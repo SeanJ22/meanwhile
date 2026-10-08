@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.ts";
-import { SOURCE_WIRING } from "@/lib/registry/source-wiring.ts";
+import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import { seedMeetingDoors } from "@/lib/doors/seed-meetings.ts";
 import { listDoors } from "@/lib/doors/registry.ts";
 import { recordDoorOutcome, recordMemberOutcomes, taskDoorId } from "@/lib/doors/outcome.ts";
@@ -12,7 +12,7 @@ const AT = "2026-10-04T12:00:00.000Z";
 
 async function seeded() {
   const repos = createMemoryRepositories();
-  await seedMeetingDoors({ repo: repos.doors, wiring: SOURCE_WIRING.slice(0, 3), derived: [], deriveInputAt: AT, at: AT });
+  await seedMeetingDoors({ repo: repos.doors, wiring: FIXTURE_DOOR_ROWS.slice(0, 3), derived: [], deriveInputAt: AT, at: AT });
   return repos;
 }
 

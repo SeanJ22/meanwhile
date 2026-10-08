@@ -3,14 +3,14 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
-import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
+import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import { makeDiligentSource, type DiligentMeeting } from "../lib/sources/diligent/index.ts";
 import { forwardCalendarMonths, sittingBodyKey } from "../lib/sources/diligent/schedule-union.ts";
 import { SourceHttpError } from "../lib/sources/http.ts";
 
 const FIXTURES = join(import.meta.dirname, "fixtures", "tusd-govboard");
 const RETRIEVAL = JSON.parse(readFileSync(join(FIXTURES, "retrieval.json"), "utf8")) as Record<string, { url: string }>;
-const WIRING = SOURCE_WIRING.find((row) => row.bodyId.includes("tucson_unified_district"))!;
+const WIRING = FIXTURE_DOOR_ROWS.find((row) => row.bodyId.includes("tucson_unified_district"))!;
 const NOW = new Date("2026-09-23T13:00:00-07:00");
 const FORWARD = ["incal-2026-09.html", "incal-2026-10.html", "incal-2026-11.html", "incal-2026-12.html", "incal-2027-01.html"];
 
@@ -179,7 +179,7 @@ test("the calendar is read under a recorded robots verdict that never refuses it
 });
 
 test("Sunnyside: the district's own SmartSites calendar is unioned the same way, and a sitting with no stated place still publishes", () => {
-  const susd = SOURCE_WIRING.find((row) => row.bodyId.includes("sunnyside_unified_district"))!;
+  const susd = FIXTURE_DOOR_ROWS.find((row) => row.bodyId.includes("sunnyside_unified_district"))!;
   const events = JSON.parse(readFileSync(join(import.meta.dirname, "fixtures", "smartsites", "susd12-calendar-150042-events.json"), "utf8"));
   events.data.events.push({ id: "fixture-2026-12-15", title: "Governing Board Meeting", start_date: "2026-12-15", start_time: "18:30:00", address: "", all_day: false });
   const portalRows: DiligentMeeting[] = [168, 169, 170, 171, 172, 173].map((Id, i) => ({

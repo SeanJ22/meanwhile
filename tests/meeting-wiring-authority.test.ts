@@ -6,7 +6,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { authorityFor } from "../lib/civic-data/source-authority.ts";
-import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
+import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 
 function configuredUrls(value: unknown, key = "", out: { key: string; url: string }[] = []) {
   if (typeof value === "string" && value.startsWith("https://")) out.push({ key, url: value });
@@ -18,7 +18,7 @@ function configuredUrls(value: unknown, key = "", out: { key: string; url: strin
 test("every https route a meeting wiring row configures inherits meetings-public-bodies authority", () => {
   const refused: string[] = [];
   let checked = 0;
-  for (const row of SOURCE_WIRING) {
+  for (const row of FIXTURE_DOOR_ROWS) {
     for (const { key, url } of configuredUrls(row.config)) {
       checked += 1;
       const verdict = authorityFor("meetings-public-bodies", "MEETING", url);

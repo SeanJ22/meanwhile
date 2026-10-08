@@ -958,12 +958,27 @@ export function authorityForManualReceipt(
   return { ok: true, contract };
 }
 
-/** Null means only the contract's own routes are registered. A door's host admits any HTTPS path on that host. */
+/**
+ * Null means only the contract's own routes are registered. A door's host admits any HTTPS path on that host, unless
+ * the contract already names routes on that host: then only those routes are read there.
+ */
 let doorHosts: ReadonlySet<string> | null = null;
 const DOOR_HOST_SOURCES: ReadonlySet<string> = new Set(["meetings-public-bodies", "door-outcomes"]);
 
 export function installDoorHosts(hosts: Iterable<string> | null): void {
   doorHosts = hosts === null ? null : new Set([...hosts].map((host) => host.trim().toLowerCase()).filter((host) => host !== ""));
+}
+
+const ROUTED_HOSTS = new WeakMap<SourceAuthorityContract, ReadonlySet<string>>();
+function routedHosts(contract: SourceAuthorityContract): ReadonlySet<string> {
+  let hosts = ROUTED_HOSTS.get(contract);
+  if (hosts === undefined) {
+    hosts = new Set(contract.routePrefixes.flatMap((prefix) => {
+      try { return [new URL(prefix).hostname.toLowerCase()]; } catch { return []; }
+    }).filter((host) => host !== ""));
+    ROUTED_HOSTS.set(contract, hosts);
+  }
+  return hosts;
 }
 
 export function authorityFor(
@@ -980,7 +995,8 @@ export function authorityFor(
   try { url = new URL(finalUrl); }
   catch { return { ok: false, code: "FINAL_URL_INVALID", detail: `Final URL is not parseable: ${JSON.stringify(finalUrl)}.` }; }
   if (url.protocol !== "https:") return { ok: false, code: "FINAL_URL_NOT_HTTPS", detail: `${url.href} is not HTTPS.` };
-  const onDoorHost = DOOR_HOST_SOURCES.has(sourceId) && doorHosts !== null && doorHosts.has(url.hostname.toLowerCase());
+  const host = url.hostname.toLowerCase();
+  const onDoorHost = DOOR_HOST_SOURCES.has(sourceId) && doorHosts !== null && doorHosts.has(host) && !routedHosts(contract).has(host);
   if (!onDoorHost && !contract.routePrefixes.some((prefix) => url.href.startsWith(prefix))) {
     return { ok: false, code: "FINAL_ROUTE_NOT_REGISTERED", detail: `${url.href} is outside ${sourceId}'s registered publication routes.` };
   }

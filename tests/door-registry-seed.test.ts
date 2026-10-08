@@ -4,7 +4,8 @@ import test from "node:test";
 import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.ts";
 import { meetingPartitionId } from "@/lib/civic-data/meeting-partitions.ts";
 import { MEETING_PARTITION_CONTRACTS } from "@/lib/civic-data/meeting-partitions.ts";
-import { SOURCE_WIRING, meetingSourceNamesForWiring } from "@/lib/registry/source-wiring.ts";
+import { meetingSourceNamesForWiring } from "@/lib/registry/source-wiring.ts";
+import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import { derivedWiringKey, type DerivedWiringRecord } from "@/lib/civic-data/derived-meeting-wiring.ts";
 import { doorFromDerivedRecord, seedMeetingDoors } from "@/lib/doors/seed-meetings.ts";
 import { listDoors } from "@/lib/doors/registry.ts";
@@ -34,9 +35,9 @@ const DERIVED: DerivedWiringRecord = {
 
 test("every hand-wired meeting door becomes a registry record under its partition id", async () => {
   const repos = createMemoryRepositories();
-  const expectedIds = SOURCE_WIRING.flatMap((row) => meetingSourceNamesForWiring(row).map((s) => meetingPartitionId(s, row.bodyId)));
+  const expectedIds = FIXTURE_DOOR_ROWS.flatMap((row) => meetingSourceNamesForWiring(row).map((s) => meetingPartitionId(s, row.bodyId)));
   assert.ok(expectedIds.length > 100, "the seed is not trivial");
-  const counts = await seedMeetingDoors({ repo: repos.doors, wiring: SOURCE_WIRING, derived: [], deriveInputAt: AT, at: AT });
+  const counts = await seedMeetingDoors({ repo: repos.doors, wiring: FIXTURE_DOOR_ROWS, derived: [], deriveInputAt: AT, at: AT });
   assert.deepEqual(counts.refused, []);
   const { doors } = await listDoors(repos.doors);
   assert.equal(new Set(expectedIds).size, doors.length, "one door per unique (source, body)");

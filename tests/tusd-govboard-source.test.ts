@@ -10,7 +10,8 @@ import {
   parseBoardActions,
   parseCalendarFragment,
 } from "../lib/sources/tusd-govboard/index.ts";
-import { SOURCE_WIRING, type BodySourceWiring } from "../lib/registry/source-wiring.ts";
+import { type BodySourceWiring } from "../lib/registry/source-wiring.ts";
+import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import { agendaItems } from "../lib/routing/agenda-search.ts";
 import { makeDiligentSource } from "../lib/sources/diligent/index.ts";
 
@@ -47,7 +48,7 @@ const RAW = [{
 }];
 
 test("the WIRED Diligent row links a concluded board sitting's own Board Actions record, not the portal page", () => {
-  const wiring = SOURCE_WIRING.find((row) => row.bodyId === WIRING.bodyId)!;
+  const wiring = FIXTURE_DOOR_ROWS.find((row) => row.bodyId === WIRING.bodyId)!;
   assert.equal(wiring.config.agendaRecordsUrl, "https://govboard.tusd1.org/Actions");
   const rows = JSON.parse(readFileSync(join(import.meta.dirname, "fixtures", "diligent-tusd-meetings.json"), "utf8"));
   const source = makeDiligentSource([wiring]);

@@ -58,37 +58,10 @@ export function wiringRowsFromDoors(doors: readonly DoorRecord[], options: DoorR
   return [...rows.values()].sort(compareRows);
 }
 
-/** Rows a given adapter capability should serve, read from the registry's doors. */
-export function doorRowsFor(kinds: readonly AgendaSourceType[], doors: readonly DoorRecord[], options: DoorRowOptions = {}): BodySourceWiring[] {
-  return wiringRowsFromDoors(doors, options).filter((row) => kinds.includes(row.agendaSourceType));
-}
-
 export function compareRows(a: BodySourceWiring, b: BodySourceWiring): number {
   return a.bodyId < b.bodyId ? -1 : a.bodyId > b.bodyId ? 1 : a.agendaSourceType < b.agendaSourceType ? -1 : a.agendaSourceType > b.agendaSourceType ? 1 : 0;
 }
 
-/**
- * How the registry's rows differ from the code's. Empty means meetings read
- * through the registry are read exactly as they are today.
- */
-export function wiringParity(code: readonly BodySourceWiring[], registry: readonly BodySourceWiring[]): string[] {
-  const key = (row: BodySourceWiring) => `${row.bodyId} ${row.agendaSourceType} ${JSON.stringify(sortedConfig(row))}`;
-  const mine = new Map(registry.map((row) => [key(row), row]));
-  const theirs = new Map(code.map((row) => [key(row), row]));
-  const problems: string[] = [];
-  for (const [k, row] of theirs) {
-    const other = mine.get(k);
-    if (other === undefined) problems.push(`missing from the registry: ${row.bodyId} (${row.agendaSourceType})`);
-    else if (JSON.stringify(sortKeys(other)) !== JSON.stringify(sortKeys(row))) problems.push(`differs: ${row.bodyId} (${row.agendaSourceType})`);
-  }
-  for (const [k, row] of mine) if (!theirs.has(k)) problems.push(`only in the registry: ${row.bodyId} (${row.agendaSourceType})`);
-  return problems;
-}
-
 function sortedConfig(row: BodySourceWiring): Record<string, string> {
   return Object.fromEntries(Object.entries(row.config).sort(([a], [b]) => (a < b ? -1 : 1)));
-}
-
-function sortKeys(row: BodySourceWiring): unknown {
-  return Object.fromEntries(Object.entries({ ...row, config: sortedConfig(row) }).sort(([a], [b]) => (a < b ? -1 : 1)));
 }

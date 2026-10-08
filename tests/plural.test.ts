@@ -422,7 +422,7 @@ test("a national walk reuses another role's working source route after a directo
     "https://www.usa.gov/states/missouri": '<h1>Missouri</h1><div class="field--name-field-website"><a href="https://state.example.gov/old">State</a></div>',
     "https://state.example.gov/leaders": '<a href="/governor">Governor Jane Doe</a>',
   };
-  const result = await collectNationalPlaceSources({ now, knowledge: { store, revision: 1, projection: projectFieldManual(store) },
+  const result = await collectNationalPlaceSources({ now, knowledge: { store, projection: projectFieldManual(store) },
     divisions: [{ id: "ocd-division/country:us/state:mo", label: "Missouri", divisionType: "state", geoid: "29", sourceUrl: "https://census.gov" }],
     read: async url => { opened.push(url); if (!(url in pages)) throw Error("Source unavailable"); return { url, text: pages[url], collectedAt: now }; } });
   assert.ok(opened.includes("https://state.example.gov/leaders"));

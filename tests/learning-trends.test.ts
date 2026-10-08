@@ -18,8 +18,6 @@ function entry(id: string, url: string | null, routeId: string | null): FieldMan
 }
 
 const STORE: FieldManualStore = {
-  formatVersion: 1,
-  updatedOn: null,
   entries: [
     entry("fm:by-url", "https://Pima.Legistar.com/Calendar.aspx/", null),
     entry("fm:duplicate-url", "https://pima.legistar.com/Calendar.aspx", "another-name-for-same-door"),

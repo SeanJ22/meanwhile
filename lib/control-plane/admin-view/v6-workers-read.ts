@@ -52,6 +52,7 @@ const REFUSAL_WORDS: Readonly<Record<string, string>> = {
   PROVIDER_REQUEST_CEILING: "the request limit is reached",
   PAYLOAD_BYTE_CEILING: "the data limit is reached",
   WEBSITE_REQUEST_CAP: "the limit on requests to one website is reached",
+  WEBSITE_ASKED_TO_WAIT: "the website asked us to wait",
   OWNER_PAUSED: "paid research is paused",
   MODEL_LANE_CLOSED: "that model is turned off",
   PROVIDER_CIRCUIT_BROKEN: "the provider is failing",

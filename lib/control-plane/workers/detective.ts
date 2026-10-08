@@ -3,14 +3,14 @@ import { scoutExecutor } from "../scheduler/scout-executor.ts";
 import { contentHash } from "../ids.ts";
 import { ZERO_COST } from "../attempt.ts";
 import {installedAdapters,installedAdapterVersion} from '../scheduler/scout-adapters.ts';
-import {FIELD_MANUAL_ID, readFieldManual, type FieldManualEntry} from '../field-manual.ts';
+import {readFieldManual, type FieldManualEntry, type FieldManualQuery} from '../field-manual.ts';
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { ExecutorDecision } from "../scheduler/dispatch.ts";
 import type { RouteDescriptor } from "../scheduler/registry.ts";
 import { sourceReliabilityKey } from "../scheduler/scout-reliability.ts";
 import { DETECTIVE_SHUT_THRESHOLD_SETTING, readSetting } from "../settings.ts";
 import type { AdminConfig } from "../gateway/admin-config.ts";
-import { reopenAbsencesForRecentCapabilities } from "../scheduler/absence-reopen.ts";
+import { CAPABILITY_KINDS, reopenAbsencesForRecentCapabilities } from "../scheduler/absence-reopen.ts";
 
 /** Consecutive failures after which a door counts as shut, when Admin's setting is unset or unreadable. */
 export const DETECTIVE_SHUT_THRESHOLD = 3;
@@ -283,13 +283,23 @@ export function adapterWaitReason(results: readonly import('../scheduler/scout-r
     ? 'AWAITING_ADAPTER: '+latest.narrative+'; Engineer owns this work. Resume when its adapter is available.' : null;
 }
 
+/** The adapters the Engineer built or installed, wherever they were built. */
+const ADAPTER_KNOWLEDGE: FieldManualQuery = { role: 'DETECTIVE', kinds: ['ENGINEER_ADAPTER_PR', 'PLATFORM_ADAPTER'], everywhere: true };
+
+/** Routes, methods and adapters the manual gained, which can reopen dead ends anywhere. */
+async function readCapabilities(repos: Pick<import('../repository/types.ts').ControlPlaneRepositories, 'fieldManual'>): Promise<readonly FieldManualEntry[]> {
+  const read = await readFieldManual(repos, { kinds: CAPABILITY_KINDS, everywhere: true });
+  if (read.error) throw new Error(read.error);
+  return read.store.entries;
+}
+
 /** Reuse the Engineer's failed-attempt and source-class links before generated filenames appear in Scout history. */
 export async function adapterWaitReasonFromKnowledge(repos:import('../repository/types.ts').ControlPlaneRepositories,
   results:readonly import('../scheduler/scout-result.ts').ScoutResult[]):Promise<string|null> {
   const installed=await installedAdapters();
   const wait=adapterWaitReason(results,installed);
   if(!wait)return null;
-  const manual=await readFieldManual(repos,{role:'DETECTIVE'});
+  const manual=await readFieldManual(repos,ADAPTER_KNOWLEDGE);
   return adapterWaitReason(results,installed,manual.store.entries);
 }
 
@@ -297,7 +307,7 @@ export async function adapterWaitReasonFromKnowledge(repos:import('../repository
 export async function wakeInstalledAdapterDebts(repos:import('../repository/types.ts').ControlPlaneRepositories,
   debts:readonly import('../scheduler/debt.ts').FreshnessDebt[],now:string) {
   // A working route, method or adapter the bank gained reopens the dead ends it could solve, in this round.
-  const reopened=await (async()=>reopenAbsencesForRecentCapabilities(repos,(await repos.fieldManual.read(FIELD_MANUAL_ID))?.value.entries??[],now))().catch((error:unknown)=>{
+  const reopened=await (async()=>reopenAbsencesForRecentCapabilities(repos,await readCapabilities(repos),now))().catch((error:unknown)=>{
     console.error(`  dead ends not reopened this round (${error instanceof Error?error.message:String(error)}); the next round tries again`);
     return [];
   });
@@ -305,7 +315,7 @@ export async function wakeInstalledAdapterDebts(repos:import('../repository/type
   const waiting=debts.filter(debt=>debt.cause==='AWAITING_ADAPTER');
   if(!waiting.length)return debts;
   const adapters=await installedAdapters();
-  const manual=await readFieldManual(repos,{role:'DETECTIVE'});
+  const manual=await readFieldManual(repos,ADAPTER_KNOWLEDGE);
   const latest=await repos.scoutResults.readLatest(waiting.map(debt=>debt.obligationId),{
     attemptId:true,recordClass:true,refusal:true,outcome:true,recoveryCapabilityVersion:true,narrative:true,nextRungs:true,candidates:true,rungs:true});
   return debts.map(debt=>{

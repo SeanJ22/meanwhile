@@ -1132,7 +1132,9 @@ test('parent HTTP shares ten held small-publisher requests across text and byte 
   assert.equal(controller.snapshot().providerCircuits.length,0,'a cap is not a provider failure');
   for(let i=0;i<20;i++)assert.equal((await text({url:census,method:'GET',headers:{},timeoutMs:1000})).status,200);
   assert.equal(calls,30);
-  assert.equal((await controller.guardedOpenOne('public-web','different-work',fetcher)({url:small,method:'GET',headers:{},timeoutMs:1000})).status,200);
+  const other=await controller.guardedOpenOne('public-web','different-work',fetcher)({url:`${small}/other`,method:'GET',headers:{},timeoutMs:1000});
+  assert.match(other.transportError??'',/^WEBSITE_REQUEST_CAP: /,'the allowance is the website\'s, shared by every work item');
+  assert.equal(calls,30);
 });
 
 test('redirects apply the destination website size and uncapped HTTP still honors 429 Retry-After', async () => {

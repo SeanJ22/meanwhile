@@ -210,7 +210,10 @@ import {
   walkableByFreeWalk,
   type MeetingsDiscoveryPass,
 } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
-import { knownRecipes } from "../lib/hunt/meetings-recipes.ts";
+import { knownRecipes, RECIPE_KIND } from "../lib/hunt/meetings-recipes.ts";
+import { runSpreadPass, sentMoneyPlaces, spreadLine } from "../lib/method/spread-pass.ts";
+import { pacedProbeFetch } from "../lib/doors/probe-fetch.ts";
+import { refreshDoorsForPass } from "../lib/doors/install.ts";
 import { ROUTE_HINTS } from "../lib/hunt/meetings-route-hints.ts";
 import { directoryMeetingHints } from "../lib/civic-data/worker-body-directory.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
@@ -278,17 +281,20 @@ import {
   type RunningScout,
 } from "../lib/control-plane/scheduler/research-policy.ts";
 import { candidateStoreCounts, proposeScoutCandidates, readMethodCandidateStore, type ProposalReport } from "../lib/control-plane/scheduler/scout-candidates.ts";
-import { emptyFieldManual, readFieldManual, type FieldManualStore } from "../lib/control-plane/field-manual.ts";
+import { emptyFieldManual, readFieldManual, type FieldManualRead, type FieldManualStore } from "../lib/control-plane/field-manual.ts";
 import {
   compoundingPair,
   fieldManualBriefLines,
   knownRouteIds,
   scoutDiscoveryEntries,
   scoutFieldManualProjection,
+  scoutFieldManualQuery,
+  recordScoutMethods,
   scoutStateHint,
   usedFieldManualEntryIds,
   writeFieldManualDiscoveries,
 } from "../lib/control-plane/scheduler/field-manual-scout.ts";
+import { recordFoundSources } from "../lib/doors/page-doors.ts";
 import { readResearchProgression } from "../lib/control-plane/research-progression.ts";
 import { readMethodKnowledge } from "../lib/method/manual-bridge.ts";
 import { candidateCounts as countMethodCandidates } from "../lib/method/candidate.ts";
@@ -661,6 +667,12 @@ if (!legacyOperationalReference && !azOperationalReference) throw new Error(
 );
 await preloadCandidateEnrichmentAuthorities();
 
+/* The meeting doors this cycle's meeting work, facts and Ask gaps are read against, straight from the registry. */
+{
+  const doors = await refreshDoorsForPass(repos.doors);
+  console.log(`  meeting doors: ${doors.rows} read from the registry${doors.reason ? ` — ${doors.reason}` : ""}`);
+}
+
 /*
  * One CAS lease on the fixed aggregate id `nightly-window` serializes cycle
  * writers: a cycle that finds it held is REFUSED by name (exit 3). The lease is
@@ -687,7 +699,7 @@ try {
  * against each state's canonical candidate acquisition denominator.
  */
 /*
- * Meeting acquisition belongs to the SOURCE_WIRING-derived meeting-partition
+ * Meeting acquisition belongs to the meeting-partition
  * contracts; the worker pipeline may project evidence into a fail-closed
  * receipt but never opens the same official feeds on a parallel schedule.
  */
@@ -1774,6 +1786,7 @@ const fleetSafety = new FleetSafetyController({
   /* The second lock: while the lane is closed for any reason, no model request is reserved at all. */
   modelHold: laneDisabledReason,
   circuits: priorCircuits,
+  websitePacing: repos.websitePacing,
   lastSuccessfulActivity: priorLastSuccessfulActivity,
   rollingCeilingUsd: effectiveCeilingUsd,
   lifetimeHuntWork,
@@ -2253,10 +2266,11 @@ const assignmentsReading = (): AssignmentCycleReading | null =>
 /* Prior context the Scout may inherit — read once, only when a Scout can run. */
 const priorScoutResults = new Map<string, ScoutResult[]>();
 const priorDispositionsByObligation = new Map<string, { disposition: string; permission: string; transport: string; note: string; at: string }[]>();
-/* The live field manual is refreshed after write-back and captured per dispatch. */
-let fieldManual: FieldManualStore = emptyFieldManual();
-let fieldManualRevision = 0;
+/* Each due place's own field-manual rows, read once before its Scout is briefed. */
+const manualReads = new Map<string, FieldManualRead>();
 const inheritedManualStores = new Map<string, FieldManualStore>();
+/* The divisions each Scout's obligation covers, where its method results are recorded. */
+const scoutDivisions = new Map<string, readonly string[]>();
 const inheritedFieldManualCounts = new Map<string, number>();
 /** The exact projected doors handed to each obligation's scout at dispatch — captured input for the delivery audit, keyed by obligation id. */
 const inheritedFieldManualDoors = new Map<string, { readonly entryIds: readonly string[]; readonly lines: readonly string[] }>();
@@ -2271,13 +2285,12 @@ if (modelLaneEnabled && dueModel.length > 0) {
   } catch (error) {
     runtimeConditions.push(`prior Scout results could not be read: ${error instanceof Error ? error.message : String(error)}`);
   }
-  try {
-    const fm = await readFieldManual(repos,{role:'SCOUT'});
-    fieldManual = fm.store;
-    fieldManualRevision = fm.revision??0;
-  } catch (error) {
-    runtimeConditions.push(`the field manual could not be read: ${error instanceof Error ? error.message : String(error)}`);
-  }
+  const places = [...new Map(dueModel.map((row) => [row.obligation.subjectId, row.obligation] as const)).values()];
+  const reads = await Promise.all(places.map(async (obligation) => [obligation.subjectId,
+    await readFieldManual(repos, scoutFieldManualQuery({ subjectId: obligation.subjectId, obligationId: obligation.id, divisions: obligation.scopeDivisions ?? [] }))] as const));
+  for (const [subjectId, read] of reads) manualReads.set(subjectId, read);
+  const unread = reads.find(([, read]) => read.error !== undefined);
+  if (unread) runtimeConditions.push(`the field manual could not be read: ${unread[1].error}`);
   try {
     const routeTaskToObligation = new Map<string, string>();
     const priorDispositions: (Awaited<ReturnType<typeof repos.dispositions.readAll>>)[number][] = [];
@@ -2383,13 +2396,16 @@ function inheritedFor(row: ScheduledObligation): InheritedEvidence {
    * does not rebuild a door already listed. The count is the inherited half of
    * the reported pair, stashed for onResult.
    */
-  const projection = scoutFieldManualProjection(fieldManual, {
+  const manual = manualReads.get(row.obligation.subjectId) ?? { store: emptyFieldManual() };
+  const projection = scoutFieldManualProjection(manual, {
     subjectId: row.obligation.subjectId,
     obligationId: row.obligation.id,
+    divisions: row.obligation.scopeDivisions ?? [],
     recordClass: row.obligation.recordClass,
   });
+  scoutDivisions.set(id, row.obligation.scopeDivisions ?? []);
   inheritedFieldManualCounts.set(id, projection.entryIds.length);
-  inheritedManualStores.set(id, fieldManual);
+  inheritedManualStores.set(id, manual.store);
   const manualLines = fieldManualBriefLines(projection);
   // Capture the EXACT projected doors handed to this scout, at dispatch, for the delivery audit.
   inheritedFieldManualDoors.set(id, { entryIds: projection.entryIds, lines: manualLines });
@@ -2784,7 +2800,7 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
          * back into the field manual so the NEXT Scout of any role inherits them
          * this cycle — no human method:learn step in between.
          */
-        const handedManual = inheritedManualStores.get(result.obligationId) ?? fieldManual;
+        const handedManual = inheritedManualStores.get(result.obligationId) ?? emptyFieldManual();
         const pair = compoundingPair(inheritedFieldManualCounts.get(result.obligationId) ?? 0, result, knownRouteIds(handedManual));
         const doors = inheritedFieldManualDoors.get(result.obligationId);
         amended = {
@@ -2804,18 +2820,14 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
           );
           if (written.error) {
             amended = { ...amended, unverified: [...amended.unverified, `field manual write-back failed: ${written.error}`] };
-          } else {
-            try {
-              const refreshed = await readFieldManual(repos,{role:'SCOUT'});
-              if ((refreshed.revision??0) >= fieldManualRevision) { fieldManualRevision = refreshed.revision??0; fieldManual = refreshed.store; }
-            } catch (error) {
-              amended = { ...amended, unverified: [...amended.unverified, `field manual saved but refresh failed: ${String(error)}`] };
-            }
           }
         }
+        const fixed = await recordScoutMethods(repos, amended, handedManual, scoutDivisions.get(amended.obligationId) ?? []);
+        if (fixed) amended = { ...amended, unverified: [...amended.unverified, fixed] };
         const heldJobId = jobSpend.get(amended.obligationId)?.jobId;
         if (heldJobId !== undefined) amended = { ...amended, spendHoldJobId: heldJobId };
         await repos.scoutResults.append(amended.obligationId, amended.attemptId, amended, nowIso());
+        await recordFoundSources(repos.doors, [amended], nowIso());
         scoutResultsThisCycle.push(amended);
         priorScoutResults.set(amended.obligationId,[...(priorScoutResults.get(amended.obligationId)??[]),amended]);
         const outcome = amended.refusal !== null ? "REFUSED"
@@ -3114,6 +3126,19 @@ for (const row of cycle.deferred) {
 
 
 
+/* ------------------------------------------------- spread what started working --- */
+
+if (!dry && !canary) {
+  const spread = await pending.step("methods:spread", () => runSpreadPass({ repos, now: nowIso(),
+    sendPlaceIds: sentMoneyPlaces({ areas: expansionBudget?.gate.armedReading().scopes ?? null, sends: assignmentMembers }),
+    paidTriesLeft: guards.paidWorkerCapacity(), fetch: pacedProbeFetch({ pacing: repos.websitePacing, sizeFor: websiteSize }), sizeFor: websiteSize })).catch((error: unknown) => {
+    runtimeConditions.push(`working methods were not tried elsewhere: ${error instanceof Error ? error.message : String(error)}`);
+    return null;
+  });
+  if (spread && spread.methods > 0) console.log(`  spread: ${spreadLine(spread)}`);
+  if (spread?.writeError) runtimeConditions.push(`the spread's results were not all recorded: ${spread.writeError}`);
+}
+
 /* ------------------------------------------------- close, and persist debt --- */
 
 // Scheduling projections and closure both CAS the standing obligation.
@@ -3353,7 +3378,8 @@ const runMeetingsDiscoveryPass = async (discoveryDeadlineMs: number, maxWalks: n
     const leaveDiscovery = pending.enter("meetings-discovery");
     try {
       /* The saved methods live in the field manual; the runner consults them on every walk. */
-      const manual = await repos.fieldManual.read("live");
+      const manual = await readFieldManual(repos, { kinds: [RECIPE_KIND], everywhere: true });
+      if (manual.error) throw new Error(manual.error);
       /*
        * Search: pointers only, and PAID, so it exists only while the owner's switch in Admin allows it
        * (`AdminConfig.discoverySearch`, read at cycle start). Otherwise no search step is built at all: no request,
@@ -3429,7 +3455,7 @@ const runMeetingsDiscoveryPass = async (discoveryDeadlineMs: number, maxWalks: n
             spent: () => Date.now() >= discoveryDeadlineMs,
             remainingMs: () => Math.max(0, discoveryDeadlineMs - Date.now()),
           },
-          recipes: knownRecipes(manual?.value.entries ?? []),
+          recipes: knownRecipes(manual.store.entries),
           /* Committed route hints: the current official site where the recorded address is stale, and routes found on a government's own publications. */
           routeHints: meetingHints,
           ...(discoverySearch === null ? {} : { search: discoverySearch }),

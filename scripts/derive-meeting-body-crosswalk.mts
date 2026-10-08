@@ -57,7 +57,8 @@ import { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { loadRegistrationReference, type LoadedReference } from "../lib/registration/reference.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
 import { REGISTRY_RUNTIME_SCOPE } from "../lib/registry/runtime-data-plane.ts";
-import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
+import { activeWiring } from "../lib/registry/source-wiring.ts";
+import { ensureMeetingDoors } from "../lib/doors/meeting-doors.ts";
 
 if (!process.argv.includes("--promote")) {
   throw new Error("usage: scripts/derive-meeting-body-crosswalk.mts --promote (the standing runner's child; there is no dry mode against production)");
@@ -67,6 +68,9 @@ prepareProductionCivicDataWrite();
 
 const store = new PostgresRoutineDataStore();
 const now = new Date().toISOString();
+// A body a hand-wired door already serves gets no derived row; without the doors, that cannot be told, so nothing is derived.
+const doors = await ensureMeetingDoors();
+if (!doors.ready) throw new Error(`MEETING_DOORS_UNREADABLE: ${doors.reason}`);
 /**
  * The reviewer's output version (12 hex). Change it only when the review's
  * accepted output changes: a new value re-keys every row it accepts from then on.
@@ -200,7 +204,7 @@ async function main(): Promise<void> {
       routes: walk.routes,
       registered,
       held: (artifactId) => held.get(artifactId) ?? null,
-      handWired: (bodyId) => SOURCE_WIRING.some((wiring) => wiring.bodyId === bodyId),
+      handWired: (bodyId) => activeWiring().some((wiring) => wiring.bodyId === bodyId),
       reviewer: REVIEWER,
       now,
     }));

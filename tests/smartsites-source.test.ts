@@ -23,7 +23,7 @@ const BODY = JSON.parse(readFileSync(join(FIXTURES, "susd12-calendar-150042-even
   data: { events: SmartSitesEvent[]; site_timezone: string };
 };
 
-// Built for the test only — no SOURCE_WIRING row names this adapter.
+// Built for the test only — no meeting door names this adapter.
 const WIRING: BodySourceWiring = {
   bodyId: "ocd-division/country:us/state:az/school_district:sunnyside_unified_district#board",
   ocdId: "ocd-division/country:us/state:az/school_district:sunnyside_unified_district",

@@ -495,6 +495,8 @@ function validateMeetingPartitionProjection(
 export async function readMeetingsProjection(
   options: MeetingsProjectionReadOptions = {},
 ): Promise<MeetingsProjectionReadResult> {
+  // The meeting partitions read here are the published doors' partitions, installed in this module graph.
+  await (await import("../doors/meeting-doors.ts")).ensureMeetingDoors();
   const now = options.now ?? new Date().toISOString();
   const readOptions = {
     ...(options.store ? { store: options.store } : {}),

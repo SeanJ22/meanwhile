@@ -170,7 +170,7 @@ export function claimLesson(check: ClaimCheck, at: string): FieldManualEntry {
     role: "AUDITOR", kind: "CLAIM_LESSON",
     title: `A claimed win was wrong (${kind === "PROVEN_LABEL" ? "a Proven label" : kind === "FIX_PROVEN" ? "a Proven count" : "a fix reported done"})`,
     summary: `recompute from source records before claiming: ${check.cause ?? "the claim did not match"}`.slice(0, 240),
-    outcome: "FAILED", observedAt: at.slice(0, 10), payload: { claimId: check.claimId, claimed: check.claimed, recomputed: check.recomputed },
+    outcome: "FAILED", observedAt: at.slice(0, 10), portable: true, payload: { claimId: check.claimId, claimed: check.claimed, recomputed: check.recomputed },
   });
 }
 

@@ -6,11 +6,8 @@ import { test } from "node:test";
 
 import registryFile from "../lib/registry/registry.json" with { type: "json" };
 import { loadRegistrationReference, registeredGovernments } from "../lib/registration/reference.ts";
-import {
-  SOURCE_WIRING,
-  wiringForTypes,
-  type BodySourceWiring,
-} from "../lib/registry/source-wiring.ts";
+import { wiringForTypes, type BodySourceWiring } from "../lib/registry/source-wiring.ts";
+import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import { makeApptegySource } from "../lib/sources/apptegy/index.ts";
 import {
   parseAgendaCenter,
@@ -47,16 +44,16 @@ function registeredBodyIds(): Set<string> {
 
 test("every source-wiring row names a real registry body", () => {
   const bodyIds = new Set([...registryFile.bodies.map((b: { id: string }) => b.id), ...registeredBodyIds()]);
-  const missing = SOURCE_WIRING.filter((w) => !bodyIds.has(w.bodyId));
+  const missing = FIXTURE_DOOR_ROWS.filter((w) => !bodyIds.has(w.bodyId));
   assert.deepEqual(
     missing.map((w) => w.bodyId),
     [],
-    `${SOURCE_WIRING.length - missing.length} of ${SOURCE_WIRING.length} wiring rows matched a registry body`,
+    `${FIXTURE_DOOR_ROWS.length - missing.length} of ${FIXTURE_DOOR_ROWS.length} wiring rows matched a registry body`,
   );
 });
 
 test("every wiring row's ocdId is its bodyId without the slot", () => {
-  for (const w of SOURCE_WIRING) {
+  for (const w of FIXTURE_DOOR_ROWS) {
     if (w.ocdId === null) {
       assert.match(w.bodyId, /^curated:/, w.bodyId);
     } else {

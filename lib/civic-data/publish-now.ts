@@ -13,6 +13,11 @@ export function publishNowLane(run: () => Promise<void>): IndependentRuntimeLane
   return { id: "publish-now", everyMs: PUBLISH_NOW_INTERVAL_MS, run };
 }
 
+/** A publish-now minute that selected nothing, with nothing failed on the way there, ends quietly: no outcome, no count. */
+export function publishNowHasNothingOwed(publishNow: boolean, selectedTasks: number, failures: number): boolean {
+  return publishNow && selectedTasks === 0 && failures === 0;
+}
+
 /** Parser results are a durable outbox acknowledged by publicationOutcome.workerResultId, so a crash cannot lose a request. */
 export function publishNowWorkerTasks(items: readonly WorkItem[], results: readonly WorkerResultRecord[], now: string): RoutineSourceTask[] {
   return workerPublicationTasks(items.filter(item => latestParserResult(results, item.id) !== undefined), results, now);

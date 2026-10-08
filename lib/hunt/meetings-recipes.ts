@@ -2,7 +2,7 @@
  * A discovery method that worked is saved so the runner repeats it: what was
  * missing, the query patterns, the navigation, the publisher's traits, the
  * extractor, what verification requires, what it cost and when it last
- * worked. Recipes live in the field manual (`cp_field_manual`, kind
+ * worked. Recipes live in the field manual (`cp_field_manual_entries`, kind
  * `MEETINGS_RECIPE`); failures are kept with their limits so the same
  * unchanged failure is not paid for twice. Seed counts start at zero.
  *
@@ -463,6 +463,7 @@ export function recipeEntry(recipe: MeetingsRecipe, observedAt: string): FieldMa
     states: recipe.state === null ? [] : [recipe.state],
     recordClasses: ["meetings"],
     platforms: recipe.platform === null ? [] : [recipe.platform],
+    ...(recipe.state === null && recipe.platform === null ? { portable: true } : {}),
     outcome: recipe.successes > 0 ? "YIELDED" : latest === null ? "REFERENCE" : "FAILED",
     url: recipe.lastSuccess?.url ?? null,
     source: RECIPE_SOURCE,

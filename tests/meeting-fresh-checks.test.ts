@@ -5,7 +5,13 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 
-import { MEETING_PARTITION_CONTRACTS, type MeetingPartitionContract } from "../lib/civic-data/meeting-partitions.ts";
+import {
+  MEETING_PARTITION_CONTRACTS,
+  meetingPartitionId,
+  meetingPartitionOfId,
+  refreshMeetingPartitions,
+  type MeetingPartitionContract,
+} from "../lib/civic-data/meeting-partitions.ts";
 import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { VALIDATION_CHECKS, type RoutineCandidate, type ValidationReceipt } from "../lib/civic-data/types.ts";
@@ -30,8 +36,10 @@ import { freshnessDisclosure, lastReadByDivision, staleDivisionRead } from "../l
 import {
   clearPreparedMeetingsProjectionCache,
   preparePublishedMeetingSnapshot,
+  readComposedSourcePlaces,
   readPreparedMeetingsProjection,
 } from "../lib/meetings/prepared-snapshot.ts";
+import { RETIRED_MEETING_ROUTES } from "../lib/registry/source-wiring.ts";
 import {
   readMeetingsProjection,
   snapshotClientMeta,
@@ -340,4 +348,62 @@ test("controlled clock, the prepared serving copy and the edge: a receipt republ
   if (reread.kind !== "PROMOTED") return;
   assert.equal(reread.value.meetings.filter((m) => m.bodyId === NEWBURY.bodyId).length, 2, "the new sitting reaches readers");
   assert.deepEqual(collectedOf(reread.value, PIMA), [checkedAt]);
+});
+
+test("a published composition is read whatever doors the process holds: its partitions' scopes and places come from their ids", async () => {
+  for (const partition of MEETING_PARTITION_CONTRACTS) {
+    assert.deepEqual(meetingPartitionOfId(partition.id), { source: partition.meetingSource, bodyId: partition.bodyId, scope: partition.scope }, partition.id);
+  }
+  assert.equal(meetingPartitionOfId("meetings-history:ical:x"), null);
+  assert.equal(meetingPartitionOfId("everyday-routing"), null);
+
+  clearPreparedMeetingsProjectionCache();
+  const store = new MemoryRoutineDataStore();
+  await readPartition(store, PIMA, T1, ["a", "b"]);
+  await readPartition(store, NEWBURY, T1, ["x"]);
+  assert.equal((await preparePublishedMeetingSnapshot(store, at(T1, 60_000))).status, "PUBLISHED");
+  await readPartition(store, PIMA, T2, ["a", "b"]);
+
+  // A site that holds no door yet (its runner has published none) serves the same answer, Last checked included.
+  const installed = MEETING_PARTITION_CONTRACTS.length;
+  assert.equal(refreshMeetingPartitions([]).refreshed, true);
+  try {
+    assert.equal(MEETING_PARTITION_CONTRACTS.some((p) => p.id === PIMA.id || p.id === NEWBURY.id), false);
+    const served = await readPreparedMeetingsProjection({ store, now: at(T2, 2 * 60_000) });
+    assert.equal(served.kind, "PROMOTED");
+    if (served.kind !== "PROMOTED") return;
+    assert.equal(served.value.generatedAt, T2);
+    assert.deepEqual(collectedOf(served.value, PIMA), [T2]);
+    assert.deepEqual(collectedOf(served.value, NEWBURY), [T1]);
+    const places = await readComposedSourcePlaces({ store });
+    assert.deepEqual(places?.get(PIMA.meetingSource), [PIMA.ocdId]);
+    assert.deepEqual(places?.get(NEWBURY.meetingSource), [NEWBURY.ocdId]);
+  } finally {
+    refreshMeetingPartitions();
+  }
+  assert.equal(MEETING_PARTITION_CONTRACTS.length, installed);
+});
+
+test("a failed source is attributed to the places its composed partitions serve: a retired route's held partition and a body with no division name none", async () => {
+  const retired = RETIRED_MEETING_ROUTES.find((route) => route.bodyId.startsWith("ocd-division/"))!;
+  const wilmot = "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town";
+  const store = new MemoryRoutineDataStore();
+  await store.writePreparedReaderProjection({
+    recordClass: "MEETING", scope: "composed-reader-snapshot", payload: {}, factSha256: "0".repeat(64),
+    generatedAt: T1, composedAt: T1, sourceThrough: null, retrievedAt: null, promotedThrough: null,
+    composedFrom: [
+      { contractId: PIMA.id, versionId: "v-pima" },
+      { contractId: meetingPartitionId(retired.meetingSource, retired.bodyId), versionId: "v-held" },
+      { contractId: meetingPartitionId("pima-edu", "curated:az/pima-community-college#governing"), versionId: "v-curated" },
+      { contractId: meetingPartitionId(NEWBURY.meetingSource, `${wilmot}#selectboard`), versionId: "v-wilmot" },
+      { contractId: NEWBURY.id, versionId: "v-newbury" },
+    ],
+  }, null);
+  const places = await readComposedSourcePlaces({ store });
+  assert.ok(places !== null);
+  assert.deepEqual(places.get(PIMA.meetingSource), [PIMA.ocdId]);
+  assert.deepEqual(places.get(NEWBURY.meetingSource), [wilmot, NEWBURY.ocdId], "in the composition's order");
+  assert.deepEqual(places.get("pima-edu"), [], "a body with no division names no place");
+  assert.equal((places.get(retired.meetingSource) ?? []).includes(retired.bodyId.split("#")[0]!), false, "a retired route's held partition serves no place");
+  assert.equal(await readComposedSourcePlaces({ store: new MemoryRoutineDataStore() }), null, "no composition, no attribution");
 });

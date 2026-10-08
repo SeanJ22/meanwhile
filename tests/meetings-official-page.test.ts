@@ -297,24 +297,24 @@ test("THE RUNNER USES WHAT IT SAVED: cycle 1 credits the method for TUSD; cycle 
   for (const [label, repos] of await eachStore("wtp-official-page-")) {
     const first = await runMeetingsDiscovery(repos, {
       needs: [TUSD],
-      runtime: runtime(fakeOpen(TUSD_SITE).open, knownRecipes((await repos.fieldManual.read("live"))?.value.entries ?? [])),
+      runtime: runtime(fakeOpen(TUSD_SITE).open, knownRecipes((await repos.fieldManual.list()).map((row) => row.value))),
       cycleIndex: 0,
       maxWalks: 5,
     });
     assert.equal(first.walked[0].outcome, "FOUND", label);
     assert.ok(first.recipesUpdated.includes(METHOD), label);
-    const saved = knownRecipes((await repos.fieldManual.read("live"))?.value.entries ?? []).find((r) => r.recipeId === METHOD)!;
+    const saved = knownRecipes((await repos.fieldManual.list()).map((row) => row.value)).find((r) => r.recipeId === METHOD)!;
     assert.equal(saved.successes, 1, `${label}: the success is written to the field manual, which outlives the process`);
     assert.equal(saved.lastSuccess?.jurisdictionId, TUSD.jurisdictionId);
 
     const second = await runMeetingsDiscovery(repos, {
       needs: [SFPS],
-      runtime: runtime(fakeOpen(SFPS_SITE).open, knownRecipes((await repos.fieldManual.read("live"))?.value.entries ?? []), "2026-09-23T23:59:00.000Z"),
+      runtime: runtime(fakeOpen(SFPS_SITE).open, knownRecipes((await repos.fieldManual.list()).map((row) => row.value)), "2026-09-23T23:59:00.000Z"),
       cycleIndex: 0,
       maxWalks: 5,
     });
     assert.equal(second.walked[0].outcome, "FOUND", label);
-    const after = knownRecipes((await repos.fieldManual.read("live"))?.value.entries ?? []).find((r) => r.recipeId === METHOD)!;
+    const after = knownRecipes((await repos.fieldManual.list()).map((row) => row.value)).find((r) => r.recipeId === METHOD)!;
     assert.equal(after.successes, 2, `${label}: the New Mexico walk used the saved method and added to it`);
     assert.equal(after.lastSuccess?.jurisdictionId, SFPS.jurisdictionId);
   }

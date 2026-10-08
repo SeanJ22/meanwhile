@@ -12,7 +12,10 @@ import {
   HELD_MEETING_PARTITIONS,
   MEETING_PARTITION_CONTRACTS,
   heldMeetingPartitionFor,
+  meetingPartitionId,
+  meetingPartitionOfId,
 } from "../civic-data/meeting-partitions.ts";
+import { RETIRED_MEETING_ROUTES } from "../registry/source-wiring.ts";
 import {
   MEETINGS_RECORD_CLASS,
   MEETINGS_SCOPE,
@@ -41,10 +44,8 @@ function couplingFingerprint(coupling: readonly PreparedProjectionCoupling[]): s
     .join("|");
 }
 
-const SCOPE_BY_CONTRACT: ReadonlyMap<string, string> = new Map([
-  ...MEETING_PARTITION_CONTRACTS.map((partition) => [partition.id, partition.scope] as const),
-  ...HELD_MEETING_PARTITIONS.map((held) => [held.id, held.scope] as const),
-]);
+/** A composed partition's scope, read from its id: the composition is checked whatever doors this process holds. */
+const scopeOfContract = (contractId: string): string | undefined => meetingPartitionOfId(contractId)?.scope;
 
 function withCurrentChecks(
   couplings: readonly FreshCheckCoupling[],
@@ -52,7 +53,7 @@ function withCurrentChecks(
 ): FreshCheckCoupling[] {
   return couplings.map((coupling) => {
     if (coupling.routes === undefined) return coupling;
-    const scope = SCOPE_BY_CONTRACT.get(coupling.contractId);
+    const scope = scopeOfContract(coupling.contractId);
     const identity = scope === undefined ? undefined : identityByScope.get(scope);
     const checkedAt = laterCheck(coupling.checkedAt ?? null, confirmationCheckedAt(identity?.latestConfirmation, coupling.versionId, true));
     return checkedAt === (coupling.checkedAt ?? null) ? coupling : { ...coupling, checkedAt };
@@ -250,7 +251,43 @@ async function readPreparedRowOnceUnchanged(
   return row;
 }
 
+/** How long a process keeps the composition's places before it reads them again. */
+export const COMPOSED_PLACES_TTL_MS = 60_000;
+let composedPlaces: { readonly at: number; readonly places: ReadonlyMap<string, readonly string[]> } | null = null;
+
+/**
+ * The places each source serves in the composition the publisher last prepared, read from its own partition ids, in
+ * its order: a failed source is attributed to every place it serves whatever doors this process has installed. A
+ * route held for a retired one is not a source of the composition, and a body with no division has no place. Null
+ * when the composition cannot be read.
+ */
+export async function readComposedSourcePlaces(options: { readonly store?: RoutineDataStore; readonly clock?: () => number } = {}):
+  Promise<ReadonlyMap<string, readonly string[]> | null> {
+  const now = (options.clock ?? Date.now)();
+  if (options.store === undefined && composedPlaces !== null && now - composedPlaces.at < COMPOSED_PLACES_TTL_MS) return composedPlaces.places;
+  let coupling: Awaited<ReturnType<RoutineDataStore["readPreparedReaderProjectionCoupling"]>>;
+  try {
+    coupling = await (options.store ?? new PostgresRoutineDataStore()).readPreparedReaderProjectionCoupling(MEETINGS_RECORD_CLASS, MEETINGS_PREPARED_SCOPE);
+  } catch {
+    return null;
+  }
+  if (coupling === null) return null;
+  const held = new Set(RETIRED_MEETING_ROUTES.map((route) => meetingPartitionId(route.meetingSource, route.bodyId)));
+  const places = new Map<string, string[]>();
+  for (const { contractId } of coupling.composedFrom) {
+    const partition = held.has(contractId) ? null : meetingPartitionOfId(contractId);
+    if (partition === null) continue;
+    const division = partition.bodyId.split("#")[0]!;
+    const list = places.get(partition.source) ?? [];
+    if (division.startsWith("ocd-division/")) list.push(division);
+    places.set(partition.source, list);
+  }
+  if (options.store === undefined) composedPlaces = { at: now, places };
+  return places;
+}
+
 export function clearPreparedMeetingsProjectionCache(): void {
+  composedPlaces = null;
   preparedRows = new WeakMap();
   servedChecks = new WeakMap();
 }
@@ -273,7 +310,7 @@ async function servedPreparedChecks(
   try {
     const identities = await store.readPromotionIdentities(
       MEETINGS_RECORD_CLASS,
-      [...new Set(checkable.flatMap((coupling) => SCOPE_BY_CONTRACT.get(coupling.contractId) ?? []))],
+      [...new Set(checkable.flatMap((coupling) => scopeOfContract(coupling.contractId) ?? []))],
     );
     const checked = withCurrentChecks(couplings, new Map(identities.map((identity) => [identity.scope, identity])));
     servedChecks.set(scope, { sequence: prepared.sequence, readAtMs: nowMs, couplings: checked });
@@ -286,6 +323,8 @@ async function servedPreparedChecks(
 export async function readPreparedMeetingsProjection(
   options: { readonly store?: RoutineDataStore; readonly now?: string } = {},
 ): Promise<MeetingsProjectionReadResult> {
+  // The meeting partitions read here are the published doors' partitions, installed in this module graph.
+  await (await import("../doors/meeting-doors.ts")).ensureMeetingDoors();
   let prepared: PreparedReaderProjectionRow | null;
   let store: RoutineDataStore | null = null;
   try {

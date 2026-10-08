@@ -133,7 +133,7 @@ export async function collectNationalPlaceSources(input: {
   const sourceKnowledge = new Map<string, ReturnType<typeof fieldManualForSource>>();
   const learned = (url: string, state: string) => {
     const key = `${state}|${new URL(url).origin}`;
-    if (!sourceKnowledge.has(key)) sourceKnowledge.set(key, input.knowledge ? fieldManualForSource(input.knowledge, url, state) : []);
+    if (!sourceKnowledge.has(key)) sourceKnowledge.set(key, input.knowledge ? fieldManualForSource(input.knowledge, url) : []);
     return sourceKnowledge.get(key)!;
   };
   const orderRoutes = (urls: readonly string[], state: string) => [...new Set(urls)].sort((a, b) => {

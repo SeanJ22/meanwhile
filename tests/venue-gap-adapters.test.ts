@@ -6,7 +6,8 @@ import test from "node:test";
 import { extractPdfText } from "../lib/meetings/agenda-documents.ts";
 import { placelessWhereLine } from "../lib/meetings/online.ts";
 import { unplacedVenueGap } from "../lib/meetings/venue-cache.ts";
-import { SOURCE_WIRING, wiringForTypes, type BodySourceWiring } from "../lib/registry/source-wiring.ts";
+import { wiringForTypes, type BodySourceWiring } from "../lib/registry/source-wiring.ts";
+import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import { makeApptegySource, type ApptegyEvent } from "../lib/sources/apptegy/index.ts";
 import { makeCivicClerkSource, type CivicClerkEvent } from "../lib/sources/civicclerk/index.ts";
 import { makeCivicPlusSource } from "../lib/sources/civicplus/index.ts";
@@ -283,7 +284,7 @@ test("pima-edu: a room code with no reviewed spelling renders in the college's w
   const read = (name: string) => readFileSync(join(dir, name), "utf8");
   const retrieval = JSON.parse(read("retrieval.json")) as Record<string, { url: string }>;
   const url = (name: string) => retrieval[name].url;
-  const wiring = SOURCE_WIRING.find((w) => w.bodyId === "curated:az/pima-community-college#governing")!;
+  const wiring = FIXTURE_DOOR_ROWS.find((w) => w.bodyId === "curated:az/pima-community-college#governing")!;
   const schedule = read("finance-audit-committee.html")
     .replace(/(<td>October 16, 2026<\/td>\s*<td>9:00am<\/td>\s*<td>)Zoom Webinar(<\/td>)/, "$1$2")
     .replace(/(<td>December 11, 2026<\/td>\s*<td>9:00am<\/td>\s*<td>)Zoom Webinar(<\/td>)/, "$1West Campus, Room A-120$2");

@@ -4,7 +4,7 @@
  */
 
 import type { ScoutResult } from "../control-plane/scheduler/scout-result.ts";
-import { applyFixResult, type FixMapRepository, type FixMapRow } from "./fix-map.ts";
+import { applyFixResult, latestWorking, methodWorksOf, type FixMapRepository, type FixMapRow } from "./fix-map.ts";
 
 export const ATTEMPT_KINDS = ["SCOUT", "DETECTIVE", "ROUTE_RUN", "ACQUIRER_VERDICT", "AUDIT"] as const;
 export type AttemptKind = (typeof ATTEMPT_KINDS)[number];
@@ -76,6 +76,8 @@ export function memoryFixMap(): FixMapRepository & { readonly rows: () => readon
     rows: () => [...rows.values()],
     forPlace: async (placeId) => [...rows.values()].filter((r) => r.placeId === placeId).sort((a, b) => (a.methodId < b.methodId ? -1 : 1)),
     forMethod: async (methodId) => [...rows.values()].filter((r) => r.methodId === methodId).sort((a, b) => (a.placeId < b.placeId ? -1 : 1)),
+    worksFor: async (methodIds) => methodWorksOf([...rows.values()], methodIds),
+    workingMethods: async (limit = 200) => latestWorking([...rows.values()], limit),
     put: async (row) => { rows.set(key(row), applyFixResult(rows.get(key(row)) ?? null, row)); },
   };
 }

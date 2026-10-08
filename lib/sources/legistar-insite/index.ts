@@ -1070,8 +1070,7 @@ export function makeLegistarInSiteSource(
   options: { fetchImpl?: typeof fetch; tenants?: InSiteTenant[] } = {},
 ): ReportingMeetingSource<LegistarInSiteRaw> {
   // Test callers may inject an explicit fixture list. Production membership
-  // is always derived from SOURCE_WIRING; INSITE_TENANTS is historical test
-  // data and is not an autonomous production registry.
+  // is always the installed meeting doors.
   const tenants = options.tenants ?? inSiteTenantsFromWiring();
 
   return {

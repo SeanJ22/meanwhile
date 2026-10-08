@@ -39,7 +39,7 @@ import {
 import { makePermissionGate, permittedText } from "../lib/sources/permission-gate.ts";
 import { SourceHttpError, politeGetBytes, politeGetText, sourceUserAgent } from "../lib/sources/http.ts";
 import { identifiedResearchGet } from "../lib/hunt/research-transport.ts";
-import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
+import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import { InSiteSession } from "../lib/sources/legistar-insite/http.ts";
 
 const DISALLOW_ALL = "User-agent: *\nDisallow: /\n";
@@ -280,7 +280,7 @@ test("THE RESEARCH TRANSPORT'S SECOND ASK IS WHO WE ARE: a 403 is asked once mor
 });
 
 test("NO WIRING ROW ASKS FOR A DISGUISE", () => {
-  const browserRows = SOURCE_WIRING.filter((row) => row.config.profile !== undefined).map((row) => row.bodyId);
+  const browserRows = FIXTURE_DOOR_ROWS.filter((row) => row.config.profile !== undefined).map((row) => row.bodyId);
   assert.deepEqual(browserRows, [], "the browser profile dressed the client as a browser to get past a refusal; it is retired");
 });
 
@@ -367,6 +367,7 @@ const ROBOTS_CONSUMERS: Readonly<Record<string, string>> = {
   "lib/control-plane/promotion/campaign-publication-cycle.ts": "tests/campaign-site-runner.test.ts: a disallowed linked publication is captured with its robots verdict",
   "lib/candidates/campaign-site-verifier.ts": "tests/campaign-site-verifier.test.ts",
   "lib/civic-data/website-correction-acquisition.ts": "tests/website-corrections.test.ts",
+  "lib/method/method-try.ts": "tests/method-spread.test.ts: a disallowed site's request is still made and its verdict counted",
   "scripts/robots-sweep.mts": "records verdicts only; its consumers below",
   "scripts/verify-extraction.mts": "records the verdict on each result; never skips a roster for one",
   "scripts/research-fetch.mts": "the command line over researchFetch (tests/robots-first-fetch.test.ts)",

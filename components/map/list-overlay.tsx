@@ -9,7 +9,7 @@ import { MeetingListingNotice } from "./meeting-listing-notice";
 
 import { haversineKm } from "@/lib/geo/distance";
 import { orderByUpcomingFirst } from "@/lib/meetings/ordering";
-import { concludedGapNote } from "@/lib/meetings/history-gaps";
+import { concludedGapNoteFor } from "@/lib/meetings/history-gaps";
 
 import { focusList } from "@/lib/state/list-focus";
 
@@ -86,9 +86,9 @@ export function ListOverlay({
   // The line explaining an empty Concluded filter.
   const gapNote = useMemo(
     () =>
-      concludedGapNote(
+      concludedGapNoteFor(
         ui.filters.statuses.includes("CONCLUDED"),
-        result?.coverage?.bodies ?? [],
+        (result?.coverage?.bodies ?? []).flatMap((body) => body.historyGap ?? []),
       ),
     [ui.filters.statuses, result],
   );

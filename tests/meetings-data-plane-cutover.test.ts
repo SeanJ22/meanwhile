@@ -130,7 +130,7 @@ test("one partition carry-forward opens only its own pointer and ignores an unre
   assert.deepEqual(previous, promoted.outcome.promoted?.payload);
 });
 
-test("meetings candidate proves SOURCE_WIRING obligations independently of row count", async () => {
+test("meetings candidate proves its meeting door's obligations independently of row count", async () => {
   const evidenced = withAcquisitionEvidence(fixturePartition());
   const candidate = candidateForMeetingPartition(partition, evidenced);
   assert.equal(candidate.retrieval.requestedUrl, "https://webapi.legistar.com/v1/pima/events");
@@ -142,7 +142,7 @@ test("meetings candidate proves SOURCE_WIRING obligations independently of row c
   assert.match(candidate.horizon.query, new RegExp(partition.meetingSource));
   assert.equal(
     candidate.dependentChecks.find((check) =>
-      check.consumer.includes("SOURCE_WIRING"),
+      check.consumer.startsWith("meeting door "),
     )?.passed,
     true,
   );

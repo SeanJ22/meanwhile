@@ -136,6 +136,8 @@ test("the list, the body's pin panel and the meeting card show the stated place 
       "--import", "data:text/javascript,process.geteuid=()=>0",
       "--import", "tsx",
       "--import", "./scripts/register-test-loader.mjs",
+      // The meeting doors this render reads, as every test process installs them.
+      "--import", "./tests/helpers/install-fixture-doors.ts",
       "--input-type=module", "-e", script,
     ],
     { cwd: ROOT, encoding: "utf8", timeout: 240_000, maxBuffer: 16 * 1024 * 1024 },

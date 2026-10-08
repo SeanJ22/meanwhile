@@ -28,7 +28,7 @@ import {
 /**
  * CivicPlus / CivicEngage meeting source: the municipality's own iCal and RSS feeds, first-party and
  * machine-readable. Both URL patterns are CivicPlus-wide, so another CivicPlus municipality is a
- * `SOURCE_WIRING` row, not code. The iCal category feed mixes civic events with sittings; only events
+ * meeting door, not code. The iCal category feed mixes civic events with sittings; only events
  * whose SUMMARY matches the row's `summaryMatch` are this body's meetings, and the rest count as
  * `notConfigured`.
  */

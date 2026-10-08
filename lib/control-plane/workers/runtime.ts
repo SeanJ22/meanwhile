@@ -240,7 +240,7 @@ export async function dispatchWorkerTask(runtime: FleetRuntime, task: RouteTask)
     isRetiredRoutineMeetingAcquisition(task.workerTask.contract)
   ) {
     throw new Error(
-      "PDC_ROUTINE_MEETINGS_ACQUISITION_RETIRED: permanent SOURCE_WIRING-derived meeting-partition contracts are the only standing acquisition authorities",
+      "PDC_ROUTINE_MEETINGS_ACQUISITION_RETIRED: meeting-partition contracts built from the meeting doors are the only standing acquisition authorities",
     );
   }
   const modelAudit = task.workerTask?.role === "ADVERSARIAL_AUDITOR" && runtime.auditReasoner !== undefined

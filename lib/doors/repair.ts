@@ -6,7 +6,7 @@
  */
 
 import { startFixItem } from "../control-plane/fix-list.ts";
-import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
+import { canonicalJson, type ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { applyManualEdit, checkDoorDraft, editableFieldsOf, isDoorRecord, type DoorDraft, type DoorRecord } from "./registry.ts";
 import { shutDoorFixWords } from "./shut-repair.ts";
 import { fixSubjectId } from "../control-plane/fix-queue.ts";
@@ -21,7 +21,7 @@ const FIELDS = ["kind", "ocdId", "bodyIds", "hosts", "config", "holds", "checkEv
 
 /** Which of the draft's fields differ from the record, in plain field names. */
 function changedFields(before: Required<DoorDraft>, after: Required<DoorDraft>): string[] {
-  return FIELDS.filter((f) => JSON.stringify(before[f]) !== JSON.stringify(after[f]));
+  return FIELDS.filter((f) => canonicalJson(before[f]) !== canonicalJson(after[f]));
 }
 
 /** Apply `changes` over the stored door. Only the fields supplied are changed. No such door: nothing is invented. */

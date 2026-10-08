@@ -15,7 +15,7 @@ test("edited instructions reach the next worker and undo restores the previous c
   assert.equal(current.text, edit.text);
   assert.notEqual(current.version, before.version);
   assert.ok(workerSystemPrompt("SCOUT", current.text).startsWith(WORKER_SAFETY_FRAME));
-  const read = await readFieldManual(repos);
+  const read = await readFieldManual(repos, { kinds: ["PLAYBOOK"], everywhere: true });
   const row = playbookEditView(read.store.entries, "SCOUT");
   assert.equal(row.history[0].before, before.text);
   assert.equal(row.history[0].factory, undefined);
@@ -40,7 +40,7 @@ test("editing one role preserves other instructions and learned doors, and stale
   await assert.rejects(updateRolePlaybook(repos, { ...edit, id: "old-undo", text: before.text, expectedVersion: second.version, undoOf: "first" }), /refresh before/);
   await assert.rejects(updateRolePlaybook(repos, { ...edit, id: "false-undo", text: "Invented earlier version", expectedVersion: second.version, undoOf: "second" }), /restore the previous/);
   assert.equal((await readRolePlaybook(repos, "PARSER")).version, parser.version);
-  assert.ok((await readFieldManual(repos)).store.entries.some(e => e.id === door.id));
+  assert.ok(await repos.fieldManual.read(door.id));
 });
 
 test("imported instructions and their source records survive an edit while the next worker reads only the current playbook", async () => {
@@ -49,7 +49,7 @@ test("imported instructions and their source records survive an edit while the n
     summary: id, outcome: "REFERENCE", payload: { text: id } })), at);
   const before = await readRolePlaybook(repos, "SCOUT");
   await updateRolePlaybook(repos, { role: "SCOUT", text: "Replacement", expectedVersion: before.version, id: "edit", at, why: "" });
-  const read = await readFieldManual(repos);
+  const read = await readFieldManual(repos, { kinds: ["PLAYBOOK"], everywhere: true });
   assert.equal(read.store.entries.filter(e => e.kind === "PLAYBOOK" && e.role === "SCOUT").length, 3);
   assert.equal(read.store.entries.filter(e => e.source === "legacy").length, 2, "imported record identities and payloads are preserved");
   assert.equal((await readRolePlaybook(repos, "SCOUT")).text, "Replacement");

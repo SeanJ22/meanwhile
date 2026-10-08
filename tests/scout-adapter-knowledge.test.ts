@@ -18,11 +18,12 @@ test('installed code teaches a new bank once per implementation version through 
  assert.equal(entry.kind,'PLATFORM_ADAPTER','installed code is a capability entry, not an invented PR record');
  assert.ok(first.projection.lines.some(line=>line.includes('/sopapi/document/getdocument/')));
  assert.equal((entry.payload as {implementationVersion:string}).implementationVersion,installedAdapterVersion('sparqdata-policy'));
+ const revision=(await repos.fieldManual.read(entry.id))!.revision;
  await learnInstalledAdapters(repos,'2026-10-02T00:01:00Z');
- assert.equal((await readFieldManual(repos)).revision,first.revision,'unchanged installed code does not rewrite knowledge each cycle');
+ assert.equal((await repos.fieldManual.read(entry.id))!.revision,revision,'unchanged installed code does not rewrite knowledge each cycle');
  await writeFieldManual(repos,[{...entry,observedAt:'2026-10-02T00:02:00Z',payload:{...(entry.payload as object),implementationVersion:'older-code'}}],'2026-10-02T00:02:00Z');
  await learnInstalledAdapters(repos,'2026-10-02T00:03:00Z');
- const changed=(await readFieldManual(repos)).store.entries.find(row=>row.id===entry.id)!;
+ const changed=(await repos.fieldManual.read(entry.id))!.value;
  assert.equal((changed.payload as {implementationVersion:string}).implementationVersion,guide.version);
 });
 

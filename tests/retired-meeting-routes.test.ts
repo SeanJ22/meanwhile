@@ -6,13 +6,8 @@ import { test } from "node:test";
 import { MEETING_PARTITION_CONTRACTS, meetingPartitionId } from "../lib/civic-data/meeting-partitions.ts";
 import { authorityFor } from "../lib/civic-data/source-authority.ts";
 import { ROBOTS_BLOCKS_ACQUISITION, evaluatePermission } from "../lib/control-plane/scheduler/robots.ts";
-import {
-  RETIRED_MEETING_ROUTES,
-  SOURCE_WIRING,
-  isUnreadableRetiredMeetingHost,
-  meetingSourceNamesForWiring,
-  type BodySourceWiring,
-} from "../lib/registry/source-wiring.ts";
+import { RETIRED_MEETING_ROUTES, isUnreadableRetiredMeetingHost, meetingSourceNamesForWiring, type BodySourceWiring } from "../lib/registry/source-wiring.ts";
+import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import { agendaRetrievalRefusal } from "../scripts/ingest.ts";
 import { agendaDocumentStore } from "../lib/meetings/agenda-documents.ts";
 
@@ -28,7 +23,7 @@ const ROOT = join(import.meta.dirname, "..");
 test("every retired route has exactly one wired successor for the same body, and no clock of its own", () => {
   assert.ok(RETIRED_MEETING_ROUTES.length >= 1);
   for (const retired of RETIRED_MEETING_ROUTES) {
-    const rows = SOURCE_WIRING.filter((row) => row.bodyId === retired.bodyId);
+    const rows = FIXTURE_DOOR_ROWS.filter((row) => row.bodyId === retired.bodyId);
     assert.equal(rows.length, 1, `${retired.bodyId} should have exactly one wiring row`);
     const routes = meetingSourceNamesForWiring(rows[0]);
     assert.deepEqual(routes, [retired.replacedBy], "the successor is the body's only route — one clock, never two, never none");
@@ -65,7 +60,7 @@ test("Newbury's dead CivicWeb route is retired, and its already-wired calendar f
   assert.deepEqual(retired.hosts, ["newburynh.civicweb.net"]);
   assert.equal(retired.replacedBy, "ical");
   assert.equal(retired.successorAlreadyWired, true);
-  const rows = SOURCE_WIRING.filter((row) => row.bodyId === NEWBURY_SELECTBOARD);
+  const rows = FIXTURE_DOOR_ROWS.filter((row) => row.bodyId === NEWBURY_SELECTBOARD);
   assert.deepEqual(rows.map((row) => row.config.slug), ["newbury-ical-governing"]);
   assert.equal(
     MEETING_PARTITION_CONTRACTS.some((p) => p.id === meetingPartitionId("diligent", NEWBURY_SELECTBOARD)),
@@ -107,7 +102,7 @@ test("re-opening a retired (route, body) pair fails at registration, loudly", ()
 test("no wiring row names a retired host, and meetings authority no longer reaches it", () => {
   for (const retired of RETIRED_MEETING_ROUTES) {
     for (const host of retired.hosts) {
-      for (const row of SOURCE_WIRING) {
+      for (const row of FIXTURE_DOOR_ROWS) {
         for (const value of Object.values(row.config)) {
           assert.ok(!value.includes(host), `${row.bodyId} config still names ${host}`);
         }
@@ -160,7 +155,7 @@ test("a superseded retired route's host is readable for agenda retrieval while i
 
   // The clock stays off: no partition for the retired pair, one route for the body, re-wiring refused.
   assert.equal(MEETING_PARTITION_CONTRACTS.some((p) => p.id === meetingPartitionId("diligent", PCC)), false);
-  assert.deepEqual(SOURCE_WIRING.filter((row) => row.bodyId === PCC).flatMap(meetingSourceNamesForWiring), ["pima-edu"]);
+  assert.deepEqual(FIXTURE_DOOR_ROWS.filter((row) => row.bodyId === PCC).flatMap(meetingSourceNamesForWiring), ["pima-edu"]);
 
   // The host is read: the college's own link into the tenant is requested like any public agenda link.
   const tenantLink = "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=698";

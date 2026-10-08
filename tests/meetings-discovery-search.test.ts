@@ -257,7 +257,7 @@ test("WALK: authorized search checks beyond connected feeds, follows source resu
     );
     assert.equal(walk.search[0].requests[0].priceSource, SEARCH_PRICES.brave.source);
     assert.equal(walk.recipes.learned.length, 1);
-    const learned = knownRecipes((await repos.fieldManual.read("live"))?.value.entries ?? []).find((r) => r.recipeId === walk.recipes.learned[0].recipeId)!;
+    const learned = knownRecipes((await repos.fieldManual.list()).map((row) => row.value)).find((r) => r.recipeId === walk.recipes.learned[0].recipeId)!;
     assert.equal(learned.successes, 1, `${label}: the method is saved with its success`);
     assert.deepEqual(learned.queryTemplates, ["{bodyName} meetings agendas minutes"]);
 
@@ -266,13 +266,13 @@ test("WALK: authorized search checks beyond connected feeds, follows source resu
     const nextSearches = fakeSearch({});
     const nextPass = await runMeetingsDiscovery(repos, {
       needs: [need("az:city:city-of-avondale", "avondale.gov", "CITY OF AVONDALE")],
-      runtime: runtime(next.open, nextSearches.search, [], knownRecipes((await repos.fieldManual.read("live"))?.value.entries ?? [])),
+      runtime: runtime(next.open, nextSearches.search, [], knownRecipes((await repos.fieldManual.list()).map((row) => row.value))),
       cycleIndex: 0,
       maxWalks: 5,
     });
     assert.equal(nextSearches.calls[0].query, "CITY OF AVONDALE meetings agendas minutes", `${label}: the saved template, identity substituted`);
     assert.equal(nextPass.walked[0].search[0].recipeId, learned.recipeId, `${label}: the first query came from the saved method, not the default`);
-    const afterMiss = knownRecipes((await repos.fieldManual.read("live"))?.value.entries ?? []).find((r) => r.recipeId === learned.recipeId)!;
+    const afterMiss = knownRecipes((await repos.fieldManual.list()).map((row) => row.value)).find((r) => r.recipeId === learned.recipeId)!;
     assert.equal(afterMiss.failures, 1, `${label}: a saved method that found nothing here is recorded against it`);
 
     /* A working feed is still compared with a current search when authorized. */

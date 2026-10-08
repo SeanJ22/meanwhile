@@ -4,6 +4,7 @@ import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts
 import { installDatabaseTransferCounter } from "../../db/transfer.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { DoorRecord } from "../../doors/registry.ts";
+import { createWebsitePacing } from "../website-pacing.ts";
 import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { pgActiveWorkClaimReader } from "./active-work-claims.ts";
@@ -17,7 +18,9 @@ import type {
   OwnerSnapshot,
   RunnerHeartbeat,
 } from "../owner-surface.ts";
-import type { FieldManualStore } from "../field-manual.ts";
+import { coveringPlaces, entryInSlice, queryState, TRANSFERABLE_METHOD_KINDS, type FieldManualEntry, type FieldManualQuery } from "../field-manual.ts";
+import { createFixMapRepository } from "../../method/fix-map.ts";
+import { copyFieldManualDocument, type SingleDocumentManual } from "../field-manual-copy.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
 import { appendActionReceiptWithHistoryAtomic, readActionHistoryPage } from "./action-history-atomic.ts";
 import type { AgentJobRecord } from "../gateway/agent-job.ts";
@@ -99,6 +102,7 @@ import {
   type ChangedRecords,
   type ChangedRows,
   type ControlPlaneRepositories,
+  type FieldManualRepository,
   type DispositionCommit,
   type LockManager,
   type Persisted,
@@ -672,6 +676,23 @@ export function pgAppendOnlyRepository<T>(
       /* `readWhere` newest first, stopped at `limit`; `limit` bounds the response, so no paging. */
       const jsonPath = jsonPathLiteral(table, path);
       const narrowed = recordProjectionSql(table, projection);
+      if (copies !== null && recordedAtSince === undefined) {
+        /* On the runner the query's newest records are held, and only matches stamped since the copy's clock cross the wire. */
+        return copies.recentWhere(table, JSON.stringify([key, path, value, limit, projection]), limit, async (since) => {
+          const clock = (await run("readRecentWhere:clock", "POINT", "SELECT now() AS read_at")) as Record<string, unknown>[];
+          const rows = (await run(
+            "readRecentWhere",
+            "PAGE",
+            `SELECT position, ${narrowed} AS record FROM ${table}
+             WHERE log_key = $1 AND record #>> '${jsonPath}' = $2${since === null ? "" : " AND changed_at >= $4::timestamptz"}
+             ORDER BY position DESC
+             LIMIT $3`,
+            [key, value, Math.max(0, Math.trunc(limit)), ...(since === null ? [] : [since])],
+          )) as Record<string, unknown>[];
+          return { rows: rows.map((r) => ({ position: Number(r.position), record: parseValue<unknown>(r.record, `${table} ${key}`) })),
+            through: new Date(clock[0]?.read_at as string).toISOString() };
+        });
+      }
       const rows = (await run(
         "readRecentWhere",
         "PAGE",
@@ -911,6 +932,69 @@ export async function bootstrap(
   await run("recordVersion", "POINT", recordVersionStatement(BOOTSTRAP_VERSION, nowIso));
 }
 
+/** The SQL half of `entryInSlice`: the rows one job could use, never fewer (the caller applies the exact rule). */
+export const FIELD_MANUAL_SLICE_SQL = `SELECT id, revision, updated_at, value FROM cp_field_manual_entries
+  WHERE ($1::text[] IS NULL OR value->>'role' = ANY($1::text[]))
+    AND ($2::text[] IS NULL OR value->>'kind' = ANY($2::text[]))
+    AND ($3::text IS NULL OR jsonb_array_length(coalesce(value->'recordClasses', '[]'::jsonb)) = 0 OR value->'recordClasses' ? $3::text)
+    AND (($4::boolean AND ($7::text IS NULL OR jsonb_array_length(coalesce(value->'platforms', '[]'::jsonb)) = 0 OR value->'platforms' ? $7::text))
+      OR (NOT $4::boolean AND (value->>'kind' = ANY($5::text[])
+        OR coalesce((value->'reach'->>'method')::boolean, false)
+        OR coalesce((value->'reach'->>'everywhere')::boolean, false)
+        OR coalesce(value->'reach'->'places', '[]'::jsonb) ?| $6::text[]
+        OR (jsonb_array_length(coalesce(value->'reach'->'platforms', '[]'::jsonb)) > 0 AND ($7::text IS NULL OR value->'reach'->'platforms' ? $7::text))
+        OR ($8::text IS NOT NULL AND coalesce(value->'reach'->'states', '[]'::jsonb) ? $8::text))))
+    AND ($9::text IS NULL OR id > $9::text)
+  ORDER BY id ASC LIMIT ${AGGREGATE_LIST_READ_PAGE}`;
+
+/** The slice's parameters, in `FIELD_MANUAL_SLICE_SQL`'s order (without the page cursor). */
+export function fieldManualSliceParams(query: FieldManualQuery): unknown[] {
+  return [
+    query.role === undefined ? null : [...new Set([query.role, "SHARED"])],
+    query.kinds === undefined ? null : [...query.kinds],
+    query.recordClass?.toLowerCase() ?? null,
+    query.everywhere === true,
+    [...TRANSFERABLE_METHOD_KINDS],
+    coveringPlaces(query),
+    query.platform?.toLowerCase() ?? null,
+    queryState(query) ?? null,
+  ];
+}
+
+/**
+ * The field manual's rows in `cp_field_manual_entries`. On the runner a slice is the held copy filtered by
+ * `entryInSlice`, so a process pays only for rows changed since the copy's clock; without a copy (a page host or
+ * a hand-run script) the slice crosses the wire one page at a time.
+ */
+export function pgFieldManualRepository(sql: Sql, options: PgRepositoryBounds = {}): FieldManualRepository {
+  const base = pgAggregateRepository<FieldManualEntry>(sql, "FieldManualEntry", "cp_field_manual_entries", options);
+  const run = boundedRunner(sql, "cp_field_manual_entries", options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
+  const copies = options.copies ?? null;
+  return {
+    ...base,
+    readMany: base.readMany!,
+    async slice(query) {
+      if (copies !== null) {
+        const rows = await copies.aggregateList("cp_field_manual_entries", base.listChangedSince!,
+          (row) => (entryInSlice(row.value, query) ? row : null));
+        return rows.filter((row): row is Persisted<FieldManualEntry> => row !== null);
+      }
+      const params = fieldManualSliceParams(query);
+      const out: Persisted<FieldManualEntry>[] = [];
+      let afterId: string | null = null;
+      for (;;) {
+        const rows = (await run("slice", "PAGE", FIELD_MANUAL_SLICE_SQL, [...params, afterId])) as Record<string, unknown>[];
+        for (const row of rows) {
+          out.push({ id: String(row.id), revision: Number(row.revision), updatedAt: new Date(row.updated_at as string).toISOString(),
+            value: parseValue<FieldManualEntry>(row.value, `cp_field_manual_entries id ${String(row.id)}`) });
+        }
+        if (rows.length < AGGREGATE_LIST_READ_PAGE) return out;
+        afterId = String(rows[rows.length - 1]!.id);
+      }
+    },
+  };
+}
+
 /** Every call is one statement, so one implicit transaction. Nothing reads the table whole; `liveAll` reads only holds that still count. */
 export function pgSpendHoldRepository(sql: Sql, bounds: ControlPlaneRequestBounds = CONTROL_PLANE_REQUEST_BOUNDS_MS): SpendHoldStore {
   const run = boundedRunner(sql, "cp_spend_holds", bounds);
@@ -1118,6 +1202,8 @@ export async function createPgRepositories(
     },
   };
 
+  const fixMapRun = boundedRunner(sql, "cp_fix_map", bounds);
+  const pacingRun = boundedRunner(sql, "cp_website_pacing", bounds);
   const repositories: ControlPlaneRepositories = {
     adminActionHistoryPage: query => readActionHistoryPage(sql, query, bounds),
     workItems: pgAggregateRepository<WorkItem>(sql, "WorkItem", "cp_work_items", bounded),
@@ -1151,12 +1237,11 @@ export async function createPgRepositories(
       "cp_owner_snapshots",
       bounded,
     ),
-    fieldManual: pgAggregateRepository<FieldManualStore>(
-      sql,
-      "FieldManual",
-      "cp_field_manual",
-      bounded,
-    ),
+    fieldManual: pgFieldManualRepository(sql, bounded),
+    fixMap: createFixMapRepository(async (text, params) =>
+      (await fixMapRun("fixMap", "PAGE", text, params)) as readonly Record<string, unknown>[]),
+    websitePacing: createWebsitePacing(async (text, params) =>
+      (await pacingRun("websitePacing", "POINT", text, params)) as readonly Record<string, unknown>[]),
     runnerHeartbeat: pgAggregateRepository<RunnerHeartbeat>(
       sql,
       "RunnerHeartbeat",
@@ -1198,7 +1283,42 @@ export async function createPgRepositories(
     durable: true,
   };
   placeReadConnections.set(repositories, sql);
+  if (!options.skipBootstrap) {
+    const copied = await copyFieldManualDocument(pgSingleDocumentManual(sql, bounded), repositories, nowIso).catch((error: unknown) => {
+      console.error(`  field manual: the lessons were not copied into rows this start; the next start tries again (${error instanceof Error ? error.message : String(error)})`);
+      return null;
+    });
+    if (copied !== null) {
+      console.log(`  field manual: ${copied.entries} lessons copied into one row each (${copied.retagged.fromRecord + copied.retagged.fromSameAddress} given ` +
+        `their place, ${copied.reach.NOWHERE} name no place yet; report ${copied.copiedAt})`);
+    }
+  }
   return repositories;
+}
+
+/** The old single-document manual in `cp_field_manual`, for the one-time copy into rows. */
+export function pgSingleDocumentManual(sql: Sql, options: PgRepositoryBounds = {}): SingleDocumentManual {
+  const documents = pgAggregateRepository<{ readonly entries?: readonly FieldManualEntry[] }>(sql, "FieldManual", "cp_field_manual", options);
+  const run = boundedRunner(sql, "cp_field_manual", options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
+  return {
+    read: (id) => documents.read(id),
+    async retire(id, revision, as) {
+      const moved = (await run("retire", "DOCUMENT", "UPDATE cp_field_manual SET id = $3 WHERE id = $1 AND revision = $2 RETURNING id",
+        [id, revision, as])) as unknown[];
+      return moved.length === 1;
+    },
+    async insertNew(entries, now) {
+      const inserted = new Set<string>();
+      for (let at = 0; at < entries.length; at += AGGREGATE_LIST_READ_PAGE) {
+        const page = entries.slice(at, at + AGGREGATE_LIST_READ_PAGE);
+        const rows = (await run("insertNew", "PAGE", `INSERT INTO cp_field_manual_entries (id, revision, updated_at, value)
+          SELECT e->>'id', 1, $2::timestamptz, e FROM jsonb_array_elements($1::jsonb) AS e
+          ON CONFLICT (id) DO NOTHING RETURNING id`, [JSON.stringify(page), now])) as Record<string, unknown>[];
+        for (const row of rows) inserted.add(String(row.id));
+      }
+      return inserted;
+    },
+  };
 }
 
 /** Null when absent: NOT_CONFIGURED, not broken. */

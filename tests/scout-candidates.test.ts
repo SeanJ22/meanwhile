@@ -184,7 +184,7 @@ test("4. the first Attempt that makes it work admits the candidate into the manu
   assert.equal(report.proposed[0].lifecycle, "ADMITTED");
   const candidates = (await readMethodCandidateStore(repos)).candidates;
   assert.equal(candidates.length, 1);
-  const manual = await readFieldManual(repos, { role: "SCOUT", recordClass: "meetings" });
+  const manual = await readFieldManual(repos, { role: "SCOUT", recordClass: "meetings", ocdIds: ["ocd-division/country:us/state:az/place:testville"] });
   const entry = manual.store.entries.find((entry) => entry.source === "scout-candidate");
   assert.ok(entry);
   assert.equal(entry.kind, "ROUTE");
@@ -224,13 +224,16 @@ test("6. a failed manual write leaves the candidate validated and a replay finis
   const repos = await seededRepos();
   await seedFixtureStore(repos);
   const write = repos.fieldManual.compareAndSet.bind(repos.fieldManual);
+  const create = repos.fieldManual.put.bind(repos.fieldManual);
   repos.fieldManual.compareAndSet = async () => { throw new Error("manual unavailable"); };
+  repos.fieldManual.put = async () => { throw new Error("manual unavailable"); };
   const input = { repos, result: result([candidate()]), artifacts: opened, stamp: STAMP };
   const failed = await proposeScoutCandidates(input);
   assert.equal(failed.proposed[0].lifecycle, "VALIDATED");
   assert.match(failed.proposed[0].issues.join(), /manual unavailable/);
   assert.equal((await methodMaturityFromManual(repos))(candidate().routeId), "UNGRADUATED");
   repos.fieldManual.compareAndSet = write;
+  repos.fieldManual.put = create;
   assert.equal((await proposeScoutCandidates(input)).proposed[0].lifecycle, "ADMITTED");
   assert.equal((await readMethodVersion(repos)), failed.storeVersionObserved + 1);
 });

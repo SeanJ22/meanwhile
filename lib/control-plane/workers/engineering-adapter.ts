@@ -9,7 +9,7 @@ import type { ScoutResult } from '../scheduler/scout-result.ts';
 import { STREAMLINE_INVENTORY_SOURCE } from './engineering-candidate.ts';
 import { installedAdapters,installedAdapterGuides } from '../scheduler/scout-adapters.ts';
 import {hasUntriedAdapter} from './detective.ts';
-import {readFieldManual,writeFieldManual,newFieldManualEntry,upsertEntries,projectFieldManual} from '../field-manual.ts';
+import {readFieldManual,writeFieldManual,newFieldManualEntry,type FieldManualQuery,type FieldManualRead} from '../field-manual.ts';
 import { MODELS, MODEL_TIERS } from '../../models.ts';
 import { recordCost } from '../repository/coordinator.ts';
 import { meteredCostFields, priceMeteredUsage, readMeteredUsage } from '../model-cost.ts';
@@ -124,18 +124,28 @@ test('dated sitemap preserves exact publisher locators and rejects unrelated hos
 }
 
 /** Reviewed code teaches its portable instructions after deployment; unchanged versions need no write. */
-export async function learnInstalledAdapters(repos:ControlPlaneRepositories,now:string) {
-  const manual=await readFieldManual(repos,{role:'ENGINEER'});
+export async function learnInstalledAdapters(repos:ControlPlaneRepositories,now:string):Promise<FieldManualRead> {
+  const manual=await readFieldManual(repos,ENGINEER_BOOKKEEPING);
   const learned=(await installedAdapterGuides()).map(({name,version,file,guide})=>newFieldManualEntry('installed-adapter',name,{
     role:'SHARED',kind:'PLATFORM_ADAPTER',title:name,summary:guide.summary,
     outcome:'REFERENCE',recordClasses:guide.recordClasses,platforms:[name],url:guide.sourceUrls[0]??null,observedAt:now,
     payload:{platform:name,installed:true,implementationVersion:version,files:[file],sourceUrls:guide.sourceUrls,procedure:guide.procedure},
   })).filter(entry=>!manual.store.entries.some(prior=>prior.id===entry.id && prior.kind===entry.kind &&
     (prior.payload as {implementationVersion?:string|null}|null)?.implementationVersion===(entry.payload as {implementationVersion:string|null}).implementationVersion));
-  if(!learned.length)return {store:manual.store,projection:manual.projection,error:manual.error};
+  if(!learned.length)return manual;
   const saved=await writeFieldManual(repos,learned,now);
-  const store=upsertEntries(manual.store,learned,now);
-  return {store,projection:projectFieldManual(store,{role:'ENGINEER'}),error:saved.error};
+  const read=await readFieldManual(repos,ENGINEER_BOOKKEEPING);
+  return saved.error?{...read,error:saved.error}:read;
+}
+
+/** What the Engineer keeps track of across platforms: adapters built and installed, investigations, and how platforms are recognized. */
+const ENGINEER_BOOKKEEPING:FieldManualQuery={role:'ENGINEER',everywhere:true,
+  kinds:['ENGINEER_ADAPTER_PR','PLATFORM_ADAPTER','ENGINEER_INVESTIGATION','PLATFORM_FINGERPRINT']};
+
+/** The Engineer's page for one platform: what is known for this platform, this place and its record class. */
+export function engineerJob(result:Pick<ScoutResult,"subjectId"|"recordClass">,platform:string):FieldManualQuery {
+  const place=result.subjectId.split('#')[0]!;
+  return {role:'ENGINEER',platform,recordClass:result.recordClass,subjectId:result.subjectId,...(place.startsWith('ocd-division/')?{ocdIds:[place]}:{})};
 }
 
 /** Consume needs-an-adapter work from the existing Scout results, saving the published route in the bank. */
@@ -177,7 +187,7 @@ export async function workAdapterQueue(input:{repos:ControlPlaneRepositories;res
       const transport=input.transportFor(result);
       const messages:Parameters<ModelTransport>[0]['messages'][number][]=[{role:'user',content:scope?repairBrief(scope):JSON.stringify({platform,
         investigation:{narrative:result.narrative,routes:result.candidates,facts:result.findings,tried:result.rungs,next:result.nextRungs},
-        knowledge:manual.projection.lines,evidence:evidence.map(e=>({sourceUrl:e.canonicalUrl,text:e.text,artifactId:e.artifactId}))})}];
+        knowledge:(await readFieldManual(input.repos,engineerJob(result,platform))).projection.lines,evidence:evidence.map(e=>({sourceUrl:e.canonicalUrl,text:e.text,artifactId:e.artifactId}))})}];
       const tried:string[]=[];
       for(const tier of MODEL_TIERS) {
         const model=MODELS[tier].model,started=Date.now();
@@ -212,7 +222,7 @@ export async function workAdapterQueue(input:{repos:ControlPlaneRepositories;res
         if(usd===null)throw new Error('ENGINEER_USAGE_UNMEASURED: no escalation until the existing budget hold is reconciled');
         messages.push({role:'assistant',content:text},{role:'user',content:reason+'. Repair the response using the supplied saved evidence, or state that evidence is insufficient.'});
       }
-      if(!candidate)await writeFieldManual(input.repos,[newFieldManualEntry('engineer-investigation',platform,{role:'ENGINEER',kind:'ENGINEER_INVESTIGATION',title:platform,
+      if(!candidate)await writeFieldManual(input.repos,[newFieldManualEntry('engineer-investigation',platform,{role:'ENGINEER',kind:'ENGINEER_INVESTIGATION',title:platform,platforms:[platform],
         summary:tried.join('; ')+'. Await new source evidence before repeating this investigation.',outcome:'BLOCKED',observedAt:input.now,
         payload:{sourceAttemptId:result.attemptId,tried}})],input.now);
     }
@@ -221,13 +231,13 @@ export async function workAdapterQueue(input:{repos:ControlPlaneRepositories;res
     const published=await publishAdapterStream({...candidate,reason,request:input.request,check:input.check,runId:`engineer:${result.attemptId}`,now:input.now});
     opened.push(published);done.add(platform);
     const route={stream:{branch:published.branch,readySha:published.readySha,statusSha:published.statusSha,check:published.check.summary}};
-    await writeFieldManual(input.repos,[newFieldManualEntry('engineer-adapter',platform,{role:'SHARED',kind:'ENGINEER_ADAPTER_PR',title:platform,
+    await writeFieldManual(input.repos,[newFieldManualEntry('engineer-adapter',platform,{role:'SHARED',kind:'ENGINEER_ADAPTER_PR',title:platform,platforms:[platform],
       summary:'Adapter implementation in '+published.url,outcome:'REFERENCE',observedAt:input.now,recordClasses:[result.recordClass],url:published.url,
       payload:{platform,...route,subjectId:result.subjectId,sourceAttemptId:result.attemptId,files:candidate.files.map(file=>file.path),
         sourceUrls:[...new Set([...result.candidates.filter(c=>c.evidenceArtifactIds.length>0).map(c=>c.url),
           ...result.rungs.filter(r=>r.ok && r.artifactIds.length>0).map(r=>r.target)])]}})],input.now);
     } catch(error) {
-      await writeFieldManual(input.repos,[newFieldManualEntry('engineer-adapter-blocker',platform,{role:'ENGINEER',kind:'ENGINEER_BLOCKER',title:platform,
+      await writeFieldManual(input.repos,[newFieldManualEntry('engineer-adapter-blocker',platform,{role:'ENGINEER',kind:'ENGINEER_BLOCKER',title:platform,platforms:[platform],
         summary:error instanceof Error?error.message:String(error),outcome:'BLOCKED',observedAt:input.now,payload:{sourceAttemptId:result.attemptId,nextAction:`Push stream/adapter-${platform} by fast-forward after the recorded publication failure is repaired.`}})],input.now);
     }
   }

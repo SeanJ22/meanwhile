@@ -1,7 +1,7 @@
 import { durableResearchTools, type ResearchRuntimeTools } from "./durable-research-tools.ts";
 export { durableResearchTools, type ResearchRuntimeTools } from "./durable-research-tools.ts";
 import { readSourceReliability } from "../scheduler/scout-reliability.ts";
-import { readFieldManual, writeFieldManual, newFieldManualEntry } from "../field-manual.ts";
+import { readFieldManual, writeFieldManual, newFieldManualEntry, type FieldManualQuery } from "../field-manual.ts";
 import { performance } from "node:perf_hooks";
 import { ZERO_COST, type WorkerRef } from "../attempt.ts";
 import { defaultGrant, requireCapability } from "../capability.ts";
@@ -66,6 +66,18 @@ export function scheduledWorkerObligation(task: RouteTask): ScheduledObligation 
     cadenceSource:"DEFAULT_NO_SIGNAL",basis:"Persisted bounded worker computation remains owed until committed."};
 }
 
+/** The division a work subject names, or null. */
+function placeOf(subject: string): string | null {
+  const place = subject.split("#")[0]!;
+  return place.startsWith("ocd-division/") ? place : null;
+}
+
+/** An acquirer's page: what is known for its place, its state and its record class. */
+export function acquirerQuery(subject: string, recordClass: string): FieldManualQuery {
+  const place = placeOf(subject);
+  return { role: "ACQUIRER", recordClass, subjectId: subject, ...(place ? { ocdIds: [place] } : {}) };
+}
+
 export function researchRoleExecutor(runtime: FleetRuntime, tools: ResearchRuntimeTools, task: RouteTask, holder: string, root = process.cwd()): DeclaredExecutor {
   const spec = task.workerTask;
   if (!spec || spec.role !== "ACQUIRER") throw new Error("RESEARCH_ROLE_SPEC_MISSING");
@@ -82,7 +94,7 @@ export function researchRoleExecutor(runtime: FleetRuntime, tools: ResearchRunti
     let measuredToolkit: ReturnType<typeof buildScoutToolkit> | undefined;
     try {
       requireCapability(grant,"VAULT_READ_SANITIZED");
-      const learned = await readFieldManual(tools.repos, {role:"ACQUIRER", recordClass:spec.contract.recordClass});
+      const learned = await readFieldManual(tools.repos, acquirerQuery(item.subject, spec.contract.recordClass));
       if (!spec.acquisition || spec.acquisition.route.subjectId !== item.subject) throw new Error("ACQUIRER_TASK_BINDING_REFUSED");
       const scheduled = scheduledWorkerObligation(task);
       const toolkit = buildScoutToolkit({root,obligation:{...scheduled,obligation:{...scheduled.obligation,autonomousPlan:item.autonomousPlan}},route:null,providerId:null,attemptId,workItemId,routeTaskId,
@@ -104,7 +116,8 @@ export function researchRoleExecutor(runtime: FleetRuntime, tools: ResearchRunti
           role:"SHARED",kind:"SOURCE_RELIABILITY",title:result.source.publisher,
           summary:result.verdict+": "+result.blockers.map(b=>b.description).join("; "),
           outcome:result.verdict === "ACQUIRED"?"YIELDED":"FAILED",url:result.source.url,
-          observedAt:tools.now(),recordClasses:[result.source.recordClass],payload:{source:result.source,verdict:result.verdict,walk:result.walk}}));
+          observedAt:tools.now(),recordClasses:[result.source.recordClass],...(placeOf(item.subject)?{ocdIds:[placeOf(item.subject)!]}:{}),
+          payload:{source:result.source,verdict:result.verdict,walk:result.walk}}));
         if (learnings.length > 0) await writeFieldManual(tools.repos, learnings, tools.now());
       } catch { /* field-manual write-back is best-effort; the worker result is authoritative */ }
       const cost = {...ZERO_COST,durationMs:Math.round(performance.now()-started),requestCount,bytesFetched};

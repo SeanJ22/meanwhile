@@ -65,8 +65,8 @@ export const COVERAGE_LEARNING_SQL = `WITH observations AS (
 
 export const DETECTIVE_REUSE_SQL = `SELECT count(*)::int AS reused FROM cp_log_scout_results r
  CROSS JOIN LATERAL jsonb_array_elements_text(CASE WHEN jsonb_typeof(r.record->'usedFieldManualEntryIds')='array' THEN r.record->'usedFieldManualEntryIds' ELSE '[]'::jsonb END) used(id)
- JOIN cp_field_manual m ON m.id='live' CROSS JOIN LATERAL jsonb_array_elements(m.value->'entries') e
- WHERE e->>'id'=used.id AND e->>'foundBy'='DETECTIVE' AND r.recorded_at >= $1::timestamptz AND r.recorded_at < $2::timestamptz
+ JOIN cp_field_manual_entries e ON e.id=used.id
+ WHERE e.value->>'foundBy'='DETECTIVE' AND r.recorded_at >= $1::timestamptz AND r.recorded_at < $2::timestamptz
  AND (r.record->'refusal' IS NULL OR r.record->'refusal'='null'::jsonb OR r.record->'refusal'='[]'::jsonb)`;
 
 export const HEAD_START_LEARNING_SQL = `WITH targets AS (

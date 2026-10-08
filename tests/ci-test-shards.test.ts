@@ -31,6 +31,9 @@ function fixture() {
   // Use the real loader and its installed TypeScript dependency in the parent tree.
   writeFileSync(join(root, "scripts", "register-test-loader.mjs"),
     `import ${JSON.stringify(pathToFileURL(join(ROOT, "scripts", "register-test-loader.mjs")).href)};\n`);
+  // The runner preloads the doors the suite reads; this small repository has none to install.
+  mkdirSync(join(root, "tests", "helpers"));
+  writeFileSync(join(root, "tests", "helpers", "install-fixture-doors.ts"), "export {};\n");
   const passing = `import test from 'node:test'; import assert from 'node:assert/strict'; test('real assertion', () => assert.equal(2 + 2, 4));\n`;
   for (const file of ["a.test.ts", "b.test.ts", "nested/c.test.ts", "nested/d.test.tsx"]) {
     writeFileSync(join(root, "tests", file), passing);

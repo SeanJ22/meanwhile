@@ -34,9 +34,9 @@ const isArr = (key: string): string => `jsonb_typeof(record->'${key}') = 'array'
 
 const WEEKS = `
   with bank_entries as (
-    select e->>'id' as id, e->>'foundBy' as finder
-    from cp_field_manual m cross join lateral jsonb_array_elements(m.value->'entries') e
-    where m.id = 'live' and e->>'foundBy' in ('SCOUT', 'DETECTIVE')
+    select id, value->>'foundBy' as finder
+    from cp_field_manual_entries
+    where value->>'foundBy' in ('SCOUT', 'DETECTIVE')
   ), finder_reuse as (
     select to_char(date_trunc('week', (r.record->>'startedAt')::timestamptz at time zone 'UTC'), 'YYYY-MM-DD') as wk,
       count(*)::int as attributed,
@@ -102,7 +102,7 @@ export async function readLearningTrends(connection: string, nowIso: string): Pr
   const sql = neon(connection);
   const results = await sql.transaction(
     [sql.query(`SET LOCAL statement_timeout = ${LEARNING_TRENDS_STATEMENT_TIMEOUT_MS}`), sql.query(WEEKS), sql.query(DOORS), sql.query(NAMED),
-      sql.query("select coalesce((select (value #>> '{entries,0,payload,count}')::bigint from cp_field_manual where id = 'write-errors'), 0) as write_errors")],
+      sql.query("select coalesce((select sum((value #>> '{payload,count}')::bigint) from cp_field_manual_entries where value->>'kind' = 'WRITE_HEALTH'), 0) as write_errors")],
     { readOnly: true, isolationLevel: "RepeatableRead" },
   );
   const [, weekRows, doorRows, namedRows, healthRows] = results as unknown as Rows[];

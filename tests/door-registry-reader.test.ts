@@ -1,27 +1,21 @@
 import assert from "node:assert/strict";
 import { afterEach, describe, it } from "node:test";
-import { refreshMeetingPartitions } from "../lib/civic-data/meeting-partitions.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { refreshDoorsForPass } from "../lib/doors/install.ts";
 import { seedMeetingDoors } from "../lib/doors/seed-meetings.ts";
 import { allHistoryGaps } from "../lib/meetings/history-gaps.ts";
 import { isWiredNoticePage } from "../lib/meetings/notice-pages.ts";
 import { CURATED_BODIES, refreshCuratedBodyStatus } from "../lib/registry/curated-bodies.ts";
-import { installRegistryWiring, SOURCE_WIRING, type BodySourceWiring } from "../lib/registry/source-wiring.ts";
+import type { BodySourceWiring } from "../lib/registry/source-wiring.ts";
+import { FIXTURE_DOOR_ROWS, installFixtureDoors } from "./helpers/meeting-doors-fixture.ts";
 
-const code = SOURCE_WIRING.slice();
+const code = FIXTURE_DOOR_ROWS.slice();
 const AT = "2026-10-04T12:00:00.000Z";
 
-function restore(): void {
-  installRegistryWiring(null);
-  refreshMeetingPartitions(code);
-  refreshCuratedBodyStatus(code);
-}
-
 describe("DB-15: reader-side coverage follows the doors in use", () => {
-  afterEach(restore);
+  afterEach(() => installFixtureDoors());
 
-  it("with the code's own list, curated status is unchanged", () => {
+  it("with the installed doors, curated status is unchanged", () => {
     assert.equal(refreshCuratedBodyStatus(code), 0);
   });
 
@@ -48,11 +42,11 @@ describe("DB-15: reader-side coverage follows the doors in use", () => {
     };
     await seedMeetingDoors({ repo: repos.doors, wiring: [...code, added], derived: [], deriveInputAt: AT, at: AT });
     assert.equal(isWiredNoticePage(added.noticeUrl!), false);
-    const pass = await refreshDoorsForPass(repos.doors, { mode: "registry" });
-    assert.equal(pass.reading, "registry", pass.reason ?? "");
+    const pass = await refreshDoorsForPass(repos.doors);
+    assert.equal(pass.reason, null);
     assert.equal(isWiredNoticePage(added.noticeUrl!), true);
     assert.ok(allHistoryGaps().some((gap) => gap.bodyId === added.bodyId));
-    installRegistryWiring(null);
+    installFixtureDoors();
     assert.equal(isWiredNoticePage(added.noticeUrl!), false);
     assert.ok(!allHistoryGaps().some((gap) => gap.bodyId === added.bodyId));
   });

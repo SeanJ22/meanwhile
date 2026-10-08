@@ -7,7 +7,7 @@ import {
   type RoutineSourceContract,
   type SittingWindowSchedule,
 } from "./contracts.ts";
-import { MEETING_PARTITION_CONTRACTS, sittingWindowSourceIds } from "./meeting-partitions.ts";
+import { MEETING_PARTITION_CONTRACTS, onMeetingPartitionsRefreshed, sittingWindowSourceIds } from "./meeting-partitions.ts";
 import { sittingWindowHotByConclusion, sittingWindowObligation } from "./sitting-window-admission.ts";
 import { SOURCE_AUTHORITIES, authorityFor, sourceAuthority } from "./source-authority.ts";
 import { derivedRequestedUrl } from "./derived-door.ts";
@@ -111,10 +111,12 @@ export function routineTaskFromContract(contract: RoutineSourceContract): Routin
   };
 }
 
-export const ROUTINE_SOURCE_TASKS: readonly RoutineSourceTask[] = [
-  ...ROUTINE_SOURCE_CONTRACTS,
-  ...MEETING_PARTITION_CONTRACTS,
-].map(routineTaskFromContract);
+const routineSourceTasks = (): RoutineSourceTask[] => [...ROUTINE_SOURCE_CONTRACTS, ...MEETING_PARTITION_CONTRACTS].map(routineTaskFromContract);
+/** Every standing task, the meeting doors' partitions included; replaced in place whenever this process installs the doors. */
+export const ROUTINE_SOURCE_TASKS: readonly RoutineSourceTask[] = routineSourceTasks();
+onMeetingPartitionsRefreshed(() => {
+  (ROUTINE_SOURCE_TASKS as RoutineSourceTask[]).splice(0, ROUTINE_SOURCE_TASKS.length, ...routineSourceTasks());
+});
 
 /** At most one child from any shared upstream per pass; the next pass rotates to the least-recently-considered task. */
 export const ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS = 1;

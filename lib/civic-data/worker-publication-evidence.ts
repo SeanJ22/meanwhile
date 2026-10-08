@@ -8,7 +8,8 @@ import { compareCandidateWithSource } from "../control-plane/workers/record-veri
 import { linkingPageFrom, pageLinksTo, SECTION3_MINIMUMS, section3Page, section3Record } from "../control-plane/promotion/section3.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import type { ManualSourceSetReceipt } from "./types.ts";
-import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/repository/types.ts";
+import { keysWhere, type ArtifactRecord, type ControlPlaneRepositories } from "../control-plane/repository/types.ts";
+import { readCompletedWorkerResultsOf } from "../control-plane/repository/worker-completion.ts";
 import { isOfficialSource } from "./source-authority.ts";
 import { hostOfUrl, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
 
@@ -101,6 +102,31 @@ ${field}`)));
   const sourceReceipt = section3SourceReceipt(captures, now, `section3-validator:${parser.id}`,
     `Parser result ${parser.id}: ${records.length} record(s) found on the saved page inside its freshness window (§3).`, contract.recordClass);
   return { contract, extraction: { ...extraction, records }, primary, captures, sourceReceipt, heldRecordIds, pulledRecords };
+}
+
+/**
+ * A publication job's worker results: those of its own work items, and, for a saved page another item captured,
+ * that item's own (its Acquirer's walk dates the page). Nothing else is read. `readCapture` hands each page the
+ * results of the items that captured it.
+ */
+export async function jobWorkerResults<C>(repos: ControlPlaneRepositories, workItemIds: readonly string[],
+  readCapture: (id: string, results: readonly WorkerResultRecord[]) => Promise<C>) {
+  const byItem = new Map<string, readonly WorkerResultRecord[]>();
+  const resultsOf = async (ids: readonly string[]): Promise<readonly WorkerResultRecord[]> => {
+    const missing = [...new Set(ids)].filter(id => !byItem.has(id));
+    if (missing.length) {
+      const read = await readCompletedWorkerResultsOf(repos, missing);
+      for (const id of missing) byItem.set(id, read.filter(record => record.workItemId === id));
+    }
+    return [...new Set(ids)].flatMap(id => byItem.get(id)!);
+  };
+  return {
+    results: await resultsOf(workItemIds),
+    readCapture: async (id: string, own: readonly WorkerResultRecord[]): Promise<C> => {
+      const owners = await keysWhere(repos.artifacts, ["artifactId"], id);
+      return readCapture(id, owners === null ? own : await resultsOf(owners));
+    },
+  };
 }
 
 export function latestParserResult(results: readonly WorkerResultRecord[], workItemId: string): WorkerResultRecord | undefined {

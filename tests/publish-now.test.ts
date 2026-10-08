@@ -6,7 +6,7 @@ import { publishNowLane, publishNowDoorTasks, publishNowWorkerTasks } from "../l
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import type { WorkerResultRecord } from "../lib/control-plane/workers/types.ts";
 import type { DoorRecord } from "../lib/doors/registry.ts";
-import type { RoutineSourceTask } from "../lib/civic-data/runner.ts";
+import { routineSupervisorCycleId, type RoutineSourceTask } from "../lib/civic-data/runner.ts";
 const NOW = "2026-10-05T18:00:00.000Z";
 
 test("BX-12: publish-now runs each minute while a routine pass remains in flight", async () => {
@@ -62,4 +62,22 @@ test("BX-12: the executable selects only publication work and never holds the ro
   assert.match(runner, /PUBLISH_NOW \? \[\] : await withNationalPlaceTasks/);
   assert.match(runner, /return \[\.\.\.publication, \.\.\.publishNowDoorTasks/);
   assert.match(runner, /!PUBLISH_NOW && ONLY === null \? null : selectedTasks/);
+});
+
+test("the standing runner starts publish-now each minute on its own lane, beside the routine pass", () => {
+  const pilot = readFileSync("scripts/pilot-runner.mts", "utf8");
+  const lanes = pilot.slice(pilot.indexOf("const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler(["));
+  assert.match(lanes.slice(0, lanes.indexOf("], (outcome) =>")), /\{ id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS, run: runRoutineCivicData \},[\s\S]*publishNowLane\(runPublishNow\),\n$/);
+  const run = pilot.slice(pilot.indexOf("async function runPublishNow()"), pilot.indexOf("async function persistOuterRoutineChildFailure("));
+  assert.match(run, /if \(provider !== "postgres" \|\| canary\) return;/, "only the standing production runner publishes");
+  assert.match(run, /args: \[\.\.\.TS_CHILD, "scripts\/publish-now-runner\.mts"\]/);
+  assert.match(run, /standingChildEnvironment\("ROUTINE_SUPERVISOR", \{ \.\.\.process\.env, \[ROUTINE_SUPERVISOR_STARTED_AT_ENV\]: startedAt \}\)/);
+  assert.match(run, /persistOuterRoutineChildFailure\(routineSupervisorCycleId\(hostname\(\), startedAt, "publish-now"\)/, "a crash still reaches Admin, under its own lane");
+  const routine = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
+  assert.match(routine, /routineSupervisorCycleId\(hostname\(\), RUN_STARTED_AT, PUBLISH_NOW \? "publish-now" : "routine-civic-data"\)/);
+});
+
+test("the two lanes started in one millisecond never share an outcome's identity", () => {
+  assert.equal(routineSupervisorCycleId("host", NOW), `routine-civic-data-supervisor:host:${NOW}`);
+  assert.equal(routineSupervisorCycleId("host", NOW, "publish-now"), `publish-now-supervisor:host:${NOW}`);
 });

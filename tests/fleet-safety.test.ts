@@ -250,14 +250,14 @@ test("mixed-tier shares are recovered once and an incomplete split is counted at
     cacheCreation5mInputTokens: 0, cacheCreation1hInputTokens: 0 });
   const row: CostEntry = { ...base, cost: { ...base.cost, inputTokens: 2, outputTokens: 2, requestCount: 2 },
     byModel: [share("haiku"), share("opus")] };
-  assert.ok(Math.abs(aggregateModelSpend([row], NIGHT, NIGHT).usd! - .00003) < 1e-12);
+  assert.ok(Math.abs(aggregateModelSpend([row], NIGHT, NIGHT).usd! - .0000246) < 1e-12);
   const half = { ...row, byModel: row.byModel!.slice(0, 1) };
   assert.equal(aggregateModelSpend([half], NIGHT, NIGHT).usd, costEntryWorstCaseUsd(half));
   const partialRow = { ...row, byModel: [share("haiku"), share("unknown-served")] };
   const partial = aggregateModelSpend([partialRow], NIGHT, NIGHT);
   assert.equal(partial.usd, costEntryWorstCaseUsd(partialRow));
   assert.equal(partial.worstCaseCharges, 1);
-  assert.ok(Math.abs(partial.knownUsd - .000006) < 1e-12, "an unknown second tier cannot erase the first tier's recorded price");
+  assert.ok(Math.abs(partial.knownUsd - .0000006) < 1e-12, "an unknown second tier cannot erase the first tier's recorded price");
 });
 
 test("unknown ASK, Scout and error bills retain measured dollars and are counted at worst case", () => {
@@ -292,7 +292,7 @@ test("historical Ask provider maxima bound missing usage and unknown served ids 
   const rows = [cost(3, NIGHT), ...missing, ...served];
   const before = JSON.stringify(rows);
   const aggregate = aggregateModelSpend(rows, NIGHT, NIGHT);
-  assert.ok(Math.abs(aggregate.usd! - 14.520336) < 1e-12);
+  assert.ok(Math.abs(aggregate.usd! - 45.240336) < 1e-9);
   assert.equal(aggregate.knownUsd, 3);
   assert.equal(aggregate.measured, 1);
   assert.equal(aggregate.unmeasured, 16);
@@ -313,7 +313,7 @@ test("an actual request maximum bounds an unmetered bill and rejects incomplete 
     modelRequestBound: { model: "haiku", inputTokens: 5000, outputTokens: 1024, usd: 0,
       basis: "REQUEST_UTF8_BYTES", measured: false } };
   const priced = aggregateModelSpend([row], NIGHT, NIGHT);
-  assert.equal(priced.usd, .01512, "counts and central rates determine the maximum, not a supplied dollar value");
+  assert.ok(Math.abs(priced.usd! - .001512) < 1e-15, "counts and central rates determine the maximum, not a supplied dollar value");
   assert.equal(priced.knownUsd, 0);
   assert.equal(priced.unmeasured, 1);
   assert.equal(aggregateModelSpend([{ ...row, role: "PARSER", source: null, model: null }], NIGHT, NIGHT).usd, priced.usd,

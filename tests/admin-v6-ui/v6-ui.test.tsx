@@ -83,7 +83,7 @@ test("previews never promise more than the action does", () => {
   const ctx = { target: "x", targetName: "X", scopeName: "Arizona", scopeIsCountry: false, outreachAuthorized: false };
   const focus = actionDef("focus").preview(ctx);
   assert.ok(!focus.rows.some(([k]) => k === "Won’t"), "no what-it-won't-do row");
-  assert.ok(focus.options?.some((o) => /Haiku 4\.5, then Sonnet 5\.5, then Opus 5\.5/.test(o.note)), "the model option names the order");
+  assert.ok(focus.options?.some((o) => /Haiku 5\.5, then Sonnet 5\.5, then Opus 5\.5/.test(o.note)), "the model option names the order");
   assert.match(actionDef("decide").doneWords, /Decision saved/);
   assert.equal(actionDef("stoprepeats").preview(ctx).level, "global");
   assert.equal(actionDef("scope-first").preview({ ...ctx, scopeIsCountry: true }).level, "global");

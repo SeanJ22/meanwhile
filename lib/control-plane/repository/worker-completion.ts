@@ -2,7 +2,7 @@ import { boxIndexEnabled, indexDetectiveFindings } from "../box.ts";
 import { endAttempt, isExpired, release, type Attempt } from "../attempt.ts";
 import type { AuditFinding, ValidationRecord } from "../audit.ts";
 import type { RouteTask } from "../route-task.ts";
-import { canonicalJson, type ControlPlaneRepositories } from "./types.ts";
+import { canonicalJson, readByKeys, type ControlPlaneRepositories } from "./types.ts";
 import { recordCost, transitionWorkItem } from "./coordinator.ts";
 import { assertFleetResult, type WorkerResultRecord } from "../workers/types.ts";
 import { costEntryWithModel, type CostEntry } from "../cost.ts";
@@ -207,6 +207,18 @@ export async function readCompletedWorkerResults(repos: ControlPlaneRepositories
     if (!attempt) return false;
     try { assertCompletedWorkerResult(record, attempt); return true; }
     catch { return false; /* Uncommitted or malformed history is never inherited as evidence. */ }
+  });
+}
+
+/** `readCompletedWorkerResults` for the named work items only, in one batched read of their results and of each result's own Attempt. */
+export async function readCompletedWorkerResultsOf(repos: ControlPlaneRepositories, workItemIds: readonly string[]): Promise<readonly WorkerResultRecord[]> {
+  const records = [...(await readByKeys(repos.workerResults, workItemIds)).values()].flat();
+  const attempts = new Map((await readAttemptsById(repos, records.map(record => record.attemptId))).map(row => [row.id, row.value]));
+  return records.filter(record => {
+    const attempt = attempts.get(record.attemptId);
+    if (!attempt) return false;
+    try { assertCompletedWorkerResult(record, attempt); return true; }
+    catch { return false; }
   });
 }
 

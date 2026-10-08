@@ -10,13 +10,13 @@
 
 import type { AttemptCost } from "../attempt.ts";
 import { defaultPlaybookText, rolePlaybook, workerSystemPrompt, type WorkerPlaybook } from "../playbooks.ts";
-import { MODELS } from '../../models.ts';
 import { sanitizedErrorDiagnostic } from "../../ops/error-diagnostic.ts";
 import { WORK_QUESTIONS, WORK_QUESTION_WORDS, type WorkQuestion } from "../work-question.ts";
 import type { CostModelShare } from "../cost.ts";
 import { describeCacheDefects, detectCacheDefects, type CacheDefectReading } from "../cache-defects.ts";
 import {
   CACHE_RATE_MULTIPLIERS,
+  highestRates,
   meteredCostFields,
   minimumCacheablePrefixTokensFor,
   priceMeteredUsage,
@@ -119,9 +119,9 @@ export const SCOUT_THINKING = {
   block_binding: { prefix_mismatch_behavior: "drop_block" },
 } as const;
 
-/** Haiku 4.5 rejects adaptive thinking and effort; do not pay for a known-invalid request. */
-export function scoutThinkingOptions(model: string, effort: ModelEffort): Pick<ModelRequest, "thinking" | "output_config"> {
-  return model === MODELS.haiku.model || model.startsWith(MODELS.haiku.model+'-') ? {} : { thinking: SCOUT_THINKING, output_config: { effort } };
+/** Every model class takes adaptive thinking and effort; a worker request states both. */
+export function scoutThinkingOptions(effort: ModelEffort): Pick<ModelRequest, "thinking" | "output_config"> {
+  return { thinking: SCOUT_THINKING, output_config: { effort } };
 }
 
 /** The beta header value `thinking.block_binding` requires. */
@@ -505,7 +505,8 @@ export const OUTAGE_TIER_AFTER = 2;
 export function scoutAttemptWorstCaseUsd(model: string, bound: ScoutBound): number | null {
   const rate = rateFor(model);
   if (rate === null) return null;
-  const dearest = Math.max(rate.inputUsdPerMillion * CACHE_RATE_MULTIPLIERS.cacheCreation, rate.outputUsdPerMillion);
+  const card = highestRates(rate);
+  const dearest = Math.max(card.inputUsdPerMillion * CACHE_RATE_MULTIPLIERS.cacheCreation, card.outputUsdPerMillion);
   return (bound.maxOutputTokensPerTurn / 1_000_000) * dearest;
 }
 
@@ -724,7 +725,7 @@ export function scoutPrewarmRequest(input: {
     system: prefix.system,
     tools: prefix.tools,
     tool_choice: { type: "auto" },
-    ...scoutThinkingOptions(input.model, input.effort),
+    ...scoutThinkingOptions(input.effort),
     messages: [{ role: "user", content: [{ type: "text", text: SCOUT_PREWARM_PLACEHOLDER }] }],
   };
 }
@@ -1120,7 +1121,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
               /* Always `auto`: forcing `finish` invalidates the messages cache. The bound or early-stop instruction drives the finish. */
               tool_choice: { type: "auto" },
               /* Preserved thinking, stated on every turn of both models (`SCOUT_THINKING`); the pre-warm sends the same. */
-              ...scoutThinkingOptions(current.model, step.effort),
+              ...scoutThinkingOptions(step.effort),
               messages: withCacheBreakpoints(messages),
               ...(SCOUT_CACHE_POLICY.movingBreakpoint === "TOP_LEVEL" ? { cache_control: SCOUT_CACHE_POLICY.cacheControl } : {}),
             };
@@ -1182,7 +1183,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
             kind: "MODEL",
             turn: turns,
             model: response.model ?? current.model,
-            effort: current.modelClass === "haiku" ? null : step.effort,
+            effort: step.effort,
             tokens: turnTokens,
             usd: priced?.usd ?? null,
             representationBytes: representationBytesThisTurn,
@@ -1690,7 +1691,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         refusal,
         startedAt,
         recordedAt: clock(),
-        effort: last.modelClass === "haiku" ? null : effort,
+        effort,
         steps,
         cacheDefect,
         guardRefusals,

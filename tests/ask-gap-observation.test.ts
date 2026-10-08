@@ -117,6 +117,7 @@ test("the Postgres sink sends one bounded atomic upsert per observation", async 
   assert.equal(calls.length, 1);
   assert.equal(calls[0]!.text, ASK_GAP_OBSERVATION_UPSERT);
   assert.match(ASK_GAP_OBSERVATION_UPSERT, /^INSERT INTO cp_ask_gap_observations .* ON CONFLICT \(id\) DO UPDATE SET revision = cp_ask_gap_observations\.revision \+ 1/);
+  assert.match(ASK_GAP_OBSERVATION_UPSERT, /changed_at = now\(\)/, "an aggregate write stamps changed_at, so a changed-since read sees the count move");
   assert.deepEqual(calls[0]!.params?.slice(0, 2), [askGapObservationId(MARANA, "MEETINGS_NOT_HELD", DAY), "2026-09-24T00:00:00.000Z"]);
   assert.deepEqual(JSON.parse(calls[0]!.params![2] as string), one, "the stored value is the observation, and only it");
 });

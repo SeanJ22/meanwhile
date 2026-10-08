@@ -12,6 +12,9 @@ import { browseWithPlaywright } from "../../../scripts/scout-browse.mts";
 import { workerBroker } from "./worker-broker.ts";
 import { workerDispatchFailure, type LeaseWorkerConfig } from "./process-pool.ts";
 import { join } from "node:path";
+import { readFromHeldCopies } from "../repository/incremental-reads.ts";
+
+readFromHeldCopies();
 
 const broker = workerBroker<LeaseWorkerConfig>(work);
 

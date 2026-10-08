@@ -23,6 +23,7 @@ import { ROLE_WORDS } from "./v6-agents-read.ts";
 import { migrationOutcomeOf, PRODUCTION_MIGRATION_HEADLINE } from "../../db/migration-phases.ts";
 import type { UpdateCard } from "../../../app/(admin)/_mw/admin-v6/model.ts";
 import { runnerCycleOf, type CycleHeartbeat, type RunnerCycle } from "../runner-standing.ts";
+import { MODELS, canonicalModelId, modelTierFor } from "../../models.ts";
 import { readAreaZips } from "./v6-national-geography.ts";
 import { huntName, scopedHunts, sectionRevision, validateV6Query, type AdminV6SectionEnvelope, type V6PlaceScope, type V6Refusal } from "./v6-hunts-read.ts";
 
@@ -211,10 +212,8 @@ const mstWords = (iso: string) => `${EASTERN.format(new Date(iso))} ET`;
 
 function modelWords(version: unknown): string {
   if (!text(version)) return "Not recorded";
-  if (/haiku/i.test(version)) return `Cheapest AI (${version})`;
-  if (/sonnet/i.test(version)) return `Mid-level AI (${version})`;
-  if (/opus|fable/i.test(version)) return `Strongest AI (${version})`;
-  return version;
+  const tier = modelTierFor(canonicalModelId(version));
+  return tier ? `${MODELS[tier].plainRole} (${MODELS[tier].name})` : version;
 }
 
 const SOURCE_STAGE: Readonly<Record<HuntSourceProgress["stage"], { kind: string; says: string; tone: V6WorkerEvent["tone"] }>> = {

@@ -5,8 +5,8 @@ import { BOOTSTRAP_DDL, BOOTSTRAP_VERSION, DECLARED_TABLES, FIELD_MANUAL_ENTRIES
 import { FIELD_MANUAL_SLICE_SQL, fieldManualSliceParams } from "../lib/control-plane/repository/pg-store.ts";
 import { createFixMapRepository, FIX_MAP_DDL, methodWorksOf, stateOfPlace, type FixMapRow } from "../lib/method/fix-map.ts";
 
-test("version 26 declares the manual's rows and the fix map, one statement per bootstrap entry", () => {
-  assert.ok(BOOTSTRAP_VERSION >= 26);
+test("version 27 declares the manual's rows and the fix map, one statement per bootstrap entry", () => {
+  assert.ok(BOOTSTRAP_VERSION >= 27);
   assert.ok(DECLARED_TABLES.includes("cp_field_manual_entries"));
   assert.ok(DECLARED_TABLES.includes("cp_fix_map"));
   assert.ok(DECLARED_TABLES.includes("cp_field_manual"), "the old document table stays declared while its copy is kept");

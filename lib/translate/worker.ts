@@ -122,7 +122,7 @@ export async function translateText(input: {
     } } };
   const send = input.transportFor({ subjectId: subject.subjectId, state: subject.state });
   const request = (model: string, tool: typeof writer | typeof checkerTool, content: unknown): ModelRequest => ({
-    model, max_tokens: 8192, ...scoutThinkingOptions(model, "medium"),
+    model, max_tokens: 8192, ...scoutThinkingOptions("medium"),
     system: [{ type: "text", text: `${WORKER_SAFETY_FRAME}\n\n${playbook.text}\n\n${instruction}\n${preservation}\nUse the supplied text-translation tool for this non-measure task. Every sentence uses field text and an exact supporting quote.`, cache_control: { type: "ephemeral" } }],
     tools: [tool], tool_choice: { type: "auto" }, messages: [{ role: "user", content: JSON.stringify(content) }],
   });
@@ -159,7 +159,7 @@ export async function translateMeasure(input: {
   const playbook = await loadTranslationPlaybook(input.repos, now);
   const send = input.transportFor({ subjectId: subject.contestId, state: subject.state });
   const request = (model: string, tool: typeof writerTool | typeof checkerTool, content: unknown): ModelRequest => ({
-    model, max_tokens: 8192, ...scoutThinkingOptions(model, "medium"),
+    model, max_tokens: 8192, ...scoutThinkingOptions("medium"),
     system: [{ type: "text", text: `${WORKER_SAFETY_FRAME}\n\n${playbook.text}`, cache_control: { type: "ephemeral" } }],
     tools: [tool], tool_choice: { type: "auto" }, messages: [{ role: "user", content: JSON.stringify(content) }],
   });

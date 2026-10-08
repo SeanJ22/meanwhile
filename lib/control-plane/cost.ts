@@ -14,7 +14,7 @@
 import type { Attempt, AttemptCost, WorkerRole } from "./attempt.ts";
 import type { WorkQuestion } from "./work-question.ts";
 import { canonicalModelId, modelTierFor, MODEL_TIERS, MODELS, type ModelTier } from "../models.ts";
-import { CACHE_RATE_MULTIPLIERS, rateFor } from "./model-cost.ts";
+import { CACHE_RATE_MULTIPLIERS, DEAREST_ACTIVE_RATES, rateFor, ratesForPrompt } from "./model-cost.ts";
 /* Re-exported so a cost reader keys on the one constant. */
 export { DISCOVERY_SEARCH_ROLE } from "./attempt.ts";
 
@@ -165,8 +165,9 @@ function boundedTokenCount(value: number | null | undefined): value is number {
 export function modelRequestBoundFor(model: string, inputTokens: number, outputTokens: number): ModelRequestBound | null {
   const rate = rateFor(canonicalModelId(model));
   if (!rate || !boundedTokenCount(inputTokens) || !boundedTokenCount(outputTokens)) return null;
-  const usd = (inputTokens * rate.inputUsdPerMillion * CACHE_RATE_MULTIPLIERS.cacheCreation1h +
-    outputTokens * rate.outputUsdPerMillion) / 1_000_000;
+  const card = ratesForPrompt(rate, inputTokens);
+  const usd = (inputTokens * card.inputUsdPerMillion * CACHE_RATE_MULTIPLIERS.cacheCreation1h +
+    outputTokens * card.outputUsdPerMillion) / 1_000_000;
   return Number.isFinite(usd) ? { model, inputTokens, outputTokens, usd, basis: "REQUEST_UTF8_BYTES", measured: false } : null;
 }
 
@@ -201,9 +202,7 @@ export function costEntryModelRequestBound(entry: CostEntry): number | null {
     if (!protocol || !boundedTokenCount(requests) || requests === 0) return null;
     output = protocol.maxOutputTokens * requests;
   }
-  const maxInputRate = Math.max(...MODEL_TIERS.map(tier => MODELS[tier].inputUsdPerMillion));
-  const maxOutputRate = Math.max(...MODEL_TIERS.map(tier => MODELS[tier].outputUsdPerMillion));
-  const usd = (input * maxInputRate * CACHE_RATE_MULTIPLIERS.cacheCreation1h + output * maxOutputRate) / 1_000_000;
+  const usd = (input * DEAREST_ACTIVE_RATES.inputUsdPerMillion * CACHE_RATE_MULTIPLIERS.cacheCreation1h + output * DEAREST_ACTIVE_RATES.outputUsdPerMillion) / 1_000_000;
   return Number.isFinite(usd) ? usd : null;
 }
 
@@ -218,9 +217,7 @@ export function costEntryWorstCaseUsd(entry: CostEntry): number {
       : Math.max(...MODEL_TIERS.map(tier => MODELS[tier].contextWindowTokens)) * requests;
   const output = boundedTokenCount(entry.cost.outputTokens) ? entry.cost.outputTokens
     : Math.max(...MODEL_TIERS.map(tier => MODELS[tier].maxOutputTokens)) * requests;
-  const maxInputRate = Math.max(...MODEL_TIERS.map(tier => MODELS[tier].inputUsdPerMillion));
-  const maxOutputRate = Math.max(...MODEL_TIERS.map(tier => MODELS[tier].outputUsdPerMillion));
-  return (input * maxInputRate * CACHE_RATE_MULTIPLIERS.cacheCreation1h + output * maxOutputRate) / 1_000_000;
+  return (input * DEAREST_ACTIVE_RATES.inputUsdPerMillion * CACHE_RATE_MULTIPLIERS.cacheCreation1h + output * DEAREST_ACTIVE_RATES.outputUsdPerMillion) / 1_000_000;
 }
 
 /** One model's part of a charge (`CostEntry.byModel`): the billed quantities of the requests sent to it. */

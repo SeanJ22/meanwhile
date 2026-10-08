@@ -150,7 +150,7 @@ export const ASK_GAP_OBSERVATION_UPSERT =
   "VALUES ($1, 1, $2::timestamptz, $3::jsonb) " +
   "ON CONFLICT (id) DO UPDATE SET " +
   `revision = ${ASK_GAP_OBSERVATIONS_TABLE}.revision + 1, ` +
-  "updated_at = EXCLUDED.updated_at, " +
+  "updated_at = EXCLUDED.updated_at, changed_at = now(), " +
   `value = jsonb_set(${ASK_GAP_OBSERVATIONS_TABLE}.value, '{count}', ` +
   `to_jsonb((${ASK_GAP_OBSERVATIONS_TABLE}.value->>'count')::bigint + (EXCLUDED.value->>'count')::bigint)) ` +
   "RETURNING revision";

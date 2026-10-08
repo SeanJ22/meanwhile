@@ -39,8 +39,9 @@ test("dispatch-sized POINT bursts share transport admission across repository cl
         return answer([]);
       } finally { active--; }
     }) as typeof neonConfig.fetchFunction;
-    const first = await createPgRepositories(URL, undefined, { skipBootstrap: true, requestBounds: TINY });
-    const second = await createPgRepositories(URL, undefined, { skipBootstrap: true, requestBounds: TINY });
+    // The measured bounds: this test is about admission, and a 60 ms bound would also be measuring the host's CPU load.
+    const first = await createPgRepositories(URL, undefined, { skipBootstrap: true });
+    const second = await createPgRepositories(URL, undefined, { skipBootstrap: true });
     const result = await Promise.all(Array.from({ length: 3300 }, (_, index) =>
       (index % 2 ? first.occurrences : second.obligations).read(String(index))));
     assert.equal(calls, 3300, "every due row is read exactly once");
@@ -172,8 +173,9 @@ test("each call class takes its own bound: a large document row is DOCUMENT, a p
       [() => repos.researchState.read("level-1"), "cp_research_state.read", "DOCUMENT", TINY.DOCUMENT],
       [() => repos.fieldManual.read("fm-x"), "cp_field_manual_entries.read", "POINT", TINY.POINT],
       [() => repos.fieldManual.slice({ role: "SCOUT" }), "cp_field_manual_entries.slice", "PAGE", TINY.PAGE],
-      [() => repos.costs.readAll(), "cp_log_costs.readAll", "PAGE", TINY.PAGE],
-      [() => repos.occurrences.list(), "cp_occurrences.list", "PAGE", TINY.PAGE],
+      [() => repos.costs.readAll(), "cp_log_costs.readChangedSince:clock", "POINT", TINY.POINT],
+      [() => repos.costs.readSince("2026-09-22T00:00:00.000Z"), "cp_log_costs.readSince", "PAGE", TINY.PAGE],
+      [() => repos.occurrences.list(), "cp_occurrences.listChangedSince:clock", "POINT", TINY.POINT],
       [() => repos.ownerDigests.readWhere("owner-digest", ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE"), "cp_log_owner_digests.readWhere", "PAGE", TINY.PAGE],
       [() => repos.ownerDigests.readRecentWhere("owner-digest", ["runtimeOutcome", "kind"], "ROUTINE_CIVIC_DATA_SUPERVISOR", 288, { digestId: true }), "cp_log_owner_digests.readRecentWhere", "PAGE", TINY.PAGE],
       [() => repos.ownerDigests.append("owner-digest", "id", { x: 1 } as never, "2026-09-23T00:00:00.000Z"), "cp_log_owner_digests.append:probe", "DOCUMENT", TINY.DOCUMENT],
@@ -337,7 +339,7 @@ test("an answered call is returned untouched, and every timeout is told to the o
   await withHungFetch(true, async () => {
     const repos = await createPgRepositories(URL, "2026-09-23T00:00:00.000Z", { skipBootstrap: true, requestBounds: TINY });
     await assert.rejects(repos.debts.list());
-    assert.deepEqual(seen, ["cp_debts.list"]);
+    assert.deepEqual(seen, ["cp_debts.listChangedSince:clock"]);
   });
   stop();
 });

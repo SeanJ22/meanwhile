@@ -230,7 +230,7 @@ export interface AggregateRepository<T> {
   readMany?(ids: readonly string[]): Promise<readonly Persisted<T>[]>;
   /** Every aggregate of this kind, ordered by id so reports are diffable. */
   list(): Promise<readonly Persisted<T>[]>;
-  /** Every row in the same id order, with only projected value fields crossing the wire. */
+  /** Every row in the same id order, each value narrowed to the projection. */
   listNarrowed(projection: RecordProjection): Promise<readonly Persisted<unknown>[]>;
   /** Exactly `list()` filtered by the scalar `#>>` value at `path`. */
   listWhere(path: readonly string[], value: string): Promise<readonly Persisted<T>[]>;

@@ -80,8 +80,8 @@ test("one admission decides the tier and all consuming jobs depend on it", () =>
 test("a refused admission makes required build and final contexts fail loudly", () => {
   const all = jobs();
   // Required contexts report on every non-draft event; a draft buys no Actions.
-  assert.equal(all.build.if, "always() && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)");
-  assert.equal(all.gates.if, "always() && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)");
+  assert.equal(all.build.if, "!cancelled() && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)");
+  assert.equal(all.gates.if, "!cancelled() && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)");
   assert.equal(all.build.steps.find((s) => s.name === "Require successful admission")?.run, 'test "$ADMISSION_RESULT" = success');
   assert.deepEqual(all.gates.needs, ["admission", "verify", "test", "build"]);
   const verdict = all.gates.steps.find((s) => s.run === "node scripts/ci-verdict.mjs");

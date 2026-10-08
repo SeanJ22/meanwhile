@@ -399,7 +399,7 @@ test("ROUTE: who represents me in Congress names the two U.S. Senators the state
 test("ROUTE: any other question is still read by the model; the answer starts from the code's reading meanwhile and is kept because the readings agree", { concurrency: false }, async () => {
   const { payload, calls: made } = await ask("Who can I talk to at the Vail school board?", [AZ, PIMA, VAIL]);
   assert.deepEqual(made.map((call) => call.kind), ["INTERPRET", "SYNTHESIZE"], "one reading and one answer: the answer was started on the code's reading, not written twice");
-  assert.equal(made[0].model, resolveAskRoleModel("READER"), "reading the question is the READER role's model (Haiku 4.5 since the 2026-09-25 comparison)");
+  assert.equal(made[0].model, resolveAskRoleModel("READER"), "reading the question is the READER role's model (Haiku 5.5 since the 2026-09-25 comparison)");
   assert.equal(payload.trace.interpretation.ran, true);
   assert.equal(payload.trace.composition, undefined, "no composition shape");
   assert.equal(payload.mode, "GROUNDED_CLAUDE");
@@ -540,14 +540,14 @@ test("the writer is sent every record but member-vote rows past the bound, cut b
   assert.ok(!(validateAnswer("The Board has not published how each member voted on most other items.", [], whole) as { failed?: string[] }).failed?.includes("withheld-votes-called-unpublished"), "only where rows were held back from the writer");
 });
 
-test("the declared ladder: the fast writer first (no thinking, no effort), then the frontier; one switch turns the fast writer off", () => {
+test("the declared ladder: the fast writer first (adaptive thinking, low effort), then the frontier; one switch turns the fast writer off", () => {
   const ladder = synthesisLadder({});
-  assert.deepEqual(ladder.map((rung) => [rung.model, rung.role, rung.effort]), [[ASK_FAST_WRITER_MODEL, "FAST", null], [ASK_SYNTHESIS_MODEL, "FRONTIER", "medium"]]);
+  assert.deepEqual(ladder.map((rung) => [rung.model, rung.role, rung.effort]), [[ASK_FAST_WRITER_MODEL, "FAST", "low"], [ASK_SYNTHESIS_MODEL, "FRONTIER", "medium"]]);
   assert.deepEqual(synthesisLadder({ WTP_ASK_FAST_MODEL: "off" }).map((rung) => rung.role), ["FRONTIER"]);
   const pack: EvidencePack = { question: "q", intent: "UNKNOWN", temporal: { kind: "NONE" }, subject: null, records: [RECORDS[0]], gaps: [], denominators: {}, today: "2026-09-25" };
-  const fast = synthesisRequestBody(pack, { model: ASK_FAST_WRITER_MODEL, cached: true }) as { thinking?: unknown; output_config: { effort?: unknown } };
-  assert.equal(fast.thinking, undefined);
-  assert.equal(fast.output_config.effort, undefined);
+  const fast = synthesisRequestBody(pack, { model: ASK_FAST_WRITER_MODEL, cached: true, effort: "low" }) as { thinking?: unknown; output_config: { effort?: unknown } };
+  assert.deepEqual(fast.thinking, { type: "adaptive" });
+  assert.equal(fast.output_config.effort, "low");
   const frontier = synthesisRequestBody(pack, { model: ASK_SYNTHESIS_MODEL, cached: true, effort: "medium" }) as { thinking?: unknown; output_config: { effort?: unknown } };
   assert.deepEqual(frontier.thinking, { type: "adaptive" });
   assert.equal(frontier.output_config.effort, "medium");

@@ -22,6 +22,9 @@ import { addUpdates } from "../lib/control-plane/updates.ts";
 import { listDoors } from "../lib/doors/registry.ts";
 import { absenceReadings, auditReadings, doorReadings, holdReadings, lookReadings, placeTraitsFrom } from "../lib/method/loss-readings.ts";
 import { LOSS_KIND_WORDS, lessonKinds, lossLessonUpdates, studyAllLosses } from "../lib/method/study-all-losses.ts";
+import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
+
+readFromHeldCopies();
 
 const DRY = process.argv.includes("--dry-run");
 const now = new Date().toISOString();

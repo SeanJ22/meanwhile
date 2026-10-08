@@ -4,6 +4,7 @@ import { usd } from "./model.ts";
 import { addableFamilies } from "@/lib/coverage/owed-overlay.ts";
 import { RECIPES } from "@/lib/control-plane/data-business/recipes.ts";
 import { audienceWords } from "@/lib/control-plane/data-business/types.ts";
+import { MODEL_TIERS, tierShortName } from "@/lib/models.ts";
 
 /** A data switch's target is `<recipe>@<audience>`: the number's label and who it is for, in words. */
 function switchWords(target: string): { readonly label: string; readonly who: string } {
@@ -107,7 +108,7 @@ export const DEP = {
 } as const satisfies Record<string, Dependency>;
 
 const COST_NONE = "None";
-const MODEL_ORDER = "Haiku 4.5, then Sonnet 5.5, then Opus 5.5";
+const MODEL_ORDER = MODEL_TIERS.map(tierShortName).join(", then ");
 
 function localOrGlobal(ctx: PreviewContext): "local" | "global" {
   return ctx.scopeIsCountry ? "global" : "local";

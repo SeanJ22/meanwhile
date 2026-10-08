@@ -9,7 +9,7 @@
 import { costEntryModelRequestBound, costEntryWorstCaseUsd, type CostEntry } from "./cost.ts";
 import type { SpendHold } from "./budget.ts";
 import { canonicalModelId } from "../models.ts";
-import { CACHE_RATE_MULTIPLIERS, rateFor, priceMeteredUsage, readMeteredUsage } from "./model-cost.ts";
+import { CACHE_RATE_MULTIPLIERS, rateFor, ratesForPrompt, priceMeteredUsage, readMeteredUsage } from "./model-cost.ts";
 import type { ModelRequest, ModelResponse, ModelTransport, ScoutEscalationAdmission, ScoutEscalationRequest } from "./scheduler/scout-executor.ts";
 import { ModelTransportError } from "./scheduler/scout-executor.ts";
 import type { OpenBytes } from "./scheduler/scout-contract.ts";
@@ -342,8 +342,9 @@ export function modelRequestWorstCaseUsd(request: ModelRequest): number | null {
   const body = JSON.stringify(request);
   const bodyBytes = Buffer.byteLength(body);
   const writeMultiplier = body.includes('"ttl":"1h"') ? CACHE_RATE_MULTIPLIERS.cacheCreation1h : CACHE_RATE_MULTIPLIERS.cacheCreation;
-  const worstInput = (bodyBytes / 1_000_000) * rate.inputUsdPerMillion * writeMultiplier;
-  const worstOutput = (request.max_tokens / 1_000_000) * rate.outputUsdPerMillion;
+  const card = ratesForPrompt(rate, bodyBytes);
+  const worstInput = (bodyBytes / 1_000_000) * card.inputUsdPerMillion * writeMultiplier;
+  const worstOutput = (request.max_tokens / 1_000_000) * card.outputUsdPerMillion;
   return worstInput + worstOutput;
 }
 

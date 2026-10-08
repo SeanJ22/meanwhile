@@ -17,7 +17,7 @@ import {
   type CandidateLifecycle,
   type MethodCandidate,
 } from "../../method/candidate.ts";
-import { ConcurrentModification, IdentityCollision, type ControlPlaneRepositories } from "../repository/types.ts";
+import { ConcurrentModification, IdentityCollision, type ControlPlaneRepositories, type Persisted } from "../repository/types.ts";
 import { learnBatch, type LearnedRoute } from "../../method/learn-batch.ts";
 import { readMethodKnowledge } from "../../method/manual-bridge.ts";
 import { newFieldManualEntry, writeFieldManual } from "../field-manual.ts";
@@ -28,9 +28,19 @@ import type { ScoutCandidate, ScoutResult } from "./scout-result.ts";
 /** One authoritative lifecycle aggregate in the standing production plane. */
 export const METHOD_CANDIDATE_STORE_ID = "live" as const;
 
-/** The live store with its revision, read as the table's list: on the runner that is its held copy, fetched only when it changed. */
+/** This process's last read or write of the live store, per repositories; one revision is one value. */
+const lastSeen = new WeakMap<object, Persisted<CandidateStore>>();
+
+/**
+ * The live store with its revision. While its revision is the one this process last read or wrote, that copy is
+ * the store; otherwise it is read as the table's list, which on the runner is its held copy.
+ */
 async function readLiveCandidates(repos: Pick<ControlPlaneRepositories, "methodCandidates">) {
-  return (await repos.methodCandidates.list()).find((row) => row.id === METHOD_CANDIDATE_STORE_ID) ?? null;
+  const seen = lastSeen.get(repos);
+  if (seen && (await repos.methodCandidates.readNarrowed(METHOD_CANDIDATE_STORE_ID, {}))?.revision === seen.revision) return seen;
+  const row = (await repos.methodCandidates.list()).find((entry) => entry.id === METHOD_CANDIDATE_STORE_ID) ?? null;
+  if (row) lastSeen.set(repos, row);
+  return row;
 }
 
 export interface ProposedCandidate {
@@ -249,7 +259,7 @@ export async function proposeScoutCandidates(input: {
     const report = { proposed, notProposed, counts: candidateCounts(store), storeVersionObserved: knowledge.version };
     if (!wrote) return report;
     try {
-      await input.repos.methodCandidates.compareAndSet(METHOD_CANDIDATE_STORE_ID, current.revision, store, input.stamp);
+      lastSeen.set(input.repos, await input.repos.methodCandidates.compareAndSet(METHOD_CANDIDATE_STORE_ID, current.revision, store, input.stamp));
       return report;
     } catch (error) {
       if (!(error instanceof ConcurrentModification) && !(error instanceof IdentityCollision)) throw error;

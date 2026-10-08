@@ -1,7 +1,8 @@
 /**
  * Every whole-table read of a Postgres control-plane table answers from one held copy of that table on the
  * runner's disk, shared by every runner process. A read opens the copy, asks the database only for rows whose
- * `changed_at` is at or after the copy's read clock minus a slack, merges them into the copy as it streams it,
+ * `changed_at` is at or after the copy's read clock minus a slack, less the rows its latest reads already took
+ * (the header's `recent` slots), merges them into the copy as it streams it,
  * and writes the merged copy back by atomic rename. Logs are insert-only and aggregates change only by
  * compare-and-set and are never deleted (the database refuses anything else), so a merge never forgets a row.
  * Nothing is kept in memory between reads: a process holds a table only while its caller does.
@@ -16,7 +17,7 @@ import { createInterface } from "node:readline";
 import { finished } from "node:stream/promises";
 import { withCallerSite } from "../../db/transfer-by-caller.ts";
 import { installHeldCopies } from "./pg-store.ts";
-import type { ChangedRecord, ChangedRecords, ChangedRows, Persisted } from "./types.ts";
+import type { ChangedRecord, ChangedRecords, ChangedRows, HeldSlots, Persisted } from "./types.ts";
 
 /** How far before a copy's read clock the next read reaches back; every control-plane write is one bounded statement shorter than this. */
 export const INCREMENTAL_READS_SLACK_MS = 120_000;
@@ -25,7 +26,8 @@ export const INCREMENTAL_READS_SLACK_MS = 120_000;
 export const CONTROL_PLANE_READS_DIR_ENV = "WTP_CONTROL_PLANE_READS_DIR";
 
 const COPY_FORMAT = 1;
-const HEADER_LIMIT_BYTES = 4_096;
+const HEADER_CHUNK_BYTES = 65_536;
+const HEADER_LIMIT_BYTES = 16 * 1024 * 1024;
 const WRITE_CHUNK_CHARS = 1 << 20;
 /** A temporary file this old belongs to a writer that died; a live write finishes in seconds. */
 const ABANDONED_WRITE_MS = 3_600_000;
@@ -38,13 +40,16 @@ export function databaseIdentity(connectionString: string): string {
   return createHash("sha256").update(`${host}/${database}`).digest("hex").slice(0, 16);
 }
 
+/** A table's changed-since read, told which slots the copy already holds so the database leaves them out. */
+export type ChangedSince<C> = (since: string | null, held: HeldSlots) => Promise<C>;
+
 /** One directory of held copies: one database, one schema version. */
 export interface HeldCopies {
   readonly dir: string;
   /** `list()` for one aggregate table: rows in id order, each mapped by `out` as the copy streams. */
-  aggregateList<T, O>(table: string, changedSince: (since: string | null) => Promise<ChangedRows<T>>, out: (row: Persisted<T>) => O): Promise<O[]>;
+  aggregateList<T, O>(table: string, changedSince: ChangedSince<ChangedRows<T>>, out: (row: Persisted<T>) => O): Promise<O[]>;
   /** `readAll()` for one log table: records in key then position order. */
-  logReadAll<T>(table: string, changedSince: (since: string | null) => Promise<ChangedRecords<T>>): Promise<T[]>;
+  logReadAll<T>(table: string, changedSince: ChangedSince<ChangedRecords<T>>): Promise<T[]>;
   /**
    * `readRecentWhere` for one query of one log key: the copy keeps that query's newest `limit` records, newest first,
    * and a later read asks only for matches the database stamped at or after the copy's clock less the slack.
@@ -80,11 +85,11 @@ export function openHeldCopies(dir: string, options: { readonly log?: (line: str
   };
   return {
     dir,
-    aggregateList: <T, O>(table: string, changedSince: (since: string | null) => Promise<ChangedRows<T>>, out: (row: Persisted<T>) => O) =>
+    aggregateList: <T, O>(table: string, changedSince: ChangedSince<ChangedRows<T>>, out: (row: Persisted<T>) => O) =>
       withCallerSite(() => readHeld(copyDir, table, aggregateLayout<T>(), slackMs, changedSince, out)),
-    logReadAll: <T>(table: string, changedSince: (since: string | null) => Promise<ChangedRecords<T>>) => withCallerSite(() =>
-      readHeld(copyDir, table, logLayout<T>(), slackMs, async (since: string | null) => {
-        const changed = await changedSince(since);
+    logReadAll: <T>(table: string, changedSince: ChangedSince<ChangedRecords<T>>) => withCallerSite(() =>
+      readHeld(copyDir, table, logLayout<T>(), slackMs, async (since, held) => {
+        const changed = await changedSince(since, held);
         return { rows: changed.records, through: changed.through };
       }, entry => entry.record)),
     recentWhere: (table, query, limit, newer) => withCallerSite(() => readRecent(copyDir, table, query, limit, slackMs, newer)),
@@ -155,6 +160,8 @@ interface Layout<R> {
   /** Zero means the same slot: one aggregate id, or one log position under one key. */
   readonly order: (a: R, b: R) => number;
   readonly replaces: (incoming: R, held: R) => boolean;
+  /** The row's slot and version, as a changed-since read leaves it out: [id, revision] or [key, position]. */
+  readonly slot: (row: R) => readonly [string, number];
 }
 
 const compareText = (a: string, b: string): number => (a < b ? -1 : a > b ? 1 : 0);
@@ -170,6 +177,7 @@ function aggregateLayout<T>(): Layout<Persisted<T>> {
     },
     order: (a, b) => compareText(a.id, b.id),
     replaces: (incoming, held) => incoming.revision > held.revision,
+    slot: row => [row.id, row.revision],
   };
 }
 
@@ -182,23 +190,44 @@ function logLayout<T>(): Layout<ChangedRecord<T>> {
     },
     order: (a, b) => compareText(a.key, b.key) || a.position - b.position,
     replaces: () => false,
+    slot: entry => [entry.key, entry.position],
   };
 }
 
-interface Header { readonly through: string; readonly bodyStart: number }
+/** A slot this copy took from one changed-since read, with that read's clock. */
+type RecentSlot = readonly [slot: string, version: number, through: string];
+
+/**
+ * `recent` names the slots the copy took from its latest changed-since reads. Rows stamped inside the slack are
+ * asked for again by every read; the ones the copy already holds at that version are left out.
+ */
+interface Header { readonly through: string; readonly bodyStart: number; readonly recent: readonly RecentSlot[] }
+
+const isRecentSlot = (value: unknown): value is RecentSlot => Array.isArray(value) && value.length === 3 &&
+  isText(value[0]) && Number.isSafeInteger(value[1]) && isText(value[2]) && !Number.isNaN(Date.parse(value[2]));
 
 async function readHeader(handle: FileHandle, table: string): Promise<Header> {
-  const buffer = Buffer.alloc(HEADER_LIMIT_BYTES);
-  const { bytesRead } = await handle.read(buffer, 0, HEADER_LIMIT_BYTES, 0);
-  const end = buffer.subarray(0, bytesRead).indexOf(0x0a);
+  const chunks: Buffer[] = [];
+  let end = -1;
+  for (let at = 0; end < 0 && at < HEADER_LIMIT_BYTES;) {
+    const buffer = Buffer.alloc(HEADER_CHUNK_BYTES);
+    const { bytesRead } = await handle.read(buffer, 0, HEADER_CHUNK_BYTES, at);
+    if (bytesRead === 0) break;
+    const newline = buffer.subarray(0, bytesRead).indexOf(0x0a);
+    chunks.push(buffer.subarray(0, newline < 0 ? bytesRead : newline));
+    if (newline >= 0) end = at + newline;
+    at += bytesRead;
+  }
   if (end < 0) throw new UnreadableCopy("no header line");
-  let header: { format?: unknown; table?: unknown; through?: unknown };
-  try { header = JSON.parse(buffer.subarray(0, end).toString("utf8")); }
+  let header: { format?: unknown; table?: unknown; through?: unknown; recent?: unknown };
+  try { header = JSON.parse(Buffer.concat(chunks).toString("utf8")); }
   catch { throw new UnreadableCopy("the header is not JSON"); }
   if (header.format !== COPY_FORMAT || header.table !== table || !isText(header.through) || Number.isNaN(Date.parse(header.through))) {
     throw new UnreadableCopy("the header names another format, table or clock");
   }
-  return { through: header.through, bodyStart: end + 1 };
+  const recent = header.recent === undefined ? [] : header.recent;
+  if (!Array.isArray(recent) || !recent.every(isRecentSlot)) throw new UnreadableCopy("the header's recent slots are malformed");
+  return { through: header.through, bodyStart: end + 1, recent };
 }
 
 /** Writes a copy beside its target and renames it into place only when it is whole. A failed write never fails the read. */
@@ -265,6 +294,10 @@ async function mergeCopy<R, O>(input: {
   readonly held: { readonly handle: FileHandle; readonly header: Header } | null;
   readonly changed: readonly R[];
   readonly through: string;
+  /** The slots the written copy names as recent. */
+  readonly recent: readonly RecentSlot[];
+  /** The copy is written even when no row moved, so the slots this read took are named next time. */
+  readonly rewrite: boolean;
   readonly out: (row: R) => O;
 }): Promise<O[]> {
   const { copies, table, layout, held } = input;
@@ -289,9 +322,9 @@ async function mergeCopy<R, O>(input: {
     }
   };
   try {
-    await write(JSON.stringify({ format: COPY_FORMAT, table, through: laterOf(held?.header.through ?? null, input.through) }));
+    await write(JSON.stringify({ format: COPY_FORMAT, table, through: laterOf(held?.header.through ?? null, input.through), recent: input.recent }));
     const rows: O[] = [];
-    let moved = held === null;
+    let moved = held === null || input.rewrite;
     let written = 0;
     const take = async (row: R, line?: string) => {
       rows.push(input.out(row));
@@ -347,11 +380,11 @@ async function readHeld<R, O>(
   table: string,
   layout: Layout<R>,
   slackMs: number,
-  fetch: (since: string | null) => Promise<{ readonly rows: readonly R[]; readonly through: string | null }>,
+  fetch: (since: string | null, held: HeldSlots) => Promise<{ readonly rows: readonly R[]; readonly through: string | null }>,
   out: (row: R) => O,
 ): Promise<O[]> {
-  const ask = async (since: string | null) => {
-    const changed = await fetch(since);
+  const ask = async (since: string | null, recent: readonly RecentSlot[]) => {
+    const changed = await fetch(since, recent.map(([slot, version]) => [slot, version] as const));
     if (changed.through === null || Number.isNaN(Date.parse(changed.through))) {
       throw new Error(`${table}: the changed-since read returned no read clock`);
     }
@@ -368,14 +401,20 @@ async function readHeld<R, O>(
         catch (error) { copies.log(`held copy of ${table} is unreadable (${describe(error)}); it is filled again`); }
       }
       const held = handle !== null && header !== null ? { handle, header } : null;
-      const changed = await ask(held === null ? null : sinceOf(held.header.through, slackMs));
+      const since = held === null ? null : sinceOf(held.header.through, slackMs);
+      /* A slot the copy took before the slack began was stamped before `since`, so the read cannot return it. */
+      const recent = since === null ? [] : held!.header.recent.filter(([, , through]) => Date.parse(through) >= Date.parse(since) - slackMs);
+      const changed = await ask(since, recent);
+      /* A whole read names no recent slots: the next read asks for its slack once, then names what it took. */
+      const taken = changed.rows.map((row): RecentSlot => [...layout.slot(row), changed.through]);
       try {
-        return await mergeCopy({ copies, table, layout, held, changed: changed.rows, through: changed.through, out });
+        return await mergeCopy({ copies, table, layout, held, changed: changed.rows, through: changed.through,
+          recent: since === null ? [] : [...recent, ...taken], rewrite: since !== null && taken.length > 0, out });
       } catch (error) {
         if (!(error instanceof UnreadableCopy) || held === null) throw error;
         copies.log(`held copy of ${table} is unreadable (${error.message}); it is filled again`);
-        const all = await ask(null);
-        return mergeCopy({ copies, table, layout, held: null, changed: all.rows, through: all.through, out });
+        const all = await ask(null, []);
+        return mergeCopy({ copies, table, layout, held: null, changed: all.rows, through: all.through, recent: [], rewrite: false, out });
       }
     } finally {
       await handle?.close();

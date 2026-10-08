@@ -1,4 +1,4 @@
-import { publicationSourcePolicy } from "../control-plane/promotion/source-settings.ts";
+import { readPublicationSourcePolicy } from "../control-plane/promotion/source-settings.ts";
 import { join } from "node:path";
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../control-plane/repository/pg-store.ts";
 import { DurableEvidenceStore } from "../control-plane/evidence/durable-store.ts";
@@ -16,7 +16,7 @@ export async function workerPublicationContext(now: string, existingRepos?: Cont
   const connection = controlPlaneUrlFromEnv();
   if (!existingRepos && !connection) throw new Error("WORKER_PUBLICATION_CONTROL_PLANE_UNAVAILABLE");
   const repos = existingRepos ?? await createPgRepositories(connection!, now, { skipBootstrap: true });
-  const sourcePolicy = publicationSourcePolicy((await repos.adminConfig.read("current"))?.value ?? null);
+  const sourcePolicy = await readPublicationSourcePolicy(repos);
   const vault = new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR));
   const { readObject, readEvidence } = publicationVaultReaders(repos, vault);
   return { repos, readSavedFinanceResponse: async (id: string): Promise<CapturedFinanceResponse> => {
@@ -80,7 +80,7 @@ export function localHeldCaptureReader() {
 export async function publicationCaptureReaders(repos: Pick<import("../control-plane/repository/types.ts").ControlPlaneRepositories, "adminConfig">,
   readCapture: (id: string, results: readonly WorkerResultRecord[]) => Promise<WorkerPublicationCapture>,
   readHeld: (record: ArtifactRecord) => Promise<WorkerPublicationCapture | null> = localHeldCaptureReader()) {
-  const sourcePolicy = publicationSourcePolicy((await repos.adminConfig.read("current"))?.value ?? null);
+  const sourcePolicy = await readPublicationSourcePolicy(repos);
   return {
     readCapture: async (id: string, results: readonly WorkerResultRecord[]) => ({ ...await readCapture(id, results), sourcePolicy }),
     readHeld: async (record: ArtifactRecord) => { const capture = await readHeld(record); return capture ? { ...capture, sourcePolicy } : null; },

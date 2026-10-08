@@ -2,6 +2,7 @@ import type { BoxFinding } from "../box.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import { installDatabaseTransferCounter } from "../../db/transfer.ts";
+import { withCallerSite } from "../../db/transfer-by-caller.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { DoorRecord } from "../../doors/registry.ts";
 import type { LeadOrder } from "../leads/order.ts";
@@ -106,6 +107,7 @@ import {
   type ControlPlaneRepositories,
   type FieldManualRepository,
   type DispositionCommit,
+  type HeldSlots,
   type LockManager,
   type Persisted,
   type PutOutcome,
@@ -159,6 +161,20 @@ let heldCopiesFor: ((connectionString: string, schemaVersion: number) => HeldCop
 /** Where this process's repositories keep their held copies; see incremental-reads.ts `readFromHeldCopies`. */
 export function installHeldCopies(open: (connectionString: string, schemaVersion: number) => HeldCopies | null): void {
   heldCopiesFor = open;
+}
+
+/** A changed-since filter leaving out the slots a held copy already holds; empty when it holds none. */
+function heldFilter(held: HeldSlots | undefined, at: (value: unknown) => string, slot: string, version: string): string {
+  if (!held || held.length === 0) return "";
+  return `NOT EXISTS (SELECT 1 FROM unnest(${at(held.map(([name]) => name))}::text[], ${at(held.map(([, number]) => number))}::bigint[]) ` +
+    `AS held(slot, version) WHERE held.slot = ${slot} AND held.version = ${version})`;
+}
+
+/** Each method reads its caller's site on entry, so the bytes of queries it sends after its own awaits still count under that caller. */
+function callerPinned<R extends object>(repository: R): R {
+  return Object.fromEntries(Object.entries(repository).map(([name, member]) => [name, typeof member === "function"
+    ? (...args: unknown[]) => withCallerSite(() => member.apply(repository, args))
+    : member])) as R;
 }
 
 /** Bounds transport fan-out across repositories and clients in this process, so many ready rows share HTTP capacity. */
@@ -289,16 +305,17 @@ export function pgAggregateRepository<T>(
     };
   }
 
-  async function listChangedSince(since: string | null): Promise<ChangedRows<T>> {
-    /* Rows the database stamped at or after `since` (all when null), in id order; `through` is the database clock before the first page. */
+  async function listChangedSince(since: string | null, held?: HeldSlots): Promise<ChangedRows<T>> {
+    /* Rows the database stamped at or after `since` (all when null), less the held ones, in id order; `through` is the database clock before the first page. */
     const clock = (await run("listChangedSince:clock", "POINT", "SELECT now() AS read_at")) as Record<string, unknown>[];
     const through = new Date(clock[0]?.read_at as string).toISOString();
-    const changed = since === null ? "" : "changed_at >= $1::timestamptz";
     const out: Persisted<T>[] = [];
     let afterId: string | null = null;
     for (;;) {
-      const filters = [changed, afterId === null ? "" : `id > $${since === null ? 1 : 2}`].filter(Boolean);
-      const params = [...(since === null ? [] : [since]), ...(afterId === null ? [] : [afterId])];
+      const params: unknown[] = [];
+      const at = (value: unknown) => `$${params.push(value)}`;
+      const filters = [since === null ? "" : `changed_at >= ${at(since)}::timestamptz`,
+        heldFilter(held, at, "id", "revision"), afterId === null ? "" : `id > ${at(afterId)}`].filter(Boolean);
       const rows = (await run(
         "listChangedSince",
         "PAGE",
@@ -327,7 +344,7 @@ export function pgAggregateRepository<T>(
     ? listChangedSince(null).then(changed => changed.rows.map(out))
     : copies.aggregateList(table, listChangedSince, out);
 
-  return {
+  return callerPinned({
     read,
 
     async readNarrowed(id, projection) {
@@ -490,7 +507,7 @@ export function pgAggregateRepository<T>(
       }
       return out;
     },
-  };
+  });
 }
 
 /** Records per log read page: a full-log read must never assume it fits in one 64 MiB response. */
@@ -506,17 +523,17 @@ export function pgAppendOnlyRepository<T>(
   /* An append's probe and re-read return the held record, and its insert uploads one. */
   const recordClass = options.rowClass ?? (DOCUMENT_RECORD_LOGS.has(log) ? "DOCUMENT" : "POINT");
 
-  async function readChangedSince(since: string | null): Promise<ChangedRecords<T>> {
-    /* `readAll()` narrowed to records the database stamped at or after `since`; `through` is the database clock before the first page. */
+  async function readChangedSince(since: string | null, held?: HeldSlots): Promise<ChangedRecords<T>> {
+    /* `readAll()` narrowed to records the database stamped at or after `since`, less the held ones; `through` is the database clock before the first page. */
     const clock = (await run("readChangedSince:clock", "POINT", "SELECT now() AS read_at")) as Record<string, unknown>[];
     const through = new Date(clock[0]?.read_at as string).toISOString();
     const out: { key: string; recordId: string; position: number; record: T }[] = [];
     let cursor: { readonly key: string; readonly position: number } | null = null;
     for (;;) {
-      const at = since === null ? 1 : 2;
-      const filters = [since === null ? "" : "changed_at >= $1::timestamptz",
-        cursor === null ? "" : `(log_key, position) > ($${at}, $${at + 1})`].filter(Boolean);
-      const params = [...(since === null ? [] : [since]), ...(cursor === null ? [] : [cursor.key, cursor.position])];
+      const params: unknown[] = [];
+      const at = (value: unknown) => `$${params.push(value)}`;
+      const filters = [since === null ? "" : `changed_at >= ${at(since)}::timestamptz`, heldFilter(held, at, "log_key", "position"),
+        cursor === null ? "" : `(log_key, position) > (${at(cursor.key)}, ${at(cursor.position)})`].filter(Boolean);
       const rows = (await run(
         "readChangedSince",
         "PAGE",
@@ -542,7 +559,7 @@ export function pgAppendOnlyRepository<T>(
     ? readChangedSince(null).then(changed => changed.records.map(entry => entry.record))
     : copies.logReadAll(table, readChangedSince);
 
-  return {
+  return callerPinned({
     async append(key, recordId, record, now): Promise<AppendOutcome<T>> {
       /*
        * The position is allocated by the position-allocator table, never computed as MAX+1 (which races under
@@ -817,7 +834,7 @@ export function pgAppendOnlyRepository<T>(
       )) as Record<string, unknown>[];
       return rows.map((r) => String(r.log_key));
     },
-  };
+  });
 }
 
 /** Bounded source lookup; the canonical URL and newest-capture order use the artifact index. */

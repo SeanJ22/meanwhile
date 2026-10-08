@@ -50,6 +50,24 @@ test("a real control-plane read counts its response bytes under the operation an
   }
 });
 
+test("a read whose query is sent after the repository's own awaits counts under the code that called it, not unknown", async () => {
+  const saved = { fetch: neonConfig.fetchFunction, env: { ...process.env } };
+  Object.assign(process.env, { WTP_CONTROL_PLANE_DATABASE_URL: "postgresql://local:local@ep-pinned-bytes-test.us-east-2.aws.neon.tech/neondb" });
+  const answer = JSON.stringify({ command: "SELECT", rowCount: 0, rowAsArray: true, fields: [{ name: "record", dataTypeID: 25 }], rows: [] });
+  neonConfig.fetchFunction = databaseTransferFetch(async () => new Response(answer), row => { countNeonBytes(row.database, row.responseBytes); });
+  try {
+    const repos = await createPgRepositories(process.env.WTP_CONTROL_PLANE_DATABASE_URL!, undefined, { skipBootstrap: true });
+    // A callback, not an awaiting async function, so no async stack leads back here once the read has awaited.
+    await new Promise(resolve => setImmediate(() => resolve(repos.costs.readSince("2026-10-01T00:00:00.000Z"))));
+    assert.deepEqual(callerBytes("cp_log_costs.").map(([caller]) => caller.replace(/:\d+$/, "")),
+      ["cp_log_costs.readSince ← tests/neon-bytes-by-caller.test.ts"]);
+  } finally {
+    neonConfig.fetchFunction = saved.fetch;
+    for (const key of Object.keys(process.env)) if (!(key in saved.env)) delete process.env[key];
+    Object.assign(process.env, saved.env);
+  }
+});
+
 test("a whole-table read answered from its held copy still counts its bytes under the code that asked", async () => {
   const saved = { fetch: neonConfig.fetchFunction, env: { ...process.env } };
   const dir = mkdtempSync(join(tmpdir(), "held-bytes-"));
@@ -101,6 +119,13 @@ test("the caller is the first frame outside the database layers, repo-relative",
   ].join("\n");
   assert.equal(callerFromStack(stack), "lib/control-plane/promotion/campaign-publication-cycle.ts:56");
   assert.equal(callerFromStack("Error\n    at file:///srv/x/scripts/freshness-shadow.mts:3507:11"), "scripts/freshness-shadow.mts:3507");
+  assert.equal(callerFromStack([
+    "Error",
+    "    at async file:///srv/x/lib/ops/neon-request-deadline.ts:33:14",
+    "    at async Object.observed (file:///srv/x/lib/control-plane/scheduler/cycle-phases.ts:23:52)",
+    "    at Object.tracked (file:///srv/x/lib/control-plane/scheduler/cycle-stall.ts:147:39)",
+    "    at async PostgresRoutineDataStore.readPromotion (file:///srv/x/lib/civic-data/store.ts:1676:19)",
+  ].join("\n")), "lib/civic-data/store.ts:1676", "the request deadline and the cycle's call counter and tracker are wrappers, never the caller");
   assert.equal(callerFromStack(undefined), "unknown");
 });
 

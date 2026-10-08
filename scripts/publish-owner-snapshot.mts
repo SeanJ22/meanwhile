@@ -21,7 +21,7 @@ import {
   CONTROL_PLANE_URL_VAR,
 } from "../lib/control-plane/repository/pg-store.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
-import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
+import type { ControlPlaneRepositories, Persisted } from "../lib/control-plane/repository/types.ts";
 import { collectMapTilerUsage } from "../lib/control-plane/maptiler/collector.ts";
 import { collectProviderBilling } from "../lib/control-plane/provider-billing-collector.ts";
 import { providerBillingAttribution } from "../lib/control-plane/provider-billing-attribution.ts";
@@ -78,7 +78,7 @@ function log(line: string): void {
 const publisherRepos = await repositories();
 const canonicalCycle = publisherRepos === null ? null : await readLatestFreshnessCycleOutcome(publisherRepos);
 const newestCycle: { record: CycleRecord; file: string } | null = canonicalCycle
-  ? { record: canonicalCycle.outcome as unknown as CycleRecord, file: canonicalCycle.digest.digestId }
+  ? { record: canonicalCycle.outcome as unknown as CycleRecord, file: canonicalCycle.digestId }
   : null;
 
 /** Candidate display names belong to the canonical candidate-profile projection, not this snapshot. */
@@ -106,12 +106,8 @@ function spendByDay(reads: ControlPlaneReads | null): OwnerSnapshot["spendByDay"
     .map(([d, v]) => ({ day: d, usd: Math.round(v.usd * 10_000) / 10_000, attempts: v.attempts }));
 }
 
-/** The run record's shapes as `scripts/freshness-shadow.mts` writes them. */
+/** The run record's shapes as `scripts/freshness-shadow.mts` writes them, narrowed to what the snapshot shows. */
 interface CycleRecord {
-  startedAt?: string;
-  finishedAt?: string;
-  testedSha?: string;
-  digest?: string[];
   risk?: {
     obligationsScheduled?: number;
     obligationsUnscheduled?: number;
@@ -122,17 +118,9 @@ interface CycleRecord {
     activation?: string;
   };
   incidents?: Array<Record<string, unknown>>;
-  scheduled?: number;
-  unscheduled?: Array<{ id?: string; reason?: string }>;
   registry?: {
     providers?: Array<{ providerId?: string; units?: number; records?: number; readFailure?: string | null }>;
     registeredUnits?: number;
-  };
-  research?: {
-    lanes?: {
-      deterministic?: { due?: number; dispatched?: number };
-      model?: { due?: number; dispatched?: number };
-    } | null;
   };
 }
 
@@ -413,6 +401,10 @@ async function repositories(): Promise<ControlPlaneRepositories | null> {
   return createPgRepositories(url, NOW_ISO);
 }
 
+/** The parts of the published snapshot this publish carries forward; the rest is rebuilt, so it is never read back. */
+const CARRIED_FORWARD = { maptiler: true, providerBilling: true, servedReaderReadback: true, placeHistory: true } as const;
+type CarriedForward = Partial<Pick<OwnerSnapshot, keyof typeof CARRIED_FORWARD>>;
+
 async function main(): Promise<void> {
   log(`HEAD ${HEAD?.slice(0, 8) ?? "unknown"}`);
 
@@ -420,7 +412,7 @@ async function main(): Promise<void> {
   const repos = publisherRepos;
   if (repos) log(repos.describe());
   const reads = repos ? await readControlPlane(repos) : null;
-  const existing = repos ? await repos.ownerSnapshots.read(SNAPSHOT_ID) : null;
+  const existing = repos ? await repos.ownerSnapshots.readNarrowed(SNAPSHOT_ID, CARRIED_FORWARD) as Persisted<CarriedForward> | null : null;
   const maptilerCandidate = await collectMapTilerUsage({ nowIso: NOW_ISO });
   const maptiler = retainMapTilerLastKnownGood({
     candidate: maptilerCandidate,

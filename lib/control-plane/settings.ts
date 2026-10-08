@@ -90,7 +90,7 @@ export function controlOf(definition: SettingDefinition): SettingControl {
 }
 
 /** Pass the newly read config each runner pass; no process-wide settings snapshot. An invalid stored value reads as the fallback. */
-export function readSetting<T extends SettingValue>(config: AdminConfig | null, key: string, fallback: T): T {
+export function readSetting<T extends SettingValue>(config: Pick<AdminConfig, "settings"> | null, key: string, fallback: T): T {
   const definition = settingDefinition(key);
   const value = config?.settings?.[key];
   return definition && value !== undefined && definition.validate(value) ? value as T : fallback;

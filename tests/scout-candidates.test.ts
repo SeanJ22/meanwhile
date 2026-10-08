@@ -237,3 +237,22 @@ test("6. a failed manual write leaves the candidate validated and a replay finis
   assert.equal((await proposeScoutCandidates(input)).proposed[0].lifecycle, "ADMITTED");
   assert.equal((await readMethodVersion(repos)), failed.storeVersionObserved + 1);
 });
+
+test("7. the store is read whole only when its revision moved since this process last read or wrote it", async () => {
+  const repos = await seededRepos();
+  await seedFixtureStore(repos);
+  const list = repos.methodCandidates.list.bind(repos.methodCandidates);
+  let whole = 0;
+  repos.methodCandidates.list = async () => { whole += 1; return list(); };
+  await readMethodCandidateStore(repos);
+  await readMethodCandidateStore(repos);
+  assert.equal(whole, 1, "an unchanged revision reuses the store this process holds");
+  await proposeScoutCandidates({ repos, result: result([candidate()]), artifacts: opened, stamp: STAMP });
+  assert.equal(whole, 1, "the process's own write is the store it holds next");
+  assert.equal((await readMethodCandidateStore(repos)).candidates.length, 1);
+  assert.equal(whole, 1);
+  const elsewhere = await repos.methodCandidates.read(METHOD_CANDIDATE_STORE_ID);
+  await repos.methodCandidates.compareAndSet(METHOD_CANDIDATE_STORE_ID, elsewhere!.revision, emptyCandidateStore(), STAMP);
+  assert.equal((await readMethodCandidateStore(repos)).candidates.length, 0, "another writer's revision is read whole");
+  assert.equal(whole, 2);
+});

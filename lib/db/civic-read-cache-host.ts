@@ -15,11 +15,11 @@ export async function saveCivicReadCopy(root: string, key: string, saved: string
   } catch { await unlink(temporary).catch(() => {}); }
 }
 
-/** Host-local copy sink for this pass, inherited by its existing children.
+/** Host-local copy sink, inherited by every child; a process that inherited one keeps using it.
  * It owns no civic authority: readers still ask Postgres for each row etag. */
 export async function startCivicReadCacheHost(): Promise<{ close: () => Promise<void> }> {
   const database = process.env.DATABASE_URL;
-  if (!database) return { close: async () => {} };
+  if (!database || (process.env.WTP_CIVIC_READ_CACHE_URL && process.env.WTP_CIVIC_READ_CACHE_TOKEN)) return { close: async () => {} };
   const root = join(process.cwd(), ".runtime", "civic-read-cache",
     createHash("sha256").update(database).digest("hex"));
   const token = randomUUID();

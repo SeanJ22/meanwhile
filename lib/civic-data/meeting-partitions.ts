@@ -50,6 +50,28 @@ export function meetingPartitionId(sourceName: string, bodyId: string): string {
   return `meetings:${sourceName}:${encodeURIComponent(bodyId)}`;
 }
 
+/**
+ * What a partition id names, read from the id alone: its source, its body and its scope. A reader of a published
+ * composition knows every partition in it this way, whatever doors this process has installed. Null for an id that
+ * is not a meeting partition's.
+ */
+export function meetingPartitionOfId(id: string): { readonly source: string; readonly bodyId: string; readonly scope: string } | null {
+  const named = /^meetings:([^:]+):(.+)$/.exec(id);
+  if (named === null) return null;
+  const [, source, rest] = named as unknown as [string, string, string];
+  if (source === DERIVED_FAMILY_SOURCE) {
+    const state = rest as DerivedMeetingFamilyState;
+    return { source, bodyId: `derived-family:${state}`, scope: derivedMeetingFamilyScope(state) };
+  }
+  let bodyId: string;
+  try {
+    bodyId = decodeURIComponent(rest);
+  } catch {
+    return null;
+  }
+  return { source, bodyId, scope: meetingPartitionScope(source, bodyId) };
+}
+
 /** Every supported adapter is explicit, so a new route cannot silently fall back to a shared failure domain. */
 export function meetingAcquisitionFailureDomain(
   sourceName: string,

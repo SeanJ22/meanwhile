@@ -964,6 +964,7 @@ export const FIELD_MANUAL_SLICE_SQL = `SELECT id, revision, updated_at, value FR
     AND ($3::text IS NULL OR jsonb_array_length(coalesce(value->'recordClasses', '[]'::jsonb)) = 0 OR value->'recordClasses' ? $3::text)
     AND (($4::boolean AND ($7::text IS NULL OR jsonb_array_length(coalesce(value->'platforms', '[]'::jsonb)) = 0 OR value->'platforms' ? $7::text))
       OR (NOT $4::boolean AND (value->>'kind' = ANY($5::text[])
+        OR coalesce((value->'reach'->>'method')::boolean, false)
         OR coalesce((value->'reach'->>'everywhere')::boolean, false)
         OR coalesce(value->'reach'->'places', '[]'::jsonb) ?| $6::text[]
         OR (jsonb_array_length(coalesce(value->'reach'->'platforms', '[]'::jsonb)) > 0 AND ($7::text IS NULL OR value->'reach'->'platforms' ? $7::text))

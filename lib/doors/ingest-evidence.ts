@@ -2,14 +2,11 @@
  * Turns what the meeting runner already has into a `DoorEvidence` for
  * `lib/doors/shut.ts`. A read that proves nothing about the door itself gives
  * no evidence, and the caller keeps its plain last success / failure record.
- * Off unless `WTP_DOOR_SHUT=on`.
  */
 
 import { isDoorRecord, type DoorRepository } from "./registry.ts";
 import { evidenceFromFailureCode, recordDoorEvidence, type DoorEvidence } from "./shut.ts";
 import type { FixRepos } from "./shut-repair.ts";
-
-export const doorShutEnabled = (env: NodeJS.ProcessEnv = process.env): boolean => env.WTP_DOOR_SHUT === "on";
 
 const HTTP_STATUS = /\bHTTP (\d{3})\b/;
 

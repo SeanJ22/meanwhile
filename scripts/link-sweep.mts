@@ -34,6 +34,12 @@ if (Number.isInteger(limit) && limit > 0) {
   links = links.filter((l) => hosts.includes(new URL(l.url).hostname));
 }
 say(`${links.length} links found in ${artifacts.length} published pieces.`);
+// Every request counts against the website's one shared hour, so the control plane is opened before any look.
+const opened = await openControlPlane();
+if (!opened.ok) {
+  say(`REFUSED — ${opened.detail}`);
+  process.exit(1);
+}
 
 const states = [...new Set(links.flatMap((l) => /(?:^|\.)([a-z]{2})\.gov$/i.exec(new URL(l.url).hostname)?.[1]?.toLowerCase() ?? []))];
 const fetchFn: SweepFetch = async (url, method) => {
@@ -43,6 +49,7 @@ const fetchFn: SweepFetch = async (url, method) => {
 const results = await sweepLinks(links, {
   fetchFn,
   now: () => Date.now(),
+  pacing: opened.repos.websitePacing,
   sizeFor: websiteSizeFromHoldings(states),
   rotation: Number(FLAGS.get("rotation") ?? Math.floor(Date.now() / 3_600_000)),
 });
@@ -51,13 +58,8 @@ say(floorLine(floored("links looked at", "sweepLinks", results.length, looked, "
 
 if (!FLAGS.has("apply")) {
   const dead = results.filter((r) => r.verdict === "DEAD").length;
-  say(`dry run: ${dead} dead of ${looked} looked at. Nothing was written. Run with --apply to record the counts.`);
+  say(`dry run: ${dead} dead of ${looked} looked at. No counts were recorded (the requests still count against each website's hour). Run with --apply to record the counts.`);
   process.exit(0);
-}
-const opened = await openControlPlane();
-if (!opened.ok) {
-  say(`REFUSED — ${opened.detail}`);
-  process.exit(1);
 }
 const summaries = await recordSweep(opened.repos.doors, results, new Date().toISOString());
 for (const s of summaries) say(`${s.surface}: ${s.dead} dead, ${s.ok} answering, ${s.later} to retry, ${s.waiting} waiting, of ${s.links}.`);

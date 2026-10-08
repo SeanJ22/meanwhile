@@ -1783,6 +1783,7 @@ const fleetSafety = new FleetSafetyController({
   /* The second lock: while the lane is closed for any reason, no model request is reserved at all. */
   modelHold: laneDisabledReason,
   circuits: priorCircuits,
+  websitePacing: repos.websitePacing,
   lastSuccessfulActivity: priorLastSuccessfulActivity,
   rollingCeilingUsd: effectiveCeilingUsd,
   lifetimeHuntWork,
@@ -3130,7 +3131,7 @@ for (const row of cycle.deferred) {
 if (!dry && !canary) {
   const spread = await pending.step("methods:spread", () => runSpreadPass({ repos, now: nowIso(),
     sendPlaceIds: sentMoneyPlaces({ areas: expansionBudget?.gate.armedReading().scopes ?? null, sends: assignmentMembers }),
-    paidTriesLeft: guards.paidWorkerCapacity(), fetch: pacedProbeFetch(), sizeFor: websiteSize })).catch((error: unknown) => {
+    paidTriesLeft: guards.paidWorkerCapacity(), fetch: pacedProbeFetch({ pacing: repos.websitePacing, sizeFor: websiteSize }), sizeFor: websiteSize })).catch((error: unknown) => {
     runtimeConditions.push(`working methods were not tried elsewhere: ${error instanceof Error ? error.message : String(error)}`);
     return null;
   });

@@ -6,16 +6,17 @@
  * when the page answers "gone" or is plainly not on that platform. A method
  * whose procedure is not a plain request is checked for its platform only and
  * left for a worker. robots.txt is read once per website and recorded, never
- * obeyed as a block. A small publisher gets at most its hourly allowance of
- * requests; a website that answers 429 or 5xx is left alone for the round.
+ * obeyed as a block. Every request asks the one per-website count all readers
+ * share: a small publisher gets at most its hourly allowance, and a website
+ * that answered 429 or 5xx is left alone by every reader until it may be asked.
  */
 
 import { probeUrlFor, type ProbeFetch } from "../doors/probe.ts";
-import { normalizeHost, type DoorRecord } from "../doors/registry.ts";
+import type { DoorRecord } from "../doors/registry.ts";
+import { WebsiteWait } from "../doors/probe-fetch.ts";
 import { assertPublicUrl } from "../hunt/egress.ts";
 import { detectTenancy } from "../hunt/platform-tenancy.ts";
 import { evaluatePermission, type PermissionVerdict } from "../control-plane/scheduler/robots.ts";
-import { websiteRequestLimit, type WebsiteSizeForUrl } from "../control-plane/scheduler/host-supervision.ts";
 import type { FieldManualEntry } from "../control-plane/field-manual.ts";
 
 export type PlainTryOutcome = "WORKS" | "FAILS" | "UNDECIDED" | "WAITING";
@@ -79,34 +80,32 @@ export interface PlainTrier {
   readonly requests: ReadonlyMap<string, number>;
 }
 
-/** One round's trier: the request allowance, the robots readings and the websites backing off are kept for the round. */
-export function plainTrier(input: { readonly fetch: ProbeFetch; readonly sizeFor?: WebsiteSizeForUrl }): PlainTrier {
+/**
+ * One round's trier over the shared paced fetch (`pacedProbeFetch`): each website's hourly allowance and its requests
+ * to wait are the ones every reader shares. robots.txt is read once per website for the round.
+ */
+export function plainTrier(input: { readonly fetch: ProbeFetch }): PlainTrier {
   const requests = new Map<string, number>();
   const robots = new Map<string, Promise<{ text: string | null; status: number | null; transportError: string | null }>>();
-  const resting = new Map<string, string>();
 
-  const allowed = (url: string, needed: number): boolean => {
-    const host = new URL(url).host.toLowerCase();
-    const cap = websiteRequestLimit(input.sizeFor?.(url));
-    return cap === null || (requests.get(host) ?? 0) + needed <= cap;
-  };
-  const get = async (url: string): Promise<{ status: number; body: string; retryAfter: string | null } | { error: string }> => {
-    const host = new URL(url).host.toLowerCase();
-    requests.set(host, (requests.get(host) ?? 0) + 1);
+  const get = async (url: string): Promise<{ status: number; body: string } | { error: string } | { wait: string }> => {
     try {
       const response = await input.fetch(url, {});
+      const host = new URL(url).host.toLowerCase();
+      requests.set(host, (requests.get(host) ?? 0) + 1);
       const body = response.status >= 200 && response.status < 300 ? decode(await response.bytes()) : "";
-      return { status: response.status, body, retryAfter: response.headers.get("retry-after") };
+      return { status: response.status, body };
     } catch (error) {
+      if (error instanceof WebsiteWait) return { wait: error.message };
       return { error: (error as Error)?.name ?? "error" };
     }
   };
-  const robotsFor = async (url: string): Promise<PermissionVerdict> => {
+  const robotsFor = async (url: string): Promise<PermissionVerdict | { wait: string }> => {
     const origin = new URL(url).origin;
     if (!robots.has(origin)) {
-      robots.set(origin, get(`${origin}/robots.txt`).then((got) => "error" in got
-        ? { text: null, status: null, transportError: got.error }
-        : { text: got.body, status: got.status, transportError: null }));
+      robots.set(origin, get(`${origin}/robots.txt`).then((got) => "wait" in got
+        ? { text: null, status: null, transportError: got.wait }
+        : "error" in got ? { text: null, status: null, transportError: got.error } : { text: got.body, status: got.status, transportError: null }));
     }
     const read = await robots.get(origin)!;
     return evaluatePermission({ robotsText: read.text, status: read.status, transportError: read.transportError }, url).verdict;
@@ -118,21 +117,13 @@ export function plainTrier(input: { readonly fetch: ProbeFetch; readonly sizeFor
     if (start === null) return { outcome: "UNDECIDED", url: null, note: "this place's door has no address to try", robots: null };
     const replay = replayUrl(procedureOf(method), door);
     const url = replay ?? start;
-    const host = normalizeHost(url) ?? new URL(url).host;
-    if (resting.has(host)) return { outcome: "WAITING", url, note: resting.get(host)!, robots: null };
-    const origin = new URL(url).origin;
-    if (!allowed(url, robots.has(origin) ? 1 : 2)) {
-      return { outcome: "WAITING", url, note: "this small publisher's hourly allowance is used; the try waits for the next round", robots: null };
-    }
     const permission = await robotsFor(url);
+    if (typeof permission !== "string") return { outcome: "WAITING", url, note: `the try waits: ${permission.wait}`, robots: null };
     const got = await get(url);
-    if ("error" in got) {
-      resting.set(host, `the website did not answer (${got.error}); tried again next round`);
-      return { outcome: "WAITING", url, note: resting.get(host)!, robots: permission };
-    }
+    if ("wait" in got) return { outcome: "WAITING", url, note: `the try waits: ${got.wait}`, robots: permission };
+    if ("error" in got) return { outcome: "WAITING", url, note: `the website did not answer (${got.error}); tried again next round`, robots: permission };
     if (BACK_OFF(got.status)) {
-      resting.set(host, `the website answered ${got.status}${got.retryAfter ? ` and asked to wait (${got.retryAfter})` : ""}; tried again next round`);
-      return { outcome: "WAITING", url, note: resting.get(host)!, robots: permission };
+      return { outcome: "WAITING", url, note: `the website answered ${got.status}, so every reader leaves it alone for now; tried again next round`, robots: permission };
     }
     if (replay !== null && GONE.has(got.status)) {
       return { outcome: "FAILS", url, note: `the method's request answered ${got.status} here`, robots: permission };

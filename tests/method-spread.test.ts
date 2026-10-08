@@ -19,6 +19,9 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import { recordScoutMethods, scoutFieldManualQuery } from "../lib/control-plane/scheduler/field-manual-scout.ts";
 import { plainTrier, replayUrl } from "../lib/method/method-try.ts";
+import { pacedProbeFetch } from "../lib/doors/probe-fetch.ts";
+import { memoryWebsitePacing, type WebsitePacing } from "../lib/control-plane/website-pacing.ts";
+import type { WebsiteSizeForUrl } from "../lib/control-plane/scheduler/host-supervision.ts";
 import { planSpread, SPREAD_ATTEMPT } from "../lib/method/spread.ts";
 import { runSpreadPass, sentMoneyPlaces, spreadLine } from "../lib/method/spread-pass.ts";
 import type { FixMapRow } from "../lib/method/fix-map.ts";
@@ -42,16 +45,22 @@ const works = (methodId: string, placeId: string, at = NOW): FixMapRow =>
 const plainTried = (methodId: string, placeId: string): FixMapRow =>
   ({ methodId, placeId, state: "UNTRIED", triedAt: null, attemptId: SPREAD_ATTEMPT.PLAIN_TRIED, cause: "x", updatedAt: NOW });
 
-/** A website double: each address answers what the table says; anything else is a 404. Every request is kept. */
-function websites(table: Record<string, { status: number; body?: string; retryAfter?: string }>) {
+/**
+ * A website double behind the shared paced fetch: each address answers what the table says; anything else is a 404.
+ * Every request that reached the website is kept.
+ */
+function websites(table: Record<string, { status: number; body?: string; retryAfter?: string }>,
+  options: { readonly pacing?: WebsitePacing; readonly sizeFor?: WebsiteSizeForUrl } = {}) {
   const calls: string[] = [];
-  const fetch: ProbeFetch = async (url) => {
+  const fetchImpl = (async (input: string | URL | Request) => {
+    const url = String(input instanceof Request ? input.url : input);
     calls.push(url);
     const hit = table[url] ?? { status: 404 };
-    return { status: hit.status, headers: { get: (name: string) => (name === "retry-after" ? hit.retryAfter ?? null : null) },
-      bytes: async () => new TextEncoder().encode(hit.body ?? "") };
-  };
-  return { fetch, calls };
+    return new Response(hit.body ?? "", { status: hit.status, headers: hit.retryAfter ? { "retry-after": hit.retryAfter } : {} });
+  }) as typeof globalThis.fetch;
+  const paced: ProbeFetch = pacedProbeFetch({ pacing: options.pacing ?? memoryWebsitePacing(), ...(options.sizeFor ? { sizeFor: options.sizeFor } : {}),
+    fetchImpl, sleep: async () => {}, clock: () => Date.parse(NOW) });
+  return { fetch: paced, calls };
 }
 
 test("free tries go to every matching place; paid tries only where the free try could not decide, inside a Send and within the dial", () => {
@@ -114,7 +123,7 @@ test("a working method is tried by plain code at every matching place, and every
   assert.match((await at(MORRIS)).cause!, /answered 404 here/);
   assert.equal((await at(LA)).state, "UNTRIED");
   assert.equal((await at(LA)).attemptId, SPREAD_ATTEMPT.QUEUED);
-  assert.match((await at(LA)).cause!, /answered 503 and asked to wait \(120\)/);
+  assert.match((await at(LA)).cause!, /the website answered 503, so every reader leaves it alone for now/);
 
   const saved = (await repos.fieldManual.read(method.id))!.value;
   assert.deepEqual(saved.placeResults!.filter((r) => r.place.startsWith("ocd-division/") && r.place !== PIMA).map((r) => [r.place, r.outcome]).sort(), [[MARICOPA, "YIELDED"], [MORRIS, "FAILED"]].sort());
@@ -166,9 +175,12 @@ test("a Scout whose subject is not a division reads and records at the divisions
   assert.equal((await repos.fixMap.workingMethods(10)).length, 1);
 });
 
-test("a small publisher gets at most ten requests in a round; robots.txt is read once per website", async () => {
-  const site = websites({ "https://smalltown.gov/robots.txt": { status: 200, body: "User-agent: *\nAllow: /\n" } });
-  const trier = plainTrier({ fetch: site.fetch, sizeFor: () => ({ kind: "local-government", population: 4_000 }) as never });
+test("a small publisher gets at most ten requests an hour, counted with every other reader; robots.txt is read once per website", async () => {
+  const pacing = memoryWebsitePacing();
+  for (let i = 0; i < 4; i += 1) await pacing.take("smalltown.gov", 10, Date.parse(NOW));
+  const site = websites({ "https://smalltown.gov/robots.txt": { status: 200, body: "User-agent: *\nAllow: /\n" } },
+    { pacing, sizeFor: () => ({ kind: "local-government", population: 4_000 }) as never });
+  const trier = plainTrier({ fetch: site.fetch });
   const method = newFieldManualEntry("m", "m", { role: "SHARED", kind: "METHOD", title: "m", summary: "GET {door}", outcome: "YIELDED", platforms: [], recordClasses: [],
     observedAt: NOW, payload: { procedure: "GET {door}" } });
   const outcomes: string[] = [];
@@ -176,7 +188,7 @@ test("a small publisher gets at most ten requests in a round; robots.txt is read
     const d = door(`d${i}`, `${TUCSON}-${i}`, "page", "smalltown.gov", { url: `https://smalltown.gov/p${i}` });
     outcomes.push((await trier.tryAt(method, d, "door kind")).outcome);
   }
-  assert.equal(site.calls.length, 10);
+  assert.equal(site.calls.length, 6, "four requests another reader made leave six: robots.txt and five pages");
   assert.equal(site.calls.filter((url) => url.endsWith("/robots.txt")).length, 1);
-  assert.deepEqual(outcomes.slice(9), ["WAITING", "WAITING", "WAITING"]);
+  assert.deepEqual(outcomes.slice(5), Array(7).fill("WAITING"));
 });

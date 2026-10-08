@@ -57,7 +57,7 @@ import {
 } from "../lib/civic-data/meeting-partitions.ts";
 import { OUTCOME_PARTITION_CONTRACTS } from "../lib/civic-data/outcome-partitions.ts";
 import { recordDoorOutcome, taskDoorId, type DoorOutcome } from "../lib/doors/outcome.ts";
-import { doorShutEnabled, evidenceFromCandidate, reopenDoorIfShut } from "../lib/doors/ingest-evidence.ts";
+import { evidenceFromCandidate, reopenDoorIfShut } from "../lib/doors/ingest-evidence.ts";
 import { recordDoorEvidence, type DoorEvidence } from "../lib/doors/shut.ts";
 import { observedChangeMinutesByDoor } from "../lib/doors/observed-rate.ts";
 import { isDoorRecord } from "../lib/doors/registry.ts";
@@ -103,7 +103,9 @@ import { loadPublishedLookupState } from "../lib/census-geography/reader.ts";
 import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../lib/control-plane/scheduler/research-policy.ts";
 import { admittedHuntSourceScopes, huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
 import { PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowWorkerTasks } from "../lib/civic-data/publish-now.ts";
-import { doorProbesOn, runHourlyProbes } from "../lib/doors/hourly-check.ts";
+import { runHourlyProbes } from "../lib/doors/hourly-check.ts";
+import { stateOfPlace } from "../lib/method/fix-map.ts";
+import { websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
 import { hotMeetingPartitions } from "../lib/doors/hot-partitions.ts";
 import { pacedProbeFetch } from "../lib/doors/probe-fetch.ts";
 import { workerPublicationTasks } from "../lib/civic-data/worker-publication-tasks.ts";
@@ -299,13 +301,12 @@ async function recordTaskDoorOutcome(taskId: string, outcome: DoorOutcome, chang
     const doorId = await taskDoorId(repos.doors, taskId);
     if (doorId === null) return;
     const at = new Date().toISOString();
-    // With WTP_DOOR_SHUT=on, a failed read that tells the door itself is gone judges it and opens its fix item;
-    // a promoted read reopens a door that was shut.
+    // A failed read that tells the door itself is gone judges it and opens its fix item; a promoted read reopens a door that was shut.
     if (outcome === "FAILURE" && evidence !== null) {
       if ((await recordDoorEvidence(repos.doors, doorId, evidence, at, repos)).written) return;
     }
     await recordDoorOutcome(repos.doors, doorId, outcome, at, changed);
-    if (outcome === "SUCCESS" && doorShutEnabled() && await reopenDoorIfShut(repos.doors, doorId, at, repos)) {
+    if (outcome === "SUCCESS" && await reopenDoorIfShut(repos.doors, doorId, at, repos)) {
       console.log(`RCD_TASK ${taskId}: its door was shut and reads again; reopened`);
     }
   } catch (error) {
@@ -432,15 +433,18 @@ async function readHuntSourceTasks(): Promise<readonly RoutineSourceTask[]> {
   if (PUBLISH_NOW) {
     // The hourly first look: each hot door's page or feed is looked at once an hour; a change is stored on
     // the door and read below at once. A look that cannot be made never stops a known-changed door's read.
-    if (doorProbesOn()) {
-      try {
-        const listed = (await listDoors(repos.doors)).doors;
-        const clockStore = new PostgresRoutineDataStore();
-        const report = await runHourlyProbes(repos.doors, listed, await hotMeetingPartitions({ readClock: (task) => clockStore.clock(task.sourceId, task.recordClass, task.scope), db: getDb() }, Date.now()), pacedProbeFetch(), new Date().toISOString());
-        if (report.looked > 0 || report.deferred > 0) console.log(`RCD_PROBE ${report.looked} door(s) looked at (${report.requests} request(s)): ${report.changed} changed, ${report.unchanged} the same, ${report.failed} failed; ${report.deferred} waiting`);
-      } catch (error) {
-        console.log(`RCD_PROBE CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; doors keep their routine schedule`);
+    try {
+      const listed = (await listDoors(repos.doors)).doors;
+      const clockStore = new PostgresRoutineDataStore();
+      const sizeFor = websiteSizeFromHoldings([...new Set(listed.flatMap((door) => stateOfPlace(door.ocdId ?? "") ?? []))]);
+      const report = await runHourlyProbes(repos.doors, listed, await hotMeetingPartitions({ readClock: (task) => clockStore.clock(task.sourceId, task.recordClass, task.scope), db: getDb() }, Date.now()),
+        pacedProbeFetch({ pacing: repos.websitePacing, sizeFor }), new Date().toISOString());
+      if (report.looked > 0 || report.deferred > 0 || report.waiting > 0) {
+        console.log(`RCD_PROBE ${report.looked} door(s) looked at (${report.requests} request(s)): ${report.changed} changed, ${report.unchanged} the same, ${report.failed} failed; ` +
+          `${report.waiting} waiting on their website's hour or its request to wait; ${report.deferred} not due`);
       }
+    } catch (error) {
+      console.log(`RCD_PROBE CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; doors keep their routine schedule`);
     }
     return [...publication, ...publishNowDoorTasks((await listDoors(repos.doors)).doors,
       MEETING_PARTITION_CONTRACTS.map(routineTaskFromContract), RUN_STARTED_AT)];
@@ -936,7 +940,7 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
       console.log(`RCD_TASK ${pending.task.id}: GOOD (${receipt.state})`);
     } else {
       verifiedSourceFailures += 1;
-      const failedCandidate = doorShutEnabled() && !receipt.acquisitionSucceeded ? await store.readCandidateSummary(receipt.candidateId).catch(() => null) : null;
+      const failedCandidate = !receipt.acquisitionSucceeded ? await store.readCandidateSummary(receipt.candidateId).catch(() => null) : null;
       await recordTaskDoorOutcome(pending.task.id, "FAILURE", false, failedCandidate === null ? null : evidenceFromCandidate(failedCandidate));
       captureTaskReceipt(pending, receipt, "VERIFIED_SOURCE_FAILURE");
       console.log("RCD_RECEIPT=" + JSON.stringify(receipt));

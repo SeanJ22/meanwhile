@@ -103,7 +103,7 @@ import { resolveScopes } from "../lib/control-plane/expansion/runner-load.ts";
 import { loadPublishedLookupState } from "../lib/census-geography/reader.ts";
 import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../lib/control-plane/scheduler/research-policy.ts";
 import { admittedHuntSourceScopes, huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
-import { PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowWorkerTasks } from "../lib/civic-data/publish-now.ts";
+import { PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowHasNothingOwed, publishNowWorkerTasks } from "../lib/civic-data/publish-now.ts";
 import { runHourlyProbes } from "../lib/doors/hourly-check.ts";
 import { stateOfPlace } from "../lib/method/fix-map.ts";
 import { websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
@@ -623,6 +623,15 @@ try {
 // A standing refresh already covers a Send for its source; don't launch duplicate children for the same pointer.
 const selectedTasks = [...STANDING_SOURCE_TASKS, ...huntTasks.filter(task => !STANDING_SOURCE_TASKS.some(standing => standing.id === task.id))]
   .filter((task) => !ONLY || ONLY.has(task.id) || (task.registeredContractId !== undefined && ONLY.has(task.registeredContractId)));
+if (publishNowHasNothingOwed(PUBLISH_NOW, selectedTasks.length, supervisorFailures.length)) {
+  console.log("publish-now: nothing owed this minute");
+  if (!await flushDatabaseTransfer()) console.warn("RCD_TRANSFER daily byte counter could not be saved; data results are unchanged.");
+  await ROUTINE_DATA_PROCESS_LEASE.release();
+  await readCacheHost.close();
+  await workerToolsHost?.close();
+  await sharedBrowser.close();
+  process.exit(0);
+}
 step = "reading the routine task clocks";
 const clockReads = FORCE
   ? selectedTasks.map((task) => ({ task, ok: true as const, clock: undefined, error: null }))

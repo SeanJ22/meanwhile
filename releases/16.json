@@ -1,0 +1,20 @@
+{
+  "n": 16,
+  "branch": "release/16",
+  "river_sha": "321ac4975de4471153f22b67128b511a5bb485db",
+  "tested_sha": "321ac4975de4471153f22b67128b511a5bb485db",
+  "steps": [
+    "IR-01",
+    "IR-02",
+    "IR-03",
+    "IR-04",
+    "IR-05"
+  ],
+  "lanes": [
+    "reads"
+  ],
+  "integration_from": 121,
+  "integration_count": 122,
+  "pr": null,
+  "at": "2026-10-08T02:37:18Z"
+}

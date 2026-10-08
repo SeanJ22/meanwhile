@@ -1,0 +1,23 @@
+{
+  "n": 20,
+  "branch": "release/20",
+  "river_sha": "6358f0634fba8dbbba7846aff1fcf8bf63443d8d",
+  "tested_sha": "6358f0634fba8dbbba7846aff1fcf8bf63443d8d",
+  "steps": [
+    "NR-01",
+    "NR-02",
+    "NR-03",
+    "NR-04",
+    "NR-05",
+    "NR-06",
+    "NR-07",
+    "NR-08"
+  ],
+  "lanes": [
+    "neon-reads"
+  ],
+  "integration_from": 127,
+  "integration_count": 128,
+  "pr": null,
+  "at": "2026-10-08T18:20:03Z"
+}

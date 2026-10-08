@@ -16,7 +16,7 @@ Built 2026-10-07 (UTC) from repo `/home/user/meanwhile` at `f566ec0f`. Nothing i
 ## Start / stop / reset
 
 ```bash
-LP=/tmp/claude-0/-home-user-meanwhile/d66f8503-5066-5aa1-9543-6c62b6fc4036/scratchpad/localprod
+LP=$SCRATCH/localprod
 $LP/up.sh      # start Postgres (inside a user namespace, so the root-owned data dir works) + shim
 $LP/down.sh    # stop both; data kept
 $LP/reset.sh   # stop, replace pgdata with pristine/pgdata (identical data), start  (~15 s)

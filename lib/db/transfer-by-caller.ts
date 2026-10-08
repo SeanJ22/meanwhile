@@ -27,6 +27,8 @@ export interface NeonBytesHour {
   readonly hour: string;
   readonly requests: number;
   readonly bytes: Readonly<Record<NeonDatabase, number>>;
+  /** Requests and request-body bytes by database: with `bytes`, the runner's rows in the daily transfer table (transfer.ts). */
+  readonly sent?: Readonly<Record<NeonDatabase, NeonSent>>;
   /** Caller key → bytes. Keys are prefixed "reader: " for the reader database. */
   readonly byCaller: Readonly<Record<string, number>>;
   /** Which processes contributed: script name and pid. */
@@ -50,7 +52,9 @@ export interface NeonBytesSummary {
   readonly processCount: number;
 }
 
-interface Bucket { requests: number; bytes: Record<NeonDatabase, number>; byCaller: Map<string, number>; counters: Map<string, number>; dirty: boolean }
+export interface NeonSent { readonly requests: number; readonly bytes: number }
+
+interface Bucket { requests: number; bytes: Record<NeonDatabase, number>; sent: Record<NeonDatabase, NeonSent>; byCaller: Map<string, number>; counters: Map<string, number>; dirty: boolean }
 
 const scope = new AsyncLocalStorage<string>();
 const pinnedSite = new AsyncLocalStorage<string>();
@@ -80,7 +84,9 @@ export function withQueryCaller<T>(operation: string, run: () => T): T {
  * still count under the code that asked.
  */
 export function withCallerSite<T>(run: () => T): T {
-  return pinnedSite.run(callSite(), run);
+  const site = callSite();
+  const outer = pinnedSite.getStore();
+  return pinnedSite.run(site === "unknown" && outer !== undefined ? outer : site, run);
 }
 
 /** The first stack frame outside the database layers, as a repo-relative "path:line". */
@@ -90,13 +96,18 @@ export function callerFromStack(stack: string | undefined): string {
   if (cached !== undefined) return cached;
   let site = "unknown";
   for (const line of stack.split("\n").slice(1)) {
-    if (/node:|node_modules|\/lib\/control-plane\/repository\/|\/lib\/db\/|\(<anonymous>\)/.test(line)) continue;
+    if (/node:|node_modules|\/lib\/control-plane\/repository\/|\/lib\/db\/|\/lib\/ops\/neon-request-deadline\.|\/lib\/control-plane\/scheduler\/cycle-(?:phases|stall)\.|\(<anonymous>\)/.test(line)) continue;
     const match = line.match(/.*[/\\]((?:lib|scripts|app|netlify|tests)[/\\][^:()]+):(\d+):\d+/);
     if (match) { site = `${match[1].replace(/\\/g, "/")}:${match[2]}`; break; }
   }
   if (siteCache.size >= SITE_CACHE_LIMIT) siteCache.clear();
   siteCache.set(stack, site);
   return site;
+}
+
+/** The code opening a database socket, under which the socket's bytes count: "websocket ← path:line". */
+export function socketCaller(): string {
+  return `websocket ← ${pinnedSite.getStore() ?? callSite()}`;
 }
 
 function callSite(): string {
@@ -108,13 +119,18 @@ function callSite(): string {
   return callerFromStack(holder.stack);
 }
 
-/** Called once per counted Neon HTTP response (transfer.ts). Never throws. */
-export function countNeonBytes(database: NeonDatabase, bytes: number, nowMs: number = Date.now()): void {
+/**
+ * Called once per counted Neon HTTP response, and per message a database socket receives or sends (transfer.ts).
+ * `sent` is the request side (one request with no body unless given); `caller` names a socket's opener. Never throws.
+ */
+export function countNeonBytes(database: NeonDatabase, bytes: number, nowMs: number = Date.now(),
+  sent: NeonSent = { requests: 1, bytes: 0 }, caller?: string): void {
   try {
-    const caller = scope.getStore() ?? `query ← ${callSite()}`;
-    const key = database === "reader" ? `reader: ${caller}` : caller;
+    const site = caller ?? scope.getStore() ?? `query ← ${callSite()}`;
+    const key = database === "reader" ? `reader: ${site}` : site;
     const bucket = bucketFor(nowMs);
-    bucket.requests += 1;
+    bucket.requests += sent.requests;
+    bucket.sent[database] = { requests: bucket.sent[database].requests + sent.requests, bytes: bucket.sent[database].bytes + sent.bytes };
     bucket.bytes[database] += bytes;
     bucket.byCaller.set(key, (bucket.byCaller.get(key) ?? 0) + bytes);
     bucket.dirty = true;
@@ -125,7 +141,9 @@ function bucketFor(nowMs: number): Bucket {
   const hour = hourStart(nowMs);
   let bucket = buckets.get(hour);
   if (!bucket) {
-    bucket = { requests: 0, bytes: { reader: 0, "control-plane": 0 }, byCaller: new Map(), counters: new Map(), dirty: false };
+    bucket = { requests: 0, bytes: { reader: 0, "control-plane": 0 },
+      sent: { reader: { requests: 0, bytes: 0 }, "control-plane": { requests: 0, bytes: 0 } },
+      byCaller: new Map(), counters: new Map(), dirty: false };
     buckets.set(hour, bucket);
   }
   return bucket;
@@ -147,7 +165,7 @@ function processLabel(): string {
 }
 
 function snapshot(hour: string, bucket: Bucket): NeonBytesHour {
-  return { hour, requests: bucket.requests, bytes: { ...bucket.bytes },
+  return { hour, requests: bucket.requests, bytes: { ...bucket.bytes }, sent: { ...bucket.sent },
     byCaller: Object.fromEntries(bucket.byCaller), processes: [processLabel()],
     ...(bucket.counters.size > 0 ? { counters: Object.fromEntries(bucket.counters) } : {}) };
 }

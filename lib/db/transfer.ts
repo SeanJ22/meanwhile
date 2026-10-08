@@ -1,6 +1,6 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import { neon, neonConfig } from "@neondatabase/serverless";
-import { countNeonBytes, installNeonBytesReport } from "./transfer-by-caller.ts";
+import { countNeonBytes, installNeonBytesReport, socketCaller, VITAL_SIGNS_REPORT_ENV, type NeonBytesHour } from "./transfer-by-caller.ts";
 
 type FetchLike = typeof fetch;
 export interface DatabaseTransfer {
@@ -18,6 +18,12 @@ let installed = false;
 let lastFlush = 0;
 let flushing: Promise<boolean> | null = null;
 
+const easternDay = (at: Date) => new Intl.DateTimeFormat("sv-SE", { timeZone: "America/New_York" }).format(at);
+
+function runnerClient(): boolean {
+  return Boolean(process.env.WTP_RUNTIME_AUTHORITY_CAPABILITY) || process.env.WTP_SANCTIONED_WRITE === "routine-civic-data-promotion";
+}
+
 /** Decoded HTTP body bytes, before parsing. This measures our reads, not Neon's billing lag. */
 export function databaseTransferFetch(underlying: FetchLike, record: (value: DatabaseTransfer) => void | Promise<unknown>): FetchLike {
   return async (input, init) => {
@@ -31,9 +37,9 @@ export function databaseTransferFetch(underlying: FetchLike, record: (value: Dat
         connection !== process.env.WTP_CONTROL_PLANE_DATABASE_URL) return response;
     const bytes = await response.arrayBuffer();
     await record({
-      day: new Intl.DateTimeFormat("sv-SE", { timeZone: "America/New_York" }).format(new Date()),
+      day: easternDay(new Date()),
       database: connection === process.env.DATABASE_URL ? "reader" : "control-plane",
-      client: process.env.WTP_RUNTIME_AUTHORITY_CAPABILITY || process.env.WTP_SANCTIONED_WRITE === "routine-civic-data-promotion" ? "runner" : "reader",
+      client: runnerClient() ? "runner" : "reader",
       requests: 1,
       requestBytes: typeof init?.body === "string" ? Buffer.byteLength(init.body) : 0,
       responseBytes: bytes.byteLength,
@@ -84,22 +90,94 @@ function accumulate(row: DatabaseTransfer): void {
     requestBytes: prior.requestBytes + row.requestBytes, responseBytes: prior.responseBytes + row.responseBytes } : row);
 }
 
-/** Shared Neon HTTP hook; query execution is unchanged and counter failure never hides data. */
+/**
+ * A standing-runner process hands its counts to the runner in its hour reports, which reach the runner even when the
+ * process exits at once or is ended; the runner alone writes their daily rows (`keepRunnerTransfer`).
+ */
+function reportsToRunner(): boolean {
+  return process.env[VITAL_SIGNS_REPORT_ENV] === "1";
+}
+
+function counted(row: DatabaseTransfer, caller?: string): void {
+  countNeonBytes(row.database, row.responseBytes, Date.now(), { requests: row.requests, bytes: row.requestBytes }, caller);
+  if (reportsToRunner()) return;
+  accumulate(row);
+  // An answered query must not wait on the accounting write to the reader database.
+  if (Date.now() - lastFlush >= 60_000) void flushDatabaseTransfer();
+}
+
+/** Which of the two civic databases a socket URL reaches, by host; null for any other host. */
+function socketDatabase(url: string | URL): DatabaseTransfer["database"] | null {
+  const host = (value: string | undefined) => {
+    try { return value ? new URL(value).hostname.toLowerCase().replace("-pooler.", ".") : null; } catch { return null; }
+  };
+  let target: string;
+  try { target = new URL(String(url)).hostname.toLowerCase().replace("-pooler.", "."); } catch { return null; }
+  if (target === host(process.env.DATABASE_URL)) return "reader";
+  if (target === host(process.env.WTP_CONTROL_PLANE_DATABASE_URL)) return "control-plane";
+  return null;
+}
+
+const messageBytes = (data: unknown): number => typeof data === "string" ? Buffer.byteLength(data)
+  : data instanceof ArrayBuffer || ArrayBuffer.isView(data) ? data.byteLength : data instanceof Blob ? data.size : 0;
+
+/** The Pool driver's sockets (locks, pinned connections, the meeting and publication stores), counted like HTTP responses. */
+function countedWebSocket(Socket: typeof WebSocket): typeof WebSocket {
+  return class CountedWebSocket extends Socket {
+    constructor(url: string | URL, protocols?: string | string[]) {
+      super(url, protocols);
+      const database = socketDatabase(url);
+      if (database === null) return;
+      const caller = socketCaller();
+      const row = (responseBytes: number, requestBytes: number): DatabaseTransfer => ({ day: easternDay(new Date()), database,
+        client: runnerClient() ? "runner" : "reader", requests: 0, requestBytes, responseBytes });
+      this.addEventListener("message", event => { try { counted(row(messageBytes(event.data), 0), caller); } catch { /* accounting never breaks a read */ } });
+      const send = this.send.bind(this);
+      this.send = data => { try { counted(row(0, messageBytes(data)), caller); } catch { /* accounting never breaks a write */ } send(data); };
+    }
+  };
+}
+
+/** Shared Neon HTTP and socket hook; query execution is unchanged and counter failure never hides data. */
 export function installDatabaseTransferCounter(): void {
   if (installed) return;
   installed = true;
   installNeonBytesReport();
-  neonConfig.fetchFunction = databaseTransferFetch((neonConfig.fetchFunction ?? fetch) as FetchLike, (row) => {
-    accumulate(row);
-    countNeonBytes(row.database, row.responseBytes);
-    // An answered query must not wait on the accounting write to the reader database.
-    if (Date.now() - lastFlush >= 60_000) void flushDatabaseTransfer();
-  });
+  neonConfig.fetchFunction = databaseTransferFetch((neonConfig.fetchFunction ?? fetch) as FetchLike, row => { counted(row); });
+  const Socket = (neonConfig.webSocketConstructor ?? globalThis.WebSocket) as typeof WebSocket | undefined;
+  if (Socket) neonConfig.webSocketConstructor = countedWebSocket(Socket);
   // Long-running processes flush once a minute. The supervisor also awaits a flush before it exits.
   const timer = setInterval(() => { if (Date.now() - lastFlush >= 60_000) void flushDatabaseTransfer(); }, 60_000);
   timer.unref();
-  // Short-lived acquisition/repair children also save their final partial minute.
+  // A process outside the runner also saves its final partial minute.
   process.once("beforeExit", () => { void flushDatabaseTransfer(); });
+}
+
+const runnerParts = new Map<string, { readonly hour: string; readonly bytes: NeonBytesHour["bytes"]; readonly sent: NonNullable<NeonBytesHour["sent"]> }>();
+const NOTHING_SENT: NonNullable<NeonBytesHour["sent"]> = { reader: { requests: 0, bytes: 0 }, "control-plane": { requests: 0, bytes: 0 } };
+
+/**
+ * The standing runner's daily rows: each hour report (one process's whole hour so far, its own or a child's) adds
+ * what that process read and sent since its previous report, written once a minute by this process.
+ */
+export function keepRunnerTransfer(part: NeonBytesHour): void {
+  if (!Number.isSafeInteger(part.pid)) return;
+  installDatabaseTransferCounter();
+  const key = `${part.pid}:${part.startedMs ?? ""}:${part.hour}`;
+  const prior = runnerParts.get(key);
+  const sent = part.sent ?? NOTHING_SENT;
+  runnerParts.set(key, { hour: part.hour, bytes: part.bytes, sent });
+  const day = easternDay(new Date(part.hour));
+  for (const database of ["reader", "control-plane"] as const) {
+    const responseBytes = (part.bytes[database] ?? 0) - (prior?.bytes[database] ?? 0);
+    const requests = sent[database].requests - (prior?.sent[database].requests ?? 0);
+    const requestBytes = sent[database].bytes - (prior?.sent[database].bytes ?? 0);
+    if (responseBytes > 0 || requests > 0 || requestBytes > 0) {
+      accumulate({ day, database, client: "runner", requests: Math.max(0, requests), requestBytes: Math.max(0, requestBytes), responseBytes: Math.max(0, responseBytes) });
+    }
+  }
+  const oldest = new Date(Date.parse(part.hour) - 2 * 3_600_000).toISOString();
+  for (const [held, value] of runnerParts) if (value.hour < oldest) runnerParts.delete(held);
 }
 
 export type DailyDatabaseTransferRead =

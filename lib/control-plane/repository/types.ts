@@ -235,8 +235,19 @@ export interface AggregateRepository<T> {
   listNarrowed(projection: RecordProjection): Promise<readonly Persisted<unknown>[]>;
   /** Exactly `list()` filtered by the scalar `#>>` value at `path`. */
   listWhere(path: readonly string[], value: string): Promise<readonly Persisted<T>[]>;
-  /** Rows whose database-clock `changed_at` is at or after `since` (all when null), in id order; `through` is the store's clock when the read began. */
-  listChangedSince?(since: string | null): Promise<ChangedRows<T>>;
+  /**
+   * Rows whose database-clock `changed_at` is at or after `since` (all when null), in id order, less any row `held`
+   * names at its current revision; `through` is the store's clock when the read began.
+   */
+  listChangedSince?(since: string | null, held?: HeldSlots): Promise<ChangedRows<T>>;
+}
+
+/** Slots a reader already holds, left out of a changed-since read: an aggregate's [id, revision], a log record's [key, position]. */
+export type HeldSlots = readonly (readonly [string, number])[];
+
+/** `held` as a set of "slot\nversion" keys. */
+export function heldSlotKeys(held: HeldSlots | undefined): ReadonlySet<string> {
+  return new Set((held ?? []).map(([slot, version]) => `${slot}\n${version}`));
 }
 
 /** The field manual's rows, one aggregate per entry. */
@@ -296,8 +307,8 @@ export interface AppendOnlyRepository<T> {
   keysWhere?(path: readonly string[], value: string): Promise<readonly string[]>;
   /** Exactly `read(key)` for each key, in one batched read; a key with no record is absent. */
   readKeys?(keys: readonly string[]): Promise<ReadonlyMap<string, readonly T[]>>;
-  /** Records whose `changed_at` is at or after `since` (all when null), in `readAll()` order, with coordinates. */
-  readChangedSince?(since: string | null): Promise<ChangedRecords<T>>;
+  /** Records whose `changed_at` is at or after `since` (all when null), less any `held` names, in `readAll()` order, with coordinates. */
+  readChangedSince?(since: string | null, held?: HeldSlots): Promise<ChangedRecords<T>>;
 }
 
 /** `log.readKeys(keys)`, or `read` per key where the provider has no batched read. */

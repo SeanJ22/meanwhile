@@ -332,13 +332,18 @@ export function routineSupervisorCycleIsolationIssue(
   return null;
 }
 
+/** The fields of the newest cycle outcome that the owner snapshot shows. */
+export type LatestFreshnessCycle = Pick<FreshnessCycleOutcome, "kind" | "cycleId" | "registry" | "risk" | "incidents">;
+
+/** The newest freshness cycle only, narrowed by the store; on the runner a held copy answers it. */
 export async function readLatestFreshnessCycleOutcome(
   repos: ControlPlaneRepositories,
-): Promise<{ readonly digest: OwnerDigestRecord; readonly outcome: FreshnessCycleOutcome } | null> {
-  const rows = await repos.ownerDigests.readWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE");
-  const digest = rows.at(-1);
+): Promise<{ readonly digestId: string; readonly outcome: LatestFreshnessCycle } | null> {
+  const [digest] = await repos.ownerDigests.readRecentWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE", 1,
+    { digestId: true, runtimeOutcome: ["kind", "cycleId", "registry", "risk", "incidents"] }) as
+    readonly { readonly digestId?: string; readonly runtimeOutcome?: LatestFreshnessCycle }[];
   const outcome = digest?.runtimeOutcome;
-  if (digest && outcome?.kind === "FRESHNESS_CYCLE") return { digest, outcome };
+  if (typeof digest?.digestId === "string" && outcome?.kind === "FRESHNESS_CYCLE") return { digestId: digest.digestId, outcome };
   return null;
 }
 

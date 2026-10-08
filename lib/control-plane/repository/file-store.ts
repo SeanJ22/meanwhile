@@ -3,6 +3,7 @@ import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { DoorRecord } from "../../doors/registry.ts";
+import type { LeadOrder } from "../leads/order.ts";
 import { memoryWebsitePacing } from "../website-pacing.ts";
 import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
@@ -596,6 +597,10 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
       (await artifacts.readAll()).filter(record => record.canonicalUrl === url)
         .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt) || a.artifactId.localeCompare(b.artifactId))
         .slice(0, Math.max(0, Math.trunc(limit))),
+    capturedCanonicalUrls: async (urls) => {
+      const wanted = new Set(urls);
+      return new Set((await artifacts.readAll()).map(record => record.canonicalUrl).filter(url => wanted.has(url)));
+    },
     adminEvidenceCopyRequests: fileAggregateRepository<AdminEvidenceCopyRequest>(resolved, "AdminEvidenceCopyRequest", "admin-evidence-copy-requests"),
     costs: fileAppendOnlyRepository<CostEntry>(resolved, "costs"),
     ownerSnapshots: fileAggregateRepository<OwnerSnapshot>(
@@ -636,6 +641,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     adminConfig: fileAggregateRepository<AdminConfig>(resolved, "AdminConfig", "admin-config"),
     askGapObservations: fileAggregateRepository<AskGapObservation>(resolved, "AskGapObservation", "ask-gap-observations"),
     doors: fileAggregateRepository<DoorRecord>(resolved, "Door", "doors"),
+    leadOrders: fileAggregateRepository<LeadOrder>(resolved, "LeadOrder", "lead-orders"),
     budget: budgetRepositoryFrom(
       fileAggregateRepository<BudgetLedger>(resolved, "BudgetLedger", "budget"),
       locks,

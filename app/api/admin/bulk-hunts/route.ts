@@ -5,17 +5,20 @@
  *   POST { text?, picks?, budget, priority? }            the ZIPs pasted or uploaded and one
  *                                                        mission for each pick, each with its
  *                                                        budget, and everything left out
+ *   POST { kind: "leads", text?, xlsx? }                 the research leads pasted or uploaded,
+ *                                                        one row per link, and everything left out
  * ```
  *
- * It changes nothing. The send itself is `expansion.scope.setMany`, posted to `/api/admin/action` with the `items` this returns.
+ * It changes nothing. The send itself is `expansion.scope.setMany` (or `leads.upload`), posted to `/api/admin/action` with the `items` (or `rows`) this returns.
  */
 import { NextResponse, type NextRequest } from "next/server";
 
 import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
 import { guardAdminRequest } from "@/lib/control-plane/gateway/admin-guard.ts";
 import { BULK_MAX_ZIPS, ZIP_COLUMN, parseZips } from "@/lib/control-plane/bulk-hunts/parse.ts";
-// The repository's own workbook reader (there is no spreadsheet library here): a ZIP of XML parts, read without one.
-import { readWorkbook, toCsv } from "../../../../scripts/xlsx.mjs";
+import { sheetAsCsv } from "@/lib/control-plane/bulk-hunts/workbook.ts";
+import { LINK_COLUMN } from "@/lib/control-plane/leads/parse.ts";
+import { previewLeads } from "@/lib/control-plane/leads/preview.ts";
 import { planBudgets, type BudgetSpec } from "@/lib/control-plane/bulk-hunts/plan.ts";
 import { PICKABLE_TYPES, describeZips, missionForPick, pickable, validPick, type PickableType } from "@/app/(admin)/_mw/data/bulk-places.ts";
 import { scopeKeyOf } from "@/lib/control-plane/expansion/scopes.ts";
@@ -83,20 +86,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ says: "That request could not be read, so nothing was previewed." }, { status: 400, headers });
   }
   let text = typeof body.text === "string" ? body.text : "";
+  const leads = body.kind === "leads";
   const workbook = typeof body.xlsx === "string" ? body.xlsx : "";
   if (workbook.length > XLSX_MAX_CHARS) return NextResponse.json({ says: "That workbook is too large to read here. Save it as CSV and send it in parts." }, { status: 413, headers });
   if (workbook !== "") {
-    // The first sheet that has a column named zip. Every other sheet is left alone.
-    try {
-      const sheets = readWorkbook(Buffer.from(workbook, "base64")) as { name: string; rows: string[][] }[];
-      const sheet = sheets.find((s) => (s.rows[0] ?? []).some((h) => ZIP_COLUMN.test(String(h).trim())));
-      if (!sheet) return NextResponse.json({ ok: false, says: "No sheet in that workbook has a column named zip." }, { status: 200, headers });
-      text = toCsv(sheet.rows[0], sheet.rows.slice(1)) as string;
-    } catch {
-      return NextResponse.json({ ok: false, says: "That file could not be read as an Excel workbook. Save it as CSV and upload that." }, { status: 200, headers });
-    }
+    const sheet = sheetAsCsv(workbook, leads ? LINK_COLUMN : ZIP_COLUMN);
+    if (!sheet.ok) return NextResponse.json({ ok: false, says: sheet.says }, { status: 200, headers });
+    text = sheet.csv;
   }
   if (text.length > TEXT_MAX_CHARS) return NextResponse.json({ says: "That file is too large to read here. Split it and send it in parts." }, { status: 413, headers });
+  if (leads) return NextResponse.json(previewLeads(text), { headers });
   const rawPicks = Array.isArray(body.picks) ? body.picks : [];
   if (rawPicks.length > PICKS_MAX) return NextResponse.json({ says: `Pick at most ${PICKS_MAX} places at a time.` }, { status: 400, headers });
   const spec = budgetSpecOf(body.budget);

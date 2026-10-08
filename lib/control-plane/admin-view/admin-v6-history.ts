@@ -15,7 +15,7 @@ export interface V6HistoryReceipt {
   readonly scopeKey: string; readonly scopeName: string; readonly level: "local" | "global";
   readonly status: V6ReceiptStatus; readonly statusWords: string;
   readonly steps: readonly { readonly label: string; readonly at: string }[];
-  readonly says: string; readonly items: readonly [];
+  readonly says: string; readonly items: readonly { readonly name: string; readonly status: V6ReceiptStatus; readonly note: string; readonly label?: string }[];
   readonly lifecycle: { readonly saved: string | null; readonly workersReceived: string | null;
     readonly workStarted: null; readonly workFinished: null; readonly factsChecked: null;
     readonly published: null; readonly checkedOnPublicPage: null };
@@ -54,17 +54,18 @@ function targetWords(kind: ActionKind): string {
   if (kind.startsWith("hunt-")) return "a hunt";
   if (kind.startsWith("target-")) return "a place's target";
   if (kind.startsWith("data-switch-")) return "who can see a number";
+  if (kind === "leads-send") return "research leads";
   return "";
 }
 function mapped(receipt: ActionReceipt, scope: string, confirmation: Confirmation | null = null): V6HistoryReceipt | null {
   const target = receipt.requestedSubject || receipt.subject;
   const kind = gatewayActionKind(receipt.type, { subject: target, says: receipt.says });
   if (receipt.formatVersion !== 1 || !kind || !receipt.receiptId || !receipt.idempotencyKey || !eventTime(receipt.startedAt)) return null;
-  const global = kind.startsWith("global-") || kind === "hunt-start-many";
+  const global = kind.startsWith("global-") || kind === "hunt-start-many" || kind === "leads-send";
   const place = /^(?:us|st:[a-z]{2}|geo:[a-z]{2}\.[a-z_]+\.[0-9A-Za-z]{1,16})$/.test(target) ? target : global ? "us" : "unknown";
   if (scope !== "us" && place !== scope && receipt.subject !== scope) return null;
   const confirmed = confirmation?.state === "applied" && receipt.outcome !== "REFUSED";
-  const status = confirmed ? "done" : statusOf(receipt);
+  const status = confirmed ? "done" : confirmation?.state === "working" ? "running" : statusOf(receipt);
   const completed = eventTime(receipt.completedAt);
   const confirmedAt = confirmed ? eventTime(confirmation!.at) ?? completed : null;
   return {
@@ -74,11 +75,11 @@ function mapped(receipt: ActionReceipt, scope: string, confirmation: Confirmatio
     scopeKey: place, scopeName: place === "us" ? "United States" : place === "unknown" ? "Place not recorded" : "—", level: place === "us" ? "global" : "local", status,
     statusWords: status === "queued" ? "Request saved; runner response unknown" :
       status === "refused" ? "Request refused" : confirmed ? "Done" : status === "done" ? "Gateway action recorded" :
-      status === "running" ? "Gateway action in progress" : "Outcome unknown",
+      status === "running" ? (confirmation?.state === "working" ? "Running" : "Gateway action in progress") : "Outcome unknown",
     steps: [{ label: "Sent", at: receipt.startedAt },
       ...(completed ? [{ label: status === "refused" ? "Refused" : "Gateway receipt recorded", at: completed }] : []),
       ...(confirmedAt ? [{ label: "Runner confirmed", at: confirmedAt }] : [])],
-    says: confirmed ? confirmation!.words : receipt.says, items: [],
+    says: confirmed || confirmation?.state === "working" ? confirmation!.words : receipt.says, items: confirmation?.items ?? [],
     lifecycle: { saved: status === "queued" || status === "done" ? completed : null,
       workersReceived: confirmedAt, workStarted: null, workFinished: null, factsChecked: null,
       published: null, checkedOnPublicPage: null },

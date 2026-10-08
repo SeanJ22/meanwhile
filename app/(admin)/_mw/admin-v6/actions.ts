@@ -327,6 +327,22 @@ const defs: ActionDef[] = [
     dependency: null,
   },
   {
+    kind: "leads-send",
+    label: "Send research leads",
+    needs: "owner",
+    doneWords: "Leads received.",
+    preview: () => ({
+      title: "Send research leads",
+      level: "global",
+      rows: [
+        ["Creates", "One order with a row for each link"],
+        ["Spending", "None to test the links"],
+      ],
+    }),
+    gateway: { type: "leads.upload" },
+    dependency: null,
+  },
+  {
     kind: "hunt-pause",
     label: "Pause paid work",
     needs: "spend",

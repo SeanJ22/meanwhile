@@ -54,6 +54,8 @@ export type ResearchGet = (input: {
   /** The redirect target of a 3xx; null otherwise. */
   readonly location: string | null;
   readonly transportError: string | null;
+  /** The Retry-After header as sent, when there was one. */
+  readonly retryAfter?: string | null;
 }>;
 
 /**
@@ -126,6 +128,7 @@ export type ResearchFetchResult =
       readonly contentType: string;
       readonly body: Uint8Array;
       readonly sha256: string | null;
+      readonly retryAfter: string | null;
       /** The access control this answer put in front of the page, or null. A technical failure, never defeated. */
       readonly accessControl: AccessControl | null;
       readonly redirects: readonly { readonly from: string; readonly status: number; readonly to: string }[];
@@ -254,6 +257,7 @@ export async function researchFetch(start: string, runtime: ResearchRuntime): Pr
       contentType: got.contentType,
       body: got.body,
       sha256: got.transportError === null ? createHash("sha256").update(got.body).digest("hex") : null,
+      retryAfter: got.retryAfter ?? null,
       accessControl:
         got.transportError === null ? accessControlIn({ status: got.status, text: new TextDecoder().decode(got.body.subarray(0, 65_536)) }) : null,
       redirects,
@@ -273,6 +277,7 @@ export const nodeResearchGet: ResearchGet = async ({ url, headers, timeoutMs }) 
       contentType: response.headers.get("content-type") ?? "",
       location: response.headers.get("location"),
       transportError: null,
+      retryAfter: response.headers.get("retry-after"),
     };
   } catch (error) {
     const cause = error instanceof Error && error.cause instanceof Error ? `: ${error.cause.message}` : "";

@@ -151,6 +151,8 @@ export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Re
     }
     case "hunt-start-many":
       return { items: JSON.parse(s.payload?.items ?? "[]") as unknown, priority: Number(s.payload?.priority ?? 1), note: s.payload?.note ?? null, huntBudget: true };
+    case "leads-send":
+      return { rows: JSON.parse(s.payload?.rows ?? "[]") as unknown };
     case "hunt-limit":
       return { placeKey: s.target, change: "set", budgetUsd: limit() };
     case "hunt-pause":

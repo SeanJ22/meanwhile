@@ -39,6 +39,7 @@ import type { CandidateStore } from "../../method/candidate.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { DoorRecord } from "../../doors/registry.ts";
+import type { LeadOrder } from "../leads/order.ts";
 import type { WebsitePacing } from "../website-pacing.ts";
 
 /** `revision` starts at 1 and increments by exactly one per accepted write. */
@@ -455,6 +456,8 @@ export interface ControlPlaneRepositories {
   readonly artifacts: AppendOnlyRepository<ArtifactRecord>;
   /** Exact source-owned captures across jobs, newest acquisition first; no general log scan in Postgres. */
   readonly artifactsByCanonicalUrl?: (url: string, limit: number) => Promise<readonly ArtifactRecord[]>;
+  /** Which of these exact canonical URLs have a capture, in one indexed read. */
+  readonly capturedCanonicalUrls?: (urls: readonly string[]) => Promise<ReadonlySet<string>>;
   /** Exact Admin original-byte copy requests, CAS-leased by the permanent runner. */
   readonly adminEvidenceCopyRequests: AggregateRepository<AdminEvidenceCopyRequest>;
   readonly costs: AppendOnlyRepository<CostEntry>;
@@ -496,6 +499,8 @@ export interface ControlPlaneRepositories {
   readonly askGapObservations: AggregateRepository<AskGapObservation>;
   /** One aggregate per door. Written only through `door.save` and by derive steps that never overwrite a newer manual edit. */
   readonly doors: AggregateRepository<DoorRecord>;
+  /** One aggregate per research-leads order, keyed by its receipt id. */
+  readonly leadOrders: AggregateRepository<LeadOrder>;
   readonly budget: BudgetRepository;
   /** Absent in the file store, where holds stay on the budget ledger row. */
   readonly spendHolds?: SpendHoldRepository;

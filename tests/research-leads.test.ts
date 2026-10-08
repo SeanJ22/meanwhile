@@ -398,10 +398,10 @@ test("a lead whose robots.txt disallows us is still read; the verdict is recorde
   assert.equal((lesson.payload as { lead: { robots: { verdict: string } } }).lead.robots.verdict, "DISALLOWED");
 });
 
-test("version 27 declares one row per leads order and one per paced website, and captures are looked up by the source index's own expression", async () => {
+test("version 28 declares one row per leads order beside the paced websites, and captures are looked up by the source index's own expression", async () => {
   const { BOOTSTRAP_VERSION, DECLARED_TABLES } = await import("../lib/control-plane/repository/pg-schema.ts");
   const { CAPTURED_URLS_SQL } = await import("../lib/control-plane/repository/pg-store.ts");
-  assert.ok(BOOTSTRAP_VERSION >= 27);
+  assert.ok(BOOTSTRAP_VERSION >= 28);
   assert.ok(DECLARED_TABLES.includes("cp_lead_orders"));
   assert.ok(DECLARED_TABLES.includes("cp_website_pacing"));
   const { BOOTSTRAP_DDL } = await import("../lib/control-plane/repository/pg-schema.ts");

@@ -4,7 +4,7 @@ import { FIX_MAP_DDL } from "../../method/fix-map.ts";
 import { WEBSITE_PACING_DDL } from "../website-pacing.ts";
 
 /** Moves whenever `BOOTSTRAP_DDL` moves. The gate compares against it. */
-export const BOOTSTRAP_VERSION = 27;
+export const BOOTSTRAP_VERSION = 28;
 
 /**
  *   AGGREGATE     id, revision, updated_at, value   (CAS on revision)

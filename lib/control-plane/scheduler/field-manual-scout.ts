@@ -1,18 +1,21 @@
 import {
   fieldManualEntryId,
-  fieldManualPlaceRank,
-  normalizeEntry,
-  emptyFieldManual,
-  upsertEntries,
+  foldEntries,
+  isTransferableMethod,
   readFieldManual,
   projectFieldManual,
   writeFieldManual,
   type FieldManualEntry,
   type FieldManualProjection,
+  type FieldManualQuery,
+  type FieldManualRead,
   type FieldManualStore,
   type FieldManualRepos,
 } from "../field-manual.ts";
 import type { ScoutCandidate, ScoutResult } from "./scout-result.ts";
+import type { ControlPlaneRepositories } from "../repository/types.ts";
+import { attemptFromScoutResult } from "../../method/fix-map-record.ts";
+import { recordAttemptsKeepingHistory } from "../fix-history.ts";
 import { doorMethodEntries, type SavedDoorPage } from "../bank-methods.ts";
 import { exhaustedRungEntries } from "../bank-exhausted-rungs.ts";
 import { scoutJobCostEntries } from "../bank-job-cost.ts";
@@ -28,7 +31,7 @@ export function scoutStateHint(subjectId: string | null | undefined, obligationI
   const out = new Set<string>();
   for (const value of [subjectId, obligationId]) {
     if (!value) continue;
-    const ocd = OCD_STATE.exec(value);
+    const ocd = OCD_STATE.exec(value) ?? /^([a-z]{2}):/i.exec(value);
     if (ocd) out.add(ocd[1]!.toLowerCase());
     const tok = STATE_TOKEN.exec(value.replace(/^[a-z]+:/i, ""));
     if (tok) out.add(tok[1]!.toLowerCase());
@@ -36,16 +39,43 @@ export function scoutStateHint(subjectId: string | null | undefined, obligationI
   return [...out];
 }
 
+export interface ScoutManualOptions {
+  /** The place the walk is for: its division, or a state code. */
+  readonly subjectId?: string | null;
+  readonly obligationId?: string | null;
+  /** The divisions the walk's obligation covers. */
+  readonly divisions?: readonly string[];
+  readonly recordClass?: string | null;
+  readonly limit?: number;
+}
+
+/** The walk's own places: its subject when that is a division, and the divisions its obligation covers. */
+export function scoutPlaces(subjectId: string | null | undefined, divisions: readonly string[] = []): string[] {
+  const subject = subjectId?.split("#")[0];
+  return [...new Set([...(subject?.startsWith("ocd-division/") ? [subject] : []), ...divisions.filter((d) => d.startsWith("ocd-division/"))])];
+}
+
+/** The read a scout's page is cut from: its role, its place and its state. */
+export function scoutFieldManualQuery(opts: ScoutManualOptions): FieldManualQuery {
+  const states = scoutStateHint(opts.subjectId, opts.obligationId);
+  const places = scoutPlaces(opts.subjectId, opts.divisions);
+  return {
+    role: "SCOUT", subjectId: opts.subjectId ?? undefined,
+    ...(states[0] ? { state: states[0] } : {}),
+    ...(places.length > 0 ? { ocdIds: places } : {}),
+  };
+}
+
 /**
- * Project the manual down to what applies to a scout in this jurisdiction and
- * record class. Capped so a walk inherits a cache-cheap page of the most useful
+ * Project a scout's read down to its page, ranked for its place and record
+ * class. Capped so a walk inherits a cache-cheap page of the most useful
  * doors, never the whole manual.
  */
 export function scoutFieldManualProjection(
-  store: FieldManualStore,
-  opts: { readonly subjectId?: string | null; readonly obligationId?: string | null; readonly recordClass?: string | null; readonly limit?: number },
+  read: Pick<FieldManualRead, "store" | "evidence">,
+  opts: ScoutManualOptions,
 ): FieldManualProjection {
-  const states = scoutStateHint(opts.subjectId, opts.obligationId);
+  const store = read.store;
   // Rank applicable field hints first; cross-family methods keep the remaining slots.
   const related: Readonly<Record<string, readonly string[]>> = {
     OFFICIAL_ROSTER: ["officeholder", "roster", "contact", "verifiedpage", "photo", "body", "officials"],
@@ -55,40 +85,27 @@ export function scoutFieldManualProjection(
     CAMPAIGN_FINANCE_FILING: ["filing", "document", "contribution", "expenditure"],
   };
   const hints = new Set([opts.recordClass?.toLowerCase() ?? "", ...(related[opts.recordClass ?? ""] ?? [])]);
-  // One state is the common case; portable entries remain available.
-  const full = projectFieldManual(store, {
-    role: "SCOUT", subjectId: opts.subjectId ?? undefined,
-    ...(states[0] ? { state: states[0] } : {}),
-    ...(opts.subjectId?.startsWith("ocd-division/") ? { ocdIds: [opts.subjectId] } : {}),
-    limit: store.entries.length,
-  });
+  const full = projectFieldManual(store, { ...scoutFieldManualQuery(opts), limit: store.entries.length }, read.evidence);
   const byId = new Map(store.entries.map(entry => [entry.id, entry] as const));
-  const indexed = full.entryIds.map((id, index) => ({ id, line: full.lines[index]!, entry: byId.get(id)! }))
+  const indexed = full.entryIds.map((id, index) => ({ id, line: full.lines[index]!, tier: full.tiers[index]!, entry: byId.get(id)! }))
     .filter(row => row.entry.kind !== "EXHAUSTED_RUNGS" || !opts.recordClass || row.entry.recordClasses.includes(opts.recordClass.toLowerCase()));
-  indexed.sort((a, b) => {
-    if (opts.subjectId?.startsWith("ocd-division/")) {
-      const query = { ocdIds: [opts.subjectId], state: states[0] };
-      const place = fieldManualPlaceRank(normalizeEntry(a.entry), query) - fieldManualPlaceRank(normalizeEntry(b.entry), query);
-      if (place) return place;
-    }
-    const affinity = (entry: FieldManualEntry) => entry.recordClasses.some(value => hints.has(value.toLowerCase())) ? 0 : entry.recordClasses.length === 0 ? 1 : 2;
-    return affinity(a.entry) - affinity(b.entry);
-  });
+  // Within each rank, the record class's own fields first.
+  const affinity = (entry: FieldManualEntry) => entry.recordClasses.some(value => hints.has(value.toLowerCase())) ? 0 : entry.recordClasses.length === 0 ? 1 : 2;
+  indexed.sort((a, b) => a.tier - b.tier || affinity(a.entry) - affinity(b.entry));
   const chosen = indexed.slice(0, opts.limit ?? 30);
-  return { lines: chosen.map(row => row.line), entryIds: chosen.map(row => row.id), matched: full.matched, total: full.total };
+  return { lines: chosen.map(row => row.line), entryIds: chosen.map(row => row.id), tiers: chosen.map(row => row.tier),
+    leftOutFailingHere: full.leftOutFailingHere, matched: full.matched, total: full.total };
 }
 
-/** All state/role-applicable entries available to on-demand local search.
+/** Every entry of the scout's read that applies to its walk, for on-demand local search.
  * Only the capped projection goes into the model prompt; this catalog stays
  * outside that prefix until find_manual/read_manual is called. */
 export function scoutFieldManualCatalog(
-  store: FieldManualStore,
-  opts: { readonly subjectId?: string | null; readonly obligationId?: string | null },
+  read: Pick<FieldManualRead, "store" | "evidence">,
+  opts: ScoutManualOptions,
 ): readonly FieldManualEntry[] {
-  const state = scoutStateHint(opts.subjectId, opts.obligationId)[0];
-  const applicable = new Set(projectFieldManual(store, { role: "SCOUT", state, subjectId: opts.subjectId ?? undefined,
-    ...(opts.subjectId?.startsWith("ocd-division/") ? { ocdIds: [opts.subjectId] } : {}), limit: store.entries.length }).entryIds);
-  return store.entries.filter(entry => applicable.has(entry.id) || (entry.kind === "PLAYBOOK" && entry.role === "DETECTIVE"));
+  const applicable = new Set(projectFieldManual(read.store, { ...scoutFieldManualQuery(opts), limit: read.store.entries.length }, read.evidence).entryIds);
+  return read.store.entries.filter(entry => applicable.has(entry.id) || (entry.kind === "PLAYBOOK" && entry.role === "DETECTIVE"));
 }
 
 /** A projected door recorded as dead (BLOCKED or FAILED), from its rendered line (`<role>/<kind> <outcome> (...)`). */
@@ -230,8 +247,22 @@ export function usedFieldManualEntryIds(result: ScoutResult, handedIds: readonly
 }
 
 export async function writeFieldManualDiscoveries(repos: FieldManualRepos, entries: readonly FieldManualEntry[], now: string) {
-  const bank = await readFieldManual(repos);
-  const methods = entries.flatMap(door => doorMethodEntries(door, [], bank.store.entries));
-  const folded = upsertEntries(emptyFieldManual(), [...entries, ...methods], now);
-  return writeFieldManual(repos, folded.entries, now);
+  const fingerprints = await readFieldManual(repos, { kinds: ["PLATFORM_FINGERPRINT"], everywhere: true });
+  const methods = entries.flatMap(door => doorMethodEntries(door, [], fingerprints.store.entries));
+  return writeFieldManual(repos, foldEntries([...entries, ...methods]), now);
+}
+
+/** Record in the fix map, at each of the walk's places, what it did with the methods it opened from its page; the words of a failure, or null. */
+export async function recordScoutMethods(repos: Pick<ControlPlaneRepositories, "fixMap" | "adminConfig">, result: ScoutResult,
+  handed: FieldManualStore, divisions: readonly string[] = []): Promise<string | null> {
+  const places = scoutPlaces(result.subjectId, divisions);
+  if (places.length === 0) return null;
+  const methods = new Set(handed.entries.filter(isTransferableMethod).map((entry) => entry.id));
+  const titles = new Map(handed.entries.map((entry) => [entry.id, entry.title] as const));
+  const attempts = places.map((place) => {
+    const attempt = attemptFromScoutResult(result, place);
+    return { ...attempt, methodIds: attempt.methodIds.filter((id) => methods.has(id)) };
+  });
+  const done = await recordAttemptsKeepingHistory(repos.fixMap, repos, attempts, (id) => titles.get(id) ?? null);
+  return done.failed > 0 ? `the fix map was not updated for ${done.failed} method result(s)` : null;
 }

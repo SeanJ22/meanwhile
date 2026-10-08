@@ -85,7 +85,7 @@ export interface AutoCrosswalkReviewInput {
   readonly registered: RegisteredGovernment | { readonly notRegistered: string };
   /** The vault's bytes for an artifact the walk recorded, or null when not held (or held only restricted). */
   readonly held: (artifactId: string) => HeldBytes | null;
-  /** A hand-wired SOURCE_WIRING route already serves the body. */
+  /** A hand-wired meeting door already serves the body. */
   readonly handWired: (bodyId: string) => boolean;
   /** `auto-crosswalk-reviewer@<12 hex>`: the reviewer's code version. */
   readonly reviewer: string;

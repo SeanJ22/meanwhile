@@ -469,7 +469,7 @@ test("PASS: every walk is appended under its jurisdiction; a need not yet due is
     assert.equal((await repos.discoveryAttempts.readRecent("az:b:blocked", 5))[0]?.outcome, "BLOCKED", `${label}: a blocked walk is recorded too`);
     assert.deepEqual(await repos.discoveryAttempts.readRecent("az:d:no-site", 5), [], `${label}: a need with no site is not walked`);
 
-    const manual = (await repos.fieldManual.read("live"))?.value.entries ?? [];
+    const manual = (await repos.fieldManual.list()).map((row) => row.value);
     assert.deepEqual(manual.map((e) => [e.kind, e.outcome]).sort(), [["DEAD_DOOR", "BLOCKED"], ["MEETINGS_ROUTE", "YIELDED"]], `${label}: a route and a dead door are learned`);
     assert.equal(pass.fieldManual.written, 2);
 

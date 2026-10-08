@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { fixtureRepositories } from "./helpers/meeting-doors-fixture.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
 import { requestRoutineRefresh, reserveRoutineRefresh, finishRoutineRefresh, routineRefreshSelection } from "../lib/civic-data/owner-refresh.ts";
 
@@ -21,14 +21,14 @@ test("owner refresh also takes one exact registered routine source contract, nev
   for (const args of [["--contract=census-geography"], ["--contract=census-geography-overlaps/2"], ["--contract="]]) {
     assert.throws(() => routineRefreshSelection(args), /OWNER_REFRESH_REGISTERED_CONTRACT_REQUIRED/);
   }
-  const repos = createMemoryRepositories();
+  const repos = await fixtureRepositories();
   await requestRoutineRefresh(repos, [`--contract=${sourceContract}`], NOW);
   const claim = await reserveRoutineRefresh(repos, NOW);
   assert.deepEqual(claim?.args, ["--force", `--only=${sourceContract}`], "the standing parent launches it through its own routine child");
 });
 
 test("standing parent consumes durable bounded refresh requests independently of ordinary source due time", async () => {
-  const repos = createMemoryRepositories();
+  const repos = await fixtureRepositories();
   assert.equal(await reserveRoutineRefresh(repos, NOW), null);
   const request = await requestRoutineRefresh(repos, [`--contract=${contractId}`, "--attempts=2"], NOW);
   await assert.rejects(requestRoutineRefresh(repos, [`--contract=${contractId}`], NOW), /ALREADY_PENDING/);
@@ -49,7 +49,7 @@ test("standing parent consumes durable bounded refresh requests independently of
 });
 
 test("a crash after reservation cannot restart the same attempt indefinitely", async () => {
-  const repos = createMemoryRepositories();
+  const repos = await fixtureRepositories();
   await requestRoutineRefresh(repos, [`--contract=${contractId}`, "--attempts=1"], NOW);
   assert.ok(await reserveRoutineRefresh(repos, NOW));
   assert.equal(await reserveRoutineRefresh(repos, NOW), null);

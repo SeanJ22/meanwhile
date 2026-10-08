@@ -4,11 +4,10 @@ import test from "node:test";
 import { CONCLUDED_LOOKBACK_DAYS } from "../lib/meetings/constants.ts";
 import {
   allHistoryGaps,
-  concludedGapNote,
   concludedGapNoteFor,
   historyGapsFor,
 } from "../lib/meetings/history-gaps.ts";
-import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
+import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import { applyFilters } from "../lib/state/derive.ts";
 import { INITIAL_STATE, uiReducer } from "../lib/state/reducer.ts";
 import { daysBackForStatuses } from "../lib/state/status-intent.ts";
@@ -87,7 +86,7 @@ test("the Concluded chip opens the window its own meetings live in", () => {
 });
 
 test("a body that publishes no history says so, in plain language", () => {
-  for (const row of SOURCE_WIRING) {
+  for (const row of FIXTURE_DOOR_ROWS) {
     if (row.publishesHistory === false) {
       const reason = row.historyGapReason ?? "";
       assert.ok(
@@ -116,16 +115,16 @@ test("a body that publishes no history says so, in plain language", () => {
     `${gaps.length} history gap(s): ${gaps.map((g) => g.bodyName).join(", ")}`,
   );
   for (const gap of gaps) {
-    assert.ok(SOURCE_WIRING.some((r) => r.bodyId === gap.bodyId));
+    assert.ok(FIXTURE_DOOR_ROWS.some((r) => r.bodyId === gap.bodyId));
   }
 });
 
 test("the gap note fires only when the reader asks about the past", () => {
   const cleanBody = [{ bodyId: "ocd-division/country:us/state:az/county:pima#governing" }];
 
-  assert.equal(concludedGapNote(false, cleanBody), null, "not asking, no note");
+  assert.equal(concludedGapNoteFor(false, historyGapsFor(cleanBody)), null, "not asking, no note");
   assert.equal(
-    concludedGapNote(true, cleanBody),
+    concludedGapNoteFor(true, historyGapsFor(cleanBody)),
     null,
     "a body that does publish history gets no excuse made for it",
   );
@@ -170,7 +169,7 @@ test("the Apptegy fetch asks the vendor for the past", async () => {
     );
   }) as unknown as typeof fetch;
 
-  const wiring = SOURCE_WIRING.filter((r) => r.agendaSourceType === "APPTEGY");
+  const wiring = FIXTURE_DOOR_ROWS.filter((r) => r.agendaSourceType === "APPTEGY");
   assert.ok(wiring.length > 0, "the denominator: Apptegy rows exist");
 
   const source = makeApptegySource(wiring, fakeFetch);

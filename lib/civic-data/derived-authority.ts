@@ -55,6 +55,14 @@ export type DerivedInputRef =
       readonly httpStatus: number;
       readonly rawHash: string;
       readonly retrievedAt: string;
+    }
+  | {
+      /** One door of the door registry as it stood: its id, its record's revision and when it was written, and the sha256 of what it says. */
+      readonly kind: "DOOR_RECORD";
+      readonly doorId: string;
+      readonly revision: number;
+      readonly updatedAt: string;
+      readonly recordSha256: string;
     };
 
 export type DerivedInputKind = DerivedInputRef["kind"];
@@ -66,6 +74,7 @@ export const DERIVED_INPUT_KINDS = [
   "CROSSWALK_VERSION",
   "PIPELINE_APPROVAL",
   "MEMBER_ACQUISITION",
+  "DOOR_RECORD",
 ] as const satisfies readonly DerivedInputKind[];
 
 export type HostAttestation =
@@ -354,7 +363,8 @@ export function derivedRetrieval(inputs: readonly DerivedInputRef[]): {
         : input.kind === "VAULTED_EVIDENCE" || input.kind === "MEMBER_ACQUISITION" ? input.retrievedAt
           : input.kind === "DISCOVERY_ATTEMPT" ? input.recordedAt
             : input.kind === "PIPELINE_APPROVAL" ? input.approvedAt
-              : null)
+              : input.kind === "DOOR_RECORD" ? input.updatedAt
+                : null)
     .filter((time): time is string => time !== null && Number.isFinite(Date.parse(time)))
     .sort();
   return {

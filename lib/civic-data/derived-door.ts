@@ -57,6 +57,10 @@ export function derivedInputIssue(input: DerivedInputRef): string | null {
           SHA256.test(input.rawHash) && instant(input.retrievedAt)
         ? null
         : `a member read lacks its member, https URLs, a 2xx status, its sha256 or its time`;
+    case "DOOR_RECORD":
+      return text(input.doorId) && Number.isInteger(input.revision) && input.revision > 0 && instant(input.updatedAt) && SHA256.test(input.recordSha256)
+        ? null
+        : `a door-record input lacks its door, revision, write time or sha256`;
     default:
       return `an input of unknown kind`;
   }

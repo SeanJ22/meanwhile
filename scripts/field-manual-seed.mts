@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 /**
  * Seeds and grows the field manual from the knowledge stores. Each store is
- * folded into the one `cp_field_manual` aggregate as typed entries whose
+ * folded into the field manual (one row per entry) as typed entries whose
  * `payload` keeps the original record verbatim. It only ever grows: a re-run
  * refreshes entries in place and never removes one. The large Markdown
  * method-of-record docs are indexed as pointer entries; their text stays in git.
@@ -17,7 +17,6 @@ import { join } from "node:path";
 
 import {
   fieldManualEntryId,
-  readFieldManual,
   writeFieldManual,
   type FieldManualEntry,
   type FieldManualOutcome,
@@ -28,6 +27,7 @@ import { platformFingerprintEntries } from "../lib/control-plane/platform-finger
 import { COVERAGE_AUDITS } from "../lib/registry/coverage-audit.ts";
 import { LEGISTAR_CLIENTS } from "../lib/sources/legistar/client-registry.ts";
 import { INSITE_TENANTS } from "../lib/sources/legistar-insite/tenant-registry.ts";
+import { ensureMeetingDoors } from "../lib/doors/meeting-doors.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
@@ -174,6 +174,7 @@ function fromDocs(): FieldManualEntry[] {
       platforms: [],
       outcome: "REFERENCE",
       url: doc.path,
+      portable: true,
       source: doc.path,
       observedAt: null,
       tier: null,
@@ -272,6 +273,8 @@ function fromTiers(): FieldManualEntry[] {
 
 async function main(): Promise<void> {
   const now0 = new Date().toISOString();
+  const doors = await ensureMeetingDoors();
+  if (!doors.ready) throw new Error(`the vendor tenants come from the meeting doors, which could not be read: ${doors.reason}`);
   let repos: ControlPlaneRepositories;
   if (target === "control-plane") {
     const url = controlPlaneUrlFromEnv();
@@ -311,9 +314,9 @@ async function main(): Promise<void> {
 
   const written = await writeFieldManual(repos, entries, new Date().toISOString());
   if (written.error) throw new Error(`field-manual-seed: the write failed: ${written.error}`);
-  const total = (await readFieldManual(repos)).store.entries.length;
+  const total = (await repos.fieldManual.list()).length;
   console.log(`
-Wrote cp_field_manual/live (${target}): ${total} entries total (${written.written} offered by this seed).`);
+Wrote the field manual (${target}): ${total} entries total (${written.written} offered by this seed).`);
 }
 
 await main();

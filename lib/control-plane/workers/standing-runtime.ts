@@ -7,7 +7,8 @@ import { missionPartOfPlan } from "../expansion/mission-parts.ts";
 import { workAdapterQueue } from "./engineering-adapter.ts";
 import { detectiveExecutor, heldRecoveryBrief, investigationRole, subjectScoutHistory } from "./detective.ts";
 import { outsideRecordBlockBriefs } from "./record-block.ts";
-import { readFieldManual, writeFieldManual, newFieldManualEntry } from "../field-manual.ts";
+import { readFieldManual, writeFieldManual, newFieldManualEntry, type FieldManualRead, type FieldManualStore } from "../field-manual.ts";
+import type { DeclaredExecutor } from "../scheduler/dispatch.ts";
 import { isAbsolute, join, relative, resolve, sep } from "node:path";
 import { readFile } from "node:fs/promises";
 import { DurableEvidenceStore } from "../evidence/durable-store.ts";
@@ -23,7 +24,6 @@ import { computeRouteFloor } from "../preflight.ts";
 import { readMethodKnowledge } from "../../method/manual-bridge.ts";
 import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import { proposeScoutCandidates } from "../scheduler/scout-candidates.ts";
-import { type FieldManualStore } from "../field-manual.ts";
 import {
   compoundingPair,
   scoutFieldManualCatalog,
@@ -31,10 +31,13 @@ import {
   knownRouteIds,
   scoutDiscoveryEntries,
   scoutFieldManualProjection,
+  scoutFieldManualQuery,
+  recordScoutMethods,
   scoutStateHint,
   usedFieldManualEntryIds,
   writeFieldManualDiscoveries,
 } from "../scheduler/field-manual-scout.ts";
+import { recordFoundSources } from "../../doors/page-doors.ts";
 import { durableResearchTools, researchRoleExecutor, type ResearchRuntimeTools } from "./research-runtime.ts";
 import type { AutonomousCoordinatorRuntime } from "./coordinator.ts";
 import { refreshRegistryRuntimeFromPromoted } from "../../registry/runtime-read-model.ts";
@@ -136,9 +139,32 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   // Build saved findings before any paid adapter work; include freshly installed routes in the Scout brief.
   if (!scoped) await workAdapterQueue({repos:input.repos,results:prior,now:now(),readEvidence:async id=>evidenceProjection(await heldRuntime.readEvidence(id)),
     ...(input.transportFor?{transportFor:result=>input.transportFor!({subjectId:result.subjectId,state:scoutStateHint(result.subjectId,result.obligationId)[0]??null})}:{})});
-  const fmRead = await readFieldManual(input.repos,{role:"SCOUT"});
-  let fieldManual: FieldManualStore = fmRead.store;
-  let fieldManualRevision = fmRead.revision ?? 0;
+  // Each walk reads only the manual rows its place could use, as it starts.
+  const manualReads = new Map<string, FieldManualRead>();
+  // The divisions each walk's obligation covers: its places for the manual and the fix map.
+  const walkDivisions = new Map<string, readonly string[]>();
+  const divisionsOf = async (item: WorkItem): Promise<readonly string[]> => {
+    try {
+      const occurrence = (await input.repos.occurrences.listWhere(["workItemId"], item.id))[0];
+      const obligation = occurrence ? await input.repos.obligations.read(occurrence.value.obligationId) : null;
+      return obligation?.value.scopeDivisions ?? [];
+    } catch {
+      return [];
+    }
+  };
+  const readScoutManual = async (item: WorkItem): Promise<void> => {
+    const divisions = await divisionsOf(item);
+    walkDivisions.set(item.id, divisions);
+    manualReads.set(item.id, await readFieldManual(input.repos, scoutFieldManualQuery({ subjectId: item.subject, obligationId: item.id, divisions })));
+  };
+  // The rows are held only while the walk runs; a process that runs many walks keeps none of them.
+  const withManual = async <T>(item: WorkItem, walk: () => Promise<T>): Promise<T> => {
+    await readScoutManual(item);
+    try { return await walk(); } finally { manualReads.delete(item.id); walkDivisions.delete(item.id); inheritedManualStores.delete(item.id); }
+  };
+  const withScoutManual = (item: WorkItem, executor: DeclaredExecutor): DeclaredExecutor => ({ ...executor,
+    run: (...args) => withManual(item, () => executor.run(...args)),
+    ...(executor.dispatch ? { dispatch: (...args) => withManual(item, () => executor.dispatch!(...args)) } : {}) });
 
   // The lineage broker: which sibling's captures each lineage root may reuse. Whole-store when unscoped; one task's lineage when scoped.
   let lineages: ReturnType<typeof selectStandingLineages> = [];
@@ -209,7 +235,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
       const blanks=blanksFor(item.subject);
       const mission=missionBriefLines(item.subject,blanks,MISSION_BRIEF_LINE_CAP);
       const ownPart=item.autonomousPlan?missionPartOfPlan(item.autonomousPlan):null;
-      return (investigationRole(subjectScoutHistory(currentHistory??prior,item.subject,item.autonomousPlan!.contract.recordClass),task.routeLabel.includes('UNRESOLVED_INVESTIGATION') || heldRecoveryBrief(item.publicationOutcome)!==null || outsideBlockLines(item.id).length>0 || priorWorkers.some(w=>w.workItemId===item.id && (!["ACQUIRED","EXTRACTED","PASS","SUPPORTED","SURVIVED"].includes(w.result.verdict) || ("warnings" in w.result ? w.result.warnings : w.result.findings).some(f=>f.severity==="BLOCKING")))) === "DETECTIVE" ? detectiveExecutor : scoutExecutor)({transport:input.transportFor?input.transportFor({subjectId:item.subject,state:item.autonomousPlan?.jurisdiction??null}):input.transport!,now,
+      return withScoutManual(item,(investigationRole(subjectScoutHistory(currentHistory??prior,item.subject,item.autonomousPlan!.contract.recordClass),task.routeLabel.includes('UNRESOLVED_INVESTIGATION') || heldRecoveryBrief(item.publicationOutcome)!==null || outsideBlockLines(item.id).length>0 || priorWorkers.some(w=>w.workItemId===item.id && (!["ACQUIRED","EXTRACTED","PASS","SUPPORTED","SURVIVED"].includes(w.result.verdict) || ("warnings" in w.result ? w.result.warnings : w.result.findings).some(f=>f.severity==="BLOCKING")))) === "DETECTIVE" ? detectiveExecutor : scoutExecutor)({transport:input.transportFor?input.transportFor({subjectId:item.subject,state:item.autonomousPlan?.jurisdiction??null}):input.transport!,now,
       ...(input.reserveScoutEscalation?{reserveEscalation:input.reserveScoutEscalation}:{}),
       toolkitFor:ctx=>buildScoutToolkit({...ctx,root:input.root,
         obligation:{...ctx.obligation,obligation:{...ctx.obligation.obligation,autonomousPlan:item.autonomousPlan}},
@@ -249,12 +275,14 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
           fields:plan.contract.schemaVersion===2?methodFields(plan.capability,plan.contract):["meeting","agenda"],
           adapterRoutes:plan.sources.map(source=>({routeId:source.id,label:source.applicableBecause,target:source.url}))});
         // The field manual projected to this jurisdiction takes the line budget the mission's lines leave.
-        const manualProjection=scoutFieldManualProjection(fieldManual,{subjectId:plan.jurisdiction,obligationId:item.id,recordClass:plan.contract.recordClass,
+        const manual=manualReads.get(item.id)??{store:{entries:[]}};
+        const divisions=walkDivisions.get(item.id)??[];
+        const manualProjection=scoutFieldManualProjection(manual,{subjectId:item.subject,obligationId:item.id,divisions,recordClass:plan.contract.recordClass,
           limit:SCOUT_BRIEF_LINE_BUDGET-mission.lines.length});
-        const manualEntries=scoutFieldManualCatalog(fieldManual,{subjectId:plan.jurisdiction,obligationId:item.id});
+        const manualEntries=scoutFieldManualCatalog(manual,{subjectId:item.subject,obligationId:item.id,divisions});
         const repair=(item as typeof item & {readonly planRepair?:PlanRepairLink}).planRepair;
         inheritedFieldManualCounts.set(item.id,manualEntries.length);
-        inheritedManualStores.set(item.id,fieldManual);
+        inheritedManualStores.set(item.id,manual.store);
         const manualLines=fieldManualBriefLines(manualProjection);
         inheritedFieldManualDoors.set(item.id,{entryIds:manualProjection.entryIds,availableIds:manualEntries.map(entry=>entry.id),lines:manualLines});
         return {route:null,providerId:null,sourceRecordClass:plan.contract.recordClass,
@@ -292,7 +320,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
           recorded={...result,unverified:[...result.unverified,
             `Method candidates were not proposed: ${error instanceof Error?error.message:String(error)}`]};
         }
-        const handedManual = inheritedManualStores.get(result.workItemId) ?? fieldManual;
+        const handedManual = inheritedManualStores.get(result.workItemId) ?? { entries: [] };
         const pair=compoundingPair(inheritedFieldManualCounts.get(result.workItemId)??0,result,knownRouteIds(handedManual));
         const doors=inheritedFieldManualDoors.get(result.workItemId);
         recorded={...recorded,inheritedFieldManual:pair.inheritedCount,rebuiltExistingRoutes:pair.rebuiltExisting,
@@ -302,26 +330,19 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
         if((result.refusal===null&&result.candidates.length>0)||result.sourceDeadEnds?.length){
           const written=await writeFieldManualDiscoveries(input.repos,scoutDiscoveryEntries(result,scoutStateHint(result.subjectId,result.obligationId)),result.recordedAt);
           if(written.error) recorded={...recorded,unverified:[...recorded.unverified,`field manual write-back failed: ${written.error}`]};
-          else {
-            // Read the canonical result, including concurrent writers, before a later
-            // task constructs its context. Already running tasks retain their receipt.
-            try {
-              const refreshed = await input.repos.fieldManual.read("live");
-              if (refreshed && refreshed.revision >= fieldManualRevision) { fieldManualRevision = refreshed.revision; fieldManual = refreshed.value; }
-            } catch (error) {
-              recorded = { ...recorded, unverified: [...recorded.unverified, `field manual saved but refresh failed: ${String(error)}`] };
-            }
-          }
         }
+        const fixed=await recordScoutMethods(input.repos,recorded,handedManual,walkDivisions.get(result.workItemId)??[]);
+        if(fixed) recorded={...recorded,unverified:[...recorded.unverified,fixed]};
         await writeFieldManual(input.repos,[newFieldManualEntry("investigation",recorded.subjectId+":"+recorded.recordClass,{
           role:"SHARED",kind:"INVESTIGATION_RESULT",title:recorded.subjectId,
           summary:recorded.outcome+": "+recorded.narrative,outcome:recorded.candidates.length||recorded.findings.length?"YIELDED":"BLOCKED",
           recordClasses:[recorded.recordClass],observedAt:recorded.recordedAt,
           payload:{subjectId:recorded.subjectId,recordClass:recorded.recordClass,facts:recorded.findings,routes:recorded.candidates,tried:recorded.rungs,nextRungs:recorded.nextRungs}})],recorded.recordedAt);
         await input.repos.scoutResults.append(recorded.obligationId,recorded.attemptId,recorded,recorded.recordedAt);
+        await recordFoundSources(input.repos.doors,[recorded],recorded.recordedAt);
         if (indexFindings) await indexScoutFindings(input.repos.boxFindings, recorded, now());
         return recorded;
       }
-    });}}:{})};
+    }));}}:{})};
   return runtime;
 }

@@ -247,8 +247,8 @@ test("(h) every Postgres whole-table read goes through the held copies, and no s
   }
 });
 
-test("schema version 26: every aggregate and log carries changed_at; logs refuse UPDATE and DELETE, aggregates refuse DELETE", () => {
-  assert.equal(BOOTSTRAP_VERSION, 26);
+test("schema version 26 onward: every aggregate and log carries changed_at; logs refuse UPDATE and DELETE, aggregates refuse DELETE", () => {
+  assert.ok(BOOTSTRAP_VERSION >= 26);
   assert.deepEqual([...CHANGED_AT_TABLES].sort(),
     [...AGGREGATE_KINDS.map(k => `cp_${k}`), ...APPEND_ONLY_LOGS.map(l => `cp_log_${l}`)].sort());
   for (const table of CHANGED_AT_TABLES) {

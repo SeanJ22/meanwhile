@@ -15,7 +15,7 @@ import { fileURLToPath } from "node:url";
 
 import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
-import { observableRoutineContracts } from "../lib/civic-data/meeting-partitions.ts";
+import { firewallRoutineContracts } from "../lib/civic-data/meeting-route-kinds.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import { civicDataFirewall } from "../lib/civic-data/firewall.ts";
 
@@ -39,7 +39,7 @@ export function civicDataReleaseFirewall({ cwd = ROOT } = {}) {
   try {
     const paths = filesThatWouldBeCommitted({ cwd });
     const files = Object.fromEntries(paths.map((path) => [path, readFileSync(join(cwd, path), "utf8")]));
-    const routineContracts = observableRoutineContracts();
+    const routineContracts = firewallRoutineContracts();
     const findings = civicDataFirewall({
       files,
       contracts: routineContracts,

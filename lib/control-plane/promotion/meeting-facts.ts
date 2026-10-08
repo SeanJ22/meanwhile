@@ -35,7 +35,7 @@ export interface FactBodyIdentity {
   readonly bodyName: string;
   readonly jurisdiction: string;
   readonly publishingOrg: string;
-  readonly resolvedBy: "LEGISTAR_CLIENT_REGISTRY" | "SOURCE_WIRING";
+  readonly resolvedBy: "LEGISTAR_CLIENT_REGISTRY" | "MEETING_DOORS";
 }
 
 export interface FactSourceIdentity {
@@ -200,11 +200,11 @@ export function normalizeFactsFromBytes(input: {
   const wired = (input.wiring ?? activeWiring()).filter((row) => row.agendaSourceType === "CIVICCLERK" && row.config.slug === slug);
   if (wired.length === 0) {
     return { ...base, rows, rowById, body: null, considered: rows.length,
-      refusal: { code: "BODY_IDENTITY_UNRESOLVED", detail: `no SOURCE_WIRING row serves CivicClerk tenant ${slug}; the canonical body cannot be named`, recordId: null } };
+      refusal: { code: "BODY_IDENTITY_UNRESOLVED", detail: `no meeting door serves CivicClerk tenant ${slug}; the canonical body cannot be named`, recordId: null } };
   }
   if (wired.length > 1) {
     return { ...base, rows, rowById, body: null, considered: rows.length,
-      refusal: { code: "BODY_IDENTITY_AMBIGUOUS", detail: `${wired.length} SOURCE_WIRING rows serve CivicClerk tenant ${slug}; one feed row would attribute to more than one body`, recordId: null } };
+      refusal: { code: "BODY_IDENTITY_AMBIGUOUS", detail: `${wired.length} meeting doors serve CivicClerk tenant ${slug}; one feed row would attribute to more than one body`, recordId: null } };
   }
   const wiring = wired[0];
   let apiHost: string | null = null;
@@ -217,7 +217,7 @@ export function normalizeFactsFromBytes(input: {
   }
   const out = makeCivicClerkSource([wiring]).normalizeWithDrops([{ wiring, events: rows as unknown as CivicClerkEvent[], collectedAt }], now);
   return { ...base, rows, rowById, considered: rows.length, meetings: out.meetings, drops: { ...out.drops },
-    body: { bodyId: wiring.bodyId, ocdId: wiring.ocdId, jurisdiction: wiring.jurisdiction, publishingOrg: wiring.publishingOrg, resolvedBy: "SOURCE_WIRING" },
+    body: { bodyId: wiring.bodyId, ocdId: wiring.ocdId, jurisdiction: wiring.jurisdiction, publishingOrg: wiring.publishingOrg, resolvedBy: "MEETING_DOORS" },
     refusal: null };
 }
 

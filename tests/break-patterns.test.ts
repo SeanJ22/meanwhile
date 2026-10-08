@@ -3,7 +3,6 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { withEpisodeKept, type FixItemWithHistory } from "../lib/control-plane/fix-history.ts";
-import { FIELD_MANUAL_ID } from "../lib/control-plane/field-manual.ts";
 import { ADMIN_CONFIG_ID, defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { BREAK_PATTERN_KIND, breakPatterns, runBreakPatternPass } from "../lib/method/break-patterns.ts";
@@ -36,7 +35,7 @@ test("the pass writes one lesson per pattern to the field manual, and rewrites i
   await repos.adminConfig.put(ADMIN_CONFIG_ID, { ...defaultAdminConfig(NOW), fixList: [twoMarches()] }, NOW);
   assert.deepEqual(await runBreakPatternPass(repos, NOW), { patterns: 1, written: 1 });
   await runBreakPatternPass(repos, NOW);
-  const entries = (await repos.fieldManual.read(FIELD_MANUAL_ID))!.value.entries.filter((e) => e.kind === BREAK_PATTERN_KIND);
+  const entries = (await repos.fieldManual.list()).map((row) => row.value).filter((e) => e.kind === BREAK_PATTERN_KIND);
   assert.equal(entries.length, 1);
   assert.equal(entries[0].role, "DETECTIVE");
   assert.match(entries[0].summary, /^Door d-1 has broken in March in 2025 and 2026\. Have the last fix ready before March: The door's record was edited/);
@@ -46,5 +45,5 @@ test("the pass writes one lesson per pattern to the field manual, and rewrites i
 test("with no history the pass writes nothing", async () => {
   const repos = createMemoryRepositories();
   assert.deepEqual(await runBreakPatternPass(repos, NOW), { patterns: 0, written: 0 });
-  assert.equal(await repos.fieldManual.read(FIELD_MANUAL_ID), null);
+  assert.deepEqual(await repos.fieldManual.list(), []);
 });

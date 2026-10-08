@@ -26,7 +26,6 @@ import {
 import type { ExpansionCycleReading } from "./reading.ts";
 import { expansionScopesOf, type ExpansionScopeDecision } from "./scopes.ts";
 import { declaredWorkMembers, type ScopedStandingWork } from "./declared-work-scope.ts";
-import { readFieldManual, type FieldManualRead } from "../field-manual.ts";
 import { divisionsForZip, heldDivisionsForZip, type PlaceDivision } from "./national-geography.ts";
 import { readStateReference } from "./state-references.ts";
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
@@ -246,8 +245,6 @@ export interface ExpansionLoad {
   /** Held Census memberships plus acquired intersections for unheld ZIPs.
    * Work placement inputs, not invented registry bodies. */
   readonly nationalPlaces?: ReadonlyMap<string, readonly PlaceDivision[]>;
-  /** Inherited sources, methods and dead ends, read before geography or dispatch. */
-  readonly knowledge?: FieldManualRead;
   /** Null when no scope is selected and nothing on the policy row is unreadable: the cycle runs exactly as before. */
   readonly plan: ExpansionPlan | null;
   /** Named runtime conditions for the research state. Empty when nothing went wrong. */
@@ -306,8 +303,6 @@ export async function loadExpansionPlan(input: {
     );
   }
   if (decisions.length === 0 && malformed === 0) return { plan: null, conditions };
-  const knowledge = await readFieldManual(input.repos);
-  if (knowledge.error) conditions.push(`Shared knowledge could not be read: ${knowledge.error}`);
   if (malformed > 0 && conditions.length === 0) {
     conditions.push(`${malformed} entr${malformed === 1 ? "y" : "ies"} on the owner's expansion scope list could not be read; paid Scout work is held this cycle`);
   }
@@ -379,7 +374,6 @@ export async function loadExpansionPlan(input: {
     catch (error) { malformed += 1; conditions.push(`Shared-work scope attribution failed; paid work is held: ${error instanceof Error ? error.message : String(error)}`); }
   }
   return {
-    knowledge,
     nationalPlaces,
     plan: planExpansion({
       declaredMembers,

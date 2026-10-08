@@ -29,6 +29,7 @@ import { COVERAGE_AUDIT_FILE } from "./coverage-audit.ts";
 import type { PublicBodyAttempt } from "./body-attempt-read.ts";
 import type { BodyFamilyAttempts } from "./attempt-families.ts";
 import type { Meeting } from "../sources/types.ts";
+import { historyGapFor, type HistoryGap } from "../meetings/history-gaps.ts";
 
 /** A dated cited source hunt is evidence; a registry status alone is not.
  * New control-plane attempts are not present in this historic audit yet, so
@@ -138,6 +139,8 @@ export interface CoveredBody {
    * False means no such receipt is held here, not that nobody has searched.
    */
   lookedAt: boolean;
+  /** Set when the body's door publishes no past meetings: why, for the empty Concluded list. */
+  historyGap?: HistoryGap;
   /**
    * This body's publisher attempts when the bounded public projection answered, kept within one kind of fact:
    * a family shows its own latest attempt, last good check and what is published now, and a family with no
@@ -313,6 +316,7 @@ export function summarizeCoverage(
   const covered: CoveredBody[] = bodies.map((body) => {
     const division = body.ocdId ? divisionsById.get(body.ocdId) : undefined;
     const held = heldMeetings.find(meeting => meeting.bodyId === body.id);
+    const historyGap = historyGapFor(body.id);
     return {
       bodyId: body.id,
       ocdId: body.ocdId,
@@ -334,6 +338,7 @@ export function summarizeCoverage(
         ? { officeContact: { address: body.officeAddress ?? null, phone: body.officePhone ?? null, provenance: body.provenance } }
         : {}),
       lookedAt: held !== undefined || DOCUMENTED_SEARCHES.has(body.id),
+      ...(historyGap ? { historyGap } : {}),
       tier: division?.tier ?? "local",
     };
   });

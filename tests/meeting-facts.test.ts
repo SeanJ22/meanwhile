@@ -203,7 +203,7 @@ test("PRDY-2: with a wiring row the CivicClerk adapter decides — no venue on t
   assert.equal(fact.meetingId, "civicclerk:avondaleaz:1404");
   assert.equal(fact.time.startsAt, "2027-12-06T19:00:00-07:00");
   assert.equal(fact.body.bodyName, "City Council");
-  assert.equal(fact.body.resolvedBy, "SOURCE_WIRING");
+  assert.equal(fact.body.resolvedBy, "MEETING_DOORS");
   assert.equal(fact.status, "SCHEDULED");
   const agenda = bridge.facts.find((f): f is Extract<MeetingFact, { recordClass: "agendas" }> => f.recordClass === "agendas")!;
   assert.equal(agenda.agenda.documentUrl, "https://avondaleaz.portal.civicclerk.com/event/1404");

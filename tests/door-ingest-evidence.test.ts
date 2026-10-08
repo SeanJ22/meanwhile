@@ -1,10 +1,11 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { describe, it } from "node:test";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { fixItems } from "../lib/control-plane/fix-list.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { applyManualEdit, checkDoorDraft, isDoorRecord } from "../lib/doors/registry.ts";
-import { doorShutEnabled, evidenceFromCandidate, evidenceFromFamilyRead, reopenDoorIfShut } from "../lib/doors/ingest-evidence.ts";
+import { evidenceFromCandidate, evidenceFromFamilyRead, reopenDoorIfShut } from "../lib/doors/ingest-evidence.ts";
 import { recordDoorEvidence } from "../lib/doors/shut.ts";
 
 const T = (h: number) => `2026-10-06T${String(10 + h).padStart(2, "0")}:00:00.000Z`;
@@ -28,9 +29,10 @@ const items = async (repos: Awaited<ReturnType<typeof setup>>) => {
 };
 
 describe("DB-32/34 connection: what a read tells its door", () => {
-  it("the switch is off unless WTP_DOOR_SHUT=on", () => {
-    assert.equal(doorShutEnabled({ NODE_ENV: "test" }), false);
-    assert.equal(doorShutEnabled({ NODE_ENV: "test", WTP_DOOR_SHUT: "on" }), true);
+  it("judging a door from its read is always on: no switch keeps the old way", () => {
+    for (const file of ["scripts/routine-civic-data-runner.mts", "scripts/ingest.ts", "lib/doors/ingest-evidence.ts"]) {
+      assert.doesNotMatch(readFileSync(file, "utf8"), /WTP_DOOR_SHUT|doorShutEnabled/, file);
+    }
   });
 
   it("a held partition: a refused address is the door's; bytes that arrived and failed validation are not", () => {

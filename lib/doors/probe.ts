@@ -7,6 +7,7 @@
 
 import { createHash } from "node:crypto";
 
+import { WebsiteWait } from "./probe-fetch.ts";
 import { isDoorRecord, type DoorRecord, type DoorRepository, type DoorValidators } from "./registry.ts";
 
 export interface ProbeResponse {
@@ -29,7 +30,8 @@ export function probeUrlFor(door: DoorRecord): string | null {
   return null;
 }
 
-export type ProbeVerdict = "CHANGED" | "UNCHANGED" | "FAILED" | "NOT_PROBEABLE";
+/** WAITING: the website could not be asked now (it asked every reader to wait, or a small publisher's hour is used). */
+export type ProbeVerdict = "CHANGED" | "UNCHANGED" | "FAILED" | "WAITING" | "NOT_PROBEABLE";
 
 export interface ProbeResult {
   readonly url: string | null;
@@ -51,6 +53,7 @@ export async function firstLook(url: string, previous: DoorValidators | null | u
   try {
     response = await fetchFn(url, headers);
   } catch (error) {
+    if (error instanceof WebsiteWait) return { url, verdict: "WAITING", validators: null, requests: 0, detail: error.message };
     return { url, verdict: "FAILED", validators: null, requests: 1, detail: `the first look could not reach the page (${(error as Error)?.name ?? "error"})` };
   }
   if (response.status === 304) {

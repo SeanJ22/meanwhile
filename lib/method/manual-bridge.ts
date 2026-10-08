@@ -3,7 +3,7 @@
  * manual, and routing asks the manual which routes are learned. Pure except `readMethodVersion`.
  */
 
-import type { FieldManualStore } from "../control-plane/field-manual.ts";
+import { readFieldManual, type FieldManualQuery, type FieldManualStore } from "../control-plane/field-manual.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import type { MethodKnowledge, MethodRoute } from "./knowledge.ts";
 
@@ -58,9 +58,12 @@ export function methodVersionFromManual(store: FieldManualStore): number | null 
 
 /** The current method version, read from the live manual. Null when the manual is unreadable or not seeded: the caller says so rather than guessing. */
 export async function readMethodVersion(repos: Pick<ControlPlaneRepositories, "fieldManual">): Promise<number | null> {
-  const read = await repos.fieldManual.read("live").catch(() => null);
-  return read ? methodVersionFromManual(read.value) : null;
+  const read = await readFieldManual(repos, METHOD_ROWS);
+  return read.error ? null : methodVersionFromManual(read.store);
 }
+
+/** The rows the method store lives in: its routes and its base version, wherever they were learned. */
+const METHOD_ROWS: FieldManualQuery = { kinds: [ROUTE_ENTRY_KIND, METHOD_VERSION_KIND], everywhere: true };
 
 /** A manual `ROUTE` payload that is a whole route record, not just a pointer an agent wrote. */
 function isRouteRecord(payload: unknown): payload is MethodRoute {
@@ -91,8 +94,9 @@ export function methodKnowledgeFromManual(store: FieldManualStore): MethodKnowle
 
 /** The method knowledge from the live manual. An unreadable or unseeded manual THROWS: an empty store would read as "we know nothing" and send every route to the bounded worker. */
 export async function readMethodKnowledge(repos: Pick<ControlPlaneRepositories, "fieldManual">): Promise<MethodKnowledge> {
-  const read = await repos.fieldManual.read("live");
-  const knowledge = read ? methodKnowledgeFromManual(read.value) : null;
+  const read = await readFieldManual(repos, METHOD_ROWS);
+  if (read.error) throw new Error(read.error);
+  const knowledge = methodKnowledgeFromManual(read.store);
   if (!knowledge) throw new Error("the field manual holds no method version; it has not been seeded (scripts/field-manual-seed.mts). An empty store would send every route to the bounded worker.");
   return knowledge;
 }

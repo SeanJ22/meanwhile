@@ -18,12 +18,12 @@ export async function readPublicRecords(ocdId: string, options: PromotedCivicDat
 }
 
 export async function recordNewPublicKinds(repos: Pick<ControlPlaneRepositories, "adminConfig" | "fieldManual">, records: readonly PublicRecord[], now: string) {
-  const manual = await readFieldManual(repos, { role: "SHARED", recordClass: "PUBLIC_RECORD" });
+  const manual = await readFieldManual(repos, { role: "SHARED", recordClass: "PUBLIC_RECORD", kinds: ["PUBLIC_RECORD_KIND", "PUBLIC_RECORD_PLACE_KIND"], everywhere: true });
   if (manual.error) throw new Error(manual.error);
   const entries = records.map(row => newFieldManualEntry("public-record-kinds", createHash("sha256")
     .update(row.kindLabel.normalize("NFKC").toLowerCase().trim()).digest("hex"), {
       role: "SHARED", kind: "PUBLIC_RECORD_KIND", title: row.kindLabel, summary: `Source kind: ${row.kindLabel}`, outcome: "YIELDED",
-      url: row.sourceUrl, observedAt: now, recordClasses: ["PUBLIC_RECORD"], payload: { kindLabel: row.kindLabel },
+      url: row.sourceUrl, observedAt: now, recordClasses: ["PUBLIC_RECORD"], portable: true, payload: { kindLabel: row.kindLabel },
     }));
   const known = new Set(manual.store.entries.filter(entry => entry.kind === "PUBLIC_RECORD_KIND").map(entry => entry.id));
   const fresh = entries.filter(entry => !known.has(entry.id));

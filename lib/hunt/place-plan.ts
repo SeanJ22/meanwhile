@@ -27,7 +27,7 @@ export async function planPlaceHunt(input: {
   readonly readOptions?: PromotedCivicDataReadOptions;
   readonly acquireNational: (missing: readonly PlaceOwedItem[], knowledge: Awaited<ReturnType<typeof readFieldManual>>) => Promise<PlaceCapture>;
 }) {
-  const knowledge = input.knowledge ?? await readFieldManual(input.repos);
+  const knowledge = input.knowledge ?? await readFieldManual(input.repos, { ocdIds: input.divisions.map(d => d.id) });
   const held = await (input.readHeld ?? (ids => readHeldPlaceCapture(ids, { ...input.readOptions, now: input.now })))(input.divisions.map(d => d.id));
   const before = buildPlaceOwedList({ ...input, ...held });
   // Only blanks that apply, are due, are unsatisfied and are not already being worked go to acquisition.

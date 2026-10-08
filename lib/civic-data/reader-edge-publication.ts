@@ -28,7 +28,6 @@ import { readOfficialStateLegislatorsProjection } from "../state-rollcalls/legis
 import { combinedOutcomeVersionId, combineOutcomeProjections, doorOutcomeParts, doorOutcomesUnreadable, outcomePointers, readDoorOutcomeProjections } from "../outcomes/store.ts";
 import { DOOR_OUTCOME_POINTERS } from "../outcomes/door-outcome-pointers.ts";
 import { outcomePartitionsAreCurrent } from "./outcome-partitions.ts";
-import { doorReadModeFromEnv } from "../doors/install.ts";
 import { MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT, PIMA_LEGISTAR_OUTCOMES_CONTRACT } from "../outcomes/data-plane.ts";
 import { OFFICIAL_STATE_LEGISLATOR_TARGETS } from "../state-rollcalls/authority.ts";
 import type { OfficialStateLegislatorReadModel } from "./candidate-builders.ts";
@@ -241,7 +240,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
       if (refreshes("meeting-outcomes")) try {
         delete authority["meeting-outcomes"];
         const doorPointers = outcomePointers();
-        if (doorReadModeFromEnv() === "registry" && !outcomePartitionsAreCurrent()) {
+        if (!outcomePartitionsAreCurrent()) {
           // The doors were not read this pass, so the door list is unknown, not empty: keep serving the last artifact
           // rather than publish one that silently drops every door's outcomes.
           const served = servedAuthorityVersion(servedManifest, "meeting-outcomes");

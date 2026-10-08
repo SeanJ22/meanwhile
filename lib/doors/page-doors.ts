@@ -1,12 +1,14 @@
 /**
- * Pages that feed live facts become doors. When a worker publishes a fact
- * from a saved page, that page gets a door record: its host, what it holds,
- * how often it is due (the fact class's freshness window), and who found it.
- * A page that is not a plain web address adds none.
+ * Pages that feed live facts, and sources a Scout or detective found, become
+ * doors. Each page gets a door record: its host, what it holds, how often it
+ * is due (the fact class's freshness window), and who found it. A page that
+ * fed a live fact is also marked as having just worked. A page that is not a
+ * plain web address adds none.
  */
 
 import { createHash } from "node:crypto";
 import { FRESHNESS_WINDOW_HOURS } from "../control-plane/promotion/section3.ts";
+import type { ScoutResult } from "../control-plane/scheduler/scout-result.ts";
 import { MAX_CHECK_MINUTES, MIN_CHECK_MINUTES, normalizeHost, upsertDerivedDoor, isDoorRecord, type DoorDraft, type DoorRepository } from "./registry.ts";
 
 export const PAGE_DOOR_KIND = "page";
@@ -99,6 +101,24 @@ export interface PageDoorsResult {
  * could be written, and the next publication writes it again.
  */
 export async function recordPublishedPages(repo: DoorRepository, pages: readonly PublishedPage[], now: string): Promise<PageDoorsResult> {
+  return recordPages(repo, pages, now, true);
+}
+
+/** The sources a recorded Scout or detective result found: each candidate's page, with what it was found for. */
+export function foundPages(result: ScoutResult): PublishedPage[] {
+  if (result.refusal !== null || !Array.isArray(result.candidates)) return [];
+  const foundBy = finderOfRole(result.researchRole);
+  return result.candidates.flatMap((candidate) => typeof candidate?.url === "string"
+    ? [{ url: candidate.url, retrievedAt: result.recordedAt, recordClass: candidate.recordClass || result.recordClass, bodyId: null, foundBy }]
+    : []);
+}
+
+/** Found sources become doors at once; nothing marks one as working until a fact from it goes live. Never throws. */
+export async function recordFoundSources(repo: DoorRepository, results: readonly ScoutResult[], now: string): Promise<PageDoorsResult> {
+  return recordPages(repo, results.flatMap(foundPages), now, false);
+}
+
+async function recordPages(repo: DoorRepository, pages: readonly PublishedPage[], now: string, worked: boolean): Promise<PageDoorsResult> {
   let created = 0, updated = 0, unchanged = 0, skipped = 0;
   for (const page of pages) {
     try {
@@ -111,7 +131,7 @@ export async function recordPublishedPages(repo: DoorRepository, pages: readonly
       if (verdict === "created") created += 1;
       else if (verdict === "updated") updated += 1;
       else unchanged += 1;
-      await stampSuccess(repo, draft.doorId, page.retrievedAt, now);
+      if (worked) await stampSuccess(repo, draft.doorId, page.retrievedAt, now);
     } catch {
       skipped += 1;
     }

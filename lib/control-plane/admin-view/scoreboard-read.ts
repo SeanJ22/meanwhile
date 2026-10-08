@@ -565,7 +565,7 @@ export function buildScoreboard(r: ScoreboardReadings): ScoreboardView {
     ["Audit accuracy", auditRow(r.audit)],
     ["Look and feel", lookRow(r.look)],
     ["Site speed and reliability", speedRow(r.speed, r.deadLinks, r.speedLimits)],
-    ...doorRows({ now: r.doorNumbers?.now ?? "", shutDoors: r.shutDoors, overdue: r.doorNumbers?.overdue ?? null, posting: r.doorNumbers?.posting ?? null, fixes: r.doorNumbers?.fixes ?? null }),
+    ...doorRows({ now: r.doorNumbers?.now ?? "", shutDoors: r.shutDoors, overdue: r.doorNumbers?.overdue ?? null, scheduled: r.doorNumbers?.scheduled ?? null, posting: r.doorNumbers?.posting ?? null, fixes: r.doorNumbers?.fixes ?? null }),
     ...flowRows(r.flow),
     ["Proven fixes", provenFixesRow(r.provenFixes)],
     ["Report accuracy", reportAccuracyRow(r.reportAccuracy)],

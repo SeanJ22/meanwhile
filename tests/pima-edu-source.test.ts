@@ -17,7 +17,8 @@ import {
   type PimaEduRaw,
 } from "../lib/sources/pima-edu/index.ts";
 import { makePermissionGate, permittedText } from "../lib/sources/permission-gate.ts";
-import { SOURCE_WIRING, type BodySourceWiring } from "../lib/registry/source-wiring.ts";
+import { type BodySourceWiring } from "../lib/registry/source-wiring.ts";
+import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 
 /**
  * A college board read from its own permitted pages, against recorded responses
@@ -30,7 +31,7 @@ const read = (name: string) => readFileSync(join(FIXTURES, name), "utf8");
 const RETRIEVAL = JSON.parse(read("retrieval.json")) as Record<string, { url: string }>;
 const urlOf = (name: string) => RETRIEVAL[name].url;
 
-const WIRING = SOURCE_WIRING.find((row) => row.bodyId === "curated:az/pima-community-college#governing")!;
+const WIRING = FIXTURE_DOOR_ROWS.find((row) => row.bodyId === "curated:az/pima-community-college#governing")!;
 // Inside the recording's coverage: Aug 10 is 44 days back, Dec 11 is 79 days ahead.
 const NOW = new Date("2026-09-23T13:00:00-07:00");
 
@@ -66,7 +67,7 @@ test("the wiring row reads permitted pima.edu hosts and never the Diligent tenan
     assert.ok(host === "www.pima.edu" || host === "events.pima.edu", `${key} names ${host}`);
   }
   assert.ok(
-    !SOURCE_WIRING.some((row) =>
+    !FIXTURE_DOOR_ROWS.some((row) =>
       Object.values(row.config).some((v) => /pima\.community\.highbond\.com/.test(v)),
     ),
     "a wiring row still names the retired Diligent tenant",

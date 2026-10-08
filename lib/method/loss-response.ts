@@ -51,6 +51,13 @@ function traitsOf(traits: LossResponseInput["placeTraits"], placeId: string): Pl
   return traits instanceof Map ? traits.get(placeId) : (traits as Record<string, PlaceTraits>)[placeId];
 }
 
+/** Where a loss lesson applies: the platforms and states its failures share, or, when they share neither, wherever the method is tried. */
+function lessonReach(shared: LossStudy["shared"]): Pick<FieldManualEntry, "platforms" | "states" | "portable"> {
+  const platforms = shared.flatMap((s) => (s.trait === "platform" ? [s.value] : []));
+  const states = shared.flatMap((s) => (s.trait === "state" && /^[a-z]{2}$/.test(s.value) ? [s.value] : []));
+  return platforms.length + states.length > 0 ? { platforms, states } : { platforms, states, portable: true };
+}
+
 function causeText(study: LossStudy): string {
   return study.shared.map((s) => `${s.trait} (${s.value})`).join("; ");
 }
@@ -81,6 +88,7 @@ export function respondToLosses(input: LossResponseInput): LossResponse {
       summary: `Method ${study.methodId} fails where ${cause}; ${study.says}.`.replace(/\s+/g, " ").slice(0, 280),
       outcome: "FAILED",
       observedAt: input.now,
+      ...lessonReach(study.shared),
       payload: { methodId: study.methodId, shared: study.shared, failures: study.failures, works: study.works },
     }));
     const known = new Set(rows.filter((r) => r.state !== "UNTRIED").map((r) => r.placeId));

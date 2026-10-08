@@ -1,0 +1,2094 @@
+{
+ "about": "The hand-wired meeting doors as the registry holds them after the import: the doors tests run against.",
+ "rows": [
+  {
+   "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+   "ocdId": "ocd-division/country:us/state:az/county:pima",
+   "agendaSourceType": "LEGISTAR",
+   "jurisdiction": "Pima County, AZ",
+   "publishingOrg": "Pima County Clerk of the Board",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "slug": "pima",
+    "sourceRoutes": "legistar,legistar-insite",
+    "insiteHost": "pima.legistar.com",
+    "insiteBodyNames": "Board of Supervisors",
+    "insiteBodyName": "Board of Supervisors",
+    "insiteClerkScheduleUrl": "https://www.pima.gov/board-of-supervisors-meeting-schedule",
+    "insiteFeedId": "43473383",
+    "insiteFeedGuid": "88b7d677-6602-4f79-b987-4677f7f035e6",
+    "insiteFeedRange": "Next Month",
+    "insiteFeedObservedAt": "2026-08-28",
+    "venueSourceId": "legistar"
+   },
+   "verifiedAt": "2026-08-13"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:mesa#governing",
+   "ocdId": "ocd-division/country:us/state:az/place:mesa",
+   "agendaSourceType": "LEGISTAR",
+   "jurisdiction": "Mesa, AZ",
+   "publishingOrg": "City of Mesa City Clerk",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "slug": "mesa",
+    "sourceRoutes": "legistar-insite",
+    "insiteHost": "mesa.legistar.com",
+    "insiteBodyNames": "City Council|City Council Study Session|City Council Strategic Planning Session",
+    "insiteBodyName": "City Council",
+    "venueSourceId": "legistar-insite"
+   },
+   "noticeUrl": "https://www.mesaaz.gov/Government/City-Council-Meetings",
+   "verifiedAt": "2026-08-28"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:tucson#governing",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "agendaSourceType": "ONBASE",
+   "jurisdiction": "Tucson, AZ",
+   "publishingOrg": "City of Tucson Clerk",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "baseUrl": "https://tucsonaz.hylandcloud.com/221agendaonline"
+   },
+   "verifiedAt": "2026-08-13"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+   "agendaSourceType": "DILIGENT",
+   "jurisdiction": "Tucson Unified School District, AZ",
+   "publishingOrg": "Tucson Unified School District Governing Board",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "slug": "tusd1",
+    "serviceBase": "https://tusd1-schooldesk.community.diligentoneplatform.com",
+    "meetingPath": "/Portal/MeetingInformation.aspx?Org=Cal&Id=",
+    "extraQuery": "&loadall=true",
+    "agendaRecordsUrl": "https://govboard.tusd1.org/Actions",
+    "agendaRecordsTypeIds": "17,29",
+    "scheduleCalendarBase": "https://govboard.tusd1.org",
+    "scheduleCalendarPid": "36871",
+    "legacyIdsThrough": "505",
+    "legacySitting:503": "2026-09-28T1815-alternative-education-advisory",
+    "legacySitting:505": "2026-09-30T1600-budget-advisory",
+    "legacySitting:504": "2026-10-05T1730-employee-benefit-trust",
+    "venueMatch:Duffy Community Center": "Duffy Community Center Multipurpose Room 5145 E. 5th Street Tucson, AZ 85711",
+    "venueMatch:Morrow Education Center": "Board Conference Room Morrow Education Center 1010 E. Tenth Street Tucson, Arizona 85719"
+   },
+   "noticeUrl": "https://govboard.tusd1.org/",
+   "verifiedAt": "2026-08-13"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+   "agendaSourceType": "OFFICIAL_PAGE_EVENTS",
+   "jurisdiction": "Tucson Unified School District, AZ",
+   "publishingOrg": "Tucson Unified School District",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "slug": "tusd1-reconfiguration",
+    "pageUrl": "https://www.tusd1.org/Reconfiguration",
+    "officialHost": "www.tusd1.org",
+    "bodyName": "Tucson Unified School District",
+    "nameTerms": "Tucson Unified|TUSD|Joint Committee"
+   },
+   "verifiedAt": "2026-09-23"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/school_district:sunnyside_unified_district#board",
+   "ocdId": "ocd-division/country:us/state:az/school_district:sunnyside_unified_district",
+   "agendaSourceType": "DILIGENT",
+   "jurisdiction": "Sunnyside Unified School District, AZ",
+   "publishingOrg": "Sunnyside Unified School District Governing Board",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "slug": "susd12",
+    "serviceBase": "https://susd-12.community.highbond.com",
+    "meetingPath": "/Portal/MeetingInformation.aspx?Org=Cal&Id=",
+    "typeName:27": "Governing Board",
+    "typeName:21": "Governing Board",
+    "scheduleCalendarKind": "smartsites",
+    "siteBase": "https://www.susd12.org",
+    "calendarApiId": "150042",
+    "scheduleCalendarTitlePattern": "\\bgoverning board\\b",
+    "legacyIdsThrough": "174",
+    "legacySitting:168": "2026-09-29T1830-governing-board",
+    "legacySitting:169": "2026-10-13T1830-governing-board",
+    "legacySitting:170": "2026-10-27T1830-governing-board",
+    "legacySitting:171": "2026-11-10T1830-governing-board",
+    "legacySitting:172": "2026-11-24T1830-governing-board",
+    "legacySitting:173": "2026-12-08T1830-governing-board"
+   },
+   "verifiedAt": "2026-08-14"
+  },
+  {
+   "bodyId": "curated:az/pima-community-college#governing",
+   "ocdId": null,
+   "agendaSourceType": "PIMA_EDU",
+   "jurisdiction": "Pima Community College District, AZ",
+   "publishingOrg": "Pima Community College Governing Board",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "slug": "pcc",
+    "documentsUrl": "https://www.pima.edu/about-pima/leadership-policies/governing-board/board-meetings/documents.html",
+    "eventsUrl": "https://events.pima.edu/?calendar[]=3&calId=10",
+    "committeeName": "Finance and Audit Committee",
+    "committeeScheduleUrl": "https://www.pima.edu/about-pima/leadership-policies/governing-board/finance-advisory-committee/index.html",
+    "committeeDocumentsUrl": "https://www.pima.edu/about-pima/leadership-policies/governing-board/finance-advisory-committee/agendas-minutes.html",
+    "venueSourceId": "diligent",
+    "venueTenant": "pcc",
+    "venueRoom:C-105": "District Office, Community/Board Room C-105",
+    "venueRoom:C-228": "District Office, Board Conference Room C-228",
+    "venueBuilding": "District Office TBD"
+   },
+   "verifiedAt": "2026-09-23"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:tucson#2018-parks-connections-bond-oversight-commission",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "agendaSourceType": "CLERKSBOARDS",
+   "jurisdiction": "Tucson, AZ",
+   "publishingOrg": "City of Tucson Clerk",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "boardId": "128"
+   },
+   "verifiedAt": "2026-08-18"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:tucson#armory-park-historic-zone-advisory-board",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "agendaSourceType": "CLERKSBOARDS",
+   "jurisdiction": "Tucson, AZ",
+   "publishingOrg": "City of Tucson Clerk",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "boardId": "9"
+   },
+   "verifiedAt": "2026-08-18"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:tucson#barrio-historico-historic-zone-advisory-board",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "agendaSourceType": "CLERKSBOARDS",
+   "jurisdiction": "Tucson, AZ",
+   "publishingOrg": "City of Tucson Clerk",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "boardId": "12"
+   },
+   "verifiedAt": "2026-08-18"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:tucson#board-of-adjustment",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "agendaSourceType": "CLERKSBOARDS",
+   "jurisdiction": "Tucson, AZ",
+   "publishingOrg": "City of Tucson Clerk",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "boardId": "8"
+   },
+   "verifiedAt": "2026-08-18"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:tucson#citizens-water-advisory-committee",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "agendaSourceType": "CLERKSBOARDS",
+   "jurisdiction": "Tucson, AZ",
+   "publishingOrg": "City of Tucson Clerk",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "boardId": "23"
+   },
+   "verifiedAt": "2026-08-18"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:tucson#city-of-tucson-deferred-compensation-plan-management-board",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "agendaSourceType": "CLERKSBOARDS",
+   "jurisdiction": "Tucson, AZ",
+   "publishingOrg": "City of Tucson Clerk",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "boardId": "25"
+   },
+   "verifiedAt": "2026-08-18"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "agendaSourceType": "CLERKSBOARDS",
+   "jurisdiction": "Tucson, AZ",
+   "publishingOrg": "City of Tucson Clerk",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "boardId": "3"
+   },
+   "verifiedAt": "2026-08-18"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-equitable-housing-and-development",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "agendaSourceType": "CLERKSBOARDS",
+   "jurisdiction": "Tucson, AZ",
+   "publishingOrg": "City of Tucson Clerk",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "boardId": "131"
+   },
+   "verifiedAt": "2026-08-18"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:tucson#community-police-advisory-review-board",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "agendaSourceType": "CLERKSBOARDS",
+   "jurisdiction": "Tucson, AZ",
+   "publishingOrg": "City of Tucson Clerk",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "boardId": "19"
+   },
+   "verifiedAt": "2026-08-18"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:tucson#complete-streets-coordinating-council",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "agendaSourceType": "CLERKSBOARDS",
+   "jurisdiction": "Tucson, AZ",
+   "publishingOrg": "City of Tucson Clerk",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "boardId": "130"
+   },
+   "verifiedAt": "2026-08-18"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:tucson#design-review-board",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "agendaSourceType": "CLERKSBOARDS",
+   "jurisdiction": "Tucson, AZ",
+   "publishingOrg": "City of Tucson Clerk",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "boardId": "26"
+   },
+   "verifiedAt": "2026-08-18"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:tucson#fort-lowell-historic-zone-advisory-board",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "agendaSourceType": "CLERKSBOARDS",
+   "jurisdiction": "Tucson, AZ",
+   "publishingOrg": "City of Tucson Clerk",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "boardId": "39"
+   },
+   "verifiedAt": "2026-08-18"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:tucson#human-relations-commission",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "agendaSourceType": "CLERKSBOARDS",
+   "jurisdiction": "Tucson, AZ",
+   "publishingOrg": "City of Tucson Clerk",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "boardId": "42"
+   },
+   "verifiedAt": "2026-08-18"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "agendaSourceType": "CLERKSBOARDS",
+   "jurisdiction": "Tucson, AZ",
+   "publishingOrg": "City of Tucson Clerk",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "boardId": "43"
+   },
+   "verifiedAt": "2026-08-18"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:tucson#park-tucson-commission",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "agendaSourceType": "CLERKSBOARDS",
+   "jurisdiction": "Tucson, AZ",
+   "publishingOrg": "City of Tucson Clerk",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "boardId": "57"
+   },
+   "verifiedAt": "2026-08-18"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:tucson#pima-county-tucson-women-s-commission",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "agendaSourceType": "CLERKSBOARDS",
+   "jurisdiction": "Tucson, AZ",
+   "publishingOrg": "City of Tucson Clerk",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "boardId": "50"
+   },
+   "verifiedAt": "2026-08-18"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:tucson#planning-commission",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "agendaSourceType": "CLERKSBOARDS",
+   "jurisdiction": "Tucson, AZ",
+   "publishingOrg": "City of Tucson Clerk",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "boardId": "38"
+   },
+   "verifiedAt": "2026-08-18"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:tucson#public-art-and-community-design-committee",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "agendaSourceType": "CLERKSBOARDS",
+   "jurisdiction": "Tucson, AZ",
+   "publishingOrg": "City of Tucson Clerk",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "boardId": "49"
+   },
+   "verifiedAt": "2026-08-18"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-commission-on-lesbian-gay-bisexual-transgender-and-queer-issues",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "agendaSourceType": "CLERKSBOARDS",
+   "jurisdiction": "Tucson, AZ",
+   "publishingOrg": "City of Tucson Clerk",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "boardId": "40"
+   },
+   "verifiedAt": "2026-08-18"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-convention-center-commission",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "agendaSourceType": "CLERKSBOARDS",
+   "jurisdiction": "Tucson, AZ",
+   "publishingOrg": "City of Tucson Clerk",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "boardId": "15"
+   },
+   "verifiedAt": "2026-08-18"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-fire-public-safety-personnel-retirement-system-board",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "agendaSourceType": "CLERKSBOARDS",
+   "jurisdiction": "Tucson, AZ",
+   "publishingOrg": "City of Tucson Clerk",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "boardId": "58"
+   },
+   "verifiedAt": "2026-08-18"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-greens-committee",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "agendaSourceType": "CLERKSBOARDS",
+   "jurisdiction": "Tucson, AZ",
+   "publishingOrg": "City of Tucson Clerk",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "boardId": "41"
+   },
+   "verifiedAt": "2026-08-18"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-parks-and-recreation-commission",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "agendaSourceType": "CLERKSBOARDS",
+   "jurisdiction": "Tucson, AZ",
+   "publishingOrg": "City of Tucson Clerk",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "boardId": "63"
+   },
+   "verifiedAt": "2026-08-18"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-police-public-safety-personnel-retirement-system-board",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "agendaSourceType": "CLERKSBOARDS",
+   "jurisdiction": "Tucson, AZ",
+   "publishingOrg": "City of Tucson Clerk",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "boardId": "59"
+   },
+   "verifiedAt": "2026-08-18"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-transit-advisory-committee",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "agendaSourceType": "CLERKSBOARDS",
+   "jurisdiction": "Tucson, AZ",
+   "publishingOrg": "City of Tucson Clerk",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "boardId": "133"
+   },
+   "verifiedAt": "2026-08-18"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-pima-county-historical-commission",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "agendaSourceType": "CLERKSBOARDS",
+   "jurisdiction": "Tucson, AZ",
+   "publishingOrg": "City of Tucson Clerk",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "boardId": "61"
+   },
+   "verifiedAt": "2026-08-18"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:tucson#veterans-affairs-committee",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "agendaSourceType": "CLERKSBOARDS",
+   "jurisdiction": "Tucson, AZ",
+   "publishingOrg": "City of Tucson Clerk",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "boardId": "65"
+   },
+   "verifiedAt": "2026-08-18"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/school_district:amphitheater_unified_district#board",
+   "ocdId": "ocd-division/country:us/state:az/school_district:amphitheater_unified_district",
+   "agendaSourceType": "BOARDBOOK",
+   "jurisdiction": "Amphitheater Unified School District, AZ",
+   "publishingOrg": "Amphitheater Unified School District Governing Board",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "orgId": "2065",
+    "bodyName": "Amphitheater Unified School District Governing Board"
+   },
+   "verifiedAt": "2026-08-14"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "agendaSourceType": "CIVICPLUS",
+   "jurisdiction": "Rockaway Township, NJ",
+   "publishingOrg": "Rockaway Township",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "rockaway_township",
+    "icalUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
+    "rssUrl": "https://www.rockawaytownship.org/RSSFeed.aspx?ModID=65&CID=All-agendacenter",
+    "summaryMatch": "Township Council",
+    "agendaCenterUrl": "https://www.rockawaytownship.org/AgendaCenter",
+    "agendaCenterCategoryId": "2"
+   },
+   "verifiedAt": "2026-08-15"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#planning-board",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "agendaSourceType": "CIVICPLUS",
+   "jurisdiction": "Rockaway Township, NJ",
+   "publishingOrg": "Rockaway Township Planning Board",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "rockaway_township_planning_board",
+    "icalUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
+    "summaryMatch": "Planning Board Meeting",
+    "bodyName": "Planning Board",
+    "agendaCenterUrl": "https://www.rockawaytownship.org/AgendaCenter",
+    "agendaCenterCategoryId": "4"
+   },
+   "verifiedAt": "2026-08-15"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "agendaSourceType": "CIVICPLUS",
+   "jurisdiction": "Rockaway Township, NJ",
+   "publishingOrg": "Rockaway Township Board of Adjustment",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "rockaway_township_board_of_adjustment",
+    "icalUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
+    "summaryMatch": "Board of Adjustment Meeting",
+    "bodyName": "Board of Adjustment",
+    "agendaCenterUrl": "https://www.rockawaytownship.org/AgendaCenter",
+    "agendaCenterCategoryId": "3"
+   },
+   "verifiedAt": "2026-08-15"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nj/county:morris#governing",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris",
+   "agendaSourceType": "IQM2",
+   "jurisdiction": "Morris County, NJ",
+   "publishingOrg": "Morris County Board of County Commissioners",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "morriscountynj",
+    "base": "https://morriscountynj.iqm2.com",
+    "boardMatch": "Board of County Commissioners"
+   },
+   "verifiedAt": "2026-08-13"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack#governing",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
+   "agendaSourceType": "REVIZE",
+   "jurisdiction": "Merrimack County, NH",
+   "publishingOrg": "Merrimack County Board of Commissioners",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "merrimack",
+    "base": "https://www.merrimackcounty.net",
+    "agendaPage": "board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
+    "documentsFolder": "Board of Commissioners/Public Notices, Agenda, Minutes/",
+    "titleMatch": "Board of Commissioners",
+    "bodyName": "Merrimack County Board of Commissioners"
+   },
+   "verifiedAt": "2026-08-15"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/school_district:vail_unified_district#board",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "agendaSourceType": "APPTEGY",
+   "jurisdiction": "Vail Unified School District, AZ",
+   "publishingOrg": "Vail School District Governing Board",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "slug": "vail",
+    "apiBase": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164",
+    "titleMatch": "Governing Board Meeting"
+   },
+   "verifiedAt": "2026-08-13"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district#board",
+   "ocdId": "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district",
+   "agendaSourceType": "SCHEDULEPAGE",
+   "jurisdiction": "Morris Hills Regional School District, NJ",
+   "publishingOrg": "Morris Hills Regional District Board of Education",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "mhrd",
+    "schedulePage": "https://www.mhrd.org/administration/board-of-education/boe-meetings",
+    "documentsPage": "https://www.mhrd.org/administration/board-of-education/board-agendas",
+    "bodyName": "Board of Education",
+    "venueMatch": "Board of Education - Board Conference Room"
+   },
+   "verifiedAt": "2026-08-15"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:chandler#governing",
+   "ocdId": "ocd-division/country:us/state:az/place:chandler",
+   "agendaSourceType": "SCHEDULEPAGE",
+   "jurisdiction": "Chandler, AZ",
+   "publishingOrg": "City of Chandler City Clerk's Office",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "slug": "chandler-city-council",
+    "schedulePage": "https://www.chandleraz.gov/government/departments/city-clerks-office/city-council-meetings",
+    "bodyName": "City Council",
+    "shapes": "dated-list",
+    "sectionMatch": "paragraph--id--18399",
+    "venueMatch": "Council Chambers, 88 E. Chicago St.",
+    "dayJson": "https://www.chandleraz.gov/rest/events/day/",
+    "titleMatch": "City Council",
+    "destinyAgenda": "https://public.destinyhosted.com/agenda_publish.cfm?id=24263&mt=CC"
+   },
+   "verifiedAt": "2026-09-25"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:holbrook#governing",
+   "ocdId": "ocd-division/country:us/state:az/place:holbrook",
+   "agendaSourceType": "DOCUMENT_LISTING",
+   "jurisdiction": "Holbrook, AZ",
+   "publishingOrg": "City of Holbrook",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "slug": "holbrook-city-council",
+    "pageTemplate": "https://holbrookaz.gov/government/council-agenda/{year}-agendas-minutes/",
+    "officialHost": "holbrookaz.gov",
+    "bodyName": "City Council",
+    "sittingKinds": "Regular Meeting|Special Meeting|Work Session",
+    "agendaHeading": "Agendas",
+    "minutesHeading": "Minutes"
+   },
+   "verifiedAt": "2026-09-25"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/place:winslow#governing",
+   "ocdId": "ocd-division/country:us/state:az/place:winslow",
+   "agendaSourceType": "SUITEONE",
+   "jurisdiction": "Winslow, AZ",
+   "publishingOrg": "City of Winslow",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "slug": "winslow-city-council",
+    "portalUrl": "https://winslowaz.suiteonemedia.com/?embed=1",
+    "groupName": "City Council",
+    "titleMatch": "City Council",
+    "bodyName": "City Council"
+   },
+   "verifiedAt": "2026-09-25"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/school_district:kearsarge_regional_school_district#board",
+   "ocdId": "ocd-division/country:us/state:nh/school_district:kearsarge_regional_school_district",
+   "agendaSourceType": "SCHEDULEPAGE",
+   "jurisdiction": "Kearsarge Regional School District, NH",
+   "publishingOrg": "Kearsarge Regional School District School Board",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "kearsarge",
+    "shapes": "month-table",
+    "schedulePage": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
+    "documentsPage": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-agendas-minutes",
+    "sectionMatch": "field-name-body",
+    "bodyName": "School Board",
+    "venueMatch": "114 Main Street, New London",
+    "otherVenueMarkers": "KRMS"
+   },
+   "verifiedAt": "2026-08-15"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#planning-board",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "agendaSourceType": "SCHEDULEPAGE",
+   "jurisdiction": "Newbury, NH",
+   "publishingOrg": "Newbury Planning Board",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "newbury-planning-board",
+    "shapes": "agenda-list",
+    "schedulePage": "https://www.newbury.nh.gov/planning-board",
+    "pathPrefix": "/planning-board/",
+    "bodyName": "Planning Board",
+    "venueMatch": "Newbury Town Office"
+   },
+   "verifiedAt": "2026-08-15"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#conservation-commission",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "agendaSourceType": "SCHEDULEPAGE",
+   "jurisdiction": "Newbury, NH",
+   "publishingOrg": "Newbury Conservation Commission",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "newbury-conservation-commission",
+    "shapes": "dated-list,agenda-list",
+    "schedulePage": "https://www.newbury.nh.gov/conservation-commission",
+    "sectionMatch": "field-name-field-description",
+    "pathPrefix": "/conservation-commission/",
+    "bodyName": "Conservation Commission",
+    "venueMatch": "Newbury Town Office"
+   },
+   "verifiedAt": "2026-08-15"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#library-trustees",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "agendaSourceType": "SCHEDULEPAGE",
+   "jurisdiction": "Newbury, NH",
+   "publishingOrg": "Newbury Public Library Board of Trustees",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "newbury-library-trustees-notices",
+    "shapes": "notice-feed",
+    "schedulePage": "https://newburynhlibrary.net/feed/",
+    "titleMatch": "Trustee",
+    "bodyName": "Newbury Public Library Trustees",
+    "venueMatch": "Newbury Public Library",
+    "otherVenueMarkers": "Newbury Public Library"
+   },
+   "verifiedAt": "2026-09-24"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#energy-committee",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "agendaSourceType": "SCHEDULEPAGE",
+   "jurisdiction": "Newbury, NH",
+   "publishingOrg": "Newbury Energy Committee",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "newbury-energy-committee-page",
+    "shapes": "next-meeting-line",
+    "schedulePage": "https://www.newburyenergynh.org/",
+    "bodyName": "Newbury Energy Committee",
+    "venueMatch": "Newbury Town Office"
+   },
+   "verifiedAt": "2026-09-24"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#zoning-board-of-adjustment",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "agendaSourceType": "SCHEDULEPAGE",
+   "jurisdiction": "Newbury, NH",
+   "publishingOrg": "Newbury Zoning Board of Adjustment",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "newbury-zoning-board-of-adjustment",
+    "shapes": "agenda-list",
+    "schedulePage": "https://www.newbury.nh.gov/zoning-board-adjustment",
+    "pathPrefix": "/zoning-board-adjustment/",
+    "bodyName": "Zoning Board of Adjustment",
+    "venueMatch": "Newbury Offices"
+   },
+   "verifiedAt": "2026-08-15"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district#board",
+   "ocdId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district",
+   "agendaSourceType": "APPTEGY",
+   "jurisdiction": "Rockaway Township School District, NJ",
+   "publishingOrg": "Rockaway Township Public Schools Board of Education",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "rocktwp",
+    "apiBase": "https://api.thrillshare.com/api/v4/o/4707",
+    "titleMatch": "Board Meeting"
+   },
+   "verifiedAt": "2026-08-13"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#advisory-budget-committee",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Newbury, NH",
+   "publishingOrg": "Town of Newbury",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "newbury-advisory-budget-committee",
+    "feedUrl": "https://www.newbury.nh.gov/calendar/ical/export.ics",
+    "titleMatch": "Advisory Budget Committee,Budget Advisory Committee",
+    "bodyName": "2026 Advisory Budget Committee",
+    "venueMatch": "Newbury Town Office"
+   },
+   "verifiedAt": "2026-08-20"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#blodgett-sewer-user-advisory-committee",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Newbury, NH",
+   "publishingOrg": "Town of Newbury",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "newbury-blodgett-sewer-user-advisory-committee",
+    "feedUrl": "https://www.newbury.nh.gov/calendar/ical/export.ics",
+    "titleMatch": "Blodgett Sewer",
+    "bodyName": "Blodgett Sewer User Advisory Committee",
+    "venueMatch": "Newbury Town Office"
+   },
+   "verifiedAt": "2026-08-20"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#cemetery-trustees",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Newbury, NH",
+   "publishingOrg": "Town of Newbury",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "newbury-cemetery-trustees",
+    "feedUrl": "https://www.newbury.nh.gov/calendar/ical/export.ics",
+    "titleMatch": "Cemetery Trustee",
+    "bodyName": "Cemetery Trustees",
+    "venueMatch": "Newbury Town Office"
+   },
+   "verifiedAt": "2026-08-20"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#joint-loss-management-committee",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Newbury, NH",
+   "publishingOrg": "Town of Newbury",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "newbury-joint-loss-management-committee",
+    "feedUrl": "https://www.newbury.nh.gov/calendar/ical/export.ics",
+    "titleMatch": "Joint Loss",
+    "bodyName": "Joint Loss Management Committee",
+    "venueMatch": "Newbury Town Office"
+   },
+   "verifiedAt": "2026-08-20"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#septic-committee",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Newbury, NH",
+   "publishingOrg": "Town of Newbury",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "newbury-septic-committee",
+    "feedUrl": "https://www.newbury.nh.gov/calendar/ical/export.ics",
+    "titleMatch": "Septic Committee",
+    "bodyName": "Newbury Septic Committee",
+    "venueMatch": "Newbury Town Office"
+   },
+   "verifiedAt": "2026-08-20"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#trustees-of-the-trust-funds",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Newbury, NH",
+   "publishingOrg": "Town of Newbury",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "newbury-trustees-of-the-trust-funds",
+    "feedUrl": "https://www.newbury.nh.gov/calendar/ical/export.ics",
+    "titleMatch": "Trustees of the Trust Funds,Trust Funds",
+    "bodyName": "Trustees of the Trust Funds",
+    "venueMatch": "Newbury Town Office"
+   },
+   "verifiedAt": "2026-08-20"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#energy-committee",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Newbury, NH",
+   "publishingOrg": "Town of Newbury",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "newbury-energy-committee",
+    "feedUrl": "https://www.newbury.nh.gov/calendar/ical/export.ics",
+    "titleMatch": "Energy Committee",
+    "bodyName": "Newbury Energy Committee",
+    "venueMatch": "Newbury Town Office"
+   },
+   "verifiedAt": "2026-08-20"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#beautification-committee",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Newbury, NH",
+   "publishingOrg": "Town of Newbury",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "newbury-beautification-committee",
+    "feedUrl": "https://www.newbury.nh.gov/calendar/ical/export.ics",
+    "titleMatch": "Beautification",
+    "bodyName": "Newbury Beautification Committee",
+    "venueMatch": "Newbury Town Office"
+   },
+   "verifiedAt": "2026-08-20"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#joint-assessing-board",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Newbury, NH",
+   "publishingOrg": "Town of Newbury",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "newbury-joint-assessing-board",
+    "feedUrl": "https://www.newbury.nh.gov/calendar/ical/export.ics",
+    "titleMatch": "Joint Assessing",
+    "bodyName": "Joint Assessing Board (Newbury, Sunapee & New London)",
+    "venueMatch": "Newbury Town Office"
+   },
+   "verifiedAt": "2026-08-20"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#library-trustees",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Newbury, NH",
+   "publishingOrg": "Town of Newbury",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "newbury-library-trustees",
+    "feedUrl": "https://www.newbury.nh.gov/calendar/ical/export.ics",
+    "titleMatch": "Library Trustee",
+    "bodyName": "Newbury Public Library Trustees",
+    "venueMatch": "Newbury Town Office"
+   },
+   "verifiedAt": "2026-08-20"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#governing",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Newbury, NH",
+   "publishingOrg": "Town of Newbury",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "newbury-ical-governing",
+    "feedUrl": "https://www.newbury.nh.gov/calendar/ical/export.ics",
+    "titleMatch": "Selectboard",
+    "bodyName": "Selectboard",
+    "venueMatch": "Newbury Town Office"
+   },
+   "verifiedAt": "2026-08-20"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#planning-board",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Newbury, NH",
+   "publishingOrg": "Town of Newbury",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "newbury-ical-planning-board",
+    "feedUrl": "https://www.newbury.nh.gov/calendar/ical/export.ics",
+    "titleMatch": "Planning Board",
+    "bodyName": "Planning Board",
+    "venueMatch": "Newbury Town Office"
+   },
+   "verifiedAt": "2026-08-20"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#conservation-commission",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Newbury, NH",
+   "publishingOrg": "Town of Newbury",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "newbury-ical-conservation-commission",
+    "feedUrl": "https://www.newbury.nh.gov/calendar/ical/export.ics",
+    "titleMatch": "Conservation Commission",
+    "bodyName": "Conservation Commission",
+    "venueMatch": "Newbury Town Office"
+   },
+   "verifiedAt": "2026-08-20"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#zoning-board-of-adjustment",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Newbury, NH",
+   "publishingOrg": "Town of Newbury",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "newbury-ical-zoning-board-of-adjustment",
+    "feedUrl": "https://www.newbury.nh.gov/calendar/ical/export.ics",
+    "titleMatch": "Zoning Board",
+    "bodyName": "Zoning Board of Adjustment",
+    "venueMatch": "Newbury Town Office"
+   },
+   "verifiedAt": "2026-08-20"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#supervisors-of-the-checklist",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Newbury, NH",
+   "publishingOrg": "Town of Newbury",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "newbury-supervisors-of-the-checklist",
+    "feedUrl": "https://www.newbury.nh.gov/calendar/ical/export.ics",
+    "titleMatch": "Supervisors of the Checklist,Supervisions of the Checklist",
+    "bodyName": "Supervisors of the Checklist",
+    "venueMatch": "Newbury Town Office"
+   },
+   "verifiedAt": "2026-08-20"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town#selectboard",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Wilmot, NH",
+   "publishingOrg": "Wilmot Selectboard",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "wilmot-selectboard",
+    "feedUrl": "https://www.wilmotnh.org/events/list/?ical=1",
+    "pastFeedUrl": "https://www.wilmotnh.org/events/list/?tribe_event_display=past&ical=1",
+    "categoryMatch": "Select Board",
+    "bodyName": "Selectboard",
+    "venueMatch": "Wilmot Town Office Building"
+   },
+   "verifiedAt": "2026-08-19"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town#planning-board",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Wilmot, NH",
+   "publishingOrg": "Wilmot Planning Board",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "wilmot-planning-board",
+    "feedUrl": "https://www.wilmotnh.org/events/list/?ical=1",
+    "pastFeedUrl": "https://www.wilmotnh.org/events/list/?tribe_event_display=past&ical=1",
+    "categoryMatch": "Planning Board",
+    "bodyName": "Planning Board"
+   },
+   "verifiedAt": "2026-08-19"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town#cemetery-trustees",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Wilmot, NH",
+   "publishingOrg": "Wilmot Cemetery Trustees",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "wilmot-cemetery-trustees",
+    "feedUrl": "https://www.wilmotnh.org/events/list/?ical=1",
+    "pastFeedUrl": "https://www.wilmotnh.org/events/list/?tribe_event_display=past&ical=1",
+    "categoryMatch": "Cemetery Trustees",
+    "bodyName": "Cemetery Trustees"
+   },
+   "verifiedAt": "2026-08-19"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town#conservation-commission",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Wilmot, NH",
+   "publishingOrg": "Town of Wilmot",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "wilmot-conservation-commission",
+    "feedUrl": "https://www.wilmotnh.org/events/list/?ical=1",
+    "pastFeedUrl": "https://www.wilmotnh.org/events/list/?tribe_event_display=past&ical=1",
+    "categoryMatch": "Conservation Commission",
+    "bodyName": "Conservation Commission",
+    "venueMatch": "Wilmot Town Office Building"
+   },
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town#planning-board",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Sutton, NH",
+   "publishingOrg": "Town of Sutton",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "sutton-planning-board",
+    "feedUrl": "https://www.suttonnh.gov/calendar/ical/calendar.ics",
+    "titleMatch": "Planning Board",
+    "titleExclude": "Joint,Zoning,Budget",
+    "bodyName": "Planning Board",
+    "venueMatch": "Pillsbury Memorial Hall"
+   },
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town#select-board",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Sutton, NH",
+   "publishingOrg": "Town of Sutton",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "sutton-select-board",
+    "feedUrl": "https://www.suttonnh.gov/calendar/ical/calendar.ics",
+    "titleMatch": "Select Board",
+    "titleExclude": "Joint,Planning,Zoning,Budget",
+    "bodyName": "Select Board",
+    "venueMatch": "Sutton Town Offices"
+   },
+   "verifiedAt": "2026-08-22"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town#conservation-commission",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Sutton, NH",
+   "publishingOrg": "Town of Sutton",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "sutton-conservation-commission",
+    "feedUrl": "https://www.suttonnh.gov/calendar/ical/calendar.ics",
+    "titleMatch": "Conservation Commission",
+    "titleExclude": "Joint",
+    "bodyName": "Conservation Commission",
+    "venueMatch": "Sutton Town Offices"
+   },
+   "verifiedAt": "2026-08-22"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town#cemetery-commission",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Sutton, NH",
+   "publishingOrg": "Town of Sutton",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "sutton-cemetery-commission",
+    "feedUrl": "https://www.suttonnh.gov/calendar/ical/calendar.ics",
+    "titleMatch": "Cemetery Commission",
+    "titleExclude": "Joint",
+    "bodyName": "Cemetery Commission",
+    "venueMatch": "Sutton Town Offices"
+   },
+   "verifiedAt": "2026-08-22"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town#zoning-board",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Sutton, NH",
+   "publishingOrg": "Town of Sutton",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "sutton-zoning-board",
+    "feedUrl": "https://www.suttonnh.gov/calendar/ical/calendar.ics",
+    "titleMatch": "ZBA",
+    "titleExclude": "Joint,Planning",
+    "bodyName": "Zoning Board of Adjustment",
+    "venueMatch": "Sutton Town Offices"
+   },
+   "verifiedAt": "2026-08-22"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town#hazard-mitigation-committee",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Sutton, NH",
+   "publishingOrg": "Town of Sutton",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "sutton-hazard-mitigation-committee",
+    "feedUrl": "https://www.suttonnh.gov/calendar/ical/calendar.ics",
+    "titleMatch": "Hazard Mitigation",
+    "titleExclude": "Joint",
+    "bodyName": "Hazard Mitigation Committee",
+    "venueMatch": "Sutton Town Offices"
+   },
+   "verifiedAt": "2026-08-22"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town#ad-hoc-fire-safety-municipal-building-committee",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Sutton, NH",
+   "publishingOrg": "Town of Sutton",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "sutton-ad-hoc-fire-safety-municipal-building-committee",
+    "feedUrl": "https://www.suttonnh.gov/calendar/ical/calendar.ics",
+    "titleMatch": "Fire Safety Municipal Building,Fire Safety Municipal Bldg",
+    "titleExclude": "Joint",
+    "bodyName": "Ad Hoc Fire Safety Municipal Building Committee",
+    "venueMatch": "Sutton Town Offices"
+   },
+   "verifiedAt": "2026-08-22"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town#ad-hoc-sutton-connects-committee",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Sutton, NH",
+   "publishingOrg": "Town of Sutton",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "sutton-ad-hoc-sutton-connects-committee",
+    "feedUrl": "https://www.suttonnh.gov/calendar/ical/calendar.ics",
+    "titleMatch": "Sutton Connects",
+    "titleExclude": "Joint",
+    "bodyName": "Ad Hoc Sutton Connects! Committee",
+    "venueMatch": "Sutton Town Offices"
+   },
+   "verifiedAt": "2026-08-22"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#board-of-selectmen",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
+   "agendaSourceType": "SCHEDULEPAGE",
+   "jurisdiction": "New London, NH",
+   "publishingOrg": "New London Board of Selectmen",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "new-london-board-of-selectmen",
+    "shapes": "event-tip",
+    "schedulePage": "https://newlondon.nh.gov/calendar",
+    "monthPagePath": "/index.asp",
+    "monthPageQuery": "Type=B_EV&SEC=D43F63EA-A7A8-4400-AFB3-BCF489A6B5E5",
+    "monthsAhead": "2",
+    "titleMatch": "Board of Selectmen",
+    "bodyName": "Board of Selectmen",
+    "venueMatch": "Whipple Memorial Town Hall",
+    "otherVenueMarkers": "Whipple Memorial Hall,Whipple Hall,New London Town Office,Syd Crook,Sydney Crook,Fire Department,Newbury Town Office,Sunapee Town Offices"
+   },
+   "verifiedAt": "2026-09-25"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#planning-board",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
+   "agendaSourceType": "SCHEDULEPAGE",
+   "jurisdiction": "New London, NH",
+   "publishingOrg": "New London Planning Board",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "new-london-planning-board",
+    "shapes": "event-tip",
+    "schedulePage": "https://newlondon.nh.gov/calendar",
+    "monthPagePath": "/index.asp",
+    "monthPageQuery": "Type=B_EV&SEC=D43F63EA-A7A8-4400-AFB3-BCF489A6B5E5",
+    "monthsAhead": "2",
+    "titleMatch": "Planning Board",
+    "bodyName": "Planning Board",
+    "venueMatch": "Whipple Memorial Town Hall",
+    "otherVenueMarkers": "Whipple Memorial Hall,Whipple Hall,New London Town Office,Syd Crook,Sydney Crook,Fire Department,Newbury Town Office,Sunapee Town Offices"
+   },
+   "verifiedAt": "2026-09-25"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#zoning-board",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
+   "agendaSourceType": "SCHEDULEPAGE",
+   "jurisdiction": "New London, NH",
+   "publishingOrg": "New London Zoning Board",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "new-london-zoning-board",
+    "shapes": "event-tip",
+    "schedulePage": "https://newlondon.nh.gov/calendar",
+    "monthPagePath": "/index.asp",
+    "monthPageQuery": "Type=B_EV&SEC=D43F63EA-A7A8-4400-AFB3-BCF489A6B5E5",
+    "monthsAhead": "2",
+    "titleMatch": "Zoning Board",
+    "bodyName": "Zoning Board",
+    "venueMatch": "Whipple Memorial Town Hall",
+    "otherVenueMarkers": "Whipple Memorial Hall,Whipple Hall,New London Town Office,Syd Crook,Sydney Crook,Fire Department,Newbury Town Office,Sunapee Town Offices"
+   },
+   "verifiedAt": "2026-09-25"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#conservation-commission",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
+   "agendaSourceType": "SCHEDULEPAGE",
+   "jurisdiction": "New London, NH",
+   "publishingOrg": "New London Conservation Commission",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "new-london-conservation-commission",
+    "shapes": "event-tip",
+    "schedulePage": "https://newlondon.nh.gov/calendar",
+    "monthPagePath": "/index.asp",
+    "monthPageQuery": "Type=B_EV&SEC=D43F63EA-A7A8-4400-AFB3-BCF489A6B5E5",
+    "monthsAhead": "2",
+    "titleMatch": "Conservation Commission",
+    "bodyName": "Conservation Commission",
+    "venueMatch": "Whipple Memorial Town Hall",
+    "otherVenueMarkers": "Whipple Memorial Hall,Whipple Hall,New London Town Office,Syd Crook,Sydney Crook,Fire Department,Newbury Town Office,Sunapee Town Offices"
+   },
+   "verifiedAt": "2026-09-25"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#budget-committee",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
+   "agendaSourceType": "SCHEDULEPAGE",
+   "jurisdiction": "New London, NH",
+   "publishingOrg": "New London Budget Committee",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "new-london-budget-committee",
+    "shapes": "event-tip",
+    "schedulePage": "https://newlondon.nh.gov/calendar",
+    "monthPagePath": "/index.asp",
+    "monthPageQuery": "Type=B_EV&SEC=D43F63EA-A7A8-4400-AFB3-BCF489A6B5E5",
+    "monthsAhead": "2",
+    "titleMatch": "Budget Committee",
+    "bodyName": "Budget Committee",
+    "venueMatch": "Whipple Memorial Town Hall",
+    "otherVenueMarkers": "Whipple Memorial Hall,Whipple Hall,New London Town Office,Syd Crook,Sydney Crook,Fire Department,Newbury Town Office,Sunapee Town Offices"
+   },
+   "verifiedAt": "2026-09-25"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#energy-committee",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
+   "agendaSourceType": "SCHEDULEPAGE",
+   "jurisdiction": "New London, NH",
+   "publishingOrg": "New London Energy Committee",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "new-london-energy-committee",
+    "shapes": "event-tip",
+    "schedulePage": "https://newlondon.nh.gov/calendar",
+    "monthPagePath": "/index.asp",
+    "monthPageQuery": "Type=B_EV&SEC=D43F63EA-A7A8-4400-AFB3-BCF489A6B5E5",
+    "monthsAhead": "2",
+    "titleMatch": "Energy Committee",
+    "bodyName": "Energy Committee",
+    "venueMatch": "Whipple Memorial Town Hall",
+    "otherVenueMarkers": "Whipple Memorial Hall,Whipple Hall,New London Town Office,Syd Crook,Sydney Crook,Fire Department,Newbury Town Office,Sunapee Town Offices"
+   },
+   "verifiedAt": "2026-09-25"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#housing-commission",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
+   "agendaSourceType": "SCHEDULEPAGE",
+   "jurisdiction": "New London, NH",
+   "publishingOrg": "New London Housing Commission",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "new-london-housing-commission",
+    "shapes": "event-tip",
+    "schedulePage": "https://newlondon.nh.gov/calendar",
+    "monthPagePath": "/index.asp",
+    "monthPageQuery": "Type=B_EV&SEC=D43F63EA-A7A8-4400-AFB3-BCF489A6B5E5",
+    "monthsAhead": "2",
+    "titleMatch": "Housing Commission",
+    "bodyName": "Housing Commission",
+    "venueMatch": "Whipple Memorial Town Hall",
+    "otherVenueMarkers": "Whipple Memorial Hall,Whipple Hall,New London Town Office,Syd Crook,Sydney Crook,Fire Department,Newbury Town Office,Sunapee Town Offices"
+   },
+   "verifiedAt": "2026-09-25"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#recreation-commission",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
+   "agendaSourceType": "SCHEDULEPAGE",
+   "jurisdiction": "New London, NH",
+   "publishingOrg": "New London Recreation Commission",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "new-london-recreation-commission",
+    "shapes": "event-tip",
+    "schedulePage": "https://newlondon.nh.gov/calendar",
+    "monthPagePath": "/index.asp",
+    "monthPageQuery": "Type=B_EV&SEC=D43F63EA-A7A8-4400-AFB3-BCF489A6B5E5",
+    "monthsAhead": "2",
+    "titleMatch": "Recreation Commission",
+    "bodyName": "Recreation Commission",
+    "venueMatch": "Whipple Memorial Town Hall",
+    "otherVenueMarkers": "Whipple Memorial Hall,Whipple Hall,New London Town Office,Syd Crook,Sydney Crook,Fire Department,Newbury Town Office,Sunapee Town Offices"
+   },
+   "verifiedAt": "2026-09-25"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#board-of-firewards",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
+   "agendaSourceType": "SCHEDULEPAGE",
+   "jurisdiction": "New London, NH",
+   "publishingOrg": "New London Board of Firewards",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "new-london-board-of-firewards",
+    "shapes": "event-tip",
+    "schedulePage": "https://newlondon.nh.gov/calendar",
+    "monthPagePath": "/index.asp",
+    "monthPageQuery": "Type=B_EV&SEC=D43F63EA-A7A8-4400-AFB3-BCF489A6B5E5",
+    "monthsAhead": "2",
+    "titleMatch": "Firewards,Fire Wards",
+    "bodyName": "Board of Firewards",
+    "venueMatch": "Whipple Memorial Town Hall",
+    "otherVenueMarkers": "Whipple Memorial Hall,Whipple Hall,New London Town Office,Syd Crook,Sydney Crook,Fire Department,Newbury Town Office,Sunapee Town Offices"
+   },
+   "verifiedAt": "2026-09-25"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#archives-committee",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
+   "agendaSourceType": "SCHEDULEPAGE",
+   "jurisdiction": "New London, NH",
+   "publishingOrg": "New London Archives Committee",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "new-london-archives-committee",
+    "shapes": "event-tip",
+    "schedulePage": "https://newlondon.nh.gov/calendar",
+    "monthPagePath": "/index.asp",
+    "monthPageQuery": "Type=B_EV&SEC=D43F63EA-A7A8-4400-AFB3-BCF489A6B5E5",
+    "monthsAhead": "2",
+    "titleMatch": "Archives Committee",
+    "bodyName": "Archives Committee",
+    "venueMatch": "Whipple Memorial Town Hall",
+    "otherVenueMarkers": "Whipple Memorial Hall,Whipple Hall,New London Town Office,Syd Crook,Sydney Crook,Fire Department,Newbury Town Office,Sunapee Town Offices"
+   },
+   "verifiedAt": "2026-09-25"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#bicycle-pedestrian-advisory-committee",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
+   "agendaSourceType": "SCHEDULEPAGE",
+   "jurisdiction": "New London, NH",
+   "publishingOrg": "New London Bicycle & Pedestrian Advisory Committee",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "new-london-bicycle-pedestrian-advisory-committee",
+    "shapes": "event-tip",
+    "schedulePage": "https://newlondon.nh.gov/calendar",
+    "monthPagePath": "/index.asp",
+    "monthPageQuery": "Type=B_EV&SEC=D43F63EA-A7A8-4400-AFB3-BCF489A6B5E5",
+    "monthsAhead": "2",
+    "titleMatch": "Pedestrian",
+    "bodyName": "Bicycle & Pedestrian Advisory Committee",
+    "venueMatch": "Whipple Memorial Town Hall",
+    "otherVenueMarkers": "Whipple Memorial Hall,Whipple Hall,New London Town Office,Syd Crook,Sydney Crook,Fire Department,Newbury Town Office,Sunapee Town Offices"
+   },
+   "verifiedAt": "2026-09-25"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#citizens-committee",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
+   "agendaSourceType": "SCHEDULEPAGE",
+   "jurisdiction": "New London, NH",
+   "publishingOrg": "New London Citizens' Committee",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "new-london-citizens-committee",
+    "shapes": "event-tip",
+    "schedulePage": "https://newlondon.nh.gov/calendar",
+    "monthPagePath": "/index.asp",
+    "monthPageQuery": "Type=B_EV&SEC=D43F63EA-A7A8-4400-AFB3-BCF489A6B5E5",
+    "monthsAhead": "2",
+    "titleMatch": "Citizens Committee,Citizens Advisory Committee",
+    "bodyName": "Citizens' Committee",
+    "venueMatch": "Whipple Memorial Town Hall",
+    "otherVenueMarkers": "Whipple Memorial Hall,Whipple Hall,New London Town Office,Syd Crook,Sydney Crook,Fire Department,Newbury Town Office,Sunapee Town Offices"
+   },
+   "verifiedAt": "2026-09-25"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#trustees-of-the-trust-funds",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
+   "agendaSourceType": "SCHEDULEPAGE",
+   "jurisdiction": "New London, NH",
+   "publishingOrg": "New London Trustees of the Trust Funds",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "new-london-trustees-of-the-trust-funds",
+    "shapes": "event-tip",
+    "schedulePage": "https://newlondon.nh.gov/calendar",
+    "monthPagePath": "/index.asp",
+    "monthPageQuery": "Type=B_EV&SEC=D43F63EA-A7A8-4400-AFB3-BCF489A6B5E5",
+    "monthsAhead": "2",
+    "titleMatch": "Trust Fund",
+    "bodyName": "Trustees of the Trust Funds",
+    "venueMatch": "Whipple Memorial Town Hall",
+    "otherVenueMarkers": "Whipple Memorial Hall,Whipple Hall,New London Town Office,Syd Crook,Sydney Crook,Fire Department,Newbury Town Office,Sunapee Town Offices"
+   },
+   "verifiedAt": "2026-09-25"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#tri-town-assessing-board",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
+   "agendaSourceType": "SCHEDULEPAGE",
+   "jurisdiction": "New London, NH",
+   "publishingOrg": "New London Tri-Town Assessing Board (New London, Sunapee & Newbury)",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "new-london-tri-town-assessing-board",
+    "shapes": "event-tip",
+    "schedulePage": "https://newlondon.nh.gov/calendar",
+    "monthPagePath": "/index.asp",
+    "monthPageQuery": "Type=B_EV&SEC=D43F63EA-A7A8-4400-AFB3-BCF489A6B5E5",
+    "monthsAhead": "2",
+    "titleMatch": "Tri-Town Assessing",
+    "bodyName": "Tri-Town Assessing Board (New London, Sunapee & Newbury)",
+    "venueMatch": "Whipple Memorial Town Hall",
+    "otherVenueMarkers": "Whipple Memorial Hall,Whipple Hall,New London Town Office,Syd Crook,Sydney Crook,Fire Department,Newbury Town Office,Sunapee Town Offices"
+   },
+   "verifiedAt": "2026-09-25"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#supervisors-of-the-checklist",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
+   "agendaSourceType": "SCHEDULEPAGE",
+   "jurisdiction": "New London, NH",
+   "publishingOrg": "New London Supervisors of the Checklist",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "new-london-supervisors-of-the-checklist",
+    "shapes": "event-tip",
+    "schedulePage": "https://newlondon.nh.gov/calendar",
+    "monthPagePath": "/index.asp",
+    "monthPageQuery": "Type=B_EV&SEC=D43F63EA-A7A8-4400-AFB3-BCF489A6B5E5",
+    "monthsAhead": "2",
+    "titleMatch": "Supervisors of the Checklist",
+    "bodyName": "Supervisors of the Checklist",
+    "venueMatch": "Whipple Memorial Town Hall",
+    "otherVenueMarkers": "Whipple Memorial Hall,Whipple Hall,New London Town Office,Syd Crook,Sydney Crook,Fire Department,Newbury Town Office,Sunapee Town Offices"
+   },
+   "verifiedAt": "2026-09-25"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#capital-improvement-program",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
+   "agendaSourceType": "SCHEDULEPAGE",
+   "jurisdiction": "New London, NH",
+   "publishingOrg": "New London Capital Improvement Program Committee",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "new-london-capital-improvement-program",
+    "shapes": "event-tip",
+    "schedulePage": "https://newlondon.nh.gov/calendar",
+    "monthPagePath": "/index.asp",
+    "monthPageQuery": "Type=B_EV&SEC=D43F63EA-A7A8-4400-AFB3-BCF489A6B5E5",
+    "monthsAhead": "2",
+    "titleMatch": "Capital Improvement Program",
+    "bodyName": "Capital Improvement Program Committee",
+    "venueMatch": "Whipple Memorial Town Hall",
+    "otherVenueMarkers": "Whipple Memorial Hall,Whipple Hall,New London Town Office,Syd Crook,Sydney Crook,Fire Department,Newbury Town Office,Sunapee Town Offices"
+   },
+   "verifiedAt": "2026-09-25"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#select-board",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Bradford, NH",
+   "publishingOrg": "Town of Bradford",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "bradford-select-board",
+    "feedUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+    "titleMatch": "Select Board,Board of Selectmen",
+    "bodyName": "Select Board"
+   },
+   "noticeUrl": "https://bradfordnh.gov/pages/calendar",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#budget-committee",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Bradford, NH",
+   "publishingOrg": "Town of Bradford",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "bradford-budget-committee",
+    "feedUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+    "titleMatch": "Budget Committee",
+    "bodyName": "Budget Committee"
+   },
+   "noticeUrl": "https://bradfordnh.gov/pages/calendar",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#cemetery-trustees",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Bradford, NH",
+   "publishingOrg": "Town of Bradford",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "bradford-cemetery-trustees",
+    "feedUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+    "titleMatch": "Cemetery Commission,Cemetery Trustees",
+    "bodyName": "Cemetery Trustees"
+   },
+   "noticeUrl": "https://bradfordnh.gov/pages/calendar",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#community-power-committee",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Bradford, NH",
+   "publishingOrg": "Town of Bradford",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "bradford-community-power-committee",
+    "feedUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+    "titleMatch": "Community Power",
+    "bodyName": "Community Power Committee"
+   },
+   "noticeUrl": "https://bradfordnh.gov/pages/calendar",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#conservation-commission",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Bradford, NH",
+   "publishingOrg": "Town of Bradford",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "bradford-conservation-commission",
+    "feedUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+    "titleMatch": "Conservation Commission",
+    "bodyName": "Conservation Commission"
+   },
+   "noticeUrl": "https://bradfordnh.gov/pages/calendar",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#economic-development-committee",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Bradford, NH",
+   "publishingOrg": "Town of Bradford",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "bradford-economic-development-committee",
+    "feedUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+    "titleMatch": "Economic Development",
+    "bodyName": "Economic Development Committee"
+   },
+   "noticeUrl": "https://bradfordnh.gov/pages/calendar",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#energy-committee",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Bradford, NH",
+   "publishingOrg": "Town of Bradford",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "bradford-energy-committee",
+    "feedUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+    "titleMatch": "Energy Committee",
+    "bodyName": "Energy Committee"
+   },
+   "noticeUrl": "https://bradfordnh.gov/pages/calendar",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#parks-and-recreation",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Bradford, NH",
+   "publishingOrg": "Town of Bradford",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "bradford-parks-and-recreation",
+    "feedUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+    "titleMatch": "Parks and Recreation,Parks & Recreation,Parks and Rec,Parks & Rec",
+    "bodyName": "Parks and Recreation Committee"
+   },
+   "noticeUrl": "https://bradfordnh.gov/pages/calendar",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#planning-board",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Bradford, NH",
+   "publishingOrg": "Town of Bradford",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "bradford-planning-board",
+    "feedUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+    "titleMatch": "Planning Board",
+    "bodyName": "Planning Board"
+   },
+   "noticeUrl": "https://bradfordnh.gov/pages/calendar",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#zoning-board",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Bradford, NH",
+   "publishingOrg": "Town of Bradford",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "bradford-zoning-board",
+    "feedUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+    "titleMatch": "Zoning Board,ZBA",
+    "bodyName": "Zoning Board of Adjustment"
+   },
+   "noticeUrl": "https://bradfordnh.gov/pages/calendar",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#cip-committee",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Bradford, NH",
+   "publishingOrg": "Town of Bradford",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "bradford-cip-committee",
+    "feedUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+    "titleMatch": "CIP Committee,CIP Meeting",
+    "bodyName": "Capital Improvement Program Committee"
+   },
+   "noticeUrl": "https://bradfordnh.gov/pages/calendar",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#hazard-mitigation-committee",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Bradford, NH",
+   "publishingOrg": "Town of Bradford",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "bradford-hazard-mitigation-committee",
+    "feedUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+    "titleMatch": "Hazard Mitigation",
+    "bodyName": "Hazard Mitigation Committee"
+   },
+   "noticeUrl": "https://bradfordnh.gov/pages/calendar",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#facilities-use-committee",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Bradford, NH",
+   "publishingOrg": "Town of Bradford",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "bradford-facilities-use-committee",
+    "feedUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+    "titleMatch": "Facilities Use",
+    "bodyName": "Facilities Use Committee"
+   },
+   "noticeUrl": "https://bradfordnh.gov/pages/calendar",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#independence-day-committee",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Bradford, NH",
+   "publishingOrg": "Town of Bradford",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "bradford-independence-day-committee",
+    "feedUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+    "titleMatch": "Independence Day Committee",
+    "bodyName": "Independence Day Committee"
+   },
+   "noticeUrl": "https://bradfordnh.gov/pages/calendar",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#supervisors-of-the-checklist",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Bradford, NH",
+   "publishingOrg": "Town of Bradford",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "bradford-supervisors-of-the-checklist",
+    "feedUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+    "titleMatch": "Supervisors of Checklist,Supervisors of the Checklist,Checklist Session",
+    "bodyName": "Supervisors of the Checklist"
+   },
+   "noticeUrl": "https://bradfordnh.gov/pages/calendar",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#select-board",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Warner, NH",
+   "publishingOrg": "Town of Warner",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "warner-select-board",
+    "feedUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "titleMatch": "Select Board,SB Wk Sess,SB Work Session",
+    "bodyName": "Select Board",
+    "venueMatch": "Warner Town Hall"
+   },
+   "noticeUrl": "https://warnernh.gov/calendar/",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#agricultural-commission",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Warner, NH",
+   "publishingOrg": "Town of Warner",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "warner-agricultural-commission",
+    "feedUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "titleMatch": "Agricultural Commission,Ag Commission",
+    "bodyName": "Agricultural Commission",
+    "venueMatch": "Warner Town Hall"
+   },
+   "noticeUrl": "https://warnernh.gov/calendar/",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#auditor-search-committee",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Warner, NH",
+   "publishingOrg": "Town of Warner",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "warner-auditor-search-committee",
+    "feedUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "titleMatch": "Auditor Search",
+    "bodyName": "Auditor Search Committee",
+    "venueMatch": "Warner Town Hall"
+   },
+   "noticeUrl": "https://warnernh.gov/calendar/",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#budget-committee",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Warner, NH",
+   "publishingOrg": "Town of Warner",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "warner-budget-committee",
+    "feedUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "titleMatch": "Budget Comm",
+    "bodyName": "Budget Committee",
+    "venueMatch": "Warner Town Hall"
+   },
+   "noticeUrl": "https://warnernh.gov/calendar/",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#chandler-reservation-committee",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Warner, NH",
+   "publishingOrg": "Town of Warner",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "warner-chandler-reservation-committee",
+    "feedUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "titleMatch": "Chandler Reservation,Chandler Comm",
+    "bodyName": "Chandler Reservation Committee",
+    "venueMatch": "Warner Town Hall"
+   },
+   "noticeUrl": "https://warnernh.gov/calendar/",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#conservation-commission",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Warner, NH",
+   "publishingOrg": "Town of Warner",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "warner-conservation-commission",
+    "feedUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "titleMatch": "Conservation Commission,Con Com",
+    "bodyName": "Conservation Commission",
+    "venueMatch": "Warner Town Hall"
+   },
+   "noticeUrl": "https://warnernh.gov/calendar/",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#energy-solar-committee",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Warner, NH",
+   "publishingOrg": "Town of Warner",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "warner-energy-solar-committee",
+    "feedUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "titleMatch": "Energy Committee,Solar Committee,Energy/Solar",
+    "bodyName": "Energy/Solar Committee",
+    "venueMatch": "Warner Town Hall"
+   },
+   "noticeUrl": "https://warnernh.gov/calendar/",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#housing-committee",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Warner, NH",
+   "publishingOrg": "Town of Warner",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "warner-housing-committee",
+    "feedUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "titleMatch": "Housing Committee",
+    "titleExclude": "Advisory",
+    "bodyName": "Housing Committee",
+    "venueMatch": "Warner Town Hall"
+   },
+   "noticeUrl": "https://warnernh.gov/calendar/",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#parks-and-recreation",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Warner, NH",
+   "publishingOrg": "Town of Warner",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "warner-parks-and-recreation",
+    "feedUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "titleMatch": "Parks & Rec,Parks and Rec,P&R",
+    "bodyName": "Parks and Recreation Commission",
+    "venueMatch": "Warner Town Hall"
+   },
+   "noticeUrl": "https://warnernh.gov/calendar/",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#planning-board",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Warner, NH",
+   "publishingOrg": "Town of Warner",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "warner-planning-board",
+    "feedUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "titleMatch": "Planning Board",
+    "bodyName": "Planning Board",
+    "venueMatch": "Warner Town Hall"
+   },
+   "noticeUrl": "https://warnernh.gov/calendar/",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#road-committee",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Warner, NH",
+   "publishingOrg": "Town of Warner",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "warner-road-committee",
+    "feedUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "titleMatch": "Road Committee",
+    "bodyName": "Road Committee",
+    "venueMatch": "Warner Town Hall"
+   },
+   "noticeUrl": "https://warnernh.gov/calendar/",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#supervisors-of-the-checklist",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Warner, NH",
+   "publishingOrg": "Town of Warner",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "warner-supervisors-of-the-checklist",
+    "feedUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "titleMatch": "Supervisors of the Checklist,Supervisors of Checklist",
+    "bodyName": "Supervisors of the Checklist",
+    "venueMatch": "Warner Town Hall"
+   },
+   "noticeUrl": "https://warnernh.gov/calendar/",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#trustees-of-the-trust-funds",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Warner, NH",
+   "publishingOrg": "Town of Warner",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "warner-trustees-of-the-trust-funds",
+    "feedUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "titleMatch": "Trustees of Trust Funds,Trustees of the Trust Funds,Trust Funds",
+    "bodyName": "Trustees of the Trust Funds",
+    "venueMatch": "Warner Town Hall"
+   },
+   "noticeUrl": "https://warnernh.gov/calendar/",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#warner-river-local-advisory-committee",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Warner, NH",
+   "publishingOrg": "Pillsbury Free Library (Warner, NH)",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "warner-warner-river-local-advisory-committee",
+    "feedUrl": "https://calendar.google.com/calendar/ical/mq5sbbdfvg3le9ddpc76qpo5d8%40group.calendar.google.com/public/basic.ics",
+    "titleMatch": "WRLAC,Warner River LAC,Warner River Local Advisory,Warner Local River Advisory",
+    "titleExclude": "NO Warner River,NOT Warner River",
+    "bodyName": "Warner River Local Advisory Committee",
+    "venueMatch": "Warner Town Hall"
+   },
+   "noticeUrl": "https://warnernh.gov/calendar/",
+   "verifiedAt": "2026-09-25"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#warner-village-water-district",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Warner, NH",
+   "publishingOrg": "Town of Warner",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "warner-warner-village-water-district",
+    "feedUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "titleMatch": "Warner Village Water,WVWD,Precinct Commissioners",
+    "titleExclude": "Budget Comm",
+    "bodyName": "Warner Village Water District",
+    "venueMatch": "Warner Town Hall"
+   },
+   "noticeUrl": "https://warnernh.gov/calendar/",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#zoning-board",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Warner, NH",
+   "publishingOrg": "Town of Warner",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "warner-zoning-board",
+    "feedUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "titleMatch": "Zoning Board,ZBA",
+    "bodyName": "Zoning Board of Adjustment",
+    "venueMatch": "Warner Town Hall"
+   },
+   "noticeUrl": "https://warnernh.gov/calendar/",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#lake-todd-village-district",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "agendaSourceType": "ICAL",
+   "jurisdiction": "Lake Todd Village District, NH",
+   "publishingOrg": "Town of Bradford",
+   "timeZone": "America/New_York",
+   "config": {
+    "slug": "lake-todd-village-district-newbury",
+    "feedUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+    "titleMatch": "Lake Todd,LTVD",
+    "bodyName": "Lake Todd Village District"
+   },
+   "noticeUrl": "https://bradfordnh.gov/pages/calendar",
+   "verifiedAt": "2026-08-21"
+  },
+  {
+   "bodyId": "ocd-division/country:us/state:az/county:pima#central-arizona-water-conservation-district",
+   "ocdId": "ocd-division/country:us/state:az/county:pima",
+   "agendaSourceType": "CIVICCLERK",
+   "jurisdiction": "Central Arizona Water Conservation District, AZ",
+   "publishingOrg": "Central Arizona Water Conservation District",
+   "timeZone": "America/Phoenix",
+   "config": {
+    "slug": "capaz",
+    "apiBase": "https://capaz.api.civicclerk.com",
+    "portalBase": "https://capaz.portal.civicclerk.com"
+   },
+   "noticeUrl": "https://www.cap-az.com/board/board-committee-meetings/",
+   "verifiedAt": "2026-08-27"
+  }
+ ]
+}

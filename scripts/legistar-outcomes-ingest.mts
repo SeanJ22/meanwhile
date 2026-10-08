@@ -68,6 +68,7 @@ import {
 import { readDoorOutcomeProjection } from "../lib/outcomes/store.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { legistarClientsFromWiring } from "../lib/sources/legistar/client-registry.ts";
+import { ensureMeetingDoors } from "../lib/doors/meeting-doors.ts";
 import { loadOutcomePartitionForDoor } from "../lib/doors/outcome-door-load.ts";
 import type { OutcomeSnapshot, PersistedSittingOutcomes } from "../lib/outcomes/types.ts";
 import { rollingOutcomeWindow, type OutcomeWindow } from "../lib/outcomes/window.ts";
@@ -446,7 +447,12 @@ async function main(): Promise<void> {
     }
     tenant = partition.tenant;
     client = legistarClientsFromWiring([partition.wiring])[0];
-  } else client = findClient(args.slug);
+  } else {
+    // Pima's own contract: its client is read off the published meeting doors.
+    const doors = await ensureMeetingDoors();
+    if (!doors.ready) throw new Error(`MEETING_DOORS_UNREADABLE: ${doors.reason}`);
+    client = findClient(args.slug);
+  }
   if (!client) throw new Error("PIMA_LEGISTAR_CLIENT_NOT_REGISTERED");
   const run = await runPimaLegistarOutcomeIngest({
     store: new PostgresRoutineDataStore(),

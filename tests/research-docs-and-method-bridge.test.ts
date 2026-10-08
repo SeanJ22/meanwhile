@@ -1,7 +1,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-import { emptyFieldManual, fieldManualEntryId, upsertEntries } from "../lib/control-plane/field-manual.ts";
+import { emptyFieldManual, fieldManualEntryId, foldEntries, type FieldManualEntry, type FieldManualStore } from "../lib/control-plane/field-manual.ts";
+
+const upsert = (store: FieldManualStore, entries: readonly FieldManualEntry[]) => ({ entries: foldEntries([...store.entries, ...entries]) });
 import { KNOWLEDGE_SOURCE, learnedRouteIds } from "../lib/method/manual-bridge.ts";
 import { knowledgeEntries, methodFixture, methodVersionEntry } from "./method-store-fixture.ts";
 
@@ -10,19 +12,19 @@ test("the fixture folds into the manual with every route kept whole, and routing
   const entries = knowledgeEntries(store);
   assert.equal(entries.length, store.routes.length);
   assert.ok(entries.every((e) => e.source === KNOWLEDGE_SOURCE && e.id === fieldManualEntryId(KNOWLEDGE_SOURCE, (e.payload as { id: string }).id)));
-  const manual = upsertEntries(emptyFieldManual(), entries, "2026-09-29");
+  const manual = ({ entries: foldEntries(entries) });
   assert.deepEqual([...learnedRouteIds(manual)].sort(), store.routes.map((r) => r.id).sort());
 });
 
 test("a route an agent writes as a ROUTE entry is learned on the next read, with no human step", () => {
   const store = methodFixture();
-  let manual = upsertEntries(emptyFieldManual(), knowledgeEntries(store), "2026-09-29");
+  let manual = ({ entries: foldEntries(knowledgeEntries(store)) });
   assert.equal(learnedRouteIds(manual).has("agent-found-route"), false);
-  manual = upsertEntries(manual, [{
+  manual = upsert(manual, [{
     id: fieldManualEntryId("agent", "agent-found-route"), role: "SCOUT", kind: "ROUTE", title: "found by an agent", summary: "x",
     states: [], recordClasses: [], platforms: [], outcome: "YIELDED", url: null, source: "agent", observedAt: "2026-09-29", tier: null,
     payload: { routeId: "agent-found-route" },
-  }], "2026-09-29");
+  }]);
   assert.equal(learnedRouteIds(manual).has("agent-found-route"), true);
 });
 
@@ -36,14 +38,14 @@ test("the method version lives in the manual: the frozen store's number, plus on
     outcome: "YIELDED" as const, url: null, source, observedAt: "2026-09-30", tier: null, payload: { routeId: id } });
 
   assert.equal(methodVersionFromManual(emptyFieldManual()), null, "an unseeded manual says so instead of guessing");
-  let manual = upsertEntries(emptyFieldManual(), [...knowledgeEntries(store), methodVersionEntry(store)], "2026-09-30");
+  let manual = ({ entries: foldEntries([...knowledgeEntries(store), methodVersionEntry(store)]) });
   assert.equal(methodVersionFromManual(manual), store.version, "seeded, it equals the file's number");
 
-  manual = upsertEntries(manual, [agentRoute("agent-route-a"), agentRoute("agent-route-b")], "2026-09-30");
+  manual = upsert(manual, [agentRoute("agent-route-a"), agentRoute("agent-route-b")]);
   assert.equal(methodVersionFromManual(manual), store.version + 2);
-  manual = upsertEntries(manual, [{ ...agentRoute("agent-route-a"), summary: "updated in place" }], "2026-09-30");
+  manual = upsert(manual, [{ ...agentRoute("agent-route-a"), summary: "updated in place" }]);
   assert.equal(methodVersionFromManual(manual), store.version + 2, "rewriting a route is not a new route");
-  manual = upsertEntries(manual, [agentRoute(store.routes[0]!.id, "another-source")], "2026-09-30");
+  manual = upsert(manual, [agentRoute(store.routes[0]!.id, "another-source")]);
   assert.equal(methodVersionFromManual(manual), store.version + 2, "a route the frozen store already held is not new");
 
   const repos = createMemoryRepositories();
@@ -63,7 +65,7 @@ test("the method knowledge the floor reads comes from the manual: every folded r
   const whole = { ...store.routes[0]!, id: "agent-whole-route", title: "whole" };
 
   assert.equal(methodKnowledgeFromManual(emptyFieldManual()), null);
-  const manual = upsertEntries(emptyFieldManual(), [...seeded, entry("agent-whole-route", whole), entry("agent-pointer", { routeId: "agent-pointer" })], "2026-09-30");
+  const manual = ({ entries: foldEntries([...seeded, entry("agent-whole-route", whole), entry("agent-pointer", { routeId: "agent-pointer" })]) });
   const knowledge = methodKnowledgeFromManual(manual)!;
   assert.deepEqual(knowledge.routes.slice(0, store.routes.length), store.routes, "the frozen routes come back exactly as they were stored");
   assert.ok(knowledge.routes.some((r) => r.id === "agent-whole-route"));

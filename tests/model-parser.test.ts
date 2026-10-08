@@ -131,7 +131,7 @@ test("the manual routes the parse: nothing recorded starts cheapest; a tier that
   store = learn(store, { tier: "haiku", confirmed: 3 });
   assert.equal(routeParse(store, { recordClass: "PLANNING_MEETING", host: "www.exampletonaz.gov" }).tier, "haiku");
 });
-function readEmpty(): FieldManualStore { return { formatVersion: 1, updatedOn: null, entries: [] }; }
+function readEmpty(): FieldManualStore { return { entries: [] }; }
 function learn(store: FieldManualStore, o: { tier: "haiku" | "sonnet"; confirmed: number }) {
   const entries = parseLearningEntries(store, { recordClass: "PLANNING_MEETING", host: "www.exampletonaz.gov", state: "AZ", tier: o.tier, proposed: 3, confirmed: o.confirmed,
     rejected: 3 - o.confirmed, fieldNames: o.confirmed ? ["title", "when"] : [], samples: [], observedAt: NOW });

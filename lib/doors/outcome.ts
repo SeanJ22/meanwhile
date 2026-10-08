@@ -1,14 +1,21 @@
 /**
  * Records `lastSuccessAt` / `lastFailureAt` on a door after each read: for a
- * hand-wired door from its partition's promotion outcome, for a derived member
- * from that member's own result. A system write: not a hand edit, and nothing
+ * hand-wired door or a feed from its task's promotion outcome, for a derived
+ * member from that member's own result. A system write: not a hand edit, and nothing
  * else on the record changes.
  */
 
 import { observeChange } from "./observed-rate.ts";
-import { isDoorRecord, type DoorRepository } from "./registry.ts";
+import { feedDoorId, isDoorRecord, type DoorRepository } from "./registry.ts";
 
 export type DoorOutcome = "SUCCESS" | "FAILURE";
+
+/** The door a routine task's read lands on: its meeting door (the task's own id) or its feed door. Null when it has neither. */
+export async function taskDoorId(repo: DoorRepository, taskId: string): Promise<string | null> {
+  if ((await repo.read(taskId)) !== null) return taskId;
+  const feed = feedDoorId(taskId);
+  return (await repo.read(feed)) !== null ? feed : null;
+}
 
 /** Returns true when the record was written; false when there is no such door (nothing is invented). */
 export async function recordDoorOutcome(

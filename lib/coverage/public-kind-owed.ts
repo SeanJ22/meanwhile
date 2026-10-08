@@ -32,7 +32,7 @@ export function publicKindOwedForDivisions(entries: readonly FieldManualEntry[],
   return [...first.values()].sort((a,b) => a.id.localeCompare(b.id));
 }
 export async function readPublicKindOwed(repos: Pick<ControlPlaneRepositories,"fieldManual">, divisions: readonly string[]) {
-  const read = await readFieldManual(repos,{role:"SHARED",recordClass:"PUBLIC_RECORD"});
+  const read = await readFieldManual(repos,{role:"SHARED",recordClass:"PUBLIC_RECORD",kinds:["PUBLIC_RECORD_PLACE_KIND"],ocdIds:divisions});
   if (read.error) throw new Error(read.error);
   return publicKindOwedForDivisions(read.store.entries,divisions);
 }

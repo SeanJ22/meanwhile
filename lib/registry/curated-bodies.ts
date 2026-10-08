@@ -701,7 +701,7 @@ function rockawayBoardRows(): Body[] {
     slug: string;
     name: string;
     categoryId: string;
-    /** LIVE rows are wired in SOURCE_WIRING; the others say why not. */
+    /** LIVE rows have a meeting door in use; the others say why not. */
     live: boolean;
     homepage: string;
   }> = [

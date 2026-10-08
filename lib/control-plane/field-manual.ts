@@ -498,6 +498,37 @@ export async function readFieldManualRows(repos: FieldManualRepos, query: FieldM
 }
 
 /**
+ * Many jobs' reads at once, as a cycle briefs every due place: the manual is read once for `covering`, which takes
+ * in every query's rows, and each job's rows are those same row objects narrowed by `entryInSlice`. Each job gets
+ * what `readFieldManualRows` would give it, and a thousand places hold one copy of the rows, not a thousand.
+ */
+export async function readFieldManualForPlaces(
+  repos: FieldManualRepos,
+  covering: FieldManualQuery,
+  queries: readonly FieldManualQuery[],
+): Promise<FieldManualRead[]> {
+  const failed = (query: FieldManualQuery, error: unknown): FieldManualRead => {
+    const store = emptyFieldManual();
+    return { projection: projectFieldManual(store, query), store, error: error instanceof Error ? error.message : String(error) };
+  };
+  let rows: readonly FieldManualEntry[];
+  try {
+    rows = (await repos.fieldManual.slice(covering)).map((row) => row.value).filter((entry) => entryInSlice(entry, covering));
+  } catch (error) {
+    return queries.map((query) => failed(query, error));
+  }
+  return Promise.all(queries.map(async (query): Promise<FieldManualRead> => {
+    try {
+      const store = { entries: rows.filter((entry) => entryInSlice(entry, query)) };
+      const evidence = await readMethodEvidence(repos, store.entries, query);
+      return { projection: projectFieldManual(store, query, evidence), store, ...(evidence ? { evidence } : {}) };
+    } catch (error) {
+      return failed(query, error);
+    }
+  }));
+}
+
+/**
  * The one read: the rows that could apply to `query`'s job, ranked for it. A
  * worker process asks the shared tools host, which reads the store for it. A
  * read failure comes back as `error` with an empty projection.

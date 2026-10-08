@@ -282,7 +282,7 @@ import {
   type RunningScout,
 } from "../lib/control-plane/scheduler/research-policy.ts";
 import { candidateStoreCounts, proposeScoutCandidates, readMethodCandidateStore, type ProposalReport } from "../lib/control-plane/scheduler/scout-candidates.ts";
-import { emptyFieldManual, readFieldManual, type FieldManualRead, type FieldManualStore } from "../lib/control-plane/field-manual.ts";
+import { emptyFieldManual, readFieldManual, readFieldManualForPlaces, type FieldManualRead, type FieldManualStore } from "../lib/control-plane/field-manual.ts";
 import {
   compoundingPair,
   fieldManualBriefLines,
@@ -2286,12 +2286,13 @@ if (modelLaneEnabled && dueModel.length > 0) {
   } catch (error) {
     runtimeConditions.push(`prior Scout results could not be read: ${error instanceof Error ? error.message : String(error)}`);
   }
+  // One read of the Scout rows for every due place; each place's rows are the same row objects narrowed to it.
   const places = [...new Map(dueModel.map((row) => [row.obligation.subjectId, row.obligation] as const)).values()];
-  const reads = await Promise.all(places.map(async (obligation) => [obligation.subjectId,
-    await readFieldManual(repos, scoutFieldManualQuery({ subjectId: obligation.subjectId, obligationId: obligation.id, divisions: obligation.scopeDivisions ?? [] }))] as const));
-  for (const [subjectId, read] of reads) manualReads.set(subjectId, read);
-  const unread = reads.find(([, read]) => read.error !== undefined);
-  if (unread) runtimeConditions.push(`the field manual could not be read: ${unread[1].error}`);
+  const reads = await readFieldManualForPlaces(repos, { role: "SCOUT", everywhere: true }, places.map((obligation) =>
+    scoutFieldManualQuery({ subjectId: obligation.subjectId, obligationId: obligation.id, divisions: obligation.scopeDivisions ?? [] })));
+  places.forEach((obligation, index) => manualReads.set(obligation.subjectId, reads[index]!));
+  const unread = reads.find((read) => read.error !== undefined);
+  if (unread) runtimeConditions.push(`the field manual could not be read: ${unread.error}`);
   try {
     const routeTaskToObligation = new Map<string, string>();
     const priorDispositions: (Awaited<ReturnType<typeof repos.dispositions.readAll>>)[number][] = [];

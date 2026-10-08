@@ -254,6 +254,16 @@ function sourceGoodCandidate(receipts = 10) {
   });
 }
 
+test("installed doors' partitions are standing tasks once: the runner never adds them beside the routine tasks that already hold them", () => {
+  const ids = ROUTINE_SOURCE_TASKS.map((task) => task.id);
+  assert.ok(ids.filter((id) => id.startsWith("meetings:")).length > 50, "the fixture doors are installed");
+  assert.equal(new Set(ids).size, ids.length);
+  const runner = readFileSync(new URL("../scripts/routine-civic-data-runner.mts", import.meta.url), "utf8");
+  const standing = runner.slice(runner.indexOf("const STANDING_SOURCE_TASKS"), runner.indexOf("], process.argv.slice(2));"));
+  assert.match(standing, /\.\.\.ROUTINE_SOURCE_TASKS\.filter\(\(task\) => task\.id !== MEETING_DOORS_CONTRACT_ID\)/);
+  assert.doesNotMatch(standing, /MEETING_PARTITION_CONTRACTS/, "a second copy of the partitions makes every pass refuse its duplicate tasks");
+});
+
 test("the standing portfolio invokes data-plane scripts only", () => {
   const nonMeetingTasks = ROUTINE_SOURCE_TASKS.filter((task) => task.recordClass !== "MEETING");
   assert.deepEqual(nonMeetingTasks.map((task) => task.id), [

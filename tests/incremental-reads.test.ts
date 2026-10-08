@@ -330,6 +330,38 @@ test("Postgres: compareAndSet stamps changed_at; list() asks only for rows chang
   assert.doesNotMatch(seen[1]!.text, /changed_at >=/, "the first read of a log fills its copy");
 });
 
+test("Postgres: a recent-where read on the runner holds the query's newest records and later asks only for matches stamped since its copy", async () => {
+  const seen: { text: string; params: readonly unknown[] }[] = [];
+  let held = Array.from({ length: 5 }, (_, i) => ({ position: i + 1, record: { kind: "S", n: i + 1 } }));
+  const sql: Sql = { query: async (text, params = []) => {
+    seen.push({ text, params });
+    if (text.includes("SELECT now() AS read_at")) return [{ read_at: "2026-10-06T12:00:00.000Z" }];
+    if (!text.includes("ORDER BY position DESC")) return [];
+    const fresh = text.includes("changed_at >=") ? held.filter((row) => row.position > 5) : held;
+    return fresh.sort((a, b) => b.position - a.position).slice(0, Number(params[2]));
+  } };
+  const dir = await temporaryDir();
+  const digests = pgAppendOnlyRepository<unknown>(sql, "owner_digests", { copies: processCopies(dir) });
+  const read = () => digests.readRecentWhere("digest", ["kind"], "S", 3, { n: true });
+  assert.deepEqual(await read(), [{ kind: "S", n: 5 }, { kind: "S", n: 4 }, { kind: "S", n: 3 }]);
+  assert.doesNotMatch(seen[1]!.text, /changed_at >=/, "the first read fills the copy");
+
+  held = [...held, { position: 6, record: { kind: "S", n: 6 } }, { position: 7, record: { kind: "S", n: 7 } }];
+  seen.length = 0;
+  const other = pgAppendOnlyRepository<unknown>(sql, "owner_digests", { copies: processCopies(dir) });
+  assert.deepEqual(await other.readRecentWhere("digest", ["kind"], "S", 3, { n: true }),
+    [{ kind: "S", n: 7 }, { kind: "S", n: 6 }, { kind: "S", n: 5 }], "another process merges the new matches into the held ones");
+  assert.match(seen[1]!.text, /AND changed_at >= \$4::timestamptz\s+ORDER BY position DESC/);
+  assert.deepEqual(seen[1]!.params.slice(0, 4), ["digest", "S", 3, "2026-10-06T11:58:00.000Z"]);
+
+  seen.length = 0;
+  await digests.readRecentWhere("digest", ["kind"], "S", 3, { n: true }, "2026-10-01T00:00:00.000Z");
+  assert.doesNotMatch(seen.at(-1)!.text, /changed_at >=/, "a read bounded by when records were made asks the database itself");
+  seen.length = 0;
+  await pgAppendOnlyRepository<unknown>(sql, "owner_digests").readRecentWhere("digest", ["kind"], "S", 3, { n: true });
+  assert.ok(seen.every((call) => !/changed_at >=/.test(call.text)), "a process with no held copies asks the database");
+});
+
 test("Persisted rows survive the copy exactly", async () => {
   const dir = await temporaryDir();
   const rows: Persisted<unknown>[] = [

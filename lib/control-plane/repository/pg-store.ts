@@ -18,7 +18,7 @@ import type {
   OwnerSnapshot,
   RunnerHeartbeat,
 } from "../owner-surface.ts";
-import { coveringPlaces, queryState, TRANSFERABLE_METHOD_KINDS, type FieldManualEntry, type FieldManualQuery } from "../field-manual.ts";
+import { coveringPlaces, entryInSlice, queryState, TRANSFERABLE_METHOD_KINDS, type FieldManualEntry, type FieldManualQuery } from "../field-manual.ts";
 import { createFixMapRepository } from "../../method/fix-map.ts";
 import { copyFieldManualDocument, type SingleDocumentManual } from "../field-manual-copy.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
@@ -676,6 +676,23 @@ export function pgAppendOnlyRepository<T>(
       /* `readWhere` newest first, stopped at `limit`; `limit` bounds the response, so no paging. */
       const jsonPath = jsonPathLiteral(table, path);
       const narrowed = recordProjectionSql(table, projection);
+      if (copies !== null && recordedAtSince === undefined) {
+        /* On the runner the query's newest records are held, and only matches stamped since the copy's clock cross the wire. */
+        return copies.recentWhere(table, JSON.stringify([key, path, value, limit, projection]), limit, async (since) => {
+          const clock = (await run("readRecentWhere:clock", "POINT", "SELECT now() AS read_at")) as Record<string, unknown>[];
+          const rows = (await run(
+            "readRecentWhere",
+            "PAGE",
+            `SELECT position, ${narrowed} AS record FROM ${table}
+             WHERE log_key = $1 AND record #>> '${jsonPath}' = $2${since === null ? "" : " AND changed_at >= $4::timestamptz"}
+             ORDER BY position DESC
+             LIMIT $3`,
+            [key, value, Math.max(0, Math.trunc(limit)), ...(since === null ? [] : [since])],
+          )) as Record<string, unknown>[];
+          return { rows: rows.map((r) => ({ position: Number(r.position), record: parseValue<unknown>(r.record, `${table} ${key}`) })),
+            through: new Date(clock[0]?.read_at as string).toISOString() };
+        });
+      }
       const rows = (await run(
         "readRecentWhere",
         "PAGE",
@@ -944,14 +961,24 @@ export function fieldManualSliceParams(query: FieldManualQuery): unknown[] {
   ];
 }
 
-/** The field manual's rows in `cp_field_manual_entries`; a slice crosses the wire one page at a time. */
+/**
+ * The field manual's rows in `cp_field_manual_entries`. On the runner a slice is the held copy filtered by
+ * `entryInSlice`, so a process pays only for rows changed since the copy's clock; without a copy (a page host or
+ * a hand-run script) the slice crosses the wire one page at a time.
+ */
 export function pgFieldManualRepository(sql: Sql, options: PgRepositoryBounds = {}): FieldManualRepository {
   const base = pgAggregateRepository<FieldManualEntry>(sql, "FieldManualEntry", "cp_field_manual_entries", options);
   const run = boundedRunner(sql, "cp_field_manual_entries", options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
+  const copies = options.copies ?? null;
   return {
     ...base,
     readMany: base.readMany!,
     async slice(query) {
+      if (copies !== null) {
+        const rows = await copies.aggregateList("cp_field_manual_entries", base.listChangedSince!,
+          (row) => (entryInSlice(row.value, query) ? row : null));
+        return rows.filter((row): row is Persisted<FieldManualEntry> => row !== null);
+      }
       const params = fieldManualSliceParams(query);
       const out: Persisted<FieldManualEntry>[] = [];
       let afterId: string | null = null;

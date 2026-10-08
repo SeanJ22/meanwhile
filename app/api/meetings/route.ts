@@ -25,7 +25,7 @@ import {
 import { stateOfOcdId } from "@/lib/meetings/edge-artifacts";
 import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { CivicDataStoreUnavailableError } from "@/lib/civic-data/read-model";
-import { wiringForSourceName } from "@/lib/sources/composite/wiring";
+import { readComposedSourcePlaces } from "@/lib/meetings/prepared-snapshot";
 import { divisionIdsForZipArea } from "@/lib/ballot/zip-divisions";
 import { needsPill, zipCertainty } from "@/lib/geo/zip-certainty";
 import { WIRED_STATUSES } from "@/lib/registry/coverage";
@@ -382,6 +382,8 @@ export async function GET(request: Request) {
   // with no hint that the gap is ours and temporary.
   // The one projection read above already produced this; no second read.
   const meta = snapshotMeta;
+  // A whole-source failure is attributed to the places the published composition says the source serves.
+  const composed = meta?.sources.some((s) => !s.ok && !s.unreachableOcdIds) ? await readComposedSourcePlaces() : null;
   // `meta.carried` rides along untouched: the footer's one age is true of
   // the fresh rows only, and the count of rows it is NOT true of has to reach
   // the client or the line keeps speaking for them.
@@ -409,9 +411,7 @@ export async function GET(request: Request) {
             ocdIds:
               s.ok && s.unreachableOcdIds
                 ? s.unreachableOcdIds
-                : wiringForSourceName(s.source).flatMap((row) =>
-                    row.ocdId ? [row.ocdId] : [],
-                  ),
+                : [...(composed?.get(s.source) ?? [])],
           })),
       }
     : null;

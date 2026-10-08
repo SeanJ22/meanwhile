@@ -178,7 +178,6 @@ if (PUBLISH_NOW && FORCE) throw new Error("Publish-now cannot force unrelated so
 // The door registry is the only door list. Every routine pass first brings the doors the system holds into the
 // registry, publishes its meeting doors for every child to read, then builds its meeting work from the registry.
 // A registry that cannot be read leaves the pass without hand-wired meeting work, and the pass says so.
-const MODULE_MEETING_PARTITION_IDS = new Set(MEETING_PARTITION_CONTRACTS.map((contract) => contract.id));
 if (controlPlaneUrlFromEnv() === null) {
   console.warn("RCD_TASK routine-civic-data-runner: no door registry is configured, so this pass has no hand-wired meeting work");
 } else {
@@ -209,8 +208,8 @@ if (controlPlaneUrlFromEnv() === null) {
   }
 }
 const STANDING_SOURCE_TASKS: readonly RoutineSourceTask[] = PUBLISH_NOW ? [] : await withNationalPlaceTasks([
-  ...ROUTINE_SOURCE_TASKS.filter((task) => !MODULE_MEETING_PARTITION_IDS.has(task.id) && task.id !== MEETING_DOORS_CONTRACT_ID),
-  ...MEETING_PARTITION_CONTRACTS.map(routineTaskFromContract),
+  // The installed doors' meeting partitions are already among the routine tasks: installing doors rebuilds that list.
+  ...ROUTINE_SOURCE_TASKS.filter((task) => task.id !== MEETING_DOORS_CONTRACT_ID),
   ...OUTCOME_PARTITION_CONTRACTS.map(routineTaskFromContract),
   ...AUTOMATIC_REFRESH_TASKS,
 ], process.argv.slice(2));
@@ -842,7 +841,8 @@ function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
     executable: process.execPath,
     args: ["--experimental-strip-types", ...pending.command],
     env: {
-      ...(pending.task.ownerInvocation || automaticRefreshContract(pending.task.id) ? admittedRuntimeChildEnvironment({
+      // A changed door's publish-now read is its routine partition's own read, so it runs under that routine contract.
+      ...((pending.task.ownerInvocation && pending.task.registeredContractId !== undefined) || automaticRefreshContract(pending.task.id) ? admittedRuntimeChildEnvironment({
         parentEnv: process.env,
         capability: "MANUAL_CONTRACT",
         contract: pending.task.registeredContractId ?? automaticRefreshContract(pending.task.id) ?? pending.task.id,

@@ -20,22 +20,26 @@ import type { DoorRecord } from "../doors/registry.ts";
 import { detectTenancy } from "../hunt/platform-tenancy.ts";
 import type { FixMapRow } from "./fix-map.ts";
 import type { MethodAttempt } from "./fix-map-record.ts";
+import { subjectDivisionOf } from "./method-places.ts";
 import { plainTrier, type PlainTry } from "./method-try.ts";
 import { planSpread, SPREAD_ATTEMPT, type SpreadPlace } from "./spread.ts";
 
-const place = (subject: string): string => subject.split("#")[0]!;
 
 /** At most this many free tries a round; the rest stay queued for the next. */
 export const FREE_TRIES_PER_ROUND = 200;
 
-/** The places the owner has sent money to: members of a Send, and of an area with a budget. */
+/**
+ * The places the owner has sent money to: members of a Send, and of an area with a budget, each as the division the
+ * spread keys on. A member that is a registry government is read to its own division; a member that is no place
+ * (a candidate, an office) funds no door.
+ */
 export function sentMoneyPlaces(input: { readonly areas: readonly BudgetScope[] | null; readonly sends: AssignmentMembership | null }): ReadonlySet<string> {
   const out = new Set<string>();
   for (const scope of input.areas ?? []) {
-    if (scope.resolved && scope.budgetUsd > 0) for (const member of scope.members) out.add(place(member));
+    if (scope.resolved && scope.budgetUsd > 0) for (const member of scope.members) { const at = subjectDivisionOf(member); if (at !== null) out.add(at); }
   }
   for (const members of input.sends?.byKey.values() ?? []) {
-    for (const member of [...members.created.values(), ...members.reordered.values()]) out.add(place(member.subjectId));
+    for (const member of [...members.created.values(), ...members.reordered.values()]) { const at = subjectDivisionOf(member.subjectId); if (at !== null) out.add(at); }
   }
   return out;
 }
@@ -51,8 +55,28 @@ export interface SpreadPassInput {
   readonly sizeFor?: WebsiteSizeForUrl;
 }
 
+/** One method's round, for the log: where it could go and what each place came to. */
+export interface SpreadMethodReport {
+  readonly methodId: string;
+  readonly title: string;
+  readonly platforms: readonly string[];
+  readonly workedIn: string;
+  readonly matchingDoors: number;
+  readonly matchingPlaces: number;
+  readonly alreadyTried: number;
+  readonly freeTries: number;
+  readonly worked: readonly { readonly place: string; readonly note: string }[];
+  readonly didNotFit: readonly { readonly place: string; readonly note: string }[];
+  /** Tried and undecided: a worker there is offered it. */
+  readonly leftForWorker: readonly { readonly place: string; readonly note: string }[];
+  readonly waiting: readonly { readonly place: string; readonly note: string }[];
+  readonly paidAllowed: readonly string[];
+  readonly paidRefused: readonly { readonly place: string; readonly reason: string }[];
+}
+
 export interface SpreadPassResult {
   readonly methods: number;
+  readonly perMethod: readonly SpreadMethodReport[];
   /** Free tries made this round, by what they found. */
   readonly tried: { readonly works: number; readonly fails: number; readonly undecided: number };
   /** Free tries still queued: a small publisher's allowance, a website backing off, or the round's limit. */
@@ -66,11 +90,12 @@ export interface SpreadPassResult {
   readonly writeError: string | null;
 }
 
-const detected = (host: string | undefined): string | null => {
-  if (!host) return null;
-  const url = `https://${host}/`;
-  return detectTenancy(url, url)[0]?.platform ?? null;
-};
+/** Every platform the door's websites are on, by their addresses. */
+const platformsOf = (door: DoorRecord): string[] =>
+  [...new Set(door.hosts.flatMap((host) => {
+    const url = `https://${host}/`;
+    return detectTenancy(url, url).map((hit) => hit.platform.toLowerCase());
+  }))];
 
 function untried(methodId: string, target: SpreadPlace, attemptId: string, cause: string, now: string): FixMapRow {
   return { methodId, placeId: target.placeId, state: "UNTRIED", triedAt: null, attemptId, updatedAt: now, cause };
@@ -84,11 +109,12 @@ export async function runSpreadPass(input: SpreadPassInput): Promise<SpreadPassR
   const working = await repos.fixMap.workingMethods(1000);
   const workedIn = new Map(working.map((row) => [row.methodId, placeLabel(row.placeId)] as const));
   const methods = working.length === 0 ? [] : (await repos.fieldManual.readMany([...workedIn.keys()])).map((row) => row.value).filter((entry: FieldManualEntry) => isTransferableMethod(entry));
-  const empty: SpreadPassResult = { methods: 0, tried: { works: 0, fails: 0, undecided: 0 }, waiting: 0, paid: 0, paidSkipped: 0, robots: {}, requests: 0, writeError: null };
+  const empty: SpreadPassResult = { methods: 0, perMethod: [], tried: { works: 0, fails: 0, undecided: 0 }, waiting: 0, paid: 0, paidSkipped: 0, robots: {}, requests: 0, writeError: null };
   if (methods.length === 0) return empty;
   const doors = (await repos.doors.list()).map((row) => row.value);
   const doorById = new Map<string, DoorRecord>(doors.map((door) => [door.doorId, door] as const));
-  const platformOf = new Map(doors.map((door) => [door.doorId, detected(door.hosts[0])] as const));
+  const platformOf = new Map(doors.map((door) => [door.doorId, platformsOf(door)] as const));
+  const perMethod: SpreadMethodReport[] = [];
   const trier = plainTrier({ fetch: input.fetch });
   const tried = { works: 0, fails: 0, undecided: 0 };
   const robots: Partial<Record<PermissionVerdict, number>> = {};
@@ -110,11 +136,17 @@ export async function runSpreadPass(input: SpreadPassInput): Promise<SpreadPassR
     const worked = workedIn.get(method.id) ?? "another place";
     const plan = planSpread({
       method: { methodId: method.id, doorKind: method.platforms[0] ?? null, platforms: method.platforms },
-      doors, detectedPlatform: (doorId) => platformOf.get(doorId),
+      doors, detectedPlatforms: (doorId) => platformOf.get(doorId) ?? [],
       fixMapRows: await repos.fixMap.forMethod(method.id, 1000),
       ...(input.sizeFor ? { sizeFor: (host: string) => input.sizeFor!(`https://${host}/`) } : {}),
       sendPlaceIds: input.sendPlaceIds, paidTriesLeft: left,
     });
+    const report = { methodId: method.id, title: method.title, platforms: method.platforms, workedIn: worked, matchingDoors: plan.matchingDoors,
+      matchingPlaces: plan.matching, alreadyTried: plan.alreadyTried, freeTries: 0,
+      worked: [] as { place: string; note: string }[], didNotFit: [] as { place: string; note: string }[], leftForWorker: [] as { place: string; note: string }[],
+      waiting: [] as { place: string; note: string }[], paidAllowed: plan.paid.map((p) => p.placeId),
+      paidRefused: plan.paidSkipped.map((skip) => ({ place: skip.place.placeId, reason: skip.reason })) };
+    perMethod.push(report);
     const queue = (target: SpreadPlace, why: string) =>
       put(untried(method.id, target, SPREAD_ATTEMPT.QUEUED, `Queued: it worked in ${worked}, and this place has ${sameWebsite(target)}; ${why}.`, now));
 
@@ -123,6 +155,7 @@ export async function runSpreadPass(input: SpreadPassInput): Promise<SpreadPassR
       if (door === undefined) continue;
       if (freeLeft <= 0) {
         waiting += 1;
+        report.waiting.push({ place: target.placeId, note: "the round's free tries are used; it waits for the next round" });
         await queue(target, "a free try waits for the next round");
         continue;
       }
@@ -131,12 +164,17 @@ export async function runSpreadPass(input: SpreadPassInput): Promise<SpreadPassR
       if (got.robots !== null) robots[got.robots] = (robots[got.robots] ?? 0) + 1;
       if (got.outcome === "WAITING") {
         waiting += 1;
+        report.waiting.push({ place: target.placeId, note: got.note });
         await queue(target, `a free try waits: ${got.note}`);
       } else if (got.outcome === "UNDECIDED") {
+        report.freeTries += 1;
+        report.leftForWorker.push({ place: target.placeId, note: got.note });
         tried.undecided += 1;
         await put(untried(method.id, target, SPREAD_ATTEMPT.PLAIN_TRIED,
           `Tried by plain code: ${got.note}. It worked in ${worked}; a worker here is offered it.`, now));
       } else {
+        report.freeTries += 1;
+        (got.outcome === "WORKS" ? report.worked : report.didNotFit).push({ place: target.placeId, note: got.note });
         tried[got.outcome === "WORKS" ? "works" : "fails"] += 1;
         attempts.push({ kind: "ROUTE_RUN", attemptId: `${SPREAD_ATTEMPT.PLAIN_TRIED}:${now}`, placeId: target.placeId, methodIds: [method.id],
           outcome: got.outcome === "WORKS" ? "SUCCEEDED" : "FAILED", cause: `Tried by plain code: ${got.note}.`, at: now });
@@ -147,6 +185,7 @@ export async function runSpreadPass(input: SpreadPassInput): Promise<SpreadPassR
     }
     for (const target of plan.plainWaiting) {
       waiting += 1;
+      report.waiting.push({ place: target.placeId, note: "this small publisher's hourly allowance is used this round" });
       await queue(target, "a free try waits for this small publisher's hourly allowance");
     }
     left -= plan.paid.length;
@@ -169,7 +208,7 @@ export async function runSpreadPass(input: SpreadPassInput): Promise<SpreadPassR
     if (saved.error !== undefined) writeError ??= `the field manual was not updated: ${saved.error}`;
   }
   const requests = [...trier.requests.values()].reduce((sum, n) => sum + n, 0);
-  return { methods: methods.length, tried, waiting, paid, paidSkipped, robots, requests, writeError };
+  return { methods: methods.length, perMethod, tried, waiting, paid, paidSkipped, robots, requests, writeError };
 }
 
 /** One line for the round's log. */
@@ -178,6 +217,6 @@ export function spreadLine(result: SpreadPassResult): string {
   const robots = Object.entries(result.robots).map(([verdict, n]) => `${verdict.toLowerCase().replace(/_/g, " ")} ${n}`).join(", ");
   return `${result.methods} working method(s) tried elsewhere by plain code: ${works} worked, ${fails} did not fit, ${undecided} left for a worker, ` +
     `${result.waiting} waiting; ${result.paid} paid tr${result.paid === 1 ? "y" : "ies"} allowed inside places with money sent` +
-    `${result.paidSkipped ? `, ${result.paidSkipped} not allowed (outside a Send or past the budget dial)` : ""}; ${result.requests} request(s)` +
+    `${result.paidSkipped ? `, ${result.paidSkipped} not allowed (no money sent there, or past the budget dial)` : ""}; ${result.requests} request(s)` +
     `${robots ? ` (robots.txt: ${robots})` : ""}${result.writeError ? `; ${result.writeError}` : ""}`;
 }

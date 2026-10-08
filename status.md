@@ -5,7 +5,7 @@ worker: river
 provider: Claude (scheduled resume)
 run_id: session_01D8EZAejHqhy9XbGCw6G6bL-r15
 lock: session_01D8EZAejHqhy9XbGCw6G6bL
-heartbeat: 2026-10-07T22:16:51Z
+heartbeat: 2026-10-08T01:21:32Z
 
 ## RELEASE 15 — Haiku 5.5: MERGED (Oct 7, 2026)
 

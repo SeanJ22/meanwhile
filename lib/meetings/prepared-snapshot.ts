@@ -289,6 +289,8 @@ async function servedPreparedChecks(
 export async function readPreparedMeetingsProjection(
   options: { readonly store?: RoutineDataStore; readonly now?: string } = {},
 ): Promise<MeetingsProjectionReadResult> {
+  // The meeting partitions read here are the published doors' partitions, installed in this module graph.
+  await (await import("../doors/meeting-doors.ts")).ensureMeetingDoors();
   let prepared: PreparedReaderProjectionRow | null;
   let store: RoutineDataStore | null = null;
   try {

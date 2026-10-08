@@ -1,5 +1,7 @@
 import type { BudgetLedger } from "../budget.ts";
 import {
+  ConcurrentModification,
+  IdentityCollision,
   UnknownAggregate,
   type AggregateRepository,
   type BudgetRepository,
@@ -68,4 +70,32 @@ export function budgetRepositoryFrom(
 /** A JSON round trip, the copy boundary in every implementation, so no caller holds a reference into the store. */
 export function jsonCopy<T>(value: T): T {
   return JSON.parse(JSON.stringify(value)) as T;
+}
+
+/** How many lost compare-and-sets one write absorbs before it gives up. */
+export const SOLE_WRITER_LOST_RACES = 3;
+
+/**
+ * Writes for the one process that owns an aggregate. It remembers the revision it last wrote (or read), writes
+ * with a compare-and-set on it, and learns the current revision only from a lost compare-and-set: the row is
+ * never read back before a write. `known` is null when the row does not exist, undefined when it was never read
+ * (then only its revision is asked for).
+ */
+export function soleWriter<T>(repo: AggregateRepository<T>, id: string, known: number | null | undefined) {
+  let revision = known;
+  return async (next: T, now: string): Promise<Persisted<T>> => {
+    if (revision === undefined) revision = (await repo.readNarrowed(id, {}))?.revision ?? null;
+    for (let lost = 0; ; lost += 1) {
+      try {
+        const written = revision === null ? (await repo.put(id, next, now)).persisted : await repo.compareAndSet(id, revision, next, now);
+        revision = written.revision;
+        return written;
+      } catch (error) {
+        if (lost >= SOLE_WRITER_LOST_RACES) throw error;
+        if (error instanceof ConcurrentModification) revision = error.foundRevision;
+        else if (error instanceof IdentityCollision) revision = (await repo.readNarrowed(id, {}))?.revision ?? null;
+        else throw error;
+      }
+    }
+  };
 }

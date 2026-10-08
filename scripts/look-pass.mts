@@ -46,6 +46,9 @@ import { publishedPlaces } from "../lib/ops/post-deploy-warm.ts";
 import { storeRunScreenshot } from "../lib/photos/store.ts";
 import { launchGuarded, seedZip, type GuardedBrowser } from "./browser.mts";
 import { fetchServedCommit } from "./post-deploy-observer.mts";
+import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
+
+readFromHeldCopies();
 
 const BASE = (process.env.SHOOT_BASE_URL ?? PUBLIC_SITE_ORIGIN).replace(/\/$/, "");
 const ZIP_COUNT = Number(process.env.WTP_LOOK_ZIPS ?? 1);

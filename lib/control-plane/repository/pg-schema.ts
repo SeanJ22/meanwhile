@@ -1,7 +1,7 @@
 /** The control-plane schema, versioned in this module. */
 
 /** Moves whenever `BOOTSTRAP_DDL` moves. The gate compares against it. */
-export const BOOTSTRAP_VERSION = 25;
+export const BOOTSTRAP_VERSION = 26;
 
 /**
  *   AGGREGATE     id, revision, updated_at, value   (CAS on revision)
@@ -159,11 +159,35 @@ FOR EACH ROW EXECUTE FUNCTION cp_touch_changed_at();
 END $$;`;
 }
 
-/** The `changed_at` indexes for the tables read incrementally, built online. */
+/** The `changed_at` indexes for the tables the runner reads whole, built online. */
 export const CHANGED_AT_INDEXES: readonly OnlineIndex[] = [
-  "cp_work_items", "cp_attempts", "cp_route_tasks", "cp_occurrences", "cp_leases",
-  "cp_log_artifacts", "cp_log_scout_results", "cp_log_worker_results", "cp_log_costs",
+  "cp_work_items", "cp_attempts", "cp_route_tasks", "cp_occurrences", "cp_leases", "cp_obligations", "cp_debts",
+  "cp_log_artifacts", "cp_log_scout_results", "cp_log_worker_results", "cp_log_costs", "cp_log_dispositions",
+  "cp_log_promotion_pipeline",
 ].map(table => onlineIndex(`${table}_changed_at`, `${table} (changed_at)`));
+
+/** Refuses what a changed-since read could not see: rewriting or deleting a log record, or deleting an aggregate. */
+export const REJECT_REWRITE_FUNCTION_DDL = `CREATE OR REPLACE FUNCTION cp_reject_rewrite() RETURNS trigger
+LANGUAGE plpgsql AS $$
+BEGIN
+  RAISE EXCEPTION '% on % is refused: logs are insert-only and aggregates are never deleted', TG_OP, TG_TABLE_NAME
+    USING ERRCODE = 'restrict_violation';
+END $$;`;
+
+/** A log refuses UPDATE and DELETE; an aggregate refuses DELETE (its updates are compare-and-sets that stamp `changed_at`). */
+export function rejectRewriteDdl(table: string): string {
+  if (!/^cp_[a-z0-9_]+$/.test(table)) throw new Error(`unsafe control-plane table name ${JSON.stringify(table)}`);
+  const refused = table.startsWith("cp_log_") ? "UPDATE OR DELETE" : "DELETE";
+  return `DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = '${table}_no_rewrite' AND tgrelid = '${table}'::regclass) THEN
+    BEGIN
+      CREATE TRIGGER ${table}_no_rewrite BEFORE ${refused} ON ${table}
+FOR EACH ROW EXECUTE FUNCTION cp_reject_rewrite();
+    EXCEPTION WHEN duplicate_object THEN NULL;
+    END;
+  END IF;
+END $$;`;
+}
 
 /** The RouteTask lookups, on the exact expression `listWhere(["routeTaskId"])` sends. */
 export const ROUTE_TASK_INDEXES: readonly OnlineIndex[] = [
@@ -589,6 +613,8 @@ END $$;`,
   ...SCOPED_HISTORY_INDEXES.map(index => index.ddl),
   CHANGED_AT_TOUCH_FUNCTION_DDL,
   ...CHANGED_AT_TABLES.map(changedAtColumnDdl),
+  REJECT_REWRITE_FUNCTION_DDL,
+  ...CHANGED_AT_TABLES.map(rejectRewriteDdl),
   ...CHANGED_AT_INDEXES.map(index => index.ddl),
   ...ROUTE_TASK_INDEXES.map(index => index.ddl),
   SPEND_HOLDS_TABLE_DDL,

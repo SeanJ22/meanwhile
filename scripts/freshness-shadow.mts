@@ -23,6 +23,7 @@ import { oneHunterPath } from "../lib/control-plane/workers/scout-scheduling.ts"
 import { planRepairBrief } from "../lib/control-plane/workers/plan-repair.ts";
 import { observeCyclePhases, type CyclePhase } from "../lib/control-plane/scheduler/cycle-phases.ts";
 import { cycleStateWriter } from "../lib/control-plane/scheduler/cycle-state-writer.ts";
+import { soleWriter } from "../lib/control-plane/repository/shared.ts";
 import { selectedCycleRepositories } from "../lib/control-plane/scheduler/cycle-selection.ts";
 import { websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
@@ -112,7 +113,6 @@ import {
   CONTROL_PLANE_QUERY_CONCURRENCY,
 } from "../lib/control-plane/repository/pg-store.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
-import { incrementalReadsEnabled, INCREMENTAL_READS_ENV, withIncrementalReads } from "../lib/control-plane/repository/incremental-reads.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import {
   closeCycleOccurrences,
@@ -402,6 +402,9 @@ import { today } from "./doc-dates.mjs";
 import { assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
 import { countVitalSign } from "../lib/db/transfer-by-caller.ts";
 import { VITAL_COUNTERS } from "../lib/control-plane/vital-signs.ts";
+import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
+
+readFromHeldCopies();
 
 const hostWorkerSlots = workerProcessSlots(() => Number.MAX_SAFE_INTEGER,
   { parentPeakBytes: RESEARCH_PARENT_PEAK_MIB * 1024 * 1024, admissionsOpen: () => !releaseDrainRequested });
@@ -593,16 +596,6 @@ if (wantsPostgres) {
     process.exit(1);
   }
   repos = await pending.step("control-plane:open", () => createPgRepositories(url, NOW));
-  /* One in-memory copy of the tables every wave re-reads (planner, standing
-     runtime, round start, promotion tail, campaign chain); each later read
-     fetches only rows changed since (schema v22). The lease-worker children
-     open their own repositories and are not wrapped. WTP_INCREMENTAL_READS=0
-     is the way back to whole reads. */
-  if (incrementalReadsEnabled()) {
-    repos = withIncrementalReads(repos, { log: (line) => console.warn(`freshness:shadow · ${line}`) });
-  } else {
-    console.log(`freshness:shadow · ${INCREMENTAL_READS_ENV}=0: control-plane tables are read whole on every wave`);
-  }
 } else {
   mkdirSync(CONTROL_PLANE_ROOT, { recursive: true });
   repos = await createFileRepositories(CONTROL_PLANE_ROOT);
@@ -1757,8 +1750,11 @@ let scoutsAdmittedOutsideLifetime = 0;
 let priorCircuits: readonly ProviderCircuit[] = [];
 let priorLastSuccessfulActivity: string | null = null;
 let priorResearchState: ResearchState | null = null;
+/* This round is the research state's only writer: the revision it read or last wrote is the one it writes on. */
+let researchStateRevision: number | null | undefined;
 try {
   const previous = await repos.researchState.read(RESEARCH_STATE_ID);
+  researchStateRevision = previous?.revision ?? null;
   priorResearchState = previous?.value ?? null;
   priorCircuits = previous?.value.fleetSafety?.providerCircuits ?? [];
   priorLastSuccessfulActivity = previous?.value.fleetSafety?.lastSuccessfulActivity ?? null;
@@ -2562,19 +2558,16 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
 }
 
 /*
- * Up to four read-and-compare-and-set tries, inside one budget, and every
- * failed try said on stderr. The row is 1.1 MB, so each try moves
- * about 3.3 MB; the four tries used to fail silently, and at 30 s a request
- * they could hold a finalization for four minutes without a word.
+ * Up to four tries, inside one budget, and every failed try said on stderr.
+ * The 1.1 MB row is never read before a write: a lost compare-and-set names
+ * the current revision and the write goes again on it.
  */
+const putResearchState = soleWriter(repos.researchState, RESEARCH_STATE_ID, researchStateRevision);
 const writeResearchState = cycleStateWriter(async (cycleFinishedAt) => {
   await (async () => {
     for (let tries = 0; tries < 4; tries += 1) {
       try {
-        const current = await repos.researchState.read(RESEARCH_STATE_ID);
-        const next = researchState(cycleFinishedAt);
-        if (current === null) await repos.researchState.put(RESEARCH_STATE_ID, next, nowIso());
-        else await repos.researchState.compareAndSet(RESEARCH_STATE_ID, current.revision, next, nowIso());
+        await putResearchState(researchState(cycleFinishedAt), nowIso());
         return;
       } catch (error) {
         const detail = error instanceof Error ? error.message : String(error);

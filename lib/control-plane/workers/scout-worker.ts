@@ -9,6 +9,9 @@ import { SendBudgetRefusal } from "../expansion/spend-holds.ts";
 import { workerBroker } from "./worker-broker.ts";
 import type { LeaseWorkerConfig } from "./process-pool.ts";
 import { join } from "node:path";
+import { readFromHeldCopies } from "../repository/incremental-reads.ts";
+
+readFromHeldCopies();
 
 // Scout entry: load the research loop and tools, without the standing worker pipeline.
 const broker = workerBroker<LeaseWorkerConfig>(async config => {

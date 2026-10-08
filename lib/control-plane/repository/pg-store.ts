@@ -70,6 +70,7 @@ import {
   type HoldDecision,
   type SpendHoldStore,
 } from "../expansion/spend-holds.ts";
+import type { HeldCopies } from "./incremental-reads.ts";
 import {
   CONTROL_PLANE_CONNECT_MAX_ATTEMPTS,
   withControlPlaneConnectRetry,
@@ -89,11 +90,14 @@ import {
   IdentityCollision,
   UnknownAggregate,
   canonicalJson,
+  projectAggregate,
   reconcileIdempotentPut,
   type AggregateRepository,
   type AppendOnlyRepository,
   type AppendOutcome,
   type ArtifactRecord,
+  type ChangedRecords,
+  type ChangedRows,
   type ControlPlaneRepositories,
   type DispositionCommit,
   type LockManager,
@@ -139,6 +143,16 @@ export interface PgRepositoryBounds {
   readonly bounds?: ControlPlaneRequestBounds;
   /** The class of a single-row call; DOCUMENT for the tables in DOCUMENT_ROW_TABLES / DOCUMENT_RECORD_LOGS. */
   readonly rowClass?: Exclude<ControlPlaneCallClass, "PAGE">;
+  /** Where `list()` and `readAll()` keep their held copies; null reads every whole table as a first read. */
+  readonly copies?: HeldCopies | null;
+}
+
+/* Runner processes install the held copies (`readFromHeldCopies`); civic-data commands never import their writer. */
+let heldCopiesFor: ((connectionString: string, schemaVersion: number) => HeldCopies | null) | null = null;
+
+/** Where this process's repositories keep their held copies; see incremental-reads.ts `readFromHeldCopies`. */
+export function installHeldCopies(open: (connectionString: string, schemaVersion: number) => HeldCopies | null): void {
+  heldCopiesFor = open;
 }
 
 /** Bounds transport fan-out across repositories and clients in this process, so many ready rows share HTTP capacity. */
@@ -269,46 +283,43 @@ export function pgAggregateRepository<T>(
     };
   }
 
-  async function list(): Promise<readonly Persisted<T>[]>;
-  async function list(projection: RecordProjection): Promise<readonly Persisted<unknown>[]>;
-  async function list(projection?: RecordProjection): Promise<readonly Persisted<unknown>[]> {
-    const operation = projection === undefined ? "list" : "listNarrowed";
-    const value = projection === undefined ? "value" : Object.keys(projection).length === 0
-      ? "'{}'::jsonb AS value" : `${recordProjectionSql(table, projection, "value")} AS value`;
-    /* Keyset-paged by id (an index range scan), so no response exceeds the 64 MiB cap. */
-    const out: Persisted<unknown>[] = [];
+  async function listChangedSince(since: string | null): Promise<ChangedRows<T>> {
+    /* Rows the database stamped at or after `since` (all when null), in id order; `through` is the database clock before the first page. */
+    const clock = (await run("listChangedSince:clock", "POINT", "SELECT now() AS read_at")) as Record<string, unknown>[];
+    const through = new Date(clock[0]?.read_at as string).toISOString();
+    const changed = since === null ? "" : "changed_at >= $1::timestamptz";
+    const out: Persisted<T>[] = [];
     let afterId: string | null = null;
     for (;;) {
-      const rows = (afterId === null
-        ? await run(
-            operation,
-            "PAGE",
-            `SELECT id, revision, updated_at, ${value} FROM ${table}
-             ORDER BY id ASC
-             LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
-          )
-        : await run(
-            operation,
-            "PAGE",
-            `SELECT id, revision, updated_at, ${value} FROM ${table}
-             WHERE id > $1
-             ORDER BY id ASC
-             LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
-            [afterId],
-          )) as Record<string, unknown>[];
+      const filters = [changed, afterId === null ? "" : `id > $${since === null ? 1 : 2}`].filter(Boolean);
+      const params = [...(since === null ? [] : [since]), ...(afterId === null ? [] : [afterId])];
+      const rows = (await run(
+        "listChangedSince",
+        "PAGE",
+        `SELECT id, revision, updated_at, value FROM ${table}
+         ${filters.length === 0 ? "" : `WHERE ${filters.join(" AND ")}`}
+         ORDER BY id ASC
+         LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
+        params,
+      )) as Record<string, unknown>[];
       for (const row of rows) {
         out.push({
           id: String(row.id),
           revision: Number(row.revision),
           updatedAt: new Date(row.updated_at as string).toISOString(),
-          value: parseValue<unknown>(row.value, `${where} id ${String(row.id)}`),
+          value: parseValue<T>(row.value, `${where} id ${String(row.id)}`),
         });
       }
       if (rows.length < AGGREGATE_LIST_READ_PAGE) break;
       afterId = String(rows[rows.length - 1].id);
     }
-    return out;
+    return { rows: out, through };
   }
+
+  const copies = options.copies ?? null;
+  const held = <O>(out: (row: Persisted<T>) => O): Promise<O[]> => copies === null
+    ? listChangedSince(null).then(changed => changed.rows.map(out))
+    : copies.aggregateList(table, listChangedSince, out);
 
   return {
     read,
@@ -431,41 +442,9 @@ export function pgAggregateRepository<T>(
       return out;
     },
 
-    list: () => list(),
-    listNarrowed: projection => list(projection),
-
-    async listChangedSince(since) {
-      /* `list()` narrowed to rows the database stamped at or after `since`; `through` is the database clock before the first page. */
-      const clock = (await run("listChangedSince:clock", "POINT", "SELECT now() AS read_at")) as Record<string, unknown>[];
-      const through = new Date(clock[0]?.read_at as string).toISOString();
-      const changed = since === null ? "" : "changed_at >= $1::timestamptz";
-      const out: Persisted<T>[] = [];
-      let afterId: string | null = null;
-      for (;;) {
-        const filters = [changed, afterId === null ? "" : `id > $${since === null ? 1 : 2}`].filter(Boolean);
-        const params = [...(since === null ? [] : [since]), ...(afterId === null ? [] : [afterId])];
-        const rows = (await run(
-          "listChangedSince",
-          "PAGE",
-          `SELECT id, revision, updated_at, value FROM ${table}
-           ${filters.length === 0 ? "" : `WHERE ${filters.join(" AND ")}`}
-           ORDER BY id ASC
-           LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
-          params,
-        )) as Record<string, unknown>[];
-        for (const row of rows) {
-          out.push({
-            id: String(row.id),
-            revision: Number(row.revision),
-            updatedAt: new Date(row.updated_at as string).toISOString(),
-            value: parseValue<T>(row.value, `${where} id ${String(row.id)}`),
-          });
-        }
-        if (rows.length < AGGREGATE_LIST_READ_PAGE) break;
-        afterId = String(rows[rows.length - 1].id);
-      }
-      return { rows: out, through };
-    },
+    list: () => held(row => row),
+    listNarrowed: projection => held(row => ({ ...row, value: projectAggregate(row.value, projection) })),
+    listChangedSince,
 
     async listWhere(path, value) {
       /* `list()` filtered in the database with the same order and paging, so the result equals `list()` filtered. */
@@ -520,6 +499,42 @@ export function pgAppendOnlyRepository<T>(
   const run = boundedRunner(sql, table, options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
   /* An append's probe and re-read return the held record, and its insert uploads one. */
   const recordClass = options.rowClass ?? (DOCUMENT_RECORD_LOGS.has(log) ? "DOCUMENT" : "POINT");
+
+  async function readChangedSince(since: string | null): Promise<ChangedRecords<T>> {
+    /* `readAll()` narrowed to records the database stamped at or after `since`; `through` is the database clock before the first page. */
+    const clock = (await run("readChangedSince:clock", "POINT", "SELECT now() AS read_at")) as Record<string, unknown>[];
+    const through = new Date(clock[0]?.read_at as string).toISOString();
+    const out: { key: string; recordId: string; position: number; record: T }[] = [];
+    let cursor: { readonly key: string; readonly position: number } | null = null;
+    for (;;) {
+      const at = since === null ? 1 : 2;
+      const filters = [since === null ? "" : "changed_at >= $1::timestamptz",
+        cursor === null ? "" : `(log_key, position) > ($${at}, $${at + 1})`].filter(Boolean);
+      const params = [...(since === null ? [] : [since]), ...(cursor === null ? [] : [cursor.key, cursor.position])];
+      const rows = (await run(
+        "readChangedSince",
+        "PAGE",
+        `SELECT log_key, record_id, position, record FROM ${table}
+         ${filters.length === 0 ? "" : `WHERE ${filters.join(" AND ")}`}
+         ORDER BY log_key ASC, position ASC
+         LIMIT ${APPEND_ONLY_LOG_READ_PAGE}`,
+        params,
+      )) as Record<string, unknown>[];
+      for (const r of rows) {
+        out.push({ key: String(r.log_key), recordId: String(r.record_id), position: Number(r.position),
+          record: parseValue<T>(r.record, `${table} ${String(r.log_key)}`) });
+      }
+      if (rows.length < APPEND_ONLY_LOG_READ_PAGE) break;
+      const last = rows[rows.length - 1];
+      cursor = { key: String(last.log_key), position: Number(last.position) };
+    }
+    return { records: out, through };
+  }
+
+  const copies = options.copies ?? null;
+  const heldAll = (): Promise<T[]> => copies === null
+    ? readChangedSince(null).then(changed => changed.records.map(entry => entry.record))
+    : copies.logReadAll(table, readChangedSince);
 
   return {
     async append(key, recordId, record, now): Promise<AppendOutcome<T>> {
@@ -690,66 +705,8 @@ export function pgAppendOnlyRepository<T>(
       return out;
     },
 
-    async readAll() {
-      /* Keyset-paged over the whole table in (log_key, position) order, for the 64 MiB cap. */
-      const out: T[] = [];
-      let cursor: { readonly key: string; readonly position: number } | null = null;
-      for (;;) {
-        const rows = (cursor === null
-          ? await run(
-              "readAll",
-              "PAGE",
-              `SELECT log_key, position, record FROM ${table}
-               ORDER BY log_key ASC, position ASC
-               LIMIT ${APPEND_ONLY_LOG_READ_PAGE}`,
-            )
-          : await run(
-              "readAll",
-              "PAGE",
-              `SELECT log_key, position, record FROM ${table}
-               WHERE (log_key, position) > ($1, $2)
-               ORDER BY log_key ASC, position ASC
-               LIMIT ${APPEND_ONLY_LOG_READ_PAGE}`,
-              [cursor.key, cursor.position],
-            )) as Record<string, unknown>[];
-        for (const r of rows) out.push(parseValue<T>(r.record, `${table} ${String(r.log_key)}`));
-        if (rows.length < APPEND_ONLY_LOG_READ_PAGE) break;
-        const last = rows[rows.length - 1];
-        cursor = { key: String(last.log_key), position: Number(last.position) };
-      }
-      return out;
-    },
-
-    async readChangedSince(since) {
-      /* `readAll()` narrowed to records the database stamped at or after `since`; `through` is the database clock before the first page. */
-      const clock = (await run("readChangedSince:clock", "POINT", "SELECT now() AS read_at")) as Record<string, unknown>[];
-      const through = new Date(clock[0]?.read_at as string).toISOString();
-      const out: { key: string; recordId: string; position: number; record: T }[] = [];
-      let cursor: { readonly key: string; readonly position: number } | null = null;
-      for (;;) {
-        const at = since === null ? 1 : 2;
-        const filters = [since === null ? "" : "changed_at >= $1::timestamptz",
-          cursor === null ? "" : `(log_key, position) > ($${at}, $${at + 1})`].filter(Boolean);
-        const params = [...(since === null ? [] : [since]), ...(cursor === null ? [] : [cursor.key, cursor.position])];
-        const rows = (await run(
-          "readChangedSince",
-          "PAGE",
-          `SELECT log_key, record_id, position, record FROM ${table}
-           ${filters.length === 0 ? "" : `WHERE ${filters.join(" AND ")}`}
-           ORDER BY log_key ASC, position ASC
-           LIMIT ${APPEND_ONLY_LOG_READ_PAGE}`,
-          params,
-        )) as Record<string, unknown>[];
-        for (const r of rows) {
-          out.push({ key: String(r.log_key), recordId: String(r.record_id), position: Number(r.position),
-            record: parseValue<T>(r.record, `${table} ${String(r.log_key)}`) });
-        }
-        if (rows.length < APPEND_ONLY_LOG_READ_PAGE) break;
-        const last = rows[rows.length - 1];
-        cursor = { key: String(last.log_key), position: Number(last.position) };
-      }
-      return { records: out, through };
-    },
+    readAll: () => heldAll(),
+    readChangedSince,
 
     async readRecent(key, limit) {
       /* Newest `limit`, newest first. `limit` bounds the response, so this needs
@@ -1117,7 +1074,7 @@ export async function createPgRepositories(
       } finally { await pool.end(); }
     },
   });
-  const bounded: PgRepositoryBounds = { bounds };
+  const bounded: PgRepositoryBounds = { bounds, copies: heldCopiesFor?.(connectionString, BOOTSTRAP_VERSION) ?? null };
   if (!options.skipBootstrap) {
     /* The bootstrap is idempotent and is this process's first Neon I/O, so its transient connect failures are retried. */
     await withControlPlaneConnectRetry(() => bootstrap(sql, nowIso, bounds), {

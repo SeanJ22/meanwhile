@@ -1759,5 +1759,24 @@
     "tested_sha": "e845b4b75b6f078a1f86a1dc5752f18eb0ec6df0",
     "gates": "pass",
     "at": "2026-10-08T12:33:18Z"
+  },
+  {
+    "lane": "neon-reads",
+    "steps": [
+      "NR-01",
+      "NR-02",
+      "NR-03",
+      "NR-04",
+      "NR-05",
+      "NR-06",
+      "NR-07",
+      "NR-08"
+    ],
+    "ready_sha": "626b0dcfa46c8bf4241d87cf8aee1841ce7092d4",
+    "merge_sha": "74db1f6b257e47a993d2af8c1dbc7995e9d231e9",
+    "river_sha": "6358f0634fba8dbbba7846aff1fcf8bf63443d8d",
+    "tested_sha": "6358f0634fba8dbbba7846aff1fcf8bf63443d8d",
+    "gates": "pass",
+    "at": "2026-10-08T18:19:55Z"
   }
 ]

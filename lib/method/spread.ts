@@ -1,6 +1,6 @@
 /**
- * When a method succeeds, `planSpread` lists every place whose door matches it (by door kind, or by the platform
- * detected on a held page). Plain-code tries go to every matching place within each small publisher's hourly allowance;
+ * When a method succeeds, `planSpread` lists every place, in every state, whose door matches it: a door of the
+ * method's kind or platform (Legistar's InSite portal is Legistar), or a door any of whose websites is on it. Plain-code tries go to every matching place within each small publisher's hourly allowance;
  * paid tries go only to places inside a Send where the plain try could not decide, within the budget dial. The order is
  * a fixed shuffle keyed by method and place, never queue position. A place with a result for the method is not tried
  * again here. Pure.
@@ -48,14 +48,23 @@ export interface SpreadPlan {
   readonly paidSkipped: readonly { readonly place: SpreadPlace; readonly reason: string }[];
   /** Matching places that already have a result for this method. */
   readonly alreadyTried: number;
+  /** Matching places: one try each, however many of its doors match. */
   readonly matching: number;
+  /** Matching doors, in every state. */
+  readonly matchingDoors: number;
+}
+
+/** The platform a door kind is a route of: Legistar's InSite portal is Legistar. */
+export function doorKindPlatform(kind: string): string {
+  const k = kind.toLowerCase();
+  return k === "legistar-insite" ? "legistar" : k;
 }
 
 export interface SpreadInput {
   readonly method: SpreadMethod;
   readonly doors: readonly DoorRecord[];
-  /** Platform detected on a held page, by door id, lower case. */
-  readonly detectedPlatform?: (doorId: string) => string | null | undefined;
+  /** Platforms detected on the door's websites, by door id, lower case. */
+  readonly detectedPlatforms?: (doorId: string) => readonly string[];
   /** The fix map's rows for this method. */
   readonly fixMapRows: readonly FixMapRow[];
   /** What is known of a place's publisher; unknown means full speed. */
@@ -78,12 +87,13 @@ export function planSpread(input: SpreadInput): SpreadPlan {
   const paidQueued = marked(SPREAD_ATTEMPT.PAID);
   const matching: SpreadPlace[] = [];
   const seenPlaces = new Set<string>();
+  let matchingDoors = 0;
   for (const door of input.doors) {
     if (door.status !== "OPEN" || door.ocdId === null) continue;
-    const byKind = method.doorKind != null && door.kind === method.doorKind;
-    const detected = input.detectedPlatform?.(door.doorId)?.toLowerCase();
-    const byPlatform = detected !== undefined && detected !== "" && platforms.has(detected);
+    const byKind = (method.doorKind != null && door.kind === method.doorKind) || platforms.has(doorKindPlatform(door.kind));
+    const byPlatform = (input.detectedPlatforms?.(door.doorId) ?? []).some((p) => platforms.has(p.toLowerCase()));
     if (!byKind && !byPlatform) continue;
+    matchingDoors += 1;
     if (seenPlaces.has(door.ocdId)) continue;
     seenPlaces.add(door.ocdId);
     matching.push({ placeId: door.ocdId, doorId: door.doorId, host: door.hosts[0] ?? null, why: byKind ? "door kind" : "platform detected" });
@@ -125,5 +135,5 @@ export function planSpread(input: SpreadInput): SpreadPlan {
       left -= 1;
     }
   }
-  return { plain, plainWaiting, paid, paidSkipped, alreadyTried: matching.length - fresh.length, matching: matching.length };
+  return { plain, plainWaiting, paid, paidSkipped, alreadyTried: matching.length - fresh.length, matching: matching.length, matchingDoors };
 }

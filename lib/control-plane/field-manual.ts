@@ -17,6 +17,7 @@ import { createHash } from "node:crypto";
 
 import { stateOfPlace, type FixMapRow, type MethodWorks } from "../method/fix-map.ts";
 import { recordAttempts, type MethodAttempt } from "../method/fix-map-record.ts";
+import { methodPlaceOf } from "../method/method-places.ts";
 import { sortRung } from "./field-manual-rungs.ts";
 import { hereNote, mergePlaceResults, placeResultsOf, type MethodHere, type PlaceResult } from "./field-manual-places.ts";
 import { recordAttemptsKeepingHistory } from "./fix-history.ts";
@@ -584,13 +585,15 @@ export function methodAttemptsOf(entry: FieldManualEntry, now: string): MethodAt
   const at = (value: string | null | undefined) => value && Number.isFinite(Date.parse(value)) ? new Date(Date.parse(value)).toISOString() : now;
   const results: { place: string; outcome: FieldManualOutcome; at: string }[] = [];
   if (Array.isArray(p?.outcomes)) {
-    for (const o of p.outcomes as { jurisdiction?: unknown; outcome?: unknown; observedOn?: unknown }[]) {
-      if (typeof o?.jurisdiction === "string" && o.jurisdiction.startsWith("ocd-division/") && typeof o.outcome === "string" && o.outcome in TRIED) {
-        results.push({ place: o.jurisdiction.split("#")[0]!, outcome: o.outcome as FieldManualOutcome, at: at(typeof o.observedOn === "string" ? o.observedOn : entry.observedAt) });
+    for (const o of p.outcomes as { jurisdiction?: unknown; outcome?: unknown; observedOn?: unknown; walkedOn?: unknown }[]) {
+      const place = typeof o?.jurisdiction === "string" ? methodPlaceOf(o.jurisdiction) : null;
+      if (place !== null && typeof o.outcome === "string" && o.outcome in TRIED) {
+        const when = [o.observedOn, o.walkedOn].find((v): v is string => typeof v === "string") ?? entry.observedAt;
+        results.push({ place, outcome: o.outcome as FieldManualOutcome, at: at(when) });
       }
     }
   }
-  const named = Array.isArray(p?.places) ? (p.places as unknown[]).filter((v): v is string => typeof v === "string") : [];
+  const named = Array.isArray(p?.places) ? (p.places as unknown[]).flatMap((v) => typeof v === "string" ? methodPlaceOf(v) ?? [] : []) : [];
   for (const place of [...named, ...(entry.ocdIds ?? [])]) {
     if (!results.some((r) => r.place === place)) results.push({ place, outcome: entry.outcome, at: at(entry.observedAt) });
   }

@@ -1,0 +1,19 @@
+{
+  "n": 18,
+  "branch": "release/18",
+  "river_sha": "415133742a6043591f7b5627161dd6e4e19dc4de",
+  "tested_sha": "415133742a6043591f7b5627161dd6e4e19dc4de",
+  "steps": [
+    "LD-01",
+    "LD-02",
+    "LD-03",
+    "LD-04"
+  ],
+  "lanes": [
+    "leads"
+  ],
+  "integration_from": 125,
+  "integration_count": 126,
+  "pr": null,
+  "at": "2026-10-08T10:23:55Z"
+}

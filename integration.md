@@ -182,3 +182,4 @@ One line per batch folded into river.
 - 2026-10-07T21:25:20Z · models · HK-01 · ready 498b766c410f · river ce52ee5a4a7e · pnpm gates pass on ce52ee5a4a7e
 - 2026-10-07T22:25:57Z · ci · CI-02 · ready 44763e59267f · river 3c2a470eb136 · pnpm gates pass on 3c2a470eb136
 - 2026-10-08T02:07:52Z · reads · IR-01, IR-02, IR-03, IR-04, IR-05 · ready 318c2d5e19d7 · river 321ac4975de4 · pnpm gates pass on 321ac4975de4
+- 2026-10-08T04:32:59Z · manual · FM-01, FM-02, FM-03, FM-04, FM-05, FM-06, FM-07, FM-08, FM-09, FM-10 · ready ebabcf290173 · river b568ef168007 · pnpm gates pass on b568ef168007

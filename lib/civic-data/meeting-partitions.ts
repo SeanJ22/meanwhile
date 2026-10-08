@@ -1,6 +1,5 @@
 import {
   RETIRED_MEETING_ROUTES,
-  SOURCE_WIRING,
   activeWiring,
   meetingSourceNamesForWiring,
   type BodySourceWiring,
@@ -102,9 +101,10 @@ export function meetingAcquisitionFailureDomain(
   return `meeting-upstream:${host}`;
 }
 
-function buildMeetingPartitions(wirings: readonly BodySourceWiring[]): MeetingPartitionContract[] {
+/** A door that could not be built into work is left out with its reason; the other doors are not held back by it. */
+function buildMeetingPartitions(wirings: readonly BodySourceWiring[], skipped: string[] = []): MeetingPartitionContract[] {
   const { readerConsumers, ...policy } = MEETING_PARTITION_POLICY;
-  const partitions: MeetingPartitionContract[] = wirings.flatMap((wiring) =>
+  const doorPartitions = (wiring: BodySourceWiring): MeetingPartitionContract[] =>
     meetingSourceNamesForWiring(wiring).map((meetingSource) => ({
       ...policy,
       id: meetingPartitionId(meetingSource, wiring.bodyId),
@@ -126,8 +126,24 @@ function buildMeetingPartitions(wirings: readonly BodySourceWiring[]): MeetingPa
       ocdId: wiring.ocdId,
       wiring,
       derivedFamily: null,
-    })),
-  );
+    }));
+  const partitions: MeetingPartitionContract[] = [];
+  const ids = new Set<string>();
+  const scopes = new Set<string>();
+  for (const wiring of wirings) {
+    try {
+      const built = doorPartitions(wiring);
+      const clash = built.find((partition) => ids.has(partition.id) || scopes.has(partition.scope));
+      if (clash) throw new Error(`MEETING_PARTITION_COLLISION:${clash.id}:${clash.scope}`);
+      for (const partition of built) {
+        ids.add(partition.id);
+        scopes.add(partition.scope);
+      }
+      partitions.push(...built);
+    } catch (error) {
+      skipped.push(`${wiring.bodyId} (${wiring.agendaSourceType}): ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
   const { readerConsumers: familyConsumers, ...familyPolicy } = DERIVED_MEETING_FAMILY_POLICY;
   for (const state of DERIVED_MEETING_FAMILY_STATES) {
     const id = derivedMeetingFamilyId(state);
@@ -152,20 +168,20 @@ function buildMeetingPartitions(wirings: readonly BodySourceWiring[]): MeetingPa
       derivedFamily: state,
     });
   }
-  const ids = new Set<string>();
-  const scopes = new Set<string>();
-  for (const partition of partitions) {
-    if (ids.has(partition.id) || scopes.has(partition.scope)) {
-      throw new Error(`MEETING_PARTITION_COLLISION:${partition.id}:${partition.scope}`);
-    }
+  for (const partition of partitions.filter((p) => p.derivedFamily !== null)) {
+    if (ids.has(partition.id) || scopes.has(partition.scope)) throw new Error(`MEETING_PARTITION_COLLISION:${partition.id}:${partition.scope}`);
     ids.add(partition.id);
     scopes.add(partition.scope);
   }
   return partitions;
 }
 
-/** Replaced in place by `refreshMeetingPartitions()`, so every importer sees the current doors. */
-export const MEETING_PARTITION_CONTRACTS: MeetingPartitionContract[] = buildMeetingPartitions(SOURCE_WIRING);
+/**
+ * One partition per hand-wired meeting door, and one per derived family. Holds the families alone until the doors
+ * are installed (`lib/doors/meeting-doors.ts`), then is replaced in place by `refreshMeetingPartitions()`, so every
+ * importer sees the current doors.
+ */
+export const MEETING_PARTITION_CONTRACTS: MeetingPartitionContract[] = buildMeetingPartitions([]);
 
 /** A retired partition's last promoted version is held read-only, in its successor's place, until the successor promotes. */
 export interface HeldMeetingPartition {
@@ -185,9 +201,8 @@ function buildHeldMeetingPartitions(contracts: readonly MeetingPartitionContract
     const successorId = meetingPartitionId(route.replacedBy, route.bodyId);
     if (registered.has(id)) throw new Error(`MEETING_PARTITION_RETIRED_BUT_REGISTERED:${id}`);
     const successor = registered.get(successorId);
-    if (!successor || successor.bodyId !== route.bodyId) {
-      throw new Error(`MEETING_PARTITION_SUCCESSOR_NOT_REGISTERED:${id}->${successorId}`);
-    }
+    // A successor that is not a door in use has no place for the retired route's rows to be held in.
+    if (!successor || successor.bodyId !== route.bodyId) return [];
     // A successor already wired for the body has its own pointer: there is no gap to hold.
     if (route.successorAlreadyWired) return [];
     return [{
@@ -231,11 +246,9 @@ function buildSittingWindowSources(contracts: readonly MeetingPartitionContract[
     const follows = contract.schedule.follows;
     if (!follows) throw new Error(`SITTING_WINDOW_WITHOUT_SITTINGS:${contract.id}`);
     if (follows.length === 0) throw new Error(`SITTING_WINDOW_FOLLOWS_NOTHING:${contract.id}`);
-    const ids = follows.map((row) => meetingPartitionId(row.meetingSource, row.bodyId));
-    for (const id of ids) {
-      if (!registered.has(id)) throw new Error(`SITTING_WINDOW_PARTITION_NOT_REGISTERED:${contract.id}->${id}`);
-    }
-    sources.set(contract.id, ids);
+    // A followed door that is not in use (not imported yet, or suspended) gives the window nothing to follow.
+    const ids = follows.map((row) => meetingPartitionId(row.meetingSource, row.bodyId)).filter((id) => registered.has(id));
+    if (ids.length > 0) sources.set(contract.id, ids);
   }
   return sources;
 }
@@ -246,24 +259,28 @@ export interface MeetingPartitionRefresh {
   readonly refreshed: boolean;
   readonly partitions: number;
   readonly reason: string | null;
+  /** Doors left out, each with why. */
+  readonly skipped: readonly string[];
 }
 
 /** All lists are built first and swapped in only if every check passes; otherwise the last good lists stay. */
 export function refreshMeetingPartitions(wirings: readonly BodySourceWiring[] = activeWiring()): MeetingPartitionRefresh {
+  const skipped: string[] = [];
   try {
-    const contracts = buildMeetingPartitions(wirings);
+    const contracts = buildMeetingPartitions(wirings, skipped);
     const held = buildHeldMeetingPartitions(contracts);
     const sources = buildSittingWindowSources(contracts);
     MEETING_PARTITION_CONTRACTS.splice(0, MEETING_PARTITION_CONTRACTS.length, ...contracts);
     HELD_MEETING_PARTITIONS.splice(0, HELD_MEETING_PARTITIONS.length, ...held);
     SITTING_WINDOW_SOURCES.clear();
     for (const [id, ids] of sources) SITTING_WINDOW_SOURCES.set(id, ids);
-    return { refreshed: true, partitions: contracts.length, reason: null };
+    return { refreshed: true, partitions: contracts.length, reason: null, skipped };
   } catch (error) {
     return {
       refreshed: false,
       partitions: MEETING_PARTITION_CONTRACTS.length,
       reason: `the registry's doors could not be built into meeting work (${error instanceof Error ? error.message : String(error)}), so the previous list stays in use`,
+      skipped,
     };
   }
 }

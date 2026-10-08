@@ -6,7 +6,6 @@ import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "./manual-contracts.ts";
 import { observableRoutineContracts } from "./meeting-partitions.ts";
 import { projectPublicationStatus, type PublicationStatusRead } from "./publication-status.ts";
 import { readPublicationStatusRows } from "./publication-status-store.ts";
-import { doorReadModeFromEnv } from "../doors/install.ts";
 import type { DoorRepository } from "../doors/registry.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../control-plane/repository/pg-store.ts";
 
@@ -41,7 +40,7 @@ export async function readRoutineDataObservability(
 ): Promise<RoutineObservabilityRead> {
   let doors: DoorRepository | undefined;
   const url = controlPlaneUrlFromEnv();
-  if (doorReadModeFromEnv() === "registry" && url) {
+  if (url) {
     try { doors = (await createPgRepositories(url, new Date().toISOString(), { skipBootstrap: true })).doors; } catch { doors = undefined; }
   }
   return readRoutineDataObservabilityFromConnection(process.env.DATABASE_URL, {

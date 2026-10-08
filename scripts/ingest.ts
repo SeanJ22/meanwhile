@@ -31,7 +31,6 @@ import {
 } from "../lib/meetings/constants.ts";
 import { meetingFetchedWindowFor } from "../lib/meetings/fetch-window.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
-import { doorReadModeFromEnv } from "../lib/doors/install.ts";
 import { recordFamilyReads } from "../lib/doors/outcome.ts";
 import { evidenceFromFamilyRead } from "../lib/doors/ingest-evidence.ts";
 import { recordDoorEvidence } from "../lib/doors/shut.ts";
@@ -86,7 +85,8 @@ import { makeIqm2Source } from "../lib/sources/iqm2/index.ts";
 import { makeRevizeSource } from "../lib/sources/revize/index.ts";
 import { legistarSource } from "../lib/sources/legistar/index.ts";
 import { makeOnBaseSource } from "../lib/sources/onbase/index.ts";
-import { SOURCE_WIRING, isUnreadableRetiredMeetingHost, wiringForTypes } from "../lib/registry/source-wiring.ts";
+import { activeWiring, isUnreadableRetiredMeetingHost, wiringForTypes } from "../lib/registry/source-wiring.ts";
+import { ensureMeetingDoors } from "../lib/doors/meeting-doors.ts";
 import { isLegistarDocumentHost } from "../lib/sources/legistar/routes.ts";
 import { isLegistarMeetingDetailUrl, isPortalAgendaLinkFor, portalAgendaLinkFrom } from "../lib/sources/legistar/portal-agenda-link.ts";
 import { sourceUserAgent } from "../lib/sources/http.ts";
@@ -208,7 +208,7 @@ export function documentUrlFor(meeting: Meeting): string | null {
    * first; the division-wide page is used only when every notice URL on the
    * division agrees, and nothing is returned when they disagree.
    */
-  const onDivision = SOURCE_WIRING.filter(
+  const onDivision = activeWiring().filter(
     (row) => row.noticeUrl && row.ocdId !== null && row.ocdId === meeting.ocdId,
   );
   if (onDivision.length === 0) return null;
@@ -695,12 +695,12 @@ async function readDerivedFamilyMember(member: DerivedWiringRecord, fetchImpl: t
 
 /**
  * Each member of a derived family records its own last success or failure on its own door (never the
- * family's, so one failing calendar does not mark its healthy neighbours). Only with the door registry in use; a
- * registry that cannot be written never changes the read's outcome.
+ * family's, so one failing calendar does not mark its healthy neighbours). A registry that cannot be written never
+ * changes the read's outcome.
  */
 async function recordFamilyMemberOutcomes(reads: readonly FamilyMemberRead[]): Promise<void> {
   const connection = controlPlaneUrlFromEnv();
-  if (connection === null || doorReadModeFromEnv() !== "registry" || reads.length === 0) return;
+  if (connection === null || reads.length === 0) return;
   try {
     const repos = await createPgRepositories(connection, new Date().toISOString(), { skipBootstrap: true });
     const at = new Date().toISOString();
@@ -866,12 +866,15 @@ async function main() {
     process.exitCode = 1;
     return;
   }
+  // The meeting doors are the door registry's, as the runner published them for this pass. There is no other list.
+  const doors = await ensureMeetingDoors();
+  if (!doors.ready) console.error(`meeting doors: ${doors.reason}`);
   const partitions = name === "composite"
     ? selectedMeetingPartitions(process.argv.slice(3))
     : [];
 
   /*
-   * A derived family reads its members from the promoted wiring, never from SOURCE_WIRING. It reads the wiring
+   * A derived family reads its members from the promoted wiring, never from the hand-wired doors. It reads the wiring
    * before anything else: every registered state has a family, and one with no member yet refuses by
    * name without the registry and venue preload (about 24 MB) a member's read needs.
    */
@@ -1401,19 +1404,20 @@ export interface MeetingsWiringCoverage {
   readonly missing: readonly string[];
 }
 
-/** The canonical denominator is registry wiring, never yesterday's rows. */
+/** The canonical denominator is the meeting doors in use, never yesterday's rows. */
 export function meetingsWiringCoverage(
   snapshot: MeetingsSnapshot,
 ): MeetingsWiringCoverage {
   const represented = new Set(
     snapshot.sources.flatMap((source) => wiringForSourceName(source.source)),
   );
-  const missing = SOURCE_WIRING.filter((row) => !represented.has(row)).map(
+  const doors = activeWiring();
+  const missing = doors.filter((row) => !represented.has(row)).map(
     (row) => `${row.bodyId}:${row.agendaSourceType}`,
   );
   return {
-    accounted: SOURCE_WIRING.length - missing.length,
-    denominator: SOURCE_WIRING.length,
+    accounted: doors.length - missing.length,
+    denominator: doors.length,
     missing,
   };
 }
@@ -1512,7 +1516,7 @@ export function candidateForMeetingPartition(
     horizon: {
       ...base.horizon,
       kind: "OPEN_FACT_SET",
-      query: `SOURCE_WIRING route/body ${partition.meetingSource}/${partition.bodyId}; ${snapshot.meetings.length} exact rows`,
+      query: `meeting door route/body ${partition.meetingSource}/${partition.bodyId}; ${snapshot.meetings.length} exact rows`,
       declaredTotal: null,
       paginationComplete: base.horizon.paginationComplete,
       claimsComplete: false,
@@ -1520,7 +1524,7 @@ export function candidateForMeetingPartition(
     dependentChecks: [
       ...base.dependentChecks,
       {
-        consumer: `SOURCE_WIRING ${partition.meetingSource}/${partition.bodyId}`,
+        consumer: `meeting door ${partition.meetingSource}/${partition.bodyId}`,
         passed: snapshot.sources.length === 1 && snapshot.sources[0]?.source === partition.meetingSource,
         detail: `This candidate contains exactly the registered ${partition.meetingSource}/${partition.bodyId} authority partition.`,
       },

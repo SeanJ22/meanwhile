@@ -699,7 +699,7 @@ try {
  * against each state's canonical candidate acquisition denominator.
  */
 /*
- * Meeting acquisition belongs to the SOURCE_WIRING-derived meeting-partition
+ * Meeting acquisition belongs to the meeting-partition
  * contracts; the worker pipeline may project evidence into a fail-closed
  * receipt but never opens the same official feeds on a parallel schedule.
  */

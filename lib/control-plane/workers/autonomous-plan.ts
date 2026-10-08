@@ -113,7 +113,7 @@ export function bodyDirectoryDiscoveryPlan(jurisdiction: Jurisdiction, bodyId: s
 
 /**
  * These legacy worker contracts acquire the same meeting event feeds now
- * owned by permanent SOURCE_WIRING-derived meeting-partition contracts. They
+ * owned by the meeting-partition contracts built from the meeting doors. They
  * remain readable as immutable engineering evidence, but the standing runtime
  * may never schedule or dispatch another acquisition for them.
  */

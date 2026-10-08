@@ -1732,5 +1732,20 @@
     "tested_sha": "89e0cc4b02a48a34af470bdd2c994214b862ce2f",
     "gates": "pass",
     "at": "2026-10-08T09:33:17Z"
+  },
+  {
+    "lane": "leads",
+    "steps": [
+      "LD-01",
+      "LD-02",
+      "LD-03",
+      "LD-04"
+    ],
+    "ready_sha": "27bdeed2f2943da28210d49e522d881e2a235927",
+    "merge_sha": "169ff95a5ee5cde73d264428d78f604be22b51da",
+    "river_sha": "415133742a6043591f7b5627161dd6e4e19dc4de",
+    "tested_sha": "415133742a6043591f7b5627161dd6e4e19dc4de",
+    "gates": "pass",
+    "at": "2026-10-08T10:23:48Z"
   }
 ]

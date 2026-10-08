@@ -185,3 +185,4 @@ One line per batch folded into river.
 - 2026-10-08T04:32:59Z · manual · FM-01, FM-02, FM-03, FM-04, FM-05, FM-06, FM-07, FM-08, FM-09, FM-10 · ready ebabcf290173 · river b568ef168007 · pnpm gates pass on b568ef168007
 - 2026-10-08T09:33:17Z · manual · FM-01, FM-07, FM-09 · ready 979e4bbaf92a · river 89e0cc4b02a4 · pnpm gates pass on 89e0cc4b02a4
 - 2026-10-08T09:33:17Z · publish-now · PN-01 · ready e18f68884228 · river 89e0cc4b02a4 · pnpm gates pass on 89e0cc4b02a4
+- 2026-10-08T10:23:48Z · leads · LD-01, LD-02, LD-03, LD-04 · ready 27bdeed2f294 · river 415133742a60 · pnpm gates pass on 415133742a60

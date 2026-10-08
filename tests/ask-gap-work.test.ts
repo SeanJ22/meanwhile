@@ -17,7 +17,7 @@ import {
   type AskGapMeeting,
   type CarrierClock,
 } from "../lib/control-plane/scheduler/providers/ask-gaps.ts";
-import { ASK_GAP_CARRIER_TASKS, carrierClocks, readAskGapHoldings } from "../lib/control-plane/scheduler/ask-gap-holdings.ts";
+import { askGapCarrierTasks, carrierClocks, readAskGapHoldings } from "../lib/control-plane/scheduler/ask-gap-holdings.ts";
 import { buildRegistry } from "../lib/control-plane/scheduler/registry.ts";
 import { routeExecutor } from "../lib/control-plane/scheduler/route-executor.ts";
 import { decideExecutor } from "../lib/control-plane/scheduler/dispatch.ts";
@@ -351,7 +351,7 @@ test("Ask and the provider agree: on every body of the fixture, the codes Ask ho
 });
 
 test("the runner's reading: the sitting window decides the cadence a carrying read owes, and a failed read is named, never an empty domain", async () => {
-  const task = ASK_GAP_CARRIER_TASKS.find((t) => t.id === MESA_PARTITION)!;
+  const task = askGapCarrierTasks().find((t) => t.id === MESA_PARTITION)!;
   assert.ok(task, "Mesa's partition is a carrying task");
   const hot = carrierClocks([{ task, ok: true, clock: { lastAttemptedAt: "2026-09-24T11:00:00.000Z", lastSucceededAt: "2026-09-24T11:00:00.000Z", lastSucceededObservedAt: "2026-09-24T11:00:05.000Z", sittingStarts: ["2026-09-29T17:45:00-07:00"] } }], NOW).get(MESA_PARTITION);
   assert.deepEqual(hot, { kind: "READ", lastSucceededAt: "2026-09-24T11:00:05.000Z", lastAttemptedAt: "2026-09-24T11:00:00.000Z", requiredEveryMs: 3_600_000, nextReadDueAt: "2026-09-24T12:00:05.000Z" });

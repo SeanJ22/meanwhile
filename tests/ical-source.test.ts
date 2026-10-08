@@ -306,9 +306,9 @@ test("A-007 · the DATE-BOUNDARY case, which is the one that misleads a reader",
 
 test("A-007 · an unreadable zone is counted as unplaceableInTime, not dropped silently", () => {
   const wiring = wiringForTypes(["ICAL"]).find((w) =>
-    w.config.feedUrl?.includes("wilmotnh.org"),
+    w.config.feedUrl?.includes("wilmotnh.org") && w.bodyId.endsWith("#selectboard"),
   );
-  assert.ok(wiring, "no Wilmot row wired — this guard is stale");
+  assert.ok(wiring, "no Wilmot Selectboard row wired — this guard is stale");
 
   const ics = [
     "BEGIN:VCALENDAR",

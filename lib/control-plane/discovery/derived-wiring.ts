@@ -192,7 +192,7 @@ export interface DerivedWiringInputs {
   readonly registration: (row: MeetingBodyCrosswalkRow) => { readonly input: DerivedInputRef; readonly identityInput?: DerivedInputRef } | { readonly notRegistered: string };
   /** Saved walks containing each route's newest actual read, with original log identity. */
   readonly attempts: readonly { readonly attempt: MeetingsDiscoveryAttempt; readonly recordId: string; readonly recordedAt: string }[];
-  /** A hand-wired SOURCE_WIRING route already serves the body: shadow-compared, never a second writer. */
+  /** A hand-wired meeting door already serves the body: shadow-compared, never a second writer. */
   readonly handWired: (bodyId: string) => boolean;
   /** The vault's record of an artifact, or null when it is not held. */
   readonly vaulted: (artifactId: string) => (DerivedInputRef & { readonly kind: "VAULTED_EVIDENCE" }) | null;

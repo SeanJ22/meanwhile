@@ -57,11 +57,12 @@ import {
 } from "../lib/civic-data/meeting-partitions.ts";
 import { OUTCOME_PARTITION_CONTRACTS } from "../lib/civic-data/outcome-partitions.ts";
 import { recordDoorOutcome, taskDoorId, type DoorOutcome } from "../lib/doors/outcome.ts";
-import { doorShutEnabled, evidenceFromCandidate, reopenDoorIfShut } from "../lib/doors/ingest-evidence.ts";
+import { evidenceFromCandidate, reopenDoorIfShut } from "../lib/doors/ingest-evidence.ts";
 import { recordDoorEvidence, type DoorEvidence } from "../lib/doors/shut.ts";
 import { observedChangeMinutesByDoor } from "../lib/doors/observed-rate.ts";
 import { isDoorRecord } from "../lib/doors/registry.ts";
-import { doorReadModeFromEnv, refreshDoorsForPass } from "../lib/doors/install.ts";
+import { refreshDoorsForPass } from "../lib/doors/install.ts";
+import { MEETING_DOORS_CONTRACT_ID } from "../lib/doors/meeting-doors.ts";
 import { doorSyncLine, syncHeldDoors } from "../lib/doors/seed-all.ts";
 import { readNowDueRequests, settleReadNow } from "../lib/doors/mission-refresh.ts";
 import { editDeriveDueRequests } from "../lib/doors/edit-derive.ts";
@@ -103,7 +104,9 @@ import { loadPublishedLookupState } from "../lib/census-geography/reader.ts";
 import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../lib/control-plane/scheduler/research-policy.ts";
 import { admittedHuntSourceScopes, huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
 import { PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowWorkerTasks } from "../lib/civic-data/publish-now.ts";
-import { doorProbesOn, runHourlyProbes } from "../lib/doors/hourly-check.ts";
+import { runHourlyProbes } from "../lib/doors/hourly-check.ts";
+import { stateOfPlace } from "../lib/method/fix-map.ts";
+import { websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
 import { hotMeetingPartitions } from "../lib/doors/hot-partitions.ts";
 import { pacedProbeFetch } from "../lib/doors/probe-fetch.ts";
 import { workerPublicationTasks } from "../lib/civic-data/worker-publication-tasks.ts";
@@ -169,29 +172,41 @@ const readCacheHost = await startCivicReadCacheHost();
 const FORCE = process.argv.includes("--force");
 const PUBLISH_NOW = process.argv.includes("--publish-now");
 if (PUBLISH_NOW && FORCE) throw new Error("Publish-now cannot force unrelated source work.");
-// With WTP_DOORS_READ=registry the meeting work is built from the door registry; otherwise the code's list.
-const CODE_MEETING_PARTITION_IDS = new Set(MEETING_PARTITION_CONTRACTS.map((contract) => contract.id));
-if (controlPlaneUrlFromEnv() !== null && (!PUBLISH_NOW || doorReadModeFromEnv() === "registry")) {
+// The door registry is the only door list. Every routine pass first brings the doors the system holds into the
+// registry, publishes its meeting doors for every child to read, then builds its meeting work from the registry.
+// A registry that cannot be read leaves the pass without hand-wired meeting work, and the pass says so.
+const MODULE_MEETING_PARTITION_IDS = new Set(MEETING_PARTITION_CONTRACTS.map((contract) => contract.id));
+if (controlPlaneUrlFromEnv() === null) {
+  console.warn("RCD_TASK routine-civic-data-runner: no door registry is configured, so this pass has no hand-wired meeting work");
+} else {
   try {
     const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, new Date().toISOString(), { skipBootstrap: true });
-    // Every routine pass brings the doors the system holds into the registry; a pass with nothing new writes nothing.
-    if (!PUBLISH_NOW) console.log(`RCD_TASK routine-civic-data-runner: door registry — ${doorSyncLine(await syncHeldDoors(doorRepos.doors, { scoutResults: doorRepos.scoutResults }))}`);
-    if (doorReadModeFromEnv() === "registry") {
-      const doorPass = await refreshDoorsForPass(doorRepos.doors);
-      console.log(`RCD_TASK routine-civic-data-runner: meeting doors read from ${doorPass.reading} (${doorPass.partitions?.partitions ?? doorPass.rows} partitions)` +
-        `${doorPass.reason ?? doorPass.partitions?.reason ? ` — ${doorPass.reason ?? doorPass.partitions?.reason}` : ""}`);
-      if (doorPass.outcomes !== null) {
-        console.log(`RCD_TASK routine-civic-data-runner: outcome doors — ${doorPass.outcomes.partitions} door(s) collect outcomes` +
-          `${doorPass.outcomes.reason ? ` — ${doorPass.outcomes.reason}` : ""}` +
-          `${doorPass.outcomes.skipped.length > 0 ? `; ${doorPass.outcomes.skipped.length} left out (${doorPass.outcomes.skipped.map((skip) => `${skip.doorId}: ${skip.why}`).join("; ")})` : ""}`);
-      }
+    if (!PUBLISH_NOW) {
+      console.log(`RCD_TASK routine-civic-data-runner: door registry — ${doorSyncLine(await syncHeldDoors(doorRepos.doors, { scoutResults: doorRepos.scoutResults }))}`);
+      const [published] = await runBoundedChildPass([{
+        id: MEETING_DOORS_CONTRACT_ID,
+        failureDomain: "derived:meeting-doors",
+        executable: process.execPath,
+        args: ["--experimental-strip-types", "scripts/publish-meeting-doors.mts", "--promote"],
+        env: admittedRuntimeChildEnvironment({ parentEnv: process.env, capability: "ROUTINE_CONTRACT", contract: MEETING_DOORS_CONTRACT_ID, parentPid: process.pid }),
+      }], { cwd: ROOT, env: process.env, timeoutMs: ROUTINE_CHILD_TIMEOUT_MS, maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES, concurrency: 1 });
+      console.log(`RCD_TASK routine-civic-data-runner: meeting doors ${published?.status === 0 ? "published" : `not published (${safeFailure(published?.errorMessage ?? published?.stderr.trim().split("\n").at(-1) ?? "no answer")}); children read the last good doors`}`);
+    }
+    const doorPass = await refreshDoorsForPass(doorRepos.doors);
+    console.log(`RCD_TASK routine-civic-data-runner: meeting doors read from the registry (${doorPass.partitions?.partitions ?? 0} partitions)` +
+      `${doorPass.reason ?? doorPass.partitions?.reason ? ` — ${doorPass.reason ?? doorPass.partitions?.reason}` : ""}` +
+      `${(doorPass.partitions?.skipped.length ?? 0) > 0 ? `; ${doorPass.partitions!.skipped.length} door(s) left out (${doorPass.partitions!.skipped.join("; ")})` : ""}`);
+    if (doorPass.outcomes !== null) {
+      console.log(`RCD_TASK routine-civic-data-runner: outcome doors — ${doorPass.outcomes.partitions} door(s) collect outcomes` +
+        `${doorPass.outcomes.reason ? ` — ${doorPass.outcomes.reason}` : ""}` +
+        `${doorPass.outcomes.skipped.length > 0 ? `; ${doorPass.outcomes.skipped.length} left out (${doorPass.outcomes.skipped.map((skip) => `${skip.doorId}: ${skip.why}`).join("; ")})` : ""}`);
     }
   } catch (error) {
-    console.warn(`RCD_TASK routine-civic-data-runner: the door registry could not be read, the code's meeting list stays in use — ${error instanceof Error ? error.message : String(error)}`);
+    console.warn(`RCD_TASK routine-civic-data-runner: the door registry could not be read, so this pass has no hand-wired meeting work — ${error instanceof Error ? error.message : String(error)}`);
   }
 }
 const STANDING_SOURCE_TASKS: readonly RoutineSourceTask[] = PUBLISH_NOW ? [] : await withNationalPlaceTasks([
-  ...ROUTINE_SOURCE_TASKS.filter((task) => !CODE_MEETING_PARTITION_IDS.has(task.id)),
+  ...ROUTINE_SOURCE_TASKS.filter((task) => !MODULE_MEETING_PARTITION_IDS.has(task.id) && task.id !== MEETING_DOORS_CONTRACT_ID),
   ...MEETING_PARTITION_CONTRACTS.map(routineTaskFromContract),
   ...OUTCOME_PARTITION_CONTRACTS.map(routineTaskFromContract),
   ...AUTOMATIC_REFRESH_TASKS,
@@ -299,13 +314,12 @@ async function recordTaskDoorOutcome(taskId: string, outcome: DoorOutcome, chang
     const doorId = await taskDoorId(repos.doors, taskId);
     if (doorId === null) return;
     const at = new Date().toISOString();
-    // With WTP_DOOR_SHUT=on, a failed read that tells the door itself is gone judges it and opens its fix item;
-    // a promoted read reopens a door that was shut.
+    // A failed read that tells the door itself is gone judges it and opens its fix item; a promoted read reopens a door that was shut.
     if (outcome === "FAILURE" && evidence !== null) {
       if ((await recordDoorEvidence(repos.doors, doorId, evidence, at, repos)).written) return;
     }
     await recordDoorOutcome(repos.doors, doorId, outcome, at, changed);
-    if (outcome === "SUCCESS" && doorShutEnabled() && await reopenDoorIfShut(repos.doors, doorId, at, repos)) {
+    if (outcome === "SUCCESS" && await reopenDoorIfShut(repos.doors, doorId, at, repos)) {
       console.log(`RCD_TASK ${taskId}: its door was shut and reads again; reopened`);
     }
   } catch (error) {
@@ -432,15 +446,18 @@ async function readHuntSourceTasks(): Promise<readonly RoutineSourceTask[]> {
   if (PUBLISH_NOW) {
     // The hourly first look: each hot door's page or feed is looked at once an hour; a change is stored on
     // the door and read below at once. A look that cannot be made never stops a known-changed door's read.
-    if (doorProbesOn()) {
-      try {
-        const listed = (await listDoors(repos.doors)).doors;
-        const clockStore = new PostgresRoutineDataStore();
-        const report = await runHourlyProbes(repos.doors, listed, await hotMeetingPartitions({ readClock: (task) => clockStore.clock(task.sourceId, task.recordClass, task.scope), db: getDb() }, Date.now()), pacedProbeFetch(), new Date().toISOString());
-        if (report.looked > 0 || report.deferred > 0) console.log(`RCD_PROBE ${report.looked} door(s) looked at (${report.requests} request(s)): ${report.changed} changed, ${report.unchanged} the same, ${report.failed} failed; ${report.deferred} waiting`);
-      } catch (error) {
-        console.log(`RCD_PROBE CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; doors keep their routine schedule`);
+    try {
+      const listed = (await listDoors(repos.doors)).doors;
+      const clockStore = new PostgresRoutineDataStore();
+      const sizeFor = websiteSizeFromHoldings([...new Set(listed.flatMap((door) => stateOfPlace(door.ocdId ?? "") ?? []))]);
+      const report = await runHourlyProbes(repos.doors, listed, await hotMeetingPartitions({ readClock: (task) => clockStore.clock(task.sourceId, task.recordClass, task.scope), db: getDb() }, Date.now()),
+        pacedProbeFetch({ pacing: repos.websitePacing, sizeFor }), new Date().toISOString());
+      if (report.looked > 0 || report.deferred > 0 || report.waiting > 0) {
+        console.log(`RCD_PROBE ${report.looked} door(s) looked at (${report.requests} request(s)): ${report.changed} changed, ${report.unchanged} the same, ${report.failed} failed; ` +
+          `${report.waiting} waiting on their website's hour or its request to wait; ${report.deferred} not due`);
       }
+    } catch (error) {
+      console.log(`RCD_PROBE CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; doors keep their routine schedule`);
     }
     return [...publication, ...publishNowDoorTasks((await listDoors(repos.doors)).doors,
       MEETING_PARTITION_CONTRACTS.map(routineTaskFromContract), RUN_STARTED_AT)];
@@ -639,9 +656,8 @@ if (!FORCE) {
     console.log(`RCD_DUE_REQUEST CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; every task keeps its normal schedule`);
   }
 }
-// With the door registry in use, a door marked to be read now is the same due request an owner's
-// controlled refresh makes. Spent marks are cleared first.
-if (!FORCE && doorReadModeFromEnv() === "registry" && controlPlaneUrlFromEnv() !== null) {
+// A door marked to be read now is the same due request an owner's controlled refresh makes. Spent marks are cleared first.
+if (!FORCE && controlPlaneUrlFromEnv() !== null) {
   try {
     const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, RUN_STARTED_AT, { skipBootstrap: true });
     const settledAt = new Date().toISOString();
@@ -936,7 +952,7 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
       console.log(`RCD_TASK ${pending.task.id}: GOOD (${receipt.state})`);
     } else {
       verifiedSourceFailures += 1;
-      const failedCandidate = doorShutEnabled() && !receipt.acquisitionSucceeded ? await store.readCandidateSummary(receipt.candidateId).catch(() => null) : null;
+      const failedCandidate = !receipt.acquisitionSucceeded ? await store.readCandidateSummary(receipt.candidateId).catch(() => null) : null;
       await recordTaskDoorOutcome(pending.task.id, "FAILURE", false, failedCandidate === null ? null : evidenceFromCandidate(failedCandidate));
       captureTaskReceipt(pending, receipt, "VERIFIED_SOURCE_FAILURE");
       console.log("RCD_RECEIPT=" + JSON.stringify(receipt));

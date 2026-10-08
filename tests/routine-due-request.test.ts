@@ -22,7 +22,7 @@ import {
   type RoutineSourceTask,
   type RoutineTaskClock,
 } from "../lib/civic-data/runner.ts";
-import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { fixtureRepositories } from "./helpers/meeting-doors-fixture.ts";
 
 const MIN = 60_000;
 const HOUR = 60 * MIN;
@@ -75,7 +75,7 @@ test("a due request names one registered meeting partition with a sitting window
 });
 
 test("one open request at a time on the owner's config row; withdrawn and expired ones stay as inert history", async () => {
-  const repos = createMemoryRepositories();
+  const repos = await fixtureRepositories();
   const first = await requestRoutineDue(repos, [`--contract=${NEWBURY_ENERGY}`, "--expires-in-minutes=30"], NOW);
   assert.match(first.id, /^routine-due:[0-9a-f-]{36}$/);
   assert.deepEqual({ ...first, id: "x" }, {

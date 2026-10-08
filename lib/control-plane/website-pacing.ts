@@ -75,6 +75,39 @@ type Query = (text: string, parameters: readonly unknown[]) => Promise<readonly 
 const iso = (ms: number): string => new Date(ms).toISOString();
 const ms = (value: unknown): number => (value instanceof Date ? value.getTime() : Date.parse(String(value)));
 
+/** How long a website that answered 429 or 5xx without a Retry-After is left alone. */
+export const WEBSITE_BACKOFF_MS = 60_000;
+
+export type WebsiteAdmission =
+  | { readonly ok: true }
+  | { readonly ok: false; readonly until: number; readonly why: "ASKED_TO_WAIT" | "HOURLY_ALLOWANCE" };
+
+/** One request a reader is about to send: a held website waits for every reader; a small one takes from its shared hour. */
+export async function admitWebsiteRequest(pacing: WebsitePacing, url: string, limit: number | null, nowMs: number): Promise<WebsiteAdmission> {
+  const site = websiteOf(url);
+  const held = (await pacing.heldUntil(nowMs)).get(site);
+  if (held !== undefined && held > nowMs) return { ok: false, until: held, why: "ASKED_TO_WAIT" };
+  if (limit === null) return { ok: true };
+  const took = await pacing.take(site, limit, nowMs);
+  return took.ok ? took : { ok: false, until: took.until, why: "HOURLY_ALLOWANCE" };
+}
+
+/** A Retry-After value (seconds or an HTTP date) as milliseconds from `nowMs`; null when absent or unreadable. */
+export function retryAfterMs(value: string | null | undefined, nowMs: number): number | null {
+  if (!value) return null;
+  if (/^\d+$/.test(value.trim())) return Number(value) * 1000;
+  const at = Date.parse(value);
+  return Number.isFinite(at) ? Math.max(0, at - nowMs) : null;
+}
+
+/** What a website's answer means for every reader: a 429 or 5xx holds it until its Retry-After, or for a minute. The hold, or null. */
+export async function holdWebsiteAfter(pacing: WebsitePacing, url: string, status: number, retryAfter: string | null | undefined, nowMs: number): Promise<number | null> {
+  if (status !== 429 && status < 500) return null;
+  const until = nowMs + Math.max(WEBSITE_BACKOFF_MS, retryAfterMs(retryAfter, nowMs) ?? 0);
+  await pacing.hold(websiteOf(url), until, nowMs);
+  return until;
+}
+
 export function createWebsitePacing(query: Query): WebsitePacing {
   return {
     async take(site, limit, nowMs) {

@@ -214,6 +214,7 @@ import { knownRecipes, RECIPE_KIND } from "../lib/hunt/meetings-recipes.ts";
 import { runSpreadPass, sentMoneyPlaces, spreadLine } from "../lib/method/spread-pass.ts";
 import { pacedProbeFetch } from "../lib/doors/probe-fetch.ts";
 import { guardedLeadGet, LEADS_PASS_BUDGET_MS, runLeadsPass } from "../lib/control-plane/leads/plain-test.ts";
+import { refreshDoorsForPass } from "../lib/doors/install.ts";
 import { ROUTE_HINTS } from "../lib/hunt/meetings-route-hints.ts";
 import { directoryMeetingHints } from "../lib/civic-data/worker-body-directory.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
@@ -674,6 +675,12 @@ if (!legacyOperationalReference && !azOperationalReference) throw new Error(
 );
 await preloadCandidateEnrichmentAuthorities();
 
+/* The meeting doors this cycle's meeting work, facts and Ask gaps are read against, straight from the registry. */
+{
+  const doors = await refreshDoorsForPass(repos.doors);
+  console.log(`  meeting doors: ${doors.rows} read from the registry${doors.reason ? ` — ${doors.reason}` : ""}`);
+}
+
 /*
  * One CAS lease on the fixed aggregate id `nightly-window` serializes cycle
  * writers: a cycle that finds it held is REFUSED by name (exit 3). The lease is
@@ -700,7 +707,7 @@ try {
  * against each state's canonical candidate acquisition denominator.
  */
 /*
- * Meeting acquisition belongs to the SOURCE_WIRING-derived meeting-partition
+ * Meeting acquisition belongs to the meeting-partition
  * contracts; the worker pipeline may project evidence into a fail-closed
  * receipt but never opens the same official feeds on a parallel schedule.
  */
@@ -3149,7 +3156,7 @@ if (!dry && !canary) {
 if (!dry && !canary) {
   const spread = await pending.step("methods:spread", () => runSpreadPass({ repos, now: nowIso(),
     sendPlaceIds: sentMoneyPlaces({ areas: expansionBudget?.gate.armedReading().scopes ?? null, sends: assignmentMembers }),
-    paidTriesLeft: guards.paidWorkerCapacity(), fetch: pacedProbeFetch(), sizeFor: websiteSize })).catch((error: unknown) => {
+    paidTriesLeft: guards.paidWorkerCapacity(), fetch: pacedProbeFetch({ pacing: repos.websitePacing, sizeFor: websiteSize }), sizeFor: websiteSize })).catch((error: unknown) => {
     runtimeConditions.push(`working methods were not tried elsewhere: ${error instanceof Error ? error.message : String(error)}`);
     return null;
   });

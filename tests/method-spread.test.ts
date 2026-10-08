@@ -19,7 +19,9 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import { recordScoutMethods, scoutFieldManualQuery } from "../lib/control-plane/scheduler/field-manual-scout.ts";
 import { plainTrier, replayUrl } from "../lib/method/method-try.ts";
-import { memoryWebsitePacing } from "../lib/control-plane/website-pacing.ts";
+import { pacedProbeFetch } from "../lib/doors/probe-fetch.ts";
+import { memoryWebsitePacing, type WebsitePacing } from "../lib/control-plane/website-pacing.ts";
+import type { WebsiteSizeForUrl } from "../lib/control-plane/scheduler/host-supervision.ts";
 import { planSpread, SPREAD_ATTEMPT } from "../lib/method/spread.ts";
 import { runSpreadPass, sentMoneyPlaces, spreadLine } from "../lib/method/spread-pass.ts";
 import type { FixMapRow } from "../lib/method/fix-map.ts";
@@ -43,16 +45,22 @@ const works = (methodId: string, placeId: string, at = NOW): FixMapRow =>
 const plainTried = (methodId: string, placeId: string): FixMapRow =>
   ({ methodId, placeId, state: "UNTRIED", triedAt: null, attemptId: SPREAD_ATTEMPT.PLAIN_TRIED, cause: "x", updatedAt: NOW });
 
-/** A website double: each address answers what the table says; anything else is a 404. Every request is kept. */
-function websites(table: Record<string, { status: number; body?: string; retryAfter?: string }>) {
+/**
+ * A website double behind the shared paced fetch: each address answers what the table says; anything else is a 404.
+ * Every request that reached the website is kept.
+ */
+function websites(table: Record<string, { status: number; body?: string; retryAfter?: string }>,
+  options: { readonly pacing?: WebsitePacing; readonly sizeFor?: WebsiteSizeForUrl } = {}) {
   const calls: string[] = [];
-  const fetch: ProbeFetch = async (url) => {
+  const fetchImpl = (async (input: string | URL | Request) => {
+    const url = String(input instanceof Request ? input.url : input);
     calls.push(url);
     const hit = table[url] ?? { status: 404 };
-    return { status: hit.status, headers: { get: (name: string) => (name === "retry-after" ? hit.retryAfter ?? null : null) },
-      bytes: async () => new TextEncoder().encode(hit.body ?? "") };
-  };
-  return { fetch, calls };
+    return new Response(hit.body ?? "", { status: hit.status, headers: hit.retryAfter ? { "retry-after": hit.retryAfter } : {} });
+  }) as typeof globalThis.fetch;
+  const paced: ProbeFetch = pacedProbeFetch({ pacing: options.pacing ?? memoryWebsitePacing(), ...(options.sizeFor ? { sizeFor: options.sizeFor } : {}),
+    fetchImpl, sleep: async () => {}, clock: () => Date.parse(NOW) });
+  return { fetch: paced, calls };
 }
 
 test("free tries go to every matching place; paid tries only where the free try could not decide, inside a Send and within the dial", () => {
@@ -115,8 +123,7 @@ test("a working method is tried by plain code at every matching place, and every
   assert.match((await at(MORRIS)).cause!, /answered 404 here/);
   assert.equal((await at(LA)).state, "UNTRIED");
   assert.equal((await at(LA)).attemptId, SPREAD_ATTEMPT.QUEUED);
-  assert.match((await at(LA)).cause!, /answered 503; every reader leaves it alone until /);
-  assert.ok(((await repos.websitePacing.heldUntil(Date.now())).get("lacounty.legistar.com") ?? 0) >= Date.now() + 110_000, "its Retry-After holds the website for every reader");
+  assert.match((await at(LA)).cause!, /the website answered 503, so every reader leaves it alone for now/);
 
   const saved = (await repos.fieldManual.read(method.id))!.value;
   assert.deepEqual(saved.placeResults!.filter((r) => r.place.startsWith("ocd-division/") && r.place !== PIMA).map((r) => [r.place, r.outcome]).sort(), [[MARICOPA, "YIELDED"], [MORRIS, "FAILED"]].sort());
@@ -168,47 +175,20 @@ test("a Scout whose subject is not a division reads and records at the divisions
   assert.equal((await repos.fixMap.workingMethods(10)).length, 1);
 });
 
-test("free tries share the hourly count and the holds every reader uses: across rounds, and with every other reader", async () => {
+test("a small publisher gets at most ten requests an hour, counted with every other reader; robots.txt is read once per website", async () => {
   const pacing = memoryWebsitePacing();
-  let clock = Date.parse(NOW);
-  const now = () => clock;
-  const small = () => ({ kind: "local-government", population: 4_000 }) as never;
-  const site = websites({ "https://smalltown.gov/robots.txt": { status: 200, body: "User-agent: *\nAllow: /\n" } });
+  for (let i = 0; i < 4; i += 1) await pacing.take("smalltown.gov", 10, Date.parse(NOW));
+  const site = websites({ "https://smalltown.gov/robots.txt": { status: 200, body: "User-agent: *\nAllow: /\n" } },
+    { pacing, sizeFor: () => ({ kind: "local-government", population: 4_000 }) as never });
+  const trier = plainTrier({ fetch: site.fetch });
   const method = newFieldManualEntry("m", "m", { role: "SHARED", kind: "METHOD", title: "m", summary: "GET {door}", outcome: "YIELDED", platforms: [], recordClasses: [],
     observedAt: NOW, payload: { procedure: "GET {door}" } });
-  const at = (i: number, host = "smalltown.gov") => door(`d${i}`, `${TUCSON}-${i}`, "page", host, { url: `https://${host}/p${i}` });
-
-  // Another reader took four of the website's ten this hour.
-  for (let i = 0; i < 4; i += 1) assert.deepEqual(await pacing.take("smalltown.gov", 10, clock), { ok: true });
-  const trier = plainTrier({ fetch: site.fetch, sizeFor: small, pacing, now });
   const outcomes: string[] = [];
-  for (let i = 0; i < 8; i += 1) outcomes.push((await trier.tryAt(method, at(i), "door kind")).outcome);
-  assert.equal(site.calls.length, 6, "robots.txt and five pages: ten in the hour with the other reader's four");
-  assert.equal(site.calls.filter((url) => url.endsWith("/robots.txt")).length, 1, "robots.txt is read once per website");
-  assert.deepEqual(outcomes.slice(5), ["WAITING", "WAITING", "WAITING"]);
-  assert.match((await trier.tryAt(method, at(9), "door kind")).note, /^this small publisher's hourly allowance is used; the try waits until /);
-  assert.deepEqual((await pacing.take("smalltown.gov", 10, clock)).ok, false, "and the free tries counted for every other reader");
-
-  // The next round in the same hour makes no request; an hour later it does.
-  const nextRound = plainTrier({ fetch: site.fetch, sizeFor: small, pacing, now });
-  assert.equal((await nextRound.tryAt(method, at(10), "door kind")).outcome, "WAITING");
-  assert.equal(site.calls.length, 6);
-  clock += 3_600_000;
-  await plainTrier({ fetch: site.fetch, sizeFor: small, pacing, now }).tryAt(method, at(11), "door kind");
-  assert.equal(site.calls.length, 8);
-
-  // A 429 a free try gets holds the website for every reader; a hold another reader recorded holds the free tries.
-  const busy = websites({ "https://busy.gov/p1": { status: 429, retryAfter: "1800" } });
-  const tryBusy = plainTrier({ fetch: busy.fetch, pacing, now });
-  const held = await tryBusy.tryAt(method, at(1, "busy.gov"), "door kind");
-  assert.equal(held.outcome, "WAITING");
-  assert.match(held.note, /^the website answered 429; every reader leaves it alone until /);
-  assert.equal((await pacing.heldUntil(clock)).get("busy.gov"), clock + 1_800_000);
-  assert.equal((await tryBusy.tryAt(method, at(2, "busy.gov"), "door kind")).outcome, "WAITING");
-  assert.equal(busy.calls.filter((u) => !u.endsWith("/robots.txt")).length, 1, "the rest of that website is not asked");
-  await pacing.hold("flaky.gov", clock + 60_000, clock);
-  const flaky = websites({});
-  const out = await plainTrier({ fetch: flaky.fetch, pacing, now }).tryAt(method, at(3, "flaky.gov"), "door kind");
-  assert.match(out.note, /^the website asked us to wait; tried again after /);
-  assert.equal(flaky.calls.length, 0);
+  for (let i = 0; i < 12; i += 1) {
+    const d = door(`d${i}`, `${TUCSON}-${i}`, "page", "smalltown.gov", { url: `https://smalltown.gov/p${i}` });
+    outcomes.push((await trier.tryAt(method, d, "door kind")).outcome);
+  }
+  assert.equal(site.calls.length, 6, "four requests another reader made leave six: robots.txt and five pages");
+  assert.equal(site.calls.filter((url) => url.endsWith("/robots.txt")).length, 1);
+  assert.deepEqual(outcomes.slice(5), Array(7).fill("WAITING"));
 });

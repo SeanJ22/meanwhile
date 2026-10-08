@@ -55,6 +55,7 @@ import {
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { inSiteTenantsFromWiring } from "../lib/sources/legistar-insite/tenant-registry.ts";
 import { loadOutcomePartitionForDoor } from "../lib/doors/outcome-door-load.ts";
+import { ensureMeetingDoors } from "../lib/doors/meeting-doors.ts";
 import {
   applyMinutesApprovals,
   concludedSittingRows,
@@ -496,7 +497,12 @@ async function main(): Promise<void> {
     }
     outcomeTenant = partition.tenant;
     tenant = inSiteTenantsFromWiring([partition.wiring])[0];
-  } else tenant = findTenant(args.slug);
+  } else {
+    // Mesa's own contract: its tenant is read off the published meeting doors.
+    const doors = await ensureMeetingDoors();
+    if (!doors.ready) throw new Error(`MEETING_DOORS_UNREADABLE: ${doors.reason}`);
+    tenant = findTenant(args.slug);
+  }
   if (!tenant) throw new Error("MINUTES_OUTCOME_TENANT_NOT_WIRED");
   const run = await runInSiteMinutesOutcomeIngest({
     store: new PostgresRoutineDataStore(),

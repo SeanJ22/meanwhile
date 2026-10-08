@@ -3,6 +3,7 @@ import test from "node:test";
 
 import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.ts";
 import { listDoors } from "@/lib/doors/registry.ts";
+import { memoryWebsitePacing } from "@/lib/control-plane/website-pacing.ts";
 import { collectOutboundLinks, readEdgeForSweep, recordSweep, summarizeSweep, sweepLinks, type SweepFetch } from "@/lib/doors/link-sweep.ts";
 
 const edge = {
@@ -24,7 +25,7 @@ test("links are collected once, https only, with the surface their key names", (
   assert.equal(links.length, 4);
 });
 
-const quiet = { now: () => 1_000_000 };
+const quiet = () => ({ now: () => 1_000_000, pacing: memoryWebsitePacing() });
 
 test("dead means gone or not found; a slow or refusing publisher is later, never dead; Retry-After stops that host for the pass", async () => {
   const seen: string[] = [];
@@ -39,7 +40,7 @@ test("dead means gone or not found; a slow or refusing publisher is later, never
   };
   const links = ["https://a.example.gov/gone", "https://a.example.gov/moved", "https://b.example.gov/limited-a", "https://b.example.gov/limited-b",
     "https://c.example.gov/boom", "https://d.example.gov/slow"].map((url) => ({ url, surface: "other links" as const }));
-  const results = await sweepLinks(links, { ...quiet, fetchFn, concurrency: 1 });
+  const results = await sweepLinks(links, { ...quiet(), fetchFn, concurrency: 1 });
   const verdict = Object.fromEntries(results.map((r) => [r.url, r.verdict]));
   assert.equal(verdict["https://a.example.gov/gone"], "DEAD");
   assert.equal(verdict["https://a.example.gov/moved"], "OK");
@@ -56,28 +57,45 @@ test("a small local government gets ten requests in a pass and the rest wait; a 
   const links = Array.from({ length: 25 }, (_, i) => ({ url: `https://town.example.gov/p${i}`, surface: "other links" as const }))
     .concat(Array.from({ length: 25 }, (_, i) => ({ url: `https://state.example.gov/p${i}`, surface: "other links" as const })));
   const sizeFor = (url: string) => new URL(url).hostname === "town.example.gov" ? { kind: "local-government" as const, population: 800 } : { kind: "state" as const };
-  const results = await sweepLinks(links, { ...quiet, fetchFn, sizeFor, concurrency: 1 });
+  const pacing = memoryWebsitePacing();
+  const results = await sweepLinks(links, { now: () => 1_000_000, pacing, fetchFn, sizeFor, concurrency: 1 });
   assert.equal(results.filter((r) => r.url.includes("town") && r.verdict === "OK").length, 10);
   assert.equal(results.filter((r) => r.url.includes("town") && r.verdict === "WAITING").length, 15);
   assert.equal(results.filter((r) => r.url.includes("state") && r.verdict === "OK").length, 25);
   assert.equal(requests, 35);
-  // The next pass starts elsewhere in the list, so every link is reached over several passes.
-  const second = await sweepLinks(links.filter((l) => l.url.includes("town")), { ...quiet, fetchFn, sizeFor, rotation: 10 });
+  const sameHour = await sweepLinks(links.filter((l) => l.url.includes("town")), { now: () => 1_000_000 + 60_000, pacing, fetchFn, sizeFor, rotation: 10 });
+  assert.equal(sameHour.filter((r) => r.verdict === "WAITING").length, 25, "the website's hour is shared by every pass");
+  // The next hour's pass starts elsewhere in the list, so every link is reached over several passes.
+  const second = await sweepLinks(links.filter((l) => l.url.includes("town")), { now: () => 1_000_000 + 3_600_000, pacing, fetchFn, sizeFor, rotation: 10 });
   assert.equal(second.find((r) => r.url.endsWith("/p10"))?.verdict, "OK");
   assert.equal(second.find((r) => r.url.endsWith("/p0"))?.verdict, "WAITING");
+});
+
+test("the sweep shares each website's hour and its holds with every other reader", async () => {
+  const pacing = memoryWebsitePacing();
+  for (let i = 0; i < 6; i += 1) await pacing.take("town.example.gov", 10, 1_000_000);
+  await pacing.hold("busy.example.gov", 1_000_000 + 1_800_000, 1_000_000);
+  const links = Array.from({ length: 8 }, (_, i) => ({ url: `https://www.town.example.gov/p${i}`, surface: "other links" as const }))
+    .concat([{ url: "https://busy.example.gov/a", surface: "other links" as const }]);
+  const sizeFor = (url: string) => url.includes("town") ? { kind: "local-government" as const, population: 800 } : { kind: "state" as const };
+  const seen: string[] = [];
+  const results = await sweepLinks(links, { now: () => 1_000_000, pacing, sizeFor, fetchFn: async (url) => { seen.push(url); return { status: 200 }; } });
+  assert.equal(results.filter((r) => r.url.includes("town") && r.verdict === "OK").length, 4, "another reader's six requests leave four");
+  assert.equal(results.find((r) => r.url.includes("busy"))!.verdict, "LATER");
+  assert.equal(seen.some((u) => u.includes("busy")), false, "a website another reader was asked to leave alone is not asked");
 });
 
 test("a server that refuses HEAD gets one GET before the link is judged", async () => {
   const methods: string[] = [];
   const fetchFn: SweepFetch = async (_url, method) => { methods.push(method); return { status: method === "HEAD" ? 405 : 200 }; };
-  const [r] = await sweepLinks([{ url: "https://x.example.gov/a", surface: "other links" }], { ...quiet, fetchFn });
+  const [r] = await sweepLinks([{ url: "https://x.example.gov/a", surface: "other links" }], { ...quiet(), fetchFn });
   assert.equal(r!.verdict, "OK");
   assert.deepEqual(methods, ["HEAD", "GET"]);
 });
 
 test("the sweep is kept beside door health, one record per surface, zero where nothing was found", async () => {
   const repos = createMemoryRepositories();
-  const results = await sweepLinks(collectOutboundLinks([edge]), { ...quiet, fetchFn: async (u) => ({ status: u.endsWith(".pdf") ? 404 : 200 }) });
+  const results = await sweepLinks(collectOutboundLinks([edge]), { ...quiet(), fetchFn: async (u) => ({ status: u.endsWith(".pdf") ? 404 : 200 }) });
   const summaries = await recordSweep(repos.doors, results, "2026-10-04T12:00:00.000Z");
   assert.equal(summaries.find((s) => s.surface === "agenda PDFs")!.dead, 1);
   const doors = (await listDoors(repos.doors)).doors.filter((d) => d.kind === "link-sweep");

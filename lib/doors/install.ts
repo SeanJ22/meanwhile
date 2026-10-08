@@ -1,104 +1,40 @@
 /**
- * Puts the registry's door rows where adapters read them, behind
- * `WTP_DOORS_READ=registry`; the code's `SOURCE_WIRING` is the default. With
- * the switch on the registry is read every pass, and a registry that is empty
- * or has lost a door the code still names is refused whole, keeping the
- * code's list.
+ * Puts the door registry's meeting doors where adapters read them, at the
+ * start of every runner pass and wherever a process reads the registry
+ * itself. The registry is the only door list: a registry that cannot be read,
+ * or holds no meeting door in use, gives the pass no hand-wired meeting work,
+ * and the pass says so.
  */
 
-import { refreshCuratedBodyStatus } from "../registry/curated-bodies.ts";
-import { refreshMeetingPartitions, type MeetingPartitionRefresh } from "../civic-data/meeting-partitions.ts";
-import { refreshOutcomePartitions, type OutcomePartitionRefresh } from "../civic-data/outcome-partitions.ts";
-import type { DoorRecord } from "./registry.ts";
-import { SOURCE_WIRING, installRegistryWiring, type BodySourceWiring } from "../registry/source-wiring.ts";
-import { listDoors, type DoorRepository } from "./registry.ts";
-import { installDoorHosts } from "../civic-data/source-authority.ts";
-import { meetingDoorHosts, wiringParity, wiringRowsFromDoors } from "./rows.ts";
+import type { MeetingPartitionRefresh } from "../civic-data/meeting-partitions.ts";
+import type { OutcomePartitionRefresh } from "../civic-data/outcome-partitions.ts";
+import { installDoorRecords } from "./meeting-doors.ts";
+import { listDoors, type DoorRecord, type DoorRepository } from "./registry.ts";
 
-export const DOORS_READ_SWITCH = "WTP_DOORS_READ";
-
-export type DoorReadMode = "code" | "registry";
-
-export function doorReadModeFromEnv(env: Readonly<Record<string, string | undefined>> = process.env): DoorReadMode {
-  return env[DOORS_READ_SWITCH]?.trim().toLowerCase() === "registry" ? "registry" : "code";
-}
-
-export interface DoorInstallResult {
-  readonly mode: DoorReadMode;
-  /** What adapters read now. */
-  readonly reading: "registry" | "code";
+export interface DoorPassResult {
+  /** Hand-wired meeting door rows adapters read now. */
   readonly rows: number;
-  /** Why the registry was not used, in a sentence; null when it was or the switch is off. */
+  /** Why there is no hand-wired meeting work this pass, in a sentence; null when there is. */
   readonly reason: string | null;
-  readonly differences: readonly string[];
-  /** The doors the registry held when it was used, for what a pass builds from them; absent when the code's list is in use. */
+  readonly partitions: MeetingPartitionRefresh | null;
+  readonly outcomes: OutcomePartitionRefresh | null;
+  /** The doors the registry held, for what a pass builds from them; absent when it could not be read. */
   readonly doors?: readonly DoorRecord[];
 }
 
-export async function installDoorWiringFromRegistry(
-  repo: DoorRepository,
-  options: { readonly mode?: DoorReadMode; readonly code?: readonly BodySourceWiring[] } = {},
-): Promise<DoorInstallResult> {
-  const mode = options.mode ?? doorReadModeFromEnv();
-  const code = options.code ?? SOURCE_WIRING;
-  if (mode !== "registry") {
-    installRegistryWiring(null);
-    installDoorHosts(null);
-    return { mode, reading: "code", rows: code.length, reason: null, differences: [] };
-  }
-  let rows: BodySourceWiring[];
-  let hosts: string[];
-  let listed: readonly DoorRecord[];
+export async function refreshDoorsForPass(repo: DoorRepository): Promise<DoorPassResult> {
+  let doors: readonly DoorRecord[];
   try {
-    const doors = (await listDoors(repo)).doors;
-    listed = doors;
-    rows = wiringRowsFromDoors(doors);
-    hosts = meetingDoorHosts(doors);
-  } catch {
-    installRegistryWiring(null);
-    installDoorHosts(null);
-    return { mode, reading: "code", rows: code.length, reason: "the door registry could not be read, so the code's own list is in use", differences: [] };
+    doors = (await listDoors(repo)).doors;
+  } catch (error) {
+    return { rows: 0, reason: `the door registry could not be read (${error instanceof Error ? error.message : String(error)})`, partitions: null, outcomes: null };
   }
-  const differences = wiringParity(code, rows);
-  const named = new Set(rows.map((row) => `${row.bodyId} ${row.agendaSourceType}`));
-  const lost = code.filter((row) => !named.has(`${row.bodyId} ${row.agendaSourceType}`));
-  if (rows.length === 0 || lost.length > 0) {
-    installRegistryWiring(null);
-    installDoorHosts(null);
-    return {
-      mode,
-      reading: "code",
-      rows: code.length,
-      reason: rows.length === 0
-        ? "the door registry holds no meeting doors yet, so the code's own list is in use"
-        : `the registry has lost ${lost.length} meeting door(s) the code still names, so the code's own list is in use`,
-      differences,
-    };
-  }
-  installRegistryWiring(rows);
-  installDoorHosts(hosts);
-  return { mode, reading: "registry", rows: rows.length, reason: null, differences, doors: listed };
-}
-
-export interface DoorPassResult extends DoorInstallResult {
-  readonly partitions: MeetingPartitionRefresh | null;
-  /** The doors that collect outcomes, built into their own work; null with the switch off or the code's list in use. */
-  readonly outcomes: OutcomePartitionRefresh | null;
-}
-
-/**
- * The start of a runner pass: read the doors, then build the pass's meeting
- * partitions from them. With the switch off nothing changes.
- */
-export async function refreshDoorsForPass(
-  repo: DoorRepository,
-  options: Parameters<typeof installDoorWiringFromRegistry>[1] = {},
-): Promise<DoorPassResult> {
-  const installed = await installDoorWiringFromRegistry(repo, options);
-  if (installed.mode !== "registry") return { ...installed, partitions: null, outcomes: null };
-  const partitions = refreshMeetingPartitions();
-  refreshCuratedBodyStatus();
-  // The registry's own doors only: while the code's list is in use no door is known to hold outcomes.
-  const outcomes = installed.reading === "registry" && installed.doors !== undefined ? refreshOutcomePartitions(installed.doors) : null;
-  return { ...installed, partitions, outcomes };
+  const installed = installDoorRecords(doors);
+  return {
+    rows: installed.rows,
+    reason: installed.rows === 0 ? "the door registry holds no meeting door in use" : null,
+    partitions: installed.partitions,
+    outcomes: installed.outcomes,
+    doors,
+  };
 }

@@ -69,7 +69,8 @@ import { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
 import { REGISTRY_RUNTIME_SCOPE } from "../lib/registry/runtime-data-plane.ts";
-import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
+import { activeWiring } from "../lib/registry/source-wiring.ts";
+import { ensureMeetingDoors } from "../lib/doors/meeting-doors.ts";
 
 const CONTRACT_ID = "meeting-source-wiring";
 
@@ -81,6 +82,9 @@ prepareProductionCivicDataWrite();
 
 const store = new PostgresRoutineDataStore();
 const now = new Date().toISOString();
+// A body a hand-wired door already serves gets no derived row; without the doors, that cannot be told, so nothing is derived.
+const doors = await ensureMeetingDoors();
+if (!doors.ready) throw new Error(`MEETING_DOORS_UNREADABLE: ${doors.reason}`);
 
 async function finish(candidate: RoutineCandidate): Promise<void> {
   // An unchanged wiring re-check is receipted on the pointed version instead of
@@ -292,7 +296,7 @@ async function main(): Promise<void> {
       return { input: reg.input, identityInput: reviewedInput };
     },
     attempts,
-    handWired: (bodyId) => SOURCE_WIRING.some((wiring) => wiring.bodyId === bodyId),
+    handWired: (bodyId) => activeWiring().some((wiring) => wiring.bodyId === bodyId),
     vaulted: (artifactId) => refOf(byId.get(artifactId) ?? null),
     /* A credential-bearing page is held as its sanitized derivative, filed under the raw page's sha256 (vault-crosswalk-evidence). */
     vaultedBytes: (hex) => refOf(byHash.get(hex) ?? null),

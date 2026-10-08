@@ -2,58 +2,55 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.ts";
-import { SOURCE_WIRING, activeWiring, meetingSourceNamesForWiring, installRegistryWiring, wiringForMeetingSource, wiringForTypes } from "@/lib/registry/source-wiring.ts";
+import { activeWiring, meetingSourceNamesForWiring, wiringForMeetingSource, wiringForTypes, type BodySourceWiring } from "@/lib/registry/source-wiring.ts";
 import { seedMeetingDoors } from "@/lib/doors/seed-meetings.ts";
-import { doorRowsFor, wiringParity, wiringRowsFromDoors } from "@/lib/doors/rows.ts";
-import { doorReadModeFromEnv, installDoorWiringFromRegistry } from "@/lib/doors/install.ts";
+import { compareRows, wiringRowsFromDoors } from "@/lib/doors/rows.ts";
+import { refreshDoorsForPass } from "@/lib/doors/install.ts";
 import { listDoors } from "@/lib/doors/registry.ts";
+import { FIXTURE_DOOR_ROWS, installFixtureDoors } from "./helpers/meeting-doors-fixture.ts";
 
 const AT = "2026-10-04T12:00:00.000Z";
 
+function canonical(rows: readonly BodySourceWiring[]): string[] {
+  const sortKeys = (value: unknown): unknown =>
+    value !== null && typeof value === "object" && !Array.isArray(value)
+      ? Object.fromEntries(Object.entries(value).sort(([a], [b]) => (a < b ? -1 : 1)).map(([k, v]) => [k, sortKeys(v)]))
+      : value;
+  return rows.slice().sort(compareRows).map((row) => JSON.stringify(sortKeys(row)));
+}
+
 async function seeded() {
   const repos = createMemoryRepositories();
-  const counts = await seedMeetingDoors({ repo: repos.doors, wiring: SOURCE_WIRING, derived: [], deriveInputAt: AT, at: AT });
+  const counts = await seedMeetingDoors({ repo: repos.doors, wiring: FIXTURE_DOOR_ROWS, derived: [], deriveInputAt: AT, at: AT });
   assert.deepEqual(counts.refused, []);
   return repos;
 }
 
-test("the registry's rows are exactly the code's wiring rows", async () => {
+test("the imported rows come back out of the registry exactly as they went in", async () => {
   const repos = await seeded();
   const { doors } = await listDoors(repos.doors);
-  assert.deepEqual(wiringParity(SOURCE_WIRING, wiringRowsFromDoors(doors)), []);
-  for (const type of ["CIVICPLUS", "ICAL", "LEGISTAR", "CLERKSBOARDS", "SCHEDULEPAGE"] as const) {
-    assert.deepEqual(wiringParity(SOURCE_WIRING.filter((r) => r.agendaSourceType === type), doorRowsFor([type], doors)), [], type);
-  }
+  assert.deepEqual(canonical(wiringRowsFromDoors(doors)), canonical(FIXTURE_DOOR_ROWS));
 });
 
-test("a registry that holds every door the code names is used, edits included; one that lost a door is not; the switch is off by default", async () => {
+test("each pass reads the registry: adapters see its rows, and an edit is read on the next pass", async (t) => {
+  t.after(() => installFixtureDoors());
   const repos = await seeded();
-  assert.equal(doorReadModeFromEnv({}), "code");
-  assert.equal(doorReadModeFromEnv({ WTP_DOORS_READ: "Registry" }), "registry");
-  const off = await installDoorWiringFromRegistry(repos.doors, { mode: "code" });
-  assert.equal(off.reading, "code");
-  assert.equal(activeWiring(), SOURCE_WIRING);
+  const pass = await refreshDoorsForPass(repos.doors);
+  assert.equal(pass.reason, null);
+  assert.equal(pass.rows, FIXTURE_DOOR_ROWS.length);
+  assert.equal(wiringForTypes(["IQM2"]).length, FIXTURE_DOOR_ROWS.filter((r) => r.agendaSourceType === "IQM2").length);
+  assert.deepEqual(
+    canonical(wiringForMeetingSource("legistar")),
+    canonical(FIXTURE_DOOR_ROWS.filter((r) => meetingSourceNamesForWiring(r).includes("legistar"))),
+  );
 
-  const on = await installDoorWiringFromRegistry(repos.doors, { mode: "registry" });
-  assert.equal(on.reading, "registry", on.reason ?? "");
-  assert.notEqual(activeWiring(), SOURCE_WIRING);
-  assert.equal(wiringForTypes(["IQM2"]).length, SOURCE_WIRING.filter((r) => r.agendaSourceType === "IQM2").length);
-  assert.deepEqual(wiringParity(wiringForMeetingSource("legistar"), SOURCE_WIRING.filter((r) => meetingSourceNamesForWiring(r).includes("legistar"))), []);
+  const door = (await listDoors(repos.doors)).doors.find((d) => d.meeting?.agendaSourceType === "ICAL")!;
+  await repos.doors.compareAndSet(door.doorId, (await repos.doors.read(door.doorId))!.revision, { ...door, config: { ...door.config, extra: "x" } }, AT);
+  await refreshDoorsForPass(repos.doors);
+  assert.ok(activeWiring().some((row) => row.bodyId === door.bodyIds[0] && row.config.extra === "x"), "a door edited in the registry is read from the next pass (DB-13)");
 
-  const bad = (await listDoors(repos.doors)).doors[0];
-  await repos.doors.compareAndSet(bad.doorId, (await repos.doors.read(bad.doorId))!.revision, { ...bad, config: { ...bad.config, extra: "x" } }, AT);
-  const edited = await installDoorWiringFromRegistry(repos.doors, { mode: "registry" });
-  assert.equal(edited.reading, "registry", "a door edited in the registry is read from the next pass (DB-13)");
-  assert.ok(edited.differences.length > 0);
-
-  const partial = createMemoryRepositories();
-  await seedMeetingDoors({ repo: partial.doors, wiring: SOURCE_WIRING.slice(1), derived: [], deriveInputAt: AT, at: AT });
-  const lost = await installDoorWiringFromRegistry(partial.doors, { mode: "registry" });
-  assert.equal(lost.reading, "code", "a registry that lost a door the code names changes nothing");
-  assert.match(lost.reason ?? "", /lost 1 meeting door/);
-  assert.equal(activeWiring(), SOURCE_WIRING);
-
-  const empty = await installDoorWiringFromRegistry(createMemoryRepositories().doors, { mode: "registry" });
-  assert.equal(empty.reading, "code", "an unseeded registry changes nothing");
-  installRegistryWiring(null);
+  const empty = await refreshDoorsForPass(createMemoryRepositories().doors);
+  assert.equal(empty.rows, 0);
+  assert.match(empty.reason ?? "", /holds no meeting door in use/);
+  assert.equal(activeWiring().length, 0);
 });

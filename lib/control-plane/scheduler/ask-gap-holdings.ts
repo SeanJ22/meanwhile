@@ -21,9 +21,10 @@ import { readAskGapObservations, type AskGapObservation } from "../ask-gap-obser
 import type { AggregateRepository } from "../repository/types.ts";
 import type { AskGapHoldingsReading, AskGapMeeting, AskGapsInput, CarrierClock } from "./providers/ask-gaps.ts";
 
-export const ASK_GAP_CARRIER_TASKS: readonly RoutineSourceTask[] = ROUTINE_SOURCE_TASKS.filter(
-  (task) => task.recordClass === "MEETING" || task.recordClass === "MEETING_OUTCOME",
-);
+/** The meeting and outcome tasks whose clocks Ask reads, from the doors installed now. */
+export function askGapCarrierTasks(): readonly RoutineSourceTask[] {
+  return ROUTINE_SOURCE_TASKS.filter((task) => task.recordClass === "MEETING" || task.recordClass === "MEETING_OUTCOME");
+}
 
 const message = (error: unknown): string => (error instanceof Error ? error.message : String(error));
 
@@ -133,10 +134,10 @@ async function takeReading(options: ReadingOptions): Promise<AskGapHoldingsReadi
       const store = new PostgresRoutineDataStore();
       return (task: RoutineSourceTask) => store.clock(task.sourceId, task.recordClass, task.scope);
     })();
-    clocks = carrierClocks(await readRoutineTaskClocks(ASK_GAP_CARRIER_TASKS, readClock), nowMs);
+    clocks = carrierClocks(await readRoutineTaskClocks(askGapCarrierTasks(), readClock), nowMs);
   } catch (error) {
     const why = `the routine clocks could not be read (${message(error)})`;
-    clocks = new Map(ASK_GAP_CARRIER_TASKS.map((task) => [task.id, { kind: "UNREAD", why } as const]));
+    clocks = new Map(askGapCarrierTasks().map((task) => [task.id, { kind: "UNREAD", why } as const]));
   }
 
   return {

@@ -76,7 +76,7 @@ export const CAPABILITIES: Array<{
     /**
      * The same product, an independent route: `legistar` reads `webapi.legistar.com`, which returns only
      * sittings whose InSite detail page is publicly viewable; this child reads the tenant's own
-     * `Calendar.aspx` grid, which returns all of them. SOURCE_WIRING selects each route's body membership,
+     * `Calendar.aspx` grid, which returns all of them. The meeting doors select each route's body membership,
      * and each route/body pair owns its own contract, pointer and clock.
      *
      * Registration order is load-bearing: `collapseDuplicateSittings` keeps the first-seen row on a tie, so
@@ -252,7 +252,7 @@ export function buildCompositeSource(
     /**
      * A derived meeting family's member rows (C16), read from the promoted meeting-source wiring by the family's
      * own child and authorized at its promotion door. Exclusive of `meetingPartitions`: a family never reads a
-     * SOURCE_WIRING row, and a SOURCE_WIRING partition never reads a derived one.
+     * hand-wired door, and a hand-wired door's partition never reads a derived one.
      */
     derivedRows?: readonly BodySourceWiring[];
     /** Already held official pages establish external calendar-host authority. */

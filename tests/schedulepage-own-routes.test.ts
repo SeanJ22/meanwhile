@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 
-import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
+import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import {
   makeSchedulePageSource,
   parseNextMeetingLine,
@@ -65,7 +65,7 @@ test("the Energy Committee's home page yields its next sitting in its own words"
 });
 
 test("both rows reach readers as sittings of their registered bodies", async () => {
-  const rows = SOURCE_WIRING.filter((row) =>
+  const rows = FIXTURE_DOOR_ROWS.filter((row) =>
     row.config.slug === "newbury-library-trustees-notices" || row.config.slug === "newbury-energy-committee-page");
   assert.equal(rows.length, 2, "both rows are wired");
   const pages: Record<string, string> = {

@@ -127,8 +127,12 @@ export function legistarClientsFromWiring(
   });
 }
 
-/** Compatibility projection, derived exclusively from SOURCE_WIRING. */
-export const LEGISTAR_CLIENTS: LegistarClient[] = legistarClientsFromWiring();
+/** The Legistar tenants the installed meeting doors name; replaced in place whenever doors are installed. */
+export const LEGISTAR_CLIENTS: LegistarClient[] = [];
+
+export function refreshLegistarClients(): void {
+  LEGISTAR_CLIENTS.splice(0, LEGISTAR_CLIENTS.length, ...legistarClientsFromWiring());
+}
 
 /** Reduce a venue string to something two spellings of one room agree on. */
 export function venueKey(value: string): string {

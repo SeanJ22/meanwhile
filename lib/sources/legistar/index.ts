@@ -465,7 +465,7 @@ export function makeLegistarSource(
   };
 }
 
-/** Compatibility default; its membership is itself derived from SOURCE_WIRING. */
+/** The default source; its membership is the installed meeting doors'. */
 export const legistarSource: MeetingSource<LegistarEventWithClient> = makeLegistarSource();
 
 /**

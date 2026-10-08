@@ -11,7 +11,7 @@ import test from "node:test";
 import { authorityFor } from "../lib/civic-data/source-authority.ts";
 import { meetingPartitionForRow } from "../lib/civic-data/meeting-partitions.ts";
 import { POST_FIXTURE_MEETING_PARTITIONS } from "./helpers/meeting-partition-fixture.ts";
-import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
+import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import {
   makeSuiteOneSource,
   portalRows,
@@ -22,7 +22,7 @@ import {
 
 const HTML = readFileSync(join(import.meta.dirname, "fixtures", "winslow", "suiteone-web.html"), "utf8");
 const PORTAL = "https://winslowaz.suiteonemedia.com/?embed=1";
-const WIRING = SOURCE_WIRING.find((row) => row.agendaSourceType === "SUITEONE" && row.config.slug === "winslow-city-council")!;
+const WIRING = FIXTURE_DOOR_ROWS.find((row) => row.agendaSourceType === "SUITEONE" && row.config.slug === "winslow-city-council")!;
 const READ_AT = "2026-09-25T17:51:59.000Z";
 const NOW = new Date("2026-09-25T18:00:00Z");
 const at = (path: string) => `https://winslowaz.suiteonemedia.com${path}`;

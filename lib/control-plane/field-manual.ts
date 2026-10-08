@@ -17,6 +17,7 @@ import { createHash } from "node:crypto";
 
 import { stateOfPlace, type FixMapRow, type MethodWorks } from "../method/fix-map.ts";
 import { recordAttempts, type MethodAttempt } from "../method/fix-map-record.ts";
+import { sortRung } from "./field-manual-rungs.ts";
 import { hereNote, mergePlaceResults, placeResultsOf, type MethodHere, type PlaceResult } from "./field-manual-places.ts";
 import { recordAttemptsKeepingHistory } from "./fix-history.ts";
 import { ConcurrentModification, IdentityCollision, type ControlPlaneRepositories, type Persisted } from "./repository/types.ts";
@@ -48,6 +49,8 @@ export interface FieldManualReach {
   readonly platforms: readonly string[];
   /** Applies to every job of its role and record class. */
   readonly everywhere: boolean;
+  /** A method offered anywhere it fits, ranked by where it has worked. */
+  readonly method?: boolean;
 }
 
 /**
@@ -122,9 +125,9 @@ export const BOOKKEEPING_KINDS: ReadonlySet<string> = new Set([JOB_COST_KIND, "W
 /** Reusable ways in: a method from one place is offered wherever it could apply, ranked by where it has worked. */
 export const TRANSFERABLE_METHOD_KINDS: ReadonlySet<string> = new Set(["METHOD", "ROUTE", "MANIFEST_BRANCH"]);
 
-/** A method that is not tied to one source: a procedure (no door of its own) or one shaped by a platform. */
-export function isTransferableMethod(entry: Pick<FieldManualEntry, "kind" | "url" | "platforms">): boolean {
-  return TRANSFERABLE_METHOD_KINDS.has(entry.kind) && (entry.url === null || entry.platforms.length > 0);
+/** A method that is not tied to one source: a procedure (no door of its own), one shaped by a platform, or a step offered anywhere it fits. */
+export function isTransferableMethod(entry: Pick<FieldManualEntry, "kind" | "url" | "platforms" | "reach">): boolean {
+  return (TRANSFERABLE_METHOD_KINDS.has(entry.kind) && (entry.url === null || entry.platforms.length > 0)) || entry.reach?.method === true;
 }
 
 const OCD = /ocd-division\/[^\s"'<>#,;)]+/i;
@@ -168,6 +171,7 @@ function unionReach(a: FieldManualReach | undefined, b: FieldManualReach): Field
     states: lower([...a.states, ...b.states]),
     platforms: lower([...a.platforms, ...b.platforms]),
     everywhere: a.everywhere || b.everywhere,
+    ...(a.method || b.method ? { method: true } : {}),
   };
 }
 
@@ -185,7 +189,8 @@ export function normalizeEntry(entry: FieldManualEntry): FieldManualEntry {
     platforms: lower(entry.platforms),
     summary: entry.summary.replace(/\s+/g, " ").trim().slice(0, 320),
   };
-  return { ...normalized, reach: unionReach(entry.reach, reachOf(normalized)) };
+  const sorted = sortRung(normalized)?.entry ?? normalized;
+  return { ...sorted, reach: unionReach(sorted.reach, reachOf(sorted)) };
 }
 
 /**

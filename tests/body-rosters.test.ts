@@ -10,7 +10,7 @@ import {
   governingRosterHoldersForDivision,
   rosterHoldersForBody,
 } from "../lib/registry/body-rosters.ts";
-import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
+import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import { normalizeName } from "../lib/routing/exact-name.ts";
 import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
@@ -22,7 +22,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 test("every roster keys to a real body — a roster for nothing is a curation error", () => {
   // A roster may belong to a known registry body whose calendar is not wired yet; a roster keyed to nothing is forbidden.
-  const wiredIds = new Set(SOURCE_WIRING.map((r) => r.bodyId));
+  const wiredIds = new Set(FIXTURE_DOOR_ROWS.map((r) => r.bodyId));
   const registry = JSON.parse(
     readFileSync(join(process.cwd(), "lib", "registry", "registry.json"), "utf8"),
   ) as { bodies: { id: string }[] };

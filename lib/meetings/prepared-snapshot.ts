@@ -12,6 +12,7 @@ import {
   HELD_MEETING_PARTITIONS,
   MEETING_PARTITION_CONTRACTS,
   heldMeetingPartitionFor,
+  onMeetingPartitionsRefreshed,
 } from "../civic-data/meeting-partitions.ts";
 import {
   MEETINGS_RECORD_CLASS,
@@ -41,10 +42,12 @@ function couplingFingerprint(coupling: readonly PreparedProjectionCoupling[]): s
     .join("|");
 }
 
-const SCOPE_BY_CONTRACT: ReadonlyMap<string, string> = new Map([
+const scopeByContract = (): ReadonlyMap<string, string> => new Map([
   ...MEETING_PARTITION_CONTRACTS.map((partition) => [partition.id, partition.scope] as const),
   ...HELD_MEETING_PARTITIONS.map((held) => [held.id, held.scope] as const),
 ]);
+let SCOPE_BY_CONTRACT = scopeByContract();
+onMeetingPartitionsRefreshed(() => { SCOPE_BY_CONTRACT = scopeByContract(); });
 
 function withCurrentChecks(
   couplings: readonly FreshCheckCoupling[],
@@ -286,6 +289,8 @@ async function servedPreparedChecks(
 export async function readPreparedMeetingsProjection(
   options: { readonly store?: RoutineDataStore; readonly now?: string } = {},
 ): Promise<MeetingsProjectionReadResult> {
+  // The meeting partitions read here are the published doors' partitions, installed in this module graph.
+  await (await import("../doors/meeting-doors.ts")).ensureMeetingDoors();
   let prepared: PreparedReaderProjectionRow | null;
   let store: RoutineDataStore | null = null;
   try {

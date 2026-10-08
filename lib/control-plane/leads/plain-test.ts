@@ -20,8 +20,7 @@ import type { FleetSafetyController } from "../fleet-safety.ts";
 import { formatEasternTime } from "../eastern-time.ts";
 import { memoryInProcess, researchFetch, type ResearchFetchResult, type ResearchGet } from "../../hunt/robots-first-fetch.ts";
 import { detectTenancy } from "../../hunt/platform-tenancy.ts";
-import { retryAfterMs } from "../../doors/link-sweep.ts";
-import { RATE_LIMIT_BACKOFF_MS } from "../../hunt/access-control.ts";
+import { retryAfterMs, WEBSITE_BACKOFF_MS } from "../website-pacing.ts";
 import { isLeadOrder, OWNER_LEAD_SOURCE, rowOpen, type LeadFound, type LeadOrder, type LeadRow } from "./order.ts";
 
 /** How long one round spends starting new tests. */
@@ -128,7 +127,7 @@ function verdictOf(fetched: ResearchFetchResult, row: LeadRow, nowMs: number): V
   const status = fetched.status;
   const wait = retryAfterMs(fetched.retryAfter, nowMs);
   if (status === 429 || status === 503 || (status >= 500 && wait !== null)) {
-    const until = nowMs + Math.max(RATE_LIMIT_BACKOFF_MS, wait ?? 0);
+    const until = nowMs + Math.max(WEBSITE_BACKOFF_MS, wait ?? 0);
     return { kind: "later", why: `The website asked us to wait; trying again after ${formatEasternTime(new Date(until).toISOString())}.`, until, countsTry: false };
   }
   if (status >= 500) {

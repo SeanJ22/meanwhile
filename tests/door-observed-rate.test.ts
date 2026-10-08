@@ -6,7 +6,7 @@ import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.
 import { COLD_CHECK_MINUTES, STANDING_CHECK_MINUTES, overdueDoors } from "@/lib/doors/overdue.ts";
 import { MIN_OBSERVED_CHECK_MINUTES, checkEveryWithObserved, doorRateRow, observeChange, observedChangeMinutesByDoor, recordDoorChange } from "@/lib/doors/observed-rate.ts";
 import { recordDoorOutcome } from "@/lib/doors/outcome.ts";
-import { SOURCE_WIRING } from "@/lib/registry/source-wiring.ts";
+import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import { seedMeetingDoors } from "@/lib/doors/seed-meetings.ts";
 import { applyDerivedRow, editableFieldsOf, listDoors, type DoorRecord } from "@/lib/doors/registry.ts";
 
@@ -16,7 +16,7 @@ const bare = { lastChangedAt: null, observedChangeMinutes: null, observedChanges
 
 async function oneDoor() {
   const repos = createMemoryRepositories();
-  await seedMeetingDoors({ repo: repos.doors, wiring: SOURCE_WIRING.slice(0, 1), derived: [], deriveInputAt: AT, at: AT });
+  await seedMeetingDoors({ repo: repos.doors, wiring: FIXTURE_DOOR_ROWS.slice(0, 1), derived: [], deriveInputAt: AT, at: AT });
   return { repos, door: (await listDoors(repos.doors)).doors[0]! };
 }
 

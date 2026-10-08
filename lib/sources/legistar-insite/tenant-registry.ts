@@ -63,8 +63,12 @@ export function inSiteTenantsFromWiring(
   });
 }
 
-/** Compatibility projection; SOURCE_WIRING remains its only membership input. */
-export const INSITE_TENANTS: InSiteTenant[] = inSiteTenantsFromWiring();
+/** The InSite tenants the installed meeting doors name; replaced in place whenever doors are installed. */
+export const INSITE_TENANTS: InSiteTenant[] = [];
+
+export function refreshInSiteTenants(): void {
+  INSITE_TENANTS.splice(0, INSITE_TENANTS.length, ...inSiteTenantsFromWiring());
+}
 
 export function findTenant(slug: string): InSiteTenant | undefined {
   return INSITE_TENANTS.find((tenant) => tenant.slug === slug);

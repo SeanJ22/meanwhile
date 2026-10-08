@@ -13,7 +13,7 @@ import { authorityFor } from "../lib/civic-data/source-authority.ts";
 import { WEBSITE_CORRECTIONS } from "../lib/civic-data/website-corrections.ts";
 import { meetingPartitionForRow } from "../lib/civic-data/meeting-partitions.ts";
 import { POST_FIXTURE_MEETING_PARTITIONS } from "./helpers/meeting-partition-fixture.ts";
-import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
+import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import {
   datedLabel,
   listedDocuments,
@@ -29,7 +29,7 @@ const PAGE_2026 = readFileSync(join(FIXTURES, "council-2026-agendas-minutes.html
 const ROBOTS = readFileSync(join(FIXTURES, "robots.txt"), "utf8");
 const URL_2026 = "https://holbrookaz.gov/government/council-agenda/2026-agendas-minutes/";
 const URL_2027 = "https://holbrookaz.gov/government/council-agenda/2027-agendas-minutes/";
-const WIRING = SOURCE_WIRING.find((row) => row.agendaSourceType === "DOCUMENT_LISTING" && row.config.slug === "holbrook-city-council")!;
+const WIRING = FIXTURE_DOOR_ROWS.find((row) => row.agendaSourceType === "DOCUMENT_LISTING" && row.config.slug === "holbrook-city-council")!;
 const READ_AT = "2026-09-25T17:46:24.000Z";
 /** The clock a fetch picks "this year's" required page by, fixed so the test cannot rot. */
 const SEPT_25 = () => new Date("2026-09-25T18:00:00Z");

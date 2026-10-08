@@ -4,8 +4,8 @@ import test from "node:test";
 import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.ts";
 import type { ScoutResult } from "@/lib/control-plane/scheduler/scout-result.ts";
 import { recordFoundSources, recordPublishedPages } from "@/lib/doors/page-doors.ts";
-import { applyDerivedRow, editableFieldsOf, isDoorRecord, listDoors, type DoorRecord, type DoorRepository } from "@/lib/doors/registry.ts";
-import { doorSyncLine, seedAllDoors, syncHeldDoors } from "@/lib/doors/seed-all.ts";
+import { applyDerivedRow, applyManualEdit, editableFieldsOf, isDoorRecord, listDoors, type DoorRecord, type DoorRepository } from "@/lib/doors/registry.ts";
+import { doorSyncLine, readDoorImport, seedAllDoors, syncHeldDoors } from "@/lib/doors/seed-all.ts";
 
 const AT = "2026-10-05T16:00:00.000Z";
 const LATER = "2026-10-05T16:05:00.000Z";
@@ -48,10 +48,10 @@ test("every pass brings the held doors into an empty registry with no switch, an
   assert.ok(first.synced && first.result.total === held);
   const second = await syncHeldDoors(reordering(repos.doors), { now: LATER });
   assert.ok(second.synced);
-  const { meetings, feeds, routeHints } = second.result;
-  assert.deepEqual([meetings.created + feeds.created + routeHints.created, meetings.updated + feeds.updated + routeHints.updated], [0, 0],
+  const { imported, meetings, feeds, routeHints } = second.result;
+  assert.deepEqual([imported.created + meetings.created + feeds.created + routeHints.created, imported.updated + meetings.updated + feeds.updated + routeHints.updated], [0, 0],
     "settings handed back in another key order are the same settings");
-  assert.match(doorSyncLine(second), new RegExp(`^${held} doors held; 0 added, 0 updated this pass$`));
+  assert.match(doorSyncLine(second), new RegExp(`^${held} doors held; 0 added, 0 updated this pass; door import: 0 added, 0 updated, ${imported.unchanged} already there, 0 kept their hand edit$`));
 });
 
 test("a door that left the registry comes back on the next pass", async () => {
@@ -99,10 +99,30 @@ test("sources found before this pass are read from the scout log once, while the
   const repos = createMemoryRepositories();
   let reads = 0;
   const log = { readAll: async () => { reads += 1; return [scout({ candidates: [candidate("https://a.example.gov/x"), candidate("https://a.example.gov/x")] as ScoutResult["candidates"] })]; } };
-  const first = await seedAllDoors({ repo: repos.doors, derived: [], scoutResults: log, now: AT });
+  const first = await seedAllDoors({ repo: repos.doors, imported: { generatedAt: AT, rows: [] }, derived: [], scoutResults: log, now: AT });
   assert.equal(first.found?.created, 1);
-  const second = await seedAllDoors({ repo: repos.doors, derived: [], scoutResults: log, now: LATER });
+  const second = await seedAllDoors({ repo: repos.doors, imported: { generatedAt: AT, rows: [] }, derived: [], scoutResults: log, now: LATER });
   assert.equal(second.found, null);
   assert.equal(reads, 1);
   assert.ok((await repos.doors.list()).every((row) => isDoorRecord(row.value)));
+});
+
+test("the one-time door import adds every hand-wired door once, and keeps a door edited in the registry since", async () => {
+  const repos = createMemoryRepositories();
+  const file = readDoorImport();
+  // An edit made after the rows were taken from code.
+  const EDITED = new Date(Date.parse(file.generatedAt) + 60_000).toISOString();
+  assert.ok(file.rows.length > 100, `${file.rows.length} rows`);
+  const first = await seedAllDoors({ repo: repos.doors, imported: file, derived: [], now: AT });
+  assert.deepEqual(first.imported.refused, []);
+  assert.ok(first.imported.created >= file.rows.length, "every row becomes at least one door");
+  assert.equal(first.imported.updated, 0);
+  const door = (await listDoors(repos.doors)).doors.find((d) => d.meeting != null)!;
+  const row = (await repos.doors.read(door.doorId))!;
+  await repos.doors.compareAndSet(door.doorId, row.revision, applyManualEdit(door, { ...editableFieldsOf(door), notes: "checked by hand" }, EDITED), EDITED);
+  const second = await seedAllDoors({ repo: repos.doors, imported: file, derived: [], now: EDITED });
+  assert.equal(second.imported.created, 0);
+  assert.equal(second.imported.updated, 0);
+  assert.equal(second.imported.unchanged + second.imported.keptManualEdit, first.imported.created);
+  assert.equal((await repos.doors.read(door.doorId))!.value.notes, "checked by hand");
 });

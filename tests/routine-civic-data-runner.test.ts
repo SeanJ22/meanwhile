@@ -273,6 +273,7 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     // One registration per FIPS state, DC and territory, each its own data-plane script invocation.
     ...REGISTRATION_TARGETS.map(({ contractId }) => contractId),
     "meeting-body-crosswalk-derived",
+    "meeting-doors",
     "meeting-source-wiring",
     "candidate-campaign-sites-derived",
   ]);

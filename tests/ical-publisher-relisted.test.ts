@@ -7,7 +7,8 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
-import { SOURCE_WIRING, type BodySourceWiring } from "../lib/registry/source-wiring.ts";
+import { type BodySourceWiring } from "../lib/registry/source-wiring.ts";
+import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import { reissuesSitting } from "../lib/sources/event-identity.ts";
 import { makeIcalSource, parseIcs, publishedFieldsOf, relistedNote } from "../lib/sources/ical/index.ts";
 import type { Meeting } from "../lib/sources/types.ts";
@@ -17,7 +18,7 @@ import { reconcileSuccessfulMeetingPartition } from "../scripts/ingest.ts";
 const FIXTURE = readFileSync(join(import.meta.dirname, "fixtures", "ical", "newbury-2026-09-23-selectboard.ics"), "utf8");
 const READ_AT = "2026-09-23T17:30:01.000Z";
 const SLUG = "newbury-ical-governing";
-const GOVERNING: BodySourceWiring = SOURCE_WIRING.find((row) => row.agendaSourceType === "ICAL" && row.config.slug === SLUG)!;
+const GOVERNING: BodySourceWiring = FIXTURE_DOOR_ROWS.find((row) => row.agendaSourceType === "ICAL" && row.config.slug === SLUG)!;
 const id = (node: number) => `ical:${SLUG}:calendar.${node}.field_date_and_time.0@www.newbury.nh.gov`;
 const page = (node: number) => `https://www.newbury.nh.gov/home/events/${node}`;
 

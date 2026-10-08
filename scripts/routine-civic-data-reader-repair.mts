@@ -6,6 +6,7 @@
  */
 import { MEETING_PARTITION_CONTRACTS, observableRoutineContracts } from "../lib/civic-data/meeting-partitions.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
+import { ensureMeetingDoors } from "../lib/doors/meeting-doors.ts";
 import {
   routineReaderRepairRecord,
   serializeRoutineReaderRepairRecord,
@@ -67,6 +68,13 @@ step = meetingAggregate ? "repairing the meeting aggregate" : `repairing ${contr
 const store = stage
   ? traceMethodCalls(new PostgresRoutineDataStore(), "store", stage)
   : new PostgresRoutineDataStore();
+
+step = "reading the meeting doors";
+{
+  // The meeting partitions read back here are the published doors' partitions; other contracts do not need them.
+  const doors = await ensureMeetingDoors();
+  if (!doors.ready && (meetingAggregate || contractId?.startsWith("meetings:"))) throw new Error(`MEETING_DOORS_UNREADABLE: ${doors.reason}`);
+}
 
 let failed = false;
 // A receipt from an earlier commit carries to this one when no typed Reader code changed between them.

@@ -9,6 +9,7 @@ import test from "node:test";
 import { methodAttemptsOf, newFieldManualEntry, normalizeEntry } from "../lib/control-plane/field-manual.ts";
 import { methodPlaceOf } from "../lib/method/method-places.ts";
 import { doorKindPlatform, planSpread } from "../lib/method/spread.ts";
+import { sentMoneyPlaces } from "../lib/method/spread-pass.ts";
 import type { DoorRecord } from "../lib/doors/registry.ts";
 
 test("every way a result names its place becomes a division, or nothing when it names no one state", () => {
@@ -38,6 +39,14 @@ test("a route that yielded in a state has a working record there, from its own o
   assert.deepEqual(attempts.map((a) => [a.placeId, a.outcome, a.at]), [
     ["ocd-division/country:us/state:az", "SUCCEEDED", "2026-08-28T00:00:00.000Z"],
     ["ocd-division/country:us/state:az/place:marana", "FAILED", "2026-08-29T00:00:00.000Z"],
+  ]);
+});
+
+test("a funded place is the member's own division: a registry government is read to it, a candidate funds no door", () => {
+  const area = { key: "k", label: "l", budgetUsd: 100, resolved: true, states: ["AZ"], historicalUsd: 0,
+    members: new Set(["az:city:town-of-marana", "ocd-division/country:us/state:az/county:pima#governing", "az:2026:state-az-sldl-19:state-representative-district-19:caswell-cheryl"]) };
+  assert.deepEqual([...sentMoneyPlaces({ areas: [area as never], sends: null })].sort(), [
+    "ocd-division/country:us/state:az/county:pima", "ocd-division/country:us/state:az/place:marana",
   ]);
 });
 

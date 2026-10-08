@@ -20,22 +20,26 @@ import type { DoorRecord } from "../doors/registry.ts";
 import { detectTenancy } from "../hunt/platform-tenancy.ts";
 import type { FixMapRow } from "./fix-map.ts";
 import type { MethodAttempt } from "./fix-map-record.ts";
+import { subjectDivisionOf } from "./method-places.ts";
 import { plainTrier, type PlainTry } from "./method-try.ts";
 import { planSpread, SPREAD_ATTEMPT, type SpreadPlace } from "./spread.ts";
 
-const place = (subject: string): string => subject.split("#")[0]!;
 
 /** At most this many free tries a round; the rest stay queued for the next. */
 export const FREE_TRIES_PER_ROUND = 200;
 
-/** The places the owner has sent money to: members of a Send, and of an area with a budget. */
+/**
+ * The places the owner has sent money to: members of a Send, and of an area with a budget, each as the division the
+ * spread keys on. A member that is a registry government is read to its own division; a member that is no place
+ * (a candidate, an office) funds no door.
+ */
 export function sentMoneyPlaces(input: { readonly areas: readonly BudgetScope[] | null; readonly sends: AssignmentMembership | null }): ReadonlySet<string> {
   const out = new Set<string>();
   for (const scope of input.areas ?? []) {
-    if (scope.resolved && scope.budgetUsd > 0) for (const member of scope.members) out.add(place(member));
+    if (scope.resolved && scope.budgetUsd > 0) for (const member of scope.members) { const at = subjectDivisionOf(member); if (at !== null) out.add(at); }
   }
   for (const members of input.sends?.byKey.values() ?? []) {
-    for (const member of [...members.created.values(), ...members.reordered.values()]) out.add(place(member.subjectId));
+    for (const member of [...members.created.values(), ...members.reordered.values()]) { const at = subjectDivisionOf(member.subjectId); if (at !== null) out.add(at); }
   }
   return out;
 }

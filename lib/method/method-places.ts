@@ -31,18 +31,28 @@ function referenceFor(state: string, root: string): LoadedReference | null {
 
 const stateDivision = (state: string): string => `ocd-division/country:us/state:${state}`;
 
+/**
+ * The exact division a subject is: a division itself (a body's `#` part dropped), or a registry government read
+ * through its state's registration reference. Null for anything else; never widened to a state.
+ */
+export function subjectDivisionOf(subject: string, root = process.cwd()): string | null {
+  const named = subject.trim().split("#")[0]!;
+  if (named.toLowerCase().startsWith("ocd-division/")) return named;
+  const state = /^([a-z]{2}):/i.exec(named)?.[1]?.toLowerCase();
+  if (state === undefined) return null;
+  const reference = referenceFor(state, root);
+  const government = reference?.reference.governments.find((row) => row[1] === named);
+  if (reference == null || government === undefined) return null;
+  if (government[3] === "STATE") return stateDivision(state);
+  return government[4] >= 0 ? reference.reference.divisions[government[4]]?.[0] ?? null : null;
+}
+
 /** The division a result's place names, or null when it names no one state. */
 export function methodPlaceOf(jurisdiction: string, root = process.cwd()): string | null {
-  const named = jurisdiction.trim();
-  if (named.toLowerCase().startsWith("ocd-division/")) return named.split("#")[0]!;
-  const state = /^([a-z]{2})(?:$|[:-])/i.exec(named)?.[1]?.toLowerCase();
+  const exact = subjectDivisionOf(jurisdiction, root);
+  if (exact !== null) return exact;
+  const state = /^([a-z]{2})(?:$|[:-])/i.exec(jurisdiction.trim())?.[1]?.toLowerCase();
   if (state === undefined || state === "us") return null;
-  const reference = referenceFor(state, root);
   // A state with no registration reference is not one of the states this repository places.
-  if (reference === null) return null;
-  const government = reference.reference.governments.find((row) => row[1] === named);
-  if (government !== undefined && government[3] !== "STATE" && government[4] >= 0) {
-    return reference.reference.divisions[government[4]]?.[0] ?? stateDivision(state);
-  }
-  return stateDivision(state);
+  return referenceFor(state, root) === null ? null : stateDivision(state);
 }

@@ -6,23 +6,27 @@
  * state is placed at that state. A result that names no one state (`us`, `pilot-counties`) has no place here.
  */
 
-import { existsSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { loadRegistrationReference, type LoadedReference } from "../registration/reference.ts";
+import type { RegistrationReference } from "../registration/reference.ts";
 
-const references = new Map<string, LoadedReference | null>();
+const references = new Map<string, RegistrationReference | null>();
 
-function referenceFor(state: string, root: string): LoadedReference | null {
+/**
+ * A state's committed registration reference, read here directly: this module is bundled with the site's routes, and
+ * the reference loader would trace every data file into them.
+ */
+function referenceFor(state: string, root: string): RegistrationReference | null {
   const key = `${root}\u0000${state}`;
   if (!references.has(key)) {
-    let loaded: LoadedReference | null = null;
-    if (existsSync(join(/* turbopackIgnore: true */ root, "data", "derived", "registration", `${state}.json`))) {
-      try {
-        loaded = loadRegistrationReference(root, state);
-      } catch {
-        loaded = null;
-      }
+    let loaded: RegistrationReference | null = null;
+    try {
+      const file = join(/* turbopackIgnore: true */ root, "data", "derived", "registration", `${state}.json`);
+      const read = JSON.parse(readFileSync(/* turbopackIgnore: true */ file, "utf8")) as RegistrationReference;
+      loaded = read.formatVersion === 1 && read.state === state ? read : null;
+    } catch {
+      loaded = null;
     }
     references.set(key, loaded);
   }
@@ -41,10 +45,10 @@ export function subjectDivisionOf(subject: string, root = process.cwd()): string
   const state = /^([a-z]{2}):/i.exec(named)?.[1]?.toLowerCase();
   if (state === undefined) return null;
   const reference = referenceFor(state, root);
-  const government = reference?.reference.governments.find((row) => row[1] === named);
+  const government = reference?.governments.find((row) => row[1] === named);
   if (reference == null || government === undefined) return null;
   if (government[3] === "STATE") return stateDivision(state);
-  return government[4] >= 0 ? reference.reference.divisions[government[4]]?.[0] ?? null : null;
+  return government[4] >= 0 ? reference.divisions[government[4]]?.[0] ?? null : null;
 }
 
 /** The division a result's place names, or null when it names no one state. */

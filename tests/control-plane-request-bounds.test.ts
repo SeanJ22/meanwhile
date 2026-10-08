@@ -39,8 +39,9 @@ test("dispatch-sized POINT bursts share transport admission across repository cl
         return answer([]);
       } finally { active--; }
     }) as typeof neonConfig.fetchFunction;
-    const first = await createPgRepositories(URL, undefined, { skipBootstrap: true, requestBounds: TINY });
-    const second = await createPgRepositories(URL, undefined, { skipBootstrap: true, requestBounds: TINY });
+    // The measured bounds: this test is about admission, and a 60 ms bound would also be measuring the host's CPU load.
+    const first = await createPgRepositories(URL, undefined, { skipBootstrap: true });
+    const second = await createPgRepositories(URL, undefined, { skipBootstrap: true });
     const result = await Promise.all(Array.from({ length: 3300 }, (_, index) =>
       (index % 2 ? first.occurrences : second.obligations).read(String(index))));
     assert.equal(calls, 3300, "every due row is read exactly once");

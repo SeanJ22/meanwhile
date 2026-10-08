@@ -8,7 +8,8 @@ import { availableParallelism, totalmem } from "node:os";
 import { SCHEDULING_HINTS } from "./ci-test-scheduling-hints.mjs";
 import { validateTimings } from "./ci-test-timing-reporter.mjs";
 
-const FLAGS = ["--test", "--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs"];
+// Every test process starts with the fixture meeting doors installed, as every production process installs the registry's.
+const FLAGS = ["--test", "--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", "--import", "./tests/helpers/install-fixture-doors.ts"];
 const PATTERNS = ["tests/**/*.test.ts", "tests/**/*.test.tsx", "lib/sources/platform-adapters/**/*.test.ts", "lib/sources/platform-adapters/**/*.test.tsx"];
 const COMMAND = "node scripts/ci-tests.mjs";
 const REPORTER = new URL("./ci-test-timing-reporter.mjs", import.meta.url);

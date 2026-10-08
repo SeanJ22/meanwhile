@@ -35,6 +35,8 @@ export const AGGREGATE_KINDS = [
   "doors",
   /** Original-byte copy requests; never source acquisition or a second scheduler. */
   "admin_evidence_copy_requests",
+  /** The owner's research-lead uploads, one row per order. */
+  "lead_orders",
 ] as const;
 
 export const APPEND_ONLY_LOGS = [

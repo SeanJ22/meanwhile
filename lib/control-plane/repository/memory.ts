@@ -3,6 +3,7 @@ import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { DoorRecord } from "../../doors/registry.ts";
+import type { LeadOrder } from "../leads/order.ts";
 import { memoryWebsitePacing } from "../website-pacing.ts";
 import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
@@ -337,6 +338,10 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
       (await artifacts.readAll()).filter(record => record.canonicalUrl === url)
         .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt) || a.artifactId.localeCompare(b.artifactId))
         .slice(0, Math.max(0, Math.trunc(limit))),
+    capturedCanonicalUrls: async (urls) => {
+      const wanted = new Set(urls);
+      return new Set((await artifacts.readAll()).map(record => record.canonicalUrl).filter(url => wanted.has(url)));
+    },
     adminEvidenceCopyRequests: memoryAggregateRepository<AdminEvidenceCopyRequest>("AdminEvidenceCopyRequest"),
     costs: memoryAppendOnlyRepository<CostEntry>("costs"),
     ownerSnapshots: memoryAggregateRepository<OwnerSnapshot>("OwnerSnapshot"),
@@ -365,6 +370,7 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     adminConfig: memoryAggregateRepository<AdminConfig>("AdminConfig"),
     askGapObservations: memoryAggregateRepository<AskGapObservation>("AskGapObservation"),
     doors: memoryAggregateRepository<DoorRecord>("Door"),
+    leadOrders: memoryAggregateRepository<LeadOrder>("LeadOrder"),
     budget: budgetRepositoryFrom(budgetAggregate, locks),
     spendHolds: inProcessSpendHoldStore(),
     locks,

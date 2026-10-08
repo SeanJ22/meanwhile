@@ -1,9 +1,9 @@
 /**
  * When a method succeeds, `planSpread` lists every place, in every state, whose door matches it: a door of the
  * method's kind or platform (Legistar's InSite portal is Legistar), or a door any of whose websites is on it.
- * Plain-code tries go to every matching place within each small publisher's hourly allowance; paid tries go only to places inside a Send where the plain try could not decide, within the budget dial. The order is
- * a fixed shuffle keyed by method and place, never queue position. A place with a result for the method is not tried
- * again here. Pure.
+ * Plain-code tries go to every matching place within each small publisher's hourly allowance; paid tries go only to
+ * places inside a Send where the plain try could not decide, within the budget dial. The order is a fixed shuffle
+ * keyed by method and place, never queue position. A place with a result for the method is not tried again here. Pure.
  */
 
 /** A queued place's fix-map row says how far its try got, in its attempt id. */

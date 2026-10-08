@@ -1,0 +1,27 @@
+{
+  "n": 17,
+  "branch": "release/17",
+  "river_sha": "89e0cc4b02a48a34af470bdd2c994214b862ce2f",
+  "tested_sha": "89e0cc4b02a48a34af470bdd2c994214b862ce2f",
+  "steps": [
+    "FM-01",
+    "FM-02",
+    "FM-03",
+    "FM-04",
+    "FM-05",
+    "FM-06",
+    "FM-07",
+    "FM-08",
+    "FM-09",
+    "FM-10",
+    "PN-01"
+  ],
+  "lanes": [
+    "manual",
+    "publish-now"
+  ],
+  "integration_from": 122,
+  "integration_count": 125,
+  "pr": null,
+  "at": "2026-10-08T09:33:24Z"
+}

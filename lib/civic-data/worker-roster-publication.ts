@@ -9,7 +9,6 @@ import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/
 import type { WorkerEvidence, WorkerResultRecord } from "../control-plane/workers/types.ts";
 import { projectReaderRoster, type BodyRoster } from "../registry/body-rosters.ts";
 import type { OfficialCandidacyBridgeRow, RegistryRuntimePackage, RegistryRuntimePrior, RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
-import { readCompletedWorkerResults } from "../control-plane/repository/worker-completion.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
 import { readRegistryRuntimePrior, registryRuntimeCandidate, registryBaseSourceReceipt } from "../registry/runtime-data-plane.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
@@ -22,7 +21,7 @@ import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { heldDirectoryReading, materializeBodyDirectoryWork, workerBodyDirectoryPackage, type DirectoryReading } from "./worker-body-directory.ts";
 import { runtimeKinds } from "../registry/kinds-runtime.ts";
 import { publicationRecordChanges } from "./publication-record-changes.ts";
-import { auditPull, capturesForPublication, captureIntact, latestParserResult, registryEdition, section3SourceReceipt, validatorObservation } from "./worker-publication-evidence.ts";
+import { auditPull, capturesForPublication, captureIntact, jobWorkerResults, latestParserResult, registryEdition, section3SourceReceipt, validatorObservation } from "./worker-publication-evidence.ts";
 import { readValidatorManual, writeValidatorLessons, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
 import { readHeldRoster } from "./worker-held-roster.ts";
 import { heldBodySchedule, type HeldBodySchedule } from "./worker-held-meetings.ts";
@@ -321,9 +320,16 @@ export async function publishWorkerRosterResults(input: {
 }): Promise<readonly { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[]> {
   if (!input.workItemIds.length) return [];
   const kinds = runtimeKinds((await input.repos.adminConfig.read("current"))?.value ?? null);
-  const records = await readCompletedWorkerResults(input.repos);
-  const { readHeld, readCapture } = await publicationCaptureReaders(input.repos, input.readCapture, input.readHeld);
-  const allItems = (await input.repos.workItems.list()).map(row => row.value);
+  const captureReaders = await publicationCaptureReaders(input.repos, input.readCapture, input.readHeld);
+  const { readHeld } = captureReaders;
+  const { results: records, readCapture } = await jobWorkerResults(input.repos, input.workItemIds, captureReaders.readCapture);
+  /* Only the work items a sibling rule can name are read: filtered reads (and the government's own item), in id order, then the rule itself. */
+  const itemsWhere = async (rule: (item: WorkItem) => boolean, paths: readonly (readonly [readonly string[], string])[], ids: readonly string[] = []) => {
+    const rows = [...(await Promise.all(paths.map(([path, value]) => input.repos.workItems.listWhere(path, value)))).flat(),
+      ...(await Promise.all(ids.map(id => input.repos.workItems.read(id)))).filter(row => row !== null)];
+    return [...new Map(rows.map(row => [row.id, row.value])).entries()].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
+      .map(([, value]) => value).filter(rule);
+  };
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];
   let registry: RegistryRuntimePrior | null | undefined;
   const heldByBody = new Map<string, Promise<RosterReading | null>>();
@@ -352,7 +358,8 @@ export async function publishWorkerRosterResults(input: {
       if (directory && !parser) {
         const government = plan.directorySubject?.jurisdiction.id ?? id;
         if (!heldDirectories.has(government)) heldDirectories.set(government, (async () => {
-          const siblings = allItems.filter(other => (other.autonomousPlan?.directorySubject?.jurisdiction.id ?? other.id) === government);
+          const siblings = await itemsWhere(other => (other.autonomousPlan?.directorySubject?.jurisdiction.id ?? other.id) === government,
+            [[["autonomousPlan", "directorySubject", "jurisdiction", "id"], government]], [government]);
           const artifacts = (await Promise.all(siblings.map(other => input.repos.artifacts.read(other.id)))).flat();
           return heldDirectoryReading({ plan, prior, now: input.now, artifacts, readHeld });
         })());
@@ -365,7 +372,8 @@ export async function publishWorkerRosterResults(input: {
         if (reading && pull) reading = { ...reading, members: reading.members.filter(member => !pull.recordIds.has(member.recordId)) };
         if (!reading) {
           if (!heldByBody.has(bodyId)) heldByBody.set(bodyId, (async () => {
-            const siblings = allItems.filter(other => other.autonomousPlan?.publication?.bodyId === bodyId);
+            const siblings = await itemsWhere(other => other.autonomousPlan?.publication?.bodyId === bodyId,
+              [[["autonomousPlan", "publication", "bodyId"], bodyId]]);
             const artifacts = (await Promise.all(siblings.map(other => input.repos.artifacts.read(other.id)))).flat();
             return heldRosterReading({ bodyId, prior, now: input.now, artifacts, readHeld });
           })());
@@ -375,7 +383,8 @@ export async function publishWorkerRosterResults(input: {
         if (!schedules.has(bodyId)) schedules.set(bodyId, (async () => {
           const body = prior.payload.registry.bodies.find(row => row.id === bodyId);
           if (!body) return null;
-          const place = allItems.filter(other => other.autonomousPlan?.publication?.bodyId === bodyId || other.autonomousPlan?.contract.subjectId === plan.contract.subjectId);
+          const place = await itemsWhere(other => other.autonomousPlan?.publication?.bodyId === bodyId || other.autonomousPlan?.contract.subjectId === plan.contract.subjectId,
+            [[["autonomousPlan", "publication", "bodyId"], bodyId], [["autonomousPlan", "contract", "subjectId"], plan.contract.subjectId]]);
           const artifacts = (await Promise.all(place.map(other => input.repos.artifacts.read(other.id)))).flat();
           return heldBodySchedule({ body: { id: bodyId, name: body.name ?? prior.payload.bodyRosters.find(r => r.bodyId === bodyId)?.bodyName ?? null },
             divisionLabel: governmentOf(prior.payload.registry.divisions, body)?.label ?? null, artifacts, readHeld, now: input.now });

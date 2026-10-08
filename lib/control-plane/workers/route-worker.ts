@@ -5,6 +5,9 @@ import { routeExecutor, type OpenOne, type VaultPut } from "../scheduler/route-e
 import { workerBroker } from "./worker-broker.ts";
 import type { LeaseWorkerConfig } from "./process-pool.ts";
 import { join } from "node:path";
+import { readFromHeldCopies } from "../repository/incremental-reads.ts";
+
+readFromHeldCopies();
 
 const broker = workerBroker<LeaseWorkerConfig>(async config => {
   if (!config.routeDispatch) throw new Error("ROUTE_PROCESS_DISPATCH_MISSING");

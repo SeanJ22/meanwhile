@@ -34,6 +34,8 @@ export interface NeonBytesHour {
   /** The one process this part came from (a report line), and when it started; absent on a sum. */
   readonly pid?: number;
   readonly startedMs?: number;
+  /** That process's peak resident memory so far, in bytes; absent on a sum. */
+  readonly peakRssBytes?: number;
   /** Other hour counts (`countVitalSign`), e.g. rounds_finished. Absent on files that counted none. */
   readonly counters?: Readonly<Record<string, number>>;
 }
@@ -51,6 +53,7 @@ export interface NeonBytesSummary {
 interface Bucket { requests: number; bytes: Record<NeonDatabase, number>; byCaller: Map<string, number>; counters: Map<string, number>; dirty: boolean }
 
 const scope = new AsyncLocalStorage<string>();
+const pinnedSite = new AsyncLocalStorage<string>();
 const buckets = new Map<string, Bucket>();
 const siteCache = new Map<string, string>();
 /* Stack strings run to a few KB; a small cache keeps the per-process memory under 1 MB. */
@@ -68,7 +71,16 @@ export function hourStart(nowMs: number): string {
  * asked for it. The call site is read here, synchronously with the caller.
  */
 export function withQueryCaller<T>(operation: string, run: () => T): T {
-  return scope.run(`${operation} ← ${callSite()}`, run);
+  return scope.run(`${operation} ← ${pinnedSite.getStore() ?? callSite()}`, run);
+}
+
+/**
+ * Read the calling code's site now, for a repository read whose queries start
+ * only after its own awaits (a held copy is opened first), so their bytes
+ * still count under the code that asked.
+ */
+export function withCallerSite<T>(run: () => T): T {
+  return pinnedSite.run(callSite(), run);
 }
 
 /** The first stack frame outside the database layers, as a repo-relative "path:line". */
@@ -153,7 +165,8 @@ export function takeNeonBytesHours(nowMs: number = Date.now()): readonly NeonByt
   const current = hourStart(nowMs);
   const taken: NeonBytesHour[] = [];
   for (const [hour, bucket] of [...buckets.entries()]) {
-    if (bucket.dirty) { taken.push({ ...snapshot(hour, bucket), pid: process.pid, startedMs: Math.floor(performance.timeOrigin) }); bucket.dirty = false; }
+    if (bucket.dirty) { taken.push({ ...snapshot(hour, bucket), pid: process.pid, startedMs: Math.floor(performance.timeOrigin),
+      peakRssBytes: process.resourceUsage().maxRSS * 1024 }); bucket.dirty = false; }
     if (hour < current) buckets.delete(hour);
   }
   return taken;
@@ -246,7 +259,8 @@ export function installNeonBytesReport(): void {
   reportInstalled = true;
   const timer = setInterval(() => { reportNeonBytes(); }, 60_000);
   timer.unref();
-  process.once("exit", () => { reportNeonBytes(); });
+  /* At exit every hour this process counted is reported again, so its last part carries its peak memory. */
+  process.once("exit", () => { for (const bucket of buckets.values()) bucket.dirty = true; reportNeonBytes(); });
 }
 
 /** The runner parent sums the hour itself (takeNeonBytesHours); it never reports to its own output. */

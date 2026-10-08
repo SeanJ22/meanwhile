@@ -6,7 +6,6 @@ import type { AutonomousWorkPlan } from "../control-plane/workers/autonomous-pla
 import type { WorkerResultRecord, FieldValue } from "../control-plane/workers/types.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { canonicalJson } from "../control-plane/repository/types.ts";
-import { readCompletedWorkerResults } from "../control-plane/repository/worker-completion.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { readRegistryRuntimePrior, type RegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
@@ -18,7 +17,7 @@ import { processRegisteredManualCandidate } from "./promotion.ts";
 import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
-import { auditPull, captureIntact, capturesForPublication, section3SourceReceipt, latestParserResult, verifiedWorkerRecords, requirePublication, validatorObservation } from "./worker-publication-evidence.ts";
+import { auditPull, captureIntact, jobWorkerResults, capturesForPublication, section3SourceReceipt, latestParserResult, verifiedWorkerRecords, requirePublication, validatorObservation } from "./worker-publication-evidence.ts";
 import { readValidatorManual, writeValidatorLessons, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
 import { workerReaderClassMatches, isWorkerReaderContract, type WorkerReaderContract } from "./worker-reader-contracts.ts";
 import { createHash } from "node:crypto";
@@ -244,8 +243,9 @@ export async function publishWorkerReaderResults(input: {
 }) {
   if (input.contractId === "ballot-contests") return publishWorkerBallotContestsResults(input);
   if (input.contractId === "voting-sites") return publishWorkerPollingResults(input);
-  const { readHeld, readCapture } = await publicationCaptureReaders(input.repos, input.readCapture, input.readHeld);
-  const results = await readCompletedWorkerResults(input.repos);
+  const captureReaders = await publicationCaptureReaders(input.repos, input.readCapture, input.readHeld);
+  const { readHeld } = captureReaders;
+  const { results, readCapture } = await jobWorkerResults(input.repos, input.workItemIds, captureReaders.readCapture);
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];
   if (input.contractId === "ballot-navigation") {
     const held = input.workItemIds.filter(id => !latestParserResult(results, id));

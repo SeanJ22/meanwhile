@@ -33,6 +33,9 @@ import {
 } from "../lib/ops/production-integrity-data-plane.ts";
 import { createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import { assertDurableRepositories } from "../lib/control-plane/repository/types.ts";
+import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
+
+readFromHeldCopies();
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 

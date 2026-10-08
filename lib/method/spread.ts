@@ -127,7 +127,7 @@ export function planSpread(input: SpreadInput): SpreadPlan {
   let left = Math.max(0, Math.floor(input.paidTriesLeft));
   for (const place of fresh.filter((p) => plainTried.has(p.placeId) && !paidQueued.has(p.placeId))) {
     if (input.sendPlaceIds === null || !input.sendPlaceIds.has(place.placeId)) {
-      paidSkipped.push({ place, reason: "this place is not inside a Send" });
+      paidSkipped.push({ place, reason: "the owner has sent no money to this place (it is in no Send and no budgeted area)" });
     } else if (left <= 0) {
       paidSkipped.push({ place, reason: "the budget dial leaves no paid tries this round" });
     } else {

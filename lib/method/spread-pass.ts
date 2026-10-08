@@ -217,6 +217,6 @@ export function spreadLine(result: SpreadPassResult): string {
   const robots = Object.entries(result.robots).map(([verdict, n]) => `${verdict.toLowerCase().replace(/_/g, " ")} ${n}`).join(", ");
   return `${result.methods} working method(s) tried elsewhere by plain code: ${works} worked, ${fails} did not fit, ${undecided} left for a worker, ` +
     `${result.waiting} waiting; ${result.paid} paid tr${result.paid === 1 ? "y" : "ies"} allowed inside places with money sent` +
-    `${result.paidSkipped ? `, ${result.paidSkipped} not allowed (outside a Send or past the budget dial)` : ""}; ${result.requests} request(s)` +
+    `${result.paidSkipped ? `, ${result.paidSkipped} not allowed (no money sent there, or past the budget dial)` : ""}; ${result.requests} request(s)` +
     `${robots ? ` (robots.txt: ${robots})` : ""}${result.writeError ? `; ${result.writeError}` : ""}`;
 }

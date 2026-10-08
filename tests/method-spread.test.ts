@@ -75,7 +75,7 @@ test("free tries go to every matching place; paid tries only where the free try 
   assert.equal(after.plain.length, 0, "a free try that ran is not run again");
   assert.equal(after.paid.length, 1);
   assert.ok([MARICOPA, LA].includes(after.paid[0]!.placeId));
-  assert.deepEqual(after.paidSkipped.map((s) => s.reason).sort(), ["the budget dial leaves no paid tries this round", "this place is not inside a Send"]);
+  assert.deepEqual(after.paidSkipped.map((s) => s.reason).sort(), ["the budget dial leaves no paid tries this round", "the owner has sent no money to this place (it is in no Send and no budgeted area)"]);
 });
 
 test("the places the owner has sent money to: members of a Send, and of an area with a budget", () => {

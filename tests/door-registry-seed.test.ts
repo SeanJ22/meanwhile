@@ -50,7 +50,8 @@ test("a derived member is a door under its wiring row id, in its state's family"
   const draft = doorFromDerivedRecord(DERIVED);
   assert.equal(draft.doorId, DERIVED.id);
   assert.equal(draft.kind, "ical");
-  assert.equal(draft.config?.familyPartition, "meetings:derived:AZ");
+  assert.equal(draft.config?.familyPartition, "meetings:derived:US-AZ");
+  assert.ok(MEETING_PARTITION_CONTRACTS.some((p) => p.id === draft.meeting?.family), "the family named is a partition that exists");
   const repos = createMemoryRepositories();
   const first = await seedMeetingDoors({ repo: repos.doors, wiring: [], derived: [DERIVED], deriveInputAt: AT, at: AT });
   assert.deepEqual(first.refused, []);

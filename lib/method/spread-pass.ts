@@ -41,7 +41,7 @@ export function sentMoneyPlaces(input: { readonly areas: readonly BudgetScope[] 
 }
 
 export interface SpreadPassInput {
-  readonly repos: Pick<ControlPlaneRepositories, "fieldManual" | "fixMap" | "doors" | "adminConfig">;
+  readonly repos: Pick<ControlPlaneRepositories, "fieldManual" | "fixMap" | "doors" | "adminConfig" | "websitePacing">;
   readonly now: string;
   readonly sendPlaceIds: ReadonlySet<string>;
   /** How many paid tries the budget dial leaves this round. */
@@ -89,7 +89,7 @@ export async function runSpreadPass(input: SpreadPassInput): Promise<SpreadPassR
   const doors = (await repos.doors.list()).map((row) => row.value);
   const doorById = new Map<string, DoorRecord>(doors.map((door) => [door.doorId, door] as const));
   const platformOf = new Map(doors.map((door) => [door.doorId, detected(door.hosts[0])] as const));
-  const trier = plainTrier({ fetch: input.fetch, ...(input.sizeFor ? { sizeFor: input.sizeFor } : {}) });
+  const trier = plainTrier({ fetch: input.fetch, pacing: repos.websitePacing, ...(input.sizeFor ? { sizeFor: input.sizeFor } : {}) });
   const tried = { works: 0, fails: 0, undecided: 0 };
   const robots: Partial<Record<PermissionVerdict, number>> = {};
   const attempts: MethodAttempt[] = [];

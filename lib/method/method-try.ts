@@ -6,8 +6,9 @@
  * when the page answers "gone" or is plainly not on that platform. A method
  * whose procedure is not a plain request is checked for its platform only and
  * left for a worker. robots.txt is read once per website and recorded, never
- * obeyed as a block. A small publisher gets at most its hourly allowance of
- * requests; a website that answers 429 or 5xx is left alone for the round.
+ * obeyed as a block. Every request takes its place in the per-website pacing
+ * every reader shares (`WebsitePacing`): a small publisher's hourly allowance,
+ * and the hold a 429, a 5xx or a Retry-After puts on a website for everyone.
  */
 
 import { probeUrlFor, type ProbeFetch } from "../doors/probe.ts";
@@ -17,6 +18,10 @@ import { detectTenancy } from "../hunt/platform-tenancy.ts";
 import { evaluatePermission, type PermissionVerdict } from "../control-plane/scheduler/robots.ts";
 import { websiteRequestLimit, type WebsiteSizeForUrl } from "../control-plane/scheduler/host-supervision.ts";
 import type { FieldManualEntry } from "../control-plane/field-manual.ts";
+import { websiteOf, type WebsitePacing } from "../control-plane/website-pacing.ts";
+import { formatEasternTime } from "../control-plane/eastern-time.ts";
+import { RATE_LIMIT_BACKOFF_MS } from "../hunt/access-control.ts";
+import { retryAfterMs } from "../doors/link-sweep.ts";
 
 export type PlainTryOutcome = "WORKS" | "FAILS" | "UNDECIDED" | "WAITING";
 
@@ -79,16 +84,35 @@ export interface PlainTrier {
   readonly requests: ReadonlyMap<string, number>;
 }
 
-/** One round's trier: the request allowance, the robots readings and the websites backing off are kept for the round. */
-export function plainTrier(input: { readonly fetch: ProbeFetch; readonly sizeFor?: WebsiteSizeForUrl }): PlainTrier {
+/**
+ * One round's trier. The robots readings and the websites that did not answer are kept for the round; the hourly
+ * allowance and the holds are the shared pacing's, so free tries count with every other reader's requests.
+ */
+export function plainTrier(input: { readonly fetch: ProbeFetch; readonly sizeFor?: WebsiteSizeForUrl; readonly pacing: WebsitePacing; readonly now?: () => number }): PlainTrier {
+  const now = input.now ?? Date.now;
   const requests = new Map<string, number>();
   const robots = new Map<string, Promise<{ text: string | null; status: number | null; transportError: string | null }>>();
   const resting = new Map<string, string>();
+  let held: Promise<Map<string, number>> | null = null;
+  const heldSites = (): Promise<Map<string, number>> =>
+    held ??= input.pacing.heldUntil(now()).then((read) => new Map(read)).catch(() => new Map<string, number>());
 
-  const allowed = (url: string, needed: number): boolean => {
-    const host = new URL(url).host.toLowerCase();
+  /** Why this request may not go now, or null when it took its place in the website's pacing. */
+  const admit = async (url: string): Promise<string | null> => {
+    const site = websiteOf(url);
+    const until = (await heldSites()).get(site);
+    if (until !== undefined && until > now()) return `the website asked us to wait; tried again after ${formatEasternTime(new Date(until).toISOString())}`;
     const cap = websiteRequestLimit(input.sizeFor?.(url));
-    return cap === null || (requests.get(host) ?? 0) + needed <= cap;
+    if (cap === null) return null;
+    const took = await input.pacing.take(site, cap, now()).catch(() => ({ ok: true as const }));
+    return took.ok ? null : `this small publisher's hourly allowance is used; the try waits until ${formatEasternTime(new Date(took.until).toISOString())}`;
+  };
+  const holdAfter = async (url: string, retryAfter: string | null): Promise<number> => {
+    const at = now();
+    const until = at + Math.max(RATE_LIMIT_BACKOFF_MS, retryAfterMs(retryAfter, at) ?? 0);
+    (await heldSites()).set(websiteOf(url), until);
+    await input.pacing.hold(websiteOf(url), until, at).catch(() => undefined);
+    return until;
   };
   const get = async (url: string): Promise<{ status: number; body: string; retryAfter: string | null } | { error: string }> => {
     const host = new URL(url).host.toLowerCase();
@@ -121,18 +145,21 @@ export function plainTrier(input: { readonly fetch: ProbeFetch; readonly sizeFor
     const host = normalizeHost(url) ?? new URL(url).host;
     if (resting.has(host)) return { outcome: "WAITING", url, note: resting.get(host)!, robots: null };
     const origin = new URL(url).origin;
-    if (!allowed(url, robots.has(origin) ? 1 : 2)) {
-      return { outcome: "WAITING", url, note: "this small publisher's hourly allowance is used; the try waits for the next round", robots: null };
+    if (!robots.has(origin)) {
+      const robotsWait = await admit(`${origin}/robots.txt`);
+      if (robotsWait !== null) return { outcome: "WAITING", url, note: robotsWait, robots: null };
     }
     const permission = await robotsFor(url);
+    const pageWait = await admit(url);
+    if (pageWait !== null) return { outcome: "WAITING", url, note: pageWait, robots: permission };
     const got = await get(url);
     if ("error" in got) {
       resting.set(host, `the website did not answer (${got.error}); tried again next round`);
       return { outcome: "WAITING", url, note: resting.get(host)!, robots: permission };
     }
     if (BACK_OFF(got.status)) {
-      resting.set(host, `the website answered ${got.status}${got.retryAfter ? ` and asked to wait (${got.retryAfter})` : ""}; tried again next round`);
-      return { outcome: "WAITING", url, note: resting.get(host)!, robots: permission };
+      const until = await holdAfter(url, got.retryAfter);
+      return { outcome: "WAITING", url, note: `the website answered ${got.status}; every reader leaves it alone until ${formatEasternTime(new Date(until).toISOString())}`, robots: permission };
     }
     if (replay !== null && GONE.has(got.status)) {
       return { outcome: "FAILS", url, note: `the method's request answered ${got.status} here`, robots: permission };

@@ -11,6 +11,7 @@ import {
   routineFailureDomainRotationSeed,
   routineFrontierPassBound,
   routinePassLaunchOrder,
+  routineBaselineOwed,
   routineTaskDeadlineMs,
   routineTaskDue,
   routineAdmissionClock,
@@ -44,6 +45,45 @@ function largestRealDomain(): readonly RoutineSourceTask[] {
   }
   return [...grouped.values()].sort((left, right) => right.length - left.length)[0] ?? [];
 }
+
+test("missing people and previous-parser government baselines admit every state and share the existing pool in source order", () => {
+  const people = ROUTINE_SOURCE_TASKS.filter(task => task.id.startsWith("openstates-people-"));
+  const governments = ROUTINE_SOURCE_TASKS.filter(task => task.recordClass === "REGISTRATION");
+  assert.ok(people.length >= 50);
+  assert.equal(governments.length, 56);
+  const due = [...people, ...governments].map(task => {
+    const clock = task.recordClass === "REGISTRATION" ? { lastSucceededAt: "2026-10-01T12:00:00.000Z",
+      lastSucceededObservedAt: "2026-10-01T12:00:00.000Z", lastSucceededParserVersion: "registration/3" } : undefined;
+    assert.equal(routineTaskDue(task, clock, Date.parse("2026-10-02T12:00:00.000Z")), true);
+    return { task, lastConsideredAt: null, baselineOwed: routineBaselineOwed(task, clock) };
+  });
+  const admitted = routineFailureDomainFrontier(due);
+  assert.equal(admitted.length, people.length + governments.length, "one national release is shared by independent state projections");
+  const refresh = { ...due[0]!, task: { ...due[0]!.task, id: "already-current-refresh" }, baselineOwed: false };
+  const ordered = routinePassLaunchOrder([refresh, ...admitted]);
+  assert.deepEqual(ordered.slice(0, 4).map(row => row.task.sourceId),
+    [people[0]!.sourceId, governments[0]!.sourceId, people[0]!.sourceId, governments[0]!.sourceId]);
+  assert.equal(ordered.at(-1)?.task.id, refresh.task.id, "missing baselines precede an already-current cadence refresh");
+  assert.equal(new Set(ordered.map(row => row.task.id)).size, ordered.length);
+  assert.equal(ROUTINE_CHILD_CONCURRENCY, 4, "the existing worker limit remains unchanged");
+  assert.equal(ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS, 1);
+  assert.ok(people.every(task => task.cadenceMs === 86400000 && task.retryMs === 3600000));
+  assert.ok(governments.every(task => task.cadenceMs === 90 * 86400000 && task.retryMs === 6 * 3600000));
+});
+
+test("overdue meeting deadlines retain priority while missing meetings do not become national baseline work", () => {
+  const now = Date.parse("2026-10-09T12:00:00.000Z");
+  const people = ROUTINE_SOURCE_TASKS.find(task => task.id.startsWith("openstates-people-"))!;
+  const meeting = ROUTINE_SOURCE_TASKS.find(task => task.recordClass === "MEETING")!;
+  assert.equal(routineBaselineOwed(meeting, undefined), false);
+  const jobs = [
+    { task: people, deadlineMs: undefined, baselineOwed: true },
+    { task: meeting, deadlineMs: now - 1, baselineOwed: false },
+    { task: { ...meeting, id: "unbuilt-meeting" }, deadlineMs: Number.NEGATIVE_INFINITY, baselineOwed: false },
+    { task: { ...meeting, id: "later-meeting" }, deadlineMs: now + 1, baselineOwed: false },
+  ];
+  assert.deepEqual(routinePassLaunchOrder(jobs, now).map(row => row.task.id), [meeting.id, people.id, "unbuilt-meeting", "later-meeting"]);
+});
 
 test("one pass admits one least-recently-considered task per provider domain", () => {
   const shared = largestRealDomain();
@@ -212,6 +252,22 @@ function supervisorHistoryRow(input: {
     },
   };
 }
+
+test("a parser upgrade ignores an older implementation's supervisor failure but keeps current-code retry evidence", () => {
+  const upgraded = "registration-nh", unchanged = "fec-funding";
+  const row = supervisorHistoryRow({ finishedAt: "2026-10-09T12:00:00.000Z", failures: [upgraded, unchanged] }) as {
+    runtimeOutcome: Record<string, unknown>;
+  };
+  row.runtimeOutcome.testedSha = "a".repeat(40);
+  const ids = new Set([upgraded, unchanged]);
+  const options = { taskIds: new Set([upgraded]), codeSha: "b".repeat(40) };
+  const before = routineUnreceiptedSupervisorAttemptHistory([row], ids, options);
+  assert.equal(before.issues.length, 0);
+  assert.equal(before.attempts.has(upgraded), false);
+  assert.equal(before.attempts.get(unchanged), "2026-10-09T12:00:00.000Z");
+  const current = { ...row, runtimeOutcome: { ...row.runtimeOutcome, testedSha: options.codeSha } };
+  assert.equal(routineUnreceiptedSupervisorAttemptHistory([current], ids, options).attempts.get(upgraded), "2026-10-09T12:00:00.000Z");
+});
 
 test("a corrupt supervisor row is explicit and cannot erase valid fairness clocks", () => {
   const [first, second] = largestRealDomain();
@@ -660,7 +716,8 @@ test("an unreceipted child in a single-task pass waits its existing retry interv
   }
   assert.equal(clock.lastAttemptedAt, "2026-09-01T12:00:00.000Z", "no durable source clock is changed");
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  assert.ok(runner.indexOf("latestUnreceiptedSupervisorAttempts(selectedTasks)") < runner.indexOf("for (const read of clockReads)"));
+  const attemptsRead = runner.indexOf("latestUnreceiptedSupervisorAttempts(selectedTasks, parserUpgradeIds)");
+  assert.ok(attemptsRead >= 0 && attemptsRead < runner.indexOf("for (const read of clockReads)"));
 });
 
 test("an unfinished round's receipt failure waits for changed inputs rather than unchanged retries", () => {

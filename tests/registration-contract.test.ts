@@ -4,7 +4,7 @@ import test from "node:test";
 import { zip } from "../scripts/xlsx.mjs";
 import { requiredRoutineContract, ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
-import { routineTaskDue, routineTaskFromContract } from "../lib/civic-data/runner.ts";
+import { routineBaselineOwed, routineTaskDue, routineTaskFromContract } from "../lib/civic-data/runner.ts";
 import { durableRoutineRunnerReceiptIssue, routineReceiptFields } from "../lib/civic-data/runner-receipt.ts";
 import { recordRegisteredSourceAcquisitionFailure, sourceAcquisitionFailure } from "../lib/civic-data/source-acquisition-failure.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
@@ -50,6 +50,59 @@ test("held native listings promote and read independently; a replay keeps their 
   assert.equal(replay.promoted?.versionId, first.id);
   assert.equal(second.retrieval.retrievedAt, "2026-09-23T00:00:00.000Z");
   assert.equal(second.retrieval.sourceCheck?.checkedAt, "2026-09-23T00:00:00.000Z");
+});
+
+async function registrationWithPreviousParser() {
+  const store = new MemoryRoutineDataStore(), args = input("NH");
+  const next = registrationCandidate(args);
+  const previous = { ...next, id: `${next.id}:previous-parser`,
+    normalization: { ...next.normalization, parserVersion: "registration/3" } };
+  const validated = validateRoutineCandidate(next, null, observed);
+  assert.equal(validated.state, "VALIDATED");
+  const receipt = { ...validated.receipt, candidateId: previous.id };
+  await store.create({ candidate: previous, state: "FETCHED", acquisitionSucceeded: true, receipt: null,
+    promotedVersion: null, lastKnownGoodVersion: null, failureCode: null, failureDetail: null },
+  { candidateId: previous.id, sequence: 1, state: "FETCHED", at: observed, detail: "Historical source acquisition." });
+  await store.transition(previous.id, "NORMALIZED", observed, "Historical normalization.");
+  await store.transition(previous.id, "VALIDATED", observed, "Historical GOOD.", receipt);
+  await store.promote(previous.id, receipt, observed);
+  const task = routineTaskFromContract(requiredRoutineContract(args.target.contractId));
+  return { store, args, previous, next, task };
+}
+
+test("registration/4 replays the held release immediately after registration/3 GOOD, then keeps the 90-day source clock", async () => {
+  const { store, args, previous, next, task } = await registrationWithPreviousParser();
+  const clock = await store.clock(task.sourceId, task.recordClass, task.scope, task.parserVersion);
+  assert.equal(clock.lastSucceededParserVersion, "registration/3");
+  assert.equal(clock.lastAttemptedAt, undefined, "the old parser has not attempted this implementation");
+  assert.equal(clock.lastSucceededAt, previous.retrieval.retrievedAt);
+  assert.equal(routineBaselineOwed(task, clock), true);
+  assert.equal(routineTaskDue(task, clock, Date.parse(observed)), true);
+  assert.equal((await readRegistrationProjection("NH", { store, now: observed, bypassCache: true })).kind, "PROMOTED",
+    "the prior GOOD stays readable while its held evidence awaits reparse");
+  const result = await processRegisteredRoutineCandidate(store, args.target.contractId, next, observed);
+  assert.equal(result.promoted?.versionId, next.id, result.candidate.failureDetail ?? "");
+  const replayed = await store.clock(task.sourceId, task.recordClass, task.scope, task.parserVersion);
+  assert.equal(replayed.lastSucceededParserVersion, task.parserVersion);
+  assert.equal(replayed.lastSucceededAt, clock.lastSucceededAt);
+  assert.equal(replayed.lastSucceededObservedAt, clock.lastSucceededObservedAt, "reprocessing does not manufacture a publisher check");
+  assert.equal(routineBaselineOwed(task, replayed), false);
+  const nextCheck = Date.parse(replayed.lastSucceededObservedAt!) + 90 * 86400000;
+  assert.equal(routineTaskDue(task, replayed, nextCheck - 1), false);
+  assert.equal(routineTaskDue(task, replayed, nextCheck), true);
+});
+
+test("a failed current-parser registration attempt keeps the prior GOOD and its existing six-hour retry", async () => {
+  const { store, args, previous, task } = await registrationWithPreviousParser();
+  const failedAt = "2026-10-01T13:00:00.000Z";
+  await recordRegisteredSourceAcquisitionFailure({ store, contractId: args.target.contractId, attemptedAt: failedAt,
+    requestedUrl: REGISTRATION_SOURCE_URL, failure: sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", "Census unavailable.") });
+  const clock = await store.clock(task.sourceId, task.recordClass, task.scope, task.parserVersion);
+  assert.equal(clock.lastSucceededParserVersion, "registration/3");
+  assert.equal(clock.lastAttemptedAt, failedAt);
+  assert.equal((await store.readPromotionIdentity(task.recordClass, task.scope))?.versionId, previous.id);
+  assert.equal(routineTaskDue(task, clock, Date.parse(failedAt) + task.retryMs - 1), false);
+  assert.equal(routineTaskDue(task, clock, Date.parse(failedAt) + task.retryMs), true);
 });
 
 test("registration held replay and independent school delivery do not erase a later source failure or delay its retry", async () => {

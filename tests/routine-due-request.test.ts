@@ -182,7 +182,7 @@ test("the runner honours a request only in its ordinary pass: the same due check
   assert.match(runner, /const dueRequest = FORCE \? null : routineDueRequestFor\(task, durableClock, admissionNowMs, dueRequests\);/);
   assert.match(runner, /!routineTaskDue\(task, durableClock, admissionNowMs, sittingHot, observedEveryMs\) && dueRequest === null/);
   assert.match(runner, /deadlineMs: routineDueRequestDeadlineMs\(\s+routineTaskDeadlineMs\(pending\.task, clock, sittingSignals\.get\(pending\.task\.id\)\),/);
-  assert.match(runner, /for \(const \{ task \} of placeSourceLaunchOrder\(routinePassLaunchOrder\(admitted\)\)\) pendingRuns\.push/);
+  assert.match(runner, /for \(const \{ task \} of placeSourceLaunchOrder\(routinePassLaunchOrder\(admitted, admissionNowMs\)\)\) pendingRuns\.push/);
   assert.match(runner, /\.\.\.input\.dueRequestLines,/);
   assert.match(runner, /admitted by this ordinary pass/);
   const source = readFileSync("lib/civic-data/routine-due-request.ts", "utf8");

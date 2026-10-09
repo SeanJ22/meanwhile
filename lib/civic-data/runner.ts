@@ -130,6 +130,7 @@ export interface RoutineTaskAdmissionCandidate {
   readonly task: RoutineSourceTask;
   readonly lastConsideredAt: string | null;
   readonly deadlineMs?: number;
+  readonly baselineOwed?: boolean;
 }
 
 /** Earliest deadline first; a task without a deadline sorts after every task with one. */
@@ -195,14 +196,24 @@ export function routineFailureDomainFrontier(
   return candidates.filter(({ task }) => admitted.has(task.id));
 }
 
-/** Tasks without a deadline keep registry order at the front; sitting-window reads follow earliest deadline first. */
-export function routinePassLaunchOrder<T extends { readonly deadlineMs?: number }>(admitted: readonly T[]): T[] {
-  const group = (candidate: T) => candidate.deadlineMs === undefined || Number.isNaN(candidate.deadlineMs) ? 0 : 1;
+/** First build missing/current-parser baselines; steady refreshes retain their existing order. */
+export function routinePassLaunchOrder<T extends { readonly deadlineMs?: number; readonly baselineOwed?: boolean; readonly task?: Pick<RoutineSourceTask, "sourceId"> }>(admitted: readonly T[], nowMs?: number): T[] {
+  const group = (candidate: T) => nowMs !== undefined && candidate.deadlineMs !== undefined && Number.isFinite(candidate.deadlineMs) && candidate.deadlineMs <= nowMs ? 0
+    : candidate.baselineOwed ? 1 : candidate.deadlineMs === undefined || Number.isNaN(candidate.deadlineMs) ? 2 : 3;
+  // National sources have many independent state projections of the same held release.
+  // Offer one from each source before the next state so one portfolio cannot occupy the whole pool.
+  const sourcePositions = new Map<string, number>();
   return admitted
-    .map((candidate, index) => ({ candidate, index }))
+    .map((candidate, index) => {
+      const source = candidate.task?.sourceId ?? "";
+      const position = candidate.baselineOwed ? sourcePositions.get(source) ?? 0 : 0;
+      if (candidate.baselineOwed) sourcePositions.set(source, position + 1);
+      return { candidate, index, position };
+    })
     .sort((left, right) =>
       group(left.candidate) - group(right.candidate) ||
-      (group(left.candidate) === 1 ? (left.candidate.deadlineMs! < right.candidate.deadlineMs! ? -1 : left.candidate.deadlineMs! > right.candidate.deadlineMs! ? 1 : 0) : 0) ||
+      (group(left.candidate) === 1 ? left.position - right.position : 0) ||
+      ([0, 3].includes(group(left.candidate)) ? (left.candidate.deadlineMs! < right.candidate.deadlineMs! ? -1 : left.candidate.deadlineMs! > right.candidate.deadlineMs! ? 1 : 0) : 0) ||
       left.index - right.index)
     .map(({ candidate }) => candidate);
 }
@@ -273,6 +284,7 @@ function historyText(value: unknown): value is string {
 export function routineUnreceiptedSupervisorAttemptHistory(
   rows: readonly unknown[],
   registeredTaskIds: ReadonlySet<string>,
+  parserUpgrades?: { readonly taskIds: ReadonlySet<string>; readonly codeSha: string | null },
 ): RoutineSupervisorAttemptHistory {
   const attempts = new Map<string, string>();
   const issues: RoutineSupervisorHistoryIssue[] = [];
@@ -395,6 +407,7 @@ export function routineUnreceiptedSupervisorAttemptHistory(
     }
 
     for (const taskId of failureTaskIds) {
+      if (parserUpgrades?.codeSha && parserUpgrades.taskIds.has(taskId) && outcome.testedSha !== parserUpgrades.codeSha) continue;
       if (!registeredTaskIds.has(taskId) || exactReceiptTaskIds.has(taskId)) continue;
       const prior = attempts.get(taskId);
       if (prior === undefined || Date.parse(prior) < Date.parse(finishedAt)) attempts.set(taskId, finishedAt);
@@ -450,6 +463,7 @@ export interface RoutineTaskClock {
   readonly lastAttemptedAt?: string;
   readonly lastSucceededAt?: string;
   readonly lastSucceededObservedAt?: string;
+  readonly lastSucceededParserVersion?: string;
   readonly sittingStarts?: readonly string[];
 }
 
@@ -587,6 +601,14 @@ export function unchangedRoutineProtocolFailure(
 /** The hourly floor: an observed change rate never makes a door's check faster than this. Same number as lib/doors/observed-rate.ts. */
 const MIN_OBSERVED_CHECK_MS = 60 * 60_000;
 
+export function routineBaselineOwed(task: RoutineSourceTask, clock: RoutineTaskClock | undefined): boolean {
+  return !task.ownerInvocation && task.authorityMode !== "DERIVED" &&
+    task.recordClass !== "MEETING" && task.recordClass !== "MEETING_OUTCOME" && (
+    !clock?.lastSucceededObservedAt ||
+    (clock.lastSucceededParserVersion !== undefined && clock.lastSucceededParserVersion !== task.parserVersion)
+  );
+}
+
 export function routineTaskDue(
   task: RoutineSourceTask,
   clock: RoutineTaskClock | undefined,
@@ -602,6 +624,12 @@ export function routineTaskDue(
       (Number.isFinite(succeeded) && succeeded >= attempted && succeeded <= nowMs) || nowMs - attempted >= task.retryMs;
     if (Number.isFinite(succeeded) && succeeded >= requested && succeeded <= nowMs) return false;
     return !Number.isFinite(attempted) || attempted < requested || nowMs - attempted >= task.retryMs;
+  }
+  if (clock?.lastSucceededParserVersion !== undefined && clock.lastSucceededParserVersion !== task.parserVersion) {
+    // The store scopes attempts to this parser. A prior parser's GOOD remains live,
+    // but cannot postpone a held-byte reparse for the source's full refresh cadence.
+    const attempted = Date.parse(clock.lastAttemptedAt ?? "");
+    return !Number.isFinite(attempted) || attempted > nowMs || nowMs - attempted >= task.retryMs;
   }
   const schedule = task.contract?.schedule;
   if (schedule?.kind === "SITTING_WINDOW") return sittingWindowTaskDue(task, schedule, clock, nowMs, sittingHot);

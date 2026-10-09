@@ -144,6 +144,7 @@ export interface RoutineDataStore {
     sourceId: string,
     recordClass: RoutineRecordClass,
     scope: string,
+    parserVersion?: string,
   ) => Promise<RoutineStoreClock>;
 }
 
@@ -151,6 +152,8 @@ export interface RoutineStoreClock {
   readonly lastAttemptedAt?: string;
   readonly lastSucceededAt?: string;
   readonly lastSucceededObservedAt?: string;
+  /** Returned for a parser-scoped clock; the prior GOOD keeps its original source timestamps. */
+  readonly lastSucceededParserVersion?: string;
   readonly sittingStarts?: readonly string[];
 }
 
@@ -590,10 +593,12 @@ interface PromotionPointerProof {
 export const ROUTINE_CLOCK_CANDIDATE_FIELDS = {
   top: ["id", "sourceId", "recordClass", "scope", "bootstrapImport"],
   retrieval: ["retrievedAt", "sourceCheck"],
+  normalization: ["parserVersion"],
 } as const;
 
 type RoutineClockCandidate = Pick<RoutineCandidate, "id" | "sourceId" | "recordClass" | "scope" | "bootstrapImport"> & {
   readonly retrieval: Pick<RoutineCandidate["retrieval"], "retrievedAt" | "sourceCheck">;
+  readonly normalization: Pick<RoutineCandidate["normalization"], "parserVersion">;
 };
 
 export type RoutineClockRecord = Omit<CandidateVersionRecord, "candidate"> & {
@@ -613,9 +618,11 @@ function stripJsonNulls(value: unknown): unknown {
 export function routineClockCandidateView(candidate: RoutineCandidate): RoutineClockCandidate {
   const source = candidate as unknown as Readonly<Record<string, unknown>>;
   const retrieval = (candidate.retrieval ?? {}) as unknown as Readonly<Record<string, unknown>>;
+  const normalization = (candidate.normalization ?? {}) as unknown as Readonly<Record<string, unknown>>;
   return stripJsonNulls({
     ...Object.fromEntries(ROUTINE_CLOCK_CANDIDATE_FIELDS.top.map((field) => [field, source[field] ?? null])),
     retrieval: Object.fromEntries(ROUTINE_CLOCK_CANDIDATE_FIELDS.retrieval.map((field) => [field, retrieval[field] ?? null])),
+    normalization: Object.fromEntries(ROUTINE_CLOCK_CANDIDATE_FIELDS.normalization.map((field) => [field, normalization[field] ?? null])),
   }) as RoutineClockCandidate;
 }
 
@@ -991,12 +998,13 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     return structuredClone((this.history.get(candidateId) ?? []).filter(isPointerMoveEvent));
   }
 
-  async clock(sourceId: string, recordClass: RoutineRecordClass, scope: string): Promise<RoutineStoreClock> {
+  async clock(sourceId: string, recordClass: RoutineRecordClass, scope: string, parserVersion?: string): Promise<RoutineStoreClock> {
     const attempts = [...this.candidates.values()]
       .filter((row) =>
         row.candidate.sourceId === sourceId &&
         row.candidate.recordClass === recordClass &&
         row.candidate.scope === scope &&
+        (parserVersion === undefined || row.candidate.normalization.parserVersion === parserVersion) &&
         !isTrustedLkgImportCandidate(row.candidate)
       )
       .flatMap((row) => {
@@ -1024,7 +1032,9 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       lastAttemptedAt,
       lastSucceededAt: proofConsistentSuccess(pointedRecord, pointer),
       lastSucceededObservedAt: proofConsistentObservedSuccess(pointedRecord, pointer, pointedObservedAt),
-    }, confirmation, sittings);
+      ...(parserVersion !== undefined && proofConsistentPointedSuccess(pointedRecord, pointer)
+        ? { lastSucceededParserVersion: pointedRecord.candidate.normalization.parserVersion } : {}),
+    }, confirmation, sittings, parserVersion);
   }
 }
 
@@ -1042,7 +1052,7 @@ function rowToCandidate(row: typeof civicDataCandidates.$inferSelect): Candidate
 }
 
 const CLOCK_FIELD_NAME = /^[A-Za-z]+$/;
-for (const field of [...ROUTINE_CLOCK_CANDIDATE_FIELDS.top, ...ROUTINE_CLOCK_CANDIDATE_FIELDS.retrieval]) {
+for (const field of [...ROUTINE_CLOCK_CANDIDATE_FIELDS.top, ...ROUTINE_CLOCK_CANDIDATE_FIELDS.retrieval, ...ROUTINE_CLOCK_CANDIDATE_FIELDS.normalization]) {
   // The names are spliced into SQL as literals, so they stay plain identifiers.
   if (!CLOCK_FIELD_NAME.test(field)) throw new Error(`ROUTINE_CLOCK_FIELD_INVALID:${field}`);
 }
@@ -1053,8 +1063,11 @@ function routineClockCandidateStub() {
     sql`${sql.raw(`'${field}'`)}, ${column}->${sql.raw(`'${field}'`)}`);
   const retrieval = ROUTINE_CLOCK_CANDIDATE_FIELDS.retrieval.map((field) =>
     sql`${sql.raw(`'${field}'`)}, ${column}#>${sql.raw(`'{retrieval,${field}}'`)}`);
+  const normalization = ROUTINE_CLOCK_CANDIDATE_FIELDS.normalization.map((field) =>
+    sql`${sql.raw(`'${field}'`)}, ${column}#>${sql.raw(`'{normalization,${field}}'`)}`);
   return sql`jsonb_strip_nulls(jsonb_build_object(${sql.join(
-    [...top, sql`'retrieval', jsonb_build_object(${sql.join(retrieval, sql`, `)})`],
+    [...top, sql`'retrieval', jsonb_build_object(${sql.join(retrieval, sql`, `)})`,
+      sql`'normalization', jsonb_build_object(${sql.join(normalization, sql`, `)})`],
     sql`, `,
   )}))`.mapWith(civicDataCandidates.candidate);
 }
@@ -1096,12 +1109,14 @@ function laterInstant(left: string | undefined, right: string | undefined): stri
 }
 
 function confirmedClock(
-  clock: { readonly lastAttemptedAt?: string; readonly lastSucceededAt?: string; readonly lastSucceededObservedAt?: string },
+  clock: RoutineStoreClock,
   confirmation: UnchangedConfirmation | null,
   sittings: { readonly sittingStarts?: readonly string[] },
+  parserVersion?: string,
 ): RoutineStoreClock {
   const confirmedAt = confirmation ? sourceCheckedAt(confirmation.retrieval, confirmation.observedAt) : undefined;
-  const lastAttemptedAt = laterInstant(clock.lastAttemptedAt, confirmedAt);
+  const lastAttemptedAt = laterInstant(clock.lastAttemptedAt,
+    parserVersion === undefined || clock.lastSucceededParserVersion === parserVersion ? confirmedAt : undefined);
   const lastSucceededAt = clock.lastSucceededAt === undefined
     ? undefined
     : laterInstant(clock.lastSucceededAt, confirmation?.retrieval.retrievedAt);
@@ -1112,6 +1127,7 @@ function confirmedClock(
     ...(lastAttemptedAt ? { lastAttemptedAt } : {}),
     ...(lastSucceededAt ? { lastSucceededAt } : {}),
     ...(lastSucceededObservedAt ? { lastSucceededObservedAt } : {}),
+    ...(clock.lastSucceededParserVersion ? { lastSucceededParserVersion: clock.lastSucceededParserVersion } : {}),
     ...sittings,
   };
 }
@@ -2048,7 +2064,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     return rows.map(postgresCandidateEventRowToEvent);
   }
 
-  async clock(sourceId: string, recordClass: RoutineRecordClass, scope: string): Promise<RoutineStoreClock> {
+  async clock(sourceId: string, recordClass: RoutineRecordClass, scope: string, parserVersion?: string): Promise<RoutineStoreClock> {
     // Successful retained-byte replay records processing, but no newer provider attempt.
     // These fields occur only on validated promotions; failures keep their local retry clock.
     const attemptAt = sql`CASE WHEN ${civicDataCandidates.state} = 'PROMOTED'
@@ -2067,6 +2083,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
         eq(civicDataCandidates.sourceId, sourceId),
         eq(civicDataCandidates.recordClass, recordClass),
         eq(civicDataCandidates.scope, scope),
+        parserVersion === undefined ? undefined : eq(civicDataCandidates.parserVersion, parserVersion),
                 // A frozen cutover import is not a publisher attempt, so the contract is due at once for its first live read.
         sql`coalesce(${civicDataCandidates.candidate}#>>'{bootstrapImport,kind}', '') not in ('TRUSTED_LKG_IMPORT', 'TRUSTED_LKG_REATTESTATION')`,
       ))
@@ -2124,6 +2141,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       lastAttemptedAt,
       lastSucceededAt: canonicalLastSucceededAt,
       lastSucceededObservedAt,
-    }, confirmation !== null && pointer !== undefined && confirmation.versionId === pointer.currentVersionId ? confirmation : null, sittings);
+      ...(parserVersion !== undefined && proofConsistentPointedSuccess(pointedRecord, pointerProof)
+        ? { lastSucceededParserVersion: pointedRecord.candidate.normalization.parserVersion } : {}),
+    }, confirmation !== null && pointer !== undefined && confirmation.versionId === pointer.currentVersionId ? confirmation : null, sittings, parserVersion);
   }
 }

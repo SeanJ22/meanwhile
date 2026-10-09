@@ -10,6 +10,7 @@ export const ROUTINE_SUPERVISOR_HISTORY_FIELDS = {
     "cycleId",
     "startedAt",
     "finishedAt",
+    "testedSha",
     "host",
     "provider",
     "durable",

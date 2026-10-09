@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtempSync } from "node:fs";
+import { mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -25,8 +25,10 @@ import type { Meeting } from "../lib/sources/types.ts";
 import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { publishRoutineReaderEdge } from "../lib/civic-data/reader-edge-publication.ts";
-import { MEETINGS_PREPARED_SCOPE } from "../lib/meetings/prepared-snapshot.ts";
+import { MEETINGS_PREPARED_SCOPE, preparePublishedMeetingSnapshot } from "../lib/meetings/prepared-snapshot.ts";
+import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
+import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
 
 function meeting(id: string, ocdId: string | null, extra: Partial<Meeting> = {}): Meeting {
   return {
@@ -228,10 +230,12 @@ test("ordinary publication repairs old area copies once, carries quiet data, and
     if (key === "readPreparedReaderProjection") return (...args: unknown[]) => { payloadReads++; return value.apply(target, args); };
     return typeof value === "function" ? value.bind(target) : value;
   } });
-  const options = { artifactStore: artifacts, readMeetingRegistry: async (divisions: readonly string[], bodies: readonly string[]) => {
+  const options = { artifactStore: artifacts, readMeetingRegistry: async (divisions: readonly string[], bodies: readonly string[], acceptedVersion: string) => {
     registryReads++;
     assert.deepEqual(divisions, ["raw-area-key"]);
     assert.deepEqual(bodies, [bodyId]);
+    assert.equal(acceptedVersion, (await artifacts.readManifest())!.manifest.authorityArtifacts!["registry-runtime"]!.version,
+      "territories are requested from the accepted edge version, not the independently advancing database pointer");
     return { kind: "PROMOTED" as const, metadata: { recordClass: "REGISTRY_RUNTIME_BINDING" as const,
       scope: "US:reader-registry-runtime-bindings", versionId: registryVersion },
       value: { registry: { bodies: [{ id: bodyId, ocdId: primary, alsoServesOcdIds: otherAreas }] } } as unknown as RegistryRuntimeReadModel };
@@ -264,6 +268,65 @@ test("ordinary publication repairs old area copies once, carries quiet data, and
   registryVersion = "raced-pointer";
   assert.equal(await publishRoutineReaderEdge(store, snap.generatedAt, selected, options), false);
   assert.deepEqual((await artifacts.readManifest())!.manifest, beforeFailure);
+});
+
+test("a racing prepared meeting copy keeps its exact LKG while an independent registry update publishes, then the next pass repairs meetings", async () => {
+  const imported = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as {
+    record: CandidateVersionRecord; projection: PromotedProjection<RegistryRuntimeReadModel>;
+  };
+  const body = imported.projection.payload.registry.bodies.find(body => body.ocdId && body.id.endsWith("#governing"))!;
+  const older = snapshot([meeting("held-meeting", body.ocdId, { bodyId: body.id })]);
+  const newer = { ...snapshot([meeting("new-meeting", body.ocdId, { bodyId: body.id })]), generatedAt: "2026-10-09T12:00:00.000Z" };
+  const artifacts = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "meeting-registry-race-")));
+  await publishReaderEdgeArtifacts(older, META, { store: artifacts, meetingBodies: [body], meetingRegistryVersion: "registry-old",
+    authority: { "registry-runtime": { value: {}, versionId: "registry-old" } }, checks: { composition: "held-composition", freshChecks: {} } });
+  const before = (await artifacts.readManifest())!.manifest;
+  const memory = new MemoryRoutineDataStore();
+  Object.assign(memory, { candidates: new Map([[imported.record.candidate.id, imported.record]]), promotions: new Map([[imported.projection.key, imported.projection]]) });
+  const partition = MEETING_PARTITION_CONTRACTS[0];
+  const preparedInput = { recordClass: "MEETING" as const, scope: MEETINGS_PREPARED_SCOPE, payload: newer,
+    composedFrom: [{ contractId: partition.id, versionId: "meeting-v1", routes: [`az-portal|${body.id}`], checkedAt: newer.generatedAt }],
+    factSha256: "a".repeat(64), generatedAt: newer.generatedAt, composedAt: newer.generatedAt, ...META };
+  await memory.writePreparedReaderProjection(preparedInput, null);
+  let race = true;
+  const store = new Proxy(memory, { get(target, key) {
+    if (key === "readPromotionIdentities") return async (...args: Parameters<typeof memory.readPromotionIdentities>) =>
+      args[0] === "MEETING" && args[1].includes(partition.scope)
+        ? [{ key: `MEETING:${partition.scope}`, recordClass: "MEETING", scope: partition.scope, sourceId: partition.sourceId,
+          versionId: "meeting-v1", lastKnownGoodVersionId: "meeting-v1", promotedAt: newer.generatedAt }]
+        : memory.readPromotionIdentities(...args);
+    if (key === "readPreparedReaderProjection") return async (...args: Parameters<typeof memory.readPreparedReaderProjection>) => {
+      if (race) { race = false; await memory.writePreparedReaderProjection(preparedInput, 1); }
+      return memory.readPreparedReaderProjection(...args);
+    };
+    const value = Reflect.get(target, key);
+    return typeof value === "function" ? value.bind(target) : value;
+  } });
+  const selected = [{ recordClass: "REGISTRY_RUNTIME_BINDING" as const, scope: imported.projection.scope }];
+  const options = { artifactStore: artifacts, readMeetingRegistry: async (_divisions: readonly string[], _bodies: readonly string[], versionId: string) => ({
+    kind: "PROMOTED" as const, metadata: { recordClass: "REGISTRY_RUNTIME_BINDING" as const, scope: imported.projection.scope, versionId },
+    value: { registry: { bodies: [body] } } as RegistryRuntimeReadModel,
+  }) };
+  const prepared = await preparePublishedMeetingSnapshot(store, newer.generatedAt);
+  assert.equal(prepared.status, "CURRENT");
+  if (prepared.status === "CURRENT") assert.equal(prepared.checkedAt, newer.generatedAt, "the failed read has a newer check it must not apply to the held copy");
+  assert.equal(await publishRoutineReaderEdge(store, newer.generatedAt, selected, options), false, "the raced meeting composition remains owed");
+  const independent = (await artifacts.readManifest())!.manifest;
+  assert.equal(independent.authorityArtifacts!["registry-runtime"]!.version, imported.projection.versionId, "verified registry facts publish during meeting recovery");
+  assert.deepEqual(independent.scopes, before.scopes);
+  assert.equal(independent.meetingRegistryVersion, before.meetingRegistryVersion);
+  assert.equal(independent.composition, before.composition);
+  assert.equal(independent.generatedAt, before.generatedAt, "a failed composition cannot renew held meeting dates");
+  assert.equal(independent.retrievedAt, before.retrievedAt, "CURRENT preparation cannot renew the held retrieval date when its payload read races");
+  assert.equal(independent.sourceThrough, before.sourceThrough);
+  assert.equal(independent.promotedThrough, before.promotedThrough);
+  assert.deepEqual(independent.freshChecks, before.freshChecks);
+  assert.equal(await publishRoutineReaderEdge(store, newer.generatedAt, [{ recordClass: "MEETING", scope: "changed-meetings" }], options), true);
+  const recovered = (await artifacts.readManifest())!.manifest;
+  assert.equal(recovered.meetingRegistryVersion, imported.projection.versionId);
+  assert.equal(recovered.generatedAt, newer.generatedAt);
+  assert.ok(recovered.scopes.some(scope => scope.meetingIds?.includes("new-meeting")));
+  assert.ok(recovered.scopes.every(scope => !scope.meetingIds?.includes("held-meeting")));
 });
 
 test("scopesForStates dedupes, lowercases, validates, and always includes the national bucket", () => {

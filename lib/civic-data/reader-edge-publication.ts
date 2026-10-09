@@ -20,7 +20,7 @@ import { currentCommentAccess } from "../registry/comment-access.ts";
 import { readEverydayRoutingProjection } from "../routing/everyday-data-plane.ts";
 import { readRegistryRuntimeProjection } from "../registry/runtime-read-model.ts";
 import { REGISTRY_RUNTIME_SCOPE, type RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
-import { readPlacePointerSlice, type PlaceCaptureRead } from "./held-place-slices.ts";
+import { readPlaceVersionSlice, type PlaceCaptureRead } from "./held-place-slices.ts";
 import { readCensusGeographyProjection } from "../census-geography/reader.ts";
 import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../census-geography/publication.ts";
 import { REGISTRATION_SCOPES, registrationEdgePlan } from "../registration/edge.ts";
@@ -58,7 +58,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
   selected: readonly Pick<PromotedPointerIdentity, "recordClass" | "scope">[] | null = null,
   options: { readonly artifactStore?: ReaderArtifactStore | null;
     readonly requireLiveStore?: boolean;
-    readonly readMeetingRegistry?: (divisions: readonly string[], bodies: readonly string[]) => Promise<PlaceCaptureRead<RegistryRuntimeReadModel>> } = {},
+    readonly readMeetingRegistry?: (divisions: readonly string[], bodies: readonly string[], versionId: string) => Promise<PlaceCaptureRead<RegistryRuntimeReadModel>> } = {},
 ): Promise<ReaderEdgePublicationOutcome> {
   let failed = false;
   let destination: ReaderEdgePublicationOutcome["store"] = "not configured";
@@ -337,28 +337,41 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
       const sameComposition = prepared?.status === "CURRENT" && servedManifest?.meetingLayout === "governing-area" &&
         servedManifest.meetingRegistryVersion !== undefined && servedManifest.meetingRegistryVersion === meetingRegistryVersion &&
         (servedManifest.composition !== undefined ? servedManifest.composition === prepared.composition : servedManifest.generatedAt === prepared.generatedAt);
-      const checks = prepared?.status === "CURRENT" || prepared?.status === "PUBLISHED" ? { composition: prepared.composition, freshChecks: prepared.freshChecks } : undefined;
+      let checks = prepared?.status === "CURRENT" || prepared?.status === "PUBLISHED" ? { composition: prepared.composition, freshChecks: prepared.freshChecks } : undefined;
       let meetingRead: Awaited<ReturnType<typeof readPreparedMeetingsProjection>> | null = null;
-      if (prepared !== null && !sameComposition && (prepared.status === "CURRENT" || prepared.status === "PUBLISHED")) {
-        meetingRead = await readPreparedMeetingsProjection({ store });
-        if (meetingRead.kind !== "PROMOTED") throw new Error("Prepared meeting copy read " + meetingRead.kind);
-      }
       let meetingBodies: RegistryRuntimeReadModel["registry"]["bodies"] | undefined;
-      if (meetingRead?.kind === "PROMOTED") {
-        supersededMeetingFields = meetingRead.value.meetings.reduce((count, meeting) => count + (meeting.publicationConflicts?.length ?? 0), 0);
-        const registry = authority["registry-runtime"];
-        if (meetingRead.value.meetings.length === 0) {
-          meetingBodies = [];
-        } else if (registry && "value" in registry) {
-          meetingBodies = (registry.value as RegistryRuntimeReadModel).registry.bodies;
-        } else {
-          const divisions = [...new Set(meetingRead.value.meetings.flatMap(meeting => meeting.ocdId ? [meeting.ocdId.split("#")[0]] : []))];
-          const bodyIds = [...new Set(meetingRead.value.meetings.flatMap(meeting => meeting.bodyId ? [meeting.bodyId] : []))];
-          const read = await (options.readMeetingRegistry ?? ((ids, bodies) =>
-            readPlacePointerSlice<RegistryRuntimeReadModel>("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE, ids, bodies)))(divisions, bodyIds);
-          if (read.kind !== "PROMOTED" || read.metadata.versionId !== meetingRegistryVersion) throw new Error(`Meeting territories read ${read.kind} at a different registry version`);
-          meetingBodies = read.value?.registry.bodies;
+      try {
+        if (prepared !== null && !sameComposition && (prepared.status === "CURRENT" || prepared.status === "PUBLISHED")) {
+          meetingRead = await readPreparedMeetingsProjection({ store, expectedSequence: prepared.sequence });
+          if (meetingRead.kind !== "PROMOTED") throw new Error("Prepared meeting copy read " + meetingRead.kind);
         }
+        if (meetingRead?.kind === "PROMOTED") {
+          supersededMeetingFields = meetingRead.value.meetings.reduce((count, meeting) => count + (meeting.publicationConflicts?.length ?? 0), 0);
+          const registry = authority["registry-runtime"];
+          if (meetingRead.value.meetings.length === 0) {
+            meetingBodies = [];
+          } else if (registry && "value" in registry) {
+            meetingBodies = (registry.value as RegistryRuntimeReadModel).registry.bodies;
+          } else {
+            if (!meetingRegistryVersion) throw new Error("Meeting territories have no accepted registry version");
+            const divisions = [...new Set(meetingRead.value.meetings.flatMap(meeting => meeting.ocdId ? [meeting.ocdId.split("#")[0]] : []))];
+            const bodyIds = [...new Set(meetingRead.value.meetings.flatMap(meeting => meeting.bodyId ? [meeting.bodyId] : []))];
+            const read = await (options.readMeetingRegistry ?? ((ids, bodies, versionId) =>
+              readPlaceVersionSlice<RegistryRuntimeReadModel>("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE, versionId, ids, bodies)))(divisions, bodyIds, meetingRegistryVersion);
+            if (read.kind !== "PROMOTED" || read.metadata.versionId !== meetingRegistryVersion) throw new Error(`Meeting territories read ${read.kind} at a different registry version`);
+            meetingBodies = read.value?.registry.bodies;
+            if (!meetingBodies) throw new Error("The accepted registry version has no readable meeting territories");
+          }
+        }
+      } catch (error) {
+        failed = true;
+        detail = safeFailure(sanitizedErrorDiagnostic(error));
+        process.stderr.write(`READER_EDGE_MEETINGS_CARRIED: ${detail}\n`);
+        // Keep the previous meeting bytes, territory version and observation
+        // dates together while independent verified families still publish.
+        meetingRead = null;
+        meetingBodies = undefined;
+        checks = undefined;
       }
       const edge = await publishReaderEdgeArtifacts(meetingRead?.kind === "PROMOTED" ? meetingRead.value : null,
         meetingRead?.kind === "PROMOTED" ? { sourceThrough: meetingRead.metadata.sourceThrough, retrievedAt: meetingRead.metadata.retrievedAt, promotedThrough: meetingRead.metadata.promotedAt }

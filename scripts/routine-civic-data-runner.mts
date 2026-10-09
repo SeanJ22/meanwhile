@@ -41,6 +41,7 @@ import {
   routinePassLaunchOrder,
   routineTaskDeadlineMs,
   routineTaskDue,
+  routineBaselineOwed,
   routineAdmissionClock,
   unchangedRoutineProtocolFailure,
   routineTaskSelection,
@@ -103,15 +104,14 @@ import { resolveScopes } from "../lib/control-plane/expansion/runner-load.ts";
 import { loadPublishedScopeLookupState } from "../lib/census-geography/scope-lookup.ts";
 import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../lib/control-plane/scheduler/research-policy.ts";
 import { admittedHuntSourceScopes, huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
-import { PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowHasNothingOwed, publishNowWorkerTasks } from "../lib/civic-data/publish-now.ts";
+import { PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowHasNothingOwed, readPublicationBoxItems, readPublishNowWorkerTasks, readWorkerPublicationItems, startPublishNowEdgeChecks } from "../lib/civic-data/publish-now.ts";
 import { runHourlyProbes } from "../lib/doors/hourly-check.ts";
 import { stateOfPlace } from "../lib/method/fix-map.ts";
 import { websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
 import { hotMeetingPartitions } from "../lib/doors/hot-partitions.ts";
 import { pacedProbeFetch } from "../lib/doors/probe-fetch.ts";
-import { workerPublicationTasks } from "../lib/civic-data/worker-publication-tasks.ts";
 import { WORKER_PUBLICATION_TASK_IDS } from "../lib/civic-data/worker-reader-contracts.ts";
-import { readCompletedWorkerResults } from "../lib/control-plane/repository/worker-completion.ts";
+import { readCompletedWorkerResultsOf } from "../lib/control-plane/repository/worker-completion.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import {
   ROUTINE_READER_CHILD_CONCURRENCY,
@@ -149,6 +149,7 @@ import { placeSourceLaunchOrder, withNationalPlaceTasks } from "../lib/hunt/plac
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { flushDatabaseTransfer } from "../lib/db/transfer.ts";
 import { publishSupervisorReaderEdge, readerEdgeSupervisorFailure, type ReaderEdgePublicationOutcome } from "../lib/civic-data/reader-edge-publication.ts";
+import { resolveReaderArtifactWriteStore } from "../lib/meetings/edge-store.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { startWorkerToolsHost } from "../lib/control-plane/workers/process-pool.ts";
@@ -393,7 +394,7 @@ function safeFailure(value: string): string {
  * owner log Admin consumes prevents one broken partition from monopolizing a
  * shared publisher frontier without fabricating a source attempt.
  */
-async function latestUnreceiptedSupervisorAttempts(selectedTasks: readonly RoutineSourceTask[]): Promise<RoutineSupervisorAttemptHistory & { readonly protocolFailures: readonly unknown[] }> {
+async function latestUnreceiptedSupervisorAttempts(selectedTasks: readonly RoutineSourceTask[], parserUpgradeIds: ReadonlySet<string>): Promise<RoutineSupervisorAttemptHistory & { readonly protocolFailures: readonly unknown[] }> {
   const connection = controlPlaneUrlFromEnv();
   if (connection === null) {
     throw new Error(`${CONTROL_PLANE_URL_VAR} is not configured; provider-frontier fairness cannot be proved.`);
@@ -424,7 +425,8 @@ async function latestUnreceiptedSupervisorAttempts(selectedTasks: readonly Routi
     HUNT_SOURCE_PROGRESS_LOG_KEY, ["huntSourceProgress", "stage"], "FAILED",
     ROUTINE_SUPERVISOR_HISTORY_WINDOW, { testedSha: true, huntSourceProgress: true },
   ));
-  return { ...routineUnreceiptedSupervisorAttemptHistory(supervisorOutcomes, taskIds), protocolFailures };
+  return { ...routineUnreceiptedSupervisorAttemptHistory(supervisorOutcomes, taskIds,
+    { taskIds: parserUpgradeIds, codeSha: RUNNING_CODE_SHA }), protocolFailures };
 }
 
 /**
@@ -450,14 +452,21 @@ async function readHuntSourceTasks(): Promise<readonly RoutineSourceTask[]> {
   const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
   const intents = readIntents([...(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY))]);
   if (intents.runnerPause.paused) return [];
-  const items = (await repos.workItems.list()).map(row => row.value);
-  if (boxIndexEnabled()) {
-    const context = await workerPublicationContext(RUN_STARTED_AT, repos);
-    await buildBoxFindings({ repos, items, now: () => new Date().toISOString(), leaseMs: 120_000, readCapture: context.readCapture });
-  }
-  const workers = items.some(item => item.autonomousPlan?.publication) ? await readCompletedWorkerResults(repos) : [];
-  const publication = PUBLISH_NOW ? publishNowWorkerTasks(items, workers, RUN_STARTED_AT) : workerPublicationTasks(items, workers, RUN_STARTED_AT);
-  if (PUBLISH_NOW) {
+  // The independent publish-now lane owns the worker outbox and held-page fallbacks.
+  // Standing source acquisition never loads the entire worker history before its first source read.
+  if (PUBLISH_NOW || (ONLY && WORKER_PUBLICATION_TASK_IDS.some(id => ONLY.has(id)))) {
+    const sql = neon(connection);
+    const selected = ONLY ? WORKER_PUBLICATION_TASK_IDS.filter(id => ONLY.has(id)) : WORKER_PUBLICATION_TASK_IDS;
+    const items = await readWorkerPublicationItems((query, params) => sql.query(query, [...params]), selected);
+    if (boxIndexEnabled()) {
+      const pending = await readPublicationBoxItems(repos, items, new Date().toISOString());
+      if (pending.length) {
+        const context = await workerPublicationContext(RUN_STARTED_AT, repos);
+        await buildBoxFindings({ repos, items: pending, now: () => new Date().toISOString(), leaseMs: 120_000, readCapture: context.readCapture });
+      }
+    }
+    const publication = await readPublishNowWorkerTasks(items, ids => readCompletedWorkerResultsOf(repos, ids), RUN_STARTED_AT);
+    if (!PUBLISH_NOW) return publication;
     // The hourly first look: each hot door's page or feed is looked at once an hour; a change is stored on
     // the door and read below at once. A look that cannot be made never stops a known-changed door's read.
     try {
@@ -477,20 +486,20 @@ async function readHuntSourceTasks(): Promise<readonly RoutineSourceTask[]> {
       MEETING_PARTITION_CONTRACTS.map(routineTaskFromContract), RUN_STARTED_AT)];
   }
   const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
-  if (row === null) return publication;
+  if (row === null) return [];
   if (!isAdminConfig(row.value)) throw new Error("the owner's policy row is unreadable");
   const held = expansionScopesOf(row.value);
   if (held.malformed) throw new Error("the owner's scope list contains unreadable decisions");
   const currentSends = held.scopes.filter(scope => scope.sourceWorkVersion === 1);
-  if (currentSends.length === 0) return publication;
+  if (currentSends.length === 0) return [];
   const lookup = await loadPublishedScopeLookupState(currentSends.map(send => send.geography));
   const resolved = await resolveScopes(currentSends, lookup, null);
   for (const scope of resolved.scopes) {
     if (scope.kind === "UNRESOLVED") throw new Error(`scope ${scope.decision.key}: ${scope.why}`);
   }
   const admitted = admittedHuntSourceScopes(resolved.scopes, RUN_STARTED_AT);
-  if (admitted.length === 0) return publication;
-  return [...huntSourceTasks(admitted, RUN_STARTED_AT), ...publication];
+  if (admitted.length === 0) return [];
+  return huntSourceTasks(admitted, RUN_STARTED_AT);
 }
 
 function newestConsideredAt(
@@ -619,6 +628,32 @@ async function recordHuntSourceProgress(task: RoutineSourceTask, stage: HuntSour
     testedSha: RUNNING_CODE_SHA, huntSourceProgress: progress }, at);
 }
 
+// Source pointers may settle in the other routine process while publication has a large outbox.
+// Copy them before admission, then once per existing publication minute without overlapping sweeps.
+const publishNowEdgeStore = PUBLISH_NOW ? resolveReaderArtifactWriteStore() : null;
+const publishNowEdgeChecks = PUBLISH_NOW ? startPublishNowEdgeChecks({
+  store: publishNowEdgeStore?.kind === "local-file" ? "local folder" : publishNowEdgeStore?.kind === "netlify-blobs" ? "Netlify Blobs" : "not configured",
+  readPaused: async () => {
+    const connection = controlPlaneUrlFromEnv();
+    if (!connection) throw new Error("control-plane reporting connection is unavailable");
+    const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
+    return readIntents([...(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY))]).runnerPause.paused;
+  },
+  check: async () => {
+    const outcome = await publishSupervisorReaderEdge(store, new Date().toISOString());
+    const failure = readerEdgeSupervisorFailure(outcome);
+    if (failure) supervisorFailures.push(failure);
+    return outcome;
+  }, onError: error => {
+    supervisorFailures.push({ taskId: "reader-edge-publication", code: "READER_EDGE_PUBLISH_FAILED",
+      detail: safeFailure(sanitizedErrorDiagnostic(error)) });
+  },
+}) : null;
+if (publishNowEdgeChecks) {
+  step = "publishing changed source pointers before worker admission";
+  await publishNowEdgeChecks.run();
+}
+
 // Resolve every due scope at one frozen instant before launching. The provider frontier below
 // admits one least-recently-considered partition per upstream, so a host with many partitions
 // cannot stretch one pass and keep a newly due unrelated source out of the next.
@@ -634,21 +669,41 @@ try {
 // A standing refresh already covers a Send for its source; don't launch duplicate children for the same pointer.
 const selectedTasks = [...STANDING_SOURCE_TASKS, ...huntTasks.filter(task => !STANDING_SOURCE_TASKS.some(standing => standing.id === task.id))]
   .filter((task) => !ONLY || ONLY.has(task.id) || (task.registeredContractId !== undefined && ONLY.has(task.registeredContractId)));
-if (publishNowHasNothingOwed(PUBLISH_NOW, selectedTasks.length, supervisorFailures.length)) {
-  console.log("publish-now: nothing owed this minute");
+if (PUBLISH_NOW && selectedTasks.length === 0) {
+  const readerEdge = (await publishNowEdgeChecks!.stop())!;
+  if (publishNowHasNothingOwed(PUBLISH_NOW, selectedTasks.length, supervisorFailures.length, readerEdge)) {
+    console.log("publish-now: nothing owed this minute");
+  } else {
+    step = "persisting the publication outcome";
+    try {
+      const cycleId = await persistSupervisorOutcome({ readerEdge, failures: supervisorFailures,
+        attemptedTasks: 0, verifiedSourceSuccesses: 0, verifiedSourceFailures: 0,
+        finishedAt: new Date().toISOString(), taskReceipts: [], dueRequestLines: [],
+        readerReadback: { denominator: 0, recordedPass: 0, recordedFail: 0, currentFail: 0, noops: 0, repairFailures: 0, references: [] },
+      });
+      console.log("RCD_OPERATIONAL_OUTCOME=" + JSON.stringify({ kind: "ROUTINE_CIVIC_DATA_SUPERVISOR",
+        state: supervisorFailures.length === 0 ? "SUCCEEDED" : "FAILED", cycleId, lane: "publish-now",
+        readerEdge, exactTaskReceipts: 0, durable: true }));
+    } catch (error) {
+      const detail = safeFailure(sanitizedErrorDiagnostic(error));
+      supervisorFailures.push({ taskId: "routine-civic-data-supervisor-outcome", code: "SUPERVISOR_OUTCOME_NOT_DURABLE", detail });
+      console.error("RCD_OPERATIONAL_OUTCOME=" + JSON.stringify({ kind: "ROUTINE_CIVIC_DATA_SUPERVISOR",
+        state: "STORE_UNREACHABLE", detail, durable: false }));
+    }
+  }
   if (!await flushDatabaseTransfer()) console.warn("RCD_TRANSFER daily byte counter could not be saved; data results are unchanged.");
   await ROUTINE_DATA_PROCESS_LEASE.release();
   await readCacheHost.close();
   await workerToolsHost?.close();
   await sharedBrowser.close();
-  process.exit(0);
+  process.exit(supervisorFailures.length === 0 ? 0 : 2);
 }
 step = "reading the routine task clocks";
 const clockReads = FORCE
   ? selectedTasks.map((task) => ({ task, ok: true as const, clock: undefined, error: null }))
   : await readRoutineTaskClocks(
       selectedTasks,
-      (task) => store.clock(task.sourceId, task.recordClass, task.scope),
+      (task) => store.clock(task.sourceId, task.recordClass, task.scope, task.parserVersion),
     );
 // Meeting sources follow their bodies' sittings; the window is decided once, at the same frozen
 // instant. A sitting's publisher-stated end decides when it concluded; an unreadable end set falls
@@ -715,7 +770,9 @@ step = "reading unreceipted supervisor attempts";
 let supervisorAttempts: ReadonlyMap<string, string> = new Map();
 let protocolFailures: readonly unknown[] = [];
 if (selectedTasks.length > 0) try {
-  const history = await latestUnreceiptedSupervisorAttempts(selectedTasks);
+  const parserUpgradeIds = new Set(clockReads.flatMap(read => read.ok && read.clock?.lastSucceededParserVersion !== undefined &&
+    read.clock.lastSucceededParserVersion !== read.task.parserVersion ? [read.task.id] : []));
+  const history = await latestUnreceiptedSupervisorAttempts(selectedTasks, parserUpgradeIds);
   supervisorAttempts = history.attempts;
   protocolFailures = history.protocolFailures;
   for (const issue of history.issues) {
@@ -801,6 +858,7 @@ for (const read of clockReads) {
 const admitted = routineFailureDomainFrontier(dueCandidates.map(({ pending, clock }) => ({
   task: pending.task,
   lastConsideredAt: newestConsideredAt(clock, supervisorAttempts.get(pending.task.id)),
+  baselineOwed: routineBaselineOwed(pending.task, clock),
   deadlineMs: routineDueRequestDeadlineMs(
     routineTaskDeadlineMs(pending.task, clock, sittingSignals.get(pending.task.id)),
     honouredDueRequests.get(pending.task.id) ?? null,
@@ -816,7 +874,7 @@ for (const candidate of dueCandidates) {
 }
 // A saved Send starts beside the earliest standing read, before its backlog drains.
 const pendingByTaskId = new Map(dueCandidates.map(({ pending }) => [pending.id, pending] as const));
-for (const { task } of placeSourceLaunchOrder(routinePassLaunchOrder(admitted))) pendingRuns.push(pendingByTaskId.get(task.id)!);
+for (const { task } of placeSourceLaunchOrder(routinePassLaunchOrder(admitted, admissionNowMs))) pendingRuns.push(pendingByTaskId.get(task.id)!);
 for (const pending of pendingRuns) await recordHuntSourceProgress(pending.task, "QUEUED", "Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.");
 const dueRequestLines = [...honouredDueRequests].map(([taskId, request]) => admittedIds.has(taskId)
   ? `Owner due request ${request.id}: ${taskId} admitted by this ordinary pass (due ${request.dueAt}).`
@@ -1251,9 +1309,12 @@ for (const error of pass.errors) {
 const readerRuns = pass.repair;
 // Source settlement publishes serving copies even when a readback child fails.
 step = "publishing changed reader edge copies";
-const readerEdge = await publishSupervisorReaderEdge(store, new Date().toISOString(), !PUBLISH_NOW && ONLY === null ? null : selectedTasks);
-const readerEdgeFailure = readerEdgeSupervisorFailure(readerEdge);
-if (readerEdgeFailure) supervisorFailures.push(readerEdgeFailure);
+await publishNowEdgeChecks?.stop();
+const finalReaderEdge = publishNowEdgeChecks ? await publishNowEdgeChecks.run()
+  : await publishSupervisorReaderEdge(store, new Date().toISOString(), ONLY === null ? null : selectedTasks);
+const readerEdge = publishNowEdgeChecks ? (await publishNowEdgeChecks.stop())! : finalReaderEdge;
+const readerEdgeFailure = readerEdgeSupervisorFailure(finalReaderEdge);
+if (readerEdgeFailure && !publishNowEdgeChecks) supervisorFailures.push(readerEdgeFailure);
 for (const run of readerRuns) {
   if (run.settlementErrorMessage === null) continue;
   const detail = safeFailure(run.settlementErrorMessage ?? "unknown Reader settlement failure");

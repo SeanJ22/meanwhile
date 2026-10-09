@@ -22,6 +22,7 @@ export const ROUTINE_RECORD_CLASSES = [
   "REGISTRY_RUNTIME_BINDING",
   "VOTING_SITE",
   "PRL_PROFILE",
+  "PRL_ARCHIVE",
   "CENSUS_REFERENCE",
   "CENSUS_GEOGRAPHY",
   "MEETING",
@@ -161,6 +162,8 @@ export interface ManualSourceReview {
   readonly httpStatus: number;
   readonly rawHash: string;
   readonly reviewedEvidence: string;
+  /** Source documents decoded from these exact acquired archive bytes. Paths remain relative to the pinned repository. */
+  readonly extractedMembers?: readonly { readonly path: string; readonly sha256: string }[];
   /** Omitted by legacy GOOD packages; omission means SUPPORTED. */
   readonly reviewOutcome?: "SUPPORTED" | "BLOCKED";
   readonly failureDetail?: string;
@@ -173,6 +176,14 @@ export interface ManualSourceSetReceipt {
   readonly sources: readonly ManualSourceReview[];
 }
 
+export interface SourceCheckEvidence {
+  readonly requestedUrl: string;
+  readonly finalUrl: string;
+  readonly httpStatus: 200 | 304;
+  readonly rawHash: string;
+  readonly checkedAt: string;
+}
+
 export interface RetrievalEvidence {
   readonly succeeded: boolean;
   readonly requestedUrl: string;
@@ -181,6 +192,8 @@ export interface RetrievalEvidence {
   readonly retrievedAt: string;
   /** SHA-256, lowercase hex. Null when no response body was acquired. */
   readonly rawHash: string | null;
+  /** Last actual provider check, retained unchanged on held-byte or parser replay. */
+  readonly sourceCheck?: SourceCheckEvidence;
   readonly failureDetail?: string;
   readonly manualSourceReceipt?: ManualSourceSetReceipt;
   readonly derived?: { readonly inputs: readonly DerivedInputRef[] };
@@ -358,6 +371,8 @@ export interface RosterDepartureRemovalEvidence {
   readonly bodyId: string;
   readonly holderId: string;
   readonly sourceUrl: string;
+  readonly replacementHolderId?: string;
+  readonly officeTitle?: string;
 }
 
 export interface TrustedLkgFixtureEvidence {

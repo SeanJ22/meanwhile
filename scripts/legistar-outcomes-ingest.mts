@@ -48,7 +48,7 @@ import {
   fetchEventItems,
   fetchEvents,
 } from "../lib/sources/legistar/client.ts";
-import { findClient, type LegistarClient } from "../lib/sources/legistar/client-registry.ts";
+import { findClient, resolveNativeBody, type LegistarClient } from "../lib/sources/legistar/client-registry.ts";
 import { legistarMeetingId, legistarStartsAt } from "../lib/sources/legistar/index.ts";
 import { collectEventOutcomes } from "../lib/sources/legistar/outcomes.ts";
 import type { LegistarEvent, LegistarEventItem, LegistarVote } from "../lib/sources/legistar/types.ts";
@@ -255,9 +255,11 @@ export async function runPimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput
   let events: readonly LegistarEvent[] = [];
   try {
     const captured = await captureSourceAcquisitions((runForSource) =>
-      runForSource(tenant.sourceId, () =>
-        fetchEvents<LegistarEvent>(args.slug, { from: eventsWindow.from, to: eventsWindow.to }),
-      ),
+      runForSource(tenant.sourceId, async () => {
+        const bodyId = await resolveNativeBody(client);
+        if (client.slug !== args.slug || (args.bodyId !== null && args.bodyId !== bodyId)) throw new Error("LEGISTAR_OUTCOME_BODY_IDENTITY_MISMATCH");
+        return fetchEvents<LegistarEvent>(args.slug, { from: eventsWindow.from, to: eventsWindow.to, bodyId });
+      }),
     );
     events = captured.value;
     eventEvidence = captured.evidence;
@@ -275,7 +277,7 @@ export async function runPimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput
   }
   const eventsRetrievedAt = now();
 
-  const sittings = (args.bodyId === null ? events : events.filter((event) => event.EventBodyId === args.bodyId))
+  const sittings = events.filter((event) => event.EventBodyId === client.eventBodyId)
     .slice()
     .sort((left, right) => String(right.EventDate).localeCompare(String(left.EventDate)));
   const population = floored(
@@ -451,7 +453,7 @@ async function main(): Promise<void> {
     // Pima's own contract: its client is read off the published meeting doors.
     const doors = await ensureMeetingDoors();
     if (!doors.ready) throw new Error(`MEETING_DOORS_UNREADABLE: ${doors.reason}`);
-    client = findClient(args.slug);
+    client = findClient(args.slug, "ocd-division/country:us/state:az/county:pima#governing");
   }
   if (!client) throw new Error("PIMA_LEGISTAR_CLIENT_NOT_REGISTERED");
   const run = await runPimaLegistarOutcomeIngest({

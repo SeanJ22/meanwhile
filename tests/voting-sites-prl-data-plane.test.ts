@@ -304,12 +304,12 @@ test("PRL licensing/ranking defects and source failures preserve the prior GOOD 
   assert.equal((await store.readPromotion("PRL_PROFILE", PRL_CONTRACT.scope))?.versionId, good.id);
 });
 
-test("voting-sites and PRL are owner-only promotion commands with no tracked mutable writer or release path", () => {
+test("voting-sites and PRL share registered acquisition commands with automatic refresh and no tracked mutable writer", () => {
   const contracts = MANUAL_PRODUCTION_SOURCE_CONTRACTS.filter((contract) => ["voting-sites", "prl"].includes(contract.id));
   assert.equal(contracts.length, 2);
   assert.ok(contracts.every((contract) => contract.execution === "EXPLICIT_OWNER_INVOCATION_ONLY"));
   assert.ok(contracts.every((contract) => !Object.hasOwn(contract, "cadence") && !Object.hasOwn(contract, "retry")));
-  assert.deepEqual(SOURCE_AUTHORITIES.prl.recordClasses, ["PRL_PROFILE"]);
+  assert.deepEqual(SOURCE_AUTHORITIES.prl.recordClasses, ["PRL_PROFILE", "PRL_ARCHIVE"]);
   assert.equal(SOURCE_AUTHORITIES.prl.trust, "T3_ATTRIBUTED_PRIMARY");
   assert.ok(SOURCE_AUTHORITIES.prl.competentFacts.every((fact) => /PRL|licence/.test(fact)));
 
@@ -319,7 +319,7 @@ test("voting-sites and PRL are owner-only promotion commands with no tracked mut
     assert.doesNotMatch(source, /\bprocess\.exit\s*\(/, contract.id);
     assert.doesNotMatch(source, /(?:deploy-production|netlify\s+deploy|release:prod|git\s+(?:add|commit|push))/i, contract.id);
   }
-  const prlSource = readFileSync(join(ROOT, "scripts", "fetch-prl.mts"), "utf8");
+  const prlSource = readFileSync(join(ROOT, "scripts", "prl-refresh.mts"), "utf8");
   assert.doesNotMatch(prlSource, /officeholders-us\.json|data[\\/]prl[\\/]prl-profiles\.json/);
 
   const votingReader = readFileSync(join(ROOT, "lib", "ballot", "voting-sites-server.ts"), "utf8");

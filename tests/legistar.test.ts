@@ -234,15 +234,22 @@ test("status is decided against the passed clock, not the wall clock", () => {
   );
 });
 
-test("a meeting with no usable time is dropped rather than placed at midnight", () => {
+test("a sourced meeting date publishes while its start time remains unknown", () => {
   const base = EVENTS[0];
   const { meetings, drops } = normalizeWithDrops(
     wrap([{ ...base, EventId: 999_002, EventTime: null }]),
     NOW,
   );
 
+  assert.equal(meetings.length, 1);
+  assert.equal(meetings[0].startPrecision, "DAY");
+  assert.equal(drops.unplaceableInTime, 0);
+});
+
+test("a sibling body on the same tenant cannot inherit the bound body's identity", () => {
+  const { meetings, drops } = normalizeWithDrops(wrap([{ ...EVENTS[0], EventBodyId: 999, EventBodyName: "Planning Commission" }]), NOW);
   assert.equal(meetings.length, 0);
-  assert.equal(drops.unplaceableInTime, 1);
+  assert.equal(drops.notConfigured, 1);
 });
 
 test("ids are namespaced by source and client", () => {

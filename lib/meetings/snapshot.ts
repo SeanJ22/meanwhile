@@ -401,6 +401,7 @@ export interface MeetingPartitionReadback {
   readonly freshCheck?: MeetingPartitionFreshCheck;
   /** Why this partition's durable history was left out of the composition; its live rows are served regardless. */
   readonly historyIssue?: string;
+  readonly history?: { readonly contractId: string; readonly versionId: string };
 }
 
 export interface MeetingPartitionHeldFrom {
@@ -627,7 +628,9 @@ export async function readMeetingsProjection(
       ...(freshChecks.has(partition.id) ? { freshCheck: freshChecks.get(partition.id)! } : {}),
       ...(() => {
         const history = historyByPartition.get(partition.id);
-        return history !== undefined && "issue" in history ? { historyIssue: history.issue } : {};
+        return history !== undefined && "issue" in history ? { historyIssue: history.issue }
+          : history !== undefined && "value" in history && history.versionId
+            ? { history: { contractId: meetingHistoryContract(partition).id, versionId: history.versionId } } : {};
       })(),
     };
   });

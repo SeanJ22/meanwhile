@@ -57,6 +57,7 @@ export interface ElecQuery {
   /** Candidate committees rather than PACs. */
   nonPacOnly?: boolean;
   length?: number;
+  start?: number;
 }
 
 /**
@@ -76,7 +77,7 @@ export function elecRequestBody(q: ElecQuery): string {
   });
   p.set("order[0][column]", "0");
   p.set("order[0][dir]", "asc");
-  p.set("start", "0");
+  p.set("start", String(q.start ?? 0));
   p.set("length", String(q.length ?? 500));
   p.set("search[value]", "");
   p.set("search[regex]", "false");
@@ -143,8 +144,8 @@ export interface ElecFiling {
   amendNo: number;
   dateReceived: string | null;
   formName: string;
-  amountReceived: number;
-  amountDisbursed: number;
+  amountReceived: number | null;
+  amountDisbursed: number | null;
 }
 
 export const ELEC_FILING_ENDPOINT =
@@ -155,14 +156,17 @@ export function elecFilingUrl(entityId: string, mode: "EntityOnly" | "CommitteeO
 }
 
 export function normalizeElecFiling(row: Record<string, unknown>): ElecFiling {
-  const num = (v: unknown): number => {
+  const num = (v: unknown): number | null => {
+    if (v === null || v === undefined || v === "") return null;
     const n = Number(v);
-    return Number.isFinite(n) ? n : 0;
+    return Number.isFinite(n) ? n : null;
   };
+  const entity = num(row.ENTITY_S), period = num(row.PERIOD), amendment = num(row.AMEND_NO);
+  if (!Number.isSafeInteger(entity) || entity! <= 0 || !Number.isSafeInteger(period) || !Number.isSafeInteger(amendment) || amendment! < 0) throw new Error("ELEC_FILING_IDENTITY_INVALID");
   return {
-    entityId: num(row.ENTITY_S),
-    period: num(row.PERIOD),
-    amendNo: num(row.AMEND_NO),
+    entityId: entity!,
+    period: period!,
+    amendNo: amendment!,
     dateReceived: typeof row.DATE_RECEIVED === "string" ? row.DATE_RECEIVED : null,
     formName: typeof row.FormName === "string" ? row.FormName : "",
     amountReceived: num(row.AMT_REC),
@@ -171,8 +175,8 @@ export function normalizeElecFiling(row: Record<string, unknown>): ElecFiling {
 }
 
 export interface ElecMoneyTotal {
-  receipts: number;
-  disbursements: number;
+  receipts: number | null;
+  disbursements: number | null;
   /** Reports counted AFTER amendments are collapsed. */
   reportsCounted: number;
   /**
@@ -196,7 +200,7 @@ export interface ElecMoneyTotal {
 export function totalElecMoney(filings: readonly ElecFiling[]): ElecMoneyTotal {
   const latestPerPeriod = new Map<string, ElecFiling>();
   for (const f of filings) {
-    const key = `${f.formName}#${f.period}`;
+    const key = `${f.entityId}#${f.formName}#${f.period}`;
     const held = latestPerPeriod.get(key);
     if (
       !held ||
@@ -210,8 +214,8 @@ export function totalElecMoney(filings: readonly ElecFiling[]): ElecMoneyTotal {
   const money = counted.filter((f) => f.formName !== "D-1");
   const dates = counted.map((f) => f.dateReceived).filter((d): d is string => Boolean(d)).sort();
   return {
-    receipts: money.reduce((a, f) => a + f.amountReceived, 0),
-    disbursements: money.reduce((a, f) => a + f.amountDisbursed, 0),
+    receipts: money.length && money.every(f => f.amountReceived !== null) ? money.reduce((a, f) => a + f.amountReceived!, 0) : null,
+    disbursements: money.length && money.every(f => f.amountDisbursed !== null) ? money.reduce((a, f) => a + f.amountDisbursed!, 0) : null,
     reportsCounted: counted.length,
     moneyReports: money.length,
     reportsRead: filings.length,

@@ -180,8 +180,12 @@ export async function contestIncumbency(
 
   const committed = new Map<string, SeatHolder>();
   for (const candidate of contest.candidates) {
-    const holder = await (universeSources.committedHolder ?? committedIncumbentHolderFor)(contest, candidate.targetKey);
-    if (holder) committed.set(candidate.key, holder);
+    try {
+      const holder = await (universeSources.committedHolder ?? committedIncumbentHolderFor)(contest, candidate.targetKey);
+      if (holder) committed.set(candidate.key, holder);
+    } catch {
+      // The optional candidacy bridge cannot erase the body's independently held roster.
+    }
   }
   for (const [key, holder] of committed) {
     if ([...committed.values()].filter(other => other.id === holder.id).length !== 1) continue;

@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
+import sharp from "sharp";
 import { candidatePortraitFromOwnSite } from "../lib/ballot/candidate-portraits.ts";
 import { readerCandidateProfiles } from "../lib/ballot/candidate-reader-privacy.ts";
 import type { CandidateProfilesProjection } from "../lib/civic-data/manual-projections.ts";
@@ -8,24 +9,24 @@ import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-p
 
 const NOW = "2026-10-01T00:00:00Z", NAME = "Jane Doe", SITE = "https://janedoeforcouncil.com/";
 const IMAGE = "https://janedoeforcouncil.com/img/jane-doe.jpg";
-const PNG = Uint8Array.from([0xff,0xd8,0xff,0xc0,0,17,8,0,240,0,200,3,1,0x11,0,2,0x11,0,3,0x11,0,0xff,0xd9]);
+const PNG = () => sharp({create:{width:200,height:240,channels:3,background:"#335577"}}).png().toBuffer();
 
 function capture(url: string, text: string): WorkerPublicationCapture {
   const hash = `sha256-${createHash("sha256").update(text).digest("hex")}`;
   return { evidence: { artifactId: hash, contentHash: hash, text, canonicalUrl: url, retrievedAt: NOW, sourceId: new URL(url).hostname,
     acquiredByAttemptId: "fixture", methodRouteId: "portrait" }, observedAt: NOW, httpStatus: 200, transport: "REACHABLE", partial: false };
 }
-const page = (html: string) => ({ name: NAME, office: "City Council", cycle: "2026",
+const page = (html: string) => ({ personId:"candidate:jane-2026", name: NAME, office: "City Council", cycle: "2026",
   capture: capture(SITE, `<h1>Jane Doe for City Council 2026</h1>${html}`) });
 const runtime = () => { const stored = new Map<string, Uint8Array>();
-  return { stored, io: { read: async () => PNG, put: async (key: string, bytes: Uint8Array) => { stored.set(key, bytes); } } }; };
+  return { stored, io: { read: async () => PNG(), put: async (key: string, bytes: Uint8Array) => { stored.set(key, bytes); } } }; };
 
 test("a named portrait on the campaign's own page is stored under candidates/ and bound by OWN_PAGE", async () => {
   const { stored, io } = runtime();
   const got = await candidatePortraitFromOwnSite(page(`<img alt="Jane Doe" src="${IMAGE}">`), NOW, io);
   assert.ok("patch" in got);
   const { patch } = got;
-  assert.match(patch.photoUrl!, /^\/api\/portraits\/candidates\/[a-f0-9]{64}\.jpg$/);
+  assert.match(patch.photoUrl!, /^\/api\/portraits\/candidates\/[a-f0-9]{64}\.webp$/);
   assert.equal(patch.photoVerification?.basis, "OWN_PAGE");
   assert.match(patch.photoSource!, /janedoeforcouncil\.com/);
   assert.equal([...stored.keys()].length, 1);

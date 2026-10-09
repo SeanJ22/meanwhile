@@ -1,16 +1,8 @@
-/**
- * A state's registration, as the reader composes it. Pure. The reviewed registry and the state's
- * promoted registration meet only here:
- *
- * ```
- *   reviewed wins       an id the reviewed registry holds is never composed from registration
- *   one government,     a registered body is left out when the reviewed registry already keys a
- *   one body            body on its division, or lists the same Census government
- *   nothing invented    a state with no promoted registration composes to nothing
- * ```
- */
+/** Compose independently sourced governments and established bodies. Reviewed
+ * body identity wins; sharing a division does not make two governments one. */
 import type { Body, Division } from "../registry/types.ts";
 import type { RegistrationReadModel } from "./candidate.ts";
+import { bindGovernmentBodies, type RegistrationGovernmentListing } from "./listings.ts";
 
 export interface RegistrationLayer {
   /** Postal code, upper case. */
@@ -19,6 +11,7 @@ export interface RegistrationLayer {
   readonly versionId: string;
   readonly divisions: readonly Division[];
   readonly bodies: readonly Body[];
+  readonly governments: readonly RegistrationGovernmentListing[];
 }
 
 export function composeRegistration(
@@ -28,11 +21,8 @@ export function composeRegistration(
 ): RegistrationLayer {
   const divisionIds = new Set(reviewed.divisions.map((d) => d.ocdId));
   const bodyIds = new Set(reviewed.bodies.map((b) => b.id));
-  const keyedDivisions = new Set<string>();
   const censusIds = new Set<string>();
   for (const body of reviewed.bodies) {
-    if (body.ocdId) keyedDivisions.add(body.ocdId);
-    for (const other of body.alsoServesOcdIds ?? []) keyedDivisions.add(other);
     if (body.censusId) censusIds.add(body.censusId);
   }
   return {
@@ -40,7 +30,8 @@ export function composeRegistration(
     versionId,
     divisions: model.divisions.filter((d) => !divisionIds.has(d.ocdId)),
     bodies: model.bodies.filter(
-      (b) => !bodyIds.has(b.id) && !keyedDivisions.has(b.ocdId) && !(b.alsoServesOcdIds ?? []).some(id => keyedDivisions.has(id)) && !(b.censusId !== undefined && censusIds.has(b.censusId)),
+      (b) => !bodyIds.has(b.id) && !(b.censusId !== undefined && censusIds.has(b.censusId)),
     ),
+    governments: bindGovernmentBodies(model.governments ?? [], reviewed.bodies),
   };
 }

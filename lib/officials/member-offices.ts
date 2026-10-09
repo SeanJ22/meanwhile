@@ -5,9 +5,11 @@
  */
 import type { DirectoryOffice } from "./directory.ts";
 import type { Officeholder, OfficeholderDivision } from "./types.ts";
-import { designationKey, rowsToPeople } from "../sources/plural/index.ts";
+import { rowsToPeople, normalize, type PluralPerson } from "../sources/plural/index.ts";
 
 export type MemberOfficeKind = "CAPITOL" | "DISTRICT";
+import { createHash } from "node:crypto";
+import { sameNativePerson } from "./people-identity.ts";
 
 export interface MemberOfficeRecord {
   readonly id: string;
@@ -22,6 +24,7 @@ export interface MemberOfficeRecord {
   /** True only when an official government page states this office; false stays open as standing work. */
   readonly official: boolean;
   readonly collectedAt: string;
+  readonly fieldSources?: Readonly<Record<string, import("../sources/types.ts").Provenance>>;
 }
 
 export const OPEN_STATES_ORG = "Open States (Plural, CC-0)";
@@ -35,52 +38,46 @@ export function parseOfficeAddress(text: string): Pick<DirectoryOffice, "address
   return { address: match[1].trim(), city: match[2].trim(), state: match[3], zip: match[4] };
 }
 
-const familyName = (name: string) => name.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase()
-  .replace(/,?\s+(jr|sr|ii|iii|iv)\.?$/i, "").split(/\s+/).at(-1) ?? "";
-const chamberOf = (ocdId: string) => /\/sldu:/.test(ocdId) ? "upper" : /\/sldl:/.test(ocdId) ? "lower" : null;
-const districtOf = (ocdId: string) => /\/sld[ul]:([^/]+)$/.exec(ocdId)?.[1] ?? null;
-
-/**
- * Open States offices joined to the legislature's own roster for one state.
- * `officials` is the roster the reader serves (its officeholders and their
- * divisions); its phone wins over Open States' for the capitol office.
- */
+/** Join only declared person identifiers. District and surname are never person identity. */
 export function memberOfficeRecords(input: {
   readonly state: string;
-  readonly csv: string;
+  readonly csv?: string;
+  readonly people?: readonly PluralPerson[];
   readonly collectedAt: string;
   readonly officials: { readonly officeholders: readonly Officeholder[]; readonly divisions: readonly OfficeholderDivision[] };
 }): { readonly records: readonly MemberOfficeRecord[]; readonly unmatched: readonly string[] } {
-  const state = input.state.toUpperCase();
-  const seats = new Map<string, Officeholder[]>();
-  for (const division of input.officials.divisions) {
-    const chamber = chamberOf(division.ocdId), district = districtOf(division.ocdId);
-    const holder = input.officials.officeholders.find(row => row.id === division.officeholderId);
-    if (!chamber || !district || !holder) continue;
-    const key = `${chamber}|${designationKey(district)}`;
-    seats.set(key, [...seats.get(key) ?? [], holder]);
-  }
+  const people = input.people ?? (input.csv ? rowsToPeople(input.csv,input.state.toLowerCase()) : []);
+  const references = normalize([...people],new Map(),input.collectedAt,input.state.toLowerCase()).officeholders;
   const records: MemberOfficeRecord[] = [], unmatched: string[] = [];
-  for (const person of rowsToPeople(input.csv, input.state.toLowerCase())) {
-    const offices = ([["CAPITOL", person.capitol_address, person.capitol_voice], ["DISTRICT", person.district_address, person.district_voice]] as const)
-      .map(([kind, address, phone]) => ({ kind, address: address.trim(), phone: phone.trim() }))
-      .filter(office => office.address || office.phone);
-    if (!person.name || offices.length === 0) continue;
-    // Same seat and the same family name: two members of one district are told apart by name, never guessed.
-    const candidates = (seats.get(`${person.current_chamber}|${designationKey(person.current_district)}`) ?? [])
-      .filter(holder => familyName(holder.name) === familyName(person.name));
-    if (candidates.length !== 1) { unmatched.push(`${person.name} (${person.current_chamber} ${person.current_district})`); continue; }
-    const holder = candidates[0];
-    for (const office of offices) {
-      // The legislature's own number wins for its capitol office.
-      const officialPhone = office.kind === "CAPITOL" ? holder.phone : null;
-      // One capitol and one district office per member, so the id names the office, never a list position.
-      records.push({ id: `member-office:${holder.id}:${office.kind.toLowerCase()}`, kind: "MEMBER_OFFICE", officeholderId: holder.id,
-        officeKind: office.kind, office: { ...parseOfficeAddress(office.address), phone: officialPhone || office.phone || null, lat: null, lng: null },
-        sourceUrl: openStatesUrl(state), sourceOrg: OPEN_STATES_ORG, official: false, collectedAt: input.collectedAt });
-    }
+  for (const person of people) {
+    const reference = references.find(row => row.nativeIds?.["ocd-person"]?.includes(person.id));
+    const candidates = reference ? input.officials.officeholders.filter(row => sameNativePerson(row,reference)) : [];
+    if (candidates.length !== 1) { unmatched.push(person.id); continue; }
+    const holder = candidates[0]!;
+    const offices = person.offices ?? [
+      {name:"capitol",address:person.capitol_address,voice:person.capitol_voice},
+      {name:"district",address:person.district_address,voice:person.district_voice},
+    ];
+    records.push(...officeRecordsForHolder({...holder,offices:offices.map(office=>({name:office.name,address:office.address,phone:office.voice,sourceUrl:person.sourceUrl ?? openStatesUrl(input.state),collectedAt:input.collectedAt}))}));
   }
-  return { records, unmatched };
+  return {records,unmatched};
+}
+
+/** Rich native office arrays retain distinct district offices and per-field attribution. */
+export function officeRecordsForHolder(holder: Officeholder): readonly MemberOfficeRecord[] {
+  const seen = new Set<string>();
+  return (holder.offices ?? []).flatMap(office => {
+    if (!office.address && !office.phone && !office.email) return [];
+    const kind = /capitol|capital/i.test(office.name ?? "") ? "CAPITOL" : "DISTRICT";
+    const officeKey = office.id ?? createHash("sha256").update(JSON.stringify([office.name ?? "",office.address ?? "",office.phone ?? "",...(office.email ? [office.email] : [])])).digest("hex").slice(0,20);
+    if (seen.has(officeKey)) return [];
+    seen.add(officeKey);
+    const officialPhone = kind === "CAPITOL" && holder.provenance.sourceOrg !== OPEN_STATES_ORG && !/plural|open states/i.test(holder.provenance.sourceOrg) ? holder.phone : null;
+    return [{id:`member-office:${holder.id}:${officeKey}`,kind:"MEMBER_OFFICE" as const,officeholderId:holder.id,officeKind:kind,
+      office:{...parseOfficeAddress(office.address ?? ""),phone:officialPhone || office.phone || null,...(office.email ? {email:office.email} : {}),lat:null,lng:null},
+      sourceUrl:office.sourceUrl,sourceOrg:OPEN_STATES_ORG,official:false,collectedAt:office.collectedAt,
+      ...(officialPhone ? {fieldSources:{phone:holder.fieldSources?.phone ?? holder.provenance}} : {})}];
+  });
 }
 
 /** A member's offices from the held projection, capitol first. */

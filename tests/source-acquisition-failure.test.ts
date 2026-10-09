@@ -64,7 +64,7 @@ function goodFecCandidate(): RoutineCandidate {
     },
     normalization: {
       succeeded: true,
-      parserVersion: "fec-funding/2",
+      parserVersion: "fec-funding/3",
       schemaVersion: "2",
       normalizedHash: normalizedHash(readModel),
       normalizedPayloadHash: normalizedHash(normalizedPayload),

@@ -1,7 +1,9 @@
 # Census ↔ NCES school-district crosswalk — provenance
 
 Generated 2026-08-20 (America/Phoenix, `corepack pnpm stamp`) by
-`scripts/build-census-nces-crosswalk.mts`. Rebuild with `corepack pnpm crosswalk:build`.
+`scripts/build-census-nces-crosswalk.mts`. That generator and its `crosswalk:build`
+command are retired. This historical name-based crosswalk is retained as evidence;
+the live registration path accepts only explicit native identifiers from F-33.
 
 Inputs, both read from `data/reference/` and nowhere else:
 

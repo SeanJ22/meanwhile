@@ -32,8 +32,8 @@ export async function recordPublishedPageDoor(input: {
   }
 }
 
-export function withPageDoor<T extends { readonly status: string }>(outcome: T, page: WorkerPublicationCapture | null | undefined, recordClass: string): T & { readonly doorId?: string } {
+export function withPageDoor<T extends { readonly status: string }>(outcome: T, page: WorkerPublicationCapture | null | undefined, recordClass: string): T & { readonly doorId?: string; readonly sourceObservedAt?: string; readonly sourceArtifactId?: string } {
   if (!page || outcome.status === "HELD") return outcome;
   const doorId = doorIdOfPage(recordClass, page.evidence.canonicalUrl);
-  return doorId === null ? outcome : { ...outcome, doorId };
+  return { ...outcome, ...(doorId === null ? {} : { doorId }), sourceObservedAt: page.observedAt, sourceArtifactId: page.evidence.artifactId };
 }

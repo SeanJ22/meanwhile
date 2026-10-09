@@ -38,7 +38,7 @@ import { join } from "node:path";
 
 import { readBoundaryAttributes } from "../lib/geo/shapefile.ts";
 import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
-import { registrationUserAgent } from "../lib/registration/acquire.ts";
+import { censusGeographyUserAgent } from "../lib/census-geography/http.ts";
 
 const ROOT = process.cwd();
 const CACHE = process.argv.find((a) => a.startsWith("--tiger="))?.slice(8) ?? join(ROOT, ".cache", "tiger");
@@ -85,7 +85,7 @@ async function archive(file: string, url: string): Promise<{ readonly bytes: Buf
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), BATCH_TIMEOUT_MS);
   try {
-    const response = await fetch(url, { headers: { "user-agent": registrationUserAgent() }, signal: controller.signal });
+    const response = await fetch(url, { headers: { "user-agent": censusGeographyUserAgent() }, signal: controller.signal });
     const retrievedAt = new Date().toISOString();
     if (!response.ok) throw new Error(`census.gov answered HTTP ${response.status} for ${url}`);
     const finalUrl = response.url || url;

@@ -4,10 +4,6 @@ import type {
   FundingAbsenceData,
   FundingDisplayData,
 } from "@/lib/funding/display";
-import {
-  aggregateIndividuals,
-  type IndividualAggregate,
-} from "@/lib/funding/donor-privacy";
 import { groupContributions, type ContributorGroup } from "@/lib/funding/grouping";
 import { committeePillLabel } from "@/lib/funding/committee-types";
 import {
@@ -68,8 +64,8 @@ export function FundingDisplay({
         <div className="mt-3">
           <p className={SECTION_LABEL_CLASS}>Largest reported contributions</p>
           <p className="mt-0.5 t-caption leading-relaxed text-voice">
-            The biggest contributions this campaign&apos;s main committee has
-            reported, listed exactly as filed — biggest first, in two groups.
+            The largest organization contributions held from this campaign&apos;s
+            authorized committees, listed as filed.
           </p>
           {/* Two columns sorted by amount, grouped by lib/funding/grouping.ts. */}
           <div className="mt-2 grid gap-x-5 gap-y-3 sm:grid-cols-2">
@@ -77,10 +73,6 @@ export function FundingDisplay({
               title="Committees & organizations"
               groups={data.contributorGroups.organizations}
               secondHop={data.secondHop}
-            />
-            {/* Individual donors render as aggregates only, never by name. */}
-            <IndividualDonorsPanel
-              aggregate={aggregateIndividuals(data.contributorGroups.individuals)}
             />
           </div>
           <ReactionControl
@@ -149,16 +141,16 @@ export function FundingDisplay({
  * never raised minus spent); each tile shows its own figure or nothing.
  */
 type ReportedTotals = {
-  receipts: number;
-  disbursements: number;
-  cashOnHand: number;
+  receipts: number | null;
+  disbursements: number | null;
+  cashOnHand: number | null;
   smallDonorShare?: number | null;
 };
 
 function reportedTotalsOf(data: FundingDisplayData): ReportedTotals | null {
   const totals = (data as FundingDisplayData & { totals?: ReportedTotals | null }).totals;
   if (!totals) return null;
-  const ok = [totals.receipts, totals.disbursements, totals.cashOnHand].every(
+  const ok = [totals.receipts, totals.disbursements, totals.cashOnHand].some(
     (n) => typeof n === "number" && Number.isFinite(n),
   );
   return ok ? totals : null;
@@ -174,9 +166,9 @@ function MoneyOverview({ data }: { data: FundingDisplayData }) {
       </p>
       {totals && (
         <div className="mw-money-tiles">
-          <MoneyTile label="Raised" amount={totals.receipts} />
-          <MoneyTile label="Spent" amount={totals.disbursements} />
-          <MoneyTile label="Cash on hand" amount={totals.cashOnHand} />
+          {totals.receipts !== null && <MoneyTile label="Raised" amount={totals.receipts} />}
+          {totals.disbursements !== null && <MoneyTile label="Spent" amount={totals.disbursements} />}
+          {totals.cashOnHand !== null && <MoneyTile label="Cash on hand" amount={totals.cashOnHand} />}
         </div>
       )}
       {!totals && (
@@ -337,84 +329,6 @@ function ContributorColumn({
   );
 }
 
-/** The bucket for filings that carried no state. */
-const STATE_NOT_ON_FILING = "State not stated on the filing";
-
-function IndividualDonorsPanel({ aggregate }: { aggregate: IndividualAggregate }) {
-  if (aggregate.donors === 0) return null;
-  const fromStrangers = aggregate.amount - aggregate.candidateOwnMoney;
-  return (
-    <div data-contributor-group="Individual donors">
-      <p className="t-caption font-semibold uppercase trailing-space-trimmed-8 tracking-[0.08em] text-muted">
-        Individual donors
-      </p>
-      <ul className="mt-1">
-        <li
-          className="border-b border-[var(--panel-border)] py-1.5 t-detail last:border-0"
-          data-individual-total={Math.round(aggregate.amount)}
-        >
-          <div className="flex items-baseline justify-between gap-3">
-            <span className="min-w-0 font-medium text-paper">
-              {aggregate.donors.toLocaleString("en-US")}{" "}
-              {aggregate.donors === 1 ? "person" : "people"}
-              <span className="font-normal text-muted">
-                {" "}
-                · {aggregate.filings.toLocaleString("en-US")}{" "}
-                {aggregate.filings === 1 ? "filing" : "filings"}
-              </span>
-            </span>
-            <span className="shrink-0 font-mono t-detail font-medium tabular-nums">
-              ${Math.round(aggregate.amount).toLocaleString("en-US")}
-            </span>
-          </div>
-        </li>
-        {aggregate.candidateOwnMoney > 0 && (
-          <li
-            className="border-b border-[var(--panel-border)] py-1.5 t-detail last:border-0"
-            data-candidate-own-money={Math.round(aggregate.candidateOwnMoney)}
-          >
-            <div className="flex items-baseline justify-between gap-3">
-              <span className="min-w-0 font-medium text-paper">
-                The candidate&apos;s own money
-                <span className="font-normal text-muted">
-                  {" "}
-                  · ${Math.round(fromStrangers).toLocaleString("en-US")} of the
-                  above came from other people
-                </span>
-              </span>
-              <span className="shrink-0 font-mono t-detail font-medium tabular-nums">
-                ${Math.round(aggregate.candidateOwnMoney).toLocaleString("en-US")}
-              </span>
-            </div>
-          </li>
-        )}
-      </ul>
-      {aggregate.byState.length > 0 && (
-        <ul className="mt-1" data-individual-states={aggregate.byState.length}>
-          {aggregate.byState.map((share) => (
-            <li
-              key={share.state ?? "unstated"}
-              className="flex items-baseline justify-between gap-3 border-b border-[var(--panel-border)] py-1 t-caption last:border-0"
-            >
-              <span className="min-w-0 text-paper">
-                {share.state ?? STATE_NOT_ON_FILING}
-                <span className="text-muted">
-                  {" "}
-                  · {share.donors.toLocaleString("en-US")}{" "}
-                  {share.donors === 1 ? "person" : "people"}
-                </span>
-              </span>
-              <span className="shrink-0 font-mono tabular-nums">
-                ${Math.round(share.amount).toLocaleString("en-US")}
-              </span>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
-}
-
 function ContributorRow({
   group,
   hop,
@@ -511,7 +425,6 @@ function SecondHopPanel({
   const folded = groupContributions(hop.topContributions);
   // Individual donors are private here too; only organizations are listed.
   const rows = [...folded.organizations].sort((a, b) => b.amount - a.amount);
-  const hopIndividuals = aggregateIndividuals(folded.individuals);
   return (
     <details className="funding-type mt-1" data-second-hop={hop.committeeId}>
       <summary>
@@ -544,6 +457,7 @@ function SecondHopPanel({
         <p className="t-caption font-semibold text-paper">
           Who gives to {hop.name}
         </p>
+        {hop.cycle && <p className="t-caption text-muted">Cycle {hop.cycle - 1}–{String(hop.cycle).slice(2)}</p>}
         <p className="mt-0.5 t-caption leading-relaxed text-voice">
           {isJointFundraiser
             ? "Joint fundraisers split what they raise among the campaigns and committees they raise for, following a formula they file with the FEC. These are that fund's own biggest reported donors — not this campaign's."
@@ -572,25 +486,7 @@ function SecondHopPanel({
               </span>
             </li>
           ))}
-          {hopIndividuals.donors > 0 && (
-            <li
-              className="flex items-baseline justify-between gap-3 border-b border-[var(--panel-border)] py-1 t-caption last:border-0"
-              data-hop-individual-total={Math.round(hopIndividuals.amount)}
-            >
-              <span className="min-w-0 text-paper">
-                {hopIndividuals.donors.toLocaleString("en-US")}{" "}
-                {hopIndividuals.donors === 1 ? "person" : "people"}
-                <span className="text-muted">
-                  {" "}
-                  · {hopIndividuals.filings.toLocaleString("en-US")}{" "}
-                  {hopIndividuals.filings === 1 ? "filing" : "filings"}
-                </span>
-              </span>
-              <span className="shrink-0 font-mono tabular-nums">
-                ${Math.round(hopIndividuals.amount).toLocaleString("en-US")}
-              </span>
-            </li>
-          )}
+
         </ul>
         <CardSourcesContribution id={`funding-hop:${hop.provenance.sourceUrl}:${hop.name}`} sources={[{ what: `Contributions reported by ${hop.name}`, provenance: hop.provenance }]} />
       </div>

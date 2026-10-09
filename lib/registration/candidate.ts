@@ -8,7 +8,7 @@
 import { sha256 } from "../civic-data/candidate-builders.ts";
 import { canonicalCivicDataJson } from "../civic-data/changes.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "../civic-data/types.ts";
-import type { RegistrationSourceReceipt } from "./acquire.ts";
+import { registrationSourceCheck, type RegistrationSourceReceipt } from "./acquire.ts";
 import {
   REGISTRATION_MAX_CANDIDATE_BYTES,
   REGISTRATION_PARSER_VERSION,
@@ -19,7 +19,7 @@ import {
   type RegistrationTarget,
 } from "./publication.ts";
 import type { LoadedReference, ReferenceLayer } from "./reference.ts";
-import { isCensusPlaceholderDivision } from "../registry/census-placeholders.ts";
+import { referenceGovernmentListings, type RegistrationGovernmentListing } from "./listings.ts";
 import type { Body, Division, DivisionType } from "../registry/types.ts";
 
 /**
@@ -66,6 +66,7 @@ export interface RegistrationReadModel {
   readonly reviewedRegistryVersionId: string | null;
   readonly divisions: readonly RegistrationDivision[];
   readonly bodies: readonly RegistrationBody[];
+  readonly governments?: readonly RegistrationGovernmentListing[];
   readonly counts: {
     readonly governments: number;
     readonly pairedGovernments: number;
@@ -105,8 +106,6 @@ const DIVISION_TYPE: Readonly<Record<Exclude<ReferenceLayer, "state">, DivisionT
   elsd: "school_district",
   scsd: "school_district",
 };
-const SCHOOL_LAYERS = new Set<ReferenceLayer>(["unsd", "elsd", "scsd"]);
-const SCHOOL_TYPES = new Set(["SCHOOL DISTRICT", "DEPENDENT SCHOOL SYSTEM"]);
 /** The functional statuses that govern: active, partially consolidated, consolidated, subordinate. */
 const GOVERNING_FUNCSTAT = new Set(["A", "B", "C", "G"]);
 /** The layers a territory's functional status is read for. */
@@ -149,10 +148,10 @@ export function registrationCandidate(input: {
   readonly receipt: RegistrationSourceReceipt;
   /** Accepted for older callers; registration does not use it. */
   readonly reviewed?: ReviewedRegistryIds;
+  readonly previous?: RegistrationReadModel | null;
 }): RoutineCandidate {
   const { target, reference: loaded, receipt } = input;
   const ref = loaded.reference;
-  const provenance = { sourceUrl: receipt.requestedUrl, sourceOrg: "U.S. Census Bureau" as const, collectedAt: loaded.generatedAt, verifiedAt: null };
   const stateOcdId = ref.divisions[0]?.[0] ?? "";
   // Present only for a territory, whose governments are its divisions' TIGER/Line functional status.
   const territory = ref.functionalStatus;
@@ -181,86 +180,32 @@ export function registrationCandidate(input: {
         }],
   );
 
-  // Bodies: a paired government's, then every Census school district no government claimed.
+  const previousListings = new Map(input.previous?.governments?.map(row => [row.id, row]) ?? []);
+  const governmentListings = referenceGovernmentListings(loaded).map(government => {
+    const previous = previousListings.get(government.id);
+    const oldBodies = input.previous?.bodies.filter(body => body.censusId && body.censusId === government.nativeIds.census_pid6) ?? [];
+    return { ...government, aliases: [...new Set([...government.aliases, ...(previous?.aliases ?? []), ...oldBodies.map(body => body.id)])] };
+  });
+  // A government/agency directory establishes a listing. Bodies are separate
+  // sourced records retained by the reviewed registry and its normal publisher.
   const candidates: RegistrationBody[] = [];
-  const minted = new Set<string>();
-  let duplicates = 0;
-  const mint = (
-    ocdId: string,
-    slot: "governing" | "board",
-    origin: RegistrationBody["bodyOrigin"],
-    gov: { readonly sourceDataset: RegistrationBody["sourceDataset"]; readonly jurisdictionId: string; readonly census: readonly [id: string, unitType: string] | null; readonly alsoServesOcdIds?: readonly string[] } | null,
-    source: RegistrationBody["provenance"],
-  ) => {
-    const id = `${ocdId}#${slot}`;
-    if (minted.has(id)) {
-      duplicates++;
-      return;
-    }
-    minted.add(id);
-    candidates.push({
-      id,
-      ocdId,
-      name: null,
-      bodyClass: "GOVERNING",
-      bodyOrigin: origin,
-      coverageStatus: "NOT_ATTEMPTED",
-      agendaSourceType: "NONE",
-      agendaSourceRef: null,
-      meetingCadence: null,
-      homepageUrl: null,
-      demandCount: 0,
-      sourceDataset: gov ? gov.sourceDataset : "TIGER_CB2023",
-      // The Census of Governments id and unit type; a TIGER/Line government has neither, only its division's GEOID.
-      ...(gov?.census ? { censusId: gov.census[0], censusUnitType: gov.census[1] } : {}),
-      jurisdictionId: gov ? gov.jurisdictionId : null,
-      ...(gov?.alsoServesOcdIds?.length ? { alsoServesOcdIds: [...gov.alsoServesOcdIds] } : {}),
-      provenance: source,
-    });
-  };
   const unpairedByReason: Record<string, number> = {};
-  const claimedSchools = new Set<number>();
   let governments = 0;
   let paired = 0;
   let statusGovernments = 0;
-  for (const [pid6, jurisdictionId, , govType, division, how, alternate] of ref.governments) {
+  const listingByNative = new Map(governmentListings.map(row => [row.nativeIds.census_pid6 ?? row.nativeIds.tiger_geoid, row]));
+  for (const [pid, , , govType, , how] of ref.governments) {
     if (govType === "STATE") continue;
     governments++;
-    if (division < 0) {
-      unpairedByReason[how] = (unpairedByReason[how] ?? 0) + 1;
-      continue;
-    }
-    paired++;
-    const [primary, layer, , , , funcstat] = ref.divisions[division];
-    const other = alternate >= 0 ? ref.divisions[alternate][0] : null;
+    const listing = listingByNative.get(pid);
+    if (listing?.associations.length) paired++;
+    else { const reason = govType.includes("SCHOOL") ? "NATIVE_SCHOOL_CROSSWALK_NOT_HELD" : "SOURCE_GEOGRAPHY_NOT_ESTABLISHED"; unpairedByReason[reason] = (unpairedByReason[reason] ?? 0) + 1; }
     if (how === "TIGER_FUNCSTAT") {
       statusGovernments++;
-      // Never a body on a division whose own status does not govern, whatever the government row says.
-      if (!territory || !GOVERNING_FUNCSTAT.has(funcstat ?? "")) {
-        violations.push(`${pid6} is registered from TIGER/Line functional status on ${primary}, which carries ${funcstat ?? "no"} status${territory ? "" : " in a reference with no status source"}: no government is minted from geography.`);
-        continue;
-      }
+      const sourceRow = ref.governments.find(row => row[0] === pid)!;
+      const sourceDivision = ref.divisions[sourceRow[4]];
+      if (!sourceDivision || !GOVERNING_FUNCSTAT.has(sourceDivision[5] ?? "") || pid !== `${sourceDivision[1]}:${sourceDivision[2]}`) violations.push(`Territory government ${pid} lacks a matching governing functional status.`);
     }
-    if (how === "TIGER_FUNCSTAT") {
-      mint(primary, "governing", "REGISTERED_FROM_TIGER_FUNCSTAT", { sourceDataset: "TIGER_LINE2023", jurisdictionId, census: null, ...(other === null ? {} : { alsoServesOcdIds: [other] }) }, {
-        sourceUrl: territory?.sources[layer] ?? null,
-        sourceOrg: "U.S. Census Bureau",
-        collectedAt: loaded.generatedAt,
-        verifiedAt: null,
-      });
-      continue;
-    }
-    if (SCHOOL_TYPES.has(govType)) claimedSchools.add(division);
-    mint(primary, SCHOOL_TYPES.has(govType) ? "board" : "governing", "REGISTERED_FROM_CENSUS_OF_GOVERNMENTS", { sourceDataset: "COG_2022", jurisdictionId, census: [pid6, govType], ...(other === null ? {} : { alsoServesOcdIds: [other] }) }, provenance);
-  }
-  // A territory's school district is its own department of education, a territorial agency with no functional status of its
-  // own here: in a territory a body comes only from a governing status, never from a division's type.
-  if (!territory) {
-    ref.divisions.forEach(([ocdId, layer, geoid], i) => {
-      // A Census placeholder is geography, never a government: no board is minted on it (lib/registry/census-placeholders.ts).
-      if (!SCHOOL_LAYERS.has(layer) || claimedSchools.has(i) || isCensusPlaceholderDivision({ ocdId, divisionType: "school_district", geoid })) return;
-      mint(ocdId, "board", "DERIVED_FROM_DIVISION_TYPE", null, { sourceUrl: boundaryUrl(layer as Exclude<ReferenceLayer, "state">), sourceOrg: "U.S. Census Bureau", collectedAt: loaded.generatedAt, verifiedAt: null });
-    });
   }
 
   /*
@@ -312,11 +257,12 @@ export function registrationCandidate(input: {
     reviewedRegistryVersionId: null,
     divisions,
     bodies,
+    governments: governmentListings,
     counts: {
       governments,
       pairedGovernments: paired,
       unpairedByReason,
-      sharedBodyClaims: duplicates,
+      sharedBodyClaims: 0,
     },
     ...(functionalStatus ? { functionalStatus } : {}),
   };
@@ -332,9 +278,9 @@ export function registrationCandidate(input: {
   }
 
   const readModelHash = sha256(canonicalCivicDataJson(readModel));
-  const rawHash = sha256(`${receipt.sha256}\n${loaded.sha256}\n${null}`);
-  const records = divisions.length + bodies.length;
-  const considered = allDivisions.length + candidates.length;
+  const rawHash = sha256(`${receipt.sha256}\n${loaded.sha256}\n${sha256(canonicalCivicDataJson(governmentListings))}`);
+  const records = divisions.length + governmentListings.length + bodies.length;
+  const considered = allDivisions.length + governmentListings.length + candidates.length;
   const normalizedPayload = {
     formatVersion: 1,
     state: readModel.state,
@@ -344,9 +290,9 @@ export function registrationCandidate(input: {
     reviewedRegistryVersionId: null,
     divisions: divisions.length,
     bodies: bodies.length,
+    governments: governmentListings.length,
   };
-  const id = `cv-${sha256(`${REGISTRATION_SOURCE_ID}${target.scope}${rawHash}${receipt.retrievedAt}`).slice(0, 32)}`;
-  const geoidOf = new Map(allDivisions.map((d) => [d.ocdId, d.geoid]));
+  const id = `cv-${sha256(`${REGISTRATION_SOURCE_ID}${target.scope}${rawHash}${receipt.retrievedAt}${REGISTRATION_PARSER_VERSION}${readModelHash}`).slice(0, 32)}`;
   const candidate: RoutineCandidate = {
     id,
     sourceId: REGISTRATION_SOURCE_ID,
@@ -360,6 +306,7 @@ export function registrationCandidate(input: {
       httpStatus: receipt.httpStatus,
       retrievedAt: receipt.retrievedAt,
       rawHash,
+      sourceCheck: registrationSourceCheck(receipt),
     },
     normalization: {
       succeeded: true,
@@ -381,10 +328,10 @@ export function registrationCandidate(input: {
           matchBasis: "OFFICIAL_ID" as const,
           ambiguous: false,
         }))
-      : bodies.map((b) => ({
-          subjectId: b.id,
+      : governmentListings.map((government) => ({
+          subjectId: government.id,
           jurisdiction: target.jurisdiction,
-          identifiers: { ocd_id: b.ocdId, geoid: geoidOf.get(b.ocdId) ?? "", ...(b.censusId ? { census_id: b.censusId } : {}) },
+          identifiers: { ...government.nativeIds, government_id: government.id },
           matchBasis: "OFFICIAL_ID" as const,
           ambiguous: false,
         })),
@@ -394,7 +341,7 @@ export function registrationCandidate(input: {
     semantics: {
       factKind: territory
         ? "The local governments TIGER/Line 2023 records as functioning in one territory (which the Census of Governments does not enumerate), each on its own Census division, and every Census division in the territory"
-        : "The governments the 2022 Census of Governments lists in one state, each on the Census division that is its territory, and every Census division in the state",
+        : "The sourced government and education-agency listings in one state, with independent qualified geographic associations and every held Census division",
       violations,
     },
     horizon: {
@@ -411,17 +358,17 @@ export function registrationCandidate(input: {
     dependentChecks: [
       {
         consumer: "lib/registration/reader.ts",
-        passed: (governments > 0 || evidencedNone) && bodies.every((b) => geoidOf.has(b.ocdId)),
+        passed: (governments > 0 || evidencedNone) && governmentListings.every(g => g.name.length > 0 && g.state === target.state && Object.keys(g.nativeIds).length > 0),
         detail: evidencedNone
           ? `${divisions.length} divisions and no body for ${target.state}: ${functionalStatus!.noLocalGovernment}`
-          : `${bodies.length} bodies and ${divisions.length} divisions for ${target.state}; every body sits on a Census division of the state.`,
+          : `${governmentListings.length} independently sourced listings and ${divisions.length} divisions for ${target.state}; missing geography does not suppress a listing.`,
       },
     ],
     normalizedPayload,
     readModel,
   };
   // The bound is measured on what the store will hold: this candidate as built, plus one more copy of its records for the engine's change set.
-  const bytes = escapedJsonBytes(candidate) + escapedJsonBytes({ divisions, bodies });
+  const bytes = escapedJsonBytes(candidate) + escapedJsonBytes({ divisions, bodies, governments: governmentListings });
   if (bytes > REGISTRATION_MAX_CANDIDATE_BYTES) {
     violations.push(`The ${target.state} registration would carry ${bytes} escaped bytes with its change set, over the ${REGISTRATION_MAX_CANDIDATE_BYTES}-byte bound (half the 64 MiB response cap).`);
   }

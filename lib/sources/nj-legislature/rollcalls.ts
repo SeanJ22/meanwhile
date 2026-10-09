@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { inflateRawSync } from "node:zlib";
+import { readZipEntries } from "../archive.ts";
 
 import { sourceAcquisitionFailure } from "../../civic-data/source-acquisition-failure.ts";
 import { officialStateOfficeholderId } from "../../state-rollcalls/authority.ts";
@@ -395,78 +395,14 @@ export function parseNjMemberVotingRecord(
   return { participant, displayName, votes };
 }
 
-function crc32(bytes: Uint8Array): number {
-  let crc = 0xffffffff;
-  for (const byte of bytes) {
-    crc ^= byte;
-    for (let bit = 0; bit < 8; bit += 1) crc = (crc >>> 1) ^ (0xedb88320 & -(crc & 1));
-  }
-  return (crc ^ 0xffffffff) >>> 0;
-}
-
-function uint16(bytes: Uint8Array, offset: number): number {
-  if (offset < 0 || offset + 2 > bytes.length) invalid("ZIP field extends beyond the archive bytes.");
-  return bytes[offset]! | (bytes[offset + 1]! << 8);
-}
-
-function uint32(bytes: Uint8Array, offset: number): number {
-  return (uint16(bytes, offset) | (uint16(bytes, offset + 2) << 16)) >>> 0;
-}
-
-/** Strict one-entry ZIP reader for the four official OLS archive artifacts. */
+/** The official OLS artifact is exactly one bounded, verified UTF-8 member. */
 export function decodeNjVoteArchive(bytes: Uint8Array, expectedEntryName: string): string {
-  if (bytes.length < 22) invalid(`${expectedEntryName} ZIP is shorter than an end-of-central-directory record.`);
-  let eocd = -1;
-  const floor = Math.max(0, bytes.length - 65_557);
-  for (let offset = bytes.length - 22; offset >= floor; offset -= 1) {
-    if (uint32(bytes, offset) === 0x06054b50) {
-      eocd = offset;
-      break;
-    }
-  }
-  if (eocd < 0) invalid(`${expectedEntryName} ZIP lacks an end-of-central-directory record.`);
-  const disk = uint16(bytes, eocd + 4);
-  const centralDisk = uint16(bytes, eocd + 6);
-  const diskEntries = uint16(bytes, eocd + 8);
-  const totalEntries = uint16(bytes, eocd + 10);
-  const centralSize = uint32(bytes, eocd + 12);
-  const centralOffset = uint32(bytes, eocd + 16);
-  const commentLength = uint16(bytes, eocd + 20);
-  if (disk !== 0 || centralDisk !== 0 || diskEntries !== 1 || totalEntries !== 1) invalid(`${expectedEntryName} ZIP is not an exact one-entry, one-disk archive.`);
-  if (eocd + 22 + commentLength !== bytes.length || centralOffset + centralSize !== eocd) invalid(`${expectedEntryName} ZIP central-directory denominator is inconsistent.`);
-  if (uint32(bytes, centralOffset) !== 0x02014b50 || centralSize < 46) invalid(`${expectedEntryName} ZIP central entry is invalid.`);
-  const flags = uint16(bytes, centralOffset + 8);
-  const method = uint16(bytes, centralOffset + 10);
-  const expectedCrc = uint32(bytes, centralOffset + 16);
-  const compressedSize = uint32(bytes, centralOffset + 20);
-  const uncompressedSize = uint32(bytes, centralOffset + 24);
-  const nameLength = uint16(bytes, centralOffset + 28);
-  const extraLength = uint16(bytes, centralOffset + 30);
-  const entryCommentLength = uint16(bytes, centralOffset + 32);
-  const localOffset = uint32(bytes, centralOffset + 42);
-  if ((flags & ~0x0808) !== 0 || (flags & 0x0001) !== 0 || (method !== 0 && method !== 8)) invalid(`${expectedEntryName} ZIP uses unsupported flags or compression.`);
-  if (46 + nameLength + extraLength + entryCommentLength !== centralSize) invalid(`${expectedEntryName} ZIP central entry size is inconsistent.`);
-  const decoder = new TextDecoder((flags & 0x0800) !== 0 ? "utf-8" : "windows-1252", { fatal: true });
-  const name = decoder.decode(bytes.subarray(centralOffset + 46, centralOffset + 46 + nameLength));
-  if (name !== expectedEntryName || name.includes("/") || name.includes("\\")) invalid(`${expectedEntryName} ZIP contains unexpected entry ${JSON.stringify(name)}.`);
-  if (uint32(bytes, localOffset) !== 0x04034b50) invalid(`${expectedEntryName} ZIP local entry is invalid.`);
-  const localFlags = uint16(bytes, localOffset + 6);
-  const localMethod = uint16(bytes, localOffset + 8);
-  const localNameLength = uint16(bytes, localOffset + 26);
-  const localExtraLength = uint16(bytes, localOffset + 28);
-  if (localFlags !== flags || localMethod !== method) invalid(`${expectedEntryName} ZIP local and central metadata disagree.`);
-  const localName = decoder.decode(bytes.subarray(localOffset + 30, localOffset + 30 + localNameLength));
-  if (localName !== expectedEntryName) invalid(`${expectedEntryName} ZIP local entry name disagrees with its central entry.`);
-  const dataOffset = localOffset + 30 + localNameLength + localExtraLength;
-  if (dataOffset + compressedSize > centralOffset) invalid(`${expectedEntryName} ZIP compressed data overlaps its central directory.`);
-  const compressed = bytes.subarray(dataOffset, dataOffset + compressedSize);
   let opened: Uint8Array;
   try {
-    opened = method === 0 ? new Uint8Array(compressed) : new Uint8Array(inflateRawSync(compressed));
-  } catch {
-    invalid(`${expectedEntryName} ZIP compressed data cannot be opened.`);
-  }
-  if (opened.length !== uncompressedSize || crc32(opened) !== expectedCrc) invalid(`${expectedEntryName} ZIP size or CRC does not reconcile.`);
+    const entries = readZipEntries(bytes, { maxEntries: 1, maxMemberBytes: 128 * 1024 * 1024, maxTotalBytes: 128 * 1024 * 1024 });
+    if (entries.length !== 1 || entries[0].name !== expectedEntryName || /[/\\]/.test(entries[0].name)) invalid(`${expectedEntryName} ZIP contains an unexpected entry.`);
+    opened = entries[0].data;
+  } catch (error) { invalid(`${expectedEntryName} ZIP size, CRC or directory does not reconcile: ${error instanceof Error ? error.message : String(error)}`); }
   let decoded: string;
   try {
     decoded = new TextDecoder("utf-8", { fatal: true }).decode(opened).replace(/^\uFEFF/, "");

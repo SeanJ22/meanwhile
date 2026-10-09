@@ -42,6 +42,7 @@ import {
   type MeetingBodyCrosswalkRow,
 } from "./meeting-body-crosswalk.ts";
 import { manualSourceReceiptStructureIssue, sourceAuthority } from "./source-authority.ts";
+import { manualSourceUrls } from "./manual-source-urls.ts";
 import type {
   CivicRecordMember,
   IdentityEvidence,
@@ -170,7 +171,7 @@ function jurisdictionForCandidateKey(key: string): string {
 }
 
 function receiptCoverageProblems(payload: unknown, receipt: ManualSourceSetReceipt): string[] {
-  const receipted = new Set(receipt.sources.flatMap((source) => [source.requestedUrl, source.finalUrl]));
+  const receipted = new Set(receipt.sources.flatMap(manualSourceUrls));
   const held = object(payload);
   const citations = held?.kind === "ballot-navigation"
     ? new Set(rows(held, "records").flatMap(row => manualRecordSourceUrls(row)))
@@ -299,8 +300,8 @@ function curatedRecordIssue(
         !/^https:\/\//.test(string(row.sourceUrl)) || !string(row.sourceOrg) ||
         !Number.isFinite(Date.parse(string(row.collectedAt))) ||
         typeof row.official !== "boolean" ||
-        !(string(office?.address).trim() || string(office?.phone).trim())
-      ? `${string(row.id)} lacks its eligible member, office kind, HTTPS source, collection time, official flag, or an address or phone.`
+        !(string(office?.address).trim() || string(office?.phone).trim() || string(office?.email).trim())
+      ? `${string(row.id)} lacks its eligible member, office kind, HTTPS source, collection time, official flag, or an address, phone or email.`
       : null;
   }
   const bodyOcdId = row.bodyOcdId;
@@ -645,8 +646,8 @@ function genericBallotProjection(payload: ManualProjectionPayload): BuiltProject
   ]), missingRequiredFields: records.length ? [] : ["ballots.contests/candidacies"],
     violations: genericBallotProblems(value), schemaVersion: "ballot-contests:1",
     consumerChecks: [{ consumer: "generic state/election ballot Reader", passed: records.length > 0 && genericBallotProblems(value).length === 0,
-      detail: `${ballots.length} state/election ballot(s), each with its complete verified contests.` }],
-    factKind: "complete saved official ballot contests" };
+      detail: `${ballots.length} state/election ballot(s) with independently verified contests and candidates.` }],
+    factKind: "sourced official ballot contests and candidates" };
 }
 
 function ballotProjection(
@@ -888,7 +889,7 @@ function curatedReaderProjection(
 
   const referenceSources = sourceReceipt.sources.filter((source) => source.sourceClass === "REFERENCE_PUBLISHER");
   if (referenceSources.length > 0 && contractId === "member-offices") {
-    if (records.some((row) => row.official !== false && referenceSources.some((source) => source.finalUrl === string(row.sourceUrl) || source.requestedUrl === string(row.sourceUrl)))) {
+    if (records.some((row) => row.official !== false && referenceSources.some((source) => manualSourceUrls(source).includes(string(row.sourceUrl))))) {
       shapeProblems.push("A member office read from a reference publisher cannot be marked official.");
     }
   } else if (referenceSources.length > 0 && contractId !== "venue-resolutions") {
@@ -1022,7 +1023,7 @@ export function manualProjectionCandidate(
     `${left.finalUrl}\n${left.rawHash}`.localeCompare(`${right.finalUrl}\n${right.rawHash}`)
   );
   const attemptHash = sha256(sources.map((source) =>
-    `${source.requestedUrl}\n${source.finalUrl}\n${source.httpStatus}\n${source.rawHash}\n${source.reviewOutcome ?? "SUPPORTED"}\n${source.failureDetail ?? ""}`
+    `${source.requestedUrl}\n${source.finalUrl}\n${source.httpStatus}\n${source.rawHash}\n${source.reviewOutcome ?? "SUPPORTED"}\n${source.failureDetail ?? ""}${source.extractedMembers?.length ? `\n${canonicalCivicDataJson(source.extractedMembers)}` : ""}`
   ).join("\n"));
   const normalizedHash = sha256(canonicalCivicDataJson(built.payload));
   const reviewedAt = input.sourceReceipt.reviewedAt;

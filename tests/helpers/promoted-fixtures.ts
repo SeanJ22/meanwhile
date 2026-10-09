@@ -84,7 +84,14 @@ export function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): Re
 const live: ReaderAuthorityEdgeBundle = {
   get registryRuntime() { return registryRuntime; },
   get federalDirectory() { return federalDirectory; },
-  get stateLegislators() { return Object.keys(stateLegislators).length ? { value: stateLegislators, versionId: "test:state-legislators" } : undefined; },
+  get stateLegislators() {
+    return Object.keys(stateLegislators).length ? {
+      jurisdictions: new Set(Object.keys(stateLegislators)),
+      load: async (jurisdiction: string) => stateLegislators[jurisdiction]
+        ? { value: stateLegislators[jurisdiction], versionId: "test:state-legislators" }
+        : null,
+    } : undefined;
+  },
   promoted,
 };
 

@@ -181,7 +181,6 @@ test("item 6b: every tool that counts the registry's bodies leaves out the place
   const { readFileSync } = await import("node:fs");
   for (const tool of [
     "scripts/stamp-body-forms.mts",
-    "scripts/stamp-coverage-tiers.mts",
   ]) {
     assert.match(readFileSync(tool, "utf8"), /withoutPlaceholderBodies\(JSON\.parse\(/, `${tool} reads the frozen registry's bodies without the placeholder rule`);
   }

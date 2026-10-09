@@ -112,7 +112,7 @@ export interface Jurisdiction {
   readonly bodyId?: string | null;
   /**
    * Registration rows only: that division's Census layer and GEOID (`county:39049`, `place:3918000`), the key its
-   * sampled share of each ZCTA is read by (`data/derived/zip-governments.json`). Null with `ocdId`.
+   * source-established ZCTA intersections are read by. Null when no association is held.
    */
   readonly censusDivision?: string | null;
   /** Registration rows only: the Census of Governments id (`pid6`), or `<layer>:<GEOID>` for a territory government. */

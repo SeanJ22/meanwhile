@@ -39,7 +39,7 @@ export function representationNoteFor(
     return "We couldn't check who holds this seat just now.";
   }
   return tier === "local"
-    ? "We know this division has a governing body because its boundary exists. We haven't sourced who sits on it."
+    ? "We haven't sourced the governing body and its members for this division yet."
     : "No sourced officeholder for this division yet.";
 }
 
@@ -57,6 +57,8 @@ export function hasRepresentation(coverage: CoverageSummary | null): boolean {
   if (!coverage) return false;
   return (
     coverage.bodies.length > 0 ||
+    (coverage.governments?.length ?? 0) > 0 ||
+    (coverage.governmentInventoryStates?.length ?? 0) > 0 ||
     coverage.seats.length > 0 ||
     coverage.senators.length > 0 ||
     coverage.statewideExecutives.length > 0

@@ -172,7 +172,6 @@ process.env[VITAL_SIGNS_REPORT_ENV] = "1";
 process.env[CONTROL_PLANE_READS_DIR_ENV] = join(ROOT, ".runtime", "control-plane", "reads");
 readFromHeldCopies();
 /* Every runner process reads unchanged civic rows and payload parts from the same disposable copies (civic-read-cache.ts). */
-await startCivicReadCacheHost();
 keepNeonBytesInProcess();
 /** One process's hour so far: its hour file, and what it added since its last report to the daily transfer rows. */
 function keepHourPart(part: NeonBytesHour): void {
@@ -205,6 +204,8 @@ if (provider === "postgres") {
   }
   assertRuntimeAuthority({ capabilities: ["STANDING_PARENT"] });
 }
+
+await startCivicReadCacheHost();
 
 function standingChildEnvironment(
   capability: Parameters<typeof admittedRuntimeChildEnvironment>[0]["capability"],

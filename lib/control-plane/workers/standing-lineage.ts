@@ -30,7 +30,7 @@ export interface StandingLineage {
   readonly dueAt: string;
   readonly rootWorkItemId: string;
   readonly siblingRootIds: readonly string[];
-  /** A verified reader publication is the only terminal source observation used for recurrence here. */
+  /** Actual source observation behind accepted published facts; remaining gaps stay open. */
   readonly publishedAt: string | null;
 }
 
@@ -56,18 +56,17 @@ export function selectStandingLineages(input: {
   const accepted = new Set(["ACQUIRED","EXTRACTED","PASS","SURVIVED","SUPPORTED"]);
   for (const result of input.workerResults) if (accepted.has(result.result.verdict))
     successfulResults.set(result.workItemId,(successfulResults.get(result.workItemId)??0)+1);
-  const resultById=new Map(input.workerResults.map(result=>[result.id,result] as const));
   const verifiedPublicationAt=(item:WorkItem):string|null=>{
     const outcome=item.publicationOutcome;
-    if (outcome?.status!=="PUBLISHED" || !outcome.versionId || !Number.isFinite(Date.parse(outcome.at))) return null;
-    const result=resultById.get(outcome.workerResultId);
-    if (!result || result.workItemId!==item.id || result.result.role!=="ADVERSARIAL_AUDITOR" || result.result.verdict!=="SURVIVED" ||
-      completedAttempt.get(result.attemptId)?.workItemId!==item.id) return null;
+    if (!outcome || outcome.status === "HELD" || !outcome.candidateId || !outcome.versionId ||
+      !outcome.sourceArtifactId || !outcome.sourceObservedAt || !outcome.workerResultId || outcome.workerResultId === "none" ||
+      !Number.isFinite(Date.parse(outcome.at)) || !Number.isFinite(Date.parse(outcome.sourceObservedAt)) ||
+      Date.parse(outcome.sourceObservedAt) > Date.parse(outcome.at)) return null;
     // A publication of zero accepted rows is not evidence that the source was
     // refreshed; both roster records and directory body records count here.
-    const acceptedCount=(outcome.acceptedMembers?.length??0)+(outcome.bodyIds?.length??0)+
+    const acceptedCount=(outcome.acceptedMembers?.length??0)+(outcome.bodyIds?.length??0)+(outcome.acceptedRecordIds?.length??0)+
       (outcome.records?.added??0)+(outcome.records?.changed??0)+(outcome.records?.reused??0);
-    return acceptedCount>0?outcome.at:null;
+    return acceptedCount>0?outcome.sourceObservedAt:null;
   };
   const childrenByParent = new Map<string,WorkItem[]>();
   for (const item of input.workItems) {
@@ -145,8 +144,8 @@ export function standingLineageCoversDue(input: {
   const existing = input.lineages.filter(lineage => lineage.key === input.key);
   if (!existing.length) return null;
   // Once a verified publication ages past the configured source cadence, a
-  // fresh standing round can begin. An unverified/partial/held output never
-  // starts that clock, and a method-version change never resets old source work.
+  // fresh standing round can begin. Held output never starts that clock;
+  // partial accepted facts do, without completing their unresolved work.
   const active = existing.find(lineage => {
     if (lineage.publishedAt === null) return true;
     const observed = Date.parse(lineage.publishedAt), current = Date.parse(input.now);

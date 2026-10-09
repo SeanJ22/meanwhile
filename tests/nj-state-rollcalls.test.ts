@@ -359,16 +359,15 @@ test("NJ partial member acquisition and any API/archive disagreement fail closed
   );
 });
 
-test("NJ permanent adapter requires normal two-GOOD live acceptance while AZ alone remains fail-closed", () => {
+test("ready Arizona native votes replace the retired landing-page probe", () => {
   const nj = ROUTINE_SOURCE_CONTRACTS.find(({ id }) => id === "nj-state-rollcalls");
-  const az = ROUTINE_SOURCE_CONTRACTS.find(({ id }) => id === "az-state-rollcalls");
+  const az = ROUTINE_SOURCE_CONTRACTS.find(({ id }) => id === "az-openstates-votes");
   assert.ok(nj);
   assert.ok(az);
-  assert.equal(nj.liveAcceptance, undefined);
-  assert.deepEqual(az.liveAcceptance, {
-    kind: "AUTHENTICATED_FAIL_CLOSED_ATTEMPT",
-    acceptedStates: ["SOURCE_BLOCKED", "HORIZON_UNRESOLVED"],
-  });
+  assert.equal(az.sourceId, "plural-openstates-votes");
+  assert.equal(az.scope, "US-AZ:openstates-votes:v1");
+  assert.deepEqual(az.acquisitionAdapter.command, ["scripts/az-votes-refresh.mts", "--promote"]);
+  assert.equal(ROUTINE_SOURCE_CONTRACTS.some(({ id }) => id === "az-state-rollcalls"), false);
 });
 
 test("ABSTAIN remains its own exact Reader disposition in rendered and census paths", () => {

@@ -77,7 +77,7 @@ function candidate(id: string, over: Partial<RoutineCandidate> = {}): RoutineCan
     },
     normalization: {
       succeeded: true,
-      parserVersion: "fec-funding/2",
+      parserVersion: "fec-funding/3",
       schemaVersion: "2",
       normalizedHash: HASH,
       inputRecords: 1,
@@ -1034,7 +1034,7 @@ test("a pre-parser source failure is one durable terminal event with a validatio
     requestedUrl: "https://api.open.fec.gov/v1/",
     attemptedAt: NOW,
     failureDetail: "HTTP 403 from the official route",
-    parserVersion: "fec-funding/2",
+    parserVersion: "fec-funding/3",
   });
   const outcome = await processRoutineCandidate(store, blocked, NOW);
   assert.equal(outcome.candidate.state, "SOURCE_BLOCKED");
@@ -1057,7 +1057,7 @@ test("explicit bounded authoritative absence can promote", async () => {
     sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-candidate:H6AZ00000:2026"),
     normalization: {
       succeeded: true,
-      parserVersion: "fec-funding/2",
+      parserVersion: "fec-funding/3",
       schemaVersion: "2",
       normalizedHash: HASH,
       inputRecords: 0,

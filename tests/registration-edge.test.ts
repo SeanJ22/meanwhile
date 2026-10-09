@@ -28,11 +28,11 @@ const META = { sourceThrough: null, retrievedAt: null, promotedThrough: null };
 const RECEIPT: RegistrationSourceReceipt = {
   requestedUrl: REGISTRATION_SOURCE_URL,
   finalUrl: REGISTRATION_SOURCE_URL,
-  httpStatus: 304,
+  httpStatus: 200,
   retrievedAt: "2026-09-23T12:00:00.000Z",
   sha256: REGISTRATION_SOURCE_SHA256,
   bytes: REGISTRATION_SOURCE_BYTES,
-  confirmedBy: "NOT_MODIFIED_SINCE_PIN",
+  confirmedBy: "HELD_RELEASE",
 };
 const REVIEWED: ReviewedRegistryIds = { versionId: "cv-reviewed", divisionIds: new Set(), bodyIds: new Set(), bodyDivisionIds: new Set() };
 
@@ -81,7 +81,7 @@ test("each state's registration is its own compressed artifact, read back lossle
   assert.equal(published.status, "PUBLISHED");
   const manifest = (await store.readManifest())!.manifest;
   assert.deepEqual(Object.keys(manifest.registrations ?? {}).sort(), ["nh", "oh"]);
-  assert.match(manifest.registrations!.oh.key, /registration-oh\.json\.gz$/);
+  assert.match(manifest.registrations!.oh.key, /^reader\/artifacts\/[a-f0-9]{64}\.json\.gz$/);
 
   const edge = await ensureReaderAuthorityEdge(manifest, store);
   assert.deepEqual([...edge.registrations!.states].sort(), ["nh", "oh"]);
@@ -91,7 +91,7 @@ test("each state's registration is its own compressed artifact, read back lossle
   assert.equal(await edge.registrations!.load("wy"), null, "a state with no artifact loads nothing");
 });
 
-test("unchanged states carry forward, a moved state re-publishes alone, and a stale carried state drops the whole section", async () => {
+test("unchanged states carry forward, a moved state re-publishes alone, and a stale carry keeps the winning manifest", async () => {
   const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reg-edge-")));
   const oh = model("OH");
   const nh = model("NH");
@@ -118,8 +118,8 @@ test("unchanged states carry forward, a moved state re-publishes alone, and a st
     store,
     registrations: { oh: { versionId: "reg-oh-2", carried: true }, nh: { versionId: "reg-nh-9", carried: true } },
   });
-  assert.equal(stale.status, "PUBLISHED");
-  assert.equal((await store.readManifest())!.manifest.registrations, undefined, "never a partial section: the reader falls back to the database this pass");
+  assert.equal(stale.status, "RACED");
+  assert.deepEqual((await store.readManifest())!.manifest, second, "a failed carry never removes valid state references");
 });
 
 test("the reader composes a state's registration from the edge, and a state the complete section omits costs no read at all", async () => {
@@ -169,25 +169,19 @@ test("a DC division and a Puerto Rico division reach their registrations on the 
   // Adjuntas's municipal government reaches the coverage card, titled by its municipio.
   enterReaderAuthorityEdge(edge);
   const coverage = await coverageAt(18.16, -66.72, 0, await divisionsByOcdIds([adjuntas]));
-  const row = coverage.bodies.find((b) => b.bodyId === `${adjuntas}#governing`);
+  const row = coverage.governments?.find((government) => government.associations.some(association => association.divisionId === adjuntas));
   assert.ok(row, "the municipio's government is in the card");
-  assert.equal(row!.divisionLabel, "Adjuntas Municipio");
+  assert.equal(row!.name, "Adjuntas Municipio");
 });
 
-test("a registered body reaches the coverage card titled by its division, never as a nameless, labelless row", async () => {
+test("a native county listing reaches the normal coverage card without a fabricated board", async () => {
   await installRegistryAuthority();
   const { coverageAt, divisionsByOcdIds } = await import("../lib/registry/server.ts");
   const oh = model("OH");
-  const body = oh.bodies.find((b) => b.bodyOrigin === "REGISTERED_FROM_CENSUS_OF_GOVERNMENTS" && oh.divisions.some((d) => d.ocdId === b.ocdId && d.divisionType === "county"))!;
-  const bodyDivisionId = body.ocdId;
-  const division = oh.divisions.find((d) => d.ocdId === bodyDivisionId)!;
-  enterReaderAuthorityEdge(promotedFixtureBundle({ registrations: { states: new Set(["oh"]), load: async (state) => (state === "oh" ? { value: oh, versionId: "reg-oh-1" } : null) } }));
-  // The ZIP widening hands coverage the registered divisions, exactly as /api/meetings does.
-  const resolved = await divisionsByOcdIds([division.ocdId]);
+  const government = oh.governments!.find(row => row.governmentClass === "COUNTY" && row.associations.length)!;
+  enterReaderAuthorityEdge(promotedFixtureBundle({ registrations: { states: new Set(["oh"]), load: async state => state === "oh" ? { value: oh, versionId: "reg-oh-1" } : null } }));
+  const resolved = await divisionsByOcdIds([government.associations[0].divisionId]);
   const coverage = await coverageAt(39.96, -83.0, 0, resolved);
-  const row = coverage.bodies.find((b) => b.bodyId === body.id);
-  assert.ok(row, "the registered county government is in the card");
-  assert.equal(row!.name, null, "its name is null until sourced");
-  assert.equal(row!.divisionLabel, division.label, "titled by its Census division");
-  assert.equal(row!.divisionType, "county");
+  assert.equal(coverage.governments?.find(row => row.id === government.id)?.name, government.name);
+  assert.equal(oh.bodies.length, 0);
 });

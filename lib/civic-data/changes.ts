@@ -321,7 +321,7 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
         const geoid = row && typeof row.geoid === "string" ? row.geoid : "";
         return { key: ocdId && geoid ? `division:${ocdId}|${geoid}` : "", record };
       });
-      return [...divisions, ...keyed("body", array(root.bodies), ["id"])].sort((left, right) => left.key.localeCompare(right.key));
+      return [...divisions, ...keyed("body", array(root.bodies), ["id"]), ...keyed("government", array(root.governments), ["id"])].sort((left, right) => left.key.localeCompare(right.key));
     }
     case "MEETING":
       return [
@@ -395,6 +395,8 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
       ];
     case "OFFICEHOLDER_STATEMENT":
       return keyed("statement", array(root.snapshots), ["id"]);
+    case "PRL_ARCHIVE":
+      return Object.entries(object(root.datasets) ?? {}).map(([key, record]) => ({ key: `dataset:${key}`, record })).sort((a, b) => a.key.localeCompare(b.key));
     case "STATE_EXECUTIVE_ACTION":
       return [
         { key: "projection:note", record: root.note },

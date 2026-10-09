@@ -1,6 +1,6 @@
 /**
- * Divisions reaching each ZIP, built by `scripts/build-zip-division-shards.mts`
- * into one shard per two-digit ZIP prefix. A request reads only its ZIP's shard
+ * Held ZIP orientation evidence, in one shard per two-digit ZIP prefix.
+ * Selected published Census relationships supply current district membership. A request reads only its ZIP's shard
  * and keeps a few recent ones in memory. A shard that cannot be read answers
  * null and is not cached.
  *
@@ -11,6 +11,7 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import type { GeographySelection } from "../census-geography/selection.ts";
 
 export interface ZipDivisionEntry {
   /** Every division whose territory reaches inside this ZIP. */
@@ -63,18 +64,20 @@ function entryOf(shard: Shard, zip: string): ZipDivisionEntry | null {
   if (refs === undefined) return null;
   return {
     ids: refs.map((i) => shard.divisions[i]),
-    partial: (shard.partial[zip] ?? []).map((i) => shard.divisions[i]),
+    partial: refs.map((i) => shard.divisions[i]).filter(id => !/^ocd-division\/country:us(?:\/(?:state|territory|district):[a-z]{2})?$/.test(id)),
     samples: shard.zipSamples[zip] ?? 0,
   };
 }
 
 /** A ZIP's divisions, or null when it is not indexed or its shard could not be read — our gap, never a claim about the place. */
-export async function zipDivisionEntry(zip: string | null): Promise<ZipDivisionEntry | null> {
+export async function zipDivisionEntry(zip: string | null, selection?: GeographySelection): Promise<ZipDivisionEntry | null> {
   if (zip === null || !/^\d{5}$/.test(zip)) return null;
   const { publishedZipDistricts, withCensusDistricts } = await import("./zip-census-districts.ts");
   const [shard, districts] = await Promise.all([shardFor(zipShardOf(zip)), publishedZipDistricts(zip)]);
   const entry = shard === null ? null : entryOf(shard, zip);
-  return entry === null ? null : withCensusDistricts(entry, districts, zip);
+  const base = entry ?? { ids: [], partial: [], samples: 0 };
+  const qualified = withCensusDistricts(base, districts, zip, selection);
+  return entry === null && qualified.ids.length === 0 ? null : qualified;
 }
 
 const lowestByState = new Map<string, Promise<ReadonlyMap<string, string> | null>>();

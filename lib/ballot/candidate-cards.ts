@@ -3,6 +3,7 @@ import type { PortraitVerification } from "../photos/evidence.ts";
 import { officialPhotoForPerson } from "../photos/person.ts";
 
 export interface CandidateCardData {
+  personId?: string;
   photoUrl: string | null;
   photoSource: string | null;
   photoVerification?: PortraitVerification;
@@ -32,26 +33,21 @@ function load(): CandidateCardsFile {
 
 function withPersonPhoto(
   card: CandidateCardData | null,
-  personName: string,
+  subjectId: string,
 ): CandidateCardData | null {
   if (!card) return card;
-  const official = officialPhotoForPerson(personName);
+  const official = officialPhotoForPerson(card.personId ?? subjectId);
   const merged =
-    !official || official.url === card.photoUrl
+    !official
       ? card
-      : { ...card, photoUrl: official.url, photoSource: official.source };
+      : { ...card, personId: official.verification?.personId ?? card.personId, photoUrl: official.url, photoSource: official.source, photoVerification: official.verification };
   return merged;
-}
-
-function nameFromCandidacyId(candidacyId: string): string {
-  const tail = candidacyId.split(":").pop() ?? "";
-  return tail.split("-").reverse().join(" ");
 }
 
 export function cardForCandidacy(candidacyId: string): CandidateCardData | null {
   return withPersonPhoto(
     load().cards[candidacyId] ?? null,
-    nameFromCandidacyId(candidacyId),
+    candidacyId,
   );
 }
 
@@ -59,7 +55,7 @@ export function cardForNominee(
   contestId: string,
   name: string,
 ): CandidateCardData | null {
-  return withPersonPhoto(load().cards[`${contestId}|${name}`] ?? null, name);
+  return withPersonPhoto(load().cards[`${contestId}|${name}`] ?? null, `${contestId}|${name}`);
 }
 
 export function allCandidateCards(): CandidateCardsFile {

@@ -120,7 +120,10 @@ async function geocodeOnce(
       signal,
     });
     if (!response.ok) return null;
-    return parseCensusPoint(await response.json());
+    const payload = await response.json();
+    const expectedZip = /,\s*(\d{5})$/.exec(address)?.[1];
+    if (expectedZip && parseCensusZip(payload) !== expectedZip) return null;
+    return parseCensusPoint(payload);
   }
 
   // POST, so a home address never rides in a URL that might be logged.
@@ -140,13 +143,19 @@ async function geocodeOnce(
   if (typeof body.lat !== "number" || typeof body.lng !== "number") return null;
   // The same envelope check the direct path applies.
   if (!Number.isFinite(body.lat) || !Number.isFinite(body.lng)) return null;
-  if (body.lat < 15 || body.lat > 72 || body.lng < -180 || body.lng > -60) {
+  if (!plausibleUsPoint(body.lat, body.lng)) {
     return null;
   }
   return { lat: body.lat, lng: body.lng };
 }
 
-/** The first match's coordinates, or null. Defensive: this is third-party JSON. */
+function plausibleUsPoint(lat: number, lng: number): boolean {
+  return (lat >= 15 && lat <= 72 && lng >= -180 && lng <= -60) ||
+    (lat >= 12 && lat <= 22 && lng >= 140 && lng <= 147) ||
+    (lat >= -15 && lat <= -10 && lng >= -173 && lng <= -168);
+}
+
+/** Coordinates from exactly one source match. Multiple candidates are unresolved. */
 export function parseCensusPoint(
   payload: unknown,
 ): { lat: number; lng: number } | null {
@@ -155,14 +164,14 @@ export function parseCensusPoint(
       result?: { addressMatches?: { coordinates?: { x?: unknown; y?: unknown } }[] };
     }
   )?.result?.addressMatches;
-  if (!Array.isArray(matches) || matches.length === 0) return null;
+  if (!Array.isArray(matches) || matches.length !== 1) return null;
 
   const lng = matches[0]?.coordinates?.x;
   const lat = matches[0]?.coordinates?.y;
   if (typeof lat !== "number" || typeof lng !== "number") return null;
   if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
   // Outside the plausible U.S. envelope is a parse gone wrong, not a place.
-  if (lat < 15 || lat > 72 || lng < -180 || lng > -60) return null;
+  if (!plausibleUsPoint(lat, lng)) return null;
 
   return { lat, lng };
 }
@@ -174,11 +183,11 @@ export function parseCensusPoint(
 export function parseCensusZip(payload: unknown): string | null {
   const matches = (
     payload as {
-      result?: { addressMatches?: { addressComponents?: { zip?: unknown } }[] };
+      result?: { addressMatches?: { addressComponents?: { zip?: unknown }; matchedAddress?: string }[] };
     }
   )?.result?.addressMatches;
-  if (!Array.isArray(matches) || matches.length === 0) return null;
-  const zip = matches[0]?.addressComponents?.zip;
+  if (!Array.isArray(matches) || matches.length !== 1) return null;
+  const zip = matches[0]?.addressComponents?.zip ?? /,\s*(\d{5})(?:-\d{4})?$/.exec(matches[0]?.matchedAddress ?? "")?.[1];
   return typeof zip === "string" && /^\d{5}$/.test(zip.trim()) ? zip.trim() : null;
 }
 
@@ -438,7 +447,7 @@ export async function zipThisAddressResolvesTo(
           });
     if (!response.ok) return null;
     const payload = await response.json();
-    const matched = parseCensusZip(payload);
+    const matched = typeof window === "undefined" ? parseCensusZip(payload) : typeof payload.zip === "string" && /^\d{5}$/.test(payload.zip) ? payload.zip : null;
     /* The same ZIP is not a redirect; there is nothing to offer. */
     return matched !== null && matched !== statedZip ? matched : null;
   } catch {

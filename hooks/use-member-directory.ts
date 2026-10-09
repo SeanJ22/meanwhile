@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 
 import type { DirectoryOffice, DirectorySource } from "@/lib/officials/directory";
 import { memberDirectoryReaches } from "@/lib/officials/member-directory-scope";
+import { statePeopleScopeForId } from "@/lib/officials/people-identity";
 
 /**
- * One federal member's district offices and committee seats, shared by every
- * component that needs them. The cache holds the promise per member id, so
+ * One member's offices and available committee seats, shared by every
+ * component that needs them. The cache holds the promise per member and state, so
  * simultaneous mounts share one request; failures are not cached.
  */
 
@@ -43,54 +44,57 @@ export function isFederalMember(id: string): boolean {
   return id.startsWith("congress:");
 }
 
-export function loadMemberDirectory(memberId: string): Promise<MemberDirectory> {
-  const existing = cache.get(memberId);
+export function loadMemberDirectory(memberId: string, state?: string): Promise<MemberDirectory> {
+  const scope = statePeopleScopeForId(memberId,state);
+  const key = `${memberId}|${scope ?? ""}`;
+  const existing = cache.get(key);
   if (existing) return existing;
 
   const promise = (async () => {
     const response = await fetch(
-      `/api/directory?member=${encodeURIComponent(memberId)}`,
+      `/api/directory?member=${encodeURIComponent(memberId)}${scope ? `&state=${encodeURIComponent(scope.slice(3))}` : ""}`,
     );
     if (!response.ok) throw new Error(String(response.status));
     return (await response.json()) as MemberDirectory;
   })().catch((error) => {
-    cache.delete(memberId);
+    cache.delete(key);
     throw error;
   });
 
-  cache.set(memberId, promise);
+  cache.set(key, promise);
   return promise;
 }
 
 export interface MemberDirectoryState {
-  /** Null while in flight, and null when the member is not federal. */
+  /** Null while in flight, and null when no source reaches the member. */
   directory: MemberDirectory | null;
   /** The request failed; distinct from "no record". */
   failed: boolean;
 }
 
-export function useMemberDirectory(memberId: string): MemberDirectoryState {
-  const [directory, setDirectory] = useState<MemberDirectory | null>(null);
-  const [failed, setFailed] = useState(false);
+export function useMemberDirectory(memberId: string, state?: string): MemberDirectoryState {
+  const scope = statePeopleScopeForId(memberId,state) ?? undefined;
+  const key = `${memberId}|${scope ?? ""}`;
+  const [result, setResult] = useState<(MemberDirectoryState & {key:string}) | null>(null);
 
   useEffect(() => {
     let live = true;
-    if (!memberDirectoryReaches(memberId, "offices")) return;
+    if (!memberDirectoryReaches(memberId, "offices",scope)) return;
     /*
-     * No reset before the fetch: the id is the component's key at every call
-     * site. The `live` flag drops an answer for a member already left.
+     * A result belongs to its exact member/state key. The `live` flag drops
+     * a completed request after the reader has moved to a different person.
      */
-    void loadMemberDirectory(memberId)
+    void loadMemberDirectory(memberId,scope)
       .then((payload) => {
-        if (live) setDirectory(payload);
+        if (live) setResult({key,directory:payload,failed:false});
       })
       .catch(() => {
-        if (live) setFailed(true);
+        if (live) setResult({key,directory:null,failed:true});
       });
     return () => {
       live = false;
     };
-  }, [memberId]);
+  }, [memberId,scope,key]);
 
-  return { directory, failed };
+  return result?.key === key ? result : {directory:null,failed:false};
 }

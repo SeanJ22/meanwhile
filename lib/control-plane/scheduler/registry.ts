@@ -86,8 +86,6 @@ export interface ProvidedObligation {
 export interface ProviderContext {
   readonly root: string;
   readonly nowIso: string;
-  /** Every paid route no provider planned gets a route plan, so its Scout is coordinator work. */
-  readonly planEveryPaidRoute?: boolean;
 }
 
 /** What a provider produced, including whether it could read its input. */
@@ -204,7 +202,7 @@ export function buildRegistry(
               : {}),
             lastWorkedAt: record.lastWorkedAt,
             ...(record.autonomousPlans?.[route.routeId] ? { autonomousPlan: record.autonomousPlans[route.routeId] }
-              : ctx.planEveryPaidRoute ? withPlan(routeWorkPlan({ providerId: provider.id, record, route })) : {}),
+              : withPlan(routeWorkPlan({ providerId: provider.id, record, route }))),
           },
         });
         count += 1;

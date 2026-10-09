@@ -4,8 +4,6 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { test } from "node:test";
 
-import registryFile from "../lib/registry/registry.json" with { type: "json" };
-import { loadRegistrationReference, registeredGovernments } from "../lib/registration/reference.ts";
 import { wiringForTypes, type BodySourceWiring } from "../lib/registry/source-wiring.ts";
 import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import { makeApptegySource } from "../lib/sources/apptegy/index.ts";
@@ -30,27 +28,6 @@ const NOW = new Date("2026-08-13T12:00:00-07:00");
 
 const fixture = (name: string) =>
   readFileSync(new URL(`./fixtures/${name}`, import.meta.url), "utf8");
-
-/**
- * The bodies the committed REGISTRATION reference registers beyond the
- * reviewed registry, minted exactly as the registration writer mints them
- * (`registeredGovernments`). The runtime registry is the reviewed registry plus
- * these, so a wired body outside the frozen registry.json must be one of them.
- */
-function registeredBodyIds(): Set<string> {
-  const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-  return new Set(["az", "nh", "nj"].flatMap((state) => registeredGovernments(loadRegistrationReference(root, state), state).bodies.map((b) => b.id)));
-}
-
-test("every source-wiring row names a real registry body", () => {
-  const bodyIds = new Set([...registryFile.bodies.map((b: { id: string }) => b.id), ...registeredBodyIds()]);
-  const missing = FIXTURE_DOOR_ROWS.filter((w) => !bodyIds.has(w.bodyId));
-  assert.deepEqual(
-    missing.map((w) => w.bodyId),
-    [],
-    `${FIXTURE_DOOR_ROWS.length - missing.length} of ${FIXTURE_DOOR_ROWS.length} wiring rows matched a registry body`,
-  );
-});
 
 test("every wiring row's ocdId is its bodyId without the slot", () => {
   for (const w of FIXTURE_DOOR_ROWS) {

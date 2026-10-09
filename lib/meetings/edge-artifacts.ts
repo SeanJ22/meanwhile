@@ -60,7 +60,7 @@ export interface ReaderManifestScope {
   readonly bounds?: ReaderAreaBounds;
   readonly meetingIds?: readonly string[];
   readonly agendaOnly?: boolean;
-  /** Content-addressed blob key: `reader/v<sequence>/meetings-<scope>.json`. */
+  /** Immutable, content-addressed artifact key. */
   readonly key: string;
   readonly sha256: string;
   readonly meetingCount: number;
@@ -148,6 +148,8 @@ export interface ReaderManifest {
    * the reader reads registration from the database.
    */
   readonly registrations?: Readonly<Record<string, AuthorityArtifactRef>>;
+  /** Legislative people loaded separately for each requested jurisdiction. */
+  readonly stateLegislators?: Readonly<Record<string, AuthorityArtifactRef>>;
   /**
    * Each route's (`<adapter>|<bodyId>`) newest successful fresh check that found
    * nothing new. The reader restamps that route's fresh rows with it, never
@@ -181,6 +183,7 @@ export type PromotedAuthorityFamily =
   | "federal-votes"
   | "federal-key-votes"
   | "officeholder-statements"
+  | "prl-archives"
   | "executive-actions";
 
 export const PROMOTED_AUTHORITY_FAMILIES: readonly PromotedAuthorityFamily[] = [
@@ -200,6 +203,7 @@ export const PROMOTED_AUTHORITY_FAMILIES: readonly PromotedAuthorityFamily[] = [
   "federal-votes",
   "federal-key-votes",
   "officeholder-statements",
+  "prl-archives",
   "executive-actions",
 ];
 
@@ -238,20 +242,6 @@ export interface AuthorityArtifactRef {
   readonly key: string;
   readonly version: string;
   readonly sha: string;
-}
-
-export function artifactKey(sequence: number, scope: string): string {
-  return `reader/v${sequence}/meetings-${scope}.json`;
-}
-
-/** The gzip-compressed artifact key for one authority family at a sequence. */
-export function authorityArtifactKey(sequence: number, family: AuthorityFamily): string {
-  return `reader/v${sequence}/${family}.json.gz`;
-}
-
-/** One state's registration artifact, immutable within its manifest sequence. */
-export function registrationArtifactKey(sequence: number, state: string): string {
-  return `reader/v${sequence}/registration-${state.toLowerCase()}.json.gz`;
 }
 
 export function sha256OfJson(value: unknown): string {

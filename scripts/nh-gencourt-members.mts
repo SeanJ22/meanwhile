@@ -19,7 +19,8 @@
 
 import { readFileSync } from "node:fs";
 
-import { runStamp } from "../lib/ops/freshness.ts";
+import { acquireKnownRelease, knownReleaseSourceCheck } from "../lib/sources/known-release.ts";
+import { readNhMembers } from "../lib/civic-data/state-members.ts";
 import { nhMembersCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
@@ -28,9 +29,7 @@ import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { routineReceiptFields } from "../lib/civic-data/runner-receipt.ts";
 import {
   isSourceAcquisitionFailure,
-  readPublisherBody,
   recordRegisteredSourceAcquisitionFailure,
-  requestPublisher,
   sourceAcquisitionFailure,
   withPublisherAcquisitionDeadline,
 } from "../lib/civic-data/source-acquisition-failure.ts";
@@ -221,6 +220,7 @@ async function main(): Promise<void> {
   let identityFinalUrl: string | null = null;
   let identityHttpStatus: number | null = null;
   let identityCrosswalk: NhCurrentMemberIdentityCrosswalk | null = null;
+  let sourceCheck:import("../lib/civic-data/types.ts").SourceCheckEvidence|undefined;
   let extraction: MembersExtraction;
   try {
     if (local) {
@@ -237,26 +237,14 @@ async function main(): Promise<void> {
             promote ? [SOURCE_URL, NH_LEGISLATORS_URL, NH_ROLL_HISTORY_URL] : [SOURCE_URL],
             async (url): Promise<NhOfficialDocument> => {
               const requestSignal = AbortSignal.any([signal, AbortSignal.timeout(60_000)]);
-              const res = await requestPublisher("NH General Court members", () => fetch(url, {
-                headers: { "user-agent": UA, accept: "text/plain,*/*" },
-                redirect: "follow",
-                signal: requestSignal,
-              }));
-              if (!res.ok) {
-                throw sourceAcquisitionFailure(
-                  "PUBLISHER_RESPONSE_REFUSED",
-                  `nh:members: ${url} answered HTTP ${res.status}. That is a WALL with a date, not a ` +
-                    "legislature with no members.",
-                );
+              try {
+                const held=await acquireKnownRelease({sourceId:"nh-general-court",releaseId:url,url,parserVersion:"nh-general-court/3",maxBytes:64*1024*1024,checkAfterMs:86400000,signal:requestSignal,headers:{"user-agent":UA,accept:"text/plain,*/*"},validate:bytes=>{const body=decodeNhPublisherBytes(bytes);if(url===SOURCE_URL)parseMembers(body);else if(url===NH_LEGISLATORS_URL)parseNhLegislators(body);else parseNhRollCallHistory(body);}});
+                return {requestedUrl:held.requestedUrl,finalUrl:held.finalUrl,httpStatus:held.httpStatus,body:decodeNhPublisherBytes(held.bytes),retrievedAt:held.retrievedAt,sourceCheck:knownReleaseSourceCheck(held)};
+              } catch(error) {
+                if(url!==NH_ROLL_HISTORY_URL)throw error;
+                console.error(`NH optional identity-history unavailable: ${error instanceof Error ? error.message : String(error)}`);
+                return {requestedUrl:url,finalUrl:url,httpStatus:0,body:""};
               }
-              const bytes = await readPublisherBody("NH General Court members", () => res.arrayBuffer());
-              requestSignal.throwIfAborted();
-              return {
-                requestedUrl: url,
-                finalUrl: res.url || url,
-                httpStatus: res.status,
-                body: decodeNhPublisherBytes(bytes),
-              };
             },
             { signal },
           );
@@ -264,7 +252,8 @@ async function main(): Promise<void> {
       );
       const memberDocument = acquired[0]!;
       text = memberDocument.body;
-      retrievedAt = new Date().toISOString();
+      retrievedAt = memberDocument.retrievedAt ?? new Date().toISOString();
+      sourceCheck = memberDocument.sourceCheck;
       finalUrl = memberDocument.finalUrl;
       httpStatus = memberDocument.httpStatus;
       const identityDocument = acquired[1];
@@ -276,7 +265,7 @@ async function main(): Promise<void> {
       identityHistoryText = acquired[2]?.body ?? null;
       // @freshness-reads-here — this clock call sits in the reading path, so the
       // stamp it produces names the day somebody actually looked.
-      readOn = runStamp();
+      readOn = retrievedAt.slice(0,10);
     }
     extraction = parseMembers(text);
     if (promote) {
@@ -287,7 +276,7 @@ async function main(): Promise<void> {
         );
       }
       const identityRows = parseNhLegislators(identityText);
-      const historyRows = parseNhRollCallHistory(identityHistoryText);
+      const historyRows = identityHistoryText ? parseNhRollCallHistory(identityHistoryText) : [];
       identityCrosswalk = joinNhCurrentMemberIdentities(
         extraction,
         identityRows,
@@ -323,7 +312,12 @@ async function main(): Promise<void> {
     if (identityText === null || identityHistoryText === null || identityFinalUrl === null || identityHttpStatus === null || identityCrosswalk === null) {
       throw new Error("NH_OFFICIAL_PERSON_ID_CROSSWALK_NOT_INITIALIZED");
     }
+    const now = new Date().toISOString();
+    const prior = await readNhMembers({store,now,bypassCache:true});
+    if (prior.kind === "STORE_UNREACHABLE") throw Error("NH_PRIOR_UNAVAILABLE");
     const candidate = nhMembersCandidate({
+      prior: prior.kind === "PROMOTED" || prior.kind === "BOOTSTRAP" ? prior.value : null,
+      priorRetrievedAt: prior.metadata.retrievedAt ?? undefined,
       rawText: text,
       rawIdentityText: `${identityText}\n${identityHistoryText}`,
       finalUrl,
@@ -331,12 +325,13 @@ async function main(): Promise<void> {
       httpStatus,
       identityHttpStatus,
       retrievedAt,
+      sourceCheck,
       extraction,
       identityCrosswalk,
     });
-    const outcome = await processRegisteredRoutineCandidate(store, "nh-members", candidate, retrievedAt, undefined, { confirmUnchanged: true });
+    const outcome = await processRegisteredRoutineCandidate(store, "nh-members", candidate, now, undefined, { confirmUnchanged: true });
     console.log("RCD_RECEIPT=" + JSON.stringify({ source: "nh-members", ...routineReceiptFields(candidate, outcome), structuralReleaseContract: ZERO_RELEASE_EVENTS }));
-    if (!outcome.promoted) process.exitCode = 2;
+    if (!outcome.promoted && !outcome.confirmed) process.exitCode = 2;
   }
 }
 

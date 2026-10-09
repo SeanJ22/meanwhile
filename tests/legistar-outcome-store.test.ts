@@ -323,6 +323,7 @@ test("a request failure persists as a named open failure and never as an empty s
     event,
     client: {
       slug: "pima",
+      eventBodyId: 138,
       ocdId: "ocd-division/country:us/state:az/county:pima",
       bodyId: PIMA_BOARD,
       jurisdiction: "Pima County, AZ",

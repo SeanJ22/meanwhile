@@ -223,11 +223,11 @@ export async function applyManualSourceGaps(
 /** Where the datasets a blocked reason names live, in the words a receipt prints. */
 export const DATASET = {
   lookup: "the published Census geography lookup (CENSUS_GEOGRAPHY / US:zcta-geography-overlaps)",
-  territory: "data/derived/census-unit-zips.json and data/derived/zip-governments.json",
+  territory: "native state government references and published Census intersections",
   registry: (state: string) =>
     `the promoted ${state.toUpperCase()} jurisdiction registry (OPERATIONAL_REFERENCE / US:covered-jurisdiction-routing:v1), ` +
     `or its registration (REGISTRATION / US-${state.toUpperCase()}:registration:v1)`,
-  unitTerritory: "data/derived/census-unit-zips.json (no ZCTA territory: TIGER publishes no boundary for it)",
+  unitTerritory: "the native state government reference (no source-established service boundary is held)",
   wiring: "the promoted meeting-partition source wiring",
   instruction: "a geography in the instruction (a state named in the words, or a geography sent from the Census lookup)",
   reader:

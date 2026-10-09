@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { sourceCheckedAt } from "./source-check.ts";
 import { currentPromotedEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
 
 import type {
@@ -70,6 +71,8 @@ export interface CivicDataReadMetadata {
   readonly lastKnownGoodVersionId: string | null;
   readonly sourceThrough: string | null;
   readonly retrievedAt: string | null;
+  /** Real provider check; original source evidence keeps retrievedAt. */
+  readonly checkedAt?: string;
   readonly promotedAt: string | null;
   readonly stale: CivicDataStaleState;
   readonly staleAt: string | null;
@@ -1135,9 +1138,14 @@ function promotedResult<T>(
   const retrievedAt = confirmedRetrievedAt !== null && Date.parse(confirmedRetrievedAt) > Date.parse(pointedRetrievedAt)
     ? confirmedRetrievedAt
     : pointedRetrievedAt;
+  const sourceChecks = [
+    candidate.candidate.retrieval.sourceCheck ? sourceCheckedAt(candidate.candidate.retrieval, projection.promotedAt) : undefined,
+    projection.latestConfirmation?.retrieval.sourceCheck ? sourceCheckedAt(projection.latestConfirmation.retrieval, projection.latestConfirmation.observedAt) : undefined,
+  ].filter((at): at is string => at !== undefined).sort((a, b) => Date.parse(a) - Date.parse(b));
+  const checkedAt = sourceChecks.at(-1);
   const temporal = temporalState({
     now,
-    retrievedAt,
+    retrievedAt: checkedAt ?? retrievedAt,
     staleAtRetrieval: candidate.candidate.temporal.staleAtRetrieval,
     maxAgeMs,
   });
@@ -1154,6 +1162,7 @@ function promotedResult<T>(
       lastKnownGoodVersionId: projection.lastKnownGoodVersionId,
       sourceThrough: candidate.candidate.temporal.sourceThrough,
       retrievedAt,
+      ...(checkedAt ? { checkedAt } : {}),
       promotedAt: projection.promotedAt,
       ...temporal,
     },

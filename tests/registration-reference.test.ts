@@ -5,6 +5,8 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { parseCsv } from "../lib/reference/index.ts";
+import { loadRegistrationReference } from "../lib/registration/reference.ts";
+import { referenceGovernmentListings } from "../lib/registration/listings.ts";
 
 /**
  * Registration without per-state code reads this reference. These pin what it
@@ -86,21 +88,12 @@ test("every Census government sits in exactly one state's file, every file is wh
   }
 });
 
-test("a government pairs by Census code wherever the Census gives one, and nothing it does not tie to a place is guessed", () => {
-  const t = index.counts.byTypeAndPairing;
-  assert.equal(t["COUNTY:COUNTY_FIPS"], 3031, "every county, by state and county code");
-  assert.equal(t["SPECIAL DISTRICT:NO_CENSUS_GEOGRAPHY"], 39555, "no special district has Census geography, so none is paired");
-  assert.equal((t["MUNICIPAL:PLACE_FIPS"] ?? 0) + (t["MUNICIPAL:COUSUB_FIPS"] ?? 0), 19466, "19,466 of 19,491 municipalities by code");
-  assert.equal(t["TOWNSHIP:COUSUB_FIPS"], 16171, "16,171 of 16,214 townships by county-subdivision code");
-  assert.equal(
-    (t["MUNICIPAL:STATE_CODES_DISAGREE"] ?? 0) + (t["TOWNSHIP:STATE_CODES_DISAGREE"] ?? 0) + (t["SCHOOL DISTRICT:STATE_CODES_DISAGREE"] ?? 0),
-    43,
-    "a row whose postal state and state code name two states is named, never paired across states",
-  );
-  // A school district has no Census code in the file; it pairs by name, or says it could not.
-  const schools = Object.entries(t).filter(([k]) => k.startsWith("SCHOOL DISTRICT:")).reduce((n, [, v]) => n + v, 0);
-  assert.equal(schools, 12546);
-  assert.ok((t["SCHOOL DISTRICT:SCHOOL_NAME"] ?? 0) + (t["SCHOOL DISTRICT:SCHOOL_NAME_LOOSE"] ?? 0) > 9900, "most school districts pair by name");
+test("held school rows publish independently without inheriting a name-based geographic association", () => {
+  const nh = referenceGovernmentListings(loadRegistrationReference(ROOT, "NH"));
+  assert.ok(nh.some(row => row.kind === "DEPENDENT_SCHOOL_SYSTEM"));
+  assert.ok(nh.some(row => row.kind === "EDUCATION_AGENCY"));
+  assert.ok(nh.filter(row => row.governmentClass.includes("SCHOOL")).every(row => row.associations.length === 0));
+  assert.ok(nh.filter(row => row.governmentClass === "COUNTY").every(row => row.associations.length));
 });
 
 test("a government the committed registry knows lands on the id it keys, directly or through its alternate", () => {
@@ -119,29 +112,14 @@ test("a government the committed registry knows lands on the id it keys, directl
   const columbus = government("oh", "CITY OF COLUMBUS");
   assert.equal(columbus.division, "ocd-division/country:us/state:oh/place:columbus");
   assert.equal(columbus.row[1], "oh:city:city-of-columbus");
-  assert.equal(government("oh", "COLUMBUS CITY SCH DIST").division, "ocd-division/country:us/state:oh/school_district:columbus_city_school_district");
 });
 
-test("a consolidated city-county pairs to its county, and a town whose code merely missed never does", () => {
-  // Filed MUNICIPAL under a consolidated-city place code no boundary layer carries, in a county with no COUNTY government.
-  const consolidated: [string, string, string][] = [
-    ["ky", "METRO GOVERNMENT OF LOUISVILLE-JEFFERSON COUNTY", "state:ky/county:jefferson"],
-    ["tn", "METROPOLITAN GOVERNMENT OF NASHVILLE-DAVIDSON COUNTY", "state:tn/county:davidson"],
-    ["ga", "UNIFIED GOVERNMENT OF ATHENS-CLARKE COUNTY", "state:ga/county:clarke"],
-    ["hi", "CITY AND COUNTY OF HONOLULU", "state:hi/county:honolulu"],
-    ["mt", "CITY AND COUNTY OF BUTTE-SILVER BOW", "state:mt/county:silver_bow"],
-    ["ks", "UNIFIED GOVERNMENT OF GREELEY COUNTY", "state:ks/county:greeley"],
-  ];
-  for (const [state, name, division] of consolidated) {
-    const g = government(state, name);
-    assert.equal(g.row[5], "CONSOLIDATED_COUNTY_FIPS", `${name} pairs as a consolidated government`);
-    assert.equal(g.division, `ocd-division/country:us/${division}`, `${name} governs its county`);
-    assert.ok(!states.get(state)!.governments.some((o) => o[3] === "COUNTY" && o[4] === g.row[4]), `${name}'s county has no separate county government`);
-  }
-  // Also unmatched, also in counties with no county government; neither name carries its county's, so neither takes it.
-  assert.equal(government("ct", "TOWN OF POMFRET").row[5], "NO_DIVISION_FOR_FIPS");
-  assert.equal(government("ma", "CITY OF GREENFIELD").row[5], "NO_DIVISION_FOR_FIPS");
-  assert.equal(index.counts.byTypeAndPairing["MUNICIPAL:CONSOLIDATED_COUNTY_FIPS"], 6, "exactly the six, nationally");
+test("a county location and a consolidated name never become service geography", () => {
+  const tn = referenceGovernmentListings(loadRegistrationReference(ROOT, "TN"));
+  const government = tn.find(row => row.name === "METROPOLITAN GOVERNMENT OF NASHVILLE-DAVIDSON COUNTY")!;
+  assert.ok(government);
+  assert.deepEqual(government.associations, []);
+  assert.ok(government.nativeIds.census_pid6);
 });
 
 test("a territory's governments are exactly its divisions TIGER/Line gives a governing status, read from the committed extract", () => {

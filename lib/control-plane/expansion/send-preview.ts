@@ -7,7 +7,7 @@
  *                      runner places them by territory this page does not hold,
  *                      so the runner's receipt carries the count
  *   REGISTRATION       no reviewed registry: each government the promoted
- *                      registration minted a body for owes its meetings discovery
+ *                      registration independently lists owes its missing facts
  *   NOT_READ           the registration could not be read: named, never zero
  * ```
  *
@@ -20,7 +20,7 @@ import { certainlyOverlaps, OVERLAP_CERTAINTY_MARGIN, type DivisionTerritory, ty
 import type { TerritoryIndex } from "./membership.ts";
 import type { JurisdictionRegistry } from "../../hunt/jurisdiction-universe.ts";
 
-/** A government a state's registration holds a body for, on its Census division. */
+/** A native government with an independently sourced division association. */
 export interface RegisteredGovernment {
   readonly jurisdictionId: string;
   readonly ocdId: string;

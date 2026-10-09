@@ -346,7 +346,8 @@ parse as data*, never *did the call succeed*.
 - **Last walked:** 2026-08-20
 - **Status:** WIRED, and the denominator behind every coverage claim.
   `data/reference/census_govt_units_2022.csv`, the national cartographic
-  boundary files, `scripts/resolve-census-territory.mts`.
+  boundary files, and the promoted Census geography readers. The former
+  `scripts/resolve-census-territory.mts` sampler is retired; its saved evidence remains.
 - **Auth:** none for the boundary and workbook files. `CENSUS_API_KEY` is held
   for the **API**, which nothing reads (`SRC01`).
 - **Licence:** US federal government work. Public domain.

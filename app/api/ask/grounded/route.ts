@@ -1,4 +1,6 @@
 import { governmentFinanceEvidence, governmentFinanceQuestion, composeGovernmentFinanceAnswer } from "@/lib/ask/government-finance";
+import { governmentListingEntity, governmentListingEvidence, readerGovernmentListings } from "@/lib/ask/government-listings";
+import { prlStatementEvidence, readPrlForSubject } from "@/lib/sources/prl/person";
 import { type MeetingsSnapshot } from "@/lib/meetings/snapshot";
 import { ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
 import { enterReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "@/lib/registry/runtime-edge";
@@ -76,6 +78,7 @@ import {
   type AskContact,
 } from "@/lib/ask/contacts";
 import { contactForCandidate } from "@/lib/ask/candidate-contact";
+import { officeContactsForMember } from "@/lib/ask/office-contacts";
 import { keyVoteEvidenceFor } from "@/lib/ask/key-votes";
 import { settleFundingRead } from "@/lib/funding/snapshot";
 import { settleStateMoneyReads } from "@/lib/funding/state-snapshot";
@@ -432,6 +435,7 @@ export async function POST(request: Request) {
     return Response.json({ error: "question is required" }, { status: 400 });
   }
   const question = body.question.slice(0, MAX_QUESTION_CHARS);
+  const ballotZip = typeof body.approximateLocation === "string" && /^\d{5}$/.test(body.approximateLocation) ? body.approximateLocation : undefined;
   const ocdIds = Array.isArray(body.ocdIds)
     ? body.ocdIds.filter((v): v is string => typeof v === "string").slice(0, 40)
     : [];
@@ -530,7 +534,7 @@ export async function POST(request: Request) {
   // Confirm the hint from the published ballot before leaving any source
   // unread. Legacy authorities and unmatched titles continue through the full path.
   if (ballotOnlyHint) {
-    const ballot = await timed("ballot", () => loadBallotForDivisions(ocdIds))();
+    const ballot = await timed("ballot", () => loadBallotForDivisions(ocdIds, {}, ballotZip))();
     const today = typeof body.today === "string" && /^\d{4}-\d{2}-\d{2}$/.test(body.today)
       ? body.today : new Date().toISOString().slice(0, 10);
     const direct = composeBallotOnlyAnswer(ballot, question, today);
@@ -665,9 +669,11 @@ export async function POST(request: Request) {
   /* Bodies resolve through the canonical registry, so a reader binds to one government rather than a shared geography. */
   const explicitBodyIds = new Set([...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects, 8)]
     .filter((ref) => ref.kind === "BODY").flatMap((ref) => ref.id ? [ref.id] : []));
+  const governmentListings = await readerGovernmentListings(question, ocdIds, [...explicitBodyIds]).catch(() => ({ records: [], unavailableStates: [] }));
+  const listedGovernments = governmentListings.records.map(governmentListingEntity);
   const scopedBodies = [...bodyIdentityIndex().values()].filter((entry) =>
     (entry.ocdId && ocdIds.includes(entry.ocdId)) || explicitBodyIds.has(entry.bodyId));
-  const bodies = snapshotEntities([...meetings, ...scopedBodies], (bodyId) => canonicalBodyIdentity(bodyId));
+  const bodies = [...snapshotEntities([...meetings, ...scopedBodies], (bodyId) => canonicalBodyIdentity(bodyId)), ...listedGovernments];
   /*
    * A question that names a curated topic and binds its government lexically (the reader's own words, never
    * page context, a prior turn or a model expansion) is answered without the model. Anything else loads every
@@ -678,7 +684,7 @@ export async function POST(request: Request) {
   let areaTopicRoute = false;
   /* A class-phrase mention ("township") is never overridden by a model binding, so the named-body decision is lexical and skips the deferrable sources and the model. */
   const explicitBodyClass = Boolean(classPhraseIn(question) && mentionBeforeClassPhrase(question));
-  const namedBodies = explicitBodyClass ? snapshotEntities([...bodyIdentityIndex().values()], canonicalBodyIdentity) : bodies;
+  const namedBodies = explicitBodyClass ? [...snapshotEntities([...bodyIdentityIndex().values()], canonicalBodyIdentity), ...listedGovernments] : bodies;
   let namedBodyTopicRoute = false;
   if (topicRoute) {
     const probe = resolveInterpretation(interpretWithoutModel(question), question, bodies, { activeSubjects: [], priorSubjects: [] });
@@ -703,7 +709,7 @@ export async function POST(request: Request) {
   try {
     const explicitIds = [...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects, 8)]
       .flatMap((ref) => ref.id ? [ref.id] : []);
-    const named = await namedOfficeholders(question, explicitIds);
+    const named = await namedOfficeholders(question, explicitIds, ocdIds);
     namedPeople = named.length;
     for (const seat of named) if (!officeholders.seats.some((held) => held.id === seat.id)) officeholders.seats.push(seat);
   } catch {
@@ -723,7 +729,7 @@ export async function POST(request: Request) {
   /* Loaded from the reader's divisions, not from what the client says is on screen; the same set `app/ballot/page.tsx` renders from. */
   // A topic question bound lexically to a body is not a ballot question; its
   // ballot is not read (loadBallotForDivisions([]) is the empty holding).
-  const ballot = await loadBallotForDivisions(deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute || leanAsk ? [] : ocdIds);
+  const ballot = await loadBallotForDivisions(deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute || leanAsk ? [] : ocdIds, {}, ballotZip);
   const ballotLoadGaps: EvidenceGap[] = ballot.loaderFailures.length ? [{ whose: "OURS", statement: "We couldn't load the ballot for your area. Please try again in a moment." }] : [];
   const meetingLoadGaps: EvidenceGap[] = meetingDataState === "STORE_UNREACHABLE"
     ? [{ whose: "OURS", statement: `We couldn't load our meeting records. Please try again in a moment.` }]
@@ -1197,6 +1203,16 @@ export async function POST(request: Request) {
       meetingStoreUnavailableReads: meetingDataState === "STORE_UNREACHABLE" ? 1 : 0,
     };
     const contacts: AskContact[] = [];
+    const officeContactSubjects = new Set<string>();
+    const addMemberOfficeContacts = async (seat: Parameters<typeof officeContactsForMember>[0]) => {
+      if(officeContactSubjects.has(seat.id)) return;
+      officeContactSubjects.add(seat.id);
+      try { contacts.push(...await officeContactsForMember(seat)); }
+      catch {
+        denominators.officeContactLoaderFailures = (denominators.officeContactLoaderFailures ?? 0) + 1;
+        gaps.push({whose:"OURS",statement:`We couldn’t load the office addresses for ${seat.name} just now.`});
+      }
+    };
     const canonicalSubjectKeys = new Set<string>(subject ? [subject.id] : []);
     /* A party-conflict card's filing: retrieved beside the card, its money kept under its own id. */
     let partyConflictFiling: BallotSubjectRecord | null = null;
@@ -1275,6 +1291,7 @@ export async function POST(request: Request) {
           records.push(officeholderEvidence(seat, `office:${seat.id}`));
           denominators.officeholderRecords = (denominators.officeholderRecords ?? 0) + 1;
           contacts.push(contactForOfficeholder(seat));
+          await addMemberOfficeContacts(seat);
           if (!moneyOnly) officeholderActionEvidence(
             seat.id,
             seat.name,
@@ -1313,6 +1330,11 @@ export async function POST(request: Request) {
         if (!joined.length) gaps.push({ whose: "OURS", statement: `We haven't confirmed which voting record belongs to ${ballotRecord.name}, so we haven't shown anyone else's votes.` });
       }
     } else if (subject?.kind === "BODY") {
+      const listing = governmentListings.records.find(row => row.id === subject.id);
+      if (listing) {
+        records.push(governmentListingEvidence(listing));
+        denominators.governmentInventoryRecords = 1;
+      }
       const identity = canonicalBodyIdentity(subject.id);
       const financeDivision = bound?.ocdId ?? identity?.ocdId;
       if (financeDivision && governmentFinanceQuestion(question)) {
@@ -1578,6 +1600,7 @@ export async function POST(request: Request) {
         denominators.officeholderRecords = 1;
         subject.office = seat.officeTitle;
         contacts.push(contactForOfficeholder(seat));
+        await addMemberOfficeContacts(seat);
       }
       /* The denominator is stated so the answer can bound its own scope. */
       if (moneyOnly) {
@@ -1617,6 +1640,11 @@ export async function POST(request: Request) {
       records.push(...statements.records);
       gaps.push(...statements.gaps);
       Object.assign(denominators, statements.denominators);
+      const archived = await readPrlForSubject(subject.id, officeholders.seats.find(row => row.id === subject.id)).catch(() => null);
+      if (archived) {
+        records.push(...prlStatementEvidence(subject.id, archived, question, subject.name));
+        denominators.archivedStatementsReturned = archived.statements.length;
+      }
     }
 
     /*
@@ -1725,6 +1753,7 @@ export async function POST(request: Request) {
     /* The reader's own officials (`lib/ask/reader-officials.ts`): each one named is a record beside the composed sentence. */
     const officials = officialsAsk && (!subject || officialsAsk.place) ? composeReaderOfficials({ ask: officialsAsk, held: officeholders.held, holdingFailed: officeholders.loaderFailures > 0, placesReached: new Set(ocdIds.filter((id) => /[/]place:[a-z_]+$/.test(id) && !id.endsWith("_ccd"))).size }) : null;
     if (officials) {
+      await Promise.all(officials.named.map(({seat})=>addMemberOfficeContacts(seat)));
       for (const { seat, bodyName } of officials.named) {
         records.push(officeholderEvidence(seat));
         contacts.push({

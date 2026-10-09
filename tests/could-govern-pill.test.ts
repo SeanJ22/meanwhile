@@ -10,6 +10,10 @@ import {
   COULD_GOVERN_TEXT,
 } from "../lib/ballot/could-govern.ts";
 import { needsPill, zipCertainty } from "../lib/geo/zip-certainty.ts";
+import { divisionIdsForZipArea } from "../lib/ballot/zip-divisions.ts";
+import { buildCensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
+import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
+import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { codeOf } from "./read-code.ts";
 
 /**
@@ -20,17 +24,20 @@ import { codeOf } from "./read-code.ts";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, "..");
+const districtEdge = buildCensusDistrictEdge(JSON.parse(readFileSync(join(ROOT, "lib/census-geography/bootstrap-az.json"), "utf8")) as BuiltDataset, "pill-qualified-fixture");
+const current = { purpose: "representation" as const, asOf: "2026-10-09" };
+const withDistricts = <T>(read: () => T): T => withReaderAuthorityEdge({ censusDistricts: { value: districtEdge, versionId: districtEdge.versionId } }, read);
 
-test("3.2: at 07866 the county and the regional district govern everyone — no pill", async () => {
+test("3.2: sampled county and school overlap cannot establish whole-ZIP certainty", async () => {
   const c = await zipCertainty("07866");
   assert.ok(c, "07866 is inside this repo's committed geometry");
-  assert.equal(c.certaintyOf("ocd-division/country:us/state:nj/county:morris"), "CERTAIN");
+  assert.equal(c.certaintyOf("ocd-division/country:us/state:nj/county:morris"), "AMBIGUOUS");
   assert.equal(
     c.certaintyOf(
       "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district",
     ),
-    "CERTAIN",
-    "Morris Hills Regional covers the whole zip — a school district is not automatically ambiguous",
+    "AMBIGUOUS",
+    "the held sample does not establish whole-ZIP school service",
   );
 });
 
@@ -50,24 +57,20 @@ test("3.2: at 07866 the two Rockaways and Denville each govern PART — pill", a
   }
 });
 
-test("3.7: the pill is NOT universal — Newbury governs everyone at 03255", async () => {
-  /* If every municipality carried the pill it would say nothing, so a body that governs the whole ZIP is unmarked. */
-  const c = await zipCertainty("03255");
+test("3.7: a qualified whole-area district needs no pill while sampled local divisions stay uncertain", async () => {
+  const c = await withDistricts(() => zipCertainty("85635", current));
   assert.ok(c);
-  assert.equal(
-    c.certaintyOf("ocd-division/country:us/state:nh/county:merrimack/place:newbury_town"),
-    "CERTAIN",
-  );
-  assert.equal(
-    c.certaintyOf("ocd-division/country:us/state:nh/school_district:kearsarge_regional_school_district"),
-    "CERTAIN",
-  );
+  assert.equal(c.certaintyOf("ocd-division/country:us/state:az/cd:6"), "CERTAIN");
+  assert.equal(needsPill(c.certaintyOf("ocd-division/country:us/state:az/cd:6")), false);
+  assert.equal(c.certaintyOf("ocd-division/country:us/state:az/place:sierra_vista"), "AMBIGUOUS");
 });
 
-test("3.8: a zip that crosses nothing carries no pill at all", async () => {
+test("3.8: a sample with no observed crossing still leaves local boundaries uncertain", async () => {
   const c = await zipCertainty("85701");
   assert.ok(c);
-  assert.equal(c.partial.length, 0, "85701 crosses no governing boundary");
+  assert.ok(c.partial.length > 0, "a finite sample cannot certify every address in 85701");
+  assert.ok(c.partial.every(id => needsPill(c.certaintyOf(id))));
+  assert.equal(c.certaintyOf("ocd-division/country:us/state:az"), "CERTAIN");
 });
 
 test("3.2: an UNMEASURED division gets the pill, never a certainty it never earned", async () => {
@@ -328,13 +331,18 @@ test("3.1: the class sweep — both zip-resolving surfaces widen to the AREA", (
   }
 });
 
-test("3.1: the widening can only ADD divisions, never remove them", () => {
-  const route = codeOf("app", "api", "meetings", "route.ts");
-  assert.match(
-    route,
-    /widened\.length\s*>=\s*resolvedDivisions\.length/,
-    "a resolver change that could shrink the set is how a full surface goes quietly empty",
-  );
+test("3.1: qualified area plans replace stale point districts and preserve independent local facts", async () => {
+  const local = "ocd-division/country:us/state:az/place:sierra_vista";
+  const stale = "ocd-division/country:us/state:az/cd:7";
+  const point = [local, stale, "ocd-division/country:us/state:az"];
+  const serving = await withDistricts(() => divisionIdsForZipArea("85635", point, current));
+  assert.ok(serving.includes(local));
+  assert.ok(serving.includes("ocd-division/country:us/state:az/cd:6"));
+  assert.ok(!serving.includes(stale), "the previous point assignment does not survive a qualified replacement");
+  const election = await withDistricts(() => divisionIdsForZipArea("85635", point,
+    { purpose: "election", asOf: "2026-10-09", electionDate: "2026-11-03" }));
+  assert.ok(election.includes(local));
+  assert.ok(!election.some(id => /\/(?:cd|sldu|sldl):/.test(id)), "a missing election plan cannot borrow a serving district");
 });
 
 test("3.1: a body arriving only through the widening must be GOVERNING", () => {

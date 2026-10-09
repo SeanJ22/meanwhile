@@ -3,6 +3,7 @@ import test from "node:test";
 import { collectFecCandidate, fecOrganizationRows, fecTotalsForPeriod } from "../lib/funding/fec-collector.ts";
 import { fecCycle, parseFecPage, readFecPages, type FecPage, type FecReadPage } from "../lib/funding/fec-api.ts";
 import type { FecTarget } from "../lib/funding/fec-targets.ts";
+import { isSourceAcquisitionFailure, sourceAcquisitionFailure } from "../lib/civic-data/source-acquisition-error.ts";
 const id = "H6OR02001", committee = "C00000001";
 const target: FecTarget = { targetKey: "congress:A000001", displayName: "Alice Adams", state: "OR", office: "H", district: "02",
   route: "roster", knownFecCandidateId: id };
@@ -59,7 +60,8 @@ test("native candidate totals and all authorized committees publish independentl
 });
 
 test("a candidate's optional failure retains its own receipts without blocking its verified totals", async () => {
-  const read: FecReadPage = async path => path.endsWith("/totals/") ? page([{ candidate_id: id, cycle: 2026, receipts: 10 }]) : Promise.reject(new Error("503"));
+  const read: FecReadPage = async path => path.endsWith("/totals/") ? page([{ candidate_id: id, cycle: 2026, receipts: 10 }])
+    : Promise.reject(sourceAcquisitionFailure("PUBLISHER_RESPONSE_REFUSED", "FEC returned HTTP 503"));
   const first = await collectFecCandidate({ candidateId: id, cycle: 2026, targets: [target], read, observedAt: () => "2026-10-09" });
   assert.equal(first.candidate?.totals.receipts, 10); assert.equal(first.candidate?.acquisition?.contributionsComplete, false);
   const held = first.candidate!; held.topContributions = fecOrganizationRows([receipt("1", 50)], committee);
@@ -67,6 +69,14 @@ test("a candidate's optional failure retains its own receipts without blocking i
   const next = await collectFecCandidate({ candidateId: id, cycle: 2026, targets: [target], previous: held, read, observedAt: () => "2026-10-09" });
   assert.deepEqual(next.candidate?.topContributions, held.topContributions.map(row => ({ ...row, sourceObservedAt: "2026-10-01" })));
   assert.equal(next.candidate?.totals.receipts, 10);
+});
+
+test("FEC source-document failures are classified while optional vault or program failures remain operational", async () => {
+  assert.throws(() => parseFecPage("invalid json"), error => isSourceAcquisitionFailure(error) && error.code === "PUBLISHER_DOCUMENT_INVALID");
+  const defect = new Error("VAULT_STORE_UNAVAILABLE");
+  await assert.rejects(collectFecCandidate({ candidateId: id, cycle: 2026, targets: [target], observedAt: () => "2026-10-09",
+    read: async path => path.endsWith("/totals/") ? page([{ candidate_id: id, cycle: 2026, receipts: 10 }]) : Promise.reject(defect) }),
+  error => error === defect && !isSourceAcquisitionFailure(error));
 });
 
 test("periods are explicit and conflicting latest candidate totals never get summed", () => {

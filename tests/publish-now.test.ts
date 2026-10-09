@@ -38,7 +38,9 @@ test("BX-03: all unacknowledged parser results stay owed across restart; an ackn
   assert.equal(tasks[0].ownerInvocation?.requestedAt, parser.endedAt, "a request older than the due-request lifetime is still owed");
   const restored = JSON.parse(JSON.stringify({ items: [item, sibling], results: [parser, siblingParser] }));
   assert.deepEqual(publishNowWorkerTasks(restored.items, restored.results, NOW), tasks);
-  const published = { ...item, publicationOutcome: { workerResultId: parser.id, status: "PUBLISHED", at: NOW } } as WorkItem;
+  const oldAcknowledgement = { ...item, publicationOutcome: { workerResultId: parser.id, status: "PUBLISHED", at: NOW } } as WorkItem;
+  assert.equal(publishNowWorkerTasks([oldAcknowledgement, sibling], [parser, siblingParser], NOW).length, 2, "an acknowledgement without observed source evidence still owes publication repair");
+  const published = { ...item, publicationOutcome: { workerResultId: parser.id, status: "PUBLISHED", at: NOW, sourceObservedAt: parser.endedAt } } as WorkItem;
   assert.equal(publishNowWorkerTasks([published, sibling], [parser, siblingParser], NOW).length, 1);
   assert.equal(publishNowWorkerTasks([item], [], NOW).length, 0, "held-page scans stay on the ordinary lane");
 });

@@ -489,7 +489,7 @@ function scopeUnits(scope: PlannedScope, world: DispatchWorkWorld): TargetUnits 
         dataset: DATASET.registry(state),
         why:
           `${unjoined.length} Census of Governments unit(s) in this geography are not carried by the ${state} registry ` +
-          "(no row joins them by the generator's id rule), so nothing defines what they owe",
+          "(no row joins them by native identity or a retained identity alias), so nothing defines what they owe",
         units: unjoined.length,
         states: [state],
         sample: unjoined.slice(0, READING_LIST_CAP).map((u) => u.name),

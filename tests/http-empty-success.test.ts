@@ -1,19 +1,18 @@
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync, statSync } from "node:fs";
-import { dirname, join, relative } from "node:path";
-import { fileURLToPath } from "node:url";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import { SourceHttpError, notADocument, politeGetText } from "../lib/sources/http.ts";
 import { accountedNormalize } from "../lib/sources/normalize-account.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { acquireKnownRelease } from "../lib/sources/known-release.ts";
+import { isSourceAcquisitionFailure, sourceAcquisitionFailure } from "../lib/civic-data/source-acquisition-error.ts";
 
 /**
  * The fetch layer refuses a 200 that is not a document, on both return paths (the in-process client and
  * the curl rung), while an honest empty calendar with nothing in the served window still passes.
  */
-
-const HERE = dirname(fileURLToPath(import.meta.url));
-const ROOT = join(HERE, "..");
 
 /** A 200 with the given body, from a fetch this test controls entirely. */
 const serving = (body: string, status = 200): typeof fetch =>
@@ -108,48 +107,28 @@ test("the exemption cannot be claimed by a pass that set nothing aside", () => {
   );
 });
 
-/**
- * A file that reads a network response checks that what came back is a document. The walk is a filesystem
- * walk because ripgrep skips NUL-byte files and hidden paths and reports nothing found without having looked.
- */
-test("every direct network read in a source adapter checks it got a document", () => {
-  const adapters = join(ROOT, "lib", "sources");
-  const offenders: string[] = [];
-  let read = 0;
-  let direct = 0;
-
-  const walk = (dir: string): void => {
-    for (const entry of readdirSync(dir)) {
-      const full = join(dir, entry);
-      if (statSync(full).isDirectory()) {
-        walk(full);
-        continue;
-      }
-      if (!entry.endsWith(".ts")) continue;
-      // The shared client is the one place a bare fetch belongs.
-      if (full.endsWith(join("lib", "sources", "http.ts"))) continue;
-      read++;
-      const body = readFileSync(full, "utf8");
-      /* `await fetch(` is the invocation form; every adapter exports a method named `fetch`. */
-      if (!/await\s+fetch\s*\(/.test(body)) continue;
-      direct++;
-      if (!body.includes("notADocument")) offenders.push(relative(ROOT, full));
-    }
-  };
-  walk(adapters);
-
-  assert.ok(read > 10, `the sweep must actually read adapters — read ${read}`);
-  // The sweep has to find the shape it is guarding, or an allowlist that
-  // silently matches nothing reads as a clean board.
-  assert.ok(
-    direct >= 1,
-    `the sweep must find the direct-fetch shape it guards — found ${direct}`,
-  );
-  assert.deepEqual(
-    offenders,
-    [],
-    `direct network reads with no document check: ${offenders.join(", ")}`,
-  );
+test("shared release acquisition refuses empty and wrong-format documents before retaining source evidence", async () => {
+  const store = new MemoryEvidenceStore(), { locks } = createMemoryRepositories();
+  const acquire = (body: string) => acquireKnownRelease({
+    sourceId: "fixture-calendar", releaseId: "current", parserVersion: "ical/1",
+    url: "https://publisher.example/calendar.ics", signal: AbortSignal.timeout(10_000),
+    maxBytes: 1024, checkAfterMs: 86_400_000, store, locks, fetchImpl: serving(body),
+    validate(bytes) {
+      const invalid = notADocument(new TextDecoder().decode(bytes), { label: "a calendar feed", marker: "BEGIN:VCALENDAR" });
+      if (invalid) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", invalid);
+    },
+  });
+  for (const body of ["", " \n\t ", "<html>temporarily unavailable</html>"]) {
+    await assert.rejects(acquire(body), (error: unknown) => {
+      assert.ok(isSourceAcquisitionFailure(error));
+      assert.equal(error.code, "PUBLISHER_DOCUMENT_INVALID");
+      return true;
+    });
+    assert.deepEqual(await store.list("project/"), [], "an HTTP 200 wall creates no source body or current release pointer");
+  }
+  const calendar = "BEGIN:VCALENDAR\r\nEND:VCALENDAR";
+  assert.equal(new TextDecoder().decode((await acquire(calendar)).bytes), calendar,
+    "a real calendar with no events is still valid source evidence");
 });
 
 /** Every rung's 200 goes through the one finalizer. `options.ladder` drives the escalation with doubles; without it nothing escalates. */
@@ -241,7 +220,7 @@ test("A-003 · injecting a fetchImpl alone still does NOT walk the ladder", asyn
 
 /** Counting the return sites stops a future rung returning the transport triple beside the finalizer rather than through it. */
 test("A-003 · politeGetText has exactly ONE place a body becomes a return value", () => {
-  const source = readFileSync(join(HERE, "..", "lib", "sources", "http.ts"), "utf8");
+  const source = readFileSync(new URL("../lib/sources/http.ts", import.meta.url), "utf8");
   const body = source.slice(
     source.indexOf("export async function politeGetText"),
     source.indexOf("/** One polite GET returning parsed JSON. */"),

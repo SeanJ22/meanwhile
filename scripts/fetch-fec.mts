@@ -13,9 +13,9 @@ import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
-import { sourceAcquisitionFailure, recordRegisteredSourceAcquisitionFailure } from "../lib/civic-data/source-acquisition-failure.ts";
+import { isSourceAcquisitionFailure, sourceAcquisitionFailure, recordRegisteredSourceAcquisitionFailure } from "../lib/civic-data/source-acquisition-failure.ts";
 import { writeRoutineReceiptLine } from "../lib/civic-data/receipt-output.ts";
-import { openSourceAcquisitionDomain, ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS, sourceAcquisitionSleep } from "../lib/sources/acquisition-deadline.ts";
+import { isSourceAcquisitionDeadlineError, openSourceAcquisitionDomain, ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS, sourceAcquisitionSleep } from "../lib/sources/acquisition-deadline.ts";
 import { acquireKnownRelease, knownReleaseSourceCheck } from "../lib/sources/known-release.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 
@@ -69,7 +69,7 @@ try {
   // Independent candidates publish through the same source projection. A failed
   // endpoint retains only its own facts, including their original observation date.
   let index = 0;
-  await Promise.all(Array.from({ length: 3 }, async () => {
+  const workers = await Promise.allSettled(Array.from({ length: 3 }, async () => {
     for (;;) {
       if (domain.signal.aborted) return;
       const id = work[index++]; if (!id) return;
@@ -101,6 +101,9 @@ try {
               return new Response(response.body, { status: response.status, statusText: response.statusText, headers: response.headers });
             }
           }, validate: bytes => { parseFecPage(Buffer.from(bytes).toString("utf8")); },
+        }).catch(error => {
+          if (isSourceAcquisitionDeadlineError(error)) throw sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", "FEC source acquisition deadline elapsed.");
+          throw error;
         });
         const raw = Buffer.from(acquired.bytes).toString("utf8");
         sourceReceipts.push({ retrievedAt: acquired.retrievedAt, check: knownReleaseSourceCheck(acquired) });
@@ -117,11 +120,16 @@ try {
           observedAt: () => observation, previous: candidates.get(id) });
         gaps.push(...result.gaps.map(detail => ({ code: "FEC_FACT_NOT_REFRESHED", detail })));
         if (result.candidate) { candidates.set(id, result.candidate); successful++; }
-      } catch {
+      } catch (error) {
+        if (!isSourceAcquisitionFailure(error)) throw error;
         gaps.push({ code: "FEC_CANDIDATE_RETAINED", detail: `${id}: acquisition failed; prior filing dates and facts retained.` });
       }
     }
   }));
+  // A source failure is isolated above. A store or program failure stays an
+  // operational error after every admitted worker has actually settled.
+  const operationalFailure = workers.find(result => result.status === "rejected");
+  if (operationalFailure?.status === "rejected") throw operationalFailure.reason;
 } finally { domain.dispose(); }
 const completedAt = new Date().toISOString();
 if (!successful) {

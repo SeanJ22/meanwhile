@@ -305,30 +305,22 @@ test("a direct held federal official remains answerable without a ballot candida
   const body = await ask("How much campaign money has Mark Kelly raised?");
   assert.equal(body.subject?.id, "congress:K000377");
   const record = body.records.find((record) => record.id.startsWith("fec:"));
-  assert.ok(record?.sourceUrl);
+  assert.ok(record?.sourceUrl, JSON.stringify({ gaps: body.gaps, denominators: body.denominators, preloads: body.trace.preloadSources }));
   assert.equal(body.denominators.federalFinanceRecordsReturned, 1);
   assert.equal(body.denominators.governorLettersIndexedAtCollection, undefined);
   assert.ok(body.gaps.every((gap) => !/letters about individual bills|bills she signed|executive orders we indexed/.test(gap.statement)), "another office's collection gaps must not attach to this person");
 });
 
-test("Ask retrieves the same verbatim candidate passages as Positions in AZ, NJ, and NH", async () => {
+test("Ask retains Positions' exact page passages in AZ, NJ, and NH without inventing speaker attribution", async () => {
   for (const control of POSITION_CONTROLS) {
     const expected = positionsFor(control.key, control.topic, unifiedCorpus());
     assert.equal(expected.kind, "MATCHED", `${control.name}'s independent Positions surface knows the answer`);
     const body = await ask(`What does ${control.name} say about ${control.topic}?`, control.state);
     const quoted = body.records.filter((r) => r.kind === "SOURCE_PASSAGE" && r.canonicalSubjectId === control.key);
     assert.ok(quoted.length, control.name);
-    if (control.state === "AZ") {
-      assert.ok(body.answer?.includes("own words, exactly as published"));
-      assert.ok(body.gaps.every((gap) => !/have not verified a statement by/.test(gap.statement)));
-      assert.match(body.trace.synthesis?.why ?? "", /composed-from-own-words/);
-      assert.ok(expected.passages.some((passage) => body.answer!.includes(passage.quote)));
-    } else if (body.answer) {
-      assert.ok(expected.passages.some((passage) => body.answer!.includes(passage.quote)));
-    } else {
-      // A pack with a differently structured candidate-page passage keeps the existing path.
-      assert.match(body.trace.synthesis?.why ?? "", /unverified-stance/);
-    }
+    assert.ok(quoted.every(record => record.verifiedStatement === undefined), "the fixtures establish captured pages, not verified speakers");
+    assert.equal(body.answer, null);
+    assert.match(body.trace.synthesis?.why ?? "", /unverified-stance/);
     for (const passage of expected.passages) {
       assert.ok(quoted.some((r) => r.text.includes(passage.quote) && r.sourceUrl === passage.url), passage.snapshotId);
     }

@@ -10,6 +10,7 @@ import type { EvidenceRecord } from "../lib/ask/evidence.ts";
 import { lexicalQuestionShape, lexicalReading, moneyShapeForBoundPerson, otherNamedPerson } from "../lib/ask/lexical-reading.ts";
 import { codeBestReading } from "../lib/ask/speculative-reading.ts";
 import { voteEvidenceReadsStateRollCalls } from "../lib/ask/votes.ts";
+import { readNativeMemberVotes } from "../lib/state-rollcalls/reader-votes.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
 import type { BindableEntity } from "../lib/routing/named-entity.ts";
 
@@ -174,10 +175,16 @@ test("the other person named is the FULL name the reader typed, never another ca
   assert.equal(otherNamedPerson("Has Kelly Ayotte raised more money than Murphy?", withAlias, AYOTTE), null, "a bare surname two people share names neither");
 });
 
-test("a state's roll calls are read for a state legislator only — never for a body or a county candidate", () => {
+test("a state's roll calls are read for a state legislator only, with NH using its exact member projection", async () => {
   assert.equal(voteEvidenceReadsStateRollCalls("A Legislator", { officeholderId: "nj-legislature:12345" }), true);
-  assert.equal(voteEvidenceReadsStateRollCalls("A Legislator", { officeholderId: "nh-general-court:abc" }), true);
+  assert.equal(voteEvidenceReadsStateRollCalls("A Legislator", { officeholderId: "nh-general-court:12345" }), false, "NH never reopens the retired jurisdiction pointer");
   assert.equal(voteEvidenceReadsStateRollCalls("Tayfun Selen", { withinStates: ["nj"] }), false, "no roster row: nothing to read");
+  const calls: string[] = [];
+  const readers = { holder: async () => null, nh: async (member: string) => { calls.push(member); return null; }, az: async () => [] };
+  assert.equal((await readNativeMemberVotes("nh-general-court:12345", readers))?.status, "NOT_HELD");
+  assert.equal(await readNativeMemberVotes("body:county-council", readers), null);
+  assert.equal(await readNativeMemberVotes("ballot-nj-morris:county-candidate", readers), null);
+  assert.deepEqual(calls, ["nh-general-court:12345"]);
 });
 
 test("ROUTE: a New Jersey meeting question does not wait for New Jersey's roll calls (5.7-6.7 s cold, measured)", { concurrency: false }, async () => {

@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
-import { verifyPortraitSources, portraitVerificationMatches, portraitBindingMatches, type PortraitVerification } from "../lib/photos/evidence.ts";
+import { verifyPortraitSources } from "../lib/photos/evidence.ts";
+import { portraitVerificationMatches, portraitBindingMatches, type PortraitVerification } from "../lib/photos/binding.ts";
 import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
 
 const NOW="2026-10-01T00:00:00Z", NAME="Jane Doe", ID="plural:person-123", IMAGE="https://images.example.org/jane-doe.jpg";

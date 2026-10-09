@@ -27,7 +27,7 @@ import { readHeldRoster } from "./worker-held-roster.ts";
 import { heldBodySchedule, type HeldBodySchedule } from "./worker-held-meetings.ts";
 import { publicationCaptureReaders } from "./worker-publication-context.ts";
 import { type OfficialLinkingPage } from "./source-authority.ts";
-import { linkingPageFrom, pageWords, section3Page, section3Record, valueOnPage } from "../control-plane/promotion/section3.ts";
+import { linkingPageFrom, pageWords, section3Page, section3Record } from "../control-plane/promotion/section3.ts";
 import { isoTermDate, isoTermDateOnPage } from "./term-dates.ts";
 import { inventoryRecordEvidence } from "../control-plane/workers/record-evidence.ts";
 import { compareCandidateWithSource } from "../control-plane/workers/record-verification.ts";
@@ -145,9 +145,14 @@ export function workerRosterPublication(input: {
   const members: BodyRoster["members"] = live.map(member => {
     const name = verifiedValue(member, "name")!, officeTitle = verifiedValue(member, "office")!;
     // A record is scoped to its publisher and exact source row, never to a display name or seat.
-    const sourceRecordId = `${capture.evidence.canonicalUrl}#${member.recordId}`;
+    const nativeId = verifiedValue(member, "id");
+    const reusedNativeId = nativeId !== null && previous?.members.some(old => old.name !== name &&
+      (old.id === nativeId || old.nativeIds?.[capture.evidence.canonicalUrl]?.includes(nativeId)));
+    const sourceRecordId = `${capture.evidence.canonicalUrl}#${nativeId ?? member.recordId}`;
     const proposedId = `roster:${body.id}#${digest(`${sourceRecordId}\n${name}`).slice(0,24)}`;
-    const matching = previous?.members.filter(old => old.id === member.recordId || old.id === proposedId || old.sourceRecordId === sourceRecordId && old.name === name) ?? [];
+    const matching = previous?.members.filter(old => old.name === name &&
+      (old.id === member.recordId || old.id === proposedId || old.sourceRecordId === sourceRecordId ||
+        nativeId !== null && (old.id === nativeId || old.nativeIds?.[capture.evidence.canonicalUrl]?.includes(nativeId)))) ?? [];
     requireThat(matching.length <= 1,"ROSTER_PRIOR_PERSON_IDENTITY_CONFLICT");
     const old = matching[0];
     const { membershipSource: _oldMembership, retainedFieldSources: _oldRetained, ...identity } = old ??
@@ -194,6 +199,8 @@ export function workerRosterPublication(input: {
     const freshContact = publicContact && (verifiedValue(member, "phone") !== null || verifiedValue(member, "email") !== null);
     accepted.push({ recordId: member.recordId, memberId: identity.id });
     return { ...identity, name, officeTitle,
+      ...(nativeId && !reusedNativeId ? { nativeIds: { ...identity.nativeIds,
+        [capture.evidence.canonicalUrl]: [...new Set([...(identity.nativeIds?.[capture.evidence.canonicalUrl] ?? []), nativeId])] } } : {}),
       fieldSources: Object.fromEntries(Object.entries(nextFieldSources).filter(([field]) => (!["phone", "email"].includes(field) || publicContact))), termNote, ...(termStart ? { termStart } : {}), ...(termEnd ? { termEnd } : {}), email, phone, websiteUrl,
       ...(freshContact ? { contactKind: "PUBLIC_OFFICE" as const } : old?.contactKind ? { contactKind: old.contactKind } : {}),
       ...(phone && freshContact ? { contactScope: (phones.get(phone) ?? 0) > 1 ? "SHARED_OFFICE" as const : old?.contactScope ?? "INDIVIDUAL_OFFICE" as const }
@@ -418,7 +425,7 @@ ${readingId}`);
         { workerResultId: readingId, stage: "LIVE", records: changes.recordChanges.length,
           changedRecords: published.confirmed ? 0 : changes.records.added + changes.records.changed, versionId }, input.now);
       registry = acceptedRegistryPrior(published);
-      const count = directoryPackage ? prepared.payload.registry.bodies.length : prepared.payload.bodyRosters[0].members.length;
+      const count = directoryPackage ? prepared.payload.registry.bodies.length : roster!.accepted.length;
       outcome = { at: input.now, workerResultId: readingId, status: unresolved.length ? "PARTIALLY_PUBLISHED" : "PUBLISHED",
         code: unresolved.length ? directoryPackage ? "DIRECTORY_ROWS_REQUIRE_REPAIR" : "ROSTER_IDENTITIES_REQUIRE_REPAIR" : published.confirmed ? "VERIFIED_RESULT_REUSED" : "VERIFIED_RESULT_PUBLISHED",
         detail: `§3 passed for ${count} reader ${directoryPackage ? "bodies" : "members"}; the registry door accepted ${versionId} and typed reader readback passed.` +

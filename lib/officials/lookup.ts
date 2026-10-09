@@ -158,7 +158,8 @@ export function senatorsFor(
   const holders: SeatHolder[] = [];
   for (const state of states) {
     for (const holder of holdersFor(index, state)) {
-      if (holder.chamber !== "senate") continue;
+      // The sourced office is a minimum fact; optional chamber metadata may be absent.
+      if (holder.officeTitle !== "U.S. Senator") continue;
       if (seen.has(holder.id)) continue;
       seen.add(holder.id);
       holders.push(holder);

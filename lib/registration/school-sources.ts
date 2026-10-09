@@ -59,20 +59,19 @@ export function schoolListingsFromRelease(prior: LoadedReference, release: Known
 /** F-33 can supply a native crosswalk; ambiguity never becomes a name match. */
 export function applyF33NativeCrosswalk(listings: readonly RegistrationGovernmentListing[], release: KnownRelease): RegistrationGovernmentListing[] {
   const { header, rows } = table(release);
-  const leaAt = header.indexOf("LEAID"), pidAt = header.indexOf("PID6"), gidAt = header.findIndex(key => ["CENSUSID", "CENSUS_ID", "GIDID"].includes(key));
-  if (leaAt < 0 || (pidAt < 0 && gidAt < 0)) throw new Error("NCES_F33_NATIVE_CROSSWALK_UNAVAILABLE");
+  const leaAt = header.indexOf("LEAID"), pidAt = header.findIndex(key => ["PID6", "CENSUS_ID_PID6"].includes(key));
+  if (leaAt < 0 || pidAt < 0) throw new Error("NCES_F33_NATIVE_CROSSWALK_UNAVAILABLE");
   const pairs = new Map<string, Set<string>>();
   for (const row of rows) {
-    const lea = row[leaAt]?.trim(), native = row[pidAt >= 0 ? pidAt : gidAt]?.trim();
+    const lea = row[leaAt]?.trim(), native = row[pidAt]?.trim();
     if (!lea || !/^\d{7}$/.test(lea) || !native || !/^\d+$/.test(native)) continue;
-    const key = `${pidAt >= 0 ? "census_pid6" : "census_gidid"}:${native}`;
+    const key = `census_pid6:${native}`;
     const values = pairs.get(key) ?? new Set<string>(); values.add(lea); pairs.set(key, values);
   }
   const reverse = new Map<string, Set<string>>();
   for (const [key, values] of pairs) for (const lea of values) { const keys = reverse.get(lea) ?? new Set<string>(); keys.add(key); reverse.set(lea, keys); }
   return listings.map(listing => {
-    const field = pidAt >= 0 ? "census_pid6" : "census_gidid";
-    const values = pairs.get(`${field}:${listing.nativeIds[field]}`);
+    const values = pairs.get(`census_pid6:${listing.nativeIds.census_pid6}`);
     const lea = values?.size === 1 ? [...values][0] : undefined;
     return lea && reverse.get(lea)?.size === 1 ? { ...listing, nativeIds: { ...listing.nativeIds, nces_leaid: lea, f33_release: release.releaseId, f33_sha256: release.sha256 } } : listing;
   });

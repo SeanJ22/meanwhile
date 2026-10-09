@@ -1,5 +1,5 @@
 import type { CandidateProfilesProjection } from "../civic-data/manual-projections.ts";
-import { portraitBindingMatches } from "../photos/evidence.ts";
+import { portraitBindingMatches } from "../photos/binding.ts";
 import type { CandidateCardData } from "./candidate-cards.ts";
 
 const STORED_CANDIDATE_PORTRAIT = "/api/portraits/candidates/";

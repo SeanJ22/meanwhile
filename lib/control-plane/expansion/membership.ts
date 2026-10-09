@@ -52,6 +52,8 @@ import { isFundedHunt } from "../scheduler/hunt-continuation.ts";
 /** One native Census inventory entry in the state reference. */
 export interface CensusUnitTerritory {
   readonly pid6: string;
+  /** Previously held durable registry IDs for this native government, never a name match. */
+  readonly aliases?: readonly string[];
   readonly name: string;
   readonly type: string;
   readonly state: string;
@@ -122,6 +124,11 @@ export function buildTerritoryIndex(
 ): TerritoryIndex {
   const registeredStates = new Set(registries.map((r) => r.stateCode.toUpperCase()));
   const unitsByPid = new Map(units.map((u) => [`${u.state.toUpperCase()}:${u.pid6}`, u] as const));
+  const unitsByAlias = new Map<string, CensusUnitTerritory | null>();
+  for (const unit of units) for (const alias of unit.aliases ?? []) {
+    const key = `${unit.state.toUpperCase()}:${alias}`;
+    unitsByAlias.set(key, unitsByAlias.has(key) && unitsByAlias.get(key)?.pid6 !== unit.pid6 ? null : unit);
+  }
   const unregisteredUnitsByState = new Map<string, CensusUnitTerritory[]>();
   for (const unit of units) {
     const state = unit.state.toUpperCase();
@@ -145,7 +152,8 @@ export function buildTerritoryIndex(
         statewide.add(j.id);
         continue;
       }
-      const unit = j.censusId ? unitsByPid.get(`${j.stateCode.toUpperCase()}:${j.censusId}`) ?? null : null;
+      const unit = j.censusId ? unitsByPid.get(`${j.stateCode.toUpperCase()}:${j.censusId}`) ?? null
+        : unitsByAlias.get(`${j.stateCode.toUpperCase()}:${j.id}`) ?? null;
       const why = unit ? null : "no native Census government identity with sourced territory is held for this registry row";
       if (fromRegistration) {
         /* Registration: the unit is claimed, and the government is placed by the division its body sits on. */

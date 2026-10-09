@@ -9,6 +9,7 @@ import { after, test } from "node:test";
 import { publishReaderEdgeArtifacts, type PublishAuthority } from "../lib/meetings/edge-serving.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import type { PromotedAuthorityFamily, PromotedFamilyArtifactValue } from "../lib/meetings/edge-artifacts.ts";
+import type { CensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
 import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
@@ -24,7 +25,6 @@ import { fundingReadState, readFundingSnapshot } from "../lib/funding/snapshot.t
 import { stateMoneyReadState } from "../lib/funding/state-snapshot.ts";
 import { readNhMembers } from "../lib/civic-data/state-members.ts";
 import { readOfficialStateLegislatorsProjection } from "../lib/state-rollcalls/legislators.ts";
-import { nhSeatHolderReadState } from "../lib/ballot/seat-holders.ts";
 import { currentPollingPlaceLinks } from "../lib/ballot/polling-place-links.ts";
 import { currentRegistrationLinks } from "../lib/ballot/registration-links.ts";
 import { registryRuntimeReadState } from "../lib/registry/runtime-read-model.ts";
@@ -74,6 +74,22 @@ const stateMoneyFixtureEntries = (version: (state: string) => string) => (Object
 const funding = servedValue(await readFundingSnapshot({ store: seedStore, bypassCache: true }));
 const nhMembers = servedValue(await readNhMembers({ store: seedStore, bypassCache: true }));
 const nhLegislators = servedValue(await readOfficialStateLegislatorsProjection("US-NH", { store: seedStore, bypassCache: true }));
+// Explicit election-plan relationships exercise the qualified Census reader.
+// They are synthetic fixture evidence, independent of the retired ZIP sample.
+const districts: CensusDistrictEdge = {
+  formatVersion: 1, versionId: "edge-test:ballot:districts",
+  scopes: ([ ["congressional_district", "cd:120"], ["state_leg_upper", "sldu:2024"], ["state_leg_lower", "sldl:2024"] ] as const)
+    .map(([type, version]) => ({ type, version, plan: "Synthetic 2026 election applicability",
+      applicability: [{ purpose: "election", from: "2026-11-03", through: "2026-11-04" }], retrievalComplete: true,
+      sourceUrls: ["https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/"], observedAt: "2026-10-01T00:00:00.000Z" })),
+  containers: [
+    { ref: { type: "congressional_district", version: "cd:120", geoid: "0407", ocdId: null, stateFips: "04", stateAbbr: "AZ", memberStates: ["AZ"], label: "AZ Congressional District 7" }, plan: "Synthetic election plan" },
+    { ref: { type: "state_leg_upper", version: "sldu:2024", geoid: "04020", ocdId: null, stateFips: "04", stateAbbr: "AZ", memberStates: ["AZ"], label: "AZ State Senate District 20" }, plan: "Synthetic election plan" },
+    { ref: { type: "state_leg_lower", version: "sldl:2024", geoid: "04020", ocdId: null, stateFips: "04", stateAbbr: "AZ", memberStates: ["AZ"], label: "AZ State House District 20" }, plan: "Synthetic election plan" },
+    { ref: { type: "state_leg_upper", version: "sldu:2024", geoid: "33008", ocdId: null, stateFips: "33", stateAbbr: "NH", memberStates: ["NH"], label: "NH State Senate District 8" }, plan: "Synthetic election plan" },
+  ],
+  codes: { "85701": [[0, true, 1], [1, true, 1], [2, true, 1]], "03255": [[3, true, 1]] },
+};
 const navigation = {
   kind: "ballot-navigation",
   records: [
@@ -116,21 +132,7 @@ async function publishEdge(withPromoted: boolean): Promise<string> {
   const authority: PublishAuthority = {
     "registry-runtime": { value: registryTransferImport().projection.payload, versionId: REGISTRY_VERSION },
     "federal-directory": { value: federal, versionId: FEDERAL_VERSION },
-    "state-legislators": {
-      value: {
-        "US-AZ": {
-          formatVersion: 1,
-          sourceId: "az-legislature",
-          jurisdiction: "US-AZ",
-          term: "2025-2026",
-          generatedAt: "2026-09-25T00:00:00.000Z",
-          roster: { formatVersion: 1, generatedAt: "2026-09-25", source: "edge-test", officeholders: [], divisions: [] },
-        },
-        // The runner publishes every official chamber's legislators (the NH one derives from the General Court roster).
-        "US-NH": nhLegislators,
-      },
-      versionId: "edge-test:ballot:state-legislators",
-    },
+    "census-districts": { value: districts, versionId: districts.versionId },
     ...(withPromoted ? PROMOTED_BALLOT_FAMILIES : {}),
   };
   const published = await publishReaderEdgeArtifacts({
@@ -140,7 +142,17 @@ async function publishEdge(withPromoted: boolean): Promise<string> {
     sources: [],
     meetings: [],
     agendaDocuments: [],
-  }, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, { store: new LocalFileArtifactStore(dir), authority });
+  }, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, { store: new LocalFileArtifactStore(dir), authority,
+    registrations: {},
+    stateLegislators: {
+      "US-AZ": { versionId: "edge-test:ballot:az-people", value: {
+        formatVersion: 1, sourceId: "plural-openstates", jurisdiction: "US-AZ", term: "2025-2026",
+        generatedAt: "2026-09-25T00:00:00.000Z",
+        roster: { formatVersion: 1, generatedAt: "2026-09-25", source: "edge-test", officeholders: [], divisions: [] },
+      } },
+      "US-NH": { versionId: "edge-test:ballot:nh-people", value: nhLegislators },
+    },
+  });
   assert.equal(published.status, "PUBLISHED", JSON.stringify(published));
   return dir;
 }
@@ -283,11 +295,20 @@ test("a cold /ballot?zip=85701 with the whole ballot edge makes no database read
 
 test("a cold /ballot?zip=03255 (Newbury, New Hampshire) with the whole ballot edge reads its ballot and the General Court roster from it, and nothing from the database", async () => {
   process.env.WTP_READER_EDGE_DIR = ballotEdgeDir;
-  await renderBallot("03255");
+  const manifest = (await new LocalFileArtifactStore(ballotEdgeDir).readManifest())!.manifest;
+  const keys: string[] = [];
+  const originalRead = LocalFileArtifactStore.prototype.readBytes;
+  LocalFileArtifactStore.prototype.readBytes = async function (key) { keys.push(key); return originalRead.call(this, key); };
+  try {
+    await renderBallot("03255");
+  } finally {
+    LocalFileArtifactStore.prototype.readBytes = originalRead;
+  }
   assert.deepEqual(databaseReads, [], "a cold NH /ballot with the whole edge read the database");
   assert.equal(nhBallotReadState().kind, "PROMOTED");
   assert.equal(nhBallotReadState().metadata.versionId, EDGE.nh, "the NH ballot was not served from the edge");
-  assert.equal(nhSeatHolderReadState().metadata.versionId, EDGE.nhMembers, "the NH roster was not served from the edge");
+  assert.ok(keys.includes(manifest.stateLegislators!["US-NH"].key), "the requested NH roster came from its jurisdiction edge artifact");
+  assert.equal(keys.includes(manifest.stateLegislators!["US-AZ"].key), false, "an NH ballot does not load another state's people");
 });
 
 test("with no edge published, the same render reads its authority from the database: the fallback stays", async () => {

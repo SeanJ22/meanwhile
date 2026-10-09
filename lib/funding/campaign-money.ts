@@ -139,7 +139,7 @@ export function campaignMoneyForTarget(
   // an unrelated FEC or bridge read failure cannot erase its state records.
   // Officeholder slots still require the current person/candidacy bridge.
   const readIdentity = (selection.identity ?? true) &&
-    (!(direct.federal || direct.state !== null) || targetKey.includes("|"));
+    (targetKey.startsWith("congress:") || !(direct.federal || direct.state !== null) || targetKey.includes("|"));
   const roster = readIdentity ? currentRosterMemberReaderDisposition(targetKey) : null;
   if (roster?.state === "IDENTITY_UNRESOLVED") return {
     requestedTargetKey: targetKey, federal: { kind: "none" }, state: emptyState(), officialIdentity: "IDENTITY_UNRESOLVED",

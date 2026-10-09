@@ -61,7 +61,7 @@ function timedRead<T>(timings: ReadTimings | undefined, name: string, read: () =
 
 async function currentFundingTargetPlan(target: string, timings?: ReadTimings): Promise<FundingTargetPlan> {
   const direct = directFundingTargetPlan(target);
-  if ((direct.federal || direct.state !== null) && !target.includes("|")) return direct;
+  if ((direct.federal || direct.state !== null) && !target.startsWith("congress:") && !target.includes("|")) return direct;
   // The registry and the federal directory are served from the reader authority
   // edge when this request entered one (GET below), the database otherwise:
   // the same readers Ask uses.

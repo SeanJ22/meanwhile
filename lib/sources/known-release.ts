@@ -11,6 +11,7 @@ import { RepositoryLockHeld } from "../control-plane/repository/types.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories, readPlaceArtifacts } from "../control-plane/repository/pg-store.ts";
 import { researchVaultResolver } from "../control-plane/workers/vault-object.ts";
 import { VAULT_DIR } from "../control-plane/scheduler/vault.ts";
+import { readPublisherBody, requestPublisher, sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
 import { readCompleteResponse } from "./source-bytes.ts";
 import { sourceUserAgent } from "./http.ts";
 
@@ -218,25 +219,34 @@ export async function acquireKnownRelease(options: KnownReleaseOptions): Promise
     const retryObject = await store.get(retryKey);
     if (retryObject) {
       const retry = JSON.parse(new TextDecoder().decode(retryObject.bytes)) as { until?: string };
-      if (typeof retry.until === "string" && Date.parse(retry.until) > Date.parse(now)) throw new Error(`KNOWN_SOURCE_RETRY_AFTER:${retry.until}`);
+      if (typeof retry.until === "string" && Date.parse(retry.until) > Date.parse(now)) {
+        throw sourceAcquisitionFailure("PUBLISHER_RESPONSE_REFUSED", `KNOWN_SOURCE_RETRY_AFTER:${retry.until}`);
+      }
     }
-    const response = await (options.fetchImpl ?? fetch)(options.url, { headers, signal: options.signal, redirect: "follow" });
+    const response = await requestPublisher(options.sourceId, () =>
+      (options.fetchImpl ?? fetch)(options.url, { headers, signal: options.signal, redirect: "follow" }));
     const finalUrl = response.url || options.url;
-    const final = publicUrl(finalUrl);
+    let final: URL;
+    try { final = publicUrl(finalUrl); }
+    catch {
+      await response.body?.cancel().catch(() => {});
+      throw sourceAcquisitionFailure("PUBLISHER_RESPONSE_REFUSED", "KNOWN_SOURCE_REDIRECT_REFUSED:KNOWN_SOURCE_URL_MUST_BE_PUBLIC");
+    }
     if (!(options.allowedHosts ?? [new URL(options.url).hostname]).includes(final.hostname)) {
-      await response.body?.cancel(); throw new Error("KNOWN_SOURCE_REDIRECT_REFUSED");
+      await response.body?.cancel().catch(() => {});
+      throw sourceAcquisitionFailure("PUBLISHER_RESPONSE_REFUSED", "KNOWN_SOURCE_REDIRECT_REFUSED");
     }
     const checkedAt = options.now?.() ?? new Date().toISOString();
     if (response.status === 304) {
-      await response.body?.cancel();
-      if (!prior || !heldBytes) throw new Error("KNOWN_SOURCE_304_WITHOUT_BYTES");
+      await response.body?.cancel().catch(() => {});
+      if (!prior || !heldBytes) throw sourceAcquisitionFailure("PUBLISHER_RESPONSE_REFUSED", "KNOWN_SOURCE_304_WITHOUT_BYTES");
       const confirmed = { ...prior, checkedAt, lastCheckStatus: 304, parsers: [...new Set([...prior.parsers, options.parserVersion])] };
       const release = { ...confirmed, bytes: heldBytes, reused: true };
       if (!prior.parsers.includes(options.parserVersion)) await options.validate?.(heldBytes, release);
       await writeIndex(confirmed); return release;
     }
     if (response.status !== 200) {
-      await response.body?.cancel();
+      await response.body?.cancel().catch(() => {});
       const retry = response.headers.get("retry-after");
       if (retry && (response.status === 429 || response.status >= 500 && response.status <= 599)) {
         const untilMs = /^\d+$/.test(retry) ? Date.parse(checkedAt) + Number(retry) * 1000 : Date.parse(retry);
@@ -246,10 +256,18 @@ export async function acquireKnownRelease(options: KnownReleaseOptions): Promise
             byteLength: body.byteLength, objectClass: "MUTABLE_INDEX" });
         }
       }
-      throw new Error(`KNOWN_SOURCE_HTTP_${response.status}${retry ? `:Retry-After=${retry}` : ""}`);
+      throw sourceAcquisitionFailure("PUBLISHER_RESPONSE_REFUSED", `KNOWN_SOURCE_HTTP_${response.status}${retry ? `:Retry-After=${retry}` : ""}`);
     }
-    const bytes = await readCompleteResponse(response, options.maxBytes);
-    if (!bytes.byteLength) throw new Error("KNOWN_SOURCE_EMPTY_RESPONSE");
+    const bytes = await readPublisherBody(options.sourceId, async () => {
+      try { return await readCompleteResponse(response, options.maxBytes); }
+      catch (error) {
+        if (error instanceof Error && error.message.startsWith("SOURCE_RESPONSE_INCOMPLETE:")) {
+          throw sourceAcquisitionFailure("PUBLISHER_RESPONSE_REFUSED", error.message);
+        }
+        throw error;
+      }
+    });
+    if (!bytes.byteLength) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "KNOWN_SOURCE_EMPTY_RESPONSE");
     const sha256 = hash(bytes);
     const unchanged = prior && heldBytes && sha256 === prior.sha256;
     const release: KnownRelease = { sourceId: options.sourceId, releaseId: options.releaseId, bytes, sha256,

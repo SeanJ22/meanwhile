@@ -2,17 +2,18 @@ import { currentFecTransactions, fecId, fecNumber, fecObject, fecSourceObservedA
 import { smallDonorShare } from "./small-donors.ts";
 import type { FecTarget } from "./fec-targets.ts";
 import type { ContributionRow, FundingCandidate, SecondHopCommittee } from "./types.ts";
+import { isSourceAcquisitionFailure, sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
 
 export function fecTotalsForPeriod(rows: readonly FecRow[], candidateId: string, cycle: number): FecRow | null {
   const scoped = rows.filter(row => row.cycle === cycle);
   const nativeField = candidateId.startsWith("C") ? "committee_id" : "candidate_id";
-  if (scoped.some(row => row[nativeField] !== undefined && row[nativeField] !== candidateId)) throw new Error("FEC_TOTALS_IDENTITY_INVALID");
+  if (scoped.some(row => row[nativeField] !== undefined && row[nativeField] !== candidateId)) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "FEC_TOTALS_IDENTITY_INVALID");
   const sorted = scoped.toSorted((a, b) => String(b.coverage_end_date ?? "").localeCompare(String(a.coverage_end_date ?? "")));
   const latest = sorted[0];
   if (!latest) return null;
   const sameDate = sorted.filter(row => String(row.coverage_end_date ?? "") === String(latest.coverage_end_date ?? ""));
   const figures = (row: FecRow) => JSON.stringify([row.receipts, row.disbursements, row.last_cash_on_hand_end_period, row.individual_itemized_contributions, row.individual_unitemized_contributions]);
-  if (sameDate.some(row => figures(row) !== figures(latest))) throw new Error("FEC_TOTALS_AMBIGUOUS");
+  if (sameDate.some(row => figures(row) !== figures(latest))) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "FEC_TOTALS_AMBIGUOUS");
   return latest;
 }
 
@@ -21,7 +22,7 @@ export async function collectFecCommittee(input: { committeeId: string; cycle: n
   const { committeeId: id, cycle, read } = input;
   if (!/^C\d{8}$/.test(id)) throw new Error("FEC_COMMITTEE_ID_INVALID");
   const details = await readFecPages(read, `/committee/${id}/`, {});
-  if (details.length !== 1 || details[0].committee_id !== id || !fecText(details[0].name)) throw new Error("FEC_COMMITTEE_IDENTITY_INVALID");
+  if (details.length !== 1 || details[0].committee_id !== id || !fecText(details[0].name)) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "FEC_COMMITTEE_IDENTITY_INVALID");
   const detail = details[0];
   const latest = fecTotalsForPeriod(await readFecPages(read, `/committee/${id}/totals/`, { cycle }), id, cycle);
   const rows = await readFecPages(read, "/schedules/schedule_a/", { committee_id: id,
@@ -71,8 +72,8 @@ export async function collectFecCandidate(input: {
   try {
     const committees = await readFecPages(read, `/candidate/${id}/committees/`, { cycle });
     for (const row of committees) {
-      if (Array.isArray(row.candidate_ids) && !row.candidate_ids.includes(id)) throw new Error("FEC_COMMITTEE_CANDIDATE_MISMATCH");
-      if (!/^C\d{8}$/.test(String(row.committee_id))) throw new Error("FEC_COMMITTEE_ID_INVALID");
+      if (Array.isArray(row.candidate_ids) && !row.candidate_ids.includes(id)) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "FEC_COMMITTEE_CANDIDATE_MISMATCH");
+      if (!/^C\d{8}$/.test(String(row.committee_id))) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "FEC_COMMITTEE_ID_INVALID");
       if (row.designation === "P" || row.designation === "A") committeeIds.push(String(row.committee_id));
     }
     for (const committeeId of [...new Set(committeeIds)]) {
@@ -80,7 +81,8 @@ export async function collectFecCandidate(input: {
         two_year_transaction_period: cycle, is_individual: false, sort: "-contribution_receipt_amount" }, true);
       contributions.push(...fecOrganizationRows(rows, committeeId));
     }
-  } catch {
+  } catch (error) {
+    if (!isSourceAcquisitionFailure(error)) throw error;
     contributionsComplete = false;
     gaps.push(`${id}: committee/receipt acquisition incomplete; independently verified totals published.`);
     contributions = previous?.cycle === cycle ? previous.topContributions.map(row => ({ ...row,

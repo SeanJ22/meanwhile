@@ -16,7 +16,7 @@ export interface OfficeholderPhoto {
   /** A licence statement when the source supplies one; an official own-page binding is also admissible. */
   license: string | null;
   collectedAt: string;
-  verification?: import("../photos/evidence.ts").PortraitVerification;
+  verification?: import("../photos/binding.ts").PortraitVerification;
 }
 
 /** An upstream image is a lead until source identity and stored bytes check out. */

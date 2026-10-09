@@ -50,7 +50,7 @@ export function readZctaShares(root: string, wanted: ReadonlySet<string>, states
 
 /**
  * The territory index the runner uses: the preloaded registries, the committed
- * units and their sampled shares, for every unit whether or not its state has a
+ * units and source-established shares, for every unit whether or not its state has a
  * registry.
  */
 export function readTerritoryIndex(root: string, registries: readonly JurisdictionRegistry[], states = [...new Set(registries.map(registry => registry.stateCode))], zips?: ReadonlySet<string>, places: ReadonlyMap<string, readonly PlaceDivision[]> = new Map()): TerritoryIndex {
@@ -74,8 +74,9 @@ export function readTerritoryIndex(root: string, registries: readonly Jurisdicti
     if (key !== null) wanted.add(key);
   }
   const unitIds = new Set(units.map(unit => `${unit.state.toUpperCase()}:${unit.pid6}`));
+  const unitAliases = new Set(units.flatMap(unit => unit.aliases ?? []));
   const scopedRegistries = registries.filter(registry => selected.has(registry.stateCode.toUpperCase())).map(registry => zips ? {
-    ...registry, jurisdictions: registry.jurisdictions.filter(j => j.govClass === "STATE" || Boolean(j.censusId && unitIds.has(`${j.stateCode.toUpperCase()}:${j.censusId}`)) || Boolean(j.censusDivision && wanted.has(j.censusDivision))),
+    ...registry, jurisdictions: registry.jurisdictions.filter(j => j.govClass === "STATE" || Boolean(j.censusId && unitIds.has(`${j.stateCode.toUpperCase()}:${j.censusId}`)) || unitAliases.has(j.id) || Boolean(j.censusDivision && wanted.has(j.censusDivision))),
   } : registry);
   /* A registration-read registry places each government by its body's division, by that division's own layer and GEOID. */
   for (const registry of scopedRegistries) {

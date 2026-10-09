@@ -1,13 +1,13 @@
 # River status
 
-build_state: RELEASE 22 GREEN. Exact hosted CI checkout promoted to river; PR #729 ready to merge. Broad production imports still pending deployment.
+build_state: RELEASE 22 MERGED AND WEB DEPLOYED. PR #729 is fd8ffd995; post-deploy integrity holds. Runtime adoption and broad automatic baseline imports remain under live verification.
 worker: codex-acquisition-scale
 provider: Codex
 run_id: acquisition-scale-2026-10-09
 lock: codex-acquisition-scale-2026-10-09
-heartbeat: 2026-10-09T23:21:29Z
+heartbeat: 2026-10-09T23:25:33Z
 
-## RELEASE 22 — acquisition baseline: PR #729, GREEN
+## RELEASE 22 — acquisition baseline: PR #729, MERGED AND WEB DEPLOYED
 
 - Production verification at 20:28Z found no plural-openstates candidates or promotions, no registration/4 candidates, and Congress directory still at parser /2. Release 21's 13 meeting promotions did not prove the national baseline.
 - Repairs built: parser-aware initial replay; independent state projections of shared national releases; remove the normal acquisition pass's duplicate full worker-publication scan; bounded publication outbox; shared-release wait through the existing deadline; publish newly promoted baseline pointers during long passes and preserve meeting facts across registry races.
@@ -19,6 +19,8 @@ heartbeat: 2026-10-09T23:21:29Z
 - Existing source cadences, memory margin, budgets, owner pauses and evidence remain unchanged. No Hunt Network or source hunting expansion.
 
 - Final hosted run 37995919721 passed: 5,973 affected tests passed, 0 failed, 5 skipped; lint, types, preflight and standalone build green; 16 bundle checks passed. Exact tested checkout 1b001573a5ad99628d3753a5abef80acd9e4e11c promoted to river and river-next. Production imports and reader publication remain to verify after merge/deploy.
+
+- PR #729 merged as fd8ffd995eaf4a86fc731609df58c5d4d2397255, same tree as the tested checkout. Netlify deploy 6ac9772c77979b0008e1d392 ready at 23:23:57Z; post-deploy observer 38004083784 confirmed /api/build at 23:24:03Z, 35/35 migrations HOLDS and durable receipt readback. Runtime adoption and actual broad baseline delivery still pending; no manual Send or control changes.
 
 ## RELEASE 21 — acquisition-first: MERGED AND WEB DEPLOYED
 

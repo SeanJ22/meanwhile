@@ -49,5 +49,24 @@
       "cause": "Two obsolete publication-call assertions; corrected both without application changes. Original startup and publication regressions passed; final affected suite passed."
     }
   },
-  "note": "River contains the exact synthetic merge tested by hosted CI. Release branch is its tested source parent; both have the same verified tree. Owner authorized merge after green local or internal checks."
+  "note": "River contains the exact synthetic merge tested by hosted CI. Release branch is its tested source parent; both have the same verified tree. Owner authorized merge after green local or internal checks.",
+  "merged_sha": "fd8ffd995eaf4a86fc731609df58c5d4d2397255",
+  "production_observation": {
+    "run_id": 38004083784,
+    "sha": "fd8ffd995eaf4a86fc731609df58c5d4d2397255",
+    "served_at": "2026-10-09T23:24:03Z",
+    "integrity": "HOLDS",
+    "migrations_applied": 35,
+    "migrations_committed": 35
+  },
+  "deploy": {
+    "id": "6ac9772c77979b0008e1d392",
+    "state": "ready",
+    "published_at": "2026-10-09T23:23:57.399Z"
+  },
+  "runtime_adoption": {
+    "state": "pending",
+    "latest_observed_sha": "6f4df519e67b6738d1c057f60cbcd901eaead138",
+    "observed_at": "2026-10-09T23:25:33Z"
+  }
 }

@@ -523,6 +523,7 @@ export async function processRoutineCandidate(
     current !== null && lkg !== null && lkgProofIssue === null && !preloadedBaseChanged &&
     current.versionId === current.lastKnownGoodVersionId && lkg.candidate.id === current.versionId &&
     candidate.retrieval.succeeded && candidate.normalization.succeeded &&
+    candidate.normalization.parserVersion === lkg.candidate.normalization.parserVersion &&
     validated.state === "VALIDATED" && validated.receipt.decision === "GOOD" &&
     candidate.changeSet?.outcome === "UNCHANGED" &&
     typeof lkg.candidate.normalization.normalizedHash === "string" &&

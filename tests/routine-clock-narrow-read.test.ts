@@ -179,16 +179,19 @@ test("the routine clock builds its candidate view in Postgres; the payload and r
   for (const field of ROUTINE_CLOCK_CANDIDATE_FIELDS.retrieval) {
     assert.match(select, new RegExp(`'${field}', "civic_data_candidates"\\."candidate"#>'\\{retrieval,${field}\\}'`));
   }
+  assert.match(select, /'parserVersion', "civic_data_candidates"\."candidate"#>'\{normalization,parserVersion\}'/);
 });
 
 test("the clock view names exactly the fields the clock proves; widening it is a visible cost decision", () => {
   assert.deepEqual(ROUTINE_CLOCK_CANDIDATE_FIELDS, {
     top: ["id", "sourceId", "recordClass", "scope", "bootstrapImport"],
     retrieval: ["retrievedAt", "sourceCheck"],
+    normalization: ["parserVersion"],
   });
   const view = routineClockCandidateView(candidate("view-shape"));
-  assert.deepEqual(Object.keys(view).sort(), ["id", "recordClass", "retrieval", "scope", "sourceId"]);
+  assert.deepEqual(Object.keys(view).sort(), ["id", "normalization", "recordClass", "retrieval", "scope", "sourceId"]);
   assert.deepEqual(view.retrieval, { retrievedAt: "2026-09-08T12:00:00.000Z" });
+  assert.deepEqual(view.normalization, { parserVersion: "fec-funding/3" });
   assert.doesNotMatch(JSON.stringify(view), /view-shape-\d/, "no dataset row survives the view");
 });
 
@@ -560,6 +563,10 @@ test("a real 304 advances the source clock while held replay preserves both chec
   assert.equal(checked.lastSucceededAt, value.retrieval.retrievedAt);
   assert.equal(checked.lastSucceededObservedAt, checkedAt);
   assert.equal(checked.lastAttemptedAt, checkedAt);
+  const upgradedParser = await store.clock(value.sourceId, value.recordClass, value.scope, "fec-funding/4");
+  assert.equal(upgradedParser.lastAttemptedAt, undefined, "an older parser's confirmation cannot postpone the upgraded parser's first attempt");
+  assert.equal(upgradedParser.lastSucceededParserVersion, "fec-funding/3");
+  assert.equal(upgradedParser.lastSucceededObservedAt, checkedAt, "the real source check remains true for the prior GOOD");
   assert.equal((await store.confirmUnchanged(input, "2026-09-09T18:00:00.000Z")).kind, "CONFIRMED");
   assert.deepEqual(await store.clock(value.sourceId, value.recordClass, value.scope), checked);
   const read = await readPromotedCivicData(value.recordClass, value.scope, { store, now: "2026-09-09T18:00:00.000Z", maxAgeMs: 86400000, bypassCache: true });

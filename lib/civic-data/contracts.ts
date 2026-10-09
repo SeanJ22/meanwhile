@@ -473,7 +473,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     sourceId: REGISTRATION_SOURCE_ID,
     recordClass: "REGISTRATION",
     scope: target.scope,
-    acquisitionFailureDomain: `routine-source:${REGISTRATION_SOURCE_ID}`,
+    acquisitionFailureDomain: `routine-source:${REGISTRATION_SOURCE_ID}:${target.state}`,
     acquisitionAdapter: {
       authorityMode: "REGISTERED_SOURCE_ROUTES",
       command: ["scripts/registration-refresh.mts", "--promote", `--state=${target.state}`],

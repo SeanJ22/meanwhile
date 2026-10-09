@@ -7,7 +7,7 @@ import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import type { HeldPlaceFamilies } from "../lib/civic-data/held-place-families.ts";
 import type { OutcomeSnapshot } from "../lib/outcomes/types.ts";
 import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
-import { readPlacePointerSlices } from "../lib/civic-data/held-place-slices.ts";
+import { readPlacePointerSlices, readPlaceVersionSlice } from "../lib/civic-data/held-place-slices.ts";
 import type { ReadOnlyQuery } from "../lib/control-plane/admin-view/promoted-slices.ts";
 import { projectHeldGeography, readHeldPlaceGeography, type HeldGeographyRow } from "../lib/civic-data/held-place-geography.ts";
 import type { Division } from "../lib/registry/types.ts";
@@ -184,6 +184,36 @@ test("encoded candidate object maps decode only selected facts and refuse a raci
   assert.ok(fetched.length > 0, "selected long biography was decoded through actual immutable parts");
   assert.ok(!fetched.includes((cards[other] as { $civicPayloadPart: string }).$civicPayloadPart), "unselected biography never crosses the read boundary");
   await assert.rejects(readPlacePayloadParts(query, "CANDIDATE_PROFILE", [scope], [county], [], [key], new Map([[scope, "other-version"]])), /CIVIC_POINTER_CHANGED_DURING_READ/);
+});
+
+test("accepted registry slices keep the manifest's immutable version through both payload reads after the live pointer advances", async () => {
+  const scope = "US:reader-registry-runtime-bindings", acceptedVersion = "registry-held-v1";
+  const body = { id: `${county}#governing`, ocdId: county, alsoServesOcdIds: [neighbour], name: "Held county board" };
+  let missing = false, calls = 0;
+  const query: ReadOnlyQuery = async statements => statements.map(statement => {
+    calls++;
+    assert.match(statement.text, /JOIN civic_data_candidates c ON c\.id=accepted\.version_id AND c\.scope=accepted\.scope/);
+    assert.match(statement.text, /c\.state='PROMOTED' AND c\.promoted_version_id=c\.id/);
+    assert.doesNotMatch(statement.text, /FROM civic_data_promotions/, "the newer mutable pointer cannot supply any part of this accepted version");
+    assert.deepEqual(statement.params[2], [county]);
+    assert.deepEqual(statement.params[3], [body.id]);
+    const recursive = statement.text.includes("WITH RECURSIVE");
+    assert.deepEqual(JSON.parse(statement.params[recursive ? 7 : 6] as string), { [scope]: acceptedVersion });
+    if (missing) return [];
+    if (recursive) return [{ scope, field: "registry.bodies", rows: [body] }, { scope, field: "$version", rows: acceptedVersion }];
+    const carried = JSON.parse(statement.params[5] as string)[scope] === acceptedVersion;
+    return [{ scope, current_version_id: acceptedVersion, value: null, encoded: !carried }];
+  });
+  const read = () => readPlaceVersionSlice<RegistryRuntimeReadModel>("REGISTRY_RUNTIME_BINDING", scope, acceptedVersion, [county], [body.id], [], query);
+  const held = await read();
+  assert.equal(held.kind, "PROMOTED");
+  assert.equal(held.metadata.versionId, acceptedVersion);
+  assert.deepEqual(held.value?.registry.bodies, [body]);
+  assert.equal(calls, 2, "the scoped shell and its selected encoded fields are read separately");
+  assert.deepEqual((await read()).value, held.value);
+  assert.equal(calls, 3, "the exact immutable value is reused after its identity read");
+  missing = true;
+  assert.equal((await read()).kind, "NOT_RECORDED", "an absent accepted candidate cannot fall back to a different current registry");
 });
 
 test("held slices carry only exact unchanged versions, isolate selectors, and remove missing pointers", async () => {

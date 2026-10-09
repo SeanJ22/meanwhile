@@ -9,7 +9,22 @@ import { ZERO_RELEASE_EVENTS } from "./release.ts";
 
 const HOUR = 3_600_000;
 
-export function workerPublicationTasks(items: readonly WorkItem[], results: readonly WorkerResultRecord[], now: string): RoutineSourceTask[] {
+/** Admission needs identities and acknowledgement fields, never the work item's acquisition history. */
+export type WorkerPublicationItem = Pick<WorkItem, "id"> & {
+  readonly publicationOutcome?: Pick<NonNullable<WorkItem["publicationOutcome"]>, "workerResultId" | "status" | "at" | "recovery" | "sourceObservedAt">;
+  readonly autonomousPlan?: {
+    readonly publication?: Pick<NonNullable<NonNullable<WorkItem["autonomousPlan"]>["publication"]>, "contractId">;
+    readonly contract: Pick<NonNullable<WorkItem["autonomousPlan"]>["contract"], "recordClass">;
+  };
+};
+
+export function workerPublicationTasks(items: readonly WorkerPublicationItem[], results: readonly WorkerResultRecord[], now: string): RoutineSourceTask[] {
+  const byItem = new Map<string, WorkerResultRecord[]>();
+  for (const result of results) {
+    const own = byItem.get(result.workItemId) ?? [];
+    own.push(result);
+    byItem.set(result.workItemId, own);
+  }
   const nowMs = Date.parse(now);
   const hour = new Date(Math.floor(nowMs / HOUR) * HOUR).toISOString();
   const owed = items.flatMap(item => {
@@ -17,11 +32,12 @@ export function workerPublicationTasks(items: readonly WorkItem[], results: read
     const target = plan?.publication?.contractId;
     if (!plan || !target || (target !== "registry-runtime-bindings" && !isWorkerReaderContract(target))) return [];
     const outcome = item.publicationOutcome;
-    const parser = latestParserResult(results, item.id);
+    const ownResults = byItem.get(item.id) ?? [];
+    const parser = latestParserResult(ownResults, item.id);
     if (parser && Date.parse(parser.endedAt) <= nowMs) {
             // A published extraction, or a hold only new evidence can clear, waits for a newer extraction,
             // unless the Auditor broke it after that publication: then it is re-checked once.
-      const pull = auditPull(results, parser);
+      const pull = auditPull(ownResults, parser);
       const published = outcome?.workerResultId === parser.id || outcome?.workerResultId.startsWith(`${parser.id}+`);
       const publicationStillOwed = outcome?.recovery === "PUBLISHER" ||
         (outcome?.status === "PARTIALLY_PUBLISHED" && plan.contract.recordClass === "BALLOT_MEASURE") ||

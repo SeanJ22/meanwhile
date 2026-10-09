@@ -5,16 +5,17 @@ worker: codex-acquisition-scale
 provider: Codex
 run_id: acquisition-scale-2026-10-09
 lock: codex-acquisition-scale-2026-10-09
-heartbeat: 2026-10-09T21:25:10Z
+heartbeat: 2026-10-09T21:51:47Z
 
 ## RELEASE 22 — acquisition baseline: PR #729, HOSTED CHECKS
 
 - Production verification at 20:28Z found no plural-openstates candidates or promotions, no registration/4 candidates, and Congress directory still at parser /2. Release 21's 13 meeting promotions did not prove the national baseline.
 - Repairs built: parser-aware initial replay; independent state projections of shared national releases; remove the normal acquisition pass's duplicate full worker-publication scan; bounded publication outbox; shared-release wait through the existing deadline; publish newly promoted baseline pointers during long passes and preserve meeting facts across registry races.
-- READY 6e0952adc7b7163289936a27d6af9792f0415055; combined release 251417103e57aa2c468a5c928b36a0554941b8af, tree 730455cd81fcdaf7b9b2bf5d820da78ad2109862. PR https://github.com/SeanJ22/meanwhile/pull/729 is labeled run-full-ci. Focused checks pass; hosted CI must cover restricted child-process tests before merge.
+- READY e2a617be423808527414722b48ed5e3f3a45778f; combined release e310dd69134d0cdd8cb7120808bec594b2a74209, tree b847b52b2dc0964ec393e4af3ad817df6f8c8708. PR https://github.com/SeanJ22/meanwhile/pull/729 is labeled run-full-ci. Focused checks pass; hosted CI must cover restricted child-process tests before merge.
 - The completed old-code source pass exposed all 52 OpenStates entrypoints failing ERR_MODULE_NOT_FOUND before acquisition. Reproduced bare Node failure, repaired four transitive @/ imports, and verified direct command reaches write admission. New subprocess regression is included; old-code boot failures no longer postpone first baseline acquisition. Current-code and source retry clocks are retained.
 - Congress automatically promoted parser /3 at 21:10Z before this repair deployed. Registration remained /3 and OpenStates absent in that reading.
 - Owners: acquisition_plan (admission/clocks), publication_plan (reader publication), people_plan (known bulk source validation), codex-acquisition-scale (integration, hosted checks, deployment and broad live verification).
+- Hosted run 37992496532: preflight, types/lint and standalone build passed; affected tests 5,971 passed, 2 failed, 5 skipped. Both failures were obsolete publication-call assertions. Those exact assertions now pass; only their two test files changed. Production startup and real long-pass publication regressions passed in that hosted run. Final revision is queued for required hosted checks; no failed check is claimed as passing.
 - Existing source cadences, memory margin, budgets, owner pauses and evidence remain unchanged. No Hunt Network or source hunting expansion.
 
 ## RELEASE 21 — acquisition-first: MERGED AND WEB DEPLOYED

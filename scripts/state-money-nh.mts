@@ -2,6 +2,8 @@
 import { nativeStateMoneyRecord } from "../lib/funding/state-native.ts";
 import { runStateFinance, type StateFinanceIO, type StateFinanceCollected } from "./lib/state-money-runner.mts";
 import type { StateMoneyRecord } from "../lib/funding/state-money.ts";
+import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
+import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 
 export const AGENCY = "New Hampshire Secretary of State — Campaign Finance System";
 export const API = "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails";
@@ -84,4 +86,8 @@ export async function collectNhFinance(io: StateFinanceIO): Promise<StateFinance
   if (!read.ok) io.gaps.push({ code: "NH_INDEX_PARTIAL", detail: read.reason! });
   return { records, complete: read.ok, query: `All New Hampshire filer index pages; ${read.retrieved}/${read.totalItems ?? "unstated"} source rows, each with its filed election period` };
 }
-if (import.meta.filename === process.argv[1]) await runStateFinance("NH", API, collectNhFinance);
+if (import.meta.filename === process.argv[1]) {
+  if (!process.argv.includes("--promote")) throw new Error("Invoke the registered state-finance adapter with --promote.");
+  prepareProductionCivicDataWrite();
+  await runStateFinance("NH", API, collectNhFinance, new PostgresRoutineDataStore());
+}

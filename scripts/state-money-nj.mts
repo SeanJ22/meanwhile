@@ -4,6 +4,8 @@ import { ELEC_CONTROL_LOCATION, ELEC_ENTITY_ENDPOINT, ELEC_LOCATION_PAGE, elecFi
 import { nativeStateMoneyRecord } from "../lib/funding/state-native.ts";
 import { runStateFinance, type StateFinanceIO, type StateFinanceCollected } from "./lib/state-money-runner.mts";
 import type { StateMoneyRecord } from "../lib/funding/state-money.ts";
+import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
+import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 
 export const AGENCY = "New Jersey Election Law Enforcement Commission";
 const HEADERS = { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8", Accept: "application/json, text/javascript, */*; q=0.01",
@@ -103,4 +105,8 @@ export async function collectNjFinance(io: StateFinanceIO): Promise<StateFinance
   }
   return { records, complete, query: `ELEC ${io.year} native entity and amendment-resolved filing records; ${completed}/${codes.size} source locations completed` };
 }
-if (import.meta.filename === process.argv[1]) await runStateFinance("NJ", ELEC_LOCATION_PAGE, collectNjFinance);
+if (import.meta.filename === process.argv[1]) {
+  if (!process.argv.includes("--promote")) throw new Error("Invoke the registered state-finance adapter with --promote.");
+  prepareProductionCivicDataWrite();
+  await runStateFinance("NJ", ELEC_LOCATION_PAGE, collectNjFinance, new PostgresRoutineDataStore());
+}

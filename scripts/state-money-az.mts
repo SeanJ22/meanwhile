@@ -4,6 +4,8 @@ import { AGENCY, BASE, HEADERS, SUMMARY_COLUMNS, SUMMARY_PATH, aggregateEntities
 import { nativeStateMoneyRecord } from "../lib/funding/state-native.ts";
 import { runStateFinance, type StateFinanceIO, type StateFinanceCollected } from "./lib/state-money-runner.mts";
 import type { StateMoneyRecord } from "../lib/funding/state-money.ts";
+import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
+import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 
 export async function collectAzFinance(io: StateFinanceIO): Promise<StateFinanceCollected> {
   // The publisher's cycle is a two-year Jan–Dec window. Every query and record
@@ -78,4 +80,8 @@ export async function collectAzFinance(io: StateFinanceIO): Promise<StateFinance
   }
   return { records, complete, period: cycle, query: `Arizona ${cycle - 1}-${cycle} official active/less-active/officeholder filter union; ${count} completed source rows` };
 }
-if (import.meta.filename === process.argv[1]) await runStateFinance("AZ", `${BASE}${SUMMARY_PATH}`, collectAzFinance);
+if (import.meta.filename === process.argv[1]) {
+  if (!process.argv.includes("--promote")) throw new Error("Invoke the registered state-finance adapter with --promote.");
+  prepareProductionCivicDataWrite();
+  await runStateFinance("AZ", `${BASE}${SUMMARY_PATH}`, collectAzFinance, new PostgresRoutineDataStore());
+}

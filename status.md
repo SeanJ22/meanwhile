@@ -1,11 +1,19 @@
 # River status
 
-build_state: RELEASE 15 MERGED to main (4385853, PR #722: Haiku 5.5 everywhere; docs-only PRs certified on open; cancelled runs leave no red checks). river = 3c2a470. Release 16 (stream/reads) in rework after a civic-data firewall refusal; 17 (stream/manual) and 18 (stream/leads) built, finishing. Sean merges no longer needed: River merges green release PRs (Sean, Oct 7); Sean restarts the runner after 16.
+build_state: RELEASE 21 MERGED AND WEB DEPLOYED (6f4df519, PR #728). Full hosted CI green; production integrity holds. Runner adoption pending.
 worker: codex-acquisition-first
 provider: Codex
 run_id: acquisition-first-2026-10-09
 lock: codex-acquisition-first-20261009
-heartbeat: 2026-10-09T17:50:22Z
+heartbeat: 2026-10-09T19:03:59Z
+
+## RELEASE 21 — acquisition-first: MERGED AND WEB DEPLOYED
+
+- PR #728 merged as 6f4df519e67b6738d1c057f60cbcd901eaead138. Exact source tree equals the hosted CI checkout 3196f36f9064fae507a89d2300fe25f5c81d9f4e.
+- Full CI run 37966354018 passed: 7,815 tests passed, 0 failed, 5 skipped; production build and required reader files passed. Largest app trace 382/430; limits unchanged. Schema shipping check was not applicable because no schema contract changed.
+- Production observer run 37975895934 confirmed /api/build serves 6f4df519 at 2026-10-09T18:50:56Z and the read-only production schema gate held (35/35 migrations), with durable receipt read back.
+- Runner adoption is pending: last observed heartbeat 2026-10-09T19:00:31.598Z still runs e8abc6e7, after finishing its prior cycle. Existing automatic release handoff is being observed; no pause, budget or service configuration was changed.
+- Scope: acquisition-first AF-01 through AF-05 only. Superseded writers and obsolete callers/flags removed; useful machinery and evidence preserved. No Hunt Network expansion or unrelated audit cleanup.
 
 ## RELEASE 15 — Haiku 5.5: MERGED (Oct 7, 2026)
 

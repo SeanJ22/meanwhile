@@ -39,5 +39,19 @@
     "schema": "not applicable; contract unchanged",
     "local_gates": "unavailable: sandbox Git subprocess and localhost restrictions; internal CI used under owner authorization"
   },
-  "note": "River contains the exact synthetic merge checked by hosted CI. Release branch is its tested source parent; both have the same verified tree. Owner authorized merge after green local or internal checks."
+  "note": "River contains the exact synthetic merge checked by hosted CI. Release branch is its tested source parent; both have the same verified tree. Owner authorized merge after green local or internal checks.",
+  "merged_sha": "6f4df519e67b6738d1c057f60cbcd901eaead138",
+  "production_observation": {
+    "run_id": 37975895934,
+    "sha": "6f4df519e67b6738d1c057f60cbcd901eaead138",
+    "served_at": "2026-10-09T18:50:56Z",
+    "integrity": "HOLDS",
+    "migrations_applied": 35,
+    "migrations_committed": 35
+  },
+  "runtime_adoption": {
+    "state": "pending",
+    "observed_beat_at": "2026-10-09T19:00:31.598Z",
+    "tested_sha": "e8abc6e76a11a1eb0a6d48df847fa1feb97bb24e"
+  }
 }

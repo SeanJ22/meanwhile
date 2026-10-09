@@ -1237,7 +1237,7 @@ test("each admitted meeting source/body contract is its own concurrent child bou
   assert.match(runner, /command:\s*task\.command/);
   assert.match(runner, /dueCandidates\.push\(\{[\s\S]*?id:\s*task\.id,[\s\S]*?task,/);
   // Every admitted task, and only those, is launched, owed-soonest first (routinePassLaunchOrder).
-  assert.match(runner, /for \(const \{ task \} of placeSourceLaunchOrder\(routinePassLaunchOrder\(admitted\)\)\) pendingRuns\.push\(pendingByTaskId\.get\(task\.id\)!\)/);
+  assert.match(runner, /for \(const \{ task \} of placeSourceLaunchOrder\(routinePassLaunchOrder\(admitted, admissionNowMs\)\)\) pendingRuns\.push\(pendingByTaskId\.get\(task\.id\)!\)/);
   assert.match(runner, /parsed\.receipts\.length !== 1/);
   assert.match(runner, /parsed\.receipts\[0\]\?\.source !== pending\.task\.id/);
   assert.doesNotMatch(runner, /--partitions=/);
@@ -1263,7 +1263,11 @@ test("Reader readback repair covers the observable registry independently of sou
   assert.match(child, /const attestor = readerVerifierClosureAttestor\(\);/);
   assert.match(child, /repairRoutineReaderProjectionReadback\(store, contract, observedAt, undefined, \{ attestor \}\)/);
   assert.doesNotMatch(child, /preparePublishedMeetingSnapshot|publishReaderEdgeArtifacts/);
-  assert.match(runner, /publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\), !PUBLISH_NOW && ONLY === null \? null : selectedTasks\)/);
+  assert.match(runner, /await publishNowEdgeChecks\?\.stop\(\);\s*const finalReaderEdge = publishNowEdgeChecks \? await publishNowEdgeChecks\.run\(\)\s*:\s*await publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\), ONLY === null \? null : selectedTasks\)/,
+    "publish-now completes its serialized pointer sweep while ordinary repair keeps the selected source scope");
+  const publicationChecks = runner.slice(runner.indexOf("const publishNowEdgeChecks ="), runner.indexOf("const admissionNowMs ="));
+  assert.match(publicationChecks, /publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\)\)/,
+    "publish-now checks all promoted families independently of selected source work");
   assert.equal(child.match(/readMeetingsProjection\(/g)?.length, 1, "the child composes in one place");
   assert.match(child, /serializeRoutineReaderRepairRecord/);
   assert.doesNotMatch(child, /processRegisteredRoutineCandidate|promoteMeetingPartitions|\.promote\(/);
@@ -1337,7 +1341,7 @@ test("standing task construction enforces every declarative authority and valida
 
 test("the routine runner derives its clock from durable candidate history", () => {
   const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  assert.match(source, /readRoutineTaskClocks\([\s\S]*store\.clock\(task\.sourceId, task\.recordClass, task\.scope\)/);
+  assert.match(source, /readRoutineTaskClocks\([\s\S]*store\.clock\(task\.sourceId, task\.recordClass, task\.scope, task\.parserVersion\)/);
   const frozenAdmission = source.indexOf("const admissionNowMs = Date.now()");
   const clockReads = source.indexOf("const clockReads = FORCE");
   // Sitting windows are decided once, at the frozen instant, from the same reads

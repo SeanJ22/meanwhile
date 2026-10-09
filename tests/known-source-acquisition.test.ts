@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createHash } from "node:crypto";
-import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { MemoryEvidenceStore, type EvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { acquireKnownRelease, type KnownRelease } from "../lib/sources/known-release.ts";
 import { RepositoryLockHeld, type LockManager } from "../lib/control-plane/repository/types.ts";
@@ -36,6 +36,63 @@ test("another process's source lock is awaited within the caller deadline before
   const held = await acquireKnownRelease({ ...h.options, locks });
   assert.equal(attempts, 2); assert.equal(h.requests(), 1); assert.equal(held.checkedAt, T0);
   await assert.rejects(acquireKnownRelease({ ...h.options, locks, signal: AbortSignal.abort() }), /abort/i);
+});
+test("independent source children reuse a first release that holds the shared lock beyond one minute", async t => {
+  const h = harness();
+  // Separate store handles model separate processes sharing the same vault:
+  // the in-process pending Promise cannot satisfy the waiting child.
+  const peerStore: EvidenceStore = {
+    put: h.store.put.bind(h.store), get: h.store.get.bind(h.store),
+    head: h.store.head.bind(h.store), list: h.store.list.bind(h.store),
+  };
+  const validating = Promise.withResolvers<void>(), finishValidation = Promise.withResolvers<void>();
+  let clockMs = 0, held = false, contentions = 0, validations = 0;
+  t.mock.method(Date, "now", () => clockMs);
+  const locks: LockManager = { withLock: async (name, work) => {
+    if (held) {
+      contentions++;
+      // A national archive download and full validation can exceed one minute
+      // while remaining within the unchanged caller acquisition deadline.
+      clockMs = 65_000;
+      if (contentions === 2) finishValidation.resolve();
+      throw new RepositoryLockHeld(name, "another state is validating the shared national archive");
+    }
+    held = true;
+    try { return await work(); } finally { held = false; }
+  } };
+  const owner = acquireKnownRelease({ ...h.options, locks, validate: async () => {
+    validations++; validating.resolve(); await finishValidation.promise;
+  } });
+  await validating.promise;
+  try {
+    const peer = await acquireKnownRelease({ ...h.options, locks, store: peerStore });
+    const first = await owner;
+    assert.equal(contentions, 2);
+    assert.equal(h.requests(), 1); assert.equal(validations, 1);
+    assert.equal(peer.reused, true); assert.equal(peer.vaultKey, first.vaultKey);
+    assert.equal(peer.sha256, first.sha256); assert.deepEqual(peer.bytes, first.bytes);
+    assert.equal(peer.retrievedAt, T0); assert.equal(peer.checkedAt, T0);
+  } finally {
+    finishValidation.resolve(); await owner;
+  }
+});
+test("a waiting source child stops at its own acquisition deadline without fetching", async () => {
+  const h = harness(), controller = new AbortController(), waiting = Promise.withResolvers<void>();
+  const reason = new Error("source child acquisition deadline reached");
+  let attempts = 0;
+  const locks: LockManager = { withLock: async name => {
+    attempts++; waiting.resolve(); throw new RepositoryLockHeld(name, "another state is acquiring the shared release");
+  } };
+  const child = acquireKnownRelease({ ...h.options, locks, signal: controller.signal });
+  const rejected = assert.rejects(child, error => {
+    assert.ok(error instanceof Error); assert.equal(error.name, "AbortError");
+    assert.equal(error.cause, reason); return true;
+  });
+  await waiting.promise;
+  controller.abort(reason);
+  await rejected;
+  assert.equal(attempts, 1); assert.equal(h.requests(), 0);
+  assert.deepEqual(await h.store.list("project/"), []);
 });
 test("304 confirms a complete held body without changing its source date or original status", async () => {
   const h = harness(), first = await acquireKnownRelease(h.options); h.time(T1);

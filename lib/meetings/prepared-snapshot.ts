@@ -357,7 +357,7 @@ async function servedPreparedChecks(
 }
 
 export async function readPreparedMeetingsProjection(
-  options: { readonly store?: RoutineDataStore; readonly now?: string } = {},
+  options: { readonly store?: RoutineDataStore; readonly now?: string; readonly expectedSequence?: number } = {},
 ): Promise<MeetingsProjectionReadResult> {
   // The meeting partitions read here are the published doors' partitions, installed in this module graph.
   await (await import("../doors/meeting-doors.ts")).ensureMeetingDoors();
@@ -370,6 +370,9 @@ export async function readPreparedMeetingsProjection(
     prepared = await readPreparedRowOnceUnchanged(store, options.store ?? DEFAULT_PREPARED_STORE);
   } catch {
     prepared = null;
+  }
+  if (options.expectedSequence !== undefined && prepared?.sequence !== options.expectedSequence) {
+    throw new Error("PREPARED_MEETING_COPY_CHANGED_DURING_READ");
   }
   if (prepared === null || store === null) {
     return readMeetingsProjection(options);

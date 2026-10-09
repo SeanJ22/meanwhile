@@ -118,17 +118,16 @@ function validIndex(value: unknown, options: KnownReleaseOptions): value is Rele
     v.byteLength <= options.maxBytes && Array.isArray(v.parsers) && Number.isFinite(Date.parse(v.retrievedAt)) &&
     Number.isFinite(Date.parse(v.sourceObservedAt)) && Number.isFinite(Date.parse(v.checkedAt));
 }
-/** Other source children may be filling this same release. Wait briefly for
- * the existing lock so they can reuse that result within their own deadline. */
+/** Other source children may be filling this same release. Reuse their result
+ * within the caller's acquisition deadline, including a slow first download. */
 async function withReleaseLock<T>(locks: LockManager, name: string, signal: AbortSignal, work: () => Promise<T>): Promise<T> {
-  const started = Date.now();
   let waitMs = 250;
   for (;;) {
     signal.throwIfAborted();
     try { return await locks.withLock(name, work); }
     catch (error) {
-      if (!(error instanceof RepositoryLockHeld) || error.lockName !== name || Date.now() - started >= 60_000) throw error;
-      await delay(Math.min(waitMs, 60_000 - (Date.now() - started)), undefined, { signal });
+      if (!(error instanceof RepositoryLockHeld) || error.lockName !== name) throw error;
+      await delay(waitMs, undefined, { signal });
       waitMs = Math.min(5_000, waitMs * 2);
     }
   }

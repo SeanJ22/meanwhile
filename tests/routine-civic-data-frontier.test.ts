@@ -12,6 +12,7 @@ import {
   routineFrontierPassBound,
   routinePassLaunchOrder,
   routineBaselineOwed,
+  routineCodeChangeRetryTaskIds,
   routineTaskDeadlineMs,
   routineTaskDue,
   routineAdmissionClock,
@@ -267,6 +268,40 @@ test("a parser upgrade ignores an older implementation's supervisor failure but 
   assert.equal(before.attempts.get(unchanged), "2026-10-09T12:00:00.000Z");
   const current = { ...row, runtimeOutcome: { ...row.runtimeOutcome, testedSha: options.codeSha } };
   assert.equal(routineUnreceiptedSupervisorAttemptHistory([current], ids, options).attempts.get(upgraded), "2026-10-09T12:00:00.000Z");
+});
+
+test("a repaired never-published OpenStates baseline bypasses an old-code boot failure while current failures and steady refreshes keep backoff", () => {
+  const people = ROUTINE_SOURCE_TASKS.find(task => task.id === "openstates-people-az")!;
+  const ordinary = ROUTINE_SOURCE_TASKS.find(task => task.id === "fec-funding")!;
+  const meeting = ROUTINE_SOURCE_TASKS.find(task => task.recordClass === "MEETING")!;
+  const owner = { ...people, id: "owner-request", ownerInvocation: { requestedAt: "2026-10-09T12:00:00.000Z", instructions: ["saved-send"] } };
+  const failedAt = "2026-10-09T12:00:00.000Z", now = Date.parse(failedAt) + 60_000;
+  const ordinaryClock = { lastAttemptedAt: "2026-10-01T12:00:00.000Z", lastSucceededAt: "2026-10-01T12:00:00.000Z",
+    lastSucceededObservedAt: "2026-10-01T12:00:00.000Z", lastSucceededParserVersion: ordinary.parserVersion };
+  const taskIds = routineCodeChangeRetryTaskIds([
+    { task: people, ok: true, clock: undefined, error: null },
+    { task: ordinary, ok: true, clock: ordinaryClock, error: null },
+    { task: meeting, ok: true, clock: undefined, error: null },
+    { task: owner, ok: true, clock: undefined, error: null },
+    { task: { ...people, id: "unread-clock" }, ok: false, clock: undefined, error: "unavailable" },
+  ]);
+  assert.deepEqual([...taskIds], [people.id]);
+  const row = supervisorHistoryRow({ finishedAt: failedAt, failures: [people.id, ordinary.id] }) as { runtimeOutcome: Record<string, unknown> };
+  row.runtimeOutcome.testedSha = "a".repeat(40);
+  const registered = new Set([people.id, ordinary.id]);
+  const options = { taskIds, codeSha: "b".repeat(40) };
+  const old = routineUnreceiptedSupervisorAttemptHistory([row], registered, options);
+  assert.equal(old.issues.length, 0);
+  assert.equal(old.attempts.has(people.id), false);
+  assert.equal(routineTaskDue(people, routineAdmissionClock(undefined, old.attempts.get(people.id), now), now), true);
+  assert.equal(old.attempts.get(ordinary.id), failedAt, "a normal refresh retains the prior failure across code changes");
+  assert.equal(routineTaskDue(ordinary, routineAdmissionClock(ordinaryClock, old.attempts.get(ordinary.id), now), now), false);
+  const current = routineUnreceiptedSupervisorAttemptHistory([{ ...row, runtimeOutcome: { ...row.runtimeOutcome, testedSha: options.codeSha } }], registered, options);
+  const admission = routineAdmissionClock(undefined, current.attempts.get(people.id), now);
+  assert.equal(routineTaskDue(people, admission, now), false, "a current-code failure keeps the one-hour retry");
+  assert.equal(routineTaskDue(people, admission, Date.parse(failedAt) + people.retryMs), true);
+  assert.equal(routineTaskDue(people, routineAdmissionClock({ lastAttemptedAt: failedAt }, old.attempts.get(people.id), now), now), false,
+    "a durable source failure remains on its retry clock even when an older supervisor failure is discarded");
 });
 
 test("a corrupt supervisor row is explicit and cannot erase valid fairness clocks", () => {
@@ -716,7 +751,7 @@ test("an unreceipted child in a single-task pass waits its existing retry interv
   }
   assert.equal(clock.lastAttemptedAt, "2026-09-01T12:00:00.000Z", "no durable source clock is changed");
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  const attemptsRead = runner.indexOf("latestUnreceiptedSupervisorAttempts(selectedTasks, parserUpgradeIds)");
+  const attemptsRead = runner.indexOf("latestUnreceiptedSupervisorAttempts(selectedTasks, routineCodeChangeRetryTaskIds(clockReads))");
   assert.ok(attemptsRead >= 0 && attemptsRead < runner.indexOf("for (const read of clockReads)"));
 });
 

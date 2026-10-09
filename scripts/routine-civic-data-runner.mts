@@ -42,6 +42,7 @@ import {
   routineTaskDeadlineMs,
   routineTaskDue,
   routineBaselineOwed,
+  routineCodeChangeRetryTaskIds,
   routineAdmissionClock,
   unchangedRoutineProtocolFailure,
   routineTaskSelection,
@@ -394,7 +395,7 @@ function safeFailure(value: string): string {
  * owner log Admin consumes prevents one broken partition from monopolizing a
  * shared publisher frontier without fabricating a source attempt.
  */
-async function latestUnreceiptedSupervisorAttempts(selectedTasks: readonly RoutineSourceTask[], parserUpgradeIds: ReadonlySet<string>): Promise<RoutineSupervisorAttemptHistory & { readonly protocolFailures: readonly unknown[] }> {
+async function latestUnreceiptedSupervisorAttempts(selectedTasks: readonly RoutineSourceTask[], codeChangeRetryIds: ReadonlySet<string>): Promise<RoutineSupervisorAttemptHistory & { readonly protocolFailures: readonly unknown[] }> {
   const connection = controlPlaneUrlFromEnv();
   if (connection === null) {
     throw new Error(`${CONTROL_PLANE_URL_VAR} is not configured; provider-frontier fairness cannot be proved.`);
@@ -426,7 +427,7 @@ async function latestUnreceiptedSupervisorAttempts(selectedTasks: readonly Routi
     ROUTINE_SUPERVISOR_HISTORY_WINDOW, { testedSha: true, huntSourceProgress: true },
   ));
   return { ...routineUnreceiptedSupervisorAttemptHistory(supervisorOutcomes, taskIds,
-    { taskIds: parserUpgradeIds, codeSha: RUNNING_CODE_SHA }), protocolFailures };
+    { taskIds: codeChangeRetryIds, codeSha: RUNNING_CODE_SHA }), protocolFailures };
 }
 
 /**
@@ -770,9 +771,7 @@ step = "reading unreceipted supervisor attempts";
 let supervisorAttempts: ReadonlyMap<string, string> = new Map();
 let protocolFailures: readonly unknown[] = [];
 if (selectedTasks.length > 0) try {
-  const parserUpgradeIds = new Set(clockReads.flatMap(read => read.ok && read.clock?.lastSucceededParserVersion !== undefined &&
-    read.clock.lastSucceededParserVersion !== read.task.parserVersion ? [read.task.id] : []));
-  const history = await latestUnreceiptedSupervisorAttempts(selectedTasks, parserUpgradeIds);
+  const history = await latestUnreceiptedSupervisorAttempts(selectedTasks, routineCodeChangeRetryTaskIds(clockReads));
   supervisorAttempts = history.attempts;
   protocolFailures = history.protocolFailures;
   for (const issue of history.issues) {

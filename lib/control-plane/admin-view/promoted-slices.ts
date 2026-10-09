@@ -1,8 +1,8 @@
 /** Postgres cuts the slice out of the promoted pointer row inside one READ ONLY transaction. No pointer row means not published yet, never an empty list. */
-import type { CbsaClass, GeographyRef, GeographyType } from "@/lib/census-geography/contract.ts";
-import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "@/lib/census-geography/publication.ts";
-import { REGISTRATION_RECORD_CLASS, REGISTRATION_TARGETS } from "@/lib/registration/publication.ts";
-import { REGISTRY_RUNTIME_SCOPE } from "@/lib/registry/runtime-data-plane.ts";
+import type { CbsaClass, GeographyRef, GeographyType } from "../../census-geography/contract.ts";
+import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../../census-geography/publication.ts";
+import { REGISTRATION_RECORD_CLASS, REGISTRATION_TARGETS } from "../../registration/publication.ts";
+import { REGISTRY_RUNTIME_SCOPE } from "../../registry/runtime-data-plane.ts";
 
 export type Row = Readonly<Record<string, unknown>>;
 

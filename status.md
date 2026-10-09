@@ -1,13 +1,13 @@
 # River status
 
-build_state: RELEASE 22 IN HOSTED CHECKS. Baseline repairs are pushed in PR #729; real national imports remain pending deployment.
+build_state: RELEASE 22 GREEN. Exact hosted CI checkout promoted to river; PR #729 ready to merge. Broad production imports still pending deployment.
 worker: codex-acquisition-scale
 provider: Codex
 run_id: acquisition-scale-2026-10-09
 lock: codex-acquisition-scale-2026-10-09
-heartbeat: 2026-10-09T21:51:47Z
+heartbeat: 2026-10-09T23:21:29Z
 
-## RELEASE 22 — acquisition baseline: PR #729, HOSTED CHECKS
+## RELEASE 22 — acquisition baseline: PR #729, GREEN
 
 - Production verification at 20:28Z found no plural-openstates candidates or promotions, no registration/4 candidates, and Congress directory still at parser /2. Release 21's 13 meeting promotions did not prove the national baseline.
 - Repairs built: parser-aware initial replay; independent state projections of shared national releases; remove the normal acquisition pass's duplicate full worker-publication scan; bounded publication outbox; shared-release wait through the existing deadline; publish newly promoted baseline pointers during long passes and preserve meeting facts across registry races.
@@ -17,6 +17,8 @@ heartbeat: 2026-10-09T21:51:47Z
 - Owners: acquisition_plan (admission/clocks), publication_plan (reader publication), people_plan (known bulk source validation), codex-acquisition-scale (integration, hosted checks, deployment and broad live verification).
 - Hosted run 37992496532: preflight, types/lint and standalone build passed; affected tests 5,971 passed, 2 failed, 5 skipped. Both failures were obsolete publication-call assertions. Those exact assertions now pass; only their two test files changed. Production startup and real long-pass publication regressions passed in that hosted run. Final revision is queued for required hosted checks; no failed check is claimed as passing.
 - Existing source cadences, memory margin, budgets, owner pauses and evidence remain unchanged. No Hunt Network or source hunting expansion.
+
+- Final hosted run 37995919721 passed: 5,973 affected tests passed, 0 failed, 5 skipped; lint, types, preflight and standalone build green; 16 bundle checks passed. Exact tested checkout 1b001573a5ad99628d3753a5abef80acd9e4e11c promoted to river and river-next. Production imports and reader publication remain to verify after merge/deploy.
 
 ## RELEASE 21 — acquisition-first: MERGED AND WEB DEPLOYED
 

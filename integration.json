@@ -1811,5 +1811,48 @@
       "schema": "not applicable; contract unchanged",
       "local_gates": "unavailable: sandbox Git subprocess and localhost restrictions; internal CI used under owner authorization"
     }
+  },
+  {
+    "lane": "acquisition-scale",
+    "steps": [
+      "AF-06",
+      "AF-07",
+      "AF-08"
+    ],
+    "ready_sha": "e2a617be423808527414722b48ed5e3f3a45778f",
+    "merge_sha": "e310dd69134d0cdd8cb7120808bec594b2a74209",
+    "river_sha": "1b001573a5ad99628d3753a5abef80acd9e4e11c",
+    "tested_sha": "1b001573a5ad99628d3753a5abef80acd9e4e11c",
+    "gates": "pass",
+    "at": "2026-10-09T23:21:29Z",
+    "verification": {
+      "kind": "github-actions",
+      "run_id": 37995919721,
+      "url": "https://github.com/SeanJ22/meanwhile/actions/runs/37995919721",
+      "head_sha": "e310dd69134d0cdd8cb7120808bec594b2a74209",
+      "checkout_sha": "1b001573a5ad99628d3753a5abef80acd9e4e11c",
+      "tree_sha": "b847b52b2dc0964ec393e4af3ad817df6f8c8708",
+      "tests": {
+        "selected_files": 713,
+        "passed": 5973,
+        "failed": 0,
+        "skipped": 5
+      },
+      "bundle_tests": {
+        "passed": 16,
+        "failed": 0
+      },
+      "largest_app_trace_files": 382,
+      "app_trace_ceiling": 430,
+      "schema": "not applicable; contract unchanged",
+      "local_gates": "restricted Git subprocess and localhost checks covered by hosted CI under owner authorization",
+      "previous_failure": {
+        "run_id": 37992496532,
+        "passed": 5971,
+        "failed": 2,
+        "skipped": 5,
+        "cause": "Two obsolete publication-call assertions; corrected both without application changes. Original startup and publication regressions passed; final affected suite passed."
+      }
+    }
   }
 ]

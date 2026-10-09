@@ -1,0 +1,43 @@
+{
+  "n": 21,
+  "branch": "release/21",
+  "river_sha": "3196f36f9064fae507a89d2300fe25f5c81d9f4e",
+  "tested_sha": "3196f36f9064fae507a89d2300fe25f5c81d9f4e",
+  "release_head_sha": "5d558d9e916b5f474647a5d2c5f77e7f305d1033",
+  "tree_sha": "6dbf22ac63a4a79709654ee6dd3af97da60c1397",
+  "steps": [
+    "AF-01",
+    "AF-02",
+    "AF-03",
+    "AF-04",
+    "AF-05"
+  ],
+  "lanes": [
+    "acquisition-first"
+  ],
+  "integration_from": 128,
+  "integration_count": 129,
+  "pr": {
+    "number": 728,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/728"
+  },
+  "at": "2026-10-09T18:28:47Z",
+  "verification": {
+    "kind": "github-actions",
+    "run_id": 37966354018,
+    "url": "https://github.com/SeanJ22/meanwhile/actions/runs/37966354018",
+    "head_sha": "5d558d9e916b5f474647a5d2c5f77e7f305d1033",
+    "checkout_sha": "3196f36f9064fae507a89d2300fe25f5c81d9f4e",
+    "tree_sha": "6dbf22ac63a4a79709654ee6dd3af97da60c1397",
+    "tests": {
+      "passed": 7815,
+      "failed": 0,
+      "skipped": 5
+    },
+    "largest_app_trace_files": 382,
+    "app_trace_ceiling": 430,
+    "schema": "not applicable; contract unchanged",
+    "local_gates": "unavailable: sandbox Git subprocess and localhost restrictions; internal CI used under owner authorization"
+  },
+  "note": "River contains the exact synthetic merge checked by hosted CI. Release branch is its tested source parent; both have the same verified tree. Owner authorized merge after green local or internal checks."
+}

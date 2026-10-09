@@ -30,6 +30,7 @@ import type { PublicBodyAttempt } from "./body-attempt-read.ts";
 import type { BodyFamilyAttempts } from "./attempt-families.ts";
 import type { Meeting } from "../sources/types.ts";
 import { historyGapFor, type HistoryGap } from "../meetings/history-gaps.ts";
+import type { RegistrationGovernmentListing } from "../registration/listings.ts";
 
 /** A dated cited source hunt is evidence; a registry status alone is not.
  * New control-plane attempts are not present in this historic audit yet, so
@@ -193,6 +194,11 @@ export interface Seat {
 export interface CoverageSummary {
   state: CoverageState;
   bodies: CoveredBody[];
+  /** Source inventories are independent of sourced meeting bodies and people. */
+  governments?: RegistrationGovernmentListing[];
+  governmentInventoryStates?: string[];
+  governmentInventoryUnavailableStates?: string[];
+  federalDirectoryUnavailable?: boolean;
   seats: Seat[];
   /**
    * One entry per official state-legislator scope implicated by `seats`.

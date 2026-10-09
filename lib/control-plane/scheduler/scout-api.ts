@@ -1,5 +1,6 @@
 /** Credentialed, read-only government APIs shared by Scouts and Detectives.
  * Credentials stay in transport, never in source locators or model output. */
+import { readCompleteResponse } from "../../sources/source-bytes.ts";
 import { assertPublicUrl } from '../../hunt/egress.ts';
 import type { ScoutToolSpec } from './scout-contract.ts';
 
@@ -54,7 +55,7 @@ export async function readSourceApi(name: SourceApiTool, raw: unknown, options: 
     await options.spaceOut?.(url.host);
     requests++;
     const response = await fetcher(url.href, {method:'GET',headers:{accept:'application/json',...headers},redirect:'error',signal:AbortSignal.timeout(options.timeoutMs ?? 15000)});
-    const text = redact(await response.text()); bytes += Buffer.byteLength(text);
+    const text = redact(new TextDecoder("utf-8", {fatal:true}).decode(await readCompleteResponse(response,16*1024*1024))); bytes += Buffer.byteLength(text);
     return {status:response.status,text};
   };
   try {

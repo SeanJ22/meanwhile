@@ -140,7 +140,7 @@ export function registrationJurisdictionRegistry(input: RegistrationRegistryInpu
   if (promoted.model.state.toLowerCase() !== state) {
     throw new Error(`REGISTRATION_STATE_MISMATCH:${postal}: the promoted version ${promoted.versionId} is ${promoted.model.state}'s`);
   }
-  if (promoted.model.vintage.referenceSha256 !== loaded.sha256) {
+  if (!promoted.model.governments && promoted.model.vintage.referenceSha256 !== loaded.sha256) {
     throw new Error(
       `REGISTRATION_REFERENCE_MISMATCH:${postal}: the promoted registration ${promoted.versionId} was built from reference ` +
         `${promoted.model.vintage.referenceSha256}, and the committed reference is ${loaded.sha256}; neither is read until they agree`,
@@ -156,7 +156,16 @@ export function registrationJurisdictionRegistry(input: RegistrationRegistryInpu
   let withSite = 0;
   const rowsRead: Record<string, number> = {};
   const jurisdictions: Jurisdiction[] = [];
-  for (const [pid6, jurisdictionId, name, govType, division, how, alternate] of ref.governments) {
+  const listingById = new Map((promoted.model.governments ?? []).flatMap(row => {
+    const native = row.nativeIds.census_pid6 ?? row.nativeIds.tiger_geoid;
+    return native ? [[native, row] as const] : [];
+  }));
+  const rows = promoted.model.governments ? [
+    ...ref.governments.filter(row => row[3] === "STATE"),
+    ...[...listingById].map(([pid, listing]) => [pid, listing.jurisdictionId ?? listing.id, listing.name, listing.governmentClass,
+      -1, listing.nativeIds.tiger_geoid ? "TIGER_FUNCSTAT" : "NATIVE_LISTING", -1] as const),
+  ] : ref.governments;
+  for (const [pid6, jurisdictionId, name, govType, , how] of rows) {
     const govClass = CLASS_OF[govType];
     if (govClass === undefined) continue;
     const enumeratedFrom =
@@ -170,15 +179,12 @@ export function registrationJurisdictionRegistry(input: RegistrationRegistryInpu
     rowsRead[enumeratedFrom] = (rowsRead[enumeratedFrom] ?? 0) + 1;
     /* A territory government has no Census of Governments row, so no address is recorded for it: none is invented. */
     const facts = govType === "STATE" || how === "TIGER_FUNCSTAT" ? undefined : census.byPid.get(pid6);
-    const site = ownWebAddress(facts?.web ?? "");
+    const site = ownWebAddress(listingById.get(pid6)?.website ?? facts?.web ?? "");
     if (site !== null) withSite += 1;
-    const slot = govType === "SCHOOL DISTRICT" || govType === "DEPENDENT SCHOOL SYSTEM" ? "board" : "governing";
-    const pairedIds = govType === "STATE" || division < 0 ? [] : [...new Set([division, alternate]
-      .filter(index => index >= 0)
-      .map(index => ref.divisions[index]?.[0])
-      .filter((id): id is string => id !== undefined))];
-    const heldBodies = pairedIds.map(id => bodyById.get(id + "#" + slot)).filter(body => body !== undefined);
+    const heldBodies = [...bodyById.values()].filter(body => body.censusId === pid6);
     const body = heldBodies.length === 1 ? heldBodies[0] : undefined;
+    const listing = listingById.get(pid6);
+    const association = listing?.associations[0];
     jurisdictions.push({
       id: jurisdictionId,
       stateCode: postal,
@@ -188,9 +194,9 @@ export function registrationJurisdictionRegistry(input: RegistrationRegistryInpu
       enumeratedFrom,
       ownWebAddress: site,
       sourceIds: site === null ? [] : [OWN_SITE_MEETINGS_SOURCE],
-      ocdId: body?.ocdId ?? null,
+      ocdId: body?.ocdId ?? association?.divisionId ?? null,
       bodyId: body?.id ?? null,
-      censusDivision: body === undefined ? null : (censusDivisionOf.get(body.ocdId) ?? null),
+      censusDivision: association ? `${association.layer}:${association.geoid}` : body ? censusDivisionOf.get(body.ocdId) ?? null : null,
       censusId: pid6,
     });
   }
@@ -309,6 +315,6 @@ export async function preloadRegistrationJurisdictions(input: {
 /** The two-letter state of a jurisdiction id (`oh:city:city-of-columbus`) or an obligation id about one, or null. */
 export function stateOfJurisdictionId(id: string): string | null {
   const rest = id.replace(/^freshness:[a-z-]+:/, "");
-  const m = /^([a-z]{2}):[a-z]+:/.exec(rest);
-  return m === null ? null : m[1]!;
+  const m = /^government:US-([A-Z]{2}):/.exec(rest) ?? /^([a-z]{2}):[a-z]+:/.exec(rest);
+  return m === null ? null : m[1]!.toLowerCase();
 }

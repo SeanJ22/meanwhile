@@ -26,7 +26,9 @@ test("numeric funding totals copy the exact five held committee values for every
 
   const candidate = getFundingSnapshot().candidates.find(row => row.fecCandidateId === "S0NH00219");
   assert.ok(candidate);
-  assert.notEqual(candidate.totals.cashOnHand, candidate.totals.receipts - candidate.totals.disbursements);
+  assert.notEqual(candidate.totals.receipts, null);
+  assert.notEqual(candidate.totals.disbursements, null);
+  assert.notEqual(candidate.totals.cashOnHand, candidate.totals.receipts! - candidate.totals.disbursements!);
   const answer = fundingAnswerForTarget(candidate.targetKeys[0]);
   assert.equal(answer.kind, "funding");
   if (answer.kind === "funding") assert.equal(answer.data.totals?.cashOnHand, candidate.totals.cashOnHand);

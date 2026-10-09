@@ -20,5 +20,8 @@ test("offices reach federal members and the legislatures' own roster rows; commi
     assert.equal(memberDirectoryReaches(id, "committees"), false, `${id} committees: no source reaches them, so no false "sits on none"`);
   }
   assert.equal(memberDirectoryReaches("plural:c6a181c7", "offices"), false, "the retired intermediary id never enters the reader");
+  assert.equal(memberDirectoryReaches("plural:oh:00000000-0000-4000-8000-000000000001", "offices"), true);
+  assert.equal(memberDirectoryReaches("plural:00000000-0000-4000-8000-000000000001", "offices", "OH"), true);
+  assert.equal(memberDirectoryReaches("plural:00000000-0000-4000-8000-000000000001", "offices"), false, "a global native ID needs one known state scope, never a national scan");
   assert.equal(memberDirectoryReaches("roster:ocd-division/country:us/state:az/place:benson#governing#ab12", "offices"), false);
 });

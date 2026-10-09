@@ -607,7 +607,7 @@ export function routineTaskDue(
   if (schedule?.kind === "SITTING_WINDOW") return sittingWindowTaskDue(task, schedule, clock, nowMs, sittingHot);
   if (!clock?.lastAttemptedAt) return true;
   const attempted = Date.parse(clock.lastAttemptedAt);
-  const succeeded = clock.lastSucceededAt ? Date.parse(clock.lastSucceededAt) : Number.NaN;
+  const succeeded = clock.lastSucceededObservedAt ? Date.parse(clock.lastSucceededObservedAt) : Number.NaN;
   if (!Number.isFinite(attempted)) return true;
   if (attempted > nowMs || (Number.isFinite(succeeded) && succeeded > nowMs)) return true;
   if (!Number.isFinite(succeeded)) return nowMs - attempted >= task.retryMs;

@@ -7,6 +7,7 @@ import { committedIncumbentHolderFor, contestIncumbency, sameSeatDiscriminators 
 import { getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.ts";
 
 import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import { seatHolderById } from "../lib/registry/server.ts";
 
 await installRegistryAuthority();
 
@@ -15,6 +16,18 @@ const bridge = getRegistryRuntimeReadModel().officialCandidacies;
 const county = { ocdId: "ocd-division/country:us/state:nj/county:morris", title: "Member of the Board of County Commissioners" };
 
 const selen = "ballot-nj-morris:county-commissioner:selen";
+
+test("an unavailable candidacy bridge preserves an independently held exact-seat incumbent", async () => {
+  const holder = await seatHolderById("roster:morris#6");
+  assert.ok(holder);
+  const actual = await contestIncumbency({ ...county, id: "fixture:bridge-outage", federal: false, voteFor: 3,
+    candidates: [{ key: selen, targetKey: selen, display: "Tayfun Selen" }] }, async () => null, async () => [holder], {
+    committedHolder: async () => { throw new Error("registry bridge unavailable"); },
+    enumeratedHolders: () => [], certifiedNominees: () => null,
+  });
+  assert.equal(actual.decisions.get(selen)?.standing, "INCUMBENT");
+  assert.equal(actual.holderFor.get(selen)?.id, holder.id);
+});
 
 test("a committed person link cannot establish incumbency in a different body, office, or unrecognized identity", async () => {
   assert.equal((await committedIncumbentHolderFor(county, selen))?.id, "roster:morris#6");

@@ -183,6 +183,11 @@ async function pageById<T>(
     ].join("&");
 
     const page = await getJson<T[]>(`${path}?${query}`, options);
+    if (!Array.isArray(page) || page.length > PAGE_SIZE || page.some(row => !Number.isSafeInteger(idOf(row)) || idOf(row) <= cursor) ||
+      new Set(page.map(idOf)).size !== page.length ||
+      (page.length === PAGE_SIZE && page.some((row, index) => index > 0 && idOf(row) <= idOf(page[index - 1])))) {
+      throw new LegistarError(`${path}: invalid or non-advancing native-id page`, 200, path);
+    }
     collected.push(...page);
 
     if (page.length < PAGE_SIZE) break;
@@ -215,11 +220,13 @@ async function pageById<T>(
  */
 export async function fetchEvents<T>(
   slug: string,
-  window: { from: string; to: string },
+  window: { from: string; to: string; bodyId?: number },
   options: RequestOptions = {},
 ): Promise<T[]> {
+  if (window.bodyId !== undefined && (!Number.isSafeInteger(window.bodyId) || window.bodyId <= 0)) throw new Error("LEGISTAR_NATIVE_BODY_INVALID");
   const filter =
-    `EventDate ge datetime'${window.from}' and EventDate le datetime'${window.to}'`;
+    `EventDate ge datetime'${window.from}' and EventDate le datetime'${window.to}'` +
+    (window.bodyId === undefined ? "" : ` and EventBodyId eq ${window.bodyId}`);
 
   return pageById<T>(
     `${slug}/events`,
@@ -228,6 +235,11 @@ export async function fetchEvents<T>(
     filter,
     options,
   );
+}
+
+/** Native body identities on this already-known tenant. */
+export async function fetchBodies<T extends { BodyId: number }>(slug: string, options: RequestOptions = {}): Promise<T[]> {
+  return pageById<T>(`${slug}/bodies`, "BodyId", row => row.BodyId, undefined, options);
 }
 
 /**
@@ -241,10 +253,8 @@ export async function fetchEventItems<T>(
   eventId: number,
   options: RequestOptions = {},
 ): Promise<T[]> {
-  return getJson<T[]>(
-    `${slug}/events/${eventId}/eventitems?$top=${PAGE_SIZE}`,
-    options,
-  );
+  return pageById<T>(`${slug}/events/${eventId}/eventitems`, "EventItemId",
+    row => (row as { EventItemId: number }).EventItemId, undefined, options);
 }
 
 /** One event record by id. Carries the minutes status and minutes pointer. */

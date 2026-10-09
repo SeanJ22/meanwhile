@@ -5,6 +5,7 @@ import type { PublishedLookupState } from "../../census-geography/reader.ts";
 import { censusWorkDivision } from "../../census-geography/division-id.ts";
 import { US_STATES } from "../readiness/catalog.ts";
 import { politeGetText } from "../../sources/http.ts";
+import { currentRepresentationSelection, selectGeographyVersion, type GeographySelection } from "../../census-geography/selection.ts";
 
 const TIGER = "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb";
 type Polygon = { rings: number[][][]; spatialReference?: { wkid: number } };
@@ -28,11 +29,12 @@ export interface GeographyReadOptions {
   readHeld?: (sourceUrl: string) => Promise<string | null>;
   congress?: number;
   legislativeYear?: number;
+  selection?: GeographySelection;
   /** Promoted geography is read before any national API request. */
   readPublished?: (zip: string) => Promise<readonly PlaceDivision[]>;
 }
 
-export async function heldDivisionsForZip(zip: string, published?: PublishedLookupState): Promise<PlaceDivision[]> {
+export async function heldDivisionsForZip(zip: string, published?: PublishedLookupState, selection: GeographySelection = currentRepresentationSelection()): Promise<PlaceDivision[]> {
   if (!published && !process.env.DATABASE_URL) return [];
   const state = published ?? await loadPublishedAreaLookupState([zip]);
   if (state.source !== "published") return [];
@@ -43,10 +45,10 @@ export async function heldDivisionsForZip(zip: string, published?: PublishedLook
   const versions = await state.lookup.listVersions();
   for (const membership of result.memberships) {
     const type = types[membership.geography.type];
-    const year = new Date().getUTCFullYear();
-    const expected = type === "cd" ? `cd:${Math.floor((year - 1789) / 2) + 1}` :
-      type === "sldu" || type === "sldl" ? `${type}:${Math.floor((year - 1) / 2) * 2}` : null;
-    if (expected && membership.geography.version !== expected) continue;
+    if (["cd", "sldu", "sldl"].includes(type)) {
+      const selected = selectGeographyVersion(versions, membership.geography.type, selection);
+      if (!selected || membership.geography.version !== selected.key) continue;
+    }
     const base = stateBase(membership.geography.stateFips);
     // The held Census builder prepends the postal abbreviation for display.
     // It is not part of the source county name or the division's identity.
@@ -60,7 +62,8 @@ export async function heldDivisionsForZip(zip: string, published?: PublishedLook
     // Local memberships locate work; current source rows still supply their
     // governing functional status before the place hunt publishes bodies.
     out.push({ id, label: membership.geography.label, divisionType: type, geoid: membership.geography.geoid,
-      ...(["place", "cousub"].includes(type) ? {} : { completeForZip: zip }),
+      ...(!["place", "cousub"].includes(type) && version?.retrievalComplete === true ? { completeForZip: zip } : {}),
+      zctaOverlap: { whole: membership.whole, fraction: membership.fraction, fractionBasis: membership.fractionBasis },
       sourceUrl: version?.provenance.sourceUrls[0] ?? "https://www2.census.gov/geo/docs/maps-data/data/rel2020/" });
     if (base) out.push({ id: base.base, label: US_STATES.find(s => s.code === base.postal.toLowerCase())?.name ?? base.postal, divisionType: "state", geoid: membership.geography.stateFips, completeForZip: zip,
       sourceUrl: out.at(-1)!.sourceUrl });
@@ -75,6 +78,7 @@ export interface PlaceDivision {
   geoid: string;
   sourceUrl: string;
   sourceDataset?: "TIGERWEB_CURRENT";
+  zctaOverlap?: { whole: boolean; fraction: number | null; fractionBasis: string };
   boundary?: Polygon;
   /** The published lookup or a complete polygon query supplied this ZIP's layer.
    * A held member alone never establishes that every split district is held. */
@@ -124,14 +128,24 @@ const spatial = (boundary: Polygon) => ({ geometry: JSON.stringify(boundary), ge
 const stateFips = (state: string) => Object.entries(FIPS_TO_STATE).find(([, entry]) => entry.postal === state.toUpperCase())?.[0];
 
 async function legislativeLayers(options: GeographyReadOptions): Promise<{ type: string; url: string }[]> {
-  const year = new Date().getUTCFullYear();
-  const congress = options.congress ?? Math.floor((year - 1789) / 2) + 1;
-  const vintage = options.legislativeYear ?? Math.floor((year - 1) / 2) * 2;
-  return savedResponses([
-    { type: "cd", name: new RegExp(`^${congress}(?:th|st|nd|rd) Congressional Districts$`) },
+  const selection = options.selection ?? currentRepresentationSelection();
+  const available = [
+    { key: "cd:119", type: "congressional_district" as const },
+    { key: "cd:120", type: "congressional_district" as const },
+    { key: "sldu:2024", type: "state_leg_upper" as const },
+    { key: "sldl:2024", type: "state_leg_lower" as const },
+  ];
+  const congressional = selectGeographyVersion(available, "congressional_district", selection);
+  const upper = selectGeographyVersion(available, "state_leg_upper", selection);
+  const congress = options.congress ?? (congressional ? Number(congressional.key.split(":")[1]) : null);
+  const vintage = options.legislativeYear ?? (upper ? Number(upper.key.split(":")[1]) : null);
+  const selected: { type: string; name: RegExp }[] = [];
+  if (congress !== null) selected.push({ type: "cd", name: new RegExp(`^${congress}(?:th|st|nd|rd) Congressional Districts$`) });
+  if (vintage !== null) selected.push(
     { type: "sldu", name: new RegExp(`^${vintage} State Legislative Districts - Upper$`) },
-    { type: "sldl", name: new RegExp(`^${vintage} State Legislative Districts - Lower$`) },
-  ].map(async row => ({ type: row.type, url: await layer("Legislative", row.name, options) })));
+    { type: "sldl", name: new RegExp(`^${vintage} State Legislative Districts - Lower$`) });
+  return savedResponses(selected.map(async row => ({ type: row.type, url: await layer("Legislative", row.name, options) })));
+
 }
 
 function division(feature: Feature, type: string, sourceUrl: string, counties: ReadonlyMap<string, string> = new Map()): PlaceDivision | null {
@@ -153,7 +167,9 @@ function division(feature: Feature, type: string, sourceUrl: string, counties: R
     : type === "cousub" ? subdivisionIdentity(state, countyName!, String(a.NAME ?? name), lsad, funcstat, classfp)
     : schoolIdentity(state, name);
   if (!identity) return null;
-  return { id: identity.ocdId, label: String(a.NAME ?? name), divisionType: type, geoid: String(a.GEOID ?? ""), sourceUrl, sourceDataset: "TIGERWEB_CURRENT", boundary: feature.geometry, lsad, funcstat, classfp };
+  const school = ["unsd", "elsd", "scsd"].includes(type);
+  const id = school ? `${stateBase(state)!.base}/school_district:${type}_${String(a.GEOID)}` : identity.ocdId;
+  return { id, label: String(a.NAME ?? name), divisionType: school ? "school" : type, geoid: String(a.GEOID ?? ""), sourceUrl, sourceDataset: "TIGERWEB_CURRENT", boundary: feature.geometry, lsad, funcstat, classfp };
 }
 
 /** Download any state's serving legislative boundaries without a state dossier. */
@@ -168,7 +184,7 @@ export async function loadStateDistrictBoundaries(state: string, options: Geogra
 /** Every polygon intersecting a ZCTA, never a centroid's one district. */
 export async function divisionsForZip(zip: string, options: GeographyReadOptions = {}): Promise<PlaceDivision[]> {
   if (!/^\d{5}$/.test(zip)) throw new Error("A five-digit ZIP is required");
-  const held = await (options.readPublished ?? heldDivisionsForZip)(zip);
+  const held = await (options.readPublished ? options.readPublished(zip) : heldDivisionsForZip(zip, undefined, options.selection));
   const heldTypes = new Set(held.filter(d => d.completeForZip === zip).map(d => d.censusLayer ?? d.divisionType));
   const zipLayer = await layer("PUMA_TAD_TAZ_UGA_ZCTA", /^2020 Census ZIP Code Tabulation Areas$/, options);
   const [area] = await query(zipLayer, { where: `ZCTA5='${zip}'` }, options);
@@ -215,13 +231,13 @@ export async function divisionsForZip(zip: string, options: GeographyReadOptions
     }
   }
   const divisions = readings.flatMap(l => l.features.flatMap(f => {
-    const row = division(f, ["unsd", "elsd", "scsd"].includes(l.type) ? "school" : l.type, l.url, counties);
+    const row = division(f, l.type, l.url, counties);
     return row ? [{ ...row, censusLayer: l.type,
       ...(new URL(row.sourceUrl).searchParams.has("geometry") ? { completeForZip: zip } : {}) }] : [];
   }));
   return [...new Map([
     { id: "ocd-division/country:us", label: "United States", divisionType: "country", geoid: "US", sourceUrl: zipLayer },
-    ...held, ...divisions,
+    ...held.filter(row => !layers.some(layer => layer.type === (row.censusLayer ?? row.divisionType))), ...divisions,
   ].map(d => [d.id, d])).values()];
 }
 
@@ -238,8 +254,9 @@ export async function divisionsForAddress(address: string, apiKey: string, optio
 export async function zipsForPlace(place: { type: "congressional_district" | "county" | "state"; state: string; geoid: string }, options: GeographyReadOptions = {}): Promise<string[]> {
   const fips = stateFips(place.state);
   if (!fips || !/^\d+$/.test(place.geoid)) throw new Error("A Census state and GEOID are required");
-  const source = place.type === "congressional_district" ? (await legislativeLayers(options)).find(l => l.type === "cd")!.url
+  const source = place.type === "congressional_district" ? (await legislativeLayers(options)).find(l => l.type === "cd")?.url
     : await layer("State_County", place.type === "state" ? /^States$/ : /^Counties$/, options);
+  if (!source) throw new Error("No source-qualified congressional plan for this purpose and date");
   const areas = await query(source, { where: place.type === "state" ? `STATE='${fips}'` : `GEOID='${place.geoid}' AND STATE='${fips}'` }, options);
   if (!areas.length) throw new Error("Census did not resolve the requested place");
   const zipLayer = await layer("PUMA_TAD_TAZ_UGA_ZCTA", /^2020 Census ZIP Code Tabulation Areas$/, options);

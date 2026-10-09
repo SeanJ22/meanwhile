@@ -16,19 +16,19 @@ export const STATE_CAMPAIGN_FINANCE_SOURCES = {
     contractId: "az-sos-campaign-finance",
     sourceId: "az-sos-campaign-finance",
     scope: "US-AZ:campaign-finance:2026",
-    parserVersion: "az-campaign-finance/2",
+    parserVersion: "az-campaign-finance/3",
   },
   NH: {
     contractId: "nh-sos-campaign-finance",
     sourceId: "nh-sos-campaign-finance",
     scope: "US-NH:campaign-finance:2026",
-    parserVersion: "nh-campaign-finance/2",
+    parserVersion: "nh-campaign-finance/3",
   },
   NJ: {
     contractId: "nj-elec-campaign-finance",
     sourceId: "nj-elec-campaign-finance",
     scope: "US-NJ:campaign-finance:2026",
-    parserVersion: "nj-campaign-finance/2",
+    parserVersion: "nj-campaign-finance/3",
   },
 } as const;
 
@@ -84,7 +84,7 @@ function stateIdentities(snapshot: StateMoneySnapshot): readonly IdentityEvidenc
 function stateViolations(snapshot: StateMoneySnapshot, jurisdiction: StateCampaignFinanceJurisdiction): string[] {
   const violations: string[] = [];
   if (snapshot.formatVersion !== 1) violations.push("State campaign-finance projection has the wrong format version.");
-  if (snapshot.cycle !== 2026) violations.push(`State campaign-finance projection carries cycle ${snapshot.cycle}, not 2026.`);
+  if (!Number.isSafeInteger(snapshot.cycle) || snapshot.cycle < 1900) violations.push(`State campaign-finance projection carries invalid period ${snapshot.cycle}.`);
   if (snapshot.records.length === 0) violations.push("State campaign-finance projection contains no normalized records.");
   if (snapshot.records.some((record) => record.jurisdiction !== jurisdiction)) {
     violations.push(`A state campaign-finance row crosses the ${jurisdiction} authority scope.`);
@@ -110,33 +110,43 @@ export function stateCampaignFinanceCandidate(input: {
   readonly jurisdiction: StateCampaignFinanceJurisdiction;
   readonly snapshot: StateMoneySnapshot;
   readonly rawBodies: readonly string[];
+  readonly rawHashes?: readonly string[];
   readonly requestedUrl: string;
   readonly finalUrl: string;
   readonly retrievedAt: string;
+  readonly sourceCheck?: RoutineCandidate["retrieval"]["sourceCheck"];
   readonly query: string;
   readonly paginationComplete: boolean;
+  /** Newly read, individually completed negative filing queries. Retained LKG is not re-observed. */
+  readonly observedAbsences?: readonly { committeeId: string; electionYear: number; sourceUrl: string }[];
   readonly declaredTotal?: number | null;
   readonly excludedFacts?: RoutineCandidate["excludedFacts"];
 }): RoutineCandidate {
   const contract = STATE_CAMPAIGN_FINANCE_SOURCES[input.jurisdiction];
-  const rawHash = canonicalRawHash(input.rawBodies);
+  const hashes = input.rawHashes ?? input.rawBodies.map(body => sha256(body));
+  if (hashes.some(hash => !/^[a-f0-9]{64}$/.test(hash))) throw new Error("STATE_FINANCE_SOURCE_HASH_INVALID");
+  const rawHash = sha256(hashes.join("\n"));
+  const versionHash = input.sourceCheck ? sha256(`${rawHash}\n${normalizedHash(input.snapshot)}\n${contract.parserVersion}`) : rawHash;
   const members = stateCampaignFinanceMembers(input.snapshot);
   const violations = stateViolations(input.snapshot, input.jurisdiction);
-  const claimsAbsence = input.snapshot.records.some((record) => record.filingState === "NO_REPORTS_ON_FILE");
+  const claimsAbsence = input.observedAbsences ? input.observedAbsences.length > 0
+    : input.snapshot.records.some((record) => record.filingState === "NO_REPORTS_ON_FILE");
+  const absenceQuery = input.observedAbsences?.map(row => `${row.committeeId}, ${row.electionYear}: ${row.sourceUrl}`).join("; ");
   return {
-    id: `cv-${sha256(`${contract.sourceId}\u001f${contract.scope}\u001f${rawHash}\u001f${input.retrievedAt}`).slice(0, 32)}`,
+    id: `cv-${sha256(`${contract.sourceId}\u001f${contract.scope}\u001f${versionHash}\u001f${input.sourceCheck?.checkedAt ?? input.retrievedAt}`).slice(0, 32)}`,
     sourceId: contract.sourceId,
     recordClass: "STATE_CAMPAIGN_FINANCE",
     scope: contract.scope,
     sourceProjectionEvidence: sourceProjectionEvidence(contract.sourceId, "STATE_CAMPAIGN_FINANCE", contract.scope),
     retrieval: {
-      succeeded: input.rawBodies.length > 0,
+      succeeded: hashes.length > 0,
       requestedUrl: input.requestedUrl,
       finalUrl: input.finalUrl,
-      httpStatus: input.rawBodies.length > 0 ? 200 : null,
+      httpStatus: hashes.length > 0 ? 200 : null,
       retrievedAt: input.retrievedAt,
-      rawHash: input.rawBodies.length > 0 ? rawHash : null,
-      failureDetail: input.rawBodies.length > 0 ? undefined : "No official campaign-finance response bytes were acquired.",
+      rawHash: hashes.length > 0 ? rawHash : null,
+      failureDetail: hashes.length > 0 ? undefined : "No official campaign-finance response bytes were acquired.",
+      ...(input.sourceCheck ? { sourceCheck: input.sourceCheck } : {}),
     },
     normalization: {
       succeeded: violations.length === 0,
@@ -153,17 +163,17 @@ export function stateCampaignFinanceCandidate(input: {
     identities: stateIdentities(input.snapshot),
     temporal: {
       version: String(input.snapshot.cycle),
-      expectedVersion: "2026",
+      expectedVersion: String(input.snapshot.cycle),
       sourceThrough: input.snapshot.collectedAt,
       staleAtRetrieval: false,
     },
     semantics: { factKind: "official state campaign-finance filing projection", violations },
     horizon: {
       kind: "BOUNDED",
-      query: input.query,
+      query: absenceQuery ? `Independently completed filing queries: ${absenceQuery}; broader acquisition: ${input.query}` : input.query,
       returnedRecords: input.snapshot.records.length,
       declaredTotal: input.declaredTotal ?? null,
-      paginationComplete: input.paginationComplete,
+      paginationComplete: input.paginationComplete || Boolean(absenceQuery),
       // The projection is candidacy-scoped; it never claims to be every filing in the state.
       claimsComplete: false,
     },
@@ -171,8 +181,8 @@ export function stateCampaignFinanceCandidate(input: {
       ? {
           claimsAbsence: true,
           basis: "BOUNDED_AUTHORITATIVE_QUERY",
-          exactSubject: `${input.jurisdiction} 2026 candidacies named in the projection`,
-          exactHorizon: input.query,
+          exactSubject: absenceQuery ?? `${input.jurisdiction} ${input.snapshot.cycle} source-native committees and independently bound candidacies`,
+          exactHorizon: absenceQuery ?? input.query,
         }
       : { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
     dependentChecks: [

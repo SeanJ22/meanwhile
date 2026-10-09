@@ -20,10 +20,10 @@ export function parsePrlInstant(raw: string | null | undefined): number | null {
   const dateTime = /^(\d{4}-\d{2}-\d{2})[ T](\d{2}:\d{2}:\d{2})(\.\d+)?$/.exec(trimmed);
   let iso: string | null = null;
   if (dateOnly) iso = `${trimmed}T00:00:00Z`;
-  else if (dateTime) iso = `${dateTime[1]}T${dateTime[2]}Z`;
+  else if (dateTime) iso = `${dateTime[1]}T${dateTime[2]}${dateTime[3] ?? ""}Z`;
   if (iso === null) return null;
   const ms = Date.parse(iso);
-  return Number.isFinite(ms) ? ms : null;
+  return Number.isFinite(ms) && new Date(ms).toISOString().slice(0, 10) === trimmed.slice(0, 10) ? ms : null;
 }
 
 /** A row is visible only if its publication date is at or before now. */
@@ -32,16 +32,6 @@ export function isVisibleAsOf(dateRaw: string | null | undefined, nowMs: number)
   // A row with no parseable date is not asserted to be in the past — it is not
   // counted as visible, because a null date must not read as "now or earlier".
   return instant !== null && instant <= nowMs;
-}
-
-/** Is this row's cursor strictly newer than the stored mark? A null mark takes all. */
-export function isNewerThanMark(cursorRaw: string | null | undefined, markRaw: string | null): boolean {
-  const cursor = parsePrlInstant(cursorRaw);
-  if (cursor === null) return false; // an unparseable cursor is not "newer"; it is a row to store but not to advance on
-  if (markRaw === null) return true;
-  const mark = parsePrlInstant(markRaw);
-  if (mark === null) return true;
-  return cursor > mark;
 }
 
 export interface WatermarkAdvance {

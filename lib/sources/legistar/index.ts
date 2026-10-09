@@ -32,6 +32,7 @@ import {
   findVenue,
   isPlaceless,
   LEGISTAR_CLIENTS,
+  resolveNativeBody,
   venuesWithinRadius,
   type LegistarClient,
 } from "./client-registry.ts";
@@ -207,9 +208,10 @@ function statusOf(
   event: LegistarEvent,
   startsAt: string,
   now: Date,
+  dateOnly = false,
 ): MeetingStatus {
   if (isCanceled(event)) return "CANCELED";
-  return Date.parse(startsAt) < now.getTime() ? "CONCLUDED" : "SCHEDULED";
+  return Date.parse(startsAt) + (dateOnly ? 24 * 60 * 60_000 : 0) < now.getTime() ? "CONCLUDED" : "SCHEDULED";
 }
 
 /** What a normalize() pass could not place, and why. Counted, never silent. */
@@ -260,8 +262,8 @@ export function normalizeWithDrops(
   let keptButPlaceless = 0;
 
   for (const { event, slug, collectedAt, items } of raw) {
-    const client = clients.find(candidate => candidate.slug === slug &&
-      (candidate.eventBodyId === undefined || candidate.eventBodyId === event.EventBodyId));
+    const matches = clients.filter(candidate => candidate.slug === slug && candidate.eventBodyId === event.EventBodyId);
+    const client = matches.length === 1 ? matches[0] : undefined;
     if (!client) {
       drops.notConfigured++;
       continue;
@@ -269,7 +271,7 @@ export function normalizeWithDrops(
 
     const date = calendarDate(event.EventDate ?? "");
     const time = event.EventTime ? wallClock(event.EventTime) : null;
-    if (!date || !time) {
+    if (!date) {
       drops.unplaceableInTime++;
       continue;
     }
@@ -301,8 +303,8 @@ export function normalizeWithDrops(
       date.year,
       date.month,
       date.day,
-      time.hour,
-      time.minute,
+      time?.hour ?? 0,
+      time?.minute ?? 0,
       client.timeZone,
     );
 
@@ -334,6 +336,7 @@ export function normalizeWithDrops(
       // is the most specific true thing available.
       title: event.EventComment?.trim() || event.EventBodyName,
       startsAt,
+      ...(time ? {} : { startPrecision: "DAY" as const }),
       timeZone: client.timeZone,
       location: venue
         ? {
@@ -355,7 +358,7 @@ export function normalizeWithDrops(
         ? { agendaSlotObservedEmpty: true }
         : {}),
       jurisdiction: client.jurisdiction,
-      status: statusOf(event, startsAt, now),
+      status: statusOf(event, startsAt, now, !time),
       provenance: {
         // The InSite permalink — observed on the record, never constructed.
         sourceUrl: event.EventInSiteURL,
@@ -432,14 +435,15 @@ export function makeLegistarSource(
       // client with none is read (see `venuesWithinRadius`).
       if (!venuesWithinRadius(client.venues, query)) return;
 
-      const events = await fetchEvents<LegistarEvent>(client.slug, { from, to }, {
+      const bodyId = await resolveNativeBody(client, { signal: query.signal, fetchImpl });
+      const events = await fetchEvents<LegistarEvent>(client.slug, { from, to, bodyId }, {
         signal: query.signal,
         fetchImpl,
       });
       const collectedAt = new Date().toISOString();
 
       for (const event of events) {
-        if (client.eventBodyId !== undefined && event.EventBodyId !== client.eventBodyId) continue;
+        if (event.EventBodyId !== bodyId) continue;
         collected.push({
           event,
           slug: client.slug,

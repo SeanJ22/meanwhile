@@ -60,9 +60,9 @@ export async function parentCodeChanged(input: {
   readonly targetSha: string;
   readonly run: AsyncRunCommand;
 }): Promise<ParentCodeDecision> {
-  const diff = await input.run("git", ["diff", "--name-only", "--no-renames", input.parentSha, input.targetSha], { cwd: input.root, timeoutMs: GIT_TIMEOUT_MS });
+  const diff = await input.run("git", ["diff", "--name-only", "--no-renames", "-z", input.parentSha, input.targetSha], { cwd: input.root, timeoutMs: GIT_TIMEOUT_MS });
   if (diff.status !== 0) return { changed: true, why: ["the change between the two releases could not be read"] };
-  const changed = diff.stdout.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+  const changed = diff.stdout.split("\0").filter(Boolean);
   const listed = await input.run("git", ["ls-files", "-z"], { cwd: input.root, timeoutMs: GIT_TIMEOUT_MS });
   if (listed.status !== 0) return { changed: true, why: ["the running checkout's files could not be listed"] };
   const tracked = new Set(listed.stdout.split("\0").filter(Boolean));
@@ -152,11 +152,12 @@ export async function carryBackRuntimeState(input: {
   readonly root: string;
   readonly directory: string;
   readonly run: AsyncRunCommand;
-}): Promise<readonly string[]> {
-  if (!existsSync(input.directory)) return [];
+}): Promise<{ readonly moved: readonly string[]; readonly failed: readonly string[] }> {
+  if (!existsSync(input.directory)) return { moved: [], failed: [] };
   const entries = await ignoredEntries(input.directory, input.run);
-  if (entries === null) return [];
+  if (entries === null) return { moved: [], failed: ["host state could not be listed"] };
   const moved: string[] = [];
+  const failed: string[] = [];
   const carry = (path: string): void => {
     const from = join(input.directory, path);
     const stat = lstatSync(from, { throwIfNoEntry: false });
@@ -166,6 +167,7 @@ export async function carryBackRuntimeState(input: {
     if (lstatExists(to)) {
       // Both sides hold this directory: carry what only the staged side has.
       if (stat.isDirectory() && lstatSync(to).isDirectory()) for (const name of readdirSync(from)) carry(join(path, name));
+      else if (!stat.isFile() || !lstatSync(to).isFile() || !readFileSync(from).equals(readFileSync(to))) failed.push(path);
       return;
     }
     mkdirSync(dirname(to), { recursive: true });
@@ -174,7 +176,7 @@ export async function carryBackRuntimeState(input: {
   };
   for (const path of entries) {
     if (ownedByCheckout(path)) continue;
-    try { carry(path); } catch { /* a path that cannot move stays with the staged copy */ }
+    try { carry(path); } catch { failed.push(path); }
   }
-  return moved;
+  return { moved, failed };
 }

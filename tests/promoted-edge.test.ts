@@ -106,6 +106,34 @@ test("default rechecks keep one candidate and advance freshness; explicit false 
   assert.equal((await store.readPromotion(candidate.recordClass, candidate.scope))?.versionId, forced.id);
 });
 
+test("one state refresh retains its accepted evidence while a sibling state publishes new facts", async () => {
+  const { store } = await promotedAzStore();
+  const first = await readPromotedEdgeFamilies({ store, servedManifest: null, now: T1, families: { "state-money": stateMoneyPointers(["AZ", "NH"]) } });
+  const prior = first.authority["state-money"]!;
+  assert.ok("value" in prior);
+  const record = { ...structuredClone(AZ_RECORD), jurisdiction: "NH", committeeId: "nh-001", targetKeys: [],
+    provenance: { ...AZ_RECORD.provenance, sourceUrl: "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/nh-001", sourceOrg: "New Hampshire Secretary of State" } } as StateMoneySnapshot["records"][number];
+  const split = computeSplit([record], 1);
+  const snapshot: StateMoneySnapshot = { formatVersion: 1, collectedAt: "2026-09-01", cycle: 2026, records: [record], split,
+    byJurisdiction: { NH: { inScope: 1, filed: split.filed, noReports: split.noReportsOnFile, lead: split.lead } } } as StateMoneySnapshot;
+  const candidate = stateCampaignFinanceCandidate({ jurisdiction: "NH", snapshot, rawBodies: ["official-NH"],
+    requestedUrl: "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/nh-001", finalUrl: "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/nh-001", retrievedAt: T0,
+    query: "known committee filing", paginationComplete: true, declaredTotal: 1 });
+  const promotion = await processRegisteredManualCandidate(store, NH.contractId, candidate, T0);
+  assert.equal(promotion.candidate.state, "PROMOTED", JSON.stringify(promotion.candidate.receipt));
+  const pointers = stateMoneyPointers(["AZ", "NH"]).map(pointer => pointer.scope === AZ.scope
+    ? { ...pointer, reader: async () => ({ kind: "STORE_UNREACHABLE" }) } : pointer);
+  const refreshed = await readPromotedEdgeFamilies({ store, now: T1, families: { "state-money": pointers },
+    servedManifest: { authorityArtifacts: { "state-money": { key: "held", sha: "held", version: prior.versionId } } },
+    readServedFamily: async () => prior.value as PromotedFamilyArtifactValue });
+  const entries = entriesOf(refreshed, "state-money");
+  assert.equal(entries[0].kind, "PROMOTED");
+  assert.deepEqual(entries[0], (prior.value as PromotedFamilyArtifactValue).entries[0]);
+  assert.equal(entries[1].kind, "PROMOTED");
+  if (entries[1].kind === "PROMOTED") assert.equal(entries[1].projection.versionId, candidate.id);
+  assert.match(refreshed.skipped.join("\n"), /retaining the accepted prior version/);
+});
+
 const stateMoneyPointers = (states: readonly ("AZ" | "NH" | "NJ")[]): readonly PromotedEdgePointer[] =>
   promotedEdgePointers()["state-money"].filter((pointer) => states.some((state) => STATE_CAMPAIGN_FINANCE_SOURCES[state].scope === pointer.scope));
 

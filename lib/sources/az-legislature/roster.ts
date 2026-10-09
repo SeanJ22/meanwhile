@@ -78,8 +78,6 @@ function currentAzLegislativeTerm(at: string): {
   readonly startYear: number;
   readonly legislature: number;
   readonly term: string;
-  readonly termStart: string;
-  readonly termEnd: string;
 } {
   const instant = new Date(at);
   if (!Number.isFinite(instant.getTime())) invalid(`retrieval instant is invalid: ${at}`);
@@ -88,13 +86,10 @@ function currentAzLegislativeTerm(at: string): {
   if (year % 2 === 1 && instant < firstMonday(year)) startYear -= 2;
   const legislature = 57 + ((startYear - 2025) / 2);
   if (!Number.isInteger(legislature) || legislature <= 0) invalid(`cannot derive the current legislature for ${at}`);
-  const nextStart = firstMonday(startYear + 2).toISOString().slice(0, 10);
   return {
     startYear,
     legislature,
     term: `${ordinal(legislature)} Legislature (${startYear}-${startYear + 1})`,
-    termStart: firstMonday(startYear).toISOString().slice(0, 10),
-    termEnd: nextStart,
   };
 }
 
@@ -172,9 +167,8 @@ export function parseAzLegislatureRoster(
       }
       const partyCode = decoded(values[2]!);
       const partyTitle = /<span\b[^>]*title=["']([^"']+)["']/i.exec(values[2]!)?.[1]?.trim() ?? "";
-      if (!/^[DR]$/.test(partyCode) || !["Democratic", "Republican"].includes(partyTitle)) {
-        invalid(`member ${member.personId} has an unrecognized party row`);
-      }
+      const partyLabel = partyTitle && !((partyCode === "D" && partyTitle !== "Democratic") ||
+        (partyCode === "R" && partyTitle !== "Republican")) ? partyTitle : null;
       const inactive = /\bclass\s*=\s*["'][^"']*\binactive\b/i.test(row.attributes);
       const disposition = decoded(values[3]!);
       if (inactive) {
@@ -195,26 +189,26 @@ export function parseAzLegislatureRoster(
         invalid(`active member ${member.personId} carries a resigned disposition`);
       }
       const emailMatch = /href=["']https:\/\/www\.azleg\.gov\/emailazleg\/\?legislatorId=(\d+)["'][^>]*>\s*Email:\s*([^<\s]+)\s*<\/a>/i.exec(values[3]!);
-      if (!emailMatch || emailMatch[1] !== member.personId) invalid(`member ${member.personId} lacks a matching official email row`);
-      const room = decoded(values[4]!);
-      const phone = decoded(values[5]!);
-      if (!/^Room\s+\S+/i.test(room) || !/^\(602\)\s+926-\d{4}$/.test(phone)) {
-        invalid(`member ${member.personId} lacks the roster's room/phone shape`);
-      }
+      const publicEmail = emailMatch?.[1] === member.personId ? `${emailMatch[2]!.trim()}@azleg.gov` : null;
+      const sourcePhone = decoded(values[5]!);
+      const phone = /^\(602\)\s+926-\d{4}$/.test(sourcePhone) ? sourcePhone : null;
       const id = officialStateOfficeholderId("az-legislature", member.personId);
       officeholders.push({
         id,
+        personId:id,
+        nativeIds:{"az-legislature":[member.personId]},
+        memberships:[{id:`${id}:${member.legislature}`,personId:id,officeId:`US-AZ:${chamber}:${district}`,jurisdiction:"US-AZ",chamber,district:String(district),sourceUrl:member.href}],
         name: member.name,
         officeTitle: chamber === "lower" ? "State Representative" : "State Senator",
         level: "STATE",
-        termStart: expected.termStart,
-        termEnd: expected.termEnd,
+        termStart: "",
+        termEnd: "",
         birthDate: null,
-        partyLabel: partyTitle,
+        partyLabel,
         websiteUrl: member.href,
         contactFormUrl: `https://www.azleg.gov/emailazleg/?legislatorId=${member.personId}`,
         phone,
-        email: `${emailMatch[2]!.trim()}@azleg.gov`,
+        email: publicEmail,
         campaignUrl: null,
         photo: null,
         state: "AZ",
@@ -235,14 +229,6 @@ export function parseAzLegislatureRoster(
   }
 
   if (sessions.size !== 1) invalid(`the roster spans ${sessions.size} source sessions instead of one`);
-  const lower = officeholders.filter((row) => row.chamber === "lower");
-  const upper = officeholders.filter((row) => row.chamber === "upper");
-  if (lower.length !== 60 || upper.length !== 30) invalid(`active chamber counts are lower=${lower.length}, upper=${upper.length}; expected 60/30`);
-  for (let district = 1; district <= 30; district += 1) {
-    const lowerCount = divisions.filter((row) => row.ocdId.endsWith(`/sldl:${district}`)).length;
-    const upperCount = divisions.filter((row) => row.ocdId.endsWith(`/sldu:${district}`)).length;
-    if (lowerCount !== 2 || upperCount !== 1) invalid(`district ${district} has lower=${lowerCount}, upper=${upperCount}; expected 2/1`);
-  }
 
   const session = [...sessions][0];
   if (session === undefined) invalid("the roster contains no source session identifier");

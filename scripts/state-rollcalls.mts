@@ -2,12 +2,9 @@
 /**
  * Standing official state-roll-call boundary.
  *
- * One invocation owns exactly one AZ/NH/NJ contract.  It never opens the
- * retired LegiScan snapshot and has no tracked-output mode.  Until a state's
- * complete official roll horizon and exact member-id join are implemented,
- * a successful official probe is durably refused as an unbounded horizon;
- * transport failures become durable source attempts.  Neither case can move
- * or clear that state's LKG.
+ * One invocation owns one ready NH or NJ official-source contract. Arizona
+ * native API votes use az-votes-refresh.mts; a landing page is not a vote source.
+ * Acquired facts retain exact source-native identities and their prior LKG.
  *
  * @freshness-reads-here — retrievedAt is minted only after the official
  * roll-call surface returned a non-empty body for the exact state contract.
@@ -18,7 +15,6 @@ import {
   officialStateLegislatorVotesCandidate,
   officialStateLegislatorVotesSessionMarker,
   officialStateRollCallsCandidate,
-  officialStateRollCallHorizonRefusalCandidate,
   sha256,
 } from "../lib/civic-data/candidate-builders.ts";
 import {
@@ -81,9 +77,6 @@ import {
 
 const UA = "we-the-people/1.0 (civic data; +mailto:seanj22@gmail.com)";
 
-const AZ_HORIZON_GAP =
-  "The permitted official LegText landing surface does not establish one complete member-level House and Senate roll-call horizon. apps.azleg.gov is not used by this automated adapter.";
-
 interface NjTextDocument {
   readonly kind: "MEMBER";
   readonly participant: NjSessionParticipant;
@@ -119,7 +112,7 @@ export function parseStateRollCallArguments(args: readonly string[]): StateRollC
     throw new Error("STATE_ROLL_CALL_EXACT_SCOPE_REQUIRED");
   }
   const target = officialStateRollCallTargetByState(stateArgs[0]!.slice("--state=".length));
-  if (!target) throw new Error("STATE_ROLL_CALL_STATE_UNSUPPORTED");
+  if (!target || target.state === "AZ") throw new Error("STATE_ROLL_CALL_STATE_UNSUPPORTED");
   return { state: target.state };
 }
 
@@ -266,7 +259,7 @@ async function main(): Promise<void> {
     const identityAuthority = officialStateIdentityAuthorityEvidence({
       sourceId: target.sourceId,
       jurisdiction: target.jurisdiction,
-      term: "2026",
+      term: projection.rolls[0]!.term,
       session: "regular",
       identityAuthority: {
         contractId: "nh-members",
@@ -287,7 +280,8 @@ async function main(): Promise<void> {
     for (const position of projection.positions) {
       const roll = rollById.get(position.rollCallId);
       const positions = positionsByMember.get(position.officeholderId) ?? [];
-      positions.push({ rollCallId: position.rollCallId, position: position.position, date: roll?.date ?? retrievedAt.slice(0, 10) });
+      if (!roll) throw new Error("NH_MEMBER_POSITION_ROLL_MISSING");
+      positions.push({ rollCallId: position.rollCallId, position: position.position, publisherPosition: position.publisherPosition, date: roll.date });
       positionsByMember.set(position.officeholderId, positions);
       if (!chamberByMember.has(position.officeholderId)) {
         chamberByMember.set(position.officeholderId, roll?.chamber ?? null);
@@ -314,13 +308,13 @@ async function main(): Promise<void> {
       )).map((result, index) => [memberEntries[index]!.officeholderId, result] as const),
     );
     const positionsFingerprint = (positions: readonly StateLegislatorVotePosition[]): string =>
-      positions.map((position) => `${position.rollCallId}\u0000${position.position}\u0000${position.date}`).join("");
+      positions.map((position) => `${position.rollCallId}\u0000${position.position}\u0000${position.publisherPosition ?? ""}\u0000${position.date}`).join("");
 
     const throughRoll = [...projection.rolls].sort((left, right) => left.date.localeCompare(right.date)).at(-1) ?? null;
     const marker = officialStateLegislatorVotesSessionMarker({
       sourceId: target.sourceId,
       jurisdiction: target.jurisdiction,
-      term: "2026",
+      term: projection.rolls[0]!.term,
       session: "regular",
       requestedUrl: NH_ROLL_SUMMARY_URL,
       finalUrl: documents[0]!.finalUrl,
@@ -341,7 +335,11 @@ async function main(): Promise<void> {
     let unchangedMembers = 0;
     for (const { officeholderId, chamber, positions } of memberEntries) {
       const current = currentByScope.get(officeholderId);
-      if (current?.kind === "PROMOTED" && positionsFingerprint(current.value.positions) === positionsFingerprint(positions)) {
+      if (current?.kind === "PROMOTED" && current.value.term === projection.rolls[0]!.term && current.value.session === "regular" &&
+          current.value.rollCalls?.length === positions.length &&
+          positionsFingerprint(current.value.positions) === positionsFingerprint(positions) &&
+          sha256(JSON.stringify(current.value.rollCalls.map(({ retrievedAt: _retrievedAt, ...roll }) => roll))) ===
+          sha256(JSON.stringify(positions.map(position => { const { retrievedAt: _retrievedAt, ...roll } = rollById.get(position.rollCallId)!; return roll; })))) {
         unchangedMembers += 1;
         continue;
       }
@@ -350,9 +348,10 @@ async function main(): Promise<void> {
         jurisdiction: target.jurisdiction,
         officeholderId,
         chamber,
-        term: "2026",
+        term: projection.rolls[0]!.term,
         session: "regular",
         positions,
+        rollCalls: positions.map(position => rollById.get(position.rollCallId)!),
         requestedUrl: NH_ROLL_SUMMARY_URL,
         finalUrl: documents[0]!.finalUrl,
         httpStatus,
@@ -366,7 +365,12 @@ async function main(): Promise<void> {
         return;
       }
       if (persistedMember.outcome.promoted) promotedMembers += 1;
-      else unchangedMembers += 1;
+      else {
+        console.log("RCD_RECEIPT=" + JSON.stringify({ source: target.contractId,
+          ...routineReceiptFields(memberCandidate, persistedMember.outcome), structuralReleaseContract: ZERO_RELEASE_EVENTS }));
+        process.exitCode = 2;
+        return; // Refusal is not an unchanged member and must never advance the session marker.
+      }
     }
 
     const persistedMarker = await persistFanOutStateRollCall(store, target.contractId, marker, retrievedAt);
@@ -611,91 +615,7 @@ async function main(): Promise<void> {
     return;
   }
 
-  let response: Response;
-  let body: string;
-  try {
-    const acquired = await withPublisherAcquisitionDeadline(
-      `${target.publisher} roll-call horizon`,
-      ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS,
-      async (signal) => {
-        const requestSignal = AbortSignal.any([signal, AbortSignal.timeout(60_000)]);
-        const result = await requestPublisher(
-          `${target.publisher} roll-call horizon`,
-          () => fetch(target.probeUrl, {
-            headers: { "user-agent": UA, accept: "text/html,text/plain;q=0.9,*/*;q=0.5" },
-            redirect: "follow",
-            signal: requestSignal,
-          }),
-        );
-        if (!result.ok) {
-          throw sourceAcquisitionFailure(
-            "PUBLISHER_RESPONSE_REFUSED",
-            `${target.publisher} roll-call horizon answered HTTP ${result.status}.`,
-          );
-        }
-        const raw = await readPublisherBody(
-          `${target.publisher} roll-call horizon`,
-          () => result.text(),
-        );
-        requestSignal.throwIfAborted();
-        if (raw.trim() === "") {
-          throw sourceAcquisitionFailure(
-            "PUBLISHER_DOCUMENT_INVALID",
-            `${target.publisher} roll-call horizon returned an empty document.`,
-          );
-        }
-        return { response: result, body: raw };
-      },
-    );
-    response = acquired.response;
-    body = acquired.body;
-  } catch (error) {
-    if (!isSourceAcquisitionFailure(error)) throw error;
-    const failed = await recordRegisteredSourceAcquisitionFailure({
-      store,
-      contractId: target.contractId,
-      failure: error,
-      requestedUrl: target.probeUrl,
-    });
-    console.log(failed.line);
-    process.exitCode = 2;
-    return;
-  }
-
-  const retrievedAt = new Date().toISOString();
-  const candidate = officialStateRollCallHorizonRefusalCandidate({
-    sourceId: target.sourceId,
-    jurisdiction: target.jurisdiction,
-    requestedUrl: target.probeUrl,
-    finalUrl: response.url || target.probeUrl,
-    httpStatus: response.status,
-    retrievedAt,
-    rawBody: body,
-    detail: AZ_HORIZON_GAP,
-  });
-  const persisted = await persistAcquiredStateRollCall(store, target.contractId, candidate, retrievedAt);
-  if (persisted.kind === "WRITE_FAILED") {
-    console.error(persisted.diagnostic);
-    process.exitCode = 2;
-    return;
-  }
-  const outcome = persisted.outcome;
-  if (outcome.promoted || outcome.candidate.state !== "HORIZON_UNRESOLVED") {
-    throw new Error(
-      `STATE_ROLL_CALL_HORIZON_REFUSAL_BROKEN:${target.contractId}:${outcome.candidate.state}`,
-    );
-  }
-  console.log("RCD_RECEIPT=" + JSON.stringify({
-    source: target.contractId,
-    candidateId: candidate.id,
-    acquisitionSucceeded: outcome.candidate.acquisitionSucceeded,
-    state: outcome.candidate.state,
-    decision: outcome.candidate.receipt?.decision ?? null,
-    promotedVersion: null,
-    lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion,
-    structuralReleaseContract: ZERO_RELEASE_EVENTS,
-  }));
-  process.exitCode = 2;
+  throw new Error("STATE_ROLL_CALL_STATE_UNSUPPORTED");
 }
 
 const invokedDirectly = (process.argv[1] ?? "").replace(/\\/g, "/").endsWith("scripts/state-rollcalls.mts");

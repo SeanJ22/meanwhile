@@ -1,11 +1,13 @@
 /**
- * The committed registration reference, read for one state. `scripts/build-registration-reference.mts`
- * writes one file per state under `data/derived/registration/`. Only the registration child script reads
+ * The held registration reference, read for one state from `data/derived/registration/`. Only the registration child script reads
  * these files (never a request path).
  */
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { existsSync } from "node:fs";
+import { readStateReference } from "../control-plane/expansion/state-references.ts";
+import type { RegistrationGovernmentListing } from "./listings.ts";
 
 export type ReferenceLayer = "state" | "county" | "place" | "cousub" | "unsd" | "elsd" | "scsd";
 /** A territory's county, county-subdivision and place divisions also carry their TIGER/Line LSAD, FUNCSTAT and CLASSFP. */
@@ -25,8 +27,8 @@ export interface RegistrationReference {
   readonly divisions: readonly ReferenceDivision[];
   readonly governments: readonly ReferenceGovernment[];
 }
-
 export interface LoadedReference {
+  readonly listings?: readonly RegistrationGovernmentListing[];
   readonly reference: RegistrationReference;
   /** sha256 of the state file's exact text, bound into every candidate built from it. */
   readonly sha256: string;
@@ -44,27 +46,7 @@ export function loadRegistrationReference(root: string, state: string): LoadedRe
   const entry = index.states[state.toLowerCase()];
   if (entry?.sha256 !== sha256) throw new Error(`REGISTRATION_REFERENCE_DRIFT:${state}: the state file does not match index.json`);
   // A rebuild that left this state's bytes alone left its date alone, so its records promote UNCHANGED.
-  return { reference, sha256, generatedAt: entry.generatedAt ?? index.generatedAt };
-}
-
-/**
- * The governments a state's committed reference pairs to a division, with the body id the registration
- * writer mints for each (`<division>#governing`, `#board` for a school district). The state is
- * upper-case, as the registry's divisions carry it.
- */
-export function registeredGovernments(loaded: LoadedReference, state: string): {
-  readonly bodies: readonly { readonly id: string; readonly ocdId: string }[];
-  readonly divisions: readonly { readonly ocdId: string; readonly state: string }[];
-} {
-  const { reference } = loaded;
-  const bodies: { id: string; ocdId: string }[] = [];
-  const divisions = new Map<string, { ocdId: string; state: string }>();
-  for (const [, , , govType, division] of reference.governments) {
-    if (govType === "STATE" || division < 0) continue;
-    const ocdId = reference.divisions[division][0];
-    const school = govType === "SCHOOL DISTRICT" || govType === "DEPENDENT SCHOOL SYSTEM";
-    bodies.push({ id: `${ocdId}#${school ? "board" : "governing"}`, ocdId });
-    divisions.set(ocdId, { ocdId, state: state.toUpperCase() });
-  }
-  return { bodies, divisions: [...divisions.values()] };
+  const projected = join(/* turbopackIgnore: true */ root, "data", "derived", "place-reference", `${state.toLowerCase()}.json`);
+  const listings = existsSync(projected) ? readStateReference(root, state, { listings: true }).listings : undefined;
+  return { reference, sha256, generatedAt: entry.generatedAt ?? index.generatedAt, ...(listings ? { listings } : {}) };
 }

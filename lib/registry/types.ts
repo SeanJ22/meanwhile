@@ -146,6 +146,7 @@ export type AgendaSourceType =
 
 /** Which dataset a row came from, so a bad one can be retracted without taking everything with it. */
 export type SourceDataset =
+  | "CENSUS_RELATIONSHIPS"
   | "TIGER_GENZ2025"
   | "COG_2022"
   | "NCES"
@@ -159,7 +160,7 @@ export type SourceDataset =
   | "GUS_2022"
   | "USER_REPORTED"
   // The 2023 Census cartographic boundary files (GENZ2023, 1:500k) that registration and the national ZIP
-  // index assign division ids from (`scripts/lib/national-division-ids.mts`).
+  // index share as retained geographic aliases.
   | "TIGER_CB2023"
   /** Full TIGER/Line 2023, read for its attribute table only: the territories' functional status. */
   | "TIGER_LINE2023"

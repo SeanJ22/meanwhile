@@ -221,6 +221,7 @@ export interface StateVotesSnapshot {
 export interface StateLegislatorVotePosition {
   rollCallId: string;
   position: StateVotePosition;
+  publisherPosition?: string;
   /** `YYYY-MM-DD`, carried so the member's page can order votes without the
    *  roll index; every other roll field is joined, never duplicated here. */
   date: string;
@@ -243,6 +244,8 @@ export interface StateLegislatorVotes {
   term: string;
   session: string;
   positions: readonly StateLegislatorVotePosition[];
+  /** Exact roll metadata for this member's positions, acquired in the same source version. */
+  rollCalls?: readonly StateRollCall[];
   officialIdentityAuthority: NonNullable<StateVotesSnapshot["officialIdentityAuthority"]>;
 }
 

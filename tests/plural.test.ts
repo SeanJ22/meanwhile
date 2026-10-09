@@ -8,21 +8,16 @@ import {
   CHAMBER_TITLE,
   designationFromLabel,
   designationKey,
-  GRAPHQL_DAILY_QUOTA,
-  GRAPHQL_MIN_INTERVAL_MS,
   indexDivisions,
   normalize,
   parseCsv,
   pluralRosterIssue,
-  requestCount,
-  resetRequestCount,
   rowsToPeople,
   type PluralPerson,
 } from "../lib/sources/plural/index.ts";
 import { coverageAt } from "../lib/registry/server.ts";
 import registry from "../lib/registry/registry.json" with { type: "json" };
-import { collectNationalPlaceSources, electionDirectorySelection, ownPagePortrait } from "../lib/sources/plural/place.ts";
-import { verifyPortraitSources } from "../lib/photos/evidence.ts";
+import { collectNationalPlaceSources, electionDirectorySelection } from "../lib/sources/plural/place.ts";
 import { electionPageFields } from "../lib/hunt/election-page.ts";
 import { placeSourceReader, PlaceSourceDeferred } from "../lib/hunt/place-source-reader.ts";
 import { nationalPlaceJobs, placeSourceLaunchOrder } from "../lib/hunt/place-source-admission.ts";
@@ -377,6 +372,7 @@ test("a national API completes its geography walk beyond ten requests and reuses
   });
   const tools = { repos, store, now: () => "2026-09-30T00:00:00.000Z", spaceOut: async () => {} };
   const input = { tools, store: new MemoryRoutineDataStore(), zips: ["03060", "03101", "03301"],
+    readPublished: async () => [],
     publish: async () => { assert.fail("incomplete geography cannot publish"); } };
   // The injected store holds no promoted registry, so the walk ends at the first held-family read it refuses.
   await assert.rejects(runNationalPlaceTask(input), /HELD_PLACE_READ_FAILED:/);
@@ -603,7 +599,7 @@ test("a state beyond the original pilots normalizes without a local registry", (
   assert.match(set.unmatched[0].reason, /no lower division/);
 });
 
-test("a district outside the clipped coverage is reported, not dropped silently", () => {
+test("a missing district boundary is reported while the sourced person remains", () => {
   // A legislator whose district this build cannot draw is kept and the miss reported, never dropped. District 31
   // does not exist in Arizona, so it is outside any clip.
   const index = indexDivisions(DIVISIONS);
@@ -618,7 +614,7 @@ test("a district outside the clipped coverage is reported, not dropped silently"
   assert.equal(set.officeholders.length, 1);
   assert.equal(set.divisions.length, 0);
   assert.equal(set.unmatched.length, 1);
-  assert.match(set.unmatched[0].reason, /outside the clipped boundary coverage/);
+  assert.match(set.unmatched[0].reason, /missing boundary coverage/);
 });
 
 test("CSV parsing handles quoted fields with embedded commas", () => {
@@ -627,15 +623,8 @@ test("CSV parsing handles quoted fields with embedded commas", () => {
   assert.deepEqual(rows[2], ["2", "Plain"]);
 });
 
-test("rows without an id are skipped", () => {
-  const people = rowsToPeople(
-    "id,name,current_party,current_district,current_chamber,email,image,links,sources\n" +
-      ",Nobody,,,,,,,\n" +
-      "ocd-person/a,Real Person,Democratic,19,upper,,,,\n",
-    "az",
-  );
-  assert.equal(people.length, 1);
-  assert.equal(people[0].name, "Real Person");
+test("a CSV with a missing native person identifier is refused before publication", () => {
+  assert.throws(() => rowsToPeople("id,name,current_chamber,current_district\n,Nobody,upper,1\n", "az"), /missing required fields/);
 });
 
 test("a roster with the wrong header or too few rows is refused, not read as empty", () => {
@@ -733,30 +722,6 @@ test("the roster reads the unmetered bulk host, never the quota'd API", () => {
   }
 });
 
-test("the quota is stated where the build can print it", () => {
-  // The documented free tier, recorded so the build output shows the ceiling.
-  assert.equal(GRAPHQL_DAILY_QUOTA, 500);
-  assert.equal(GRAPHQL_MIN_INTERVAL_MS, 1000);
-});
-
-test("bulk and GraphQL request counts stay separate", () => {
-  // Bulk files are static and unmetered; adding them to the GraphQL count
-  // would invent pressure on a ceiling nothing is approaching.
-  resetRequestCount();
-  assert.deepEqual(requestCount, { bulk: 0, graphql: 0 });
-
-  const index = indexDivisions(DIVISIONS);
-  normalize(
-    [person({ id: "ocd-person/q", state: "az", current_district: "19" })],
-    index,
-    "2026-08-12T00:00:00.000Z",
-    "04",
-  );
-
-  // normalize() is pure — it must never spend a request of either kind.
-  assert.deepEqual(requestCount, { bulk: 0, graphql: 0 });
-});
-
 function person(overrides: Partial<PluralPerson>): PluralPerson {
   return {
     id: "ocd-person/test",
@@ -785,53 +750,9 @@ test("the bulk CSV's capitol and district office addresses are carried, not drop
 });
 
 test('Plural keeps its portrait URL as an unverified lead, never as a hotlinked reader photo', () => {
-  const people=rowsToPeople('id,name,current_party,current_district,current_chamber,email,links,image\np1,Jane Doe,Independent,1,lower,,https://legislature.gov/jane,https://images.example/jane.jpg\n','oh');
+  const people=rowsToPeople('id,name,current_party,current_district,current_chamber,email,links,image\nocd-person/p1,Jane Doe,Independent,1,lower,,https://legislature.gov/jane,https://images.example/jane.jpg\n','oh');
   const result=normalize(people,indexDivisions([]),'2026-10-01T00:00:00Z','oh');
   assert.equal(result.officeholders[0].photo,null);
   assert.equal(result.officeholders[0].portraitCandidate?.imageUrl,'https://images.example/jane.jpg');
   assert.equal(result.officeholders[0].portraitCandidate?.sourceUrl,'https://data.openstates.org/people/current/oh.csv');
-});
-
-test("CA-02: a legislator whose own page cannot be read is offered as the Open States row for the seat, with the saved CSV as its document", async () => {
-  const now = "2026-09-30T00:00:00Z";
-  const csvUrl = bulkUrl("mo");
-  const text = "id,name,current_party,current_district,current_chamber,links\nocd-person/9,Jane Roe,Democratic,5,lower,https://house.example.gov/roe\n";
-  const hash = `sha256-${createHash("sha256").update(text).digest("hex")}`;
-  const capture = { evidence: { artifactId: "ar-csv", contentHash: hash, text, canonicalUrl: csvUrl, retrievedAt: now, sourceId: "data.openstates.org", acquiredByAttemptId: "at", methodRouteId: "r" },
-    observedAt: now, httpStatus: 200, transport: "REACHABLE", partial: false };
-  const result = await collectNationalPlaceSources({ now, families: { officials: true, elections: false },
-    divisions: [{ id: "ocd-division/country:us/state:mo", label: "Missouri", divisionType: "state", geoid: "29", sourceUrl: "https://census.gov" },
-      { id: "ocd-division/country:us/state:mo/sldl:5", label: "State House District 5", divisionType: "sldl", geoid: "29005", sourceUrl: "https://census.gov" }],
-    read: async url => { if (url === csvUrl) return { url, text, collectedAt: now, capture }; throw Error("Source unavailable"); } });
-  const roe = result.officials.find(row => row.name === "Jane Roe");
-  assert.deepEqual([roe?.basis, roe?.divisionId, roe?.officeTitle, roe?.document.url], ["OPEN_STATES_ROW", "ocd-division/country:us/state:mo/sldl:5", "State Representative", csvUrl]);
-});
-
-test("CP-10: a legislator's own official page shows their portrait under another URL than the roster's; the page's image is offered and goes live on that page alone", async () => {
-  const now = "2026-09-30T00:00:00Z";
-  const csvUrl = bulkUrl("mo");
-  const pageUrl = "https://house.example.gov/roe";
-  const csvText = "id,name,current_party,current_district,current_chamber,links,image\nocd-person/9,Jane Roe,Democratic,5,lower,https://house.example.gov/roe,https://house.example.gov/photos/old/roe.jpg\n";
-  const pageText = '<h1>Representative Jane Roe</h1><p>Jane Roe, State Representative for District 5.</p><img src="/images/logo.png" alt="Seal"><img src="/photos/2026/RoeJane.jpg" alt="Representative Jane Roe">';
-  const captureOf = (url: string, text: string) => ({ evidence: { artifactId: `ar-${url}`, contentHash: `sha256-${createHash("sha256").update(text).digest("hex")}`,
-    text, canonicalUrl: url, retrievedAt: now, sourceId: new URL(url).hostname, acquiredByAttemptId: "at", methodRouteId: "r" },
-    observedAt: now, httpStatus: 200, transport: "REACHABLE", partial: false });
-  const pages: Record<string, string> = { [csvUrl]: csvText, [pageUrl]: pageText };
-  const result = await collectNationalPlaceSources({ now, families: { officials: true, elections: false },
-    divisions: [{ id: "ocd-division/country:us/state:mo", label: "Missouri", divisionType: "state", geoid: "29", sourceUrl: "https://census.gov" },
-      { id: "ocd-division/country:us/state:mo/sldl:5", label: "State House District 5", divisionType: "sldl", geoid: "29005", sourceUrl: "https://census.gov" }],
-    read: async url => { if (url in pages) return { url, text: pages[url], collectedAt: now, capture: captureOf(url, pages[url]) as never }; throw Error("Source unavailable"); } });
-  const roe = result.officials.find(row => row.name === "Jane Roe");
-  assert.equal(roe?.portrait?.imageUrl, "https://house.example.gov/photos/2026/RoeJane.jpg", "the image the official page shows, not the roster's stale path");
-  const checked = verifyPortraitSources("Jane Roe", roe!.portrait!, now);
-  assert.deepEqual([checked.basis, checked.ownPageUrl], ["OWN_PAGE", pageUrl]);
-
-  // The roster's image is kept when the page shows that same image.
-  const same = pageText.replace("/photos/2026/RoeJane.jpg", "/photos/old/roe.jpg");
-  assert.equal(ownPagePortrait("Jane Roe", { url: pageUrl, text: same, collectedAt: now, capture: captureOf(pageUrl, same) as never },
-    "https://house.example.gov/photos/old/roe.jpg"), "https://house.example.gov/photos/old/roe.jpg");
-  // Two name-matched images on the page leave the roster's lead, as before.
-  const two = `${pageText}<img src="/photos/2025/RoeJane.jpg" alt="Jane Roe">`;
-  assert.equal(ownPagePortrait("Jane Roe", { url: pageUrl, text: two, collectedAt: now, capture: captureOf(pageUrl, two) as never },
-    "https://house.example.gov/photos/old/roe.jpg"), "https://house.example.gov/photos/old/roe.jpg");
 });

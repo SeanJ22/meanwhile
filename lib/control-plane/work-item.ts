@@ -184,6 +184,9 @@ export interface WorkItem {
   readonly publicationOutcome?: {
     readonly at: string; readonly workerResultId: string; readonly status: "PUBLISHED" | "PARTIALLY_PUBLISHED" | "HELD";
     readonly code: string; readonly detail: string; readonly candidateId: string | null; readonly versionId: string | null;
+    /** Original successful source observation, retained when held bytes are republished. */
+    readonly sourceObservedAt?: string;
+    readonly sourceArtifactId?: string;
     readonly recovery?: "WORKER" | "PUBLISHER";
     /** The door (registry id of the saved page) the published facts were read through. */
     readonly doorId?: string;

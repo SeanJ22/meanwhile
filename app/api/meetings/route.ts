@@ -220,7 +220,7 @@ export async function GET(request: Request) {
 
   /*
    * On a typed zip, the divisions are widened to every one whose territory reaches inside it. Only when the
-   * point lookup succeeded, and it can only add to the point's own divisions.
+   * point lookup succeeded. A selected source plan replaces its old district family atomically.
    */
   /* The divisions the point itself resolved, kept apart from the widened set (see `widenedInBodies`). */
   const pointOwnDivisionIds = new Set(divisionsAtPoint);
@@ -230,12 +230,10 @@ export async function GET(request: Request) {
       zipRead.value,
       resolvedDivisions.map((d) => d.ocdId),
     );
-    const widened = await divisionsByOcdIds(areaIds);
+    const widened = await divisionsByOcdIds(areaIds, { zip: zipRead.value });
     widening();
-    if (widened.length >= resolvedDivisions.length) {
-      resolvedDivisions = widened;
-      divisionsAtPoint = new Set(widened.map((d) => d.ocdId));
-    }
+    resolvedDivisions = widened;
+    divisionsAtPoint = new Set(widened.map((d) => d.ocdId));
   }
 
   // One projection read per request. The search and the freshness meta

@@ -15,6 +15,7 @@ import { readHistoricalFederalVotesForMember } from "../votes/history.ts";
 import type { RollCallVote, VotesSnapshot } from "../votes/types.ts";
 
 import type { EvidenceGap, EvidenceRecord } from "./evidence.ts";
+import { readNativeMemberVotes } from "../state-rollcalls/reader-votes.ts";
 
 interface RosterRow {
   id: string;
@@ -251,6 +252,7 @@ export function voteEvidenceReadsStateRollCalls(
   options: { withinStates?: readonly string[]; officeholderId?: string } = {},
 ): boolean {
   if (options.officeholderId) {
+    if (/^(?:plural:(?:az|nh):|az-legislature:|nh-general-court:)/.test(options.officeholderId)) return false;
     if (officialStateVoteScopeForOfficeholderId(options.officeholderId)) return true;
     const seat = loadRoster().find((row) => row.officeholderId === options.officeholderId);
     return Boolean(seat && seat.rosterScope !== "us");
@@ -398,6 +400,28 @@ export async function voteEvidenceForIncludingHistory(
   personName: string,
   options: { withinStates?: readonly string[]; officeholderId?: string } = {},
 ): Promise<VoteEvidence> {
+  if (options.officeholderId && /^(?:plural:(?:az|nh):|az-legislature:|nh-general-court:)/.test(options.officeholderId)) {
+    const member = options.officeholderId;
+    const state = member.includes("az") ? "AZ" : "NH";
+    try {
+      const native = await readNativeMemberVotes(member);
+      if (native) {
+        const records: EvidenceRecord[] = native.votes.map(vote => ({ kind: "ROLL_CALL_VOTE", id: `${member}#${vote.id}`,
+          subjectId: member, text: `${personName}: recorded ${vote.position} on ${vote.legisNum} — ${vote.title} (${vote.question}), ${readableDate(vote.date)}. ${vote.result}.`,
+          rollCall: { position: vote.position, what: `${vote.legisNum} — ${vote.title}`, when: readableDate(vote.date), result: vote.result },
+          occurredAt: vote.date, sourceUrl: vote.rollCallUrl, sourceOrg: vote.sourceOrg, retrievedAt: vote.retrievedAt }));
+        return { identity: native.status === "IDENTITY_UNRESOLVED" ? { kind: "NO_ROSTER_ROW" } : { kind: "JOINED", seat: {
+          officeholderId: member, name: personName, officeTitle: "State legislator", rosterScope: native.authorityScope, state,
+          chamber: null, ocdIds: [], sourceUrl: records[0]?.sourceUrl ?? null, sourceOrg: records[0]?.sourceOrg ?? null,
+          retrievedAt: native.generatedAt } }, records,
+          gaps: records.length ? [] : [{ whose: "OURS", statement: `We have not acquired an exact voting record for ${personName} from this source yet.` }],
+          denominators: { rollCallVotesRecorded: records.length, rollCallVotesShown: records.length } };
+      }
+    } catch {
+      return { identity: { kind: "HOLDING_UNAVAILABLE", scope: `US-${state}` }, records: [], denominators: {},
+        gaps: [{ whose: "OURS", statement: `We could not load the voting record for ${personName} just now.` }] };
+    }
+  }
   const current = voteEvidenceFor(personName, options);
   if (current.identity.kind !== "JOINED" || current.identity.seat.rosterScope !== "us") return current;
   const seat = current.identity.seat;
@@ -442,7 +466,7 @@ export async function voteEvidenceForIncludingHistory(
 export function statesOf(ocdIds: readonly string[]): string[] {
   const out = new Set<string>();
   for (const id of ocdIds) {
-    const match = /\/state:([a-z]{2})\b/.exec(id);
+    const match = /\/(?:state|district|territory):([a-z]{2})\b/.exec(id);
     if (match) out.add(match[1].toUpperCase());
   }
   return [...out];

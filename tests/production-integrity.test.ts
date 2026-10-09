@@ -1,5 +1,14 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { integrityCheckoutIssue } from "../lib/ops/production-integrity.ts";
+
+test("integrity binds the clean checked tree to the receipt's exact commit", () => {
+  const sha = "a".repeat(40);
+  assert.equal(integrityCheckoutIssue(sha, sha, ""), null);
+  assert.ok(integrityCheckoutIssue(sha, "b".repeat(40), ""));
+  assert.ok(integrityCheckoutIssue(sha, sha, " M lib/db/migrations/0010.sql"));
+  assert.ok(integrityCheckoutIssue(sha, sha, null));
+});
 import { NEVER_CHECKED, assessIntegrity, sameCommit, type IntegrityRecord } from "../lib/ops/production-integrity.ts";
 import { validIntegrityRecord } from "../lib/ops/production-integrity-data-plane.ts";
 

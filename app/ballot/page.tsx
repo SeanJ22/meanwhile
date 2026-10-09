@@ -367,17 +367,17 @@ async function BallotBattlecard({
 }) {
   /* One lookup for the record section, its empty state, and the committee and office sections, so they cannot disagree. */
   let holder: SeatHolder | null = null;
-  if (authorityAvailability.officeholders && authorityAvailability.funding) {
-    try {
-      holder = await withReaderAuthorityEdge(readerEdge, () => incumbentHolderFor(targetKey));
-    } catch {
-      holder = null;
-    }
+  let officeholdersAvailable = federal ? authorityAvailability.federalOfficeholders : authorityAvailability.officeholders;
+  try {
+    holder = await withReaderAuthorityEdge(readerEdge, () => incumbentHolderFor(targetKey));
+    if (holder) officeholdersAvailable = true;
+  } catch {
+    holder = null;
   }
 
   /* Incumbency comes from the officeholder side, per contest, in three states. A miss is UNKNOWN, never `Challenger`. */
   let resolvedStanding: Awaited<ReturnType<typeof contestIncumbency>> | null = null;
-  if (authorityAvailability.officeholders && contestVoteFor !== null) {
+  if (contestVoteFor !== null) {
     try {
       resolvedStanding = await withReaderAuthorityEdge(readerEdge, () => contestIncumbency(
         {
@@ -388,15 +388,16 @@ async function BallotBattlecard({
           federal,
           voteFor: contestVoteFor,
         },
-        authorityAvailability.funding ? incumbentHolderFor : async () => null,
+        incumbentHolderFor,
       ));
+      officeholdersAvailable = true;
     } catch {
       resolvedStanding = null;
     }
   }
   const standing = resolvedStanding?.decisions.get(targetKey) ?? {
     standing: "UNKNOWN" as const,
-    basis: authorityAvailability.officeholders
+    basis: officeholdersAvailable
       ? "this candidate was not among the names this contest was resolved against"
       : "the canonical officeholder authority could not be read",
     source: null,
@@ -470,13 +471,13 @@ async function BallotBattlecard({
         /* `recordHolder` is the federal join or the officeholder the contest resolution matched by seat, the same record the map battlecard renders from. */
         /* Null where the member directory does not cover them, so the named gap renders instead of an empty box. */
         committees:
-          !authorityAvailability.officeholders ? (
+          !officeholdersAvailable ? (
             unavailableHolding("officeholder-directory")
           ) : recordHolder && memberDirectoryReaches(recordHolder.id) ? (
             <MemberCommitteesContent holder={recordHolder} />
           ) : null,
         offices:
-          !authorityAvailability.officeholders ? (
+          !officeholdersAvailable ? (
             unavailableHolding("officeholder-directory")
           ) : recordHolder && memberDirectoryReaches(recordHolder.id, "offices") ? (
             <MemberOfficesContent holder={recordHolder} />
@@ -488,7 +489,7 @@ async function BallotBattlecard({
         ) : stateCandidateFunding(targetKey, stateMoney, context),
         /* The record, in the card. Not `columns`: the two-column form builds its own top-level sections. */
         /* Gated on whether records exist (`recordHolder`), not on the federal join. */
-        record: !authorityAvailability.officeholders ? (
+        record: !officeholdersAvailable ? (
           unavailableHolding("officeholder-directory")
         ) : recordHolder ? (
           <RecentVotes holder={recordHolder} reactionContext={context} contentOnly />
@@ -524,6 +525,7 @@ interface BallotAuthorityAvailability {
   readonly funding: boolean;
   readonly stateMoney: boolean;
   readonly officeholders: boolean;
+  readonly federalOfficeholders: boolean;
 }
 
 function unavailableHolding(family: string) {
@@ -580,7 +582,7 @@ export default async function BallotPage({
   if (centroid) prefetchReaderGeography();
   // Certainty now includes the publisher's Census serving copy. Read it in
   // the same request bundle as the ballot, never ahead of the edge boundary.
-  const certainty = await readerEdgeRead.then(edge => withReaderAuthorityEdge(edge, () => zipCertainty(zip)));
+  let certainty = await readerEdgeRead.then(edge => withReaderAuthorityEdge(edge, () => zipCertainty(zip)));
 
   /*
    * The reader edge is entered here, in the page's own function. Async components React renders later run
@@ -609,11 +611,19 @@ export default async function BallotPage({
     for (const { state, source } of await readerBallotSourcesForDivisions(ocdIds)) {
       try {
         const candidate = source.normalize(await source.fetch());
-        const hit = contestsForDivisions(candidate, ocdIds);
+        const selection = { purpose: "election" as const, asOf: new Date().toISOString().slice(0, 10), electionDate: candidate.election.date };
+        const electionIds = await divisionIdsForZipArea(zip, pointDivisionIds, selection);
+        const hit = contestsForDivisions(candidate, electionIds);
         if (hit.contests.length > 0 || hit.absences.length > 0) {
           set = candidate;
           matched = hit;
-          coverageNotes = coverageNotesForScope(candidate, zip, ocdIds);
+          askOcdIds = electionIds;
+          certainty = await zipCertainty(zip, selection);
+          coverageNotes = coverageNotesForScope(candidate, zip, electionIds);
+          if (candidate.contests.some(contest => /\/(?:cd|sldu|sldl):/.test(contest.ocdId)) &&
+              !electionIds.some(id => /\/(?:cd|sldu|sldl):/.test(id))) {
+            coverageNotes.push("We have not established the district boundaries that apply to this election. District contests may be missing.");
+          }
           break;
         }
       } catch {
@@ -639,7 +649,9 @@ export default async function BallotPage({
     // graph use, so an edge-served version is never read again from the
     // database in the same render.
     auxiliaryPreloads.set("registry-runtime", () => settleRegistryAuthorityReads("REGISTRY"));
-    auxiliaryPreloads.set("federal-directory", settleFederalDirectoryRead);
+    if (matched.contests.some(isFederalContest)) {
+      auxiliaryPreloads.set("federal-directory", settleFederalDirectoryRead);
+    }
     if (matched.contests.some(nhLegislativeRosterAppliesTo)) {
       // Incumbency completeness comes from the General Court's own whole
       // membership projection. It must be established before the synchronous
@@ -674,9 +686,9 @@ export default async function BallotPage({
       auxiliaryPreloads.has("state-money") && !auxiliaryFailed.has("state-money"),
     officeholders:
       auxiliaryPreloads.has("registry-runtime") &&
-      auxiliaryPreloads.has("federal-directory") &&
-      !auxiliaryFailed.has("registry-runtime") &&
-      !auxiliaryFailed.has("federal-directory"),
+      !auxiliaryFailed.has("registry-runtime"),
+    federalOfficeholders:
+      auxiliaryPreloads.has("federal-directory") && !auxiliaryFailed.has("federal-directory"),
   };
 
   let registrationLinks: ReturnType<typeof currentRegistrationLinks> = [];

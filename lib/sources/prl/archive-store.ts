@@ -1,5 +1,6 @@
 import { createHash, createHmac } from "node:crypto";
 import { posix } from "node:path";
+import { readCompleteResponse } from "../source-bytes.ts";
 
 /**
  * The routine's object store for the large raw PRL rows, which may not enter
@@ -143,7 +144,7 @@ export class S3ArchiveStore implements PrlArchiveStore {
   }
 
   private objectUrl(key: string): string {
-    assertSafeObjectKey(key);
+    if (key !== "") assertSafeObjectKey(key);
     const base = new URL(this.config.endpoint);
     const encodedKey = key.split("/").map(encodeRfc3986).join("/");
     if (this.config.pathStyle ?? true) {
@@ -166,25 +167,29 @@ export class S3ArchiveStore implements PrlArchiveStore {
     });
     return fetch(url, {
       method,
+      signal: AbortSignal.timeout(30_000),
       headers: { ...headers, "x-amz-date": amzDate, authorization, host: new URL(url).host },
       body: body ? Buffer.from(body) : undefined,
     });
   }
 
   async put(key: string, body: Uint8Array, contentType?: string): Promise<PrlObjectMeta> {
+    assertSafeObjectKey(key);
     const response = await this.send("PUT", key, body);
     if (!response.ok) throw new Error(`PRL_ARCHIVE_S3_PUT_FAILED:${response.status}:${await response.text().catch(() => "")}`);
     return { key, size: body.byteLength, etag: response.headers.get("etag") ?? undefined, contentType };
   }
 
   async get(key: string): Promise<Uint8Array | null> {
+    assertSafeObjectKey(key);
     const response = await this.send("GET", key);
     if (response.status === 404) return null;
     if (!response.ok) throw new Error(`PRL_ARCHIVE_S3_GET_FAILED:${response.status}`);
-    return new Uint8Array(await response.arrayBuffer());
+    return readCompleteResponse(response, 8 * 1024 * 1024);
   }
 
   async head(key: string): Promise<PrlObjectMeta | null> {
+    assertSafeObjectKey(key);
     const response = await this.send("HEAD", key);
     if (response.status === 404) return null;
     if (!response.ok) throw new Error(`PRL_ARCHIVE_S3_HEAD_FAILED:${response.status}`);
@@ -192,12 +197,28 @@ export class S3ArchiveStore implements PrlArchiveStore {
   }
 
   async list(prefix: string): Promise<PrlObjectMeta[]> {
-    const response = await this.send("GET", "", undefined, `list-type=2&prefix=${encodeRfc3986(prefix)}`);
-    if (!response.ok) throw new Error(`PRL_ARCHIVE_S3_LIST_FAILED:${response.status}`);
-    const xml = await response.text();
+    if (prefix !== "") assertSafeObjectKey(prefix);
     const out: PrlObjectMeta[] = [];
-    for (const match of xml.matchAll(/<Contents>[\s\S]*?<Key>([^<]+)<\/Key>[\s\S]*?<Size>(\d+)<\/Size>[\s\S]*?<\/Contents>/g)) {
-      out.push({ key: decodeXml(match[1]), size: Number(match[2]) });
+    const tokens = new Set<string>();
+    let token: string | null = null;
+    do {
+      const response = await this.send("GET", "", undefined, `list-type=2&prefix=${encodeRfc3986(prefix)}` + (token ? `&continuation-token=${encodeRfc3986(token)}` : ""));
+      if (!response.ok) throw new Error(`PRL_ARCHIVE_S3_LIST_FAILED:${response.status}`);
+      const xml = await response.text();
+      if (!/<ListBucketResult\b/.test(xml)) throw new Error("PRL_ARCHIVE_S3_LIST_INVALID");
+      for (const match of xml.matchAll(/<Contents>[\s\S]*?<Key>([^<]+)<\/Key>[\s\S]*?<Size>(\d+)<\/Size>[\s\S]*?<\/Contents>/g)) {
+        const key = decodeXml(match[1]); assertSafeObjectKey(key);
+        if (!key.startsWith(prefix)) throw new Error("PRL_ARCHIVE_S3_LIST_WRONG_PREFIX");
+        out.push({ key, size: Number(match[2]) });
+      }
+      if (!/<IsTruncated>true<\/IsTruncated>/.test(xml)) break;
+      const rawToken = /<NextContinuationToken>([^<]+)<\/NextContinuationToken>/.exec(xml)?.[1];
+      token = rawToken ? decodeXml(rawToken) : null;
+      if (!token || tokens.has(token)) throw new Error("PRL_ARCHIVE_S3_LIST_CURSOR_INVALID");
+      tokens.add(token);
+    } while (token);
+    if (new Set(out.map(row => row.key)).size !== out.length) {
+      throw new Error("PRL_ARCHIVE_S3_LIST_DUPLICATE");
     }
     return out;
   }

@@ -11,7 +11,7 @@ import {
   STATE_CAMPAIGN_FINANCE_SOURCES,
   type StateCampaignFinanceJurisdiction,
 } from "./data-plane.ts";
-import { isRenderable } from "./state-money-reader.ts";
+import { isRenderable, publicStateMoneyRecord } from "./state-money-reader.ts";
 import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 import type { StateMoneyRecord, StateMoneySnapshot } from "./state-money.ts";
 
@@ -43,7 +43,7 @@ let readStates = new Map<StateCampaignFinanceJurisdiction, StateRead>(
 );
 
 function validateSnapshot(value: StateMoneySnapshot, state: StateCampaignFinanceJurisdiction, version: string): void {
-  if (value.formatVersion !== 1 || value.cycle !== 2026 || !Array.isArray(value.records)) {
+  if (value.formatVersion !== 1 || !Number.isSafeInteger(value.cycle) || value.cycle < 1900 || !Array.isArray(value.records)) {
     throw new Error(`${state} campaign-finance projection ${version} does not satisfy StateMoneySnapshot.`);
   }
   if (value.records.some((record) => record.jurisdiction !== state)) {
@@ -239,7 +239,7 @@ export function stateMoneyProofInventory(): StateMoneyProofInventory {
 }
 
 function snapshotForTarget(targetKey: string, hasScopedFiling = false): StateMoneySnapshot | null {
-  const state = /^ballot-([a-z]{2})-/.exec(targetKey)?.[1]?.toUpperCase() as StateCampaignFinanceJurisdiction | undefined;
+  const state = (/^ballot-([a-z]{2})-/.exec(targetKey)?.[1]?.toUpperCase() ?? /^state-finance:([A-Z]{2}):/.exec(targetKey)?.[1]) as StateCampaignFinanceJurisdiction | undefined;
   if (!state || !Object.hasOwn(STATE_CAMPAIGN_FINANCE_SOURCES, state)) return null;
   const snapshot = cache.get(state);
   if (snapshot) return snapshot;
@@ -254,11 +254,11 @@ function snapshotForTarget(targetKey: string, hasScopedFiling = false): StateMon
 export function stateMoneyForTarget(targetKey: string): StateMoneyRecord[] {
   const general = campaignFinanceForTarget(targetKey);
   const snapshot = snapshotForTarget(targetKey, general.length > 0);
-  if (!snapshot) return general;
+  if (!snapshot) return general.map(publicStateMoneyRecord);
   const held = snapshot.records.filter((record) => record.targetKeys.includes(targetKey) && isRenderable(record));
   return [...general, ...held.filter(record => !general.some(current =>
     [current.totals.receipts, current.totals.expenditures, current.totals.cashOnHand].some(amount => amount !== null) &&
-    current.committeeId === record.committeeId && current.electionYear === record.electionYear && current.totals.coveringPeriod === record.totals.coveringPeriod))];
+    current.committeeId === record.committeeId && current.electionYear === record.electionYear && current.totals.coveringPeriod === record.totals.coveringPeriod))].map(publicStateMoneyRecord);
 }
 
 export function stateMoneyWasAsked(targetKey: string): boolean {

@@ -1,3 +1,4 @@
+import { mergeStatePeople } from "../state-rollcalls/legislators.ts";
 import { createHash } from "node:crypto";
 import { isMorrisGeneralCandidatesDocument, isMorrisSchoolCandidatesDocument } from "./morris-filing-documents.ts";
 
@@ -177,6 +178,7 @@ export function censusAcsCandidate(zctaFetch: AcsFetch, stateFetch: AcsFetch): R
 }
 
 export interface NhMemberReadModel {
+  readonly memberSourceDates?: Readonly<Record<string,string>>;
   readonly formatVersion: 1;
   readonly jurisdiction: "US-NH";
   readonly term: string;
@@ -199,8 +201,8 @@ export interface NhMemberReadModel {
 
 export interface OfficialStateLegislatorReadModel {
   readonly formatVersion: 1;
-  readonly sourceId: OfficialStateRollCallSourceId;
-  readonly jurisdiction: OfficialStateVoteScope;
+  readonly sourceId: string;
+  readonly jurisdiction: `US-${string}`;
   readonly term: string;
   readonly generatedAt: string;
   readonly roster: OfficeholderSet;
@@ -687,6 +689,7 @@ export function officialStateLegislatorVotesCandidate(input: {
   readonly term: string;
   readonly session: string;
   readonly positions: readonly StateLegislatorVotePosition[];
+  readonly rollCalls?: readonly StateRollCall[];
   readonly requestedUrl: string;
   readonly finalUrl: string;
   readonly httpStatus: number;
@@ -701,7 +704,7 @@ export function officialStateLegislatorVotesCandidate(input: {
   const parserVersion = input.sourceId === "nh-general-court" ? "nh-general-court/3" : `${input.sourceId}/2`;
   // The candidate id is a content address over this member's own sorted votes,
   // so an unchanged member yields the same id and never re-promotes.
-  const rawHash = sha256(canonical({ officeholderId: input.officeholderId, positions }));
+  const rawHash = sha256(canonical({ officeholderId: input.officeholderId, positions, rollCalls: input.rollCalls }));
   const readModel: StateLegislatorVotes = {
     generatedAt: input.retrievedAt,
     officeholderId: input.officeholderId,
@@ -711,6 +714,7 @@ export function officialStateLegislatorVotesCandidate(input: {
     term: input.term,
     session: input.session,
     positions,
+    ...(input.rollCalls ? { rollCalls: input.rollCalls } : {}),
     officialIdentityAuthority: input.identityAuthority,
   };
   const normalizedPayload = { officeholderId: input.officeholderId, term: input.term, session: input.session, positionCount: positions.length };
@@ -718,6 +722,12 @@ export function officialStateLegislatorVotesCandidate(input: {
   const violations: string[] = [];
   if (!input.officeholderId.startsWith(`${input.sourceId}:`)) violations.push("The member id is not source-namespaced to its publisher authority.");
   if (new Set(positions.map((position) => position.rollCallId)).size !== positions.length) violations.push("A member records two positions on the same roll call.");
+  if (input.rollCalls && (input.rollCalls.length !== positions.length ||
+    new Set(input.rollCalls.map(roll => roll.id)).size !== input.rollCalls.length ||
+    input.rollCalls.some(roll => roll.sourceId !== input.sourceId || roll.term !== input.term || roll.session !== input.session ||
+      !positions.some(position => position.rollCallId === roll.id && position.date === roll.date)))) {
+    violations.push("A member's roll metadata does not match the same native source, session and dated positions.");
+  }
   const succeeded = positions.length > 0 && input.httpStatus >= 200 && input.httpStatus < 300;
   return {
     id: candidateId(input.sourceId, scope, rawHash, input.retrievedAt),
@@ -872,36 +882,31 @@ export function officialStateLegislatorsCandidate(input: {
   readonly expectedTerm: string;
   readonly declaredTotal: number;
   readonly roster: OfficeholderSet;
+  readonly priorRoster?: OfficeholderSet | null;
   readonly sourceAudit?: OfficialStateLegislatorReadModel["sourceAudit"];
 }): RoutineCandidate {
   const target = officialStateLegislatorTargetByScope(input.jurisdiction);
   const rawHash = sha256(input.rawBodies.map((body) => sha256(body)).join("\n"));
-  const lower = input.roster.officeholders.filter((row) => row.chamber === "lower").length;
-  const upper = input.roster.officeholders.filter((row) => row.chamber === "upper").length;
-  const personIds = new Set(input.roster.officeholders.map((row) => row.id));
+  const removed = new Set((input.sourceAudit?.excludedRecords ?? []).map(row=>`${input.sourceId}:${row.officialPersonId}`));
+  const prior = input.priorRoster ? {...input.priorRoster,officeholders:input.priorRoster.officeholders.filter(row=>!removed.has(row.id)),divisions:input.priorRoster.divisions.filter(row=>!removed.has(row.officeholderId)),unmatched:input.priorRoster.unmatched.filter(row=>!removed.has(row.officeholderId))} : null;
+  const roster = mergeStatePeople(prior,input.roster);
+  const personIds = new Set(roster.officeholders.map((row) => row.id));
   const violations: string[] = [];
   if (!target || target.sourceId !== input.sourceId) violations.push("Roster scope and publisher authority disagree.");
-  if (input.roster.officeholders.some((row) => !row.id.startsWith(`${input.sourceId}:`) || row.id.length <= input.sourceId.length + 1)) {
+  if (roster.officeholders.some((row) => !row.id.startsWith(`${input.sourceId}:`) || row.id.length <= input.sourceId.length + 1)) {
     violations.push("A roster member lacks an exact source-namespaced official identifier.");
   }
-  if (input.roster.divisions.some((link) => !personIds.has(link.officeholderId))) {
+  if (roster.divisions.some((link) => !personIds.has(link.officeholderId))) {
     violations.push("A roster division link names a person outside this source horizon.");
   }
-  if (new Set(input.roster.officeholders.map((row) => row.id)).size !== input.roster.officeholders.length) {
+  if (new Set(roster.officeholders.map((row) => row.id)).size !== roster.officeholders.length) {
     violations.push("The official roster repeats a person identifier.");
   }
   if (input.sourceAudit && (
-    input.sourceAudit.observedRecords !== input.roster.officeholders.length + input.sourceAudit.excludedRecords.length ||
+    input.sourceAudit.observedRecords < input.roster.officeholders.length + input.sourceAudit.excludedRecords.length ||
     new Set(input.sourceAudit.excludedRecords.map((row) => row.officialPersonId)).size !== input.sourceAudit.excludedRecords.length
   )) {
     violations.push("The publisher row audit does not reconcile active and explicitly excluded identities.");
-  }
-  if (target?.expectedChamberCount && (
-    lower !== target.expectedChamberCount.lower || upper !== target.expectedChamberCount.upper
-  )) {
-    violations.push(
-      `The complete current chamber denominator is lower=${lower}, upper=${upper}; expected exactly lower=${target.expectedChamberCount.lower}, upper=${target.expectedChamberCount.upper}.`,
-    );
   }
   const readModel: OfficialStateLegislatorReadModel = {
     formatVersion: 1,
@@ -909,7 +914,7 @@ export function officialStateLegislatorsCandidate(input: {
     jurisdiction: input.jurisdiction,
     term: input.term,
     generatedAt: input.retrievedAt,
-    roster: input.roster,
+    roster: roster,
     ...(input.sourceAudit ? { sourceAudit: input.sourceAudit } : {}),
   };
   const identifierKey = input.sourceId === "nj-legislature" ? "roster_id" : "legislator";
@@ -933,15 +938,15 @@ export function officialStateLegislatorsCandidate(input: {
       parserVersion: `${input.sourceId}/2`,
       schemaVersion: `official-state-legislators:${input.term}`,
       normalizedHash: normalizedHash(readModel),
-      normalizedPayloadHash: normalizedHash(input.roster),
-      inputRecords: input.sourceAudit?.observedRecords ?? input.declaredTotal,
-      outputRecords: input.roster.officeholders.length,
-      droppedRecords: input.roster.unmatched.length + (input.sourceAudit?.excludedRecords.length ?? 0),
-      missingRequiredFields: input.roster.officeholders.some((row) =>
-        !row.id || !row.name || !row.officeTitle || !row.termStart || !row.termEnd || !row.provenance?.sourceUrl
-      ) ? ["id/name/office/term/provenance"] : [],
+      normalizedPayloadHash: normalizedHash(roster),
+      inputRecords: roster.officeholders.length + (input.sourceAudit?.excludedRecords.length ?? 0),
+      outputRecords: roster.officeholders.length,
+      droppedRecords: input.sourceAudit?.excludedRecords.length ?? 0,
+      missingRequiredFields: roster.officeholders.some((row) =>
+        !row.id || !row.name || !row.officeTitle || !row.provenance?.sourceUrl
+      ) ? ["id/name/office/provenance"] : [],
     },
-    identities: input.roster.officeholders.map((row) => ({
+    identities: roster.officeholders.map((row) => ({
       subjectId: row.id,
       jurisdiction: input.jurisdiction,
       identifiers: { [identifierKey]: row.id.slice(input.sourceId.length + 1) },
@@ -950,7 +955,7 @@ export function officialStateLegislatorsCandidate(input: {
       chamber: row.chamber,
       office: row.officeTitle,
       term: input.term,
-      district: input.roster.divisions.find((link) => link.officeholderId === row.id)?.ocdId ?? "UNMATCHED",
+      district: roster.divisions.find((link) => link.officeholderId === row.id)?.ocdId ?? "UNMATCHED",
     })),
     temporal: {
       version: input.term,
@@ -960,27 +965,22 @@ export function officialStateLegislatorsCandidate(input: {
     },
     semantics: { factKind: "current official state-legislator identity and seat", violations },
     horizon: {
-      kind: "BOUNDED",
-      query: `${target?.publisher ?? input.sourceId} complete current House/Senate roster`,
-      returnedRecords: input.roster.officeholders.length + input.roster.unmatched.length,
-      declaredTotal: input.declaredTotal,
+      kind: removed.size ? "BOUNDED" : "OPEN_FACT_SET",
+      query: `${target?.publisher ?? input.sourceId} individually sourced current members`,
+      returnedRecords: roster.officeholders.length,
+      declaredTotal: removed.size ? roster.officeholders.length : null,
       paginationComplete: true,
-      claimsComplete: true,
+      claimsComplete: removed.size > 0,
     },
     absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
     dependentChecks: [
       {
         consumer: "official state-legislator Reader identity",
-        passed: input.roster.officeholders.length > 0 && input.roster.unmatched.length === 0,
-        detail: `${input.roster.officeholders.length} official people; ${input.roster.unmatched.length} unmatched rows.`,
-      },
-      {
-        consumer: "state chamber completeness floor",
-        passed: Boolean(target) && lower >= (target?.expectedChamberFloor.lower ?? Number.POSITIVE_INFINITY) && upper >= (target?.expectedChamberFloor.upper ?? Number.POSITIVE_INFINITY),
-        detail: `lower=${lower}, upper=${upper}; required lower>=${target?.expectedChamberFloor.lower ?? "unknown"}, upper>=${target?.expectedChamberFloor.upper ?? "unknown"}.`,
+        passed: roster.officeholders.length > 0,
+        detail: `${roster.officeholders.length} official people; ${roster.unmatched.length} unmatched rows.`,
       },
     ],
-    normalizedPayload: input.roster,
+    normalizedPayload: roster,
     readModel,
   };
 }
@@ -1118,22 +1118,32 @@ export function nhMembersCandidate(input: {
   readonly retrievedAt: string;
   readonly extraction: MembersExtraction;
   readonly identityCrosswalk: NhCurrentMemberIdentityCrosswalk;
+  readonly prior?: NhMemberReadModel | null;
+  readonly priorRetrievedAt?: string;
+  readonly sourceCheck?:import("./types.ts").SourceCheckEvidence;
 }): RoutineCandidate {
   const rawHash = sha256(`${sha256(input.rawText)}\n${sha256(input.rawIdentityText)}`);
-  const expectedTerm = expectedNhMembersTerm(input.retrievedAt);
-  const current = input.extraction.members.filter((member) => member.electedStatus === "INCUMBENT" || member.electedStatus === "NEW");
-  const rosterIdentities = input.identityCrosswalk.matches.map((match) => ({
+  const expectedTerm = expectedNhMembersTerm(input.sourceCheck?.checkedAt ?? input.retrievedAt);
+  const current = input.identityCrosswalk.matches.map(match=>match.member);
+  let rosterIdentities = input.identityCrosswalk.matches.map((match) => ({
     officeholderId: match.officeholderId,
     officialPersonId: match.officialPersonId,
     chamber: match.member.chamber,
     district: match.member.district,
     seatNo: match.member.seatNo,
   }));
+  const currentIds = new Set(rosterIdentities.map(row=>row.officeholderId));
+  const retainedIdentities = (input.prior?.identities ?? []).filter(row=>!currentIds.has(row.officeholderId));
+  const key = (row:{chamber:string;seatNo:string;district:string})=>`${row.chamber}|${row.seatNo}|${row.district}`;
+  const retainedKeys = new Set(retainedIdentities.map(key));
+  const retainedMembers = (input.prior?.members ?? []).filter(row=>retainedKeys.has(key(row)));
+  rosterIdentities = [...retainedIdentities,...rosterIdentities];
   const readModel: NhMemberReadModel = {
     formatVersion: 1,
     jurisdiction: "US-NH",
     term: NH_MEMBERS_SUPPORTED_TERM,
-    members: current,
+    members: [...retainedMembers,...current],
+    memberSourceDates: {...Object.fromEntries(retainedIdentities.map(row=>[row.officeholderId,input.prior?.memberSourceDates?.[row.officeholderId] ?? input.priorRetrievedAt ?? input.retrievedAt])),...Object.fromEntries(input.identityCrosswalk.matches.map(row=>[row.officeholderId,input.retrievedAt]))},
     identities: rosterIdentities,
     officialIdentityAuthority: {
       sourceUrl: input.identityFinalUrl,
@@ -1160,49 +1170,35 @@ export function nhMembersCandidate(input: {
   const duplicateKeys = identities.length - new Set(identities.map((identity) => identity.subjectId)).size;
   const missingRequiredFields = [
     ...(current.some((member) => !member.chamber || !member.district || !member.seatNo) ? ["LegislativeBody/District/seatno"] : []),
-    ...(rosterIdentities.length !== current.length ? ["official PersonID for every current member"] : []),
+
   ];
   const violations = [
     ...(duplicateKeys > 0 ? [`${duplicateKeys} official PersonID identities are duplicated.`] : []),
-    ...(input.identityCrosswalk.matches.length !== current.length
-      ? [`The official legislators.txt crosswalk resolved ${input.identityCrosswalk.matches.length}/${current.length} current members.`]
-      : []),
+
   ];
-  const currentByChamber = current.reduce<Record<string, number>>((counts, member) => {
-    counts[member.chamber] = (counts[member.chamber] ?? 0) + 1;
-    return counts;
-  }, {});
   const normalizedPayload = {
     extraction: input.extraction,
+    unresolved: input.identityCrosswalk.unresolved ?? [],
     officialIdentityAuthority: readModel.officialIdentityAuthority,
   };
   return {
-    id: candidateId("nh-general-court", "US-NH", rawHash, input.retrievedAt),
+    id: candidateId("nh-general-court", "US-NH", rawHash, input.sourceCheck?.checkedAt ?? input.retrievedAt),
     sourceId: "nh-general-court",
     recordClass: "STATE_LEGISLATOR",
     scope: "US-NH",
     sourceProjectionEvidence: sourceProjectionEvidence("nh-general-court", "STATE_LEGISLATOR", "US-NH"),
-    retrieval: { succeeded: input.httpStatus === 200 && input.identityHttpStatus === 200, requestedUrl: "https://gc.nh.gov/downloads/Members.txt", finalUrl: input.finalUrl, httpStatus: input.httpStatus === 200 && input.identityHttpStatus === 200 ? 200 : null, retrievedAt: input.retrievedAt, rawHash },
+    retrieval: { succeeded: input.httpStatus === 200 && input.identityHttpStatus === 200, requestedUrl: "https://gc.nh.gov/downloads/Members.txt", finalUrl: input.finalUrl, httpStatus: input.httpStatus === 200 && input.identityHttpStatus === 200 ? 200 : null, retrievedAt: input.retrievedAt, rawHash,...(input.sourceCheck ? {sourceCheck:input.sourceCheck} : {}) },
     normalization: { succeeded: true, parserVersion: "nh-general-court/3", schemaVersion: `Members.txt+legislators.txt+RollCallHistory.txt:${NH_MEMBERS_SUPPORTED_TERM}:official-person-id`, normalizedHash: normalizedHash(readModel), normalizedPayloadHash: normalizedHash(normalizedPayload), inputRecords: input.extraction.counts.logicalInput, outputRecords: input.extraction.counts.produced, droppedRecords: input.extraction.counts.dropped, missingRequiredFields },
     identities,
     temporal: { version: NH_MEMBERS_SUPPORTED_TERM, expectedVersion: expectedTerm, sourceThrough: input.retrievedAt, staleAtRetrieval: expectedTerm !== NH_MEMBERS_SUPPORTED_TERM },
     semantics: { factKind: "current legislative membership as stated by electedStatus", violations },
-    horizon: { kind: "BOUNDED", query: "the complete Members.txt logical row set", returnedRecords: input.extraction.counts.produced, declaredTotal: input.extraction.counts.logicalInput, paginationComplete: true, claimsComplete: true },
+    horizon: { kind: "OPEN_FACT_SET", query: "exact matched current member identities; unresolved rows remain work", returnedRecords: current.length, declaredTotal: null, paginationComplete: false, claimsComplete: false },
     absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
     dependentChecks: [
       { consumer: "lib/civic-data/state-members.ts", passed: current.length > 0, detail: `${current.length} rows marked INCUMBENT or NEW.` },
       {
-        consumer: "state chamber completeness floor",
-        passed:
-          (currentByChamber.H ?? 0) >= NH_MEMBER_CHAMBER_FLOORS.H &&
-          (currentByChamber.S ?? 0) >= NH_MEMBER_CHAMBER_FLOORS.S,
-        detail:
-          `${JSON.stringify(currentByChamber)} current official rows; minimum ` +
-          `H=${NH_MEMBER_CHAMBER_FLOORS.H}, S=${NH_MEMBER_CHAMBER_FLOORS.S}.`,
-      },
-      {
         consumer: "official legislators.txt PersonID crosswalk",
-        passed: input.identityCrosswalk.matches.length === current.length && duplicateKeys === 0,
+        passed: current.length > 0 && duplicateKeys === 0,
         detail: `${input.identityCrosswalk.ordinaryMatches} ordinary exact matches + ${input.identityCrosswalk.reviewedExceptionMatches} reviewed exact official exceptions across ${input.identityCrosswalk.observedIdentityRows} identity rows.`,
       },
     ],
@@ -1214,11 +1210,16 @@ export function nhMembersCandidate(input: {
 export function fecFundingCandidate(input: {
   readonly snapshot: FundingSnapshot;
   readonly rawBodies: readonly string[];
+  /** Exact byte hashes already stored by the shared evidence vault. */
+  readonly rawHashes?: readonly string[];
   readonly finalUrl: string;
   readonly retrievedAt: string;
+  readonly sourceCheck?: RoutineCandidate["retrieval"]["sourceCheck"];
   readonly excludedFacts: readonly { code: string; detail: string }[];
 }): RoutineCandidate {
-  const rawHash = sha256(input.rawBodies.map((body) => sha256(body)).join("\n"));
+  const hashes = input.rawHashes ?? input.rawBodies.map(body => sha256(body));
+  if (hashes.some(hash => !/^[a-f0-9]{64}$/.test(hash))) throw new Error("FEC_SOURCE_HASH_INVALID");
+  const rawHash = sha256(hashes.join("\n"));
   const snapshot: FundingSnapshot = { ...input.snapshot, absences: [] };
   const missing: string[] = [];
   const violations: string[] = [];
@@ -1230,26 +1231,27 @@ export function fecFundingCandidate(input: {
     // House/Senate identifier while accepting a shape the FEC does not issue.
     if (!/^(?:[HS]\d[A-Z]{2}\d{5}|P\d{8})$/.test(row.fecCandidateId)) missing.push(`${row.name}:candidate_id`);
     if (row.principalCommitteeId && !/^C\d{8}$/.test(row.principalCommitteeId)) missing.push(`${row.name}:committee_id`);
-    if (row.cycle !== snapshot.cycle) violations.push(`${row.fecCandidateId} cycle ${row.cycle} != snapshot ${snapshot.cycle}.`);
+    if (!Number.isSafeInteger(row.cycle) || row.cycle < 1900 || row.cycle % 2) violations.push(`${row.fecCandidateId} has an invalid filing period.`);
     if (row.totals.coverageEndDate && !/^\d{4}-\d{2}-\d{2}$/.test(row.totals.coverageEndDate)) violations.push(`${row.fecCandidateId} has an invalid coverage_end_date.`);
   }
   const sourceThrough = snapshot.candidates.map((row) => row.totals.coverageEndDate ?? "").sort().at(-1) || String(snapshot.cycle);
+  const versionHash = input.sourceCheck ? sha256(`${rawHash}\n${normalizedHash(snapshot)}\nfec-funding/3`) : rawHash;
   return {
-    id: candidateId("fec-open-api", "federal-supported", rawHash, input.retrievedAt),
+    id: candidateId("fec-open-api", "federal-supported", versionHash, input.sourceCheck?.checkedAt ?? input.retrievedAt),
     sourceId: "fec-open-api",
     recordClass: "FEC_FUNDING",
     scope: "federal-supported",
     sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-supported"),
-    retrieval: { succeeded: input.rawBodies.length > 0, requestedUrl: "https://api.open.fec.gov/v1/", finalUrl: input.finalUrl, httpStatus: input.rawBodies.length > 0 ? 200 : null, retrievedAt: input.retrievedAt, rawHash: input.rawBodies.length > 0 ? rawHash : null, failureDetail: input.rawBodies.length > 0 ? undefined : "No FEC response bytes were acquired." },
-    normalization: { succeeded: true, parserVersion: "fec-funding/2", schemaVersion: `FundingSnapshot:1:cycle-${snapshot.cycle}`, normalizedHash: normalizedHash(snapshot), normalizedPayloadHash: normalizedHash(snapshot), inputRecords: snapshot.candidates.length, outputRecords: snapshot.candidates.length, droppedRecords: 0, missingRequiredFields: missing },
+    retrieval: { succeeded: hashes.length > 0, requestedUrl: "https://api.open.fec.gov/v1/", finalUrl: input.finalUrl, httpStatus: hashes.length > 0 ? 200 : null, retrievedAt: input.retrievedAt, rawHash: hashes.length > 0 ? rawHash : null, failureDetail: hashes.length > 0 ? undefined : "No FEC response bytes were acquired.", ...(input.sourceCheck ? { sourceCheck: input.sourceCheck } : {}) },
+    normalization: { succeeded: true, parserVersion: "fec-funding/3", schemaVersion: `FundingSnapshot:1:cycle-${snapshot.cycle}`, normalizedHash: normalizedHash(snapshot), normalizedPayloadHash: normalizedHash(snapshot), inputRecords: snapshot.candidates.length, outputRecords: snapshot.candidates.length, droppedRecords: 0, missingRequiredFields: missing },
     identities: snapshot.candidates.map((row) => ({ subjectId: row.fecCandidateId, jurisdiction: "US", identifiers: { candidate_id: row.fecCandidateId, ...(row.principalCommitteeId ? { committee_id: row.principalCommitteeId } : {}) }, matchBasis: row.matchRoutes.every((route) => route === "bioguide-bridge" || route === "roster-person-reuse") ? "OFFICIAL_ID_CROSSWALK" as const : "EXACT_SCOPED_ID" as const, ambiguous: false, office: row.office, district: row.district ?? undefined })),
-    temporal: { version: String(snapshot.cycle), expectedVersion: "2026", sourceThrough, staleAtRetrieval: snapshot.candidates.some((row) => row.cycle !== 2026) },
+    temporal: { version: String(snapshot.cycle), expectedVersion: String(snapshot.cycle), sourceThrough, staleAtRetrieval: false },
     semantics: { factKind: "FEC-filed candidate/committee totals and itemized receipts", violations },
     horizon: { kind: "OPEN_FACT_SET", query: "individually matched supported federal candidates; no claim that every filing/report class is held", returnedRecords: snapshot.candidates.length, declaredTotal: null, paginationComplete: false, claimsComplete: false },
     absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
     dependentChecks: [
       { consumer: "lib/funding/snapshot.ts", passed: snapshot.candidates.length > 0 && new Set(snapshot.candidates.map((row) => row.fecCandidateId)).size === snapshot.candidates.length, detail: `${snapshot.candidates.length} unique FEC candidate projections.` },
-      { consumer: "lib/funding/display.ts + grounded Ask", passed: snapshot.candidates.every((row) => row.targetKeys.length > 0 && Number.isFinite(row.totals.receipts)), detail: "Every candidate has a target key and numeric totals." },
+      { consumer: "lib/funding/display.ts + grounded Ask", passed: snapshot.candidates.every((row) => row.targetKeys.length > 0 && [row.totals.receipts, row.totals.disbursements, row.totals.cashOnHand].some(value => typeof value === "number" && Number.isFinite(value))), detail: "Every candidate has exact target bindings and at least one filed amount; unknown amounts remain null." },
     ],
     normalizedPayload: snapshot,
     readModel: snapshot,

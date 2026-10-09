@@ -25,6 +25,7 @@ export const REGISTRY_RUNTIME_PARSER_VERSION = "registry-runtime-bindings/3" as 
 
 export interface OfficialPhotoManifestRow {
   readonly officeholderId: string;
+  readonly personId?: string;
   readonly name: string;
   readonly url: string;
   readonly sourceUrl?: string | null;
@@ -93,15 +94,16 @@ export interface RegistryRuntimePackage {
    */
   readonly scope?: "MEMBERS";
   /** Holders a complete official roster in this package no longer lists; complete rosters record departures. */
-  readonly departures?: readonly { readonly bodyId: string; readonly holderId: string; readonly sourceUrl: string }[];
+  readonly departures?: readonly { readonly bodyId: string; readonly holderId: string; readonly sourceUrl: string; readonly replacementHolderId?: string; readonly officeTitle?: string }[];
 }
 
 /** The rows that leave with a departed holder, by change-set key. */
-const departureKeys = (holderId: string) => ["roster-disposition", "official-candidacy", "official-photo", "roster-photo"].map(kind => `${kind}:${holderId}`);
+const departureKeys = (holderId: string, executive = false) => [...(executive ? ["statewide-executive"] : []),"roster-disposition", "official-candidacy", "official-photo", "roster-photo"].map(kind => `${kind}:${holderId}`);
 
 /** A departure stands only when this package's roster for the body, from that page, no longer lists the holder. */
 function provenDepartures(input: Pick<RegistryRuntimePackage, "departures" | "payload">) {
   return (input.departures ?? []).filter(departure => {
+    if (departure.replacementHolderId) return input.payload.statewideExecutives.some(row => row.stateOcdId === departure.bodyId && row.sourceUrl === departure.sourceUrl && row.holder.id === departure.replacementHolderId && row.holder.id !== departure.holderId && row.holder.officeTitle === departure.officeTitle);
     const roster = input.payload.bodyRosters.find(row => row.bodyId === departure.bodyId);
     return roster !== undefined && roster.sourceUrl === departure.sourceUrl && !roster.members.some(member => member.id === departure.holderId);
   });
@@ -399,9 +401,9 @@ function registryIsolationIssue(member: SourceScopedMember<RegistryIsolationReco
   }
   const { photo, rosterPhoto } = record.value;
   return !photo || !photo.officeholderId || !photo.name || !photo.url ||
-      (photo.verification !== undefined && !portraitBindingMatches(photo.name, photo)) ||
+      (photo.verification !== undefined && !portraitBindingMatches(photo.personId ?? photo.officeholderId, photo)) ||
       registryIsolationUrls(member).length === 0 ||
-      (rosterPhoto !== null && ((!photo.license && !portraitBindingMatches(photo.name, photo)) || rosterPhoto !== photo.url))
+      (rosterPhoto !== null && ((!photo.license && !portraitBindingMatches(photo.personId ?? photo.officeholderId, photo)) || rosterPhoto !== photo.url))
     ? `${member.key} lacks a sourced, exact portrait binding.`
     : null;
 }
@@ -471,7 +473,7 @@ function sourceScopedRegistryProjection(
       const photo = member.record.value.photo!;
       const published = priorPhotos.get(photo.officeholderId);
       if (published && canonicalCivicDataJson(published) === canonicalCivicDataJson(photo)) return null;
-      return portraitBindingMatches(photo.name, photo) ? null : `${member.key} needs its §3 portrait source binding.`;
+      return portraitBindingMatches(photo.personId ?? photo.officeholderId, photo) ? null : `${member.key} needs its §3 portrait source binding.`;
     },
     sourceUrls: member => {
       const urls = registryIsolationUrls(member);
@@ -490,7 +492,7 @@ function sourceScopedRegistryProjection(
     member.record.kind === "DIVISION" && isCensusPlaceholderDivision(member.record.value) ? [member.record.value.ocdId] : []));
   const removedKeys = new Set(reconciled.members.flatMap((member) =>
     member.record.kind === "BODY" && member.record.value.row.ocdId !== null && placeholderDivisionIds.has(member.record.value.row.ocdId) ? [member.key] : []));
-  const departedKeys = new Set(provenDepartures(input).flatMap(departure => departureKeys(departure.holderId)));
+  const departedKeys = new Set(provenDepartures(input).flatMap(departure => departureKeys(departure.holderId,Boolean(departure.replacementHolderId))));
   const members = reconciled.members
     .filter((member) => !removedKeys.has(member.key) && !departedKeys.has(member.key))
     .map((member) => {
@@ -615,7 +617,7 @@ export function registryRuntimeProjectionIssues(value: RegistryRuntimeReadModel)
   })) issues.push("OFFICIAL_CANDIDACY_HOLDER_FACT_MISMATCH");
   if (duplicate(photos.map((photo) => photo.officeholderId))) issues.push("OFFICIAL_PHOTO_ID_INVALID_OR_DUPLICATED");
   if (photos.some((photo) => !photo.name || !photo.url)) issues.push("OFFICIAL_PHOTO_REQUIRED_FACT_MISSING");
-  const shippablePhotoUrls = new Set(photos.filter((photo) => photo.license || portraitBindingMatches(photo.name, photo)).map((photo) => photo.url));
+  const shippablePhotoUrls = new Set(photos.filter((photo) => photo.license || portraitBindingMatches(photo.personId ?? photo.officeholderId, photo)).map((photo) => photo.url));
   if (Object.values(value.rosterPhotos ?? {}).some((url) => !shippablePhotoUrls.has(url))) issues.push("ROSTER_PHOTO_NOT_LICENSED_IN_MANIFEST");
   return issues;
 }
@@ -677,15 +679,16 @@ function placeholderBodyRemovals(payload: RegistryRuntimeReadModel, prior: Regis
 function departureRemovals(input: RegistryRuntimePackage, payload: RegistryRuntimeReadModel, prior: RegistryRuntimePrior | null): RoutineRemovalEvidence[] {
   if (!prior) return [];
   const present = (model: RegistryRuntimeReadModel) => new Set([
+    ...model.statewideExecutives.map(row=>`statewide-executive:${row.holder.id}`),
     ...model.rosterReaderDispositions.map(row => `roster-disposition:${row.sourceId}`),
     ...model.officialCandidacies.rows.map(row => `official-candidacy:${row.holder.id}`),
     ...model.officialPhotos.photos.map(photo => `official-photo:${photo.officeholderId}`),
     ...Object.keys(model.rosterPhotos).map(key => `roster-photo:${key}`),
   ]);
   const before = present(prior.payload), after = present(payload);
-  return provenDepartures(input).flatMap(departure => departureKeys(departure.holderId)
+  return provenDepartures(input).flatMap(departure => departureKeys(departure.holderId,Boolean(departure.replacementHolderId))
     .filter(key => before.has(key) && !after.has(key))
-    .map(key => ({ key, code: "OFFICIAL_ROSTER_NO_LONGER_LISTS" as const, bodyId: departure.bodyId, holderId: departure.holderId, sourceUrl: departure.sourceUrl })));
+    .map(key => ({ key, code: "OFFICIAL_ROSTER_NO_LONGER_LISTS" as const, bodyId: departure.bodyId, holderId: departure.holderId, sourceUrl: departure.sourceUrl, ...(departure.replacementHolderId ? {replacementHolderId:departure.replacementHolderId,officeTitle:departure.officeTitle} : {}) })));
 }
 
 /**
@@ -764,19 +767,13 @@ export function registryRuntimeCandidate(
     throw new Error(`REGISTRY_RUNTIME_SOURCE_RECEIPT_CLASS_NOT_AUTHORIZED:${unauthorizedSource.sourceClass}`);
   }
 
-  // The added reference class corroborates verified portraits and fills a legislative seat from the Open
-  // States file; it cannot authorize a new body or another fact.
+  // Reference pages corroborate verified portraits; legislative people use their own source authority.
   const currentMembers = registryIsolationMembers(input.payload, input.sourceReceipt);
   for (const source of input.sourceReceipt.sources.filter(source => source.sourceClass === "REFERENCE_PUBLISHER")) {
     const cited = currentMembers.filter(member => member.record.kind !== "PROJECTION_METADATA" &&
       registryIsolationUrls(member).some(url => url === source.requestedUrl || url === source.finalUrl));
-    // An Open States row may fill a legislative seat on that file alone; an official roster value replaces
-    // it. The seat's roster, its reader disposition and its owed candidacy check all cite the one file.
-    const openStatesSeat = (member: typeof cited[number]) => member.record.kind === "BODY_ROSTER" &&
-      /^https:\/\/data\.openstates\.org\/people\/current\/[a-z]{2}\.csv$/.test(member.record.value.sourceUrl) && /#seat$/.test(member.record.value.bodyId);
-    const seatDependent = (member: typeof cited[number]) => ["ROSTER_DISPOSITION", "OFFICIAL_CANDIDACY"].includes(member.record.kind) && cited.some(openStatesSeat);
-    if (!cited.length || cited.some(member => !openStatesSeat(member) && !seatDependent(member) && (member.record.kind !== "OFFICIAL_PHOTO" || !member.record.value.photo ||
-      !portraitBindingMatches(member.record.value.photo.name, member.record.value.photo)))) {
+    if (!cited.length || cited.some(member => member.record.kind !== "OFFICIAL_PHOTO" || !member.record.value.photo ||
+      !portraitBindingMatches(member.record.value.photo.personId ?? member.record.value.photo.officeholderId, member.record.value.photo))) {
       throw new Error("REGISTRY_RUNTIME_REFERENCE_SOURCE_NOT_VERIFIED_PORTRAIT");
     }
   }

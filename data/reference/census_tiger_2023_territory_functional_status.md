@@ -12,7 +12,7 @@ government in any of them and registration refused all five. `FUNCSTAT` (functio
 per-division statement of whether a government sits on it: `A`, `B`, `C` and `G` govern;
 `F`, `N`, `S` and `I` do not. It exists only in full TIGER/Line, never in the cartographic (`cb_*`) files the division
 ids come from, so it is read here and joined on GEOID, the method `scripts/fetch-districts.ts` established. Used by
-`scripts/build-registration-reference.mts` (territory files under `data/derived/registration/`) and nothing else.
+the held territory references under `data/derived/registration/`, read by `lib/registration/reference.ts`.
 
 ## Acquisition
 - By `scripts/extract-territory-functional-status.mts` on **2026-09-25, 10:29:47–10:29:57 MST (America/Phoenix)**,

@@ -27,26 +27,20 @@ test("a failed known-door read is classed in the round's own debt causes", () =>
   assert.equal(acquirerFailureCause(result({ verdict: "EMPTY", transport: "REACHABLE" })), "EXTRACTION_FAILED");
 });
 
-test("one hunter path: a passing outage is a free plain retry when due, and waits without a paid walk until then", () => {
-  const base = { now: NOW, scoutTriedAfterFailure: false, shutThreshold: 3, oneHunterPath: true };
+test("a passing outage is a free plain retry when due, and waits without a paid walk until then", () => {
+  const base = { now: NOW, scoutTriedAfterFailure: false, shutThreshold: 3 };
   assert.deepEqual(knownDoorRetry({ ...base, debt: debt("UPSTREAM_ERROR", 1, "2026-10-06T19:00:00.000Z") }), { kind: "PLAIN_RETRY" });
   assert.deepEqual(knownDoorRetry({ ...base, debt: debt("RATE_LIMITED", 2, "2026-10-06T19:30:00.000Z") }), { kind: "OUTAGE_WAIT", retryAt: "2026-10-06T19:30:00.000Z" });
 });
 
-test("one hunter path: a shut door goes to its investigation, with a plain re-read in alternate hourly slots", () => {
+test("a shut door goes to its investigation, with a plain re-read in alternate hourly slots", () => {
   const due = "2026-10-06T19:00:00.000Z";
   const even = "2026-10-06T18:10:00.000Z", odd = "2026-10-06T19:10:00.000Z";
   assert.equal(Math.floor(Date.parse(odd) / 3_600_000) % 2, 1);
-  const base = { scoutTriedAfterFailure: false, shutThreshold: 3, oneHunterPath: true };
+  const base = { scoutTriedAfterFailure: false, shutThreshold: 3 };
   assert.equal(knownDoorRetry({ ...base, now: odd, debt: debt("TRANSPORT_FAILED", 3, due) }).kind, "PLAIN_RETRY");
   assert.equal(knownDoorRetry({ ...base, now: even, debt: debt("TRANSPORT_FAILED", 3, "2026-10-06T18:00:00.000Z") }).kind, "INVESTIGATE");
   assert.equal(knownDoorRetry({ ...base, now: odd, debt: debt("REFUSED_BY_HOST", 1, due) }).kind, "INVESTIGATE", "a refusal goes to a detective at once");
   assert.equal(knownDoorRetry({ ...base, now: even, scoutTriedAfterFailure: true, debt: debt("TRANSPORT_FAILED", 3, "2026-10-06T18:00:00.000Z") }).kind, "PLAIN_RETRY");
   assert.equal(knownDoorRetry({ ...base, now: odd, shutThreshold: 5, debt: debt("TRANSPORT_FAILED", 3, due) }).kind, "PLAIN_RETRY", "Admin's higher threshold keeps it a passing outage");
-});
-
-test("switch off: the old rule stands (a retry only once a Scout has tried since the failure)", () => {
-  const base = { now: NOW, shutThreshold: 3, oneHunterPath: false, debt: debt("TRANSPORT_FAILED", 1, "2026-10-06T19:00:00.000Z") };
-  assert.equal(knownDoorRetry({ ...base, scoutTriedAfterFailure: false }).kind, "INVESTIGATE");
-  assert.equal(knownDoorRetry({ ...base, scoutTriedAfterFailure: true }).kind, "PLAIN_RETRY");
 });

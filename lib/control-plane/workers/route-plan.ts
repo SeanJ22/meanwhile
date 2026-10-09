@@ -1,6 +1,5 @@
 import type { AutonomousWorkPlan } from "./autonomous-plan.ts";
 import type { ProvidedObligation, RouteDescriptor } from "../scheduler/registry.ts";
-import { oneHunterPath } from "./scout-scheduling.ts";
 
 /** Every route plan's capability starts with this, so the runner can tell it from a Send's plan. */
 export const ROUTE_PLAN_CAPABILITY_PREFIX = "route-scout:";
@@ -10,9 +9,9 @@ export function isRoutePlan(plan: Pick<AutonomousWorkPlan, "capability"> | undef
   return plan?.capability.startsWith(ROUTE_PLAN_CAPABILITY_PREFIX) === true;
 }
 
-/** Behind WTP_ONE_HUNTER_PATH: with the switch off, a row holding a route plan is treated as unplanned. */
-export function plannedForHunters(plan: AutonomousWorkPlan | undefined, env: NodeJS.ProcessEnv = process.env): plan is AutonomousWorkPlan {
-  return plan !== undefined && (!isRoutePlan(plan) || oneHunterPath(env));
+/** Every persisted plan uses the same coordinator. Owner paid-work controls still govern dispatch. */
+export function plannedForHunters(plan: AutonomousWorkPlan | undefined): plan is AutonomousWorkPlan {
+  return plan !== undefined;
 }
 
 function httpsUrl(value: string): string | null {

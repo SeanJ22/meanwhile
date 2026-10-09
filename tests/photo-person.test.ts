@@ -1,20 +1,11 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import test from "node:test";
+import {personIdentityKeys,sameNativePerson} from "../lib/officials/people-identity.ts";
 
-import { personKey } from "../lib/photos/person.ts";
-
-test("person keys ignore suffixes, accents and punctuation, and nothing else", () => {
-  assert.equal(personKey("Katie Hobbs"), "KATIE HOBBS");
-  assert.equal(personKey("Daniel Butierez Sr."), "DANIEL BUTIEREZ");
-  assert.equal(personKey("José D. García-López"), "JOSE D GARCIA LOPEZ");
-  // Distinct people stay distinct.
-  assert.notEqual(personKey("Alma Hernandez"), personKey("Consuelo Hernandez"));
-});
-
-test("the production person-photo resolver reads only the promoted registry projection", () => {
-  const source = readFileSync("lib/photos/person.ts", "utf8");
-  assert.match(source, /getRegistryRuntimeReadModel\(\)/);
-  assert.match(source, /runtime\.statewideExecutives/);
-  assert.doesNotMatch(source, /readFileSync|statewide-executives\.ts/);
+test("same names do not join people and declared native aliases do",()=>{
+  const one={id:"plural:az:one",personId:"plural:one",nativeIds:{"az-legislature":["123"]}};
+  assert.equal(sameNativePerson(one,{id:"az-legislature:123"}),true);
+  assert.equal(sameNativePerson(one,{id:"plural:az:two",personId:"plural:two"}),false);
+  assert.ok(personIdentityKeys(one).has("plural:one"));
+  assert.equal(personIdentityKeys(one).has("Jane Doe"),false);
 });

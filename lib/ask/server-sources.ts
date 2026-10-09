@@ -1,5 +1,6 @@
 import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { measureRecordsForBallot } from "../ballot/measure-records.ts";
+import { divisionIdsForZipArea } from "../ballot/zip-divisions.ts";
 
 import { readerBallotSourcesForDivisions } from "../ballot/reader-sources.ts";
 import { contestsForDivisions } from "../sources/ballot-nj-morris/index.ts";
@@ -12,7 +13,7 @@ import { readStanceTopics } from "../stances/read.ts";
 import type { StanceTopic } from "../stances/topics.ts";
 import type { BallotAbsence, BallotSet, Contest } from "../ballot/types.ts";
 import { allSeatHolders, seatHolderById, seatHoldersForDivision } from "../registry/server.ts";
-import { officialStateVoteScopeForOfficeholderId } from "../state-rollcalls/authority.ts";
+import { personIdentityKeys, statePeopleScopeForId } from "../officials/people-identity.ts";
 import { statewideExecutivesFor } from "../officials/statewide-executives.ts";
 import type { SeatHolder } from "../officials/lookup.ts";
 import { membersOfBody } from "../registry/body-membership.ts";
@@ -21,14 +22,14 @@ import type { AskNominee } from "./ballot-inventory.ts";
 import { canonicalBodyIdentity } from "./body-identity.ts";
 import { stateDivisionsOf, type HeldOfficial } from "./reader-officials.ts";
 
-export async function namedOfficeholders(question: string, explicitIds: readonly string[]): Promise<SeatHolder[]> {
+export async function namedOfficeholders(question: string, explicitIds: readonly string[], divisionIds: readonly string[] = []): Promise<SeatHolder[]> {
   const targetedStateHolders: SeatHolder[] = [];
   for (const id of new Set(explicitIds)) {
-    if (!officialStateVoteScopeForOfficeholderId(id)) continue;
+    if (!statePeopleScopeForId(id)) continue;
     const holder = await seatHolderById(id);
     if (holder) targetedStateHolders.push(holder);
   }
-  const heldById = new Map((await allSeatHolders()).map((holder) => [holder.id, holder]));
+  const heldById = new Map((await allSeatHolders(divisionIds)).map((holder) => [holder.id, holder]));
   for (const holder of targetedStateHolders) heldById.set(holder.id, holder);
   const held = [...heldById.values()];
   const binding = bindNamedEntity(question, held.map((seat) => ({
@@ -37,7 +38,7 @@ export async function namedOfficeholders(question: string, explicitIds: readonly
   const wanted = new Set(explicitIds);
   if (binding.kind === "BOUND") wanted.add(binding.entity.id);
   if (binding.kind === "AMBIGUOUS") for (const entity of binding.candidates) wanted.add(entity.id);
-  return held.filter((seat) => wanted.has(seat.id));
+  return held.filter((seat) => [...personIdentityKeys(seat)].some(id => wanted.has(id)));
 }
 
 export async function readerOfficeholders(ocdIds: readonly string[], bodyIds: readonly string[] = []): Promise<{ seats: SeatHolder[]; loaderFailures: number; held: HeldOfficial[] }> {
@@ -118,6 +119,7 @@ const EMPTY: BallotForDivisions = {
 export async function loadBallotForDivisions(
   ocdIds: readonly string[],
   options: PromotedCivicDataReadOptions = {},
+  zip?: string,
 ): Promise<BallotForDivisions> {
   if (ocdIds.length === 0) return EMPTY;
   const loaderFailures: string[] = [];
@@ -125,7 +127,10 @@ export async function loadBallotForDivisions(
   for (const { state, source } of await readerBallotSourcesForDivisions(ocdIds, options)) {
     try {
       const candidate = source.normalize(await source.fetch());
-      const hit = contestsForDivisions(candidate, ocdIds);
+      const electionIds = zip && /^\d{5}$/.test(zip) ? await divisionIdsForZipArea(zip, [...ocdIds], {
+        purpose: "election", asOf: new Date().toISOString().slice(0, 10), electionDate: candidate.election.date,
+      }) : ocdIds;
+      const hit = contestsForDivisions(candidate, electionIds);
       if (hit.contests.length === 0 && hit.absences.length === 0) continue;
       const analyses = heldOrUnreadable(getMeasureAnalyses);
       const lineup = heldOrUnreadable(getGeneralLineup) ?? null;

@@ -49,7 +49,7 @@ const REAL_MATCH = {
     addressMatches: [
       {
         matchedAddress: "808 GREEN POND RD, ROCKAWAY, NJ, 07866",
-        coordinates: { x: -74.47412960913, y: 40.994137298987 },
+        addressComponents: { zip: "07866" }, coordinates: { x: -74.47412960913, y: 40.994137298987 },
       },
     ],
   },
@@ -269,10 +269,10 @@ test("D53: a street whose samples agree resolves; one that scatters does not", a
   const tight = await locateStreetInZip("Academy St", "07866", {
     fetchImpl: stubFetch({
       "1 Academy St": {
-        result: { addressMatches: [{ coordinates: { x: -74.51317, y: 40.90273 } }] },
+        result: { addressMatches: [{ addressComponents: { zip: "07866" }, coordinates: { x: -74.51317, y: 40.90273 } }] },
       },
       "50 Academy St": {
-        result: { addressMatches: [{ coordinates: { x: -74.5137, y: 40.90337 } }] },
+        result: { addressMatches: [{ addressComponents: { zip: "07866" }, coordinates: { x: -74.5137, y: 40.90337 } }] },
       },
     }),
   });
@@ -284,10 +284,10 @@ test("D53: a street whose samples agree resolves; one that scatters does not", a
   const scattered = await locateStreetInZip("Green Pond Road", "07866", {
     fetchImpl: stubFetch({
       "1 Green Pond Road": {
-        result: { addressMatches: [{ coordinates: { x: -74.50227, y: 40.9106 } }] },
+        result: { addressMatches: [{ addressComponents: { zip: "07866" }, coordinates: { x: -74.50227, y: 40.9106 } }] },
       },
       "800 Green Pond Road": {
-        result: { addressMatches: [{ coordinates: { x: -74.49598, y: 40.96108 } }] },
+        result: { addressMatches: [{ addressComponents: { zip: "07866" }, coordinates: { x: -74.49598, y: 40.96108 } }] },
       },
     }),
   });
@@ -299,10 +299,10 @@ test("the author's ruling: a crossing street is a question, not a refusal", asyn
   const crossing = await lookupStreetInZip("Green Pond Road", "07866", {
     fetchImpl: stubFetch({
       "1 Green Pond Road": {
-        result: { addressMatches: [{ coordinates: { x: -74.50227, y: 40.9106 } }] },
+        result: { addressMatches: [{ addressComponents: { zip: "07866" }, coordinates: { x: -74.50227, y: 40.9106 } }] },
       },
       "800 Green Pond Road": {
-        result: { addressMatches: [{ coordinates: { x: -74.49598, y: 40.96108 } }] },
+        result: { addressMatches: [{ addressComponents: { zip: "07866" }, coordinates: { x: -74.49598, y: 40.96108 } }] },
       },
     }),
   });
@@ -315,10 +315,10 @@ test("the author's ruling: a crossing street is a question, not a refusal", asyn
   const tight = await lookupStreetInZip("Academy St", "07866", {
     fetchImpl: stubFetch({
       "1 Academy St": {
-        result: { addressMatches: [{ coordinates: { x: -74.51317, y: 40.90273 } }] },
+        result: { addressMatches: [{ addressComponents: { zip: "07866" }, coordinates: { x: -74.51317, y: 40.90273 } }] },
       },
       "50 Academy St": {
-        result: { addressMatches: [{ coordinates: { x: -74.5137, y: 40.90337 } }] },
+        result: { addressMatches: [{ addressComponents: { zip: "07866" }, coordinates: { x: -74.5137, y: 40.90337 } }] },
       },
     }),
   });
@@ -340,7 +340,7 @@ test("the answer resolves to the point, and the house number is never kept", asy
       return {
         ok: true,
         json: async () => ({
-          result: { addressMatches: [{ coordinates: { x: -74.49598, y: 40.96108 } }] },
+          result: { addressMatches: [{ addressComponents: { zip: "07866" }, coordinates: { x: -74.49598, y: 40.96108 } }] },
         }),
       } as unknown as Response;
     }) as unknown as typeof fetch,
@@ -451,7 +451,7 @@ test("M80: the geocode route writes NOTHING — no log, no store, no echo", asyn
   globalThis.fetch = (async () =>
     new Response(
       JSON.stringify({
-        result: { addressMatches: [{ coordinates: { x: -110.97, y: 32.22 } }] },
+        result: { addressMatches: [{ addressComponents: { zip: "85701" }, coordinates: { x: -110.97, y: 32.22 } }] },
       }),
       { status: 200 },
     )) as typeof fetch;
@@ -469,7 +469,7 @@ test("M80: the geocode route writes NOTHING — no log, no store, no echo", asyn
     assert.equal(body.lng, -110.97);
     // Nothing about the request is echoed back — not the address, not the
     // upstream status, not an error string.
-    assert.deepEqual(Object.keys(body).sort(), ["lat", "lng", "match"]);
+    assert.deepEqual(Object.keys(body).sort(), ["lat", "lng", "match", "zip"]);
     assert.equal(response.headers.get("cache-control"), "no-store, no-cache, must-revalidate");
   } finally {
     globalThis.fetch = realFetch;
@@ -497,7 +497,7 @@ test("M80: a browser goes through the proxy; the server calls the Bureau direct"
     calls.push(String(input));
     return new Response(
       JSON.stringify({
-        result: { addressMatches: [{ coordinates: { x: -110.97, y: 32.22 } }] },
+        result: { addressMatches: [{ addressComponents: { zip: "85701" }, coordinates: { x: -110.97, y: 32.22 } }] },
       }),
       { status: 200 },
     );
@@ -542,4 +542,14 @@ test("M80: the promise changed in the same commit, on both surfaces", () => {
       `${name} still makes the struck never-store/never-log promise about the address`,
     );
   }
+});
+
+
+test("Census geocoding preserves ambiguity, rejects another ZIP, and supports US territories", async () => {
+  assert.equal(parseCensusPoint({ result: { addressMatches: [...REAL_MATCH.result.addressMatches, ...REAL_MATCH.result.addressMatches] } }), null);
+  for (const [x, y] of [[144.79, 13.44], [145.75, 15.18], [-170.70, -14.28]]) {
+    assert.deepEqual(parseCensusPoint({ result: { addressMatches: [{ coordinates: { x, y } }] } }), { lat: y, lng: x });
+  }
+  const fetchImpl = (async () => new Response(JSON.stringify(REAL_MATCH))) as typeof fetch;
+  assert.equal(await locateAddressInZip("1", "Green Pond Road", "07867", { fetchImpl }), null);
 });

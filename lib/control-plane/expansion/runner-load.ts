@@ -17,7 +17,6 @@ import {
   buildTerritoryIndex,
   planExpansion,
   unitShareKey,
-  registryIdForUnit,
   type CensusUnitTerritory,
   type ExpansionPlan,
   type ResolvedScope,
@@ -31,26 +30,14 @@ import { readStateReference } from "./state-references.ts";
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 
 /**
- * Each wanted government's share of each of its ZCTAs, from the sampled
- * overlap: the government's lattice samples in the ZCTA over the ZCTA's
- * samples across the county layer (counties tile the land, so that is every
- * sample in the ZCTA). Only the keys asked for are kept.
+ * Each wanted government's held, source-established ZCTA area shares.
+ * Sample counts never supply a service-area claim. Only requested keys are read.
  */
 export function readZctaShares(root: string, wanted: ReadonlySet<string>, states?: readonly string[]): Map<string, Map<string, number>> {
   const selected = states ?? [...new Set([...wanted].flatMap(key => FIPS_TO_STATE[key.split(":")[1]?.slice(0, 2)]?.postal ?? []))];
   const out = new Map<string, Map<string, number>>();
   for (const state of selected) {
     const shard = readStateReference(root, state, { shares: wanted });
-    for (const [zcta, { edges, total }] of Object.entries(shard.zips)) {
-      if (total <= 0) continue;
-      for (const edge of edges) {
-        const key = `${edge.layer}:${edge.id}`;
-        if (!wanted.has(key)) continue;
-        const shares = out.get(key) ?? new Map<string, number>();
-        shares.set(zcta, Math.min(1, edge.samples / total));
-        out.set(key, shares);
-      }
-    }
     for (const [key, entries] of Object.entries(shard.exactShares)) {
       if (!wanted.has(key)) continue;
       const shares = out.get(key) ?? new Map<string, number>();
@@ -86,12 +73,9 @@ export function readTerritoryIndex(root: string, registries: readonly Jurisdicti
     const key = unitShareKey(unit);
     if (key !== null) wanted.add(key);
   }
-  const unitIds = new Set(units.flatMap(unit => {
-    const id = registryIdForUnit(unit);
-    return id ? [id, `${id}-${unit.pid6}`] : [];
-  }));
+  const unitIds = new Set(units.map(unit => `${unit.state.toUpperCase()}:${unit.pid6}`));
   const scopedRegistries = registries.filter(registry => selected.has(registry.stateCode.toUpperCase())).map(registry => zips ? {
-    ...registry, jurisdictions: registry.jurisdictions.filter(j => j.govClass === "STATE" || unitIds.has(j.id) || Boolean(j.censusDivision && wanted.has(j.censusDivision))),
+    ...registry, jurisdictions: registry.jurisdictions.filter(j => j.govClass === "STATE" || Boolean(j.censusId && unitIds.has(`${j.stateCode.toUpperCase()}:${j.censusId}`)) || Boolean(j.censusDivision && wanted.has(j.censusDivision))),
   } : registry);
   /* A registration-read registry places each government by its body's division, by that division's own layer and GEOID. */
   for (const registry of scopedRegistries) {
@@ -99,6 +83,13 @@ export function readTerritoryIndex(root: string, registries: readonly Jurisdicti
     for (const j of registry.jurisdictions) if (j.censusDivision) wanted.add(j.censusDivision);
   }
   const shares = readZctaShares(root, wanted, states);
+  for (const [zip, divisions] of places) for (const division of divisions) {
+    const overlap = division.zctaOverlap;
+    const key = `${division.censusLayer ?? division.divisionType}:${division.geoid}`;
+    if (!wanted.has(key) || !overlap || overlap.fractionBasis !== "area" || overlap.fraction === null) continue;
+    const held = shares.get(key) ?? new Map<string, number>();
+    held.set(zip, overlap.fraction); shares.set(key, held);
+  }
   for (const key of shares.keys()) if (!selected.has(FIPS_TO_STATE[key.split(":")[1]?.slice(0, 2)]?.postal ?? "")) shares.delete(key);
   return buildTerritoryIndex(scopedRegistries, units, (key) => shares.get(key), (j) => {
     const own = j.censusDivision ? shares.get(j.censusDivision) : undefined;

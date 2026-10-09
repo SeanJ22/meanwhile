@@ -103,7 +103,7 @@ export function ContactPills({
   const [phoneModalOpen, setPhoneModalOpen] = useState(false);
 
   /* District office numbers via the shared hook; non-federal holders resolve to an empty directory. */
-  const { directory } = useMemberDirectory(holder.id);
+  const { directory } = useMemberDirectory(holder.id,holder.state);
 
   /*
    * Numbers are collected first: more than one renders one "Phone" pill

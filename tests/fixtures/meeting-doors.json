@@ -10,6 +10,7 @@
    "timeZone": "America/Phoenix",
    "config": {
     "slug": "pima",
+    "eventBodyId": "138",
     "sourceRoutes": "legistar,legistar-insite",
     "insiteHost": "pima.legistar.com",
     "insiteBodyNames": "Board of Supervisors",

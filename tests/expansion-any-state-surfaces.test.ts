@@ -21,6 +21,7 @@ import { wiringRowFor } from "../lib/control-plane/discovery/derived-wiring.ts";
 import { registrationGovernmentsPlaced, stateSendPreviewSentence, type PreviewCode } from "../lib/control-plane/expansion/send-preview.ts";
 import { scopeOfMeeting, stateOfOcdId } from "../lib/meetings/edge-artifacts.ts";
 import { ocdStateCode } from "../lib/ocd/state-of.ts";
+import type { RegistrationGovernmentListing } from "../lib/registration/listings.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 
 const ROOT = join(import.meta.dirname, "..");
@@ -71,14 +72,19 @@ test("a DC or territory division lies in its own state code on every step of the
   assert.match(crosswalkRowIssue({ ...row, ocdId: "ocd-division/country:us/nowhere:pr/county:adjuntas" }) ?? "", /names no registered division/);
 });
 
-/** What Postgres answers for the registration slice, from a list of bodies. */
-function slicedFrom(versionId: string | null, bodies: readonly { id: string; ocdId: string; jurisdictionId: string | null }[], seen: Statement[] = []): ReadOnlyQuery {
+type ListingSlice = Pick<RegistrationGovernmentListing, "id" | "jurisdictionId" | "kind" | "associations" | "bodyIds">;
+
+/** What Postgres answers from native listings and their qualified associations. */
+function slicedFrom(versionId: string | null, governments: readonly ListingSlice[], seen: Statement[] = []): ReadOnlyQuery {
   return async (statements) => {
     seen.push(...statements);
     return statements.map((s) => {
       if (s.text.startsWith("SELECT current_version_id")) return versionId === null ? [] : [{ version_id: versionId }];
       const wanted = new Set(s.params[2] as string[]);
-      return bodies.filter((b) => b.jurisdictionId !== null && wanted.has(b.ocdId)).map((b) => ({ jurisdiction_id: b.jurisdictionId, ocd_id: b.ocdId, body_id: b.id }));
+      return governments.filter(g => g.kind !== "EDUCATION_AGENCY").flatMap(g =>
+        g.associations.filter(a => wanted.has(a.divisionId)).map(a => ({
+          jurisdiction_id: g.jurisdictionId ?? g.id, ocd_id: a.divisionId, body_id: g.bodyIds[0] ?? null,
+        })));
     });
   };
 }
@@ -86,25 +92,32 @@ function slicedFrom(versionId: string | null, bodies: readonly { id: string; ocd
 test("Admin's preview: the registration slice, and the governments a Send must place and those at its edge", async () => {
   const OH = "ocd-division/country:us/state:oh";
   const seen: Statement[] = [];
-  const bodies = [
-    { id: `${OH}/county:franklin#governing`, ocdId: `${OH}/county:franklin`, jurisdictionId: "oh:county:county-of-franklin" },
-    { id: `${OH}/place:columbus#governing`, ocdId: `${OH}/place:columbus`, jurisdictionId: "oh:city:city-of-columbus" },
-    { id: `${OH}/place:edge#governing`, ocdId: `${OH}/place:edge`, jurisdictionId: "oh:city:village-of-edge" },
-    { id: `${OH}/place:outside#governing`, ocdId: `${OH}/place:outside`, jurisdictionId: "oh:city:village-of-outside" },
-    { id: `${OH}/school_district:derived#board`, ocdId: `${OH}/school_district:derived`, jurisdictionId: null },
+  const listing = (nativeId: string, jurisdictionId: string | null, layer: "county" | "place", name: string, geoid: string): ListingSlice => ({
+    id: `government:US-OH:cog:${nativeId}`, jurisdictionId, kind: "GOVERNMENT", bodyIds: [],
+    associations: [{ divisionId: `${OH}/${layer}:${name}`, layer, geoid, basis: "SOURCE_CODE" }],
+  });
+  const governments: ListingSlice[] = [
+    listing("172250", "oh:county:county-of-franklin", "county", "franklin", "39049"),
+    listing("209050", "oh:city:city-of-columbus", "place", "columbus", "3918000"),
+    listing("fixture-edge", "oh:city:village-of-edge", "place", "edge", "3900001"),
+    listing("fixture-outside", "oh:city:village-of-outside", "place", "outside", "3900002"),
+    { ...listing("fixture-agency", null, "place", "columbus", "3918000"), kind: "EDUCATION_AGENCY" },
+    { ...listing("fixture-unpaired", null, "place", "columbus", "3918000"), associations: [] },
   ];
-  const slice = await registrationGovernments("oh", [`${OH}/county:franklin`, `${OH}/place:columbus`, `${OH}/place:edge`, `${OH}/place:outside`, `${OH}/school_district:derived`], slicedFrom("cv-oh-1", bodies, seen));
+  const slice = await registrationGovernments("oh", [`${OH}/county:franklin`, `${OH}/place:columbus`, `${OH}/place:edge`, `${OH}/place:outside`], slicedFrom("cv-oh-1", governments, seen));
   assert.equal(slice.kind, "HELD");
   if (slice.kind !== "HELD") return;
   assert.equal(slice.versionId, "cv-oh-1");
   assert.deepEqual(seen.map((s) => s.params.slice(0, 2)), [["REGISTRATION", "US-OH:registration:v1"], ["REGISTRATION", "US-OH:registration:v1"]]);
-  assert.match(seen[1]!.text, /p\.payload->'bodies'/, "only the bodies cross the wire, cut by Postgres");
-  assert.equal(slice.value.length, 4, "a board registration derived from a division alone is no government");
+  assert.match(seen[1]!.text, /p\.payload->'governments'/, "Postgres reads native government listings");
+  assert.match(seen[1]!.text, /g->'associations'/, "only independently associated divisions are placed");
+  assert.equal(slice.value.length, 4, "unpaired governments and education agencies cannot supply a territory");
+  assert.ok(slice.value.every(g => g.bodyId === null), "government discovery does not require or fabricate a governing body");
 
   const codes: PreviewCode[] = [
     /* Wholly inside: the county and the city both reach it. */
     { zcta5: "43215", whole: true, fraction: 1, divisions: [`${OH}/county:franklin`, `${OH}/place:columbus`], partial: [`${OH}/place:columbus`] },
-    /* Mostly inside: a village covering only part of it, so only its sampled share can place it. */
+    /* Mostly inside: a partial village stays at the edge until a source establishes its area share. */
     { zcta5: "43001", whole: false, fraction: 0.7, divisions: [`${OH}/county:franklin`, `${OH}/place:edge`], partial: [`${OH}/county:franklin`, `${OH}/place:edge`] },
     /* A sliver: a village there is never placed, whatever its share. */
     { zcta5: "43002", whole: false, fraction: 0.03, divisions: [`${OH}/place:outside`], partial: [`${OH}/place:outside`] },
@@ -113,6 +126,13 @@ test("Admin's preview: the registration slice, and the governments a Send must p
     certain: ["oh:city:city-of-columbus", "oh:county:county-of-franklin"],
     edge: ["oh:city:village-of-edge"],
   });
+
+  const nativeOnly = listing("fixture-native-only", null, "county", "franklin", "39049");
+  const nativeSlice = await registrationGovernments("OH", [`${OH}/county:franklin`], slicedFrom("cv-oh-2", [nativeOnly]));
+  assert.equal(nativeSlice.kind, "HELD");
+  if (nativeSlice.kind === "HELD") assert.deepEqual(nativeSlice.value, [{
+    jurisdictionId: nativeOnly.id, ocdId: `${OH}/county:franklin`, bodyId: null,
+  }], "a native government remains visible before a legacy jurisdiction alias or body is held");
 
   assert.equal((await registrationGovernments("OH", [], slicedFrom(null, []))).kind, "NOT_PUBLISHED");
   assert.equal((await registrationGovernments("OH", [], null)).kind, "UNREAD");

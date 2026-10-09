@@ -1,17 +1,21 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { installFederalVotes, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import { installFederalVotes, installPromotedValue, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 await installRegistryAuthority();
 await installFederalVotes();
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { getFundingSnapshot, refreshFundingFromPromoted } from "../lib/funding/snapshot.ts";
 import { fundingAnswerForTarget } from "../lib/funding/display.ts";
 import { resetGroundedState } from "../lib/ask/grounded-state.ts";
+import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
 delete process.env.ANTHROPIC_API_KEY;
 const { POST } = await import("@/app/api/ask/grounded/route");
 
 test("normal Ask detail requests fetch every registered FEC page and deliver each filed PAC row and source", async () => {
   await refreshFundingFromPromoted({ store: new MemoryRoutineDataStore() });
+  const contract = requiredRoutineContract("fec-funding");
+  installPromotedValue({ recordClass: "FEC_FUNDING", scope: contract.scope, sourceId: contract.sourceId,
+    versionId: "test:ask-finance-detail", value: getFundingSnapshot() });
   const candidate = getFundingSnapshot().candidates.find(c => c.name.toLowerCase().includes("ciscomani"))!;
   assert.ok(candidate?.principalCommitteeId);
   const target = candidate.targetKeys.find(k => k.startsWith("congress:"))!;
@@ -38,7 +42,7 @@ test("normal Ask detail requests fetch every registered FEC page and deliver eac
         activeSubjects: [{ id: target, kind: "PERSON", name: "Juan Ciscomani", focused: true }] }) }));
     const body = await response.json();
     assert.equal(response.status, 200, JSON.stringify(body));
-    assert.equal(body.subject?.kind, "PERSON", JSON.stringify(body)); assert.equal(calls, 1);
+    assert.equal(body.subject?.kind, "PERSON", JSON.stringify(body)); assert.equal(calls, 1, JSON.stringify(body));
     assert.equal(body.denominators.financeDetailComplete, 1);
     assert.ok(body.records.some((r: { text: string; sourceUrl: string }) => r.text.includes("Fixture Filed PAC") && r.sourceUrl === "https://docquery.fec.gov/pdf/fixture.pdf"));
     assert.match(body.answer, /requested filed organization receipts/);

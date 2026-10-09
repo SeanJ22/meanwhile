@@ -6,7 +6,8 @@
  * Archive timestamps come from `pnpm stamp`, never the wall clock, so output is byte-stable.
  */
 
-import { deflateRawSync, inflateRawSync } from "node:zlib";
+import { deflateRawSync } from "node:zlib";
+import { readZipEntries } from "../lib/sources/archive.ts";
 
 /* ------------------------------------------------------------------- zip --- */
 
@@ -106,53 +107,7 @@ export function zip(entries, stampedToday) {
  * real one in a trailing data descriptor.
  */
 export function unzip(buffer) {
-  // The end-of-central-directory record, found from the back because it ends
-  // with a variable-length comment.
-  let eocd = -1;
-  for (let i = buffer.length - 22; i >= 0 && i > buffer.length - 66000; i--) {
-    if (buffer.readUInt32LE(i) === 0x06054b50) {
-      eocd = i;
-      break;
-    }
-  }
-  if (eocd < 0) throw new Error("not a zip archive — no end-of-central-directory record");
-
-  const count = buffer.readUInt16LE(eocd + 10);
-  let at = buffer.readUInt32LE(eocd + 16);
-  const out = new Map();
-
-  for (let n = 0; n < count; n++) {
-    if (buffer.readUInt32LE(at) !== 0x02014b50) {
-      throw new Error(`central directory entry ${n} has the wrong signature`);
-    }
-    const method = buffer.readUInt16LE(at + 10);
-    const compSize = buffer.readUInt32LE(at + 20);
-    const rawSize = buffer.readUInt32LE(at + 24);
-    const nameLen = buffer.readUInt16LE(at + 28);
-    const extraLen = buffer.readUInt16LE(at + 30);
-    const commentLen = buffer.readUInt16LE(at + 32);
-    const localAt = buffer.readUInt32LE(at + 42);
-    const name = buffer.toString("utf8", at + 46, at + 46 + nameLen);
-
-    const localNameLen = buffer.readUInt16LE(localAt + 26);
-    const localExtraLen = buffer.readUInt16LE(localAt + 28);
-    const dataAt = localAt + 30 + localNameLen + localExtraLen;
-    const slice = buffer.subarray(dataAt, dataAt + compSize);
-
-    let data;
-    if (method === 0) data = Buffer.from(slice);
-    else if (method === 8) data = inflateRawSync(slice);
-    else throw new Error(`${name}: unsupported compression method ${method}`);
-
-    if (data.length !== rawSize) {
-      throw new Error(
-        `${name}: decompressed to ${data.length} bytes, the directory says ${rawSize}`,
-      );
-    }
-    out.set(name, data);
-    at += 46 + nameLen + extraLen + commentLen;
-  }
-  return out;
+  return new Map(readZipEntries(buffer).map(entry => [entry.name, entry.data]));
 }
 
 /* ------------------------------------------------------------------ xlsx --- */

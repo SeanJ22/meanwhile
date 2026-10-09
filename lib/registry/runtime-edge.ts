@@ -45,10 +45,10 @@ export interface CommentAccessEdgeValue {
   readonly value: CuratedReaderProjection;
   readonly versionId: string;
 }
-/** Per-scope state-legislator read models, keyed by OfficialStateVoteScope. */
+/** A request loads only the jurisdictions it serves. Missing bytes fall back to the typed reader. */
 export interface StateLegislatorsEdgeValue {
-  readonly value: Readonly<Record<string, OfficialStateLegislatorReadModel>>;
-  readonly versionId: string;
+  readonly jurisdictions: ReadonlySet<string>;
+  readonly load: (jurisdiction: string) => Promise<EdgeServedValue<OfficialStateLegislatorReadModel> | null>;
 }
 
 /**

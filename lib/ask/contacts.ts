@@ -189,12 +189,12 @@ export function contactForOfficeholder(seat: {
 /** An office as a contact: the address and hours its page publishes, with that page as source. */
 export function contactForOfficeLocation(location: OfficeLocation, name: string, relationship: string): AskContact {
   return {
-    id: `office-location:${location.ownerId}:${location.kind.toLowerCase()}`,
+    id: `office-location:${location.ownerId}:${location.kind.toLowerCase()}:${encodeURIComponent(location.address)}`,
     name,
     officeTitle: relationship,
     relationship,
     basis: "SUBJECT_OFFICE",
-    email: null,
+    email: location.email ?? null,
     phone: location.phone,
     websiteUrl: null,
     sourceUrl: location.sourceUrl,

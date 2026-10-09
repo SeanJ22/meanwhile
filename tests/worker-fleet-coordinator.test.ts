@@ -393,9 +393,7 @@ test("Hunter transport failure is durable OPEN evidence and retry reuses the can
   const activity=(await readAutonomousActivity(h.repos,undefined,{observedAt:h.now()}))[0]; assert.equal(activity.walk.state,"OPEN"); assert.ok(activity.timeline.some(event=>event.walk?.transport==="TIMEOUT"));
 });
 
-test("CH-23 part 3 (DP-02): with one hunter path on, a passing outage on a known door is a free plain retry, and a shut door goes to the investigation", async t => {
-  const before=process.env.WTP_ONE_HUNTER_PATH; process.env.WTP_ONE_HUNTER_PATH="1";
-  t.after(()=>{ if(before===undefined) delete process.env.WTP_ONE_HUNTER_PATH; else process.env.WTP_ONE_HUNTER_PATH=before; });
+test("CH-23 part 3 (DP-02): a passing outage on a known door is a free plain retry, and a shut door goes to the investigation", async t => {
   const h=await autonomousHarness({response:{transportError:"socket timeout"}});
   const failOnce=async()=>{
     const op=await nextAutonomousOperation(h.runtime,h.item.id); assert.equal(op.task?.workerTask?.role,"ACQUIRER",op.reason);
@@ -417,12 +415,6 @@ test("CH-23 part 3 (DP-02): with one hunter path on, a passing outage on a known
   assert.equal(shut.action,"SCOUT",shut.reason); assert.match(shut.task!.routeId,/autonomous:novelty:/);
 });
 
-test("with one hunter path off, a known-door timeout still waits on a Scout turn before its retry (the way back)", async () => {
-  const h=await autonomousHarness({response:{transportError:"socket timeout"}});
-  const first=await nextAutonomousOperation(h.runtime,h.item.id);
-  assert.equal((await dispatchWorkerTask(h.runtime,first.task!)).outcome,"WORKED");
-  assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"SCOUT");
-});
 
 test("an elapsed acquisition cadence finishes retained worker handoffs before a real refresh",async()=>{
   const h=await autonomousHarness(); const acquired=await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1});

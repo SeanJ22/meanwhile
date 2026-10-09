@@ -1,6 +1,6 @@
 /**
  * Every downloadable file of America's Political Pulse, one typed row each:
- * URL, join key and incremental cursor.
+ * URL, native join key and coverage date field.
  *
  * The federal `rhetoric-all*` and state `state-rhetoric-all` files carry a
  * `last_updated` distinct from the publication `date`, because PRL reclassifies
@@ -23,13 +23,7 @@ export type PrlFormat = "csv" | "csv-zip" | "json-zip";
 /** The official identity a row keys to. `null` for a dictionary. */
 export type PrlKeyField = "bioguide_id" | "openstates_id" | "candidate_id" | "id" | null;
 
-/**
- * The column an incremental refresh advances on.
- * - `last_updated`: the dataset revises existing rows; take rows whose
- *   `last_updated` exceeds the mark (catches reclassifications).
- * - `date`: the dataset only appends; take rows whose `date` exceeds the mark.
- * - `null`: the dataset is replaced whole (aggregate profiles, dictionaries).
- */
+/** Source modification/publication field used for coverage metadata, never an exclusion cursor. */
 export type PrlCursorField = "last_updated" | "date" | null;
 
 export interface PrlDataset {
@@ -43,7 +37,7 @@ export interface PrlDataset {
   readonly target: PrlTarget;
   readonly format: PrlFormat;
   readonly key: PrlKeyField;
-  /** The incremental cursor column. See {@link PrlCursorField}. */
+  /** The source coverage date field. See {@link PrlCursorField}. */
   readonly cursorField: PrlCursorField;
   /** The publication-date column, used for the display-time future-date rule. */
   readonly dateField: string | null;
@@ -63,9 +57,8 @@ export interface PrlDataset {
     readonly through: string | null;
   };
   /**
-   * The promotion scope, unique per dataset. Every routine dataset promotes a
-   * single `PRL_INGEST` coverage receipt under this scope; the scope is the
-   * clock and pointer key, so there is no per-dataset record class.
+   * Dataset identity retained inside the canonical PRL_ARCHIVE manifest.
+   * Federal aggregate profiles retain their existing PRL_PROFILE scope.
    */
   readonly scope?: string;
   /** Free-text note carried into the report and code review. */
@@ -105,7 +98,7 @@ export const PRL_PROFILES: readonly PrlDataset[] = [
     cursorField: null, dateField: "communication_last_update", revises: false,
     declared: { sizeLabel: "317 KB", officials: "902", from: "2017-06", through: "2026-09" },
     scope: "US:congressional-rhetoric:attributed-profiles",
-    note: "Existing shipped path (lib/sources/prl/{snapshot,data-plane}.ts). Not re-ingested by this subsystem; inventory completeness only.",
+    note: "Existing shipped path (lib/sources/prl/{snapshot,data-plane}.ts). Acquired by the shared refresh service and promoted through the existing PRL_PROFILE reader.",
   },
   {
     id: "profiles-state", tab: "state", title: "State Legislator Profiles",
@@ -123,7 +116,7 @@ export const PRL_PROFILES: readonly PrlDataset[] = [
  * Postgres; a small receipt (object keys + high-water mark) promotes so the
  * standing runner has a clock and a restart cursor. `primary-rhetoric` is also
  * the source for the primary per-candidate aggregate (there is no primary
- * profile file), so it additionally derives a `PRL_PRIMARY_RHETORIC` profile.
+ * profile file), so it additionally derives a primary candidate summary.
  */
 export const PRL_ARCHIVES: readonly PrlDataset[] = [
   {
@@ -149,7 +142,7 @@ export const PRL_ARCHIVES: readonly PrlDataset[] = [
     cursorField: "date", dateField: "date", revises: false,
     declared: { sizeLabel: "20.8 MB", rows: "262K", from: "2025-10", through: "2026-09" },
     scope: "US:2026-primary-rhetoric:classified",
-    note: "Also the source for the PRL_PRIMARY_RHETORIC per-candidate aggregate (FEC candidate_id keyed); no primary profile file exists.",
+    note: "Also the source for the per-candidate aggregate (FEC candidate_id keyed); no primary profile file exists.",
   },
   {
     id: "state-rhetoric", tab: "state", title: "State Classified Rhetoric",
@@ -201,12 +194,4 @@ export function requiredPrlDataset(id: string): PrlDataset {
   const dataset = prlDataset(id);
   if (!dataset) throw new Error(`PRL_DATASET_UNKNOWN:${id}`);
   return dataset;
-}
-
-/**
- * The datasets this ingestion refreshes. The all-national profile is served by
- * `snapshot.ts` and excluded; the dictionaries are reference, landed once.
- */
-export function prlIngestibleDatasets(): readonly PrlDataset[] {
-  return PRL_DATASETS.filter((dataset) => dataset.id !== "profiles-national");
 }

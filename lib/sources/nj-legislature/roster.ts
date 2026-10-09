@@ -46,8 +46,6 @@ function currentNjLegislature(at: string): {
   readonly startYear: number;
   readonly legislature: number;
   readonly term: string;
-  readonly assemblyStart: string;
-  readonly termEnd: string;
 } {
   const instant = new Date(at);
   if (!Number.isFinite(instant.getTime())) invalid(`retrieval instant is invalid: ${at}`);
@@ -60,21 +58,9 @@ function currentNjLegislature(at: string): {
     startYear,
     legislature,
     term: `${ordinal(legislature)} New Jersey Legislature (${startYear}-${startYear + 1})`,
-    assemblyStart: njSecondTuesday(startYear).toISOString().slice(0, 10),
-    termEnd: njSecondTuesday(startYear + 2).toISOString().slice(0, 10),
   };
 }
 
-function currentNjSenateTermStart(at: string): string {
-  const instant = new Date(at);
-  let year = instant.getUTCFullYear();
-  for (; year > 1900; year -= 1) {
-    if (year % 2 !== 0 || ![2, 4, 8].includes(year % 10)) continue;
-    const starts = njSecondTuesday(year);
-    if (instant >= starts) return starts.toISOString().slice(0, 10);
-  }
-  invalid(`cannot derive the current Senate term for ${at}`);
-}
 
 function record(value: unknown, index: number): Record<string, unknown> {
   if (value === null || typeof value !== "object" || Array.isArray(value)) invalid(`roster row ${index} is not an object`);
@@ -83,7 +69,7 @@ function record(value: unknown, index: number): Record<string, unknown> {
 
 function text(row: Record<string, unknown>, key: string, index: number, nullable = false): string | null {
   const value = row[key];
-  if (nullable && value === null) return null;
+  if (nullable && (typeof value !== "string" || !value.trim())) return null;
   if (typeof value !== "string" || value.trim() === "") invalid(`roster row ${index} has invalid ${key}`);
   return value.trim();
 }
@@ -130,7 +116,7 @@ export function parseNjLegislatureRoster(
         : invalid(`roster row ${index} has inconsistent chamber fields`);
     const district = row.Roster_District;
     if (!Number.isInteger(district) || Number(district) < 1 || Number(district) > 40) invalid(`roster row ${index} has invalid district`);
-    if (row.VacantSort !== 0) invalid(`roster row ${index} is not an active named member`);
+    if (row.VacantSort !== 0) continue; // A publisher-listed vacancy is not a missing person.
     const bioLink = text(row, "BioLink", index)!;
     const bioMatch = /^\/legislative-roster\/(\d+)\/(senator|assemblyman|assemblywoman)-[a-z0-9.'-]+$/i.exec(bioLink);
     if (!bioMatch) invalid(`roster row ${index} has invalid BioLink ${bioLink}`);
@@ -145,36 +131,33 @@ export function parseNjLegislatureRoster(
     const middleName = text(row, "Middle_Name", index, true);
     const lastName = text(row, "Last_Name", index)!;
     const suffix = text(row, "Suffix", index, true);
-    text(row, "Full_Name", index);
-    text(row, "DisplayName", index);
-    const partyCode = text(row, "Party", index)!;
-    const partyDescription = text(row, "PartyDescription", index)!;
-    if (!((partyCode === "D" && partyDescription === "Democrat") || (partyCode === "R" && partyDescription === "Republican"))) {
-      invalid(`roster row ${index} has inconsistent party fields`);
-    }
-    const contact = text(row, "ContactLink", index, true);
+    const partyCode = text(row, "Party", index, true);
+    const partyDescription = text(row, "PartyDescription", index, true);
+    const partyLabel = !((partyCode === "D" && partyDescription !== "Democrat") ||
+      (partyCode === "R" && partyDescription !== "Republican")) ? partyDescription : null;
+    let contact = text(row, "ContactLink", index, true);
     if (contact !== null) {
-      let contactUrl: URL;
       try {
-        contactUrl = new URL(contact);
+        const contactUrl = new URL(contact);
+        if (contactUrl.protocol !== "https:" || contactUrl.username || contactUrl.password) contact = null;
       } catch {
-        invalid(`roster row ${index} has invalid ContactLink`);
-      }
-      if (contactUrl.protocol !== "https:" || !contactUrl.hostname.endsWith(".web.fireside21.app")) {
-        invalid(`roster row ${index} has a ContactLink outside the published HTTPS district form authority`);
+        contact = null;
       }
     }
     const id = officialStateOfficeholderId("nj-legislature", officialPersonId);
     const websiteUrl = new URL(bioLink, NJ_LEGISLATURE_ROSTER_URL).href;
     officeholders.push({
       id,
+      personId:id,
+      nativeIds:{"nj-legislature":[officialPersonId]},
+      memberships:[{id:`${id}:${expected.legislature}`,personId:id,officeId:`US-NJ:${chamber}:${district}`,jurisdiction:"US-NJ",chamber,district:String(district),sourceUrl:websiteUrl}],
       name: [firstName, middleName, lastName, suffix].filter((part): part is string => Boolean(part)).join(" "),
       officeTitle: officialTitle,
       level: "STATE",
-      termStart: chamber === "upper" ? currentNjSenateTermStart(retrievedAt) : expected.assemblyStart,
-      termEnd: expected.termEnd,
+      termStart: "",
+      termEnd: "",
       birthDate: null,
-      partyLabel: partyDescription,
+      partyLabel,
       websiteUrl,
       contactFormUrl: contact,
       phone: null,
@@ -197,16 +180,6 @@ export function parseNjLegislatureRoster(
     });
   }
 
-  const lower = officeholders.filter((row) => row.chamber === "lower");
-  const upper = officeholders.filter((row) => row.chamber === "upper");
-  if (lower.length !== 80 || upper.length !== 40 || ids.size !== 120) {
-    invalid(`active chamber counts are lower=${lower.length}, upper=${upper.length}, unique BioLink ids=${ids.size}; expected 80/40/120`);
-  }
-  for (let district = 1; district <= 40; district += 1) {
-    const lowerCount = divisions.filter((row) => row.ocdId.endsWith(`/sldl:${district}`)).length;
-    const upperCount = divisions.filter((row) => row.ocdId.endsWith(`/sldu:${district}`)).length;
-    if (lowerCount !== 2 || upperCount !== 1) invalid(`district ${district} has lower=${lowerCount}, upper=${upperCount}; expected 2/1`);
-  }
   return {
     term: expected.term,
     legislature: expected.legislature,

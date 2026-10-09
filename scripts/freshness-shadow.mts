@@ -19,7 +19,6 @@ import { serializeHostSpacing } from "../lib/control-plane/workers/host-spacing.
 import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
 import { isRetiredRoutineMeetingAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
 import { plannedForHunters } from "../lib/control-plane/workers/route-plan.ts";
-import { oneHunterPath } from "../lib/control-plane/workers/scout-scheduling.ts";
 import { planRepairBrief } from "../lib/control-plane/workers/plan-repair.ts";
 import { observeCyclePhases, type CyclePhase } from "../lib/control-plane/scheduler/cycle-phases.ts";
 import { cycleStateWriter } from "../lib/control-plane/scheduler/cycle-state-writer.ts";
@@ -754,8 +753,8 @@ const registryProviders = [
       (await import("../lib/control-plane/scheduler/ask-gap-holdings.ts")).askGapsInputFromHeld({ now: NOW, observations: repos.askGapObservations })),
   ),
 ];
-/* With WTP_ONE_HUNTER_PATH on, every paid route no provider planned carries a route plan, so its Scout is hunter work. */
-const registryContext = { root: ROOT, nowIso: NOW, planEveryPaidRoute: oneHunterPath() };
+/* Every unplanned paid route carries the shared coordinator plan. */
+const registryContext = { root: ROOT, nowIso: NOW };
 let registry = buildRegistry(registryProviders, registryContext);
 const trackedReading = trackedStates.read();
 const trackedStateCodes: readonly string[] = "states" in trackedReading ? trackedReading.states : [];
@@ -834,7 +833,7 @@ finishPhase("references-and-registration");
     if (plannedForHunters(o.autonomousPlan)) tally.planned += 1;
     paidByProvider.set(registry.providerOf(o.id) ?? "unregistered", tally);
   }
-  console.log(`  paid rows planned as hunter work (one hunter path ${oneHunterPath() ? "on" : "off"}): ${[...paidByProvider].sort(([a], [b]) => a.localeCompare(b))
+  console.log(`  paid rows planned as hunter work: ${[...paidByProvider].sort(([a], [b]) => a.localeCompare(b))
     .map(([provider, tally]) => `${provider} ${tally.planned} of ${tally.paid}`).join("; ") || "none"}`);
 }
 console.log(

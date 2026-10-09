@@ -637,9 +637,9 @@ test("funding reaction target ids validate against the snapshot", () => {
 
 test("the FEC acquisition script has no tracked writer and is reachable only through the standing routine contract", () => {
   const script = readFileSync(join(ROOT, "scripts", "fetch-fec.mts"), "utf8");
-  assert.match(script, /if \(!PROMOTE && !MATCH_ONLY\)/);
+  assert.match(script, /if \(!promote && !matchOnly\)/);
   assert.match(script, /fecFundingCandidate\(/);
-  assert.match(script, /processRegisteredRoutineCandidate\(store, "fec-funding", candidate, snapshot\.fetchedAt\)/);
+  assert.match(script, /processRegisteredRoutineCandidate\(store, "fec-funding", candidate, completedAt\)/);
   assert.doesNotMatch(script, /writeStampStable|writeFile(?:Sync)?|absolutePath:\s*OUT|--allow-shrink|findShrinkRegressions/);
 
   const manifest = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")) as {
@@ -910,9 +910,9 @@ test("no committed snapshot claims to have been read on a day that has not happe
     .replace(/^\s*\/\/.*$/gm, "");
   assert.ok(
     !/new Date\(\)\.toISOString\(\)\.slice\(0,\s*10\)/.test(fetchScript),
-    "fetch-fec.mts reads the date off UTC — use stamp()",
+    "record observations must come from the source evidence, not a new day stamp",
   );
-  assert.ok(fetchScript.includes("stamp()"));
+  assert.ok(fetchScript.includes("acquired.sourceObservedAt"));
 });
 
 /* One ask per object, and two provably distinct sensors that never pool. */

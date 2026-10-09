@@ -1,16 +1,17 @@
 # River status
 
-build_state: ACQUISITION BASELINE REPAIR IN PROGRESS. Release 21 is deployed, but national government/parser replay and OpenStates initial publication remain unproven and currently absent.
+build_state: RELEASE 22 IN HOSTED CHECKS. Baseline repairs are pushed in PR #729; real national imports remain pending deployment.
 worker: codex-acquisition-scale
 provider: Codex
 run_id: acquisition-scale-2026-10-09
 lock: codex-acquisition-scale-2026-10-09
-heartbeat: 2026-10-09T20:38:21Z
+heartbeat: 2026-10-09T21:11:55Z
 
-## RELEASE 22 — acquisition baseline: IN PROGRESS
+## RELEASE 22 — acquisition baseline: PR #729, HOSTED CHECKS
 
 - Production verification at 20:28Z found no plural-openstates candidates or promotions, no registration/4 candidates, and Congress directory still at parser /2. Release 21's 13 meeting promotions did not prove the national baseline.
-- Repairs in progress: parser-aware initial replay; independent state projections of shared national releases; remove the normal acquisition pass's duplicate full worker-publication history scan; publish meetings against the serving registry version while independent families proceed.
+- Repairs built: parser-aware initial replay; independent state projections of shared national releases; remove the normal acquisition pass's duplicate full worker-publication scan; bounded publication outbox; shared-release wait through the existing deadline; publish newly promoted baseline pointers during long passes and preserve meeting facts across registry races.
+- READY 7b0396fa8f49d0e0eaa981bf565b8fa6d0e771ac; combined release 666a871e1f2e3f3b9767e2e8ac8915d3f56f44cc, tree 0ebe9c1afed01beae77f7cbf62166622dff1aa96. PR https://github.com/SeanJ22/meanwhile/pull/729 is labeled run-full-ci. Focused checks: admission/store 115, known-source 18, publication 64 passed; types, targeted lint, diff clean. Hosted CI must cover sandbox-restricted child-process tests before merge.
 - Owners: acquisition_plan (admission/clocks), publication_plan (reader publication), people_plan (known bulk source validation), codex-acquisition-scale (integration, hosted checks, deployment and broad live verification).
 - Existing source cadences, memory margin, budgets, owner pauses and evidence remain unchanged. No Hunt Network or source hunting expansion.
 

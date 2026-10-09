@@ -13,6 +13,20 @@ const row = (id: string, entity = "PAC") => ({ sub_id: id, committee_id: "C00000
   contribution_receipt_date: "2026-09-01", line_number: "11C", contributor_city: "PRIVATE CITY",
   contributor_street_1: "PRIVATE ADDRESS", pdf_url: `https://docquery.fec.gov/pdf/${id}.pdf` });
 
+test("detail follows every source-bound authorized committee in the held cycle", async () => {
+  const seen: string[] = [];
+  const result = await fetchThroughKey({ question, subject,
+    records: [{ ...summary, fecDetailSource: { committeeId: "C00000001", committeeIds: ["C00000001", "C00000002"], cycle: 2026 } }],
+    deadlineMs: Date.now() + 2000, now: new Date("2026-10-05"), readApi: async (_provider, request) => {
+      assert.ok(request && typeof request === "object" && "params" in request);
+      const id = (request.params as Record<string, string>).committee_id; seen.push(id);
+      return { status: 200, sourceUrl: "https://api.open.fec.gov/v1/schedules/schedule_a/", requests: 1, bytes: 100,
+        text: JSON.stringify({ results: [{ ...row(id), committee_id: id }], pagination: { count: 1 } }) };
+    } });
+  assert.equal(result?.complete, true); assert.equal(result.records.length, 2);
+  assert.deepEqual(seen, ["C00000001", "C00000002"]);
+});
+
 test("detail uses the registered credential transport and complete keyset pages, returning source-bound public rows only", async () => {
   const started = Date.now();
   let calls = 0;
@@ -33,6 +47,19 @@ test("detail uses the registered credential transport and complete keyset pages,
   assert.equal(result.records[0]?.sourceUrl, "https://docquery.fec.gov/pdf/1.pdf");
   assert.equal(composeFinanceDetail(result).citedUrls.length, 3);
   assert.ok(result.records.every(row => Date.parse(row.retrievedAt!) >= started && Date.parse(row.retrievedAt!) <= Date.now()), "receipt dates come from the actual API read, not the question calendar");
+});
+
+test("Ask applies the shared amendment identity before exposing current public receipts", async () => {
+  const result = await fetchThroughKey({ question, subject, records: [summary], deadlineMs: Date.now() + 1000,
+    readApi: async () => ({ status: 200, sourceUrl: "https://api.open.fec.gov/v1/schedules/schedule_a/", requests: 1, bytes: 100,
+      text: JSON.stringify({ results: [
+        { ...row("1"), transaction_id: "source-transaction", report_year: 2026, report_type: "Q1", file_number: "1", contributor_name: "Superseded Filing PAC" },
+        { ...row("2"), transaction_id: "source-transaction", report_year: 2026, report_type: "Q1", file_number: "2", contributor_name: "Corrected Filing PAC" },
+        { ...row("3"), memoed_subtotal: true, contributor_name: "Memo Entry PAC" },
+      ], pagination: { count: 3 } }) }) });
+  assert.equal(result?.complete, true); assert.equal(result.records.length, 1);
+  assert.match(result.records[0].text, /Corrected Filing PAC/);
+  assert.doesNotMatch(JSON.stringify(result), /Superseded Filing PAC|Memo Entry PAC/);
 });
 
 test("a slow detail read falls back within the request deadline and keeps the stored source without a false complete list", async () => {

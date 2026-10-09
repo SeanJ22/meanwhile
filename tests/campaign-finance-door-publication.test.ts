@@ -20,6 +20,7 @@ import { composeMoneyAnswer } from "../lib/ask/money-answer.ts";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { StateMoneySection } from "../components/funding/state-money-section.tsx";
+import { zip as createZip } from "../scripts/xlsx.mjs";
 
 const now = "2026-10-05T18:00:00Z", division = "ocd-division/country:us/state:oh/place:alder", target = "ballot-candidacy:avery";
 const provenance = { sourceUrl: "https://elections.example.gov/candidates", sourceOrg: "Fixture election authority", collectedAt: now, verifiedAt: now };
@@ -48,7 +49,7 @@ test("new-jurisdiction finance doors publish exact candidate filings through Sli
   const store = new MemoryRoutineDataStore();
   const result = await publishCampaignFinance(store, input);
   assert.ok(result.promoted, JSON.stringify(result.candidate));
-  assert.equal(result.readerReadback?.status, "PASS");
+  assert.equal(result.readerReadback?.status, "PASS", JSON.stringify(result.readerReadback));
   assert.equal(result.unbound.length, 1, "unmatched candidate identity remains work");
   const read = await readCampaignFinance(division, { store, now });
   assert.equal(read.kind, "PROMOTED");
@@ -132,12 +133,7 @@ test("incomplete Money facts publish as documents, preserve known cells and leav
 });
 
 function zip(name: string, data: Buffer): Buffer {
-  const filename = Buffer.from(name), local = Buffer.alloc(30), central = Buffer.alloc(46), end = Buffer.alloc(22);
-  local.writeUInt32LE(0x04034b50); local.writeUInt16LE(20, 4); local.writeUInt32LE(data.length, 18); local.writeUInt32LE(data.length, 22); local.writeUInt16LE(filename.length, 26);
-  central.writeUInt32LE(0x02014b50); central.writeUInt16LE(20, 6); central.writeUInt32LE(data.length, 20); central.writeUInt32LE(data.length, 24); central.writeUInt16LE(filename.length, 28);
-  const first = Buffer.concat([local, filename, data]), directory = Buffer.concat([central, filename]);
-  end.writeUInt32LE(0x06054b50); end.writeUInt16LE(1, 8); end.writeUInt16LE(1, 10); end.writeUInt32LE(directory.length, 12); end.writeUInt32LE(first.length, 16);
-  return Buffer.concat([first, directory, end]);
+  return createZip([{ name, data }], "2026-10-05");
 }
 
 
@@ -153,7 +149,7 @@ test("saved search API and raw ZIP captures publish through the same door, prese
     const door = { ...base.door, kind, config: { ...base.door.config, rowsPath: "results", totalPath: "count", fileName: "filings.csv" } };
     const result = await publishCampaignFinance(store, { ...base, door, responses: [response], captures: [] });
     assert.ok(result.promoted, JSON.stringify(result.candidate));
-    assert.equal(result.readerReadback?.status, "PASS");
+    assert.equal(result.readerReadback?.status, "PASS", JSON.stringify(result.readerReadback));
     const read = await readCampaignFinance(division, { store, now });
     assert.equal(read.kind, "PROMOTED");
     if (read.kind === "PROMOTED") {
@@ -212,7 +208,7 @@ test("filed organizations and aggregate private giving reach cards and Ask, with
     rawHash: createHash("sha256").update(bytes).digest("hex"), publisher: "Fixture filing authority", httpStatus: 200, transport: "REACHABLE" as const }] };
   const result = await publishCampaignFinance(store, input);
   assert.ok(result.promoted, result.candidate.failureDetail ?? "held");
-  assert.equal(result.readerReadback?.status, "PASS");
+  assert.equal(result.readerReadback?.status, "PASS", JSON.stringify(result.readerReadback));
   const read = await readCampaignFinance(division, { store, now });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") throw new Error("Finance absent");

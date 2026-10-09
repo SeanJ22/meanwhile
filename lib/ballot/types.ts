@@ -11,6 +11,8 @@ export interface Election {
 export type ContestType = "CANDIDACY" | "MEASURE" | "RETENTION";
 
 export interface Contest {
+  /** True only when every candidate on this saved authoritative list was independently verified. */
+  candidateListComplete?: boolean;
   /** Stable within a source, namespaced by the source. */
   id: string;
   electionId: string;

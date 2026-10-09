@@ -11,6 +11,7 @@ export interface DirectoryOffice {
   address: string | null;
   zip: string | null;
   phone: string | null;
+  email?: string | null;
   lat: number | null;
   lng: number | null;
 }

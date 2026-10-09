@@ -1,137 +1,102 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-
 import { LocalFileArchiveStore } from "../lib/sources/prl/archive-store-local.ts";
-import { parseCsv } from "../lib/sources/prl/index.ts";
 import { requiredPrlDataset } from "../lib/sources/prl/inventory.ts";
-import { ingestDataset, type PrlSourceOpen } from "../lib/sources/prl/ingest.ts";
+import { ingestDataset, prlSubjectShard, type PrlSourceOpen } from "../lib/sources/prl/ingest.ts";
 import { readReceipt, writeReceipt } from "../lib/sources/prl/holding.ts";
+import { readPrlPerson } from "../lib/sources/prl/reader.ts";
 import type { PrlIngestReceipt } from "../lib/sources/prl/receipt.ts";
 
 const NOW = Date.parse("2026-09-18T00:00:00Z");
-
-function source(text: string, member: string): () => Promise<PrlSourceOpen> {
-  return async () => ({
-    textChunks: (async function* () {
-      // chunk oddly to exercise the streaming parsers across boundaries
-      for (let i = 0; i < text.length; i += 7) yield text.slice(i, i + 7);
-    })(),
-    sourceSha256: "b".repeat(64),
-    finalUrl: "https://americaspoliticalpulse.com/data/elite/x.zip",
-    member,
-  });
+function source(text: string, unchanged = false): () => Promise<PrlSourceOpen> {
+  return async () => ({ textChunks: (async function* () {
+    if (unchanged) throw new Error("An unchanged release must not be parsed again");
+    for (let i = 0; i < text.length; i += 7) yield text.slice(i, i + 7);
+  })(), sourceSha256: createHash("sha256").update(text).digest("hex"), finalUrl: "https://americaspoliticalpulse.com/data/elite/x.zip",
+  member: "x.csv", retrievedAt: new Date(NOW).toISOString(), byteLength: Buffer.byteLength(text), unchanged });
 }
-
-function tempStore(): { store: LocalFileArchiveStore; cleanup: () => void } {
+function tempStore() {
   const root = mkdtempSync(join(tmpdir(), "prl-ingest-"));
   return { store: new LocalFileArchiveStore(root), cleanup: () => rmSync(root, { recursive: true, force: true }) };
 }
+async function personRows(store: LocalFileArchiveStore, receipt: PrlIngestReceipt, person: string) {
+  const index = JSON.parse(new TextDecoder().decode((await store.get(`${receipt.objectRoot}/people/${prlSubjectShard(person)}/index.json`))!));
+  return (await Promise.all((index.keys as string[]).map(async key => JSON.parse(new TextDecoder().decode((await store.get(key))!))))).flat();
+}
+const FED_CSV = ["id,bioguide_id,date,last_updated,text,source_url", "1,B000944,2017-06-21,2025-01-01 00:00:00,plain,https://example.gov/1",
+  '2,B000944,2018-01-01,2025-06-01 00:00:00,"has, a comma",https://example.gov/2',
+  "3,C000127,2019-01-01,2026-09-10 04:00:00,recent reclassification,https://example.gov/3"].join("\n") + "\n";
 
-const FED_CSV = [
-  "id,bioguide_id,date,last_updated,text",
-  "1,B000944,2017-06-21,2025-01-01 00:00:00,plain",
-  '2,B000944,2018-01-01,2025-06-01 00:00:00,"has, a comma"',
-  "3,C000127,2019-01-01,2026-09-10 04:00:00,recent reclassification",
-].join("\n") + "\n";
-
-test("archive initial load writes every row and marks the newest cursor (capped at now)", async () => {
+test("complete source releases preserve person partitions, revisions and same-date or late rows", async () => {
   const { store, cleanup } = tempStore();
   try {
     const dataset = requiredPrlDataset("statements-national");
-    const receipt = await ingestDataset({ dataset, archive: store, now: NOW, priorReceipt: null, open: source(FED_CSV, "rhetoric-all-national.csv"), rowsPerObject: 2 });
-    assert.equal(receipt.rowsSeen, 3);
-    assert.equal(receipt.rowsWritten, 3);
-    assert.equal(receipt.highWaterMark, "2026-09-10 04:00:00", "cursor is last_updated, not date");
-    assert.equal(receipt.newObjectKeys.length, 2, "5→ ceil(3/2)=2 partitions");
-    // The comma-bearing cell survives the bucket round-trip.
-    const stored = (await Promise.all(receipt.newObjectKeys.map((k) => store.get(k)))).map((b) => new TextDecoder().decode(b!));
-    const allRows = stored.flatMap((csv) => parseCsv(csv).slice(1).filter((r) => r.length > 1));
-    assert.equal(allRows.length, 3);
-    assert.ok(allRows.some((r) => r[4] === "has, a comma"), "embedded comma preserved through the store");
-  } finally {
-    cleanup();
-  }
+    const first = await ingestDataset({ dataset, archive: store, now: NOW, priorReceipt: null, open: source(FED_CSV), rowsPerObject: 1 });
+    assert.equal(first.rowsSeen, 3); assert.equal(first.subjectCount, 2);
+    assert.equal((await personRows(store, first, "B000944"))[0].text, "has, a comma");
+    const changed = FED_CSV + "4,B000944,2016-01-01,2025-01-01 00:00:00,late row,https://example.gov/4\n" +
+      "3,C000127,2019-01-01,2026-09-11 04:00:00,revised label,https://example.gov/3\n";
+    const next = await ingestDataset({ dataset, archive: store, now: NOW, priorReceipt: first, open: source(changed) });
+    assert.notEqual(first.objectRoot, next.objectRoot);
+    assert.equal((await personRows(store, next, "B000944")).length, 3);
+    assert.deepEqual((await personRows(store, next, "C000127")).map(row => row.text), ["revised label"]);
+    assert.equal((await personRows(store, first, "C000127"))[0].text, "recent reclassification", "prior evidence remains held");
+  } finally { cleanup(); }
 });
 
-test("archive incremental writes only rows whose cursor beats the stored mark", async () => {
+test("receipt restart reuses a fully validated unchanged source without changing its retrieval date", async () => {
   const { store, cleanup } = tempStore();
   try {
     const dataset = requiredPrlDataset("statements-national");
-    const prior: PrlIngestReceipt = {
-      ...(await ingestDataset({ dataset, archive: store, now: NOW, priorReceipt: null, open: source(FED_CSV, "x.csv"), rowsPerObject: 100 })),
-      highWaterMark: "2025-06-01 00:00:00",
-    };
-    // Second run a week later; only row 3 (last_updated 2026-09-10) is newer.
-    const later = Date.parse("2026-09-25T00:00:00Z");
-    const receipt = await ingestDataset({ dataset, archive: store, now: later, priorReceipt: prior, open: source(FED_CSV, "x.csv"), rowsPerObject: 100 });
-    assert.equal(receipt.rowsSeen, 3, "still streams the whole file");
-    assert.equal(receipt.rowsWritten, 1, "only the reclassified row is new");
-    assert.equal(receipt.previousMark, "2025-06-01 00:00:00");
-    assert.equal(receipt.highWaterMark, "2026-09-10 04:00:00");
-    assert.ok(receipt.objectKeys.length > receipt.newObjectKeys.length, "keeps the prior objects and adds a delta");
-  } finally {
-    cleanup();
-  }
-});
-
-test("a future-dated row is stored but never advances the mark (the 2027 hazard)", async () => {
-  const { store, cleanup } = tempStore();
-  try {
-    const dataset = requiredPrlDataset("press-releases"); // json, cursor = date
-    const json = JSON.stringify([
-      { id: 1, date: "2026-09-01", bioguide_id: "L000582", text: "a" },
-      { id: 2, date: "2027-01-15", bioguide_id: "L000582", text: "future press release" },
-      { id: 3, date: "2026-09-10", bioguide_id: "T000001", text: "c" },
-    ]);
-    const receipt = await ingestDataset({ dataset, archive: store, now: NOW, priorReceipt: null, open: source(json, "statements.json"), rowsPerObject: 100 });
-    assert.equal(receipt.rowsWritten, 3, "the future row IS stored — we drop nothing");
-    assert.equal(receipt.rowsAfterNow, 1, "and it is counted as future");
-    assert.equal(receipt.highWaterMark, "2026-09-10", "the mark is capped at now, not pushed to 2027");
-    assert.equal(receipt.coverageThrough, "2026-09-10");
-  } finally {
-    cleanup();
-  }
-});
-
-test("state profiles ingest carries precomputed percentages and touches no bucket", async () => {
-  const { store, cleanup } = tempStore();
-  try {
-    const dataset = requiredPrlDataset("profiles-state");
-    const header = "openstates_id,name,state,party,position,district,communication_count,communication_attack_personal_mean,communication_attack_policy_mean,communication_outcome_creditclaiming_mean,communication_policy_mean,communication_outcome_bipartisanship_mean";
-    const csv = [header, "ocd-person/04f7bd8e-094b-433c-9e91-7ebe64c75604,Tim,AL,Republican,lower,14,1200,5.5,10.2,3.1,60.4,2.0"].join("\n") + "\n";
-    const receipt = await ingestDataset({ dataset, archive: store, now: NOW, priorReceipt: null, open: source(csv, "state-profiles.csv"), rowsPerObject: 100 });
-    assert.equal(receipt.profileKind, "state");
-    assert.equal((receipt.profiles as unknown[]).length, 1);
-    assert.equal(receipt.highWaterMark, null, "aggregate profiles have no per-row cursor");
-    assert.equal(receipt.objectStore, "none");
-    assert.equal((await store.list("")).length, 0, "no raw rows written to object storage");
-  } finally {
-    cleanup();
-  }
-});
-
-test("the receipt round-trips through the store and drives a zero-write restart", async () => {
-  const { store, cleanup } = tempStore();
-  try {
-    const dataset = requiredPrlDataset("statements-national");
-    const first = await ingestDataset({ dataset, archive: store, now: NOW, priorReceipt: null, open: source(FED_CSV, "x.csv"), rowsPerObject: 100 });
+    const first = await ingestDataset({ dataset, archive: store, now: NOW, priorReceipt: null, open: source(FED_CSV) });
     await writeReceipt(store, first);
+    const second = await ingestDataset({ dataset, archive: store, now: NOW + 86400_000, priorReceipt: await readReceipt(store, dataset.id), open: source(FED_CSV, true) });
+    assert.equal(second.rowsWritten, 0); assert.equal(second.fetchedAt, first.fetchedAt); assert.equal(second.objectRoot, first.objectRoot);
+  } finally { cleanup(); }
+});
 
-    // A later run reads the prior receipt back from the store...
-    const prior = await readReceipt(store, "statements-national");
-    assert.equal(prior?.highWaterMark, "2026-09-10 04:00:00");
+test("truncated CSV or JSON never accepts a source or publishes completed partitions", async () => {
+  const { store, cleanup } = tempStore();
+  try {
+    for (const [datasetId, raw] of [["statements-national", FED_CSV + '4,B000944,2020-01-01,2025-01-01,"unfinished'],
+      ["press-releases", '[{"id":1,"bioguide_id":"B000944","date":"2026-01-01"}']] as const) {
+      let accepted = false;
+      await assert.rejects(ingestDataset({ dataset: requiredPrlDataset(datasetId), archive: store, now: NOW, priorReceipt: null,
+        open: async () => ({ ...await source(raw)(), accept: async () => { accepted = true; } }) }), /TRUNCATED/);
+      assert.equal(accepted, false);
+    }
+    assert.deepEqual(await store.list(""), []);
+  } finally { cleanup(); }
+});
 
-    // ...and re-ingesting the same file writes nothing new, because every row's
-    // cursor is at or below the stored mark. That is the file-level restart.
-    const later = Date.parse("2026-09-25T00:00:00Z");
-    const second = await ingestDataset({ dataset, archive: store, now: later, priorReceipt: prior, open: source(FED_CSV, "x.csv"), rowsPerObject: 100 });
-    assert.equal(second.rowsSeen, 3);
-    assert.equal(second.rowsWritten, 0, "nothing beats the stored mark, so nothing is re-written");
-    assert.equal(second.newObjectKeys.length, 0);
-  } finally {
-    cleanup();
-  }
+test("person reader fetches only native partitions and excludes future, blank and undated statements", async () => {
+  const { store, cleanup } = tempStore();
+  try {
+    const raw = '[{"id":9007199254740993,"bioguide_id":"B000944","date":"2026-09-01","text":"We support providing clean water to every household.","source_url":"https://example.gov/water"},' +
+      '{"id":2,"bioguide_id":"B000944","date":"2027-01-01","text":"Future statement.","url":"https://example.gov/future"},' +
+      '{"id":3,"bioguide_id":"C000127","date":"2026-09-01","text":"Another person.","url":"https://example.gov/other"},' +
+      '{"id":4,"bioguide_id":"B000944","date":"2026-09-01","text":"","url":"https://example.gov/blank"}]';
+    const receipt = await ingestDataset({ dataset: requiredPrlDataset("press-releases"), archive: store, now: NOW, priorReceipt: null, open: source(raw) });
+    assert.equal(receipt.rowsAfterNow, 1); assert.equal(receipt.highWaterMark, "2026-09-01");
+    store.list = async () => { throw new Error("A reader must not list the bucket"); };
+    const read = await readPrlPerson({ bioguideId: "B000944" }, { archive: store, now: NOW, projection: { formatVersion: 1, datasets: { "press-releases": receipt } } });
+    assert.equal(read.statements.length, 1); assert.match(read.statements[0].id, /9007199254740993$/);
+    assert.equal(read.statements[0].retrievedAt, new Date(NOW).toISOString());
+    assert.equal(read.statements[0].date, "2026-09-01");
+    assert.deepEqual((await readPrlPerson({ bioguideId: "Same Name" }, { archive: store })).statements, []);
+  } finally { cleanup(); }
+});
+
+test("state profile ingestion leaves an absent source measurement date unknown", async () => {
+  const { store, cleanup } = tempStore();
+  try {
+    const csv = "openstates_id,name,state,party,position,district,communication_count,communication_attack_personal_mean,communication_attack_policy_mean,communication_outcome_creditclaiming_mean,communication_policy_mean,communication_outcome_bipartisanship_mean\nocd-person/04f7bd8e-094b-433c-9e91-7ebe64c75604,Tim,AL,Republican,lower,14,1200,5.5,10.2,3.1,60.4,2.0\n";
+    const receipt = await ingestDataset({ dataset: requiredPrlDataset("profiles-state"), now: NOW, priorReceipt: null, open: source(csv) });
+    assert.equal((receipt.profiles![0] as { measuredAt: string | null }).measuredAt, null);
+    assert.equal(receipt.coverageThrough, null);
+  } finally { cleanup(); }
 });

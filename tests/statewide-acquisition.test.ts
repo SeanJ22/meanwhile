@@ -182,7 +182,7 @@ test("a seal, a masthead and a favicon are refused the same way", () => {
   );
 });
 
-test("every name-matching rendition is offered, because the first is not always big enough", () => {
+test("every explicitly full-name-labelled rendition is offered, including CamelCase filenames", () => {
   // An official photo at 85x120 and again at 326x468: MIN_PORTRAIT_EDGE is 96
   // and only the second clears it.
   const small = { src: "https://x.gov/w_85,h_120/Kimberly%20Yee.jpg", alt: "Treasurer Kimberly Yee Official Photo" };
@@ -191,4 +191,9 @@ test("every name-matching rendition is offered, because the first is not always 
   assert.equal(all.length, 2, "both renditions are candidates");
   assert.equal(all[0].src, small.src, "page order is preserved");
   assert.equal(pickPortrait("Kimberly Yee", [small, large])?.src, small.src, "the singular picker is unchanged");
+  assert.deepEqual(pickPortraits("Kimberly Yee", [
+    { src: "https://x.gov/Yee.jpg", alt: "Official photo" },
+    { src: "https://x.gov/KimberlyYeeting.jpg", alt: "Official photo" },
+    { src: "https://x.gov/KimberlyYeeLogo.png", alt: "Official photo" },
+  ]), [], "neither a surname, an extended name nor page furniture supplies the full source name");
 });

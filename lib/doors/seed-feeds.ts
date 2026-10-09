@@ -17,7 +17,6 @@ const MINUTE = 60_000;
 const KEY_REFS: ReadonlyArray<readonly [RegExp, string]> = [
   [/fec/i, "FEC_API_KEY"],
   [/congress|federal-legislative/i, "CONGRESS_API_KEY"],
-  [/member-offices|open-states|plural/i, "PLURAL_API_KEY"],
 ];
 
 export function keyRefFor(...ids: readonly string[]): string | null {

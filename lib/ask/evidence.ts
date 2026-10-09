@@ -11,6 +11,9 @@ import type { GovernmentBudgetFact } from "../civic-data/government-budget-contr
  */
 
 export interface EvidenceRecord {
+  /** A native source or separately verified extraction names the speaker and publication date.
+   * A page search hit alone may never populate this field. */
+  verifiedStatement?: { speakerId: string; quote: string; date: string; attribution: string; nativeSourceId: string };
   governmentFinance?: GovernmentBudgetFact;
   /** Native meeting/document identity survives the Ask path unchanged. */
   meetingId?: string;

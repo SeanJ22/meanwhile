@@ -12,8 +12,8 @@ import {
   DISTRICT_TERRITORIES,
   ruledDistrictTerritory,
 } from "@/lib/control-plane/expansion/district-territory.ts";
-import { certainlyOverlaps, unitShareKey, type CensusUnitTerritory, type ScopeZctas } from "@/lib/control-plane/expansion/membership.ts";
-import { readCensusUnitTerritories, readTerritoryIndex } from "@/lib/control-plane/expansion/runner-load.ts";
+import { buildTerritoryIndex, certainlyOverlaps, unitShareKey, type CensusUnitTerritory, type ScopeZctas } from "@/lib/control-plane/expansion/membership.ts";
+import { readCensusUnitTerritories } from "@/lib/control-plane/expansion/runner-load.ts";
 import type { Jurisdiction, JurisdictionRegistry } from "@/lib/hunt/jurisdiction-universe.ts";
 import { reviewedGovernmentsPlaced } from "@/lib/control-plane/expansion/send-preview.ts";
 
@@ -25,8 +25,8 @@ const JTED = "az:school:cochise-technology-district";
 /** A Send scoped to one ZIP: its ZCTA, wholly inside. */
 const ZIP_SCOPE: ScopeZctas = { zctas: new Set(["85635"]), whole: new Set(["85635"]), fractions: new Map() };
 
-const government = (id: string, name: string, govClass: Jurisdiction["govClass"]): Jurisdiction => ({
-  id, stateCode: "AZ", name, govClass, countyName: "COCHISE", enumeratedFrom: "census-govt-units-2022", ownWebAddress: null, sourceIds: [],
+const government = (id: string, censusId: string, name: string, govClass: Jurisdiction["govClass"]): Jurisdiction => ({
+  id, censusId, stateCode: "AZ", name, govClass, countyName: "COCHISE", enumeratedFrom: "census-govt-units-2022", ownWebAddress: null, sourceIds: [],
 }) as unknown as Jurisdiction;
 
 const REGISTRY = {
@@ -34,9 +34,9 @@ const REGISTRY = {
   enumerationSources: [{ id: "census-govt-units-2022", describe: "test", path: "test", rowsRead: 3 }],
   counts: {}, disagreements: [], sourceCatalog: {},
   jurisdictions: [
-    government(COUNTY, "COUNTY OF COCHISE", "COUNTY"),
-    government(COLLEGE, "COCHISE COUNTY COMMUNITY COLLEGE DISTRICT", "SCHOOL_DISTRICT"),
-    government(JTED, "COCHISE TECHNOLOGY DISTRICT", "SCHOOL_DISTRICT"),
+    government(COUNTY, "100237", "COUNTY OF COCHISE", "COUNTY"),
+    government(COLLEGE, "177940", "COCHISE COUNTY COMMUNITY COLLEGE DISTRICT", "SCHOOL_DISTRICT"),
+    government(JTED, "213773", "COCHISE TECHNOLOGY DISTRICT", "SCHOOL_DISTRICT"),
   ],
 } as unknown as JurisdictionRegistry;
 
@@ -48,7 +48,16 @@ async function countyScope(geoid: string): Promise<ScopeZctas> {
   return { zctas: new Set(result.overlaps.map((o) => o.zcta5)), whole: new Set(result.overlaps.filter((o) => o.whole).map((o) => o.zcta5)), fractions };
 }
 
-const index = () => readTerritoryIndex(ROOT, [REGISTRY]);
+/** Explicit area fixtures exercise the held statutory rules. The current native
+ * inventory alone supplies no school service territory or sampled ZIP share. */
+const sourcedUnits = () => readCensusUnitTerritories(ROOT, ["AZ"]).map(unit => {
+  if (unit.pid6 === "100237") return { ...unit, zips: ["85635", "85643"], method: "county GEOID 04003" };
+  if (unit.pid6 === "177936") return { ...unit, zips: ["85635"], method: "unsd GEOID 0407750" };
+  if (unit.pid6 === "177987") return { ...unit, zips: ["85624"], method: "scsd GEOID 0406030" };
+  return unit;
+});
+const index = () => buildTerritoryIndex([REGISTRY], sourcedUnits(), key => key === "county:04003"
+  ? new Map([["85635", 0.9], ["85643", 0.8]]) : undefined);
 
 test("A SEND IN 85635 OR COCHISE COUNTY PLACES THE COLLEGE DISTRICT AND THE TECHNOLOGY DISTRICT; SANTA CRUZ COUNTY DOES NOT GET THE COLLEGE", async () => {
   const idx = index();
@@ -61,7 +70,7 @@ test("A SEND IN 85635 OR COCHISE COUNTY PLACES THE COLLEGE DISTRICT AND THE TECH
   assert.ok(jted !== undefined, `the technology district is placed: ${idx.unplaced.get(JTED)}`);
   const county = idx.bySubject.get(COUNTY)!;
   assert.deepEqual([...college.zctas].sort(), [...county.zctas].sort(), "the college district is its county");
-  assert.ok(college.shares.size > 0, "with the county's sampled shares");
+  assert.ok(college.shares.size > 0, "with the county's source-established area shares");
   assert.ok(certainlyOverlaps(college, ZIP_SCOPE) && certainlyOverlaps(jted, ZIP_SCOPE), "a Send in 85635 places both");
   const cochise = await countyScope("04003");
   assert.ok(certainlyOverlaps(college, cochise) && certainlyOverlaps(jted, cochise), "a Send in Cochise County places both");
@@ -70,9 +79,12 @@ test("A SEND IN 85635 OR COCHISE COUNTY PLACES THE COLLEGE DISTRICT AND THE TECH
   assert.ok(!certainlyOverlaps(college, await countyScope("04019")), "nor in Pima County");
   assert.ok(jted.zctas.has("85624"), "Patagonia's secondary district supplies its actual Census boundary in Santa Cruz County");
   assert.ok(certainlyOverlaps(jted, santaCruz));
-  const patagonia = readCensusUnitTerritories(ROOT, ["AZ"]).find(u => u.pid6 === "177987")!;
+  const patagonia = sourcedUnits().find(u => u.pid6 === "177987")!;
   assert.match(patagonia.method ?? "", /scsd GEOID 0406030/);
   assert.ok(patagonia.zips.includes("85624"));
+  const unpaired = buildTerritoryIndex([REGISTRY], readCensusUnitTerritories(ROOT, ["AZ"]));
+  assert.equal(unpaired.bySubject.has(JTED), false, "the law does not invent member boundaries missing from the native inventory");
+  assert.match(unpaired.unplaced.get(JTED) ?? "", /no ZCTA territory/);
 });
 
 test("THE RULES: each names its evidence; a member union never adds shares and names what it leaves out; an unknown unit has no rule", () => {

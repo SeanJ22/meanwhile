@@ -11,6 +11,7 @@ import type { ModelRequest, ModelResponse } from "../lib/control-plane/scheduler
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { registerRouteTask } from "../lib/control-plane/repository/coordinator.ts";
 import { dispatchOne } from "../lib/control-plane/scheduler/dispatch.ts";
+import { FIRST_BACKOFF_MINUTES } from "../lib/control-plane/scheduler/debt.ts";
 import { fieldManualEntryId, writeFieldManual } from "../lib/control-plane/field-manual.ts";
 import { knowledgeEntries, methodVersionEntry } from "./method-store-fixture.ts";
 import { readFileSync } from "node:fs";
@@ -22,9 +23,21 @@ import type { PromotedProjection } from "../lib/civic-data/types.ts";
 const registry = (JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { projection: PromotedProjection }).projection;
 const REGISTRY_EDGE: ReaderAuthorityEdgeBundle = { promoted: new Map([[registry.key, manualEdgeEntry("registry-runtime-bindings", registry.payload, registry.versionId)]]) };
 
+async function exhaustPlainRetries(h: Awaited<ReturnType<typeof autonomousHarness>>) {
+  for (let failure = 0; failure < 3; failure++) {
+    const run = await runAutonomousCoordinator(h.runtime, { maximum: 1, concurrency: 1 });
+    assert.equal(run.decisions[0].task?.workerTask?.role, "ACQUIRER", "known routes use plain acquisition before paid investigation");
+    assert.equal(run.dispatches[0].outcome, "WORKED", run.dispatches[0].detail);
+    if (failure < 2) {
+      const record = (await h.repos.workerResults.readAll()).find(row => row.attemptId === run.dispatches[0].attemptId)!;
+      h.advanceTo(new Date(Date.parse(record.endedAt) + (2 ** failure * FIRST_BACKOFF_MINUTES + 1) * 60_000).toISOString());
+    }
+  }
+}
+
 test("the actual Scout request inherits a learned method and the failed Hunter route before novelty",async t=>{
   const h=await autonomousHarness({response:{transportError:"socket timeout"}});
-  await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1});
+  await exhaustPlainRetries(h);
   const before=await h.repos.workerResults.readAll();
   const root=await mkdtemp(join(tmpdir(),"fleet-novelty-fixture-"));
   assert.equal(dirname(resolve(root)),resolve(tmpdir()));
@@ -78,7 +91,7 @@ test("the actual Scout request inherits a learned method and the failed Hunter r
 
 test("one running worker runtime saves a new observed route and hands it to its next Scout", async t => {
   const h = await autonomousHarness({ response: { transportError: "socket timeout" } });
-  await runAutonomousCoordinator(h.runtime, { maximum: 1, concurrency: 1 });
+  await exhaustPlainRetries(h);
   const root = await mkdtemp(join(tmpdir(), "fleet-new-method-"));
   t.after(() => rm(root, { recursive: true, force: true }));
   const empty = { version: 56, updatedOn: "2026-09-03", routes: [] };

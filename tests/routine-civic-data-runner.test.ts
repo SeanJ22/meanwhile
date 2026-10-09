@@ -1,3 +1,4 @@
+import { PLURAL_STATES } from "../lib/sources/plural/targets.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -105,8 +106,8 @@ test("source refreshes are admitted daily without a Send and retry failed source
     assert.equal(routineTaskSelection([`--only=${task.id}`], [...ROUTINE_SOURCE_TASKS, ...AUTOMATIC_REFRESH_TASKS]).ok, true);
     assert.equal(routineTaskDue(task, undefined, now), true);
     const checked = "2026-09-29T12:00:00Z";
-    assert.equal(routineTaskDue(task, { lastAttemptedAt: checked, lastSucceededAt: checked }, now - 1), false);
-    assert.equal(routineTaskDue(task, { lastAttemptedAt: checked, lastSucceededAt: checked }, now), true);
+    assert.equal(routineTaskDue(task, { lastAttemptedAt: checked, lastSucceededAt: checked, lastSucceededObservedAt: checked }, now - 1), false);
+    assert.equal(routineTaskDue(task, { lastAttemptedAt: checked, lastSucceededAt: checked, lastSucceededObservedAt: checked }, now), true);
     const failed = "2026-09-30T11:00:00Z";
     assert.equal(routineTaskDue(task, { lastAttemptedAt: failed }, now - 1), false);
     assert.equal(routineTaskDue(task, { lastAttemptedAt: failed }, now), true);
@@ -271,7 +272,8 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "nh-members",
     "az-state-legislators",
     "nj-state-legislators",
-    "az-state-rollcalls",
+    ...PLURAL_STATES.map(state => `openstates-people-${state}`),
+    "az-openstates-votes",
     "nh-state-rollcalls",
     "nj-state-rollcalls",
     "census-acs-population",
@@ -414,10 +416,13 @@ test("cadence and retry are source-local", () => {
     lastAttemptedAt: new Date(now - 7 * oneHour).toISOString(),
     lastSucceededAt: new Date(now - 8 * 24 * oneHour).toISOString(),
   }, now), true, "the failed source becomes due when its own retry interval elapses");
-  assert.equal(routineTaskDue(nh, { lastAttemptedAt: new Date(now - 2 * oneHour).toISOString(), lastSucceededAt: new Date(now - 2 * oneHour).toISOString() }, now), false);
-  assert.equal(routineTaskDue(census, { lastAttemptedAt: new Date(now - 31 * 24 * oneHour).toISOString(), lastSucceededAt: new Date(now - 31 * 24 * oneHour).toISOString() }, now), true);
+  assert.equal(routineTaskDue(nh, { lastAttemptedAt: new Date(now - 2 * oneHour).toISOString(), lastSucceededAt: new Date(now - 2 * oneHour).toISOString(), lastSucceededObservedAt: new Date(now - 2 * oneHour).toISOString() }, now), false);
+  assert.equal(routineTaskDue(census, { lastAttemptedAt: new Date(now - 31 * 24 * oneHour).toISOString(), lastSucceededAt: new Date(now - 31 * 24 * oneHour).toISOString(), lastSucceededObservedAt: new Date(now - 31 * 24 * oneHour).toISOString() }, now), true);
   assert.equal(routineTaskDue(fec, { lastAttemptedAt: new Date(now + oneHour).toISOString() }, now), true, "a future attempt cannot suppress a due source");
-  assert.equal(routineTaskDue(fec, { lastAttemptedAt: new Date(now - oneHour).toISOString(), lastSucceededAt: new Date(now + oneHour).toISOString() }, now), true, "a future success cannot suppress a due source");
+  assert.equal(routineTaskDue(fec, { lastAttemptedAt: new Date(now - oneHour).toISOString(), lastSucceededAt: new Date(now + oneHour).toISOString(), lastSucceededObservedAt: new Date(now + oneHour).toISOString() }, now), true, "a future success cannot suppress a due source");
+  const observed = new Date(now - 7 * oneHour).toISOString();
+  assert.equal(routineTaskDue(fec, { lastAttemptedAt: observed, lastSucceededAt: "2025-01-01T00:00:00Z", lastSucceededObservedAt: observed }, now), false,
+    "a verified unchanged release uses its successful observation for cadence, even when its evidence is old");
 });
 
 test("one unresolved child cannot suppress sibling launch or classification", async () => {
@@ -1428,7 +1433,12 @@ test("every standing source child emits its exact contract id and the supervisor
   assert.doesNotMatch(failureHelper, /readonly sourceLabel:/);
 
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  assert.match(runner, /const RUNNING_CODE_SHA = TASK_SELECTION\.ok[\s\S]*assertRuntimeAuthority\([\s\S]*\.sha/);
+  assert.match(runner, /const ADMITTED_CODE_SHA = assertRuntimeAuthority\([\s\S]*\.sha/);
+  assert.match(runner, /const RUNNING_CODE_SHA = TASK_SELECTION\.ok\s+\? ADMITTED_CODE_SHA\s+: null/);
+  for (const mutation of ["await syncHeldDoors(", "await startCivicReadCacheHost("]) {
+    assert.ok(runner.indexOf("const ADMITTED_CODE_SHA") < runner.indexOf(mutation), `${mutation} requires admitted code first`);
+    assert.ok(runner.indexOf("const ROUTINE_DATA_PROCESS_LEASE") < runner.indexOf(mutation), `${mutation} requires the process lease first`);
+  }
   assert.match(runner, /testedSha:\s*RUNNING_CODE_SHA/);
   assert.doesNotMatch(runner, /testedSha:\s*null/);
 });

@@ -26,7 +26,7 @@ import { plainMoney } from "./plain-money.ts";
 export interface FundingDisplayData {
   fecCandidateId: string;
   /** Exact held committee/cycle for on-demand filing reads; no credential value. */
-  detailSource?: { committeeId: string; cycle: number };
+  detailSource?: { committeeId: string; committeeIds?: readonly string[]; cycle: number };
   name: string;
   /** e.g. "2025–26" — always stated; totals never wear an unnamed cycle. */
   cycleLabel: string;
@@ -92,9 +92,13 @@ export function fundingAnswerForTarget(targetKey: string): FundingAnswer {
   if (candidate) {
     const { totals } = candidate;
     const sentences: string[] = [];
-    sentences.push(
-      `This campaign has raised ${plainMoney(totals.receipts)} in the ${cycleLabelFor(candidate.cycle)} election cycle and spent ${plainMoney(totals.disbursements)}. It has ${plainMoney(totals.cashOnHand)} on hand.`,
-    );
+    const reported = [totals.receipts === null ? null : `raised ${plainMoney(totals.receipts)}`,
+      totals.disbursements === null ? null : `spent ${plainMoney(totals.disbursements)}`].filter(Boolean);
+    if (reported.length) sentences.push(`This campaign has ${reported.join(" and ")} in the ${cycleLabelFor(candidate.cycle)} election cycle.`);
+    if (totals.cashOnHand !== null) sentences.push(`It has ${plainMoney(totals.cashOnHand)} on hand.`);
+    if (totals.individualItemized !== null && totals.individualUnitemized !== null) {
+      sentences.push(`Individual contributions totaled ${plainMoney(totals.individualItemized + totals.individualUnitemized)}.`);
+    }
     const smallDonor = smallDonorSentence(totals.individualItemized, totals.individualUnitemized);
     if (smallDonor) sentences.push(smallDonor);
     const contributors = contributorRowsForDisplay(candidate);
@@ -104,12 +108,13 @@ export function fundingAnswerForTarget(targetKey: string): FundingAnswer {
     // Committee side only: the two lists were sampled separately, so a band
     // across them would be a share of a base we picked.
     const typeConcentration = typeConcentrationOf(contributors);
+    const committeeIds = candidate.principalCommitteeIds ?? (candidate.principalCommitteeId ? [candidate.principalCommitteeId] : []);
 
     return {
       kind: "funding",
       data: {
         fecCandidateId: candidate.fecCandidateId,
-        ...(candidate.principalCommitteeId ? { detailSource: { committeeId: candidate.principalCommitteeId, cycle: candidate.cycle } } : {}),
+        ...(committeeIds.length ? { detailSource: { committeeId: committeeIds[0], committeeIds, cycle: candidate.cycle } } : {}),
         name: candidate.name,
         cycleLabel: cycleLabelFor(candidate.cycle),
         sentences,
@@ -143,9 +148,7 @@ export function fundingAnswerForTarget(targetKey: string): FundingAnswer {
 
   const absence = fundingAbsenceForTarget(targetKey);
   if (absence) {
-    const statement = absence.reason.startsWith("registered with the FEC")
-      ? `The FEC shows this candidate registered, with no financial reports filed for the 2026 cycle, so we have no campaign money to show.`
-      : `We found no committee registered with the FEC for this candidacy, so we have no campaign money to show. Candidates who raise or spend under $5,000 don't have to register.`;
+    const statement = absence.reason;
     return {
       kind: "absence",
       data: {

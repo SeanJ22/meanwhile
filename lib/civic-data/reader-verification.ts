@@ -62,11 +62,13 @@ function verifyExactVersion(
 }
 
 function verifierIdFor(contract: ReaderContract): string {
+  if (contract.sourceId === "plural-openstates" && contract.recordClass === "STATE_LEGISLATOR") return "lib/state-rollcalls/legislators.ts#readOpenStatesPeopleProjection";
   switch (contract.id) {
     case "fec-funding": return "lib/funding/snapshot.ts#readFundingSnapshot";
     case "nh-members": return "lib/civic-data/state-members.ts#readNhMembers";
     case "az-state-legislators":
     case "nj-state-legislators": return "lib/state-rollcalls/legislators.ts#readOfficialStateLegislatorsProjection";
+    case "az-openstates-votes": return "lib/sources/plural/votes.ts#readArizonaPluralVotesProjection";
     case "az-state-rollcalls":
     case "nj-state-rollcalls": return "lib/sources/legiscan/snapshot.ts#readOfficialStateVotesProjection";
     case "nh-state-rollcalls": return "lib/civic-data/read-model.ts#readPromotedStateLegislatorVotes";
@@ -95,6 +97,7 @@ function verifierIdFor(contract: ReaderContract): string {
     case "az-pima-local-finance": return "lib/control-plane/campaign-finance/held-records.ts#refreshAzPimaFinanceFromPromoted";
     case "voting-sites": return "lib/ballot/voting-sites-server.ts#readVotingSitesProjection";
     case "prl": return "lib/sources/prl/snapshot.ts#readPrlProjection";
+    case "prl-archives": return "lib/sources/prl/archive-publication.ts#readPrlArchiveProjection";
     case "az-official-actions": return "lib/officials/executive-actions.ts#readExecutiveActionsProjection";
     case "pima-legistar-outcomes": return "lib/outcomes/store.ts#readOutcomeProjection";
     case "mesa-legistar-minutes-outcomes": return "lib/outcomes/store.ts#readMesaOutcomeProjection";
@@ -127,6 +130,12 @@ export async function verifyRoutineReaderProjection(
 ): Promise<RoutineReaderVerification> {
   const verifierId = verifierIdFor(contract);
   try {
+    if (contract.sourceId === "plural-openstates" && contract.recordClass === "STATE_LEGISLATOR") {
+      const { readOpenStatesPeopleProjection } = await import("../state-rollcalls/legislators.ts");
+      const jurisdiction = /^US-[A-Z]{2}/.exec(contract.scope)?.[0] as `US-${string}` | undefined;
+      if (!jurisdiction) return fail(verifierId,"The state people scope has no jurisdiction.");
+      return verifyExactVersion(verifierId,await readOpenStatesPeopleProjection(jurisdiction,{store:options.store,now:options.now,bypassCache:true}),options.expectedVersionId,"state people");
+    }
     switch (contract.id) {
       case "fec-funding": {
         const { readFundingSnapshot } = await import("../funding/snapshot.ts");
@@ -155,6 +164,10 @@ export async function verifyRoutineReaderProjection(
           options.expectedVersionId,
           `${target.state} official-state-legislator`,
         );
+      }
+      case "az-openstates-votes": {
+        const { readArizonaPluralVotesProjection } = await import("../sources/plural/votes.ts");
+        return verifyExactVersion(verifierId, await readArizonaPluralVotesProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "native Arizona votes");
       }
       case "az-state-rollcalls":
       case "nj-state-rollcalls": {
@@ -307,6 +320,10 @@ export async function verifyRoutineReaderProjection(
       case "prl": {
         const { readPrlProjection } = await import("../sources/prl/snapshot.ts");
         return verifyExactVersion(verifierId, await readPrlProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "PRL");
+      }
+      case "prl-archives": {
+        const { readPrlArchiveProjection } = await import("../sources/prl/archive-publication.ts");
+        return verifyExactVersion(verifierId, await readPrlArchiveProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "PRL archives");
       }
       case "az-official-actions": {
         const { readExecutiveActionsProjection } = await import("../officials/executive-actions.ts");

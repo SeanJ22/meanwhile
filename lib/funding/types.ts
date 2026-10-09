@@ -5,8 +5,8 @@
  * data class, so pulling a ripcord is a filter:
  *
  * - `FEC_COMMITTEE`: committee-level totals; not behind a ripcord.
- * - `FEC_CONTRIBUTOR`: itemized receipts as filed (names). Reader display
- *   only, behind `ripcord.fecContributorDisplay`, and unreachable from the
+ * - `FEC_CONTRIBUTOR`: private source receipts. Public DTOs retain named
+ *   organizations only, behind `ripcord.fecContributorDisplay`, and unreachable from the
  *   aggregation/export path. Subject to the 52 U.S.C. § 30111(a)(4)
  *   commercial-use restriction on contributor information.
  */
@@ -46,6 +46,12 @@ export interface ContributionRow {
    * second hop. Null for individuals and older rows.
    */
   contributorCommitteeId: string | null;
+  /** Native filing identity, for amendment reconciliation before grouping. */
+  transactionId?: string | null;
+  filingId?: string | null;
+  sourceUrl?: string | null;
+  /** Original evidence observation, retained when an optional ledger refresh fails. */
+  sourceObservedAt?: string;
 }
 
 /**
@@ -58,6 +64,7 @@ export interface SecondHopCommittee {
   dataClass: "FEC_CONTRIBUTOR";
   /** The FEC committee id — the join key, and the cache key for the row. */
   committeeId: string;
+  cycle?: number;
   /** The committee's name exactly as it is registered. */
   name: string;
   /** Its own filed typing, so the pills read from the committee's filing. */
@@ -72,9 +79,9 @@ export interface SecondHopCommittee {
 }
 
 export interface CommitteeTotals {
-  receipts: number;
-  disbursements: number;
-  cashOnHand: number;
+  receipts: number | null;
+  disbursements: number | null;
+  cashOnHand: number | null;
   individualItemized: number | null;
   individualUnitemized: number | null;
   /**
@@ -98,6 +105,8 @@ export interface FundingCandidate {
   targetKeys: string[];
   matchRoutes: string[];
   principalCommitteeId: string | null;
+  /** Every source-confirmed authorized committee for this candidate and cycle. */
+  principalCommitteeIds?: string[];
   /** The two-year period the totals cover — stated, never assumed to be
    *  the current cycle (a dormant off-cycle committee's latest filing may
    *  be an earlier cycle, and the surface says which). */
@@ -105,6 +114,7 @@ export interface FundingCandidate {
   totals: CommitteeTotals;
   topContributions: ContributionRow[];
   provenance: Provenance;
+  acquisition?: { totalsComplete: boolean; contributionsComplete: boolean; checkedAt: string };
 }
 
 /** An earned "no money reported" — the search that came back empty,
@@ -135,4 +145,6 @@ export interface FundingSnapshot {
    * committee ids must never carry identical books.
    */
   secondHop?: SecondHopCommittee[];
+  /** Attempt order for the standing collector; never replaces a source observation date. */
+  refreshAttempts?: Record<string, string>;
 }

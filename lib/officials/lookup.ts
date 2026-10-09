@@ -3,6 +3,7 @@ import type { Provenance } from "../sources/types.ts";
 
 import { campaignSiteFor } from "./campaign-sites.ts";
 import { socialAccountsOf } from "./social-platforms.ts";
+import { personIdentityKeys } from "./people-identity.ts";
 import type {
   Officeholder,
   OfficeholderSet,
@@ -15,6 +16,9 @@ import type {
 export interface SeatHolder {
   fieldSources?: Record<string, Provenance>;
   id: string;
+  personId?: string;
+  nativeIds?: Officeholder["nativeIds"];
+  memberships?: Officeholder["memberships"];
   name: string;
   officeTitle: string;
   /** The jurisdiction owning this office when the holder came from a body-scoped roster; presentation context only. */
@@ -59,7 +63,8 @@ export type OfficeholderIndex = Map<string, SeatHolder[]>;
 export function indexByOfficeholderId(sets: readonly OfficeholderSet[], photos?: PhotoIndex): Map<string, SeatHolder> {
   const out = new Map<string, SeatHolder>();
   for (const set of sets) for (const person of set.officeholders) {
-    if (!out.has(person.id)) out.set(person.id, toSeatHolder(person, photos));
+    const holder = toSeatHolder(person, photos);
+    for (const id of personIdentityKeys(person)) if (!out.has(id)) out.set(id,holder);
   }
   return out;
 }
@@ -70,10 +75,15 @@ export type PhotoIndex = Map<string, string>;
 function toSeatHolder(person: Officeholder, photos?: PhotoIndex): SeatHolder {
   return {
     id: person.id,
+    personId: person.personId ?? person.id,
+    nativeIds: person.nativeIds,
+    memberships: person.memberships,
+    fieldSources: person.fieldSources ? { ...person.fieldSources } : undefined,
     name: person.name,
     officeTitle: person.officeTitle,
     partyLabel: person.partyLabel,
     termEnd: person.termEnd || null,
+    termStart: person.termStart || null,
     birthDate: person.birthDate ?? null,
     websiteUrl: person.websiteUrl,
     sourceUrl: person.provenance.sourceUrl,
@@ -81,8 +91,8 @@ function toSeatHolder(person: Officeholder, photos?: PhotoIndex): SeatHolder {
     email: person.email,
     phone: person.phone,
     contactFormUrl: person.contactFormUrl,
-    photoUrl: photos?.get(person.id) ?? null,
-    campaignUrl: campaignSiteFor(person.id)?.url ?? null,
+    photoUrl: person.photo?.url ?? photos?.get(person.personId ?? person.id) ?? photos?.get(person.id) ?? null,
+    campaignUrl: person.campaignUrl ?? campaignSiteFor(person.id)?.url ?? null,
     social: person.social === undefined ? undefined : socialAccountsOf(person.social),
     state: person.state,
     chamber: person.chamber,
@@ -148,6 +158,8 @@ export function senatorsFor(
   const holders: SeatHolder[] = [];
   for (const state of states) {
     for (const holder of holdersFor(index, state)) {
+      // The sourced office is a minimum fact; optional chamber metadata may be absent.
+      if (holder.officeTitle !== "U.S. Senator") continue;
       if (seen.has(holder.id)) continue;
       seen.add(holder.id);
       holders.push(holder);

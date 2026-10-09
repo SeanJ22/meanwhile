@@ -129,6 +129,9 @@ test("the narrow read selects no payload and never touches the candidate JSON", 
   assert.doesNotMatch(code, /civicDataCandidates\.candidate|c\.candidate|\bcandidate\s*#>|\bcandidate\s*->/);
   assert.match(code, /SET LOCAL statement_timeout = \$\{statementTimeoutMs\}/);
   assert.match(code, /e\.sequence = 1/, "the latest attempt is the local attempt clock, not the adapter's timestamp");
+  assert.match(code, /UNCHANGED_CONFIRMATION_PREFIX/, "a later accepted unchanged check supersedes an earlier failure");
+  assert.match(code, /retrieval,sourceCheck,checkedAt/, "a held replay keeps the provider check time rather than its local reprocessing time");
+  assert.match(code, /p\.current_version_id = c\.id/, "the confirmation must belong to the currently served pointer");
   assert.match(code, /like\(civicDataCandidateEvents\.detail, `\$\{READER_PROJECTION_READBACK_PREFIX\}%`\)/);
 });
 

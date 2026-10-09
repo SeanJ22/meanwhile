@@ -5,7 +5,7 @@ import type { OcdId, Provenance } from "../sources/types.ts";
 /** What kind of seat this is. Not a rank, and never ordered by it. */
 export type OfficeLevel = "FEDERAL" | "STATE" | "LOCAL";
 
-/** A portrait and the licence that decides whether it may be shown; served from our own origin, never hotlinked. */
+/** A source-bound portrait with verified image bytes, served from our own origin. */
 export interface OfficeholderPhoto {
   /** Path on our origin, e.g. `/officials/az-cd-6.jpg`. */
   url: string;
@@ -13,13 +13,13 @@ export interface OfficeholderPhoto {
   sourceUrl: string;
   /** Required attribution text, where the source states one. */
   attribution: string | null;
-  /** Null means unknown, and unknown means do not ship it. */
+  /** A licence statement when the source supplies one; an official own-page binding is also admissible. */
   license: string | null;
   collectedAt: string;
-  verification?: import("../photos/evidence.ts").PortraitVerification;
+  verification?: import("../photos/binding.ts").PortraitVerification;
 }
 
-/** An upstream image is a lead until identity, licence and stored bytes check out. */
+/** An upstream image is a lead until source identity and stored bytes check out. */
 export interface PortraitCandidate {
   readonly imageUrl: string;
   readonly sourceUrl: string;
@@ -29,6 +29,14 @@ export interface PortraitCandidate {
 export interface Officeholder {
   /** Namespaced by source: `congress:A000370`. */
   id: string;
+  /** Stable person identity, independent of any seat or tenure. */
+  personId?: string;
+  /** Exact publisher identifiers. Names are never identity aliases. */
+  nativeIds?: Readonly<Record<string, readonly string[]>>;
+  fecCandidateIds?: readonly string[];
+  offices?: readonly { id?: string; name?: string; address?: string; phone?: string; email?: string; sourceUrl: string; collectedAt: string }[];
+  memberships?: readonly PersonMembership[];
+  fieldSources?: Readonly<Record<string, Provenance>>;
   /** As the source publishes it. Never reformatted or reconstructed. */
   name: string;
   /** "U.S. Senator", "U.S. Representative". */
@@ -59,6 +67,18 @@ export interface Officeholder {
   state?: string;
   chamber?: string;
   provenance: Provenance;
+}
+
+export interface PersonMembership {
+  readonly id: string;
+  readonly personId: string;
+  readonly officeId: string;
+  readonly jurisdiction: string;
+  readonly chamber?: string;
+  readonly district?: string;
+  readonly termStart?: string | null;
+  readonly termEnd?: string | null;
+  readonly sourceUrl: string;
 }
 
 /** The channels the congress-legislators directory carries, under the source's own field names (`twitter` renders as X). */
@@ -97,6 +117,8 @@ export interface OfficeholderDivision {
 
 /** What a generated officeholder file holds. */
 export interface OfficeholderSet {
+  /** Complete enumerated current source memberships; permits retiring omitted memberships, never required for adding facts. */
+  currentMembershipComplete?: boolean;
   /** Which slice this is: `us` for the federal roster, or a state FIPS. */
   scope: string;
   generatedAt: string;

@@ -8,7 +8,7 @@ import type { FreshnessOccurrence } from "../lib/control-plane/scheduler/durable
 import { FRESHNESS_PROJECT, standing } from "../lib/control-plane/scheduler/durable.ts";
 import { brokeredSiblingCaptures, persistVerifiedPublicationAnchors, selectStandingLineages, standingLineageCoversDue, standingLineageKeyFor } from "../lib/control-plane/workers/standing-lineage.ts";
 
-test("verified child publication advances the saved source clock once; partial work does not", async () => {
+test("accepted child publication advances the source clock once and keeps partial gaps open", async () => {
   const h=await autonomousHarness();
   const dueAt="2026-09-03T18:00:00.000Z", publishedAt="2026-09-03T21:00:00.000Z";
   const root={...h.item,project:FRESHNESS_PROJECT,autonomousPlan:{...h.item.autonomousPlan!,ownerInstructions:["original-send"]}};
@@ -17,7 +17,7 @@ test("verified child publication advances the saved source clock once; partial w
       proposalHash:"proposal",scoutAttemptId:(await h.repos.attempts.list())[0]!.id,sourceArtifactId:"artifact",
       retainedEvidenceIds:[],admittedAt:h.now(),authority:"WORK_INSTRUCTIONS_ONLY" as const,unresolved:[]},
     publicationOutcome:{at:publishedAt,status:"PUBLISHED" as const,code:"PUBLISHED",detail:"",workerResultId:"wr-child",
-      candidateId:"candidate",versionId:"version",records:{added:1,changed:0,reused:0}}};
+      candidateId:"candidate",versionId:"version",sourceArtifactId:"artifact",sourceObservedAt:publishedAt,records:{added:1,changed:0,reused:0}}};
   const obligation=standing({id:"freshness:officeholders:fixture",recordClass:"OFFICIAL_ROSTER",subjectId:root.subject,
     routeId:null,active:true,readerImpactAt:null,observedChangeRateHours:null,declaredCycleHours:24,lastWorkedAt:null,
     autonomousPlan:root.autonomousPlan,assignments:[{assignmentKey:"scope:fixture",ref:"original-send",relation:"CREATED",at:dueAt}]},dueAt);
@@ -31,7 +31,7 @@ test("verified child publication advances the saved source clock once; partial w
       result:{role:"ADVERSARIAL_AUDITOR",verdict:"SURVIVED"}}]});
   const now="2026-09-03T22:00:00.000Z";
   const partial={...child,publicationOutcome:{...child.publicationOutcome,status:"PARTIALLY_PUBLISHED" as const}};
-  assert.deepEqual((await persistVerifiedPublicationAnchors(h.repos,{obligations:[obligation],lineages:selection(partial),now})).anchored,[]);
+  assert.equal(selection(partial)[0]?.publishedAt, publishedAt, "accepted partial facts carry the same source observation");
   const anchored=await persistVerifiedPublicationAnchors(h.repos,{obligations:[obligation],lineages:selection(child),now});
   assert.deepEqual(anchored.anchored,[obligation.id]);
   assert.equal((await h.repos.obligations.mustRead(obligation.id)).value.lastWorkedAt,publishedAt);
@@ -65,13 +65,14 @@ test("one source period continues its richest actual held root without losing si
 
   const published={...first,publicationOutcome:{at:"2026-09-03T21:00:00.000Z",status:"PUBLISHED" as const,
     code:"PUBLISHED",detail:"",workerResultId:"wr",candidateId:"candidate",versionId:"version",
+    sourceArtifactId:"held-second",sourceObservedAt:"2026-09-03T21:00:00.000Z",
     records:{added:1,changed:0,reused:0}}};
   const rootAudit={...attempts[0]!,id:"at-root-audit",workItemId:first.id,worker:{...attempts[0]!.worker,role:"ADVERSARIAL_AUDITOR" as const}};
   const finished=selectStandingLineages({occurrences:[rounds[0]!],workItems:[published],artifacts:[captured],
     attempts:[...attempts,rootAudit],workerResults:[{id:"wr",workItemId:first.id,attemptId:rootAudit.id,
       result:{role:"ADVERSARIAL_AUDITOR",verdict:"SURVIVED"}}]});
   assert.equal(selectStandingLineages({occurrences:[rounds[0]!],workItems:[published],artifacts:[captured],
-    attempts,workerResults:[]})[0]?.publishedAt,null,"a status without a completed audit is not a verified freshness anchor");
+    attempts,workerResults:[]})[0]?.publishedAt,published.publicationOutcome.sourceObservedAt,"ordinary accepted publication does not require an adversarial auditor");
   assert.ok(standingLineageCoversDue({lineages:finished,key,now:"2026-09-04T20:59:59.000Z",cadenceHours:24}));
   assert.equal(standingLineageCoversDue({lineages:finished,key,now:"2026-09-04T21:00:00.000Z",cadenceHours:24}),null,
     "only a verified publication permits a new cadence period");
@@ -91,8 +92,8 @@ test("one source period continues its richest actual held root without losing si
   const partial={...repaired,publicationOutcome:{...published.publicationOutcome,status:"PARTIALLY_PUBLISHED" as const}};
   const childPartial=selectStandingLineages({occurrences:rounds,workItems:[first,second,partial],artifacts:[captured],
     attempts:[...attempts,childAudit],workerResults:childResults});
-  assert.equal(childPartial[0]?.publishedAt,null,"partial child output cannot start a freshness clock");
-  assert.ok(standingLineageCoversDue({lineages:childPartial,key,now:"2026-10-04T21:00:00.000Z",cadenceHours:24}));
+  assert.equal(childPartial[0]?.publishedAt,published.publicationOutcome.sourceObservedAt,"partial accepted output records its source observation");
+  assert.equal(standingLineageCoversDue({lineages:childPartial,key,now:"2026-10-04T21:00:00.000Z",cadenceHours:24}),null);
 });
 
 test("coordinator keeps duplicate period roots recorded but defers their paid lane", async () => {

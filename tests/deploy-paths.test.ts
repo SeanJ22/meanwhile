@@ -93,7 +93,7 @@ test("the paperwork paths ARE on the allowlist", () => {
 test("a docs-only commit cancels; one shipping path anywhere in it builds", () => {
   assert.equal(classifyDeploy(["docs/DESIGN.md"]).verdict, "cancel");
   assert.equal(classifyDeploy(["docs/DESIGN.md", "docs/sources.md"]).verdict, "cancel");
-  assert.equal(classifyDeploy(["data/fec/fec-2026.json"]).verdict, "cancel");
+  assert.equal(classifyDeploy(["data/fec/fec-2026.json"]).verdict, "build");
 
   // A commit that carries any code builds.
   const mixed = classifyDeploy(["docs/DESIGN.md", "lib/funding/display.ts"]);
@@ -105,6 +105,12 @@ test("a docs-only commit cancels; one shipping path anywhere in it builds", () =
 test("an unknown path is SHIPPING — the allowlist direction is the rule", () => {
   assert.equal(isNonShippingPath("some-new-directory/thing.json"), false);
   assert.equal(classifyDeploy(["some-new-directory/thing.json"]).verdict, "build");
+});
+
+test("packaged geography and executable source code trigger shipping", () => {
+  for (const path of [BODY_TERRITORY_FILE, "data/derived/resolver-geometry.json", "data/derived/zip-divisions/az.json", "scripts/fetch-census.mts", "lib/holdings/census.ts"]) {
+    assert.equal(classifyDeploy([path]).verdict, "build", path);
+  }
 });
 
 test("an uncomputable diff BUILDS and says so, and is never a cancel", () => {
@@ -181,10 +187,10 @@ test("a shipping commit accumulated in the range builds, even under a data-only 
   // One shipping path anywhere in the range decides it; cancelling would strand the accumulated shipping change.
   const accumulated = classifyDeploy(["app/api/ask/grounded/route.ts", "data/fec/fec-2026.json"]);
   assert.equal(accumulated.verdict, "build", "cancelling would strand the accumulated shipping change");
-  assert.deepEqual(accumulated.shipping, ["app/api/ask/grounded/route.ts"]);
+  assert.deepEqual(accumulated.shipping, ["app/api/ask/grounded/route.ts", "data/fec/fec-2026.json"]);
 });
 
-test("positive control: a data-only commit alone cancels", () => {
-  const dataOnly = classifyDeploy(["data/fec/fec-2026.json"]);
+test("positive control: historical operations evidence alone cancels", () => {
+  const dataOnly = classifyDeploy(["data/ops/historical-receipt.json"]);
   assert.equal(dataOnly.verdict, "cancel");
 });

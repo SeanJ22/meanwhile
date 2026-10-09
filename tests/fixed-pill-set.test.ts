@@ -7,6 +7,7 @@ import {
   BATTLECARD_SECTIONS,
   battlecardSectionTitle,
 } from "../lib/ballot/battlecard-sections.ts";
+import { memberDirectoryReaches } from "../lib/officials/member-directory-scope.ts";
 
 const DIRECTORY = readFileSync("components/officials/member-directory.tsx", "utf8");
 const BALLOT_CARD = readFileSync("components/ballot/candidate-battlecard.tsx", "utf8");
@@ -62,7 +63,7 @@ test("BAL-34: every surface deciding these sections asks the ONE scope predicate
 
   assert.match(
     PREDICATE,
-    /export function memberDirectoryReaches\(holderId: string, section: "committees" \| "offices" = "committees"\): boolean/,
+    /export function memberDirectoryReaches\(holderId: string, section: "committees" \| "offices" = "committees", state\?: string\): boolean/,
     "the shared predicate must exist as one exported function",
   );
     // A client boundary is a directive only in the leading position of a module; elsewhere it is prose.
@@ -96,7 +97,7 @@ test("BAL-34: every surface deciding these sections asks the ONE scope predicate
     const before = BALLOT_PAGE.slice(Math.max(0, at - 400), at);
     assert.match(
       before,
-      slot === "MemberOfficesContent" ? /memberDirectoryReaches\(recordHolder\.id, "offices"\)/ : /memberDirectoryReaches\(recordHolder\.id\)/,
+      slot === "MemberOfficesContent" ? /memberDirectoryReaches\(recordHolder\.id, "offices",\s*recordHolder\.state\)/ : /memberDirectoryReaches\(recordHolder\.id\)/,
       `${slot}'s slot must be null where the source does not reach the person, or the ` +
         "battlecard's `content ?? emptyLine` fallback tests a slot that renders nothing and " +
         "the reader gets an empty box instead of the named gap",
@@ -118,6 +119,15 @@ test("BAL-34: every surface deciding these sections asks the ONE scope predicate
         "predicate, in lib/officials/member-directory-scope.ts.",
     );
   }
+});
+
+test("state people offices use the exact native person scope while committees keep their own source scope", () => {
+  const nativePerson = "ocd-person/01234567-89ab-cdef-0123-456789abcdef";
+  assert.equal(memberDirectoryReaches(nativePerson, "offices", "OH"), true);
+  assert.equal(memberDirectoryReaches(nativePerson, "committees", "OH"), false);
+  assert.equal(memberDirectoryReaches(nativePerson, "offices"), false, "a global native ID alone cannot establish the state");
+  assert.equal(memberDirectoryReaches("congress:B001302", "committees"), true);
+  assert.equal(memberDirectoryReaches("roster:unverified-person", "offices", "OH"), false);
 });
 
 test("BAL-34: the ballot card still renders the whole fixed set, unconditionally", () => {

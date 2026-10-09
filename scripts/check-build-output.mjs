@@ -312,6 +312,11 @@ export function evaluate({ root, budget }) {
         "  state this check exists to end.",
     );
   } else if (worstApp.files > budget.serverTrace.appManifest.ceiling) {
+    const manifest = join(next, worstApp.key);
+    const files = JSON.parse(readFileSync(manifest, "utf8")).files
+      .map((file) => relative(root, resolve(dirname(manifest), file)).replace(/\\/g, "/"))
+      .sort();
+    lines.push(`budget 1a · refused trace files: ${JSON.stringify(files)}`);
     failures.push(
       `app trace cardinality ${worstApp.files} files (${worstApp.key}) exceeds the committed\n` +
         `  ceiling of ${budget.serverTrace.appManifest.ceiling} ` +

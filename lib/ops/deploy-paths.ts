@@ -54,11 +54,8 @@ export interface DeployDecision {
 /** True when this exact path cannot change what a reader sees. */
 export function isNonShippingPath(path: string): boolean {
   const p = path.replace(/\\/g, "/").replace(/^\.\//, "");
-  // Standing data updates publish through the data plane. Diagnostics and
-  // proof harnesses do not change the application Netlify serves.
-  if (p.startsWith("data/")) return true;
-  if (/^scripts\/(?:lib\/)?[^/]*(?:proof|census|verify-|audit-)[^/]*\.[cm]?[jt]sx?$/.test(p)) return true;
-  if (p.startsWith("lib/holdings/") && /(?:census|proof)/.test(p)) return true;
+  // File-backed runtime geography/reference inputs ship with code. Routine
+  // source updates use canonical pointers and never need a Git data commit.
   return NON_SHIPPING_PREFIXES.some(({ prefix }) =>
     prefix.endsWith("/") ? p.startsWith(prefix) : p === prefix,
   );

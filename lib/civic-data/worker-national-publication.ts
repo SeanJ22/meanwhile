@@ -16,7 +16,6 @@ import { createHash } from "node:crypto";
 import { storeVerifiedPortrait, type PortraitRuntime } from "../photos/store.ts";
 import type { PortraitSources } from "../photos/evidence.ts";
 import { isOfficialSource } from "./source-authority.ts";
-import { openStatesSeatHolders } from "../sources/plural/place.ts";
 import { DEFAULT_KINDS, registeredKind, type KindTable } from "../registry/kinds.ts";
 
 export interface NationalDivisionInput {
@@ -39,9 +38,7 @@ export interface NationalOfficialInput {
   readonly officialUrl: string;
   readonly document: { readonly url: string; readonly capture?: WorkerPublicationCapture };
   readonly linkingPage?: OfficialLinkingPage | null;
-  readonly portrait?: PortraitSources;
-  readonly basis?: "OPEN_STATES_ROW";
-  readonly openStatesCapture?: WorkerPublicationCapture;
+  readonly portrait?: Omit<PortraitSources,"subject">;
 }
 
 export interface NationalPlacePublicationInput {
@@ -70,7 +67,7 @@ const DIVISION_TYPES: Readonly<Record<string, Division["divisionType"]>> = {
 const SCOPE_DIVISIONS = new Set(["country", "state"]);
 const GOVERNING_FUNCSTAT = new Set(["A", "B", "C", "G"]);
 const LEGISLATIVE = new Set<Division["divisionType"]>(["cd", "sldu", "sldl"]);
-const STATE_DIVISION = /^ocd-division\/country:us\/state:[a-z]{2}$/;
+const STATE_DIVISION = /^ocd-division\/country:us\/(?:state|district|territory):[a-z]{2}$/;
 const slug = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 function statewideRow(official: NationalOfficialInput, capture: WorkerPublicationCapture, now: string, stateLabel: string | null): StatewideExecutive | string {
@@ -81,7 +78,7 @@ function statewideRow(official: NationalOfficialInput, capture: WorkerPublicatio
   if (stateLabel && !valueOnPage(stateLabel, capture.evidence.text)) return "STATEWIDE_PAGE_NOT_THIS_STATE";
   const state = official.divisionId.slice(-2);
   return { stateOcdId: official.divisionId,
-    holder: { id: `statewide:${state}/${slug(official.officeTitle)}`, name: official.name, officeTitle: official.officeTitle, partyLabel: null,
+    holder: { id: `statewide:${state}/${createHash("sha256").update(`${capture.evidence.canonicalUrl}\n${official.discoveryId}\n${official.name}`).digest("hex").slice(0,24)}`, name: official.name, officeTitle: official.officeTitle, partyLabel: null,
       websiteUrl: capture.evidence.canonicalUrl, email: null, phone: null, contactFormUrl: null, photoUrl: null, campaignUrl: null, termEnd: null, birthDate: null },
     sourceUrl: capture.evidence.canonicalUrl, sourceOrg: capture.evidence.sourceId,
     partyAbsence: "The officeholder's own page does not state a party; no election filing has been read for it yet.",
@@ -89,7 +86,7 @@ function statewideRow(official: NationalOfficialInput, capture: WorkerPublicatio
 }
 
 export function nationalBodyId(division: Pick<Division, "ocdId" | "divisionType">): string {
-  if (LEGISLATIVE.has(division.divisionType)) return `${division.ocdId}#seat`;
+  if (LEGISLATIVE.has(division.divisionType)) throw Error("LEGISLATIVE_MEMBERS_USE_STATE_LEGISLATOR_AUTHORITY");
   return `${division.ocdId}#${division.divisionType === "school_district" ? "board" : "governing"}`;
 }
 
@@ -115,12 +112,6 @@ function divisionRow(input: NationalDivisionInput, captures: readonly WorkerPubl
     provenance: { sourceUrl: input.sourceUrl, sourceOrg: "U.S. Census Bureau", collectedAt: capture.observedAt, verifiedAt: now } } as Division;
 }
 
-function seatBody(division: Division, now: string): Body {
-  return { id: nationalBodyId(division), ocdId: division.ocdId, name: division.label, bodyClass: "GOVERNING", bodyOrigin: "DERIVED_FROM_DIVISION_TYPE",
-    coverageStatus: "NOT_ATTEMPTED", agendaSourceType: "NONE", agendaSourceRef: null, meetingCadence: null, homepageUrl: null, demandCount: 0,
-    sourceDataset: "DERIVED", provenance: { sourceUrl: division.provenance.sourceUrl, sourceOrg: division.provenance.sourceOrg, collectedAt: now, verifiedAt: null } };
-}
-
 async function promote(store: RoutineDataStore, prepared: Parameters<typeof registryRuntimeCandidate>[0], prior: NonNullable<Awaited<ReturnType<typeof readRegistryRuntimePrior>>>, now: string) {
   const candidate = registryRuntimeCandidate(prepared, { prior });
   const published = await processRegisteredManualCandidate(store, "registry-runtime-bindings", candidate, now, prior.versionId);
@@ -141,16 +132,13 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
   const heldDivisions = new Map(prior.payload.registry.divisions.map(d => [d.ocdId, d]));
   const heldBodies = new Set(prior.payload.registry.bodies.map(b => b.id));
   const divisions: Division[] = [], bodies: Body[] = [], used = new Set<string>();
-  const officialDivisions = new Set(input.sources.officials.map(o => o.divisionId));
   for (const row of input.divisions) {
     const held = heldDivisions.get(row.id);
     let division = held ?? divisionRow(row, input.geographyCaptures, input.now, input.kinds ?? DEFAULT_KINDS);
     if (division === null) continue;
     if (typeof division === "string") { gaps.push({ key: `division:${row.id}`, detail: division }); continue; }
     if (!heldDivisions.has(row.id)) { divisions.push(division); used.add(row.sourceUrl); }
-    const impliedBy = (division: Division) => LEGISLATIVE.has(division.divisionType)
-      ? officialDivisions.has(division.ocdId) ? [seatBody(division, input.now)] : []
-      : bodiesFor(division, input.now);
+    const impliedBy = (division: Division) => LEGISLATIVE.has(division.divisionType) ? [] : bodiesFor(division, input.now);
     if (held && impliedBy(held).some(body => !heldBodies.has(body.id))) {
             // Bind a new body to the bytes checked here; held provenance may name an older download.
       division = divisionRow(row, input.geographyCaptures, input.now, input.kinds ?? DEFAULT_KINDS);
@@ -209,6 +197,7 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
         `${statewide.length} statewide official(s): name and office found on their own saved official page inside the freshness window (§3).`);
       const digest = createHash("sha256").update(canonicalJson(statewide.map(s => s.row))).digest("hex").slice(0, 16);
       const published = await promote(input.store, { contractId: "registry-runtime-bindings", scope: "MEMBERS", version: registryEdition(`national-statewide:${digest}`), sourceThrough: input.now, sourceReceipt,
+        departures: statewide.flatMap(s=>prior!.payload.statewideExecutives.filter(old=>old.stateOcdId===s.row.stateOcdId && old.holder.officeTitle===s.row.holder.officeTitle && old.sourceUrl===s.row.sourceUrl && old.holder.id!==s.row.holder.id).map(old=>({bodyId:s.row.stateOcdId,holderId:old.holder.id,replacementHolderId:s.row.holder.id,officeTitle:s.row.holder.officeTitle,sourceUrl:s.row.sourceUrl}))),
         payload: { ...prior.payload, registry: { ...prior.payload.registry, divisions: [], bodies: [] },
           bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: statewide.map(s => s.row), officialPhotos: { photos: [] }, rosterPhotos: {},
                     // A new holder of an office keyed by its seat owes its candidacy check again rather than inheriting the last holder's.
@@ -235,6 +224,7 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
     if (!division) { gaps.push({ key: `official:${official.discoveryId}`, detail: "OFFICIAL_DIVISION_NOT_REGISTERED" }); continue; }
     if (!capture) { gaps.push({ key: `official:${official.discoveryId}`, detail: `OFFICIAL_PAGE_NOT_SAVED:${official.document.url}` }); continue; }
     if (captureProblem(capture)) { gaps.push({ key: `official:${official.discoveryId}`, detail: `OFFICIAL_PAGE_UNUSABLE:${captureProblem(capture)}` }); continue; }
+    if (LEGISLATIVE.has(division.divisionType)) { gaps.push({key:`official:${official.discoveryId}`,detail:"STATE_PEOPLE_SOURCE_REFRESH_OWNS_LEGISLATIVE_MEMBERS"}); continue; }
     const bodyId = nationalBodyId(division);
     if (!prior.payload.registry.bodies.some(b => b.id === bodyId)) { gaps.push({ key: `official:${official.discoveryId}`, detail: `OFFICIAL_BODY_NOT_REGISTERED:${bodyId}` }); continue; }
     byBody.set(bodyId, [...(byBody.get(bodyId) ?? []), official]);
@@ -246,50 +236,28 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
       const ownReading: RosterReading = { id: `national:${official.discoveryId}`, capture, linkingPage: official.linkingPage ?? null, complete: false,
         method: "Place-first national lead; official profile page read",
         members: [{ recordId: `national:${official.discoveryId}`, fields: { name: official.name, office: official.officeTitle, websiteUrl: official.officialUrl } }] };
-      const referenceReading = (csv: WorkerPublicationCapture): RosterReading | null => {
-        if (captureProblem(csv)) return null;
-        const state = official.divisionId.match(/\/state:([a-z]{2})\b/)?.[1] ?? "";
-        const held = openStatesSeatHolders(csv.evidence.text, state, [...registered.values()], csv.observedAt)
-          .find(row => row.id === official.discoveryId && row.divisionId === official.divisionId && row.name === official.name);
-        if (!held) return null;
-        const office = held.officeTitle;
-        return { id: `national:${official.discoveryId}`, capture: csv, linkingPage: null, complete: false, reference: "OPEN_STATES",
-          method: "Place-first national lead; Open States row for the seat (own page did not show the seat)",
-          members: [{ recordId: `national:${official.discoveryId}`, fields: { name: official.name, office } }] };
-      };
-      const reading = official.basis === "OPEN_STATES_ROW" ? referenceReading(capture) : ownReading;
-      let publishedTitle = official.officeTitle;
-      if (!reading) { gaps.push({ key: `official:${official.discoveryId}`, detail: "OPEN_STATES_ROW_NOT_ON_SAVED_FILE" }); continue; }
       try {
-        const published = await publishRosterReading({ store: input.store, bodyId, reading, now: input.now,
-          prior, onPublished: next => { prior = next; } }).catch(async (error: unknown) => {
-          // Only a failed own-page seat check falls back; a held gate or a stale base is not that.
-          const fallback = official.basis !== "OPEN_STATES_ROW" && official.openStatesCapture ? referenceReading(official.openStatesCapture) : null;
-          if (!fallback || !/^ROSTER_(PAGE_UNVERIFIED|PAGE_NOT_THIS_BODY|NO_MEMBER_MEETS_MINIMUMS)/.test(error instanceof Error ? error.message : String(error))) throw error;
-          publishedTitle = String(fallback.members[0].fields.office);
-          return publishRosterReading({ store: input.store, bodyId, reading: fallback, now: input.now, prior: prior ?? undefined, onPublished: next => { prior = next; } });
-        });
+        const published = await publishRosterReading({store:input.store,bodyId,reading:ownReading,now:input.now,prior,onPublished:next=>{prior=next;}});
         if (!published.confirmed) promotedVersionId = published.versionId;
         members.push({ bodyId, versionId: published.versionId, discoveryIds: [official.discoveryId] });
         if (official.portrait) {
           try {
             const holder = prior!.payload.bodyRosters.find(row => row.bodyId === bodyId)?.members
-              .find(row => row.name === official.name && row.officeTitle === (official.basis === "OPEN_STATES_ROW" ? String(reading.members[0].fields.office) : publishedTitle));
+              .find(row => row.id === published.accepted.find(binding=>binding.recordId===`national:${official.discoveryId}`)?.memberId);
             if (!holder) throw Error("PORTRAIT_HOLDER_NOT_PUBLISHED");
             const existing = prior!.payload.officialPhotos.photos.find(row => row.officeholderId === holder.id);
-            if (existing?.sourceUrl === official.portrait.imageUrl && existing.verification) continue;
-            const photo = await storeVerifiedPortrait(official.name, official.portrait, input.now, input.portraitRuntime);
+            const photo = await storeVerifiedPortrait(holder.personId ?? holder.id, {...official.portrait,subject:{personId:holder.personId ?? holder.id,name:holder.name,nativeIds:holder.nativeIds,profileUrls:[official.document.url,official.officialUrl]}}, input.now, input.portraitRuntime);
             const receipt = section3SourceReceipt(official.portrait.captures,input.now,"section3:portrait",
               "The same named portrait is supported by two saved sources; its permitted use is attributed and its decoded bytes are stored on our origin.");
             const saved = await promote(input.store, {contractId:"registry-runtime-bindings",scope:"MEMBERS",
               version:registryEdition(`portrait:${holder.id}:${photo.verification!.imageHash}`),sourceThrough:input.now,
               sourceReceipt:{...receipt,sources:[...receipt.sources.map(s=>({...s,sourceClass:isOfficialSource(s.finalUrl) ? "OFFICIAL_PUBLISHER" as const : "REFERENCE_PUBLISHER" as const})),
                 {requestedUrl:photo.sourceUrl,finalUrl:photo.sourceUrl,publisher:new URL(photo.sourceUrl).hostname,
-                  sourceClass:"REFERENCE_PUBLISHER",retrievedAt:input.now,httpStatus:200,rawHash:photo.verification!.sourceImageHash.slice(7),
+                  sourceClass:"REFERENCE_PUBLISHER",retrievedAt:photo.collectedAt,httpStatus:200,rawHash:photo.verification!.sourceImageHash.slice(7),
                   reviewedEvidence:"Downloaded, checked by the existing image decoder and stored; source identity and permitted use are bound to the saved corroborating pages."}]},
               payload:{...prior!.payload,registry:{...prior!.payload.registry,divisions:[],bodies:[]},bodyRosters:[],
                 rosterReaderDispositions:[],statewideExecutives:[],officialCandidacies:{...prior!.payload.officialCandidacies,rows:[]},
-                officialPhotos:{photos:[{officeholderId:holder.id,name:official.name,...photo}]},rosterPhotos:{[holder.id]:photo.url}}},prior!,input.now);
+                officialPhotos:{photos:[{officeholderId:holder.id,personId:holder.personId ?? holder.id,name:official.name,...photo}]},rosterPhotos:{[holder.id]:photo.url}}},prior!,input.now);
             prior=saved.prior;candidateId=saved.candidateId;promotedVersionId=saved.versionId;
           } catch (error) {
             gaps.push({key:`portrait:${official.discoveryId}`,detail:error instanceof Error ? error.message : String(error)});

@@ -2,7 +2,7 @@ import { isQuotedExtraction, quotedSourceFindings } from "../control-plane/worke
 import { manualClassForKind } from "../control-plane/promotion/source-kinds.ts";
 import { createHash } from "node:crypto";
 import type { AutonomousWorkPlan } from "../control-plane/workers/autonomous-plan.ts";
-import type { ParserResult, WorkerResultRecord } from "../control-plane/workers/types.ts";
+import type { ParserResult, WorkerResultRecord, WorkerEvidence } from "../control-plane/workers/types.ts";
 import { inventoryRecordEvidence } from "../control-plane/workers/record-evidence.ts";
 import { compareCandidateWithSource } from "../control-plane/workers/record-verification.ts";
 import { linkingPageFrom, pageLinksTo, SECTION3_MINIMUMS, section3Page, section3Record } from "../control-plane/promotion/section3.ts";
@@ -33,7 +33,9 @@ export function captureIntact(capture: WorkerPublicationCapture): boolean {
   return captureProblem(capture) === null;
 }
 
-export function captureProblem(capture: WorkerPublicationCapture): string | null {
+export function captureProblem(capture: Pick<WorkerPublicationCapture,"transport"|"partial"|"httpStatus"> & {
+  readonly evidence: {readonly text:string;readonly contentHash:string};
+}): string | null {
   if (capture.transport !== "REACHABLE") return `TRANSPORT_${capture.transport}`;
   if (capture.partial) return "PARTIAL_CAPTURE";
   if (capture.httpStatus === null || capture.httpStatus < 200 || capture.httpStatus >= 300) return `HTTP_STATUS_${capture.httpStatus}`;
@@ -42,7 +44,9 @@ export function captureProblem(capture: WorkerPublicationCapture): string | null
     : `CONTENT_HASH_MISMATCH: the page text hashes to ${hash.slice(0, 19)}…, not its recorded ${capture.evidence.contentHash.slice(0, 19)}… (pass the exact saved text)`;
 }
 
-export function section3SourceReceipt(captures: readonly WorkerPublicationCapture[], now: string, reviewedBy: string, reviewedEvidence: string, recordClass = ""): ManualSourceSetReceipt {
+export function section3SourceReceipt(captures: readonly (Pick<WorkerPublicationCapture,"campaign"|"sourcePolicy"|"observedAt"|"httpStatus"> & {
+  readonly evidence: Pick<WorkerEvidence,"canonicalUrl"|"sourceId"|"contentHash"|"text"|"sourceDocument">;
+})[], now: string, reviewedBy: string, reviewedEvidence: string, recordClass = ""): ManualSourceSetReceipt {
   return { contractVersion: 1, reviewedAt: now, reviewedBy,
     sources: captures.map(c => ({ requestedUrl: c.evidence.canonicalUrl, finalUrl: c.evidence.canonicalUrl, publisher: c.evidence.sourceId,
       sourceClass: manualClassForKind(section3Page({ url: c.evidence.canonicalUrl, text: c.evidence.text, retrievedAt: c.observedAt,

@@ -57,6 +57,7 @@ import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyColorVar } from "@/lib/officials/party-color";
 import { bodyDisplayName, readerPartyLabel } from "@/lib/text/reader-names";
 import { groupBySeatLabel } from "@/lib/officials/seat-grouping";
+import { GovernmentListings } from "./government-listings";
 
 /**
  * Says which rung of the cascade produced what's on screen, and, when nothing
@@ -539,6 +540,9 @@ function CoverageBody({
       </p>
 
       <SubjectLine zip={zip} standing={subject.location.certainty} />
+
+      {coverage.federalDirectoryUnavailable && <p className="mt-1 t-detail text-voice">We could not load the federal directory just now.</p>}
+      <GovernmentListings records={coverage.governments ?? []} states={coverage.governmentInventoryStates ?? []} unavailableStates={coverage.governmentInventoryUnavailableStates} />
 
       {othersLine && (
         <p className="mt-1 t-detail leading-relaxed text-voice">

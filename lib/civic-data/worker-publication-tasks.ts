@@ -23,7 +23,10 @@ export function workerPublicationTasks(items: readonly WorkItem[], results: read
             // unless the Auditor broke it after that publication: then it is re-checked once.
       const pull = auditPull(results, parser);
       const published = outcome?.workerResultId === parser.id || outcome?.workerResultId.startsWith(`${parser.id}+`);
-      if (outcome && published && (outcome.status !== "HELD" || outcome.recovery === "WORKER") && !(pull && pull.at > outcome.at)) return [];
+      const publicationStillOwed = outcome?.recovery === "PUBLISHER" ||
+        (outcome?.status === "PARTIALLY_PUBLISHED" && plan.contract.recordClass === "BALLOT_MEASURE") ||
+        (outcome?.status !== "HELD" && !outcome?.sourceObservedAt);
+      if (outcome && published && !publicationStillOwed && (outcome.status !== "HELD" || outcome.recovery === "WORKER") && !(pull && pull.at > outcome.at)) return [];
       return [{ item, requestedAt: parser.endedAt }];
     }
     const heldReadable = target === "registry-runtime-bindings" ? ["OFFICIAL_ROSTER", "OFFICIAL_BOARD_DIRECTORY"].includes(plan.contract.recordClass)

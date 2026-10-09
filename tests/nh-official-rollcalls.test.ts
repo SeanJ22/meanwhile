@@ -211,11 +211,21 @@ test("NH current roster replaces synthetic IDs with 386 strict official joins pl
   assert.equal(joined.matches.at(-2)?.officeholderId, "nh-general-court:8956");
   assert.equal(joined.matches.at(-1)?.officeholderId, "nh-general-court:909");
 
-  assert.throws(() => joinNhCurrentMemberIdentities(
+  const partial = joinNhCurrentMemberIdentities(
     extraction,
     identityRows.filter((row) => row.personId !== "8956"),
     "missing exact official row",
     exceptionHistory.filter((row) => row.personId !== "8956"),
     "missing exact official history pair",
-  ), /lacks exact official History pair PersonID 8956\/EmployeeNumber 408811/);
+  );
+  assert.equal(partial.matches.length,387);
+  assert.ok(partial.unresolved?.some(row=>row.includes("lacks exact official History pair")));
+});
+
+test("NH source session years advance without changing code and mixed sessions remain refused", () => {
+  const summary = SUMMARY.replaceAll("2026", "2027"), history = HISTORY.replaceAll("2026", "2027");
+  const input = { summaries: parseNhRollCallSummary(summary), history: parseNhRollCallHistory(history),
+    legislators: parseNhLegislators(LEGISLATORS), retrievedAt: "2027-09-09T12:00:00.000Z", participantSourceVersion: nhParticipantSourceVersion(history) };
+  assert.ok(buildNhOfficialRollCallProjection(input).rolls.every(roll => roll.term === "2027" && roll.id.includes(":2027:")));
+  assert.throws(() => buildNhOfficialRollCallProjection({ ...input, history: parseNhRollCallHistory(HISTORY) }), /exact source session year/);
 });

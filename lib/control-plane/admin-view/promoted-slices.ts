@@ -45,9 +45,9 @@ function groupingsQuery(withOverlaps: boolean, where: string): string {
     " CROSS JOIN LATERAL jsonb_array_elements(p.payload->'scopes') x WHERE p.record_class = $1 AND p.scope = $2)" +
     " SELECT 'scope' AS row_kind, scope->>'type' AS type, scope->>'version' AS version, scope->'versionMeta'->>'plan' AS plan," +
     " NULL::text AS geoid, NULL::text AS ocd_id, NULL::text AS label, NULL::text AS state_fips, NULL::text AS state_abbr," +
-    " NULL::text AS cbsa_class, NULL::jsonb AS member_states, NULL::jsonb AS overlaps FROM scopes" +
+    " NULL::text AS cbsa_class, NULL::jsonb AS member_states, NULL::jsonb AS overlaps, scope->'versionMeta' AS version_meta FROM scopes" +
     " UNION ALL SELECT 'grouping', scope->>'type', scope->>'version', scope->'versionMeta'->>'plan', " +
-    grouping +
+    grouping + ", scope->'versionMeta'" +
     ` FROM scopes CROSS JOIN LATERAL jsonb_array_elements(scope->'groupings') g WHERE scope->>'type' = ANY($3::text[]) AND ${where}`
   );
 }
@@ -56,6 +56,10 @@ export interface ScopeSlice {
   readonly type: GeographyType;
   readonly version: string;
   readonly plan: string;
+  readonly applicability?: readonly import("../../census-geography/selection.ts").GeographyApplicability[];
+  readonly retrievalComplete?: boolean;
+  readonly sourceUrls?: readonly string[];
+  readonly observedAt?: string;
 }
 
 export interface GeographySlice {
@@ -109,7 +113,11 @@ export function geographyOfRows(rows: readonly Row[], withOverlaps: boolean): Ge
   for (const row of rows) {
     if (row.row_kind === "scope") {
       const version = text(row.version);
-      if (isGeographyType(row.type) && version !== null) scopes.push({ type: row.type, version, plan: text(row.plan) ?? "" });
+      const meta = row.version_meta as { applicability?: ScopeSlice["applicability"]; retrievalComplete?: boolean; provenance?: { sourceUrls?: readonly string[]; computedAt?: string } } | undefined;
+      if (isGeographyType(row.type) && version !== null) scopes.push({ type: row.type, version, plan: text(row.plan) ?? "",
+        ...(Array.isArray(meta?.applicability) ? { applicability: meta.applicability } : {}),
+        ...(typeof meta?.retrievalComplete === "boolean" ? { retrievalComplete: meta.retrievalComplete } : {}),
+        ...(meta?.provenance ? { sourceUrls: meta.provenance.sourceUrls, observedAt: meta.provenance.computedAt } : {}) });
     } else {
       const c = containerOfRow(row, withOverlaps);
       if (c !== null) containers.push(c);
@@ -194,13 +202,14 @@ export async function containersOfCode(
 export interface RegisteredGovernmentSlice {
   readonly jurisdictionId: string;
   readonly ocdId: string;
-  readonly bodyId: string;
+  readonly bodyId: string | null;
 }
 
 const REGISTRATION_GOVERNMENTS =
-  "SELECT b->>'jurisdictionId' AS jurisdiction_id, b->>'ocdId' AS ocd_id, b->>'id' AS body_id" +
-  " FROM civic_data_promotions p CROSS JOIN LATERAL jsonb_array_elements(p.payload->'bodies') b" +
-  " WHERE p.record_class = $1 AND p.scope = $2 AND b->>'jurisdictionId' IS NOT NULL AND b->>'ocdId' = ANY($3::text[])";
+  "SELECT COALESCE(g->>'jurisdictionId', g->>'id') AS jurisdiction_id, a->>'divisionId' AS ocd_id, g->'bodyIds'->>0 AS body_id" +
+  " FROM civic_data_promotions p CROSS JOIN LATERAL jsonb_array_elements(p.payload->'governments') g" +
+  " CROSS JOIN LATERAL jsonb_array_elements(g->'associations') a" +
+  " WHERE p.record_class = $1 AND p.scope = $2 AND g->>'kind' <> 'EDUCATION_AGENCY' AND a->>'divisionId' = ANY($3::text[])";
 
 export async function registrationGovernments(
   state: string,
@@ -221,7 +230,7 @@ export async function registrationGovernments(
       const jurisdictionId = text(row.jurisdiction_id);
       const ocdId = text(row.ocd_id);
       const bodyId = text(row.body_id);
-      return jurisdictionId === null || ocdId === null || bodyId === null ? [] : [{ jurisdictionId, ocdId, bodyId }];
+      return jurisdictionId === null || ocdId === null ? [] : [{ jurisdictionId, ocdId, bodyId }];
     });
     return { kind: "HELD", versionId, value };
   } catch (error) {

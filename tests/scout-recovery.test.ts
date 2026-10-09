@@ -253,12 +253,7 @@ test('Engineer saves captured source URLs with its reusable adapter knowledge',a
  assert.deepEqual((entry.payload as {sourceUrls:string[]}).sourceUrls,['https://platform.example/first-tenant/calendar','https://platform.example/sitemap.xml']);
 });
 
-test('shared client tools preserve source bytes and date-window paging',async()=>{
- const rows=Array.from({length:90},(_,i)=>'person-'+i+',Member '+i+',lower,'+(i+1)).join('\n');
- const csv='id,name,current_chamber,current_district\n'+rows;
- const plural=await readClientSource('plural_roster',{state:'AZ'},{fetchImpl:async()=>new Response(csv) as never});
- assert.equal(JSON.parse(plural.text).data.length,90);assert.equal(JSON.parse(plural.text).captures[0].text,csv);
- assert.equal(plural.sourceUrl,'https://data.openstates.org/people/current/az.csv');
+test('the shared Legistar client preserves source bytes and date-window paging',async()=>{
  const requests:string[]=[];
  const calendar=await readClientSource('legistar_events',{tenant:'pima',from:'2026-09-29',to:'2026-12-28'},{fetchImpl:async(url)=>{requests.push(String(url));return new Response(JSON.stringify([{EventId:123,EventDate:'2026-10-01'}]));}});
  assert.equal(JSON.parse(calendar.text).data[0].EventId,123);assert.match(requests[0],/EventDate/);assert.equal(calendar.requests,1);

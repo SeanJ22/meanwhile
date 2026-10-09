@@ -129,9 +129,8 @@ export function getFundingSnapshot(): FundingSnapshot {
 /** The committee-level record answering for an app-side target id, if any. */
 export function fundingForTarget(targetKey: string): FundingCandidate | null {
   return (
-    getFundingSnapshot().candidates.find((c) =>
-      c.targetKeys.includes(targetKey),
-    ) ?? null
+    getFundingSnapshot().candidates.filter((c) => c.targetKeys.includes(targetKey) || targetKey === `fec:${c.fecCandidateId}`)
+      .sort((a, b) => b.cycle - a.cycle || (b.totals.coverageEndDate ?? "").localeCompare(a.totals.coverageEndDate ?? ""))[0] ?? null
   );
 }
 
@@ -150,7 +149,20 @@ export function contributorRowsForDisplay(
   candidate: FundingCandidate,
 ): ContributionRow[] {
   if (ripcordPulled("ripcord.fecContributorDisplay")) return [];
-  return candidate.topContributions;
+  return publicOrganizationContributions(candidate.topContributions);
+}
+
+/** Whitelist before serialization: source rows remain private evidence. */
+export function publicOrganizationContributions(rows: readonly ContributionRow[]): ContributionRow[] {
+  return rows.filter(row => row.kind === "COMMITTEE_OR_ORGANIZATION" &&
+    ["CCM", "COM", "ORG", "PAC", "PTY"].includes(row.entityType ?? "")).map(row => ({
+    dataClass: "FEC_CONTRIBUTOR", kind: "COMMITTEE_OR_ORGANIZATION",
+    contributorName: row.contributorName, amount: row.amount, receiptDate: row.receiptDate,
+    city: null, state: row.state, entityType: row.entityType, lineNumber: row.lineNumber,
+    committeeType: row.committeeType, organizationType: row.organizationType, designation: row.designation,
+    contributorCommitteeId: row.contributorCommitteeId,
+    ...(row.sourceObservedAt ? { sourceObservedAt: row.sourceObservedAt } : {}),
+  }));
 }
 
 /**
@@ -173,8 +185,15 @@ export function secondHopForGroups(
     if (!wanted.has(committee.committeeId)) continue;
     // A committee whose own hop came back empty is stored (so the run is
     // recorded) but never rendered as an expander with nothing in it.
-    if (committee.topContributions.length === 0) continue;
-    out[committee.committeeId] = committee;
+    const topContributions = publicOrganizationContributions(committee.topContributions);
+    if (topContributions.length === 0) continue;
+    out[committee.committeeId] = {
+      dataClass: "FEC_CONTRIBUTOR", committeeId: committee.committeeId, cycle: committee.cycle ?? getFundingSnapshot().cycle, name: committee.name,
+      committeeType: committee.committeeType, organizationType: committee.organizationType,
+      designation: committee.designation, receipts: committee.receipts, topContributions,
+      provenance: { sourceUrl: committee.provenance.sourceUrl, sourceOrg: committee.provenance.sourceOrg,
+        collectedAt: committee.provenance.collectedAt, verifiedAt: committee.provenance.verifiedAt },
+    };
   }
   return out;
 }
@@ -202,7 +221,7 @@ export function getContributorReactionTargetIds(): Set<string> {
   if (ripcordPulled("ripcord.fecContributorDisplay")) return new Set();
   return new Set(
     getFundingSnapshot()
-      .candidates.filter((c) => c.topContributions.length > 0)
+      .candidates.filter((c) => publicOrganizationContributions(c.topContributions).length > 0)
       .map((c) => c.fecCandidateId),
   );
 }

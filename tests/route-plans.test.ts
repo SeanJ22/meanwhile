@@ -11,11 +11,10 @@ import type { FleetRuntime } from "../lib/control-plane/workers/runtime.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 const T = "2026-10-06T16:30:00.000Z";
-const ON = { WTP_ONE_HUNTER_PATH: "1" } as unknown as NodeJS.ProcessEnv, OFF = {} as NodeJS.ProcessEnv;
-const pass = (planEveryPaidRoute: boolean) => buildRegistry([campaignFinanceProvider()], { root: ROOT, nowIso: T, planEveryPaidRoute });
+const pass = () => buildRegistry([campaignFinanceProvider()], { root: ROOT, nowIso: T });
 
-test("with the switch on, every paid route carries a plan with the row's own class and subject; plain routes get none", () => {
-  const units = pass(true).units;
+test("every paid route carries a plan with the row's own class and subject; plain routes get none", () => {
+  const units = pass().units;
   const paid = units.filter(u => u.route.executorClass === "BOUNDED_MODEL_WORKER");
   assert.ok(paid.length > 0, "the provider owes paid work");
   for (const u of paid) {
@@ -28,7 +27,6 @@ test("with the switch on, every paid route carries a plan with the row's own cla
     assert.equal(plan.publication, undefined, "no reader door is guessed");
   }
   assert.ok(units.filter(u => u.route.executorClass !== "BOUNDED_MODEL_WORKER").every(u => !u.obligation.autonomousPlan));
-  assert.ok(pass(false).units.every(u => !u.obligation.autonomousPlan), "with the switch off nothing changes");
 });
 
 test("no address is invented: a host target is described, an https address is seeded", () => {
@@ -47,17 +45,16 @@ test("no address is invented: a host target is described, an https address is se
   assert.equal(planned, null, "a provider's own plan is never replaced");
 });
 
-test("a route plan counts as planned work only while the switch is on; a Send's plan always does", () => {
-  const plan = pass(true).units.find(u => u.obligation.autonomousPlan)!.obligation.autonomousPlan!;
-  assert.equal(plannedForHunters(plan, ON), true);
-  assert.equal(plannedForHunters(plan, OFF), false, "switched off, a held route plan leaves the row in the round's path");
-  assert.equal(plannedForHunters({ ...plan, capability: "officials/offices" }, OFF), true);
-  assert.equal(plannedForHunters(undefined, ON), false);
+test("route plans and Send plans use the same coordinator", () => {
+  const plan = pass().units.find(u => u.obligation.autonomousPlan)!.obligation.autonomousPlan!;
+  assert.equal(plannedForHunters(plan), true);
+  assert.equal(plannedForHunters({ ...plan, capability: "officials/offices" }), true);
+  assert.equal(plannedForHunters(undefined), false);
 });
 
 test("an opened paid row is planned work: the coordinator queues its Scout as a worker task", async () => {
   const repos = createMemoryRepositories();
-  const unit = pass(true).units.find(u => u.obligation.autonomousPlan)!;
+  const unit = pass().units.find(u => u.obligation.autonomousPlan)!;
   const { all } = await syncObligations(repos, [unit.obligation], T);
   const opened = await openOccurrence(repos, { obligation: all[0]!, dueAt: T, now: T });
   const item = await repos.workItems.mustRead(opened!.occurrence.workItemId);
@@ -68,6 +65,5 @@ test("an opened paid row is planned work: the coordinator queues its Scout as a 
   const decision = planned.decisions.find(row => row.workItemId === item.id);
   assert.equal(decision?.action, "SCOUT");
   assert.ok(decision?.task, "the queued task exists for the hunter lane to claim");
-  const skipped = await runAutonomousCoordinator(runtime, { planOnly: true, acceptsWorkItem: row => plannedForHunters(row.autonomousPlan, OFF) });
-  assert.equal(skipped.decisions.find(row => row.workItemId === item.id), undefined, "switched off, the round's coordinator leaves it");
+
 });

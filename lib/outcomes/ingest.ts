@@ -54,6 +54,10 @@ export interface PersistInput {
 /** One walked sitting as one durable row. A zero-row items reply is `ZERO_ROWS_FAILED`, never an empty agenda. */
 export function toPersistedSitting(input: PersistInput): PersistedSittingOutcomes {
   const { event, client, collected } = input;
+  if (!Number.isSafeInteger(client.eventBodyId) || event.EventBodyId !== client.eventBodyId ||
+      collected.slug !== client.slug || collected.eventId !== event.EventId) {
+    throw new Error("LEGISTAR_OUTCOME_BODY_IDENTITY_MISMATCH");
+  }
 
   let extraction: PersistedSittingOutcomes["extraction"] = "RETRIEVED";
   let extractionNote: string | null = null;

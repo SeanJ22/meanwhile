@@ -9,6 +9,7 @@ await installRegistryAuthority();
 // Official state rosters are their own promoted families; a synthetic one per pilot state.
 installStateLegislators("US-AZ");
 installStateLegislators("US-NJ");
+installStateLegislators("US-NH");
 
 import { coverageAt } from "../lib/registry/server.ts";
 import { governingRosterHoldersForDivision } from "../lib/registry/body-rosters.ts";
@@ -604,6 +605,6 @@ test("the honest empty line is the same sentence on both surfaces", () => {
     0,
     "no coverage means no seat — never a guess from the roster store",
   );
-  assert.match(representationNoteFor("local"), /haven't sourced who sits on it/);
+  assert.match(representationNoteFor("local"), /haven't sourced the governing body and its members/);
   assert.match(representationNoteFor("federal"), /No sourced officeholder/);
 });

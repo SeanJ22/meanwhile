@@ -16,6 +16,6 @@ test("an id that is neither shape is refused, not guessed at", async () => {
 test("the zip reader rejects what it cannot read rather than returning nothing", () => {
   assert.throws(
     () => readZip(Buffer.from("not a zip at all, not even close")),
-    /no end-of-central-directory/,
+    /ZIP_INVALID:end of central directory missing/,
   );
 });

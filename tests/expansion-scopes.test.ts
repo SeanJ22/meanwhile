@@ -14,7 +14,6 @@ import {
   countByScope,
   orderByPlacement,
   planExpansion,
-  registryIdForUnit,
   scopeMembers,
   withCycleCounts,
   certainlyOverlaps,
@@ -268,7 +267,7 @@ test("a piece of work's subject and state are read from its own id, never guesse
   assert.equal(stateOfSubject("tracker-row-17"), null);
 });
 
-test("registry governments join their Census unit territory by the generator's own id rule", async () => {
+test("registry governments join their Census unit territory by native identity despite equal names", async () => {
   const pimaZctas = await zctasOf(PIMA);
   const units: CensusUnitTerritory[] = [
     { pid6: "100", name: "COUNTY OF PIMA", type: "COUNTY", state: "AZ", zips: pimaZctas },
@@ -278,19 +277,18 @@ test("registry governments join their Census unit territory by the generator's o
     { pid6: "202", name: "TOWNSHIP OF WASHINGTON", type: "TOWNSHIP", state: "NJ", zips: ["07840"] },
     { pid6: "900", name: "COUNTY OF FRANKLIN", type: "COUNTY", state: "OH", zips: ["43215"] },
   ];
-  assert.equal(registryIdForUnit(units[0]), "az:county:county-of-pima");
   const index = buildTerritoryIndex(
     [
       registry("AZ", [
         jurisdiction("az:state:arizona", "Arizona", "STATE"),
-        jurisdiction("az:county:county-of-pima", "COUNTY OF PIMA", "COUNTY"),
-        jurisdiction("az:city:city-of-tucson", "CITY OF TUCSON", "CITY_OR_TOWN"),
-        jurisdiction("az:city:town-of-nowhere", "TOWN OF NOWHERE", "CITY_OR_TOWN"),
+        { ...jurisdiction("az:county:county-of-pima", "COUNTY OF PIMA", "COUNTY"), censusId: "100" },
+        { ...jurisdiction("az:city:city-of-tucson", "CITY OF TUCSON", "CITY_OR_TOWN"), censusId: "101" },
+        { ...jurisdiction("az:city:town-of-nowhere", "TOWN OF NOWHERE", "CITY_OR_TOWN"), censusId: "102" },
         jurisdiction("az:depschool:pima-accommodation", "PIMA ACCOMMODATION", "DEPENDENT_SCHOOL_SYSTEM"),
       ]),
       registry("NJ", [
-        jurisdiction("nj:city:township-of-washington", "TOWNSHIP OF WASHINGTON", "CITY_OR_TOWN"),
-        jurisdiction("nj:city:township-of-washington-202", "TOWNSHIP OF WASHINGTON", "CITY_OR_TOWN"),
+        { ...jurisdiction("nj:city:township-of-washington", "TOWNSHIP OF WASHINGTON", "CITY_OR_TOWN"), censusId: "201" },
+        { ...jurisdiction("nj:city:township-of-washington-202", "TOWNSHIP OF WASHINGTON", "CITY_OR_TOWN"), censusId: "202" },
       ]),
     ],
     units,
@@ -299,7 +297,7 @@ test("registry governments join their Census unit territory by the generator's o
   assert.equal(index.bySubject.get("az:city:city-of-tucson")?.zctas.size, 10);
   assert.ok(index.statewide.has("az:state:arizona"), "the state row is statewide, in no sub-state scope");
   assert.match(index.unplaced.get("az:city:town-of-nowhere") ?? "", /no ZCTA territory/);
-  assert.match(index.unplaced.get("az:depschool:pima-accommodation") ?? "", /no Census of Governments unit/);
+  assert.match(index.unplaced.get("az:depschool:pima-accommodation") ?? "", /no native Census government identity/);
   assert.deepEqual([...(index.bySubject.get("nj:city:township-of-washington")?.zctas ?? [])], ["07882"], "the unsuffixed id is the unit no suffixed sibling claimed");
   assert.deepEqual([...(index.bySubject.get("nj:city:township-of-washington-202")?.zctas ?? [])], ["07840"]);
   assert.equal(index.unregisteredUnitsByState.get("OH")?.length, 1, "a state no registry covers keeps its Census units for the gap count");
@@ -328,60 +326,23 @@ test("sharing a border ZCTA is not membership: only a certain overlap inside a Z
   assert.equal(unitShareKey({ method: "TIGER publishes NO special-district boundaries at any vintage" }), null);
 });
 
-test("on the committed data, Pima County holds Pima and Tucson and none of its neighbours; CD 6 holds the counties it spans", async () => {
+test("native state shards need official intersections, retain unpaired inventory, and do not promote sample shares", () => {
   const root = join(import.meta.dirname, "..");
-  const AZ_COUNTIES = ["apache", "cochise", "coconino", "gila", "graham", "greenlee", "la-paz", "maricopa", "mohave", "navajo", "pima", "pinal", "santa-cruz", "yavapai", "yuma"];
-  const registries = [registry("AZ", [
-    jurisdiction("az:state:arizona", "Arizona", "STATE"),
-    ...AZ_COUNTIES.map((county) => jurisdiction(`az:county:county-of-${county}`, `COUNTY OF ${county.replace("-", " ").toUpperCase()}`, "COUNTY")),
-    jurisdiction("az:city:city-of-tucson", "CITY OF TUCSON", "CITY_OR_TOWN"),
-    jurisdiction("az:city:city-of-phoenix", "CITY OF PHOENIX", "CITY_OR_TOWN"),
-  ])];
-  const index = readTerritoryIndex(root, registries);
-  const counties = (scope: ScopeZctas) =>
-    [...index.bySubject.values()].filter((t) => t.govClass === "COUNTY" && t.stateCode === "AZ" && certainlyOverlaps(t, scope)).map((t) => t.subjectId).sort();
-
-  const pima = await geometryOf(PIMA);
-  assert.deepEqual(counties(pima), ["az:county:county-of-pima"], "Maricopa, Pinal, Cochise and Santa Cruz share border ZCTAs with Pima and are not in it");
-  assert.ok(certainlyOverlaps(index.bySubject.get("az:city:city-of-tucson")!, pima), "Tucson is in Pima County");
-  assert.ok(!certainlyOverlaps(index.bySubject.get("az:city:city-of-phoenix")!, pima), "Phoenix is not");
-
-  const cd6 = counties(await geometryOf(CD6));
-  for (const inside of ["az:county:county-of-pima", "az:county:county-of-cochise"]) assert.ok(cd6.includes(inside), `${inside} lies partly in CD 6`);
-  assert.ok(!cd6.includes("az:county:county-of-maricopa"), "Maricopa is not in CD 6");
-  assert.ok(index.bySubject.get("az:county:county-of-pima")!.shares.size > 0, "a registered county carries its sampled ZCTA shares");
-  const az = readStateReference(root, "AZ");
-  assert.ok(az.units.every(unit => unit.state === "AZ"), "the state reference carries only its own governments");
-  const scoped = readCensusUnitTerritories(root, ["AZ"], new Set(["85635"]));
-  assert.ok(scoped.length > 0 && scoped.every(unit => unit.state === "AZ"));
-  assert.ok(scoped.length < readCensusUnitTerritories(root, ["AZ"]).length, "a ZIP retains its ring rather than every unit in the state");
-  const national = JSON.parse(readFileSync(join(root, "data/derived/zip-governments.json"), "utf8")) as {
-    zips: Record<string, { layer: string; id: string; samples: number }[]>;
-  };
-  const border = Object.entries(national.zips).find(([, edges]) => edges.some(edge => edge.layer === "county" && edge.id.startsWith("04")) && edges.some(edge => edge.layer === "county" && !edge.id.startsWith("04")));
-  assert.ok(border, "the held data includes an Arizona border ZIP");
-  const [zip, edges] = border;
-  const county = edges.find(edge => edge.layer === "county" && edge.id.startsWith("04"))!;
-  const key = `county:${county.id}`;
-  const total = edges.filter(edge => edge.layer === "county").reduce((sum, edge) => sum + edge.samples, 0);
-  assert.equal(readZctaShares(root, new Set([key]), ["AZ"]).get(key)?.get(zip), county.samples / total, "state partitioning preserves the entire border ZIP denominator");
-  assert.ok(az.zips[zip].edges.every(edge => edge.id.startsWith("04")), "the shard carries no other state's government");
-  const school = az.units.find(unit => unit.method?.startsWith("unsd GEOID"))!;
-  const schoolKey = unitShareKey(school)!;
-  const absentZip = "00000";
-  assert.equal(readCensusUnitTerritories(root, ["AZ"], new Set([absentZip])).length, 0);
-  const exactSelected = readCensusUnitTerritories(root, ["AZ"], new Set([absentZip]), new Set([schoolKey, "county:06001"]));
-  assert.ok(exactSelected.some(unit => unit.pid6 === school.pid6), "an acquired division selects the unit without a shared-ZIP edge");
-  assert.ok(exactSelected.every(unit => unit.state === "AZ"));
-  const subjectId = registryIdForUnit(school)!;
-  const schoolRegistry: JurisdictionRegistry = { ...registries[0], stateCode: "AZ", registration: undefined,
-    jurisdictions: [{ ...registries[0].jurisdictions[0], id: subjectId, name: school.name, govClass: "SCHOOL_DISTRICT", stateCode: "AZ" }] };
-  const exactTerritory = readTerritoryIndex(root, [schoolRegistry], ["AZ"], new Set([absentZip]), new Map([[absentZip, [
-    { id: "school", label: school.name, divisionType: "school", censusLayer: "unsd", geoid: schoolKey.split(":")[1], sourceUrl: "https://census.gov/saved-intersection" },
-    { id: "outside-state", label: "Outside state", divisionType: "county", geoid: "06001", sourceUrl: "https://census.gov/saved-intersection" },
+  const az = readStateReference(root, "AZ", { units: "state", listings: true });
+  assert.ok(az.units.length > 600 && az.units.every(unit => unit.state === "AZ"));
+  assert.ok(az.units.some(unit => unit.type === "SPECIAL DISTRICT" && unit.zips.length === 0));
+  assert.equal(readZctaShares(root, new Set(["county:04019"]), ["AZ"]).size, 0);
+  const pima = az.units.find(unit => unitShareKey(unit) === "county:04019")!;
+  const subjectId = "az:county:county-of-pima";
+  const own = registry("AZ", [{ ...jurisdiction(subjectId, pima.name, "COUNTY"), censusId: pima.pid6 }]);
+  const scoped = readCensusUnitTerritories(root, ["AZ"], new Set(["85635"]), new Set(["county:04019"]));
+  assert.ok(scoped.some(unit => unit.pid6 === pima.pid6));
+  assert.ok(scoped.length < az.units.length);
+  const index = readTerritoryIndex(root, [own], ["AZ"], new Set(["85635"]), new Map([["85635", [
+    { id: "pima", label: pima.name, divisionType: "county", geoid: "04019", sourceUrl: "https://census.gov/held-intersection" },
   ]]]));
-  assert.ok(certainlyOverlaps(exactTerritory.bySubject.get(subjectId)!, { zctas: new Set([absentZip]), whole: new Set([absentZip]), fractions: new Map() }));
-  assert.equal(exactTerritory.bySubject.get(subjectId)!.shares.get(absentZip), undefined, "an intersection never invents an area fraction");
+  assert.ok(index.bySubject.get(subjectId)?.zctas.has("85635"));
+  assert.equal(index.bySubject.get(subjectId)?.shares.size, 0, "intersection establishes no invented area fraction");
 });
 
 test("the order puts DISPATCH first, then scopes by priority, and is exactly the old order with no scope", () => {
@@ -455,9 +416,9 @@ async function pimaPlanInput() {
     [
       registry("AZ", [
         jurisdiction("az:state:arizona", "Arizona", "STATE"),
-        jurisdiction("az:county:county-of-pima", "COUNTY OF PIMA", "COUNTY"),
-        jurisdiction("az:city:city-of-tucson", "CITY OF TUCSON", "CITY_OR_TOWN"),
-        jurisdiction("az:county:county-of-coconino", "COUNTY OF COCONINO", "COUNTY"),
+        { ...jurisdiction("az:county:county-of-pima", "COUNTY OF PIMA", "COUNTY"), censusId: "100" },
+        { ...jurisdiction("az:city:city-of-tucson", "CITY OF TUCSON", "CITY_OR_TOWN"), censusId: "101" },
+        { ...jurisdiction("az:county:county-of-coconino", "COUNTY OF COCONINO", "COUNTY"), censusId: "102" },
       ]),
     ],
     units,

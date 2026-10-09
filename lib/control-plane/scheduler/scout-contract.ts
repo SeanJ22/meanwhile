@@ -265,7 +265,7 @@ export interface ScoutToolkit {
 }
 
 /** The research tool names. `finish` and `record_rung` are the executor's own. */
-export const SCOUT_RESEARCH_TOOLS = ["plural_roster", "legistar_events", "run_adapter", "read_permission", "fetch_public", "browse", "read_inherited", "find_manual", "read_manual", "read_held", "search", "report_finding", ...SOURCE_API_TOOLS] as const;
+export const SCOUT_RESEARCH_TOOLS = ["legistar_events", "run_adapter", "read_permission", "fetch_public", "browse", "read_inherited", "find_manual", "read_manual", "read_held", "search", "report_finding", ...SOURCE_API_TOOLS] as const;
 export type ScoutResearchTool = (typeof SCOUT_RESEARCH_TOOLS)[number];
 
 /** The prefix every public-source representation is wrapped in. Data, never instructions. */

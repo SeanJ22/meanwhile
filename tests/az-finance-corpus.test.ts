@@ -1,52 +1,34 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import test from "node:test";
+import { collectAzFinance } from "../scripts/state-money-az.mts";
+import type { StateFinanceIO } from "../scripts/lib/state-money-runner.mts";
+import { readFileSync } from "node:fs";
+import type { SummaryRow } from "../lib/sources/az-seethemoney/index.ts";
+const fixture = JSON.parse(readFileSync("tests/fixtures/campaign-finance/azsos-seethemoney-summary-2026.json", "utf8")) as { data: SummaryRow[] };
 
-const ROOT = process.cwd();
-const SCRIPT_PATH = join(ROOT, "scripts", "state-money-az.mts");
-
-test("the acquisition script reads no ballot file and names no pilot ZIP", () => {
-  const source = readFileSync(SCRIPT_PATH, "utf8");
-  /* The check is on what the script reads, not on whether the words appear. */
-  const reads = [...source.matchAll(/join\(\s*ROOT,\s*("[^"]+"(?:\s*,\s*"[^"]+")*)\s*\)/g)].map((m) =>
-    m[1].replace(/"/g, "").replace(/\s*,\s*/g, "/"),
-  );
-  for (const path of reads) {
-    assert.ok(
-      !path.startsWith("data/ballot") && !/^data\/states\/[^/]+\/ballot\//.test(path),
-      `the acquisition script builds a path into data/ballot: ${path}`,
-    );
-  }
-  assert.match(
-    source,
-    /readAzBallotProjection\(\{\s*bypassCache:\s*true\s*\}\)/,
-    "the script must read the canonical promoted ballot/identity projection",
-  );
-  assert.match(
-    source,
-    /AZ_BALLOT_IDENTITY_AUTHORITY_UNAVAILABLE/,
-    "an unavailable canonical identity authority must refuse rather than fall back to a tracked file",
-  );
-  assert.doesNotMatch(
-    source,
-    /readFileSync\([^)]*data[^)]*identity/,
-    "tracked identity files are bootstrap evidence, not the production acquisition authority",
-  );
+test("AZ official native summaries publish without optional ballot, FTP or ledger reads", async () => {
+  const calls: string[] = [];
+  const io: StateFinanceIO = { year: 2028, signal: new AbortController().signal, prior: null, gaps: [], attempts: {}, cursors: {}, read: async (url, opts) => {
+    calls.push(url); assert.match(opts?.body ?? "", /columns/);
+    const text = JSON.stringify({ data: [null, ...fixture.data], recordsTotal: fixture.data.length + 1, recordsFiltered: fixture.data.length + 1 });
+    opts?.validate?.(text);
+    return { text, receipt: { sourceObservedAt: "2028-10-01T00:00:00Z" } as never };
+  } };
+  const result = await collectAzFinance(io);
+  assert.equal(calls.length, 3); assert.ok(calls.every(url => url.includes("startYear=2027") && url.includes("endYear=2028")));
+  assert.ok(result.records.length); assert.ok(result.records.every(row => row.targetKeys[0].startsWith("state-finance:AZ:") && row.electionYear === 2028));
+  assert.ok(result.records.some(row => row.totals.receipts !== null));
+  assert.ok(io.gaps.some(gap => gap.code === "AZ_NATIVE_PARTITION_UNRESOLVED"), "one malformed row does not suppress other committees");
+  assert.equal(result.period, 2028);
 });
 
-test("the acquisition script's candidate population comes from the publisher, not a page", () => {
-  /* Comments are stripped first: the check reads the code. */
-  const code = readFileSync(SCRIPT_PATH, "utf8")
-    .replace(/\/\*[\s\S]*?\*\//g, " ")
-    .replace(/^\s*\/\/.*$/gm, " ");
-  assert.ok(
-    /statewideCandidateEntities\s*=\s*\[\.\.\.entities\.values\(\)\]/.test(code),
-    "the statewide population is no longer derived from the whole cycle universe",
-  );
-  assert.ok(!/candidateOfInterest/.test(code), "the pilot-bound committee list is back");
-  assert.ok(
-    !/az-pima-2026\.json/.test(code),
-    "the acquisition script loads the pilot ballot again",
-  );
+test("an AZ filter failure retains independently completed filters and never claims absence", async () => {
+  const io: StateFinanceIO = { year: 2026, signal: new AbortController().signal, prior: null, gaps: [], attempts: {}, cursors: {}, read: async url => {
+    if (url.includes("ShowOfficeHolder=true")) throw new Error("503");
+    return { text: JSON.stringify({ data: fixture.data, recordsTotal: fixture.data.length, recordsFiltered: fixture.data.length }),
+      receipt: { sourceObservedAt: "2026-10-01T00:00:00Z" } as never };
+  } };
+  const result = await collectAzFinance(io);
+  assert.equal(result.complete, false); assert.ok(result.records.length); assert.ok(io.gaps.length);
+  assert.ok(result.records.every(row => row.filingState !== "NO_REPORTS_ON_FILE"));
 });

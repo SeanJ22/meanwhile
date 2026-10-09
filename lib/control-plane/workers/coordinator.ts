@@ -13,7 +13,7 @@ import { ceilingPermits, researchSpendInWindow } from "../scheduler/research-pol
 import { fingerprint } from "../ids.ts";
 import { dispatchWorkerTask, enqueueWorkerTask, evidenceProjection, FLEET_POLICY_VERSION, reauthorizeWorkerTask, type FleetRuntime } from "./runtime.ts";
 import { workerTaskAdmission } from "./scheduling.ts";
-import { autonomousScoutHistory, eligibleHeldProtocolRecovery, guardRecheckAt, oneHunterPath, scoutTransientDenial, scoutWalkedToNothing, unchangedScoutFailure } from "./scout-scheduling.ts";
+import { autonomousScoutHistory, eligibleHeldProtocolRecovery, guardRecheckAt, scoutTransientDenial, scoutWalkedToNothing, unchangedScoutFailure } from "./scout-scheduling.ts";
 import { absenceExpiry, absenceUnlockFrom, isArguedAbsence } from "../scheduler/absence.ts";
 import { recordArguedAbsence } from "../scheduler/durable.ts";
 import { selectStandingLineages } from "./standing-lineage.ts";
@@ -229,7 +229,6 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     );
   }
   const now = (runtime.now ?? (()=>new Date().toISOString()))();
-  const switched = oneHunterPath();
   const shutThreshold = runtime.shutThreshold ?? DETECTIVE_SHUT_THRESHOLD;
   const records = [...(knownHistory?.completedRecords ?? await readCompletedWorkerResults(repos, item.id))];
   /* The held-artifact set is read once per decision when scoped, not once per parsed artifact. */
@@ -368,12 +367,12 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     let debt: FreshnessDebt | null = null;
     for (const failed of [...history].reverse()) {
       if (failed.result.verdict === "ACQUIRED") { debt = null; continue; }
-      const cause = switched && failed.result.role === "ACQUIRER" ? acquirerFailureCause(failed.result) : "TRANSPORT_FAILED";
+      const cause = failed.result.role === "ACQUIRER" ? acquirerFailureCause(failed.result) : "TRANSPORT_FAILED";
       debt = recordFailure(debt,{obligationId:item.id,cause,detail:`ACQUIRER ${failed.result.verdict}`,target:acquisition.route.url,dueAt:failed.startedAt,now:failed.endedAt});
     }
-    // Switch off: the unresolved investigation gets a Scout turn before plain retries. Switch on: a passing outage keeps its free plain retry; a shut door goes to its investigation, with a plain re-read in alternate hourly slots.
+    // A passing outage keeps its free retry; a shut door receives investigation and scheduled plain re-reads.
     const scoutTriedAfterFailure = attempts.some(a => a.workItemId === item.id && (a.worker.role === "SCOUT" || a.worker.role === "DETECTIVE") && a.endedAt !== null && Date.parse(a.endedAt) >= Date.parse(latest.endedAt));
-    const retry = knownDoorRetry({debt,now,scoutTriedAfterFailure,shutThreshold,oneHunterPath:switched});
+    const retry = knownDoorRetry({debt,now,scoutTriedAfterFailure,shutThreshold});
     if (retry.kind === "PLAIN_RETRY") {
       const next = await taskFor({workItemId:item.id,contract:plan.contract,now,role:"ACQUIRER",artifactId:acquisition.route.observation.artifactId,acquisition,replayLabel:`retry-after:${latest.id}`});
       if (next) return next;

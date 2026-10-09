@@ -8,7 +8,7 @@
  * never queries the serving database itself, and never rolls anything back: a
  * red reading is recorded as DEGRADED and the run exits non-zero.
  *
- *   --sha=<commit>   the commit the reading is about. Defaults to origin/main's tip.
+ *   --sha=<commit>   the commit the reading is about. Defaults to the clean checked-out HEAD.
  *   --write          persist the reading to the control-plane log; otherwise print only.
  *
  * Exit codes mirror the gate's:
@@ -23,6 +23,7 @@ import { fileURLToPath } from "node:url";
 
 import {
   assessIntegrity,
+  integrityCheckoutIssue,
   type FailureClass,
   type IntegrityRecord,
 } from "../lib/ops/production-integrity.ts";
@@ -86,7 +87,14 @@ function detailFrom(output: string): string {
 
 async function main(): Promise<void> {
   const write = process.argv.includes("--write");
-  const deployedSha = arg("sha") ?? git("rev-parse", "origin/main") ?? git("rev-parse", "HEAD");
+  const headSha = git("rev-parse", "HEAD");
+  const deployedSha = arg("sha") ? git("rev-parse", "--verify", `${arg("sha")}^{commit}`) : headSha;
+  const checkoutIssue = integrityCheckoutIssue(deployedSha, headSha, git("status", "--porcelain=v1", "--untracked-files=all"));
+  if (checkoutIssue) {
+    console.error(`COULD NOT TELL: ${checkoutIssue} No integrity receipt was recorded.`);
+    process.exitCode = 2;
+    return;
+  }
   const mainSha = git("rev-parse", "origin/main");
   const observedAt = new Date().toISOString();
 

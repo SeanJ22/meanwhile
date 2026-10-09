@@ -88,8 +88,8 @@ test("no other data family's schedule is changed: only meeting partitions and me
     const enriched: RoutineTaskClock = { ...clock, lastSucceededObservedAt: at, sittingStarts: [at] };
     for (const offset of [0, HOUR - 1, HOUR, 6 * HOUR - 1, 6 * HOUR, 30 * DAY]) {
       const now = Date.parse(at) + offset;
-      const today = routineTaskDue(row, clock, now);
-      assert.equal(routineTaskDue(row, enriched, now), today, `${row.id}: the new clock fields decide nothing for it`);
+      const today = routineTaskDue(row, { ...clock, lastSucceededObservedAt: at }, now);
+      assert.equal(routineTaskDue(row, enriched, now), today, `${row.id}: observed source success owns its unchanged family cadence`);
       assert.equal(routineTaskDue(row, enriched, now, true), today, `${row.id}: a sitting signal decides nothing for it`);
       assert.equal(routineTaskDue(row, enriched, now, false), today, `${row.id}: a sitting signal decides nothing for it`);
     }

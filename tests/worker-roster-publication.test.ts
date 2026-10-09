@@ -14,7 +14,8 @@ import { registerRouteTask, claimRouteTask, beginAttemptFor, recordArtifactMetad
 import { dispatchWorkerTask, evidenceProjection, FLEET_POLICY_VERSION } from "../lib/control-plane/workers/runtime.ts";
 import { nextAutonomousOperation } from "../lib/control-plane/workers/coordinator.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { publishWorkerRosterResults } from "../lib/civic-data/worker-roster-publication.ts";
+import { publishWorkerRosterResults, workerRosterPublication, type WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
+import { publicationRecordChanges } from "../lib/civic-data/publication-record-changes.ts";
 import { readRegistryRuntimePrior, registryRuntimeCandidate } from "../lib/registry/runtime-data-plane.ts";
 import { CENSUS_PLACEHOLDER_LABELS } from "../lib/registry/census-placeholders.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
@@ -133,6 +134,8 @@ async function proveRosterPublication(partial = false, box = false) {
     "a retained neighbour whose new row is unresolved earns no accepted-result reuse credit");
   assert.deepEqual(published[0].outcome.recordChanges?.map(row => row.recordId).sort(),
     [...published[0].outcome.acceptedRecordIds ?? []].sort());
+  assert.ok(published[0].outcome.detail.startsWith(`§3 passed for ${published[0].outcome.acceptedRecordIds!.length} reader members;`),
+    "the publication receipt credits only this capture's accepted people, not retained neighbors");
   const deliveredAdmin = buildAssignments(await readAllAssignmentSources(h.repos, { nowIso: h.now(), activation: null, pilotZips: [] }));
   assert.deepEqual(deliveredAdmin.find(row => row.id === h.item.id)?.delivery.records, published[0].outcome.records);
   const deliveredItems = [(await h.repos.workItems.mustRead(h.item.id)).value];
@@ -163,12 +166,14 @@ async function proveRosterPublication(partial = false, box = false) {
   assert.equal(delivered.sourceUrl, FIXTURE_URL);
   for (const previous of existing.members) {
     const retained = delivered.members.find(member => member.id === previous.id)!;
-    const { membershipSource: _source, retainedFieldSources: _fieldSources, fieldSources: captured, ...facts } = retained;
-    assert.deepEqual(facts, previous, "independent existing fields and stable identities survive");
+    const { membershipSource: _source, retainedFieldSources: _fieldSources, fieldSources: captured, nativeIds: aliases, ...facts } = retained;
+    const { nativeIds: previousAliases, ...previousFacts } = previous;
+    assert.deepEqual(facts, previousFacts, "independent existing fields and stable identities survive");
     if (rows.some(row => row.id === previous.id)) {
       assert.ok(captured?.name?.quote?.includes(previous.name), "CP-05: the new parser quote travels with the unchanged name");
       assert.equal(captured?.name?.sourceUrl, FIXTURE_URL);
-    }
+      assert.ok(aliases?.[FIXTURE_URL]?.includes(previous.id), "the verified source native key survives future parser row changes");
+    } else assert.deepEqual(aliases, previousAliases, "an omitted neighbor gains no identity evidence from this capture");
     const earlierSource = { sourceUrl: existing.sourceUrl, sourceOrg: existing.sourceOrg, collectedAt: existing.collectedAt };
     if (retained.membershipSource) {
       assert.deepEqual(retained.membershipSource, earlierSource, "a wholly omitted member retains the earlier roster authority");
@@ -244,6 +249,42 @@ test("Box findings reach the member card with email Sources in one publication p
 
 test("ordinary independent workers publish a roster through the existing reader door, preserve prior facts, and reuse the receipt", () => proveRosterPublication());
 test("a stranded mixed roster publishes verified members while unresolved identities enter automatic repair", () => proveRosterPublication(true));
+
+test("a mixed source gives credit only to accepted native rows while omitted and unresolved neighbors keep their evidence", async () => {
+  const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
+  const store = new MemoryRoutineDataStore();
+  Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
+  const now = "2026-09-08T12:01:00.000Z";
+  const prior = (await readRegistryRuntimePrior(store, now))!;
+  const existing = prior.payload.bodyRosters[0];
+  const retained = existing.members[0], reread = existing.members[1];
+  const body = prior.payload.registry.bodies.find(row => row.id === existing.bodyId)!;
+  const members = [
+    { recordId: "parser:reordered", fields: { id: reread.id, name: reread.name, office: reread.officeTitle } },
+    { recordId: "parser:new", fields: { id: "native-new-person", name: "Morgan Example", office: "Board Member" } },
+    { recordId: "parser:unresolved", fields: { id: "native-navigation", name: "Contact us", office: "Contact information" } },
+  ];
+  const text = JSON.stringify({ body: body.name, records: members.map(row => row.fields) });
+  const capture: WorkerPublicationCapture = { evidence: { artifactId: "ar-mixed-credit", acquiredByAttemptId: "at-mixed-credit",
+    canonicalUrl: FIXTURE_URL, sourceId: new URL(FIXTURE_URL).hostname, methodRouteId: "official-roster", retrievedAt: now,
+    text, contentHash: `sha256-${createHash("sha256").update(text).digest("hex")}` }, observedAt: now,
+    httpStatus: 200, transport: "REACHABLE", partial: false };
+  const roster = workerRosterPublication({ bodyId: body.id, prior, now, reading: { id: "parser:mixed-credit", capture,
+    linkingPage: null, members, complete: true, method: "Captured native rows" } });
+  assert.deepEqual(roster.accepted.map(row => row.recordId), ["parser:reordered", "parser:new"]);
+  assert.deepEqual(roster.unresolved, ["parser:unresolved"]);
+  assert.deepEqual(roster.departed, [], "the unresolved source row cannot establish anybody's departure");
+  const delivered = roster.payload.bodyRosters[0].members;
+  assert.deepEqual(delivered.find(row => row.id === retained.id)?.membershipSource,
+    { sourceUrl: existing.sourceUrl, sourceOrg: existing.sourceOrg, collectedAt: existing.collectedAt });
+  assert.ok(!delivered.some(row => row.name === "Contact us"));
+  const changes = publicationRecordChanges({ previousVersionId: prior.versionId, accepted: roster.accepted.map(binding => ({
+    recordId: binding.recordId, readerId: binding.memberId, value: delivered.find(row => row.id === binding.memberId)!,
+    previous: existing.members.find(row => row.id === binding.memberId),
+  })) });
+  assert.deepEqual(changes.records, { added: 1, changed: 0, reused: 1 });
+  assert.ok(!changes.recordChanges.some(row => row.readerId === retained.id || row.recordId === "parser:unresolved"));
+});
 
 test("owed roster work with nothing readable yet is held with its reason", async () => {
   const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };

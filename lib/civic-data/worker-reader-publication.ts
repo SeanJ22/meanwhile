@@ -268,7 +268,7 @@ export async function publishWorkerReaderResults(input: {
     const parser = latestParserResult(results, id);
     if (!parser || plan?.publication?.contractId !== input.contractId) continue;
     const pull = auditPull(results, parser);
-    if (item.publicationOutcome?.workerResultId === parser.id && item.publicationOutcome.recovery !== "PUBLISHER" && !(pull && pull.at > item.publicationOutcome.at)) {
+    if (item.publicationOutcome?.workerResultId === parser.id && item.publicationOutcome.sourceObservedAt && item.publicationOutcome.recovery !== "PUBLISHER" && !(pull && pull.at > item.publicationOutcome.at)) {
       report.push({ workItemId: id, outcome: item.publicationOutcome }); continue;
     }
     let outcome: NonNullable<WorkItem["publicationOutcome"]>, candidateId: string | null = null, versionId: string | null = null;

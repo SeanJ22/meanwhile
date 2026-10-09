@@ -130,18 +130,20 @@ test("PRDY-2: a URL inventory class, an ambiguous extraction, and mismatched byt
 });
 
 /* An unknown venue never suppresses a meeting: the row is a fact with no place and the county's own words as its venue gap. */
-test("PRDY-2: a row the canonical adapter drops is a refusal with the adapter's own accounting, and an unknown venue is a fact with its gap named, never a guessed venue", () => {
+test("PRDY-2: a sourced day survives a missing time, an invalid date is refused, and an unknown venue stays a named gap", () => {
   const rows = JSON.parse(TEXT) as Record<string, unknown>[];
   rows[0] = { ...rows[0], EventLocation: "Somewhere the venue table has never heard of" };
   rows[1] = { ...rows[1], EventTime: null };
+  rows[2] = { ...rows[2], EventDate: "not-a-date" };
   const text = JSON.stringify(rows);
   const parser = parserRecord(text, CONTRACT, artifact(text));
   const bridge = bridgeMeetingFacts({ parser, validator: null, auditor: null, artifact: artifact(text), text, now: NOW });
   const dropped = bridge.refusals.filter((r) => r.code === "NORMALIZER_DROPPED").map((r) => r.recordId).sort();
-  assert.deepEqual(dropped, ["legistar:pima:1802"]);
+  assert.deepEqual(dropped, [`legistar:pima:${rows[2].EventId}`]);
   assert.match(bridge.refusals[0].detail, /unknownVenue 1, unplaceableInTime 1/);
   const times = bridge.facts.filter((f) => f.recordClass === "meeting-times");
   assert.equal(times.length, 17);
+  assert.equal(times.find(f => f.meetingId === "legistar:pima:1802")?.meeting.startPrecision, "DAY");
   const unplaced = times.find((f) => f.meetingId === "legistar:pima:1801")!;
   assert.equal(unplaced.meeting.location, null, "never a guessed venue");
   assert.equal(unplaced.meeting.online, undefined);

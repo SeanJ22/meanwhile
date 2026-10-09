@@ -42,13 +42,19 @@ export type AsyncRunCommand = (
 export const defaultAsyncRunCommand: AsyncRunCommand = (executable, args, options) =>
   new Promise(resolve => {
     const child = spawn(executable, [...args], { cwd: options.cwd, env: options.env ?? process.env, stdio: ["ignore", "pipe", "pipe"] });
-    let stdout = "";
+    const stdout: Buffer[] = [];
+    let stdoutBytes = 0;
+    let overflow = false;
     let stderr = "";
     const timer = setTimeout(() => child.kill("SIGKILL"), options.timeoutMs);
-    child.stdout.on("data", chunk => { stdout = (stdout + String(chunk)).slice(-64_000); });
+    child.stdout.on("data", chunk => {
+      stdoutBytes += chunk.length;
+      if (stdoutBytes > 16 * 1024 * 1024) { overflow = true; child.kill("SIGKILL"); }
+      else stdout.push(Buffer.from(chunk));
+    });
     child.stderr.on("data", chunk => { stderr = (stderr + String(chunk)).slice(-64_000); });
-    child.on("error", error => { clearTimeout(timer); resolve({ status: null, stdout, stderr: `${stderr}${error.message}` }); });
-    child.on("close", status => { clearTimeout(timer); resolve({ status, stdout, stderr }); });
+    child.on("error", error => { clearTimeout(timer); resolve({ status: null, stdout: "", stderr: `${stderr}${error.message}` }); });
+    child.on("close", status => { clearTimeout(timer); resolve({ status: overflow ? null : status, stdout: overflow ? "" : Buffer.concat(stdout).toString("utf8"), stderr: overflow ? `${stderr}\nCOMMAND_STDOUT_LIMIT_EXCEEDED` : stderr }); });
   });
 
 export function stagedReleaseDirectory(root: string, targetSha: string): string {
@@ -101,8 +107,10 @@ async function removeOtherStagedCheckouts(root: string, keep: readonly string[],
   for (const name of readdirSync(base)) {
     const dir = join(base, name);
     if (keep.includes(name) || keep.includes(dir)) continue;
-    await carryBackRuntimeState({ root, directory: dir, run }).catch(() => []);
-    await run("git", ["worktree", "remove", "--force", dir], { cwd: root, timeoutMs: GIT_TIMEOUT_MS });
+    const carried = await carryBackRuntimeState({ root, directory: dir, run });
+    if (carried.failed.length > 0) throw new Error(`STAGED_STATE_CARRY_FAILED:${carried.failed.join(",")}`);
+    const removed = await run("git", ["worktree", "remove", "--force", dir], { cwd: root, timeoutMs: GIT_TIMEOUT_MS });
+    if (removed.status !== 0) throw new Error(`STAGED_CHECKOUT_REMOVE_FAILED:${concise(removed)}`);
     rmSync(dir, { recursive: true, force: true });
   }
   await run("git", ["worktree", "prune"], { cwd: root, timeoutMs: GIT_TIMEOUT_MS });
@@ -134,8 +142,9 @@ export async function stageRuntimeRelease(input: {
   if (stagedReleaseIsReady(input.root, targetSha)) return readStagedRelease(input.root)!;
 
   record("INSTALLING", null, "installing the deployed release in its own checkout while work continues");
-  await removeOtherStagedCheckouts(input.root, [targetSha, ...(input.keep ?? [])], run);
   const fail = (code: string, detail: string): StagedReleaseRecord => record("FAILED", code, detail);
+  try { await removeOtherStagedCheckouts(input.root, [targetSha, ...(input.keep ?? [])], run); }
+  catch (error) { return fail("STAGED_STATE_CARRY_FAILED", error instanceof Error ? error.message : String(error)); }
 
   const fetched = await run("git", ["fetch", "--quiet", "--no-tags", "origin", "main"], { cwd: input.root, timeoutMs: GIT_TIMEOUT_MS });
   if (fetched.status !== 0) return fail("ORIGIN_MAIN_FETCH_FAILED", concise(fetched));
@@ -143,7 +152,10 @@ export async function stageRuntimeRelease(input: {
   if (ancestor.status !== 0) return fail("DEPLOYED_COMMIT_NOT_ON_MAIN", `${targetSha} is not proven to be an ancestor of origin/main`);
 
   if (existsSync(directory)) {
-    await run("git", ["worktree", "remove", "--force", directory], { cwd: input.root, timeoutMs: GIT_TIMEOUT_MS });
+    const carried = await carryBackRuntimeState({ root: input.root, directory, run });
+    if (carried.failed.length) return fail("STAGED_STATE_CARRY_FAILED", carried.failed.join(","));
+    const removed = await run("git", ["worktree", "remove", "--force", directory], { cwd: input.root, timeoutMs: GIT_TIMEOUT_MS });
+    if (removed.status !== 0) return fail("STAGED_CHECKOUT_REMOVE_FAILED", concise(removed));
     rmSync(directory, { recursive: true, force: true });
   }
   mkdirSync(dirname(directory), { recursive: true });

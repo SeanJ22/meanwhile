@@ -18,6 +18,7 @@ import { stateRollAttribution } from "@/lib/sources/legiscan/types";
 import { summaryForBill, summaryPendingForBill } from "@/lib/votes/bill-summaries";
 import { readHistoricalFederalVotesForMember } from "@/lib/votes/history";
 import { mayUseTestFixture } from "@/lib/civic-data/fixture-policy";
+import { readNativeMemberVotes } from "@/lib/state-rollcalls/reader-votes";
 
 /**
  * GET /api/votes?member=congress:<bioguide> — a federal member
@@ -223,6 +224,17 @@ export async function GET(request: Request) {
   const query = new URL(request.url).searchParams;
   const member = query.get("member");
   const historical = query.get("history") === "1";
+  if (member && /^(?:plural:(?:az|nh):|az-legislature:|nh-general-court:)/.test(member)) {
+    try {
+      const read = await readNativeMemberVotes(member);
+      if (read) {
+        if (historical) return Response.json({ member, historyStatus: "UNAVAILABLE", historicalVotes: [], historicalCount: 0,
+          nextHistoricalVersionId: null, historyIssue: "These acquired state votes already retain their available history." });
+        return Response.json({ ...read, holdingStatus: read.status === "IDENTITY_UNRESOLVED" ? "IDENTITY_UNRESOLVED" : "HELD",
+          count: read.votes.length, attribution: read.authorityScope.includes("openstates") ? { text: "Plural / Open States", url: "https://openstates.org/" } : null });
+      }
+    } catch { return Response.json({ member, holdingStatus: "HOLDING_UNAVAILABLE", generatedAt: null, votes: [] }, { status: 503 }); }
+  }
   const officialStateScope = member ? officialStateVoteScopeForOfficeholderId(member) : null;
   const researchStateScope = member ? researchFixtureScopeForMember(member) : null;
   const stateScope = officialStateScope ?? researchStateScope;

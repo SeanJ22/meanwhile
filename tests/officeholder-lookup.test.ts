@@ -106,6 +106,16 @@ test("senators are not duplicated when several divisions share a state", () => {
   assert.equal(senators.length, 2);
 });
 
+test("state senators, governors and territorial delegates never become U.S. Senators", () => {
+  const others = ["State Senator", "Governor", "U.S. Delegate"].map((officeTitle, index) => ({
+    ...person(`other-${index}`, `Other official ${index}`), officeTitle, chamber: "senate",
+  }));
+  const roster: OfficeholderSet = { ...ROSTER, officeholders: [...ROSTER.officeholders, ...others],
+    divisions: [...ROSTER.divisions, ...others.map(holder => ({ officeholderId: holder.id,
+      ocdId: "ocd-division/country:us/state:az", bodyId: null }))] };
+  assert.deepEqual(senatorsFor(indexByDivision([roster]), ["ocd-division/country:us/state:az"]).map(holder => holder.id).sort(), ["s1", "s2"]);
+});
+
 test("a seat with no record resolves to an empty list, never a placeholder", () => {
   // Nobody indexed means "no record yet", never "vacant".
   const index = indexByDivision([]);

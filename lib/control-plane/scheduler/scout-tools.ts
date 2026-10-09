@@ -115,7 +115,6 @@ const WHY_SCHEMA = {
 const URL_SCHEMA = { type: "string", description: "An absolute public http(s) URL." };
 
 export const SCOUT_TOOL_SPECS: readonly ScoutToolSpec[] = [
-  {name:'plural_roster',description:'Read a whole state legislature with the Plural bulk client and parser. Returns people, official links and exact raw CSV with its source URL. No API key needed; prefer this to per-person requests.',input_schema:{type:'object',properties:{state:{type:'string'},rung:RUNG_SCHEMA,why:WHY_SCHEMA},required:['state','rung','why']}},
   {name:'legistar_events',description:'Read a Legistar tenant calendar through the shared paged client within a date window of up to 97 days. Returns event data and raw source responses with links.',input_schema:{type:'object',properties:{tenant:{type:'string'},from:{type:'string'},to:{type:'string'},rung:RUNG_SCHEMA,why:WHY_SCHEMA},required:['tenant','from','to','rung','why']}},
   {
     name: 'run_adapter', description: 'Run installed platform adapters over saved sanitized bytes from this walk or inherited evidence, with no network. Omit adapter to list installed names; supply adapter and artifactId to extract source-attributed data. offset pages long results.',
@@ -1416,7 +1415,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
           hostCounts.set(host, (hostCounts.get(host) ?? 0) + 1);
           if (websiteRequestLimit(websiteSize(url.toString())) !== null) await ctx.spaceOut(host);
         } } satisfies import('./scout-api.ts').SourceApiOptions;
-      const response = name === 'plural_roster' || name === 'legistar_events' ? await readClientSource(name,raw as Record<string,unknown>,options) : await readSourceApi(name,raw,options);
+      const response = name === 'legistar_events' ? await readClientSource(name,raw as Record<string,unknown>,options) : await readSourceApi(name,raw,options);
       acc.requests = response.requests; acc.bytes = response.bytes;
       requestCount += response.requests; bytesFetched += response.bytes;
       const ok = response.status >= 200 && response.status < 300;
@@ -1481,7 +1480,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const parsed = parseInput(input, rungLabel, needsUrl);
     if (!parsed.ok) return refusal(parsed.why);
     if ((SOURCE_API_TOOLS as readonly string[]).includes(tool)) return sourceApi(tool as SourceApiTool, input, parsed.value);
-    if (tool === 'plural_roster' || tool === 'legistar_events') return sourceApi(tool,input,parsed.value);
+    if (tool === 'legistar_events') return sourceApi(tool,input,parsed.value);
     switch (tool) {
       case "read_permission":
         return await readPermission(parsed.value);

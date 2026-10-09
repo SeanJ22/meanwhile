@@ -5,6 +5,8 @@ import {
   type BodySourceWiring,
 } from "../../registry/source-wiring.ts";
 import type { MeetingQuery, OcdId } from "../types.ts";
+import { fetchBodies } from "./client.ts";
+import type { LegistarBody } from "./types.ts";
 
 /**
  * Which Legistar clients this adapter knows. The API cannot tell us the OCD-ID, so the mapping from a
@@ -42,6 +44,8 @@ export interface LegistarVenue {
 export interface LegistarClient {
   /** Exact vendor body identity for a runtime-added calendar. */
   eventBodyId?: number;
+  /** Exact body label already bound by the official calendar door; used only to resolve its native key. */
+  eventBodyName?: string;
   /** The `{client}` path segment at webapi.legistar.com. */
   slug: string;
   /** The division whose government this is. WHERE, not WHO. */
@@ -111,6 +115,7 @@ export function legistarClientsFromWiring(
     return {
       slug,
       ...(row.config.eventBodyId ? { eventBodyId: Number(row.config.eventBodyId) } : {}),
+      ...(row.config.eventBodyName || row.config.insiteBodyName ? { eventBodyName: row.config.eventBodyName || row.config.insiteBodyName } : {}),
       ocdId,
       bodyId: row.bodyId,
       jurisdiction: row.jurisdiction,
@@ -139,8 +144,23 @@ export function venueKey(value: string): string {
   return value.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
-export function findClient(slug: string): LegistarClient | undefined {
-  return LEGISTAR_CLIENTS.find((client) => client.slug === slug);
+export function findClient(slug: string, bodyId?: string): LegistarClient | undefined {
+  const matches = LEGISTAR_CLIENTS.filter(client => client.slug === slug && (bodyId === undefined || client.bodyId === bodyId));
+  return matches.length === 1 ? matches[0] : undefined;
+}
+
+/** A known door's exact official name can recover its native body key; a tenant is never a body. */
+export async function resolveNativeBody(client: LegistarClient, options: { fetchImpl?: typeof fetch; signal?: AbortSignal } = {}): Promise<number> {
+  if (client.eventBodyId !== undefined) {
+    if (!Number.isSafeInteger(client.eventBodyId) || client.eventBodyId <= 0) throw new Error("LEGISTAR_NATIVE_BODY_INVALID");
+    return client.eventBodyId;
+  }
+  if (!client.eventBodyName?.trim()) throw new Error(`LEGISTAR_NATIVE_BODY_UNRESOLVED:${client.bodyId}`);
+  const bodies = await fetchBodies<LegistarBody>(client.slug, options);
+  const matches = bodies.filter(body => body.BodyName.trim() === client.eventBodyName!.trim());
+  if (matches.length !== 1) throw new Error(`LEGISTAR_NATIVE_BODY_AMBIGUOUS:${client.bodyId}`);
+  client.eventBodyId = matches[0].BodyId;
+  return client.eventBodyId;
 }
 
 export function findVenue(

@@ -42,7 +42,7 @@ const US_STATE_CODES = new Set(Object.values(FIPS_TO_STATE).map((entry) => entry
 export function stateOfSubject(subjectId: string): string | null {
   const lower = subjectId.toLowerCase();
   const ballot = /^ballot-([a-z]{2})[-:]/.exec(lower);
-  const lead = ballot ?? /^ocd-division\/country:us\/(?:state|district|territory):([a-z]{2})(?:\/|$)/.exec(lower) ?? /^([a-z]{2})[:-]/.exec(lower);
+  const lead = /^government:us-([a-z]{2}):/.exec(lower) ?? ballot ?? /^ocd-division\/country:us\/(?:state|district|territory):([a-z]{2})(?:\/|$)/.exec(lower) ?? /^([a-z]{2})[:-]/.exec(lower);
   if (lead === null) return null;
   return US_STATE_CODES.has(lead[1]) ? lead[1].toUpperCase() : null;
 }

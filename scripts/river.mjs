@@ -711,7 +711,8 @@ async function test(flags) {
   }
   // A stale .next from an earlier build feeds tsc route types that may no longer exist.
   rmSync(join(ROOT, ".next"), { recursive: true, force: true });
-  spawnSync(process.execPath, ["--experimental-strip-types", "scripts/project-place-references.mts"], { cwd: ROOT, env, stdio: "ignore" });
+  const projection = spawnSync(process.execPath, ["--experimental-strip-types", "scripts/project-place-references.mts"], { cwd: ROOT, env, encoding: "utf8" });
+  if (projection.status !== 0) throw new Refusal(`place-reference generation failed: ${projection.error?.message ?? projection.stderr ?? "no diagnostic"}`, 2);
   const child = spawn(command, args, { cwd: ROOT, env, stdio: ["inherit", "pipe", "pipe"], shell: process.platform === "win32" });
   const tail = [];
   const keep = (sink) => (chunk) => {

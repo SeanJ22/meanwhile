@@ -1,7 +1,7 @@
 import { directoryFor } from "@/lib/officials/directory";
 import { refreshFederalDirectoryFromPromoted } from "@/lib/officials/federal-directory-read-model";
 import { matching, refuse, rejectUnknown } from "@/lib/api/params";
-import { currentMemberOffices, settleMemberOfficesRead } from "@/lib/officials/member-offices-read";
+import { readMemberOffices } from "@/lib/officials/member-offices-read";
 import { memberDirectoryReaches } from "@/lib/officials/member-directory-scope";
 
 /**
@@ -15,17 +15,17 @@ export const dynamic = "force-dynamic";
 
 const FEDERAL_ID = /^congress:[A-Z]\d{6}$/;
 /** A federal member, or a state legislator as the legislature's own roster names them (`<state>-legislature:<id>`). */
-const MEMBER_ID = /^(?:congress:[A-Z]\d{6}|[a-z]+(?:-[a-z]+)+:[A-Za-z0-9_-]+)$/;
+const MEMBER_ID = /^(?:congress:[A-Z]\d{6}|[a-z]+(?:-[a-z]+)+:[A-Za-z0-9_-]+|plural:(?:[a-z]{2}:)?[a-f0-9-]+|ocd-person\/[a-f0-9-]+)$/;
 
 export async function GET(request: Request) {
   const params = new URL(request.url).searchParams;
 
   /* A missing or malformed `member` refuses with a stated reason; the empty answer is reserved for a real member we hold no record of. */
-  const unknown = rejectUnknown(params, ["member"]);
+  const unknown = rejectUnknown(params, ["member", "state"]);
   if (!unknown.ok) return refuse(unknown.error);
 
   const read = matching(params, "member", MEMBER_ID, "refuse");
-  if (!read.ok || !memberDirectoryReaches(String(read.value), "offices")) {
+  if (!read.ok || !memberDirectoryReaches(String(read.value), "offices", params.get("state") ?? undefined)) {
     return refuse(
       `${read.ok ? "member is neither a federal member nor a state legislator" : read.error}. This route serves congress:<bioguide> (e.g. congress:C001133) and state legislators by their legislature's roster id (e.g. nj-legislature:498)`,
     );
@@ -35,13 +35,13 @@ export async function GET(request: Request) {
   // A state legislator: their capitol and district offices, read from Open States onto the
   // legislature's own roster row. No committee source reaches them, so none is claimed.
   if (!FEDERAL_ID.test(member)) {
+    let offices;
     try {
-      await settleMemberOfficesRead();
+      offices = await readMemberOffices(member,params.get("state") ?? undefined);
     } catch {
       return Response.json({ holdingStatus: "HOLDING_UNAVAILABLE", error: "We couldn’t load the office records just now." },
         { status: 503, headers: { "Cache-Control": "private, no-store" } });
     }
-    const offices = currentMemberOffices(member);
     return Response.json({
       source: null,
       districtOffices: offices.map((row) => row.office),

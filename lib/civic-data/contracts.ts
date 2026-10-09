@@ -5,7 +5,9 @@ import {
   OFFICIAL_STATE_LEGISLATOR_TARGETS,
   OFFICIAL_STATE_ROLL_CALL_TARGETS,
 } from "../state-rollcalls/authority.ts";
-import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ID, REGISTRATION_SOURCE_URL, REGISTRATION_TARGETS } from "../registration/publication.ts";
+import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ID, REGISTRATION_TARGETS } from "../registration/publication.ts";
+
+import { PLURAL_STATES, PLURAL_PARSER_VERSION, PLURAL_SOURCE_ID } from "../sources/plural/targets.ts";
 
 const HOUR = 60 * 60 * 1_000;
 const DAY = 24 * HOUR;
@@ -137,16 +139,6 @@ export interface RoutineSourceContract {
   readonly classification: RoutineDataClassification;
   /** Bundled inputs are seed/test material only; never a store-error fallback. */
   readonly bootstrapFixturePaths: readonly string[];
-  /**
-   * Terminal live-proof law. Omitted means two post-deploy source-authenticated
-   * GOOD versions are required. A bounded source whose complete official
-   * horizon is not yet available may instead prove one durable fail-closed
-   * attempt while preserving an exact LKG or an honest not-recorded pointer.
-   */
-  readonly liveAcceptance?: {
-    readonly kind: "AUTHENTICATED_FAIL_CLOSED_ATTEMPT";
-    readonly acceptedStates: readonly ["SOURCE_BLOCKED", "HORIZON_UNRESOLVED"];
-  };
 }
 
 const STORE = "civic_data_candidates+civic_data_candidate_events+civic_data_promotions" as const;
@@ -204,7 +196,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     recordClass: "FEC_FUNDING",
     scope: "federal-supported",
     acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/fetch-fec.mts", "--promote"], requestedUrl: "https://api.open.fec.gov/v1/" },
-    parserNormalizerVersion: "fec-funding/2",
+    parserNormalizerVersion: "fec-funding/3",
     cadence: { description: "weekly", defaultEveryMs: 7 * DAY },
     retry: { afterMs: 6 * HOUR, description: "six hours after a failed attempt" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "fec-open-api" },
@@ -262,7 +254,45 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
       classification: "RUNTIME_CIVIC_DATA",
       bootstrapFixturePaths: [],
     })),
-  ...OFFICIAL_STATE_ROLL_CALL_TARGETS.map((target): RoutineSourceContract => {
+  ...PLURAL_STATES.map((state): RoutineSourceContract => ({
+    id: `openstates-people-${state}`,
+    sourceId: PLURAL_SOURCE_ID,
+    recordClass: "STATE_LEGISLATOR",
+    scope: `US-${state.toUpperCase()}:openstates-people:v1`,
+    acquisitionFailureDomain: `routine-source:${PLURAL_SOURCE_ID}:${state}`,
+    acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/openstates-people-refresh.mts", "--promote", `--state=${state}`] },
+    parserNormalizerVersion: PLURAL_PARSER_VERSION,
+    cadence: { description: "daily known-source people refresh, independent of Sends", defaultEveryMs: DAY },
+    retry: { afterMs: HOUR, description: "one hour after a failed state acquisition; other states remain independent" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: PLURAL_SOURCE_ID },
+    validationContract: CHECKS,
+    canonicalProductionStore: STORE,
+    readerProjection: { id: `${state}-openstates-people`, consumers: ["lib/registry/server.ts", "people", "map", "ballot", "Ask", "Admin"] },
+    lkgBehavior: "Unusable release bytes leave this state's existing people live. Official source facts retain their authority; source-native people do not require local boundary coverage.",
+    autoPromotable: true,
+    classification: "RUNTIME_CIVIC_DATA",
+    bootstrapFixturePaths: [],
+  })),
+  {
+    id: "az-openstates-votes",
+    sourceId: "plural-openstates-votes",
+    recordClass: "STATE_ROLL_CALL",
+    scope: "US-AZ:openstates-votes:v1",
+    acquisitionFailureDomain: "routine-source:plural-openstates-votes",
+    acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/az-votes-refresh.mts", "--promote"] },
+    parserNormalizerVersion: "plural-votes/1",
+    cadence: { description: "daily native Arizona vote refresh from the existing Open States API", defaultEveryMs: DAY },
+    retry: { afterMs: HOUR, description: "one hour after a failed known bill or vote acquisition" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "plural-openstates-votes" },
+    validationContract: CHECKS,
+    canonicalProductionStore: STORE,
+    readerProjection: { id: "az-openstates-native-votes", consumers: ["app/api/votes/route.ts", "lib/ask/votes.ts", "Ask", "map", "ballot", "Admin"] },
+    lkgBehavior: "Each exact native vote merges independently. Partial source coverage makes no absence claim and preserves prior verified votes.",
+    autoPromotable: true,
+    classification: "RUNTIME_CIVIC_DATA",
+    bootstrapFixturePaths: [],
+  },
+  ...OFFICIAL_STATE_ROLL_CALL_TARGETS.filter(target => target.state !== "AZ").map((target): RoutineSourceContract => {
     const fanOut = target.state === "NH";
     return {
       id: target.contractId,
@@ -292,12 +322,6 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
       ...(fanOut ? { fanOut: true as const } : {}),
       classification: "RUNTIME_CIVIC_DATA",
       bootstrapFixturePaths: [],
-      ...(target.state === "AZ" ? {
-        liveAcceptance: {
-          kind: "AUTHENTICATED_FAIL_CLOSED_ATTEMPT" as const,
-          acceptedStates: ["SOURCE_BLOCKED", "HORIZON_UNRESOLVED"] as const,
-        },
-      } : {}),
     };
   }),
   {
@@ -451,20 +475,19 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     scope: target.scope,
     acquisitionFailureDomain: `routine-source:${REGISTRATION_SOURCE_ID}`,
     acquisitionAdapter: {
-      authorityMode: "SINGLE_ROUTE",
+      authorityMode: "REGISTERED_SOURCE_ROUTES",
       command: ["scripts/registration-refresh.mts", "--promote", `--state=${target.state}`],
-      requestedUrl: REGISTRATION_SOURCE_URL,
     },
     parserNormalizerVersion: REGISTRATION_PARSER_VERSION,
-    // Census publishes this file every five years; each check asks conditionally, so an unchanged file is a 304 with no body.
-    cadence: { description: "every 90 days, a conditional request confirms census.gov still serves the pinned Census of Governments vintage", defaultEveryMs: 90 * DAY },
+    // Versioned held bytes are replayed before a conditional publisher check.
+    cadence: { description: "known government and school directory checks every 90 days", defaultEveryMs: 90 * DAY },
     retry: { afterMs: 6 * HOUR, description: "six hours after a failed attempt" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: REGISTRATION_SOURCE_ID },
     validationContract: CHECKS,
     canonicalProductionStore: STORE,
     readerProjection: { id: `${target.state.toLowerCase()}-registration`, consumers: ["lib/registration/reader.ts"] },
     lkgBehavior:
-      `Only the pinned Census of Governments may move ${target.jurisdiction}'s registration. A changed or unavailable Census file leaves that state's prior GOOD registration live and cannot affect another state.`,
+      `Versioned known-source government listings may move ${target.jurisdiction}'s registration after validation. An unavailable or incomplete release leaves that state's prior GOOD registration live and cannot affect another state.`,
     autoPromotable: true,
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],

@@ -7,6 +7,7 @@ import { ScopeAccumulator, parseTab20Header, resolveTab20Columns, type Tab20Spec
 import { buildCbsaScope, parseCbsaDelineation } from "./cbsa.ts";
 import { acquireGrfScope, GRF_CD120 } from "./grf.ts";
 import { censusGeographyUserAgent } from "./http.ts";
+import { establishedApplicability } from "./selection.ts";
 
 const REL = "https://www2.census.gov/geo/docs/maps-data/data/rel2020";
 
@@ -134,6 +135,8 @@ async function buildScope(src: Source, fetchImpl: typeof fetch, signal?: AbortSi
     plan: src.plan,
     zctaTabulation: "2020",
     effectiveFor: src.effectiveFor,
+    applicability: establishedApplicability(src.version),
+    retrievalComplete: true,
     provenance: {
       sourceUrls: [src.url],
       sourceDataset: "CENSUS_TAB20_REL2020",

@@ -149,6 +149,9 @@ export interface GeographyVersion {
   /** The ZCTA tabulation vintage the overlaps were computed against (e.g. "2020"). */
   readonly zctaTabulation: string;
   readonly effectiveFor: string;
+  readonly applicability?: readonly import("./selection.ts").GeographyApplicability[];
+  /** False means some requested source pages or state partitions are missing. */
+  readonly retrievalComplete?: boolean;
   readonly provenance: Provenance;
 }
 

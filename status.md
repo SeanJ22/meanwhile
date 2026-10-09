@@ -1,11 +1,11 @@
 # River status
 
-build_state: RELEASE 22 MERGED AND WEB DEPLOYED. PR #729 is fd8ffd995; post-deploy integrity holds. Runtime adoption and broad automatic baseline imports remain under live verification.
+build_state: RELEASE 22 MERGED AND WEB DEPLOYED; runtime still on prior code during automatic handoff. AF-09 known executive/municipal roles and AF-10 Congress portrait repair in progress for the next combined release.
 worker: codex-acquisition-scale
 provider: Codex
 run_id: acquisition-scale-2026-10-09
 lock: codex-acquisition-scale-2026-10-09
-heartbeat: 2026-10-09T23:36:28Z
+heartbeat: 2026-10-09T23:52:05Z
 
 ## RELEASE 22 — acquisition baseline: PR #729, MERGED AND WEB DEPLOYED
 
@@ -552,3 +552,8 @@ Actions minutes, Netlify builds, runs: not yet measured.
 3. People CA-01: its session denied the verification commands.
 4. Auditors FE-01: its session denied removing the RULING 125 non-local refusals in four harnesses.
 5. Meetings DB-59: River ran the read-only production read instead (see returns/meetings.md). Nothing is needed unless meetings needs more.
+## AF-10 — repair Congress portrait acquisition
+
+- Live projection contains 539 Congress officeholders and zero verified photos. Date-only verification time rejected fresh same-day API captures; a catch-all hid the failure. Regression reproduces the rejection and passes with a post-capture verification clock while preserving original source dates.
+- Replace the fixed calendar slice with the existing bounded worker pool and source deadline; propagate cancellation to API/image transport. Reuse held API evidence and the member's already-held official URL, retain last verified portraits, and persist exact field/source failures. Candidate no-change confirmation must preserve those failures; under focused test before READY.
+- Owners: people_plan for AF-09, finance_impl for AF-10, codex-acquisition-scale for combination, required hosted checks and release. Automatic baseline/serving verification continues independently; no manual Send, budget or pause changes.

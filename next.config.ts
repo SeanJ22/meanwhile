@@ -75,17 +75,6 @@ const nextConfig: NextConfig = {
      * failure than a silent pass and still not one anybody should ship.
      */
     "/api/schema": ["./lib/db/migrations/meta/_journal.json"],
-    // Ask still needs the static geographic indexes used to resolve an area.
-    // Its civic facts come from promoted pointers and are intentionally not
-    // deployment-traced from tracked first-seed JSON.
-    // The ZIP index's shards are named for Ask because its declared ZIP-area
-    // requirement (`lib/holdings/reader-trace.ts`) includes them while its
-    // import graph does not reach the index, so the tracer alone would not.
-    "/api/ask/grounded": [
-      ...staticGeographyTrace,
-      "./data/derived/zip-coverage-tiers-runtime.json",
-      "./data/derived/zip-divisions/*.json",
-    ],
   },
   // The demo is unlisted. Platform-level visibility is the access control;
   // this keeps every route out of search indexes regardless of what a crawler

@@ -5,7 +5,7 @@ worker: codex-acquisition-scale
 provider: Codex
 run_id: acquisition-scale-2026-10-09
 lock: codex-acquisition-scale-2026-10-09
-heartbeat: 2026-10-09T23:25:33Z
+heartbeat: 2026-10-09T23:36:28Z
 
 ## RELEASE 22 — acquisition baseline: PR #729, MERGED AND WEB DEPLOYED
 
@@ -21,6 +21,8 @@ heartbeat: 2026-10-09T23:25:33Z
 - Final hosted run 37995919721 passed: 5,973 affected tests passed, 0 failed, 5 skipped; lint, types, preflight and standalone build green; 16 bundle checks passed. Exact tested checkout 1b001573a5ad99628d3753a5abef80acd9e4e11c promoted to river and river-next. Production imports and reader publication remain to verify after merge/deploy.
 
 - PR #729 merged as fd8ffd995eaf4a86fc731609df58c5d4d2397255, same tree as the tested checkout. Netlify deploy 6ac9772c77979b0008e1d392 ready at 23:23:57Z; post-deploy observer 38004083784 confirmed /api/build at 23:24:03Z, 35/35 migrations HOLDS and durable receipt readback. Runtime adoption and actual broad baseline delivery still pending; no manual Send or control changes.
+
+- AF-09 remains in scope and is now being repaired on stream/acquisition-known-roles (people_plan): the full archive retained executive/municipal YAML but unconditionally skipped every such record, including source-identified governors. Replace that blanket skip and its test with recognized native jurisdiction/role/current-tenure mapping through the existing people/portrait/site/Ask pipeline. Existing officeIdentity already supports the relevant executive/local roles. Historical source-note counts (204 executive / 608 municipalities files) are not current coverage. No new source hunting, service or owner-control change.
 
 ## RELEASE 21 — acquisition-first: MERGED AND WEB DEPLOYED
 

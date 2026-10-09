@@ -1,6 +1,6 @@
 import { getRegistryRuntimeReadModel } from "../registry/runtime-read-model.ts";
 import { readerPersonKeys } from "../identity/reader-person.ts";
-import { portraitBindingMatches, type PortraitVerification } from "./evidence.ts";
+import { portraitBindingMatches, type PortraitVerification } from "./binding.ts";
 
 export interface PersonPhoto {
   url: string;

@@ -35,7 +35,9 @@ import { parseMembers } from "../scripts/nh-gencourt-members.mts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
 import { MemoryRoutineDataStore, type RoutineDataStore } from "../lib/civic-data/store.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "../lib/civic-data/types.ts";
-import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
+import { fecFundingCandidate, normalizedHash } from "../lib/civic-data/candidate-builders.ts";
+import { collectFecCandidate } from "../lib/funding/fec-collector.ts";
+import type { FundingSnapshot } from "../lib/funding/types.ts";
 
 const GOOD_AT = "2026-09-08T12:00:00.000Z";
 const FAILED_AT = "2026-09-08T13:00:00.000Z";
@@ -165,29 +167,38 @@ test("all five single-route adapters can persist a well-formed source-scoped fai
   }
 });
 
-test("a partial FEC aggregate failure with no prior row cannot mint a promoted absence", async () => {
+test("a failed FEC candidate cannot mint an absence or block another candidate's verified totals", async () => {
   const store = new MemoryRoutineDataStore();
-  const recorded = await recordRegisteredSourceAcquisitionFailure({
-    store,
-    contractId: "fec-funding",
-    attemptedAt: FAILED_AT,
-    failure: sourceAcquisitionFailure(
-      "PUBLISHER_UNAVAILABLE",
-      "candidate A answered but candidate B's authoritative totals endpoint timed out",
-    ),
-  });
-  assert.equal(recorded.outcome.promoted, null);
-  assert.equal(recorded.receipt.lastKnownGoodVersion, null);
-  assert.equal(await store.readPromotion("FEC_FUNDING", "federal-supported"), null);
-  assert.deepEqual(
-    (await store.events(recorded.receipt.candidateId)).map((event) => event.state),
-    ["SOURCE_BLOCKED"],
-  );
-  assert.match(
-    readFileSync("scripts/fetch-fec.mts", "utf8"),
-    /fecAcquisitionFailure !== null[\s\S]*failure: fecDeadlineFailure \?\? fecAcquisitionFailure/,
-    "the FEC aggregate must refuse promotion after any branded endpoint failure",
-  );
+  const sourceBodies: string[] = [];
+  const [received, failed] = await Promise.allSettled(["H6AZ01001", "H6AZ01002"].map(candidateId => collectFecCandidate({
+    candidateId, cycle: 2026, targets: [{ targetKey: `fec:${candidateId}`, knownFecCandidateId: candidateId,
+      displayName: `Fixture ${candidateId}`, state: "AZ", office: "H", district: "01", route: "roster" }],
+    observedAt: () => GOOD_AT,
+    read: async path => {
+      if (candidateId === "H6AZ01002") throw sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", "FEC totals timed out.");
+      const results = path.endsWith("/totals/") ? [{ candidate_id: candidateId, cycle: 2026, receipts: 10 }] : [];
+      const page = { results, pagination: { count: results.length, pages: 1 }, sourceObservedAt: GOOD_AT };
+      sourceBodies.push(JSON.stringify(page)); return page;
+    },
+  })));
+  assert.equal(failed.status, "rejected");
+  if (failed.status === "rejected") assert.ok(isSourceAcquisitionFailure(failed.reason));
+  assert.equal(received.status, "fulfilled");
+  if (received.status !== "fulfilled") return;
+  assert.ok(received.value.candidate);
+  const snapshot: FundingSnapshot = { formatVersion: 1, fetchedAt: GOOD_AT, cycle: 2026,
+    candidates: [received.value.candidate], absences: [], secondHop: [],
+    matchReport: { rosterMatched: 1, rosterTotal: 2, ballotMatched: 0, ballotTotal: 0 } };
+  const candidate = fecFundingCandidate({ snapshot, rawBodies: sourceBodies,
+    finalUrl: "https://api.open.fec.gov/v1/candidate/H6AZ01001/totals/?cycle=2026", retrievedAt: GOOD_AT,
+    excludedFacts: [{ code: "FEC_CANDIDATE_RETAINED", detail: "H6AZ01002: source acquisition failed; no prior row or absence invented." }] });
+  const published = await processRegisteredRoutineCandidate(store, "fec-funding", candidate, FAILED_AT);
+  assert.ok(published.promoted, published.candidate.failureDetail ?? "");
+  const held = (await store.readPromotion<FundingSnapshot>("FEC_FUNDING", "federal-supported"))!.payload;
+  assert.deepEqual(held.candidates.map(row => row.fecCandidateId), ["H6AZ01001"]);
+  assert.equal(held.candidates[0].totals.receipts, 10);
+  assert.equal(held.candidates[0].provenance.collectedAt, GOOD_AT);
+  assert.deepEqual(held.absences, []);
 });
 
 test("program/store/protocol exceptions cannot be relabelled as a source attempt", async () => {

@@ -25,12 +25,13 @@ test("PDC · Build Check has no runtime-path cost exception", () => {
   assert.equal(classifyDeploy(["app/page.tsx"]).verdict, "build");
 });
 
-test("data-only and proof-only changes do not trigger application builds", () => {
+test("proof-only changes skip builds while file-backed reader inputs ship with the application", () => {
   assert.equal(classifyDeploy(["docs/rulings.md"]).verdict, "cancel");
-  assert.equal(classifyDeploy(["data/fec/fec-2026.json"]).verdict, "cancel");
+  assert.equal(classifyDeploy(["tests/funding.test.ts", "data/ops/held-proof.json"]).verdict, "cancel");
+  assert.equal(classifyDeploy(["data/fec/fec-2026.json"]).verdict, "build");
   assert.equal(
     classifyDeploy(["data/campaign-finance/filing-regimes.json", "data/fec/fec-2026.json"]).verdict,
-    "cancel",
+    "build",
   );
 });
 

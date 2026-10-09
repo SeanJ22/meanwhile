@@ -1,5 +1,5 @@
 import { currentCandidateProfilesProjection } from "../civic-data/manual-read-models.ts";
-import type { PortraitVerification } from "../photos/evidence.ts";
+import type { PortraitVerification } from "../photos/binding.ts";
 import { officialPhotoForPerson } from "../photos/person.ts";
 
 export interface CandidateCardData {

@@ -17,7 +17,7 @@ import type { BodyRoster, RosterReaderDisposition } from "./body-rosters.ts";
 import { CENSUS_PLACEHOLDER_BODY_ISSUE, CENSUS_PLACEHOLDER_LABELS, isCensusPlaceholderDivision } from "./census-placeholders.ts";
 import type { StatewideExecutive } from "../officials/statewide-executives.ts";
 import { officialStateVoteScopeForOfficeholderId } from "../state-rollcalls/authority.ts";
-import { portraitBindingMatches } from "../photos/evidence.ts";
+import { portraitBindingMatches } from "../photos/binding.ts";
 
 export const REGISTRY_RUNTIME_SOURCE_ID = "registry-reviewed-bindings" as const;
 export const REGISTRY_RUNTIME_SCOPE = "US:reader-registry-runtime-bindings" as const;
@@ -32,7 +32,7 @@ export interface OfficialPhotoManifestRow {
   readonly license: string | null;
   readonly attribution?: string | null;
   readonly collectedAt?: string | null;
-  readonly verification?: import("../photos/evidence.ts").PortraitVerification;
+  readonly verification?: import("../photos/binding.ts").PortraitVerification;
 }
 
 export interface OfficialCandidacyBridgeRow {

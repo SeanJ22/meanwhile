@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import test from "node:test";
 import { applyManualEdit, checkDoorDraft, type DoorDraft } from "../lib/doors/registry.ts";
 import { readFinanceDoor, type FinanceDoorKind } from "../lib/funding/finance-door-reader.ts";
+import { zip as createZip } from "../scripts/xlsx.mjs";
 
 const at = "2026-10-04T08:00:00.000Z";
 const map = { committeeId: "Filer", registeredName: "Committee", candidateName: "Candidate", office: "Office", electionYear: "Cycle", reportId: "Report", period: "Period", receipts: "Raised", expenditures: "Spent" };
@@ -19,12 +20,7 @@ const door = (kind: FinanceDoorKind, fieldMap = map) => edit(null, {
 });
 
 function zip(name: string, data: Buffer): Buffer {
-  const filename = Buffer.from(name), local = Buffer.alloc(30), central = Buffer.alloc(46), end = Buffer.alloc(22);
-  local.writeUInt32LE(0x04034b50); local.writeUInt16LE(20, 4); local.writeUInt32LE(data.length, 18); local.writeUInt32LE(data.length, 22); local.writeUInt16LE(filename.length, 26);
-  central.writeUInt32LE(0x02014b50); central.writeUInt16LE(20, 6); central.writeUInt32LE(data.length, 20); central.writeUInt32LE(data.length, 24); central.writeUInt16LE(filename.length, 28);
-  const first = Buffer.concat([local, filename, data]), directory = Buffer.concat([central, filename]);
-  end.writeUInt32LE(0x06054b50); end.writeUInt16LE(1, 8); end.writeUInt16LE(1, 10); end.writeUInt32LE(directory.length, 12); end.writeUInt32LE(first.length, 16);
-  return Buffer.concat([first, directory, end]);
+  return createZip([{ name, data }], "2026-10-04");
 }
 
 test("CSV export, search API and bulk archive readers retain the same filed amounts and raw capture hash", () => {

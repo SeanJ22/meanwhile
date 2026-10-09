@@ -59,7 +59,8 @@ function harness() {
     const url = String(raw); requested.push(url);
     assert.equal(new Headers(init?.headers).get("X-API-KEY"), "held-test-key");
     assert.doesNotMatch(url, /key|token|secret/i);
-    if (!new URL(url).pathname.startsWith("/bills/")) return new Response(JSON.stringify({ results: [1, 2].map(value => ({ id: native("bill", value), jurisdiction: { id: AZ_PLURAL_JURISDICTION } })) }));
+    const endpoint = new URL(url);
+    if (!endpoint.pathname.startsWith("/bills/")) return new Response(JSON.stringify({ results: [1, 2].map(value => ({ id: native("bill", value), jurisdiction: { id: AZ_PLURAL_JURISDICTION } })) }));
     const value = url.includes("000000000001") ? 1 : 2;
     if (failFirst && value === 1) return new Response("unavailable", { status: 503 });
     return new Response(evidence(value).body);

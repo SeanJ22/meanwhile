@@ -36,6 +36,7 @@ import { autoCrosswalkReviewerId, reviewDiscoveryWalk, type HeldBytes } from "..
 import { deriveWiringDecisions, wiringRowFor } from "../lib/control-plane/discovery/derived-wiring.ts";
 import { readHeldCalendars, type HeldCalendarReading } from "../lib/control-plane/discovery/derived-wiring-reading.ts";
 import { readFreeDiscoveryWalks } from "../lib/control-plane/discovery/free-walks.ts";
+import { reviewedBodyForGovernment } from "../lib/control-plane/discovery/reviewed-body.ts";
 import { discoveryNeedsToWalk, runMeetingsDiscovery, walkableByFreeWalk } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
 import { applyDispatchWork, dispatchWorkTarget, planDispatchWork } from "../lib/control-plane/expansion/dispatch-work.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
@@ -228,13 +229,23 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
   if (reg.kind !== "PROMOTED") return;
   const regInput: DerivedInputRef = { kind: "PROMOTED_VERSION", recordClass: "REGISTRATION", scope: reg.metadata.scope, versionId: reg.metadata.versionId!, readModelSha256: sha(reg.value), promotedAt: reg.metadata.promotedAt! };
   const model = reg.value as RegistrationReadModel;
-  /* A government's name is its division's label, as the runner's child reads it. */
-  const labels = new Map(model.divisions.map((d) => [d.ocdId, d.label] as const));
+  assert.equal(model.bodies.length, 0, "government inventory does not invent governing bodies");
+  const reference = loadRegistrationReference(ROOT, "OH");
+  const reviewedBodies = [
+    { id: COUNTY_BODY, ocdId: "ocd-division/country:us/state:oh/county:franklin", bodyClass: "GOVERNING",
+      censusId: reference.reference.governments.find(row => row[1] === COUNTY)![0] },
+    { id: "ocd-division/country:us/state:oh/place:franklin#governing", ocdId: "ocd-division/country:us/state:oh/place:franklin", bodyClass: "GOVERNING",
+      censusId: reference.reference.governments.find(row => row[1] === CITY)![0] },
+  ];
+  // Separately reviewed identities are backed by the captured official pages.
+  // A geography or a Census listing alone cannot establish either board.
   const registeredFor = (jurisdictionId: string) => {
-    const body = model.bodies.find((b) => b.jurisdictionId === jurisdictionId);
-    return body === undefined
+    const page = [...vault.values()].find(held => held.text === (jurisdictionId === COUNTY ? COUNTY_HOME : CITY_HOME));
+    assert.ok(page && /Board of Commissioners|City Council/.test(page.text));
+    const body = reviewedBodyForGovernment(reference, jurisdictionId, reviewedBodies);
+    return body === null
       ? { notRegistered: `no body for ${jurisdictionId}` }
-      : { bodyId: body.id, ocdId: body.ocdId, publishingOrg: labels.get(body.ocdId) ?? jurisdictionId, input: regInput };
+      : { ...body, input: page.evidence };
   };
 
   /* 4. The runner's reviewer, one walk at a time. */
@@ -258,7 +269,7 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
   const crosswalkCandidate = derivedCrosswalkCandidate(crosswalkPlan, [], T_CROSSWALK);
   const crosswalkOutcome = await processRegisteredRoutineCandidate(store, "meeting-body-crosswalk-derived", crosswalkCandidate, T_CROSSWALK);
   assert.equal(crosswalkOutcome.candidate.state, "PROMOTED", `${crosswalkOutcome.candidate.failureCode ?? ""} ${crosswalkOutcome.candidate.failureDetail ?? ""}`);
-  assert.equal(crosswalkOutcome.readerReadback?.status, "PASS");
+  assert.equal(crosswalkOutcome.readerReadback?.status, "PASS", JSON.stringify(crosswalkOutcome.readerReadback));
   /* The held city is on the version's durable record, with its dead end: what Admin's held records show. */
   const heldFact = crosswalkOutcome.candidate.receipt?.excludedFacts.find((f) => f.key === cityHold.key);
   assert.equal(heldFact?.code, "AUTO_CROSSWALK_HELD_AMBIGUOUS_TITLE");

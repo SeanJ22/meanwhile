@@ -19,6 +19,7 @@ import {
   type BallotAuxiliaryFamily,
 } from "@/lib/ballot/auxiliary-preloads";
 import { divisionIdsForZipArea } from "@/lib/ballot/zip-divisions";
+import { phoenixToday } from "@/lib/ballot/dated-events";
 import { needsPill, zipCertainty } from "@/lib/geo/zip-certainty";
 import { analysisForContest } from "@/lib/ballot/analyses";
 import { orderMeasures } from "@/lib/ballot/measure-order";
@@ -479,7 +480,7 @@ async function BallotBattlecard({
         offices:
           !officeholdersAvailable ? (
             unavailableHolding("officeholder-directory")
-          ) : recordHolder && memberDirectoryReaches(recordHolder.id, "offices") ? (
+          ) : recordHolder && memberDirectoryReaches(recordHolder.id, "offices", recordHolder.state) ? (
             <MemberOfficesContent holder={recordHolder} />
           ) : null,
         money: federal ? (
@@ -611,7 +612,7 @@ export default async function BallotPage({
     for (const { state, source } of await readerBallotSourcesForDivisions(ocdIds)) {
       try {
         const candidate = source.normalize(await source.fetch());
-        const selection = { purpose: "election" as const, asOf: new Date().toISOString().slice(0, 10), electionDate: candidate.election.date };
+        const selection = { purpose: "election" as const, asOf: phoenixToday(), electionDate: candidate.election.date };
         const electionIds = await divisionIdsForZipArea(zip, pointDivisionIds, selection);
         const hit = contestsForDivisions(candidate, electionIds);
         if (hit.contests.length > 0 || hit.absences.length > 0) {

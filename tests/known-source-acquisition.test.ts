@@ -5,6 +5,7 @@ import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { acquireKnownRelease, type KnownRelease } from "../lib/sources/known-release.ts";
 import { RepositoryLockHeld, type LockManager } from "../lib/control-plane/repository/types.ts";
+import { isSourceAcquisitionFailure } from "../lib/civic-data/source-acquisition-error.ts";
 
 const T0 = "2026-10-01T00:00:00.000Z", T1 = "2026-10-03T00:00:00.000Z", DAY = 86_400_000;
 const url = "https://publisher.example/releases/current.csv";
@@ -92,4 +93,40 @@ test("a provider Retry-After applies to the next native request without sleeping
   assert.ok((await h.store.list("project/")).every(key => key.includes("/retry/")), "a refusal has no source body or good-release pointer");
   h.time(T1); h.response(() => new Response("id,name\n1,A\n"));
   await acquireKnownRelease(h.options); assert.equal(h.requests(), 2);
+});
+test("publisher request and body failures are classified without making a source release current", async () => {
+  const h = harness();
+  await assert.rejects(acquireKnownRelease({ ...h.options, fetchImpl: async () => { throw new TypeError("socket unavailable"); } }), error => {
+    assert.ok(isSourceAcquisitionFailure(error)); assert.equal(error.code, "PUBLISHER_UNAVAILABLE"); return true;
+  });
+  h.response(() => new Response(new ReadableStream({ start(controller) { controller.error(new Error("broken publisher stream")); } })));
+  await assert.rejects(acquireKnownRelease(h.options), error => {
+    assert.ok(isSourceAcquisitionFailure(error)); assert.equal(error.code, "PUBLISHER_RESPONSE_REFUSED"); return true;
+  });
+  h.response(() => new Response("refused", { status: 403 }));
+  await assert.rejects(acquireKnownRelease(h.options), error => {
+    assert.ok(isSourceAcquisitionFailure(error)); assert.equal(error.code, "PUBLISHER_RESPONSE_REFUSED");
+    assert.match(error.message, /KNOWN_SOURCE_HTTP_403/); return true;
+  });
+  assert.deepEqual(await h.store.list("project/"), []);
+});
+test("vault, index, lock, and parser program failures escape unchanged rather than blaming the publisher", async () => {
+  for (const operation of ["get", "head", "put"] as const) {
+    const h = harness(), problem = new Error(`fixture vault ${operation} failed`);
+    Object.defineProperty(h.store, operation, { value: async () => { throw problem; } });
+    await assert.rejects(acquireKnownRelease(h.options), error => {
+      assert.equal(error, problem); assert.equal(isSourceAcquisitionFailure(error), false); return true;
+    });
+  }
+  const h = harness(), problem = new TypeError("fixture parser bug");
+  await assert.rejects(acquireKnownRelease({ ...h.options, validate: () => { throw problem; } }), error => error === problem);
+  await assert.rejects(acquireKnownRelease({ ...h.options, locks: { withLock: async () => { throw problem; } } }), error => error === problem);
+  await acquireKnownRelease(h.options);
+  const indexKey = (await h.store.list("project/")).find(key => key.endsWith("/manifest.json"))!;
+  const originalGet = h.store.get.bind(h.store);
+  h.store.get = async key => {
+    const object = await originalGet(key);
+    return object && key === indexKey ? { ...object, bytes: new TextEncoder().encode("broken index JSON") } : object;
+  };
+  await assert.rejects(acquireKnownRelease(h.options), error => error instanceof SyntaxError && !isSourceAcquisitionFailure(error));
 });

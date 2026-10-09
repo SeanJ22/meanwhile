@@ -98,7 +98,7 @@ export function registrationReferenceFromRelease(prior: LoadedReference, release
       const website = value("WEB_ADDRESS", "WEBSITE");
       listings.push({ id, aliases: [jurisdictionId], jurisdictionId, state, name,
         kind: type === "DEPENDENT SCHOOL SYSTEM" ? "DEPENDENT_SCHOOL_SYSTEM" : "GOVERNMENT", governmentClass: type,
-        nativeIds: { census_pid6: pid, census_gidid: value("GIDID", "CENSUS_ID_GIDID") }, status: value("IS_ACTIVE") || null, sourceVintage: release.releaseId,
+        nativeIds: { census_pid6: pid }, status: value("IS_ACTIVE") || null, sourceVintage: release.releaseId,
         website: website ? (/^https?:\/\//i.test(website) ? website : `http://${website}`) : null,
         // COG mailing/title fields can name a private addressee; they are not office contacts.
         officePhone: null, officeAddress: null, countyFips: /^\d{2}$/.test(fips) && /^\d{3}$/.test(county) && county !== "000" ? fips + county : null,

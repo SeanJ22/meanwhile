@@ -223,7 +223,8 @@ test("failed publisher refresh retains the last acquired capture for unfinished 
   const parsing = await nextAutonomousOperation(h.runtime, h.item.id);
   assert.equal(parsing.task?.workerTask?.role, "PARSER", "a due refresh must not starve the captured bytes' unfinished downstream stages");
   assert.equal(parsing.task?.workerTask?.artifactId, originalArtifact.artifactId);
-  assert.equal((await dispatchWorkerTask(h.runtime, parsing.task!)).outcome, "WORKED");
+  const parsed = await dispatchWorkerTask(h.runtime, parsing.task!);
+  assert.equal(parsed.outcome, "WORKED", parsed.detail);
   for (const expectedRole of ["VALIDATOR"]) {
     const next = await nextAutonomousOperation(h.runtime, h.item.id);
     assert.equal(next.task?.workerTask?.role, expectedRole);
@@ -234,7 +235,14 @@ test("failed publisher refresh retains the last acquired capture for unfinished 
   assert.equal((await dispatchWorkerTask(h.runtime, refresh.task!)).outcome, "WORKED");
   const failure = (await h.repos.workerResults.readAll()).find(record => record.routeTaskId === refresh.task!.id)!;
   assert.equal(failure.result.verdict, "BLOCKED");
-  assert.equal((await nextAutonomousOperation(h.runtime, h.item.id)).action, "SCOUT", "a successful retained extraction never clears the latest source failure");
+  const waiting = await nextAutonomousOperation(h.runtime, h.item.id);
+  assert.equal(waiting.action, "BLOCKED", "a successful retained extraction never clears the latest source failure");
+  const retryAt = /plain code at (\d{4}-\d{2}-\d{2}T[\d:.]+Z)/.exec(waiting.reason)?.[1];
+  assert.ok(retryAt, "a passing outage keeps its scheduled retry without paying for source discovery");
+  h.advanceTo(new Date(Date.parse(retryAt) + 1).toISOString());
+  const retry = await nextAutonomousOperation(h.runtime, h.item.id);
+  assert.equal(retry.action, "WORKER");
+  assert.equal(retry.task?.workerTask?.role, "ACQUIRER", "the known publisher is retried after its backoff");
   assert.equal((await h.runtime.readEvidence(originalArtifact.artifactId)).text, originalText);
   assert.equal((await h.repos.workerResults.readAll()).find(record => record.id === acquired.id)?.endedAt, acquired.endedAt);
   assert.equal((await h.repos.workerResults.readAll()).find(record => record.id === failure.id)?.result.verdict, "BLOCKED");

@@ -1,7 +1,8 @@
 import { assertPublicUrl } from "../hunt/egress.ts";
 import { acquireKnownRelease } from "../sources/known-release.ts";
 import { normalizePortrait, PORTRAIT_ACCEPT, MAX_PORTRAIT_BYTES, PORTRAIT_DECODER_VERSION } from "./decode.ts";
-import { portraitHash, verifyPortraitSources, type PortraitKeyPrefix, type PortraitSources } from "./evidence.ts";
+import { portraitHash, verifyPortraitSources, type PortraitSources } from "./evidence.ts";
+import type { PortraitKeyPrefix } from "./binding.ts";
 import type { OfficeholderPhoto } from "../officials/types.ts";
 
 export interface PortraitRuntime {

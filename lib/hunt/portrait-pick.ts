@@ -63,7 +63,11 @@ const FURNITURE =
  * `\b` is not enough, since `_` is a word character (`Name_LOGOS.ai.png`).
  */
 function words(s: string): string {
-  return s.toLowerCase().replace(/[^a-z0-9]+/g, " ");
+  return splitCaseBoundaries(s).toLowerCase().replace(/[^a-z0-9]+/g, " ");
+}
+
+function splitCaseBoundaries(value: string): string {
+  return value.replace(/([\p{Ll}\p{N}])(\p{Lu})/gu, "$1 $2");
 }
 
 /** Does the page's own alt text or filename call this furniture? */
@@ -92,7 +96,7 @@ function imageHaystack(img: PageImage): string {
     /* keep the raw */
   }
   const file = src.split(/[?#]/)[0].split("/").pop() ?? "";
-  return `${img.alt} ${file}`.toLowerCase();
+  return `${img.alt} ${file}`;
 }
 
 /**
@@ -101,7 +105,8 @@ function imageHaystack(img: PageImage): string {
  * `MIN_PORTRAIT_EDGE`; a decoding caller walks this list.
  */
 export function pickPortraits(name: string, all: readonly PageImage[]): PickedPortrait[] {
-  const normalized = (value: string) => value.normalize("NFKC").toLocaleLowerCase("en-US").replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+  const normalized = (value: string) => splitCaseBoundaries(value.normalize("NFKC"))
+    .toLocaleLowerCase("en-US").replace(/[^\p{L}\p{N}]+/gu, " ").trim();
   const want = normalized(name);
   if (!want) return [];
   const out: PickedPortrait[] = [];

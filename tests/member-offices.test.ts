@@ -11,7 +11,7 @@ import { routineTaskSelection } from "../lib/civic-data/runner.ts";
 import { promotedEdgePointers } from "../lib/civic-data/promoted-edge-publication.ts";
 import { READER_BALLOT_AUTHORITY_FAMILIES } from "../lib/meetings/edge-serving.ts";
 import type { Officeholder, OfficeholderDivision } from "../lib/officials/types.ts";
-import { officeRecordsForHolder, memberOfficeRecords, openStatesUrl, OPEN_STATES_ORG, type MemberOfficeRecord } from "../lib/officials/member-offices.ts";
+import { officeRecordsForHolder, openStatesUrl, OPEN_STATES_ORG, type MemberOfficeRecord } from "../lib/officials/member-offices.ts";
 import { publishMemberOffices } from "../lib/officials/member-offices-publication.ts";
 import { currentMemberOffices, refreshMemberOfficesFromPromoted } from "../lib/officials/member-offices-read.ts";
 import { officialStateLegislatorTargetByScope, officialStateOfficeholderId } from "../lib/state-rollcalls/authority.ts";
@@ -21,27 +21,12 @@ const T0 = "2026-09-27T12:00:00.000Z";
 const T1 = "2026-09-28T12:00:00.000Z";
 const T2 = "2026-09-29T12:00:00.000Z";
 
-const HEADER = "id,name,current_party,current_district,current_chamber,given_name,family_name,gender,email,biography,birth_date,death_date,image,links,sources,capitol_address,capitol_voice,capitol_fax,district_address,district_voice,district_fax";
-function csvRow(input: { id: string; name: string; district: string; chamber: "upper" | "lower"; capitol?: string; capitolVoice?: string; district_address?: string; districtVoice?: string }): string {
-  const cell = (value: string) => `"${value.replace(/"/g, '""')}"`;
-  return [input.id, input.name, "Democratic", input.district, input.chamber, "", "", "", "", "", "", "", "", "", "",
-    input.capitol ?? "", input.capitolVoice ?? "", "", input.district_address ?? "", input.districtVoice ?? "", ""].map(cell).join(",");
-}
-
 function holder(id: string, name: string, chamber: "upper" | "lower", phone: string | null = null): Officeholder {
   return { id, name, officeTitle: chamber === "lower" ? "State Representative" : "State Senator", level: "STATE", termStart: "2025-01-01",
     termEnd: "2026-12-31", birthDate: null, partyLabel: null, websiteUrl: null, contactFormUrl: null, phone, email: null, campaignUrl: null,
     photo: null, state: "AZ", chamber, provenance: { sourceUrl: "https://www.azleg.gov/MemberRoster/", sourceOrg: "Arizona State Legislature", collectedAt: T0, verifiedAt: T0 } } as unknown as Officeholder;
 }
 
-test("member offices require native person identity, never a district and family name",()=>{
-  const one={...holder("az-legislature:1","Ana Lopez","lower","602-926-1111"),nativeIds:{"ocd-person":["ocd-person/1"]}};
-  const csv=[HEADER,csvRow({id:"ocd-person/1",name:"Ana Lopez",district:"5",chamber:"lower",capitol:"1700 W Washington St, Phoenix, AZ 85007",capitolVoice:"602-900-0000"}),csvRow({id:"ocd-person/2",name:"Anna Lopez",district:"5",chamber:"lower",capitolVoice:"602-900-0001"})].join("\n");
-  const result=memberOfficeRecords({state:"AZ",csv,collectedAt:T0,officials:{officeholders:[one],divisions:[]}});
-  assert.equal(result.records.length,1);assert.equal(result.records[0].office.phone,"602-926-1111");
-  assert.equal(result.records[0].fieldSources?.phone.sourceUrl,one.provenance.sourceUrl);
-  assert.deepEqual(result.unmatched,["ocd-person/2"]);
-});
 test("all distinct native district offices survive and a missing phone does not hide an address",()=>{
   const person={...holder("plural:az:a","Ana Lopez","lower"),offices:[{name:"district",address:"One Main St",sourceUrl:openStatesUrl("AZ"),collectedAt:T0},{name:"district",address:"Two Main St",phone:"520-900-0000",sourceUrl:openStatesUrl("AZ"),collectedAt:T0}]};
   const offices=officeRecordsForHolder(person);assert.equal(offices.length,2);assert.notEqual(offices[0].id,offices[1].id);assert.equal(offices[0].office.phone,null);

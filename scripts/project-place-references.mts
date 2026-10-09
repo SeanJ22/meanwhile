@@ -47,7 +47,7 @@ for (const file of ["census_govt_units_2022.csv", "census_govt_units_2022_depend
     shard.listings!.push({
       id: governmentNativeId(postal, "cog", row[pid]), aliases: [], jurisdictionId: null, state: postal,
       name: value(row, "unit_name"), kind: type === "DEPENDENT SCHOOL SYSTEM" ? "DEPENDENT_SCHOOL_SYSTEM" : "GOVERNMENT",
-      governmentClass: type, nativeIds: { census_pid6: row[pid], census_gidid: value(row, "census_id_gidid") }, status: value(row, "is_active") || null, sourceVintage: "2022 Census of Governments",
+      governmentClass: type, nativeIds: { census_pid6: row[pid] }, status: value(row, "is_active") || null, sourceVintage: "2022 Census of Governments",
       website: website ? (/^https?:\/\//i.test(website) ? website : `http://${website}`) : null,
       officePhone: null, officeAddress: null,
       countyFips: /^\d{2}$/.test(value(row, "fips_state")) && /^\d{3}$/.test(value(row, "fips_county")) ? value(row, "fips_state") + value(row, "fips_county") : null,
@@ -80,6 +80,13 @@ for (const file of ["census_govt_units_2022.csv", "census_govt_units_2022_depend
 }
 mkdirSync(out, { recursive: true });
 for (const shard of shards.values()) {
+  // Retain the exact previously held identity mapping for existing reviewed
+  // registry callers. A saved alias does not establish a service boundary.
+  const reference = JSON.parse(readFileSync(join(root, "data", "derived", "registration", `${shard.state.toLowerCase()}.json`), "utf8")) as {
+    governments: readonly (readonly [pid6: string, jurisdictionId: string, ...rest: unknown[]])[];
+  };
+  const aliases = new Map(reference.governments.map(([pid6, jurisdictionId]) => [pid6, jurisdictionId]));
+  shard.units = shard.units.map(unit => ({ ...unit, ...(aliases.has(unit.pid6) ? { aliases: [aliases.get(unit.pid6)!] } : {}) }));
   const adjacent = new Map<string, Set<string>>();
   for (const { edges } of Object.values(shard.zips)) {
     const keys = edges.map(edge => `${edge.layer}:${edge.id}`);

@@ -4,12 +4,10 @@
  * confirms is `official: false` and stays open as standing work.
  */
 import type { DirectoryOffice } from "./directory.ts";
-import type { Officeholder, OfficeholderDivision } from "./types.ts";
-import { rowsToPeople, normalize, type PluralPerson } from "../sources/plural/index.ts";
+import type { Officeholder } from "./types.ts";
 
 export type MemberOfficeKind = "CAPITOL" | "DISTRICT";
 import { createHash } from "node:crypto";
-import { sameNativePerson } from "./people-identity.ts";
 
 export interface MemberOfficeRecord {
   readonly id: string;
@@ -36,31 +34,6 @@ export function parseOfficeAddress(text: string): Pick<DirectoryOffice, "address
   const match = /^(.*?),\s*([^,]+?),\s*([A-Z]{2})\.?\s+(\d{5}(?:-\d{4})?)$/.exec(clean);
   if (!match) return { address: clean || null, city: null, state: null, zip: null };
   return { address: match[1].trim(), city: match[2].trim(), state: match[3], zip: match[4] };
-}
-
-/** Join only declared person identifiers. District and surname are never person identity. */
-export function memberOfficeRecords(input: {
-  readonly state: string;
-  readonly csv?: string;
-  readonly people?: readonly PluralPerson[];
-  readonly collectedAt: string;
-  readonly officials: { readonly officeholders: readonly Officeholder[]; readonly divisions: readonly OfficeholderDivision[] };
-}): { readonly records: readonly MemberOfficeRecord[]; readonly unmatched: readonly string[] } {
-  const people = input.people ?? (input.csv ? rowsToPeople(input.csv,input.state.toLowerCase()) : []);
-  const references = normalize([...people],new Map(),input.collectedAt,input.state.toLowerCase()).officeholders;
-  const records: MemberOfficeRecord[] = [], unmatched: string[] = [];
-  for (const person of people) {
-    const reference = references.find(row => row.nativeIds?.["ocd-person"]?.includes(person.id));
-    const candidates = reference ? input.officials.officeholders.filter(row => sameNativePerson(row,reference)) : [];
-    if (candidates.length !== 1) { unmatched.push(person.id); continue; }
-    const holder = candidates[0]!;
-    const offices = person.offices ?? [
-      {name:"capitol",address:person.capitol_address,voice:person.capitol_voice},
-      {name:"district",address:person.district_address,voice:person.district_voice},
-    ];
-    records.push(...officeRecordsForHolder({...holder,offices:offices.map(office=>({name:office.name,address:office.address,phone:office.voice,sourceUrl:person.sourceUrl ?? openStatesUrl(input.state),collectedAt:input.collectedAt}))}));
-  }
-  return {records,unmatched};
 }
 
 /** Rich native office arrays retain distinct district offices and per-field attribution. */

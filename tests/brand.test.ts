@@ -4,6 +4,11 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { PRODUCT_NAME, titleFor } from "../lib/brand.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { sourceUserAgent } from "../lib/sources/http.ts";
+import { acquireKnownRelease } from "../lib/sources/known-release.ts";
+import { fetchBodies } from "../lib/sources/legistar/client.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 const OLD_NAME = /We[ -]the[ -]People/i;
@@ -92,27 +97,22 @@ test("the repo's off-site identity is deliberately unchanged", () => {
   }
 });
 
-test("the adapters that lost their copy still SEND the repo-derived token", () => {
-  /* A public body must find the same identifier in its logs, so the adapters must still reach the shared token. */
-  for (const path of [
-    join("lib", "sources", "legistar", "client.ts"),
-    join("lib", "sources", "plural", "index.ts"),
-  ]) {
-    const source = readFileSync(join(ROOT, path), "utf8");
-    assert.match(
-      source,
-      /import \{[^}]*sourceUserAgent[^}]*\} from "\.\.?\/(?:\.\.\/)?http\.ts"/,
-      `${path} does not import the shared User-Agent`,
-    );
-    assert.match(
-      source,
-      /"User-Agent": sourceUserAgent\(\)/,
-      `${path} imports the shared User-Agent and does not send it`,
-    );
-    assert.doesNotMatch(
-      source,
-      /function userAgent\(\)/,
-      `${path} has grown its own copy back — the shared User-Agent replaced four copies`,
-    );
+test("Legistar and the shared known-release transport send the repo-derived token", async () => {
+  const requests: { url: string; userAgent: string | null }[] = [];
+  const fetchImpl: typeof fetch = async (url, init) => {
+    requests.push({ url: String(url), userAgent: new Headers(init?.headers).get("user-agent") });
+    return new Response("[]", { headers: { "content-type": "application/json" } });
+  };
+  await fetchBodies("fixture", { fetchImpl });
+  await acquireKnownRelease({
+    sourceId: "plural-openstates", releaseId: "current", parserVersion: "plural-roster/2",
+    url: "https://publisher.example/people.json", signal: AbortSignal.timeout(10_000),
+    maxBytes: 1024, checkAfterMs: 86_400_000, fetchImpl,
+    store: new MemoryEvidenceStore(), locks: createMemoryRepositories().locks,
+  });
+  assert.equal(requests.length, 2, "both actual request paths must be exercised");
+  for (const request of requests) {
+    assert.equal(request.userAgent, sourceUserAgent(), `${request.url} must send the shared source identity`);
+    assert.match(request.userAgent!, /we-the-people/);
   }
 });

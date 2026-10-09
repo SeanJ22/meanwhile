@@ -95,7 +95,14 @@ async function publishEdge(withPromoted: boolean, overrides: typeof PROMOTED = {
     sourceThrough: snapshot.generatedAt,
     retrievedAt: snapshot.generatedAt,
     promotedThrough: snapshot.generatedAt,
-  }, { store: new LocalFileArtifactStore(dir), now: new Date().toISOString(), authority });
+  }, { store: new LocalFileArtifactStore(dir), now: new Date().toISOString(), authority,
+    registrations: {},
+    stateLegislators: { "US-AZ": { versionId: "edge-test:ask:az-people", value: {
+      formatVersion: 1, sourceId: "plural-openstates", jurisdiction: "US-AZ", term: "2025-2026",
+      generatedAt: "2026-09-25T00:00:00.000Z",
+      roster: { formatVersion: 1, generatedAt: "2026-09-25", source: "edge-test", officeholders: [], divisions: [] },
+    } } },
+  });
   assert.equal(result.status, "PUBLISHED", JSON.stringify(result));
   return dir;
 }

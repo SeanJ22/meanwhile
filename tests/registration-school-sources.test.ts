@@ -52,4 +52,6 @@ test("F33 uses a reversible native crosswalk and leaves ambiguous or unmatched g
   assert.equal(joined[1].nativeIds.nces_leaid, undefined);
   assert.equal(joined[2].nativeIds.nces_leaid, undefined);
   assert.deepEqual(joined[0].bodyIds, []);
+  assert.throws(() => applyF33NativeCrosswalk(rows, release("CENSUSID,LEAID\n123456789,3900001\n")),
+    /NCES_F33_NATIVE_CROSSWALK_UNAVAILABLE/, "a generic historical Census code is never assumed to be PID6");
 });

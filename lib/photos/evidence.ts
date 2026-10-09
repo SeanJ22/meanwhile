@@ -1,3 +1,4 @@
+import { portraitPublisher, type PortraitVerification } from "./binding.ts";
 import { createHash } from "node:crypto";
 import { imagesIn, pickPortraits } from "../hunt/portrait-pick.ts";
 import { parseCsv } from "../sources/plural/index.ts";
@@ -36,36 +37,6 @@ export interface PortraitSources {
   readonly campaign?: NonNullable<Section3Page["campaign"]> & { readonly url: string };
 }
 
-/** Stored portraits live under one prefix per kind of subject; the public route serves both. */
-export type PortraitKeyPrefix = "officials" | "candidates";
-
-/** Source references ride on the existing portrait binding, not an approval file. */
-export interface PortraitVerification {
-  readonly personId: string;
-  readonly decoderVersion?: string;
-  readonly width?: number;
-  readonly height?: number;
-  readonly imageRetrievedAt?: string;
-  readonly basis?: "OWN_PAGE" | "TWO_SOURCES";
-  readonly ownPageUrl?: string;
-  readonly attribution?: { readonly sourceUrl: string; readonly name: string };
-  readonly name: string;
-  readonly imageUrl: string;
-  readonly checkedAt: string;
-  readonly imageHash: string;
-  readonly sourceImageHash: string;
-  readonly sources: readonly { readonly url: string; readonly artifactId?: string; readonly vaultKey?:string; readonly contentHash: string; readonly retrievedAt: string }[];
-  readonly license?: { readonly value: string; readonly sourceUrl: string; readonly quote: string };
-}
-
-/** Known source ownership groups; mirrors of the same dataset are one source. */
-const publisher = (value: string): string => {
-  const url = new URL(value), host = url.hostname.toLowerCase().replace(/^www\./, "");
-  if (/(^|\.)openstates\.org$/.test(host) || /^(raw\.githubusercontent\.com|github\.com|codeload\.github\.com)$/.test(host) && /^\/openstates\/people(?:\/|$)/.test(url.pathname)) return "openstates.org";
-  const government = /(?:^|\.)([^.]+\.gov)$/.exec(host)?.[1] ?? /(?:^|\.)(state\.[a-z]{2}\.us)$/.exec(host)?.[1];
-  if (government) return government;
-  return /(?:^|\.)([^.]+\.(?:com|org|net|edu))$/.exec(host)?.[1] ?? "unresolved-publisher";
-};
 const sameName = (a: string, b: string) => pageWords(a).normalize("NFKD").replace(/\p{M}/gu, "") === pageWords(b).normalize("NFKD").replace(/\p{M}/gu, "");
 
 function namesImage(subject: PortraitSubject, imageUrl: string, capture: PortraitCapture): boolean {
@@ -115,13 +86,13 @@ export function verifyPortraitSources(personId: string, input: PortraitSources, 
     return !captureProblem(c) && Boolean(c.evidence.artifactId || c.evidence.vaultKey?.startsWith("project/freshness/source/")) &&
       age >= 0 && age <= 7 * 86_400_000 && namesImage(input.subject, input.imageUrl, c);
   });
-  let sources = [...new Map(valid.map(c => [publisher(c.evidence.canonicalUrl), c])).values()];
+  let sources = [...new Map(valid.map(c => [portraitPublisher(c.evidence.canonicalUrl), c])).values()];
   const own = valid.find(c => ownPortraitPage(name, input, c, now));
-  if (own) sources = [own, ...sources.filter(c => publisher(c.evidence.canonicalUrl) !== publisher(own.evidence.canonicalUrl))];
+  if (own) sources = [own, ...sources.filter(c => portraitPublisher(c.evidence.canonicalUrl) !== portraitPublisher(own.evidence.canonicalUrl))];
   if (!own && (sources.length < 2 || new Set(sources.map(c => c.evidence.contentHash)).size < 2)) throw Error("PORTRAIT_SECOND_SOURCE_MISSING");
   // The bulk roster's CC0 licence covers its data, never the linked image.
   let license: PortraitVerification["license"] | undefined;
-  for (const capture of sources.filter(c => publisher(c.evidence.canonicalUrl) !== "openstates.org")) {
+  for (const capture of sources.filter(c => portraitPublisher(c.evidence.canonicalUrl) !== "openstates.org")) {
     const text = pageWords(capture.evidence.text);
     const match = /(?:portrait|photograph|photo|image)\s+(?:is\s+|: ?)?(?:licensed under\s+|released (?:under|into)\s+|in (?:the )?)?(public domain|cc0|cc by(?:-sa)? [\d.]+)/i.exec(text);
     if (match) { license = { value: match[1], sourceUrl: capture.evidence.canonicalUrl, quote: match[0] }; break; }
@@ -132,30 +103,6 @@ export function verifyPortraitSources(personId: string, input: PortraitSources, 
     sources: sources.map(c => ({url:c.evidence.canonicalUrl,
       ...(c.evidence.artifactId ? {artifactId:c.evidence.artifactId} : {vaultKey:c.evidence.vaultKey}),
       contentHash:c.evidence.contentHash,retrievedAt:c.evidence.retrievedAt})) };
-}
-
-export function portraitVerificationMatches(personId: string, verification?: PortraitVerification): boolean {
-  if (!verification || !personId || personId !== verification.personId || !/^sha256-[a-f0-9]{64}$/.test(verification.imageHash) ||
-    !/^sha256-[a-f0-9]{64}$/.test(verification.sourceImageHash) ||
-    !Number.isFinite(Date.parse(verification.checkedAt))) return false;
-  try {
-    const validSources = verification.sources.length > 0 && verification.sources.every(s =>
-      (s.artifactId || s.vaultKey?.startsWith("project/freshness/source/")) && /^sha256-[a-f0-9]{64}$/.test(s.contentHash) && Number.isFinite(Date.parse(s.retrievedAt)));
-    const attributed = verification.attribution ? verification.attribution.name === verification.name &&
-      verification.sources.some(s => s.url === verification.attribution!.sourceUrl)
-      : Boolean(verification.license?.value && verification.license.quote && verification.sources.some(s => s.url === verification.license!.sourceUrl));
-    if (!validSources || !attributed) return false;
-    if (verification.basis === "OWN_PAGE") return verification.sources.some(s => s.url === verification.ownPageUrl);
-    return verification.sources.length >= 2 && new Set(verification.sources.map(s => publisher(s.url))).size >= 2 &&
-      new Set(verification.sources.map(s => s.contentHash)).size >= 2;
-  } catch { return false; }
-}
-
-/** Bind corroboration to the published image bytes and the exact source image. */
-export function portraitBindingMatches(personId: string, photo: {url: string; sourceUrl?: string | null; verification?: PortraitVerification},
-  prefix: PortraitKeyPrefix = "officials"): boolean {
-  return portraitVerificationMatches(personId, photo.verification) && photo.sourceUrl === photo.verification!.imageUrl &&
-    new RegExp(`^/api/portraits/${prefix}/${photo.verification!.imageHash.slice(7)}\\.(jpg|png|webp|gif)$`).test(photo.url);
 }
 
 export const portraitHash = (bytes: Uint8Array) => `sha256-${createHash("sha256").update(bytes).digest("hex")}`;

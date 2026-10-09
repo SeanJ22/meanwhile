@@ -966,13 +966,22 @@ test("a FEC period that regresses behind the class LKG is refused", async () => 
   }), "TEMPORAL_INVALID", "SOURCE_THROUGH_REGRESSION");
 });
 
-test("an incomplete state chamber/term identity is refused and holds the state LKG", async () => {
+test("a sourced state member publishes while optional term metadata is absent", async () => {
+  const store = new MemoryRoutineDataStore();
+  const base = stateMemberCandidate("state-member-partial-term");
+  const partial = { ...base, identities: base.identities.map(identity => ({ ...identity, term: undefined })) };
+  const outcome = await processRoutineCandidate(store, partial, NOW);
+  assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? undefined);
+  assert.equal(outcome.candidate.candidate.identities[0].term, undefined, "no individual term is invented from the source edition");
+  assert.equal((await store.readPromotion("STATE_LEGISLATOR", "US-NH"))?.versionId, partial.id);
+});
+
+test("a state member without a sourced office is refused and holds the state LKG", async () => {
   await expectHeld((base) => ({
     ...base,
     identities: [{
       ...base.identities[0],
-      // A term is deliberately absent: a fresh roster cannot inherit it.
-      term: undefined,
+      office: undefined,
     }],
   }), "IDENTITY_UNRESOLVED", "STATE_MEMBER_SEAT_IDENTITY_INCOMPLETE", stateMemberCandidate("state-member-good-1"));
 });

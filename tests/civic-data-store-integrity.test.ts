@@ -1139,13 +1139,15 @@ test("every Postgres candidate-event allocator is serialized inside its Neon bat
   assert.match(append, /civicDataPromotions\.lastKnownGoodVersionId\} = \$\{candidateId\}/);
 });
 
-test("the Postgres retry clock is the local sequence-one event, never a refused acquisition claim", () => {
+test("the Postgres retry clock keeps failed attempts local and uses an observed source check for successful held-byte replay", () => {
   const source = readFileSync(join(ROOT, "lib", "civic-data", "store.ts"), "utf8");
   const postgres = source.slice(source.indexOf("export class PostgresRoutineDataStore"));
   const clock = postgres.slice(postgres.indexOf("  async clock("));
-  assert.match(clock, /select\(\{ attemptedAt: civicDataCandidateEvents\.at \}\)/);
+  assert.match(clock, /CASE WHEN \$\{civicDataCandidates\.state\} = 'PROMOTED'[\s\S]*\$\{civicDataCandidates\.acquisitionSucceeded\} = true/);
+  assert.match(clock, /THEN LEAST\([\s\S]*retrieval,sourceCheck,checkedAt[\s\S]*civicDataCandidateEvents\.at[\s\S]*ELSE \$\{civicDataCandidateEvents\.at\} END/);
+  assert.match(clock, /select\(\{ attemptedAt: attemptAt \}\)/);
   assert.match(clock, /eq\(civicDataCandidateEvents\.sequence, 1\)/);
-  assert.match(clock, /orderBy\(desc\(civicDataCandidateEvents\.at\)\)/);
+  assert.match(clock, /orderBy\(desc\(attemptAt\)\)/);
   assert.doesNotMatch(
     clock,
     /orderBy\(desc\(civicDataCandidates\.retrievedAt\)\)/,

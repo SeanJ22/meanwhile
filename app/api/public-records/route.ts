@@ -10,8 +10,9 @@ export async function GET(request: Request) {
   const params = new URL(request.url).searchParams;
   if (params.get("kind") === "governments") {
     const state = (params.get("state") ?? "").toUpperCase();
-    const offset = Number(params.get("offset") ?? "0");
-    if (!Object.values(FIPS_TO_STATE).some(row => row.postal === state) || !Number.isSafeInteger(offset) || offset < 0) {
+    const offsetText = params.get("offset") ?? "0";
+    const offset = /^\d+$/.test(offsetText) ? Number(offsetText) : NaN;
+    if (!Object.values(FIPS_TO_STATE).some(row => row.postal === state) || !Number.isSafeInteger(offset)) {
       return NextResponse.json({ error: "A US state or territory and a valid offset are required." }, { status: 400 });
     }
     try {

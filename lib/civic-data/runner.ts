@@ -284,7 +284,7 @@ function historyText(value: unknown): value is string {
 export function routineUnreceiptedSupervisorAttemptHistory(
   rows: readonly unknown[],
   registeredTaskIds: ReadonlySet<string>,
-  parserUpgrades?: { readonly taskIds: ReadonlySet<string>; readonly codeSha: string | null },
+  codeChangeRetries?: { readonly taskIds: ReadonlySet<string>; readonly codeSha: string | null },
 ): RoutineSupervisorAttemptHistory {
   const attempts = new Map<string, string>();
   const issues: RoutineSupervisorHistoryIssue[] = [];
@@ -407,7 +407,7 @@ export function routineUnreceiptedSupervisorAttemptHistory(
     }
 
     for (const taskId of failureTaskIds) {
-      if (parserUpgrades?.codeSha && parserUpgrades.taskIds.has(taskId) && outcome.testedSha !== parserUpgrades.codeSha) continue;
+      if (codeChangeRetries?.codeSha && codeChangeRetries.taskIds.has(taskId) && outcome.testedSha !== codeChangeRetries.codeSha) continue;
       if (!registeredTaskIds.has(taskId) || exactReceiptTaskIds.has(taskId)) continue;
       const prior = attempts.get(taskId);
       if (prior === undefined || Date.parse(prior) < Date.parse(finishedAt)) attempts.set(taskId, finishedAt);
@@ -607,6 +607,14 @@ export function routineBaselineOwed(task: RoutineSourceTask, clock: RoutineTaskC
     !clock?.lastSucceededObservedAt ||
     (clock.lastSucceededParserVersion !== undefined && clock.lastSucceededParserVersion !== task.parserVersion)
   );
+}
+
+/** A repaired implementation gets its first baseline/reparse attempt; source attempts and current-code failures keep their retry clocks. */
+export function routineCodeChangeRetryTaskIds(reads: readonly RoutineTaskClockRead[]): ReadonlySet<string> {
+  return new Set(reads.flatMap(read => read.ok && (
+    routineBaselineOwed(read.task, read.clock) ||
+    (read.clock?.lastSucceededParserVersion !== undefined && read.clock.lastSucceededParserVersion !== read.task.parserVersion)
+  ) ? [read.task.id] : []));
 }
 
 export function routineTaskDue(

@@ -1,18 +1,18 @@
 # River status
 
-build_state: RELEASE 21 MERGED AND WEB DEPLOYED (6f4df519, PR #728). Full hosted CI green; production integrity holds; new-revision runtime activity confirmed.
+build_state: RELEASE 21 MERGED AND WEB DEPLOYED (6f4df519, PR #728). CI and production integrity green; runner adopted; live cycle promoted 13 sources with 21 passing reader checks.
 worker: codex-acquisition-first
 provider: Codex
 run_id: acquisition-first-2026-10-09
 lock: none
-heartbeat: 2026-10-09T19:14:35Z
+heartbeat: 2026-10-09T19:35:18Z
 
 ## RELEASE 21 — acquisition-first: MERGED AND WEB DEPLOYED
 
 - PR #728 merged as 6f4df519e67b6738d1c057f60cbcd901eaead138. Exact source tree equals the hosted CI checkout 3196f36f9064fae507a89d2300fe25f5c81d9f4e.
 - Full CI run 37966354018 passed: 7,815 tests passed, 0 failed, 5 skipped; production build and required reader files passed. Largest app trace 382/430; limits unchanged. Schema shipping check was not applicable because no schema contract changed.
 - Production observer run 37975895934 confirmed /api/build serves 6f4df519 at 2026-10-09T18:50:56Z and the read-only production schema gate held (35/35 migrations), with durable receipt read back.
-- Automatic runtime handoff executed: new-revision receipts at 19:10:12Z (startup migrations), 19:10:26Z (intake observation), 19:10:51Z (map-provider collection), and 19:12:13Z (routine source task) all name 6f4df519. The first routine source acquired a meeting page but correctly refused to treat an empty page as proven absence. The last heartbeat projection still names the old cycle; a complete successful new acquisition/publication pass and live rendered-page behavior remain unverified. No pause, budget or service configuration was changed.
+- Runtime adopted 6f4df519: heartbeat at 2026-10-09T19:34:03.181Z confirms it. The 19:32:53Z automatic cycle produced 13 verified source successes and 0 source failures; all 13 meeting partitions promoted. Reader readback: 21 pass, 9 unchanged/no-op, 0 recorded/current failures, 0 repair failures. This proves that cycle; it does not certify every configured source or live browser rendering. Budgets and owner pauses remain unchanged.
 - Scope: acquisition-first AF-01 through AF-05 only. Superseded writers and obsolete callers/flags removed; useful machinery and evidence preserved. No Hunt Network expansion or unrelated audit cleanup.
 
 ## RELEASE 15 — Haiku 5.5: MERGED (Oct 7, 2026)

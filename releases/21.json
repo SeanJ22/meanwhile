@@ -50,19 +50,26 @@
     "migrations_committed": 35
   },
   "runtime_adoption": {
-    "state": "new-revision-execution-confirmed",
+    "state": "adopted",
     "tested_sha": "6f4df519e67b6738d1c057f60cbcd901eaead138",
-    "evidence": "owner-digest receipts: startup migrations at 19:10:12Z, intake observation at 19:10:26Z, map-provider collection at 19:10:51Z, routine source task at 19:12:13Z",
-    "last_heartbeat": {
-      "beat_at": "2026-10-09T19:00:31.598Z",
-      "tested_sha": "e8abc6e76a11a1eb0a6d48df847fa1feb97bb24e"
+    "heartbeat_at": "2026-10-09T19:34:03.181Z",
+    "observed_at": "2026-10-09T19:35:18Z"
+  },
+  "live_refresh": {
+    "finished_at": "2026-10-09T19:32:53.551Z",
+    "tested_sha": "6f4df519e67b6738d1c057f60cbcd901eaead138",
+    "verified_source_successes": 13,
+    "verified_source_failures": 0,
+    "promoted_partitions": 13,
+    "record_class": "MEETING",
+    "reader_readbacks": {
+      "denominator": 30,
+      "passed": 21,
+      "noops": 9,
+      "recorded_fail": 0,
+      "current_fail": 0,
+      "repair_failures": 0
     },
-    "routine_source_result": "acquisition succeeded; CANNOT_TELL because an empty meeting page did not prove bounded absence; no promotion claimed",
-    "remaining_verification": [
-      "new-cycle heartbeat",
-      "complete successful acquisition/publication pass",
-      "live rendered-page behavior"
-    ],
-    "observed_at": "2026-10-09T19:14:35Z"
+    "scope_note": "Observed cycle only; other configured sources and live browser rendering are not claimed as verified."
   }
 }

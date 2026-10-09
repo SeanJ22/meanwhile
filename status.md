@@ -1,11 +1,18 @@
 # River status
 
-build_state: RELEASE 21 MERGED AND WEB DEPLOYED (6f4df519, PR #728). CI and production integrity green; runner adopted; live cycle promoted 13 sources with 21 passing reader checks.
-worker: codex-acquisition-first
+build_state: ACQUISITION BASELINE REPAIR IN PROGRESS. Release 21 is deployed, but national government/parser replay and OpenStates initial publication remain unproven and currently absent.
+worker: codex-acquisition-scale
 provider: Codex
-run_id: acquisition-first-2026-10-09
-lock: none
-heartbeat: 2026-10-09T19:35:18Z
+run_id: acquisition-scale-2026-10-09
+lock: codex-acquisition-scale-2026-10-09
+heartbeat: 2026-10-09T20:38:21Z
+
+## RELEASE 22 — acquisition baseline: IN PROGRESS
+
+- Production verification at 20:28Z found no plural-openstates candidates or promotions, no registration/4 candidates, and Congress directory still at parser /2. Release 21's 13 meeting promotions did not prove the national baseline.
+- Repairs in progress: parser-aware initial replay; independent state projections of shared national releases; remove the normal acquisition pass's duplicate full worker-publication history scan; publish meetings against the serving registry version while independent families proceed.
+- Owners: acquisition_plan (admission/clocks), publication_plan (reader publication), people_plan (known bulk source validation), codex-acquisition-scale (integration, hosted checks, deployment and broad live verification).
+- Existing source cadences, memory margin, budgets, owner pauses and evidence remain unchanged. No Hunt Network or source hunting expansion.
 
 ## RELEASE 21 — acquisition-first: MERGED AND WEB DEPLOYED
 

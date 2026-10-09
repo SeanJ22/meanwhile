@@ -1,11 +1,11 @@
 # River status
 
 build_state: RELEASE 15 MERGED to main (4385853, PR #722: Haiku 5.5 everywhere; docs-only PRs certified on open; cancelled runs leave no red checks). river = 3c2a470. Release 16 (stream/reads) in rework after a civic-data firewall refusal; 17 (stream/manual) and 18 (stream/leads) built, finishing. Sean merges no longer needed: River merges green release PRs (Sean, Oct 7); Sean restarts the runner after 16.
-worker: river
-provider: Claude (scheduled resume)
-run_id: session_01D8EZAejHqhy9XbGCw6G6bL-r15
-lock: none
-heartbeat: 2026-10-08T19:52:32Z
+worker: codex-acquisition-first
+provider: Codex
+run_id: acquisition-first-2026-10-09
+lock: codex-acquisition-first-20261009
+heartbeat: 2026-10-09T17:50:22Z
 
 ## RELEASE 15 — Haiku 5.5: MERGED (Oct 7, 2026)
 

@@ -58,13 +58,14 @@ function DirectoryContent({
   holder: SeatHolder;
   only: "committees" | "offices";
 }) {
-  const { directory, failed } = useMemberDirectory(holder.id);
-  return <DirectoryRecordsContent holderId={holder.id} only={only} directory={directory} failed={failed} />;
+  const { directory, failed } = useMemberDirectory(holder.id,holder.state);
+  return <DirectoryRecordsContent holderId={holder.id} state={holder.state} only={only} directory={directory} failed={failed} />;
 }
 
 /** The exact fetched body, also executable for every canonical directory slice. */
-export function DirectoryRecordsContent({ holderId, only, directory, failed }: {
+export function DirectoryRecordsContent({ holderId, state, only, directory, failed }: {
   holderId: string;
+  state?:string;
   only: "committees" | "offices";
   directory: DirectoryPayload | null;
   failed: boolean;
@@ -74,7 +75,7 @@ export function DirectoryRecordsContent({ holderId, only, directory, failed }: {
 
   // Committees are sourced for sitting federal members only; offices also for
   // state legislators. The predicate is lib/officials/member-directory-scope.ts.
-  if (!memberDirectoryReaches(holderId, only)) return null;
+  if (!memberDirectoryReaches(holderId, only,state)) return null;
   const details = directory?.officeDetails ?? null;
 
   if (only === "committees") {
@@ -128,7 +129,7 @@ export function DirectoryRecordsContent({ holderId, only, directory, failed }: {
           <>
             <p className="mb-1.5 t-caption leading-relaxed text-voice">
               {details
-                ? <>Where to reach this legislator in person: their office at the capitol and in the district, as Open States lists them.{details.some((d) => !d.official) ? " Not yet checked against the legislature’s own site." : ""}</>
+                ? <>Office contacts at the capitol and in the district, as Open States lists them.{details.some((d) => !d.official) ? " Not yet checked against the legislature’s own site." : ""}</>
                 : <>These are the member&apos;s offices in the district, not the one in Washington. They are usually the ones that answer.</>}
             </p>
             <ul>
@@ -185,6 +186,14 @@ export function DirectoryRecordsContent({ holderId, only, directory, failed }: {
                       {office.phone}
                     </a>
                   )}
+                  {office.email && (
+                    <a
+                      href={`mailto:${office.email}`}
+                      className="mt-1 block t-detail text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
+                    >
+                      {office.email}
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>
@@ -199,7 +208,7 @@ function useDirectoryCounts(holder: SeatHolder): {
   committees: number | null;
   offices: number | null;
 } {
-  const { directory } = useMemberDirectory(holder.id);
+  const { directory } = useMemberDirectory(holder.id,holder.state);
   return {
     committees: directory?.committees?.length ?? null,
     offices: directory?.districtOffices?.length ?? null,
@@ -213,7 +222,7 @@ function useDirectoryCounts(holder: SeatHolder): {
 function MemberDirectoryInner({ holder }: { holder: SeatHolder }) {
   const counts = useDirectoryCounts(holder);
   const inScope = memberDirectoryReaches(holder.id);
-  const officesInScope = memberDirectoryReaches(holder.id, "offices");
+  const officesInScope = memberDirectoryReaches(holder.id, "offices",holder.state);
   return (
     <>
       <CardSection

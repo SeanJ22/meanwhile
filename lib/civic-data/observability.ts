@@ -5,6 +5,8 @@ import {
 } from "./contracts.ts";
 import { MEETING_PARTITION_CONTRACTS, observableRoutineContracts, sittingWindowSourceIds } from "./meeting-partitions.ts";
 import { meetingPayloadSittingStarts } from "./store.ts";
+import { sourceCheckedAt } from "./source-check.ts";
+import type { RetrievalEvidence } from "./types.ts";
 import {
   SITTING_WINDOW_ADMISSION_LEAD_MS,
   SITTING_WINDOW_BASE_ADMISSION_LEAD_MS,
@@ -441,6 +443,11 @@ function compareIsoDesc(a: string, b: string): number {
 
 function candidatePayload(row: RoutineCandidateRow): Record<string, unknown> | null {
   return object(row.candidate);
+}
+
+function checkedSourceAt(row: RoutineCandidateRow, fallback: string, observedAt: string): string | undefined {
+  const retrieval = object(candidatePayload(row)?.retrieval) as unknown as RetrievalEvidence | null;
+  return retrieval?.sourceCheck ? sourceCheckedAt(retrieval, observedAt) : fallback;
 }
 
 function candidateVersionRecord(row: RoutineCandidateRow): CandidateVersionRecord | null {
@@ -1129,8 +1136,8 @@ function freshness(
 ): { readonly state: FreshnessState; readonly detail: string } {
   if (!canonicalCandidate) return { state: "UNKNOWN", detail: "No proven canonical promotion is recorded, so production freshness cannot be measured." };
   const succeededAt = Math.max(
-    Date.parse(canonicalCandidate.retrievedAt),
-    confirmation ? Date.parse(confirmation.retrieval.retrievedAt) : Number.NEGATIVE_INFINITY,
+    Date.parse(checkedSourceAt(canonicalCandidate, canonicalCandidate.retrievedAt, new Date(nowMs).toISOString()) ?? ""),
+    confirmation ? Date.parse(confirmation.retrieval.sourceCheck ? sourceCheckedAt(confirmation.retrieval, confirmation.observedAt) ?? "" : confirmation.retrieval.retrievedAt) : Number.NEGATIVE_INFINITY,
   );
   if (!Number.isFinite(succeededAt)) return { state: "UNKNOWN", detail: "The canonical acquisition time is unreadable." };
   if (succeededAt > nowMs) return { state: "UNKNOWN", detail: "The canonical acquisition time is in the future relative to this observation." };
@@ -1184,10 +1191,11 @@ function nextDue(
   if (acquisition.kind !== "MEASURED" && !containedTemporalRefusal) {
     return unknown(`The next due time cannot be proven because ${acquisition.detail}`);
   }
-  const confirmedMs = confirmation ? Date.parse(confirmation.observedAt) : Number.NEGATIVE_INFINITY;
-  const attempted = Math.max(Date.parse(attemptedAt.value), confirmedMs);
+  const confirmedMs = confirmation ? Date.parse(sourceCheckedAt(confirmation.retrieval, confirmation.observedAt) ?? "") : Number.NEGATIVE_INFINITY;
+  const attempted = Math.max(Date.parse(latest.state === "PROMOTED" ? checkedSourceAt(latest, attemptedAt.value, attemptedAt.value) ?? "" : attemptedAt.value), confirmedMs);
   const succeededAt = lastPromoted ? sourceAttemptTime(lastPromoted, events, nowMs) : null;
-  const newestSuccess = Math.max(succeededAt?.kind === "MEASURED" ? Date.parse(succeededAt.value) : Number.NEGATIVE_INFINITY, confirmedMs);
+  const newestSuccess = Math.max(succeededAt?.kind === "MEASURED" && lastPromoted
+    ? Date.parse(checkedSourceAt(lastPromoted, succeededAt.value, succeededAt.value) ?? "") : Number.NEGATIVE_INFINITY, confirmedMs);
   const succeeded = Number.isFinite(newestSuccess) ? newestSuccess : Number.NaN;
   const schedule = "schedule" in contract ? contract.schedule : undefined;
   if (schedule?.kind === "SITTING_WINDOW") {
@@ -1284,7 +1292,8 @@ function operationalState(
   if (state === null) return { state: "UNKNOWN", detail: `The latest candidate carries unrecognised state ${latest.state}.` };
   const latestAttempt = sourceAttemptTime(latest, events, nowMs);
   if (latestAttempt.kind !== "MEASURED") return { state: "UNKNOWN", detail: latestAttempt.detail };
-  const latestAt = Date.parse(latestAttempt.value);
+  const latestAt = Date.parse(latest.state === "PROMOTED"
+    ? checkedSourceAt(latest, latestAttempt.value, latestAttempt.value) ?? "" : latestAttempt.value);
   const acquisition = acquisitionEvidence(latest, nowMs);
   const receipt = parseValidationReceipt(latest.validationReceipt);
   const containedTemporalRefusal = receipt !== null &&
@@ -1295,7 +1304,8 @@ function operationalState(
   const stateEventIssue = currentCandidateEventIssue(latest, candidates, events, nowMs);
   if (stateEventIssue !== null) return { state: "UNKNOWN", detail: stateEventIssue };
   const canonicalAttempt = canonicalCandidate ? sourceAttemptTime(canonicalCandidate, events, nowMs) : null;
-  const canonicalAt = canonicalAttempt?.kind === "MEASURED" ? Date.parse(canonicalAttempt.value) : Number.NaN;
+  const canonicalAt = canonicalAttempt?.kind === "MEASURED" && canonicalCandidate
+    ? Date.parse(checkedSourceAt(canonicalCandidate, canonicalAttempt.value, canonicalAttempt.value) ?? "") : Number.NaN;
   const isLaterAttempt = canonicalCandidate === undefined || (
     latest.id !== canonicalCandidate.id && (!Number.isFinite(canonicalAt) || latestAt > canonicalAt)
   );
@@ -1393,7 +1403,10 @@ function latestAttemptTime(
   })[];
   const latestMs = Math.max(...measuredItems.map((item) => Date.parse(item.attemptedAt.value)));
   const tied = measuredItems.filter((item) => Date.parse(item.attemptedAt.value) === latestMs);
-  if (new Set(tied.map((item) => item.row.id)).size > 1) {
+  if (new Set(tied.map((item) => {
+    const check = (object(candidatePayload(item.row)?.retrieval) as unknown as RetrievalEvidence | null)?.sourceCheck;
+    return check ? JSON.stringify([check.requestedUrl, check.finalUrl, check.rawHash, check.checkedAt]) : item.row.id;
+  })).size > 1) {
     return unknown(
       `${tied.length} distinct source attempts share local attempt instant ${new Date(latestMs).toISOString()}; their causal order is not recorded.`,
     );
@@ -1403,8 +1416,9 @@ function latestAttemptTime(
 
 function withConfirmation(observation: Observation<string>, confirmation: UnchangedConfirmation | null): Observation<string> {
   if (confirmation === null || observation.kind === "UNKNOWN") return observation;
-  if (observation.kind === "MEASURED" && Date.parse(observation.value) >= Date.parse(confirmation.observedAt)) return observation;
-  return measured(new Date(Date.parse(confirmation.observedAt)).toISOString());
+  const checkedAt = sourceCheckedAt(confirmation.retrieval, confirmation.observedAt);
+  if (!checkedAt || observation.kind === "MEASURED" && Date.parse(observation.value) >= Date.parse(checkedAt)) return observation;
+  return measured(new Date(Date.parse(checkedAt)).toISOString());
 }
 
 function latestSourceAttempt(
@@ -1977,10 +1991,12 @@ function projectContract(
     .filter((row) => authorityOrigin(row) === "LIVE_SOURCE_ACQUISITION")
     .map((row) => {
       const receipt = parseValidationReceipt(row.validationReceipt);
+      const attempt = sourceAttemptTime(row, events, nowMs);
+      const checked = attempt.kind === "MEASURED" && row.state === "PROMOTED" ? checkedSourceAt(row, attempt.value, attempt.value) : null;
       return {
         row,
         evidence: acquisitionEvidence(row, nowMs),
-        attemptedAt: sourceAttemptTime(row, events, nowMs),
+        attemptedAt: checked ? measured(checked) : attempt,
         containedTemporalRefusal: receipt !== null &&
           acquisitionTimeAfterValidationRefusalIssue(row, receipt, events, nowMs) === null,
       };
@@ -2000,13 +2016,17 @@ function projectContract(
     ? sittingWindowRereadMs(schedule, sittingHot) : cadenceMsAt(contract, nowMs);
   const fresh = freshness(contract, canonicalCandidate, nowMs, confirmation, activeEveryMs);
   const readerVisible = readerProjectionProof(contract, canonical, events, currentReaderBuild, nowMs);
-  const operation = latestOrderIssue === null
-    ? operationalState(contract, latest, candidates, canonicalCandidate, canonical, readerVisible, fresh.state, events, nowMs)
-    : { state: "UNKNOWN" as const, detail: latestOrderIssue };
   const latestAttempt = latest ? sourceAttemptTime(latest, events, nowMs) : null;
+  const sourceLatest = [...sourceAcquisitions].sort((a, b) => a.attemptedAt.kind === "MEASURED" && b.attemptedAt.kind === "MEASURED"
+    ? compareIsoDesc(a.attemptedAt.value, b.attemptedAt.value) : 0)[0];
+  const operationalLatest = sourceLatest?.row ?? latest;
+  const operationalAttempt = sourceLatest?.attemptedAt ?? latestAttempt;
   const confirmedLatest = confirmation !== null && latestOrderIssue === null && (
-    latestAttempt?.kind !== "MEASURED" || Date.parse(confirmation.observedAt) >= Date.parse(latestAttempt.value)
+    operationalAttempt?.kind !== "MEASURED" || Date.parse(sourceCheckedAt(confirmation.retrieval, confirmation.observedAt) ?? "") >= Date.parse(operationalAttempt.value)
   );
+  const operation = latestOrderIssue === null
+    ? operationalState(contract, confirmedLatest ? canonicalCandidate : operationalLatest, candidates, canonicalCandidate, canonical, readerVisible, fresh.state, events, nowMs)
+    : { state: "UNKNOWN" as const, detail: latestOrderIssue };
   const changes: RoutineContractObservation["latestChanges"] = latestOrderIssue !== null
     ? unknown(latestOrderIssue)
     : confirmedLatest
@@ -2016,11 +2036,13 @@ function projectContract(
       : notRecorded("No attempt is recorded, so no change set is recorded.");
   const held: RoutineContractObservation["latestHeld"] = latestOrderIssue !== null
     ? unknown(latestOrderIssue)
+    : confirmedLatest ? measured([])
     : latest
       ? exactHeld(latest, nowMs, events, latestAttempt?.kind === "MEASURED" ? latestAttempt.value : latest.retrievedAt)
       : notRecorded("No attempt is recorded, so no held-record outcome is recorded.");
   const refused: RoutineContractObservation["latestRefused"] = latestOrderIssue !== null
     ? unknown(latestOrderIssue)
+    : confirmedLatest ? measured([])
     : latest
       ? exactRefused(latest, nowMs, events, latestAttempt?.kind === "MEASURED" ? latestAttempt.value : latest.retrievedAt)
       : notRecorded("No attempt is recorded, so no refusal outcome is recorded.");
@@ -2150,7 +2172,7 @@ function projectContract(
       retryDescription: isManualContract(contract)
         ? "explicit owner rerun after inspecting the durable refusal"
         : observedRetryDescription(contract, canonical.kind !== "NOT_RECORDED"),
-      nextDue: nextDue(contract, latest, canonicalCandidate, events, nowMs, latestOrderIssue, sittingHot, confirmation, canonical.kind !== "NOT_RECORDED"),
+      nextDue: nextDue(contract, operationalLatest, canonicalCandidate, events, nowMs, latestOrderIssue, sittingHot, confirmation, canonical.kind !== "NOT_RECORDED"),
       operationalState: operation.state,
       operationalDetail: operation.detail,
       freshness: fresh.state,

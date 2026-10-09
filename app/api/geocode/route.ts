@@ -3,6 +3,7 @@ import {
   CENSUS_BENCHMARK,
   CENSUS_GEOCODER_URL,
   parseCensusPoint,
+  parseCensusZip,
 } from "@/lib/geo/census-geocoder";
 
 /**
@@ -61,11 +62,15 @@ export async function POST(request: Request) {
       // accident. A miss is a miss.
       return Response.json({ match: false }, { headers: NO_STORE });
     }
-    const point = parseCensusPoint(await upstream.json());
+    const payload = await upstream.json();
+    const point = parseCensusPoint(payload);
+    const zip = parseCensusZip(payload);
+    const expectedZip = /,\s*(\d{5})$/.exec(address)?.[1];
+    if (expectedZip && zip !== expectedZip) return Response.json({ match: false }, { headers: NO_STORE });
     if (!point) return Response.json({ match: false }, { headers: NO_STORE });
     // The point only. Nothing about the request is echoed back.
     return Response.json(
-      { match: true, lat: point.lat, lng: point.lng },
+      { match: true, lat: point.lat, lng: point.lng, ...(zip ? { zip } : {}) },
       { headers: NO_STORE },
     );
   } catch {

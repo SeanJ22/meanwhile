@@ -419,7 +419,6 @@ test("the toolkit exposes exactly the research tools with their required locator
     read_manual: "entryId",
     read_held: "artifactId",
     run_adapter: null,
-    plural_roster: 'state',
     legistar_events: 'tenant',
     search: "query",
   };

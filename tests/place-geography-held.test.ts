@@ -24,7 +24,7 @@ test("held county display prefixes do not become division identities or lose spl
     const row = held.find(row => row.id === `ocd-division/country:us/${county.expected}`);
     assert.ok(row);
     assert.equal(row.geoid, county.geoid);
-    assert.equal(row.completeForZip, "12345");
+    assert.equal(row.completeForZip, undefined, "an observed row is not proof of complete retrieval");
   }
   assert.equal(held.find(row => row.geoid === "22093")?.label, "LA St. James Parish", "display label is unchanged");
 });

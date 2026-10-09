@@ -3,6 +3,7 @@ import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
+import { gunzipSync } from "node:zlib";
 
 import {
   NATIONAL_SCOPE,
@@ -18,6 +19,7 @@ import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import {
   publishReaderEdgeArtifacts,
   readReaderEdgeMeetings,
+  ensureReaderAuthorityEdge,
 } from "../lib/meetings/edge-serving.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
@@ -50,6 +52,129 @@ function snapshot(meetings: Meeting[]): MeetingsSnapshot {
 }
 
 const META = { sourceThrough: "2026-09-15T00:00:00.000Z", retrievedAt: "2026-09-15T00:00:00.000Z", promotedThrough: "2026-09-15T00:00:00.000Z" };
+
+test("a losing publisher cannot overwrite any bytes selected by the winning manifest", async () => {
+  const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-race-")));
+  let releaseReads!: () => void, releaseLoser!: () => void;
+  const readsReady = new Promise<void>(resolve => { releaseReads = resolve; });
+  const winnerPublished = new Promise<void>(resolve => { releaseLoser = resolve; });
+  let reads = 0;
+  const writer = (loser: boolean) => new Proxy(store, { get(target, key) {
+    if (key === "readManifest") return async () => {
+      const value = await target.readManifest();
+      if (++reads === 2) releaseReads();
+      await readsReady;
+      return value;
+    };
+    if (key === "putImmutable") return async (...args: Parameters<typeof store.putImmutable>) => {
+      if (loser) await winnerPublished;
+      return target.putImmutable(...args);
+    };
+    if (key === "writeManifest") return async (...args: Parameters<typeof store.writeManifest>) => {
+      const result = await target.writeManifest(...args);
+      if (!loser) releaseLoser();
+      return result;
+    };
+    const value = Reflect.get(target, key);
+    return typeof value === "function" ? value.bind(target) : value;
+  } });
+  const publish = (loser: boolean) => publishReaderEdgeArtifacts(snapshot([meeting(loser ? "loser" : "winner", "ocd-division/country:us/state:az")]), META, {
+    store: writer(loser), authority: { "federal-directory": { versionId: "next", value: { winner: !loser } } },
+    registrations: { az: { versionId: "next", value: { winner: !loser } } },
+  });
+  const [winner, loser] = await Promise.all([publish(false), publish(true)]);
+  assert.equal(winner.status, "PUBLISHED");
+  assert.equal(loser.status, "RACED");
+  const manifest = (await store.readManifest())!.manifest;
+  assert.equal((await store.readArtifact(manifest.scopes[0].key))!.meetings[0].id, "winner");
+  for (const ref of [manifest.authorityArtifacts!["federal-directory"]!, manifest.registrations!.az]) {
+    const envelope = JSON.parse(gunzipSync((await store.readBytes(ref.key))!).toString("utf8"));
+    assert.equal(envelope.value.winner, true);
+  }
+});
+
+test("state people load only the requested jurisdiction and failed replacements keep accepted references", async () => {
+  const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-state-people-")));
+  assert.equal((await publishReaderEdgeArtifacts(null, META, { store, stateLegislators: {
+    "US-AZ": { versionId: "az-1", value: { jurisdiction: "US-AZ", officeholders: [] } },
+    "US-NH": { versionId: "nh-1", value: { jurisdiction: "US-NH", officeholders: [] } },
+  } })).status, "PUBLISHED");
+  const first = (await store.readManifest())!.manifest;
+  let reads = 0;
+  const counting = new Proxy(store, { get(target, key) {
+    if (key === "readBytes") return async (path: string) => { reads++; return target.readBytes(path); };
+    const value = Reflect.get(target, key); return typeof value === "function" ? value.bind(target) : value;
+  } });
+  const bundle = await ensureReaderAuthorityEdge(first, counting, ["state-legislators"]);
+  assert.equal(reads, 0, "entering a nationwide manifest opens no state payload");
+  assert.deepEqual(new Set(bundle.stateLegislators?.jurisdictions), new Set(["US-AZ", "US-NH"]));
+  assert.equal((await bundle.stateLegislators!.load("US-AZ"))?.versionId, "az-1");
+  assert.equal(reads, 1);
+  assert.equal((await bundle.stateLegislators!.load("US-AZ"))?.versionId, "az-1");
+  assert.equal(reads, 1, "unchanged jurisdiction is reused");
+  assert.equal((await publishReaderEdgeArtifacts(null, META, { store, stateLegislators: {
+    "US-AZ": { versionId: "az-2", value: { jurisdiction: "US-AZ", officeholders: [] } },
+    "US-NH": { versionId: "nh-1", carried: true },
+  } })).status, "PUBLISHED");
+  const next = (await store.readManifest())!.manifest;
+  assert.deepEqual(next.stateLegislators!["US-NH"], first.stateLegislators!["US-NH"]);
+  assert.equal(next.stateLegislators!["US-AZ"].version, "az-2");
+  assert.equal((await publishReaderEdgeArtifacts(snapshot([meeting("new-meeting", "ocd-division/country:us/state:az")]), META, { store })).status, "PUBLISHED");
+  assert.deepEqual((await store.readManifest())!.manifest.stateLegislators, next.stateLegislators, "a meetings-only pass keeps the state references");
+});
+
+test("new readers lazily serve the accepted old state bundle until its publication cutover", async () => {
+  const artifacts = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-state-before-cutover-")));
+  const oldValue = {
+    "US-AZ": { jurisdiction: "US-AZ", generatedAt: "2026-08-01", sourceId: "az-legislature" },
+    "US-NH": { jurisdiction: "US-NH", generatedAt: "2026-08-02", sourceId: "nh-general-court" },
+  };
+  await publishReaderEdgeArtifacts(null, META, { store: artifacts, authority: { "state-legislators": {
+    versionId: "US-AZ=az-readable-before-cutover|US-NH=nh-readable-before-cutover", value: oldValue,
+  } } });
+  const manifest = (await artifacts.readManifest())!.manifest;
+  let reads = 0;
+  const counting = new Proxy(artifacts, { get(target, key) {
+    if (key === "readBytes") return async (path: string) => { reads++; return target.readBytes(path); };
+    const value = Reflect.get(target, key); return typeof value === "function" ? value.bind(target) : value;
+  } });
+  assert.equal((await ensureReaderAuthorityEdge(manifest, counting, ["federal-directory"])).stateLegislators, undefined);
+  const edge = (await ensureReaderAuthorityEdge(manifest, counting, ["state-legislators"])).stateLegislators!;
+  assert.deepEqual([...edge.jurisdictions].sort(), ["US-AZ", "US-NH"]);
+  assert.equal(reads, 0, "installing the old manifest does not load its national payload");
+  assert.equal(await edge.load("US-NJ"), null);
+  assert.equal(reads, 0, "an unheld state never opens the old payload");
+  assert.deepEqual(await edge.load("US-NH"), { value: oldValue["US-NH"], versionId: "nh-readable-before-cutover" });
+  assert.equal(reads, 1);
+  assert.deepEqual(await edge.load("US-AZ"), { value: oldValue["US-AZ"], versionId: "az-readable-before-cutover" });
+  assert.equal(reads, 1, "the accepted bundle is read once without changing its evidence dates");
+});
+
+test("the first scoped publication converts the accepted state bundle without losing unselected states", async () => {
+  const artifacts = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-state-cutover-")));
+  await publishReaderEdgeArtifacts(null, META, { store: artifacts, authority: { "state-legislators": {
+    versionId: "US-AZ=az-prior|US-NH=nh-prior", value: {
+      "US-AZ": { jurisdiction: "US-AZ", generatedAt: "2026-08-01" },
+      "US-NH": { jurisdiction: "US-NH", generatedAt: "2026-08-02" },
+    },
+  } } });
+  assert.equal(await publishRoutineReaderEdge(new MemoryRoutineDataStore(), "2026-09-06T00:00:00Z", [], { artifactStore: artifacts }), true);
+  const manifest = (await artifacts.readManifest())!.manifest;
+  assert.equal(manifest.authorityArtifacts?.["state-legislators"], undefined);
+  assert.equal(manifest.stateLegislators!["US-NH"].version, "nh-prior");
+  const held = await ensureReaderAuthorityEdge(manifest, artifacts, ["state-legislators"]);
+  assert.equal((await held.stateLegislators!.load("US-NH"))!.value.generatedAt, "2026-08-02");
+});
+
+test("a lost manifest CAS remains a retryable supervisor publication failure", async () => {
+  const artifacts = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-supervisor-race-")));
+  const raced = new Proxy(artifacts, { get(target, key) {
+    if (key === "writeManifest") return async () => ({ modified: false, etag: "winner" });
+    const value = Reflect.get(target, key); return typeof value === "function" ? value.bind(target) : value;
+  } });
+  assert.equal(await publishRoutineReaderEdge(new MemoryRoutineDataStore(), "2026-09-06T00:00:00Z", [], { artifactStore: raced }), false);
+  assert.equal(await artifacts.readManifest(), null);
+});
 
 test("stateOfOcdId / scopeOfMeeting derive the geographic partition key", () => {
   assert.equal(stateOfOcdId("ocd-division/country:us/state:az/place:tucson#governing"), "az");
@@ -325,7 +450,7 @@ test("authority-only publication carries geographic references and writes no mee
   let geographicWrites = 0;
   const counted = new Proxy(store, { get(target, key) {
     const value = Reflect.get(target, key);
-    if (key === "writeArtifact") return (...args: Parameters<typeof store.writeArtifact>) => { geographicWrites++; return target.writeArtifact(...args); };
+    if (key === "putImmutable") return (...args: Parameters<typeof store.putImmutable>) => { if (args[1] === "json") geographicWrites++; return target.putImmutable(...args); };
     return typeof value === "function" ? value.bind(target) : value;
   } });
   const snap = snapshot([meeting("cochise", "ocd-division/country:us/state:az/county:cochise")]);
@@ -368,7 +493,7 @@ test("a changed meeting rewrites only its area; unchanged references survive pub
   const before = (await store.readManifest())!.manifest;
   const writes: string[] = [];
   const counted = new Proxy(store, { get(target, key) {
-    if (key === "writeArtifact") return (path: string, value: never) => { writes.push(path); return target.writeArtifact(path, value); };
+    if (key === "putImmutable") return async (...args: Parameters<typeof store.putImmutable>) => { const path = await target.putImmutable(...args); if (args[1] === "json") writes.push(path); return path; };
     const value = Reflect.get(target, key);
     return typeof value === "function" ? value.bind(target) : value;
   } });

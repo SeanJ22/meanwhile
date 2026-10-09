@@ -61,11 +61,19 @@ export async function GET(
   // off the officeholder index, local governing bodies off the curated
   // rosters. Asked by division key, so neither depends on where the reader is.
   const seats = await timing.time("holders", () => seatHoldersForDivision(ocdId));
-  const holders = seats.length > 0 ? seats : governingRosterHoldersForDivision(ocdId);
 
-  // The division's own facts, off the same committed registry the map draws
-  // from. Absent rather than invented when the registry does not hold it.
-  const [known] = await timing.time("division", () => divisionsByOcdIds([ocdId]));
+  // Division labels and roster gaps are separate from a sourced person's identity. A registry
+  // failure leaves that metadata unavailable while held legislative people still reach the card.
+  const metadata = await timing.time("division", async () => {
+    try {
+      const [known] = await divisionsByOcdIds([ocdId]);
+      return { known, rosterGaps: rosterGapsForDivision(ocdId), available: true };
+    } catch {
+      return { known: undefined, rosterGaps: [], available: false };
+    }
+  });
+  const holders = seats.length > 0 ? seats : metadata.available ? governingRosterHoldersForDivision(ocdId) : [];
+  const { known } = metadata;
 
   return Response.json(
     {
@@ -73,16 +81,14 @@ export async function GET(
       label: known?.label ?? null,
       divisionType: known?.divisionType ?? null,
       tier: known?.tier ?? null,
-      holderStatus: /\/(?:sldu|sldl):/.test(ocdId)
-        ? holders.length > 0 ? "HELD" : "HOLDING_UNAVAILABLE"
-        : holders.length > 0
-          ? "HELD"
-          : "NOT_RECORDED",
+      holderStatus: holders.length > 0 ? "HELD"
+        : !metadata.available || /\/(?:sldu|sldl):/.test(ocdId) ? "HOLDING_UNAVAILABLE" : "NOT_RECORDED",
       holders,
-      rosterGaps: rosterGapsForDivision(ocdId),
+      rosterGaps: metadata.rosterGaps,
+      metadataStatus: metadata.available ? "HELD" : "HOLDING_UNAVAILABLE",
     },
     {
-      headers: { ...CDN_HELD, "Server-Timing": timing.header() },
+      headers: { ...(metadata.available ? CDN_HELD : { "Cache-Control": "no-store" }), "Server-Timing": timing.header() },
     },
   );
 }

@@ -1,80 +1,119 @@
 import { createHash } from "node:crypto";
-import { createInflateRaw } from "node:zlib";
-
+import { createReadStream, createWriteStream } from "node:fs";
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { pipeline } from "node:stream/promises";
 import { OUTBOUND_USER_AGENT } from "../../geo/outbound-agent.ts";
-import { decodeUtf8, type TextChunks } from "./streaming.ts";
+import { openZipFile } from "../archive.ts";
+import { decodeUtf8 } from "./streaming.ts";
 import type { PrlDataset } from "./inventory.ts";
 import type { PrlSourceOpen } from "./ingest.ts";
+import type { PrlArchiveStore } from "./archive-store.ts";
 
-/**
- * Acquires a dataset's bytes and streams its one member through the inflater.
- * Nothing is written to disk: the compressed archive is held in memory and the
- * multi-gigabyte member is stream-inflated. The sha256 is of the exact
- * compressed bytes, so a later run can tell whether the source moved.
- */
-
-interface ZipLocalHeader {
-  readonly method: number;
-  readonly dataStart: number;
-  readonly name: string;
+const CHUNK_BYTES = 4 * 1024 * 1024;
+const MAX_SOURCE_BYTES = 2 * 1024 * 1024 * 1024;
+interface HeldSource {
+  version: 1; url: string; finalUrl: string; sha256: string; bytes: number;
+  retrievedAt: string; etag: string | null; lastModified: string | null; chunks: string[];
 }
 
-/** Parse the first local file header of a zip from its leading bytes. */
-export function parseZipLocalHeader(head: Buffer): ZipLocalHeader {
-  if (head.length < 30 || head.readUInt32LE(0) !== 0x04034b50) {
-    throw new Error("PRL response is not a ZIP archive");
-  }
-  const method = head.readUInt16LE(8);
-  const nameLength = head.readUInt16LE(26);
-  const extraLength = head.readUInt16LE(28);
-  const name = head.subarray(30, 30 + nameLength).toString("utf8");
-  if (name.includes("..") || /^[\\/]/.test(name)) throw new Error(`PRL ZIP member name is unsafe: ${JSON.stringify(name)}`);
-  return { method, dataStart: 30 + nameLength + extraLength, name };
-}
-
-/** Yield decoded text chunks of a zip member from its in-memory compressed bytes. */
-function inflateMember(compressed: Buffer, method: number): TextChunks {
-  async function* bytes(): AsyncGenerator<Uint8Array> {
-    if (method === 0) {
-      yield compressed; // stored, not deflated
-      return;
+/** The complete compressed source is staged on disk, never held in a worker's heap.
+ * Captured source bytes survive parser refusals. Only fully decoded, validated
+ * sources may later move the canonical civic-data publication pointer. */
+export async function openPrlSource(dataset: PrlDataset, fetchImpl: typeof fetch = fetch,
+  archive?: PrlArchiveStore, reuseIfSha256?: string): Promise<PrlSourceOpen> {
+  const root = await mkdtemp(join(tmpdir(), "prl-source-"));
+  const path = join(root, "source");
+  const dispose = () => rm(root, { recursive: true, force: true });
+  const sourceKey = `${dataset.id}/source.json`;
+  try {
+    let held: HeldSource | null = null;
+    const saved = await archive?.get(sourceKey);
+    if (saved) {
+      held = JSON.parse(new TextDecoder().decode(saved)) as HeldSource;
+      if (held.version !== 1 || held.url !== dataset.url || !/^[a-f0-9]{64}$/.test(held.sha256) ||
+          !Array.isArray(held.chunks) || !held.chunks.length || held.bytes <= 0 || held.bytes > MAX_SOURCE_BYTES) throw new Error("PRL_HELD_SOURCE_INVALID");
     }
-    const inflate = createInflateRaw();
-    inflate.end(compressed);
-    for await (const chunk of inflate) yield chunk as Uint8Array;
-  }
-  return decodeUtf8(bytes());
-}
-
-/**
- * Open a dataset's source: fetch the bytes into memory, hash them, and return a
- * streaming text source over the (inflated) member. A plain CSV is streamed as
- * itself; a zip is verified to hold one supported member first.
- */
-export async function openPrlSource(dataset: PrlDataset, fetchImpl: typeof fetch = fetch): Promise<PrlSourceOpen> {
-  const response = await fetchImpl(dataset.url, { headers: { "user-agent": OUTBOUND_USER_AGENT }, redirect: "follow" });
-  if (!response.ok) {
-    throw new Error(`PRL answered HTTP ${response.status} ${response.statusText} for ${dataset.url}`);
-  }
-  const compressed = Buffer.from(await response.arrayBuffer());
-  const sourceSha256 = createHash("sha256").update(compressed).digest("hex");
-  const finalUrl = response.url || dataset.url;
-
-  if (dataset.format === "csv") {
-    async function* raw(): AsyncGenerator<Uint8Array> {
-      yield compressed;
+    const headers: Record<string, string> = { "user-agent": OUTBOUND_USER_AGENT };
+    if (held?.etag) headers["if-none-match"] = held.etag;
+    else if (held?.lastModified) headers["if-modified-since"] = held.lastModified;
+    const response = await fetchImpl(dataset.url, { headers, redirect: "follow", signal: AbortSignal.timeout(180_000) });
+    if (response.status === 206) throw new Error("PRL_SOURCE_TRUNCATED");
+    if (response.status === 304 && held && held.sha256 === reuseIfSha256) {
+      return { textChunks: (async function* () {})(), sourceSha256: held.sha256, finalUrl: held.finalUrl,
+        member: dataset.file, retrievedAt: held.retrievedAt, byteLength: held.bytes, unchanged: true, dispose };
     }
-    return { textChunks: decodeUtf8(raw()), sourceSha256, finalUrl, member: dataset.file };
-  }
-
-  const header = parseZipLocalHeader(compressed);
-  if (header.method !== 0 && header.method !== 8) {
-    throw new Error(`PRL ZIP for ${dataset.id} uses unsupported method ${header.method}`);
-  }
-  return {
-    textChunks: inflateMember(compressed.subarray(header.dataStart), header.method),
-    sourceSha256,
-    finalUrl,
-    member: header.name,
-  };
+    const hash = createHash("sha256");
+    let size = 0, source: HeldSource;
+    if (response.status === 304 && held && archive) {
+      const sourceChunks = held.chunks;
+      async function* restoredChunks() {
+        for (const key of sourceChunks) {
+          const chunk = await archive!.get(key);
+          if (!chunk || chunk.byteLength > CHUNK_BYTES) throw new Error("PRL_HELD_SOURCE_CHUNK_MISSING");
+          hash.update(chunk); size += chunk.byteLength;
+          yield chunk;
+        }
+      }
+      await pipeline(restoredChunks(), createWriteStream(path, { flags: "wx" }));
+      if (size !== held.bytes || hash.digest("hex") !== held.sha256) throw new Error("PRL_HELD_SOURCE_HASH_MISMATCH");
+      source = held;
+    } else {
+      if (!response.ok || !response.body) throw new Error(`PRL_SOURCE_HTTP_${response.status}${response.headers.get("retry-after") ? `:Retry-After=${response.headers.get("retry-after")}` : ""}`);
+      const stated = Number(response.headers.get("content-length"));
+      if (stated > MAX_SOURCE_BYTES) throw new Error("PRL_SOURCE_TOO_LARGE");
+      const reader = response.body.getReader();
+      async function* downloadedChunks() {
+        try { while (true) {
+          const next = await reader.read();
+          if (next.done) break;
+          const chunk = next.value;
+          size += chunk.byteLength;
+          if (size > MAX_SOURCE_BYTES) throw new Error("PRL_SOURCE_TOO_LARGE");
+          hash.update(chunk);
+          yield chunk;
+        } } finally {
+          await reader.cancel().catch(() => {});
+          reader.releaseLock();
+        }
+      }
+      await pipeline(downloadedChunks(), createWriteStream(path, { flags: "wx" }));
+      if (!size || (stated > 0 && !response.headers.get("content-encoding") && size !== stated)) throw new Error("PRL_SOURCE_TRUNCATED");
+      const digest = hash.digest("hex");
+      source = held?.sha256 === digest ? { ...held, etag: response.headers.get("etag"), lastModified: response.headers.get("last-modified") }
+        : { version: 1, url: dataset.url, finalUrl: response.url || dataset.url, sha256: digest, bytes: size,
+          retrievedAt: new Date().toISOString(), etag: response.headers.get("etag"), lastModified: response.headers.get("last-modified"), chunks: [] };
+    }
+    if (archive && !source.chunks.length) {
+      for await (const chunk of createReadStream(path, { highWaterMark: CHUNK_BYTES })) {
+        const key = `${dataset.id}/sources/${source.sha256}/part-${String(source.chunks.length).padStart(5, "0")}`;
+        const stored = await archive.head(key);
+        if (!stored || stored.size !== chunk.byteLength) await archive.put(key, chunk, "application/octet-stream");
+        source.chunks.push(key);
+      }
+    }
+    if (source.sha256 === reuseIfSha256) {
+      if (archive) await archive.put(sourceKey, new TextEncoder().encode(JSON.stringify(source)), "application/json");
+      return { textChunks: (async function* () {})(), sourceSha256: source.sha256, finalUrl: source.finalUrl,
+        member: dataset.file, retrievedAt: source.retrievedAt, byteLength: source.bytes, unchanged: true, dispose };
+    }
+    const entries = dataset.format === "csv" ? null : await openZipFile(path, {
+      maxEntries: 8, maxMemberBytes: 32 * 1024 ** 3, maxTotalBytes: 32 * 1024 ** 3, maxDirectoryBytes: 1024 * 1024,
+    });
+    const extension = dataset.format === "json-zip" ? ".json" : ".csv";
+    if (entries && (entries.length !== 1 || !entries[0].name.toLowerCase().endsWith(extension))) throw new Error("PRL_SOURCE_MEMBER_INVALID");
+    if (archive) await archive.put(sourceKey, new TextEncoder().encode(JSON.stringify(source)), "application/json");
+    let complete = false;
+    const bytes = entries ? entries[0].stream() : createReadStream(path);
+    async function* textChunks() {
+      for await (const chunk of decodeUtf8(bytes)) yield chunk;
+      complete = true;
+    }
+    return { textChunks: textChunks(), sourceSha256: source.sha256, finalUrl: source.finalUrl,
+      member: entries?.[0].name ?? dataset.file, retrievedAt: source.retrievedAt, byteLength: source.bytes, dispose,
+      accept: async () => {
+        if (!complete) throw new Error("PRL_SOURCE_NOT_FULLY_READ");
+      } };
+  } catch (error) { await dispose(); throw error; }
 }

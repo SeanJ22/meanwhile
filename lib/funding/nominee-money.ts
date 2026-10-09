@@ -132,7 +132,7 @@ export function unresolvedNomineeGapRecord(
 export function stateMoneyForCard(cardKey: string, contestId: string): CardMoney {
   // The Arizona bridge has no authority over another state's candidacy, so an
   // Arizona outage cannot erase another state's finance answer.
-  if (!contestId.startsWith("ballot-az-")) {
+  if (!contestId.startsWith("ballot-az-") || !cardKey.includes("|")) {
     return {
       records: stateMoneyForTarget(cardKey),
       resolution: "DIRECT_CANDIDACY_KEY",

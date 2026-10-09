@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { sourceCheckedAt } from "./source-check.ts";
 import { isScopedManualContractScope } from "./scoped-manual-contracts.ts";
 
 import { and, desc, eq, getTableColumns, inArray, like, sql } from "drizzle-orm";
@@ -588,11 +589,11 @@ interface PromotionPointerProof {
 /** The only candidate fields the routine clock reads. It runs for every task on every pass, so widening it is a cost decision. */
 export const ROUTINE_CLOCK_CANDIDATE_FIELDS = {
   top: ["id", "sourceId", "recordClass", "scope", "bootstrapImport"],
-  retrieval: ["retrievedAt"],
+  retrieval: ["retrievedAt", "sourceCheck"],
 } as const;
 
 type RoutineClockCandidate = Pick<RoutineCandidate, "id" | "sourceId" | "recordClass" | "scope" | "bootstrapImport"> & {
-  readonly retrieval: Pick<RoutineCandidate["retrieval"], "retrievedAt">;
+  readonly retrieval: Pick<RoutineCandidate["retrieval"], "retrievedAt" | "sourceCheck">;
 };
 
 export type RoutineClockRecord = Omit<CandidateVersionRecord, "candidate"> & {
@@ -647,7 +648,7 @@ export function proofConsistentObservedSuccess(
   observedAt: string | null | undefined,
 ): string | undefined {
   if (!proofConsistentPointedSuccess(record, pointer)) return undefined;
-  return typeof observedAt === "string" && Number.isFinite(Date.parse(observedAt)) ? observedAt : undefined;
+  return sourceCheckedAt(record.candidate.retrieval, observedAt);
 }
 
 export function meetingPayloadSittingStarts(payload: unknown): readonly string[] {
@@ -911,6 +912,11 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     if (row.candidate.normalization.normalizedHash !== input.readModelHash) {
       return { kind: "HASH_DIFFERS", detail: `${input.pointerVersionId}'s read model is not ${input.readModelHash}.` };
     }
+    const priorConfirmation = latestUnchangedConfirmation(this.history.get(input.pointerVersionId) ?? [], input.pointerVersionId);
+    if (priorConfirmation && Date.parse(sourceCheckedAt(priorConfirmation.retrieval, priorConfirmation.observedAt) ?? "") >
+      Date.parse(sourceCheckedAt(built.confirmation.retrieval, built.confirmation.observedAt) ?? "")) {
+      return { kind: "CONFIRMED", versionId: input.pointerVersionId, at: priorConfirmation.observedAt };
+    }
     const { history, event } = this.nextEvent(input.pointerVersionId, "PROMOTED", at, serializeUnchangedConfirmation(built.confirmation));
     history.push(structuredClone(event));
     if (input.retainedSourceResponses?.length) {
@@ -995,7 +1001,9 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       )
       .flatMap((row) => {
         const firstEvent = this.history.get(row.candidate.id)?.find((event) => event.sequence === 1);
-        return firstEvent && Number.isFinite(Date.parse(firstEvent.at)) ? [{ at: firstEvent.at }] : [];
+        const at = row.state === "PROMOTED" && row.acquisitionSucceeded
+          ? sourceCheckedAt(row.candidate.retrieval, firstEvent?.at) : firstEvent?.at;
+        return at && Number.isFinite(Date.parse(at)) ? [{ at }] : [];
       })
       .sort((a, b) => Date.parse(b.at) - Date.parse(a.at));
         // The retry scheduler runs on the locally observed first event, so a far-future publisher timestamp cannot postpone it.
@@ -1092,13 +1100,14 @@ function confirmedClock(
   confirmation: UnchangedConfirmation | null,
   sittings: { readonly sittingStarts?: readonly string[] },
 ): RoutineStoreClock {
-  const lastAttemptedAt = laterInstant(clock.lastAttemptedAt, confirmation?.observedAt);
+  const confirmedAt = confirmation ? sourceCheckedAt(confirmation.retrieval, confirmation.observedAt) : undefined;
+  const lastAttemptedAt = laterInstant(clock.lastAttemptedAt, confirmedAt);
   const lastSucceededAt = clock.lastSucceededAt === undefined
     ? undefined
     : laterInstant(clock.lastSucceededAt, confirmation?.retrieval.retrievedAt);
   const lastSucceededObservedAt = clock.lastSucceededObservedAt === undefined
     ? undefined
-    : laterInstant(clock.lastSucceededObservedAt, confirmation?.observedAt);
+    : laterInstant(clock.lastSucceededObservedAt, confirmedAt);
   return {
     ...(lastAttemptedAt ? { lastAttemptedAt } : {}),
     ...(lastSucceededAt ? { lastSucceededAt } : {}),
@@ -1832,6 +1841,13 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     this.assertCandidateMutationAuthority({ id, sourceId: input.sourceId, recordClass: input.recordClass, scope: input.scope });
     const detail = serializeUnchangedConfirmation(built.confirmation);
     const nextSequence = this.nextCandidateEventSequence(id);
+    const checkedAt = sourceCheckedAt(built.confirmation.retrieval, built.confirmation.observedAt)!;
+    // This receipt shares the existing candidate lock. A delayed parser replay cannot replace a newer real check.
+    const priorCheckedAt = sql`case when left(prior_confirmation.detail, ${UNCHANGED_CONFIRMATION_PREFIX.length}) = ${UNCHANGED_CONFIRMATION_PREFIX}
+      then coalesce(
+        (substring(prior_confirmation.detail from ${UNCHANGED_CONFIRMATION_PREFIX.length + 1})::jsonb #>> '{retrieval,sourceCheck,checkedAt}')::timestamptz,
+        (substring(prior_confirmation.detail from ${UNCHANGED_CONFIRMATION_PREFIX.length + 1})::jsonb ->> 'observedAt')::timestamptz
+      ) end`;
     let eventRows: readonly { readonly sequence: number }[];
     try {
     [, eventRows] = await this.db.batch([
@@ -1859,6 +1875,11 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
             where ${civicDataCandidateEvents.candidateId} = ${id}
               and ${civicDataCandidateEvents.at} > ${at}::timestamptz
           )
+          and not exists (
+            select 1 from civic_data_candidate_events as prior_confirmation
+            where prior_confirmation.candidate_id = ${id}
+              and ${priorCheckedAt} > ${checkedAt}::timestamptz
+          )
       `).returning({ sequence: civicDataCandidateEvents.sequence }),
       ...(input.retainedSourceResponses?.length
         ? [this.db.insert(civicDataCandidateEvents).select(sql`
@@ -1885,6 +1906,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
         sourceId: civicDataPromotions.sourceId,
         currentVersionId: civicDataPromotions.currentVersionId,
         lastKnownGoodVersionId: civicDataPromotions.lastKnownGoodVersionId,
+        latestConfirmation: LATEST_CONFIRMATION_DETAIL,
       }).from(civicDataPromotions)
         .where(and(eq(civicDataPromotions.recordClass, input.recordClass), eq(civicDataPromotions.scope, input.scope)))
         .limit(1),
@@ -1904,6 +1926,10 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     }
     if (candidate.imported) return { kind: "POINTER_IS_IMPORT", detail: `${id} is a trusted-LKG import; a live read of it promotes.` };
     if (candidate.normalizedHash !== input.readModelHash) return { kind: "HASH_DIFFERS", detail: `${id}'s read model is not ${input.readModelHash}.` };
+    const priorConfirmation = pointer.latestConfirmation ? parseUnchangedConfirmation(pointer.latestConfirmation) : null;
+    if (priorConfirmation?.versionId === id && Date.parse(sourceCheckedAt(priorConfirmation.retrieval, priorConfirmation.observedAt) ?? "") > Date.parse(checkedAt)) {
+      return { kind: "CONFIRMED", versionId: id, at: priorConfirmation.observedAt };
+    }
     throw new Error(`CANDIDATE_EVENT_TIME_INVALID:${id}:PROMOTED`);
   }
 
@@ -2023,8 +2049,15 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   }
 
   async clock(sourceId: string, recordClass: RoutineRecordClass, scope: string): Promise<RoutineStoreClock> {
+    // Successful retained-byte replay records processing, but no newer provider attempt.
+    // These fields occur only on validated promotions; failures keep their local retry clock.
+    const attemptAt = sql`CASE WHEN ${civicDataCandidates.state} = 'PROMOTED'
+      AND ${civicDataCandidates.acquisitionSucceeded} = true
+      AND ${civicDataCandidates.candidate}#>>'{retrieval,sourceCheck,checkedAt}' IS NOT NULL
+      THEN LEAST((${civicDataCandidates.candidate}#>>'{retrieval,sourceCheck,checkedAt}')::timestamptz, ${civicDataCandidateEvents.at})
+      ELSE ${civicDataCandidateEvents.at} END`;
     const attemptQuery = this.db
-      .select({ attemptedAt: civicDataCandidateEvents.at })
+      .select({ attemptedAt: attemptAt })
       .from(civicDataCandidates)
       .innerJoin(civicDataCandidateEvents, and(
         eq(civicDataCandidateEvents.candidateId, civicDataCandidates.id),
@@ -2037,7 +2070,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
                 // A frozen cutover import is not a publisher attempt, so the contract is due at once for its first live read.
         sql`coalesce(${civicDataCandidates.candidate}#>>'{bootstrapImport,kind}', '') not in ('TRUSTED_LKG_IMPORT', 'TRUSTED_LKG_REATTESTATION')`,
       ))
-      .orderBy(desc(civicDataCandidateEvents.at))
+      .orderBy(desc(attemptAt))
       .limit(1);
     const pointerQuery = routineClockPointerRead(this.db, recordClass, scope);
     const observedQuery = routineClockPointedObservedRead(this.db, recordClass, scope);

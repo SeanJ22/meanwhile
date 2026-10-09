@@ -4,7 +4,7 @@ import type { RoutineSourceTask } from "./runner.ts";
 export const AUTOMATIC_REFRESH_CONTRACT_IDS = [
   "voting-sites", "az-sos-campaign-finance", "nh-sos-campaign-finance",
   "nj-elec-campaign-finance", "az-pima-local-finance",
-  "member-offices",
+  "member-offices", "prl", "prl-archives",
   "congress-bulk-roster", "congress-rollcalls", "federal-key-votes",
 ] as const satisfies readonly ManualProductionContractId[];
 

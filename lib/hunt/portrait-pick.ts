@@ -6,8 +6,6 @@
  * a share card, not a portrait.
  */
 
-import { PORTRAIT_ACCEPT } from "../photos/decode.ts";
-import { sourceUserAgent } from "../sources/http.ts";
 
 /** One image on a page, resolved against the page's own URL. */
 export interface PageImage {
@@ -44,15 +42,6 @@ export function imagesIn(html: string, base: string): PageImage[] {
   return out;
 }
 
-/** Surnames and given names, so a filename or alt can be matched against them. */
-export function nameTokens(name: string): string[] {
-  return name
-    .toLowerCase()
-    .replace(/[^a-z ]/g, " ")
-    .split(/\s+/)
-    .filter((t) => t.length > 2);
-}
-
 /** The picked portrait, and why it was picked. */
 export interface PickedPortrait {
   src: string;
@@ -74,7 +63,11 @@ const FURNITURE =
  * `\b` is not enough, since `_` is a word character (`Name_LOGOS.ai.png`).
  */
 function words(s: string): string {
-  return s.toLowerCase().replace(/[^a-z0-9]+/g, " ");
+  return splitCaseBoundaries(s).toLowerCase().replace(/[^a-z0-9]+/g, " ");
+}
+
+function splitCaseBoundaries(value: string): string {
+  return value.replace(/([\p{Ll}\p{N}])(\p{Lu})/gu, "$1 $2");
 }
 
 /** Does the page's own alt text or filename call this furniture? */
@@ -103,7 +96,7 @@ function imageHaystack(img: PageImage): string {
     /* keep the raw */
   }
   const file = src.split(/[?#]/)[0].split("/").pop() ?? "";
-  return `${img.alt} ${file}`.toLowerCase();
+  return `${img.alt} ${file}`;
 }
 
 /**
@@ -112,27 +105,27 @@ function imageHaystack(img: PageImage): string {
  * `MIN_PORTRAIT_EDGE`; a decoding caller walks this list.
  */
 export function pickPortraits(name: string, all: readonly PageImage[]): PickedPortrait[] {
-  const want = nameTokens(name);
-  const surname = want[want.length - 1];
+  const normalized = (value: string) => splitCaseBoundaries(value.normalize("NFKC"))
+    .toLocaleLowerCase("en-US").replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+  const want = normalized(name);
+  if (!want) return [];
   const out: PickedPortrait[] = [];
   const seen = new Set<string>();
   for (const img of all) {
     if (looksLikeFurniture(img)) continue;
     const haystack = imageHaystack(img);
-    const hits = want.filter((t) => haystack.includes(t));
-    if (hits.length >= 2 || (surname && haystack.includes(surname) && /\.(jpe?g|png|webp)/i.test(img.src))) {
+    if (` ${normalized(haystack)} `.includes(` ${want} `)) {
       if (seen.has(img.src)) continue;
       seen.add(img.src);
-      out.push({ src: img.src, alt: img.alt, why: `name matched on ${hits.join(", ") || surname}` });
+      out.push({ src: img.src, alt: img.alt, why: "Publisher labels this image with the full source name" });
     }
   }
   return out;
 }
 
 /**
- * Pick the portrait: name-matched, or nothing. Two tokens matched, or the
- * surname matched on something that is plainly an image file (the extension
- * keeps it from matching a surname inside an unrelated URL path).
+ * Return an image explicitly labelled with the complete source name. This is
+ * extraction only; the publisher binds the saved profile to a stable person.
  */
 export function pickPortrait(name: string, all: readonly PageImage[]): PickedPortrait | null {
   return pickPortraits(name, all)[0] ?? null;
@@ -152,84 +145,10 @@ export function phoneIn(text: string): string | null {
   return `${area}-${m[2]}-${m[3]}${m[4] ? ` ${m[4].trim()}` : ""}`;
 }
 
-/**
- * Is this URL actually an image? A name-matched `<img src>` can serve a
- * soft-404 HTML page with a 200. Both the content type and the magic bytes
- * must agree.
- */
-export interface ImageVerdict {
-  ok: boolean;
-  status: number;
-  bytes: number;
-  contentType: string;
-  why: string;
-}
-
-/** The first bytes of the formats a portrait may be in. */
-function magicOf(b: Uint8Array): string | null {
-  if (b.length < 12) return null;
-  if (b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff) return "jpeg";
-  if (b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4e && b[3] === 0x47) return "png";
-  if (b[0] === 0x47 && b[1] === 0x49 && b[2] === 0x46) return "gif";
-  const riff = String.fromCharCode(...b.slice(0, 4));
-  const webp = String.fromCharCode(...b.slice(8, 12));
-  if (riff === "RIFF" && webp === "WEBP") return "webp";
-  return null;
-}
-
 /** `&#038;` and friends, which a page's own markup puts inside a src. */
 export function decodeEntities(url: string): string {
   return url
     .replace(/&#0?38;|&amp;/g, "&")
     .replace(/&#0?39;/g, "'")
     .replace(/&quot;/g, '"');
-}
-
-export async function verifyIsImage(
-  url: string,
-  fetchImpl: typeof fetch = fetch,
-): Promise<ImageVerdict> {
-  let res: Response;
-  try {
-    res = await fetchImpl(decodeEntities(url), {
-      headers: { "user-agent": sourceUserAgent(), accept: PORTRAIT_ACCEPT },
-      redirect: "follow",
-    });
-  } catch (e) {
-    return { ok: false, status: 0, bytes: 0, contentType: "", why: `request failed: ${(e as Error).message}` };
-  }
-  const contentType = res.headers.get("content-type") ?? "";
-  if (!res.ok) {
-    return { ok: false, status: res.status, bytes: 0, contentType, why: `HTTP ${res.status}` };
-  }
-  const bytes = new Uint8Array(await res.arrayBuffer());
-  const magic = magicOf(bytes);
-  if (!magic) {
-    return {
-      ok: false,
-      status: res.status,
-      bytes: bytes.length,
-      contentType,
-      why:
-        `HTTP 200 with ${bytes.length} B of ${contentType || "an unnamed type"} whose first bytes are ` +
-        "no image format this reads. A 200 that is not the thing is not a document — most often a " +
-        "soft 404 wearing an image's URL.",
-    };
-  }
-  if (!/^image\//i.test(contentType)) {
-    return {
-      ok: false,
-      status: res.status,
-      bytes: bytes.length,
-      contentType,
-      why: `the bytes are a ${magic} and the server calls it ${contentType} — the two disagree, and a portrait is not shipped on a disagreement`,
-    };
-  }
-  return {
-    ok: true,
-    status: res.status,
-    bytes: bytes.length,
-    contentType,
-    why: `${bytes.length} B of ${magic}, served as ${contentType}`,
-  };
 }

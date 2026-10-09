@@ -95,7 +95,7 @@ function promotedStore<T>(payload: T): CivicDataReadStore {
       },
       normalization: {
         succeeded: true,
-        parserVersion: "fec-funding/2",
+        parserVersion: "fec-funding/3",
         schemaVersion: "2",
         normalizedHash: payloadHash,
         normalizedPayloadHash: payloadHash,

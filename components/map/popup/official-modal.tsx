@@ -72,7 +72,7 @@ export function OfficialModal({
    * citations. A state legislator's offices come from Open States.
    */
   const [prlProfile, setPrlProfile] = useState<PrlReaderProfile | null>(null);
-  const { directory } = useMemberDirectory(holder.id);
+  const { directory } = useMemberDirectory(holder.id,holder.state);
   const officeSource = directory?.officeDetails?.[0];
   const sources = personCardSources(
     holder,

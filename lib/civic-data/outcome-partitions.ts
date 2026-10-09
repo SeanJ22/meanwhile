@@ -124,6 +124,9 @@ function buildOne(door: DoorRecord): OutcomePartitionContract | null {
   const tenant = tenantFor(row, kind, id, scope);
   const body = row.config.eventBodyId?.trim();
   const eventBodyId = kind === "legistar" && body && /^\d+$/.test(body) ? Number(body) : null;
+  if (kind === "legistar" && eventBodyId === null && !row.config.eventBodyName?.trim() && !row.config.insiteBodyName?.trim()) {
+    throw new Error(`OUTCOME_DOOR_NATIVE_BODY_UNRESOLVED:${row.bodyId}`);
+  }
   return {
     id,
     sourceId: DOOR_OUTCOMES_SOURCE_ID,

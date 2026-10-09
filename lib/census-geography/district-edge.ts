@@ -3,7 +3,7 @@ import type { GeographyType } from "./contract.ts";
 import type { CodeSlice, ContainerSlice, ScopeSlice, Slice } from "../control-plane/admin-view/promoted-slices.ts";
 
 const TYPES: readonly GeographyType[] = ["congressional_district", "state_leg_upper", "state_leg_lower"];
-export const censusDistrictEdgeVersion = (sourceVersion: string): string => `census-districts/v1:${sourceVersion}`;
+export const censusDistrictEdgeVersion = (sourceVersion: string): string => `census-districts/v2:${sourceVersion}`;
 
 export interface CensusDistrictEdge {
   readonly formatVersion: 1;
@@ -27,7 +27,9 @@ export function buildCensusDistrictEdge(dataset: BuiltDataset, sourceVersion: st
     }
   }
   return { formatVersion: 1, versionId: censusDistrictEdgeVersion(sourceVersion),
-    scopes: scopes.map(scope => ({ type: scope.type, version: scope.version, plan: scope.versionMeta.plan })), containers, codes };
+    scopes: scopes.map(scope => ({ type: scope.type, version: scope.version, plan: scope.versionMeta.plan,
+      applicability: scope.versionMeta.applicability, retrievalComplete: scope.versionMeta.retrievalComplete,
+      sourceUrls: scope.versionMeta.provenance.sourceUrls, observedAt: scope.versionMeta.provenance.computedAt })), containers, codes };
 }
 
 /** A failed or malformed serving copy never establishes new certainty. */

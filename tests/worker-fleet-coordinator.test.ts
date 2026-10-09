@@ -379,23 +379,29 @@ test("Hunter transport failure is durable OPEN evidence and retry reuses the can
   const result=await dispatchWorkerTask(h.runtime,first.task!); assert.equal(result.outcome,"WORKED",result.detail);
   const record=(await h.repos.workerResults.readAll())[0]; assert.equal(record.result.role,"ACQUIRER"); if(record.result.role!=="ACQUIRER") throw new Error("wrong role");
   assert.equal(record.result.verdict,"BLOCKED"); assert.equal(record.result.walkState.state,"OPEN"); assert.equal(record.result.artifacts.length,0); assert.equal(record.result.walk.at(-1)?.transport,"TIMEOUT");
+  let latestFailure = record;
+  for (const backoff of [FIRST_BACKOFF_MINUTES, 2 * FIRST_BACKOFF_MINUTES]) {
+    assert.equal((await nextAutonomousOperation(h.runtime, h.item.id)).action, "BLOCKED", "a passing outage owes a free retry first");
+    h.advanceTo(new Date(Date.parse(latestFailure.endedAt) + (backoff + 1) * 60_000).toISOString());
+    const due = await nextAutonomousOperation(h.runtime, h.item.id);
+    assert.equal(due.task?.workerTask?.role, "ACQUIRER", due.reason);
+    const retried = await dispatchWorkerTask(h.runtime, due.task!);
+    assert.equal(retried.outcome, "WORKED", retried.detail);
+    latestFailure = (await h.repos.workerResults.readAll()).find(row => row.attemptId === retried.attemptId)!;
+  }
   const novelty=await nextAutonomousOperation(h.runtime,h.item.id);
   assert.equal(novelty.action,"SCOUT"); assert.match(novelty.task!.routeId,/autonomous:novelty:/);
   assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).task?.id,novelty.task?.id,"restart reuses the same novelty task");
-  // Even after retry becomes due, the old route cannot starve the branch.
-  h.advanceTo(new Date(Date.parse(record.endedAt)+16*60_000).toISOString());
-  assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"SCOUT");
   const scout=await runAutonomousCoordinator(h.runtime,{maximum:1,maxScoutDispatches:1});
   assert.equal((await h.repos.attempts.mustRead(scout.dispatches[0].attemptId!)).value.outcome,"DENIED_BY_POLICY","offline fixture has no model transport; denial stays attributable");
+  h.advanceTo(new Date(Date.parse(latestFailure.endedAt) + (4 * FIRST_BACKOFF_MINUTES + 1) * 60_000).toISOString());
   const retry=await nextAutonomousOperation(h.runtime,h.item.id); assert.equal(retry.task?.workerTask?.role,"ACQUIRER"); assert.notEqual(retry.task?.id,first.task?.id);
   const restart=await nextAutonomousOperation(h.runtime,h.item.id); assert.equal(restart.task?.id,retry.task?.id);
   assert.ok(!(await h.repos.routeTasks.list()).some(t=>t.value.workerTask?.role==="PARSER"));
   const activity=(await readAutonomousActivity(h.repos,undefined,{observedAt:h.now()}))[0]; assert.equal(activity.walk.state,"OPEN"); assert.ok(activity.timeline.some(event=>event.walk?.transport==="TIMEOUT"));
 });
 
-test("CH-23 part 3 (DP-02): with one hunter path on, a passing outage on a known door is a free plain retry, and a shut door goes to the investigation", async t => {
-  const before=process.env.WTP_ONE_HUNTER_PATH; process.env.WTP_ONE_HUNTER_PATH="1";
-  t.after(()=>{ if(before===undefined) delete process.env.WTP_ONE_HUNTER_PATH; else process.env.WTP_ONE_HUNTER_PATH=before; });
+test("CH-23 part 3 (DP-02): a passing outage on a known door is a free plain retry, and a shut door goes to the investigation", async t => {
   const h=await autonomousHarness({response:{transportError:"socket timeout"}});
   const failOnce=async()=>{
     const op=await nextAutonomousOperation(h.runtime,h.item.id); assert.equal(op.task?.workerTask?.role,"ACQUIRER",op.reason);
@@ -417,12 +423,6 @@ test("CH-23 part 3 (DP-02): with one hunter path on, a passing outage on a known
   assert.equal(shut.action,"SCOUT",shut.reason); assert.match(shut.task!.routeId,/autonomous:novelty:/);
 });
 
-test("with one hunter path off, a known-door timeout still waits on a Scout turn before its retry (the way back)", async () => {
-  const h=await autonomousHarness({response:{transportError:"socket timeout"}});
-  const first=await nextAutonomousOperation(h.runtime,h.item.id);
-  assert.equal((await dispatchWorkerTask(h.runtime,first.task!)).outcome,"WORKED");
-  assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"SCOUT");
-});
 
 test("an elapsed acquisition cadence finishes retained worker handoffs before a real refresh",async()=>{
   const h=await autonomousHarness(); const acquired=await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1});

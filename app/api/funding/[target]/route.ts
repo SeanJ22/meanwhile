@@ -60,11 +60,12 @@ function timedRead<T>(timings: ReadTimings | undefined, name: string, read: () =
 }
 
 async function currentFundingTargetPlan(target: string, timings?: ReadTimings): Promise<FundingTargetPlan> {
+  const direct = directFundingTargetPlan(target);
+  if ((direct.federal || direct.state !== null) && !target.startsWith("congress:") && !target.includes("|")) return direct;
   // The registry and the federal directory are served from the reader authority
   // edge when this request entered one (GET below), the database otherwise:
   // the same readers Ask uses.
   await timedRead(timings, "registry", () => settleRegistryAuthorityReads("REGISTRY"));
-  const direct = directFundingTargetPlan(target);
   const related = getRegistryRuntimeReadModel().officialCandidacies.rows.filter((row) =>
     row.holder.id === target || row.candidacy?.candidacyId === target,
   );
@@ -80,7 +81,7 @@ async function currentFundingTargetPlan(target: string, timings?: ReadTimings): 
       || related.some((row) => row.holder.authority === "FEDERAL_DIRECTORY")
       || (candidacy !== null && FEDERAL_CONTEST.test(candidacy.contestId)),
     state,
-    azIdentity: state === "AZ",
+    azIdentity: state === "AZ" && target.includes("|"),
   };
 }
 

@@ -92,7 +92,7 @@ test("RCD-9: a freshly fetched stale state roster is refused", () => {
   assert.equal(result.receipt.checks.find((check) => check.check === "TEMPORAL_VALIDITY")?.code, "FRESH_FETCH_STALE_FACTS");
 });
 
-test("PDC: a thin NH response with one plausible member per chamber cannot replace LKG", () => {
+test("PDC: independently sourced NH members publish without a whole-chamber floor", () => {
   const member = (chamber: "H" | "S", seatNo: string, district: string) => ({
     chamber,
     familyName: chamber === "H" ? "House" : "Senate",
@@ -124,10 +124,10 @@ test("PDC: a thin NH response with one plausible member per chamber cannot repla
     ...exactNhIdentitySeed(extraction.members),
   });
   const result = validateRoutineCandidate(candidate, null, "2026-09-08T12:00:00.000Z");
-  assert.equal(result.state, "DEPENDENT_CONSUMER_INVALID");
+  assert.equal(result.state, "VALIDATED");
   assert.equal(
     result.receipt.checks.find((check) => check.check === "DEPENDENT_READ_MODEL_VALIDITY")?.code,
-    "DEPENDENT_CONSUMER_REJECTED",
+    "DEPENDENT_CONSUMERS_ACCEPT",
   );
 });
 

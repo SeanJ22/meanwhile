@@ -42,13 +42,15 @@ function violations(snapshot: PrlSnapshot): string[] {
 
 export function prlCandidate(input: {
   readonly snapshot: PrlSnapshot;
-  readonly rawZip: Uint8Array;
+  readonly rawZip?: Uint8Array;
+  readonly sourceEvidence?: { readonly sha256: string; readonly bytes: number };
   readonly finalUrl: string;
   readonly retrievedAt: string;
 }): RoutineCandidate {
   const semanticViolations = violations(input.snapshot);
   const civicRecords = prlMembers(input.snapshot);
-  const rawHash = sha256(input.rawZip);
+  const rawHash = input.sourceEvidence?.sha256 ?? sha256(input.rawZip ?? new Uint8Array());
+  const acquired = (input.sourceEvidence?.bytes ?? input.rawZip?.byteLength ?? 0) > 0 && /^[a-f0-9]{64}$/.test(rawHash);
   const dropped = Math.max(0, input.snapshot.rowsInFile - input.snapshot.profiles.length);
   const sourceThrough = input.snapshot.profiles.map((profile) => profile.measuredAt).sort().at(-1) ?? input.snapshot.fetchedAt;
   return {
@@ -57,7 +59,7 @@ export function prlCandidate(input: {
     recordClass: PRL_CONTRACT.recordClass,
     scope: PRL_CONTRACT.scope,
     sourceProjectionEvidence: sourceProjectionEvidence(PRL_CONTRACT.sourceId, PRL_CONTRACT.recordClass, PRL_CONTRACT.scope),
-    retrieval: { succeeded: input.rawZip.byteLength > 0, requestedUrl: input.snapshot.sourceUrl, finalUrl: input.finalUrl, httpStatus: input.rawZip.byteLength > 0 ? 200 : null, retrievedAt: input.retrievedAt, rawHash: input.rawZip.byteLength > 0 ? rawHash : null, failureDetail: input.rawZip.byteLength > 0 ? undefined : "No PRL profile archive bytes were acquired." },
+    retrieval: { succeeded: acquired, requestedUrl: input.snapshot.sourceUrl, finalUrl: input.finalUrl, httpStatus: acquired ? 200 : null, retrievedAt: input.retrievedAt, rawHash: acquired ? rawHash : null, failureDetail: acquired ? undefined : "No PRL profile archive bytes were acquired." },
     normalization: {
       succeeded: semanticViolations.length === 0,
       parserVersion: PRL_CONTRACT.parserVersion,

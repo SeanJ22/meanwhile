@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { inflateRawSync } from "node:zlib";
+import { readZipEntries } from "../sources/archive.ts";
 
 export const CENSUS_GOVERNMENT_UNITS_URL =
   "https://www2.census.gov/programs-surveys/gus/datasets/2022/govt_units_2022.ZIP" as const;
@@ -200,71 +200,10 @@ async function fetchExactSource(
   return { kind: "ACQUIRED", bytes, receipt };
 }
 
-function u16(bytes: Uint8Array, offset: number): number {
-  return bytes[offset]! | (bytes[offset + 1]! << 8);
-}
-
-function u32(bytes: Uint8Array, offset: number): number {
-  return (bytes[offset]! | (bytes[offset + 1]! << 8) | (bytes[offset + 2]! << 16) | (bytes[offset + 3]! << 24)) >>> 0;
-}
-
-let crcTable: Uint32Array | null = null;
-function crc32(bytes: Uint8Array): number {
-  if (crcTable === null) {
-    crcTable = new Uint32Array(256);
-    for (let n = 0; n < 256; n += 1) {
-      let value = n;
-      for (let bit = 0; bit < 8; bit += 1) value = value & 1 ? 0xedb88320 ^ (value >>> 1) : value >>> 1;
-      crcTable[n] = value >>> 0;
-    }
-  }
-  let value = 0xffffffff;
-  for (const byte of bytes) value = crcTable[(value ^ byte) & 0xff]! ^ (value >>> 8);
-  return (value ^ 0xffffffff) >>> 0;
-}
-
 export function jurisdictionReferenceZipMember(archive: Uint8Array, wanted: string): Uint8Array {
-  const minimumEocd = 22;
-  const searchStart = Math.max(0, archive.byteLength - (0xffff + minimumEocd));
-  let eocd = -1;
-  for (let offset = archive.byteLength - minimumEocd; offset >= searchStart; offset -= 1) {
-    if (u32(archive, offset) === 0x06054b50) {
-      eocd = offset;
-      break;
-    }
-  }
-  if (eocd === -1) throw new Error("ZIP_END_OF_CENTRAL_DIRECTORY_MISSING");
-  const entries = u16(archive, eocd + 10);
-  let cursor = u32(archive, eocd + 16);
-  const decoder = new TextDecoder();
-  for (let index = 0; index < entries; index += 1) {
-    if (u32(archive, cursor) !== 0x02014b50) throw new Error(`ZIP_CENTRAL_DIRECTORY_INVALID:${index}`);
-    const method = u16(archive, cursor + 10);
-    const expectedCrc = u32(archive, cursor + 16);
-    const compressedSize = u32(archive, cursor + 20);
-    const uncompressedSize = u32(archive, cursor + 24);
-    const nameLength = u16(archive, cursor + 28);
-    const extraLength = u16(archive, cursor + 30);
-    const commentLength = u16(archive, cursor + 32);
-    const localOffset = u32(archive, cursor + 42);
-    const name = decoder.decode(archive.subarray(cursor + 46, cursor + 46 + nameLength));
-    cursor += 46 + nameLength + extraLength + commentLength;
-    if (name !== wanted) continue;
-    if (u32(archive, localOffset) !== 0x04034b50) throw new Error(`ZIP_LOCAL_HEADER_INVALID:${wanted}`);
-    const localNameLength = u16(archive, localOffset + 26);
-    const localExtraLength = u16(archive, localOffset + 28);
-    const dataStart = localOffset + 30 + localNameLength + localExtraLength;
-    const compressed = archive.subarray(dataStart, dataStart + compressedSize);
-    const output = method === 0
-      ? Uint8Array.from(compressed)
-      : method === 8
-        ? Uint8Array.from(inflateRawSync(compressed))
-        : (() => { throw new Error(`ZIP_COMPRESSION_UNSUPPORTED:${wanted}:${method}`); })();
-    if (output.byteLength !== uncompressedSize) throw new Error(`ZIP_MEMBER_SIZE_MISMATCH:${wanted}`);
-    if (crc32(output) !== expectedCrc) throw new Error(`ZIP_MEMBER_CRC_MISMATCH:${wanted}`);
-    return output;
-  }
-  throw new Error(`ZIP_MEMBER_MISSING:${wanted}`);
+  const entry = readZipEntries(archive, { maxMemberBytes: 256 * 1024 * 1024, maxTotalBytes: 512 * 1024 * 1024 }).find(entry => entry.name === wanted);
+  if (!entry) throw new Error(`ZIP_MEMBER_MISSING:${wanted}`);
+  return entry.data;
 }
 
 function unescapeXml(value: string): string {

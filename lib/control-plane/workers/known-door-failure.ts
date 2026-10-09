@@ -19,17 +19,16 @@ export type KnownDoorRetry =
   | { readonly kind: "PLAIN_RETRY" }
   /** A passing outage that is not yet due: it waits for its free retry and owes no paid walk. */
   | { readonly kind: "OUTAGE_WAIT"; readonly retryAt: string }
-  /** The door is shut (or the old rule applies): the investigation gets the turn. */
+  /** The door is shut: the investigation gets the turn. */
   | { readonly kind: "INVESTIGATE" };
 
-/** The next step for a known door whose latest read failed. Switch on: a passing outage keeps its plain backoff retry, and a shut door alternates its detective with a plain re-read by hourly slot (`plainRereadSlot`). Switch off: a retry only once a Scout has tried since the failure. */
+/** Passing outages keep a free backoff retry; a shut door alternates investigation with a plain re-read. */
 export function knownDoorRetry(input: { readonly debt: FreshnessDebt | null; readonly now: string; readonly scoutTriedAfterFailure: boolean;
-  readonly shutThreshold: number; readonly oneHunterPath: boolean }): KnownDoorRetry {
+  readonly shutThreshold: number }): KnownDoorRetry {
   const { debt, now } = input;
   if (!debt) return { kind: "INVESTIGATE" };
   const { retryAt } = debt;
   const due = Date.parse(retryAt) <= Date.parse(now);
-  if (!input.oneHunterPath) return due && input.scoutTriedAfterFailure ? { kind: "PLAIN_RETRY" } : { kind: "INVESTIGATE" };
   if (!needsSourceInvestigation(debt, input.shutThreshold)) return due ? { kind: "PLAIN_RETRY" } : { kind: "OUTAGE_WAIT", retryAt };
   return due && (input.scoutTriedAfterFailure || plainRereadSlot(debt, Date.parse(now), input.shutThreshold))
     ? { kind: "PLAIN_RETRY" } : { kind: "INVESTIGATE" };

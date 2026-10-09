@@ -14,6 +14,7 @@ import {
   heldMeetingPartitionFor,
   meetingPartitionId,
   meetingPartitionOfId,
+  meetingHistoryContract,
 } from "../civic-data/meeting-partitions.ts";
 import { RETIRED_MEETING_ROUTES } from "../registry/source-wiring.ts";
 import {
@@ -34,6 +35,8 @@ import {
   type FreshCheckCoupling,
 } from "./fresh-checks.ts";
 import type { PromotedPointerIdentity } from "../civic-data/types.ts";
+import { buildMeetingHistorySnapshot, mergeMeetingHistory } from "../civic-data/meeting-history.ts";
+import { meetingCarriesRecords } from "./carries-records.ts";
 
 export const MEETINGS_PREPARED_SCOPE = "composed-reader-snapshot";
 
@@ -91,7 +94,8 @@ export async function preparePublishedMeetingSnapshot(
     readonly aggregate?: () => Promise<MeetingsProjectionReadResult>;
   } = {},
 ): Promise<PrepareMeetingSnapshotResult> {
-  const scopes = MEETING_PARTITION_CONTRACTS.map((partition) => partition.scope);
+  const historyContracts = MEETING_PARTITION_CONTRACTS.map(meetingHistoryContract);
+  const scopes = [...MEETING_PARTITION_CONTRACTS.map((partition) => partition.scope), ...historyContracts.map(contract => contract.scope)];
   const versionByScope = new Map<string, string>();
   const identityByScope = new Map<string, PromotedPointerIdentity>();
   try {
@@ -118,6 +122,10 @@ export async function preparePublishedMeetingSnapshot(
     const heldVersionId = held ? versionByScope.get(held.scope) : undefined;
     return held && typeof heldVersionId === "string" ? [{ contractId: held.id, versionId: heldVersionId }] : [];
   });
+  for (const contract of historyContracts) {
+    const versionId = versionByScope.get(contract.scope);
+    if (versionId) currentCoupling.push({ contractId: contract.id, versionId });
+  }
   const currentFingerprint = couplingFingerprint(currentCoupling);
 
   const prepared = await store.readPreparedReaderProjectionCoupling(MEETINGS_RECORD_CLASS, MEETINGS_PREPARED_SCOPE);
@@ -157,16 +165,38 @@ export async function preparePublishedMeetingSnapshot(
         ? [{ contractId: partition.heldFrom.contractId, versionId: partition.heldFrom.versionId, ...freshCheckOf(partition) }]
         : [],
   );
+  for (const partition of aggregate.partitions) if (partition.history) composedFrom.push(partition.history);
+  let value = aggregate.value;
+  const missingHistory = aggregate.partitions.filter(partition => partition.historyIssue);
+  if (prepared && missingHistory.length > 0) {
+    // Retain accepted historical facts during a storage outage, without reviving future meetings.
+    const prior = await store.readPreparedReaderProjection(MEETINGS_RECORD_CLASS, MEETINGS_PREPARED_SCOPE);
+    if (prior) {
+      const previous = prior.payload as MeetingsSnapshot;
+      const documented = new Set(previous.agendaDocuments.map(document => document.meetingId));
+      const meetings = previous.meetings.filter(meeting => Date.parse(meeting.startsAt) < Date.parse(now) &&
+        meetingCarriesRecords(meeting, documented.has(meeting.id)) && missingHistory.some(partition =>
+          meeting.bodyId === partition.bodyId || meeting.id.startsWith(`${partition.source}:`)));
+      const ids = new Set(meetings.map(meeting => meeting.id));
+      value = mergeMeetingHistory(value, buildMeetingHistorySnapshot({ history: null, moved: meetings,
+        agendaDocuments: previous.agendaDocuments.filter(document => ids.has(document.meetingId)), generatedAt: previous.generatedAt }));
+      for (const partition of missingHistory) {
+        const contract = MEETING_PARTITION_CONTRACTS.find(candidate => candidate.id === partition.contractId);
+        const held = contract && prior.composedFrom.find(coupling => coupling.contractId === meetingHistoryContract(contract).id);
+        if (held) composedFrom.push(held);
+      }
+    }
+  }
   let factSha256: string;
   try {
-    factSha256 = pdcV2CanonicalMeetingFactEvidence([aggregate.value]).sha256;
+    factSha256 = pdcV2CanonicalMeetingFactEvidence([value]).sha256;
   } catch {
-    factSha256 = createHash("sha256").update(JSON.stringify(aggregate.value)).digest("hex");
+    factSha256 = createHash("sha256").update(JSON.stringify(value)).digest("hex");
   }
   const input: PreparedReaderProjectionInput = {
     recordClass: MEETINGS_RECORD_CLASS,
     scope: MEETINGS_PREPARED_SCOPE,
-    payload: aggregate.value,
+    payload: value,
     composedFrom,
     factSha256,
     generatedAt: aggregate.value.generatedAt,
@@ -193,6 +223,9 @@ function partitionsFromCoupling(composedFrom: readonly PreparedProjectionCouplin
     const versionId = versionByContract.get(partition.id);
     const held = heldMeetingPartitionFor(partition.id);
     const heldVersionId = versionId === undefined && held ? versionByContract.get(held.id) : undefined;
+    const historyContract = meetingHistoryContract(partition);
+    const historyVersion = versionByContract.get(historyContract.id);
+    const history = historyVersion ? { history: { contractId: historyContract.id, versionId: historyVersion } } : {};
     return versionId !== undefined
       ? {
           contractId: partition.id,
@@ -202,6 +235,7 @@ function partitionsFromCoupling(composedFrom: readonly PreparedProjectionCouplin
           kind: "PROMOTED" as const,
           versionId,
           detail: null,
+          ...history,
         }
       : held && heldVersionId !== undefined
         ? {
@@ -213,6 +247,7 @@ function partitionsFromCoupling(composedFrom: readonly PreparedProjectionCouplin
             versionId: null,
             detail: `the prepared reader snapshot composed the retired route's held version ${held.id}@${heldVersionId} in this partition's place`,
             heldFrom: { contractId: held.id, scope: held.scope, versionId: heldVersionId },
+            ...history,
           }
         : {
             contractId: partition.id,
@@ -222,6 +257,7 @@ function partitionsFromCoupling(composedFrom: readonly PreparedProjectionCouplin
             kind: "NOT_RECORDED" as const,
             versionId: null,
             detail: "partition is not part of the prepared reader snapshot",
+            ...history,
           };
   });
 }

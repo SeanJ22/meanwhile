@@ -3,8 +3,8 @@
  * reviewed registry reads its registration as one (`lib/registration/jurisdictions.ts`).
  *
  * Every step is the production path on the in-memory stores, against the committed Ohio and Puerto Rico registration
- * references, the committed Census files and the committed national ZIP index. Nothing reaches the network, no model
- * is called, and nothing names Ohio's governments in code:
+ * references and a small, explicit published-geography fixture. Nothing reaches the network and no model is called.
+ * Government identity comes from native source IDs; the council fixture has its own official-page evidence:
  *
  * 1. Admin's preview counts the governments a county Send would create work for, from registration, by the runner's
  *    rule;
@@ -14,7 +14,7 @@
  * 4. the free discovery walk takes a city first, at the web address the Census of Governments records for it, robots
  *    first, while the paid lane remains governed by the owner's separate pause and budgets;
  * 5. it finds the city's iCal feed on the city's own host; the automatic reviewer accepts it for the city's
- *    registered body; the crosswalk, the wiring and the state's derived family promote; and the Reader shows the
+ *    separately reviewed body; the crosswalk, the wiring and the state's derived family promote; and the Reader shows the
  *    sittings under the city council;
  * 6. a Send for a Puerto Rico municipio creates discovery needs that say `find-own-site`: the territory's
  *    governments carry no web address.
@@ -25,6 +25,9 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
+import type { BuiltGrouping, BuiltScope } from "../lib/census-geography/dataset.ts";
+import { createLookup } from "../lib/census-geography/lookup.ts";
+import type { PublishedLookupState } from "../lib/census-geography/reader.ts";
 import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
 import { planDerivedVersion, type DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
 import { composeCrosswalk, derivedCrosswalkCandidate, planDerivedCrosswalk, readDerivedMeetingBodyCrosswalk } from "../lib/civic-data/derived-crosswalk.ts";
@@ -45,8 +48,9 @@ import { autoCrosswalkReviewerId, reviewDiscoveryWalk, type HeldBytes } from "..
 import { deriveWiringDecisions, wiringRowFor } from "../lib/control-plane/discovery/derived-wiring.ts";
 import { readHeldCalendars, type HeldCalendarReading } from "../lib/control-plane/discovery/derived-wiring-reading.ts";
 import { readFreeDiscoveryWalks } from "../lib/control-plane/discovery/free-walks.ts";
+import { reviewedBodyForGovernment } from "../lib/control-plane/discovery/reviewed-body.ts";
 import { runMeetingsDiscovery, walkableByFreeWalk } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
-import { applyDispatchWork, dispatchWorkReading, planDispatchWork, scopeWorkTarget, type DispatchWorkReading } from "../lib/control-plane/expansion/dispatch-work.ts";
+import { applyDispatchWork, dispatchWorkReading, planDispatchWork, requirementsFor, scopeWorkTarget, type DispatchWorkReading } from "../lib/control-plane/expansion/dispatch-work.ts";
 import type { PlannedScope } from "../lib/control-plane/expansion/membership.ts";
 import { loadExpansionPlan, readTerritoryIndex } from "../lib/control-plane/expansion/runner-load.ts";
 import { registrationGovernmentsPlaced, stateSendPreviewSentence, type PreviewCode } from "../lib/control-plane/expansion/send-preview.ts";
@@ -68,7 +72,6 @@ import {
   paidDiscoveryHold,
 } from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
 import { buildRegistry } from "../lib/control-plane/scheduler/registry.ts";
-import { zipDivisionEntry } from "../lib/geo/zip-division-index.ts";
 import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
 import { readMeetingsProjection } from "../lib/meetings/snapshot.ts";
 import { registrationCandidate, type RegistrationReadModel } from "../lib/registration/candidate.ts";
@@ -129,36 +132,34 @@ async function promoteRegistration(store: MemoryRoutineDataStore, state: string)
   assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? "");
 }
 
-/** A county's ZCTAs as the published lookup states them: each ZCTA's area share inside it, from the sampled overlap. */
-const SAMPLES = JSON.parse(readFileSync(join(ROOT, "data/derived/zip-governments.json"), "utf8")).zips as Record<string, { layer: string; id: string; samples: number }[]>;
-function countyOverlaps(geoid: string): { zcta5: string; whole: boolean; fraction: number | null }[] {
-  const out: { zcta5: string; whole: boolean; fraction: number | null }[] = [];
-  for (const [zcta5, edges] of Object.entries(SAMPLES)) {
-    const counties = edges.filter((e) => e.layer === "county");
-    const total = counties.reduce((n, e) => n + e.samples, 0);
-    const mine = counties.find((e) => e.id === geoid);
-    if (mine === undefined || total === 0) continue;
-    out.push({ zcta5, whole: mine.samples >= total, fraction: mine.samples >= total ? 1 : mine.samples / total });
-  }
-  return out.sort((a, b) => a.zcta5.localeCompare(b.zcta5));
-}
+/** Synthetic geometry observations exercise held forward and reverse lookup together.
+ * These explicit area fractions are fixture inputs, never reconstructed from sampled ZIP hits. */
+const GEOGRAPHY: readonly (BuiltGrouping & { readonly type: "county" | "place" })[] = [
+  { type: "county", geoid: "39049", ocdId: "ocd-division/country:us/state:oh/county:franklin", label: "Franklin County, Ohio",
+    stateFips: "39", stateAbbr: "OH", memberStates: ["OH"], overlaps: [{ zcta5: "43215", whole: true, fraction: 1 }] },
+  { type: "place", geoid: "3918000", ocdId: "ocd-division/country:us/state:oh/place:columbus", label: "Columbus city",
+    stateFips: "39", stateAbbr: "OH", memberStates: ["OH"], overlaps: [{ zcta5: "43215", whole: false, fraction: 0.8 }] },
+  { type: "county", geoid: "72001", ocdId: "ocd-division/country:us/territory:pr/county:adjuntas", label: "Adjuntas Municipio, Puerto Rico",
+    stateFips: "72", stateAbbr: "PR", memberStates: ["PR"], overlaps: [{ zcta5: "00601", whole: false, fraction: 0.8 }] },
+];
 
-/** A published lookup that knows these counties: what `loadPublishedLookupState` answers in production. */
-function lookupOf(counties: Readonly<Record<string, { readonly label: string; readonly stateAbbr: string }>>) {
-  return async () => ({
-    source: "published" as const,
-    versionId: "cv-lookup-test",
-    lookup: {
-      // This fixture publishes county-to-ZIP rows only; no reverse layer is held.
-      groupingsForZcta: async () => ({ status: { kind: "OK" }, memberships: [] }),
-      listVersions: async () => [],
-      zctasForGrouping: async (g: { type: string; geoid: string; version: string }) => ({
-        status: { kind: "OK" },
-        geography: { type: g.type, geoid: g.geoid, version: g.version, ocdId: null, label: counties[g.geoid]!.label, stateFips: g.geoid.slice(0, 2), stateAbbr: counties[g.geoid]!.stateAbbr, memberStates: [counties[g.geoid]!.stateAbbr] },
-        overlaps: countyOverlaps(g.geoid).map((o) => ({ ...o, fractionBasis: "area" })),
-      }),
-    },
-  }) as never;
+/** The real immutable lookup implements both directions over the published fixture. */
+function lookupOf(counties: Readonly<Record<string, { readonly label: string; readonly stateAbbr: string }>>): () => Promise<PublishedLookupState> {
+  const states = new Set(Object.values(counties).map(c => c.stateAbbr));
+  const scopes: BuiltScope[] = (["county", "place"] as const).map(type => {
+    const groupings = GEOGRAPHY.filter(g => g.type === type && states.has(g.stateAbbr));
+    return {
+      type, version: `${type}:2020`, fractionBasis: "area", groupings, instanceCount: groupings.length,
+      zctaEdgeCount: groupings.reduce((count, g) => count + g.overlaps.length, 0),
+      versionMeta: { key: `${type}:2020`, type, plan: "2020", zctaTabulation: "2020", effectiveFor: "Synthetic integration fixture",
+        provenance: { sourceUrls: [`https://fixtures.example/census/${type}-area-overlaps`], sourceDataset: "Synthetic integration fixture",
+          sourceFiles: [`${type}-area-overlaps.json`], sourceChecksums: [sha(groupings)], method: "Explicit fixture area observations", computedAt: T_REGISTRATION } },
+    };
+  });
+  const versionId = "cv-lookup-test";
+  const lookup = createLookup({ formatVersion: 1, builtAt: T_REGISTRATION, coverage: "Integration fixtures only", scopes,
+    zctaUniverse: [...new Set(scopes.flatMap(s => s.groupings.flatMap(g => g.overlaps.map(o => o.zcta5))))] }, versionId);
+  return async () => ({ source: "published", versionId, lookup });
 }
 
 /** The owner's Send, through the gateway's one door, exactly as the composer posts it. */
@@ -183,17 +184,22 @@ function postgresOverRegistration(versionId: string, model: RegistrationReadMode
     statements.map((s): Row[] => {
       if (s.text.startsWith("SELECT current_version_id")) return [{ version_id: versionId }];
       const wanted = new Set(s.params[2] as string[]);
-      return model.bodies
-        .filter((b) => b.jurisdictionId !== null && wanted.has(b.ocdId))
-        .map((b) => ({ jurisdiction_id: b.jurisdictionId, ocd_id: b.ocdId, body_id: b.id }));
+      return (model.governments ?? []).filter(g => g.kind !== "EDUCATION_AGENCY").flatMap(g =>
+        g.associations.filter(a => wanted.has(a.divisionId)).map(a => ({
+          jurisdiction_id: g.jurisdictionId ?? g.id, ocd_id: a.divisionId, body_id: g.bodyIds[0] ?? null,
+        })));
     });
 }
 
-/** The preview's codes: the lookup's overlaps, each joined to the national ZIP index, as the geography-preview route reads them. */
+/** Preview and dispatch use the same held geography, including partial memberships. */
 async function previewCodes(geoid: string): Promise<PreviewCode[]> {
-  return Promise.all(countyOverlaps(geoid).map(async (o) => {
-    const entry = await zipDivisionEntry(o.zcta5);
-    return { ...o, divisions: entry?.ids ?? [], partial: entry?.partial ?? [] };
+  const county = GEOGRAPHY.find(g => g.type === "county" && g.geoid === geoid)!;
+  const { lookup } = await lookupOf({ [geoid]: county })();
+  const { overlaps } = await lookup.zctasForGrouping({ type: "county", geoid, version: "county:2020" });
+  return Promise.all(overlaps.map(async o => {
+    const { memberships } = await lookup.groupingsForZcta(o.zcta5);
+    return { ...o, divisions: memberships.flatMap(m => m.geography.ocdId ?? []),
+      partial: memberships.filter(m => !m.whole).flatMap(m => m.geography.ocdId ?? []) };
   }));
 }
 
@@ -216,10 +222,10 @@ async function runnerCycle(
     loadLookup: lookupOf(counties),
     beforeTerritory: async (states) =>
       [...(await preloadRegistrationJurisdictions({ root: ROOT, states, options: { store, bypassCache: true, now } })).refused].map(([s, why]) => `${s}: ${why}`),
-    loadTerritory: () => {
+    loadTerritory: (states, zips, places) => {
       const promoted = promotedRegistries();
       assert.ok("registries" in promoted);
-      return readTerritoryIndex(ROOT, [...promoted.registries.values()]);
+      return readTerritoryIndex(ROOT, [...promoted.registries.values()], [...states], zips, places);
     },
   });
   assert.deepEqual(expansionLoad.conditions, []);
@@ -297,7 +303,8 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   assert.equal(slice.kind, "HELD");
   if (slice.kind !== "HELD") return;
   const preview = registrationGovernmentsPlaced(codes, slice.value);
-  assert.ok(preview.certain.length > 30, `Franklin County holds dozens of governments (${preview.certain.length})`);
+  assert.deepEqual(preview.certain, [COLUMBUS, "oh:county:county-of-franklin"], "only governments with qualified native associations enter this held geometry");
+  assert.ok(slice.value.every(g => g.bodyId === null), "registration does not manufacture governing bodies");
   for (const id of ["oh:county:county-of-franklin", COLUMBUS]) assert.ok(preview.certain.includes(id), `${id} is in the preview`);
   const sentence = stateSendPreviewSentence({ kind: "REGISTRATION", state: "OH", versionId, governments: preview.certain, edge: preview.edge });
   assert.match(sentence, new RegExp(`creates work for ${preview.certain.length} governments here`));
@@ -309,7 +316,7 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   assert.equal(dry.requirements.created, 0, "a cycle that may not write creates nothing");
   const first = (await runnerCycle(repos, store, FRANKLIN, T_CYCLE)).reading.targets[0]!;
   assert.equal(first.requirements.created + first.requirements.deferred, dry.requirements.deferred, "all planned missing requirements are created");
-  assert.equal(first.requirements.deferred, 0, "one pass creates all work beyond the former 200-row cap");
+  assert.equal(first.requirements.deferred, 0, "one pass creates every source-discovery requirement in this scope");
   const second = (await runnerCycle(repos, store, FRANKLIN, T_NEXT)).reading.targets[0]!;
   assert.equal(second.requirements.createdThisCycle, 0, "the second pass creates no duplicates");
   assert.equal(second.requirements.deferred, 0);
@@ -320,7 +327,7 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   assert.equal(target.units.placed, dry.units.placed, "the cycle places what its own preview placed");
   assert.equal(target.requirements.created, dry.requirements.deferred, "and creates what that preview counted as owed");
   assert.equal(target.units.fromRegistration, target.units.placed, "every one of them from registration");
-  assert.equal(target.requirements.defined, target.units.placed * 8, "meetings, five missing-family obligations, independently verified public-comment rules and body-directory discovery for every registered body");
+  assert.equal(target.requirements.defined, target.units.placed * 7, "meetings, five missing families and body-directory discovery; public-comment work awaits an independently verified body");
   assert.equal(target.requirements.created, target.requirements.defined);
   assert.equal(target.requirements.createdThisCycle, second.requirements.deferred, "the normal next cycle creates the remainder without duplicates");
   assert.equal(target.requirements.deferred, 0);
@@ -331,7 +338,7 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   assert.match(target.says.join(" "), new RegExp(`${n} of the ${n} governments here come from registration \\(the 2022 Census of Governments; OH version ${versionId}\\)`));
 
   const created = (await repos.obligations.list()).map((row) => row.value).filter((o) => o.materializedBy === OWNER_DISPATCH);
-  assert.equal(created.length, n * 8, "the store holds exactly what the runner counted");
+  assert.equal(created.length, n * 7, "the store holds exactly what the runner counted");
   // The real gateway/runner marks survive the publisher's bounded list: the same exact-reference filter Admin reads.
   const assignmentSources = await readAllAssignmentSources(repos, { nowIso: T_CYCLE, activation: null, pilotZips: [] });
   const publishedWork = buildAssignmentView(assignmentSources, { perGroup: 1 });
@@ -346,18 +353,19 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   assert.ok(n >= preview.certain.length && n <= preview.certain.length + preview.edge.length);
   assert.ok(created.every((o) => o.materializedFrom === "REGISTRATION"), "each created row says it came from registration");
   const missingFamilies = created.filter(o => !o.id.startsWith(MEETINGS_DISCOVERY_NAMESPACE));
-  assert.equal(missingFamilies.length, n * 7);
+  assert.equal(missingFamilies.length, n * 6);
   assert.equal(missingFamilies.filter(o => o.autonomousPlan?.contract.recordClass === "OFFICIAL_BOARD_DIRECTORY").length, n);
-  assert.equal(missingFamilies.filter(o => o.autonomousPlan?.publication?.contractId === "official-filings").length, n, "finance filing work reaches its verified-fact publisher");
-  assert.equal(missingFamilies.filter(o => o.autonomousPlan?.publication?.contractId === "ballot-contests" && o.autonomousPlan.contract.recordClass === "BALLOT_CONTEST").length, n, "candidate lists reach the whole-contest publisher");
-  assert.equal(missingFamilies.filter(o => o.autonomousPlan?.publication?.contractId === "everyday-routing").length, n);
-  assert.equal(missingFamilies.filter(o => o.autonomousPlan?.publication?.contractId === "ballot-navigation").length, n);
-  assert.equal(missingFamilies.filter(o => o.autonomousPlan?.publication?.contractId === "comment-access").length, n, "every mapped body owes its own verified participation rules");
+  assert.equal(missingFamilies.filter(o => o.autonomousPlan?.contract.recordClass === "CAMPAIGN_FINANCE_FILING").length, n, "finance filing discovery remains owed without inventing a body");
+  assert.equal(missingFamilies.filter(o => o.autonomousPlan?.contract.recordClass === "BALLOT_CONTEST").length, n, "candidate-list discovery remains owed");
+  assert.equal(missingFamilies.filter(o => o.autonomousPlan?.contract.recordClass === "SERVICE_CONTACT").length, n);
+  assert.equal(missingFamilies.filter(o => o.autonomousPlan?.contract.recordClass === "VOTER_ACCESS_ROUTE").length, n);
+  assert.ok(missingFamilies.filter(o => o.autonomousPlan?.contract.recordClass !== "OFFICIAL_BOARD_DIRECTORY").every(o => !o.autonomousPlan?.publication),
+    "unreviewed body IDs cannot reach reader publication contracts");
+  assert.equal(missingFamilies.filter(o => o.autonomousPlan?.publication?.contractId === "comment-access").length, 0, "government geography alone supplies no body for participation rules");
   assert.ok(missingFamilies.every(o => o.autonomousPlan?.contract.schemaVersion === 2 && o.autonomousPlan.contract.extraction.format === "UNSUPPORTED" && o.autonomousPlan.sources.length === 0), "new discovery instructions invent no observed sources or extracted records");
   const ohio = requiredJurisdictionRegistry("oh");
   assert.equal(ohio.registration?.versionId, versionId, "read from the promoted version, the one readers use");
   const findOwnSite = created.filter((o) => o.id.endsWith("#find-own-site"));
-  assert.ok(findOwnSite.length > 0, "a government the Census records no web address for owes finding its site first");
   for (const o of findOwnSite) assert.equal(ohio.jurisdictions.find((j) => j.id === o.subjectId)?.ownWebAddress, null, `${o.subjectId}: no address is invented`);
   assert.ok(created.some((o) => o.id === `${MEETINGS_DISCOVERY_NAMESPACE}${COLUMBUS}#own-site-meetings`));
 
@@ -417,16 +425,28 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
 
   /* 5. The automatic crosswalk, the wiring, Ohio's family and the Reader. */
   const regInput: DerivedInputRef = { kind: "PROMOTED_VERSION", recordClass: "REGISTRATION", scope: reg.metadata.scope, versionId, readModelSha256: sha(reg.value), promotedAt: reg.metadata.promotedAt! };
-  const labels = new Map(model.divisions.map((d) => [d.ocdId, d.label] as const));
-  const body = model.bodies.find((b) => b.jurisdictionId === COLUMBUS)!;
-  assert.equal(body.id, COLUMBUS_BODY);
-  /* The registered government's division: the registration stub below answers only a row on it. */
-  const columbusDivision = body.ocdId;
-  assert.equal(ohio.jurisdictions.find((j) => j.id === COLUMBUS)?.bodyId, COLUMBUS_BODY, "the registry row carries the body registration minted");
+  const columbusDivision = "ocd-division/country:us/state:oh/place:columbus";
+  assert.equal(model.bodies.length, 0, "native government registration supplies no unreviewed councils");
+  assert.equal(ohio.jurisdictions.find(j => j.id === COLUMBUS)?.bodyId, null);
+  // A separate review binds this council to the native government. The captured official page
+  // establishes its existence and name; neither a division nor a roster supplies a body.
+  const bodyPage = [...vault.values()].find(held => held.text === COLUMBUS_HOME)!;
+  assert.ok(bodyPage.text.includes("Columbus City Council meets"));
+  const reviewedBody = { id: COLUMBUS_BODY, ocdId: columbusDivision, bodyClass: "GOVERNING", censusId: "209050" };
+  const body = reviewedBodyForGovernment(loadRegistrationReference(ROOT, "OH"), COLUMBUS, [reviewedBody]);
+  assert.ok(body, "the independently reviewed council joins only by native Census identity");
+  const reviewedRequirements = requirementsFor(ohio, {
+    ...ohio.jurisdictions.find(j => j.id === COLUMBUS)!, bodyId: body.bodyId,
+  }, null, UNREAD_MEETING_PARTITIONS, true);
+  const publications = reviewedRequirements.flatMap(r => r.obligation.autonomousPlan?.publication ?? []);
+  for (const contractId of ["official-filings", "ballot-contests", "everyday-routing", "ballot-navigation", "comment-access"]) {
+    assert.equal(publications.filter(p => p.contractId === contractId && p.bodyId === COLUMBUS_BODY).length, 1,
+      `${contractId} binds the separately verified body while its own facts remain owed`);
+  }
   const walk = { attempt: attempt!, recordId: "pos-columbus", recordedAt: attempt!.finishedAt };
   const review = reviewDiscoveryWalk({
     walk,
-    registered: { bodyId: body.id, ocdId: body.ocdId, publishingOrg: labels.get(body.ocdId) ?? COLUMBUS, input: regInput },
+    registered: { ...body, input: bodyPage.evidence },
     held: (id) => vault.get(id) ?? null,
     handWired: () => false,
     reviewer: autoCrosswalkReviewerId("feedfacecafe0123"),
@@ -529,11 +549,11 @@ test("A SEND FOR A PUERTO RICO MUNICIPIO creates its discovery needs from regist
   const { reading } = await runnerCycle(repos, store, ADJUNTAS, T_CYCLE);
   const [target] = reading.targets;
   assert.deepEqual(target!.blocked, [], "a territory's governments are registered too: nothing is blocked");
-  assert.equal(target!.requirements.created, target!.units.placed * 8);
+  assert.equal(target!.requirements.created, target!.units.placed * 7);
 
   const created = (await repos.obligations.list()).map((row) => row.value).filter((o) => o.materializedBy === OWNER_DISPATCH);
   const placed = [...new Set(created.map((o) => o.subjectId))].sort();
-  assert.ok(placed.includes("pr:county:adjuntas-municipio"), `the municipio itself is placed by its sampled share (${placed.join(", ")})`);
+  assert.ok(placed.includes("pr:county:adjuntas-municipio"), `the municipio is placed by the explicit held area observation (${placed.join(", ")})`);
   for (const id of preview.certain) assert.ok(placed.includes(id));
   for (const id of placed) assert.ok(inPreview.has(id), `${id} is inside the preview's edge`);
   assert.ok(created.every((o) => o.materializedFrom === "REGISTRATION"));

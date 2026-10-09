@@ -68,15 +68,10 @@ export function scoutWalkedToNothing(attempt: Pick<Attempt, "abortReason"> | und
   return /\bSCOUT_NO_PROGRESS\b/.test(attempt?.abortReason ?? "");
 }
 
-/** Runner switch: off, a walk that found nothing stays blocked; on, it goes to a detective after its backoff. */
-export function oneHunterPath(env: NodeJS.ProcessEnv = process.env): boolean {
-  return env.WTP_ONE_HUNTER_PATH === "1";
-}
-
 /** Provider outages may recover; unchanged request/schema failures cannot. */
 export function unchangedScoutFailure(attempt: Attempt | undefined): boolean {
   if (!attempt?.endedAt || ["COMPLETED", "DENIED_BY_POLICY", "CRASHED", "LEASE_EXPIRED"].includes(attempt.outcome ?? "")) return false;
-  if (scoutWalkedToNothing(attempt) && oneHunterPath()) return false;
+  if (scoutWalkedToNothing(attempt)) return false;
   return !workerFailureCanRetry(attempt.abortReason ?? "");
 }
 

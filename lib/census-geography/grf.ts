@@ -5,6 +5,7 @@ import type { GeographyType, GeographyVersion } from "./contract.ts";
 import type { BuiltGrouping, BuiltOverlap, BuiltScope } from "./dataset.ts";
 import { WHOLE_THRESHOLD } from "./build.ts";
 import { censusGeographyUserAgent } from "./http.ts";
+import { establishedApplicability } from "./selection.ts";
 
 /** The 2026 congressional map from Census grf block files; the tab20 relationship files stop at the 119th Congress. Shares are area-based, as in the tab20 build. */
 const GRF_BASE = "https://www2.census.gov/geo/docs/maps-data/data/grf/2026";
@@ -196,6 +197,8 @@ export async function acquireGrfScope(target: GrfTarget, options: AcquireGrfOpti
     plan: target.plan,
     zctaTabulation: "2020",
     effectiveFor: target.effectiveFor,
+    applicability: establishedApplicability(target.version),
+    retrievalComplete: sourceFiles.length === states.length,
     provenance: {
       sourceUrls: [`${GRF_BASE}/`],
       sourceDataset: "CENSUS_GRF_CUR2026",

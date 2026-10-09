@@ -13,9 +13,8 @@
  * ```
  *
  * A government's territory is its Census of Governments unit's ZCTA set, with
- * sampled shares. Registry ids join units by the registry generator's own id
- * rule (`<state>:<class prefix>:<slug>`, `-<pid6>` on collision), never a fuzzy
- * name match. A subject the join cannot place is UNPLACED, never guessed.
+ * source-established intersections and area shares. Registry rows join units by
+ * state and native Census government ID. A subject the join cannot place is UNPLACED, never guessed.
  * ZCTAs are not USPS ZIP codes.
  *
  * Order: the owner's DISPATCH first, then due rows in a selected scope by
@@ -50,9 +49,11 @@ import { isFundedHunt } from "../scheduler/hunt-continuation.ts";
 
 /* ------------------------------------------------------------ territory */
 
-/** One Census of Governments unit, as `data/derived/census-unit-zips.json` carries it. */
+/** One native Census inventory entry in the state reference. */
 export interface CensusUnitTerritory {
   readonly pid6: string;
+  /** Previously held durable registry IDs for this native government, never a name match. */
+  readonly aliases?: readonly string[];
   readonly name: string;
   readonly type: string;
   readonly state: string;
@@ -68,7 +69,7 @@ export interface Territory {
   readonly govClass: string;
   readonly stateCode: string;
   readonly zctas: ReadonlySet<string>;
-  /** The government's share (0..1) of each of its ZCTAs, where the sampled overlap records one. */
+  /** The government's source-established area share (0..1) of each ZCTA, where available. */
   readonly shares: ReadonlyMap<string, number>;
 }
 
@@ -82,43 +83,6 @@ export { OVERLAP_CERTAINTY_MARGIN, certainlyOverlaps, type DivisionTerritory } f
 export function unitShareKey(unit: Pick<CensusUnitTerritory, "method">): string | null {
   const m = /^(county|place|cousub|unsd|elsd|scsd) GEOID (\d+)/.exec(unit.method ?? "");
   return m === null ? null : `${m[1]}:${m[2]}`;
-}
-
-/** The registry generator's own class and prefix rules, restated for the join (see the header). */
-const CLASS_OF_CENSUS_TYPE: Readonly<Record<string, string>> = {
-  COUNTY: "COUNTY",
-  MUNICIPAL: "CITY_OR_TOWN",
-  TOWNSHIP: "CITY_OR_TOWN",
-  "SCHOOL DISTRICT": "SCHOOL_DISTRICT",
-  "SPECIAL DISTRICT": "SPECIAL_DISTRICT",
-  "DEPENDENT SCHOOL SYSTEM": "DEPENDENT_SCHOOL_SYSTEM",
-};
-const PREFIX_OF_CLASS: Readonly<Record<string, string>> = {
-  STATE: "state",
-  COUNTY: "county",
-  CITY_OR_TOWN: "city",
-  SCHOOL_DISTRICT: "school",
-  DEPENDENT_SCHOOL_SYSTEM: "depschool",
-  COMMUNITY_COLLEGE_DISTRICT: "cc",
-  SPECIAL_DISTRICT: "special",
-};
-
-/** The registry generator's slug, character for character. */
-export function registrySlug(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/&/g, " and ")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 72);
-}
-
-/** The registry id a Census unit would have been enumerated under, before any collision suffix. */
-export function registryIdForUnit(unit: CensusUnitTerritory): string | null {
-  const govClass = CLASS_OF_CENSUS_TYPE[unit.type];
-  const prefix = govClass === undefined ? undefined : PREFIX_OF_CLASS[govClass];
-  if (prefix === undefined) return null;
-  return `${unit.state.toLowerCase()}:${prefix}:${registrySlug(unit.name)}`;
 }
 
 export interface TerritoryIndex {
@@ -148,9 +112,9 @@ export interface TerritoryIndex {
  * which governments it holds. A unit without shares can only be placed by a
  * whole-inside ZCTA.
  *
- * A registration-read registry places each government by the Census division
- * its body sits on (`divisionTerritory`), and still claims the Census unit its
- * id joins. A government paired with no division is unplaced, by name.
+ * A registration-read registry places each government by its sourced division
+ * association (`divisionTerritory`) or a held statutory district rule.
+ * Unassociated governments remain listed and geographically unresolved.
  */
 export function buildTerritoryIndex(
   registries: readonly JurisdictionRegistry[],
@@ -160,7 +124,11 @@ export function buildTerritoryIndex(
 ): TerritoryIndex {
   const registeredStates = new Set(registries.map((r) => r.stateCode.toUpperCase()));
   const unitsByPid = new Map(units.map((u) => [`${u.state.toUpperCase()}:${u.pid6}`, u] as const));
-  const unitsByKey = new Map<string, CensusUnitTerritory[]>();
+  const unitsByAlias = new Map<string, CensusUnitTerritory | null>();
+  for (const unit of units) for (const alias of unit.aliases ?? []) {
+    const key = `${unit.state.toUpperCase()}:${alias}`;
+    unitsByAlias.set(key, unitsByAlias.has(key) && unitsByAlias.get(key)?.pid6 !== unit.pid6 ? null : unit);
+  }
   const unregisteredUnitsByState = new Map<string, CensusUnitTerritory[]>();
   for (const unit of units) {
     const state = unit.state.toUpperCase();
@@ -170,11 +138,7 @@ export function buildTerritoryIndex(
       unregisteredUnitsByState.set(state, list);
       continue;
     }
-    const key = registryIdForUnit(unit);
-    if (key === null) continue;
-    const list = unitsByKey.get(key) ?? [];
-    list.push(unit);
-    unitsByKey.set(key, list);
+
   }
 
   const bySubject = new Map<string, Territory>();
@@ -182,39 +146,26 @@ export function buildTerritoryIndex(
   const statewide = new Set<string>();
   const claimed = new Set<CensusUnitTerritory>();
   for (const registry of registries) {
-    const ids = new Set(registry.jurisdictions.map((j) => j.id));
     const fromRegistration = registry.registration?.kind === "REGISTRATION";
     for (const j of registry.jurisdictions) {
       if (j.govClass === "STATE") {
         statewide.add(j.id);
         continue;
       }
-      let unit: CensusUnitTerritory | null = null;
-      let why: string | null = null;
-      const hits = unitsByKey.get(j.id) ?? [];
-      if (hits.length === 1) unit = hits[0];
-      else if (hits.length > 1) {
-        // The generator suffixed every later duplicate with `-<pid6>`; the
-        // unsuffixed id is the one unit no suffixed sibling claimed.
-        const unclaimed = hits.filter((u) => !ids.has(`${j.id}-${u.pid6}`));
-        unit = unclaimed.length === 1 ? unclaimed[0] : null;
-        if (unit === null) why = `${hits.length} Census units share this name and none is uniquely this one`;
-      } else {
-        const suffixed = /^(.*)-(\d{3,})$/.exec(j.id);
-        const base = suffixed === null ? [] : (unitsByKey.get(suffixed[1]) ?? []);
-        unit = suffixed === null ? null : (base.find((u) => u.pid6 === suffixed[2]) ?? null);
-        if (unit === null) why = "no Census of Governments unit with a territory matches this registry id";
-      }
+      const unit = j.censusId ? unitsByPid.get(`${j.stateCode.toUpperCase()}:${j.censusId}`) ?? null
+        : unitsByAlias.get(`${j.stateCode.toUpperCase()}:${j.id}`) ?? null;
+      const why = unit ? null : "no native Census government identity with sourced territory is held for this registry row";
       if (fromRegistration) {
         /* Registration: the unit is claimed, and the government is placed by the division its body sits on. */
         if (unit !== null) claimed.add(unit);
-        const t = j.ocdId ? divisionTerritory(j) : undefined;
+        const ruled = unit ? ruledDistrictTerritory(unit, unitsByPid, sharesFor, unitShareKey, DISTRICT_TERRITORIES) : null;
+        const t = (j.ocdId ? divisionTerritory(j) : undefined) ?? (ruled && !("unplaced" in ruled) ? ruled : undefined);
         if (t === undefined || t.zctas.size === 0) {
           unplaced.set(
             j.id,
             j.ocdId
-              ? "its Census division carries no ZCTA territory in the sampled overlap"
-              : "registration pairs it with no Census division (TIGER publishes none for it, or none is uniquely its), so no body is minted for it",
+              ? "its Census division carries no source-established ZCTA territory"
+              : "the government is listed; no source-established service geography is held",
           );
           continue;
         }

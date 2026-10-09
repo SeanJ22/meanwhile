@@ -22,6 +22,10 @@ export interface RosterMember {
   contactScope?: "SHARED_OFFICE" | "INDIVIDUAL_OFFICE";
   /** Stable within the roster: `roster:<bodyId>#<n>`. */
   id: string;
+  personId?: string;
+  sourceRecordId?: string;
+  nativeIds?: Readonly<Record<string, readonly string[]>>;
+  officeId?: string;
   name: string;
   /** The published role — "Mayor", "Ward 3 Council Member", "Chair". */
   officeTitle: string;

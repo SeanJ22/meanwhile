@@ -40,7 +40,8 @@ import { getRegistryRuntimeReadModel, primeRegistryRuntimeFromValue, readRegistr
 import { CENSUS_PLACEHOLDER_BODY_ISSUE, isCensusPlaceholderDivision, withoutPlaceholderBodies } from "../lib/registry/census-placeholders.ts";
 import { slotsFor } from "../lib/registry/derive.ts";
 import type { Registry } from "../lib/registry/types.ts";
-import { registryTransferImport, syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
+import { registryTransferImport, syntheticFederalDirectory, syntheticStateLegislators } from "./helpers/promoted-fixtures.ts";
+import type { OfficialStateLegislatorReadModel } from "../lib/civic-data/candidate-builders.ts";
 
 const T0 = "2026-09-08T12:00:00.000Z";
 const T1 = "2026-09-08T12:01:00.000Z";
@@ -103,7 +104,7 @@ async function registryPackage(at: string, salt: string): Promise<RegistryRuntim
   return { contractId: "registry-runtime-bindings", version: at, sourceThrough: at, sourceReceipt: receipt(payload, at, salt), payload };
 }
 
-test("Ask reads both legislative names from a partitioned registry when a statewide roster pointer is absent", async () => {
+test("Ask reads native state people beside a partitioned registry without reviving superseded legislative seat rows", async () => {
   const memory = new MemoryRoutineDataStore();
   const pkg = await registryPackage(T0, "district-seats");
   const model = structuredClone(registryRuntimeCandidate(pkg).readModel) as { -readonly [K in keyof RegistryRuntimeReadModel]: RegistryRuntimeReadModel[K] };
@@ -115,14 +116,14 @@ test("Ask reads both legislative names from a partitioned registry when a statew
     const memberId = `roster:${id}#held`;
     model.bodyRosters = [...model.bodyRosters, { ...model.bodyRosters[0]!, bodyId: id, bodyName: `Ohio legislative seat ${index}`,
       sourceUrl: `https://ohio.example.gov/seat/${index}`,
-      members: [{ id: memberId, name: index ? "Hearcel F. Craig" : "Dontavius L. Jarrells",
+      members: [{ id: memberId, name: `Superseded seat member ${index}`,
         officeTitle: index ? "Senator" : "Representative", email: null, phone: null, termNote: null, websiteUrl: null }] }];
     model.rosterReaderDispositions = [...model.rosterReaderDispositions, {
       ...model.rosterReaderDispositions.find(row => row.state === "READER_ELIGIBLE")!,
       sourceId: memberId, canonicalId: memberId,
     }];
     model.officialCandidacies = { ...model.officialCandidacies, rows: [...model.officialCandidacies.rows, {
-      holder: { id: memberId, name: index ? "Hearcel F. Craig" : "Dontavius L. Jarrells",
+      holder: { id: memberId, name: `Superseded seat member ${index}`,
         officeTitle: index ? "Senator" : "Representative", divisions: [division], authority: "REGISTRY_BODY_ROSTER",
         sourceUrl: `https://ohio.example.gov/seat/${index}` },
       status: "NOT_CHECKED", candidacy: null, reason: "This fixture has no candidacy finding.", unresolvedCandidacyIds: [],
@@ -157,13 +158,38 @@ test("Ask reads both legislative names from a partitioned registry when a statew
     const read = await readRegistryRuntimeProjection({ store: postgres, bypassCache: true, now: T0 });
     if (read.kind !== "PROMOTED") throw new Error(JSON.stringify(read));
     assert.ok(queries.includes("civic_data_payload_parts"));
-    await withReaderAuthorityEdge({ registryRuntime: { value: read.value, versionId: read.metadata.versionId! } }, async () => {
+    const registryRuntime = { value: read.value, versionId: read.metadata.versionId! };
+    await withReaderAuthorityEdge({ edgeOnly: true, registryRuntime }, async () => {
       const held = await readerOfficeholders(districts);
+      assert.ok(held.loaderFailures > 0, "the missing state authority stays a reported gap");
+      assert.ok(held.seats.every(seat => !seat.name.startsWith("Superseded seat member")), "registry seat rows are no longer a competing legislative authority");
+    });
+    const sample = syntheticStateLegislators("US-NJ").roster.officeholders[0]!;
+    const people = districts.map((division, index) => ({
+      ...sample, id: `plural:oh:00000000-0000-4000-8000-00000000000${index + 1}`,
+      personId: `plural:00000000-0000-4000-8000-00000000000${index + 1}`,
+      name: index ? "Hearcel F. Craig" : "Dontavius L. Jarrells", state: "OH", chamber: index ? "upper" : "lower",
+      officeTitle: index ? "State Senator" : "State Representative",
+      provenance: { sourceUrl: `https://github.com/openstates/people/blob/${"a".repeat(40)}/data/oh/legislature/person-${index}.yml`,
+        sourceOrg: "Plural / Open States", collectedAt: T0, verifiedAt: null },
+    }));
+    const statePeople: OfficialStateLegislatorReadModel = { formatVersion: 1, sourceId: "plural-openstates", jurisdiction: "US-OH",
+      term: "2025-2026", generatedAt: T0, roster: { scope: "OH", generatedAt: T0, officeholders: people,
+        divisions: districts.map((ocdId, index) => ({ ocdId, officeholderId: people[index].id, bodyId: null })), unmatched: [] } };
+    const stateReads: string[] = [];
+    await withReaderAuthorityEdge({ edgeOnly: true, registryRuntime, stateLegislators: { jurisdictions: new Set(["US-OH"]), load: async scope => {
+      stateReads.push(scope);
+      assert.equal(scope, "US-OH");
+      return { value: statePeople, versionId: "test:oh-native-people" };
+    } } }, async () => {
+      const held = await readerOfficeholders(districts);
+      assert.deepEqual(held.seats.map(seat => seat.id).sort(), people.map(person => person.id).sort());
       for (const [question, name] of [["Who is my state representative?", "Dontavius L. Jarrells"], ["Who is my state senator?", "Hearcel F. Craig"]]) {
         const answer = composeReaderOfficials({ ask: readerOfficialsQuestion(question)!, held: held.held, holdingFailed: held.loaderFailures > 0 });
         assert.ok(answer?.answer.includes(name), answer?.answer);
       }
     });
+    assert.ok(stateReads.length > 0);
   } finally {
     if (originalUrl === undefined) delete process.env.DATABASE_URL;
     else process.env.DATABASE_URL = originalUrl;

@@ -100,7 +100,7 @@ import {
 import { ADMIN_CONFIG_ID, isAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
 import { resolveScopes } from "../lib/control-plane/expansion/runner-load.ts";
-import { loadPublishedLookupState } from "../lib/census-geography/reader.ts";
+import { loadPublishedScopeLookupState } from "../lib/census-geography/scope-lookup.ts";
 import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../lib/control-plane/scheduler/research-policy.ts";
 import { admittedHuntSourceScopes, huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
 import { PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowHasNothingOwed, publishNowWorkerTasks } from "../lib/civic-data/publish-now.ts";
@@ -169,12 +169,11 @@ let step = "reading its task selection";
 installFatalLine("routine-civic-data-runner", () => step);
 
 const ROOT = process.cwd();
-// Place-task expansion also reads canonical geography. Give those startup
-// reads the same held copies as the later source and Reader children.
-const readCacheHost = await startCivicReadCacheHost();
+// Admit the supervisor before opening hosts or changing durable source state.
 const FORCE = process.argv.includes("--force");
 const PUBLISH_NOW = process.argv.includes("--publish-now");
 if (PUBLISH_NOW && FORCE) throw new Error("Publish-now cannot force unrelated source work.");
+const ADMITTED_CODE_SHA = assertRuntimeAuthority({ capabilities: ["ROUTINE_SUPERVISOR"] }).sha;
 // The door registry is the only door list. Every routine pass first brings the doors the system holds into the
 // registry, publishes its meeting doors for every child to read, then builds its meeting work from the registry.
 // A registry that cannot be read leaves the pass without hand-wired meeting work, and the pass says so.
@@ -183,17 +182,6 @@ if (controlPlaneUrlFromEnv() === null) {
 } else {
   try {
     const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, new Date().toISOString(), { skipBootstrap: true });
-    if (!PUBLISH_NOW) {
-      console.log(`RCD_TASK routine-civic-data-runner: door registry — ${doorSyncLine(await syncHeldDoors(doorRepos.doors, { scoutResults: doorRepos.scoutResults }))}`);
-      const [published] = await runBoundedChildPass([{
-        id: MEETING_DOORS_CONTRACT_ID,
-        failureDomain: "derived:meeting-doors",
-        executable: process.execPath,
-        args: ["--experimental-strip-types", "scripts/publish-meeting-doors.mts", "--promote"],
-        env: admittedRuntimeChildEnvironment({ parentEnv: process.env, capability: "ROUTINE_CONTRACT", contract: MEETING_DOORS_CONTRACT_ID, parentPid: process.pid }),
-      }], { cwd: ROOT, env: process.env, timeoutMs: ROUTINE_CHILD_TIMEOUT_MS, maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES, concurrency: 1 });
-      console.log(`RCD_TASK routine-civic-data-runner: meeting doors ${published?.status === 0 ? "published" : `not published (${safeFailure(published?.errorMessage ?? published?.stderr.trim().split("\n").at(-1) ?? "no answer")}); children read the last good doors`}`);
-    }
     const doorPass = await refreshDoorsForPass(doorRepos.doors);
     console.log(`RCD_TASK routine-civic-data-runner: meeting doors read from the registry (${doorPass.partitions?.partitions ?? 0} partitions)` +
       `${doorPass.reason ?? doorPass.partitions?.reason ? ` — ${doorPass.reason ?? doorPass.partitions?.reason}` : ""}` +
@@ -239,7 +227,7 @@ if (!TASK_SELECTION.ok) {
 // clocks, or any child capability can be opened.
 step = "proving its runtime authority";
 const RUNNING_CODE_SHA = TASK_SELECTION.ok
-  ? assertRuntimeAuthority({ capabilities: ["ROUTINE_SUPERVISOR"] }).sha
+  ? ADMITTED_CODE_SHA
   : null;
 
 // Manual invocation and the standing pilot share this same atomic host-local
@@ -262,6 +250,27 @@ const ROUTINE_DATA_PROCESS_LEASE = TASK_SELECTION.ok ? await (async () => {
     return null;
   }
 })() : null;
+
+const readCacheHost = ROUTINE_DATA_PROCESS_LEASE ? await startCivicReadCacheHost() : { close: async () => {} };
+if (ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()) {
+  try {
+    const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, RUN_STARTED_AT, { skipBootstrap: true });
+    if (!PUBLISH_NOW) {
+      console.log(`RCD_TASK routine-civic-data-runner: door registry — ${doorSyncLine(await syncHeldDoors(doorRepos.doors, { scoutResults: doorRepos.scoutResults }))}`);
+      const [published] = await runBoundedChildPass([{
+        id: MEETING_DOORS_CONTRACT_ID,
+        failureDomain: "derived:meeting-doors",
+        executable: process.execPath,
+        args: ["--experimental-strip-types", "scripts/publish-meeting-doors.mts", "--promote"],
+        env: admittedRuntimeChildEnvironment({ parentEnv: process.env, capability: "ROUTINE_CONTRACT", contract: MEETING_DOORS_CONTRACT_ID, parentPid: process.pid }),
+      }], { cwd: ROOT, env: process.env, timeoutMs: ROUTINE_CHILD_TIMEOUT_MS, maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES, concurrency: 1 });
+      console.log(`RCD_TASK routine-civic-data-runner: meeting doors ${published?.status === 0 ? "published" : `not published (${safeFailure(published?.errorMessage ?? published?.stderr.trim().split("\n").at(-1) ?? "no answer")}); children read the last good doors`}`);
+    }
+    await refreshDoorsForPass(doorRepos.doors);
+  } catch (error) {
+    console.warn(`RCD_TASK routine-civic-data-runner: door refresh unavailable — ${safeFailure(sanitizedErrorDiagnostic(error))}; existing source work continues`);
+  }
+}
 
 const sharedBrowser = sharedScoutBrowser();
 const workerToolsHost = ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()
@@ -307,15 +316,18 @@ async function readObservedChangeRates(): Promise<ReadonlyMap<string, number>> {
  * never changes the pass.
  */
 let doorOutcomeRepos: Promise<Awaited<ReturnType<typeof createPgRepositories>>> | null = null;
-async function recordTaskDoorOutcome(taskId: string, outcome: DoorOutcome, changed = false, evidence: DoorEvidence | null = null): Promise<void> {
+async function recordTaskDoorOutcome(taskId: string, outcome: DoorOutcome, changed = false, evidence: DoorEvidence | null = null,
+  sourceClock?: () => Promise<RoutineTaskClock>): Promise<void> {
   const connection = controlPlaneUrlFromEnv();
   if (connection === null) return;
   try {
+    const checkedAt = outcome === "SUCCESS" ? (await sourceClock?.())?.lastSucceededObservedAt : undefined;
+    if (outcome === "SUCCESS" && (!checkedAt || Date.parse(checkedAt) < Date.parse(RUN_STARTED_AT))) return;
     doorOutcomeRepos ??= createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
     const repos = await doorOutcomeRepos;
     const doorId = await taskDoorId(repos.doors, taskId);
     if (doorId === null) return;
-    const at = new Date().toISOString();
+    const at = checkedAt ?? new Date().toISOString();
     // A failed read that tells the door itself is gone judges it and opens its fix item; a promoted read reopens a door that was shut.
     if (outcome === "FAILURE" && evidence !== null) {
       if ((await recordDoorEvidence(repos.doors, doorId, evidence, at, repos)).written) return;
@@ -471,7 +483,7 @@ async function readHuntSourceTasks(): Promise<readonly RoutineSourceTask[]> {
   if (held.malformed) throw new Error("the owner's scope list contains unreadable decisions");
   const currentSends = held.scopes.filter(scope => scope.sourceWorkVersion === 1);
   if (currentSends.length === 0) return publication;
-  const lookup = await loadPublishedLookupState({ bypassCache: true });
+  const lookup = await loadPublishedScopeLookupState(currentSends.map(send => send.geography));
   const resolved = await resolveScopes(currentSends, lookup, null);
   for (const scope of resolved.scopes) {
     if (scope.kind === "UNRESOLVED") throw new Error(`scope ${scope.decision.key}: ${scope.why}`);
@@ -743,7 +755,7 @@ for (const read of clockReads) {
     continue;
   }
   const sittingHot = sittingSignals.get(task.id);
-  const observedChange = observedChangeRates.get(task.id);
+  const observedChange = observedChangeRates.get(task.id) ?? observedChangeRates.get(`feed:${task.id}`);
   const observedEveryMs = observedChange === undefined ? undefined : observedChange * 60_000;
   const dueRequest = FORCE ? null : routineDueRequestFor(task, durableClock, admissionNowMs, dueRequests);
   const publicationDue = campaignPublicationInputsDue(task.id, campaignPublicationInputs);
@@ -958,7 +970,8 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
       console.error(`RCD_TASK ${pending.task.id}: SUPERVISOR_FAILURE (CANNOT_TELL) — ${durableIssue}`);
     } else if (promoted) {
       verifiedSourceSuccesses += 1;
-      await recordTaskDoorOutcome(pending.task.id, "SUCCESS", receipt.promotedVersion !== null && receipt.confirmedAt === undefined);
+      await recordTaskDoorOutcome(pending.task.id, "SUCCESS", receipt.promotedVersion !== null && receipt.confirmedAt === undefined, null,
+        () => store.clock(pending.task.sourceId, pending.task.recordClass, pending.task.scope));
       captureTaskReceipt(pending, receipt, "VERIFIED_SOURCE_SUCCESS");
       console.log("RCD_RECEIPT=" + JSON.stringify(receipt));
       console.log(`RCD_TASK ${pending.task.id}: GOOD (${receipt.state})`);
@@ -1004,6 +1017,8 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
       : child.detail,
     child.kind === "SUPERVISOR_FAILURE" ? null : child.receipt.candidateId);
   if (child.kind === "VERIFIED_SOURCE_SUCCESS") {
+    await recordTaskDoorOutcome(pending.task.id, "SUCCESS", child.receipt.promotedVersion !== null && child.receipt.confirmedAt === undefined, null,
+      () => store.clock(pending.task.sourceId, pending.task.recordClass, pending.task.scope));
     verifiedSourceSuccesses += 1;
     captureTaskReceipt(pending, child.receipt, "VERIFIED_SOURCE_SUCCESS");
     console.log("RCD_RECEIPT=" + JSON.stringify(child.receipt));
@@ -1011,6 +1026,8 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
     // A publication pass says what reached readers, so a new version is never read as delivery.
     console.log(`RCD_TASK ${pending.task.id}: GOOD (${child.state})${delivered ? ` — delivered ${delivered.records} record(s); ${delivered.gaps} owed: ${Object.entries(delivered.gapReasons).map(([code, n]) => `${code}×${n}`).join(", ") || "none"}` : ""}`);
   } else if (child.kind === "VERIFIED_SOURCE_FAILURE") {
+    const failedCandidate = !child.receipt.acquisitionSucceeded ? await store.readCandidateSummary(child.receipt.candidateId).catch(() => null) : null;
+    await recordTaskDoorOutcome(pending.task.id, "FAILURE", false, failedCandidate === null ? null : evidenceFromCandidate(failedCandidate));
     verifiedSourceFailures += 1;
     captureTaskReceipt(pending, child.receipt, "VERIFIED_SOURCE_FAILURE");
     console.log("RCD_RECEIPT=" + JSON.stringify(child.receipt));

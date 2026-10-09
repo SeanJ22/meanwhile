@@ -13,7 +13,7 @@ import {
   type CoverageStateLegislatorReader,
 } from "../lib/registry/server.ts";
 import type { Division } from "../lib/registry/types.ts";
-import type { OfficialStateVoteScope } from "../lib/state-rollcalls/authority.ts";
+import type { StatePeopleJurisdiction } from "../lib/officials/people-identity.ts";
 import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
 const NOW = "2026-09-09T12:00:00.000Z";
@@ -21,7 +21,7 @@ const NOW = "2026-09-09T12:00:00.000Z";
 await installRegistryAuthority();
 
 function metadata(
-  scope: OfficialStateVoteScope,
+  scope: StatePeopleJurisdiction,
   overrides: Partial<CivicDataReadMetadata> = {},
 ): CivicDataReadMetadata {
   return {
@@ -71,7 +71,7 @@ function division(
 
 function emptyRead(
   kind: "NOT_RECORDED" | "STORE_UNREACHABLE",
-  scope: OfficialStateVoteScope,
+  scope: StatePeopleJurisdiction,
 ): CivicDataReadResult<OfficialStateLegislatorReadModel> {
   if (kind === "NOT_RECORDED") {
     return {

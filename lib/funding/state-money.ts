@@ -78,6 +78,8 @@ export interface StateMoneyTotals {
 }
 
 export interface StateMoneyRecord {
+  /** A source-native filer may publish before a cross-source person binding exists. */
+  identityBasis?: "NATIVE_FILER" | "CANDIDACY";
   /** Held source descriptor and key reference; never a credential value. */
   detailSource?: import("./finance-detail-source.ts").FinanceDoorDetailSource;
   dataClass: "STATE_COMMITTEE";
@@ -163,6 +165,9 @@ export interface StateMoneySnapshot {
     }
   >;
   records: StateMoneyRecord[];
+  /** Standing refresh cursor; fact dates remain on each source-bound record. */
+  refreshAttempts?: Record<string, string>;
+  acquisitionCursors?: Record<string, number>;
 }
 
 /**

@@ -35,6 +35,7 @@ import {
   type TerritoryIndex,
 } from "@/lib/control-plane/expansion/membership.ts";
 import { readTerritoryIndex } from "@/lib/control-plane/expansion/runner-load.ts";
+import type { PlaceDivision } from "@/lib/control-plane/expansion/national-geography.ts";
 import { scopeKeyOf, withScopeSet, type ExpansionScopeDecision, type ExpansionScopeGeography } from "@/lib/control-plane/expansion/scopes.ts";
 import { stateOfSubject, subjectOfObligationId } from "@/lib/control-plane/expansion/subjects.ts";
 import { lookupAction } from "@/lib/control-plane/gateway/registry.ts";
@@ -80,7 +81,7 @@ import { sourcesOf, type Jurisdiction, type JurisdictionRegistry } from "@/lib/h
 
 /**
  * Sending the fleet to a geography creates the work it is missing. Runs on recorded data (the jurisdiction registry
- * fixture, the committed Census unit territories and census-geography bootstrap) against in-memory repositories and
+ * fixture, native Census unit identities and explicit area-relationship fixtures) against in-memory repositories and
  * a fixed clock. No network, no database, no model.
  */
 
@@ -154,9 +155,17 @@ test("owner-created family work reaches autonomous workers and survives registra
 });
 
 let territoryAll: TerritoryIndex | null = null;
+/** Synthetic bounded area observations exercise dispatch; saved lattice counts are not area evidence. */
+const HELD_PLACES = new Map<string, readonly PlaceDivision[]>([["85701", [
+  ["county", "04019", "Pima County"], ["place", "0477000", "Tucson"],
+  ["place", "0468850", "South Tucson"], ["place", "0444270", "Marana"],
+  ["place", "0451600", "Oro Valley"], ["place", "0462140", "Sahuarita"],
+].map(([layer, geoid, label]) => ({ id: `${layer}:${geoid}`, label, geoid, divisionType: layer,
+  sourceUrl: "https://www2.census.gov/geo/docs/maps-data/data/rel2020/", censusLayer: layer,
+  zctaOverlap: { whole: false, fraction: 0.2, fractionBasis: "area" } }))]]);
 /** The runner's own territory index over every promoted registry, read once for the file. */
 function territory(): TerritoryIndex {
-  territoryAll ??= readTerritoryIndex(ROOT, Object.values(REGISTRIES));
+  territoryAll ??= readTerritoryIndex(ROOT, Object.values(REGISTRIES), undefined, undefined, HELD_PLACES);
   return territoryAll;
 }
 
@@ -243,8 +252,9 @@ test("sending the fleet to Pima County creates what the registry defines there a
   const reading = dispatchWorkReading(plan, applied, CONTEXT);
   const [pima] = reading.targets;
 
-  assert.ok(pima.units.placed >= 15, `the registered governments certainly in Pima are placed (${pima.units.placed})`);
-  for (const name of ["COUNTY OF PIMA", "CITY OF TUCSON", "TUCSON UNIFIED SCHOOL DISTRICT 1"]) assert.ok(pima.units.placedSample.includes(name), `${name} is in Pima`);
+  assert.equal(pima.units.placed, 7, "six native governments on sourced area fixtures plus the statewide government");
+  for (const name of ["COUNTY OF PIMA", "CITY OF TUCSON", "CITY OF SOUTH TUCSON"]) assert.ok(pima.units.placedSample.includes(name), `${name} is placed by the fixture`);
+  assert.ok(!pima.units.placedSample.includes("TUCSON UNIFIED SCHOOL DISTRICT 1"), "a school name match supplies no service geography");
   assert.ok(pima.units.unplaced > 0, "registered governments no territory can place (special districts) are counted, never guessed in");
   assert.equal(identity(pima.requirements), pima.requirements.defined, "every requirement instance lands in exactly one state");
   assert.ok(pima.requirements.carried > 0, "Pima's standing custodian clocks are reordered, never created twice");
@@ -355,7 +365,7 @@ test("all missing requirements are created in one pass without a cycle window", 
 
 test("a geography in a state with no promoted registry is blocked by name, and nothing is invented for it", async () => {
   /* Arizona unregistered: the same Census units, and no registry to say what they owe. */
-  const withoutAz = readTerritoryIndex(ROOT, [REGISTRIES.nh, REGISTRIES.nj], ["AZ", "NH", "NJ"]);
+  const withoutAz = readTerritoryIndex(ROOT, [REGISTRIES.nh, REGISTRIES.nj], ["AZ", "NH", "NJ"], undefined, HELD_PLACES);
   const repos = createMemoryRepositories();
   const { world } = await cycleWorld(repos, T0);
   const plan = planDispatchWork({
@@ -416,7 +426,7 @@ test("a promoted registry the runtime's reader refuses is named as that, never u
   const readable = new Map([["nh", REGISTRIES.nh], ["nj", REGISTRIES.nj]]);
   const plan = planDispatchWork({
     targets: [scopeWorkTarget(await planned(decision(PIMA))), dispatchWorkTarget({ intentId: "i-az", note: "Arizona", requestedAt: T0 })],
-    world: { ...world, territory: readTerritoryIndex(ROOT, [REGISTRIES.nh, REGISTRIES.nj], ["AZ", "NH", "NJ"]), registries: readable, refusedRegistries: refused },
+    world: { ...world, territory: readTerritoryIndex(ROOT, [REGISTRIES.nh, REGISTRIES.nj], ["AZ", "NH", "NJ"], undefined, HELD_PLACES), registries: readable, refusedRegistries: refused },
   });
   const [dispatch, scope] = dispatchWorkReading(plan, null, CONTEXT).targets;
   for (const t of [scope, dispatch]) {
@@ -434,7 +444,7 @@ test("a Census unit the registry does not carry is blocked NOT_IN_REGISTRY, with
     counts: { COUNTY: 1 },
   };
   const units: CensusUnitTerritory[] = [
-    { pid6: "1", name: "COUNTY OF PIMA", type: "COUNTY", state: "AZ", zips: ["85701"], method: "county GEOID 04019" },
+    { pid6: "160816", aliases: ["az:county:county-of-pima"], name: "COUNTY OF PIMA", type: "COUNTY", state: "AZ", zips: ["85701"], method: "county GEOID 04019" },
     { pid6: "2", name: "TOWN OF SOMEWHERE", type: "MUNICIPAL", state: "AZ", zips: ["85701"], method: "place GEOID 0499999" },
   ];
   const index = buildTerritoryIndex([reg], units);
@@ -477,6 +487,21 @@ test("a Census unit the registry does not carry is blocked NOT_IN_REGISTRY, with
   ).targets;
   assert.equal(words.requirements.defined, 0);
   assert.match(words.says.join(" "), /No registered government in Arizona carries these words, so nothing was created/);
+});
+
+test("reviewed dispatch identities retain exact saved aliases; names and conflicting aliases never supply a native join", () => {
+  const government = REGISTRIES.az.jurisdictions.find(row => row.id === "az:county:county-of-pima")!;
+  const registry = { ...REGISTRIES.az, jurisdictions: [government] };
+  const unit: CensusUnitTerritory = { pid6: "160816", aliases: [government.id], name: "RENAMED SOURCE GOVERNMENT",
+    type: "COUNTY", state: "AZ", zips: ["85701"], method: "county GEOID 04019" };
+  assert.ok(buildTerritoryIndex([registry], [unit]).bySubject.has(government.id), "a changed label does not break the held identity alias");
+  assert.equal(buildTerritoryIndex([registry], [{ ...unit, aliases: [], name: government.name }]).bySubject.has(government.id), false,
+    "matching names do not recreate the retired join");
+  const conflicting = { ...unit, pid6: "999999" };
+  assert.equal(buildTerritoryIndex([registry], [unit, conflicting]).bySubject.has(government.id), false,
+    "an alias claiming two native governments is unresolved");
+  assert.ok(buildTerritoryIndex([{ ...registry, jurisdictions: [{ ...government, censusId: "160816" }] }], [unit, conflicting]).bySubject.has(government.id),
+    "an explicit native identifier still resolves independently of the ambiguous historical alias");
 });
 
 test("creating work opens no paid lane: the owner's PAUSE stands, nothing but obligations is written, and paid discovery waits for the free walk", async () => {

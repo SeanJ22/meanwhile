@@ -12,6 +12,7 @@ export interface OfficeLocation {
   readonly address: string;
   readonly hours: string | null;
   readonly phone: string | null;
+  readonly email?:string | null;
   readonly sourceUrl: string;
   readonly sourceOrg: string | null;
   readonly collectedAt: string | null;
@@ -41,6 +42,7 @@ export function officeLocation(input: {
   readonly address: string | null | undefined;
   readonly hours?: string | null;
   readonly phone?: string | null;
+  readonly email?: string | null;
   readonly sourceUrl: string | null | undefined;
   readonly sourceOrg?: string | null;
   readonly collectedAt?: string | null;
@@ -50,7 +52,8 @@ export function officeLocation(input: {
   if (!looksLikeAddress(address) || !input.sourceUrl?.startsWith("https://")) return null;
   return { ownerId: input.ownerId, kind: input.kind as OfficeLocationKind, address,
     hours: input.hours ? clean(input.hours) || null : null, phone: input.phone ? clean(input.phone) || null : null,
-    sourceUrl: input.sourceUrl, sourceOrg: input.sourceOrg ?? null, collectedAt: input.collectedAt ?? null };
+    sourceUrl: input.sourceUrl, sourceOrg: input.sourceOrg ?? null, collectedAt: input.collectedAt ?? null,
+    ...(input.email?.trim() ? {email:input.email.trim()} : {}) };
 }
 
 const joinAddress = (office: MemberOfficeRecord["office"]) =>
@@ -59,7 +62,7 @@ const joinAddress = (office: MemberOfficeRecord["office"]) =>
 /** The stored member offices, as the one shape. */
 export function fromMemberOffice(record: MemberOfficeRecord): OfficeLocation | null {
   return officeLocation({ ownerId: record.officeholderId, kind: record.officeKind === "CAPITOL" ? "CAPITOL_OFFICE" : "DISTRICT_OFFICE",
-    address: joinAddress(record.office), phone: record.office.phone, sourceUrl: record.sourceUrl, sourceOrg: record.sourceOrg, collectedAt: record.collectedAt });
+    address: joinAddress(record.office), phone: record.office.phone, email:record.office.email, sourceUrl: record.sourceUrl, sourceOrg: record.sourceOrg, collectedAt: record.collectedAt });
 }
 
 /** A body's office, as its own page states it. */
@@ -113,7 +116,7 @@ export function campaignOfficeFrom(input: {
 export function officeLocationLine(location: OfficeLocation): string {
   const label = { DISTRICT_OFFICE: "District office", CAPITOL_OFFICE: "Capitol office", CAMPAIGN_OFFICE: "Campaign office",
     BODY_OFFICE: "Office", MEETING_PLACE: "Meets at" }[location.kind];
-  return [`${label}: ${location.address}`, location.hours ? `Hours: ${location.hours}` : null, location.phone ? `Phone: ${location.phone}` : null]
+  return [`${label}: ${location.address}`, location.hours ? `Hours: ${location.hours}` : null, location.phone ? `Phone: ${location.phone}` : null,location.email ? `Email: ${location.email}` : null]
     .filter(Boolean).join(". ") + ".";
 }
 

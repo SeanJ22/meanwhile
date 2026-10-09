@@ -12,6 +12,7 @@
  * `tests/robots-recorded-not-blocking.test.ts` holds this.
  */
 
+import { readCompleteResponse } from "./source-bytes.ts";
 import { recordAcquiredResponse } from "./acquisition-trace.ts";
 import { challengeIn } from "./challenge-signatures.ts";
 import {
@@ -56,6 +57,8 @@ export class SourceHttpError extends Error {
 }
 
 export interface HttpOptions {
+  /** Complete response bytes allowed for a binary source. */
+  maxBytes?: number;
   /** Overridden in tests so the suite never sleeps or touches the network. */
   fetchImpl?: typeof fetch;
   accept?: string;
@@ -422,7 +425,7 @@ export async function politeGetBytes(
       2,
     );
   }
-  const bytes = new Uint8Array(await response.arrayBuffer());
+  const bytes = await readCompleteResponse(response, options.maxBytes ?? 32 * 1024 * 1024);
   options.signal?.throwIfAborted();
   // A zero-byte 200 is a failed retrieval, not an empty document.
   if (bytes.length === 0) {

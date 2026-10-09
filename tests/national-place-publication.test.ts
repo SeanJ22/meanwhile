@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { gunzipSync } from "node:zlib";
 import { createHash } from "node:crypto";
 import test from "node:test";
+import sharp from "sharp";
 import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { readRegistryRuntimePrior, registryRuntimeCandidate } from "../lib/registry/runtime-data-plane.ts";
@@ -51,227 +52,51 @@ const governorUrl = "https://governor.ohio.gov/about/governor-mike-dewine";
 const governor = capture("<html><head><title>Governor Mike DeWine | Governor of Ohio</title></head><body><h1>Governor Mike DeWine</h1><p>The 70th Governor of the State of Ohio.</p></body></html>", governorUrl);
 const profile = capture(`<html><head><title>Representative Allison Russo | Ohio House</title></head><body><h1>Representative Allison Russo</h1><p>District 7</p></body></html>`, profileUrl);
 
-test("a place with no prepared registry gets its Census divisions, their bodies and its verified officials through the registry door (§3)", async () => {
-  const s = await store();
-  const result = await publishNationalPlaceSources({ store: s, now: NOW, divisions, geographyCaptures: geography, sources: { officials: [
-    { discoveryId: "russo", divisionId: `${OH}/sldl:7`, name: "Allison Russo", officeTitle: "Representative", officialUrl: profileUrl, document: { url: profileUrl, capture: profile } },
-    { discoveryId: "dewine", divisionId: OH, name: "Mike DeWine", officeTitle: "Governor", officialUrl: governorUrl, document: { url: governorUrl, capture: governor } },
-    { discoveryId: "unsaved", divisionId: `${OH}/sldl:7`, name: "Someone Else", officeTitle: "Representative", officialUrl: profileUrl, document: { url: profileUrl } },
-  ] } });
-  assert.deepEqual(result.divisions, [`${OH}/place:columbus`, `${OH}/sldl:7`]);
-  assert.deepEqual(result.bodies, [`${OH}/place:columbus#governing`, `${OH}/sldl:7#seat`]);
-  assert.deepEqual(result.members.map(m => [m.bodyId, m.discoveryIds]), [[OH, ["dewine"]], [`${OH}/sldl:7#seat`, ["russo"]]]);
-  assert.deepEqual(result.gaps.map(g => g.key).sort(), ["official:unsaved"], "the state is the registry's scope, not a missing row");
-  assert.ok(result.promotedVersionId);
-  // A door package speaks only for its own members: the thousands it omits are retained, not listed as excluded.
-  const written = (await s.readCandidate(result.candidateId!))!;
-  assert.equal((written.candidate.excludedFacts ?? []).filter(f => f.code === "MANUAL_MEMBER_REMOVAL_EVIDENCE_MISSING").length, 0);
-  const after = (await readRegistryRuntimePrior(s, NOW))!;
-  const roster = after.payload.bodyRosters.find(r => r.bodyId === `${OH}/sldl:7#seat`);
-  assert.deepEqual(roster?.members.map(m => [m.name, m.officeTitle]), [["Allison Russo", "Representative"]]);
-  assert.equal(roster?.sourceUrl, profileUrl);
-  const executive = after.payload.statewideExecutives.find(row => row.stateOcdId === OH);
-  assert.deepEqual([executive?.holder.id, executive?.holder.name, executive?.holder.officeTitle, executive?.sourceUrl], ["statewide:oh/governor", "Mike DeWine", "Governor", governorUrl]);
-  assert.equal(after.payload.registry.bodies.find(b => b.id === `${OH}/place:columbus#governing`)?.name, null, "a council's name is a sourced fact, never minted");
-
-  const again = await publishNationalPlaceSources({ store: s, now: NOW, divisions, geographyCaptures: geography, sources: { officials: [] } });
-  assert.deepEqual([again.divisions, again.bodies, again.candidateId], [[], [], null], "a second call with the same evidence adds nothing");
-});
-
-test("a township that governs is published as a place with its governing body; a fictitious Census subdivision is neither a row nor a gap", async () => {
-  const s = await store();
-  const cousubUrl = "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/1/query?geometry=43085";
-  const saved = capture(`{"features":[{"attributes":{"NAME":"Sharon township","GEOID":"3904971248","LSAD":"44","FUNCSTAT":"A"}},{"attributes":{"NAME":"Columbus city","GEOID":"3904918000","LSAD":"25","FUNCSTAT":"F"}}]}`, cousubUrl);
-  const township = `${OH}/county:franklin/place:sharon_township`;
-  const result = await publishNationalPlaceSources({ store: s, now: NOW, geographyCaptures: [saved], sources: { officials: [] }, divisions: [
-    { id: township, label: "Sharon township", divisionType: "cousub", geoid: "3904971248", sourceUrl: cousubUrl, sourceDataset: "TIGER_CB2023", lsad: "44", funcstat: "A" },
-    { id: `${OH}/county:franklin/place:columbus_city`, label: "Columbus city", divisionType: "cousub", geoid: "3904918000", sourceUrl: cousubUrl, sourceDataset: "TIGER_CB2023", lsad: "25", funcstat: "F" },
-  ] });
-  assert.deepEqual(result.divisions, [township]);
-  assert.deepEqual(result.bodies, [`${township}#governing`]);
-  assert.deepEqual(result.gaps, []);
-  const after = (await readRegistryRuntimePrior(s, NOW))!;
-  const row = after.payload.registry.divisions.find(d => d.ocdId === township);
-  assert.deepEqual([row?.divisionType, row?.funcstat, row?.parentOcdId], ["place", "A", `${OH}/county:franklin`]);
-});
-
-test("an official whose page does not name the district, and a division its saved Census response does not show, stay gaps", async () => {
-  const s = await store();
-  const elsewhere = capture(profile.evidence.text.replace("District 7", "District 8"), profileUrl);
-  const result = await publishNationalPlaceSources({ store: s, now: NOW, geographyCaptures: geography,
-    divisions: [...divisions.slice(0, 2), { ...divisions[0], id: `${OH}/place:bexley`, label: "Bexley city", geoid: "3905438" }],
-    sources: { officials: [{ discoveryId: "russo", divisionId: `${OH}/sldl:7`, name: "Allison Russo", officeTitle: "Representative", officialUrl: profileUrl, document: { url: profileUrl, capture: elsewhere } }] } });
-  assert.deepEqual(result.members, []);
-  assert.match(result.gaps.find(g => g.key === "official:russo")!.detail, /ROSTER_PAGE_NOT_THIS_BODY/);
-  assert.equal(result.gaps.find(g => g.key === `division:${OH}/place:bexley`)?.detail, "DIVISION_NOT_ON_SAVED_SOURCE");
-});
-
-test("an official page whose text is not the saved bytes is a named gap, and the pass reports what it delivered", async () => {
-  const s = await store();
-  const altered = { ...governor, evidence: { ...governor.evidence, text: governor.evidence.text.replace("DeWine</h1>", "DeWine </h1>") } };
-  const result = await publishNationalPlaceSources({ store: s, now: NOW, divisions, geographyCaptures: geography, sources: { officials: [
-    { discoveryId: "dewine", divisionId: OH, name: "Mike DeWine", officeTitle: "Governor", officialUrl: governorUrl, document: { url: governorUrl, capture: altered } }] } });
-  assert.match(result.gaps.find(g => g.key === "official:dewine")!.detail, /^OFFICIAL_PAGE_UNUSABLE:CONTENT_HASH_MISMATCH/);
-  const delivered = nationalDelivery([result]);
-  assert.deepEqual([delivered.records, delivered.gaps.length, delivered.versionId === result.promotedVersionId], [0, 1, true]);
-});
-
-test("a missing seat body uses current Census bytes for a held division with an older source URL", async () => {
-  const s = await store();
-  // No official yet: the division publishes without its legislative seat body.
-  await publishNationalPlaceSources({ store: s, now: NOW, divisions: [divisions[1]], geographyCaptures: geography, sources: { officials: [] } });
-  const currentUrl = `${houseUrl}&vintage=current`;
-  const current = capture(geography[1].evidence.text, currentUrl);
-  const result = await publishNationalPlaceSources({ store: s, now: NOW,
-    divisions: [{ ...divisions[1], sourceUrl: currentUrl }], geographyCaptures: [current], sources: { officials: [
-      { discoveryId: "russo", divisionId: `${OH}/sldl:7`, name: "Allison Russo", officeTitle: "Representative", officialUrl: profileUrl, document: { url: profileUrl, capture: profile } },
-    ] } });
-  assert.deepEqual(result.divisions, [], "held division remains in place");
-  assert.deepEqual(result.bodies, [`${OH}/sldl:7#seat`]);
-  assert.deepEqual(result.gaps, []);
-  assert.deepEqual(result.members.flatMap(member => member.discoveryIds), ["russo"]);
-  const after = (await readRegistryRuntimePrior(s, NOW))!;
-  assert.equal(after.payload.registry.divisions.find(d => d.ocdId === divisions[1].id)?.provenance.sourceUrl, houseUrl);
-  assert.equal(after.payload.registry.bodies.find(b => b.id === `${OH}/sldl:7#seat`)?.provenance.sourceUrl, currentUrl);
-});
-
-test("missing current geography leaves a body owed without blocking an independently sourced statewide official", async () => {
-  const s = await store();
-  await publishNationalPlaceSources({ store: s, now: NOW, divisions: [divisions[1]], geographyCaptures: geography, sources: { officials: [] } });
-  const result = await publishNationalPlaceSources({ store: s, now: NOW, divisions, geographyCaptures: [], sources: { officials: [
-    { discoveryId: "russo", divisionId: `${OH}/sldl:7`, name: "Allison Russo", officeTitle: "Representative", officialUrl: profileUrl, document: { url: profileUrl, capture: profile } },
-    { discoveryId: "dewine", divisionId: OH, name: "Mike DeWine", officeTitle: "Governor", officialUrl: governorUrl, document: { url: governorUrl, capture: governor } },
-  ] } });
-  assert.deepEqual(result.bodies, []);
-  assert.deepEqual(result.members.flatMap(member => member.discoveryIds), ["dewine"]);
-  assert.ok(result.gaps.some(g => g.key === `division:${OH}/sldl:7` && g.detail.startsWith("DIVISION_SOURCE_NOT_SAVED:")));
-});
-
-test("a statewide office's holder: the same one is confirmed without losing their live facts; a new one owes the candidacy check again", async t => {
-  const s = await store();
-  const AZ = "ocd-division/country:us/state:az";
-  const agUrl = "https://www.azag.gov/office/about-ag";
-  const page = (name: string) => capture(`<html><head><title>About the Attorney General | Arizona Attorney General</title></head><body><h1>Attorney General ${name}</h1><p>Arizona's chief legal officer.</p></body></html>`, agUrl);
-  const official = (name: string) => ({ discoveryId: `ag-${name}`, divisionId: AZ, name, officeTitle: "Attorney General", officialUrl: agUrl, document: { url: agUrl, capture: page(name) } });
-  const azDivision = [{ id: AZ, label: "Arizona", divisionType: "state", geoid: "04", sourceUrl: agUrl, sourceDataset: "TIGER_CB2023" as const }];
-  const before = (await readRegistryRuntimePrior(s, NOW))!;
-  const live = before.payload.statewideExecutives.find(row => row.holder.id === "statewide:az/attorney-general")!;
-  const same = await publishNationalPlaceSources({ store: s, now: NOW, divisions: azDivision, geographyCaptures: [], sources: { officials: [official("Kris Mayes")] } });
-  assert.deepEqual([same.candidateId, same.gaps, same.members.map(m => m.discoveryIds)], [null, [], [["ag-Kris Mayes"]]], "confirmed, not replaced");
-  assert.deepEqual((await readRegistryRuntimePrior(s, NOW))!.payload.statewideExecutives.find(row => row.holder.id === live.holder.id), live);
-  const delivery = nationalDelivery([same]);
-  assert.deepEqual([delivery.records, delivery.versionId, delivery.candidateId], [0, before.versionId, before.versionId]);
-  const lines: string[] = [];
-  t.mock.method(console, "log", (line: string) => { lines.push(line); });
-  assert.equal(await printWorkerPublicationReceipt(s, "registry-runtime-bindings", [], delivery, NOW), true,
-    "an unchanged official-only pass emits its existing durable version instead of missing its receipt");
-  const receipt = JSON.parse(lines[0].slice("RCD_RECEIPT=".length));
-  assert.deepEqual([receipt.candidateId, receipt.delivered.records, receipt.delivered.gaps], [before.versionId, 0, 0]);
-
-  const changed = await publishNationalPlaceSources({ store: s, now: NOW, divisions: azDivision, geographyCaptures: [], sources: { officials: [official("Jordan Reyes")] } });
-  assert.deepEqual(changed.gaps, [], "a new holder of the office is not refused as a holder/candidacy mismatch");
-  const after = (await readRegistryRuntimePrior(s, NOW))!;
-  assert.equal(after.payload.statewideExecutives.find(row => row.holder.id === live.holder.id)?.holder.name, "Jordan Reyes");
-  const bridge = after.payload.officialCandidacies.rows.find(row => row.holder.id === live.holder.id)!;
-  assert.deepEqual([bridge.holder.name, bridge.status, bridge.candidacy], ["Jordan Reyes", "NOT_CHECKED", null], "the last holder's candidacy is never carried to the new one");
-  assert.equal(nationalDelivery([same, changed]).records, 1, "reused holders do not inflate delivery in a mixed pass");
-});
-
-test("national delivery names the final roster candidate after earlier geography publications", () => {
-  const delivered = nationalDelivery([{ candidateId: "cv-geography", promotedVersionId: "cv-roster",
-    divisions: [], bodies: [], members: [{ bodyId: `${OH}/sldl:7#seat`, versionId: "cv-roster", discoveryIds: ["russo"] }], gaps: [] }]);
-  assert.deepEqual([delivered.candidateId, delivered.versionId, delivered.records], ["cv-roster", "cv-roster", 1]);
-});
-
-test('state portrait publishes through the existing blob path and registry binding with its named official source and attribution', async () => {
+test("national place publication keeps legislative people on their single state authority",async()=>{
   const s=await store();
-  const imageUrl='https://images.example.org/allison-russo.jpg';
-  const officialUrl='https://ohiohouse.gov/members/allison-russo';
-  const page=capture(`<h1>Representative Allison Russo</h1><p>District 7</p><img alt="Allison Russo" src="${imageUrl}">`,officialUrl);
-  const csv=capture(`name,image\nAllison Russo,${imageUrl}\n`,'https://data.openstates.org/people/current/oh.csv');
-  // Existing decoder's structural JPEG fixture: 200x240, with a frame marker.
-  const image=Buffer.from([0xff,0xd8,0xff,0xc0,0,17,8,0,240,0,200,3,1,0x11,0,2,0x11,0,3,0x11,0,0xff,0xd9]);
-  const writes=new Map<string,Uint8Array>();let reads=0;
-  const result=await publishNationalPlaceSources({store:s,now:NOW,divisions,geographyCaptures:geography,
-    sources:{officials:[{discoveryId:'russo',divisionId:`${OH}/sldl:7`,name:'Allison Russo',officeTitle:'Representative',officialUrl,
-      document:{url:officialUrl,capture:page},portrait:{imageUrl,captures:[csv,page]}}]},
-    portraitRuntime:{read:async()=>{reads++;return image;},put:async(key,bytes)=>{writes.set(key,bytes);}}});
+  const result=await publishNationalPlaceSources({store:s,now:NOW,divisions,geographyCaptures:geography,sources:{officials:[{discoveryId:"russo",divisionId:`${OH}/sldl:7`,name:"Allison Russo",officeTitle:"Representative",officialUrl:profileUrl,document:{url:profileUrl,capture:profile}}]}});
+  assert.ok(result.divisions.includes(`${OH}/sldl:7`));
+  assert.equal(result.bodies.some(id=>id.endsWith("#seat")),false);
+  assert.ok(result.gaps.some(row=>row.detail==="STATE_PEOPLE_SOURCE_REFRESH_OWNS_LEGISLATIVE_MEMBERS"));
+  assert.equal((await readRegistryRuntimePrior(s,NOW))!.payload.bodyRosters.some(row=>row.bodyId===`${OH}/sldl:7#seat`),false);
+});
+
+test("statewide successor identities and candidacy checks cannot inherit the prior actor",async()=>{
+  const s=await store();
+  const official=(name:string)=>({discoveryId:"governor",divisionId:OH,name,officeTitle:"Governor",officialUrl:governorUrl,document:{url:governorUrl,capture:capture(`<h1>Governor ${name}</h1><p>Governor of Ohio</p>`,governorUrl)}});
+  const run=(name:string)=>publishNationalPlaceSources({store:s,now:NOW,divisions,geographyCaptures:geography,sources:{officials:[official(name)]}});
+  const first=await run("Mike DeWine");assert.deepEqual(first.gaps,[]);
+  const old=(await readRegistryRuntimePrior(s,NOW))!.payload.statewideExecutives.find(row=>row.stateOcdId===OH)!;
+  const same=await run("Mike DeWine");assert.equal(same.candidateId,null);
+  const changed=await run("Jordan Reyes");assert.deepEqual(changed.gaps,[]);
+  const after=(await readRegistryRuntimePrior(s,NOW))!.payload;
+  const current=after.statewideExecutives.filter(row=>row.stateOcdId===OH);
+  assert.equal(current.length,1);assert.notEqual(current[0].holder.id,old.holder.id);
+  assert.equal(current[0].holder.name,"Jordan Reyes");
+  assert.equal(after.officialCandidacies.rows.find(row=>row.holder.id===current[0].holder.id)?.status,"NOT_CHECKED");
+  assert.equal(after.officialCandidacies.rows.some(row=>row.holder.id===old.holder.id),false);
+});
+
+test("saved own-page portraits publish by the exact accepted roster identity and actual normalized pixels",async()=>{
+  const s=await store(),name="Jane Doe",url="https://www.columbus.gov/council/jane-doe",imageUrl="https://www.columbus.gov/photos/jane-doe.jpg";
+  const page=capture(`<title>Columbus City Council</title><h1>Columbus City Council</h1><h2>Councilmember Jane Doe</h2><img alt="Jane Doe" src="${imageUrl}">`,url);
+  const original=await sharp({create:{width:200,height:240,channels:3,background:"#336699"}}).withMetadata({orientation:1}).jpeg().toBuffer();
+  const stored=new Map<string,Uint8Array>();
+  const result=await publishNationalPlaceSources({store:s,now:NOW,divisions,geographyCaptures:geography,sources:{officials:[{discoveryId:"jane-native",divisionId:`${OH}/place:columbus`,name,officeTitle:"Councilmember",officialUrl:url,document:{url,capture:page},portrait:{imageUrl,captures:[page]}}]},portraitRuntime:{read:async()=>original,put:async(key,bytes)=>{stored.set(key,bytes);}}});
   assert.deepEqual(result.gaps,[]);
-  const after=(await readRegistryRuntimePrior(s,NOW))!;
-  const holder=after.payload.bodyRosters.find(r=>r.bodyId===`${OH}/sldl:7#seat`)!.members[0];
-  const photo=after.payload.officialPhotos.photos.find(p=>p.officeholderId===holder.id)!;
-  assert.ok(photo);assert.match(photo.url,/^\/api\/portraits\/officials\/[a-f0-9]{64}\.jpg$/);
-  assert.equal(photo.verification?.basis,'OWN_PAGE');assert.equal(photo.license,null);assert.equal(photo.attribution,`Portrait: ${officialUrl}`);
-  assert.equal(after.payload.rosterPhotos[holder.id],photo.url);assert.equal(reads,1);assert.equal(writes.size,1);
-  assert.deepEqual(writes.values().next().value,image);
-  const changed = registryRuntimeCandidate({contractId:'registry-runtime-bindings',scope:'MEMBERS',version:'unverified-photo-replacement',sourceThrough:NOW,
-    sourceReceipt:{...after.sourceReceipt,sources:after.sourceReceipt.sources.map(source=>({...source,sourceClass:'OFFICIAL_PUBLISHER' as const}))},
-    payload:{...after.payload,registry:{...after.payload.registry,divisions:[],bodies:[]},bodyRosters:[],rosterReaderDispositions:[],statewideExecutives:[],
-      officialCandidacies:{...after.payload.officialCandidacies,rows:[]},officialPhotos:{photos:[{...photo,url:'/api/portraits/officials/replaced.jpg',verification:undefined}]},
-      rosterPhotos:{[holder.id]:'/api/portraits/officials/replaced.jpg'}}},{prior:after});
-  assert.equal((changed.readModel as typeof after.payload).rosterPhotos[holder.id],photo.url,'an uncorroborated replacement retains the published portrait');
-  assert.ok(changed.excludedFacts?.some(f=>f.key===`official-photo:${holder.id}` && /portrait binding/.test(f.detail ?? '')));
+  const after=(await readRegistryRuntimePrior(s,NOW))!.payload;
+  const member=after.bodyRosters.find(row=>row.bodyId===`${OH}/place:columbus#governing`)!.members[0];
+  const photo=after.officialPhotos.photos.find(row=>row.officeholderId===member.id)!;
+  assert.ok(photo);assert.equal(photo.verification?.personId,member.personId ?? member.id);assert.match(photo.url,/\.webp$/);
+  assert.equal(stored.size,1);const bytes=[...stored.values()][0];
+  const decoded=await sharp(bytes).raw().toBuffer({resolveWithObject:true});assert.equal(decoded.info.width,200);assert.equal(decoded.info.height,240);
+  assert.equal((await sharp(bytes).metadata()).exif,undefined);
 });
 
-test('a non-official portrait without corroboration stays a gap while its official still publishes', async () => {
-    const s=await store(),imageUrl='https://images.example.org/allison-russo.jpg',officialUrl='https://ohiohouse.gov/members/allison-russo';
-    const page=capture(`<h1>Representative Allison Russo</h1><p>District 7</p><img alt="Allison Russo" src="${imageUrl}">`,officialUrl);
-    const result=await publishNationalPlaceSources({store:s,now:NOW,divisions,geographyCaptures:geography,
-      sources:{officials:[{discoveryId:'russo',divisionId:`${OH}/sldl:7`,name:'Allison Russo',officeTitle:'Representative',officialUrl,
-        document:{url:officialUrl,capture:page},portrait:{imageUrl,captures:[capture(`<h1>Allison Russo</h1><img alt="Allison Russo" src="${imageUrl}">`,"https://portraits.example/people/russo")]}}]},
-      portraitRuntime:{read:async()=>{throw Error('An unverified photo must not be downloaded');},put:async()=>{throw Error('must not store');}}});
-    assert.ok(result.members.some(m=>m.discoveryIds.includes('russo')));
-    assert.ok(result.gaps.some(g=>g.key==='portrait:russo' && g.detail==='PORTRAIT_SECOND_SOURCE_MISSING'),JSON.stringify(result.gaps));
-});
-
-const openStatesUrl = "https://data.openstates.org/people/current/oh.csv";
-const csvCapture = (rows: string) => capture(`id,name,current_party,current_district,current_chamber\n${rows}\n`, openStatesUrl);
-const russoRow = "ocd-person/0001,Allison Russo,Democratic,7,lower";
-
-test("CA-02: a legislator whose own page fails the seat check still fills the seat from the Open States row, as a Reference source", async () => {
-  const s = await store();
-  const elsewhere = capture(profile.evidence.text.replace("District 7", "District 8"), profileUrl);
-  const result = await publishNationalPlaceSources({ store: s, now: NOW, divisions, geographyCaptures: geography, sources: { officials: [
-    { discoveryId: "plural:0001", divisionId: `${OH}/sldl:7`, name: "Allison Russo", officeTitle: "Representative", officialUrl: profileUrl,
-      document: { url: profileUrl, capture: elsewhere }, openStatesCapture: csvCapture(russoRow) }] } });
-  assert.deepEqual(result.members.map(m => [m.bodyId, m.discoveryIds]), [[`${OH}/sldl:7#seat`, ["plural:0001"]]], JSON.stringify(result.gaps));
-  const after = (await readRegistryRuntimePrior(s, NOW))!;
-  const roster = after.payload.bodyRosters.find(r => r.bodyId === `${OH}/sldl:7#seat`);
-  assert.deepEqual(roster?.members.map(m => [m.name, m.officeTitle]), [["Allison Russo", "State Representative"]], "the title is the chamber's own word in Open States, not read off a page");
-  assert.equal(roster?.sourceUrl, openStatesUrl);
-});
-
-test("CA-02: the Open States row is checked on the saved file: a name or district the file does not show stays a gap, and an own page that passes is used", async () => {
-  const s = await store();
-  const elsewhere = capture(profile.evidence.text.replace("District 7", "District 8"), profileUrl);
-  const official = { discoveryId: "plural:0001", divisionId: `${OH}/sldl:7`, name: "Allison Russo", officeTitle: "Representative", officialUrl: profileUrl, document: { url: profileUrl, capture: elsewhere } };
-  const wrongDistrict = await publishNationalPlaceSources({ store: s, now: NOW, divisions, geographyCaptures: geography,
-    sources: { officials: [{ ...official, openStatesCapture: csvCapture("ocd-person/0001,Allison Russo,Democratic,9,lower") }] } });
-  assert.deepEqual(wrongDistrict.members, []);
-  assert.match(wrongDistrict.gaps.find(g => g.key === "official:plural:0001")!.detail, /ROSTER_PAGE_NOT_THIS_BODY/);
-  const wrongName = await publishNationalPlaceSources({ store: s, now: NOW, divisions, geographyCaptures: geography,
-    sources: { officials: [{ ...official, openStatesCapture: csvCapture("ocd-person/0001,Someone Else,Democratic,7,lower") }] } });
-  assert.deepEqual(wrongName.members, []);
-  const passing = await publishNationalPlaceSources({ store: s, now: NOW, divisions, geographyCaptures: geography,
-    sources: { officials: [{ ...official, document: { url: profileUrl, capture: profile }, openStatesCapture: csvCapture(russoRow) }] } });
-  assert.equal((await readRegistryRuntimePrior(s, NOW))!.payload.bodyRosters.find(r => r.bodyId === `${OH}/sldl:7#seat`)?.sourceUrl, profileUrl);
-  assert.equal(passing.members.length, 1);
-});
-
-test("CA-02: an own page that cannot be read at all is filled from the Open States row, and an official roster value replaces it later", async () => {
-  const s = await store();
-  const csv = csvCapture(russoRow);
-  const first = await publishNationalPlaceSources({ store: s, now: NOW, divisions, geographyCaptures: geography, sources: { officials: [
-    { discoveryId: "plural:0001", divisionId: `${OH}/sldl:7`, name: "Allison Russo", officeTitle: "Representative", officialUrl: openStatesUrl, document: { url: openStatesUrl, capture: csv }, basis: "OPEN_STATES_ROW" }] } });
-  assert.equal(first.members.length, 1, JSON.stringify(first.gaps));
-  const held = (await readRegistryRuntimePrior(s, NOW))!.payload.bodyRosters.find(r => r.bodyId === `${OH}/sldl:7#seat`)!;
-  assert.equal(held.sourceUrl, openStatesUrl);
-  const later = await publishNationalPlaceSources({ store: s, now: NOW, divisions, geographyCaptures: geography, sources: { officials: [
-    { discoveryId: "plural:0001", divisionId: `${OH}/sldl:7`, name: "Allison Russo", officeTitle: "State Representative", officialUrl: profileUrl,
-      document: { url: profileUrl, capture: capture(profile.evidence.text.replace("<h1>Representative", "<h1>State Representative"), profileUrl) } }] } });
-  assert.equal(later.members.length, 1, JSON.stringify(later.gaps));
-  const after = (await readRegistryRuntimePrior(s, NOW))!.payload.bodyRosters.find(r => r.bodyId === `${OH}/sldl:7#seat`)!;
-  assert.deepEqual(after.members.map(m => [m.name, m.officeTitle]), [["Allison Russo", "State Representative"]], "one person, not two");
-  assert.equal(after.members[0].id, held.members[0].id);
-  assert.equal(after.sourceUrl, profileUrl);
+test("a corrupted saved source cannot replace the independently held official",async()=>{
+  const s=await store();
+  const altered={...governor,evidence:{...governor.evidence,text:governor.evidence.text+" corruption"}};
+  const result=await publishNationalPlaceSources({store:s,now:NOW,divisions,geographyCaptures:geography,sources:{officials:[{discoveryId:"dewine",divisionId:OH,name:"Mike DeWine",officeTitle:"Governor",officialUrl:governorUrl,document:{url:governorUrl,capture:altered}}]}});
+  assert.ok(result.gaps.some(row=>row.detail.includes("CONTENT_HASH_MISMATCH")));
+  assert.equal(nationalDelivery([result]).records,0);
 });

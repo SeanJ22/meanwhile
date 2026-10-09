@@ -6,14 +6,15 @@ import type { PrlReaderProfile } from "@/lib/sources/prl/snapshot";
 import { PRL_CATEGORIES } from "@/lib/sources/prl/types";
 import { formatDateLong } from "@/lib/text/format-date";
 import { CardSection } from "./card-section";
+import type { PrlPersonRead } from "@/lib/sources/prl/reader";
 
 /** Shared map and ballot presentation; the source's measurement stays attributed. */
 export function PublicStatementsProfile({ subjectId, onProfile }: { subjectId: string; onProfile?: (profile: PrlReaderProfile | null) => void }) {
   return <ProfileForIdentity key={subjectId} subjectId={subjectId} onProfile={onProfile} />;
 }
 
-/** Only congressional identities have a PRL profile to look for. */
-export const PRL_SUBJECT = /^congress:[A-Z]\d{6}$/;
+/** Native person IDs are hints; the server verifies the archive's exact key. */
+export const PRL_SUBJECT = /^(?:congress:[A-Z]\d{6}|plural:[a-z]{2}:[0-9a-f-]{36}|[a-z]{2}-(?:legislature|general-court):[A-Za-z0-9_-]+|fec:[HSP][A-Z0-9]{8})$/;
 
 /** Every fetch outcome settles to exactly one state, so a card never stays on "Loading". */
 export type StatementsLoad =
@@ -38,18 +39,25 @@ export function settleStatementsAnswer(
 
 function ProfileForIdentity({ subjectId, onProfile }: { subjectId: string; onProfile?: (profile: PrlReaderProfile | null) => void }) {
   const [load, setLoad] = useState<StatementsLoad>(() => statementsLoadFor(subjectId));
+  const [archive, setArchive] = useState<PrlPersonRead | null>(null);
   const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     if (!PRL_SUBJECT.test(subjectId)) return;
     const controller = new AbortController();
     void fetch(`/api/profile/${encodeURIComponent(subjectId)}`, { signal: controller.signal })
-      .then(response => { if (!response.ok) throw new Error(String(response.status)); return response.json() as Promise<{ profile: PrlReaderProfile | null }>; })
-      .then(answer => { if (!controller.signal.aborted) setLoad(settleStatementsAnswer(subjectId, answer)); })
+      .then(response => { if (!response.ok) throw new Error(String(response.status)); return response.json() as Promise<{ profile: PrlReaderProfile | null; archive?: PrlPersonRead }>; })
+      .then(answer => { if (!controller.signal.aborted) { setLoad(settleStatementsAnswer(subjectId, answer)); setArchive(answer.archive ?? null); } })
       .catch(() => { if (!controller.signal.aborted) setLoad({ kind: "failed" }); });
     return () => controller.abort();
   }, [subjectId, attempt]);
   const heldProfile = load.kind === "held" ? load.profile : null;
   useEffect(() => { onProfile?.(heldProfile); }, [heldProfile, onProfile]);
+  if (archive && (archive.statements.length > 0 || archive.summaries.length > 0)) {
+    return <CardSection title="Public statements" defaultOpen>
+      {heldProfile && <PublicStatementsProfileContent profile={heldProfile} statementsHeld={archive.statements.length > 0} />}
+      <ArchivedStatementsContent archive={archive} />
+    </CardSection>;
+  }
   switch (load.kind) {
     case "not-applicable":
     case "none":
@@ -117,7 +125,7 @@ function shareOf(category: HeldCategory): number | null {
 }
 
 /** The same measured, attributed reader body for fetched UI and census render proof. */
-export function PublicStatementsProfileContent({ profile }: { profile: PrlReaderProfile }) {
+export function PublicStatementsProfileContent({ profile, statementsHeld = false }: { profile: PrlReaderProfile; statementsHeld?: boolean }) {
   const [selected, setSelected] = useState<string | null>(null);
   const categories = [...(profile.categories as HeldCategory[])].sort(
     (a, b) => CATEGORY_ORDER.indexOf(a.id) - CATEGORY_ORDER.indexOf(b.id),
@@ -196,13 +204,13 @@ export function PublicStatementsProfileContent({ profile }: { profile: PrlReader
           </>
         )}
         {/* No verified per-statement rows are held, so the feed is stated as unavailable. */}
-        <p className="mw-feed-gap" data-statement-feed="not-held">
+        {!statementsHeld && <p className="mw-feed-gap" data-statement-feed="not-held">
           Individual statements aren&apos;t held here yet — only PRL&apos;s category
           shares.{" "}
           <a className="underline underline-offset-2" href={profile.attribution.url} target="_blank" rel="noreferrer">
             See PRL&apos;s data ↗
           </a>
-        </p>
+        </p>}
         <p className="t-detail text-muted-foreground">
           {profile.statementCount.toLocaleString("en-US")} statements tracked. Measured {formatDateLong(profile.measuredAt)}. Read {formatDateLong(profile.readAt.slice(0, 10))}.
         </p>
@@ -212,4 +220,27 @@ export function PublicStatementsProfileContent({ profile }: { profile: PrlReader
         </p>
       </div>
   );
+}
+
+/** Literal source text and separate attributed measurements; no inferred personal stance. */
+export function ArchivedStatementsContent({ archive }: { archive: PrlPersonRead }) {
+  return <div className="mt-3 space-y-3 t-body" data-statement-feed="held">
+    {archive.summaries.map(summary => <details key={summary.kind}>
+      <summary className="cursor-pointer text-link">{summary.kind === "state" ? "State legislator statement measurements" : "Primary campaign statement measurements"}</summary>
+      <p>{summary.profile.statementCount.toLocaleString("en-US")} statements classified by {summary.attribution.text}.</p>
+      {PRL_CATEGORIES.map(category => {
+        const share = summary.profile.shares[category.key];
+        return share === null ? null : <p key={category.key}>{category.label}: {share.toFixed(1)}%.</p>;
+      })}
+      <p className="t-detail">{summary.kind === "primary" ? "Shares calculated from PRL’s classifications of the acquired statements. " : "PRL’s published shares. "}Categories can overlap.</p>
+      <p className="t-detail"><a href={summary.sourceUrl} target="_blank" rel="noreferrer" className="text-link">Source</a>{" · "}Retrieved {summary.retrievedAt.slice(0, 10)}.</p>
+    </details>)}
+    {archive.statements.map(statement => <details key={statement.id}>
+      <summary className="cursor-pointer text-link">{formatDateLong(statement.date.slice(0, 10))} · {statement.sourceLabel}</summary>
+      <blockquote className="mt-2 whitespace-pre-wrap">{statement.text}</blockquote>
+      <p className="mt-1 t-detail">Attributed by {statement.attribution.text}. <a href={statement.sourceUrl} target="_blank" rel="noreferrer" className="text-link">Original source</a>{" · "}Retrieved {statement.retrievedAt.slice(0, 10)}.</p>
+    </details>)}
+    {archive.gaps.map(gap => <p key={gap} className="mw-feed-gap">{gap}</p>)}
+    <p className="t-detail"><a href="https://americaspoliticalpulse.com/elites/data" target="_blank" rel="noreferrer" className="text-link">America’s Political Pulse — Congressional Rhetoric Dataset</a>{" · "}<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer" className="text-link">CC BY</a></p>
+  </div>;
 }

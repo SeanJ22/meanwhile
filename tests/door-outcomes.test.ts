@@ -50,7 +50,7 @@ function door(overrides: Partial<DoorDraft> & { readonly doorId: string }): Door
     ocdId: "ocd-division/country:us/state:az/county:demo",
     bodyIds: ["ocd-division/country:us/state:az/county:demo#governing"],
     hosts: ["webapi.legistar.com"],
-    config: { slug: "demo", sourceRoutes: "legistar" },
+    config: { slug: "demo", sourceRoutes: "legistar", eventBodyId: "138" },
     holds: ["meetings", "outcomes"],
     checkEveryMinutes: null,
     notes: "test door",

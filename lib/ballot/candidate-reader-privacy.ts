@@ -1,13 +1,13 @@
 import type { CandidateProfilesProjection } from "../civic-data/manual-projections.ts";
-import { portraitBindingMatches } from "../photos/evidence.ts";
+import { portraitBindingMatches } from "../photos/binding.ts";
 import type { CandidateCardData } from "./candidate-cards.ts";
 
 const STORED_CANDIDATE_PORTRAIT = "/api/portraits/candidates/";
 
-function boundPortrait(card: CandidateCardData): CandidateCardData {
+function boundPortrait(card: CandidateCardData, subjectId: string): CandidateCardData {
   if (!card.photoUrl?.startsWith(STORED_CANDIDATE_PORTRAIT)) return card;
   const verification = card.photoVerification;
-  if (verification && portraitBindingMatches(verification.name, { url: card.photoUrl, sourceUrl: verification.imageUrl, verification }, "candidates")) return card;
+  if (verification && portraitBindingMatches(card.personId ?? subjectId, { url: card.photoUrl, sourceUrl: verification.imageUrl, verification }, "candidates")) return card;
   return { ...card, photoUrl: null, photoSource: null };
 }
 
@@ -17,5 +17,5 @@ export function readerCandidateProfiles(value: CandidateProfilesProjection): Can
     note: "", hunts: [],
     cards: Object.fromEntries(Object.entries(value.cards.cards).map(([key, card]) =>
       [key, boundPortrait({ ...card, ...(Object.hasOwn(card, "filedAddress") ? { filedAddress: null } : {}),
-        ...(Object.hasOwn(card, "filedAddressSource") ? { filedAddressSource: null } : {}) })])) } };
+        ...(Object.hasOwn(card, "filedAddressSource") ? { filedAddressSource: null } : {}) },key)])) } };
 }

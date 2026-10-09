@@ -49,6 +49,7 @@ export const RETIRED_STATE_ROLL_CALL_SCOPES: readonly {
   readonly scope: OfficialStateVoteScope;
   readonly movedTo: string;
 }[] = [
+  { scope: "US-AZ", movedTo: "az-openstates-votes native API facts (STATE_ROLL_CALL US-AZ:openstates-votes:v1)" },
   { scope: "US-NH", movedTo: "nh-state-rollcalls per-legislator fan-out (STATE_LEGISLATOR_VOTES)" },
 ];
 

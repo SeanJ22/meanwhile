@@ -51,7 +51,8 @@ export async function publishWorkerPollingResults(input: {
     const item = await input.repos.workItems.mustRead(id), plan = item.value.autonomousPlan;
     const parser = latestParserResult(results, id);
     if (!plan || plan.publication?.contractId !== "voting-sites" || !parser || parser.result.role !== "PARSER") continue;
-    if (item.value.publicationOutcome?.workerResultId === parser.id && item.value.publicationOutcome.status === "PUBLISHED") {
+    if (item.value.publicationOutcome?.workerResultId === parser.id && item.value.publicationOutcome.status === "PUBLISHED" &&
+      item.value.publicationOutcome.sourceObservedAt) {
       report.push({ workItemId: id, outcome: item.value.publicationOutcome }); continue;
     }
     let candidateId: string | null = null, versionId: string | null = null;
@@ -72,6 +73,7 @@ export async function publishWorkerPollingResults(input: {
       const publication = await publishPollingDoor({ ...input, door, capture, linkingCaptures: captures, jurisdictionName: division.label });
       candidateId = publication.candidate.candidate.id; versionId = publication.promoted!.versionId;
       outcome = { at: input.now, workerResultId: parser.id, candidateId, versionId, status: "PUBLISHED",
+        sourceObservedAt: capture.observedAt, sourceArtifactId: capture.evidence.artifactId,
         code: publication.confirmed ? "VERIFIED_RESULT_REUSED" : "OFFICIAL_POLLING_SITES_PUBLISHED",
         acceptedRecordIds: publication.jurisdiction.sites.map(site => site.id),
         detail: "Every verified official site row is held; unreported coordinates, elections and assignments remain unknown." };

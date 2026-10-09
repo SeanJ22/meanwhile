@@ -14,7 +14,6 @@
     "build": "next build",
     "contrast": "tsx scripts/contrast-audit.mts",
     "credentials": "tsx scripts/credential-ledger.mts",
-    "crosswalk:build": "tsx scripts/build-census-nces-crosswalk.mts",
     "db:apply": "tsx scripts/db-apply.mts",
     "db:check": "tsx scripts/check-schema-state.mts",
     "db:gate": "tsx scripts/db-shipping-gate.mts",
@@ -48,7 +47,6 @@
     "robots:sweep": "tsx scripts/robots-sweep.mts",
     "research:fetch": "tsx scripts/research-fetch.mts",
     "rung6": "tsx scripts/rung6.mts",
-    "schools:classify": "tsx scripts/classify-school-districts.mts",
     "secrets:scrub-mirror": "tsx scripts/secrets-sweep.mts --scrub",
     "secrets:sweep": "tsx scripts/secrets-sweep.mts",
     "session:start": "node scripts/session-start.mjs",
@@ -57,20 +55,15 @@
     "start": "next start",
     "state-holdings:project": "tsx scripts/state-holdings-project.mts",
     "states:fetch": "tsx scripts/fetch-state-outlines.mts",
-    "territory:resolve": "tsx scripts/resolve-census-territory.mts",
     "test": "node scripts/ci-tests.mjs",
     "test:bundle": "node --test --experimental-strip-types --import ./scripts/register-test-loader.mjs tests/feedback.test.ts",
-    "tiers:stamp": "tsx scripts/stamp-coverage-tiers.mts",
     "tiger:fetch": "tsx scripts/fetch-tiger-national.mts",
     "verify:extraction": "tsx scripts/verify-extraction.mts",
     "verify:migration": "tsx scripts/verify-migration-applied.mts",
     "verify:readonly": "tsx scripts/verify-readonly.mts",
     "verify:write-handle": "tsx scripts/verify-write-handle.mts",
     "walk:all": "tsx scripts/walk-all.mts",
-    "zcta:fetch": "tsx scripts/fetch-zcta-centroids.ts",
-    "registration:reference": "tsx scripts/build-registration-reference.mts",
-    "zip:divisions": "tsx scripts/build-zip-division-shards.mts",
-    "zipgov:build": "tsx scripts/build-zip-governments.mts"
+    "zcta:fetch": "tsx scripts/fetch-zcta-centroids.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
@@ -85,6 +78,7 @@
     "pmtiles": "^4.5.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "sharp": "0.35.3",
     "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {

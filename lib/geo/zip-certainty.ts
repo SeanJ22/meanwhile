@@ -1,27 +1,11 @@
-/**
- * Which governments certainly govern the reader at a zip. ZIP codes are
- * delivery routes and often cross municipal boundaries, so some governments
- * reaching inside a zip govern everyone there and others only some streets.
- *
- * Certainty comes from the zip-governments index, which samples each ZCTA on
- * a 0.01-degree lattice and records how many sample points fall inside each
- * government. The zip's total is the sum of its county-layer samples
- * (counties tile the country with no gaps or overlaps):
- *
- *   samples === total  →  covers the whole zip; renders with no marker.
- *   samples <  total   →  covers part; renders with the pill.
- *
- * Congressional and legislative districts use the published Census
- * whole/partial overlap flag instead. The pill is not a completeness marker:
- * it says the answer depends on the reader's street. The lattice can miss a
- * sliver finer than itself, but only toward calling a near-certain division
- * certain.
- */
+/** ZIP certainty comes from a selected published Census relationship. Held
+ * lattice intersections remain useful orientation data with uncertainty. */
 
 import { zipDivisionEntry } from "./zip-division-index.ts";
+import type { GeographySelection } from "../census-geography/selection.ts";
 
 /**
- * - `CERTAIN`: this division covers every sampled point of the zip.
+ * - `CERTAIN`: an official selected relationship establishes whole-ZCTA membership.
  * - `AMBIGUOUS`: it covers part of the zip. The pill renders.
  * - `UNKNOWN`: we could not measure it (zip not indexed, shard unreadable,
  *   or the division not in the zip's list). The pill renders.
@@ -47,10 +31,10 @@ export interface ZipCertainty {
   certaintyOf(ocdId: string): GovernCertainty;
 }
 
-export async function zipCertainty(zip: string | null): Promise<ZipCertainty | null> {
+export async function zipCertainty(zip: string | null, selection?: GeographySelection): Promise<ZipCertainty | null> {
   if (!zip || !/^\d{5}$/.test(zip)) return null;
   // An unindexed zip or an unreadable shard is OUR gap, and it degrades to "we cannot say", never to a claim.
-  const entry = await zipDivisionEntry(zip);
+  const entry = await zipDivisionEntry(zip, selection);
   if (entry === null) return null;
 
   const all = [...entry.ids];

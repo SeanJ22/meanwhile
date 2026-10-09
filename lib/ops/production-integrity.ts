@@ -30,6 +30,13 @@ export const FAILURE_CLASSES = [
 ] as const;
 export type FailureClass = (typeof FAILURE_CLASSES)[number];
 
+/** A receipt may name only the clean source tree whose migrations were checked. */
+export function integrityCheckoutIssue(targetSha: string | null, headSha: string | null, dirty: string | null): string | null {
+  if (!targetSha || !/^[0-9a-f]{40}$/i.test(targetSha) || targetSha !== headSha) return "The checked-out commit does not match the requested production commit.";
+  if (dirty === null || dirty !== "") return "The production integrity check requires an unchanged checkout of the requested commit.";
+  return null;
+}
+
 /** The durable integrity record; `deployedSha` is what makes a stale green detectable. */
 export interface IntegrityRecord {
   /** Schema version of this file, so a reader can refuse a shape it predates. */

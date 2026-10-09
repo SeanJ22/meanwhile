@@ -5,8 +5,7 @@ import { openSourceAcquisitionDomain, ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS, sou
 import { STATE_CAMPAIGN_FINANCE_SOURCES, stateCampaignFinanceCandidate, type StateCampaignFinanceJurisdiction } from "../../lib/funding/data-plane.ts";
 import { financeYear, upsertStateMoney } from "../../lib/funding/state-native.ts";
 import type { StateMoneyRecord, StateMoneySnapshot } from "../../lib/funding/state-money.ts";
-import { PostgresRoutineDataStore } from "../../lib/civic-data/store.ts";
-import { prepareProductionCivicDataWrite } from "../../lib/civic-data/production-write.ts";
+import type { RoutineDataStore } from "../../lib/civic-data/store.ts";
 import { processRegisteredManualCandidate } from "../../lib/civic-data/promotion.ts";
 import { failedAcquisitionCandidate } from "../../lib/civic-data/candidate-builders.ts";
 import { printSourceRunnerReceipt } from "../../lib/civic-data/runner-receipt.ts";
@@ -22,13 +21,11 @@ export interface StateFinanceCollected { records: StateMoneyRecord[]; complete: 
 
 /** Existing manual contracts are also invoked by standing source tasks. */
 export async function runStateFinance(state: StateCampaignFinanceJurisdiction, sourceUrl: string,
-  collect: (io: StateFinanceIO) => Promise<StateFinanceCollected>): Promise<void> {
-  if (!process.argv.includes("--promote")) throw new Error("Invoke the registered state-finance adapter with --promote.");
-  prepareProductionCivicDataWrite();
+  collect: (io: StateFinanceIO) => Promise<StateFinanceCollected>, store: RoutineDataStore): Promise<void> {
   const yearArg = process.argv.find(arg => arg.startsWith("--year="))?.slice(7) ??
     (process.argv.includes("--year") ? process.argv[process.argv.indexOf("--year") + 1] : undefined);
   const year = financeYear(yearArg), contract = STATE_CAMPAIGN_FINANCE_SOURCES[state];
-  const store = new PostgresRoutineDataStore(), held = await store.readPromotion<StateMoneySnapshot>("STATE_CAMPAIGN_FINANCE", contract.scope);
+  const held = await store.readPromotion<StateMoneySnapshot>("STATE_CAMPAIGN_FINANCE", contract.scope);
   const domain = openSourceAcquisitionDomain({ sourceLabel: `${state} campaign finance`, timeoutMs: ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS });
   const receipts: Omit<KnownRelease, "bytes">[] = [], gaps: StateFinanceIO["gaps"] = [];
   const attempts = { ...held?.payload.refreshAttempts };

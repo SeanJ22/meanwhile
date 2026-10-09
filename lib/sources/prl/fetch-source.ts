@@ -1,8 +1,9 @@
 import { createHash } from "node:crypto";
-import { createReadStream } from "node:fs";
-import { mkdtemp, open, rm } from "node:fs/promises";
+import { createReadStream, createWriteStream } from "node:fs";
+import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { pipeline } from "node:stream/promises";
 import { OUTBOUND_USER_AGENT } from "../../geo/outbound-agent.ts";
 import { openZipFile } from "../archive.ts";
 import { decodeUtf8 } from "./streaming.ts";
@@ -22,7 +23,8 @@ interface HeldSource {
  * sources may later move the canonical civic-data publication pointer. */
 export async function openPrlSource(dataset: PrlDataset, fetchImpl: typeof fetch = fetch,
   archive?: PrlArchiveStore, reuseIfSha256?: string): Promise<PrlSourceOpen> {
-  const root = await mkdtemp(join(tmpdir(), "prl-source-")), path = join(root, "source");
+  const root = await mkdtemp(join(tmpdir(), "prl-source-"));
+  const path = join(root, "source");
   const dispose = () => rm(root, { recursive: true, force: true });
   const sourceKey = `${dataset.id}/source.json`;
   try {
@@ -42,39 +44,47 @@ export async function openPrlSource(dataset: PrlDataset, fetchImpl: typeof fetch
       return { textChunks: (async function* () {})(), sourceSha256: held.sha256, finalUrl: held.finalUrl,
         member: dataset.file, retrievedAt: held.retrievedAt, byteLength: held.bytes, unchanged: true, dispose };
     }
-    const handle = await open(path, "wx");
     const hash = createHash("sha256");
     let size = 0, source: HeldSource;
-    try {
-      if (response.status === 304 && held && archive) {
-        for (const key of held.chunks) {
-          const chunk = await archive.get(key);
+    if (response.status === 304 && held && archive) {
+      const sourceChunks = held.chunks;
+      async function* restoredChunks() {
+        for (const key of sourceChunks) {
+          const chunk = await archive!.get(key);
           if (!chunk || chunk.byteLength > CHUNK_BYTES) throw new Error("PRL_HELD_SOURCE_CHUNK_MISSING");
-          hash.update(chunk); size += chunk.byteLength; await handle.writeFile(chunk);
+          hash.update(chunk); size += chunk.byteLength;
+          yield chunk;
         }
-        if (size !== held.bytes || hash.digest("hex") !== held.sha256) throw new Error("PRL_HELD_SOURCE_HASH_MISMATCH");
-        source = held;
-      } else {
-        if (!response.ok || !response.body) throw new Error(`PRL_SOURCE_HTTP_${response.status}${response.headers.get("retry-after") ? `:Retry-After=${response.headers.get("retry-after")}` : ""}`);
-        const stated = Number(response.headers.get("content-length"));
-        if (stated > MAX_SOURCE_BYTES) throw new Error("PRL_SOURCE_TOO_LARGE");
-        const reader = response.body.getReader();
+      }
+      await pipeline(restoredChunks(), createWriteStream(path, { flags: "wx" }));
+      if (size !== held.bytes || hash.digest("hex") !== held.sha256) throw new Error("PRL_HELD_SOURCE_HASH_MISMATCH");
+      source = held;
+    } else {
+      if (!response.ok || !response.body) throw new Error(`PRL_SOURCE_HTTP_${response.status}${response.headers.get("retry-after") ? `:Retry-After=${response.headers.get("retry-after")}` : ""}`);
+      const stated = Number(response.headers.get("content-length"));
+      if (stated > MAX_SOURCE_BYTES) throw new Error("PRL_SOURCE_TOO_LARGE");
+      const reader = response.body.getReader();
+      async function* downloadedChunks() {
         try { while (true) {
           const next = await reader.read();
           if (next.done) break;
           const chunk = next.value;
           size += chunk.byteLength;
           if (size > MAX_SOURCE_BYTES) throw new Error("PRL_SOURCE_TOO_LARGE");
-          hash.update(chunk); await handle.writeFile(chunk);
-        } } catch (error) { await reader.cancel().catch(() => {}); throw error; }
-        finally { reader.releaseLock(); }
-        if (!size || (stated > 0 && !response.headers.get("content-encoding") && size !== stated)) throw new Error("PRL_SOURCE_TRUNCATED");
-        const digest = hash.digest("hex");
-        source = held?.sha256 === digest ? { ...held, etag: response.headers.get("etag"), lastModified: response.headers.get("last-modified") }
-          : { version: 1, url: dataset.url, finalUrl: response.url || dataset.url, sha256: digest, bytes: size,
-            retrievedAt: new Date().toISOString(), etag: response.headers.get("etag"), lastModified: response.headers.get("last-modified"), chunks: [] };
+          hash.update(chunk);
+          yield chunk;
+        } } finally {
+          await reader.cancel().catch(() => {});
+          reader.releaseLock();
+        }
       }
-    } finally { await handle.close(); }
+      await pipeline(downloadedChunks(), createWriteStream(path, { flags: "wx" }));
+      if (!size || (stated > 0 && !response.headers.get("content-encoding") && size !== stated)) throw new Error("PRL_SOURCE_TRUNCATED");
+      const digest = hash.digest("hex");
+      source = held?.sha256 === digest ? { ...held, etag: response.headers.get("etag"), lastModified: response.headers.get("last-modified") }
+        : { version: 1, url: dataset.url, finalUrl: response.url || dataset.url, sha256: digest, bytes: size,
+          retrievedAt: new Date().toISOString(), etag: response.headers.get("etag"), lastModified: response.headers.get("last-modified"), chunks: [] };
+    }
     if (archive && !source.chunks.length) {
       for await (const chunk of createReadStream(path, { highWaterMark: CHUNK_BYTES })) {
         const key = `${dataset.id}/sources/${source.sha256}/part-${String(source.chunks.length).padStart(5, "0")}`;

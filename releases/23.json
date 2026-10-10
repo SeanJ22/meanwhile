@@ -66,11 +66,185 @@
     "observed_at": "2026-10-10T02:12:12Z"
   },
   "runtime_adoption": {
-    "state": "pending",
-    "latest_observed_sha": "fd8ffd995eaf4a86fc731609df58c5d4d2397255",
+    "state": "adopted",
+    "tested_sha": "4f8bc8d5bcfb1606ce436c9d68f4098b68cafcb7",
     "target_sha": "4f8bc8d5bcfb1606ce436c9d68f4098b68cafcb7",
-    "last_heartbeat_at": "2026-10-10T02:13:46.486Z",
-    "checked_at": "2026-10-10T02:23:04Z",
-    "detail": "Research cycle finished; the existing automatic handoff waits for standing work. Worker leases renewed through 02:20. No recorded runtime handoff refusal; no new-parser candidates yet."
+    "last_heartbeat_at": "2026-10-10T02:35:55.515Z",
+    "checked_at": "2026-10-10T02:36:00Z",
+    "detail": "The standing runtime adopted main automatically after the old pass finished. New source promotions and canonical reader receipts independently identify the same merged revision. No manual Send, restart, budget or pause change."
+  },
+  "source_rollout": {
+    "state": "running",
+    "observed_at": "2026-10-10T02:36:00Z",
+    "counts": [
+      {
+        "people": 0,
+        "scopes": 45,
+        "listings": 0,
+        "source_id": "census-governments-registration",
+        "latest_capture": "2026-10-09T18:35:02.126+00:00",
+        "parser_version": "registration/3",
+        "earliest_capture": "2026-10-06T03:57:52.703+00:00",
+        "latest_promotion": "2026-10-09T18:35:04.182+00:00",
+        "verified_portraits": 0
+      },
+      {
+        "people": 0,
+        "scopes": 11,
+        "listings": 20769,
+        "source_id": "census-governments-registration",
+        "latest_capture": "2026-10-10T02:27:50.823+00:00",
+        "parser_version": "registration/5",
+        "earliest_capture": "2026-10-10T02:27:50.823+00:00",
+        "latest_promotion": "2026-10-10T02:33:50.266+00:00",
+        "verified_portraits": 0
+      },
+      {
+        "people": 539,
+        "scopes": 1,
+        "listings": 0,
+        "source_id": "congress-directory-project",
+        "latest_capture": "2026-10-09T21:09:30.926+00:00",
+        "parser_version": "congress-directory/4",
+        "earliest_capture": "2026-10-09T21:09:30.926+00:00",
+        "latest_promotion": "2026-10-10T02:30:38.478+00:00",
+        "verified_portraits": 158
+      },
+      {
+        "people": 5853,
+        "scopes": 40,
+        "listings": 0,
+        "source_id": "plural-openstates",
+        "latest_capture": "2026-10-10T00:06:11.779+00:00",
+        "parser_version": "plural-roster/2",
+        "earliest_capture": "2026-10-10T00:06:11.779+00:00",
+        "latest_promotion": "2026-10-10T00:24:13.163+00:00",
+        "verified_portraits": 0
+      },
+      {
+        "people": 1654,
+        "scopes": 12,
+        "listings": 0,
+        "source_id": "plural-openstates",
+        "latest_capture": "2026-10-10T00:06:11.779+00:00",
+        "parser_version": "plural-roster/3",
+        "earliest_capture": "2026-10-10T00:06:11.779+00:00",
+        "latest_promotion": "2026-10-10T02:35:45.319+00:00",
+        "verified_portraits": 148
+      }
+    ],
+    "reader_checks": [
+      {
+        "fail": 0,
+        "pass": 1,
+        "scopes": 1,
+        "source_id": "az-sos-campaign-finance",
+        "no_receipt": 0,
+        "last_checked": "2026-10-10T02:31:29.172Z",
+        "parser_version": "az-campaign-finance/4",
+        "verifier_revisions": [
+          "4f8bc8d5bcfb1606ce436c9d68f4098b68cafcb7"
+        ]
+      },
+      {
+        "fail": 0,
+        "pass": 45,
+        "scopes": 45,
+        "source_id": "census-governments-registration",
+        "no_receipt": 0,
+        "last_checked": "2026-10-10T00:49:16.517Z",
+        "parser_version": "registration/3",
+        "verifier_revisions": [
+          "fd8ffd995eaf4a86fc731609df58c5d4d2397255"
+        ]
+      },
+      {
+        "fail": 0,
+        "pass": 11,
+        "scopes": 11,
+        "source_id": "census-governments-registration",
+        "no_receipt": 0,
+        "last_checked": "2026-10-10T02:33:55.013Z",
+        "parser_version": "registration/5",
+        "verifier_revisions": [
+          "4f8bc8d5bcfb1606ce436c9d68f4098b68cafcb7"
+        ]
+      },
+      {
+        "fail": 0,
+        "pass": 1,
+        "scopes": 1,
+        "source_id": "congress-directory-project",
+        "no_receipt": 0,
+        "last_checked": "2026-10-10T02:30:48.036Z",
+        "parser_version": "congress-directory/4",
+        "verifier_revisions": [
+          "4f8bc8d5bcfb1606ce436c9d68f4098b68cafcb7"
+        ]
+      },
+      {
+        "fail": 0,
+        "pass": 1,
+        "scopes": 1,
+        "source_id": "nh-sos-campaign-finance",
+        "no_receipt": 0,
+        "last_checked": "2026-10-10T00:50:57.449Z",
+        "parser_version": "nh-campaign-finance/2",
+        "verifier_revisions": [
+          "fd8ffd995eaf4a86fc731609df58c5d4d2397255"
+        ]
+      },
+      {
+        "fail": 0,
+        "pass": 1,
+        "scopes": 1,
+        "source_id": "nj-elec-campaign-finance",
+        "no_receipt": 0,
+        "last_checked": "2026-10-10T00:51:09.036Z",
+        "parser_version": "nj-campaign-finance/3",
+        "verifier_revisions": [
+          "fd8ffd995eaf4a86fc731609df58c5d4d2397255"
+        ]
+      },
+      {
+        "fail": 0,
+        "pass": 40,
+        "scopes": 40,
+        "source_id": "plural-openstates",
+        "no_receipt": 0,
+        "last_checked": "2026-10-10T00:24:14.794Z",
+        "parser_version": "plural-roster/2",
+        "verifier_revisions": [
+          "fd8ffd995eaf4a86fc731609df58c5d4d2397255"
+        ]
+      },
+      {
+        "fail": 0,
+        "pass": 12,
+        "scopes": 12,
+        "source_id": "plural-openstates",
+        "no_receipt": 0,
+        "last_checked": "2026-10-10T02:35:47.605Z",
+        "parser_version": "plural-roster/3",
+        "verifier_revisions": [
+          "4f8bc8d5bcfb1606ce436c9d68f4098b68cafcb7"
+        ]
+      }
+    ],
+    "native_roles_checked": {
+      "jurisdictions": 12,
+      "state_executives": 41,
+      "local_mayors": 46,
+      "mismatches_against_held_source": 0
+    },
+    "source_gaps": [
+      "NCES lea-directory download link unavailable; held government/school inventories remain GOOD and continue publishing independently.",
+      "NH finance retains its last GOOD projection during its known publisher outage."
+    ],
+    "remaining_verification": [
+      "Full registration/5 rollout across all 56 jurisdictions and plural-roster/3 across all 52 source jurisdictions is still processing automatically.",
+      "Portrait continuation remains bounded by the existing per-source deadlines.",
+      "Public browser/served artifact verification is unavailable from this workspace; canonical typed-reader PASS is not a browser pass."
+    ]
   }
 }

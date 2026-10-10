@@ -1,15 +1,15 @@
 # River status
 
-build_state: RELEASE 23 PR #730 CORRECTING THREE HOSTED TEST FAILURES (AF-09 AF-10 AF-11); no merge until required checks pass.
+build_state: RELEASE 23 PR #730 CORRECTED REVISION IN HOSTED CI (AF-09 AF-10 AF-11); no merge until required checks pass.
 worker: codex-acquisition-scale
 provider: Codex
 run_id: acquisition-scale-2026-10-09
 lock: codex-acquisition-scale-2026-10-09
-heartbeat: 2026-10-10T01:26:30Z
+heartbeat: 2026-10-10T01:28:00Z
 
-## RELEASE 23 — held listings, known native roles and portraits: PR #730, TEST CORRECTIONS
+## RELEASE 23 — held listings, known native roles and portraits: PR #730, CORRECTED CHECKS RUNNING
 
-- Prior READY 04ff1080e5bd23fe8f967a94b3c8273046ca0ca2; fold 755987782812daa25ea539f9b62133ef0422f288 includes main fd8ffd995. Exact staged/uploaded tree 8c6c24fbc4bc1e1975dc2e8321cc891fbc7f9e14; release snapshot committed; current correction adds finance native identity and three test repairs.
+- Corrected READY39e732b45f5bd713c6968c8ef9efb1ddb9aeec2d; fold35600a4b222b2cc9527e07e8b7aaf4bb08515a23 includes mainfd8ffd995. Exact local/uploaded tree4c8f25c452d4e620ef8aa03fea23c08b10c8182b; all17current correction files committed, workspace clean.
 - Registration /4 actually failed ACQUISITION_TIME_REGRESSION in all 56 scopes. Prior /3 mislabeled the later 304 check as acquisition. /5 reconciles only the exact GOOD archive and state reference, retaining Sept23 capture, actual prior check, divisions and native aliases. Production inspection confirms all56 have the expected 304/placeholder shape. Historical failures remain immutable; existing parser-upgrade admission makes /5 owed.
 - Recognized native executive and municipal memberships reach division routes, first coverage and Ask. Explicit past ends require independently parsed old/new captures before retirement during a partial refresh. Current membership identity, exact jurisdiction and direct-official precedence remain enforced. Local roles get distinct office labels; absent body data no longer implies no mayor.
 - Congress/state portraits use post-capture verification, durable field failures, prior verified assets and finite fair continuation within existing bounded pools/deadlines. Congress emits one final supervisor receipt while every per-file promotion remains durable. Pima accepts its already registered exact-tenant bodies route before event acquisition.
@@ -20,6 +20,7 @@ heartbeat: 2026-10-10T01:26:30Z
 - All52current OpenStates promotions have canonical typed-reader PASS onfd8. Netlify sequence3200 published at00:46:13Z, but exact served state artifact refs and rendered pages remain inaccessible from this workspace.
 - A concrete enabled-source finance follow-up is frozen separately in8localfiles: AZ candidatecv-2d1133fe6d5b9a9b0f162c7182271f69 held716rows because committee102250/2026 moved REGISTERED_NO_ACTIVITY_REPORTED→FILED and the old key treated filingState as identity. Shared native committee/period key and AZ/NH/NJ parser/4 repair this without loosening removal validation. Types/lint/diff pass;19localtests pass and3reader assertions hit confirmed Git subprocess EPERM. Hosted verification remains required. No FEC edit:552known memberIDs are queued, existing first pass spent its bounded window on22second-hop committee attempts.
 - Existing budgets, owner pauses, source cadences and valid evidence unchanged. No manual Send, new sources or Hunt Network work.
+- Corrected hosted run https://github.com/SeanJ22/meanwhile/actions/runs/38013256704 is underway. Three test repairs: dedicated division-representation server reader (body membership firewall retained), source roster ordering retained, and HTTP URL test parsing fixed. The native finance correction joins this combination. TypeScript/scoped lint pass;36focused passes,17independent reader passes. Remaining local source-sweep/readback/render checks fail at known subprocess EPERM/timeout and are not reported passed.
 - Owner codex-acquisition-scale: hosted checks, merge, deploy and actual broad acquisition/reader readback. Direct live browser access remains restricted and is not claimed as passed.
 
 ## RELEASE 22 — acquisition baseline: PR #729, MERGED AND WEB DEPLOYED

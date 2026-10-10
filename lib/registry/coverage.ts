@@ -180,13 +180,13 @@ export interface CoveredBody {
 }
 
 /**
- * A legislative seat covering the point. Kept apart from `bodies`: a legislative district elects seats
- * in a chamber that sits elsewhere, but it is still representation.
+ * A sourced office for a division covering the point. Kept apart from body membership:
+ * a division's representatives do not establish who sits on every board there.
  */
 export interface Seat {
   ocdId: string;
   label: string;
-  divisionType: "cd" | "sldu" | "sldl" | "place";
+  divisionType: DivisionType;
   tier: Tier;
   /**
    * Who currently holds this seat, where a sourced record exists. Empty means we have no record, never
@@ -354,13 +354,13 @@ export function summarizeCoverage(
   });
 
   const seats: Seat[] = divisions
-    .filter((d) => SEAT_TYPES.has(d.divisionType) || d.divisionType === "place" && holdersFor(officials, d.ocdId).length > 0)
+    .filter((d) => SEAT_TYPES.has(d.divisionType) || d.tier === "local" && holdersFor(officials, d.ocdId).length > 0)
     .map((d) => ({
       ocdId: d.ocdId,
       label: d.label,
-      divisionType: d.divisionType as Seat["divisionType"],
+      divisionType: d.divisionType,
       tier: d.tier,
-      representatives: d.divisionType === "place"
+      representatives: d.tier === "local"
         ? heldDivisionRepresentatives(d.ocdId, holdersFor(officials, d.ocdId))
         : holdersFor(officials, d.ocdId),
     }));

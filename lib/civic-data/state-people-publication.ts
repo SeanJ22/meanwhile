@@ -141,9 +141,11 @@ export async function refreshStatePeoplePortraits(input: {store:RoutineDataStore
   const excludedFacts = (prior?.candidate.excludedFacts ?? []).filter(fact=>fact.code.startsWith("STATE_PORTRAIT_") &&
     dueIds.has((fact.record as {personId?:string}|undefined)?.personId ?? ""));
   let changed=false, attempted=0;
-  const gap = (person:OfficeholderSet["officeholders"][number],code:string,detail:string,page?:import("../sources/known-release.ts").KnownRelease) => {
+  const gap = (person:OfficeholderSet["officeholders"][number],code:string,detail:string,page?:import("../sources/known-release.ts").KnownRelease,
+    profileAttempts?:readonly {sourceUrl:string;code:string;detail:string}[]) => {
     excludedFacts.push({key:`${person.personId ?? person.id}:portrait`,code,detail,
-      record:{personId:person.personId ?? person.id,sourceUrl:person.websiteUrl,attemptedAt:clock(),
+      record:{personId:person.personId ?? person.id,sourceUrl:page?.finalUrl ?? person.websiteUrl,attemptedAt:clock(),
+        ...(profileAttempts ? {profileAttempts} : {}),
         ...(page ? {sourceRetrievedAt:page.retrievedAt,sourceCheckedAt:page.checkedAt,rawHash:page.sha256,vaultKey:page.vaultKey} : {}),
         retainedVerifiedPortrait:Boolean(person.photo && portraitBindingMatches(person.personId ?? person.id,person.photo))}});
   };
@@ -151,37 +153,50 @@ export async function refreshStatePeoplePortraits(input: {store:RoutineDataStore
     if (sourceSignal.aborted) return;
     attempted++;
     for (let i=excludedFacts.length-1;i>=0;i--) if (excludedFacts[i].key === `${person.personId ?? person.id}:portrait`) excludedFacts.splice(i,1);
-    if (!person.websiteUrl || !isOfficialSource(person.websiteUrl)) {
+    const profiles = [...new Set([person.websiteUrl,...(person.profileUrls ?? [])])]
+      .filter((url):url is string=>Boolean(url && isOfficialSource(url)));
+    if (!profiles.length) {
       gap(person,"STATE_PORTRAIT_PROFILE_UNRESOLVED","No verified official profile URL is held for this native person; no source route was invented."); return;
     }
     let page:import("../sources/known-release.ts").KnownRelease|undefined;
-    try {
+    const profileAttempts:{sourceUrl:string;code:string;detail:string}[]=[];
+    // Each known profile keeps the existing request timeout. Every attempt
+    // also shares the continuation's total deadline and bounded worker pool.
+    for (const sourceUrl of profiles) {
+      if (sourceSignal.aborted) break;
       const signal = AbortSignal.any([sourceSignal,AbortSignal.timeout(20000)]);
-      const profile = new URL(person.websiteUrl!);
-      if (profile.protocol === "http:") profile.protocol = "https:";
-      const host = profile.hostname.replace(/^www\./, "");
-      page = await acquire({sourceId:"official-person-profile",releaseId:person.websiteUrl!,url:profile.href,parserVersion:"portrait-profile/2",maxBytes:2*1024*1024,checkAfterMs:7*86400000,signal,allowedHosts:[host,`www.${host}`],headers:{accept:"text/html"}});
-      if (!isOfficialSource(page.finalUrl)) throw Error("STATE_PORTRAIT_PROFILE_REDIRECT_UNVERIFIED");
-      const text=new TextDecoder("utf-8",{fatal:true}).decode(page.bytes);
-      const candidates=pickPortraits(person.name,imagesIn(text,page.finalUrl));
-      candidates.sort((a,b)=>Number(b.src===person.portraitCandidate?.imageUrl)-Number(a.src===person.portraitCandidate?.imageUrl));
-      if (!candidates.length) { gap(person,"STATE_PORTRAIT_IMAGE_NOT_FOUND","The captured official profile does not identify a portrait for this person.",page); return; }
-      const capture: import("../photos/evidence.ts").PortraitCapture = {transport:"REACHABLE",partial:false,httpStatus:page.httpStatus,observedAt:page.checkedAt,
-        evidence:{retrievedAt:page.retrievedAt,vaultKey:page.vaultKey,canonicalUrl:page.finalUrl,sourceId:new URL(page.finalUrl).hostname,contentHash:portraitHash(page.bytes),text}};
-      let failure:unknown;
-      for (const selected of candidates) {
-        signal.throwIfAborted();
-        try {
-          // A real capture can finish after this continuation began. Verify at
-          // the post-capture clock while retaining its original source vintage.
-          person.photo=await storePortrait(person.personId ?? person.id,{subject:{personId:person.personId ?? person.id,name:person.name,nativeIds:person.nativeIds,profileUrls:[page.finalUrl]},imageUrl:selected.src,captures:[capture]},clock(),signal);
-          changed=true; return;
-        } catch (error) { failure=error; }
+      try {
+        const profile = new URL(sourceUrl);
+        if (profile.protocol === "http:") profile.protocol = "https:";
+        const host = profile.hostname.replace(/^www\./, "");
+        page = await acquire({sourceId:"official-person-profile",releaseId:sourceUrl,url:profile.href,parserVersion:"portrait-profile/2",maxBytes:2*1024*1024,checkAfterMs:7*86400000,signal,allowedHosts:[host,`www.${host}`],headers:{accept:"text/html"}});
+        if (!isOfficialSource(page.finalUrl)) throw Error("STATE_PORTRAIT_PROFILE_REDIRECT_UNVERIFIED");
+        const text=new TextDecoder("utf-8",{fatal:true}).decode(page.bytes);
+        const candidates=pickPortraits(person.name,imagesIn(text,page.finalUrl));
+        candidates.sort((a,b)=>Number(b.src===person.portraitCandidate?.imageUrl)-Number(a.src===person.portraitCandidate?.imageUrl));
+        if (!candidates.length) {
+          profileAttempts.push({sourceUrl,code:"STATE_PORTRAIT_IMAGE_NOT_FOUND",detail:"The captured official profile does not identify a portrait for this person."});
+          continue;
+        }
+        const capture: import("../photos/evidence.ts").PortraitCapture = {transport:"REACHABLE",partial:false,httpStatus:page.httpStatus,observedAt:page.checkedAt,
+          evidence:{retrievedAt:page.retrievedAt,vaultKey:page.vaultKey,canonicalUrl:page.finalUrl,sourceId:new URL(page.finalUrl).hostname,contentHash:portraitHash(page.bytes),text}};
+        let failure:unknown;
+        for (const selected of candidates) {
+          signal.throwIfAborted();
+          try {
+            // Verify after capture while preserving the source's original vintage.
+            person.photo=await storePortrait(person.personId ?? person.id,{subject:{personId:person.personId ?? person.id,name:person.name,nativeIds:person.nativeIds,profileUrls:[page.finalUrl]},imageUrl:selected.src,captures:[capture]},clock(),signal);
+            changed=true; return;
+          } catch (error) { failure=error; }
+        }
+        throw failure ?? Error("STATE_PORTRAIT_IMAGE_UNVERIFIED");
+      } catch (error) {
+        profileAttempts.push({sourceUrl,code:"STATE_PORTRAIT_PROCESSING_FAILED",detail:sanitizedErrorDiagnostic(error,500)});
       }
-      throw failure ?? Error("STATE_PORTRAIT_IMAGE_UNVERIFIED");
-    } catch (error) {
-      gap(person,"STATE_PORTRAIT_PROCESSING_FAILED",`The known profile/image did not complete; prior person facts and verified portrait remain. ${sanitizedErrorDiagnostic(error,500)}`,page);
     }
+    const code = profileAttempts.length && profileAttempts.every(row=>row.code === "STATE_PORTRAIT_IMAGE_NOT_FOUND")
+      ? "STATE_PORTRAIT_IMAGE_NOT_FOUND" : "STATE_PORTRAIT_PROCESSING_FAILED";
+    gap(person,code,"The directly held profile/image leads did not verify within this attempt; prior person facts and verified portrait remain.",page,profileAttempts);
   });
   if (attempted<due.length) excludedFacts.push({key:`US-${input.state.toUpperCase()}:portrait-continuation`,code:"STATE_PORTRAIT_WORK_REMAINS",
     detail:`${due.length-attempted} known native profiles remain after this continuation; saved attempt dates prioritize unattempted people next.`});

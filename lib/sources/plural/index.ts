@@ -90,7 +90,7 @@ export interface PluralRole {
 
 const STATE_EXECUTIVE_OFFICES = new Set(["governor", "lieutenant_governor", "secretary_of_state", "attorney_general",
   "state_treasurer", "superintendent_of_public_instruction", "state_mine_inspector", "corporation_commissioner",
-  "state_auditor", "state_comptroller", "insurance_commissioner", "executive_councilor"]);
+  "state_auditor", "state_comptroller", "insurance_commissioner", "executive_councilor", "chief_election_officer"]);
 const LOCAL_OFFICES = new Set(["mayor", "municipal_council", "county_commissioner", "county_supervisor", "county_sheriff",
   "county_attorney", "county_treasurer", "register_of_deeds", "register_of_probate", "county_clerk", "county_assessor", "county_recorder", "school_board"]);
 const NATIVE_ROLE_TITLES: Readonly<Record<string, string>> = {
@@ -98,6 +98,7 @@ const NATIVE_ROLE_TITLES: Readonly<Record<string, string>> = {
   secretary_of_state: "Secretary of State", attorney_general: "Attorney General", treasurer: "State Treasurer",
   state_treasurer: "State Treasurer", auditor: "State Auditor", state_auditor: "State Auditor", comptroller: "State Comptroller",
   superintendent_of_public_instruction: "Superintendent of Public Instruction", insurance_commissioner: "Insurance Commissioner",
+  "chief election officer": "Chief Election Officer", chief_election_officer: "Chief Election Officer",
   mayor: "Mayor", councilmember: "Councilmember", council_member: "Councilmember",
 };
 
@@ -105,16 +106,23 @@ const NATIVE_ROLE_TITLES: Readonly<Record<string, string>> = {
 export function nativeRoleBinding(role: PluralRole, state: string): {
   officeTitle: string; officeKey: string; divisionId?: string; level: "STATE" | "LOCAL"; gap?: string;
 } | { issue: string } {
-  const sourceTitle = role.title || NATIVE_ROLE_TITLES[role.type] || role.type.replace(/_/g, " ");
+  const nativeTitle = role.title || NATIVE_ROLE_TITLES[role.type] || role.type.replace(/_/g, " ");
+  // OpenStates uses its governor category for the District's chief executive.
+  // Preserve the exact District jurisdiction while displaying the real office.
+  const districtExecutive = state === "dc" && role.jurisdiction === "ocd-jurisdiction/country:us/district:dc/government";
+  const sourceTitle = districtExecutive && role.type === "governor" && officeIdentity(nativeTitle) === "governor" ? "Mayor" : nativeTitle;
   const officeKey = officeIdentity(sourceTitle);
   if (!officeKey || !STATE_EXECUTIVE_OFFICES.has(officeKey) && !LOCAL_OFFICES.has(officeKey)) return { issue: `PLURAL_ROLE_UNSUPPORTED:${role.type}:${role.title ?? ""}` };
   const match = /^ocd-jurisdiction\/(country:us\/(?:state|district|territory):([a-z]{2})(?:\/[^/]+:[^/]+)*)\/government$/.exec(role.jurisdiction ?? "");
   if (!match) return { issue: `PLURAL_ROLE_JURISDICTION_MISSING_OR_INVALID:${role.jurisdiction ?? ""}` };
   if (match[2] !== state) return { issue: `PLURAL_ROLE_WRONG_STATE:${match[2]}:${state}` };
   const path = match[1], local = /\/(?:place|county|county_subdivision|school_district):[^/]+/.test(path);
-  if (STATE_EXECUTIVE_OFFICES.has(officeKey) && local || LOCAL_OFFICES.has(officeKey) && !local) return { issue: `PLURAL_ROLE_JURISDICTION_MISMATCH:${officeKey}:${role.jurisdiction}` };
-  // A municipal office needs a municipal jurisdiction, not merely its county.
-  if (["mayor", "municipal_council"].includes(officeKey) && !/\/(?:place|county_subdivision):[^/]+/.test(path)) return { issue: `PLURAL_ROLE_MUNICIPAL_JURISDICTION_REQUIRED:${role.jurisdiction}` };
+  const districtMayor = districtExecutive && officeKey === "mayor";
+  if (STATE_EXECUTIVE_OFFICES.has(officeKey) && local || LOCAL_OFFICES.has(officeKey) && !local && !districtMayor) return { issue: `PLURAL_ROLE_JURISDICTION_MISMATCH:${officeKey}:${role.jurisdiction}` };
+  // Some counties, including Hawaii's, elect a mayor. The native county is
+  // the represented division; a municipality must never be fabricated for it.
+  if (officeKey === "municipal_council" && !/\/(?:place|county_subdivision):[^/]+/.test(path)) return { issue: `PLURAL_ROLE_MUNICIPAL_JURISDICTION_REQUIRED:${role.jurisdiction}` };
+  if (officeKey === "mayor" && !districtMayor && !/\/(?:place|county|county_subdivision):[^/]+/.test(path)) return { issue: `PLURAL_ROLE_MUNICIPAL_JURISDICTION_REQUIRED:${role.jurisdiction}` };
   const district = role.district?.trim();
   const districtScoped = officeKey === "executive_councilor" || Boolean(district && !/^(?:at[ -]large|statewide|citywide)$/i.test(district));
   const nativeDistrict = /\/(?:ward|district|council_district|executive_council_district):([^/]+)$/.exec(path)?.[1];
@@ -168,6 +176,22 @@ export function yamlToPeople(text: string, state: string, sourceUrl: string, asO
     if (binding.gap) unresolved(`${binding.gap}:person=${row.id}`);
     return true;
   });
+  // An upstream person slot occasionally contains a collective body. Require
+  // both explicit structured body naming and its own council contact page;
+  // a person's surname or an unrelated council link cannot reject a person.
+  const councilName = typeof row.family_name === "string" && /^(?:City|Town|Borough|Village) Council$/i.test(row.family_name) &&
+    typeof row.given_name === "string" && row.name === `${row.given_name} ${row.family_name}`;
+  const collectiveSource = councilName && current.some(role => role.type === "mayor") &&
+    [...(Array.isArray(row.links) ? row.links : []), ...(Array.isArray(row.sources) ? row.sources : [])].find(value => {
+      const url = typeof value === "string" ? value : value && typeof value === "object" ? (value as {url?:unknown}).url : null;
+      if (typeof url !== "string") return false;
+      try { const parsed = new URL(url); return /(?:^|\.)[^.]+\.gov$/.test(parsed.hostname) &&
+        /\/(?:city|town|borough|village)-council\/contact-(?:the-)?(?:city|town|borough|village)-council\/?$/.test(parsed.pathname); } catch { return false; }
+    });
+  if (collectiveSource) {
+    unresolved(`PLURAL_PERSON_IS_GOVERNING_BODY:person=${row.id}:name=${row.name}`);
+    return [];
+  }
   if (!roles.length) unresolved(`PLURAL_PERSON_HAS_NO_ROLES:${row.id}`);
   if (!roles.length || !current.length && !includeInactive) return [];
   const offices = (Array.isArray(row.offices) ? row.offices : []).filter(value => value && typeof value === "object").map(value => {
@@ -462,6 +486,9 @@ export function normalize(
       websiteUrl: person.links.split(";").find(link => {
         try { return ["http:", "https:"].includes(new URL(link).protocol); } catch { return false; }
       }) || null,
+      profileUrls: [...new Set([...person.links.split(";"), ...person.sources.split(";")].filter(link => {
+        try { return ["http:", "https:"].includes(new URL(link).protocol); } catch { return false; }
+      }))],
       contactFormUrl: null,
       // Capitol office first; the district office where the capitol number is
       // not published. Empty strings are absences.

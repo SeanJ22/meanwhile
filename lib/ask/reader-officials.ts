@@ -1,6 +1,6 @@
 import { normalizeName } from "../routing/exact-name.ts";
 import { officeIdentity, type OfficeKey } from "../officials/office-identity.ts";
-import type { SeatHolder } from "../officials/lookup.ts";
+import { stateOcdIdFrom, type SeatHolder } from "../officials/lookup.ts";
 import type { EvidenceGap } from "./evidence.ts";
 import { proseName } from "./sitting-answer.ts";
 
@@ -28,7 +28,7 @@ const OFFICE_PHRASES: readonly OfficePhrase[] = [
   { pattern: /^(?:representatives?|reps?)$/, keys: ["us_representative", "state_lower_house"] },
   { pattern: /^(?:state )?(?:legislators?|lawmakers?)$/, keys: STATE_LEGISLATORS },
   { pattern: /^governor$/, keys: ["governor"] },
-  { pattern: /^(?:city |town )?mayor$/, keys: ["mayor"] },
+  { pattern: /^(?:city |town |county )?mayor$/, keys: ["mayor"] },
   { pattern: /^(?:county )?supervisors?$/, keys: ["county_supervisor"] },
   { pattern: /^county commissioners?$/, keys: ["county_commissioner"] },
   { pattern: /^(?:county )?sheriff$/, keys: ["county_sheriff"] },
@@ -41,6 +41,7 @@ const OFFICE_PHRASES: readonly OfficePhrase[] = [
   { pattern: /^school board (?:members?|trustees?|representatives?)$|^school board$/, keys: ["school_board"] },
   { pattern: /^attorney general$/, keys: ["attorney_general"] },
   { pattern: /^secretary of state$/, keys: ["secretary_of_state"] },
+  { pattern: /^(?:state )?chief election officer$/, keys: ["chief_election_officer"] },
   { pattern: /^(?:state )?treasurer$/, keys: ["state_treasurer"] },
   { pattern: /^(?:state )?superintendent of public instruction$|^state superintendent$/, keys: ["superintendent_of_public_instruction"] },
   { pattern: /^corporation commissioners?$/, keys: ["corporation_commissioner"] },
@@ -149,8 +150,8 @@ export function placeNamesOf(ocdIds: readonly string[]): string[] {
 
 export function stateDivisionsOf(ocdIds: readonly string[]): string[] {
   return [...new Set(ocdIds.flatMap((id) => {
-    const match = /^(ocd-division\/country:us\/state:[a-z]{2})(?:\/|$)/.exec(id);
-    return match ? [match[1]!] : [];
+    const state = stateOcdIdFrom(id);
+    return state ? [state] : [];
   }))];
 }
 
@@ -173,6 +174,7 @@ const LABELS: Readonly<Record<string, readonly [string, string]>> = {
   us_senator: ["United States Senator", "United States Senators"],
   us_representative: ["United States Representative", "United States Representatives"],
   governor: ["governor", "governors"],
+  chief_election_officer: ["chief election officer", "chief election officers"],
   state_senator: ["state senator", "state senators"],
   state_lower_house: ["state representative", "state representatives"],
   county_supervisor: ["county supervisor", "county supervisors"],
@@ -320,7 +322,11 @@ export function composeReaderOfficials(input: {
       gap(statement);
       sentences.push(statement);
     }
-    if ((key === "mayor" || key === "municipal_council") && !input.ask.place && (input.placesReached ?? 0) > 1) {
+    const countyOrDistrictMayors = key === "mayor" && holders.every(held => {
+      const jurisdiction = held.seat.officeJurisdictionOcdId ?? "";
+      return /\/county:[^/]+$/.test(jurisdiction) || jurisdiction === "ocd-division/country:us/district:dc";
+    });
+    if ((key === "mayor" || key === "municipal_council") && !countyOrDistrictMayors && !input.ask.place && (input.placesReached ?? 0) > 1) {
       const statement = `Your ZIP code reaches ${input.placesReached} places, so a ZIP code alone does not say which city's ${singular} is yours.`;
       gap(statement);
       sentences.push(statement);

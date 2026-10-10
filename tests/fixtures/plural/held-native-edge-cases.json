@@ -1,0 +1,58 @@
+[
+  {
+    "scope": "US-DC:openstates-people:v1",
+    "retrieved_at": "2026-10-10T00:06:11.779Z",
+    "source_url": "https://codeload.github.com/openstates/people/zip/d5cc49a9e5bc70e22f0ab0273842973fc1b144fa",
+    "member": "data/dc/executive/Muriel-Bowser-dce9c4a8-218a-411d-bb93-09f7e8347d8c.yml",
+    "body": "id: ocd-person/dce9c4a8-218a-411d-bb93-09f7e8347d8c\nname: Muriel Bowser\ngiven_name: Muriel\nfamily_name: Bowser\nemail: eom@dc.gov\nimage: https://mayor.dc.gov/sites/default/files/styles/medium/public/dc/sites/mayormb/biography_content/images/mmb-medium-tight.jpg\nparty:\n- name: Democratic\nroles:\n- start_date: '2007-01-02'\n  end_date: '2015-01-02'\n  type: legislature\n  jurisdiction: ocd-jurisdiction/country:us/district:dc/government\n  district: Ward 4\n- start_date: '2015-01-02'\n  end_date: '2023-01-01'\n  type: governor\n  jurisdiction: ocd-jurisdiction/country:us/district:dc/government\n- start_date: '2023-01-02'\n  end_date: '2027-01-02'\n  type: governor\n  jurisdiction: ocd-jurisdiction/country:us/district:dc/government\noffices:\n- classification: capitol\n  address: 1350 Pennsylvania Avenue NW; Washington, DC 20004\n  voice: 202-727-2643\nlinks:\n- url: https://mayor.dc.gov/\nids:\n  twitter: MayorBowser\nother_identifiers:\n- scheme: legacy_openstates\n  identifier: DCL000011\nsources:\n- url: https://mayor.dc.gov/\n"
+  },
+  {
+    "scope": "US-DE:openstates-people:v1",
+    "retrieved_at": "2026-10-10T00:06:11.779Z",
+    "source_url": "https://codeload.github.com/openstates/people/zip/d5cc49a9e5bc70e22f0ab0273842973fc1b144fa",
+    "member": "data/de/executive/Anthony-Albence-1fbb3c2f-b3ec-421d-af2a-2f0af26b2939.yml",
+    "body": "id: ocd-person/1fbb3c2f-b3ec-421d-af2a-2f0af26b2939\nname: Anthony Albence\ngiven_name: Anthony\nfamily_name: Albence\nemail: Anthony.Albence@delaware.gov\nparty:\n- name: Independent\nroles:\n- start_date: '2019-06-19'\n  end_date: '2023-06-19'\n  type: chief election officer\n  jurisdiction: ocd-jurisdiction/country:us/state:de/government\n- start_date: '2023-06-19'\n  end_date: '2028-06-30'\n  type: chief election officer\n  jurisdiction: ocd-jurisdiction/country:us/state:de/government\noffices:\n- classification: capitol\n  address: 905 S. Governors Ave; Suite 170; Dover, DE 19904-\n  voice: 302-739-4277\n  fax: 302-739-6794\nlinks:\n- url: https://elections.delaware.gov/index.shtml\nsources:\n- url: https://elections.delaware.gov/index.shtml\n"
+  },
+  {
+    "scope": "US-MA:openstates-people:v1",
+    "retrieved_at": "2026-10-10T00:06:11.779Z",
+    "source_url": "https://codeload.github.com/openstates/people/zip/d5cc49a9e5bc70e22f0ab0273842973fc1b144fa",
+    "member": "data/ma/executive/William-Galvin-ead7f955-7ff0-4ac0-bc29-35688074b79f.yml",
+    "body": "id: ocd-person/ead7f955-7ff0-4ac0-bc29-35688074b79f\nname: William Galvin\ngiven_name: William\nfamily_name: Galvin\nemail: cis@sec.state.ma.us\nimage: https://upload.wikimedia.org/wikipedia/commons/c/ca/WFGalvin_Official_Portrait.png\nparty:\n- name: Democratic\nroles:\n- end_date: '2027-01-06'\n  type: chief election officer\n  jurisdiction: ocd-jurisdiction/country:us/state:ma/government\noffices:\n- classification: capitol\n  address: State House Rm 337; 24 Beacon St.; Boston, MA 02133-1099\n  voice: 617-727-9180\n  fax: 617-742-4528\nlinks:\n- url: https://www.sec.state.ma.us\nids:\n  twitter: SecretaryOfMass\nsources:\n- url: https://www.sec.state.ma.us\n"
+  },
+  {
+    "scope": "US-PR:openstates-people:v1",
+    "retrieved_at": "2026-10-10T00:06:11.779Z",
+    "source_url": "https://codeload.github.com/openstates/people/zip/d5cc49a9e5bc70e22f0ab0273842973fc1b144fa",
+    "member": "data/pr/executive/Francisco-Rosado-Colomer-f21042d2-549c-479e-a685-5e8ba99b8fca.yml",
+    "body": "id: ocd-person/f21042d2-549c-479e-a685-5e8ba99b8fca\nname: Francisco Rosado Colomer\ngiven_name: Francisco\nfamily_name: Rosado Colomer\nemail: frosado@cee.pr.gov\nimage: https://ww2.ceepur.org/sites/ComisionEE/es-pr/Webmaster/pic/FranciscoJRosado-Presidente-web.jpg\nparty:\n- name: Independent\nroles:\n- end_date: '2026-12-31'\n  type: chief election officer\n  jurisdiction: ocd-jurisdiction/country:us/territory:pr/government\nlinks:\n- url: https://ww2.ceepur.org/\nsources:\n- url: https://ww2.ceepur.org/\noffices:\n- address: P.O. Box 195552; ; San Juan, PR 00919-5552\n  voice: 787-777-8682\n  classification: capitol\n"
+  },
+  {
+    "scope": "US-SC:openstates-people:v1",
+    "retrieved_at": "2026-10-10T00:06:11.779Z",
+    "source_url": "https://codeload.github.com/openstates/people/zip/d5cc49a9e5bc70e22f0ab0273842973fc1b144fa",
+    "member": "data/sc/executive/Howard-Knapp-fd462977-6631-4203-820c-a91b0b4ebcd2.yml",
+    "body": "id: ocd-person/fd462977-6631-4203-820c-a91b0b4ebcd2\nname: Howard Knapp\ngiven_name: Howard\nfamily_name: Knapp\nemail: hknapp@elections.sc.gov\nparty:\n- name: Independent\nroles:\n- start_date: '2023-03-02'\n  end_date: '2026-12-31'\n  type: chief election officer\n  jurisdiction: ocd-jurisdiction/country:us/state:sc/government\noffices:\n- classification: capitol\n  address: Post Office Box 5987; ; Columbia, SC 29250-5987\n  voice: 803-734-9060\n  fax: 803-734-9366\nlinks:\n- url: https://scvotes.gov/about-the-sec/\nsources:\n- url: https://scvotes.gov/about-the-sec/\n"
+  },
+  {
+    "scope": "US-HI:openstates-people:v1",
+    "retrieved_at": "2026-10-10T00:06:11.779Z",
+    "source_url": "https://codeload.github.com/openstates/people/zip/d5cc49a9e5bc70e22f0ab0273842973fc1b144fa",
+    "member": "data/hi/municipalities/Derek-Kawakami-ff3fcb8b-c05c-44f6-95fd-454be5e05128.yml",
+    "body": "id: ocd-person/ff3fcb8b-c05c-44f6-95fd-454be5e05128\nname: Derek S.K. Kawakami\ngiven_name: Derek\nfamily_name: Kawakami\nemail: mayor@kauai.gov\nroles:\n- end_date: '2026-12-05'\n  type: mayor\n  jurisdiction: ocd-jurisdiction/country:us/state:hi/county:kauai/government\noffices:\n- classification: primary\n  address: 4444 Rice St., Suite 235;Lihue, HI 96766\n  voice: 808-241-4900\n  fax: 808-241-6877\nsources:\n- url: https://www.kauai.gov/Mayor\n"
+  },
+  {
+    "scope": "US-HI:openstates-people:v1",
+    "retrieved_at": "2026-10-10T00:06:11.779Z",
+    "source_url": "https://codeload.github.com/openstates/people/zip/d5cc49a9e5bc70e22f0ab0273842973fc1b144fa",
+    "member": "data/hi/municipalities/Rick-Blangiardi-5cff5ed2-d289-4fcb-a264-72d2dadc77e1.yml",
+    "body": "id: ocd-person/5cff5ed2-d289-4fcb-a264-72d2dadc77e1\nname: Rick Blangiardi\ngiven_name: Rick\nfamily_name: Blangiardi\nemail: mayor@honolulu.gov\nroles:\n- end_date: '2029-01-02'\n  type: mayor\n  jurisdiction: ocd-jurisdiction/country:us/state:hi/county:honolulu/government\noffices:\n- classification: primary\n  address: 530 South King Street, Room 300;Honolulu, HI 96813\n  voice: 808-768-4141\nsources:\n- url: https://www.honolulu.gov/mayor/contactthemayor/request-for-general-message-form#gsc.tab=0\n"
+  },
+  {
+    "scope": "US-WI:openstates-people:v1",
+    "retrieved_at": "2026-10-10T00:06:11.779Z",
+    "source_url": "https://codeload.github.com/openstates/people/zip/d5cc49a9e5bc70e22f0ab0273842973fc1b144fa",
+    "member": "data/wi/municipalities/Janesville-City-Council-6a6483f4-4abb-438e-a768-6adf264698bb.yml",
+    "body": "id: ocd-person/6a6483f4-4abb-438e-a768-6adf264698bb\nname: Janesville City Council\ngiven_name: Janesville\nfamily_name: City Council\nemail: citycouncil@ci.janesville.wi.us\nroles:\n- end_date: '2030-04-01'\n  type: mayor\n  jurisdiction: ocd-jurisdiction/country:us/state:wi/place:janesville/government\noffices:\n- classification: primary\n  address: PO Box 5005;Janesville, WI 53547\n  voice: 608-373-6015\nsources:\n- url: https://www.janesvillewi.gov/government/city-council/contact-the-city-council\n"
+  }
+]

@@ -201,7 +201,7 @@ export function mergeStatePeople(reference: OfficeholderSet | null, official: Of
     const matches = people.flatMap((row,index) => sameNativePerson(row,person) ? [index] : []);
     if (matches.length !== 1) { people.push(person); continue; }
     const at = matches[0], prior = people[at];
-    const fields = ["termStart","termEnd","birthDate","partyLabel","websiteUrl","contactFormUrl","phone","email","campaignUrl","photo","social","offices"] as const;
+    const fields = ["termStart","termEnd","birthDate","partyLabel","websiteUrl","profileUrls","contactFormUrl","phone","email","campaignUrl","photo","social","offices"] as const;
     const merged: Officeholder = {...prior,...person,personId:prior.personId ?? person.personId ?? person.id,
       nativeIds:{...Object.fromEntries([...new Set([...Object.keys(prior.nativeIds ?? {}),...Object.keys(person.nativeIds ?? {})])].map(key=>[key,[...new Set([...(prior.nativeIds?.[key] ?? []),...(person.nativeIds?.[key] ?? [])])]])),reader:[...new Set([...(prior.nativeIds?.reader ?? []),...(person.nativeIds?.reader ?? []),prior.id,prior.personId ?? prior.id,person.id,person.personId ?? person.id])]},
       fieldSources:{...prior.fieldSources,...person.fieldSources},

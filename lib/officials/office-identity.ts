@@ -64,6 +64,7 @@ const RULES: OfficeRule[] = [
   { key: "state_auditor", pattern: /^state auditor$/i },
   { key: "state_comptroller", pattern: /^(?:state )?comptroller$/i },
   { key: "insurance_commissioner", pattern: /^insurance commissioner$/i },
+  { key: "chief_election_officer", pattern: /^chief election officer$/i },
 
   {
     key: "state_senator",

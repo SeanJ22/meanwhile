@@ -1,13 +1,13 @@
 # River status
 
-build_state: RELEASE 23 PR #730 CORRECTED REVISION IN HOSTED CI (AF-09 AF-10 AF-11); no merge until required checks pass.
+build_state: RELEASE 23 HELD-NATIVE-SOURCE CORRECTIONS READY; final exact combination requires hosted checks (AF-09 AF-10 AF-11).
 worker: codex-acquisition-scale
 provider: Codex
 run_id: acquisition-scale-2026-10-09
 lock: codex-acquisition-scale-2026-10-09
-heartbeat: 2026-10-10T01:28:00Z
+heartbeat: 2026-10-10T01:46:00Z
 
-## RELEASE 23 — held listings, known native roles and portraits: PR #730, CORRECTED CHECKS RUNNING
+## RELEASE 23 — held listings, known native roles and portraits: PR #730, HELD-NATIVE CORRECTIONS
 
 - Corrected READY39e732b45f5bd713c6968c8ef9efb1ddb9aeec2d; fold35600a4b222b2cc9527e07e8b7aaf4bb08515a23 includes mainfd8ffd995. Exact local/uploaded tree4c8f25c452d4e620ef8aa03fea23c08b10c8182b; all17current correction files committed, workspace clean.
 - Registration /4 actually failed ACQUISITION_TIME_REGRESSION in all 56 scopes. Prior /3 mislabeled the later 304 check as acquisition. /5 reconciles only the exact GOOD archive and state reference, retaining Sept23 capture, actual prior check, divisions and native aliases. Production inspection confirms all56 have the expected 304/placeholder shape. Historical failures remain immutable; existing parser-upgrade admission makes /5 owed.
@@ -21,6 +21,7 @@ heartbeat: 2026-10-10T01:28:00Z
 - A concrete enabled-source finance follow-up is frozen separately in8localfiles: AZ candidatecv-2d1133fe6d5b9a9b0f162c7182271f69 held716rows because committee102250/2026 moved REGISTERED_NO_ACTIVITY_REPORTED→FILED and the old key treated filingState as identity. Shared native committee/period key and AZ/NH/NJ parser/4 repair this without loosening removal validation. Types/lint/diff pass;19localtests pass and3reader assertions hit confirmed Git subprocess EPERM. Hosted verification remains required. No FEC edit:552known memberIDs are queued, existing first pass spent its bounded window on22second-hop committee attempts.
 - Existing budgets, owner pauses, source cadences and valid evidence unchanged. No manual Send, new sources or Hunt Network work.
 - Corrected hosted run https://github.com/SeanJ22/meanwhile/actions/runs/38013256704 is underway. Three test repairs: dedicated division-representation server reader (body membership firewall retained), source roster ordering retained, and HTTP URL test parsing fixed. The native finance correction joins this combination. TypeScript/scoped lint pass;36focused passes,17independent reader passes. Remaining local source-sweep/readback/render checks fail at known subprocess EPERM/timeout and are not reported passed.
+- Actual production replay of810previously captured native YAML records found and corrected2HIcounty mayors,DCMayor semantics,4chief-election-officer roles,and1collective council pseudo-person. The corrected denominator is478new people (180stateexecutives,298localmayors),478exactdivisionlinks;331expiredrecords plus1collective excluded. Zero overlap with7420existinglegislative nativeIDs.346acceptedpeople have knownofficialprofileleads, not yet verifiedimages. Source profileURLs are retained/tried underexistingbounds. First coverage and Ask coverexactcounties/district/territory roots; county/DCmayors do not get city-only ambiguitycopy. Latest77focused tests pass (49source+28reader),lintpass,fulltypespreviouspass and finalrerunpending.
 - Owner codex-acquisition-scale: hosted checks, merge, deploy and actual broad acquisition/reader readback. Direct live browser access remains restricted and is not claimed as passed.
 
 ## RELEASE 22 — acquisition baseline: PR #729, MERGED AND WEB DEPLOYED

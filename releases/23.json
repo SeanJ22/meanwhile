@@ -1,0 +1,49 @@
+{
+  "n": 23,
+  "branch": "release/23",
+  "river_sha": "8d68f46721de856247c38dd39680db15e5a9f37e",
+  "tested_sha": "8d68f46721de856247c38dd39680db15e5a9f37e",
+  "release_head_sha": "5f76b2d80a9b6f8799cfbee5888f5c15f9b350fd",
+  "tree_sha": "487faefd8b207db1fc23cb74e9549daf95a98d8d",
+  "steps": [
+    "AF-09",
+    "AF-10",
+    "AF-11"
+  ],
+  "lanes": [
+    "acquisition-known-roles"
+  ],
+  "integration_from": 130,
+  "integration_count": 131,
+  "pr": {
+    "number": 730,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/730"
+  },
+  "at": "2026-10-10T02:04:46Z",
+  "verification": {
+    "kind": "github-actions",
+    "run_id": 38014509898,
+    "url": "https://github.com/SeanJ22/meanwhile/actions/runs/38014509898",
+    "head_sha": "5f76b2d80a9b6f8799cfbee5888f5c15f9b350fd",
+    "checkout_sha": "8d68f46721de856247c38dd39680db15e5a9f37e",
+    "tree_sha": "487faefd8b207db1fc23cb74e9549daf95a98d8d",
+    "tests": {
+      "plan": "full",
+      "total": 7877,
+      "passed": 7872,
+      "failed": 0,
+      "skipped": 5
+    },
+    "bundle_tests": {
+      "passed": 16,
+      "failed": 0
+    },
+    "largest_app_trace_files": 382,
+    "app_trace_ceiling": 430,
+    "framework_trace_files": 1184,
+    "framework_trace_ceiling": 1300,
+    "schema": "not applicable; none of the 55 changed paths touch the schema contract",
+    "local_gates": "Restricted Git subprocess and localhost checks covered by full hosted CI under owner authorization."
+  },
+  "note": "River contains the exact synthetic merge tested by hosted CI. Release branch is its tested source parent; both have the same verified tree. Owner authorized merge after green local or internal checks."
+}

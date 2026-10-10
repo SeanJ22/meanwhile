@@ -189,3 +189,4 @@ One line per batch folded into river.
 - 2026-10-08T12:33:18Z · cycle-memory · CM-01 · ready 592129c925ba · river e845b4b75b6f · pnpm gates pass on e845b4b75b6f
 - 2026-10-08T18:19:55Z · neon-reads · NR-01, NR-02, NR-03, NR-04, NR-05, NR-06, NR-07, NR-08 · ready 626b0dcfa46c · river 6358f0634fba · pnpm gates pass on 6358f0634fba
 - 2026-10-09T18:28:47Z · acquisition-first · AF-01, AF-02, AF-03, AF-04, AF-05 · ready e83fb2c09771 · river 3196f36f9064 · hosted full CI gates pass on exact checkout 3196f36f9064; run 37966354018 (7,815 passed, 0 failed, 5 skipped); source release 5d558d9e916b has identical tree.
+- 2026-10-10T02:04:46Z · acquisition-known-roles · AF-09, AF-10, AF-11 · ready ed5929429cd0 · river 8d68f46721de · full hosted CI gates pass on exact checkout 8d68f46721de; run 38014509898 (7,872 passed, 0 failed, 5 skipped); source release 5f76b2d80a9b has identical tree.

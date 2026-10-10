@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 
 import { agendaContentGroups, type AgendaContentRow } from "../meetings/agenda-content.ts";
+import { stateMoneyRecordKey } from "../funding/state-money.ts";
 import type {
   CivicRecordMember,
   RoutineCandidate,
@@ -439,10 +440,14 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
     case "STATE_CAMPAIGN_FINANCE":
       return array(root.records).map((record, index) => {
         const row = object(record) ?? {};
-        const targets = array(row.targetKeys).filter((value): value is string => typeof value === "string").sort().join("+");
-        const identity = textKey(row, ["committeeId"]) || targets || `unresolved-${index}`;
         return {
-          key: `state-money:${textKey(row, ["jurisdiction"]) ?? "unknown"}:${textKey(row, ["electionYear"]) ?? "unknown"}:${identity}:${textKey(row, ["filingState"]) ?? "unknown"}`,
+          key: stateMoneyRecordKey({
+            jurisdiction: textKey(row, ["jurisdiction"]) ?? "unknown",
+            electionYear: textKey(row, ["electionYear"]) ?? "unknown",
+            committeeId: textKey(row, ["committeeId"]),
+            targetKeys: array(row.targetKeys).filter((value): value is string => typeof value === "string"),
+            filingState: textKey(row, ["filingState"]) ?? "unknown",
+          }, index),
           record,
         };
       }).sort((a, b) => a.key.localeCompare(b.key));

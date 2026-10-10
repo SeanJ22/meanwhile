@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { sourceCheckIssue } from "./source-check.ts";
+import { pluralRetirementCheckConsumer } from "../sources/plural/targets.ts";
 
 import { authorityFor, authorityForManualReceipt, sourceAuthority } from "./source-authority.ts";
 import { derivedAuthorityFor } from "./derived-door.ts";
@@ -20,6 +21,7 @@ import {
   type ListedSittingFacts,
 } from "../sources/event-identity.ts";
 import { isCensusPlaceholderDivision } from "../registry/census-placeholders.ts";
+import { registrationHeldReplayIsExact } from "../registration/held-evidence.ts";
 import type {
   CandidateDecision,
   CandidateState,
@@ -157,7 +159,53 @@ function auditPullRemovalCheck(candidate: RoutineCandidate, removed: readonly { 
     `${removed.length} record(s) left this version because an auditor broke them.`);
 }
 
-function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationCheck | null {
+/** An explicit source end date is a fact even when another native record could not be parsed. */
+function statePeopleRetirementCheck(candidate: RoutineCandidate, prior: CandidateVersionRecord | null, validatedAt: string, sourceChecks:readonly DependentCheck[]): ValidationCheck | null {
+  if (candidate.recordClass !== "STATE_LEGISLATOR" || candidate.sourceId !== "plural-openstates" ||
+    !prior || prior.candidate.sourceId !== candidate.sourceId || prior.candidate.scope !== candidate.scope ||
+    (candidate.removalEvidence?.length ?? 0) > 0) return null;
+  const nativeSourceCheck=sourceChecks.find(check=>check.consumer === pluralRetirementCheckConsumer(candidate,prior));
+  if (!nativeSourceCheck) return null;
+  if (!nativeSourceCheck.passed) return result("COMPLETENESS_HORIZON_VALIDITY","FAIL","NATIVE_MEMBERSHIP_END_SOURCE_UNPROVEN",nativeSourceCheck.detail);
+  const rows = (value:unknown) => Array.isArray(value) ? value.map(object).filter((row):row is Record<string,unknown>=>row !== null) : [];
+  const roster=object(object(candidate.readModel)?.roster);
+  const ended=rows(roster?.endedMemberships), sourceEnds=rows(object(candidate.normalizedPayload)?.endedMemberships);
+  const day=validatedAt.slice(0,10);
+  const nativeDate=(value:unknown):value is string => typeof value === "string" && /^\d{4}(?:-\d{2}(?:-\d{2})?)?$/.test(value) &&
+    Number.isFinite(Date.parse(value)) && new Date(value).toISOString().slice(0,value.length) === value;
+  const captured=(source:RoutineCandidate,url:unknown):boolean => {
+    if (typeof url !== "string") return false;
+    const path=/^https:\/\/raw\.githubusercontent\.com\/openstates\/people\/([a-f0-9]{40})\/(data\/[a-z]{2}\/(?:legislature|executive|municipal|municipalities)\/.+\.ya?ml)$/.exec(url);
+    if (!path || candidate.scope.slice(3,5).toLowerCase() !== path[2].split("/")[1]) return false;
+    return rows(object(source.normalizedPayload)?.acquisitions).some(acquisition=>{
+      const origin=object(acquisition.extractedFrom);
+      return origin?.member === path[2] && acquisition.requestedUrl === `https://codeload.github.com/openstates/people/zip/${path[1]}` &&
+        origin.requestedUrl === acquisition.requestedUrl && origin.finalUrl === acquisition.finalUrl &&
+        typeof origin.sha256 === "string" && SHA256.test(origin.sha256) && origin.sha256 === acquisition.rawHash &&
+        typeof acquisition.httpStatus === "number" && acquisition.httpStatus >= 200 && acquisition.httpStatus < 300 &&
+        typeof acquisition.body === "string" && acquisition.body.length > 0;
+    });
+  };
+  const removed=candidate.changeSet?.removed ?? [];
+  if (!removed.length) return null;
+  for (const delta of removed) {
+    const before=object(delta.before), memberships=rows(before?.memberships).filter(row=>row.current !== false);
+    if (!before || delta.key !== `member:${before.id}` || typeof before.personId !== "string" || !memberships.length) return null;
+    for (const membership of memberships) {
+      const matches=ended.filter(row=>row.id === membership.id), end=matches[0];
+      if (matches.length !== 1 || end.current !== false || end.personId !== before.personId || end.personId !== membership.personId ||
+        end.officeId !== membership.officeId || end.jurisdiction !== membership.jurisdiction ||
+        (end.termStart ?? null) !== (membership.termStart ?? null) || !nativeDate(end.termEnd) || end.termEnd >= day.slice(0,end.termEnd.length) ||
+        end.termStart != null && (!nativeDate(end.termStart) || end.termStart.slice(0,Math.min(end.termStart.length,end.termEnd.length)) > end.termEnd.slice(0,Math.min(end.termStart.length,end.termEnd.length))) ||
+        !captured(prior.candidate,membership.sourceUrl) || !captured(candidate,end.sourceUrl) ||
+        sourceEnds.filter(row=>canonicalCivicDataJson(row) === canonicalCivicDataJson(end)).length !== 1) return null;
+    }
+  }
+  return result("COMPLETENESS_HORIZON_VALIDITY","PASS","NATIVE_MEMBERSHIPS_EXPLICITLY_ENDED",
+    `${removed.length} current person record(s) left only after every active native tenure ended; exact identities, original captures and historical memberships remain held.`);
+}
+
+function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: CandidateVersionRecord | null, validatedAt: string, sourceChecks:readonly DependentCheck[]): ValidationCheck | null {
   const removed = candidate.changeSet?.removed ?? [];
   const evidence = candidate.removalEvidence ?? [];
   const reconciledCompleteHorizon = candidate.horizon.kind === "BOUNDED" &&
@@ -191,6 +239,9 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
 
   const auditPull = auditPullRemovalCheck(candidate, removed, evidence);
   if (auditPull !== null) return auditPull;
+
+  const statePeopleRetirement=statePeopleRetirementCheck(candidate,prior,validatedAt,sourceChecks);
+  if (statePeopleRetirement !== null) return statePeopleRetirement;
 
   if (candidate.recordClass !== "MEETING" && candidate.recordClass !== "REGISTRY_RUNTIME_BINDING") {
     return result(
@@ -674,6 +725,8 @@ export function validateRoutineCandidate(
   const validationAt = Date.parse(validatedAt);
   const candidateOrder = temporalOrder(candidate.temporal.sourceThrough);
   const currentOrder = current ? temporalOrder(current.sourceThrough) : null;
+  const heldRegistrationReplay = currentRetrievedAt !== null && Number.isFinite(currentRetrievedAt) &&
+    retrievedAt < currentRetrievedAt && registrationHeldReplayIsExact(candidate, lastKnownGood);
   if (!Number.isFinite(retrievedAt) || !Number.isFinite(validationAt)) {
     checks.push(result("TEMPORAL_VALIDITY", "FAIL", "ACQUISITION_TIME_INVALID", "The acquisition or validation instant is not a valid timestamp."));
   } else if (retrievedAt > validationAt) {
@@ -683,7 +736,8 @@ export function validateRoutineCandidate(
       "ACQUISITION_TIME_AFTER_VALIDATION",
       `The acquisition instant ${candidate.retrieval.retrievedAt} is later than validation ${validatedAt}.`,
     ));
-  } else if (currentRetrievedAt !== null && Number.isFinite(currentRetrievedAt) && retrievedAt < currentRetrievedAt) {
+  } else if (currentRetrievedAt !== null && Number.isFinite(currentRetrievedAt) && retrievedAt < currentRetrievedAt &&
+    !heldRegistrationReplay) {
     checks.push(result(
       "TEMPORAL_VALIDITY",
       "FAIL",
@@ -713,7 +767,10 @@ export function validateRoutineCandidate(
   } else if (candidateOrder !== null && currentOrder !== null && candidateOrder < currentOrder) {
     checks.push(result("TEMPORAL_VALIDITY", "FAIL", "SOURCE_THROUGH_REGRESSION", `${candidate.temporal.sourceThrough} precedes promoted ${current!.sourceThrough}.`));
   } else {
-    checks.push(result("TEMPORAL_VALIDITY", "PASS", "TEMPORAL_VERSION_VALID", `${candidate.temporal.version}; source through ${candidate.temporal.sourceThrough}.`));
+    checks.push(result("TEMPORAL_VALIDITY", "PASS", heldRegistrationReplay ? "REGISTRATION_HELD_SOURCE_REPLAY" : "TEMPORAL_VERSION_VALID",
+      heldRegistrationReplay
+        ? `Same archive and state reference as GOOD ${lastKnownGood!.candidate.id}; original capture ${candidate.retrieval.retrievedAt}, prior provider check ${candidate.retrieval.sourceCheck!.checkedAt}. Source dates and held division facts are preserved.`
+        : `${candidate.temporal.version}; source through ${candidate.temporal.sourceThrough}.`));
   }
 
   if (candidate.semantics.violations.length > 0) {
@@ -724,7 +781,7 @@ export function validateRoutineCandidate(
     checks.push(result("SEMANTIC_VALIDITY", "PASS", "FACT_INTERPRETATION_VALID", `${candidate.semantics.factKind}${candidate.semantics.actionStage ? ` at ${candidate.semantics.actionStage}` : ""}.`));
   }
 
-  const removalCheck = incompleteHorizonRemovalCheck(candidate);
+  const removalCheck = incompleteHorizonRemovalCheck(candidate,lastKnownGood,validatedAt,sourceScopedChecks);
   if (candidate.horizon.returnedRecords !== candidate.normalization.outputRecords) {
     checks.push(result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "HORIZON_RECORD_COUNT_MISMATCH", `${candidate.horizon.returnedRecords} horizon rows != ${candidate.normalization.outputRecords} normalized rows.`));
   } else if (candidate.horizon.claimsComplete && candidate.horizon.kind !== "BOUNDED") {

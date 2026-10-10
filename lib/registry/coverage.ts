@@ -6,15 +6,19 @@ import type {
 import {
   holdersFor,
   senatorsFor,
+  stateOcdIdFrom,
   type OfficeholderIndex,
   type SeatHolder,
 } from "../officials/lookup.ts";
 import { statewideExecutivesFor } from "../officials/statewide-executives.ts";
+import { isStatewideExecutive, scopedHolders } from "../officials/scoped-holders.ts";
 import { schoolDependency, type SchoolDependency } from "../officials/school-dependency.ts";
 
 import { bodiesAt, type GeoFeature } from "./resolve.ts";
+import { slotsFor } from "./derive.ts";
 import type { BodyTerritoryFile } from "./body-territory.ts";
 import type { RosterReaderGap } from "./body-rosters.ts";
+import { heldDivisionRepresentatives } from "./representation-server.ts";
 import type {
   Body,
   BodyClass,
@@ -176,13 +180,13 @@ export interface CoveredBody {
 }
 
 /**
- * A legislative seat covering the point. Kept apart from `bodies`: a legislative district elects seats
- * in a chamber that sits elsewhere, but it is still representation.
+ * A sourced office for a division covering the point. Kept apart from body membership:
+ * a division's representatives do not establish who sits on every board there.
  */
 export interface Seat {
   ocdId: string;
   label: string;
-  divisionType: "cd" | "sldu" | "sldl";
+  divisionType: DivisionType;
   tier: Tier;
   /**
    * Who currently holds this seat, where a sourced record exists. Empty means we have no record, never
@@ -350,13 +354,15 @@ export function summarizeCoverage(
   });
 
   const seats: Seat[] = divisions
-    .filter((d) => SEAT_TYPES.has(d.divisionType))
+    .filter((d) => SEAT_TYPES.has(d.divisionType) || d.tier === "local" && holdersFor(officials, d.ocdId).length > 0)
     .map((d) => ({
       ocdId: d.ocdId,
       label: d.label,
-      divisionType: d.divisionType as Seat["divisionType"],
+      divisionType: d.divisionType,
       tier: d.tier,
-      representatives: holdersFor(officials, d.ocdId),
+      representatives: d.tier === "local"
+        ? heldDivisionRepresentatives(d.ocdId, holdersFor(officials, d.ocdId))
+        : holdersFor(officials, d.ocdId),
     }));
 
   const senators = senatorsFor(
@@ -364,9 +370,10 @@ export function summarizeCoverage(
     divisions.map((d) => d.ocdId),
   );
 
-  const statewideExecutives = statewideExecutivesFor(
-    divisions.map((d) => d.ocdId),
-  );
+  const stateIds = [...new Set(divisions.map(d => stateOcdIdFrom(d.ocdId)).filter((id): id is string => id !== null))];
+  const statewideExecutives = stateIds.flatMap(stateId => scopedHolders(
+    statewideExecutivesFor([stateId]), holdersFor(officials, stateId).filter(isStatewideExecutive),
+  ));
 
   // Only claim "unincorporated" when a municipal-shaped division was actually
   // found and every one of them turned out to be statistical. No division at all
@@ -376,7 +383,10 @@ export function summarizeCoverage(
     covered.filter((b) => b.divisionType === "place").map((b) => b.ocdId),
   );
   const unincorporated =
-    municipal.length > 0 && municipal.every((d) => !municipalWithBody.has(d.ocdId));
+    municipal.length > 0 && municipal.every((d) =>
+      slotsFor(d).skipped === "statistical-or-unorganized" &&
+      !municipalWithBody.has(d.ocdId) && holdersFor(officials, d.ocdId).length === 0 &&
+      heldDivisionRepresentatives(d.ocdId).length === 0);
 
   // Governing bodies first, live sources before unwired ones, then by label —
   // the notice names only the first few, and those slots belong to the

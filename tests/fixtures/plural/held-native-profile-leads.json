@@ -1,0 +1,23 @@
+[
+  {
+    "scope": "US-MN:openstates-people:v1",
+    "retrieved_at": "2026-10-10T00:06:11.779Z",
+    "source_url": "https://codeload.github.com/openstates/people/zip/d5cc49a9e5bc70e22f0ab0273842973fc1b144fa",
+    "member": "data/mn/executive/Peggy-Flanagan-d563a09c-876b-4384-a7cc-a15f3d5d064c.yml",
+    "body": "id: ocd-person/d563a09c-876b-4384-a7cc-a15f3d5d064c\nname: Peggy Flanagan\ngiven_name: Peggy\nfamily_name: Flanagan\nimage: https://mn.gov/governor/assets/flanagan-bio-thumbnail_tcm1055-653288.png\nparty:\n- name: Democratic-Farmer-Labor\nroles:\n- end_date: '2019-01-07'\n  type: lower\n  jurisdiction: ocd-jurisdiction/country:us/state:mn/government\n  district: 46A\n- start_date: '2019-01-07'\n  end_date: '2027-01-04'\n  type: lt_governor\n  jurisdiction: ocd-jurisdiction/country:us/state:mn/government\nlinks:\n- url: http://www.house.leg.state.mn.us/members/members.asp?id=15451\n- url: https://mn.gov/governor/about-gov/peggyflanagan/\nother_identifiers:\n- scheme: legacy_openstates\n  identifier: MNL000706\nsources:\n- url: http://www.house.leg.state.mn.us/members/hmem.asp\n- url: https://mn.gov/governor/about-gov/peggyflanagan/\n- url: https://ballotpedia.org/Peggy_Flanagan\noffices:\n- classification: capitol\n  address: 130 State Capitol, 75 Rev Dr. Martin Luther King Jr. Blvd.; St. Paul, MN\n    55155\n  voice: 651-201-3400\n"
+  },
+  {
+    "scope": "US-NJ:openstates-people:v1",
+    "retrieved_at": "2026-10-10T00:06:11.779Z",
+    "source_url": "https://codeload.github.com/openstates/people/zip/d5cc49a9e5bc70e22f0ab0273842973fc1b144fa",
+    "member": "data/nj/executive/Dale-Caldwell-45caac41-0f71-4243-99cc-bb18b7b82386.yml",
+    "body": "id: ocd-person/45caac41-0f71-4243-99cc-bb18b7b82386\nname: Dale Caldwell\ngiven_name: Dale\nfamily_name: Caldwell\nimage: https://www.nj.gov/governor/library/secondary/ltgov_LGDaleCaldwell_new.jpg\nparty:\n- name: Democratic\nroles:\n- start_date: '2026-01-20'\n  end_date: '2030-01-15'\n  type: lt_governor\n  jurisdiction: ocd-jurisdiction/country:us/state:nj/government\noffices:\n- classification: capitol\n  address: P.O. Box 001; Trenton, NJ 08625\nsources:\n- url: https://www.nj.gov/governor/admin/ltgovernor/\n- url: https://ballotpedia.org/Dale_Caldwell\n"
+  },
+  {
+    "scope": "US-AZ:openstates-people:v1",
+    "retrieved_at": "2026-10-10T00:06:11.779Z",
+    "source_url": "https://codeload.github.com/openstates/people/zip/d5cc49a9e5bc70e22f0ab0273842973fc1b144fa",
+    "member": "data/az/municipalities/Corey-D-Woods-978a1abb-5661-43df-8db8-53c63b99e943.yml",
+    "body": "id: ocd-person/978a1abb-5661-43df-8db8-53c63b99e943\nname: Corey D. Woods\ngiven_name: Corey D.\nfamily_name: Woods\nemail: Corey_Woods@tempe.gov\nroles:\n- end_date: '2028-07-01'\n  type: mayor\n  jurisdiction: ocd-jurisdiction/country:us/state:az/place:tempe/government\noffices:\n- classification: primary\n  address: P.O. Box 5002;Tempe, AZ 85280\n  voice: 480-350-8793\nsources:\n- url: https://www.tempe.gov/government/mayor-and-city-council/corey-d-woods-mayor\n"
+  }
+]

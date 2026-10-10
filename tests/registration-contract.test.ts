@@ -70,7 +70,7 @@ async function registrationWithPreviousParser() {
   return { store, args, previous, next, task };
 }
 
-test("registration/4 replays the held release immediately after registration/3 GOOD, then keeps the 90-day source clock", async () => {
+test("the current registration parser replays held evidence after registration/3 GOOD, then keeps the 90-day source clock", async () => {
   const { store, args, previous, next, task } = await registrationWithPreviousParser();
   const clock = await store.clock(task.sourceId, task.recordClass, task.scope, task.parserVersion);
   assert.equal(clock.lastSucceededParserVersion, "registration/3");

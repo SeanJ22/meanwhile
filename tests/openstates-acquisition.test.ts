@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import test from "node:test";
 import { zip } from "../scripts/xlsx.mjs";
 import { acquireStatePeople } from "../lib/sources/plural/acquisition.ts";
@@ -14,6 +15,13 @@ import { readStatePeopleProjection } from "../lib/state-rollcalls/legislators.ts
 import { keyRefFor } from "../lib/doors/seed-feeds.ts";
 import { publishMemberOffices } from "../lib/officials/member-offices-publication.ts";
 import { refreshMemberOfficesFromPromoted, currentMemberOffices, readMemberOffices } from "../lib/officials/member-offices-read.ts";
+import { indexByDivision, indexByOfficeholderId, seatHolderForMembership } from "../lib/officials/lookup.ts";
+import { heldOfficialStateLegislatorsFromRead } from "../lib/state-rollcalls/legislators.ts";
+import { validateRoutineCandidate } from "../lib/civic-data/validate.ts";
+import { candidateChangeSet, canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
+import type { CandidateVersionRecord, RoutineCandidate } from "../lib/civic-data/types.ts";
+import { statePeopleRetirementSourceCheck } from "../lib/sources/plural/retirement.ts";
+import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 
 const sha = "a".repeat(40), at = "2026-10-01T00:00:00.000Z";
 const yaml = (id: string, name: string) => `id: ocd-person/${id}
@@ -50,7 +58,7 @@ test("two states use one validated archive and keep complete native identity, co
   const archive = zip([
     { name: `people-${sha}/data/az/legislature/One.yml`, data: Buffer.from(yaml("one", "Member One")) },
     { name: `people-${sha}/data/nh/legislature/Two.yml`, data: Buffer.from(yaml("two", "Member Two")) },
-    { name: `people-${sha}/data/az/executive/Governor.yml`, data: Buffer.from("id: ocd-person/governor\nname: Source Governor\nroles:\n  - type: governor\n") },
+    { name: `people-${sha}/data/az/executive/Governor.yml`, data: Buffer.from("id: ocd-person/governor\nname: Source Governor\nroles:\n  - type: governor\n    jurisdiction: ocd-jurisdiction/country:us/state:az/government\n    start_date: '2025-01-01'\n") },
   ], "2026-10-01");
   const store = new MemoryEvidenceStore(), { locks } = createMemoryRepositories(), requests: string[] = [];
   let now = at;
@@ -60,24 +68,26 @@ test("two states use one validated archive and keep complete native identity, co
   const acquire = (state: string) => acquireStatePeople({ state, store, locks, fetchImpl, now: () => now,
     signal: AbortSignal.timeout(10_000), divisions: [] });
   const [az, nh] = await Promise.all([acquire("az"), acquire("nh")]);
-  assert.equal(requests.length, 2); assert.equal(az.roster.officeholders.length, 1); assert.equal(nh.roster.officeholders.length, 1);
-  const person = az.roster.officeholders[0];
+  assert.equal(requests.length, 2); assert.equal(az.roster.officeholders.length, 2); assert.equal(nh.roster.officeholders.length, 1);
+  const person = az.roster.officeholders.find(row=>row.personId === "plural:one")!;
   assert.equal(person.id, "plural:az:one"); assert.equal(person.personId, "plural:one");
   assert.equal(person.nativeIds?.legacy_openstates[0], "one"); assert.equal(person.termStart, "2025-01-01");
   assert.equal(person.memberships?.length, 2); assert.equal(person.offices?.length, 2); assert.equal(person.email, "member@legislature.example.gov");
   assert.equal(az.roster.currentMembershipComplete, true, "completeness follows parsed native source members, without a seat-count threshold");
   assert.equal(person.photo, null); assert.match(person.portraitCandidate?.imageUrl ?? "", /one\.jpg$/);
-  assert.equal(az.roster.divisions.length, 0); assert.equal(az.roster.unmatched.length, 1, "missing maps cannot withhold a sourced person");
+  assert.deepEqual(az.roster.divisions.map(row=>row.ocdId), ["ocd-division/country:us/state:az"]);
+  assert.equal(az.roster.officeholders.find(row=>row.personId === "plural:governor")?.officeTitle, "Governor");
+  assert.equal(az.roster.unmatched.length, 1, "missing legislative maps cannot withhold a sourced person or the exact statewide role");
   assert.equal(az.acquisitions.length, 2); assert.match(az.acquisitions[0].requestedUrl, /^https:\/\/codeload\.github\.com/);
   assert.equal(az.acquisitions[0].extractedFrom?.sha256, az.acquisitions[0].rawHash);
-  assert.match(az.gaps[0].detail, /executive\/municipal/);
+  assert.deepEqual(az.gaps, []);
   await acquire("az"); assert.equal(requests.length, 2, "reader/member-office consumers reuse the same release");
   const canonical = new MemoryRoutineDataStore();
   const published = await publishStatePeople({ store: canonical, ...az, now: at });
   assert.ok(published.outcome.promoted, JSON.stringify(published.outcome.candidate.receipt));
   const read = await readStatePeopleProjection("US-AZ", { store: canonical, now: at, bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
-  if (read.kind === "PROMOTED") assert.equal(read.value.roster.officeholders[0].personId, "plural:one");
+  if (read.kind === "PROMOTED") assert.ok(read.value.roster.officeholders.some(row=>row.personId === "plural:one"));
   assert.equal((await readMemberOffices("plural:az:one", undefined, {store:canonical,now:at,bypassCache:true})).length, 2,
     "native office contacts reach the scoped reader immediately with the core people projection");
   const offices = await publishMemberOffices({ store: canonical, now: at, jurisdictions: ["US-AZ"] });
@@ -116,7 +126,12 @@ test("native role dates select the current legislative membership without mayor 
   const roster = normalize([person], new Map([["az|upper|7", "ocd-division/country:us/state:az/sldu:7"]]), at, "US-AZ");
   assert.equal(roster.officeholders[0].chamber, "upper"); assert.equal(roster.divisions.length, 1);
   assert.equal(yamlToPeople(text, "az", person.sourceUrl!, "2022-01-01T00:00:00.000Z").length, 0);
-  assert.throws(() => yamlToPeople(text.replace("2025-01-01", "2025-02-30"), "az", person.sourceUrl!, at), /ROLE_DATE_INVALID/);
+  const invalidRoleGaps:string[]=[];
+  assert.equal(yamlToPeople(text.replace("2025-01-01", "2025-02-30"), "az", person.sourceUrl!, at, detail=>invalidRoleGaps.push(detail)).length,0);
+  assert.ok(invalidRoleGaps.some(detail=>detail.startsWith("PLURAL_ROLE_DATE_INVALID:person=ocd-person/same:role=1")));
+  const independent = yamlToPeople(text.replace("2025-01-01", "2025-02-30").replace("2024-12-31","2027-12-31"), "az", person.sourceUrl!, at, detail=>invalidRoleGaps.push(detail));
+  assert.equal(normalize(independent,new Map(),at,"US-AZ").officeholders[0].officeTitle,"State Representative",
+    "a malformed role cannot suppress the same person's independently valid current membership");
   const partialDates = yamlToPeople(text.replace("2025-01-01", "2025").replace("    start_date: '2025'", "    start_date: '2025'\n    end_date: '2026'"), "az", person.sourceUrl!, at);
   assert.equal(partialDates[0].current_chamber, "upper");
   assert.equal(partialDates[0].roles?.[1].end_date, "2026", "partial dates retain the publisher's precision");
@@ -139,6 +154,152 @@ test("one malformed native record leaves verified people publishable without cla
   assert.ok(result.gaps.some(gap => /IDENTITY_INVALID/.test(gap.detail)));
   const canonical = new MemoryRoutineDataStore();
   assert.ok((await publishStatePeople({ store: canonical, ...result, now: at })).outcome.promoted);
+});
+test("known municipal roles preserve native identity, generic office contacts and precise durable gaps", async () => {
+  const executive = (id:string,type:string,jurisdiction:string,extra="") => `id: ocd-person/${id}\nname: Person ${id}\nroles:\n  - type: ${type}\n    jurisdiction: ${jurisdiction}\n${extra}offices:\n  - name: City Hall\n    voice: '555-3000'\n    email: mayor@city.example.gov\nlinks:\n  - url: https://city.example.gov/mayor\n`;
+  const archive = zip([
+    {name:`people-${sha}/data/az/legislature/One.yml`,data:Buffer.from(yaml("one","Member One"))},
+    {name:`people-${sha}/data/az/municipalities/Mayor.yml`,data:Buffer.from(executive("mayor","mayor","ocd-jurisdiction/country:us/state:az/place:mesa/government"))},
+    {name:`people-${sha}/data/az/municipalities/Ward.yml`,data:Buffer.from(executive("ward","councilmember","ocd-jurisdiction/country:us/state:az/place:mesa/government","    district: '3'\n"))},
+    {name:`people-${sha}/data/az/executive/Wrong.yml`,data:Buffer.from(executive("wrong","governor","ocd-jurisdiction/country:us/state:nh/government"))},
+    {name:`people-${sha}/data/az/executive/Ended.yml`,data:Buffer.from(executive("ended","governor","ocd-jurisdiction/country:us/state:az/government","    end_date: '2025-01-01'\n"))},
+    {name:`people-${sha}/data/az/executive/Unsupported.yml`,data:Buffer.from(executive("unknown","unrecognized_role","ocd-jurisdiction/country:us/state:az/government"))},
+  ],"2026-10-01");
+  const {locks}=createMemoryRepositories(),store=new MemoryEvidenceStore();
+  const result=await acquireStatePeople({state:"az",store,locks,now:()=>at,signal:AbortSignal.timeout(10_000),divisions:[],
+    fetchImpl:(async url=>String(url)===PLURAL_REVISION_URL ? new Response(JSON.stringify([{sha}])) : new Response(archive)) as typeof fetch});
+  assert.deepEqual(result.roster.officeholders.map(row=>row.personId).sort(),["plural:mayor","plural:one","plural:ward"]);
+  const mayor=result.roster.officeholders.find(row=>row.personId === "plural:mayor")!;
+  assert.equal(mayor.level,"LOCAL"); assert.equal(mayor.phone,"555-3000"); assert.equal(mayor.email,"mayor@city.example.gov");
+  assert.ok(result.roster.divisions.some(row=>row.officeholderId===mayor.id && row.ocdId==="ocd-division/country:us/state:az/place:mesa"));
+  assert.ok(!result.roster.divisions.some(row=>row.officeholderId==="plural:az:ward"),"a ward member cannot represent the entire city");
+  assert.ok(result.gaps.some(row=>row.detail.startsWith("PLURAL_ROLE_DISTRICT_DIVISION_UNRESOLVED")));
+  assert.ok(result.gaps.some(row=>row.detail.startsWith("PLURAL_ROLE_WRONG_STATE")));
+  assert.ok(result.gaps.some(row=>row.detail.startsWith("PLURAL_ROLE_UNSUPPORTED")));
+  const canonical=new MemoryRoutineDataStore(),publication=await publishStatePeople({store:canonical,...result,now:at});
+  assert.ok(publication.outcome.promoted,JSON.stringify(publication.outcome.candidate.receipt));
+  const saved=await canonical.readCandidate(publication.candidate.id);
+  assert.ok(saved?.candidate.excludedFacts?.some(row=>row.code === "PLURAL_ROLE_WRONG_STATE" && (row.record as {sourceUrl:string}).sourceUrl.endsWith("/Wrong.yml")));
+  assert.equal((saved?.candidate.normalizedPayload as {gaps:unknown[]}).gaps.length,result.gaps.length);
+});
+test("the same native person in legislative and municipal files keeps both memberships and ends only the expired role", async () => {
+  const mayor = (end?:string) => `id: ocd-person/one\nname: Member One\nroles:\n  - type: mayor\n    jurisdiction: ocd-jurisdiction/country:us/state:az/place:mesa/government\n    start_date: '2025-01-01'\n${end ? `    end_date: '${end}'\n` : ""}`;
+  const archiveFor=(end?:string)=>zip([
+    {name:`people-${sha}/data/az/legislature/One.yml`,data:Buffer.from(yaml("one","Member One"))},
+    {name:`people-${sha}/data/az/municipalities/One.yml`,data:Buffer.from(mayor(end))},
+  ],"2026-10-01");
+  const acquire=async(end?:string)=>{
+    const {locks}=createMemoryRepositories();
+    return acquireStatePeople({state:"az",store:new MemoryEvidenceStore(),locks,now:()=>at,signal:AbortSignal.timeout(10_000),
+      divisions:[{ocdId:"ocd-division/country:us/state:az/sldu:7",label:"State Senate District 7",divisionType:"sldu"}],
+      fetchImpl:(async url=>String(url)===PLURAL_REVISION_URL ? new Response(JSON.stringify([{sha}])) : new Response(archiveFor(end))) as typeof fetch});
+  };
+  const result=await acquire(),canonical=new MemoryRoutineDataStore();
+  assert.equal(result.roster.officeholders.length,1); assert.equal(result.roster.divisions.length,2);
+  assert.equal(result.roster.officeholders[0].memberships?.filter(row=>row.current).length,2);
+  assert.equal(indexByDivision([result.roster]).get("ocd-division/country:us/state:az/place:mesa")?.[0].officeTitle,"Mayor");
+  await publishStatePeople({store:canonical,...result,now:at});
+  const read=await readStatePeopleProjection("US-AZ",{store:canonical,now:at,bypassCache:true});
+  assert.equal(read.kind,"PROMOTED"); if(read.kind!=="PROMOTED")return;
+  const held=heldOfficialStateLegislatorsFromRead("US-AZ",read),link=held.divisions.find(row=>row.ocdId.endsWith("/place:mesa"))!;
+  assert.equal(seatHolderForMembership(held.seats[0],link.membershipId)?.officeTitle,"Mayor");
+  const ended=await acquire("2026-09-01");
+  await publishStatePeople({store:canonical,...ended,now:at});
+  const after=await readStatePeopleProjection("US-AZ",{store:canonical,now:at,bypassCache:true});
+  assert.equal(after.kind,"PROMOTED"); if(after.kind!=="PROMOTED")return;
+  assert.deepEqual(after.value.roster.divisions.map(row=>row.ocdId),["ocd-division/country:us/state:az/sldu:7"]);
+  assert.equal(after.value.roster.officeholders.length,1,"ending the mayor tenure cannot remove the still-serving legislator");
+  const endedHeld=heldOfficialStateLegislatorsFromRead("US-AZ",after);
+  assert.equal(seatHolderForMembership(endedHeld.seats[0],link.membershipId),null,"an expired linked role cannot fall back to the person's other current office");
+  assert.equal(endedHeld.seats[0].memberships?.find(row=>row.id===link.membershipId)?.termEnd,"2026-09-01");
+  assert.equal(indexByDivision([{...after.value.roster,divisions:[...after.value.roster.divisions,{...link,bodyId:null}]}]).has(link.ocdId),false,
+    "even a stale explicit division link cannot render a retired membership");
+});
+test("an explicitly ended final office retires during a partial refresh while malformed roles preserve held people", async () => {
+  const municipal = (id:string,place:string,end?:string) => `id: ocd-person/${id}\nname: Mayor ${id}\nroles:\n  - type: mayor\n    jurisdiction: ocd-jurisdiction/country:us/state:az/place:${place}/government\n    start_date: '2025-01-01'\n${end ? `    end_date: '${end}'\n` : ""}`;
+  const acquire = async (stage:0|1|2) => {
+    const release=[sha,"b".repeat(40),"c".repeat(40)][stage];
+    const archive=zip([
+      {name:`people-${release}/data/az/legislature/One.yml`,data:Buffer.from(yaml("one","Member One"))},
+      {name:`people-${release}/data/az/municipalities/Ended.yml`,data:Buffer.from(municipal("ended","mesa",stage===1 ? "2026-02-30" : stage===2 ? "2026-09-01" : undefined))},
+      {name:`people-${release}/data/az/municipalities/Malformed.yml`,data:Buffer.from(municipal("malformed","tempe",stage ? "2026-02-30" : undefined))},
+      {name:`people-${release}/data/az/municipalities/WrongJurisdiction.yml`,data:Buffer.from(stage
+        ? municipal("wrong-jurisdiction","phoenix","2026-09-01").replace("state:az","state:nh")
+        : municipal("wrong-jurisdiction","phoenix"))},
+    ],"2026-10-01");
+    const {locks}=createMemoryRepositories();
+    return acquireStatePeople({state:"az",store:new MemoryEvidenceStore(),locks,now:()=>at,signal:AbortSignal.timeout(10_000),divisions:[],
+      fetchImpl:(async url=>String(url)===PLURAL_REVISION_URL ? new Response(JSON.stringify([{sha:release}])) : new Response(archive)) as typeof fetch});
+  };
+  const canonical=new MemoryRoutineDataStore(),initial=await acquire(0);
+  const initialPublication=await publishStatePeople({store:canonical,...initial,now:at});
+  assert.ok(initialPublication.outcome.promoted);
+  const endedId=initial.roster.officeholders.find(row=>row.personId === "plural:ended")!.memberships![0].id;
+  const malformed=await acquire(1),malformedPublication=await publishStatePeople({store:canonical,...malformed,now:at});
+  assert.ok(malformedPublication.outcome.promoted);
+  assert.ok((malformedPublication.candidate.normalizedPayload as {acquisitions:{requestedUrl:string;body:string}[]}).acquisitions.some(row=>
+    row.requestedUrl.endsWith(sha) && row.body.includes("id: ocd-person/ended")),"partial refresh retains the original capture behind the still-serving prior tenure");
+  const partial=await acquire(2);
+  assert.equal(partial.roster.currentMembershipComplete,false);
+  assert.ok(!partial.roster.officeholders.some(row=>row.personId === "plural:ended"));
+  assert.equal(partial.roster.endedMemberships?.find(row=>row.id === endedId)?.termEnd,"2026-09-01",
+    "explicit end evidence survives independently of the current people output");
+  assert.ok(!partial.roster.endedMemberships?.some(row=>["plural:malformed","plural:wrong-jurisdiction"].includes(row.personId)),
+    "an invalid date or a different native jurisdiction cannot invent retirement");
+  assert.ok(partial.gaps.some(row=>row.detail.startsWith("PLURAL_ROLE_DATE_INVALID")));
+  const publication=await publishStatePeople({store:canonical,...partial,now:at});
+  assert.ok(publication.outcome.promoted,JSON.stringify(publication.outcome.candidate.receipt));
+  assert.ok(publication.outcome.candidate.receipt?.checks.some(row=>row.code === "NATIVE_MEMBERSHIPS_EXPLICITLY_ENDED"));
+  const read=await readStatePeopleProjection("US-AZ",{store:canonical,now:at,bypassCache:true});
+  assert.equal(read.kind,"PROMOTED"); if(read.kind!=="PROMOTED")return;
+  assert.equal(indexByOfficeholderId([read.value.roster]).has("plural:ended"),false);
+  const divisions=indexByDivision([read.value.roster]);
+  assert.equal(divisions.has("ocd-division/country:us/state:az/place:mesa"),false);
+  assert.equal(divisions.get("ocd-division/country:us/state:az/place:tempe")?.[0].personId,"plural:malformed");
+  assert.equal(divisions.get("ocd-division/country:us/state:az/place:phoenix")?.[0].personId,"plural:wrong-jurisdiction");
+  assert.ok(read.value.roster.officeholders.some(row=>row.personId === "plural:one"));
+  const history=read.value.roster.endedMemberships?.find(row=>row.id === endedId);
+  assert.equal(history?.current,false); assert.equal(history?.termEnd,"2026-09-01");
+  assert.match(history?.sourceUrl ?? "",/\/municipalities\/Ended\.yml$/);
+  assert.ok((publication.candidate.normalizedPayload as {acquisitions:{body:string}[]}).acquisitions.some(row=>row.body.includes("id: ocd-person/ended") && row.body.includes("2026-09-01")));
+
+  const hash=(value:unknown)=>createHash("sha256").update(canonicalCivicDataJson(value)).digest("hex");
+  const reject=(mutate:(candidate:RoutineCandidate,prior:CandidateVersionRecord)=>void,label:string,expected="NATIVE_MEMBERSHIP_END_SOURCE_UNPROVEN")=>{
+    const candidate=structuredClone(publication.outcome.candidate.candidate),prior=structuredClone(malformedPublication.outcome.candidate);
+    mutate(candidate,prior);
+    const rebound={...candidate,normalization:{...candidate.normalization,
+      normalizedHash:hash(candidate.readModel),normalizedPayloadHash:hash(candidate.normalizedPayload)},
+      changeSet:candidateChangeSet(candidate,prior.candidate.readModel)};
+    const sourceCheck=statePeopleRetirementSourceCheck(rebound,prior,at);
+    const check=validateRoutineCandidate(rebound,prior,at,[sourceCheck]).receipt.checks.find(row=>row.check === "COMPLETENESS_HORIZON_VALIDITY");
+    assert.equal(check?.code,expected,label);
+  };
+  const endedRows=(candidate:RoutineCandidate)=>[
+    ...((candidate.readModel as {roster:{endedMemberships:{id:string;personId:string;officeId:string;termEnd:string}[]}}).roster.endedMemberships),
+    ...((candidate.normalizedPayload as {endedMemberships:{id:string;personId:string;officeId:string;termEnd:string}[]}).endedMemberships),
+  ].filter(row=>row.id === endedId);
+  reject(candidate=>{for(const row of endedRows(candidate))row.personId="plural:somebody-else";},"another native person cannot prove retirement");
+  reject(candidate=>{for(const row of endedRows(candidate))row.officeId="openstates-office:another-office";},"another office cannot prove this tenure ended");
+  reject(candidate=>{for(const row of endedRows(candidate))row.termEnd="2026-02-30";},"an invalid native date cannot prove retirement");
+  reject(candidate=>{for(const row of endedRows(candidate))row.termEnd="2027";},"a future end date cannot retire a current office");
+  reject(candidate=>{for(const row of endedRows(candidate))row.termEnd="2026-08-01";},"agreeing projections cannot forge a different past end from the captured YAML");
+  reject(candidate=>{(candidate.normalizedPayload as {acquisitions:unknown[]}).acquisitions=[];},"the new end must cite its captured native source");
+  reject((_candidate,prior)=>{(prior.candidate.normalizedPayload as {acquisitions:unknown[]}).acquisitions=[];},"the old active tenure must cite its held native source");
+  reject(candidate=>{(candidate.normalizedPayload as {endedMemberships:unknown[]}).endedMemberships=[];},"a reader-only end claim is not captured normalization evidence","INCOMPLETE_HORIZON_REMOVAL_UNEXPLAINED");
+  for (const replacement of ["", "    end_date: '2026-08-01'\n"]) {
+    const unproved=structuredClone(publication.candidate);
+    for (const acquisition of (unproved.normalizedPayload as {acquisitions:{body:string}[]}).acquisitions) {
+      if (acquisition.body.includes("id: ocd-person/ended")) acquisition.body=acquisition.body.replace("    end_date: '2026-09-01'\n",replacement);
+    }
+    const store=new MemoryRoutineDataStore();
+    await publishStatePeople({store,...initial,now:at});
+    const lastGood=await publishStatePeople({store,...malformed,now:at});
+    const outcome=await processRegisteredRoutineCandidate(store,"openstates-people-az",{...unproved,
+      normalization:{...unproved.normalization,normalizedPayloadHash:hash(unproved.normalizedPayload)}},at);
+    assert.equal(outcome.promoted,null,"the real publication door reparses raw native evidence independently of agreeing projections");
+    assert.equal(outcome.candidate.failureCode,"NATIVE_MEMBERSHIP_END_SOURCE_UNPROVEN");
+    assert.equal((await store.readPromotion("STATE_LEGISLATOR","US-AZ:openstates-people:v1"))?.versionId,lastGood.candidate.id);
+  }
 });
 test("reduced held reference and truncated CSV shapes cannot be mistaken for rich current exports", () => {
   assert.match(pluralRosterIssue("ocd_person_id,name,chamber,district\nocd-person/a,A,upper,1\n") ?? "", /missing id/);

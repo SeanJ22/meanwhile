@@ -8,7 +8,7 @@ import type { DirectoryFile } from "./directory.ts";
 
 export const FEDERAL_DIRECTORY_SOURCE_ID = "congress-directory-project" as const;
 export const FEDERAL_DIRECTORY_SCOPE = "US:current-congress-directory" as const;
-export const FEDERAL_DIRECTORY_PARSER_VERSION = "congress-directory/3" as const;
+export const FEDERAL_DIRECTORY_PARSER_VERSION = "congress-directory/4" as const;
 
 export interface FederalDirectoryAcquisition {
   readonly requestedUrl: string;
@@ -68,6 +68,7 @@ export function federalDirectoryCandidate(input: {
   readonly acquisitions: readonly FederalDirectoryAcquisition[];
   readonly retrievedAt: string;
   readonly projection: FederalDirectoryReadModel;
+  readonly excludedFacts?: RoutineCandidate["excludedFacts"];
 }): RoutineCandidate {
   const issues = federalDirectoryProjectionIssues(input.projection);
   for (const acquisition of input.acquisitions) {
@@ -87,6 +88,7 @@ export function federalDirectoryCandidate(input: {
   const sourceCheck = input.acquisitions.flatMap(row=>row.sourceCheck ? [row.sourceCheck] : []).sort((a,b)=>b.checkedAt.localeCompare(a.checkedAt))[0];
   const normalizedPayload = {
     sourceSha: input.projection.sourceSha,
+    ...(input.excludedFacts?.length ? { excludedFacts: input.excludedFacts } : {}),
     acquisitions: input.acquisitions.map(({ requestedUrl, finalUrl, httpStatus, body, retrievedAt, vaultKey, sourceCheck }) => ({ requestedUrl, finalUrl, httpStatus, body, rawHash: sha256(body), byteCount: Buffer.byteLength(body), ...(retrievedAt ? {retrievedAt} : {}),...(vaultKey ? {vaultKey} : {}),...(sourceCheck ? {sourceCheck} : {}) })),
   };
   const normalizedHash = sha256(canonicalCivicDataJson(input.projection));
@@ -94,7 +96,7 @@ export function federalDirectoryCandidate(input: {
   const records = civicRecordsFor("FEDERAL_DIRECTORY", input.projection);
   const acquisitionProblems = issues.filter((issue) => /^(?:FINAL_|SOURCE_|HTTP_|EMPTY_BODY|ACQUISITION_|CORE_SOURCE|DUPLICATE_SOURCE)/.test(issue));
   return {
-    id: `cv-${sha256(`${FEDERAL_DIRECTORY_SOURCE_ID}\u001f${FEDERAL_DIRECTORY_SCOPE}\u001f${rawHash}\u001f${normalizedHash}\u001f${input.projection.sourceSha}\u001f${input.retrievedAt}\u001f${canonicalCivicDataJson(sourceCheck ?? null)}`).slice(0, 32)}`,
+    id: `cv-${sha256(`${FEDERAL_DIRECTORY_SOURCE_ID}\u001f${FEDERAL_DIRECTORY_SCOPE}\u001f${FEDERAL_DIRECTORY_PARSER_VERSION}\u001f${rawHash}\u001f${normalizedHash}\u001f${normalizedPayloadHash}\u001f${input.projection.sourceSha}\u001f${input.retrievedAt}\u001f${canonicalCivicDataJson(sourceCheck ?? null)}`).slice(0, 32)}`,
     sourceId: FEDERAL_DIRECTORY_SOURCE_ID,
     recordClass: "FEDERAL_DIRECTORY",
     scope: FEDERAL_DIRECTORY_SCOPE,
@@ -152,6 +154,7 @@ export function federalDirectoryCandidate(input: {
     normalizedPayload,
     readModel: input.projection,
     civicRecords: records,
+    ...(input.excludedFacts?.length ? { excludedFacts: input.excludedFacts } : {}),
   };
 }
 

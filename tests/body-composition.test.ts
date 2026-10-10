@@ -162,6 +162,8 @@ test("no reader surface reaches a body's members through a division roster", () 
     "lib/registry/body-rosters.ts",
     /* The DIVISION question — "who represents this district" — and its route. */
     "lib/registry/representation.ts",
+    /* Server-side division acquisition and composition; no body-membership reader lives here. */
+    "lib/registry/representation-server.ts",
     "app/api/representation/[...division]/route.ts",
     /* Tests of those two, and of this rule. */
     "tests/body-composition.test.ts",

@@ -505,15 +505,18 @@ export async function processRoutineCandidate(
     : continuingExactLkg || lkgProofIssue === null ? lkg : null;
     // Production observes this write's time and never trusts an adapter clock.
   const transitionAt = await routineEventObservedAt(store, candidate.recordClass, candidate.scope, now);
+  const nativeRetirementCheck=candidate.sourceId === "plural-openstates" && candidate.recordClass === "STATE_LEGISLATOR" &&
+    (candidate.changeSet?.removed.length ?? 0)>0 && !candidate.horizon.claimsComplete
+    ? (await import("../sources/plural/retirement.ts")).statePeopleRetirementSourceCheck(candidate,validationLkg,transitionAt) : null;
   const validated = validateRoutineCandidate(
     candidate,
     validationLkg,
     transitionAt,
-    sourceProjectionVerification === null ? [] : [{
+    [...(sourceProjectionVerification === null ? [] : [{
       consumer: `${sourceProjectionVerification.verifierId} (source-scoped pre-promotion)`,
       passed: sourceProjectionVerification.status === "PASS",
       detail: sourceProjectionVerification.detail,
-    }],
+    }]),...(nativeRetirementCheck ? [nativeRetirementCheck] : [])],
   );
     // A re-check whose read model is exactly the pointed one is a receipted no-change; any refusal falls through to
     // the ordinary candidate and promotion below.

@@ -59,6 +59,16 @@ export interface SeatHolder {
 
 export type OfficeholderIndex = Map<string, SeatHolder[]>;
 
+/** Select a person's exact current office when several native memberships are held. */
+export function seatHolderForMembership(holder: SeatHolder, membershipId?: string): SeatHolder | null {
+  const membership = membershipId ? holder.memberships?.find(row=>row.id === membershipId && row.current !== false) : undefined;
+  if (!membership) return membershipId ? null : holder;
+  return {...holder,officeTitle:membership.officeTitle ?? holder.officeTitle,
+    officeJurisdictionOcdId:membership.divisionId ?? holder.officeJurisdictionOcdId,
+    chamber:membership.chamber,termStart:membership.termStart ?? null,termEnd:membership.termEnd ?? null,
+    sourceUrl:membership.sourceUrl};
+}
+
 /** Person lookup is independent of whether their district geometry is held. */
 export function indexByOfficeholderId(sets: readonly OfficeholderSet[], photos?: PhotoIndex): Map<string, SeatHolder> {
   const out = new Map<string, SeatHolder>();
@@ -114,10 +124,12 @@ export function indexByDivision(
       // A link with no matching person is a broken artifact, not something to
       // paper over. Skipping it is right; rendering an empty name is not.
       if (!person) continue;
+      const holder = seatHolderForMembership(toSeatHolder(person, photos), link.membershipId);
+      if (!holder) continue;
 
       const existing = index.get(link.ocdId);
-      if (existing) existing.push(toSeatHolder(person, photos));
-      else index.set(link.ocdId, [toSeatHolder(person, photos)]);
+      if (existing) existing.push(holder);
+      else index.set(link.ocdId, [holder]);
     }
   }
 

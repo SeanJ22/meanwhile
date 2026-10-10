@@ -5,7 +5,7 @@ import type { SourceCheckEvidence } from "../civic-data/types.ts";
 import { sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
 import { indexVault, readHeldBytes, READ_ONLY_VAULT_PROJECT } from "../control-plane/evidence/read-only-vault.ts";
 import { VAULT_DIR } from "../control-plane/scheduler/vault.ts";
-import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_BYTES, REGISTRATION_SOURCE_SHA256, REGISTRATION_SOURCE_URL, REGISTRATION_SOURCE_LAST_MODIFIED } from "./publication.ts";
+import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_BYTES, REGISTRATION_SOURCE_SHA256, REGISTRATION_SOURCE_URL, REGISTRATION_SOURCE_LAST_MODIFIED, REGISTRATION_HELD_RETRIEVED_AT } from "./publication.ts";
 import { validateGovernmentRelease } from "./source-reference.ts";
 
 export interface RegistrationSourceReceipt {
@@ -18,6 +18,8 @@ export interface RegistrationSourceReceipt {
   readonly confirmedBy: "BYTES_HASHED" | "HELD_RELEASE";
   readonly checkedAt?: string;
   readonly sourceCheck?: SourceCheckEvidence;
+  /** Exact prior GOOD whose later check attested these same held source bytes. */
+  readonly replayedFromVersionId?: string;
   readonly release?: KnownRelease;
 }
 
@@ -33,9 +35,9 @@ export function registrationSourceCheck(receipt: RegistrationSourceReceipt, addi
 /** The saved source attestation belongs to September 23, not today's replay. */
 export function heldRegistrationReceipt(): RegistrationSourceReceipt {
   return { requestedUrl: REGISTRATION_SOURCE_URL, finalUrl: REGISTRATION_SOURCE_URL, httpStatus: 200,
-    retrievedAt: "2026-09-23T00:00:00.000Z", sha256: REGISTRATION_SOURCE_SHA256, bytes: REGISTRATION_SOURCE_BYTES, confirmedBy: "HELD_RELEASE",
+    retrievedAt: REGISTRATION_HELD_RETRIEVED_AT, sha256: REGISTRATION_SOURCE_SHA256, bytes: REGISTRATION_SOURCE_BYTES, confirmedBy: "HELD_RELEASE",
     sourceCheck: { requestedUrl: REGISTRATION_SOURCE_URL, finalUrl: REGISTRATION_SOURCE_URL, httpStatus: 200,
-      rawHash: REGISTRATION_SOURCE_SHA256, checkedAt: "2026-09-23T00:00:00.000Z" } };
+      rawHash: REGISTRATION_SOURCE_SHA256, checkedAt: REGISTRATION_HELD_RETRIEVED_AT } };
 }
 
 async function heldRelease(signal: AbortSignal): Promise<KnownRelease | null> {

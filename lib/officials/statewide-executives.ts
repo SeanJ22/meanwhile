@@ -401,6 +401,7 @@ export function statewideExecutivesFor(ocdIds: string[]): SeatHolder[] {
     // Provenance attached here once, from the entry's `sourceOrg` and `collectedAt`.
     holders.push({
       ...executive.holder,
+      officeJurisdictionOcdId: executive.stateOcdId,
       provenance: {
         sourceUrl: executive.sourceUrl,
         sourceOrg: executive.sourceOrg,

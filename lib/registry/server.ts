@@ -4,10 +4,9 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
 import {
-  holdersFor,
   indexByDivision,
   indexByOfficeholderId,
-  stateOcdIdFrom,
+  seatHolderForMembership,
   type OfficeholderIndex,
   type PhotoIndex,
   type SeatHolder,
@@ -18,6 +17,9 @@ import { readPublicBodyAttempts, type PublicBodyAttempt } from "./body-attempt-r
 import { attemptsByFamily } from "./attempt-families.ts";
 import { currentStatewideExecutives, statewideExecutivesFor } from "../officials/statewide-executives.ts";
 import { currentBodyRosters, currentRosterMemberReaderDisposition, rosterGapForBody, rosterHoldersForBody } from "./body-rosters.ts";
+import { scopedHolders } from "../officials/scoped-holders.ts";
+import { readDivisionRepresentatives } from "./representation-server.ts";
+export { federalDirectoryAppliesToDivision } from "./representation-server.ts";
 import { membersOfBody } from "./body-membership.ts";
 import { officePhoneForBody } from "../meetings/office-phone.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
@@ -540,10 +542,18 @@ function suppliedOfficialPhotos(): PhotoIndex {
 export async function allSeatHolders(divisionIds: readonly string[] = []): Promise<SeatHolder[]> {
   const states = [...new Set(divisionIds.map(statePeopleScopeForDivision).filter((scope): scope is StatePeopleJurisdiction => scope !== null))];
   const [base, ...stateReads] = await Promise.allSettled([loaded().then(value => [...value.officialsById.values()]),
-    ...states.map(async scope => [...(await heldStateLegislatorsEdgeFirst(scope))?.seats ?? []])]);
+    ...states.map(async scope => [...(await heldStateLegislatorsEdgeFirst(scope))?.seats ?? []].flatMap(holder => {
+      const selected = seatHolderForMembership(holder, holder.memberships?.find(row => row.current === true)?.id);
+      return selected ? [selected] : [];
+    }))]);
   const holders = new Map<string, SeatHolder>();
+  const primary = base.status === "fulfilled" ? base.value : [];
   for (const read of [base, ...stateReads]) if (read.status === "fulfilled") {
-    for (const holder of read.value) holders.set(holder.id, holder);
+    for (const holder of read.value) {
+      const sameDivision = holder.officeJurisdictionOcdId
+        ? primary.filter(row => row.officeJurisdictionOcdId === holder.officeJurisdictionOcdId) : [];
+      if (scopedHolders(sameDivision, [holder]).some(row => row.id === holder.id)) holders.set(holder.id, holder);
+    }
   }
   if ([base, ...stateReads].every(read => read.status === "rejected")) throw new Error("Officeholder authorities unavailable");
   return [...holders.values()];
@@ -598,30 +608,14 @@ export async function chamberForOfficeholder(
 export async function seatHoldersForDivision(
   ocdId: string,
 ): Promise<SeatHolder[]> {
-  const officialStateScope = officialStateLegislatorScopeForDivision(ocdId);
-  if (officialStateScope) {
-    const held = await heldStateLegislatorsEdgeFirst(officialStateScope);
-    if (!held) return [];
-    const ids = new Set(held.divisions.filter((row) => row.ocdId === ocdId).map((row) => row.officeholderId));
-    return held.seats.filter((holder) => ids.has(holder.id)).sort((a, b) => a.name.localeCompare(b.name));
-  }
-  if (!federalDirectoryAppliesToDivision(ocdId)) {
-    // Production's federal directory has no rows for local or state-legislative
-    // divisions. Confirm the canonical registry pointer, then return its honest
-    // no-federal-row result without letting a federal outage take that scope down.
-    await registryLoaded();
-    return [];
-  }
-  const reads: Promise<SeatHolder[]>[] = [settleFederalDirectoryRead().then(() =>
-    holdersFor(indexByDivision([getFederalOfficeholderSet()], suppliedOfficialPhotos()), ocdId))];
-  // Executives belong only to the state division itself. Read their authority independently, so a
-  // failed federal holding cannot hide the governor and a failed registry cannot hide senators.
-  if (stateOcdIdFrom(ocdId) === ocdId) reads.push(settleRegistryRuntimeRead().then(() => statewideExecutivesFor([ocdId])));
-  const settled = await Promise.allSettled(reads);
-  const holders = settled.flatMap(read => read.status === "fulfilled" ? read.value : []);
-  const failed = settled.find(read => read.status === "rejected");
-  if (!holders.length && failed?.status === "rejected") throw failed.reason;
-  return holders;
+  return readDivisionRepresentatives(ocdId, {
+    statePeople: heldStateLegislatorsEdgeFirst,
+    federal: async () => {
+      await settleFederalDirectoryRead();
+      return indexByDivision([getFederalOfficeholderSet()], suppliedOfficialPhotos());
+    },
+    registry: settleRegistryRuntimeRead,
+  });
 }
 
 /**
@@ -633,13 +627,6 @@ async function heldStateLegislatorsEdgeFirst(scope: StatePeopleJurisdiction) {
   if (read.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(read);
   if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") return null;
   return heldOfficialStateLegislatorsFromRead(scope, read);
-}
-
-/** Exact divisions to which the production federal roster can contribute. */
-export function federalDirectoryAppliesToDivision(ocdId: string): boolean {
-  return ocdId === "ocd-division/country:us"
-    || /^ocd-division\/country:us\/(?:state|district|territory):[a-z]{2}$/.test(ocdId)
-    || /\/cd:[^/]+$/.test(ocdId);
 }
 
 export type CoverageStateLegislatorReader = (
@@ -703,7 +690,7 @@ export async function settleCoverageStateLegislators(
     [...officials].map(([division, holders]) => [division, [...holders]]),
   );
   const scopes = [...new Set(exactDivisions
-    .map((division) => officialStateLegislatorScopeForDivision(division.ocdId))
+    .map((division) => statePeopleScopeForDivision(division.ocdId))
     .filter((scope): scope is StatePeopleJurisdiction => scope !== null))];
   const authorities: StateLegislatorCoverageAuthority[] = [];
 
@@ -724,10 +711,12 @@ export async function settleCoverageStateLegislators(
     const held = heldOfficialStateLegislatorsFromRead(scope, read);
     const byId = new Map(held.seats.map((holder) => [holder.id, holder]));
     for (const link of held.divisions) {
-      const holder = byId.get(link.officeholderId);
+      const person = byId.get(link.officeholderId);
+      if (!person) continue;
+      const holder = seatHolderForMembership(person, link.membershipId);
       if (!holder) continue;
       const existing = nextOfficials.get(link.ocdId) ?? [];
-      if (!existing.some((row) => row.id === holder.id)) {
+      if (!existing.some((row) => row.id === holder.id && row.officeTitle === holder.officeTitle)) {
         nextOfficials.set(
           link.ocdId,
           [...existing, holder].sort((a, b) => a.name.localeCompare(b.name)),
@@ -737,11 +726,6 @@ export async function settleCoverageStateLegislators(
   }
 
   return { officials: nextOfficials, authorities };
-}
-
-/** Exact permanent roster scope implied by one state-legislative division. */
-function officialStateLegislatorScopeForDivision(ocdId: string): StatePeopleJurisdiction | null {
-  return /\/sld[lu]:[^/]+$/.test(ocdId) ? statePeopleScopeForDivision(ocdId) : null;
 }
 
 /**
@@ -756,11 +740,6 @@ export async function seatHoldersForOffice(
 ): Promise<SeatHolder[]> {
   const office = officeIdentity(officeTitle);
   if (office === null) return [];
-  if (office !== "us_senator" && office !== "us_representative"
-    && /^ocd-division\/country:us\/state:[a-z]{2}$/.test(ocdId)) {
-    await registryLoaded();
-    return statewideExecutivesFor([ocdId]).filter((holder) => officeIdentity(holder.officeTitle) === office);
-  }
   const holders = await seatHoldersForDivision(ocdId);
   return holders.filter((h) => officeIdentity(h.officeTitle) === office);
 }

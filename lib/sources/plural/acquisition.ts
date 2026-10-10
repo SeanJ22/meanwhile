@@ -85,31 +85,27 @@ export async function acquireStatePeople(input: SharedOptions & {
     });
     releaseId = sha;
     await staged(release.bytes, async entries => {
-      const selected = entries.filter(entry => new RegExp(`^people-[^/]+/data/${state}/(?:legislature|executive|municipal|municipalities)/.+\\.ya?ml$`).test(entry.name));
+      const selected = entries.filter(entry => new RegExp(`^people-[^/]+/data/${state}/(?:legislature|executive|municipal|municipalities)/.+\\.ya?ml$`).test(entry.name))
+        .sort((left,right)=>left.name.localeCompare(right.name));
       if (!selected.length) throw new Error(`PLURAL_STATE_DIRECTORY_MISSING:${state}`);
       for (const entry of selected) {
         input.signal.throwIfAborted();
         const member = entry.name.slice(entry.name.indexOf("/") + 1);
         const sourceUrl = `https://raw.githubusercontent.com/openstates/people/${sha}/${member}`;
-        const legislative = member.includes("/legislature/");
         let body: string;
         try { body = await memberText(entry); }
         catch (error) {
           input.signal.throwIfAborted();
-          if (legislative) currentMembershipComplete = false;
+          currentMembershipComplete = false;
           gaps.push({ sourceUrl, detail: `The known source member could not be decoded: ${error instanceof Error ? error.message : String(error)}. Its original bytes remain in the archive.` });
           continue;
         }
-        if (legislative) {
-          try { people.push(...yamlToPeople(body, state, sourceUrl, asOf, detail => {
-            currentMembershipComplete = false; gaps.push({ sourceUrl, detail });
-          })); } catch (error) {
-            currentMembershipComplete = false;
-            gaps.push({ sourceUrl, detail: error instanceof Error ? error.message : String(error) });
-          }
+        try { people.push(...yamlToPeople(body, state, sourceUrl, asOf, detail => {
+          currentMembershipComplete = false; gaps.push({ sourceUrl, detail });
+        },true)); } catch (error) {
+          currentMembershipComplete = false;
+          gaps.push({ sourceUrl, detail: error instanceof Error ? error.message : String(error) });
         }
-        else gaps.push({ sourceUrl,
-          detail: "Known executive/municipal native record captured. Publication needs an exact existing office binding; it is not legislative coverage." });
         acquisitions.push({ requestedUrl: release.requestedUrl, finalUrl: release.finalUrl, httpStatus: release.httpStatus,
           body, retrievedAt: release.retrievedAt, rawHash: release.sha256,
           sourceCheck,
@@ -117,15 +113,30 @@ export async function acquireStatePeople(input: SharedOptions & {
           extractedFrom: { requestedUrl: release.requestedUrl, finalUrl: release.finalUrl, sha256: release.sha256, member } });
       }
     });
-    const counts = new Map<string, number>();
-    for (const person of people) counts.set(person.id, (counts.get(person.id) ?? 0) + 1);
-    people = people.filter(person => {
-      if (counts.get(person.id) === 1) return true;
-      currentMembershipComplete = false;
-      gaps.push({ sourceUrl: person.sourceUrl ?? url, detail: `PLURAL_DUPLICATE_NATIVE_PERSON:${person.id}` });
-      return false;
-    });
-    if (!people.length) throw new Error(`PLURAL_STATE_HAS_NO_CURRENT_PEOPLE:${state}`);
+    const byNativeId = new Map<string, PluralPerson>();
+    for (const person of people) {
+      const prior = byNativeId.get(person.id);
+      if (!prior) { byNativeId.set(person.id, person); continue; }
+      if (prior.name !== person.name) {
+        currentMembershipComplete = false;
+        gaps.push({sourceUrl:person.sourceUrl ?? url,detail:`PLURAL_NATIVE_PERSON_NAME_CONFLICT:${person.id}:${prior.name}:${person.name}`});
+      }
+      const roles = [...new Map([...(prior.roles ?? []),...(person.roles ?? [])].map(role=>[
+        JSON.stringify([role.type,role.jurisdiction,role.district,role.title,role.start_date,role.end_date]),role])).values()];
+      const offices = [...new Map([...(prior.offices ?? []),...(person.offices ?? [])].map(office=>[
+        JSON.stringify([office.name,office.address,office.voice,office.email]),office])).values()];
+      const identifiers = Object.fromEntries([...new Set([...Object.keys(prior.identifiers ?? {}),...Object.keys(person.identifiers ?? {})])]
+        .map(key=>[key,[...new Set([...(prior.identifiers?.[key] ?? []),...(person.identifiers?.[key] ?? [])])]]));
+      const combined = {...person,...prior,roles,offices,identifiers};
+      for (const key of ["email","image","capitol_address","capitol_voice","district_address","district_voice","current_party"] as const) combined[key] ||= person[key];
+      combined.links = [...new Set([prior.links,person.links].flatMap(value=>value.split(";")).filter(Boolean))].join(";");
+      combined.sources = [...new Set([prior.sources,person.sources].flatMap(value=>value.split(";")).filter(Boolean))].join(";");
+      byNativeId.set(person.id,combined);
+    }
+    // Ended native tenures must reach normalization even when another source
+    // record is malformed and this refresh cannot claim a complete roster.
+    people = [...byNativeId.values()];
+    if (!people.some(person=>person.roles?.some(role=>role.current))) throw new Error(`PLURAL_STATE_HAS_NO_CURRENT_PEOPLE:${state}`);
   } catch (error) {
     input.signal.throwIfAborted();
     if (error instanceof RepositoryLockHeld) throw error;
@@ -138,7 +149,9 @@ export async function acquireStatePeople(input: SharedOptions & {
       validate: bytes => { const issue = pluralRosterIssue(new TextDecoder("utf-8", { fatal: true }).decode(bytes)); if (issue) throw new Error(issue); } });
     const body = new TextDecoder("utf-8", { fatal: true }).decode(release.bytes);
     people = rowsToPeople(body, state); releaseId = `csv:${release.sha256}`;
-    currentMembershipComplete = true;
+    // The current CSV enumerates legislative people only; it cannot retire
+    // previously captured executive/municipal memberships omitted by that export.
+    currentMembershipComplete = false;
     acquisitions = [{ requestedUrl: release.requestedUrl, finalUrl: release.finalUrl, httpStatus: release.httpStatus, body,
       retrievedAt: release.retrievedAt, rawHash: release.sha256, sourceCheck: knownReleaseSourceCheck(release),
       ...(release.vaultKey ? { vaultKey: release.vaultKey } : {}) }];
@@ -147,6 +160,7 @@ export async function acquireStatePeople(input: SharedOptions & {
   const divisions = input.divisions ?? await statePeopleDivisions(state, asOf);
   const collectedAt = acquisitions.map(row => row.retrievedAt).sort().at(-1)!;
   const roster = normalize(people, indexDivisions([...divisions]), collectedAt, `US-${state.toUpperCase()}`);
-  return { state, releaseId, people, acquisitions, gaps,
-    roster: { ...roster, currentMembershipComplete: currentMembershipComplete && roster.officeholders.length === people.length } };
+  const currentPeople = people.filter(person=>!person.roles || person.roles.some(role=>role.current));
+  return { state, releaseId, people:currentPeople, acquisitions, gaps,
+    roster: { ...roster, currentMembershipComplete: currentMembershipComplete && roster.officeholders.length === currentPeople.length } };
 }

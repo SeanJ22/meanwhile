@@ -391,9 +391,9 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     recordClass: "MEETING_OUTCOME",
     scope: "US-AZ:county:pima:legistar-outcomes",
     acquisitionAdapter: {
-      authorityMode: "SINGLE_ROUTE",
+      // Native body lookup, events, items and votes all stay within the registered Pima tenant.
+      authorityMode: "REGISTERED_SOURCE_ROUTES",
       command: ["scripts/legistar-outcomes-ingest.mts", "--promote", "--slug", "pima"],
-      requestedUrl: "https://webapi.legistar.com/v1/pima/events",
     },
     parserNormalizerVersion: "pima-legistar-outcomes/2",
     // Fourteen hours outlasts the twelve-hour re-read plus one failed retry.

@@ -291,8 +291,10 @@ export function registrationCandidate(input: {
     divisions: divisions.length,
     bodies: bodies.length,
     governments: governmentListings.length,
+    ...(receipt.replayedFromVersionId ? { replayedFromVersionId: receipt.replayedFromVersionId } : {}),
   };
-  const id = `cv-${sha256(`${REGISTRATION_SOURCE_ID}${target.scope}${rawHash}${receipt.retrievedAt}${REGISTRATION_PARSER_VERSION}${readModelHash}`).slice(0, 32)}`;
+  const normalizedPayloadHash = sha256(canonicalCivicDataJson(normalizedPayload));
+  const id = `cv-${sha256(`${REGISTRATION_SOURCE_ID}${target.scope}${rawHash}${receipt.retrievedAt}${REGISTRATION_PARSER_VERSION}${readModelHash}${normalizedPayloadHash}`).slice(0, 32)}`;
   const candidate: RoutineCandidate = {
     id,
     sourceId: REGISTRATION_SOURCE_ID,
@@ -313,7 +315,7 @@ export function registrationCandidate(input: {
       parserVersion: REGISTRATION_PARSER_VERSION,
       schemaVersion: REGISTRATION_SCHEMA_VERSION,
       normalizedHash: readModelHash,
-      normalizedPayloadHash: sha256(canonicalCivicDataJson(normalizedPayload)),
+      normalizedPayloadHash,
       inputRecords: considered,
       outputRecords: records,
       droppedRecords: considered - records,

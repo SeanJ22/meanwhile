@@ -143,7 +143,7 @@ export interface HeldOfficialStateLegislators {
   readonly scope: StatePeopleJurisdiction;
   readonly versionId: string;
   readonly seats: readonly SeatHolder[];
-  readonly divisions: readonly { officeholderId: string; ocdId: string }[];
+  readonly divisions: readonly { officeholderId: string; ocdId: string; membershipId?: string }[];
 }
 
 export type AvailableOfficialStateLegislatorsRead = Extract<
@@ -186,7 +186,7 @@ export function heldOfficialStateLegislatorsFromRead(
     scope,
     versionId: result.metadata.versionId ?? result.kind,
     seats,
-    divisions: result.value.roster.divisions.map(({ officeholderId, ocdId }) => ({ officeholderId, ocdId })),
+    divisions: result.value.roster.divisions.map(({ officeholderId, ocdId, membershipId }) => ({ officeholderId, ocdId, ...(membershipId ? {membershipId} : {}) })),
   };
 }
 
@@ -201,7 +201,7 @@ export function mergeStatePeople(reference: OfficeholderSet | null, official: Of
     const matches = people.flatMap((row,index) => sameNativePerson(row,person) ? [index] : []);
     if (matches.length !== 1) { people.push(person); continue; }
     const at = matches[0], prior = people[at];
-    const fields = ["termStart","termEnd","birthDate","partyLabel","websiteUrl","contactFormUrl","phone","email","campaignUrl","photo","social","offices"] as const;
+    const fields = ["termStart","termEnd","birthDate","partyLabel","websiteUrl","profileUrls","contactFormUrl","phone","email","campaignUrl","photo","social","offices"] as const;
     const merged: Officeholder = {...prior,...person,personId:prior.personId ?? person.personId ?? person.id,
       nativeIds:{...Object.fromEntries([...new Set([...Object.keys(prior.nativeIds ?? {}),...Object.keys(person.nativeIds ?? {})])].map(key=>[key,[...new Set([...(prior.nativeIds?.[key] ?? []),...(person.nativeIds?.[key] ?? [])])]])),reader:[...new Set([...(prior.nativeIds?.reader ?? []),...(person.nativeIds?.reader ?? []),prior.id,prior.personId ?? prior.id,person.id,person.personId ?? person.id])]},
       fieldSources:{...prior.fieldSources,...person.fieldSources},
@@ -220,8 +220,12 @@ export function mergeStatePeople(reference: OfficeholderSet | null, official: Of
     people[at] = merged;
   }
   const divisions = [...reference.divisions,...official.divisions].map(row=>({...row,officeholderId:aliases.get(row.officeholderId) ?? row.officeholderId}));
+  const currentMembershipIds=new Set(people.flatMap(person=>(person.memberships ?? []).filter(row=>row.current !== false).map(row=>row.id)));
+  const endedMemberships=[...new Map([...(reference.endedMemberships ?? []),...(official.endedMemberships ?? [])].map(row=>[row.id,row])).values()]
+    .filter(row=>!currentMembershipIds.has(row.id));
   return JSON.parse(JSON.stringify({currentMembershipComplete:official.currentMembershipComplete ?? false,scope:official.scope,generatedAt:[reference.generatedAt,official.generatedAt].sort().at(-1)!,officeholders:people,
-    divisions:[...new Map(divisions.map(row=>[`${row.officeholderId}|${row.ocdId}|${row.bodyId}`,row])).values()],
+    ...(endedMemberships.length ? {endedMemberships} : {}),
+    divisions:[...new Map(divisions.map(row=>[`${row.officeholderId}|${row.ocdId}|${row.bodyId}|${row.membershipId ?? ""}`,row])).values()],
     unmatched:[...new Map([...reference.unmatched,...official.unmatched].map(row=>({...row,officeholderId:aliases.get(row.officeholderId) ?? row.officeholderId})).map(row=>[`${row.officeholderId}|${row.reason}`,row])).values()]}));
 }
 

@@ -5,7 +5,7 @@ import {
   READER_MANIFEST_CACHE_TAG,
   READER_MAP_AUTHORITY_FAMILIES,
 } from "@/lib/meetings/edge-serving";
-import { governingRosterHoldersForDivision, rosterGapsForDivision } from "@/lib/registry/body-rosters";
+import { rosterGapsForDivision } from "@/lib/registry/body-rosters";
 import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { divisionsByOcdIds, prefetchReaderGeography, seatHoldersForDivision } from "@/lib/registry/server";
 
@@ -72,7 +72,7 @@ export async function GET(
       return { known: undefined, rosterGaps: [], available: false };
     }
   });
-  const holders = seats.length > 0 ? seats : metadata.available ? governingRosterHoldersForDivision(ocdId) : [];
+  const holders = seats;
   const { known } = metadata;
 
   return Response.json(

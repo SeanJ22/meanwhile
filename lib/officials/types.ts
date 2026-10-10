@@ -52,6 +52,8 @@ export interface Officeholder {
   partyLabel: string | null;
   /** The officeholder's official site. */
   websiteUrl: string | null;
+  /** Direct profile links/sources in this person's native record; leads until the page and portrait verify. */
+  profileUrls?: readonly string[];
   /** Official contact form, where one is published. */
   contactFormUrl: string | null;
   phone: string | null;
@@ -76,6 +78,10 @@ export interface PersonMembership {
   readonly jurisdiction: string;
   readonly chamber?: string;
   readonly district?: string;
+  readonly officeTitle?: string;
+  readonly level?: OfficeLevel;
+  readonly current?: boolean;
+  readonly divisionId?: string;
   readonly termStart?: string | null;
   readonly termEnd?: string | null;
   readonly sourceUrl: string;
@@ -111,6 +117,8 @@ export type SocialAccounts = DirectorySocial | readonly SocialAccount[];
 export interface OfficeholderDivision {
   officeholderId: string;
   ocdId: OcdId;
+  /** The exact current role, when a person serves more than one office. */
+  membershipId?: string;
   /** Set where the seat belongs to a specific body rather than a district. */
   bodyId: string | null;
 }
@@ -119,6 +127,8 @@ export interface OfficeholderDivision {
 export interface OfficeholderSet {
   /** Complete enumerated current source memberships; permits retiring omitted memberships, never required for adding facts. */
   currentMembershipComplete?: boolean;
+  /** Explicitly ended native tenures, retained even when the person has no current office. */
+  endedMemberships?: readonly PersonMembership[];
   /** Which slice this is: `us` for the federal roster, or a state FIPS. */
   scope: string;
   generatedAt: string;

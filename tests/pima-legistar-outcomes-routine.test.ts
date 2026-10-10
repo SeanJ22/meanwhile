@@ -26,7 +26,7 @@ import { latestUnchangedConfirmation } from "../lib/civic-data/unchanged-confirm
 import { pimaLegistarOutcomesCandidate } from "../lib/outcomes/data-plane.ts";
 import { readDoorOutcomeProjection, resetOutcomeSnapshotCache } from "../lib/outcomes/store.ts";
 import type { OutcomeSnapshot, PersistedSittingOutcomes } from "../lib/outcomes/types.ts";
-import { findClient } from "../lib/sources/legistar/client-registry.ts";
+import { findClient, type LegistarClient } from "../lib/sources/legistar/client-registry.ts";
 import type { LegistarEvent } from "../lib/sources/legistar/types.ts";
 import {
   legistarUtcInstant,
@@ -38,7 +38,8 @@ import {
 } from "../scripts/legistar-outcomes-ingest.mts";
 import { withFetch } from "./helpers/with-fetch.ts";
 
-// Every Legistar byte below is a recorded response under tests/fixtures; the stub refuses any route it was not given.
+// Events, items and votes are recorded responses under tests/fixtures. Native body fixtures are explicit;
+// the stub refuses any route it was not given.
 
 const CONTRACT_ID: string = "pima-legistar-outcomes";
 const SCOPE = "US-AZ:county:pima:legistar-outcomes";
@@ -48,6 +49,11 @@ const B64 = "b".repeat(64);
 
 function fixture<T>(path: string): T {
   return JSON.parse(readFileSync(new URL(`./fixtures/${path}`, import.meta.url), "utf8")) as T;
+}
+
+function requestPath(url: string): string {
+  const parsed = new URL(url);
+  return parsed.pathname;
 }
 
 const PIMA_ENDPOINT = (eventId: number) => `https://webapi.legistar.com/v1/pima/events/${eventId}/eventitems`;
@@ -144,6 +150,7 @@ const RECORDED_VOTES: Readonly<Record<number, unknown[]>> = {
 function recordedLegistar(routes: {
   readonly events: readonly LegistarEvent[] | number;
   readonly items?: Readonly<Record<number, number>>;
+  readonly bodies?: readonly { readonly BodyId: number; readonly BodyName: string }[];
 }) {
   const requests: string[] = [];
   const json = (body: unknown) => new Response(JSON.stringify(body), {
@@ -155,6 +162,7 @@ function recordedLegistar(routes: {
     requests.push(url);
     const parsed = new URL(url);
     assert.equal(parsed.origin, "https://webapi.legistar.com", `unexpected host ${url}`);
+    if (parsed.pathname === "/v1/pima/bodies" && routes.bodies) return json(routes.bodies);
     if (parsed.pathname === "/v1/pima/events") {
       return typeof routes.events === "number" ? new Response("refused", { status: routes.events }) : json(routes.events);
     }
@@ -205,8 +213,9 @@ async function routinePass(
   store: MemoryRoutineDataStore,
   stub: ReturnType<typeof recordedLegistar>,
   clockStart: string,
+  unresolvedClient?: LegistarClient,
 ) {
-  const client = findClient("pima");
+  const client = unresolvedClient ?? findClient("pima");
   assert.ok(client);
   const lines: string[] = [];
   const result = await withFetch(stub.fetchImpl, () => runPimaLegistarOutcomeIngest({
@@ -257,9 +266,8 @@ test("(a) Pima Legistar outcomes are one routine contract on the standing clock,
   assert.equal(contract.scope, SCOPE);
   assert.equal(contract.parserNormalizerVersion, "pima-legistar-outcomes/2");
   assert.deepEqual(contract.acquisitionAdapter, {
-    authorityMode: "SINGLE_ROUTE",
+    authorityMode: "REGISTERED_SOURCE_ROUTES",
     command: ["scripts/legistar-outcomes-ingest.mts", "--promote", "--slug", "pima"],
-    requestedUrl: EVENTS_ROUTE,
   });
   assert.equal(contract.autoPromotable, true);
   assert.equal(contract.classification, "RUNTIME_CIVIC_DATA");
@@ -286,7 +294,7 @@ test("(a) Pima Legistar outcomes are one routine contract on the standing clock,
   // The standing runner accepts it with no special case.
   const task = routineTaskFromContract(contract);
   assert.deepEqual(ROUTINE_SOURCE_TASKS.filter(({ id }) => id === CONTRACT_ID), [task]);
-  assert.equal(task.requestedUrl, EVENTS_ROUTE);
+  assert.equal(task.requestedUrl, "", "each acquired route is checked against Pima's registered authority");
   assert.equal(task.acquisitionFailureDomain, "routine-source:pima-legistar-outcomes");
   assert.equal(task.retryMs, HOUR);
   const succeededAt = Date.parse("2026-09-24T09:00:00.000Z");
@@ -316,7 +324,7 @@ test("(b) a GOOD Pima candidate promotes through the routine door and a later fa
     retrievedAt: "2026-09-20T19:00:00.000Z",
     sourceThrough: "2026-09-20T18:59:00.000Z",
   });
-  assert.equal(routineCandidateContractIssue(CONTRACT_ID, good), null, "the recorded events route is inside the registered SINGLE_ROUTE");
+  assert.equal(routineCandidateContractIssue(CONTRACT_ID, good), null, "the recorded events route is inside Pima's registered source authority");
   const promoted = await processRegisteredRoutineCandidate(memory, CONTRACT_ID, good, "2026-09-20T19:01:00.000Z");
   assert.equal(promoted.candidate.state, "PROMOTED");
   assert.equal(promoted.promoted?.versionId, good.id);
@@ -365,6 +373,73 @@ test("the rolling routine window ends today where the Board sits and reaches bac
   assert.equal(defaults.to, null);
   assert.equal(defaults.maxSittings, 40);
   assert.equal(parsePimaOutcomeIngestArgs(["--dry-run", "--from", "2026-08-01", "--to", "2026-08-31"]).from, "2026-08-01");
+});
+
+test("body-first Pima acquisition promotes the exact native body's outcomes and retains every source receipt", async () => {
+  const store = await storeHoldingSeed();
+  const heldClient = findClient("pima");
+  assert.ok(heldClient);
+  const event = recordedEvent(1825, "2026-09-20T18:00:00.12");
+  const client = { ...heldClient, eventBodyId: undefined, eventBodyName: event.EventBodyName };
+  const stub = recordedLegistar({
+    bodies: [{ BodyId: event.EventBodyId, BodyName: event.EventBodyName }, { BodyId: 999, BodyName: "Another Pima body" }],
+    events: [event, { ...recordedEvent(1821), EventBodyId: 999 }],
+  });
+  const { result } = await routinePass(store, stub, "2026-09-21T00:00:00.000Z", client);
+  assert.equal(result.exitCode, 0);
+  assert.equal(result.promotedSittings, 1, "a different native body cannot become the Board even when the event label matches");
+  assert.equal(requestPath(stub.requests[0]), "/v1/pima/bodies");
+  const eventsRequest = stub.requests.find(url => requestPath(url) === "/v1/pima/events");
+  assert.ok(eventsRequest);
+  assert.match(new URL(eventsRequest).searchParams.get("$filter")!, new RegExp(`EventBodyId eq ${event.EventBodyId}`));
+  assert.ok(!stub.requests.some(url => /\/events\/1821\/eventitems/.test(url)), "wrong-body event items are never requested");
+  const verdict = await supervisorVerdict(store, result.receiptLine, result.exitCode);
+  assert.deepEqual({ outcome: verdict.outcome, issue: verdict.issue }, { outcome: "SUCCESS", issue: null });
+  const saved = await store.readCandidate(verdict.candidateId);
+  assert.equal(requestPath(saved!.candidate.retrieval.requestedUrl), "/v1/pima/bodies",
+    "the candidate names its actual first response, without relabeling body evidence as events");
+  const acquisitions = (saved!.candidate.normalizedPayload as { acquisitions: typeof EVIDENCE }).acquisitions;
+  for (const path of ["/v1/pima/bodies", "/v1/pima/events", "/v1/pima/events/1825/eventitems", "/v1/pima/eventitems/329182/votes"]) {
+    assert.ok(acquisitions.some(row => requestPath(row.requestedUrl) === path && row.source === CONTRACT_ID), `${path} remains attributed evidence`);
+  }
+  const read = await readDoorOutcomeProjection(SCOPE, { store, bypassCache: true });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind === "PROMOTED") {
+    assert.ok(read.value.sittings.some(sitting => sitting.eventId === 1825 && sitting.rollCalls.some(row => row.eventItemId === 329182)));
+    assert.ok(!read.value.sittings.some(sitting => sitting.eventId === 1821));
+  }
+  resetOutcomeSnapshotCache();
+});
+
+test("a requested Pima body that disagrees with the native body is durably held before events and keeps LKG", async () => {
+  const store = await storeHoldingSeed();
+  const before = await store.readPromotion("MEETING_OUTCOME", SCOPE);
+  const heldClient = findClient("pima");
+  assert.ok(heldClient);
+  const event = recordedEvent(1825);
+  const stub = recordedLegistar({ bodies: [{ BodyId: event.EventBodyId, BodyName: event.EventBodyName }], events: [event] });
+  const result = await withFetch(stub.fetchImpl, () => runPimaLegistarOutcomeIngest({
+    store, client: { ...heldClient, eventBodyId: undefined, eventBodyName: event.EventBodyName },
+    args: { ...ROUTINE_ARGS, bodyId: 999 }, window: { from: "2026-05-24", to: "2026-09-21" },
+    now: steppedClock("2026-09-21T00:00:00.000Z"), log: () => {},
+  }));
+  assert.equal(result.exitCode, 2);
+  assert.deepEqual(stub.requests.map(requestPath), ["/v1/pima/bodies"]);
+  const verdict = await supervisorVerdict(store, result.receiptLine, result.exitCode);
+  assert.deepEqual({ outcome: verdict.outcome, issue: verdict.issue }, { outcome: "HELD", issue: null });
+  assert.match((await store.readCandidate(verdict.candidateId))!.candidate.retrieval.failureDetail!, /LEGISTAR_OUTCOME_BODY_IDENTITY_MISMATCH/);
+  assert.equal((await store.readPromotion("MEETING_OUTCOME", SCOPE))?.versionId, before!.versionId);
+  resetOutcomeSnapshotCache();
+});
+
+test("Pima's multi-route contract admits its body lookup but refuses another tenant or API host", () => {
+  const candidateFor = (requestedUrl: string) => pimaLegistarOutcomesCandidate({ snapshot: heldSeed(),
+    acquisitions: [{ ...EVIDENCE[0], requestedUrl, finalUrl: requestedUrl }],
+    retrievedAt: "2026-09-20T19:00:00.000Z", sourceThrough: "2026-09-20T18:59:00.000Z" });
+  assert.equal(routineCandidateContractIssue(CONTRACT_ID, candidateFor("https://webapi.legistar.com/v1/pima/bodies?$top=1000")), null);
+  for (const url of ["https://webapi.legistar.com/v1/mesa/bodies", "https://webapi.legistar.com/v1/pima-other/events", "https://unrelated.example/v1/pima/bodies"]) {
+    assert.notEqual(routineCandidateContractIssue(CONTRACT_ID, candidateFor(url)), null, url);
+  }
 });
 
 test("a Legistar UTC stamp is read as UTC, and a candidate's source-through never precedes the pointer it extends", () => {

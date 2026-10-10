@@ -143,7 +143,7 @@ export interface HeldOfficialStateLegislators {
   readonly scope: StatePeopleJurisdiction;
   readonly versionId: string;
   readonly seats: readonly SeatHolder[];
-  readonly divisions: readonly { officeholderId: string; ocdId: string }[];
+  readonly divisions: readonly { officeholderId: string; ocdId: string; membershipId?: string }[];
 }
 
 export type AvailableOfficialStateLegislatorsRead = Extract<
@@ -186,7 +186,7 @@ export function heldOfficialStateLegislatorsFromRead(
     scope,
     versionId: result.metadata.versionId ?? result.kind,
     seats,
-    divisions: result.value.roster.divisions.map(({ officeholderId, ocdId }) => ({ officeholderId, ocdId })),
+    divisions: result.value.roster.divisions.map(({ officeholderId, ocdId, membershipId }) => ({ officeholderId, ocdId, ...(membershipId ? {membershipId} : {}) })),
   };
 }
 
@@ -221,7 +221,7 @@ export function mergeStatePeople(reference: OfficeholderSet | null, official: Of
   }
   const divisions = [...reference.divisions,...official.divisions].map(row=>({...row,officeholderId:aliases.get(row.officeholderId) ?? row.officeholderId}));
   return JSON.parse(JSON.stringify({currentMembershipComplete:official.currentMembershipComplete ?? false,scope:official.scope,generatedAt:[reference.generatedAt,official.generatedAt].sort().at(-1)!,officeholders:people,
-    divisions:[...new Map(divisions.map(row=>[`${row.officeholderId}|${row.ocdId}|${row.bodyId}`,row])).values()],
+    divisions:[...new Map(divisions.map(row=>[`${row.officeholderId}|${row.ocdId}|${row.bodyId}|${row.membershipId ?? ""}`,row])).values()],
     unmatched:[...new Map([...reference.unmatched,...official.unmatched].map(row=>({...row,officeholderId:aliases.get(row.officeholderId) ?? row.officeholderId})).map(row=>[`${row.officeholderId}|${row.reason}`,row])).values()]}));
 }
 

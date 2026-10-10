@@ -41,7 +41,6 @@ import {
   leadKind,
   noteStateFor,
   noticeLabel,
-  representationForDivision,
   representationNoteFor,
   shouldRenderNotice,
 } from "@/lib/registry/representation";
@@ -49,6 +48,7 @@ import {
   panelSeatsFor,
   FEDERAL_SEAT_TYPES,
   STATE_SEAT_TYPES,
+  LOCAL_SEAT_TYPES,
   type PanelSeat,
 } from "@/lib/state/panel-seats";
 import { agendaAbsenceNote, collapseFootnotes } from "@/lib/registry/wording";
@@ -374,6 +374,7 @@ function CoverageBody({
    * are fetched by division key and injected as rows.
    */
   const stateConfirmed = useConfirmedDivisions(coverage, subject.location, STATE_SEAT_TYPES);
+  const localConfirmed = useConfirmedDivisions(coverage, subject.location, LOCAL_SEAT_TYPES);
   const federalConfirmed = useConfirmedDivisions(
     coverage,
     subject.location,
@@ -398,6 +399,7 @@ function CoverageBody({
     federalConfirmed,
   );
   const stateSeats = statePanel.yours;
+  const localSeats = panelSeatsFor(coverage, subject.location, LOCAL_SEAT_TYPES, localConfirmed).yours;
   const federalSeats = federalPanel.yours;
   const stateLegislatorGaps = stateLegislatorAuthorities.flatMap((authority) => {
     const text = stateLegislatorCoverageGapText(authority);
@@ -691,6 +693,15 @@ function CoverageBody({
         </ul>
       )}
 
+      {localSeats.length > 0 && (
+        <>
+          <p className="t-structure mt-4 text-local">Local officials</p>
+          <ul className="mt-1 space-y-1">
+            {localSeats.map(seat => <SeatRow key={seat.ocdId} seat={seat} zip={zip} onOpenOfficial={onOpenOfficial} />)}
+          </ul>
+        </>
+      )}
+
       {/* One pill for the whole panel; affected rows above carry only an asterisk. */}
       <CouldGovernNotice
         zip={zip}
@@ -782,7 +793,7 @@ function CoverageBody({
         </p>
       ))}
 
-      {seats.length > 0 && seatCounts.named === 0 ? (
+      {seats.length > 0 && seatCounts.named === 0 && statewideExecutives.length === 0 && senators.length === 0 ? (
         // Nothing sourced for any seat — the original wording, still true.
         <p className="mt-2.5 t-detail leading-relaxed text-voice">
           You&apos;re also represented in {seatLine}.

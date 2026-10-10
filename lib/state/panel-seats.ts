@@ -39,6 +39,7 @@ import {
 /** The legislative levels this panel splits into State and Federal sections. */
 export const STATE_SEAT_TYPES = ["sldl", "sldu"] as const;
 export const FEDERAL_SEAT_TYPES = ["cd"] as const;
+export const LOCAL_SEAT_TYPES = ["place"] as const;
 
 /**
  * How a row's people were arrived at, so the panel can say the right sentence

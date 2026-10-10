@@ -6,10 +6,12 @@ import type {
 import {
   holdersFor,
   senatorsFor,
+  stateOcdIdFrom,
   type OfficeholderIndex,
   type SeatHolder,
 } from "../officials/lookup.ts";
 import { statewideExecutivesFor } from "../officials/statewide-executives.ts";
+import { isStatewideExecutive, scopedHolders } from "../officials/scoped-holders.ts";
 import { schoolDependency, type SchoolDependency } from "../officials/school-dependency.ts";
 
 import { bodiesAt, type GeoFeature } from "./resolve.ts";
@@ -182,7 +184,7 @@ export interface CoveredBody {
 export interface Seat {
   ocdId: string;
   label: string;
-  divisionType: "cd" | "sldu" | "sldl";
+  divisionType: "cd" | "sldu" | "sldl" | "place";
   tier: Tier;
   /**
    * Who currently holds this seat, where a sourced record exists. Empty means we have no record, never
@@ -350,7 +352,7 @@ export function summarizeCoverage(
   });
 
   const seats: Seat[] = divisions
-    .filter((d) => SEAT_TYPES.has(d.divisionType))
+    .filter((d) => SEAT_TYPES.has(d.divisionType) || d.divisionType === "place" && holdersFor(officials, d.ocdId).length > 0)
     .map((d) => ({
       ocdId: d.ocdId,
       label: d.label,
@@ -364,9 +366,10 @@ export function summarizeCoverage(
     divisions.map((d) => d.ocdId),
   );
 
-  const statewideExecutives = statewideExecutivesFor(
-    divisions.map((d) => d.ocdId),
-  );
+  const stateIds = [...new Set(divisions.map(d => stateOcdIdFrom(d.ocdId)).filter((id): id is string => id !== null))];
+  const statewideExecutives = stateIds.flatMap(stateId => scopedHolders(
+    statewideExecutivesFor([stateId]), holdersFor(officials, stateId).filter(isStatewideExecutive),
+  ));
 
   // Only claim "unincorporated" when a municipal-shaped division was actually
   // found and every one of them turned out to be statistical. No division at all

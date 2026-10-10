@@ -34,3 +34,22 @@ test('no credentials are sent to an unrecognized Socrata host',async()=>{
   await assert.rejects(readSourceApi('socrata_api',{domain:'evil.example',dataset:'abcd-1234'},{env:{SOCRATA_APP_TOKEN:'secret'},fetchImpl:async()=>{calls++;return new Response('{"results":[]}');}}),/not found/);
   assert.equal(calls,1);
 });
+
+test('a source API request inherits its caller cancellation and keeps the provider timeout',async()=>{
+  const controller=new AbortController();
+  let observed:AbortSignal|null=null;
+  const request=readSourceApi('congress_api',{path:'member/A000001'},{env:{CONGRESS_API_KEY:'fixture-key'},signal:controller.signal,
+    fetchImpl:async (_url,init)=>{
+      observed=init?.signal ?? null;
+      assert.ok(observed);
+      queueMicrotask(()=>controller.abort(new Error('Fixture acquisition deadline')));
+      return await new Promise<Response>((_resolve,reject)=>observed!.addEventListener('abort',()=>reject(observed!.reason),{once:true}));
+    }});
+  await assert.rejects(request,/Fixture acquisition deadline/);
+  assert.equal((observed as AbortSignal|null)?.aborted,true);
+  await assert.rejects(readSourceApi('congress_api',{path:'member/A000001'},{env:{CONGRESS_API_KEY:'fixture-key'},timeoutMs:1,
+    fetchImpl:async (_url,init)=>await new Promise<Response>((_resolve,reject)=>{
+      const keepAlive=setTimeout(()=>reject(new Error('Provider timeout did not run')),1000);
+      init!.signal!.addEventListener('abort',()=>{clearTimeout(keepAlive);reject(init!.signal!.reason);},{once:true});
+    })}),/timeout/i);
+});

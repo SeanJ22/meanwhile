@@ -70,6 +70,13 @@ export function groupOfficials(coverage: CoverageSummary): TieredOfficials {
     }
   }
 
+  // Native local offices can be sourced before a meeting body or its membership is known.
+  for (const seat of coverage.seats.filter(row => row.tier === "local")) {
+    for (const holder of seat.representatives) {
+      push(local, holder, holder.officeTitle, "local", seat.ocdId);
+    }
+  }
+
   // STATE — legislative seats first (district scope), then the governor
   // and any other statewide executive (statewide scope). sldl before
   // sldu: the larger chamber's district is the narrower one.

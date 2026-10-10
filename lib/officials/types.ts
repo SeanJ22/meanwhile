@@ -52,6 +52,8 @@ export interface Officeholder {
   partyLabel: string | null;
   /** The officeholder's official site. */
   websiteUrl: string | null;
+  /** Direct profile links/sources in this person's native record; leads until the page and portrait verify. */
+  profileUrls?: readonly string[];
   /** Official contact form, where one is published. */
   contactFormUrl: string | null;
   phone: string | null;

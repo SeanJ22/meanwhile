@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { readFileSync } from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
 import { stringify } from "yaml";
 import { yamlToPeople, normalize } from "../lib/sources/plural/index.ts";
@@ -7,11 +8,12 @@ import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { allSeatHolders, seatHoldersForDivision, seatHoldersForOffice, settleCoverageStateLegislators } from "../lib/registry/server.ts";
 import { summarizeCoverage } from "../lib/registry/coverage.ts";
 import { namedOfficeholders, readerOfficeholders } from "../lib/ask/server-sources.ts";
-import { composeReaderOfficials, readerOfficialsQuestion } from "../lib/ask/reader-officials.ts";
+import { composeReaderOfficials, readerOfficialsQuestion, stateDivisionsOf } from "../lib/ask/reader-officials.ts";
 import { GET as representation } from "../app/api/representation/[...division]/route.ts";
 import { CoverageNotice } from "../components/map/coverage-notice.tsx";
 import { DataProvider, type ShellData } from "../lib/state/data.tsx";
 import { scopedHolders } from "../lib/officials/scoped-holders.ts";
+import { groupOfficials } from "../lib/officials/tier-grouping.ts";
 import { registryRuntimeProjectionIssues } from "../lib/registry/runtime-data-plane.ts";
 import { withoutPlaceholderBodies } from "../lib/registry/census-placeholders.ts";
 import { currentBodyRosters, rosterHoldersForBody } from "../lib/registry/body-rosters.ts";
@@ -162,4 +164,69 @@ test("coverage gives the exact official mayor precedence over a conflicting bulk
     new Map([[divisionId, [bulk]]]), [division], null);
   const mayors = coverage.seats.flatMap(row => row.representatives).filter(row => row.officeTitle === "Mayor");
   assert.deepEqual(mayors.map(row => row.id), [official.id]);
+});
+
+test("captured county mayors and district executives reach exact routes, first coverage and Ask without invented bodies", async () => {
+  await installRegistryAuthority();
+  const captured = JSON.parse(readFileSync(new URL("./fixtures/plural/held-native-edge-cases.json", import.meta.url), "utf8")) as {
+    scope: string; source_url: string; body: string;
+  }[];
+  const models = new Map<string, OfficialStateLegislatorReadModel>();
+  for (const jurisdiction of new Set(captured.map(row => row.scope.split(":")[0] as `US-${string}`))) {
+    const native = captured.filter(row => row.scope.startsWith(`${jurisdiction}:`)).flatMap(row =>
+      yamlToPeople(row.body, jurisdiction.slice(3).toLowerCase(), row.source_url, NOW));
+    models.set(jurisdiction, { formatVersion: 1, sourceId: "plural-openstates", jurisdiction,
+      term: "d5cc49a9e5bc70e22f0ab0273842973fc1b144fa", generatedAt: NOW,
+      roster: normalize(native, new Map(), NOW, jurisdiction) });
+  }
+  const dc = "ocd-division/country:us/district:dc";
+  assert.deepEqual(stateDivisionsOf([`${dc}/ward:1`, "ocd-division/country:us/territory:pr/sldl:1"]),
+    [dc, "ocd-division/country:us/territory:pr"]);
+  const cases = [
+    { scope: "US-HI", id: "ocd-division/country:us/state:hi/county:honolulu", type: "county", name: "Rick Blangiardi", title: "Mayor", question: "Who is my county mayor?" },
+    { scope: "US-HI", id: "ocd-division/country:us/state:hi/county:kauai", type: "county", name: "Derek S.K. Kawakami", title: "Mayor", question: "Who is my mayor?" },
+    { scope: "US-DC", id: dc, type: "state", name: "Muriel Bowser", title: "Mayor", question: "Who is my mayor?" },
+    { scope: "US-DE", id: "ocd-division/country:us/state:de", type: "state", name: "Anthony Albence", title: "Chief Election Officer", question: "Who is my chief election officer?" },
+    { scope: "US-PR", id: "ocd-division/country:us/territory:pr", type: "state", name: "Francisco Rosado Colomer", title: "Chief Election Officer", question: "Who is my chief election officer?" },
+  ];
+  const authority = { edgeOnly: true as const, stateLegislators: { jurisdictions: new Set(models.keys()), load: async (scope: string) => {
+    const value = models.get(scope);
+    return value ? { value, versionId: `fixture:held-native:${scope}` } : null;
+  } } };
+  for (const example of cases) {
+    await withReaderAuthorityEdge(authority, async () => {
+      const response = await representation(new Request(`https://example.test/api/representation/${example.id}`), {
+        params: Promise.resolve({ division: example.id.split("/") }),
+      });
+      const payload = await response.json();
+      assert.equal(response.status, 200);
+      assert.deepEqual(payload.holders.map((row: SeatHolder) => [row.name, row.officeTitle]), [[example.name, example.title]]);
+      const held = await readerOfficeholders([example.id]);
+      const answer = composeReaderOfficials({ ask: readerOfficialsQuestion(example.question)!, held: held.held,
+        holdingFailed: held.loaderFailures > 0, placesReached: 4 });
+      assert.ok(answer?.answer.includes(example.name));
+      assert.doesNotMatch(answer?.answer ?? "", /which city's mayor is yours/);
+      assert.ok(answer?.citedUrls.some(url => url.includes("/openstates/people/")));
+      assert.ok(!payload.holders.some((row: SeatHolder) => row.name === "Janesville City Council" || row.officeTitle === "Governor"));
+    });
+    const division: Division = { ocdId: example.id, label: example.id === dc ? "District of Columbia" : example.id.split(":").at(-1)!,
+      divisionType: example.type, tier: example.type === "county" ? "local" : "state", state: example.scope.slice(3),
+      geoid: null, lsad: null, parentOcdId: null, funcstat: "A", classfp: null, canonicalOcdId: example.id,
+      canonicalMatch: "exact", sourceDataset: "TIGER_GENZ2025",
+      provenance: { sourceUrl: "https://census.gov", sourceOrg: "Census fixture", collectedAt: NOW, verifiedAt: null } };
+    const value = models.get(example.scope)!;
+    const settled = await settleCoverageStateLegislators([division], new Map(), async scope => ({ kind: "BOOTSTRAP", value,
+      detail: "Held native source fixture", metadata: { recordClass: "STATE_LEGISLATOR", scope, sourceId: value.sourceId, version: null,
+        versionId: "native-roles", lastKnownGoodVersionId: "native-roles", sourceThrough: NOW, retrievedAt: NOW,
+        promotedAt: null, stale: "CURRENT", staleAt: null } }));
+    const coverage = summarizeCoverage([0, 0], [], new Map([[example.id, division]]), [], 0, settled.officials, [division], null, settled.authorities);
+    assert.deepEqual(coverage.bodies, [], "a native office never invents a board membership");
+    const groups = groupOfficials(coverage);
+    assert.ok([...groups.local, ...groups.state].some(row => row.holder.name === example.name && row.holder.officeTitle === example.title));
+    const data: ShellData = { allMeetings: [], meetings: [], venues: [], result: null, location: null, drawnDistricts: [],
+      dropped: 0, searchFailed: false, atAddress: false, governing: null, zipPartial: null, basis: "ZIP" };
+    const html = renderToStaticMarkup(<DataProvider value={data}><CoverageNotice tier="none" zip="96813" radiusKm={0}
+      requestedRadiusKm={0} count={0} coverage={coverage} /></DataProvider>);
+    assert.ok(html.includes(example.name), `${example.name} appears on first coverage`);
+  }
 });

@@ -9,6 +9,7 @@ import { portraitHash, verifyPortraitSources, type PortraitSources } from "../li
 import { storeVerifiedPortrait, type PortraitRuntime } from "../lib/photos/store.ts";
 import { portraitBindingMatches } from "../lib/photos/binding.ts";
 import type { KnownRelease, KnownReleaseOptions } from "../lib/sources/known-release.ts";
+import heldProfiles from "./fixtures/plural/held-native-profile-leads.json" with {type:"json"};
 
 const SOURCE_DATE="2026-10-08T12:00:00.000Z",START="2026-10-09T21:00:00.000Z",CHECK="2026-10-09T21:00:05.000Z",VERIFIED="2026-10-09T21:00:06.000Z";
 const sha="a".repeat(40);
@@ -100,4 +101,69 @@ test("state portrait cancellation retains work and prioritizes untouched native 
   const first=await run();assert.equal(first.requested.length,3);
   assert.ok(first.result!.candidate.excludedFacts?.some(row=>row.code==="STATE_PORTRAIT_WORK_REMAINS"));
   const second=await run();assert.deepEqual(second.requested.slice(0,2),["https://legislature.example.gov/members/3","https://legislature.example.gov/members/4"]);
+});
+
+const HELD_NOW="2026-10-10T01:00:00.000Z";
+async function seedHeldProfile(row:typeof heldProfiles[number],extraLinks=""){
+  const store=new MemoryRoutineDataStore(),state=row.scope.slice(3,5).toLowerCase();
+  const releaseId=row.source_url.split("/").at(-1)!;
+  const url=`https://raw.githubusercontent.com/openstates/people/${releaseId}/${row.member}`;
+  const body=row.body+extraLinks;
+  const roster=normalize(yamlToPeople(body,state,url,HELD_NOW),new Map(),row.retrieved_at,`US-${state.toUpperCase()}`);
+  const published=await publishStatePeople({store,state,roster,acquisitions:[{requestedUrl:url,finalUrl:url,httpStatus:200,
+    retrievedAt:row.retrieved_at,body}],releaseId,now:HELD_NOW});
+  assert.ok(published.outcome.promoted,JSON.stringify(published.outcome.candidate.receipt));
+  return {store,state,person:roster.officeholders[0]};
+}
+function heldPage(options:KnownReleaseOptions,text:string):KnownRelease{
+  const bytes=new TextEncoder().encode(text);
+  return {...profile(options),bytes,sha256:portraitHash(bytes).slice(7),retrievedAt:HELD_NOW,sourceObservedAt:HELD_NOW,checkedAt:HELD_NOW};
+}
+test("exact held links and sources supply profiles when a native person's selected website is empty or old",async()=>{
+  for(const row of heldProfiles){
+    const {store,state,person}=await seedHeldProfile(row),images=await imageStore(),requests:string[]=[];
+    assert.ok(person.profileUrls?.length);
+    const result=await refreshStatePeoplePortraits({store,state,now:HELD_NOW},{now:()=>HELD_NOW,storePortrait:images.store,
+      acquire:async options=>{
+        requests.push(options.url);
+        return heldPage(options,`<h1>${person.name}</h1><img alt="Portrait of ${person.name}" src="/verified-person.png">`);
+      }});
+    assert.ok(result?.outcome.promoted,JSON.stringify(result?.outcome.candidate.receipt));
+    assert.equal(requests.length,1,"unrelated third-party and old nonofficial source URLs are not acquired");
+    assert.ok(person.profileUrls!.includes(requests[0]));
+    const read=await readOpenStatesPeopleProjection(`US-${state.toUpperCase()}`,{store,now:HELD_NOW,bypassCache:true});
+    assert.equal(read.kind,"PROMOTED");if(read.kind!=="PROMOTED")continue;
+    const shown=read.value.roster.officeholders[0];
+    assert.ok(shown.photo,JSON.stringify(result!.candidate.excludedFacts));
+    assert.ok(portraitBindingMatches(person.personId!,shown.photo));
+    assert.equal(shown.personId,person.personId);assert.equal(shown.provenance.collectedAt,row.retrieved_at);
+    assert.equal(shown.photo.verification?.ownPageUrl,requests[0]);
+  }
+});
+test("failed held profiles advance to the next exact native link without accepting a different person's image",async()=>{
+  const row=heldProfiles.find(row=>row.member.includes("Corey-"))!;
+  const first="https://www.tempe.gov/retired-profile";
+  const {store,state,person}=await seedHeldProfile(row,`\nlinks:\n- url: ${first}\n`),images=await imageStore();
+  const requests:string[]=[];
+  const fail=await refreshStatePeoplePortraits({store,state,now:HELD_NOW},{now:()=>HELD_NOW,storePortrait:images.store,
+    acquire:async options=>{
+      requests.push(options.url);
+      return heldPage(options,'<h1>Different Person</h1><img alt="Portrait of Different Person" src="/different.png">');
+    }});
+  assert.ok(fail?.outcome.promoted);assert.equal(images.writes.length,0);
+  assert.deepEqual(requests,[first,"https://www.tempe.gov/government/mayor-and-city-council/corey-d-woods-mayor"]);
+  const failure=fail!.candidate.excludedFacts?.find(fact=>fact.code==="STATE_PORTRAIT_IMAGE_NOT_FOUND");
+  assert.deepEqual((failure?.record as {profileAttempts:{sourceUrl:string}[]}).profileAttempts.map(attempt=>attempt.sourceUrl),requests);
+  requests.length=0;
+  const success=await refreshStatePeoplePortraits({store,state,now:HELD_NOW},{now:()=>HELD_NOW,storePortrait:images.store,
+    acquire:async options=>{
+      requests.push(options.url);
+      if(options.url===first)throw Error("Held old profile is no longer available");
+      return heldPage(options,`<h1>${person.name}</h1><img alt="Portrait of ${person.name}" src="/correct.png">`);
+    }});
+  assert.ok(success?.outcome.promoted);assert.equal(requests.length,2);assert.equal(images.writes.length,1);
+  const read=await readOpenStatesPeopleProjection("US-AZ",{store,now:HELD_NOW,bypassCache:true});
+  assert.equal(read.kind,"PROMOTED");if(read.kind!=="PROMOTED")return;
+  assert.ok(portraitBindingMatches(person.personId!,read.value.roster.officeholders[0].photo!));
+  assert.deepEqual(success!.candidate.excludedFacts,[]);
 });

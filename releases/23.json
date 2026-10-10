@@ -64,5 +64,13 @@
     "run_id": 38015653417,
     "conclusion": "success",
     "observed_at": "2026-10-10T02:12:12Z"
+  },
+  "runtime_adoption": {
+    "state": "pending",
+    "latest_observed_sha": "fd8ffd995eaf4a86fc731609df58c5d4d2397255",
+    "target_sha": "4f8bc8d5bcfb1606ce436c9d68f4098b68cafcb7",
+    "last_heartbeat_at": "2026-10-10T02:13:46.486Z",
+    "checked_at": "2026-10-10T02:23:04Z",
+    "detail": "Research cycle finished; the existing automatic handoff waits for standing work. Worker leases renewed through 02:20. No recorded runtime handoff refusal; no new-parser candidates yet."
   }
 }

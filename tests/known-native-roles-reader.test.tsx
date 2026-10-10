@@ -1,0 +1,127 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+import { renderToStaticMarkup } from "react-dom/server";
+import { stringify } from "yaml";
+import { yamlToPeople, normalize } from "../lib/sources/plural/index.ts";
+import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
+import { allSeatHolders, seatHoldersForDivision, seatHoldersForOffice, settleCoverageStateLegislators } from "../lib/registry/server.ts";
+import { summarizeCoverage } from "../lib/registry/coverage.ts";
+import { namedOfficeholders, readerOfficeholders } from "../lib/ask/server-sources.ts";
+import { composeReaderOfficials, readerOfficialsQuestion } from "../lib/ask/reader-officials.ts";
+import { GET as representation } from "../app/api/representation/[...division]/route.ts";
+import { CoverageNotice } from "../components/map/coverage-notice.tsx";
+import { DataProvider, type ShellData } from "../lib/state/data.tsx";
+import { scopedHolders } from "../lib/officials/scoped-holders.ts";
+import { registryRuntimeProjectionIssues } from "../lib/registry/runtime-data-plane.ts";
+import { withoutPlaceholderBodies } from "../lib/registry/census-placeholders.ts";
+import { registryTransferImport, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import type { OfficialStateLegislatorReadModel } from "../lib/civic-data/candidate-builders.ts";
+import type { Division } from "../lib/registry/types.ts";
+import type { SeatHolder } from "../lib/officials/lookup.ts";
+
+const NOW = "2026-10-09T18:00:00Z";
+const STATE = "ocd-division/country:us/state:oh";
+const PLACE = `${STATE}/place:example_city`;
+const OTHER = `${STATE}/place:another_city`;
+const source = (name: string) => `https://raw.githubusercontent.com/openstates/people/${"a".repeat(40)}/data/oh/${name}.yml`;
+
+function fixture(): OfficialStateLegislatorReadModel {
+  const rows = [
+    { id: "00000000-0000-0000-0000-000000000001", name: "Morgan Governor", type: "governor", division: STATE },
+    { id: "00000000-0000-0000-0000-000000000002", name: "Taylor Mayor", type: "mayor", division: PLACE },
+    { id: "00000000-0000-0000-0000-000000000003", name: "Other Mayor", type: "mayor", division: OTHER },
+    { id: "00000000-0000-0000-0000-000000000004", name: "Former Mayor", type: "mayor", division: PLACE, end: "2025-12-31" },
+  ];
+  const people = rows.flatMap(row => yamlToPeople(stringify({ id: `ocd-person/${row.id}`, name: row.name,
+    roles: [{ type: row.type, jurisdiction: row.division.replace("ocd-division/", "ocd-jurisdiction/") + "/government",
+      start_date: "2023-01-01", end_date: row.end ?? "2027-12-31" }],
+    offices: [{ classification: "primary", voice: "555-0100", address: "1 Government Plaza" }],
+    links: [{ url: "https://example.gov/profile" }], sources: [{ url: "https://example.gov/profile" }],
+  }), "oh", source(row.id), NOW));
+  return { formatVersion: 1, sourceId: "plural-openstates", jurisdiction: "US-OH", term: "a".repeat(40),
+    generatedAt: NOW, roster: normalize(people, new Map(), NOW, "US-OH") };
+}
+
+function edge(value: OfficialStateLegislatorReadModel) {
+  return { edgeOnly: true as const, stateLegislators: { jurisdictions: new Set(["US-OH", "US-CA"]), load: async (scope: string) => {
+    assert.equal(scope, "US-OH", "a local reader loads only its state's known people");
+    return { value, versionId: "fixture:native-roles" };
+  } } };
+}
+
+test("known governor and mayor reach real division routes and Ask without registry, federal or finance holdings", async () => {
+  const value = fixture();
+  assert.equal(value.roster.officeholders.length, 3, "expired membership does not become a current officeholder");
+  await withReaderAuthorityEdge(edge(value), async () => {
+    assert.deepEqual((await seatHoldersForOffice(STATE, "Governor")).map(row => row.name), ["Morgan Governor"]);
+    assert.deepEqual((await seatHoldersForDivision(PLACE)).map(row => row.name), ["Taylor Mayor"]);
+    const response = await representation(new Request(`https://example.test/api/representation/${PLACE}`), {
+      params: Promise.resolve({ division: PLACE.split("/") }),
+    });
+    const body = await response.json();
+    assert.equal(response.status, 200); assert.equal(body.holderStatus, "HELD");
+    assert.deepEqual(body.holders.map((row: SeatHolder) => row.name), ["Taylor Mayor"]);
+    assert.equal(body.metadataStatus, "HOLDING_UNAVAILABLE");
+    const held = await readerOfficeholders([PLACE]);
+    assert.deepEqual(held.seats.map(row => row.name).sort(), ["Morgan Governor", "Taylor Mayor"]);
+    for (const [question, expected] of [["Who is my governor?", "Morgan Governor"], ["Who is my mayor?", "Taylor Mayor"]]) {
+      const ask = readerOfficialsQuestion(question)!;
+      const answer = composeReaderOfficials({ ask, held: held.held, holdingFailed: held.loaderFailures > 0 });
+      assert.ok(answer?.answer.includes(expected));
+      assert.ok(answer?.citedUrls.some(url => url.startsWith("https://raw.githubusercontent.com/openstates/people/")));
+      assert.ok(!answer?.answer.includes("Other Mayor") && !answer?.answer.includes("Former Mayor"));
+    }
+    assert.deepEqual((await namedOfficeholders("Tell me about Taylor Mayor", [], [PLACE])).map(row => row.name), ["Taylor Mayor"]);
+    assert.equal((await allSeatHolders([PLACE])).length, 3, "named-person lookup can use the held state roster without claiming each person governs this place");
+  });
+});
+
+test("the first coverage read renders known local and state people with no legislative roster or invented body", async () => {
+  await installRegistryAuthority();
+  const value = fixture();
+  const place: Division = { ocdId: PLACE, label: "Example City", divisionType: "place", tier: "local", geoid: "3912345",
+    state: "OH", lsad: null, parentOcdId: STATE, funcstat: "A", classfp: "C1", canonicalOcdId: PLACE,
+    canonicalMatch: "exact", sourceDataset: "TIGER_GENZ2025",
+    provenance: { sourceUrl: "https://census.gov", sourceOrg: "Census fixture", collectedAt: NOW, verifiedAt: null } };
+  const settled = await settleCoverageStateLegislators([place], new Map(), async scope => ({ kind: "BOOTSTRAP", value,
+    detail: "Held fixture", metadata: { recordClass: "STATE_LEGISLATOR", scope, sourceId: value.sourceId, version: null,
+      versionId: "native-roles", lastKnownGoodVersionId: "native-roles", sourceThrough: NOW, retrievedAt: NOW,
+      promotedAt: null, stale: "CURRENT", staleAt: null } }));
+  const coverage = summarizeCoverage([0, 0], [], new Map([[PLACE, place]]), [], 0, settled.officials, [place], null, settled.authorities);
+  assert.deepEqual(coverage.bodies, [], "a people source does not invent body membership");
+  assert.deepEqual(coverage.statewideExecutives.map(row => row.name), ["Morgan Governor"]);
+  assert.deepEqual(coverage.seats.flatMap(row => row.representatives.map(holder => holder.name)), ["Taylor Mayor"]);
+  const data: ShellData = { allMeetings: [], meetings: [], venues: [], result: null, location: null, drawnDistricts: [],
+    dropped: 0, searchFailed: false, atAddress: false, governing: null, zipPartial: null, basis: "ZIP" };
+  const html = renderToStaticMarkup(<DataProvider value={data}><CoverageNotice tier="none" zip="43215" radiusKm={0}
+    requestedRadiusKm={0} count={0} coverage={coverage} /></DataProvider>);
+  assert.match(html, /Morgan Governor/); assert.match(html, /Taylor Mayor/);
+  assert.doesNotMatch(html, /Other Mayor|Former Mayor/);
+});
+
+test("an exact official office holder takes precedence without joining names or removing other council seats", async () => {
+  const value = fixture();
+  const { projection } = registryTransferImport();
+  const official = { ...projection.payload.statewideExecutives[0], stateOcdId: STATE,
+    holder: { ...projection.payload.statewideExecutives[0].holder, id: "official:oh-governor", name: "Official Governor", officeTitle: "Governor", photoUrl: null } };
+  const bridge = projection.payload.officialCandidacies.rows.find(row => row.holder.id === projection.payload.statewideExecutives[0].holder.id)!;
+  const registry = {
+    ...projection.payload, statewideExecutives: [...projection.payload.statewideExecutives, official],
+    registry: withoutPlaceholderBodies(projection.payload.registry),
+    officialCandidacies: { ...projection.payload.officialCandidacies, rows: [...projection.payload.officialCandidacies.rows,
+      { ...bridge, holder: { ...bridge.holder, id: official.holder.id, name: official.holder.name,
+        officeTitle: official.holder.officeTitle, divisions: [STATE] }, status: "NO_APPLICABLE_CANDIDACY" as const,
+        candidacy: null, unresolvedCandidacyIds: [] }], },
+  };
+  assert.deepEqual(registryRuntimeProjectionIssues(registry), [], "the competing authority is a valid reader projection");
+  await withReaderAuthorityEdge({ ...edge(value), registryRuntime: { versionId: "fixture:official", value: registry } }, async () => {
+    assert.deepEqual((await seatHoldersForOffice(STATE, "Governor")).map(row => row.name), ["Official Governor"]);
+    const all = await allSeatHolders([PLACE]);
+    assert.ok(all.some(row => row.name === "Official Governor"));
+    assert.ok(!all.some(row => row.name === "Morgan Governor"));
+    const holder = (await seatHoldersForDivision(PLACE))[0];
+    const first = { ...holder, id: "council:one", officeTitle: "Councilmember" };
+    const second = { ...first, id: "council:two", personId: "another-native-person", nativeIds: undefined };
+    assert.equal(scopedHolders([first], [second]).length, 2, "a multi-seat office is not a person identity");
+  });
+});

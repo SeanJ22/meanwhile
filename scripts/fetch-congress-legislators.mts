@@ -1,7 +1,6 @@
 /** @freshness-reads-here — the held capture keeps the date the source bytes were read. */
 import { parse } from "yaml";
-import { stamp } from "./stamp.mts";
-import { failedFederalDirectoryCandidate, federalDirectoryCandidate, type FederalDirectoryAcquisition } from "../lib/officials/federal-directory-data-plane.ts";
+import { failedFederalDirectoryCandidate, federalDirectoryCandidate, FEDERAL_DIRECTORY_PARSER_VERSION, type FederalDirectoryAcquisition } from "../lib/officials/federal-directory-data-plane.ts";
 import { congressPortraits } from "../lib/officials/congress-portraits.ts";
 import { normalizeCongressDirectory } from "../lib/officials/congress-normalize.ts";
 import { readFederalDirectoryProjection } from "../lib/officials/federal-directory-read-model.ts";
@@ -17,7 +16,7 @@ let attemptPersisted = false, writePrepared = false;
 async function main() {
   if (!process.argv.includes("--promote")) throw Error("Run with --promote; tracked federal files are first-seed/test evidence only.");
   prepareProductionCivicDataWrite(); writePrepared = true;
-  const store = new PostgresRoutineDataStore(), now = stamp();
+  const store = new PostgresRoutineDataStore(), now = new Date().toISOString();
   const priorRead = await readFederalDirectoryProjection({store,now,bypassCache:true});
   if (priorRead.kind === "STORE_UNREACHABLE") throw Error("CONGRESS_PRIOR_UNAVAILABLE");
   const prior = priorRead.kind === "PROMOTED" || priorRead.kind === "BOOTSTRAP" ? priorRead.value : null;
@@ -34,7 +33,7 @@ async function main() {
         if (name === "legislators-current" && !(value as unknown[]).length) throw Error("CONGRESS_CORE_EMPTY");
         return {text,value};
       };
-      const held = await acquireKnownRelease({sourceId:"congress-directory-project",releaseId:`${sourceSha}/${name}`,url,parserVersion:"congress-directory/3",maxBytes:16*1024*1024,checkAfterMs:365*86400000,signal:AbortSignal.timeout(30000),headers:{accept:"text/plain"},validate:bytes=>{decode(bytes);}});
+      const held = await acquireKnownRelease({sourceId:"congress-directory-project",releaseId:`${sourceSha}/${name}`,url,parserVersion:FEDERAL_DIRECTORY_PARSER_VERSION,maxBytes:16*1024*1024,checkAfterMs:365*86400000,signal:AbortSignal.timeout(30000),headers:{accept:"text/plain"},validate:bytes=>{decode(bytes);}});
       const parsed = decode(held.bytes);
       raw[name] = parsed.value; dates[name] = held.retrievedAt;
       acquisitions.push({requestedUrl:held.requestedUrl,finalUrl:held.finalUrl,httpStatus:held.httpStatus,body:parsed.text,retrievedAt:held.retrievedAt,vaultKey:held.vaultKey,sourceCheck});
@@ -46,25 +45,30 @@ async function main() {
     if (!raw["legislators-current"]) continue;
     const projection = normalizeCongressDirectory(raw,sourceSha,dates["legislators-current"]!,prior,dates,now);
     const candidate = federalDirectoryCandidate({acquisitions,retrievedAt:dates["legislators-current"]!,projection});
-    const outcome = await processRegisteredManualCandidate(store,"congress-bulk-roster",candidate,now);
+    const outcome = await processRegisteredManualCandidate(store,"congress-bulk-roster",candidate,new Date().toISOString());
     attemptPersisted = true;
     printSourceRunnerReceipt("congress-bulk-roster",candidate,outcome);
     if (!outcome.promoted && !outcome.confirmed) throw Error(`Federal directory held as ${outcome.candidate.state}: ${outcome.candidate.failureDetail ?? "validation refused"}`);
   }
   const latest=await readFederalDirectoryProjection({store,now,bypassCache:true});
   if(latest.kind === "PROMOTED") {
-    const projection=await congressPortraits(latest.value,now,AbortSignal.timeout(120000));
-    if(JSON.stringify(projection)!==JSON.stringify(latest.value)) {
-      const candidate=federalDirectoryCandidate({acquisitions,retrievedAt:dates["legislators-current"]!,projection});
-      const outcome=await processRegisteredManualCandidate(store,"congress-bulk-roster",candidate,now);
+    const previousExcludedFacts = priorRead.kind === "PROMOTED" && priorRead.metadata.versionId
+      ? (await store.readCandidate(priorRead.metadata.versionId))?.candidate.excludedFacts : undefined;
+    const portraits=await congressPortraits(latest.value,new Date().toISOString(),AbortSignal.timeout(120000),{previousExcludedFacts});
+    if(portraits.excludedFacts.length || JSON.stringify(portraits.projection)!==JSON.stringify(latest.value)) {
+      const candidate=federalDirectoryCandidate({acquisitions,retrievedAt:dates["legislators-current"]!,projection:portraits.projection,excludedFacts:portraits.excludedFacts});
+      // The field-attempt receipt is new evidence even when the accepted person payload is unchanged.
+      const outcome=await processRegisteredManualCandidate(store,"congress-bulk-roster",candidate,new Date().toISOString(),undefined,{confirmUnchanged:portraits.excludedFacts.length === 0});
       printSourceRunnerReceipt("congress-bulk-roster",candidate,outcome);
+      console.log(`Congress portraits: ${portraits.attempted} known members attempted; ${portraits.excludedFacts.length} source or field gaps recorded.`);
+      if (!outcome.promoted && !outcome.confirmed) throw Error(`Federal portraits held as ${outcome.candidate.state}: ${outcome.candidate.failureDetail ?? "validation refused"}`);
     }
   }
 }
 void main().catch(async (error:unknown)=>{
   const detail = error instanceof Error ? error.message : String(error);
   if (writePrepared && !attemptPersisted) {
-    try { const now=stamp(), candidate=failedFederalDirectoryCandidate(now,detail); const outcome=await processRegisteredManualCandidate(new PostgresRoutineDataStore(),"congress-bulk-roster",candidate,now); printSourceRunnerReceipt("congress-bulk-roster",candidate,outcome); }
+    try { const now=new Date().toISOString(), candidate=failedFederalDirectoryCandidate(now,detail); const outcome=await processRegisteredManualCandidate(new PostgresRoutineDataStore(),"congress-bulk-roster",candidate,now); printSourceRunnerReceipt("congress-bulk-roster",candidate,outcome); }
     catch (receiptError) { console.error(`Failed attempt receipt: ${String(receiptError)}`); }
   }
   console.error(detail); process.exitCode=1;

@@ -118,7 +118,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     recordClass: "FEDERAL_DIRECTORY",
     scope: "US:current-congress-directory",
     command: ["scripts/fetch-congress-legislators.mts", "--promote"],
-    parserNormalizerVersion: "congress-directory/3",
+    parserNormalizerVersion: "congress-directory/4",
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "congress-directory-project" },
     validationContract: VALIDATION_CHECKS,
     canonicalProductionStore: STORE,

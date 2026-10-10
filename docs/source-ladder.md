@@ -285,9 +285,9 @@ audit rows.
   CSVs, which carry the legislatures' published values; per-member
   direct-from-legislature verification is open. `attemptedAt: 2026-08-14`.
 - Photos: azleg.gov / njleg.state.nj.us / gc.nh.gov member pages publish
-  portraits; **their reuse terms are unhunted** — no state photo ships until
-  a per-state terms record exists (D20's unknown-is-not-clearable rule).
-  `NOT_ATTEMPTED` as of 2026-08-14.
+  portraits. The shared portrait verifier checks the native person binding,
+  saved source evidence and decoded image under rulings §3, then publishes
+  the immutable image through the existing portrait endpoint.
 
 **Federal roll-call endpoints** (D02; exact endpoints, all verified 200 on
 2026-08-14):
@@ -1184,24 +1184,19 @@ Five files, with the counts each returned at this pin:
 **Joins are by BIOGUIDE, never by name.** A name join is invisible until two
 members share a surname.
 
-**The prior bioguide rungs are DEMOTED to fallback-and-audit.** The federal
-roster already carried a birthday and a term end for all 537 from the same
-upstream through its **unpinned** JSON mirror
-(`unitedstates.github.io/congress-legislators/legislators-current.json`).
-`pnpm congress:migrate` DIFFS the two and writes every disagreement to
-`docs/congress-legislators-diff.md` as a finding for the author to rule on —
-an upstream PR to file, or a stale value of ours. **Nothing is silently
-overwritten.** First run: 537 of 537 matched, 0 disagreements.
+The recorded comparison at this pin matched all 537 members to the
+previously held JSON export, with zero disagreements.
 
-**The recency exception, named.** Official pages win on recency — a death, a
-resignation or a swearing-in may be corrected from the chamber's own page
-without waiting for the repo. The repo is the baseline, not the ceiling; the
-migration never reverses such a correction because it never overwrites.
-(Seen live: Adelita S. Grijalva is in our roster and carries no social in
-this pin, because she took the seat after the pinned commit. Her card renders
-the absent channels as absent pills, which is the correct answer.)
+The standing source contract runs the Congress directory script with
+`node --experimental-strip-types scripts/fetch-congress-legislators.mts --promote`.
+It resolves the current upstream commit, reuses immutable source
+captures and publishes through the routine civic data pipeline. Optional
+contact, office, social, committee and portrait facts publish independently;
+a failed update retains the last verified value and its source date.
 
-Commands: `pnpm congress:fetch` then `pnpm congress:migrate`.
+The counts above describe the recorded source revision. Current membership
+comes from the promoted directory and its explicit as-of date. Official
+sources take precedence under rulings §3.
 
 ---
 

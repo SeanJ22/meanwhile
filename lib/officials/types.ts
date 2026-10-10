@@ -76,6 +76,10 @@ export interface PersonMembership {
   readonly jurisdiction: string;
   readonly chamber?: string;
   readonly district?: string;
+  readonly officeTitle?: string;
+  readonly level?: OfficeLevel;
+  readonly current?: boolean;
+  readonly divisionId?: string;
   readonly termStart?: string | null;
   readonly termEnd?: string | null;
   readonly sourceUrl: string;
@@ -111,6 +115,8 @@ export type SocialAccounts = DirectorySocial | readonly SocialAccount[];
 export interface OfficeholderDivision {
   officeholderId: string;
   ocdId: OcdId;
+  /** The exact current role, when a person serves more than one office. */
+  membershipId?: string;
   /** Set where the seat belongs to a specific body rather than a district. */
   bodyId: string | null;
 }

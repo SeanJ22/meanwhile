@@ -14,7 +14,6 @@ import type { StanceTopic } from "../stances/topics.ts";
 import type { BallotAbsence, BallotSet, Contest } from "../ballot/types.ts";
 import { allSeatHolders, seatHolderById, seatHoldersForDivision } from "../registry/server.ts";
 import { personIdentityKeys, statePeopleScopeForId } from "../officials/people-identity.ts";
-import { statewideExecutivesFor } from "../officials/statewide-executives.ts";
 import type { SeatHolder } from "../officials/lookup.ts";
 import { membersOfBody } from "../registry/body-membership.ts";
 import { bindNamedEntity } from "../routing/named-entity.ts";
@@ -42,17 +41,18 @@ export async function namedOfficeholders(question: string, explicitIds: readonly
 }
 
 export async function readerOfficeholders(ocdIds: readonly string[], bodyIds: readonly string[] = []): Promise<{ seats: SeatHolder[]; loaderFailures: number; held: HeldOfficial[] }> {
-  const seats = new Map(statewideExecutivesFor([...ocdIds]).map((seat) => [seat.id, seat]));
+  const seats = new Map<string, SeatHolder>();
+  const key = (seat: SeatHolder) => `${seat.id}|${seat.officeJurisdictionOcdId ?? ""}|${seat.officeTitle}`;
   const where = new Map<string, { divisionIds: Set<string>; bodyId: string | null; bodyName: string | null }>();
   const at = (seat: SeatHolder) => {
-    let row = where.get(seat.id);
-    if (!row) where.set(seat.id, row = { divisionIds: new Set(), bodyId: null, bodyName: null });
+    let row = where.get(key(seat));
+    if (!row) where.set(key(seat), row = { divisionIds: new Set(), bodyId: null, bodyName: null });
     return row;
   };
   for (const bodyId of bodyIds) {
     const governing = /#(?:governing|board)$/.test(bodyId);
     for (const seat of membersOfBody(bodyId).members) {
-      seats.set(seat.id, seat);
+      seats.set(key(seat), seat);
       if (governing && !at(seat).bodyId) Object.assign(at(seat), { bodyId, bodyName: canonicalBodyIdentity(bodyId)?.name ?? null });
     }
   }
@@ -62,7 +62,7 @@ export async function readerOfficeholders(ocdIds: readonly string[], bodyIds: re
     try {
       const held = await seatHoldersForDivision(ocdId);
       for (const seat of held) {
-        seats.set(seat.id, seat);
+        seats.set(key(seat), seat);
         at(seat).divisionIds.add(ocdId);
       }
       if (/\/(?:sldu|sldl):/.test(ocdId) && held.length === 0) {
@@ -75,7 +75,7 @@ export async function readerOfficeholders(ocdIds: readonly string[], bodyIds: re
   return {
     seats: [...seats.values()],
     loaderFailures,
-    held: [...seats.values()].map((seat) => ({ seat, divisionIds: [...(where.get(seat.id)?.divisionIds ?? [])], bodyId: where.get(seat.id)?.bodyId ?? null, bodyName: where.get(seat.id)?.bodyName ?? null })),
+    held: [...seats.values()].map((seat) => ({ seat, divisionIds: [...(where.get(key(seat))?.divisionIds ?? [])], bodyId: where.get(key(seat))?.bodyId ?? null, bodyName: where.get(key(seat))?.bodyName ?? null })),
   };
 }
 

@@ -125,6 +125,8 @@ export interface OfficeholderDivision {
 export interface OfficeholderSet {
   /** Complete enumerated current source memberships; permits retiring omitted memberships, never required for adding facts. */
   currentMembershipComplete?: boolean;
+  /** Explicitly ended native tenures, retained even when the person has no current office. */
+  endedMemberships?: readonly PersonMembership[];
   /** Which slice this is: `us` for the federal roster, or a state FIPS. */
   scope: string;
   generatedAt: string;

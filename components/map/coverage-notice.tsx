@@ -248,9 +248,11 @@ function seatPhrase(seats: Seat[]): string | null {
 function Holder({
   holder,
   onOpen,
+  showOfficeTitle = false,
 }: {
   holder: SeatHolder;
   onOpen?: () => void;
+  showOfficeTitle?: boolean;
 }) {
   /*
    * Name (opens the small battlecard), party as plain text in its colour, and
@@ -270,6 +272,7 @@ function Holder({
         ) : (
           holder.name
         )}
+        {showOfficeTitle && <span className="block t-caption text-muted">{readerOfficeTitle(holder.officeTitle)}</span>}
       </span>
       <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
         {holder.partyLabel && (
@@ -306,8 +309,9 @@ function HolderList({
     <>
       {holders.map((holder) => (
         <Holder
-          key={holder.id}
+          key={`${holder.id}|${holder.officeJurisdictionOcdId ?? seatOcdId ?? ""}|${holder.officeTitle}`}
           holder={holder}
+          showOfficeTitle={tier === "local"}
           onOpen={
             onOpenOfficial
               ? () => onOpenOfficial(holder, seatLabel, tier, seatOcdId)

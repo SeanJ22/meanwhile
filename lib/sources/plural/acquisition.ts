@@ -133,8 +133,10 @@ export async function acquireStatePeople(input: SharedOptions & {
       combined.sources = [...new Set([prior.sources,person.sources].flatMap(value=>value.split(";")).filter(Boolean))].join(";");
       byNativeId.set(person.id,combined);
     }
-    people = [...byNativeId.values()].filter(person=>person.roles?.some(role=>role.current));
-    if (!people.length) throw new Error(`PLURAL_STATE_HAS_NO_CURRENT_PEOPLE:${state}`);
+    // Ended native tenures must reach normalization even when another source
+    // record is malformed and this refresh cannot claim a complete roster.
+    people = [...byNativeId.values()];
+    if (!people.some(person=>person.roles?.some(role=>role.current))) throw new Error(`PLURAL_STATE_HAS_NO_CURRENT_PEOPLE:${state}`);
   } catch (error) {
     input.signal.throwIfAborted();
     if (error instanceof RepositoryLockHeld) throw error;
@@ -158,6 +160,7 @@ export async function acquireStatePeople(input: SharedOptions & {
   const divisions = input.divisions ?? await statePeopleDivisions(state, asOf);
   const collectedAt = acquisitions.map(row => row.retrievedAt).sort().at(-1)!;
   const roster = normalize(people, indexDivisions([...divisions]), collectedAt, `US-${state.toUpperCase()}`);
-  return { state, releaseId, people, acquisitions, gaps,
-    roster: { ...roster, currentMembershipComplete: currentMembershipComplete && roster.officeholders.length === people.length } };
+  const currentPeople = people.filter(person=>!person.roles || person.roles.some(role=>role.current));
+  return { state, releaseId, people:currentPeople, acquisitions, gaps,
+    roster: { ...roster, currentMembershipComplete: currentMembershipComplete && roster.officeholders.length === currentPeople.length } };
 }

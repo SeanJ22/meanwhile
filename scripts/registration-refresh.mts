@@ -21,6 +21,7 @@ import { registrationReferenceFromRelease, registrationReferenceWithPublished } 
 import { acquireSchoolRelease, applyF33NativeCrosswalk, NCES_DIRECTORY, schoolListingsFromRelease } from "../lib/registration/school-sources.ts";
 import { referenceGovernmentListings } from "../lib/registration/listings.ts";
 import { knownReleaseSourceCheck } from "../lib/sources/known-release.ts";
+import { reconcileRegistrationHeldReceipt } from "../lib/registration/held-evidence.ts";
 
 export function parseRegistrationArguments(args: readonly string[]): { readonly target: RegistrationTarget } {
   const states = args.filter((value) => value.startsWith("--state="));
@@ -35,12 +36,15 @@ async function main(): Promise<void> {
   installNeonRequestDeadline();
   prepareProductionCivicDataWrite();
   const store = new PostgresRoutineDataStore();
-  const previous = (await store.readPromotion<RegistrationReadModel>("REGISTRATION", target.scope))?.payload ?? null;
+  const previousPromotion = await store.readPromotion<RegistrationReadModel>("REGISTRATION", target.scope);
+  const previous = previousPromotion?.payload ?? null;
   const reference = registrationReferenceWithPublished(loadRegistrationReference(process.cwd(), target.state), previous);
+  const heldReceipt = reconcileRegistrationHeldReceipt(heldRegistrationReceipt(), reference,
+    previousPromotion && !previous?.governments ? await store.readCandidate(previousPromotion.versionId) : null);
   // Publish evidence already held before checking the publisher. Fresh access
   // is not a prerequisite for first-use delivery or a changed parser.
   if (!previous?.governments) {
-    const held = registrationCandidate({ target, reference, receipt: heldRegistrationReceipt(), previous });
+    const held = registrationCandidate({ target, reference, receipt: heldReceipt, previous });
     const delivery = await processRegisteredRoutineCandidate(store, target.contractId, held, new Date().toISOString());
     if (!delivery.promoted) throw new Error(`REGISTRATION_HELD_PUBLICATION_REFUSED:${delivery.candidate.receipt?.decision ?? "unknown"}`);
   }
@@ -49,7 +53,7 @@ async function main(): Promise<void> {
   const capabilityGaps: string[] = [];
   const schoolChecks: SourceCheckEvidence[] = [];
   let refreshed = reference;
-  let receipt = heldRegistrationReceipt();
+  let receipt = heldReceipt;
   let sourceFailure: unknown;
   let sourceFailedAt: string | undefined;
   let sourceFailureUrl = receipt.requestedUrl;

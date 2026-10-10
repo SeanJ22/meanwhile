@@ -14,7 +14,7 @@ import { DataProvider, type ShellData } from "../lib/state/data.tsx";
 import { scopedHolders } from "../lib/officials/scoped-holders.ts";
 import { registryRuntimeProjectionIssues } from "../lib/registry/runtime-data-plane.ts";
 import { withoutPlaceholderBodies } from "../lib/registry/census-placeholders.ts";
-import { currentBodyRosters, governingRosterHoldersForDivision } from "../lib/registry/body-rosters.ts";
+import { currentBodyRosters, rosterHoldersForBody } from "../lib/registry/body-rosters.ts";
 import { registryTransferImport, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 import type { OfficialStateLegislatorReadModel } from "../lib/civic-data/candidate-builders.ts";
 import type { Division } from "../lib/registry/types.ts";
@@ -156,7 +156,7 @@ test("coverage gives the exact official mayor precedence over a conflicting bulk
   assert.ok(roster, "fixture has a directly sourced municipal mayor");
   const divisionId = roster.bodyId.split("#")[0];
   const division = registryTransferImport().projection.payload.registry.divisions.find(row => row.ocdId === divisionId)!;
-  const official = governingRosterHoldersForDivision(divisionId).find(row => row.officeTitle === "Mayor")!;
+  const official = rosterHoldersForBody(roster.bodyId).find(row => row.officeTitle === "Mayor")!;
   const bulk = { ...official, id: "plural:fixture:old-mayor", personId: "plural:fixture:old-mayor", name: "Superseded Bulk Mayor" };
   const coverage = summarizeCoverage([0, 0], [], new Map([[divisionId, division]]), [], 0,
     new Map([[divisionId, [bulk]]]), [division], null);

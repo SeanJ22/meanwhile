@@ -89,7 +89,7 @@ test("AZ, NH, and NJ finance candidates bind exact source/class/scope and promot
     const outcome = await processRegisteredManualCandidate(store, contract.contractId, candidate, T0);
     assert.equal(outcome.candidate.state, "PROMOTED");
     assert.equal(outcome.promoted?.versionId, candidate.id);
-    assert.equal(outcome.readerReadback?.status, "PASS");
+    assert.equal(outcome.readerReadback?.status, "PASS", outcome.readerReadback?.detail);
     assert.equal(outcome.readerReadback?.versionId, candidate.id);
     assert.equal(outcome.candidate.candidate.changeSet?.added.length, 1);
     assert.equal(outcome.candidate.candidate.changeSet?.changed.length, 0);

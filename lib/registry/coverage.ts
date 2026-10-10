@@ -17,7 +17,8 @@ import { schoolDependency, type SchoolDependency } from "../officials/school-dep
 import { bodiesAt, type GeoFeature } from "./resolve.ts";
 import { slotsFor } from "./derive.ts";
 import type { BodyTerritoryFile } from "./body-territory.ts";
-import { governingRosterHoldersForDivision, type RosterReaderGap } from "./body-rosters.ts";
+import type { RosterReaderGap } from "./body-rosters.ts";
+import { heldDivisionRepresentatives } from "./representation-server.ts";
 import type {
   Body,
   BodyClass,
@@ -360,7 +361,7 @@ export function summarizeCoverage(
       divisionType: d.divisionType as Seat["divisionType"],
       tier: d.tier,
       representatives: d.divisionType === "place"
-        ? scopedHolders(governingRosterHoldersForDivision(d.ocdId), holdersFor(officials, d.ocdId))
+        ? heldDivisionRepresentatives(d.ocdId, holdersFor(officials, d.ocdId))
         : holdersFor(officials, d.ocdId),
     }));
 
@@ -385,7 +386,7 @@ export function summarizeCoverage(
     municipal.length > 0 && municipal.every((d) =>
       slotsFor(d).skipped === "statistical-or-unorganized" &&
       !municipalWithBody.has(d.ocdId) && holdersFor(officials, d.ocdId).length === 0 &&
-      governingRosterHoldersForDivision(d.ocdId).length === 0);
+      heldDivisionRepresentatives(d.ocdId).length === 0);
 
   // Governing bodies first, live sources before unwired ones, then by label —
   // the notice names only the first few, and those slots belong to the

@@ -45,5 +45,6 @@
     "schema": "not applicable; none of the 55 changed paths touch the schema contract",
     "local_gates": "Restricted Git subprocess and localhost checks covered by full hosted CI under owner authorization."
   },
-  "note": "River contains the exact synthetic merge tested by hosted CI. Release branch is its tested source parent; both have the same verified tree. Owner authorized merge after green local or internal checks."
+  "note": "River contains the exact synthetic merge tested by hosted CI. Release branch is its tested source parent; both have the same verified tree. Owner authorized merge after green local or internal checks.",
+  "merged_sha": "4f8bc8d5bcfb1606ce436c9d68f4098b68cafcb7"
 }

@@ -65,8 +65,8 @@
     "published_at": "2026-10-09T23:23:57.399Z"
   },
   "runtime_adoption": {
-    "state": "pending",
-    "latest_observed_sha": "6f4df519e67b6738d1c057f60cbcd901eaead138",
-    "observed_at": "2026-10-09T23:25:33Z"
+    "state": "adopted",
+    "latest_observed_sha": "fd8ffd995eaf4a86fc731609df58c5d4d2397255",
+    "observed_at": "2026-10-10T00:31:50.530Z"
   }
 }

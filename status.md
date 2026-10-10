@@ -5,17 +5,20 @@ worker: codex-acquisition-scale
 provider: Codex
 run_id: acquisition-scale-2026-10-09
 lock: codex-acquisition-scale-2026-10-09
-heartbeat: 2026-10-10T00:44:13Z
+heartbeat: 2026-10-10T01:08:35Z
 
 ## RELEASE 23 — held listings, known native roles and portraits: PR #730, CHECKING
 
-- Final READY 04ff1080e5bd23fe8f967a94b3c8273046ca0ca2; fold 755987782812daa25ea539f9b62133ef0422f288 includes main fd8ffd995. Exact staged/uploaded tree 8c6c24fbc4bc1e1975dc2e8321cc891fbc7f9e14; local working tree clean.
+- Final READY 04ff1080e5bd23fe8f967a94b3c8273046ca0ca2; fold 755987782812daa25ea539f9b62133ef0422f288 includes main fd8ffd995. Exact staged/uploaded tree 8c6c24fbc4bc1e1975dc2e8321cc891fbc7f9e14; release snapshot clean; later finance follow-up remains separately uncommitted.
 - Registration /4 actually failed ACQUISITION_TIME_REGRESSION in all 56 scopes. Prior /3 mislabeled the later 304 check as acquisition. /5 reconciles only the exact GOOD archive and state reference, retaining Sept23 capture, actual prior check, divisions and native aliases. Production inspection confirms all56 have the expected 304/placeholder shape. Historical failures remain immutable; existing parser-upgrade admission makes /5 owed.
 - Recognized native executive and municipal memberships reach division routes, first coverage and Ask. Explicit past ends require independently parsed old/new captures before retirement during a partial refresh. Current membership identity, exact jurisdiction and direct-official precedence remain enforced. Local roles get distinct office labels; absent body data no longer implies no mayor.
 - Congress/state portraits use post-capture verification, durable field failures, prior verified assets and finite fair continuation within existing bounded pools/deadlines. Congress emits one final supervisor receipt while every per-file promotion remains durable. Pima accepts its already registered exact-tenant bodies route before event acquisition.
 - Latest combined focused suites: 82 named passes, zero failures/skips; full TypeScript pass; full ESLint zero errors (62 existing warnings). Additional focused Pima, frontier, retirement and generic guards pass. General promotion suite locally45/47: two Reader readback assertions remain failures; required hosted CI must cover these before merge.
-- Hosted final run https://github.com/SeanJ22/meanwhile/actions/runs/38010315619 is queued/in progress on final fold. Earlier revision had green admission, lint/types and standalone build; its tests are superseded by final combination checks.
+- Hosted final run https://github.com/SeanJ22/meanwhile/actions/runs/38010315619: admission, lint/types and real standalone build PASS; 16 bundle tests PASS, traces382/430 and1184/1300. Exact checkout044ad400eb0d4a427ba4b8b18f70f7981d4d3403 has the same8c6c24fb tree. Selected740files are running; no merge before their pass.
 - Production: all52 OpenStates /2 scopes automatically promoted 7,420 people by00:24:13Z; Congress /3 still539, registration still56 /3 without new listings. Runtime automatically adopted fd8 by00:31. These establish source acquisition only, not delivery of pending changes.
+- All56 held registration replay preflights passed:112,034named source listings (91,013government +19,708educationagency +1,313dependentschool),85,541unchanged divisions and49,127preserved native aliases. These are replay counts, not yet new production promotions.
+- All52current OpenStates promotions have canonical typed-reader PASS onfd8. Netlify sequence3200 published at00:46:13Z, but exact served state artifact refs and rendered pages remain inaccessible from this workspace.
+- A concrete enabled-source finance follow-up is frozen separately in8localfiles: AZ candidatecv-2d1133fe6d5b9a9b0f162c7182271f69 held716rows because committee102250/2026 moved REGISTERED_NO_ACTIVITY_REPORTED→FILED and the old key treated filingState as identity. Shared native committee/period key and AZ/NH/NJ parser/4 repair this without loosening removal validation. Types/lint/diff pass;19localtests pass and3reader assertions hit confirmed Git subprocess EPERM. Hosted verification remains required. No FEC edit:552known memberIDs are queued, existing first pass spent its bounded window on22second-hop committee attempts.
 - Existing budgets, owner pauses, source cadences and valid evidence unchanged. No manual Send, new sources or Hunt Network work.
 - Owner codex-acquisition-scale: hosted checks, merge, deploy and actual broad acquisition/reader readback. Direct live browser access remains restricted and is not claimed as passed.
 

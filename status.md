@@ -1,16 +1,16 @@
 # River status
 
-build_state: RELEASE 23 PR #730 FINAL HELD-SOURCE CORRECTIONS IN HOSTED CI (AF-09 AF-10 AF-11).
+build_state: RELEASE 23 PR #730 BUILD, LINT AND TYPES PASS; FULL HOSTED TEST SUITE RUNNING.
 worker: codex-acquisition-scale
 provider: Codex
 run_id: acquisition-scale-2026-10-09
 lock: codex-acquisition-scale-2026-10-09
-heartbeat: 2026-10-10T01:48:00Z
+heartbeat: 2026-10-10T01:58:00Z
 
 ## RELEASE 23 — national listings, known officials, portraits and finance: CHECKING
 
 - PR https://github.com/SeanJ22/meanwhile/pull/730. Final READY ed5929429cd05a58fe429acf6eef549434d0fc56; fold 5f76b2d80a9b6f8799cfbee5888f5c15f9b350fd includes main fd8ffd995eaf4a86fc731609df58c5d4d2397255. Exact local/uploaded tree487faefd8b207db1fc23cb74e9549daf95a98d8d; workspace clean.
-- Hosted run https://github.com/SeanJ22/meanwhile/actions/runs/38014509898 is underway on signed checkout8d68f46721de856247c38dd39680db15e5a9f37e. Tree equality and ancestry from existing river/main confirmed. River remains at its previous tested revision until this exact combination is green.
+- Hosted run https://github.com/SeanJ22/meanwhile/actions/runs/38014509898 is running the full suite across four test jobs on signed checkout 8d68f46721de856247c38dd39680db15e5a9f37e. Admission, lint, TypeScript, production standalone build and all 16 bundle checks passed. Largest app trace 382/430; framework trace 1,184/1,300; initial client 1,903.5 KB raw / 550.5 KB gzip. Tree equality and ancestry from existing river/main confirmed. River remains at its previous tested revision until this exact combination is green.
 - Registration /4 failed ACQUISITION_TIME_REGRESSION in all56scopes. Prior /3 mislabeled a later304check as acquisition. /5 reconciles only the exact GOOD archive/state reference, retaining original capture, later source check, divisions and native aliases. All56held replay preflights pass:112,034source listings (91,013government+19,708educationagency+1,313dependentschool),85,541unchanged divisions and49,127nativealiases. Those are replay results, not yet production /5.
 - Full held-native replay of810executive/municipal YAML captures yields478current people:180stateexecutives across52jurisdictions and298localmayors across47states,478exactdivisionlinks.331explicitly ended records and1collectivecouncil are excluded. All7420current legislative nativeIDs were checked; no overlap with these478.346acceptedpeople have knownofficialprofileleads, not yet verifiedportraits.
 - Real source-shaped corrections preserve2HIcounty mayors on their counties, callDC's chief executive Mayor, preserve4literal chief-election-officer roles, and reject the structured Janesville council pseudo-person. Current production /2 has never held that council record. Native current roles reach exact routes, first coverage, tier grouping and Ask; district/territory roots work. County/DCmayors do not receive city-only uncertaintycopy.
@@ -18,7 +18,7 @@ heartbeat: 2026-10-10T01:48:00Z
 - AZ finance candidatecv-2d1133fe6d5b9a9b0f162c7182271f69 held716rows because committee102250/2026 moved REGISTERED_NO_ACTIVITY_REPORTED→FILED and the old key treated filingState as identity. Shared nativecommittee/period key and AZ/NH/NJ parser/4 repair this without loosening genuine removal validation. No FEC edit:552known memberIDs are queued; the first bounded pass attempted22second-hop committees.
 - Final local checks:77focused source/reader tests pass (49source/native/portrait+28reader/Ask),zero failures/skips. Full TypeScript and changed-file ESLint pass; diffclean. Earlier source/reader suites82passes. Local source-sweep/readback/render subprocess checks remain restricted (Git EPERM or childtimeout) and are not reported as passes; required hosted tests cover these.
 - Earlier run38010315619 had6119passes,3failures,5skips; corrected the division-call boundary, roster order and HTTP URL testguard. Superseded run38013256704 passed admission, lint/types, real standalone build and16bundlechecks; final native correction requires the newrun above.
-- Production before merge:52OpenStates /2 scopes,7420people,52/52canonical typed-readerPASS; Congress /3 has539people; registration56 /3 hasno newlistings. Runtimeauto-adoptedfd8 andremainscurrent. Latest completed pass00:59:52Z attempted191tasks,205readerPASS,zero recordedFAIL,readeredgePUBLISHED sequence3206. This does not establish delivery of pending /3,/4,/5changes.
+- Production before merge: 52 OpenStates /2 scopes, 7,420 people, 52/52 canonical typed-reader PASS; Congress /3 has 539 people; registration 56 /3 has no new listings. Runtime auto-adopted fd8 and remains current. Latest completed old-code pass ended 01:46:47Z, attempted 56 tasks, reader edge CURRENT at sequence 3219; no new reader readbacks in that pass. Current accepted source versions still have 109/109 typed-reader PASS. This does not establish delivery of pending /3, /4 or /5 changes.
 - Existing budgets, owner pauses, source cadences and valid evidence unchanged. No manual Send, new sources, new credentials or Hunt Network work.
 - Owner codex-acquisition-scale: required checks→record tested River/release→merge→web deploy/observer→automatic runtime adoption/acquisition and reader publication. Direct livebrowser access remains restricted and is not claimed passed.
 

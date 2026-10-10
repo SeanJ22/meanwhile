@@ -1,21 +1,23 @@
 # River status
 
-build_state: RELEASE 23 PR #730 IN HOSTED CI (AF-09 AF-10). Release 22 web deployed; first OpenStates promotions observed, broad baseline still incomplete.
+build_state: RELEASE 23 PR #730 FINAL REVISION IN HOSTED CI (AF-09 AF-10). All 52 OpenStates scopes automatically promoted; registration date reconciliation and native roles/portraits checking.
 worker: codex-acquisition-scale
 provider: Codex
 run_id: acquisition-scale-2026-10-09
 lock: codex-acquisition-scale-2026-10-09
-heartbeat: 2026-10-10T00:18:40Z
+heartbeat: 2026-10-10T00:44:13Z
 
-## RELEASE 23 — known native roles and portraits: PR #730, CHECKING
+## RELEASE 23 — held listings, known native roles and portraits: PR #730, CHECKING
 
-- READY a8e4c5a4b71a5fd56e450b8522ea8ae930701050; fold 45191d3420d44991050d06dc0aba0f4403363d98 includes main fd8ffd995. Exact staged/uploaded tree 371da20556b7e6453666591e4a060ed9e556c6de.
-- Recognized source-native executive and municipal memberships now reach division routes, normal coverage and Ask; exact current-role selection and direct-official precedence preserve jurisdiction and tenure. Blanket exclusion and legislative-only reader restriction removed.
-- Congress/state portraits verify after asynchronous capture, retain previous verified assets and durable source failures, and resume finite known profiles with the existing bounded pool and deadline. Fixed calendar slice removed; held API evidence and official URLs reused.
-- Local combined tests: 117 named passes, 0 failures, 0 skips. TypeScript and changed-file lint pass. PR https://github.com/SeanJ22/meanwhile/pull/730 is labeled run-full-ci. Required hosted checks precede merge.
-- Fresh production query at 00:13Z: Plural /2 has 3 scopes and 230 people (latest 00:07:46Z). Registration still 56 /3 scopes with no new named listing payload; Congress /3 has 539 people from 21:10Z. This is initial automatic acquisition, not proof of national completion or reader delivery. Current runner heartbeat still records 6f4d at 23:38Z; independent intake remains active.
-- Existing budgets, owner pauses, memory reserve, source cadences and shared evidence unchanged. No manual Send, new sources or Hunt Network work.
-- Owner: codex-acquisition-scale for hosted checks, merge, deploy, automatic acquisition and reader readback. Browser access is restricted in this environment and has not been claimed as passed.
+- Final READY 04ff1080e5bd23fe8f967a94b3c8273046ca0ca2; fold 755987782812daa25ea539f9b62133ef0422f288 includes main fd8ffd995. Exact staged/uploaded tree 8c6c24fbc4bc1e1975dc2e8321cc891fbc7f9e14; local working tree clean.
+- Registration /4 actually failed ACQUISITION_TIME_REGRESSION in all 56 scopes. Prior /3 mislabeled the later 304 check as acquisition. /5 reconciles only the exact GOOD archive and state reference, retaining Sept23 capture, actual prior check, divisions and native aliases. Production inspection confirms all56 have the expected 304/placeholder shape. Historical failures remain immutable; existing parser-upgrade admission makes /5 owed.
+- Recognized native executive and municipal memberships reach division routes, first coverage and Ask. Explicit past ends require independently parsed old/new captures before retirement during a partial refresh. Current membership identity, exact jurisdiction and direct-official precedence remain enforced. Local roles get distinct office labels; absent body data no longer implies no mayor.
+- Congress/state portraits use post-capture verification, durable field failures, prior verified assets and finite fair continuation within existing bounded pools/deadlines. Congress emits one final supervisor receipt while every per-file promotion remains durable. Pima accepts its already registered exact-tenant bodies route before event acquisition.
+- Latest combined focused suites: 82 named passes, zero failures/skips; full TypeScript pass; full ESLint zero errors (62 existing warnings). Additional focused Pima, frontier, retirement and generic guards pass. General promotion suite locally45/47: two Reader readback assertions remain failures; required hosted CI must cover these before merge.
+- Hosted final run https://github.com/SeanJ22/meanwhile/actions/runs/38010315619 is queued/in progress on final fold. Earlier revision had green admission, lint/types and standalone build; its tests are superseded by final combination checks.
+- Production: all52 OpenStates /2 scopes automatically promoted 7,420 people by00:24:13Z; Congress /3 still539, registration still56 /3 without new listings. Runtime automatically adopted fd8 by00:31. These establish source acquisition only, not delivery of pending changes.
+- Existing budgets, owner pauses, source cadences and valid evidence unchanged. No manual Send, new sources or Hunt Network work.
+- Owner codex-acquisition-scale: hosted checks, merge, deploy and actual broad acquisition/reader readback. Direct live browser access remains restricted and is not claimed as passed.
 
 ## RELEASE 22 — acquisition baseline: PR #729, MERGED AND WEB DEPLOYED
 

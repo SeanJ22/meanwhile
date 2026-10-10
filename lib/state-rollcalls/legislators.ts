@@ -220,7 +220,11 @@ export function mergeStatePeople(reference: OfficeholderSet | null, official: Of
     people[at] = merged;
   }
   const divisions = [...reference.divisions,...official.divisions].map(row=>({...row,officeholderId:aliases.get(row.officeholderId) ?? row.officeholderId}));
+  const currentMembershipIds=new Set(people.flatMap(person=>(person.memberships ?? []).filter(row=>row.current !== false).map(row=>row.id)));
+  const endedMemberships=[...new Map([...(reference.endedMemberships ?? []),...(official.endedMemberships ?? [])].map(row=>[row.id,row])).values()]
+    .filter(row=>!currentMembershipIds.has(row.id));
   return JSON.parse(JSON.stringify({currentMembershipComplete:official.currentMembershipComplete ?? false,scope:official.scope,generatedAt:[reference.generatedAt,official.generatedAt].sort().at(-1)!,officeholders:people,
+    ...(endedMemberships.length ? {endedMemberships} : {}),
     divisions:[...new Map(divisions.map(row=>[`${row.officeholderId}|${row.ocdId}|${row.bodyId}|${row.membershipId ?? ""}`,row])).values()],
     unmatched:[...new Map([...reference.unmatched,...official.unmatched].map(row=>({...row,officeholderId:aliases.get(row.officeholderId) ?? row.officeholderId})).map(row=>[`${row.officeholderId}|${row.reason}`,row])).values()]}));
 }

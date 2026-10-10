@@ -14,6 +14,7 @@ import { DataProvider, type ShellData } from "../lib/state/data.tsx";
 import { scopedHolders } from "../lib/officials/scoped-holders.ts";
 import { registryRuntimeProjectionIssues } from "../lib/registry/runtime-data-plane.ts";
 import { withoutPlaceholderBodies } from "../lib/registry/census-placeholders.ts";
+import { currentBodyRosters, governingRosterHoldersForDivision } from "../lib/registry/body-rosters.ts";
 import { registryTransferImport, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 import type { OfficialStateLegislatorReadModel } from "../lib/civic-data/candidate-builders.ts";
 import type { Division } from "../lib/registry/types.ts";
@@ -25,7 +26,7 @@ const PLACE = `${STATE}/place:example_city`;
 const OTHER = `${STATE}/place:another_city`;
 const source = (name: string) => `https://raw.githubusercontent.com/openstates/people/${"a".repeat(40)}/data/oh/${name}.yml`;
 
-function fixture(): OfficialStateLegislatorReadModel {
+function fixture(dualRole = false): OfficialStateLegislatorReadModel {
   const rows = [
     { id: "00000000-0000-0000-0000-000000000001", name: "Morgan Governor", type: "governor", division: STATE },
     { id: "00000000-0000-0000-0000-000000000002", name: "Taylor Mayor", type: "mayor", division: PLACE },
@@ -34,7 +35,10 @@ function fixture(): OfficialStateLegislatorReadModel {
   ];
   const people = rows.flatMap(row => yamlToPeople(stringify({ id: `ocd-person/${row.id}`, name: row.name,
     roles: [{ type: row.type, jurisdiction: row.division.replace("ocd-division/", "ocd-jurisdiction/") + "/government",
-      start_date: "2023-01-01", end_date: row.end ?? "2027-12-31" }],
+      start_date: "2023-01-01", end_date: row.end ?? "2027-12-31" },
+      ...(dualRole && row.name === "Taylor Mayor" ? [{ type: "councilmember",
+        jurisdiction: PLACE.replace("ocd-division/", "ocd-jurisdiction/") + "/government",
+        start_date: "2023-01-01", end_date: "2027-12-31" }] : [])],
     offices: [{ classification: "primary", voice: "555-0100", address: "1 Government Plaza" }],
     links: [{ url: "https://example.gov/profile" }], sources: [{ url: "https://example.gov/profile" }],
   }), "oh", source(row.id), NOW));
@@ -89,6 +93,7 @@ test("the first coverage read renders known local and state people with no legis
       promotedAt: null, stale: "CURRENT", staleAt: null } }));
   const coverage = summarizeCoverage([0, 0], [], new Map([[PLACE, place]]), [], 0, settled.officials, [place], null, settled.authorities);
   assert.deepEqual(coverage.bodies, [], "a people source does not invent body membership");
+  assert.equal(coverage.unincorporated, false, "an absent body row does not negate the known municipal office");
   assert.deepEqual(coverage.statewideExecutives.map(row => row.name), ["Morgan Governor"]);
   assert.deepEqual(coverage.seats.flatMap(row => row.representatives.map(holder => holder.name)), ["Taylor Mayor"]);
   const data: ShellData = { allMeetings: [], meetings: [], venues: [], result: null, location: null, drawnDistricts: [],
@@ -97,6 +102,24 @@ test("the first coverage read renders known local and state people with no legis
     requestedRadiusKm={0} count={0} coverage={coverage} /></DataProvider>);
   assert.match(html, /Morgan Governor/); assert.match(html, /Taylor Mayor/);
   assert.doesNotMatch(html, /Other Mayor|Former Mayor/);
+  assert.doesNotMatch(html, /no mayor or city council/);
+  const statistical = { ...place, funcstat: "S", classfp: "U1" };
+  const summary = (division: Division, officials = settled.officials) => summarizeCoverage([0, 0], [],
+    new Map([[PLACE, division]]), [], 0, officials, [division], null);
+  assert.equal(summary(statistical).unincorporated, false, "held municipal people prevent a contradictory negative claim");
+  assert.equal(summary(statistical, new Map()).unincorporated, true, "positive statistical evidence still supports the existing absence statement");
+  assert.equal(summary({ ...place, funcstat: null, classfp: null, lsad: null }, new Map()).unincorporated, false,
+    "unknown municipal structure is a gap, not evidence that no mayor exists");
+  await withReaderAuthorityEdge(edge(fixture(true)), async () => {
+    const local = await seatHoldersForDivision(PLACE);
+    assert.deepEqual(local.map(row => row.officeTitle).sort(), ["Councilmember", "Mayor"]);
+    const dualCoverage = { ...coverage, seats: coverage.seats.map(seat => ({ ...seat, representatives: local })) };
+    const dualHtml = renderToStaticMarkup(<DataProvider value={data}><CoverageNotice tier="none" zip="43215" radiusKm={0}
+      requestedRadiusKm={0} count={0} coverage={dualCoverage} /></DataProvider>);
+    assert.match(dualHtml, />Mayor<\/span>/);
+    assert.match(dualHtml, />Council member<\/span>/);
+    assert.equal(dualHtml.split("Taylor Mayor").length - 1, 2, "each current role remains visible with its own title");
+  });
 });
 
 test("an exact official office holder takes precedence without joining names or removing other council seats", async () => {
@@ -124,4 +147,19 @@ test("an exact official office holder takes precedence without joining names or 
     const second = { ...first, id: "council:two", personId: "another-native-person", nativeIds: undefined };
     assert.equal(scopedHolders([first], [second]).length, 2, "a multi-seat office is not a person identity");
   });
+});
+
+test("coverage gives the exact official mayor precedence over a conflicting bulk office record", async () => {
+  await installRegistryAuthority();
+  const roster = currentBodyRosters().find(row => /\/place:[^/]+#governing$/.test(row.bodyId) &&
+    row.members.some(member => member.officeTitle === "Mayor"))!;
+  assert.ok(roster, "fixture has a directly sourced municipal mayor");
+  const divisionId = roster.bodyId.split("#")[0];
+  const division = registryTransferImport().projection.payload.registry.divisions.find(row => row.ocdId === divisionId)!;
+  const official = governingRosterHoldersForDivision(divisionId).find(row => row.officeTitle === "Mayor")!;
+  const bulk = { ...official, id: "plural:fixture:old-mayor", personId: "plural:fixture:old-mayor", name: "Superseded Bulk Mayor" };
+  const coverage = summarizeCoverage([0, 0], [], new Map([[divisionId, division]]), [], 0,
+    new Map([[divisionId, [bulk]]]), [division], null);
+  const mayors = coverage.seats.flatMap(row => row.representatives).filter(row => row.officeTitle === "Mayor");
+  assert.deepEqual(mayors.map(row => row.id), [official.id]);
 });

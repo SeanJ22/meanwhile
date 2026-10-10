@@ -33,7 +33,8 @@ export function statePeopleCandidate(input: {state:string;roster:OfficeholderSet
   }))];
   const normalizedPayload = {releaseId:input.releaseId,acquisitions:input.acquisitions.map(({body,sourceCheck:_sourceCheck,...row})=>({...row,textHash:hash(body)})),excludedFacts};
   // Keep the exact saved bytes in the durable candidate so parser changes can replay them.
-  const payload = JSON.parse(JSON.stringify({releaseId:input.releaseId,acquisitions:input.acquisitions,gaps:input.gaps ?? [],excludedFacts}));
+  const payload = JSON.parse(JSON.stringify({releaseId:input.releaseId,acquisitions:input.acquisitions,
+    endedMemberships:input.roster.endedMemberships ?? [],gaps:input.gaps ?? [],excludedFacts}));
   const rawHash = hash(normalizedPayload), normalizedHash = hash(readModel);
   const people = input.roster.officeholders;
   return {id:`cv-${hash(`${sourceId}|${scope}|${rawHash}|${normalizedHash}|${hash(sourceCheck ?? null)}`).slice(0,32)}`,sourceId,recordClass:"STATE_LEGISLATOR",scope,
@@ -55,19 +56,48 @@ export async function publishStatePeople(input: {store:RoutineDataStore;state:st
   const jurisdiction = `US-${input.state.toUpperCase()}` as const;
   const prior = await readOpenStatesPeopleProjection(jurisdiction,{store:input.store,now:input.now,bypassCache:true});
   if (prior.kind === "STORE_UNREACHABLE") throw new Error("STATE_PEOPLE_PRIOR_UNAVAILABLE");
+  const priorCandidate = prior.kind === "PROMOTED" ? await input.store.readCandidate(prior.metadata.versionId!) : null;
   const held = prior.kind === "PROMOTED" || prior.kind === "BOOTSTRAP" ? prior.value.roster : null;
   const currentIds=new Set(input.roster.officeholders.map(row=>row.id));
-  const explicitEnded = new Set(input.roster.officeholders.flatMap(row=>(row.memberships ?? []).filter(membership=>membership.current === false).map(membership=>membership.id)));
+  const explicitEnded = new Map((input.roster.endedMemberships ?? []).map(membership=>[membership.id,membership]));
+  const priorPeople = held?.officeholders.filter(row=>!input.roster.currentMembershipComplete || currentIds.has(row.id)).flatMap(row=>{
+    const memberships=row.memberships?.map(membership=>{
+      const ended=explicitEnded.get(membership.id);
+      return ended?.personId === membership.personId ? {...membership,...ended,current:false}
+        : input.roster.currentMembershipComplete ? {...membership,current:false} : membership;
+    });
+    // A partial archive cannot assert absence, but an exact native end date
+    // independently retires that tenure, including a person's final office.
+    if (!currentIds.has(row.id) && memberships?.length && memberships.every(membership=>membership.current === false) &&
+      memberships.some(membership=>explicitEnded.get(membership.id)?.personId === membership.personId)) return [];
+    return [{...row,...(memberships ? {memberships} : {})}];
+  }) ?? [];
+  const priorIds=new Set(priorPeople.map(row=>row.id));
   const priorFacts = held ? {...held,
-    officeholders:held.officeholders.filter(row=>!input.roster.currentMembershipComplete || currentIds.has(row.id)).map(row=>({...row,
-      memberships:row.memberships?.map(membership=>input.roster.currentMembershipComplete || explicitEnded.has(membership.id) ? {...membership,current:false} : membership)})),
-    divisions:input.roster.currentMembershipComplete ? [] : held.divisions.filter(row=>!row.membershipId || !explicitEnded.has(row.membershipId)),
-    unmatched:input.roster.currentMembershipComplete ? [] : held.unmatched,
+    officeholders:priorPeople,
+    divisions:input.roster.currentMembershipComplete ? [] : held.divisions.filter(row=>priorIds.has(row.officeholderId) && (!row.membershipId || !explicitEnded.has(row.membershipId))),
+    unmatched:input.roster.currentMembershipComplete ? [] : held.unmatched.filter(row=>priorIds.has(row.officeholderId)),
   } : null;
   const roster = mergeStatePeople(priorFacts,input.roster);
-  const priorCandidate = prior.kind === "PROMOTED" && input.excludedFacts === undefined ? await input.store.readCandidate(prior.metadata.versionId!) : null;
+  // Keep the original captures behind still-held facts. A malformed next
+  // release must not sever a prior tenure's evidence before it later ends.
+  const referenced = new Set([...roster.officeholders.flatMap(person=>[person.provenance.sourceUrl,
+    ...(person.memberships ?? []).map(row=>row.sourceUrl),...(person.offices ?? []).map(row=>row.sourceUrl),
+    ...Object.values(person.fieldSources ?? {}).map(row=>row.sourceUrl)]),
+    ...(roster.endedMemberships ?? []).map(row=>row.sourceUrl)]);
+  const captureUrl = (row:StatePeopleAcquisition) => {
+    const revision=/^https:\/\/codeload\.github\.com\/openstates\/people\/zip\/([a-f0-9]{40})$/.exec(row.requestedUrl)?.[1];
+    return revision && row.extractedFrom ? `https://raw.githubusercontent.com/openstates/people/${revision}/${row.extractedFrom.member}` : row.finalUrl;
+  };
+  const captured=new Set(input.acquisitions.map(captureUrl));
+  const priorAcquisitions=(priorCandidate?.candidate.normalizedPayload as {acquisitions?:StatePeopleAcquisition[]}|undefined)?.acquisitions ?? [];
+  const acquisitions=[...input.acquisitions,...priorAcquisitions.filter(row=>{
+    const url=captureUrl(row);
+    if (!referenced.has(url) || captured.has(url)) return false;
+    captured.add(url); return true;
+  })];
   const carriedPortraitFacts = priorCandidate?.candidate.excludedFacts?.filter(fact=>fact.code.startsWith("STATE_PORTRAIT_")) ?? [];
-  const candidate = statePeopleCandidate({...input,roster,excludedFacts:input.excludedFacts ?? carriedPortraitFacts});
+  const candidate = statePeopleCandidate({...input,roster,acquisitions,excludedFacts:input.excludedFacts ?? carriedPortraitFacts});
   const outcome = await processRegisteredRoutineCandidate(input.store,`openstates-people-${input.state.toLowerCase()}`,candidate,input.now,
     prior.kind === "PROMOTED" ? prior.metadata.versionId : null,{confirmUnchanged:input.confirmUnchanged});
   return {candidate,outcome};

@@ -83,6 +83,8 @@ export interface PluralRole {
   readonly start_date?: string;
   readonly end_date?: string;
   readonly current?: boolean;
+  /** A valid native end date is before the observation date; never inferred from a missing role. */
+  readonly ended?: boolean;
   readonly sourceUrl?: string;
 }
 
@@ -147,7 +149,7 @@ export function yamlToPeople(text: string, state: string, sourceUrl: string, asO
       if (start_date && end_date && start_date.slice(0, Math.min(start_date.length,end_date.length)) > end_date.slice(0, Math.min(start_date.length,end_date.length))) throw new Error("PLURAL_ROLE_DATE_ORDER_INVALID");
       return [{ type: role.type, district: typeof role.district === "string" || typeof role.district === "number" ? String(role.district) : undefined,
         title: typeof role.title === "string" ? role.title : undefined, jurisdiction: typeof role.jurisdiction === "string" ? role.jurisdiction : undefined,
-        start_date, end_date, current: startsBy(start_date) && endsAfter(end_date), sourceUrl }];
+        start_date, end_date, current: startsBy(start_date) && endsAfter(end_date), ended: Boolean(end_date && !endsAfter(end_date)), sourceUrl }];
     } catch (error) {
       unresolved(`${error instanceof Error ? error.message : String(error)}:person=${row.id}:role=${index}`);
       return [];
@@ -377,6 +379,7 @@ export function normalize(
   const officeholders: Officeholder[] = [];
   const divisions: OfficeholderDivision[] = [];
   const unmatched: OfficeholderSet["unmatched"] = [];
+  const endedMemberships: NonNullable<OfficeholderSet["endedMemberships"]>[number][] = [];
   const chamberFor = (state: string, type: string) => type === "legislature" && ["ne", "dc"].includes(state) ? "upper" : type;
 
   for (const person of raw) {
@@ -390,6 +393,7 @@ export function normalize(
       const chamber = chamberFor(person.state, role.type);
       const legislative = ["upper", "lower", "legislature"].includes(role.type);
       if (legislative) {
+        if (role.jurisdiction && !new RegExp(`^ocd-jurisdiction/country:us/(?:state|district|territory):${person.state}/government$`).test(role.jurisdiction)) return [];
         const title = role.title || CHAMBER_TITLE[person.state]?.[chamber as "upper" | "lower"];
         if (!["upper", "lower"].includes(chamber) || !title) {
           if (role.current) unmatched.push({officeholderId:id,reason:`PLURAL_LEGISLATIVE_ROLE_UNRESOLVED:${role.type}`});
@@ -409,9 +413,21 @@ export function normalize(
         officeId:`openstates-office:${role.jurisdiction}:${binding.officeKey}:${role.district ?? ""}`,
         membershipId:`${personId}:${role.jurisdiction}:${binding.officeKey}:${role.district ?? ""}:${role.start_date ?? ""}`}];
     });
+    const memberships = mapped.map(item => ({
+      id:item.membershipId,personId,officeId:item.officeId,
+      jurisdiction:item.role.jurisdiction ?? `US-${person.state.toUpperCase()}`,
+      chamber:item.chamber,district:item.role.district,officeTitle:item.title,level:item.level,
+      current:item.role.current !== false,divisionId:item.divisionId,
+      termStart:item.role.start_date ?? null,termEnd:item.role.end_date ?? null,
+      sourceUrl:item.role.sourceUrl ?? person.sourceUrl ?? bulkUrl(person.state),
+    }));
+    for (let i=0;i<mapped.length;i++) if (mapped[i].role.ended) endedMemberships.push({...memberships[i],current:false});
     const current = mapped.filter(item=>item.role.current !== false);
     const primary = current.find(item=>item.chamber) ?? current[0];
-    if (!primary) { unmatched.push({officeholderId:id,reason:"PLURAL_PERSON_HAS_NO_BOUND_CURRENT_ROLE"}); continue; }
+    if (!primary) {
+      if (sourceRoles.some(role=>role.current)) unmatched.push({officeholderId:id,reason:"PLURAL_PERSON_HAS_NO_BOUND_CURRENT_ROLE"});
+      continue;
+    }
     const {role,title,chamber,level}=primary;
 
     officeholders.push({
@@ -426,14 +442,7 @@ export function normalize(
         }
         return native;
       })(),
-      memberships: mapped.map(item => ({
-        id:item.membershipId,personId,officeId:item.officeId,
-        jurisdiction:item.role.jurisdiction ?? `US-${person.state.toUpperCase()}`,
-        chamber:item.chamber,district:item.role.district,officeTitle:item.title,level:item.level,
-        current:item.role.current !== false,divisionId:item.divisionId,
-        termStart:item.role.start_date ?? null,termEnd:item.role.end_date ?? null,
-        sourceUrl:item.role.sourceUrl ?? person.sourceUrl ?? bulkUrl(person.state),
-      })),
+      memberships,
       offices: (person.offices ?? [
         { name: "capitol", address: person.capitol_address, voice: person.capitol_voice },
         { name: "district", address: person.district_address, voice: person.district_voice },
@@ -485,7 +494,8 @@ export function normalize(
     }
   }
 
-  return { scope, generatedAt: collectedAt, officeholders, divisions, unmatched };
+  return { scope, generatedAt: collectedAt, officeholders, divisions, unmatched,
+    ...(endedMemberships.length ? {endedMemberships:[...new Map(endedMemberships.map(row=>[row.id,row])).values()]} : {}) };
 }
 
 

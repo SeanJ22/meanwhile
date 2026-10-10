@@ -15,8 +15,9 @@ import { isStatewideExecutive, scopedHolders } from "../officials/scoped-holders
 import { schoolDependency, type SchoolDependency } from "../officials/school-dependency.ts";
 
 import { bodiesAt, type GeoFeature } from "./resolve.ts";
+import { slotsFor } from "./derive.ts";
 import type { BodyTerritoryFile } from "./body-territory.ts";
-import type { RosterReaderGap } from "./body-rosters.ts";
+import { governingRosterHoldersForDivision, type RosterReaderGap } from "./body-rosters.ts";
 import type {
   Body,
   BodyClass,
@@ -358,7 +359,9 @@ export function summarizeCoverage(
       label: d.label,
       divisionType: d.divisionType as Seat["divisionType"],
       tier: d.tier,
-      representatives: holdersFor(officials, d.ocdId),
+      representatives: d.divisionType === "place"
+        ? scopedHolders(governingRosterHoldersForDivision(d.ocdId), holdersFor(officials, d.ocdId))
+        : holdersFor(officials, d.ocdId),
     }));
 
   const senators = senatorsFor(
@@ -379,7 +382,10 @@ export function summarizeCoverage(
     covered.filter((b) => b.divisionType === "place").map((b) => b.ocdId),
   );
   const unincorporated =
-    municipal.length > 0 && municipal.every((d) => !municipalWithBody.has(d.ocdId));
+    municipal.length > 0 && municipal.every((d) =>
+      slotsFor(d).skipped === "statistical-or-unorganized" &&
+      !municipalWithBody.has(d.ocdId) && holdersFor(officials, d.ocdId).length === 0 &&
+      governingRosterHoldersForDivision(d.ocdId).length === 0);
 
   // Governing bodies first, live sources before unwired ones, then by label —
   // the notice names only the first few, and those slots belong to the

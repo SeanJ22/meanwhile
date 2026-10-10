@@ -18,7 +18,7 @@ export function scopedHolders(primary: readonly SeatHolder[], additional: readon
     if (office !== null && SINGLE_OFFICES.has(office) && primary.some(row => officeIdentity(row.officeTitle) === office)) continue;
     holders.push(holder);
   }
-  return holders.sort((a, b) => a.name.localeCompare(b.name));
+  return holders;
 }
 
 /** Only statewide executive offices, excluding Congress and state legislative seats on the same index. */

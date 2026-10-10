@@ -5,7 +5,7 @@ import type {
 } from "../civic-data/types.ts";
 import { sourceProjectionEvidence } from "../civic-data/types.ts";
 import { normalizedHash, sha256 } from "../civic-data/candidate-builders.ts";
-import type { StateMoneyRecord, StateMoneySnapshot } from "./state-money.ts";
+import { stateMoneyRecordKey, type StateMoneySnapshot } from "./state-money.ts";
 import type {
   AzPimaHeld,
   AzPimaTransactions,
@@ -16,19 +16,19 @@ export const STATE_CAMPAIGN_FINANCE_SOURCES = {
     contractId: "az-sos-campaign-finance",
     sourceId: "az-sos-campaign-finance",
     scope: "US-AZ:campaign-finance:2026",
-    parserVersion: "az-campaign-finance/3",
+    parserVersion: "az-campaign-finance/4",
   },
   NH: {
     contractId: "nh-sos-campaign-finance",
     sourceId: "nh-sos-campaign-finance",
     scope: "US-NH:campaign-finance:2026",
-    parserVersion: "nh-campaign-finance/3",
+    parserVersion: "nh-campaign-finance/4",
   },
   NJ: {
     contractId: "nj-elec-campaign-finance",
     sourceId: "nj-elec-campaign-finance",
     scope: "US-NJ:campaign-finance:2026",
-    parserVersion: "nj-campaign-finance/3",
+    parserVersion: "nj-campaign-finance/4",
   },
 } as const;
 
@@ -51,21 +51,16 @@ function canonicalRawHash(rawBodies: readonly string[]): string {
   return sha256(rawBodies.map((body) => sha256(body)).join("\n"));
 }
 
-function stateRecordKey(record: StateMoneyRecord, index: number): string {
-  const identity = record.committeeId || record.targetKeys.slice().sort().join("+") || `unresolved-${index}`;
-  return `state-money:${record.jurisdiction}:${record.electionYear}:${identity}:${record.filingState}`;
-}
-
 export function stateCampaignFinanceMembers(snapshot: StateMoneySnapshot): readonly CivicRecordMember[] {
   return snapshot.records
-    .map((record, index) => ({ key: stateRecordKey(record, index), record }))
+    .map((record, index) => ({ key: stateMoneyRecordKey(record, index), record }))
     .sort((a, b) => a.key.localeCompare(b.key));
 }
 
 function stateIdentities(snapshot: StateMoneySnapshot): readonly IdentityEvidence[] {
   return snapshot.records.map((record, index) => {
     const exactTarget = record.targetKeys.slice().sort().join("+");
-    const subjectId = record.committeeId || exactTarget || stateRecordKey(record, index);
+    const subjectId = record.committeeId || exactTarget || stateMoneyRecordKey(record, index);
     const identifiers: Readonly<Record<string, string>> = record.committeeId
       ? { committee_id: record.committeeId }
       : { candidacy_id: exactTarget || subjectId };

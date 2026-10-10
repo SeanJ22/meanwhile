@@ -26,7 +26,8 @@ async function seed(count=1) {
   return {store,roster,acquisitions};
 }
 function profile(options:KnownReleaseOptions):KnownRelease {
-  const index=new URL(options.url).pathname.split("/").at(-1);
+  const requestedUrl=new URL(options.url);
+  const index=requestedUrl.pathname.split("/").at(-1);
   const text=`<h1>Jane Member ${index}</h1><img alt="Portrait of Jane Member ${index}" src="/portraits/${index}.png">`;
   const bytes=new TextEncoder().encode(text),sha256=portraitHash(bytes).slice(7);
   return {sourceId:options.sourceId,releaseId:options.releaseId,requestedUrl:options.url,finalUrl:options.url,

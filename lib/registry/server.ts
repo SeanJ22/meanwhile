@@ -4,10 +4,8 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
 import {
-  holdersFor,
   indexByDivision,
   indexByOfficeholderId,
-  stateOcdIdFrom,
   seatHolderForMembership,
   type OfficeholderIndex,
   type PhotoIndex,
@@ -18,8 +16,10 @@ import { BODY_TERRITORY_FILE, type BodyTerritoryFile } from "./body-territory.ts
 import { readPublicBodyAttempts, type PublicBodyAttempt } from "./body-attempt-read.ts";
 import { attemptsByFamily } from "./attempt-families.ts";
 import { currentStatewideExecutives, statewideExecutivesFor } from "../officials/statewide-executives.ts";
-import { currentBodyRosters, currentRosterMemberReaderDisposition, governingRosterHoldersForDivision, rosterGapForBody, rosterHoldersForBody } from "./body-rosters.ts";
+import { currentBodyRosters, currentRosterMemberReaderDisposition, rosterGapForBody, rosterHoldersForBody } from "./body-rosters.ts";
 import { scopedHolders } from "../officials/scoped-holders.ts";
+import { readDivisionRepresentatives } from "./representation-server.ts";
+export { federalDirectoryAppliesToDivision } from "./representation-server.ts";
 import { membersOfBody } from "./body-membership.ts";
 import { officePhoneForBody } from "../meetings/office-phone.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
@@ -608,31 +608,14 @@ export async function chamberForOfficeholder(
 export async function seatHoldersForDivision(
   ocdId: string,
 ): Promise<SeatHolder[]> {
-  const stateScope = /\/cd:[^/]+$/.test(ocdId) ? null : statePeopleScopeForDivision(ocdId);
-  const reads: { official: boolean; read: Promise<SeatHolder[]> }[] = [];
-  if (stateScope) reads.push({ official: false, read: heldStateLegislatorsEdgeFirst(stateScope).then(held => {
-    if (!held) return [];
-    const byId = new Map(held.seats.map(holder => [holder.id, holder]));
-    return held.divisions.filter(row => row.ocdId === ocdId).flatMap(link => {
-      const holder = byId.get(link.officeholderId);
-      const selected = holder ? seatHolderForMembership(holder, link.membershipId) : null;
-      return selected ? [selected] : [];
-    });
-  }) });
-  if (federalDirectoryAppliesToDivision(ocdId)) reads.push({ official: false, read: settleFederalDirectoryRead().then(() =>
-    holdersFor(indexByDivision([getFederalOfficeholderSet()], suppliedOfficialPhotos()), ocdId)) });
-  if (stateOcdIdFrom(ocdId) === ocdId) reads.push({ official: true,
-    read: settleRegistryRuntimeRead().then(() => statewideExecutivesFor([ocdId])) });
-  else if (!/\/(?:sld[lu]|cd):[^/]+$/.test(ocdId) && !federalDirectoryAppliesToDivision(ocdId)) reads.push({ official: true,
-    read: settleRegistryRuntimeRead().then(() => governingRosterHoldersForDivision(ocdId)) });
-  // These independent authorities all describe this exact division. One failed source cannot erase another's people.
-  const settled = await Promise.allSettled(reads.map(row => row.read));
-  const primary = settled.flatMap((read, index) => read.status === "fulfilled" && reads[index].official ? read.value : []);
-  const additional = settled.flatMap((read, index) => read.status === "fulfilled" && !reads[index].official ? read.value : []);
-  const holders = scopedHolders(primary, additional);
-  const failed = settled.find(read => read.status === "rejected");
-  if (!holders.length && failed?.status === "rejected") throw failed.reason;
-  return holders;
+  return readDivisionRepresentatives(ocdId, {
+    statePeople: heldStateLegislatorsEdgeFirst,
+    federal: async () => {
+      await settleFederalDirectoryRead();
+      return indexByDivision([getFederalOfficeholderSet()], suppliedOfficialPhotos());
+    },
+    registry: settleRegistryRuntimeRead,
+  });
 }
 
 /**
@@ -644,13 +627,6 @@ async function heldStateLegislatorsEdgeFirst(scope: StatePeopleJurisdiction) {
   if (read.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(read);
   if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") return null;
   return heldOfficialStateLegislatorsFromRead(scope, read);
-}
-
-/** Exact divisions to which the production federal roster can contribute. */
-export function federalDirectoryAppliesToDivision(ocdId: string): boolean {
-  return ocdId === "ocd-division/country:us"
-    || /^ocd-division\/country:us\/(?:state|district|territory):[a-z]{2}$/.test(ocdId)
-    || /\/cd:[^/]+$/.test(ocdId);
 }
 
 export type CoverageStateLegislatorReader = (

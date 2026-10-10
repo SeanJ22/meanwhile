@@ -170,6 +170,22 @@ export interface StateMoneySnapshot {
   acquisitionCursors?: Record<string, number>;
 }
 
+/** Filing status can change without replacing the agency's committee for a period. */
+export function stateMoneyRecordKey(record: {
+  readonly jurisdiction: string;
+  readonly electionYear: string | number;
+  readonly committeeId: string | null;
+  readonly targetKeys: readonly string[];
+  readonly filingState: string;
+}, index: number): string {
+  const scope = `state-money:${record.jurisdiction}:${record.electionYear}`;
+  if (record.committeeId) return `${scope}:${record.committeeId}`;
+  // Unresolved candidacy gaps have no native committee; retain their exact
+  // target identity until source evidence resolves that relationship.
+  const target = record.targetKeys.slice().sort().join("+") || `unresolved-${index}`;
+  return `${scope}:${target}:${record.filingState}`;
+}
+
 /**
  * The matching bar, in one function so no caller can lower it. The join is on
  * a name, which can always drop or mismatch rows, so the bar is a

@@ -51,6 +51,11 @@ function fixture<T>(path: string): T {
   return JSON.parse(readFileSync(new URL(`./fixtures/${path}`, import.meta.url), "utf8")) as T;
 }
 
+function requestPath(url: string): string {
+  const parsed = new URL(url);
+  return parsed.pathname;
+}
+
 const PIMA_ENDPOINT = (eventId: number) => `https://webapi.legistar.com/v1/pima/events/${eventId}/eventitems`;
 const PIMA_PROVENANCE = { endpoint: PIMA_ENDPOINT(1801), sourceOrg: "Pima County Clerk of the Board", readOn: "2026-08-29" };
 const SITTING_URL = "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1801&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394";
@@ -383,19 +388,19 @@ test("body-first Pima acquisition promotes the exact native body's outcomes and 
   const { result } = await routinePass(store, stub, "2026-09-21T00:00:00.000Z", client);
   assert.equal(result.exitCode, 0);
   assert.equal(result.promotedSittings, 1, "a different native body cannot become the Board even when the event label matches");
-  assert.equal(new URL(stub.requests[0]).pathname, "/v1/pima/bodies");
-  const eventsRequest = stub.requests.find(url => new URL(url).pathname === "/v1/pima/events");
+  assert.equal(requestPath(stub.requests[0]), "/v1/pima/bodies");
+  const eventsRequest = stub.requests.find(url => requestPath(url) === "/v1/pima/events");
   assert.ok(eventsRequest);
   assert.match(new URL(eventsRequest).searchParams.get("$filter")!, new RegExp(`EventBodyId eq ${event.EventBodyId}`));
   assert.ok(!stub.requests.some(url => /\/events\/1821\/eventitems/.test(url)), "wrong-body event items are never requested");
   const verdict = await supervisorVerdict(store, result.receiptLine, result.exitCode);
   assert.deepEqual({ outcome: verdict.outcome, issue: verdict.issue }, { outcome: "SUCCESS", issue: null });
   const saved = await store.readCandidate(verdict.candidateId);
-  assert.equal(new URL(saved!.candidate.retrieval.requestedUrl).pathname, "/v1/pima/bodies",
+  assert.equal(requestPath(saved!.candidate.retrieval.requestedUrl), "/v1/pima/bodies",
     "the candidate names its actual first response, without relabeling body evidence as events");
   const acquisitions = (saved!.candidate.normalizedPayload as { acquisitions: typeof EVIDENCE }).acquisitions;
   for (const path of ["/v1/pima/bodies", "/v1/pima/events", "/v1/pima/events/1825/eventitems", "/v1/pima/eventitems/329182/votes"]) {
-    assert.ok(acquisitions.some(row => new URL(row.requestedUrl).pathname === path && row.source === CONTRACT_ID), `${path} remains attributed evidence`);
+    assert.ok(acquisitions.some(row => requestPath(row.requestedUrl) === path && row.source === CONTRACT_ID), `${path} remains attributed evidence`);
   }
   const read = await readDoorOutcomeProjection(SCOPE, { store, bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
@@ -419,7 +424,7 @@ test("a requested Pima body that disagrees with the native body is durably held 
     now: steppedClock("2026-09-21T00:00:00.000Z"), log: () => {},
   }));
   assert.equal(result.exitCode, 2);
-  assert.deepEqual(stub.requests.map(url => new URL(url).pathname), ["/v1/pima/bodies"]);
+  assert.deepEqual(stub.requests.map(requestPath), ["/v1/pima/bodies"]);
   const verdict = await supervisorVerdict(store, result.receiptLine, result.exitCode);
   assert.deepEqual({ outcome: verdict.outcome, issue: verdict.issue }, { outcome: "HELD", issue: null });
   assert.match((await store.readCandidate(verdict.candidateId))!.candidate.retrieval.failureDetail!, /LEGISTAR_OUTCOME_BODY_IDENTITY_MISMATCH/);

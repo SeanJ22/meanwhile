@@ -1,13 +1,13 @@
 # River status
 
-build_state: RELEASE 23 PR #730 MERGED; VERIFYING AUTOMATIC DEPLOYMENT AND SOURCE PUBLICATION.
+build_state: RELEASE 23 PR #730 MERGED AND WEB DEPLOYED; VERIFYING AUTOMATIC RUNTIME ADOPTION AND SOURCE PUBLICATION.
 worker: codex-acquisition-scale
 provider: Codex
 run_id: acquisition-scale-2026-10-09
 lock: codex-acquisition-scale-2026-10-09
-heartbeat: 2026-10-10T02:06:13Z
+heartbeat: 2026-10-10T02:12:12Z
 
-## RELEASE 23 — national listings, known officials, portraits and finance: MERGED, PRODUCTION VERIFYING
+## RELEASE 23 — national listings, known officials, portraits and finance: MERGED AND WEB DEPLOYED
 
 - PR https://github.com/SeanJ22/meanwhile/pull/730 merged as 4f8bc8d5bcfb1606ce436c9d68f4098b68cafcb7; merged tree matches the tested tree exactly. Final READY ed5929429cd05a58fe429acf6eef549434d0fc56; fold 5f76b2d80a9b6f8799cfbee5888f5c15f9b350fd includes main fd8ffd995eaf4a86fc731609df58c5d4d2397255. Exact local/uploaded tree487faefd8b207db1fc23cb74e9549daf95a98d8d; workspace clean.
 - Hosted run https://github.com/SeanJ22/meanwhile/actions/runs/38014509898 completed successfully on signed checkout 8d68f46721de856247c38dd39680db15e5a9f37e: all 7,872 tests passed, zero failed, five skipped; lint, TypeScript, production standalone build, all 16 bundle checks and final gate passed. Schema shipping gate not applicable: the contract did not change. Largest app trace 382/430; framework trace 1,184/1,300; initial client 1,903.5 KB raw / 550.5 KB gzip. River and river-next now point to this exact tested commit. Main and release head were rechecked unchanged; merge authorized.
@@ -20,7 +20,8 @@ heartbeat: 2026-10-10T02:06:13Z
 - Earlier run38010315619 had6119passes,3failures,5skips; corrected the division-call boundary, roster order and HTTP URL testguard. Superseded run38013256704 passed admission, lint/types, real standalone build and16bundlechecks; final native correction requires the newrun above.
 - Production before merge: 52 OpenStates /2 scopes, 7,420 people, 52/52 canonical typed-reader PASS; Congress /3 has 539 people; registration 56 /3 has no new listings. Runtime auto-adopted fd8 and remains current. Latest completed old-code pass ended 01:46:47Z, attempted 56 tasks, reader edge CURRENT at sequence 3219; no new reader readbacks in that pass. Current accepted source versions still have 109/109 typed-reader PASS. This does not establish delivery of pending /3, /4 or /5 changes.
 - Existing budgets, owner pauses, source cadences and valid evidence unchanged. No manual Send, new sources, new credentials or Hunt Network work.
-- Owner codex-acquisition-scale: hosted checks, tested River record and merge complete. Post-deploy observer run 38015653418 is active. Remaining: web deployment/observer, automatic runtime adoption/acquisition and reader publication. Direct livebrowser access remains restricted and is not claimed passed.
+- Netlify deploy 6ac99d4e6a59be0008efb522 published 4f8bc8d at 02:06:46.287Z. Observer run 38015653418 read /api/build serving that revision at 02:06:55Z, confirmed 35/35 migrations HOLDS and read back its durable receipt. Main build/gates run 38015653417 also passed. Runtime heartbeat at 02:11:40Z still reports fd8; new source/parser production counts are not yet claimed.
+- Owner codex-acquisition-scale: hosted checks, tested River record, merge and web deployment/observer complete. Remaining: automatic runtime adoption/acquisition and reader publication. Direct livebrowser access remains restricted and is not claimed passed.
 
 ## RELEASE 22 — acquisition baseline: PR #729, MERGED AND WEB DEPLOYED
 

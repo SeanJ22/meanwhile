@@ -46,5 +46,23 @@
     "local_gates": "Restricted Git subprocess and localhost checks covered by full hosted CI under owner authorization."
   },
   "note": "River contains the exact synthetic merge tested by hosted CI. Release branch is its tested source parent; both have the same verified tree. Owner authorized merge after green local or internal checks.",
-  "merged_sha": "4f8bc8d5bcfb1606ce436c9d68f4098b68cafcb7"
+  "merged_sha": "4f8bc8d5bcfb1606ce436c9d68f4098b68cafcb7",
+  "production_observation": {
+    "run_id": 38015653418,
+    "sha": "4f8bc8d5bcfb1606ce436c9d68f4098b68cafcb7",
+    "served_at": "2026-10-10T02:06:55.224Z",
+    "integrity": "HOLDS",
+    "migrations_applied": 35,
+    "migrations_committed": 35
+  },
+  "deploy": {
+    "id": "6ac99d4e6a59be0008efb522",
+    "state": "ready",
+    "published_at": "2026-10-10T02:06:46.287Z"
+  },
+  "main_verification": {
+    "run_id": 38015653417,
+    "conclusion": "success",
+    "observed_at": "2026-10-10T02:12:12Z"
+  }
 }

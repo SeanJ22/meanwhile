@@ -1,11 +1,21 @@
 # River status
 
-build_state: RELEASE 22 MERGED AND WEB DEPLOYED; runtime still on prior code during automatic handoff. AF-09 known executive/municipal roles and AF-10 Congress portrait repair in progress for the next combined release.
+build_state: RELEASE 23 PR #730 IN HOSTED CI (AF-09 AF-10). Release 22 web deployed; first OpenStates promotions observed, broad baseline still incomplete.
 worker: codex-acquisition-scale
 provider: Codex
 run_id: acquisition-scale-2026-10-09
 lock: codex-acquisition-scale-2026-10-09
-heartbeat: 2026-10-09T23:52:05Z
+heartbeat: 2026-10-10T00:18:40Z
+
+## RELEASE 23 — known native roles and portraits: PR #730, CHECKING
+
+- READY a8e4c5a4b71a5fd56e450b8522ea8ae930701050; fold 45191d3420d44991050d06dc0aba0f4403363d98 includes main fd8ffd995. Exact staged/uploaded tree 371da20556b7e6453666591e4a060ed9e556c6de.
+- Recognized source-native executive and municipal memberships now reach division routes, normal coverage and Ask; exact current-role selection and direct-official precedence preserve jurisdiction and tenure. Blanket exclusion and legislative-only reader restriction removed.
+- Congress/state portraits verify after asynchronous capture, retain previous verified assets and durable source failures, and resume finite known profiles with the existing bounded pool and deadline. Fixed calendar slice removed; held API evidence and official URLs reused.
+- Local combined tests: 117 named passes, 0 failures, 0 skips. TypeScript and changed-file lint pass. PR https://github.com/SeanJ22/meanwhile/pull/730 is labeled run-full-ci. Required hosted checks precede merge.
+- Fresh production query at 00:13Z: Plural /2 has 3 scopes and 230 people (latest 00:07:46Z). Registration still 56 /3 scopes with no new named listing payload; Congress /3 has 539 people from 21:10Z. This is initial automatic acquisition, not proof of national completion or reader delivery. Current runner heartbeat still records 6f4d at 23:38Z; independent intake remains active.
+- Existing budgets, owner pauses, memory reserve, source cadences and shared evidence unchanged. No manual Send, new sources or Hunt Network work.
+- Owner: codex-acquisition-scale for hosted checks, merge, deploy, automatic acquisition and reader readback. Browser access is restricted in this environment and has not been claimed as passed.
 
 ## RELEASE 22 — acquisition baseline: PR #729, MERGED AND WEB DEPLOYED
 

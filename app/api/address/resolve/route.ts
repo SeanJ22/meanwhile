@@ -12,7 +12,9 @@ import { divisionsAt } from "@/lib/registry/server";
 import { contestsForDivisions } from "@/lib/sources/ballot-nj-morris";
 import { readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
 import { publishedZipDistricts } from "@/lib/geo/zip-census-districts";
-import { excludedRepresentationAtPoints } from "@/lib/geo/representation-geography";
+import { excludedRepresentationAtPoints, requestRepresentationGeographyReader } from "@/lib/geo/representation-geography";
+import { readReaderManifest, readerAuthorityEdge } from "@/lib/meetings/edge-serving";
+import { withReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 
 /**
  * Takes a street and a ZIP; returns the jurisdictions the reader is confirmed to be in, level by level, and
@@ -71,6 +73,12 @@ export async function POST(request: Request) {
   if (street.length < 3 || street.length > 120) return bad();
   if (houseNumber.length > 12) return bad();
 
+  // Acquire the serving version alongside geocoding, once for every sample.
+  const authority = readReaderManifest().then(manifest => manifest
+    ? readerAuthorityEdge(manifest, undefined, ["registry-runtime", "census-districts"])
+    : null).catch(() => null);
+  const geographyRead = authority.then(edge => withReaderAuthorityEdge(edge, () => publishedZipDistricts(zip)));
+
   /*
    * With a house number there is ONE point and nothing to average, so every
    * level is certain by construction. Without one, the street is sampled at
@@ -101,41 +109,45 @@ export async function POST(request: Request) {
     return Response.json({ ok: true, resolution: failed, contestIds: [] }, { headers: NO_STORE });
   }
 
-  const samples: Sample[] = [];
-  for (const p of points) {
-    const divisions = await divisionsAt(p.lat, p.lng);
-    samples.push(
-      divisions.map((d) => ({ ocdId: d.ocdId, divisionType: d.divisionType, label: d.label })),
+  return withReaderAuthorityEdge(await authority, async () => {
+    const geography = await geographyRead;
+    // Published ZIP geography can know a state before its base registry is held.
+    const states = geography.kind === "HELD"
+      ? [...new Set(geography.value.containers.map(container => container.ref.stateAbbr))]
+      : [];
+    const representationRead = requestRepresentationGeographyReader();
+    const samples: Sample[] = await Promise.all(points.map(async p => {
+      const divisions = await divisionsAt(p.lat, p.lng, representationRead, states);
+      return divisions.map(d => ({ ocdId: d.ocdId, divisionType: d.divisionType, label: d.label }));
+    }));
+
+    const resolution = resolveAddress(samples);
+    const excludedDivisionIds = geography.kind === "HELD" ? excludedRepresentationAtPoints(points.map(point => [point.lng, point.lat]), geography.value) : [];
+
+    /*
+     * Contests come from the CONFIRMED divisions only. A level the street
+     * genuinely crosses contributes nothing until the reader settles it, because
+     * narrowing a ballot on a jurisdiction we are not sure of would hide
+     * contests the reader may actually vote in — and hiding a contest silently
+     * is how a reader ends up believing it does not exist.
+     */
+    const confirmed =
+      resolution.status === "FAILED"
+        ? []
+        : resolution.levels.filter((l) => l.certain).flatMap((l) => l.divisionIds);
+
+    /* The point comes back only when the answer is unambiguous: a street midpoint, never a house, never stored. */
+    const point =
+      resolution.status === "RESOLVED" && points.length > 0
+        ? {
+            lat: points.reduce((sum, q) => sum + q.lat, 0) / points.length,
+            lng: points.reduce((sum, q) => sum + q.lng, 0) / points.length,
+          }
+        : null;
+
+    return Response.json(
+      { ok: true, resolution, contestIds: await contestIdsFor(confirmed), point, excludedDivisionIds },
+      { headers: NO_STORE },
     );
-  }
-
-  const resolution = resolveAddress(samples);
-  const geography = await publishedZipDistricts(zip);
-  const excludedDivisionIds = geography.kind === "HELD" ? excludedRepresentationAtPoints(points.map(point => [point.lng, point.lat]), geography.value) : [];
-
-  /*
-   * Contests come from the CONFIRMED divisions only. A level the street
-   * genuinely crosses contributes nothing until the reader settles it, because
-   * narrowing a ballot on a jurisdiction we are not sure of would hide
-   * contests the reader may actually vote in — and hiding a contest silently
-   * is how a reader ends up believing it does not exist.
-   */
-  const confirmed =
-    resolution.status === "FAILED"
-      ? []
-      : resolution.levels.filter((l) => l.certain).flatMap((l) => l.divisionIds);
-
-  /* The point comes back only when the answer is unambiguous: a street midpoint, never a house, never stored. */
-  const point =
-    resolution.status === "RESOLVED" && points.length > 0
-      ? {
-          lat: points.reduce((sum, q) => sum + q.lat, 0) / points.length,
-          lng: points.reduce((sum, q) => sum + q.lng, 0) / points.length,
-        }
-      : null;
-
-  return Response.json(
-    { ok: true, resolution, contestIds: await contestIdsFor(confirmed), point, excludedDivisionIds },
-    { headers: NO_STORE },
-  );
+  });
 }

@@ -16,6 +16,7 @@ import {
   locateAddressInZip,
   lookupStreetInZip,
   parseCensusPoint,
+  sampleStreetPoints,
   streetOnly,
 } from "../lib/geo/census-geocoder.ts";
 
@@ -124,6 +125,99 @@ function stubFetch(bodies: Record<string, unknown>): typeof fetch {
     });
   }) as typeof fetch;
 }
+
+/** Hold source responses until the test releases them, honoring fetch cancellation. */
+function controlledSampleFetch() {
+  const requests: {
+    address: string;
+    signal: AbortSignal;
+    aborted: boolean;
+    respond: (body: unknown) => void;
+  }[] = [];
+  const fetchImpl = ((input: string | URL, init?: RequestInit) =>
+    new Promise<Response>((resolve, reject) => {
+      const signal = init?.signal;
+      assert.ok(signal);
+      const request = {
+        address: new URL(String(input)).searchParams.get("address") ?? "",
+        signal,
+        aborted: false,
+        respond(body: unknown) {
+          signal.removeEventListener("abort", onAbort);
+          resolve(new Response(JSON.stringify(body), { status: 200 }));
+        },
+      };
+      const onAbort = () => {
+        request.aborted = true;
+        reject(new DOMException("Aborted", "AbortError"));
+      };
+      signal.addEventListener("abort", onAbort, { once: true });
+      requests.push(request);
+    })) as typeof fetch;
+  return { fetchImpl, requests };
+}
+
+test("street sampling starts all four probes before any source response and preserves sample order", async () => {
+  const { fetchImpl, requests } = controlledSampleFetch();
+  const parent = new AbortController();
+  const lookup = sampleStreetPoints("Academy St", "07866", { fetchImpl, signal: parent.signal });
+  try {
+    assert.deepEqual(requests.map((request) => request.address),
+      SAMPLE_HOUSE_NUMBERS.map((number) => `${number} Academy St, 07866`));
+    const points = [
+      { lat: 40.90273, lng: -74.51317 },
+      { lat: 40.90337, lng: -74.5137 },
+      { lat: 40.904, lng: -74.514 },
+      { lat: 40.905, lng: -74.515 },
+    ];
+    // Reverse source completion must neither reorder nor drop any sample.
+    for (let index = requests.length - 1; index >= 0; index--) {
+      requests[index].respond({ result: { addressMatches: [{
+        addressComponents: { zip: "07866" },
+        coordinates: { x: points[index].lng, y: points[index].lat },
+      }] } });
+    }
+    assert.deepEqual(await lookup, points);
+  } finally {
+    parent.abort();
+    await lookup;
+  }
+});
+
+test("cancelling a street lookup releases every in-flight probe and a pre-cancelled lookup sends none", async () => {
+  const { fetchImpl, requests } = controlledSampleFetch();
+  const parent = new AbortController();
+  const lookup = lookupStreetInZip("Academy St", "07866", { fetchImpl, signal: parent.signal });
+  parent.abort();
+  assert.deepEqual(await lookup, { kind: "NOT_FOUND" });
+  assert.equal(requests.length, 4);
+  assert.ok(requests.every((request) => request.aborted), "an in-flight source request survived cancellation");
+
+  assert.deepEqual(await sampleStreetPoints("Academy St", "07866", { fetchImpl, signal: parent.signal }), []);
+  assert.equal(requests.length, 4, "a pre-cancelled lookup started source requests");
+});
+
+test("the whole-lookup deadline cancels remaining probes without publishing an incomplete midpoint", async (context) => {
+  context.mock.timers.enable({ apis: ["setTimeout", "Date"], now: 0 });
+  const { fetchImpl, requests } = controlledSampleFetch();
+  const parent = new AbortController();
+  const lookup = lookupStreetInZip("Academy St", "07866", { fetchImpl, signal: parent.signal, timeoutMs: 100 });
+  try {
+    assert.equal(requests.length, 4);
+    requests[0].respond(REAL_MATCH);
+    await new Promise<void>((resolve) => setImmediate(resolve));
+    context.mock.timers.tick(99);
+    assert.ok(requests.every((request) => !request.aborted));
+    context.mock.timers.tick(1);
+    assert.deepEqual(await lookup, { kind: "NOT_FOUND" });
+    assert.equal(requests[0].aborted, false, "the completed response was treated as in flight");
+    assert.ok(requests.slice(1).every((request) => request.aborted));
+  } finally {
+    parent.abort();
+    await lookup;
+    context.mock.timers.reset();
+  }
+});
 
 test("D53: the lookup never sends a reader's number and stops at four samples", async () => {
   const asked: string[] = [];

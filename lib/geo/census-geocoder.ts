@@ -267,30 +267,33 @@ async function sampleStreet(
 ): Promise<{ lat: number; lng: number }[]> {
   const impl = options.fetchImpl ?? fetch;
   const deadline = Date.now() + (options.timeoutMs ?? 8000);
-  const points: { lat: number; lng: number }[] = [];
+  if (options.signal?.aborted || Date.now() >= deadline) return [];
 
-  // Serialized: one request at a time, with a clock that stops the whole lookup.
-  for (const number of numbers) {
-    if (options.signal?.aborted || Date.now() > deadline) break;
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), Math.max(0, deadline - Date.now()));
-    const onOuterAbort = () => controller.abort();
-    options.signal?.addEventListener("abort", onOuterAbort);
-    try {
-      const point = await geocodeOnce(
-        `${number} ${cleaned}, ${zip}`,
-        impl,
-        controller.signal,
-      );
-      if (point) points.push(point);
-    } catch {
-      // A miss is a miss. The loop keeps going; zero matches ends as null.
-    } finally {
-      clearTimeout(timer);
-      options.signal?.removeEventListener("abort", onOuterAbort);
-    }
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), Math.max(0, deadline - Date.now()));
+  const onOuterAbort = () => controller.abort();
+  options.signal?.addEventListener("abort", onOuterAbort, { once: true });
+  try {
+    // The fixed four samples are independent and share one lookup deadline.
+    // Promise.all keeps their ladder order even when responses arrive out of order.
+    const points = await Promise.all(numbers.map(async (number) => {
+      try {
+        return await geocodeOnce(
+          `${number} ${cleaned}, ${zip}`,
+          impl,
+          controller.signal,
+        );
+      } catch {
+        return null;
+      }
+    }));
+    // An incomplete lookup cannot resolve a street from only its quickest samples.
+    if (controller.signal.aborted) return [];
+    return points.filter((point) => point !== null);
+  } finally {
+    clearTimeout(timer);
+    options.signal?.removeEventListener("abort", onOuterAbort);
   }
-  return points;
 }
 
 export async function locateStreetInZip(

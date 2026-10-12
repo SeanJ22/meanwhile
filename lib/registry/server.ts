@@ -45,7 +45,7 @@ import { bindGovernmentBodies, governmentStateOf, type RegistrationGovernmentLis
 import { readRegistrationProjection } from "../registration/reader.ts";
 import { stateOf } from "./wording.ts";
 import { publishedDivisionsForZip } from "../geo/zip-census-districts.ts";
-import { supplementPointDivisions } from "../geo/representation-geography.ts";
+import { supplementPointDivisions, type RepresentationGeographyReader } from "../geo/representation-geography.ts";
 import type { GeographySelection } from "../census-geography/selection.ts";
 import {
   heldOfficialStateLegislatorsFromRead,
@@ -475,9 +475,9 @@ export async function bodyById(bodyId: string): Promise<Body | null> {
 }
 
 /** The divisions containing a point, from the committed geometry. */
-export async function divisionsAt(lat: number, lng: number): Promise<Division[]> {
+export async function divisionsAt(lat: number, lng: number, representationRead?: RepresentationGeographyReader, representationStates?: readonly string[]): Promise<Division[]> {
   const { features, divisionsById } = await registryLoaded();
-  return supplementPointDivisions(lat, lng, resolveDivisionsAt([lng, lat], features, divisionsById));
+  return supplementPointDivisions(lat, lng, resolveDivisionsAt([lng, lat], features, divisionsById), undefined, representationRead, representationStates);
 }
 
 /**

@@ -11,6 +11,8 @@ import { tribalSeatReferencesFor } from "../officials/tribal-seats.ts";
 
 const SUPPLEMENTAL_TYPES = ["overlay_district", "aiannh"] as const;
 
+export type RepresentationGeographyReader = (state: string) => Promise<Slice<GeographySlice>>;
+
 /** Select plans separately for each state's chamber. Supplemental areas never replace the partition. */
 export function selectedRepresentationContainers(slice: GeographySlice, selection: GeographySelection = currentRepresentationSelection()): readonly ContainerSlice[] {
   const families = new Map<string, ContainerSlice[]>();
@@ -58,6 +60,20 @@ export async function publishedRepresentationGeography(state: string): Promise<S
   return stateContainers(state, SUPPLEMENTAL_TYPES, false, readerQuery(1000));
 }
 
+/** All street samples in a request share one state read and one published version. */
+export function requestRepresentationGeographyReader(read: RepresentationGeographyReader = publishedRepresentationGeography): RepresentationGeographyReader {
+  const states = new Map<string, Promise<Slice<GeographySlice>>>();
+  return state => {
+    const postal = state.toUpperCase();
+    let held = states.get(postal);
+    if (!held) {
+      held = read(postal);
+      states.set(postal, held);
+    }
+    return held;
+  };
+}
+
 export function representationDivisionsAt(point: [number, number], slice: GeographySlice, selection?: GeographySelection): Division[] {
   const hits: Division[] = [];
   for (const container of selectedRepresentationContainers(slice, selection)) {
@@ -81,9 +97,10 @@ export function excludedRepresentationAtPoints(points: readonly [number, number]
   });
 }
 
-export async function supplementPointDivisions(lat: number, lng: number, base: readonly Division[], state?: string): Promise<Division[]> {
+export async function supplementPointDivisions(lat: number, lng: number, base: readonly Division[], state?: string, read: RepresentationGeographyReader = publishedRepresentationGeography, additionalStates: readonly string[] = []): Promise<Division[]> {
   const states = new Set(state ? [state] : base.map(division => division.state).filter((value): value is string => !!value));
-  const reads = await Promise.all([...states].map(publishedRepresentationGeography));
+  for (const additional of additionalStates) states.add(additional);
+  const reads = await Promise.all([...states].map(read));
   const additional = reads.flatMap(slice => slice.kind === "HELD" ? representationDivisionsAt([lng, lat], slice.value) : []);
   return [...new Map([...base, ...additional].map(division => [division.ocdId, division])).values()];
 }

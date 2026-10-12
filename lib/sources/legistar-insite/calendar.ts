@@ -1,38 +1,16 @@
 /**
- * Reading Legistar InSite's own calendar grid — the parse, with no network in
- * it.
+ * Reading Legistar InSite's own calendar grid: the parse, with no network in it.
  *
- * ## The measurement this file exists because of (2026-08-28)
+ * `webapi.legistar.com/v1/{client}/events` returns only sittings whose InSite meeting-detail page is
+ * publicly viewable; the others have no WebAPI record at all, and the two routes number meetings in
+ * disjoint id spaces. The discriminator is in the grid HTML only: an unpublished sitting renders its
+ * "Meeting details" anchor with no href, `class="meeting_NotViewable"` and `title="Not viewable by the
+ * public"`. This is vendor behaviour, so the grid is the only route that enumerates every sitting (the RSS
+ * feed has no location or kind; the per-meeting iCalendar export needs an ID/GUID pair only the grid
+ * supplies).
  *
- * `webapi.legistar.com/v1/{client}/events` returns only the sittings whose
- * InSite **meeting-detail page is publicly viewable**. It is not an
- * agenda-status filter and it is not missing data: the events the API omits
- * have no WebAPI record at all — 40 of 40 probed ids 404 on the item endpoint —
- * and the two routes number their meetings in **disjoint id spaces**
- * (`EventInSiteURL` points at `MeetingDetail.aspx?LEGID=<apiEventId>`, while
- * the calendar grid's own links carry `ID=1381575`).
- *
- * The discriminator is in the grid HTML and nowhere else: an unpublished
- * sitting renders its "Meeting details" anchor with **no href**,
- * `class="meeting_NotViewable"` and `title="Not viewable by the public"`.
- *
- * Measured the same day, all three tenants on the same "Next Month" filter:
- *
- * | tenant | grid rows | `meeting_NotViewable` | rows `/events` returned |
- * | --- | --- | --- | --- |
- * | Mesa | 15 | 12 | exactly the 3 viewable |
- * | Phoenix | 8 | 8 | 0 |
- * | Pima | 3 | 3 | 0 |
- *
- * So this is a **class behaviour of the vendor**, not a Pima configuration. Any
- * wired Legistar tenant loses its unpublished future sittings through the API
- * alone, and the grid is the only route that enumerates them completely: the
- * RSS feed carries no location and no meeting kind, and the per-meeting
- * iCalendar export needs an ID and GUID pair that only the grid supplies.
- *
- * Everything below parses; nothing below concludes. A grid that yields zero
- * rows is a failed extraction for the caller to report as one — never an empty
- * calendar.
+ * Everything below parses; nothing concludes. A grid yielding zero rows is a failed extraction for the
+ * caller to report, never an empty calendar.
  */
 import { decodeEntities } from "../http.ts";
 
@@ -73,14 +51,9 @@ export function parseFormFields(html: string): Record<string, string> {
 }
 
 /**
- * The date-range control, and why it is not a `<select>`.
- *
- * InSite renders the range picker as a Telerik `RadComboBox`: a readonly text
- * input carrying the LABEL, plus a hidden `_ClientState` JSON the server reads
- * the selection from. Posting only the text input leaves the server on its
- * previous range — which is the silent no-op above, and it is what a first
- * attempt at this actually did: HTTP 200, 231 KB of correct HTML, and "This
- * Month" still selected.
+ * The date-range control. InSite renders it as a Telerik `RadComboBox`: a readonly text input carrying
+ * the label, plus a hidden `_ClientState` JSON the server reads the selection from. Posting only the text
+ * input silently leaves the server on its previous range.
  */
 export const DATE_RANGE_CONTROL = "ctl00$ContentPlaceHolder1$lstYears";
 const DATE_RANGE_CLIENT_STATE = "ctl00_ContentPlaceHolder1_lstYears_ClientState";
@@ -126,23 +99,9 @@ export function renderedRange(html: string): string | null {
 }
 
 /**
- * **THE GRID PAGES AT 100, AND IT SAYS SO OUT LOUD.** (Measured 2026-08-28.)
- *
- * Mesa's "This Year" filter answers with `items 1 to 100 of 148` and a two-page
- * pager. A parse that only counted rows would report **100 sittings and a clean
- * 200** for a range holding 148 — the same shape of failure this whole adapter
- * exists to correct, one layer down: a route answering completely about the part
- * it chose to send.
- *
- * The pager states the total, so completeness is CHECKABLE rather than assumed.
- * A window whose parsed rows fall short of `totalItems` is an **incomplete
- * enumeration**, reported as one; it is never handed upward as the range's
- * answer.
- *
- * Null when the page renders no pager. That is the normal case for a small
- * range and means "one page, nothing to reconcile against" — it is not a
- * licence to assume completeness, which is why the caller compares only when a
- * total is actually published.
+ * The grid pages at 100 and states its total (`items 1 to 100 of 148`), so completeness is checkable: a
+ * window whose parsed rows fall short of `totalItems` is an incomplete enumeration. Null when the page
+ * renders no pager (one page; not a licence to assume completeness).
  */
 export interface InSiteGridPager {
   page: number;
@@ -178,51 +137,19 @@ export function parseGridPager(html: string): InSiteGridPager | null {
 }
 
 /**
- * **THE GRID SAYING IT HOLDS NOTHING, IN ITS OWN WORDS.** (Measured 2026-08-28.)
- *
- * `parseCalendarRows` returns `[]` for two completely different pages: one
- * where the grid rendered and the publisher stated it has no rows for this
- * filter, and one where the grid did not render at all — a challenge page, a
- * session that expired, a template change this parser no longer matches.
- * **Reporting those as the same fact is exactly the failure this adapter
- * exists to correct**, and RULING 100 is explicit that a zero-row extraction is
- * a FAILED extraction unless the source itself said zero.
- *
- * Pima's "Next Year" filter is the measured positive: HTTP 200, the grid
- * present, `class="rgNoRecords"` and the literal sentence **"No records were
- * found."**. That is Pima County stating that it has published no 2027 Board
- * sittings yet. It is a fact about the publisher, and it is the ONLY shape in
- * which this adapter will let a zero stand.
- *
- * False therefore never means "there are rows". It means **this page did not
- * say it was empty**, and a caller holding zero rows and `false` has a wall.
+ * The grid saying it holds nothing, in its own words: `class="rgNoRecords"` and "No records were found."
+ * The only shape in which a zero may stand. False means this page did not say it was empty; a caller
+ * holding zero rows and `false` has a wall.
  */
 export function parseGridNoRecords(html: string): boolean {
   return /class="rgNoRecords"/i.test(html) && /No records were found/i.test(html);
 }
 
 /**
- * **PAGE NUMBER → THE POSTBACK THAT FETCHES IT, READ OFF THE PAGER ITSELF.**
- * (2026-08-28.)
- *
- * The trap this replaces is a measured one. The pager's controls are ASP.NET
- * auto-numbered — `…$gridCalendar$ctl00$ctl02$ctl00$ctl02`, `…$ctl04`,
- * `…$ctl06` — and the indices are neither stable nor in an order anyone can
- * derive: posting `ctl03$ctl01$ctl06` at Pima's "All Years" grid, guessed as
- * "the next-page button", returned **page 3**. It returned it with HTTP 200,
- * the right range still rendered, and 100 perfectly well-formed rows. A
- * guessed control index does not fail; it silently reads the wrong page and
- * calls it the next one, and the enumeration then skips a hundred sittings
- * while every check passes.
- *
- * So the mapping is never constructed. Telerik renders each numbered page link
- * with its intended page in its own `onclick` —
- * `Telerik.Web.UI.Grid.NavigateToPage('…gridCalendar_ctl00', '3')` — beside the
- * `__doPostBack` target that fetches it. This reads the pair the page
- * published, so "the target for page 3" is a fact off the document rather than
- * an arithmetic guess about a vendor's control tree.
- *
- * Empty map when the page renders no numbered pager. One page, nothing to walk.
+ * Page number → the postback that fetches it, read off the pager itself. Telerik's auto-numbered control
+ * ids cannot be derived (a guessed index silently reads the wrong page), so each page's target is read
+ * from the `onclick` pair `Telerik.Web.UI.Grid.NavigateToPage('…gridCalendar_ctl00', '3')` beside its
+ * `__doPostBack` target. Empty when the page renders no numbered pager.
  */
 export function parseGridPageTargets(html: string): Map<number, string> {
   const targets = new Map<number, string>();
@@ -325,16 +252,9 @@ function documentCell(row: string, suffix: string): InSiteDocumentCell {
 }
 
 /**
- * Every row in `gridCalendar`.
- *
- * Anchored on the Telerik row classes and on the ASP.NET control-id suffixes
- * rather than on column position, because a tenant can reorder or hide the
- * grid's columns from its own admin screen — and a positional parse would then
- * read the minutes column as the agenda and publish the wrong link.
- *
- * Returns `[]` for a page with no grid. **That is not an empty calendar and
- * must not be reported as one**: the caller checks the count against what the
- * page said it was showing.
+ * Every row in `gridCalendar`, anchored on the Telerik row classes and ASP.NET control-id suffixes rather
+ * than column position (a tenant can reorder or hide columns). Returns `[]` for a page with no grid, which
+ * is not an empty calendar.
  */
 export function parseCalendarRows(html: string): InSiteCalendarRow[] {
   const rows: InSiteCalendarRow[] = [];
@@ -387,19 +307,10 @@ export function parseCalendarRows(html: string): InSiteCalendarRow[] {
 }
 
 /**
- * The RSS link the calendar page itself renders for the range in view.
- *
- * **Discovered, never constructed.** The `ID`/`GUID` pair in `Feed.ashx` is
- * minted per tenant AND per range — Pima's "Next Month" feed is
- * `ID=43473383`, and the pair recorded for a different range is a different
- * number. Reading it off the page that was just fetched is the only way the
- * URL is a fact rather than a guess.
- *
- * The page renders the link with two further parameters, `Mode` and `Title`,
- * and they are dropped: verified live 2026-08-28 that the pair alone returns
- * the identical three items with the identical `pubDate`s. They are also the
- * two parameters carrying a literal space, which is what a naive capture stops
- * on — a truncated URL that still looks like a URL.
+ * The RSS link the calendar page itself renders for the range in view. The `ID`/`GUID` pair in
+ * `Feed.ashx` is minted per tenant and per range, so it is read off the fetched page, never constructed.
+ * The `Mode` and `Title` parameters are dropped (the pair alone returns the same items; those two carry a
+ * literal space a naive capture stops on).
  */
 export function calendarFeedUrl(html: string, origin: string): string | null {
   const match = /Feed\.ashx\?M=Calendar&(?:amp;)?ID=(\d+)&(?:amp;)?GUID=([0-9A-Fa-f-]{36})/.exec(
@@ -409,15 +320,6 @@ export function calendarFeedUrl(html: string, origin: string): string | null {
   return `${origin}/Feed.ashx?M=Calendar&ID=${match[1]}&GUID=${match[2]}`;
 }
 
-/**
- * One item of the calendar RSS.
- *
- * The feed is a poorer enumeration than the grid — no location, no meeting
- * kind — and it carries one thing the grid does not: `pubDate`, **the instant
- * InSite itself published the sitting**. That is the vendor's own publication
- * clock, and it is what makes "the API's forward horizon is short" a
- * measurement rather than an opinion.
- */
 export interface InSiteFeedItem {
   title: string;
   link: string;
@@ -451,19 +353,6 @@ function tag(xml: string, name: string): string | null {
   return match ? match[1].trim() : null;
 }
 
-/**
- * The per-meeting iCalendar export.
- *
- * **`DTSTART` is FLOATING** — `20260908T130000`, no `Z`, no `TZID`. It is the
- * body's wall clock and nothing else, so it is returned as the parts that were
- * written and never as an instant: reading it as UTC would move Pima's 1:00 PM
- * study session to 6:00 AM and would do it silently.
- *
- * The `GUID` is mandatory on the request. `View.ashx?M=IC&ID=…` without it
- * answers **200 with a 19 KB HTML confirmation page**, not an error — a
- * successful status carrying the wrong document, which is why the caller
- * declares `BEGIN:VCALENDAR` as the document marker.
- */
 export interface InSiteIcalEvent {
   /** Local wall clock as written: `{ year, month, day, hour, minute }`. */
   start: { year: number; month: number; day: number; hour: number; minute: number } | null;

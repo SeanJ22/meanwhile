@@ -1,20 +1,8 @@
 /**
- * **WHAT AN AUDIT BROKE, AND HOW MUCH IT COVERED — TWO SEPARATE ANSWERS.**
- *
- * Rulings section 3: other sources not yet checked never hold back a verified
- * fact, and a sample re-check that finds something wrong pulls what is wrong.
- * So the audit answers two questions and never mixes them:
- *
- * - **Broken records.** A record is broken when a BLOCKING finding names it (its
- *   value is not on the saved page, its identity does not bind, an official
- *   source contradicts it). A BLOCKING finding that names no record makes the
- *   whole capture untrustworthy, so every record in it is broken. These are the
- *   records to pull.
- * - **Coverage.** How many of the official sources and records that apply have
- *   been checked. A source not yet checked, or a record the extraction has not
- *   reached, lowers the number and breaks nothing.
- *
- * Pure and dependency-free: it is bundled into the isolated auditor realm.
+ * What an audit broke and how much it covered, kept separate. A record is broken when a BLOCKING finding names
+ * it (a BLOCKING finding naming no record breaks the whole capture); coverage counts the applicable sources and
+ * records checked, and an unchecked one lowers coverage without breaking anything. Pure and dependency-free:
+ * it is bundled into the isolated auditor realm.
  */
 
 import type { AuditCoverage, WorkerFinding } from "./types.ts";

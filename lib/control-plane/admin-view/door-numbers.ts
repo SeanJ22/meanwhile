@@ -1,9 +1,4 @@
-/**
- * **DOOR NUMBERS ON THE SCOREBOARD (BR-32).** Five rows, each with the counts behind it and a sentence:
- * shut doors now (with how long each took to reopen), posted-to-live against the one-hour target inside the 7-day
- * window, overdue doors, time to repair, and repairs needing no code. PURE: readings in, rows out. A reading the caller
- * could not take arrives as null and its row says "—" and why; nothing is shown as a zero it did not count.
- */
+/** A reading the caller could not take arrives as null and its row says "—" and why; nothing is shown as an uncounted zero. */
 import type { ScoreboardRow } from "../../../app/(admin)/_mw/admin-v6/model.ts";
 import type { PostingToLiveRow } from "../../civic-data/posting-to-live.ts";
 import type { OverdueDoor } from "../../doors/overdue.ts";
@@ -19,11 +14,10 @@ export interface DoorCounts { readonly shut: number; readonly open: number; read
 export interface DoorNumberReadings {
   readonly now: string;
   readonly shutDoors: DoorCounts | null;
-  /** Open doors whose last read is older than their check; null when the registry could not be read. */
   readonly overdue: readonly OverdueDoor[] | null;
-  /** Meeting changes of the versions now live, with the four times kept apart; null when the store could not be read. */
+  /** Open doors a routine task reads on a clock: the only doors that can be overdue. */
+  readonly scheduled: number | null;
   readonly posting: readonly PostingToLiveRow[] | null;
-  /** The fix list, which is the one repair log; null when it could not be read. */
   readonly fixes: readonly FixItem[] | null;
 }
 
@@ -36,7 +30,6 @@ const hoursWords = (h: number): string => (h < 1 ? `${n(Math.round(h * 60))} min
 const minutesWords = (m: number): string => (m < 120 ? `${n(m)} minutes` : hoursWords(m / 60));
 const median = (xs: readonly number[]): number => { const s = [...xs].sort((a, b) => a - b); const m = s.length >> 1; return s.length % 2 === 1 ? s[m]! : (s[m - 1]! + s[m]!) / 2; };
 
-/** Door repairs: the shut-door check's finished items, with hours from shutting to reopening. */
 function repairs(fixes: readonly FixItem[]): { readonly done: readonly FixItem[]; readonly hours: readonly number[]; readonly openNow: number } {
   const mine = fixes.filter((f) => f.addedBy === SHUT_DOOR_FIX_BY);
   const done = mine.filter((f) => f.state === "FIXED" && f.fixedAt !== undefined);
@@ -78,14 +71,14 @@ function postedRow(r: DoorNumberReadings): ScoreboardRow {
 
 function overdueRow(r: DoorNumberReadings): ScoreboardRow {
   const id = "Overdue doors";
-  if (r.overdue === null || r.shutDoors === null) return unmeasured(id, "The door registry could not be read just now, so no door is called late.");
+  if (r.overdue === null || r.scheduled === null) return unmeasured(id, "The door registry could not be read just now, so no door is called late.");
   const late = r.overdue;
   const counted = late.filter((d) => d.liveFacts !== null);
   const facts = counted.reduce((a, d) => a + d.liveFacts!, 0);
   return row(id, {
     value: n(late.length),
-    counts: `${n(late.length)} of ${n(r.shutDoors.open)} open doors are past their check${late.length > 0 ? ` · ${n(facts)} live facts behind ${n(counted.length)} of them${late.length - counted.length > 0 ? `, ${n(late.length - counted.length)} not counted yet` : ""}` : ""}`,
-    says: late.length === 0 ? "Every open door was read within its check." : `The latest is ${minutesWords(late[0]!.overdueByMinutes)} past its check. A shut door is counted under Shut doors, not here.`,
+    counts: `${n(late.length)} of ${n(r.scheduled)} doors read on a schedule are past their check${late.length > 0 ? ` · ${n(facts)} live facts behind ${n(counted.length)} of them${late.length - counted.length > 0 ? `, ${n(late.length - counted.length)} not counted yet` : ""}` : ""}`,
+    says: late.length === 0 ? "Every door read on a schedule was read within its check." : `The latest is ${minutesWords(late[0]!.overdueByMinutes)} past its check. A shut door is counted under Shut doors, not here; a found page is read when work needs it, so it is not counted.`,
   });
 }
 
@@ -116,7 +109,6 @@ function noCodeRow(r: DoorNumberReadings): ScoreboardRow {
   });
 }
 
-/** The five door rows, keyed by the Scoreboard's names. */
 export function doorRows(r: DoorNumberReadings): ReadonlyMap<string, ScoreboardRow> {
   const rows = [shutRow(r), postedRow(r), overdueRow(r), repairTimeRow(r), noCodeRow(r)];
   return new Map(rows.map((x) => [x.id, x]));

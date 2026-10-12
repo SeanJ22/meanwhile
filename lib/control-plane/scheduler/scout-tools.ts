@@ -55,29 +55,10 @@ export function savedPageReader(context:ScoutToolContext,options:{maxAgeMs?:numb
 }
 import { readClientSource, type ClientTool } from './scout-clients.ts';
 /**
- * **THE SCOUT'S RESEARCH TOOLS.** (Level 1 activation, 2026-09-01.)
- *
- * Implements `scout-contract.ts`. The model never touches the network; every
- * tool here acts under enforcement the model cannot reach, in this order:
- *
- * ```
- *   public URL guard   -> per-host request cap -> robots.txt READ AND RECORDED
- *   (every verdict travels with the artifact; none refuses a public page:
- *   owner decision 2026-09-25, ROBOTS_BLOCKS_ACQUISITION = false)
- *   -> spaced, identified GET (no credential, no cookie) -> VAULT FIRST
- *   -> derive `forModel` FROM THE VAULTED BODY -> return it with the artifact
- *   id, wrapped as untrusted DATA
- * ```
- *
- * An access control on the answer (401/403/429, a bot challenge, a login) is a
- * WALL: reported, vaulted as DIAGNOSTIC, never defeated. The model is told to
- * walk another public route, never to get past it (`lib/hunt/access-control.ts`).
- *
- * Failure modes, each a named refusal in `forModel` and never a throw:
- * a vault that refuses or throws shows the model NOTHING of the body; a
- * `RESTRICTED_RAW` classification likewise; a wall (401/403/429...) vaults the
- * challenge page as DIAGNOSTIC and shows only the envelope; a binary body with
- * no `vaultBytes` in the runtime is refused by name.
+ * The Scout's research tools (implements `scout-contract.ts`). Order: public URL guard, per-host request cap,
+ * robots.txt read and recorded (never a refusal), spaced identified GET, vault first, then `forModel` derived
+ * from the vaulted body and wrapped as untrusted data. An access control is a wall: vaulted as DIAGNOSTIC,
+ * never defeated. Every failure is a named refusal in `forModel`, never a throw.
  */
 
 import { accessControlIn } from "../../hunt/access-control.ts";
@@ -113,7 +94,6 @@ import {
 } from "./scout-contract.ts";
 import { SCOUT_LADDER } from "./scout-result.ts";
 
-/* ------------------------------------------------------------ constants */
 
 export const TEXT_CAP_CHARS = 12_000;
 export const LINK_CAP = 60;
@@ -135,7 +115,6 @@ const WHY_SCHEMA = {
 const URL_SCHEMA = { type: "string", description: "An absolute public http(s) URL." };
 
 export const SCOUT_TOOL_SPECS: readonly ScoutToolSpec[] = [
-  {name:'plural_roster',description:'Read a whole state legislature with the Plural bulk client and parser. Returns people, official links and exact raw CSV with its source URL. No API key needed; prefer this to per-person requests.',input_schema:{type:'object',properties:{state:{type:'string'},rung:RUNG_SCHEMA,why:WHY_SCHEMA},required:['state','rung','why']}},
   {name:'legistar_events',description:'Read a Legistar tenant calendar through the shared paged client within a date window of up to 97 days. Returns event data and raw source responses with links.',input_schema:{type:'object',properties:{tenant:{type:'string'},from:{type:'string'},to:{type:'string'},rung:RUNG_SCHEMA,why:WHY_SCHEMA},required:['tenant','from','to','rung','why']}},
   {
     name: 'run_adapter', description: 'Run installed platform adapters over saved sanitized bytes from this walk or inherited evidence, with no network. Omit adapter to list installed names; supply adapter and artifactId to extract source-attributed data. offset pages long results.',
@@ -249,11 +228,7 @@ export const SEARCH_TOOL_SPEC: ScoutToolSpec = {
   },
 };
 
-/**
- * CH-20: the `report_finding` spec, appended only when the runtime can write the
- * Box. It opens nothing and costs nothing: the quote must already be in a page
- * this walk saved, so a dropped finding carries the same proof a finished one does.
- */
+/** The `report_finding` spec, appended only when the runtime can write the Box. The quote must already be in a page this walk saved. */
 export const REPORT_FINDING_TOOL_SPEC: ScoutToolSpec = {
   name: "report_finding",
   description:
@@ -275,19 +250,11 @@ export const REPORT_FINDING_TOOL_SPEC: ScoutToolSpec = {
   },
 };
 
-/**
- * **THE RESEARCH TOOL LIST, FOR ONE SETTING OF THE SEARCH SWITCH — the one
- * answer the toolkit and the pre-warm both read.** (2026-09-25.) The tool list
- * is the first part of the cached prefix, so a pre-warm built from the list
- * WITHOUT `search` while the Attempts send the list WITH it warms an entry no
- * Attempt reads — a paid write and a miss every cycle the owner's paid-search
- * switch is on.
- */
+/** The research tool list for one setting of the search switch, the one answer the toolkit and the pre-warm both read (it is the cached prefix). */
 export function scoutToolSpecsFor(search: boolean, reportFinding = false): readonly ScoutToolSpec[] {
   return [...SCOUT_TOOL_SPECS, ...SOURCE_API_SPECS, ...(search ? [SEARCH_TOOL_SPEC] : []), ...(reportFinding ? [REPORT_FINDING_TOOL_SPEC] : [])];
 }
 
-/* ------------------------------------------------------------ transport */
 
 /** The runtime's bytes opener. One request; text is decoded by the toolkit. */
 export const realOpenBytes: OpenBytes = async ({ url, headers, timeoutMs }) => {
@@ -362,7 +329,6 @@ function decodeText(bytes: Uint8Array, contentType: string): string {
   }
 }
 
-/* --------------------------------------------------------- derivations */
 
 const ENTITIES: Readonly<Record<string, string>> = {
   amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " ", ndash: "–", mdash: "—", hellip: "…",
@@ -491,13 +457,12 @@ export async function extractPdf(bytes: Uint8Array, ocr: typeof runOcr = runOcr)
   }
 }
 
-/* ------------------------------------------------------------- toolkit */
 
 type Rung = NonNullable<ScoutToolCallResult["rung"]>;
 
 interface CallAccount {
   readonly artifacts: WorkArtifact[];
-  /** RULING 243: the machine's record of each artifact this call vaulted. */
+  /** The machine's record of each artifact this call vaulted. */
   readonly provenance: ArtifactProvenance[];
   requests: number;
   bytes: number;
@@ -561,11 +526,7 @@ function workArtifact(artifact: Artifact, recordedAt: string): WorkArtifact {
   };
 }
 
-/**
- * The envelope carries `retrieved <stamp>` and the permission verdict so the
- * model's provenance CLAIMS can be copied from the record it was shown
- * (RULING 243); the machine still derives the values from the artifact itself.
- */
+/** The envelope carries `retrieved <stamp>` and the permission verdict; the machine still derives provenance from the artifact. */
 function envelope(artifact: Artifact, url: string, finalUrl: string, status: number | null, byteLength: number): string {
   return (
     `ARTIFACT ${artifact.id} | url ${url}` +
@@ -802,7 +763,6 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     return { artifact, stored: true, why: "stored" };
   }
 
-  /* ------------------------------------------------------- permission */
 
   async function readRobots(url: URL, acc: CallAccount): Promise<HostRobots> {
     const host = hostOf(url);
@@ -878,7 +838,6 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     return lines.join("\n");
   }
 
-  /* ------------------------------------------------------------- tools */
 
   function refusal(text: string, extra: Partial<ScoutToolCallResult> = {}): ScoutToolCallResult {
     return { ok: false, forModel: `REFUSED: ${text}`, artifacts: [], provenance: [], rung: null, requestCount: 0, bytesFetched: 0, ...extra };
@@ -945,7 +904,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const acc: CallAccount = { artifacts: [], provenance: [], requests: 0, bytes: 0 };
     const capBefore = overCap(url);
     if (capBefore !== null) return { kind: "REFUSED", result: refusal(capBefore) };
-    /* Read and recorded, never a refusal: ROBOTS_BLOCKS_ACQUISITION is false (owner decision 2026-09-25). */
+    /* Read and recorded, never a refusal: ROBOTS_BLOCKS_ACQUISITION is false. */
     const robots = await readRobots(url, acc);
     const reading = evaluate(robots, url);
     const capAfter = overCap(url);
@@ -1456,7 +1415,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
           hostCounts.set(host, (hostCounts.get(host) ?? 0) + 1);
           if (websiteRequestLimit(websiteSize(url.toString())) !== null) await ctx.spaceOut(host);
         } } satisfies import('./scout-api.ts').SourceApiOptions;
-      const response = name === 'plural_roster' || name === 'legistar_events' ? await readClientSource(name,raw as Record<string,unknown>,options) : await readSourceApi(name,raw,options);
+      const response = name === 'legistar_events' ? await readClientSource(name,raw as Record<string,unknown>,options) : await readSourceApi(name,raw,options);
       acc.requests = response.requests; acc.bytes = response.bytes;
       requestCount += response.requests; bytesFetched += response.bytes;
       const ok = response.status >= 200 && response.status < 300;
@@ -1471,9 +1430,8 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     } catch(error) { return refusal(name+': '+(error instanceof Error ? error.message : String(error))); }
   }
 
-  /* ----------------------------------------------------- report_finding */
 
-  /** CH-20: one finding into the Box, proved by a page this walk saved. Never throws; a refusal says why. */
+  /** One finding into the Box, proved by a page this walk saved. Never throws; a refusal says why. */
   const reported = new Map<string, string>();
   async function reportFinding(raw: unknown): Promise<ScoutToolCallResult> {
     const report = ctx.reportFinding;
@@ -1510,7 +1468,6 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     }
   }
 
-  /* -------------------------------------------------------------- call */
 
   async function call(name: string, input: unknown, rungLabel: string | null): Promise<ScoutToolCallResult> {
     if (!(SCOUT_RESEARCH_TOOLS as readonly string[]).includes(name)) {
@@ -1523,7 +1480,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const parsed = parseInput(input, rungLabel, needsUrl);
     if (!parsed.ok) return refusal(parsed.why);
     if ((SOURCE_API_TOOLS as readonly string[]).includes(tool)) return sourceApi(tool as SourceApiTool, input, parsed.value);
-    if (tool === 'plural_roster' || tool === 'legistar_events') return sourceApi(tool,input,parsed.value);
+    if (tool === 'legistar_events') return sourceApi(tool,input,parsed.value);
     switch (tool) {
       case "read_permission":
         return await readPermission(parsed.value);

@@ -1,5 +1,5 @@
 /**
- * **THE "IS IT LEARNING" VIEW STATES ONLY WHAT IS MEASURED.** A week with no
+ * The "is it learning" view states only what is measured. A week with no
  * record is a gap, never a zero; a question nothing measures is listed as
  * "not measured yet" with what it needs.
  */

@@ -1,19 +1,14 @@
 /**
- * The funding corpus (D34) — FEC campaign-finance data, snapshot-committed,
- * FUNDING evidence tier. It renders beside a candidate, never merges into
- * the statements or votes corpora, and never feeds any score or ordering.
+ * The funding corpus: FEC campaign-finance data at the FUNDING evidence tier.
+ * It renders beside a candidate, never merges into the statements or votes
+ * corpora, and never feeds any score or ordering. Every record carries its
+ * data class, so pulling a ripcord is a filter:
  *
- * Every record carries its data class — the ripcord doctrine's provenance
- * tag, so pulling a ripcord is a filter, never a migration or a hunt:
- *
- * - `FEC_COMMITTEE` — committee-level totals. Public summary figures; not
- *   behind a ripcord.
- * - `FEC_CONTRIBUTOR` — itemized receipts as filed (names). Reader-facing
- *   display ONLY, behind `ripcord.fecContributorDisplay`, and structurally
- *   unreachable from the aggregation/export path (guard-tested in
- *   tests/funding.test.ts). The open question is D23 — the 52 U.S.C.
- *   § 30111(a)(4) commercial-use restriction on contributor information;
- *   counsel closes it, nobody else.
+ * - `FEC_COMMITTEE`: committee-level totals; not behind a ripcord.
+ * - `FEC_CONTRIBUTOR`: private source receipts. Public DTOs retain named
+ *   organizations only, behind `ripcord.fecContributorDisplay`, and unreachable from the
+ *   aggregation/export path. Subject to the 52 U.S.C. § 30111(a)(4)
+ *   commercial-use restriction on contributor information.
  */
 
 import type { Provenance } from "../sources/types.ts";
@@ -30,58 +25,46 @@ export interface ContributionRow {
   city: string | null;
   state: string | null;
   /**
-   * The FEC's own entity typing for the money's source, as filed (IND,
-   * CAN, CCM, COM, ORG, PAC, PTY). The mechanical basis for the plain
-   * label — a candidate's own money renders as exactly that (2a), derived
-   * from this field and never guessed. Null on rows collected before the
-   * field was captured.
+   * The FEC's own entity typing for the money's source, as filed (IND, CAN,
+   * CCM, COM, ORG, PAC, PTY). Null on rows collected before it was captured.
    */
   entityType: string | null;
   /** FEC form line number (13A is loans from the candidate). */
   lineNumber: string | null;
   /**
-   * The contributing COMMITTEE's own typing, as it filed it (item 6,
-   * 2026-08-14). Carried on the Schedule A row's `contributor` object:
-   * `committee_type`, `organization_type` (ORG_TP) and `designation`
-   * (CMTE_DSGN). These three fields are the whole mechanical basis for the
-   * plain "what kind of money" label — see lib/funding/committee-types.ts.
-   * Null on individuals, and on rows collected before the fields were
-   * captured (which fall to the pre-item-6 generic, honestly).
+   * The contributing committee's own typing as filed on the Schedule A
+   * `contributor` object: `committee_type`, `organization_type` (ORG_TP) and
+   * `designation` (CMTE_DSGN); see lib/funding/committee-types.ts. Null on
+   * individuals and on rows collected before capture.
    */
   committeeType: string | null;
   organizationType: string | null;
   designation: string | null;
   /**
-   * The contributing COMMITTEE's own FEC committee id (Schedule A's
-   * `contributor_id`), when the money came from a registered committee.
-   * Null for individuals and for rows collected before the field was
-   * captured. This id is the ONLY basis for the second hop (item 3,
-   * 2026-08-15): a joint-fundraising committee is itself an FEC filer with
-   * its own books, and "who gives to the Booker Victory Fund" is answered
-   * by that committee's own Schedule A — never by inference from this one.
+   * The contributing committee's own FEC id (Schedule A `contributor_id`),
+   * when the money came from a registered committee: the only basis for the
+   * second hop. Null for individuals and older rows.
    */
   contributorCommitteeId: string | null;
+  /** Native filing identity, for amendment reconciliation before grouping. */
+  transactionId?: string | null;
+  filingId?: string | null;
+  sourceUrl?: string | null;
+  /** Original evidence observation, retained when an optional ledger refresh fails. */
+  sourceObservedAt?: string;
 }
 
 /**
- * The second hop (item 3, 2026-08-15, the author's design) — a contributing
- * committee's OWN top itemized receipts, one level down.
- *
- * A joint-fundraising committee is not a donor in the ordinary sense: it is
- * a pooled raise that splits proceeds among its participants by a filed
- * formula. So the reader who wants to know where a $1.1M "transfer" came
- * from is asking about a different committee's books, and this record is
- * that committee's books — fetched from the FEC by committee id, rendered
- * under the fund's OWN name, never relabeled as the candidate's donors.
- *
- * FEC_CONTRIBUTOR class, so `ripcord.fecContributorDisplay` governs it
- * exactly as it governs the first hop: pulling the ripcord empties this
- * data at the accessor, not in CSS.
+ * The second hop: a contributing committee's own top itemized receipts, one
+ * level down, fetched by committee id and rendered under its own name, never
+ * as the candidate's donors. FEC_CONTRIBUTOR class, governed by
+ * `ripcord.fecContributorDisplay` at the accessor.
  */
 export interface SecondHopCommittee {
   dataClass: "FEC_CONTRIBUTOR";
   /** The FEC committee id — the join key, and the cache key for the row. */
   committeeId: string;
+  cycle?: number;
   /** The committee's name exactly as it is registered. */
   name: string;
   /** Its own filed typing, so the pills read from the committee's filing. */
@@ -96,9 +79,9 @@ export interface SecondHopCommittee {
 }
 
 export interface CommitteeTotals {
-  receipts: number;
-  disbursements: number;
-  cashOnHand: number;
+  receipts: number | null;
+  disbursements: number | null;
+  cashOnHand: number | null;
   individualItemized: number | null;
   individualUnitemized: number | null;
   /**
@@ -122,6 +105,8 @@ export interface FundingCandidate {
   targetKeys: string[];
   matchRoutes: string[];
   principalCommitteeId: string | null;
+  /** Every source-confirmed authorized committee for this candidate and cycle. */
+  principalCommitteeIds?: string[];
   /** The two-year period the totals cover — stated, never assumed to be
    *  the current cycle (a dormant off-cycle committee's latest filing may
    *  be an earlier cycle, and the surface says which). */
@@ -129,6 +114,7 @@ export interface FundingCandidate {
   totals: CommitteeTotals;
   topContributions: ContributionRow[];
   provenance: Provenance;
+  acquisition?: { totalsComplete: boolean; contributionsComplete: boolean; checkedAt: string };
 }
 
 /** An earned "no money reported" — the search that came back empty,
@@ -154,12 +140,11 @@ export interface FundingSnapshot {
   candidates: FundingCandidate[];
   absences: FundingAbsence[];
   /**
-   * The second hop, keyed by committee id (item 3). Joined to the first hop
-   * by `ContributionRow.contributorCommitteeId` at render time — the same
-   * committee funding three candidates is fetched and stored ONCE, and the
-   * distinctness invariant applies: two distinct committee ids must never
-   * carry identical books (guarded in tests/funding.test.ts, the D40
-   * family). Absent on snapshots written before the hop existed.
+   * The second hop, keyed by committee id, joined to the first hop by
+   * `ContributionRow.contributorCommitteeId` at render time. Two distinct
+   * committee ids must never carry identical books.
    */
   secondHop?: SecondHopCommittee[];
+  /** Attempt order for the standing collector; never replaces a source observation date. */
+  refreshAttempts?: Record<string, string>;
 }

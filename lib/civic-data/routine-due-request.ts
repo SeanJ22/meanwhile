@@ -6,37 +6,8 @@ import { refreshDoorsForPass } from "../doors/install.ts";
 import { MEETING_PARTITION_CONTRACTS } from "./meeting-partitions.ts";
 
 /**
- * **BRING ONE MEETING PARTITION'S NEXT READ FORWARD; THE NORMAL SCHEDULER READS IT
- * (owner instruction, 2026-09-25).**
- *
- * Sean: "bring a small test case's next due time forward and let the normal
- * scheduler—not a manual 'run now' shortcut—process it ... Keep temporary test
- * changes isolated and restore any adjusted state."
- *
- * The owner refresh (owner-refresh.ts) is the run-now shortcut: its pass runs
- * `--force --only=<id>`, skipping the due check, the frontier and every other
- * task. A due request changes one instant and nothing else: when one registered
- * meeting partition falls due. The standing runner's ordinary pass reads it
- * from the owner's config row, and from there everything is the normal path:
- * the due check, the earliest-deadline frontier with its lane slots and the
- * same-host gap, the ordinary child and its receipt, Reader repair, and the
- * supervisor outcome, which records that the request was honoured. A request
- * never writes a source clock, a candidate or an event.
- *
- * Bounded, so it cannot become a second schedule:
- *  - one registered MEETING partition with a sitting window, and one open
- *    request at a time;
- *  - due no earlier than it was requested, and expired at most two hours after;
- *  - spent by the partition's first durable attempt after it was requested (the
- *    store's own clock), so the next due after that read is the normal rule's;
- *  - it only brings a read forward: a task already due stays due, and its
- *    deadline is the earlier of the two;
- *  - withdrawable. Spent, expired and withdrawn requests are inert history on
- *    the config row, the last 20 kept.
- *
- * An engineering control for verification, not an owner policy: it records who
- * asked through the owner door (installed-runtime-dispatch.mts, mode
- * `routine-due`) and why, and changes no standing decision.
+ * Brings one registered meeting partition's next due instant forward; the ordinary pass then reads it. A request never
+ * writes a source clock, a candidate or an event, and is spent by the partition's first durable attempt after it.
  */
 export interface RoutineDueRequest {
   readonly id: string;
@@ -55,13 +26,8 @@ export const ROUTINE_DUE_REQUEST_HISTORY = 20;
 const REASON_MAX = 200;
 const DEFAULT_REASON = "controlled refresh verification (owner instruction 2026-09-25)";
 
-/**
- * DB-36: the two derive steps that build records from door edits. A door edit asks for them directly (lib/doors/edit-derive.ts),
- * so they may be made due by a request even though they are not meeting partitions.
- */
 export const DOOR_DERIVE_CONTRACT_IDS = ["meeting-body-crosswalk-derived", "meeting-source-wiring"] as const;
 
-/** The partitions a request may name: registered MEETING partitions with a sitting window. */
 function requestablePartition(contractId: string): boolean {
   return MEETING_PARTITION_CONTRACTS.some((contract) =>
     contract.id === contractId && contract.recordClass === "MEETING" && contract.schedule?.kind === "SITTING_WINDOW");
@@ -73,7 +39,6 @@ export function canonicalInstant(value: unknown): value is string {
   return Number.isFinite(parsed) && new Date(parsed).toISOString() === value;
 }
 
-/** A whole number of minutes in [min, max], as milliseconds; `fallbackMinutes` when absent. */
 function minutesArg(args: readonly string[], name: string, fallbackMinutes: number, min: number, max: number): number {
   const values = args.filter((arg) => arg.startsWith(`--${name}=`)).map((arg) => arg.slice(name.length + 3));
   if (values.length > 1) throw new Error(`ROUTINE_DUE_REQUEST_ARGUMENT_REPEATED:${name}`);
@@ -120,14 +85,11 @@ export function routineDueCommand(args: readonly string[]): RoutineDueCommand {
   return { kind: "REQUEST", contractId, dueInMs, expiresInMs, reason };
 }
 
-/** Why a stored value is not a well-formed request, or null. The row is durable input, not trusted memory. */
 export function routineDueRequestIssue(value: unknown): string | null {
   if (!value || typeof value !== "object" || Array.isArray(value)) return "not an object";
   const row = value as Record<string, unknown>;
   if (typeof row.id !== "string" || !/^routine-due:[0-9a-f-]{36}$/.test(row.id)) return "id is malformed";
-  // Registration is checked when a request is made and again when a pass reads it
-  // (only a registered sitting-window MEETING task can match), so a partition
-  // retired later leaves an inert row, not a refusal of every later request.
+    // Registration is checked again when a pass reads it, so a partition retired later leaves an inert row.
   if (typeof row.contractId !== "string" || !row.contractId.trim()) return "contractId is missing";
   for (const field of ["requestedAt", "dueAt", "expiresAt"] as const) {
     if (!canonicalInstant(row[field])) return `${field} is not a canonical instant`;
@@ -142,7 +104,6 @@ export function routineDueRequestIssue(value: unknown): string | null {
   return null;
 }
 
-/** The well-formed requests on the config row, and a named issue for each one that is not. */
 export function parseRoutineDueRequests(value: unknown): { readonly requests: readonly RoutineDueRequest[]; readonly issues: readonly string[] } {
   if (value === undefined || value === null) return { requests: [], issues: [] };
   if (!Array.isArray(value)) return { requests: [], issues: ["routineDueRequests is not a list"] };
@@ -158,12 +119,6 @@ export function parseRoutineDueRequests(value: unknown): { readonly requests: re
 
 export type RoutineDueRequestState = "WAITING" | "DUE" | "SPENT" | "EXPIRED" | "WITHDRAWN";
 
-/**
- * Where a request stands at `nowMs`, from the partition's durable clock: SPENT
- * once the store holds an attempt made at or after the request, which is the
- * normal pass's read of it (a candidate's first event or an unchanged
- * confirmation).
- */
 export function routineDueRequestState(
   request: RoutineDueRequest,
   clock: { readonly lastAttemptedAt?: string } | undefined,
@@ -176,7 +131,6 @@ export function routineDueRequestState(
   return nowMs >= Date.parse(request.dueAt) ? "DUE" : "WAITING";
 }
 
-/** The request that makes `task` due at `nowMs`, if one does. */
 export function routineDueRequestFor(
   task: { readonly id: string; readonly recordClass: string; readonly contract: { readonly schedule?: { readonly kind: string } } },
   clock: { readonly lastAttemptedAt?: string } | undefined,
@@ -188,21 +142,17 @@ export function routineDueRequestFor(
   return requests.find((request) => request.contractId === task.id && routineDueRequestState(request, clock, nowMs) === "DUE") ?? null;
 }
 
-/** A requested task's deadline for the frontier: the earlier of its own and the request's. */
 export function routineDueRequestDeadlineMs(deadlineMs: number | undefined, request: RoutineDueRequest | null): number | undefined {
   if (request === null) return deadlineMs;
   const dueMs = Date.parse(request.dueAt);
   return deadlineMs === undefined || Number.isNaN(deadlineMs) ? dueMs : Math.min(deadlineMs, dueMs);
 }
 
-/** An open request: neither withdrawn nor expired. Whether it is spent needs the clock, so it stays open until then. */
 function openAt(request: RoutineDueRequest, nowMs: number): boolean {
   return request.withdrawnAt === null && nowMs < Date.parse(request.expiresAt);
 }
 
-/** Record a request on the owner's config row (compare-and-set). One open request at a time. */
 export async function requestRoutineDue(repos: ControlPlaneRepositories, args: readonly string[], now: string): Promise<RoutineDueRequest> {
-  // DB-14: a door added as data is a partition this request may name.
   await refreshDoorsForPass(repos.doors);
   const command = routineDueCommand(args);
   if (command.kind !== "REQUEST") throw new Error("ROUTINE_DUE_REQUEST_EXPECTED_REQUEST");
@@ -229,7 +179,6 @@ export async function requestRoutineDue(repos: ControlPlaneRepositories, args: r
   return request;
 }
 
-/** Withdraw a request: it stays on the row as history and no pass honours it again. Idempotent. */
 export async function withdrawRoutineDue(repos: ControlPlaneRepositories, args: readonly string[], now: string): Promise<RoutineDueRequest> {
   const command = routineDueCommand(args);
   if (command.kind !== "WITHDRAW") throw new Error("ROUTINE_DUE_REQUEST_EXPECTED_WITHDRAW");

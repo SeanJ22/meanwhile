@@ -1,7 +1,4 @@
-/**
- * **THE DIGEST'S COST SECTION READS THE LEDGER'S CACHE ROWS.** (Prompt-caching
- * session, 2026-09-06. Acceptance row PC-11.)
- */
+// The digest's cost section reads the ledger's cache rows.
 
 import assert from "node:assert/strict";
 import test from "node:test";

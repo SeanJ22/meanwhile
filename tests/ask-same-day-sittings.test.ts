@@ -1,14 +1,3 @@
-/**
- * **ASK-24 — A DAY WITH TWO SITTINGS IS A DAY WITH TWO SITTINGS.**
- * (Session B resume, W2, 2026-08-31.)
- *
- * The owner's report, verbatim in the dictation: the Mayor & Council study
- * session is at 1 p.m. and "the actual meeting is later in the day at 5 p.m.",
- * and separately that no agenda was posted for either the Pima study session
- * or "the session at 5:00 in the afternoon later that same day". The map card
- * renders both sittings; Ask named one.
- */
-
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -20,7 +9,7 @@ interface Sitting {
   readonly timeZone?: string | null;
 }
 
-/* Tucson. 1 p.m. and 5 p.m. local on 2026-09-08, plus one the following week. */
+/* Two sittings at 1 p.m. and 5 p.m. local on one day, plus one the following week. */
 const STUDY: Sitting = { id: "m-study", startsAt: "2026-09-08T20:00:00.000Z", timeZone: "America/Phoenix" };
 const BUSINESS: Sitting = { id: "m-business", startsAt: "2026-09-09T00:00:00.000Z", timeZone: "America/Phoenix" };
 const NEXT_WEEK: Sitting = { id: "m-next", startsAt: "2026-09-15T20:00:00.000Z", timeZone: "America/Phoenix" };

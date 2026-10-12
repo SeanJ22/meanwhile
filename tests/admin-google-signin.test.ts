@@ -1,12 +1,10 @@
 /**
- * **SIGN IN WITH GOOGLE — THE SEEDED FAILURES.** (RULING 245, 2026-09-02.)
+ * Sign in with Google.
  *
- * Every signature here is REAL: an RSA key pair is generated with Web Crypto,
- * a fake JWKS publishes its public half under a `kid`, and the ID tokens are
- * signed with the private half. A test that verified against a stub verifier
- * would encode the same reasoning as the code and could not disagree with it.
+ * Every signature here is real: an RSA key pair is generated with Web Crypto, a fake JWKS
+ * publishes its public half under a `kid`, and the ID tokens are signed with the private half.
  *
- * The five seeded failures named in the acceptance criteria:
+ * Seeded failures:
  *
  *   i    an ID token for any other email is refused              WRONG_EMAIL
  *   ii   `email_verified: false` is refused                       UNVERIFIED_EMAIL
@@ -240,8 +238,7 @@ test("the authorization URL is Google's, with PKCE S256, openid email, state and
   assert.equal(url.searchParams.get("nonce"), "nn");
   // The enrolled address is not put in a query string; `hd` is a chooser hint only.
   assert.equal(url.searchParams.get("login_hint"), null);
-  // Never prompt=none: with no session, Google must show the normal sign-in
-  // prompt, not fail silently and bounce the owner back (owner directive 2026-09-18).
+  // Never prompt=none: with no session, Google must show the normal sign-in prompt.
   assert.equal(url.searchParams.get("prompt"), null);
   assert.ok(!url.toString().includes(encodeURIComponent(OWNER_ADMIN_EMAIL)) && !url.toString().includes(OWNER_LOCAL_PART));
 });
@@ -978,7 +975,7 @@ test("the incident record names class, moment and outcome, passes aggregate-only
   assert.ok(accepted.lines.some((l) => l === "outcome: ACCEPTED"));
   assert.ok(accepted.lines.some((l) => l === "at: 2026-09-02T12:00:00.000Z"));
   assert.ok(accepted.lines.some((l) => l === "session issued: adm_example"));
-  assert.ok(accepted.lines.some((l) => /RULING 245/.test(l) && /RULING 238/.test(l)));
+  assert.ok(accepted.lines.some((l) => /break-glass/.test(l) && /custody/.test(l)));
 
   const refused = buildBreakGlassIncident({
     at: "2026-09-02T12:00:01.000Z",
@@ -1066,7 +1063,7 @@ test("the middleware's unauthenticated set is exactly the four surfaces", () => 
   assert.deepEqual(listed, ["/admin/login", "/admin/auth/google", "/admin/auth/callback", "/api/admin/session"]);
 });
 
-test("a session issued before RULING 245 still verifies, and `via` round-trips", async () => {
+test("a session issued before Google sign-in still verifies, and `via` round-trips", async () => {
   const iat = NOW;
   const legacy = await signSession({ sid: "adm_legacy", iat, exp: iat + SESSION_LIFETIME_SECONDS }, SESSION_KEY);
   const verdict = await verifySession(legacy, SESSION_KEY, iat + 1);

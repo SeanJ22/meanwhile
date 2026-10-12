@@ -1,6 +1,6 @@
 /**
- * CH-15: missions split into parts from settings. The pure mapping from checklist family and record class to
- * mission parts, read from the overlay's squad and overridden by the `expansion.missionParts` setting.
+ * Missions split into parts from settings. The pure mapping from checklist family and record class to mission parts,
+ * read from the overlay's squad and overridden by the `expansion.missionParts` setting.
  */
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -11,11 +11,9 @@ import { ROUTINE_RECORD_CLASSES } from "../lib/civic-data/types.ts";
 import { RECORD_CLASSES } from "../lib/answerability/record-class.ts";
 import { buildPlaceOwedList, type PlaceSubject } from "../lib/coverage/place-owed.ts";
 import { openBlanksOf } from "../lib/coverage/open-blanks.ts";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import { requirementsFor } from "../lib/control-plane/expansion/dispatch-work.ts";
 import { UNREAD_MEETING_PARTITIONS } from "../lib/control-plane/scheduler/provider-inputs.ts";
-import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
+import type { Jurisdiction, JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
 import { bodyDirectoryDiscoveryPlan, publicCommentDiscoveryPlan, type AutonomousWorkPlan } from "../lib/control-plane/workers/autonomous-plan.ts";
 import {
   DEFAULT_MISSION_PARTS, missionPartOfPlan, missionWorkCounts, MISSION_PARTS_SETTING, missionPartCounts, missionPartOf, missionPartsOf, squadsOf, validMissionParts,
@@ -29,7 +27,7 @@ test("the starting value is the three §8.1 parts, with families from the overla
   assert.deepEqual(DEFAULT_MISSION_PARTS.families, SQUAD_START);
   assert.ok(validMissionParts(DEFAULT_MISSION_PARTS));
   assert.equal(settingDefinition(MISSION_PARTS_SETTING)?.control, "json");
-  // §8.1 families, and the ones the design leaves unassigned, start where the plan puts them.
+  // Checklist families, and the ones the design leaves unassigned, start where the plan puts them.
   const part = (family: string) => missionPartOf({ family });
   for (const family of ["GOV", "MTG", "DOC", "GEO", "REF", "FIN", "PAR"]) assert.equal(part(family), "governments-meetings", family);
   for (const family of ["OFF", "CAN", "CAM", "LEG", "EXE", "PRL"]) assert.equal(part(family), "people-money", family);
@@ -97,8 +95,16 @@ test("a place's owed list is grouped by part, with counts, and its open blanks f
 });
 
 test("CH-16: every plan built for a government's owed families carries its mission part", () => {
-  const reg = JSON.parse(readFileSync(join(import.meta.dirname, "..", "data/states/az/jurisdictions/az.json"), "utf8")) as JurisdictionRegistry;
-  const government = { ...reg.jurisdictions.find((j) => j.govClass === "SCHOOL_DISTRICT")!, sourceIds: [], bodyId: "fixture:registered-school-board" };
+  const school: Jurisdiction = {
+    id: "xx:school:example-unified", stateCode: "XX", name: "Example Unified School District", govClass: "SCHOOL_DISTRICT",
+    countyName: "EXAMPLE", enumeratedFrom: "census-govt-units", ownWebAddress: "https://www.example.k12.xx.us/", sourceIds: [],
+  };
+  const reg: JurisdictionRegistry = {
+    formatVersion: 1, stateCode: "XX", generatedBy: "test", generatedOn: "2026-10-05", _note: [],
+    enumerationSources: [{ id: "census-govt-units", describe: "Census of Governments", path: "census", rowsRead: 1 }],
+    counts: {}, disagreements: [], sourceCatalog: {}, jurisdictions: [school],
+  };
+  const government = { ...school, bodyId: "fixture:registered-school-board" };
   const plans = requirementsFor(reg, government, null, UNREAD_MEETING_PARTITIONS, true)
     .map((r) => r.obligation.autonomousPlan).filter((plan): plan is AutonomousWorkPlan => plan !== undefined);
   assert.ok(plans.length >= 5);

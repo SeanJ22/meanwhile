@@ -6,24 +6,6 @@ import { useEffect } from "react";
 
 import { Logo } from "@/components/brand/logo";
 
-/**
- * **The ballot page's error boundary (2026-09-14).**
- *
- * Before this file the ballot render had no `error.tsx` anywhere above it, so a
- * throw — or a render that ran past the platform's limit — fell through to the
- * browser's own "This page couldn't load", chrome and all. That is the product
- * announcing its own failure in the worst possible register: a stranger's error
- * page over a civic ballot.
- *
- * RULING 254 forbids a verdict on ourselves and requires we state what the
- * reader can DO. So the copy is exactly that and nothing else: what happened, in
- * plain words, and the two ways forward — reload, or return to the map. No
- * cause, no stack, no coverage claim, no apology.
- *
- * A Client Component because a Next.js error boundary must be; `reset()` re-runs
- * the segment's render, which is the right first move for a transient failure
- * (a slow upstream read, a cold compute) — the common case here.
- */
 export default function BallotError({
   error,
   reset,
@@ -33,7 +15,7 @@ export default function BallotError({
 }) {
   useEffect(() => {
     // Logged, never shown: the digest ties a reader's report to the server log
-    // without putting an internal string on a reader surface (RULING 258).
+    // without putting an internal string on a reader surface.
     console.error("[ballot] render failed", error);
   }, [error]);
 

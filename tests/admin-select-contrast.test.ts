@@ -6,32 +6,14 @@ import test from "node:test";
 import { sourceFilesUnder } from "./read-code.ts";
 
 /**
- * THE CONTROL-CENTRE DROPDOWNS ARE LEGIBLE IN DARK MODE.
- * (Control-centre resource-safety closure, 2026-09-04; re-pointed for the
- * Admin redesign, 2026-09-23.)
- *
- * A native `<select>` given no explicit surface renders its closed field and
- * its option popup in the UA's default (light) chrome even on a dark page —
- * the reported defect: the State Readiness dropdown opened light with
- * near-invisible option text. The fix pins every control-centre `<select>` and
- * its `<option>`s to system colours (`Canvas`/`CanvasText`) under an explicit
- * `color-scheme`, so the popup is drawn in the same scheme as the page.
- *
- * Two stylesheets carry selects now:
+ * Control-centre dropdowns are legible in dark mode: every `<select>` and its `<option>`s are pinned
+ * to system colours (`Canvas`/`CanvasText`) under an explicit `color-scheme`, so the popup is drawn
+ * in the page's scheme.
  *
  * ```
- *   app/(admin)/layout.tsx         the pages that kept their content (research,
- *                                  sources, release review and the rest); its
- *                                  selects follow the page's dark or light theme
- *   app/(admin)/_mw/admin-v6/v6.module.css  the redesigned shell — the scope select in
- *                                  the header and the Work composer's pickers;
- *                                  always dark, so its selects are pinned dark
+ *   app/(admin)/layout.tsx                  selects follow the page's dark or light theme
+ *   app/(admin)/_mw/admin-v6/v6.module.css  the redesigned shell; always dark, selects pinned dark
  * ```
- *
- * Admin redesign, 2026-09-23: the header's View and State dropdowns and the
- * per-state readiness panel's level / row / ZIP-sort selects were removed; the
- * checks follow the selects that exist. These assertions read the style text
- * so the fix cannot silently regress; the actual render is verified in-browser.
  */
 
 const ROOT = process.cwd();
@@ -42,15 +24,11 @@ function styleText(rel: string): string {
 
 /** A `<select>` rule that follows the page's theme: an explicit inherited color-scheme, a themed background and text colour. */
 function assertSelectIsThemed(src: string, where: string): void {
-  // The select rule sets an explicit color-scheme (never relying on inheritance
-  // of the native control chrome) and themed surface + text.
-  // `[^}]` already spans newlines, so no dotAll flag is needed (or portable to
-  // the type-check target). Each match is confined to a single rule block.
+  // `[^}]` spans newlines, so each match stays inside one rule block.
   assert.match(src, /select\b[^}]*color-scheme:\s*inherit/, `${where}: no explicit color-scheme on the select`);
   assert.match(src, /select\b[^}]*background-color:\s*Canvas/, `${where}: no themed background on the select`);
   assert.match(src, /select\b[^}]*color:\s*CanvasText/, `${where}: no themed text colour on the select`);
-  // ...and the option popup gets the same treatment, because that is the part
-  // that was rendering light on a dark page.
+  // ...and the option popup gets the same treatment.
   assert.match(
     src,
     /select option\s*\{[^}]*background-color:\s*Canvas[^}]*color:\s*CanvasText/,
@@ -78,7 +56,7 @@ test("the kept pages' selects are theme-pinned (dark and light)", () => {
 
 test("the redesigned shell's selects are pinned dark, and every select it draws carries that rule", () => {
   assertShellSelectIsDark(styleText("app/(admin)/_mw/admin-v6/v6.module.css"), "shell stylesheet");
-  // A select that does not carry the class falls back to the UA's chrome — the original defect.
+  // A select that does not carry the class falls back to the UA's chrome.
   const drawn: string[] = [];
   for (const abs of sourceFilesUnder([".tsx"], "app", "(admin)", "_mw")) {
     const source = readFileSync(abs, "utf8");

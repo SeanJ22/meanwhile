@@ -19,44 +19,6 @@ export {
   type UnreadSitting,
 } from "./held-gaps.ts";
 
-/**
- * **A TOPIC QUESTION IS ANSWERED FROM EVERY DATED MENTION, NOT FROM THE NEXT
- * SITTING.** (2026-09-24, the Pima data-center miss.)
- *
- * *"Is Pima County voting on data centers"* was answered by choosing the NEXT
- * Board sitting from the question's tense and handing the synthesis model the
- * topic sweep's quotes as loose context. Three things were wrong with that, and
- * each is a class, not a Pima fact:
- *
- * 1. **The tense chose the evidence.** "Is … voting" read as NEXT, so the
- *    answer led with an unrelated October study session while the sittings that
- *    actually carried the topic sat in the pack as quotes.
- * 2. **A mention was never joined to what the body did with it.** The held
- *    structured outcome record already said the August 11 moratorium item was
- *    acted on and PASSED, with a roll call, and the model — never shown it —
- *    wrote "we have no record of what the Board decided".
- * 3. **A sitting we have not read looked like a sitting where nothing
- *    happened.** The Board's September 22 meeting was on the held calendar with
- *    no agenda read, and nothing in the answer said so.
- *
- * This module builds the TIMELINE for a topic within one bound body: every
- * held agenda line and every held structured agenda item that carries the
- * topic, each dated and each carrying ONE status that the evidence supports —
- *
- * | status | evidence |
- * |---|---|
- * | `SCHEDULED` | on the agenda of a sitting that has not happened yet |
- * | `PASSED` / `FAILED` | the publisher's own recorded disposition for that item |
- * | `ACTED` | a recorded action with no readable disposition — quoted, never read as a result |
- * | `OUTCOME_NOT_READ` | the sitting happened and we hold no recorded action for the item |
- *
- * — plus the sittings in the recent window whose agenda we have not read, so a
- * gap names the exact meeting rather than implying nothing was on it. Nothing
- * here generates a claim: every sentence `composeTopicAnswer` writes quotes a
- * clerk's line, a recorded action, or states a date we hold, and the whole
- * answer passes the same validator a model answer does.
- */
-
 export type TopicEntryStatus = "SCHEDULED" | "PASSED" | "FAILED" | "ACTED" | "OUTCOME_NOT_READ";
 
 export interface TopicMeetingLike {
@@ -80,59 +42,32 @@ export interface TopicTimelineEntry {
   readonly startsAt: string;
   /** The body's local calendar day, `YYYY-MM-DD`. */
   readonly localDay: string;
-  /** The clerk's own words for the item, trimmed; never rewritten. */
   readonly itemText: string;
   readonly agendaNumber: string | null;
   readonly matterFile: string | null;
   readonly status: TopicEntryStatus;
-  /** The recorded action, verbatim (`approve as amended`). */
   readonly action: string | null;
-  /** The clerk's recorded motion text, verbatim; carries the tally when there is one. */
   readonly tallyText: string | null;
   readonly sourceUrl: string | null;
   readonly sourceOrg: string | null;
   readonly retrievedAt: string | null;
-  /**
-   * Where the entry came from: the structured agenda record, a line in a held
-   * agenda document, or an item and its recorded result in the body's own
-   * minutes (a body whose clerk records decisions only there, NH332).
-   */
   readonly basis: "STRUCTURED_AGENDA_RECORD" | "AGENDA_DOCUMENT_LINE" | "MINUTES_RECORD";
 }
 
 export interface TopicTimeline {
   readonly topic: AgendaTopic;
   readonly bodyName: string;
-  /** The structured outcome store could not be read for this answer (a holding failure). */
   readonly outcomesUnavailable: boolean;
   readonly entries: readonly TopicTimelineEntry[];
-  /** Recent or imminent sittings of this body whose agenda we have not read. */
   readonly unreadSittings: readonly UnreadSitting[];
-  /**
-   * When the body's calendar listings were read: the OLDEST read among its
-   * upcoming listings, or, with none upcoming, the newest read of any.
-   */
   readonly calendarLastReadAt: string | null;
-  /** True when {@link calendarLastReadAt} dates the upcoming listings. */
   readonly calendarReadBoundsUpcoming: boolean;
   readonly records: EvidenceRecord[];
   readonly gaps: EvidenceGap[];
-  /**
-   * Every gap this body carries, coded, from the ONE decision the standing
-   * runner's `ask-gaps` provider also makes (`held-gaps.ts`). `gaps` states
-   * all but `OUTCOME_NOT_READ`, which each concluded entry states in its own
-   * sentence.
-   */
   readonly heldGaps: readonly HeldAskGap[];
   readonly denominators: Record<string, number>;
 }
 
-/**
- * Is this a question about a TOPIC across a body's business, rather than about
- * one sitting? A topic question names a curated topic and does not point at one
- * meeting ("the next meeting", "tonight's agenda", "last week's session"). A
- * question that does point at one sitting keeps the ordinary sitting selection.
- */
 export function topicFocusedQuestion(question: string): AgendaTopic | null {
   const topic = agendaTopicFor(question);
   if (!topic) return null;
@@ -146,20 +81,12 @@ function matchesTopic(text: string, topic: AgendaTopic): boolean {
   return topic.phrases.some((phrase) => lower.includes(phrase));
 }
 
-/** The first line of a clerk's item title — the item's own name. */
 function firstLine(text: string): string {
   return text.split(/\r?\n/).map((line) => line.trim()).find((line) => line.length > 0) ?? text.trim();
 }
 
-/**
- * Quote safely inside a sentence budget: collapse whitespace, stop at the
- * clerk's first sentence end so a quoted "NO. 2026" cannot be counted as two of
- * our sentences, and mark any cut with an ellipsis rather than pretending the
- * fragment is the whole.
- */
 export function quotable(text: string, maxChars: number): string {
   const flat = text.replace(/\s+/g, " ").trim().replace(/[.;:,]+$/, "");
-  // A clerk's leading item number ("3. ", "B. ") is part of the line, not its end.
   const enumerator = /^(?:\d{1,3}|[A-Z])[.)]\s+/.exec(flat)?.[0].length ?? 0;
   const inner = flat.slice(enumerator).search(/[.!?]\s/);
   const boundary = inner >= 0 ? inner + enumerator : -1;
@@ -168,15 +95,6 @@ export function quotable(text: string, maxChars: number): string {
   return out;
 }
 
-/**
- * The part of a clerk's line that carries the topic. A document line can run
- * several items together ("9. … O-26-25 … ADA IMPROVEMENTS … 10. … O-26-23 …
- * DESIGNATE DATA CENTERS AS A PROHIBITED USE"), and cutting it from the front
- * quoted the wrong ordinance to a reader asking about data centers. The window
- * starts at the last item number before the phrase when one is close enough,
- * otherwise a little before the phrase, and every cut is marked with an
- * ellipsis. The words are the clerk's; only the window is ours.
- */
 export function topicWindow(text: string, topic: AgendaTopic, maxChars = 260): string {
   const flat = text.replace(/\s+/g, " ").trim();
   const lower = flat.toLowerCase();
@@ -190,16 +108,12 @@ export function topicWindow(text: string, topic: AgendaTopic, maxChars = 260): s
     }
   }
   if (at < 0) return flat.length <= maxChars ? flat : `${flat.slice(0, maxChars).replace(/\s+\S*$/, "")}…`;
-  // Where this item starts: the last item number, or an item's own file
-  // number ("O-26-23"), before the phrase — when it is within reach.
   const reach = Math.max(0, at - (maxChars - 60));
   const starts = [...flat.slice(reach, at).matchAll(/(?:^|\s)(?:\d{1,3}\.\s+[A-Z(]|[A-Z]{1,3}-\d{2}-\d{2,3}\s)/g)];
   let start: number;
   if (starts.length > 0) {
     const last = starts[starts.length - 1]!;
     start = reach + (last.index ?? 0) + (last[0].startsWith(" ") ? 1 : 0);
-    // A file number directly under its item heading ("10. ORDINANCE(S) FOR
-    // ADOPTION: O-26-23 …") starts at the heading: it says what stage the item is at.
     const heading = [...flat.slice(Math.max(0, start - 60), start).matchAll(/(?:^|\s)\d{1,3}\.\s+[A-Z(]/g)].at(-1);
     if (heading && /^[A-Z]{1,3}-\d/.test(flat.slice(start))) {
       start = Math.max(0, start - 60) + (heading.index ?? 0) + (heading[0].startsWith(" ") ? 1 : 0);
@@ -211,8 +125,6 @@ export function topicWindow(text: string, topic: AgendaTopic, maxChars = 260): s
     const space = flat.indexOf(" ", start);
     if (start > 0 && space >= 0 && space < at) start = space + 1;
   }
-  // Where it ends: the next item number, the next item's file number, or a
-  // page footer after the phrase — whichever comes first — within the budget.
   const tail = flat.slice(phraseEnd);
   const boundary = tail.search(/\s(?:\d{1,3}\.\s+[A-Z(]|[A-Z]{1,3}-\d{2}-\d{2,3}\b|Agenda Page\b|Page \d+ of \d+\b)/);
   let end = Math.min(flat.length, start + maxChars, boundary >= 0 ? phraseEnd + boundary : flat.length);
@@ -225,18 +137,12 @@ export function topicWindow(text: string, topic: AgendaTopic, maxChars = 260): s
   return `${cutBefore ? "…" : ""}${flat.slice(start, end).trim()}${cutAfter ? "…" : ""}`;
 }
 
-/** The last motion in a clerk's multi-motion text is the one that disposed of the item. */
 function finalMotion(text: string): string {
   const parts = text.split(/\s*(?=Motion\s+\d+\s*:)/i).map((part) => part.trim()).filter(Boolean);
   const last = parts.at(-1) ?? text;
   return last.replace(/^Motion\s+\d+\s*:\s*/i, "");
 }
 
-/**
- * The sentence of the clerk's text that carries the result — the one with a
- * tally ("3-2") or "unanimous" — quoted whole. Null when no sentence carries
- * one: the mover-and-seconder sentence alone says nothing about the result.
- */
 export function tallyClause(text: string | null): string | null {
   if (!text) return null;
   const motion = finalMotion(text).replace(/\s+/g, " ").trim();
@@ -245,14 +151,6 @@ export function tallyClause(text: string | null): string | null {
   return carrying ? carrying.replace(/[.;:,]+$/, "") : null;
 }
 
-/**
- * Is the topic the item's own subject? The phrase must sit near the start of
- * the item's first line. "Moratorium on Data Center Development" is about data
- * centers; a fire district's contract "for data center racks and GIS services"
- * mentions the phrase 140 characters in and is about something else. A
- * non-salient entry stays in the evidence the reader is shown; it never leads
- * the composed prose.
- */
 export function salientEntry(entry: Pick<TopicTimelineEntry, "itemText">, topic: AgendaTopic): boolean {
   const head = firstLine(entry.itemText).toLowerCase();
   return topic.phrases.some((phrase) => {
@@ -299,8 +197,6 @@ export function buildTopicTimeline(input: {
   const records: EvidenceRecord[] = [];
   const gaps: EvidenceGap[] = [];
   const structuredDays = new Set<string>();
-  // What we hold and do not hold for this body, decided once (held-gaps.ts):
-  // the sittings read, the agendas that can be searched, and every coded gap.
   const held = heldBodyGaps({
     bodyId: input.bodyId,
     meetings: input.meetings,
@@ -310,7 +206,6 @@ export function buildTopicTimeline(input: {
     outcomesUnavailable: input.outcomesUnavailable,
   });
 
-  // 1. The publisher's structured agenda records, joined to their recorded outcome.
   for (const sitting of input.sittings) {
     if (!sitting.startsAt || !Number.isFinite(Date.parse(sitting.startsAt))) continue;
     const day = sitting.startsAt.slice(0, 10);
@@ -367,14 +262,7 @@ export function buildTopicTimeline(input: {
       }
     }
 
-    /*
-     * 1b. A sitting read off its MINUTES (NH332): no structured agenda, and
-     * each recorded action carries the item as the minutes print it and the
-     * exact passage recording its result. Minutes list every item the body
-     * reached, so a read sitting is not an unread one.
-     */
     if (sitting.agenda.length > 0 || sitting.extraction !== "RETRIEVED") continue;
-    // Whether a minutes-read sitting counts as read is decided once, in heldBodyGaps (held-gaps.ts).
     for (const outcome of sitting.outcomes) {
       if (!outcome.quote || !outcome.itemQuote || !matchesTopic(outcome.itemQuote, topic)) continue;
       structuredDays.add(day);
@@ -389,7 +277,6 @@ export function buildTopicTimeline(input: {
         meetingId: sitting.meetingId,
         startsAt: sitting.startsAt,
         localDay: day,
-        // One motion can carry several items: the words around the topic, windowed as a document line is.
         itemText: topicWindow(outcome.itemQuote, topic),
         agendaNumber: outcome.itemReference ?? null,
         matterFile: outcome.matterFile,
@@ -419,22 +306,9 @@ export function buildTopicTimeline(input: {
     }
   }
 
-  // 2. Lines in held agenda documents, for sittings the structured records did not cover.
-  // A body's notice page is never one of its sittings' agendas (D1, 2026-09-24):
-  // another body's page, or a notice page that states no agenda item, is not
-  // searched, not counted among the agendas held, and does not make a sitting
-  // read. CAP's meetings page held for Pima's Oct 13 study session is both.
-  // Nor is a publisher portal's shell, which the publication reading already
-  // names as a portal: Newbury Selectboard's nine held pages (four CivicWeb
-  // shells, five copies of Bradford's calendar) were answered as "the 9
-  // agendas we hold" beside a gap saying none of them was readable. The one
-  // filter is `heldAgendaDocuments` (held-gaps.ts).
   const documents = held.agendaDocuments;
   const byMeeting = new Map(input.meetings.map((meeting) => [meeting.id, meeting]));
   const { hits, searched, unreadable } = searchAgendas(documents, topic);
-  // Each occurrence is windowed from the FULL agenda text: the sweep's quote is
-  // capped at 400 characters and, on a line that runs items together, can end
-  // before the phrase it matched. Versions of one agenda collapse by content.
   const seenWindow = new Set<string>();
   const newestFirst = [...documents].sort((a, b) => String(b.retrievedAt).localeCompare(String(a.retrievedAt)));
   for (const document of newestFirst) {
@@ -476,8 +350,6 @@ export function buildTopicTimeline(input: {
   }
   entries.sort((a, b) => b.startsAt.localeCompare(a.startsAt));
 
-  // 3. Sittings in the recent window whose agenda we have not read — named, never implied empty —
-  // and the other gaps this body carries, each stated with its code (held-gaps.ts decides them).
   const { unreadSittings, calendarLastReadAt, calendarReadBoundsUpcoming } = held;
   for (const gap of held.gaps) {
     const coded = { code: gap.code, bodyId: gap.bodyId, recordClass: gap.recordClass };
@@ -513,7 +385,6 @@ export function buildTopicTimeline(input: {
         });
         break;
       case "OUTCOME_NOT_READ":
-        // Stated in each concluded entry's own sentence ("we have not read the recorded outcome of that item").
         break;
     }
   }
@@ -545,8 +416,6 @@ function spelledDay(entry: Pick<TopicTimelineEntry, "localDay">): string {
 function itemPhrase(entry: TopicTimelineEntry): string {
   const label = entry.agendaNumber ? `agenda item ${entry.agendaNumber}` : "an agenda item";
   const file = entry.matterFile ? ` (${entry.matterFile})` : "";
-  // A document line and a minutes item are already windowed on the topic
-  // (topicWindow); a structured title is quoted to its first sentence.
   const quote = entry.basis === "STRUCTURED_AGENDA_RECORD" ? quotable(entry.itemText, 150) : entry.itemText;
   return `${label}${file}, "${quote}"`;
 }
@@ -573,16 +442,6 @@ function entrySentence(entry: TopicTimelineEntry, bodyName: string, lead: boolea
 
 const DECISIVE: readonly TopicEntryStatus[] = ["PASSED", "FAILED", "ACTED"];
 
-/**
- * Compose the answer from the timeline, in plain language, inside the one
- * length contract. Returns null when there is nothing the timeline can say
- * (no entry and no named sitting), so the caller falls through to its ordinary
- * path rather than shipping an empty sentence.
- *
- * Order: the most recent decision; the next scheduled appearance; one earlier
- * appearance; then the sittings we have not read and how old our calendar read
- * is. Each sentence is added only while the whole stays inside the contract.
- */
 export function composeTopicAnswer(timeline: TopicTimeline, now: number): { answer: string; citedUrls: string[] } | null {
   const sentences: string[] = [];
   const cited: string[] = [];
@@ -608,16 +467,12 @@ export function composeTopicAnswer(timeline: TopicTimeline, now: number): { answ
   const lead = decisive[0] && (!newestPast || decisive[0].localDay >= newestPast.localDay) ? decisive[0] : newestPast ?? upcoming[0] ?? null;
 
   if (!lead) {
-    // Nothing held carries the topic: say what was searched, in the sweep's
-    // own words (lib/ask/agenda-topic.ts), so a reader never reads silence as
-    // "no". The unread-sitting sentence below says what the search could not see.
     const searched = timeline.denominators.topicAgendaDocumentsSearched ?? 0;
     add(searched > 0
       ? `No mention of ${timeline.topic.label} in the ${searched} agenda${searched === 1 ? "" : "s"} we hold for ${timeline.bodyName}`
       : `We don't hold any readable agendas for ${timeline.bodyName} yet, so nothing was searched for ${timeline.topic.label}`);
   }
   if (lead && !add(entrySentence(lead, timeline.bodyName, true, timeline.outcomesUnavailable), lead)) {
-    // The lead is the answer; a long clerk's line is shortened, never dropped.
     add(entrySentence({ ...lead, itemText: quotable(lead.itemText, 110), basis: "STRUCTURED_AGENDA_RECORD" }, timeline.bodyName, true, timeline.outcomesUnavailable), lead);
   }
   const nextUp = upcoming.find((entry) => !used.has(entry.key));
@@ -625,7 +480,6 @@ export function composeTopicAnswer(timeline: TopicTimeline, now: number): { answ
   const earlier = past.find((entry) => !used.has(entry.key) && entry.localDay !== lead?.localDay);
   if (earlier) add(`Earlier, ${entrySentence(earlier, timeline.bodyName, false, timeline.outcomesUnavailable).replace(/^./, (c) => c.toLowerCase())}`, earlier);
 
-  // Only the sittings that could change the answer: after the newest held mention.
   const newestDay = timeline.entries[0]?.localDay ?? "";
   const unread = timeline.unreadSittings.filter((sitting) => sitting.localDay > newestDay);
   const unreadPast = unread.filter((sitting) => sitting.past);
@@ -647,17 +501,6 @@ export function composeTopicAnswer(timeline: TopicTimeline, now: number): { answ
   return { answer: `${sentences.join(". ")}.`, citedUrls: cited };
 }
 
-/**
- * **A TOPIC QUESTION ABOUT THE READER'S AREA.** (2026-09-24.)
- *
- * *"Is there a data center coming?"* names no government. The reader's area
- * holds several bodies, and each gets its own timeline — never a merged one,
- * because a Board of Supervisors' vote is not a school board's agenda item.
- * The answer leads with the most recent recorded decision anywhere in the
- * area, then the next scheduled appearance, then one more body's most recent
- * mention; every sentence names the body it is about. Bodies with nothing on
- * the topic are counted, not listed.
- */
 export function composeAreaTopicAnswer(
   timelines: readonly TopicTimeline[],
   now: number,
@@ -694,8 +537,6 @@ export function composeAreaTopicAnswer(
   add(entrySentence(lead.entry, lead.timeline.bodyName, true, lead.timeline.outcomesUnavailable), lead.entry, lead.timeline);
   const next = upcoming.find(({ entry }) => entry.key !== lead.entry.key);
   if (next) add(entrySentence(next.entry, next.timeline.bodyName, true, next.timeline.outcomesUnavailable), next.entry, next.timeline);
-  // The lead body's own sittings after its newest mention whose agenda we have
-  // not read: the September 22 case, named rather than implied empty.
   const unread = lead.timeline.unreadSittings.filter((sitting) => sitting.past && sitting.localDay > (lead.timeline.entries[0]?.localDay ?? ""));
   if (unread.length > 0) {
     const days = unread.slice(-2).map((sitting) => formatDateLong(sitting.localDay) ?? sitting.localDay);

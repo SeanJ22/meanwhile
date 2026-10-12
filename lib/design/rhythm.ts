@@ -1,22 +1,7 @@
 /**
- * **RHYTHM COMES FROM THE SCALE, AND THE SCALE ONLY SHRINKS THE EXCEPTIONS.**
- * (The visual-polish session, 2026-09-03. WORK ITEM 2.)
- *
- * Spacing is the 4-based scale (`--space-*`, 4/8/12/16/24/32/48), radius is the
- * five-token family (`--radius`, `-sm`, `-lg`, `-pill`, `-circle`), elevation is
- * the `--shadow-*` family, type is the `--text-*` scale. A raw literal off any
- * of these is a value nobody named, and it is what makes one card sit a pixel
- * off from the next.
- *
- * This system is mature and hand-tuned (RULING 137: the author's eye is the
- * ceiling), so the off-scale literals are NOT snapped blind in one pass — that
- * would reflow rhythm the author set deliberately. Instead each category is
- * measured, frozen to a baseline, and allowed only to SHRINK: a new off-scale
- * value fails, and clearing an old one is a diff a reviewer can see. Same
- * discipline as `tests/absence-defaults.json`.
- *
- * The radius PILL/CIRCLE family was unified in this session (a value-identical
- * tokenization of every `999px`/`50%`), so those never appear as offenders.
+ * Rhythm checks: spacing on the 4-based `--space-*` scale, radius on the
+ * `--radius*` family, elevation on `--shadow-*`, type on `--text-*`. Off-scale
+ * literals are frozen to a baseline that may only shrink, not snapped.
  */
 
 /** Spacing scale in px (DESIGN.md). Rem equivalents (×16) are accepted too. */

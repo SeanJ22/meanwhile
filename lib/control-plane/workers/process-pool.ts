@@ -1,7 +1,7 @@
 import { fork } from "node:child_process";
 import { createHash, randomUUID } from "node:crypto";
 import { createServer } from "node:http";
-import { narrowFieldManual, type FieldManualQuery, type FieldManualRead } from "../field-manual.ts";
+import { readFieldManualRows, type FieldManualQuery, type FieldManualRepos } from "../field-manual.ts";
 import type { BrowseFn } from "../scheduler/scout-contract.ts";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -13,8 +13,8 @@ import { endOwnedProcessTree } from "../../../scripts/pilot-runtime-child.mts";
 export { workerProcessSlots, type WorkerProcessSlots } from "./worker-slots.ts";
 const processMemorySlots = workerProcessSlots(() => Number.MAX_SAFE_INTEGER);
 
-/** Transient tools on this host; leases, costs and publications keep their existing stores. */
-export async function startWorkerToolsHost(input: { knowledge: FieldManualRead; browse: BrowseFn }) {
+/** Transient tools on this host; leases, costs and publications keep their existing stores. A manual read takes only the asking job's rows. */
+export async function startWorkerToolsHost(input: { repos: FieldManualRepos; browse: BrowseFn }) {
   const token = randomUUID();
   const server = createServer(async (request, response) => {
     if (request.method !== "POST" || request.url !== "/" || request.headers.authorization !== token) {
@@ -24,7 +24,7 @@ export async function startWorkerToolsHost(input: { knowledge: FieldManualRead; 
       const chunks: Buffer[] = [];
       for await (const chunk of request) chunks.push(Buffer.from(chunk));
       const message = JSON.parse(Buffer.concat(chunks).toString("utf8")) as { kind: string; body: unknown };
-      const result = message.kind === "manual" ? narrowFieldManual(input.knowledge, message.body as FieldManualQuery)
+      const result = message.kind === "manual" ? await readFieldManualRows(input.repos, message.body as FieldManualQuery)
         : message.kind === "browse" ? await input.browse(message.body as Parameters<BrowseFn>[0]) : null;
       if (result === null) { response.writeHead(404).end(); return; }
       response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify(result));
@@ -68,7 +68,7 @@ export interface LeaseWorkerConfig {
   readonly searchEnabled: boolean;
   readonly ceilingUsd: number;
   readonly fundedSubjects: readonly string[];
-  /** Plain-code ZIP tasks use S9's ordinary canonical acquisition lease. */
+  /** Plain-code ZIP tasks use the ordinary canonical acquisition lease. */
   readonly nationalZips?: readonly string[];
   readonly routeDispatch?: { readonly input: ScoutProcessDispatch; readonly route: RouteDescriptor | null };
   readonly scoutDispatch?: {
@@ -90,10 +90,7 @@ export function workerDispatchFailure(taskId: string, error: unknown, obligation
     detail: `Worker task deferred: ${error instanceof Error ? error.message : String(error)}; work remains owed` };
 }
 
-/**
- * A worker the standing lane ended alone (Sean, Oct 6: one job must never end
- * the others). What it held, what it was waiting on, when it last moved.
- */
+/** A worker the standing lane ended alone: what it held, what it was waiting on, when it last moved. */
 export interface StuckWorker {
   readonly pid: number;
   /** The task it was working, or null when it was starting up or between tasks. */
@@ -107,13 +104,7 @@ export interface StuckWorker {
   readonly tasksDone: number;
 }
 
-/**
- * The standing hunter lane's pool (Sean's isolation order, Oct 6). Each worker
- * process has its own progress clock: any message either way between it and
- * the lane is progress, and a worker quiet for `quietMs` is ended alone, its
- * state recorded, while the others keep running. New tasks the lane queues
- * join the running pool, so nothing waits for the slowest worker.
- */
+/** The standing hunter lane's pool: each worker has its own progress clock, and a worker quiet for `quietMs` is ended alone with its state recorded. New queued tasks join the running pool. */
 export interface StandingPoolOptions {
   /** Tasks queued since the pool started; each new id joins the pool. Polled about once a second. */
   readonly moreTasks?: () => readonly string[];
@@ -181,7 +172,7 @@ export async function runLeaseWorkerProcesses(input: {
   readonly onExited?: (pid: number, why: string) => void;
   /** Read current place priority before the next existing lease is claimed. */
   readonly orderPending?: (ids: readonly string[]) => Promise<readonly string[]>;
-  /** CH-20: the mission's open blanks related to one government, held in this process. Absent: none. */
+  /** The mission's open blanks related to one government, held in this process. Absent: none. */
   readonly missionBlanksFor?: (subjectId: string) => readonly MissionBlank[];
   readonly onDispatched?: (result: DispatchResult) => void | Promise<void>;
   readonly route?: { readonly tool: (name: string, args: readonly unknown[]) => Promise<unknown> };

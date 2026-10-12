@@ -3,16 +3,11 @@ import type { TextChunks } from "./streaming.ts";
 import { streamCsvObjects } from "./streaming.ts";
 
 /**
- * **Precompute the per-official numbers at ingest time.**
- *
- * A reader page must read a handful of numbers, never scan millions of rows.
- * PRL already computes the federal and state shares (we read its means and
- * refuse its ranks). The primary candidates have no profile file, so their
- * per-candidate shares are aggregated here from PRL's own 0/1 labels — the
- * aggregation is ours and is marked as such; the classifications are PRL's.
- *
- * Every share is a percentage 0-100, the same units and the same allowlist the
- * federal profile adapter established in `index.ts`.
+ * Per-official numbers precomputed at ingest, so a reader page reads a handful
+ * of numbers instead of scanning millions of rows. Federal and state shares are
+ * PRL's own means; primary candidates have no profile file, so their shares are
+ * aggregated here from PRL's 0/1 labels and attributed as ours. Every share is
+ * a percentage 0-100.
  */
 
 /** The five mean columns, derived from the shared category table. */
@@ -51,8 +46,8 @@ export interface PrlStateProfile {
   readonly statementCount: number;
   /** Share of statements per category, as PRL computed it (0-100). */
   readonly shares: Record<PrlCategoryKey, number | null>;
-  /** When these shares were measured (the ingest run's date; state file carries no per-row stamp). */
-  readonly measuredAt: string;
+  /** State profiles have no source measure date; retrieval is carried separately. */
+  readonly measuredAt: string | null;
 }
 
 export interface StateProfileResult {
@@ -73,7 +68,7 @@ const OPENSTATES_ID = /^ocd-person\/[0-9a-f-]{36}$/;
  * statement count. Ranks are refused by the allowlist; only the five means and
  * the count cross.
  */
-export function normalizeStateProfiles(rows: readonly (readonly string[])[], measuredAt: string): StateProfileResult {
+export function normalizeStateProfiles(rows: readonly (readonly string[])[], measuredAt: string | null): StateProfileResult {
   if (rows.length === 0) throw new Error("PRL: the state profiles file parsed to zero rows");
   const header = rows[0];
   const wanted = ["openstates_id", "name", "state", "party", "position", "district", "communication_count", ...MEAN_COLUMNS.map((m) => m.column)];

@@ -1,14 +1,9 @@
 #!/usr/bin/env node
 /**
- * Validate the standing runner's immutable launch boundary.
- *
- * This is the validator `pilot-task.ps1` actually executes before it registers
- * either launch mechanism.  It deliberately reads no environment-file bytes:
- * the only environment fact it returns is the resolved path.  The standing
- * checkout must be a clean repository root, detached at the exact deployed
- * software SHA supplied by the release operator, and that commit must already
- * be present on `origin/main`.  A branch tip or a merely-current checkout is
- * not an equivalent proof.
+ * Validate the standing runner's immutable launch boundary. It reads no
+ * environment-file bytes; the only environment fact it returns is the resolved
+ * path. The checkout must be a clean repository root, detached at the exact
+ * deployed SHA, and that commit must already be on `origin/main`.
  */
 
 import { execFileSync } from "node:child_process";
@@ -136,10 +131,7 @@ export function validateRuntimeConfig(input) {
 
   if (isInside(repoPath, envFile)) {
     const rel = relative(repoPath, envFile).replaceAll("\\", "/");
-    // Ask the exact immutable commit for this exact path. A tracked-only file
-    // LIST is the wrong primitive for a gate because it cannot see prospective
-    // tree state; exact object membership proves the secret is absent from the
-    // deployed tree without creating another tracked-state sweep.
+    // Ask the exact deployed commit for this path: a file list cannot prove the secret is absent from that tree.
     const tracked = git(repoPath, ["cat-file", "-e", `HEAD:${rel}`], { allowFailure: true });
     if (tracked !== null) throw new Error("environment file is tracked by Git; a standing secret file may never be committed");
     const ignored = git(repoPath, ["check-ignore", "--quiet", "--", rel], { allowFailure: true });

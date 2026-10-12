@@ -17,12 +17,8 @@ import { VERIFICATION_CHECKS } from "../lib/control-plane/promotion/types.ts";
 import { validateSnapshot } from "../lib/meetings/snapshot.ts";
 
 /**
- * **PRDY-3 — THE FIVE CHECKS RUN, AND THE CONTROLS ARE MEASURED.**
- * (Fleet Promotion Readiness, 2026-09-06.)
- *
- * Every check has a positive control (the real Pima capture passes all five)
- * and a seeded failure that names what it measured. Nothing returns
- * NOT_IMPLEMENTED.
+ * The five checks run and the controls are measured: every check has a positive control (the real capture passes all
+ * five) and a seeded failure that names what it measured.
  */
 
 const TEXT = PIMA_EVENTS_TEXT;

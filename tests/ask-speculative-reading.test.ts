@@ -1,36 +1,15 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { initializeFederalVoteFirstSeed } from "./helpers/federal-vote-first-seed.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { installFederalVotes, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
-await Promise.all([
-  initializeFederalVoteFirstSeed(),
-  installRegistryRuntimeFirstSeeds(),
-]);
+await installRegistryAuthority();
+await installFederalVotes();
 
 import { codeBestReading, speculationVerdict, type ReadingOutcome } from "../lib/ask/speculative-reading.ts";
 import { synthesizeWithLadder } from "../lib/ask/synthesize.ts";
 import { ASK_FAST_WRITER_MODEL } from "../lib/ask/model.ts";
 import type { EvidencePack } from "../lib/ask/evidence.ts";
 import type { BindableEntity } from "../lib/routing/named-entity.ts";
-
-/**
- * **READING THE QUESTION AND WRITING THE ANSWER OVERLAP.** (2026-09-25, the
- * Ask three-second repair; `lib/ask/speculative-reading.ts`.)
- *
- * Measured warm, locally, that day: a question only the model can read took
- * ~5.8 s because the model's reading (~1.5 s and up) and the fast writer
- * (~1.9 s and up) ran one after the other. The route now starts the answer
- * from the code's own best reading while the model reads, and keeps it only
- * when the model's reading agrees. These tests drive the real route with a
- * fake transport that takes exactly those measured times — no real model is
- * called — and prove: the two calls overlap (total ≈ the longer, not the sum);
- * a reading that disagrees discards the speculative answer and stops its call;
- * a reading that never comes discards it too; and a question the code reads
- * itself, or a deployment with no model key, starts nothing.
- */
-
-/* ── the code's reading, and the verdict ─────────────────────────────────── */
 
 const MESA = "ocd-division/country:us/state:az/place:mesa#governing";
 const MESA_SCHOOLS = "ocd-division/country:us/state:az/school_district:mesa_unified_district#board";
@@ -46,7 +25,7 @@ test("the code's best reading: a guess from the reader's words, the page or the 
     return reading && { intent: reading.interpretation.intent, temporal: reading.interpretation.temporal.kind, basis: reading.basis, subject: reading.subjectId, mentions: reading.interpretation.entityMentions.length, referent: reading.interpretation.referent };
   };
   assert.deepEqual(read("Who can I talk to at the Mesa City Council?"), { intent: "CONTACT", temporal: "NONE", basis: "WORDING", subject: MESA, mentions: 0, referent: null });
-  // A canonical CONTACT shape since 2026-09-25 (lib/ask/lexical-reading.ts): the same guess, read off the shape.
+  // A canonical CONTACT shape: the same guess, read off the shape.
   assert.deepEqual(read("How do I contact the Mesa City Council?"), { intent: "CONTACT", temporal: "NONE", basis: "SHAPE", subject: MESA, mentions: 0, referent: null });
   // Pronoun follow-ups: the lexical reading refuses a pronoun in the name slot. "It" binds the earlier turn's
   // body in the binders; "they" is read there as people, so the guess proposes that body as the referent — as a
@@ -101,9 +80,7 @@ test("an abandoned writer stops, and the ladder never escalates past it", async 
   assert.equal(result.escalation, null);
 });
 
-/* ── the route, with a transport that takes the measured times ───────────── */
-
-/** Measured warm on 2026-09-25 (see the module note): the frontier model reading a question, the fast writer answering. */
+/** Measured warm times: the frontier model reading a question, the fast writer answering. */
 const READING_MS = 1_500;
 const WRITING_MS = 1_900;
 
@@ -194,8 +171,7 @@ test("ROUTE: the reading and the writing overlap — the answer arrives in about
   assert.equal(on.payload.trace.interpretation.ran, true, "the model still read the question");
   assert.deepEqual([on.payload.trace.speculation?.ran, on.payload.trace.speculation?.delivered, on.payload.trace.speculation?.why, on.payload.trace.speculation?.codeIntent],
     [true, "SPECULATIVE_ANSWER", "same-subject-body-kind-and-writer-input", "CONTACT"]);
-  // Measured on the two model calls themselves, first start to last end: the route's own work around them
-  // slows with the machine (7.2 s under the full suite on 2026-09-25) and is not what overlaps.
+  // Measured on the two model calls themselves, first start to last end; the route's own work around them slows with the machine.
   const modelWindow = (calls: typeof on.calls) => Math.max(...calls.map((call) => call.endedAt!)) - Math.min(...calls.map((call) => call.startedAt));
   const onWindow = modelWindow(on.calls);
   assert.ok(onWindow >= WRITING_MS && onWindow < READING_MS + WRITING_MS, `the model calls took ${onWindow.toFixed(0)} ms together: about the longer call, under the sum`);

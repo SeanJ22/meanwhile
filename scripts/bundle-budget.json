@@ -43,8 +43,7 @@
     "ordinary dependency bump does not fail a build and teach people to raise",
     "ceilings.",
     "",
-    "`scripts/check-build-output.mjs` exports HEADROOM and ceilingCap();",
-    "`tests/build-budget.test.ts` holds every ceiling below to them.",
+    "`scripts/check-build-output.mjs` exports HEADROOM and ceilingCap().",
     "",
     "WHAT THE RULE CHANGED WHEN IT WAS ADOPTED, stated rather than left to a",
     "diff: serverTrace.appManifest.ceiling came DOWN from 240 to 220, because 240",
@@ -83,9 +82,8 @@
     "mode working. Zero app-route manifests changed between the two modes: every",
     "one is byte-identical, which is what makes 1a mode-independent.",
     "",
-    "Reproduce any of it with `node scripts/trace-census.mjs --files out.txt` and",
-    "diff two builds' dumps; .github/workflows/build-check.yml runs both modes on",
-    "linux so the deployed number is measured before Netlify measures it."
+    ".github/workflows/build-check.yml runs both modes on linux so the deployed",
+    "number is measured before Netlify measures it."
   ],
   "serverTrace": {
     "appManifest": {
@@ -94,7 +92,7 @@
       "largest": "server/app/api/ask/grounded/route.js.nft.json",
       "ceiling": 430,
       "ceilingUnit": 10,
-      "ceilingNote": "RE-MEASURED 2026-09-23 from 275 to 374, ceiling from 310 to 430 (cap: floor(374*1.15/10)*10 = 430). The largest manifest is still ask/grounded. WHAT JOINED: the national ZIP index — data/derived/zip-divisions/00.json through 99.json, every two-digit ZIP prefix the Census tabulates (all but 09, military mail, which has no tabulation area), and its index.json, 100 files — replaces the one three-state data/derived/zip-division-ids.json (-1), so a reader in any of the country's 33,791 ZIP codes gets the governments whose territory reaches it (Sean, 2026-09-23: track everywhere, not a small subset). Every route that can be asked for any ZIP carries every shard: ask/grounded 274 + 100 = 374, ballot/page 269 + 100 = 369, api/meetings 239 + 100 = 339, the Admin pages that place bodies on ZIPs 178-185 + 100. The shards are read from a literal folder (lib/geo/zip-division-index.ts), so the tracer finds them itself and nothing else joins: tests/ traced 0, no whole-project warning, and the 274 other ask/grounded files are the prior baseline's 275 less the old index. One shard per ZIP3 would have been 896 files; the prefix layout was chosen to keep this count near its baseline. PRIOR NOTE: RE-MEASURED 2026-09-16 from 221 to 275, ceiling from 230 to 310 (cap: floor(275*1.15/10)*10 = 310). The largest manifest moved from meetings to ask/grounded. WHAT JOINED: the reader edge-serving work (PR #312) adds request-scoped edge-artifact priming to lib/registry/server.ts, which transitively imports edge-store, edge-observability, and runtime-edge modules, plus new civic-data read-model projections (curated-reader-read-model, manual-read-models). These are the data families the coverage graph needs to serve from edge artifacts instead of Postgres. The meetings route grew from 221 to 241 (+20, same mechanism); ask/grounded is larger because it also imports the ballot, funding, votes, and meeting-knowledge evidence chains. No repo file joined by runaway tracing — every addition is a statically imported module or its compiled chunk, not a dynamic-path trace blowup. The prior 221 baseline and its history are in git.",
+      "ceilingNote": "RE-MEASURED 2026-09-23 from 275 to 374, ceiling from 310 to 430 (cap: floor(374*1.15/10)*10 = 430). The largest manifest is still ask/grounded. WHAT JOINED: the national ZIP index — data/derived/zip-divisions/00.json through 99.json, every two-digit ZIP prefix the Census tabulates (all but 09, military mail, which has no tabulation area), and its index.json, 100 files — replaces the one three-state data/derived/zip-division-ids.json (-1), so a reader in any of the country's 33,791 ZIP codes gets the governments whose territory reaches it (track everywhere, not a small subset). Every route that can be asked for any ZIP carries every shard: ask/grounded 274 + 100 = 374, ballot/page 269 + 100 = 369, api/meetings 239 + 100 = 339, the Admin pages that place bodies on ZIPs 178-185 + 100. The shards are read from a literal folder (lib/geo/zip-division-index.ts), so the tracer finds them itself and nothing else joins: tests/ traced 0, no whole-project warning, and the 274 other ask/grounded files are the prior baseline's 275 less the old index. One shard per ZIP3 would have been 896 files; the prefix layout was chosen to keep this count near its baseline. PRIOR NOTE: RE-MEASURED 2026-09-16 from 221 to 275, ceiling from 230 to 310 (cap: floor(275*1.15/10)*10 = 310). The largest manifest moved from meetings to ask/grounded. WHAT JOINED: the reader edge-serving work (PR #312) adds request-scoped edge-artifact priming to lib/registry/server.ts, which transitively imports edge-store, edge-observability, and runtime-edge modules, plus new civic-data read-model projections (curated-reader-read-model, manual-read-models). These are the data families the coverage graph needs to serve from edge artifacts instead of Postgres. The meetings route grew from 221 to 241 (+20, same mechanism); ask/grounded is larger because it also imports the ballot, funding, votes, and meeting-knowledge evidence chains. No repo file joined by runaway tracing — every addition is a statically imported module or its compiled chunk, not a dynamic-path trace blowup. The prior 221 baseline and its history are in git.",
       "modeIndependent": "Measured identical in default and standalone mode on 2026-08-18. If these ever diverge, the divergence is the finding."
     },
     "frameworkRuntime": {
@@ -147,7 +145,7 @@
     "RE-BASELINED AGAIN THE SAME DAY, BY AUD-03. Eight surfaces that are not on",
     "the first paint of `/` moved behind next/dynamic boundaries, and the initial",
     "graph fell by 145,026 raw and 42,824 gzip against the threshold of 20,480",
-    "committed before the measurement (docs/aud-03-prereg.md). The numbers below",
+    "committed before the measurement. The numbers below",
     "are the post-AUD-03 build, so the budget guards what actually ships.",
     "",
     "THE MAPLIBRE SPLIT MOVED AND MAPLIBRE DID NOT. maplibreBytes reads 1,148,412",
@@ -172,10 +170,7 @@
     "initial graph and reshuffles the chunks. No map code was touched.",
     "  substring method   1149452 -> 1127962   moved 21,490 bytes",
     "  provenance         873003 -> 872955     moved 48 bytes (0.006%)",
-    "The 48 bytes are minification context shifting, not attribution drift. The",
-    "same plant is in tests/build-attribution.test.ts as a synthetic fixture,",
-    "with the substring method asserted to FAIL it - a control, so the new",
-    "method passing proves something.",
+    "The 48 bytes are minification context shifting, not attribution drift.",
     "",
     "WHAT THE OLD NUMBER WAS GETTING WRONG, now that both can be read: it put",
     "MapLibre at 43% of the initial JS. By provenance it is 32%. The gap is two",
@@ -242,7 +237,7 @@
       "",
       "The whole of it is lib/geo/zcta-centroids.json — 960,770 raw bytes, 32.5% of",
       "the landing page initial JavaScript, larger than MapLibre — attributed by",
-      "module provenance with scripts/p002-module-table.mts. It is loaded on demand",
+      "module provenance. It is loaded on demand",
       "now (lib/geo/zcta-table.ts); no reader can use it before typing a zip.",
       "",
       "WHAT IS OWED: an ubuntu standalone figure from a build-check run on this",

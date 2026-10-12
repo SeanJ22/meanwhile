@@ -1,59 +1,11 @@
 /**
- * THE COORDINATOR — atomic claim, lease, and disposition over durable state.
- *
- * ============================================================================
- * WHAT THIS FILE IS FOR
- *
- * `attempt.ts`, `route-task.ts`, `work-item.ts` and `completion.ts` hold the
- * RULES, purely, over values. `repository/` holds the STORAGE, neutrally. This
- * file is the only place the two meet, and it is where the architecture's claim
- *
- *     A CRASHED WORKER LOSES ITS ATTEMPT AND NOTHING ELSE
- *
- * becomes something a test can fail.
- *
- * IT DUPLICATES NO RULE. Every domain question — may this Attempt carry a
- * disposition, is this lease expired, does this Attempt leave the task
- * reclaimable, may this obligation end — is asked of the module that owns it.
- * What is added here is exactly and only what a pure function cannot do: decide
- * a race against PERSISTED state, and make a two-aggregate write atomic.
- * ============================================================================
- *
- * THE THREE MECHANISMS, and the failure each one exists for:
- *
- *   1. COMPARE-AND-SET ON THE LEASE SLOT. The lease is stored under the ROUTE
- *      TASK's id — one slot per task — so "who holds this task" is a single
- *      persisted cell and claiming it is a single conditional write. Two workers
- *      that both read an empty slot both try to create it; exactly one creation
- *      succeeds and the other is refused. `claimRouteTask` is deliberately
- *      LOCK-FREE for this reason: correctness comes from the conditional write,
- *      not from a mutual-exclusion section a crashed process could hold forever.
- *
- *   2. OWNERSHIP ON RENEWAL. `heartbeat()` in `attempt.ts` checks EXPIRY and
- *      cannot check ownership — it is handed a lease value and has no way to
- *      know who is asking. That check belongs here, where the caller's identity
- *      and the persisted holder are both available. Without it, a worker whose
- *      task was reclaimed could keep a live lease alive under someone else's
- *      name and two workers would walk one route believing they each held it.
- *
- *   3. A WRITE-AHEAD COMMIT FOR DISPOSITION. Disposing a route writes two
- *      aggregates — the RouteTask records the disposition, the Attempt closes.
- *      Two files is two writes, and a process dying between them leaves a
- *      half-write: a disposed route whose Attempt is still open, or a closed
- *      Attempt against a route that shows nothing. Both are lies to the next
- *      reader. So the pair is committed as ONE append to an append-only log and
- *      the aggregate writes are the APPLICATION of that commit. Either the
- *      commit is there — and `reconcile()` finishes it, deterministically, from
- *      values the domain already computed — or nothing happened at all.
- *
- * COST IS ORTHOGONAL TO TRUTH, mechanically. Nothing in the disposition path
- * reads a budget, a cap or a cost. A budget refusal changes what runs NEXT; it
- * cannot produce, alter or withhold a `RouteDisposition`. The only route out of
- * a cost stop is an Attempt that ends `ABORTED`, and `disposeRoute` refuses an
- * `ABORTED` Attempt by name. A scheduling fact is never a finding about a
- * government. See `COST_SCHEDULING_INVARIANT` in `cost.ts`.
- *
- * TIME IS ALWAYS A PARAMETER. Nothing here reads a clock.
+ * Atomic claim, lease and disposition over durable state. Domain rules live in attempt.ts, route-task.ts,
+ * work-item.ts and completion.ts; this module adds only what a pure function cannot:
+ *   1. Claims are a conditional write to the lease slot (one slot per RouteTask), lock-free on purpose.
+ *   2. Lease renewal checks ownership here; `heartbeat()` can only check expiry.
+ *   3. A disposition is committed as one append, and the two aggregate writes apply that commit;
+ *      `reconcile()` finishes any commit whose writes did not land.
+ * Nothing in the disposition path reads a budget or cost. Time is always a parameter.
  */
 
 import {
@@ -102,18 +54,7 @@ import {
 } from "./types.ts";
 import { loadWorkerCompletionEvidence, reconcileWorkerCompletions } from "./worker-completion.ts";
 
-/** ------------------------------------------------------------- refusals */
-
-/**
- * Someone who does not hold this lease tried to act as though they did.
- *
- * The distinction from `LeaseConflict` matters and is not cosmetic.
- * `LeaseConflict` says "you cannot TAKE this, someone else has it" and is the
- * correct, expected answer to a losing claim. `LeaseNotHeld` says "you are
- * acting as though you already had this, and you do not" — which is a worker
- * operating on a belief the control plane has already overwritten, and is the
- * shape a stale worker takes just before it writes a stale conclusion.
- */
+/** Distinct from `LeaseConflict` ("someone else has it"): this caller is acting on a lease it no longer holds. */
 export class LeaseNotHeld extends Error {
   readonly routeTaskId: string;
   readonly claimant: string;
@@ -166,22 +107,7 @@ export class NothingToReclaim extends Error {
   }
 }
 
-/**
- * A claim reached a RouteTask that already carries a disposition.
- *
- * (2026-09-22.) `claimRouteTask` refused only WORKER tasks outside PENDING and
- * RECLAIMABLE, so a settled civic route could be claimed again. The claim
- * overwrote its state from DISPOSED to CLAIMED, and the dispatch behind it
- * opened an Attempt that no disposition could close (`disposeRoute` refuses a
- * second one) and no reclaim could return (`reclaim` refuses a settled route),
- * leaving its lease for the sweep. Production held 65 such tasks.
- *
- * Settled is a fact about this ROUTE, not about the obligation. What the
- * obligation still owes — parsing, verifying and publishing what the route
- * retrieved, or another route when this one returned nothing — is carried by
- * the durable evidence and by the obligation's next occurrence, never by
- * walking a settled route again.
- */
+/** A disposed route is never claimed again; what the obligation still owes belongs to its evidence and next occurrence. */
 export class RouteTaskSettled extends Error {
   readonly routeTaskId: string;
   readonly disposition: string;
@@ -199,8 +125,6 @@ export class RouteTaskSettled extends Error {
   }
 }
 
-/** ------------------------------------------------------------ registration */
-
 /** Idempotently persist a WorkItem. A re-put of the identical item is a no-op. */
 export async function registerWorkItem(
   repos: ControlPlaneRepositories,
@@ -211,14 +135,7 @@ export async function registerWorkItem(
   return outcome.persisted;
 }
 
-/**
- * Idempotently persist a RouteTask and link it to its WorkItem.
- *
- * The link write is skipped when it would be a no-op, so re-registering a task
- * does not churn the WorkItem's revision. A revision that moves for no reason
- * makes every legitimate compare-and-set above it fail for no reason, and a
- * guard that fails for no reason is a guard about to be removed.
- */
+/** The link write is skipped when it would be a no-op, so re-registering a task does not churn the WorkItem's revision. */
 export async function registerRouteTask(
   repos: ControlPlaneRepositories,
   task: RouteTask,
@@ -233,33 +150,14 @@ export async function registerRouteTask(
   return outcome.persisted;
 }
 
-/** ----------------------------------------------------------------- claim */
-
 export interface ClaimOutcome {
   readonly lease: Persisted<ExecutionLease>;
   readonly task: Persisted<RouteTask>;
 }
 
 /**
- * Claim a RouteTask against durable state, or lose cleanly.
- *
- * LOCK-FREE BY DESIGN. The race is decided by a single conditional write to the
- * lease slot: an idempotent create when the slot is empty, a compare-and-set
- * when a dead lease is being taken over. A mutual-exclusion section would be the
- * wrong instrument here — a process that dies holding one blocks every future
- * claimant, which is precisely the failure mode this whole subsystem exists to
- * remove.
- *
- * Both storage-level refusals are translated into `LeaseConflict`, the domain's
- * own word for "someone else has it". A caller does not need to learn the
- * storage layer's vocabulary to understand that it lost a claim, and translating
- * keeps the losing path identical whether the loser was beaten to an empty slot
- * (`IdentityCollision`) or beaten to an expired one (`ConcurrentModification`).
- *
- * A RouteTask that already carries a disposition is refused with
- * `RouteTaskSettled`, and the refusal writes nothing: it is checked before the
- * lease slot is touched, so neither the task nor its lease moves. A dead lease
- * already on that slot stays where the sweep releases it.
+ * Lock-free: the race is one conditional write to the lease slot. Both storage refusals become
+ * `LeaseConflict`. A disposed task is refused with `RouteTaskSettled` before the slot is touched.
  */
 export async function claimRouteTask(
   repos: ControlPlaneRepositories,
@@ -352,23 +250,7 @@ export async function claimRouteTask(
   return { lease, task };
 }
 
-/**
- * Renew a lease this worker actually holds.
- *
- * TWO CHECKS, IN THIS ORDER, and the order is deliberate:
- *
- *   1. OWNERSHIP, here. `heartbeat()` cannot make this check — it receives a
- *      lease value and has no idea who is asking — so a system that only called
- *      `heartbeat` would let any worker keep any lease alive.
- *   2. EXPIRY, in `attempt.ts`. Not re-implemented here. An expired lease is not
- *      renewable by anyone including its own holder; it must be re-claimed, so
- *      that taking it back is a decision the lease slot arbitrates rather than
- *      one a straggler makes unilaterally.
- *
- * Ownership is checked first because it is the more specific fact about the
- * CALLER. A stranger renewing an expired lease is both a stranger and late, and
- * "you do not hold this" is the sentence that tells it what to do next.
- */
+/** Ownership is checked here first; expiry is checked in `attempt.ts`. An expired lease must be re-claimed, not renewed. */
 export async function renewLease(
   repos: ControlPlaneRepositories,
   input: { routeTaskId: string; holder: string; now: string; ttlMs: number },
@@ -387,16 +269,7 @@ export async function renewLease(
   return repos.leases.compareAndSet(input.routeTaskId, current.revision, renewed, input.now);
 }
 
-/** ------------------------------------------------------------- attempts */
-
-/**
- * Open an Attempt under a lease this worker holds.
- *
- * The lease identity is re-checked against durable state rather than trusted
- * from the caller's copy. A worker holding a stale `ExecutionLease` object is
- * exactly the thing that happens after a reclaim, and letting it open an Attempt
- * would put two live Attempts on one route.
- */
+/** The lease is re-checked against durable state: a stale lease object after a reclaim must not open a second live Attempt. */
 export async function beginAttemptFor(
   repos: ControlPlaneRepositories,
   input: {
@@ -432,15 +305,7 @@ export async function beginAttemptFor(
   return outcome.persisted;
 }
 
-/**
- * Every Attempt against one RouteTask, oldest first.
- *
- * A FILTERED read, never the whole table (2026-09-22). This listed every
- * Attempt and filtered in process: 44 sequential 100-row pages over 4,324 rows
- * on the production control plane, once per expired lease the sweep walked.
- * `listWhere` returns exactly `list()` filtered, in the same id order, so the
- * sort below sees the same input and returns the same rows in the same order.
- */
+/** A filtered read by RouteTask, never the whole table. */
 export async function attemptsForRouteTask(
   repos: ControlPlaneRepositories,
   routeTaskId: string,
@@ -449,17 +314,7 @@ export async function attemptsForRouteTask(
   return [...mine].sort((a, b) => (a.value.startedAt < b.value.startedAt ? -1 : 1));
 }
 
-/** ---------------------------------------------------- artifact metadata */
-
-/**
- * Record that an artifact exists, and whose Attempt produced it.
- *
- * METADATA ONLY. The bytes live in the evidence vault; what the control plane
- * owes is attribution. The named Attempt must already be persisted, because an
- * artifact attributed to an Attempt nobody recorded cannot be walked back to the
- * obligation it answers — and an artifact that cannot be walked back is not
- * evidence, whatever it contains.
- */
+/** Metadata only; the bytes live in the vault. The named Attempt must already be persisted. */
 export async function recordArtifactMetadata(
   repos: ControlPlaneRepositories,
   record: ArtifactRecord,
@@ -471,27 +326,8 @@ export async function recordArtifactMetadata(
   } catch (error) {
     if (!(error instanceof AppendOnlyViolation)) throw error;
     /*
-     * **A RE-OBSERVATION OF ONE ARTIFACT IS IDEMPOTENT, NOT A REWRITE.**
-     *
-     * An artifact IS its content: `artifactId` is content-derived, and
-     * `contentHash`/`byteLength`/`canonicalUrl`/`tier`/`partial` are the bytes
-     * and how they were classified. When a resumed occurrence re-runs a route
-     * whose prior observation was recorded but whose occurrence was never
-     * closed — a killed cycle, a crash-restart — a SECOND Attempt retrieves
-     * byte-identical content and offers the SAME artifact under a new
-     * `attemptId`/`recordedAt`. The append-only log sees a differing record
-     * under one id and refuses it as a history rewrite. It is not one: the fact
-     * (this content, at this URL, for this work) already exists, and the FIRST
-     * observation's attribution stands. So a content-identical re-record is an
-     * idempotent success and the cycle proceeds — the disposition cites the
-     * artifact from the disposing Attempt's own declared ids, not from the
-     * log's attribution, so nothing false is recorded.
-     *
-     * A collision on the same id with DIFFERENT content is a genuine violation
-     * (a broken content-address, a hash collision) and is re-thrown untouched.
-     * Without this, one such re-record aborts the entire cycle with no run
-     * record, and every crash-restart re-resumes the same occurrence into the
-     * same death — the recovery loop that required manual surgery.
+     * An artifact id is content-derived, so a byte-identical re-record under a new Attempt is an idempotent
+     * success and the first attribution stands. The same id with different content is re-thrown.
      */
     const held = await repos.artifacts.read(record.workItemId);
     const position = held.findIndex((a) => a.artifactId === record.artifactId);
@@ -518,33 +354,17 @@ export async function artifactsForAttempt(
   return all.filter((record) => record.attemptId === attemptId);
 }
 
-/** ------------------------------------------------------------ reclaiming */
-
 export interface ReclaimOutcome {
   readonly task: Persisted<RouteTask>;
   readonly closed: readonly Persisted<Attempt>[];
-  /**
-   * True when the RouteTask was ALREADY DISPOSED. Nothing was returned to the
-   * pool and no Attempt was read or closed: the only write was releasing the
-   * dead lease. A caller must not count this as a reclaim.
-   */
+  /** True when the RouteTask was already disposed: only the dead lease was released. Not a reclaim. */
   readonly settled: boolean;
 }
 
 /**
- * Observe a worker's death from OUTSIDE and return the route to the pool.
- *
- * The only admissible evidence of death is a lease that stopped being renewed.
- * A dead worker is by construction unavailable to report that it died, so a
- * design that waits for it to say so has already lost the case it was built for.
- * `LeaseStillLive` refuses the impatient reading.
- *
- * The abandoned Attempt is closed as `LEASE_EXPIRED` by the CONTROL PLANE, with
- * a named `abortReason` — never as `COMPLETED`, and never with a disposition.
- * Its partial artifacts are carried onto the closed Attempt exactly as recorded,
- * still attributed to the worker that fetched them. Preserving the evidence
- * while withholding the conclusion is the whole of the rule: there was never a
- * conclusion to keep.
+ * The only evidence of death is a lease that stopped being renewed. The abandoned Attempt closes as
+ * LEASE_EXPIRED with a named reason, never COMPLETED and never with a disposition; its partial artifacts
+ * stay attributed to it.
  */
 export async function reclaimRouteTask(
   repos: ControlPlaneRepositories,
@@ -562,28 +382,7 @@ export async function reclaimRouteTask(
     );
   }
 
-  /*
-   * **A DEAD LEASE ON A SETTLED ROUTE IS RELEASED, AND NOTHING ELSE MOVES.**
-   * (2026-09-22.)
-   *
-   * `reclaim()` refuses to reopen a disposed RouteTask, and must: a dead
-   * Attempt cannot unsettle a settled route. But that refusal fired inside the
-   * loop below, BEFORE the lease release at the end of this function, so an
-   * expired lease on a disposed task was never released and
-   * `sweepExpiredLeases` walked it again every cycle. The production control
-   * plane held 65 of them (disposed tasks re-claimed by a later dispatch whose
-   * own write was then refused), and walking them took 348 s of a 417 s
-   * pre-dispatch, so every due deterministic item was deferred.
-   *
-   * On a settled route the lease is the only dead state. The disposition, the
-   * Attempts, the cost ledger and the debt are history this path does not
-   * read or write: it performs exactly the release the disposition path
-   * performs (`applyDispositionCommit`), one compare-and-set of the lease to
-   * `released`, which is how every release is recorded. A lease re-claimed
-   * since it was read loses that compare-and-set and is left alone. "Disposed"
-   * is `reclaim()`'s own test (`disposition !== null`), so this fires only
-   * where that refusal would, and only when there is a lease left to release.
-   */
+  /* A dead lease on a disposed route is released with one compare-and-set, and nothing else moves. */
   if (task.value.disposition !== null && lease !== null && !lease.value.released) {
     await repos.leases.compareAndSet(
       input.routeTaskId,
@@ -637,29 +436,8 @@ export async function reclaimRouteTask(
 }
 
 /**
- * **A LIVING WORKER THAT GAVE UP, WHICH IS NOT A WORKER THAT DIED.**
- * (Session B resume, W3.A, 2026-08-31.)
- *
- * `reclaimRouteTask` above refuses a lease that is still live, and that refusal
- * is right: death is only ever observed from outside, and a process that can
- * still tell us something has not died. But that leaves a real case with no
- * path — a worker that is alive, holds a live lease, and reached no boundary:
- * a bounded model worker that spent its ceiling, a route that returned nothing
- * usable, a shadow executor that deliberately performed no retrieval.
- *
- * Without this, such a worker had exactly two options and both were wrong. It
- * could write a terminal disposition it did not earn — which is how a failure
- * of ours becomes a claim about a government — or it could walk away holding
- * the lease until the TTL elapsed, so that the NEXT cycle diagnosed a live
- * worker as a dead one. The second is the shape the resume audit found: WORKED
- * with no Attempt, then an expired lease with nothing to reclaim.
- *
- * So the giving-up is recorded AS giving up. The Attempt closes under a
- * NON-disposition-bearing outcome, which `mayWriteDisposition` already refuses
- * to let carry a conclusion; its partial artifacts are preserved and stay
- * attributed to it; the RouteTask returns to RECLAIMABLE; and the lease is
- * released now rather than expiring later. The route is owed exactly as much
- * after this call as before it, which is the property that matters.
+ * A live worker that gave up: the Attempt closes under a non-disposition outcome, partial artifacts are
+ * kept, the RouteTask returns to RECLAIMABLE and the lease is released now. The route stays owed.
  */
 export async function abandonAttempt(
   repos: ControlPlaneRepositories,
@@ -671,13 +449,7 @@ export async function abandonAttempt(
     /** Named, always. `endAttempt` refuses an unnamed one and so does this. */
     reason: string;
     now: string;
-    /**
-     * What the abandoned Attempt MEASURED. (Level 1 activation, 2026-09-01.)
-     * A model worker that walked its ladder and reached no conclusion still
-     * spent real tokens; an abandoned Attempt that dropped its cost would let
-     * the rolling spend ceiling under-count exactly the Attempts most likely
-     * to be repeated. Optional, because a killed worker reports nothing.
-     */
+    /** What the abandoned Attempt measured, so the spend ceiling counts it. Optional: a killed worker reports nothing. */
     cost?: AttemptCost;
   },
 ): Promise<{ readonly task: Persisted<RouteTask>; readonly attempt: Persisted<Attempt> }> {
@@ -732,8 +504,6 @@ export async function abandonAttempt(
   return { task, attempt };
 }
 
-/** ---------------------------------------------------------- disposition */
-
 /** The commit id is a pure function of what is being committed. */
 export function dispositionCommitId(
   routeTaskId: string,
@@ -752,34 +522,13 @@ export interface DisposeOutcome {
 }
 
 /**
- * Close an Attempt and dispose of its route, atomically.
- *
- * THE ORDER IS THE DESIGN:
- *
+ * Order matters:
  *   1. Read both aggregates.
- *   2. COMPARE-AND-SET PRECONDITION, checked before anything is written. The
- *      caller states the RouteTask revision it read. A mismatch means the task
- *      moved underneath it — reclaimed, or disposed by someone else — and the
- *      write is refused by `ConcurrentModification`, naming what was expected
- *      and what was found. This is the stale-writer refusal, and it is the
- *      reason a worker that comes back from the dead cannot overwrite the
- *      finding of the worker that replaced it.
- *   3. LEASE OWNERSHIP, an independent guard. The revision check catches a task
- *      that MOVED; this catches a task whose lease changed hands without the
- *      revision happening to differ. Two guards, because one of them being
- *      sufficient in every case we thought of is not a proof.
- *   4. The DOMAIN computes both next values. `endAttempt` refuses an unnamed
- *      abort and a double close; `disposeRoute` refuses an Attempt that never
- *      reached a boundary, a second disposition, an `INGESTED` with no artifact,
- *      and a `WALKED_NO_YIELD` over an unreachable transport. Every one of those
- *      refusals fires HERE, before a single byte is written.
- *   5. ONE APPEND commits the pair. This is the atomic instant.
- *   6. The aggregate writes APPLY the commit, and are replayable.
- *
- * A process that dies between 5 and 6 leaves a commit whose application
- * `reconcile()` completes. A process that dies before 5 leaves nothing. There is
- * no third state, which is what "no half-write is observable by a later reader"
- * requires.
+ *   2. Compare-and-set precondition on the RouteTask revision the caller read (stale-writer refusal).
+ *   3. Lease ownership, an independent guard.
+ *   4. The domain computes both next values; every refusal fires before anything is written.
+ *   5. One append commits the pair.
+ *   6. The aggregate writes apply the commit and are replayable via `reconcile()`.
  */
 export async function disposeRouteTask(
   repos: ControlPlaneRepositories,
@@ -848,16 +597,7 @@ export async function disposeRouteTask(
   return { ...applied, commit, committed: appended.appended };
 }
 
-/**
- * Apply a committed disposition to its two aggregates, idempotently.
- *
- * Called on the happy path and again by `reconcile()` after a crash, and it must
- * behave identically in both. "Already applied" is detected by VALUE — the
- * persisted aggregate already equals the committed one — rather than by
- * revision, because a recovery run has no way to know how many revisions the
- * store has taken since, and a revision-based check would refuse to finish a
- * recovery it is supposed to finish.
- */
+/** "Already applied" is detected by value, not revision, so a recovery after a crash can finish. */
 async function applyDispositionCommit(
   repos: ControlPlaneRepositories,
   commit: DispositionCommit,
@@ -904,15 +644,7 @@ export interface ReconcileReport {
   readonly healed: readonly string[];
 }
 
-/**
- * Finish every committed disposition whose aggregate writes did not land.
- *
- * This is what a fresh instance runs before it believes anything it reads. A
- * store with an unapplied commit is not corrupt and is not ambiguous — the
- * decision was made and recorded, and only its projection is missing. Recovering
- * it is a replay of values the domain already computed, so it cannot reach a
- * different answer than the one that was committed.
- */
+/** Run by a fresh instance before it believes anything it reads; a replay of values already committed. */
 export async function reconcile(
   repos: ControlPlaneRepositories,
   now: string,
@@ -937,8 +669,6 @@ export async function reconcile(
   }
   return { commitsSeen: commits.length, healed };
 }
-
-/** ------------------------------------------------- transitions and asks */
 
 /** Move a WorkItem and append the transition to its replayable history. */
 export async function transitionWorkItem(
@@ -998,22 +728,7 @@ export async function recordEscalation(
   return persisted;
 }
 
-/** ------------------------------------------------------ shared budgets */
-
-/**
- * Ask the ONE shared budget for permission to make ONE request.
- *
- * Read, decide and write happen inside a single exclusive section, so N workers
- * contend on one persisted ledger rather than on N copies of it. Per-worker
- * politeness multiplies and is therefore not politeness — twelve individually
- * correct workers are twelve times the request rate the publisher was told to
- * expect.
- *
- * The result is a SCHEDULING answer. It cannot become a route disposition: there
- * is no path from here into `disposeRouteTask`, and the only way a budget stop
- * reaches an Attempt at all is as an `ABORTED` closure, which `disposeRoute`
- * refuses to let carry a conclusion.
- */
+/** Read, decide and write happen in one exclusive section, so workers contend on one persisted ledger. */
 export async function acquireHostBudget(
   repos: ControlPlaneRepositories,
   input: { host: string; now: string; credentialId?: string },
@@ -1047,22 +762,7 @@ export async function recordCost(
   return repos.costs.append(entry.workItemId, recordId, costEntryWithModel(entry, entry.model ?? null), now);
 }
 
-/** ----------------------------------------------------------- completion */
-
-/**
- * Build a `CompletionSnapshot` from DURABLE state.
- *
- * `reconcile` runs first, always. A reader that evaluated completion over a
- * store with an unapplied commit would see a RouteTask with no disposition and
- * refuse an obligation that is in fact finished — and the refusal would be
- * indistinguishable from a genuine one, which is the worst possible shape for a
- * wrong answer in this system.
- *
- * Validations, audits, contradictions and upstream states are supplied by the
- * caller rather than loaded here: they belong to modules this one does not own,
- * and an absent input must refuse rather than default. `evaluateCompletion`
- * already treats an upstream missing from the map as UNRESOLVED.
- */
+/** `reconcile` runs first. Validations, audits, contradictions and upstream states come from the caller; an absent input refuses. */
 export async function loadCompletionSnapshot(
   repos: ControlPlaneRepositories,
   input: {
@@ -1073,13 +773,7 @@ export async function loadCompletionSnapshot(
     contradictions?: readonly Contradiction[];
     upstreamStates?: ReadonlyMap<string, WorkItemState>;
     denominatorComplete?: boolean | null;
-    /**
-     * Instance/check ids a canonical instrument run has evaluated GREEN on a
-     * qualifying tree. Supplied by the caller for the same reason validations
-     * and audits are: the run records belong to `lib/health`, which this
-     * module does not own, and loading them here would make the control plane
-     * depend on the health harness rather than the other way round.
-     */
+    /** Instance/check ids a canonical instrument run evaluated GREEN; supplied by the caller. */
     instrumentGreens?: ReadonlySet<string>;
   },
 ): Promise<CompletionSnapshot> {

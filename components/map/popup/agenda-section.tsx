@@ -16,14 +16,9 @@ import { MeetingRecords } from "./meeting-records";
 import { minutesSummaryForMeeting } from "@/lib/meetings/minutes-summaries";
 
 /**
- * What the meeting is actually about (4c) — the stored notice/agenda text,
- * rendered on the meeting surface instead of merely linked from it.
- *
- * "School board meeting I may not care about — revising the instructional
- * time model I may very much care about." The documents are already fetched
- * and stored; this section puts their words in front of the reader:
- * public hearing items called out prominently, the document's own text
- * below, and an honest statement plus the link where extraction failed.
+ * The meeting's stored notice or agenda text on the meeting surface: public
+ * hearing items called out, the document's own text below, and the link where
+ * extraction failed.
  */
 
 interface AgendaDocumentView {
@@ -44,13 +39,9 @@ interface AgendaSectionProps {
   /** The meeting's own agenda link, for the no-document and failed cases. */
   agendaUrl: string | null;
   /**
-   * The meeting record's own publisher observation, passed straight through.
-   *
-   * SWEEP-01: this component took only `meetingId` and `agendaUrl`, so a null
-   * link was the ONLY thing it could reason from — and it reasoned "the body
-   * has not posted". These two fields are what let it tell an unmeasured gap
-   * from a measured one, and they travel together because
-   * `observationFromMeetingRecord` refuses an observation missing either.
+   * The meeting record's publisher observation, passed through. With
+   * `agendaUrl` it separates an unmeasured gap from a measured one;
+   * `observationFromMeetingRecord` refuses one without the other.
    */
   agendaSlotObservedEmpty?: boolean;
   provenance?: {
@@ -67,12 +58,7 @@ function hasPublicHearing(text: string): boolean {
   return /public hearing/i.test(text);
 }
 
-/**
- * Stored rows extracted before the extractor learned numeric entities can
- * carry `&times;`-style literals — decode at render so a legacy row never
- * shows markup to a reader. (The extractor itself now decodes; this covers
- * documents whose bytes haven't changed since.)
- */
+/** Decodes `&times;`-style literals in rows stored before the extractor decoded them. */
 function sanitizeStoredText(text: string): string {
   return text
     .replace(/&#x([0-9a-f]+);/gi, (_, hex) => String.fromCodePoint(parseInt(hex, 16)))
@@ -82,8 +68,7 @@ function sanitizeStoredText(text: string): string {
 }
 
 export function AgendaSection(props: AgendaSectionProps) {
-  // A different meeting owns different network state. Never flash the previous
-  // body's agenda or vote records while the next exact identity is loading.
+  // Keyed on the meeting so the previous one's records never flash.
   return <AgendaForMeeting key={props.meetingId} {...props} />;
 }
 
@@ -94,12 +79,7 @@ function AgendaForMeeting({
   provenance,
   carried,
 }: AgendaSectionProps) {
-  /*
-   * SWEEP-01 (2026-08-31): the same decider the meeting panel uses. Two
-   * components independently deciding what `agendaUrl === null` means is how
-   * one of them came to say a clerk had not posted a packet on the strength of
-   * our own empty record.
-   */
+  /* The same decider the meeting panel uses for a null `agendaUrl`. */
   const agendaState = agendaSentenceFor(
     { id: meetingId, agendaUrl, agendaSlotObservedEmpty, provenance, carried },
   );
@@ -140,7 +120,7 @@ function AgendaForMeeting({
   }, [meetingId]);
 
   if (failed) {
-    // Couldn't check ≠ none — the standing rule, here too.
+    // Couldn't check is not none.
     return (
       <p className="mt-1.5 t-detail leading-relaxed text-muted">
         Couldn&apos;t check for the agenda just now.
@@ -192,19 +172,9 @@ function MinutesRecord({ meetingId }: { meetingId: string }) {
 }
 
 /**
- * **THE VERSIONS LINE STATES THE ROWS IT RENDERS.** (2026-09-22.)
- *
- * `documents` is `/api/agenda`'s reader projection: one row per DISTINCT
- * content of the sitting's own document, newest first. It used to be every
- * stored fetch, and the card told readers Tucson Unified sitting 499 had "89
- * versions on file — a revised agenda is itself news" when its page had never
- * changed. So the count is the length of the list below it, each version is a
- * rendered row, and the revision wording needs two or more distinct contents
- * that the publication reading also calls revised — never a fetch count.
- *
- * An earlier version read at the SAME address is not linked: that address now
- * serves the newer content, and a link would hand the reader the wrong
- * version. Every distinct address is linked exactly where its version is.
+ * One row per distinct content of the sitting's document, newest first; the
+ * count is the rows rendered, never a fetch count. An earlier version read at
+ * the same address is not linked, since that address now serves the newer one.
  */
 export function AgendaDocuments(props: {
   documents: AgendaDocumentView[]; meetingId: string; agendaUrl: string | null; agendaSentence: string;
@@ -227,9 +197,7 @@ function AgendaDocumentContents({ documents, meetingId, agendaUrl, agendaSentenc
   const latest = documents[0] ?? null;
 
   if (latest && publication?.acquisition === "ACQUIRED_IS_PUBLICATION_INDEX") {
-    // Only publication-index pages are held for this sitting. They are shown
-    // for what they are — listing pages, never versions of its agenda — and a
-    // second distinct listing page is linked rather than counted as a revision.
+    // Only publication-index pages are held: shown as listing pages, never versions.
     return <div data-agenda-publication="ACQUIRED_IS_PUBLICATION_INDEX" className="mt-1.5 t-detail leading-relaxed text-muted">
       <p>{publication.gap?.statement} <CheckedLink href={latest.documentUrl} target="_blank" rel="noreferrer" className="text-signal underline">{publication.documentSharedAcrossGovernments ? "Inspect the stored link" : "Open the publisher's agenda portal"}</CheckedLink>.</p>
 
@@ -247,29 +215,8 @@ function AgendaDocumentContents({ documents, meetingId, agendaUrl, agendaSentenc
 
   const summary = noticeSummaryFor(meetingId, latest.contentHash);
   /*
-   * A05's reader-facing surface (2026-08-19, g20) — the row's remainder,
-   * and the last thing between it and Done.
-   *
-   * g19 built the extraction and `POST /api/ask/agenda` in meeting mode and
-   * said plainly that nothing rendered it. This is where it renders: on the
-   * meeting card, above the document's own text, beside the raw link the
-   * row requires it to sit beside and never replace.
-   *
-   * It calls `agendaItems` DIRECTLY rather than posting to the route. Same
-   * function, so the two can never disagree about what an item is — and it
-   * is one fewer request for a reader who already has the text on screen,
-   * which the friction rule makes the default rather than the optimisation.
-   *
-   * NOT A SUMMARY. These are the clerk's own numbered and lettered lines,
-   * verbatim, cut only at length. The row's word is "summarized" and this
-   * deliberately is not one: a summary of an agenda is a claim about what a
-   * government is about to do, made by us.
-   *
-   * An empty list renders NOTHING — never "no items". The extraction is
-   * best-effort against collapsed PDF text (see A05's note: adjacent items
-   * merge where neither ends in a sentence mark), and the full document is
-   * directly below, so silence here costs the reader nothing while a "none"
-   * would be our parser's failure wearing the agenda's clothes.
+   * The clerk's own numbered lines, verbatim, cut only at length; never a
+   * summary. Extraction is best-effort, so an empty list renders nothing.
    */
   const items = agendaItems(sanitizeStoredText(latest.text));
 
@@ -297,21 +244,18 @@ function AgendaDocumentContents({ documents, meetingId, agendaUrl, agendaSentenc
         </div>
       )}
       {summary && (
-        // Curated from this exact document version (4d): labeled, above,
-        // never replacing the official text below.
+        // Curated from this exact document version; never replaces the official text below.
         <div className="mb-2 rounded bg-[var(--surface,rgba(255,255,255,0.04))] p-3">
           <p className="trailing-space-trimmed-15 font-mono t-caption uppercase tracking-[0.15em] text-muted">
             Plain-language summary — read the official text below
           </p>
-          {/* 3b: the product's voice renders BOLD. */}
           <p className="mt-1.5 t-detail font-semibold leading-relaxed">
             {summary.summary}
           </p>
         </div>
       )}
       {hasPublicHearing(latest.text) && (
-        // The thing a reader most needs called out: the meeting takes
-        // public input on something specific.
+        // The meeting takes public input on something specific.
         <p className="mb-2 rounded border border-[var(--signal)] px-3 py-2 t-detail font-semibold text-signal">
           This meeting includes a public hearing — a set time when members of
           the public can speak on a listed item.

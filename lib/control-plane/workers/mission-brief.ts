@@ -1,27 +1,13 @@
 /**
- * **THE MISSION IN A SCOUT'S BRIEF (CH-20).**
- *
- * A hunter working one government sees the mission's open blanks for that
- * government and for the governments above and below it, so a page that also
- * answers a neighbour's blank is not wasted: the hunter drops that finding into
- * the Box with `report_finding`. The list comes from the owed list the round
- * already reads (`refreshPlaceOrder`); it adds no store read.
- *
- * "Above" and "below" follow the OCD division path: a state is above its
- * counties, a county above its places. A blank whose subject sits in no
- * division is related only to that exact subject.
- *
- * The Scout brief has one line budget (DP-21 owns it). The mission takes at most
- * `MISSION_BRIEF_LINE_CAP` of it and the field manual keeps the rest, so the two
- * never crowd each other out.
- *
- * PURE. No store, no clock, no environment.
+ * The mission's open blanks for the government a Scout works and those above and below it on the OCD path, so a
+ * finding for a neighbour can go into the Box with `report_finding`. Takes at most `MISSION_BRIEF_LINE_CAP` of
+ * the brief's line budget; the field manual keeps the rest. Pure.
  */
 import { isOpenBlank } from "../../coverage/open-blanks.ts";
 import type { PlaceOwedItem } from "../../coverage/place-owed.ts";
 import { missionPartOf, type MissionPartsSetting } from "../expansion/mission-parts.ts";
 
-/** The whole Scout brief's inherited-line budget: field-manual lines plus mission lines (DP-21). */
+/** The whole Scout brief's inherited-line budget: field-manual lines plus mission lines. */
 export const SCOUT_BRIEF_LINE_BUDGET = 30;
 /** The mission's share of that budget, header included. */
 export const MISSION_BRIEF_LINE_CAP = 8;

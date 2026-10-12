@@ -1,8 +1,6 @@
 /**
- * CH-23 part 1: the coordinator path keeps the in-round absence rules. A coordinator Scout runs on a stand-in
- * obligation, so a detective walk that argues the record absent is recorded on the real obligation with what would
- * reopen it (DP-04, DP-06), the item waits on that clock instead of being blocked for good, and a plain Scout walk
- * that found nothing goes to a detective after its backoff.
+ * A coordinator Scout runs on a stand-in obligation, so a detective walk that argues the record absent is recorded on
+ * the real obligation with what would reopen it, and the item waits on that clock instead of being blocked for good.
  */
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -12,11 +10,6 @@ import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts
 import { nextAutonomousOperation, runAutonomousCoordinator, type AutonomousCoordinatorRuntime } from "../lib/control-plane/workers/coordinator.ts";
 import { scoutWalkedToNothing, unchangedScoutFailure } from "../lib/control-plane/workers/scout-scheduling.ts";
 import { autonomousHarness } from "./helpers/autonomous-fleet.ts";
-
-/* The re-walk after a walk that found nothing is behind CH-23's runner switch; each test sets it as it needs. */
-function withOneHunterPath(on: boolean) {
-  if (on) process.env.WTP_ONE_HUNTER_PATH = "1"; else delete process.env.WTP_ONE_HUNTER_PATH;
-}
 
 const OWNER = "freshness:fixture:owner";
 
@@ -47,19 +40,15 @@ async function ownedHarness(role: "SCOUT" | "DETECTIVE", rungs: number) {
   return { h, runtime };
 }
 
-test("with the switch on, a walk that found nothing is not an unchanged failure; a refused request still is", () => {
-  withOneHunterPath(true);
+test("a walk that found nothing is not an unchanged failure; a refused request still is", () => {
   const ended = { endedAt: "2026-10-06T00:00:00.000Z", outcome: "ABORTED" } as const;
   const walked = { ...ended, abortReason: "the worker reached no boundary. SCOUT_NO_PROGRESS (MODEL): 5 rung(s) walked" };
   assert.equal(scoutWalkedToNothing(walked), true);
   assert.equal(unchangedScoutFailure(walked as never), false);
   assert.equal(unchangedScoutFailure({ ...ended, abortReason: "SCOUT_RESULT_REFUSED: HTTP 400 schema" } as never), true);
-  withOneHunterPath(false);
-  assert.equal(unchangedScoutFailure(walked as never), true, "with the switch off the old path holds");
 });
 
 test("a coordinator detective's argued absence is recorded on the real obligation and holds the item on its clock", async () => {
-  withOneHunterPath(true);
   const { h, runtime } = await ownedHarness("DETECTIVE", 4);
   const run = await runAutonomousCoordinator(runtime, { maximum: 1, concurrency: 1 });
   assert.equal(run.dispatches.length, 1);
@@ -80,7 +69,6 @@ test("a coordinator detective's argued absence is recorded on the real obligatio
 });
 
 test("an absence cleared early by a new capability lets the item walk again at once", async () => {
-  withOneHunterPath(true);
   const { h, runtime } = await ownedHarness("DETECTIVE", 4);
   await runAutonomousCoordinator(runtime, { maximum: 1, concurrency: 1 });
   const row = await h.repos.obligations.mustRead(OWNER);
@@ -90,7 +78,6 @@ test("an absence cleared early by a new capability lets the item walk again at o
 });
 
 test("a plain Scout that found nothing records no absence and goes to a detective after its backoff, not blocked for good", async () => {
-  withOneHunterPath(true);
   const { h, runtime } = await ownedHarness("SCOUT", 4);
   await runAutonomousCoordinator(runtime, { maximum: 1, concurrency: 1 });
   assert.equal((await h.repos.obligations.mustRead(OWNER)).value.absentUntil ?? null, null, "only a detective walk argues absence (DP-04)");
@@ -101,15 +88,6 @@ test("a plain Scout that found nothing records no absence and goes to a detectiv
   assert.equal((await nextAutonomousOperation(runtime, h.item.id)).action, "SCOUT");
 });
 
-test("with the switch off, the argued absence is still recorded and the old block stands after it lapses", async () => {
-  withOneHunterPath(false);
-  const { h, runtime } = await ownedHarness("DETECTIVE", 4);
-  await runAutonomousCoordinator(runtime, { maximum: 1, concurrency: 1 });
-  const owner = (await h.repos.obligations.mustRead(OWNER)).value;
-  assert.ok(owner.absentUntil, "recording the absence only removes paid re-walks, so it is not switched");
-  h.advanceTo(new Date(Date.parse(owner.absentUntil!) + 60_000).toISOString());
-  assert.match((await nextAutonomousOperation(runtime, h.item.id)).reason, /unchanged Scout request already failed/);
-});
 
 test("a detective walk under the evidence floor is not an argued absence", async () => {
   const { h, runtime } = await ownedHarness("DETECTIVE", 1);

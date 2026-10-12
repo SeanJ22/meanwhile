@@ -1,19 +1,7 @@
-/**
- * The dates a voter plans around, per state — S2 §4b.
- *
- * Every row cites the official page it was read from, and a state with no
- * verified entry simply has none — the strip renders what exists and never
- * approximates. AZ and NH land here next session in the same shape; their
- * dates are already verified in `docs/state.md` §9 but are not entered until
- * their ballot surfaces ship, so the strip can never outrun the ballot.
- */
-
 export interface DatedStep {
-  /** What the reader can do or must do by then. */
   label: string;
   /** ISO date, or a short official phrase where no single date exists. */
   date: string;
-  /** Detail worth one line, in the authority's terms. */
   detail: string | null;
 }
 
@@ -21,7 +9,6 @@ export interface ElectionDates {
   state: string;
   electionDay: string;
   steps: DatedStep[];
-  /** The official source every step above was read from. */
   sourceUrl: string;
   sourceOrg: string;
   collectedAt: string;

@@ -7,17 +7,10 @@ const GIT_SHA_PATTERN = /^[0-9a-f]{40}$/;
 
 export const READER_READBACK_EVIDENCE_KIND = "TYPED_READER_READ_MODEL" as const;
 
-/** Stable evidence identity for a registered operational projection with no public Reader surface. */
 export function sourceScopedReaderReadbackProjectionId(contractId: string): string {
   return `source-scoped:${contractId}`;
 }
 
-/**
- * Durable result from executing the contract-specific typed read model used
- * by Reader against the exact promoted version. A pointer read or a declared
- * consumer list is not this proof. Failed observations are retained too, so
- * Admin cannot turn a delivery defect into either silence or source failure.
- */
 export interface ReaderProjectionReadbackReceipt {
   readonly contractVersion: 2;
   readonly kind: "READER_PROJECTION_READBACK";
@@ -31,23 +24,17 @@ export interface ReaderProjectionReadbackReceipt {
   readonly observedAt: string;
   readonly evidenceKind: typeof READER_READBACK_EVIDENCE_KIND;
   readonly verifierId: string;
-  /** Commit whose typed Reader implementation produced this observation. */
   readonly verifierCodeSha: string | null;
   readonly status: "PASS" | "FAIL";
   readonly detail: string;
 }
 
-/** Normalize an exact Git commit identity; an absent/unreadable value stays unknown. */
 export function normalizeReaderCodeSha(value: string | null | undefined): string | null {
   const normalized = value?.trim().toLowerCase() ?? "";
   return GIT_SHA_PATTERN.test(normalized) ? normalized : null;
 }
 
-/**
- * Readback events are operational evidence, not source promotion events.
- * Recognize retired receipt versions here so a V1 row cannot reappear as a
- * second PROMOTED source event after the V2 migration.
- */
+/** Retired receipt versions are recognized so a V1 row cannot reappear as a second PROMOTED source event. */
 export function isReaderProjectionReadbackDetail(detail: string): boolean {
   return detail.startsWith(READER_PROJECTION_READBACK_PREFIX) ||
     LEGACY_READER_PROJECTION_READBACK_PREFIXES.some((prefix) => detail.startsWith(prefix));

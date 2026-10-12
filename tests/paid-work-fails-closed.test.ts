@@ -1,26 +1,7 @@
 /**
- * **AN UNREADABLE OR IGNORED SPENDING CONTROL NEVER LETS PAID WORK PROCEED.**
- * (2026-09-25.)
- *
- * The owner's rule: paid research is paused by him; paid search sits under his
- * Admin switch. A pause, ceiling, budget or switch record that cannot be read
- * keeps paid work — paid Scouts, the auditor, the cache pre-warm, paid Brave /
- * Exa search — closed, while plain-code work, routine publication and the free
- * discovery walks carry on. Before this:
- *
- *   - an unreadable intent log read as "not paused", in the cycle and in the
- *     runner between cycles;
- *   - the paid lane read only the research-lane PAUSE, never the runner-level
- *     PAUSE_RUNNER Admin's runner card issues, and FleetSafety's pause was
- *     display-only;
- *   - an unreadable or malformed ceiling row fell back to the built-in $100,
- *     which can sit ABOVE the owner's dial;
- *   - the Scout `search` tool spent from env keys alone, outside the switch.
- *
- * The pure rules are pinned by value in model-lane, fleet-safety, scout-search
- * and worker-fleet-model-audit tests; the row reading is pinned by value here.
- * The two scripts are long-running and host-bound, so their wiring is pinned
- * as SOURCE TEXT with positive controls, as runner-owner-intents.test.ts does.
+ * A pause, ceiling, budget or switch record that cannot be read keeps paid work closed, while plain-code work,
+ * routine publication and free discovery carry on. The two long-running scripts' wiring is pinned as source text
+ * with positive controls.
  */
 
 import assert from "node:assert/strict";

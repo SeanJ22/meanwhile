@@ -6,15 +6,7 @@ import { publishWorkerRosterResults } from "./worker-roster-publication.ts";
 import type { WorkerReaderContract } from "./worker-reader-contracts.ts";
 import { workerPublicationReceipt } from "./worker-publication-tasks.ts";
 
-/** Saved-result publication inside the runner's long-lived parent. The caller
- * supplies its existing repositories (including the shared incremental cache)
- * and serving store. No repository creation, process exit, console interception
- * or paid work occurs here. Scheduling, authorization and job isolation remain
- * with the runner, just as they do for the command adapter.
- *
- * Evidence is scoped to this invocation, so later jobs see newly saved bytes
- * and current source settings. Do not retain a context across publication jobs.
- */
+/** Evidence is scoped to this invocation; do not retain a context across publication jobs. */
 export async function runWorkerPublicationJob(input: {
   readonly repos: ControlPlaneRepositories;
   readonly store: RoutineDataStore;

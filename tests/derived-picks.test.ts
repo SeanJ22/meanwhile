@@ -11,11 +11,8 @@ import {
 import type { StoredPick } from "../lib/ballot/picks.ts";
 
 /**
- * M134 — a Yes becomes the pick, and the race stops asking twice.
- *
- * The five rules the row states, one test each, plus the two properties that
- * make the whole thing safe: the derived pick writes nothing anywhere, and it
- * cannot touch a reaction.
+ * A Yes becomes the pick, and the race stops asking twice. The derived pick writes nothing anywhere and cannot touch
+ * a reaction.
  */
 
 const ROOT = join(import.meta.dirname, "..");
@@ -107,9 +104,7 @@ test("M134 rule 4 — resolving a pick cannot alter a reaction: this module writ
 });
 
 test("M134 rule 5 — a measure's Yes/No derives the same way, through the same function", () => {
-  // Nothing in `resolvePick` knows what a candidate is. A measure passes its
-  // Yes/No option ids and gets the identical behaviour, which is why rule 5
-  // needed no second code path.
+  // `resolvePick` knows nothing about candidates, so a measure's Yes/No option ids get identical behaviour.
   assert.deepEqual(resolvePick(null, ["Yes"], 1).chosen, ["Yes"]);
   assert.equal(resolvePick(null, ["Yes"], 1).basis, "DERIVED");
   assert.equal(resolvePick(null, ["Yes", "No"], 1).asks, true);
@@ -124,9 +119,7 @@ test("M134 — a derived pick says where it came from", () => {
     join(ROOT, "components", "ballot", "pick-control.tsx"),
     "utf8",
   );
-  // The derived pick is read from the DEVICE's own answer record, never from
-  // the server and never from an aggregate — so it can add nothing to what is
-  // sold.
+  // The derived pick is read from the device's own answer record, never from the server or an aggregate.
   assert.match(control, /getStoredReaction\("CANDIDATE", o\.reactionTargetId\)/);
   assert.ok(
     !/\/api\/reactions/.test(control),

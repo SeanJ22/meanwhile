@@ -15,11 +15,10 @@ import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
 import type { RoutineDataStore } from "./store.ts";
-import { readCompletedWorkerResults } from "../control-plane/repository/worker-completion.ts";
 import { readRegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
 import { readManualProjectionPrior, manualProjectionCandidate } from "./manual-projections.ts";
 import { processRegisteredManualCandidate } from "./promotion.ts";
-import { auditPull, capturesForPublication, latestParserResult } from "./worker-publication-evidence.ts";
+import { auditPull, capturesForPublication, jobWorkerResults, latestParserResult } from "./worker-publication-evidence.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { workerBallotMeasuresPackage } from "./worker-ballot-measures.ts";
 
@@ -28,7 +27,6 @@ const text = (value: unknown) => typeof value === "string" ? value : "";
 const hash = (value: unknown) => createHash("sha256").update(canonicalCivicDataJson(value)).digest("hex").slice(0, 24);
 const groupKey = (f: Readonly<Record<string, unknown>>) => canonicalCivicDataJson([words(f.election), words(f.office), words(f.jurisdictionName)]);
 
-/** Replay every source row before letting a contest's full listed set move together. */
 export function workerBallotContestsPackage(input: {
   plan: AutonomousWorkPlan; parser: WorkerResultRecord; captures: readonly WorkerPublicationCapture[];
   registry: RegistryRuntimePrior | null; now: string; results?: readonly WorkerResultRecord[];
@@ -38,15 +36,13 @@ export function workerBallotContestsPackage(input: {
   requirePublication(input.plan.contract.recordClass === "BALLOT_CONTEST", "BALLOT_CLASS_MISMATCH");
   const checked = verifiedWorkerRecords(input);
   const inventory = inventoryRecordEvidence(checked.primary.evidence, checked.contract.extraction);
-  requirePublication(inventory.declaredCount === null || inventory.declaredCount === inventory.rows.length, "BALLOT_SOURCE_LIST_INCOMPLETE");
+  const sourceListComplete = inventory.declaredCount === null || inventory.declaredCount === inventory.rows.length;
   const source = inventory.rows.map(row => Object.fromEntries(Object.entries(row).map(([key, cell]) => [key, cell.value])));
   const groups = new Map<string, typeof source>();
   for (const row of source) groups.set(groupKey(row), [...groups.get(groupKey(row)) ?? [], row]);
   const state = checked.contract.jurisdiction.state.toUpperCase();
   const ballots: Record<string, BallotSet> = {}, heldContests: string[] = [];
-  // Structured delimiters are not visible word boundaries in section3Contest.
-  // Use the exact replayed source cells, preserving names (including commas);
-  // the original capture and its raw hash remain the publication evidence.
+    // Structured delimiters are not visible word boundaries in section3Contest, so use the exact replayed source cells.
   const pageText = ["DELIMITED_TEXT", "JSON_RECORDS", "XML_RECORDS"].includes(checked.contract.extraction.format)
     ? source.map(row => Object.values(row).join("\n")).join("\n") : checked.primary.evidence.text;
   const page = { url: checked.primary.evidence.canonicalUrl, text: pageText,
@@ -54,18 +50,22 @@ export function workerBallotContestsPackage(input: {
       input.captures.filter(captureIntact).map(c => c.evidence)), sourcePolicy: checked.primary.sourcePolicy };
   const pageOffices = [...new Set(source.map(row => text(row.office)))];
   for (const [key, listed] of groups) {
-    const rows = checked.extraction.records.filter(row => groupKey(row.fields) === key);
+    const extracted = checked.extraction.records.filter(row => groupKey(row.fields) === key);
     const f = listed[0];
     const names = listed.map(row => text(row.candidateName));
     const uniqueNames = new Set(names.map(words));
-    const replayedNames = new Set(rows.map(row => words(row.fields.candidateName)));
     const verdict = section3Contest({ page, now: input.now, pageOffices, contest: {
       election: text(f.election), office: text(f.office), candidates: names } });
     const divisions = input.registry?.payload.registry.divisions.filter(row => row.state.toUpperCase() === state && words(row.label) === words(f.jurisdictionName)) ?? [];
-    if (!verdict.live || verdict.openCandidates.length || !names.every(Boolean) || uniqueNames.size !== names.length ||
-      rows.length !== listed.length || uniqueNames.size !== replayedNames.size || ![...uniqueNames].every(name => replayedNames.has(name)) || divisions.length !== 1) {
+    const verifiedNames = new Set(verdict.verifiedCandidates.map(words));
+    const rows = extracted.filter(row => verifiedNames.has(words(row.fields.candidateName)) &&
+      listed.filter(source => words(source.candidateName) === words(row.fields.candidateName)).length === 1 &&
+      extracted.filter(other => words(other.fields.candidateName) === words(row.fields.candidateName)).length === 1);
+    if (!verdict.live || !rows.length || divisions.length !== 1) {
       heldContests.push(`${text(f.election)} / ${text(f.office)} / ${text(f.jurisdictionName)}`); continue;
     }
+    const complete = sourceListComplete && names.every(Boolean) && uniqueNames.size === names.length && rows.length === listed.length;
+    if (!complete) heldContests.push(`${text(f.election)} / ${text(f.office)} / ${text(f.jurisdictionName)}`);
     const electionId = `${state.toLowerCase()}-${hash([state, text(f.election)])}`;
     const election = { id: electionId, state, name: text(f.election), date: text(rows[0].fields.electionDate) };
     const contestId = `ballot-contest:${hash([state, electionId, text(f.office), divisions[0].ocdId])}`;
@@ -73,7 +73,8 @@ export function workerBallotContestsPackage(input: {
     const verified = rows[0].fields;
     const contest: Contest = { id: contestId, electionId, ocdId: divisions[0].ocdId, divisionVintage: divisions[0].sourceDataset,
       title: text(f.office), type: "CANDIDACY", voteFor: typeof verified.voteFor === "number" && verified.voteFor > 0 ? verified.voteFor : null,
-      termYears: typeof verified.termYears === "number" ? verified.termYears : null, scopeNote: null, provenance };
+      termYears: typeof verified.termYears === "number" ? verified.termYears : null,
+      candidateListComplete: complete, scopeNote: complete ? null : "We're working on getting the rest of this candidate list", provenance };
     const candidacies: Candidacy[] = rows.map(row => {
       const value = row.fields;
       return { id: `ballot-candidacy:${hash([contestId, text(value.candidateName)])}`, contestId,
@@ -85,12 +86,11 @@ export function workerBallotContestsPackage(input: {
     const ballot = ballots[ballotKey] ?? { election, contests: [], candidacies: [], measures: [], absences: [] };
     ballot.contests.push(contest); ballot.candidacies.push(...candidacies); ballots[ballotKey] = ballot;
   }
-  requirePublication(Object.keys(ballots).length, "NO_COMPLETE_BALLOT_CONTEST");
+  requirePublication(Object.keys(ballots).length, "NO_VERIFIED_BALLOT_CANDIDATE");
   return { package: { contractId: "ballot-contests", version: `worker:${input.parser.id}`, sourceThrough: input.now,
     sourceReceipt: checked.sourceReceipt, payload: { kind: "ballot-contests", ballots } }, heldContests };
 }
 
-/** Replace a complete contest atomically; other elections/contests keep their exact saved authority. */
 export function mergeBallotContests(input: ManualProjectionPackage, prior: ManualProjectionPrior | null): ManualProjectionPackage {
   const fresh = input.payload as GenericBallotProjection;
   const previous = prior?.payload as GenericBallotProjection | undefined;
@@ -103,7 +103,9 @@ export function mergeBallotContests(input: ManualProjectionPackage, prior: Manua
     requirePublication(!before?.election.date || !ballot.election.date || before.election.date === ballot.election.date, "BALLOT_ELECTION_DATE_CONFLICT");
     ballots[key] = before ? { ...before, election: { ...ballot.election, date: ballot.election.date || before.election.date },
       contests: [...before.contests.filter(row => !ids.has(row.id)), ...ballot.contests],
-      candidacies: [...before.candidacies.filter(row => !ids.has(row.contestId)), ...ballot.candidacies],
+      candidacies: [...before.candidacies.filter(row => !ballot.candidacies.some(next => next.id === row.id) &&
+        !ballot.contests.some(contest => contest.id === row.contestId && contest.candidateListComplete === true &&
+          contest.provenance.sourceUrl === before.contests.find(old => old.id === contest.id)?.provenance.sourceUrl)), ...ballot.candidacies],
       measures: [...before.measures.filter(row => keepsMeasure(row.contestId, row.provenance.sourceUrl)), ...ballot.measures],
       ...(before.measureRecords !== undefined || ballot.measureRecords !== undefined ? {
         measureRecords: [...before.measureRecords ?? []].filter(row => keepsMeasure(row.contestId, row.sourceUrl)).concat([...ballot.measureRecords ?? []]) } : {}) } : ballot;
@@ -114,32 +116,31 @@ export function mergeBallotContests(input: ManualProjectionPackage, prior: Manua
     sources: sources.filter((source, at) => sources.findIndex(row => canonicalCivicDataJson(row) === canonicalCivicDataJson(source)) === at) } };
 }
 
-/** A retained parser result reaches the same registered promotion and typed readback as every reader door. */
 export async function publishWorkerBallotContestsResults(input: {
   repos: ControlPlaneRepositories; store: RoutineDataStore; workItemIds: readonly string[]; now: string;
   readCapture: (id: string, results: readonly WorkerResultRecord[]) => Promise<WorkerPublicationCapture>;
 }) {
-  const results = await readCompletedWorkerResults(input.repos);
+  const { results, readCapture } = await jobWorkerResults(input.repos, input.workItemIds, input.readCapture);
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];
   for (const id of [...new Set(input.workItemIds)]) {
     const item = (await input.repos.workItems.mustRead(id)).value, plan = item.autonomousPlan;
     const parser = latestParserResult(results, id);
     if (!parser || plan?.publication?.contractId !== "ballot-contests") continue;
     const pull = auditPull(results, parser);
-    if (item.publicationOutcome?.workerResultId === parser.id && item.publicationOutcome.recovery !== "PUBLISHER" &&
-      !(plan.contract.recordClass === "BALLOT_MEASURE" && item.publicationOutcome.status === "PARTIALLY_PUBLISHED") &&
+    if (item.publicationOutcome?.workerResultId === parser.id && item.publicationOutcome.sourceObservedAt && item.publicationOutcome.recovery !== "PUBLISHER" &&
+      item.publicationOutcome.status !== "PARTIALLY_PUBLISHED" &&
       !(pull && pull.at > item.publicationOutcome.at)) { report.push({ workItemId: id, outcome: item.publicationOutcome }); continue; }
     let outcome: NonNullable<WorkItem["publicationOutcome"]>;
     let candidateId: string | null = null, versionId: string | null = null, verified = false;
     try {
       requirePublication(parser.result.role === "PARSER", "PARSER_RESULT_UNRESOLVED");
-      const captures = await capturesForPublication({ ...input, workItemId: id, primaryId: parser.result.artifactId, results });
+      const captures = await capturesForPublication({ ...input, readCapture, workItemId: id, primaryId: parser.result.artifactId, results });
       if (plan.contract.schemaVersion === 2 && plan.contract.recordClass === "BALLOT_MEASURE") {
         const urls = new Set(parser.result.records.map(row => row.fields.textUrl).filter((url): url is string => typeof url === "string" && url.startsWith("https://")));
         const held = (await input.repos.artifacts.read(id)).filter(row => urls.has(row.canonicalUrl) && !row.partial)
           .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt));
         const fetched = await Promise.all(held.filter(row => !captures.some(capture => capture.evidence.artifactId === row.artifactId))
-          .map(row => input.readCapture(row.artifactId, results).catch(() => null)));
+          .map(row => readCapture(row.artifactId, results).catch(() => null)));
         captures.push(...fetched.filter((capture): capture is WorkerPublicationCapture => capture !== null));
       }
       const checked = workerBallotContestsPackage({ plan, parser, captures, now: input.now, results,
@@ -159,9 +160,10 @@ export async function publishWorkerBallotContestsResults(input: {
       await recordPublicationFlow(input.repos, published.candidate.candidate.id,
         { workerResultId: parser.id, stage: "LIVE", records: contests.length, changedRecords: published.confirmed ? 0 : changes.records.added + changes.records.changed, versionId }, input.now);
       outcome = { at: input.now, workerResultId: parser.id, status: checked.heldContests.length ? "PARTIALLY_PUBLISHED" : "PUBLISHED",
-        code: published.confirmed ? "VERIFIED_RESULT_REUSED" : "COMPLETE_BALLOT_CONTESTS_PUBLISHED", candidateId, versionId,
-        detail: `${contests.length} official contest(s) published with ${plan.contract.recordClass === "BALLOT_MEASURE" ? "each independently verified measure fact" : "every listed candidate"}; ${checked.heldContests.length} source or text gap(s) remain owed: ${checked.heldContests.join("; ")}.`,
-        ...changes, acceptedRecordIds: contests.map(contest => contest.id), ...(checked.heldContests.length ? { recovery: "WORKER" as const } : {}) };
+        code: published.confirmed ? "VERIFIED_RESULT_REUSED" : "VERIFIED_BALLOT_FACTS_PUBLISHED", candidateId, versionId,
+        detail: `${contests.length} official contest(s) published with ${plan.contract.recordClass === "BALLOT_MEASURE" ? "each independently verified measure fact" : "independently verified candidates"}; ${checked.heldContests.length} source or text gap(s) remain owed: ${checked.heldContests.join("; ")}.`,
+        ...changes, sourceObservedAt: captures[0]?.observedAt, sourceArtifactId: captures[0]?.evidence.artifactId,
+        acceptedRecordIds: contests.map(contest => contest.id), ...(checked.heldContests.length ? { recovery: "WORKER" as const } : {}) };
     } catch (error) {
       const detail = sanitizedErrorDiagnostic(error);
       outcome = { at: input.now, workerResultId: parser.id, status: "HELD", code: detail.split(":")[0], detail,

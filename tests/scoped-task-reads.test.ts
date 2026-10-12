@@ -1,9 +1,3 @@
-/**
- * CH-26: each task reads only its own history. With the runner switch on, a
- * task's reads are scoped to its own work item, subject and lineage, so the
- * repository calls it makes, and the rows they return, stay flat as unrelated
- * history grows. With the switch off, the old whole-table reads still run.
- */
 import assert from "node:assert/strict";
 import test from "node:test";
 import { ZERO_COST } from "../lib/control-plane/attempt.ts";
@@ -31,6 +25,11 @@ import { readCompletedWorkerResults } from "../lib/control-plane/repository/work
 import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import { registerWorkItem } from "../lib/control-plane/repository/coordinator.ts";
 import type { FreshnessOccurrence } from "../lib/control-plane/scheduler/durable.ts";
+import { readFileSync } from "node:fs";
+import { gunzipSync } from "node:zlib";
+import type { PromotedProjection } from "../lib/civic-data/types.ts";
+import { withReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
+import { manualEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 
 const WHOLE_TABLE = new Set(["list", "listNarrowed", "readAll", "keys"]);
 
@@ -215,7 +214,9 @@ test("CH-26: a lease worker's scoped runtime builds and begins a task without li
   const method = { version: 56, updatedOn: "2026-09-03", routes: [] };
   await writeFieldManual(h.repos, [...knowledgeEntries(method), methodVersionEntry(method)], h.now());
   counter.reset();
-  const runtime = await autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1, scopedReads: true, environment: { NODE_ENV: "test", WTP_BOX_ENABLED: "1" } });
+  const { projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { projection: PromotedProjection };
+  const registry: ReaderAuthorityEdgeBundle = { promoted: new Map([[projection.key, manualEdgeEntry("registry-runtime-bindings", projection.payload, projection.versionId)]]) };
+  const runtime = await withReaderAuthorityEdge(registry, () => autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1, scopedReads: true, environment: { NODE_ENV: "test", WTP_BOX_ENABLED: "1" } }));
   assert.deepEqual(counter.whole(), [], "the build reads no whole table");
   for (const row of (await h.repos.routeTasks.listWhere(["workItemId"], h.item.id))) {
     counter.reset();
@@ -223,7 +224,7 @@ test("CH-26: a lease worker's scoped runtime builds and begins a task without li
     assert.deepEqual(counter.whole(), [], "beginning a task reads only its own lineage");
   }
   counter.reset();
-  await autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1 });
+  await withReaderAuthorityEdge(registry, () => autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1 }));
   assert.ok(counter.whole().length > 0, "the round's unscoped build still does the whole-store upkeep");
 });
 

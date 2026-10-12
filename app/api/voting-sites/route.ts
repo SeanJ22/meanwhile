@@ -22,35 +22,9 @@ import {
 } from "@/lib/ballot/voting-sites";
 
 /**
- * `POST /api/voting-sites` — where the reader can actually vote (B19).
- *
- * ## Address in, sites out, and NOTHING in between is kept
- *
- * This route is `/api/geocode`'s sibling and inherits its whole design. It
- * writes no log row, no database row, no cache entry; it echoes no header; it
- * prints nothing. The address exists in this function's memory for the length
- * of one request and is gone. `tests/voting-sites.test.ts` asserts it the same
- * way the geocoder's guard does — a source scan for every write primitive, so
- * a future edit that adds one fails the suite rather than quietly retracting
- * the promise the input's own copy makes.
- *
- * **POST, not GET**, for the same reason: a GET would put a home address in a
- * URL, and URLs reach access logs, referrers and proxy caches that are not
- * ours to promise about. `no-store` on the way back, because this response is
- * per-reader by construction and must never sit in a shared cache (the D40
- * family).
- *
- * ## What comes back, and what it refuses to invent
- *
- * The point resolves to a set of divisions, and a jurisdiction matches when
- * the reader's point is inside it. There may be more than one — a Morris
- * municipality sits inside Morris County — and every match is returned with
- * its own model sentence, because which model applies is the answer in half
- * the cases.
- *
- * A jurisdiction whose retrieval failed comes back with its REFUSAL and every
- * rung walked, never as an empty list. "No polling places" is never the render
- * for "we could not reach the authority."
+ * POST /api/voting-sites: address in, sites out, nothing kept: no log, row, cache entry or echoed header.
+ * POST so an address never sits in a URL; `no-store`. Every jurisdiction containing the point is returned; one
+ * whose retrieval failed comes back with its refusal and rungs, never an empty list.
  */
 
 export const runtime = "nodejs";
@@ -168,13 +142,7 @@ export async function POST(request: Request) {
   }
   const hits = file.jurisdictions.filter((j) => covering.has(j.ocdId));
 
-  /*
-   * A state-level record (New Hampshire's walled state list) is not a
-   * division the resolver returns, and it is exactly what a NH reader needs
-   * to see: the wall, with its rungs. So a state-level record joins the
-   * answer whenever the reader's point resolved into that state and nothing
-   * more specific answered for them.
-   */
+  /* A state-level record is not a division the resolver returns; it joins the answer when the point resolved into that state and nothing more specific answered. */
   const state = divisions
     .map((d) => /\/state:([a-z]{2})(\/|$)/.exec(d.ocdId)?.[1])
     .find((s): s is string => typeof s === "string");

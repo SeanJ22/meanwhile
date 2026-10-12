@@ -2,8 +2,6 @@ import { neon } from "@neondatabase/serverless";
 import type { ReadOnlyQuery, Row } from "../control-plane/admin-view/promoted-slices.ts";
 import { installDatabaseTransferCounter } from "../db/transfer.ts";
 
-/** Shared server-side adapter for narrowly sliced promoted reader records.
- * Postgres enforces read-only access for the entire transaction. */
 export function readerQuery(deadlineMs?: number): ReadOnlyQuery | null {
   installDatabaseTransferCounter();
   const url = process.env.DATABASE_URL?.trim();

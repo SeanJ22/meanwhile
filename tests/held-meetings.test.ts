@@ -21,7 +21,7 @@ const ROSTER_URL = "https://www.bensonaz.gov/government/city-council/contact-the
 const MEETINGS_URL = "https://www.bensonaz.gov/government/city-council/council-meetings";
 const shell = (title: string, main: string) => `<html><head><title>${title} | City of Benson, AZ</title></head><body>` +
   `<header><a href="/our-city/calendar">Calendar</a> <a href="/agendas">Agendas</a></header><main>${main}</main><footer>City of Benson</footer></body></html>`;
-// The shape of Sierra Vista's saved council-meetings page (captured 2026-09-28).
+// The shape of a city's saved council-meetings page.
 const MEETINGS = shell("Council Meetings", `<h1>Council Meetings</h1><p>The City Council generally meets four times a month for:</p>
   <p><strong>Work Sessions</strong> &ndash; Generally held on the second and fourth Tuesday of the month. Meetings are held in Council Chambers on the second floor of City Hall at 3:00 p.m.</p>
   <p><strong>Council Meetings</strong> &ndash; Regular City Council meetings are held on the second and fourth Thursday of the month. Meetings are held in Council Chambers on the second floor of City Hall at 5:00 p.m.</p>
@@ -70,7 +70,7 @@ test("a saved meeting page from any job names the council's schedule and agenda 
   assert.equal(base.payload.registry.bodies.find(body => body.id === BODY)?.name, null, "the fixture council is Census-derived and unnamed");
   const meetings = capture(MEETINGS, MEETINGS_URL), roster = capture(ROSTER, ROSTER_URL);
   const other = capture(shell("Planning Commission Meetings", "<p>The Planning Commission meets the first Monday of each month at 6:00 p.m.</p>"), "https://www.bensonaz.gov/planning");
-  // A later capture of the same page is the host's "Access Denied" wall (Sierra Vista's, 2026-09-29).
+  // A later capture of the same page is the host's "Access Denied" wall.
   const wall = { ...capture("<html><head><title>Access Denied</title></head><body><h1>Access Denied</h1></body></html>", MEETINGS_URL, "2026-09-29T06:00:00.000Z"), httpStatus: 403 };
   const pages = new Map([meetings, roster, other, wall].map(c => [c.evidence.artifactId, c]));
   const schedule = await heldBodySchedule({ body: { id: BODY, name: "Benson City Council" }, divisionLabel: "Benson", now: NOW,

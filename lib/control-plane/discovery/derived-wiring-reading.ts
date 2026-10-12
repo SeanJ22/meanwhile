@@ -1,26 +1,16 @@
 /**
- * **THE DERIVED WIRING'S OWN READING OF A HELD CALENDAR, WITH THE READER'S ADAPTER.** (C16, 2026-09-24.)
+ * The derived wiring's own reading of a held calendar through the family's
+ * adapter, with the row's reviewed filter. The adapter is served the held bytes
+ * for the row's route and a 404 for anything else. The venue-resolutions
+ * projection (`lib/meetings/venue-cache.ts`) is read first; a store that cannot
+ * answer refuses the whole reading.
  *
- * The wiring derive (`scripts/derive-meeting-source-wiring.mts`) confirms a reviewed row by reading the calendar
- * bytes a walk vaulted, through the same adapter the family runs, with the row's reviewed filter. The adapter is
- * served the held bytes for the row's route and a 404 for anything else.
- *
- * Both adapters resolve each sitting's venue through the synchronous venue-resolutions Reader projection
- * (`lib/meetings/venue-cache.ts`), which answers only after its canonical pointer was read in this process. In
- * production nothing falls back to the tracked seed. So the projection is read here, before any adapter reading, and
- * a store that cannot answer refuses the whole reading by name. On 2026-09-24 the first production pass would have
- * read no projection: every reading threw, and the throw was filed as a changed calendar.
- *
- * What one reading can say:
- * - `verified`: the filter selects this body's sittings, and none names another reviewed body of the government;
- * - `changed`: the held bytes are no longer a calendar of this kind, or the filter selects none of them. The
- *   adapter says the second by throwing its zero-row extraction (`ZeroRowExtractionError`, RULING 43: documents
- *   fetched, nothing extracted, nothing dropped) or by returning none of the body's sittings. Either is
- *   CALENDAR_CHANGED, a review trigger;
- * - `wrongAttribution`: a selected sitting names another reviewed body (WRONG_ATTRIBUTION);
- * - `refused`: the bytes hold no event to read, or the adapter threw anything else. Such a throw is ours or the
- *   serving's (an unread projection, bytes not served), never evidence about the calendar, so it holds the row
- *   (ADAPTER_REFUSED) and triggers no review.
+ * - `verified`: the filter selects this body's sittings and none names another reviewed body;
+ * - `changed`: the held bytes are no longer such a calendar, or the filter selects none of them
+ *   (`ZeroRowExtractionError` or no matching sittings): CALENDAR_CHANGED, a review trigger;
+ * - `wrongAttribution`: a selected sitting names another reviewed body;
+ * - `refused`: no event to read, or any other adapter throw. That is ours, never evidence about
+ *   the calendar: ADAPTER_REFUSED, no review triggered.
  */
 
 import { refreshVenueResolutionsFromPromoted } from "../../civic-data/curated-reader-read-model.ts";
@@ -98,8 +88,7 @@ async function readOne(reading: HeldCalendarReading, now: string, adapterDigest:
   const { text, contentType } = reading.held;
   const fetchImpl = (async (request: string | URL | Request) => {
     const url = typeof request === "string" ? request : request instanceof URL ? request.toString() : request.url;
-    // The same retained Diligent response is read directly below: its original
-    // date query remains evidence, never a claim that different bytes were fetched.
+    // The retained response's original date query remains evidence, never a claim that different bytes were fetched.
     return sameRoute(url, row.route)
       ? new Response(text, { status: 200, headers: { "content-type": contentType || "text/html" } })
       : new Response("not held in the vault", { status: 404 });

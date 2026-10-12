@@ -1,16 +1,8 @@
 /**
- * DB-12: adapters read their doors from the registry.
- *
- * `wiringRowsFromDoors` turns hand-wired meeting door records back into the
- * wiring rows the adapters already read; `doorRowsFor` is the accessor an
- * adapter uses instead of importing `SOURCE_WIRING`. A suspended door is not
- * read; an open or shut one still is (a shut door is retried, DB-32).
- *
- * Derived members stay in their state's family (read at runtime by the family
- * child), so they are not returned here unless asked for.
- *
- * PURE: no store. Row order is by body then source type; adapters key rows by
- * body and tenant, not by position.
+ * Turns hand-wired meeting door records back into the wiring rows adapters
+ * read. A suspended door is not read; an open or shut one still is. Derived
+ * family members are excluded unless asked for. Pure. Row order is by body
+ * then source type.
  */
 
 import type { BodySourceWiring } from "../registry/source-wiring.ts";
@@ -41,7 +33,7 @@ function rowOf(door: DoorRecord): BodySourceWiring | null {
   };
 }
 
-/** DB-16: every host the registry's meeting doors read, so a door with a new host needs no edit to a host list. */
+/** Every host the registry's meeting doors read, so a door with a new host needs no edit to a host list. */
 export function meetingDoorHosts(doors: readonly DoorRecord[]): string[] {
   const hosts = new Set<string>();
   for (const door of doors) {
@@ -66,37 +58,10 @@ export function wiringRowsFromDoors(doors: readonly DoorRecord[], options: DoorR
   return [...rows.values()].sort(compareRows);
 }
 
-/** Rows a given adapter capability should serve, read from the registry's doors. */
-export function doorRowsFor(kinds: readonly AgendaSourceType[], doors: readonly DoorRecord[], options: DoorRowOptions = {}): BodySourceWiring[] {
-  return wiringRowsFromDoors(doors, options).filter((row) => kinds.includes(row.agendaSourceType));
-}
-
 export function compareRows(a: BodySourceWiring, b: BodySourceWiring): number {
   return a.bodyId < b.bodyId ? -1 : a.bodyId > b.bodyId ? 1 : a.agendaSourceType < b.agendaSourceType ? -1 : a.agendaSourceType > b.agendaSourceType ? 1 : 0;
 }
 
-/**
- * How the registry's rows differ from the code's. Empty means meetings read
- * through the registry are read exactly as they are today.
- */
-export function wiringParity(code: readonly BodySourceWiring[], registry: readonly BodySourceWiring[]): string[] {
-  const key = (row: BodySourceWiring) => `${row.bodyId} ${row.agendaSourceType} ${JSON.stringify(sortedConfig(row))}`;
-  const mine = new Map(registry.map((row) => [key(row), row]));
-  const theirs = new Map(code.map((row) => [key(row), row]));
-  const problems: string[] = [];
-  for (const [k, row] of theirs) {
-    const other = mine.get(k);
-    if (other === undefined) problems.push(`missing from the registry: ${row.bodyId} (${row.agendaSourceType})`);
-    else if (JSON.stringify(sortKeys(other)) !== JSON.stringify(sortKeys(row))) problems.push(`differs: ${row.bodyId} (${row.agendaSourceType})`);
-  }
-  for (const [k, row] of mine) if (!theirs.has(k)) problems.push(`only in the registry: ${row.bodyId} (${row.agendaSourceType})`);
-  return problems;
-}
-
 function sortedConfig(row: BodySourceWiring): Record<string, string> {
   return Object.fromEntries(Object.entries(row.config).sort(([a], [b]) => (a < b ? -1 : 1)));
-}
-
-function sortKeys(row: BodySourceWiring): unknown {
-  return Object.fromEntries(Object.entries({ ...row, config: sortedConfig(row) }).sort(([a], [b]) => (a < b ? -1 : 1)));
 }

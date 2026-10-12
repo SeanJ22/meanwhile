@@ -1,35 +1,9 @@
 import { rolePlaybook, workerSystemPrompt } from "../playbooks.ts";
 /**
- * **THE PARSER'S FALLBACK WHEN NO PARSING RULE EXISTS: A MODEL PULLS THE FIELDS
- * WITH EXACT QUOTES, AND CODE CONFIRMS EVERY QUOTE IS IN THE SAVED DOCUMENT.**
- *
- * A record type nobody has written a rule for (contract format `UNSUPPORTED`)
- * used to stop at the parser. Here the cheapest model tier reads the saved
- * document text and returns, for every field, its value and the exact passage it
- * came from. The model's answer is a claim and nothing more: code then checks,
- * for each field, that
- *
- *   1. the quote occurs, character for character, in the saved document,
- *   2. the value occurs inside its own quote, and
- *   3. the record carries every required and identity field.
- *
- * Only what passes becomes a record, and every kept field carries a span (start,
- * end, quote, and the PDF page when the document is a transcribed PDF). Whatever
- * fails is dropped and named in a finding, never published and never repaired.
- * A model cannot put a fact in front of a reader that the document does not say.
- *
- * ## The manual decides where to start
- *
- * Before the first call the parser reads the field manual for this record class
- * and publisher. A tier that failed here before (its quotes did not confirm) is
- * skipped; a tier that yielded is used again; and the field names earlier runs
- * settled on are handed to the model so the same record type keeps the same
- * field names. After the run the outcome is written back, so the next parse of
- * this record type starts where the last one succeeded.
- *
- * Scanned agendas and PDFs arrive here already transcribed: the acquisition step
- * runs the PDF text layer and OCR (lib/extract/ocr.ts) and vaults the text as a
- * derived artifact, whose `[Page N]` markers the spans read back into pages.
+ * The parser's fallback when no parsing rule exists: a model pulls each field with its exact quote, and code keeps
+ * only fields whose quote occurs character for character in the saved document and contains the value, on a
+ * record carrying every required and identity field. Everything else is dropped and named in a finding. The
+ * field manual decides the starting tier and field names, and the outcome is written back.
  */
 
 import { performance } from "node:perf_hooks";
@@ -93,7 +67,6 @@ const RECORD_EXTRACTION = {
   cache_control: { type: "ephemeral" as const },
 };
 
-/* ------------------------------------------------------- the manual's say */
 
 /** The tiers the extraction step may use, cheapest first. */
 export const PARSE_TIERS: readonly ModelClass[] = ["haiku", "sonnet"];
@@ -115,12 +88,7 @@ function outcomeEntries(store: FieldManualStore, recordClass: string): FieldManu
   return store.entries.filter((e) => e.kind === "PARSE_OUTCOME" && (e.payload as OutcomePayload | null)?.recordClass === recordClass);
 }
 
-/**
- * **THE DECISION THE MANUAL CHANGES.** A tier is ruled out for a publisher when
- * the manual's latest word on it there is FAILED; with nothing recorded for the
- * publisher, when it failed on other publishers of this record class and yielded
- * on none. The parse starts at the cheapest tier not ruled out.
- */
+/** A tier is ruled out for a publisher when the manual's latest word on it there is FAILED, or, with nothing for the publisher, when it failed on others of this record class and yielded on none. The parse starts at the cheapest tier not ruled out. */
 export function routeParse(store: FieldManualStore, key: { readonly recordClass: string; readonly host: string }): ParseRoute {
   const entries = outcomeEntries(store, key.recordClass);
   const names = store.entries.find((e) => e.id === parseFieldsId(key.recordClass));
@@ -151,7 +119,6 @@ export function parseFieldsId(recordClass: string): string {
   return newFieldManualEntry(PARSE_LEARNING_SOURCE, `fields|${recordClass}`, { role: "PARSER", kind: "PARSE_FIELDS", title: "", summary: "", outcome: "REFERENCE" }).id;
 }
 
-/* ------------------------------------------------------------ windows */
 
 /** The document cut into overlapping windows on line boundaries; each is [start, end) in the full text. */
 export function documentWindows(text: string, size = PARSE_WINDOW_CHARS, overlap = PARSE_WINDOW_OVERLAP, max = PARSE_MAX_WINDOWS): { readonly windows: readonly { readonly start: number; readonly end: number }[]; readonly unreadFrom: number | null } {
@@ -170,7 +137,6 @@ export function documentWindows(text: string, size = PARSE_WINDOW_CHARS, overlap
   return { windows, unreadFrom: start < text.length ? windows[windows.length - 1]!.end : null };
 }
 
-/* ------------------------------------------------------------ the learning */
 
 /** What a finished parse teaches the next one: this tier's outcome for this publisher, and the field names used. */
 export function parseLearningEntries(
@@ -192,7 +158,7 @@ export function parseLearningEntries(
     const prior = store.entries.find((e) => e.id === parseFieldsId(input.recordClass));
     const merged = [...new Set([...(((prior?.payload as { fieldNames?: string[] } | undefined)?.fieldNames) ?? []), ...input.fieldNames])].sort();
     entries.push(newFieldManualEntry(PARSE_LEARNING_SOURCE, `fields|${input.recordClass}`, {
-      role: "PARSER", kind: "PARSE_FIELDS", outcome: "REFERENCE",
+      role: "PARSER", kind: "PARSE_FIELDS", outcome: "REFERENCE", portable: true,
       title: `${input.recordClass}: field names used by earlier parses`,
       summary: `earlier parses of ${input.recordClass} settled on: ${merged.join(", ")}`.slice(0, 300),
       recordClasses: [input.recordClass], observedAt: day, payload: { recordClass: input.recordClass, fieldNames: merged },
@@ -201,7 +167,6 @@ export function parseLearningEntries(
   return entries;
 }
 
-/* ------------------------------------------------------------ the reasoner */
 
 export interface ModelParseRecord {
   readonly byModel?: readonly CostModelShare[];
@@ -240,7 +205,7 @@ export class ModelParseFailure extends Error {
 }
 
 function toolInput(response: ModelResponse, expectedModel: string): unknown {
-  // The provider answers with the dated alias of a tier's model (claude-haiku-4-5-20251001): the same model.
+  // The provider may answer with a dated alias of the model asked for: the same model.
   if (canonicalModelId(String(response.model)) !== canonicalModelId(expectedModel)) throw new Error("PARSE_MODEL_IDENTITY_MISMATCH");
   const tools = (Array.isArray(response.content) ? response.content : []).filter((b) => b.type === "tool_use");
   if (tools.length !== 1 || tools[0]!.name !== "record_extraction" || response.stop_reason !== "tool_use") throw new Error(`PARSE_MODEL_NO_TOOL_CALL:${String(response.stop_reason).slice(0, 60)}`);
@@ -277,7 +242,7 @@ export function modelParseReasoner(
   now: () => string,
   options: {
     readonly ceilingUsd?: number;
-    /** CH-26: read only the cost rows the rolling window can count. */
+    /** Read only the cost rows the rolling window can count. */
     readonly scopedReads?: boolean;
     readonly transportFor?: (jurisdiction: { readonly subjectId: string; readonly state: string | null }) => ModelTransport;
     readonly lifetimeHuntSubject?: (subjectId: string) => boolean;
@@ -321,7 +286,7 @@ export function modelParseReasoner(
         const body = userBody(contract, route, input.evidence.text.slice(w.start, w.end));
         if (index === 0 && firstBody === "") firstBody = body;
         const request: ModelRequest = { model, max_tokens: PARSE_RESPONSE_MAX_TOKENS,
-          ...(step.modelClass === "haiku" ? {} : { output_config: { effort: step.effort } }),
+          output_config: { effort: step.effort },
           system: [{ type: "text", text: workerSystemPrompt("PARSER", rolePlaybook(manual.store.entries, "PARSER").text), cache_control: { type: "ephemeral" } }], tools: [RECORD_EXTRACTION],
           tool_choice: { type: "auto" }, messages: [{ role: "user", content: body }] };
         const response = await send(request).catch((error) => {

@@ -11,22 +11,7 @@ import {
   sourceUserAgent,
 } from "../lib/sources/http.ts";
 
-/* ========================================================================== */
-/* THE FETCH LAYER — the uncovered half, and where the silent partials lived  */
-/* ========================================================================== */
-
-/**
- * `tests/http-empty-success.test.ts` and `tests/challenge-at-200.test.ts`
- * between them cover the DOCUMENT check: a 200 that is blank, wrong-format or
- * a challenge page. Nothing covered the RETRIEVAL DISCIPLINE itself — the
- * retries, the `Retry-After` honouring, the rung recorded on a wall, the
- * identification, or the JSON path — and that is the layer `RULING 43` named as
- * uncovered and the layer a scheduled job had already fallen through.
- *
- * Every test here injects `fetchImpl`. No test in this file touches the network
- * or sleeps for more than the retry policy's own backoff, and the backoff is
- * asserted rather than waited out where it can be.
- */
+/** Retrieval discipline: retries, `Retry-After`, the rung recorded on a wall, identification and the JSON path. Every test injects `fetchImpl`. */
 
 interface Call {
   url: string;
@@ -53,8 +38,6 @@ function fakeFetch(
   }) as unknown as typeof fetch;
 }
 
-/* ------------------------------------------------------- identification --- */
-
 test("http: the client identifies itself on every request, and there is no browser rung", async () => {
   const ua = sourceUserAgent();
   assert.match(ua, /we-the-people civic meeting index/);
@@ -70,8 +53,6 @@ test("http: no request carries a borrowed browser identity or browser-only navig
     assert.doesNotMatch(name, /^sec-fetch-|^upgrade-insecure-requests$/i, `${name} pretends to be a browser navigation`);
   }
 });
-
-/* ------------------------------------------------------------- retrying --- */
 
 test("http: a 429 is retried, and Retry-After is honoured rather than the default backoff", async () => {
   const calls: Call[] = [];
@@ -135,8 +116,6 @@ test("http: a 404 is NOT retried — it is an answer, not a wobble", async () =>
   assert.equal(calls.length, 1, "a 404 was retried — that is noise against a public server");
 });
 
-/* ------------------------------------------------- the rung is recorded --- */
-
 test("http: every wall records the RUNG it stopped at, never a terminal blocked state", async () => {
   const plain = await politeGetText("https://example.gov/e", {
     fetchImpl: fakeFetch([{ status: 404 }]),
@@ -162,15 +141,8 @@ test("http: a rung is a number from the CLAUDE.md ladder, and never a `blocked` 
   );
 });
 
-/* ------------------------------------------------------------ the body --- */
-
 test("http: an injected fetchImpl is never routed around, even on a 403", async () => {
-  /*
-   * The 403 ladder step shells out to curl. A test's fake fetch IS the thing
-   * under test, so the escalation must not fire — otherwise the suite would
-   * touch the network and this file's own claim about never doing so would be
-   * false.
-   */
+  /* The 403 ladder shells out to curl; with an injected fetch the escalation must not fire. */
   const calls: Call[] = [];
   await assert.rejects(
     politeGetText("https://example.gov/g", {
@@ -216,8 +188,6 @@ test("http: politeGetJson on a blank 200 is a WALL, not an empty object", async 
     "a blank body reached JSON.parse — a status is not a document",
   );
 });
-
-/* -------------------------------------------------------------- entities --- */
 
 test("http: entity decoding covers decimal AND hex, which is how ’ reached a reader", () => {
   assert.equal(decodeEntities("Selectmen&#x27;s Board"), "Selectmen's Board");

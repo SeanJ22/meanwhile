@@ -1,16 +1,6 @@
 /**
- * The stamped coverage tier for a zip, read from the committed ledger
- * (Prompt B items 6 to 8, 2026-08-20).
- *
- * RULING 6: the tier is STORED and STAMPED, never inferred at read time from
- * what happens to be present. This module is the read side of that — it looks
- * a stamp up, and it has no way to compute one. There is deliberately no
- * function here that derives a tier from live data: a tier that recomputed
- * itself would drift every time a vendor had a bad afternoon, and a zip would
- * quietly demote and promote without anybody deciding either.
- *
- * The ledger is `data/derived/zip-coverage-tiers.json`, written by
- * `corepack pnpm tiers:stamp`.
+ * Looks up the stored coverage tier for a ZIP. It never computes a tier from
+ * live data.
  */
 
 import { readFileSync } from "node:fs";
@@ -31,7 +21,7 @@ export type StampedZipRow = {
   };
   unresolvedSpecialDistrictsInCounties: number;
   edges: Array<{ layer: string; id: string; tier: CoverageTier }>;
-  /** Item 3. Absent on a ledger written before the column existed. */
+  /** Absent on a ledger written before the column existed. */
   governmentTierDistribution?: GovernmentTierDistribution;
 };
 
@@ -42,12 +32,7 @@ type RuntimeLedger = {
   denominator: { zips: number; source?: string };
   distribution: Record<string, number>;
   ocdTiers: Record<string, CoverageTier>;
-  /**
-   * OCD division id -> [governments at Tier 0, 1, 2, 3] (Prompt C item 3).
-   * Counted over DISTINCT governments touching the division's zips, so it
-   * means the same thing as the per-zip distribution rather than merely
-   * sharing its name.
-   */
+  /** OCD division id -> distinct governments touching its zips at Tier 0, 1, 2, 3. */
   ocdDistributions?: Record<string, [number, number, number, number]>;
   /**
    * [tierIndex, territoryResolved, bodiesEnumeratedFor, unresolvedSpecial,
@@ -60,20 +45,7 @@ type RuntimeLedger = {
 /** The eight-number per-zip tuple the runtime ledger stores. */
 type CompactZip = [number, number, number, number, number, number, number, number];
 
-/**
- * THE PER-GOVERNMENT TIER DISTRIBUTION (Prompt C item 3, 2026-08-20).
- *
- * The floor tier is the honest public headline and it does not move. It is
- * also TIER_0 for 97.88% of zips nationally — because no special district
- * anywhere resolved and nearly every zip contains one — so as a FIELD on a
- * sold row it separates almost nothing: a zip with a fully enumerated county
- * and one unresolved fire district reads identically to a zip where nothing
- * is known.
- *
- * This is the same stamped values counted rather than floored. STORED ONLY —
- * it reaches no reader-facing surface, no headline figure, no report summary
- * and no national distribution.
- */
+/** The stamped government tiers counted rather than floored. Stored only; never shown to readers. */
 export interface GovernmentTierDistribution {
   TIER_0: number;
   TIER_1: number;
@@ -81,11 +53,7 @@ export interface GovernmentTierDistribution {
   TIER_3: number;
 }
 
-/**
- * The wire form for the sold stores' column: a fixed, parseable text encoding.
- * `UNKNOWN` where the distribution genuinely cannot be recovered — never
- * zeros, which would claim we counted and found none.
- */
+/** Text encoding for the stored column. UNKNOWN, never zeros, when the distribution is unavailable. */
 export const TIER_DISTRIBUTION_UNKNOWN = "UNKNOWN";
 
 export function encodeTierDistribution(
@@ -113,40 +81,15 @@ type Ledger = {
   denominator: { zips: number; source?: string };
   distribution: Record<string, number>;
   zips: Record<string, StampedZipRow>;
-  /**
-   * OCD division id -> the stamped tier for that division.
-   *
-   * The reaction write path holds DIVISIONS, not a zip — the reader was
-   * looking at a map view, and the view resolves to divisions. This is the
-   * same ledger keyed the way that caller can actually ask.
-   */
+  /** OCD division id -> the stamped tier for that division. */
   ocdTiers: Record<string, CoverageTier>;
   ocdDistributions: Record<string, [number, number, number, number]>;
 };
 
 /**
- * Loaded lazily and cached. The ledger is 33,791 rows and most requests never
- * need it; a top-level read would put it in every cold start.
- */
-/**
- * THE READ PATH READS THE COMPACT FILE, NOT THE AUDIT FILE.
- *
- * `zip-coverage-tiers.json` is the auditable artifact — every zip, its
- * evidence, and every government-to-zip edge with its own tier — and it is
- * 18 MB. Tracing that into a serverless function to answer "what tier is
- * 85701" would pay the whole ledger's weight on every cold start.
- *
- * `zip-coverage-tiers-runtime.json` is 666 KB and holds exactly what the
- * reader note and the two sold-store write paths need. Both are written in
- * the SAME pass from the SAME values by `corepack pnpm tiers:stamp`, so they
- * cannot drift, and the suite asserts they agree zip for zip.
- *
- * IT MUST ALSO BE TRACED INTO THE DEPLOY. This file is read through
- * `process.cwd()`, which Next cannot see statically, so `next.config.ts`
- * names it in `outputFileTracingIncludes` for every route that reaches it.
- * Without that the read throws, the catch below returns null, and every zip
- * on production renders UNKNOWN while every sold row is stamped UNKNOWN —
- * a silent degradation that looks exactly like honest missing data.
+ * Loaded lazily and cached. Read through process.cwd(), so next.config.ts must
+ * list this file in outputFileTracingIncludes for every route that reaches it;
+ * otherwise every ZIP silently reads UNKNOWN.
  */
 const RUNTIME_FILE = "zip-coverage-tiers-runtime.json";
 
@@ -155,25 +98,17 @@ let ledger: Ledger | null = null;
 export function loadLedger(): Ledger | null {
   if (ledger) return ledger;
   try {
-    // The READ is lazy, not the import. `node:fs` costs nothing to import, and
-    // an earlier draft deferred it with a CommonJS loader instead — which does
-    // not exist in an ES module and would have thrown the first time a
-    // reaction was written, inside a try/catch that would have reported the
-    // throw as "no ledger". Caught by tests/package-module-type.test.ts.
     const raw = JSON.parse(
       readFileSync(join(process.cwd(), "data", "derived", RUNTIME_FILE), "utf8"),
     ) as RuntimeLedger;
 
-    // Decode the tuples once, on load, so every caller below sees the same
-    // named shape whichever file it came from.
     const zips: Record<string, StampedZipRow> = {};
     for (const [zip, t] of Object.entries(raw.zips)) {
       zips[zip] = {
         tier: raw.tiers[t[0]]!,
         stampedAt: raw.stampedAt,
         evidence: {
-          // The universe is the resolved set PLUS the unresolved special
-          // districts — the same sum the stamper promoted from.
+          // Resolved governments plus unresolved special districts.
           universeGovernments: t[1] + t[3],
           territoryResolved: t[1],
           bodiesEnumeratedFor: t[2],
@@ -182,9 +117,7 @@ export function loadLedger(): Ledger | null {
         },
         unresolvedSpecialDistrictsInCounties: t[3],
         edges: [],
-        // Item 3. A ledger written before this existed has a four-number
-        // tuple, and `undefined` here becomes UNKNOWN on the row rather than
-        // four zeros — a distribution of zeros is a claim that we counted.
+        // An older four-number tuple has no distribution; it reads UNKNOWN, not zeros.
         governmentTierDistribution:
           t.length >= 8
             ? { TIER_0: t[4]!, TIER_1: t[5]!, TIER_2: t[6]!, TIER_3: t[7]! }
@@ -201,9 +134,7 @@ export function loadLedger(): Ledger | null {
     };
     return ledger;
   } catch {
-    // A missing ledger is a STATE, not a tier. Every caller below turns it
-    // into UNKNOWN, which is the named gap — never TIER_0, which would be a
-    // claim that we looked and found nothing.
+    // Callers turn a missing ledger into UNKNOWN, never TIER_0.
     return null;
   }
 }
@@ -220,25 +151,13 @@ export function stampedRowForZip(zip: string): StampedZipRow | null {
   return loadLedger()?.zips[zip] ?? null;
 }
 
-/**
- * The value that goes on a sold row.
- *
- * Returns `UNKNOWN` — never a tier — when the zip is absent, malformed, or
- * the ledger is unreadable. A zip with no ZCTA genuinely has no stamped tier,
- * and saying `TIER_0` about it would assert that we looked at its governments
- * and found none, which is a different and false statement.
- */
+/** UNKNOWN, never TIER_0, when the zip is absent, malformed, or the ledger is unreadable. */
 export function coverageTierForZip(zip: string | null | undefined): CoverageTierOrUnknown {
   if (!zip) return COVERAGE_TIER_UNKNOWN;
   return stampedRowForZip(zip)?.tier ?? COVERAGE_TIER_UNKNOWN;
 }
 
-/**
- * THE DISTRIBUTION THAT GOES ON A SOLD ROW, for a zip (item 3.1).
- *
- * Never inferred: it is read from the stamped ledger, and a zip with no stamp
- * returns null, which the caller encodes as UNKNOWN.
- */
+/** Null for an unstamped zip; the caller encodes it as UNKNOWN. */
 export function tierDistributionForZip(
   zip: string | null | undefined,
 ): GovernmentTierDistribution | null {
@@ -247,15 +166,9 @@ export function tierDistributionForZip(
 }
 
 /**
- * The same, for a set of OCD division ids — what the reaction write path
- * holds.
- *
- * SUMMED OVER DIVISIONS, and the double-counting that implies is real and
- * stated: two divisions in one view can share a government, and this ledger
- * cannot tell which. It is a count of government-to-division relationships in
- * view, not of distinct governments, and it is the same unit for every row so
- * it stays comparable. Rows whose divisions carry no stamp return null, which
- * becomes UNKNOWN — never zeros.
+ * Summed over divisions: a count of government-to-division relationships, not
+ * distinct governments (two divisions can share a government). Null when no
+ * division is stamped.
  */
 export function tierDistributionForOcdIds(
   ocdIds: string[],
@@ -274,14 +187,7 @@ export function tierDistributionForOcdIds(
   };
 }
 
-/**
- * The tier for a set of OCD division ids, for callers that have divisions
- * rather than a zip — which is what the reaction write path holds.
- *
- * Takes the FLOOR across the zips it can resolve, matching how a zip's own
- * tier is the floor across its governments: a reader looking at a view that
- * spans a well-covered zip and a bare one saw the bare one too.
- */
+/** The floor tier across the zips that resolve. */
 export function coverageTierForZips(zips: string[]): CoverageTierOrUnknown {
   const tiers = zips
     .map((z) => stampedRowForZip(z)?.tier)
@@ -290,19 +196,7 @@ export function coverageTierForZips(zips: string[]): CoverageTierOrUnknown {
   return tiers.reduce((lowest, t) => (RANK[t] < RANK[lowest] ? t : lowest));
 }
 
-
-/**
- * The tier for a set of OCD division ids — what the reaction write path holds.
- *
- * FLOOR, not maximum, and not an average. A reader whose map view spanned a
- * well-covered county and a bare one saw the bare one too, and a buyer
- * weighting this row needs to know that the page had gaps on it. Taking the
- * maximum would describe the best thing in view; averaging would invent a
- * tier that is not one of the four.
- *
- * `UNKNOWN` when nothing resolves — never `TIER_0`, which is a claim that we
- * looked at this place's governments and found none.
- */
+/** The floor tier across the divisions that resolve; UNKNOWN when none do. */
 export function coverageTierForOcdIds(ocdIds: string[]): CoverageTierOrUnknown {
   const ledgerNow = loadLedger();
   if (!ledgerNow) return COVERAGE_TIER_UNKNOWN;

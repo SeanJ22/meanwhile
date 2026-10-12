@@ -1,77 +1,8 @@
 /**
- * **WHAT A WORKER INHERITS — THE ONE CONSUMER SURFACE.** (2026-08-28.)
- *
- * `lib/method/claims.ts` gave every assertion in the method store its own
- * record, its own class and its own retraction. That was necessary and it was
- * not sufficient, because nothing made the consumers USE it.
- *
- * ## The defect this module closes, exactly
- *
- * `inheritedRoutes()` returned raw `MethodRoute` objects, and every consumer of
- * method inheritance — `pnpm method:prove`, `pnpm descent:handoff` — took them
- * and read them. A `MethodRoute` carries four prose fields that nobody
- * classified and nothing retracts:
- *
- *   - `applicability.note`  — the paragraph a route's whole lesson lives in
- *   - `origin`              — how it was conceived, which is often a conclusion
- *   - `outcomes[].note`     — the walk's own words
- *   - `subBranches[].reason` — the supersession record's own words
- *
- * The Pima case put a FALSE derived conclusion in the first of those and a
- * FALSE coverage claim in the third, and both were typed, withdrawn and
- * superseded on 2026-08-28 — in `claims`, which the consumers never opened. So
- * the retraction machinery worked perfectly and the withdrawn sentence carried
- * on being inherited anyway, out of a field one struct over. **A correction that
- * the read path does not read is not a correction.**
- *
- * And 112 of 116 entries predate claim classes entirely. Reporting that number
- * is honest. Letting those 112 paragraphs act as inherited SUBSTANTIVE authority
- * — while the four classified ones are carefully filtered — is not, and it is
- * the larger half of the hole.
- *
- * ## What this module projects, and the one rule behind all of it
- *
- * **A CONSUMER MUST NOT HAVE TO READ PROSE TO KNOW WHAT IT INHERITS.** So the
- * projected type does not carry the raw prose fields at all. What it carries is:
- *
- *   1. **Route identity and applicability** — id, title, tier, fields,
- *      portability, the dimensions that narrow it, and whether the offer here is
- *      speculative. That is what "this route exists and may apply to you" means
- *      and it survives any conclusion drawn from the route being wrong.
- *   2. **Declared `ROUTE_EXISTENCE` (class A) assertions**, as typed statements.
- *   3. **Outcomes as OBSERVATIONS** — the tuple (jurisdiction, date, rows,
- *      disposition). An observation inherits as an observation. Its free-text
- *      `note` does NOT, because that is precisely the slot the false
- *      "complete for the window" sentence was written into.
- *   4. **Declared `ROUTE_OUTCOME` (class B) assertions**, as typed statements.
- *   5. **Only CURRENT, INHERITABLE class C `COVERAGE_CLAIM` and class D
- *      `DERIVED_CONCLUSION` assertions** — the two classes that propagate as
- *      reasons for a later session to stop looking.
- *
- * Everything a C or D says that is retracted, corrected, superseded,
- * contradicted, unprovenanced, or resting on something withdrawn is moved to
- * `withheld` — by id, with the reason named, and with its text under the field
- * name `statementNotCurrent` so that a consumer flattening `.statement` across
- * the projection cannot pick it up by accident.
- *
- * ## Legacy entries: a named gap, never a promotion
- *
- * An entry that declared no class is projected as EXACTLY this and no more:
- *
- *   > route known; substantive legacy prose NOT YET CLASSIFIED as an inherited
- *   > conclusion
- *
- * carried as `legacyUnclassified: true` and the `namedGap` string. Its prose is
- * not emitted as a claim, not summarised into one, and not offered as one. It is
- * reachable — deliberately, because it is real knowledge somebody wrote — only
- * through `readNonAuthoritativeProse()`, whose name is the warning and whose
- * return value says `authoritative: false` in a field.
- *
- * This is the same rule the root constitution states for readers, applied to
- * the workers: **a null renders as its NAMED GAP, and the name says whose gap it
- * is.** "Nobody has classified this yet" is a fact about US. It is not a fact
- * about the route, and it is certainly not a licence to read the paragraph as
- * settled.
+ * What a worker inherits from the method store: route identity and applicability, class A and B assertions, outcomes
+ * as observation tuples, and only current, inheritable class C and D assertions. Everything else a C or D says is
+ * moved to `withheld` by id with its reason. No raw prose field is carried; legacy unclassified entries are a named
+ * gap, and their prose is reachable only through `readNonAuthoritativeProse()`.
  */
 
 import {
@@ -91,25 +22,14 @@ import {
 } from "./knowledge.ts";
 import type { Jurisdiction, PortabilityClass } from "./portability.ts";
 
-/**
- * The named gap for an entry nobody has classified.
- *
- * It is a constant rather than a sentence built at each call site so that a test
- * can assert on it, a report can print it, and no consumer can quietly reword it
- * into something that sounds like a finding.
- */
+/** The named gap for an entry nobody has classified; a constant so no consumer can reword it into a finding. */
 export const LEGACY_UNCLASSIFIED_GAP =
   "ROUTE KNOWN. ITS SUBSTANTIVE LEGACY PROSE IS NOT YET CLASSIFIED AND IS NOT INHERITED AS A CONCLUSION.";
 
 /** The two classes that propagate a conclusion into a later session's reasoning. */
 const SUBSTANTIVE_CLASSES: readonly ClaimClass[] = ["COVERAGE_CLAIM", "DERIVED_CONCLUSION"];
 
-/**
- * Why a substantive assertion is NOT being inherited. Every one of these is a
- * state the store can actually be in, and each is reported by name — a claim
- * that silently vanished from a projection would be indistinguishable from one
- * that was never written.
- */
+/** Why a substantive assertion is not being inherited, each reported by name. */
 export const WITHHOLDING_REASONS = [
   /** Carries a retraction record of any kind: RETRACTED, SUPERSEDED, CORRECTED, CONTRADICTED, REOPENED. */
   "WITHDRAWN",
@@ -124,15 +44,7 @@ export const WITHHOLDING_REASONS = [
 ] as const;
 export type WithholdingReason = (typeof WITHHOLDING_REASONS)[number];
 
-/**
- * Route identity and applicability. **No prose fields.**
- *
- * `title` is the route's NAME — what a worker calls it and what it looks up —
- * and it is carried for that reason. The four fields that hold reasoning
- * (`applicability.note`, `origin`, `outcomes[].note`, `subBranches[].reason`)
- * are absent from this type by construction, so a consumer cannot read them
- * without deliberately calling the accessor that says it is not authoritative.
- */
+/** Route identity and applicability. The fields that hold reasoning are absent by construction. */
 export interface ProjectedRouteIdentity {
   id: string;
   title: string;
@@ -152,15 +64,7 @@ export interface ProjectedRouteIdentity {
   speculative: boolean;
 }
 
-/**
- * A walk, as a tuple. **This is what an observation inherits as.**
- *
- * The `note` is deliberately absent. `reconcile-the-adapter-before-suspecting-it`
- * carries an outcome note asserting a window was "complete rather than
- * truncated" — a coverage claim, class C, written into a class B slot, withdrawn
- * on 2026-08-28 and still sitting in that field. A tuple cannot carry a
- * conclusion; a paragraph always can.
- */
+/** A walk as a tuple; the free-text `note` is deliberately absent, since a tuple cannot carry a conclusion. */
 export interface ProjectedObservation {
   routeId: string;
   jurisdiction: string;
@@ -182,13 +86,7 @@ export interface ProjectedAssertion {
   validation?: ClaimValidation;
 }
 
-/**
- * A substantive assertion that exists and is NOT current.
- *
- * It is kept — history is never erased — and its text lives under
- * `statementNotCurrent` rather than `statement` so that no consumer collecting
- * statements across the projection can pick a withdrawn one up by shape.
- */
+/** A substantive assertion that is not current, its text under `statementNotCurrent` so it is never collected as current. */
 export interface WithheldAssertion {
   id: string;
   routeId: string;
@@ -212,11 +110,7 @@ export interface ProjectedRoute {
   observationAssertions: ProjectedAssertion[];
   /** Declared class C and D assertions that are current AND inheritable. */
   substantive: ProjectedAssertion[];
-  /**
-   * True when this entry declared no class at all. It does NOT mean the entry
-   * holds no conclusion — its prose may well hold an undeclared C or D — which
-   * is exactly why none of that prose is projected.
-   */
+  /** True when this entry declared no class; its prose may hold an undeclared conclusion, so none of it is projected. */
   legacyUnclassified: boolean;
   /** `LEGACY_UNCLASSIFIED_GAP` when the above is true, otherwise `null`. */
   namedGap: string | null;
@@ -260,9 +154,7 @@ function withheldFor(
   reason: WithholdingReason,
   why: string,
 ): WithheldAssertion {
-  // `currentTruthFor` follows the supersession chain with its own cycle guard.
-  // Reusing it is the point: there is one definition of "what corrected this",
-  // and a second implementation here would be a second thing to get wrong.
+  // One definition of "what corrected this": reuse `currentTruthFor`.
   const truth = currentTruthFor(k, c.id);
   const corrected = truth.status === "SUPERSEDED" ? truth.claim : null;
   return {
@@ -277,12 +169,7 @@ function withheldFor(
   };
 }
 
-/**
- * Is this substantive assertion inheritable as CURRENT INSTRUCTION?
- *
- * Four refusals, and every one of them is a state the Pima case actually passed
- * through. Returns `null` when the claim may be inherited.
- */
+/** Whether this substantive assertion is inheritable as current instruction; null when it may be inherited. */
 function withholdingReason(
   c: MethodClaim,
   staleIds: ReadonlySet<string>,
@@ -324,14 +211,7 @@ function withholdingReason(
   return null;
 }
 
-/**
- * **THE PROJECTION. THIS IS THE METHOD-INHERITANCE READ PATH.**
- *
- * Every consumer that asks "what does this jurisdiction inherit?" calls this and
- * nothing else. `applicableRoutesUnprojected` still exists one layer down
- * because the applicability arithmetic has to live somewhere, and it is named so
- * that reaching for it by accident is not possible.
- */
+/** The method-inheritance read path; every consumer asking what a jurisdiction inherits calls this. */
 export function projectMethodFor(k: MethodKnowledge, j: Jurisdiction): MethodProjection {
   const staleIds = new Set(staleDependents(k).map((f) => f.dependent));
   const applicable = new Map(
@@ -344,9 +224,7 @@ export function projectMethodFor(k: MethodKnowledge, j: Jurisdiction): MethodPro
   for (const r of k.routes) {
     const claims = r.claims ?? [];
 
-    // A RETIRED ROUTE IS HISTORY, NOT INSTRUCTION. Its substantive claims are
-    // named as withheld rather than dropped, so a worker that inherited them
-    // yesterday can see why it does not today.
+    // A retired route's substantive claims are named as withheld rather than dropped.
     if (r.retiredOn) {
       for (const c of claims) {
         if (!SUBSTANTIVE_CLASSES.includes(c.class)) continue;
@@ -424,13 +302,7 @@ export function projectMethodFor(k: MethodKnowledge, j: Jurisdiction): MethodPro
   };
 }
 
-/**
- * Every substantive sentence a worker inheriting this projection may act on.
- *
- * One call, so that "what am I being told to believe?" has an answer shorter
- * than a walk of the whole structure — and so a test can assert the whole set
- * rather than a sample of it.
- */
+/** Every substantive sentence a worker inheriting this projection may act on. */
 export function substantiveAssertions(p: MethodProjection): ProjectedAssertion[] {
   return p.routes.flatMap((r) => r.substantive);
 }
@@ -445,13 +317,7 @@ export function projectionHasRoute(p: MethodProjection, routeId: string): boolea
   return p.routes.some((r) => r.identity.id === routeId);
 }
 
-/**
- * The routes whose substantive prose nobody has classified, with the named gap.
- *
- * Reported as a population rather than left to a reader to notice: 112 of 116
- * entries are in this state, and the honest thing to do with a number that large
- * is print it.
- */
+/** The routes whose substantive prose nobody has classified, with the named gap. */
 export function legacyUnclassifiedRoutes(
   p: MethodProjection,
 ): Array<{ id: string; namedGap: string }> {
@@ -460,20 +326,7 @@ export function legacyUnclassifiedRoutes(
     .map((r) => ({ id: r.identity.id, namedGap: r.namedGap as string }));
 }
 
-/**
- * **THE PROSE, AND IT IS NOT AUTHORITY.**
- *
- * The reasoning in the store is real and this repository requires a rule to ship
- * with its reasoning, so the paragraphs are reachable — through a function whose
- * name says what they are, returning a value that says `authoritative: false` in
- * a field a program can read.
- *
- * What it is FOR: a human deciding how to classify a legacy entry, a report
- * quoting a route's own words with the label attached, an audit. What it is not
- * for: deriving a coverage claim or a conclusion about a government. Anything
- * that belongs in a later session's reasoning has to be classified first — which
- * is a piece of work somebody does on purpose, not a side effect of a read.
- */
+/** The prose, which is not authority: for classifying a legacy entry, quoting a route, or an audit. */
 export interface NonAuthoritativeProse {
   routeId: string;
   /** Literal `false`. It is a field so that a consumer can be made to see it. */
@@ -507,13 +360,7 @@ export function readNonAuthoritativeProse(
   };
 }
 
-/**
- * What a consumer is handed when it asks about ONE assertion by id.
- *
- * A thin, named wrapper over `currentTruthFor` so a consumer never has to know
- * whether the id it holds is current — which is the question a consumer holding
- * an inherited id most needs answered and least often thinks to ask.
- */
+/** What a consumer is handed when it asks about one assertion by id: the current truth for it. */
 export function inheritedTruthFor(
   k: MethodKnowledge,
   id: string,

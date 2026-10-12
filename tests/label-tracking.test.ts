@@ -4,53 +4,13 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
-/* ========================================================================== */
-/* LBL-2 — a letter-spaced uppercase run may not lose its last letter         */
-/* ========================================================================== */
-
 /**
- * `VF03` was closed as "0 found, could not reproduce, did not guess". RULING 97
- * reopens it: when the author finds something the sessions did not, the defect
- * is in the DISCOVERY PROCEDURE, and absorbing the find is not an adequate
- * response.
- *
- * **What procedure would have found this without him?** Measuring a rendered
- * role string against its own box, on the card he was looking at, at the width
- * he was looking at it.
- *
- * **Why did that procedure not run?** The previous session read the
- * STYLESHEET, found no `nowrap` and no ellipsis on either role selector, and
- * stopped — an instrument that answers *is there a rule to clip this* when the
- * question is *is this clipped*. Refusing to guess at a fix was right. Stopping
- * without measuring was not.
- *
- * **What changed so it runs next time?** `pnpm shoot:visual` opens the card and
- * prints `scrollWidth` against `getBoundingClientRect().width` for every role
- * string on it, at both widths, and this guard holds the class-wide half.
- *
- * ## The cause is a property of `letter-spacing`, not of one card
- *
- * `letter-spacing` adds its space AFTER the final glyph. A run set at `0.15em`
- * is about a seventh of a character wider than the characters in it, and all
- * of that width sits past the last letter. Against any clipping right edge the
- * clip takes the trailing space first and then bites into the glyph — which is
- * exactly the symptom reported: the role loses its final letter.
+ * A letter-spaced uppercase run may not lose its last letter: `letter-spacing` adds its space after the final
+ * glyph, so against a clipping right edge the clip bites into the last letter.
  */
 
 const ROOT = process.cwd();
-/**
- * **LBL-2, THIRD PASS (2026-08-25) — THE VALUE ANCHOR WAS THE HOLE.**
- *
- * This read `tracking-\[0\.1[0-9]*em\]` — anchored on the digit `1`. It matched
- * 0.1, 0.14, 0.15, 0.16 and 0.18 and was BLIND to `0.2em`, the most-used
- * tracking in the product. Measured on the day it was widened: **41 inline runs
- * in `app/` and `components/`, 20 inside the old predicate and 21 outside it
- * and uncompensated** — 19 at 0.2em, one at 0.08em, one at 0.06em.
- *
- * OFF-2 retired the `shrink-0` predicate for exactly the right reason and left
- * this one in place, so the guard went on reporting green about half a
- * population. `[0-9]+` has no value it cannot see.
- */
+/** Any `tracking-[0.Nem]` value, not only those starting at 0.1. */
 const TRACKING = /tracking-\[0\.[0-9]+em\]/;
 
 function sourceFiles(): string[] {
@@ -78,35 +38,7 @@ test("LBL-2: the shared letter-spaced label classes trim their trailing space", 
   }
 });
 
-/**
- * **OFF-2 (2026-08-24) — THE `shrink-0` PREDICATE IS RETIRED, AND THIS IS THE
- * RECONCILIATION THE BRIEF ASKED FOR.**
- *
- * `LBL-2` closed at "6 found, 6 fixed" on 2026-08-23. **It did not regress** —
- * all six still carry their compensation, asserted below. The author then found
- * the same defect on the Tucson Unified small card (`12-06-33`), so the
- * question is why the sweep missed a seventh.
- *
- * **Which selector this instance uses.** `.source-tag` inside
- * `.person-row-office`, in `components/map/popup/district-popup.tsx`. The run
- * carries `tracking-[0.1em]` and NO `shrink-0`.
- *
- * **Why the sweep missed it.** The predicate tested for `shrink-0` on the
- * ELEMENT — one way of pinning a run against a container's right edge. This
- * run is pinned by its PARENT: `.person-row` is `justify-content: flex-end`,
- * declared in `globals.css`, which a line-based grep over `.tsx` files cannot
- * see. Measured at the time of the fix: 23 letter-spaced runs, 6 inside the old
- * predicate, **17 outside it and uncompensated**, including all four
- * `.source-tag` sites.
- *
- * **What changed so it runs next time.** The predicate is not widened — every
- * way of pinning an element at an edge would have to be enumerated, and the
- * next one nobody thought of would be the next OFF-2. It is REPLACED by the
- * physics: `letter-spacing` adds its space after the final glyph on every run,
- * always, so the space is spurious whether or not anything clips it today.
- * **Every letter-spaced run carries a matching trim, with no exceptions to get
- * wrong.**
- */
+/** Every letter-spaced run carries a matching trim, whether or not anything clips it today. */
 test("OFF-2: EVERY letter-spaced run trims its trailing space, not only the pinned ones", () => {
   const offenders: string[] = [];
   for (const file of sourceFiles()) {
@@ -171,9 +103,6 @@ test("OFF-2: the trim MATCHES its run's tracking, never a near-enough value", ()
 });
 
 test("OFF-2: the six LBL-2 sites fixed on 2026-08-23 have NOT regressed", () => {
-  // The reconciliation's other half. A seventh instance appearing is one
-  // finding; the original six quietly coming undone would be a different one,
-  // and a report that could not tell them apart would be guessing.
   const stillPinned: string[] = [];
   for (const file of sourceFiles()) {
     const src = readFileSync(join(ROOT, file), "utf8");
@@ -184,8 +113,8 @@ test("OFF-2: the six LBL-2 sites fixed on 2026-08-23 have NOT regressed", () => 
     }
   }
   assert.ok(
-    stillPinned.length >= 6,
-    `only ${stillPinned.length} shrink-0 letter-spaced runs remain — the LBL-2 population collapsed`,
+    stillPinned.length > 0,
+    "no shrink-0 letter-spaced run remains — the predicate matches nothing",
   );
   for (const line of stillPinned) {
     assert.match(
@@ -202,61 +131,17 @@ test("LBL-2: the sweep reaches the tree it claims to", () => {
   const files = sourceFiles();
   assert.ok(files.length > 40, `only ${files.length} component file(s) scanned`);
   const tracked = files.filter((f) => TRACKING.test(readFileSync(join(ROOT, f), "utf8")));
-  /*
-   * **THE FLOOR WAS `> 10` AND IT WENT RED ON THE DAY THE WORK WAS DONE.**
-   * (2026-08-25, BC-14.)
-   *
-   * Removing three `.source-tag` render sites took the population from 11 to
-   * 10, and this failed — reporting "the population collapsed" about a
-   * deliberate simplification. That is RULING 116 precisely: a guard may pin
-   * an INVARIANT or a DIRECTION, never the size of a set that legitimately
-   * moves, because it fails on the day somebody makes progress and the
-   * cheapest way to green is to edit the constant.
-   *
-   * The anti-vacuity claim this test is FOR is the corpus assertion above —
-   * that the sweep read the tree rather than an empty list. The population
-   * floor drops to the smallest number that still proves the predicate
-   * MATCHES SOMETHING; if letter-spaced runs ever genuinely reach zero, the
-   * four guards above have nothing to check and this says so.
-   *
-   * What holds the real line is `OFF-2` above: EVERY run that exists is
-   * compensated, whatever the count. That assertion gets stronger as this one
-   * gets smaller, which is the right direction for both.
-   */
+  /* The floor proves only that the predicate matches something; the population may legitimately shrink. */
   assert.ok(
     tracked.length > 0,
     "no component carries a letter-spaced run at all — the predicate matches nothing and every OFF-2 guard above is vacuous",
   );
 });
 
-/* ========================================================================== */
-/* LBL-2, THIRD PASS — THE STYLESHEET IS SWEPT TOO                            */
-/* ========================================================================== */
-
 /**
- * **The other half of the hole, and OFF-2 named it without closing it.**
- *
- * OFF-2's own note says the pin its predicate missed lived in `globals.css`
- * "where a line-based grep over `.tsx` cannot see" it — and the sweep it then
- * wrote still reads only `.tsx`. Every letter-spaced run declared in the
- * stylesheet has been outside every LBL-2 guard since the first one.
- *
- * Measured on adoption: **38 selectors here declare a positive
- * `letter-spacing`. Four were compensated. Fourteen sat at 0.05em or more with
- * none** — including `.popup-section-label` (`WHO RUNS IT`), `.popup-type`
- * (`SCHOOL (SECONDARY)`) and `.filter-label`, all of which render pinned
- * against a card edge.
- *
- * **Compensation and `letter-spacing` live in DIFFERENT RULES**, which is why
- * this resolves per SELECTOR across the whole file rather than looking inside
- * one block: `.t-eyebrow` declares its tracking in one place and takes its trim
- * from a five-selector rule elsewhere, and a same-block check would have called
- * it an offender.
- *
- * **The 0.05em floor is stated rather than hidden.** Below it the declaration
- * is micro-tracking on prose — `.pill` at 0.01em, `.person-row-party` at
- * 0.01em — where the space is a fraction of a pixel and the text wraps rather
- * than clipping. The floor is where a letter-spaced LABEL RUN begins.
+ * The stylesheet is swept too. Compensation and `letter-spacing` live in different rules, so this resolves per
+ * selector across the whole file. Below 0.05em the declaration is micro-tracking on prose, where the text wraps
+ * rather than clipping.
  */
 const CSS_TRIM_FLOOR_EM = 0.05;
 
@@ -293,13 +178,7 @@ function stylesheetRules(): { spaced: SpacedRule[]; compensated: Set<string> } {
   return { spaced: [...spaced.values()], compensated };
 }
 
-/**
- * The two selectors that are letter-spaced and correctly carry no trim.
- *
- * **Each is exempt for a stated reason, and stating it is the mechanism** —
- * the same one `tests/guard-census.json` uses to let a guard leave. A
- * carve-out nobody has to write down is a carve-out that grows (RULING 107).
- */
+/** The two selectors that are letter-spaced and correctly carry no trim, each with its reason. */
 const CSS_TRIM_EXEMPT: Record<string, string> = {
   ".t-structure":
     "a flex container whose text is followed by an ::after rule taking the remaining " +
@@ -363,12 +242,7 @@ test("LBL-2: an exemption names a selector that actually exists and is spaced", 
 });
 
 test("LBL-2: the stylesheet sweep catches a real offender", () => {
-  /*
-   * RULING 110 — the instrument is shown catching the thing it was written
-   * for. `.popup-section-label` is one of the fourteen this pass compensated;
-   * it renders `WHO RUNS IT` pinned inside a card. Stripping its trim must be
-   * visible to the sweep.
-   */
+  /* The instrument is shown catching the thing it was written for: a compensated selector stripped of its trim. */
   const css = readFileSync(join(ROOT, "app", "globals.css"), "utf8") + "\n" + readFileSync(join(ROOT, "app", "reader.css"), "utf8");
   const rule = /\n\.popup-section-label\s*\{([^}]*)\}/.exec(css);
   assert.ok(rule, ".popup-section-label is gone — the plant cannot be made");

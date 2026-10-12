@@ -7,8 +7,9 @@ import { fetchFinanceDocument } from "./fetch-finance-document.ts";
 import { readSourceApi, type SourceApiOptions } from "../control-plane/scheduler/scout-api.ts";
 import { ripcordPulled } from "../ripcords.ts";
 import type { EvidenceRecord, EvidenceSubject } from "./evidence.ts";
+import { currentFecTransactions, fecScheduleCursor, parseFecPage, type FecRow } from "../funding/fec-api.ts";
 
-export interface FinanceDetailSource { readonly committeeId: string; readonly cycle: number }
+export interface FinanceDetailSource { readonly committeeId: string; readonly committeeIds?: readonly string[]; readonly cycle: number }
 export interface FinanceDetailRead {
   readonly records: readonly EvidenceRecord[];
   readonly complete: boolean;
@@ -56,15 +57,20 @@ export async function fetchThroughKey(input: {
   const summaries = input.records.filter(r => r.kind === "FINANCE_SUMMARY" && r.subjectId === input.subject.id && r.fecDetailSource && r.sourceUrl);
   if (summaries.length !== 1) return null;
   const summary = summaries[0]!, source = summary.fecDetailSource!;
-  if (!/^C\d{8}$/.test(source.committeeId) || !Number.isSafeInteger(source.cycle) || source.cycle < 1900 || source.cycle % 2 !== 0) return null;
-  const records: EvidenceRecord[] = [], seen = new Set<string>(), cursors = new Set<string>();
+  const committeeIds = [...new Set(source.committeeIds ?? [source.committeeId])];
+  if (!committeeIds.length || !committeeIds.includes(source.committeeId) || committeeIds.some(id => !/^C\d{8}$/.test(id)) || !Number.isSafeInteger(source.cycle) || source.cycle < 1900 || source.cycle % 2 !== 0) return null;
+  const records: EvidenceRecord[] = [];
   const now = input.now ?? new Date(), yearMatch = /\b((?:19|20)\d{2})\b/.exec(input.question);
   const year = yearMatch ? Number(yearMatch[1]) : /\bthis year\b/i.test(input.question) ? now.getUTCFullYear() : null;
   // A filing identity held for one election cycle does not establish an older
   // candidate/committee relationship. Older source documents remain linked.
   if (year !== null && ![source.cycle - 1, source.cycle].includes(year)) return { records, complete: false, status: "UNAVAILABLE", summary };
   const onlyPacs = /\bpacs?\b/i.test(input.question);
-  const params: Record<string, string> = { committee_id: source.committeeId,
+  let allComplete = true;
+  for (const committeeId of committeeIds) {
+  const seen = new Set<string>(), cursors = new Set<string>();
+  const received = new Map<string, { row: FecRow; sourceUrl: string; receivedAt: string }>();
+  const params: Record<string, string> = { committee_id: committeeId,
     two_year_transaction_period: String(source.cycle), is_individual: "false", per_page: "100", sort: "-contribution_receipt_amount" };
   if (year !== null) { params.min_date = `${year}-01-01`; params.max_date = `${year}-12-31`; }
   let expected: number | null = null, visited = 0, complete = false, owedRows = false;
@@ -79,44 +85,47 @@ export async function fetchThroughKey(input: {
       ]).finally(() => { if (timer) clearTimeout(timer); });
       if (Date.now() >= input.deadlineMs || result.status !== 200 || result.bytes <= 0 || !result.text) break;
       const receivedAt = new Date().toISOString();
-      const body = object(JSON.parse(result.text, (key: string, value: unknown, context?: { source?: string }) =>
-        (key === "sub_id" || key === "last_index") && typeof value === "number" && context?.source && /^\d+$/.test(context.source) ? context.source : value)), pagination = object(body?.pagination);
-      if (!Array.isArray(body?.results)) break;
+      const body = parseFecPage(result.text), pagination = body.pagination;
       const count = pagination?.count;
       const countValid = typeof count === "number" && Number.isSafeInteger(count) && count >= 0;
       if (expected !== null && countValid && expected !== count) break;
       if (countValid) expected = count as number;
       for (const value of body.results) {
         const row = object(value), id = text(row?.sub_id), committee = text(row?.committee_id);
-        if (!row || !id || committee !== source.committeeId || seen.has(id)) throw new Error("FEC detail identity or pagination is ambiguous");
+        if (!row || !id || committee !== committeeId || seen.has(id)) throw new Error("FEC detail identity or pagination is ambiguous");
         seen.add(id); visited++;
-        const entity = text(row.entity_type), contributor = object(row.contributor), type = text(contributor?.committee_type), line = text(row.line_number);
-        if (entity === "IND" || entity === "CAN") continue;
-        if (!entity || !publicEntities.has(entity) || !line) { owedRows = true; continue; }
-        if (!(line.startsWith("11") || line === "12")) continue;
-        if (onlyPacs && entity !== "PAC" && (!type || !pacTypes.has(type))) { if (!type) owedRows = true; continue; }
-        const name = text(row.contributor_name), amount = row.contribution_receipt_amount;
-        if (!name || typeof amount !== "number" || !Number.isFinite(amount)) { owedRows = true; continue; }
-        const receiptDate = text(row.contribution_receipt_date)?.slice(0, 10) ?? null;
-        if (year !== null && (!receiptDate || !receiptDate.startsWith(`${year}-`))) continue;
-        const sourceUrl = sourceLink(row.pdf_url, result.sourceUrl);
-        records.push({ kind: "FINANCE_SUMMARY", id: `fec-detail:${source.committeeId}:${id}`, subjectId: input.subject.id,
-          canonicalSubjectId: summary.canonicalSubjectId,
-          text: `${name}: $${amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}${receiptDate ? `, received ${receiptDate}` : ""}; filed entity ${entity}${type ? `, committee type ${type}` : ""}.`,
-          sourceUrl, sourceOrg: "Federal Election Commission", retrievedAt: receivedAt });
+        received.set(id, { row, sourceUrl: sourceLink(row.pdf_url, result.sourceUrl), receivedAt });
       }
       if (expected !== null && visited > expected) throw new Error("FEC detail exceeds its published count");
       if (!countValid) break;
-      if (visited === expected) { complete = !owedRows; break; }
-      const next = object(pagination?.last_indexes);
-      const index = typeof next?.last_index === "string" || typeof next?.last_index === "number" && Number.isSafeInteger(next.last_index) ? String(next.last_index) : null;
-      const amount = typeof next?.last_contribution_receipt_amount === "string" || typeof next?.last_contribution_receipt_amount === "number" ? String(next.last_contribution_receipt_amount) : null;
-      const cursor = `${index}:${amount}`;
-      if (!body.results.length || !index || amount === null || cursors.has(cursor)) break;
-      cursors.add(cursor); params.last_index = index; params.last_contribution_receipt_amount = amount;
+      if (visited === expected) { complete = true; break; }
+      const next = fecScheduleCursor(pagination), cursor = JSON.stringify(next);
+      if (!body.results.length || !next || cursors.has(cursor)) break;
+      cursors.add(cursor); Object.assign(params, next);
     }
   } catch { /* Never log transport errors or a credential-bearing API URL. */ }
-  return { records, complete, status: complete ? "COMPLETE" : records.length ? "PARTIAL" : "UNAVAILABLE", summary };
+  try {
+    for (const row of currentFecTransactions([...received.values()].map(value => value.row), committeeId)) {
+      const id = text(row.sub_id)!;
+      const entity = text(row.entity_type), contributor = object(row.contributor), type = text(contributor?.committee_type), line = text(row.line_number);
+      if (entity === "IND" || entity === "CAN") continue;
+      if (!entity || !publicEntities.has(entity) || !line) { owedRows = true; continue; }
+      if (!(line.startsWith("11") || line === "12")) continue;
+      if (onlyPacs && entity !== "PAC" && (!type || !pacTypes.has(type))) { if (!type) owedRows = true; continue; }
+      const name = text(row.contributor_name), amount = row.contribution_receipt_amount;
+      if (!name || typeof amount !== "number" || !Number.isFinite(amount)) { owedRows = true; continue; }
+      const receiptDate = text(row.contribution_receipt_date)?.slice(0, 10) ?? null;
+      if (year !== null && (!receiptDate || !receiptDate.startsWith(`${year}-`))) continue;
+      const observation = received.get(id)!;
+      records.push({ kind: "FINANCE_SUMMARY", id: `fec-detail:${committeeId}:${id}`, subjectId: input.subject.id,
+        canonicalSubjectId: summary.canonicalSubjectId,
+        text: `${name}: $${amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}${receiptDate ? `, received ${receiptDate}` : ""}; filed entity ${entity}${type ? `, committee type ${type}` : ""}.`,
+        sourceUrl: observation.sourceUrl, sourceOrg: "Federal Election Commission", retrievedAt: observation.receivedAt });
+    }
+  } catch { owedRows = true; }
+  allComplete &&= complete && !owedRows;
+  }
+  return { records, complete: allComplete, status: allComplete ? "COMPLETE" : records.length ? "PARTIAL" : "UNAVAILABLE", summary };
 }
 
 /** Rows are delivered as normal sourced evidence; a full filing list does not

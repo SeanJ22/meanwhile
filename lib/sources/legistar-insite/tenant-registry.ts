@@ -52,15 +52,9 @@ export function inSiteTenantsFromWiring(
       jurisdiction: row.jurisdiction,
       publishingOrg: row.publishingOrg,
       timeZone: row.timeZone,
-      /*
-       * The reviewed venues for this tenant's scope — possibly none, which is
-       * a real state and never a failed read (the venue-gap class,
-       * 2026-09-23): the adapter publishes every sitting, a room with no
-       * reviewed row carrying its named venue gap. A tenant with no division
-       * is scoped by its own slug (D31), as every division-less body is, so it
-       * can never read another division-less body's rooms and never throws
-       * for want of a scope.
-       */
+      // The reviewed venues for this tenant's scope, possibly none (a real state, never a failed read): every
+      // sitting is published, a room with no reviewed row carrying its named venue gap. A tenant with no
+      // division is scoped by its own slug, so it never reads another division-less body's rooms.
       get venues() {
         return reviewedVenueEntries(venueSourceId, ocdId, ocdId === null ? slug : null);
       },
@@ -69,8 +63,12 @@ export function inSiteTenantsFromWiring(
   });
 }
 
-/** Compatibility projection; SOURCE_WIRING remains its only membership input. */
-export const INSITE_TENANTS: InSiteTenant[] = inSiteTenantsFromWiring();
+/** The InSite tenants the installed meeting doors name; replaced in place whenever doors are installed. */
+export const INSITE_TENANTS: InSiteTenant[] = [];
+
+export function refreshInSiteTenants(): void {
+  INSITE_TENANTS.splice(0, INSITE_TENANTS.length, ...inSiteTenantsFromWiring());
+}
 
 export function findTenant(slug: string): InSiteTenant | undefined {
   return INSITE_TENANTS.find((tenant) => tenant.slug === slug);

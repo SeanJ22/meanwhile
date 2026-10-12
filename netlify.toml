@@ -1,154 +1,40 @@
-# Deploy configuration, pinned rather than autodetected.
-#
-# The first deploy (main@7b9ccb0) went green on Netlify's autodetected
-# settings, which is the dangerous form of a wrong configuration: the default
-# build command runs whatever global pnpm the build image ships, while this
-# repo pins pnpm 10.33.0 through the `packageManager` field and expects the
-# `corepack pnpm` prefix everywhere. That happens to work until a lockfile
-# change makes the two versions disagree, and the failure would look unrelated
-# to its cause. So everything autodetection guessed is written down here.
-#
-# Verification is reading the deploy's build log for the pnpm version that
-# actually ran — never inferring it from a green build.
+# Deploy settings are pinned here rather than autodetected.
 
 [build]
   command = "corepack enable && corepack pnpm db:apply --target=production --phase=expand --production-build && corepack pnpm run build"
   publish = ".next"
-  # THE DEPLOY FILTER — RULING 124 (2026-08-24, Sean's instruction, item 1.2).
-  #
-  # Exit 0 CANCELS the build; non-zero lets it run. Inverted from every other
-  # exit code in this repo, which is why it is stated at both ends.
-  #
-  # Three of the five production builds before 5 AM on 2026-08-24 rebuilt and
-  # redeployed a byte-identical application to serve paperwork: an intake
-  # report, and two close-out commits touching only `docs/`. The allowlist and
-  # the measured evidence for it live in `lib/ops/deploy-paths.ts`, and
-  # `tests/deploy-paths.test.ts` reads the built trace manifests and fails if
-  # any file under a non-shipping prefix is actually needed by the deploy.
-  #
-  # Every failure path here BUILDS. A wasted build is the cheap failure.
+  # Exit 0 CANCELS the build; non-zero builds. Every failure path builds.
   ignore = "node scripts/netlify-ignore.mjs"
 
 [build.environment]
-  # Versioned archive served directly from the edge; the app retains its
-  # Netlify Range route as the fallback when this source fails.
+  # Versioned boundary archive served from the edge; the app's own Range route is the fallback.
   NEXT_PUBLIC_BOUNDARY_PMTILES_URL = "https://tiles.meanwhilemaps.com/us-2025.pmtiles"
-  # package.json pins packageManager pnpm@10.33.0; corepack honours it.
-  # Node 24 is what the repo is developed and tested on (no engines field —
-  # see docs/state.md §1).
   NODE_VERSION = "24"
-  # The same heap as CI's build step (.github/workflows/build-check.yml), so CI
-  # stays a rehearsal of this build. Next's type check of the whole program ran
-  # out of the ~2 GB default heap in CI (#378, 2026-09-23). Netlify's support
-  # guide, last reviewed July 2025, gives builds "8 GiB of memory and 3 CPUs"
-  # on the Free and Starter plans and up to 11 GiB on paid plans
-  # (answers.netlify.com/t/5349), so a 4 GiB V8 limit fits.
+  # Same heap as CI's build step; the whole-program type check needs more than the ~2 GB default.
   NODE_OPTIONS = "--max-old-space-size=4096"
 
-# PR previews build only when the pull request has the preview label.
 [context.deploy-preview]
   ignore = "node scripts/netlify-ignore.mjs"
 
-# BRANCH DEPLOYS BUILD FOR EXACTLY ONE BRANCH (ITEM I, 2026-09-01).
-#
-# RULING 124 item 1.1 (2026-08-24) set this to a bare `exit 0` — an
-# unconditional cancel of every branch deploy — because a branch deploy of this
-# repo was never looked at by anyone, and `.github/workflows/build-check.yml`
-# already runs the literal build command on every pull request with a log
-# readable without a Netlify login. The overnight session of 2026-08-24 alone
-# pushed 15 branch commits, every one of them a full Next build nobody read.
-#
-# ITEM I changes exactly one fact in that finding: there is now a branch whose
-# deploy IS read, by the owner, at a real hostname — the branch named by
-# `STAGING_RENDER_ORIGIN`'s own subdomain label (`lib/ops/origins.ts`), which is
-# `test`. RULING 233 names the branch `staging` and the host
-# `test.meanwhileusa.com`, and THIS PROVIDER WILL NOT SERVE BOTH: Netlify
-# derives a branch deploy's hostname as `<branch>.<suffix>`, measured four ways
-# and recorded as a FACT in RULING 235. NH304 carries the choice to the author;
-# nothing here decides it, because RULING 233 is not operative until the session
-# after Session C closes. Nothing else about RULING 124
-# has changed, so nothing else about this filter changes: every other branch is
-# still cancelled, and the cancel is now written down by name in
-# `scripts/netlify-staging-ignore.mjs` rather than being a bare `exit 0` that
-# cannot say WHY it cancelled.
-#
-# Exit 0 CANCELS; non-zero builds. The script exits non-zero for that branch and
-# for an unset BRANCH (every failure path builds), and 0 for anything else.
-#
-# SECOND LAYER, and neither is sufficient alone: the Netlify site's own
-# `build_settings.allowed_branches` is `["main", "test"]`, read back from the
-# API on 2026-09-01, which is what
-# actually prevents a session branch from reaching a deploy at all. This file
-# is the half that is readable and diffable without a Netlify login, and the
-# half that still holds if `allowed_branches` is ever widened by hand.
+# Branch deploys build only for the staging branch the script names. Secrets for each context are set on Netlify, not here.
 [context.branch-deploy]
   ignore = "node scripts/netlify-staging-ignore.mjs"
-
-# THE STAGING CONTEXT'S DATABASE (ITEM I, 2026-09-01).
-#
-# Deploy-context environment variables are set on the NETLIFY SIDE, scoped to
-# the `branch-deploy` context, not written here — a database URL is a secret and
-# `netlify.toml` is a public file in a public repository. The names, and only
-# the names, are recorded here so that a reader of this file knows what the
-# staging context is expected to carry:
-#
-#   DATABASE_URL                       scoped branch-deploy -> the Neon STAGING branch
-#   WTP_CONTROL_PLANE_DATABASE_URL     scoped branch-deploy -> the staging control plane
-#   NEXT_PUBLIC_MAPTILER_KEY           scoped branch-deploy -> meanwhile-staging-browser
-#
-# THAT MAPTILER KEY IS SCOPED, AND THE SCOPE IS THE POINT (MAPQ-3, 2026-09-07).
-# The staging context carries meanwhile-staging-browser, restricted in the
-# MapTiler account to test.meanwhileusa.com; production carries
-# meanwhile-prod-browser, restricted to the production Reader origins and NEVER
-# to *.meanwhileusa.com. Deploy previews and every other branch deploy carry NO
-# key at all and draw the fallback basemap. One key across all of them is how
-# 101,863 requests against a 100,000 allowance became unattributable; see
-# docs/maptiler-keys.md.
-#
-# `lib/ops/staging-isolation.ts` is the seeded failure that makes this real: a
-# staging build whose resolved `DATABASE_URL` is the production database fails
-# the gate rather than deploying. A staging environment that silently shares
-# production's database is worse than no staging environment, because every
-# test run against it would be a write to the store readers are served from.
 
 [functions]
   directory = "netlify/functions"
 
-# Same Ask engine, with its own small cold-start boundary. Static geography
-# remains file-backed; mutable civic records still resolve published pointers.
 [functions."grounded-ask"]
   node_bundler = "esbuild"
   included_files = ["data/derived/zip-divisions/*.json", "data/derived/resolver-geometry.json", "data/derived/zip-coverage-tiers-runtime.json", "data/states/*/geo/**/*.geojson", "public/geo/*.geojson"]
 
-# THE LEGACY HOST FORWARDS — ITEM F (2026-09-01).
-#
-# `sparkwtp.netlify.app` is the Netlify site's default subdomain and it keeps
-# answering forever; setting a custom domain does not retire it. Measured
-# 2026-09-01, before this redirect existed: `GET https://sparkwtp.netlify.app/`
-# returned **200**, not a redirect. So the old host was serving the whole
-# application in parallel with the new one — two origins, one product, and
-# every link, bookmark, bot user-agent and archived reference pointing at the
-# one nobody maintains.
-#
-# That is not merely untidy. `lib/ops/origin-confinement.ts` decides whether a
-# synthetic-run marker may travel by comparing HOSTS, and the reader-facing
-# claim this product makes about its own origin is the load-bearing half of
-# that comparison. An origin that answers 200 but is not `PUBLIC_SITE_ORIGIN`
-# is an origin where the confinement rule and the deployed reality disagree.
-#
-# `force = true` because there is no path on the old host worth preserving,
-# and the full-URL `from` scopes the rule to that exact host — deploy previews
-# and branch deploys live on other `*.netlify.app` names and are untouched.
+# The site's default Netlify hostname forwards to the real one.
 [[redirects]]
   from = "https://sparkwtp.netlify.app/*"
   to = "https://meanwhileusa.com/:splat"
   status = 301
   force = true
 
-# The demo is unlisted: platform-level visibility is the access control, and
-# these headers keep crawlers from indexing whatever they can reach anyway.
-# Belt to the braces in next.config.ts `headers()`, which covers Next-served
-# routes; this covers anything served off the CDN without touching Next.
+# Covers anything the CDN serves without Next; next.config.ts headers() covers Next routes.
 [[headers]]
   for = "/*"
   [headers.values]

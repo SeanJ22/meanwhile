@@ -2,69 +2,17 @@ import type { BoxFinding } from "../box.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import { installDatabaseTransferCounter } from "../../db/transfer.ts";
+import { withCallerSite } from "../../db/transfer-by-caller.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { DoorRecord } from "../../doors/registry.ts";
+import type { LeadOrder } from "../leads/order.ts";
+import { createWebsitePacing } from "../website-pacing.ts";
 import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { pgActiveWorkClaimReader } from "./active-work-claims.ts";
-/**
- * **THE POSTGRES CONTROL-PLANE PROVIDER.** (Session B, W3.1. RULING 220.)
- *
- * A new file beside `file-store.ts`, implementing the same
- * `ControlPlaneRepositories` interfaces and nothing else — which is exactly the
- * shape `file-store.ts`'s own "WHY A FILESYSTEM AND NOT A DATABASE" section
- * predicted a later swap would take: *a new file in that directory, not a
- * change to a domain rule*.
- *
- * ## What only this provider can do
- *
- * ```
- *   CROSS-MACHINE CLAIMING   the file store's exclusiveCreate/link() lock
- *                            semantics are single-host and cannot arbitrate
- *                            between two machines; the Drive mirror is an
- *                            eventually-consistent synced folder, not a
- *                            locking substrate
- *   INDEXED DUE-TIME         a due-time query over a directory is a full scan
- *   SURVIVAL                 Neon outlives either laptop, with PITR
- * ```
- *
- * ## The four properties, and where each one lives here
- *
- * ```
- *   IDEMPOTENT PUT      INSERT ... ON CONFLICT DO NOTHING, then read back and
- *                       compare canonically. Identical is a no-op success;
- *                       different is IdentityCollision.
- *   APPEND-ONLY         PRIMARY KEY (log_key, record_id) makes a rewrite
- *                       impossible at the storage layer rather than by
- *                       convention; a re-append of the identical record is a
- *                       no-op success, a different one is AppendOnlyViolation.
- *   COMPARE-AND-SET     UPDATE ... WHERE revision = $expected. Zero rows
- *                       affected IS the refusal — the database arbitrates,
- *                       not a read-then-write in this process.
- *   FAILED READ ≠ EMPTY unparseable or unreachable raises
- *                       CorruptPersistedState; nothing here returns [] for a
- *                       read that did not happen.
- * ```
- *
- * ## Locks use a pinned WebSocket transaction
- *
- * `pg_advisory_xact_lock` is held by the DATABASE, so two processes on two
- * machines contend correctly — which is the single thing the filesystem
- * provider cannot do and the reason RULING 220 exists. The lock name is hashed
- * to a bigint because that is the API; the hash is stable and stated.
- *
- * ## What is NOT proved here, said plainly
- *
- * `WTP_CONTROL_PLANE_DATABASE_URL` is not provisioned on the machine this was
- * written on. So this provider is IMPLEMENTED and CONFORMANCE-TESTED by the
- * shared suite whenever the variable is present, and RULING 220's step 6 —
- * contention from both machines, crash/reclaim on Postgres, a restore drill —
- * has NOT been performed. Tracker NH300 carries that escalation with the
- * provider, mechanism, scopes and what continues without it. Nothing in this
- * file claims otherwise, and `pnpm control-plane:gate` reports NOT_CONFIGURED
- * rather than passing.
- */
+/** The Postgres control-plane provider, implementing the same `ControlPlaneRepositories` interfaces as the file store. */
 
+import { createHash } from "node:crypto";
 import { neon, Pool, neonConfig } from "@neondatabase/serverless";
 import type {
   CacheObservationRecord,
@@ -73,7 +21,9 @@ import type {
   OwnerSnapshot,
   RunnerHeartbeat,
 } from "../owner-surface.ts";
-import type { FieldManualStore } from "../field-manual.ts";
+import { coveringPlaces, entryInSlice, queryState, TRANSFERABLE_METHOD_KINDS, type FieldManualEntry, type FieldManualQuery } from "../field-manual.ts";
+import { createFixMapRepository } from "../../method/fix-map.ts";
+import { copyFieldManualDocument, type SingleDocumentManual } from "../field-manual-copy.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
 import { appendActionReceiptWithHistoryAtomic, readActionHistoryPage } from "./action-history-atomic.ts";
 import type { AgentJobRecord } from "../gateway/agent-job.ts";
@@ -126,6 +76,7 @@ import {
   type HoldDecision,
   type SpendHoldStore,
 } from "../expansion/spend-holds.ts";
+import type { HeldCopies } from "./incremental-reads.ts";
 import {
   CONTROL_PLANE_CONNECT_MAX_ATTEMPTS,
   withControlPlaneConnectRetry,
@@ -145,13 +96,18 @@ import {
   IdentityCollision,
   UnknownAggregate,
   canonicalJson,
+  projectAggregate,
   reconcileIdempotentPut,
   type AggregateRepository,
   type AppendOnlyRepository,
   type AppendOutcome,
   type ArtifactRecord,
+  type ChangedRecords,
+  type ChangedRows,
   type ControlPlaneRepositories,
+  type FieldManualRepository,
   type DispositionCommit,
+  type HeldSlots,
   type LockManager,
   type Persisted,
   type PutOutcome,
@@ -162,47 +118,17 @@ import {
 /** The one environment variable, named and never valued. */
 export const CONTROL_PLANE_URL_VAR = "WTP_CONTROL_PLANE_DATABASE_URL";
 
-/**
- * The SEPARATE variable that names an ISOLATED test control plane.
- *
- * The conformance suite's Postgres lane MUTATES — it puts, appends and
- * compare-and-sets — so it may only ever run against a database designated for
- * exactly that. `CONTROL_PLANE_URL_VAR` names the LIVE, append-only production
- * control plane; a normal `.env.local` carries it, and a local gate or handoff
- * loads that file. If the mutable lane read that variable it would write test
- * fixtures into the production control plane every time the suite ran — which
- * is how an overnight quota was burned. So the mutable lane requires THIS
- * variable, and never silently treats the production connection as a test one.
- */
+/** The mutable conformance lane requires this separate isolated-test variable and never treats the production connection as a test one. */
 export const CONTROL_PLANE_TEST_URL_VAR = "WTP_CONTROL_PLANE_TEST_DATABASE_URL";
 
-/**
- * The SQL surface this provider uses, narrowed to what it actually calls.
- *
- * Not `ReturnType<typeof neon>`: that type is generic over array-mode and
- * full-results flags, and a concrete client does not widen back to it. The
- * provider only ever calls the parameterized `query` form, so the seam is one
- * method — which also means a test double is one function rather than a mock of
- * the whole driver.
- *
- * The third argument is the driver's per-query options. This provider passes
- * only `fetchOptions.signal`, which cancels the request at its bound
- * (request-bounds.ts); a double may ignore it.
- */
+/** Narrowed to the calls this provider makes. */
 export interface Sql {
   query(text: string, params?: readonly unknown[], options?: BoundableQueryOptions): Promise<unknown>;
   /** Online DDL and session locks need one connection; normal reads keep HTTP. */
   withPinnedConnection?<T>(operation: (sql: Sql) => Promise<T>): Promise<T>;
 }
 
-/**
- * Tables whose ONE row is a large document, so a read, put or compare-and-set
- * of it moves hundreds of KB to MB each way. Measured 2026-09-23: research
- * state 1.1 MB (1.06 MB of it the FleetSafety deferral list), field manual
- * 1.4 MB, method candidates 0.8 MB, owner snapshot 428 KB, readiness snapshot
- * 119 KB. Measured staging 2026-10-02: the shared budget ledger is 3.37 MB
- * as host state and lifetime spend holds accumulate.
- */
+/** Tables whose one row is a large document (hundreds of KB to MB each way). */
 export const DOCUMENT_ROW_TABLES: ReadonlySet<string> = new Set([
   "cp_budget",
   "cp_research_state",
@@ -212,12 +138,7 @@ export const DOCUMENT_ROW_TABLES: ReadonlySet<string> = new Set([
   "cp_readiness_snapshots",
 ]);
 
-/**
- * Logs whose records reach tens to hundreds of KB, so an append uploads a
- * document. Measured 2026-09-23 maximum record: owner digests 708 KB, worker
- * results 246 KB, window runs 147 KB, scout results 73 KB. Every other log's
- * records are under 14 KB.
- */
+/** Logs whose records reach tens to hundreds of KB. */
 export const DOCUMENT_RECORD_LOGS: ReadonlySet<string> = new Set([
   "owner_digests",
   "worker_results",
@@ -230,13 +151,33 @@ export interface PgRepositoryBounds {
   readonly bounds?: ControlPlaneRequestBounds;
   /** The class of a single-row call; DOCUMENT for the tables in DOCUMENT_ROW_TABLES / DOCUMENT_RECORD_LOGS. */
   readonly rowClass?: Exclude<ControlPlaneCallClass, "PAGE">;
+  /** Where `list()` and `readAll()` keep their held copies; null reads every whole table as a first read. */
+  readonly copies?: HeldCopies | null;
 }
 
-/** Bound transport fan-out across repositories and clients in this process.
- * Thousands of dispatch rows may be ready together; they share HTTP capacity,
- * rather than starting thousands of request timers while waiting for sockets.
- * This does not cap workers or due work. Each admitted query keeps its existing
- * request bound, and an enclosing store budget still includes queue time. */
+/* Runner processes install the held copies (`readFromHeldCopies`); civic-data commands never import their writer. */
+let heldCopiesFor: ((connectionString: string, schemaVersion: number) => HeldCopies | null) | null = null;
+
+/** Where this process's repositories keep their held copies; see incremental-reads.ts `readFromHeldCopies`. */
+export function installHeldCopies(open: (connectionString: string, schemaVersion: number) => HeldCopies | null): void {
+  heldCopiesFor = open;
+}
+
+/** A changed-since filter leaving out the slots a held copy already holds; empty when it holds none. */
+function heldFilter(held: HeldSlots | undefined, at: (value: unknown) => string, slot: string, version: string): string {
+  if (!held || held.length === 0) return "";
+  return `NOT EXISTS (SELECT 1 FROM unnest(${at(held.map(([name]) => name))}::text[], ${at(held.map(([, number]) => number))}::bigint[]) ` +
+    `AS held(slot, version) WHERE held.slot = ${slot} AND held.version = ${version})`;
+}
+
+/** Each method reads its caller's site on entry, so the bytes of queries it sends after its own awaits still count under that caller. */
+function callerPinned<R extends object>(repository: R): R {
+  return Object.fromEntries(Object.entries(repository).map(([name, member]) => [name, typeof member === "function"
+    ? (...args: unknown[]) => withCallerSite(() => member.apply(repository, args))
+    : member])) as R;
+}
+
+/** Bounds transport fan-out across repositories and clients in this process, so many ready rows share HTTP capacity. */
 export const CONTROL_PLANE_QUERY_CONCURRENCY = 16;
 let activeQueries = 0;
 const queryWaiters: Array<() => void> = [];
@@ -270,14 +211,7 @@ function boundedRunner(sql: Sql, prefix: string, bounds: ControlPlaneRequestBoun
   };
 }
 
-/**
- * A stable 63-bit key for an advisory lock name.
- *
- * FNV-1a, written out rather than imported, because the only property that
- * matters is that two processes computing it from one name agree — and a hash
- * whose implementation could change under a dependency bump is a lock that
- * could silently stop being the same lock.
- */
+/** FNV-1a written out, so two processes always agree and a dependency bump cannot change the lock. */
 export function advisoryLockKey(name: string): bigint {
   const OFFSET = BigInt("0xcbf29ce484222325");
   const PRIME = BigInt("0x100000001b3");
@@ -304,10 +238,7 @@ function parseValue<T>(raw: unknown, where: string): T {
   }
 }
 
-/* The `#>>` path is a fixed literal built from CODE-PROVIDED segments, never a
-   query value; validate each segment so it can never carry SQL, then embed it
-   (the extracted VALUE is the parameter). Shared by the log `readWhere` and the
-   aggregate `listWhere`, so there is one validator, not two. */
+/* The `#>>` path is built from code-provided segments, each validated so it can never carry SQL; the extracted value is the parameter. */
 function jsonPathLiteral(table: string, path: readonly string[]): string {
   if (path.length === 0) throw new Error(`${table}: an empty JSON path cannot select a field`);
   for (const segment of path) {
@@ -318,12 +249,7 @@ function jsonPathLiteral(table: string, path: readonly string[]): string {
   return `{${path.join(",")}}`;
 }
 
-/* A `RecordProjection` as a Postgres expression over the `record` column (a
-   log's) or the `value` column (an aggregate's): `projectRecord`, built by the
-   database, so a dropped field never leaves it.
-   Keys are CODE-PROVIDED and embedded as literals, so each is validated as a
-   plain identifier exactly as a JSON path segment is. `jsonb_each` keeps only
-   the keys the record holds, so an absent key stays absent. */
+/* A `RecordProjection` as a Postgres expression over `record` (a log) or `value` (an aggregate); keys are code-provided. */
 function recordProjectionSql(table: string, projection: RecordProjection, column: "record" | "value" = "record"): string {
   /* An aggregate's column is named through its table, so it is never read as the `value` column `jsonb_each` answers. */
   const source = column === "record" ? "record" : `${table}.value`;
@@ -349,22 +275,7 @@ function recordProjectionSql(table: string, projection: RecordProjection, column
     `WHERE t.key IN (${kept.map(literal).join(", ")})) ELSE ${source} END`;
 }
 
-/**
- * How many aggregate rows one `list()` statement fetches.
- *
- * The Neon serverless (HTTP) driver caps a single response at 64 MiB. An
- * aggregate table grows without bound — one row per work item, attempt, lease,
- * transition subject — and `readAutonomousActivity` lists FOUR of them
- * (`workItems`, `routeTasks`, `attempts`, `leases`) on every `/admin/fleet`
- * render. A single unbounded `SELECT ... ORDER BY id` therefore threw
- * `NeonDbError: response is too large` once the fleet's aggregates crossed the
- * cap, surfacing as STORE_UNREACHABLE and collapsing the whole operations
- * report — the same failure the append-only log had (see
- * {@link APPEND_ONLY_LOG_READ_PAGE}), one layer up. `list()` keyset-pages
- * instead. `id` is the primary key and the ASC order key, so `id > $1` is an
- * index range scan and the page concatenation is byte-identical to the old
- * single statement.
- */
+/** Rows per `list()` page: the HTTP driver caps a response at 64 MiB, so aggregate reads are keyset-paged by id. */
 export const AGGREGATE_LIST_READ_PAGE = 100;
 
 export function pgAggregateRepository<T>(
@@ -394,57 +305,50 @@ export function pgAggregateRepository<T>(
     };
   }
 
-  async function list(): Promise<readonly Persisted<T>[]>;
-  async function list(projection: RecordProjection): Promise<readonly Persisted<unknown>[]>;
-  async function list(projection?: RecordProjection): Promise<readonly Persisted<unknown>[]> {
-    const operation = projection === undefined ? "list" : "listNarrowed";
-    const value = projection === undefined ? "value" : Object.keys(projection).length === 0
-      ? "'{}'::jsonb AS value" : `${recordProjectionSql(table, projection, "value")} AS value`;
-    /* Keyset-paged by id so no one response can exceed the driver's 64 MiB
-       cap (see AGGREGATE_LIST_READ_PAGE). `id > $1` on the primary key is an
-       index range scan; the concatenation equals the old single statement. */
-    const out: Persisted<unknown>[] = [];
+  async function listChangedSince(since: string | null, held?: HeldSlots): Promise<ChangedRows<T>> {
+    /* Rows the database stamped at or after `since` (all when null), less the held ones, in id order; `through` is the database clock before the first page. */
+    const clock = (await run("listChangedSince:clock", "POINT", "SELECT now() AS read_at")) as Record<string, unknown>[];
+    const through = new Date(clock[0]?.read_at as string).toISOString();
+    const out: Persisted<T>[] = [];
     let afterId: string | null = null;
     for (;;) {
-      const rows = (afterId === null
-        ? await run(
-            operation,
-            "PAGE",
-            `SELECT id, revision, updated_at, ${value} FROM ${table}
-             ORDER BY id ASC
-             LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
-          )
-        : await run(
-            operation,
-            "PAGE",
-            `SELECT id, revision, updated_at, ${value} FROM ${table}
-             WHERE id > $1
-             ORDER BY id ASC
-             LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
-            [afterId],
-          )) as Record<string, unknown>[];
+      const params: unknown[] = [];
+      const at = (value: unknown) => `$${params.push(value)}`;
+      const filters = [since === null ? "" : `changed_at >= ${at(since)}::timestamptz`,
+        heldFilter(held, at, "id", "revision"), afterId === null ? "" : `id > ${at(afterId)}`].filter(Boolean);
+      const rows = (await run(
+        "listChangedSince",
+        "PAGE",
+        `SELECT id, revision, updated_at, value FROM ${table}
+         ${filters.length === 0 ? "" : `WHERE ${filters.join(" AND ")}`}
+         ORDER BY id ASC
+         LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
+        params,
+      )) as Record<string, unknown>[];
       for (const row of rows) {
         out.push({
           id: String(row.id),
           revision: Number(row.revision),
           updatedAt: new Date(row.updated_at as string).toISOString(),
-          value: parseValue<unknown>(row.value, `${where} id ${String(row.id)}`),
+          value: parseValue<T>(row.value, `${where} id ${String(row.id)}`),
         });
       }
       if (rows.length < AGGREGATE_LIST_READ_PAGE) break;
       afterId = String(rows[rows.length - 1].id);
     }
-    return out;
+    return { rows: out, through };
   }
 
-  return {
+  const copies = options.copies ?? null;
+  const held = <O>(out: (row: Persisted<T>) => O): Promise<O[]> => copies === null
+    ? listChangedSince(null).then(changed => changed.rows.map(out))
+    : copies.aggregateList(table, listChangedSince, out);
+
+  return callerPinned({
     read,
 
     async readNarrowed(id, projection) {
-      /* Postgres narrows the row, so only the kept fields cross the wire; an
-         empty projection reads the revision and write time without the value
-         at all, so a large document is not even decompressed. A small answer,
-         so a POINT call, whatever the row's class. */
+      /* Postgres narrows the row, so only kept fields cross the wire; an empty projection skips the value entirely. */
       const narrowed = Object.keys(projection).length === 0 ? "'{}'::jsonb" : recordProjectionSql(table, projection, "value");
       const rows = (await run(
         "readNarrowed",
@@ -469,13 +373,7 @@ export function pgAggregateRepository<T>(
     },
 
     async put(id, value, now): Promise<PutOutcome<T>> {
-      /*
-       * INSERT ... DO NOTHING, then read back. Not an upsert: an upsert would
-       * silently replace a DIFFERENT value under a derived id, which is the
-       * exact collision `IdentityCollision` exists to refuse. The database
-       * decides who created; this process only decides what the difference
-       * means.
-       */
+      /* INSERT ... DO NOTHING, then read back. Never an upsert, which would silently replace a different value under a derived id. */
       const inserted = (await run(
         "put",
         rowClass,
@@ -509,14 +407,7 @@ export function pgAggregateRepository<T>(
     },
 
     async compareAndSet(id, expectedRevision, next, now) {
-      /*
-       * The WHERE clause IS the compare-and-set. Zero rows affected is the
-       * refusal, decided by the database — a read-then-write in this process
-       * would leave a window in which two writers both read the same revision
-       * and both proceeded, which is the lost update the whole mechanism
-       * exists to prevent, and it is precisely the window a second MACHINE
-       * makes reachable.
-       */
+      /* The WHERE clause is the compare-and-set: zero rows affected is the refusal, decided by the database. */
       // Keep the exact submitted JSON: the caller may mutate next while the
       // request is pending, and JSON normalizes undefined, dates and numbers.
       const submitted = JSON.stringify(next);
@@ -532,7 +423,7 @@ export function pgAggregateRepository<T>(
 
       if (updated.length === 0) {
         // A losing writer needs only the current revision, not another copy
-        // of a potentially multi-megabyte aggregate.
+        // The revision fence acknowledges this exact JSON; there are no value-rewrite triggers, so no readback is needed.
         const current = (await run("readNarrowed", "POINT",
           `SELECT revision FROM ${table} WHERE id = $1`, [id])) as Record<string, unknown>[];
         throw new ConcurrentModification(
@@ -547,9 +438,6 @@ export function pgAggregateRepository<T>(
         id: String(row.id),
         revision: Number(row.revision),
         updatedAt: new Date(row.updated_at as string).toISOString(),
-        // The schema's aggregate tables have no value-rewrite triggers. The
-        // successful revision fence acknowledges this exact JSON assignment;
-        // downloading its identical value again adds no readback information.
         value: parseValue<T>(submitted, `${where} id ${id}`),
       };
     },
@@ -577,51 +465,12 @@ export function pgAggregateRepository<T>(
       return out;
     },
 
-    list: () => list(),
-    listNarrowed: projection => list(projection),
-
-    async listChangedSince(since) {
-      /* `list()` narrowed to rows the DATABASE stamped at or after `since`
-         (schema v22), the same id keyset pages. `through` is the database clock
-         taken before the first page, so a change committed while the pages are
-         read is caught by the next read rather than straddled. */
-      const clock = (await run("listChangedSince:clock", "POINT", "SELECT now() AS read_at")) as Record<string, unknown>[];
-      const through = new Date(clock[0]?.read_at as string).toISOString();
-      const changed = since === null ? "" : "changed_at >= $1::timestamptz";
-      const out: Persisted<T>[] = [];
-      let afterId: string | null = null;
-      for (;;) {
-        const filters = [changed, afterId === null ? "" : `id > $${since === null ? 1 : 2}`].filter(Boolean);
-        const params = [...(since === null ? [] : [since]), ...(afterId === null ? [] : [afterId])];
-        const rows = (await run(
-          "listChangedSince",
-          "PAGE",
-          `SELECT id, revision, updated_at, value FROM ${table}
-           ${filters.length === 0 ? "" : `WHERE ${filters.join(" AND ")}`}
-           ORDER BY id ASC
-           LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
-          params,
-        )) as Record<string, unknown>[];
-        for (const row of rows) {
-          out.push({
-            id: String(row.id),
-            revision: Number(row.revision),
-            updatedAt: new Date(row.updated_at as string).toISOString(),
-            value: parseValue<T>(row.value, `${where} id ${String(row.id)}`),
-          });
-        }
-        if (rows.length < AGGREGATE_LIST_READ_PAGE) break;
-        afterId = String(rows[rows.length - 1].id);
-      }
-      return { rows: out, through };
-    },
+    list: () => held(row => row),
+    listNarrowed: projection => held(row => ({ ...row, value: projectAggregate(row.value, projection) })),
+    listChangedSince,
 
     async listWhere(path, value) {
-      /* `list()` filtered IN THE DATABASE: the same ORDER BY id and keyset
-         paging, with the content filter in the WHERE clause, so only matching
-         rows cross the wire and the result equals `list()` filtered, row for
-         row and in order. One RouteTask's Attempts is one bounded round trip
-         here, where `list()` is every page of cp_attempts (44 on 2026-09-22). */
+      /* `list()` filtered in the database with the same order and paging, so the result equals `list()` filtered. */
       const jsonPath = jsonPathLiteral(table, path);
       const out: Persisted<T>[] = [];
       let afterId: string | null = null;
@@ -658,29 +507,10 @@ export function pgAggregateRepository<T>(
       }
       return out;
     },
-  };
+  });
 }
 
-/**
- * How many log records one read statement fetches.
- *
- * The Neon serverless (HTTP) driver caps a single response at 64 MiB, and an
- * append-only log grows without bound — so a full-log read must NEVER assume it
- * fits in one response. On 2026-09-15 the owner-digest log crossed 64 MiB and
- * every `SELECT record ... ORDER BY position` for it began throwing
- * `NeonDbError: Server error (HTTP status 507): response is too large`, which
- * surfaced to callers as STORE_UNREACHABLE and stopped the standing runner at
- * its startup gate, which read this log (that gate is gone). Appends kept succeeding — they
- * are small — so the log only grew, one crash-loop hold every five minutes.
- *
- * Reads are fetched in keyset pages instead. 100 rows keeps a page far under the
- * cap even at the largest record this control plane has ever held (~0.25 MiB →
- * ~25 MiB per page), with room for the log to keep growing. The concatenation is
- * identical to the old single statement because `position` is a strict
- * per-`log_key` order and `(log_key, position)` is strict across the whole
- * table — both backed by the `cp_log_<name>_order` unique index the schema
- * already creates, so each page is an index range scan, not a re-sort.
- */
+/** Records per log read page: a full-log read must never assume it fits in one 64 MiB response. */
 export const APPEND_ONLY_LOG_READ_PAGE = 100;
 
 export function pgAppendOnlyRepository<T>(
@@ -693,31 +523,48 @@ export function pgAppendOnlyRepository<T>(
   /* An append's probe and re-read return the held record, and its insert uploads one. */
   const recordClass = options.rowClass ?? (DOCUMENT_RECORD_LOGS.has(log) ? "DOCUMENT" : "POINT");
 
-  return {
+  async function readChangedSince(since: string | null, held?: HeldSlots): Promise<ChangedRecords<T>> {
+    /* `readAll()` narrowed to records the database stamped at or after `since`, less the held ones; `through` is the database clock before the first page. */
+    const clock = (await run("readChangedSince:clock", "POINT", "SELECT now() AS read_at")) as Record<string, unknown>[];
+    const through = new Date(clock[0]?.read_at as string).toISOString();
+    const out: { key: string; recordId: string; position: number; record: T }[] = [];
+    let cursor: { readonly key: string; readonly position: number } | null = null;
+    for (;;) {
+      const params: unknown[] = [];
+      const at = (value: unknown) => `$${params.push(value)}`;
+      const filters = [since === null ? "" : `changed_at >= ${at(since)}::timestamptz`, heldFilter(held, at, "log_key", "position"),
+        cursor === null ? "" : `(log_key, position) > (${at(cursor.key)}, ${at(cursor.position)})`].filter(Boolean);
+      const rows = (await run(
+        "readChangedSince",
+        "PAGE",
+        `SELECT log_key, record_id, position, record FROM ${table}
+         ${filters.length === 0 ? "" : `WHERE ${filters.join(" AND ")}`}
+         ORDER BY log_key ASC, position ASC
+         LIMIT ${APPEND_ONLY_LOG_READ_PAGE}`,
+        params,
+      )) as Record<string, unknown>[];
+      for (const r of rows) {
+        out.push({ key: String(r.log_key), recordId: String(r.record_id), position: Number(r.position),
+          record: parseValue<T>(r.record, `${table} ${String(r.log_key)}`) });
+      }
+      if (rows.length < APPEND_ONLY_LOG_READ_PAGE) break;
+      const last = rows[rows.length - 1];
+      cursor = { key: String(last.log_key), position: Number(last.position) };
+    }
+    return { records: out, through };
+  }
+
+  const copies = options.copies ?? null;
+  const heldAll = (): Promise<T[]> => copies === null
+    ? readChangedSince(null).then(changed => changed.records.map(entry => entry.record))
+    : copies.logReadAll(table, readChangedSince);
+
+  return callerPinned({
     async append(key, recordId, record, now): Promise<AppendOutcome<T>> {
       /*
-       * **THE POSITION IS ALLOCATED, NOT COMPUTED.** (Session B resume, W3.D.)
-       *
-       * This read `COALESCE((SELECT MAX(position) + 1 FROM ... WHERE log_key = $1), 0)`
-       * inside the INSERT, under a comment asserting that computing it inside
-       * the statement meant "two appenders cannot both compute the same
-       * position from a stale read". That is not what it meant. A subquery in
-       * an INSERT still runs against the statement's READ COMMITTED snapshot,
-       * so two concurrent appenders with different `record_id`s each saw the
-       * same committed MAX and each wrote it. `PRIMARY KEY (log_key, record_id)`
-       * does not object — the record ids differ — so both committed, and the
-       * log held two records at one position.
-       *
-       * The log is the replay history: `reconcile()` walks dispositions in
-       * position order to finish aggregate writes a crash interrupted. Two
-       * records at one position make that order ambiguous.
-       *
-       * The idempotency check runs FIRST so a retried append returns the
-       * position it already has instead of allocating a fresh one. Positions
-       * may therefore contain GAPS under contention — an allocation whose
-       * insert then no-ops burns its number — and that is fine and is stated
-       * here so nobody later "fixes" it: position is an ORDER key, never a
-       * count, and `readAll` orders by it rather than counting it.
+       * The position is allocated by the position-allocator table, never computed as MAX+1 (which races under
+       * READ COMMITTED). The idempotency probe runs first, so a retry keeps its position. Positions may have
+       * gaps under contention: position is an order key, never a count.
        */
       const already = (await run(
         "append:probe",
@@ -823,10 +670,7 @@ export function pgAppendOnlyRepository<T>(
     },
 
     async readWhere(key, path, value) {
-      /* Content filter, keyset-paged like `read`: the response only ever holds
-         matching rows (bounded by the page), so a selective filter over a log
-         far larger than the 64 MiB cap still returns every match. The cursor
-         advances by the last match's position, skipping non-matching rows. */
+      /* Content filter, keyset-paged like `read`, so a selective filter over a huge log still returns every match. */
       const jsonPath = jsonPathLiteral(table, path);
       const out: T[] = [];
       let afterPosition = -1;
@@ -848,13 +692,26 @@ export function pgAppendOnlyRepository<T>(
     },
 
     async readRecentWhere(key, path, value, limit, projection, recordedAtSince) {
-      /* `readWhere` newest first, stopped at `limit` matches, each record
-         narrowed in the SELECT list: the database projects only the rows it
-         returns, and `limit` bounds the response, so this needs no paging.
-         `ORDER BY position DESC` on `(log_key, position)` is a backward index
-         scan that stops at the `limit`th match. */
+      /* `readWhere` newest first, stopped at `limit`; `limit` bounds the response, so no paging. */
       const jsonPath = jsonPathLiteral(table, path);
       const narrowed = recordProjectionSql(table, projection);
+      if (copies !== null && recordedAtSince === undefined) {
+        /* On the runner the query's newest records are held, and only matches stamped since the copy's clock cross the wire. */
+        return copies.recentWhere(table, JSON.stringify([key, path, value, limit, projection]), limit, async (since) => {
+          const clock = (await run("readRecentWhere:clock", "POINT", "SELECT now() AS read_at")) as Record<string, unknown>[];
+          const rows = (await run(
+            "readRecentWhere",
+            "PAGE",
+            `SELECT position, ${narrowed} AS record FROM ${table}
+             WHERE log_key = $1 AND record #>> '${jsonPath}' = $2${since === null ? "" : " AND changed_at >= $4::timestamptz"}
+             ORDER BY position DESC
+             LIMIT $3`,
+            [key, value, Math.max(0, Math.trunc(limit)), ...(since === null ? [] : [since])],
+          )) as Record<string, unknown>[];
+          return { rows: rows.map((r) => ({ position: Number(r.position), record: parseValue<unknown>(r.record, `${table} ${key}`) })),
+            through: new Date(clock[0]?.read_at as string).toISOString() };
+        });
+      }
       const rows = (await run(
         "readRecentWhere",
         "PAGE",
@@ -888,70 +745,8 @@ export function pgAppendOnlyRepository<T>(
       return out;
     },
 
-    async readAll() {
-      /* Keyset-paged over the whole table in the same (log_key, position) order
-         the single statement used, for the same 64 MiB reason as `read`. */
-      const out: T[] = [];
-      let cursor: { readonly key: string; readonly position: number } | null = null;
-      for (;;) {
-        const rows = (cursor === null
-          ? await run(
-              "readAll",
-              "PAGE",
-              `SELECT log_key, position, record FROM ${table}
-               ORDER BY log_key ASC, position ASC
-               LIMIT ${APPEND_ONLY_LOG_READ_PAGE}`,
-            )
-          : await run(
-              "readAll",
-              "PAGE",
-              `SELECT log_key, position, record FROM ${table}
-               WHERE (log_key, position) > ($1, $2)
-               ORDER BY log_key ASC, position ASC
-               LIMIT ${APPEND_ONLY_LOG_READ_PAGE}`,
-              [cursor.key, cursor.position],
-            )) as Record<string, unknown>[];
-        for (const r of rows) out.push(parseValue<T>(r.record, `${table} ${String(r.log_key)}`));
-        if (rows.length < APPEND_ONLY_LOG_READ_PAGE) break;
-        const last = rows[rows.length - 1];
-        cursor = { key: String(last.log_key), position: Number(last.position) };
-      }
-      return out;
-    },
-
-    async readChangedSince(since) {
-      /* `readAll()` narrowed to records the DATABASE stamped at or after
-         `since` (schema v22), the same (log_key, position) keyset pages, each
-         with its coordinates. `through` is the database clock before the first
-         page, as in the aggregate read. */
-      const clock = (await run("readChangedSince:clock", "POINT", "SELECT now() AS read_at")) as Record<string, unknown>[];
-      const through = new Date(clock[0]?.read_at as string).toISOString();
-      const out: { key: string; recordId: string; position: number; record: T }[] = [];
-      let cursor: { readonly key: string; readonly position: number } | null = null;
-      for (;;) {
-        const at = since === null ? 1 : 2;
-        const filters = [since === null ? "" : "changed_at >= $1::timestamptz",
-          cursor === null ? "" : `(log_key, position) > ($${at}, $${at + 1})`].filter(Boolean);
-        const params = [...(since === null ? [] : [since]), ...(cursor === null ? [] : [cursor.key, cursor.position])];
-        const rows = (await run(
-          "readChangedSince",
-          "PAGE",
-          `SELECT log_key, record_id, position, record FROM ${table}
-           ${filters.length === 0 ? "" : `WHERE ${filters.join(" AND ")}`}
-           ORDER BY log_key ASC, position ASC
-           LIMIT ${APPEND_ONLY_LOG_READ_PAGE}`,
-          params,
-        )) as Record<string, unknown>[];
-        for (const r of rows) {
-          out.push({ key: String(r.log_key), recordId: String(r.record_id), position: Number(r.position),
-            record: parseValue<T>(r.record, `${table} ${String(r.log_key)}`) });
-        }
-        if (rows.length < APPEND_ONLY_LOG_READ_PAGE) break;
-        const last = rows[rows.length - 1];
-        cursor = { key: String(last.log_key), position: Number(last.position) };
-      }
-      return { records: out, through };
-    },
+    readAll: () => heldAll(),
+    readChangedSince,
 
     async readRecent(key, limit) {
       /* Newest `limit`, newest first. `limit` bounds the response, so this needs
@@ -966,8 +761,7 @@ export function pgAppendOnlyRepository<T>(
     },
 
     async readLatest(keys, projection) {
-      /* The inner statement picks each key's newest row on `(log_key, position)`; the outer one narrows only those rows,
-         with the projection `readRecentWhere` uses, so older walks and dropped fields never leave the database. */
+      /* The inner statement picks each key's newest row; the outer one narrows only those rows. */
       const narrowed = recordProjectionSql(table, projection);
       const unique = [...new Set(keys)];
       const out = new Map<string, unknown>();
@@ -1030,8 +824,7 @@ export function pgAppendOnlyRepository<T>(
     },
 
     async keysWhere(path, value) {
-      /* `keys()` narrowed in the database, on the same `#>>` expression the
-         version-20 log indexes are built on (CH-26). */
+      /* `keys()` narrowed in the database, on the same `#>>` expression the log indexes use. */
       const jsonPath = jsonPathLiteral(table, path);
       const rows = (await run(
         "keysWhere",
@@ -1041,7 +834,7 @@ export function pgAppendOnlyRepository<T>(
       )) as Record<string, unknown>[];
       return rows.map((r) => String(r.log_key));
     },
-  };
+  });
 }
 
 /** Bounded source lookup; the canonical URL and newest-capture order use the artifact index. */
@@ -1053,6 +846,26 @@ export async function pgArtifactsByCanonicalUrl(sql: Sql, url: string, limit: nu
     [url, Math.max(0, Math.trunc(limit))]) as Record<string, unknown>[];
   return rows.map(row => parseValue<ArtifactRecord>(row.record, "cp_log_artifacts source capture"));
 }
+
+/** Page size for one batched source lookup. */
+const CAPTURED_URLS_PAGE = 1000;
+
+/** Which exact canonical URLs have a capture: one indexed read per thousand, on the same md5 expression as the source index. */
+export async function pgCapturedCanonicalUrls(sql: Sql, urls: readonly string[], options: PgRepositoryBounds = {}): Promise<ReadonlySet<string>> {
+  const run = boundedRunner(sql, "cp_log_artifacts", options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
+  const held = new Set<string>();
+  const unique = [...new Set(urls)];
+  for (let at = 0; at < unique.length; at += CAPTURED_URLS_PAGE) {
+    const page = unique.slice(at, at + CAPTURED_URLS_PAGE);
+    const rows = await run("capturedCanonicalUrls", "PAGE", CAPTURED_URLS_SQL,
+      [page.map((url) => createHash("md5").update(url, "utf8").digest("hex")), page]) as Record<string, unknown>[];
+    for (const row of rows) held.add(String(row.url));
+  }
+  return held;
+}
+
+export const CAPTURED_URLS_SQL = `SELECT DISTINCT record->>'canonicalUrl' AS url FROM cp_log_artifacts
+     WHERE md5(record->>'canonicalUrl') = ANY($1::text[]) AND record->>'canonicalUrl' = ANY($2::text[])`;
 
 /** Locks use one pinned WebSocket transaction. HTTP queries have no shared session. */
 function pgLockManager(connectionString: string): LockManager {
@@ -1132,7 +945,6 @@ export async function pgEnsureOnlineIndex(
     await ddlRun("create", "POINT", index.ddl);
   } finally {
     // A failed build retains its original error. The caller destroys the pinned
-    // session as well, releasing the session lock even after a transport failure.
     await run("unlock", "POINT", "SELECT pg_advisory_unlock($1::bigint)", [key]).catch(() => {});
     await run("restoreTimeout", "POINT", `SET statement_timeout = ${bounds.POINT}`).catch(() => {});
   }
@@ -1159,17 +971,70 @@ export async function bootstrap(
   await run("recordVersion", "POINT", recordVersionStatement(BOOTSTRAP_VERSION, nowIso));
 }
 
+/** The SQL half of `entryInSlice`: the rows one job could use, never fewer (the caller applies the exact rule). */
+export const FIELD_MANUAL_SLICE_SQL = `SELECT id, revision, updated_at, value FROM cp_field_manual_entries
+  WHERE ($1::text[] IS NULL OR value->>'role' = ANY($1::text[]))
+    AND ($2::text[] IS NULL OR value->>'kind' = ANY($2::text[]))
+    AND ($3::text IS NULL OR jsonb_array_length(coalesce(value->'recordClasses', '[]'::jsonb)) = 0 OR value->'recordClasses' ? $3::text)
+    AND (($4::boolean AND ($7::text IS NULL OR jsonb_array_length(coalesce(value->'platforms', '[]'::jsonb)) = 0 OR value->'platforms' ? $7::text))
+      OR (NOT $4::boolean AND (value->>'kind' = ANY($5::text[])
+        OR coalesce((value->'reach'->>'method')::boolean, false)
+        OR coalesce((value->'reach'->>'everywhere')::boolean, false)
+        OR coalesce(value->'reach'->'places', '[]'::jsonb) ?| $6::text[]
+        OR (jsonb_array_length(coalesce(value->'reach'->'platforms', '[]'::jsonb)) > 0 AND ($7::text IS NULL OR value->'reach'->'platforms' ? $7::text))
+        OR ($8::text IS NOT NULL AND coalesce(value->'reach'->'states', '[]'::jsonb) ? $8::text))))
+    AND ($9::text IS NULL OR id > $9::text)
+  ORDER BY id ASC LIMIT ${AGGREGATE_LIST_READ_PAGE}`;
+
+/** The slice's parameters, in `FIELD_MANUAL_SLICE_SQL`'s order (without the page cursor). */
+export function fieldManualSliceParams(query: FieldManualQuery): unknown[] {
+  return [
+    query.role === undefined ? null : [...new Set([query.role, "SHARED"])],
+    query.kinds === undefined ? null : [...query.kinds],
+    query.recordClass?.toLowerCase() ?? null,
+    query.everywhere === true,
+    [...TRANSFERABLE_METHOD_KINDS],
+    coveringPlaces(query),
+    query.platform?.toLowerCase() ?? null,
+    queryState(query) ?? null,
+  ];
+}
+
 /**
- * **THE SPEND HOLDS, ONE ROW EACH.** (Schema v24, 2026-10-06.)
- *
- * Every call is one statement over the HTTP driver, so one implicit
- * transaction. An admission is `cp_admit_spend_hold` (pg-schema.ts): it locks
- * the lines it names, deletes what no longer counts on them, and decides as
- * `decideHold` does; the refusal is worded here by the same functions. A
- * settle is one UPDATE by job, a release one DELETE by id, a live read one
- * indexed SELECT, and a sweep one bounded DELETE. Nothing reads the table
- * whole: the only unfiltered read (`liveAll`) is of holds that still count.
+ * The field manual's rows in `cp_field_manual_entries`. On the runner a slice is the held copy filtered by
+ * `entryInSlice`, so a process pays only for rows changed since the copy's clock; without a copy (a page host or
+ * a hand-run script) the slice crosses the wire one page at a time.
  */
+export function pgFieldManualRepository(sql: Sql, options: PgRepositoryBounds = {}): FieldManualRepository {
+  const base = pgAggregateRepository<FieldManualEntry>(sql, "FieldManualEntry", "cp_field_manual_entries", options);
+  const run = boundedRunner(sql, "cp_field_manual_entries", options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
+  const copies = options.copies ?? null;
+  return {
+    ...base,
+    readMany: base.readMany!,
+    async slice(query) {
+      if (copies !== null) {
+        const rows = await copies.aggregateList("cp_field_manual_entries", base.listChangedSince!,
+          (row) => (entryInSlice(row.value, query) ? row : null));
+        return rows.filter((row): row is Persisted<FieldManualEntry> => row !== null);
+      }
+      const params = fieldManualSliceParams(query);
+      const out: Persisted<FieldManualEntry>[] = [];
+      let afterId: string | null = null;
+      for (;;) {
+        const rows = (await run("slice", "PAGE", FIELD_MANUAL_SLICE_SQL, [...params, afterId])) as Record<string, unknown>[];
+        for (const row of rows) {
+          out.push({ id: String(row.id), revision: Number(row.revision), updatedAt: new Date(row.updated_at as string).toISOString(),
+            value: parseValue<FieldManualEntry>(row.value, `cp_field_manual_entries id ${String(row.id)}`) });
+        }
+        if (rows.length < AGGREGATE_LIST_READ_PAGE) return out;
+        afterId = String(rows[rows.length - 1]!.id);
+      }
+    },
+  };
+}
+
+/** Every call is one statement, so one implicit transaction. Nothing reads the table whole; `liveAll` reads only holds that still count. */
 export function pgSpendHoldRepository(sql: Sql, bounds: ControlPlaneRequestBounds = CONTROL_PLANE_REQUEST_BOUNDS_MS): SpendHoldStore {
   const run = boundedRunner(sql, "cp_spend_holds", bounds);
   const since = (now: string) => {
@@ -1242,14 +1107,7 @@ export function pgSpendHoldRepository(sql: Sql, bounds: ControlPlaneRequestBound
   };
 }
 
-/**
- * Open the Postgres control-plane repositories.
- *
- * NO ENV MAGIC in the signature: the caller passes the connection string, the
- * same discipline `createFileRepositories` applies to its root. `fromEnv`
- * below is the one place the variable is read, and it refuses rather than
- * defaulting.
- */
+/** The caller passes the connection string; `fromEnv` is the one place the variable is read. */
 const placeReadConnections = new WeakMap<ControlPlaneRepositories, Sql>();
 
 /** Reconcile all subjects in one place against one indexed query, rather
@@ -1272,10 +1130,6 @@ export async function readPlaceWorkItems(repos: ControlPlaneRepositories, subjec
     updatedAt: new Date(row.updated_at as string).toISOString(), value: parseValue<WorkItem>(row.value, `place work item ${String(row.id)}`) }));
 }
 
-/** Exact source observations from any job; unrelated vault metadata stays in
- * Postgres instead of being copied into every place worker. The md5 filter is
- * what `cp_log_artifacts_source_url` (v18) indexes; the plain equality alone
- * scanned the whole log. */
 export async function readPlaceArtifacts(repos: ControlPlaneRepositories, url: string, cutoff: string, now: string): Promise<readonly ArtifactRecord[]> {
   const sql = placeReadConnections.get(repos);
   if (!sql) return (await repos.artifacts.readAll()).filter(row => row.canonicalUrl === url && !row.partial &&
@@ -1303,16 +1157,7 @@ export async function createPgRepositories(
   connectionString: string,
   nowIso: string = new Date().toISOString(),
   options: {
-    /**
-     * Skip the schema bootstrap. (ADM-2, 9.4.26.) The bootstrap replays every
-     * DDL statement and a version upsert — nine sequential Neon round trips —
-     * and the admin PAGES were paying it on every request before their first
-     * SELECT, which is most of the two-second lag the owner felt choosing a
-     * state. A page never owns the schema: the runner and the publishers
-     * bootstrap, the deploy only reads. On a database whose schema is behind,
-     * a read then fails and the page says STORE_UNREACHABLE, which is the
-     * honest reading — never a silent CREATE from a web request.
-     */
+    /** Pages never own the schema: skip the bootstrap, and a schema that is behind reads as STORE_UNREACHABLE. */
     readonly skipBootstrap?: boolean;
     /**
      * Override the per-class request bounds (request-bounds.ts). Tests shrink
@@ -1326,7 +1171,7 @@ export async function createPgRepositories(
       "createPgRepositories requires an explicit connection string. There is deliberately no " +
         "default: a control plane that can be opened by accident is one whose contents nobody " +
         "can account for, and a default here could point at the SERVING database, which " +
-        "RULING 220 separates on purpose.",
+        "is kept separate on purpose.",
     );
   }
   installDatabaseTransferCounter();
@@ -1352,16 +1197,9 @@ export async function createPgRepositories(
       } finally { await pool.end(); }
     },
   });
-  const bounded: PgRepositoryBounds = { bounds };
+  const bounded: PgRepositoryBounds = { bounds, copies: heldCopiesFor?.(connectionString, BOOTSTRAP_VERSION) ?? null };
   if (!options.skipBootstrap) {
-    /* The schema bootstrap is this process's first Neon I/O, so its first query
-       IS the connect. Under host load that connect can fail transiently
-       (`NeonDbError: Error connecting to database: fetch failed`); before this
-       wrapper that single throw aborted a whole standing-runner cycle at its
-       start — the per-cycle child died ~2s in having dispatched nothing.
-       bootstrap is idempotent (it records the version it reaches), so retrying
-       the transient connect is safe. A latched circuit or a real SQL/status
-       error is not retried; see connect-retry.ts. */
+    /* The bootstrap is idempotent and is this process's first Neon I/O, so its transient connect failures are retried. */
     await withControlPlaneConnectRetry(() => bootstrap(sql, nowIso, bounds), {
       onRetry: ({ attempt, delayMs, error }) =>
         console.warn(
@@ -1403,6 +1241,8 @@ export async function createPgRepositories(
     },
   };
 
+  const fixMapRun = boundedRunner(sql, "cp_fix_map", bounds);
+  const pacingRun = boundedRunner(sql, "cp_website_pacing", bounds);
   const repositories: ControlPlaneRepositories = {
     adminActionHistoryPage: query => readActionHistoryPage(sql, query, bounds),
     workItems: pgAggregateRepository<WorkItem>(sql, "WorkItem", "cp_work_items", bounded),
@@ -1428,21 +1268,20 @@ export async function createPgRepositories(
     dispositions: pgAppendOnlyRepository<DispositionCommit>(sql, "dispositions", bounded),
     artifacts: pgAppendOnlyRepository<ArtifactRecord>(sql, "artifacts", bounded),
     artifactsByCanonicalUrl: (url, limit) => pgArtifactsByCanonicalUrl(sql, url, limit, bounded),
+    capturedCanonicalUrls: (urls) => pgCapturedCanonicalUrls(sql, urls, bounded),
     adminEvidenceCopyRequests: pgAggregateRepository<AdminEvidenceCopyRequest>(sql, "AdminEvidenceCopyRequest", "cp_admin_evidence_copy_requests", bounded),
     costs: pgAppendOnlyRepository<CostEntry>(sql, "costs", bounded),
-    /* The owner control centre's data plane (ITEM H, schema v3). */
     ownerSnapshots: pgAggregateRepository<OwnerSnapshot>(
       sql,
       "OwnerSnapshot",
       "cp_owner_snapshots",
       bounded,
     ),
-    fieldManual: pgAggregateRepository<FieldManualStore>(
-      sql,
-      "FieldManual",
-      "cp_field_manual",
-      bounded,
-    ),
+    fieldManual: pgFieldManualRepository(sql, bounded),
+    fixMap: createFixMapRepository(async (text, params) =>
+      (await fixMapRun("fixMap", "PAGE", text, params)) as readonly Record<string, unknown>[]),
+    websitePacing: createWebsitePacing(async (text, params) =>
+      (await pacingRun("websitePacing", "POINT", text, params)) as readonly Record<string, unknown>[]),
     runnerHeartbeat: pgAggregateRepository<RunnerHeartbeat>(
       sql,
       "RunnerHeartbeat",
@@ -1457,33 +1296,26 @@ export async function createPgRepositories(
     ),
     ownerDigests: pgAppendOnlyRepository<OwnerDigestRecord>(sql, "owner_digests", bounded),
     ownerDecisions: pgAppendOnlyRepository<OwnerDecisionIntent>(sql, "owner_decisions", bounded),
-    /* Level 1 — Research (schema v4). */
     researchState: pgAggregateRepository<ResearchState>(sql, "ResearchState", "cp_research_state", bounded),
     methodCandidates: pgAggregateRepository<CandidateStore>(sql, "MethodCandidateStore", "cp_method_candidates", bounded),
     researchIntents: pgAppendOnlyRepository<ResearchIntent>(sql, "research_intents", bounded),
     boxFindings: pgAggregateRepository<BoxFinding>(sql, "BoxFinding", "cp_box_findings", bounded),
     scoutResults: pgAppendOnlyRepository<ScoutResult>(sql, "scout_results", bounded),
     workerResults: pgAppendOnlyRepository<WorkerResultRecord>(sql, "worker_results", bounded),
-    /* The nightly door (RULING 242, schema v5). */
     promotionPipeline: pgAppendOnlyRepository<PromotionPipelineRecord>(sql, "promotion_pipeline", bounded),
     windowRuns: pgAppendOnlyRepository<WindowRunRecord>(sql, "window_runs", bounded),
     windowIncidents: pgAppendOnlyRepository<WindowIncident>(sql, "window_incidents", bounded),
     windowIntents: pgAppendOnlyRepository<WindowIntent>(sql, "window_intents", bounded),
-    /* Software release review (Admin Pass B, schema v8). */
     softwareReleaseReviews: pgAppendOnlyRepository<SoftwareReleaseReviewRecord>(sql, "software_release_reviews", bounded),
-    /* The Action Gateway (Admin Pass C, ADM-C6, schema v9). */
     adminReceipts,
     agentJobs: pgAppendOnlyRepository<AgentJobRecord>(sql, "agent_jobs", bounded),
     discoveryAttempts: pgAppendOnlyRepository<MeetingsDiscoveryAttempt>(sql, "discovery_attempts", bounded),
-    /* Live-audit results, corrections and pulls (DP-13, schema v21). */
     liveAudits: pgAppendOnlyRepository<LiveAuditLogRow>(sql, "live_audits", bounded),
     adminConfig: pgAggregateRepository<AdminConfig>(sql, "AdminConfig", "cp_admin_config", bounded),
-    /* What readers were told Ask does not hold (schema v13). Ask's route adds through `pgAskGapObservationSink`, one atomic upsert per row. */
     askGapObservations: pgAggregateRepository<AskGapObservation>(sql, "AskGapObservation", "cp_ask_gap_observations", bounded),
-    /* The Door Registry (DB-09, schema v19). */
     doors: pgAggregateRepository<DoorRecord>(sql, "Door", "cp_doors", bounded),
+    leadOrders: pgAggregateRepository<LeadOrder>(sql, "LeadOrder", "cp_lead_orders", bounded),
     budget,
-    /* The spend holds, one row each (schema v24). */
     spendHolds: pgSpendHoldRepository(sql, bounds),
     locks,
     describe: () =>
@@ -1492,16 +1324,45 @@ export async function createPgRepositories(
     durable: true,
   };
   placeReadConnections.set(repositories, sql);
+  if (!options.skipBootstrap) {
+    const copied = await copyFieldManualDocument(pgSingleDocumentManual(sql, bounded), repositories, nowIso).catch((error: unknown) => {
+      console.error(`  field manual: the lessons were not copied into rows this start; the next start tries again (${error instanceof Error ? error.message : String(error)})`);
+      return null;
+    });
+    if (copied !== null) {
+      console.log(`  field manual: ${copied.entries} lessons copied into one row each (${copied.retagged.fromRecord + copied.retagged.fromSameAddress} given ` +
+        `their place, ${copied.reach.NOWHERE} name no place yet; report ${copied.copiedAt})`);
+    }
+  }
   return repositories;
 }
 
-/**
- * The one place the variable is read.
- *
- * Returns null when it is absent, so a caller can report NOT_CONFIGURED rather
- * than crashing — every machine without a control plane is a legitimate state,
- * and "this is not set up here" is a different sentence from "this is broken".
- */
+/** The old single-document manual in `cp_field_manual`, for the one-time copy into rows. */
+export function pgSingleDocumentManual(sql: Sql, options: PgRepositoryBounds = {}): SingleDocumentManual {
+  const documents = pgAggregateRepository<{ readonly entries?: readonly FieldManualEntry[] }>(sql, "FieldManual", "cp_field_manual", options);
+  const run = boundedRunner(sql, "cp_field_manual", options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
+  return {
+    read: (id) => documents.read(id),
+    async retire(id, revision, as) {
+      const moved = (await run("retire", "DOCUMENT", "UPDATE cp_field_manual SET id = $3 WHERE id = $1 AND revision = $2 RETURNING id",
+        [id, revision, as])) as unknown[];
+      return moved.length === 1;
+    },
+    async insertNew(entries, now) {
+      const inserted = new Set<string>();
+      for (let at = 0; at < entries.length; at += AGGREGATE_LIST_READ_PAGE) {
+        const page = entries.slice(at, at + AGGREGATE_LIST_READ_PAGE);
+        const rows = (await run("insertNew", "PAGE", `INSERT INTO cp_field_manual_entries (id, revision, updated_at, value)
+          SELECT e->>'id', 1, $2::timestamptz, e FROM jsonb_array_elements($1::jsonb) AS e
+          ON CONFLICT (id) DO NOTHING RETURNING id`, [JSON.stringify(page), now])) as Record<string, unknown>[];
+        for (const row of rows) inserted.add(String(row.id));
+      }
+      return inserted;
+    },
+  };
+}
+
+/** Null when absent: NOT_CONFIGURED, not broken. */
 export function controlPlaneUrlFromEnv(
   env: NodeJS.ProcessEnv = process.env,
 ): string | null {
@@ -1509,12 +1370,7 @@ export function controlPlaneUrlFromEnv(
   return typeof value === "string" && value.trim().length > 0 ? value : null;
 }
 
-/**
- * The one place the ISOLATED-TEST variable is read. Same "empty is null" rule
- * as {@link controlPlaneUrlFromEnv}, so an absent or blank value means "no test
- * database is configured" — which is a legitimate state that reads NOT RUN, not
- * a licence to fall back to the production control plane.
- */
+/** The one place the isolated-test variable is read. Empty is null. */
 export function controlPlaneTestUrlFromEnv(
   env: NodeJS.ProcessEnv = process.env,
 ): string | null {

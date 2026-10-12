@@ -26,9 +26,7 @@ export function provenanceKind(provenance: Pick<VerifiableProvenance, "kind" | "
   return provenance.sourceUrl && isOfficialSource(provenance.sourceUrl) ? "OFFICIAL" : hostSourceKind(provenance.sourceUrl ?? "");
 }
 
-/** CP-04: a candidate's own words or campaign links. Their own site is a
- * Campaign source; an official page or a known publisher (a voter guide's
- * candidate survey, say) keeps its own kind. Never "Other" for kellyfornh.com. */
+/** A candidate's own words or campaign links: their own site is a Campaign source; an official page or a known publisher keeps its own kind. */
 export function candidateOwnKind(sourceUrl: string | null): SourceKind {
   const kind = provenanceKind({ sourceUrl });
   return kind === "OTHER" && hostOf(sourceUrl) !== null ? "CAMPAIGN" : kind;

@@ -1,14 +1,4 @@
-/**
- * The row shape this needs, structurally.
- *
- * NOT `DirectoryCommittee` from `./directory.ts`: that is the SERVER type, and
- * this module runs on the client against the wire shape from
- * `hooks/use-member-directory.ts`, which carries the jurisdiction fields the
- * route joins on. Importing the server type would also drag the `node:fs`
- * snapshot graph into a client bundle. Structural on purpose — the two shapes
- * agree on the three fields the tree is built from, and the day they stop
- * agreeing a compile error is the right outcome.
- */
+/** The row shape needed, declared structurally: this runs on the client against the wire shape, not the server type. */
 export interface CommitteeSeat {
   committeeId: string;
   name: string;
@@ -17,53 +7,7 @@ export interface CommitteeSeat {
   jurisdictionSource?: string | null;
 }
 
-/**
- * **Parents and their subcommittees, told apart** — F01 4.2, 2026-08-19.
- *
- * ## Item 0a, answered from the authoritative source
- *
- * The open question before this could be built: under Senate Committee on
- * Armed Services, the card listed *ranking member Senate Committee on Armed
- * Services* and *Senate Committee on Armed Services Emerging Threats and
- * Capabilities*. Are these subcommittees?
- *
- * They are — all of them. Read off `data/congress-legislators/directory.json`
- * (unitedstates/congress-legislators, SHA `44582443`, collected 2026-08-16) and
- * re-confirmed against the live file on 2026-08-19, Mark Kelly's Armed Services
- * rows are:
- *
- * | id       | title          | name                                              |
- * |----------|----------------|---------------------------------------------------|
- * | `SSAS`   | —              | Senate Committee on Armed Services                 |
- * | `SSAS14` | Ranking Member | Senate Committee on Armed Services — Airland       |
- * | `SSAS20` | —              | … — Emerging Threats and Capabilities              |
- * | `SSAS16` | —              | … — Strategic Forces                               |
- *
- * So the middle row is **not** a role notation on the parent, which is what it
- * looked like on screen: it is a SUBCOMMITTEE (Airland) that he is ranking
- * member OF, and the card truncated the distinguishing half. Two different
- * things needing two different treatments, as suspected — but the
- * split is not where the render implied. `title` is a role notation that can
- * ride on EITHER a parent row or a child row; the `— Subcommittee` suffix is
- * what makes a row a child.
- *
- * ## The convention, verified rather than assumed
- *
- * A parent's `thomas_id` is four characters; a subcommittee's is the parent's
- * id plus a two-digit suffix, and its `name` is always exactly
- * `"<parent name> — <subcommittee name>"`. Checked across all 230 committees in
- * the snapshot: **0 orphans, 0 name mismatches**, and across all 537 members,
- * **0 subcommittee seats whose parent seat the member does not also hold**.
- * `tests/committee-tree.test.ts` asserts all three against the shipped data, so
- * the day the convention breaks it breaks a test rather than a card.
- *
- * ## What happens when it does break
- *
- * A child whose parent seat is absent is NOT dropped and NOT re-parented. It
- * renders as its own top-level row under its FULL name — which is exactly what
- * shipped before this function existed. Losing a committee seat off a member's
- * card to tidy a hierarchy would be a worse bug than the untidy hierarchy.
- */
+/** Parents and their subcommittees, told apart by id length (a parent's id is four characters). */
 
 export interface CommitteeNode {
   seat: CommitteeSeat;
@@ -95,8 +39,7 @@ export function buildCommitteeTree(
   const nodes: CommitteeNode[] = [];
   const parentNodes = new Map<string, CommitteeNode>();
 
-  // Parents first, in the source's own order, so the top level is unchanged
-  // from what shipped.
+  // Parents first, in the source's own order.
   for (const seat of seats) {
     if (parentIdOf(seat.committeeId) !== null) continue;
     const node: CommitteeNode = { seat, label: seat.name, children: [] };

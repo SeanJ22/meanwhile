@@ -1,9 +1,6 @@
 /**
- * @freshness-reads-here
- *
- * The clock stamps in this file are minted by the code path that performs the
- * read: `collectedAt` is taken at the moment of the fetch, in `fetch()` below,
- * and never reconstructed afterwards.
+ * @freshness-reads-here — `collectedAt` is taken at the moment of the fetch, in
+ * `fetch()` below, and never reconstructed afterwards.
  */
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import {
@@ -26,16 +23,9 @@ import type {
 } from "../types.ts";
 
 /**
- * **SUITEONE MEDIA MEETING MANAGEMENT — A TOWN'S AGENDA PORTAL.**
- * (2026-09-25, first body: the City of Winslow, AZ, City Council.)
- *
- * `<tenant>.suiteonemedia.com` is a hosted meeting portal (ASP.NET): the
- * City of Winslow publishes every council agenda, packet, set of minutes and
- * video on `winslowaz.suiteonemedia.com`, and its own site's "agendas and
- * minutes" link is where a resident is sent. The tenant serves no robots.txt
- * (HTTP 404: no restriction stated, read before the first byte of every run
- * through `lib/sources/permission-gate.ts`), and its home page is plain
- * server-rendered HTML — no script is needed to read it:
+ * SuiteOne Media meeting management — a town's hosted agenda portal
+ * (`<tenant>.suiteonemedia.com`, ASP.NET). Its home page is plain
+ * server-rendered HTML:
  *
  * - **Upcoming Meetings**: a table of the next TEN meetings of every body the
  *   town runs on the portal, each row a link to the meeting's own page
@@ -44,38 +34,25 @@ import type {
  *   ("Oct 27, 2026 | 06:30 PM") beside a sort key in .NET ticks of the same
  *   wall clock (`data-sort="639287226000000000"`).
  * - **Past Meetings**: one panel per body category ("City Council (47)"), with
- *   the current and previous year's sittings in the same row shape, agenda,
- *   agenda packet, minutes and video included.
- *
- * ## What is read, and what is not
+ *   the current and previous year's sittings in the same row shape.
  *
  * A body is ONE category panel (`groupName`, its exact heading) plus the
- * upcoming rows whose title begins with the body's own name (`titleMatch`):
- * the upcoming table names no category, and every Winslow council sitting is
- * titled "City Council …" by the city itself. Other bodies' upcoming rows are
- * counted and set aside.
+ * upcoming rows whose title begins with the body's own name (`titleMatch`);
+ * the upcoming table names no category. Other bodies' rows are counted and set
+ * aside.
  *
  * - **Time**: the printed wall clock, cross-checked against the row's own
  *   ticks. A row whose two readings disagree is not placed in time, counted.
- * - **Place**: not on the portal's rows. Winslow's agendas state it (the 22
- *   September 2026 agenda: "the main hall of the Winslow Visitor's Center,
- *   523 West Second Street"); the agenda link is carried and the ingest's
- *   agenda reading places a sitting from its own agenda when a reviewed venue
- *   holds that address. Until then the sitting carries our own "place not
- *   recorded" gap, never "online".
- * - **Cancellation**: only the city's own word — its titles read
- *   "… ~ CANCELLED".
- * - **Minutes**: labelled as the portal labels them ("Minutes"): not marked
- *   draft or approved.
+ * - **Place**: not on the portal's rows. The agenda link is carried and the
+ *   ingest's agenda reading may place a sitting from its own agenda; until then
+ *   the sitting carries our own "place not recorded" gap, never "online".
+ * - **Cancellation**: only the town's own word ("… ~ CANCELLED").
+ * - **Minutes**: labelled as the portal labels them, not marked draft or
+ *   approved.
  *
- * ## The publisher's horizon, stated
- *
- * The home page lists the next ten meetings across ALL of the town's bodies —
- * on 2026-09-25 that reached 19 November 2026. A council sitting later than
- * the tenth row is not on the page this adapter reads; it appears as the
- * table rolls forward. The page's own "next page" control is a POST
- * (`/Home/GetUpcomingEvents`) that the robots-first research client could not
- * verify, so it is not wired.
+ * The home page lists only the next ten meetings across all bodies; later
+ * sittings appear as the table rolls forward. The page's "next page" control is
+ * a POST and is not wired.
  */
 
 export const SOURCE_NAME = "suiteone";

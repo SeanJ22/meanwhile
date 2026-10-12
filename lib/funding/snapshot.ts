@@ -55,10 +55,7 @@ function fundingBootstrap(): CivicDataBootstrap<FundingSnapshot> {
   const heldAbsenceCount = tracked.absences.length;
   const value: FundingSnapshot = {
     ...tracked,
-    // The promoted FEC contract deliberately makes no absence claim: the
-    // frozen rows lack the bounded authoritative horizon and completed
-    // pagination required to prove one. Keep them in the historical file,
-    // but never let a local bootstrap revive them as Reader authority.
+    // The frozen rows cannot prove an absence; never revive them as Reader authority.
     absences: [],
   };
   const sourceThrough = value.candidates
@@ -110,7 +107,7 @@ export async function refreshFundingFromPromoted(
   return promotedVersionOrThrow(await readFundingSnapshot(options));
 }
 
-/** The FEC read, edge first (2026-09-25): the reader edge's proven copy through this Reader, else the database. */
+/** The FEC read, edge first: the reader edge's proven copy through this Reader, else the database. */
 export const settleFundingSnapshotRead = (): Promise<CivicDataReadResult<FundingSnapshot>> =>
   readPromotedEdgeFirst("FEC_FUNDING", FEC_SCOPE, readFundingSnapshot, "The FEC funding");
 /** The FEC preload, edge first. */
@@ -132,9 +129,8 @@ export function getFundingSnapshot(): FundingSnapshot {
 /** The committee-level record answering for an app-side target id, if any. */
 export function fundingForTarget(targetKey: string): FundingCandidate | null {
   return (
-    getFundingSnapshot().candidates.find((c) =>
-      c.targetKeys.includes(targetKey),
-    ) ?? null
+    getFundingSnapshot().candidates.filter((c) => c.targetKeys.includes(targetKey) || targetKey === `fec:${c.fecCandidateId}`)
+      .sort((a, b) => b.cycle - a.cycle || (b.totals.coverageEndDate ?? "").localeCompare(a.totals.coverageEndDate ?? ""))[0] ?? null
   );
 }
 
@@ -153,19 +149,26 @@ export function contributorRowsForDisplay(
   candidate: FundingCandidate,
 ): ContributionRow[] {
   if (ripcordPulled("ripcord.fecContributorDisplay")) return [];
-  return candidate.topContributions;
+  return publicOrganizationContributions(candidate.topContributions);
+}
+
+/** Whitelist before serialization: source rows remain private evidence. */
+export function publicOrganizationContributions(rows: readonly ContributionRow[]): ContributionRow[] {
+  return rows.filter(row => row.kind === "COMMITTEE_OR_ORGANIZATION" &&
+    ["CCM", "COM", "ORG", "PAC", "PTY"].includes(row.entityType ?? "")).map(row => ({
+    dataClass: "FEC_CONTRIBUTOR", kind: "COMMITTEE_OR_ORGANIZATION",
+    contributorName: row.contributorName, amount: row.amount, receiptDate: row.receiptDate,
+    city: null, state: row.state, entityType: row.entityType, lineNumber: row.lineNumber,
+    committeeType: row.committeeType, organizationType: row.organizationType, designation: row.designation,
+    contributorCommitteeId: row.contributorCommitteeId,
+    ...(row.sourceObservedAt ? { sourceObservedAt: row.sourceObservedAt } : {}),
+  }));
 }
 
 /**
- * The second hop for a set of grouped contributor rows (item 3) — the
- * contributing committees' own books, keyed by committee id.
- *
- * Same ripcord as the first hop: these are FEC_CONTRIBUTOR rows, and
- * `ripcord.fecContributorDisplay` empties them HERE, at the accessor, not
- * in a component. Only ids the hop actually holds are returned, so a
- * committee we never fetched renders no expander rather than an empty one —
- * "we haven't looked one level down for this committee" and "this committee
- * has no donors" are different claims and must not render the same.
+ * The contributing committees' own books, keyed by committee id. Emptied by
+ * `ripcord.fecContributorDisplay` here, at the accessor. Only ids actually
+ * fetched are returned, so an unfetched committee renders no expander.
  */
 export function secondHopForGroups(
   groups: ContributorGroups,
@@ -182,8 +185,15 @@ export function secondHopForGroups(
     if (!wanted.has(committee.committeeId)) continue;
     // A committee whose own hop came back empty is stored (so the run is
     // recorded) but never rendered as an expander with nothing in it.
-    if (committee.topContributions.length === 0) continue;
-    out[committee.committeeId] = committee;
+    const topContributions = publicOrganizationContributions(committee.topContributions);
+    if (topContributions.length === 0) continue;
+    out[committee.committeeId] = {
+      dataClass: "FEC_CONTRIBUTOR", committeeId: committee.committeeId, cycle: committee.cycle ?? getFundingSnapshot().cycle, name: committee.name,
+      committeeType: committee.committeeType, organizationType: committee.organizationType,
+      designation: committee.designation, receipts: committee.receipts, topContributions,
+      provenance: { sourceUrl: committee.provenance.sourceUrl, sourceOrg: committee.provenance.sourceOrg,
+        collectedAt: committee.provenance.collectedAt, verifiedAt: committee.provenance.verifiedAt },
+    };
   }
   return out;
 }
@@ -211,7 +221,7 @@ export function getContributorReactionTargetIds(): Set<string> {
   if (ripcordPulled("ripcord.fecContributorDisplay")) return new Set();
   return new Set(
     getFundingSnapshot()
-      .candidates.filter((c) => c.topContributions.length > 0)
+      .candidates.filter((c) => publicOrganizationContributions(c.topContributions).length > 0)
       .map((c) => c.fecCandidateId),
   );
 }

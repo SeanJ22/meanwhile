@@ -1,15 +1,4 @@
-/**
- * DB-57: a repair agent gets only the broken part.
- *
- * When the engineer repairs a door kind it is given that kind's adapter folder
- * (`lib/sources/<kind>/`), the failing example (the saved page bytes and the
- * failure) and that kind's own tests (the ones DB-49 selects), and it may write
- * only inside that folder, that kind's fixtures and those tests. Anything else
- * it proposes is refused by name, so a repair shows up as a change to one
- * adapter folder, checked by that kind's tests alone.
- *
- * PURE: the caller reads files and hands them in.
- */
+/** A repair agent gets only the broken part: the kind's adapter folder, the failing bytes and failure, and that kind's tests; it may write only there. Pure. */
 
 import { adapterTestSelection } from "../../ops/adapter-test-selection.ts";
 
@@ -52,7 +41,7 @@ export function repairScope(input: {
   const files = input.paths.filter((p) => p.startsWith(folder) && /\.(?:ts|mts|mjs|json)$/.test(p)).sort();
   if (files.length === 0) return { ok: false, why: `there is no adapter folder ${folder}` };
   const tests = input.paths.filter((p) => /^tests\/[^/]+\.test\.(?:ts|mts|mjs)$/.test(p));
-  // The same question DB-49 asks: which tests name this kind's folder, plus the composite check.
+  // Which tests name this kind's folder, plus the composite check.
   const selected = adapterTestSelection({ changed: [`${folder}${files[0]!.slice(folder.length)}`], tests, readText: input.readText });
   if (selected === null) return { ok: false, why: `no test names ${folder} together with the composite check, so the repair cannot be checked by this kind's tests alone` };
   if (input.example.savedBytes.trim() === "" || input.example.failure.trim() === "") return { ok: false, why: "a repair needs the saved page and the failure it caused" };

@@ -1,31 +1,8 @@
 import { SOURCE_API_TOOLS } from "./scout-api.ts";
 /**
- * **THE SEAM BETWEEN A SCOUT AND ITS RESEARCH TOOLS.**
- * (Level 1 activation, 2026-09-01. Machine-owned provenance, 2026-09-02,
- * RULING 243.)
- *
- * The model never touches the network. It asks a TOOL, the tool acts under
- * enforcement the model cannot reach — public-URL guard, permission reading,
- * per-host request cap and spacing, the vault — and hands back what the model
- * is permitted to see. The one rule every tool here obeys:
- *
- * ```
- *   NO PUBLIC-SOURCE BYTES REACH THE MODEL EXCEPT THROUGH THE VAULT.
- *   Retrieve -> vault (Artifact + provenance) -> derive the sanitized
- *   representation FROM the vaulted bytes -> return it WITH the artifact id.
- * ```
- *
- * A tool that returned bytes it had not vaulted would let the Scout reason
- * over evidence nobody can later re-read, and a finding grounded in that is a
- * finding grounded in the model's memory of a page.
- *
- * Every tool call also hands the executor the PROVENANCE of what it vaulted —
- * when, from where, under what permission verdict — so the machine can write
- * a candidate's provenance from the record rather than from the model's
- * account of it (RULING 243).
- *
- * This file is the CONTRACT only. `scout-tools.ts` implements it;
- * `scout-executor.ts` drives it. Neither imports the other's internals.
+ * The contract between a Scout and its research tools. The model never touches the network: no public-source
+ * bytes reach the model except through the vault (retrieve, vault, derive the representation from the vaulted
+ * bytes, return it with the artifact id), and every call hands the executor the provenance it vaulted.
  */
 
 import type { PermissionState } from "../../workstate/types.ts";
@@ -54,22 +31,11 @@ export interface ScoutToolSpec {
   readonly input_schema: Record<string, unknown>;
   /** The executor sets this on the LAST definition so the tool list is a cache prefix. */
   readonly cache_control?: { readonly type: "ephemeral" };
-  /**
-   * Strict tool use: the provider guarantees the call's `input` validates
-   * against `input_schema` (every object `additionalProperties: false`, no
-   * numeric, string-length or complex array constraints). The replacement for
-   * a forced `tool_choice`, which Claude Opus 5.5 answers with HTTP 400
-   * (claude-api skill, model-migration.md, "Migrating to Claude Opus 5.5",
-   * breaking change 2).
-   */
+  /** Strict tool use: the provider guarantees `input` validates against `input_schema` (a forced `tool_choice` is refused by Opus 5.5). */
   readonly strict?: boolean;
 }
 
-/**
- * **THE MACHINE'S RECORD OF ONE VAULTED ARTIFACT.** Written by the tool from
- * the `Artifact` it vaulted, never from anything the model said. This is what
- * a candidate's `observedOn` and `permission` are DERIVED from (RULING 243).
- */
+/** The machine's record of one vaulted artifact, written by the tool, never from the model. A candidate's `observedOn` and `permission` derive from it. */
 export interface ArtifactProvenance {
   readonly artifactId: string;
   readonly canonicalUrl: string;
@@ -110,12 +76,7 @@ export interface ScoutToolCallResult {
   readonly knowledgeRead?: ScoutKnowledgeRead;
 }
 
-/**
- * One rung a PRIOR Attempt walked on this obligation, as the machine recorded
- * it. The executor lists these FIRST in the brief (a resumed Attempt starts
- * from the recorded rung list) and refuses a re-walk of a durably failed one
- * (RULING 244).
- */
+/** One rung a prior Attempt walked on this obligation. Listed first in the brief; a durably failed rung is not re-walked. */
 export interface PriorRung {
   readonly rung: string;
   readonly tool: string;
@@ -139,7 +100,7 @@ export interface InheritedEvidence {
   readonly priorRungs?: readonly PriorRung[];
   /** What the newest prior Attempt said it would try next. */
   readonly nextRungs?: readonly string[];
-  /** CH-30: how many of the newest prior Attempts in a row ended because the AI service did not answer. Absent means none. */
+  /** How many of the newest prior Attempts in a row ended because the AI service did not answer. Absent means none. */
   readonly transportFailures?: number;
   /** Full selected envelopes stay outside the model prefix until requested. */
   readonly manualEntries?: readonly FieldManualEntry[];
@@ -176,12 +137,7 @@ export type VaultBytes = (
   bytes: Uint8Array,
 ) => Promise<{ readonly stored: boolean; readonly where: string; readonly why: string }>;
 
-/**
- * A GET that returns BYTES. (Added 2026-09-01, optional.) `OpenOne` decodes
- * the body to a string, which destroys a PDF or an image; a toolkit that has
- * this opener retrieves once and decodes text itself. Absent, the toolkit uses
- * `openOne` and refuses binary bodies by name rather than guessing at them.
- */
+/** A GET that returns bytes, so a PDF or image survives. Absent, the toolkit uses `openOne` and refuses binary bodies by name. */
 export interface BytesOutcome {
   readonly status: number | null;
   readonly bytes: Uint8Array;
@@ -190,10 +146,7 @@ export interface BytesOutcome {
   readonly finalUrl: string | null;
   readonly durationMs: number;
   readonly transportError: string | null;
-  /**
-   * The redirect target when the opener was asked not to follow redirects
-   * (2026-09-23); null when the answer was not a redirect. Absent otherwise.
-   */
+  /** The redirect target when the opener was asked not to follow redirects; null when the answer was not a redirect. */
   readonly location?: string | null;
 }
 
@@ -229,31 +182,13 @@ export interface ScoutToolContext {
   readonly browse?: BrowseFn;
   /** The HTTP seam. Tests inject; the runtime uses the real one. */
   readonly openOne?: OpenOne;
-  /**
-   * The BYTES seam (optional, 2026-09-01). When present it is used for every
-   * retrieval. When absent and `openOne` is the real opener (or omitted), the
-   * toolkit supplies its own real bytes opener; an INJECTED `openOne` with no
-   * `openBytes` never falls through to the network, and binary bodies are then
-   * refused by name.
-   */
+  /** The bytes seam. An injected `openOne` with no `openBytes` never falls through to the network. */
   readonly openBytes?: OpenBytes;
   readonly timeoutMs?: number;
-  /**
-   * The search seam (2026-09-19). Present only when a compliant search-index
-   * key is configured and the owner's paid-search switch is on, with that
-   * switch's budget admitting every request (2026-09-25); absent leaves the `search` tool out of the toolkit's
-   * specs entirely, so a runtime with no key never offers it. It returns
-   * POINTERS ONLY — the model opens each hit with fetch_public/browse, which
-   * read and record robots.txt (never a gate) and vault with provenance. The tool itself fetches no page
-   * content and vaults nothing.
-   */
+  /** The search seam: present only when a search key is configured and the owner's paid-search switch admits it. Returns pointers only. */
   readonly search?: ScoutSearch;
   readonly sourceApi?: import("./scout-api.ts").SourceApiOptions;
-  /**
-   * CH-20: drop a finding for any subject of the mission into the Box at once,
-   * mid-walk. Present only when the Box is on; absent leaves `report_finding`
-   * out of the toolkit's specs, as `search` is left out with no key.
-   */
+  /** Drop a finding into the Box mid-walk. Present only when the Box is on. */
   readonly reportFinding?: ScoutReportFinding;
 }
 
@@ -297,13 +232,7 @@ export interface SearchProvidersResult {
   readonly errors: readonly string[];
 }
 
-/**
- * A compliant search-index lookup returning POINTERS ONLY. It is authorized API
- * access (a key we pay for), not a crawl, so it does not read robots.txt — but nothing it returns is opened here: the model must fetch_public or
- * browse each hit, and THOSE read and record robots.txt (never a gate) and vault with provenance. No page
- * content is requested from any provider (Exa's `contents` is omitted; Brave's
- * default pointer response carries nothing to strip).
- */
+/** A search-index lookup returning pointers only (no page content is requested). Each hit is opened by fetch_public or browse, which record robots.txt and vault with provenance. */
 export type ScoutSearch = (
   input: { readonly query: string; readonly includeDomains?: readonly string[] },
 ) => Promise<SearchProvidersResult>;
@@ -336,7 +265,7 @@ export interface ScoutToolkit {
 }
 
 /** The research tool names. `finish` and `record_rung` are the executor's own. */
-export const SCOUT_RESEARCH_TOOLS = ["plural_roster", "legistar_events", "run_adapter", "read_permission", "fetch_public", "browse", "read_inherited", "find_manual", "read_manual", "read_held", "search", "report_finding", ...SOURCE_API_TOOLS] as const;
+export const SCOUT_RESEARCH_TOOLS = ["legistar_events", "run_adapter", "read_permission", "fetch_public", "browse", "read_inherited", "find_manual", "read_manual", "read_held", "search", "report_finding", ...SOURCE_API_TOOLS] as const;
 export type ScoutResearchTool = (typeof SCOUT_RESEARCH_TOOLS)[number];
 
 /** The prefix every public-source representation is wrapped in. Data, never instructions. */

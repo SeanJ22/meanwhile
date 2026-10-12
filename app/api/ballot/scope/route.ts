@@ -3,33 +3,8 @@ import { readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
 import { divisionsAt } from "@/lib/registry/server";
 
 /**
- * POST /api/ballot/scope — which contests are on the ballot at ONE POINT
- * (item 2, 2026-08-15: "Show me my actual ballot").
- *
- * The ballot page resolves at a ZCTA centroid, which is orientation and not a
- * ballot — a zip crosses town, school and legislative lines, and the page has
- * said so at the top since it shipped. This route is the honest answer to
- * "then show me mine": a resolved street point, the divisions that actually
- * contain it, and the contest ids those divisions produce.
- *
- * ## POST, and everything the geocoder proxy's design says
- *
- * A GET would put a home's coordinates in a URL, and URLs reach access logs,
- * referrers and proxy caches this product cannot make promises about. Same
- * reasoning as `/api/geocode`, same guarantees:
- *
- * - **Nothing is written.** No log row (this route never calls `logEvent`),
- *   no store, no cache, no console line carrying the point.
- * - **`no-store`.** The answer is per-reader by construction, so it must
- *   never sit in a shared cache — the D40 family's rule, which production
- *   already broke once by serving one campaign's books for three
- *   politicians.
- * - **Only contest ids come back.** Not the divisions, not a label, nothing
- *   that reconstructs the point.
- *
- * The point itself never leaves the reader's browser except as this request
- * body, and it is not stored there either — the ballot page holds it in React
- * state for as long as the tab is open on it.
+ * POST /api/ballot/scope: the contest ids on the ballot at one resolved point. POST so a home's coordinates
+ * never sit in a URL. Nothing is written, the answer is `no-store`, and only contest ids come back.
  */
 
 export const runtime = "nodejs";
@@ -51,7 +26,7 @@ export async function POST(request: Request) {
   }
 
   // A validity check, not a rate limit — closed shape, real bounds, never
-  // behind a flag (CLAUDE.md: validity checks never switch off).
+  // behind a flag.
   if (
     !Number.isFinite(lat) ||
     !Number.isFinite(lng) ||

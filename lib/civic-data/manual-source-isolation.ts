@@ -1,5 +1,6 @@
 import { canonicalCivicDataJson } from "./changes.ts";
 import type { ManualSourceReview, ManualSourceSetReceipt } from "./types.ts";
+import { manualSourceUrls as sourceUrls, mergeManualSourceCopies } from "./manual-source-urls.ts";
 
 const NON_POSITIVE_URL_CONTAINER = /^(?:superseded|failed|blocked|retired).*urls?$|^failures$/i;
 
@@ -22,9 +23,7 @@ export interface SourceScopedHeldFact {
 
 export interface SourceScopedReconciliation<T = unknown> {
   readonly members: readonly SourceScopedMember<T>[];
-  /** A successful-only receipt suitable for deterministic promotion authority. */
   readonly promotionReceipt: ManualSourceSetReceipt;
-  /** Exact blocked/ambiguous members and conservative prior-member retention. */
   readonly excludedFacts: readonly SourceScopedHeldFact[];
   readonly supportedCurrentSources: number;
   readonly inputMembers: number;
@@ -54,12 +53,6 @@ export function directPositiveSourceUrls(value: unknown, found: Set<string> = ne
     }
   }
   return found;
-}
-
-function sourceUrls(source: ManualSourceReview): readonly string[] {
-  return source.requestedUrl === source.finalUrl
-    ? [source.finalUrl]
-    : [source.requestedUrl, source.finalUrl];
 }
 
 function sourceIdentity(source: ManualSourceReview): string {
@@ -235,7 +228,10 @@ export function reconcileSourceScopedMembers<T>(input: {
     }, urlsForMember),
   ];
   const deduplicated = new Map<string, ManualSourceReview>();
-  for (const source of proofSources) deduplicated.set(sourceIdentity(source), source);
+  for (const source of proofSources) {
+    const key = sourceIdentity(source);
+    deduplicated.set(key, mergeManualSourceCopies(deduplicated.get(key), source));
+  }
 
   return {
     members: [...selected.values()].sort((left, right) => left.key.localeCompare(right.key)),

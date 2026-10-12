@@ -1,28 +1,6 @@
 /**
- * **ONE PLACE MINTS AN ADMIN TEST SESSION.** (RULING 103.)
- *
- * Every guard that drives an admin route has to answer the same two questions
- * before it can ask its own: which host is the admin host, and what does a
- * signed session cookie look like. Six suites had each answered them for
- * themselves — the same two constants, the same cookie minter, the same
- * save-and-restore of the signing key around a block. Four of those copies were
- * byte-identical, which is how `tests/duplicate-implementations.test.ts` found
- * them.
- *
- * The reason that matters here is sharper than tidiness. These helpers encode
- * the SHAPE OF AN ADMIN SESSION — the claim set, the lifetime, the cookie name.
- * If the real session gains a field, six copies drift one at a time, and a
- * suite still passing against last month's shape is worse than a suite that
- * fails: it is a guard reporting that a boundary holds when nobody checked the
- * boundary that ships. One definition means the next change to a session breaks
- * every guard at once, which is the correct blast radius.
- *
- * The per-file `request()` builders are deliberately NOT here. They take
- * different arguments because they drive different routes, and collapsing them
- * into one variadic helper would trade a real difference for a false one.
- *
- * NOT a test file: no `test()` calls, so `tests/guard-census.json` counts no
- * guards here.
+ * The one place an admin test session is minted: the admin and public hosts, a signed session
+ * cookie, and save-and-restore of the signing key. Not a test file.
  */
 import {
   ADMIN_SESSION_COOKIE,

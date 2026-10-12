@@ -8,17 +8,7 @@ import { themeParityGaps, isLiteralColor } from "../lib/design/theme-parity.ts";
 const ROOT = join(import.meta.dirname, "..");
 const GLOBALS = join(ROOT, "app", "globals.css");
 
-/**
- * **WORK ITEM 7 — every colour is authored in both themes.**
- * (The visual-polish session, 2026-09-03.)
- *
- * A literal colour declared in one theme block only fails. Var-aliases and
- * derivations are exempt because they inherit the theme variance of what they
- * reference. `pnpm contrast` already holds every reading pair to the 7:1 sun
- * bar in both themes; this holds the palette to being fully authored in both.
- */
-
-test("the parity classifier reads literal vs derived correctly (RULING 110)", () => {
+test("the parity classifier reads literal vs derived correctly", () => {
   assert.equal(isLiteralColor("#1a1a2e"), true);
   assert.equal(isLiteralColor("rgba(0,0,0,0.3)"), true);
   assert.equal(isLiteralColor("var(--link)"), false, "an alias inherits theme variance");
@@ -29,7 +19,6 @@ test("the parity classifier reads literal vs derived correctly (RULING 110)", ()
   );
   assert.equal(isLiteralColor("999px"), false, "a dimension is not a colour");
 
-  // PLANT: a dark-only literal colour is the defect this catches.
   const planted =
     ":root {\n  --x: #123456;\n  --shared: #222222;\n}\n" +
     '[data-theme="light"] {\n  --shared: #eeeeee;\n  --y: #ffffff;\n}\n';

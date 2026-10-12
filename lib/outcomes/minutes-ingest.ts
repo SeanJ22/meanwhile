@@ -1,27 +1,4 @@
-/**
- * **ONE CONCLUDED SITTING'S MINUTES → ONE DURABLE ROW**, and whether to read
- * them again. (NH332, 2026-09-25.)
- *
- * Pure, like `./ingest.ts` beside it: nothing here fetches. The routine adapter
- * (`scripts/legistar-insite-minutes-ingest.mts`) reads the portal and hands the
- * results in, so the acquisition POLICY — which sittings are owed a read, and
- * what a sitting with no minutes yet is — is tested against recorded pages.
- *
- * ## Three states a concluded sitting can be in, kept apart
- *
- * - **Minutes read.** The row carries the records the minutes support and the
- *   document they came from (`minutesDocument`), with its standing: the
- *   clerk's action minutes, minutes whose approval we have not seen, or
- *   minutes a later sitting's minutes record approving.
- * - **Not yet published** (`NOT_YET_PUBLISHED`). The portal's minutes cell
- *   says "Not available". That is a fact about the publisher, stated with the
- *   instant we read it, and never "no decision was made".
- * - **Not read** (`REQUEST_FAILED` / `ZERO_ROWS_FAILED`). Ours, retryable. A
- *   request that failed stays out of the projection and is retried soon. A
- *   document read whose extraction failed on its bytes is held, named, with
- *   those bytes' identity (`failedMinutesRead`), and read again only when the
- *   document or the parser changes (2026-09-25).
- */
+/** One concluded sitting's minutes to one durable row, and whether to read them again. Pure: the caller fetches. */
 import { createHash } from "node:crypto";
 
 import { decodeEntities } from "../sources/http.ts";
@@ -64,11 +41,7 @@ export interface MinutesLink {
   readonly label: string;
 }
 
-/**
- * A grid link, resolved against the tenant's portal, when it is a public web
- * address this route may follow: https, no credentials in the URL, and on one
- * of `hosts`. Null otherwise.
- */
+/** A grid link resolved against the tenant's portal when it is a public https address on one of `hosts`, else null. */
 function publicLinkOn(href: string, host: string, hosts: readonly string[]): string | null {
   try {
     const url = new URL(href, `https://${host}/`);
@@ -84,17 +57,7 @@ function onPortal(href: string, host: string): string | null {
   return publicLinkOn(href, host, [host.toLowerCase()]);
 }
 
-/**
- * A document the grid links (minutes, agenda file): on the tenant's portal
- * host or on the vendor's document host (`LEGISTAR_DOCUMENT_HOSTS`,
- * `legistar.granicus.com`). (2026-09-25.)
- *
- * Until the owner decision of 2026-09-25 only the portal host was followed,
- * because the vendor's document host answers robots.txt with `Disallow: /`.
- * robots.txt is recorded and blocks nothing now, so a public document on the
- * vendor's host is read like one on the portal. A link to any other host is
- * not this tenant's publication and stays unfollowed.
- */
+/** A document the grid links, on the tenant's portal host or the vendor's document host; any other host stays unfollowed. */
 function documentOn(href: string, host: string): string | null {
   return publicLinkOn(href, host, [host.toLowerCase(), ...LEGISTAR_DOCUMENT_HOSTS]);
 }
@@ -131,13 +94,7 @@ export function gridStartsAt(row: InSiteCalendarRow, timeZone: string): string |
   return toZonedIso(date.year, date.month, date.day, time.hour, time.minute, timeZone);
 }
 
-/**
- * The wired body's concluded sittings in the window, one per portal id.
- *
- * A row the grid printed twice (two ranges overlap) keeps the reading that
- * carries a minutes link: a link published in one read is never lost to a
- * range that rendered the same sitting without it.
- */
+/** The wired body's concluded sittings in the window, one per portal id; a duplicate keeps the reading with a minutes link. */
 export function concludedSittingRows(
   rows: readonly InSiteCalendarRow[],
   tenant: Pick<InSiteTenant, "bodyNames" | "host" | "timeZone">,
@@ -171,17 +128,9 @@ export type MinutesRefreshReason =
   | "PUBLISHER_RELABELED"
   /** A failed request or a failure with no document identity held: read again. */
   | "PRIOR_EXTRACTION_FAILED"
-  /**
-   * Held, but its note names "It was moved" passages the parser could not read, and a newer parser revision
-   * than the one that read it is in force (2026-09-25): read again, so a parser that now reads them reaches
-   * readers without a forced pass. The 2026-08-13 study session held three motions and named its fourth this
-   * way until the parser learned the clerk's infinitive form. Under the same revision it is not re-read.
-   */
+  /** Held with unread "It was moved" passages under an older parser revision: read again. Under the same revision it is not. */
   | "UNREAD_PASSAGES_HELD"
-  /**
-   * The link serves the document whose extraction failed (`failedMinutesRead`): the caller asks the portal
-   * whether it changed (`failedDocumentCheck`) before downloading it again.
-   */
+  /** The link serves a document whose extraction failed: the caller checks whether it changed before downloading again. */
   | "FAILED_DOCUMENT_CHECK"
   /** The failed document's cheap check says it changed: read it again at once. */
   | "FAILED_DOCUMENT_CHANGED"
@@ -198,17 +147,10 @@ export type MinutesRefreshReason =
   | "UNCHANGED_SKIP"
   /** Still not published, as last recorded. */
   | "STILL_NOT_PUBLISHED"
-  /**
-   * We hold minutes read from a link the portal no longer shows. Kept as held:
-   * a link withdrawn is not a decision reversed, and the pass says so.
-   */
+  /** Minutes held from a link the portal no longer shows: kept, since a withdrawn link is not a reversed decision. */
   | "LINK_WITHDRAWN_KEPT";
 
-/**
- * How long a held failed extraction goes without its bytes being read again when the cheap check keeps
- * saying the document is unchanged (2026-09-25). The check (length, type, any validators) cannot see a
- * same-length replacement, so the bytes themselves are re-read on this bound: once a week, never hourly.
- */
+/** How long a held failed extraction goes before its bytes are re-read anyway: the HEAD check cannot see a same-length replacement. */
 export const FAILED_MINUTES_REVERIFY_DAYS = 7;
 
 /** The words `minutesSitting` writes when a document leaves "It was moved" passages unread. */
@@ -260,12 +202,8 @@ function baseType(contentType: string | null): string | null {
 }
 
 /**
- * Did the document whose extraction failed change? Asked of one HEAD, without its bytes (2026-09-25).
- *
- * Changed — read again at once — when the length differs from the bytes that failed, when the type differs,
- * or when a validator (`ETag`, `Last-Modified`) differs from the one served with them, including one appearing
- * or disappearing. Unchanged when every one agrees. A HEAD that was not answered with a 2xx and a length says
- * nothing either way: the failure stays held until `FAILED_MINUTES_REVERIFY_DAYS`, when the bytes are re-read.
+ * Whether a document whose extraction failed changed, from one HEAD: a different length, type or validator means
+ * changed. A HEAD without a 2xx and a length says nothing; the failure stays held until the re-verification bound.
  */
 export function failedDocumentCheck(
   failed: PersistedFailedMinutesRead,
@@ -317,13 +255,8 @@ export function failedMinutesReadFor(
 }
 
 /**
- * What a read leaves held for its sitting (2026-09-25).
- *
- * - A read that succeeded is the sitting, and clears any failure remembered for it.
- * - A read whose extraction failed on its bytes is held as the failure it is, with those bytes' identity —
- *   except over a sitting already held with verified minutes (a relabel to a document that fails): the
- *   verified reading stays, and the failed newer document is remembered beside it, never in its place.
- * - A request that failed is returned as it is: it read no bytes, is not held, and is retried soon.
+ * What a read leaves held: a success replaces the sitting and clears any failure; a failed extraction is held with its
+ * bytes' identity, beside (never over) verified minutes already held; a failed request is not held.
  */
 export function sittingAfterRead(
   held: PersistedSittingOutcomes | undefined,
@@ -364,13 +297,7 @@ function htmlText(html: string): string {
     .trim();
 }
 
-/**
- * Read a fetched minutes document into pages of text.
- *
- * The sha256 is taken BEFORE the PDF engine sees the bytes: pdf.js takes
- * ownership of the buffer it is handed, and a hash taken afterwards is the
- * hash of nothing (measured while building these fixtures).
- */
+/** Read a fetched minutes document into pages of text. The sha256 is taken before pdf.js takes ownership of the buffer. */
 export async function readMinutesDocument(link: MinutesLink, bytes: Uint8Array): Promise<MinutesDocumentRead> {
   const sha256 = createHash("sha256").update(bytes).digest("hex");
   const byteCount = bytes.byteLength;
@@ -527,7 +454,7 @@ export function minutesSitting(
         extraction: "ZERO_ROWS_FAILED",
         extractionNote:
           `The minutes document was fetched and yielded no text: ${document.unreadable} A zero-row ` +
-          "extraction is a FAILED extraction (RULING 100); nothing is claimed about what was decided.",
+          "extraction is a FAILED extraction; nothing is claimed about what was decided.",
         minutesPointer: pointer,
         outcomes: [],
         routesWalked: ["INSITE_CALENDAR"],
@@ -579,7 +506,7 @@ export function minutesSitting(
         extraction: "ZERO_ROWS_FAILED",
         extractionNote:
           `The minutes were read (${parsed.bodyCharacters} characters) and yielded no motion, and they do ` +
-          "not say that no action was taken. A zero-row extraction is a FAILED extraction (RULING 100), " +
+          "not say that no action was taken. A zero-row extraction is a FAILED extraction, " +
           `not a sitting where nothing was decided.${unread}`,
         minutesPointer: pointer,
         outcomes: [],
@@ -612,14 +539,9 @@ const APPROVAL_KIND_MATCH: Readonly<Record<string, (sitting: PersistedSittingOut
 };
 
 /**
- * Mark every held sitting whose minutes a later held sitting's minutes record
- * approving. Recomputed over the whole projection on every write, so an
- * approval read today reaches a sitting read weeks ago.
- *
- * Only when exactly one held sitting matches the named date and kind, the
- * approving item carried, and the held document is the council's minutes (an
- * approval does not make action minutes the approved record: the approved
- * document is a different one, owed a read when the portal relabels it).
+ * Mark every held sitting whose minutes a later held sitting's minutes record approving, recomputed over the whole
+ * projection. Only when exactly one held sitting matches, the approving item carried, and the held document is the
+ * council's minutes.
  */
 export function applyMinutesApprovals(snapshot: OutcomeSnapshot): OutcomeSnapshot {
   const approvals = new Map<string, { meetingId: string; startsAt: string | null; quote: string }>();

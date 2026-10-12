@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { sourceCheckedAt } from "./source-check.ts";
 import { isScopedManualContractScope } from "./scoped-manual-contracts.ts";
 
 import { and, desc, eq, getTableColumns, inArray, like, sql } from "drizzle-orm";
@@ -56,13 +57,6 @@ export function projectionKey(recordClass: RoutineRecordClass, scope: string): s
   return `${recordClass}:${scope}`;
 }
 
-/**
- * A candidate row's own columns: identity, disposition, receipt and version
- * pointers. Never the envelope (normalized payload, read model, change set) or
- * the identity set, which carry the dataset: 23.7 MB on the wire for NJ roll
- * calls on 2026-09-23. The identity columns equal the envelope's by CHECK
- * (`civic_data_candidates_envelope_identity_coherent`).
- */
 export type CandidateVersionSummary = Omit<CandidateVersionRecord, "candidate"> & {
   readonly candidate: Pick<RoutineCandidate, "id" | "sourceId" | "recordClass" | "scope">;
 };
@@ -73,17 +67,12 @@ export interface CandidateVersionReadback {
   readonly record: CandidateVersionRecord;
 }
 
-/** One coupled partition version the prepared reader snapshot was composed from. */
 export interface PreparedProjectionCoupling {
   readonly contractId: string;
   readonly versionId: string;
 }
 
-/**
- * A derived reader-serving projection row — a pure function of the partitions it
- * names in `composedFrom`, written by the standing runner and read once by the
- * reader. A SERVING COPY, never authoritative civic truth.
- */
+/** A serving copy derived from the partitions in `composedFrom`, never authoritative civic truth. */
 export interface PreparedReaderProjectionRow {
   readonly recordClass: RoutineRecordClass;
   readonly scope: string;
@@ -98,7 +87,6 @@ export interface PreparedReaderProjectionRow {
   readonly promotedThrough: string | null;
 }
 
-/** A prepared projection row without its payload (the composed snapshot, 7.5 MB on 2026-09-23). */
 export type PreparedReaderProjectionCoupling = Pick<PreparedReaderProjectionRow, "recordClass" | "scope" | "sequence" | "composedFrom" | "generatedAt">;
 
 export interface PreparedReaderProjectionInput {
@@ -119,7 +107,6 @@ export interface CandidateTransitionOptions {
 }
 
 export interface RoutineDataStore {
-  /** Latest durable scope event, bounded by this write's observed time. */
   readonly eventObservedAt?: (recordClass: RoutineRecordClass, scope: string, requestedAt: string) => Promise<string>;
   readonly create: (record: CandidateVersionRecord, firstEvent: CandidateEvent) => Promise<void>;
   readonly transition: (
@@ -129,110 +116,56 @@ export interface RoutineDataStore {
     detail: string,
     receipt?: ValidationReceipt,
     failure?: { code: string; detail: string },
-    /**
-     * The candidate envelope the caller already holds (R26). Returned as the
-     * record's envelope once it is verified to be this row's; a mismatch is
-     * refused. Without it the Postgres store reads the envelope once.
-     */
     options?: CandidateTransitionOptions,
   ) => Promise<CandidateVersionRecord>;
   readonly readCandidate: (candidateId: string) => Promise<CandidateVersionRecord | null>;
-  /** A candidate's disposition without its dataset: every column but the envelope and identity set. */
   readonly readCandidateSummary: (candidateId: string) => Promise<CandidateVersionSummary | null>;
   readonly readPromotion: <T = unknown>(recordClass: RoutineRecordClass, scope: string) => Promise<PromotedProjection<T> | null>;
-  /** Set-oriented Reader door; production composition must not fan out per authority. */
   readonly readCandidates: (candidateIds: readonly string[]) => Promise<readonly CandidateVersionReadback[]>;
-  /**
-   * The candidate exactly as a promotion proof reads it (`candidateProofView`).
-   * Optional: the Reader falls back to the whole read on a store without it.
-   */
   readonly readCandidateProof?: (candidateId: string) => Promise<CandidateVersionRecord | null>;
   readonly readCandidateProofs?: (candidateIds: readonly string[]) => Promise<readonly CandidateVersionReadback[]>;
-  /**
-   * A re-check that found nothing new: an append-only confirmation event on the
-   * pointed candidate (see `UnchangedConfirmation`). Refused, never partly
-   * written, when the pointer moved, it is a trusted-LKG import, the read model
-   * differs, or the evidence is malformed.
-   */
   readonly confirmUnchanged?: (input: ConfirmUnchangedInput, at: string) => Promise<ConfirmUnchangedOutcome>;
   readonly readPromotions: <T = unknown>(recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedProjection<T>[]>;
-  /**
-   * The pointer named, never carried: identity columns only. Reader-delivery
-   * evidence names and compares the current version through this door; only
-   * the typed Reader itself reads (and proves) the payload.
-   */
   readonly readPromotionIdentity: (recordClass: RoutineRecordClass, scope: string) => Promise<PromotedPointerIdentity | null>;
   readonly readPromotionIdentities: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedPointerIdentity[]>;
-  /** Read the single derived reader-serving projection for a record class + scope (one query). Null before the first is published. */
   readonly readPreparedReaderProjection: (recordClass: RoutineRecordClass, scope: string) => Promise<PreparedReaderProjectionRow | null>;
-  /**
-   * The prepared projection's publication coupling without its payload: what
-   * a runner pass needs to decide the serving copy is already current.
-   */
   readonly readPreparedReaderProjectionCoupling: (recordClass: RoutineRecordClass, scope: string) => Promise<PreparedReaderProjectionCoupling | null>;
-  /**
-   * Publish a derived reader-serving projection (a SERVING COPY of the promoted
-   * partitions, never a promotion). Monotonic + last-valid-safe: the write lands
-   * only if the row is still at `expectedSequence` (null = expect absent), so two
-   * overlapping runner passes can never put an older composition over a newer
-   * one, and a stale pass sees `published:false` and re-reads instead of
-   * overwriting a newer publication.
-   */
+    /** Lands only if the row is still at `expectedSequence` (null = expect absent); a stale pass gets `published:false`. */
   readonly writePreparedReaderProjection: (
     input: PreparedReaderProjectionInput,
     expectedSequence: number | null,
   ) => Promise<{ readonly published: boolean; readonly sequence: number }>;
-  /**
-   * Move the pointer to a VALIDATED candidate. The returned projection's
-   * payload is that candidate's own read model, already in hand: a store
-   * never ships the promoted dataset back over the wire to report the move.
-   */
   readonly promote: (candidateId: string, receipt: ValidationReceipt, at: string) => Promise<PromotedProjection>;
-  /** Append non-disposition evidence without changing the candidate's state. */
   readonly appendEvidence: (candidateId: string, state: CandidateState, at: string, detail: string) => Promise<CandidateEvent>;
   readonly events: (candidateId: string) => Promise<readonly CandidateEvent[]>;
-  /**
-   * Each named version's newest typed Reader readback event (at most one per
-   * version): the only event readback inspection decides on. A version that
-   * stays pointed gathers a readback per re-verification and a confirmation per
-   * quiet re-check; this read stays one row however many it gathers. Optional:
-   * callers fall back to `events` (`readLatestReaderReadbacks`).
-   */
   readonly latestReaderReadbacks?: (candidateIds: readonly string[]) => Promise<readonly CandidateEvent[]>;
-  /** A version's pointer-move events (`POINTER_MOVE_DETAIL_PREFIX`), without its readbacks or confirmations. */
   readonly pointerMoveEvents?: (candidateId: string) => Promise<readonly CandidateEvent[]>;
   readonly clock: (
     sourceId: string,
     recordClass: RoutineRecordClass,
     scope: string,
+    parserVersion?: string,
   ) => Promise<RoutineStoreClock>;
 }
 
-/**
- * One task's durable clock. `lastSucceededAt` is the pointed candidate's claimed
- * retrieval; `lastSucceededObservedAt` is its store-observed first event, the
- * attempt clock's own units, under the same pointer/receipt proof. Sitting
- * starts are reported for MEETING scopes only, from the promoted payload,
- * without the payload leaving the database.
- */
 export interface RoutineStoreClock {
   readonly lastAttemptedAt?: string;
   readonly lastSucceededAt?: string;
   readonly lastSucceededObservedAt?: string;
+  /** Returned for a parser-scoped clock; the prior GOOD keeps its original source timestamps. */
+  readonly lastSucceededParserVersion?: string;
   readonly sittingStarts?: readonly string[];
 }
 
 /** Every pointer move's event detail begins with this (both stores' `promote`). */
 export const POINTER_MOVE_DETAIL_PREFIX = "Atomic pointer ";
 
-/** The newest typed Reader readback among `events`, ordered as readback inspection orders them. */
 export function newestReaderReadback(events: readonly CandidateEvent[]): CandidateEvent | null {
   return events
     .filter((event) => event.detail.startsWith(READER_PROJECTION_READBACK_PREFIX))
     .sort((left, right) => Date.parse(right.at) - Date.parse(left.at) || right.sequence - left.sequence)[0] ?? null;
 }
 
-/** Each version's newest typed Reader readback, narrowed in the store when it can be. */
 export async function readLatestReaderReadbacks(
   store: Pick<RoutineDataStore, "events" | "latestReaderReadbacks">,
   candidateIds: readonly string[],
@@ -246,7 +179,6 @@ export async function readLatestReaderReadbacks(
   return latest;
 }
 
-/** A version's pointer-move events, narrowed in the store when it can be. */
 export async function readPointerMoveEvents(
   store: Pick<RoutineDataStore, "events" | "pointerMoveEvents">,
   candidateId: string,
@@ -265,17 +197,11 @@ type RegisteredMutationContract = {
   readonly readerProjectionId: string | null;
 };
 
-/**
- * The candidate fields every mutation-authority and Reader-evidence decision
- * reads: its contract identity and any authority-transfer marker. Never its
- * normalized payload or read model.
- */
 export type CandidateAuthorityIdentity = Pick<RoutineCandidate, "id" | "sourceId" | "recordClass" | "scope" | "bootstrapImport">;
 
 function registeredMutationContract(
   candidate: Pick<RoutineCandidate, "sourceId" | "recordClass" | "scope">,
 ): RegisteredMutationContract | null {
-  // A partition's durable history is written by that partition's own child, under that partition's contract (DB-06).
   if (candidate.sourceId === MEETING_HISTORY_SOURCE_ID && candidate.recordClass === "MEETING") {
     const partition = meetingPartitionForHistoryScope(candidate.scope);
     return partition === null
@@ -286,8 +212,6 @@ function registeredMutationContract(
     .filter((contract) =>
       contract.sourceId === candidate.sourceId &&
       contract.recordClass === candidate.recordClass &&
-      // A fan-out contract owns a scope family — its per-state marker at the
-      // contract scope plus one bounded member at `<sourceId>:<officeholderId>`.
       (contract.scope === candidate.scope ||
         ("fanOut" in contract && contract.fanOut === true && candidate.scope.startsWith(`${contract.sourceId}:`)))
     )
@@ -312,7 +236,6 @@ function registeredMutationContract(
   return matches.length === 1 ? matches[0] : null;
 }
 
-/** Pure exact-contract check layered behind the installed-runtime attestation. */
 export function routineDataStoreCandidateAuthorityIssue(
   candidate: CandidateAuthorityIdentity,
   authority: RuntimeAuthorityEnvelope,
@@ -340,26 +263,17 @@ export function routineDataStoreCandidateAuthorityIssue(
   return null;
 }
 
-/** Production Next status alone never grants this operational data writer. */
 export function assertRoutineDataStoreMutationAuthority(
   env: Readonly<Record<string, string | undefined>> = process.env,
 ): RuntimeAuthorityEnvelope {
   assertWriteAllowed(CIVIC_DATA_PROMOTION_OPERATION, env);
   const admitted = assertSanctionedRuntimeAuthority(CIVIC_DATA_PROMOTION_OPERATION, env);
-  // S13's direct staging parent has already been admitted on its explicit
-  // staging settings. Children carry that envelope in env; the parent must
-  // retain the same returned authority rather than require a child envelope.
   const authority = runtimeAuthorityEnvelope(env) ?? (env.WTP_RUNTIME_MODE === "staging" ? admitted : null);
   if (authority === null) throw new RuntimeAuthorityRefused("routine data store mutation authority is unreadable");
   return authority;
 }
 
-/**
- * The candidate was validated against one exact LKG pointer, but another
- * writer moved that pointer before this candidate reached the atomic promotion
- * door. The stale candidate remains durable evidence; it may not overwrite the
- * newer authority it did not validate against.
- */
+/** Another writer moved the pointer after this candidate validated against it; the stale candidate may not overwrite it. */
 export class PromotionBaseChangedError extends Error {
   readonly candidateId: string;
   readonly expectedVersionId: string | null;
@@ -380,7 +294,6 @@ export class PromotionBaseChangedError extends Error {
   }
 }
 
-/** The four fields that name a candidate; a receipt must name exactly these. */
 type RoutineCandidateName = Pick<RoutineCandidate, "id" | "sourceId" | "recordClass" | "scope">;
 
 function receiptNamesCandidate(receipt: ValidationReceipt, candidate: RoutineCandidateName): boolean {
@@ -399,7 +312,6 @@ function receiptIsGoodForCandidate(receipt: ValidationReceipt, candidate: Routin
   return parsed !== null && parsed.decision === "GOOD" && receiptNamesCandidate(parsed, candidate);
 }
 
-/** The promotion door trusts the persisted proof, never a caller's replacement proof. */
 function persistedPromotionReceipt(
   record: CandidateVersionRecord | null | undefined,
   supplied: ValidationReceipt,
@@ -428,11 +340,6 @@ export interface PdcV2CanonicalMeetingFactEvidence {
   readonly agendaDocumentRowCount: number;
 }
 
-/**
- * Content-only meeting authority fingerprint used by permanent Reader
- * preparation and closure proofs. Observation stamps and source summaries
- * are deliberately excluded; exact meeting/document facts are not.
- */
 export function pdcV2CanonicalMeetingFactEvidence(
   payloads: readonly unknown[],
 ): PdcV2CanonicalMeetingFactEvidence {
@@ -545,7 +452,6 @@ function allowedPriorStates(next: CandidateState): readonly CandidateState[] {
   return [];
 }
 
-/** What a transition checks: the candidate's name, its state, and when it was retrieved. Never its dataset. */
 interface TransitionSubject {
   readonly state: CandidateState;
   readonly candidate: RoutineCandidateName & { readonly retrieval: Pick<RoutineCandidate["retrieval"], "retrievedAt"> };
@@ -662,12 +568,7 @@ function isoTime(value: string): string | null {
   return Number.isFinite(parsed) ? new Date(parsed).toISOString() : null;
 }
 
-/**
- * Drizzle's timestamptz string mode exposes PostgreSQL's lexical spelling,
- * which is semantically exact but not the canonical UTC text used by civic
- * evidence hashes. Normalize at the Postgres adapter boundary and fail closed
- * rather than allowing driver formatting to change durable authority proofs.
- */
+/** Normalize Drizzle's timestamptz text to canonical UTC at the adapter boundary, failing closed, so hashes stay exact. */
 export function canonicalPostgresRoutineTimestamp(value: unknown, field: string): string {
   if (typeof value !== "string") {
     throw new Error(`CIVIC_DATA_POSTGRES_TIMESTAMP_INVALID:${field}`);
@@ -688,29 +589,18 @@ interface PromotionPointerProof {
   readonly receipt: ValidationReceipt;
 }
 
-/**
- * The only candidate fields the routine clock reads. `proofConsistentSuccess`
- * names the candidate against its pointer and receipt and takes
- * `retrieval.retrievedAt`; `isTrustedLkgImportCandidate` reads
- * `bootstrapImport`. The clock never needs a promoted payload, a normalized
- * payload or a read model. It runs for every routine task on every pass, and
- * whole-row reads moved every promoted dataset (twice, through the candidate)
- * across the wire each time: 52.7 MB received per pass against production on
- * 2026-09-22 (0.75 MB through this view), about 15 GB/day of billed transfer.
- * Both stores read the clock through this one view, and the Postgres store
- * builds it server-side, so widening it is a cost decision a reviewer sees,
- * never a convenience.
- */
+/** The only candidate fields the routine clock reads. It runs for every task on every pass, so widening it is a cost decision. */
 export const ROUTINE_CLOCK_CANDIDATE_FIELDS = {
   top: ["id", "sourceId", "recordClass", "scope", "bootstrapImport"],
-  retrieval: ["retrievedAt"],
+  retrieval: ["retrievedAt", "sourceCheck"],
+  normalization: ["parserVersion"],
 } as const;
 
 type RoutineClockCandidate = Pick<RoutineCandidate, "id" | "sourceId" | "recordClass" | "scope" | "bootstrapImport"> & {
-  readonly retrieval: Pick<RoutineCandidate["retrieval"], "retrievedAt">;
+  readonly retrieval: Pick<RoutineCandidate["retrieval"], "retrievedAt" | "sourceCheck">;
+  readonly normalization: Pick<RoutineCandidate["normalization"], "parserVersion">;
 };
 
-/** A candidate record as the clock sees it: every row field, the candidate narrowed. */
 export type RoutineClockRecord = Omit<CandidateVersionRecord, "candidate"> & {
   readonly candidate: RoutineClockCandidate;
 };
@@ -724,21 +614,18 @@ function stripJsonNulls(value: unknown): unknown {
   );
 }
 
-/**
- * The in-memory twin of the Postgres clock stub below: the same fields with
- * the same null handling, so the memory store (the reference every clock test
- * runs against) decides from exactly what the Postgres clock is sent.
- */
+/** The in-memory twin of the Postgres clock view: same fields, same null handling. */
 export function routineClockCandidateView(candidate: RoutineCandidate): RoutineClockCandidate {
   const source = candidate as unknown as Readonly<Record<string, unknown>>;
   const retrieval = (candidate.retrieval ?? {}) as unknown as Readonly<Record<string, unknown>>;
+  const normalization = (candidate.normalization ?? {}) as unknown as Readonly<Record<string, unknown>>;
   return stripJsonNulls({
     ...Object.fromEntries(ROUTINE_CLOCK_CANDIDATE_FIELDS.top.map((field) => [field, source[field] ?? null])),
     retrieval: Object.fromEntries(ROUTINE_CLOCK_CANDIDATE_FIELDS.retrieval.map((field) => [field, retrieval[field] ?? null])),
+    normalization: Object.fromEntries(ROUTINE_CLOCK_CANDIDATE_FIELDS.normalization.map((field) => [field, normalization[field] ?? null])),
   }) as RoutineClockCandidate;
 }
 
-/** A historical PROMOTED state is not a clock; only the current pointer and its exact proof are. */
 function proofConsistentPointedSuccess(
   record: RoutineClockRecord | null | undefined,
   pointer: PromotionPointerProof | null | undefined,
@@ -750,9 +637,7 @@ function proofConsistentPointedSuccess(
   if (pointer.sourceId !== record.candidate.sourceId || pointer.recordClass !== record.candidate.recordClass || pointer.scope !== record.candidate.scope) return false;
   if (!receiptIsGoodForCandidate(receipt, record.candidate)) return false;
   if (!receiptsEqual(pointer.receipt, receipt)) return false;
-  // A frozen LKG import is proof of service continuity, not a publisher
-  // acquisition. Returning no clock success makes the standing runner due
-  // immediately instead of silently waiting one cadence after cutover.
+    // A frozen LKG import is not a publisher acquisition: no clock success, so the runner is due at once.
   return !isTrustedLkgImportCandidate(record.candidate);
 }
 
@@ -763,22 +648,16 @@ export function proofConsistentSuccess(
   return proofConsistentPointedSuccess(record, pointer) ? record.candidate.retrieval.retrievedAt : undefined;
 }
 
-/**
- * The same proven success, as its store-observed first event. The claimed
- * retrieval precedes that event by the acquisition's own duration, so a clock
- * comparing it with the attempt clock reads every success as "a later attempt
- * failed" (measured 2026-09-23: 157 ms to 10.1 s, never zero).
- */
+/** The claimed retrieval precedes the store-observed first event, so the attempt clock compares against this one. */
 export function proofConsistentObservedSuccess(
   record: RoutineClockRecord | null | undefined,
   pointer: PromotionPointerProof | null | undefined,
   observedAt: string | null | undefined,
 ): string | undefined {
   if (!proofConsistentPointedSuccess(record, pointer)) return undefined;
-  return typeof observedAt === "string" && Number.isFinite(Date.parse(observedAt)) ? observedAt : undefined;
+  return sourceCheckedAt(record.candidate.retrieval, observedAt);
 }
 
-/** The start of every sitting a MEETING payload carries; the memory twin of `sittingStartsRead`. */
 export function meetingPayloadSittingStarts(payload: unknown): readonly string[] {
   const meetings = payload && typeof payload === "object" ? (payload as { meetings?: unknown }).meetings : undefined;
   if (!Array.isArray(meetings)) return [];
@@ -788,17 +667,7 @@ export function meetingPayloadSittingStarts(payload: unknown): readonly string[]
   });
 }
 
-/**
- * The clock of a scope whose pointer is a trusted-LKG import (the cutover
- * successor). The import is neither an attempt nor a success, so a
- * predecessor's attempt from before the import never postpones the first live
- * read. A live attempt made since the import's pointer move IS an attempt: a
- * failed first live read then waits its retry clock like any other failure,
- * instead of reading as never-attempted and falling due on every pass: four
- * meeting partitions whose first live read keeps failing were re-fetched about
- * every six minutes, 964 SOURCE_BLOCKED candidates in the 24 hours to
- * 2026-09-24T05:23Z, each child paying its full canonical preload.
- */
+/** An import is neither an attempt nor a success; a live attempt made since the import's pointer move is an attempt. */
 export function trustedLkgImportClock(
   lastAttemptedAt: string | undefined,
   importPromotedAt: string,
@@ -810,7 +679,6 @@ export function trustedLkgImportClock(
     : {};
 }
 
-/** A whole candidate record narrowed to exactly its summary; the memory twin of the Postgres column read. */
 export function candidateVersionSummary(record: CandidateVersionRecord): CandidateVersionSummary {
   const { candidate, ...columns } = record;
   return {
@@ -819,7 +687,6 @@ export function candidateVersionSummary(record: CandidateVersionRecord): Candida
   };
 }
 
-/** Name a pointer without its dataset or receipt; a whole projection narrows to exactly this. */
 export function promotedPointerIdentity(pointer: PromotedPointerIdentity): PromotedPointerIdentity {
   return {
     key: pointer.key,
@@ -833,7 +700,6 @@ export function promotedPointerIdentity(pointer: PromotedPointerIdentity): Promo
   };
 }
 
-/** Shared by dispositions, unchanged confirmations and typed Reader evidence. */
 export async function routineEventObservedAt(
   store: RoutineDataStore,
   recordClass: RoutineRecordClass,
@@ -843,7 +709,6 @@ export async function routineEventObservedAt(
   return store.eventObservedAt ? store.eventObservedAt(recordClass, scope, requestedAt) : requestedAt;
 }
 
-/** Deterministic store used by destructive/failure tests. */
 export class MemoryRoutineDataStore implements RoutineDataStore {
   private readonly candidates = new Map<string, CandidateVersionRecord>();
   private readonly history = new Map<string, CandidateEvent[]>();
@@ -919,7 +784,6 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     return row ? candidateVersionSummary(structuredClone(row)) : null;
   }
 
-  /** The pointer as a read returns it: with its version's newest confirmation, when one exists. */
   private pointerRead(recordClass: RoutineRecordClass, scope: string): PromotedProjection | null {
     const row = this.promotions.get(projectionKey(recordClass, scope));
     if (!row) return null;
@@ -1055,6 +919,11 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     if (row.candidate.normalization.normalizedHash !== input.readModelHash) {
       return { kind: "HASH_DIFFERS", detail: `${input.pointerVersionId}'s read model is not ${input.readModelHash}.` };
     }
+    const priorConfirmation = latestUnchangedConfirmation(this.history.get(input.pointerVersionId) ?? [], input.pointerVersionId);
+    if (priorConfirmation && Date.parse(sourceCheckedAt(priorConfirmation.retrieval, priorConfirmation.observedAt) ?? "") >
+      Date.parse(sourceCheckedAt(built.confirmation.retrieval, built.confirmation.observedAt) ?? "")) {
+      return { kind: "CONFIRMED", versionId: input.pointerVersionId, at: priorConfirmation.observedAt };
+    }
     const { history, event } = this.nextEvent(input.pointerVersionId, "PROMOTED", at, serializeUnchangedConfirmation(built.confirmation));
     history.push(structuredClone(event));
     if (input.retainedSourceResponses?.length) {
@@ -1129,27 +998,26 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     return structuredClone((this.history.get(candidateId) ?? []).filter(isPointerMoveEvent));
   }
 
-  async clock(sourceId: string, recordClass: RoutineRecordClass, scope: string): Promise<RoutineStoreClock> {
+  async clock(sourceId: string, recordClass: RoutineRecordClass, scope: string, parserVersion?: string): Promise<RoutineStoreClock> {
     const attempts = [...this.candidates.values()]
       .filter((row) =>
         row.candidate.sourceId === sourceId &&
         row.candidate.recordClass === recordClass &&
         row.candidate.scope === scope &&
+        (parserVersion === undefined || row.candidate.normalization.parserVersion === parserVersion) &&
         !isTrustedLkgImportCandidate(row.candidate)
       )
       .flatMap((row) => {
         const firstEvent = this.history.get(row.candidate.id)?.find((event) => event.sequence === 1);
-        return firstEvent && Number.isFinite(Date.parse(firstEvent.at)) ? [{ at: firstEvent.at }] : [];
+        const at = row.state === "PROMOTED" && row.acquisitionSucceeded
+          ? sourceCheckedAt(row.candidate.retrieval, firstEvent?.at) : firstEvent?.at;
+        return at && Number.isFinite(Date.parse(at)) ? [{ at }] : [];
       })
       .sort((a, b) => Date.parse(b.at) - Date.parse(a.at));
-    // A candidate's retrievedAt is acquisition evidence and can itself be the
-    // defect being refused. The retry scheduler runs on the locally observed
-    // first append-only event, so a far-future publisher/adapter timestamp can
-    // remain durable without postponing the next source attempt.
+        // The retry scheduler runs on the locally observed first event, so a far-future publisher timestamp cannot postpone it.
     const lastAttemptedAt = attempts[0]?.at;
     const pointer = this.promotions.get(projectionKey(recordClass, scope));
     const pointedRow = pointer?.sourceId === sourceId ? this.candidates.get(pointer.versionId) : null;
-    // Decide from exactly the narrowed view the Postgres clock is sent.
     const pointedRecord: RoutineClockRecord | null = pointedRow
       ? { ...pointedRow, candidate: routineClockCandidateView(pointedRow.candidate) }
       : null;
@@ -1164,7 +1032,9 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       lastAttemptedAt,
       lastSucceededAt: proofConsistentSuccess(pointedRecord, pointer),
       lastSucceededObservedAt: proofConsistentObservedSuccess(pointedRecord, pointer, pointedObservedAt),
-    }, confirmation, sittings);
+      ...(parserVersion !== undefined && proofConsistentPointedSuccess(pointedRecord, pointer)
+        ? { lastSucceededParserVersion: pointedRecord.candidate.normalization.parserVersion } : {}),
+    }, confirmation, sittings, parserVersion);
   }
 }
 
@@ -1182,31 +1052,28 @@ function rowToCandidate(row: typeof civicDataCandidates.$inferSelect): Candidate
 }
 
 const CLOCK_FIELD_NAME = /^[A-Za-z]+$/;
-for (const field of [...ROUTINE_CLOCK_CANDIDATE_FIELDS.top, ...ROUTINE_CLOCK_CANDIDATE_FIELDS.retrieval]) {
+for (const field of [...ROUTINE_CLOCK_CANDIDATE_FIELDS.top, ...ROUTINE_CLOCK_CANDIDATE_FIELDS.retrieval, ...ROUTINE_CLOCK_CANDIDATE_FIELDS.normalization]) {
   // The names are spliced into SQL as literals, so they stay plain identifiers.
   if (!CLOCK_FIELD_NAME.test(field)) throw new Error(`ROUTINE_CLOCK_FIELD_INVALID:${field}`);
 }
 
-/**
- * `routineClockCandidateView`, built by Postgres: the candidate column is read
- * only through these paths, so its payload and read model never leave the
- * database. `jsonb_strip_nulls` makes an absent field absent, not null.
- */
 function routineClockCandidateStub() {
   const column = civicDataCandidates.candidate;
   const top = ROUTINE_CLOCK_CANDIDATE_FIELDS.top.map((field) =>
     sql`${sql.raw(`'${field}'`)}, ${column}->${sql.raw(`'${field}'`)}`);
   const retrieval = ROUTINE_CLOCK_CANDIDATE_FIELDS.retrieval.map((field) =>
     sql`${sql.raw(`'${field}'`)}, ${column}#>${sql.raw(`'{retrieval,${field}}'`)}`);
+  const normalization = ROUTINE_CLOCK_CANDIDATE_FIELDS.normalization.map((field) =>
+    sql`${sql.raw(`'${field}'`)}, ${column}#>${sql.raw(`'{normalization,${field}}'`)}`);
   return sql`jsonb_strip_nulls(jsonb_build_object(${sql.join(
-    [...top, sql`'retrieval', jsonb_build_object(${sql.join(retrieval, sql`, `)})`],
+    [...top, sql`'retrieval', jsonb_build_object(${sql.join(retrieval, sql`, `)})`,
+      sql`'normalization', jsonb_build_object(${sql.join(normalization, sql`, `)})`],
     sql`, `,
   )}))`.mapWith(civicDataCandidates.candidate);
 }
 
 type RoutineClockDb = Pick<ReturnType<typeof getDb>, "select">;
 
-/** The clock's pointer read: identity and proof, never the promoted payload. */
 export function routineClockPointerRead(db: RoutineClockDb, recordClass: RoutineRecordClass, scope: string) {
   return db
     .select({
@@ -1223,7 +1090,6 @@ export function routineClockPointerRead(db: RoutineClockDb, recordClass: Routine
     .limit(1);
 }
 
-/** The event rule's own refusal of a repeated PROMOTED event that is not typed Reader evidence. */
 function unchangedConfirmationRefusedByEventRule(error: unknown): boolean {
   const chain: unknown[] = [];
   for (let value: unknown = error; value !== null && value !== undefined && chain.length < 4; value = (value as { cause?: unknown }).cause) {
@@ -1242,33 +1108,30 @@ function laterInstant(left: string | undefined, right: string | undefined): stri
   return Date.parse(right) > Date.parse(left) ? right : left;
 }
 
-/**
- * A pointed version's newest unchanged confirmation is its newest attempt and,
- * when the pointer proof holds, its newest success: observed in the attempt
- * clock's units, claimed as the confirming acquisition's retrieval. A later
- * failed attempt still reads as later than it, so the retry clock owns it.
- */
 function confirmedClock(
-  clock: { readonly lastAttemptedAt?: string; readonly lastSucceededAt?: string; readonly lastSucceededObservedAt?: string },
+  clock: RoutineStoreClock,
   confirmation: UnchangedConfirmation | null,
   sittings: { readonly sittingStarts?: readonly string[] },
+  parserVersion?: string,
 ): RoutineStoreClock {
-  const lastAttemptedAt = laterInstant(clock.lastAttemptedAt, confirmation?.observedAt);
+  const confirmedAt = confirmation ? sourceCheckedAt(confirmation.retrieval, confirmation.observedAt) : undefined;
+  const lastAttemptedAt = laterInstant(clock.lastAttemptedAt,
+    parserVersion === undefined || clock.lastSucceededParserVersion === parserVersion ? confirmedAt : undefined);
   const lastSucceededAt = clock.lastSucceededAt === undefined
     ? undefined
     : laterInstant(clock.lastSucceededAt, confirmation?.retrieval.retrievedAt);
   const lastSucceededObservedAt = clock.lastSucceededObservedAt === undefined
     ? undefined
-    : laterInstant(clock.lastSucceededObservedAt, confirmation?.observedAt);
+    : laterInstant(clock.lastSucceededObservedAt, confirmedAt);
   return {
     ...(lastAttemptedAt ? { lastAttemptedAt } : {}),
     ...(lastSucceededAt ? { lastSucceededAt } : {}),
     ...(lastSucceededObservedAt ? { lastSucceededObservedAt } : {}),
+    ...(clock.lastSucceededParserVersion ? { lastSucceededParserVersion: clock.lastSucceededParserVersion } : {}),
     ...sittings,
   };
 }
 
-/** The pointed candidate's newest unchanged confirmation, if any: one event's detail, never a payload. */
 export function routineClockConfirmationRead(db: RoutineClockDb, recordClass: RoutineRecordClass, scope: string) {
   return db
     .select({ detail: civicDataCandidateEvents.detail })
@@ -1284,11 +1147,6 @@ export function routineClockConfirmationRead(db: RoutineClockDb, recordClass: Ro
     .limit(1);
 }
 
-/**
- * The pointed candidate's store-observed first event, joined on the unique
- * (candidate_id, sequence) index: the success instant in the attempt clock's
- * own units. The pointer/receipt proof still decides whether it counts.
- */
 export function routineClockPointedObservedRead(db: RoutineClockDb, recordClass: RoutineRecordClass, scope: string) {
   return db
     .select({ observedAt: civicDataCandidateEvents.at })
@@ -1301,12 +1159,6 @@ export function routineClockPointedObservedRead(db: RoutineClockDb, recordClass:
     .limit(1);
 }
 
-/**
- * A MEETING pointer's sitting starts, built by Postgres from the promoted
- * payload: a few timestamps cross the wire, never the payload. The strings are
- * returned as stored and parsed by the runner exactly as the memory twin
- * (`meetingPayloadSittingStarts`) parses them, so no cast can fail the clock.
- */
 export function sittingStartsRead(db: RoutineClockDb, scope: string) {
   const payload = civicDataPromotions.payload;
   return db
@@ -1326,18 +1178,6 @@ function sittingStartsFromRow(value: unknown): readonly string[] | undefined {
   return Array.isArray(value) ? value.filter((start): start is string => typeof start === "string") : undefined;
 }
 
-/**
- * **A PROOF READS WHAT IT CHECKS** (2026-09-24).
- *
- * `promotionProofIssue` re-hashes a live candidate's read model and normalized
- * payload and checks its identity, state, receipt and times. It never reads
- * the candidate's change set, civic records or identity set, and those were
- * most of the bytes a cold proof moved. A trusted-LKG import is read whole:
- * its evidence binds the SHA-256 of the complete candidate envelope and
- * re-derives its records and change set. The identity column is outside the
- * envelope and no proof reads it. The Postgres store narrows server-side; the
- * memory store through this twin.
- */
 export const CANDIDATE_PROOF_OMITTED = {
   unlessImported: ["changeSet", "civicRecords", "identities"],
 } as const;
@@ -1355,7 +1195,6 @@ export function candidateProofView(candidate: RoutineCandidate): RoutineCandidat
   ) as unknown as RoutineCandidate;
 }
 
-/** `candidateProofView`, built by Postgres, with the row columns a proof reads. The identity column never leaves. */
 export function candidateProofRead(db: RoutineClockDb, candidateIds: readonly string[]) {
   const column = civicDataCandidates.candidate;
   const unlessImported = CANDIDATE_PROOF_OMITTED.unlessImported.map((field) => sql.raw(` - '${field}'`));
@@ -1390,7 +1229,6 @@ function candidateProofRowToRecord(row: Awaited<ReturnType<typeof candidateProof
   };
 }
 
-/** The clock's pointed-candidate read: every row field, the candidate as its narrowed view. */
 export function routineClockCandidateRead(db: RoutineClockDb, versionId: string) {
   return db
     .select({
@@ -1421,7 +1259,6 @@ function routineClockRowToRecord(row: Awaited<ReturnType<typeof routineClockCand
   };
 }
 
-/** The promotion columns that name a pointer. The payload (the Reader's dataset) and receipt are not among them. */
 const PROMOTED_POINTER_IDENTITY_COLUMNS = {
   key: civicDataPromotions.key,
   sourceId: civicDataPromotions.sourceId,
@@ -1432,12 +1269,6 @@ const PROMOTED_POINTER_IDENTITY_COLUMNS = {
   promotedAt: civicDataPromotions.promotedAt,
 } as const;
 
-/**
- * Reader-delivery evidence's pointer read: identity only. The readback once
- * read each whole row, payload included, on every 5-minute supervisor pass
- * for every Reader contract merely to learn which version to verify: 55.1 MB
- * per pass against production on 2026-09-23, before any typed Reader ran.
- */
 export function promotedPointerIdentityRead(
   db: RoutineClockDb,
   recordClass: RoutineRecordClass,
@@ -1449,10 +1280,6 @@ export function promotedPointerIdentityRead(
     .where(and(eq(civicDataPromotions.recordClass, recordClass), inArray(civicDataPromotions.scope, [...scopes])));
 }
 
-/**
- * What a promotion's RETURNING carries back: the moved pointer's identity and
- * receipt. Never its payload; see `PostgresRoutineDataStore.promote`.
- */
 export const PROMOTED_POINTER_COLUMNS = {
   ...PROMOTED_POINTER_IDENTITY_COLUMNS,
   validationReceipt: civicDataPromotions.validationReceipt,
@@ -1463,12 +1290,6 @@ type PostgresPromotedPointerIdentityRow = Pick<
   keyof typeof PROMOTED_POINTER_IDENTITY_COLUMNS
 > & { readonly latestConfirmation?: string | null };
 
-/**
- * The pointed version's newest unchanged-confirmation detail, built in
- * Postgres beside a pointer read: one short event detail, never a payload,
- * and none when the version was never confirmed. The prefix is compared
- * exactly (not with LIKE, whose `_` is a wildcard).
- */
 const LATEST_CONFIRMATION_DETAIL = sql<string | null>`(
   select confirmation.detail from civic_data_candidate_events as confirmation
   where confirmation.candidate_id = "civic_data_promotions"."current_version_id"
@@ -1477,7 +1298,6 @@ const LATEST_CONFIRMATION_DETAIL = sql<string | null>`(
   limit 1
 )`;
 
-/** A pointer read's columns: identity, plus the newest confirmation of the pointed version. */
 const PROMOTED_POINTER_READ_COLUMNS = {
   ...PROMOTED_POINTER_IDENTITY_COLUMNS,
   latestConfirmation: LATEST_CONFIRMATION_DETAIL,
@@ -1493,7 +1313,6 @@ function postgresPromotedPointerIdentity(row: PostgresPromotedPointerIdentityRow
     versionId: row.currentVersionId,
     lastKnownGoodVersionId: row.lastKnownGoodVersionId,
     promotedAt: canonicalPostgresRoutineTimestamp(row.promotedAt, "promotion.promotedAt"),
-    // A confirmation of another version, or one that does not parse, is not this pointer's.
     ...(confirmation !== null && confirmation.versionId === row.currentVersionId ? { latestConfirmation: confirmation } : {}),
   };
 }
@@ -1508,7 +1327,6 @@ function postgresPromotionRowToProjection<T = unknown>(
   };
 }
 
-/** Every candidate column but the envelope and identity set; see `CandidateVersionSummary`. */
 const CANDIDATE_SUMMARY_COLUMNS = {
   id: civicDataCandidates.id,
   sourceId: civicDataCandidates.sourceId,
@@ -1523,7 +1341,6 @@ const CANDIDATE_SUMMARY_COLUMNS = {
   failureDetail: civicDataCandidates.failureDetail,
 } as const;
 
-/** A candidate's disposition without its dataset (see `CandidateVersionSummary`). */
 export function candidateSummaryRead(db: RoutineClockDb, candidateId: string) {
   return db.select(CANDIDATE_SUMMARY_COLUMNS).from(civicDataCandidates).where(eq(civicDataCandidates.id, candidateId)).limit(1);
 }
@@ -1543,22 +1360,13 @@ function postgresCandidateSummary(row: PostgresCandidateSummaryRow): CandidateVe
   };
 }
 
-/**
- * The Reader-evidence door's candidate read: identity, transfer marker, and
- * state. Never the candidate envelope, which carries the whole normalized
- * dataset and read model (23.7 MB on the wire for NJ roll calls). The row's
- * identity columns equal the envelope's by CHECK
- * (`civic_data_candidates_envelope_identity_coherent`).
- */
 const READER_EVIDENCE_CANDIDATE_COLUMNS = {
   id: civicDataCandidates.id,
   sourceId: civicDataCandidates.sourceId,
   recordClass: civicDataCandidates.recordClass,
   scope: civicDataCandidates.scope,
   state: civicDataCandidates.state,
-  // An absent marker and a JSON-null marker both read back as null; the
-  // key test keeps a present-but-null marker a marker, exactly as the
-  // whole envelope's own-property check decides.
+    // A present-but-null marker is still a marker, as the envelope's own-property check decides.
   hasBootstrapImport: sql<boolean>`${civicDataCandidates.candidate} ? 'bootstrapImport'`,
   bootstrapImport: sql<unknown>`${civicDataCandidates.candidate}->'bootstrapImport'`,
 };
@@ -1571,17 +1379,6 @@ export function readerEvidenceCandidateRead(db: RoutineClockDb, candidateId: str
     .limit(1);
 }
 
-/**
- * **A TRANSITION'S PRE-READ, WITHOUT THE ENVELOPE.** (2026-09-25, R26.)
- *
- * `transition()` read the whole candidate row before its compare-and-set —
- * the envelope carries the normalized dataset and read model, ~235 MB an hour
- * across the runner's promotions — to use five identity columns, the state,
- * and `retrieval.retrievedAt`. This reads the Reader-evidence columns, plus
- * `retrieved_at` (a VALIDATED receipt may not predate retrieval) and the two
- * hash columns a caller's held envelope is verified against. Each equals the
- * envelope's own value by CHECK (`civic_data_candidates_envelope_identity_coherent`).
- */
 export function candidateTransitionRead(db: RoutineClockDb, candidateId: string) {
   return db
     .select({
@@ -1595,7 +1392,6 @@ export function candidateTransitionRead(db: RoutineClockDb, candidateId: string)
     .limit(1);
 }
 
-/** The envelope a caller holds must be this row's: same identity, retrieval instant and hashes. */
 function heldEnvelopeMatches(
   row: {
     readonly id: string;
@@ -1632,7 +1428,6 @@ export function readerEvidenceRowToRecord(
   };
 }
 
-/** The prepared projection's coupling columns; never its composed payload. */
 export function preparedProjectionCouplingRead(db: RoutineClockDb, recordClass: RoutineRecordClass, scope: string) {
   return db
     .select({
@@ -1676,12 +1471,6 @@ const CANDIDATE_EVENT_COLUMNS = {
   detail: civicDataCandidateEvents.detail,
 } as const;
 
-/**
- * Each named version's newest typed Reader readback, chosen in Postgres in
- * readback inspection's own order (newest instant, then highest sequence):
- * one row per version, never the readbacks and confirmations it has gathered.
- * The prefix is compared exactly (not with LIKE, whose `_` is a wildcard).
- */
 export function latestReaderReadbacksRead(db: Pick<ReturnType<typeof getDb>, "selectDistinctOn">, candidateIds: readonly string[]) {
   return db
     .selectDistinctOn([civicDataCandidateEvents.candidateId], CANDIDATE_EVENT_COLUMNS)
@@ -1693,7 +1482,6 @@ export function latestReaderReadbacksRead(db: Pick<ReturnType<typeof getDb>, "se
     .orderBy(civicDataCandidateEvents.candidateId, desc(civicDataCandidateEvents.at), desc(civicDataCandidateEvents.sequence));
 }
 
-/** A version's pointer-move events only, chosen in Postgres. */
 export function pointerMoveEventsRead(db: RoutineClockDb, candidateId: string) {
   return db
     .select(CANDIDATE_EVENT_COLUMNS)
@@ -1716,7 +1504,6 @@ function postgresCandidateEventRowToEvent(row: PostgresCandidateEventRow): Candi
   };
 }
 
-/** Production store: append-only events plus one atomic canonical projection. */
 export class PostgresRoutineDataStore implements RoutineDataStore {
   private readonly db = getDb();
   private readonly readCache = runtimeCivicReadCache();
@@ -1728,7 +1515,6 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       const values = async (keys: readonly string[]) => this.db.select().from(civicDataPayloadParts)
         .where(inArray(civicDataPayloadParts.hash, [...keys]));
       return this.readCache ? this.readCache.rows({ namespace: "payload-part", keys: hashes,
-        // The existing content address is the version of this immutable part.
         versions: async keys => keys.map(key => ({ key, etag: key })), values, keyOf: row => row.hash,
       }) : values(hashes);
     },
@@ -1758,15 +1544,12 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
         latestConfirmation: LATEST_CONFIRMATION_DETAIL,
       }).from(civicDataPromotions).where(and(eq(civicDataPromotions.recordClass, recordClass),
         inArray(civicDataPromotions.key, [...selected]))),
-      // Confirmations are append-only events, so they need no pointer UPDATE.
       freshen: (row, version) => ({ ...row, latestConfirmation: version.latestConfirmation }),
     });
   }
   private writeAuthority: RuntimeAuthorityEnvelope | null = null;
 
   async eventObservedAt(recordClass: RoutineRecordClass, scope: string, _requestedAt: string): Promise<string> {
-    // One scalar, never a payload or candidate envelope. Observe our own wall
-    // clock after the read; a runner's pass start is not a write timestamp.
     const [row] = await this.db.select({ at: sql<string | null>`max(${civicDataCandidateEvents.at})` })
       .from(civicDataCandidateEvents)
       .innerJoin(civicDataCandidates, eq(civicDataCandidates.id, civicDataCandidateEvents.candidateId))
@@ -1774,13 +1557,6 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     return new Date(Math.max(Date.now(), row?.at == null ? 0 : Date.parse(row.at))).toISOString();
   }
 
-  /**
-   * The registered promotion wrappers are the normal authority door, but the
-   * database adapter must not trust every future caller to remember it. Prove
-   * the named sanctioned write and exact installed-runtime authority at the
-   * first actual mutation made by this store instance. Reads remain available
-   * to the production application without a write capability.
-   */
   private assertMutationAuthority(): RuntimeAuthorityEnvelope {
     if (this.writeAuthority !== null) return this.writeAuthority;
     this.writeAuthority = assertRoutineDataStoreMutationAuthority();
@@ -1799,14 +1575,10 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     if (issue !== null) throw new RuntimeAuthorityRefused(issue);
   }
 
-  /**
-   * Candidate history has a per-candidate sequence invariant. Neon HTTP
-   * batches are real database transactions but they are not interactive, so
-   * serialize every sequence allocator with a transaction-scoped advisory
-   * lock as the first statement in the batch. A lock acquired inside the
-   * INSERT statement would be too late: that statement's snapshot may have
-   * been taken before a competing transaction committed its event.
-   */
+    /**
+     * Neon HTTP batches are not interactive, so every sequence allocator takes a transaction-scoped advisory lock as the
+     * batch's first statement; a lock inside the INSERT would be too late for its snapshot.
+     */
   private candidateEventLock(candidateId: string) {
     return this.db.execute(sql`
       select pg_advisory_xact_lock(hashtextextended(${candidateId}, 0))
@@ -1824,8 +1596,6 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   async create(record: CandidateVersionRecord, firstEvent: CandidateEvent): Promise<void> {
     this.assertCandidateMutationAuthority(record.candidate);
     assertInitialRecord(record, firstEvent);
-    // Preserve scalar evidence used by SQL constraints and clocks. Partition
-    // datasets only; normalized evidence and the read model share their parts.
     const stored = ["REGISTRY_RUNTIME_BINDING", "STATE_ROLL_CALL"].includes(record.candidate.recordClass)
       ? await this.payloadParts.store(record.candidate,
         ["id", "sourceId", "recordClass", "scope", "retrieval", "normalization", "temporal", "bootstrapImport"]) as RoutineCandidate
@@ -1857,12 +1627,10 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   async transition(candidateId: string, state: CandidateState, at: string, detail: string, receipt?: ValidationReceipt, failure?: { code: string; detail: string }, options: CandidateTransitionOptions = {}): Promise<CandidateVersionRecord> {
     this.assertMutationAuthority();
-    // Identity, state, retrieval instant and hashes — never the envelope (R26).
     const [priorRow] = await candidateTransitionRead(this.db, candidateId);
     if (!priorRow) throw new Error(`CANDIDATE_NOT_FOUND:${candidateId}`);
     const authority = readerEvidenceRowToRecord(priorRow);
     this.assertCandidateMutationAuthority(authority.candidate);
-    // A held envelope that is not this row's is refused before anything is written.
     if (options.candidate && !heldEnvelopeMatches(priorRow, options.candidate)) {
       throw new Error(`CANDIDATE_TRANSITION_ENVELOPE_MISMATCH:${candidateId}`);
     }
@@ -1876,13 +1644,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       inArray(civicDataCandidates.state, [...allowed]),
     )!;
     const nextSequence = this.nextCandidateEventSequence(candidateId);
-    /*
-     * The actual compare-and-set and its event are one data-modifying CTE.
-     * The earlier read is validation input only: after an advisory-lock wait,
-     * a stale caller's UPDATE returns no row, so the INSERT also returns no row.
-     * It cannot commit an event without the state mutation (or vice versa),
-     * even if the row changed after the pre-read.
-     */
+        /* The compare-and-set and its event are one data-modifying CTE: neither can commit without the other. */
     const updatedCandidate = this.db.$with("updated_candidate").as(
       this.db.update(civicDataCandidates).set({
         state,
@@ -1897,9 +1659,6 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
         from ${updatedCandidate}
       `)
       .returning();
-    // The row's columns after the write, never the envelope: it and the
-    // identity set are written once at create and no statement updates them,
-    // so the caller's verified copy is the durable one.
     const updatedCandidateRead = candidateSummaryRead(this.db, candidateId);
     const [, eventRows, updatedRows] = await this.db.batch([
       this.candidateEventLock(candidateId),
@@ -1918,7 +1677,6 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     return { ...columns, candidate: options.candidate ?? await this.readCandidateEnvelope(candidateId) };
   }
 
-  /** The envelope alone, for a caller that transitions without the candidate in hand. */
   private async readCandidateEnvelope(candidateId: string): Promise<RoutineCandidate> {
     const [row] = await this.db.select({ candidate: civicDataCandidates.candidate })
       .from(civicDataCandidates)
@@ -1993,10 +1751,6 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     input: PreparedReaderProjectionInput,
     expectedSequence: number | null,
   ): Promise<{ readonly published: boolean; readonly sequence: number }> {
-    // The DB write sanction is the gate: this is a reader-evidence-class derived
-    // write (a serving copy), never a candidate mutation, and the standing
-    // runner's reader-repair pass already holds the sanction. The reader path,
-    // holding no sanction, can never reach this.
     this.assertMutationAuthority();
     const key = projectionKey(input.recordClass, input.scope);
     const body = {
@@ -2013,7 +1767,6 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       promotedThrough: input.promotedThrough,
     };
     if (expectedSequence === null) {
-      // First publication: insert; a racing insert is rejected (published:false).
       const inserted = await this.db.insert(civicDataReaderProjections)
         .values({ ...body, sequence: 1 })
         .onConflictDoNothing()
@@ -2058,8 +1811,6 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   async appendEvidence(candidateId: string, state: CandidateState, at: string, detail: string): Promise<CandidateEvent> {
     const authority = this.assertMutationAuthority();
-    // Identity, marker, and state only: evidence never needs the candidate
-    // envelope, and the typed Reader has already read and proved the dataset.
     const [candidateRow] = await readerEvidenceCandidateRead(this.db, candidateId);
     if (!candidateRow) throw new Error(`CANDIDATE_NOT_FOUND:${candidateId}`);
     const record = readerEvidenceRowToRecord(candidateRow);
@@ -2106,8 +1857,13 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     this.assertCandidateMutationAuthority({ id, sourceId: input.sourceId, recordClass: input.recordClass, scope: input.scope });
     const detail = serializeUnchangedConfirmation(built.confirmation);
     const nextSequence = this.nextCandidateEventSequence(id);
-    // One guarded insert: the pointer still names exactly this live version,
-    // its read model is the confirmed one, and time never runs backward.
+    const checkedAt = sourceCheckedAt(built.confirmation.retrieval, built.confirmation.observedAt)!;
+    // This receipt shares the existing candidate lock. A delayed parser replay cannot replace a newer real check.
+    const priorCheckedAt = sql`case when left(prior_confirmation.detail, ${UNCHANGED_CONFIRMATION_PREFIX.length}) = ${UNCHANGED_CONFIRMATION_PREFIX}
+      then coalesce(
+        (substring(prior_confirmation.detail from ${UNCHANGED_CONFIRMATION_PREFIX.length + 1})::jsonb #>> '{retrieval,sourceCheck,checkedAt}')::timestamptz,
+        (substring(prior_confirmation.detail from ${UNCHANGED_CONFIRMATION_PREFIX.length + 1})::jsonb ->> 'observedAt')::timestamptz
+      ) end`;
     let eventRows: readonly { readonly sequence: number }[];
     try {
     [, eventRows] = await this.db.batch([
@@ -2135,9 +1891,12 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
             where ${civicDataCandidateEvents.candidateId} = ${id}
               and ${civicDataCandidateEvents.at} > ${at}::timestamptz
           )
+          and not exists (
+            select 1 from civic_data_candidate_events as prior_confirmation
+            where prior_confirmation.candidate_id = ${id}
+              and ${priorCheckedAt} > ${checkedAt}::timestamptz
+          )
       `).returning({ sequence: civicDataCandidateEvents.sequence }),
-      // The confirming acquisition's source bytes, kept as a promotion would
-      // have kept them; written only when the receipt above was.
       ...(input.retainedSourceResponses?.length
         ? [this.db.insert(civicDataCandidateEvents).select(sql`
             select gen_random_uuid(), ${id}, ${this.nextCandidateEventSequence(id)}, ${"PROMOTED"}, ${at}::timestamptz,
@@ -2151,21 +1910,19 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
         : []),
     ]);
     } catch (error) {
-      // The event rule (enforce_civic_data_candidate_event_insert) admits this
-      // receipt only once its migration is applied; until then a refusal is a
-      // no-confirmation, and the caller promotes exactly as before.
+            // Until the event rule's migration is applied, a refusal here is a no-confirmation and the caller promotes.
       if (unchangedConfirmationRefusedByEventRule(error)) {
         return { kind: "STORE_REFUSED", detail: "The database's event rule does not admit unchanged confirmations yet." };
       }
       throw error;
     }
     if (eventRows[0]) return { kind: "CONFIRMED", versionId: id, at };
-    // Name the guard that refused, from identity columns only.
     const [pointerRows, candidateRows] = await this.db.batch([
       this.db.select({
         sourceId: civicDataPromotions.sourceId,
         currentVersionId: civicDataPromotions.currentVersionId,
         lastKnownGoodVersionId: civicDataPromotions.lastKnownGoodVersionId,
+        latestConfirmation: LATEST_CONFIRMATION_DETAIL,
       }).from(civicDataPromotions)
         .where(and(eq(civicDataPromotions.recordClass, input.recordClass), eq(civicDataPromotions.scope, input.scope)))
         .limit(1),
@@ -2185,13 +1942,15 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     }
     if (candidate.imported) return { kind: "POINTER_IS_IMPORT", detail: `${id} is a trusted-LKG import; a live read of it promotes.` };
     if (candidate.normalizedHash !== input.readModelHash) return { kind: "HASH_DIFFERS", detail: `${id}'s read model is not ${input.readModelHash}.` };
+    const priorConfirmation = pointer.latestConfirmation ? parseUnchangedConfirmation(pointer.latestConfirmation) : null;
+    if (priorConfirmation?.versionId === id && Date.parse(sourceCheckedAt(priorConfirmation.retrieval, priorConfirmation.observedAt) ?? "") > Date.parse(checkedAt)) {
+      return { kind: "CONFIRMED", versionId: id, at: priorConfirmation.observedAt };
+    }
     throw new Error(`CANDIDATE_EVENT_TIME_INVALID:${id}:PROMOTED`);
   }
 
   async promote(candidateId: string, receipt: ValidationReceipt, at: string): Promise<PromotedProjection> {
     this.assertMutationAuthority();
-    // Whole row: its read model is the payload the insert below copies and the
-    // payload of the projection returned, so the batch never ships it back.
     const [row] = await this.db.select().from(civicDataCandidates).where(eq(civicDataCandidates.id, candidateId)).limit(1);
     const record = row ? { ...rowToCandidate(row), candidate: await this.payloadParts.load(row.candidate) as RoutineCandidate } : null;
     const persistedReceipt = persistedPromotionReceipt(record, receipt);
@@ -2200,7 +1959,6 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     this.assertCandidateMutationAuthority(record.candidate);
     const candidate = record.candidate;
     const key = projectionKey(candidate.recordClass, candidate.scope);
-    // The prior pointer is read for its version id alone, never its payload.
     const [prior] = await this.db.select({ currentVersionId: civicDataPromotions.currentVersionId })
       .from(civicDataPromotions)
       .where(eq(civicDataPromotions.key, key))
@@ -2218,13 +1976,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const detail = `${POINTER_MOVE_DETAIL_PREFIX}${key} moved from ${prior?.currentVersionId ?? "bootstrap/no-version"} to ${candidateId}.`;
     const nextSequence = this.nextCandidateEventSequence(candidateId);
 
-    /*
-     * Neon HTTP has no interactive transactions. `batch` is one server-side
-     * transaction, and each write below is selected from the same still-
-     * VALIDATED row with the exact persisted JSONB receipt. A concurrent
-     * transition therefore makes every statement a zero-row write; it cannot
-     * move the pointer while losing the candidate/event half of promotion.
-     */
+        /* One server-side transaction: a concurrent transition makes every statement a zero-row write. */
     const promotionWrite = this.db.insert(civicDataPromotions).select(sql`
       select
         ${key},
@@ -2289,15 +2041,6 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       }
       throw new Error(`CANDIDATE_NOT_PROMOTABLE:${candidateId}`);
     }
-    /*
-     * The batch returns the moved pointer's identity and receipt, never its
-     * payload or the candidate envelope. Both carry the promoted dataset, so
-     * one HTTP response held it twice: 75.84 MB for census geography before
-     * PR #363 compacted it, 33.5 MB for NJ roll calls on 2026-09-23. The
-     * pointer's payload is, by the insert above, `candidate->'readModel'` of
-     * this exact eligible row; that read model is already in hand, so the
-     * projection is built from it and the dataset never crosses back.
-     */
     return {
       ...postgresPromotedPointerIdentity(promotedRows[0]),
       payload: candidate.readModel,
@@ -2321,9 +2064,16 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     return rows.map(postgresCandidateEventRowToEvent);
   }
 
-  async clock(sourceId: string, recordClass: RoutineRecordClass, scope: string): Promise<RoutineStoreClock> {
+  async clock(sourceId: string, recordClass: RoutineRecordClass, scope: string, parserVersion?: string): Promise<RoutineStoreClock> {
+    // Successful retained-byte replay records processing, but no newer provider attempt.
+    // These fields occur only on validated promotions; failures keep their local retry clock.
+    const attemptAt = sql`CASE WHEN ${civicDataCandidates.state} = 'PROMOTED'
+      AND ${civicDataCandidates.acquisitionSucceeded} = true
+      AND ${civicDataCandidates.candidate}#>>'{retrieval,sourceCheck,checkedAt}' IS NOT NULL
+      THEN LEAST((${civicDataCandidates.candidate}#>>'{retrieval,sourceCheck,checkedAt}')::timestamptz, ${civicDataCandidateEvents.at})
+      ELSE ${civicDataCandidateEvents.at} END`;
     const attemptQuery = this.db
-      .select({ attemptedAt: civicDataCandidateEvents.at })
+      .select({ attemptedAt: attemptAt })
       .from(civicDataCandidates)
       .innerJoin(civicDataCandidateEvents, and(
         eq(civicDataCandidateEvents.candidateId, civicDataCandidates.id),
@@ -2333,15 +2083,12 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
         eq(civicDataCandidates.sourceId, sourceId),
         eq(civicDataCandidates.recordClass, recordClass),
         eq(civicDataCandidates.scope, scope),
-        // A frozen cutover import is durable service-continuity evidence, not
-        // a publisher attempt.  Excluding it from the source clock makes a
-        // newly imported contract due immediately for its first live read.
+        parserVersion === undefined ? undefined : eq(civicDataCandidates.parserVersion, parserVersion),
+                // A frozen cutover import is not a publisher attempt, so the contract is due at once for its first live read.
         sql`coalesce(${civicDataCandidates.candidate}#>>'{bootstrapImport,kind}', '') not in ('TRUSTED_LKG_IMPORT', 'TRUSTED_LKG_REATTESTATION')`,
       ))
-      .orderBy(desc(civicDataCandidateEvents.at))
+      .orderBy(desc(attemptAt))
       .limit(1);
-    // Identity and proof only: a whole-row read here moves every promoted
-    // dataset on every pass (see ROUTINE_CLOCK_CANDIDATE_FIELDS).
     const pointerQuery = routineClockPointerRead(this.db, recordClass, scope);
     const observedQuery = routineClockPointedObservedRead(this.db, recordClass, scope);
     const confirmationQuery = routineClockConfirmationRead(this.db, recordClass, scope);
@@ -2394,6 +2141,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       lastAttemptedAt,
       lastSucceededAt: canonicalLastSucceededAt,
       lastSucceededObservedAt,
-    }, confirmation !== null && pointer !== undefined && confirmation.versionId === pointer.currentVersionId ? confirmation : null, sittings);
+      ...(parserVersion !== undefined && proofConsistentPointedSuccess(pointedRecord, pointerProof)
+        ? { lastSucceededParserVersion: pointedRecord.candidate.normalization.parserVersion } : {}),
+    }, confirmation !== null && pointer !== undefined && confirmation.versionId === pointer.currentVersionId ? confirmation : null, sittings, parserVersion);
   }
 }

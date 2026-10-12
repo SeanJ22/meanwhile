@@ -12,7 +12,6 @@ export const SOURCE_ACQUISITION_FAILURE_CODES = [
 
 export type SourceAcquisitionFailureCode = (typeof SOURCE_ACQUISITION_FAILURE_CODES)[number];
 
-/** Explicit source evidence; ordinary program/config/store errors never gain this brand. */
 export class SourceAcquisitionFailure extends Error {
   readonly code: SourceAcquisitionFailureCode;
 
@@ -56,7 +55,6 @@ export async function requestPublisher<T>(
   }
 }
 
-/** Wrap only consumption of an already-received publisher response body. */
 export async function readPublisherBody<T>(
   sourceLabel: string,
   read: () => Promise<T>,
@@ -72,11 +70,7 @@ export async function readPublisherBody<T>(
   }
 }
 
-/**
- * Bound only publisher acquisition. The returned promise does not settle on a
- * timeout until the abort-aware operation itself has settled, and the domain
- * is gone before callers perform any candidate, pointer, LKG, or receipt I/O.
- */
+/** On timeout the promise settles only after the abort-aware operation itself has settled. */
 export async function withPublisherAcquisitionDeadline<T>(
   sourceLabel: string,
   timeoutMs: number,
@@ -97,7 +91,6 @@ export async function withPublisherAcquisitionDeadline<T>(
   }
 }
 
-/** Convert only this deadline's own abort into durable publisher evidence. */
 export function publisherDeadlineFailure(
   sourceLabel: string,
   domain: Pick<SourceAcquisitionDomain, "signal">,

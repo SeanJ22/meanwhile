@@ -2,20 +2,9 @@ import type { CivicDataReadMetadata } from "../civic-data/read-model.ts";
 
 /**
  * The one campaign-finance freshness/disclosure sentence, shared by every
- * surface that renders funding (the map official popup and the ballot
- * battlecard). Both surfaces MUST show the identical note for the same
- * holding — the render proof (`reader-last-mile-render.mts`, federal-money
- * focus) asserts the map and ballot funding sections render the same text —
- * so the wording lives here once rather than being re-authored per surface
- * and drifting. It is computed from the availability envelope the funding
- * settlement produces (`holdingStatus`/`dataState`/`dataMetadata`/
- * `unavailableAuthorities`), never from a hardcoded date: the actual
- * source-through value is read off `dataMetadata.sourceThrough`.
- *
- * Returns null when the holding is fully HELD, PROMOTED, and CURRENT — there
- * is nothing to disclose, and a note in that case would be noise. A missing,
- * incorrect, or misleading note is therefore detectable: the proof compares
- * the rendered text on both surfaces against this single source of truth.
+ * surface that renders funding so the map and ballot show identical text.
+ * Computed from the funding settlement's availability envelope, never a
+ * hardcoded date. Null when the holding is fully HELD, PROMOTED and CURRENT.
  */
 export interface FundingFreshnessEnvelope {
   // Optional so the map's CampaignMoneyApiResponse (which types holdingStatus as

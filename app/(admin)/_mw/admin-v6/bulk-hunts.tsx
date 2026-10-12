@@ -1,27 +1,5 @@
 "use client";
 
-/**
- * **START MISSIONS AND HUNTS IN ONE GO.** (S11.)
- *
- * Three ways in, one list out:
- *
- * ```
- *   paste    ZIPs separated by spaces, commas or lines
- *   file     a spreadsheet saved as CSV (a column named zip; a district column
- *            groups them) — the Cook toss-up file reads as 21 groups
- *   pick     a whole state, counties, congressional or state legislative
- *            districts, or metro areas. Each pick is ONE mission, never a pile
- *            of ZIP hunts: the runner works out its ZIPs when it plans
- * ```
- *
- * and three ways to budget: one total for all (shared evenly), the same amount
- * for each, or a budget for each. "Check the list" asks the server to read it
- * and shows exactly what will be sent and what was left out and why; Send is
- * off until that check has been run on what is on screen now, so nothing is
- * sent that was not shown. The send itself is the one gateway action, through
- * the same executor every other control uses, and its receipt reads Done only
- * when the runner confirms.
- */
 import { useEffect, useId, useRef, useState } from "react";
 
 import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
@@ -70,10 +48,25 @@ interface Preview {
   readonly pickNotes: readonly string[];
 }
 
+/** One research lead as the preview read it and the send carries it. */
+export interface BulkLead {
+  readonly n: number;
+  readonly link: string;
+  readonly notes: Readonly<Record<string, string>>;
+}
+
+interface LeadsPreview {
+  readonly leads: readonly BulkLead[];
+  readonly duplicates: number;
+  readonly skipped: readonly { readonly why: string; readonly count: number; readonly examples: readonly string[] }[];
+  readonly columns: { readonly link: string; readonly notes: readonly string[] } | null;
+}
+
 type Mode = "split" | "same" | "each";
+type What = "hunts" | "leads";
 type Source = "paste" | "file" | "pick";
 
-/** The pick a place key stands for (`st:az`, `geo:az.county.04019`), or null for a place a pick cannot carry. */
+/** The pick a place key stands for, or null for a place a pick cannot carry. */
 export function bulkPickOf(target: string, name: string): BulkPick | null {
   const st = /^st:([a-z]{2})$/.exec(target);
   if (st) return { kind: "state", state: st[1].toUpperCase(), label: `All of ${name}` };
@@ -89,14 +82,17 @@ const CHECK_FAILED = "Check failed";
 
 export function BulkHunts(props: {
   readonly initialPick?: BulkPick | null;
-  /** Why sending is off (the connection, or no spending permission), or null. */
   readonly blocked: string | null;
   readonly onSend: (send: { readonly items: readonly BulkItem[]; readonly missions: readonly BulkMission[]; readonly priority: number }) => void;
+  readonly leadsBlocked: string | null;
+  readonly onSendLeads: (leads: readonly BulkLead[]) => void;
   readonly onClose: () => void;
 }) {
   const titleId = useId();
   const dialogRef = useRef<HTMLDivElement>(null);
+  const [what, setWhat] = useState<What>("hunts");
   const [source, setSource] = useState<Source>(props.initialPick ? "pick" : "paste");
+  const [leadsPreview, setLeadsPreview] = useState<LeadsPreview | null>(null);
   const [pasted, setPasted] = useState("");
   const [fileText, setFileText] = useState("");
   /** An Excel workbook, as base64, when that is what was uploaded; the server reads it. */
@@ -115,11 +111,10 @@ export function BulkHunts(props: {
   const [edits, setEdits] = useState<Readonly<Record<string, string>>>({});
   const [sent, setSent] = useState(false);
 
-  const invalidate = () => { setPreview(null); setProblem(null); setEdits({}); };
+  const invalidate = () => { setPreview(null); setLeadsPreview(null); setProblem(null); setEdits({}); };
 
   useEffect(() => { dialogRef.current?.focus(); }, []);
 
-  // The districts or counties of the chosen state, when picking those. Each answer is kept under the question it answers.
   const listKey = source === "pick" && pickType !== "state" ? `${pickType}:${pickState}` : null;
   const held = listKey === null ? null : lists[listKey] ?? null;
   const choices = held?.items ?? null;
@@ -158,6 +153,25 @@ export function BulkHunts(props: {
   };
 
   const budget = () => mode === "split" ? { mode, totalUsd: Number(amount) } : mode === "same" ? { mode, eachUsd: Number(amount) } : { mode, defaultUsd: Number(amount), byZip: {} };
+
+  const checkLeads = async () => {
+    setChecking(true);
+    invalidate();
+    try {
+      const res = await fetch("/api/admin/bulk-hunts", {
+        method: "POST",
+        headers: { "content-type": "application/json", accept: "application/json" },
+        body: JSON.stringify({ kind: "leads", text: source === "paste" ? pasted : fileText, xlsx: source === "file" ? fileXlsx : "" }),
+      });
+      const body = (await res.json().catch(() => null)) as (LeadsPreview & { ok?: boolean; says?: string }) | null;
+      if (res.ok && body?.ok) setLeadsPreview(body);
+      else setProblem(body?.says ?? CHECK_FAILED);
+    } catch {
+      setProblem(CHECK_FAILED);
+    } finally {
+      setChecking(false);
+    }
+  };
 
   const check = async () => {
     setChecking(true);
@@ -198,15 +212,31 @@ export function BulkHunts(props: {
   return (
     <div className={s.overlay} onMouseDown={(e) => { if (e.target === e.currentTarget) props.onClose(); }}>
       <div ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby={titleId} className={s.dialog} onKeyDown={onKeyDown} style={{ maxWidth: 820, maxHeight: "90vh", overflow: "auto" }}>
-        <h2 id={titleId} className={s.h2}>Start missions or hunts</h2>
+        <h2 id={titleId} className={s.h2}>{what === "leads" ? "Send research leads" : "Start missions or hunts"}</h2>
+
+        <div className={s.inline} role="tablist" aria-label="What you are sending">
+          {([["hunts", "Hunts and missions"], ["leads", "Research leads"]] as const).map(([id, label]) => (
+            <button key={id} type="button" role="tab" aria-selected={what === id} className={cx(s.btn, what === id ? s.btnPrimary : s.btnGhost)}
+              onClick={() => { setWhat(id); if (id === "leads" && source === "pick") setSource("paste"); invalidate(); }}>{label}</button>
+          ))}
+        </div>
 
         <div className={s.inline} role="tablist" aria-label="Where the list comes from">
-          {([["paste", "Paste ZIPs"], ["file", "Upload a file"], ["pick", "Pick a state, counties, districts or metro areas"]] as const).map(([id, label]) => (
+          {(what === "leads"
+            ? ([["paste", "Paste links"], ["file", "Upload a file"]] as const)
+            : ([["paste", "Paste ZIPs"], ["file", "Upload a file"], ["pick", "Pick a state, counties, districts or metro areas"]] as const)).map(([id, label]) => (
             <button key={id} type="button" role="tab" aria-selected={source === id} className={cx(s.btn, source === id ? s.btnPrimary : s.btnGhost)} onClick={() => { setSource(id); invalidate(); }}>{label}</button>
           ))}
         </div>
 
-        {source === "paste" && (
+        {what === "leads" && source === "paste" && (
+          <label className={s.stack} style={{ gap: 4 }}>
+            <span className={s.small}>One link per line, with any note after it, or a table with a link column (other columns are kept as notes). Up to 5,000.</span>
+            <textarea className={s.textarea} rows={6} value={pasted} onChange={(e) => { setPasted(e.target.value); invalidate(); }} placeholder="https://www.example.gov/agendas  City council agendas" />
+          </label>
+        )}
+
+        {what === "hunts" && source === "paste" && (
           <label className={s.stack} style={{ gap: 4 }}>
             <span className={s.small}>ZIPs, separated by spaces, commas or new lines</span>
             <textarea className={s.textarea} rows={6} value={pasted} onChange={(e) => { setPasted(e.target.value); invalidate(); }} placeholder="85635 85641 85901" />
@@ -216,14 +246,14 @@ export function BulkHunts(props: {
         {source === "file" && (
           <div className={s.stack} style={{ gap: 6 }}>
             <label className={s.stack} style={{ gap: 4 }}>
-              <span className={s.small}>Excel or CSV file (column: zip, optional: district)</span>
+              <span className={s.small}>{what === "leads" ? "Excel or CSV file (column: link; other columns are kept as notes)" : "Excel or CSV file (column: zip, optional: district)"}</span>
               <input type="file" accept=".csv,.tsv,.txt,.xlsx,text/csv,text/plain,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onChange={(e) => void onFile(e.target.files?.[0])} />
             </label>
             {fileName && <span className={s.meta}>{fileName} · {fileXlsx ? "Excel workbook ready to read" : `${fileText.length.toLocaleString("en-US")} characters read`}</span>}
           </div>
         )}
 
-        {source === "pick" && (
+        {what === "hunts" && source === "pick" && (
           <div className={s.stack} style={{ gap: 8 }}>
             <div className={s.inline}>
               <label className={s.small}>State{" "}
@@ -262,7 +292,7 @@ export function BulkHunts(props: {
           </div>
         )}
 
-        <fieldset className={s.stack} style={{ border: 0, padding: 0, margin: 0, gap: 6 }}>
+        {what === "hunts" && <fieldset className={s.stack} style={{ border: 0, padding: 0, margin: 0, gap: 6 }}>
           <legend className={s.small}>Budget for paid work</legend>
           {([["split", "One budget for all, shared evenly", "Total for the whole list"], ["same", "The same amount for each hunt", "Amount for each hunt"], ["each", "A budget for each hunt", "Starting amount (change any below)"]] as const).map(([id, label]) => (
             <label key={id} className={s.check}>
@@ -273,13 +303,41 @@ export function BulkHunts(props: {
           <label className={s.small}>Priority (1 runs first){" "}
             <input className={s.input} style={{ width: 70 }} inputMode="numeric" value={priority} onChange={(e) => setPriority(e.target.value)} />
           </label>
-        </fieldset>
+        </fieldset>}
 
         <div className={s.inline}>
-          <button type="button" className={cx(s.btn, s.btnPrimary)} aria-disabled={checking ? "true" : undefined} onClick={() => { if (!checking) void check(); }}>{checking ? "Checking…" : "Check the list"}</button>
+          <button type="button" className={cx(s.btn, s.btnPrimary)} aria-disabled={checking ? "true" : undefined} onClick={() => { if (!checking) void (what === "leads" ? checkLeads() : check()); }}>{checking ? "Checking…" : "Check the list"}</button>
           <button type="button" className={cx(s.btn, s.btnGhost)} onClick={props.onClose}>Cancel</button>
         </div>
         {problem && <p className={s.why} role="alert">{problem}</p>}
+
+        {leadsPreview && (
+          <section className={s.stack} aria-label="What will be sent" style={{ gap: 6 }}>
+            <strong>{leadsPreview.leads.length.toLocaleString("en-US")} link{leadsPreview.leads.length === 1 ? "" : "s"} · no paid-work budget needed to test them</strong>
+            {leadsPreview.columns && <span className={s.meta}>Links from the “{leadsPreview.columns.link}” column{leadsPreview.columns.notes.length > 0 ? `; kept as notes: ${leadsPreview.columns.notes.join(", ")}` : ""}</span>}
+            {leadsPreview.duplicates > 0 && <span className={s.meta}>{leadsPreview.duplicates.toLocaleString("en-US")} repeats counted once</span>}
+            {leadsPreview.skipped.map((k) => <span key={k.why} className={s.meta}>Left out {k.count.toLocaleString("en-US")}: {k.why}{k.examples.length ? ` (${k.examples.join(", ")}…)` : ""}</span>)}
+            <table className={s.small} style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
+              <thead><tr><th align="left">Link</th><th align="left">Notes</th></tr></thead>
+              <tbody>
+                {leadsPreview.leads.slice(0, SHOWN_ROWS).map((l) => (
+                  <tr key={l.n}>
+                    <td style={{ overflowWrap: "anywhere" }}>{l.link}</td>
+                    <td style={{ overflowWrap: "anywhere" }}>{Object.entries(l.notes).map(([k, v]) => `${k}: ${v}`).join(" · ")}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {leadsPreview.leads.length > SHOWN_ROWS && <span className={s.meta}>First {SHOWN_ROWS} of {leadsPreview.leads.length.toLocaleString("en-US")}</span>}
+            {props.leadsBlocked && <p className={s.why} role="alert">{props.leadsBlocked}</p>}
+            <div className={s.inline}>
+              <button type="button" className={cx(s.btn, s.btnPrimary)} aria-disabled={!props.leadsBlocked && !sent ? undefined : "true"}
+                onClick={() => { if (props.leadsBlocked || sent) return; setSent(true); props.onSendLeads(leadsPreview.leads); }}>
+                {sent ? "Sending…" : `Send ${leadsPreview.leads.length.toLocaleString("en-US")} lead${leadsPreview.leads.length === 1 ? "" : "s"}`}
+              </button>
+            </div>
+          </section>
+        )}
 
         {preview && (
           <section className={s.stack} aria-label="What will be sent" style={{ gap: 6 }}>

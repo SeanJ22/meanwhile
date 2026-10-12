@@ -16,7 +16,6 @@ const text = (value: unknown) => typeof value === "string" ? value : "";
 const words = (value: string) => value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 const idHash = (parts: readonly string[]) => createHash("sha256").update(canonicalCivicDataJson(parts)).digest("hex").slice(0, 24);
 
-/** Official full-text measure records join the existing general ballot, with no per-place code. */
 export function workerBallotMeasuresPackage(input: {
   plan: AutonomousWorkPlan; parser: WorkerResultRecord; captures: readonly WorkerPublicationCapture[];
   registry: RegistryRuntimePrior | null; now: string; results?: readonly WorkerResultRecord[];
@@ -56,8 +55,6 @@ export function workerBallotMeasuresPackage(input: {
     ballot.election.date ||= text(fields.electionDate);
     ballot.contests.push({ id: contestId, electionId, ocdId: divisions[0].ocdId, divisionVintage: divisions[0].sourceDataset,
       title, type: "MEASURE", measureTextUrl: documentUrl, voteFor: null, termYears: null, scopeNote: text(fields.scopeNote) || null, provenance });
-    // §3's election + designation + text link goes live immediately. A missing
-    // document or unverified optional wording remains work, never another gate.
     const fullText = questionText && source && !documents.some(row => Date.parse(row.observedAt) === Date.parse(document.observedAt) && row.evidence.contentHash !== source.contentHash) &&
       (!officialStatement || source.text.includes(officialStatement)) &&
       section3Page({ url: documentUrl, text: source.text, retrievedAt: document.observedAt,
@@ -70,8 +67,7 @@ export function workerBallotMeasuresPackage(input: {
     const measure: Measure = { id: `${contestId}#question`, contestId, ...(number ? { officialNumber: number } : {}), questionText, officialStatement,
       provenance: { ...provenance, sourceUrl: documentUrl, sourceOrg: source.sourceId, collectedAt: document.observedAt } };
     ballot.measures.push(measure);
-    // Official wording is held verbatim until CA-25 writes a checked translation.
-    // Only explicit publisher YES/NO sentences attach; null remains unknown.
+        // Only explicit publisher YES/NO sentences attach; null remains unknown.
     ballot.measureRecords = [...ballot.measureRecords ?? [], { contestId, whatItDoes: officialStatement || questionText,
       ...explicitVoteMeanings(`${questionText}\n${officialStatement ?? ""}`), parts: [], sourceUrl: documentUrl,
       sourceHash: (source.sourceDocument?.contentHash ?? source.contentHash).replace(/^sha256-/, ""),

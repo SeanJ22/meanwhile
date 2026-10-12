@@ -17,15 +17,16 @@ function scope(state: string, id = "owner-send-1"): ResolvedScope {
       priority: 1, budgetUsd: 50, budgetStartedAt: NOW, sourceWorkVersion: 1, note: null, decidedAt: NOW, decidedBy: "owner-session", receiptId: id, previous: null } };
 }
 
-test("an actual resolved Send selects shared producers once, without expanding the standing portfolio", () => {
+test("an actual resolved Send selects each shared native source producer once", () => {
   assert.deepEqual(huntSourceTasks([], NOW), []);
   const legacy = scope("AZ");
   assert.deepEqual(huntSourceTasks([{ ...legacy, decision: { ...legacy.decision, sourceWorkVersion: undefined } }], NOW), [], "deployment alone cannot launch the paused hunt or expand old Sends");
   const unresolved: ResolvedScope = { kind: "UNRESOLVED", decision: scope("AZ").decision, states: ["AZ"], why: "vintage absent" };
   assert.deepEqual(huntSourceTasks([unresolved], NOW), []);
-  assert.equal(huntSourceTasks([scope("NH")], NOW).length, 5, "national sources plus the voting-site pass and PRL, for any state");
+  assert.equal(huntSourceTasks([scope("NH")], NOW).length, 7, "national sources, known PRL datasets, voting sites and native New Hampshire finance");
   const tasks = huntSourceTasks([scope("AZ"), scope("AZ", "owner-send-2")], NOW);
-  assert.equal(tasks.length, 7);
+  assert.equal(tasks.length, 8);
+  assert.equal(new Set(tasks.map(task => task.id)).size, tasks.length);
   for (const task of tasks) {
     assert.deepEqual(task.ownerInvocation?.instructions, ["owner-send-1", "owner-send-2"]);
     assert.ok(!ROUTINE_SOURCE_TASKS.some(standing => standing.id === task.id));

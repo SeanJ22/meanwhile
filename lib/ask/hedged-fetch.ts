@@ -1,19 +1,7 @@
 /**
- * **A SLOW CALL IS ASKED AGAIN, AND THE FIRST ANSWER WINS.** (2026-09-29, S3.)
- *
- * Measured on staging that day, the fast model's reading of a question took
- * 1.0-1.7 s in 21 of 25 calls and 5.1-5.8 s in four — stalls, not larger
- * questions: the same prompt asked again a moment later answered in 1.1 s. Sean's
- * bar is three seconds from the question, and one stalled reading spends it.
- *
- * So the request is sent, and if it has not answered by `hedgeAfterMs` the same
- * request is sent once more; the first response to arrive is the one used and the
- * other is stopped. A reading is small (about 3,500 input tokens, 60 output), so
- * the second call costs a fraction of a cent and only on the slow one in six. A
- * request that fails returns its failure; an unchanged failure is not retried.
- *
- * Nothing about the request changes between the two sends, so the answer the
- * winner returns is the answer either would have.
+ * A slow call is sent once more after `hedgeAfterMs`; the first response to
+ * arrive is used and the other is stopped. The request is identical, so either
+ * answer is the same answer. A failure returns its failure and is not retried.
  */
 
 /** The hedge delay in ms, from `WTP_ASK_HEDGE_MS`; `off` (or 0) means never. */

@@ -36,17 +36,14 @@ import {
 import { findTenant } from "../lib/sources/legistar-insite/tenant-registry.ts";
 
 /**
- * NH332: Mesa's City Council decisions are in its minutes, not the vendor's
- * API. Every document below is a real Mesa minutes document read robots-first
- * (`pnpm research:fetch`, 2026-09-25; mesa.legistar.com/robots.txt answered
- * 404): two as their exact PDF bytes, three as the text layer lib/extract
- * extracted from bytes identified by sha256 (tests/fixtures/
- * legistar-insite-mesa-minutes/*.pages.json). No test here touches the network.
+ * Mesa's City Council decisions are in its minutes, not the vendor's API. Every document below is a real Mesa
+ * minutes document: some as their exact PDF bytes, others as the text layer extracted from bytes identified by
+ * sha256 (`*.pages.json`). No test here touches the network.
  */
 
 const DIR = "tests/fixtures/legistar-insite-mesa-minutes";
 /** sha256 of lib/sources/legistar-insite/minutes.ts (LF line endings) at MINUTES_PARSER_REVISION "2026-09-25.motion-clauses". */
-const PINNED_MINUTES_PARSER_DIGEST = "63ef8d519cb796784f77698194cbd6147796b3f968a4a8a17ebaa5dc87bea782";
+const PINNED_MINUTES_PARSER_DIGEST = "12179d0eed01392166b0d244ff9e0e1a064e828e90637656490bb96a028dafd3";
 const MESA = "ocd-division/country:us/state:az/place:mesa#governing";
 const tenant = findTenant("mesa")!;
 const CALENDAR_URL = "https://mesa.legistar.com/Calendar.aspx";
@@ -275,11 +272,7 @@ test("the 2026-06-08 study session's scrambled OCR: displaced margin numbers sta
 });
 
 test("result wording: a failed motion reads FAILED, and a motion with no readable result is NOT_RECORDED, never failed", () => {
-  /*
-   * None of the 29 motions in the eight Mesa sittings read on 2026-09-25 failed,
-   * so these two cases take a real passage (7-27, item 5-c) and change only its
-   * result sentence. They are labelled synthetic for that reason.
-   */
+  // Synthetic: a real passage with only its result sentence changed, since no recorded motion failed.
   const pages = pagesFixture("1336059").pages;
   const failedPages = pages.map((page) => ({ ...page, text: page.text.replace("NAYS – Goforth Mayor Freeman declared the motion carried by majority vote.", "NAYS – Goforth Mayor Freeman declared the motion failed.") }));
   const failed = parseCouncilMinutes(failedPages).motions[1]!;
@@ -302,9 +295,7 @@ test("the minutes link: the accessible HTML first, the PDF second, on the portal
   // Synthetic: no Mesa row has published an accessible-minutes rendering (0 of 163 seen).
   const accessible = { ...withPdf, accessibleMinutes: { status: "Accessible Minutes", href: "View.ashx?M=MADA&ID=1336059&GUID=B0165E88-90A2-4E7C-80FE-0AA9E5A24F1A" } };
   assert.equal(minutesLinkFor(accessible, tenant.host)?.format, "HTML");
-  // The vendor's document host answers robots.txt with `Disallow: /`. Since the
-  // owner decision of 2026-09-25 that is recorded and blocks nothing: its
-  // public minutes file is followed like the portal's.
+  // The vendor's document host answers robots.txt with `Disallow: /`; that is recorded and blocks nothing.
   const vendorHost = { ...withPdf, minutes: { status: "Minutes", href: "https://legistar.granicus.com/mesa/meetings/2026/7/x.pdf" } };
   assert.deepEqual(minutesLinkFor(vendorHost, tenant.host), { url: "https://legistar.granicus.com/mesa/meetings/2026/7/x.pdf", format: "PDF", label: "Minutes" });
   // Still guarded: a third host, plain http, or credentials in the URL are never followed.
@@ -354,20 +345,11 @@ test("the concluded sittings a pass considers: the wired bodies, in the window, 
 });
 
 /*
- * THE CLERK'S OTHER TWO WORDINGS (2026-09-25). Mesa's first production minutes pass (3:23-3:26 PM MST) held
- * two sittings as failed extractions. Read through the InSite route that evening (22:30Z): the 2026-06-04
- * study session writes its one motion without "that" ("… seconded by Councilmember Taylor, receipt of the
- * above listed minutes be acknowledged."), and the 2026-08-13 study session, already promoted with three
- * motions, wrote its fourth as an infinitive ("… seconded by Councilmember Duff, to direct the City Attorney
- * to pursue litigation …") and published it as an unread passage. The 2026-05-28 strategic planning session
- * records no motion and does not say no action was taken: it stays a failed extraction.
- *
- * A scan of all 21 documents the promoted projection cites (fetched the same evening) found no other motion
- * passage the parser did not read: the other motion-vocabulary hits are "Motion Industries", "any motion to
- * approve would …", a clerk's parenthetical note, and "will be voted on in one motion" ahead of a read motion.
+ * The clerk's other two motion wordings: a motion without "that", and a motion as an infinitive. Minutes that
+ * record no motion and do not say no action was taken stay a failed extraction.
  */
 
-/** The grid row as Mesa's calendar printed it on 2026-09-25 (22:30Z) for a sitting the recorded grids do not carry. */
+/** The grid row as Mesa's calendar printed it for a sitting the recorded grids do not carry. */
 function printedRow(insiteId: string, date: string, kind: string, guid: string): InSiteCalendarRow {
   return {
     bodyName: "City Council",
@@ -444,7 +426,7 @@ test("a held sitting whose note names unread passages is read again once a newer
   assert.equal(now.extractionNote, null, "this parser leaves no passage unread");
   assert.equal(now.minutesDocument?.parserRevision, MINUTES_PARSER_REVISION, "the reading records the parser that made it");
   assert.deepEqual(minutesRefreshDecision(link, now), { walk: false, reason: "UNCHANGED_SKIP" });
-  // As production held it on 2026-09-25 (22:26Z): three motions, the fourth named unread, read before parser revisions existed.
+  // Three motions, the fourth named unread, held before parser revisions existed.
   const { parserRevision: _revision, ...olderDocument } = now.minutesDocument!;
   const unread =
     ' 1 passage(s) beginning "It was moved" were not in the clerk\'s usual form and were not read: "It was moved by Councilmember Adams, seconded by Councilmember Duff, to direct the City Attorney …"';
@@ -455,12 +437,9 @@ test("a held sitting whose note names unread passages is read again once a newer
 });
 
 /*
- * A HELD FAILED EXTRACTION IS NOT DOWNLOADED AND FAILED AGAIN EVERY HOUR (2026-09-25). Mesa's 2026-05-28
- * strategic planning minutes (18,779,714 bytes) record no motion and do not say no action was taken, so every
- * read fails by rule; each failure refused the candidate, the contract retried an hour later, and each retry
- * downloaded the same 18.8 MB again. The failure is now held with the bytes' identity, the portal is asked by
- * HEAD whether the document changed (Mesa answers with its length and type, no ETag or Last-Modified), and the
- * bytes are read again only when it changed, the parser changed, or the failure is a week old.
+ * A held failed extraction is not downloaded and failed again every hour: the failure is held with the bytes'
+ * identity, the portal is asked by HEAD whether the document changed, and the bytes are read again only when it
+ * changed, the parser changed, or the failure is a week old.
  */
 const STRATEGIC = () => printedRow("1343166", "5/28/2026", "Strategic Planning Session", "F1571C51-0D0D-4537-9B82-C6F355A76A24");
 const FAILED_AT = "2026-09-25T22:31:11.000Z";

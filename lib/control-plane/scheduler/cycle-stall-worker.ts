@@ -1,16 +1,4 @@
-/**
- * The stall diagnostic's worker thread (see cycle-stall.ts).
- *
- * It sleeps until the diagnostic's moment, about 90 s before the supervisor's
- * wall, then reads what the cycle published and writes it to stderr and to
- * the cycle's local record, unless the cycle already wrote that record. It
- * writes with fs directly: a worker's console is relayed through the main
- * thread, which may be the thread that is blocked.
- *
- * The timer here is deliberately left referenced: it is the only thing keeping
- * this thread alive until it fires. The main side unrefs the Worker, so a
- * pending diagnostic never holds the cycle's process open.
- */
+/** The stall diagnostic's worker thread. Writes with fs directly (the main thread may be blocked); its timer stays referenced to keep this thread alive. */
 import { mkdirSync, writeFileSync, writeSync } from "node:fs";
 import { dirname } from "node:path";
 import { workerData } from "node:worker_threads";

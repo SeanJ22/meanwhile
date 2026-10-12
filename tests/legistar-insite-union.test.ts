@@ -1,35 +1,7 @@
 /**
- * **THE UNION IS THE ACCEPTANCE.** (2026-08-28.)
- *
- * MTG-13 shipped three Pima Board of Supervisors sittings. Three is what the
- * two routes anyone had wired AGREED on; the county had fourteen published,
- * running to 15 December, each one carried by three separate first-party
- * routes. The three are real, they still ship, and every one of them is
- * asserted below as a regression floor. They were never the answer.
- *
- * Everything here runs against RECORDED responses in `tests/fixtures/`, taken
- * live on 2026-08-28 by `scripts/learn-legistar-horizon.mts`. No live calls.
- *
- * ## The rule these tests exist to hold
- *
- * > An instance published by ANY materially distinct first-party route is owed
- * > to the reader. Absence from another route is never evidence against it.
- *
- * And its named counterfactual, which must FAIL: shipping only what the routes
- * agree on. On Pima's live routes that intersection is **zero sittings** for a
- * county with fourteen published meetings.
- *
- * ## Why Mesa is in here and is not just a second parser fixture
- *
- * Pima's asymmetry runs one way — the portal has everything, the WebAPI has
- * nothing forward. If that were the whole story the fix would be "prefer the
- * portal", and it would be wrong. **Mesa's asymmetry runs BOTH ways**: on the
- * same day the WebAPI carried nineteen future sittings the portal grid did not,
- * and the grid carried eleven the WebAPI did not, out of a union of 33 with an
- * intersection of 2. A composition rule that preferred either route would lose
- * a fifth of one tenant's calendar or a third of the other's. Only the union
- * survives both, which is why the SECOND tenant exercises the composition and
- * not merely the parse.
+ * An instance published by any materially distinct first-party route is owed to the reader; absence from
+ * another route is never evidence against it, and shipping only what the routes agree on must fail. A second
+ * tenant, whose routes disagree in both directions, exercises the composition. Recorded responses only.
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -196,19 +168,8 @@ const PIMA_HORIZON = [
   ["12/15/2026", "5:00 PM", null],
 ] as const;
 
-// ---------------------------------------------------------------------------
-// The measurement that retires "three"
-// ---------------------------------------------------------------------------
-
 test("the WebAPI's future horizon is EMPTY, and that is a fact about the route", () => {
-  /*
-   * Both WebAPI routes, measured live 2026-08-28. Neither is broken and neither
-   * is lying: `/events` returns 403 rows all-time and its latest EventDate is
-   * 25 August. `EventDates/138?FutureDatesOnly=true` returns `[]`.
-   *
-   * A route that answers zero has told us about ITSELF. Reading either of these
-   * zeros as a statement about Pima County is the whole defect.
-   */
+  /* A route that answers zero has told us about itself, never about the county. */
   assert.deepEqual(PIMA_EVENTDATES_FUTURE, [], "FutureDatesOnly=true genuinely returns nothing");
   const latest = PIMA_EVENTS_LATEST.map((e) => String(e.EventDate).slice(0, 10)).sort().pop();
   assert.equal(latest, "2026-08-25", "the newest row this route holds is already in the past");
@@ -237,12 +198,7 @@ test("the portal publishes FOURTEEN future sittings, to 2026-12-15", () => {
 });
 
 test("the Clerk of the Board publishes the SAME fourteen, on the county's own domain", () => {
-  /*
-   * A second, independent first-party publisher — Pima telling us about Pima
-   * rather than Granicus telling us about Pima. It is the only available check
-   * on the vendor: without it there is no way to know whether Calendar.aspx has
-   * dropped a sitting or moved an hour.
-   */
+  /* A second, independent first-party publisher: the only check on whether the vendor grid dropped a sitting or moved an hour. */
   const parsed = parseClerkSchedule(PIMA_CLERK);
   assert.ok(parsed.length > 40, "the whole 2026 table parses, not just the tail");
   const future = parsed.filter((r) => r.date >= "2026-08-28");
@@ -260,10 +216,6 @@ test("the Clerk of the Board publishes the SAME fourteen, on the county's own do
   );
 });
 
-// ---------------------------------------------------------------------------
-// The acceptance rule itself
-// ---------------------------------------------------------------------------
-
 test("ACCEPTANCE: the union of every route reaches the reader — all fourteen", () => {
   const result = normalizeWithDrops([pimaReading()], NOW);
 
@@ -277,8 +229,7 @@ test("ACCEPTANCE: the union of every route reaches the reader — all fourteen",
     "in the body's own chronological order, every one of them",
   );
 
-  // Every union instance became a Meeting. Not "most", not "the ones inside the
-  // serving window" — the adapter no longer clips the future at all.
+  // Every union instance became a Meeting; the adapter does not clip the future.
   const produced = new Set(
     result.meetings.map((m) => sittingKey({ bodyId: m.bodyId, startsAt: m.startsAt, timeZone: m.timeZone })),
   );
@@ -297,12 +248,7 @@ test("ACCEPTANCE: the union of every route reaches the reader — all fourteen",
 });
 
 test("FORBIDDEN: intersection semantics would ship ZERO of Pima's fourteen", () => {
-  /*
-   * The named wrong answer, failing on purpose. This is the rule the previous
-   * reading of MTG-13 applied without naming it, and the reason it is written
-   * down in code rather than only in prose is that a rule stated only in prose
-   * gets re-derived — this workstream already did it once.
-   */
+  /* The named wrong answer, failing on purpose. */
   const result = normalizeWithDrops([pimaReading()], NOW);
   const webapi = webapiObservation(PIMA_EVENTS_LATEST, pima.bodyId, "pima", "2026-08-28");
   const union = unionFutureInstances([...result.routes, webapi]);
@@ -324,10 +270,7 @@ test("FORBIDDEN: intersection semantics would ship ZERO of Pima's fourteen", () 
 });
 
 test("REGRESSION FLOOR: the three September sittings still ship, unchanged", () => {
-  /*
-   * The union correction is additive. These three are what MTG-13 delivered and
-   * they are verified at the reader API; nothing here may move them.
-   */
+  /* The union correction is additive: these three must not move. */
   const result = normalizeWithDrops([pimaReading()], NOW);
   const september = result.meetings
     .filter((m) => m.startsAt.startsWith("2026-09"))
@@ -349,10 +292,6 @@ test("REGRESSION FLOOR: the three September sittings still ship, unchanged", () 
   }
 });
 
-// ---------------------------------------------------------------------------
-// Dispositions are DATA, and they name whose fact they are
-// ---------------------------------------------------------------------------
-
 test("every instance carries a disposition, and each names WHOSE fact it is", () => {
   const result = normalizeWithDrops([pimaReading()], NOW);
   assert.equal(result.dispositions.length, 14, "one per union instance, no instance unexplained");
@@ -372,11 +311,7 @@ test("every instance carries a disposition, and each names WHOSE fact it is", ()
 });
 
 test("a sitting past the app's serving horizon is HELD and NAMED, never dropped", () => {
-  /*
-   * All fourteen published sittings remain accounted for. Under the 90-day horizon eleven reached the reader and three
-   * were held beyond it; the adapter now holds the 120-day window (DB-03), which reaches all fourteen from NOW, so the
-   * held-and-named path is exercised from a January vantage below.
-   */
+  /* All fourteen published sittings remain accounted for within the 120-day held window. */
   const result = normalizeWithDrops([pimaReading()], NOW);
   const beyond = result.dispositions.filter((d) => d.verdict === "BEYOND_APP_SERVING_HORIZON");
   const represented = result.dispositions.filter((d) => d.verdict === "REPRESENTED_IN_READER");
@@ -385,12 +320,7 @@ test("a sitting past the app's serving horizon is HELD and NAMED, never dropped"
   assert.equal(beyond.length, 0, "the three later sittings are inside the held 120-day horizon");
   assert.equal(represented.length, 14);
 
-  /*
-   * The mechanism, exercised on the SAME published sittings by moving the
-   * observer rather than inventing a meeting. Read from January, every one of
-   * the fourteen is more than 120 days out, so every one must be held and
-   * named. No new fixture, and nothing here depends on the horizon's value.
-   */
+  /* Read from January, every one of the fourteen is more than 120 days out, so every one must be held and named. */
   const EARLY = new Date("2026-01-05T12:00:00Z");
   const far = normalizeWithDrops([pimaReading()], EARLY);
   const farBeyond = far.dispositions.filter((d) => d.verdict === "BEYOND_APP_SERVING_HORIZON");
@@ -454,12 +384,7 @@ test("the per-route table states each route's mechanism, counts, span and comple
 });
 
 test("a route this tenant has not declared says NOBODY LOOKED, not that nothing exists", () => {
-  /*
-   * Mesa declares no clerk-schedule route. That is a rung nobody has climbed in
-   * this workstream, and it is emitted as exactly that: a later session must
-   * read "we have not looked", never "the city publishes no schedule of its
-   * own". `CLAUDE.md` — absence is never asserted.
-   */
+  /* A clerk-schedule route nobody has read is emitted as "we have not looked", never as an absence. */
   assert.equal(mesa.clerkScheduleUrl, null);
   const result = normalizeWithDrops(
     [
@@ -500,8 +425,7 @@ test("a route this tenant has not declared says NOBODY LOOKED, not that nothing 
 
 test("the Granicus route is unbuilt, not walled — its robots.txt recorded with a date, and a NULL claim about content", () => {
   const route = granicusRouteObservation();
-  // Owner decision 2026-09-25: robots.txt is recorded and blocks nothing, so
-  // the route's zero is ours (no adapter reads it yet), never a permission wall.
+  // robots.txt is recorded and blocks nothing, so the route's zero is ours, never a permission wall.
   assert.equal(route.enumeration, "NOT_BUILT");
   assert.equal(GRANICUS_LIVE_PROCEEDINGS_ROUTE.rule, "User-agent: * / Disallow: /");
   assert.equal(GRANICUS_LIVE_PROCEEDINGS_ROUTE.readAt, "2026-08-28");
@@ -527,20 +451,8 @@ test("the Granicus route is unbuilt, not walled — its robots.txt recorded with
   assert.equal(result.union.length, 14, "nothing we owe a reader depends on the unbuilt route");
 });
 
-// ---------------------------------------------------------------------------
-// The unnamed second tenant — the COMPOSITION rule, not the parser
-// ---------------------------------------------------------------------------
-
 test("UNNAMED TENANT: Mesa's asymmetry runs BOTH ways, so neither route may win", () => {
-  /*
-   * The control that says this was never about Pima, and never about preferring
-   * the portal. Measured the same day:
-   *
-   *   union 33 · intersection 2 · only-on-WebAPI 19 · only-on-grid 11
-   *
-   * Preferring the portal would lose Mesa nineteen sittings; preferring the API
-   * would lose Pima fourteen. Only the union survives both tenants.
-   */
+  /* Preferring either route loses one tenant's sittings; only the union survives both. */
   const result = normalizeWithDrops(
     [
       {
@@ -626,10 +538,6 @@ test("UNNAMED TENANT: the paged range is WALKED, and its 148 rows all reach the 
   );
 });
 
-// ---------------------------------------------------------------------------
-// Identity, across routes that share no id space
-// ---------------------------------------------------------------------------
-
 test("identity is (body, local date, local time) — never the vendor's number", () => {
   /*
    * The routes number the same meeting differently: the WebAPI calls Pima's 25
@@ -691,10 +599,6 @@ test("sittingKeyFromLocal and sittingKey are the same key, reached two ways", ()
     "a record with no time has no sitting identity, and is not given a fallback one",
   );
 });
-
-// ---------------------------------------------------------------------------
-// The Clerk's table, parsed as the publisher writes it
-// ---------------------------------------------------------------------------
 
 test("one table row can publish TWO sittings, and both are kept", () => {
   /*
@@ -761,26 +665,7 @@ test("a row that names a meeting without an hour keeps the meeting and NOT an in
   );
 });
 
-// ---------------------------------------------------------------------------
-// AUDIT FINDING E — the unique-route disposition that hid a meeting
-// ---------------------------------------------------------------------------
-
-/**
- * **THE FALLBACK THAT INVERTED ITS OWN MEANING.**
- *
- * The disposition chain used to end, for any union instance with no `Meeting`
- * and no recorded reason, in `SUPERSEDED_BY_RICHER_ROUTE` — while its own
- * comment said the meeting-producing route had NOT carried it. Nothing richer
- * superseded those sittings; nothing carried them at all. And `unaccounted()`
- * is satisfied by ANY disposition, so the verdict turned *an explicit
- * first-party route published a sitting we did not produce* into *accounted
- * for*, with the sitting nowhere near a reader.
- *
- * **Pima cannot expose it.** Its grid carries all fourteen, so the branch is
- * unreachable on the only corpus anyone had read — which is exactly why the
- * control below is a different tenant, and why it is written against a feed
- * that publishes a sitting the grid is silent about.
- */
+/** A union instance with no Meeting and no recorded reason is never SUPERSEDED_BY_RICHER_ROUTE: nothing carried it. */
 function mesaControlReading(
   overrides: Partial<LegistarInSiteRaw> = {},
 ): LegistarInSiteRaw {
@@ -820,11 +705,7 @@ const SUPERSEDING_KEY = sittingKeyFromLocal({
 })!;
 
 test("UNNAMED TENANT: a sitting only the FEED publishes is never called superseded", () => {
-  /*
-   * The finding-E control, at the product boundary. The feed publishes a timed
-   * future sitting the grid does not carry; the old chain called that
-   * "SUPERSEDED_BY_RICHER_ROUTE" and closed the book on it.
-   */
+  /* The feed publishes a timed future sitting the grid does not carry. */
   const result = normalizeWithDrops([mesaControlReading()], NOW);
 
   const instance = result.union.find((i) => i.key === UNPLACED_KEY);
@@ -884,12 +765,7 @@ test("UNNAMED TENANT: a sitting only the FEED publishes is never called supersed
 });
 
 test("EXPLAINED IS NOT DISCHARGED: the unplaced sitting stays OPEN and leaves the adapter", () => {
-  /*
-   * The half of the defect that made it invisible. `unaccounted()` asks whether
-   * an instance was EXPLAINED and is satisfied by any verdict at all — so a
-   * fallback disposition read as "accounted for" and the hunt stopped. What is
-   * still owed is a different question, and it now has its own answer.
-   */
+  /* `unaccounted()` is satisfied by any verdict, so what is still owed has its own answer. */
   const result = normalizeWithDrops([mesaControlReading()], NOW);
   const produced = new Set(
     result.meetings.map((m) =>
@@ -940,17 +816,7 @@ test("EXPLAINED IS NOT DISCHARGED: the unplaced sitting stays OPEN and leaves th
 });
 
 test("POSITIVE CONTROL: supersession is still assigned — when a richer record provably exists", () => {
-  /*
-   * The other half. Naming the inversion is worthless if the fix simply retires
-   * the verdict: a record a richer route genuinely supersedes must still be
-   * called superseded, or every rescheduled sitting starts reporting itself as
-   * a sitting we lost.
-   *
-   * The feed carries InSite meeting 1336055 at 6:15 PM; the recorded grid
-   * carries the SAME meeting id at 5:45 PM, in Council Chambers, and we produce
-   * it. One publisher record, two canonical identities, and the link between
-   * them is a shared vendor id in one declared id space.
-   */
+  /* A record a richer route genuinely supersedes (one vendor id, two canonical identities) is still called superseded. */
   const result = normalizeWithDrops([mesaControlReading()], NOW);
 
   const disposition = result.dispositions.find((d) => d.key === SUPERSEDED_KEY);
@@ -1105,10 +971,7 @@ test("ZERO SILENT LOSSES: every control-tenant instance is served, superseded-wi
 });
 
 test("REGRESSION: Pima's in-window sittings are untouched — no supersession", () => {
-  /*
-   * The union retains all fourteen source sittings; the adapter holds the 120-day window (DB-03; eleven of them
-   * were inside 90 days) without inventing supersession or a missing venue.
-   */
+  /* The union retains all fourteen source sittings within the 120-day window, without inventing supersession or a missing venue. */
   const result = normalizeWithDrops([pimaReading()], NOW);
   assert.equal(result.union.length, 14);
   assert.equal(

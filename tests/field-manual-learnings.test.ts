@@ -3,16 +3,12 @@ import test from "node:test";
 
 import {
   DETECTIVE_LEARNING_SOURCE,
-  ENGINEERING_CANDIDATE_SOURCE,
   researchLearningEntries,
 } from "../lib/control-plane/workers/field-manual-learnings.ts";
 import { fieldManualEntryId } from "../lib/control-plane/field-manual.ts";
 import type { FleetResult } from "../lib/control-plane/workers/types.ts";
 
-/* ========================================================================== */
-/* THE DETECTIVE AND ENGINEER WROTE INTO A LOG NOBODY READ. NOW IT IS A MANUAL */
-/* ENTRY. This pins the mapping — including that proposed CODE never leaks in.  */
-/* ========================================================================== */
+/** A detective learning becomes a field-manual entry. */
 
 const NOW = "2026-09-19T08:00:00.000Z";
 
@@ -82,52 +78,6 @@ test("a CONTRADICTED detective result is a dead door, kept as FAILED", () => {
     detective({ verdict: "CONTRADICTED", identity: { state: "UNRESOLVED", candidates: [] } }),
     NOW,
   );
-  assert.equal(entry.outcome, "FAILED");
-});
-
-function engineering(overrides: Record<string, unknown>): FleetResult {
-  return {
-    role: "ENGINEERING",
-    attemptId: "at-2",
-    schemaVersion: 1,
-    implementation: "review-only-method-engineering",
-    version: "1.0.0",
-    verdict: "CANDIDATE_PROVED",
-    findings: [],
-    artifactIds: ["a1"],
-    methodRouteId: "streamline-sitemap-is-a-dated-meeting-inventory",
-    methodVersion: 3,
-    methodContentHash: "h",
-    validationResultId: "v1",
-    affectedPaths: ["review-candidates/streamline-sitemap-inventory/inventory.mjs"],
-    proposedFiles: [
-      { path: "review-candidates/streamline-sitemap-inventory/inventory.mjs", kind: "IMPLEMENTATION", content: "UNIQUE_PROPOSED_SOURCE_BYTES_marker", contentHash: "hh" },
-    ],
-    learnedProcedure: ["read the vaulted sitemap", "reject unsupported XML"],
-    reproducibility: { verdict: "PASS", isolatedExecutions: 2, cases: [], replayCommand: "node --test x" },
-    unresolvedRisks: ["portability not proved"],
-    adoption: "INTEGRATION_REVIEW_REQUIRED",
-    ...overrides,
-  } as unknown as FleetResult;
-}
-
-test("a proved engineering candidate becomes an ENGINEER pointer — the paths, never the file bytes", () => {
-  const [entry, ...rest] = researchLearningEntries(engineering({}), NOW);
-  assert.equal(rest.length, 0);
-  assert.equal(entry.role, "ENGINEER");
-  assert.equal(entry.kind, "ENGINEERING_CANDIDATE");
-  assert.equal(entry.outcome, "REFERENCE", "a proved candidate is code under review, not a live door");
-  assert.equal(entry.id, fieldManualEntryId(ENGINEERING_CANDIDATE_SOURCE, "streamline-sitemap-is-a-dated-meeting-inventory"));
-  const payload = entry.payload as { affectedPaths?: string[] };
-  assert.ok((payload.affectedPaths ?? []).length === 1, "the pointer carries the proposed paths");
-  assert.ok(
-    !JSON.stringify(entry).includes("UNIQUE_PROPOSED_SOURCE_BYTES_marker"),
-    "the proposed file CONTENT must never enter the manual — the candidate store keeps the bytes",
-  );
-});
-
-test("a failed engineering proof is a FAILED dead door, not silently dropped", () => {
-  const [entry] = researchLearningEntries(engineering({ verdict: "PROOF_FAILED" }), NOW);
   assert.equal(entry.outcome, "FAILED");
 });
 

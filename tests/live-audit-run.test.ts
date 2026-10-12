@@ -1,9 +1,8 @@
-/** DP-13/DP-14: one connected live-audit cycle records every result, answers red flags at once, and marks pulled facts fixed. */
+/** One connected live-audit cycle records every result, answers red flags at once, and marks pulled facts fixed. */
 import assert from "node:assert/strict";
 import test from "node:test";
 
 import { fixItems } from "../lib/control-plane/fix-list.ts";
-import { FIELD_MANUAL_ID } from "../lib/control-plane/field-manual.ts";
 import { ADMIN_CONFIG_ID, type AdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { readAuditWeek, readLiveAuditPulls, weekDayKeys } from "../lib/control-plane/live-audit-log.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
@@ -37,7 +36,7 @@ test("every result is kept by day; a red flag unpulled for want of a trace goes 
   assert.equal(items[0].where, "comment-access:b");
   assert.equal(items[0].addedBy, "The live audit");
   assert.match(items[0].says, /not pulled automatically/);
-  assert.equal(await repos.fieldManual.read(FIELD_MANUAL_ID), null, "no lesson without a traced origin");
+  assert.deepEqual(await repos.fieldManual.list(), [], "no lesson without a traced origin");
 
   const again = await runLiveAuditCycle({ repos, catalog, policy, now: NOW, passId: "p1", fetchPage: async () => { throw new Error("no fetch"); } });
   assert.equal(again.summary.sampled, 0, "a fact checked within the hold is not checked again");
@@ -58,7 +57,7 @@ test("a traced red flag is pulled, its work reopened and its lesson kept; when i
   assert.deepEqual(reopened, ["wi-b"]);
   const pulls = await readLiveAuditPulls(repos, "wi-b");
   assert.deepEqual(pulls.map((p) => [p.parserAttemptId, p.recordIds]), [["pa", ["r1", "r2"]]]);
-  const manual = await repos.fieldManual.read(FIELD_MANUAL_ID);
+  const manual = { value: { entries: (await repos.fieldManual.list()).map((row) => row.value) } };
   const lesson = manual?.value.entries.find((e) => e.kind === "AUDIT_LESSON");
   assert.deepEqual(lesson?.platforms, ["granicus"], "the lesson reaches every door on the platform");
   assert.deepEqual((await readAuditWeek(repos, NOW)).corrections.map((c) => c.action), ["PULLED"]);

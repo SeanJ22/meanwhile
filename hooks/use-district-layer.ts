@@ -8,18 +8,9 @@ import {
 } from "@/lib/state/subscribe-to-storage";
 
 /**
- * Whether the congressional district overlay is showing.
- *
- * A sibling of use-stored-zip.ts and deliberately the same shape: localStorage
- * is an external store, so it is read through useSyncExternalStore with the
- * server rendering `pending`. That distinction is what stops the layer from
- * flashing on — or off — for a returning reader between the server render and
- * hydration.
- *
- * ON by default (session item 2, 2026-08-14 second session): the
- * who-governs card counts school districts, so the map must show them
- * without the reader finding a toggle — the tester asked for Kearsarge by
- * name and never saw it. An explicit "off" choice ("0") is still honored.
+ * Whether the district overlay is showing, read from localStorage through
+ * useSyncExternalStore with the server rendering `pending`, so it never flashes
+ * on hydration. On by default; only an explicit "0" turns it off.
  */
 
 const STORAGE_KEY = "wtp.show_districts";

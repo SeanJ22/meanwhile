@@ -1,35 +1,10 @@
 /**
- * **THE COST PANEL, WITH NUMBERS IN IT.** (ADM-6, 9.4.26 admin feedback;
- * free-by-design rows and non-dollar measures added for the evening pass,
- * ADM-17.)
+ * Joins the cost ledger, attempts, cycle cache metrics, lane share and verified
+ * record count into the cost panel figures. Pure: records in, rows out.
  *
- * The owner's words: "there are no numbers next to cost, by caller role, by
- * model, cache hits. None of it really makes sense." The section rendered
- * three headings over empty lists and a paragraph of architecture under each,
- * because the publisher never opened the cost ledger it wrote about.
- *
- * The ledger EXISTS (`cp_log_costs`, one `CostEntry` per Attempt with its
- * role and measured usd), the model per Attempt EXISTS (`cp_attempts`
- * `worker.version`), the cache split for model workers EXISTS on the research
- * state's per-cycle metrics, the lane share EXISTS on the newest run record,
- * and the verified-record count EXISTS in the promotion pipeline. This module
- * joins them into the five panel figures. PURE: records in, `Held<Measured>`
- * rows out, so a test pins every row without a store.
- *
- * ## Free by design is not a gap (ADM-17)
- *
- * The evening pass found 5 of 7 roles reading "not measured", and the owner
- * was surprised only two were measured. The ledger had told the truth badly:
- * a role whose every attempt ran deterministic code has no dollar cost BY
- * DESIGN, and rendering that as a gap invited a hunt for a measurement that
- * does not exist. So a role is now one of three things, decided from the
- * attempts' own worker identity, never assumed:
- *
- *   MEASURED        model attempts reported dollars — a real figure
- *   FREE_BY_DESIGN  every attempt ran without a paid model — $0, measured in
- *                   time, requests and bytes instead, which ARE recorded
- *   UNMEASURED      model attempts exist and reported no dollars — a gap of
- *                   ours, named as such, one short line
+ * A role is MEASURED (model attempts reported dollars), FREE_BY_DESIGN (every
+ * attempt ran without a paid model; measured in time, requests and bytes) or
+ * UNMEASURED (model attempts reported no dollars).
  */
 import type { WorkerRole } from "./attempt.ts";
 import {
@@ -66,17 +41,16 @@ export interface CostRow {
   /** Attempts whose usd was reported / not reported. Never coerced to zero. */
   readonly attemptsMeasured: number;
   readonly attemptsUnmeasured: number;
-  /** Absent on a snapshot published before ADM-17. */
+  /** Absent on older snapshots. */
   readonly kind?: CostRowKind;
-  /** The measures a deterministic role does carry. Absent before ADM-17. */
+  /** Absent on older snapshots. */
   readonly nonDollar?: NonDollarMeasures;
-  /** One plain sentence about the row. Absent before ADM-17. */
+  /** Absent on older snapshots. */
   readonly meaning?: string;
   /**
-   * How many of the row's entries can say anything about cache and batch use
-   * (ADM-C14, 2026-09-06). A row recorded before the metering fields existed
-   * reports PREDATES, and §9A.4 forbids rendering that as a zero. Absent on a
-   * snapshot published before this field existed, where absent means unknown.
+   * How many of the row's entries can say anything about cache and batch use.
+   * A row recorded before the metering fields existed is never a zero. Absent
+   * on older snapshots, where absent means unknown.
    */
   readonly metering?: MeteringCounts;
 }
@@ -93,13 +67,7 @@ export interface MeteringCounts {
   readonly batched: number;
 }
 
-/**
- * The cache health beside a caller's hit rate (ADM-C14: *"cache hit / miss
- * health; malformed/unmeasured rows; cache-defect warnings"*). Every field is
- * carried straight from the cycle's own `CacheHitRate` reading; a null is a
- * measurement nobody took, never a zero. Absent on a snapshot published before
- * this field existed.
- */
+/** Cache health carried from the cycle's `CacheHitRate`; null is an untaken measurement, never a zero. */
 export interface CacheCallerHealth {
   /** Turns after the first that read ZERO cached tokens, over turns after the first. */
   readonly zeroReadTurns: number | null;
@@ -136,13 +104,9 @@ export interface CostPanel {
     readonly attemptsUnmeasured: number;
     readonly entries: number;
   };
-  /**
-   * What the daily ceiling buys at the measured mean (§9A.4 capacity). Null
-   * when the caller passed no clock — a capacity figure needs a window, and a
-   * window needs an instant this module may not read for itself.
-   */
+  /** What the daily ceiling buys at the measured mean. Null when no clock was passed. */
   readonly capacity: ScoutCapacity | null;
-  /** The UTC calendar month's spend (§9A.23). Null for the same reason. */
+  /** The UTC calendar month's spend. Null when no clock was passed. */
   readonly monthlySpend: MonthlySpendView | null;
 }
 
@@ -156,14 +120,7 @@ export interface CostPanelInput {
   readonly share: ShareTrend | null;
   /** Records that reached VERIFIED in the promotion pipeline; null when the pipeline could not be read. */
   readonly verifiedRecords: number | null;
-  /**
-   * The instant of the publish, for the two figures that need a window: the
-   * capacity reading and the UTC monthly spend. OPTIONAL because this module
-   * has never read a clock and a publisher written before §9A.23 does not pass
-   * one; both figures are then null and the console says the publisher has not
-   * been wired, which is true, rather than showing a total over a window
-   * nobody dated.
-   */
+  /** Needed for capacity and monthly spend; both are null without it, since this module never reads a clock. */
   readonly nowIso?: string;
   /** The rolling ceiling the capacity sentence is stated against. Defaults to the research daily ceiling. */
   readonly dailyCeilingUsd?: number;
@@ -171,11 +128,7 @@ export interface CostPanelInput {
 
 export const NO_MODEL_KEY = "no model (deterministic work)";
 export const PROD_ASK_KEY = "prod-ask (reader questions)";
-/**
- * The by-model key for a ledger row whose Attempt is not in the attempts list.
- * A NAMED join gap: we do not know what ran, and §9A.4 forbids reading that as
- * a role that never spends.
- */
+/** By-model key for a ledger row whose Attempt is not in the attempts list: unknown, not free. */
 export const ATTEMPT_NOT_ON_RECORD = "(attempt not on record)";
 const LEDGER = "cp_log_costs (control-plane cost ledger)";
 
@@ -184,12 +137,7 @@ export function modelKeyOf(worker: { readonly version: string; readonly provider
   return /^claude-/i.test(worker.version) || worker.provider === "anthropic" ? worker.version : NO_MODEL_KEY;
 }
 
-/**
- * The kind of a published cost row, tolerating a snapshot written before the
- * field existed: the old publisher's gap sentence for a deterministic role
- * said in so many words that the work "runs without a paid model", and that
- * sentence is the fact the kind now names.
- */
+/** Tolerates older snapshots without `kind`, whose free-role gap sentence said "without a paid model". */
 export function costRowKind(row: { readonly kind?: CostRowKind; readonly usd: Held<Measured> }): CostRowKind {
   if (row.kind) return row.kind;
   if (row.usd.held) return "MEASURED";
@@ -319,11 +267,7 @@ export function buildCostPanel(input: CostPanelInput): CostPanel {
     .sort((a, b) => a[0].localeCompare(b[0]))
     .map(([role, entries]) => usdRow(role, entries, grandTotal, modelOf));
 
-  /*
-   * ---- by model, joined through the Attempt's worker version — and, for an
-   * Attempt that ran more than one model (an escalated Scout), split by the
-   * row's own `byModel` so each model carries its own part (MW-031) ----
-   */
+  /* By model via the Attempt's worker version; a multi-model Attempt is split by its own `byModel`. */
   const byModel = new Map<string, CostEntry[]>();
   for (const e of input.costs) {
     for (const part of costPortionsByModel(e, modelOf.get(e.attemptId) ?? ATTEMPT_NOT_ON_RECORD)) {
@@ -350,11 +294,7 @@ export function buildCostPanel(input: CostPanelInput): CostPanel {
                 "cp_research_state metrics.cacheByRole, computed by the newest cycle from Scout results",
               ),
             ),
-      /*
-       * ADM-C14's health columns, carried rather than recomputed: the cycle
-       * already read them from the ledger through `cacheHitRateByRole`, and a
-       * second derivation here is a second answer waiting to disagree.
-       */
+      /* Carried from the cycle rather than recomputed, so the two cannot disagree. */
       health: {
         zeroReadTurns: c.repeatedPrefixMisses ?? null,
         turnsExamined: c.repeatedPrefixTurns ?? null,
@@ -425,11 +365,7 @@ export function buildCostPanel(input: CostPanelInput): CostPanel {
       attemptsUnmeasured: input.costs.length - measuredEntries.length,
       entries: input.costs.length,
     },
-    /*
-     * CAPACITY reuses `scoutCapacity` rather than averaging the ledger again
-     * here: the digest, the research page and this panel must not be able to
-     * disagree about what an Attempt costs (RULING 103).
-     */
+    /* Reuses `scoutCapacity` so every surface agrees on what an Attempt costs. */
     capacity:
       input.nowIso === undefined
         ? null
@@ -458,51 +394,9 @@ export function durationText(ms: number): string {
   return `${s} s`;
 }
 
-/* ================================================================== *
- * §9A.4 — WHAT A ROLE'S COST IS, AND WHAT THE PAGE MAY CLAIM ABOUT IT
- * ================================================================== */
-
 /**
- * **"FREE BY DESIGN" WAS AN INFERENCE FROM ONE PUBLISH, NOT A POLICY.**
- * (ADM-33 and §9A.4 of the Admin C brief, 2026-09-06.)
- *
- * The console said *"Free by design: Acquirer, Detective, Engineering, Parser,
- * Validator"* and the owner did not believe it of Detective. He was right to
- * doubt the sentence, because it was not making the claim it looked like it was
- * making. {@link costRowKind} decides FREE_BY_DESIGN from the Attempts in ONE
- * publish: a role lands there when no row of its own carried an Anthropic
- * worker identity. That is a statement about those rows — and an Attempt
- * missing from the attempts list falls into the very same branch
- * (`usdRow` reads `modelOf.get(id) ?? NO_MODEL_KEY`), so a join gap reads as
- * evidence of frugality. §9A.4 forbids precisely this: *do not say a role is
- * free by design unless current canonical execution policy proves that role
- * never makes a paid-model request.*
- *
- * ## What the execution policy proves, read on 2026-09-06
- *
- * Model spend in the control plane passes one gate — `assertStepMayInvokeModel`
- * (`scheduler/model-routing.ts`) over a CLOSED step registry — and there are
- * exactly two executors on the other side of it:
- *
- * ```
- *   SCOUT                scheduler/scout-executor.ts: assertStepMayInvokeModel(SCOUT_LOOP_STEP)
- *                        and a declared { provider: "anthropic", version: model }
- *   ADVERSARIAL_AUDITOR  workers/model-audit.ts: assertStepMayInvokeModel("adversarial-audit"),
- *                        reachable only through workers/runtime.ts's `assisted` line,
- *                        which names ADVERSARIAL_AUDITOR and no other role
- * ```
- *
- * Every other role runs through an executor that DECLARES the deterministic
- * lane and `provider: "we-the-people"` before an Attempt is opened, and no
- * model transport is reachable from inside it: PARSER, VALIDATOR and
- * RELEASE_ORCHESTRATOR through `workers/runtime.ts`; ACQUIRER, DETECTIVE and
- * ENGINEERING through `workers/research-runtime.ts`.
- *
- * So this table is a READING OF THE CODE, and each row carries the file that
- * proves it so a later session can check it instead of trusting it.
- * `tests/cost-section-adm-c14.test.ts` re-derives the table from those files
- * and fails the moment a new executor hands a model to a role named here as
- * plain code. That guard is what makes the claim a proof rather than a habit.
+ * Whether each role can reach a paid model, read from the executor that runs it.
+ * `tests/cost-section-adm-c14.test.ts` re-derives this from the cited files.
  */
 export type RoleModelAccess = "ROUTED_TO_A_PAID_MODEL" | "NO_MODEL_STEP_ROUTED";
 
@@ -536,8 +430,8 @@ export const ROLE_COST_POLICY: Readonly<Record<WorkerRole, RoleCostPolicy>> = {
   },
   ENGINEERING: {
     role: "ENGINEERING",
-    access: "ROUTED_TO_A_PAID_MODEL",
-    provenIn: "lib/control-plane/workers/engineering.ts — adapter repair can escalate to the shared model tiers after plain code",
+    access: "NO_MODEL_STEP_ROUTED",
+    provenIn: "lib/control-plane/workers/research-runtime.ts — no executor runs this role, so no model transport reaches it",
   },
   PARSER: {
     role: "PARSER",
@@ -567,37 +461,20 @@ export function roleCostPolicy(key: string): RoleCostPolicy | null {
 }
 
 /**
- * **THE SIX THINGS A COST ROW CAN HONESTLY BE.** (§9A.4, verbatim.)
- *
- * The old trichotomy answered "did dollars arrive?"; these answer the question
- * the owner is actually asking, which is *why is this number what it is*. The
- * distinction that matters most is the one the old wording collapsed: a role
- * that CAN spend and did not spend in these rows is `$0 this run`, and it is
- * not the same statement as a role that could never spend at all.
- *
- * SUBSCRIPTION_JOB is never returned from the API ledger. It exists here so
- * that the one surface naming these classes names all six, and it is assigned
- * only from the Agent Bridge job log — a job that ran on the owner's
- * subscription left no row in this ledger by construction.
+ * Why a cost row's number is what it is. A role that can spend and did not is
+ * `$0 this run`, which is not the same as a role that can never spend.
  */
 export type CostClass =
   | "PAID_MODEL"
   | "PLAIN_CODE"
-  | "SUBSCRIPTION_JOB"
   | "ZERO_THIS_RUN"
   | "NOT_MEASURED"
   | "PREDATES_MEASUREMENT";
 
-/**
- * The words for each class. These are the owner's own strings from §9A.4;
- * two of them match `plain-words.ts` exactly (`BOUNDED_MODEL_WORKER` reads
- * "Paid model", `DETERMINISTIC` reads "Plain code"), which is the point — the
- * lane a worker ran in and the cost class it produces say the same word.
- */
+/** Two of these match `plain-words.ts` lane words exactly ("Paid model", "Plain code"). */
 export const COST_CLASS_WORDS: Readonly<Record<CostClass, string>> = {
   PAID_MODEL: "Paid model",
   PLAIN_CODE: "Plain code",
-  SUBSCRIPTION_JOB: "Subscription job",
   ZERO_THIS_RUN: "$0 this run",
   NOT_MEASURED: "Not measured",
   PREDATES_MEASUREMENT: "Predates measurement fields",
@@ -622,16 +499,7 @@ export interface CostRowLike {
   readonly metering?: MeteringCounts;
 }
 
-/**
- * Classify one published cost row under §9A.4.
- *
- * The order is deliberate. Measured dollars settle the row first, because a
- * row that spent money is a paid-model row whatever else is true of it. Then
- * comes the only policy question — CAN this key reach a paid model — and only
- * a key that cannot is allowed to read "Plain code". A key that can, and shows
- * nothing, reads `$0 this run` and says so in as many words; that is the exact
- * sentence ADM-33 was asking for.
- */
+/** Measured dollars settle the row first; only a key that cannot reach a paid model may read "Plain code". */
 export function costClassOf(row: CostRowLike): CostClassReading {
   const policy = roleCostPolicy(row.key);
   const kind = costRowKind(row);
@@ -676,31 +544,16 @@ export function costClassOf(row: CostRowLike): CostClassReading {
   );
 }
 
-/* ================================================================== *
- * ADM-26 / §9A.4 — THE SPEND WINDOWS AS A TABLE, TO THE CENT
- * ================================================================== */
-
 /**
- * **ONE IMPLEMENTATION OF THE WINDOW TABLE, RENDERED IN TWO PLACES.**
- * (ADM-26, 2026-09-06.)
- *
- * The console used to state the three ceilings as one run-on sentence with
- * four-decimal dollars in it. §9A.4 replaces it with a `| Window | Spend |`
- * table, and the runner card shows the same three figures — so the rows are
- * built here, once, and both surfaces render the same array. Two surfaces
- * computing the same three sentences is exactly the drift RULING 103 forbids.
- *
- * A window whose spend could not be measured is NOT rendered as `$0.00`: the
- * admission controller returns null for a window containing an Attempt that
- * reported no cost, and a zero there would say the runner spent nothing when
- * what happened is that nobody can tell.
+ * Spend window rows, rendered by both the console and the runner card. An
+ * unmeasured window is never shown as `$0.00`.
  */
 export interface SpendWindowRow {
   /** "Current cycle", "Operational night", "Last 24 hours". */
   readonly window: string;
   readonly spentUsd: number | null;
   readonly ceilingUsd: number;
-  /** `$0.44 of $25.00`, or the named gap. Always to the cent. */
+  /** The spend against the ceiling, or the named gap. Always to the cent. */
   readonly shown: string;
   /** True when the figure is a gap rather than a total. */
   readonly unmeasured: boolean;
@@ -710,12 +563,7 @@ export interface SpendWindowRow {
 
 /** The ceilings, taken structurally so this module never imports the admission controller. */
 export interface SpendCeilings {
-  /**
-   * The one spend ceiling. Every spend window is framed against it now that the
-   * per-cycle and operational-night model-spend caps are retired — a number
-   * still gets a denominator (RULING: no bare number), and that denominator is
-   * the only limit that stands.
-   */
+  /** The one spend ceiling every window is framed against. */
   readonly rolling24HourModelUsd: number;
 }
 
@@ -747,23 +595,10 @@ export function spendWindowRows(input: {
   ];
 }
 
-/* ================================================================== *
- * §9A.4 — CAPACITY, AND A ZERO THAT SAYS WHY
- * ================================================================== */
-
-/** The rolling research ceiling, read from the canonical bounds rather than restated as a second 25. */
+/** The rolling research ceiling, read from the canonical bounds. */
 export const DEFAULT_DAILY_CEILING_USD = RESEARCH_BOUNDS.dailyCeilingUsd;
 
-/**
- * **THE SENTENCE THE COST SECTION LEADS WITH.** (§9A.4.)
- *
- * *"At the current average cost, the $25 daily limit buys about 79 Scout
- * attempts at roughly $0.31 each."* Every number in it comes from
- * {@link scoutCapacity} over the ledger — the same reading the research digest
- * and the research page print, so three surfaces cannot disagree about what an
- * attempt costs. A ceiling nobody can divide by is stated as such: a mean of
- * null means no attempt in the window reported a cost, which is not $0.
- */
+/** The capacity sentence the cost section leads with. A null mean means no attempt reported a cost, not $0. */
 export function capacitySentence(capacity: ScoutCapacity | null): string {
   if (capacity === null) {
     return "How much the daily limit buys is not published on this snapshot yet — the publisher passes no clock, so no window could be dated.";
@@ -781,15 +616,7 @@ export function capacitySentence(capacity: ScoutCapacity | null): string {
   );
 }
 
-/**
- * **A ZERO SAYS WHY.** (ADM-47.)
- *
- * `0%` on the model/deterministic split is one of three different facts and
- * the ring drew all three the same: nothing was dispatched at all; things were
- * dispatched and every one of them was plain code; or no cycle has recorded a
- * split. The first two are good news and the third is a gap, so the sentence
- * beside the ring names which one it is.
- */
+/** `0%` model work can mean nothing dispatched, all plain code, or no split recorded; the sentence names which. */
 export function shareSentence(share: Held<Measured>): string {
   if (!share.held) return share.gap.says;
   const { value, denominator } = share.value;
@@ -802,31 +629,9 @@ export function shareSentence(share: Held<Measured>): string {
   return `${pct}% of this cycle's ${denominator} job${denominator === 1 ? "" : "s"} ran as plain code; ${modelJobs} used a paid model.`;
 }
 
-/* ================================================================== *
- * §9A.23 — THE MONTHLY UTC SPEND WINDOW
- * ================================================================== */
-
 /**
- * **THE OWNER'S FUNDS RESET ON THE FIRST OF THE MONTH, UTC.** (§9A.23.)
- *
- * Nothing in the control plane had ever computed a calendar month. The three
- * enforced windows are a per-cycle counter, a Phoenix operational night and a
- * SLIDING 24 hours; the console's spend bars bucket by Eastern day; the
- * politeness ledger rolls over at UTC midnight but counts REQUESTS, not
- * dollars. So the window is new ({@link utcMonthWindow}) and the arithmetic
- * over it is the ledger's own {@link sumMetric} — a second cost calculator is
- * exactly what ADM-C14 forbids.
- *
- * Rows that measured nothing are counted OUT of every dollar figure and
- * reported separately, split by what they can and cannot say: a row written
- * before the metering fields existed, a row whose provider reported no usage,
- * and a row that reported usage but no dollars are three different facts and
- * none of them is zero.
- */
-/**
- * The billed quantities ADM-C14 names, in the order it names them. These are
- * ledger metric keys, so the totals come from `sumMetric` and nothing here
- * re-derives a token count.
+ * The month's billed quantities, as ledger metric keys summed by `sumMetric`.
+ * Unmeasured rows are counted out of every dollar figure and reported apart.
  */
 export const MONTHLY_TOKEN_METRICS = [
   "requestCount",
@@ -840,7 +645,7 @@ export const MONTHLY_TOKEN_METRICS = [
 ] as const;
 export type MonthlyTokenMetric = (typeof MONTHLY_TOKEN_METRICS)[number];
 
-/** What each billed quantity is, in the owner's words. Rendered beside the number. */
+/** Rendered beside the number. */
 export const MONTHLY_TOKEN_WORDS: Readonly<Record<MonthlyTokenMetric, string>> = {
   requestCount: "Requests",
   inputTokens: "Input tokens (whole prompt)",
@@ -852,17 +657,7 @@ export const MONTHLY_TOKEN_WORDS: Readonly<Record<MonthlyTokenMetric, string>> =
   outputTokens: "Output tokens",
 };
 
-/**
- * **THE ONE STAMP ON THIS CONSOLE THAT IS NOT EASTERN, AND WHY.**
- *
- * Every timestamp the owner reads is Eastern (`eastern-time.ts`), and this is
- * the single exception the brief requires: §9A.23 defines the window as
- * *00:00 UTC on the 1st* and asks for `Resets <date/time UTC>`, because the
- * boundary is a fact about the provider's clock rather than about his day.
- * Rendering that instant only as "September 30, 8:00 PM" would make a UTC rule
- * look like an Eastern one, so the section prints BOTH: this stamp, and the
- * Eastern one beside it. Neither replaces the other.
- */
+/** The monthly window resets at 00:00 UTC on the 1st, so its reset is stamped in UTC beside the Eastern stamp. */
 export function utcStamp(iso: string): string {
   const at = Date.parse(iso);
   if (!Number.isFinite(at)) return "an unreadable time";
@@ -879,7 +674,7 @@ export function utcStamp(iso: string): string {
 }
 
 export interface MonthlyBreakdownRow {
-  /** A provider id, a model id or a role code — RAW. The face renders it through `modelName`/`roleWords`. */
+  /** A provider id, a model id or a role code, raw. The face renders it through `modelName`/`roleWords`. */
   readonly key: string;
   readonly usd: number | null;
   readonly measuredRows: number;
@@ -887,29 +682,15 @@ export interface MonthlyBreakdownRow {
   readonly predatesFieldRows: number;
   /** Measured rows for this key served through the Message Batches API. */
   readonly batchedRows: number;
-  /**
-   * The billed quantities for this key alone (ADM-C14 asks for them BY
-   * provider/model, not only in aggregate: a hit rate that looks healthy
-   * across the month can hide one model re-sending its whole prompt).
-   */
+  /** The billed quantities for this key alone. */
   readonly tokens: Readonly<Record<MonthlyTokenMetric, MeasuredTotal>>;
   /**
-   * Cache hit rate for this key alone: cache-read input tokens out of every
-   * input token it sent (reads + writes + uncached), the SAME denominator
-   * `cacheHitRateByCaller` uses. Carried, not recomputed in the render — a
-   * second derivation is a second answer waiting to disagree. A gap (never a
-   * 0%) when the key's rows carried no cache metering, so a model that predates
-   * the fields does not read as a cache miss.
+   * Cache-read input tokens out of reads + writes + uncached, the same
+   * denominator `cacheHitRateByCaller` uses. A gap, never 0%, when the key's
+   * rows carried no cache metering.
    */
   readonly cacheHitRate: Held<Measured>;
-  /**
-   * What this key's cache reads saved against sending the same tokens uncached
-   * at list price (`cacheSavingUsd` in model-cost.ts). Non-null only where the
-   * key is itself a priced model — a per-model saving needs a model's rate, so
-   * it is null on the by-provider and by-role groupings and on any key with no
-   * priced cache read. The month's aggregate saving stays `cacheSavingUsd` on
-   * the view.
-   */
+  /** Cache-read saving at this key's list price. Non-null only when the key is a priced model. */
   readonly cacheSavingUsd: number | null;
 }
 
@@ -930,36 +711,20 @@ export interface MonthlySpendView {
   readonly total: MeasuredTotal;
   readonly byProvider: readonly MonthlyBreakdownRow[];
   /**
-   * Model charges by model. Search charges (`DISCOVERY_SEARCH`) are not model
-   * charges and are not here. A charge that ran more than one model (an
-   * escalated Scout, `CostEntry.byModel`) is a row under each model it paid,
-   * with that model's part of its dollars and tokens: its dollars are counted
-   * once across the rows, its row count once per model.
+   * Model charges by model; search charges are excluded. A multi-model charge
+   * is a row under each model with that model's part: dollars counted once
+   * across rows, row count once per model.
    */
   readonly byModel: readonly MonthlyBreakdownRow[];
   readonly byRole: readonly MonthlyBreakdownRow[];
-  /**
-   * Search charges by API host. Absent from snapshots published before
-   * 2026-09-23 — a reader treats absence as "not broken down", never as none.
-   */
+  /** Search charges by API host. Absent on older snapshots, meaning "not broken down", never none. */
   readonly bySearchSource?: readonly MonthlyBreakdownRow[];
-  /**
-   * What cache reads saved against sending the same tokens uncached, at the
-   * list prices in `model-cost.ts`. A counterfactual, stated as one; null when
-   * no row in the window carried a measured cache read on a priced model.
-   */
+  /** Cache-read saving at `model-cost.ts` list prices. Null when no row measured a cache read on a priced model. */
   readonly cacheSavingUsd: number | null;
   readonly cacheSavingRows: number;
-  /**
-   * The month's cache hit rate across every model: cache-read input tokens out
-   * of every input token (reads + writes + uncached). The "All models" figure
-   * beside the per-model column, carried rather than recomputed in the render.
-   */
+  /** Cache-read input tokens out of every input token, across every model. */
   readonly cacheHitRate: Held<Measured>;
-  /**
-   * What the Batches API's 50% saved. A batched row was charged half, so what
-   * it saved equals what it cost. Null when no row went through batching.
-   */
+  /** A batched row was charged half, so what it saved equals what it cost. Null when no row was batched. */
   readonly batchSavingUsd: number | null;
   readonly batchRows: number;
   /** Rows carried by no dollar figure above, each named by why. */
@@ -968,12 +733,7 @@ export interface MonthlySpendView {
     readonly providerReportedNothing: number;
     readonly noDollarFigure: number;
   };
-  /**
-   * The billed quantities behind the dollars (ADM-C14: request count, input,
-   * uncached input, cache create with its 5m/1h split, cache read, output).
-   * Each is a `MeasuredTotal`, so a metric no row reported is null with its
-   * unmeasured count beside it rather than a zero.
-   */
+  /** A metric no row reported is null with its unmeasured count beside it, never zero. */
   readonly tokens: Readonly<Record<MonthlyTokenMetric, MeasuredTotal>>;
   /** Current month first, then as far back as the ledger actually holds rows (up to three). */
   readonly history: readonly MonthComparison[];
@@ -988,13 +748,7 @@ function tokenTotals(rows: readonly CostEntry[]): Readonly<Record<MonthlyTokenMe
   return Object.fromEntries(MONTHLY_TOKEN_METRICS.map((m) => [m, sumMetric(rows, m)])) as Readonly<Record<MonthlyTokenMetric, MeasuredTotal>>;
 }
 
-/**
- * Cache hit rate from a token breakdown: reads / (reads + writes + uncached) —
- * the same denominator `cacheHitRateByCaller` states, so the two never
- * disagree. A gap (never a 0%) when any of the three is unmeasured, so a group
- * that predates the cache fields reads as our named gap rather than a cache
- * miss; and a gap when the group sent no input at all.
- */
+/** reads / (reads + writes + uncached). A gap, never 0%, when any of the three is unmeasured or no input was sent. */
 function hitRateFromTokens(tokens: Readonly<Record<MonthlyTokenMetric, MeasuredTotal>>): Held<Measured> {
   const read = tokens.cacheReadInputTokens.total;
   const write = tokens.cacheCreationInputTokens.total;
@@ -1087,7 +841,7 @@ export function buildMonthlySpend(input: {
       providerReportedNothing += 1;
       continue;
     }
-    /* Each part of an escalated charge saved at its own model's cache-read rate (MW-031). */
+    /* Each part of a multi-model charge saved at its own model's cache-read rate. */
     let savedHere: number | null = null;
     for (const part of costPortionsByModel(e, modelOf.get(e.attemptId) ?? NO_MODEL_KEY)) {
       const reads = part.entry.cost.cacheReadInputTokens;
@@ -1111,7 +865,6 @@ export function buildMonthlySpend(input: {
   const history: MonthComparison[] = [];
   for (let back = 0; back < 3; back += 1) {
     const w = utcMonthWindow(input.nowIso, back);
-    /* A month entirely before the ledger's first row is not history that exists to compare against. */
     if (back > 0 && (ledgerBeginsAt === null || Date.parse(w.until) < Date.parse(ledgerBeginsAt))) break;
     const monthRows = entriesInWindow(input.costs, w);
     const monthTotal = sumMetric(monthRows, "usd");
@@ -1131,12 +884,9 @@ export function buildMonthlySpend(input: {
     asOf: input.nowIso,
     total: { ...total, total: total.total === null ? null : round(total.total) },
     byProvider: breakdown(rows, (e) => providerOf.get(e.attemptId) ?? ATTEMPT_NOT_ON_RECORD),
-    /* An escalated Scout's one charge counts once, split by the model each part was for (MW-031). */
     byModel: breakdownParts(
       rows.filter((e) => !isSearchCharge(e)).flatMap((e) => costPortionsByModel(e, modelOf.get(e.attemptId) ?? ATTEMPT_NOT_ON_RECORD)),
-      /* Per-model saving needs the model's own list price; `cacheSavingUsd`
-         returns null for an unpriced or unknown key, so a stray non-model key
-         yields null rather than a wrong number. */
+      /* `cacheSavingUsd` returns null for an unpriced or unknown key. */
       (key, tokens) => {
         if (key === ATTEMPT_NOT_ON_RECORD || key === NO_MODEL_KEY) return null;
         const read = tokens.cacheReadInputTokens.total;
@@ -1159,26 +909,17 @@ export function buildMonthlySpend(input: {
   };
 }
 
-/* ================================================================== *
- * SPEND BY PLACE — "WHAT DID WE SPEND AT PIMA COUNTY?" (MW-013)
- *
- * The section already answers by role and by model. It could not answer the
- * owner's own question — what a given government or place cost — because the
- * ledger keys spend to a source/jurisdiction id, not to a place the owner
- * names. This rolls those ids up: state, then the jurisdictions under it, over
- * the WHOLE ledger (the cumulative "what have we ever spent here"; the month
- * has its own panel). Same honesty as every other total here: an unmeasured
- * row is counted out, never as a zero, and a charge whose source names no
- * place (a scout pre-warm, a bare api.anthropic.com call) lands in a named
- * bucket rather than being dropped or hidden inside a state.
- * ================================================================== */
+/*
+ * Whole-ledger spend by state, then jurisdiction. Unmeasured rows are counted
+ * out, never as zero; charges whose source names no place go to a named bucket.
+ */
 
-/** A charge's source/jurisdiction id parsed to a state and the jurisdiction under it, or null when it names no place. */
+/** A charge's source/jurisdiction id parsed to a state and jurisdiction, or null when it names no place. */
 function placeIdOf(entry: CostEntry): { readonly state: string; readonly place: string } | null {
   const raw = entry.source ?? entry.jurisdiction;
   if (raw === null) return null;
   const parts = raw.split(":");
-  /* The civic id shape is `<st>:<yyyy>:<jurisdiction>:<office>:<subject>`; anything else is overhead, not a place. */
+    /* Civic id shape: `<st>:<yyyy>:<jurisdiction>:<office>:<subject>`. */
   if (parts.length >= 3 && /^[a-z]{2}$/.test(parts[0]) && /^\d{4}$/.test(parts[1]) && parts[2].length > 0) {
     return { state: parts[0], place: parts[2] };
   }
@@ -1225,16 +966,7 @@ export interface SpendByPlaceView {
   readonly states: readonly SpendByStateRow[];
 }
 
-/**
- * Roll the whole cost ledger up by place: state, then jurisdiction. PURE.
- *
- * Whole-ledger on purpose — the by-role and by-model tables beside it are
- * whole-ledger too, and "what have we spent at this county" is a cumulative
- * question, not a this-month one. Every dollar is `round`ed to the cent and
- * every bucket keeps its measured/unmeasured counts, so a place all of whose
- * charges were deterministic shows $0.00 with its attempt count rather than
- * vanishing.
- */
+/** Roll the whole cost ledger up by place: state, then jurisdiction. Pure. */
 export function buildSpendByPlace(entries: readonly CostEntry[]): SpendByPlaceView {
   const total = sumMetric(entries, "usd");
   const byState = new Map<string, Map<string, CostEntry[]>>();
@@ -1295,97 +1027,20 @@ export function buildSpendByPlace(entries: readonly CostEntry[]): SpendByPlaceVi
   return { total: { ...total, total: total.total === null ? null : round(total.total) }, states };
 }
 
-/**
- * A by-model key as the owner reads it (ADM-33). `modelName` handles the model
- * ids and the deterministic bucket; the join gap is named here because it is a
- * cost-panel key rather than a model, and `plain-words.ts` is the dictionary
- * for constants, not for this module's own row labels.
- */
+/** A by-model key as the owner reads it. */
 export function modelLabel(key: string): string {
   return key === ATTEMPT_NOT_ON_RECORD ? "Attempt not on record" : modelName(key);
 }
 
-/* ================================================================== *
- * ADM-C14 — SUBSCRIPTION JOBS, SHOWN APART FROM API SPEND
- * ================================================================== */
-
-/**
- * **A SUBSCRIPTION JOB IS NOT A CHEAP API CALL, AND THE PAGE MAY NOT IMPLY IT
- * IS.** (ADM-C14: *"Do not pretend subscription jobs are free API calls or
- * vice versa."*)
- *
- * Work the owner runs on his Claude subscription leaves NO row in
- * `cp_log_costs` — the ledger records what the API metered, and a subscription
- * job never touched the API. Showing those jobs inside the API totals would
- * inflate them; leaving them out silently would let the console report a
- * quiet night that was in fact a busy one.
- *
- * So the section renders a separate block over the Agent Bridge job log, and
- * this is the projection it reads. The LOG ITSELF IS NOT BUILT HERE — it is
- * being added by the repository lane, and until it exists the reading is
- * `NOT_WIRED`, which the page states in those words. `EMPTY` and `NOT_WIRED`
- * are different facts and are never collapsed: one says no job ran, the other
- * says nobody is writing them down.
- */
-export interface SubscriptionJobRow {
-  /** What the job was, in ordinary words. Never a command line. */
-  readonly what: string;
-  /** ISO. Rendered Eastern by the section. */
-  readonly at: string;
-  /** How it ended, as the log recorded it. */
-  readonly outcome: string;
-}
-
-export type SubscriptionJobsReading =
-  | { readonly state: "NOT_WIRED"; readonly says: string }
-  | { readonly state: "EMPTY"; readonly says: string }
-  | { readonly state: "HELD"; readonly says: string; readonly jobs: readonly SubscriptionJobRow[] };
-
-const OUTSIDE_THE_API_LEDGER =
-  "These ran on a subscription and are outside the API ledger, so none of their work appears in any dollar figure above.";
-
-/** Turn whatever the Agent Bridge log yielded into one of three honest readings. */
-export function subscriptionJobsReading(jobs: readonly SubscriptionJobRow[] | null): SubscriptionJobsReading {
-  if (jobs === null) {
-    return {
-      state: "NOT_WIRED",
-      says:
-        "Subscription work is not being recorded yet: there is no Agent Bridge job log to read. That is a missing recording path, not a finding that no subscription job has run.",
-    };
-  }
-  if (jobs.length === 0) {
-    return { state: "EMPTY", says: `The Agent Bridge job log is readable and holds no job. ${OUTSIDE_THE_API_LEDGER}` };
-  }
-  return { state: "HELD", says: OUTSIDE_THE_API_LEDGER, jobs };
-}
-
-/* ================================================================== *
- * ADM-36 — RESTRAINED SEMANTIC COLOUR, AS CLASS NAMES ONLY
- * ================================================================== */
-
-/**
- * The bar class for a worker role (ADM-36). Colour is carried by the class and
- * defined in the console stylesheet, which this lane does not write: the
- * required declarations are reported to the integrator instead. A role with no
- * class falls back to the neutral lit bar, which is the current appearance.
- */
+/** Bar class for a worker role; colour is defined in the console stylesheet. */
 export function roleBarClass(roleCode: string): string {
   const role = roleCode.replace(/ \(.*\)$/, "").trim();
   return roleCostPolicy(role) === null ? "role-other" : `role-${role.toLowerCase().replace(/_/g, "-")}`;
 }
 
-/* ================================================================== *
- * THE PAGE'S OWN NUMBER AUDIT
- * ================================================================== */
-
 /**
- * Every figure this section renders, as audit rows.
- *
- * `app/(admin)/admin/page.tsx` refuses to render the whole console if any
- * number it pushed lacks a denominator and a contract, and a section that
- * draws its numbers outside that list is a section outside the guarantee. This
- * lives in the `.ts` module rather than the component so a test can read it
- * without importing a `.tsx`.
+ * Every figure this section renders, as audit rows. The admin page refuses to
+ * render if any pushed number lacks a denominator and a contract.
  */
 export function costSectionNumbers(input: {
   readonly monthly: MonthlySpendView | null;

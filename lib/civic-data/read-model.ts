@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { sourceCheckedAt } from "./source-check.ts";
 import { currentPromotedEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
 
 import type {
@@ -37,11 +38,6 @@ function trustedLkgPredecessorVersionId(candidate: CandidateVersionRecord | null
     : null;
 }
 
-/**
- * The pointed candidate as its proof reads it (`candidateProofView`); a store
- * without the narrowed door is read whole. A predecessor stays a whole read:
- * a re-attestation's evidence re-derives its civic records.
- */
 function readProofCandidate(
   store: Pick<RoutineDataStore, "readCandidate"> & Partial<Pick<RoutineDataStore, "readCandidateProof">>,
   versionId: string,
@@ -75,6 +71,8 @@ export interface CivicDataReadMetadata {
   readonly lastKnownGoodVersionId: string | null;
   readonly sourceThrough: string | null;
   readonly retrievedAt: string | null;
+  /** Real provider check; original source evidence keeps retrievedAt. */
+  readonly checkedAt?: string;
   readonly promotedAt: string | null;
   readonly stale: CivicDataStaleState;
   readonly staleAt: string | null;
@@ -112,42 +110,23 @@ export type CivicDataReadStore = Pick<
   "readPromotion" | "readCandidate"
 > & Partial<Pick<RoutineDataStore, "readPromotions" | "readCandidates" | "readPromotionIdentity" | "readPromotionIdentities">>;
 
-/**
- * Optional set-oriented read door used by projections that compose many
- * independent authorities. Narrow test/readback stores may keep implementing
- * only the two scalar methods above; the production store implements both
- * batch methods so one Reader request never fans out into one database round
- * trip per authority.
- */
 export type CivicDataBatchReadStore = Pick<
   RoutineDataStore,
   "readPromotion" | "readCandidate" | "readPromotions" | "readCandidates"
 > & Partial<Pick<RoutineDataStore, "readPromotionIdentities" | "readCandidateProof" | "readCandidateProofs">>;
 
 export interface PromotedCivicDataReadOptions {
-  /** Deterministic store injection for tests and bounded readbacks. */
   readonly store?: CivicDataReadStore;
   readonly now?: string;
   /** Age from the actual retrieval instant, not from process start. */
   readonly maxAgeMs?: number;
   readonly bypassCache?: boolean;
-  /**
-   * A version the standing supervisor proved in this pass (see
-   * `AttestedPromotion`). Used only for its own class and scope, only when the
-   * pointer still names it and its payload hashes to the proven payload, and
-   * never by verification (`bypassCache`).
-   */
+  /** Used only for its own class and scope, while the pointer still names it and its payload hashes to the proven payload; never with `bypassCache`. */
   readonly attested?: AttestedPromotion;
-  /**
-   * The reader edge's copy of this pointer (`PromotedEdgeEntry`): the read is
-   * answered from it and the store is not opened. Only a reader request that
-   * entered the edge passes it (`readPromotedEdgeFirst`,
-   * lib/registry/runtime-edge.ts); the runner and every verification path never do.
-   */
+  /** When present the read is answered from it and the store is not opened. The runner and verification paths never pass it. */
   readonly edge?: PromotedEdgeEntry<unknown>;
 }
 
-/** Whether a freshly read pointer is exactly the attested, proven version. */
 function attestationHolds(
   attested: AttestedPromotion,
   recordClass: RoutineRecordClass,
@@ -164,7 +143,6 @@ function attestationHolds(
     promotedPayloadSha256(projection.payload) === attested.payloadSha256;
 }
 
-/** The proven candidate fields a promoted result reports, as the attestation carries them. */
 function attestedCandidate(attested: AttestedPromotion, projection: PromotedProjection<unknown>): CandidateVersionRecord {
   return {
     candidate: {
@@ -189,10 +167,6 @@ function attestedCandidate(attested: AttestedPromotion, projection: PromotedProj
   };
 }
 
-/**
- * The attestation of the version this process proved for a scope through
- * `store`, for the supervisor to hand its children; null when nothing is proven.
- */
 export function attestPromotedVersion(
   recordClass: RoutineRecordClass,
   scope: string,
@@ -225,31 +199,8 @@ function attestationOf(
 }
 
 /**
- * **A PROVEN POINTER AS THE READER EDGE CARRIES IT.** (2026-09-25.)
- *
- * A cold /ballot and a cold Ask read their ballot, candidate, money and record
- * families from the database: a pointer read and a proof read each, the proof
- * alone up to 6.4 MB (Pima finance) on a cold instance. The standing runner
- * already reads and proves each of them; it now publishes the proven pair on
- * the reader edge, and a reader request answers the same typed read from it.
- *
- * What the edge carries is what the proof leaves behind, never less:
- *
- * - the pointer row itself (`PromotedProjection`: payload, the durable GOOD
- *   receipt, the promotion instant, the newest unchanged confirmation), and
- * - the attestation of the candidate the runner proved it against
- *   (`AttestedPromotion`, RULING 288's "attest, never re-run", the same
- *   record the supervisor hands its children): the payload's SHA-256 and the
- *   candidate's retrieval instant, version, source-through and staleness.
- *
- * From those two the read is rebuilt exactly as `promotedResult` builds it
- * from the database, so a reader sees the same kind (PROMOTED), the same
- * metadata and the same staleness, measured at its own request instant. A copy
- * that names another pointer, carries no GOOD receipt for its version, or whose
- * payload does not hash to the attested payload is refused as
- * PROMOTION_PROOF_INVALID, as the database path refuses a pointer whose proof
- * fails. An answered, absent pointer travels as NOT_RECORDED, so a family with
- * no pointer (the derived campaign sites today) costs no database read either.
+ * The pointer row plus the attestation of the candidate the runner proved it against. The read is rebuilt from both
+ * exactly as `promotedResult` builds it from the database; a copy that does not match is PROMOTION_PROOF_INVALID.
  */
 export type PromotedEdgeEntry<T = unknown> =
   | {
@@ -263,13 +214,6 @@ export type PromotedEdgeEntry<T = unknown> =
       readonly scope: string;
     };
 
-/**
- * The runner's side: the edge entry for a read this process just made. A
- * PROMOTED read yields its pointer and the attestation of the candidate its
- * proof cleared (null when this process holds no proof of that exact version);
- * an answered, absent pointer yields NOT_RECORDED; anything else yields null
- * and publishes nothing.
- */
 export function promotedEdgeEntryOf<T>(
   result: CivicDataReadResult<T>,
   recordClass: RoutineRecordClass,
@@ -284,7 +228,6 @@ export function promotedEdgeEntryOf<T>(
   return attested === null ? null : { kind: "PROMOTED", projection: result.projection, attested };
 }
 
-/** Entries whose payload already hashed to its attestation in this process (each edge value is immutable). */
 const verifiedEdgeEntries = new WeakSet<object>();
 
 function promotedEdgeIssue(
@@ -312,7 +255,6 @@ function promotedEdgeIssue(
   return null;
 }
 
-/** The reader's side: the typed read an edge entry stands for, measured at `now`. Never opens a store. */
 function readPromotedFromEdge<T>(
   recordClass: RoutineRecordClass,
   scope: string,
@@ -364,12 +306,7 @@ export interface PromotedOrBootstrapOptions<T> extends PromotedCivicDataReadOpti
   readonly recordClass: RoutineRecordClass;
   readonly scope: string;
   readonly bootstrap: () => CivicDataBootstrap<T>;
-  /**
-   * Explicitly permits a bundled fixture outside production when the store is
-   * either unconfigured or has answered that no canonical pointer exists.
-   * Production never consults the fixture: an absent pointer is an authority
-   * gap, not permission to reopen Git as mutable runtime truth.
-   */
+  /** Production never consults the fixture: an absent pointer is an authority gap. */
   readonly allowUnconfiguredBootstrap?: boolean;
 }
 
@@ -382,61 +319,15 @@ interface CachedPromotion {
 const cache = new Map<string, CachedPromotion | { readonly expiresAt: number; readonly projection: null }>();
 
 /**
- * **Proven versions, keyed by the IMMUTABLE versionId (RULING 288's "attest,
- * never re-run", made in-process).**
- *
- * A promoted version's candidate bytes and promotion payload never change once
- * written: the store admits `VALIDATED → PROMOTED` only, re-promoting a promoted
- * row is a no-op, and CHECK constraints tie the pointer payload and the durable
- * hashes to the versionId. So a versionId that `promotionProofIssue` has cleared
- * once is cleared for the life of this instance. This memo lets a pointer that
- * has NOT moved skip the second candidate fetch (the 1.77 MB envelope haul on a
- * dense meetings read) AND the proof's ~10 canonical passes + two sha256 — the
- * dominant cost of a cache-miss — and serve the already-proven candidate.
- *
- * It never weakens the proof and never serves stale data. A versionId is entered
- * ONLY after the full proof returned `null` (GOOD) for it; the pointer is ALWAYS
- * re-read, so a promotion that advanced the pointer is a memo MISS that fetches
- * and re-proves the new version; and a `bypassCache` caller (the verification
- * paths) skips the memo entirely and always re-proves. Cleared alongside `cache`.
+ * Keyed by the immutable versionId: a version proven once stays proven for this instance. Entered only after a full
+ * GOOD proof; the pointer is always re-read, and `bypassCache` skips the memo.
  */
 const provenByVersion = new Map<string, { projection: PromotedProjection; candidate: CandidateVersionRecord }>();
 
-/**
- * **The pointer each store last proved, per scope: check the version before
- * fetching unchanged contents.**
- *
- * A promotion's payload is immutable per version. The database refuses to
- * rewrite a pointer in place (`civic_data_promotions_no_delete_or_rewrite`)
- * and requires its payload and receipt to equal that exact candidate's read
- * model and receipt (`civic_data_promotions_exact_candidate_proof`), and the
- * candidate itself is immutable evidence. So when a scope's cached result
- * expires, the Reader first asks which version the pointer names (identity
- * columns only); an unmoved pointer is served from the proof this process
- * already made, and only a moved pointer fetches and re-proves. Until
- * 2026-09-23 a warm process re-read every whole payload each time its 30 s
- * scope cache expired (registry 3.9 MB, NJ roll calls 8.8 MB, all 84 meeting
- * partitions 7.3 MB) to learn that nothing had changed.
- *
- * Keyed by the store it was proved against (the process's own production
- * store is `DEFAULT_STORE`), so no store is ever served another's proof.
- * `bypassCache` (every verification path) never consults it.
- */
+/** Per store and scope, the version last proved, so an unmoved pointer is served without refetching. `bypassCache` never consults it. */
 const DEFAULT_STORE: object = {};
 
-/**
- * **One read per cold scope, however many callers ask at once.** A page asks
- * for the same scope from several places in the same render (the ballot page's
- * division lookup, its preloads and its incumbency checks all want the
- * registry). On a cold process each one found the cache empty and downloaded
- * the whole scope itself: on an isolated copy of production (2026-09-23) one
- * fresh instance serving its first ballot page read the registry's promotion,
- * candidate and trusted-LKG predecessor (about 29 MB) two or three times over.
- * A caller that finds a read of its scope already in flight from the same store
- * now waits for it and is served the version that read proved; if that read
- * proved nothing, it reads for itself. `bypassCache` (every verification
- * path) never shares a read.
- */
+/** Concurrent callers for the same cold scope and store share one in-flight read. `bypassCache` never shares. */
 type ProvenPair = { projection: PromotedProjection; candidate: CandidateVersionRecord };
 let inflight = new WeakMap<object, Map<string, Promise<ProvenPair | null>>>();
 
@@ -461,7 +352,6 @@ function provenPointersOf(store: CivicDataReadStore | undefined): Map<string, { 
   return pointers;
 }
 
-/** A proven projection with the newest confirmation a fresh identity read carried (or none). */
 function withLatestConfirmation<T>(projection: PromotedProjection<T>, identity: PromotedPointerIdentity): PromotedProjection<T> {
   const { latestConfirmation: _proven, ...rest } = projection;
   return identity.latestConfirmation ? { ...rest, latestConfirmation: identity.latestConfirmation } : rest;
@@ -529,12 +419,6 @@ export function civicDataReadNotInitialized(
   };
 }
 
-/**
- * Whether a synchronous reader may seed its bundled test fixture. Both the
- * environment and authority-state rules live here so one adapter cannot
- * quietly treat production or a real store failure as permission to reopen
- * tracked data.
- */
 export function maySeedFixture(
   result: CivicDataReadResult<unknown>,
   env: CivicDataFixtureEnvironment = process.env,
@@ -545,20 +429,13 @@ export function maySeedFixture(
   ));
 }
 
-/**
- * Read the one canonical pointer without consulting a bundled file.
- *
- * `NOT_RECORDED` means the store answered and no pointer exists.
- * `STORE_UNREACHABLE` means we could not establish that fact. Callers may
- * bootstrap only from the former; a database error never becomes old data.
- */
+/** `NOT_RECORDED`: the store answered and no pointer exists. `STORE_UNREACHABLE`: that could not be established. */
 export async function readPromotedCivicData<T>(
   recordClass: RoutineRecordClass,
   scope: string,
   options: PromotedCivicDataReadOptions = {},
 ): Promise<CivicDataReadResult<T>> {
   const now = options.now ?? new Date().toISOString();
-  // The reader edge's copy answers without opening the store (and without any cache).
   if (options.edge !== undefined) return readPromotedFromEdge<T>(recordClass, scope, options.edge, now, options.maxAgeMs);
   const injected = options.store !== undefined;
   if (!injected && !options.bypassCache) {
@@ -602,7 +479,6 @@ export async function readPromotedCivicData<T>(
   flights.set(key, flight);
   try {
     const result = await loadPromotedCivicData<T>(recordClass, scope, options, now, key);
-    // A PROMOTED load has just recorded the pair it proved for this store.
     settle(result.kind === "PROMOTED" ? provenPointersOf(options.store).get(key) ?? null : null);
     return result;
   } catch (error) {
@@ -624,13 +500,10 @@ async function loadPromotedCivicData<T>(
   let observedProjection: PromotedProjection<T> | null = null;
   try {
     const store = options.store ?? new PostgresRoutineDataStore();
-    // Version before contents: an unmoved pointer this store already proved is
-    // served from that proof (see `provenPointers`); only a moved one is read.
     const known = options.bypassCache ? undefined : provenPointersOf(options.store).get(key);
     if (known !== undefined && typeof store.readPromotionIdentity === "function") {
       const identity = await store.readPromotionIdentity(recordClass, scope);
       if (identity !== null && samePointer(identity, known.projection)) {
-        // The version is unchanged; its newest confirmation comes with the identity.
         const projection = withLatestConfirmation(known.projection, identity);
         if (!injected) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate: known.candidate });
         return promotedResult(projection as PromotedProjection<T>, known.candidate, now, options.maxAgeMs);
@@ -647,20 +520,13 @@ async function loadPromotedCivicData<T>(
       };
     }
     observedProjection = projection;
-    // The supervisor proved this exact version in this pass: the pointer names
-    // it and its payload hashes to the proven payload, so the candidate is not
-    // read again. The attested record stays local to this read and its scope
-    // cache; it never enters the proven-version memo.
+        // The supervisor proved this exact version in this pass; the attested record never enters the proven-version memo.
     if (!options.bypassCache && options.attested && attestationHolds(options.attested, recordClass, scope, projection)) {
       const candidate = attestedCandidate(options.attested, projection);
       if (!injected) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate });
       return promotedResult(projection, candidate, now, options.maxAgeMs);
     }
-    // Attest, never re-run (RULING 288): if this exact version is already proven
-    // GOOD in this instance, reuse its candidate — skip the second fetch and the
-    // whole proof — and refresh the scope cache. The pointer was just read
-    // fresh, so a promotion that advanced the pointer is a memo MISS below.
-    // `bypassCache` (the verification paths) opts out and always re-proves.
+        // A version already proven GOOD in this instance reuses its candidate and skips the proof. `bypassCache` re-proves.
     if (!options.bypassCache) {
       const proven = provenByVersion.get(projection.versionId);
       if (proven) {
@@ -708,18 +574,11 @@ async function loadPromotedCivicData<T>(
   }
 }
 
-/**
- * Read many scopes from one record class without weakening any per-pointer
- * proof. Production performs at most one pointer query and one candidate
- * query for every uncached scope. Stores exposing only the narrow scalar door
- * retain the original behavior, which keeps focused adapters and tests small.
- */
 export async function readPromotedCivicDataBatch<T>(
   recordClass: RoutineRecordClass,
   scopes: readonly string[],
   options: PromotedCivicDataReadOptions = {},
 ): Promise<readonly CivicDataReadResult<T>[]> {
-  // An edge entry answers one pointer; a batch never takes one.
   if (options.edge !== undefined) throw new Error("A batch civic-data read takes no reader edge entry.");
   if (scopes.length === 0) return [];
   const injected = options.store !== undefined;
@@ -766,10 +625,6 @@ export async function readPromotedCivicDataBatch<T>(
       : promotedResult(held.projection as PromotedProjection<T>, held.candidate, now, options.maxAgeMs));
   }
 
-  // Version before contents (see `provenPointers`): scopes whose pointer has
-  // not moved since this store proved it are served from that proof, and only
-  // the rest are read whole. A failed identity read decides nothing; those
-  // scopes take the ordinary whole read below.
   const pointers = options.bypassCache ? null : provenPointersOf(options.store);
   const known = pointers === null ? [] : misses.filter((scope) => pointers.has(projectionKey(recordClass, scope)));
   if (pointers !== null && known.length > 0 && typeof store.readPromotionIdentities === "function") {
@@ -822,13 +677,7 @@ export async function readPromotedCivicDataBatch<T>(
     const uniqueProjections = [...projectionsByScope.values()]
       .filter((rows) => rows.length === 1)
       .map((rows) => rows[0]!);
-    // Attest, never re-run (RULING 288): only fetch candidate envelopes for
-    // versions NOT already proven in this instance. On a steady meetings read
-    // where no pointer has moved, this fetches ZERO candidates — the ~1.77 MB
-    // envelope haul and every partition's proof are skipped, and the value is
-    // served from the freshly-read pointer + the memoised candidate. A pointer
-    // that has moved names a new versionId, which is a memo miss fetched and
-    // re-proved here. `bypassCache` (verification) opts out of the memo entirely.
+        // Only fetch candidates for versions not already proven in this instance; a moved pointer is a memo miss.
     const memoUsable = !options.bypassCache;
     const candidateIds = [...new Set(
       uniqueProjections
@@ -923,10 +772,7 @@ export async function readPromotedCivicDataBatch<T>(
         ));
         continue;
       }
-      // Proven-version reuse (RULING 288): the pointer was read fresh above; if
-      // its version is already proven, serve the memoised candidate and skip the
-      // per-partition proof. No candidate was fetched for it (filtered out of
-      // `candidateIds`), so `candidatesById` will not hold it.
+            // Already proven: no candidate was fetched for it, so `candidatesById` will not hold it.
       const proven = memoUsable ? provenByVersion.get(projection.versionId) : undefined;
       if (proven) {
         results.set(scope, promotedResult(projection, proven.candidate, now, options.maxAgeMs));
@@ -996,23 +842,12 @@ export async function readPromotedCivicDataBatch<T>(
   return scopes.map((scope) => results.get(scope)!);
 }
 
-/** One scope's version as a proof run pinned it; null = the capture read no pointer. */
-export interface PinnedCivicDataVersion {
-  readonly scope: string;
-  readonly versionId: string | null;
-}
-
-/** The pinned read also needs the append-only event log that dates a promotion. */
-export type CivicDataPinnedReadStore = CivicDataReadStore & Pick<RoutineDataStore, "events">;
-
 export interface ProvenCivicDataHistory<T> {
   /** Older, individually proven versions, newest first. Never includes current. */
   readonly versions: readonly Extract<CivicDataReadResult<T>, { readonly kind: "PROMOTED" }>[];
   /** True only when the durable pointer-move chain reaches bootstrap/no-version. */
   readonly complete: boolean;
-  /** Exact next predecessor for a later page; null when the chain is complete or broken. */
   readonly nextVersionId: string | null;
-  /** A failed read or proof is disclosed and never turned into an absence. */
   readonly issue: string | null;
 }
 
@@ -1030,12 +865,6 @@ const HISTORY_TTL_MS = 60_000;
 const historicalPages = new Map<string, { readonly expiresAt: number; readonly value: ProvenCivicDataHistory<unknown> }>();
 const historicalFlights = new Map<string, Promise<ProvenCivicDataHistory<unknown>>>();
 
-/**
- * Normal Reader door for older versions of an already proven current pointer.
- * A pointer-move event names each predecessor; every predecessor is then
- * checked with the same GOOD receipt, hash, source and import proof used for
- * a current promotion. The proof-only pin admission above remains separate.
- */
 export async function readPromotedCivicDataPredecessors<T>(
   recordClass: RoutineRecordClass,
   scope: string,
@@ -1147,129 +976,6 @@ export async function readPromotedCivicDataPredecessors<T>(
   } finally {
     historicalFlights.delete(cacheKey);
   }
-}
-
-/**
- * **PROOF-ONLY exact-version read** (`lib/meetings/proof-pin.ts`, which admits
- * the pin only inside the Reader proof harness and never in a deployed build).
- * Nothing else calls this; an unpinned read never reaches it.
- *
- * It pins WHICH version a scope resolves to, never WHETHER that version is
- * proven. The live pointers are read and proven exactly as
- * `readPromotedCivicDataBatch` does. Where a pointer still names the pinned
- * version, that fully proven result is returned unchanged. Where it has moved
- * on, the pinned version is read by its immutable id and proven again:
- * candidate row, GOOD receipt, hashes, source authenticity and time order all
- * go through `promotionProofIssue`. The pointer that named it is rebuilt from
- * that same row, exactly as the atomic promotion door wrote it
- * (`store.ts#promote`). The durable event log must also show exactly one
- * "Atomic pointer <key> moved … to <version>." promotion, which dates it.
- * A store that could not be asked stays unanswered, and a version that fails
- * any proof stays PROMOTION_PROOF_INVALID. A pin never turns a failure into data.
- */
-export async function readPinnedPromotedCivicDataBatch<T>(
-  recordClass: RoutineRecordClass,
-  pins: readonly PinnedCivicDataVersion[],
-  options: Omit<PromotedCivicDataReadOptions, "store"> & { readonly store?: CivicDataPinnedReadStore } = {},
-): Promise<readonly CivicDataReadResult<T>[]> {
-  const now = options.now ?? new Date().toISOString();
-  const live = await readPromotedCivicDataBatch<T>(recordClass, pins.map(({ scope }) => scope), options);
-  let store: CivicDataPinnedReadStore | undefined = options.store;
-  return Promise.all(pins.map(async (pin, index): Promise<CivicDataReadResult<T>> => {
-    const current = live[index]!;
-    if (
-      current.kind === "STORE_UNREACHABLE" &&
-      current.code !== "PROMOTION_PROOF_INVALID" &&
-      current.code !== "PROMOTION_CANDIDATE_MISSING"
-    ) return current;
-    if (pin.versionId === null) {
-      return {
-        kind: "NOT_RECORDED",
-        value: null,
-        metadata: emptyMetadata(recordClass, pin.scope),
-        detail: `The Reader proof pin recorded no canonical pointer for ${projectionKey(recordClass, pin.scope)} when it was captured; a pointer promoted since is outside this proof run.`,
-      };
-    }
-    if (current.kind === "PROMOTED" && current.metadata.versionId === pin.versionId) return current;
-    const key = projectionKey(recordClass, pin.scope);
-    if (!options.bypassCache) {
-      const proven = provenByVersion.get(pin.versionId);
-      if (proven && proven.projection.key === key) {
-        return promotedResult(proven.projection as PromotedProjection<T>, proven.candidate, now, options.maxAgeMs);
-      }
-    }
-    let candidate: CandidateVersionRecord | null;
-    let promotions: readonly { readonly at: string }[];
-    let predecessor: CandidateVersionRecord | null = null;
-    try {
-      store ??= new PostgresRoutineDataStore();
-      candidate = await readProofCandidate(store, pin.versionId);
-      const moved = new RegExp(`^Atomic pointer ${escapeRegExp(key)} moved from \\S+ to ${escapeRegExp(pin.versionId)}\\.$`);
-      promotions = candidate === null
-        ? []
-        : (await readPointerMoveEvents(store, pin.versionId)).filter((event) => moved.test(event.detail));
-      const predecessorVersionId = trustedLkgPredecessorVersionId(candidate);
-      if (predecessorVersionId !== null) predecessor = await store.readCandidate(predecessorVersionId);
-    } catch (error) {
-      return {
-        kind: "STORE_UNREACHABLE",
-        value: null,
-        metadata: { ...emptyMetadata(recordClass, pin.scope), versionId: pin.versionId },
-        code: "STORE_READ_FAILED",
-        detail: `Reading pinned version ${pin.versionId} of ${key} failed (${error instanceof Error ? error.name : "unknown error"}). We could not ask the store.`,
-      };
-    }
-    if (candidate === null) {
-      return {
-        kind: "STORE_UNREACHABLE",
-        value: null,
-        metadata: { ...emptyMetadata(recordClass, pin.scope), versionId: pin.versionId },
-        code: "PROMOTION_CANDIDATE_MISSING",
-        detail: `The Reader proof pin names ${pin.versionId} for ${key}, but its candidate/version row is missing.`,
-      };
-    }
-    const projection: PromotedProjection<T> = {
-      key,
-      sourceId: candidate.candidate.sourceId,
-      recordClass,
-      scope: pin.scope,
-      versionId: pin.versionId,
-      lastKnownGoodVersionId: pin.versionId,
-      promotedAt: promotions[0]?.at ?? "",
-      payload: candidate.candidate.readModel as T,
-      receipt: candidate.receipt as ValidationReceipt,
-    };
-    if (promotions.length !== 1) {
-      return promotionProofInvalidResult(
-        recordClass,
-        pin.scope,
-        projection,
-        `the pinned version has ${promotions.length} durable atomic promotions of ${key}, not exactly one`,
-      );
-    }
-    try {
-      const result = resultFromPromotionProof(recordClass, pin.scope, projection, candidate, predecessor, now, options.maxAgeMs);
-      // Attest, never re-run (RULING 288): a pinned version proven once is
-      // proven for this process, so a proof run's later requests serve it from
-      // the memo above instead of re-reading its candidate and event log. A
-      // proof run once re-read every moved partition on every Ask request
-      // (about 2,000 whole candidate reads in four minutes, 2026-09-24).
-      // Only the proof harness admits a pin; bypassCache still re-proves.
-      if (result.kind === "PROMOTED" && !options.bypassCache) provenByVersion.set(pin.versionId, { projection, candidate });
-      return result;
-    } catch (error) {
-      return promotionProofInvalidResult(
-        recordClass,
-        pin.scope,
-        projection,
-        `proof evaluation failed (${error instanceof Error ? error.name : "unknown error"})`,
-      );
-    }
-  }));
-}
-
-function escapeRegExp(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 function observedProjectionMetadata<T>(
@@ -1432,9 +1138,14 @@ function promotedResult<T>(
   const retrievedAt = confirmedRetrievedAt !== null && Date.parse(confirmedRetrievedAt) > Date.parse(pointedRetrievedAt)
     ? confirmedRetrievedAt
     : pointedRetrievedAt;
+  const sourceChecks = [
+    candidate.candidate.retrieval.sourceCheck ? sourceCheckedAt(candidate.candidate.retrieval, projection.promotedAt) : undefined,
+    projection.latestConfirmation?.retrieval.sourceCheck ? sourceCheckedAt(projection.latestConfirmation.retrieval, projection.latestConfirmation.observedAt) : undefined,
+  ].filter((at): at is string => at !== undefined).sort((a, b) => Date.parse(a) - Date.parse(b));
+  const checkedAt = sourceChecks.at(-1);
   const temporal = temporalState({
     now,
-    retrievedAt,
+    retrievedAt: checkedAt ?? retrievedAt,
     staleAtRetrieval: candidate.candidate.temporal.staleAtRetrieval,
     maxAgeMs,
   });
@@ -1451,6 +1162,7 @@ function promotedResult<T>(
       lastKnownGoodVersionId: projection.lastKnownGoodVersionId,
       sourceThrough: candidate.candidate.temporal.sourceThrough,
       retrievedAt,
+      ...(checkedAt ? { checkedAt } : {}),
       promotedAt: projection.promotedAt,
       ...temporal,
     },
@@ -1489,10 +1201,6 @@ function bootstrapResult<T>(
   };
 }
 
-/**
- * Select bundled bootstrap only through the explicit non-production fixture
- * gate. An answered, absent production pointer stays NOT_RECORDED.
- */
 export async function readPromotedOrBootstrap<T>(
   options: PromotedOrBootstrapOptions<T>,
 ): Promise<CivicDataReadResult<T>> {
@@ -1520,7 +1228,6 @@ export class CivicDataStoreUnavailableError extends Error {
   }
 }
 
-/** Preserve the legacy preload return without duplicating fail-closed logic. */
 export function promotedVersionOrThrow<T>(result: CivicDataReadResult<T>): string | null {
   if (result.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(result);
   return result.kind === "PROMOTED" ? result.metadata.versionId : null;

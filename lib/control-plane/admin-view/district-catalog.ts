@@ -1,14 +1,4 @@
-/**
- * **EVERY CONGRESSIONAL DISTRICT THERE IS, AS A PLACE ADMIN CAN OPEN.** (S12.4, Sean's 9:00 AM MST target.)
- *
- * The place picker lists a district before anyone has opened it: `AZ-06` is a place whether or not a hunt, a row of the country view or
- * a visit has put it in the list. A district's GEOID is the Census one the published lookup uses: the state FIPS plus two digits, `00` for
- * a state with a single seat and `98` for the delegate of the District of Columbia and each territory. Seats are the 2020 apportionment
- * (435 voting seats), the plan the lookup's 119th Congress districts are drawn to.
- *
- * What a district holds (its ZIPs, its score, its hunts) is read from the published lookup and held data when it is opened; this module
- * only names the places. PURE; client-safe.
- */
+/** GEOID: state FIPS plus two digits, `00` for a single-seat state and `98` for DC and territory delegates. 2020 apportionment. PURE; client-safe. */
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 import { districtLabelOf } from "./district-label.ts";
 
@@ -22,13 +12,11 @@ const SEATS: Readonly<Record<string, number>> = {
 const DELEGATES: readonly string[] = ["DC", "PR", "GU", "VI", "AS", "MP"];
 
 export interface CatalogDistrict {
-  /** Lowercase postal code. */
   readonly state: string;
   /** The Census GEOID: state FIPS plus two digits. */
   readonly geoid: string;
   /** `AZ-06`, `WY-AL`. */
   readonly label: string;
-  /** `geo:az.congressional_district.0406`. */
   readonly placeKey: string;
 }
 
@@ -54,10 +42,6 @@ export function allDistricts(): readonly CatalogDistrict[] {
   return out;
 }
 
-/**
- * The district label a typed query names, or null. `az-06`, `AZ 6`, `az6` and `az-6` are all `AZ-06`; `wy-al` and `wy` followed by nothing
- * but "al" are `WY-AL`. Anything else is not a district and the picker matches it as text.
- */
 export function districtLabelOfQuery(query: string): string | null {
   const m = /^([a-z]{2})[\s-]*(\d{1,2}|al)$/i.exec(query.trim());
   if (m === null) return null;

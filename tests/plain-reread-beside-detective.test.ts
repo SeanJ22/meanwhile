@@ -1,4 +1,4 @@
-/** DP-02: a shut door goes to a detective, and its plain re-read keeps running, paid lane open or closed. */
+/** A shut door goes to a detective, and its plain re-read keeps running, paid lane open or closed. */
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -21,8 +21,6 @@ async function cycle(paidLaneOpen: boolean) {
     repos: createMemoryRepositories(), obligations: [shut], debts: [], requireOpenOccurrence: false,
     routeTaskFor: () => "task", maturity: () => "UNGRADUATED", holder: "dp-02", now: NOW, leaseTtlMs: 60_000, maxDispatches: 5,
     executor: { lane: "DETERMINISTIC", run: run("plain") as never },
-    reader: { contract: "READER", state: "NOT_READY", reason: "fixture" },
-    truth: { contract: "TRUTH", state: "NOT_READY", reason: "fixture" },
     research: {
       decide: () => ({ kind: "BOUNDED_MODEL_WORKER", why: "shut door", disagreement: null }),
       plainBesideDetective: () => ({ kind: "DETERMINISTIC", why: "plain re-read", disagreement: null }),

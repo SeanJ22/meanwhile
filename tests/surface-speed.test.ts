@@ -1,4 +1,4 @@
-/** FE-26: per-surface share over three seconds, errors and dead links on the Scoreboard row; a surface over its limit leads the stuck list and opens one fix item. */
+/** Per-surface share over three seconds, errors and dead links on the Scoreboard row; a surface over its limit leads the stuck list and opens one fix item. */
 import assert from "node:assert/strict";
 import test from "node:test";
 

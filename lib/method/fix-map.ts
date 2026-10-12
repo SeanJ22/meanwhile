@@ -1,4 +1,7 @@
-/** One observation per reusable method and place. Production schema wiring belongs to River. */
+import { createHash } from "node:crypto";
+import type { AggregateRepository } from "../control-plane/repository/types.ts";
+
+/** One observation per reusable method and place. */
 export type FixMapState = "WORKS" | "FAILS" | "UNTRIED";
 export interface FixMapRow {
   readonly methodId: string; readonly placeId: string; readonly state: FixMapState;
@@ -6,14 +9,59 @@ export interface FixMapRow {
   readonly updatedAt: string; readonly supersededAttemptId?: string | null;
 }
 
-/** Expand-only DDL for the existing control-plane bootstrap; never applied from this module. */
-export const FIX_MAP_EXPAND_SQL = `CREATE TABLE IF NOT EXISTS cp_fix_map (
+/** The control-plane bootstrap's statements for the table, one statement each. */
+export const FIX_MAP_DDL: readonly string[] = [
+  `CREATE TABLE IF NOT EXISTS cp_fix_map (
   method_id text NOT NULL, place_id text NOT NULL,
   state text NOT NULL CHECK (state IN ('WORKS', 'FAILS', 'UNTRIED')),
   tried_at timestamptz, attempt_id text, cause text, updated_at timestamptz NOT NULL,
   superseded_attempt_id text, PRIMARY KEY (method_id, place_id)
-);
-CREATE INDEX IF NOT EXISTS cp_fix_map_place ON cp_fix_map (place_id, method_id);`;
+);`,
+  "CREATE INDEX IF NOT EXISTS cp_fix_map_place ON cp_fix_map (place_id, method_id);",
+  "CREATE INDEX IF NOT EXISTS cp_fix_map_works ON cp_fix_map (tried_at) WHERE state = 'WORKS';",
+];
+
+/** Where one method works: up to `WORKS_PLACES_SHOWN` places, newest first, and every state it works in. */
+export interface MethodWorks {
+  readonly places: readonly string[];
+  readonly states: readonly string[];
+}
+export const WORKS_PLACES_SHOWN = 3;
+
+/** The two-letter state a place id names, or null. */
+export function stateOfPlace(placeId: string): string | null {
+  return /(?:^|\/)state:([a-z]{2})(?:\/|$|#)/i.exec(placeId)?.[1]?.toLowerCase() ?? null;
+}
+
+/** Pure: the `worksFor` answer from rows already held. */
+export function methodWorksOf(rows: readonly FixMapRow[], methodIds: readonly string[]): ReadonlyMap<string, MethodWorks> {
+  const wanted = new Set(methodIds);
+  const out = new Map<string, MethodWorks>();
+  const working = rows.filter((r) => r.state === "WORKS" && wanted.has(r.methodId))
+    .sort((a, b) => Date.parse(b.triedAt ?? b.updatedAt) - Date.parse(a.triedAt ?? a.updatedAt) || a.placeId.localeCompare(b.placeId));
+  for (const row of working) {
+    const held = out.get(row.methodId) ?? { places: [], states: [] };
+    const state = stateOfPlace(row.placeId);
+    out.set(row.methodId, {
+      places: held.places.length < WORKS_PLACES_SHOWN ? [...held.places, row.placeId] : held.places,
+      states: state === null || held.states.includes(state) ? held.states : [...held.states, state].sort(),
+    });
+  }
+  return out;
+}
+
+const workedAt = (r: FixMapRow): number => Date.parse(r.triedAt ?? r.updatedAt);
+
+/** Pure: the `workingMethods` answer from rows already held. */
+export function latestWorking(rows: readonly FixMapRow[], limit: number): FixMapRow[] {
+  const newest = new Map<string, FixMapRow>();
+  for (const row of rows) {
+    if (row.state !== "WORKS") continue;
+    const held = newest.get(row.methodId);
+    if (!held || workedAt(row) > workedAt(held) || (workedAt(row) === workedAt(held) && row.placeId < held.placeId)) newest.set(row.methodId, row);
+  }
+  return [...newest.values()].sort((a, b) => workedAt(b) - workedAt(a) || a.methodId.localeCompare(b.methodId)).slice(0, limit);
+}
 
 /** An old replay or a newly scheduled trial cannot erase a known result. */
 export function applyFixResult(prior: FixMapRow | null, incoming: FixMapRow): FixMapRow {
@@ -29,6 +77,10 @@ type Query = (text: string, parameters: readonly unknown[]) => Promise<readonly 
 export interface FixMapRepository {
   forPlace(placeId: string, limit?: number): Promise<readonly FixMapRow[]>;
   forMethod(methodId: string, limit?: number): Promise<readonly FixMapRow[]>;
+  /** For each named method, where it works. */
+  worksFor(methodIds: readonly string[]): Promise<ReadonlyMap<string, MethodWorks>>;
+  /** Each method that works somewhere: its newest working row, newest first. */
+  workingMethods(limit?: number): Promise<readonly FixMapRow[]>;
   put(row: FixMapRow): Promise<void>;
 }
 
@@ -48,6 +100,19 @@ export function createFixMapRepository(query: Query): FixMapRepository {
   return {
     forPlace: async (placeId, limit) => (await query("SELECT * FROM cp_fix_map WHERE place_id = $1 ORDER BY method_id LIMIT $2", [placeId, bounded(limit)])).map(decode),
     forMethod: async (methodId, limit) => (await query("SELECT * FROM cp_fix_map WHERE method_id = $1 ORDER BY place_id LIMIT $2", [methodId, bounded(limit)])).map(decode),
+    worksFor: async (methodIds) => {
+      if (methodIds.length === 0) return new Map();
+      const rows = await query(`SELECT method_id,
+          (array_agg(place_id ORDER BY coalesce(tried_at, updated_at) DESC, place_id))[1:${WORKS_PLACES_SHOWN}] AS places,
+          array_remove(array_agg(DISTINCT lower(substring(place_id from '(?:^|/)state:([a-zA-Z]{2})(?:/|$|#)'))), NULL) AS states
+        FROM cp_fix_map WHERE method_id = ANY($1::text[]) AND state = 'WORKS' GROUP BY method_id`, [[...new Set(methodIds)]]);
+      return new Map(rows.map((row) => [String(row.method_id),
+        { places: (row.places as string[] | null) ?? [], states: [...((row.states as string[] | null) ?? [])].sort() }] as const));
+    },
+    workingMethods: async (limit) => (await query(
+      `SELECT * FROM (SELECT DISTINCT ON (method_id) * FROM cp_fix_map WHERE state = 'WORKS'
+        ORDER BY method_id, coalesce(tried_at, updated_at) DESC, place_id) newest
+      ORDER BY coalesce(tried_at, updated_at) DESC, method_id LIMIT $1`, [bounded(limit)])).map(decode),
     put: async row => {
       await query(`INSERT INTO cp_fix_map (method_id, place_id, state, tried_at, attempt_id, cause, updated_at)
         VALUES ($1, $2, $3, $4, $5, $6, $7)
@@ -58,6 +123,33 @@ export function createFixMapRepository(query: Query): FixMapRepository {
         WHERE (cp_fix_map.state = 'UNTRIED' AND (EXCLUDED.state != 'UNTRIED' OR EXCLUDED.updated_at >= cp_fix_map.updated_at))
           OR (cp_fix_map.state != 'UNTRIED' AND EXCLUDED.state != 'UNTRIED' AND EXCLUDED.tried_at >= cp_fix_map.tried_at)`,
       [row.methodId, row.placeId, row.state, row.triedAt, row.attemptId, row.cause, row.updatedAt]);
+    },
+  };
+}
+
+/** The fix map over any aggregate store (one aggregate per method and place), with the table's replace rules. */
+export function aggregateFixMap(repo: AggregateRepository<FixMapRow>): FixMapRepository {
+  const idOf = (r: Pick<FixMapRow, "methodId" | "placeId">): string => createHash("sha256").update(`${r.methodId}\u0000${r.placeId}`).digest("hex").slice(0, 32);
+  const all = async () => (await repo.list()).map((row) => row.value);
+  return {
+    forPlace: async (placeId, limit = 200) => (await all()).filter((r) => r.placeId === placeId).sort((a, b) => a.methodId.localeCompare(b.methodId)).slice(0, limit),
+    forMethod: async (methodId, limit = 200) => (await all()).filter((r) => r.methodId === methodId).sort((a, b) => a.placeId.localeCompare(b.placeId)).slice(0, limit),
+    worksFor: async (methodIds) => methodWorksOf(await all(), methodIds),
+    workingMethods: async (limit = 200) => latestWorking(await all(), limit),
+    put: async (row) => {
+      for (let attempt = 0; ; attempt += 1) {
+        const held = await repo.read(idOf(row));
+        try {
+          if (held === null) await repo.put(idOf(row), row, row.updatedAt);
+          else {
+            const next = applyFixResult(held.value, row);
+            if (next !== held.value) await repo.compareAndSet(idOf(row), held.revision, next, row.updatedAt);
+          }
+          return;
+        } catch (error) {
+          if (attempt === 3) throw error;
+        }
+      }
     },
   };
 }

@@ -1,4 +1,4 @@
-/** DB-47: compare actual applied migrations with exact previously published code. */
+/** Compare actually applied migrations with exact previously published code. */
 import { createHash } from "node:crypto";
 import type { ActionReceipt } from "../control-plane/gateway/contract.ts";
 import { appendReceipt, findReceipt } from "../control-plane/gateway/receipts.ts";

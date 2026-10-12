@@ -1,0 +1,8 @@
+[
+ { "key": "pima-meetings", "ocdId": "ocd-division/country:us/state:az/county:pima", "state": "az", "recordClass": "meetings", "host": "webapi.legistar.com", "workItemId": "wi-pima-meetings" },
+ { "key": "tucson-roster", "ocdId": "ocd-division/country:us/state:az/place:tucson", "state": "az", "recordClass": "OFFICIAL_ROSTER", "host": "tucsonaz.gov", "workItemId": "wi-tucson-roster" },
+ { "key": "rockaway-meetings", "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway", "state": "nj", "recordClass": "meetings", "host": "rockawaytownship.org", "workItemId": "wi-rockaway-meetings" },
+ { "key": "concord-roster", "ocdId": "ocd-division/country:us/state:nh/place:concord", "state": "nh", "recordClass": "OFFICIAL_ROSTER", "host": "concordnh.gov", "workItemId": "wi-concord-roster" },
+ { "key": "harris-meetings", "ocdId": "ocd-division/country:us/state:tx/county:harris", "state": "tx", "recordClass": "meetings", "host": "harriscountytx.gov", "workItemId": "wi-harris-meetings" },
+ { "key": "allegheny-meetings", "ocdId": "ocd-division/country:us/state:pa/county:allegheny", "state": "pa", "recordClass": "meetings", "host": "alleghenycounty.us", "workItemId": "wi-allegheny-meetings" }
+]

@@ -14,11 +14,11 @@ import {
   settleReadNow,
 } from "../lib/doors/mission-refresh.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
-import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
+import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import { routineDueRequestFor } from "../lib/civic-data/routine-due-request.ts";
 import { ROUTINE_SOURCE_TASKS } from "../lib/civic-data/runner.ts";
 
-/** DB-56: starting a mission marks every open door already known in the place to be read now. */
+/** Starting a mission marks every open door already known in the place to be read now. */
 
 const SEEDED = "2026-10-04T12:00:00.000Z";
 const MISSION = "2026-10-04T13:00:00.000Z";
@@ -26,7 +26,7 @@ const LATER = "2026-10-04T13:20:00.000Z";
 
 async function seeded() {
   const repos = createMemoryRepositories();
-  await seedMeetingDoors({ repo: repos.doors, wiring: SOURCE_WIRING, derived: [], deriveInputAt: SEEDED, at: SEEDED });
+  await seedMeetingDoors({ repo: repos.doors, wiring: FIXTURE_DOOR_ROWS, derived: [], deriveInputAt: SEEDED, at: SEEDED });
   return repos;
 }
 
@@ -123,7 +123,8 @@ describe("DB-56: mission start refreshes the doors already known in the place", 
 
   it("the ordinary pass treats a marked door as due, and the partition's own next attempt spends it", async () => {
     const repos = await seeded();
-    const task = ROUTINE_SOURCE_TASKS.find((candidate) => candidate.recordClass === "MEETING" && candidate.contract.schedule?.kind === "SITTING_WINDOW" && candidate.id.startsWith("meetings:"))!;
+    const task = ROUTINE_SOURCE_TASKS.find((candidate) => candidate.recordClass === "MEETING" && candidate.contract.schedule?.kind === "SITTING_WINDOW" && candidate.id.startsWith("meetings:")
+      && typeof (candidate.contract as { ocdId?: unknown }).ocdId === "string")!;
     const door = (await listDoors(repos.doors)).doors.find((row) => row.doorId === task.id)!;
     assert.ok(door, "a hand-wired door carries its partition's id");
     await markDoorsReadNow(repos.doors, [door.ocdId!], MISSION);

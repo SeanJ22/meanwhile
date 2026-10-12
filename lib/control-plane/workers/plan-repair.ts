@@ -60,7 +60,7 @@ export function evaluatePlanRepair(input: { plan: AutonomousWorkPlan; candidate:
   observedAtByArtifact?: ReadonlyMap<string, string>; registeredPublisherAddress?: string | null }) {
   const { plan, candidate, evidence, now } = input;
   requireThat(plan.contract.schemaVersion === 2 && (PLAN_REPAIR_CLASSES as readonly string[]).includes(plan.contract.recordClass), "REPAIR_CLASS_NOT_ADMITTED");
-  // The robots.txt verdict is a record, never a gate (owner decision 2026-09-25): any recorded verdict is admitted.
+  // The robots.txt verdict is a record, never a gate: any recorded verdict is admitted.
   requireThat(candidate.recordClass === plan.contract.recordClass && isRecordedRobotsVerdict(candidate.permission), "REPAIR_CANDIDATE_SCOPE_MISMATCH");
   requireThat(candidate.contractRepair && Buffer.byteLength(canonicalJson(candidate.contractRepair)) <= 32_768, "REPAIR_PROPOSAL_BOUND");
   const proposal = candidate.contractRepair as { schemaVersion?: unknown; sourceArtifactId?: unknown; extraction?: unknown; authorities?: unknown };
@@ -79,11 +79,7 @@ export function evaluatePlanRepair(input: { plan: AutonomousWorkPlan; candidate:
   const primary = evidence.find(row => row.artifactId === proposal.sourceArtifactId);
   requireThat(primary && primary.canonicalUrl === candidate.url, "REPAIR_SOURCE_CAPTURE_MISSING");
   const trustedOrigins = [...plan.seedUrls, ...plan.sources.map(source => source.url), ...plan.contract.sourceScope.canonicalUrls].map(origin);
-  // The original registry can carry an HTTP homepage while a completed Scout
-  // captured its exact host over HTTPS. That registered address is an identity
-  // lead, not model-proposed authority: the caller resolves it by subject from
-  // the installed jurisdiction registry, and the captured bytes still need all
-  // normal provenance, extraction and verification checks below.
+  // A registry homepage over HTTP may match a Scout's HTTPS capture of the same host; it is an identity lead resolved by subject, and the bytes still pass every check below.
   const primaryOrigin = origin(primary.canonicalUrl);
   let registeredOrigin: string | null = null;
   if (!trustedOrigins.includes(primaryOrigin) && input.registeredPublisherAddress) {
@@ -154,11 +150,7 @@ export function evaluatePlanRepair(input: { plan: AutonomousWorkPlan; candidate:
   requireThat(replay.verdict === "EXTRACTED" && replay.warnings.length === 0, `REPAIR_EXTRACTION_REFUSED:${replay.warnings.map(issue => issue.code).join(",")}`);
   const checks = verifyExternalAuthorities({ attemptId: "contract-instruction-comparison", producerAttemptId: replay.attemptId, candidate: replay,
     evidence: primary, authorityEvidence: evidence, verifiedAt: now }, contract);
-  // A separately captured person profile can contradict one source row while
-  // confirming another. The ordinary validator and publisher isolate those
-  // exact people; a repair preflight must not turn a local office disagreement
-  // into a global refusal. Identity, source, count, and incomplete-capture
-  // defects remain global holds, and no contradicted person earns credit.
+  // A profile that contradicts one source row while confirming another holds only that person; identity, source, count and incomplete-capture defects stay global.
   const localSubsetDisagreement = (check: typeof checks[number]) =>
     contract.recordClass === "OFFICIAL_ROSTER" && check.comparison.kind === "RECORD_VALUES_SUBSET" &&
     check.discrepancies.length > 0 && check.discrepancies.every(issue =>

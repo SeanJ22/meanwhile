@@ -1,6 +1,6 @@
 import { readerQuery } from "./promoted-reader-query.ts";
 import type { CivicDataReadResult, CivicDataReadMetadata } from "./read-model.ts";
-import { readPlacePayloadParts } from "./place-payload-slices.ts";
+import { placeProjectionSourceSql, readPlacePayloadParts } from "./place-payload-slices.ts";
 import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
 
 const slices = new Map<string, Map<string, { version: string; value: unknown }>>();
@@ -28,15 +28,24 @@ export async function readPlacePointerSlice<T>(recordClass: CivicDataReadMetadat
   return (await readPlacePointerSlices<T>(recordClass, [scope], ids, bodies, targets))[0];
 }
 
-/** Multiple existing partitions share one read-only connection. */
+/** Read only requested facts from the exact promoted version already accepted
+ * by the serving manifest, even while the latest pointer moves independently. */
+export async function readPlaceVersionSlice<T>(recordClass: CivicDataReadMetadata["recordClass"], scope: string,
+  versionId: string, ids: readonly string[], bodies: readonly string[] = [], targets: readonly string[] = [],
+  injected?: ReadOnlyQuery): Promise<PlaceCaptureRead<T>> {
+  return (await readPlacePointerSlices<T>(recordClass, [scope], ids, bodies, targets, injected, new Map([[scope, versionId]])))[0];
+}
+
 export async function readPlacePointerSlices<T>(recordClass: CivicDataReadMetadata["recordClass"], scopes: readonly string[],
-  ids: readonly string[], bodies: readonly string[] = [], targets: readonly string[] = [], injected?: ReadOnlyQuery): Promise<PlaceCaptureRead<T>[]> {
+  ids: readonly string[], bodies: readonly string[] = [], targets: readonly string[] = [], injected?: ReadOnlyQuery,
+  acceptedVersions?: ReadonlyMap<string, string>): Promise<PlaceCaptureRead<T>[]> {
   if (!scopes.length) return [];
   const query = injected ?? readerQuery();
   if (!query) throw new Error(`HELD_PLACE_READ_FAILED:${recordClass}:${scopes.join(",")}:STORE_UNCONFIGURED`);
   if (injected && !queryIds.has(injected)) queryIds.set(injected, ++nextQueryId);
   const cacheKey = JSON.stringify([injected ? queryIds.get(injected) : process.env.DATABASE_URL, recordClass,
-    [...new Set(ids)].sort(), [...new Set(bodies)].sort(), [...new Set(targets)].sort()]);
+    [...new Set(ids)].sort(), [...new Set(bodies)].sort(), [...new Set(targets)].sort(),
+    acceptedVersions === undefined ? null : [...acceptedVersions].sort(([a], [b]) => a.localeCompare(b))]);
   const cached = slices.get(cacheKey) ?? new Map<string, { version: string; value: unknown }>();
   // Pin this call's carried values before any concurrent read can move the cache.
   const carried = new Map(cached);
@@ -80,15 +89,17 @@ export async function readPlacePointerSlices<T>(recordClass: CivicDataReadMetada
   } else {
     value = `(payload - 'records') || jsonb_build_object('records', ${array("payload->'records'", `${division} OR x->>'stateOcdId'=ANY($3::text[])`)})`;
   }
-  const [rows] = await query([{ text: `WITH selected AS (SELECT $3::text[] ids, $4::text[] bodies, $5::text[] targets)
+  const [rows] = await query([{ text: `WITH selected AS (SELECT $3::text[] ids, $4::text[] bodies, $5::text[] targets),
+    projections AS (${placeProjectionSourceSql(acceptedVersions === undefined ? undefined : 7)})
     SELECT scope, current_version_id, CASE WHEN ($6::jsonb->>scope)=current_version_id THEN NULL ELSE ${value} END AS value,
       CASE WHEN ($6::jsonb->>scope)=current_version_id THEN false ELSE jsonb_path_exists(payload, '$.**."$civicPayloadPart"') END AS encoded
-      FROM civic_data_promotions WHERE record_class=$1 AND scope=ANY($2::text[])`,
-    params: [recordClass, [...new Set(scopes)], [...ids], [...bodies], [...targets], versions] }]);
+      FROM projections WHERE record_class=$1 AND scope=ANY($2::text[])`,
+    params: [recordClass, [...new Set(scopes)], [...ids], [...bodies], [...targets], versions,
+      ...(acceptedVersions === undefined ? [] : [JSON.stringify(Object.fromEntries(acceptedVersions))])] }]);
   const byScope = new Map(rows?.map(row => [row.scope, row]));
   const encoded = rows.filter(row => row.encoded).map(row => row.scope as string);
   const decoded = encoded.length ? await readPlacePayloadParts(query, recordClass, encoded, ids, bodies, targets,
-    new Map(rows.map(row => [row.scope as string, row.current_version_id as string]))) : new Map();
+    new Map(rows.map(row => [row.scope as string, row.current_version_id as string])), acceptedVersions) : new Map();
   const result = scopes.map(scope => {
     const row = byScope.get(scope);
     const value = row ? carried.get(scope)?.version === row.current_version_id

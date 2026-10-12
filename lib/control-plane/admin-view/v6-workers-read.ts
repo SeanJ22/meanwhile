@@ -1,31 +1,7 @@
 /**
- * **admin-v6/workers@1 — WHAT THE WORKERS ARE DOING IN ONE PLACE, FROM SAVED EVIDENCE.**
- *
- * Bounded reads only: the owner policy row, the runner heartbeat and the
- * research state (each narrowed in the store), the newest
- * `WORKERS_SOURCE_EVENT_LIMIT` hunt source receipts, and three point reads per
- * Scout the research state lists as running (at most `WORKERS_RUNNING_MAX`).
- * No `.list()`, no `readAll()`, no filtered log scan.
- *
- * What a fact needs before it is shown:
- *   - running: an open Attempt whose own lease is unreleased and unexpired now.
- *     A listed Scout with an expired lease is shown as stopped, never running.
- *   - progress: a saved PUBLISHED/REUSED source receipt or a completed-window
- *     promotion count. A heartbeat or lease renewal is only "switched on".
- *   - result: an ended Attempt is not a delivered result, and a saved result is
- *     not a public-page check; the words say so.
- *   - place: an exact saved Send (geography key and original instruction
- *     receipt) on the obligation or source receipt, matched to a saved hunt the
- *     place binding (`scopedHunts`) proves is inside the place.
- *
- * `jobs` is every job running now, from one bounded indexed read of the
- * unreleased, unexpired work leases joined to their open Attempts
- * (repository/running-jobs.ts), Scouts and plain-code jobs alike. A job is
- * running only when its Attempt is open AND its own lease is unreleased and
- * unexpired at the read time. A job is placed on a place only through the exact
- * Send (key + original receipt) its obligation carries, or the scope divisions
- * its obligation declares; a job that cannot be placed is counted for the whole
- * system only. A read that reached its row limit says the count is a lower bound.
+ * A job is running only when its Attempt is open and its own lease is unreleased and unexpired at read time. A heartbeat
+ * or lease renewal is only "switched on", never progress. A job is placed only through its exact Send or declared scope
+ * divisions; a read that reached its row limit gives lower bounds.
  */
 import { NextResponse, type NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "../admin-auth.ts";
@@ -47,11 +23,11 @@ import { ROLE_WORDS } from "./v6-agents-read.ts";
 import { migrationOutcomeOf, PRODUCTION_MIGRATION_HEADLINE } from "../../db/migration-phases.ts";
 import type { UpdateCard } from "../../../app/(admin)/_mw/admin-v6/model.ts";
 import { runnerCycleOf, type CycleHeartbeat, type RunnerCycle } from "../runner-standing.ts";
+import { MODELS, canonicalModelId, modelTierFor } from "../../models.ts";
 import { readAreaZips } from "./v6-national-geography.ts";
 import { huntName, scopedHunts, sectionRevision, validateV6Query, type AdminV6SectionEnvelope, type V6PlaceScope, type V6Refusal } from "./v6-hunts-read.ts";
 
 export const ADMIN_V6_WORKERS_CONTRACT = "admin-v6/workers@1" as const;
-/** The research state's own bound on its running list (runner-progress-read.ts). */
 export const WORKERS_RUNNING_MAX = 16;
 export const WORKERS_SOURCE_EVENT_LIMIT = 25;
 export const WORKERS_EVENT_LIMIT = 20;
@@ -67,9 +43,7 @@ const ATTEMPT_FIELDS = { id: true, routeTaskId: true, workItemId: true, worker: 
 const OBLIGATION_FIELDS = { id: true, recordClass: true, assignments: true } as const satisfies RecordProjection;
 
 export const DEP_WORKER_ACTIVE_INDEX = "DEP-WORKER-ACTIVE-INDEX";
-/** The quiet after which an open round with nothing new is called stuck: the runner's own no-progress wait (scripts/pilot-runtime-child.mts). */
 export const NO_PROGRESS_MS = 10 * 60_000;
-/** Why the fleet's safety checks refused paid work, in the words Sean reads (lib/control-plane/fleet-safety.ts codes). */
 const REFUSAL_WORDS: Readonly<Record<string, string>> = {
   UNMEASURED_MODEL_SPEND: "the spending total is unknown",
   CEILING: "the spending limit is reached",
@@ -78,12 +52,11 @@ const REFUSAL_WORDS: Readonly<Record<string, string>> = {
   PROVIDER_REQUEST_CEILING: "the request limit is reached",
   PAYLOAD_BYTE_CEILING: "the data limit is reached",
   WEBSITE_REQUEST_CAP: "the limit on requests to one website is reached",
+  WEBSITE_ASKED_TO_WAIT: "the website asked us to wait",
   OWNER_PAUSED: "paid research is paused",
   MODEL_LANE_CLOSED: "that model is turned off",
   PROVIDER_CIRCUIT_BROKEN: "the provider is failing",
 };
-
-/* ------------------------------------------------ the UI shape (model.ts) */
 
 /** Structurally `WorkerStatus` in app/(admin)/_mw/admin-v6/model.ts. */
 export interface V6WorkerStatus {
@@ -125,14 +98,12 @@ export interface V6WorkerJob {
   readonly latest: string;
   readonly next: string;
 }
-/** Workers running now: in this place, in the whole system, and whether the read stopped at its row limit. */
 export interface V6WorkersRunning {
   readonly count: number;
   readonly system: number;
   /** True when the read reached its row limit: both counts are then lower bounds. */
   readonly lowerBound: boolean;
 }
-/** `AdminV6Data.workers.data`. `update` is null until its dependency lands; `jobs` is null when the lease read failed. */
 export interface AdminV6WorkersView {
   readonly status: V6WorkerStatus;
   readonly jobs: readonly V6WorkerJob[] | null;
@@ -142,8 +113,6 @@ export interface AdminV6WorkersView {
   readonly update: UpdateCard | null;
   readonly next: readonly string[] | null;
 }
-
-/* ------------------------------------------------------------ the sources */
 
 type Read<T> = { readonly state: "READ"; readonly value: T; readonly revision: number } | { readonly state: "MISSING" } | { readonly state: "UNREAD" };
 
@@ -160,16 +129,11 @@ export interface V6WorkersSources {
     | { readonly state: "UNREAD"; readonly detail: string };
   readonly heartbeat: Read<Partial<CycleHeartbeat>>;
   readonly research: Read<Record<string, unknown>>;
-  /** Newest first. */
   readonly sourceEvents: { readonly state: "READ"; readonly records: readonly unknown[] } | { readonly state: "UNREAD" };
-  /** Null when the research state was not read or its running list is not a valid bounded list. */
   readonly scouts: readonly ScoutEvidence[] | null;
-  /** Every live work lease with its open attempt: one bounded indexed read. */
   readonly jobs: { readonly state: "READ"; readonly rows: readonly RunningJobRow[]; readonly truncated: boolean } | { readonly state: "UNREAD" };
-  /** The latest verified result in the state in view; "NOT_ASKED" outside a state. */
   readonly stateProgress: { readonly state: "READ"; readonly value: StateProgress | null } | { readonly state: "UNREAD" } | { readonly state: "NOT_ASKED" };
   readonly migration?: unknown;
-  /** The ZIPs the Census lookup puts in the district or county in view; null for any other place. */
   readonly scopeZips?: ReadonlySet<string> | null;
 }
 
@@ -184,7 +148,6 @@ async function point<T>(read: () => Promise<{ readonly revision: number; readonl
   } catch { return { state: "UNREAD" }; }
 }
 
-/** The research state's running list, when it is the bounded list the runner writes. */
 export function runningScoutsOf(research: unknown): readonly RunningScout[] | null {
   const running = (research as { running?: unknown } | null)?.running;
   if (!Array.isArray(running) || running.length > WORKERS_RUNNING_MAX) return null;
@@ -194,7 +157,6 @@ export function runningScoutsOf(research: unknown): readonly RunningScout[] | nu
   return ok ? running as RunningScout[] : null;
 }
 
-/** Every read this section makes, each bounded. Nothing here writes. */
 export async function readV6WorkersSources(repos: ControlPlaneRepositories, readAt: string, scope: V6PlaceScope | null = null): Promise<V6WorkersSources> {
   const [config, heartbeat, research, sourceEvents, jobs, stateProgress, migration, scopeZips] = await Promise.all([
     readAdminConfig(repos),
@@ -244,18 +206,14 @@ export async function readV6WorkersSources(repos: ControlPlaneRepositories, read
   };
 }
 
-/* ------------------------------------------------------------- the words */
-
 const EASTERN = new Intl.DateTimeFormat("en-US", { timeZone: EASTERN_ZONE, month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
-/** Eastern time, the way Admin shows every time (rulings §10). The name is older than that ruling. */
+/** Eastern time, despite the name. */
 const mstWords = (iso: string) => `${EASTERN.format(new Date(iso))} ET`;
 
 function modelWords(version: unknown): string {
   if (!text(version)) return "Not recorded";
-  if (/haiku/i.test(version)) return `Cheapest AI (${version})`;
-  if (/sonnet/i.test(version)) return `Mid-level AI (${version})`;
-  if (/opus|fable/i.test(version)) return `Strongest AI (${version})`;
-  return version;
+  const tier = modelTierFor(canonicalModelId(version));
+  return tier ? `${MODELS[tier].plainRole} (${MODELS[tier].name})` : version;
 }
 
 const SOURCE_STAGE: Readonly<Record<HuntSourceProgress["stage"], { kind: string; says: string; tone: V6WorkerEvent["tone"] }>> = {
@@ -279,16 +237,11 @@ function failureWords(detail: unknown): string {
 const sourceName = (sourceId: string) => `The ${sourceId.replaceAll(/[-_]/g, " ")} source`;
 const plural = (n: number, one: string, many = `${one}s`) => `${n.toLocaleString("en-US")} ${n === 1 ? one : many}`;
 
-/* ------------------------------------------------------------- membership */
-
 type Relation = "member" | "outside" | "unresolved";
 
 interface Binding {
-  /** The whole country: every saved fact is inside. */
   readonly all: boolean;
-  /** Saved Sends inside the place, by `key` → original instruction receipt. */
   readonly members: readonly ExpansionScopeDecision[];
-  /** Every saved Send, for names and for proving a Send is outside. */
   readonly saved: readonly ExpansionScopeDecision[];
 }
 
@@ -298,7 +251,6 @@ function sendRelation(binding: Binding, key: string, ref: string): Relation {
   return binding.saved.some(d => d.key === key && d.receiptId === ref) ? "outside" : "unresolved";
 }
 
-/** A set of Sends: inside when any is; outside only when every one is a saved Send proven outside. */
 function sendsRelation(binding: Binding, sends: readonly { readonly key: string; readonly ref: string }[]): Relation {
   if (binding.all) return "member";
   const each = sends.map(s => sendRelation(binding, s.key, s.ref));
@@ -306,7 +258,6 @@ function sendsRelation(binding: Binding, sends: readonly { readonly key: string;
   return each.length > 0 && each.every(r => r === "outside") ? "outside" : "unresolved";
 }
 
-/** The Send marks that stood when this Scout started (and that it recorded, when it recorded them). */
 function scoutSends(evidence: ScoutEvidence): readonly { key: string; ref: string }[] | null {
   if (evidence.obligation.state !== "READ") return null;
   const marks = evidence.obligation.value.assignments;
@@ -323,8 +274,6 @@ function namesOf(binding: Binding, sends: readonly { key: string; ref: string }[
   return names.length === 0 ? "work not tied to a current hunt" : names.length === 1 ? `the ${names[0]}` : `${names.length} hunts (${names.join(", ")})`;
 }
 
-/* ------------------------------------------------------------ the section */
-
 type ScoutState = "RUNNING" | "EXPIRED" | "ENDED" | "UNKNOWN";
 
 /** Running only with an open Attempt and its own unreleased, unexpired lease at `now`. */
@@ -339,28 +288,17 @@ export function scoutState(evidence: ScoutEvidence, now: string): ScoutState {
   return live ? "RUNNING" : "EXPIRED";
 }
 
-/* ------------------------------------------------------- jobs running now */
-
-/** A running job and where it is placed. */
 export interface RunningJob {
   readonly row: RunningJobRow & { readonly attempt: NonNullable<RunningJobRow["attempt"]> };
-  /** The saved hunts whose exact Send (key + original receipt) the obligation carries. */
   readonly hunts: readonly ExpansionScopeDecision[];
   readonly sends: readonly { readonly key: string; readonly ref: string }[];
-  /** The obligation declares the whole country. */
   readonly national: boolean;
-  /** The states its declared divisions name; `exact` when the division is the state itself, not a part of it. */
   readonly states: readonly { readonly state: string; readonly exact: boolean }[];
 }
 
 const NATIONAL_DIVISION = "ocd-division/country:us";
 const STATE_DIVISION = /^ocd-division\/country:us\/state:([a-z]{2})(\/|$)/;
 
-/**
- * The jobs running at `now`: an open Attempt whose own lease is unreleased and
- * unexpired. A lease with no open attempt, an ended attempt, an attempt that
- * names another lease, a released lease and an expired lease are not running.
- */
 export function runningJobsOf(rows: readonly RunningJobRow[], now: string, binding: Binding): RunningJob[] {
   const at = Date.parse(now);
   const out: RunningJob[] = [];
@@ -380,7 +318,6 @@ export function runningJobsOf(rows: readonly RunningJobRow[], now: string, bindi
   return out;
 }
 
-/** Whether a running job belongs in the place in view: the whole country holds every job; a place holds only a job it is placed in. */
 export function jobInScope(job: RunningJob, binding: Binding, scope: V6PlaceScope): boolean {
   if (binding.all) return true;
   if (sendsRelation(binding, job.sends) === "member") return true;
@@ -433,7 +370,6 @@ function sourceRows(records: readonly unknown[]): { rows: SourceRow[]; invalid: 
   return { rows, invalid };
 }
 
-/** A receipt names instruction receipts only; each must match exactly one saved Send to be placed. */
 function sourceSends(binding: Binding, p: HuntSourceProgress): { key: string; ref: string }[] {
   return p.instructionIds.flatMap(id => {
     const d = binding.saved.filter(s => s.receiptId === id);
@@ -446,12 +382,7 @@ export function unboundScope(scopeKey: string): V6Refusal {
     says: `${scopeKey} is not a place this section can bind yet; governing-body identities and overlaps are not proven.`, dependency: "DEP-SCOPE-IDENTITIES" };
 }
 
-/**
- * **admin-v6/workers@1.** Pure: the same sources give the same answer. The
- * lists are non-null only when every fact in them is proven for this place;
- * an empty list is returned only when the reads that would fill it all
- * succeeded and found nothing here.
- */
+/** A list is empty only when every read that would fill it succeeded and found nothing here. */
 export function v6WorkersSection(input: { readonly scopeKey: string; readonly scope: V6PlaceScope | null; readonly sources: V6WorkersSources }):
   AdminV6SectionEnvelope<AdminV6WorkersView> | V6Refusal {
   const { scopeKey, scope, sources } = input;
@@ -487,7 +418,6 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
   const finished = hb && clock(hb.lastCycleFinishedAt) ? hb.lastCycleFinishedAt : null;
   const nextDue = hb && clock(hb.nextCycleDueAt) ? hb.nextCycleDueAt : null;
 
-  /* the Scouts the research state lists, each checked against its own Attempt and lease now */
   const scoutRows = (sources.scouts ?? []).map(evidence => {
     const sends = scoutSends(evidence);
     return { evidence, state: scoutState(evidence, now), sends, relation: sends === null ? "unresolved" as Relation : sendsRelation(binding, sends) };
@@ -498,7 +428,6 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
   const scoutUnplaced = scoutRows.filter(r => r.relation === "unresolved").length;
   if (scoutUnplaced > 0) missing.push(`${plural(scoutUnplaced, "listed paid research job")} could not be placed: ${scoutUnplaced === 1 ? "its" : "their"} saved task names no hunt that settles whether it is in ${scopeKey}.`);
 
-  /* source receipts, placed by exact instruction receipt */
   const read = sources.sourceEvents.state === "READ" ? sourceRows(sources.sourceEvents.records) : null;
   if (read && read.invalid > 0) missing.push(`${plural(read.invalid, "recent source receipt")} had an unreadable shape and ${read.invalid === 1 ? "was" : "were"} left out.`);
   const placed = (read?.rows ?? []).map(row => ({ row, sends: sourceSends(binding, row.p) }))
@@ -526,7 +455,6 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
   if (sources.stateProgress.state === "UNREAD") unread.push("the latest verified result in this state");
   useful.sort((a, b) => Date.parse(b.at) - Date.parse(a.at));
 
-  /* a round that is open with nothing started or reported since, for ten minutes: the same quiet the runner's own guard waits out */
   const roundOpen = started !== null && (finished === null || Date.parse(finished) < Date.parse(started));
   const nothingRunning = sources.jobs.state === "READ" && sources.jobs.rows.length === 0 && (sources.scouts ?? []).length === 0;
   const activity = roundOpen && nothingRunning
@@ -551,7 +479,6 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
     unread,
   };
 
-  /* waiting, and why: per-hunt completion and money from the runner's own Send reading */
   const reading = research?.assignments as { at?: unknown; assignments?: unknown } | null | undefined;
   const sends = reading && clock(reading.at) && Array.isArray(reading.assignments) && reading.assignments.length <= ASSIGNMENT_READING_MAX
     ? (reading.assignments as Record<string, unknown>[]).filter(r => r && text(r.key) && (r.ref === null || text(r.ref))) : null;
@@ -585,7 +512,6 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
       why: `${typeof b.leftUsd === "number" ? `$${b.leftUsd.toFixed(2)}` : "—"} left of the ${typeof b.budgetUsd === "number" ? `$${b.budgetUsd.toFixed(2)}` : "—"} limit${typeof b.heldUsd === "number" && b.heldUsd > 0 ? ` · $${b.heldUsd.toFixed(2)} held` : ""}`,
       nextTime: "—", owner: "You", applies, actions: [] });
   }
-  /* a source whose newest receipt here is a failure or a hold is waiting on that failure */
   const byTask = new Map<string, typeof inScope>();
   for (const x of inScope) byTask.set(x.row.p.taskId, [...(byTask.get(x.row.p.taskId) ?? []), x]);
   for (const [, rows] of byTask) {
@@ -609,7 +535,6 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
   if (!binding.all) missing.push(`Only work sent to a hunt is split by place. Other queued work is counted for the whole system only, in the lane counts.`);
   if (!binding.all && sends === null) missing.push("The runner's per-hunt reading of finished and unfinished tasks could not be read.");
 
-  /* what changed: each source's newest receipt (a retry loop is one line), checked Scout starts and stops, the completed window */
   const events: (V6WorkerEvent & { iso: string })[] = [];
   for (const [, rows] of byTask) {
     const newest = rows[0], p = newest.row.p, stage = SOURCE_STAGE[p.stage];
@@ -637,7 +562,6 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
   // Plain-code jobs record no change this section can read, so no scope can claim "no recorded changes".
 
   if (nextDue) next.push(Date.parse(nextDue) > Date.parse(now) ? `Next round due ${mstWords(nextDue)}.` : `Next round was due ${mstWords(nextDue)}.`);
-  /* jobs running now: every live lease with its own open attempt, placed by exact Send or declared division */
   let jobs: V6WorkerJob[] | null = null;
   let running: V6WorkersRunning | null = null;
   let runningIds: string[] | null = null;
@@ -691,21 +615,13 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
   return { contract: ADMIN_V6_WORKERS_CONTRACT, scope: scopeKey, revision, asOf: now, data, missingParts: missing };
 }
 
-/* -------------------------------------------------------------- the route */
-
 const NO_STORE = { "cache-control": "private, no-store, no-cache, must-revalidate" };
 
-/** Only `scope`, exactly once; the place-key grammar is the Hunts/Money one. */
 export function validateWorkersQuery(params: URLSearchParams): ReturnType<typeof validateV6Query> {
   if ([...params.keys()].some(key => key !== "scope")) return { ok: false, code: "UNKNOWN_PARAMETER" };
   return validateV6Query(params);
 }
 
-/**
- * GET `admin-v6/workers@1`: Admin host only (404), signed session (401),
- * bounded query (400), unread store (503), unbound place (409). Private and
- * never cached. Read-only: nothing here writes, starts or stops work.
- */
 export async function v6WorkersGet(request: NextRequest, seams: {
   readonly open?: () => ReturnType<typeof openControlPlane>;
   readonly now?: () => string;

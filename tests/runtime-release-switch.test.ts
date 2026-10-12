@@ -1,8 +1,3 @@
-/**
- * DB-53: new code loads without stopping the factory. A staged release whose
- * change leaves the parent runner's own code alone is loaded by starting new
- * children from its checkout, which shares the running checkout's host state.
- */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, readlinkSync, writeFileSync } from "node:fs";
@@ -102,7 +97,8 @@ test("the staged checkout shares the running checkout's host state and stays cle
   write(directory, ".runtime/new-lane/state.json", "{\"new\":true}");
   write(directory, "data/states/new.log", "new log");
   const moved = await carryBackRuntimeState({ root, directory, run: defaultAsyncRunCommand });
-  assert.deepEqual([...moved].sort(), [".runtime/new-lane", "data/states/new.log"]);
+  assert.deepEqual([...moved.moved].sort(), [".runtime/new-lane", "data/states/new.log"]);
+  assert.deepEqual(moved.failed, []);
   assert.equal(readFileSync(join(root, ".runtime", "new-lane", "state.json"), "utf8"), "{\"new\":true}");
   assert.equal(lstatSync(join(root, "data", "vault")).isDirectory(), true, "links are never carried back over the real state");
   assert.equal(readFileSync(join(root, "node_modules", "pkg", "index.js"), "utf8"), "old");

@@ -1,31 +1,16 @@
 /**
- * **THE PORTAL'S OWN LINK TO A SITTING'S AGENDA, READ BEFORE THE VENDOR'S
- * FILE.** (2026-09-24, RULING 248 / RULING 263; the vendor file is the
- * fallback since 2026-09-25.)
+ * The portal's own link to a sitting's agenda, read before the vendor's file. The Web API's
+ * `EventAgendaFile` names a PDF on `legistar.granicus.com`; the tenant publishes the same agenda on its
+ * own portal host. The sitting's MeetingDetail page (`EventInSiteURL`, already the API row's
+ * `provenance.sourceUrl`) links it as `…_hypAgenda` → `View.ashx?M=A&ID={portal id}&GUID=…`, answering
+ * 200 `application/pdf` directly. The vendor's file is the fallback when the page links no agenda or
+ * cannot be read (`scripts/ingest.ts`).
  *
- * The Web API's `EventAgendaFile` names the agenda PDF on
- * `legistar.granicus.com`, whose robots.txt reads `Disallow: /`. From
- * 2026-09-24 the ingest refused that host and read the agenda here instead.
- * Since the owner decision of 2026-09-25 robots.txt blocks nothing, and this
- * link is still read first — every such sitting read since 2026-09-24 holds its
- * versions under it — with the vendor's file as the fallback when the page
- * links no agenda or cannot be read (`scripts/ingest.ts`). The tenant publishes
- * the same agenda on its own portal host, which publishes no robots.txt (404,
- * docs/sources.md). The sitting's MeetingDetail page is `EventInSiteURL`, which
- * the API row already holds as its `provenance.sourceUrl`. That page links the
- * agenda as `…_hypAgenda` → `View.ashx?M=A&ID={portal id}&GUID=…`. The link
- * answers 200 `application/pdf` directly, with no redirect (measured
- * 2026-09-24 on Pima's 22 September sitting: API event 1828 → portal id
- * 1381577).
+ * Without this, the reader merge keeps the API row for a sitting both routes carry and drops the portal
+ * row with its document, so the sitting shows an agenda link and no agenda text.
  *
- * Without this, the reader merge keeps the API row for a sitting both routes
- * carry, and it drops the portal row together with the document the portal
- * route read. The sitting then shows an agenda link and no agenda text.
- *
- * The portal numbers sittings in its own id space: `View.ashx` built from the
- * API's EventId and EventGuid answers 302 → `Confirmation.aspx?M1=Gone`
- * (measured the same day). So the link is read off the sitting's own page and
- * is never constructed.
+ * The portal numbers sittings in its own id space (a `View.ashx` built from the API's ids answers 302 →
+ * `Confirmation.aspx?M1=Gone`), so the link is read off the sitting's own page, never constructed.
  *
  * Reached only by the ingest, never by a reader surface.
  */

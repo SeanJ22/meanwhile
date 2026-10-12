@@ -11,16 +11,7 @@ import {
 } from "../lib/sources/revize/index.ts";
 import { wiringForTypes } from "../lib/registry/source-wiring.ts";
 
-/**
- * The two county adapters, against recorded fixtures — no live calls.
- *
- * Fixtures were captured 2026-08-13 from the real portals
- * (morriscountynj.iqm2.com Calendar.aspx; merrimackcounty.net homepage and
- * BOC notices page). What is pinned is the *parse*: a vendor template change
- * should fail here with a count, never silently return zero rows — the
- * NovusAgenda 200-with-zero-meetings miss recorded as a HIT is the shape
- * these counts guard against.
- */
+/** The two county adapters against recorded fixtures: a vendor template change must fail here with a count, never silently return zero rows. */
 
 const FIXTURES = join(process.cwd(), "tests", "fixtures");
 
@@ -118,11 +109,7 @@ test("revize: normalize wires the BOC, drops the delegation's committee counted"
     NOW,
   );
 
-  // Two populations now, and they are different facts (M59, 2026-08-15).
-  // The "Upcoming Meetings" block still yields exactly one BOC sitting with a
-  // real published time; the notices page yields the archive, dated and
-  // untimed. Counted separately so a regression in either is visible as a
-  // number instead of hiding inside a total.
+  // Two populations, counted separately: the upcoming block (timed) and the notices archive (dated, untimed).
   const timed = meetings.filter((x) => x.startPrecision !== "DAY");
   const dayOnly = meetings.filter((x) => x.startPrecision === "DAY");
   assert.equal(timed.length, 1, "one timed BOC meeting in the recorded block");

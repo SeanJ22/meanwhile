@@ -11,15 +11,7 @@ import {
 import { PRL_RHETORIC_ATTRIBUTION } from "../lib/sources/prl/types.ts";
 import type { PrlReaderProfile } from "../lib/sources/prl/snapshot.ts";
 
-/**
- * **PUBLIC STATEMENTS IN THE APPROVED READER DESIGN** (2026-09-28), and the
- * lead's review of `49e7b4a4`: every fetch outcome settles to one state, the
- * chart draws only the HELD numeric shares on one 0–100 scale, and the PRL
- * sentences still reach the markup (the reader proof checks them).
- *
- * FIXTURE ONLY: the profile below is a hand-made test record in the reader
- * contract's shape, not a held production profile.
- */
+/** The profile below is a hand-made test record in the reader contract's shape. */
 
 const SUBJECT = "congress:K000377";
 
@@ -48,7 +40,6 @@ function fixtureProfile(withShares: boolean): PrlReaderProfile {
 test("a congressional card starts loading; any other identity has no section", () => {
   assert.deepEqual(statementsLoadFor(SUBJECT), { kind: "loading" });
   assert.deepEqual(statementsLoadFor("ocd-person/abc"), { kind: "not-applicable" });
-  // The broken `d{6}` form the lead found must not come back: a real id matches.
   assert.equal(statementsLoadFor("congress:A000055").kind, "loading");
 });
 

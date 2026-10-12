@@ -1,8 +1,6 @@
 import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { measureRecordsForBallot } from "../ballot/measure-records.ts";
-import { stateForRosterFile } from "../holdings/runtime-paths.ts";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { divisionIdsForZipArea } from "../ballot/zip-divisions.ts";
 
 import { readerBallotSourcesForDivisions } from "../ballot/reader-sources.ts";
 import { contestsForDivisions } from "../sources/ballot-nj-morris/index.ts";
@@ -13,13 +11,9 @@ import { getMeasureAnalyses, type MeasureAnalysis } from "../ballot/analyses.ts"
 import { positionsFor } from "../candidates/positions.ts";
 import { readStanceTopics } from "../stances/read.ts";
 import type { StanceTopic } from "../stances/topics.ts";
-import { heldRosterFiles } from "../holdings/discovery.ts";
-import { mayReadRetiredPluralRoster } from "../officials/roster-authority.ts";
-import { getFederalOfficeholderSet } from "../officials/federal-directory-read-model.ts";
 import type { BallotAbsence, BallotSet, Contest } from "../ballot/types.ts";
 import { allSeatHolders, seatHolderById, seatHoldersForDivision } from "../registry/server.ts";
-import { officialStateVoteScopeForOfficeholderId } from "../state-rollcalls/authority.ts";
-import { statewideExecutivesFor } from "../officials/statewide-executives.ts";
+import { personIdentityKeys, statePeopleScopeForId } from "../officials/people-identity.ts";
 import type { SeatHolder } from "../officials/lookup.ts";
 import { membersOfBody } from "../registry/body-membership.ts";
 import { bindNamedEntity } from "../routing/named-entity.ts";
@@ -27,21 +21,14 @@ import type { AskNominee } from "./ballot-inventory.ts";
 import { canonicalBodyIdentity } from "./body-identity.ts";
 import { stateDivisionsOf, type HeldOfficial } from "./reader-officials.ts";
 
-/**
- * A reader may ask about a held person outside our mapped divisions. Match the
- * question using the existing entity binder, then retrieve only exact held IDs.
- * This adds subjects to an answer, never representatives to a geography.
- */
-export async function namedOfficeholders(question: string, explicitIds: readonly string[]): Promise<SeatHolder[]> {
+export async function namedOfficeholders(question: string, explicitIds: readonly string[], divisionIds: readonly string[] = []): Promise<SeatHolder[]> {
   const targetedStateHolders: SeatHolder[] = [];
   for (const id of new Set(explicitIds)) {
-    // Resolve an explicit state-publisher identity against that one authority
-    // before the broad federal/local directory is opened.
-    if (!officialStateVoteScopeForOfficeholderId(id)) continue;
+    if (!statePeopleScopeForId(id)) continue;
     const holder = await seatHolderById(id);
     if (holder) targetedStateHolders.push(holder);
   }
-  const heldById = new Map((await allSeatHolders()).map((holder) => [holder.id, holder]));
+  const heldById = new Map((await allSeatHolders(divisionIds)).map((holder) => [holder.id, holder]));
   for (const holder of targetedStateHolders) heldById.set(holder.id, holder);
   const held = [...heldById.values()];
   const binding = bindNamedEntity(question, held.map((seat) => ({
@@ -50,30 +37,22 @@ export async function namedOfficeholders(question: string, explicitIds: readonly
   const wanted = new Set(explicitIds);
   if (binding.kind === "BOUND") wanted.add(binding.entity.id);
   if (binding.kind === "AMBIGUOUS") for (const entity of binding.candidates) wanted.add(entity.id);
-  return held.filter((seat) => wanted.has(seat.id));
+  return held.filter((seat) => [...personIdentityKeys(seat)].some(id => wanted.has(id)));
 }
 
-/**
- * The representation selector supplies Ask's officials, with the same IDs and provenance.
- *
- * `held` says where each was found: the division ids (a district, the county, the
- * state) and, for a member of a governing body, that body's name. The state each
- * division sits in is read too — a reader's ZIP divisions name the districts and
- * places, and the U.S. Senators and statewide executives are held under the state
- * itself.
- */
 export async function readerOfficeholders(ocdIds: readonly string[], bodyIds: readonly string[] = []): Promise<{ seats: SeatHolder[]; loaderFailures: number; held: HeldOfficial[] }> {
-  const seats = new Map(statewideExecutivesFor([...ocdIds]).map((seat) => [seat.id, seat]));
+  const seats = new Map<string, SeatHolder>();
+  const key = (seat: SeatHolder) => `${seat.id}|${seat.officeJurisdictionOcdId ?? ""}|${seat.officeTitle}`;
   const where = new Map<string, { divisionIds: Set<string>; bodyId: string | null; bodyName: string | null }>();
   const at = (seat: SeatHolder) => {
-    let row = where.get(seat.id);
-    if (!row) where.set(seat.id, row = { divisionIds: new Set(), bodyId: null, bodyName: null });
+    let row = where.get(key(seat));
+    if (!row) where.set(key(seat), row = { divisionIds: new Set(), bodyId: null, bodyName: null });
     return row;
   };
   for (const bodyId of bodyIds) {
     const governing = /#(?:governing|board)$/.test(bodyId);
     for (const seat of membersOfBody(bodyId).members) {
-      seats.set(seat.id, seat);
+      seats.set(key(seat), seat);
       if (governing && !at(seat).bodyId) Object.assign(at(seat), { bodyId, bodyName: canonicalBodyIdentity(bodyId)?.name ?? null });
     }
   }
@@ -83,10 +62,10 @@ export async function readerOfficeholders(ocdIds: readonly string[], bodyIds: re
     try {
       const held = await seatHoldersForDivision(ocdId);
       for (const seat of held) {
-        seats.set(seat.id, seat);
+        seats.set(key(seat), seat);
         at(seat).divisionIds.add(ocdId);
       }
-      if (!mayReadRetiredPluralRoster() && /\/(?:sldu|sldl):/.test(ocdId) && held.length === 0) {
+      if (/\/(?:sldu|sldl):/.test(ocdId) && held.length === 0) {
         loaderFailures += 1;
       }
     } catch {
@@ -96,32 +75,12 @@ export async function readerOfficeholders(ocdIds: readonly string[], bodyIds: re
   return {
     seats: [...seats.values()],
     loaderFailures,
-    held: [...seats.values()].map((seat) => ({ seat, divisionIds: [...(where.get(seat.id)?.divisionIds ?? [])], bodyId: where.get(seat.id)?.bodyId ?? null, bodyName: where.get(seat.id)?.bodyName ?? null })),
+    held: [...seats.values()].map((seat) => ({ seat, divisionIds: [...(where.get(key(seat))?.divisionIds ?? [])], bodyId: where.get(key(seat))?.bodyId ?? null, bodyName: where.get(key(seat))?.bodyName ?? null })),
   };
 }
 
-/**
- * **THE SERVER-SIDE READS ASK NEEDS, IN ONE PLACE.**
- * (PR #212 follow-up, 2026-08-28.)
- *
- * `app/api/ask/grounded/route.ts` is the pipeline and this is what it reads
- * from. Split out for two reasons that are both about not duplicating truth:
- *
- * 1. **The ballot is loaded exactly the way `/ballot` loads it** — the same
- *    canonical ballot registry, the same `contestsForDivisions` filter, the
- *    same committed files. Ask does not hold a copy of ballot truth and cannot
- *    drift from the page that renders it.
- * 2. **A route file that also holds loaders is a route file nothing can test
- *    without standing up a request.** These are ordinary functions.
- *
- * Every read here degrades to EMPTY rather than throwing. An unavailable
- * committed file is a real state and the pipeline reports it as an honest gap;
- * a 500 would take a correct meetings answer down over a ballot file.
- */
-
 export interface BallotForDivisions {
   authorityKind?: "GENERAL" | "LEGACY";
-  /** Applicable canonical state holdings that could not be read or validated. */
   loaderFailures: string[];
   analysisLoaderFailed: boolean;
   measureAnalysis: (contestId: string) => MeasureAnalysis | null;
@@ -157,16 +116,10 @@ const EMPTY: BallotForDivisions = {
   measureProvisions: () => [],
 };
 
-/**
- * The reader's own ballot, matched to their divisions.
- *
- * The loop is `/ballot`'s: first select only authorities named by the resolved
- * state divisions, then take the first that matches anything. An unavailable
- * authority in a different state is outside this Reader's failure domain.
- */
 export async function loadBallotForDivisions(
   ocdIds: readonly string[],
   options: PromotedCivicDataReadOptions = {},
+  zip?: string,
 ): Promise<BallotForDivisions> {
   if (ocdIds.length === 0) return EMPTY;
   const loaderFailures: string[] = [];
@@ -174,15 +127,18 @@ export async function loadBallotForDivisions(
   for (const { state, source } of await readerBallotSourcesForDivisions(ocdIds, options)) {
     try {
       const candidate = source.normalize(await source.fetch());
-      const hit = contestsForDivisions(candidate, ocdIds);
+      const electionIds = zip && /^\d{5}$/.test(zip) ? await divisionIdsForZipArea(zip, [...ocdIds], {
+        purpose: "election", asOf: new Date().toISOString().slice(0, 10), electionDate: candidate.election.date,
+      }) : ocdIds;
+      const hit = contestsForDivisions(candidate, electionIds);
       if (hit.contests.length === 0 && hit.absences.length === 0) continue;
-      const analyses = state === "az" ? getMeasureAnalyses() : null;
-      const lineup = state === "az" ? getGeneralLineup() : null;
+      const analyses = heldOrUnreadable(getMeasureAnalyses);
+      const lineup = heldOrUnreadable(getGeneralLineup) ?? null;
       const measureRecords = measureRecordsForBallot(candidate);
       return {
         authorityKind: source.name.startsWith("ballot-contests:") ? "GENERAL" : "LEGACY",
         loaderFailures,
-        analysisLoaderFailed: state === "az" && analyses === null,
+        analysisLoaderFailed: analyses === undefined,
         measureAnalysis: (contestId) => analyses?.analyses.find((analysis) => analysis.contestId === contestId) ?? null,
         set: candidate,
         contests: hit.contests,
@@ -210,16 +166,15 @@ export async function loadBallotForDivisions(
   return { ...EMPTY, loaderFailures };
 }
 
-/**
- * **A POSITION IS A QUOTE WITH A URL, OR IT IS NOT A POSITION.**
- *
- * Only `MATCHED` answers are returned, and only their verbatim passages. A
- * `SEARCHED_NOTHING_MATCHED` answer is real and useful on the ballot card,
- * where it renders as *what we searched and did not find* — but as an evidence
- * record it would be a row with no statement in it, and the synthesis rung
- * given a row with no statement will describe the absence as though it were
- * one. The named gap in the route says that instead, once, correctly.
- */
+/** `undefined` when the holding cannot be read; another state's ballot still loads. */
+function heldOrUnreadable<T>(read: () => T | null): T | null | undefined {
+  try {
+    return read();
+  } catch {
+    return undefined;
+  }
+}
+
 function sourcedPositions(targetKey: string, topics: readonly StanceTopic[]) {
   try {
     return positionsFor(targetKey, null, topics).flatMap((position) =>
@@ -243,109 +198,4 @@ function sourcedPositions(targetKey: string, topics: readonly StanceTopic[]) {
   } catch {
     return [];
   }
-}
-
-/**
- * The legislators whose districts the reader's divisions actually name.
- *
- * **Selected by DIVISION ID, never by state.** A reader in Arizona has two
- * state senators near them and exactly one who represents the district they are
- * standing in; handing them the state's whole roster and calling it "your
- * senator" would be a false relationship for 29 of 30. The `sldu:`/`sldl:` ids
- * in their own division list are what the geometry already resolved.
- *
- * Congressional and federal rows are deliberately not included: the ballot and
- * the who-governs card already carry them with their own provenance, and an Ask
- * answer about a school board agenda listing a U.S. senator would be a contact
- * with no relationship to the question.
- */
-export function readerRepresentatives(ocdIds: readonly string[]): {
-  id: string;
-  name: string;
-  officeTitle: string;
-  email: string | null;
-  phone: string | null;
-  websiteUrl: string | null;
-  sourceUrl: string | null;
-  sourceOrg: string | null;
-  collectedAt: string | null;
-}[] {
-  // The tracked state rosters are recorded Plural/OpenStates research
-  // fixtures, not production authority. In production the existing Ask
-  // holding-failure path names the missing canonical officeholder projection;
-  // only node:test may exercise the historical rows.
-  if (!mayReadRetiredPluralRoster()) return [];
-  const wanted = new Set(ocdIds.filter((id) => /\/(sldu|sldl):/.test(id)));
-  if (wanted.size === 0) return [];
-
-  const out: ReturnType<typeof readerRepresentatives> = [];
-  const seen = new Set<string>();
-
-  for (const file of heldRosterFiles(process.cwd())) {
-    /* The federal roster is keyed on bare state ids and carries no
-       `sldu:`/`sldl:` links, so it contributes nothing here and is skipped
-       rather than read and discarded. */
-    if (file === "officeholders-us.json") continue;
-    const set = readRoster(file);
-    if (!set) continue;
-    const byId = new Map(set.officeholders.map((o) => [o.id, o]));
-    for (const link of set.divisions) {
-      if (!wanted.has(link.ocdId)) continue;
-      const person = byId.get(link.officeholderId);
-      if (!person || seen.has(person.id)) continue;
-      seen.add(person.id);
-      out.push({
-        id: person.id,
-        name: person.name,
-        officeTitle: person.officeTitle,
-        email: person.email ?? null,
-        phone: person.phone ?? null,
-        websiteUrl: person.websiteUrl ?? null,
-        sourceUrl: person.provenance?.sourceUrl ?? null,
-        sourceOrg: person.provenance?.sourceOrg ?? null,
-        collectedAt: person.provenance?.collectedAt ?? null,
-      });
-    }
-  }
-  return out;
-}
-
-interface RosterFile {
-  officeholders: {
-    id: string;
-    name: string;
-    officeTitle: string;
-    email?: string | null;
-    phone?: string | null;
-    websiteUrl?: string | null;
-    provenance?: { sourceUrl?: string | null; sourceOrg?: string | null; collectedAt?: string | null } | null;
-  }[];
-  divisions: { ocdId: string; officeholderId: string }[];
-}
-
-const rosterCache = new Map<string, RosterFile | null>();
-
-/**
- * One roster file, cached per process.
- *
- * Read through `process.cwd()` like every other committed artifact, which is
- * why `/api/ask/grounded` names `./lib/registry/*.json` in
- * `outputFileTracingIncludes` — a file reached this way is absent from a
- * serverless bundle unless the tracer is told, and an absent roster would
- * render as "we have not recorded who represents you", which is
- * indistinguishable from honest missing data.
- */
-function readRoster(name: string): RosterFile | null {
-  if (rosterCache.has(name)) return rosterCache.get(name) ?? null;
-  let parsed: RosterFile | null = null;
-  try {
-    parsed = stateForRosterFile(name) === null
-      ? getFederalOfficeholderSet() as RosterFile
-      : JSON.parse(readFileSync(join(process.cwd(), "data", "states", stateForRosterFile(name)!, "officials", name), "utf8")) as RosterFile;
-  } catch (error) {
-    if (stateForRosterFile(name) === null) throw error;
-    parsed = null;
-  }
-  rosterCache.set(name, parsed);
-  return parsed;
 }

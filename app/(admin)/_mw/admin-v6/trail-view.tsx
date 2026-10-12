@@ -1,12 +1,5 @@
 "use client";
 
-/**
- * **THE EVIDENCE BEHIND A SEND.** What an instruction reached, and for any one piece of work its source-to-public-result
- * trail: the saved documents (with the private original-copy control for an exact RAW capture), the attempts, the
- * extraction, the checks, the publication and the reader's readback.
- *
- * Both read on a click (`admin-v6/trail@1`) and never on a timer: a trail is dozens of point reads.
- */
 import { useCallback, useState } from "react";
 
 import { EvidenceCopyControl } from "../evidence-copy-control.tsx";

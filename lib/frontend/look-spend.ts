@@ -1,20 +1,13 @@
 /**
- * **THE LOOK REVIEWER'S MODEL CALL, UNDER THE OWNER'S SPEND CONTROLS.** (FE-21.)
+ * The look reviewer's model call and spend reservation, for the runner.
  *
- * The look reviewer (FE-20) runs only when the caller hands it a model call
- * and a spend reservation. These are those two, for the runner:
- *
- *   reserve   refuses when Admin's settings cannot be read, when the owner has
- *             paused research or the runner, when the rolling model spend
- *             cannot be measured, or when this review would cross the rolling
- *             ceiling Admin sets (the same dial and window the research lane
- *             obeys). Nothing here raises or bypasses that dial.
- *   call      one request to the model with the screenshots, metered into the
- *             cost ledger like every other model call, so the review's own
- *             spend counts against the same ceiling. Nobody waits on it, so it
- *             goes through the Message Batches API (River's batch lane for
- *             unattended audit reviews, job AUDIT_SAMPLE) at half price; with
- *             that lane switched off it is one Messages request as before.
+ *   reserve   refuses when Admin's settings cannot be read, when research or
+ *             the runner is paused, when rolling model spend cannot be
+ *             measured, or when this review would cross the rolling ceiling
+ *             Admin sets. Nothing here raises or bypasses that dial.
+ *   call      one metered model request with the screenshots, counted against
+ *             the same ceiling; through the Message Batches API when that lane
+ *             is on, else one Messages request.
  */
 import { randomUUID } from "node:crypto";
 

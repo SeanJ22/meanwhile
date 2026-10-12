@@ -1,6 +1,11 @@
+import { createHash } from "node:crypto";
+import { createRequire } from "node:module";
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { parseCsv, normalizeProfiles, sourceBioguides } from "./index.ts";
 import { createPrimaryAggregator, normalizeStateProfiles } from "./precompute.ts";
-import { parsePrlInstant, isNewerThanMark } from "./future-date.ts";
+import { isVisibleAsOf, parsePrlInstant } from "./future-date.ts";
 import {
   recordFromRow,
   streamCsvRecords,
@@ -13,30 +18,29 @@ import type { PrlDataset } from "./inventory.ts";
 import type { PrlIngestReceipt, PrlProfileKind } from "./receipt.ts";
 
 /**
- * **The ingestion engine: download, filter, land, mark.**
- *
- * One pass over the source. Large files stream so the whole never sits in
- * memory; their raw rows partition into bounded object-storage objects and only
- * the new ones (cursor newer than the mark) are written. Small profile files
- * are read whole and precomputed. Either way the run ends with a receipt whose
- * high-water mark is capped at now, so a future-dated row can neither advance
- * the marker nor be dropped.
- *
- * Everything the engine touches — the object store, the clock, the source
- * bytes, the prior receipt — is injected, so the logic is exercised without a
- * network or a database.
+ * Complete changed releases stream through a bounded disk index into immutable
+ * person partitions. Same-date and late records are included; dates describe
+ * coverage and never suppress records. Unchanged validated source hashes reuse
+ * their prior normalized release and retain the source's retrieval date.
  *
  * @freshness-reads-here — the receipt's `fetchedAt` is stamped from the run's
  * injected `now`; it is the retrieval instant this ingestion records.
  */
 
-const DEFAULT_ROWS_PER_OBJECT = 100_000;
+const DEFAULT_ROWS_PER_OBJECT = 10_000;
+export const PRL_INGEST_PARSER_VERSION = "prl-ingest/2";
+export const prlSubjectShard = (subject: string) => createHash("sha256").update(subject).digest("hex");
 
 export interface PrlSourceOpen {
   readonly textChunks: TextChunks;
   readonly sourceSha256: string;
   readonly finalUrl: string;
   readonly member: string;
+  readonly retrievedAt?: string;
+  readonly byteLength?: number;
+  readonly unchanged?: boolean;
+  readonly accept?: () => Promise<void>;
+  readonly dispose?: () => Promise<void>;
 }
 
 export interface IngestOptions {
@@ -47,16 +51,6 @@ export interface IngestOptions {
   readonly priorReceipt: PrlIngestReceipt | null;
   readonly open: () => Promise<PrlSourceOpen>;
   readonly rowsPerObject?: number;
-}
-
-function csvCell(value: string): string {
-  return /[",\n\r]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value;
-}
-function csvRow(cells: readonly string[]): string {
-  return cells.map(csvCell).join(",");
-}
-function sanitizeTag(value: string): string {
-  return value.replace(/[^0-9A-Za-z_-]/g, "-");
 }
 
 interface WatermarkTracker {
@@ -102,126 +96,140 @@ function observe(tracker: WatermarkTracker, cursorRaw: string, dateRaw: string, 
 }
 
 export async function ingestDataset(options: IngestOptions): Promise<PrlIngestReceipt> {
-  if (options.dataset.target === "profile") return ingestProfile(options);
-  if (options.dataset.target === "archive") return ingestArchive(options);
-  throw new Error(`PRL_INGEST_UNSUPPORTED_TARGET:${options.dataset.id}:${options.dataset.target}`);
+  const source = await options.open();
+  try {
+    if (source.unchanged && options.priorReceipt?.parserVersion === PRL_INGEST_PARSER_VERSION &&
+        options.priorReceipt.sourceSha256 === source.sourceSha256) {
+      return { ...options.priorReceipt, rowsWritten: 0, newObjectKeys: [] };
+    }
+    const opened = { ...options, open: async () => source };
+    const receipt = options.dataset.target === "profile" ? await ingestProfile(opened)
+      : options.dataset.target === "archive" ? await ingestArchive(opened)
+      : (() => { throw new Error(`PRL_INGEST_UNSUPPORTED_TARGET:${options.dataset.id}:${options.dataset.target}`); })();
+    await source.accept?.();
+    return receipt;
+  } finally { await source.dispose?.(); }
 }
 
 async function ingestArchive(options: IngestOptions): Promise<PrlIngestReceipt> {
   const { dataset, archive, now, priorReceipt } = options;
-  if (!archive) throw new Error(`PRL: ${dataset.id} is an archive dataset but no object store was provided`);
-  const rowsPerObject = options.rowsPerObject ?? DEFAULT_ROWS_PER_OBJECT;
+  if (!archive) throw new Error(`PRL: ${dataset.id} requires an archive store`);
   const source = await options.open();
-  const priorMark = priorReceipt?.highWaterMark ?? null;
-  const ext = dataset.format === "json-zip" ? "json" : "csv";
-  const runTag = priorMark === null ? "initial" : `delta-${sanitizeTag(new Date(now).toISOString())}`;
-  const tracker = newTracker(priorMark);
-  const primary = dataset.id === "primary-rhetoric" ? createPrimaryAggregator() : null;
-
-  let rowsSeen = 0;
-  let rowsWritten = 0;
-  let partIndex = 0;
-  const newObjectKeys: string[] = [];
-  let buffer: string[] = [];
-  let headerLine = "";
-
-  const flush = async (): Promise<void> => {
-    if (buffer.length === 0) return;
-    const key = `${dataset.id}/${runTag}/part-${String(partIndex).padStart(5, "0")}.${ext}`;
-    const body = ext === "json"
-      ? `[\n${buffer.join(",\n")}\n]\n`
-      : `${headerLine}\n${buffer.join("\n")}\n`;
-    await archive.put(key, new TextEncoder().encode(body), ext === "json" ? "application/json" : "text/csv");
-    newObjectKeys.push(key);
-    partIndex += 1;
-    buffer = [];
-  };
-
-  if (dataset.format === "json-zip") {
-    const dateField = dataset.dateField ?? "date";
-    const cursorField = dataset.cursorField ?? "date";
-    for await (const value of streamJsonArrayObjects(source.textChunks)) {
-      rowsSeen += 1;
-      const object = (value ?? {}) as Record<string, unknown>;
-      const cursorRaw = String(object[cursorField] ?? "");
-      const dateRaw = String(object[dateField] ?? "");
-      observe(tracker, cursorRaw, dateRaw, now);
-      if (isNewerThanMark(cursorRaw, priorMark)) {
-        buffer.push(JSON.stringify(object));
-        rowsWritten += 1;
-        if (buffer.length >= rowsPerObject) await flush();
+  const tracker = newTracker(null), primary = dataset.id === "primary-rhetoric" ? createPrimaryAggregator() : null;
+  const root = await mkdtemp(join(tmpdir(), "prl-rows-"));
+  // Temporary source processing index, discarded after the immutable objects are complete.
+  // Cache stays bounded; publication and reader state remain in the existing civic data plane.
+  const { DatabaseSync } = createRequire(import.meta.url)("node:sqlite") as { DatabaseSync: new(path: string) => {
+    exec(sql: string): void; close(): void; prepare(sql: string): {
+      run(...values: (string | number)[]): void;
+      iterate(...values: (string | number)[]): Iterable<Record<string, string>>;
+      get(...values: (string | number)[]): Record<string, string> | undefined;
+    } } };
+  const db = new DatabaseSync(join(root, "rows.sqlite"));
+  db.exec("PRAGMA journal_mode=OFF; PRAGMA cache_size=-8192; CREATE TABLE records(subject TEXT, id TEXT, modified TEXT, body TEXT, PRIMARY KEY(subject,id)) WITHOUT ROWID; BEGIN");
+  const insert = db.prepare("INSERT INTO records VALUES(?,?,?,?)"), existing = db.prepare("SELECT modified,body FROM records WHERE subject=? AND id=?"),
+    replace = db.prepare("UPDATE records SET modified=?,body=? WHERE subject=? AND id=?");
+  let rowsSeen = 0, subjectCount = 0, storedRows = 0;
+  const objectRoot = `${dataset.id}/${source.sourceSha256}/${PRL_INGEST_PARSER_VERSION.replace("/", "-")}`;
+  const put = async (object: Record<string, unknown>) => {
+    rowsSeen++;
+    observe(tracker, String(object[dataset.cursorField ?? "date"] ?? ""), String(object[dataset.dateField ?? "date"] ?? ""), now);
+    const subject = dataset.key ? String(object[dataset.key] ?? "") : "";
+    const row = JSON.stringify(Object.fromEntries(Object.entries(object).sort(([left], [right]) => left.localeCompare(right))));
+    const native = object.id ?? object.source_id ?? object.tweet_id;
+    const id = native === undefined ? createHash("sha256").update(row).digest("hex") :
+      `${String(object.source ?? "")}:${String(native)}:${object.id !== undefined ? "" : createHash("sha256").update(String(object.text ?? "")).digest("hex")}`;
+    const modified = String(object.last_updated ?? object.date ?? "");
+    try { insert.run(subject, id, modified, row); }
+    catch (error) {
+      const prior = existing.get(subject, id);
+      if (!prior) throw error;
+      if (prior.body !== row) {
+        const before = parsePrlInstant(prior.modified), after = parsePrlInstant(modified);
+        if (before === null || after === null || before === after) throw new Error("PRL_NATIVE_RECORD_CONFLICT");
+        if (after > before) replace.run(modified, row, subject, id);
       }
     }
+    if (rowsSeen % 10_000 === 0) db.exec("COMMIT; BEGIN");
+  };
+  try {
+  if (dataset.format === "json-zip") {
+    for await (const value of streamJsonArrayObjects(source.textChunks)) await put(value as Record<string, unknown>);
   } else {
     let header: string[] | null = null;
-    let cursorIdx = -1;
-    let dateIdx = -1;
     for await (const row of streamCsvRecords(source.textChunks)) {
       if (header === null) {
         header = row;
-        headerLine = csvRow(row);
-        cursorIdx = header.indexOf(dataset.cursorField ?? "date");
-        dateIdx = header.indexOf(dataset.dateField ?? "date");
-        if (cursorIdx < 0) {
-          throw new Error(`PRL: ${dataset.id} data file has no cursor column "${dataset.cursorField}" — the schema moved; a wrong cutoff would silently miss corrections.`);
-        }
+        if (!dataset.key || !header.includes(dataset.key) || !header.includes(dataset.cursorField ?? "date")) throw new Error("PRL_SOURCE_SCHEMA_CHANGED");
         continue;
       }
-      rowsSeen += 1;
-      const cursorRaw = row[cursorIdx] ?? "";
-      const dateRaw = dateIdx >= 0 ? (row[dateIdx] ?? "") : "";
-      observe(tracker, cursorRaw, dateRaw, now);
-      if (primary) primary.add(recordFromRow(header, row));
-      if (isNewerThanMark(cursorRaw, priorMark)) {
-        buffer.push(csvRow(row));
-        rowsWritten += 1;
-        if (buffer.length >= rowsPerObject) await flush();
-      }
+      if (row.length !== header.length) throw new Error("PRL_CSV_COLUMN_COUNT_INVALID");
+      await put(recordFromRow(header, row));
     }
-    if (header === null) throw new Error(`PRL: ${dataset.id} data file parsed to zero rows`);
+    if (!header) throw new Error("PRL_CSV_EMPTY");
   }
-  await flush();
+  if (!rowsSeen) throw new Error("PRL_ARCHIVE_EMPTY");
+  db.exec("COMMIT");
+  // Visit one native person at a time. Readers fetch only this person's small index and bounded parts.
+  for (const { subject } of db.prepare("SELECT DISTINCT subject FROM records ORDER BY subject").iterate()) {
+    const keys: string[] = [];
+    let buffer: string[] = [], bytes = 0;
+    const flush = async () => {
+      if (!buffer.length) return;
+      const body = new TextEncoder().encode(`[${buffer.join(",")}]`), digest = createHash("sha256").update(body).digest("hex");
+      const key = `${objectRoot}/people/${prlSubjectShard(subject)}/${digest}.json`;
+      if (!(await archive.head(key))) await archive.put(key, body, "application/json");
+      keys.push(key); buffer = []; bytes = 0;
+    };
+    for (const { body } of db.prepare("SELECT body FROM records WHERE subject=? ORDER BY modified DESC,id").iterate(subject)) {
+      storedRows++;
+      if (primary) {
+        const row = JSON.parse(body) as Record<string, unknown>;
+        if (isVisibleAsOf(String(row.date ?? ""), now)) primary.add(Object.fromEntries(Object.entries(row).map(([key, value]) => [key, String(value ?? "")])));
+      }
+      buffer.push(body); bytes += Buffer.byteLength(body);
+      if (buffer.length >= (options.rowsPerObject ?? DEFAULT_ROWS_PER_OBJECT) || bytes >= 1024 * 1024) await flush();
+    }
+    await flush();
+    await archive.put(`${objectRoot}/people/${prlSubjectShard(subject)}/index.json`,
+      new TextEncoder().encode(JSON.stringify({ subject, keys })), "application/json");
+    subjectCount++;
+  }
+  const result = primary?.result(tracker.dateMaxRaw ?? "");
+  return { ...buildReceipt({ dataset, source, now, priorMark: priorReceipt?.highWaterMark ?? null, tracker,
+    rowsSeen, rowsWritten: storedRows, objectStore: archive.kind, objectKeys: [], newObjectKeys: [],
+    profileKind: result ? "primary" : null, profiles: result?.profiles ?? null }), objectRoot, subjectCount };
+  } finally { db.close(); await rm(root, { recursive: true, force: true }); }
 
-  const measuredAt = tracker.dateMaxRaw ?? new Date(now).toISOString().slice(0, 10);
-  const primaryResult = primary ? primary.result(measuredAt) : null;
-  const objectKeys = [...(priorReceipt?.objectKeys ?? []), ...newObjectKeys];
-
-  return buildReceipt({
-    dataset,
-    source,
-    now,
-    priorMark,
-    tracker,
-    rowsSeen,
-    rowsWritten,
-    objectStore: archive.kind,
-    objectKeys,
-    newObjectKeys,
-    profileKind: primaryResult ? "primary" : null,
-    profiles: primaryResult ? primaryResult.profiles : null,
-  });
 }
 
 async function ingestProfile(options: IngestOptions): Promise<PrlIngestReceipt> {
   const { dataset, now } = options;
   const source = await options.open();
   let text = "";
-  for await (const chunk of source.textChunks) text += chunk;
-  const nowDate = new Date(now).toISOString().slice(0, 10);
-
+  for await (const chunk of source.textChunks) {
+    text += chunk;
+    if (text.length > 32 * 1024 * 1024) throw new Error("PRL_PROFILE_TOO_LARGE");
+  }
+  // Completion and column shape are verified even though the small profile normalizer uses a whole CSV.
+  let width: number | null = null;
+  for await (const row of streamCsvRecords((async function* () { yield text; })())) {
+    if (width === null) width = row.length;
+    else if (row.length !== width) throw new Error("PRL_CSV_COLUMN_COUNT_INVALID");
+  }
   let profileKind: PrlProfileKind;
   let profiles: readonly unknown[];
   let rowsSeen: number;
-  let measuredAt = nowDate;
+  let measuredAt: string | null = null;
 
-  if (dataset.id === "profiles-current") {
+  if (dataset.id === "profiles-current" || dataset.id === "profiles-national") {
     const result = normalizeProfiles(text, sourceBioguides(text));
     profileKind = "federal";
     profiles = result.profiles;
     rowsSeen = result.counts.rowsInFile;
-    measuredAt = result.profiles.map((profile) => profile.measuredAt).sort().at(-1) ?? nowDate;
+    measuredAt = result.profiles.map((profile) => profile.measuredAt).sort().at(-1) ?? null;
   } else if (dataset.id === "profiles-state") {
-    const result = normalizeStateProfiles(parseCsv(text), nowDate);
+    const result = normalizeStateProfiles(parseCsv(text), null);
     profileKind = "state";
     profiles = result.profiles;
     rowsSeen = result.counts.rowsInFile;
@@ -232,7 +240,7 @@ async function ingestProfile(options: IngestOptions): Promise<PrlIngestReceipt> 
   const tracker = newTracker(null);
   // Aggregate profiles recompute whole; the "coverage through" is the measure
   // date, capped at now, and there is no per-row cursor to advance.
-  const cappedMeasuredAt = parsePrlInstant(measuredAt) !== null && parsePrlInstant(measuredAt)! <= now ? measuredAt : nowDate;
+  const cappedMeasuredAt = parsePrlInstant(measuredAt) !== null && parsePrlInstant(measuredAt)! <= now ? measuredAt : null;
   tracker.dateMaxRaw = cappedMeasuredAt;
 
   return buildReceipt({
@@ -272,15 +280,18 @@ function buildReceipt(input: BuildReceiptInput): PrlIngestReceipt {
   const highWaterMark = dataset.cursorField === null ? null : tracker.markRaw;
   return {
     formatVersion: 1,
+    parserVersion: PRL_INGEST_PARSER_VERSION,
+    sourceBytes: input.source.byteLength,
     datasetId: dataset.id,
     scope,
     title: dataset.title,
     target: dataset.target,
     sourceUrl: dataset.url,
+    sourceFinalUrl: input.source.finalUrl,
     sourceSha256: input.source.sourceSha256,
     member: input.source.member || null,
     cursorField: dataset.cursorField,
-    fetchedAt: new Date(input.now).toISOString(),
+    fetchedAt: input.source.retrievedAt ?? new Date(input.now).toISOString(),
     highWaterMark,
     previousMark: input.priorMark,
     rowsSeen: input.rowsSeen,

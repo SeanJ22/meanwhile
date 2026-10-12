@@ -21,7 +21,6 @@ export interface V6ReadSources extends V6MoneySources {
   readonly adminConfig: Parameters<typeof expansionScopesOf>[0] & { readonly fleetSpendCeiling?: unknown } | null;
 }
 
-/** Three bounded reads: the owner policy row, four named snapshot fields, and (Money) the one fleet-safety row. */
 export async function readV6Sources(repos: ControlPlaneRepositories, readAt: string, withSafety: boolean, scope: V6PlaceScope | null = null): Promise<V6ReadSources> {
   const [config, snapshot, safety, scopeZips] = await Promise.all([
     readAdminConfig(repos),
@@ -50,11 +49,6 @@ export async function readV6Sources(repos: ControlPlaneRepositories, readAt: str
   };
 }
 
-/**
- * The shared GET for `admin-v6/hunts@1` and `admin-v6/money@1`: Admin-host 404,
- * signed-session 401, bounded query (400), then one projection. Every answer is
- * private and never cached. Read-only; nothing here writes or starts work.
- */
 export async function v6MoneyHuntsGet(request: NextRequest, options: {
   readonly withSafety: boolean;
   readonly project: (input: { readonly scopeKey: string; readonly scope: V6PlaceScope | null; readonly period: V6Period; readonly sources: V6ReadSources }) => AdminV6SectionEnvelope<unknown> | V6Refusal;

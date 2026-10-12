@@ -1,32 +1,15 @@
 /**
- * The state-legislature voting record — tracker **D49**, LegiScan.
+ * The state-legislature voting record, the state-level sibling of `lib/votes/`.
+ * - Record-tier evidence only: how a member voted, as the chamber recorded it, mapped onto four states.
+ *   Never merged with the statement corpus.
+ * - Never characterized by us: the title is the bill's official title or the chamber's own description.
+ *   No record may carry a `score`, `rank`, `rating`, `match`, `fit`, `grade`, `alignment` or
+ *   `recommendation` key (`tests/neutrality-guards.test.ts`).
+ * - Production serves only proof-validated official-publisher promotions from the data plane.
  *
- * The state-level sibling of `lib/votes/` (federal roll calls from the
- * chambers' own XML). Same doctrine, restated because it is the doctrine and
- * not an implementation detail:
- *
- * - **RECORD-tier evidence only.** How a member voted, as the chamber
- *   recorded it, mapped onto four states and nothing else. Never merged with
- *   the STATEMENT corpus.
- * - **Never characterized by us.** The title is the bill's official title or
- *   the chamber's own description. No record here may carry a `score`,
- *   `rank`, `rating`, `match`, `fit`, `grade`, `alignment` or
- *   `recommendation` key — `tests/neutrality-guards.test.ts` holds that.
- * - **Projection architecture.** Production serves only proof-validated
- *   official-publisher promotions from the standing data plane, never a
- *   publisher fetch or tracked research artifact per page load.
- *
- * ## Attribution
- *
- * LegiScan's data is published under **CC BY 4.0**, which requires
- * attribution wherever it appears. `LEGISCAN_ATTRIBUTION` below is the single
- * string every surface renders, and `tests/legiscan.test.ts` fails if a
- * surface renders a LegiScan vote without it.
- *
- * ## The retrieval discipline
- *
- * The retained LegiScan corpus is historical research/test evidence. It is
- * not a production authority, standing refresh input, or Reader fallback.
+ * LegiScan's data is published under CC BY 4.0; `LEGISCAN_ATTRIBUTION` is the single string every
+ * surface renders with it (`tests/legiscan.test.ts`). The retained LegiScan corpus is research/test
+ * evidence, never a production authority or Reader fallback.
  */
 
 /**
@@ -132,10 +115,8 @@ export interface StateMemberVote {
 }
 
 /**
- * What a refresh downloaded, so the next one can skip what has not changed.
- *
- * Historical research metadata. Production official projections preserve
- * their own source/version proof and do not depend on this vendor hash.
+ * What a refresh downloaded, so the next one can skip what has not changed. Research metadata;
+ * production official projections carry their own source/version proof.
  */
 export interface LegiscanDatasetRecord {
   state: string;
@@ -181,9 +162,8 @@ export interface StateVotesSnapshot {
     }[];
   };
   /**
-   * Exact promoted official-person authority used by the acquisition that
-   * joined member positions. Required for permanent official projections;
-   * absent only from the retired LegiScan research fixture.
+   * Exact promoted official-person authority used by the acquisition that joined member positions.
+   * Required for permanent official projections.
    */
   officialIdentityAuthority?: {
     contractId: string;
@@ -217,11 +197,9 @@ export interface StateVotesSnapshot {
   /** One per state session covered, with its hash. */
   datasets: LegiscanDatasetRecord[];
   /**
-   * The identifier-set comparison, per the standing rule: how many LegiScan
-   * people ids matched a roster seat, out of how many were seen in the roll
-   * calls. A silent zero-match join is the cd:0 failure again, and a 100%
-   * match rate pointing at one row is the D40 failure — so this also states
-   * how many DISTINCT officeholders the matched ids resolved to.
+   * The identifier-set comparison: how many LegiScan people ids matched a roster seat, out of how many were
+   * seen, and how many distinct officeholders the matched ids resolved to (a silent zero-match join and a
+   * many-to-one match both show here).
    */
   identifierMatch: {
     peopleSeen: number;
@@ -243,6 +221,7 @@ export interface StateVotesSnapshot {
 export interface StateLegislatorVotePosition {
   rollCallId: string;
   position: StateVotePosition;
+  publisherPosition?: string;
   /** `YYYY-MM-DD`, carried so the member's page can order votes without the
    *  roll index; every other roll field is joined, never duplicated here. */
   date: string;
@@ -265,6 +244,8 @@ export interface StateLegislatorVotes {
   term: string;
   session: string;
   positions: readonly StateLegislatorVotePosition[];
+  /** Exact roll metadata for this member's positions, acquired in the same source version. */
+  rollCalls?: readonly StateRollCall[];
   officialIdentityAuthority: NonNullable<StateVotesSnapshot["officialIdentityAuthority"]>;
 }
 
@@ -287,10 +268,8 @@ export interface StateLegislatorVotesSessionMarker {
   positionCount: number;
   /**
    * Digest of the exact source documents this acquisition fetched, over
-   * `sha256(bodies.map(sha256).join("\n"))` — the whole-session candidate's own
-   * raw fingerprint, kept on the marker so the fan-out retains source
-   * provenance without duplicating raw bytes onto every member. The bytes
-   * themselves move to object storage in a later pass, as PRL already does.
+   * `sha256(bodies.map(sha256).join("\n"))`, kept on the marker so the fan-out retains source provenance
+   * without duplicating raw bytes onto every member.
    */
   sourceDocumentsSha256: string;
   officialIdentityAuthority: NonNullable<StateVotesSnapshot["officialIdentityAuthority"]>;

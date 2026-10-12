@@ -1,7 +1,6 @@
 import type { DerivedInputKind, DerivedInputRef } from "./derived-authority.ts";
 import type { UnchangedConfirmation } from "./unchanged-confirmation.ts";
 
-/** The four source-trust classes in the routine civic-data contract. */
 export const SOURCE_TRUST_CLASSES = [
   "T1_AUTHORITATIVE_STRUCTURED",
   "T2_AUTHORITATIVE_DOCUMENT",
@@ -23,6 +22,7 @@ export const ROUTINE_RECORD_CLASSES = [
   "REGISTRY_RUNTIME_BINDING",
   "VOTING_SITE",
   "PRL_PROFILE",
+  "PRL_ARCHIVE",
   "CENSUS_REFERENCE",
   "CENSUS_GEOGRAPHY",
   "MEETING",
@@ -40,7 +40,6 @@ export const ROUTINE_RECORD_CLASSES = [
 ] as const;
 export type RoutineRecordClass = (typeof ROUTINE_RECORD_CLASSES)[number];
 
-/** Unknown civic shapes retain the source's own words; no new kind union is required. */
 export interface PublicRecord {
   readonly id: string;
   readonly kind: "PUBLIC_RECORD";
@@ -59,7 +58,6 @@ export const ROUTINE_DATA_CLASSIFICATIONS = [
 ] as const;
 export type RoutineDataClassification = (typeof ROUTINE_DATA_CLASSIFICATIONS)[number];
 
-/** The canonical happy path, plus precise terminal refusal states. */
 export const CANDIDATE_STATES = [
   "FETCHED",
   "NORMALIZED",
@@ -106,7 +104,6 @@ export interface ValidationReceipt {
   readonly scope: string;
   readonly validatedAt: string;
   readonly checks: readonly ValidationCheck[];
-  /** Non-blocking, record-level facts deliberately omitted from the projection. */
   readonly excludedFacts: readonly {
     readonly key?: string | null;
     readonly code: string;
@@ -137,16 +134,10 @@ export interface SourceAuthorityContract {
   readonly parserVersion: string;
   readonly freshnessExpectation: string;
   readonly absencePolicy: AbsencePolicy;
-  /** T4 sources remain useful inputs, but may not auto-promote official truth. */
   readonly routineAutoPromotion: boolean;
-  /** Dynamic primary publishers may promote only through an explicit reviewed source-set receipt. */
   readonly manualReceiptPromotion?: {
     readonly allowedSourceClasses: readonly ManualSourceClass[];
   };
-  /**
-   * A DERIVED authority has no route of its own: a candidate is authentic only as the exact inputs it names, of
-   * these kinds (`lib/civic-data/derived-door.ts`), and a promoted input is checked against the store at the door.
-   */
   readonly derivedPromotion?: {
     readonly inputKinds: readonly DerivedInputKind[];
     readonly authorization: string;
@@ -162,7 +153,6 @@ export const MANUAL_SOURCE_CLASSES = [
 ] as const;
 export type ManualSourceClass = (typeof MANUAL_SOURCE_CLASSES)[number];
 
-/** Exact-byte evidence reviewed by an owner before a manual production promotion. */
 export interface ManualSourceReview {
   readonly requestedUrl: string;
   readonly finalUrl: string;
@@ -172,9 +162,10 @@ export interface ManualSourceReview {
   readonly httpStatus: number;
   readonly rawHash: string;
   readonly reviewedEvidence: string;
+  /** Source documents decoded from these exact acquired archive bytes. Paths remain relative to the pinned repository. */
+  readonly extractedMembers?: readonly { readonly path: string; readonly sha256: string }[];
   /** Omitted by legacy GOOD packages; omission means SUPPORTED. */
   readonly reviewOutcome?: "SUPPORTED" | "BLOCKED";
-  /** Required when exact acquired bytes cannot support positive promotion. */
   readonly failureDetail?: string;
 }
 
@@ -185,6 +176,14 @@ export interface ManualSourceSetReceipt {
   readonly sources: readonly ManualSourceReview[];
 }
 
+export interface SourceCheckEvidence {
+  readonly requestedUrl: string;
+  readonly finalUrl: string;
+  readonly httpStatus: 200 | 304;
+  readonly rawHash: string;
+  readonly checkedAt: string;
+}
+
 export interface RetrievalEvidence {
   readonly succeeded: boolean;
   readonly requestedUrl: string;
@@ -193,13 +192,10 @@ export interface RetrievalEvidence {
   readonly retrievedAt: string;
   /** SHA-256, lowercase hex. Null when no response body was acquired. */
   readonly rawHash: string | null;
+  /** Last actual provider check, retained unchanged on held-byte or parser replay. */
+  readonly sourceCheck?: SourceCheckEvidence;
   readonly failureDetail?: string;
-  /** Required only by authorities whose publisher set is bounded by an owner-reviewed receipt. */
   readonly manualSourceReceipt?: ManualSourceSetReceipt;
-  /**
-   * Required only by a DERIVED authority: the exact inputs the candidate was computed from. `rawHash` is their
-   * canonical hash and `retrievedAt` the newest input's own time (`derivedRetrieval`); there is no final URL.
-   */
   readonly derived?: { readonly inputs: readonly DerivedInputRef[] };
 }
 
@@ -207,13 +203,8 @@ export interface NormalizationEvidence {
   readonly succeeded: boolean;
   readonly parserVersion: string;
   readonly schemaVersion: string;
-  /** SHA-256 of the exact bounded Reader projection. */
   readonly normalizedHash: string | null;
-  /**
-   * SHA-256 of the exact normalized/provenance evidence envelope. Required by
-   * every promotable registered production candidate; legacy/unit fixtures
-   * may omit it only when they cannot enter a production contract door.
-   */
+    /** Required by every promotable production candidate; only fixtures that cannot reach a production door may omit it. */
   readonly normalizedPayloadHash?: string | null;
   readonly inputRecords: number;
   readonly outputRecords: number;
@@ -236,7 +227,6 @@ export interface IdentityEvidence {
 }
 
 export interface TemporalEvidence {
-  /** Product vintage, election/report period, legislative term/session, or source-through instant. */
   readonly version: string;
   readonly sourceThrough: string;
   readonly expectedVersion: string;
@@ -272,11 +262,6 @@ export interface DependentCheck {
   readonly detail: string;
 }
 
-/**
- * Binds every read-model/dependent check to the one candidate whose promotion
- * it may affect. Software-suite, UI, browser, and unrelated source outcomes
- * cannot be presented as evidence for this contract.
- */
 export interface SourceProjectionEvidence {
   readonly kind: "SOURCE_PROJECTION_CONTRACT";
   readonly sourceId: string;
@@ -292,7 +277,6 @@ export function sourceProjectionEvidence(
   return { kind: "SOURCE_PROJECTION_CONTRACT", sourceId, recordClass, scope };
 }
 
-/** One exact member of a normalized civic record set. */
 export interface CivicRecordMember {
   readonly key: string;
   readonly record: unknown;
@@ -311,10 +295,6 @@ export interface HeldCivicRecord {
   readonly record?: unknown;
 }
 
-/**
- * The exact, durable outcome compared with the previously promoted projection.
- * Counts shown by Admin are always derived from these member arrays.
- */
 export interface RoutineChangeSet {
   readonly outcome: "CHANGED" | "UNCHANGED";
   readonly added: readonly CivicRecordDelta[];
@@ -323,16 +303,6 @@ export interface RoutineChangeSet {
   readonly held: readonly HeldCivicRecord[];
 }
 
-/**
- * Exact authority for removing one previously promoted record from an
- * incomplete candidate horizon. This is deliberately narrow: today only a
- * meeting (or one of its attached agenda-document versions) may age out of
- * the registered Reader serving window without a complete-universe claim, be
- * replaced by the fresh record that now holds its exact sitting or by the
- * occurrence record that now holds its exact fact, or be struck out of its
- * series by its publisher; and a registry body minted on a Census placeholder
- * may leave.
- */
 export type RoutineRemovalEvidence =
   | ServingWindowRemovalEvidence
   | OccurrenceSupersessionRemovalEvidence
@@ -342,157 +312,75 @@ export type RoutineRemovalEvidence =
   | AuditPullRemovalEvidence
   | MovedToHistoryRemovalEvidence;
 
-/**
- * A published member an auditor broke (BROKE). It leaves the next version instead of being carried
- * from its base. The candidate must also hold the member as an `AUDIT_PULLED_FROM_VERSION` excluded fact.
- */
+/** A published member an auditor broke; the candidate must also hold it as an `AUDIT_PULLED_FROM_VERSION` excluded fact. */
 export interface AuditPullRemovalEvidence {
-  /** Exact `RoutineChangeSet.removed[].key`. */
   readonly key: string;
   readonly code: "REMOVED_BY_AUDIT_PULL";
-  /** The curated member id the audit named. */
   readonly memberId: string;
 }
 
-/**
- * A concluded meeting that carries a record leaves its live partition only
- * into the partition's durable history (DB-06). The history version is
- * promoted FIRST; the validator re-derives the rest from the candidate, and the
- * door confirms the named history version holds the exact record, so no record
- * is ever in neither place. An attached agenda document inherits this from its
- * meeting.
- */
+/** A concluded meeting leaves its partition only into the partition's history, which is promoted first. */
 export interface MovedToHistoryRemovalEvidence {
-  /** Exact `RoutineChangeSet.removed[].key`; evidence is never positional. */
   readonly key: string;
   readonly code: "MOVED_TO_HISTORY";
-  /** The partition's history scope that holds the record. */
   readonly historyScope: string;
-  /** The promoted history version that holds it. */
   readonly historyVersionId: string;
   /** The held window's lower bound at this candidate's clock; the sitting began before it. */
   readonly lowerBound: string;
-  /** The previously promoted meeting's exact `startsAt`. */
   readonly priorStartsAt: string;
-  /** Required only for an agenda document; names its exact moved meeting. */
   readonly parentMeetingKey?: string;
 }
 
 export interface ServingWindowRemovalEvidence {
-  /** Exact `RoutineChangeSet.removed[].key`; evidence is never positional. */
   readonly key: string;
   readonly code: "OUTSIDE_REGISTERED_SERVING_WINDOW";
-  /** Exact versioned Reader/acquisition window policy, never a caller-defined window. */
   readonly windowContract: "MEETING_READER_SERVING_WINDOW_V1" | "MEETING_READER_SERVING_WINDOW_V2";
-  /** Inclusive registered window used by the acquisition/Reader. */
   readonly lowerBound: string;
   readonly upperBound: string;
-  /** The previously promoted meeting's exact `startsAt`. */
   readonly priorStartsAt: string;
-  /** Required only for an agenda document; names its exact removed meeting. */
   readonly parentMeetingKey?: string;
 }
 
-/**
- * A prior meeting record replaced by the fresh record that now holds its
- * sitting (see lib/sources/event-identity.ts): a series record since
- * 2026-09-23, a re-issued sitting since 2026-09-24. Two tests grant it, and the
- * validator re-derives either from the candidate itself; the successor is
- * always a fresh member of this candidate, never a carried one:
- *
- * - `supersedesSeriesRecord`: a recurring series' single `UID`-keyed record,
- *   replaced by an occurrence of exactly that series id, for the same body, at
- *   the removed record's start or in its slot.
- * - `reissuesSitting`: the same sitting its publisher re-issued under a new
- *   id: the same body id, the same body key from both the body name and the
- *   title, and the same local date and minute in the same zone.
- *
- * An agenda document attached to the removed record inherits this authority
- * from it, never on its own.
- */
 export interface OccurrenceSupersessionRemovalEvidence {
-  /** Exact `RoutineChangeSet.removed[].key`; evidence is never positional. */
   readonly key: string;
   readonly code: "SUPERSEDED_BY_OCCURRENCE_IDENTITY";
-  /**
-   * `meeting:<id>` of the fresh member of the same candidate that holds the
-   * sitting: `<series id>/<slot>` for a series record, or the re-issued id.
-   */
   readonly successorKey: string;
-  /** The previously promoted meeting's exact `startsAt`. */
   readonly priorStartsAt: string;
-  /** Required only for an agenda document; names its exact removed meeting. */
   readonly parentMeetingKey?: string;
 }
 
-/**
- * A published sitting of a recurring series that its publisher has since
- * struck out of the series (`EXDATE`), 2026-09-23. The validator re-derives it
- * from the candidate's own held fact `MEETING_EXCLUDED_BY_PUBLISHER`, which the
- * same read recorded: same series, same slot, same body, and the removed
- * record is that sitting (its occurrence id, or the series' own UID-only id at
- * that slot's instant). A cancellation the publisher states as a STATUS is not
- * this: it stays a status on a published sitting.
- */
 export interface PublisherExclusionRemovalEvidence {
-  /** Exact `RoutineChangeSet.removed[].key`; evidence is never positional. */
   readonly key: string;
   readonly code: "EXCLUDED_BY_PUBLISHER";
-  /** The series' own meeting id, `<source>:<slug>:<UID>`. */
   readonly seriesId: string;
-  /** The struck sitting's recurrence slot. */
   readonly slot: string;
-  /** The previously promoted meeting's exact `startsAt`. */
   readonly priorStartsAt: string;
-  /** Required only for an agenda document; names its exact removed meeting. */
   readonly parentMeetingKey?: string;
 }
 
-/**
- * A registry body on a Census "no district here" placeholder (LEA 99997) is
- * geography, never a government (Sean, 2026-09-23). The validator re-derives
- * the claim from the candidate itself and trusts nothing in this row alone:
- * the removed record is exactly `body:<its id>`, it sat on exactly this
- * division, and the candidate still holds that division as a placeholder by
- * its own Census code.
- */
+/** A registry body on a Census "no district here" placeholder (LEA 99997) is geography, never a government. */
 export interface CensusPlaceholderBodyRemovalEvidence {
-  /** Exact `RoutineChangeSet.removed[].key`: `body:<body id>`. */
   readonly key: string;
   readonly code: "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT";
-  /** The removed body's division, which the candidate keeps. */
   readonly divisionOcdId: string;
 }
 
-/**
- * A departed officeholder's rows (reader disposition, candidacy bridge, photo)
- * leave with them: the body's complete official roster, read from `sourceUrl`
- * and carried by this candidate, no longer lists `holderId`.
- */
 export interface RosterDepartureRemovalEvidence {
-  /** Exact `RoutineChangeSet.removed[].key`, e.g. `official-candidacy:<holder id>`. */
   readonly key: string;
   readonly code: "OFFICIAL_ROSTER_NO_LONGER_LISTS";
   readonly bodyId: string;
   readonly holderId: string;
   readonly sourceUrl: string;
+  readonly replacementHolderId?: string;
+  readonly officeTitle?: string;
 }
 
-/** One immutable tracked input whose exact bytes were used for a PDC-v2 LKG import. */
 export interface TrustedLkgFixtureEvidence {
-  /** Repository-relative, forward-slash path whose exact bytes come from `frozenBaseSha`. */
   readonly path: string;
   readonly sha256: string;
   readonly bytes: number;
 }
 
-/**
- * Exact durable authority from which one meeting partition was split during
- * the bounded PDC-v2 cutover.  The obsolete aggregate candidate and its event
- * history remain immutable after its pointer is retired, so every successor
- * can be audited back to the precise authority that was serving immediately
- * before transfer without pretending that the split was a new publisher read.
- */
 export interface TrustedLkgLegacyMeetingsPartitionEvidence {
   readonly contractVersion: 1;
   readonly kind: "DURABLE_LEGACY_MEETINGS_PARTITION";
@@ -522,13 +410,6 @@ export interface TrustedLkgLegacyMeetingsPartitionEvidence {
   readonly partitionAgendaDocumentRowCount: number;
 }
 
-/**
- * Exact predecessor witness for the one PDC-v2 manual import whose frozen LKG
- * must be unioned with an already-serving permanent pointer.  The frozen
- * twenty-sitting payload and the durable predecessor are both append-only
- * authorities: neither may silently overwrite a same-id sitting from the
- * other, and every non-conflicting sitting from both must survive.
- */
 export interface TrustedLkgPimaOutcomeUnionEvidence {
   readonly contractVersion: 1;
   readonly kind: "DURABLE_PIMA_OUTCOME_UNION";
@@ -547,15 +428,10 @@ export interface TrustedLkgPimaOutcomeUnionEvidence {
   }[];
   readonly predecessorSittingCount: number;
   readonly unionSittingCount: number;
-  /** Digest of the immutable fixture manifest plus the exact predecessor pointer. */
   readonly unionAuthoritySha256: string;
 }
 
-/**
- * Explicit provenance for the one-time PDC-v2 transfer of an already-serving
- * tracked LKG into the permanent store. This is not a publisher acquisition
- * and must never be rendered or counted as one.
- */
+/** Provenance for a one-time transfer of a tracked LKG; never render or count it as a publisher acquisition. */
 export interface TrustedLkgImportEvidence {
   readonly contractVersion: 1;
   readonly kind: "TRUSTED_LKG_IMPORT";
@@ -572,43 +448,23 @@ export interface TrustedLkgImportEvidence {
   readonly importedAt: string;
   readonly frozenBaseSha: string;
   readonly importerCodeSha: string;
-  /** SHA-256 of the canonical, path-sorted `fixtures` manifest. */
   readonly fixtureSetSha256: string;
   readonly fixtures: readonly TrustedLkgFixtureEvidence[];
-  /**
-   * Present only when the meeting payload came from the exact durable legacy
-   * aggregate rather than frozen fixture bytes.  In that case `fixtures` is
-   * deliberately empty and this witness is the complete transfer provenance.
-   */
   readonly legacyMeetingsPartition?: TrustedLkgLegacyMeetingsPartitionEvidence;
-  /** Present only for the bounded frozen-Pima-outcomes + durable-LKG union. */
   readonly pimaOutcomeUnion?: TrustedLkgPimaOutcomeUnionEvidence;
-  /** Bind the exact normalized and Reader projections to this import receipt. */
   readonly normalizedPayloadSha256: string;
   readonly readModelSha256: string;
-  /** Bind every persisted candidate proof field except derived id/change-set and this evidence itself. */
   readonly candidateEnvelopeSha256: string;
   readonly validatorIds: readonly string[];
 }
 
-/**
- * One-time, content-addressed successor for a durable authority promoted
- * before the permanent candidate-integrity contract existed. The predecessor
- * row remains immutable. These hashes make the exact authority transfer
- * independently auditable after the temporary importer is deleted.
- */
 export interface TrustedLkgReattestationEvidence {
   readonly contractVersion: 1;
   readonly kind: "TRUSTED_LKG_REATTESTATION";
   readonly authorization: "PDC_V2_FROZEN_LKG_CUTOVER";
   readonly purpose: "RE_ATTEST_EXISTING_DURABLE_LKG_TO_PERMANENT_INTEGRITY_CONTRACT";
   readonly sourceAuthenticated: false;
-  /**
-   * The sole allowed structural bridge.  Legacy nh-members `/2` bound its
-   * normalized extraction rather than its smaller Reader projection and did
-   * not carry the import-only stable identities required by `/3`.  Absence
-   * means the ordinary byte-for-byte re-attestation contract still applies.
-   */
+    /** Absent, the ordinary byte-for-byte re-attestation contract applies. */
   readonly contractUpgrade?: "NH_MEMBERS_V2_TO_V3";
   readonly contractId: string;
   readonly sourceId: string;
@@ -617,7 +473,6 @@ export interface TrustedLkgReattestationEvidence {
   readonly parserVersion: string;
   readonly sourceVersion: string;
   readonly sourceThrough: string;
-  /** Original publisher retrieval instant, copied unchanged to the successor. */
   readonly sourceRetrievedAt: string;
   readonly reattestedAt: string;
   readonly importerCodeSha: string;
@@ -641,11 +496,7 @@ export type TrustedLkgTransferEvidence =
   | TrustedLkgImportEvidence
   | TrustedLkgReattestationEvidence;
 
-/**
- * A fetched candidate presented to the deterministic promotion engine.
- * `normalizedPayload` is the canonical evidence shape; `readModel` is the
- * bounded projection Reader consumes. Reader never queries staging rows.
- */
+/** `readModel` is the bounded projection Reader consumes; Reader never queries staging rows. */
 export interface RoutineCandidate {
   readonly id: string;
   readonly sourceId: string;
@@ -662,15 +513,10 @@ export interface RoutineCandidate {
   readonly dependentChecks: readonly DependentCheck[];
   readonly normalizedPayload: unknown;
   readonly readModel: unknown;
-  /** Exact normalized members used to compute added/changed/removed outcomes. */
   readonly civicRecords?: readonly CivicRecordMember[];
-  /** Added by the one promotion driver before the candidate is persisted. */
   readonly changeSet?: RoutineChangeSet;
-  /** Exact, validator-checked authority for incomplete-horizon removals. */
   readonly removalEvidence?: readonly RoutineRemovalEvidence[];
-  /** Present only on a one-time, explicitly non-source-authenticated LKG transfer. */
   readonly bootstrapImport?: TrustedLkgTransferEvidence;
-  /** Unresolved facts omitted without withholding individually valid facts. */
   readonly excludedFacts?: readonly {
     readonly key?: string | null;
     readonly code: string;
@@ -708,20 +554,10 @@ export interface PromotedProjection<T = unknown> {
   readonly promotedAt: string;
   readonly payload: T;
   readonly receipt: ValidationReceipt;
-  /**
-   * The pointed version's newest unchanged confirmation, when one exists: a
-   * re-check that found nothing new and kept readers on this version. Reader
-   * freshness is measured from the later of its retrieval and the version's.
-   */
+    /** Reader freshness is measured from the later of this confirmation's retrieval and the version's. */
   readonly latestConfirmation?: UnchangedConfirmation;
 }
 
-/**
- * A canonical pointer named, never carried: its identity columns and none of
- * its dataset. The payload is the Reader's value, up to tens of MB on the wire
- * for the largest classes; code that only names, compares, or appends evidence
- * to the current version reads this, and the typed Reader reads the payload.
- */
 export type PromotedPointerIdentity = Pick<
   PromotedProjection,
   "key" | "sourceId" | "recordClass" | "scope" | "versionId" | "lastKnownGoodVersionId" | "promotedAt" | "latestConfirmation"

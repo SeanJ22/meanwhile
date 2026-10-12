@@ -1,22 +1,4 @@
-/**
- * **THE SOCIAL PLATFORM LIST (CA-04).**
- *
- * One list, one setting. The contact pills, the coverage matrix and the
- * directory reader all map over it, so a platform added in Admin shows its pill
- * with no deploy. It defaults to Facebook, X, Instagram, YouTube, LinkedIn and
- * TikTok — six pills. Mastodon is not in the default; add it in Admin to show it.
- *
- * A platform is `{id, label, urlPatterns, profileUrlTemplate, iconKey}`:
- * - `urlPatterns` are host names (no scheme, no path) a URL must be on to count
- *   as that platform;
- * - `profileUrlTemplate` turns a bare handle into the profile URL, `{handle}`
- *   standing for it;
- * - `iconKey` picks a mark; a key with no mark of its own draws the generic one.
- *
- * The list is the code default of the reader-facing setting `officials.socialPlatforms`
- * (BR-05). A change in Admin reaches readers through the reader-edge settings
- * publication; the site never reads the control plane per request.
- */
+/** The social platform list, one setting read by every surface, so a platform added in Admin shows with no deploy. */
 import { registerSetting, type SettingValue } from "../control-plane/settings.ts";
 import type { AccountKind, DirectorySocial, SocialAccount, SocialAccounts } from "./types.ts";
 
@@ -100,14 +82,7 @@ function isAccountList(value: unknown): value is readonly SocialAccount[] {
   return Array.isArray(value);
 }
 
-/**
- * Hold what the stored record carries, as the one list of accounts.
- *
- * The congress-legislators directory stores one field per platform
- * (`twitter`, `facebook`, ...); those are the source's own names and stay as
- * stored. They read here as OFFICIAL accounts of the member's office, from the
- * directory file. A record that already holds the list is returned as is.
- */
+/** The stored record's accounts as one list; the directory's per-platform fields are official accounts. */
 export function socialAccountsOf(
   stored: SocialAccounts | undefined,
   platforms: readonly SocialPlatform[] = DEFAULT_SOCIAL_PLATFORMS,

@@ -1,25 +1,8 @@
 /**
- * **THE STANDING HUNTER LANE (CH-24 part 2, Proposal A).**
- *
- * With WTP_CONTINUOUS_HUNTERS=1 the research round plans the hunt and writes
- * its queue (the tasks it planned, in its order) beside its Send and area
- * reading; it starts no lease worker and admits no paid request. This lane is
- * a standing child of the runner: it leases the queued tasks to worker
- * processes with no 15-minute slice, admits every paid request through the
- * guards it re-arms every five minutes (hunter-lane-arming.ts), and picks up
- * each new queue the round writes. While paid work is held, plain-code tasks
- * still run.
- *
- * The lane ends itself after `HUNTER_LANE_LIFE_MS` (or when a release asks
- * it to drain) once its current wave finishes, and the runner starts it again,
- * so new code loads within the hour and no request hold can outlive
- * `SPEND_HOLD_STALE_MS`. On every exit it can still act on, it releases the
- * request holds it never settled (`releaseOpenJobs`).
- *
- * Isolation (Sean, Oct 6): inside a wave each worker has its own progress
- * clock, a stuck one is ended alone with its state said in the journal, a
- * queue written mid-wave joins the running workers, and the lane says it is
- * working only while workers move (constants below).
+ * The standing hunter lane: a child of the runner that leases the round's queued tasks to worker processes,
+ * admits every paid request through guards re-armed every refresh, and keeps running plain-code tasks while
+ * paid work is held. It ends itself after `HUNTER_LANE_LIFE_MS` (or when a release asks it to drain),
+ * releasing request holds it never settled. Each worker has its own progress clock and a stuck one is ended alone.
  */
 import { mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -36,16 +19,7 @@ export const HUNTER_LANE_IDLE_READ_MS = 30_000;
 export const HUNTER_LANE_IDLE_SAY_MS = 5 * 60_000;
 if (HUNTER_LANE_LIFE_MS + 60 * 60_000 >= SPEND_HOLD_STALE_MS) throw new Error("a lane's life and its last wave must end before a hold goes stale");
 
-/*
- * Isolation (Sean, Oct 6: one lane must never crash another). Each worker
- * process has its own progress clock in the pool (process-pool.ts
- * StandingPoolOptions): any message either way between it and the lane is
- * progress. A worker quiet this long is ended alone, with what it held and
- * what it was waiting on, and the others keep running. It is shorter than
- * the runner's 10-minute no-progress limit by more than the lane's progress
- * period, so a stuck job is always ended, and said, before the runner could
- * end the whole lane.
- */
+/* Each worker has its own progress clock; a worker quiet this long is ended alone. Shorter than the runner's no-progress limit by more than the lane's progress period. */
 export const HUNTER_JOB_QUIET_MS = 7 * 60_000;
 /** A worker this old takes no further task; it finishes the one it holds and a fresh worker takes its place. */
 export const HUNTER_WORKER_RETIRE_MS = 30 * 60_000;

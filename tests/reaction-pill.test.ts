@@ -16,24 +16,9 @@ import {
 } from "../lib/signal/reactions.ts";
 
 /**
- * THE CONFIRMATION PILL (the correction pass, 2026-08-16).
- *
- * The defect: on production, tapping Yes BLANKED the button and tapping
- * Love it made it DISAPPEAR. The reader could not tell whether their answer
- * counted. It had: the POST returned 204 and the row was in the store every
- * time — a display defect, not data loss.
- *
- * The cause was the CASCADE, not the component. `.reaction-choice--settled`
- * was written ABOVE `.reaction-choice` at the same specificity, so the base
- * control's `background: var(--panel-bg)` won and the pill's fill never
- * reached the screen; near-white `--vote-text` on the panel ground measured
- * 1.01:1 in light theme. Every class name in the component read correctly.
- *
- * So this guard refuses to read class names and believe them. It taps each
- * value, takes the class list the control would actually render, and then
- * RESOLVES THAT CLASS LIST THROUGH THE STYLESHEET — specificity and source
- * order — to a literal colour, in both themes. A captured reaction that
- * cannot be seen fails here.
+ * Resolves each settled pill's class list through the stylesheet (specificity
+ * and source order) to a literal colour in both themes, so a captured reaction
+ * that cannot be seen fails here.
  */
 
 const ROOT = process.cwd();
@@ -103,11 +88,7 @@ function tokensFor(theme: "dark" | "light"): Map<string, string> {
   return tokens;
 }
 
-/**
- * Resolve a value through `var()` chains against a token map plus any
- * locally-declared custom properties. Returns null when a reference dead-ends
- * — the `--signal` failure mode, and a null here is a real finding.
- */
+/** Resolve a value through `var()` chains; null when a reference dead-ends. */
 function resolve(
   value: string,
   tokens: Map<string, string>,
@@ -132,11 +113,7 @@ function classesOf(selector: string): string[] | null {
   return selector.split(".").filter(Boolean);
 }
 
-/**
- * What the browser would compute for an element carrying `classList`, for
- * the properties named. Later rules win at equal specificity — the exact
- * mechanism the defect turned on.
- */
+/** What the browser would compute for `classList`; later rules win at equal specificity. */
 function computeFor(
   classList: string[],
   theme: "dark" | "light",
@@ -158,8 +135,7 @@ function computeFor(
           continue;
         }
         const current = winners.get(prop);
-        // `<=` because source order breaks a specificity tie in favour of
-        // the later rule. That is the whole defect, modelled.
+        // `<=`: source order breaks a specificity tie in favour of the later rule.
         if (!current || current.specificity <= specificity) {
           winners.set(prop, { specificity, value });
         }
@@ -296,10 +272,7 @@ for (const theme of ["dark", "light"] as const) {
 }
 
 test("no rule this model cannot see repaints the reaction control", () => {
-  // The guard's own blind spot, named: the model reads flat class selectors
-  // only. If a descendant or attribute selector ever sets a background or a
-  // colour on `.reaction-choice`, the measurement above stops being the
-  // truth and this test says so rather than passing quietly.
+  // The model reads flat class selectors only; fail if any other selector paints the control.
   for (const rule of RULES) {
     for (const selector of rule.selector.split(",")) {
       const trimmed = selector.trim();

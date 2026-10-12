@@ -159,7 +159,7 @@ export async function automaticVenuePackage(input: {
     if (!pending.has(id)) pending.set(id, meeting);
   }
   const keys = [...pending.keys()].sort();
-  // Federal sites are read at full speed (rulings §2): every new address is matched in the pass.
+  // Federal sites are read at full speed: every new address is matched in the pass.
   for (const id of keys) {
     const meeting = pending.get(id)!;
     const gap = meeting.venueGap!;
@@ -224,7 +224,7 @@ export interface CensusVenuePlacement {
   readonly placedCount: number;
   readonly held: readonly string[];
   readonly venueReferenceEvidence: readonly Readonly<Record<string, unknown>>[];
-  /** The new matches as a `venue-resolutions` package (BX-09), or null when nothing new was matched. */
+  /** The new matches as a `venue-resolutions` package, or null when nothing new was matched. */
   readonly package: ManualProjectionPackage | null;
 }
 

@@ -1,33 +1,9 @@
 /**
- * @freshness-reads-here — a correction receipt's retrievedAt is the instant its own robots-first read returned,
- * minted in the function that performed that read.
+ * @freshness-reads-here: a receipt's retrievedAt is the instant its own read returned.
  *
- * **EACH WEBSITE CORRECTION, READ AGAIN WHEN THE REFERENCE IS PROMOTED.** (C15, 2026-09-24.)
- *
- * `lib/civic-data/website-corrections.ts` holds the reviewed corrections and
- * their evidence. When the jurisdiction reference is promoted, each correction
- * is read again at its own sources, robots.txt first (`researchFetch`):
- *
- * - its homepage must still be on the corrected site and still name the
- *   government as reviewed;
- * - its .gov registry row, where the site has its own, must still list the
- *   domain for that government;
- * - each other government's page it relies on must still name the site.
- *
- * Every page read is receipted (URL, status, time, sha256, bytes).
- *
- * - A source that now contradicts the review REFUSES the correction, and the
- *   Census address stays. So does a source its publisher withdrew (404 or 410):
- *   the correction no longer rests on a live publication.
- * - A source that could not be read (a timeout, a server error, or an access
- *   control in front of it: a 401, 403 or 429 to this client, a bot challenge,
- *   a recorded wall) is an outage. The reviewed evidence stands, and the
- *   correction is applied on it, saying which source was not read again. An
- *   access control is never bypassed (`lib/hunt/access-control.ts`).
- * - Robots.txt is read first and recorded by `researchFetch`, and never stops
- *   the read: a public page read over a robots.txt that names it, or one that
- *   could not be read, is a reading like any other (owner decision 2026-09-25:
- *   robots.txt alone must not block acquisition).
+ * A source that now contradicts the review, or was withdrawn (404/410), refuses the correction. A source that could
+ * not be read (timeout, server error, access control) is an outage: the reviewed evidence stands. Robots.txt is
+ * recorded and never stops the read; an access control is never bypassed.
  */
 
 import { accessControlIn } from "../hunt/access-control.ts";
@@ -43,11 +19,9 @@ import {
 } from "./website-corrections.ts";
 
 export type WebsiteCorrectionDisposition =
-  /** Every source read now agrees with the review. */
   | "APPLIED_VERIFIED"
   /** A source could not be read now; nothing read contradicts the review, so it stands. */
   | "APPLIED_ON_REVIEWED_EVIDENCE"
-  /** A source read now contradicts the review, or its publisher withdrew it: not applied. */
   | "REFUSED";
 
 export interface WebsiteCorrectionOutcome {
@@ -65,10 +39,6 @@ type Reading =
 
 const bareHost = (url: string): string => new URL(url).hostname.toLowerCase().replace(/^www\./, "");
 
-/**
- * Read the corrections' sources again and decide each. The runtime is injected: production passes
- * `nodeResearchGet` and a clock; a test passes recorded responses and never touches the network.
- */
 export async function acquireWebsiteCorrections(
   corrections: readonly WebsiteCorrection[],
   runtime: ResearchRuntime,
@@ -76,13 +46,11 @@ export async function acquireWebsiteCorrections(
   const receipts: JurisdictionReferenceSourceReceipt[] = [];
 
   async function read(url: string, sourceId: WebsiteCorrectionSourceId): Promise<Reading> {
-    /* The robots verdicts in got.permissions are recorded by researchFetch and refuse nothing; only a recorded wall or a bad URL is REFUSED. */
     const got = await researchFetch(url, runtime);
     if (got.outcome === "REFUSED") return { kind: "NOT_READ", detail: `${url} was not read: ${got.reason}` };
     if (got.transportError !== null || got.status === null) return { kind: "NOT_READ", detail: `${url}: ${got.transportError ?? "no response"}` };
     if (got.status === 404 || got.status === 410) return { kind: "WITHDRAWN", detail: `${url} answered ${got.status}: its publisher withdrew it` };
     const text = new TextDecoder().decode(got.body);
-    /* An access control (a login, a 403, a rate limit, a bot challenge) is not a reading, and is never pushed past. */
     const control = accessControlIn({ status: got.status, text });
     if (control !== null) return { kind: "NOT_READ", detail: `${url}: an access control answered in place of the page (${control.detail})` };
     if (got.status < 200 || got.status >= 300) return { kind: "NOT_READ", detail: `${url} answered HTTP ${got.status}` };

@@ -3,30 +3,7 @@ import { projectedBodyRoster } from "../registry/body-roster-client.ts";
 
 import type { SeatHolder } from "./lookup.ts";
 
-/**
- * The three-tier grouping every officials surface renders (session item
- * 2c, wall clock 2026-08-14 second session — from production
- * screenshots): flat mixed lists of officials get messy as
- * coverage grows, so every surface that lists officials groups under
- * three headers, ALWAYS closest-first:
- *
- *   LOCAL   — county, municipal, mayor, school districts, special
- *             districts, commissions and boards
- *   STATE   — state legislators, then the governor and statewide
- *             executives (order of scope: district before statewide)
- *   FEDERAL — the US House member, then US senators (same scope rule)
- *
- * Closest-first is the product's thesis: the government nobody watches
- * is the nearest one, and the list must not open with the names people
- * already know. "Federal" is the label, not "National" — it matches
- * every ballot and source the app cites.
- *
- * This module is the ONE derivation: the who-governs card, the
- * officials door, and the stat count all read it, so the stated N and
- * the rendered rows cannot disagree. Membership is decided by
- * STRUCTURE — which store the holder came from, the seat's division
- * type — never by string-matching a label.
- */
+/** Every officials surface groups under three headers, closest first: local, state, federal. */
 
 export const TIER_GROUP_LABELS = {
   local: "Local",
@@ -59,11 +36,7 @@ const LOCAL_SCOPE_RANK: Record<string, number> = {
   county: 2,
 };
 
-/**
- * Group every named officeholder the coverage summary can source into
- * the three tiers. Deduped by holder id across the whole result — a
- * person appears once, in the closest tier that claims them.
- */
+/** Group every named officeholder into the three tiers; a person appears once, in the closest tier that claims them. */
 export function groupOfficials(coverage: CoverageSummary): TieredOfficials {
   const seen = new Set<string>();
   const local: OfficialRow[] = [];
@@ -87,16 +60,20 @@ export function groupOfficials(coverage: CoverageSummary): TieredOfficials {
   // then curated boards in the summary's own order.
   const bodiesByScope = [...coverage.bodies].sort(
     (a, b) =>
-      // NH94: a body with no division sorts with the unranked, which is where
-      // an unknown division type already sorted. The `?? 3` was always the
-      // honest branch; what changed is that null now reaches it instead of
-      // being turned into "place" upstream.
+      // A body with no division sorts with the unranked.
       ((a.divisionType ? LOCAL_SCOPE_RANK[a.divisionType] : undefined) ?? 3) -
       ((b.divisionType ? LOCAL_SCOPE_RANK[b.divisionType] : undefined) ?? 3),
   );
   for (const body of bodiesByScope) {
     for (const holder of projectedBodyRoster(body).members) {
       push(local, holder, holder.officeTitle, "local", body.ocdId);
+    }
+  }
+
+  // Native local offices can be sourced before a meeting body or its membership is known.
+  for (const seat of coverage.seats.filter(row => row.tier === "local")) {
+    for (const holder of seat.representatives) {
+      push(local, holder, holder.officeTitle, "local", seat.ocdId);
     }
   }
 

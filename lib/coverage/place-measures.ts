@@ -2,14 +2,8 @@ import { isCountedChecklistItem, percentOf } from "./place-percent.ts";
 import type { RowStatuses } from "./place-statuses.ts";
 
 /**
- * **THREE MEASURES, NEVER BLENDED.** Completeness (what we hold of what is
- * owed), freshness (how much of what we hold is current) and delivery (how much
- * of what is published a reader can be seen to get). Each carries the counts
- * behind its percentage, and none is averaged into another. They only count the
- * owed list; nothing here gates publishing. A count we do not have is null and
- * shows "—", never zero.
- *
- * PURE.
+ * Completeness, freshness and delivery, each with its counts and never blended.
+ * A count we do not have is null and shows "—", never zero. Pure.
  */
 export interface MeasureRow {
   readonly checklistId: string;

@@ -21,16 +21,7 @@ import { ADMIN_CONFIG_ID, defaultAdminConfig, withFleetSpendCeiling } from "@/li
 import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.ts";
 import type { ControlPlaneRepositories } from "@/lib/control-plane/repository/types.ts";
 
-/**
- * **BILLING FIGURES THE OWNER READ WHERE THE SYSTEM CANNOT LOOK.**
- * (Admin redesign, 2026-09-23 — COST-ACCOUNTING.md §2; MW-041/042/043/045.)
- *
- * The manual entry and import path for providers with no automated read. Each
- * figure carries its kind, its period, the day it was read and where; the same
- * slot entered twice is a correction, never a second figure for the same
- * money; and nothing on the policy row that governs spending is touched.
- * In-memory repositories and a fixed clock, through the one gateway door.
- */
+/** Billing figures read by hand where the system cannot look: each carries its kind, period, read day and place; the same slot entered twice is a correction; the spending policy row is untouched. */
 
 const NOW = "2026-09-23T04:00:00.000Z";
 const TODAY = "2026-09-23";
@@ -188,14 +179,7 @@ test("a policy row with an unreadable billing entry refuses the write rather tha
   assert.match(outcome.receipt.says, /could not be read, so nothing was changed/);
 });
 
-/**
- * **NOTHING DECIDES ANYTHING FROM A BILLING FIGURE.** A figure the owner typed
- * is shown and reconciled; it must never become an input to a ceiling, a
- * budget, an admission or the runner — the owner's hold on paid research relies
- * on the same property. So the only code that may touch the field or its module
- * is the module itself, the policy row's shape, the gateway that writes it, and
- * the Admin render path. A new reader anywhere else fails here, by name.
- */
+/** Nothing decides anything from a billing figure: only its own module, the policy row's shape, the gateway that writes it and the Admin render path may touch it. */
 test("billing figures are read only by the gateway that writes them and the Admin render path — never by the runner, the scheduler or a ceiling", () => {
   const ROOT = join(import.meta.dirname, "..");
   const allowed = new Set([

@@ -13,28 +13,6 @@ import {
 } from "../lib/sources/legistar/routes.ts";
 import type { LegistarFactClass } from "../lib/sources/legistar/routes.ts";
 
-/**
- * **THE ANTI-COLLAPSE REGRESSION.**
- * (WS-LEGI, 2026-08-29.)
- *
- * These tests exist to fail if the Legistar adapter ever collapses back to a
- * single preferred representation — the optimisation every source adapter
- * eventually attempts, because it is invisible when it is wrong. The JSON route
- * returns 200, the fields we happened to collect are populated, the meeting
- * renders, and the facts only the other representation carried are never missed
- * by anybody.
- *
- * The rule being defended is stated in `lib/sources/legistar/routes.ts` and is
- * already MEASURED on this source, on two tenants (`docs/sources.md`,
- * 2026-08-28): on one Mesa filter the InSite grid held 15 sittings where the Web
- * API held 3; on Pima the grid holds 14 future Board sittings the Web API
- * returns zero of. Only the union survives both tenants.
- *
- * A test that merely asserted "there are N routes" would be satisfied by a
- * portfolio of N synonyms. So the assertions below are about FACT CLASSES —
- * what a route can tell you — which is the thing a collapse actually destroys.
- */
-
 /** Every WALKED JSON route. "The API answered" in its strongest form. */
 const ALL_WEBAPI_ROUTES = LEGISTAR_ROUTES.filter(
   (route) => route.transport === "JSON_API" && route.disposition === "WALKED",
@@ -43,15 +21,6 @@ const ALL_WEBAPI_ROUTES = LEGISTAR_ROUTES.filter(
 test("SEEDED FAILURE: a full sweep of the JSON API does NOT discharge the facts only other representations carry", () => {
   const owed = factClassesOwedAfter(ALL_WEBAPI_ROUTES);
 
-  /*
-   * This is the whole regression in one assertion. Every WALKED JSON route has
-   * succeeded — bodies, events, event, eventitems, votes — and the item TEXT,
-   * the supporting documents and the narrative minutes are still owed, because
-   * no JSON route in this portfolio is capable of carrying them.
-   *
-   * If a later change makes WEBAPI_EVENTITEMS claim ITEM_FULL_TEXT so that a
-   * pipeline can "skip the Accessible Agenda since the API worked", this fails.
-   */
   assert.ok(
     owed.includes("ITEM_FULL_TEXT"),
     "An HTTP 200 from the Web API must never discharge ITEM_FULL_TEXT: " +
@@ -71,7 +40,6 @@ test("SEEDED FAILURE: a full sweep of the JSON API does NOT discharge the facts 
 });
 
 test("SEEDED FAILURE: one successful route never collapses the universe for the facts it does not bear", () => {
-  // The strongest single route in the portfolio: per-person votes.
   const owed = factClassesOwedAfter(["WEBAPI_EVENTITEM_VOTES"]);
   const borne = factsBorneBy(["WEBAPI_EVENTITEM_VOTES"]);
 
@@ -90,25 +58,12 @@ test("SEEDED FAILURE: one successful route never collapses the universe for the 
 });
 
 test("every information-bearing fact class is reachable through more than one route, or is NAMED as singly routed", () => {
-  /*
-   * Not an assertion that everything is multiply routed — PERSON_VOTE genuinely
-   * is not, on any tenant whose minutes sit only on the vendor's document host,
-   * which no adapter reads yet. The assertion is that the portfolio KNOWS which
-   * facts hang on one thread, so a vendor change to that thread reads as a
-   * known single point of failure rather than as a body that stopped
-   * publishing.
-   */
+  // A singly routed fact must be named as such, so a vendor change reads as a known single point of failure.
   const singles = singlyRoutedFacts();
   for (const fact of singles) {
     const walked = routesBearing(fact).filter((r) => r.disposition === "WALKED");
     assert.equal(walked.length, 1, `${fact} was reported singly routed`);
   }
-  /*
-   * PERSON_VOTE was singly routed until the portal minutes route was walked
-   * (NH332, 2026-09-25): Mesa's minutes list the ayes and nays by surname. The
-   * minutes route is WALKED, so the count moves; the route's own note says the
-   * tabulation is held as text and not yet as per-member records.
-   */
   assert.ok(!singles.includes("PERSON_VOTE"));
   assert.deepEqual(
     routesBearing("PERSON_VOTE").filter((r) => r.disposition === "WALKED").map((r) => r.id).sort(),
@@ -128,13 +83,12 @@ test("robots.txt is recorded on a route and never decides it: the vendor's minut
   assert.match(vendorMinutes.note, /owner decision of 2026-09-25/, "and says it no longer blocks");
   assert.equal(vendorMinutes.disposition, "REQUIRES_NEW_ADAPTER", "what it lacks is a reader, not permission");
 
-  // Owed: yes, until a route that carries it is walked, because we do not hold it.
   assert.ok(
     factClassesOwedAfter(ALL_WEBAPI_ROUTES).includes("NARRATIVE_MINUTES"),
     "A fact borne only by unbuilt and unwalked routes stays owed.",
   );
 
-  // Suggested: every route that can carry it, robots.txt notwithstanding (owner decision 2026-09-25).
+  // Suggested: every route that can carry it, whatever its robots.txt says.
   const suggested = routesStillWorthAsking("NARRATIVE_MINUTES", ALL_WEBAPI_ROUTES).map((route) => route.id);
   assert.ok(suggested.includes("INSITE_ACCESSIBLE_MINUTES"), "the portal's own minutes are offered");
   assert.ok(suggested.includes("GRANICUS_MINUTES_PDF"), "and so is the vendor's file, whatever its robots.txt says");
@@ -144,13 +98,6 @@ test("MEETING_EXISTENCE is multiply routed across transports — the union rule,
   const routes = routesBearing("MEETING_EXISTENCE");
   const transports = new Set(routes.map((route) => route.transport));
 
-  /*
-   * The measured proof this encodes: neither the Web API nor the InSite grid
-   * dominates. Pima's grid holds 14 future sittings the API returns zero of;
-   * Mesa's API holds sittings the grid marks NotViewable. A portfolio that kept
-   * only "the better route" would be wrong on one tenant or the other, and
-   * would be wrong SILENTLY, with a clean 200 either way.
-   */
   assert.ok(
     routes.length >= 4,
     "Meeting existence must remain reachable through the API, the grid, the feeds " +
@@ -164,13 +111,6 @@ test("MEETING_EXISTENCE is multiply routed across transports — the union rule,
 });
 
 test("no two routes are substitutable unless they bear identical fact sets", () => {
-  /*
-   * The structural guard against a future "these two are the same, drop one"
-   * refactor. Two routes may legitimately bear the same facts — the accessible
-   * agenda and the agenda PDF do — but that must be VISIBLE as an equal pair
-   * rather than assumed, and a route whose facts are a strict superset of
-   * another's is not a replacement for it in the other direction.
-   */
   for (const route of LEGISTAR_ROUTES) {
     assert.ok(route.bears.length > 0, `${route.id} bears no fact class at all`);
     assert.ok(route.note.length > 20, `${route.id} has no stated reason`);
@@ -185,11 +125,6 @@ test("no two routes are substitutable unless they bear identical fact sets", () 
 });
 
 test("the portfolio names no tenant — Pima is the proving tenant, not the scope", () => {
-  /*
-   * The Pima-special-case guard. A concrete tenant id, slug, host or date in
-   * this map would make the national source class into one county's adapter,
-   * which is the defect the portfolio exists to prevent.
-   */
   const banned = /\bpima\b|\bmesa\b|\b138\b|\b18[0-9]{2}\b/i;
   for (const route of LEGISTAR_ROUTES) {
     assert.ok(
@@ -200,11 +135,6 @@ test("the portfolio names no tenant — Pima is the proving tenant, not the scop
 });
 
 test("factsBorneBy ignores an unknown route id rather than crediting it", () => {
-  /*
-   * A route id this portfolio has never heard of discharges nothing. The
-   * alternative — treating an unknown id as a success — would let a typo in a
-   * caller silently satisfy a fact class.
-   */
   const borne = factsBorneBy(["NOT_A_ROUTE", "WEBAPI_EVENTITEM_VOTES"]);
   assert.deepEqual([...borne], ["PERSON_VOTE"]);
   assert.equal(findRoute("NOT_A_ROUTE"), undefined);

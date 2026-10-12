@@ -1,24 +1,6 @@
 /**
- * **WHO CARRIES A SENT ACTION OUT.**
- *
- * The screens never decide an outcome. They hand a send to an `Executor` and
- * render whatever receipt it reports. Two executors exist:
- *
- *   live    posts to the deployed `/api/admin/action` (the only state-changing
- *           door) with a caller-minted idempotency key, and folds the saved
- *           receipt into the view. It never retries on its own. The gateway
- *           type is the control's fixed mapping (runner pause/resume) or the
- *           type the backend announces on the pulse (contract.ts).
- *   sample  lives under ./sample/ and is used only by the development preview
- *           and tests; every receipt it makes is marked `simulated`.
- *
- * `check` is "Check what happened": it asks without sending the action again,
- * through the announced read-only receipt lookup. Until one is announced it
- * returns null and the screen explains why.
- *
- * A saved request is not a done request. After a send the live executor keeps
- * asking the same lookup, without sending again, until the runner's own record
- * confirms the action (or a final state arrives). "Done" is the runner's word.
+ * A saved request is not a done request: after a send the live executor keeps asking the receipt lookup,
+ * without sending again, until the runner's record confirms the action or a final state arrives.
  */
 import type { ActionDef } from "./actions.ts";
 import { actionInput, RECEIPT_LOOKUP_CONTRACT, supportedAction, type V6Capabilities } from "./contract.ts";
@@ -38,15 +20,10 @@ export interface SendRequest {
 
 export interface Executor {
   readonly mode: "live" | "sample";
-  /** Does something real carry this action out right now? */
   supports(def: ActionDef): boolean;
-  /** Carry out one send; call `update` with each new state of the receipt. */
   send(receipt: UiReceipt, request: SendRequest, update: (next: UiReceipt) => void): Promise<void>;
-  /** Can "Check what happened" ask right now, without sending again? */
   canCheck(): boolean;
-  /** Ask what happened to an unknown result without repeating it, or null when nothing can be asked. */
   check(receipt: UiReceipt, def: ActionDef, update: (next: UiReceipt) => void): Promise<void> | null;
-  /** Stop every follow-up ask. Called when the page goes away. */
   dispose?(): void;
 }
 
@@ -63,7 +40,6 @@ type Fetch = (input: string, init: { method: string; headers: Record<string, str
 
 export function liveExecutor(opts: {
   readonly capabilities: () => V6Capabilities | null;
-  /** The latest pulse revision, quoted when an announced action requires the rendered state. */
   readonly stateVersion?: () => string | null;
   readonly fetch?: Fetch;
   readonly now?: () => string;
@@ -83,7 +59,6 @@ export function liveExecutor(opts: {
     const type = receipt.gatewayType ?? def.gateway?.type ?? supportedAction(opts.capabilities(), def.kind)?.type ?? "";
     return `${lookup.href}?type=${encodeURIComponent(type)}&key=${encodeURIComponent(receipt.key)}`;
   };
-  /** Keep asking the runner's record about one saved receipt until it is confirmed. */
   const follow = (first: UiReceipt, def: ActionDef, update: (next: UiReceipt) => void): void => {
     if (!isOpen(first) || following.has(first.key)) return;
     following.add(first.key);

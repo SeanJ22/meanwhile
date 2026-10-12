@@ -145,19 +145,55 @@ test("a departure publishes through the registry door: the holder's rows leave w
 test("CP-08: a newer news phone cannot replace the official phone, and its losing value is kept", async () => {
   const base = await prior();
   const first = capture(page("Contact the Mayor & Council"));
-  const reading = (saved: WorkerPublicationCapture) => ({ id: `held:${saved.evidence.artifactId}`, capture: saved, linkingPage: null, complete: true, method: "fixture",
-    members: readHeldRoster(saved.evidence.text, saved.evidence.canonicalUrl)!.rows.map((member, i) => ({ recordId: `r${i}`, fields: { ...member } })) });
+  const reading = (saved: WorkerPublicationCapture, nativeIds?: readonly string[]) => ({ id: `held:${saved.evidence.artifactId}`, capture: saved, linkingPage: null, complete: true, method: "fixture",
+    members: readHeldRoster(saved.evidence.text, saved.evidence.canonicalUrl)!.rows.map((member, i) => ({ recordId: `r${i}`, fields: { ...member, ...(nativeIds ? { id: nativeIds[i] } : {}) } })) });
   const official = workerRosterPublication({ bodyId: BODY, reading: reading(first), prior: base, now: NOW });
   const held = { ...base, sourceReceipt: { ...base.sourceReceipt, sources: [...base.sourceReceipt.sources, ...official.sourceReceipt.sources] },
     payload: { ...base.payload, bodyRosters: official.payload.bodyRosters, registry: { ...base.payload.registry,
       bodies: base.payload.registry.bodies.map(body => official.payload.registry.bodies.find(row => row.id === body.id) ?? body) } } };
-  const news = { ...capture(page("Contact the Mayor & Council").replaceAll("5205551000", "5205552000").replaceAll("555-1000", "555-2000"), "https://news.example/council", NOW),
+  // The news directory carries the exact previously published person IDs in
+  // each row. A matching name or office alone cannot join different sources.
+  const ids = official.payload.bodyRosters[0].members.map(member => member.id);
+  const newsRows = [member(1, "McCaa II, Clea", "Mayor"), member(2, "Flowers, Carolyn", "Vice Mayor"), member(3, "Jackson, Faye", "Council Member")]
+    .map((row, i) => row.replace("<tr>", `<tr data-person-id="${ids[i]}">`)).join("");
+  const news = { ...capture(page("Contact the Mayor & Council", newsRows).replaceAll("5205551000", "5205552000").replaceAll("555-1000", "555-2000"), "https://news.example/council", NOW),
     sourcePolicy: { hosts: { "news.example": "NEWS" as const }, enabled: { OFFICIAL: true, CAMPAIGN: true, FILING: true, VOTER_GUIDE: true, FORUM: true, NEWS: true, REFERENCE: true, OTHER: true } } };
-  const result = workerRosterPublication({ bodyId: BODY, reading: reading(news), prior: held, now: NOW });
+  const result = workerRosterPublication({ bodyId: BODY, reading: reading(news, ids), prior: held, now: NOW });
   assert.ok(result.payload.bodyRosters[0].members.every(member => member.phone === "(520) 555-1000"));
   assert.equal(result.payload.bodyRosters[0].members[0].websiteUrl, official.payload.bodyRosters[0].members[0].websiteUrl);
   assert.equal(result.payload.bodyRosters[0].members[0].fieldSources?.websiteUrl.sourceUrl, URL_);
   assert.ok(result.excludedFacts?.some(fact => fact.code === "CONFLICT_SUPERSEDED" && (fact.record as { value: string }).value === "(520) 555-2000"));
+});
+
+test("a source-verified native ID preserves a person across parser row changes and never transfers a predecessor's contact to a successor", async () => {
+  const base = await prior();
+  const makeReading = (recordId: string, name: string, written: string, nativeId?: string) => {
+    const row = member(1, written, "Mayor").replace("<tr>", nativeId ? `<tr data-person-id="${nativeId}">` : "<tr>");
+    return { id: "held:native-person", capture: capture(page("Contact the Mayor & Council", row)), linkingPage: null, complete: true, method: "fixture",
+      members: [{ recordId, fields: { name, nameAsWritten: written, office: "Mayor", ...(nativeId ? { id: nativeId } : { phone: "(520) 555-1000" }) } }] };
+  };
+  const first = workerRosterPublication({ bodyId: BODY, prior: base, now: NOW, reading: makeReading("old-parser-row", "Clea McCaa II", "McCaa II, Clea") });
+  const held = { ...base, payload: { ...base.payload, bodyRosters: first.payload.bodyRosters } };
+  const original = first.payload.bodyRosters[0].members[0];
+  const linked = workerRosterPublication({ bodyId: BODY, prior: held, now: NOW,
+    reading: makeReading("reordered-parser-row", original.name, "McCaa II, Clea", original.id) });
+  const person = linked.payload.bodyRosters[0].members[0];
+  assert.equal(person.id, original.id, "the native source ID reaches the existing reader person");
+  assert.equal(person.phone, original.phone, "an optional omitted phone retains its prior proof");
+  assert.deepEqual(person.nativeIds?.[URL_], [original.id]);
+  assert.equal(person.retainedFieldSources?.phone?.collectedAt, first.payload.bodyRosters[0].collectedAt);
+
+  const nextPrior = { ...held, payload: { ...held.payload, bodyRosters: linked.payload.bodyRosters } };
+  const replay = workerRosterPublication({ bodyId: BODY, prior: nextPrior, now: NOW,
+    reading: makeReading("another-parser-row", original.name, "McCaa II, Clea", original.id) });
+  assert.equal(replay.payload.bodyRosters[0].members[0].id, original.id);
+  assert.deepEqual(replay.payload.bodyRosters[0].members[0].nativeIds, person.nativeIds);
+
+  const successor = workerRosterPublication({ bodyId: BODY, prior: nextPrior, now: NOW,
+    reading: makeReading("new-parser-row", "Ana Rivera", "Rivera, Ana", original.id) });
+  assert.notEqual(successor.payload.bodyRosters[0].members[0].id, original.id, "a reused source seat ID cannot rename the prior person");
+  assert.equal(successor.payload.bodyRosters[0].members[0].phone, null, "the predecessor's optional contact never crosses the identity boundary");
+  assert.equal(successor.payload.bodyRosters[0].members[0].nativeIds?.[URL_]?.includes(original.id) ?? false, false, "the successor cannot export the predecessor's ID as a person alias");
 });
 
 

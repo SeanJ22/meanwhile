@@ -14,63 +14,20 @@ import {
 import type { EvidenceGap, EvidenceRecord, EvidenceSubject } from "./evidence.ts";
 
 /**
- * **CAMPAIGN MONEY FOR A LOCAL BODY, FROM THE FILINGS WE ACTUALLY HOLD.**
- * (2026-08-30.)
+ * Campaign money for a local body, from the filings we hold (read through
+ * `lib/control-plane/campaign-finance/held-records.ts`).
  *
- * ## The defect this closes
+ * The chain is `BODY ← OFFICE ← COMMITTEE`, each leg someone's own record:
+ * committee → office is the filing officer's register row (`officeName`), read,
+ * never inferred; office → body is the hand-audited
+ * {@link REGISTER_OFFICE_TO_BODY_ID} crosswalk, never a string similarity. A
+ * committee the chain cannot link appears for no body, whatever its name says.
  *
- * The repository holds 900 contribution rows and 584 distribution rows read
- * from the Pima County filing officer's own portal, a slice of the county's
- * committee register, and the state's own reporting calendar — acquired
- * 2026-08-29 (`data/campaign-finance/`) and reachable through the sanctioned
- * readers in `lib/control-plane/campaign-finance/held-records.ts`. The
- * grounded Ask engine could reach none of it. A reader asking who funded a
- * Vail school board campaign was told campaign-finance records were not held,
- * over a store that holds the committee's register row and its itemized
- * transactions. "We don't have any campaign finance records" had become a
- * false statement about us.
- *
- * ## The linkage rule, and why it is a crosswalk rather than a match
- *
- * The chain is `BODY ← OFFICE ← COMMITTEE`, and each leg is somebody's own
- * record:
- *
- * 1. **COMMITTEE → OFFICE is the filing officer's.** The county register row
- *    carries `officeName` — the office the committee registered for, in the
- *    filing officer's own words ("School Governing Board - Vail"). We read it;
- *    we never infer it.
- * 2. **OFFICE → BODY is a hand-audited crosswalk, committed with its basis.**
- *    {@link REGISTER_OFFICE_TO_BODY_ID} maps the register's office designation
- *    to the canonical body id, one entry at a time, each entry carrying the
- *    evidence it was audited against. It is a data decision recorded in code —
- *    the same posture as `lib/registry/body-rosters.ts` — never a runtime
- *    string similarity.
- *
- * A committee that cannot be linked by that chain DOES NOT APPEAR for the
- * body. The live case is deliberate and worth naming: **"Citizens of Vail for
- * Education"** holds transactions in the store (a $5,000.00 contribution from
- * Concord General Contracting among them) and its register row's office
- * designation is "PAC" — a filer type, not an office. Nothing we hold links
- * that committee to the Vail governing board, its races or its members; the
- * word "Vail" in its name is a name, and this project's own bar refuses to
- * treat a name match as agreement. It therefore appears for NO body until a
- * record links it — its Statement of Organization is the record that would.
- * The same refusal keeps "ANDRES FOR SUPERVISOR"'s transaction rows away from
- * the county Board of Supervisors: those committees have no register row in
- * the held slice at all, so no held record states their office.
- *
- * ## What it never does
- *
- * No totals — a sum across filed rows would be our arithmetic wearing a
- * filing's provenance, and the store's own limits note that summing across
- * `ItemizedListType` values invents a figure no filer reported. No ranking of
- * donors or committees — rows are ordered by date, newest first, uniformly.
- * No support/opposition — an independent-expenditure report is the record
- * class that states outside spending for or against a candidate, none is
- * held, and every evidence set this module returns names that gap. And no
- * committee-to-person attachment: the register links a committee to an
- * OFFICE, so a question about a person on a covered body is answered with the
- * body's own finance evidence and a gap saying exactly that.
+ * Never: totals (a sum across filed rows is our arithmetic), ranking of donors
+ * or committees (rows are dated, newest first), support/opposition (no
+ * independent-expenditure report is held, and every evidence set names that
+ * gap), or committee-to-person attachment (the register links a committee to
+ * an office).
  */
 
 /* -------------------------------------------------------------------------- */
@@ -78,37 +35,22 @@ import type { EvidenceGap, EvidenceRecord, EvidenceSubject } from "./evidence.ts
 /* -------------------------------------------------------------------------- */
 
 /**
- * Wording that asks about CAMPAIGN MONEY. Conservative on the same reasoning
- * as `outcome-question.ts`: a missed finance question keeps the pre-existing
- * behaviour, while a false positive attaches finance records or a finance gap
- * to a question that was not about money — noise, not a false claim about a
- * government — so the phrases lean specific. Bare "funding" is deliberately
- * absent: "who is funding the school district" is a budget question.
+ * Wording that asks about campaign money. Conservative: a false positive
+ * attaches finance records to a non-money question. Bare "funding" is absent
+ * ("who is funding the school district" is a budget question).
  */
 const FINANCE_PHRASES: readonly RegExp[] = [
   /\bcampaign (?:finance|finances|money|cash|funds?|fundraising|spending|contributions?|donations?|donors?|expenditures?|war chest)\b/,
   /\bdonors?\b/,
   /\bdonations?\b/,
   /\bcontribut(?:ions?|ors?|ed)\b/,
-  /*
-   * The fund/finance verbs demand campaign context in the same breath: "who
-   * is funding the school district?" is a question about a budget, and
-   * answering it with committee filings would be the product not listening.
-   */
+  /* Fund/finance verbs need campaign context in the same breath. */
   /\bwho (?:funded|funds|is funding|has funded|financed|finances|is financing|bankrolled|bankrolls|is bankrolling|paid for|pays for|is paying for) (?:\w+ ){0,6}(?:campaign|race|candidac\w*|candidate|election|bid)/,
   /\bwho (?:gave|donated|is giving) money\b/,
   /\bwho (?:has |have )?donated\b/,
   /\bhow much (?:money )?(?:has|have|did|was|were) (?:\w+ ){0,8}(?:raised|spent)\b/,
   /\braised? money\b/,
-  /*
-   * **A COMPARISON IS A MONEY QUESTION TOO.** (2026-09-25, the Ask model
-   * comparison.) *"Has Cinde Warmington raised more money than Kelly Ayotte?"*
-   * matched none of these ("raised MORE money"), so no money record was
-   * retrieved and every writer said we hold no fundraising for either of them
-   * — over a New Hampshire file that holds both committees. The verb and a
-   * comparing word, in the same breath: "raised more", "spent the most",
-   * "outraised".
-   */
+  /* A comparison is a money question too: "raised more", "spent the most", "outraised". */
   /\b(?:raised?|raising|spent|spend|spending) (?:more|less|the most|the least|as much)\b/,
   /\bout ?(?:raised|raising|spent|spending)\b/,
   /\bcash on hand\b/,
@@ -127,26 +69,21 @@ export function financeQuestionAsked(question: string): boolean {
   return FINANCE_PHRASES.some((p) => p.test(normalized));
 }
 
-/** "Who is funding Andy Biggs?": a funding verb aimed at a NAMED PERSON. For a school district the same words are a budget question. */
+/** A funding verb aimed at a named person. For a school district the same words are a budget question. */
 const PERSON_FUNDING = new RegExp(`\\bwho (?:is |has |are )?(?:funding|funded|funds|financing|financed|finances|bankrolling|bankrolled|bankrolls|backing|backed|backs|paying for|paid for|pays for)\\b`);
 
 /**
- * Did the reader ask about campaign money, given what the question resolved to?
- * A funding verb needs campaign words after it to be a money question ("who is
- * funding the school district?" is a budget question) — unless the subject is a
- * person, whose funding is their campaign's (2026-09-29: "Who is funding Andy
- * Biggs?" retrieved no money and the writer said we hold none, over three filings).
+ * Did the reader ask about campaign money, given what the question resolved
+ * to? A funding verb needs campaign words after it, unless the subject is a
+ * person, whose funding is their campaign's.
  */
 export function financeQuestionAskedFor(question: string, subjectKind: string | null): boolean {
   return financeQuestionAsked(question) || (subjectKind === "PERSON" && PERSON_FUNDING.test(normalizeName(question)));
 }
 
 /**
- * Did the reader ask about a person's campaign money and nothing they did in
- * office? Then their votes, key votes, statements and recorded actions are not
- * what was asked: they only make the pack (and the writer's bill, and the
- * reader's wait) larger. A question that also asks how they voted, what they
- * said or what they signed keeps all of it.
+ * A question about a person's campaign money and nothing they did in office:
+ * votes, statements and actions are left out of the pack.
  */
 export function asksOnlyMoney(question: string, subjectKind: string | null = null): boolean {
   return financeQuestionAskedFor(question, subjectKind) &&
@@ -159,29 +96,11 @@ export function asksOnlyMoney(question: string, subjectKind: string | null = nul
 
 /**
  * The filing officer's office designation → the canonical body id.
- *
- * **Hand-audited, one entry at a time, and each entry states its basis.**
- * An entry asserts that the office the register names is the office whose
- * seat-holders sit as the named body — an identity question a human answered
- * against the records below, not a string a matcher scored.
- *
- * - `"School Governing Board - Vail"` is the Pima County filing officer's own
- *   designation on four candidate-committee register rows
- *   (`data/states/az/campaign-finance/az-pima-2026-held.json`,
- *   `committeeRegisterCountyPortal`, read from the county's own portal API
- *   2026-08-29). The body is the Vail Unified School District Governing Board:
- *   the registry's LIVE Vail body (`lib/registry/registry.json`), whose roster
- *   is read from the district's own governing-board page
- *   (`lib/registry/body-rosters.ts`), and Pima County has exactly one school
- *   district named Vail — the state's own committee register places every
- *   Vail committee in Vail, AZ 85641, inside the district. One of the four
- *   committees is "Ed Buster for VUSD Board", and Ed Buster sits on that board
- *   per the district's own roster — corroboration, though the OFFICE
- *   designation is the linkage, never the name.
- *
- * A register office with no entry here links to nothing, which fails closed:
- * the committee simply does not appear for any body, and the body's answer
- * carries the honest OURS gap instead.
+ * Hand-audited, one entry at a time: each asserts that the office the register
+ * names is the office whose seat-holders sit as the named body, checked against
+ * the county register, the registry's live body and its roster page. The
+ * office designation is the linkage, never a committee's name. An office with
+ * no entry links to nothing, and the body carries the OURS gap.
  */
 const REGISTER_OFFICE_TO_BODY_ID: Readonly<Record<string, string>> = {
   "School Governing Board - Vail":
@@ -198,7 +117,7 @@ export interface LocalFinanceEvidence {
   denominators: Record<string, number>;
 }
 
-/** `$5,000.00` — an amount as filed, spelled the way a reader reads money. */
+/** An amount as filed, spelled as money. */
 function usd(amount: number): string {
   return `$${amount.toLocaleString("en-US", {
     minimumFractionDigits: 2,
@@ -208,8 +127,7 @@ function usd(amount: number): string {
 
 /**
  * The filed date, spelled out where it parses, the filer's own string where it
- * does not. Years 0006 and 2926 exist in this store and are preserved as
- * filed — a repaired date would be our claim rather than the filer's record.
+ * does not; implausible years are preserved as filed, never repaired.
  */
 function filedDate(raw: string | null): string | null {
   if (!raw) return null;
@@ -274,12 +192,8 @@ function transactionLines(committeeNameAsFiled: string, filedWith: string): Tran
 /* -------------------------------------------------------------------------- */
 
 /**
- * Everything the pack should carry about campaign money for one BODY.
- *
- * Every path produces something: a body with linked committees gets their
- * register rows and their filed money rows; a body with none gets the honest
- * OURS gap — never silence, which reads as "no committee exists", a claim
- * about a government made out of our own collection state.
+ * Everything the pack carries about campaign money for one body: linked
+ * committees' register and money rows, or the OURS gap, never silence.
  */
 function bodyFinanceEvidence(bodyId: string, bodyName: string): LocalFinanceEvidence {
   const records: EvidenceRecord[] = [];
@@ -297,14 +211,7 @@ function bodyFinanceEvidence(bodyId: string, bodyName: string): LocalFinanceEvid
   denominators.financeCommitteesLinkedToThisBody = linked.length;
 
   if (linked.length === 0) {
-    /*
-     * THE HONEST EMPTY. Our register slice is 5 of the 138 filers the county's
-     * own portal lists, and the committees whose transaction rows we DO hold
-     * without a register row (an "ANDRES FOR SUPERVISOR", say) state no office
-     * in any held record — so nothing we hold links any committee to this
-     * body. That is a fact about our records. It is never "no committee
-     * exists" and never "no money was raised", and the sentence says so.
-     */
+    /* Nothing we hold links a committee to this body: a fact about our records, never "no committee exists". */
     gaps.push({
       whose: "OURS",
       statement:
@@ -360,9 +267,7 @@ function bodyFinanceEvidence(bodyId: string, bodyName: string): LocalFinanceEvid
     lines.push(...forCommittee);
   }
 
-  /* Date is the one neutral order, applied uniformly to both directions of
-     money and every committee alike. Never by amount — an amount-ordered list
-     is a leaderboard. Undated rows sort last rather than being dropped. */
+  /* Ordered by date only, uniformly; never by amount. Undated rows sort last. */
   lines.sort((a, b) => {
     if (a.isoDate === b.isoDate) return a.id < b.id ? -1 : 1;
     if (a.isoDate === null) return 1;
@@ -390,18 +295,13 @@ function bodyFinanceEvidence(bodyId: string, bodyName: string): LocalFinanceEvid
   denominators.financeOtherMoneyRowsHeldForThisBody = otherMoneyRows;
   denominators.financeTransactionRecordsShown = lines.length;
   denominators.financeCommitteesWithMoneyRowsHeld = committeesWithRows;
-  /* The document-class denominator: candidate/committee campaign-finance
-     reports are the ONLY class these rows come from, and the class that
-     states outside spending is affirmatively not acquired. */
+  /* Only candidate/committee reports are held; the class stating outside spending is not. */
   denominators.independentExpenditureReportsHeld = 0;
 
   if (committeesWithoutRows.length > 0) {
     /*
-     * A committee the register links and the transaction search returns
-     * nothing for. The county's own search partitions cleanly (the store's
-     * reconciliation block), so "no rows from this route" is real — but the
-     * committee's filed reports are indexed and their DOCUMENTS are unread
-     * behind the 401 route, so what they raised or spent is OUR open question,
+     * A linked committee with no transaction rows from this route: its filed
+     * documents are unread, so what it raised or spent is our open question,
      * never "they raised nothing".
      */
     const names = committeesWithoutRows.map((n) => `"${n}"`).join(", ");
@@ -416,9 +316,7 @@ function bodyFinanceEvidence(bodyId: string, bodyName: string): LocalFinanceEvid
   }
 
   if (otherMoneyRows > 0) {
-    /* Loans, interest, refunds, reimbursements and the rest: neither
-       contributions nor campaign spending, never folded into either, and
-       never silently dropped. */
+    /* Loans, interest, refunds and the rest: never folded into contributions or spending, never dropped. */
     gaps.push({
       whose: "OURS",
       statement:
@@ -429,13 +327,9 @@ function bodyFinanceEvidence(bodyId: string, bodyName: string): LocalFinanceEvid
   }
 
   /*
-   * THE DOCUMENT-CLASS GAP, ALWAYS. Contribution ≠ expenditure ≠ independent
-   * expenditure. Every row above is off a candidate/committee campaign-finance
-   * report; the record class that states outside spending for or against a
-   * candidate is a different document type, none is acquired, and an answer
-   * that showed filed money without saying so would read as the whole money
-   * picture. Its absence is OURS — the state's reporting surface publishes IE
-   * reports and we have not acquired them — never a finding about anyone.
+   * Always: every row is off a candidate/committee report; independent
+   * expenditures are a different document type we have not acquired. A gap of
+   * ours, never a finding about anyone.
    */
   gaps.push({
     whose: "OURS",
@@ -452,22 +346,15 @@ function bodyFinanceEvidence(bodyId: string, bodyName: string): LocalFinanceEvid
 
 /**
  * Campaign-finance evidence for a resolved Ask subject, or null where this
- * module has nothing honest to add.
+ * module has nothing to add.
  *
- * - **BODY** — always answers: linked committees' records, or the named gap.
- * - **PERSON** — only a person whose canonical official ID resolves to
- *   exactly ONE body the committed crosswalk covers; they get that
- *   body's evidence with the no-committee-attachment gap stated first. Anyone
- *   else — a statewide executive, a federal candidate — returns null: their
- *   finance records live in other stores (the FEC snapshot renders on the
- *   ballot surface), and "we have not recorded campaign finance for X" would
- *   be a false statement about us for a candidate whose FEC totals we hold.
- * - **MEASURE** — the linkage gap: no held source states which committees
- *   support or oppose a measure, and a committee's name is never evidence of
- *   its position.
- * - **CONTEST / OFFICE** — null. A contest's money is its candidacies', and
- *   no held record links a committee to a candidacy (see held-records.ts on
- *   why `authorizedByCandidacyId` stays null).
+ * - **BODY**: linked committees' records, or the named gap.
+ * - **PERSON**: only one whose canonical official ID resolves to exactly one
+ *   body the crosswalk covers, with the no-committee-attachment gap first.
+ *   Others return null; their records live in other stores (FEC).
+ * - **MEASURE**: the linkage gap; a committee's name is never its position.
+ * - **CONTEST / OFFICE**: null; no held record links a committee to a
+ *   candidacy.
  */
 export function localFinanceEvidenceFor(subject: EvidenceSubject, canonicalOfficialIds: readonly string[] = [subject.id]): LocalFinanceEvidence | null {
   if (subject.kind === "BODY") {
@@ -503,9 +390,7 @@ export function localFinanceEvidenceFor(subject: EvidenceSubject, canonicalOffic
         }
       }
     }
-    /* Exactly one, or nothing — the same fail-closed identity rule as
-       lib/ask/votes.ts. Zero seats is a person this module holds nothing
-       for; two would be an ambiguity nothing here can resolve. */
+    /* Exactly one seat, or nothing. */
     if (seats.size !== 1) return null;
 
     const seat = [...seats.values()][0];
@@ -523,65 +408,18 @@ export function localFinanceEvidenceFor(subject: EvidenceSubject, canonicalOffic
   return null;
 }
 
-/* ═════════════ OWN-Q5: EVERY REGIME, NAMED, ON EVERY MONEY ANSWER ════════ */
-
 /**
- * **A CAMPAIGN-FINANCE ANSWER SAYS WHICH REGIMES IT LOOKED IN.**
- * (The owner's amendment on Q5, worked 2026-08-31.)
- *
- * The owner's words: *not just FEC filings, but state and local finances must
- * be checked* — and its operative half, *an FEC absence never stands in for
- * "no records exist"*.
- *
- * ## What was actually wrong, measured rather than assumed
- *
- * The county store is reachable and has been since 2026-08-30. What is missing
- * is the DENOMINATOR SENTENCE. `localFinanceEvidenceFor` returns **null** for
- * a statewide executive, a federal candidate, a contest and an office, and a
- * null pushes nothing — so the answer fell through to whatever generic
- * finance-gap sentence the pack produced, and one regime's silence became a
- * claim about all money everywhere.
- *
- * That is the same class as `NO_SOURCE_FOUND → COMPLETE`: one route's failure
- * standing in for the record universe. The acquisition doctrine names it —
- * **ONE ROUTE SUCCESS != SOURCE UNIVERSE COMPLETE**, and its mirror is that one
- * route's absence is not the universe's.
- *
- * ## So every money answer carries every regime, always
- *
- * Three, and each says what it is and what we hold:
- *
- * ```
- *   FEDERAL   the FEC, through the funding snapshot, which renders on the
- *             ballot surface rather than through this pipeline
- *   STATE     Arizona's own filing officer, whose reporting calendar we hold
- *             and whose itemized filings we do not
- *   COUNTY    the Pima County filing officer's portal — 900 contribution and
- *             584 distribution rows, itemized, and the store this module reads
- * ```
- *
- * These are gaps in the `EvidenceGap` sense — *statements about scope*, every
- * one labelled `OURS`, because each says what THIS PRODUCT has and has not
- * searched. None of them is a claim about whether a government holds a filing:
- * that would be an absence asserted, and the registry's own note says it
- * plainly — *absence from this file is a fact about this file.*
- *
- * **The regime list is data, not prose.** It is derived from
- * `data/campaign-finance/filing-regimes.json`, which records that this project
- * knows two jurisdictions out of fifty states plus tens of thousands of local
- * filing jurisdictions. The sentence says that, so a reader is never told the
- * search was wider than it was.
+ * Every money answer names every filing regime it looked in (federal via the
+ * FEC snapshot, the state filing officer, the county portal), each an OURS
+ * statement of scope, so one regime's absence never stands for all money.
+ * The regime list is derived from `data/campaign-finance/filing-regimes.json`.
  */
 export interface FinanceRegimeNote {
   readonly regime: "FEDERAL" | "STATE" | "COUNTY";
   readonly gap: EvidenceGap;
 }
 
-/**
- * The regime statements for one subject. Never empty when a money question was
- * asked, which is the whole point: silence is what let one regime answer for
- * all of them.
- */
+/** The regime statements for one subject; never empty when a money question was asked. */
 export function financeRegimeNotesFor(subject: EvidenceSubject, retrieved: { state: boolean; federal: boolean; county?: boolean } = { state: false, federal: false }): FinanceRegimeNote[] {
   const about = subject.name;
   const notes: FinanceRegimeNote[] = [];
@@ -622,12 +460,9 @@ export function financeRegimeNotesFor(subject: EvidenceSubject, retrieved: { sta
 }
 
 /**
- * The one sentence that must never be said, said correctly instead.
- *
- * A reader asking about money for a subject this module returns null for was
- * previously answered from whatever generic gap the pack produced. This is
- * what they get instead: the subject class, why this pipeline holds nothing
- * for it, and — for a federal candidate — where the record actually is.
+ * The scope gap for a money question about a subject this module returns null
+ * for: the subject class, why this pipeline holds nothing, and for a federal
+ * candidate where the record is.
  */
 export function financeScopeGapFor(subject: EvidenceSubject): EvidenceGap {
   if (subject.kind === "CONTEST" || subject.kind === "OFFICE") {

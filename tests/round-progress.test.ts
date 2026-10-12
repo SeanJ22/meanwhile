@@ -12,8 +12,7 @@ const progressModule = JSON.stringify(new URL("../lib/control-plane/scheduler/ro
 const stallModule = JSON.stringify(new URL("../lib/control-plane/scheduler/cycle-stall.ts", import.meta.url).href);
 
 /*
- * The returned live failure (2026-10-05): a round whose worker wave finished task
- * after task but printed nothing until the wave ended was ended as
+ * A worker wave that finishes task after task but prints nothing until it ends must not be ended as
  * RESEARCH_CHILD_NO_PROGRESS. Here the wave lasts three quiet allowances.
  */
 const waveChild = (report: boolean) => `

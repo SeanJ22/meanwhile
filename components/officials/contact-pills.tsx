@@ -22,35 +22,9 @@ import {
 } from "./channel-marks";
 
 /**
- * **The contact pill row** — items 2 and 8, 2026-08-16.
- *
- * ## What it replaces, and why
- *
- * The `REACH THEM` label/value ledger. That ledger was a `.popup-row` flex
- * with a `white-space: nowrap` key column, and inside a 300px popup a long
- * key ate the whole row: the value collapsed to a few pixels and
- * `word-break: break-word` broke it one character per line. **That is the
- * production defect reported — Pima's supervisors reading vertically.** A row that puts a label and a value in competition for a
- * fixed width will always eventually lose, and a pill carries its own label
- * so there is nothing to compete with.
- *
- * ## The rules, all four load-bearing
- *
- * - **Absent channels are absent pills.** Never a placeholder, never a greyed
- *   "no website", never padding to make a row look full. A thin card must
- *   read as a thin card, not as a broken one — and equal effort means the
- *   HUNT is equal, not that the ROW is padded to equal length.
- * - **They wrap, they never shrink.** Below a tap target a pill is a defect,
- *   so the row wraps at 390px rather than squeezing. `.contact-pill` has no
- *   flex-shrink and a 44px minimum.
- * - **Every account says whose it is.** The social pills map over the
- *   platform list (a setting) and the person's held accounts. The
- *   congress-legislators directory supplies the office's own accounts; a
- *   campaign or personal account, when one is held, says so on its pill.
- * - **The campaign site is labeled as one.** Always; it is never the primary
- *   link, and a social page serving as a campaign site says which platform it
- *   is (the Facebook-as-campaign-site rule) rather than being dressed as a
- *   website.
+ * The contact pill row. Absent channels are absent pills, never placeholders.
+ * Pills wrap and never shrink below the 44px tap target. Every account says
+ * whose it is, and the campaign site is always labelled as one.
  */
 
 /** What a pill says when the account is not the office's own. */
@@ -79,13 +53,7 @@ function Pill({ href, label, mark, external = true, title }: PillProps) {
   );
 }
 
-/**
- * The same pill geometry, pressing instead of navigating.
- *
- * Only the multi-number phone pill uses it: everything else on this row IS a
- * destination, and a button that looks like a link but goes nowhere is the
- * friction the pill row was built to remove.
- */
+/** The pill geometry as a button; only the multi-number phone pill uses it. */
 function PillButton({
   label,
   mark,
@@ -114,20 +82,11 @@ export function ContactPills({
   holder,
   /** The small popup scales the row down; the large card runs it full size. */
   compact = false,
-  /**
-   * `"column"` stacks the pills one per line (item 4, 2026-08-16) — the
-   * small popup's form. A wrapped row left ragged
-   * half-lines across the card; a column reads as a list of ways to reach one
-   * person.
-   */
+  /** `"column"` stacks the pills one per line (the small popup's form). */
   layout = "row",
   /**
-   * `"primary"` is the small popup's set: phone, email, contact form,
-   * official page, campaign site, and X. **The rest of the social row —
-   * every other platform in the list — is large-card only**, because
-   * a glance card answers "how do I reach them", and five
-   * more accounts is the scatter it was sent back for. Nothing is padded
-   * either way; an absent channel is still an absent pill.
+   * `"primary"`: phone, email, contact form, official page, campaign site and
+   * X. The rest of the social row is large-card only.
    */
   scope = "all",
 }: {
@@ -140,67 +99,21 @@ export function ContactPills({
   const platforms = useSocialPlatforms();
   const pills: React.ReactNode[] = [];
   const full = scope === "all";
-  /**
-   * R39: which numbers the modal is showing, or null for closed. State rather
-   * than a route — M52, and the same reason `EntityModal` pushes no history
-   * entry: the Next router remounts this island and the modal would die the
-   * tick it opened.
-   */
+  /** Which numbers the modal is showing. State, not a route: a history push remounts this island. */
   const [phoneModalOpen, setPhoneModalOpen] = useState(false);
 
-  /*
-   * The district offices' own numbers (item 8).
-   *
-   * Fetched through the shared hook, so this and the offices section make one
-   * request between them. A non-federal holder resolves to an empty
-   * directory and this whole branch simply does not fire — bodies and
-   * non-federal officials follow the same rule with whatever numbers are
-   * held, which for them is the one on the holder.
-   */
-  const { directory } = useMemberDirectory(holder.id);
+  /* District office numbers via the shared hook; non-federal holders resolve to an empty directory. */
+  const { directory } = useMemberDirectory(holder.id,holder.state);
 
   /*
-   * **ONE PHONE PILL** — R39, 2026-08-17, from production feedback.
-   *
-   * ## What was here, and what it did
-   *
-   * g4 item 8 put BOTH numbers on the row, labelled, district first — right
-   * about the data (a reader wanting something local was being handed the DC
-   * line) and wrong about the shape. One pill per number means a member with
-   * seven offices gets seven pills, and Shaheen's card is what that looks
-   * like: a wall of numbers where a contact row should be. The registry holds
-   * 531 officeholders with more than one recorded number, so this was never
-   * one card's problem.
-   *
-   * ## What is here now
-   *
-   * The numbers are COLLECTED first and rendered second, and the count
-   * decides the shape:
-   *
-   * - **More than one** → one pill reading `Phone`, opening a modal that
-   *   lists them with their office labels. The choice is still the reader's;
-   *   it just stopped costing them the whole card to make it.
-   * - **Exactly one** → the pill IS the `tel:` link and carries the number
-   *   itself. No modal: a dialog with one row is friction with nothing to
-   *   choose, and the number on the face is strictly more useful than the
-   *   word "Phone".
-   *
-   * District first, because it is the one that answers. Labels come from the
-   * recorded data — the district office's own published CITY, and Washington
-   * for the number the member's term record holds — never from an area code.
-   * The full list with addresses stays in Offices-near-you rather than being
-   * duplicated here.
-   *
-   * The order is otherwise the reader's likely need rather than the source's
-   * field order: the phone rings a human, the form reaches the office, the
-   * pages explain it, the accounts are where the office talks.
+   * Numbers are collected first: more than one renders one "Phone" pill
+   * opening a chooser; exactly one is the `tel:` link itself. District first.
+   * Labels come from recorded data, never an area code.
    */
   const phoneChoices = phoneChoicesFor({
     phone: holder.phone,
     districtOffices: directory?.districtOffices,
-    // Named only in contrast to a district office, and only where the record
-    // supports it: a federal member's term record IS the Washington office's
-    // line. Every other tier publishes one number and no office structure.
+    // A federal member's term record is the Washington office's line.
     ownLabel: isFederalMember(holder.id) ? "Washington office" : holder.contactScope === "SHARED_OFFICE" ? "Shared office" : "Office",
   });
 
@@ -219,12 +132,7 @@ export function ContactPills({
       <Pill
         key="phone"
         href={telHref(phoneChoices[0].phone)}
-        // Taps to dial on a phone. The visible number stays exactly as the
-        // source published it, formatting and all — a reformatted number is a
-        // number we typed rather than one they published.
-        //
-        // No office label: the label is there to answer "which of these", and
-        // with one number there is no question to answer.
+        // The number stays exactly as the source published it.
         label={holder.contactScope === "SHARED_OFFICE" ? `Shared office: ${phoneChoices[0].phone}` : phoneChoices[0].phone}
         mark={<PhoneMark />}
         external={false}
@@ -232,15 +140,7 @@ export function ContactPills({
     );
   }
 
-  /*
-   * R39 asked for the same treatment if any official carries multiple EMAILS.
-   * None does, and none can: `SeatHolder.email` is one nullable string, every
-   * roster fills it from one published address, and a census of all 1,157
-   * officeholder records on 2026-08-17 found ZERO whose email field holds a
-   * list. So there is nothing here to collapse, and nothing changed — stated
-   * rather than silently skipped, because "we looked and there were none" and
-   * "we did not look" are different claims.
-   */
+  /* `SeatHolder.email` is a single published address. */
   if (holder.email) {
     pills.push(
       <Pill
@@ -282,12 +182,7 @@ export function ContactPills({
       <Pill
         key="campaign"
         href={holder.campaignUrl}
-        /*
-         * Labelled as what it actually is, always. The Facebook-as-campaign-site
-         * rule and RULING 122's party-hosted page both name their own label,
-         * because a page on somebody ELSE'S site presented as "Campaign site"
-         * is a false claim about whose site it is.
-         */
+        /* Labelled as what it actually is: a page on someone else's site is never "Campaign site". */
         label={campaignLinkLabel(holder.campaignUrl)}
         title={hostOf(holder.campaignUrl)}
         mark={
@@ -336,9 +231,7 @@ export function ContactPills({
       >
         {pills}
       </div>
-      {/* Over the card, not instead of it. Closing returns the card exactly as
-          it was — the overlay carries `data-dismiss-exempt` so the press that
-          closes this never reads as an outside press on the battlecard. */}
+      {/* The overlay carries `data-dismiss-exempt` so closing it is not an outside press on the card. */}
       {phoneModalOpen && (
         <PhoneChoiceModal
           name={holder.name}
@@ -357,4 +250,3 @@ function hostOf(url: string): string {
     return url;
   }
 }
-

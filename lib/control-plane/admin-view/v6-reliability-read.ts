@@ -2,17 +2,7 @@ import type { Sql } from "../repository/pg-store.ts";
 import { boundedQuery } from "../repository/request-bounds.ts";
 import { reduceSourceReliability, type SourceReliability, type SourceReliabilityRow } from "../scheduler/scout-reliability.ts";
 
-/**
- * **admin-v6/reliability@1 — HOW RELIABLE EACH SOURCE HAS BEEN, FROM THE WORKERS' OWN RESULTS.**
- *
- * The same reducer the dispatcher uses (`reduceSourceReliability`, S8), so Admin
- * and the runner can never disagree about a source's backoff. It is fed from one
- * bounded statement over the completed plain-code reads that made a request,
- * projecting only the fields the reducer takes. Nothing loads every attempt. The blocker codes ride along so the reducer can
- * set aside an old refusal recorded for robots.txt alone: that is a wall, not an outage.
- * A source failing outside our control is shown as source reliability, not as
- * something to investigate each time (rulings §6).
- */
+/** The dispatcher's own reducer, so Admin and the runner never disagree about a source's backoff. */
 export const ADMIN_V6_RELIABILITY_CONTRACT = "admin-v6/reliability@1" as const;
 export const RELIABILITY_LIMIT = 30;
 

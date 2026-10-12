@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * River: the one path code takes from the build streams to `main` (RL-03, RL-05).
+ * River: the one path code takes from the build streams to `main`.
  *
  * Builders push `stream/<lane>` and mark finished work with a `READY: <step ids>`
  * commit. River folds those exact commits into `river-next`, numbers any
@@ -71,9 +71,8 @@ const OBSERVE_WORKFLOW = "post-deploy-integrity.yml";
 const STEP_ID = /\b[A-Z]{2,4}-\d{1,3}\b/g;
 
 /**
- * The adapter implementation path `scripts/merge-engineer-adapters.mjs` merges
- * on its own. An adapter stream that reaches outside it is flagged in `scan` so
- * River reviews it like any other lane instead of trusting the adapter route.
+ * The adapter implementation path. An adapter stream that reaches outside it is
+ * flagged in `scan` so River reviews it like any other lane.
  */
 export const adapterPath = (path) => path.startsWith("lib/sources/platform-adapters/")
   && /\.[cm]?[jt]sx?$/.test(path) && !/(?:^|\/)(?:evidence|fixtures)(?:\/|$)/.test(path);
@@ -712,7 +711,8 @@ async function test(flags) {
   }
   // A stale .next from an earlier build feeds tsc route types that may no longer exist.
   rmSync(join(ROOT, ".next"), { recursive: true, force: true });
-  spawnSync(process.execPath, ["--experimental-strip-types", "scripts/project-place-references.mts"], { cwd: ROOT, env, stdio: "ignore" });
+  const projection = spawnSync(process.execPath, ["--experimental-strip-types", "scripts/project-place-references.mts"], { cwd: ROOT, env, encoding: "utf8" });
+  if (projection.status !== 0) throw new Refusal(`place-reference generation failed: ${projection.error?.message ?? projection.stderr ?? "no diagnostic"}`, 2);
   const child = spawn(command, args, { cwd: ROOT, env, stdio: ["inherit", "pipe", "pipe"], shell: process.platform === "win32" });
   const tail = [];
   const keep = (sink) => (chunk) => {
@@ -829,11 +829,10 @@ function promote() {
 /* -------------------------------------------------------------------------- */
 
 /**
- * Send a stream's failed check back to the lane that wrote it (RL-06): print
- * the record, keep it in `.scratch/river/`, and write `returns/<lane>.md` on
- * `board/river`. The record carries the fix-list entry ("Add this to the
- * queue" shape, `lib/control-plane/river-returns.ts`); writing it into the
- * control plane's fix list is BR-03's, since River has no database here.
+ * Send a stream's failed check back to the lane that wrote it: print the
+ * record, keep it in `.scratch/river/`, and write `returns/<lane>.md` on
+ * `board/river`. The record carries the fix-list entry shape from
+ * `lib/control-plane/river-returns.ts`.
  */
 async function recordReturn({ lane, check, output, readySha = null, steps = [], riverSha = null }) {
   const { riverReturn, riverReturnMarkdown } = await import("../lib/control-plane/river-returns.ts");

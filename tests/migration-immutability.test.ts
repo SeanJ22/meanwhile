@@ -1,36 +1,8 @@
 /**
- * **AN ESTABLISHED MIGRATION IS IMMUTABLE — AND THE GUARD IS SHOWN CATCHING IT.**
- * (2026-08-28, the audit of the shipping gate written the same day.)
- *
- * ## The hole, and what was searched for before anything was built
- *
- * `migrationTagsIn` recognises that a migration file CHANGED and cannot tell
- * which way, so a rewrite of an already-applied `0021_mixed_red_ghost.sql` and
- * a brand-new `0023_...sql` reach the shipping gate as the same string.
- *
- * **There was no existing mechanism to reuse.** Drizzle's `meta/_journal.json`
- * is version 7 here and its entries carry `idx`, `version`, `when`, `tag` and
- * `breakpoints` — no hash and no checksum — and that absence is ASSERTED below
- * rather than described, so a future Drizzle format that adds one is noticed.
- * The only content anchor anywhere is
- * `drizzle.__drizzle_migrations.hash`, which `scripts/apply-migrations.mts`
- * writes on every apply and which `lib/db/applied-migrations.ts` has never read
- * back; `checksumViolations` is that comparison, tested here against fixtures.
- *
- * ## THE FOUR REGRESSIONS RUN THE REAL GATE, ON REAL GIT OUTPUT
- *
- * Not the evaluator with a hand-written change list — `scripts/db-shipping-gate.mts`
- * itself, spawned as a process, in a throwaway git repository holding a
- * miniature `lib/db/migrations/` tree. The four scenarios are the four things a
- * person actually does to a migration: REWRITE it, DELETE it, RENAME it, and
- * APPEND a new one. Three must exit 1 naming the file; the fourth must pass,
- * because a guard that refuses ordinary work gets removed.
- *
- * The child's environment has `WTP_PRODUCTION_DATABASE_URL_READONLY` REMOVED.
- * That is not tidiness: it makes the exit codes deterministic on a machine that
- * has the credential, and it guarantees the suite opens no connection —
- * `tests/fixtures/` exists because no test in this repository makes a live
- * call.
+ * An established migration is immutable. `migrationTagsIn` cannot tell which way a migration file changed, so the
+ * guard is run here as the real gate (`scripts/db-shipping-gate.mts`), spawned in a throwaway git repository: a
+ * rewrite, a delete and a rename must exit 1 naming the file, and an append must pass. The child's environment has
+ * `WTP_PRODUCTION_DATABASE_URL_READONLY` removed, so exit codes are deterministic and no connection is opened.
  */
 
 import assert from "node:assert/strict";
@@ -58,17 +30,8 @@ const ROOT = process.cwd();
 const GATE = join(ROOT, "scripts", "db-shipping-gate.mts");
 const MIGRATIONS = join(ROOT, "lib", "db", "migrations");
 
-/* ========================================================================== */
-/* 0. THE ABSENCE THAT MADE THIS NECESSARY                                    */
-/* ========================================================================== */
-
 test("Drizzle's committed journal carries NO hash — the absence is asserted, not assumed", () => {
-  /*
-   * RULING 110: an instrument that cannot find what it was written for reports
-   * green about nothing. If Drizzle ever starts writing a digest into the
-   * journal, THAT is the mechanism to reuse and this module becomes a
-   * duplicate — so the absence is pinned rather than remembered.
-   */
+  // If Drizzle ever writes a digest into the journal, that is the mechanism to reuse, so the absence is pinned.
   const raw = JSON.parse(readFileSync(join(MIGRATIONS, "meta", "_journal.json"), "utf8")) as {
     version: string;
     entries: Record<string, unknown>[];
@@ -90,28 +53,8 @@ test("Drizzle's committed journal carries NO hash — the absence is asserted, n
 });
 
 test("the applier's sha256 is read back — the content anchor, wired end to end", () => {
-  /*
-   * **THIS TEST USED TO PIN THE GAP. IT NOW PINS THE JOIN.**
-   *
-   * The gap was one column in one SELECT. `apply-migrations.mts` computed
-   * sha256 of each file's raw bytes and wrote it to
-   * `drizzle.__drizzle_migrations.hash`; `applied-migrations.ts` asked for
-   * `created_at` alone. So the strongest evidence in the system — the only
-   * record of what production ACTUALLY executed — was written on every apply
-   * and read by nothing, and the git guard was the whole of the immutability
-   * check.
-   *
-   * That mattered because the two guards fail in opposite directions. The git
-   * guard sees every rewrite from now on and cannot see one that landed
-   * BEFORE it existed. The checksum sees a disagreement between committed SQL
-   * and executed SQL whenever it happened, and cannot see a rewrite of a
-   * migration production never applied. Neither is redundant with the other,
-   * which is why closing this was worth a production read-path change.
-   *
-   * The column was never in doubt: the applier CREATEs the table with
-   * `hash text NOT NULL` and has itself run `SELECT hash, created_at` against
-   * production since the 2026-08-28 drift incident.
-   */
+  // The applier writes each file's sha256; the reader must select it back so `checksumViolations` can compare
+  // committed SQL with the SQL production executed.
   const applier = readFileSync(join(ROOT, "scripts", "apply-migrations.mts"), "utf8");
   assert.match(
     applier,
@@ -156,10 +99,6 @@ test("the applier's sha256 is read back — the content anchor, wired end to end
     "a read carrying appliedHashes must reach checksumViolations intact",
   );
 });
-
-/* ========================================================================== */
-/* 1. THE FOUR REGRESSIONS, THROUGH THE REAL GATE, ON REAL GIT OUTPUT         */
-/* ========================================================================== */
 
 function git(cwd: string, args: string[]): string {
   const r = spawnSync("git", args, { cwd, encoding: "utf8" });
@@ -218,42 +157,15 @@ function writeJournal(dir: string, entries: readonly JournalEntry[]): void {
 }
 
 /**
- * Run the REAL gate in the scratch repository.
- *
- * `--base=` is how the merge base is stated when there is no GitHub event and
- * no `origin/main`; it is the same flag a session uses by hand. The credential
- * is stripped from the child so the exit codes are the guard's own and no
- * connection is possible.
- */
-/**
- * Run the REAL gate against a scratch repository, in an environment that
- * carries nothing this test did not put there.
- *
- * **The credential is not the only inherited input, and that cost a red CI
- * run.** The first version of this helper deleted
- * `WTP_PRODUCTION_DATABASE_URL_READONLY` and stopped. It passed on a laptop and
- * failed on GitHub Actions, and the failure was the helper's rather than the
- * gate's: on CI the child inherited `GITHUB_EVENT_PATH` and `GITHUB_EVENT_NAME`,
- * so the gate resolved its changed-path base from the REAL pull request — a
- * commit that does not exist in the throwaway repo it was pointed at. Unable to
- * diff it, the gate did the correct fail-safe thing and asked production; with
- * no credential that is `COULD NOT TELL`, exit 2, and the append test expects 0.
- *
- * The immutability verdict was right the whole time — the log says
- * `migration immutability HOLDS`. What was wrong was a test whose result
- * depended on an input it had not controlled, which is the defect RULING 193
- * names and which this file exists to guard against. So the child is given the
- * ambient environment MINUS every variable the gate reads: the fixture decides
- * what the gate sees, on every machine.
+ * Run the real gate in the scratch repository, in an environment carrying only what this test put there: the
+ * credential and every variable the gate reads, CI event context included, are removed.
  */
 function runGate(dir: string, base: string): { status: number; out: string } {
   const env = { ...process.env };
   delete env.WTP_PRODUCTION_DATABASE_URL_READONLY;
   delete env.WTP_SCHEMA_GATE_SMOKE;
   delete env.WTP_SCHEMA_GATE_MOMENT;
-  // The CI event context. `scripts/db-shipping-gate.mts` reads these two to
-  // find its base; the rest go with them so no later reader can reintroduce
-  // the same coupling by reaching for a different one.
+  // The CI event context the gate reads to find its base.
   for (const key of Object.keys(env)) if (key.startsWith("GITHUB_")) delete env[key];
   const r = spawnSync(
     process.execPath,
@@ -266,8 +178,7 @@ function runGate(dir: string, base: string): { status: number; out: string } {
 test("REGRESSION · a REWRITTEN established migration is REFUSED by the real gate", () => {
   const { dir, base } = scratch();
   try {
-    // The exact move: correcting a shipped migration in place. It looks tidy,
-    // it reviews cleanly, and the applied-join never notices.
+    // Correcting a shipped migration in place.
     writeFileSync(
       join(dir, "lib", "db", "migrations", "0001_beta.sql"),
       `CREATE TABLE "0001_beta" ("id" uuid PRIMARY KEY NOT NULL, "corrected" text);\n`,
@@ -291,8 +202,7 @@ test("REGRESSION · a REWRITTEN established migration is REFUSED by the real gat
 test("REGRESSION · a DELETED established migration is REFUSED by the real gate", () => {
   const { dir, base } = scratch();
   try {
-    // Deleting the file and its journal row — "undoing" a migration. It does
-    // not unapply anything; production still ran it.
+    // Deleting the file and its journal row does not unapply anything.
     git(dir, ["rm", "--quiet", "lib/db/migrations/0001_beta.sql"]);
     git(dir, ["rm", "--quiet", "lib/db/migrations/meta/0001_snapshot.json"]);
     writeJournal(dir, [{ idx: 0, when: 1_780_000_000_000, tag: "0000_alpha" }]);
@@ -313,12 +223,7 @@ test("REGRESSION · a DELETED established migration is REFUSED by the real gate"
 test("REGRESSION · a RENAMED established migration is REFUSED by the real gate", () => {
   const { dir, base } = scratch();
   try {
-    /*
-     * The CAREFUL rename — the file moves and the journal is edited to agree,
-     * so nothing downstream looks inconsistent. It is still a delete and an add
-     * wearing one line: the `when` production applied now names a different
-     * tag, and no timestamp-joined check anywhere would say a word.
-     */
+    // A careful rename, with the journal edited to agree, is still a delete and an add.
     git(dir, ["mv", "lib/db/migrations/0001_beta.sql", "lib/db/migrations/0001_beta_v2.sql"]);
     writeJournal(dir, [
       { idx: 0, when: 1_780_000_000_000, tag: "0000_alpha" },
@@ -373,10 +278,6 @@ test("REGRESSION · a NORMAL APPEND passes — the guard does not refuse ordinar
   }
 });
 
-/* ========================================================================== */
-/* 2. THE UNREADABLE CASE — never a pass                                      */
-/* ========================================================================== */
-
 test("an unreachable merge base is COULD NOT TELL, never a pass", () => {
   const verdict = evaluateMigrationImmutability({
     changes: null,
@@ -409,10 +310,6 @@ test("the gate exits 2 on COULD NOT TELL and 1 on a violation — they are diffe
     "an escape hatch on a gate is how the gate stops meaning anything",
   );
 });
-
-/* ========================================================================== */
-/* 3. THE JOURNAL — append-only, and it must match the disk                   */
-/* ========================================================================== */
 
 const established: JournalEntry[] = [
   { idx: 0, when: 1_780_000_000_000, tag: "0000_alpha" },
@@ -458,10 +355,6 @@ test("a journal entry with no file, and a file with no journal entry, are both c
 });
 
 test("THE REPOSITORY ITSELF agrees: every journal entry has a file and every file an entry", () => {
-  /*
-   * The guard, run against the real tree. This is the half that needs no merge
-   * base at all, and it has never been asserted anywhere before now.
-   */
   const journal = readJournal();
   const onDisk = readdirSync(MIGRATIONS)
     .filter((f) => f.endsWith(".sql"))
@@ -479,10 +372,6 @@ test("THE REPOSITORY ITSELF agrees: every journal entry has a file and every fil
   assert.equal(verdict.verdict, "pass", verdict.failures.join("\n"));
 });
 
-/* ========================================================================== */
-/* 4. THE PARSERS — both git vocabularies                                     */
-/* ========================================================================== */
-
 test("parseNameStatus reads every status letter, and a rename carries both sides", () => {
   const parsed = parseNameStatus(
     [
@@ -490,7 +379,7 @@ test("parseNameStatus reads every status letter, and a rename carries both sides
       "A\tlib/db/migrations/0002_gamma.sql",
       "D\tlib/db/migrations/0000_alpha.sql",
       "R100\tlib/db/migrations/0003_x.sql\tlib/db/migrations/0003_y.sql",
-      "T\tdocs/state.md",
+      "T\tdocs/DESIGN.md",
       "",
     ].join("\n"),
   );
@@ -501,7 +390,7 @@ test("parseNameStatus reads every status letter, and a rename carries both sides
       "added:->lib/db/migrations/0002_gamma.sql",
       "deleted:->lib/db/migrations/0000_alpha.sql",
       "renamed:lib/db/migrations/0003_x.sql>lib/db/migrations/0003_y.sql",
-      "typechange:->docs/state.md",
+      "typechange:->docs/DESIGN.md",
     ],
   );
 });
@@ -533,7 +422,7 @@ test("an unrecognised git status on a migration fails CLOSED", () => {
 });
 
 test("a Windows separator does not hide a rewrite", () => {
-  // RULING 14 — the separator is BUILT, never written as a literal.
+  // The separator is built, never written as a literal.
   const BACKSLASH = String.fromCharCode(92);
   const windowsPath = "lib/db/migrations/0001_beta.sql".split("/").join(BACKSLASH);
   const parsed = parseNameStatus(`M\t${windowsPath}`);
@@ -541,10 +430,6 @@ test("a Windows separator does not hide a rewrite", () => {
   const verdict = verdictFor(established, ["0000_alpha", "0001_beta"], parsed);
   assert.equal(verdict.verdict, "fail");
 });
-
-/* ========================================================================== */
-/* 5. THE CONTENT ANCHOR — ready for the column production already carries    */
-/* ========================================================================== */
 
 test("checksumViolations catches SQL that is not the SQL production ran", () => {
   const sha = (s: string) => createHash("sha256").update(s).digest("hex");
@@ -568,10 +453,7 @@ test("checksumViolations catches SQL that is not the SQL production ran", () => 
 });
 
 test("checksumViolations says nothing about a migration production has not applied", () => {
-  /*
-   * That is the shipping invariant's question, and answering it here in a
-   * second vocabulary is how two surfaces start disagreeing about one database.
-   */
+  // That is the shipping invariant's question, not this one.
   const sha = (s: string) => createHash("sha256").update(s).digest("hex");
   const violations = checksumViolations(established, [], () => sha("anything"));
   assert.deepEqual(violations, []);
@@ -597,20 +479,9 @@ test("appliedHashesFrom reads real rows and refuses malformed ones", () => {
   assert.equal(appliedHashesFrom({ ok: false, why: "refused" }), null);
 });
 
-/* ========================================================================== */
-/* 6. THE UNREACHABLE BASE, AT BOTH ENDS — refused where it matters           */
-/* ========================================================================== */
-
 /**
- * An unreachable merge base makes DIRECTION unknown, and direction is the whole
- * question. The gate refuses on it — but only where a migration is actually in
- * play, and the difference is a SECOND independently-taken measurement rather
- * than a lowered bar: `changedPaths()` lists deletions on every one of its
- * rungs, so a readable path list with nothing under `lib/db/migrations/` in it
- * is a finding that no migration changed in any direction.
- *
- * Both halves are asserted, because only the pair is meaningful: the narrowing
- * is safe exactly insofar as the refusal still fires.
+ * An unreachable merge base makes direction unknown, so the gate refuses, but only where a migration is in play: a
+ * readable path list with nothing under `lib/db/migrations/` is a second, independent finding. Both halves are asserted.
  */
 function withUnreachableBase(paths: string): { status: number; out: string } {
   const { dir } = scratch();
@@ -645,7 +516,7 @@ test("an unreachable base REFUSES when the change touches a migration", () => {
 });
 
 test("an unreachable base does NOT refuse a docs-only change — a second reading says why", () => {
-  const { status, out } = withUnreachableBase("docs/state.md");
+  const { status, out } = withUnreachableBase("docs/DESIGN.md");
   assert.equal(status, 0, `a docs-only change must not go red on a git hiccup:\n${out}`);
   assert.match(out, /SECOND reading rather than a lowered bar/);
   assert.match(out, /no migration changed in any direction/);

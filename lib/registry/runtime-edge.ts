@@ -35,7 +35,7 @@ export interface CampaignSitesEdgeValue {
   readonly value: CuratedReaderProjection;
   readonly versionId: string;
 }
-/** The promoted recorded-outcome projection (C20: a cold Ask's slowest database read). */
+/** The promoted recorded-outcome projection. */
 export interface MeetingOutcomesEdgeValue {
   readonly value: OutcomeSnapshot;
   readonly versionId: string;
@@ -45,17 +45,17 @@ export interface CommentAccessEdgeValue {
   readonly value: CuratedReaderProjection;
   readonly versionId: string;
 }
-/** Per-scope state-legislator read models, keyed by OfficialStateVoteScope. */
+/** A request loads only the jurisdictions it serves. Missing bytes fall back to the typed reader. */
 export interface StateLegislatorsEdgeValue {
-  readonly value: Readonly<Record<string, OfficialStateLegislatorReadModel>>;
-  readonly versionId: string;
+  readonly jurisdictions: ReadonlySet<string>;
+  readonly load: (jurisdiction: string) => Promise<EdgeServedValue<OfficialStateLegislatorReadModel> | null>;
 }
 
 /**
- * Each state's promoted registration on the edge (2026-09-24). Not fetched with the bundle: a request loads only
- * the states its divisions name. `states` is complete (`ReaderManifest.registrations`): a state it lacks has no
- * promoted registration. `load` answers null when the artifact could not be fetched, and the caller then reads that
- * state from the database.
+ * Each state's promoted registration on the edge. Not fetched with the bundle: a request loads only the
+ * states its divisions name. `states` is complete (`ReaderManifest.registrations`): a state it lacks has
+ * no promoted registration. `load` answers null when the artifact could not be fetched, and the caller
+ * then reads that state from the database.
  */
 export interface RegistrationsEdge {
   readonly states: ReadonlySet<string>;
@@ -72,22 +72,17 @@ export interface ReaderAuthorityEdgeBundle {
   readonly commentAccess?: CommentAccessEdgeValue;
   readonly registrations?: RegistrationsEdge;
   /**
-   * The proven pointers the edge carries whole (2026-09-25): the ballots, the
-   * candidate profiles and publications, campaign money and the federal and
-   * state records Ask reads, keyed by pointer (`RECORD_CLASS:scope`). Each is
-   * read through its own typed Reader (`readPromotedEdgeFirst`), so every
-   * validation it applies to a database read applies to this copy too.
+   * The proven pointers the edge carries whole, keyed by pointer (`RECORD_CLASS:scope`). Each is read
+   * through its own typed Reader (`readPromotedEdgeFirst`), so every validation applied to a database read
+   * applies to this copy too.
    */
   readonly promoted?: ReadonlyMap<string, PromotedEdgeEntry>;
   /** The proven-pointer families whose artifact this bundle loaded (a trace reports where each source came from). */
   readonly promotedFamilies?: ReadonlySet<string>;
   /**
-   * The keep-warm call's promise (C21, 2026-09-25): it loads what a reader
-   * reads, and never the database. A read this bundle cannot serve then fails
-   * ({@link refuseDatabaseInEdgeOnlyContext}) instead of falling through to
-   * Neon, so a manifest missing a family costs the warm call that place, never
-   * a database wake every five minutes on every instance. Reader requests never
-   * set it: their fallback to the database is the point.
+   * Set only by the keep-warm call: a read this bundle cannot serve fails
+   * ({@link refuseDatabaseInEdgeOnlyContext}) instead of waking the database. Reader requests never set
+   * it; their fallback to the database is the point.
    */
   readonly edgeOnly?: true;
 }
@@ -112,20 +107,10 @@ export interface EdgeServedValue<T> {
 }
 
 /**
- * **EDGE FIRST, DATABASE SECOND: THE ONE IMPLEMENTATION.** (R24, RULING 103,
- * 2026-09-25.)
- *
- * The registry runtime, the federal directory, the campaign-site URLs, the
- * comment-access rules and the recorded outcomes each settled the same way in
- * five copies: serve the request's edge value if it entered one, else refuse in
- * an edge-only context, else read the authoritative database pointer. One `T`
- * runs through the edge accessor, the prime and the read, so a family cannot be
- * primed with another family's value; the prime stays each family's own typed
- * binding (its validator, its cache), which is why this takes it as an argument
- * rather than naming a cache by string.
- *
- * `what` names the family in the edge-only refusal. A prime may be a typed
- * Reader itself (`readPromotedEdgeFirst`), so it is awaited.
+ * Edge first, database second: serve the request's edge value if it entered one, else refuse in an
+ * edge-only context, else read the authoritative database pointer. One `T` runs through the edge
+ * accessor, the prime and the read, so a family cannot be primed with another family's value. `what`
+ * names the family in the edge-only refusal. A prime may itself be a typed Reader, so it is awaited.
  */
 export async function settleEdgeFirst<T>(
   edge: () => EdgeServedValue<T> | null,
@@ -150,14 +135,9 @@ export function currentPromotedEdge(recordClass: RoutineRecordClass, scope: stri
 }
 
 /**
- * **ONE POINTER, EDGE FIRST, THROUGH ITS OWN TYPED READER.** (2026-09-25.)
- *
- * `read` is the family's own Reader (`readFundingSnapshot`,
- * `readAzBallotProjection`, ...). With the edge's copy of the pointer it is
- * handed `{ edge }` and answers from it, applying every validation, bootstrap
- * rule and staleness bound it applies to a database read; without one it
- * reads the database exactly as before, or refuses in an edge-only context.
- * One settle (`settleEdgeFirst`), and the Reader's own result returned.
+ * One pointer, edge first, through its own typed Reader. With the edge's copy of the pointer, `read` is
+ * handed `{ edge }` and applies every validation and staleness bound it applies to a database read;
+ * without one it reads the database, or refuses in an edge-only context.
  */
 export async function readPromotedEdgeFirst<R>(
   recordClass: RoutineRecordClass,
@@ -187,14 +167,10 @@ export function enterReaderAuthorityEdge(bundle: ReaderAuthorityEdgeBundle): voi
 }
 
 /**
- * Run `read` inside the bundle's context, and only it (AsyncLocalStorage.run).
- *
- * For a React server component (2026-09-25, R30): React calls each async
- * component from its own render loop, never from the page function that
- * entered the edge, so a component's reads do not see the page's
- * `enterReaderAuthorityEdge` (tests/ballot-reader-edge.test.ts). The page hands
- * the bundle down and each component runs its reads here. A null bundle (no
- * manifest, a failed fetch) runs `read` unchanged: the database path.
+ * Run `read` inside the bundle's context, and only it (AsyncLocalStorage.run). React calls each async
+ * server component from its own render loop, so a component's reads do not see the page's
+ * `enterReaderAuthorityEdge`; the page hands the bundle down and each component reads here. A null bundle
+ * runs `read` unchanged: the database path.
  */
 export function withReaderAuthorityEdge<T>(bundle: ReaderAuthorityEdgeBundle | null, read: () => T): T {
   return bundle ? edgeStore.run(bundle, read) : read();

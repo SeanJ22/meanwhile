@@ -135,11 +135,11 @@ export function campaignMoneyForTarget(
   selection: CampaignMoneyReadSelection = {},
 ): CampaignMoney {
   const direct = directFundingTargetPlan(targetKey);
-  // A source-namespaced candidacy already identifies its finance authority.
-  // Opening FEC or the officeholder bridge first would let an unrelated read
-  // failure erase that candidacy's independently verified state records.
+  // A source-namespaced candidacy already identifies its finance authority, so
+  // an unrelated FEC or bridge read failure cannot erase its state records.
   // Officeholder slots still require the current person/candidacy bridge.
-  const readIdentity = selection.identity ?? (direct.contestId === null);
+  const readIdentity = (selection.identity ?? true) &&
+    (targetKey.startsWith("congress:") || !(direct.federal || direct.state !== null) || targetKey.includes("|"));
   const roster = readIdentity ? currentRosterMemberReaderDisposition(targetKey) : null;
   if (roster?.state === "IDENTITY_UNRESOLVED") return {
     requestedTargetKey: targetKey, federal: { kind: "none" }, state: emptyState(), officialIdentity: "IDENTITY_UNRESOLVED",

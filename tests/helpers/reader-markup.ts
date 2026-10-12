@@ -1,6 +1,6 @@
 /**
  * Reading server-rendered reader markup in tests — one implementation, shared
- * by every test that renders a meeting surface (RULING 103).
+ * by every test that renders a meeting surface.
  */
 
 /** renderToStaticMarkup escapes these; the assertions read reader text. */

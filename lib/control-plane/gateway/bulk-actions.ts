@@ -1,27 +1,3 @@
-/**
- * **SEND MANY HUNTS IN ONE ACTION, AND MOVE ONE HUNT'S BUDGET.** (S11.)
- *
- * Two registry actions, kept out of `registry.ts` so that file stays the list
- * of single-purpose actions it was and these two can share their helpers:
- *
- * ```
- *   expansion.scope.setMany   many ZIP hunts, each with its own budget, written
- *                             to the expansion list in ONE compare-and-set, so a
- *                             send of 2,000 ZIPs is one receipt and one row
- *                             rewrite, never 2,000 racing ones
- *   expansion.scope.budget    one hunt's budget moved: set a new limit, pause its
- *                             paid work ($0 holds it), or resume (the budget it
- *                             had before the pause)
- * ```
- *
- * Both write through `withScopeSet`, exactly as `expansion.scope.set` does, so
- * a hunt keeps its lifetime accounting start when its budget is edited, and the
- * runner reads both the way it reads every other expansion change.
- *
- * The ZIPs arrive resolved (the preview route did the lookups, district and
- * county and state to ZIPs included). This action holds no lookup of its own: it
- * checks each item's shape, says what it skipped, and writes.
- */
 import { ADMIN_CONFIG_ID, defaultAdminConfig, isAdminConfig, withExpansionScopes, fleetSpendCeilingOverrideUsd } from "./admin-config.ts";
 import { resolveRollingCeiling } from "../fleet-safety.ts";
 import {
@@ -41,7 +17,7 @@ import { huntPlaceKey } from "../admin-view/v6-hunts-read.ts";
 import type { ActionResult, RegisteredAction, Validation } from "./registry.ts";
 import { writeFailureSays } from "./write-readback.ts";
 
-/** A hunt is named by its scope key (`zcta:2020/85635`) or by the place key a screen shows it under (`geo:az.zcta.85635`). */
+/** A hunt is named by its scope key (`zcta:2020/<zip>`) or by its place key (`geo:<state>.zcta.<zip>`). */
 const PLACE_KEY = /^(?:geo:[a-z]{2}.[a-z_]+.[0-9A-Za-z]{2,12}|st:[a-z]{2})$/;
 
 /** The most ZIPs one send takes. A bigger list is a file to split, not one click. */
@@ -68,7 +44,6 @@ function validateItems(raw: unknown): { readonly ok: true; readonly items: reado
     const r = raw[i];
     if (r === null || typeof r !== "object") return { ok: false, why: `item ${i + 1} is not a ZIP or a mission` };
     const o = r as Readonly<Record<string, unknown>>;
-    // A mission names a whole geography (a state, county, district or metro); a ZIP item names a ZIP.
     const mission = o.geography !== null && typeof o.geography === "object";
     const zip = typeof o.zip === "string" ? o.zip.trim() : "";
     const geography = mission
@@ -88,7 +63,6 @@ function validateItems(raw: unknown): { readonly ok: true; readonly items: reado
 }
 
 export const BULK_ACTIONS: readonly RegisteredAction[] = [
-  /* ----------------------------------------------- expansion.scope.setMany */
   {
     definition: {
       type: "expansion.scope.setMany",
@@ -177,7 +151,6 @@ export const BULK_ACTIONS: readonly RegisteredAction[] = [
     },
   },
 
-  /* -------------------------------------------------- expansion.scope.budget */
   {
     definition: {
       type: "expansion.scope.budget",

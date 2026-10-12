@@ -1,21 +1,12 @@
 /**
- * **THE RESEARCH VIEW'S SEEDED FAILURES.** (Level 1 activation, 2026-09-01.)
- *
- * Each of these is a defect that would be invisible in normal use:
- *
- *   1  an admin route on the public host must 404, and an unauthenticated
- *      request on the admin host must be refused before any data is read
- *   2  the intent route must refuse a cross-origin post and an unknown action,
- *      and must say NOT RECORDED when the control plane cannot open
- *   3  a stored flag asserting the lane is active must be IGNORED — the
- *      verdict is derived from the heartbeat, the state, the intents and the
- *      spend, and nothing else
- *   4  a historical success is not a live lane: a successful Scout result
- *      beside a dead runner still derives INACTIVE
- *   5  every number the page emits carries a denominator and a contract
- *   6  the credential never travels: name and configured flag only
- *
- * Positive controls sit beside every detector that could look at nothing.
+ * Research view guards, each with a positive control where a detector could look at nothing:
+ *   1  an admin route on the public host 404s, and an unauthenticated admin-host request is refused
+ *      before any data is read
+ *   2  a stored flag asserting the lane is active is ignored; the verdict is derived from the
+ *      heartbeat, the state, the intents and the spend
+ *   3  a historical success is not a live lane
+ *   4  every number the page emits carries a denominator and a contract
+ *   5  the credential never travels: name and configured flag only
  */
 
 import test from "node:test";
@@ -26,8 +17,7 @@ import { join } from "node:path";
 import { NextRequest } from "next/server";
 
 import { middleware } from "@/middleware.ts";
-import { POST } from "@/app/api/admin/research/route.ts";
-import { ADMIN_ORIGIN, PUBLIC_SITE_ORIGIN } from "@/lib/ops/origins.ts";
+import { ADMIN_ORIGIN } from "@/lib/ops/origins.ts";
 import type { ReadOutcome } from "@/lib/control-plane/admin-data.ts";
 import type { CostEntry } from "@/lib/control-plane/cost.ts";
 import {
@@ -37,7 +27,6 @@ import {
   type RunnerHeartbeat,
 } from "@/lib/control-plane/owner-surface.ts";
 import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.ts";
-import { CONTROL_PLANE_URL_VAR } from "@/lib/control-plane/repository/pg-store.ts";
 import {
   INTENTS_SHOWN,
   SCOUT_RESULTS_SHOWN,
@@ -65,7 +54,7 @@ import {
   type ResearchState,
 } from "@/lib/control-plane/scheduler/research-policy.ts";
 import type { ScoutResult } from "@/lib/control-plane/scheduler/scout-result.ts";
-import { ADMIN_HOST, PUBLIC_HOST, adminSessionCookie, withAdminSessionKey } from "./admin-session.ts";
+import { ADMIN_HOST, PUBLIC_HOST } from "./admin-session.ts";
 
 const ROOT = process.cwd();
 
@@ -124,25 +113,6 @@ function state(over: Record<string, unknown> = {}): ResearchState {
     running: [{ attemptId: "att-run-1", obligationId: "obl-1", startedAt: FRESH }],
     runtimeConditions: [],
     methodCandidates: { proposed: 4, validated: 2, admitted: 1, rejected: 1 },
-    /* RULING 246: a proven parent relaunch travels with the state; without it the lane is DEGRADED. */
-    hostSupervision: {
-      host: "test-host",
-      checkedAt: FRESH,
-      measurable: true,
-      notMeasurableReason: null,
-      relaunchTrigger: { present: true, detail: "Repetition trigger present on the live task" },
-      proof: {
-        measuredAt: "2026-09-01T11:00:00.000Z",
-        killedPid: 20240,
-        relaunchedPid: 12900,
-        secondsToRelaunch: 274,
-        relaunchTriggerPresent: true,
-        taskStateAfter: "Running",
-        lastTaskResult: "0x00000000",
-        verdict: "RELAUNCHED",
-      },
-      proofPath: "data/ops/runner-relaunch-proof.json",
-    },
     ...over,
   } as unknown as ResearchState;
 }
@@ -253,19 +223,6 @@ function post(host: string, body: string, headers: Record<string, string> = {}):
   });
 }
 
-async function withEnv<T>(name: string, value: string | undefined, fn: () => Promise<T>): Promise<T> {
-  const before = process.env[name];
-  if (value === undefined) delete process.env[name];
-  else process.env[name] = value;
-  try {
-    return await fn();
-  } finally {
-    if (before === undefined) delete process.env[name];
-    else process.env[name] = before;
-  }
-}
-
-
 /* ================================================================== *
  * SEEDED FAILURE 1 — host and session boundaries, through the real middleware
  * ================================================================== */
@@ -290,133 +247,6 @@ test("SEEDED: an unauthenticated /admin/research request on the ADMIN host redir
 test("SEEDED: an unauthenticated /api/admin/research request on the ADMIN host is 401", async () => {
   const response = await middleware(post(ADMIN_HOST, "action=PAUSE", { origin: ADMIN_ORIGIN }));
   assert.equal(response.status, 401);
-});
-
-/* ================================================================== *
- * SEEDED FAILURE 2 — the intent route's own refusals, in sequence
- * ================================================================== */
-
-test("the handler re-verifies the host: a public-host request is 404 even with everything else valid", async () => {
-  await withAdminSessionKey(async () => {
-    const cookie = await adminSessionCookie();
-    const response = await POST(post(PUBLIC_HOST, "action=PAUSE", { origin: ADMIN_ORIGIN, cookie }));
-    assert.equal(response.status, 404);
-  });
-});
-
-test("SEEDED: a missing or cross-site Origin is refused with 403", async () => {
-  await withAdminSessionKey(async () => {
-    const cookie = await adminSessionCookie();
-    const missing = await POST(post(ADMIN_HOST, "action=PAUSE", { cookie }));
-    assert.equal(missing.status, 403, "a MISSING Origin is refused, not allowed");
-    const cross = await POST(post(ADMIN_HOST, "action=PAUSE", { origin: PUBLIC_SITE_ORIGIN, cookie }));
-    assert.equal(cross.status, 403, "the public origin may not post an intent");
-  });
-});
-
-test("the handler re-verifies the session: no cookie is 401 inside the handler too", async () => {
-  await withAdminSessionKey(async () => {
-    const response = await POST(post(ADMIN_HOST, "action=PAUSE", { origin: ADMIN_ORIGIN }));
-    assert.equal(response.status, 401);
-  });
-});
-
-test("SEEDED: an unknown or missing action is 400 and names the allowed actions", async () => {
-  await withAdminSessionKey(async () => {
-    const cookie = await adminSessionCookie();
-    for (const body of ["action=DELETE_EVERYTHING", "action=pause", "action=", ""]) {
-      const response = await POST(post(ADMIN_HOST, body, { origin: ADMIN_ORIGIN, cookie }));
-      assert.equal(response.status, 400, `${JSON.stringify(body)} must be 400, not ${response.status}`);
-      const payload = (await response.json()) as { error: string };
-      for (const action of RESEARCH_INTENT_ACTIONS) assert.match(payload.error, new RegExp(action));
-    }
-  });
-});
-
-test("POSITIVE CONTROL and SEEDED: a valid action passes validation, and a control plane that cannot open is 503 NOT RECORDED", async () => {
-  // With the control-plane variable unset the handler cannot reach a store, so
-  // the ONLY status past validation is 503. That both proves the 400 above was
-  // the action's fault and proves a failed open is never a redirect.
-  await withAdminSessionKey(() =>
-    withEnv(CONTROL_PLANE_URL_VAR, undefined, async () => {
-      const cookie = await adminSessionCookie();
-      for (const action of RESEARCH_INTENT_ACTIONS) {
-        // A DISPATCH is the one action that needs the owner's words (ADM-8):
-        // "deploy the fleet" to nowhere is refused at validation, so the
-        // positive control carries a target.
-        // A CANCEL_DISPATCH names the sent instruction it takes back.
-        const body = action === "DISPATCH" ? `action=${action}&note=deep+dive+on+Illinois`
-          : action === "CANCEL_DISPATCH" ? `action=${action}&note=DISPATCH:2026-09-30T18:57:07.300Z` : `action=${action}`;
-        const response = await POST(post(ADMIN_HOST, body, { origin: ADMIN_ORIGIN, cookie }));
-        assert.equal(response.status, 503, `${action} must reach the open and be told NOT RECORDED`);
-        const payload = (await response.json()) as { error: string; detail: string };
-        assert.equal(payload.error, "not recorded");
-        assert.match(payload.detail, new RegExp(CONTROL_PLANE_URL_VAR));
-        assert.doesNotMatch(payload.detail, /postgres:\/\//, "no connection string may leak");
-      }
-    }),
-  );
-});
-
-test("the route's security sequence is the decision route's, in order", () => {
-  const source = readFileSync(join(ROOT, "app", "api", "admin", "research", "route.ts"), "utf8");
-  const order = [
-    "isAdminHostRequest(",
-    "originAllowed(",
-    "verifySession(",
-    "parseResearchIntentAction(",
-    "openControlPlane(",
-    "appendResearchIntent(",
-    "NextResponse.redirect(",
-  ].map((needle) => {
-    // The LAST occurrence is the call; the first may be the import line.
-    const at = source.lastIndexOf(needle);
-    assert.ok(at >= 0, `${needle} is not called in the route`);
-    return at;
-  });
-  for (let i = 1; i < order.length; i += 1) {
-    assert.ok(order[i - 1] < order[i], `step ${i} runs out of sequence`);
-  }
-  assert.match(source, /export const runtime = "nodejs"/);
-  assert.doesNotMatch(source, /export (async )?function GET/, "POST only");
-});
-
-/* ================================================================== *
- * THE JSON ANSWER — the console's controls, refused before anything is written
- * ================================================================== */
-
-test("SEEDED: a JSON request that is unauthenticated or cross-origin is refused before the store is opened, so nothing is appended", async () => {
-  // The control-plane variable names a store that cannot exist: had any of
-  // these requests got past the refusals to the open, the answer would be 503.
-  // A 401 or 403 therefore proves the handler stopped before opening the store,
-  // and the sequence test below proves the append comes after the open.
-  await withAdminSessionKey(() =>
-    withEnv(CONTROL_PLANE_URL_VAR, "postgres://nobody:nothing@127.0.0.1:1/none", async () => {
-      const json = { accept: "application/json" };
-      const noSession = await POST(post(ADMIN_HOST, "action=PAUSE", { origin: ADMIN_ORIGIN, ...json }));
-      assert.equal(noSession.status, 401, "no session cookie: refused before the open");
-      const cookie = await adminSessionCookie();
-      const crossSite = await POST(post(ADMIN_HOST, "action=RESUME_RUNNER", { origin: PUBLIC_SITE_ORIGIN, cookie, ...json }));
-      assert.equal(crossSite.status, 403, "the public origin: refused before the open");
-      const noOrigin = await POST(post(ADMIN_HOST, "action=PAUSE_RUNNER", { cookie, ...json }));
-      assert.equal(noOrigin.status, 403, "a missing Origin: refused before the open");
-      const publicHost = await POST(post(PUBLIC_HOST, "action=PAUSE", { origin: ADMIN_ORIGIN, cookie, ...json }));
-      assert.equal(publicHost.status, 404, "the public host: refused before anything");
-      for (const r of [noSession, crossSite, noOrigin]) {
-        assert.equal(r.headers.get("location"), null, "a refusal is never a redirect");
-      }
-    }),
-  );
-});
-
-test("the JSON answer comes after the append and before the redirect, and returns a body rather than a redirect", () => {
-  const source = readFileSync(join(ROOT, "app", "api", "admin", "research", "route.ts"), "utf8");
-  const append = source.lastIndexOf("appendResearchIntent(");
-  const json = source.indexOf('includes("application/json")');
-  const redirect = source.lastIndexOf("NextResponse.redirect(");
-  assert.ok(append >= 0 && json > append, "the JSON branch runs only after the intent is appended");
-  assert.ok(redirect > json, "the no-JS form path keeps its redirect, after the JSON branch");
-  assert.match(source.slice(json, redirect), /NextResponse\.json\(/, "the JSON branch answers with a body");
 });
 
 test("parseResearchIntentAction accepts exactly the intent actions", () => {
@@ -468,7 +298,7 @@ test("POSITIVE CONTROL: the append path refuses a record carrying a reader-level
 });
 
 /* ================================================================== *
- * SEEDED FAILURE 3 — a stored flag is IGNORED; the verdict is derived
+ * SEEDED FAILURE 2 — a stored flag is IGNORED; the verdict is derived
  * ================================================================== */
 
 test("POSITIVE CONTROL: a fresh heartbeat, current state, no pause and permitted spend derive ACTIVE", () => {
@@ -509,7 +339,7 @@ test("the view module never reads a stored flag off the state — checked in sou
 });
 
 /* ================================================================== *
- * SEEDED FAILURE 4 — a historical success is not a live lane
+ * SEEDED FAILURE 3 — a historical success is not a live lane
  * ================================================================== */
 
 test("SEEDED: a successful ScoutResult beside a dead runner derives INACTIVE, and the result is still shown", () => {
@@ -586,49 +416,6 @@ test("a paused lane shows RESUME; a pause then a resume shows PAUSE; the state's
   assert.equal(stateSaysPaused.verdict, "INACTIVE");
 });
 
-/* ================================================================== *
- * RULING 246 — the ACTIVE verdict needs a proven parent relaunch (view level)
- * ================================================================== */
-
-test("SEEDED (RULING 246): a state with no host supervision reading derives DEGRADED naming the missing proof; the panel is OUR named gap", () => {
-  const view = buildResearchView(healthyInput({ state: heldOut(state({ hostSupervision: null })) }));
-  assert.equal(view.verdict, "DEGRADED");
-  assert.match(view.reasons.join("\n"), /host supervision proven/);
-  assert.match(view.reasons.join("\n"), /has not been proven/);
-  assert.equal(view.supervision.held, false);
-  if (!view.supervision.held) assert.equal(view.supervision.gap.whose, "OURS");
-});
-
-test("POSITIVE CONTROL (RULING 246): a fresh RELAUNCHED proof with the trigger live holds the supervision panel and keeps ACTIVE", () => {
-  const view = buildResearchView(healthyInput());
-  assert.equal(view.verdict, "ACTIVE");
-  assert.equal(view.supervision.held, true);
-  if (view.supervision.held) {
-    assert.equal(view.supervision.value.proof?.verdict, "RELAUNCHED");
-    assert.equal(view.supervision.value.condition?.ok, true);
-    assert.match(view.supervision.value.condition?.reason ?? "", /pid 20240 killed, pid 12900 back in 274s/);
-  }
-  const notRelaunched = buildResearchView(
-    healthyInput({
-      state: heldOut(
-        state({
-          hostSupervision: {
-            host: "test-host",
-            checkedAt: FRESH,
-            measurable: true,
-            notMeasurableReason: null,
-            relaunchTrigger: { present: true, detail: "present" },
-            proof: { measuredAt: FRESH, killedPid: 1, relaunchedPid: null, secondsToRelaunch: null, relaunchTriggerPresent: true, taskStateAfter: "Ready", lastTaskResult: "0x00000000", verdict: "NOT_RELAUNCHED" },
-            proofPath: "data/ops/runner-relaunch-proof.json",
-          },
-        }),
-      ),
-    }),
-  );
-  assert.equal(notRelaunched.verdict, "DEGRADED");
-  assert.match(notRelaunched.reasons.join("\n"), /NOT_RELAUNCHED/);
-});
-
 test("the metrics and ordering panels are OUR named gaps until a cycle computes them, and typed rows once it has", () => {
   const view = buildResearchView(healthyInput());
   assert.equal(view.metrics.held, false);
@@ -663,7 +450,7 @@ test("the metrics and ordering panels are OUR named gaps until a cycle computes 
 });
 
 /* ================================================================== *
- * SEEDED FAILURE 5 — every number carries a denominator and a contract
+ * SEEDED FAILURE 4 — every number carries a denominator and a contract
  * ================================================================== */
 
 test("SEEDED: every number the page emits carries a denominator and a contract, and stated N equals rendered rows", () => {
@@ -737,7 +524,7 @@ test("no state recorded: every state-derived panel is OUR named gap and the verd
 });
 
 /* ================================================================== *
- * SEEDED FAILURE 6 — the credential never travels
+ * SEEDED FAILURE 5 — the credential never travels
  * ================================================================== */
 
 test("SEEDED: the view carries the worker credential's NAME and configured flag, and nothing else from that record", () => {
@@ -765,15 +552,7 @@ test("SEEDED: the view carries the worker credential's NAME and configured flag,
 });
 
 /* ================================================================== *
- * ADM-42 — the heading is the STATE, and the level is explained
- * ================================================================== */
-
-/* ================================================================== *
- * ADM-42 item 9 / §3 — the credential name never reaches the browser
- * ================================================================== */
-
-/* ================================================================== *
- * ADM-48 — the runner's own facts travel to the view
+ * The runner's own facts travel to the view
  * ================================================================== */
 
 test("ADM-48: the view carries the runner's standing, its next cycle time and the last cycle's safety snapshot", () => {
@@ -786,7 +565,7 @@ test("ADM-48: the view carries the runner's standing, its next cycle time and th
     assert.equal(view.safety.gap.whose, "OURS");
     assert.match(view.safety.gap.says, /no Fleet safety snapshot/);
   }
-  // A paused runner reads as paused here exactly as it does on Pilot health.
+  // A paused runner reads as paused here as everywhere else.
   const paused = buildResearchView(
     healthyInput({
       intents: heldOut([
@@ -799,7 +578,7 @@ test("ADM-48: the view carries the runner's standing, its next cycle time and th
 });
 
 /* ================================================================== *
- * ADM-48 — the typed facts a plain sentence needs travel on the row
+ * The typed facts a plain sentence needs travel on the row
  * ================================================================== */
 
 test("ADM-48: a Scout row carries the record class, the route, the refusals and the rungs it still owes", () => {

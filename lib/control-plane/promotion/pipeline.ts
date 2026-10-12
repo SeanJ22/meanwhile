@@ -1,16 +1,4 @@
-/**
- * THE PIPELINE'S RULES — pure, over records; and the one append path.
- *
- *   validateTransition   decides, and returns either the accepted record or
- *                        a REFUSED record carrying the offered one
- *   appendTransition     validates against the item's log and appends
- *                        whichever it decided; a refusal is history too
- *   deriveItemState      replays an item's records in append order
- *   map*                 the honest mapping of EXISTING evidence into SCOUTED
- *
- * Nothing here reads a clock or a disk. Lookups the rules need (an artifact
- * by id, an Attempt's role) are handed in as functions.
- */
+/** The pipeline's rules: pure over records, with `appendTransition` as the one append path. No clock or disk. */
 
 import type { WorkerRole } from "../attempt.ts";
 import { INDEPENDENT_BASES } from "../audit.ts";
@@ -50,17 +38,9 @@ export interface PipelineContext {
   readonly workerFactAuditBlocks?: (artifactIds: readonly string[], auditorResultId: string) => boolean;
   readonly artifactById: (artifactId: string) => ArtifactRecord | null;
   readonly attemptRoleById: (attemptId: string) => WorkerRole | null;
-  /**
-   * PRDY-3 (2026-09-06): the artifact ids a COMPLETED Attempt recorded. An
-   * Attempt that retrieved byte-identical content re-observes the artifact
-   * the log already holds (the artifact log is idempotent on content), so a
-   * second acquisition of the same representation is evidenced by the second
-   * Attempt naming the same artifact id, not by a second artifact row.
-   */
+  /** Artifact ids a COMPLETED Attempt recorded: a byte-identical re-acquisition names the existing artifact id, not a new row. */
   readonly attemptArtifactIds?: (attemptId: string) => readonly string[] | null;
 }
-
-/* ---------------------------------------------------------------- state */
 
 /** A record this module wrote, as opposed to a foreign row under the same log. */
 export function isPipelineRecord(value: unknown): value is PromotionPipelineRecord {
@@ -111,17 +91,8 @@ export function deriveItemState(itemId: string, records: readonly PromotionPipel
   return { itemId, recordClass, subjectId, stage, refused, refusals, records, byStage };
 }
 
-/* ------------------------------------------------------------ decisions */
-
 function refuse(offered: TransitionRecord, reasons: readonly PipelineRefusalReason[]): RefusedRecord {
-  /*
-   * PRDY-3 (2026-09-06): the refusal id is derived from the OFFER'S CONTENT as
-   * well as the reason codes. An approval re-offered after its measured
-   * burdens moved (a class that was NOT_SCHEDULED and is now STALE) is a
-   * different refusal, appended beside the first; an identical re-offer is the
-   * same refusal, deduped. Deriving from codes alone made the second offer a
-   * history rewrite the append-only log rightly threw on.
-   */
+  /* The refusal id derives from the offer's content as well as its reason codes, so a changed re-offer is a new refusal and an identical one dedupes. */
   return {
     formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION,
     recordId: `${offered.recordId}:refused:${fingerprint([offered.at, ...reasons.map((r) => r.code), canonicalJson(offered)])}`,
@@ -155,7 +126,7 @@ function confirmationReasons(
       detail: "a second route must name the fact it shares with the scouted representation",
     });
   }
-  /* PRDY-3: a second acquisition that states a different fact confirms nothing; the item holds. */
+  /* A second acquisition that states a different fact confirms nothing; the item holds. */
   if (offered.factAgreement !== undefined && !offered.factAgreement.sameFact) {
     reasons.push({ code: "CONFIRMATION_FACT_CONFLICT", detail: offered.factAgreement.detail });
   }
@@ -165,13 +136,7 @@ function confirmationReasons(
       reasons.push({ code: "CONFIRMATION_ARTIFACT_UNKNOWN", detail: `artifact ${id} is not in the artifact log` });
       continue;
     }
-    /*
-     * PRDY-3: byte-identical re-acquisition. The artifact log keeps ONE row per
-     * content, attributed to the first observer, so a second Attempt that
-     * retrieved the same bytes is evidenced by that Attempt's own recorded
-     * artifact ids. The offered actor must be that Attempt, and it is the
-     * Attempt whose role is then judged.
-     */
+    /* The artifact log keeps one row per content, so a byte-identical re-acquisition is evidenced by the second Attempt's own artifact ids. */
     const reobservedBy =
       scouted !== undefined &&
       artifact.attemptId === scouted.scoutAttemptId &&
@@ -276,20 +241,14 @@ function approvalReasons(state: PipelineItemState, offered: ApprovedRecord): Pip
       });
     }
   }
-  /* PRDY-3/5: the burdens the offer measured travel on the record; a FAIL refuses. */
+  /* The burdens the offer measured travel on the record; a FAIL refuses. */
   for (const burden of offered.burdens ?? []) {
     if (burden.result === "FAIL") reasons.push({ code: "APPROVAL_BURDEN_FAILED", detail: `${burden.name}: ${burden.detail}` });
   }
   return reasons;
 }
 
-/**
- * Decide one offered transition against the item's current state.
- *
- * Returns the accepted record, or a REFUSED record that carries the offered
- * one and every reason at once — a refusal that reported only the first
- * defect would send the next attempt back one defect at a time.
- */
+/** Returns the accepted record, or a REFUSED record carrying every reason at once. */
 export function validateTransition(
   state: PipelineItemState,
   offered: TransitionRecord,
@@ -364,8 +323,6 @@ export function validateTransition(
   return reasons.length === 0 ? { ok: true, record: offered } : { ok: false, record: refuse(offered, reasons) };
 }
 
-/* ---------------------------------------------------------------- append */
-
 export interface AppendTransitionOutcome {
   readonly accepted: boolean;
   /** False when the identical record was already in the log. */
@@ -379,10 +336,7 @@ async function readItemRecords(repos: ControlPlaneRepositories, itemId: string):
   return (await repos.promotionPipeline.read(itemId)).filter(isPipelineRecord);
 }
 
-/**
- * Validate against the log, then append what was decided. A refusal is
- * appended too. An identical re-offer of a held record is a no-op success.
- */
+/** A refusal is appended too. An identical re-offer of a held record is a no-op success. */
 export async function appendTransition(
   repos: ControlPlaneRepositories,
   offered: TransitionRecord,
@@ -396,15 +350,7 @@ export async function appendTransition(
   return { accepted: decided.ok, appended: outcome.appended, record: decided.record, state: after };
 }
 
-/**
- * Every item's derived state, by item id order. Keys holding no pipeline record are not items.
- *
- * The log is read whole in bounded pages and grouped by item: `appendTransition`
- * appends every record, held, offered or refused, under its own `itemId`, so
- * an item's group is exactly what reading its key returns. One read per key
- * issued 629 sequential requests on 2026-09-24, and a research cycle reached
- * its 15-minute wall waiting on them.
- */
+/** Keys holding no pipeline record are not items. */
 export async function readPipelineStates(repos: ControlPlaneRepositories): Promise<PipelineItemState[]> {
   const [keys, records] = await Promise.all([repos.promotionPipeline.keys(), repos.promotionPipeline.readAll()]);
   const byItem = new Map<string, PromotionPipelineRecord[]>();
@@ -424,14 +370,7 @@ export async function readPipelineStates(repos: ControlPlaneRepositories): Promi
   return out;
 }
 
-/**
- * The derived states of the items holding a record whose value at `path` equals
- * `value` (for example every item of one record class), by item id order: the
- * same states `readPipelineStates` derives for those items, read by key in
- * batches instead of the whole log. Only the matching keys and their own
- * records cross the wire. A store with no filtered key read reads the log whole
- * and filters, as before.
- */
+/** The same states `readPipelineStates` derives for the matching items, read by key in batches. */
 export async function readPipelineStatesWhere(repos: ControlPlaneRepositories,
   matches: readonly { readonly path: readonly string[]; readonly value: string }[]): Promise<PipelineItemState[]> {
   const log = repos.promotionPipeline;
@@ -450,7 +389,6 @@ export async function readPipelineStatesWhere(repos: ControlPlaneRepositories,
   return out;
 }
 
-/** A context over the live logs, read once. */
 export async function contextFromRepositories(repos: ControlPlaneRepositories): Promise<PipelineContext> {
   const artifacts = new Map<string, ArtifactRecord>();
   for (const a of await repos.artifacts.readAll()) artifacts.set(a.artifactId, a);
@@ -484,16 +422,12 @@ export async function contextFromRepositories(repos: ControlPlaneRepositories): 
     workerFactAuditBlocks: (ids, auditorId) => {
       const audits = results.filter(record => record.result.role === "ADVERSARIAL_AUDITOR" &&
         record.inputArtifactIds.some(id => ids.includes(id))).sort((a, b) => b.endedAt.localeCompare(a.endedAt));
-      // A captured-fact audit does not close the source-universe obligation.
-      // It may certify only its exact current validated facts. Actual breaks
-      // remain blocking; a later captured-only run cannot erase them.
+      // A captured-fact audit certifies only its exact current validated facts; breaks stay blocking.
       return audits[0]?.id !== auditorId || audits[0]?.result.verdict !== "SURVIVED" ||
         audits.some(record => record.result.verdict === "BROKE");
     },
   };
 }
-
-/* --------------------------------------------------------------- mapping */
 
 export const SCOUTED_OUTCOMES = ["ROUTE_CANDIDATE", "EVIDENCE_FOUND"] as const;
 
@@ -551,10 +485,7 @@ export function scoutedFromScoutResult(result: ScoutResult): ScoutedRecord[] {
   ];
 }
 
-/**
- * A VALIDATED (or PROPOSED) method candidate is a SCOUTED item: method-store
- * validation checks the store's shape, which is not the pipeline's VERIFIED.
- */
+/** Method-store validation checks the store's shape, which is not the pipeline's VERIFIED. */
 export function scoutedFromMethodCandidate(
   candidate: MethodCandidate,
   resultsByAttempt: ReadonlyMap<string, ScoutResult>,
@@ -581,11 +512,7 @@ export function scoutedFromMethodCandidate(
   };
 }
 
-/**
- * The one CONFIRMED record the evidence could honestly support: artifacts at
- * the scouted URL vaulted by an ACQUIRER-role Attempt other than the Scout's.
- * Returns null when no such artifact exists — which is the measured case.
- */
+/** Artifacts at the scouted URL vaulted by an ACQUIRER-role Attempt other than the Scout's, or null. */
 export function confirmationFromArtifacts(
   scouted: ScoutedRecord,
   artifacts: readonly ArtifactRecord[],
@@ -613,8 +540,6 @@ export function confirmationFromArtifacts(
     sameFact: null,
   };
 }
-
-/* ---------------------------------------------------------------- counts */
 
 export interface StageCounts {
   readonly items: number;

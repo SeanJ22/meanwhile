@@ -24,7 +24,6 @@ export interface AdminV6ChecklistView {
 
 export interface AdminV6ChecklistEnvelope {
   readonly contract: typeof ADMIN_V6_CHECKLIST_CONTRACT;
-  /** An exact canonical instruction scope key. Mapping a UI place key is not inferred here. */
   readonly scope: string;
   readonly revision: string;
   readonly asOf: string;

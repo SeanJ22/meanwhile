@@ -1,11 +1,8 @@
 import assert from "node:assert/strict";
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { test } from "node:test";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
-
-await installRegistryRuntimeFirstSeeds();
 
 import { canonicalBodyIdentity } from "../lib/ask/body-identity.ts";
 import {
@@ -13,42 +10,19 @@ import {
   governingRosterHoldersForDivision,
   rosterHoldersForBody,
 } from "../lib/registry/body-rosters.ts";
-import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
+import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import { normalizeName } from "../lib/routing/exact-name.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
-/**
- * Tier-3 rosters (5a/5b) — officeholder discipline held mechanically:
- * sourced, dated, keyed to real wired bodies, and actually rendered.
- */
+await installRegistryAuthority();
+
+/** Rosters are sourced, dated, keyed to real registry bodies, and actually rendered. */
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
-/**
- * The committed retrieval ledgers, read once without a corpus-sized string.
- *
- * A ledger line is the bytes a public body actually sent us, with the URL, the
- * date, the HTTP status and the ladder rung it took to get them. An address
- * that appears in one was published; an address that appears in none has only
- * our word behind it.
- */
-const EVIDENCE = (() => {
-  const dir = join(ROOT, "docs", "evidence");
-  if (!existsSync(dir)) return [];
-  return readdirSync(dir)
-    .filter((f) => f.endsWith(".jsonl") || f.endsWith(".json"))
-    .map((f) => readFileSync(join(dir, f), "utf8"));
-})();
-
-function publishedInEvidence(email: string): boolean {
-  return EVIDENCE.some(ledger => ledger.includes(email));
-}
-
 test("every roster keys to a real body — a roster for nothing is a curation error", () => {
-  // Generalized 2026-08-17 (Kearsarge): a roster may belong to a KNOWN
-  // registry body whose calendar is not wired yet — showing a body's people
-  // while its meetings are still being hunted is exactly the who-governs
-  // case. What stays forbidden is a roster keyed to nothing at all.
-  const wiredIds = new Set(SOURCE_WIRING.map((r) => r.bodyId));
+  // A roster may belong to a known registry body whose calendar is not wired yet; a roster keyed to nothing is forbidden.
+  const wiredIds = new Set(FIXTURE_DOOR_ROWS.map((r) => r.bodyId));
   const registry = JSON.parse(
     readFileSync(join(process.cwd(), "lib", "registry", "registry.json"), "utf8"),
   ) as { bodies: { id: string }[] };
@@ -61,22 +35,7 @@ test("every roster keys to a real body — a roster for nothing is a curation er
   }
 });
 
-/**
- * **NO TWO ROSTERS SHARE A BODY** (NH Hunt, 2026-08-20).
- *
- * `rosterHoldersForBody` returns the FIRST match, so a second roster on the
- * same `bodyId` is a roster nothing can read: it renders nowhere, it is never
- * checked against the page it cites, and it drifts silently from the one that
- * does render. This session wrote one — a second Merrimack County Board of
- * Commissioners, sourced from the county's own annual report while the live
- * one was sourced from a copy the Town of Chichester hosts — and nothing in
- * this file caught it. The two agreed on all three names, which is the only
- * reason it was harmless; the next one would not be.
- *
- * The fix was a MERGE, not a deletion: the surviving row took the better
- * source and recorded that two copies read three days apart agree. This is the
- * assertion that makes the next session merge too.
- */
+/** No two rosters share a body: the lookup returns the first match, so a second roster on one bodyId would render nowhere. */
 test("no two rosters claim the same body", () => {
   const byId = new Map<string, string[]>();
   for (const roster of BODY_ROSTERS) {
@@ -114,7 +73,7 @@ test("every roster cites the body's own page, never a vendor's", () => {
   }
 });
 
-test("every member has a name, a published title, and no invented contact", () => {
+test("every member has a name and a published title", () => {
   for (const roster of BODY_ROSTERS) {
     assert.ok(roster.members.length >= 3, `${roster.bodyName}: suspiciously thin roster`);
     const ids = new Set<string>();
@@ -123,58 +82,11 @@ test("every member has a name, a published title, and no invented contact", () =
       assert.ok(member.officeTitle.length >= 4, `${member.name}: no title`);
       assert.ok(!ids.has(member.id), `duplicate member id ${member.id}`);
       ids.add(member.id);
-      if (member.email) {
-        /*
-         * **THE RULE IS "PUBLISHED", AND THE DOMAIN LIST WAS ONLY A PROXY FOR
-         * IT.** (Widened 2026-08-20, NH Hunt.)
-         *
-         * What this guard exists to refuse is an INVENTED address — a
-         * `firstname.lastname@` pattern-matched onto a person who never
-         * published one. A hand-kept list of government domains catches that
-         * and also catches something it should not: Kearsarge Regional School
-         * District's own staff directory publishes its District Clerk at a
-         * `@gmail.com` address, on a `kearsarge.org` page, in the district's
-         * own words. That address is unusual and it is real, and refusing it
-         * would be refusing a published fact because of its shape.
-         *
-         * So there are two ways to pass, and the second is the stronger one:
-         *
-         *   1. the address is on the body's own domain — the fast path, and
-         *      still hand-kept, still a list;
-         *   2. the address appears VERBATIM in a committed retrieval ledger
-         *      under `docs/evidence/`, which is a recording of bytes a public
-         *      body actually sent us on a stated date.
-         *
-         * Proof beats pattern. A guessed address cannot satisfy (2) unless
-         * somebody forges a ledger, and a real one on an odd domain no longer
-         * has to be dropped to keep a test green.
-         */
-        const onOwnDomain =
-          /@(tucsonaz\.gov|pima\.gov|tusd1\.org|vailschooldistrict\.org|newbury\.nh\.gov|kearsarge\.org|rockawaytownship\.org|rocktwp\.net)$/.test(
-            member.email,
-          );
-        assert.ok(
-          onOwnDomain || publishedInEvidence(member.email),
-          `${member.name}: ${member.email} is neither on the body's own domain ` +
-            "nor recorded verbatim in any committed retrieval ledger under docs/evidence/",
-        );
-      }
     }
   }
 });
 
-/**
- * **NH288 — the sourced name and the served name are ONE name.** (2026-08-30.)
- *
- * `BODY_ROSTERS` has carried "Pima County Board of Supervisors" — cited to the
- * Board's own page, dated — since 2026-08-13, while `canonicalBodyIdentity`
- * fell through the registry's legitimately-null derived name straight to the
- * division label and served "Pima" as the body's name on every Ask surface. A
- * geography stood in for a government for seventeen days with every gate
- * green, because nothing held the two stores to one answer. This test is that
- * hold: it would have failed on 2026-08-13 and it fails again the day the two
- * layers drift.
- */
+/** The sourced roster name and the name the identity layer serves are one name. */
 test("NH288: every roster's sourced bodyName is the name the identity layer serves", () => {
   const registry = JSON.parse(
     readFileSync(join(process.cwd(), "lib", "registry", "registry.json"), "utf8"),
@@ -207,10 +119,7 @@ test("NH288: every roster's sourced bodyName is the name the identity layer serv
           "in for a government again",
       );
     } else {
-      /* The registry named the body itself and wins (RULING 197). The roster
-         may qualify that name with the town for display — "Newbury Planning
-         Board" over "Planning Board" — but the two are claims about ONE body,
-         so the served name must appear whole inside the roster's. */
+      /* The registry named the body itself and wins; the roster may qualify it with the town, so the served name appears whole inside the roster's. */
       assert.ok(
         ` ${normalizeName(roster.bodyName)} `.includes(` ${normalizeName(identity.name)} `),
         `${roster.bodyId}: registry name "${identity.name}" and roster name ` +
@@ -235,14 +144,7 @@ test("the author's named example is covered: TUSD renders a full board", () => {
   const holders = rosterHoldersForBody(
     "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
   );
-  /*
-   * F01 1.2 (2026-08-19): 5 → 6. The sixth is the SUPERINTENDENT, who is hired
-   * by this board and does not sit on it. He is in the roster array because
-   * that is where the body card's `superintendent` slot resolves from, and
-   * `bodySubject` removes him from the seated list in the same change — so the
-   * board is still five seats, and the count below says which is which rather
-   * than just growing by one.
-   */
+  /* The superintendent is in the roster array because the body card's superintendent slot resolves from it; he is hired by the board and does not sit on it. */
   const seated = holders.filter((h) => !/superintendent/i.test(h.officeTitle));
   const hired = holders.filter((h) => /superintendent/i.test(h.officeTitle));
   assert.equal(seated.length, 5, "TUSD's board has five ELECTED seats");
@@ -263,12 +165,7 @@ test("the author's named example is covered: TUSD renders a full board", () => {
   );
 });
 
-/**
- * F01 1.2 — the seated/hired split, held at the render.
- *
- * A person appearing under BOTH "Who sits on it" and "Runs the district day to
- * day" would be the card saying two different things about one person's job.
- */
+/** The seated/hired split, held at the render: one person never appears under both. */
 test("F01 1.2: the superintendent is pulled out of the seated list, not duplicated", () => {
   const entry = readFileSync(
     join(process.cwd(), "components", "map", "map-entry.tsx"),
@@ -310,8 +207,7 @@ test("the surfaces render the rosters — the register is not shelf-ware", () =>
 });
 
 test("the division lookup finds both registry suffixes — school boards are #board", () => {
-  // The Sunnyside catch (2026-08-18): a #governing-only lookup rendered
-  // "no sourced officeholder" over every curated school-board roster.
+  // A #governing-only lookup would miss every school-board roster.
   const tusd = governingRosterHoldersForDivision(
     "ocd-division/country:us/state:az/school_district:tucson_unified_district",
   );

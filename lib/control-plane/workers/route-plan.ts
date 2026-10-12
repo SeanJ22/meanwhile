@@ -1,6 +1,5 @@
 import type { AutonomousWorkPlan } from "./autonomous-plan.ts";
 import type { ProvidedObligation, RouteDescriptor } from "../scheduler/registry.ts";
-import { oneHunterPath } from "./scout-scheduling.ts";
 
 /** Every route plan's capability starts with this, so the runner can tell it from a Send's plan. */
 export const ROUTE_PLAN_CAPABILITY_PREFIX = "route-scout:";
@@ -10,27 +9,9 @@ export function isRoutePlan(plan: Pick<AutonomousWorkPlan, "capability"> | undef
   return plan?.capability.startsWith(ROUTE_PLAN_CAPABILITY_PREFIX) === true;
 }
 
-/**
- * CH-23 part 2, behind WTP_ONE_HUNTER_PATH: a route plan only counts as planned work while the switch is on. With it
- * off, a row that already holds one is treated as unplanned, so its paid Scout runs in the round's research path as before.
- */
-export function plannedForHunters(plan: AutonomousWorkPlan | undefined, env: NodeJS.ProcessEnv = process.env): plan is AutonomousWorkPlan {
-  return plan !== undefined && (!isRoutePlan(plan) || oneHunterPath(env));
-}
-
-/** The research lane's code for a planned paid row it leaves to the coordinator (CH-23 part 4). */
-export const HUNTER_PATH = "HUNTER_PATH";
-
-/**
- * CH-23 part 4, behind WTP_ONE_HUNTER_PATH: the round's registry-lane Scout (`scoutFor`) never walks a planned paid
- * row. The round opens its occurrence, and the coordinator runs its Scout as a work item with a plan, through the same
- * chain to the reader. Null with the switch off, or for a row with no plan, so the old path runs as before.
- */
-export function hunterPathRefusal(plan: AutonomousWorkPlan | undefined, env: NodeJS.ProcessEnv = process.env):
-  { readonly admit: false; readonly code: typeof HUNTER_PATH; readonly why: string } | null {
-  if (!oneHunterPath(env) || !plannedForHunters(plan, env)) return null;
-  return { admit: false, code: HUNTER_PATH,
-    why: "it runs as hunter work: the round opened its occurrence, and the coordinator runs its Scout through its plan" };
+/** Every persisted plan uses the same coordinator. Owner paid-work controls still govern dispatch. */
+export function plannedForHunters(plan: AutonomousWorkPlan | undefined): plan is AutonomousWorkPlan {
+  return plan !== undefined;
 }
 
 function httpsUrl(value: string): string | null {
@@ -50,14 +31,10 @@ function stateOf(record: Pick<ProvidedObligation, "subjectId" | "scopeDivisions"
 }
 
 /**
- * CH-23 part 2: the work plan for a provider's paid route that no provider planned, so its Scout runs as a coordinator
- * work item with a plan (one hunter path) instead of in the round's separate research path.
- *
- * The plan keeps the row's own record class and subject. A coordinator Scout records its result under the plan's
- * class and subject, so what already reads Scout results by class and subject (the promotion pipeline, the
- * campaign-site chain) reads these the same way. The Scout is briefed from the route itself: what it is, why no
- * plain client opens it, and its address when it has one. No address is invented: a target that is not an https URL
- * is described, never seeded. No reader door is named here; a provider that holds one plans the route itself (CH-22).
+ * A coordinator work plan for a provider's paid route that no provider planned.
+ * It keeps the row's record class and subject so existing readers of Scout
+ * results see it unchanged. A target that is not an https URL is described,
+ * never seeded.
  */
 export function routeWorkPlan(input: { readonly providerId: string; readonly record: ProvidedObligation; readonly route: RouteDescriptor }): AutonomousWorkPlan | null {
   const { providerId, record, route } = input;
@@ -70,7 +47,7 @@ export function routeWorkPlan(input: { readonly providerId: string; readonly rec
   return {
     version: 1, capability: `${ROUTE_PLAN_CAPABILITY_PREFIX}${providerId}`, jurisdiction: state,
     sourceRegistryReferences: [record.subjectId, route.routeId], seedUrls: seed ? [seed] : [],
-    sources: [], acquisition: [], engineering: [], auditScope: "SOURCE_UNIVERSE",
+    sources: [], acquisition: [], auditScope: "SOURCE_UNIVERSE",
     contract: {
       schemaVersion: 2, recordClass: record.recordClass, subjectId: record.subjectId,
       requiredFields: ["value", "sourceUrl", "sourceSentence"],

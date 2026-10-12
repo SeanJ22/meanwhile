@@ -1,19 +1,13 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-
 import {
   CivicDataStoreUnavailableError,
   civicDataReadNotInitialized,
-  mayUseTestFixture,
-  readPromotedOrBootstrap,
-  type CivicDataBootstrap,
+  readPromotedCivicData,
   type CivicDataReadResult,
   type PromotedCivicDataReadOptions,
 } from "../civic-data/read-model.ts";
 import type { BillSummariesFile } from "./bill-summaries.ts";
 import {
   FEDERAL_ROLLCALL_SCOPE,
-  FEDERAL_VOTES_SOURCE_ID,
   type FederalRollCallsReadModel,
 } from "./data-plane.ts";
 import type { VotesSnapshot } from "./types.ts";
@@ -41,53 +35,21 @@ function validateProjection(value: FederalRollCallsReadModel, versionId: string)
   }
 }
 
-/** Exact frozen-Git payload and provenance for one explicit durable first-seed import. */
-export function federalRollCallsFirstSeed(): CivicDataBootstrap<FederalRollCallsReadModel> {
-  const snapshot = JSON.parse(readFileSync(join(process.cwd(), "data", "votes", "votes-snapshot.json"), "utf8")) as VotesSnapshot;
-  const billSummaries = JSON.parse(readFileSync(join(process.cwd(), "data", "votes", "bill-summaries.json"), "utf8")) as BillSummariesFile;
-  const value: FederalRollCallsReadModel = { formatVersion: 1, snapshot, billSummaries };
-  validateProjection(value, "bundled first seed");
-  return {
-    value,
-    sourceId: FEDERAL_VOTES_SOURCE_ID,
-    version: `${snapshot.congress}-${snapshot.session}`,
-    versionId: `bootstrap:FEDERAL_ROLL_CALL:${snapshot.congress}-${snapshot.session}:${snapshot.generatedAt}`,
-    sourceThrough: snapshot.votes.map((vote) => vote.retrievedAt || vote.date).sort().at(-1) ?? snapshot.generatedAt,
-    retrievedAt: snapshot.generatedAt,
-    detail: "The canonical federal roll-call store answered with no pointer; serving the bundled first-seed projection explicitly.",
-  };
-}
-
-/**
- * Resolve the immutable bill-summary input used while acquiring a new roll
- * window. An answered absent pointer is the one lawful first-seed case: the
- * summaries are reviewed supporting input, not a claim that the tracked vote
- * snapshot is already live. A configured-store failure remains a failure and
- * must never be converted into a bundled fallback.
- */
+/** The promoted bill summaries carried into a new roll-call acquisition. */
 export function billSummariesForRollCallAcquisition(
   current: CivicDataReadResult<FederalRollCallsReadModel>,
 ): BillSummariesFile {
   if (current.kind === "PROMOTED" || current.kind === "BOOTSTRAP") {
     return current.value.billSummaries;
   }
-  if (current.kind === "NOT_RECORDED") {
-    return federalRollCallsFirstSeed().value.billSummaries;
-  }
+  if (current.kind === "NOT_RECORDED") throw new Error(current.detail);
   throw new CivicDataStoreUnavailableError(current);
 }
 
-/** A store error is returned verbatim and never opens the bundled seed. */
 export async function readFederalRollCallsProjection(
   options: PromotedCivicDataReadOptions = {},
 ): Promise<CivicDataReadResult<FederalRollCallsReadModel>> {
-  const result = await readPromotedOrBootstrap({
-    ...options,
-    recordClass: "FEDERAL_ROLL_CALL",
-    scope: FEDERAL_ROLLCALL_SCOPE,
-    bootstrap: federalRollCallsFirstSeed,
-    allowUnconfiguredBootstrap: process.env.NODE_ENV === "development" || mayUseTestFixture(),
-  });
+  const result = await readPromotedCivicData<FederalRollCallsReadModel>("FEDERAL_ROLL_CALL", FEDERAL_ROLLCALL_SCOPE, options);
   readState = result;
   if (result.kind === "PROMOTED" || result.kind === "BOOTSTRAP") {
     validateProjection(result.value, result.metadata.versionId ?? result.kind);
@@ -107,7 +69,7 @@ export async function refreshFederalVotesFromPromoted(
   return result.kind === "PROMOTED" ? result.metadata.versionId : null;
 }
 
-/** The federal roll-call preload, edge first (2026-09-25): the reader edge's proven copy through this Reader, else the database. */
+/** The federal roll-call preload: the reader edge's proven copy, else the database. */
 export const settleFederalVotesRead = (): Promise<string | null> =>
   readPromotedEdgeFirst("FEDERAL_ROLL_CALL", FEDERAL_ROLLCALL_SCOPE, refreshFederalVotesFromPromoted, "The federal roll calls");
 

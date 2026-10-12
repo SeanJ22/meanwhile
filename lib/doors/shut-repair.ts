@@ -1,12 +1,7 @@
 /**
- * DB-34: a shut door is put at the top of the stuck list, and its repair is recorded.
- *
- * When a door goes shut, one fix-list item opens (lib/control-plane/fix-list.ts,
- * the one repair log; nothing separate is kept). When it reopens, that item is
- * completed with what broke, what changed (the door record's own edit when one
- * was made, otherwise "nothing on our side"), who, when it shut and when it
- * reopened. Time to repair and the share of repairs that needed no code come
- * from these items. Nothing here names a place.
+ * When a door goes shut, one fix-list item opens; when it reopens, that item
+ * is completed with what broke, what changed (the record's own edit, or
+ * nothing on our side), who, and when it shut and reopened.
  */
 
 import { addFixItem, completeFixItem } from "../control-plane/fix-list.ts";

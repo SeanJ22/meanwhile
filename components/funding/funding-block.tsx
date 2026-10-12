@@ -15,11 +15,8 @@ import {
 import { StateMoneySection } from "./state-money-section";
 
 /**
- * The official-modal half of the Funding surface (D34): fetches the funding
- * answer for any officeholder from /api/funding, using the same canonical
- * candidacy projection as the ballot and grounded Ask.
- * A fetch failure renders nothing rather than an error a reader can't act
- * on; the section simply isn't there, the same as before it existed.
+ * Fetches the funding answer for any officeholder from /api/funding. A fetch
+ * failure renders nothing.
  */
 
 
@@ -27,12 +24,10 @@ import { StateMoneySection } from "./state-money-section";
 export function FundingBlock(props: {
   holder: SeatHolder;
   reactionContext: ReactionViewContext | null;
-  /** Inside a CardSection that already names the block (6b4). */
+  /** Inside a CardSection that already names the block. */
   bare?: boolean;
 }) {
-  // Keyed on the holder so a holder change discards the fetched state
-  // structurally — a new holder never wears the previous one's answer,
-  // not even for the frames before (or if) the new fetch lands (D40).
+  // Keyed on the holder so a new holder never shows the previous one's answer.
   return <FundingBlockInner key={props.holder.id} {...props} />;
 }
 
@@ -52,9 +47,7 @@ function FundingBlockInner({
     const controller = new AbortController();
     void (async () => {
       try {
-        // The target rides in the PATH, never a query string — a publicly
-        // cacheable response must carry its cache key where every shared
-        // cache honours it (D40).
+        // The target rides in the path, never a query string, so shared caches key on it.
         const response = await fetch(
           `/api/funding/${encodeURIComponent(holder.id)}`,
           { signal: controller.signal },
@@ -69,12 +62,8 @@ function FundingBlockInner({
   }, [holder.id]);
 
   if (loadFailed) return <WorkingOnIt subject={{ type: "CANDIDATE", id: holder.id }} />;
-  // A visible loading line (approved design): an empty open section reads as
-  // "nothing here", which is a claim, while the records are still on the way.
   if (!answer) return <p className="mw-loading-inline" role="status">Loading campaign money…</p>;
-  // The disclosure sentence is computed by the one shared helper so the map
-  // popup and the ballot battlecard render byte-identical text for the same
-  // holding (the render proof asserts map === ballot funding text).
+  // Shared helper, so map and ballot render identical text.
   const freshness = fundingFreshnessNote(answer);
   let content: React.ReactNode = null;
   if (answer.kind === "combined") content = <>

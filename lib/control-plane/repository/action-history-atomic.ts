@@ -1,12 +1,4 @@
-/** Postgres-only receipt + Admin history companion append.
- *
- * The existing generic append repository uses separate HTTP statements for
- * position allocation and receipt insertion. It cannot make a second table
- * write atomic. This function uses one parameterized, data-modifying SQL
- * statement, so Postgres commits or rolls back receipt, companion, scope ref,
- * and readiness invalidation together. The v16 provider routes gateway receipts
- * through this path after its normal schema bootstrap.
- */
+/** One data-modifying SQL statement, so receipt, companion, scope ref and readiness invalidation commit or roll back together. */
 import type { ActionReceipt } from "../gateway/contract.ts";
 import { prepareActionHistoryProjection, type ValidatedActionEvidence } from "../admin-view/action-history-projection.ts";
 import { canonicalJson } from "./types.ts";

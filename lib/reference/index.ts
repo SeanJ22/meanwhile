@@ -1,25 +1,7 @@
 /**
- * The reference universe, read from the repo and nowhere else (Prompt B item
- * 2d, 2026-08-20).
- *
- * `data/reference/` holds the OFFICIAL enumerations this product measures
- * itself against: the 2022 Census of Governments unit file, its dependent
- * school systems companion, the NCES CCD LEA directory, the Open States
- * legislator roster, and three vendor-tenant lists. Coverage is claimed
- * against these and never against our own registry's count — a registry that
- * defines its own denominator cannot be caught missing anything.
- *
- * WHY A LOADER RATHER THAN AD-HOC READS. These files arrived from an
- * acquisition pass that ran outside this repo. The failure mode that follows
- * is a downstream module reading them from wherever they happened to sit at
- * acquisition time — a container's `outputs/`, a desktop folder, an absolute
- * Windows path — which works on exactly one machine and silently narrows the
- * denominator everywhere else. Every read goes through here, `REFERENCE_DIR`
- * is the only path, and `tests/reference-data.test.ts` fails if any other
- * module names one of these files by any other route.
- *
- * The files are large — the Census unit file alone is 18 MB — so nothing is
- * read at import time and every accessor is explicit about what it costs.
+ * The reference universe: the official enumerations under `data/reference/` that coverage is measured
+ * against, never our own registry's count. Every read goes through `REFERENCE_DIR`. The files are large,
+ * so nothing is read at import time.
  */
 
 import { readFileSync, readdirSync } from "node:fs";
@@ -35,13 +17,7 @@ export const REFERENCE_DIR = join(process.cwd(), "data", "reference");
  */
 export const REFERENCE_DATASETS = [
   "boarddocs_tenants",
-  /*
-   * RULING 86 and the RULING 97 accounting (2026-08-24, the state-campaign-money
-   * session). Which office in a state holds CAMPAIGN-FINANCE reports, for all 56
-   * jurisdictions the FEC directory covers, link-verified with a date.
-   *
-   * DERIVED from the FEC directory below rather than hand-kept.
-   */
+  // Which office in each state holds campaign-finance reports. Derived from the FEC directory below.
   "state-cf-agencies",
   "census_govt_units_2022",
   "census_govt_units_2022_dependent_school_systems",
@@ -49,52 +25,17 @@ export const REFERENCE_DATASETS = [
   "granicus_legistar_tenants",
   "nces_ccd_lea_directory_2025_26",
   "openstates_legislators",
-  /*
-   * RULING 69 (NJ Hunt 2, 2026-08-22). The FEC's two directories, as DATA.
-   *
-   * They answer the question the NJ Hunt raised and could not settle: the
-   * variable deciding whether a candidate's contact is reachable is not the
-   * number of routes in the manifest, it is what each state's filing authority
-   * publishes — and there is no national floor for that. These name every
-   * state's election office and, per jurisdiction, the offices holding
-   * disclosure records, the legislative committees on elections and on ethics,
-   * and the associations. They are public domain, being works of the United
-   * States federal government.
-   */
+  // The FEC's state election office and disclosure directories (public domain).
   "fec_state_election_offices",
   "fec_combined_federal_state_disclosure_directory",
-  /*
-   * ADM-23 (the 9.4.26 evening admin feedback), re-acquired at the 2024 vintage
-   * for ADM-41 / §9A.19 (9.6.26). Census ACS 5-Year total population
-   * (B01003_001E) and its published 90% margin of error (B01003_001M) by ZIP
-   * Code Tabulation Area and by state, acquired through the Census Data API by
-   * lib/sources/census-acs-population. 2024 is the newest 5-Year release the
-   * API serves — /data/2025/acs/acs5 answers 404, measured 2026-09-06. The
-   * readiness publisher weights completeness by these; a ZIP with no ZCTA row
-   * is a named gap downstream, never a zero, and an estimate whose margin
-   * reaches zero is rendered as a sentence rather than as a count.
-   */
-  "acs5_2024_b01003_zcta",
-  "acs5_2024_b01003_state",
-  /*
-   * 2026-09-25. The Census of Governments does not enumerate the five
-   * territories, so their registration reads TIGER/Line 2023's functional
-   * status (FUNCSTAT, docs/state.md §4.6 M17) for their county-equivalents,
-   * county subdivisions and places: the attribute tables only, extracted by
-   * scripts/extract-territory-functional-status.mts. It is the evidence behind
-   * each territory government registered, and behind "none recorded" in Guam
-   * and the Virgin Islands.
-   */
   "census_tiger_2023_territory_functional_status",
 ] as const;
 
 export type ReferenceDataset = (typeof REFERENCE_DATASETS)[number];
 
 /**
- * Row counts verified against the FILES on 2026-08-20 (Prompt B item 2b), not
- * copied from the provenance notes. Where a note's claim and the file
- * disagreed, the file won and the disagreement is stated in the report — an
- * expected figure adjusted to match what was found is not a reconciliation.
+ * The Census of Governments does not enumerate the territories, so their registration reads
+ * TIGER/Line 2023 functional status (FUNCSTAT) for county-equivalents, county subdivisions and places.
  */
 export const REFERENCE_ROW_COUNTS: Record<ReferenceDataset, number> = {
   boarddocs_tenants: 0,
@@ -105,24 +46,10 @@ export const REFERENCE_ROW_COUNTS: Record<ReferenceDataset, number> = {
   nces_ccd_lea_directory_2025_26: 19_711,
   openstates_legislators: 7_976,
   fec_state_election_offices: 58,
-  // Re-extracted 2026-10-02: 26 phone continuation cells are not office rows.
+  // Phone continuation cells are not office rows.
   fec_combined_federal_state_disclosure_directory: 323,
-  /*
-   * One row per jurisdiction the FEC directory covers — the 50 states, DC, and
-   * the five territories. It is a DERIVED file, so this figure is a fact about
-   * the directory rather than about a fetch: it moves only when the FEC
-   * publishes a new edition covering a different set of jurisdictions.
-   */
+  // Expected data-row counts, verified against the files themselves.
   "state-cf-agencies": 56,
-  /*
-   * Verified against the API on 2026-09-06: every ZCTA the 2024 5-year
-   * release tabulates (33,772 — the same delineation the 2023 release used)
-   * and the 50 states, DC and Puerto Rico (52). These move only with a new ACS
-   * vintage, and a changed figure is a real change in the country's tabulation
-   * areas, not drift.
-   */
-  acs5_2024_b01003_zcta: 33_772,
-  acs5_2024_b01003_state: 52,
   /*
    * Every territory row of the 2023 TIGER/Line county file (91) and of the
    * five territories' county-subdivision (1,010, of which 46 are the "not
@@ -173,12 +100,7 @@ export function readRecords(dataset: ReferenceDataset): Record<string, string>[]
   });
 }
 
-/* -------------------------------------------------------------------------- */
-/* Recorded properties of this data (Prompt B item 2c).                       */
-/*                                                                            */
-/* These are ENFORCED in tests/reference-data.test.ts rather than written as  */
-/* comments, because each one is a denominator somebody could quietly change. */
-/* -------------------------------------------------------------------------- */
+// Recorded properties of this data, enforced in tests/reference-data.test.ts.
 
 /**
  * 339 Census units carry `is_active = N` and are RETAINED on purpose.
@@ -198,15 +120,9 @@ export const CENSUS_INACTIVE_UNITS = 339;
 export const CENSUS_BLANK_PLACE_TX_UNITS = 13;
 
 /**
- * `web_address` is blank for 51,655 of 90,837 Census units (56.87%), and the
- * Census documents the populated 43% as having had minimal quality control.
- *
- * THIS IS A SEED LIST FOR CRAWLING, NEVER A DETECTION SURFACE. A
- * platform-signature scan over these URLs returned ONE hit in 39,182 Census
- * URLs and ZERO in 17,346 CCD URLs. A future session that treats a blank
- * `web_address` as "this body has no website", or a populated one as
- * evidence of which agenda platform a body runs, is reading a claim this
- * column cannot make.
+ * `web_address` is blank for 51,655 of 90,837 Census units, and the populated ones had minimal quality
+ * control. A seed list for crawling, never a detection surface: a blank value does not mean a body has
+ * no website, and a populated one says nothing about its agenda platform.
  */
 export const CENSUS_BLANK_WEB_ADDRESS = 51_655;
 

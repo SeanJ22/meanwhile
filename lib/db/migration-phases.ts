@@ -1,52 +1,16 @@
 /**
- * **EXPAND AND CONTRACT — WHICH SIDE OF THE DEPLOY A MIGRATION BELONGS ON.**
- *
- * ## The law this makes mechanical was already written, in a migration comment
- *
- * `lib/db/migrations/0013_tier_distribution_bridge.sql` states it in as many
- * words, at the end of a comment nothing can enforce:
- *
- * > a NOT NULL column with no default may only lose its default once the code
- * > that fills it is live.
- *
- * That is one half of a two-sided ordering, and both halves are real:
- *
- *   - **EXPAND** — the migration is purely additive. Old code keeps working
- *     against the new schema, and new code cannot work without it. It MUST be
- *     applied BEFORE the deploy that introduces the code naming it. Shipping
- *     the code first is the 0011 failure and the 0021/0022 failure: every
- *     insert names a column the database does not have, the route catches the
- *     error and serves the page, and the loss is invisible from every surface.
- *
- *   - **CONTRACT** — the migration NARROWS what the database will accept:
- *     a dropped column, a dropped default, a new constraint, a NOT NULL column
- *     with nothing to fill it. The currently deployed build still writes the
- *     old shape, so applying it first BREAKS THE LIVE DEPLOY. It must be
- *     applied only AFTER the code that no longer depends on the old shape is
- *     serving.
- *
- * **Migrate-always-first is therefore wrong half the time**, and a gate that
- * assumed it would have refused `0013`/`0014` — the pair this repository split
- * deliberately, and the reason `pnpm db:apply` grew its `--upto=` flag.
- *
- * ## The phase is DERIVED from the SQL, not asserted beside it
- *
- * `contractSignalsIn` reads a migration's own statements and returns the ones
- * that narrow. `MIGRATION_PHASES` below is the declaration a human writes, and
- * `tests/migration-shipping-invariant.test.ts` fails when the two disagree —
- * RULING 147, the anchor is the thing itself. A declaration that could be
- * written freely would agree with a wrong phase forever, and the wrong phase is
- * precisely a deploy ordered the unsafe way round.
- *
- * A committed migration with NO entry here is a failure, not a default. There
- * is no "assume expand": assuming expand is what orders a contract migration
- * ahead of its code.
+ * Which side of its deploy a migration belongs on.
+ *   - expand: purely additive; apply BEFORE the code that uses it ships.
+ *   - contract: narrows what the database accepts (dropped column or default,
+ *     new constraint, NOT NULL with no fill); apply only AFTER the code that
+ *     no longer needs the old shape is serving.
+ * The phase is derived from the SQL and checked against MIGRATION_PHASES. A
+ * migration with no entry there is a failure, never a default.
  */
 
 /** Which side of its deploy a migration is safe on. */
 export type MigrationPhase = "expand" | "contract";
 
-/** An outcome in the existing owner history, shared by the deploy and stuck views. */
 export const PRODUCTION_MIGRATION_HEADLINE = "Production migrations";
 export interface ProductionMigrationOutcome {
   readonly phase: string;
@@ -90,13 +54,7 @@ export interface PhaseDeclaration {
   readonly why: string;
 }
 
-/**
- * The ordering each phase requires, stated once and read by the gate.
- *
- * `apply` is the machine-checkable half; `sentence` is what a failing run
- * prints, because a gate that refuses without saying which way round is right
- * sends the next session guessing.
- */
+/** The ordering each phase requires; `sentence` is what a failing run prints. */
 export const PHASE_ORDERING: Readonly<
   Record<MigrationPhase, { readonly apply: "before-deploy" | "after-deploy"; readonly sentence: string }>
 > = {
@@ -115,14 +73,7 @@ export const PHASE_ORDERING: Readonly<
   },
 };
 
-/**
- * The shapes that narrow what the database will accept.
- *
- * Each is a rule with a reason. The list only grows: a shape recognised once is
- * recognised forever, and an unrecognised shape falls through to `expand`,
- * which is why the classifier is checked against every committed migration in
- * the suite rather than trusted in the abstract.
- */
+/** Shapes that narrow what the database accepts. An unrecognised shape falls through to expand. */
 const CONTRACT_RULES: readonly {
   rule: string;
   why: string;
@@ -180,19 +131,9 @@ const CONTRACT_RULES: readonly {
 ];
 
 /**
- * The statements in a migration file, with SQL comments removed.
- *
- * **The comment strip is load-bearing and it is not tidiness.**
- * `0011_organic_cerise.sql` opens with a comment that QUOTES the generated
- * statement it was hand-corrected away from — `ADD COLUMN "coverage_tier" text
- * NOT NULL;` — and `0013_tier_distribution_bridge.sql`'s comment says "DROP
- * DEFAULT" in prose. A classifier reading raw text reads both as SQL and
- * reports a phase derived from an explanation of what the file deliberately
- * does NOT do.
- *
- * The breakpoint marker is split off BEFORE comments are stripped, because the
- * marker itself begins with `--` and stripping first would merge every
- * statement into one.
+ * The statements in a migration file, with SQL comments removed so prose that
+ * quotes SQL is not classified. The breakpoint marker is split off before
+ * stripping, because it begins with `--`.
  */
 export function statementsIn(sql: string): string[] {
   return sql
@@ -225,27 +166,13 @@ export function contractSignalsIn(sql: string): ContractSignal[] {
   return found;
 }
 
-/**
- * The phase the SQL itself implies.
- *
- * One narrowing statement makes the whole file a contract: the file is applied
- * atomically, so its safest ordering is the ordering its most dangerous
- * statement needs.
- */
+/** One narrowing statement makes the whole (atomically applied) file a contract. */
 export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: ContractSignal[] } {
   const signals = contractSignalsIn(sql);
   return { phase: signals.length > 0 ? "contract" : "expand", signals };
 }
 
-/**
- * **THE DECLARATION.** Hand-written, one entry per committed migration, and
- * checked against `phaseFromSql` by the suite on every run.
- *
- * Adding a migration without adding a line here fails `pnpm test` on every pull
- * request, locally and on Linux. That is the mechanism, and it is deliberately
- * the cheapest one in the repository to trip: the failure arrives before a
- * database is involved at all.
- */
+/** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 export const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   "0000_square_stryfe": {
     phase: "expand",

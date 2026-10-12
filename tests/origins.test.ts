@@ -19,10 +19,6 @@ import {
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
-/* ========================================================================== */
-/* ITEM F — one production origin, and the three roles never collapse         */
-/* ========================================================================== */
-
 test("the three origins are three distinct hosts", () => {
   const hosts = [PUBLIC_SITE_ORIGIN, STAGING_RENDER_ORIGIN, ADMIN_ORIGIN].map(
     hostOf,
@@ -38,12 +34,7 @@ test("the three origins are three distinct hosts", () => {
 });
 
 test("the legacy host is NOT one of ours", () => {
-  /*
-   * It answers — the Netlify default subdomain never stops answering — and
-   * that is exactly why it must not classify as production. A run that
-   * reaches it has targeted the wrong place, and the honest answer is
-   * `null`, not `production`.
-   */
+  // The Netlify default subdomain still answers, so it must not classify as production.
   assert.equal(originRole(LEGACY_NETLIFY_ORIGIN), null);
   assert.equal(isProductionOrigin(LEGACY_NETLIFY_ORIGIN + "/api/build"), false);
   assert.equal(isProductionOrigin(PUBLIC_SITE_ORIGIN + "/api/build"), true);
@@ -54,27 +45,12 @@ test("the legacy host is NOT one of ours", () => {
 });
 
 test("the Netlify site id is kept apart from the public origin", () => {
-  /*
-   * Renaming the public domain did not rename the site. The deploy-record
-   * reader asks the API about `NETLIFY_SITE_ID_DEFAULT`; asking it about
-   * `meanwhileusa.com` returns 404.
-   */
+  // The deploy-record reader asks the API about the site id; asking about the public host returns 404.
   assert.equal(NETLIFY_SITE_ID_DEFAULT, "sparkwtp.netlify.app");
   assert.notEqual(NETLIFY_SITE_ID_DEFAULT, hostOf(PUBLIC_SITE_ORIGIN));
 });
 
-/* ========================================================================== */
-/* The sweep: the production host is written down ONCE                        */
-/* ========================================================================== */
-
-/**
- * Where the production host may appear as a literal, and why.
- *
- * Each entry is a fact about that file, not a place to park a new copy. The
- * whole point of ITEM F is that thirty copies of one host became thirty facts
- * that could disagree; an allowlist that grows without an argument recreates
- * that.
- */
+/** Where the production host may appear as a literal, and why. Each entry is a fact about that file. */
 const LITERAL_ALLOWED = new Map<string, string>([
   [
     "lib/ops/origins.ts",
@@ -95,46 +71,16 @@ const LITERAL_ALLOWED = new Map<string, string>([
   ["tests/origins.test.ts", "this file asserts the host's value"],
   [
     "lib/control-plane/admin-google.ts",
-    // RULING 245 enrolls exactly one Google identity, and an identity is an
-    // EMAIL ADDRESS, not an origin: it happens to sit at the owner's domain and
-    // would not move if the product's host did. Deriving it from
-    // PUBLIC_SITE_ORIGIN would tie who may administer the product to where the
-    // product is served from, which is the wrong fact. The bare-origin check
-    // below still applies to the file.
-    "the enrolled owner address (RULING 245) — an identity, never a call site",
-  ],
-  [
-    "lib/governance/adoptions.ts",
-    // RULING 233's body states the shipping law in the author's own words, and
-    // those words name both hosts: "main is production and deploys to
-    // meanwhileusa.com. staging is the integration branch and deploys to
-    // test.meanwhileusa.com." That is QUOTED LAW, not a call site — nothing in
-    // this file is fetched, rendered or compared against, and a ruling body
-    // rewritten to satisfy a lint is a different ruling. The file is data.
-    "governance record bodies quote the law verbatim; a ruling is not a call site",
-  ],
-  [
-    "lib/tracker/registry.mjs",
-    // NH304's decision card asks the author to choose between two hosts, so it
-    // has to name both of them. Same shape as the ruling above: prose the
-    // author reads, not an address anything resolves.
-    "decision-card text names the hosts the decision is between",
+    // An enrolled identity is an email address, not an origin, so it is not derived from PUBLIC_SITE_ORIGIN.
+    "the enrolled owner address — an identity, never a call site",
   ],
 ]);
 
 /**
- * The allowlist is for PROSE, and this is what keeps it honest.
- *
- * An allowlist entry that merely says "trust me" grows until the guard means
- * nothing — the failure mode is not the first entry, it is the fourth, added
- * because the third was there. So every allowlisted file is checked for the
- * one thing the guard actually exists to prevent: **a bare origin literal**,
- * which is what a call site looks like.
+ * Allowlisted files may hold prose naming the host, never a bare origin literal (a call site):
  *
  *     "https://meanwhileusa.com"          <- a call site. Refused, allowlisted or not.
  *     "…deploys to meanwhileusa.com. …"   <- prose. Allowed.
- *
- * `lib/ops/origins.ts` is exempt from this check because it IS the declaration.
  */
 const BARE_ORIGIN_LITERAL = /(["'`])https:\/\/(?:[a-z]+\.)?meanwhileusa\.com\/?\1/g;
 
@@ -150,8 +96,7 @@ function gitGrepFiles(pattern: string, paths: string[]): string[] {
     );
     return out.trim().split("\n").filter(Boolean);
   } catch (err) {
-    // git grep exits 1 with no output when nothing matches — that is a pass,
-    // not a failure. Anything else is a real error and must not read as clean.
+    // git grep exits 1 with no output when nothing matches.
     const e = err as { status?: number; stdout?: string };
     if (e.status === 1 && !e.stdout?.trim()) return [];
     throw err;
@@ -203,17 +148,7 @@ test("the legacy host survives only as the site id and the redirect", () => {
     "lib/ops/origins.ts",
     "netlify.toml",
     "scripts/deploy-live.mjs",
-    "scripts/handoff.mjs",
     "tests/origins.test.ts",
-    // Both of these QUOTE the legacy host inside recorded evidence, and the
-    // evidence is worth more than the tidiness. RULING 235's body reproduces
-    // the exact 422 that proves a managed DNS record cannot point at a branch
-    // deploy — `value: staging--sparkwtp.netlify.app` — and NS12's predicate
-    // reproduces the `pnpm deploy:live` reading that closed it, which names
-    // the SITE. Rewriting either to satisfy a sweep would delete the thing
-    // that makes it evidence.
-    "lib/governance/adoptions.ts",
-    "lib/tracker/registry.mjs",
   ]);
   const offenders = gitGrepFiles("sparkwtp", [
     ...SWEPT,

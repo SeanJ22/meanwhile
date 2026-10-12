@@ -8,7 +8,7 @@ import type { FixItem } from "../lib/control-plane/fix-list.ts";
 import { SHUT_DOOR_FIX_BY } from "../lib/doors/shut-repair.ts";
 
 const NOW = "2026-10-05T12:00:00Z";
-const base = (over: Partial<DoorNumberReadings> = {}): DoorNumberReadings => ({ now: NOW, shutDoors: { shut: 2, open: 40, setAside: 1, unreadable: 0 }, overdue: [], posting: [], fixes: [], ...over });
+const base = (over: Partial<DoorNumberReadings> = {}): DoorNumberReadings => ({ now: NOW, shutDoors: { shut: 2, open: 40, setAside: 1, unreadable: 0 }, overdue: [], scheduled: 30, posting: [], fixes: [], ...over });
 const post = (firstSeenAt: string, minutes: number | null, basis: "POSTED" | "FIRST_SEEN" = "POSTED"): PostingToLiveRow => ({
   recordKey: "meeting:x", kind: "MEETING_NEW", versionId: "v", postedAt: null, firstSeenAt, lastUnchangedAt: null, liveAt: minutes === null ? null : firstSeenAt, basis, minutesToLive: minutes, startsAt: null, insideSevenDayWindow: null,
 });
@@ -17,7 +17,7 @@ const fix = (addedAt: string, fixedAt: string | null, changedBy?: string): FixIt
 });
 
 test("every door row says why it has no value when its reading failed", () => {
-  const rows = doorRows(base({ shutDoors: null, overdue: null, posting: null, fixes: null }));
+  const rows = doorRows(base({ shutDoors: null, overdue: null, scheduled: null, posting: null, fixes: null }));
   for (const id of ["Shut doors", "Posted to live", "Overdue doors", "Time to repair", "Repairs without code"]) {
     assert.equal(rows.get(id)!.value, null, id);
     assert.notEqual(rows.get(id)!.notMeasured, null, id);
@@ -39,7 +39,7 @@ test("overdue doors show the late count against open doors and the facts behind 
   const late: OverdueDoor = { doorId: "d1", kind: "legistar", bodyIds: ["b"], lastSuccessAt: null, checkEveryMinutes: 60, checkEverySetOnDoor: false, overdueByMinutes: 90, liveFacts: 12 };
   const r = doorRows(base({ overdue: [late, { ...late, doorId: "d2", liveFacts: null }] })).get("Overdue doors")!;
   assert.equal(r.value, "2");
-  assert.match(r.counts!, /2 of 40 open doors are past their check · 12 live facts behind 1 of them, 1 not counted yet/);
+  assert.match(r.counts!, /2 of 30 doors read on a schedule are past their check · 12 live facts behind 1 of them, 1 not counted yet/);
   assert.equal(doorRows(base()).get("Overdue doors")!.value, "0");
 });
 

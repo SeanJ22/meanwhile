@@ -1,5 +1,5 @@
 /**
- * CH-24 part 2: the standing hunter lane works the round's queue with no
+ * The standing hunter lane works the round's queue with no
  * 15-minute slice. It re-arms its guards mid-wave, runs plain-code tasks while
  * paid work is held and the paid ones once it opens, picks up each new queue,
  * ends at the end of its life or on a release drain, and releases the request
@@ -118,7 +118,7 @@ test("CH-24 lane: the round under the switch closes its own model lane after any
   assert.match(round, /const CONTINUOUS_HUNTERS = process\.env\.WTP_CONTINUOUS_HUNTERS === "1";/);
   assert.match(round, /const laneClosure = modelLaneClosure\(\{[\s\S]{0,800}?paidWorkInHunterLane: CONTINUOUS_HUNTERS,\n  unreadableControls,\n\}\);/);
   assert.match(round, /row\.action === "SCOUT" && \(CONTINUOUS_HUNTERS \|\| paidWorkerCapacity\(\) > 0\)/);
-  const wave = round.slice(round.indexOf("if (CONTINUOUS_HUNTERS) {\n    /* CH-24 part 2"), round.indexOf("const workerDispatches = await runLeaseWorkerProcesses({"));
+  const wave = round.slice(round.indexOf("if (CONTINUOUS_HUNTERS) {"), round.indexOf("const workerDispatches = await runLeaseWorkerProcesses({"));
   assert.match(wave, /writeHunterQueue\(hunterQueuePath\(hunterLaneArmingPath\(ROOT\)\)/);
   assert.match(wave, /return \{ \.\.\.planned, dispatches: \[\.\.\.queueFailures\], scoutsAdmitted: 0, scoutsLimitedAdmitted: 0 \};/);
 });
@@ -136,7 +136,7 @@ test("CH-24 lane: the runner starts the lane only under the switch, names one re
 });
 
 test("CH-24 lane: under the switch the round's model lane closes last, so an owner pause is still named as the pause", () => {
-  const facts = { dry: false, noModel: false, credentialConfigured: true, credentialVar: "K", activation: { promotionEnabled: true, openRecordClasses: ["MEETING"] } as never,
+  const facts = { dry: false, noModel: false, credentialConfigured: true, credentialVar: "K",
     paused: false, pauseIntentId: null, runnerPaused: false, runnerPauseIntentId: null, spendHold: null, unreadableControls: [] };
   assert.equal(modelLaneClosure(facts), null);
   assert.match(modelLaneClosure({ ...facts, paidWorkInHunterLane: true })!.reason, /runs in the standing hunter lane/);

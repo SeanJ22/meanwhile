@@ -10,14 +10,7 @@ import {
   blurbForBody,
 } from "../lib/officials/body-description.ts";
 
-/*
-  M136 — the body battlecard reaches person-card depth.
-
-  The spec's own done-test: Pima (county), Tucson (municipal) and Tucson
-  Unified (school) each render every applicable section with either content or
-  an honest line. These are the tree-side half; the walk asserts the rendered
-  half against production on all three.
-*/
+/* The body battlecard renders every applicable section with either content or an honest line. */
 
 const ROOT = process.cwd();
 const PIMA = "ocd-division/country:us/state:az/county:pima";
@@ -57,8 +50,7 @@ test("M136: Tucson's own entry wins over the state-level one", () => {
 });
 
 test("M136: a body with no read statute gets the honest line, never a paraphrase", () => {
-  // New Hampshire is the live case: Newbury, Kearsarge and Merrimack County
-  // are all covered bodies whose enabling law nobody has read yet.
+  // Covered bodies whose enabling law has not been read.
   for (const ocdId of [
     "ocd-division/country:us/state:nh/county:merrimack",
     "ocd-division/country:us/state:nh/place:newbury",
@@ -98,13 +90,7 @@ test("M136: every blurb carries a checkable basis — no unsourced prose anywher
 });
 
 test("M136: the card renders the same SET of sections for every body", () => {
-  /*
-    The equal-effort shape, enforced where it is decided. A section is never
-    hidden for lack of content: an empty section collapses closed with its
-    honest line inside and its header visible (M93, 2026-08-17). Hiding
-    empties would make a well-covered body's card taller than a thin one's,
-    which is a layout asymmetry.
-  */
+  /* A section is never hidden for lack of content: an empty section collapses closed with its honest line inside. */
   const source = readFileSync(
     join(ROOT, "components/map/popup/entity-modal.tsx"),
     "utf8",

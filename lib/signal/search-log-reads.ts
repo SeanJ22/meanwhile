@@ -3,30 +3,13 @@ import { and, eq, sql, type SQL } from "drizzle-orm";
 import { searchLog } from "../db/schema.ts";
 
 /**
- * THE ONLY DOOR INTO THE SEARCH LOG FOR ANYTHING THAT AGGREGATES (C05).
+ * The only door into the search log for anything that aggregates. Our own automated traffic must never
+ * be in anything sold, so the filter is not a convention: it is the only exported way to build a query
+ * against this table, `tests/search-log-exclusion.test.ts` asserts no other module reads `search_log`,
+ * and every aggregate reports the ORGANIC count and says so in words.
  *
- * Roughly 537 rows on production are ours — written by local and CI Playwright
- * runs — and every walk adds about 28 more. Nothing sold may ever contain
- * them. A filter that each aggregate remembers to apply is a filter one
- * aggregate will forget, and the forgetting is invisible: the number just
- * comes out slightly too high, in our favour, on the thing we are selling.
- *
- * So the filter is not a convention. It is the only exported way to build a
- * query against this table, `tests/search-log-exclusion.test.ts` asserts that
- * no other module reads `search_log` without going through here, and the
- * denominator every aggregate reports is the ORGANIC count and says so in
- * words wherever it is rendered or exported.
- *
- * ## Why UNKNOWN is excluded and not merged into organic
- *
- * `UNKNOWN` means the row predates the marker, or arrived declaring itself
- * automated without a usable run id. Counting it as a reader would be a guess
- * in our own favour on a number a buyer pays for. Excluding it is a guess in
- * the other direction, and that is the direction the product has to err in:
- * an undercount stated honestly is a smaller number, while an overcount is a
- * false claim about a district. Every row written before 2026-08-17 is
- * UNKNOWN, and the honest reading of the historical log is that it is not
- * sellable.
+ * `UNKNOWN` (rows predating the marker, or declaring automation without a usable run id) is excluded, not
+ * merged into organic: an undercount stated honestly beats an overcount.
  */
 
 /** The classes an aggregate may count. Exactly one. */
@@ -63,17 +46,8 @@ export interface RunClassCensus {
 }
 
 /**
- * The counts, which the brief requires stating and which every export's
- * confidence mix should carry.
- *
- * Deliberately NOT filtered: this is the one read whose job is to describe the
- * whole table, including the part that is ours. It reports rather than
- * aggregates, so it is not a sold number and does not go through the filter.
- *
- * `author` joined the census on 2026-08-17 with the class itself. A class that
- * exists in the data and not in the census is a row the census cannot account
- * for — `organic + synthetic + unknown` would simply stop summing to `total`,
- * and a census that does not reconcile is worse than no census.
+ * The run-class census. Deliberately not filtered: it describes the whole table, including our own
+ * traffic, and is a report, not a sold number. Every class appears, so the parts sum to `total`.
  */
 export function runClassCensusQuery(): SQL {
   return sql`
@@ -88,29 +62,10 @@ export function runClassCensusQuery(): SQL {
 }
 
 /**
- * **THE SAME CENSUS, OVER A DATE WINDOW, AS RAW SQL** (MAPQ-7, 2026-09-07).
- *
- * The MapTiler usage panel compares what the provider billed us for against
- * what OUR OWN declared actor classes did over the same billing window. That
- * comparison needs the census restricted to a window, and it needs it as a
- * string because `scripts/maptiler-usage.mts` speaks to the production replica
- * through the Neon HTTP driver rather than through Drizzle.
- *
- * It lives HERE, beside `runClassCensusQuery`, because this module is the only
- * door into this table and `tests/search-log-exclusion.test.ts` enforces that.
- * A windowed census hand-written inside a script would be a second reader of
- * `search_log` that nothing checks — which is exactly the shape of forgetting
- * the guard exists to prevent, even though a census is a report rather than a
- * sold number.
- *
- * Like `runClassCensusQuery`, it is deliberately NOT filtered: its job is to
- * describe the whole window, including the part that is ours. Nothing it
- * returns may be presented as a reader count without the exclusions stated
- * beside it, and `organicDenominatorSentence` is how that is said.
- *
- * Two positional parameters: the inclusive start and the exclusive end, as ISO
- * timestamps. Parameterised rather than interpolated, so a window can never
- * become SQL.
+ * The same census over a date window, as raw SQL for callers that use the Neon HTTP driver. Lives here
+ * because this module is the only door into the table. Not filtered; nothing it returns may be
+ * presented as a reader count without `organicDenominatorSentence` beside it. Two positional parameters:
+ * inclusive start and exclusive end, ISO timestamps.
  */
 export const RUN_CLASS_CENSUS_WINDOW_SQL = `
   SELECT run_class, COUNT(*)::int AS n

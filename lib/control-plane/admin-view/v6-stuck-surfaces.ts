@@ -8,11 +8,7 @@ import {
 } from "../../health/surface-speed.ts";
 import type { AdminV6StuckItem } from "./v6-stuck-read.ts";
 
-/**
- * FE-26: pages over their speed limit (or never finishing) and link kinds with dead links, for the top of the stuck list beside shut doors.
- * Both readings come from plain-code checks (the speed pass and the link sweep); nothing here uses AI. A reading that cannot be taken
- * says so (`unread`), never an empty list passed off as "all well".
- */
+/** A reading that cannot be taken says `unread`, never an empty list passed off as "all well". */
 export async function readSurfaceItems(nowIso: string): Promise<{ readonly items: readonly AdminV6StuckItem[]; readonly unread: boolean }> {
   const opened = await openControlPlane().catch(() => null);
   if (opened === null || !opened.ok) return { items: [], unread: true };

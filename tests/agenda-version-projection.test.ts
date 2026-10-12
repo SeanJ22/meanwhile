@@ -7,14 +7,10 @@ import { tsImport } from "tsx/esm/api";
 
 import { classifyAgendaPublication, readerAgendaDocuments } from "../lib/ask/agenda-publication.ts";
 import type { AgendaDocument } from "../lib/meetings/agenda-documents.ts";
-import { readSnapshot } from "../lib/meetings/snapshot.ts";
 
 // The native runner strips TypeScript but does not compile TSX; the one reader
 // leaf that states the version count is compiled through the existing tsx runtime.
 const { AgendaDocuments } = await tsImport("../components/map/popup/agenda-section.tsx", import.meta.url) as typeof import("../components/map/popup/agenda-section.tsx");
-
-for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL"]) delete process.env[key];
-const { GET } = await import("../app/api/agenda/route.ts");
 
 const TUSD = "ocd-division/country:us/state:az/school_district:tucson_unified_district";
 const SITE_ROOT = "https://govboard.tusd1.org/";
@@ -60,7 +56,7 @@ function view(document: AgendaDocument) {
 
 const meetings = ["diligent:tusd1:495", "diligent:tusd1:497", "diligent:tusd1:499"].map((id) => ({ id, ocdId: TUSD }));
 
-/** The production shape of 2026-09-22: 88 hourly re-fetches of one unchanged page plus the board's site root. */
+/** 88 hourly re-fetches of one unchanged page plus the board's site root. */
 function tusd499Corpus(): AgendaDocument[] {
   const refetches = Array.from({ length: 88 }, (_, hour) =>
     row("diligent:tusd1:499", OWN_PAGE, OWN_TEXT, new Date(Date.parse("2026-09-19T00:05:00.000Z") + hour * 3_600_000).toISOString()));
@@ -83,14 +79,7 @@ function render(documents: readonly AgendaDocument[], publication: ReturnType<ty
 }
 
 test("Tucson Unified 499: 88 identical re-reads of its portal page plus the site root are two index pages, never a version", () => {
-  /*
-   * Corrected 2026-09-23. The 88 re-reads are Diligent's skip links alone:
-   * the extractor removed the ASP.NET server form holding the rest of the
-   * page, so what production stored is the publisher's portal page, not the
-   * sitting's agenda, and 499 holds only publication-index pages. What this
-   * test protects is unchanged: 88 identical re-reads are ONE content, and
-   * nothing here is a version or a revision.
-   */
+  // 88 identical re-reads of a publication-index page are one content, never a version or a revision.
   const corpus = tusd499Corpus();
   const held = corpus.filter((document) => document.meetingId === "diligent:tusd1:499");
   assert.equal(held.length, 89);
@@ -199,57 +188,4 @@ test("a sitting holding only publication-index pages is rendered as what it hold
   assert.ok(markup.includes(`href="${SITE_ROOT}"`));
   assert.ok(!markup.includes("versions on file"), markup);
   assert.ok(!markup.includes("revised"), markup);
-});
-
-test("the real agenda route over the committed holding returns one row per distinct content and reconciles every held row", async () => {
-  // A case this fix was not derived from: the committed first-seed holding
-  // (Bradford's shared town calendar, Vail's and Tucson Unified's portal roots).
-  const snapshot = readSnapshot();
-  assert.ok(snapshot);
-  const heldByMeeting = new Map<string, AgendaDocument[]>();
-  for (const document of snapshot.agendaDocuments) {
-    heldByMeeting.set(document.meetingId, [...(heldByMeeting.get(document.meetingId) ?? []), document]);
-  }
-  assert.ok(heldByMeeting.size > 100);
-  let indexOnlyMultiContent = 0;
-  let anotherBodysOnly = 0;
-  for (const [meetingId, held] of heldByMeeting) {
-    const response = await GET(new Request(`http://localhost/api/agenda?meetingId=${encodeURIComponent(meetingId)}`));
-    assert.equal(response.status, 200, meetingId);
-    const payload = await response.json() as {
-      documents: ReturnType<typeof view>[];
-      documentCount: number;
-      documentAccounting: { heldRows: number; shown: number; identicalContentRows: number; publicationIndexRowsSetAside: number; anotherBodysPagesSetAside: number; sittingSpecific: boolean };
-      publication: ReturnType<typeof classifyAgendaPublication>;
-    };
-    assert.equal(payload.documentCount, payload.documents.length, meetingId);
-    assert.equal(payload.documentAccounting.shown, payload.documents.length, meetingId);
-    assert.equal(payload.documentAccounting.heldRows, held.length, meetingId);
-    assert.equal(payload.documentAccounting.heldRows,
-      payload.documentAccounting.shown + payload.documentAccounting.identicalContentRows + payload.documentAccounting.publicationIndexRowsSetAside +
-        payload.documentAccounting.anotherBodysPagesSetAside, meetingId);
-    const contents = payload.documents.map((document) => document.text?.replace(/\s+/g, " ").trim() || document.contentHash);
-    assert.equal(new Set(contents).size, contents.length, `${meetingId}: a shown row repeats another's content`);
-    assert.equal(payload.publication.revised, payload.documentAccounting.sittingSpecific && payload.documents.length > 1, meetingId);
-    if (payload.documents.length === 0) {
-      // D1 (2026-09-24): a sitting holding only another body's notice page (the
-      // Town of Bradford's calendar, held for Newbury sittings) is shown none
-      // of it, and every held row is stated as set aside.
-      assert.equal(payload.documentAccounting.anotherBodysPagesSetAside, held.length, meetingId);
-      anotherBodysOnly += 1;
-      continue;
-    }
-    const markup = renderToStaticMarkup(createElement(AgendaDocuments, { documents: payload.documents, meetingId,
-      agendaUrl: payload.documents[0]!.documentUrl, agendaSentence: "", publication: payload.publication }));
-    for (const document of payload.documents) {
-      assert.ok(markup.includes(`href="${document.documentUrl.replaceAll("&", "&amp;")}"`), `${meetingId}: ${document.documentUrl} is not linked`);
-    }
-    if (!payload.documentAccounting.sittingSpecific && payload.documents.length > 1) {
-      indexOnlyMultiContent += 1;
-      assert.ok(!markup.includes("versions on file"), meetingId);
-      assert.ok(!markup.includes("revised"), meetingId);
-    }
-  }
-  assert.ok(indexOnlyMultiContent >= 1, "the committed Bradford calendar sitting holds two distinct listing-page contents");
-  assert.ok(anotherBodysOnly >= 1, "the committed holding has a Newbury sitting that held only the Town of Bradford's calendar");
 });

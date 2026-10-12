@@ -36,9 +36,7 @@ function findingCodes(result:{readonly findings?:readonly {readonly code:string}
   const codes=[...new Set((result.findings??[]).map(row=>plainCode(row.code)).filter(Boolean))];
   return codes.length?` Recorded reasons: ${codes.slice(0,4).join("; ")}${codes.length>4?`; ${codes.length-4} more in the result`:""}.`:"";
 }
-/** Per-item execution evidence from the already-targeted Admin read. Every
- * displayed join is exact work/attempt/artifact/result identity. No model
- * narrative, raw saved bytes or URL credentials enter this projection. */
+/** Every join is exact work/attempt/artifact/result identity; no raw saved bytes or URL credentials enter it. */
 export function assignmentEvidenceTrail(sources:AssignmentSources,assignmentId:string,nextAction:string|null):AssignmentEvidenceTrail {
   const items=sources.workItems.filter(item=>item.id===assignmentId ||
     sources.obligations.some(ob=>ob.id===assignmentId&&sources.occurrences.some(occ=>occ.workItemId===item.id&&occ.obligationId===ob.id)));

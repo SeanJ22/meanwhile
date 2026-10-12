@@ -1,43 +1,33 @@
 #!/usr/bin/env tsx
 /**
- * **SEED / GROW THE FIELD MANUAL FROM EVERY SCATTERED KNOWLEDGE STORE.**
- * (Owner directive 2026-09-19 — consolidate discovery knowledge into one
- * growing store, without loss.)
+ * Seeds and grows the field manual from the knowledge stores. Each store is
+ * folded into the field manual (one row per entry) as typed entries whose
+ * `payload` keeps the original record verbatim. It only ever grows: a re-run
+ * refreshes entries in place and never removes one. The large Markdown
+ * method-of-record docs are indexed as pointer entries; their text stays in git.
  *
- * Reads each machine-readable knowledge store and folds it into the one
- * `cp_field_manual` aggregate as typed, projectable entries whose `payload`
- * keeps the ORIGINAL record verbatim — so nothing is dropped to look tidy. It
- * only ever grows: a re-run refreshes entries in place and never removes one.
- * The big Markdown method-of-record docs (the playbook, the source ladder, the
- * per-state dossiers) are indexed as pointer entries — their full narrative
- * stays version-controlled in git, and the manual now knows they exist and what
- * they cover.
- *
- * Usage (safe by default — writes the LOCAL file provider unless told otherwise):
+ * Usage (writes the LOCAL file provider unless told otherwise):
  *   node --env-file=<main .env.local> --experimental-strip-types \
  *     --import ./scripts/register-test-loader.mjs scripts/field-manual-seed.mts \
  *     [--target=control-plane|file|memory] [--dry]
  */
 
-import { readdirSync, readFileSync, statSync } from "node:fs";
+import { readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 import {
   fieldManualEntryId,
-  readFieldManual,
   writeFieldManual,
   type FieldManualEntry,
   type FieldManualOutcome,
   type FieldManualRole,
 } from "../lib/control-plane/field-manual.ts";
-import { leadLine, researchDocEntries, splitMarkdownDocument } from "../lib/method/research-docs.ts";
 import { defaultPlaybookEntries } from "../lib/control-plane/playbooks.ts";
-import { MANIFEST_ROUTES } from "../lib/hunt/branch-manifest.ts";
 import { platformFingerprintEntries } from "../lib/control-plane/platform-fingerprints.ts";
-import { DESCENT_SEEDS } from "../lib/hunt/descent-seeds.ts";
 import { COVERAGE_AUDITS } from "../lib/registry/coverage-audit.ts";
 import { LEGISTAR_CLIENTS } from "../lib/sources/legistar/client-registry.ts";
 import { INSITE_TENANTS } from "../lib/sources/legistar-insite/tenant-registry.ts";
+import { ensureMeetingDoors } from "../lib/doors/meeting-doors.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
@@ -86,19 +76,6 @@ function latestDate(...values: (string | null | undefined)[]): string | null {
   return dates.length === 0 ? null : dates.sort().at(-1)!;
 }
 
-const PLATFORM_TOKENS: readonly [RegExp, string][] = [
-  [/legistar[- ]?insite/i, "legistar-insite"], [/legistar/i, "legistar"], [/civicclerk/i, "civicclerk"],
-  [/civicplus/i, "civicplus"], [/granicus/i, "granicus"], [/novus\s?agenda|novus/i, "novusagenda"],
-  [/boardbook/i, "boardbook"], [/primegov/i, "primegov"], [/onbase|hyland/i, "onbase"],
-  [/apptegy|thrillshare/i, "apptegy"], [/diligent/i, "diligent"], [/revize/i, "revize"], [/escribe/i, "escribe"],
-];
-/** Vendor platforms named in a heading or line. A platform hint sharpens a platform-scoped query and never hides an entry from the scout path, which does not filter on it. */
-function platformHints(text: string): string[] {
-  const out = new Set<string>();
-  for (const [re, id] of PLATFORM_TOKENS) if (re.test(text)) out.add(id);
-  return [...out];
-}
-
 /* ------------------------------------------------------------- importers --- */
 
 const perSource = new Map<string, number>();
@@ -107,54 +84,8 @@ function collect(source: string, entries: FieldManualEntry[]): FieldManualEntry[
   return entries;
 }
 
-function fromManifest(): FieldManualEntry[] {
-  const src = "lib/hunt/branch-manifest.ts";
-  return collect(src, MANIFEST_ROUTES.map((route) => ({
-    id: fieldManualEntryId(src, route.id),
-    role: "SCOUT" as FieldManualRole,
-    kind: "MANIFEST_BRANCH",
-    title: route.what,
-    summary: `${route.how} → ${route.yields}`,
-    states: stateOf(route.how, route.what, route.through),
-    recordClasses: [...route.fields],
-    platforms: [],
-    outcome: "REFERENCE" as FieldManualOutcome,
-    url: null,
-    source: src,
-    observedAt: null,
-    tier: route.tier,
-    payload: route,
-  })));
-}
-
 function fromPlatforms(): FieldManualEntry[] {
   return platformFingerprintEntries();
-}
-
-function fromDescentSeeds(): FieldManualEntry[] {
-  const src = "lib/hunt/descent-seeds.ts";
-  const entries: FieldManualEntry[] = [];
-  for (const [state, seeds] of Object.entries(DESCENT_SEEDS)) {
-    for (const seed of seeds) {
-      entries.push({
-        id: fieldManualEntryId(src, `${state}:${seed.url}`),
-        role: "SCOUT",
-        kind: "DESCENT_SEED",
-        title: `${seed.tier} descent door — ${seed.publisher}`,
-        summary: `${seed.why} (control string: ${seed.control})`,
-        states: [state.toLowerCase()],
-        recordClasses: [],
-        platforms: [],
-        outcome: "REFERENCE",
-        url: seed.url,
-        source: src,
-        observedAt: null,
-        tier: null,
-        payload: seed,
-      });
-    }
-  }
-  return collect(src, entries);
 }
 
 function fromCoverageAudits(): FieldManualEntry[] {
@@ -220,7 +151,6 @@ function fromDocs(): FieldManualEntry[] {
   const docs: { path: string; kind: string; role: FieldManualRole; states: string[]; title: string }[] = [
     { path: "docs/zip-playbook.md", kind: "PLAYBOOK", role: "SHARED", states: [], title: "The ZIP discovery playbook (lettered A–M ladder, dated rungs and dead doors, definition-of-done)" },
     { path: "docs/source-ladder.md", kind: "PLAYBOOK", role: "SHARED", states: [], title: "The source ladder — per-body evidence: every rung walked, every wall that fell" },
-    { path: "docs/branch-manifest.md", kind: "PLAYBOOK", role: "SCOUT", states: [], title: "The branch manifest, question-indexed (candidate field → ordered route ids)" },
     { path: "docs/sources.md", kind: "SOURCE_REGISTER", role: "SHARED", states: [], title: "The global source & credential register (wired/auth/licence)" },
   ];
   const entries: FieldManualEntry[] = [];
@@ -244,6 +174,7 @@ function fromDocs(): FieldManualEntry[] {
       platforms: [],
       outcome: "REFERENCE",
       url: doc.path,
+      portable: true,
       source: doc.path,
       observedAt: null,
       tier: null,
@@ -254,11 +185,9 @@ function fromDocs(): FieldManualEntry[] {
 }
 
 /**
- * The vendor TENANT registries — the single most reusable thing in the whole
- * inventory and the one that was not even pointed to: a bodyId → tenant slug →
- * exact API URL. Read only the scalar wiring; never the `venues` getter, which
- * resolves against the promoted projection at runtime and is not this seed's to
- * touch.
+ * The vendor tenant registries: bodyId → tenant slug → exact API URL. Reads only
+ * the scalar wiring, never the `venues` getter, which resolves against the
+ * promoted projection at runtime.
  */
 function fromTenantRegistries(): FieldManualEntry[] {
   const entries: FieldManualEntry[] = [];
@@ -340,143 +269,12 @@ function fromTiers(): FieldManualEntry[] {
   return collect(path, entries);
 }
 
-/** The descent RESULTS — the harvested candidate bodies per tier, per state. One entry per tier walked, the whole level (declined doors and all) kept in payload. */
-function fromDescentResults(): FieldManualEntry[] {
-  const entries: FieldManualEntry[] = [];
-  for (const state of ["az", "nh", "nj"]) {
-    const path = `states/${state}/descent.json`;
-    let doc: { startedOn?: unknown; levels?: unknown };
-    try { doc = JSON.parse(readFileSync(join(ROOT, path), "utf8")); } catch { continue; }
-    const levels = Array.isArray(doc.levels) ? (doc.levels as Record<string, unknown>[]) : [];
-    for (const lvl of levels) {
-      const tier = String(lvl.tier ?? "");
-      const yielded = Number(lvl.yielded ?? 0);
-      const newCand = Number(lvl.candidatesNew ?? 0);
-      const vocab = strings(lvl.vocabulary);
-      entries.push({
-        id: fieldManualEntryId(path, tier),
-        role: "SHARED",
-        kind: "DESCENT_RESULT",
-        title: `${state.toUpperCase()} ${tier} descent${doc.startedOn ? ` (${String(doc.startedOn)})` : ""}`,
-        summary: `found ${lvl.found}, followed ${lvl.followed}, yielded ${yielded}, barren ${lvl.barren}; ${newCand} new candidate bodies; vocabulary ${vocab.join("/") || "none"}`,
-        states: [state],
-        recordClasses: [],
-        platforms: [],
-        outcome: yielded > 0 ? "YIELDED" : newCand > 0 ? "REFERENCE" : "ZERO",
-        url: null,
-        source: path,
-        observedAt: typeof lvl.walkedOn === "string" ? lvl.walkedOn : (typeof doc.startedOn === "string" ? doc.startedOn : null),
-        tier,
-        payload: lvl,
-      });
-    }
-  }
-  return collect("states/*/descent.json", entries);
-}
-
-/** The citation ledger — a proven officeholder source cannot delete a person from a reader's page. One entry per distinct confirming URL, its people kept in payload. */
-function fromCitationConfirmations(): FieldManualEntry[] {
-  const path = "data/states/nj/hunt/citation-confirmations.json";
-  let doc: { rows?: unknown };
-  try { doc = JSON.parse(readFileSync(join(ROOT, path), "utf8")); } catch { return collect(path, []); }
-  const rows = Array.isArray(doc.rows) ? (doc.rows as Record<string, unknown>[]) : [];
-  const byUrl = new Map<string, { url: string; source: string; last: string; persons: { person: string; firstConfirmedOn: string; lastConfirmedOn: string }[] }>();
-  for (const r of rows) {
-    const url = typeof r.url === "string" ? r.url : "";
-    if (!url) continue;
-    const person = String(r.person ?? "").replace(/^[\s:*]+/, "").replace(/\s+/g, " ").trim();
-    const last = String(r.lastConfirmedOn ?? "");
-    const g = byUrl.get(url) ?? { url, source: String(r.source ?? ""), last: "", persons: [] };
-    g.persons.push({ person, firstConfirmedOn: String(r.firstConfirmedOn ?? ""), lastConfirmedOn: last });
-    if (last > g.last) g.last = last;
-    byUrl.set(url, g);
-  }
-  const entries: FieldManualEntry[] = [];
-  for (const g of byUrl.values()) {
-    let host = g.url;
-    try { host = new URL(g.url).hostname; } catch { /* keep the raw string */ }
-    entries.push({
-      id: fieldManualEntryId(path, g.url),
-      role: "SHARED",
-      kind: "CITATION_SOURCE",
-      title: `NJ officeholder source — ${host}`,
-      summary: `a confirmed source for ${g.persons.length} officeholder(s); last confirmed ${g.last || "?"}`,
-      states: ["nj"],
-      recordClasses: [],
-      platforms: [],
-      outcome: "YIELDED",
-      url: g.url,
-      source: path,
-      observedAt: g.last || null,
-      tier: null,
-      payload: { url: g.url, source: g.source, persons: g.persons },
-    });
-  }
-  return collect(path, entries);
-}
-
-/** Every markdown file under a directory, repo-relative with forward slashes. */
-function markdownUnder(dir: string): string[] {
-  const out: string[] = [];
-  let names: import("node:fs").Dirent[];
-  try { names = readdirSync(join(ROOT, dir), { withFileTypes: true }); } catch { return out; }
-  for (const d of names) {
-    const rel = `${dir}/${d.name}`;
-    if (d.isDirectory()) out.push(...markdownUnder(rel));
-    else if (d.name.endsWith(".md")) out.push(rel);
-  }
-  return out.sort();
-}
-
-/**
- * The research docs, IN FULL: every `states/**` and `docs/detective/` markdown file,
- * each `##`/`###` section its own entry with its whole body in the payload. Not a
- * pointer to the file: the text itself is in the manual every worker reads.
- */
-function fromResearchDocs(): FieldManualEntry[] {
-  const entries: FieldManualEntry[] = [];
-  for (const path of [...markdownUnder("states"), ...markdownUnder("docs/detective")]) {
-    let text: string;
-    try { text = readFileSync(join(ROOT, path), "utf8"); } catch { continue; }
-    const state = /^states\/([a-z]{2})\//.exec(path)?.[1];
-    entries.push(...researchDocEntries({ path, text, states: state ? [state] : stateOf(path, text.slice(0, 400)), platformHints }));
-  }
-  return collect("states/** and docs/detective/ (full text)", entries);
-}
-
-/** The ZIP playbook, indexed — every `##`/`###` rung/recipe as a queryable entry (the "what to try for a township clerk" index). The 292 KB of prose stays the pointer entry; the index is what a worker can actually reach. */
-function fromPlaybookIndex(): FieldManualEntry[] {
-  const path = "docs/zip-playbook.md";
-  const src = `${path}#index`;
-  let text: string;
-  try { text = readFileSync(join(ROOT, path), "utf8"); } catch { return collect(src, []); }
-  const entries: FieldManualEntry[] = [];
-  for (const sec of splitMarkdownDocument(text).sections) {
-    const lead = leadLine(sec.body);
-    entries.push({
-      id: fieldManualEntryId(src, sec.heading),
-      role: "SHARED",
-      kind: "PLAYBOOK_RUNG",
-      title: sec.heading.slice(0, 200),
-      summary: (lead || sec.heading).slice(0, 300),
-      states: stateOf(sec.heading, lead),
-      recordClasses: [],
-      platforms: platformHints(`${sec.heading}\n${lead}`),
-      outcome: "REFERENCE",
-      url: null,
-      source: path,
-      observedAt: latestDate(sec.heading, lead),
-      tier: null,
-      payload: { heading: sec.heading, level: sec.level, lead, doc: path },
-    });
-  }
-  return collect(src, entries);
-}
-
 /* ------------------------------------------------------------------ main --- */
 
 async function main(): Promise<void> {
   const now0 = new Date().toISOString();
+  const doors = await ensureMeetingDoors();
+  if (!doors.ready) throw new Error(`the vendor tenants come from the meeting doors, which could not be read: ${doors.reason}`);
   let repos: ControlPlaneRepositories;
   if (target === "control-plane") {
     const url = controlPlaneUrlFromEnv();
@@ -489,23 +287,16 @@ async function main(): Promise<void> {
   }
 
   const entries: FieldManualEntry[] = [
-    ...fromManifest(),
     ...fromPlatforms(),
-    ...fromDescentSeeds(),
     ...fromCoverageAudits(),
     ...(target === "control-plane" ? await fromMethodCandidates(repos) : []),
     ...fromDocs(),
     ...defaultPlaybookEntries(["SCOUT", "DETECTIVE", "PARSER", "AUDITOR", "ENGINEER", "VALIDATOR"]),
     ...fromTenantRegistries(),
     ...fromTiers(),
-    ...fromDescentResults(),
-    ...fromCitationConfirmations(),
-    ...fromResearchDocs(),
-    ...fromPlaybookIndex(),
   ];
 
-  // RULING 159 floor: a seed that consolidated NOTHING did not read the stores —
-  // an empty field manual is a broken sweep, never a valid state to write.
+  // An empty sweep did not read the stores; never write it.
   if (entries.length === 0) {
     throw new Error(
       "field-manual-seed: the source sweep produced 0 entries. No knowledge store resolved (roots moved, or every reader threw). Refusing to write an empty field manual over a populated one.",
@@ -523,9 +314,9 @@ async function main(): Promise<void> {
 
   const written = await writeFieldManual(repos, entries, new Date().toISOString());
   if (written.error) throw new Error(`field-manual-seed: the write failed: ${written.error}`);
-  const total = (await readFieldManual(repos)).store.entries.length;
+  const total = (await repos.fieldManual.list()).length;
   console.log(`
-Wrote cp_field_manual/live (${target}): ${total} entries total (${written.written} offered by this seed).`);
+Wrote the field manual (${target}): ${total} entries total (${written.written} offered by this seed).`);
 }
 
 await main();

@@ -6,22 +6,6 @@ import { AgendaDocumentStore, agendaDocumentStore } from "../lib/meetings/agenda
 import { agendaRetrievalOrder, retrieveAgendas } from "../scripts/ingest.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 
-/**
- * **A BODY'S NOTICE PAGE IS NEVER A SITTING'S AGENDA BY DEFAULT.** (2026-09-24, D1.)
- *
- * A scheduled sitting with no agenda link used to be given the notice page of
- * whatever wiring row on its division carried one. On Pima County's division
- * that is the Central Arizona Water Conservation District's row, so Board of
- * Supervisors study session 1381578 (Oct 13) held CAP's "Board and Committee
- * Meetings" page as its agenda. The landing-page rule refused a page only once
- * another sitting held it, so the first sitting to reach Mesa's own council
- * meetings page (1343183) kept it, and a reader was shown it as a read agenda.
- * Across production that day, 70 held documents came from notice pages and not
- * one yields an agenda item.
- *
- * The texts are the ones production held, recorded read-only. No live call.
- */
-
 const HELD = JSON.parse(readFileSync("tests/fixtures/notice-pages-held-2026-09-24.json", "utf8")) as {
   readonly cap: { readonly url: string; readonly text: string };
   readonly mesa: { readonly url: string; readonly text: string };
@@ -141,7 +125,7 @@ test("a notice page that states agenda items is still held", async () => {
 test("a sitting reached only through its body's notice page is read after every sitting's own link", () => {
   const nearNotice = mesaSitting("d1:order:notice", "2026-09-25T17:30:00-07:00");
   const farLinked = mesaSitting("d1:order:linked", "2026-11-10T17:30:00-07:00", "https://mesa.legistar.com/View.ashx?M=A&ID=9&GUID=X");
-  // A store of its own: the tests above leave Mesa's page held, which would rank it last on its own.
+  // A store of its own: the tests above leave that page held, which would rank it last.
   const order = agendaRetrievalOrder([nearNotice, farLinked], Date.parse("2026-09-24T18:00:00Z"), new AgendaDocumentStore()).map(({ id }) => id);
   assert.deepEqual(order, ["d1:order:linked", "d1:order:notice"], "a notice page was read before a sitting's own unread link");
 });

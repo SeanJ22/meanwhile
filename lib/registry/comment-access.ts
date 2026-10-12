@@ -8,25 +8,13 @@ import {
 export type { CommentAccess } from "./comment-access-client.ts";
 
 /**
- * How to actually be heard, per body — tracker **D25**.
+ * How to be heard, per body: usually a standing rule of the body rather than a per-meeting field. Every
+ * claim cites the page it was read from. `UNKNOWN` is a real value and the honest one for most bodies: a
+ * comment period is never inferred from a meeting being public.
  *
- * A meeting record that does not say how to speak is a notification without a
- * next step. This is usually a standing rule of the body rather than a
- * per-meeting field, which makes it cheap to curate once and durable; a
- * per-meeting override belongs on the meeting when an agenda states something
- * different.
- *
- * **Curated by hand for the bodies with a wired source, into the shape a feed
- * fills later (§0a)** — at scale most of these fields fall out of agenda text
- * extraction, which is one reason agenda documents were built first. Every
- * claim cites the page it was read from. **`UNKNOWN` is a real value and the
- * honest one for most bodies**: a comment period must never be inferred from
- * the fact that a meeting is public — many are public to observe and closed
- * to speak.
+ * Initial adoption/node:test evidence; production reads `comment-access`.
  */
-/** Initial adoption/node:test evidence; production reads `comment-access`. */
 export const COMMENT_ACCESS: CommentAccess[] = [
-  // ── Pima Community College Governing Board (D28) ────────────────────────
   // All this board's meeting types follow the same published procedure.
   {
     bodyId: "curated:az/pima-community-college#governing",
@@ -46,31 +34,9 @@ export const COMMENT_ACCESS: CommentAccess[] = [
     verifiedAt: "2026-08-14",
   },
 
-  // ── Tucson boards wired via clerksboards (D29) ──────────────────────────
-  //
-  // CLOSED 2026-08-18 (g19, D25). All five were honest UNKNOWNs for four
-  // sessions because every hunt stopped at the Clerk's board PAGE, which
-  // publishes schedule and venue and no comment procedure. g18 re-walked
-  // those pages, confirmed there is no shared platform-level rule, and named
-  // the Tucson City Code as the next rung.
-  //
-  // The rung that actually closed them was one rung lower and cheaper: the
-  // board page links its own AGENDA (`?run=currentagenda&board=N` and
-  // `?run=pastagenda&board=N`), and the agenda PDF carries the rule in its
-  // standing header — ladder rung 9, linked documents in every format. The
-  // City Code was never needed. **The playbook entry: for a body whose page
-  // is silent, read the body's own agenda before reading the law that made
-  // the body.** A published agenda is the body describing its own meeting.
-  //
-  // Each of the five carries a DIFFERENT rule, which is why one shared row
-  // could never have closed them and why the earlier shared `.map` shape is
-  // gone. Nothing below is inferred from Mayor & Council's speaker-card
-  // procedure; each field is read from that board's own agenda.
-  //
-  // Where an agenda publishes no per-speaker limit, `timeLimit` stays null.
-  // Two of these agendas allot minutes to the Call to the Audience ITEM on a
-  // timed agenda; an item duration is not a per-speaker limit and is never
-  // rendered as one.
+  // Each body carries its own rule, read from that body's own agenda. Where an agenda publishes no
+  // per-speaker limit, `timeLimit` stays null; a timed agenda's slot for the public-comment item is not a
+  // per-speaker limit.
   {
     bodyId: "ocd-division/country:us/state:az/place:tucson#planning-commission",
     ocdId: "ocd-division/country:us/state:az/place:tucson",
@@ -83,8 +49,7 @@ export const COMMENT_ACCESS: CommentAccess[] = [
     writtenComment: "Written comments may be sent to PlanningCommission@tucsonaz.gov.",
     attend:
       "In person, or by the hybrid link and dial-in published on each meeting's agenda.",
-    // The agenda publishes no per-speaker limit. Not inferred from any other
-    // Tucson body's limit.
+    // The agenda publishes no per-speaker limit.
     timeLimit: null,
     sourceUrl: "https://assets.tucsonaz.gov/share/bcc/42308.pdf",
     collectedAt: "2026-08-18",
@@ -164,33 +129,8 @@ export const COMMENT_ACCESS: CommentAccess[] = [
     verifiedAt: "2026-08-18",
   },
 
-  // ── Tucson Public Housing Authority Board of Commissioners (D29) ────────
-  //
-  // RESOLVED 2026-08-18 (g19, D25), and the scope of the answer is the whole
-  // point of the row. FOUR of the Board's own agendas were read on the
-  // Clerk's tenant — meetingIds 1981, 1903, 1894 and the 2026-08-18 notice —
-  // and NONE carries a Call to the Audience item. Two of the four carry a
-  // noticed PUBLIC HEARING (the PHA Annual Plan amendment, and one other).
-  //
-  // So the route to be heard is real and published, and it is item-scoped
-  // rather than general. `commentPeriodDetail` leads with that scope, because
-  // a reader who arrives expecting a general comment period would be wrong.
-  //
-  // NOTHING here is inferred from Mayor & Council's Call to the Audience,
-  // even though the Board IS the Mayor and Council sitting as commissioners:
-  // the Board's own agenda closes by saying the Mayor and Council REGULAR
-  // meeting commences after this one adjourns, so that Call to the Audience
-  // belongs to the meeting that follows, not to this one. Stating otherwise
-  // would send a reader to speak at the wrong meeting.
-  //
-  // NOT a standing rule: no published PHA participation policy was found.
-  // The rungs still open, named so the next hunt starts below them — the
-  // Board's own bylaws, HUD's resident-participation requirements as the PHA
-  // publishes them locally, and the City Clerk's records path.
-  //
-  // `verifiedAt` stays null on purpose: hylandcloud.com is a VENDOR portal,
-  // and CLAUDE.md types a vendor portal as not-official however authentic the
-  // records on it are.
+  // No general comment period: the agendas carry noticed public hearings only, so the route to be heard
+  // is item-scoped. `verifiedAt` stays null because the records are on a vendor portal.
   {
     bodyId: "ocd-division/country:us/state:az/place:tucson#public-housing-authority",
     ocdId: "ocd-division/country:us/state:az/place:tucson",
@@ -212,7 +152,6 @@ export const COMMENT_ACCESS: CommentAccess[] = [
   {
     bodyId: "ocd-division/country:us/state:az/place:tucson#governing",
     ocdId: "ocd-division/country:us/state:az/place:tucson",
-    // As the OnBase feed publishes them after the name split.
     bodyNames: ["Mayor & Council"],
     commentPeriod: "YES",
     commentPeriodDetail:
@@ -239,8 +178,7 @@ export const COMMENT_ACCESS: CommentAccess[] = [
     attend:
       "Board of Supervisors Hearing Room, 130 W. Congress St, 1st Floor, Tucson.",
     timeLimit: null,
-    // The recorded 2026-08-11 agenda (EventId 1824) carries the item; the
-    // calendar is the reader-facing route to the same record.
+    // The calendar is the reader-facing route to the same record.
     sourceUrl: "https://pima.legistar.com/Calendar.aspx",
     collectedAt: "2026-08-13",
     verifiedAt: null,
@@ -281,29 +219,12 @@ export const COMMENT_ACCESS: CommentAccess[] = [
     verifiedAt: null,
   },
 
-  // ── Honest unknowns: the body's own page is the next step ───────────────
+  // No rule found yet: the body's own page is the next step.
   {
     bodyId:
       "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
     ocdId:
       "ocd-division/country:us/state:az/school_district:tucson_unified_district",
-    /*
-     * FOUND 2026-08-18 (g18, D25). Policy BEDH, "Public Participation at
-     * Board Meetings", revised 12/12/2023, in the district's own policy
-     * manual on its own domain.
-     *
-     * THE RUNGS, so the next hunt starts below this one. Rung 2 on
-     * `govboard.tusd1.org/Meetings` returned 200 and matched "public comment"
-     * — a FALSE LEAD: the nav item it matched is `/Comments`, which is the
-     * district's page for commenting on PROPOSED POLICIES during their
-     * reading period, not for speaking at a meeting. Recording that it was
-     * checked and rejected, because the next reader will match the same
-     * string. The rule is in Section B of the policy manual, reached by
-     * scanning the manual's own section index for the NEPN/ASBA code a school
-     * board files this under (BEDH). That code is the rung: a school district
-     * with a coded policy manual will have its participation rule at BEDH,
-     * and looking there directly is faster than reading agendas.
-     */
     commentPeriod: "YES",
     commentPeriodDetail:
       "Call to the Audience. The comment period is 45 minutes at regular meetings and 20 minutes at special meetings, and is extended only by the Board's approval. Speakers whose comments relate to an item on the agenda are taken first; the rest are taken in the order their forms arrived.",
@@ -323,25 +244,7 @@ export const COMMENT_ACCESS: CommentAccess[] = [
       "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing",
     ocdId:
       "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
-    /*
-     * CLOSED 2026-08-18 (g19, D25), on exactly the rung g18 named and did not
-     * walk: the township code's council-procedure chapter, on eCode360.
-     *
-     * The rule is Township Code § 2-5.14, "Addressing the Council" (1971 Code
-     * § 3-4N; Ord. No. 2-7-84; Ord. No. O-22-01), and the order of business at
-     * § 2-5.7 puts "Open to the public" fifth and takes comment on ordinances
-     * up for adoption separately. Both limits below are the code's own words.
-     *
-     * The three township-website pages g18 fetched (200 each, no comment
-     * language) were not a wall and not an emptiness — the rule was simply
-     * somewhere else. Recorded because it is the general lesson: a New Jersey
-     * municipality's comment rule lives in its CODE far more reliably than on
-     * its CivicPlus pages.
-     *
-     * `verifiedAt` stays null: ecode360.com is a third-party publisher, not
-     * the township's own host, so it is a second-rung read under CLAUDE.md's
-     * verification rule however faithful the text is.
-     */
+    // `verifiedAt` stays null: the code is read from a third-party publisher, not the township's own host.
     commentPeriod: "YES",
     commentPeriodDetail:
       "A portion of every regular and special meeting is open for public comment — it sits fifth on the order of business, after the ordinances up for adoption. Ordinances being adopted take their own comment before that.",
@@ -360,39 +263,8 @@ export const COMMENT_ACCESS: CommentAccess[] = [
       "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#governing",
     ocdId:
       "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
-    /*
-     * THE WALL FELL 2026-08-18 (g19, D25). g18 recorded a 403 at rung 2 and
-     * rung 3 and named rungs 4, 5, 6 and 11 as next. Rung 4 was enough:
-     * **curl, with the same identified User-Agent that got the 403, is served
-     * HTTP 200** — so it was a TLS-fingerprint filter, exactly the class curl
-     * beat in the f session, and not an egress or header problem.
-     *
-     * The walk, all with an identified User-Agent carrying a contact address:
-     *   rung 4, `/` — HTTP 200, 80,561 bytes. The wall is fingerprint-only.
-     *   rung 4, `/selectboard` — HTTP 200, 90,511 bytes. Carries a link
-     *     titled "Selecboard Public Input Rules of Participation" (the
-     *     town's own typo), which is the rule.
-     *   rung 9, the PDF behind it — HTTP 200, 115,680 bytes, one page, dated
-     *     May 12, 2025. Every field below is read from it.
-     *   rung 9, the request form — HTTP 200, 95,965 bytes; it confirms the
-     *     Wednesday 10 a.m. deadline in its own footer.
-     *
-     * STILL WALLED, recorded rather than smoothed over: the deep paths
-     * `/administration/...` and `/minutes-and-agendas` return 403 even to
-     * curl, so the filter is path-scoped as well as fingerprint-scoped. That
-     * cost nothing here because the rule was reachable another way, and it is
-     * written down so the next session does not rediscover it.
-     *
-     * FOUND ON THE WAY, and it is worth more than this row: the walled
-     * agendas path 302-redirects to `newburynh.civicweb.net`, a CivicWeb
-     * portal (ladder rung 12) that answers HTTP 200. Newbury's meetings have
-     * a vendor platform underneath and nothing in this repo knew it.
-     *
-     * The time limit is the honest gap: the rule says the Chairperson HAS THE
-     * RIGHT to set time limits and publishes no number, so `timeLimit` is
-     * null and the detail says who decides. A plausible number here would be
-     * a fabrication about a real town.
-     */
+    // The rule lets the Chairperson set time limits and publishes no number, so `timeLimit` says who
+    // decides.
     commentPeriod: "YES",
     commentPeriodDetail:
       "There is a Public Input section on the agenda, and the Selectboard may keep comment to it. On an agenda item, you may speak when the Chair invites comment on it. On anything else, speak during public comment time — give your name and your topic first; the Chair may put the issue on a future agenda or send it to the Town Administrator rather than take it up on the spot. Newbury is direct about the limit: the public does not have a right to speak at Selectboard meetings unless the Selectboard opens Public Input.",
@@ -410,28 +282,11 @@ export const COMMENT_ACCESS: CommentAccess[] = [
     collectedAt: "2026-08-18",
     verifiedAt: "2026-08-18",
   },
-  // Wired 2026-08-13; no published comment rule found on the calendar or the
-  // notices read so far. The agenda PDFs are the likely place a rule appears
-  // (Morris's carry item lists; the retrieval cap has not reached them yet)
-  // — UNKNOWN until one is read, never inferred from the meeting being
-  // public.
+  // No published comment rule found yet. UNKNOWN until one is read.
   {
     bodyId: "ocd-division/country:us/state:nj/county:morris#governing",
     ocdId: "ocd-division/country:us/state:nj/county:morris",
-    /*
-     * FOUND 2026-08-18 (g18, D25), and the rung is the point: the rule was
-     * never going to be on the VENDOR calendar this row was pointed at.
-     * `morriscountynj.iqm2.com/Citizens/Calendar.aspx` returns 200 and
-     * contains no comment-access language at all, which is what a vendor
-     * calendar is — a list of dates. The rule is on the BODY'S OWN `.gov`
-     * page, one fetch away.
-     *
-     * The distinction it draws is why this is worth having and why a
-     * meeting-agnostic row would be wrong: evening meetings carry a public
-     * comment portion, and the 5pm WORK SESSIONS do not unless the Director
-     * grants one. A reader told "there is a comment period" and sent to a
-     * work session would have been sent by us.
-     */
+    // Evening meetings carry a public comment portion; work sessions do not unless the Director grants one.
     commentPeriod: "YES",
     commentPeriodDetail:
       "There is a public comment portion at every evening meeting. Work sessions, which start at 5:00 p.m., have no public comment portion unless the Commissioner Director grants one.",
@@ -448,24 +303,6 @@ export const COMMENT_ACCESS: CommentAccess[] = [
   {
     bodyId: "ocd-division/country:us/state:nh/county:merrimack#governing",
     ocdId: "ocd-division/country:us/state:nh/county:merrimack",
-    /*
-     * FOUND 2026-08-18 (g18, D25): the county's own Public Comment Policy,
-     * adopted by the Board 7/14/25, under RSA 91-A:2.
-     *
-     * THE RUNG, AND IT IS NEW — it is now in `docs/zip-playbook.md`. The
-     * notices page names the policy and links it, and that link 404s from
-     * outside. The href is RELATIVE and the CMS serves the page under a
-     * section path (`/board_of_commissioners_/…`), so resolving the href
-     * against the page URL builds `/board_of_commissioners_/Board%20of%20
-     * Commissioners/…` — a path that does not exist. Every document on the
-     * page 404s the same way, which is what proved it was the path and not
-     * the file. The documents live at the SITE ROOT:
-     * `https://www.merrimackcounty.net/Board%20of%20Commissioners/…`. Strip
-     * the section prefix and re-resolve from the root.
-     *
-     * Then rung 9: it is a PDF, and PDFs are data. Text-layer extraction
-     * through `extractPdfText` read the whole policy.
-     */
     commentPeriod: "YES",
     commentPeriodDetail:
       "A designated public comment period at Board meetings, for matters within the Board's jurisdiction. Comments about individual county employees or private individuals are not taken there — the policy directs those to the Human Resources Director or the County Administrator during business hours.",
@@ -481,7 +318,6 @@ export const COMMENT_ACCESS: CommentAccess[] = [
     verifiedAt: "2026-08-18",
   },
 
-  // ── Sunnyside USD Governing Board (item 2, 2026-08-18 session) ──────────
   {
     bodyId:
       "ocd-division/country:us/state:az/school_district:sunnyside_unified_district#board",
@@ -500,7 +336,6 @@ export const COMMENT_ACCESS: CommentAccess[] = [
     verifiedAt: null,
   },
 
-  // ── Amphitheater USD Governing Board (item 2, 2026-08-18 session) ───────
   {
     bodyId:
       "ocd-division/country:us/state:az/school_district:amphitheater_unified_district#board",

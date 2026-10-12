@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
   return adminGet(request, async observedAt => {
     const opened = await openControlPlane();
     if (!opened.ok) throw new Error("Worker instructions are unavailable");
-    const read = await readFieldManual(opened.repos, {});
+    const read = await readFieldManual(opened.repos, { kinds: ["PLAYBOOK"], everywhere: true });
     if (read.error) throw new Error("Worker instructions could not be read");
     return { observedAt, rows: EDITABLE_PLAYBOOK_ROLES.map(role => playbookEditView(read.store.entries, role)) };
   });

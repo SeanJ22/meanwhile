@@ -10,7 +10,6 @@ export interface PlaybookSend {
   readonly expectedVersion: string; readonly why: string; readonly undoOf?: string;
 }
 
-/** The Settings view supplies its normal gateway preview/Send and reloads after a receipt. */
 export function PlaybookEditor({ row, onSend }: { readonly row: Row; readonly onSend: (send: PlaybookSend) => Promise<void> }) {
   const [text, setText] = useState(row.text);
   const [why, setWhy] = useState("");

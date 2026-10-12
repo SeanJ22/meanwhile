@@ -1,10 +1,4 @@
-/**
- * Durable post-deploy integrity outcomes in the existing software-release log.
- *
- * This is deliberately an adapter over `softwareReleaseReviews`, not a new
- * table or ledger. The observer appends exact readings under one fixed key;
- * the release-freeze gate and Admin read that same append-only partition.
- */
+/** Post-deploy integrity outcomes as an adapter over the existing software-release log, under one fixed key. */
 import type { AppendOnlyRepository } from "../control-plane/repository/types.ts";
 import {
   PRODUCTION_INTEGRITY_LOG_KEY,

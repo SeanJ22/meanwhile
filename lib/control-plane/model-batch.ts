@@ -6,11 +6,6 @@ import { anthropicBetasFor, cachedModelRequest, ModelTransportError, type ModelR
 
 export const MESSAGE_BATCHES_ENDPOINT = "https://api.anthropic.com/v1/messages/batches";
 
-/**
- * The lanes this module may serve. Each is not reader-facing and each request
- * stands alone. A lane is added here with its flag and its reason, never by a
- * caller inventing an environment variable.
- */
 export const BATCH_LANES = {
   "background-worker-audit": {
     flag: "WTP_BACKGROUND_WORKER_BATCH",
@@ -82,7 +77,6 @@ function headers(apiKey: string): Record<string, string> {
   return { "content-type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" };
 }
 
-/** The wire body of a batch submission. Exposed so a test can assert the shape without a network. */
 export function batchRequestBody(items: readonly BatchRequestItem[]): { readonly requests: readonly BatchRequestItem[] } {
   if (items.length === 0) throw new MessageBatchError("a batch needs at least one request", null);
   const ids = new Set(items.map((i) => i.custom_id));
@@ -129,7 +123,6 @@ export interface SingleRequestBatchOptions {
   readonly apiKey: string;
   readonly fetchImpl?: typeof fetch;
   readonly endpoint?: string;
-  /** How often to ask whether the batch ended. The scheduler's own cadence; a test injects a short one. */
   readonly pollIntervalMs?: number;
   /** Give up after this long. The API's own ceiling is 24 hours. */
   readonly deadlineMs?: number;
@@ -137,13 +130,7 @@ export interface SingleRequestBatchOptions {
   readonly customId?: string;
 }
 
-/**
- * Run ONE Messages API request through the Batches API and return the
- * message as the Messages API would have — the caller reads `usage` and
- * `content` exactly as before, and marks the usage `batch: true` so the
- * pricing halves once. Throws a `MessageBatchError` naming the result type
- * when the request errored, was canceled or expired.
- */
+/** Returns the message as the Messages API would, with usage marked `batch: true`. Throws `MessageBatchError` on an errored, canceled or expired result. */
 export async function runSingleRequestBatch(
   params: Record<string, unknown>,
   options: SingleRequestBatchOptions,
@@ -171,10 +158,7 @@ export async function runSingleRequestBatch(
   return { message: mine.result.message, batchId: batch.id, waitedMs: Date.now() - started };
 }
 
-/** Coalesce independent unattended reviews; dependent tool conversations keep Messages.
- * This uses the provider's existing batch state, not a second queue or budget store.
- * A failed submission/result is surfaced once and never resubmitted here.
- */
+/** A failed submission or result is surfaced once and never resubmitted here. */
 export interface BatchJournal {
   readonly read: (requestHash: string) => Promise<AttemptProviderBatch | null>;
   readonly write: (record: AttemptProviderBatch) => Promise<void>;
@@ -184,7 +168,6 @@ export function batchRequestHash(request: ModelRequest): string {
   return createHash("sha256").update(canonicalJson(cachedModelRequest(request))).digest("hex");
 }
 
-/** Reclaimed tasks inherit provider identities, while writes require the new live lease. */
 export function attemptBatchJournal(repos: ControlPlaneRepositories, taskId: string, now: () => string): BatchJournal {
   return {
     read: async hash => {
@@ -215,8 +198,7 @@ export function backgroundBatchTransport(options: Omit<SingleRequestBatchOptions
   const fetchImpl = options.fetchImpl ?? fetch;
   const sleep = options.sleep ?? (ms => new Promise<void>(resolve => setTimeout(resolve, ms)));
   async function recoverUncertain(record: AttemptProviderBatch): Promise<MessageBatch> {
-    // The POST may have succeeded before its id was saved. List is read-only;
-    // correlate the prewritten custom id from results, never resubmit the request.
+    // The POST may have succeeded before its id was saved: correlate the prewritten custom id, never resubmit.
     for (;;) {
       let cursor: string | null = null;
       let processing = false;

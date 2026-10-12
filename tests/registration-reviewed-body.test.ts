@@ -19,15 +19,15 @@ const reference: LoadedReference = {
   },
 };
 
-const first = { id: "ocd-division/country:us/state:xx/county:one#governing", ocdId: "ocd-division/country:us/state:xx/county:one", bodyClass: "GOVERNING" };
-const alternate = { id: "ocd-division/country:us/state:xx/county:two#governing", ocdId: "ocd-division/country:us/state:xx/county:two", bodyClass: "GOVERNING" };
+const first = { id: "ocd-division/country:us/state:xx/county:one#governing", ocdId: "ocd-division/country:us/state:xx/county:one", bodyClass: "GOVERNING", censusId: "123456" };
+const alternate = { id: "ocd-division/country:us/state:xx/county:two#governing", ocdId: "ocd-division/country:us/state:xx/county:two", bodyClass: "GOVERNING", censusId: "123456" };
 
-test("reviewed body bridge requires an exact Census government-to-division pairing", () => {
+test("reviewed body bridge requires native government identity and keeps established body IDs", () => {
   assert.deepEqual(reviewedBodyForGovernment(reference, "xx:county:one", [first]), {
     bodyId: first.id, ocdId: first.ocdId, publishingOrg: "One County",
   });
   assert.equal(reviewedBodyForGovernment(reference, "xx:county:missing", [first]), null);
-  assert.equal(reviewedBodyForGovernment(reference, "xx:county:one", [{ ...first, id: "other" }]), null);
+  assert.equal(reviewedBodyForGovernment(reference, "xx:county:one", [{ ...first, censusId: "987654" }]), null);
   assert.equal(reviewedBodyForGovernment(reference, "xx:county:one", [{ ...first, bodyClass: "ADVISORY" }]), null);
   assert.equal(reviewedBodyForGovernment(reference, "xx:county:one", [first, alternate]), null, "two candidate bodies must be held");
 });

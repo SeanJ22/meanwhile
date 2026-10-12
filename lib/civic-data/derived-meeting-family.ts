@@ -1,28 +1,3 @@
-/**
- * **A DERIVED MEETING FAMILY: ONE STATE'S REVIEWED CALENDARS, EACH HELD TO
- * ITS OWN EVIDENCE.** (C16, 2026-09-24.)
- *
- * One partition per registered state (`meetings:derived:US-AZ`, every state
- * since 2026-09-25) whose members are the promoted meeting-source wiring's rows
- * for that state. Its
- * child reads each ACTIVE member on that member's own attested host, and
- * builds one candidate in which every member stands alone:
- *
- * - a member read cleanly contributes its fresh sittings, reconciled against
- *   its own last verified sittings exactly as a partition is;
- * - a member that failed, read off its host, returned another body's rows, or
- *   is SUSPENDED for review contributes its last verified sittings, carried and
- *   marked, and is named in the version (`derivedMembers`) with why. Previously
- *   verified records are preserved through an outage and through a review;
- * - nothing one member does can hold or erase another member's sittings.
- *
- * Its authority is not a route: each member read is named as a
- * MEMBER_ACQUISITION input beside the wiring version that authorizes it, and
- * the door checks every read's host against that version's ACTIVE row
- * (`lib/civic-data/derived-door.ts`). An unreadable wiring store builds no
- * member at all: the candidate is refused and the family's last known good
- * stays live.
- */
 import { createHash } from "node:crypto";
 
 import { canonicalCivicDataJson } from "./changes.ts";
@@ -36,12 +11,16 @@ import type { Meeting } from "../sources/types.ts";
 import { carriedFromAnswer, mark as markCarried } from "../meetings/carry-forward.ts";
 import { ocdStateCode } from "../ocd/state-of.ts";
 
+/**
+ * One partition per registered state whose members are the wiring's rows for that state. A member read cleanly
+ * contributes fresh sittings; a member that failed, read off its host, returned another body's rows or is suspended
+ * carries its last verified sittings, marked. Nothing one member does can hold or erase another's.
+ */
 export const DERIVED_FAMILY_SOURCE_ID = "meetings-derived-routes" as const;
 
 const sha256 = (value: string): string => createHash("sha256").update(value).digest("hex");
 const bare = (host: string): string => host.toLowerCase().replace(/^www\./, "");
 
-/** The member's own sittings and documents in the family's last verified version. */
 export function familyMemberSlice(previous: MeetingsSnapshot | null, member: DerivedWiringRecord): {
   readonly meetings: readonly Meeting[];
   readonly agendaDocuments: MeetingsSnapshot["agendaDocuments"];
@@ -83,10 +62,8 @@ function combineMeetings(rows: readonly Meeting[]): { meetings: Meeting[]; dropp
   return { meetings: [...kept.values()], dropped };
 }
 
-/** One member's read, as the family child made it. */
 export interface FamilyMemberRead {
   readonly member: DerivedWiringRecord;
-  /** Every response the member's adapter read: the evidence its host is checked on. */
   readonly acquisitions: readonly {
     readonly requestedUrl: string;
     readonly finalUrl: string;
@@ -126,7 +103,6 @@ export function familyMemberReadIssue(read: FamilyMemberRead): string | null {
   return null;
 }
 
-/** The candidate a family attempt makes when it cannot build any member: refused, so its last known good stays. */
 export function derivedFamilyFailedCandidate(partition: MeetingPartitionContract, attemptedAt: string, failureDetail: string): RoutineCandidate {
   const requestedUrl = derivedRequestedUrl(DERIVED_FAMILY_SOURCE_ID, partition.scope);
   return {
@@ -209,7 +185,6 @@ export function buildDerivedFamily(input: {
       : read === undefined ? "the member was not read this pass" : familyMemberReadIssue(read);
     const t = tally(source);
     if (issue !== null || read === undefined) {
-      /* Held: its last verified sittings are carried, marked, and nothing it read this pass enters. */
       const carried = slice.meetings.map((m) => carriedMember(m, source, input.previous?.generatedAt ?? input.generatedAt));
       meetings.push(...carried);
       agendaDocuments.push(...slice.agendaDocuments);
@@ -223,8 +198,6 @@ export function buildDerivedFamily(input: {
       agendaDocuments: [...slice.agendaDocuments],
       derivedMembers: undefined,
     };
-    // Failures belong to their own record, not to unrelated members or rows.
-    // The same minimum identity/source rules formerly held the whole candidate.
     const usable = read.freshMeetings.filter(meeting => {
       const detail = !meeting.id || !meeting.bodyId || !meeting.provenance?.sourceUrl
         ? "The meeting lacks its exact id, body, or authoritative source URL."
@@ -283,7 +256,6 @@ export function buildDerivedFamily(input: {
   return { snapshot, removalEvidence, heldFacts, inputs };
 }
 
-/** The family's candidate: authentic as its wiring version and its members' reads, never as a route. */
 export function derivedFamilyCandidate(partition: MeetingPartitionContract, build: DerivedFamilyBuild): RoutineCandidate {
   const { snapshot } = build;
   const retrieval = derivedRetrieval(build.inputs);
@@ -305,7 +277,6 @@ export function derivedFamilyCandidate(partition: MeetingPartitionContract, buil
     .filter(Boolean).sort().at(-1) ?? snapshot.generatedAt;
   const retrievedAt = retrieval.retrievedAt ?? snapshot.generatedAt;
   return {
-    /* Each pass is its own attempt: a pass whose members were all held reads nothing new, so its time names it too. */
     id: `cv-${sha256(`${DERIVED_FAMILY_SOURCE_ID}\u001f${partition.scope}\u001f${retrieval.rawHash}\u001f${retrievedAt}\u001f${snapshot.generatedAt}\u001f${normalized}`).slice(0, 32)}`,
     sourceId: DERIVED_FAMILY_SOURCE_ID,
     recordClass: "MEETING",

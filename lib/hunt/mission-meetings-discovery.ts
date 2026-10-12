@@ -1,22 +1,11 @@
 /**
- * **MEETINGS DISCOVERY FOLLOWS THE MISSION MAP.** (CH-21, 2026-10-05.)
- *
- * A Send's mission map (the owed list, `lib/coverage/place-owed.ts`) owes every
- * body in its places a calendar: the body's own publisher route (MTG-01) and
- * the rest of the calendar items. Where that route is not held, the body's
- * meetings are still to be found, and the free discovery walk is the first
- * hunter on it. This module turns those calendar blanks into discovery needs
- * in the shape the walk already takes (`MeetingsDiscoveryNeed`), from the same
- * registry derivation the owner's dispatch uses (`meetingsDiscoveryNeeds`).
- *
- * It replaces the committed gap ledger in both of its jobs:
- *
- * - **what the walk walks:** every government in a mission place whose body has
- *   no held calendar route, in any state, with no dispatch needed;
- * - **the evidence an old jurisdiction meetings row retires on:** the body has a
- *   held calendar route on the owed rows (`heldCalendarRouteBodies`).
- *
- * PURE: the caller reads the owed list, the registries and the body join.
+ * Meetings discovery follows the mission map. The owed list
+ * (`lib/coverage/place-owed.ts`) owes every body in a mission's places a
+ * calendar; where the body's own publisher route is not held, this turns that
+ * blank into a discovery need (`MeetingsDiscoveryNeed`) for the free walk,
+ * from the same registry derivation the owner's dispatch uses. A body with a
+ * held calendar route on the owed rows (`heldCalendarRouteBodies`) is the
+ * evidence an old jurisdiction meetings row retires on. Pure.
  */
 
 import type { PlaceOwedItem } from "../coverage/place-owed.ts";
@@ -33,10 +22,10 @@ const CALENDAR_SUFFIX = "#calendar";
 type OwedRow = Pick<PlaceOwedItem, "subject" | "checklistId" | "held">;
 
 /**
- * The bodies whose calendar route is held on these owed rows: the body's calendar
- * row (MTG-01) holds a captured route, or a meeting of the body was captured from
- * its source (MTG-12). A held route that is due a refresh is still held; a
- * government's statement that it publishes nothing is not a route.
+ * The bodies whose calendar route is held on these owed rows: the body's
+ * calendar row holds a captured route, or a meeting of the body was captured
+ * from its source. A held route due a refresh is still held; a government's
+ * statement that it publishes nothing is not a route.
  */
 export function heldCalendarRouteBodies(rows: readonly OwedRow[]): ReadonlySet<string> {
   const bodies = new Set<string>();
@@ -52,7 +41,7 @@ export function heldCalendarRouteBodies(rows: readonly OwedRow[]): ReadonlySet<s
   return bodies;
 }
 
-/** A registry government id (`az:city:tucson`), never a division or another subject. */
+/** A registry government id (`az:city:<name>`), never a division or another subject. */
 function isGovernmentId(id: string): boolean {
   return /^[a-z]{2}:[a-z]+:[^#]+$/.test(id);
 }
@@ -105,7 +94,7 @@ export function missionMeetingsDiscoveryNeeds(input: {
       heldRoute.push(id);
       continue;
     }
-    /* A reviewed website correction the registry does not carry yet is walked as reviewed (C15), as the ledger did. */
+    /* A reviewed website correction the registry does not carry yet is walked as reviewed. */
     entries.push({ need: withWebsiteCorrection(need), reg: held.reg });
   }
   return { entries, heldRoute, failures };

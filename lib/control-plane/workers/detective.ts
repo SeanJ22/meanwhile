@@ -3,14 +3,14 @@ import { scoutExecutor } from "../scheduler/scout-executor.ts";
 import { contentHash } from "../ids.ts";
 import { ZERO_COST } from "../attempt.ts";
 import {installedAdapters,installedAdapterVersion} from '../scheduler/scout-adapters.ts';
-import {FIELD_MANUAL_ID, readFieldManual, type FieldManualEntry} from '../field-manual.ts';
+import {readFieldManual, type FieldManualEntry, type FieldManualQuery} from '../field-manual.ts';
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { ExecutorDecision } from "../scheduler/dispatch.ts";
 import type { RouteDescriptor } from "../scheduler/registry.ts";
 import { sourceReliabilityKey } from "../scheduler/scout-reliability.ts";
 import { DETECTIVE_SHUT_THRESHOLD_SETTING, readSetting } from "../settings.ts";
 import type { AdminConfig } from "../gateway/admin-config.ts";
-import { reopenAbsencesForRecentCapabilities } from "../scheduler/absence-reopen.ts";
+import { CAPABILITY_KINDS, reopenAbsencesForRecentCapabilities } from "../scheduler/absence-reopen.ts";
 
 /** Consecutive failures after which a door counts as shut, when Admin's setting is unset or unreadable. */
 export const DETECTIVE_SHUT_THRESHOLD = 3;
@@ -85,7 +85,7 @@ function heldAfterSourceFailure(solved: import('../scheduler/scout-result.ts').S
 /** Reuses the research loop and every source tool for failure response. */
 type ScoutExecutorFactory = (deps: import('../scheduler/scout-executor.ts').ScoutExecutorDeps) => import('../scheduler/dispatch.ts').DeclaredExecutor;
 export function detectiveExecutor(deps: import('../scheduler/scout-executor.ts').ScoutExecutorDeps, executorFactory: ScoutExecutorFactory = scoutExecutor,
-  /** DP-31: a line that goes above everything else in the brief (the last fix of a repeat break). */
+  /** A line that goes above everything else in the brief (the last fix of a repeat break). */
   lead: string | null = null) {
   return executorFactory({...deps, role:'DETECTIVE',onResult:async(result,artifacts)=>{
     const recorded={...result,researchRole:'DETECTIVE' as const};
@@ -97,10 +97,7 @@ export function detectiveExecutor(deps: import('../scheduler/scout-executor.ts')
   }});
 }
 
-/**
- * DP-31: the fixes on record for a subject, newest first. A fix is a result that found a reusable route
- * (the same test `solvedScoutResult` applies to the latest one). `history` is the subject's history.
- */
+/** The fixes on record for a subject, newest first: results that found a reusable route. */
 export function earlierFixes(history: readonly import('../scheduler/scout-result.ts').ScoutResult[]): import('../scheduler/scout-result.ts').ScoutResult[] {
   return [...history].sort((a,b)=>b.recordedAt.localeCompare(a.recordedAt)).filter(result=>result.refusal===null &&
     ['ROUTE_CANDIDATE','EVIDENCE_FOUND'].includes(result.outcome) && reusableScoutCandidates(result).length>0);
@@ -111,12 +108,7 @@ function firstInvestigationAt(debt: FreshnessDebt, shutThreshold: number): numbe
   return SHUT_AT_ONCE.includes(debt.cause) ? 1 : shutThreshold;
 }
 
-/**
- * DP-31: a door that breaks again first tries what fixed it before, in plain code. When the latest fix's
- * route is the one failing, the newest earlier fix with a route on another source is handed to acquisition
- * with no model request. It gets the break's first detective turn only: if the door fails again, the
- * detective runs, with that fix at the top of its brief.
- */
+/** A door that breaks again first tries what fixed it before, in plain code, for the break's first detective turn only; if it fails again the detective runs with that fix at the top of its brief. */
 export function repeatBreakRetry(fixes: readonly import('../scheduler/scout-result.ts').ScoutResult[],
   debt: FreshnessDebt | null | undefined, route: RouteDescriptor | null | undefined, shutThreshold: number = DETECTIVE_SHUT_THRESHOLD) {
   if (!needsSourceInvestigation(debt, shutThreshold) || debt.consecutiveFailures > firstInvestigationAt(debt, shutThreshold)) return null;
@@ -142,7 +134,7 @@ export function lastFixBrief(fix: import('../scheduler/scout-result.ts').ScoutRe
 /** Both Scout lanes use the same failure responder and keep their existing budgets and tools. */
 export function failureResponderExecutor(deps: import('../scheduler/scout-executor.ts').ScoutExecutorDeps & {
   solved?: import('../scheduler/scout-result.ts').ScoutResult | null;
-  /** DP-31: this subject and class's recorded results, so a repeat break starts from what fixed it last time. */
+  /** This subject and class's recorded results, so a repeat break starts from what fixed it last time. */
   history?: readonly import('../scheduler/scout-result.ts').ScoutResult[];
   sourceFailure?: FreshnessDebt | null;
   sourceRoute?: RouteDescriptor | null;
@@ -243,12 +235,7 @@ export async function readSubjectScoutHistory(repos:import('../repository/types.
   }
   return results;
 }
-/**
- * Publication holds and validator failures that a detective takes with the failing code in its brief,
- * instead of a fresh Scout starting over (DP-03). The §3 holds and the validator codes name the check
- * that failed, so the detective goes to the exact field. Date-sanity refusals (CP-06) arrive as held
- * outcomes with a worker recovery and are covered by that rule; add their code here if they get one.
- */
+/** Publication holds and validator failures a detective takes with the failing code in its brief, instead of a fresh Scout starting over. */
 export const DETECTIVE_HELD_CODES: readonly string[] = ['SOURCE_REPLAY_FAILED', 'PAGE_UNVERIFIED', 'ROSTER_PAGE_UNVERIFIED',
   'PARSE_INVALID', 'IDENTITY_UNRESOLVED', 'SEMANTIC_INVALID', 'DATE_OUT_OF_WINDOW'];
 
@@ -296,21 +283,31 @@ export function adapterWaitReason(results: readonly import('../scheduler/scout-r
     ? 'AWAITING_ADAPTER: '+latest.narrative+'; Engineer owns this work. Resume when its adapter is available.' : null;
 }
 
+/** The adapters the Engineer built or installed, wherever they were built. */
+const ADAPTER_KNOWLEDGE: FieldManualQuery = { role: 'DETECTIVE', kinds: ['ENGINEER_ADAPTER_PR', 'PLATFORM_ADAPTER'], everywhere: true };
+
+/** Routes, methods and adapters the manual gained, which can reopen dead ends anywhere. */
+async function readCapabilities(repos: Pick<import('../repository/types.ts').ControlPlaneRepositories, 'fieldManual'>): Promise<readonly FieldManualEntry[]> {
+  const read = await readFieldManual(repos, { kinds: CAPABILITY_KINDS, everywhere: true });
+  if (read.error) throw new Error(read.error);
+  return read.store.entries;
+}
+
 /** Reuse the Engineer's failed-attempt and source-class links before generated filenames appear in Scout history. */
 export async function adapterWaitReasonFromKnowledge(repos:import('../repository/types.ts').ControlPlaneRepositories,
   results:readonly import('../scheduler/scout-result.ts').ScoutResult[]):Promise<string|null> {
   const installed=await installedAdapters();
   const wait=adapterWaitReason(results,installed);
   if(!wait)return null;
-  const manual=await readFieldManual(repos,{role:'DETECTIVE'});
+  const manual=await readFieldManual(repos,ADAPTER_KNOWLEDGE);
   return adapterWaitReason(results,installed,manual.store.entries);
 }
 
 /** Reopen adapter waits only when a matching installed implementation has not already been tried. */
 export async function wakeInstalledAdapterDebts(repos:import('../repository/types.ts').ControlPlaneRepositories,
   debts:readonly import('../scheduler/debt.ts').FreshnessDebt[],now:string) {
-  // DP-10: a working route, method or adapter the bank gained reopens the dead ends it could solve, in this round.
-  const reopened=await (async()=>reopenAbsencesForRecentCapabilities(repos,(await repos.fieldManual.read(FIELD_MANUAL_ID))?.value.entries??[],now))().catch((error:unknown)=>{
+  // A working route, method or adapter the bank gained reopens the dead ends it could solve, in this round.
+  const reopened=await (async()=>reopenAbsencesForRecentCapabilities(repos,await readCapabilities(repos),now))().catch((error:unknown)=>{
     console.error(`  dead ends not reopened this round (${error instanceof Error?error.message:String(error)}); the next round tries again`);
     return [];
   });
@@ -318,7 +315,7 @@ export async function wakeInstalledAdapterDebts(repos:import('../repository/type
   const waiting=debts.filter(debt=>debt.cause==='AWAITING_ADAPTER');
   if(!waiting.length)return debts;
   const adapters=await installedAdapters();
-  const manual=await readFieldManual(repos,{role:'DETECTIVE'});
+  const manual=await readFieldManual(repos,ADAPTER_KNOWLEDGE);
   const latest=await repos.scoutResults.readLatest(waiting.map(debt=>debt.obligationId),{
     attemptId:true,recordClass:true,refusal:true,outcome:true,recoveryCapabilityVersion:true,narrative:true,nextRungs:true,candidates:true,rungs:true});
   return debts.map(debt=>{

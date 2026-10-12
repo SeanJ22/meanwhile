@@ -1,27 +1,18 @@
 /**
- * **THE FIRST OPEN OF AN ADMIN PAGE WAITS ONLY FOR WHAT IT MUST.** (Sean,
- * 2026-09-24: every Admin page loads under three seconds and succeeds on the
- * first attempt. Measured on production 2026-09-25: opening prop-423 on Work
- * took 4.54 s the first time.)
+ * The first open of an Admin page waits only for what it must:
  *
  * ```
- *   bodies      every page reads the watched bodies without the change history
- *               only an opened routine read draws (920 ms of the 2.3 s body read
- *               on production); that read asks for its own body's history alone
- *   drilldown   an opened piece of standing work is read in as few dependent
- *               round trips as its keys allow — four for an ordinary one — and
- *               returns the same records in the same order as before
- *   page        Work reads it beside its other reads, not after them, and reads
- *               the newest digest alone rather than a twenty-row history
- *   Fleet · Now the body list is sent the views it draws, not all 120
+ *   bodies      the watched-body read leaves out the change history; only an opened routine read
+ *               asks for its own body's history
+ *   drilldown   an opened piece of standing work is read in as few dependent round trips as its
+ *               keys allow, returning the same records in the same order
+ *   page        Work reads it beside its other reads and reads the newest digest alone
  * ```
  *
- * The round trips are counted with gated repositories: every read waits until
- * the test releases the reads in flight, so one release is one dependent round
- * trip, exactly as a page pays it against the store.
+ * Round trips are counted with gated repositories: every read waits until the test releases the
+ * reads in flight, so one release is one dependent round trip.
  */
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import { readLatestDigest } from "../lib/control-plane/admin-data.ts";
@@ -296,19 +287,4 @@ test("one body read whole, narrowed to its own sources, is the view the whole re
   assert.deepEqual(one, whole.find((v) => v.id === legistar.bodyId));
   assert.equal(one.contractIds.length, 2, "both of the body's sources");
   assert.equal(one.lastChange?.versionId, "cv-l-old");
-});
-
-test("the pages read the bodies without the history; only the opened routine read asks for it, for its own body", () => {
-  const loader = readFileSync("app/(admin)/_mw/data/load-bodies.ts", "utf8");
-  const watched = loader.slice(loader.indexOf("async function readWatchedBodies("), loader.indexOf("export type BodyRead"));
-  assert.match(watched, /readBodyStore\(connection, nowIso, \{ history: false \}\)/);
-  const one = loader.slice(loader.indexOf("export async function loadWatchedBody("));
-  assert.match(one, /readBodyStore\(connection, nowIso, \{ history: true, scopes: contracts\.map\(\(c\) => c\.scope\) \}\)/);
-  assert.match(one, /WATCHED_CONTRACTS\.filter\(\(c\) => c\.bodyId === contract\.bodyId\)/, "every source of the body, not the one contract");
-
-  const store = readFileSync("app/(admin)/_mw/data/body-store.ts", "utf8");
-  const read = store.slice(store.indexOf("export async function readBodyStore("), store.indexOf("export async function readBodyStanding("));
-  assert.match(read, /!options\.history\s*\? Promise\.resolve\(null\)/, "no history statement is sent when it is not asked for");
-  assert.match(store, /SELECT \* FROM \(\$\{statement\}\) narrowed WHERE narrowed\.scope = ANY\(\$\$\{param\}::text\[\]\)/);
-  assert.match(store, /const SCOPED_VERSION_READBACKS = `\$\{VERSION_READBACKS\} AND p\.scope = ANY\(\$2::text\[\]\)`/);
 });

@@ -99,11 +99,7 @@ type RuntimeDigestInput =
   | IntakeRuntimeObservationDigestInput
   | MapTilerUsageCollectionDigestInput;
 
-/**
- * Append one exact runner outcome to the existing canonical owner digest log.
- * This is intentionally not a new table or ledger: Admin already consumes this
- * history, and the append-only identity makes an uncertain retry idempotent.
- */
+/** Append-only: the record identity makes an uncertain retry idempotent. */
 async function appendRuntimeDigest(
   repos: ControlPlaneRepositories,
   input: RuntimeDigestInput,
@@ -133,7 +129,6 @@ export async function appendFreshnessCycleDigest(
   return appendRuntimeDigest(repos, input);
 }
 
-/** Append a supervisor fault to the same owner history without forging a source outcome. */
 export async function appendRoutineCivicDataSupervisorDigest(
   repos: ControlPlaneRepositories,
   input: RoutineCivicDataSupervisorDigestInput,
@@ -157,7 +152,6 @@ export async function appendMapTilerUsageCollectionDigest(
   return appendRuntimeDigest(repos, input);
 }
 
-/** One strict constructor owns the intake log identity and authority boundary. */
 export function intakeRuntimeObservationOutcome(
   input: IntakeRuntimeObservationOutcomeInput,
 ): IntakeRuntimeObservationOutcome {
@@ -186,11 +180,6 @@ export function intakeRuntimeObservationOutcome(
   return outcome;
 }
 
-/**
- * Bind an exact MapTiler attempt to the disposition the owner snapshot will
- * display. The full candidate is hashed rather than duplicated into history;
- * response-level provenance remains exact on `attempt`.
- */
 export function mapTilerUsageCollectionOutcome(
   input: MapTilerUsageCollectionOutcomeInput,
 ): MapTilerUsageCollectionOutcome {
@@ -250,7 +239,6 @@ export function mapTilerUsageCollectionOutcome(
   };
 }
 
-/** One constructor owns the supervisor's explicit no-source-mutation boundary. */
 export function routineCivicDataSupervisorOutcome(
   input: RoutineCivicDataSupervisorOutcomeInput,
 ): RoutineCivicDataSupervisorOutcome {
@@ -321,7 +309,6 @@ export function routineCivicDataSupervisorOutcome(
   return outcome;
 }
 
-/** Aggregate counts can never establish cross-source isolation without exact task/candidate receipts. */
 export function routineSupervisorCycleIsolationIssue(
   outcome: RoutineCivicDataSupervisorOutcome,
 ): string | null {
@@ -345,15 +332,18 @@ export function routineSupervisorCycleIsolationIssue(
   return null;
 }
 
-/** Newest canonical structured cycle; historical text-only digests are skipped. */
+/** The fields of the newest cycle outcome that the owner snapshot shows. */
+export type LatestFreshnessCycle = Pick<FreshnessCycleOutcome, "kind" | "cycleId" | "registry" | "risk" | "incidents">;
+
+/** The newest freshness cycle only, narrowed by the store; on the runner a held copy answers it. */
 export async function readLatestFreshnessCycleOutcome(
   repos: ControlPlaneRepositories,
-): Promise<{ readonly digest: OwnerDigestRecord; readonly outcome: FreshnessCycleOutcome } | null> {
-  /* Targeted by kind, newest last in append order — not a scan of the whole log. */
-  const rows = await repos.ownerDigests.readWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE");
-  const digest = rows.at(-1);
+): Promise<{ readonly digestId: string; readonly outcome: LatestFreshnessCycle } | null> {
+  const [digest] = await repos.ownerDigests.readRecentWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE", 1,
+    { digestId: true, runtimeOutcome: ["kind", "cycleId", "registry", "risk", "incidents"] }) as
+    readonly { readonly digestId?: string; readonly runtimeOutcome?: LatestFreshnessCycle }[];
   const outcome = digest?.runtimeOutcome;
-  if (digest && outcome?.kind === "FRESHNESS_CYCLE") return { digest, outcome };
+  if (typeof digest?.digestId === "string" && outcome?.kind === "FRESHNESS_CYCLE") return { digestId: digest.digestId, outcome };
   return null;
 }
 
@@ -363,7 +353,6 @@ export function freshnessCycleOutcomes(
   return rows.flatMap((row) => row.runtimeOutcome?.kind === "FRESHNESS_CYCLE" ? [row.runtimeOutcome] : []);
 }
 
-/** Every durable map-provider attempt, suitable for 24h/7d/30d projections. */
 export function mapTilerUsageCollectionOutcomes(
   rows: readonly OwnerDigestRecord[],
 ): readonly MapTilerUsageCollectionOutcome[] {

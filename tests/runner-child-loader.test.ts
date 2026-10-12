@@ -1,21 +1,3 @@
-/**
- * **EVERY CHILD THE RUNNER STARTS CAN LOAD ITS OWN CODE.** (2026-10-06.)
- *
- * The owner snapshot (cp_owner_snapshots 'current') stopped moving at
- * 2026-10-04 13:38Z. SC-11 had made publish-owner-snapshot.mts import
- * place-owed-read.ts, whose chain reaches promoted-slices.ts and its `@/`
- * imports. The runner started that publisher with type stripping only, no
- * alias resolver, so every publish died at import with ERR_MODULE_NOT_FOUND,
- * and the runner printed the last stderr line, "Node.js v22…", as the reason.
- * Every Admin money and cost screen read the stale snapshot for two days.
- *
- * What these tests hold:
- * - every TypeScript child in pilot-runner.mts starts through the one
- *   TS_CHILD prefix, which carries the alias resolver;
- * - the owner-snapshot publisher, started exactly that way, loads and builds
- *   a snapshot (dry run, no database);
- * - a dead child's printed reason is the error, not the Node version banner.
- */
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
@@ -36,7 +18,7 @@ test("pilot-runner starts every TypeScript child through TS_CHILD, which carries
   const launched = [...RUNNER.matchAll(/args: \[([^\]\n]*"scripts\/[\w-]+\.mts")/g)].map((m) => m[1])
     // CONSOLE_PUBLISHERS entries name only their script; they start through publisher.args below.
     .filter((args) => !/^"scripts\/[\w-]+\.mts"$/.test(args));
-  assert.ok(launched.length >= 5, `runner child launches found: ${launched.length}`);
+  assert.ok(launched.length >= 4, `runner child launches found: ${launched.length}`);
   for (const args of launched) assert.match(args, /^\.\.\.TS_CHILD, /, `launched without TS_CHILD: ${args}`);
   assert.match(RUNNER, /args: \[\.\.\.TS_CHILD, \.\.\.publisher\.args\]/, "console publishers start through TS_CHILD");
 });

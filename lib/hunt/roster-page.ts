@@ -1,43 +1,13 @@
 /**
- * **Read a governing body's roster off the body's OWN page.**
- * (NJ Hunt 6, 2026-08-22. Branch `body-own-page-roster`, Tier B.)
+ * Read a governing body's roster off the body's own page: the pattern of a
+ * table of members whose contact cell carries a `mailto:`, a block per
+ * member, or a list of links to per-member contact pages. Keyed on the
+ * pattern, not the vendor. Proven against New Jersey municipal sites; other
+ * shapes need their own strategy.
  *
- * ## Why this exists, and what it is the second half of
- *
- * RULING 87 draws the line this file sits on: *Wikipedia names the person; the
- * citation proves them.* NJ Hunt 5 walked the naming half and produced 261
- * distinct officials in Morris County. It could not walk the proving half for
- * everybody — 80 of 898 rows came back `LEAD`, `NO_CITATION` or `UNREACHABLE`,
- * and among them were **all nine members of the Rockaway Township Council**,
- * the governing body of the target zip. The encyclopedia named them and cited
- * nothing, so not one of them was eligible to render.
- *
- * They were sitting on `rockawaytownship.org/157/Township-Council` the whole
- * time, with their wards, their term expiries, a direct phone extension each
- * and an email address each — more than Wikipedia carried, from the government
- * that employs them. **This is the Tier B route, and it out-performs the Tier A
- * route it confirms.**
- *
- * ## Why a parser and not nine hand-typed rows
- *
- * RULING 60: a hand-worked body that produced one row and no branch has spent
- * the discovery and kept nothing. Rockaway's page is a hand-authored HTML table
- * inside a CivicPlus/CivicEngage site, and the *pattern* — a table of members
- * where the contact cell carries a `mailto:` — is not a CivicPlus invention. It
- * is how a municipal web editor lays out a council on any CMS. So the parser
- * keys on the PATTERN rather than the vendor, and travels accordingly.
- *
- * **RULING 60's caveat applies and is not decoration.** This is proven against
- * New Jersey municipal sites. A borough in Alaska, a parish in Louisiana and an
- * unincorporated Arizona county will each need their own sub-branch, and the
- * failure is recorded with the jurisdiction rather than treated as evidence the
- * roster does not exist.
- *
- * ## A zero-row extraction is a FAILED extraction
- *
- * `extractRoster` always reports what it was given and what each strategy
- * returned. A page that yields nothing names the page, the strategies tried and
- * the reason — it never returns an empty roster that reads like an empty body.
+ * `extractRoster` reports what it was given and what each strategy returned.
+ * A page that yields nothing names the strategies tried and the reason; it
+ * never returns an empty roster that reads like an empty body.
  */
 
 /** One person as the body's own page publishes them. */
@@ -51,19 +21,16 @@ export interface PageRosterMember {
   termNote: string | null;
   phone: string | null;
   /**
-   * The address the page DISPLAYS. Where a `mailto:` href disagrees with the
-   * text beside it, the text is what the body publishes as the address and the
-   * href is recorded separately rather than silently preferred — Rockaway's own
-   * page shows `hmorrison@` over a `mailto:hkritz@`, and picking the href would
-   * have shipped a predecessor's mailbox as a sitting member's contact.
+   * The address the page displays. Where a `mailto:` href disagrees with the
+   * text beside it, the displayed text wins and the href is kept separately:
+   * a stale href can be a predecessor's mailbox.
    */
   email: string | null;
   /** The `mailto:` target, when it differs from the displayed address. */
   emailHrefMismatch: string | null;
   /**
-   * The member's own page on the body's site, where the body routes contact
-   * through a FORM rather than publishing an address. A working contact and a
-   * verified page at once — and honestly not an email.
+   * The member's own page on the body's site, where contact goes through a
+   * form rather than a published address. Not an email.
    */
   contactPageUrl?: string | null;
 }
@@ -109,19 +76,13 @@ export function cellText(html: string): string {
   return decodeEntities(
     html
       /*
-       * `<style>` and `<script>` bodies are not text. Joomla's SP Page Builder
-       * emits a per-widget `<style>` block INSIDE the content region, so a
-       * naive tag-strip returned 800 characters of CSS media queries as though
-       * they were the page's words — and a name-shaped test then found nothing
-       * in it, which reads as "this body publishes no roster".
+       * `<style>` and `<script>` bodies are not text; some page builders emit
+       * a `<style>` block inside the content region.
        */
       .replace(/<style[\s\S]*?<\/style>/gi, " ")
       .replace(/<script[\s\S]*?<\/script>/gi, " ")
-      // `<br id="isPasted">` and `<br data-pasted="true">` are what a WYSIWYG
-      // editor actually emits, and a `<br>`-only pattern silently skips them:
-      // four of Rockaway's nine council members vanished because their name and
-      // their term ran together into one unparsable line, and the extraction
-      // returned five rows and no error. Match the TAG, not the tidy form.
+      // WYSIWYG editors emit `<br id="isPasted">` and `<br data-pasted="true">`;
+      // match the tag, not only the tidy form, or a name and term run together.
       .replace(/<br\b[^>]*>/gi, "\n")
       .replace(/<\/(?:p|div|li|tr|h[1-6]|td|th)>/gi, "\n")
       .replace(/<[^>]+>/g, ""),
@@ -171,18 +132,10 @@ const TRAILING_TITLE =
   /[,\s]+((?:Deputy\s+)?Mayor|Council\s*President|Council\s*Vice[-\s]?President|Vice[-\s]?President|President|Councilm[ae]n?|Councilmember|Councilwoman|Councilman|Council\s*Member|Committeem[ae]n?|Committeewoman|Committeeman|Committee\s*Member|Commissioner|Trustee|Chair(?:person|man|woman)?|Alderm[ae]n|Alderwoman|Freeholder|Selectm[ae]n|Selectwoman)\.?$/i;
 
 /**
- * **Split a name cell into a name, a title and a term note.**
- *
- * Two shapes live here. Rockaway stacks the term under the name with a `<br>`;
- * Morris Plains writes the office INTO the name cell — `Jason Karr, Mayor`,
- * `Art Bruhn, Jr. Councilmember`. Taking the cell whole put the office inside
- * the person's name, so a card would have rendered a man called *Jason Karr,
- * Mayor* — and, because the title then came back null, the body resolved no
- * presiding officer at all.
- *
- * The generational suffix is kept on the name (`Art Bruhn, Jr.`) and the title
- * is taken off after it, which is why the suffix is matched before the split
- * rather than as part of it.
+ * Split a name cell into a name, a title and a term note. A page may stack
+ * the term under the name with a `<br>`, or write the office into the name
+ * cell (`Name, Mayor`, `Name, Jr. Councilmember`). A generational suffix stays
+ * on the name and is matched before the split.
  */
 function splitNameCell(text: string): {
   name: string;
@@ -245,10 +198,7 @@ function fromTables(html: string, attempts: Attempt[]): PageRosterMember[] {
         null;
       /**
        * The seat is the WARD or AT-LARGE token itself, never the line holding
-       * it. Rockaway writes `Council Vice President Ward 4` on one line, and
-       * taking the line gave a council member a seat called "Vice President
-       * Ward 4" — a seat that does not exist, on a card claiming to quote the
-       * body's own page.
+       * it (`Council Vice President Ward 4` has seat `Ward 4`).
        */
       const roleLines = roleCell === null ? [] : roleCell.split("\n").map((l) => l.trim()).filter(Boolean);
       const seatRe = /\b(Ward\s*\d+|At[- ]Large)\b/i;
@@ -334,20 +284,10 @@ function fromBlocks(html: string, attempts: Attempt[]): PageRosterMember[] {
 /* ── Strategy 3: a list of links, one per member ────────────────────────── */
 
 /**
- * **`Adrienne Zimmermann (Ward 2)` linking to her own contact page.**
- * (NJ Hunt 6, found hand-working Denville Township — a `07866` body.)
- *
- * A great many municipal sites publish no address at all and route every member
- * through a per-member contact FORM. The first two strategies both key on a
- * contact being present in the text, so a site like this returned zero rows and
- * the body read as one that publishes no roster — while its seven council
- * members, with their wards, sat in a list called *Contact Members*.
- *
- * A contact form IS a working contact, and the per-member page IS that member's
- * own page on the body's site, so this closes the verified-page field too.
- *
- * The anchor text carries the seat in a parenthetical, which is the same shape
- * the encyclopedia uses and is parsed the same way.
+ * `Member Name (Ward 2)` linking to the member's own contact page. Many
+ * municipal sites publish no address and route every member through a
+ * per-member contact form; that form is a working contact, and the page is
+ * the member's own page on the body's site. The seat is the parenthetical.
  */
 function fromMemberLinks(html: string, attempts: Attempt[]): PageRosterMember[] {
   const out: PageRosterMember[] = [];
@@ -396,11 +336,9 @@ function fromMemberLinks(html: string, attempts: Attempt[]): PageRosterMember[] 
 }
 
 /**
- * **Extract a roster, reporting every strategy and its count.**
- *
- * Strategies run in order and the FIRST that returns at least two people wins —
- * two, because a governing body with one member is not a governing body and a
- * single match is almost always a webmaster's address in a footer.
+ * Extract a roster, reporting every strategy and its count. Strategies run in
+ * order and the first that returns at least two people wins: a single match
+ * is almost always a footer address.
  */
 export function extractRoster(url: string, html: string): RosterExtraction {
   const attempts: Attempt[] = [];

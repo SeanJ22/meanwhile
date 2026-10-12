@@ -178,7 +178,7 @@ rather than a green-while-wrong guard.
 | Body identity | `lib/registry/registry.json`, `curated-bodies.ts` | `REUSE_AS_AUTHORITY` | R-0197: the registry is the authority; an adapter never mints one. |
 | Tenant→body guard | `lib/ops/tenant-body-binding.ts` | `REUSE_AS_AUTHORITY` | |
 | Source wiring | `lib/registry/source-wiring.ts` (76 rows) | `MIGRATE` | Its own header calls it the committed forerunner of a table; it cannot stay in code at 90,000 governments. |
-| Private tenant tables | `data/states/az/meetings/legistar-venues.json`, `legistar-insite/insite-venues.json` | `WRAP_BEHIND_INTERFACE` | Two adapters keep tenant tables outside `SOURCE_WIRING`. |
+| Private tenant tables | `data/states/az/meetings/legistar-venues.json`, `legistar-insite/insite-venues.json` | `WRAP_BEHIND_INTERFACE` | Two adapters keep tenant tables outside the meeting doors in the door registry. |
 | Browser constructor | `scripts/browser.mts` | `REUSE_AS_AUTHORITY` | The only sanctioned browser; its bypass is test-refused. |
 | Extraction toolkit | `lib/extract/**` | `REUSE_AS_AUTHORITY` | Its `CANNOT_RUN` ≠ `zeroRows` contract is exactly the discipline a vault needs. |
 | Two colliding rung namespaces | `lib/sources/http.ts` (14-rung mechanics) vs `lib/registry/audit.ts` (`LadderRung`, 9 values) | `HARDEN_IN_PLACE` | Documented, not resolved. Only a typed `walledAtRung` stops it recurring. |

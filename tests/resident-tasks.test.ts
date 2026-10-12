@@ -1,4 +1,4 @@
-/** FE-17: the resident-task file is well formed and names no particular place. */
+/** The resident-task file is well formed and names no particular place. */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";

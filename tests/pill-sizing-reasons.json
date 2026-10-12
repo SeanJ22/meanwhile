@@ -1,5 +1,5 @@
 {
-  "note": "BAL-12 (2026-08-25). Every pill rule whose sizing DELIBERATELY differs from the voting-pill reference, with the reason. RULING 105: a pill is either RENDERING UNIFORM, OUT OF SCOPE WITH A REASON, or DIFFERING WITH NO REASON — and only the third is a defect. A rule may leave this file only by becoming uniform; a rule may join it only with a reason somebody wrote.",
+  "note": "BAL-12 (2026-08-25). Every pill rule whose sizing DELIBERATELY differs from the voting-pill reference, with the reason. A pill is either RENDERING UNIFORM, OUT OF SCOPE WITH A REASON, or DIFFERING WITH NO REASON — and only the third is a defect. A rule may leave this file only by becoming uniform; a rule may join it only with a reason somebody wrote.",
   "recordedOn": "2026-08-25",
   "reference": ".vote-pill",
   "reasons": [

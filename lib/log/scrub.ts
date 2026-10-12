@@ -1,24 +1,12 @@
 /**
- * The free-text scrub (session brief 4, wall clock 2026-08-14): the
- * refusal log captures raw typed questions, the store is publicly
- * described as identifier-free, and a reader WILL type an address or a
- * phone number into a question box. The design: keep the
- * capture, scrub first — before storage, mechanically, with no judgment
- * calls.
- *
- * What gets replaced with `[#]`:
- *  - digit runs totalling 7+ digits, separators allowed (phone numbers,
- *    SSNs, account numbers — "973-627-2000" and "9736272000" both);
+ * The free-text scrub, applied before storage at the single write path
+ * (lib/db/search-log.ts). Replaced with `[#]`:
+ *  - digit runs totalling 7+ digits, separators allowed (phone, SSN, account
+ *    numbers: "973-627-2000" and "9736272000" both);
  *  - email-shaped tokens (anything@anything.tld);
- *  - street-address-shaped tokens (a number followed by capitalized
- *    words — "123 Main Street").
- *
- * The scrub is deliberately blunt: it will occasionally eat something
- * harmless (a bill number long enough to look like a phone number), and
- * that is the correct direction — the log's value is the topic of the
- * question, never its digits. It runs server-side at the single write
- * path (lib/db/search-log.ts) so nothing unscrubbed can reach the store
- * whatever the client sends.
+ *  - street-address-shaped tokens (a number followed by capitalized words:
+ *    "123 Main Street").
+ * Deliberately blunt: it may eat a harmless long number.
  */
 
 const EMAIL_SHAPED = /\S+@\S+\.\S+/g;
@@ -37,26 +25,9 @@ const STREET_ADDRESS_SHAPED = /\b\d{1,6}(?:\s+[A-Z][A-Za-z]+){1,4}\b/g;
 export const SCRUB_MARK = "[#]";
 
 /**
- * **THE CONTACT SHAPES ONLY — email and digit runs, NOT the address
- * heuristic.** (PR #212 follow-up, 2026-08-28.)
- *
- * `scrubFreeText` is the right pass for text a READER typed, and its
- * bluntness is correct there: eating a bill number to be sure of eating a
- * phone number is a trade the refusal log should make every time.
- *
- * It is the wrong pass for text WE generated. `STREET_ADDRESS_SHAPED` is
- * "a number followed by capitalised words", and this product deliberately
- * spells its dates out — so *"the board meets on 8 September 2026"* is an
- * address to that regex. Running it over a stored Ask answer would replace the
- * meeting date with `[#]` and flag the row as containing a street address,
- * which is a redaction that destroys the field's whole value and files a false
- * fact about the row while doing it.
- *
- * So the answer path takes the two shapes that are unambiguous — nothing a
- * civic answer legitimately contains is email-shaped, and a seven-digit run in
- * our own prose is a phone number or an account number — and gets the reader's
- * self-disclosed VALUES struck by exact match instead. See
- * `scrubStoredAnswer` in `lib/db/ask-signal.ts`.
+ * The contact shapes only (email and digit runs), not the address heuristic:
+ * for text we generated, where spelled-out dates ("8 September 2026") look
+ * like addresses. See `scrubStoredAnswer` in `lib/db/ask-signal.ts`.
  */
 export function scrubContactShapes(text: string): string {
   return text
@@ -67,14 +38,8 @@ export function scrubContactShapes(text: string): string {
 }
 
 /**
- * Did either contact shape appear?
- *
- * Fresh regexes rather than `.test()` on the module-level ones: those carry
- * the `g` flag, and `RegExp.prototype.test` on a global regex ADVANCES
- * `lastIndex` — so the same pattern asked twice about two different strings
- * answers the second one from the wrong offset. A stateful detector that
- * reports "no" on every other call is a pass that half-passes, which is worse
- * than one that never runs.
+ * Did either contact shape appear? Fresh regexes: `.test()` on a module-level
+ * `g` regex advances `lastIndex` between calls.
  */
 export function contactShapesIn(text: string): { email: boolean; digits: boolean } {
   return {

@@ -1,30 +1,15 @@
 /**
- * ROBOTS.TXT READ AND RECORDED, AT SCALE.
- * (2026-08-26, the sources-and-incumbency session; made a record rather than a
- * gate by the owner decision of 2026-09-25.)
- *
- * This is the instrument that makes the robots column cheap to fill for MANY
- * hosts at once, so a session enumerating a state's sources can record what
- * each host's rules say before it walks them.
- *
- * It reads each host's own `robots.txt` and reports, per (host, path):
+ * Reads each host's own `robots.txt` and records, per (host, path):
  *
  *   ALLOWED       no `User-agent: *` rule disallows the path
- *   DISALLOWED    a `Disallow` rule covers it — RECORDED, and not blocking
+ *   DISALLOWED    a `Disallow` rule covers it — recorded, and not blocking
  *   NO_ROBOTS     the host serves no robots.txt
- *   CANNOT_TELL   robots.txt could not be read at all. RULING 24: a check that
- *                 cannot reach its subject never prints like a pass, so it is
- *                 reported as unread, never as "no robots file"
+ *   CANNOT_TELL   robots.txt could not be read at all; reported as unread
  *
- * **No verdict refuses a walk.** Sean, 2026-09-25: "Robots.txt alone must not
- * block acquisition. I explicitly authorize automated reading of publicly
- * accessible pages even when robots.txt requests otherwise." A robots.txt that
- * answered 401, 403 or 429, or a challenge page, is reported as what it is: a
- * sign the host walls this client by an access control, which the walk must
- * never bypass (`lib/hunt/access-control.ts`).
- *
- * RULING 159 — the run FAILS when it has nothing to report. A sweep of zero
- * hosts is a sweep that did not run, not a clean board.
+ * No verdict refuses a walk. A robots.txt that answered 401, 403 or 429, or a
+ * challenge page, is reported as a sign the host walls this client by an
+ * access control, which the walk must never bypass (`lib/hunt/access-control.ts`).
+ * The run fails when it has nothing to report.
  *
  * Usage:
  *   pnpm robots:sweep --hosts a.gov,b.org
@@ -49,23 +34,11 @@ export interface HostVerdict {
   /** The literal robots.txt line that decided it, or a reason there was none. */
   readonly basis: string;
   readonly robotsStatus: number | null;
-  /**
-   * Which ladder rung read the rules — 2 for the plain identified fetch, 3 for
-   * the browser header set, null when nothing read them. A permission read
-   * that needed rung 3 is a weaker fact than one that did not, and running the
-   * two together in a report would hide that.
-   */
+  /** Which ladder rung read the rules (2 plain, 3 browser headers), null when none did. A rung-3 read is a weaker fact. */
   readonly robotsRung: number | null;
 }
 
-/**
- * Parse the `User-agent: *` group out of a robots.txt.
- *
- * Deliberately only the wildcard group: this project identifies itself in its
- * User-Agent but has no registered agent token, so the wildcard group is the one
- * that binds it. Reading a narrower group would be choosing which rules we
- * prefer to be bound by.
- */
+/** Parse the `User-agent: *` group: with no registered agent token, the wildcard group is the one that binds us. */
 export function wildcardGroup(text: string): RobotsRule {
   const disallow: string[] = [];
   const allow: string[] = [];
@@ -130,33 +103,10 @@ export function judgePath(rule: RobotsRule, path: string): { allowed: boolean; b
 }
 
 /**
- * THE PERMISSION QUESTION IS ITSELF WALKED UP THE LADDER.
- * (2026-08-26, the descent session. RULING 52 pointed at `robots.txt`.)
- *
- * The first version of this asked rung 2 — a plain fetch under this project's
- * own identified User-Agent — and read a rung-2 refusal as *the permission
- * question is unanswerable*. `CANNOT_TELL` REFUSES, correctly, so the effect
- * was that a host refusing our UA became a host we may not walk.
- *
- * **Measured on adoption: `az.gov` and `irc.az.gov` both reported `CANNOT_TELL`
- * at HTTP 403 and both answer HTTP 200 with an ordinary permissive Drupal
- * `robots.txt` at rung 3.** `az.gov` is the TOP OF THE ARIZONA DESCENT. The
- * instrument built to answer the permission question was refusing the state.
- *
- * That is RULING 52 exactly — a branch returning empty is one measurement on
- * one route, never a verdict — and it matters more here than almost anywhere
- * else, because this refusal is silent and total: it does not look like a wall,
- * it looks like a rule.
- *
- * **This is a harder read of the rules, never a softer one.** Every rung asks
- * the same host for the same file and obeys whatever comes back. A blanket
- * `Disallow: /` read at rung 3 refuses exactly as it would at rung 2. What
- * changes is only whether we managed to READ the host's rules before deciding
- * we could not.
- *
- * The rung that answered is carried on the verdict, because a permission read
- * that needed a browser header set is a weaker fact than one that did not, and
- * a report that ran the two together would be hiding that.
+ * The permission question is itself walked up the ladder: a refusal of our own
+ * User-Agent is one measurement on one route, not the host's rules. Every rung
+ * asks for the same file and obeys whatever comes back; the rung that answered
+ * is carried on the verdict.
  */
 const RUNGS: readonly { readonly rung: number; readonly label: string; readonly headers: Record<string, string> }[] = [
   {
@@ -184,18 +134,9 @@ export interface RobotsRead {
 }
 
 /**
- * RUNG 4 — a different CLIENT, because the wall is a TLS FINGERPRINT.
- *
- * `az.gov`, `irc.az.gov` and `azed.gov` refuse Node's `fetch` with HTTP 403
- * under this project's User-Agent AND under a full Chrome header set, and admit
- * `curl` carrying the same Chrome header set at HTTP 200. Headers are identical
- * across those two; the client is not. That is rung 4 in as many words — *a
- * different CLIENT whose TLS fingerprint passes (curl beat the fingerprint
- * filter in the f session where header-swapping did not)* — and it is the
- * second time this project has met it.
- *
- * `curl` ships with Windows 10+ and every mainstream Linux image, and its
- * absence is a failed rung rather than a crash.
+ * Rung 4: a different client, because some hosts refuse Node's `fetch` by TLS
+ * fingerprint and admit `curl` with the same headers. A missing `curl` is a
+ * failed rung, not a crash.
  */
 async function curlRobots(url: string): Promise<{ status: number; text: string | null } | null> {
   const { execFile } = await import("node:child_process");
@@ -238,15 +179,13 @@ async function readRobots(origin: string): Promise<RobotsRead> {
   let out: RobotsRead = { status: null, text: null, rung: null };
 
   const settle = (status: number, text: string | null, rung: number): boolean => {
-    /* Keep the FIRST status seen so a report can still say what the polite
-     * rung got, but a rung that actually READ the file wins outright. */
+    /* Keep the first status seen, but a rung that actually read the file wins outright. */
     if (out.status === null) out = { status, text, rung };
     if (text !== null) {
       out = { status, text, rung };
       return true;
     }
-    /* A 404 is a real answer — the host publishes no rules — and escalating
-     * past it would be asking a question that has already been answered. */
+    /* A 404 is a real answer (no rules published); escalating past it would re-ask an answered question. */
     if (status === 404 || status === 410) {
       out = { status, text: null, rung };
       return true;
@@ -274,28 +213,10 @@ async function readRobots(origin: string): Promise<RobotsRead> {
   if (curled) settle(curled.status, curled.text, 4);
 
   /*
-   * RUNG 4b — THE SAME HOST OVER PLAIN HTTP.
-   *
-   * Tried only when `https` produced no answer at all, and only for an
-   * `https` origin. It is not a softer read: it is the SAME question asked at
-   * the only address this host actually answers.
-   *
-   * The case, measured 2026-08-27 during the AZ 85641 hunt:
-   * `www.mescalj6fd.com` — the Mescal-J6 Fire District, one of the four fire
-   * districts that levy on ZIP 85641 — resolves fine, and fails `https` with
-   * `ERR_TLS_CERT_ALTNAME_INVALID`. Its `robots.txt` answers **HTTP 200 over
-   * plain http**. Every https rung, including curl, returned nothing, so the
-   * sweep returned `CANNOT_TELL` and refused the walk — and a fire district
-   * that governs the target ZIP was recorded as unwalkable because of a
-   * certificate.
-   *
-   * **Small governments are frequently http-only**, and a permission instrument
-   * that can only ask over https cannot answer the permission question for
-   * them. That is a gap in the instrument, not a fact about the publisher.
-   *
-   * If http answers nothing either, the origin stays `CANNOT_TELL`: recorded
-   * as unread, never as "no robots file", and not blocking (owner decision
-   * 2026-09-25).
+   * Rung 4b: the same host over plain http, tried only when https produced no
+   * answer. Small governments are often http-only (for example a certificate that
+   * does not match the host). If http answers nothing either, the origin stays
+   * CANNOT_TELL: recorded as unread, and not blocking.
    */
   if (out.status === null && origin.startsWith("https://")) {
     const plain = origin.replace(/^https:/, "http:");
@@ -401,7 +322,7 @@ if (invokedDirectly) {
   ];
 
   if (urls.length === 0) {
-    // RULING 159 — zero is a result that must be earned, never defaulted to.
+    // Zero hosts is a sweep that did not run, never a clean board.
     console.error("robots:sweep: no hosts or URLs given. A sweep of nothing is not a clean board.");
     process.exit(1);
   }
@@ -417,7 +338,7 @@ if (invokedDirectly) {
         `             ${r.basis}${r.robotsStatus === null ? "" : ` (robots.txt HTTP ${r.robotsStatus}${rung})`}`,
       );
     }
-    /* Recorded, never a refusal (owner decision 2026-09-25): every public path is walkable; an access control is not. */
+    /* Recorded, never a refusal: every public path is walkable; an access control is not. */
     const disallowed = results.filter((r) => r.verdict === "DISALLOWED").length;
     const unread = results.filter((r) => r.verdict === "CANNOT_TELL").length;
     console.log(`\n${results.length} recorded · ${disallowed} named by a Disallow (recorded, not blocking) · ${unread} unread`);

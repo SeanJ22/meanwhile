@@ -1,13 +1,7 @@
 /**
- * **THE WIRING DERIVE READS THE VENUE RESOLUTIONS BEFORE ANY ADAPTER READING.** (C16, 2026-09-24.)
- *
- * The defect: the derive child read held calendars through the reader's iCal adapter without first reading the
- * venue-resolutions projection the adapter resolves every sitting through. Under `node --test` the synchronous
- * selector falls back to the tracked test seed (`mayUseTestFixture`), so every test passed; in production it
- * throws, and the derive filed the throw as a changed calendar. The first production pass would have held all
- * three Flagstaff commissions as REVIEW_TRIGGERED.
- *
- * These tests run the reading with the fixture fallback OFF, as production runs it.
+ * The wiring derive reads the venue-resolutions projection before any adapter reading; otherwise the synchronous
+ * selector throws in production and the derive files the throw as a changed calendar. These tests run with the
+ * fixture fallback off, as production runs it.
  */
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -202,7 +196,7 @@ async function decisionFor(verification: WiringVerification) {
 }
 
 test("C16: an adapter throw of ours is ADAPTER_REFUSED, never CALENDAR_CHANGED: the unread-projection throw itself", async () => {
-  /* The very throw the first production pass would have met: the venue selector asked before its projection was read. */
+  /* The venue selector asked before its projection was read. */
   await readCuratedReaderProjection("venue-resolutions", { store: new MemoryRoutineDataStore(), bypassCache: true, now: NOW });
   let thrown: unknown = null;
   try {
@@ -221,7 +215,7 @@ test("C16: an adapter throw of ours is ADAPTER_REFUSED, never CALENDAR_CHANGED: 
 
 test("C16: the adapter's zero-row extraction stays CALENDAR_CHANGED: the held calendar selects nothing for the reviewed filter", async () => {
   const store = await storeWithVenues();
-  /* The body's events page, held, now lists no event at all: the adapter's RULING 43 zero-row extraction. */
+  /* The body's events page, held, now lists no event at all: the adapter's zero-row extraction. */
   const page = crosswalkRow({ kind: "OFFICIAL_PAGE_EVENTS", route: "https://www.example.gov/council", filter: { nameTerms: "Town Council" } });
   const empty = reading(page, "<html><body><h1>Town Council</h1></body></html>");
   const read = await asProduction(() => readHeldCalendars({

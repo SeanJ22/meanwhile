@@ -5,65 +5,16 @@ import type { EvidenceGap, EvidencePack, EvidenceRecord, EvidenceSubject } from 
 import { emptyTrace, type AnswerMode, type AskTrace } from "./trace.ts";
 
 /**
- * **ONE READER ANSWER SHAPE.** (ASK-05, 2026-08-28.)
- *
- * ## What was wrong, and it was not a tidiness problem
- *
- * Three routes answered readers and **not one of them declared a response
- * type.** Every reply was an untyped inline object literal, so the contract
- * existed nowhere except as hand-copied interfaces duplicated inside the two
- * client components — and the duplicates had already drifted:
- *
- * * `/api/ask/grounded` emitted `mode: "OFF"` when its ripcord was pulled.
- *   `"OFF"` was not a member of `AnswerMode`; both clients typed `mode` as a
- *   bare `string`, so it typechecked, matched no branch, and rendered an EMPTY
- *   PANEL. A switched-off engine looked exactly like a working one with
- *   nothing to say.
- * * `AskContact` carries `basis` and `retrievedAt`. Both client copies dropped
- *   them, so the provenance of a sourced civic relationship travelled on the
- *   wire and was **unrenderable by declaration**.
- * * `AskTrace` rides on every response and appeared in neither client copy.
- * * `EvidenceRecord.kind` is a 16-member union; both copies flattened it to
- *   `string`, so a client could branch on a kind the server can never send and
- *   nothing would say so.
- * * `/api/ask/agenda` had FIVE distinct response shapes out of one handler,
- *   one of which re-spelled `NamedEntityBinding`'s discriminant from `kind` to
- *   `state` and dropped its `NONE` member in transit.
- *
- * And underneath the type problem was a **product** problem: the map surface
- * ran the grounded engine and the topic sweep CONCURRENTLY and rendered both,
- * each with its own eyebrow, its own denominator sentence and its own hit
- * list. Two competing civic authorities on one screen, and the reader picked
- * which one to believe.
- *
- * ## What this is
- *
- * The single reader-facing contract, declared once, imported by the routes
- * that produce it and by the clients that render it. The topic sweep is not
- * deleted — it is DEMOTED, from a second answer to supplemental evidence
- * inside the one pack, as `AGENDA_MENTION` records with its denominator folded
- * into `denominators`.
- *
- * ## Every field travels on every mode
- *
- * `CLARIFY`, `UNRESOLVED` and `OFF` used to answer with two or three keys and
- * nothing else, which is what made a client's `?? []` the load-bearing part of
- * the render. Every payload now carries the whole shape. A client that reads
- * `records` gets an array on every path, and a client that forgets a mode
- * still has something true to render.
- *
- * **Nothing here is optional to make it easier to build.** `mention` and
- * `candidates` are optional because they are meaningful on exactly two modes;
- * everything else is required precisely so a producer cannot omit it.
+ * The one reader-facing Ask contract, imported by the routes that produce it
+ * and the clients that render it. Every field travels on every mode, so a
+ * client always has arrays to read; only `mention` and `candidates` are
+ * optional, being meaningful on two modes.
  */
+
 /**
- * One sitting an answer resolved, structured for a CONTROL rather than prose.
- *
- * Declared here rather than reusing `Meeting` because the two differ on
- * `bodyId` — `Meeting` has `string | undefined`, the Ask pipeline's own shape
- * has `string | null` — and reconciling that with a cast at the boundary is
- * how a null reaches something that declared it could not be one. The client
- * adapts explicitly, in one place, where the difference is visible.
+ * One sitting an answer resolved, structured for a control. Not `Meeting`:
+ * `bodyId` is `string | null` here and `string | undefined` there, and the
+ * client adapts explicitly.
  */
 export interface AskSitting {
   id: string;
@@ -73,7 +24,7 @@ export interface AskSitting {
   bodyName: string;
   startsAt: string;
   timeZone?: string | null;
-  /** `DAY`: a date-only posting; `startsAt`'s midnight is never a time (M59). */
+  /** `DAY`: a date-only posting; `startsAt`'s midnight is never a time. */
   startPrecision?: Meeting["startPrecision"];
   agendaUrl?: string | null;
   location: Meeting["location"];
@@ -89,24 +40,9 @@ export interface AskAnswerPayload {
   /** Held agenda records lead the reader answer, even when prose is available. */
   agendaLead?: boolean;
   /**
-   * **THE SITTINGS THIS ANSWER IS ABOUT, STRUCTURED.**
-   * (Session B closure, ASK-20 / ASK-23 / ASK-24, 2026-08-31.)
-   *
-   * The evidence `records` carry a MEETING as prose plus an id and a start
-   * time, which is everything a READER needs and not enough for a CONTROL. An
-   * Add-to-calendar entry needs the title, the venue or the join line, the
-   * body's own time zone and the status; a card that leads with "this body's
-   * next meeting" needs to know which sitting that is. Both were absent, so
-   * the Ask answer could describe a meeting and offer nothing to do with it
-   * while the map card beside it offered both.
-   *
-   * These are the SAME `Meeting` objects the route selected, not a reshaped
-   * copy — a second shape would be a second place for the calendar entry and
-   * the sentence to disagree about a start time.
-   *
-   * Empty on every mode that resolved no sitting, which is most of them. A
-   * client reads `meetings[0]` for "the one this answer is about" and the
-   * whole array for a day that holds more than one (ASK-24).
+   * The sittings this answer is about, as the same `Meeting` objects the route
+   * selected, so calendar controls and the sentence agree. Empty on modes that
+   * resolved none; `meetings[0]` is the one the answer is about.
    */
   meetings: AskSitting[];
   /** Exact listing identities; a null unique count must never become array.length. */
@@ -117,13 +53,7 @@ export interface AskAnswerPayload {
   subject: EvidenceSubject | null;
   /** Validated generated prose, or null. Null is a normal, honest outcome. */
   answer: string | null;
-  /**
-   * The evidence, WHATEVER the mode.
-   *
-   * A rejected or unavailable synthesis still ships every record, because the
-   * structured answer is a true answer and discarding a useful reply over one
-   * null field is the defect class this repository has found repeatedly.
-   */
+  /** The evidence, whatever the mode; a rejected or unavailable synthesis still ships every record. */
   records: EvidenceRecord[];
   /** Named gaps, each saying WHOSE gap it is. Evidence, not error handling. */
   gaps: EvidenceGap[];
@@ -142,23 +72,9 @@ export interface AskAnswerPayload {
 }
 
 /**
- * **THE DESTINATION ROUTER'S SHAPE — declared here, deliberately.**
- *
- * `/api/ask/classify` is the third Ask route and it had no response type
- * either: an inline literal on the server read by an inline literal in a
- * component. It lives beside `AskAnswerPayload` rather than inside the route
- * because a type declared in `app/api/**` cannot be imported by a client
- * component without dragging server code into the browser graph — which is
- * exactly why the hand-copied duplicates existed in the first place.
- *
- * It is a short type because what this route returns is short, and saying so
- * out loud is the point: **this is NAVIGATION, not an answer.** It selects
- * among curated in-app destinations and can never carry a fact about a
- * government, which is why it may coexist with the one reader answer instead
- * of competing with it.
- *
- * `topic: null` is a first-class outcome and never an error. `why` is operator
- * diagnostics and no reader sentence is built from it.
+ * The destination router's reply (`/api/ask/classify`), declared here so a
+ * client can import it without server code. Navigation, never a fact about a
+ * government. `topic: null` is a normal outcome; `why` is for operators.
  */
 export interface AskClassifyReply {
   /** A curated topic id, or null when nothing curated fits. */
@@ -187,12 +103,8 @@ function base(mode: AnswerMode, trace: AskTrace): AskAnswerPayload {
 }
 
 /**
- * The full answer, built from the pack that produced it.
- *
- * Taking the pack rather than loose arguments is deliberate: the records, the
- * gaps and the denominators the reader sees are then BY CONSTRUCTION the ones
- * the synthesis rung was given and the validator checked against. A route that
- * assembled its reply separately could ship a record the validator never saw.
+ * The full answer, built from the pack that produced it, so the records, gaps
+ * and denominators shown are the ones the validator checked.
  */
 export function askAnswer(input: {
   mode: AnswerMode;
@@ -241,14 +153,7 @@ export function unresolvedReadLine(answer: { mention?: string; denominators?: Re
     : `We don't have anything recorded under “${answer.mention ?? "that name"}”.`;
 }
 
-/**
- * The engine is switched off.
- *
- * It carries a NAMED GAP rather than an empty body, because the reader is
- * owed a sentence and `why` is operator diagnostics. The attribution is OURS —
- * a switched-off capability is a fact about this product and never about a
- * government — and there is no verdict on ourselves in it (RULING 139).
- */
+/** The engine is switched off: a named gap of ours, with `why` for operators. */
 export function offAnswer(why: string): AskAnswerPayload {
   const out = base("OFF", emptyTrace());
   out.trace.answerMode = "OFF";
@@ -263,13 +168,7 @@ export function offAnswer(why: string): AskAnswerPayload {
   return out;
 }
 
-/**
- * The request never reached us. **Constructed by a CLIENT, never by a server.**
- *
- * The map surface had no such state: its fetch caught, returned null, and the
- * panel rendered nothing — the same failure the ballot surface reported
- * honestly. One engine may not degrade two ways.
- */
+/** The request never reached us. Constructed by a client, never by a server. */
 export function transportFailure(): AskAnswerPayload {
   const out = base("TRANSPORT_FAILED", emptyTrace());
   out.trace.answerMode = "TRANSPORT_FAILED";
@@ -282,15 +181,7 @@ export function transportFailure(): AskAnswerPayload {
   return out;
 }
 
-/**
- * Read an unknown wire body into the contract, or refuse it.
- *
- * A client parses JSON and gets `any`; the duplicated interfaces existed
- * because nothing turned that `any` into the contract. This does, and it is
- * deliberately narrow: a reply whose `mode` is not a member of `AnswerMode` is
- * refused rather than rendered, because the empty-panel defect was exactly a
- * mode nothing branched on reaching the render.
- */
+/** Read an unknown wire body into the contract, or refuse it: a `mode` outside `AnswerMode` is refused. */
 export const ANSWER_MODES: AnswerMode[] = [
   "GROUNDED_CLAUDE",
   "GROUNDED_COMPOSED",
@@ -315,9 +206,7 @@ export function readAskAnswer(raw: unknown): AskAnswerPayload | null {
     records: arr<EvidenceRecord>(value.records),
     gaps: arr<EvidenceGap>(value.gaps),
     contacts: arr<AskContact>(value.contacts),
-    /* ASK-20: absent on an older reply is an EMPTY list, never undefined — the
-       client reads meetings[0] and a missing array would be a runtime throw on
-       a payload that is otherwise perfectly renderable. */
+    /* Absent on an older reply is an empty list, never undefined. */
     meetings: arr<AskSitting>(value.meetings),
     denominators:
       value.denominators && typeof value.denominators === "object"
@@ -340,27 +229,12 @@ export function readAskAnswer(raw: unknown): AskAnswerPayload | null {
 }
 
 /**
- * Did this answer put anything true in front of the reader?
- *
- * One definition, read by the render and by the log, for the reason
- * `askWasAnswered` exists one layer up: a private copy in a component learns
- * about prose and records and then has to learn about gaps separately, and the
- * two disagree the first time one of them is extended.
- *
- * **A named gap counts.** "We have not recorded any roll-call votes for this
- * person" is an answer — it is the honest one — and treating it as nothing
- * would file a question this product answered correctly into the roadmap of
- * things it cannot do.
+ * Did this answer put anything true in front of the reader? One definition for
+ * the render and the log. A named gap counts.
  */
 export function answerSaysSomething(payload: AskAnswerPayload | null): boolean {
   if (!payload) return false;
-  /*
-   * **A TRANSPORT FAILURE IS NOT AN ANSWER, AND IT IS NOT A REFUSAL EITHER.**
-   * Its gap is about us reaching our own server; nothing was asked of the
-   * records, so nothing may be concluded about them in either direction. A
-   * caller that logs on this boolean must skip the row entirely — see
-   * `components/ask/ask-box.tsx`, which does.
-   */
+  /* A transport failure is neither an answer nor a refusal; callers that log on this skip the row. */
   if (payload.mode === "TRANSPORT_FAILED") return false;
   return Boolean(
     payload.answer ||

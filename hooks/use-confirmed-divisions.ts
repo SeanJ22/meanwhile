@@ -8,49 +8,10 @@ import { representationForDivision } from "@/lib/registry/representation";
 import { levelKeyOf, type ResolvedLocation } from "@/lib/state/resolved-location";
 
 /**
- * **THE READER'S OWN DIVISIONS, RESOLVED BY KEY.** (WGH-22, 2026-08-31.)
- *
- * ## The measurement that made this necessary
- *
- * `panelSeatsFor` was written on 2026-08-30 to add the reader's confirmed
- * districts to the panel by reaching `coverage.divisions`. Driven against
- * production at 85641 with the owner's own address confirmed, it added
- * nothing: State House 17 and State Senate 17 were absent from the panel
- * entirely, and the State section rendered EMPTIER than the wrong answer it
- * replaced.
- *
- * The reason is structural and it is provable from one line of
- * `summarizeCoverage`:
- *
- * ```
- *   const seats = divisions.filter((d) => SEAT_TYPES.has(d.divisionType))
- * ```
- *
- * `coverage.seats` IS `coverage.divisions` at the seat levels. They are one
- * point-in-polygon answer at the ZIP centroid, carried twice. So a district
- * missing from `seats` is missing from `divisions` by construction, and the
- * fix's second half could never fire at any ZIP, for any reader. It passed its
- * unit test because the fixture hand-built a `CoverageSummary` whose
- * `divisions` carried District 17 while its `seats` did not — a shape the
- * production derivation cannot emit. `tests/panel-seats.test.ts` now asserts
- * that impossibility directly instead of depending on it.
- *
- * ## So the answer is asked for, by the division's own key
- *
- * The client already holds the confirmed division ids — they are on the device
- * and nothing about them reaches the server as reader data. What it does not
- * hold is the division's NAME or its people, and `CLAUDE.md` forbids printing
- * an OCD-ID at a reader. `/api/representation/<ocd-id>` answers both from the
- * committed registry, keyed by the division rather than by where the reader
- * is, which is the same route the district battlecard has used since M112.
- *
- * ## The four statuses are the whole point, again
- *
- * `looking` is not an absence and `unavailable` is not `unsourced`. A district
- * the reader IS in whose people we are still fetching must never render as a
- * district with no members — that is the render-default rule broken by a
- * timing gap, and it is how a correct answer becomes a false claim about a
- * government.
+ * The reader's confirmed divisions, resolved by key. `coverage.seats` is the
+ * ZIP-centroid answer, so a confirmed district missing from it must be asked
+ * for: `/api/representation/<ocd-id>` returns its name and people. `looking`
+ * is not an absence and `unavailable` is not `unsourced`.
  */
 export type DivisionStatus = "resolved" | "looking" | "unsourced" | "unavailable";
 
@@ -87,11 +48,7 @@ export function useConfirmedDivisions(
   const confirmed =
     location.certainty === "ADDRESS_RESOLVED" ? location.confirmedDivisionIds : [];
 
-  /*
-   * The ids this hook is responsible for: confirmed, at these levels, and NOT
-   * already carried by the coverage payload. A division the payload answers is
-   * answered instantly and never becomes a request.
-   */
+  /* Confirmed ids at these levels that the coverage payload does not already answer. */
   const held = new Set((coverage?.seats ?? []).map((s) => s.ocdId));
   const wanted = confirmed.filter((id) => {
     if (held.has(id)) return false;
@@ -99,9 +56,7 @@ export function useConfirmedDivisions(
     // An id whose level cannot be read names no level this section owns.
     return level !== null && divisionTypes.includes(level);
   });
-  /* A stable key, so the effect re-runs on a CHANGE of divisions rather than
-     on every render — the same identity discipline `useDivisionRepresentation`
-     keeps with `localCount`. */
+  /* A stable key, so the effect re-runs only when the divisions change. */
   const key = wanted.join("|");
 
   const [answers, setAnswers] = useState<Record<string, Answer>>({});
@@ -111,8 +66,7 @@ export function useConfirmedDivisions(
     if (ids.length === 0) return;
     const controller = new AbortController();
     for (const ocdId of ids) {
-      // The OCD-ID is already a path; spelled as one so every cache keys on
-      // the division rather than on a query string a CDN may drop (D40).
+      // The OCD-ID in the path, so every cache keys on the division.
       const path = ocdId
         .split("/")
         .map((segment) => encodeURIComponent(segment))
@@ -130,8 +84,7 @@ export function useConfirmedDivisions(
             } | null,
           ) => {
             if (controller.signal.aborted) return;
-            // An answer naming a different division is not this division's
-            // answer. Bound at the point of use, never assumed by arrival order.
+            // An answer naming a different division is not this one's.
             if (!body || body.ocdId !== ocdId) {
               setAnswers((prev) => ({
                 ...prev,

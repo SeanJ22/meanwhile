@@ -6,18 +6,8 @@ import { ASK_GAP_RECORD_CLASS, type AskGapCode, type AskGapRecordClass } from ".
 import { localDate } from "./meeting-time.ts";
 
 /**
- * **THE GAPS ASK STATES ABOUT ONE BODY, AS CODES — ONE IMPLEMENTATION.**
- * (2026-09-25. The owner's civic accuracy brief: "A discrepancy must create
- * tracked acquisition work that flows through publication", and "Say 'still
- * looking' only when real work exists.")
- *
- * Ask's topic timeline (`topic-timeline.ts`) tells a reader what we do NOT
- * hold for a body: a recent sitting whose agenda we have not read, a calendar
- * read that is days old, a recorded-outcome store that could not be read, and
- * — in the prose of each concluded agenda line — an outcome we have not read.
- * Those sentences had no machine-readable identity, so nothing downstream
- * could turn them into work. This module is the ONE place those gaps are
- * decided, from what we HOLD, and it gives each a closed code:
+ * The gaps Ask states about one body, as codes, decided in one place from what
+ * we hold:
  *
  * | code | decided from |
  * |---|---|
@@ -27,12 +17,10 @@ import { localDate } from "./meeting-time.ts";
  * | `OUTCOMES_UNREADABLE` | the recorded-outcome store could not be read (a holding failure of ours) |
  * | `MEETINGS_NOT_HELD` | no held meeting names the body at all ({@link meetingsNotHeldGap}) |
  *
- * Ask calls {@link heldBodyGaps} to write its gap sentences (the wording is
- * the timeline's and is unchanged), and the standing runner's `ask-gaps`
- * provider calls the SAME function over the same held projections to create
- * one tracked obligation per body and code (RULING 103: one rule, never a
- * second copy). Nothing here reads a reader, a question, or a log: the input
- * is the promoted meetings, their agenda documents and the recorded outcomes.
+ * Ask calls {@link heldBodyGaps} for its gap sentences, and the runner's
+ * `ask-gaps` provider calls the same function to create one tracked obligation
+ * per body and code. The input is the promoted meetings, agenda documents and
+ * recorded outcomes; nothing about a reader or question.
  *
  * PURE: no clock is read (`now` is supplied) and no store is opened.
  */
@@ -123,11 +111,9 @@ export function recordedOutcomeStatus(
 }
 
 /**
- * A body's notice page is never one of its sittings' agendas (D1, 2026-09-24):
- * another body's page, or a notice page that states no agenda item, is not
- * searched, not counted among the agendas held, and does not make a sitting
- * read. Nor is a publisher portal's shell, which the publication reading
- * already names as a portal. `documents` must already be scoped to the body.
+ * A body's agenda documents that can be one of its sittings' agendas: never
+ * another body's notice page, a notice page stating no agenda item, or a
+ * portal shell. `documents` must already be scoped to the body.
  */
 export function heldAgendaDocuments(documents: readonly AgendaDocumentLike[], bodyId: string): AgendaDocumentLike[] {
   return documents.filter((document) =>
@@ -137,12 +123,9 @@ export function heldAgendaDocuments(documents: readonly AgendaDocumentLike[], bo
 }
 
 /**
- * **A BODY WE HOLD NO MEETING OF.** (2026-09-25.) Ask states "We have not
- * recorded any meetings for …" when the held meetings name the body not once.
- * {@link heldBodyGaps} never sees such a body — its callers group the held
- * meetings by body — so this is the rule on its own: Ask's route codes the
- * sentence with it, and the runner's `ask-gaps` provider asks it again of a
- * body a reader was told this about, to know whether the gap is still open.
+ * A body we hold no meeting of. {@link heldBodyGaps} never sees one, since
+ * callers group held meetings by body; Ask's route and the runner's provider
+ * ask this directly.
  */
 export function meetingsNotHeldGap(bodyId: string, heldMeetingsOfBody: number): HeldAskGap | null {
   if (heldMeetingsOfBody > 0) return null;
@@ -170,8 +153,7 @@ export function heldBodyGaps(input: {
   for (const sitting of input.sittings) {
     if (!sitting.startsAt || !Number.isFinite(Date.parse(sitting.startsAt))) continue;
     if (sitting.agenda.length > 0) readDays.add(sitting.startsAt.slice(0, 10));
-    // … or it was read off its MINUTES (NH332): minutes list every item the body
-    // reached, so a sitting whose recorded actions carry their passages is read.
+    // … or it was read off its minutes, whose recorded actions carry their passages.
     else if (sitting.extraction === "RETRIEVED" && sitting.outcomes.some((outcome) => outcome.quote)) {
       readDays.add(sitting.startsAt.slice(0, 10));
     }
@@ -206,13 +188,9 @@ export function heldBodyGaps(input: {
   const unread = [...unreadByDay.values()].sort((a, b) => a.startsAt.localeCompare(b.startsAt));
 
   /*
-   * **THE READ THAT BOUNDS WHAT IS COMING.** (2026-09-24.) A body read by two
-   * routes can be current on one and weeks old on the other. At 85701 the
-   * Pima Board's API route was read at 11:14Z and carries no upcoming
-   * sitting, while every upcoming sitting shown came from the portal's
-   * September 8 read. Dating the body by its newest read of ANY row hid that.
-   * The upcoming listings are therefore dated by the OLDEST read among them.
-   * Only when none is upcoming is the body dated by its newest read.
+   * A body read by two routes can be current on one and old on the other, so
+   * upcoming listings are dated by the oldest read among them; only with none
+   * upcoming is the body dated by its newest read.
    */
   const readOf = (meeting: HeldGapMeetingLike) => {
     const at = meeting.provenance?.collectedAt ?? null;
@@ -237,12 +215,9 @@ export function heldBodyGaps(input: {
     gaps.push(gap("OUTCOMES_UNREADABLE", null, null));
   } else {
     /*
-     * A concluded sitting whose agenda we hold and for which no recorded
-     * decision is held: every agenda line of it that a reader asks about is
-     * answered "we have not read the recorded outcome of that item". The
-     * decision may be held on the publisher's structured record for that
-     * meeting or for another listing of the same day. With the store
-     * unreadable this is not decidable, and the gap is the store's instead.
+     * A concluded sitting whose agenda we hold with no recorded decision held
+     * (on its structured record or another listing of the same day). With the
+     * store unreadable, the gap is the store's instead.
      */
     const decided = (sitting: PersistedSittingOutcomes) =>
       sitting.outcomes.some((outcome) => recordedOutcomeStatus(outcome) !== "OUTCOME_NOT_READ");

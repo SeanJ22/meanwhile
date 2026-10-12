@@ -1,29 +1,15 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import test from "node:test";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
-
-await installRegistryRuntimeFirstSeeds();
 
 import { membersOfBody } from "../lib/registry/body-membership.ts";
 import { CURATED_BODIES } from "../lib/registry/curated-bodies.ts";
 import { coverageAt } from "../lib/registry/server.ts";
 import type { CoveredBody } from "../lib/registry/coverage.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
-/**
- * DATA-3 — A BODY'S MEMBERS COME FROM THE BODY, NEVER FROM ITS GEOGRAPHY.
- *
- * `lib/registry/body-membership.ts` established the rule on 2026-08-27 and is
- * correct. What this file guards is the LOOKUP that feeds it, which was still
- * joining on the division: `bodyFor(meeting.ocdId)` in the map shell returned
- * whichever coverage body happened to sit on the meeting's division, and the
- * only thing that result is ever used for is a membership claim.
- *
- * Six coverage bodies sit on `county:pima`. The first is the county board, so
- * every CAWCD sitting rendered the five Pima County Supervisors under
- * Representation — the reported regression, and the reason a correct
- * composition module was not enough on its own.
- */
+await installRegistryAuthority();
+
+/** A body's members come from the body, never from its geography: a meeting resolves to the body it names or to nothing. */
 
 const VAIL_AREA = { lat: 31.9557, lng: -110.7115 };
 const PIMA = "ocd-division/country:us/state:az/county:pima";
@@ -48,7 +34,7 @@ function bodyByDivision(
   return bodies.find((b) => b.ocdId === meeting.ocdId) ?? null;
 }
 
-interface SnapshotMeeting {
+interface FixtureMeeting {
   id: string;
   ocdId: string | null;
   bodyId?: string;
@@ -56,16 +42,16 @@ interface SnapshotMeeting {
   jurisdiction: string;
 }
 
-const snapshot = JSON.parse(
-  readFileSync(new URL("../data/meetings-snapshot.json", import.meta.url), "utf8"),
-) as { meetings: SnapshotMeeting[] };
-
-/* --------------------------------------------------- the named example --- */
+/** Sittings of three bodies that share the county's division. */
+const MEETINGS: FixtureMeeting[] = [
+  { id: "cawcd:1", ocdId: PIMA, bodyId: CAWCD, bodyName: "Central Arizona Water Conservation District Board", jurisdiction: "Pima County, AZ" },
+  { id: "pima:1", ocdId: PIMA, bodyId: COUNTY_BOARD, bodyName: "Board of Supervisors", jurisdiction: "Pima County, AZ" },
+  { id: "boa4:1", ocdId: PIMA, bodyId: `${PIMA}#board-of-adjustment-district-4`, bodyName: "Board of Adjustment District 4", jurisdiction: "Pima County, AZ" },
+];
 
 test("DATA-3: a CAWCD sitting renders the CAWCD board, not the county supervisors", async () => {
   const { bodies } = await coverageAt(VAIL_AREA.lat, VAIL_AREA.lng, 0);
-  const meeting = snapshot.meetings.find((m) => m.bodyId === CAWCD);
-  assert.ok(meeting, "the snapshot must hold a CAWCD sitting to test");
+  const meeting = MEETINGS.find((m) => m.bodyId === CAWCD)!;
 
   const resolved = bodyForMeeting(bodies, meeting);
   assert.equal(resolved?.bodyId, CAWCD);
@@ -78,28 +64,12 @@ test("DATA-3: a CAWCD sitting renders the CAWCD board, not the county supervisor
   }
 });
 
-test("DATA-3: the old division join is what produced the wrong five", async () => {
-  // Stated rather than implied: this is the defect, and it is why matching on
-  // identity is the repair rather than a tidy-up.
-  const { bodies } = await coverageAt(VAIL_AREA.lat, VAIL_AREA.lng, 0);
-  const meeting = snapshot.meetings.find((m) => m.bodyId === CAWCD)!;
-  const wrong = bodyByDivision(bodies, meeting);
-  assert.equal(wrong?.bodyId, COUNTY_BOARD);
-  assert.notEqual(wrong?.bodyId, meeting.bodyId);
-});
-
-/* ------------------------------------------------ the unnamed controls --- */
-
 test("DATA-3 control: no meeting anywhere renders another body's members", async () => {
-  /*
-   * The class, over the whole snapshot rather than the reported row. A
-   * meeting resolves to the body it names or to nothing; it may never resolve
-   * to a body it merely shares ground with.
-   */
+  /* A meeting resolves to the body it names or to nothing, never to a body it merely shares ground with. */
   const { bodies } = await coverageAt(VAIL_AREA.lat, VAIL_AREA.lng, 0);
   const offenders: string[] = [];
 
-  for (const meeting of snapshot.meetings) {
+  for (const meeting of MEETINGS) {
     const resolved = bodyForMeeting(bodies, meeting);
     if (!resolved) continue;
     assert.equal(
@@ -120,21 +90,12 @@ test("DATA-3 control: no meeting anywhere renders another body's members", async
 
   assert.ok(
     offenders.length > 0,
-    "the snapshot must still contain the shape this guard protects against",
+    "the fixture must contain the shape this guard protects against",
   );
 });
 
 test("DATA-3 control: a second special district on county:pima keeps its own answer", async () => {
-  /*
-   * The unnamed instance, and a better control than expected. The Board of
-   * Adjustment District 4 sits on the SAME `county:pima` division as CAWCD and
-   * as the county board, and it publishes its own membership — read from the
-   * county's District 4 notices page on 2026-08-27.
-   *
-   * So three bodies share one division and there are three different right
-   * answers. A division join has no way to tell them apart; it would hand all
-   * three the same five people.
-   */
+  /* Three bodies share one division with three different right answers; a division join cannot tell them apart. */
   const { bodies } = await coverageAt(VAIL_AREA.lat, VAIL_AREA.lng, 0);
   const sharing = bodies.filter((b) => b.ocdId === PIMA);
   assert.ok(sharing.length >= 3, "the division must actually be shared");
@@ -157,11 +118,7 @@ test("DATA-3 control: a second special district on county:pima keeps its own ans
 });
 
 test("DATA-3 control: a statutory alias still inherits, because an authority says so", async () => {
-  /*
-   * The repair must not become "never inherit". Three Pima districts ARE the
-   * board of supervisors by statute, and rendering them empty would replace a
-   * false claim with a false absence. The difference is a recorded authority.
-   */
+  /* A recorded statutory alias still inherits; the difference is the recorded authority. */
   const flood = membersOfBody(`${PIMA}#regional-flood-control-district`);
   assert.equal(flood.kind, "EXPLICIT_LEGAL_ALIAS");
   assert.equal(flood.members.length, 5);

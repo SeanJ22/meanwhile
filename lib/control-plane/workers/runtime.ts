@@ -47,11 +47,7 @@ export function usesModelParse(runtime: Pick<FleetRuntime, "parseReasoner">, spe
 }
 
 export interface FleetRuntime {
-  /**
-   * The production standing runner sets this after PDC authority transfer.
-   * Isolated deterministic worker tests may omit it, but no production
-   * runtime may use a legacy meeting ACQUIRER as a callable fallback.
-   */
+  /** Set by the production standing runner; no production runtime may use a legacy meeting ACQUIRER as a fallback. */
   readonly routineMeetingsAuthority?: "PERMANENT_CIVIC_DATA_PLANE";
   readonly roleExecutor?: (task: RouteTask, holder: string) => DeclaredExecutor;
   readonly repos: ControlPlaneRepositories;
@@ -60,15 +56,12 @@ export interface FleetRuntime {
   readonly independentContext: (input: Pick<WorkerTaskSpec, "artifactId" | "contract" | "auditScope"> & { methodVersion: number; workItemId?: string }) => Promise<IndependentAuditContext>;
   readonly methodVersion: number;
   readonly requireModelAudit?: boolean;
-  /**
-   * Whether the model's adversarial review runs on an audit (audit-sampling.ts). Absent: every audit is reviewed, as before.
-   * The deterministic audit is code and runs on every validated record either way; the review is what costs money.
-   */
+  /** Whether the model's adversarial review runs on an audit. Absent: every audit is reviewed. The deterministic audit always runs. */
   readonly modelAuditSample?: (spec: WorkerTaskSpec) => Promise<boolean>;
   /** Exact subjects whose model calls reserve the selected lifetime hunt budget durably. */
   readonly lifetimeHuntSubject?: (subjectId: string) => boolean;
   readonly rollingCeilingUsd?: number;
-  /** CH-26: a task's history reads are scoped to its own work item, subject and lineage (`scoped-history.ts`). Absent: the old whole-table reads. */
+  /** History reads scoped to the task's own work item, subject and lineage (`scoped-history.ts`). Absent: whole-table reads. */
   readonly scopedReads?: boolean;
   readonly now?: () => string;
   /** The parser's fallback when no parsing rule exists: a model pulls the fields with exact quotes and code confirms each quote is in the saved document (model-parser.ts). */
@@ -78,7 +71,7 @@ export interface FleetRuntime {
     readonly workerVersion: string;
     readonly review: (context: IndependentAuditContext, attemptId: string, escalation?: WorkerTaskSpec["auditEscalation"]) => Promise<{
       review: NonNullable<WorkerResultRecord["modelReview"]>; usage: WorkerUsage; usd: number | null;
-      /** The six ledger fields from the provider's usage block (2026-09-06). Absent from an older reasoner: the row reads UNREPORTED. */
+      /** The provider's usage-block metering fields. Absent from an older reasoner: the row reads UNREPORTED. */
       metering?: Pick<AttemptCost, "cacheReadInputTokens" | "cacheCreationInputTokens" | "cacheCreation5mInputTokens" | "cacheCreation1hInputTokens" | "uncachedInputTokens" | "batch">;
     }>;
   };
@@ -88,7 +81,7 @@ export async function enqueueWorkerTask(repos: ControlPlaneRepositories, input: 
   workItemId: string; role: FleetRole; artifactId: string; contract: CivicExtractionContract; now: string;
   producerResultId?: string; validatorResultId?: string; auditScope?: WorkerTaskSpec["auditScope"]; replayLabel?: string;
   purpose?: WorkerTaskSpec["purpose"];
-  acquisition?: WorkerTaskSpec["acquisition"]; engineering?: WorkerTaskSpec["engineering"];
+  acquisition?: WorkerTaskSpec["acquisition"];
   auditEscalation?: WorkerTaskSpec["auditEscalation"];
 }): Promise<RouteTask> {
   const spec: WorkerTaskSpec = { schemaVersion: 1, role: input.role, artifactId: input.artifactId, contract: input.contract,
@@ -96,8 +89,7 @@ export async function enqueueWorkerTask(repos: ControlPlaneRepositories, input: 
     auditScope: input.auditScope ?? "CAPTURED_ARTIFACT", implementationVersion: FLEET_IMPLEMENTATION_VERSION,
     ...(input.auditEscalation ? { auditEscalation: input.auditEscalation } : {}),
     ...(input.purpose ? { purpose: input.purpose } : {}),
-    ...(input.acquisition ? { acquisition: input.acquisition } : {}),
-    ...(input.engineering ? { engineering: input.engineering } : {}) };
+    ...(input.acquisition ? { acquisition: input.acquisition } : {}) };
   const signature = fingerprint([canonicalJson(spec), input.replayLabel ?? "canonical"]);
   const task: RouteTask = { ...createRouteTask({ workItemId: input.workItemId, routeId: `worker:${input.role}:${signature}`,
     routeLabel: `${input.role} ${input.contract.recordClass} ${FLEET_IMPLEMENTATION_VERSION}`, target: input.artifactId,
@@ -115,7 +107,7 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
   const spec = task.workerTask;
   if (!spec) throw new Error("WORKER_TASK_SPEC_MISSING");
   const role = spec.role;
-  if (role === "ACQUIRER" || role === "DETECTIVE" || role === "ENGINEERING") {
+  if (role === "ACQUIRER" || role === "DETECTIVE") {
     if (!runtime.roleExecutor) throw new Error("AUTONOMOUS_ROLE_RUNTIME_UNAVAILABLE");
     return runtime.roleExecutor(task, holder);
   }
@@ -200,19 +192,14 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
     }
     assertFleetResult(result, role, attemptId);
     if (result.role === "ADVERSARIAL_AUDITOR") {
-      // What the audit found is written where the next agent reads it (best effort: a store hiccup must not lose the result).
+      // Best effort: a store hiccup must not lose the result.
       await writeFieldManual(runtime.repos, auditLearningEntries({ result, auditResultId: `wr-${fingerprint([attemptId])}`, modelReviewed: model !== undefined,
         contract: spec.contract, ...(producerRecord ? { parser: producerRecord } : {}), observedAt: now() }), now()).catch(() => undefined);
     }
     const durationMs = Math.round(performance.now() - started);
     const usage = model?.usage ?? parsed?.usage ?? NULL_USAGE;
-    /*
-     * The ledger row (2026-09-06): `inputTokens` is the WHOLE prompt — the
-     * uncached remainder plus the cache reads and writes — as it is on every
-     * other lane's row, and the six metering fields split it the way the
-     * provider bills it. The worker usage keeps `inputTokens` as the uncached
-     * remainder, which is what its own `uncachedInputTokens` restates.
-     */
+    // `inputTokens` on the cost row is the whole prompt (uncached remainder plus cache
+    // reads and writes); the worker usage's `inputTokens` is the uncached remainder only.
     const cost = { ...ZERO_COST, durationMs, inputTokens: wholePrompt(usage), outputTokens: usage.outputTokens, usd: model?.usd ?? parsed?.usd ?? null, requestCount: parsed?.review.byModel?.reduce((n,s)=>n+s.requestCount,0) ?? (model || parsed ? 1 : 0), ...(model?.metering ?? parsed?.metering ?? {}) };
     const workerResult: UncommittedWorkerResult = { id: `wr-${fingerprint([attemptId])}`, schemaVersion: 1,
       workItemId, routeTaskId, attemptId, worker, grant, methodVersion: attempt.methodVersion, policyVersion: attempt.policyVersion,
@@ -253,7 +240,7 @@ export async function dispatchWorkerTask(runtime: FleetRuntime, task: RouteTask)
     isRetiredRoutineMeetingAcquisition(task.workerTask.contract)
   ) {
     throw new Error(
-      "PDC_ROUTINE_MEETINGS_ACQUISITION_RETIRED: permanent SOURCE_WIRING-derived meeting-partition contracts are the only standing acquisition authorities",
+      "PDC_ROUTINE_MEETINGS_ACQUISITION_RETIRED: meeting-partition contracts built from the meeting doors are the only standing acquisition authorities",
     );
   }
   const modelAudit = task.workerTask?.role === "ADVERSARIAL_AUDITOR" && runtime.auditReasoner !== undefined
@@ -272,7 +259,7 @@ async function dispatchAdmittedWorkerTask(runtime: FleetRuntime, task: RouteTask
     subjectId: task.workerTask.contract.subjectId, routeId: task.routeId, active: true, readerImpactAt: null,
     observedChangeRateHours: null, lastWorkedAt: null }, nextDueAt: task.createdAt, cadenceHours: 24,
     cadenceSource: "DEFAULT_NO_SIGNAL", basis: "A persisted bounded worker task is due until its computation commits." };
-  /* MW-024: a proof run's worker tasks charge under its own project, marked non-production. */
+  // A proof run's worker tasks charge under its own project, marked non-production.
   const proof = proofChargeOf((await runtime.repos.workItems.read(task.workItemId).catch(() => null))?.value.project);
   return dispatchOne(runtime.repos, { obligation, routeTaskId: task.id, holder, now, leaseTtlMs: 300_000,
     clock: runtime.now ?? (()=>new Date().toISOString()),

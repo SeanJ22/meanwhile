@@ -1,4 +1,4 @@
-import { geometryFiles } from "../lib/holdings/files.ts";
+import { geometryFiles } from "../lib/holdings/discovery.ts";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
@@ -10,29 +10,14 @@ import { bodiesAt, type GeoFeature } from "../lib/registry/resolve.ts";
 import type { Division, Registry } from "../lib/registry/types.ts";
 
 /**
- * The hand-written oracle, and what it is for.
- *
- * These lists were written out by hand from what actually governs each target
- * zip. They are **not** the mechanism — the registry is generated from polygons
- * — they are the ground truth the generated registry gets measured against.
- *
- * The interesting output is what the derivation *fails* to produce. A rule that
- * quietly drops a division type, a clip that excludes a county, or a division
- * that generates no body all look fine until something asserts the answer. The
- * old suite could not have caught the 85641 gap because it never asked.
+ * Hand-written ground truth per ZIP that the polygon-generated registry is measured against; the useful
+ * output is what the derivation fails to produce.
  */
 
 const here = dirname(fileURLToPath(import.meta.url));
 const HOLDINGS_ROOT = join(here, "..");
 
-/**
- * What must resolve, per zip, as OCD-ID substrings.
- *
- * Substrings rather than full identifiers on purpose: the identifier convention
- * is unsettled (tracker D15), and this oracle is about *which governments*
- * resolve, not about their current key shape. Pinning full IDs here would make
- * the oracle fail for the right answer under a new convention.
- */
+/** What must resolve, per ZIP, as OCD-ID substrings, so the oracle is about which governments resolve, not key shape. */
 const ORACLE: Record<string, { must: string[]; note: string }> = {
   "85701": {
     note: "Downtown Tucson. City, county, unified school district, and state and federal seats.",
@@ -121,10 +106,8 @@ for (const [zip, spec] of Object.entries(ORACLE)) {
 }
 
 test("85641 gets a school board and no municipal government", () => {
-  // Vail is unincorporated. The only municipal-shaped division covering the
-  // centroid is Tucson CCD — a Census County Division, which is a statistical
-  // artifact with no government at all. The derivation has to produce nothing
-  // for it rather than mint a council, and still find the school board.
+  // An unincorporated point whose only municipal-shaped division is a Census County Division (no government):
+  // the derivation must produce no council for it and still find the school board.
   const { divisions, bodies } = resolve("85641");
 
   const municipalish = divisions.filter((d) => d.divisionType === "place");
@@ -150,8 +133,7 @@ test("85641 gets a school board and no municipal government", () => {
 });
 
 test("07866 resolves the township, not the neighbouring borough", () => {
-  // Morris County holds Rockaway township and Rockaway borough — two separate
-  // municipalities. Keying on NAME alone collapsed them onto one identifier.
+  // Two municipalities with the same name in one county must not collapse onto one identifier.
   const { divisions } = resolve("07866");
   const ids = divisions.map((d) => d.ocdId);
 
@@ -181,12 +163,8 @@ test("every derived body is labelled structural, never sourced", () => {
   assert.ok(derived.length >= 265, "the derived rows went missing");
 
   for (const body of derived) {
-    // Unchanged by 4.6.10 and load-bearing: a source hunt can find a body's
-    // website without making the body's EXISTENCE a sourced claim. That stays
-    // structural, and the name stays null, on every derived row.
-    // coverageStatus is no longer uniform — an audited body carries what its
-    // hunt found. What must never happen is a body claiming an exhausted
-    // search; tests/link-ladder.test.ts holds that line against the audit file.
+    // A body's existence is structural and its name stays null on every derived row; no body may claim an
+    // exhausted search (tests/link-ladder.test.ts).
     assert.notEqual(
       body.coverageStatus,
       "NO_SOURCE_FOUND",
@@ -204,8 +182,7 @@ test("every derived body is labelled structural, never sourced", () => {
 });
 
 test("every curated body carries a sourced name with its citation", () => {
-  // The curated bargain (D28/D29): a name may appear exactly because the page
-  // it was read from is cited. One without the other is a minted claim.
+  // A curated name may appear only with the page it was read from cited.
   const curated = registry.bodies.filter((b) => b.bodyOrigin === "CURATED");
   assert.ok(curated.length > 0, "the curated overlay went missing");
 
@@ -218,11 +195,11 @@ test("every curated body carries a sourced name with its citation", () => {
     assert.notEqual(body.coverageStatus, "NO_SOURCE_FOUND");
   }
 
-  // The division-less path (D28) exists and stays the exception.
+  // The division-less path exists and stays the exception.
   const divisionless = curated.filter((b) => b.ocdId === null);
   assert.ok(divisionless.length >= 1, "PCC's division-less row went missing");
 
-  // One division, many bodies (D29) — the registry must never assume one
+  // One division, many bodies: the registry must never assume one
   // body per division.
   const tucson = registry.bodies.filter(
     (b) => b.ocdId === "ocd-division/country:us/state:az/place:tucson",

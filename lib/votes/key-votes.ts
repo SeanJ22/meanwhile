@@ -1,69 +1,24 @@
 /**
- * The key votes list — tracker **B15**, a locked list (2026-08-15).
+ * The key votes list: a fixed, reviewed set of questions a reader might want a
+ * member's answer to, each rendered as that member's OWN chamber's roll call,
+ * with a plain-language explainer anchored to the bill's own contents.
  *
- * ## What this is, and the three things it is not
+ * It is not a scorecard: nothing is summed, averaged, graded or ordered by
+ * agreement. It is not a selection made after looking at the votes: the
+ * criteria sentence is published on the surface. And code never adds an entry.
  *
- * It is a fixed set of questions the reader might reasonably want a member's
- * answer to, each rendered as that member's OWN chamber's roll call, with a
- * plain-language explainer anchored to the bill's own contents.
- *
- * It is **not** a scorecard. Nothing here is summed, averaged, graded or
- * ordered by agreement — CLAUDE.md's neutrality rule is stricter than the
- * no-composite-score rule and this file is the place it would be easiest to
- * break. It is **not** a selection made after looking at the votes: the
- * criteria sentence below is published ON the surface, and the entries were
- * fixed before any roll call was fetched. And it is **not** generated: the
- * list is fixed and reviewed; code never adds an entry.
- *
- * ## The chamber rule (structural)
- *
- * **An entry is a QUESTION. Each chamber answered it with its own roll
- * calls, and a member's card shows only their own chamber's votes.** So
+ * An entry is a QUESTION; each chamber answered it with its own roll calls, so
  * every entry maps to `{ house: RollCallRef[], senate: RollCallRef[] }`, and
- * either side may legitimately be empty:
+ * either side may be empty with a structural note (the House does not vote on
+ * nominations). The April 2024 package is four sibling entries because the
+ * House voted four bills and the Senate one package.
  *
- *  - `[]` with a structural `houseNote` — that chamber does not vote on
- *    this class of question at all (the House does not vote on nominations).
- *    Current chamber or law status is never asserted by reviewed input; it
- *    requires its own official acquisition and durable receipt.
- *  - A member who was not in office, or did not vote, renders "did not
- *    vote" — also first-class.
+ * Where a chamber voted twice on a bill, the card shows the LAST passage or
+ * concurrence vote — the vote on the text that became law — unless an entry's
+ * `whichVote` says otherwise.
  *
- * The April 2024 package is four sibling entries because the House voted on
- * four separate bills and a member could vote differently on each; the
- * Senate voted the four as one package, so a senator's card shows one row
- * and says so.
- *
- * ## The last-passage rule — 2026-08-15 (6f3)
- *
- * Where a chamber voted twice on the same bill (passage, then concurrence in
- * the other chamber's amendment), the entry names WHICH roll call is its
- * vote — final passage or concurrence — per entry, in `whichVote`.
- *
- * **The standing rule: the card shows the LAST passage or concurrence
- * vote.** The sixteen entries that took this as their
- * default when B17 resolved them stand as approved rather than as
- * unreviewed defaults.
- *
- * The reason it is the right default, recorded so nobody re-argues it: the
- * last vote is the one on the text that became law. B17 found this the hard
- * way — matching the Bipartisan Safer Communities Act on the literal words
- * "final passage" picked the House's May vote on its own unrelated version
- * of the bill, not the June concurrence that is the vote on the gun law. A
- * member who voted differently on the two would have been shown answering a
- * question nobody asked.
- *
- * Any future per-entry override is an explicit reviewed decision, written into
- * that entry's `whichVote`. Code never changes which vote an entry means.
- *
- * ## Roll call ids are fetched, never assumed
- *
- * The reviewed v1 selection binds these questions to the roll identities in
- * `lib/votes/key-vote-selection-v1.ts`. `pnpm key-votes:positions`
- * reacquires each selected roll from the official chamber, and the canonical
- * projection carries its current question, tally, URL verification, and
- * member positions in the canonical projection. An unverified roll is held;
- * no tracked file is changed.
+ * Roll identities are bound in `lib/votes/key-vote-selection-v1.ts`;
+ * `pnpm key-votes:positions` reacquires each roll from the official chamber.
  */
 
 /** The criteria, published verbatim on the surface. Never paraphrased. */
@@ -136,25 +91,15 @@ export interface KeyVoteEntry {
   senateSearch?: string;
   /**
    * The law's POPULAR NAME, for resolving this entry against the official
-   * record — B17, 2026-08-15.
-   *
-   * The Senate publishes its votes under a bill's official long title
-   * ("A bill to provide for reconciliation pursuant to title II of S. Con.
-   * Res. 14"), which names nothing a reader would recognise; that is why
-   * `senateSearch` alone left every law row empty. congress.gov's own
-   * `/titles` endpoint carries the popular and short titles the country
-   * actually uses, so the resolution is: find the public law whose titles
-   * include THIS phrase, then read that bill's recorded votes.
-   *
-   * Curated matching data, exactly like `senateSearch` — a phrase to search
-   * the official record for, never an asserted bill number. A bill number
-   * typed here from memory is the assumption this whole file refuses.
+   * record. The Senate publishes votes under a bill's long title, so the
+   * resolution finds the public law whose congress.gov titles include this
+   * phrase. Matching data, never an asserted bill number.
    */
   lawSearch?: string;
   /**
-   * The official short title of a PENDING measure, for the route that goes
-   * through the chamber's roll-call index rather than the public-law list
-   * (B15, 2026-08-18). Matching data, never an asserted bill number.
+   * The official short title of a PENDING measure, found through the chamber's
+   * roll-call index rather than the public-law list. Matching data, never an
+   * asserted bill number.
    */
   pendingSearch?: string;
 }
@@ -165,11 +110,7 @@ const NO_HOUSE_NOMINATION = "The House doesn't vote on nominations.";
 const CONGRESS_GOV = "congress.gov bill text and official summary";
 const SENATE_ROLL = "senate.gov roll-call record";
 
-/**
- * A nomination entry. Sixteen of these, all Senate, all single roll calls —
- * which is why the brief ships this group first: there is no chamber
- * mapping to get wrong.
- */
+/** A nomination entry: Senate only, single roll call. */
 function nomination(
   id: string,
   title: string,
@@ -200,12 +141,9 @@ function nomination(
 }
 
 /**
- * VOTES ON PEOPLE — sixteen Senate confirmations, a fixed list.
- *
- * The tally on each is recorded as the thing the fetch must AGREE WITH: a
- * resolved roll call whose tally does not match is treated as the wrong roll
- * call and refused, rather than quietly overwriting the reviewed list with
- * whatever the search returned.
+ * Votes on people — Senate confirmations, a fixed list. The recorded tally is
+ * what the fetch must AGREE WITH: a resolved roll call whose tally differs is
+ * refused as the wrong roll call.
  */
 export const KEY_VOTES_PEOPLE: KeyVoteEntry[] = [
   nomination(
@@ -327,19 +265,10 @@ function law(
 }
 
 /**
- * VOTES ON LAWS — twenty entries, a fixed list, including the April
- * 2024 package as FOUR siblings and one additional selected proposal.
- *
- * The count read "seventeen" until 2026-08-18 (g19), when it was checked
- * against the array rather than against the previous comment. A stale count
- * in a docblock is a small thing; a stale count that a report quotes as a
- * denominator is not.
- *
- * Every explainer is drafted in the register set by the first three samples
- * (BSCA, Social Security Fairness, Ukraine aid): what the law actually DOES to people, in one sentence, with the
- * status stated where the status is part of the answer. No entry lets its
- * title do the explaining, and the bundles name their biggest real-world
- * effects rather than their branding.
+ * Votes on laws — a fixed list, including the April 2024 package as FOUR
+ * siblings. Each explainer says what the law actually DOES to people in one
+ * sentence; no title does the explaining, and bundles name their biggest
+ * real-world effects rather than their branding.
  */
 export const KEY_VOTES_LAWS: KeyVoteEntry[] = [
   law(
@@ -432,9 +361,6 @@ export const KEY_VOTES_LAWS: KeyVoteEntry[] = [
   law(
     "genius-act",
     "The GENIUS Act (2025)",
-    // The one edit from the review of all 36 explainer lines (2026-08-15).
-    // Every other line is approved as shipped and is not to be reworded,
-    // tightened, or improved.
     "The first federal rulebook for stablecoins (cryptocurrency) — digital tokens meant to hold a fixed dollar value — requiring issuers to hold real dollar reserves and submit to federal or state supervision.",
   ),
   law(
@@ -443,28 +369,12 @@ export const KEY_VOTES_LAWS: KeyVoteEntry[] = [
     "Reopened the federal government after the longest shutdown on record and funded it for the rest of the year, restoring back pay to federal workers and resuming paused federal payments.",
     {
       /*
-       * UNPARKED 2026-08-19 (F01 5.6, superseding the g20 park): there are
-       * votes recorded for this episode.
-       *
-       * That was right, and the two notes that used to sit here are gone rather
-       * than reworded, because what they said is no longer true. They said we
-       * had not tied the entry to a single vote and that Congress passed more
-       * than one appropriations law that year. The roll-call record — the House
-       * Clerk's 2025 index and the Senate's 119-1 vote menu, both read this
-       * session — shows ONE bill running the whole episode: H.R. 5371, the
-       * Continuing Appropriations and Extensions Act, 2026.
-       *
-       * The vote each chamber gets is the one that ENDED it, which is the same
-       * rule `obbba` uses and for the same reason: the House's meaningful act
-       * on a Senate-amended bill is the concurrence, not its own earlier
-       * passage of a text the Senate then replaced.
+       * One bill ran this whole episode (H.R. 5371, the Continuing
+       * Appropriations and Extensions Act, 2026). Each chamber's vote is the one
+       * that ENDED it, the same rule `obbba` uses:
        *
        *   House  — roll 285, 12 Nov 2025, concurrence, 222–209
        *   Senate — roll 618, 10 Nov 2025, passage as amended, 60–40
-       *
-       * Both are pinned in the snapshot with their chamber's own URL, tally and
-       * read date. See PARKED_KEY_VOTES below for why the park existed and what
-       * the record showed about its premise.
        */
       whichVote: { house: "concurrence in the Senate amendment", senate: "final passage" },
     },
@@ -482,34 +392,11 @@ export const KEY_VOTES_LAWS: KeyVoteEntry[] = [
 ];
 
 /**
- * What to look for in the Senate's OWN published vote title, per law.
- *
- * Curated matching data and nothing more. A bill number typed here from
- * memory would be exactly the assumption this file refuses to make, so
- * these are the laws' own names as the chamber prints them, and the fetch
- * requires a passage-type question and refuses on ambiguity.
- *
- * All four April 2024 siblings share one phrase on purpose: the Senate
- * voted the four bills as a single package, so they resolve to one Senate
- * roll call, which is what APRIL_2024_SENATE_NOTE tells the reader.
- *
- * ## What the first run found, recorded rather than smoothed over
- *
- * **These phrases do not match, and the reason is structural.** The Senate
- * publishes each vote under the bill's OFFICIAL LONG TITLE, never its
- * popular name: the Inflation Reduction Act appears as "A bill to provide
- * for reconciliation pursuant to title II of S. Con. Res. 14", which names
- * nothing a reader would recognise, and the Respect for Marriage Act as "A
- * bill to repeal the Defense of Marriage Act and ensure respect for State
- * regulation of marriage". Sixteen of eighteen searched entries returned
- * zero passage votes and the seventeenth returned sixteen candidates.
- *
- * The route that closes this is the congress.gov API — search the bill by
- * title, take its number from the official record, then take that bill's
- * roll calls — and it is a work item (tracker), not a licence to type a
- * bill number here from memory. Until it runs, the LAWS entries carry no
- * roll calls and render as OUR recorded gap, which is a different sentence
- * from "no vote exists" and must never be shown as one.
+ * What to look for in the Senate's OWN published vote title, per law. The
+ * Senate publishes votes under official long titles, so these rarely match on
+ * their own; `LAW_SEARCH` (popular names via congress.gov) is the working
+ * route. All four April 2024 siblings share one phrase because the Senate
+ * voted them as one package. Matching data, never a bill number.
  */
 const SENATE_SEARCH: Readonly<Record<string, string>> = {
   "cares-act": "Coronavirus Aid, Relief, and Economic Security",
@@ -534,17 +421,11 @@ const SENATE_SEARCH: Readonly<Record<string, string>> = {
 };
 
 /**
- * The popular name of each law, for the congress.gov resolution (B17).
- *
- * Every phrase here is a name in ordinary public use — the name the entry's
- * own title already carries. Nothing is a bill
- * number and nothing is a roll call: the fetch searches the official titles
- * for the phrase and refuses on zero or ambiguous matches.
+ * The popular name of each law, for the congress.gov resolution. The fetch
+ * searches the official titles and refuses on zero or ambiguous matches.
  */
 const LAW_SEARCH: Readonly<Record<string, string>> = {
-  // "CARES Act" matches three public laws across two congresses — the
-    // relief act, an unrelated 2019 bill, and a 2024 one. The full name the
-    // law itself carries is unambiguous. Matching data, never an assertion.
+  // The full name: "CARES Act" alone matches three public laws.
   "cares-act": "Coronavirus Aid, Relief, and Economic Security Act",
   "american-rescue-plan": "American Rescue Plan",
   iija: "Infrastructure Investment and Jobs Act",
@@ -566,15 +447,9 @@ const LAW_SEARCH: Readonly<Record<string, string>> = {
 };
 
 /**
- * The phrase that finds a PENDING measure in the chamber's own record.
- *
- * Separate from `LAW_SEARCH` because the route is different: a pending bill
- * is in no public-law list, so it is found through the House's own
- * roll-call index and the titles of the measures it voted on.
- *
- * Curated matching data, exactly like the two above — a phrase to search
- * the official record for, never an asserted bill number. The phrase here
- * is the bill's own official short title, which is what the record prints.
+ * The phrase that finds a PENDING measure in the chamber's own record, through
+ * the House's roll-call index (a pending bill is in no public-law list). The
+ * bill's own official short title.
  */
 const PENDING_SEARCH: Readonly<Record<string, string>> = {
   "stock-trading-ban": "Stop Insider Trading Act",
@@ -592,55 +467,13 @@ for (const entry of KEY_VOTES_LAWS) {
 
 
 /**
- * **Entries deliberately parked — not a gap in effort, and not something a
- * later run may quietly close.** (2026-08-19, g20, B15 item 1c.)
- *
- * Distinct from a `miss`, and the distinction is the point. A miss is what a
- * resolver could not find; it invites another attempt with a better rung. A
- * PARK is a decision that no attempt should be made, because the answer
- * needs human review and guessing it would put named members of Congress
- * against a vote on a bill they may never have voted on.
- *
- * Why this is a list in code rather than a sentence in the tracker: the
- * fill-only rule that mitigated D68 protects a chamber that ALREADY has a
- * roll call. A parked entry has none, so fill-only would happily let the
- * next run write one in — which is exactly the failure the park exists to
- * prevent, arriving through the door the last fix left open.
- * The reviewed selection gate skips these; `tests/key-votes.test.ts` holds
- * both halves.
+ * Entries deliberately parked: the answer needs human review, so no resolver
+ * attempt may be made (unlike a miss, which invites another attempt). The
+ * reviewed selection gate skips these.
  */
 export const PARKED_KEY_VOTES: Readonly<Record<string, string>> = {
-  /*
-   * EMPTY, AND DELIBERATELY KEPT.
-   *
-   * `funding-fight` was the only entry here. It was UNPARKED in F01 5.6
-   * (2026-08-19) as a data gap to close, not a display issue: there are votes
-   * recorded for that episode.
-   *
-   * **The park's premise turned out to be wrong, and the roll-call record is
-   * what showed it.** The park said this entry names two things at once and
-   * the 119th carries five appropriations laws, so picking one risked showing
-   * a reader a vote on a different bill. But the record names ONE bill for the
-   * whole episode: **H.R. 5371, the Continuing Appropriations and Extensions
-   * Act, 2026**. The House Clerk's 2025 roll index carries it from first
-   * passage (roll 281, 19 Sep) through concurrence in the Senate amendment
-   * (roll 285, 12 Nov, 222–209); the Senate's own 119-1 vote menu carries
-   * twenty-three H.R. 5371 votes, from the first failed cloture on 1 Oct to
-   * passage as amended (roll 618, 10 Nov, 60–40). There was never an ambiguity
-   * to resolve — there was one bill and a six-week fight over it, and the
-   * popular-name route could not see that because "Continuing Appropriations"
-   * matches several laws by TITLE while only one of them is this episode.
-   *
-   * Both refs are pinned in the snapshot with their tallies, their chamber's
-   * own URL and their read date, which is why the resolver's inability to
-   * guess a popular name no longer decides this row.
-   *
-   * The map stays because the MECHANISM is still right: an entry whose answer
-   * cannot be resolved without human judgement must block every run
-   * rather than let a resolver write a guess in. The reviewed selection gate
-   * skips whatever is here; `tests/key-votes.test.ts` holds both halves
-   * whether the map is empty or not.
-   */
+  /* Empty, and kept: an entry that cannot be resolved without human judgement
+     must block every run rather than let a resolver write a guess in. */
 };
 
 /** The whole list, in its fixed order: laws first, then people. */

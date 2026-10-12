@@ -1,31 +1,4 @@
-/**
- * **WHERE THE GAPS ARE — BODIES, CODES AND CONTAINERS.** (Admin redesign,
- * 2026-09-23; the Readiness drilldown: state → county / district / metro →
- * its codes → one code.)
- *
- * Three facts, never merged:
- *
- * ```
- *   membership   a code (ZCTA) is in a container when the published Census
- *                lookup says it overlaps it, wholly or in part; a partly
- *                overlapping code is included whole (the design's settled rule)
- *   placement    a body is at a code when the reader's ZIP division index says
- *                its division's territory reaches that code — the reader's own
- *                rule for what governs a ZIP
- *   coverage     whether a body has a way in: its registry coverage status,
- *                advanced by later confirmed reads for its exact body id.
- *                Failed attempts without a confirmed route stay unresolved;
- *                a clock alone cannot prove a read. Current meeting health
- *                and public delivery remain separate measurements
- * ```
- *
- * A body reaching three codes is one body: every container and every state
- * counts distinct bodies (MW-003), so no container can claim more than the
- * state holds. A code outside the ZIP index is `indexed: false` and is named
- * as such; it never reads as a code with no bodies.
- *
- * PURE.
- */
+/** A partly overlapping code is included whole; containers and states count distinct bodies; a code outside the ZIP index is `indexed: false`, never a code with no bodies. */
 import { displayNameOf } from "../display-name.ts";
 import type { BodyStatus, BodyView } from "./bodies.ts";
 
@@ -55,7 +28,6 @@ export interface CoverageCounts {
   readonly lookedNoRoute: number;
   readonly neverWalked: number;
   readonly other: number;
-  /** Bodies whose meetings we read on the standing clock now, by their standing. */
   readonly watched: Readonly<Record<BodyStatus, number>>;
 }
 
@@ -75,7 +47,6 @@ export interface ContainerStanding {
   /** Distinct bodies over every indexed code — a body at three codes counts once. */
   readonly counts: CoverageCounts;
   readonly perCode: readonly CodeStanding[];
-  /** The indexed code with the lowest share of bodies with a way in; null when no code is indexed. */
   readonly worst: CodeStanding | null;
 }
 
@@ -88,7 +59,6 @@ export function stateOfBody(id: string, ocdId: string | null): string | null {
   return m ? m[1] : null;
 }
 
-/** A registry body as the drilldown needs it; the name is the recorded one, or the division's own name. */
 export function registryBodyOf(raw: {
   readonly id: string;
   readonly name?: string | null;
@@ -115,9 +85,7 @@ export function registryBodyOf(raw: {
 
 const NO_WATCH: Readonly<Record<BodyStatus, number>> = { WORKING: 0, "NEEDS ATTENTION": 0, STUCK: 0, "NOT READ YET": 0 };
 
-/** A later measured read supersedes an old registry label, for this exact body
- * only. A retained publication still proves a route existed when a newer read
- * fails; its current failure and freshness remain on the separate BodyView. */
+/** A later measured read supersedes an old registry label, for this exact body only. */
 export function observedCoverageStatus(body: RegistryBody, watched?: BodyView): CoverageStatus {
   if (!watched || watched.id !== body.id) return body.coverageStatus;
   if (watched.recordSources > 0 || watched.lastSuccessAt) return "LIVE";
@@ -147,7 +115,6 @@ export function countBodies(bodies: readonly RegistryBody[], watchedById: Readon
   return { bodies: bodies.length, wayIn, lookedNoRoute, neverWalked, other, watched };
 }
 
-/** Bodies by every division they sit in or also serve: built once per page, looked up per code. */
 export type BodyIndex = ReadonlyMap<string, readonly RegistryBody[]>;
 
 export function indexBodies(bodies: readonly RegistryBody[]): BodyIndex {
@@ -165,7 +132,6 @@ export function indexBodies(bodies: readonly RegistryBody[]): BodyIndex {
   return out;
 }
 
-/** Distinct bodies whose division (or a division they also serve) is among these. */
 export function bodiesAtDivisions(divisions: Iterable<string>, index: BodyIndex): RegistryBody[] {
   const seen = new Map<string, RegistryBody>();
   for (const d of divisions) for (const b of index.get(d) ?? []) seen.set(b.id, b);
@@ -176,11 +142,6 @@ export function wayInShare(c: CoverageCounts): number | null {
   return c.bodies === 0 ? null : c.wayIn / c.bodies;
 }
 
-/**
- * A watched body (a meeting source we read) matches a registry body by id.
- * The registry id and the meeting contract's body id are the same identity
- * for every meeting body (checked 2026-09-23: 119 of 119).
- */
 export function watchedIndex(views: readonly BodyView[]): { byId: ReadonlyMap<string, BodyView>; byOcd: ReadonlyMap<string, readonly BodyView[]> } {
   const byId = new Map<string, BodyView>();
   const byOcd = new Map<string, BodyView[]>();
@@ -226,7 +187,6 @@ export function pct(n: number, d: number): string {
   return d === 0 ? "—" : `${Math.round((n / d) * 100)}%`;
 }
 
-/** "wholly inside" / "65% inside — whole code included". */
 export function overlapWords(whole: boolean, fraction: number | null): string {
   if (whole) return "wholly inside";
   if (fraction === null) return "partly inside (no land area) — whole code included";
@@ -234,7 +194,6 @@ export function overlapWords(whole: boolean, fraction: number | null): string {
   return `${p < 1 ? "under 1" : p}% inside — whole code included`;
 }
 
-/** The worst-gap sentence for a container row, generated from its worst code. */
 export function worstGapWords(c: ContainerStanding): string {
   if (c.indexedCodes === 0) return "No code here is in the ZIP index this repository has geometry for, so nothing is known about its bodies. That is not a zero.";
   const w = c.worst;
@@ -250,11 +209,7 @@ export function worstGapWords(c: ContainerStanding): string {
   return `${w.zcta5} at ${pct(k.wayIn, k.bodies)} — ${who} no way in recorded (${parts.join(", ")}).`;
 }
 
-/**
- * A body's coverage status as the owner reads it. The registry's own status
- * codes stay in this model — they are internal vocabulary and never render
- * (RULING 28); a screen draws only the words and the tone.
- */
+/** Registry status codes are internal vocabulary and never render; a screen draws only the words and the tone. */
 export function coverageStatusPill(status: CoverageStatus): { readonly pill: string; readonly tone: "teal" | "gold" | "amber" | "slate" } {
   switch (status) {
     case "LIVE":

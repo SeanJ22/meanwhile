@@ -1,3 +1,4 @@
+import { PLURAL_STATES } from "../lib/sources/plural/targets.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -105,8 +106,8 @@ test("source refreshes are admitted daily without a Send and retry failed source
     assert.equal(routineTaskSelection([`--only=${task.id}`], [...ROUTINE_SOURCE_TASKS, ...AUTOMATIC_REFRESH_TASKS]).ok, true);
     assert.equal(routineTaskDue(task, undefined, now), true);
     const checked = "2026-09-29T12:00:00Z";
-    assert.equal(routineTaskDue(task, { lastAttemptedAt: checked, lastSucceededAt: checked }, now - 1), false);
-    assert.equal(routineTaskDue(task, { lastAttemptedAt: checked, lastSucceededAt: checked }, now), true);
+    assert.equal(routineTaskDue(task, { lastAttemptedAt: checked, lastSucceededAt: checked, lastSucceededObservedAt: checked }, now - 1), false);
+    assert.equal(routineTaskDue(task, { lastAttemptedAt: checked, lastSucceededAt: checked, lastSucceededObservedAt: checked }, now), true);
     const failed = "2026-09-30T11:00:00Z";
     assert.equal(routineTaskDue(task, { lastAttemptedAt: failed }, now - 1), false);
     assert.equal(routineTaskDue(task, { lastAttemptedAt: failed }, now), true);
@@ -254,6 +255,16 @@ function sourceGoodCandidate(receipts = 10) {
   });
 }
 
+test("installed doors' partitions are standing tasks once: the runner never adds them beside the routine tasks that already hold them", () => {
+  const ids = ROUTINE_SOURCE_TASKS.map((task) => task.id);
+  assert.ok(ids.filter((id) => id.startsWith("meetings:")).length > 50, "the fixture doors are installed");
+  assert.equal(new Set(ids).size, ids.length);
+  const runner = readFileSync(new URL("../scripts/routine-civic-data-runner.mts", import.meta.url), "utf8");
+  const standing = runner.slice(runner.indexOf("const STANDING_SOURCE_TASKS"), runner.indexOf("], process.argv.slice(2));"));
+  assert.match(standing, /\.\.\.ROUTINE_SOURCE_TASKS\.filter\(\(task\) => task\.id !== MEETING_DOORS_CONTRACT_ID\)/);
+  assert.doesNotMatch(standing, /MEETING_PARTITION_CONTRACTS/, "a second copy of the partitions makes every pass refuse its duplicate tasks");
+});
+
 test("the standing portfolio invokes data-plane scripts only", () => {
   const nonMeetingTasks = ROUTINE_SOURCE_TASKS.filter((task) => task.recordClass !== "MEETING");
   assert.deepEqual(nonMeetingTasks.map((task) => task.id), [
@@ -261,23 +272,21 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "nh-members",
     "az-state-legislators",
     "nj-state-legislators",
-    "az-state-rollcalls",
+    ...PLURAL_STATES.map(state => `openstates-people-${state}`),
+    "az-openstates-votes",
     "nh-state-rollcalls",
     "nj-state-rollcalls",
     "census-acs-population",
     "census-geography-overlaps",
     "nj-morris-filing",
     "pima-legistar-outcomes",
-    // Mesa's council decisions, read off its minutes on the portal host (NH332).
     "mesa-legistar-minutes-outcomes",
     "dotgov",
     // One registration per FIPS state, DC and territory, each its own data-plane script invocation.
     ...REGISTRATION_TARGETS.map(({ contractId }) => contractId),
-    // The automatic crosswalk (C16 option A, 2026-09-25): the runner's own reviewer, on promoted and vaulted inputs.
     "meeting-body-crosswalk-derived",
-    // The derived meeting-source wiring (C16): recomputed from promoted and vaulted inputs, no route of its own.
+    "meeting-doors",
     "meeting-source-wiring",
-    // The verified campaign sites the campaign-site chain approves (2026-09-25): pipeline approvals and vaulted reads, no route of its own.
     "candidate-campaign-sites-derived",
   ]);
   assert.deepEqual(nonMeetingTasks.map((task) => task.id), ROUTINE_SOURCE_CONTRACTS.map((contract) => contract.id));
@@ -332,9 +341,7 @@ test("one canonical registry owns every supported authority and refuses arbitrar
     "nj-legislature",
     "legiscan",
     "plural-openstates",
-    // DB-06: a partition's durable history promotes under its partition's own contract (`meetingHistoryContract`), so it has no contract of its own to list.
     "meetings-history",
-    // DB-22: door-built outcome contracts exist only at runtime, one per door that holds outcomes.
     "door-outcomes",
   ];
   const expectedAuthorities = new Set([
@@ -347,7 +354,6 @@ test("one canonical registry owns every supported authority and refuses arbitrar
     assert.equal(source.id, id);
     assert.ok(source.publisher);
     if (source.routePrefixes.length === 0) {
-      /* A route-less authority is authorized only by a reviewed receipt, or only as the exact inputs it names (C16). */
       assert.ok(
         ("manualReceiptPromotion" in source && source.manualReceiptPromotion) ||
           ("derivedPromotion" in source && source.derivedPromotion && source.derivedPromotion.inputKinds.length > 0),
@@ -410,10 +416,13 @@ test("cadence and retry are source-local", () => {
     lastAttemptedAt: new Date(now - 7 * oneHour).toISOString(),
     lastSucceededAt: new Date(now - 8 * 24 * oneHour).toISOString(),
   }, now), true, "the failed source becomes due when its own retry interval elapses");
-  assert.equal(routineTaskDue(nh, { lastAttemptedAt: new Date(now - 2 * oneHour).toISOString(), lastSucceededAt: new Date(now - 2 * oneHour).toISOString() }, now), false);
-  assert.equal(routineTaskDue(census, { lastAttemptedAt: new Date(now - 31 * 24 * oneHour).toISOString(), lastSucceededAt: new Date(now - 31 * 24 * oneHour).toISOString() }, now), true);
+  assert.equal(routineTaskDue(nh, { lastAttemptedAt: new Date(now - 2 * oneHour).toISOString(), lastSucceededAt: new Date(now - 2 * oneHour).toISOString(), lastSucceededObservedAt: new Date(now - 2 * oneHour).toISOString() }, now), false);
+  assert.equal(routineTaskDue(census, { lastAttemptedAt: new Date(now - 31 * 24 * oneHour).toISOString(), lastSucceededAt: new Date(now - 31 * 24 * oneHour).toISOString(), lastSucceededObservedAt: new Date(now - 31 * 24 * oneHour).toISOString() }, now), true);
   assert.equal(routineTaskDue(fec, { lastAttemptedAt: new Date(now + oneHour).toISOString() }, now), true, "a future attempt cannot suppress a due source");
-  assert.equal(routineTaskDue(fec, { lastAttemptedAt: new Date(now - oneHour).toISOString(), lastSucceededAt: new Date(now + oneHour).toISOString() }, now), true, "a future success cannot suppress a due source");
+  assert.equal(routineTaskDue(fec, { lastAttemptedAt: new Date(now - oneHour).toISOString(), lastSucceededAt: new Date(now + oneHour).toISOString(), lastSucceededObservedAt: new Date(now + oneHour).toISOString() }, now), true, "a future success cannot suppress a due source");
+  const observed = new Date(now - 7 * oneHour).toISOString();
+  assert.equal(routineTaskDue(fec, { lastAttemptedAt: observed, lastSucceededAt: "2025-01-01T00:00:00Z", lastSucceededObservedAt: observed }, now), false,
+    "a verified unchanged release uses its successful observation for cadence, even when its evidence is old");
 });
 
 test("one unresolved child cannot suppress sibling launch or classification", async () => {
@@ -1167,7 +1176,6 @@ test("the standing authority envelope is narrowed independently for every runtim
     "CONSOLE_PUBLISHER",
     "ROUTINE_SUPERVISOR",
     "INTAKE_RUNTIME",
-    "NIGHTLY_RESEARCH",
   ]) {
     assert.match(pilot, new RegExp(`standingChildEnvironment\\(\\s*"${capability}"`));
   }
@@ -1229,7 +1237,7 @@ test("each admitted meeting source/body contract is its own concurrent child bou
   assert.match(runner, /command:\s*task\.command/);
   assert.match(runner, /dueCandidates\.push\(\{[\s\S]*?id:\s*task\.id,[\s\S]*?task,/);
   // Every admitted task, and only those, is launched, owed-soonest first (routinePassLaunchOrder).
-  assert.match(runner, /for \(const \{ task \} of placeSourceLaunchOrder\(routinePassLaunchOrder\(admitted\)\)\) pendingRuns\.push\(pendingByTaskId\.get\(task\.id\)!\)/);
+  assert.match(runner, /for \(const \{ task \} of placeSourceLaunchOrder\(routinePassLaunchOrder\(admitted, admissionNowMs\)\)\) pendingRuns\.push\(pendingByTaskId\.get\(task\.id\)!\)/);
   assert.match(runner, /parsed\.receipts\.length !== 1/);
   assert.match(runner, /parsed\.receipts\[0\]\?\.source !== pending\.task\.id/);
   assert.doesNotMatch(runner, /--partitions=/);
@@ -1243,7 +1251,6 @@ test("Reader readback repair covers the observable registry independently of sou
   const protocol = readFileSync("lib/civic-data/reader-repair-protocol.ts", "utf8");
   assert.match(runner, /const readerContracts = selectedReaderRepairContracts\(/);
   assert.match(runner, /const readerDomains = routineReaderRepairDomains\(readerContracts\)/);
-  // Launched racing-first (C6, lib/civic-data/hot-read-catch-up.ts); every domain still runs.
   assert.match(runner, /runBoundedChildPass\([\s\S]*readerLaunch\.map[\s\S]*scripts\/routine-civic-data-reader-repair\.mts/);
   assert.match(runner, /timeoutMs: domain\.timeoutMs/);
   assert.match(runner, /concurrency: ROUTINE_READER_CHILD_CONCURRENCY/);
@@ -1253,11 +1260,14 @@ test("Reader readback repair covers the observable registry independently of sou
   assert.match(child, /repairMeetingReaderProjectionReadbacks\(/);
   // Repair composes once when needed; serving-copy publication runs independently.
   assert.match(child, /repairMeetingReaderProjectionReadbacks\([^;]*\{ aggregate, attestor \},?\s*\)/);
-  // A receipt from an earlier commit is carried, not re-read, when no Reader code changed (R31).
   assert.match(child, /const attestor = readerVerifierClosureAttestor\(\);/);
   assert.match(child, /repairRoutineReaderProjectionReadback\(store, contract, observedAt, undefined, \{ attestor \}\)/);
   assert.doesNotMatch(child, /preparePublishedMeetingSnapshot|publishReaderEdgeArtifacts/);
-  assert.match(runner, /publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\), !PUBLISH_NOW && ONLY === null \? null : selectedTasks\)/);
+  assert.match(runner, /await publishNowEdgeChecks\?\.stop\(\);\s*const finalReaderEdge = publishNowEdgeChecks \? await publishNowEdgeChecks\.run\(\)\s*:\s*await publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\), ONLY === null \? null : selectedTasks\)/,
+    "publish-now completes its serialized pointer sweep while ordinary repair keeps the selected source scope");
+  const publicationChecks = runner.slice(runner.indexOf("const publishNowEdgeChecks ="), runner.indexOf("const admissionNowMs ="));
+  assert.match(publicationChecks, /publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\)\)/,
+    "publish-now checks all promoted families independently of selected source work");
   assert.equal(child.match(/readMeetingsProjection\(/g)?.length, 1, "the child composes in one place");
   assert.match(child, /serializeRoutineReaderRepairRecord/);
   assert.doesNotMatch(child, /processRegisteredRoutineCandidate|promoteMeetingPartitions|\.promote\(/);
@@ -1331,11 +1341,11 @@ test("standing task construction enforces every declarative authority and valida
 
 test("the routine runner derives its clock from durable candidate history", () => {
   const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  assert.match(source, /readRoutineTaskClocks\([\s\S]*store\.clock\(task\.sourceId, task\.recordClass, task\.scope\)/);
+  assert.match(source, /readRoutineTaskClocks\([\s\S]*store\.clock\(task\.sourceId, task\.recordClass, task\.scope, task\.parserVersion\)/);
   const frozenAdmission = source.indexOf("const admissionNowMs = Date.now()");
   const clockReads = source.indexOf("const clockReads = FORCE");
   // Sitting windows are decided once, at the frozen instant, from the same reads
-  // and the publisher-stated ends read in the same pass (C6).
+  // and the publisher-stated ends read in the same pass.
   const statedEnds = source.indexOf("statedSittingEndsRead(getDb())");
   const sittingSignals = source.indexOf("sittingWindowSignals(clockReads, admissionNowMs, statedEndsByTask)");
   const dueDecision = source.indexOf("routineTaskDue(task, durableClock, admissionNowMs, sittingHot, observedEveryMs)");
@@ -1427,7 +1437,12 @@ test("every standing source child emits its exact contract id and the supervisor
   assert.doesNotMatch(failureHelper, /readonly sourceLabel:/);
 
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  assert.match(runner, /const RUNNING_CODE_SHA = TASK_SELECTION\.ok[\s\S]*assertRuntimeAuthority\([\s\S]*\.sha/);
+  assert.match(runner, /const ADMITTED_CODE_SHA = assertRuntimeAuthority\([\s\S]*\.sha/);
+  assert.match(runner, /const RUNNING_CODE_SHA = TASK_SELECTION\.ok\s+\? ADMITTED_CODE_SHA\s+: null/);
+  for (const mutation of ["await syncHeldDoors(", "await startCivicReadCacheHost("]) {
+    assert.ok(runner.indexOf("const ADMITTED_CODE_SHA") < runner.indexOf(mutation), `${mutation} requires admitted code first`);
+    assert.ok(runner.indexOf("const ROUTINE_DATA_PROCESS_LEASE") < runner.indexOf(mutation), `${mutation} requires the process lease first`);
+  }
   assert.match(runner, /testedSha:\s*RUNNING_CODE_SHA/);
   assert.doesNotMatch(runner, /testedSha:\s*null/);
 });
@@ -1759,12 +1774,6 @@ test("nonzero child receipts must prove a durable held candidate and cannot clai
 });
 
 test("the durable receipt check proves a Reader-projected pointer by identity and reads nothing whole", async () => {
-  // Measured 2026-09-23: the whole-row reads here moved 66.9 MB for one held
-  // NJ roll-call settle (the refused candidate's envelope plus the LKG
-  // pointer's payload twice), against a 67.11 MB Neon response cap. Since
-  // then each settle still moved the pointer's payload and candidate once;
-  // the pass's Reader repair re-proves a Reader-projected version in full, so
-  // the settle proves the pointer by identity alone.
   class CountingStore extends MemoryRoutineDataStore {
     readonly whole: string[] = [];
 

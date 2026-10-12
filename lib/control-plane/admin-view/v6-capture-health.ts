@@ -1,13 +1,8 @@
 /**
- * @freshness-reads-here — `observedAt` is the instant this module's own reads of the store returned.
+ * @freshness-reads-here: `observedAt` is the instant this module's own reads of the store returned.
  *
- * **IS CAPTURE WORKING? — Admin's check, built from the same recipes every other screen uses.** (S12, Sean's 2:30 PM MST note, item 4.)
- *
- * One read of the data business as Admin: events per day by type, the share sorted into topics vs free-form, new vs returning
- * readers, usage by district (a Florida district beside a New Jersey one), and anything that failed to record. Each block is a
- * recipe through `readRecipe` (so a recipe Sean switches off for Admin is shown as off, not as empty), and no block carries an
- * anonymous ID, an exact time or one person's trail. A store that is not installed says so; a day with nothing is shown as a day
- * with nothing, never as a day we did not read.
+ * Each block goes through `readRecipe`, so a recipe switched off for Admin shows as off, not empty. No block carries an
+ * anonymous ID, an exact time or one person's trail.
  */
 import { switchOn } from "../data-business/switches.ts";
 import { readRecipe, type ReadDeps, type ReadResult } from "../data-business/read.ts";
@@ -18,11 +13,9 @@ import type { TotalsEntry } from "../data-business/types.ts";
 
 export const CAPTURE_DAYS = 14;
 
-/** The fourteen UTC days ending today. */
 export const captureWindow = (now: Date = new Date()): { readonly from: string; readonly to: string } => ({ from: daysBefore(todayUtc(now), CAPTURE_DAYS - 1), to: todayUtc(now) });
 
 export interface CaptureHeadline {
-  /** `recording`: events in the last two UTC days. `quiet`: some, but not lately. `none`: nothing recorded in the window. `unknown`: the counts could not be read. */
   readonly state: "recording" | "quiet" | "none" | "unknown";
   readonly says: string;
   readonly latestDay: string | null;
@@ -82,7 +75,6 @@ export function headlineOf(days: readonly string[], totalsByDay: ReadonlyMap<str
   return { state: "quiet", says: `The latest events were on ${latest}, ${Math.round((Date.parse(`${today}T00:00:00Z`) - Date.parse(`${latest}T00:00:00Z`)) / 86_400_000)} days ago.`, latestDay: latest };
 }
 
-/** Admin's capture-health view as of `now`. `failures` is measured by the caller (it needs the store directly), or null when it could not be. */
 export async function readCaptureHealth(deps: ReadDeps, config: AdminConfig | null, failures: CaptureFailures | null, now: Date = new Date()): Promise<CaptureHealthView> {
   const { from, to } = captureWindow(now);
   const days = Array.from({ length: CAPTURE_DAYS }, (_, i) => daysBefore(from, -i));

@@ -1,36 +1,13 @@
 /**
- * **THE SPREADSHEET LAYER — read and write, one module.**
+ * Spreadsheet read and write, with a built-in ZIP codec (an .xlsx is a ZIP of XML parts).
  *
- * Created 2026-08-20 (Prompt E item 6) by extracting the writer that had lived
- * inside `scripts/deferred-xlsx.mjs` since 2026-08-17 and adding the half it
- * never needed: a READER. `docs/tracker.xlsx` is a store the author edits by
- * hand, so a script that can only write it would overwrite his work every run.
- *
- * ## Why there is a ZIP codec in here rather than a dependency
- *
- * An `.xlsx` is a ZIP of XML parts. `scripts/gus-extract.mts` already reads the
- * Census workbook by treating it as exactly that, and adding a spreadsheet
- * library to write fifteen columns of text is a worse trade than the ~200 lines
- * below. Both directions are verified against the real thing rather than
- * assumed: the writer's output is read back through this reader, and the reader
- * is pointed at workbooks Excel itself has rewritten.
- *
- * ## The two encodings a cell arrives in, and why the reader handles both
- *
- * This writer emits `inlineStr` — the string sits in the cell. **Excel does
- * not.** When the author opens the workbook, edits one cell and saves, Excel
- * rewrites every sheet using a shared-string TABLE and cells that hold an
- * INDEX into it. A reader that understood only its own output would read the
- * author's saved file as a grid of empty cells and report his edits as
- * deletions — which, under a rule that nothing is ever deleted, would refuse
- * the whole run. So `sharedStrings.xml` is read whenever it is present.
- *
- * Timestamps in the archive come from `pnpm stamp`, never the wall clock, so
- * two runs on the same day produce byte-identical workbooks and a diff means a
- * real change.
+ * The writer emits `inlineStr` cells; Excel rewrites saved workbooks with a shared-string
+ * table, so the reader reads `sharedStrings.xml` whenever it is present.
+ * Archive timestamps come from `pnpm stamp`, never the wall clock, so output is byte-stable.
  */
 
-import { deflateRawSync, inflateRawSync } from "node:zlib";
+import { deflateRawSync } from "node:zlib";
+import { readZipEntries } from "../lib/sources/archive.ts";
 
 /* ------------------------------------------------------------------- zip --- */
 
@@ -126,75 +103,17 @@ export function zip(entries, stampedToday) {
 /**
  * Every entry in a ZIP, by name, decompressed.
  *
- * Walks the CENTRAL DIRECTORY rather than scanning for local headers. A local
- * header can carry a zero length with the real one in a trailing data
- * descriptor, and a scanner that trusts the local header reads a truncated
- * part and reports a short sheet — a file that read as fewer rows than it holds
- * is exactly the silent-loss shape this repo keeps finding. The central
- * directory is authoritative.
+ * Walks the central directory: a local header can carry a zero length with the
+ * real one in a trailing data descriptor.
  */
 export function unzip(buffer) {
-  // The end-of-central-directory record, found from the back because it ends
-  // with a variable-length comment.
-  let eocd = -1;
-  for (let i = buffer.length - 22; i >= 0 && i > buffer.length - 66000; i--) {
-    if (buffer.readUInt32LE(i) === 0x06054b50) {
-      eocd = i;
-      break;
-    }
-  }
-  if (eocd < 0) throw new Error("not a zip archive — no end-of-central-directory record");
-
-  const count = buffer.readUInt16LE(eocd + 10);
-  let at = buffer.readUInt32LE(eocd + 16);
-  const out = new Map();
-
-  for (let n = 0; n < count; n++) {
-    if (buffer.readUInt32LE(at) !== 0x02014b50) {
-      throw new Error(`central directory entry ${n} has the wrong signature`);
-    }
-    const method = buffer.readUInt16LE(at + 10);
-    const compSize = buffer.readUInt32LE(at + 20);
-    const rawSize = buffer.readUInt32LE(at + 24);
-    const nameLen = buffer.readUInt16LE(at + 28);
-    const extraLen = buffer.readUInt16LE(at + 30);
-    const commentLen = buffer.readUInt16LE(at + 32);
-    const localAt = buffer.readUInt32LE(at + 42);
-    const name = buffer.toString("utf8", at + 46, at + 46 + nameLen);
-
-    const localNameLen = buffer.readUInt16LE(localAt + 26);
-    const localExtraLen = buffer.readUInt16LE(localAt + 28);
-    const dataAt = localAt + 30 + localNameLen + localExtraLen;
-    const slice = buffer.subarray(dataAt, dataAt + compSize);
-
-    let data;
-    if (method === 0) data = Buffer.from(slice);
-    else if (method === 8) data = inflateRawSync(slice);
-    else throw new Error(`${name}: unsupported compression method ${method}`);
-
-    if (data.length !== rawSize) {
-      throw new Error(
-        `${name}: decompressed to ${data.length} bytes, the directory says ${rawSize}`,
-      );
-    }
-    out.set(name, data);
-    at += 46 + nameLen + extraLen + commentLen;
-  }
-  return out;
+  return new Map(readZipEntries(buffer).map(entry => [entry.name, entry.data]));
 }
 
 /* ------------------------------------------------------------------ xlsx --- */
 
-/**
- * Escape for XML, and drop the control characters XML 1.0 forbids outright.
- *
- * A stray control byte in a pasted cell makes the whole workbook unopenable
- * with an error naming no file, so it is removed here rather than shipped.
- */
-// Written as escapes, never as the literal bytes. The first version of this
-// line held six real control characters - invisible in an editor, invisible
-// in a diff, and exactly the class of byte-level surprise this repo has been
-// bitten by before.
+/** Escape for XML, and drop the control characters XML 1.0 forbids (one makes the workbook unopenable). */
+// Keep these as escapes, never literal bytes.
 const XML_FORBIDDEN = /[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g;
 
 /** Excel refuses a cell over this, and refuses the whole FILE because of it. */
@@ -364,10 +283,7 @@ function sharedStringsOf(files) {
   if (!part) return [];
   const text = part.toString("utf8");
   const out = [];
-  // One <si> per shared string; its text may be split across many <t> runs
-  // (Excel does that whenever a cell carries mixed formatting), so the runs
-  // are joined rather than the first one taken. Taking the first is how a
-  // reader silently truncates a cell the author typed a long note into.
+  // One <si> per shared string; its text may be split across many <t> runs, so join them all.
   for (const si of text.matchAll(/<si>([\s\S]*?)<\/si>/g)) {
     let s = "";
     for (const t of si[1].matchAll(/<t(?:\s[^>]*)?>([\s\S]*?)<\/t>/g)) s += unxml(t[1]);
@@ -378,10 +294,7 @@ function sharedStringsOf(files) {
 
 /**
  * Every sheet in a workbook, as `{ name, rows }` where `rows[0]` is the header.
- *
- * Blank cells are filled in, so every row is the width of the header — Excel
- * omits an empty cell entirely rather than emitting an empty one, and a reader
- * that does not fill the gap shifts every column after it.
+ * Excel omits empty cells, so gaps are filled to keep every row the header's width.
  */
 export function readWorkbook(buffer) {
   const files = unzip(buffer);

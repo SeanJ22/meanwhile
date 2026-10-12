@@ -1,8 +1,8 @@
 /**
- * **WHICH STATE AND COUNTIES A ZIP REACHES — so a slice can be a county or a state.** The reader's own ZIP index
+ * Which state and counties a ZIP reaches, so a slice can be a county or a state. The reader's own ZIP index
  * (`data/derived/zip-divisions/<NN>.json`, one shard per two-digit prefix, the same files `bulk-hunts/zip-state.ts` reads) names
  * every division whose territory reaches each ZIP; the state and county ids are in those names. A ZIP that reaches two counties is
- * in both. The folder is spelled in literal path segments so the bundler traces exactly the shards (R23).
+ * in both. The folder is spelled in literal path segments so the bundler traces exactly the shards.
  *
  * A shard that cannot be read answers "unknown" for its ZIPs and is not kept, so one failed read is never permanent.
  */

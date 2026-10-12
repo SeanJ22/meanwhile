@@ -1,20 +1,8 @@
 /**
- * **What a reader is ASKING FOR, as a closed set.**
- *
- * This is the vocabulary the interpretation rung answers in and the retrieval
- * rung dispatches on. It is deliberately a small closed enum rather than free
- * text: an intent decides WHICH RECORDS ARE FETCHED, so an intent the
- * retrieval layer has never heard of would be a silent no-op — the reader
- * would get the default, which is the substitution class this whole pipeline
- * exists to close.
- *
- * The two agenda intents are separate and that separation is the point. Before
- * this module the corpus answered *"what did Vail discuss at its LAST
- * meeting?"* with the NEXT meeting's agenda, because `bodyAgendaAnswer` read
- * `upcoming[0] ?? past[0]` and nothing in the pipeline had ever been told that
- * the reader's tense was a retrieval instruction. The answer was well-sourced,
- * correctly attributed, about the right government — and about the wrong
- * meeting. A temporal defect wearing a provenance record.
+ * What a reader is asking for, as a closed set the interpretation rung answers
+ * in and retrieval dispatches on. An unknown intent would select no records,
+ * so the set is closed. The reader's tense is a retrieval instruction:
+ * `UPCOMING_AGENDA` and `PAST_MEETING` select different sittings.
  */
 export type AskIntent =
   /** "what's on the agenda", "what are they discussing next" */
@@ -23,7 +11,7 @@ export type AskIntent =
   | "PAST_MEETING"
   /** "when does the board meet", "when is the next meeting" */
   | "MEETING_TIME"
-  /** "what has Katie Hobbs done", "what did she veto" */
+  /** "what has the governor done", "what did she veto" */
   | "PERSON_RECORD"
   /** "who fixes the streetlight", "who do I call about a pothole" */
   | "TOPIC_OWNER"
@@ -32,21 +20,9 @@ export type AskIntent =
   /** "who should I contact about this" */
   | "CONTACT"
   /**
-   * **"is there a data centre coming?" — A TOPIC, SWEPT ACROSS EVERY READABLE
-   * AGENDA IN SCOPE.** (ASK-05, 2026-08-28.)
-   *
-   * Distinct from `UPCOMING_AGENDA`, and the distinction is the retrieval
-   * rule. `UPCOMING_AGENDA` names a body and asks what IT has scheduled; this
-   * names a SUBJECT and asks which governments have it on any docket. One
-   * selects a sitting, the other sweeps a corpus and states a denominator.
-   *
-   * It is on this list because before ASK-05 the sweep ran OUTSIDE the intent
-   * vocabulary entirely — a second `fetch` from the map component, racing the
-   * grounded engine through `Promise.all`, painting a second civic answer with
-   * its own eyebrow and its own denominator sentence beside the first. Two
-   * competing authorities on one screen, and the reader picked. Now it is an
-   * intent like any other, its records enter the ONE evidence pack as
-   * `AGENDA_MENTION`, and its denominator is a number in `pack.denominators`.
+   * "is there a data centre coming?": a subject swept across every readable
+   * agenda in scope, stating a denominator. Its records enter the one pack as
+   * `AGENDA_MENTION`.
    */
   | "AGENDA_TOPIC"
   /** "what does a school board actually do" — no records needed */
@@ -83,18 +59,10 @@ export interface AskTemporal {
 }
 
 /**
- * **The model's reading of the question. A HYPOTHESIS, never an identity.**
- *
- * Every field here is something a language model proposed. Nothing in this
- * object has been checked against the registry, and nothing in it may reach a
- * reader as a claim. `lib/ask/resolve.ts` is what turns the `entityMentions`
- * into a canonical government, and it is allowed to disagree with all of it.
- *
- * `entityMentions` carries the reader's OWN WORDS wherever possible rather
- * than the model's tidied-up version of them. Both are kept — see
- * `normalizedMentions` — because the tidy form is often what actually binds
- * ("vail school district" → "Vail Unified School District") while the verbatim
- * form is the only one we can honestly quote back when nothing resolves.
+ * The model's reading of the question: a hypothesis, never an identity.
+ * `lib/ask/resolve.ts` turns `entityMentions` into a canonical government and
+ * may disagree with all of it. `entityMentions` keeps the reader's own words;
+ * `normalizedMentions` the model's expansion, which often binds better.
  */
 export interface AskInterpretation {
   intent: AskIntent;
@@ -123,12 +91,7 @@ export function unavailableInterpretation(): AskInterpretation {
 
 /**
  * Read a model answer into an interpretation, discarding anything not on the
- * closed lists.
- *
- * Belt and braces over the response schema, for the same reason the topic
- * classifier re-checks its enum: a schema is a promise made by a server, and
- * an intent that reached the retrieval switch without being on this list would
- * select no records and read to the reader as an absence.
+ * closed lists; a schema is a server's promise, not a guarantee.
  */
 export function readInterpretation(raw: unknown): AskInterpretation {
   const fallback = unavailableInterpretation();

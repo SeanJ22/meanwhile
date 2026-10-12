@@ -1,13 +1,7 @@
 /**
- * **WINSLOW'S CITY COUNCIL, FROM THE CITY'S SUITEONE MEDIA PORTAL.** (2026-09-25.)
- *
- * Discovery's "commission page" finds for Winslow were a community-events
- * list, not the council. The council's agendas, packets, minutes and video are
- * on `winslowaz.suiteonemedia.com`, whose home page is server-rendered and
- * whose host serves no robots.txt.
- *
- * No live calls: `tests/fixtures/winslow/suiteone-web.html` is the recorded
- * home page (retrieval.json says when and how).
+ * A city council from the city's SuiteOne media portal, whose home page is
+ * server-rendered. No live calls: `tests/fixtures/winslow/suiteone-web.html` is
+ * the recorded home page (retrieval.json says when and how).
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -17,7 +11,7 @@ import test from "node:test";
 import { authorityFor } from "../lib/civic-data/source-authority.ts";
 import { meetingPartitionForRow } from "../lib/civic-data/meeting-partitions.ts";
 import { POST_FIXTURE_MEETING_PARTITIONS } from "./helpers/meeting-partition-fixture.ts";
-import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
+import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import {
   makeSuiteOneSource,
   portalRows,
@@ -28,7 +22,7 @@ import {
 
 const HTML = readFileSync(join(import.meta.dirname, "fixtures", "winslow", "suiteone-web.html"), "utf8");
 const PORTAL = "https://winslowaz.suiteonemedia.com/?embed=1";
-const WIRING = SOURCE_WIRING.find((row) => row.agendaSourceType === "SUITEONE" && row.config.slug === "winslow-city-council")!;
+const WIRING = FIXTURE_DOOR_ROWS.find((row) => row.agendaSourceType === "SUITEONE" && row.config.slug === "winslow-city-council")!;
 const READ_AT = "2026-09-25T17:51:59.000Z";
 const NOW = new Date("2026-09-25T18:00:00Z");
 const at = (path: string) => `https://winslowaz.suiteonemedia.com${path}`;
@@ -84,7 +78,7 @@ test("WINSLOW · the council's in-window sittings reach readers with their own t
   const { meetings, drops, accounting } = makeSuiteOneSource([WIRING]).normalizeWithDrops([raw()], NOW);
   assert.equal(accounting.outcome, "CONSERVED");
   assert.deepEqual(meetings.map((m) => [m.startsAt, m.status, m.title]), [
-    // DB-05: the held 120-day window reaches back to 9 and 23 June.
+    // The held 120-day window reaches back to 9 and 23 June.
     ["2026-06-09T18:30:00-07:00", "CONCLUDED", "City Council Regular Meeting (2nd Tuesday)"],
     ["2026-06-23T18:30:00-07:00", "CONCLUDED", "City Council Regular Meeting (4th Tuesday)"],
     ["2026-06-23T19:30:00-07:00", "CONCLUDED", "City Council Special Meetings & Work Sessions"],
@@ -154,7 +148,7 @@ test("WINSLOW · robots.txt is read first and recorded; a host with no robots.tx
   assert.equal(rows[0].error, undefined);
   assert.equal(rows[0].html, HTML);
 
-  /* Owner decision 2026-09-25: robots.txt alone never blocks a public page. The rules are still read first. */
+  /* robots.txt alone never blocks a public page. The rules are still read first. */
   const disallowedAsked: string[] = [];
   const disallowed: typeof fetch = (async (input: string | URL | Request) => {
     const url = String(input);

@@ -3,7 +3,6 @@ import { useState } from "react";
 import type { RollbackView } from "@/lib/ops/release-rollback.ts";
 import s from "./v6.module.css";
 
-/** Admin supplies the existing preview/Send, which queues the ordinary receipt. */
 export function ReleaseRollback({ view, onSend }: { readonly view: RollbackView;
   readonly onSend: (input: { type: "release.rollback"; deployId: string; sha: string; expectedVersion: string }) => Promise<void> }) {
   const [busy,setBusy] = useState(false), [failed,setFailed] = useState(false);

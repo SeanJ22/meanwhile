@@ -1,9 +1,7 @@
 import type { Sql } from "../repository/pg-store.ts";
 import { boundedQuery } from "../repository/request-bounds.ts";
 
-/** DB-52: measurements attached to the existing mission digest, not a publication gate.
- * The runner supplies completed coverage and the exact target set; partial work is not coverage.
- * Target outcomes separately record whether the Bank alone solved them. */
+/** Measurements, not a publication gate. Partial work is not coverage. */
 export interface CoverageLearningObservation {
   readonly subjectId: string;
   readonly targetSet: string;
@@ -15,8 +13,6 @@ export interface CoverageLearningObservation {
 export interface HeadStartObservation {
   readonly attemptId: string; readonly targetId: string; readonly solved: boolean; readonly headStartOnly: boolean | null;
 }
-/** Optional coverage is present only when the same complete target set was covered.
- * Attach this value to the existing mission digest; save target failures too. */
 export type FactoryLearningDigest = ({ readonly coverage: CoverageLearningObservation } | { readonly coverage?: never }) & {
   readonly targets: readonly HeadStartObservation[];
 };
@@ -51,7 +47,6 @@ export function coverageLearning(observations: readonly CoverageLearningObservat
     headStart: { solved, measured, share: measured ? solved / measured : null } };
 }
 
-/** One row of counts, aggregated at the store. No country-wide payload enters Admin memory. */
 export const COVERAGE_LEARNING_SQL = `WITH observations AS (
  SELECT DISTINCT ON (record->'factoryLearning'->'coverage'->>'subjectId', record->'factoryLearning'->'coverage'->>'targetSet', record->'factoryLearning'->'coverage'->>'ordinal')
  record->'factoryLearning'->'coverage' AS v FROM cp_log_owner_digests
@@ -70,8 +65,8 @@ export const COVERAGE_LEARNING_SQL = `WITH observations AS (
 
 export const DETECTIVE_REUSE_SQL = `SELECT count(*)::int AS reused FROM cp_log_scout_results r
  CROSS JOIN LATERAL jsonb_array_elements_text(CASE WHEN jsonb_typeof(r.record->'usedFieldManualEntryIds')='array' THEN r.record->'usedFieldManualEntryIds' ELSE '[]'::jsonb END) used(id)
- JOIN cp_field_manual m ON m.id='live' CROSS JOIN LATERAL jsonb_array_elements(m.value->'entries') e
- WHERE e->>'id'=used.id AND e->>'foundBy'='DETECTIVE' AND r.recorded_at >= $1::timestamptz AND r.recorded_at < $2::timestamptz
+ JOIN cp_field_manual_entries e ON e.id=used.id
+ WHERE e.value->>'foundBy'='DETECTIVE' AND r.recorded_at >= $1::timestamptz AND r.recorded_at < $2::timestamptz
  AND (r.record->'refusal' IS NULL OR r.record->'refusal'='null'::jsonb OR r.record->'refusal'='[]'::jsonb)`;
 
 export const HEAD_START_LEARNING_SQL = `WITH targets AS (
@@ -82,7 +77,6 @@ export const HEAD_START_LEARNING_SQL = `WITH targets AS (
 ) SELECT count(*) FILTER (WHERE jsonb_typeof(t->'headStartOnly')='boolean' AND jsonb_typeof(t->'solved')='boolean')::int AS measured,
  count(*) FILTER (WHERE t->'headStartOnly'='true'::jsonb AND t->'solved'='true'::jsonb)::int AS solved FROM targets`;
 
-/** Posting flow begins at the caller's actual instrumentation instant; earlier time is unknown. */
 export const FACTS_LEARNING_SQL = `SELECT date_trunc('week', recorded_at AT TIME ZONE 'UTC') AT TIME ZONE 'UTC' AS week,
  sum((record->'publicationFlow'->>'changedRecords')::int)::int AS facts
  FROM cp_log_owner_digests WHERE log_key='publication-flow' AND record->'publicationFlow'->>'stage'='LIVE'

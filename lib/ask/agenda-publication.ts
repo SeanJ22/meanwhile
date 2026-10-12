@@ -1,77 +1,20 @@
 /**
- * **WHOSE GAP AN ABSENT AGENDA IS — measured, never assumed.** (ASK-07,
- * 2026-08-29.)
+ * Whose gap an absent agenda is. Holding no agenda document for a sitting is
+ * a fact about us; it never becomes a claim that the body has not posted one.
+ * A `whose: "THEIRS"` publication claim is emitted only from a first-party
+ * publisher observation of that exact meeting, inside its freshness window.
+ * Two axes stay apart: `PublisherPublicationStatus` (what the publisher's
+ * surface said, and when) and `AgendaAcquisitionState` (how far we got).
+ * Nothing on the acquisition axis can promote a publication status; `UNKNOWN`
+ * is the default.
  *
- * ## The line this module exists to delete
+ * Observations expire because publication state changes: each carries
+ * `observedAt`, each reading `recheckDueAt`, and a stale observation falls back
+ * to the OURS gap with the obligation open. Items are read by
+ * `lib/routing/agenda-search.ts#agendaItems`; the emitted shape is
+ * `lib/ask/evidence.ts#EvidenceGap`.
  *
- * `app/api/ask/grounded/route.ts` held this, and a test pinned it as correct:
- *
- * ```ts
- * if (forMeeting.length === 0) {
- *   gaps.push({
- *     whose: "THEIRS",
- *     statement: `No agenda has been published for that ${subject.name} meeting yet.`,
- *   });
- * }
- * ```
- *
- * `forMeeting.length === 0` is one measurement and it is a measurement OF US:
- * this product holds zero agenda documents linked to that meeting id. The
- * sentence it produced is a claim about a GOVERNMENT — that a clerk has not
- * posted the agenda for a sitting on their own calendar. Nothing in the input
- * measures that. The corpus carries 34 bodies with future sittings and no
- * document at all, and for every one of them the honest reading is *we have
- * not gone and got it*, which is exactly the reading the emitted sentence
- * denied.
- *
- * `CLAUDE.md`: *"A render default may never manufacture a claim. A null renders
- * as its NAMED GAP, on every surface, always — and the name says WHOSE gap it
- * is."* RULING 184: *"A blocked route may never become a blocked fact."*
- * RULING 170: a finite attempt count never earns an absence. Zero documents is
- * a count of attempts that landed, which is the smallest finite count there is.
- *
- * ## The rule, mechanically
- *
- * A `whose: "THEIRS"` publication claim is emitted **only** when a first-party
- * publisher observation measures the publication state of THAT EXACT MEETING
- * and is still inside its freshness window. There is no other path to THEIRS
- * in this module, and the two axes below are kept apart so there cannot be one:
- *
- * - `PublisherPublicationStatus` — what the PUBLISHER's own surface said, and
- *   when. Facts about them.
- * - `AgendaAcquisitionState` — how far WE got. Facts about us.
- *
- * A reading is the pair, plus the derived sentence. Nothing in the acquisition
- * axis can promote a publication status, and a publication status of `UNKNOWN`
- * is the default, the common case, and never silently the negative one.
- *
- * ## Why the observation expires
- *
- * Publication state CHANGES. A clerk posts the packet the Friday before the
- * Tuesday sitting; a "not available" reading taken a week out is true of the
- * moment it was taken and false of now. Rendering it as current truth forever
- * is the stale-snapshot failure this repository has already recorded twice
- * (the raster basemap, the vector tiles) pointed at a claim about a government
- * instead of at a map layer. So every observation carries `observedAt`, every
- * reading carries `recheckDueAt`, and an observation past its window stops
- * being renderable as a THEIRS fact and falls back to the OURS gap with the
- * acquisition obligation still open.
- *
- * ## What this module REUSES rather than re-declares
- *
- * - `lib/routing/agenda-search.ts#agendaItems` is the one extractive item
- *   reader in the repository and stays the one.
- * - `lib/answerability/stages.ts` owns the SEVEN-STAGE answerability ladder and
- *   its block codes, measured over a whole corpus for coverage reporting. This
- *   module is the READER-FACING reading of one meeting, and the state names
- *   below are deliberately the same distinctions under names that say whose
- *   fact each one is. They are not merged because they answer different
- *   questions: that module asks *how far did the corpus get*, this one asks
- *   *what may we say to a reader about this sitting*.
- * - `lib/ask/evidence.ts#EvidenceGap` is the emitted shape. This module does
- *   not invent a second gap type.
- *
- * PURE and TOTAL apart from the store at the bottom. No clock (the caller
+ * Pure and total apart from the store at the bottom. No clock (the caller
  * supplies `now`), no disk, no network.
  */
 
@@ -83,16 +26,10 @@ import type { EvidenceGap } from "./evidence.ts";
 /* ─────────────────────────────────────────────── the publisher's own axis */
 
 /**
- * How the observation was come by. **Only `FIRST_PARTY_PUBLISHER` can ever
- * produce a THEIRS sentence**, and that is enforced below rather than
- * documented here.
- *
- * `THIRD_PARTY` is a vendor portal or aggregator reporting on a body's behalf:
- * real evidence, worth keeping, and not the government's own statement about
- * its own docket. `INFERRED` exists so that anything derived from our own
- * collection state has somewhere to be recorded that is structurally incapable
- * of becoming a claim about a government — which is the defect this file was
- * opened to remove.
+ * How the observation was come by. Only `FIRST_PARTY_PUBLISHER` can produce a
+ * THEIRS sentence. `THIRD_PARTY` is a vendor portal or aggregator; `INFERRED`
+ * records anything derived from our own collection state and can never become
+ * a claim about a government.
  */
 export type PublisherObservationProvenance =
   | "FIRST_PARTY_PUBLISHER"
@@ -103,16 +40,11 @@ export type PublisherObservationProvenance =
 export type PublisherAgendaReport = "NOT_AVAILABLE" | "AVAILABLE";
 
 /**
- * One reading of a publisher's own surface, scoped to ONE sitting.
- *
- * Every field is required because every one of them is load-bearing for the
- * question *may this become a sentence about a government?* — an observation
- * that cannot say which meeting it measured, when it was taken, where it was
- * taken, or what the surface actually said is not evidence of a publication
- * state and is refused rather than downgraded.
+ * One reading of a publisher's own surface, scoped to one sitting. Every field
+ * is required; an observation missing one is refused, not downgraded.
  */
 export interface PublisherAgendaObservation {
-  /** The exact sitting this measured. Scoping is the whole rule. */
+  /** The exact sitting this measured. */
   readonly meetingId: string;
   readonly provenance: PublisherObservationProvenance;
   readonly report: PublisherAgendaReport;
@@ -123,60 +55,29 @@ export interface PublisherAgendaObservation {
   /** The publisher, as they name themselves. */
   readonly sourceOrg: string;
   /**
-   * What the surface ACTUALLY SAID, verbatim and trimmed — "Agenda not yet
-   * posted", "Agenda: none", the empty-cell label. A report with no quoted
-   * basis is an assertion, and this product does not carry those.
-   *
-   * **OR a STRUCTURAL basis, which is the ASK-18 extension (2026-08-30) and is
-   * held to the same standard.** Many calendars say nothing at all about a
-   * missing agenda: the row simply carries no agenda link. That absence is
-   * observed on a named page at a named time and is exactly as checkable as a
-   * quote — a reader can open `observedUrl` and see the same empty cell.
-   *
-   * It is NOT a loophole, and the difference from an assertion is precise:
-   *
-   * ```
-   *   ALLOWED   "the body's own calendar listing for this meeting carried no
-   *             agenda link when we read it"      — a description of a page
-   *   REFUSED   "no agenda has been published"    — a claim about a government
-   *             that no page was read for
-   * ```
-   *
-   * `structuralBasisFor` below is the ONE constructor, so the sentence a
-   * reader eventually meets cannot be hand-written per adapter. And the
-   * provenance still has to be `FIRST_PARTY_PUBLISHER`: a missing link on an
-   * aggregator's copy of a calendar says nothing about what the body posted.
+   * What the surface said, verbatim and trimmed ("Agenda not yet posted"), or
+   * the structural basis from `structuralBasisFor`: a first-party listing row
+   * that carried no agenda link, observed on a named page at a named time. It
+   * describes the page, never whether an agenda exists.
    */
   readonly evidenceQuote: string;
   /**
-   * How long this reading may stand as current, in hours. Absent takes
-   * `DEFAULT_PUBLISHER_OBSERVATION_HOURS`; anything above
-   * `MAX_PUBLISHER_OBSERVATION_HOURS` is clamped down to it, because a
-   * publisher cannot grant its own negative an unlimited shelf life.
+   * Hours this reading may stand as current. Absent takes
+   * `DEFAULT_PUBLISHER_OBSERVATION_HOURS`; above
+   * `MAX_PUBLISHER_OBSERVATION_HOURS` it is clamped.
    */
   readonly freshnessHours?: number;
 }
 
 /**
- * **24 hours.** Agenda packets in this corpus land in the last few days before
- * a sitting and frequently the evening before; a negative reading is at its
- * most wrong exactly when a reader is most likely to ask. A day is short
- * enough that a stale negative expires before the sitting it is about, and long
- * enough that a nightly refresh keeps the state renderable.
+ * Packets often land the evening before a sitting, so a negative reading
+ * expires within a day; a nightly refresh keeps the state renderable.
  */
 export const DEFAULT_PUBLISHER_OBSERVATION_HOURS = 24;
 
 /**
- * **THE STRUCTURAL BASIS SENTENCE, AND THERE IS ONE OF IT.** (ASK-18.)
- *
- * A calendar row with no agenda link is evidence, and this is the only
- * sentence allowed to describe it. One constructor rather than a string per
- * adapter, because the whole risk here is an adapter author writing something
- * a shade stronger — *"no agenda published"* instead of *"the listing carried
- * no agenda link"* — and that shade is the difference between describing a
- * page and making a claim about a government.
- *
- * It describes the PAGE. It never says whether an agenda exists.
+ * The only sentence allowed to describe a calendar row with no agenda link.
+ * It describes the page and never says whether an agenda exists.
  */
 export function structuralBasisFor(sourceOrg: string): string {
   return (
@@ -186,48 +87,17 @@ export function structuralBasisFor(sourceOrg: string): string {
 }
 
 /**
- * Derive a first-party observation from a meeting record we already hold.
- *
- * **Why this exists.** `gapFor` has had a THEIRS branch since ASK-05 and it is
- * unreachable outside the Legistar lane: nothing else populates observations,
- * so every other body's answer falls to the OURS branch and tells a reader *we
- * have not yet acquired the agenda... we are still looking for it* about a
- * meeting whose body had simply not posted one. A check at 8:30 that morning
- * confirmed nothing was posted for either Pima sitting, so the answer read as
- * the product blaming itself for someone else's timing.
- *
- * ## THE NARROWING THIS FUNCTION EXISTS TO ENFORCE, AND IT IS THE WHOLE POINT
- *
- * The first cut of this fired on `agendaUrl === null` and a first-party
- * provenance. `tests/agenda-publication-state.test.ts` refused it, correctly,
- * and the reason is the one thing that matters here:
- *
- * ```
- *   an EMPTY AGENDA CELL on a page that has one   is evidence
- *   a feed with NO AGENDA FIELD AT ALL            is not evidence of anything
- * ```
- *
- * A Legistar InSite grid prints a literal "Not Available" in an Agenda column
- * — the publisher saying something. A generic iCal feed has no agenda field, so
- * its silence measures the FEED FORMAT, not the docket. Many bodies also post
- * packets on a page the calendar never links. `agendaUrl === null` conflates
- * all three, and turning that into *"they have not posted an agenda"* is a
- * claim about a government drawn from the shape of a file format.
- *
- * So the caller must state that the surface it read HAS an agenda slot and
- * that the slot was empty. That is per-adapter knowledge and **no adapter
- * records it yet**, which means this returns null everywhere today. The seam
- * is built, wired and tested; what it needs is the adapter work, and naming
- * that precisely is more use than a derivation that would have shipped a false
- * absence to close a feedback row.
+ * A first-party observation from a meeting record we already hold. An empty
+ * agenda slot on a page that has one is evidence; a feed with no agenda field
+ * is not, so `agendaUrl === null` alone never qualifies. The adapter must set
+ * `agendaSlotObservedEmpty` at the moment of the read.
  */
 export function observationFromMeetingRecord(meeting: {
   readonly id: string;
   readonly agendaUrl?: string | null;
   /**
-   * The source surface carries an agenda slot for this sitting AND it was
-   * empty when read. Set by the ADAPTER at the moment of the read; nothing may
-   * infer it from a null `agendaUrl`, which is exactly the conflation above.
+   * The source surface carries an agenda slot for this sitting and it was
+   * empty when read. Set by the adapter; never inferred from a null `agendaUrl`.
    */
   readonly agendaSlotObservedEmpty?: boolean;
   readonly provenance?: {
@@ -238,25 +108,18 @@ export function observationFromMeetingRecord(meeting: {
   };
   readonly carried?: unknown;
 }): PublisherAgendaObservation | null {
-  /*
-   * **THE GATE.** Absent means the adapter did not measure the publisher's
-   * agenda state, and not-measured is never not-published.
-   */
+  /* Not measured is never not published. */
   if (meeting.agendaSlotObservedEmpty !== true) return null;
   /* An agenda we hold is not an absence to observe. */
   if (meeting.agendaUrl != null) return null;
   const p = meeting.provenance;
-  /* No provenance is NOT an observation. A shape that dropped the fields
-     produces nothing here rather than an observation with blanks in it. */
+  /* No provenance is not an observation. */
   if (!p) return null;
-  /* A page we cannot name is a page a reader cannot check, and an
-     unverifiable observation is an assertion wearing a timestamp. */
+  /* A page we cannot name cannot be checked. */
   if (!p.sourceUrl) return null;
   /* An aggregator's missing link says nothing about what the BODY posted. */
   if (p.secondHand === true) return null;
-  /* A carried-forward row was NOT retrieved on the run that wrote it, so its
-     `collectedAt` is not when this listing was read. Nothing about a carried
-     row may render a freshness it does not have. */
+  /* A carried-forward row was not read on the run that wrote it, so its `collectedAt` is not the read time. */
   if (meeting.carried !== undefined) return null;
   if (!p.collectedAt) return null;
 
@@ -281,20 +144,12 @@ export type PublisherPublicationStatus =
   | "REPORTS_NOT_AVAILABLE"
   /** A first-party surface reports an agenda is posted, and the reading is current. */
   | "REPORTS_AVAILABLE"
-  /**
-   * A first-party reading exists and has aged past its window. It is KEPT and
-   * NAMED — dropping it would lose the recheck obligation — and it may not be
-   * rendered as current truth.
-   */
+  /** A first-party reading past its window: kept for the recheck, never rendered as current. */
   | "STALE_OBSERVATION";
 
 /* ───────────────────────────────────────────────────── our own axis */
 
-/**
- * How far THIS product got toward putting that sitting's agenda in front of a
- * reader. Every value is a fact about us, and none of them may be worded as a
- * fact about a government.
- */
+/** How far we got toward putting the sitting's agenda in front of a reader. Facts about us only. */
 export type AgendaAcquisitionState =
   /** The sitting is known and we hold no representation of its agenda. */
   | "NOT_ACQUIRED"
@@ -311,7 +166,7 @@ export type AgendaAcquisitionState =
   /** Items are held and a reader can be shown them. */
   | "ITEMS_READER_READY";
 
-/** One attempt at one route to the representation. A ROUTE fact (RULING 184). */
+/** One attempt at one route to the representation: a fact about the route. */
 export interface AgendaRouteAttempt {
   readonly meetingId: string;
   readonly routeId: string;
@@ -324,11 +179,9 @@ export interface AgendaRouteAttempt {
 /* ──────────────────────────────────────────────────────── the reading */
 
 /**
- * The pair, plus the one sentence a reader may be shown.
- *
- * `state` is the joined name, kept as a single string so a caller can log,
- * count or switch on one value; `publication` and `acquisition` remain
- * separately readable so nothing downstream has to parse it back apart.
+ * The pair plus the one sentence a reader may be shown. `state` is the joined
+ * name for logging and switching; `publication` and `acquisition` stay
+ * separately readable.
  */
 export interface AgendaPublicationReading {
   readonly state: `${PublisherPublicationStatus}/${AgendaAcquisitionState}`;
@@ -341,12 +194,8 @@ export interface AgendaPublicationReading {
   /** The named gap, or null when items are reader-ready and nothing is owed. */
   readonly gap: EvidenceGap | null;
   /**
-   * **Is this product still on the hook to go and get it?**
-   *
-   * True for every state except `ITEMS_READER_READY`. A publisher reporting
-   * "not posted yet" does NOT close it — the recheck is the obligation, and a
-   * negative that closed the hunt would be RULING 170's finite attempt count
-   * earning an absence.
+   * Whether we still owe the reader this agenda: true for every state except
+   * `ITEMS_READER_READY`. A publisher's "not posted yet" does not close it.
    */
   readonly obligationOpen: boolean;
   /**
@@ -355,11 +204,7 @@ export interface AgendaPublicationReading {
    * with no observation at all (immediately: `now`).
    */
   readonly recheckDueAt: string | null;
-  /**
-   * Is there another avenue left to try? True whenever nothing is reader-ready
-   * — the universe of methods is not bounded (RULING 177), so this is false
-   * only once the reader has the items.
-   */
+  /** Another avenue is left to try: true until the reader has the items. */
   readonly alternateSearchOpen: boolean;
   /** The version the reading was taken over. Null when nothing is held. */
   readonly currentDocumentUrl: string | null;
@@ -386,21 +231,12 @@ export interface AgendaPublicationInput {
   /** Every document linked to THIS sitting, any version. */
   readonly documentsForMeeting: readonly AgendaDocumentLike[];
   /**
-   * The agenda link the publisher's calendar exposed for this sitting, when it
-   * exposed one — `Meeting.agendaUrl`.
-   *
-   * A KNOWN LINK WE DID NOT FETCH is a different fact from no link at all, and
-   * it is a fact about US either way: the presence of a link says a route
-   * exists, its absence says only that this calendar row did not carry one.
-   * Neither measures whether an agenda is posted, which is why neither can
-   * reach the THEIRS branch.
+   * The agenda link the publisher's calendar exposed (`Meeting.agendaUrl`). A
+   * known unfetched link and no link are both facts about us; neither reaches
+   * the THEIRS branch.
    */
   readonly discoveredDocumentUrl?: string | null;
-  /**
-   * The whole document corpus, used for one thing: detecting that the URL we
-   * hold for this sitting is also held for another, which makes it an index
-   * page by construction. One page cannot be the agenda of two meetings.
-   */
+  /** The whole corpus, used to detect a URL held for two sittings: an index page by construction. */
   readonly documentsAcrossCorpus: readonly AgendaDocumentLike[];
   /** Publisher readings. Filtered to this meeting here, not by the caller. */
   readonly observations?: readonly PublisherAgendaObservation[];
@@ -425,13 +261,7 @@ export function observationFreshUntil(observation: PublisherAgendaObservation): 
   return new Date(at + windowHours(observation) * 3_600_000).toISOString();
 }
 
-/**
- * Is this reading still current?
- *
- * An observation whose `observedAt` will not parse is NOT fresh. A stamp we
- * cannot read is not a stamp, and failing open here would let a malformed row
- * mint a permanent claim about a government.
- */
+/** Is this reading still current? An unparseable `observedAt` is not fresh. */
 export function observationIsFresh(
   observation: PublisherAgendaObservation,
   now: number,
@@ -439,19 +269,14 @@ export function observationIsFresh(
   const until = observationFreshUntil(observation);
   if (!until) return false;
   const at = Date.parse(observation.observedAt);
-  /* A reading stamped in the future is not fresh either — it is a broken
-     clock, and a broken clock must never be the thing that authorises a
-     sentence about a government. */
+  /* A reading stamped in the future is not fresh either. */
   if (at > now) return false;
   return Date.parse(until) > now;
 }
 
 /**
- * The one observation a reading may rest on: the newest FIRST-PARTY one for
- * this exact meeting.
- *
- * Third-party and inferred rows are dropped here rather than downgraded later,
- * so there is no code path in which one of them reaches the THEIRS branch.
+ * The newest first-party observation for this exact meeting. Third-party and
+ * inferred rows are dropped here, so none can reach the THEIRS branch.
  */
 function governingObservation(
   meetingId: string,
@@ -465,23 +290,9 @@ function governingObservation(
 }
 
 /**
- * **THE THREE TEXTS A DILIGENT/iCOMPASS MEETING PAGE HAS BEEN STORED AS.**
- * (2026-09-23.)
- *
- * The page is the same portal page each time; what changed is the extractor
- * that read it, and every one of its readings is held in production:
- *
- * - **The whole page** (before 2026-08-28): the skip links, "Quick Menu", the
- *   sidebar's schedules and the board-application picker.
- * - **The skip links alone** (2026-08-28 until the server form was unwrapped):
- *   "Skip Navigation Jump to SideBar Tucson Unified School District", because
- *   the ASP.NET form holding everything else was removed whole. 2,308 rows
- *   across 18 sittings, and the reader called each one an agenda it could not
- *   read the items of.
- * - **The page's own content** (after): the meeting type's title and standing
- *   notice and the document panel ("Private Version For: … Accessible Web
- *   Version"), still the portal, because the sitting's agenda is the linked
- *   document and never the page.
+ * A Diligent/iCompass meeting page as stored: the whole page, the skip links
+ * alone, or the page's own content. In every case it is the portal, not the
+ * sitting's agenda, which is the linked document.
  */
 function diligentPortalPageText(text: string): boolean {
   const wholePage = /Skip Navigation\s+Jump to SideBar\s+Quick Menu/i.test(text)
@@ -501,9 +312,8 @@ function diligentPortalPageText(text: string): boolean {
 export function agendaDocumentRepresentation(
   document: AgendaDocumentLike & { readonly extractionNote?: string | null },
 ): "TEXT" | "PUBLICATION_PORTAL" | "UNREADABLE" {
-  // A read the retrieval recorded as failed because its words were the same
-  // publisher page another sitting's read carries (RULING 269, 2026-09-23):
-  // what is held is the publisher's page, named as such, not unread bytes.
+  // A read recorded as failed because its words were another sitting's
+  // publisher page: what is held is that page, not unread bytes.
   if (document.extraction === "failed" && isPublisherPageNote(document.extractionNote)) {
     return "PUBLICATION_PORTAL";
   }
@@ -535,7 +345,7 @@ export function agendaDocumentRepresentation(
 /** Corpus context shared by the publication reading and the reader document projection. */
 export interface AgendaCorpusContext {
   readonly documentsAcrossCorpus: readonly AgendaDocumentLike[];
-  /** `bodyId`, when the caller has it, lets a notice page be matched to its own body (D1). */
+  /** `bodyId`, when the caller has it, lets a notice page be matched to its own body. */
   readonly meetingsAcrossCorpus?: readonly { id: string; ocdId: string | null; bodyId?: string | null }[];
 }
 
@@ -545,22 +355,11 @@ interface HeldDocumentReading {
   readonly items: readonly string[];
   /** The body's publication index (portal, listing page, shared landing page), not a sitting's own document. */
   readonly publicationIndex: boolean;
-  /**
-   * A wired notice page that is neither this sitting's body's nor its
-   * publisher's (D1, 2026-09-24): CAP's meetings page held for a Pima Board
-   * sitting, Bradford's calendar held for a Newbury one. It is nobody's
-   * document for this sitting and is never shown for it.
-   */
+  /** A wired notice page that is neither this sitting's body's nor its publisher's; never shown for it. */
   readonly anotherBodysNoticePage: boolean;
 }
 
-/**
- * **ONE READING OF ONE HELD DOCUMENT, used by every question asked of it.**
- *
- * The publication reading asks it of the sitting's newest shown document; the
- * reader projection asks it of every held row. One implementation, so the card
- * can never call a page an index while the version count calls it a revision.
- */
+/** One reading of one held document, shared by the publication reading and the reader projection. */
 function heldDocumentReader(context: AgendaCorpusContext): (document: AgendaDocumentLike) => HeldDocumentReading {
   const governmentByMeeting = new Map((context.meetingsAcrossCorpus ?? []).map((meeting) => [meeting.id, meeting.ocdId]));
   const bodyByMeeting = new Map((context.meetingsAcrossCorpus ?? []).map((meeting) => [meeting.id, meeting.bodyId ?? null]));
@@ -575,8 +374,7 @@ function heldDocumentReader(context: AgendaCorpusContext): (document: AgendaDocu
     // A row with no text is told apart by its note: two failed reads of one
     // URL can be different findings (no text at all, or the publisher's page).
     const note = (document as { readonly extractionNote?: string | null }).extractionNote ?? "";
-    // The notice-page verdict depends on the sitting's body and publisher, so
-    // both are part of the key (D1).
+    // The notice-page verdict depends on the sitting's body and publisher, so both are in the key.
     const memoKey = `${document.documentUrl}\u0000${document.extraction}\u0000${document.text ?? `\u0001null\u0000${note}`}` +
       `\u0000${bodyByMeeting.get(document.meetingId) ?? ""}\u0000${document.sourceOrg ?? ""}`;
     const known = memo.get(memoKey);
@@ -588,8 +386,7 @@ function heldDocumentReader(context: AgendaCorpusContext): (document: AgendaDocu
       [...holders].map((meetingId) => governmentByMeeting.get(meetingId)).filter((id): id is string => Boolean(id)),
     ).size > 1;
     const items = !sharedAcrossGovernments && representation === "TEXT" && document.text ? agendaItems(document.text) : [];
-    // A wired notice page is the body's page by its URL alone; one that states
-    // no agenda item is an index however its bytes read (D1).
+    // A wired notice page is the body's page by its URL alone; one stating no item is an index.
     const noticePage = isWiredNoticePage(document.documentUrl);
     const reading: HeldDocumentReading = {
       representation,
@@ -633,35 +430,17 @@ export interface ReaderAgendaDocumentProjection<T> {
   readonly identicalContentRows: number;
   /** Held publication-index rows not shown because the sitting's own document is held. */
   readonly publicationIndexRowsSetAside: number;
-  /** Held rows not shown because they are another body's notice page (D1). */
+  /** Held rows not shown because they are another body's notice page. */
   readonly anotherBodysPagesSetAside: number;
 }
 
 /**
- * **WHAT A READER IS SHOWN FOR ONE SITTING'S AGENDA, AND HOW MANY VERSIONS THAT IS.**
- * (2026-09-22.)
- *
- * The meeting card said "89 versions on file — a revised agenda is itself news"
- * for Tucson Unified sitting 499, which had never been revised: 88 re-fetches of
- * one page whose extracted text never changed, plus the board's site root the
- * sitting was attached to before its own page was acquired. A fetch count is a
- * fact about our schedule; a version is a fact about the government's document.
- *
- * - **A version is a distinct content** (`sameAgendaContent`, the one rule the
- *   ingest store and the promotion change set also use). Rows whose extracted
- *   text is identical (whitespace aside), or whose bytes hash identically, are
- *   one version however many times or on whatever days they were read. The
- *   newest row speaks for it.
- * - **A publication index is not a version of the sitting's agenda.** Once any
- *   held row is the sitting's own document, index rows (a shared landing page,
- *   a portal shell, a page held for another government's meeting) are set aside
- *   rather than counted. A sitting holding ONLY index pages shows them, for what
- *   they are, and they are never a sitting's versions.
- *
- * Nothing is deleted and nothing is rewritten: every stored row remains the
- * holding's provenance, and the rows not shown are stated as counts, so the
- * three numbers — shown, identical re-fetches, set-aside index pages — always
- * reconcile to the rows held.
+ * What a reader is shown for one sitting's agenda. A version is a distinct
+ * content (`sameAgendaContent`); identical re-fetches are one version, newest
+ * row speaking for it. Once the sitting's own document is held, publication
+ * index rows are set aside; a sitting holding only index pages shows them as
+ * such. Nothing is deleted: shown, identical and set-aside counts reconcile to
+ * the rows held.
  */
 export function readerAgendaDocuments<T extends AgendaDocumentLike & { readonly id?: string; readonly contentHash?: string }>(
   documentsForMeeting: readonly T[],
@@ -669,8 +448,7 @@ export function readerAgendaDocuments<T extends AgendaDocumentLike & { readonly 
 ): ReaderAgendaDocumentProjection<T> {
   const read = heldDocumentReader(context);
   const held = [...documentsForMeeting].sort(retrievedAtOrder);
-  // Another body's notice page is never shown for this sitting, not even as
-  // an index: it is not this body's publication either (D1).
+  // Another body's notice page is never shown for this sitting.
   const newestFirst = held.filter((document) => !read(document).anotherBodysNoticePage);
   const sittingRows = newestFirst.filter((document) => !read(document).publicationIndex);
   const sittingSpecific = sittingRows.length > 0;
@@ -687,10 +465,7 @@ export function readerAgendaDocuments<T extends AgendaDocumentLike & { readonly 
   };
 }
 
-/**
- * **The reading. This is the only place `whose: "THEIRS"` can be produced for
- * an agenda, and it is produced from an observation or not at all.**
- */
+/** The reading. The only place `whose: "THEIRS"` is produced for an agenda, and only from an observation. */
 export function classifyAgendaPublication(
   input: AgendaPublicationInput,
 ): AgendaPublicationReading {
@@ -718,9 +493,7 @@ export function classifyAgendaPublication(
         : "REPORTS_AVAILABLE";
 
   /* ── our axis ────────────────────────────────────────────────────────── */
-  // The reading is taken over exactly what a reader is shown for this sitting:
-  // one row per distinct content, the sitting's own document ahead of any
-  // publication index it was once attached to (`readerAgendaDocuments`).
+  // Taken over exactly what a reader is shown (`readerAgendaDocuments`).
   const context: AgendaCorpusContext = { documentsAcrossCorpus, meetingsAcrossCorpus };
   const shown = readerAgendaDocuments(documentsForMeeting, context);
   const newest = shown.documents[0] ?? null;
@@ -740,8 +513,7 @@ export function classifyAgendaPublication(
         ? "REPRESENTATION_DISCOVERED"
         : "NOT_ACQUIRED"
     : reading?.publicationIndex && isWiredNoticePage(newest.documentUrl)
-      // A body's notice page is its publication index whether or not its
-      // bytes could be read: its URL says what it is (D1).
+      // A body's notice page is its publication index by URL, readable or not.
       ? "ACQUIRED_IS_PUBLICATION_INDEX"
       : representation === "UNREADABLE"
       ? "ACQUIRED_NOT_READABLE"
@@ -773,23 +545,9 @@ export function classifyAgendaPublication(
 }
 
 /**
- * **The sentence, and the attribution that goes with it.**
- *
- * Four of the five OURS sentences below are the four the body-agenda branch has
- * emitted since ASK-05, preserved word for word: a meeting with no readable
- * document, an index page, a document that would not yield items, and now the
- * one that used to be a claim about a government. They stay four DIFFERENT
- * sentences because RULING 100 asks an operation that can return nothing WHAT
- * it returned, and collapsing them would hand a reader one flat absence.
- *
- * RULING 139 applies to every one of them: the attribution is required, the
- * verdict on ourselves is struck. No apology, no "we failed", no
- * "unfortunately" — a fact and a next step.
- *
- * The one THEIRS sentence names the publisher and the day, because a claim
- * about a government that does not say who said it and when is not sourced,
- * and an unsourced claim about a government is the thing this product cannot
- * survive shipping.
+ * The gap sentence. The OURS sentences stay distinct by what was returned,
+ * and carry no apology or verdict on ourselves. The THEIRS sentence names the
+ * publisher and the day the page was read.
  */
 function gapFor(args: {
   publication: PublisherPublicationStatus;
@@ -828,33 +586,11 @@ function gapFor(args: {
   }
 
   /*
-   * **THE ONLY THEIRS BRANCH IN THIS FILE.**
-   *
-   * It is reachable only with a first-party observation that measured THIS
-   * meeting, is inside its freshness window, and reports NOT_AVAILABLE. The
-   * date is the day the surface was read, not today, so a reader can see the
-   * age of the claim rather than being handed it as a standing fact.
-   *
-   * Note what it does NOT say: not "there is no agenda", not "none has been
-   * published". It says what a named publisher's own page said on a named day,
-   * which is the largest true statement the evidence supports.
+   * The only THEIRS branch: a fresh first-party observation of this meeting
+   * reporting NOT_AVAILABLE. It says what a named publisher's page showed on a
+   * named day, with the publisher first and the date as its scope.
    */
   if (publication === "REPORTS_NOT_AVAILABLE" && observation) {
-    /*
-     * **ASK-18 (2026-08-30) — THE SENTENCE LEADS WITH WHOSE FACT IT IS.**
-     *
-     * The clauses are unchanged and their ORDER is not. It read *"As of
-     * <date>, <org> had not posted an agenda..."*, which buries the subject
-     * behind a date and reads like hedging. The answer should say very
-     * clearly that this agenda is not posted, and the map card's NO AGENDA
-     * POSTED YET is the right register.
-     *
-     * So the publisher and the fact come first and the date follows as the
-     * scope it is. Nothing is added: this still says only what a named
-     * publisher's own page showed on a named day, which is the largest true
-     * statement the evidence supports. Not "there is no agenda". Not "none has
-     * been published".
-     */
     return {
       whose: "THEIRS",
       statement:
@@ -865,18 +601,9 @@ function gapFor(args: {
   }
 
   /*
-   * Everything else — no observation, a stale one, or a publisher that says the
-   * agenda IS up while we do not hold it — is OURS, and is worded to keep the
-   * acquisition obligation OPEN. "have not yet acquired" is a fact about this
-   * product's state at a moment. "has not been published" was a fact about a
-   * government that nothing measured.
-   */
-  /*
-   * 2026-09-24: the OURS sentence no longer ends "We are still looking for
-   * it." Nothing on this path knows that looking is happening — the Pima Board
-   * sittings carried that promise for ten days while every re-read failed in
-   * our own code — and a progress claim is only true where actionable work is
-   * known to exist. The fact stands alone: we have not acquired it.
+   * Everything else (no observation, a stale one, or a publisher saying the
+   * agenda is up while we do not hold it) is OURS: "have not yet acquired".
+   * No progress claim is made.
    */
   const tail =
     publication === "REPORTS_AVAILABLE" && observation
@@ -897,28 +624,13 @@ function gapFor(args: {
 /* ──────────────────────────────────────────────────────────── the store */
 
 /**
- * **Where observations come from, and why this is a store rather than a file.**
- *
- * No ingest adapter records publisher publication state today, which is exactly
- * why the route was inventing it. The store is written the way
- * `lib/meetings/agenda-documents.ts` writes `AgendaDocumentStore` and states the
- * same lifetime honestly: in-memory, per-process, until persistence lands. An
- * adapter that reads a portal's "Agenda: not yet posted" cell calls
- * `recordPublisherAgendaObservation` at the moment of the read, and Ask starts
- * emitting the scoped THEIRS sentence for that sitting with no further change
- * here.
- *
- * **Empty is the correct and current content.** A reader today gets the OURS
- * gap for every sitting with no document, because that is the only thing this
- * product has actually measured.
+ * Publisher observations, in memory per process. An adapter that reads a
+ * portal's "Agenda: not yet posted" cell calls
+ * `recordPublisherAgendaObservation` at the moment of the read.
  */
 const observationStore = new Map<string, PublisherAgendaObservation[]>();
 
-/**
- * Record one reading. Newest wins at read time; nothing is overwritten, so the
- * history of a docket's publication state survives for a later recheck to
- * reason over.
- */
+/** Record one reading. Newest wins at read time; nothing is overwritten. */
 export function recordPublisherAgendaObservation(
   observation: PublisherAgendaObservation,
 ): void {

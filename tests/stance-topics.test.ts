@@ -5,9 +5,33 @@ import { POSITION_TOPICS } from "../lib/corpus/positions.ts";
 import { DEFAULT_STANCE_TOPICS, STANCE_TOPICS_SETTING, validStanceTopics } from "../lib/stances/topics.ts";
 import { positionsFor } from "../lib/candidates/positions.ts";
 import { settingDefinition } from "../lib/control-plane/settings.ts";
-import { installCandidateCorpusFirstSeed, installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import type { CandidateCorpus } from "../lib/candidates/corpus.ts";
+import { readCandidateCorpusProjection } from "../lib/civic-data/manual-read-models.ts";
+import { installManualValue, installRegistryRuntime } from "./helpers/promoted-fixtures.ts";
 
-await Promise.all([installCandidateCorpusFirstSeed(), installRegistryRuntimeFirstSeeds()]);
+// A promoted candidate publication corpus holding one other candidate's page;
+// "nobody-at-all" holds none, so every topic reads as not found.
+installManualValue<CandidateCorpus>("candidate-corpus", {
+  formatVersion: 1,
+  fetchedAt: "2026-09-25T12:00:00.000Z",
+  attempted: 1,
+  documents: [{
+    id: "ballot-az-pima:governor:someone-else@0000",
+    candidateKey: "ballot-az-pima:governor:someone-else",
+    sourceClass: "CAMPAIGN_SITE",
+    basis: "HUNTED_AND_VERIFIED",
+    metaDescription: null,
+    documentUrl: "https://someone-else.example/issues",
+    contentHash: "0000",
+    retrievedAt: "2026-09-25T12:00:00.000Z",
+    contentType: "text/html",
+    text: "Housing and water for every family.",
+    extraction: "html",
+    extractionNote: null,
+  }],
+  failures: [],
+});
+await Promise.all([installRegistryRuntime(), readCandidateCorpusProjection()]);
 
 test("CA-10: the person card and the ballot card read the same ten plain nouns", () => {
   assert.equal(DEFAULT_STANCE_TOPICS.length, 10);

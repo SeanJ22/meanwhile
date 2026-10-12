@@ -1,25 +1,6 @@
 import "server-only";
 
-/**
- * **THE WEEKLY LEARNING SERIES, AGGREGATED WHERE THE RESULTS ARE STORED.**
- * (MW-025, MW-027, 2026-09-25.)
- *
- * One read-only HTTP transaction (no socket to open) under a statement limit,
- * three aggregates over the Scout result log — never the log itself, since
- * database transfer is billed:
- *
- * ```
- *   weeks   per UTC week: walks, the field-manual pair, doors used, resumed
- *           and fresh walks with their finds, dollars and unpriced walks
- *   doors   over every walk that records which handed doors it used: doors
- *           given, doors used, since when
- *   named   the five doors used most, by entry id
- * ```
- *
- * The series themselves — gaps as gaps, never zeros — are built by the pure
- * `lib/control-plane/admin-view/learning-trends.ts`. A failure is returned as
- * unread, never as a week with nothing in it.
- */
+/** Aggregates over the Scout result log, never the log itself: database transfer is billed. A failure is returned as unread, never as an empty week. */
 import { neon } from "@neondatabase/serverless";
 
 import type { WeekLearningRow } from "@/lib/control-plane/admin-view/learning-trends.ts";
@@ -29,13 +10,11 @@ import { ADMIN_READ_DEADLINE_MS, lateWords, sharedRead } from "./shared-read.ts"
 
 export const LEARNING_TRENDS_STATEMENT_TIMEOUT_MS = 6_000;
 
-/** Doors handed and used, over the walks that record use. */
 export interface DoorUse {
   readonly walks: number;
   readonly given: number;
   readonly used: number;
   readonly since: string | null;
-  /** The doors used most, by entry id, with how many walks used each. */
   readonly named: readonly { readonly id: string; readonly walks: number }[];
 }
 
@@ -55,9 +34,9 @@ const isArr = (key: string): string => `jsonb_typeof(record->'${key}') = 'array'
 
 const WEEKS = `
   with bank_entries as (
-    select e->>'id' as id, e->>'foundBy' as finder
-    from cp_field_manual m cross join lateral jsonb_array_elements(m.value->'entries') e
-    where m.id = 'live' and e->>'foundBy' in ('SCOUT', 'DETECTIVE')
+    select id, value->>'foundBy' as finder
+    from cp_field_manual_entries
+    where value->>'foundBy' in ('SCOUT', 'DETECTIVE')
   ), finder_reuse as (
     select to_char(date_trunc('week', (r.record->>'startedAt')::timestamptz at time zone 'UTC'), 'YYYY-MM-DD') as wk,
       count(*)::int as attributed,
@@ -123,7 +102,7 @@ export async function readLearningTrends(connection: string, nowIso: string): Pr
   const sql = neon(connection);
   const results = await sql.transaction(
     [sql.query(`SET LOCAL statement_timeout = ${LEARNING_TRENDS_STATEMENT_TIMEOUT_MS}`), sql.query(WEEKS), sql.query(DOORS), sql.query(NAMED),
-      sql.query("select coalesce((select (value #>> '{entries,0,payload,count}')::bigint from cp_field_manual where id = 'write-errors'), 0) as write_errors")],
+      sql.query("select coalesce((select sum((value #>> '{payload,count}')::bigint) from cp_field_manual_entries where value->>'kind' = 'WRITE_HEALTH'), 0) as write_errors")],
     { readOnly: true, isolationLevel: "RepeatableRead" },
   );
   const [, weekRows, doorRows, namedRows, healthRows] = results as unknown as Rows[];

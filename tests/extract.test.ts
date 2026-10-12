@@ -12,15 +12,7 @@ import {
   walkStrings,
 } from "../lib/extract/embedded-payload.ts";
 
-/* ========================================================================== */
-/* The contract: a zero-row extraction is a FAILED extraction                 */
-/* ========================================================================== */
-
-/**
- * F11 / Prompt C item 12. The rule is law in `CLAUDE.md` and it is enforced
- * inside the constructor rather than left to every caller to remember — a
- * convention every layer has to honour is a convention one layer will not.
- */
+/** A zero-row extraction is a failed extraction, enforced inside the constructor rather than by every caller. */
 test("extracted() with no items REFUSES to report success", () => {
   const r = extracted("TEXT_LAYER", "x.pdf", 100, []);
   assert.equal(r.outcome, "ZERO_ROWS");
@@ -37,11 +29,7 @@ test("extracted() with items reports EXTRACTED and states its count", () => {
 });
 
 test("ZERO_ROWS and CANNOT_RUN are different facts", () => {
-  /*
-   * "I looked and found nothing" and "I could not look" must never render
-   * alike. That is the render-default rule applied to a parser: an unreachable
-   * document recorded as an empty one is a false claim about a public body.
-   */
+  /* "I looked and found nothing" and "I could not look" must never render alike. */
   const zero = zeroRows("OCR", "s", 10, "ran, recognised nothing");
   const cant = cannotRun("OCR", "s", "no engine on PATH");
   assert.notEqual(zero.outcome, cant.outcome);
@@ -56,15 +44,10 @@ test("describe() always states the counts", () => {
   assert.match(line, /candidateRows=40/);
 });
 
-/* ========================================================================== */
-/* Layer 1 — the text layer                                                   */
-/* ========================================================================== */
-
 test("layer 1: a non-PDF input CANNOT RUN rather than reading as an empty PDF", async () => {
   /*
-   * The F20 shape, one floor down: a challenge interstitial or an HTML error
-   * page fed to a PDF parser produces a document that says nothing, and that
-   * is indistinguishable from a body that published nothing.
+   * A challenge interstitial or an HTML error page fed to a PDF parser produces a document that says nothing,
+   * indistinguishable from a body that published nothing.
    */
   const html = new TextEncoder().encode("<html><body>Client Challenge</body></html>");
   const r = await extractTextLayer(html, "challenge.html");
@@ -77,10 +60,6 @@ test("layer 1: zero bytes CANNOT RUN", async () => {
   assert.equal(r.outcome, "CANNOT_RUN");
   assert.match(r.reason, /zero bytes/);
 });
-
-/* ========================================================================== */
-/* Layer 2 — tables                                                           */
-/* ========================================================================== */
 
 const item = (x: number, y: number, text: string, width = text.length * 4) => ({
   x,
@@ -134,16 +113,8 @@ test("layer 2: a non-PDF CANNOT RUN", async () => {
   assert.equal(r.outcome, "CANNOT_RUN");
 });
 
-/* ========================================================================== */
-/* Layer 3 — OCR                                                              */
-/* ========================================================================== */
-
 test("layer 3: a missing engine is CANNOT RUN, never 'no text'", async () => {
-  /*
-   * The single most important assertion in this file. A scanned agenda
-   * recorded as a document that published nothing is a false claim about a
-   * public body, and it is what "return empty string on failure" produces.
-   */
+  /* A scanned agenda recorded as a document that published nothing is a false claim about a public body. */
   const r = await runOcr(new Uint8Array([1, 2, 3]), "scan.pdf", {
     binary: "definitely-not-an-ocr-engine-wtp",
   });
@@ -177,25 +148,9 @@ test("layer 3: engine availability is answered, not assumed", () => {
   assert.equal(ocrEngineAvailable("definitely-not-an-ocr-engine-wtp"), false);
 });
 
-/* ========================================================================== */
-/* Layer 4 — the embedded CMS payload                                         */
-/* ========================================================================== */
-
 /**
- * THE APPTEGY SHAPE, reproduced.
- *
- * Vail Unified's superintendent was carried as "Carruth" — a surname with no
- * given name. The fetch worked (200 to a plain client), discovery worked (the
- * home page's static HTML links the page), and "John Carruth" was in that HTML
- * six times. The EXTRACTION failed, because Apptegy ships page content as an
- * escaped JSON payload inside a `<script>`: the rendered prose carries a news
- * blurb saying "Superintendent Carruth" and never the byline.
- *
- * The live page was verified with this layer on 2026-08-20 — 1,151 payload
- * strings across 14 scripts, 6 of them carrying JSON, and three hits for
- * "John Carruth" with their key paths. That was one verification fetch, not a
- * hunt. This fixture is the SHAPE, so the guard runs offline like every other
- * parse test in this repo.
+ * Apptegy ships page content as an escaped JSON payload inside a `<script>`: the rendered prose carries a blurb with
+ * a bare surname and never the byline, so the full name is only in the payload. This fixture is the shape.
  */
 const APPTEGY_SHAPED = `
 <!doctype html><html><head>
@@ -216,7 +171,7 @@ test("layer 4: the byline is found in the payload though the prose never carries
   const r = extractEmbeddedPayload(APPTEGY_SHAPED, "vail-shaped");
   assert.equal(r.outcome, "EXTRACTED");
 
-  // The prose really does not carry it — that is the whole defect.
+  // The prose does not carry the full name.
   const prose = APPTEGY_SHAPED.replace(/<script[\s\S]*?<\/script>/gi, "");
   assert.ok(!prose.includes("John Carruth"), "the rendered prose has no byline");
 
@@ -229,8 +184,7 @@ test("layer 4: the byline is found in the payload though the prose never carries
 });
 
 test("layer 4: a DOUBLY-encoded payload is walked, not skipped", () => {
-  // Apptegy's actual shape: a JSON string whose value is itself JSON. Skipping
-  // it is exactly how the byline was missed.
+  // Apptegy's shape: a JSON string whose value is itself JSON; skipping it misses the byline.
   const html = `<script>window.d = ${JSON.stringify(JSON.stringify({ name: "Buried Name" }))}</script>`;
   const r = extractEmbeddedPayload(html, "double");
   assert.equal(r.outcome, "EXTRACTED");

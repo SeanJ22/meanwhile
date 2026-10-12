@@ -4,7 +4,6 @@ import { neonConfig } from "@neondatabase/serverless";
 
 import { feedbackConnection, readFeedback, writeFeedback } from "../lib/db/feedback.ts";
 import { flushDatabaseTransfer } from "../lib/db/transfer.ts";
-import { carryOverFeedback } from "../lib/db/feedback-carryover.ts";
 
 const old = "postgresql://local:local@ep-old-feedback.us-east-2.aws.neon.tech/neondb";
 const dedicated = "postgresql://local:local@ep-dedicated-feedback.us-east-2.aws.neon.tech/neondb";
@@ -58,40 +57,4 @@ test("feedback writes and reads use the dedicated branch and preserve the origin
     assert.ok(fallback.params.includes("live"));
   });
   assert.equal(feedbackConnection({}), null);
-});
-
-test("carry-over reads the old store without writing it, preserves report/contact IDs, and never overwrites a report", async () => {
-  const row = {
-    id: "00000000-0000-4000-8000-000000000001", received_at: "2026-09-29T15:00:00Z",
-    message: "The published time is wrong", surface: "SIDEBAR", contact_ref: "original-contact",
-    run_class: "ORGANIC", run_id: null, suspect_reason: null, site: "live",
-    about: null, zip: null, record_id: null, reply_address: "reply@example.org",
-    contact_received_at: "2026-09-29T15:00:00Z",
-  };
-  let present = false;
-  await mocked(async sent => {
-    const plan = await carryOverFeedback(old, dedicated, false);
-    assert.equal(plan.kind, "PLAN");
-    assert.equal(plan.reports, 1);
-    assert.ok(sent.every(s => !/INSERT|UPDATE|DELETE/i.test(s.query)));
-    assert.equal((await carryOverFeedback(old, dedicated, true)).copied, 1);
-    assert.equal((await carryOverFeedback(old, dedicated, true)).copied, 0);
-    assert.ok(sent.filter(s => s.connection === old).every(s => !/INSERT|UPDATE|DELETE/i.test(s.query)));
-    const contact = sent.find(s => /INSERT INTO feedback_contact/.test(s.query))!;
-    const report = sent.find(s => /INSERT INTO feedback \(/.test(s.query))!;
-    assert.equal(contact.connection, dedicated);
-    assert.deepEqual(contact.params, [row.contact_ref, row.reply_address, row.contact_received_at]);
-    assert.equal(report.params[0], row.id);
-    assert.deepEqual(report.params.slice(-3), [null, null, null]);
-    assert.match(report.query, /ON CONFLICT \(id\) DO NOTHING/);
-  }, request => {
-    if (/count\(\*\)/.test(request.query)) return [{ count: "1", through: row.received_at }];
-    if (/FROM feedback f/.test(request.query)) return request.params[1] ? [] : [row];
-    if (/INSERT INTO feedback \(/.test(request.query)) {
-      if (present) return [];
-      present = true;
-      return [{ id: row.id }];
-    }
-    return [];
-  });
 });

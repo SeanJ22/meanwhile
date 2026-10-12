@@ -9,7 +9,6 @@ import type { AuditEvidenceBase } from "../audit.ts";
 import { appendTransition, contextFromRepositories, readPipelineStatesWhere, scoutedFromScoutResult, type PipelineContext } from "./pipeline.ts";
 import {
   PROMOTION_PIPELINE_FORMAT_VERSION,
-  type ActivationGateReading,
   type ApprovalBurden,
   type ApprovedRecord,
   type ConfirmedRecord,
@@ -92,7 +91,6 @@ export interface CampaignSiteChainOptions {
   readonly recordRead: (subjectId: string, lead: CampaignSiteLead, read: CampaignSitePageRead) => Promise<ArtifactRecord>;
   /** The vaulted bytes of an artifact as a page read; null when the vault cannot produce them. */
   readonly heldPage: (artifact: ArtifactRecord) => Promise<CampaignSitePageRead | null>;
-  readonly gate: Pick<ActivationGateReading, "promotionEnabled" | "openRecordClasses" | "openFields">;
   readonly now: string;
   /** Distinct lead URLs read in one run at most; the rest stay owed, named. */
   readonly maxReads?: number;
@@ -108,14 +106,7 @@ export interface CampaignSiteChainOptions {
    * reaching the same first few. Absent, the log's order.
    */
   readonly rotation?: string;
-  /**
-   * Candidacies whose promoted profile already carries a campaign link on one
-   * of their Reader keys. The publication door holds any site approved for
-   * them (a reviewed link always wins: PRIOR_CAMPAIGN_LINK_HELD), so their
-   * leads are read after every other
-   * candidacy's. Order only: every lead is still read in turn, by the same
-   * checks. Absent, only the approvals this log already holds count.
-   */
+  /** Candidacies whose profile already carries a campaign link; their leads are read last. Order only. */
   readonly linkedCandidacies?: ReadonlySet<string>;
 }
 
@@ -180,16 +171,12 @@ export interface CampaignSiteChainReport {
   readonly judgedFromVault: number;
 }
 
-/* ------------------------------------------------------------------ ids */
-
 /** The item a Marginalia pointer becomes: one per candidacy and pointed URL, so a re-run collides. */
 export function discoveryPointerItemId(subjectId: string, url: string): string {
   return `pp-${fingerprint(["discovery-pointer", MARGINALIA_ROUTE_ID, subjectId, url])}`;
 }
 
 const displayName = candidateDisplayName;
-
-/* ---------------------------------------------------------------- leads */
 
 /** Leads a held Scout finding points at: its URL, or the pages its own Attempt vaulted. */
 async function scoutLeads(state: PipelineItemState, ctx: PipelineContext, subject: CampaignSiteSubject,
@@ -317,12 +304,7 @@ export function marginaliaLeads(held: HeldMarginaliaResponse, subject: CampaignS
   return { leads, refused, noHit: normalized.noHit !== undefined };
 }
 
-/* --------------------------------------------------------------- checks */
-
-/**
- * **THE FIVE CHECKS, MEASURED.** Every one is computed from the vaulted read and
- * the identity universe; none is assumed. FAIL names what failed.
- */
+/** The five checks, computed from the vaulted read and the identity universe. FAIL names what failed. */
 export function campaignSiteChecks(input: {
   readonly subject: CampaignSiteSubject;
   readonly verdict: CampaignSiteVerdict;
@@ -358,9 +340,8 @@ export function campaignSiteChecks(input: {
     : { name: "CANONICAL_IDENTITY_UNIQUE", result: "FAIL", detail: form === null ? "the page names no form of the candidate" : `"${form}" is shared by ${sharing.length} candidacy(ies), ${placed.length} placed here (${placed.map((p) => p.candidacyId).join(", ") || "none"}); ${subject.readerKeys.length} Reader key(s)` });
 
   /*
-   * The campaign-site class burdens: an HTTPS page answered 2xx with no access control in front of it, robots.txt
-   * read first and recorded on every origin, a candidate-owned host, fresh, hashed. The robots verdict is evidence and
-   * never a burden by itself (owner decision 2026-09-25: robots.txt alone must not block acquisition).
+   * Campaign-site burdens: HTTPS 2xx with no access control in front, robots.txt read first and recorded,
+   * a candidate-owned host, fresh, hashed. The robots verdict is evidence, never a burden by itself.
    */
   const burdens: string[] = [];
   if (m === null) burdens.push("no measurement");
@@ -392,8 +373,6 @@ export function campaignSiteChecks(input: {
     : { name: "FALSE_ZERO", result: "FAIL", detail: "a refused lead offers nothing to state" });
   return checks;
 }
-
-/* ---------------------------------------------------------- the projection */
 
 function zeroStages(): Record<PipelineStage, number> {
   return { SCOUTED: 0, CONFIRMED: 0, VERIFIED: 0, AUDITED: 0, APPROVED_FOR_PROMOTION: 0 };

@@ -1,27 +1,7 @@
 /**
- * **A DEPLOY MAY NOT CROSS ITS OWN MIGRATIONS.**
- * (2026-08-28, the P0 schema-drift incident. Intake tripwire run 33211710028.)
- *
- * `0021_mixed_red_ghost` and `0022_adorable_hemingway` merged and deployed with
- * production's schema still at 20. `ask_interactions` did not exist, every
- * insert naming it failed, the route caught the error and served the page — so
- * a reader saw a working site while Ask interactions were being dropped.
- *
- * **DETECTION WAS NOT THE GAP.** Two instruments caught it: the daily
- * `db:check` in `intake-tripwire.yml` (run 33211710028) and `walk:all`'s
- * `[promptD]` check, as a named regression. Both are downstream of the deploy —
- * one runs the next morning, the other when a session runs the walk by hand.
- * Nothing in the merge or deploy path asked. **The ordering is the defect**, so
- * what is added here is PLACEMENT, a PHASE and a SCOPE, over the comparator the
- * repository already has.
- *
- * The reasoning lives in `lib/db/shipping-invariant.ts` and
- * `lib/db/migration-phases.ts`; this is what runs in the suite.
- *
- * **Fixture-driven and hermetic.** No database, no network. The synthetic
- * fixtures use REAL migration tags so they exercise the real phase
- * declaration — a fixture with invented tags would prove the evaluator agrees
- * with a table this file wrote for it.
+ * A deploy may not cross its own migrations. The reasoning lives in `lib/db/shipping-invariant.ts` and
+ * `lib/db/migration-phases.ts`. Fixture-driven and hermetic; the fixtures use real migration tags so they exercise
+ * the real phase declaration.
  */
 
 import assert from "node:assert/strict";
@@ -56,10 +36,6 @@ function journalOf(...tags: string[]): JournalEntry[] {
 const whenOf = (journal: JournalEntry[], tag: string): number =>
   journal.find((e) => e.tag === tag)!.when;
 
-/* ========================================================================== */
-/* 1. THE DELTA                                                               */
-/* ========================================================================== */
-
 test("a delta of zero passes", () => {
   const journal = journalOf("0019_next_scarlet_witch", "0021_mixed_red_ghost", "0022_adorable_hemingway");
   const verdict = evaluateShippingInvariant({
@@ -75,11 +51,7 @@ test("a delta of zero passes", () => {
 });
 
 test("pending expands reach the production build, but still fail after deployment", () => {
-  /*
-   * The shape of run 33211710028: 23 committed, 21 applied, the two Ask
-   * migrations missing. The production build now applies both before serving
-   * the code naming `ask_interactions`; neither may remain missing afterward.
-   */
+  // Pending expands are applied by the production build before the code naming them is served.
   const journal = journalOf(
     "0019_next_scarlet_witch",
     "0020_dazzling_deathbird",
@@ -132,15 +104,11 @@ test("a number is never the answer: the verdict carries every migration by name"
   );
 });
 
-/* ========================================================================== */
-/* 2. SCOPE — a docs-only change is not gated on a database round trip        */
-/* ========================================================================== */
-
 test("a docs-only change is NOT gated", () => {
   const involvement = schemaInvolvement([
-    "docs/state.md",
+    "docs/DESIGN.md",
     "docs/tracker-working.csv",
-    "docs/context.md",
+    "docs/sources.md",
     "README.md",
   ]);
   assert.equal(involvement.involved, false, involvement.reason);
@@ -154,16 +122,14 @@ test("a change that moves the schema contract IS gated, from either file", () =>
     "lib/db/migrations/meta/_journal.json",
     "lib/db/schema.ts",
   ]) {
-    const involvement = schemaInvolvement(["docs/state.md", path]);
+    const involvement = schemaInvolvement(["docs/DESIGN.md", path]);
     assert.equal(involvement.involved, true, `${path} must make the gate applicable`);
     assert.deepEqual(involvement.paths, [path]);
   }
 });
 
 test("a lib/db file that is NOT the schema contract does not force a round trip", () => {
-  // This module and its sibling live under lib/db/ and cannot change what
-  // production has applied. Widening the trigger to `lib/db/` would gate every
-  // edit to the gate itself on a database call.
+  // Widening the trigger to `lib/db/` would gate every edit to the gate itself on a database call.
   const involvement = schemaInvolvement([
     "lib/db/shipping-invariant.ts",
     "lib/db/migration-phases.ts",
@@ -179,11 +145,7 @@ test("an UNREADABLE changed-path list is gated, never skipped", () => {
 });
 
 test("Windows separators and ./ prefixes do not hide a migration", () => {
-  /*
-   * The separator is BUILT, never written. RULING 14 forbids a backslash
-   * repo-path literal anywhere in the tree — it can only ever match on Windows
-   * — and a fixture is not an exemption from the rule it is testing.
-   */
+  // The separator is built, never written as a backslash literal.
   const BACKSLASH = String.fromCharCode(92);
   const windowsPath = "lib/db/migrations/0021_mixed_red_ghost.sql".split("/").join(BACKSLASH);
   const involvement = schemaInvolvement([windowsPath]);
@@ -199,22 +161,14 @@ test("migrationTagsIn reads tags off the changed files and ignores the journal",
       "lib/db/migrations/0021_mixed_red_ghost.sql",
       "lib/db/migrations/meta/_journal.json",
       "lib/db/migrations/meta/0021_snapshot.json",
-      "docs/state.md",
+      "docs/DESIGN.md",
     ]),
     ["0021_mixed_red_ghost"],
   );
 });
 
-/* ========================================================================== */
-/* 3. EXPAND AND CONTRACT — both orderings, and the unsafe one fails          */
-/* ========================================================================== */
-
 test("an EXPAND migration MAY precede its code", () => {
-  /*
-   * 0021 creates a table. Applying it before the deploy that names the table is
-   * the correct ordering, and the gate must say so rather than complaining that
-   * production is ahead of the last deploy.
-   */
+  // Applying an expand before the deploy that names its table is the correct ordering.
   const journal = journalOf("0020_dazzling_deathbird", "0021_mixed_red_ghost");
   assert.equal(declaredPhase("0021_mixed_red_ghost")?.phase, "expand");
 
@@ -229,11 +183,7 @@ test("an EXPAND migration MAY precede its code", () => {
 });
 
 test("a CONTRACT migration may NOT precede its code", () => {
-  /*
-   * 0018 drops `feedback.reply_to`. Applying it before the deploy that stops
-   * writing that column breaks the build serving readers right now. This is the
-   * ordering a migrate-always-first gate would have forced.
-   */
+  // Applying a contract before the deploy that stops writing the column breaks the build serving readers.
   const journal = journalOf("0017_lively_mulholland_black", "0018_plain_silver_samurai");
   assert.equal(declaredPhase("0018_plain_silver_samurai")?.phase, "contract");
 
@@ -269,13 +219,7 @@ test("a CONTRACT migration still pending at its own deploy is the CORRECT orderi
 });
 
 test("the 0013/0014 pair is expressible — this is why migrate-always-first is refused", () => {
-  /*
-   * 0013 puts the default back so the live build's writes land; 0014 takes it
-   * away once the code that fills the column is serving. A gate that required
-   * every committed migration to be applied before every deploy would refuse
-   * the exact split this repository made on purpose, and `pnpm db:apply
-   * --upto=` exists because of it.
-   */
+  // 0013 restores a default the live build needs; 0014 removes it once the code that fills the column serves.
   assert.equal(declaredPhase("0013_tier_distribution_bridge")?.phase, "expand");
   assert.equal(declaredPhase("0014_tier_distribution_no_default")?.phase, "contract");
 
@@ -316,10 +260,6 @@ test("post-deploy, BOTH phases are owed and an unapplied contract fails", () => 
   assert.equal(verdict.verdict, "fail");
   assert.deepEqual(verdict.notAppliedAfterDeploy, ["0018_plain_silver_samurai"]);
 });
-
-/* ========================================================================== */
-/* 4. THE DECLARATION — and why an undeclared migration has no default        */
-/* ========================================================================== */
 
 test("a committed migration with no phase declaration FAILS and is given no phase", () => {
   const journal = journalOf("0021_mixed_red_ghost", "0099_undeclared_newcomer");
@@ -373,10 +313,6 @@ test("the declaration states a reason, and names no migration that does not exis
   }
 });
 
-/* ========================================================================== */
-/* 5. THE PHASE IS DERIVED FROM THE SQL, not asserted beside it (RULING 147)  */
-/* ========================================================================== */
-
 test("every declaration agrees with the migration's own SQL", () => {
   const disagreements: string[] = [];
   let read = 0;
@@ -404,12 +340,7 @@ test("every declaration agrees with the migration's own SQL", () => {
 });
 
 test("the classifier reads STATEMENTS, never the comment above them", () => {
-  /*
-   * 0011's header QUOTES the generated statement it was hand-corrected away
-   * from — `ADD COLUMN "coverage_tier" text NOT NULL;` — and 0013's says "DROP
-   * DEFAULT" in prose. A classifier reading raw text derives a phase from an
-   * explanation of what the file deliberately does not do.
-   */
+  // A classifier reading raw text would derive a phase from a header that explains what the file does not do.
   const planted = [
     "-- Drizzle wrote:",
     '--     ALTER TABLE "x" ADD COLUMN "c" text NOT NULL;',
@@ -466,10 +397,6 @@ test("THE PLANT: each narrowing shape is caught, and an additive one is not", ()
   }
 });
 
-/* ========================================================================== */
-/* 6. WHERE IT RUNS — and the tripwire that stays beside it                   */
-/* ========================================================================== */
-
 const GATE_COMMAND = "pnpm exec tsx scripts/db-shipping-gate.mts";
 
 test("the shipping gate runs in the PR gate job on every pull request and every push to main", () => {
@@ -500,23 +427,8 @@ test("the shipping gate is in the LOCAL gate set too — the RO04 hole stays clo
 });
 
 test("ONE DETECTOR — the gate reuses the comparator, it does not reimplement it", () => {
-  /*
-   * The correction that produced this guard: detection was never missing. The
-   * delta this repository ships is `compareSchemaState`, and `db:check`,
-   * `/api/schema` (which walk:all's `[promptD]` check reads) and this gate all
-   * import THAT. A second comparator is how two surfaces start disagreeing
-   * about the same database.
-   *
-   * The SELECT is consolidated the same way. `app/api/schema/route.ts` still
-   * carries its own — it is a Next route, out of this change's reach — so the
-   * closed list has three members and grows only deliberately.
-   */
-  /*
-   * SWEPT OVER THE TREE, not over a hand-kept list (RULING 147), and matched on
-   * the QUERY rather than on the identifier: both scripts still NAME the table
-   * in their error messages, and a guard that read its own prose as the defect
-   * would refuse the consolidation it exists to protect.
-   */
+  // The delta is `compareSchemaState`, shared by `db:check`, `/api/schema` and this gate. Swept over the tree and
+  // matched on the query, not the identifier, since scripts name the table in their error messages.
   const QUERIES_IT =
     /\b(?:FROM|INTO|UPDATE|CREATE TABLE(?: IF NOT EXISTS)?)\s+drizzle\.__drizzle_migrations\b/i;
   const files = filesThatWouldBeCommitted({ cwd: ROOT, paths: ["app", "components", "lib", "scripts"] }).filter(path => /\.[cm]?[jt]sx?$/.test(path));
@@ -535,8 +447,6 @@ test("ONE DETECTOR — the gate reuses the comparator, it does not reimplement i
       "lib/db/applied-migrations.ts",
       // The applier, the only thing allowed to WRITE this table.
       "scripts/apply-migrations.mts",
-      // Proves a local write reached the local branch; reads the journal count.
-      "scripts/verify-local-write.mts",
     ].sort(),
     `these files query drizzle.__drizzle_migrations: ${queriers.join(", ")}.\n` +
       "`db:check` and the shipping gate must NOT be among them — they share\n" +
@@ -588,12 +498,11 @@ test("the production migration applier commits each migration and its journal ro
 });
 
 test("production expand applies in the deploy; pull-request checks do not apply migrations", () => {
-  // Sean replaced manual production application in rulings section 5 on October 1.
   const deploy = readFileSync(join(ROOT, "netlify.toml"), "utf8");
   assert.match(deploy, /pnpm db:apply --target=production --phase=expand --production-build && corepack pnpm run build/);
   const offenders: string[] = [];
   const files = readdirSync(WORKFLOWS).filter((f) => f.endsWith(".yml"));
-  assert.equal(files.length, 3, `expected CI, release observer and authorized adapter merger workflows, found ${files.length}`);
+  assert.equal(files.length, 2, `expected the CI and release observer workflows, found ${files.length}`);
   for (const file of files) {
     const text = readFileSync(join(WORKFLOWS, file), "utf8");
     for (const line of text.split("\n")) {
@@ -610,22 +519,7 @@ test("production expand applies in the deploy; pull-request checks do not apply 
   );
 });
 
-/* ========================================================================== */
-/* 7. THE SMOKE PATH — a credential proof that invents no schema change       */
-/* ========================================================================== */
-
-/*
- * WTP_PRODUCTION_DATABASE_URL_READONLY IS NOT YET A REPOSITORY SECRET.
- *
- * The gate above is SCOPED, which is right and which means the credential is
- * only ever exercised when a schema change happens along — so a wrong, expired
- * or absent secret would be discovered by the very pull request that most needs
- * the gate working. `workflow_dispatch` gains an input that forces the gate to
- * contact production on a commit that changed nothing.
- *
- * These assert the WIRING, because the secret cannot be asserted from here and
- * inventing one would be the fabrication this repository forbids by name.
- */
+/* The smoke path forces the gate to contact production on a commit that changed nothing; its wiring is asserted. */
 
 test("the smoke input exists, is opt-in, and is off unless a person dispatches it", () => {
   const text = readFileSync(join(WORKFLOWS, "build-check.yml"), "utf8");
@@ -642,12 +536,7 @@ test("the smoke input exists, is opt-in, and is off unless a person dispatches i
 });
 
 test("the smoke path did not change the gate's COMMAND — gate parity is not spent on it", () => {
-  /*
-   * RO04: a gate whose CI command drifts from its local command is a gate a
-   * session reports green while a required check fails. The smoke path is
-   * carried on `env:`, so `run:` is byte-identical to the entry in
-   * scripts/gates.mjs and `tests/gate-parity.test.ts` keeps holding.
-   */
+  // The smoke path is carried on `env:`, so the gate's `run:` line stays identical to its entry in scripts/gates.mjs.
   const text = readFileSync(join(WORKFLOWS, "build-check.yml"), "utf8");
   assert.ok(
     text.includes(`run: corepack ${GATE_COMMAND}\n`),
@@ -657,14 +546,7 @@ test("the smoke path did not change the gate's COMMAND — gate parity is not sp
 });
 
 test("the second reading is automatic after a shipping main push", () => {
-  /*
-   * A pre-merge answer is true about the moment it was taken. `post-deploy` is
-   * where BOTH phases are owed, and it is the one that fails on a CONTRACT
-   * migration that pre-deploy deliberately allows. Netlify emits no usable
-   * deployment-status event in this repository, so the software-release
-   * workflow starts on the shipping main push and waits for that exact SHA to
-   * be served before taking the second reading.
-   */
+  // `post-deploy` owes both phases; the release workflow waits for the pushed SHA to be served before reading.
   const text = readFileSync(join(WORKFLOWS, "build-check.yml"), "utf8");
   assert.match(text, /schema_moment:/);
   assert.match(text, /WTP_SCHEMA_GATE_MOMENT: \$\{\{ inputs\.schema_moment \}\}/);
@@ -689,12 +571,7 @@ test("the second reading is automatic after a shipping main push", () => {
 
 test("SMOKE MAY NOT MANUFACTURE A DIFF — the flag overrides the exit, never the finding", () => {
   const gate = readFileSync(join(ROOT, "scripts", "db-shipping-gate.mts"), "utf8");
-  /*
-   * The tempting shortcut is a fake `--paths=` naming a migration, which also
-   * reaches the database and puts a false statement about what the change
-   * touched into a log somebody reads later. The scope test runs honestly and
-   * prints its honest NOT APPLICABLE; only the exit is overridden.
-   */
+  // The scope test runs honestly; only the exit is overridden, so no false migration path reaches a log.
   assert.match(gate, /if \(!involvement\.involved && SMOKE\)/);
   assert.match(gate, /NOT APPLICABLE[\s\S]{0,400}SMOKE: contacting production anyway/);
   assert.ok(

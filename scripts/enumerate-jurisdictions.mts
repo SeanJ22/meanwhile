@@ -1,43 +1,15 @@
 /**
- * `pnpm jurisdictions:enumerate` — **NAME EVERY LOCAL GOVERNMENT THAT CAN HOLD
- * AN ELECTION, BEFORE A READER NEEDS ONE.**
- * (Session C3, lane C, 2026-09-01. RULING 229, RULING 205, RULING 207.)
+ * `pnpm jurisdictions:enumerate` — every local government that can hold an
+ * election, named before a reader needs one, with the routes that serve it.
  *
- * Builds the reviewed jurisdiction-routing projection and submits it to the
- * canonical production candidate/event/promotion plane. It never writes a
- * tracked repository file. The retired JSON copies are seed/test evidence.
+ * Builds the reviewed jurisdiction-routing projection from the Census of
+ * Governments and submits it to the production candidate/event/promotion
+ * plane. It never writes a tracked repository file.
  *
- * ## The defect, measured
- *
- * `data/campaign-finance/filing-regimes.json` routes Arizona correctly and knows
- * exactly TWO custodians by name: the Secretary of State, and Pima County. The
- * Arizona SOS's current bulk guide defines a jurisdiction reference table but
- * does not publish its current rows over HTTPS. The 2022 Census of Governments
- * names Arizona governments. Every one of those that is not the SOS or Pima County was, until this file existed, not an open
- * obligation, not a debt row, not a denominator and not a name — it was
- * invisible, which is how a two-custodian corpus comes to be described as
- * "Arizona".
- *
- * ## THE SCOPE DISTINCTION IS THE POINT, and it is data
- *
- * The Secretary's documented bulk route is an ARIZONA route.
- * `https://pimacountyaz.easyvotecampaignfinance.com/...` is a PIMA route
- * and belongs to Pima County and to the districts A.R.S. § 16-928 routes
- * through the Pima County officer — and to nothing else. Every source row
- * carries `scope`, so the difference is checkable rather than conventional.
- *
- * ## Where the routing comes from
- *
- * A.R.S. § 16-928, read from `https://www.azleg.gov/ars/16/00928.htm` on
- * 2026-08-26 and quoted VERBATIM in
- * `data/campaign-finance/filing-regimes.json`. Nothing here paraphrases it: a
- * paraphrase of a routing rule is a different routing rule.
- *
- * New Hampshire and New Jersey get the same treatment from the same Census
- * enumeration, with their own statutes cited where this repository has read
- * them and an explicit OPEN QUESTION where it has not. A statute nobody read is
- * recorded as unread; a plausible citation typed from memory would be a
- * fabrication in the one field whose whole job is being checkable.
+ * Every source row carries `scope` (STATEWIDE, PER_COUNTY, THIS_JURISDICTION),
+ * so a county's route is never presented as a state's. Statutes are cited where
+ * read and quoted verbatim in `data/campaign-finance/filing-regimes.json`; an
+ * unread statute is recorded as an open question, never paraphrased.
  */
 import { US_JURISDICTIONS } from "../lib/coverage/states.ts";
 import { NAME_BY_USPS } from "../lib/coverage/artifacts.ts";
@@ -52,7 +24,6 @@ import { adaptedSplit, completenessCaveat } from "../lib/hunt/jurisdiction-unive
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import {
   JURISDICTION_REFERENCE_STATES,
-  azJurisdictionOperationalReferenceCandidate,
   jurisdictionOperationalReferenceCandidate,
   jurisdictionOperationalReferenceFailureCandidate,
   type JurisdictionReferenceState,
@@ -80,7 +51,7 @@ const GENERATOR = "scripts/enumerate-jurisdictions.mts";
 let asOf = "";
 let acquiredCensusUnits: readonly CensusJurisdictionUnitInput[] = [];
 let acquiredDependentSchoolSystems: readonly CensusJurisdictionUnitInput[] = [];
-/** Each reviewed website correction's reading at this promotion (C15), by jurisdiction id. */
+/** Each reviewed website correction's reading at this promotion, by jurisdiction id. */
 let websiteCorrectionOutcomes: ReadonlyMap<string, WebsiteCorrectionOutcome> = new Map();
 
 /* ------------------------------------------------------------- the sources */
@@ -160,29 +131,19 @@ const PREFIX_OF: Readonly<Record<JurisdictionClass, string>> = {
   SPECIAL_DISTRICT: "special",
 };
 
-/**
- * The government's OWN published address, where the Census recorded one.
- *
- * This is a DISCOVERY source, never an adapted one: an address is not an
- * adapter, and calling a URL "acquired" is the `URL != RECORD` error with a
- * different noun. What it buys is that the discovery obligation has an ADDRESS
- * rather than only a name, which is the difference between a next move and a
- * research project.
- */
+/** The government's own published address, where the Census recorded one: a DISCOVERY source, never an adapted one. */
 const OWN_SITE_SOURCE: JurisdictionSource = {
   recordClass: "MEETINGS",
   authority: "this government itself",
   authorityBasis: "the government's own published web address, as the Census of Governments recorded it",
   scope: "THIS_JURISDICTION",
   routeId: null,
-  /* The address is per-government and lives on the jurisdiction row as
-     `ownWebAddress`. Repeating it here would put one URL in two places, and the
-     two would disagree the first time either was corrected. */
+  /* The address is per-government and lives on the jurisdiction row as `ownWebAddress`. */
   url: null,
   state: "DISCOVERY_OWED",
   owed:
     "walk this row's `ownWebAddress` for the body's own meeting notices, agendas, minutes and " +
-    "officeholder roster, under RULING 166's body-own-publication-first order. The address is " +
+    "officeholder roster, under the body-own-publication-first order. The address is " +
     "recorded; no adapter in this repository opens it, and an address is not an acquisition.",
   citation: CENSUS_CITATION,
 };
@@ -206,8 +167,7 @@ const AZ_COUNTY_ADAPTED = new Map<string, { routeId: string; url: string; citati
       routeId: "az-pima-easyvote-public-filings",
       url: "https://pimacountyaz.easyvotecampaignfinance.com/home/publicfilings",
       citation:
-        "data/states/az/campaign-finance/az-pima-2026-held.json — the EasyVote tenant API answered HTTP 200 on " +
-        "2026-08-29 with 138 filers and 680 filing records for Pima County",
+        "the EasyVote tenant API answered HTTP 200 on 2026-08-29 with 138 filers and 680 filing records for Pima County",
     },
   ],
 ]);
@@ -321,18 +281,11 @@ function arizonaSources(unit: CensusUnit, govClass: JurisdictionClass): Jurisdic
       authorityBasis: "the Secretary of State certifies and publishes statewide and legislative candidate lists",
       scope: "STATEWIDE",
       routeId: "az-sos-candidate-filings",
-      /*
-       * THE URL THIS ROW USED TO CARRY —
-       * `azsos.gov/elections/results-data/candidate-filings` — ANSWERED HTTP 404
-       * ON 2026-09-01. The document it was supposed to lead to answers 200.
-       * That is RULING 206 in one line: the record is the Secretary's filing
-       * list, never the navigation path that served it, and a dead landing page
-       * is not a lost record.
-       */
+      /* The record is the Secretary's filing list itself, not the landing page that served it. */
       url: "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
       state: "ADAPTED",
       owed:
-        "ACQUIRED 2026-09-01 as a corpus at data/states/az/candidates/az-2026-sos-candidate-filings.json — 266 " +
+        "ACQUIRED 2026-09-01 — 266 " +
         "candidacies across 76 contests, the Secretary's complete applicable universe for the offices " +
         "he is the filing officer for (federal congressional, statewide executive, legislative). WHAT " +
         "IS STILL OWED IS A DIFFERENT RECORD, and it is the 15 county rows below: county, municipal, " +
@@ -341,18 +294,14 @@ function arizonaSources(unit: CensusUnit, govClass: JurisdictionClass): Jurisdic
         "nominees, or nonpartisan and judicial offices — each an absence from THIS DOCUMENT and never " +
         "from the ballot.",
       citation:
-        "data/states/az/candidates/az-2026-sos-candidate-filings.json — HTTP 200, 183,097 B, last-modified " +
-        "2026-03-31, sha256 a13d2a82f83b52206d3697a840382403b1c3d5cb6c80481e383b42d360669016, read " +
-        "2026-09-01. Extracted twice by independent mechanisms, both returning 266 rows; " +
-        "`pnpm acquire:az-sos-candidates` re-runs it and tests/az-sos-candidate-filings.test.ts " +
-        "reproduces the parse offline from the committed bytes.",
+        "HTTP 200, 183,097 B, last-modified 2026-03-31, sha256 " +
+        "a13d2a82f83b52206d3697a840382403b1c3d5cb6c80481e383b42d360669016, read 2026-09-01. " +
+        "Extracted twice by independent mechanisms, both returning 266 rows.",
     });
     return out;
   }
 
-  /* Every Arizona government below the state is ALSO a subject of the statewide
-     bulk drop, which is what "one route success never collapses the source
-     universe" means when it is written as data rather than as a slogan. */
+  /* Every Arizona government below the state is also a subject of the statewide bulk drop. */
   out.push({
     recordClass: "CAMPAIGN_FINANCE",
     authority: "Arizona Secretary of State (bulk reference tables)",
@@ -389,8 +338,7 @@ function arizonaSources(unit: CensusUnit, govClass: JurisdictionClass): Jurisdic
     if (county) out.push(azBallotSource(county));
   } else {
     /* School, community college and special taxing districts all route to the
-       COUNTY officer by the same sentence of § 16-928. The district is the
-       government; the county officer is the custodian. */
+       county officer under § 16-928: the district is the government, the officer the custodian. */
     if (county) {
       out.push(azCountyFinanceSource(county));
       out.push(azBallotSource(county));
@@ -415,17 +363,8 @@ const NJ_STATUTE =
 
 function newHampshireSources(unit: CensusUnit, govClass: JurisdictionClass): JurisdictionSource[] {
   /*
-   * **THE STATEWIDE CFS IS NOT ASSERTED TO COVER LOCAL CANDIDATES.**
-   *
-   * The New Hampshire CFS filer index is ADAPTED and its acquisition matched the
-   * publisher's own declared total, 5,738 of 5,738. What it holds is state and
-   * county filers; WHETHER a town, school-district or village-district
-   * candidate files with the Secretary of State at all is NOT read into this
-   * repository. Marking every one of the state's 551 local governments ADAPTED
-   * on the strength of a state API would be exactly the flattering arithmetic
-   * this registry exists to prevent — so the local rows carry the state route as
-   * DISCOVERY_OWED with the open question stated, and the state row carries it
-   * as ADAPTED, which is the only place it is proven.
+   * The statewide CFS holds state and county filers; whether a local candidate
+   * files there is not established, so local rows carry it as DISCOVERY_OWED.
    */
   const proven = govClass === "STATE" || govClass === "COUNTY";
   const out: JurisdictionSource[] = [
@@ -463,7 +402,7 @@ function newHampshireSources(unit: CensusUnit, govClass: JurisdictionClass): Jur
       owed:
         "find this government's certified candidate and contest publication. The state list is held; the " +
         "local list is not.",
-      citation: "data/states/nh/ballot/nh-merrimack-2026.json — one county's certified list is held; no other's is",
+      citation: "one county's certified list is held; no other's is",
     });
   }
   const own = ownSiteSource(unit);
@@ -502,7 +441,7 @@ function newJerseySources(unit: CensusUnit, govClass: JurisdictionClass): Jurisd
       owed:
         "acquire this county clerk's certified candidate and contest list for the applicable cycle. " +
         "Morris County's is held; no other New Jersey county's is.",
-      citation: "data/states/nj/ballot/nj-morris-2026.json",
+      citation: "Morris County's certified list is held; no other New Jersey county's is",
     });
   }
   const own = ownSiteSource(unit);
@@ -582,16 +521,7 @@ function build(plan: StatePlan): JurisdictionRegistry {
   const jurisdictions: Jurisdiction[] = [];
   const seen = new Set<string>();
 
-  /*
-   * THE CATALOG, and why the indirection is not premature.
-   *
-   * One sentence of A.R.S. § 16-928 routes 44 Pima County districts to one
-   * county officer. Writing that route out 44 times produced a 2.3 MB file
-   * whose every diff would be noise, and — worse — hid the SHARING: a route
-   * used by 300 governments should look like one route used by 300 governments.
-   * The key is a digest of the route's own content, so two rows that describe
-   * the same route collapse and two that differ in one word do not.
-   */
+  /* Shared routes are catalogued once and referenced by key; rows that differ in one word get distinct keys. */
   const catalog: Record<string, JurisdictionSource> = {};
   const catalogKey = (s: JurisdictionSource): string => {
     const base = `${s.recordClass}:${s.scope}:${s.routeId ?? slug(s.authority)}`;
@@ -631,8 +561,7 @@ function build(plan: StatePlan): JurisdictionRegistry {
     });
   };
 
-  /* The state itself is a jurisdiction, and it is the one whose routes are
-     STATEWIDE. Leaving it out would make "statewide" a property of nothing. */
+  /* The state itself is a jurisdiction: the owner of every STATEWIDE route. */
   push(
     { name: plan.name, govType: "STATE", county: "", web: "", pid: "state", active: true },
     "STATE",
@@ -661,7 +590,7 @@ function build(plan: StatePlan): JurisdictionRegistry {
       "it may never be read as one. A government absent from every enumeration read here is absent from",
       "THIS FILE. That is a fact about this file and never a fact about the state.",
       "",
-      "RULING 229: a jurisdiction is enumerated so that it can be an OPEN OBLIGATION with a clock BEFORE",
+      "A jurisdiction is enumerated so that it can be an OPEN OBLIGATION with a clock BEFORE",
       "a reader needs it. Activating a ZIP inside one of these governments must be applicability work,",
       "never a fresh external hunt for a record the authority already owed.",
       "",
@@ -709,13 +638,8 @@ function build(plan: StatePlan): JurisdictionRegistry {
 
 const CHECK = process.argv.includes("--check");
 const PROMOTE = process.argv.includes("--promote");
-const stateArguments = process.argv.filter(argument => argument.startsWith("--state="));
-if (stateArguments.length > 1 || (stateArguments.length === 1 && stateArguments[0] !== "--state=AZ")) {
-  throw new Error("JURISDICTION_REFERENCE_STATE_UNSUPPORTED: only exact --state=AZ is registered");
-}
-const AZ_ONLY = stateArguments.length === 1;
-const selectedStates: readonly JurisdictionReferenceState[] = AZ_ONLY ? ["az"] : JURISDICTION_REFERENCE_STATES;
-const contractId = AZ_ONLY ? "jurisdiction-operational-reference-az" : "jurisdiction-operational-reference";
+const selectedStates: readonly JurisdictionReferenceState[] = JURISDICTION_REFERENCE_STATES;
+const contractId = "jurisdiction-operational-reference";
 if (CHECK === PROMOTE) {
   throw new Error("JURISDICTION_REFERENCE_MODE_REQUIRED: choose exactly one of --check or --promote");
 }
@@ -724,7 +648,7 @@ if (PROMOTE) prepareProductionCivicDataWrite();
 const store = CHECK ? new MemoryRoutineDataStore() : new PostgresRoutineDataStore();
 
 async function recordFailedAttempt(failure: JurisdictionReferenceAcquisitionFailure): Promise<never> {
-  const candidate = jurisdictionOperationalReferenceFailureCandidate(failure, AZ_ONLY);
+  const candidate = jurisdictionOperationalReferenceFailureCandidate(failure);
   const outcome = await processRegisteredManualCandidate(
     store,
     contractId,
@@ -744,9 +668,8 @@ if (acquisition.kind === "FAILED") {
 }
 acquiredCensusUnits = acquisition.censusUnits;
 acquiredDependentSchoolSystems = acquisition.dependentSchoolSystems;
-/* Each reviewed website correction is read again, robots.txt first, before it may replace a Census address (C15). */
-const corrections = await acquireWebsiteCorrections([...applicableWebsiteCorrections(WEBSITE_CORRECTIONS).values()]
-  .filter(correction => !AZ_ONLY || correction.jurisdictionId.startsWith("az:")), {
+/* Each reviewed website correction is read again, robots.txt first, before it may replace a Census address. */
+const corrections = await acquireWebsiteCorrections([...applicableWebsiteCorrections(WEBSITE_CORRECTIONS).values()], {
   get: nodeResearchGet,
   memory: memoryInProcess(),
   now: () => Date.now(),
@@ -838,9 +761,7 @@ if (selectedStates.some((state) => !built.has(state))) {
   });
 }
 const registries = Object.fromEntries(selectedStates.map((state) => [state, built.get(state)!])) as Record<JurisdictionReferenceState, JurisdictionRegistry>;
-const candidate = AZ_ONLY ? azJurisdictionOperationalReferenceCandidate({
-  registries: { az: registries.az }, sourceReceipts, workbook: acquisition.workbook, retrievedAt,
-}) : jurisdictionOperationalReferenceCandidate({
+const candidate = jurisdictionOperationalReferenceCandidate({
   registries,
   sourceReceipts,
   workbook: acquisition.workbook,

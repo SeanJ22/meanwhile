@@ -11,12 +11,33 @@ import type { ModelRequest, ModelResponse } from "../lib/control-plane/scheduler
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { registerRouteTask } from "../lib/control-plane/repository/coordinator.ts";
 import { dispatchOne } from "../lib/control-plane/scheduler/dispatch.ts";
+import { FIRST_BACKOFF_MINUTES } from "../lib/control-plane/scheduler/debt.ts";
 import { fieldManualEntryId, writeFieldManual } from "../lib/control-plane/field-manual.ts";
 import { knowledgeEntries, methodVersionEntry } from "./method-store-fixture.ts";
+import { readFileSync } from "node:fs";
+import { gunzipSync } from "node:zlib";
+import { manualEdgeEntry } from "./helpers/promoted-edge-entry.ts";
+import { withReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
+import type { PromotedProjection } from "../lib/civic-data/types.ts";
+
+const registry = (JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { projection: PromotedProjection }).projection;
+const REGISTRY_EDGE: ReaderAuthorityEdgeBundle = { promoted: new Map([[registry.key, manualEdgeEntry("registry-runtime-bindings", registry.payload, registry.versionId)]]) };
+
+async function exhaustPlainRetries(h: Awaited<ReturnType<typeof autonomousHarness>>) {
+  for (let failure = 0; failure < 3; failure++) {
+    const run = await runAutonomousCoordinator(h.runtime, { maximum: 1, concurrency: 1 });
+    assert.equal(run.decisions[0].task?.workerTask?.role, "ACQUIRER", "known routes use plain acquisition before paid investigation");
+    assert.equal(run.dispatches[0].outcome, "WORKED", run.dispatches[0].detail);
+    if (failure < 2) {
+      const record = (await h.repos.workerResults.readAll()).find(row => row.attemptId === run.dispatches[0].attemptId)!;
+      h.advanceTo(new Date(Date.parse(record.endedAt) + (2 ** failure * FIRST_BACKOFF_MINUTES + 1) * 60_000).toISOString());
+    }
+  }
+}
 
 test("the actual Scout request inherits a learned method and the failed Hunter route before novelty",async t=>{
   const h=await autonomousHarness({response:{transportError:"socket timeout"}});
-  await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1});
+  await exhaustPlainRetries(h);
   const before=await h.repos.workerResults.readAll();
   const root=await mkdtemp(join(tmpdir(),"fleet-novelty-fixture-"));
   assert.equal(dirname(resolve(root)),resolve(tmpdir()));
@@ -33,17 +54,17 @@ test("the actual Scout request inherits a learned method and the failed Hunter r
     id:doorId,role:"SHARED",kind:"VENDOR_TENANT",title:"Seeded test door",
     summary:"a portable inherited door for the capture assertion",states:[],recordClasses:[],
     platforms:[],outcome:"YIELDED",url:"https://seeded.example/door",source:"test-seed",
-    observedAt:"2026-09-19",tier:null,payload:{}}],h.now());
+    observedAt:"2026-09-19",tier:null,portable:true,payload:{}}],h.now());
   assert.equal(seeded.written,1);
   const requests:ModelRequest[]=[];
   const searches: string[] = [];
-  const runtime=await autonomousStandingRuntime({root,repos:h.repos,now:h.now,auditCeilingUsd:1,
+  const runtime=await withReaderAuthorityEdge(REGISTRY_EDGE,()=>autonomousStandingRuntime({root,repos:h.repos,now:h.now,auditCeilingUsd:1,
     search: async input => { searches.push(input.query); return { hits: [], requestCount: 1, bytesFetched: 0, providersUsed: ["offline-fixture"], errors: [] }; },
     transport:async request=>{
     requests.push(request);
     if (requests.length === 1) return { model: request.model, stop_reason: "tool_use", content: [{ type: "tool_use", id: "offline-search", name: "search", input: { query: "fixture clerk alternate official roster", rung: "other:source-discovery", why: "The recorded direct route timed out" } }], usage: { input_tokens: 10, output_tokens: 10 } };
     throw new Error("OFFLINE_REQUEST_CAPTURE_COMPLETE");
-  }});
+  }}));
   const run=await runAutonomousCoordinator(runtime,{maximum:1,concurrency:1,maxScoutDispatches:1});
   assert.equal(run.decisions[0].action,"SCOUT");
   assert.equal(requests.length,2,"the transport is an offline recorder, never a provider call");
@@ -70,14 +91,14 @@ test("the actual Scout request inherits a learned method and the failed Hunter r
 
 test("one running worker runtime saves a new observed route and hands it to its next Scout", async t => {
   const h = await autonomousHarness({ response: { transportError: "socket timeout" } });
-  await runAutonomousCoordinator(h.runtime, { maximum: 1, concurrency: 1 });
+  await exhaustPlainRetries(h);
   const root = await mkdtemp(join(tmpdir(), "fleet-new-method-"));
   t.after(() => rm(root, { recursive: true, force: true }));
   const empty = { version: 56, updatedOn: "2026-09-03", routes: [] };
   await writeFieldManual(h.repos, [methodVersionEntry(empty)], h.now());
   const discovered = "https://fixture-clerk.example.gov/alternate-roster.json";
   const requests: ModelRequest[] = [];
-  const runtime = await autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1, spaceOut: async () => {},
+  const runtime = await withReaderAuthorityEdge(REGISTRY_EDGE, () => autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1, spaceOut: async () => {},
     openBytes: async ({ url }) => ({ status: 200, bytes: Buffer.from(url.endsWith("robots.txt") ? "User-agent: *\nDisallow:\n" : '[{"id":"clerk","name":"Clerk"}]'), contentType: "text/plain", finalUrl: url, durationMs: 1, transportError: null }),
     transport: async request => {
       requests.push(request);
@@ -87,14 +108,14 @@ test("one running worker runtime saves a new observed route and hands it to its 
         ? [{ type: "tool_use", id: "open", name: "fetch_public", input: { url: discovered, rung: "primary-site-navigation", why: "Read the alternative official roster" } }]
         : [{ type: "tool_use", id: "done", name: "finish", input: { outcome: "ROUTE_CANDIDATE", rungsWalked: [{ index: 0, note: "Observed alternate roster" }], candidates: [{ routeId: "new-official-roster", title: "Alternative official roster", url: discovered, procedure: "GET the public roster and parse its JSON records", relevance: "official roster", permission: "ALLOWED", permissionReading: "Recorded public response", evidenceArtifactIds: [observed[1]], observedOn: "2026-09-03", recordClass: "OFFICIAL_ROSTER", deterministic: true, unverified: [] }], findings: [], nextRungs: [], unverified: [], narrative: "Observed a source route; publication remains independently verified." } }];
       return { model: request.model, stop_reason: "tool_use", content, usage: { input_tokens: 100, output_tokens: 50, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 } };
-    } });
+    } }));
   await runAutonomousCoordinator(runtime, { maximum: 1, concurrency: 1, maxScoutDispatches: 1 });
   const first = (await h.repos.scoutResults.readAll()).at(-1)!;
   assert.equal(first.refusal, null, JSON.stringify(first.refusal));
   assert.equal(first.candidates.length, 1);
   assert.deepEqual(first.rebuiltExistingRoutes, []);
-  const stored = await h.repos.fieldManual.read("live");
-  const entry = stored!.value.entries.find(e => e.url === discovered)!;
+  const stored = (await h.repos.fieldManual.list()).map(row => row.value);
+  const entry = stored.find(e => e.url === discovered)!;
   assert.ok(entry, "real runtime write-back persisted the discovered route");
   const item = (await h.repos.workItems.mustRead(h.item.id)).value;
   const task = createRouteTask({ workItemId: item.id, routeId: "reuse-check", routeLabel: "Follow-up route check", target: discovered, inherited: true, now: h.now() });

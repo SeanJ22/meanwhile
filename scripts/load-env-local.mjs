@@ -5,24 +5,9 @@ import { fileURLToPath } from "node:url";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 /**
- * **`.env.local` into `process.env`, for the scripts `pnpm` runs without dotenv.**
- *
- * One implementation. It was written inside `scripts/deploy-live.mjs` and the
- * handoff needed the same thing the moment its deploy check started reading the
- * Netlify record — RULING 103: the cheapest way to have no duplicate is to move
- * the original rather than write a second.
- *
- * ## The failure that made this necessary, recorded because it was silent
- *
- * `pnpm handoff --ship` reported **no NETLIFY_AUTH_TOKEN — the deploy record
- * cannot be read** on 2026-08-25, while the token was sitting in `.env.local` and
- * `pnpm deploy:live` was reading it fine. The handoff simply never loaded the
- * file. That is a could-not-run rather than a pass, which is the correct
- * reporting — and a could-not-run caused by not looking is still a check that
- * did not run.
- *
- * **An existing value always wins.** A CI environment sets these for real, and a
- * committed-adjacent file must never override what the platform supplied.
+ * `.env.local` into `process.env`, for the scripts `pnpm` runs without dotenv.
+ * An existing value always wins: a CI environment's real values are never
+ * overridden by the file.
  */
 export function loadEnvLocal(root = ROOT) {
   const p = join(root, ".env.local");

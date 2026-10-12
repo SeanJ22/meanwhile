@@ -1,9 +1,6 @@
 /**
- * Schema v24 (2026-10-06): the spend holds are one row each in
- * `cp_spend_holds`, never one jsonb document on the budget ledger row. Sean:
- * "Split the giant single-row records into real tables, one row per item: the
- * spend ledger (holds) ... Settled holds are cleared or moved out, never
- * accumulated."
+ * The spend holds are one row each in `cp_spend_holds`, never one jsonb
+ * document on the budget ledger row.
  *
  * These tests pin: concurrent admissions on one line admit exactly what fits;
  * the database admission is called as one statement and its refusals are

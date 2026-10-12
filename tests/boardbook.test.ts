@@ -9,11 +9,7 @@ import {
 } from "../lib/sources/boardbook/index.ts";
 import type { BodySourceWiring } from "../lib/registry/source-wiring.ts";
 
-/**
- * The BoardBook adapter (item 2, the Amphitheater half) against the recorded
- * org-page fixture. Minimum row counts, never merely the absence of an error
- * — the parser returning [] on real markup must fail loudly here.
- */
+/** The BoardBook adapter against the recorded org-page fixture, with minimum row counts. */
 
 const FIXTURE = readFileSync(
   join(import.meta.dirname, "fixtures", "boardbook-amphi-2065.html"),
@@ -61,12 +57,7 @@ test("normalize emits windowed meetings with cited venues and real agenda links"
   const raw = [{ wiring: WIRING, html: FIXTURE, collectedAt: "2026-08-14T12:00:00Z" }];
   const { meetings, drops } = source.normalizeWithDrops!(raw, NOW);
 
-  // M76 (2026-08-15): the back window is now the SERVED window — 90 days,
-  // not 30 — so the four sittings this adapter used to clip at the fetch are
-  // in. Jul 14, previously "31 days back, one day outside", is one of them.
-  // The 2018 row and the spring rows are still outside 90 days and are a
-  // deliberate archive clip, not drops: the count says which is which.
-  // DB-04 (2026-10-04): the adapter now holds the 120-day window, so the two sittings between 90 and 120 days out are in too.
+  // The back window is the adapter's 120-day window; rows outside it are a deliberate archive clip, counted as such.
   const within = (days: number) => meetings.filter((m) => Math.abs(Date.parse(m.startsAt) - NOW.getTime()) <= days * 86_400_000).length;
   assert.equal(within(90), 6, "the six sittings inside 90 days are unchanged");
   assert.equal(meetings.length, 8, `${meetings.length} meetings in the 120-day window`);
@@ -90,14 +81,7 @@ test("normalize emits windowed meetings with cited venues and real agenda links"
   }
 });
 
-/*
- * CHANGED ON PURPOSE (the venue-gap class, 2026-09-23). This test used to be
- * "an unobserved venue drops the meeting" — the sitting was withheld because our
- * venue table lacked a row. The owner's rule is that a missing or unreviewed
- * place never suppresses a meeting. The sitting is now published with no pin
- * and the row's own venue spans as its named gap; it is still counted, and it
- * is still never guessed.
- */
+/* A missing or unreviewed venue never suppresses a meeting: the sitting is published with no pin and its venue as a named gap. */
 test("an unobserved venue is published with the row's own words, counted, never guessed", () => {
   const source = makeBoardBookSource([WIRING]);
   const collectedAt = "2026-08-14T12:00:00Z";

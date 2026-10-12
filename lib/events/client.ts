@@ -13,28 +13,14 @@ import {
 } from "./wire";
 
 /**
- * **THE BROWSER HALF OF BEHAVIOR CAPTURE** (S2.4, October 1, 2026).
+ * The browser half of behavior capture. Surfaces record through `captureEvent`;
+ * this batches events and sends them to `/api/events` after a short quiet
+ * period, at twenty events, or when the page is hidden or closed (`sendBeacon`).
+ * A batch keeps one id across retries, so a retry never double-counts; after
+ * three failures it is dropped. Nothing here throws into the page.
  *
- * Every surface records what a reader did through `captureEvent`; this module
- * batches them and sends one request, never one per click or per scroll tick.
- * The batch goes to `/api/events`, which writes S6.8's event store.
- *
- * ## Batching
- *
- * Events wait in memory and go out after a short quiet period, when twenty have
- * gathered, or when the page is hidden or closed (`sendBeacon`, so a closing
- * tab still delivers). A batch keeps ONE id across retries: the store drops a
- * batch it has already counted, so a retry after a lost response can never
- * double-count. A batch that fails three times is dropped — losing events must
- * never cost the reader anything, and nothing here ever throws into the page.
- *
- * ## What is sent, and what is not
- *
- * The returning-reader ID (random, on the device, its own slot, digested by the
- * server) and the events: type, time, ZIP, division, how the ZIP was reached,
- * the card, how long it was in view, a reaction, a pick. No name, no address, no
- * cookie. The exact time rides with each event; the server keeps it internally
- * and publishes only day and week totals.
+ * Sent: the returning-reader ID (random, on the device, digested by the
+ * server) and the events. No name, address or cookie.
  */
 
 const ENDPOINT = "/api/events";

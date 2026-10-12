@@ -1,30 +1,3 @@
-/**
- * The New Jersey filed-candidate parser, guarded against a recorded document.
- *
- * The branch shipped in NJ Hunt with no test at all, and the next run of it
- * found four separate parse defects in one document — three of which put wrong
- * words into rows about NAMED REAL PEOPLE and named governments:
- *
- *  1. `No Nomination Made <Party>` — the clerk's way of recording a seat a
- *     party filed nobody for — bled into the FOLLOWING contest's jurisdiction,
- *     so twenty candidates were filed under places like `Made Democratic Butler
- *     Borough`.
- *  2. The page-one table header did the same thing, producing `City State Zip
- *     Email` as a municipality for the four US Senate candidates.
- *  3. The office heading's all-caps run ate the next word's leading capital, so
- *     `NO LOCAL ELECTION Roxbury Township` was published as a statement about a
- *     municipality called `Township`.
- *  4. Hyphenated names truncated: `Parsippany-Troy Hills Township` became `Troy
- *     Hills Township`, which is not a government.
- *
- * And the same read found something the parser had been DISCARDING: 36 seats
- * where the filing authority states in the document that a party filed nobody.
- * That is publishable information about whether a race is contested, and it is
- * now returned rather than dropped.
- *
- * The fixture is the text layer of the Morris County Clerk's 2026-08-21
- * revision, recorded as bytes. `tests/fixtures/` takes no live calls.
- */
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -62,8 +35,6 @@ function parse() {
 test("the document yields a real number of candidates, not merely no error", () => {
   const { candidates } = parse();
   // A minimum, not an equality: the clerk republishes and the count grows.
-  // Asserting the absence of an error is what let a zero-row parse read as a
-  // clean run five separate times in this project.
   assert.ok(candidates.length >= 130, `only ${candidates.length} candidates parsed`);
   assert.ok(
     candidates.filter((c) => c.email).length >= 120,
@@ -83,19 +54,6 @@ test("no candidate is filed under document furniture instead of a place", () => 
   );
 });
 
-/**
- * A jurisdiction is a place name, a congressional district, or EMPTY.
- *
- * Empty is the honest answer for a federal office: the clerk's list heads
- * municipal rows with a municipality and heads the US Senate rows with nothing,
- * because the Senate is not a municipal contest. Before the header strip those
- * four rows read `City State Zip Email`, which looked like a place and was one
- * of the twenty polluted rows.
- *
- * So empty is allowed and CONSTRAINED: it may occur only on a federal office. A
- * blank municipality on a borough council row would be a parse failure wearing
- * the same face.
- */
 test("every jurisdiction is a plausible place name, or empty only on a federal office", () => {
   const { candidates } = parse();
   const PLACE = /^(?:[A-Z][A-Za-z.'-]*(?:[-/ ][A-Za-z.'-]+)*|\d+(?:st|nd|rd|th) Congressional|New Jersey)$/;
@@ -133,13 +91,6 @@ test("the four Rockaway Borough council candidates parse with their filed contac
   }
 });
 
-/**
- * BURNSIDE is the specific row the first defect corrupted — the fragment that
- * bled into her jurisdiction read `Made Democratic`, immediately before a
- * Republican candidate's name. Nothing shipped it, but a party label on a named
- * person is exactly the class of claim that must never be one regex away from
- * wrong.
- */
 test("a candidate's party is never taken from the preceding unfilled-seat row", () => {
   const { candidates } = parse();
   const burnside = candidates.find((c) => c.familyName === "BURNSIDE");
@@ -191,40 +142,13 @@ test("a document with no office headings is ZERO_ROWS with a reason, not success
   assert.match(String(out.reason), /grammar/);
 });
 
-/* ========================================================================== *
- *  THE MAYOR DEFECT — nine contests, eleven candidates, and seven phantoms
- *  (2026-08-25, the final pass.)
- * ========================================================================== */
-
-/**
- * The document's own row grammar: `<Jurisdiction> <ALL-CAPS OFFICE> <term>
- * <seats> <payload>`. Anchored on the Title-Case-to-CAPS transition, so a
- * candidate's capitalised SURNAME — which is preceded by a Title-Case given
- * name and followed by a party — cannot match.
- *
- * This is deliberately NOT a list of headings. Reading a list of headings we
- * already knew is exactly what missed `MAYOR` for the whole life of the parser.
- */
+// Row grammar: `<Jurisdiction> <ALL-CAPS OFFICE> <term> <seats> <payload>`, anchored on the
+// Title-Case-to-CAPS transition so a capitalised surname cannot match.
 const ROW_GRAMMAR =
   /[a-z]\s+((?:[A-Z][A-Z.'\-/]*|-|WARD|\d)(?:\s+(?:[A-Z][A-Z.'\-/]*|-|WARD|\d))*?)\s+\d{1,2}\s+\d{1,2}\s+[A-Z]/g;
 
 test("every office-heading SHAPE the DOCUMENT exposes is recognised as a heading", () => {
-  /*
-   * The guard that would have caught this without anyone knowing to look.
-   *
-   * `MAYOR` was not in `OFFICE_RE`'s opener list, so a `MAYOR` heading was not
-   * a heading: it stayed inside the previous contest's body and `NAME_RE` read
-   * it as a person — the Title-Case run before it became a given name and the
-   * capitals became a surname. Six phantom candidates reached the rendered
-   * ballot, a seventh swallowed a whole row (`Morris Plains Borough MAYOR 4 1
-   * Jason C. KARR` as one person's name), nine mayoral contests rendered
-   * nowhere, and eleven real named candidates were absent from the product.
-   *
-   * So the shapes are read from the fixture rather than declared here, and each
-   * one must produce at least one parsed row that names it as its office. A new
-   * heading the clerk introduces next year fails this test on the day the
-   * fixture is re-recorded, which is the point.
-   */
+  // Heading shapes are read from the fixture, not declared, so a new heading fails here.
   const flat = text.replace(/\s+/g, " ");
   const shapes = new Set<string>();
   for (const m of flat.matchAll(ROW_GRAMMAR)) shapes.add(m[1].trim().replace(/\s+/g, " "));
@@ -264,18 +188,7 @@ test("no candidate's NAME is an office heading, a term count, or a seat count", 
 });
 
 test("the parser's count matches an INDEPENDENT count of the same document", () => {
-  /*
-   * RULING 111 and RULING 114, offline. `nj:filing:check` compared our parse
-   * against our parse and reported `AGREES` on 272 against 272 while four
-   * candidacies were missing and six were fictional. The count of filed email
-   * addresses depends on none of this project's reading — not the heading list,
-   * not the name pattern, not the jurisdiction tail — and it read the true
-   * number the whole time.
-   *
-   * OCCURRENCES, never distinct: a joint ticket files one shared mailbox
-   * (`rowlandandmchugh4chathamtwp@gmail.com`), and counting distinct values
-   * would lose one of the two candidates it belongs to.
-   */
+  // Occurrences, not distinct values: a joint ticket files one shared mailbox.
   const emails = text.match(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g)?.length ?? 0;
   assert.ok(emails > 100, `the fixture carries only ${emails} email(s) — the instrument is broken, not the parser`);
   const { candidates } = parse();
@@ -310,8 +223,6 @@ test("all nine mayoral contests parse, with the candidates the clerk names", () 
     ],
     "the nine municipalities electing a mayor in this filing",
   );
-  // The two CONTESTED ones, named — a mayoral race with two candidates is the
-  // case a reader most needs and the one this defect hid most completely.
   assert.deepEqual(byPlace.get("Morris Plains Borough")?.sort(), ["Jason C. KARR", "Nancy VERGA"]);
   assert.deepEqual(byPlace.get("Wharton Borough")?.sort(), ["Robin GHEBREAL", "Vincent BINKOSKI"]);
 });

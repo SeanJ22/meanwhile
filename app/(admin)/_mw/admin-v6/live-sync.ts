@@ -1,25 +1,13 @@
 /**
- * **KEEPS AN OPEN PAGE'S SECTIONS IN STEP WITH WHAT THE BACKEND CAN SERVE.**
+ * Driven only by the existing pulse loop; there is no second poller.
  *
- * Driven only by the existing pulse loop (`useLiveConnection` hands every good
- * pulse to `onPulse`). There is no second polling loop and no per-card timer.
- *
- *   not announced          "waiting for the backend" (recoverable, never zero)
+ *   not announced          waiting (recoverable, never zero)
  *   announced, new/moved   fetch that one section for the current scope
- *   200 + right contract   live data replaces whatever was shown
- *   401 / 403              access denied: shown, NOT retried until the next
- *                          announcement change or scope change
- *   contract mismatch/409  incompatible version: shown, not retried
- *   network / 404 / 5xx    temporary failure: last good data kept (stale), up to
- *                          3 retries at 2 s, 8 s, 30 s, then wait for the next
- *                          revision change
+ *   401 / 403              access denied; not retried until the announcement or scope changes
+ *   contract mismatch/409  incompatible version; not retried
+ *   network / 404 / 5xx    keep last good data; up to 3 retries at 2 s, 8 s, 30 s
  *
- * One read per section in flight at a time; a later request supersedes an
- * earlier one, and a response for an old scope or an older request is dropped.
- * Changing scope clears data that belonged to the old scope, so an old headline
- * can never sit on new rows. It never sends an action.
- *
- * PURE apart from the injected fetch and timer.
+ * One read per section in flight; a response for an old scope or an older request is dropped.
  */
 import { capabilitiesOf, PAGE_LIMIT, PAGED_SECTIONS, sectionContract, SECTION_IDS, type SectionId, type SectionPage, type V6Capabilities } from "./contract.ts";
 import type { Dependency, Sourced } from "./model.ts";
@@ -50,7 +38,6 @@ interface Slot {
   inFlight: AbortController | null;
   retry: (() => void) | null;
   gaveUpAt: string | null;
-  /** Server-side search, filters and cursor for a paged section. */
   params: Readonly<Record<string, string>>;
 }
 
@@ -104,7 +91,6 @@ export class LiveSync {
     slot.state = { ...slot.state, ...next };
   }
 
-  /** A new scope: drop the old scope's data and read every announced section again. */
   setScope(scope: string) {
     if (scope === this.scope) return;
     this.scope = scope;
@@ -122,10 +108,6 @@ export class LiveSync {
     this.emit();
   }
 
-  /**
-   * Server-side search, filters or a cursor for one paged section. Reads that
-   * one window again; the rest of the population is never fetched.
-   */
   setParams(id: SectionId, params: Readonly<Record<string, string>>) {
     const slot = this.slots.get(id)!;
     const clean = Object.fromEntries(Object.entries(params).filter(([, v]) => v !== ""));
@@ -137,7 +119,6 @@ export class LiveSync {
     if (this.caps?.sections[id]) { this.read(id); this.emit(); }
   }
 
-  /** Every successful pulse. Reads only what is announced and has moved. */
   onPulse(pulse: unknown) {
     const rev = (pulse as { revision?: unknown } | null)?.revision;
     this.lastRevision = typeof rev === "string" ? rev : null;
@@ -184,7 +165,6 @@ export class LiveSync {
     if (changed) this.emit();
   }
 
-  /** After a lost connection comes back: read every announced section once more. */
   catchUp() {
     for (const [id, slot] of this.slots) {
       if (this.caps?.sections[id] && slot.inFlight === null && slot.state.phase !== "denied" && slot.state.phase !== "incompatible") this.read(id);
@@ -284,7 +264,6 @@ function pageOf(raw: unknown): SectionPage | null {
 
 export const WAITING_DEP_SUFFIX = " This part turns on by itself as soon as the backend offers it. You don’t need to reload or change anything.";
 
-/** Turn a section's sync state into what the screens read. */
 export function toSourced<T>(state: SectionState, dep: Dependency, fallback: T | null = null): Sourced<T> {
   switch (state.phase) {
     case "live":

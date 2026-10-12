@@ -1,20 +1,9 @@
 /**
- * **THE REGISTERED REDIRECT URI.** (RULING 245, 2026-09-02.)
+ * The registered redirect URI: `ADMIN_ORIGIN` + `OAUTH_CALLBACK_PATH`, never the request's own host.
+ * Every decision is `completeGoogleCallback` in `lib/control-plane/admin-google.ts`.
  *
- * `ADMIN_ORIGIN` + `OAUTH_CALLBACK_PATH`, exactly as registered on the OAuth
- * client — the admin host or nothing, never the request's own. Google sends
- * the browser here with `code` and `state`; this route exchanges the code
- * server-side, verifies the ID token against Google's keys, and admits
- * exactly the enrolled owner by issuing the EXISTING session cookie. Every
- * decision is `completeGoogleCallback` in `lib/control-plane/admin-google.ts`;
- * this file is the Next-shaped rim around it.
- *
- * On every outcome the state cookie is cleared. On failure the browser goes
- * to `/admin/login?why=<class>` — the class, never the token, the code, the
- * email Google asserted, or the error text Google sent.
- *
- * Nothing about a token or a code is logged. The one log line names the
- * class and, for an exchange failure, the HTTP status Google returned.
+ * The state cookie is cleared on every outcome. On failure the browser goes to `/admin/login?why=<class>`:
+ * the class only, never a token, code, email or Google's error text. Nothing about a token or code is logged.
  */
 
 import { NextResponse, type NextRequest } from "next/server";

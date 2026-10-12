@@ -1,8 +1,3 @@
-/**
- * **REAL REFERENCE DATA FOR THE LIVE PAGE.** Server-side: the states and
- * territories the Admin tracks and the adopted checklist definitions, as plain
- * data the client component can take as props.
- */
 import { CHECKLIST_PROFILE } from "@/lib/control-plane/readiness/checklist-score.ts";
 import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
 import { districtLabelOf } from "@/lib/control-plane/admin-view/district-label.ts";

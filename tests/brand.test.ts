@@ -4,30 +4,18 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { PRODUCT_NAME, titleFor } from "../lib/brand.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { sourceUserAgent } from "../lib/sources/http.ts";
+import { acquireKnownRelease } from "../lib/sources/known-release.ts";
+import { fetchBodies } from "../lib/sources/legistar/client.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 const OLD_NAME = /We[ -]the[ -]People/i;
 
-/**
- * B01 interim, 2026-08-17 — the name lives in one place.
- *
- * The rename was a task rather than an edit because "We the People" was
- * written out longhand in eight files and twelve places. Interim means it is
- * expected to move again, so what these guards protect is not the string but
- * the SHAPE: one constant, no literals on reader surfaces, and the repo's own
- * off-site identity untouched.
- */
+/** The product name lives in one constant; no literal appears on reader surfaces, and the repo's off-site identity is untouched. */
 
-/**
- * Every file a reader's browser can be served from.
- *
- * `app/api/` is deliberately NOT one. Those routes send OUTBOUND requests to
- * other people's servers, and `app/api/geocode/route.ts` identifies this
- * product to the Census geocoder with `we-the-people-civic-app/0.1` — an
- * off-site identifier, on the same footing as the repo URL in the source
- * adapters' User-Agents, and covered by the last test in this file rather than
- * this one. Renaming it would change who we say we are to a public body.
- */
+/** Every file a reader's browser can be served from. app/api/ is not one: its outbound User-Agent is an off-site identifier, covered by the last tests. */
 function readerSurfaces(): string[] {
   const out: string[] = [];
   const walk = (dir: string) => {
@@ -92,30 +80,11 @@ test("no reader surface hardcodes the new name either", () => {
 });
 
 test("the repo's off-site identity is deliberately unchanged", () => {
-  // Renaming the repository would break every URL pointing at it, and the
-  // outbound User-Agent this product sends to public bodies carries that URL
-  // as its contact route. A body with our identifier in last week's logs must
-  // find the same identifier this week. So these keep the old token ON PURPOSE
-  // and this test is the record of that decision, not an oversight.
-  /*
-   * **The list shrank on 2026-08-23, and the shrink is the fix rather than a
-   * loss of coverage** (RULING 103). The Congress, Legistar and Plural
-   * adapters each carried a byte-identical copy of the User-Agent function —
-   * four implementations of "who is calling", which `CLAUDE.md` makes law.
-   * They now import `sourceUserAgent` from `lib/sources/http.ts`, so the token
-   * lives in ONE home and the three call sites cannot drift from it.
-   *
-   * This is the same move the comment below already records for
-   * `lib/geo/outbound-agent.ts`: one home for the string, one place this
-   * check has to look. The guard asserting the string in a file that no longer
-   * declares it would be asserting a copy back into existence.
-   */
+  // The outbound User-Agent carries the repo URL as its contact route, so it keeps the old token on purpose: a public body must find the same identifier in its logs.
+  /* The token lives in one home that the adapters import, so the call sites cannot drift. */
   for (const path of [
     join("lib", "sources", "http.ts"),
-    // The outbound User-Agent both geocoder-calling routes send, same
-    // reasoning. It moved out of app/api/geocode/route.ts in g21 when a
-    // second route needed it: one home for the string, one exemption in
-    // tests/feedback.test.ts, one place this check has to look.
+    // The outbound User-Agent both geocoder-calling routes send.
     join("lib", "geo", "outbound-agent.ts"),
   ]) {
     const source = readFileSync(join(ROOT, path), "utf8");
@@ -128,34 +97,22 @@ test("the repo's off-site identity is deliberately unchanged", () => {
   }
 });
 
-test("the three adapters that lost their copy still SEND the repo-derived token", () => {
-  /*
-   * The other half of the shrink above, and the half that makes it safe. A
-   * public body must find the same identifier in this week's logs as in last
-   * week's — so it is not enough that the string lives somewhere; these three
-   * adapters have to be reaching it. RULING 103's consolidation is only
-   * correct if the call sites still call.
-   */
-  for (const path of [
-    join("lib", "sources", "congress", "index.ts"),
-    join("lib", "sources", "legistar", "client.ts"),
-    join("lib", "sources", "plural", "index.ts"),
-  ]) {
-    const source = readFileSync(join(ROOT, path), "utf8");
-    assert.match(
-      source,
-      /import \{[^}]*sourceUserAgent[^}]*\} from "\.\.?\/(?:\.\.\/)?http\.ts"/,
-      `${path} does not import the shared User-Agent`,
-    );
-    assert.match(
-      source,
-      /"User-Agent": sourceUserAgent\(\)/,
-      `${path} imports the shared User-Agent and does not send it`,
-    );
-    assert.doesNotMatch(
-      source,
-      /function userAgent\(\)/,
-      `${path} has grown its own copy back — four copies is what RULING 103 removed`,
-    );
+test("Legistar and the shared known-release transport send the repo-derived token", async () => {
+  const requests: { url: string; userAgent: string | null }[] = [];
+  const fetchImpl: typeof fetch = async (url, init) => {
+    requests.push({ url: String(url), userAgent: new Headers(init?.headers).get("user-agent") });
+    return new Response("[]", { headers: { "content-type": "application/json" } });
+  };
+  await fetchBodies("fixture", { fetchImpl });
+  await acquireKnownRelease({
+    sourceId: "plural-openstates", releaseId: "current", parserVersion: "plural-roster/2",
+    url: "https://publisher.example/people.json", signal: AbortSignal.timeout(10_000),
+    maxBytes: 1024, checkAfterMs: 86_400_000, fetchImpl,
+    store: new MemoryEvidenceStore(), locks: createMemoryRepositories().locks,
+  });
+  assert.equal(requests.length, 2, "both actual request paths must be exercised");
+  for (const request of requests) {
+    assert.equal(request.userAgent, sourceUserAgent(), `${request.url} must send the shared source identity`);
+    assert.match(request.userAgent!, /we-the-people/);
   }
 });

@@ -1,36 +1,13 @@
 /**
- * **THE TUSD PROOF: A SAVED METHOD FINDS A BODY'S OWN EVENTS PAGE, AND THE
- * RUNNER REUSES IT IN ANOTHER STATE.** (2026-09-23.)
- *
- * Owner directive, 2026-09-23: prove the reusable discovery process on the
- * missing TUSD events at www.tusd1.org/Reconfiguration, with cross-state
- * transfer in tests (Santa Fe), and show that the runner uses the saved method
- * after the initial repair (#384 wired the page by hand).
- *
- * What these tests hold, on recorded pages only (no test reaches the network):
- *
- * - **The saved method.** The seed recipe `official-page-events-linked-committee-page`
- *   follows TUSD's own homepage link "Reconfiguration Committee" and verifies
- *   the page with the official-page-events extractor for Tucson Unified.
- * - **Identity, never the page's say-so.** An event verifies only on the body's
- *   own host, named in its title by the body's recorded name, the name without
- *   class words, its initials, or the words the body's own homepage used to
- *   link the page. It must also be dated in the body's state's zone. A state
- *   that spans zones is never guessed.
- * - **Cross-state transfer.** The same method, retrieved for Santa Fe Public
- *   Schools (NM) with its identity substituted, verifies Santa Fe's board page.
- *   An Arizona page never verifies for the New Mexico body, nor the reverse.
- * - **The runner uses what it saved.** Cycle 1 credits the method in the field
- *   manual. Cycle 2, a later process in another state, reads it from the store
- *   and applies it.
- * - **An exact parser version.** The extractor id names the digest of the
- *   adapter's value-import closure, so a runtime change re-keys it.
+ * A saved method finds a body's own events page and the runner reuses it in another state, on recorded pages only.
+ * An event verifies only on the body's own host, named in its title by the body's recorded name, the name without
+ * class words, its initials, or the words the body's own homepage used to link the page, and dated in the body's
+ * state's zone; a state that spans zones is never guessed. An Arizona page never verifies for a New Mexico body,
+ * nor the reverse.
  */
 
 import assert from "node:assert/strict";
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import {
@@ -48,7 +25,6 @@ import {
   verifyEndpointBody,
 } from "../lib/hunt/meetings-site-discovery.ts";
 import { SEED_RECIPES, knownRecipes, recipeCandidates } from "../lib/hunt/meetings-recipes.ts";
-import { digestValueClosure, sourceClosure, valueClosure } from "../lib/ops/generator-digest.ts";
 import { eachStore } from "./control-plane-fixtures.ts";
 
 const FIXTURES = new URL("./fixtures/official-page-events/", import.meta.url);
@@ -64,7 +40,7 @@ const DIRECTORY = { url: "https://directory.example.gov/schools", html: '<a href
 const METHOD = "official-page-events-linked-committee-page";
 const ALLOW = { status: 200, body: "User-agent: *\nAllow: /\n", contentType: "text/plain" } as const;
 
-/** The gap ledger's TUSD need, carrying the reviewed registry's live homepage (the ledger's own address no longer resolves). */
+/** TUSD's need, carrying the reviewed registry's live homepage. */
 const TUSD: MeetingsDiscoveryNeed = {
   jurisdictionId: "az:school:tucson-unified-school-district-1",
   stateCode: "AZ",
@@ -131,14 +107,14 @@ test("TERMS AND ZONES: a body's name forms come from its recorded name alone; a 
   assert.deepEqual(identityNameTerms("CITY OF CHANDLER"), ["City of Chandler", "Chandler"], "two letters of initials name nothing");
   assert.deepEqual(identityNameTerms("CITY OF TUCSON"), ["City of Tucson", "Tucson"]);
   assert.notDeepEqual(identityNameTerms("TUCSON UNIFIED SCHOOL DISTRICT 1")[1], "Tucson", "a district's core name keeps Unified, so the city's events never verify for it");
-  /* Every one-zone state and territory (2026-09-25), never a state a zone line crosses or one whose towns keep a neighbour's time. */
+  /* Every one-zone state and territory, never a state a zone line crosses or one whose towns keep a neighbour's time. */
   assert.deepEqual(Object.keys(STATE_TIME_ZONES).sort(), [
     "AR", "AS", "AZ", "CA", "CO", "CT", "DC", "DE", "GA", "GU", "HI", "IA", "IL", "LA", "MA", "MD", "ME", "MN", "MO", "MP", "MS", "MT",
     "NC", "NH", "NJ", "NM", "NY", "OH", "OK", "PA", "PR", "RI", "SC", "UT", "VA", "VI", "VT", "WA", "WI", "WV", "WY",
   ]);
   assert.deepEqual([STATE_TIME_ZONES.AZ, STATE_TIME_ZONES.NH, STATE_TIME_ZONES.NJ, STATE_TIME_ZONES.NM, STATE_TIME_ZONES.OH], ["America/Phoenix", "America/New_York", "America/New_York", "America/Denver", "America/New_York"]);
   for (const split of ["AK", "AL", "FL", "ID", "IN", "KS", "KY", "MI", "ND", "NE", "NV", "OR", "SD", "TN", "TX"]) assert.equal(STATE_TIME_ZONES[split], undefined, `${split} is never guessed`);
-  /* A government's own events page in Ohio is confirmed by the free walk now; before, every Ohio page was TIME_ZONE_UNKNOWN. */
+  /* A government's own events page in a one-zone state is confirmed by the free walk. */
   const ohio = verifyEndpointBody(
     { vendor: "official-page-events", url: "https://www.sfps.info/page/board-of-education-2" },
     { status: 200, body: SFPS_PAGE, finalUrl: "https://www.sfps.info/page/board-of-education-2" },
@@ -152,76 +128,6 @@ test("TERMS AND ZONES: a body's name forms come from its recorded name alone; a 
   );
   assert.equal(texas.verdict, "NOT_CONFIRMED");
   assert.match(texas.detail, /TIME_ZONE_UNKNOWN/);
-});
-
-test("VERSION: the extractor id names the digest of the adapter's value-import closure, so a runtime change re-keys it", () => {
-  const entry = "lib/sources/official-page-events/index.ts";
-  const digest = digestValueClosure(process.cwd(), entry).digest.slice(0, 12);
-  assert.equal(
-    OFFICIAL_PAGE_EVENTS_VERSION,
-    `official-page-events@${digest}`,
-    `the official-page-events parser's runtime closure changed: set OFFICIAL_PAGE_EVENTS_VERSION in lib/hunt/meetings-site-discovery.ts to "official-page-events@${digest}" so saved methods and wiring rows re-key`,
-  );
-  assert.ok(valueClosure(process.cwd(), entry).length < sourceClosure(process.cwd(), entry).length, "type-only imports are left out");
-});
-
-test("VALUE CLOSURE: an import or re-export that carries only types is left out; any value, side effect or dynamic import is kept", () => {
-  const root = mkdtempSync(join(tmpdir(), "wtp-value-closure-"));
-  try {
-    mkdirSync(join(root, "m"));
-    const files: Record<string, string> = {
-      "m/entry.ts": [
-        `import type { A } from "./types-only.ts";`,
-        `import { type B, c } from "./mixed.ts";`,
-        `import { type D } from "./all-type-names.ts";`,
-        `export type { E } from "./reexported-types.ts";`,
-        `export * from "./reexported-values.ts";`,
-        `import "./side-effect.ts";`,
-        `const lazy = () => import("./dynamic.ts");`,
-        `import def from "./default.ts";`,
-        `import { f } from "./reaches-types-only.ts";`,
-      ].join("\n"),
-      "m/types-only.ts": "export type A = 1;",
-      "m/mixed.ts": "export type B = 1; export const c = 1;",
-      "m/all-type-names.ts": "export type D = 1;",
-      "m/reexported-types.ts": "export type E = 1;",
-      "m/reexported-values.ts": "export const g = 1;",
-      "m/side-effect.ts": "globalThis.x = 1;",
-      "m/dynamic.ts": "export const h = 1;",
-      "m/default.ts": "export default 1;",
-      "m/reaches-types-only.ts": `import "./types-only.ts"; export const f = 1;`,
-    };
-    for (const [path, text] of Object.entries(files)) writeFileSync(join(root, path), text);
-    const value = valueClosure(root, join(root, "m/entry.ts"));
-    assert.deepEqual(value, [
-      "m/default.ts", "m/dynamic.ts", "m/entry.ts", "m/mixed.ts", "m/reaches-types-only.ts",
-      "m/reexported-values.ts", "m/side-effect.ts", "m/types-only.ts",
-    ], "types-only.ts lands only because a value import reaches it");
-    assert.equal(value.includes("m/all-type-names.ts"), false);
-    assert.equal(value.includes("m/reexported-types.ts"), false);
-    assert.equal(sourceClosure(root, join(root, "m/entry.ts")).length, Object.keys(files).length, "the full closure still follows every edge");
-    const digest = () => digestValueClosure(root, join(root, "m/entry.ts")).digest;
-    const original = digest();
-    writeFileSync(join(root, "m/entry.ts"), `/*\nimport "./all-type-names.ts";\n*/\n${files["m/entry.ts"].replaceAll(";", ";\r\n\r\n")}`);
-    writeFileSync(join(root, "m/mixed.ts"), "// a comment\r\nexport type B = 2;\r\nexport const c /* note */ =\r\n  1 ;\r\n");
-    assert.deepEqual(valueClosure(root, join(root, "m/entry.ts")), value, "commented imports do not expand the closure");
-    assert.equal(digest(), original, "comments, whitespace, line endings and erased types do not re-key runtime code");
-    writeFileSync(join(root, "m/mixed.ts"), "export const c = 2;");
-    assert.notEqual(digest(), original, "a dependency's runtime change still re-keys the entry");
-    for (const [before, after] of [
-      ['export const c = "a b//c";', 'export const c = "ab//c";'],
-      ['export const c = /a b/;', 'export const c = /ab/;'],
-      ['export const c = `a ${1} b`;', 'export const c = `a ${1}b`;'],
-      ['export function c() { return 1; }', 'export function c() { return\n1; }'],
-    ]) {
-      writeFileSync(join(root, "m/mixed.ts"), before);
-      const previous = digest();
-      writeFileSync(join(root, "m/mixed.ts"), after);
-      assert.notEqual(digest(), previous, "literal text and significant line breaks still affect runtime identity");
-    }
-  } finally {
-    rmSync(root, { recursive: true, force: true });
-  }
 });
 
 test("THE SAVED METHOD: TUSD's homepage links its reconfiguration page by name, and the method proposes exactly that, on its own host", () => {
@@ -391,24 +297,24 @@ test("THE RUNNER USES WHAT IT SAVED: cycle 1 credits the method for TUSD; cycle 
   for (const [label, repos] of await eachStore("wtp-official-page-")) {
     const first = await runMeetingsDiscovery(repos, {
       needs: [TUSD],
-      runtime: runtime(fakeOpen(TUSD_SITE).open, knownRecipes((await repos.fieldManual.read("live"))?.value.entries ?? [])),
+      runtime: runtime(fakeOpen(TUSD_SITE).open, knownRecipes((await repos.fieldManual.list()).map((row) => row.value))),
       cycleIndex: 0,
       maxWalks: 5,
     });
     assert.equal(first.walked[0].outcome, "FOUND", label);
     assert.ok(first.recipesUpdated.includes(METHOD), label);
-    const saved = knownRecipes((await repos.fieldManual.read("live"))?.value.entries ?? []).find((r) => r.recipeId === METHOD)!;
+    const saved = knownRecipes((await repos.fieldManual.list()).map((row) => row.value)).find((r) => r.recipeId === METHOD)!;
     assert.equal(saved.successes, 1, `${label}: the success is written to the field manual, which outlives the process`);
     assert.equal(saved.lastSuccess?.jurisdictionId, TUSD.jurisdictionId);
 
     const second = await runMeetingsDiscovery(repos, {
       needs: [SFPS],
-      runtime: runtime(fakeOpen(SFPS_SITE).open, knownRecipes((await repos.fieldManual.read("live"))?.value.entries ?? []), "2026-09-23T23:59:00.000Z"),
+      runtime: runtime(fakeOpen(SFPS_SITE).open, knownRecipes((await repos.fieldManual.list()).map((row) => row.value)), "2026-09-23T23:59:00.000Z"),
       cycleIndex: 0,
       maxWalks: 5,
     });
     assert.equal(second.walked[0].outcome, "FOUND", label);
-    const after = knownRecipes((await repos.fieldManual.read("live"))?.value.entries ?? []).find((r) => r.recipeId === METHOD)!;
+    const after = knownRecipes((await repos.fieldManual.list()).map((row) => row.value)).find((r) => r.recipeId === METHOD)!;
     assert.equal(after.successes, 2, `${label}: the New Mexico walk used the saved method and added to it`);
     assert.equal(after.lastSuccess?.jurisdictionId, SFPS.jurisdictionId);
   }

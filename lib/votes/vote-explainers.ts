@@ -1,19 +1,9 @@
 /**
- * Vote-type explainers (4b) — what kind of vote a roll call was, in plain
- * words, keyed data like the office blurbs.
- *
- * The defect this exists for: a member voting "yes" then "no" on the same
- * act reads as incoherence until the reader knows one vote was passage and
- * the other a motion to recommit. Every rendered vote row states its type
- * in the 15-year-old register.
- *
- * The `basis` fields cite the parliamentary definitions — in this data
- * file, never on the surface (the reader gets plain words; the citation is
- * for whoever maintains these).
- *
- * Matching is on the chamber's own question line ("On Passage", "On
- * Cloture on the Motion to Proceed"). An unmatched question renders no
- * explainer — never a guessed one.
+ * Vote-type explainers — what kind of vote a roll call was, in plain words, so
+ * a "yes" on passage and a "no" on a motion to recommit do not read as
+ * incoherence. `basis` cites the parliamentary definition for maintainers and
+ * never renders. Matching is on the chamber's own question line ("On
+ * Passage"); an unmatched question renders no explainer.
  */
 
 export interface VoteExplainer {
@@ -21,11 +11,7 @@ export interface VoteExplainer {
   match: RegExp;
   /** The plain-words statement of what this vote decides. */
   plain: string;
-  /**
-   * 5b (2026-08-17): what a No vote mechanically did on this vote type —
-   * one line, mechanical, never evaluative. Derived from the same
-   * parliamentary definition as `plain`; rendered on every vote row.
-   */
+  /** What a No vote mechanically did on this vote type; one line, never evaluative. */
   noMeans: string;
   /** Where the parliamentary definition lives. Data-file citation only. */
   basis: string;

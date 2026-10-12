@@ -7,15 +7,15 @@ import { validateRuntimeConfig } from "./pilot-runtime-config.mjs";
 const root = resolve(process.env.WTP_RUNTIME_REPO ?? process.cwd());
 const envFile = resolve(root, ".env.local");
 const staging = process.env.WTP_RUNTIME_MODE !== "production";
-// Recover with bare Node before pilot-runner imports any changed dependencies.
+const sha = execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim();
+if (!staging) validateRuntimeConfig({ repoPath: root, envFile, expectedSha: sha });
+// Only an admitted checkout may recover installation state.
 const { resumeRuntimeReleaseInstall } = await import("../lib/ops/runtime-release-handoff.ts");
 const recoveredInstall = resumeRuntimeReleaseInstall({ root });
 if (recoveredInstall?.state === "REFUSED") {
   process.stderr.write(`Runtime install recovery failed: ${recoveredInstall.code}\n`);
   process.exit(2);
 }
-const sha = execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim();
-if (!staging) validateRuntimeConfig({ repoPath: root, envFile, expectedSha: sha });
 const child = spawn(process.execPath, [
   `--env-file=${envFile}`, "--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs",
   "scripts/pilot-runner.mts", ...(staging ? ["--staging"] : ["--release-handoff"]), ...process.argv.slice(2),

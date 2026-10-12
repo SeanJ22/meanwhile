@@ -1,18 +1,10 @@
 import type { CommitteeTypeLabel } from "./committee-types.ts";
 
 /**
- * The pill family for each funding type label (design pass item 2b,
- * 2026-08-15, the author's spec). THIS FILE IS THE WHOLE ASSIGNMENT —
- * a type's color is decided here and nowhere else, so the same type is
- * always the same color on every surface.
- *
- * The families live in app/globals.css (--pill-<family>-text/bg per
- * theme) and deliberately never use or approach the party palette:
- * teals, cyans, ambers, golds, slates and warm stones only, so no
- * committee type reads as partisan and no color implies good or bad
- * money. Assignment within the allowed families is arbitrary; related
- * types share a family on purpose (the independent-expenditure pair in
- * amber, the connected-PAC cluster spread for scan-ability).
+ * The pill colour family for each funding type label; the whole assignment.
+ * Families live in app/globals.css (--pill-<family>-text/bg per theme) and
+ * never approach the party palette, so no type reads as partisan or as good
+ * or bad money.
  */
 export type PillFamily =
   | "teal"
@@ -40,10 +32,7 @@ const PILL_FAMILY_BY_TYPE_ID: Readonly<Record<string, PillFamily>> = {
   organization: "stone",
 };
 
-/** The CSS class pair for a typed label's pill. Unmapped ids get the
- *  neutral stone family rather than an error — a new label renders
- *  legibly the day it is added, and the test that pins this table to
- *  COMMITTEE_TYPE_LABELS is what keeps the map complete. */
+/** The CSS class pair for a typed label's pill. Unmapped ids get the neutral stone family. */
 export function pillClassFor(label: CommitteeTypeLabel): string {
   return `pill pill--${PILL_FAMILY_BY_TYPE_ID[label.id] ?? "stone"}`;
 }

@@ -11,11 +11,9 @@ import {
 import type { BodySourceWiring } from "../lib/registry/source-wiring.ts";
 
 /**
- * ParentSquare SmartSites, first tenant Sunnyside USD — against the district
- * calendar JSON recorded 2026-09-23 (tests/fixtures/smartsites/retrieval.json).
- * Built and NOT wired: this file proves what the permitted route carries and,
- * as importantly, what it does not (no per-sitting place), which is the reason
- * the Sunnyside cutover is held for the owner rather than made.
+ * ParentSquare SmartSites, against a recorded district calendar
+ * (tests/fixtures/smartsites/retrieval.json). Built and NOT wired: this proves
+ * what the route carries and what it does not (no per-sitting place).
  */
 
 const FIXTURES = join(import.meta.dirname, "fixtures", "smartsites");
@@ -25,7 +23,7 @@ const BODY = JSON.parse(readFileSync(join(FIXTURES, "susd12-calendar-150042-even
   data: { events: SmartSitesEvent[]; site_timezone: string };
 };
 
-// Built for the test only — no SOURCE_WIRING row names this adapter.
+// Built for the test only — no meeting door names this adapter.
 const WIRING: BodySourceWiring = {
   bodyId: "ocd-division/country:us/state:az/school_district:sunnyside_unified_district#board",
   ocdId: "ocd-division/country:us/state:az/school_district:sunnyside_unified_district",
@@ -53,9 +51,8 @@ const RAW = [{
 }];
 
 /**
- * The twelve sittings production held from the district's robots-disallowed
- * Diligent tenant on 2026-09-23 (read read-only from the promoted partition),
- * as Phoenix wall clocks. The permitted calendar must carry each one.
+ * The twelve sittings held from the district's Diligent tenant, as Phoenix wall
+ * clocks. The calendar must carry each one.
  */
 const HELD_FROM_DILIGENT = [
   "2026-07-07T16:30", "2026-07-28T18:30", "2026-08-04T11:30", "2026-08-11T18:30",
@@ -87,12 +84,9 @@ test("every sitting the disallowed tenant carried is on the permitted calendar, 
 });
 
 /*
- * CHANGED ON PURPOSE (the venue-gap class, 2026-09-23). This test used to be
- * "a sitting whose own event states no place is dropped and counted" and pinned
- * that only the Virtual sitting survived. The owner's rule is that a missing
- * place never suppresses a verified meeting. The twelve sittings are now
- * published with no pin and the district's own silence as their named gap; the
- * half that stays pinned is that the standing sentence never places them.
+ * A missing place never suppresses a verified meeting: the sittings publish with
+ * no pin and the district's silence as their named gap, and the standing
+ * sentence never places them.
  */
 test("a sitting whose own event states no place is published with the district's gap, counted, never placed by the standing sentence", () => {
   const source = makeSmartSitesSource([WIRING]);

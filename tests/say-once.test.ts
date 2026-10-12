@@ -6,7 +6,6 @@ import { gapsNotInAnswer } from "../lib/text/say-once.ts";
 const gap = (statement: string) => ({ whose: "OURS" as const, statement });
 
 test("S2.4: Ask says each gap once", () => {
-  // 10001: the answer's own clause and the gap entry were the same fact.
   const answer = "We have not recorded who your state senator is yet.";
   assert.deepEqual(
     gapsNotInAnswer(answer, [gap("We have not recorded who holds the office of state senator for your area yet.")]),

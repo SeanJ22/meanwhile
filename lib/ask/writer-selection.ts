@@ -1,76 +1,17 @@
 import type { EvidencePack, EvidenceRecord } from "./evidence.ts";
 
-/**
- * **WHAT THE ANSWER-WRITING MODEL IS SENT: A BOUNDED, RELEVANT SELECTION OF
- * THE RECORDS THE READER IS SHOWN.** (2026-09-25, the Ask latency repair.)
- *
- * Measured on production read-only data 2026-09-25: *"What did the Pima County
- * Board of Supervisors decide at its last meeting?"* sent the synthesis model
- * 108,678 input tokens — 240 per-member vote rows (150,029 of the 228,293
- * characters it was given) beside the 51 recorded actions that actually say
- * what was decided. It cost $0.69, took 7.7 s, and the answer was then
- * rejected for length. Every member-vote row repeats its roll call's source
- * link, date and publisher; the rows of five members on one item are one fact
- * about that item, written five times.
- *
- * So the writer is sent every record EXCEPT per-member vote rows beyond a
- * bound, and those are cut only by whole roll call — never half a roll call,
- * which would misstate how a vote went:
- *
- * - The route already orders member-vote rows by relevance
- *   (`lib/ask/meeting-outcomes.ts`: a roll call whose item the question names
- *   first, then divided votes, then agenda order). Roll calls are kept in that
- *   order until the next whole roll call would pass `WRITER_MEMBER_VOTE_ROWS`;
- *   the first roll call is always kept whole.
- * - The recorded actions — the clerk's disposition and tally text — are never
- *   cut, so "what was decided" and each item's tally always reach the writer.
- * - The writer is told, in `writerSelection`, exactly how many rows and roll
- *   calls it was given and how many exist, and that the reader sees them all.
- *   The pack's own denominators (`personVotesHeldForThatMeeting`,
- *   `rollCallItemsHeldForThatMeeting`, ...) are untouched and still state the
- *   full counts.
- *
- * What does NOT change: the records the reader sees (`payload.records`) stay
- * complete, the validator checks the answer against the WHOLE pack, and a
- * failed check fails closed exactly as before. This module only decides what
- * one model call reads.
- */
-
-/**
- * The most per-member vote rows the answer-writing model is sent: three to
- * five roll calls of a five-to-nine-member body. Measured 2026-09-25 with the
- * fast writer on the Pima sitting: 240 rows was 108,678 input tokens (7.7 s on
- * Opus 5); 40 rows, 36,964 tokens (2.9 s on Haiku 4.5) — each ~10k input
- * tokens costs the reader about 0.3 s before the first word.
- */
 export const WRITER_MEMBER_VOTE_ROWS = 24;
 
-/**
- * **A PERSON'S VOTES ARE SENT AS THE ONES THE QUESTION IS ABOUT.** (2026-09-29, S3.)
- *
- * Measured on staging that day, *"How did Juan Ciscomani vote on the budget?"*
- * sent the fast writer 104 records — 39 roll calls, 36 key-vote contexts, 12 key-vote
- * positions and 6 bill summaries, about 36,000 tokens. Haiku 4.5 did not answer in
- * its 6 s budget, the escalation writer took another 5.6 s, and the reader waited
- * 11.6 s for an answer that names three votes. The same rule as the sitting's
- * member votes applies: the records the reader is shown stay whole, and the writer
- * is sent the most relevant of them — those whose own words share a content word
- * with the question ("budget"), newest first — up to `WRITER_PERSON_VOTE_RECORDS`,
- * with each kept key-vote position's context beside it, and is told exactly what it
- * was not given.
- */
 export const WRITER_PERSON_VOTE_RECORDS = 16;
 
 const PERSON_VOTE_KINDS: ReadonlySet<EvidenceRecord["kind"]> = new Set(["ROLL_CALL_VOTE", "KEY_VOTE_POSITION", "KEY_VOTE_CONTEXT", "BILL_SUMMARY"]);
 
-/** Words that name what is asked rather than what it is about. */
 const QUESTION_WORDS: ReadonlySet<string> = new Set([
   "how", "did", "does", "what", "when", "where", "which", "that", "this", "with", "from", "have", "has", "been", "were", "was", "are", "the", "and", "for",
   "vote", "voted", "votes", "voting", "record", "position", "stance", "about", "their", "they", "them", "tell", "show", "give", "recent", "recently", "last",
   "past", "time", "times", "ever", "always", "member", "representative", "senator", "congress", "house", "legislature", "bill", "bills", "law", "laws",
 ]);
 
-/** The content words of a question, without the subject's own name, lightly stemmed. */
 function contentTerms(question: string, subjectName: string): string[] {
   const name = new Set(subjectName.toLowerCase().split(/[^a-z]+/));
   const words = question.toLowerCase().split(/[^a-z0-9]+/).filter((word) => word.length >= 4 && !QUESTION_WORDS.has(word) && !name.has(word));
@@ -78,16 +19,12 @@ function contentTerms(question: string, subjectName: string): string[] {
 }
 
 export interface WriterSelection {
-  /** The records the writer is sent, in pack order. */
   records: EvidenceRecord[];
-  /** What was held back and why, as the writer is told it. Null when nothing was. */
   note: string | null;
-  /** Counts for the trace and the proofs. Zero when nothing was withheld. */
   withheld: { memberVoteRows: number; rollCalls: number; personVoteRecords?: number };
   shown: { memberVoteRows: number; rollCalls: number; personVoteRecords?: number };
 }
 
-/** The person-vote records the writer is sent, or null when the family fits the bound. */
 function personVoteSelection(pack: Pick<EvidencePack, "records"> & Partial<Pick<EvidencePack, "question" | "subject">>): { kept: Set<EvidenceRecord>; total: number } | null {
   const family = pack.records.filter((record) => PERSON_VOTE_KINDS.has(record.kind));
   if (family.length <= WRITER_PERSON_VOTE_RECORDS) return null;
@@ -116,13 +53,6 @@ function rollCallOf(record: EvidenceRecord): string {
   return at > 0 ? record.id.slice(0, at) : record.id;
 }
 
-/**
- * **THE PROOF OF WHAT THE WRITER WAS SENT.** For the reader-proof harnesses,
- * which assert the model input. `writerRecords` is what the synthesis context
- * payload actually carries; it must be exactly this module's selection of the
- * pack, and every record the reader sees that the writer was not sent must be
- * a per-member vote row, counted here and still present in `payloadRecords`.
- */
 export function writerInputProof(
   pack: Pick<EvidencePack, "records"> & Partial<Pick<EvidencePack, "question" | "subject">>,
   payloadRecords: readonly EvidenceRecord[],

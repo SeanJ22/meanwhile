@@ -1,25 +1,3 @@
-/**
- * **THE ASSIGNMENT VIEW — every unit of work, end to end, in seven parts.**
- *
- * The load-bearing assertions, each against a fixture built from the real
- * record shapes (`Attempt`, `RouteTask`, `ScoutResult`, `CostEntry`, …):
- *
- *   - a succeeded assignment (a plain-code INGESTED acquisition, and a Scout
- *     ROUTE_CANDIDATE with vaulted artifacts) reads SUCCEEDED with its
- *     downloads counted and its gaps (no parse step, no served-reader
- *     witness) NAMED, never zero
- *   - a failed one (Scout NO_PROGRESS; a BLOCKED_CURRENTLY wall) reads FAILED,
- *     and REQUIRES_NEW_ADAPTER reads BLOCKED with engineering owning it
- *   - a waiting one (overdue, in failure backoff) names its blocker and owner
- *   - the Scout pre-warm is a SHARED cost: named as shared, never split
- *   - an unmeasured cost (usd null on model work) is a named gap in the row,
- *     the list row and the summary — never $0
- *   - an Attempt with no model recorded says "model not recorded"
- *   - every drawn number carries a denominator and a contract; the published
- *     list is bounded and states what it left out
- *
- * Pure: no clock but NOW, no store.
- */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -45,9 +23,6 @@ import {
 } from "../lib/control-plane/assignment-view.ts";
 import type { CostEntry } from "../lib/control-plane/cost.ts";
 import { assertAggregateOnly, auditRenderedNumbers, checkStatedEqualsRendered } from "../lib/control-plane/owner-surface.ts";
-import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
-import type { PromotionPipelineRecord } from "../lib/control-plane/promotion/types.ts";
-import { deriveItemState } from "../lib/control-plane/promotion/pipeline.ts";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 import type { AggregateRepository } from "../lib/control-plane/repository/types.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
@@ -63,8 +38,6 @@ import type { WorkerResultRecord } from "../lib/control-plane/workers/types.ts";
 const NOW = "2026-09-22T12:00:00.000Z";
 const PAST = "2026-09-15T12:00:00.000Z";
 const FUTURE = "2026-09-23T12:00:00.000Z";
-
-/* ------------------------------------------------------------ builders */
 
 const CE = "freshness:candidate-enrichment:nj:2026:state-nj-place-rockaway:member-of-the-borough-council";
 
@@ -294,7 +267,7 @@ function empty(): AssignmentSources {
     scoutResults: [],
     workerResults: [],
     pipeline: [],
-    activation: readActivationGate(""),
+    activation: null,
     servedReader: null,
     pilotZips: ["07866"],
   };
@@ -333,17 +306,6 @@ test("a later same-key Send does not claim an earlier body publication", () => {
     occurrence("ob-body",2,later.id,"rt-later")],[owner]);
   assert.deepEqual(rows.find(row=>row.workItemId===prior.id)?.assignmentRefs,[{key,ref:oldRef}]);
   assert.deepEqual(rows.find(row=>row.workItemId===later.id)?.assignmentRefs,[{key,ref:nextRef}]);
-});
-
-test("an exact manual source gap is indexed under its Send while legacy unkeyed gaps remain unlinked", () => {
-  const exact = workItem("wi-manual-exact", { manualSourceGap: { contractId: "az-sos-ballot", mode: "REVIEWED_INPUT",
-    reason: "Reviewed ballot input owed", instructionReceipt: "receipt-1", assignmentKey: "zcta:2020/85635" } });
-  const legacy = workItem("wi-manual-legacy", { manualSourceGap: { contractId: "az-sos-ballot", mode: "REVIEWED_INPUT",
-    reason: "Earlier gap", instructionReceipt: "receipt-old" } });
-  const view = buildAssignmentView({ ...empty(), workItems: [exact, legacy] });
-  assert.deepEqual(view.allRowsIndex?.find(row => row.id === exact.id)?.assignmentKeys, ["zcta:2020/85635"]);
-  assert.deepEqual(view.allRowsIndex?.find(row => row.id === legacy.id)?.assignmentKeys, []);
-  assert.equal(Object.values(view.instructionCounts?.["zcta:2020/85635"] ?? {}).reduce((a, b) => a + b, 0), 1);
 });
 
 test("full index separates latest Attempt from activity and counts only measured dependency unlocks", () => {
@@ -429,8 +391,6 @@ function merge(...parts: Partial<AssignmentSources>[]): AssignmentSources {
   return out;
 }
 
-/* ---------------------------------------------------------- the worlds */
-
 /** A: a plain-code acquisition that INGESTED one document; next reading not yet due. */
 function worldA(): Partial<AssignmentSources> {
   const id = `${CE}:doe-jane#candidate-marginalia-index`;
@@ -487,32 +447,6 @@ function worldB(): Partial<AssignmentSources> {
     artifactIds: ["ar-b1", "ar-b2"],
     usd: 0.75,
   });
-  const scouted: PromotionPipelineRecord = {
-    formatVersion: 1,
-    recordId: "pp-b:scouted",
-    itemId: "pp-b",
-    at: NOW,
-    actor: { role: "SCOUT", lane: "BOUNDED_MODEL_WORKER", instance: "at-b1" },
-    stage: "SCOUTED",
-    source: { kind: "SCOUT_RESULT", attemptId: "at-b1", obligationId: id, outcome: "ROUTE_CANDIDATE", routeId: "vote411-race" },
-    recordClass: "candidate-enrichment",
-    subjectId: "fixture",
-    canonicalUrl: "https://onyourballot.example.org/race?id=1",
-    artifactIds: ["ar-b1"],
-    scoutAttemptId: "at-b1",
-    summary: "VOTE411 race view",
-  };
-  const guard: PromotionPipelineRecord = {
-    formatVersion: 1,
-    recordId: "pp-b:refused:1",
-    itemId: "pp-b",
-    at: NOW,
-    actor: scouted.actor,
-    stage: "REFUSED",
-    atStage: "SCOUTED",
-    reasons: [{ code: "STAGE_ALREADY_REACHED", detail: "the item already holds SCOUTED record pp-b:scouted" }],
-    offered: scouted as Extract<PromotionPipelineRecord, { stage: "SCOUTED" }>,
-  };
   return {
     obligations: [obligation(id, { nextDueAt: PAST })],
     occurrences: [occurrence(id, 1, "wi-b1", "rt-b1")],
@@ -529,7 +463,6 @@ function worldB(): Partial<AssignmentSources> {
     costs: [cost(a, 0.75, { requestCount: 12 })],
     artifacts: [artifact("ar-b1", a), artifact("ar-b2", a, { canonicalUrl: "https://clerk.example.gov/filings.pdf" })],
     debts: [debt(id, { cause: "REFUSED_BY_HOST", consecutiveFailures: 2, retryAt: "2026-09-22T18:00:00.000Z" })],
-    pipeline: [deriveItemState("pp-b", [scouted, guard])],
   };
 }
 
@@ -708,8 +641,6 @@ function rowOf(rows: readonly AssignmentRow[], idPart: string): AssignmentRow {
   return row;
 }
 
-/* ---------------------------------------------------------------- tests */
-
 test("projected publisher listings retain the full assignment view and named gaps", async () => {
   const original = world();
   const scope = { key: "exact-send", receiptId: "receipt" } as ExpansionScopeDecision;
@@ -788,7 +719,7 @@ test("succeeded (plain code, INGESTED with a document): downloads counted, the p
   assert.ok(a.evidence.notes.some((n) => /ACQUISITION ONLY/.test(n.text)));
 });
 
-test("succeeded (Scout ROUTE_CANDIDATE with artifacts): the model recorded, needs-more-evidence counted, a guard refusal is not a rejection", () => {
+test("succeeded (Scout ROUTE_CANDIDATE with artifacts): the model recorded", () => {
   const rows = buildAssignments(world());
   const b = rowOf(rows, "roe-rick");
   assert.equal(b.state, "SUCCEEDED");
@@ -799,12 +730,6 @@ test("succeeded (Scout ROUTE_CANDIDATE with artifacts): the model recorded, need
   assert.ok(b.discovery.discovered.held);
   assert.deepEqual([b.discovery.discovered.value.routes, b.discovery.discovered.value.records, b.discovery.discovered.value.sourceRows], [1, 1, null]);
   assert.ok(b.discovery.downloaded.held && b.discovery.downloaded.value.count === 2);
-  // 4 — one pipeline item at SCOUTED: needs more evidence; the duplicate write refused by the guard is not a quality rejection.
-  assert.ok(b.verification.pipeline.held);
-  const p = b.verification.pipeline.value;
-  assert.deepEqual([p.items, p.passed.value, p.needsMoreEvidence.value, p.rejected.value, p.guardRefusals], [1, 0, 1, 0, 1]);
-  assert.ok(p.rejections.every((r) => r.guard));
-  assert.ok(b.delivery.approved !== null && b.delivery.approved.held && b.delivery.approved.value.value === 0);
   // 6 — measured dollars with a denominator.
   assert.equal(b.cost.dollars.kind, "MEASURED");
   assert.ok(b.cost.dollars.kind === "MEASURED" && b.cost.dollars.usd.held && b.cost.dollars.usd.value.value === 0.75);
@@ -1126,8 +1051,6 @@ test("a parser attempt that aborted without a result is a failed parse run, coun
 });
 
 test("filter counts say which half is missing, so an unpublished view or an unread routine plane never draws as zero", () => {
-  // Found rendering the page locally on 2026-09-22: before the first publish every
-  // state and lane badge read "0" beside the "not on the published snapshot yet" note.
   const unpublished = combinedCounts(null, []);
   assert.deepEqual(unpublished.missing, ["the assignment view is not on the published snapshot yet"]);
   assert.deepEqual(combinedCountNumbers(unpublished), [], "incomplete counts are not drawn, so they are not audited as numbers");

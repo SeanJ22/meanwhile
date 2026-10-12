@@ -1,40 +1,15 @@
 /**
- * **RUNG 6, AS A COMMAND** (built 2026-08-21, NH Hunt 6 item 3).
+ * Rung 6 as a command: the live browser with JavaScript executed and content
+ * awaited, walked deliberately whatever rung 2 said (a JS-rendered page can
+ * answer rung 2 with HTTP 200 and an empty detail region).
  *
  * ```
  * pnpm rung6 <url> [--out <file>] [--wait <ms>] [--selector <css>] [--html]
  * ```
  *
- * `CLAUDE.md`'s rung 6: *the LIVE BROWSER with JavaScript executed and content
- * awaited. A page that renders for a human renders for us. A plain fetch
- * returning nothing on a JS-rendered page is a FALSE MISS, not a wall.*
- *
- * ## Why `pnpm ladder` does not cover this
- *
- * The ladder stops climbing at the first rung that READS the document, and it
- * decides "read" from the HTTP status and the byte count. That is right for a
- * wall and wrong for a false miss. `gc.nh.gov`'s member page answers rung 2 at
- * HTTP 200 with 29 KB of chrome and an EMPTY detail region — the member's name,
- * address, email and phone are all written in by script after load. The ladder
- * calls that a read, stops, and hands back a document containing none of the
- * facts it was fetched for. Sutton's calendar, every Wix contact page, and the
- * whole JS-rendered class behave the same way.
- *
- * So this is rung 6 walked DELIBERATELY, whatever rung 2 said. It is not a
- * replacement for the ladder — it is the rung the ladder skips when a cheaper
- * rung answers with the wrong bytes.
- *
- * ## What it reports
- *
- * The rendered text, and separately the counts: bytes before script ran against
- * bytes after, and the contacts found in the RENDERED DOM including the ones
- * living only in an `href` (the Kearsarge lesson — nine board emails sat in
- * `mailto:` links after two sessions recorded them as honest absences). A run
- * whose after-count equals its before-count has found a page that was never
- * JS-rendered, and says so rather than implying the browser earned something.
- *
- * The browser is opened through `scripts/browser.mts` (R50) so the run declares
- * itself and cannot write an undeclared row.
+ * Reports the rendered text, bytes before script ran against bytes after, and
+ * the contacts in the rendered DOM including those only in an `href`. The
+ * browser is opened through `scripts/browser.mts`, so the run declares itself.
  */
 import { writeFileSync } from "node:fs";
 
@@ -101,11 +76,7 @@ const inText = {
   emails: [...new Set(text.match(EMAIL) ?? [])].filter((e) => !NOISE.test(e)),
   phones: [...new Set(text.match(PHONE) ?? [])],
 };
-/*
- * The Kearsarge lesson, made mechanical: a contact can be in the href and not
- * in the cell, and a session reading only the visible text records an honest
- * absence that was never absent.
- */
+/* A contact can be in the href and not in the cell. */
 const inHref = {
   emails: [
     ...new Set(
@@ -124,14 +95,7 @@ console.log(`  title          ${title || "(none)"}`);
 console.log(`  rung 2         HTTP ${beforeStatus}, ${beforeBytes} bytes`);
 console.log(`  rung 6         ${renderedHtml.length} bytes rendered, ${text.length} chars of text`);
 
-/*
- * A REFUSAL AT RUNG 6 IS NOT 'THE BROWSER ADDED NOTHING'.
- *
- * gc.nh.gov answers rung 2 at HTTP 200 and blocks the live browser at a WAF —
- * the inverse of the usual shape, and the first run of this script called it
- * 'not JS-rendered' because the byte count went down. A block that reads as a
- * clean measurement is the empty-success shape wearing a browser's clothes.
- */
+/* A refusal at rung 6 (a WAF blocking the browser) is not "the browser added nothing". */
 const blocked = /error 40[13]|web page blocked|access denied|attack id|are you human|just a moment/i.test(
   `${title} ${text.slice(0, 600)}`,
 );

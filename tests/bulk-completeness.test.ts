@@ -31,9 +31,7 @@ test("shortTransfer passes a transfer that reconciles, and one with no declared 
 });
 
 test("shortTransfer never fires on a compressed body — Content-Length is the WIRE size there", () => {
-  // The measurement that made this necessary: a 55 KB body can arrive under a
-  // `content-length: 177` when gzip'd, and comparing the two would refuse every
-  // compressed response. Completeness of a decoded body is a record-count job.
+  // A gzip body arrives under a smaller content-length, so a decoded body's completeness is a record-count job.
   assert.equal(
     shortTransfer(new Headers({ "content-length": "3", "content-encoding": "gzip" }), "abcdefghij"),
     null,
@@ -50,8 +48,7 @@ test("shortTransfer never fires on a compressed body — Content-Length is the W
 });
 
 test("acsTableTooShort refuses a table below its scope floor and passes a complete one", () => {
-  // The floors sit well below the live counts (state 52, zcta 33,772) and far
-  // above zero, so a partial or error-page table is refused and a real one is not.
+  // The floors sit well below the live counts and far above zero.
   assert.equal(ACS_ROW_FLOOR.state, 50);
   assert.equal(ACS_ROW_FLOOR.zcta, 30_000);
 

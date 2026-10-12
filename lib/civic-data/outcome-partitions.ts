@@ -1,16 +1,3 @@
-/**
- * DB-22: outcomes are a capability of a door kind, not of a place.
- *
- * A door of kind `legistar` (the Legistar Web API) or `legistar-insite` (the portal's calendar and minutes) that holds
- * `outcomes` as well as `meetings` collects the body's agenda actions, decisions and roll calls, in its own scope and
- * under its own pointer, with no code release. The two per-place contracts that came first (`pima-legistar-outcomes`,
- * `mesa-legistar-minutes-outcomes`) stay as they are until a live read of the door-built contracts matches them: a
- * door that names the same body and route as one of them is not built twice.
- *
- * The contracts are rebuilt from the registry's doors at the start of a pass (`refreshDoorsForPass`), swapped in only
- * when every one builds, so a door that cannot be built leaves the previous list in place. With the registry switch
- * off the list is empty and nothing changes.
- */
 import { MEETING_SITTING_WINDOW, type RoutineSourceContract } from "./contracts.ts";
 import { VALIDATION_CHECKS } from "./types.ts";
 import { meetingAcquisitionFailureDomain, meetingPartitionId, setExtraSittingWindowSources } from "./meeting-partitions.ts";
@@ -24,30 +11,22 @@ import { setDoorOutcomePointers } from "../outcomes/door-outcome-pointers.ts";
 const HOUR = 60 * 60 * 1_000;
 const DAY = 24 * HOUR;
 
-/** The source authority every door-built outcome contract promotes under (`source-authority.ts`). */
 export const DOOR_OUTCOMES_SOURCE_ID = "door-outcomes" as const;
 
-/** The hold a door names to collect outcomes. */
 export const OUTCOMES_HOLD = "outcomes";
 
 export const OUTCOME_DOOR_KINDS = ["legistar", "legistar-insite"] as const;
 export type OutcomeDoorKind = (typeof OUTCOME_DOOR_KINDS)[number];
 
-/**
- * Routes the per-place contracts already read. A door on one of these is served by that contract until the door-built
- * one is checked live against it; building both would write each sitting twice.
- */
+/** A door on one of these routes is served by that contract; building both would write each sitting twice. */
 const STILL_ON_PLACE_CONTRACT: ReadonlySet<string> = new Set(["legistar:pima", "legistar-insite:mesa"]);
 
 export interface OutcomePartitionContract extends RoutineSourceContract {
-  /** The meeting door this partition reads, i.e. its meeting partition id. */
   readonly doorId: string;
   readonly kind: OutcomeDoorKind;
   readonly bodyId: string;
   readonly tenant: OutcomeTenant;
-  /** The wiring row the door describes; the ingest builds its Legistar client from it. */
   readonly wiring: BodySourceWiring;
-  /** The Legistar event body id to read when the door names one, else the whole tenant's events. */
   readonly eventBodyId: number | null;
 }
 
@@ -63,7 +42,6 @@ export function isOutcomePartitionScope(scope: string): boolean {
   return scope.startsWith("door:") && scope.endsWith(":outcomes");
 }
 
-/** `ocd-division/country:us/state:az/county:pima` -> `US-AZ`; null when the id names no state. */
 export function stateJurisdictionOf(ocdId: string): string | null {
   const state = /\/state:([a-z]{2})(?:\/|$)/.exec(ocdId)?.[1];
   return state ? `US-${state.toUpperCase()}` : null;
@@ -99,7 +77,6 @@ function outcomeDoorKind(door: DoorRecord): OutcomeDoorKind | null {
   return (OUTCOME_DOOR_KINDS as readonly string[]).includes(door.kind) ? (door.kind as OutcomeDoorKind) : null;
 }
 
-/** The doors that collect outcomes: a Legistar kind, a meeting door, holding `outcomes`, not suspended. */
 export function outcomeDoors(doors: readonly DoorRecord[]): readonly DoorRecord[] {
   return doors.filter((door) =>
     door.status !== "SUSPENDED" && door.meeting != null && door.meeting.family === null && door.bodyIds.length === 1 &&
@@ -108,7 +85,6 @@ export function outcomeDoors(doors: readonly DoorRecord[]): readonly DoorRecord[
 
 export interface OutcomePartitionBuild {
   readonly contracts: OutcomePartitionContract[];
-  /** Doors left out, each with the reason in a sentence. One door that cannot be built never holds back another. */
   readonly skipped: readonly { readonly doorId: string; readonly why: string }[];
 }
 
@@ -148,12 +124,14 @@ function buildOne(door: DoorRecord): OutcomePartitionContract | null {
   const tenant = tenantFor(row, kind, id, scope);
   const body = row.config.eventBodyId?.trim();
   const eventBodyId = kind === "legistar" && body && /^\d+$/.test(body) ? Number(body) : null;
+  if (kind === "legistar" && eventBodyId === null && !row.config.eventBodyName?.trim() && !row.config.insiteBodyName?.trim()) {
+    throw new Error(`OUTCOME_DOOR_NATIVE_BODY_UNRESOLVED:${row.bodyId}`);
+  }
   return {
     id,
     sourceId: DOOR_OUTCOMES_SOURCE_ID,
     recordClass: "MEETING_OUTCOME",
     scope,
-    // The body's own lane: its outcomes are read from the host its meetings are, one request at a time.
     acquisitionFailureDomain: meetingAcquisitionFailureDomain(kind, row),
     acquisitionAdapter: {
       authorityMode: "SINGLE_ROUTE",
@@ -165,13 +143,11 @@ function buildOne(door: DoorRecord): OutcomePartitionContract | null {
       requestedUrl: tenant.requestedUrl,
     },
     parserNormalizerVersion: tenant.parserVersion,
-    // Reader freshness as the per-place outcomes: the twelve-hour re-read plus one failed retry lands inside it.
     cadence: {
       description: "fresh for fourteen hours through the 2026 general election, then a day",
       defaultEveryMs: DAY,
       phases: [{ through: "2026-11-04T00:00:00.000Z", everyMs: 14 * HOUR, description: "fourteen hours through 2026-11-03" }],
     },
-    // Re-reads follow the body's sittings, which its meeting door carries.
     schedule: { ...MEETING_SITTING_WINDOW, follows: [{ meetingSource: kind, bodyId: door.bodyIds[0] }] },
     retry: { afterMs: HOUR, description: "one hour after a failed events, items, votes or minutes attempt" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: DOOR_OUTCOMES_SOURCE_ID },
@@ -193,15 +169,11 @@ function buildOne(door: DoorRecord): OutcomePartitionContract | null {
   };
 }
 
-/** The door-built outcome contracts in use now; empty until the registry's doors are read. Replaced in place. */
 export const OUTCOME_PARTITION_CONTRACTS: OutcomePartitionContract[] = [];
 
 let outcomePartitionsCurrent = false;
 
-/**
- * Whether this process built its list from a registry read. A publisher that combines the doors' outcomes for the
- * Reader must not publish from an empty list that only means "the doors were not read"; it carries what is served.
- */
+/** False means the doors were not read; a publisher must not treat the empty list as "no outcomes". */
 export function outcomePartitionsAreCurrent(): boolean {
   return outcomePartitionsCurrent;
 }
@@ -209,15 +181,11 @@ export function outcomePartitionsAreCurrent(): boolean {
 export interface OutcomePartitionRefresh {
   readonly refreshed: boolean;
   readonly partitions: number;
-  /** Doors left out of this pass, with why; empty when every door built. */
   readonly skipped: readonly { readonly doorId: string; readonly why: string }[];
   readonly reason: string | null;
 }
 
-/**
- * Rebuild the list from the doors in use. Built first and swapped in only if every door builds, so a door that cannot
- * be built (no slug, no state, a collision) leaves the last good list in place.
- */
+/** Swapped in only if every door builds; otherwise the last good list stays. */
 export function refreshOutcomePartitions(doors: readonly DoorRecord[]): OutcomePartitionRefresh {
   try {
     const { contracts, skipped } = buildOutcomePartitions(doors);

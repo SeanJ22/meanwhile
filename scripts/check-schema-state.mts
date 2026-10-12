@@ -1,28 +1,19 @@
 /**
  * `pnpm db:check` — does a database have the migrations this checkout commits?
- *
- * **Prompt D item 6.1, 2026-08-20. D73's class, at the other end.**
- * `app/api/schema/route.ts` answers the same question from inside the running
- * deploy, for the walk. This answers it from CI and from the scheduled jobs,
- * which have a database credential and run on a clock — so a migration
- * committed and not applied fails loudly within a day rather than waiting for
- * somebody to open a session.
+ * Runs from CI and the scheduled jobs, so a migration committed and not applied
+ * fails loudly within a day (`app/api/schema/route.ts` answers the same
+ * question from inside a deploy).
  *
  * Run:
  *   corepack pnpm db:check                      # DATABASE_URL (the local branch)
  *   corepack pnpm db:check --target=production  # WTP_PRODUCTION_DATABASE_URL_READONLY
  *
- * READONLY on purpose: this asks a question and must never be able to answer it
- * by applying something. Applying is `pnpm db:apply`, which resolves a
- * different variable through `lib/db/write-handle.ts` and refuses this one.
- *
- * ## What it prints, and the empty-success shape it refuses
+ * READONLY on purpose: this must never be able to answer by applying
+ * something (that is `pnpm db:apply`).
  *
  * Counts on both sides, always, and the missing tags BY NAME. A run that could
- * not read the migrations table exits 2 — COULD NOT READ, distinct from exit 1's
- * OUT OF SYNC — because an unreadable answer must never print as a passing one.
- * That distinction is the whole reason this file exists rather than a one-line
- * query in a workflow.
+ * not read the migrations table exits 2 (COULD NOT READ), distinct from exit
+ * 1 (OUT OF SYNC).
  */
 import { join } from "node:path";
 
@@ -54,12 +45,8 @@ if (!connection) {
 
 const journal = readJournal();
 
-/*
- * ONE READER (2026-08-28). The `neon(...)` and the SELECT used to live here and
- * again in `scripts/db-shipping-gate.mts`. They are `lib/db/applied-migrations.ts`
- * now — same query, same distinction between an unreadable table and an empty
- * one, and no way for the two callers to learn different things about a failure.
- */
+/* The query lives in `lib/db/applied-migrations.ts`, shared with
+ * `scripts/db-shipping-gate.mts`. */
 const read = await readAppliedMigrationWhen(connection);
 if (!read.ok) {
   console.error(`db:check: COULD NOT READ drizzle.__drizzle_migrations — ${read.why}`);

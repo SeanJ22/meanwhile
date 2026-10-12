@@ -1,5 +1,5 @@
 /**
- * **THE "CONTROLS CHANGED" WAKE HINT NEVER CHANGES WHAT AN ACTION DID.** After an
+ * The "controls changed" wake hint never changes what an action did. After an
  * action is durably applied the shared writer overwrites one hint object; a hint
  * that fails or hangs leaves the action's result exactly as it was, a refusal
  * writes none, and replaying an applied action writes it again.

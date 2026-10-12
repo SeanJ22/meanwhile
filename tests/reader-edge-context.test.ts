@@ -6,41 +6,28 @@ import { after, test } from "node:test";
 
 import { publishReaderEdgeArtifacts, type PublishAuthority } from "../lib/meetings/edge-serving.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
-import { readSnapshot } from "../lib/meetings/snapshot.ts";
 import { enterReaderAuthorityEdge, currentRegistryRuntimeEdge } from "../lib/registry/runtime-edge.ts";
-import { registryRuntimeFirstSeed, registryRuntimeReadState } from "../lib/registry/runtime-read-model.ts";
-import { federalDirectoryFirstSeed, federalDirectoryReadState } from "../lib/officials/federal-directory-read-model.ts";
-import { loadedFrom, outcomeProjectionReadState, refreshOutcomeSnapshotFromPromoted } from "../lib/outcomes/store.ts";
+import { registryRuntimeReadState } from "../lib/registry/runtime-read-model.ts";
+import { federalDirectoryReadState } from "../lib/officials/federal-directory-read-model.ts";
+import { getOutcomeSnapshot, loadedFrom, outcomeProjectionReadState, refreshOutcomeSnapshotFromPromoted } from "../lib/outcomes/store.ts";
 import { curatedReaderReadState } from "../lib/civic-data/curated-reader-read-model.ts";
 import type { CuratedReaderProjection } from "../lib/civic-data/manual-projections.ts";
 import { currentCommentAccess } from "../lib/registry/comment-access.ts";
 import { settleCommentAccessRead } from "../lib/registry/server.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { installRegistryAuthority, registryTransferImport, syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
+import { installPimaOutcomes, pimaOutcomeFixture, recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
+import { september22Sitting } from "./helpers/pima-september-22-sitting.ts";
 
 /**
- * **THE READER AUTHORITY EDGE IS ENTERED WHERE ITS READS RUN.** (2026-09-24,
- * C20/C22.)
- *
- * `enterReaderAuthorityEdge` is `AsyncLocalStorage.enterWith`. On Node 24 (the
- * runtime Netlify serves, NODE_VERSION 24) a store entered inside an async
- * helper never reaches promise reactions created from the caller: a first
- * version of C20 entered the edge inside such a helper, and every registry and
- * federal-directory read chained on it would have gone to the database again
- * ("none" where the old shape saw "EDGE"). Local runs never saw it, because
- * there was no edge. These tests publish a real local edge store
- * (`WTP_READER_EDGE_DIR`) and ask the real Ask and funding routes, so the reads
- * must come from it.
- *
- * B6 (C20, later the same day): the recorded meeting outcomes and the
- * comment-access rules are edge families too. From a cold database they were
- * the slowest reads of a cold Ask (2.0–2.3 s and 0.6–0.8 s), so a request that
- * reads either from the database while the edge carries it fails here.
+ * `enterReaderAuthorityEdge` is `AsyncLocalStorage.enterWith`: on Node 24 a store entered inside an async
+ * helper never reaches promise reactions created from the caller. These tests publish a real local edge
+ * store (`WTP_READER_EDGE_DIR`) and ask the real routes, so the reads must come from it.
  */
 
 delete process.env.ANTHROPIC_API_KEY;
 for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL"]) delete process.env[key];
 process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
-await installRegistryRuntimeFirstSeeds();
+await installRegistryAuthority();
 
 const edgeDir = mkdtempSync(join(tmpdir(), "wtp-reader-edge-"));
 const previousEdgeDir = process.env.WTP_READER_EDGE_DIR;
@@ -50,12 +37,13 @@ after(() => {
   rmSync(edgeDir, { recursive: true, force: true });
 });
 
-// The validated values the edge serves: the same first seeds and test fixtures
-// the database path reads in this process.
+// The recorded Pima outcome store with the September 22 data-center sitting, promoted.
+const recordedOutcomes = pimaOutcomeFixture();
+await installPimaOutcomes({ ...recordedOutcomes, sittings: [...recordedOutcomes.sittings, september22Sitting()] });
 await refreshOutcomeSnapshotFromPromoted();
 const outcomesValue = outcomeProjectionReadState();
 assert.ok(outcomesValue.kind === "BOOTSTRAP" || outcomesValue.kind === "PROMOTED", "the outcome fixture is readable");
-// The comment-access first seed, in the projection shape the runner publishes.
+// Comment access in the projection shape the runner publishes.
 const commentAccessProjection: CuratedReaderProjection = {
   kind: "comment-access",
   records: currentCommentAccess().map((value) => ({ id: `comment-access:${value.bodyId}`, ...value }) as unknown as CuratedReaderProjection["records"][number]),
@@ -69,13 +57,13 @@ interface EdgeVersions {
 }
 
 async function publishEdge(versions: EdgeVersions): Promise<void> {
-  const snapshot = readSnapshot();
-  assert.ok(snapshot, "the bundled meetings snapshot publishes the edge's meeting scopes");
+  const snapshot = recordedMeetingsSnapshot();
+  assert.ok(snapshot.meetings.length > 0, "the recorded meetings publish the edge's meeting scopes");
   const authority: PublishAuthority = {
-    "registry-runtime": { value: registryRuntimeFirstSeed().value, versionId: versions.registry },
-    "federal-directory": { value: federalDirectoryFirstSeed().value, versionId: versions.federal },
+    "registry-runtime": { value: registryTransferImport().projection.payload, versionId: versions.registry },
+    "federal-directory": { value: syntheticFederalDirectory(), versionId: versions.federal },
     ...(versions.outcomes && (outcomesValue.kind === "BOOTSTRAP" || outcomesValue.kind === "PROMOTED")
-      ? { "meeting-outcomes": { value: outcomesValue.value, versionId: versions.outcomes } }
+      ? { "meeting-outcomes": { value: getOutcomeSnapshot(), versionId: versions.outcomes } }
       : {}),
     ...(versions.commentAccess ? { "comment-access": { value: commentAccessProjection, versionId: versions.commentAccess } } : {}),
   };
@@ -108,7 +96,9 @@ async function askPima(): Promise<{ trace: { preloads?: Record<string, number>; 
 }
 
 test("Node 24: an edge entered inside a helper never reaches the reads chained on it; entered by the caller, it does", async () => {
-  const bundle = { registryRuntime: { value: registryRuntimeFirstSeed().value, versionId: "als-probe" } };
+  const bundle = { registryRuntime: { value: registryTransferImport().projection.payload, versionId: "als-probe" } };
+  // The caller's own context starts from an edge with no registry (the module's installed one is set aside).
+  enterReaderAuthorityEdge({});
   const insideHelper = async () => {
     const entered = (async () => { await Promise.resolve(); enterReaderAuthorityEdge(bundle); })();
     return await entered.then(() => currentRegistryRuntimeEdge()?.versionId ?? "none");
@@ -128,7 +118,7 @@ test("Ask reads the registry, the federal directory and the recorded outcomes fr
   assert.ok(Number.isFinite(payload.trace.preloads?.authorityEdge), "the edge was not fetched");
   assert.equal(registryRuntimeReadState().metadata?.versionId, "edge-test:registry:1", "the registry was read from the database, not the edge");
   assert.equal(federalDirectoryReadState().metadata?.versionId, "edge-test:federal:1", "the federal directory was read from the database, not the edge");
-  assert.equal(outcomeProjectionReadState().metadata?.versionId, "edge-test:outcomes:1", "the recorded outcomes were read from the database, not the edge");
+  assert.match(outcomeProjectionReadState().detail ?? "", /edge artifact \(version edge-test:outcomes:1\)/, "the recorded outcomes were read from the database, not the edge");
   assert.equal(loadedFrom(), "DATA_PLANE", "an edge-served outcome projection is the data plane's own value, never a test fixture");
   assert.deepEqual(
     { registry: payload.trace.preloadSources?.registry, federalDirectory: payload.trace.preloadSources?.federalDirectory, outcomes: payload.trace.preloadSources?.outcomes },
@@ -142,7 +132,7 @@ test("a manifest without the outcomes family reads them from the database, and t
   await publishEdge({ registry: "edge-test:registry:2", federal: "edge-test:federal:2" });
   const payload = await askPima();
   assert.equal(payload.trace.preloadSources?.outcomes, "DATABASE");
-  assert.notEqual(outcomeProjectionReadState().metadata?.versionId, "edge-test:outcomes:1");
+  assert.doesNotMatch(outcomeProjectionReadState().detail ?? "", /edge-test:outcomes:1/);
   assert.ok(["PROMOTED", "BOOTSTRAP"].includes(outcomeProjectionReadState().kind), "the database fallback read the outcomes");
 });
 

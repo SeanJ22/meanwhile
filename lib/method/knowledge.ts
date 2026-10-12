@@ -1,28 +1,6 @@
 /**
- * Cumulative project discovery knowledge — the compounding engine.
- *
- * ## The three properties this has to make structurally true
- *
- * 1. **State N+1 never rediscovers a method state N already taught.** Routes
- *    are project knowledge, not session knowledge.
- * 2. **State N+1 is never PREVENTED from inventing a method** because state N's
- *    manifest is treated as complete. The manifest is versioned current
- *    knowledge, never a finished list.
- * 3. **A newly learned route mechanically reopens prior conclusions it would
- *    have applied to.** Not "a future session should remember to go back" —
- *    that has been the rule since RULING 61 and has never once happened.
- *
- * ## Why a new store rather than an edit to `branch-manifest.ts`
- *
- * The manifest holds 62 routes with real reasoning attached and is wired into
- * `judgeManifestWalk`, tier ordering and `isEvidencedAbsence`. Rewriting it
- * would risk the project's accumulated discovery knowledge to gain a data
- * shape, which RULING 63 forbids in as many words: *do not reset the project's
- * learned discovery system while improving its architecture.*
- *
- * So this store INGESTS the manifest rather than replacing it. Every existing
- * route arrives with its id, its tier, its prose and its sub-branches intact,
- * gains a typed portability class defaulting to `UNKNOWN`, and keeps working.
+ * Cumulative project discovery knowledge. Routes are project knowledge, never a finished list, and a newly learned
+ * route mechanically reopens prior conclusions it would have applied to.
  */
 
 import {
@@ -39,23 +17,7 @@ import {
   type PortabilityClass,
 } from "./portability.ts";
 
-/**
- * **WHEN CLAIM CLASSES BECAME REQUIRED.** (2026-08-28.)
- *
- * The store held 116 routes at method version 55 when the four claim classes
- * were adopted, and backfilling 116 entries by re-deriving what each of their
- * paragraphs was asserting would be a large act of guessing — precisely the
- * thing the classes exist to prevent. So the requirement is FORWARD, and the
- * floor is stated as the version the store stood at:
- *
- *   - a route that ENTERS project knowledge after v55 declares its classes;
- *   - a route AMENDED after the adoption date — a dated sub-branch on or after
- *     it — declares its classes, because an amendment is exactly the moment
- *     somebody decided part of an entry was wrong;
- *   - the 116 that came before are reported as UNCLASSIFIED, by number, and a
- *     consumer is told that unclassified means nobody declared a class, NOT
- *     that the entry contains no conclusion.
- */
+/** Routes entering or amended after this version must declare claim classes; earlier ones report as unclassified. */
 export const CLAIM_CLASS_REQUIRED_FROM_VERSION = 55;
 export const CLAIM_CLASS_ADOPTED_ON = "2026-08-28";
 
@@ -65,22 +27,12 @@ export interface RouteOutcome {
   /** ISO date. */
   walkedOn: string;
   rows: number;
-  /**
-   * A route that returned zero is a WALKED route, never a broken one. RULING 88
-   * is explicit: a newly conceived route returning nothing is a reported
-   * success, and the invention is the deliverable.
-   */
+  /** A route that returned zero is a walked route, never a broken one. */
   outcome: "YIELDED" | "ZERO" | "FAILED" | "BLOCKED";
   note?: string;
 }
 
-/**
- * A sub-branch — an inherited route that failed somewhere new.
- *
- * RULING 60: a branch that stops working is evidence the tree needs another
- * limb, never evidence the fact is unobtainable. It is never DELETED, because
- * deleting it would let a later session rediscover it as new.
- */
+/** An inherited route that failed somewhere new; never deleted, so it is never rediscovered as new. */
 export interface SubBranch {
   jurisdiction: string;
   failedOn: string;
@@ -90,30 +42,8 @@ export interface SubBranch {
 }
 
 /**
- * **WHAT A STORE ENTRY IS: A FETCHABLE SURFACE, OR A WAY OF THINKING.**
- * (2026-08-30.)
- *
- * The store has always held both — `legistar-insite-calendar-postback-
- * enumeration` names a URL shape a machine can walk; `reconciled-is-not-
- * complete` names a discipline a session applies to any walk — and nothing
- * typed the difference. It matters to a consumer building a route FLOOR: a
- * retrieval route can be materialised as a RouteTask against a target host,
- * while a reasoning discipline has no target and can never be "walked" — an
- * undisposed discipline on a floor is a row nobody can close.
- *
- * - `RETRIEVAL` — the entry names a retrieval mechanism: a URL, a host, a
- *   vendor surface. Evidence: the route's own record carries one.
- * - `REASONING_DISCIPLINE` — the entry is a way of interpreting or checking
- *   work, applicable across routes rather than against a host.
- *
- * **An ABSENT `kind` means nobody classified it — a named gap, exactly like an
- * absent claim class.** The mechanical populator writes `RETRIEVAL` only where
- * the record itself proves a retrieval mechanism; it never writes
- * `REASONING_DISCIPLINE`, because the absence of a URL in a record is evidence
- * about the RECORD, not about the route — a poorly recorded retrieval route and
- * a discipline read identically there, and asserting from absence is the move
- * this store exists to refuse. A discipline is classified by a person or a
- * session that read the entry, on purpose, through the amend path.
+ * `RETRIEVAL`: names a retrieval mechanism. `REASONING_DISCIPLINE`: a way of checking work, applicable across routes.
+ * Absent means unclassified; the populator writes only `RETRIEVAL`, and only where the record proves it.
  */
 export const ROUTE_KINDS = ["RETRIEVAL", "REASONING_DISCIPLINE"] as const;
 export type RouteKind = (typeof ROUTE_KINDS)[number];
@@ -121,13 +51,9 @@ export type RouteKind = (typeof ROUTE_KINDS)[number];
 export interface MethodRoute {
   id: string;
   title: string;
-  /** RULING 84 / RULING 166: A0, A1, B, C. */
+  /** A0, A1, B, C. */
   tier: "A0" | "A1" | "B" | "C";
-  /**
-   * Retrieval route or reasoning discipline. OPTIONAL: 122 entries predate the
-   * field, and an absent value is reported as UNCLASSIFIED by `method:check`
-   * rather than guessed. See `ROUTE_KINDS`.
-   */
+  /** Retrieval route or reasoning discipline; absent is reported as unclassified, never guessed. See `ROUTE_KINDS`. */
   kind?: RouteKind;
   /** Which owed field types this route can advance. */
   fields: string[];
@@ -142,90 +68,28 @@ export interface MethodRoute {
   /** A route is never removed. One that stops working carries a dated note. */
   retiredOn?: string;
   retiredReason?: string;
-  /**
-   * **WHAT THIS ROUTE COST, IN KINDS RATHER THAN IN MINUTES** (2026-08-27).
-   *
-   * A scale forecast — what does the next thousand ZIPs take? — needs to know
-   * which work is paid for ONCE and which is paid for per state, per county,
-   * per vendor or per ZIP. The previous session could not produce that forecast
-   * because the inputs were never captured, and the wrong repair would be to
-   * reconstruct them afterwards from commit timestamps: a commit time measures
-   * when someone typed, not what the work was, and a plausible number here
-   * would be a fabrication with a decimal point on it.
-   *
-   * So nothing is estimated retrospectively. This is CAPTURED AT THE MOMENT A
-   * ROUTE IS LEARNED, it is optional, and an absent `effort` means exactly what
-   * it says: nobody recorded it, which is different from zero.
-   *
-   * `applicability.portability` already answers "would this route work
-   * elsewhere". This answers the question portability cannot: **what did
-   * getting it cost, and can a machine do it again without a person.**
-   */
+  /** What this route cost, in kinds rather than minutes, captured when learned. Absent means nobody recorded it, not zero. */
   effort?: RouteEffort;
-  /**
-   * **THE ASSERTIONS THIS ENTRY MAKES, EACH CLASSIFIED AND SEPARATELY
-   * RETRACTABLE.** (2026-08-28. See `lib/method/claims.ts`.)
-   *
-   * A route is not one claim. It exists (A), it did something somewhere (B),
-   * and it is often read as saying something about coverage (C) or about the
-   * public record itself (D). Before this field those four lived together in
-   * `applicability.note` at one authority, so withdrawing the false part meant
-   * rewriting the paragraph or deleting the route — and the Pima case proved
-   * that a false D and a perfectly valid A can be written in the same sentence.
-   *
-   * Optional on the type because 116 routes predate it and inventing classes
-   * for them would be the guessing this field exists to stop. **Required by the
-   * validator for new and amended entries**, which is where the rule can be
-   * enforced without a fabrication.
-   */
+  /** The assertions this entry makes, each classified and separately retractable (`lib/method/claims.ts`). */
   claims?: MethodClaim[];
 }
 
-/**
- * The cost dimensions a scale forecast actually needs, each a CLASS rather than
- * a duration, because a class can be recorded truthfully from memory and a
- * duration cannot.
- */
+/** Cost dimensions as classes rather than durations, so they can be recorded truthfully. */
 export interface RouteEffort {
-  /**
-   * What has to be redone, and how often, for the next jurisdiction.
-   *
-   * - `ONCE` — generic work, reused everywhere. An adapter, a parser, a rule.
-   * - `PER_STATE` — a state's own law, portal or vocabulary.
-   * - `PER_COUNTY` — a county's own systems.
-   * - `PER_VENDOR` — a platform (Legistar, CivicClerk, Apptegy, Granicus).
-   * - `PER_ZIP` — genuinely unique to one place. The expensive class, and the
-   *   one a forecast most needs an honest count of.
-   */
+  /** What has to be redone, and how often, for the next jurisdiction. `PER_ZIP` is the expensive class. */
   repeats: "ONCE" | "PER_STATE" | "PER_COUNTY" | "PER_VENDOR" | "PER_ZIP";
-  /**
-   * Can a machine walk this unattended from here?
-   *
-   * `HUMAN_ONLY` is the one that does not scale and must not be hidden inside
-   * an average — a records request, a phone call, a CAPTCHA, a page that only
-   * renders to a person. A route can be `MACHINE` now and have been
-   * `HUMAN_ONLY` to discover, which is what `discovery` records separately.
-   */
+  /** Whether a machine can walk this unattended from here; `HUMAN_ONLY` must never be hidden inside an average. */
   execution: "MACHINE" | "HUMAN_ONLY" | "MACHINE_AFTER_HUMAN_SETUP";
   /** Whether finding this route was new invention or reuse of a known shape. */
   discovery: "NEW_METHOD" | "REAPPLIED_KNOWN_METHOD";
-  /**
-   * True when this route exists because a reader was being told something
-   * false, rather than because a fact was missing. Integrity repair is not
-   * collection work and averaging the two together describes neither.
-   */
+  /** True when this route exists because a reader was being told something false, rather than a fact was missing. */
   readerIntegrityRepair?: boolean;
   /** What was actually observed, in the recorder's own words. Never a guess. */
   note?: string;
 }
 
 export interface MethodKnowledge {
-  /**
-   * The method version. It increments whenever a route ENTERS project
-   * knowledge, and it is what convergence records are stamped with — so a
-   * completion earned under v7 stops being exhaustion the moment v8 contains an
-   * applicable route that was never walked.
-   */
+  /** Increments whenever a route enters project knowledge; convergence records are stamped with it. */
   version: number;
   updatedOn: string | null;
   routes: MethodRoute[];
@@ -235,30 +99,7 @@ export function emptyKnowledge(): MethodKnowledge {
   return { version: 0, updatedOn: null, routes: [] };
 }
 
-/**
- * **THE APPLICABILITY ARITHMETIC, AND NOTHING ELSE. NOT A CONSUMER SURFACE.**
- *
- * Everything applicable, including the speculative ones. Inheritance is the
- * starting advantage of a new state, never its constraint (RULING 178).
- *
- * ## Why this is no longer called `inheritedRoutes`
- *
- * It was, and every consumer of method inheritance called it and got back raw
- * `MethodRoute` objects — carrying `applicability.note`, `origin`,
- * `outcomes[].note` and `subBranches[].reason`, four unclassified prose fields
- * that no retraction can reach. On 2026-08-28 the Pima coverage claim and the
- * Pima derived conclusion were both withdrawn in `claims`, correctly, with
- * successors — and both went on being handed to workers out of those fields,
- * because `pnpm method:prove` and `pnpm descent:handoff` never opened `claims`
- * at all. The correction was real and the read path did not read it.
- *
- * So the name now says what the value is: routes that APPLY, UNPROJECTED. The
- * consumer surface is `projectMethodFor()` in `lib/method/projection.ts`, which
- * is the only caller of this function outside its own tests, and
- * `tests/method-projection.test.ts` sweeps the repository to keep it that way.
- * A rename does not stop a determined caller; it stops an accidental one, and
- * the sweep stops the determined one from landing.
- */
+/** Every applicable route, unprojected. Not a consumer surface: consumers use `projectMethodFor()`. */
 export function applicableRoutesUnprojected(
   k: MethodKnowledge,
   j: Jurisdiction,
@@ -272,13 +113,7 @@ export function applicableRoutesUnprojected(
   return out;
 }
 
-/**
- * Learn a route. **There is no cap, and no cap may be introduced.**
- *
- * 76 becomes 87 becomes 91 becomes 150. The version increments; nothing else
- * bounds it. `tests/method-knowledge.test.ts` asserts that adding an 88th route
- * to an 87-route store requires no change to any constant.
- */
+/** Learn a route. There is no cap. */
 export function learnRoute(
   k: MethodKnowledge,
   route: Omit<MethodRoute, "learnedAtVersion">,
@@ -286,8 +121,7 @@ export function learnRoute(
 ): { knowledge: MethodKnowledge; version: number; duplicate: MethodRoute | null } {
   const duplicate = k.routes.find((r) => r.id === route.id) ?? null;
   if (duplicate) {
-    // RULING 63: duplication is worse than a gap, and a session that builds a
-    // branch which already existed has committed a defect reported as one.
+    // Duplication is worse than a gap: an existing branch is never rebuilt.
     return { knowledge: k, version: k.version, duplicate };
   }
   const version = k.version + 1;
@@ -302,21 +136,7 @@ export function learnRoute(
   };
 }
 
-/**
- * Record what a route actually did, in one jurisdiction, on one date.
- *
- * ## Why this exists
- *
- * The migration set all 61 inherited routes to `UNKNOWN` portability, which was
- * the honest call — `expectedToTravel` is an EXPECTATION and the manifest held
- * no outcome records. But nothing wrote outcomes either, so every route could
- * have stayed `UNKNOWN` forever and "speculative" would have become permanent
- * noise rather than a temporary state evidence resolves.
- *
- * **Idempotent by (jurisdiction, date, outcome).** A session that re-processes
- * the same walk must not deepen the evidence for it — that would let a route
- * earn `NATIONWIDE` by being re-read three times in one state.
- */
+/** Record what a route did in one jurisdiction on one date. Idempotent by (jurisdiction, date, outcome). */
 export function recordRouteOutcome(
   k: MethodKnowledge,
   routeId: string,
@@ -352,17 +172,8 @@ export function recordRouteOutcome(
 }
 
 /**
- * A jurisdictional failure — evidence that a route cannot work HERE, as opposed
- * to evidence that this attempt did not work.
- *
- * **The distinction is the whole of RULING 182 applied to method knowledge.** A
- * timeout, a TLS refusal, a CAPTCHA and a missing adapter are all facts about
- * the attempt. Narrowing a route's applicability on any of them would convert a
- * transport failure into a claim about a government — the same collapse that
- * silently removed two states from this project on 2026-08-26.
- *
- * So narrowing requires the caller to SAY the failure was jurisdictional, and
- * to say why. That is a sentence somebody has to write, on purpose.
+ * A jurisdictional failure: evidence that a route cannot work here, not that this attempt failed. Narrowing requires
+ * the caller to say so and why; a transport, permission or tooling failure never narrows.
  */
 export interface JurisdictionalFailure {
   jurisdiction: string;
@@ -378,21 +189,9 @@ export interface EarnedPortability {
 }
 
 /**
- * Derive the portability a route has EARNED from its recorded outcomes.
- *
- * Deliberately conservative, and asymmetric on purpose:
- *
- * - **One success does NOT narrow to `STATE_SPECIFIC`.** A route that worked in
- *   New Hampshire is not thereby proven to fail in Arizona, and narrowing it
- *   would stop it being offered there — the opposite of *inherit everything*.
- *   It stays `UNKNOWN`, which still inherits everywhere, marked speculative.
- * - **Widening needs breadth**: three distinct states for `NATIONWIDE`, two for
- *   `STATE_FAMILY`. Those are the same bars `overGeneralized` refuses below, so
- *   what is earned here can never be what is refused there.
- * - **`ZERO`, `FAILED` and `BLOCKED` never narrow.** A zero-yield walk is
- *   knowledge (RULING 88) and a blocked one is a fact about a wall.
- * - **`UNKNOWN` is a permanent-valid resting state.** The goal is not to drive
- *   it to zero; it is to make learning possible when evidence is earned.
+ * The portability a route has earned from its outcomes, conservatively: one success never narrows; `NATIONWIDE` needs
+ * three states and `STATE_FAMILY` two, the same bars `overGeneralized` refuses; `ZERO`, `FAILED` and `BLOCKED` never
+ * narrow; `UNKNOWN` is a valid resting state.
  */
 export function earnedPortability(
   route: MethodRoute,
@@ -473,27 +272,8 @@ export function applyEarnedPortability(
 }
 
 /**
- * **WHAT A CONCLUSION'S CURRENCY IS, SEPARATELY FROM WHETHER IT WAS REOPENED.**
- * (2026-08-29.)
- *
- * A conclusion can stop being current for two entirely different reasons, and
- * running them together is how a route gets deleted for a sentence's mistake:
- *
- * - `REOPENED` — knowledge grew past it. The conclusion was honestly earned and
- *   a later route means it must be re-walked. This is the RULING 178 mechanism
- *   and it says nothing bad about the conclusion or the route beneath it.
- * - `WITHDRAWN` / `INVALIDATED` — the conclusion itself was wrong, or the
- *   evidence it rested on was. Withdrawn is the author or a later session
- *   pulling it; invalidated is stronger evidence contradicting it.
- *
- * **A withdrawn or invalidated conclusion is no longer closing anything, so
- * there is nothing left for a new route to reopen** — and, far more importantly,
- * the route that produced it survives untouched. That is the same rule
- * `lib/method/claims.ts` holds one level down: a false conclusion must never
- * cause a valid route to be deleted.
- *
- * The union lives here rather than in `lib/method/conclusions.ts` so that
- * `PriorConclusion` can carry it without the dependency running backwards.
+ * `REOPENED`: knowledge grew past an honestly earned conclusion. `WITHDRAWN` / `INVALIDATED`: the conclusion itself was
+ * wrong; it closes nothing, and the route that produced it is untouched.
  */
 export const CONCLUSION_STATUSES = ["EARNED", "REOPENED", "WITHDRAWN", "INVALIDATED"] as const;
 export type ConclusionStatus = (typeof CONCLUSION_STATUSES)[number];
@@ -501,13 +281,7 @@ export type ConclusionStatus = (typeof CONCLUSION_STATUSES)[number];
 /** The statuses under which a conclusion is still closing an avenue. */
 export const CLOSING_CONCLUSION_STATUSES: readonly ConclusionStatus[] = ["EARNED", "REOPENED"];
 
-/**
- * A prior conclusion — an absence, a block, a dark body, a converged graph.
- *
- * These are what a newly learned route REOPENS. Each one records the method
- * version it was earned under, which is the whole mechanism: a conclusion
- * earned at v7 is re-examined against every route learned after v7.
- */
+/** A prior conclusion, recording the method version it was earned under. */
 export interface PriorConclusion {
   id: string;
   kind: "ABSENCE" | "BLOCKED" | "DARK" | "CONVERGED";
@@ -515,10 +289,7 @@ export interface PriorConclusion {
   jurisdiction: Jurisdiction;
   earnedAtVersion: number;
   earnedOn: string;
-  /**
-   * Optional and defaulting to `EARNED`, because the corpus predates the field
-   * and an absent status has always meant "this conclusion is standing".
-   */
+  /** Defaults to `EARNED`; an absent status means the conclusion is standing. */
   status?: ConclusionStatus;
   /** Set when a later route reopened it. */
   reopenedBy?: string;
@@ -536,17 +307,7 @@ export interface Reopening {
   why: string;
 }
 
-/**
- * Which prior conclusions does current knowledge reopen?
- *
- * **This is the function that makes RULING 178's last clause real.** A
- * conclusion earned under method version 76 does not retain "exhausted" status
- * if version 87 contains an applicable route that was never walked, and nobody
- * has to remember to check.
- *
- * A SPECULATIVE match reopens too. Reopening costs a re-walk; not reopening
- * costs a fact nobody finds, and only one of those is visible later.
- */
+/** Which prior conclusions current knowledge reopens; a speculative match reopens too. */
 export function findReopenings(
   k: MethodKnowledge,
   conclusions: readonly PriorConclusion[],
@@ -554,17 +315,11 @@ export function findReopenings(
   const out: Reopening[] = [];
   for (const c of conclusions) {
     if (c.reopenedBy) continue;
-    // A WITHDRAWN or INVALIDATED conclusion closes nothing, so nothing can
-    // reopen it. Flagging one as awaiting reopening would report a repair as an
-    // outstanding obligation forever, and — the part that matters — the route
-    // that produced the withdrawn conclusion is untouched either way.
+    // A withdrawn or invalidated conclusion closes nothing, so nothing can reopen it.
     if (!isClosing(c)) continue;
     for (const r of k.routes) {
       if (r.retiredOn) continue;
-      // Only routes learned AFTER the conclusion was earned can reopen it.
-      // An earlier route was available when the conclusion was made, so it was
-      // either walked or deliberately not — and re-litigating that would make
-      // every conclusion permanently unstable.
+      // Only routes learned after the conclusion was earned can reopen it.
       if (r.learnedAtVersion <= c.earnedAtVersion) continue;
       if (!r.fields.includes(c.field)) continue;
       const v = appliesTo(r.applicability, c.jurisdiction);
@@ -590,8 +345,7 @@ export function applyReopenings(
   const byId = new Map(reopenings.map((r) => [r.conclusion.id, r]));
   return conclusions.map((c) => {
     const r = byId.get(c.id);
-    // The old measurement is PRESERVED — `earnedAtVersion` and `earnedOn` stay.
-    // Reopening adds a fact; it never erases the one it supersedes.
+    // The old measurement is preserved; reopening adds a fact.
     return r ? { ...c, status: "REOPENED" as ConclusionStatus, reopenedBy: r.route.id, reopenedOn: on } : c;
   });
 }
@@ -602,10 +356,7 @@ export interface MethodIssue {
   detail: string;
 }
 
-/**
- * The method validator. What it refuses is the list in the remediation brief,
- * plus the two the brief could not have known about until the manifest was read.
- */
+/** The method validator. */
 export function validateKnowledge(
   k: MethodKnowledge,
   conclusions: readonly PriorConclusion[] = [],
@@ -632,25 +383,7 @@ export function validateKnowledge(
       bad(r.id, "version-ahead", `learnedAtVersion ${r.learnedAtVersion} exceeds store version ${k.version}`);
     }
 
-    /*
-     * **THE SAME HOLE, ONE FIELD OVER.** (2026-08-28.)
-     *
-     * The `effort` repair below closed a closed-set that nothing checked, and
-     * `outcome.outcome` had exactly the same hole. This session wrote three
-     * routes carrying `WORKED` — which is not a member of the set — every one
-     * of them landed in the canonical store, and `method:check` reported
-     * PASSED. `tsc` caught it afterwards, for an unrelated reason, which is
-     * the identical sequence the `effort` note records.
-     *
-     * It is not cosmetic. `YIELDED` is the value `provenStates` filters on
-     * three lines above and the value `overGeneralized` reasons from, so an
-     * unrecognised outcome silently removes a route's evidence from the
-     * over-generalisation check — the guard that stops a route claiming a
-     * portability it has not earned.
-     *
-     * Fixing one instance of a class and leaving the class open is how the
-     * same defect gets found twice.
-     */
+    // `outcome.outcome` is a closed set: an unrecognised value would silently drop a route's evidence from `overGeneralized`.
     const OUTCOMES = ["YIELDED", "ZERO", "FAILED", "BLOCKED"];
     for (const o of r.outcomes) {
       if (!OUTCOMES.includes(o.outcome as string)) {
@@ -665,22 +398,7 @@ export function validateKnowledge(
       }
     }
 
-    /*
-     * **A DECLARED TYPE IS NOT A WRITE PATH.** (2026-08-27.)
-     *
-     * `effort` has had a closed set of values on all three of its fields since
-     * it was declared, and nothing ever checked them. This session wrote four
-     * routes carrying `PER_SOURCE`, `AUTOMATED` and `KNOWN_METHOD` — none of
-     * which is a member of any of the three sets — and every one of them landed
-     * in the canonical store while `method:check` reported PASSED. It was `tsc`
-     * that caught it, minutes later and for an unrelated reason.
-     *
-     * That is the shape of defect this repository keeps finding: a guard that
-     * is green because it never looked. A `repeats` value outside the set is
-     * not cosmetic — the effort forecast buckets on it, so an unrecognised
-     * value silently drops a route out of whichever bucket a reader is
-     * counting, and the forecast reports the project as cheaper than it is.
-     */
+    // `effort` fields are closed sets: an unrecognised value would silently drop a route out of the forecast's buckets.
     if (r.effort) {
       const sets = {
         repeats: ["ONCE", "PER_STATE", "PER_COUNTY", "PER_VENDOR", "PER_ZIP"],
@@ -699,13 +417,7 @@ export function validateKnowledge(
       }
     }
 
-    /*
-     * The same closed-set hole the `effort` and `outcome` notes above record,
-     * closed for `kind` on the day the field was declared rather than after a
-     * bad value lands. Absent is valid (UNCLASSIFIED, a named gap); a present
-     * value off the set would silently fall out of every consumer that
-     * branches on it.
-     */
+    // `kind` is a closed set; absent is valid (unclassified).
     if (r.kind !== undefined && !(ROUTE_KINDS as readonly string[]).includes(r.kind)) {
       bad(
         r.id,
@@ -714,8 +426,7 @@ export function validateKnowledge(
       );
     }
 
-    // A route that stopped working is RETAINED with jurisdiction and date. A
-    // deleted route is one a later session rediscovers as new (RULING 63).
+    // A route that stopped working is retained with jurisdiction and date.
     if (r.retiredOn && !r.retiredReason) {
       bad(r.id, "retired-without-reason", "a retired route must carry its reason and date");
     }
@@ -726,31 +437,8 @@ export function validateKnowledge(
     }
 
     /*
-     * **A NEW OR AMENDED ENTRY DECLARES WHAT IT IS ASSERTING.** (2026-08-28.)
-     *
-     * Two mechanical triggers, and neither one requires a person to remember:
-     *
-     *   NEW      — the route entered after the floor version.
-     *   AMENDED  — the route carries a sub-branch dated AFTER adoption, which
-     *              is the store's existing record of "somebody decided part of
-     *              this was wrong". That is exactly the moment the class
-     *              matters, because it is the moment a reader has to know
-     *              whether what changed was the route, its outcome, a coverage
-     *              claim, or a conclusion about a government.
-     *
-     * The boundary is STRICTLY after the adoption date, because a rule cannot
-     * demand a class of an amendment written before the rule existed, and
-     * everything written on adoption day was written before it existed. The two
-     * entries amended that day — the Pima pair — are classified anyway, by the
-     * amendment in `lib/method/pima-claim-classes.ts`, which is the worked
-     * example rather than an exemption.
-     *
-     * The amendment trigger reads only sub-branches whose `failedOn` PARSES as
-     * an ISO date. Thirteen legacy sub-branches carry prose in that field (the
-     * jurisdiction, date, reason and successor were written into each other's
-     * slots before this store had a writer), and an unparseable date is not a
-     * dated amendment. Those are counted and named by `method:check` rather
-     * than silently swept into a rule they cannot answer.
+     * A route that entered after the floor version, or carries a sub-branch dated strictly after adoption, must declare its
+     * claim classes. Only sub-branches whose `failedOn` parses as an ISO date count as dated amendments.
      */
     const claims = r.claims ?? [];
     if (claims.length === 0) {
@@ -785,10 +473,7 @@ export function validateKnowledge(
     if (typeof c.earnedAtVersion !== "number") {
       bad(c.id, "conclusion-without-version", `${c.kind} carries no method version`);
     }
-    // The same closed-set hole the `effort` and `outcome` notes above record.
-    // An unrecognised status would fall out of `isClosing` as NOT closing —
-    // which silently removes the conclusion from the reopening sweep, the one
-    // guard that stops knowledge growing past a conclusion unnoticed.
+    // `status` is a closed set: an unrecognised value would fall out of the reopening sweep.
     if (c.status !== undefined && !(CONCLUSION_STATUSES as readonly string[]).includes(c.status)) {
       bad(
         c.id,
@@ -798,8 +483,7 @@ export function validateKnowledge(
     }
   }
 
-  // The load-bearing one: knowledge has grown past a conclusion and nothing
-  // reopened it. Silence here is the failure mode RULING 178 names.
+  // Knowledge has grown past a conclusion and nothing reopened it.
   const pending = findReopenings(k, conclusions);
   for (const p of pending) {
     bad(
@@ -812,14 +496,7 @@ export function validateKnowledge(
   return out;
 }
 
-/**
- * **There is no maximum number of routes, and this states it in code.**
- *
- * A constant here — `MAX_ROUTES`, or a fixed-length tuple, or a check that the
- * count matches a recorded number — would freeze the manifest. RULING 178 and
- * the non-final-manifest test both forbid it. This function exists so that a
- * later reader looking for the cap finds this comment instead of one.
- */
+/** There is no maximum number of routes. */
 export function routeCount(k: MethodKnowledge): number {
   return k.routes.length;
 }

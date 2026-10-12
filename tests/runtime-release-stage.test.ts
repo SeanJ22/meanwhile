@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { existsSync, mkdirSync, mkdtempSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -9,6 +9,7 @@ import {
   stageRuntimeRelease,
   stagedReleaseDirectory,
   stagedReleaseIsReady,
+  defaultAsyncRunCommand,
   type AsyncRunCommand,
 } from "../lib/ops/runtime-release-stage.ts";
 
@@ -72,4 +73,26 @@ test("an invalid target is refused", async () => {
   const root = mkdtempSync(join(tmpdir(), "stage-"));
   const result = await stageRuntimeRelease({ root, targetSha: "nope", run: fakeRun().run });
   assert.equal(result.code, "TARGET_SHA_INVALID");
+});
+
+test("machine-readable command output stays complete beyond the old diagnostic tail limit", async () => {
+  const result = await defaultAsyncRunCommand("printf", ["%s", "path\n".repeat(20000)], {
+    cwd: process.cwd(), timeoutMs: 10_000,
+  });
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(result.stdout.length, 100_000);
+  assert.equal(result.stdout.split("\n").length, 20_001);
+});
+
+test("a failed state carry leaves the older checkout and its evidence intact", async () => {
+  const root = mkdtempSync(join(tmpdir(), "stage-carry-"));
+  const older = stagedReleaseDirectory(root, "2".repeat(40));
+  mkdirSync(older, { recursive: true });
+  writeFileSync(join(older, "evidence.txt"), "retained source bytes");
+  const { run, calls } = fakeRun({ failOn: "ls-files" });
+  const result = await stageRuntimeRelease({ root, targetSha: TARGET, run });
+  assert.equal(result.state, "FAILED");
+  assert.equal(result.code, "STAGED_STATE_CARRY_FAILED");
+  assert.equal(readFileSync(join(older, "evidence.txt"), "utf8"), "retained source bytes");
+  assert.ok(!calls.some(call => call.includes("worktree remove")));
 });

@@ -1,22 +1,4 @@
-/**
- * **THE STANCES DOOR'S ROW (CA-11).**
- *
- * A stance is one exact quote a person said, its date, and its topic. It is
- * published only when the quote has already been proven character for
- * character on the saved page (`quotedSourceFindings`), so everything here is
- * the part that proof cannot say: whose words they are, whether this page may
- * speak for that person, and whether the topic and date are ones we show.
- *
- * - A campaign page counts only for its own candidate. A page we cannot tie to
- *   that person's own verified site is never filed under a campaign-site label.
- * - A paraphrase is a judgment call and needs a second, independent source. The
- *   door publishes quotes only, so a summary field is refused here, never
- *   quietly kept.
- * - The topic is one of the ten topics, read from the setting, never a word the
- *   page happens to use.
- *
- * Pure: the caller supplies the topic ids and the person's own site hosts.
- */
+/** The quote is already proven on the saved page; this decides whose words they are, whether the page may speak for that person, and the topic and date. */
 import { createHash } from "node:crypto";
 import { SOURCE_KINDS } from "../corpus/source-kinds.ts";
 import { requirePublication } from "./worker-publication-evidence.ts";
@@ -48,12 +30,10 @@ export function stanceId(personId: string, topicId: string, quote: string): stri
   return `stance:${createHash("sha256").update(JSON.stringify([personId, topicId, quote.replace(/\s+/g, " ")])).digest("hex").slice(0, 24)}`;
 }
 
-/** One verified record's fields to the row readers show. Throws a coded refusal when the page cannot speak for the person. */
 export function stanceRowFrom(input: {
   readonly fields: Readonly<Record<string, FieldValue>>;
   readonly pageUrl: string; readonly collectedAt: string; readonly now: string;
   readonly topicIds: readonly string[];
-  /** The hosts of the person's own verified campaign or official sites. */
   readonly ownSiteHosts: (personId: string) => readonly string[];
 }): StanceRow {
   const f = input.fields;
@@ -73,7 +53,6 @@ export function stanceRowFrom(input: {
     sourceUrl: input.pageUrl, collectedAt: input.collectedAt, verifiedAt: input.now };
 }
 
-/** The shape check the projection applies to every stored row. */
 export function stanceRowIssue(row: Readonly<Record<string, unknown>>): string | null {
   const s = (v: unknown) => typeof v === "string" ? v : "";
   const bad = !s(row.personId) || !s(row.topicId) || !s(row.quote) || s(row.quote).length > MAX_STANCE_QUOTE_CHARS ||

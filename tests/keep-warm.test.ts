@@ -1,10 +1,7 @@
 /**
- * **THE KEEP-WARM PINGER KEEPS INSTANCES BOOTED AND CANNOT BE USED TO HOLD THEM
- * LONGER.** (C21, 2026-09-24; the owner chose the pinger.)
- *
- * app/api/warm/route.ts holds a marked call for up to a second so ten
- * overlapping calls keep ten instances booted; netlify/functions/keep-warm.mts
- * makes those ten calls every five minutes. No live calls.
+ * The keep-warm pinger keeps instances booted and cannot be used to hold them longer: app/api/warm/route.ts
+ * holds a marked call for up to a second, and netlify/functions/keep-warm.mts makes ten overlapping calls every
+ * five minutes. No live calls.
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -44,7 +41,7 @@ test("KEEP-WARM · a hold beyond the cap, a malformed hold and an unknown parame
 
 test("KEEP-WARM · every five minutes the pinger makes fourteen overlapping marked calls to the site's own warm route", async () => {
   assert.equal(config.schedule, "*/5 * * * *");
-  // Fourteen overlapping calls reached 10-11 booted instances on production (2026-09-25).
+  // Fourteen overlapping calls reached 10-11 booted instances in production.
   assert.equal(WARM_INSTANCES, 14);
   assert.ok(HOLD_MS > 0 && HOLD_MS <= MAX_HOLD_MS);
   const seen: { url: string; marker: string | null }[] = [];

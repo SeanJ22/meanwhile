@@ -2,18 +2,11 @@ import type { VotePosition } from "./types.ts";
 import { getFederalKeyVotesReadModel } from "./key-votes-projection.ts";
 
 /**
- * How each sitting member voted on each key-vote roll call (item 6b,
- * 2026-08-15). `pnpm key-votes:positions` writes these facts to
- * the canonical data plane; this module reads the initialized projection.
+ * How each sitting member voted on each key-vote roll call, read from the
+ * initialized projection (`pnpm key-votes:positions` writes it).
  *
- * **A member absent from a roll call's map means WE HOLD NO POSITION for
- * them — never that they did not vote.** The distinction is the whole point
- * of this file existing: the card component was already written to render a
- * position and, with nothing to render, fell through to "Did not vote", which
- * is a false and checkable claim about a named person. Two very common
- * reasons a sitting member is absent from a 2021 roll call are that they were
- * not in Congress yet and that they were not in that chamber — neither of
- * which is "did not vote", and both of which a card must be able to say.
+ * A member absent from a roll call's map means WE HOLD NO POSITION for them —
+ * never that they did not vote (they may not have been in that chamber yet).
  */
 
 export interface PositionsFile {
@@ -56,11 +49,8 @@ export function keyVotePositionFor(
 }
 
 /**
- * Whether a roll call was fetched at all.
- *
- * Distinguishes "we have this roll call and this member is not in it" from
- * "we have not fetched this roll call". Both render as our gap, but they are
- * different gaps and a report should be able to tell them apart.
+ * Whether a roll call was fetched at all: "this member is not in this roll
+ * call" and "we have not fetched this roll call" are different gaps.
  */
 export function keyVoteRollCallHeld(key: string): boolean {
   return load().positions[key] !== undefined;

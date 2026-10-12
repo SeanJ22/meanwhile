@@ -22,40 +22,25 @@ import {
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 /**
- * The reference universe (Prompt B item 2, 2026-08-20).
- *
- * `data/reference/` is where every coverage denominator in this product comes
- * from. "We watch N of M bodies here" is only honest while M comes from the
- * Census of Governments and NCES rather than from counting our own registry —
- * a registry that defines its own denominator cannot be caught missing
- * anything, which is the Sunnyside class of miss.
- *
- * So the files themselves are gated. A file going missing, a row count
- * drifting, or a dormant unit being quietly filtered out all make M smaller,
- * and a smaller M makes our coverage look better. None of that may happen
- * without a test going red and naming it.
- *
- * The counts here were verified against the FILES on 2026-08-20, not read off
- * the provenance notes — checking a note's claim against the note is not a
- * reconciliation. `corepack pnpm reference:verify` prints the full found /
- * expected table; this is the same reconciliation as a gate.
+ * `data/reference/` is where every coverage denominator comes from. A file going missing, a row count
+ * drifting, or a dormant unit being filtered out all make the denominator smaller, so each turns a test red.
  */
 
-/* ---- 2a / 2d.4: the inventory and its pairings ---------------------------- */
+/* ---- the inventory and its pairings ---------------------------------------- */
 
-test("data/reference holds 26 files: 13 data files and 13 provenance notes", () => {
+test("data/reference holds 22 files: 11 data files and 11 provenance notes", () => {
   const files = referenceFiles();
   const data = files.filter((f) => f.endsWith(".csv"));
   const notes = files.filter((f) => f.endsWith(".md"));
 
   assert.equal(
     files.length,
-    26,
-    `expected 26 files, found ${files.length}: ${files.join(", ")} — a file going ` +
+    22,
+    `expected 22 files, found ${files.length}: ${files.join(", ")} — a file going ` +
       "missing narrows a denominator, and a narrowed denominator flatters our coverage",
   );
-  assert.equal(data.length, 13, `expected 13 data files, found ${data.length}`);
-  assert.equal(notes.length, 13, `expected 13 provenance notes, found ${notes.length}`);
+  assert.equal(data.length, 11, `expected 11 data files, found ${data.length}`);
+  assert.equal(notes.length, 11, `expected 11 provenance notes, found ${notes.length}`);
 });
 
 test("every reference data file is paired with its provenance note, both ways", () => {
@@ -89,7 +74,7 @@ test("every provenance note says something about its data file", () => {
   assert.deepEqual(thin, [], "these provenance notes are too thin to be provenance");
 });
 
-/* ---- 2b: row counts, against the ingested rows --------------------------- */
+/* ---- row counts, against the ingested rows ------------------------------- */
 
 test("every reference file holds the row count it is expected to", () => {
   const mismatches: string[] = [];
@@ -155,9 +140,9 @@ test("Open States reconciles: 7,439 state/territory/DC + 537 federal = 7,976", (
   assert.equal(table.count, 7_976);
 });
 
-/* ---- 2c: the recorded properties, enforced rather than commented ---------- */
+/* ---- the recorded properties --------------------------------------------- */
 
-test("2c: the 339 dormant Census units are RETAINED", () => {
+test("the 339 dormant Census units are RETAINED", () => {
   const table = readTable("census_govt_units_2022");
   const idx = table.header.indexOf("is_active");
   const inactive = table.rows.filter((r) => r[idx] === "N").length;
@@ -169,7 +154,7 @@ test("2c: the 339 dormant Census units are RETAINED", () => {
   );
 });
 
-test("2c: the 13 Texas special districts with blank place are left as a stated gap", () => {
+test("the 13 Texas special districts with blank place are left as a stated gap", () => {
   const table = readTable("census_govt_units_2022");
   const [st, city, zip, fips] = ["state", "city", "zip", "fips_state"].map((c) =>
     table.header.indexOf(c),
@@ -189,7 +174,7 @@ test("2c: the 13 Texas special districts with blank place are left as a stated g
   );
 });
 
-test("2c: web_address is a seed list for crawling, not a detection surface", () => {
+test("web_address is a seed list for crawling, not a detection surface", () => {
   const table = readTable("census_govt_units_2022");
   const idx = table.header.indexOf("web_address");
   const blank = table.rows.filter((r) => (r[idx] ?? "").trim() === "").length;
@@ -204,7 +189,7 @@ test("2c: web_address is a seed list for crawling, not a detection surface", () 
   );
 });
 
-test("2c: the Legistar file is 39 rows of fixture and claims no jurisdictions", () => {
+test("the Legistar file is 39 rows of fixture and claims no jurisdictions", () => {
   assert.equal(LEGISTAR_IS_FIXTURE_NOT_ENUMERATION, true);
   const table = readTable("granicus_legistar_tenants");
   assert.equal(table.count, 39, "a test-fixture convenience sample, NOT an enumeration");
@@ -223,7 +208,7 @@ test("2c: the Legistar file is 39 rows of fixture and claims no jurisdictions", 
   );
 });
 
-test("2c: the BoardDocs file is deliberately empty, and zero is the correct state", () => {
+test("the BoardDocs file is deliberately empty, and zero is the correct state", () => {
   assert.equal(BOARDDOCS_IS_DELIBERATELY_EMPTY, true);
   const table = readTable("boarddocs_tenants");
   assert.equal(
@@ -235,17 +220,10 @@ test("2c: the BoardDocs file is deliberately empty, and zero is the correct stat
   assert.ok(table.header.length > 5, "the header is present, so the shape is declared");
 });
 
-/* ---- 2d.3: nothing reads this data from outside the repo ------------------ */
+/* ---- nothing reads this data from outside the repo ----------------------- */
 
-/**
- * The acquisition pass that produced these files ran outside this repo. The
- * failure that follows is a module reading them from wherever they sat at
- * acquisition time — a container's `outputs/`, a desktop folder, an absolute
- * Windows path. That works on exactly one machine and silently narrows the
- * denominator everywhere else, which is the one direction this data must
- * never move in.
- */
-test("2d: no module reads reference data from any path outside data/reference", () => {
+/** A module reading reference data from outside the repo works on one machine and narrows the denominator elsewhere. */
+test("no module reads reference data from any path outside data/reference", () => {
   const ALLOWED = new Set(["lib/reference/index.ts"]);
   const DATASET_NAMES = REFERENCE_DATASETS.join("|");
   // A dataset named alongside a path that is not the sanctioned one.
@@ -278,7 +256,7 @@ test("2d: no module reads reference data from any path outside data/reference", 
   );
 });
 
-test("2d: the loader resolves every dataset inside data/reference", () => {
+test("the loader resolves every dataset inside data/reference", () => {
   for (const dataset of REFERENCE_DATASETS) {
     for (const ext of ["csv", "md"]) {
       const p = posixRelative(ROOT, join(ROOT, "data", "reference", `${dataset}.${ext}`));
@@ -290,13 +268,7 @@ test("2d: the loader resolves every dataset inside data/reference", () => {
 
 /* ---- the parser the counts depend on ------------------------------------- */
 
-/**
- * The row counts above are only as trustworthy as the reader that produced
- * them, and the Census unit file carries quoted fields with embedded commas.
- * A `split(",")` reader does not fail on those — it produces short rows and a
- * correct-looking total, which is the "operation that returned nothing"
- * shape one layer down.
- */
+/** The Census unit file carries quoted fields with embedded commas; a naive split would produce short rows. */
 test("the CSV reader survives quoted commas, escaped quotes and embedded newlines", () => {
   const rows = parseCsv('a,b,c\n"x,1","he said ""hi""","line\nbreak"\nplain,2,3');
   assert.deepEqual(rows[0], ["a", "b", "c"]);

@@ -1,19 +1,7 @@
 /**
- * **THE ADMIN CONTROL CENTRE'S SEEDED FAILURES.**
- * (Session C final, ITEM H, 2026-09-01.)
- *
- * Three of these are seeded failures named in the acceptance criteria, and they
- * are here because each one is a defect that would be INVISIBLE in normal use:
- *
- *   1  an admin route on the public host must 404 — a working admin page on the
- *      admin host tells you nothing about what the public host serves
- *   2  an unauthenticated request on the admin host must be refused — and the
- *      refusal must happen before any admin data is read
- *   3  a number rendered without a denominator must fail the page's own check —
- *      a bare number looks exactly like a good number
- *
- * The rest guard the credential boundary, which has no user-visible symptom at
- * all until it has already failed.
+ * Admin control centre: admin routes 404 on the public host, unauthenticated admin requests are
+ * refused before any data is read, a number without a denominator fails its own check, and the
+ * credential boundary holds.
  */
 
 import test from "node:test";
@@ -152,8 +140,7 @@ test("a FORGED session cookie is refused on the admin host", async () => {
 });
 
 test("the admin host serves ONLY the admin surface", async () => {
-  // A reader page answering on the admin host would be a second origin serving
-  // the product, which is the defect ITEM F's 301 closed.
+  // A reader page answering on the admin host would be a second origin serving the product.
   const response = await middleware(request(ADMIN_HOST, "/ballot"));
   assert.equal(response.status, 404);
 });
@@ -273,9 +260,7 @@ test("H1 WAIVER: 'not yet observed' uses the owner's exact wording", () => {
 });
 
 test("H1 WAIVER: an unwired recorder does NOT read as 'not yet observed'", () => {
-  // The load-bearing separation. "Not yet observed" is a claim about our
-  // record; if nothing is recording, we have observed nothing rather than
-  // observed an absence. Absence is never asserted.
+  // If nothing is recording, nothing was observed; absence is never asserted.
   const noRecord = renderCacheObservation(null);
   assert.equal(noRecord.state, "RECORDING_NOT_WIRED");
   assert.notEqual(noRecord.says, ORGANIC_PROD_ASK_NOT_YET);
@@ -380,8 +365,7 @@ test("a session round-trips, and an expired one is refused", async () => {
 });
 
 test("a session claiming a lifetime longer than policy is refused", async () => {
-  // Trusting a cookie's own `exp` would let a once-issued long session outlive
-  // a tightening of the rule.
+  // A cookie's own `exp` is not trusted, so tightening the rule shortens live sessions.
   const iat = 1_800_000_000;
   const cookie = await signSession(
     { sid: "s1", iat, exp: iat + SESSION_LIFETIME_SECONDS * 10 },
@@ -433,11 +417,7 @@ test("redactSecrets removes a configured secret from anything about to be logged
  * ================================================================== */
 
 test("an admin session id can never collide with a reader browser key", () => {
-  // RULING 132 proves separation over VALUE SPACES, not column names. The first
-  // version of `mintAdminSessionId` was byte-identical to `mintBrowserKey` in
-  // `lib/state/browser-key.ts` — 16 random bytes as hex — which put an admin
-  // session id and a READER's own local key into one space. Nothing had to
-  // intend a join for one to be mistaken for the other.
+  // Admin session ids and reader browser keys must live in disjoint value spaces.
   const READER_KEY_SHAPE = /^[0-9a-f]{32}$/;
   for (let i = 0; i < 200; i += 1) {
     const sid = mintAdminSessionId();

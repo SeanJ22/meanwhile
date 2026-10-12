@@ -13,30 +13,13 @@ import {
 } from "../lib/extract/types.ts";
 import { parseRoster } from "../lib/hunt/wikipedia.ts";
 
-/* ========================================================================== */
-/* RULING 100 — THE THREE NAMED SHAPES, LOCKED AS REGRESSIONS                 */
-/* ========================================================================== */
-
 /**
- * The brief for 2026-08-23 says the fetch layer and extraction are where the
- * six silent partials lived. Three of them are named in RULING 100 itself, with
- * the exact defect in each. **All three read correctly today** — this file is
- * what stops them coming back, because every one of them failed by returning
- * SOME rows and a clean exit, which is invisible to any check asking whether
- * something came back.
- *
- * Each test states the shape, not the string (RULING 110): *a roster sentence
- * cut short by stray markup*, not one particular `<br>` tag.
+ * Three silent-partial shapes, each of which returned some rows and a clean exit. Each test states the shape, not the
+ * string: a roster sentence cut short by stray markup, not one particular `<br>` tag.
  */
 
 test("partials: a roster sentence cut short by stray markup still reads every member", () => {
-  /*
-   * SHAPE 1 — Rockaway Township. A stray `<br id="isPasted">` mid-sentence
-   * ended the parse early. **Four of nine council members vanished, the parse
-   * reported five rows and exited clean**, and every instrument in the repo
-   * read that as healthy because every instrument was asking whether anything
-   * came back.
-   */
+  /* Shape 1: a stray `<br id="isPasted">` mid-sentence ended the parse early, leaving five of nine members. */
   const section =
     "The governing body is comprised of a Mayor and a Township Council of nine members. " +
     "The members of the Township Council are Michael Puzio (R, 2027; Ward 1), " +
@@ -56,12 +39,7 @@ test("partials: a roster sentence cut short by stray markup still reads every me
 });
 
 test("partials: the least-documented members are not filtered out for being thin", () => {
-  /*
-   * SHAPE 2 — Mount Olive. A filter requiring a party letter, a term year or a
-   * seat deleted the two members the article says least about. **That is the
-   * equal-effort failure pointed the other way**: the people with the least
-   * public material were the ones the parser dropped.
-   */
+  /* Shape 2: a filter requiring a party letter, a term year or a seat dropped the members the article says least about. */
   const section =
     "The governing body is comprised of a Township Council of seven members. " +
     "The members of the Township Council are Joe Nicastro (D, 2026), Alex Roman (D, 2025), " +
@@ -77,11 +55,7 @@ test("partials: the least-documented members are not filtered out for being thin
 });
 
 test("partials: a past-tense copula is still a body that exists", () => {
-  /*
-   * SHAPE 3 — Pequannock. The article's sentence read *"was composed of"*
-   * rather than *"is composed of"*, and **five sitting members read as an empty
-   * body.** A tense is not a fact about whether a government exists.
-   */
+  /* Shape 3: "was composed of" rather than "is composed of" read sitting members as an empty body. */
   const section =
     "As of 2023, the Township Council was composed of five members. " +
     "The members of the Township Council are Ann Ryan (R, 2025), Ryan Herd (R, 2024), " +
@@ -94,12 +68,7 @@ test("partials: a past-tense copula is still a body that exists", () => {
 });
 
 test("partials: the guard would CATCH a truncation — it is not green about nothing", () => {
-  /*
-   * The other half of RULING 110: an instrument that cannot find the defect it
-   * was written for is an instrument reporting green about nothing. This is the
-   * Rockaway article with four members genuinely missing, and the result must
-   * be PARTIAL rather than a clean five.
-   */
+  /* Positive control: the article with four members genuinely missing must be PARTIAL rather than a clean five. */
   const truncated =
     "The governing body is comprised of a Mayor and a Township Council of nine members. " +
     "The members of the Township Council are Michael Puzio (R, 2027; Ward 1), " +
@@ -116,10 +85,6 @@ test("partials: the guard would CATCH a truncation — it is not green about not
   );
   assert.match(parsed.count.reason, /4 missing/);
 });
-
-/* ========================================================================== */
-/* PARTIAL travels — a caller that only asks EXTRACTED must not read it clean */
-/* ========================================================================== */
 
 /** A stated count as a layer reads one out of its own document. */
 const states = (count: number): StatedCount => ({
@@ -188,10 +153,6 @@ test("partials: the census separates what could be checked from what was", () =>
     "an unasserted count, a zero-row and a cannot-run must all read as unchecked rather than as passes",
   );
 });
-
-/* ========================================================================== */
-/* The roster-table layer — CANNOT_RUN is not ZERO_ROWS                       */
-/* ========================================================================== */
 
 test("partials: a prose page CANNOT RUN this layer rather than reading as an empty board", () => {
   const result = extractRosterTables(

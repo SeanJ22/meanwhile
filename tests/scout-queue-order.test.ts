@@ -1,21 +1,9 @@
 /**
- * **THE PAID SCOUT LANE: LONGEST WAIT FIRST WITHIN A BAND.** (2026-09-25.)
- *
- * The Scout lane orders due rows by reader-impact band. Before this fix, rows
- * in the same band were ordered by next-due, with ties broken by id. A row's
- * next-due advances only on a reading, so a row whose Scouts keep failing kept
- * its first next-due. Each time its backoff ended, it went back to the head of
- * its band. Production on 2026-09-25 (read-only):
- * - 329 failing and 49 never-tried `candidate-authored-awaits-site` rows shared
- *   one next-due, 2026-09-15T17:58:43.627Z.
- * - 4 more failing rows were owed since 2026-08-14.
- * - In the week before the owner's pause (2026-09-23), 2,104 Scout attempts
- *   went to 410 of these rows. Most rows were tried 3 to 6 times, and one was
- *   tried 17 times.
- *
- * The lane is paused, so these tests replay it offline on a moving clock. They
- * use the scheduler's own pure functions and the same comparator the standing
- * runner uses (`compareReaderImpact` over `orderableDueRow`):
+ * The Scout lane orders due rows by reader-impact band, and within a band by
+ * longest wait, so a row whose Scouts keep failing cannot return to the head of
+ * its band each time its backoff ends. These tests replay the lane offline on a
+ * moving clock with the scheduler's own pure functions and the runner's
+ * comparator (`compareReaderImpact` over `orderableDueRow`):
  * - Under the old order, a never-tried row starves behind rows that keep
  *   failing.
  * - Under the new order, it runs within ⌈(A + 1) / c⌉ cycles of the rows
@@ -124,7 +112,7 @@ function row(id: string, firstOwed: string, subjectId = `nj:2026:${id}`): Freshn
 }
 
 /**
- * Production's shape, in miniature, all band 2:
+ * All band 2:
  * - four failing rows owed since August;
  * - four failing rows at the tie whose ids sort first;
  * - one never-tried row at the tie whose id sorts last.
@@ -194,8 +182,6 @@ async function scoutLaneRun(input: { readonly cycles: number; readonly perCycle:
       holder: "scout-queue",
       now: new Date(START_MS + c * HOUR_MS).toISOString(),
       leaseTtlMs: 60_000,
-      reader: { contract: "READER", state: "NOT_READY", reason: "fixture" },
-      truth: { contract: "TRUTH", state: "NOT_READY", reason: "fixture" },
       research: {
         decide: () => ({ kind: "BOUNDED_MODEL_WORKER", why: "fixture: no address is known", disagreement: null }),
         compareModelRows: (l, r) => NEW(l, r, (id) => carried.get(id)),
@@ -284,8 +270,6 @@ test("actual paid and plain-code admissions retain hunt rounds through place pri
     maturity: () => "UNGRADUATED", holder: "hunt-round-regression", now, leaseTtlMs: 60_000,
     executor: scheduled => ({ lane: "DETERMINISTIC", run: execute("plain", scheduled) }), workerCapacity: 1,
     huntFor, placeComparator: async () => (a, b) => priority.indexOf(huntFor(a)) - priority.indexOf(huntFor(b)),
-    reader: { contract: "READER", state: "NOT_READY", reason: "offline fixture" },
-    truth: { contract: "TRUTH", state: "NOT_READY", reason: "offline fixture" },
     research: { decide: scheduled => ({ kind: scheduled.obligation.id.startsWith("paid:") ? "BOUNDED_MODEL_WORKER" : "DETERMINISTIC",
       why: "offline lane regression", disagreement: null }),
       admitScout: () => ({ admit: true }), workerCapacity: 1, scoutLeaseTtlMs: 60_000,

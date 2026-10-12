@@ -1,39 +1,10 @@
 /**
- * **THE CLIENT'S ZIP TABLE, LOADED WHEN IT IS ASKED FOR** — P-002, 2026-08-24.
+ * The client's zip table, loaded on first use with a dynamic `import()` and
+ * cached, so the centroid JSON (about 1 MB) is its own chunk and not part of
+ * the first paint. The server keeps `./zcta.ts` and its synchronous API.
  *
- * ## The measurement
- *
- * `lib/geo/zcta-centroids.json` is 960,770 raw bytes and was **32.5% of the
- * landing page's initial JavaScript**, larger than MapLibre — measured by
- * module provenance with `pnpm tsx scripts/p002-module-table.mts` against an
- * attribution build, not estimated.
- *
- * It reached the client because `lib/geo/zcta.ts` imports it statically and
- * three client components import that module: the welcome overlay, the
- * location bar and the zip switcher. Every one of them uses it INSIDE an event
- * handler — a submit, a pick, a *use my location* press. None of them needs a
- * byte of it to paint.
- *
- * ## What this changes, and what it deliberately does not
- *
- * The server keeps `lib/geo/zcta.ts` and its synchronous API for the pages and
- * scripts that resolve a zip, and every script keeps working exactly as it did.
- * `app/api/meetings/route.ts` moved here on 2026-09-25 (C21): it needs the
- * table only for a panned map with no zip, and the static import made every
- * cold start of the reader's busiest route parse the whole megabyte first.
- *
- * The client gets this: one dynamic `import()`, cached after the first call, so
- * the table becomes its own chunk that the browser fetches when a reader first
- * asks a question that needs it.
- *
- * ## The prefetch, and why it is not a cheat
- *
- * `warmZctaTable()` starts the load without waiting for it. The entry overlay
- * calls it on mount, so by the time a reader has typed five digits the chunk is
- * almost always already there — the interaction is not slower, the FIRST PAINT
- * is lighter, and that is the whole trade. It is a `void` call with no error
- * path on purpose: a prefetch that fails must not surface anything, because the
- * real call will fail visibly if the chunk is genuinely unreachable.
+ * `warmZctaTable()` starts the load without waiting; a failed prefetch
+ * surfaces nothing, because the real call fails visibly.
  */
 import {
   isWellFormedZip,
@@ -57,11 +28,8 @@ interface Loaded {
 let loading: Promise<Loaded> | null = null;
 
 /**
- * The table, loaded once per page.
- *
- * The promise is cached rather than the result, so two handlers racing on a
- * cold start share one fetch instead of both decoding a megabyte of JSON —
- * the same reason `lib/registry/server.ts` caches its promise.
+ * The table, loaded once per page. The promise is cached, so racing handlers
+ * share one fetch.
  */
 export function loadZctaTable(): Promise<Loaded> {
   loading ??= import("./zcta-centroids.json").then((module) => {
@@ -81,7 +49,7 @@ export function loadZctaTable(): Promise<Loaded> {
   return loading;
 }
 
-/** Start the load and do not wait. See the note above. */
+/** Start the load and do not wait. */
 export function warmZctaTable(): void {
   void loadZctaTable();
 }

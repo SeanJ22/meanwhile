@@ -1,13 +1,6 @@
 /**
- * **A FINISHED RESEARCH CYCLE EXITS; IT NEVER WAITS FOR THE WALL.**
- * (Runner bounded store calls, follow-up, 2026-09-24.)
- *
- * On 2026-09-24 the 07:49Z cycle wrote its canonical digest and local record at
- * 07:59:02 and was still alive at the 15-minute wall, so the supervisor
- * SIGTERMed it and the owner digest read "exit NON-ZERO — the cycle did not
- * finish". It was the seventh such cycle in 16 hours. These tests hold the
- * drain grace: it never keeps the process alive itself, it names what does,
- * and it exits with the cycle's own code once the grace ends.
+ * A finished research cycle exits; the drain grace never keeps the process alive itself, names what does, and exits
+ * with the cycle's own code once the grace ends.
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";

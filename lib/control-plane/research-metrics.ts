@@ -1,36 +1,4 @@
-/**
- * **THE RESEARCH LANE'S NUMBERS — CAPACITY, THE QUEUE BY BAND, THE
- * GRADUATION FUNNEL, THE MODEL-VS-DETERMINISTIC SHARE, THE CACHE HIT RATE,
- * AND THE COST PER USEFUL OUTCOME.** (Work Item 5 and 6, 2026-09-02.
- * RULING 229, RULING 244.)
- *
- * Every function here is PURE over records the caller read: cost-ledger
- * entries, Scout results, the due queue, run records. Nothing reads a clock,
- * a file or a store. Every number carries its denominator and the rule it
- * was computed under, because a research digest that printed "capacity 17"
- * with no denominator would be a statistic looking for a story.
- *
- * ## The dispatch order (Work Item 5)
- *
- * OLDEST-FIRST answered "what has waited longest", which is the wrong
- * question for a lane whose whole purpose is what a reader can see. The order
- * is now READER IMPACT, in three bands, and within a band the longest wait
- * first. A row that failed waits from the end of its backoff (`waitingSince`),
- * not from its first next-due (2026-09-25):
- *
- * ```
- *   band 1   feeds a pilot surface: readerImpactAt is set on the canonical
- *            obligation, OR the subject is in a release-pinned pilot
- *            jurisdiction
- *   band 2   source-universe completion (RULING 229): the statewide and
- *            per-jurisdiction universe providers
- *   band 3   the long tail — everything else
- * ```
- *
- * Every input is NAMED on the record (`DispatchOrdering.inputs`) so the order
- * is auditable, and the band counts travel on the run record and the research
- * state.
- */
+/** The research lane's numbers: capacity, queue order, funnel, model share, cache hit rate and cost per useful outcome, each with its denominator. */
 
 import { MODELS, canonicalModelId, modelTierFor } from "../models.ts";
 import { cacheMeteringOf, costPortionsByModel, type CostEntry } from "./cost.ts";
@@ -38,8 +6,6 @@ import { CACHE_RATE_MULTIPLIERS, cacheSavingUsd } from "./model-cost.ts";
 import type { ScoutResult, ScoutStep } from "./scheduler/scout-result.ts";
 import { SCOUT_PREWARM_ROUTE_ID } from "./scheduler/research-policy.ts";
 import { waitingSince, type QueueDebt } from "./scheduler/obligation.ts";
-
-/* ------------------------------------------------------------- capacity */
 
 export interface ScoutCapacity {
   /** Mean measured usd per Scout Attempt over the window. Null when none measured. */
@@ -53,11 +19,7 @@ export interface ScoutCapacity {
   readonly denominator: string;
 }
 
-/**
- * Attempts per day the rolling ceiling supports at the measured mean cost.
- * The mean is over MEASURED Scout entries inside the window; an unmeasured
- * Attempt is counted beside it and never coerced to zero (cost.ts).
- */
+/** The mean is over measured Scout entries in the window; an unmeasured Attempt is counted beside it, never as zero. */
 export function scoutCapacity(input: {
   readonly costs: readonly CostEntry[];
   readonly nowIso: string;
@@ -70,7 +32,7 @@ export function scoutCapacity(input: {
   let unmeasured = 0;
   for (const c of input.costs) {
     if (c.role !== "SCOUT") continue;
-    /* A pre-warm request is a cache write for the cycle's Attempts, never an Attempt itself (2026-09-06). */
+    /* A pre-warm request is a cache write for the cycle's Attempts, never an Attempt itself. */
     if (c.routeId === SCOUT_PREWARM_ROUTE_ID) continue;
     if (Date.parse(c.recordedAt) < since) continue;
     if (c.cost.usd === null || c.cost.usd === undefined || Number.isNaN(c.cost.usd)) {
@@ -92,15 +54,13 @@ export function scoutCapacity(input: {
   };
 }
 
-/* -------------------------------------------------------------- ordering */
-
 export type ReaderImpactBand = 1 | 2 | 3;
 
-/** Providers whose obligations are a source-universe denominator (RULING 229). */
+/** Providers whose obligations are a source-universe denominator. */
 export const UNIVERSE_PROVIDERS: readonly string[] = ["candidate-enrichment", "local-jurisdictions", "campaign-finance"];
 
 export interface OrderingInputs {
-  /** Retired (CH-12): no place is ahead of the line because it was a pilot. Order comes from sends and place targets only. Callers may still pass it; it is ignored. */
+  /** Ignored: order comes from sends and place targets only. */
   readonly pilotZips?: readonly string[];
 }
 
@@ -110,21 +70,11 @@ export interface OrderableObligation {
   readonly readerImpactAt: string | null;
   readonly providerId: string | null;
   readonly nextDueAt: string;
-  /**
-   * When the row joined the queue (`waitingSince`): its next-due, or after a
-   * failed attempt the end of its backoff. Absent, the next-due. Within a band
-   * this is the order key, so a failing row cannot hold its first next-due and
-   * go back to the head each time its backoff ends (2026-09-25).
-   */
+  /** When the row joined the queue: its next-due, or after a failed attempt the end of its backoff. The order key within a band. */
   readonly queuedSince?: string;
 }
 
-/**
- * **ONE DUE ROW, AS THE SCOUT ORDER READS IT.** (2026-09-25.) Both the recorded
- * queue and the live Scout pool build their rows here, so the waiting key
- * cannot be dropped from one of them. `debt` is the row's debt carried into
- * the cycle.
- */
+/** One due row as the Scout order reads it; the recorded queue and the live pool both build rows here. */
 export function orderableDueRow(
   row: {
     readonly obligation: { readonly id: string; readonly subjectId: string; readonly readerImpactAt: string | null };
@@ -151,7 +101,6 @@ export interface BandedObligation<T extends OrderableObligation> {
 
 export interface DispatchOrdering {
   readonly rule: string;
-  /** What the order decides, and what it does not. */
   readonly scope: string;
   readonly inputs: {
     readonly readerImpactAt: "FreshnessObligation.readerImpactAt";
@@ -170,7 +119,7 @@ export const TIE_BREAK = "longest wait first within a band: the next-due, or the
 
 export const ORDERING_RULE =
   "band 1 = a reader is waiting on it (canonical FreshnessObligation.readerImpactAt set); " +
-  "band 2 = source-universe completion (RULING 229 universe providers); band 3 = long tail; within a band, the longest wait first " +
+  "band 2 = source-universe completion (universe providers); band 3 = long tail; within a band, the longest wait first " +
   "(a row that failed waits from the end of its backoff)";
 
 export const ORDERING_SCOPE =
@@ -180,29 +129,18 @@ export const ORDERING_SCOPE =
 export function bandFor(row: OrderableObligation, _inputs: OrderingInputs): { readonly band: ReaderImpactBand; readonly why: string } {
   if (row.readerImpactAt !== null) return { band: 1, why: `readerImpactAt ${row.readerImpactAt} is set by the provider` };
   if (row.providerId !== null && UNIVERSE_PROVIDERS.includes(row.providerId)) {
-    return { band: 2, why: `provider ${row.providerId} is a source-universe denominator (RULING 229)` };
+    return { band: 2, why: `provider ${row.providerId} is a source-universe denominator` };
   }
   return { band: 3, why: "no reader-impact signal and not a universe provider: the long tail" };
 }
 
-/**
- * The one comparator behind both the recorded queue and the live Scout pool.
- * Keeping it here prevents the standing loop from growing a second band table
- * that can disagree with the owner-visible ordering record.
- */
+/** The one comparator behind both the recorded queue and the live Scout pool. */
 export function compareReaderImpact(
   left: OrderableObligation,
   right: OrderableObligation,
   inputs: OrderingInputs,
 ): number {
-  /*
-   * Within a band, the longest wait first (2026-09-25). Before, the key was
-   * the next-due, with ties broken by id. A failing row keeps its first
-   * next-due, so on 2026-09-25 329 failing and 49 never-tried authored-site
-   * rows shared one next-due (2026-09-15T17:58:43.627Z). The failing rows
-   * whose ids sorted first went back to the head each time their backoff
-   * ended.
-   */
+  /* Within a band, the longest wait first, so failing rows cannot hold the head with their first next-due. */
   const leftSince = left.queuedSince ?? left.nextDueAt;
   const rightSince = right.queuedSince ?? right.nextDueAt;
   return (
@@ -237,8 +175,6 @@ export function orderByReaderImpact<T extends OrderableObligation>(
   };
 }
 
-/* ---------------------------------------------------------------- funnel */
-
 export interface FunnelStage {
   readonly stage: string;
   readonly count: number;
@@ -258,14 +194,7 @@ export interface GraduationFunnel {
   readonly pipelineSource: string;
 }
 
-/**
- * SCOUTED -> CONFIRMED -> VERIFIED -> AUDITED -> APPROVED, and beside it the
- * candidate lifecycle VALIDATED -> ADMITTED -> deterministic replays.
- * SCOUTED counts distinct obligations with a non-refused Scout result; the
- * pipeline stages come from the injected reader (none recorded by default);
- * replays count deterministic dispatches on routes an ADMITTED candidate
- * learned, from the run records the caller read.
- */
+/** SCOUTED counts distinct obligations with a non-refused Scout result. */
 export function graduationFunnel(input: {
   readonly results: readonly ScoutResult[];
   readonly candidateCounts: { readonly validated: number; readonly admitted: number; readonly rejected: number; readonly proposed: number } | null;
@@ -288,8 +217,6 @@ export function graduationFunnel(input: {
   ];
   return { stages, pipelineSource: input.pipelineSource };
 }
-
-/* ----------------------------------------------------------------- share */
 
 export interface LaneShare {
   readonly deterministic: number;
@@ -326,8 +253,6 @@ export function modelShareTrend(input: {
   };
 }
 
-/* ----------------------------------------------------------------- cache */
-
 
 /** Historical model roles stay in the denominator when their identity is missing.
  * Roles that also run plain code require recorded model evidence. */
@@ -350,8 +275,7 @@ function recordedCacheSaving(entry: CostEntry): number | null {
     if (!model || (tier != null && modelTierFor(model) !== tier)) return null;
     const metering = cacheMeteringOf(portion.entry.cost);
     if (metering.status !== "MEASURED") return null;
-    // Current shares inherit the row's batch flag. Retained explicit flags must
-    // be actual booleans and agree; conflicting metadata is not a price estimate.
+    // Current shares inherit the row's batch flag; conflicting explicit flags are not a price estimate.
     if (share && "batch" in share && (typeof share.batch !== "boolean" || share.batch !== metering.batch)) return null;
     const amount = cacheSavingUsd(metering.cacheReadInputTokens, model);
     if (amount === null) return null;
@@ -376,12 +300,7 @@ export interface CacheHitRate {
   readonly repeatedPrefixMisses: number | null;
   readonly attempts: number;
   readonly denominator: string;
-  /*
-   * ---- the ledger columns (2026-09-06). Always set by `cacheHitRateByRole`;
-   * OPTIONAL on the type because a row persisted on a research-state record
-   * before that date carries none of them, and the digest prints such a row
-   * as it always did rather than crashing on it. ----
-   */
+  /* Optional: a row persisted before these columns existed carries none. */
   /** Turns after the first whose uncached input exceeded what they appended by more than the model minimum — the stationary-breakpoint signature. Null before per-turn steps exist. */
   readonly stationaryTurns?: number | null;
   /** Ledger rows in the window for this role: measured, predating the cache fields, and reported null by the provider. */
@@ -399,19 +318,7 @@ export interface CacheHitRate {
   readonly aggregatePricedRows?: number;
 }
 
-/**
- * **THE CACHE HIT RATE BY ROLE, FROM THE COST LEDGER.** (2026-09-06.)
- *
- * Until this session the rate was computed from the Scout results' own usage
- * block — a parallel store of the same quantities the ledger should have
- * carried, which is why one instrument printed 18.6% while the digest's COST
- * section printed NOT MEASURED. Both now read the ledger: every row inside the
- * window, per role, through `cacheMeteringOf`. A row that predates the cache
- * fields counts as PREDATING and contributes no tokens; a row the provider
- * left null counts as UNREPORTED. The per-turn columns still come from the
- * Scout results' `steps`, which is the only per-turn record there is; the
- * results are matched to the window by their attempt ids.
- */
+/** Computed from the cost ledger. */
 export function cacheHitRateByRole(input: {
   readonly costs: readonly CostEntry[];
   readonly results: readonly ScoutResult[];
@@ -502,8 +409,6 @@ export function cacheHitRateByRole(input: {
   });
 }
 
-/* ------------------------------------------------------ cost per outcome */
-
 export interface CostPerOutcome {
   readonly outcome: string;
   readonly count: number;
@@ -512,12 +417,7 @@ export interface CostPerOutcome {
   readonly denominator: string;
 }
 
-/**
- * Cost per useful outcome: the whole measured spend in scope over the number
- * of each useful outcome class. The spend is shared across classes on
- * purpose — a NO_PROGRESS Attempt cost real money, and hiding it inside its
- * own bucket would make every useful outcome look cheaper than it was.
- */
+/** The whole measured spend in scope over each useful outcome's count, so a NO_PROGRESS Attempt's cost is not hidden. */
 export function costPerUsefulOutcome(input: {
   readonly results: readonly ScoutResult[];
   readonly candidateCounts: { readonly validated: number; readonly admitted: number } | null;
@@ -542,8 +442,6 @@ export function costPerUsefulOutcome(input: {
   ];
 }
 
-/* --------------------------------------------------------------- record */
-
 /** Everything the digest and the admin page report, computed once per cycle and stored on the research state. */
 export interface ResearchMetrics {
   readonly computedAt: string;
@@ -553,14 +451,9 @@ export interface ResearchMetrics {
   readonly share: ShareTrend;
   readonly cacheByRole: readonly CacheHitRate[];
   readonly costPerOutcome: readonly CostPerOutcome[];
-  /**
-   * Results with a recorded cache defect, of results carrying steps; and the
-   * two signatures counted apart (2026-09-06). A result carries `stationary`
-   * when a turn paid for more uncached input than it appended, `zeroRead`
-   * when a turn read nothing; one result can carry both.
-   */
+  /** Results with a recorded cache defect, of results carrying steps, with the stationary and zero-read signatures counted apart. */
   readonly cacheDefects: { readonly defective: number; readonly instrumented: number; readonly stationary?: number; readonly zeroRead?: number };
-  /** The window the cache-by-role rows were computed over (2026-09-06). Absent on a record computed before. */
+  /** The window the cache-by-role rows were computed over. Absent on older records. */
   readonly cacheWindow?: { readonly sinceIso: string | null; readonly untilIso: string | null };
 }
 
@@ -571,7 +464,7 @@ export function cacheDefectCounts(results: readonly ScoutResult[]): ResearchMetr
     defective: defective.length,
     instrumented: instrumented.length,
     stationary: defective.filter((r) => (r.cacheDefect?.stationaryTurns?.length ?? 0) > 0).length,
-    /* A result recorded before 2026-09-06 carries only `turns`, which were zero-read turns by construction. */
+    /* An older result carries only `turns`, which were zero-read turns by construction. */
     zeroRead: defective.filter((r) => (r.cacheDefect?.zeroReadTurns?.length ?? (r.cacheDefect?.stationaryTurns === undefined ? r.cacheDefect?.turns.length ?? 0 : 0)) > 0).length,
   };
 }

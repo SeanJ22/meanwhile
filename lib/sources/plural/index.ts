@@ -4,21 +4,16 @@ import type {
   OfficeholderSet,
 } from "../../officials/types.ts";
 
-import { notADocument, sourceUserAgent } from "../http.ts";
-import { shortTransfer } from "../bulk-completeness.ts";
-import { FIPS_TO_STATE } from "../../ocd/fips.ts";
+import { parse as parseYaml } from "yaml";
+import { nativePersonIdFromUrl } from "../../officials/people-identity.ts";
+import { officeIdentity } from "../../officials/office-identity.ts";
+import { PLURAL_STATES } from "./targets.ts";
+export { PLURAL_STATES } from "./targets.ts";
 
 /**
- * State legislators, from Plural Open (ex-Open States). Phase 5.2 tier 2,
- * tracker **D03**.
- *
- * **Reads the nightly bulk CSV, not the v3 API.** `data.openstates.org` publishes
- * one file per state, needs no key and no login, and 5.0a says to prefer bulk
- * where one exists. That also means the `PLURAL_API_KEY` in `.env.local` is not
- * required for the roster — it is there for the API, which this does not use.
- *
- * Data is CC-0. Attribution is requested rather than required, and is carried on
- * every row regardless because provenance rides on everything.
+ * Known officeholders from Open States (Plural Open) native people YAML and
+ * its separately parsed legislative CSV export. CC-0 attribution stays on each
+ * person, membership and contact field.
  */
 
 const SOURCE_NAME = "plural";
@@ -26,10 +21,6 @@ const SOURCE_NAME = "plural";
 const SOURCE_ORG = "Plural Open States (CC-0)";
 
 /** Acquisition is national; a missing local boundary never suppresses a roster. */
-export const PLURAL_STATES: readonly string[] = Object.values(FIPS_TO_STATE)
-  .filter(state => state.prefix === "state" || state.postal === "DC" || state.postal === "PR")
-  .map(state => state.postal.toLowerCase());
-
 export type PluralState = (typeof PLURAL_STATES)[number];
 
 export function bulkUrl(state: string): string {
@@ -37,18 +28,14 @@ export function bulkUrl(state: string): string {
 }
 
 /**
- * What a chamber's members are actually called, per state.
- *
- * **Not derivable, and not guessable.** New Jersey's lower chamber is the
- * General Assembly and its members are Assemblymembers, not Representatives.
- * This is the same problem the body registry has with supervisors against
- * commissioners against select boards, and it gets the same answer: state it
- * explicitly rather than mint a plausible wrong title and render it to somebody.
+ * What a chamber's members are called, per state. Not derivable: some lower
+ * chambers' members are Assemblymembers, not Representatives.
  */
 const CHAMBER_TITLE: Record<string, { upper: string; lower: string }> = {
   az: { upper: "State Senator", lower: "State Representative" },
   nh: { upper: "State Senator", lower: "State Representative" },
   nj: { upper: "State Senator", lower: "Assemblymember" },
+  pr: { upper: "Senator", lower: "Representative" },
 };
 
 for (const state of PLURAL_STATES) {
@@ -64,9 +51,14 @@ export interface PluralPerson {
   id: string;
   name: string;
   current_party: string;
-  /** `"19"` in most states; `"Merrimack 8"` for the New Hampshire House. */
+  /** `"19"` in most states; `"<County> 8"` where districts are designated by county. */
   current_district: string;
   current_chamber: "upper" | "lower" | string;
+  roles?: readonly PluralRole[];
+  identifiers?: Readonly<Record<string, readonly string[]>>;
+  sourceUrl?: string;
+  birthDate?: string;
+  offices?: readonly { name: string; address: string; voice: string; email?: string; sourceUrl?: string }[];
   email: string;
   image: string;
   /** The capitol office address, as Open States publishes it ("…, City, ST 12345"). */
@@ -83,19 +75,169 @@ export interface PluralPerson {
   state: string;
 }
 
+export interface PluralRole {
+  readonly type: string;
+  readonly district?: string;
+  readonly title?: string;
+  readonly jurisdiction?: string;
+  readonly start_date?: string;
+  readonly end_date?: string;
+  readonly current?: boolean;
+  /** A valid native end date is before the observation date; never inferred from a missing role. */
+  readonly ended?: boolean;
+  readonly sourceUrl?: string;
+}
+
+const STATE_EXECUTIVE_OFFICES = new Set(["governor", "lieutenant_governor", "secretary_of_state", "attorney_general",
+  "state_treasurer", "superintendent_of_public_instruction", "state_mine_inspector", "corporation_commissioner",
+  "state_auditor", "state_comptroller", "insurance_commissioner", "executive_councilor", "chief_election_officer"]);
+const LOCAL_OFFICES = new Set(["mayor", "municipal_council", "county_commissioner", "county_supervisor", "county_sheriff",
+  "county_attorney", "county_treasurer", "register_of_deeds", "register_of_probate", "county_clerk", "county_assessor", "county_recorder", "school_board"]);
+const NATIVE_ROLE_TITLES: Readonly<Record<string, string>> = {
+  governor: "Governor", lt_governor: "Lieutenant Governor", lieutenant_governor: "Lieutenant Governor",
+  secretary_of_state: "Secretary of State", attorney_general: "Attorney General", treasurer: "State Treasurer",
+  state_treasurer: "State Treasurer", auditor: "State Auditor", state_auditor: "State Auditor", comptroller: "State Comptroller",
+  superintendent_of_public_instruction: "Superintendent of Public Instruction", insurance_commissioner: "Insurance Commissioner",
+  "chief election officer": "Chief Election Officer", chief_election_officer: "Chief Election Officer",
+  mayor: "Mayor", councilmember: "Councilmember", council_member: "Councilmember",
+};
+
+/** The source's own jurisdiction establishes scope; no pre-existing registry membership is required. */
+export function nativeRoleBinding(role: PluralRole, state: string): {
+  officeTitle: string; officeKey: string; divisionId?: string; level: "STATE" | "LOCAL"; gap?: string;
+} | { issue: string } {
+  const nativeTitle = role.title || NATIVE_ROLE_TITLES[role.type] || role.type.replace(/_/g, " ");
+  // OpenStates uses its governor category for the District's chief executive.
+  // Preserve the exact District jurisdiction while displaying the real office.
+  const districtExecutive = state === "dc" && role.jurisdiction === "ocd-jurisdiction/country:us/district:dc/government";
+  const sourceTitle = districtExecutive && role.type === "governor" && officeIdentity(nativeTitle) === "governor" ? "Mayor" : nativeTitle;
+  const officeKey = officeIdentity(sourceTitle);
+  if (!officeKey || !STATE_EXECUTIVE_OFFICES.has(officeKey) && !LOCAL_OFFICES.has(officeKey)) return { issue: `PLURAL_ROLE_UNSUPPORTED:${role.type}:${role.title ?? ""}` };
+  const match = /^ocd-jurisdiction\/(country:us\/(?:state|district|territory):([a-z]{2})(?:\/[^/]+:[^/]+)*)\/government$/.exec(role.jurisdiction ?? "");
+  if (!match) return { issue: `PLURAL_ROLE_JURISDICTION_MISSING_OR_INVALID:${role.jurisdiction ?? ""}` };
+  if (match[2] !== state) return { issue: `PLURAL_ROLE_WRONG_STATE:${match[2]}:${state}` };
+  const path = match[1], local = /\/(?:place|county|county_subdivision|school_district):[^/]+/.test(path);
+  const districtMayor = districtExecutive && officeKey === "mayor";
+  if (STATE_EXECUTIVE_OFFICES.has(officeKey) && local || LOCAL_OFFICES.has(officeKey) && !local && !districtMayor) return { issue: `PLURAL_ROLE_JURISDICTION_MISMATCH:${officeKey}:${role.jurisdiction}` };
+  // Some counties, including Hawaii's, elect a mayor. The native county is
+  // the represented division; a municipality must never be fabricated for it.
+  if (officeKey === "municipal_council" && !/\/(?:place|county_subdivision):[^/]+/.test(path)) return { issue: `PLURAL_ROLE_MUNICIPAL_JURISDICTION_REQUIRED:${role.jurisdiction}` };
+  if (officeKey === "mayor" && !districtMayor && !/\/(?:place|county|county_subdivision):[^/]+/.test(path)) return { issue: `PLURAL_ROLE_MUNICIPAL_JURISDICTION_REQUIRED:${role.jurisdiction}` };
+  const district = role.district?.trim();
+  const districtScoped = officeKey === "executive_councilor" || Boolean(district && !/^(?:at[ -]large|statewide|citywide)$/i.test(district));
+  const nativeDistrict = /\/(?:ward|district|council_district|executive_council_district):([^/]+)$/.exec(path)?.[1];
+  const unresolvedDistrict = districtScoped && (!nativeDistrict || district && nativeDistrict !== district);
+  return { officeTitle: sourceTitle, officeKey, ...(unresolvedDistrict ? {
+    gap:`PLURAL_ROLE_DISTRICT_DIVISION_UNRESOLVED:${officeKey}:${district ?? ""}:${role.jurisdiction}`,
+  } : {divisionId:`ocd-division/${path}`}), level: local ? "LOCAL" : "STATE" };
+}
+
+/** The native YAML record keeps fields absent from the reduced held CSV export. */
+export function yamlToPeople(text: string, state: string, sourceUrl: string, asOf: string, unresolved: (detail: string) => void = () => {}, includeInactive = false): PluralPerson[] {
+  const value: unknown = parseYaml(text, { maxAliasCount: 0, uniqueKeys: true });
+  if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("PLURAL_YAML_RECORD_INVALID");
+  const row = value as Record<string, unknown>;
+  if (typeof row.id !== "string" || !row.id.startsWith("ocd-person/") || typeof row.name !== "string" || !row.name.trim()) throw new Error("PLURAL_YAML_PERSON_IDENTITY_INVALID");
+  const day = asOf.slice(0, 10);
+  const date = (value: unknown): string | undefined => {
+    if (value === undefined || value === null || value === "") return undefined;
+    const text = String(value);
+    if (!/^\d{4}(?:-\d{2}(?:-\d{2})?)?$/.test(text) || !Number.isFinite(Date.parse(text)) || new Date(text).toISOString().slice(0, text.length) !== text) throw new Error("PLURAL_ROLE_DATE_INVALID");
+    return text;
+  };
+  // Compare at the precision actually supplied. A year-only end date does
+  // not claim January 1, and the exact native value remains on the membership.
+  const startsBy = (value: string | undefined) => !value || value <= day.slice(0, value.length);
+  const endsAfter = (value: string | undefined) => !value || value >= day.slice(0, value.length);
+  const roles: PluralRole[] = (Array.isArray(row.roles) ? row.roles : []).flatMap((value, index) => {
+    try {
+      const role = value as Record<string, unknown>;
+      if (!role || typeof role.type !== "string") throw new Error("PLURAL_ROLE_IDENTITY_INVALID");
+      const start_date = date(role.start_date), end_date = date(role.end_date);
+      if (start_date && end_date && start_date.slice(0, Math.min(start_date.length,end_date.length)) > end_date.slice(0, Math.min(start_date.length,end_date.length))) throw new Error("PLURAL_ROLE_DATE_ORDER_INVALID");
+      return [{ type: role.type, district: typeof role.district === "string" || typeof role.district === "number" ? String(role.district) : undefined,
+        title: typeof role.title === "string" ? role.title : undefined, jurisdiction: typeof role.jurisdiction === "string" ? role.jurisdiction : undefined,
+        start_date, end_date, current: startsBy(start_date) && endsAfter(end_date), ended: Boolean(end_date && !endsAfter(end_date)), sourceUrl }];
+    } catch (error) {
+      unresolved(`${error instanceof Error ? error.message : String(error)}:person=${row.id}:role=${index}`);
+      return [];
+    }
+  });
+  const current = roles.filter(role => {
+    if (!role.current) return false;
+    if (["upper", "lower", "legislature"].includes(role.type)) {
+      if (role.jurisdiction && !new RegExp(`^ocd-jurisdiction/country:us/(?:state|district|territory):${state}/government$`).test(role.jurisdiction)) {
+        unresolved(`PLURAL_LEGISLATIVE_JURISDICTION_MISMATCH:${role.jurisdiction}`); return false;
+      }
+      return true;
+    }
+    const binding = nativeRoleBinding(role, state);
+    if ("issue" in binding) { unresolved(`${binding.issue}:person=${row.id}`); return false; }
+    if (binding.gap) unresolved(`${binding.gap}:person=${row.id}`);
+    return true;
+  });
+  // An upstream person slot occasionally contains a collective body. Require
+  // both explicit structured body naming and its own council contact page;
+  // a person's surname or an unrelated council link cannot reject a person.
+  const councilName = typeof row.family_name === "string" && /^(?:City|Town|Borough|Village) Council$/i.test(row.family_name) &&
+    typeof row.given_name === "string" && row.name === `${row.given_name} ${row.family_name}`;
+  const collectiveSource = councilName && current.some(role => role.type === "mayor") &&
+    [...(Array.isArray(row.links) ? row.links : []), ...(Array.isArray(row.sources) ? row.sources : [])].find(value => {
+      const url = typeof value === "string" ? value : value && typeof value === "object" ? (value as {url?:unknown}).url : null;
+      if (typeof url !== "string") return false;
+      try { const parsed = new URL(url); return /(?:^|\.)[^.]+\.gov$/.test(parsed.hostname) &&
+        /\/(?:city|town|borough|village)-council\/contact-(?:the-)?(?:city|town|borough|village)-council\/?$/.test(parsed.pathname); } catch { return false; }
+    });
+  if (collectiveSource) {
+    unresolved(`PLURAL_PERSON_IS_GOVERNING_BODY:person=${row.id}:name=${row.name}`);
+    return [];
+  }
+  if (!roles.length) unresolved(`PLURAL_PERSON_HAS_NO_ROLES:${row.id}`);
+  if (!roles.length || !current.length && !includeInactive) return [];
+  const offices = (Array.isArray(row.offices) ? row.offices : []).filter(value => value && typeof value === "object").map(value => {
+    const office = value as Record<string, unknown>;
+    const text = (value: unknown) => typeof value === "string" ? value : "";
+    return { name: text(office.classification) || text(office.name), address: text(office.address), voice: text(office.voice), email: typeof office.email === "string" ? office.email : undefined, sourceUrl };
+  });
+  const urls = (value: unknown) => (Array.isArray(value) ? value : []).flatMap(value => {
+    const url = typeof value === "string" ? value : value && typeof value === "object" ? (value as { url?: unknown }).url : null;
+    if (typeof url !== "string") return [];
+    try { const parsed = new URL(url); return ["http:", "https:"].includes(parsed.protocol) ? [url] : []; } catch { return []; }
+  });
+  const parties = Array.isArray(row.party) ? row.party as { name?: string; start_date?: string; end_date?: string }[] : [];
+  const party = parties.filter(p => {
+    if (!p || typeof p.name !== "string") return false;
+    try { return startsBy(date(p.start_date)) && endsAfter(date(p.end_date)); } catch { return false; }
+  }).at(-1)?.name ?? "";
+  const identifiers: Record<string, string[]> = Object.create(null);
+  for (const value of Array.isArray(row.other_identifiers) ? row.other_identifiers : []) {
+    if (!value || typeof value !== "object") continue;
+    const item = value as { scheme?: unknown; identifier?: unknown };
+    if (typeof item.scheme === "string" && typeof item.identifier === "string") (identifiers[item.scheme] ??= []).push(item.identifier);
+  }
+  const capitol = offices.find(o => /capitol/i.test(o.name)), district = offices.find(o => /district/i.test(o.name));
+  // One person, every current membership. Display chooses a role; identity never does.
+  const role = current.find(role => ["upper", "lower", "legislature"].includes(role.type)) ?? current[0] ?? roles[0]!;
+  const safeDate = (value: unknown) => { try { return date(value); } catch { return undefined; } };
+  return [{ id: row.id, name: row.name, state, sourceUrl, roles: roles.map(role => ({...role,current:current.includes(role)})), identifiers, offices,
+    birthDate: safeDate(row.birth_date),
+    current_party: party, current_chamber: role.type, current_district: role.district ?? "",
+    email: typeof row.email === "string" ? row.email : capitol?.email ?? district?.email ?? "",
+    image: typeof row.image === "string" ? row.image : "", links: urls(row.links).join(";"), sources: urls(row.sources).join(";"),
+    capitol_address: capitol?.address ?? "", capitol_voice: capitol?.voice ?? "", district_address: district?.address ?? "", district_voice: district?.voice ?? "" }];
+}
+
 /**
- * Reduce a district designation to something two spellings agree on.
- *
- * Handles the only real variation across these three states: New Hampshire
- * House districts are designated by county and number — "Merrimack 8" — and the
- * two sides zero-pad differently. Everything else is a bare number.
+ * Reduces a district designation to something two spellings agree on. Some
+ * districts are designated by county and number ("<County> 8") and the two
+ * sides zero-pad differently; everything else is a bare number.
  */
 export function designationKey(value: string): string {
   return value
     .trim()
     .toUpperCase()
     .replace(/\s+/g, " ")
-    // Strip leading zeros from any number so "Merrimack 08" meets "Merrimack 8".
+    // Strip leading zeros so "<County> 08" meets "<County> 8".
     .replace(/\b0+(\d)/g, "$1");
 }
 
@@ -116,20 +258,10 @@ export interface RegistryDivisionLite {
 }
 
 /**
- * Index the registry's legislative divisions by state, chamber and designation.
- *
- * **This is not the name-string join `CLAUDE.md` forbids, and the distinction
- * matters.** That rule is about joining *geographic entities* on names that
- * collide across states and drift between sources. What is matched here is a
- * district's official *designation* — "Merrimack 8" is what that district is
- * called in statute, not a colloquial name — scoped to one state and one
- * chamber, matched exactly after normalization, with every miss reported rather
- * than resolved by similarity. The output is keyed on this repo's OCD-IDs.
- *
- * It is needed because the two sides genuinely disagree: the registry's
- * identifiers are Census numeric codes (`sldl:608`) and Plural uses the
- * statutory designation. The label is the only thing that bridges them, and it
- * is Census-sourced on both counts.
+ * Indexes the registry's legislative divisions by state, chamber and
+ * designation. The registry ids are Census codes (`sldl:608`) and Plural uses
+ * the statutory designation; the Census-sourced label bridges them. Matching
+ * is exact within one state and chamber, and every miss is reported.
  */
 export function indexDivisions(
   divisions: RegistryDivisionLite[],
@@ -183,6 +315,7 @@ export function parseCsv(text: string): string[][] {
     } else cell += char;
   }
 
+  if (quoted) throw new Error("PLURAL_CSV_TRUNCATED_QUOTED_FIELD");
   if (cell.length > 0 || row.length > 0) {
     row.push(cell);
     rows.push(row);
@@ -192,6 +325,8 @@ export function parseCsv(text: string): string[][] {
 }
 
 export function rowsToPeople(csv: string, state: string): PluralPerson[] {
+  const issue = pluralRosterIssue(csv);
+  if (issue) throw new Error(`PLURAL_CSV_INVALID:${issue}`);
   const rows = parseCsv(csv);
   if (rows.length === 0) return [];
 
@@ -203,7 +338,7 @@ export function rowsToPeople(csv: string, state: string): PluralPerson[] {
 
   return rows
     .slice(1)
-    .filter((row) => row.length >= header.length - 2 && at(row, "id"))
+    .filter(row => row.some(value => value.trim() !== ""))
     .map((row) => ({
       id: at(row, "id"),
       name: at(row, "name"),
@@ -222,49 +357,16 @@ export function rowsToPeople(csv: string, state: string): PluralPerson[] {
     }));
 }
 
-/**
- * What a build spent, so the quota is a printed number rather than a surprise.
- *
- * **The two counters are deliberately separate.** Plural's free tier allows
- * **500 GraphQL requests per day at 1 per second**; the bulk CSVs are ordinary
- * static files on `data.openstates.org` and are not metered against it. Adding
- * them together would invent pressure on a ceiling nothing is approaching, and
- * showing neither is how a ceiling gets discovered by hitting it.
- */
-export interface PluralRequestCount {
-  /** Static bulk-file downloads. Not counted against the API quota. */
-  bulk: number;
-  /** Metered against the 500/day tier. Currently always zero — see below. */
-  graphql: number;
-}
-
-/** The free tier's documented ceiling, stated once so the build can print it. */
-export const GRAPHQL_DAILY_QUOTA = 500;
-export const GRAPHQL_MIN_INTERVAL_MS = 1000;
-
-export const requestCount: PluralRequestCount = { bulk: 0, graphql: 0 };
-
-export function resetRequestCount(): void {
-  requestCount.bulk = 0;
-  requestCount.graphql = 0;
-}
-
 /** The columns `rowsToPeople` reads to build a legislator; a header without them is not the roster. */
 export const PLURAL_REQUIRED_COLUMNS = ["id", "name", "current_chamber", "current_district"] as const;
 
-/** Refuse an empty response; a pilot seat count is not a national admission rule. */
+/** Refuse an empty response. */
 export const PLURAL_ROSTER_FLOOR = 1;
 
 /**
  * Is this 200 body actually a Plural roster, and the whole of it? Returns the
- * reason it is not, or null.
- *
- * The `,` blank-check `fetchState` runs first cannot catch the real failure: an
- * HTML error page served at 200 contains commas, so it passes, and then parses
- * to a table whose header is not the roster's — `rowsToPeople` finds no `id`
- * column and returns ZERO people, a state's whole legislature reading as absent
- * with no error at all. The header check refuses that; the floor refuses a
- * file truncated to a handful of rows. Kept pure so it is tested directly.
+ * reason it is not, or null. An HTML error page passes the comma check and
+ * parses to zero people, so the header and the floor are checked here.
  */
 export function pluralRosterIssue(csv: string): string | null {
   const rows = parseCsv(csv);
@@ -273,76 +375,24 @@ export function pluralRosterIssue(csv: string): string | null {
   if (missing.length > 0) {
     return `a CSV whose header is missing ${missing.join(", ")} — a truncated file or an error page, not the roster`;
   }
-  const dataRows = rows.length - 1;
+  if (new Set(header).size !== header.length) return "duplicate CSV column names";
+  const data = rows.slice(1).filter(row => row.some(value => value.trim() !== ""));
+  const malformed = data.find(row => row.length !== header.length || PLURAL_REQUIRED_COLUMNS.some(column => !row[header.indexOf(column)]?.trim()));
+  if (malformed) return "a data row has missing required fields or does not match the complete CSV header";
+  const ids = data.map(row => row[header.indexOf("id")]);
+  if (ids.some(id => !/^ocd-person\/\S+$/.test(id))) return "a native person identifier is not an Open States person ID";
+  if (new Set(ids).size !== ids.length) return "duplicate native person identifiers";
+  const dataRows = data.length;
   if (dataRows < PLURAL_ROSTER_FLOOR) {
     return `${dataRows} data row(s), below the floor of ${PLURAL_ROSTER_FLOOR} — refusing a truncated roster`;
   }
   return null;
 }
 
-async function fetchState(state: string): Promise<string> {
-  const url = bulkUrl(state);
-  const MAX_ATTEMPTS = 4;
-  let lastStatus = 0;
-
-  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
-    requestCount.bulk++;
-    const response = await fetch(url, {
-      headers: { "User-Agent": sourceUserAgent(), Accept: "text/csv" },
-    });
-
-    if (response.ok) {
-      const text = await response.text();
-      // A status is not a document (NH Hunt 3, 2026-08-21). This adapter hand-
-      // rolls its own backoff rather than using the shared client, so it gets
-      // the shared client's checks by hand — a 200 with a blank body, a
-      // transfer cut short of its declared length, or an error page that parses
-      // to zero people here is a state's whole legislature reading as empty.
-      const notDoc = notADocument(text, { label: "a bulk CSV", marker: "," });
-      if (notDoc !== null) throw new Error(`${url} returned HTTP 200 with ${notDoc}`);
-      const short = shortTransfer(response.headers, text);
-      if (short !== null) throw new Error(`${url} returned HTTP 200 with ${short}`);
-      const issue = pluralRosterIssue(text);
-      if (issue !== null) throw new Error(`${url} returned HTTP 200 with ${issue}`);
-      return text;
-    }
-
-    lastStatus = response.status;
-    if (response.status !== 429 && response.status < 500) break;
-    await new Promise((resolve) => setTimeout(resolve, 500 * 2 ** attempt));
-  }
-
-  throw new Error(`${url} returned HTTP ${lastStatus}`);
-}
-
 /**
- * Download every configured state, serialized.
- *
- * **One request per state, and nothing per legislator.** That is the whole
- * reason for the bulk route: 620 legislators across these three states would
- * cost most of a day's GraphQL quota under any per-person or per-district fetch
- * pattern, and would cost it again on every rerun. Three static files cost
- * three requests and are metered against nothing.
- */
-export async function fetchAll(
-  states: readonly string[] = PLURAL_STATES,
-): Promise<PluralPerson[]> {
-  const people: PluralPerson[] = [];
-  for (const state of states) {
-    people.push(...rowsToPeople(await fetchState(state), state));
-  }
-  return people;
-}
-
-/**
- * Map people onto officeholders and division links.
- *
- * Everything that cannot be attached lands in `unmatched` with a reason.
- * **Most misses here are expected and are not errors**: the registry is clipped
- * to three counties, so the overwhelming majority of a state's legislators sit
- * in districts this repo holds no boundary for. That is a coverage fact, and it
- * must not be confused with an identifier mismatch — which is why the reason
- * distinguishes them.
+ * Maps people onto officeholders and division links. Everything unattached
+ * lands in `unmatched` with a reason that separates a missing boundary from an
+ * identifier mismatch.
  */
 export function normalize(
   raw: PluralPerson[],
@@ -353,77 +403,126 @@ export function normalize(
   const officeholders: Officeholder[] = [];
   const divisions: OfficeholderDivision[] = [];
   const unmatched: OfficeholderSet["unmatched"] = [];
+  const endedMemberships: NonNullable<OfficeholderSet["endedMemberships"]>[number][] = [];
+  const chamberFor = (state: string, type: string) => type === "legislature" && ["ne", "dc"].includes(state) ? "upper" : type;
 
   for (const person of raw) {
-    const id = `${SOURCE_NAME}:${person.id.replace("ocd-person/", "")}`;
-    const chamber = person.current_chamber;
-
-    if (chamber !== "upper" && chamber !== "lower") {
-      unmatched.push({ officeholderId: id, reason: `unknown chamber "${chamber}"` });
+    const uuid = person.id.replace("ocd-person/", "");
+    const id = `${SOURCE_NAME}:${person.state}:${uuid}`;
+    const personId = `${SOURCE_NAME}:${uuid}`;
+    const sourceRoles: readonly PluralRole[] = person.roles ?? [{ type: person.current_chamber, district: person.current_district, current: true }];
+    const mapped = sourceRoles.flatMap<{
+      role:PluralRole;title:string;chamber:string|undefined;level:"STATE"|"LOCAL";divisionId:string|undefined;officeId:string;membershipId:string;
+    }>(role => {
+      const chamber = chamberFor(person.state, role.type);
+      const legislative = ["upper", "lower", "legislature"].includes(role.type);
+      if (legislative) {
+        if (role.jurisdiction && !new RegExp(`^ocd-jurisdiction/country:us/(?:state|district|territory):${person.state}/government$`).test(role.jurisdiction)) return [];
+        const title = role.title || CHAMBER_TITLE[person.state]?.[chamber as "upper" | "lower"];
+        if (!["upper", "lower"].includes(chamber) || !title) {
+          if (role.current) unmatched.push({officeholderId:id,reason:`PLURAL_LEGISLATIVE_ROLE_UNRESOLVED:${role.type}`});
+          return [];
+        }
+        const divisionId = divisionIndex.get(`${person.state}|${chamber}|${designationKey(role.district ?? "")}`);
+        return [{role, title, chamber, level:"STATE" as const, divisionId,
+          officeId:`openstates-office:${person.state}:${role.type}:${role.district ?? ""}`,
+          membershipId:`${personId}:${person.state}:${role.type}:${role.district ?? ""}:${role.start_date ?? ""}`}];
+      }
+      const binding = nativeRoleBinding(role,person.state);
+      if ("issue" in binding) {
+        if (role.current) unmatched.push({officeholderId:id,reason:binding.issue});
+        return [];
+      }
+      return [{role,title:binding.officeTitle,chamber:undefined,level:binding.level,divisionId:binding.divisionId,
+        officeId:`openstates-office:${role.jurisdiction}:${binding.officeKey}:${role.district ?? ""}`,
+        membershipId:`${personId}:${role.jurisdiction}:${binding.officeKey}:${role.district ?? ""}:${role.start_date ?? ""}`}];
+    });
+    const memberships = mapped.map(item => ({
+      id:item.membershipId,personId,officeId:item.officeId,
+      jurisdiction:item.role.jurisdiction ?? `US-${person.state.toUpperCase()}`,
+      chamber:item.chamber,district:item.role.district,officeTitle:item.title,level:item.level,
+      current:item.role.current !== false,divisionId:item.divisionId,
+      termStart:item.role.start_date ?? null,termEnd:item.role.end_date ?? null,
+      sourceUrl:item.role.sourceUrl ?? person.sourceUrl ?? bulkUrl(person.state),
+    }));
+    for (let i=0;i<mapped.length;i++) if (mapped[i].role.ended) endedMemberships.push({...memberships[i],current:false});
+    const current = mapped.filter(item=>item.role.current !== false);
+    const primary = current.find(item=>item.chamber) ?? current[0];
+    if (!primary) {
+      if (sourceRoles.some(role=>role.current)) unmatched.push({officeholderId:id,reason:"PLURAL_PERSON_HAS_NO_BOUND_CURRENT_ROLE"});
       continue;
     }
-
-    const title = CHAMBER_TITLE[person.state]?.[chamber];
-    if (!title) {
-      // No title table for this state means nobody decided what its members
-      // are called. Inventing "State Representative" for a chamber that calls
-      // them something else is a small fabrication rendered to a reader.
-      unmatched.push({
-        officeholderId: id,
-        reason: `no chamber title recorded for ${person.state}`,
-      });
-      continue;
-    }
-
-    const key = `${person.state}|${chamber}|${designationKey(person.current_district)}`;
-    const ocdId = divisionIndex.get(key);
+    const {role,title,chamber,level}=primary;
 
     officeholders.push({
       id,
+      personId,
+      state: person.state.toUpperCase(), chamber,
+      nativeIds: (() => {
+        const native: Record<string, readonly string[]> = { ...person.identifiers, plural: [uuid], "ocd-person": [person.id] };
+        for (const link of person.links.split(";")) {
+          const binding = nativePersonIdFromUrl(link);
+          if (binding) native[binding.source] = [...new Set([...(native[binding.source] ?? []), binding.id])];
+        }
+        return native;
+      })(),
+      memberships,
+      offices: (person.offices ?? [
+        { name: "capitol", address: person.capitol_address, voice: person.capitol_voice },
+        { name: "district", address: person.district_address, voice: person.district_voice },
+      ]).filter(office => office.address || office.voice || ("email" in office && office.email)).map(office => ({
+        name: office.name, address: office.address || undefined, phone: office.voice || undefined,
+        email: "email" in office ? office.email : undefined,
+        sourceUrl: "sourceUrl" in office ? office.sourceUrl ?? person.sourceUrl ?? bulkUrl(person.state) : person.sourceUrl ?? bulkUrl(person.state), collectedAt,
+      })),
       name: person.name,
       officeTitle: title,
-      level: "STATE",
-      // The CSV carries no term dates. Null is not allowed by the type and a
-      // guessed date is worse than an empty string, so the field records what
-      // is known: nothing. Term dates need the API or the YAML repo — D03.
-      termStart: "",
-      termEnd: "",
-      // State rosters publish no birth date; no sourced date, no age (6d).
-      birthDate: null,
+      level,
+      // The CSV carries no term dates; empty, never guessed.
+      termStart: role?.start_date ?? "",
+      termEnd: role?.end_date ?? "",
+      birthDate: person.birthDate ?? null,
       partyLabel: person.current_party || null,
-      websiteUrl: person.links.split(";")[0] || null,
+      websiteUrl: person.links.split(";").find(link => {
+        try { return ["http:", "https:"].includes(new URL(link).protocol); } catch { return false; }
+      }) || null,
+      profileUrls: [...new Set([...person.links.split(";"), ...person.sources.split(";")].filter(link => {
+        try { return ["http:", "https:"].includes(new URL(link).protocol); } catch { return false; }
+      }))],
       contactFormUrl: null,
-      // Contact as the legislature publishes it, carried through the CC-0
-      // bulk file (3a). Capitol office first; the district office where the
-      // capitol number is not published. Empty strings are absences.
-      phone: person.capitol_voice || person.district_voice || null,
-      email: person.email || null,
-      // Curated separately with per-entry verification (3e).
+      // Capitol office first; the district office where the capitol number is
+      // not published. Empty strings are absences.
+      phone: person.capitol_voice || person.district_voice || person.offices?.find(office=>office.voice)?.voice || null,
+      email: person.email || person.offices?.find(office=>office.email)?.email || null,
       campaignUrl: null,
-      // Keep the upstream lead for the shared portrait source check. It is
-      // not a reader image or a claim that Open States licenses the photo.
+      // A lead for the shared portrait source check, not a reader image.
       photo: null,
-      ...(person.image ? { portraitCandidate: { imageUrl: person.image, sourceUrl: bulkUrl(person.state), collectedAt } } : {}),
+      ...(person.image ? { portraitCandidate: { imageUrl: person.image, sourceUrl: person.sourceUrl ?? bulkUrl(person.state), collectedAt } } : {}),
       provenance: {
-        sourceUrl: bulkUrl(person.state),
+        sourceUrl: person.sourceUrl ?? bulkUrl(person.state),
         sourceOrg: SOURCE_ORG,
         collectedAt,
         verifiedAt: null,
       },
     });
 
-    if (!ocdId) {
-      unmatched.push({
-        officeholderId: id,
-        reason: `no ${chamber} division for ${person.state.toUpperCase()} "${person.current_district}" — outside the clipped boundary coverage, or a designation mismatch`,
-      });
-      continue;
+    const seenDivisions = new Set<string>();
+    for (const item of current) {
+      const district = item.role.district ?? "";
+      const ocdId = item.divisionId;
+      if (!ocdId) {
+        unmatched.push({ officeholderId: id,
+          reason: item.chamber ? `no ${item.chamber} division for ${person.state.toUpperCase()} "${district}" — missing boundary coverage or an unresolved designation`
+            : `PLURAL_ROLE_DISTRICT_DIVISION_UNRESOLVED:${item.role.type}:${district}:${item.role.jurisdiction}` });
+      } else if (!seenDivisions.has(`${ocdId}|${item.membershipId}`)) {
+        divisions.push({ officeholderId: id, ocdId, bodyId: null, membershipId:item.membershipId });
+        seenDivisions.add(`${ocdId}|${item.membershipId}`);
+      }
     }
-
-    divisions.push({ officeholderId: id, ocdId, bodyId: null });
   }
 
-  return { scope, generatedAt: collectedAt, officeholders, divisions, unmatched };
+  return { scope, generatedAt: collectedAt, officeholders, divisions, unmatched,
+    ...(endedMemberships.length ? {endedMemberships:[...new Map(endedMemberships.map(row=>[row.id,row])).values()]} : {}) };
 }
 
 

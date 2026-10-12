@@ -23,3 +23,17 @@ test("actual event dates and source changes remain changed; missing prior author
   assert.throws(() => publicationRecordChanges({ previousVersionId: "prior", accepted: [
     { recordId: "a", readerId: "a", value: {} }, { recordId: "b", readerId: "a", value: {} }] }), /IDENTITY_COLLISION/);
 });
+
+test("new native aliases retain reuse credit while changed people and civic facts remain distinct", () => {
+  const previous = { id: "roster:one", name: "Ana Rivera", phone: "555-0100" };
+  const bound = { ...previous, personId: "person:101", sourceRecordId: "https://example.gov/roster#101",
+    nativeIds: { "https://example.gov/roster": ["101"] } };
+  const result = publicationRecordChanges({ previousVersionId: "good:prior", accepted: [
+    { recordId: "parser:reordered", readerId: previous.id, previous, value: bound },
+    { recordId: "parser:updated", readerId: "roster:updated", previous, value: { ...bound, phone: "555-0200" } },
+    { recordId: "parser:new-person", readerId: "roster:successor", value: { ...bound, id: "roster:successor", name: "Alex Rivera" } },
+  ] });
+  assert.deepEqual(result.records, { added: 1, changed: 1, reused: 1 });
+  assert.equal(result.recordChanges[0].factsHash, result.recordChanges[0].previousFactsHash);
+  assert.deepEqual(result.recordChanges.map(row => row.readerId), ["roster:one", "roster:updated", "roster:successor"]);
+});

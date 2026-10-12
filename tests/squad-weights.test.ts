@@ -1,5 +1,5 @@
 /**
- * CH-17: squads are sized to their parts, and hunters move to the gaps. The coordinator's fairness is round-robin
+ * Squads are sized to their parts, and hunters move to the gaps. The coordinator's fairness is round-robin
  * over (Send, part), weighted by each part's open blanks and recent difficulty, re-read every wave.
  */
 import assert from "node:assert/strict";

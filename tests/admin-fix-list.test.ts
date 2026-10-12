@@ -1,4 +1,4 @@
-/** BR-03: the fix list lives on the control plane: add, survive a reload, complete with before and after, come back. */
+/** The fix list lives on the control plane: add, survive a reload, complete with before and after, come back. */
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";

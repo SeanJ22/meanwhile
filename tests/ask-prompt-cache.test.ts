@@ -27,56 +27,12 @@ import {
   synthesisRequestBody,
 } from "../lib/ask/synthesize.ts";
 
-/**
- * **H1 — PROMPT CACHING ON THE ASK SYNTHESIS RUNG.** (Session C, lane W6.)
- *
- * ## Why this file simulates the API instead of calling it
- *
- * `tests/fixtures/` is recorded API responses and **no test in this repository
- * makes a live call** (CLAUDE.md, Repo layout). A caching test that cannot call
- * the API has exactly one honest option: model the DOCUMENTED semantics of the
- * feature and check our request against them. That is what `anthropicWithCache`
- * below is — a test double implementing the four rules prompt caching actually
- * runs on:
- *
- * ```
- *   1. PREFIX MATCH   the key is the exact bytes of model + system + every
- *                     message block up to and including the one carrying
- *                     `cache_control`. One byte earlier in that span differs →
- *                     miss.
- *   2. MINIMUM        a prefix under the model's minimum SILENTLY does not
- *                     cache — no error, `cache_creation_input_tokens: 0`.
- *                     Claude Opus 5's minimum is 512 tokens.
- *   3. TTL            entries expire; a read refreshes the timer at no cost.
- *   4. NO MARKER      no `cache_control` anywhere → no cache participation.
- * ```
- *
- * **The double is written so it can MISS.** Three tests below drive it to zero
- * cache reads on purpose — expiry, a different ZIP, and a removed marker. A
- * simulator that always reported a hit would make this whole file vacuous, and
- * a green vacuous test is the failure mode this repository has been bitten by
- * before, so the misses are asserted rather than assumed.
- *
- * ## What it cannot prove, stated rather than implied
- *
- * It proves our REQUEST SHAPE earns a cache read under the documented rules. It
- * does not prove Anthropic's production cache behaved as documented on a given
- * day — only a live keyed run does that, and `scripts/ask-cache-probe.mts` is
- * the instrument for it.
- */
-
-/* ── the pack ───────────────────────────────────────────────────────────── */
+/** A test double for prompt caching's documented rules: prefix match, minimum size, TTL, and no marker means no cache. It can miss. */
 
 const VAIL = "ocd-division/country:us/state:az/school_district:vail_unified_district";
 const PIMA = "ocd-division/country:us/state:az/county:pima";
 
-/**
- * A pack big enough to clear the 512-token minimum, because a pack that does
- * not is a test that would pass for the wrong reason. The filler is realistic
- * agenda prose rather than padding: the minimum is a property of the REAL
- * traffic this rung sees, and the repeated-record shape is what a body's
- * docket actually looks like.
- */
+/** A pack big enough to clear the 512-token minimum, so the test cannot pass for the wrong reason. */
 function zipPack(over: Partial<EvidencePack> = {}): EvidencePack {
   return {
     question: "what is on the agenda",
@@ -103,8 +59,6 @@ function zipPack(over: Partial<EvidencePack> = {}): EvidencePack {
   };
 }
 
-/* ── the double ─────────────────────────────────────────────────────────── */
-
 /** Claude Opus 5's documented minimum cacheable prefix. Under this: no entry. */
 const OPUS_5_MIN_CACHEABLE_TOKENS = 512;
 
@@ -121,7 +75,7 @@ interface SeenCall {
   callerPrefix: string;
   cacheRead: number;
   cacheCreation: number;
-  /** The request body as sent (2026-09-06), so a test can assert its shape. */
+  /** The request body as sent, so a test can assert its shape. */
   body: Record<string, unknown>;
 }
 
@@ -137,7 +91,7 @@ function renderedPrefix(body: Record<string, unknown>): string | null {
     | undefined;
   if (!messages) return null;
 
-  /* The system field is a string with caching off and, since 2026-09-06, an array of text blocks with it on. */
+  /* The system field is a string with caching off and an array of text blocks with it on. */
   const system = Array.isArray(body.system)
     ? (body.system as { text?: string }[]).map((b) => b.text ?? "").join("")
     : String(body.system ?? "");
@@ -216,21 +170,8 @@ function anthropicWithCache(clock: FakeClock, seen: SeenCall[]): typeof fetch {
   }) as unknown as typeof fetch;
 }
 
-/* ── THE SEEDED FAILING TEST ─────────────────────────────────────────────── */
-
 test("H1: a second same-ZIP call inside the TTL reads the cached prefix", async () => {
-  /*
-   * **THIS IS THE SEEDED FAILURE, AND IT IS THE WHOLE POINT OF THE TASK.**
-   *
-   * Before this change the request put the reader's QUESTION at byte 0 of the
-   * message payload, ahead of the civic context, and carried no
-   * `cache_control` anywhere. Two questions about the same government
-   * therefore shared no prefix the API could key on, every call paid full
-   * price for the same records, and nothing in the repository could tell.
-   *
-   * A second same-ZIP call inside the TTL that reports ZERO cache-read tokens
-   * FAILS here. That is the assertion the owner asked for three times.
-   */
+  /* A second same-ZIP call inside the TTL must report cache-read tokens. */
   const clock: FakeClock = { now: 0 };
   const seen: SeenCall[] = [];
   const fetchImpl = anthropicWithCache(clock, seen);
@@ -271,8 +212,6 @@ test("H1: a second same-ZIP call inside the TTL reads the cached prefix", async 
      a measurement. */
   assert.ok(second.kind === "WROTE" && second.usage.cacheReadInputTokens > 0);
 });
-
-/* ── the double can miss: three proofs, so the test above is not vacuous ─── */
 
 test("H1: past the TTL the same call misses, so the double is capable of missing", async () => {
   const clock: FakeClock = { now: 0 };
@@ -339,8 +278,6 @@ test("H1: the QUESTION is outside the cached prefix", async () => {
   );
 });
 
-/* ── the civic context is genuinely in the prefix ────────────────────────── */
-
 test("H1: the cached prefix carries the system rules AND the ZIP civic context", async () => {
   const clock: FakeClock = { now: 0 };
   const seen: SeenCall[] = [];
@@ -359,20 +296,6 @@ test("H1: the cached prefix carries the system rules AND the ZIP civic context",
 });
 
 test("H1: the prefix clears Claude Opus 5's 512-token cacheable minimum", () => {
-  /*
-   * Measured, not assumed. The system prompt ALONE is 1,503 characters = **478
-   * tokens**, counted at Anthropic's own `count_tokens` endpoint on 2026-09-01
-   * — BELOW the 512-token minimum, which is exactly why the breakpoint sits
-   * after the civic context rather than on the system block. A breakpoint on a
-   * too-short prefix does not error; it silently never caches, and a marker
-   * that can never fire is worse than none because it reads as a guarantee.
-   *
-   * The earlier note said "≈ 418 tokens", a chars/4 estimate that was 60 low.
-   * The conclusion is unchanged and now rests on a count rather than a divisor:
-   * 478 is still under 512, and the margin is 34 tokens, which is thin enough
-   * that the next edit to the system prompt could cross it silently — so the
-   * assertion below is on the SYSTEM side too, not only on the whole prefix.
-   */
   const pack = zipPack();
   const contextChars =
     JSON.stringify({ subject: pack.subject, records: pack.records }, null, 1).length;
@@ -382,29 +305,7 @@ test("H1: the prefix clears Claude Opus 5's 512-token cacheable minimum", () => 
   );
 });
 
-/* ── the split changed no information ───────────────────────────────────── */
-
 test("H1: the two payloads are a PARTITION of the pre-caching payload", () => {
-  /*
-   * **THE EQUIVALENCE PROOF, AND WHAT IT IS WORTH.**
-   *
-   * The acceptance asks for byte-identical answers before and after. The
-   * strongest thing checkable WITHOUT a live keyed call is that the model is
-   * given exactly the same information, because a model handed the same fields
-   * with the same values has been given the same evidence. That is what this
-   * asserts, mechanically, field by field:
-   *
-   *   - every key of the pre-caching payload lands in exactly one side
-   *   - neither side invents a key
-   *   - every value survives the split unchanged
-   *
-   * It is NOT a proof that the two prompts produce identical prose. The
-   * question moved from the head of the payload to its own trailing block, and
-   * only a live A/B on the canonical reader suite settles what that does to the
-   * output. `scripts/ask-cache-probe.mts` is that run; it needs a credential
-   * this worktree does not have, and the report says so rather than implying
-   * this test covered it.
-   */
   const p = zipPack();
   const legacy = JSON.parse(synthesisPayload(p)) as Record<string, unknown>;
   const context = JSON.parse(synthesisContextPayload(p)) as Record<string, unknown>;
@@ -442,47 +343,11 @@ test("H1: the two payloads are a PARTITION of the pre-caching payload", () => {
 });
 
 test("H1: the system prompt is one string with every rule, and its size is pinned", () => {
-  /*
-   * The system field is the front of the cached prefix, so its size is a cost
-   * fact and a change to it is deliberate rather than incidental — this pins it.
-   *
-   * **ASK-24 (2026-09-02) grew it from 1,503 to 2,347 characters**, adding the
-   * definition-first answer contract the owner's Prop 141 report asked for:
-   * lead with a twelve-year-old's plain definition, then descending relevance,
-   * caveats after, nothing off the subject. The growth crosses a cost boundary
-   * worth naming: at ~1,503 chars the system block was measured at 471 tokens,
-   * below BOTH models' minimum cacheable prefix (512 / 1,024), so a breakpoint
-   * on it could never fire; at 2,347 chars it is above the Opus-5 floor, so the
-   * system block is now large enough to cache in its own right. That is a cost
-   * OPPORTUNITY, not a change made here — the request still carries the one
-   * breakpoint on the reader's question, and the token recount is owed to the
-   * next `count_tokens` run before a second marker is added.
-   */
-  // ASK-27 gives agenda questions their own lead; the definition-first branch
-  // remains byte-identical for the questions that ask what something means.
+  // Agenda questions have their own lead; the definition-first branch stays byte-identical.
   const prompt = synthesisPrompt(zipPack({ intent: "CIVICS" }));
   assert.equal(typeof prompt, "string");
   assert.match(prompt, /ONLY the records supplied/);
   assert.match(prompt, /Never tell the reader how to vote/);
-  /*
-   * Prompt-caching session, 2026-09-06: the date LEFT the system prompt. It
-   * was the one per-request value ahead of every breakpoint, so the system
-   * prefix could never be shared across a midnight. The sentence is unchanged
-   * and now rides as its own block after the last breakpoint
-   * (`synthesisDateBlock`); the prompt shrank by exactly that line and its
-   * blank line — 2,347 → 2,325 characters — and was counted at Anthropic's
-   * `count_tokens` endpoint that day at 731 tokens on `claude-opus-5`, above
-   * the 512-token floor, which is what makes the system breakpoint real.
-   *
-   * 2026-09-25 (the Ask latency repair): the citation line now asks for source
-   * NUMBERS (`citedSources`) instead of full URLs — 2,325 → 2,327 characters,
-   * two characters, so the block stays well above the floor. The same day the
-   * length rule gained its target ("Aim for 3 sentences or fewer and about 450
-   * characters.", `ANSWER_LENGTH_CONTRACT.target*`) — 2,327 → 2,382.
-   * The verified historical-vote grounding instruction now makes this 2,543
-   * characters. The prior measured 731-token block cleared the 512-token floor
-   * by 219; no second cache marker is added without a fresh token measurement.
-   */
   assert.doesNotMatch(prompt, /Today is/, "the date is no longer in the system prompt");
   assert.match(prompt, /LEAD WITH THE PLAIN DEFINITION/, "the definition-first contract is in the prompt");
   assert.equal(prompt.length, 2543, "the system prompt changed size — re-measure the cache floor");
@@ -510,8 +375,6 @@ test("PC-5 (2026-09-06): the request carries TWO breakpoints — the system bloc
   assert.equal(typeof cold.system, "string");
   assert.ok(!JSON.stringify(cold).includes("cache_control"));
 });
-
-/* ── the caller key ──────────────────────────────────────────────────────── */
 
 test("H1: hit rates are reported PER CALLER KEY and never pooled", () => {
   let ledger = emptyCacheLedger();
@@ -598,19 +461,7 @@ test("H1: a caller key is derived from the environment, never from a reader", ()
 });
 
 test("H1: a LOCAL PRODUCTION BUILD's harness traffic is never pooled with production readers", () => {
-  /*
-   * **THE BUG THIS PINS, WHICH WOULD HAVE DEFEATED THE WHOLE MEASUREMENT.**
-   *
-   * `pnpm start` sets NODE_ENV=production, and RULING 125 says every walk and
-   * check runs against a LOCAL PRODUCTION BUILD. A caller key derived from
-   * NODE_ENV alone therefore labels the reader suite, `walk:all` and the cache
-   * probe `prod-ask` — and the harness asks the same questions over and over,
-   * so it would post a spectacular hit rate on top of whatever production was
-   * actually doing, in the one number that exists to catch a regression.
-   *
-   * The first question is "is this a declared automated run", which the product
-   * already answers for the sold search log.
-   */
+  /* NODE_ENV=production also runs local walks and checks, so a declared automated run gets its own key. */
   assert.equal(
     askCallerKey({ NODE_ENV: "production" } as NodeJS.ProcessEnv, "SYNTHETIC"),
     "synthetic-run",
@@ -639,8 +490,6 @@ test("H1: an unrecognised WTP_ASK_CALLER falls back rather than reaching the wir
   );
 });
 
-/* ── what the cache saved ────────────────────────────────────────────────── */
-
 test("H1: the saving is computed from the published multipliers, and one read repays the write", () => {
   /*
    * The arithmetic that decides whether a breakpoint is worth having at all:
@@ -655,8 +504,7 @@ test("H1: the saving is computed from the published multipliers, and one read re
     "if one read did not repay the write premium the breakpoint would be a surcharge",
   );
 
-  /* The 2026-09-01 PRODUCTION reading, seeded: 15,731 read, 9,662 written,
-     583 uncached, at Claude Opus 5's $5/M input rate. */
+  /* A production reading: 15,731 read, 9,662 written, 583 uncached, at a $5/M input rate. */
   const measured = cacheSavings(
     {
       callerKey: "synthetic-run",

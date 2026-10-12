@@ -7,36 +7,19 @@ import {
 } from "./types.ts";
 
 /**
- * **The PRL profiles adapter** — D62's v1 build shape: the aggregated
- * legislator profiles, joined to our roster by bioguide.
+ * The PRL profiles adapter: aggregated legislator profiles, joined to our
+ * roster by bioguide.
  *
- * `fetch` / `normalize` / `upsert` is the source convention, and this file is
- * the whole of the source: adding PRL meant adding a directory, not editing
- * shared ingestion logic.
+ * Seventeen of the source's columns are ranks, percentiles or an ideology
+ * score, and none may enter our records. The filter is an ALLOWLIST checked
+ * against the file's own header: `normalizeProfiles` reads only the columns
+ * named in `PRL_CATEGORIES` plus the count, sources and stamp, and
+ * `assertNoForbiddenColumns` refuses the run if any column it reads matches the
+ * forbidden pattern.
  *
- * ## What crosses the boundary, and what is refused at it
- *
- * The source file has 51 columns. **Seventeen of them are ranks,
- * percentiles or an ideology score**, and none of those may exist in our
- * records at any remove — a rank is a ranking of named politicians against
- * each other, and it does not become acceptable because a university
- * computed it.
- *
- * So the filter is an ALLOWLIST, checked against the file's own header:
- * `normalizeProfiles` reads only the columns named in `PRL_CATEGORIES` plus
- * the count, the sources and the stamp, and `assertNoForbiddenColumns`
- * refuses the whole run if any column it is about to read matches the
- * forbidden pattern. A denylist would let PRL add a column and have it
- * arrive silently.
- *
- * ## A share is never rendered without its denominator
- *
- * PRL supplies both a `_sum` and a `_mean` per category. The mean IS the
- * share, and it is carried through as PRL computed it rather than
- * recomputed here — recomputing would make us the author of the number.
- * `statementCount` rides with every profile because a share without its base
- * is a naked percentage, which this codebase has now caught itself printing
- * more than once.
+ * The per-category `_mean` IS the share and is carried as PRL computed it, never
+ * recomputed. `statementCount` rides with every profile so no share is shown
+ * without its base.
  */
 
 /** A minimal CSV reader: quotes, embedded commas, embedded newlines. */
@@ -90,13 +73,8 @@ export function allowedColumns(): string[] {
 }
 
 /**
- * Refuse the run if any column we are about to read is a rank, a percentile
- * or an ideology score.
- *
- * This can only fire if the allowlist above is edited carelessly — which is
- * the point. The check is on the columns we READ, so a future session adding
- * `ideology_ideology` to the allowlist because it looked useful gets a
- * failure rather than a shipped ranking.
+ * Refuses the run if any column about to be read is a rank, a percentile or an
+ * ideology score — a guard on the allowlist above.
  */
 export function assertNoForbiddenColumns(columns: string[]): void {
   const bad = columns.filter((c) => PRL_FORBIDDEN_COLUMN_PATTERN.test(c));
@@ -110,12 +88,10 @@ export function assertNoForbiddenColumns(columns: string[]): void {
 }
 
 /**
- * Derive the acquisition denominator from PRL's own national file.
- *
- * Production no longer filters this source through a tracked congressional
- * roster. Exact Bioguide ids are the source's stable identities; malformed
- * non-empty ids remain outside this list and therefore make the bounded
- * candidate fail its row-count reconciliation rather than disappearing.
+ * Derives the acquisition denominator from PRL's own national file. Exact
+ * Bioguide ids are the source's stable identities; malformed non-empty ids
+ * stay out of this list, so the candidate fails its row-count reconciliation
+ * rather than losing them silently.
  */
 export function sourceBioguides(csv: string): string[] {
   const rows = parseCsv(csv).filter((row) => row.length > 1);
@@ -130,7 +106,7 @@ export function sourceBioguides(csv: string): string[] {
 
 export interface NormalizeResult {
   profiles: PrlMemberProfile[];
-  /** Every count this run must state (the no-silent-empty rule). */
+  /** Every count this run must state. */
   counts: {
     rowsInFile: number;
     rowsWithStatements: number;
@@ -141,12 +117,7 @@ export interface NormalizeResult {
   rosterMisses: string[];
 }
 
-/**
- * Read the profiles CSV into records for the roster bioguides asked for.
- *
- * Reports fetched / matched / dropped with denominators, because an
- * operation that can return nothing must be asked what it returned.
- */
+/** Reads the profiles CSV into records for the roster bioguides asked for, with every count stated. */
 export function normalizeProfiles(
   csv: string,
   rosterBioguides: readonly string[],
@@ -227,9 +198,8 @@ export function normalizeProfiles(
 }
 
 /**
- * The sentence a reader gets under a category bar. **PRL's measurement, in
- * PRL's name, with the denominator** — never the app's voice, and never a
- * statement about what the person believes.
+ * The sentence under a category bar: PRL's measurement, in PRL's name, with
+ * the denominator — never a statement about what the person believes.
  */
 export function shareSentence(
   profile: PrlMemberProfile,
@@ -239,14 +209,9 @@ export function shareSentence(
   if (share === null) return null;
   const entry = PRL_CATEGORIES.find((c) => c.key === category);
   if (!entry) return null;
-  // The stored value is a PERCENTAGE, 0-100, as PRL computed it. It is not a
-  // fraction and it is not recomputed here — see PrlMemberProfile.shares for
-  // what reading the file rather than assuming its units caught.
+  // The stored value is a PERCENTAGE, 0-100, as PRL computed it. The share's own base is not exactly
+  // `statementCount`, so the two numbers are stated side by side, never multiplied together.
   const percent = share > 0 && share < 1 ? "under 1%" : `${Math.round(share)}%`;
-  // TWO OF PRL'S NUMBERS, JOINED BY NOTHING. The share's own base is not
-  // exactly `statementCount`, so "N% of the 16,056" would be an arithmetic
-  // claim we cannot support. Both are stated, both attributed, neither
-  // multiplied by the other.
   return (
     `${PRL_RHETORIC_ATTRIBUTION.text} classifies ${percent} of this member's ` +
     `public statements as ${entry.label}. It has ` +

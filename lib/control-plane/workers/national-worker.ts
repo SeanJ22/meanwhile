@@ -2,6 +2,9 @@ import { createPgRepositories, controlPlaneUrlFromEnv } from "../repository/pg-s
 import { browseWithPlaywright } from "../../../scripts/scout-browse.mts";
 import { join } from "node:path";
 import type { LeaseWorkerConfig } from "./process-pool.ts";
+import { readFromHeldCopies } from "../repository/incremental-reads.ts";
+
+readFromHeldCopies();
 
 const replies = new Map<string, { resolve: (value: unknown) => void; reject: (error: unknown) => void }>();
 let sequence = 0;

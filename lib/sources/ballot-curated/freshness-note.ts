@@ -1,9 +1,8 @@
 /**
  * The one sentence a stored ballot says about its own age, in a reader's words:
  * when the election authorities' filings were last read and whether a fresh
- * read is due, never how the copy is stored. Both the curated (Pima, Merrimack)
- * and the Morris County ballot sources use it, so the wording cannot drift
- * between them.
+ * read is due, never how the copy is stored. Shared by every ballot source so
+ * the wording cannot drift between them.
  */
 export type BallotReadStateLike =
   | { readonly kind: "BOOTSTRAP" }
@@ -20,7 +19,7 @@ function readOn(sourceThrough: string | null): string {
   return ` on ${at.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" })}`;
 }
 
-/** `subject` reads after "for": "this ballot", "the Morris County ballot". */
+/** `subject` reads after "for": "this ballot", "the county ballot". */
 export function ballotFreshnessNote(state: BallotReadStateLike, subject: string): string | null {
   if (state.kind === "BOOTSTRAP") {
     return `This is our first saved copy of ${subject} from the election authorities; a fresh read of their filings has not run yet.`;

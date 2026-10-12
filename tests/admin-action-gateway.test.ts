@@ -42,27 +42,7 @@ import { POST } from "@/app/api/admin/action/route.ts";
 import { GET } from "@/app/api/admin/live/route.ts";
 import { ADMIN_HOST, PUBLIC_HOST, adminSessionCookie, withAdminSessionKey } from "./admin-session.ts";
 
-/**
- * **ADM-C6 — the canonical typed Action Gateway, proven against the store.**
- * (Admin Pass C, 2026-09-06.)
- *
- * The gateway preserves these action and refusal behaviors:
- *
- *   1  a permitted action succeeds and leaves a receipt that says what happened
- *   2  a control drawn against a world that has moved is refused as stale
- *   3  a duplicate submission returns the SAME receipt and does not act twice —
- *      asserted against the delegated log, not against the gateway's own answer
- *   5  an owner-gated action is refused for an AGENT caller
- *   6  a refusal writes a receipt too — a refusal with no record is
- *      indistinguishable from a click that never arrived
- *   7  an unknown action fails closed
- *
- * Everything runs against `createMemoryRepositories()` with an injected clock,
- * so the whole path — validate, staleness, idempotency, execute, append — is
- * the production path and not a rehearsal of it.
- *
- * Every registered action is covered by the shape assertions below.
- */
+/** The typed Admin action gateway, run against `createMemoryRepositories()` with an injected clock. */
 
 const NOW = "2026-09-06T12:00:00.000Z";
 
@@ -124,7 +104,7 @@ test("ADM-C6: every registry entry carries a full definition", () => {
       `${definition.type} does not say what it will NOT do, which is the sentence the owner needs`,
     );
     assert.ok(definition.refusals.length > 0, `${definition.type} claims it can never refuse`);
-    // No machine constant leads on the face: these strings are rendered.
+    // These strings are rendered.
     for (const field of ["label", "does", "doesNot"] as const) {
       assert.doesNotMatch(
         definition[field],
@@ -137,8 +117,7 @@ test("ADM-C6: every registry entry carries a full definition", () => {
 });
 
 test("ADM-C6: an action type that is not registered resolves to nothing, inherited members included", () => {
-  // A registry backed by a plain object answers `toString` with a function.
-  // A lookup that trusted truthiness would have handed the gateway that.
+  // A registry backed by a plain object would answer `toString` with a function.
   for (const nonsense of ["toString", "constructor", "__proto__", "hasOwnProperty", "queue.remove", ""]) {
     assert.equal(lookupAction(nonsense), null, `${nonsense} resolved to something`);
   }
@@ -157,7 +136,6 @@ test("ADM-C6 acceptance 1: a permitted action succeeds and leaves a receipt that
   assert.equal(outcome.receipt.outcome, "QUEUED");
   assert.equal(outcome.receipt.refusal, null);
 
-  /* §3.7's list, field by field. A receipt that cannot answer these is a toast. */
   const r = outcome.receipt;
   assert.equal(r.type, "queue.add", "what was done");
   assert.equal(r.authority, "REVERSIBLE_NONPRODUCTION", "under what authority");
@@ -170,32 +148,22 @@ test("ADM-C6 acceptance 1: a permitted action succeeds and leaves a receipt that
   assert.equal(r.readBackAt, "/admin", "where the result can be read back");
   assert.ok((r.undo ?? "").length > 0, "and what would undo it");
 
-  /* The derived identity is recorded, not the empty subject that was submitted. */
   assert.equal(
     r.subject,
     fixSubjectId("the control centre", "Spend by day is not measured"),
     "the receipt names what was actually acted on",
   );
 
-  /* BR-03: the fix list on the control plane holds it, not the decision log. */
   assert.equal((await repos.ownerDecisions.read(DECISION_LOG_KEY)).length, 0, "the fix list no longer waits on a local script");
   const held = (await repos.adminConfig.mustRead("current")).value;
   assert.equal(held.fixList?.length, 1, "the queue add did not reach the fix list");
   assert.equal(held.fixList?.[0].state, "OPEN");
 
-  /* And the receipt is durable, under its derived id. */
   const stored = await findReceipt(repos, receiptIdFor("queue.add", "test-key-000001"));
   assert.deepEqual(stored, r, "the receipt in the store is not the receipt that was returned");
 });
 
 test("ADM-C6: the receipt log holds no field the aggregate-only boundary refuses", async () => {
-  /*
-   * RULING 226 reaches the owner's own console: his page is a rendering like
-   * any other. `appendReceipt` runs `assertAggregateOnly`, so a receipt shape
-   * that grew a reader-level field name would throw at the append rather than
-   * become durable. This asserts the property on the record that actually
-   * landed, not on the schema.
-   */
   const repos = createMemoryRepositories();
   await submit(ask(), deps(repos));
   const rows = await repos.adminReceipts.read(ADMIN_RECEIPT_LOG_KEY);
@@ -223,18 +191,11 @@ test("ADM-C6 acceptance 2: an action rendered against a world that has moved is 
   assert.match(outcome.receipt.says, /out of date/i);
   assert.doesNotMatch(outcome.receipt.says, /STALE_STATE/, "the machine code does not lead the sentence");
 
-  /* Nothing was recorded but the refusal. */
   assert.deepEqual(await repos.ownerDecisions.read(DECISION_LOG_KEY), [], "a stale decision reached the log");
   assert.equal((await readReceipts(repos)).length, 1, "the refusal is the only record");
 });
 
 test("ADM-C6: an action that must quote a version and quotes none is INVALID, not stale", async () => {
-  /*
-   * The contract is explicit that these are different failures: an action that
-   * quotes nothing against a world that has one has not gone stale, it has
-   * arrived without the thing that would let anyone tell. Collapsing them would
-   * teach the owner to read "out of date" as "the button is broken".
-   */
   const repos = createMemoryRepositories();
   const outcome = await submit(
     ask({ type: "decision.record", subject: "row-88", stateVersion: null, input: { subjectId: "row-88", chosenOption: "Do it" } }),
@@ -243,7 +204,6 @@ test("ADM-C6: an action that must quote a version and quotes none is INVALID, no
   assert.equal(outcome.receipt.refusal, "INVALID_INPUT");
   assert.match(outcome.receipt.says, /which version of the page/i);
 
-  /* And an action that does NOT require one is unaffected by quoting nothing. */
   const relaxed = await submit(
     ask({ stateVersion: null, idempotencyKey: "test-key-000002" }),
     deps(repos, { currentStateVersion: "world-2" }),
@@ -273,11 +233,7 @@ test("ADM-C6 acceptance 3: a duplicate submission returns the same receipt and d
   assert.deepEqual(second.receipt, first.receipt, "the replay returned a different receipt");
   assert.equal(second.receipt.startedAt, NOW, "the replay re-stamped the receipt with a later clock");
 
-  /*
-   * THE ASSERTION THAT MATTERS. The gateway agreeing with itself proves
-   * nothing; what proves it is the DELEGATED path having run once. Two pause
-   * intents in the log would be two things the runner honors.
-   */
+  // Asserted on the delegated log, not the gateway's own answer.
   const intents = await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY);
   assert.equal(intents.length, 1, "the runner was told to pause twice");
   assert.equal((await readReceipts(repos)).length, 1, "the log holds two receipts for one action");
@@ -317,7 +273,6 @@ test("research.pause records one versioned paid-lane intent and idempotent recei
   const applied = readIntents(saved);
   const lane = modelLaneClosure({ dry: false, noModel: false,
     credentialConfigured: true, credentialVar: "ANTHROPIC_API_KEY",
-    activation: { promotionEnabled: true, openRecordClasses: ["OFFICIAL_ROSTER"] },
     paused: applied.paused, pauseIntentId: applied.pauseIntentId,
     runnerPaused: applied.runnerPause.paused, runnerPauseIntentId: applied.runnerPause.intent?.intentId ?? null,
     unreadableControls: [] });
@@ -334,8 +289,7 @@ test("research.pause records one versioned paid-lane intent and idempotent recei
   assert.equal(pendingResearchLaneAcknowledgment([...acknowledged, resumed], null)?.detail, "model lane reopened");
   assert.match(pendingResearchLaneAcknowledgment([...acknowledged, resumed],
     { code: "LANE_DISABLED", reason: "no credential" })?.detail ?? "", /stays closed this cycle: no credential/);
-  // The ordinary cycle, not the Admin gateway, consumes this reading and
-  // acknowledges the exact intent once. No cycle or paid transport runs here.
+  // The ordinary cycle, not the gateway, consumes this reading and acknowledges the intent once.
   const cycle = readFileSync(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
   assert.match(cycle, /const intents = readIntents\(intentLog\);/);
   assert.match(cycle, /const laneClosure = modelLaneClosure\(\{[\s\S]*?paused: intents\.paused,/);
@@ -351,8 +305,7 @@ test("research.pause records one versioned paid-lane intent and idempotent recei
 });
 
 test("ADM-C6: two DIFFERENT actions sharing an idempotency key are two actions", async () => {
-  // The receipt id is `<type>:<key>`, so the key is scoped to the action. A key
-  // that collided across types would let one control silently swallow another.
+  // The receipt id is `<type>:<key>`, so the key is scoped to the action.
   const repos = createMemoryRepositories();
   const a = await submit(ask({ type: "runner.pause", input: {}, idempotencyKey: "shared-key-01" }), deps(repos));
   const b = await submit(ask({ type: "runner.resume", input: {}, idempotencyKey: "shared-key-01" }), deps(repos));
@@ -383,7 +336,6 @@ test("ADM-C6 acceptance 5: an owner-gated action is refused for an AGENT caller"
   assert.equal(outcome.receipt.refusal, "AUTHORITY_MISMATCH");
   assert.deepEqual(await repos.ownerDecisions.read(DECISION_LOG_KEY), [], "an agent recorded an owner decision");
 
-  /* The same action from the owner's own session goes through. */
   const owned = await submit(
     ask({
       type: "decision.record",
@@ -399,12 +351,6 @@ test("ADM-C6 acceptance 5: an owner-gated action is refused for an AGENT caller"
 });
 
 test("ADM-C6: the operator chat carries a button's authority for everything but an owner decision", async () => {
-  /*
-   * §3.5 — the chat is the owner's own session speaking, so it must not be a
-   * second-class caller for ordinary controls. It is NOT the owner for a
-   * decision, because "an agent cannot silently execute a workflow requiring
-   * owner judgment" reads the same whether the agent is wearing a chat window.
-   */
   const repos = createMemoryRepositories();
   const control = await submit(
     ask({ type: "runner.resume", subject: "pilot-runner", input: {}, idempotencyKey: "chat-key-00001", caller: "OPERATOR_CHAT" }),
@@ -427,7 +373,6 @@ test("ADM-C6: the operator chat carries a button's authority for everything but 
 
 test("ADM-C6 acceptance 6: a refusal is a first-class outcome with a durable receipt", async () => {
   const repos = createMemoryRepositories();
-  /* One of each refusal the gateway itself produces, and every one leaves a row. */
   await submit(ask({ type: "nothing.here", idempotencyKey: "refusal-key-01" }), deps(repos));
   await submit(ask({ type: "queue.add", input: { says: "" }, idempotencyKey: "refusal-key-03" }), deps(repos));
   await submit(ask({ stateVersion: "old", idempotencyKey: "refusal-key-04" }), deps(repos));
@@ -461,12 +406,7 @@ test("ADM-C6 acceptance 7: an unknown action fails closed and is recorded as one
 });
 
 test("ADM-C6: a request that is not shaped like an action writes nothing at all, and says so", async () => {
-  /*
-   * The one deliberate exception to "every refusal leaves a record". The
-   * receipt id is derived from the type and the idempotency key; a malformed
-   * pair cannot produce a row anybody could ever address again, so the gateway
-   * refuses without writing and the sentence tells the caller that.
-   */
+  // A malformed type/key pair cannot produce an addressable receipt id, so nothing is written.
   const repos = createMemoryRepositories();
   for (const bad of [
     ask({ type: "", idempotencyKey: "envelope-key-1" }),
@@ -483,19 +423,11 @@ test("ADM-C6: a request that is not shaped like an action writes nothing at all,
 });
 
 /* ==========================================================================
- * THE PLANT — the instrument catches the real defect
+ * POSITIVE CONTROL
  * ======================================================================= */
 
 test("ADM-C6 PLANT: a gateway that skipped the idempotency read would be caught here", async () => {
-  /*
-   * A POSITIVE CONTROL, because a duplicate-submission test that only reads the
-   * gateway's own answer would pass against a gateway that did the work twice
-   * and returned the second receipt. This plants exactly that defect — the same
-   * action, submitted twice, with the receipt log emptied in between so the
-   * idempotency read finds nothing — and asserts the DELEGATED log moves. If
-   * the real test above were measuring the wrong thing, this one would be
-   * indistinguishable from it.
-   */
+  // Blinding the idempotency read must make the delegated log move twice.
   const repos = createMemoryRepositories();
   const request = ask({ type: "runner.resume", subject: "pilot-runner", input: {}, idempotencyKey: "plant-key-0001" });
   await submit(request, deps(repos));
@@ -533,7 +465,7 @@ test("ADM-C6: an unreadable receipt log stops the gateway rather than risking a 
 });
 
 /* ==========================================================================
- * §9A.22 — THE API FALLBACK TOGGLE
+ * THE API FALLBACK TOGGLE
  * ======================================================================= */
 
 test("§9A.22: paid API fallback defaults OFF, and reads OFF from a store nothing has written", async () => {
@@ -573,10 +505,8 @@ test("§9A.22: turning paid API fallback on needs an explicit confirmation, and 
     receiptIdFor("config.setApiFallback", "fallback-key-02"),
     "the policy does not point at the receipt that changed it",
   );
-  /* And the sentence does not claim more than the system does. */
   assert.match(on.receipt.says, /does not switch anything on by itself/i);
 
-  /* Turning it back off is a compare-and-set on the row that exists. */
   const off = await submit(
     ask({ type: "config.setApiFallback", subject: "paid API fallback", input: { enabled: "false" }, idempotencyKey: "fallback-key-03" }),
     deps(repos),
@@ -622,7 +552,6 @@ test("the Fleet spend ceiling is recorded durably, names who/when/previous, and 
     receiptIdFor("config.setFleetSpendCeiling", "ceiling-key-01"),
     "the override points at the receipt that changed it",
   );
-  /* Setting API fallback separately must not erase the ceiling override, and vice versa. */
   assert.equal(afterFirst?.value.apiFallback.enabled, false, "the ceiling write preserves the untouched apiFallback default");
 
   const second = await submit(
@@ -664,7 +593,7 @@ test("the Fleet spend ceiling rounds to whole cents and a corrupt policy row rea
 });
 
 /* ==========================================================================
- * ADM-34 — the pulse
+ * THE PULSE
  * ======================================================================= */
 
 test("ADM-34: the pulse names every read it could not make and renders none of them as zero", async () => {
@@ -676,11 +605,7 @@ test("ADM-34: the pulse names every read it could not make and renders none of t
     assert.equal(value, null, `${name} reported a number from a store that holds nothing`);
   }
   assert.equal(pulse.counts.agentJobsRunning, 0, "an empty job log is a real answer: nothing is running");
-  /*
-   * Three aggregates answered "nothing published yet" and each is named. The
-   * four snapshot-fed counts are covered by the snapshot's own name rather than
-   * repeated four times, which is why the denominator is three and not seven.
-   */
+  // The four snapshot-fed counts are named once, by the snapshot.
   assert.equal(pulse.unread.length, 3, `${pulse.unread.length} unread reading(s) were named, not three`);
   assert.ok(
     pulse.unread.some((name) => /control centre snapshot/.test(name)),
@@ -718,11 +643,7 @@ test("ADM-34: the revision moves when the console's own record moves, and not ot
 });
 
 test("ADM-34: the pulse makes no list() call — the reads it may not make are refused loudly", async () => {
-  /*
-   * §16. A pulse that listed attempts, work items or route tasks would be a
-   * full table scan every forty-five seconds per open tab. The prohibition is
-   * enforced by BREAKING those methods and asserting the pulse still answers.
-   */
+  // Listing these would be a full table scan per open tab on every pulse.
   const repos = createMemoryRepositories();
   const refuse = (which: string) => async () => {
     throw new Error(`${which}.list() must not be called from the pulse`);
@@ -774,13 +695,6 @@ test("ADM-C6: the agent-job log holds a job's progression without ever editing a
 });
 
 test("ADM-34: a delegated-job row this strip cannot read makes the count unknown, never zero", async () => {
-  /*
-   * The bridge that writes this log is another lane's, and its record may carry
-   * a state field this module does not know. Reading such a row as "not
-   * running" would report nothing running while something ran — an absence
-   * asserted from a row we did not understand. It is counted as unreadable, the
-   * pulse leaves the number null, and the strip is told by name.
-   */
   const repos = createMemoryRepositories();
   await repos.agentJobs.append(
     AGENT_JOB_LOG_KEY,
@@ -841,11 +755,7 @@ test("ADM-C6: both gateway routes are invisible on the public host and unreachab
 });
 
 test("ADM-C6: neither route ever puts a connection string or a variable name in its body", async () => {
-  /*
-   * `openControlPlane` names `WTP_CONTROL_PLANE_DATABASE_URL` in its own detail
-   * sentence, which is right for a server log and wrong for a browser. With no
-   * control plane configured, both routes must answer without it.
-   */
+  // `openControlPlane` names the variable in its detail sentence; that must not reach a browser.
   await withAdminSessionKey(async () => {
     const before = process.env.WTP_CONTROL_PLANE_DATABASE_URL;
     delete process.env.WTP_CONTROL_PLANE_DATABASE_URL;
@@ -884,20 +794,12 @@ test("ADM-C6: neither route ever puts a connection string or a variable name in 
 });
 
 test("ADM-C6: the route is one door — a no-JS form and a JSON fetch build the same request", async () => {
-  /*
-   * §3.5, asserted on the shape rather than on a promise. Both bodies name the
-   * same action with the same input, so both must produce the same input digest
-   * and therefore the same derived idempotency key, receipt id and delegated
-   * effect. The route's own reader is exercised through the module's exported
-   * helper shape below; the equality is what matters.
-   */
   const fromForm = inputDigest({ note: "deep dive on Illinois" });
   const fromJson = inputDigest({ note: "deep dive on Illinois" });
   assert.equal(fromForm, fromJson);
   assert.notEqual(fromForm, inputDigest({ note: "deep dive on Iowa" }));
   assert.match(fromForm, /^sha256-[0-9a-f]{64}$/, "the digest is not a content address");
-  // Key order must not change the digest: a form and a fetch build the object
-  // in whatever order their fields arrived in.
+  // Key order must not change the digest.
   assert.equal(inputDigest({ a: 1, b: 2 }), inputDigest({ b: 2, a: 1 }));
 });
 
@@ -964,7 +866,6 @@ test("ADM-34: the counts come from the published snapshot, so the strip and the 
   assert.equal(pulse.runner.state, "ALIVE");
   assert.equal(pulse.runner.nextCycleDueAt, "2026-09-06T12:20:00.000Z");
 
-  /* Recording a decision still works; it is simply not counted on the strip. */
   const decided = await submit(
     ask({
       type: "decision.record",

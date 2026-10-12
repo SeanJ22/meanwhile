@@ -5,10 +5,8 @@ import { useRef, type ReactNode } from "react";
 import { useCardVisibility } from "@/hooks/use-card-visibility";
 
 /**
- * A server-rendered card that records how long it is on screen (S2.4, October
- * 1, 2026). The ballot's cards are server components, which cannot hold the
- * visibility hook; this thin client wrapper does and renders its children
- * unchanged.
+ * Records how long a server-rendered card is on screen; server components
+ * cannot hold the visibility hook. Renders children unchanged.
  */
 export function VisibleCard({
   cardId,

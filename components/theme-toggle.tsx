@@ -3,10 +3,8 @@
 import { useStoredTheme } from "@/hooks/use-stored-theme";
 
 /**
- * The theme switch (approved reader design, 2026-09-28): a half-black,
- * half-white circle that turns 180° as the theme cross-fades. One glyph for
- * both states, so it reads as "switch", not as a picture of the current or
- * the next theme. The label names the destination.
+ * The theme switch: a half-black, half-white circle that turns as the theme
+ * cross-fades. The label names the destination.
  */
 export function ThemeToggle({ className = "" }: { className?: string }) {
   const { theme, toggle } = useStoredTheme();

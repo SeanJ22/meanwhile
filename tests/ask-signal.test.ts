@@ -18,14 +18,7 @@ import {
   RESIDENCY_RELATIONS,
 } from "../lib/ask/residency.ts";
 
-/**
- * **ASK03 — the Ask interaction store, which is built and NOT RUNNING.**
- *
- * Every test here runs against a store whose ripcord ships PULLED. That is
- * deliberate and it is the point: the shape has to be provable BEFORE the
- * capability is switched on, so that turning it on is a one-flip
- * activation rather than a build followed by a scramble.
- */
+/** The Ask interaction store, tested with its ripcord pulled. */
 
 function input(over: Partial<AskInteractionInput> = {}): AskInteractionInput {
   return {
@@ -64,8 +57,6 @@ function input(over: Partial<AskInteractionInput> = {}): AskInteractionInput {
   };
 }
 
-// ── The gate ────────────────────────────────────────────────────────────
-
 test("ASK03: with a continuity key and a write path, one Ask writes one row", async () => {
   let wrote = 0;
   const outcome = await captureAskInteraction(input(), async () => {
@@ -74,8 +65,6 @@ test("ASK03: with a continuity key and a write path, one Ask writes one row", as
   assert.equal(outcome.kind, "WROTE");
   assert.equal(wrote, 1);
 });
-
-// ── Free-text safety ────────────────────────────────────────────────────
 
 test("ASK03: PII a reader types about themselves never reaches the stored text", () => {
   const row = prepareAskInteraction(
@@ -109,8 +98,6 @@ test("ASK03: the stored answer is capped", () => {
   assert.equal(row.answerText?.length, ASK_ANSWER_MAX_CHARS);
 });
 
-// ── The identity boundary ───────────────────────────────────────────────
-
 test("ASK03: the continuity key is stored ONLY as a digest, under its own prefix", () => {
   const row = prepareAskInteraction(input({ continuityKey: "browser-minted-abc123" }));
   assert.ok(!JSON.stringify(row).includes("browser-minted-abc123"), "the raw key must not be stored");
@@ -119,14 +106,7 @@ test("ASK03: the continuity key is stored ONLY as a digest, under its own prefix
 });
 
 test("ASK03: the digest CANNOT equality-join to another store's key for the same browser", () => {
-  /*
-   * **THE WHOLE BOUNDARY, AS ONE ASSERTION.**
-   *
-   * Four stores hash a browser-minted key. If they digested the raw value they
-   * would produce the SAME hash for the same browser — equality-joinable across
-   * stores the constitution says share no key, on a value nobody would even
-   * have to look up. RULING 132: proven over VALUE SPACES, never column names.
-   */
+  /* Stores hashing one browser key must not produce the same digest: no two stores may be equality-joinable. */
   const key = "the-same-browser-everywhere";
   const ask = askKeyHash(key);
   const reaction = createHash("sha256").update(key, "utf8").digest("hex");
@@ -158,15 +138,8 @@ test("ASK03: the row carries no email, account, address or phone field at all", 
   }
 });
 
-// ── Location: two axes, and the sentence each one licenses ──────────────
-
 test("ASK03: a self-declared ZIP is a ZIP COHORT and is NOT district membership", () => {
-  /*
-   * The initial zip is a self-declared HOME zip, and
-   * that is real signal. It is also not an address-validated residence, and
-   * 85641 crosses school, legislative, fire and special-district lines — so
-   * the two sentences must never be spoken as one.
-   */
+  /* The initial zip is a self-declared home zip, not an address-validated residence, so the two sentences are never spoken as one. */
   assert.equal(zipCohortOnly("SELF_DECLARED_ZIP"), true);
   assert.equal(zipCohortOnly("UNVERIFIED"), true);
   assert.equal(zipCohortOnly("ADDRESS_RESOLVED"), false);
@@ -226,8 +199,6 @@ test("ASK03: every declared relation and confidence has an honest label", () => 
     }
   }
 });
-
-// ── The answer is recorded as it actually happened ──────────────────────
 
 test("ASK03: the answer mode is stored as given and is never inferred", () => {
   /*

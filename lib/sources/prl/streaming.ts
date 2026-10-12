@@ -1,20 +1,8 @@
 /**
- * **Streaming parsers for files too large to hold in memory.**
- *
- * The classified-statement CSVs reach 461 MB compressed and several gigabytes
- * decompressed, and their `text` and `*_explanation` columns are free prose
- * full of commas, quotes and newlines. Two consequences drive this module:
- *
- * - A line-split is wrong. A record spans as many physical lines as its quoted
- *   text contains, and a `split(",")` mis-columns every row after the first
- *   embedded comma. Both parsers are quote/brace aware.
- * - The whole file must never sit in memory. Both parsers are fed text chunks
- *   and yield one record at a time, holding only the partial record that
- *   straddles a chunk boundary. Both are linear in the input length.
- *
- * The full-text `.json` members are a single top-level array of objects. The
- * JSON parser tracks string, escape and brace state, so it yields correct
- * objects whether or not PRL keeps one object per line.
+ * Streaming parsers for files too large to hold in memory. Records span as many
+ * physical lines as their quoted prose contains, so both parsers are quote/brace
+ * aware, are fed text chunks, yield one record at a time and are linear in the
+ * input. The full-text `.json` members are one top-level array of objects.
  */
 
 /** A source of decoded text chunks (e.g. an inflating zip member). */
@@ -34,33 +22,41 @@ export async function* streamCsvRecords(chunks: TextChunks): AsyncGenerator<stri
   // character may be in the next chunk, so the decision is parser state, not a
   // look-ahead into the current chunk.
   let pendingQuote = false;
+  let closedQuote = false;
+  let rowChars = 0;
   for await (const chunk of chunks) {
     for (let i = 0; i < chunk.length; i += 1) {
       const c = chunk[i];
+      if (++rowChars > 4 * 1024 * 1024) throw new Error("PRL_CSV_RECORD_TOO_LARGE");
       if (pendingQuote) {
         pendingQuote = false;
         if (c === '"') {
           cell += '"'; // an escaped quote; the field stays open
           continue;
         }
-        quoted = false; // the prior quote closed the field; fall through to handle c
+        quoted = false; closedQuote = true; // the prior quote closed the field; fall through to handle c
       } else if (quoted) {
         if (c === '"') pendingQuote = true;
         else cell += c;
         continue;
       }
-      if (c === '"') quoted = true;
+      if (closedQuote && c !== "," && c !== "\n" && c !== "\r") throw new Error("PRL_CSV_INVALID_QUOTE");
+      if (c === '"') {
+        if (cell.length) throw new Error("PRL_CSV_INVALID_QUOTE");
+        quoted = true;
+      }
       else if (c === ",") {
         row.push(cell);
-        cell = "";
+        cell = ""; closedQuote = false;
       } else if (c === "\n") {
         row.push(cell);
         yield row;
         row = [];
-        cell = "";
+        cell = ""; closedQuote = false; rowChars = 0;
       } else if (c !== "\r") cell += c;
     }
   }
+  if (quoted && !pendingQuote) throw new Error("PRL_CSV_TRUNCATED_QUOTE");
   // Flush a final record that had no trailing newline.
   if (cell !== "" || row.length > 0) {
     row.push(cell);
@@ -94,51 +90,46 @@ export async function* streamCsvObjects(chunks: TextChunks): AsyncGenerator<Reco
  * is examined once, and the buffer is trimmed to at most one in-flight object.
  */
 export async function* streamJsonArrayObjects(chunks: TextChunks): AsyncGenerator<unknown> {
-  let buf = "";
-  let scan = 0; // next index in buf to examine
-  let depth = 0;
-  let inString = false;
-  let escaped = false;
-  let objStart = -1; // index in buf where the current top-level object began
-  let consumed = 0; // everything before this index in buf is finished
+  let state: "START" | "FIRST" | "VALUE" | "COMMA" | "END" = "START";
+  let object = "", depth = 0, inString = false, escaped = false;
   for await (const chunk of chunks) {
-    buf += chunk;
-    for (; scan < buf.length; scan += 1) {
-      const c = buf[scan];
-      if (inString) {
-        if (escaped) escaped = false;
-        else if (c === "\\") escaped = true;
-        else if (c === '"') inString = false;
+    for (const char of chunk) {
+      if (depth > 0) {
+        object += char;
+        if (object.length > 4 * 1024 * 1024) throw new Error("PRL_JSON_RECORD_TOO_LARGE");
+        if (inString) {
+          if (escaped) escaped = false;
+          else if (char === "\\") escaped = true;
+          else if (char === '"') inString = false;
+        } else if (char === '"') inString = true;
+        else if (char === "{" || char === "[") depth++;
+        else if (char === "}" || char === "]") depth--;
+        if (depth === 0) {
+          yield JSON.parse(object, (key: string, value: unknown, context?: { source?: string }) => {
+            if ((key === "id" || key.endsWith("_id")) && typeof value === "number") {
+              if (!context?.source || !/^\d+$/.test(context.source)) throw new Error("PRL_NATIVE_NUMBER_INVALID");
+              return context.source;
+            }
+            return value;
+          });
+          object = ""; state = "COMMA";
+        }
         continue;
       }
-      if (c === '"') {
-        inString = true;
-      } else if (c === "{") {
-        if (depth === 0) objStart = scan;
-        depth += 1;
-      } else if (c === "}") {
-        depth -= 1;
-        if (depth === 0 && objStart >= 0) {
-          yield JSON.parse(buf.slice(objStart, scan + 1));
-          consumed = scan + 1;
-          objStart = -1;
-        }
-      }
-    }
-    // Trim everything already consumed (or before the in-flight object).
-    const keepFrom = objStart >= 0 ? objStart : consumed;
-    if (keepFrom > 0) {
-      buf = buf.slice(keepFrom);
-      scan -= keepFrom;
-      if (objStart >= 0) objStart -= keepFrom;
-      consumed = Math.max(0, consumed - keepFrom);
+      if (/\s/.test(char)) continue;
+      if (state === "START" && char === "[") { state = "FIRST"; continue; }
+      if ((state === "FIRST" || state === "VALUE") && char === "{") { object = "{"; depth = 1; continue; }
+      if ((state === "FIRST" || state === "COMMA") && char === "]") { state = "END"; continue; }
+      if (state === "COMMA" && char === ",") { state = "VALUE"; continue; }
+      throw new Error("PRL_JSON_ARRAY_INVALID");
     }
   }
+  if (state !== "END" || depth !== 0 || inString) throw new Error("PRL_JSON_ARRAY_TRUNCATED");
 }
 
 /** Adapt a byte/string async iterable to decoded UTF-8 text chunks. */
 export async function* decodeUtf8(chunks: AsyncIterable<Uint8Array | string>): TextChunks {
-  const decoder = new TextDecoder("utf-8");
+  const decoder = new TextDecoder("utf-8", { fatal: true });
   for await (const chunk of chunks) {
     yield typeof chunk === "string" ? chunk : decoder.decode(chunk, { stream: true });
   }

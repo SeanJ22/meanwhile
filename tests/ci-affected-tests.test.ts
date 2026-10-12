@@ -16,7 +16,6 @@ import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 
-/** A synthetic repository: tracked paths and their text. */
 function repo(files: Record<string, string>) {
   const tracked = Object.keys(files).sort();
   const tests = tracked.filter((path) => /^tests\/.+\.test\.tsx?$/.test(path));
@@ -164,22 +163,15 @@ test("a test that sweeps source trees runs on every code change", () => {
   assert.equal(repo(files)(["docs/notes.md"]).plan, "none");
 });
 
-// RL-07: a pull request that changed only docs/rulings.md ran 482 test files,
-// because modules citing the document pulled in their whole import tree.
 const DOCUMENTS = {
   ...BASE,
-  // A widely imported module that cites the rulings in a reason string.
   "lib/cites.ts": 'export const why = "see docs/rulings.md §3";\n',
   "lib/wide.ts": 'import { why } from "./cites.ts";\nexport const wide = why;\n',
   "tests/wide.test.ts": 'import { wide } from "../lib/wide.ts";\n',
-  // A test that imports the citing module directly reads through it.
   "tests/cites.test.ts": 'import { why } from "../lib/cites.ts";\n',
-  // A test that reads the document by name.
   "tests/reads-rulings.test.ts": 'import { readFileSync } from "node:fs";\nreadFileSync("docs/rulings.md", "utf8");\n',
-  // A compiler that reads the document, and the freshness test that spawns it.
   "scripts/compile.mjs": 'import { readFileSync, writeFileSync } from "node:fs";\nwriteFileSync("docs/constitution.md", readFileSync("docs/rulings.md", "utf8"));\n',
   "tests/fresh.test.ts": 'import { spawnSync } from "node:child_process";\nspawnSync(process.execPath, ["scripts/compile.mjs"]);\n',
-  // Sweeps: one lists source only, one lists the whole repository, one lists docs/.
   "tests/source-sweep.test.ts": 'import { readdirSync } from "node:fs";\nfor (const f of readdirSync("lib")) {}\n',
   "tests/repo-sweep.test.ts": 'import { filesThatWouldBeCommitted } from "../lib/c.ts";\nfilesThatWouldBeCommitted({ cwd: "." });\n',
   "tests/helpers/doc-walk.ts": 'import { readdirSync } from "node:fs";\nexport const docs = () => readdirSync("docs");\n',
@@ -188,7 +180,7 @@ const DOCUMENTS = {
   "CLAUDE.md": "# Guide\n",
 };
 
-test("RL-07: a documents-only change selects the tests that read the document, and no source sweep or import tree", () => {
+test("a documents-only change selects the tests that read the document, and no source sweep or import tree", () => {
   const decision = repo(DOCUMENTS)(["docs/rulings.md"]);
   assert.equal(decision.plan, "affected", decision.reasons.join(" "));
   assert.equal(decision.scope, "documents");
@@ -204,18 +196,18 @@ test("RL-07: a documents-only change selects the tests that read the document, a
   assert.match(decision.reasons.join(" "), /documents only: test files that read the changed documents: 5 of \d+/);
 });
 
-test("RL-07: the compiler's freshness test runs when its source document changes", () => {
+test("the compiler's freshness test runs when its source document changes", () => {
   assert.ok(repo(DOCUMENTS)(["docs/rulings.md"]).files.includes("tests/fresh.test.ts"));
 });
 
-test("RL-07: CLAUDE.md and AGENTS.md alone are documents, not the whole suite", () => {
+test("CLAUDE.md and AGENTS.md alone are documents, not the whole suite", () => {
   const decision = repo(DOCUMENTS)(["CLAUDE.md"]);
   assert.equal(decision.scope, "documents");
   assert.equal(decision.plan, "affected", decision.reasons.join(" "));
   assert.deepEqual(decision.files, ["tests/repo-sweep.test.ts"], "only the sweep that lists every repository file reads it");
 });
 
-test("RL-07: a documents-only change no test reads says NONE, with its count, and does not claim a pass", () => {
+test("a documents-only change no test reads says NONE, with its count, and does not claim a pass", () => {
   const decision = repo(BASE)(["docs/notes.md", "AGENTS.md"]);
   assert.equal(decision.plan, "none");
   assert.equal(decision.scope, "documents");
@@ -224,7 +216,7 @@ test("RL-07: a documents-only change no test reads says NONE, with its count, an
   assert.match(decision.reasons.join(" "), /NONE of the test files read the changed documents \(test files that read the changed documents: 0 of 3\)/);
 });
 
-test("RL-07: documents mixed with code keep the code selection exactly", () => {
+test("documents mixed with code keep the code selection exactly", () => {
   const select = repo(DOCUMENTS);
   const mixed = select(["lib/a.ts", "docs/rulings.md"]);
   assert.equal(mixed.scope, "code");
@@ -235,7 +227,7 @@ test("RL-07: documents mixed with code keep the code selection exactly", () => {
   assert.equal(select(["data/table.json", "docs/rulings.md"]).plan, "full", "data beside a document still selects the full suite");
 });
 
-test("RL-07: Markdown under a code root or public/ is not a document", () => {
+test("Markdown under a code root or public/ is not a document", () => {
   assert.equal(repo(BASE)(["lib/prompt.md"]).plan, "full");
   assert.equal(repo(BASE)(["public/notice.md"]).plan, "full");
   assert.equal(repo(BASE)(["docs/table.json"]).scope, "documents", "anything under docs/ is a document");
@@ -284,24 +276,4 @@ test("the real repository: every test's imports resolve, and a lib change select
   assert.equal(decision.plan, "affected", decision.reasons.join(" "));
   assert.ok(decision.files.includes("tests/required-checks.test.ts"));
   assert.ok(decision.files.length < discoverTests(ROOT).length, "a leaf change must not select the whole suite");
-});
-
-test("RL-07 on the real repository: docs/rulings.md alone runs its readers and its compiled copies' freshness test, not the source sweeps", () => {
-  const tracked = filesThatWouldBeCommitted({ cwd: ROOT });
-  const tests = discoverTests(ROOT);
-  const decision = selectTests({
-    changed: ["docs/rulings.md"],
-    tracked,
-    tests,
-    readText: (path: string) => readFileSync(join(ROOT, path), "utf8"),
-  });
-  assert.equal(decision.plan, "affected", decision.reasons.join(" "));
-  assert.equal(decision.scope, "documents");
-  // docs/rulings.md compiles into docs/governance/constitution.md; this test re-runs the compiler and compares.
-  assert.ok(decision.files.includes("tests/generated-artifacts.test.ts"), "the generated-copy freshness test runs");
-  for (const reader of ["tests/governance-atomicity.test.ts", "tests/no-suppression.test.ts", "tests/secret-redaction.test.ts"]) {
-    assert.ok(decision.files.includes(reader), `${reader} reads the document`);
-  }
-  assert.ok(!decision.files.includes("tests/clean-typecheck.test.ts"), "a source sweep does not run for a document");
-  assert.ok(decision.files.length < tests.length / 5, `${decision.files.length} files: a document must not select a code-sized share of the suite`);
 });

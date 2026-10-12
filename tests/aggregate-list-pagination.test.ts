@@ -1,17 +1,7 @@
 /**
- * `pgAggregateRepository.list()` must not exceed the Neon HTTP driver's 64 MiB
- * response cap. Before this fix `list()` issued ONE unbounded
- * `SELECT ... ORDER BY id`, so once an aggregate table (cp_work_items,
- * cp_attempts, …) crossed 64 MiB the read threw `NeonDbError: response is too
- * large` — and `readAutonomousActivity` lists four of them on every
- * `/admin/fleet` render, so the whole operations report collapsed to
- * STORE_UNREACHABLE. This is the append-only log's 64 MiB failure one layer up;
- * the remedy is the same keyset paging.
- *
- * Deterministic and provider-independent over a fake `Sql`: the fake THROWS on
- * an unbounded scan, so a regression to a single unbounded `SELECT` fails here
- * rather than only against a >64 MiB production aggregate. The paged
- * concatenation must equal the whole table in id order.
+ * `pgAggregateRepository.list()` reads through its changed-since read, which pages by key so it never
+ * exceeds the Neon HTTP driver's 64 MiB response cap. The fake `Sql` throws on any scan without a
+ * `LIMIT` (the one-row read clock aside), and the paged concatenation must equal the whole table in id order.
  */
 
 import assert from "node:assert/strict";
@@ -21,7 +11,7 @@ import {
   AGGREGATE_LIST_READ_PAGE,
   pgAggregateRepository,
 } from "../lib/control-plane/repository/pg-store.ts";
-import { jsonTextAtPath } from "../lib/control-plane/repository/types.ts";
+import { jsonTextAtPath, projectAggregate } from "../lib/control-plane/repository/types.ts";
 
 interface Row {
   readonly id: string;
@@ -38,6 +28,7 @@ function fakeAggregateSql(rows: readonly Row[]) {
   const sql = {
     async query(text: string, params: readonly unknown[] = []): Promise<unknown> {
       calls.push(text);
+      if (/^SELECT now\(\) AS read_at$/.test(text)) return [{ read_at: "2026-09-17T00:00:00.000Z" }];
       const litLimit = /LIMIT\s+(\d+)/.exec(text);
       if (litLimit === null) {
         throw new Error(`unbounded scan would risk the 64 MiB cap: ${text.replace(/\s+/g, " ").trim()}`);
@@ -88,34 +79,31 @@ test("list() pages an aggregate larger than one response and returns every row i
   const out = await repo.list();
   assert.equal(out.length, n);
   assert.deepEqual(out.map((r) => r.value.seq), Array.from({ length: n }, (_, i) => i));
-  assert.ok(calls.length >= 3, `expected multiple bounded pages, saw ${calls.length}`);
-  assert.ok(calls.every((c) => /LIMIT/i.test(c)), "every list statement must carry LIMIT");
+  assert.ok(calls.length >= 4, `expected the read clock and multiple bounded pages, saw ${calls.length}`);
+  assert.match(calls[0]!, /SELECT now\(\) AS read_at/);
+  assert.ok(calls.slice(1).every((c) => /LIMIT/i.test(c)), "every list statement must carry LIMIT");
 });
 
-test("list() of an empty table is one empty bounded page", async () => {
+test("list() of an empty table is the read clock and one empty bounded page", async () => {
   const { sql, calls } = fakeAggregateSql([]);
   const repo = pgAggregateRepository<{ seq: number }>(sql, "WorkItem", "cp_work_items");
   assert.deepEqual(await repo.list(), []);
-  assert.equal(calls.length, 1);
+  assert.equal(calls.length, 2);
 });
 
-test("listNarrowed projects every bounded page in the database and keeps row order", async () => {
-  const rows = seq(AGGREGATE_LIST_READ_PAGE * 2 + 1);
+test("listNarrowed reads the same bounded pages and projects each row exactly as the database projection would", async () => {
+  const rows = seq(AGGREGATE_LIST_READ_PAGE * 2 + 1).map(row => ({ ...row, value: { ...row.value, dropped: "x".repeat(20), nested: { kept: 1, gone: 2 } } }));
   const { sql, calls } = fakeAggregateSql(rows);
-  const repo = pgAggregateRepository<{ seq: number }>(sql, "WorkItem", "cp_work_items");
-  const out = await repo.listNarrowed({ seq: true });
+  const repo = pgAggregateRepository<Record<string, unknown>>(sql, "WorkItem", "cp_work_items");
+  const projection = { seq: true, nested: ["kept"] } as const;
+  const out = await repo.listNarrowed(projection);
   assert.deepEqual(out.map(row => row.id), rows.map(row => row.id));
-  assert.equal(calls.length, 3);
-  for (const query of calls) {
-    assert.match(query, /jsonb_each\(cp_work_items\.value\) AS t WHERE t\.key IN \('seq'\)/);
-    assert.match(query, /END AS value FROM cp_work_items/);
-    assert.match(query, /LIMIT 100/);
-  }
-  assert.match(calls[1], /WHERE id > \$1/);
-  await assert.rejects(() => repo.listNarrowed({ "unsafe') --": true }), /unsafe projection key/);
-  const empty = fakeAggregateSql([]);
-  assert.deepEqual(await pgAggregateRepository(empty.sql, "WorkItem", "cp_work_items").listNarrowed({}), []);
-  assert.match(empty.calls[0], /'\{\}'::jsonb AS value/);
+  assert.deepEqual(out.map(row => row.value), rows.map(row => projectAggregate(row.value, projection)));
+  assert.deepEqual(out[0]!.value, { seq: 0, nested: { kept: 1 } });
+  assert.equal(calls.length, 4, "the read clock and three bounded pages");
+  assert.match(calls[2]!, /WHERE id > \$1/);
+  const empty = fakeAggregateSql(seq(2));
+  assert.deepEqual((await pgAggregateRepository(empty.sql, "WorkItem", "cp_work_items").listNarrowed({})).map(row => row.value), [{}, {}]);
 });
 
 test("list() of exactly one full page still terminates on the short second page", async () => {
@@ -124,13 +112,11 @@ test("list() of exactly one full page still terminates on the short second page"
   const out = await repo.list();
   assert.equal(out.length, AGGREGATE_LIST_READ_PAGE);
   // One full page forces a second (empty) page to confirm the end.
-  assert.equal(calls.length, 2);
-  assert.ok(calls.every((c) => /LIMIT/i.test(c)));
+  assert.equal(calls.length, 3);
+  assert.ok(calls.slice(1).every((c) => /LIMIT/i.test(c)));
 });
 
-/* `listWhere()` (2026-09-22): the lease sweep's per-task Attempt read moved off
-   a full `list()` onto this, so it must be `list()` filtered, bounded, and
-   filtered by the DATABASE with the value as a parameter. */
+/* `listWhere()` is `list()` filtered by the database, bounded, with the value as a parameter. */
 const tagged = (n: number, wanted: (seq: number) => boolean) =>
   seq(n).map((r) => ({ ...r, value: { seq: r.value.seq, routeTaskId: wanted(r.value.seq) ? "rt-want" : "rt-other" } }));
 

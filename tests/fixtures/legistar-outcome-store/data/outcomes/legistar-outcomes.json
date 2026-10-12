@@ -304,7 +304,7 @@
       "sourceOrg": "Pima County Clerk of the Board",
       "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1869&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
       "extraction": "ZERO_ROWS_FAILED",
-      "extractionNote": "The eventitems route returned ZERO rows for this sitting. A zero-row extraction is a FAILED extraction, never an agenda with nothing on it (RULING 100), so no claim is made about what was noticed or decided here.",
+      "extractionNote": "The eventitems route returned ZERO rows for this sitting. A zero-row extraction is a FAILED extraction, never an agenda with nothing on it, so no claim is made about what was noticed or decided here.",
       "publication": {
         "agendaStatusName": "Final",
         "agendaStatusId": 10,

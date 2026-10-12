@@ -2,7 +2,7 @@
  * @freshness-reads-here — each download receipt's retrievedAt is the instant this script's own census.gov read
  * answered, minted right beside that fetch and kept with the file it read.
  *
- * **THE TERRITORIES' GOVERNMENTS, IN THE CENSUS'S OWN WORDS.** (2026-09-25.)
+ * The territories' governments, in the Census's own words.
  *
  *   node_modules/.bin/tsx scripts/extract-territory-functional-status.mts [--tiger=<dir>]
  *
@@ -10,8 +10,8 @@
  * lists nothing for American Samoa, Guam, the Northern Mariana Islands, Puerto
  * Rico or the U.S. Virgin Islands: it does not enumerate the territories. So
  * their registration reads the one Census field that says, per division,
- * whether a government sits on it: TIGER/Line's functional status (FUNCSTAT,
- * docs/state.md §4.6 M17). It exists only in full TIGER/Line, never in the
+ * whether a government sits on it: TIGER/Line's functional status (FUNCSTAT).
+ * It exists only in full TIGER/Line, never in the
  * cartographic files the division ids come from, and the method is the one
  * `scripts/fetch-districts.ts` established: download the TIGER/Line archive,
  * read only its attribute table, join on GEOID.
@@ -38,7 +38,7 @@ import { join } from "node:path";
 
 import { readBoundaryAttributes } from "../lib/geo/shapefile.ts";
 import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
-import { registrationUserAgent } from "../lib/registration/acquire.ts";
+import { censusGeographyUserAgent } from "../lib/census-geography/http.ts";
 
 const ROOT = process.cwd();
 const CACHE = process.argv.find((a) => a.startsWith("--tiger="))?.slice(8) ?? join(ROOT, ".cache", "tiger");
@@ -85,7 +85,7 @@ async function archive(file: string, url: string): Promise<{ readonly bytes: Buf
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), BATCH_TIMEOUT_MS);
   try {
-    const response = await fetch(url, { headers: { "user-agent": registrationUserAgent() }, signal: controller.signal });
+    const response = await fetch(url, { headers: { "user-agent": censusGeographyUserAgent() }, signal: controller.signal });
     const retrievedAt = new Date().toISOString();
     if (!response.ok) throw new Error(`census.gov answered HTTP ${response.status} for ${url}`);
     const finalUrl = response.url || url;

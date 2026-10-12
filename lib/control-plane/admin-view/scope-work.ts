@@ -4,8 +4,6 @@ import { stateOfSubject } from "../expansion/subjects.ts";
 
 export type ScopeWorkObligation = Pick<FreshnessObligation, "id" | "subjectId" | "recordClass" | "routeId" | "lastWorkedAt" | "active" | "scopeDivisions">;
 
-/** Only the scope fields, in one read. Worker plans and accumulated attempt
- * state do not belong in a read-only geography preview. */
 export const SCOPE_WORK_QUERY = `SELECT jsonb_build_object(
   'id', value->'id', 'subjectId', value->'subjectId', 'recordClass', value->'recordClass',
   'routeId', value->'routeId', 'lastWorkedAt', value->'lastWorkedAt',
@@ -29,9 +27,7 @@ export interface ScopeWorkPreview {
   readonly totalActiveInStates: number;
 }
 
-/** Read-only preview of durable work; absence here never excludes an obligation
- * from the full scope. Provider declarations place shared records. An exact
- * registered body can place its own work, never a sibling on its division. */
+/** Absence here never excludes an obligation from the full scope. */
 export function scopeWorkPreview(input: {
   readonly codes: readonly PreviewCode[];
   readonly states: readonly string[];

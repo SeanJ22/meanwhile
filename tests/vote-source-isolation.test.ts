@@ -76,7 +76,7 @@ function stateSnapshot(scope: OfficialStateVoteScope, member: string | null): St
   const rosterTarget = officialStateLegislatorTargetByScope(scope)!;
   const rollId = `${sourceId}:roll-1`;
   return {
-    generatedAt: `2026-09-09T0${OFFICIAL_STATE_VOTE_SCOPES.indexOf(scope)}:00:00.000Z`,
+    generatedAt: `2026-09-09T0${OFFICIAL_STATE_ROLL_CALL_TARGETS.findIndex(target => target.jurisdiction === scope)}:00:00.000Z`,
     officialIdentityAuthority: {
       contractId: rosterTarget.contractId,
       sourceId,
@@ -178,15 +178,16 @@ test("official state proof enumeration keeps NOT_RECORDED explicit without borro
   const calls: OfficialStateVoteScope[] = [];
   const result = await readAvailableOfficialStateVotes({}, async (scope) => {
     calls.push(scope);
-    return stateReadResult(scope, scope === "US-AZ" ? "NOT_RECORDED" : "PROMOTED");
+    return stateReadResult(scope, "NOT_RECORDED");
   });
   assert.deepEqual(calls, OFFICIAL_STATE_VOTE_SCOPES);
-  assert.deepEqual(calls, ["US-AZ", "US-NJ"], "the retired New Hampshire pointer is never opened");
-  assert.deepEqual(result.promoted.map(({ scope }) => scope), ["US-NJ"]);
+  assert.deepEqual(calls, ["US-NJ"], "neither retired Arizona nor retired New Hampshire pointer is opened");
+  assert.deepEqual(result.promoted, []);
   assert.deepEqual(result.readbacks, [
-    { scope: "US-AZ", kind: "NOT_RECORDED", versionId: null },
-    { scope: "US-NJ", kind: "PROMOTED", versionId: "US-NJ:good" },
+    { scope: "US-NJ", kind: "NOT_RECORDED", versionId: null },
   ]);
+  const held = await readAvailableOfficialStateVotes({}, async scope => stateReadResult(scope, "PROMOTED"));
+  assert.deepEqual(held.promoted.map(({ scope }) => scope), ["US-NJ"]);
 });
 
 test("official state proof enumeration fails closed on an unreadable canonical store", async () => {
@@ -199,19 +200,11 @@ test("official state proof enumeration fails closed on an unreadable canonical s
   );
 });
 
-/*
- * R9 (2026-09-25): New Hampshire moved to the per-legislator fan-out
- * (`nh-state-rollcalls`, STATE_LEGISLATOR_VOTES); nothing writes its
- * STATE_ROLL_CALL pointer, yet every proof enumeration and Reader read still
- * opened that stale version. The read list is derived from the contracts, as
- * the Reader render gate is, and the retired scope is named.
- */
 test("R9: only scopes whose contract still promotes STATE_ROLL_CALL are read; the retired one is named", () => {
   const derived = OFFICIAL_STATE_ROLL_CALL_TARGETS
     .filter((target) => {
       const contract = ROUTINE_SOURCE_CONTRACTS.find((entry) => entry.id === target.contractId);
-      assert.ok(contract, `no registered contract for ${target.contractId}`);
-      return contract.recordClass === "STATE_ROLL_CALL";
+      return contract?.recordClass === "STATE_ROLL_CALL";
     })
     .map((target) => target.jurisdiction);
   assert.deepEqual([...OFFICIAL_STATE_VOTE_SCOPES], derived);
@@ -220,23 +213,26 @@ test("R9: only scopes whose contract still promotes STATE_ROLL_CALL are read; th
     OFFICIAL_STATE_ROLL_CALL_TARGETS.map(({ jurisdiction }) => jurisdiction).filter((scope) => !derived.includes(scope)),
     "every official target the contracts no longer promote per jurisdiction is retired by name, and only those",
   );
-  assert.deepEqual(RETIRED_STATE_ROLL_CALL_SCOPES.map(({ scope }) => scope), ["US-NH"]);
+  assert.deepEqual(RETIRED_STATE_ROLL_CALL_SCOPES.map(({ scope }) => scope), ["US-AZ", "US-NH"]);
+  assert.equal(ROUTINE_SOURCE_CONTRACTS.some(entry => entry.id === "az-state-rollcalls"), false);
+  assert.equal(ROUTINE_SOURCE_CONTRACTS.find(entry => entry.id === "az-openstates-votes")?.scope, "US-AZ:openstates-votes:v1");
   assert.equal(
     ROUTINE_SOURCE_CONTRACTS.find((entry) => entry.id === "nh-state-rollcalls")?.recordClass,
     "STATE_LEGISLATOR_VOTES",
   );
   assert.equal(isRetiredStateRollCallScope("US-NH"), true);
+  assert.equal(isRetiredStateRollCallScope("US-AZ"), true);
   assert.equal(isRetiredStateRollCallScope("US-NJ"), false);
 });
 
-test("R9: the retired New Hampshire pointer is refused before any store opens", async () => {
+test("R9: retired jurisdiction pointers are refused before any store opens", async () => {
   const store = new Proxy({}, {
     get() { throw new Error("the store was opened for a retired scope"); },
   });
-  await assert.rejects(
-    readOfficialStateVotesProjection("US-NH", { store: store as never, bypassCache: true }),
-    /STATE_ROLL_CALL_SCOPE_RETIRED:US-NH/,
-  );
+  for (const scope of ["US-AZ", "US-NH"] as const) {
+    await assert.rejects(readOfficialStateVotesProjection(scope, { store: store as never, bypassCache: true }),
+      new RegExp(`STATE_ROLL_CALL_SCOPE_RETIRED:${scope}`));
+  }
 });
 
 test("a New Hampshire member opens only the exact New Hampshire authority", async () => {
@@ -291,7 +287,7 @@ test("an exact Arizona id absent from its held projection is a scoped no-record 
 test("the permanent state-vote Reader has no retired aggregate-scope probe", () => {
   const reader = readFileSync(new URL("../lib/sources/legiscan/snapshot.ts", import.meta.url), "utf8");
   assert.doesNotMatch(reader, /supported-states/);
-  assert.deepEqual(OFFICIAL_STATE_VOTE_SCOPES, ["US-AZ", "US-NJ"]);
+  assert.deepEqual(OFFICIAL_STATE_VOTE_SCOPES, ["US-NJ"]);
 });
 
 test("a production process cannot reopen the retired aggregate through a test marker", { concurrency: false }, () => {

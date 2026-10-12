@@ -6,42 +6,27 @@ import { overLengthBudget } from "./length-contract.ts";
 import { filedOrganizations, stateSmallDonorSentence } from "../funding/state-money-funding.ts";
 
 /**
- * **HOW MUCH A CAMPAIGN RAISED IS A FIGURE WE HOLD, NOT A PARAGRAPH TO WRITE.**
- * (2026-09-25, the Ask three-second repair.)
+ * A campaign-money answer composed from held FINANCE_SUMMARY records only:
  *
- * Measured that evening on production read-only packs (the paid model
- * comparison, `meanwhile-evidence/admin-completion/2026-09-25/ask-model-test`):
- * a campaign-money question the code could not answer took a model reading and
- * a model writing — 3.7 s median on Haiku 4.5, and 5.0-9.1 s for "who gave" and
- * comparison questions, which Opus 5.5 writes first because Haiku 4.5 got 6 of
- * 8 of them wrong in ways the validator cannot see: the donor's absence put on
- * the state ("filings with Arizona describe totals"), "we have no fundraising
- * records for Kelly Ayotte" over a pack that simply had not been given hers.
- * Every one of those answers restates one or two FINANCE_SUMMARY records — the
- * filer's registered committee, its totals, its period, the agency and the day
- * we read it. So the answer is composed here, from those records only:
+ * - **HOW_MUCH**: each held committee filing's own figures in dollars as the
+ *   record carries them, its period as the agency states it, the agency and
+ *   the read date. Two committees are stated separately and never added.
+ * - **WHO_GAVE**: our records hold campaign totals, not donor identities, so
+ *   the answer says so, names what we hold and counts it ("money records we
+ *   hold for this candidate that name a donor: 0 of 1"). It never says the
+ *   state withholds donors.
+ * - **COMPARE**: each person's own figure, with a verdict only when both are
+ *   one filing for the same period and agency. No filing is stated as the
+ *   record states it, never as $0.
  *
- * - **HOW_MUCH** — each held committee filing's own figures, in dollars exactly
- *   as the record carries them, its period as the agency states it, the agency
- *   and the read date. Two committees are stated separately and never added.
- * - **WHO_GAVE** — our records hold campaign TOTALS, not donor identities
- *   (RULING 167 renders no individual donor anywhere), so the answer says
- *   exactly that, names what we do hold, and counts it: "money records we hold
- *   for this candidate that name a donor: 0 of 1". It never says the state
- *   withholds donors.
- * - **COMPARE** — each person's own figure for the asked measure, and a verdict
- *   only when both are one filing for the same period with the same agency.
- *   A person with no filing is stated as the record states them, never as $0.
+ * A person is named as few times as possible: the length contract counts the
+ * "R. " in a middle initial as a sentence end.
  *
- * A person is named as few times as the answer allows: the length contract
- * counts "R. " in "James R. KELLY" as a sentence end (measured 2026-09-25: two
- * mentions of such a name pushed a two-committee answer past five sentences).
- *
- * It returns null — and the model writes, exactly as before — whenever the pack
- * holds anything this cannot state plainly: no state money record for a named
- * person, a federal or county record, more than two committees, an unresolved
- * finance identity, or an answer that would not fit the length contract. The
- * caller holds the result to the SAME validator a model answer faces.
+ * Returns null (the model writes) whenever the pack holds anything this cannot
+ * state plainly: no state money record for a named person, a federal or county
+ * record, more than two committees, an unresolved finance identity, or an
+ * answer over the length contract. The caller applies the same validator a
+ * model answer faces.
  */
 
 export type MoneyMeasure = "RAISED" | "SPENT" | "CASH";
@@ -62,7 +47,7 @@ export interface MoneyQuestion {
 }
 
 /* Written against `normalizeName` (lowercase, punctuation -> space, one leading
-   "the" dropped): "Katie Hobbs's campaign" reads "katie hobbs s campaign". */
+   "the" dropped): "X's campaign" reads "x s campaign". */
 const OF_CAMPAIGN = "(?: s (?:campaign committee|campaign|committee|reelection campaign|re election campaign))?";
 const GENERIC_TAIL = "so far|in total|this (?:year|cycle|election(?: cycle)?)|for (?:his|her|their) (?:campaign|race|bid|run|reelection|re election)(?: campaign)?";
 /* A race the reader names ("for her state senate race") is admitted, and checked against the person's office. */
@@ -97,7 +82,7 @@ const MONEY_PATTERNS: readonly MoneyPattern[] = [
     pattern: new RegExp("^who (?:funded|funds|is funding|has funded|financed|is financing|has financed|bankrolled|is bankrolling|is paying for|paid for) (?<name>.+?) s (?:campaign committee|campaign|race|bid|reelection campaign)$"),
     read: () => ({ kind: "WHO_GAVE" }),
   },
-  /* "Who is funding Andy Biggs?": the slot must bind a held PERSON, so "who is funding the school district" and "who is backing Prop 141" are not this. */
+  /* "Who is funding <person>?": the slot must bind a held person, so a body or measure is not this. */
   {
     pattern: new RegExp(`^who (?:is |has |are )?(?:funding|funded|funds|financing|financed|finances|bankrolling|bankrolled|bankrolls|backing|backed|backs|paying for|paid for|pays for) (?!(?:the|this|that|these|those|our|my|your|a|an|all|every|any|some) )(?<name>.+?)${OF_CAMPAIGN}$`),
     read: () => ({ kind: "WHO_GAVE" }),
@@ -129,7 +114,7 @@ const MONEY_PATTERNS: readonly MoneyPattern[] = [
 export function moneyQuestionShape(question: string): MoneyQuestion | null {
   const normalized = normalizeName(question);
   if (!normalized || normalized.length > 160 || /\d{4}/.test(normalized)) return null;
-  // "Who donated to the candidates for governor?" names a race, not a person: the race reader owns it.
+  // A question naming a race, not a person, belongs to the race reader.
   if (groupMoneyQuestionShape(question)) return null;
   for (const { pattern, read } of MONEY_PATTERNS) {
     const groups = pattern.exec(normalized)?.groups;
@@ -145,10 +130,9 @@ export function moneyQuestionShape(question: string): MoneyQuestion | null {
 const RACE_FILLER: ReadonlySet<string> = new Set(["the", "his", "her", "their", "for", "race", "campaign", "bid", "seat", "run", "reelection", "re", "election"]);
 
 /**
- * Do the words the reader used for the race name this person's own office?
- * "state senate" fits "State Senator, District 7" (a shared five-letter stem);
- * "state senate" does not fit "Governor". An unknown office fits nothing, so a
- * race the reader named is never waved through.
+ * Do the reader's race words name this person's own office (a shared stem,
+ * e.g. "state senate" and "State Senator, District 7")? An unknown office fits
+ * nothing.
  */
 export function raceWordsFitOffice(raceWords: string, office: string | null | undefined): boolean {
   if (!office) return false;
@@ -174,9 +158,8 @@ export interface MoneyAnswerInput {
   records: readonly EvidenceRecord[];
   gaps: readonly EvidenceGap[];
   /**
-   * A required first sentence the route states before the figures: a person
-   * held as two records whose authorities disagree (Hourihan's two parties) is
-   * named with both, never merged silently. Not used for a comparison.
+   * A required first sentence: a person held as two records whose authorities
+   * disagree is named with both, never merged. Not used for a comparison.
    */
   lead?: string;
 }
@@ -204,10 +187,9 @@ function heldFor(records: readonly EvidenceRecord[], personId: string): Held[] |
 }
 
 /**
- * A federal candidate's money: the one FEC summary record held for them, stated
- * in the record's own sentences ("This campaign has raised $6.2 million ..."),
- * with the Federal Election Commission and the day we read it. Null when the
- * person has anything else (a state committee, an absence) or more than one record.
+ * A federal candidate's money: the one FEC summary record held, in the
+ * record's own sentences, with the FEC and the read date. Null when anything
+ * else is held or more than one record.
  */
 function federalHeld(records: readonly EvidenceRecord[], personId: string): EvidenceRecord | null {
   const mine = records.filter((record) => record.kind === "FINANCE_SUMMARY" && record.subjectId === personId);
@@ -228,11 +210,8 @@ function composeFederalMoney(input: MoneyAnswerInput, record: EvidenceRecord): {
 }
 
 /**
- * The period as the agency states it, spelled for a reader, with the filer's
- * report count where the agency gives one: "for the 2026 Election Cycle",
- * "for the Arizona 2026 election cycle, activity recorded January 1st, 2025
- * through September 1st, 2026", "in 14 reports filed through June 22nd, 2026"
- * (New Jersey's report codes — "72/24 HR, D-1, R-1" — are not read out).
+ * The period as the agency states it, spelled for a reader, with the report
+ * count where the agency gives one. Agency report codes are not read out.
  */
 export function periodPhrase(finance: Pick<Held["finance"], "totals" | "electionYear">): string {
   const period = finance.totals.coveringPeriod?.trim();
@@ -262,11 +241,9 @@ function facts(finance: Held["finance"], only?: MoneyMeasure): string | null {
 }
 
 /**
- * One held record, as one clause. `committee` is how the clause opens ("Kelly
- * Ayotte's campaign committee", "The campaign committee", "One", "the other"):
- * the person is named as few times as the answer allows, because an initial
- * ("James R. KELLY") counts as a sentence end in the length contract. Null for
- * a state this cannot state.
+ * One held record as one clause, opening with `committee` ("The campaign
+ * committee", "One", "the other") so the person is named as few times as
+ * possible. Null for a state this cannot state.
  */
 function heldClause(person: MoneyPerson, held: Held, committee: string, only?: MoneyMeasure): string | null {
   const { finance } = held;
@@ -297,10 +274,9 @@ function sourceSentence(held: readonly Held[]): string {
 const STATE_NOTE_LEAD = /^State filings: this answer uses the same state campaign-money records as the card\.\s+/;
 
 /**
- * The state regime note's own second sentence: the campaigns' own filings, no
- * outside spending. Everything after the note's fixed first sentence — never a
- * split on the next period, which cut "for or against Gregory M. Sargent" to
- * "for or against Gregory M." (the 2026-09-25 production sweep).
+ * The state regime note's second sentence (campaigns' own filings, no outside
+ * spending): everything after the fixed first sentence, never a split on the
+ * next period, which would cut a middle initial.
  */
 function outsideSpendingSentence(gaps: readonly EvidenceGap[]): string | null {
   const note = gaps.find((gap) => STATE_NOTE_LEAD.test(gap.statement));
@@ -388,9 +364,8 @@ export function composeMoneyAnswer(input: MoneyAnswerInput): { answer: string; c
   const filed = held.filter((entry) => entry.finance.filingState === "FILED");
   const shown = filed.length ? filed : held.slice(0, 1);
   const source = filed.length ? sourceSentence(held) : null;
-  /* The person is named once where the answer allows: the WHO_GAVE lead names
-     them, so the filing is "The campaign committee"; two filings are "One" and
-     "the other", in one sentence, after a lead that says they are not added. */
+  /* The WHO_GAVE lead names the person, so the filing is "The campaign
+     committee"; two filings are "One" and "the other", in one sentence. */
   const statement = (named: boolean): string | null => {
     if (shown.length === 2) {
       const clauses = [heldClause(person, shown[0], "One"), heldClause(person, shown[1], "the other")];
@@ -439,38 +414,22 @@ export function composeMoneyAnswer(input: MoneyAnswerInput): { answer: string; c
 /* ── a race's candidates, together ──────────────────────────────────────── */
 
 /**
- * **THE CANDIDATES IN ONE RACE, FROM THE SAME HELD FILINGS.** (2026-09-25,
- * the Ask three-second repair, part two.)
- *
- * *"Who funded the Vail school board candidates?"* named a race, not a person:
- * a model read it (Haiku) and Opus 5.5 wrote it first on the escalation route —
- * 8.5 s locally, 4.97 s warm on production — to restate records we hold. The
- * question is answered here from those records only, when the words name ONE
- * race the route resolved:
+ * The candidates in one race the route resolved, from the same held filings.
  *
  * - **A contest on the reader's held ballot** (bound by name, or the one
- *   contest for a bound body's own seats in its division): every candidate the
- *   ballot lists for it, each with their own state committee filing —
- *   registered name, the figures as filed, the agency's period, agency and read
- *   date; two committees stated apart, never added — and every candidate we
- *   hold no money record for, named as such (candidates sharing one gap named
- *   together), with the count ("candidates with a state money record we hold:
- *   2 of 3"). "Who is raising the most" gets a verdict only when every
- *   candidate has one filing with the same agency and period; otherwise the
- *   figures stand side by side.
- * - **A governing body whose race the authority says is not on the ballot**
- *   (Vail: the Board of Supervisors cancelled it as uncontested): that
- *   statement in the authority's words, then the committees the county register
- *   links to the office, each by its registered name with its status and filing
- *   count as the register states them. Never attached to a person — the
- *   register links a committee to an office, not a human.
+ *   contest for a bound body's own seats): every listed candidate with their
+ *   own state committee filing, two committees stated apart, and every
+ *   candidate with no money record named as such, with the count ("candidates
+ *   with a state money record we hold: 2 of 3"). "Who is raising the most" gets
+ *   a verdict only when every candidate has one filing with the same agency and
+ *   period.
+ * - **A governing body whose race the authority says is not on the ballot**:
+ *   that statement in the authority's words, then the committees the county
+ *   register links to the office, as the register states them; never attached
+ *   to a person.
  *
- * "Who gave" is answered the way the one-person answer is: our records hold
- * campaign totals, not the identities of donors, counted — never the state's or
- * the county's withholding. Anything else (a federal or county record in a
- * contest, a candidate with three filings, no state filing held for anyone, a
- * body whose race IS on the ballot but is not one held contest, more than fits
- * the length contract) returns null and the model writes.
+ * "Who gave" is answered as for one person. Anything else returns null and the
+ * model writes.
  */
 export type GroupMoneyAsk =
   | { kind: "HOW_MUCH"; measures: readonly MoneyMeasure[] }
@@ -479,13 +438,13 @@ export type GroupMoneyAsk =
 
 export interface GroupMoneyQuestion {
   ask: GroupMoneyAsk;
-  /** The words naming the race ("vail school board", "governor", "state senator district 7"). */
+  /** The words naming the race ("<place> school board", "governor", "state senator district 7"). */
   group: string;
 }
 
 const FUNDED = "(?:funded|funds|is funding|has funded|financed|is financing|has financed|bankrolled|is bankrolling|is paying for|paid for|(?:gave|gives|given|donated|donates|contributed|contributes) (?:money )?to)";
 const GROUP_TAIL = "(?: (?:so far|in total|this (?:year|cycle|election(?: cycle)?)))?";
-/* "the Vail school board candidates", "the candidates for governor", "the candidates in the state senate district 7 race". */
+/* "the <place> school board candidates", "the candidates for governor", "the candidates in the state senate district 7 race". */
 const CANDIDATES_OF: readonly string[] = [
   "(?:the )?(?<group>.+?) (?:candidates|candidates campaigns|candidates committees)",
   "(?:the )?candidates (?:for|in|running for) (?:the )?(?<group>.+?)(?: (?:race|contest|election))?",
@@ -530,11 +489,8 @@ export function groupMoneyQuestionShape(question: string): GroupMoneyQuestion | 
 }
 
 /**
- * Is this contest the bound body's own seats? A body names its race only
- * through its office: every word of the contest's title (past "member of the")
- * must be a word of the body's name — "Member of the Township Committee" is the
- * Mendham Township Committee's; "County Clerk" is not the Board of County
- * Commissioners', whatever division they share.
+ * Is this contest the bound body's own seats? Every word of the contest's
+ * title (past "member of the") must be a word of the body's name.
  */
 export function contestFitsBody(contestTitle: string, bodyName: string): boolean {
   const office = normalizeName(contestTitle).replace(/\b(?:members?|of|at large|unexpired|full|short|term|seats?)\b/g, " ").trim();
@@ -569,14 +525,11 @@ function filedFacts(finance: Held["finance"], measures: readonly MoneyMeasure[])
 }
 
 /**
- * One candidate, compactly: `Katie Hobbs ("Elect Katie Hobbs"): raised
- * $11,109,719.95`. Two committees are stated apart, never added. A candidate
- * with no filing is OUR gap — "no state committee filing in our records", or,
- * when the ballot listing is not yet joined to a filing identity, "not yet
- * matched to a state filing in our records" (never "no filing", which would be
- * false about a filing held under another record). The gap kinds carry a `gap`
- * text so candidates sharing one are named together ("Shaun Fife and Bob
- * Wayne McClory: no reports on file with ... as of ...").
+ * One candidate, compactly: `Name ("Committee"): raised $X`. Two committees
+ * are stated apart. No filing is our gap ("no state committee filing in our
+ * records", or "not yet matched to a state filing in our records" when the
+ * listing is not joined to a filing identity). Candidates sharing a gap are
+ * named together.
  */
 function candidateClause(person: GroupCandidate, held: readonly Held[], measures: readonly MoneyMeasure[], withPeriod: boolean): { name: string; text: string; gap?: string } | null {
   const period = (finance: Held["finance"]) => withPeriod ? ` ${periodPhrase(finance)}` : "";
@@ -725,8 +678,7 @@ export function composeNoRaceMoneyAnswer(input: GroupMoneyNoRaceInput): { answer
       ? `Our money records for them name no donor (${floorLine(floored("money records naming a donor", where, money.length, namingDonor))})`
       : "We do not add their itemized rows into totals; the rows we hold are listed below");
   }
-  /* The authority's whole statement when it fits; otherwise its first sentence
-     (that the race is not on the ballot), the rest staying in the record below. */
+  /* The authority's whole statement, or its first sentence when that is all that fits. */
   const lead = input.absence.text.trim().split(/(?<=\.)\s+(?=[A-Z])/)[0];
   const answer = assemble(sentences, []) ?? assemble([lead, ...sentences.slice(1)], []);
   const cited = [...new Set([input.absence, ...register.map((row) => row.record)].flatMap((record) => record.sourceUrl ? [record.sourceUrl] : []))];

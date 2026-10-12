@@ -31,54 +31,9 @@ import {
 import { STANDING_NEON_REQUEST_DEADLINE_MS } from "../ops/neon-request-deadline.ts";
 
 /**
- * **A DUE MEETING READ NEVER WAITS FOR THE PASS THAT HOLDS ITS LANE (C6, 2026-09-25).**
- *
- * The standing pilot admits the routine lane every five minutes and never while
- * the last pass is still running, and a pass admits at most three reads a
- * meeting lane. A pass is held open by its slowest work. On 2026-09-24 the 196
- * passes took 1:34 at the median and 15:52 at most, and that longest pass spent
- * 14:31 in its source reads (every family's children) and 1:21 in Reader repair
- * (tests/fixtures/routine-pass-durations-2026-09-24.json dates each pass's
- * Reader repair from its receipts). While a pass is held open, a meeting lane
- * that has made its reads sits idle, and a read that falls due waits for the
- * next pass.
- *
- * The first catch-up (batch B) admitted reads in rounds on the five-minute
- * cadence, and only while Reader repair ran. Replayed against production's
- * recorded passes split into those two phases (tests/helpers/routine-pass-replay.ts),
- * it still left reads late in 5 of 14 seeds: up to 14 hourly reads in 30 days
- * on Tucson's lane (by up to 4:02), and up to 11 hourly and 5 twice-daily reads
- * in the whole registry's first hour. A pass held open by its source reads ran
- * no round; a round skipped a lane still inside its same-host gap at the
- * round's instant; a round carrying reads for many lanes, two at a time, held
- * every lane until its last read ended; and a round started its reads in
- * registry order.
- *
- * So catch-up is per lane, for as long as a pass is held open: a meeting lane
- * with no read of this pass queued or running, and its same-host gap behind it,
- * starts the due read it owes soonest, and lanes take the catch-up children
- * earliest deadline first. Each decision applies the pass's own rules to the
- * pass's own clock reads (the durable clocks of reads not made this pass cannot
- * have moved: this runner is the only writer and holds the host singleton), and
- * a task is read at most once a pass. Only sitting-window tasks are admitted, so
- * no other data family's schedule changes. The same replays, 42 seeds each,
- * then read every hourly body within 52:44 and every body within 11:53, at 1.5%
- * to 4.1% more meeting reads (a due read is made when it falls due, not at the
- * next pass).
- *
- * Reader repair starts only once every catch-up read begun beside the source
- * reads has settled, and catch-up resumes only once no running repair can race
- * a new meeting promotion: the meeting aggregate and any repair of a task
- * catch-up may read settle first (the runner launches them first). A promotion
- * made during repair is proved and published by the next pass's repair, as any
- * promotion after a pass is. No read starts that could outlast the pass's outer
- * time limit; during the source reads, the repair's own worst case stays free.
- *
- * Why not a separate lane, or a capped repair: a separate repair lane would
- * split the one supervisor outcome Admin proves Reader delivery from (every
- * outcome carries exact per-contract Reader receipts) and still needs a second
- * singleton and outer bound; capping repair still holds a read for the domains
- * already running and cuts nothing from a pass held open by its source reads.
+ * While a pass is held open, a meeting lane with no read of this pass queued or running and its same-host gap
+ * behind it starts the due sitting-window read it owes soonest, earliest deadline first across lanes, at most once a
+ * pass. No read starts that could outlast the pass's time limit.
  */
 export interface HotReadCandidate {
   readonly task: RoutineSourceTask;
@@ -105,11 +60,8 @@ export function hotReadCatchUpReadWorstCaseMs(): number {
 }
 
 export interface HotReadCatchUpAdmission {
-  /** The reads to start now, in order. */
   readonly start: readonly RoutineSourceTask[];
-  /** Due reads that could outlast the pass's time limit: they wait for the next pass. */
   readonly pastLimit: readonly RoutineSourceTask[];
-  /** When to look again if nothing else changes first. */
   readonly recheckAtMs: number;
 }
 
@@ -125,13 +77,10 @@ function ascending(left: number, right: number): number {
  */
 export function hotReadCatchUpAdmission(input: {
   readonly nowMs: number;
-  /** Tasks not yet read this pass. */
   readonly candidates: readonly HotReadCandidate[];
   readonly clockReads: Parameters<typeof sittingWindowSignals>[0];
   readonly statedEnds: Parameters<typeof sittingWindowSignals>[2];
-  /** When each lane's last read of this pass ended. */
   readonly laneLastEndedMs: ReadonlyMap<string, number>;
-  /** Lanes with a read of this pass queued or running. */
   readonly busyLanes: ReadonlySet<string>;
   readonly slots: number;
   /** No read starts that could outlast this instant. */
@@ -192,23 +141,18 @@ export interface HotReadCatchUpRead {
 }
 
 export interface HotReadCatchUpInput<R> {
-  /** The phase holding the pass open (its source reads, or its Reader repair), already running. */
   readonly work: Promise<R>;
-  /** No read starts before this settles. */
   readonly unblocked: Promise<void>;
   readonly now: () => number;
   readonly sleepUntil: (atMs: number) => Promise<void>;
   readonly concurrency: number;
-  /** The reads to start at `nowMs` in `slots` free children, lanes of running catch-up reads excluded. */
   readonly admit: (nowMs: number, slots: number, runningLanes: ReadonlySet<string>) => Pick<HotReadCatchUpAdmission, "start" | "recheckAtMs">;
-  /** Run one read and settle it exactly as the pass's own. */
   readonly read: (task: RoutineSourceTask, atMs: number) => Promise<void>;
 }
 
 export interface HotReadCatchUpResult<R> {
   readonly work: R;
   readonly reads: readonly HotReadCatchUpRead[];
-  /** A defect in admission or a read: no further read starts, and the phase is still awaited and reported. */
   readonly error?: string;
 }
 
@@ -255,7 +199,6 @@ export async function runHotReadCatchUp<R>(input: HotReadCatchUpInput<R>): Promi
         } catch (cause) {
           launched = Promise.reject(cause);
         }
-        // A defect in a read never costs the pass its phase or its outcome.
         const settled: Promise<void> = launched.catch(fail).finally(() => { running.delete(settled); });
         running.set(settled, task.acquisitionFailureDomain);
       }

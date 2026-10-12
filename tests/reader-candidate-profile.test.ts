@@ -4,17 +4,50 @@ import { allCandidateCards } from "../lib/ballot/candidate-cards.ts";
 import { allCandidateLinks } from "../lib/ballot/candidate-sites.ts";
 import { candidateProfileEvidenceFor, projectCandidateProfile } from "../lib/ask/candidate-profile.ts";
 import { readerPersonKeys } from "../lib/identity/reader-person.ts";
-import {
-  installCandidateCorpusFirstSeed,
-  installNjMorrisFilingFirstSeed,
-  installRegistryRuntimeFirstSeeds,
-} from "./helpers/registry-runtime-first-seed.ts";
+import { installAzBallot, installRegistryAuthority, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
+import { installCandidateProfiles, syntheticCandidateCard, candidateProfilesFor } from "./helpers/reader-fixtures.ts";
 
-await Promise.all([
-  installCandidateCorpusFirstSeed(),
-  installNjMorrisFilingFirstSeed(),
-  installRegistryRuntimeFirstSeeds(),
-]);
+await installRegistryAuthority();
+// An Arizona governor contest whose certified lineup reconciles one card and records one party conflict.
+await installAzBallot(syntheticAzBallot([{
+  id: "ballot-az-pima:governor",
+  title: "Governor",
+  candidacies: [
+    { id: "ballot-az-pima:governor:hobbs-katie", givenName: "Katie", familyName: "Hobbs" },
+    { id: "ballot-az-pima:governor:biggs-andy", givenName: "Andy", familyName: "Biggs" },
+    { id: "ballot-az-pima:governor:hourihan-teri-ann", givenName: "Teri Ann", familyName: "Hourihan" },
+  ],
+  lineup: [
+    { name: "Andy Biggs", partyLabel: "Republican", outcome: "RECONCILED", candidacyId: "ballot-az-pima:governor:biggs-andy" },
+    { name: "Teri Ann Hourihan", partyLabel: "Independent", outcome: "PARTY_CONFLICT", candidacyId: "ballot-az-pima:governor:hourihan-teri-ann", filingParty: "Democratic" },
+  ],
+}]));
+// Synthetic held profiles: a biography and contact for the governor's candidacy (joined to the registry's
+// current governor), a contact with its own office label, a bio for a namesake card, and verified links.
+await installCandidateProfiles(candidateProfilesFor({
+  "ballot-az-pima:governor:hobbs-katie": syntheticCandidateCard({
+    bio: "Synthetic test biography for the governor's candidacy.", bioSourceUrl: "https://example.test/hobbs/about",
+    bioSourceLabel: "Campaign site, read 2026-09-20", email: "candidate@example.test", phone: "555-0100",
+    phoneSource: "https://example.test/hobbs/contact", photoUrl: null, photoSource: null,
+  }),
+  "ballot-az-pima:governor|Andy Biggs": syntheticCandidateCard({
+    bio: "Synthetic test biography for a different candidate.", bioSourceUrl: "https://example.test/biggs/about",
+    bioSourceLabel: "Campaign site, read 2026-09-21",
+  }),
+  "ballot-nh-merrimack:county-attorney:test-candidate": syntheticCandidateCard({
+    phone: "555-0101", phoneLabel: "Merrimack County Attorney (test office line)", phoneSource: "https://example.test/county-attorney",
+    filedAddress: "1 Filed Address Way (test)", filedAddressSource: "https://example.test/filing",
+  }),
+}, {
+  "ballot-az-pima:governor:hobbs-katie": {
+    official: { url: "https://example.test/governor", verification: "Page names the officeholder (test).", attemptedAt: "2026-09-20" },
+    campaign: { url: "https://example.test/hobbs", verification: "Page names the candidate (test).", attemptedAt: "2026-09-20", label: "Campaign site" },
+  },
+  "ballot-nh-merrimack:county-attorney:test-candidate": {
+    official: null,
+    campaign: { url: "https://example.test/county-attorney-campaign", verification: "Page names the candidate (test).", attemptedAt: "2026-09-22" },
+  },
+}));
 
 test("every current native candidate bio and verified link reaches grounded profile records with exact provenance", () => {
   const cards = allCandidateCards().cards;
@@ -102,6 +135,6 @@ test("contact source metadata is never borrowed from a biography or an unrelated
   assert.ok(answer.records[0].candidateProfile?.provenanceLimitation);
   const officeKey = Object.keys(allCandidateCards().cards).find(id => allCandidateCards().cards[id].phoneLabel)!;
   const actual = candidateProfileEvidenceFor({ kind: "PERSON", id: officeKey, name: "Unrelated display text" }).records.find(row => row.candidateProfile?.field === "phone")!;
-  assert.match(actual.text, /Merrimack County Attorney/);
+  assert.ok(actual.text.includes(allCandidateCards().cards[officeKey].phoneLabel!), "the phone carries its own office label");
   assert.equal(actual.candidateProfile?.label, allCandidateCards().cards[officeKey].phoneLabel);
 });

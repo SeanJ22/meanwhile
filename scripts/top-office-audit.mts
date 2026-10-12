@@ -1,35 +1,14 @@
 /**
- * `pnpm office:audit` — **which bodies have the WRONG PERSON in the
- * runs-it-day-to-day slot, or in the presiding slot?**
+ * `pnpm office:audit` — which bodies have the wrong person in the
+ * runs-it-day-to-day slot, or in the presiding slot? Walks every body in the
+ * registry and reports each as:
  *
- * ## Why this exists (`OFF-7`, 2026-08-25)
+ * - CORRECT — the slot holds the person the body's own titles say it should.
+ * - OUT OF SCOPE, with the reason — the body publishes no executive title at all.
+ * - WRONG — a subordinate or lesser office occupies a slot a senior title in the
+ *   same roster should hold; every instance is named.
  *
- * Sean found Kearsarge Regional School District's card led with **Lawrence
- * LeBoeuf, Business Administrator** under *Runs it day to day*, while the data
- * held **Michael Bessette, Interim Superintendent of Schools** eleventh in the
- * same roster. The selection was fixed and its guard is
- * `tests/interim-office-holder.test.ts`.
- *
- * **The fix is not the item.** RULING 136: the id names an instance, the defect
- * is the class, and an item is done when the class is closed with a
- * denominator. RULING 157: the verification must exercise a case the fix was
- * NOT derived from. Kearsarge is the derived case; every other body in the
- * registry is the class, and this walks all of them.
- *
- * ## What it reports, and why THREE numbers rather than one
- *
- * RULING 105 — never a bare count. Per body:
- *
- * - **CORRECT** — the slot holds the person the body's own titles say it should.
- * - **OUT OF SCOPE, with the reason** — the body publishes no executive title at
- *   all, so there is no slot to get wrong. A single-seat legislative division is
- *   the commonest case and it is a decision, not a gap.
- * - **WRONG** — a subordinate or a lesser office is occupying a slot that a
- *   senior title in the same roster should hold. This is the `OFF-7` shape and
- *   every instance is named.
- *
- * The floor is RULING 159's: a registry that failed to load would report zero
- * wrong slots and read as a clean bill of health.
+ * A registry that failed to load fails the run rather than reporting zero wrong.
  */
 import { BODY_ROSTERS } from "../lib/registry/body-rosters.ts";
 import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
@@ -73,8 +52,7 @@ export function auditTopOffices(rosters = BODY_ROSTERS): OfficeAuditRow[] {
       continue;
     }
 
-    // THE OFF-7 SHAPE: a senior executive exists in the roster and somebody
-    // else is standing in the slot.
+    // A senior executive exists in the roster and somebody else is standing in the slot.
     if (seniorAvailable && dayToDay && dayToDay.holder.id !== seniorAvailable.h.id) {
       out.push({
         bodyId: roster.bodyId,

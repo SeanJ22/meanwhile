@@ -1,43 +1,5 @@
-/**
- * THE DIVISIONS A ZIP REACHES — AREA, NOT A POINT (`NJ01`, 2026-08-22).
- *
- * The ballot page resolved a zip to its ZCTA centroid and asked which divisions
- * contain that ONE point. 07866's centroid falls inside Rockaway Township.
- * Rockaway BOROUGH is a different municipality with its own council, its own
- * school district and its own ballot; its territory is also inside the 07866
- * ZCTA, and its residents write 07866 on their post.
- *
- * So a Borough resident entering their own zip saw the Township's government,
- * none of their own, and a four-candidate Borough council contest that did not
- * render at all. Not because the data was missing — because the resolver asked
- * a question a zip cannot answer.
- *
- * `CLAUDE.md` states the premise already: **a ZCTA crosses city, county, school
- * district and legislative boundaries, so a zip can never resolve a ballot.**
- * Resolving one point and rendering the answer as "your ballot" treats a ZCTA as
- * though it could. Reading the whole area and labelling what comes back treats
- * it as what it is — orientation.
- *
- * ## What this is NOT
- *
- * It is not a claim that a reader at this zip votes in every division returned.
- * They do not. It is the reason `CLAUDE.md` says to prompt for a street address
- * when a reader wants their actual ballot, and the reason anything surfaced
- * through this route renders with the jurisdiction printed beside it. The
- * product's job here is to stop HIDING a government from the people it governs.
- *
- * ## The centroid answer is kept, never replaced
- *
- * The union starts from the point-resolved divisions, so nothing a reader saw
- * yesterday can disappear today — the failed-fetch-empties-a-full-surface rule,
- * applied to a resolver change. A zip absent from the index, or whose shard
- * cannot be read (OUR gap), falls back to exactly the previous behaviour.
- *
- * The index is national (`lib/geo/zip-division-index.ts`, 2026-09-23): every
- * ZIP code in the country, read one small shard at a time.
- */
-
 import { zipDivisionEntry } from "../geo/zip-division-index.ts";
+import type { GeographySelection } from "../census-geography/selection.ts";
 
 /**
  * Every division whose territory reaches inside this zip, unioned with the
@@ -49,10 +11,17 @@ import { zipDivisionEntry } from "../geo/zip-division-index.ts";
 export async function divisionIdsForZipArea(
   zip: string | null,
   pointDivisionIds: readonly string[],
+  selection?: GeographySelection,
 ): Promise<string[]> {
   const out = new Set(pointDivisionIds);
   if (!zip || !/^\d{5}$/.test(zip)) return [...out];
-  const entry = await zipDivisionEntry(zip);
+  const entry = await zipDivisionEntry(zip, selection);
+  // A qualified area family supersedes stale centroid assignments for that
+  // family. The centroid remains orientation data for unrelated local layers.
+  for (const family of ["cd", "sldu", "sldl"]) {
+    const pattern = new RegExp(`/${family}:[^/]+$`);
+    for (const id of out) if (pattern.test(id)) out.delete(id);
+  }
   for (const id of entry?.ids ?? []) out.add(id);
   return [...out];
 }

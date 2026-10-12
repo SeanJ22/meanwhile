@@ -1,11 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { NextRequest } from "next/server";
 
-import { GET } from "../app/api/admin/checklist-definitions/route.ts";
 import { searchChecklistDefinitions, ChecklistDefinitionQueryError } from "../lib/control-plane/admin-view/checklist-definition-search.ts";
 import { CHECKLIST_PROFILE } from "../lib/control-plane/readiness/checklist-score.ts";
-import { ADMIN_HOST, PUBLIC_HOST, adminSessionCookie, withAdminSessionKey } from "./admin-session.ts";
 
 const query = (over: Partial<Parameters<typeof searchChecklistDefinitions>[0]> = {}) =>
   ({ q: "", group: null, id: null, limit: 25, cursor: null, ...over });
@@ -57,28 +54,4 @@ test("search covers the full profile, treats wildcard text literally, and binds 
     CHECKLIST_PROFILE.definitions.filter(row => `${row.id} ${row.group} ${row.requirement} ${row.canonicalPredicate} ${row.owner}`.toLowerCase().includes("%_")).length);
   assert.throws(() => searchChecklistDefinitions(query({ limit: 51 })), ChecklistDefinitionQueryError);
   assert.throws(() => searchChecklistDefinitions(query({ q: "x".repeat(101) })), ChecklistDefinitionQueryError);
-});
-
-test("authenticated API is national-only, paged, private and refuses forged or ambiguous queries", async () => {
-  const publicRequest = new NextRequest(`https://${PUBLIC_HOST}/api/admin/checklist-definitions`, { headers: { host: PUBLIC_HOST } });
-  const adminRequest = new NextRequest(`https://${ADMIN_HOST}/api/admin/checklist-definitions`, { headers: { host: ADMIN_HOST } });
-  assert.equal((await GET(publicRequest)).status, 404);
-  assert.equal((await GET(adminRequest)).status, 401);
-  await withAdminSessionKey(async () => {
-    const cookie = await adminSessionCookie();
-    const request = (suffix = "") => new NextRequest(`https://${ADMIN_HOST}/api/admin/checklist-definitions${suffix}`, {
-      headers: { host: ADMIN_HOST, cookie },
-    });
-    const first = await GET(request("?limit=1"));
-    assert.equal(first.status, 200);
-    assert.equal(first.headers.get("cache-control"), "no-store, no-cache, must-revalidate");
-    const body = await first.json();
-    assert.equal(body.rows.length, 1);
-    assert.equal(body.definitionsTotal, 325);
-    assert.equal(body.instances.total, null);
-    assert.equal((await GET(request("?scope=az"))).status, 400);
-    assert.equal((await GET(request("?q=a&q=b"))).status, 400);
-    assert.equal((await GET(request("?limit=999"))).status, 400);
-    assert.equal((await GET(request("?cursor=not-a-page"))).status, 400);
-  });
 });

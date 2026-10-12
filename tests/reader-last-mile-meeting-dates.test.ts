@@ -1,20 +1,21 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { readSnapshot } from "../lib/meetings/snapshot.ts";
 import { localDate } from "../lib/ask/meeting-time.ts";
 import { canonicalBodyIdentity } from "../lib/ask/body-identity.ts";
 import type { AskAnswerPayload } from "../lib/ask/answer.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import { installMeetings, recordedMeetings85701 } from "./helpers/reader-fixtures.ts";
 
-await installRegistryRuntimeFirstSeeds();
+await installRegistryAuthority();
+const held = recordedMeetings85701();
+installMeetings(held);
 
 test("an explicit held local date retrieves that sitting rather than the next or latest one", async () => {
   delete process.env.ANTHROPIC_API_KEY;
   const { POST } = await import("../app/api/ask/grounded/route.ts");
   const { resetGroundedState } = await import("../lib/ask/grounded-state.ts");
-  const snapshot = readSnapshot()!;
-  const bodyId = "ocd-division/country:us/state:az/school_district:vail_unified_district#board";
-  const rows = snapshot.meetings.filter((meeting) => meeting.bodyId === bodyId).sort((a, b) => a.startsAt.localeCompare(b.startsAt));
+  const bodyId = "ocd-division/country:us/state:az/school_district:tucson_unified_district#board";
+  const rows = held.filter((meeting) => meeting.bodyId === bodyId).sort((a, b) => a.startsAt.localeCompare(b.startsAt));
   assert.ok(rows.length > 2);
   const selected = rows[1];
   const date = localDate(selected);

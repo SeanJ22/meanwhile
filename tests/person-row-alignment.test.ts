@@ -1,30 +1,5 @@
-/**
- * ALIGN-1 — EVERYTHING READS LEFT TO RIGHT. NOTHING INDENTS RIGHT.
- * (2026-08-25, the author's spec captures `17-18-44`, `17-30-58`, `17-53-26`.)
- *
- * The single most repeated complaint of the 8/25 evening walkthrough, and one
- * declaration behind all of it: `.person-row` was `justify-content: flex-end`,
- * so every name in the product sat pushed to the right of the district or body
- * it serves while the district's own label sat at the left margin.
- *
- * **`.person-row` is the SHARED row**, which is why the four surfaces he named
- * are four renderings of one line of CSS:
- *
- * | Surface | Component | Block |
- * |---|---|---|
- * | Who Governs Here | `components/map/coverage-notice.tsx` | representation |
- * | Small battlecard | `components/map/popup/district-popup.tsx` | who runs it |
- * | Small battlecard | `components/map/popup/district-popup.tsx` | representation |
- *
- * His instruction with the captures: *assume this is how all of them look, not
- * just the ones photographed.* They do, and this is why.
- *
- * **What is NOT in this class, checked rather than assumed.** A row that puts
- * the NAME first and a label after it — `justify-between` on the ballot
- * candidate card, on the door overlay's seat list, and the `.pk`/`.pv` fact
- * table on the popups — already reads left to right. Those were swept and left
- * alone; right-aligning a trailing LABEL is not indenting a NAME.
- */
+// `.person-row` is the shared row behind every name line, so it must read left to right. A row that puts the
+// name first and a label after it (`justify-between`) is not in this class.
 
 import test from "node:test";
 import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
@@ -59,12 +34,7 @@ test("ALIGN-1: the shared person row flows from the left", () => {
 });
 
 test("ALIGN-1: the row is still a wrapping baseline row (NH-1 is not undone)", () => {
-  /*
-   * NH-1 turned this from a column into a wrapping row so a person took one
-   * line instead of two, and a long name still wraps rather than truncating —
-   * a truncated name is a different person's name. Changing the justification
-   * must not have cost any of that.
-   */
+  // A long name still wraps rather than truncating: a truncated name is a different person's name.
   const block = personRowBlock();
   assert.match(block, /display:\s*flex/);
   assert.match(block, /flex-direction:\s*row/);
@@ -73,11 +43,7 @@ test("ALIGN-1: the row is still a wrapping baseline row (NH-1 is not undone)", (
 });
 
 test("ALIGN-1: both consumers of the shared row still use it", () => {
-  /*
-   * The fix is only class-wide while the class is shared. If a surface stops
-   * using `.person-row` and hand-rolls its own layout, this guard would keep
-   * passing about a rule nobody reads — so the consumers are asserted by name.
-   */
+  // The fix is class-wide only while the class is shared, so the consumers are asserted by name.
   const consumers = [
     "components/map/coverage-notice.tsx",
     "components/map/popup/district-popup.tsx",
@@ -93,8 +59,7 @@ test("ALIGN-1: both consumers of the shared row still use it", () => {
     );
   }
 
-  /* And the district popup uses it for BOTH blocks — who-runs-it and the full
-     roster — which is two of the four surfaces the author named. */
+  /* The district popup uses it for both blocks. */
   const popup = readFileSync("components/map/popup/district-popup.tsx", "utf8");
   const uses = popup.match(/className="person-row"/g) ?? [];
   assert.ok(
@@ -105,11 +70,7 @@ test("ALIGN-1: both consumers of the shared row still use it", () => {
 });
 
 test("ALIGN-1: no OTHER rule right-justifies a person row", () => {
-  /*
-   * The class sweep, held open. A later `.person-row-name { margin-left: auto }`
-   * or a `justify-end` on the element would re-create the defect without
-   * touching the rule above, and this guard would have passed.
-   */
+  // A later `margin-left: auto` on the name or `justify-end` on the element would re-create the defect.
   const offenders: string[] = [];
   const stylesheet = css();
   for (const m of stylesheet.matchAll(/\n(\.person-row[a-z-]*)\s*\{([^}]*)\}/g)) {
@@ -129,32 +90,10 @@ test("ALIGN-1: no OTHER rule right-justifies a person row", () => {
   assert.deepEqual(offenders, [], "a person row is being pushed right by something other than the shared rule");
 });
 
-/* ========================================================================== */
-/* WGH-11 — an annotation sits against the word it annotates                  */
-/* ========================================================================== */
-
-/**
- * **The mark was a flex ITEM in a `justify-between` row**, so it was
- * distributed into the dead space between the body name and the right-aligned
- * type label. The author's `17-30-58` shows three of them floating a third of
- * the way across the panel.
- *
- * `.could-govern-mark` already declared `display: inline; margin-left: 3px` and
- * both were inert: flex overrides `display: inline` on its children, and a 3px
- * margin is invisible next to a `justify-between` gap. **The CSS was right and
- * the markup was wrong**, which is why a stylesheet-only reading of this would
- * have found nothing — the same instrument failure LBL-2 was reopened over.
- *
- * He is fine with the asterisk EXISTING; the objection is placement. So this
- * asserts the mark is a sibling of the name rather than asserting it is gone.
- */
+// Inside a `justify-between` row, the mark must share the name's flex item or it floats into the gap.
 test("WGH-11: the could-govern mark is inside the name's own flex item", () => {
   const src = readFileSync("components/map/coverage-notice.tsx", "utf8");
-  /*
-   * The row is located by its own data attribute and every assertion below is
-   * on the ORDER of its parts. Nothing here reads indentation — see the note
-   * on the wrapper assertion for why that matters.
-   */
+  // Every assertion below is on the ORDER of the row's parts, never on indentation.
   const rowIdx = src.indexOf(`data-governing-row=""`);
   assert.ok(rowIdx >= 0, "the governing row is no longer recognisable in coverage-notice.tsx");
   const row = [src.slice(rowIdx)];
@@ -168,15 +107,7 @@ test("WGH-11: the could-govern mark is inside the name's own flex item", () => {
     "the mark must precede the type label — it annotates the NAME, not the label",
   );
 
-  /*
-   * The load-bearing assertion: the name and the mark share a wrapper, so the
-   * row's `justify-between` sees TWO items and not three.
-   *
-   * Structural rather than indentation-coupled. The first version of this
-   * matched exact leading whitespace between the closing tag and the next
-   * element, and failed on markup that was correct — a guard pinned to
-   * formatting fails on a reformat and teaches nobody anything.
-   */
+  // The name and the mark share a wrapper, so the row's `justify-between` sees two items, not three.
   const wrapIdx = row[0].indexOf('<span className="inline-flex items-baseline">');
   assert.ok(
     wrapIdx >= 0,

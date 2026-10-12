@@ -1,41 +1,13 @@
 /**
- * @freshness-reads-here
- *
- * RULING 107 — the clock stamps in this file are minted by the code path that
- * performs the read: the freshness date is taken at the moment of the fetch,
- * which is what the ruling asks for rather than what it forbids. Verified
- * 2026-08-23 by reading each stamp site against the retrieval it sits in.
+ * @freshness-reads-here — each freshness date is taken at the moment of the fetch it describes.
  */
 /**
- * `pnpm states:fetch` — the covered states' outlines, for the state-focus
- * map (g3 item 10, M91).
+ * `pnpm states:fetch` — state outlines for the state-focus map, from Census
+ * TIGERweb as GeoJSON.
  *
- * ## Why this is its own tiny script
- *
- * `scripts/fetch-districts.ts` is the district pipeline: shapefile archives,
- * a TIGER/Line attribute join, OCD identity per feature. States need none of
- * that — one outline per state, no attributes, no identity resolution — and
- * bolting a type onto that table would drag the whole apparatus along for a
- * layer whose only job is to be a mask.
- *
- * ## The source, and the generalization
- *
- * Census TIGERweb, the Bureau's own REST service over TIGER/Line — the same
- * authority `CLAUDE.md`'s source table names for boundaries, reached through
- * the endpoint that speaks GeoJSON so nothing here parses a shapefile.
- *
- * **Generalized on purpose, and the number is stated:** `maxAllowableOffset`
- * of 0.005° (roughly half a kilometre) takes the three states from 673 KB to
- * about 10 KB. That is a deliberate loss of fidelity and it is safe for
- * exactly one reason — this geometry NEVER answers a question. It is not a
- * boundary the product makes a claim from, not a join key, and nothing is
- * resolved against it. District truth still comes from the committed
- * cartographic boundaries, which are unchanged. This outline only decides
- * which pixels are muted, and a reader cannot tell a half-kilometre error in
- * a blur edge from the blur.
- *
- * If a later feature ever wants to ASK this geometry something, it needs the
- * unsimplified file and this comment is the warning.
+ * The outline only decides which pixels are muted: it answers no question and
+ * joins to nothing. It is generalized (see MAX_ALLOWABLE_OFFSET); anything
+ * that needs to ask this geometry something needs the unsimplified file.
  */
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -51,26 +23,8 @@ const SERVICE =
 const STATE_FIPS = HELD_GEOMETRY_FIPS;
 
 /**
- * **MAP-1 (2026-08-25): 0.005 deg (~500 m) WAS VISIBLE, and the author saw it.**
- *
- * The header argued that "a reader cannot tell a half-kilometre error in a
- * blur edge from the blur". His capture `09-24-22` disproves it in one red
- * box: at Belvidere the New Jersey border IS the Delaware, and the river
- * meanders about three kilometres west at Hartzells Ferry. New Jersey had 143
- * vertices in total and 17 within a tenth of a degree of Belvidere — roughly
- * one every two kilometres — so the whole meander fell BETWEEN two vertices
- * and the raised-state edge cut a straight chord across the river, claiming a
- * slab of Pennsylvania and dropping a slab of New Jersey.
- *
- * The original reasoning was sound about what this geometry is FOR — it
- * answers no question, joins to nothing, and decides only which pixels are
- * muted. What it got wrong is that a wrong edge is still a visible claim about
- * where a state stops, and RULING 114 is the same lesson: completing a layer
- * turns a quiet approximation into something that can lie.
- *
- * 0.0005 deg is roughly 50 metres, which is finer than the stroke is wide at
- * any zoom this product reaches. The cost is measured and reported rather than
- * assumed (RULING 133).
+ * Degrees; about 50 metres, finer than the stroke at any zoom. Coarser
+ * generalization (0.005, ~500 m) visibly cut river borders.
  */
 const MAX_ALLOWABLE_OFFSET = 0.0005;
 
@@ -99,9 +53,7 @@ const raw = (await response.json()) as {
 
 const features = raw.features ?? [];
 
-// An operation that can return nothing is asked what it returned. TIGERweb
-// answers 200 with an empty feature list for a `where` clause that matches
-// nothing, which is the empty-success shape this repo keeps catching.
+// TIGERweb answers 200 with an empty feature list for a `where` clause that matches nothing.
 if (features.length !== STATE_FIPS.length) {
   throw new Error(
     `expected ${STATE_FIPS.length} state outline(s), got ${features.length} — ` +

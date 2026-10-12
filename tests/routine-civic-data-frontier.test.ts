@@ -11,6 +11,8 @@ import {
   routineFailureDomainRotationSeed,
   routineFrontierPassBound,
   routinePassLaunchOrder,
+  routineBaselineOwed,
+  routineCodeChangeRetryTaskIds,
   routineTaskDeadlineMs,
   routineTaskDue,
   routineAdmissionClock,
@@ -44,6 +46,45 @@ function largestRealDomain(): readonly RoutineSourceTask[] {
   }
   return [...grouped.values()].sort((left, right) => right.length - left.length)[0] ?? [];
 }
+
+test("missing people and previous-parser government baselines admit every state and share the existing pool in source order", () => {
+  const people = ROUTINE_SOURCE_TASKS.filter(task => task.id.startsWith("openstates-people-"));
+  const governments = ROUTINE_SOURCE_TASKS.filter(task => task.recordClass === "REGISTRATION");
+  assert.ok(people.length >= 50);
+  assert.equal(governments.length, 56);
+  const due = [...people, ...governments].map(task => {
+    const clock = task.recordClass === "REGISTRATION" ? { lastSucceededAt: "2026-10-01T12:00:00.000Z",
+      lastSucceededObservedAt: "2026-10-01T12:00:00.000Z", lastSucceededParserVersion: "registration/3" } : undefined;
+    assert.equal(routineTaskDue(task, clock, Date.parse("2026-10-02T12:00:00.000Z")), true);
+    return { task, lastConsideredAt: null, baselineOwed: routineBaselineOwed(task, clock) };
+  });
+  const admitted = routineFailureDomainFrontier(due);
+  assert.equal(admitted.length, people.length + governments.length, "one national release is shared by independent state projections");
+  const refresh = { ...due[0]!, task: { ...due[0]!.task, id: "already-current-refresh" }, baselineOwed: false };
+  const ordered = routinePassLaunchOrder([refresh, ...admitted]);
+  assert.deepEqual(ordered.slice(0, 4).map(row => row.task.sourceId),
+    [people[0]!.sourceId, governments[0]!.sourceId, people[0]!.sourceId, governments[0]!.sourceId]);
+  assert.equal(ordered.at(-1)?.task.id, refresh.task.id, "missing baselines precede an already-current cadence refresh");
+  assert.equal(new Set(ordered.map(row => row.task.id)).size, ordered.length);
+  assert.equal(ROUTINE_CHILD_CONCURRENCY, 4, "the existing worker limit remains unchanged");
+  assert.equal(ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS, 1);
+  assert.ok(people.every(task => task.cadenceMs === 86400000 && task.retryMs === 3600000));
+  assert.ok(governments.every(task => task.cadenceMs === 90 * 86400000 && task.retryMs === 6 * 3600000));
+});
+
+test("overdue meeting deadlines retain priority while missing meetings do not become national baseline work", () => {
+  const now = Date.parse("2026-10-09T12:00:00.000Z");
+  const people = ROUTINE_SOURCE_TASKS.find(task => task.id.startsWith("openstates-people-"))!;
+  const meeting = ROUTINE_SOURCE_TASKS.find(task => task.recordClass === "MEETING")!;
+  assert.equal(routineBaselineOwed(meeting, undefined), false);
+  const jobs = [
+    { task: people, deadlineMs: undefined, baselineOwed: true },
+    { task: meeting, deadlineMs: now - 1, baselineOwed: false },
+    { task: { ...meeting, id: "unbuilt-meeting" }, deadlineMs: Number.NEGATIVE_INFINITY, baselineOwed: false },
+    { task: { ...meeting, id: "later-meeting" }, deadlineMs: now + 1, baselineOwed: false },
+  ];
+  assert.deepEqual(routinePassLaunchOrder(jobs, now).map(row => row.task.id), [meeting.id, people.id, "unbuilt-meeting", "later-meeting"]);
+});
 
 test("one pass admits one least-recently-considered task per provider domain", () => {
   const shared = largestRealDomain();
@@ -213,6 +254,56 @@ function supervisorHistoryRow(input: {
   };
 }
 
+test("a parser upgrade ignores an older implementation's supervisor failure but keeps current-code retry evidence", () => {
+  const upgraded = "registration-nh", unchanged = "fec-funding";
+  const row = supervisorHistoryRow({ finishedAt: "2026-10-09T12:00:00.000Z", failures: [upgraded, unchanged] }) as {
+    runtimeOutcome: Record<string, unknown>;
+  };
+  row.runtimeOutcome.testedSha = "a".repeat(40);
+  const ids = new Set([upgraded, unchanged]);
+  const options = { taskIds: new Set([upgraded]), codeSha: "b".repeat(40) };
+  const before = routineUnreceiptedSupervisorAttemptHistory([row], ids, options);
+  assert.equal(before.issues.length, 0);
+  assert.equal(before.attempts.has(upgraded), false);
+  assert.equal(before.attempts.get(unchanged), "2026-10-09T12:00:00.000Z");
+  const current = { ...row, runtimeOutcome: { ...row.runtimeOutcome, testedSha: options.codeSha } };
+  assert.equal(routineUnreceiptedSupervisorAttemptHistory([current], ids, options).attempts.get(upgraded), "2026-10-09T12:00:00.000Z");
+});
+
+test("a repaired never-published OpenStates baseline bypasses an old-code boot failure while current failures and steady refreshes keep backoff", () => {
+  const people = ROUTINE_SOURCE_TASKS.find(task => task.id === "openstates-people-az")!;
+  const ordinary = ROUTINE_SOURCE_TASKS.find(task => task.id === "fec-funding")!;
+  const meeting = ROUTINE_SOURCE_TASKS.find(task => task.recordClass === "MEETING")!;
+  const owner = { ...people, id: "owner-request", ownerInvocation: { requestedAt: "2026-10-09T12:00:00.000Z", instructions: ["saved-send"] } };
+  const failedAt = "2026-10-09T12:00:00.000Z", now = Date.parse(failedAt) + 60_000;
+  const ordinaryClock = { lastAttemptedAt: "2026-10-01T12:00:00.000Z", lastSucceededAt: "2026-10-01T12:00:00.000Z",
+    lastSucceededObservedAt: "2026-10-01T12:00:00.000Z", lastSucceededParserVersion: ordinary.parserVersion };
+  const taskIds = routineCodeChangeRetryTaskIds([
+    { task: people, ok: true, clock: undefined, error: null },
+    { task: ordinary, ok: true, clock: ordinaryClock, error: null },
+    { task: meeting, ok: true, clock: undefined, error: null },
+    { task: owner, ok: true, clock: undefined, error: null },
+    { task: { ...people, id: "unread-clock" }, ok: false, clock: undefined, error: "unavailable" },
+  ]);
+  assert.deepEqual([...taskIds], [people.id]);
+  const row = supervisorHistoryRow({ finishedAt: failedAt, failures: [people.id, ordinary.id] }) as { runtimeOutcome: Record<string, unknown> };
+  row.runtimeOutcome.testedSha = "a".repeat(40);
+  const registered = new Set([people.id, ordinary.id]);
+  const options = { taskIds, codeSha: "b".repeat(40) };
+  const old = routineUnreceiptedSupervisorAttemptHistory([row], registered, options);
+  assert.equal(old.issues.length, 0);
+  assert.equal(old.attempts.has(people.id), false);
+  assert.equal(routineTaskDue(people, routineAdmissionClock(undefined, old.attempts.get(people.id), now), now), true);
+  assert.equal(old.attempts.get(ordinary.id), failedAt, "a normal refresh retains the prior failure across code changes");
+  assert.equal(routineTaskDue(ordinary, routineAdmissionClock(ordinaryClock, old.attempts.get(ordinary.id), now), now), false);
+  const current = routineUnreceiptedSupervisorAttemptHistory([{ ...row, runtimeOutcome: { ...row.runtimeOutcome, testedSha: options.codeSha } }], registered, options);
+  const admission = routineAdmissionClock(undefined, current.attempts.get(people.id), now);
+  assert.equal(routineTaskDue(people, admission, now), false, "a current-code failure keeps the one-hour retry");
+  assert.equal(routineTaskDue(people, admission, Date.parse(failedAt) + people.retryMs), true);
+  assert.equal(routineTaskDue(people, routineAdmissionClock({ lastAttemptedAt: failedAt }, old.attempts.get(people.id), now), now), false,
+    "a durable source failure remains on its retry clock even when an older supervisor failure is discarded");
+});
+
 test("a corrupt supervisor row is explicit and cannot erase valid fairness clocks", () => {
   const [first, second] = largestRealDomain();
   assert.ok(first && second);
@@ -297,8 +388,7 @@ test("a malformed exact receipt cannot suppress a valid prior supervisor attempt
 
 /**
  * The provider frontier reads its supervisor history through the store's
- * narrowed, bounded read (ROUTINE_SUPERVISOR_HISTORY_FIELDS, _WINDOW): on
- * 2026-09-24 the whole-history read moved 428 MB a pass. These fixtures carry
+ * narrowed, bounded read (ROUTINE_SUPERVISOR_HISTORY_FIELDS, _WINDOW). These fixtures carry
  * every field a real outcome does, the Reader readback references included.
  */
 function wholeSupervisorOutcomes(): unknown[] {
@@ -502,23 +592,15 @@ async function simulateTucsonLane(withRecordedPasses: boolean, initialSeed = 202
   const HOUR = 3_600_000;
   const DAY = 24 * HOUR;
   const MIN = 60_000;
-  // Tucson's board site: 27 bodies on one host, the busiest meeting lane.
   const lane = ROUTINE_SOURCE_TASKS.filter((task) => task.acquisitionFailureDomain === TUCSON_BOARDS);
   assert.equal(lane.length, 27);
   for (const task of lane) assert.deepEqual(task.contract.schedule, MEETING_SITTING_WINDOW);
-  // The 196 passes production ran on 2026-09-24 (5:00 AM to 11:00 PM MST): each
-  // pass's source reads (every family's) and then its Reader repair, as recorded
-  // (p50 1:34, p99 10:58, max 15:52, of which 14:31 source reads and 1:21 repair).
   const recorded = recordedPasses();
   assert.equal(Math.max(...recorded.map(({ durationMs }) => durationMs)), 952_000);
   let seed = initialSeed;
   const rand = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 2 ** 32; };
   const start = Date.parse("2026-09-25T07:00:00.000Z");
   const end = start + 30 * DAY;
-  // 2 never published, 3 meeting twice a month (always hourly) and 22 monthly,
-  // meeting across 24 days of the month, so up to 19 are hourly at once: more
-  // than Tucson's projected peak of 16 (2026-10-14, counting conclusion as a day
-  // after start).
   type Body = { readonly task: RoutineSourceTask; readonly starts: readonly string[] | undefined };
   const bodies: Body[] = lane.map((task, index) => {
     if (index < 2) return { task, starts: undefined };
@@ -543,9 +625,6 @@ async function simulateTucsonLane(withRecordedPasses: boolean, initialSeed = 202
       : { lastAttemptedAt: iso, lastSucceededAt: new Date(at - 2_500).toISOString(), lastSucceededObservedAt: iso, sittingStarts: body.starts });
     reads.get(body.task.id)!.push(at);
   };
-  // Twice-daily bodies fall due over the first two hours, one every five
-  // minutes, as Tucson's did after the B3 switch; hourly ones were read within
-  // the last 40 minutes.
   bodies.forEach((body, index) => record(body, hot(body, start) === true ? start - (index % 8 + 1) * 5 * MIN : start - 12 * HOUR + 30 * MIN + index * 5 * MIN));
 
   // Each pass is admitted by the runner's own functions and run by
@@ -634,9 +713,6 @@ test("C6: 30 days on a lane shaped like Tucson's, passes of normal length, the s
 });
 
 test("C6: 30 days on Tucson's board lane under production's recorded passes (up to 15:52, drawn at random), with catch-up while a pass is held open: every hourly body is read within 60:00 and every other within 12:00:00", async () => {
-  // 20260925 is this replay's own draw. Under 10, catch-up only while Reader
-  // repair ran left 14 hourly reads late (up to 64.02 min): two passes in a row
-  // held open 14:31 by their source reads, in which no round ran.
   for (const seed of [20260925, 10]) {
     const { misses, maxHotGap, maxBaseGap, longestPassMs, reads, catchUpReads } = await simulateTucsonLane(true, seed);
     const detail = `seed ${seed}: longest hourly gap ${(maxHotGap / 60_000).toFixed(2)} min, longest gap ${(maxBaseGap / 3_600_000).toFixed(2)} h, ` +
@@ -648,7 +724,6 @@ test("C6: 30 days on Tucson's board lane under production's recorded passes (up 
   }
 });
 
-
 test("C6: the runner hands the frontier each due task's deadline from the same pass's clocks and sitting signals", () => {
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   const call = runner.slice(runner.indexOf("const admitted = routineFailureDomainFrontier("));
@@ -659,7 +734,6 @@ test("C6: the runner hands the frontier each due task's deadline from the same p
   );
   assert.ok(runner.indexOf("const sittingSignals = sittingWindowSignals(") < runner.indexOf("const admitted = routineFailureDomainFrontier("));
 });
-
 
 test("an unreceipted child in a single-task pass waits its existing retry interval across restarts", () => {
   const task = ROUTINE_SOURCE_TASKS.find(task => task.contract?.schedule?.kind !== "SITTING_WINDOW")!;
@@ -677,7 +751,8 @@ test("an unreceipted child in a single-task pass waits its existing retry interv
   }
   assert.equal(clock.lastAttemptedAt, "2026-09-01T12:00:00.000Z", "no durable source clock is changed");
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  assert.ok(runner.indexOf("latestUnreceiptedSupervisorAttempts(selectedTasks)") < runner.indexOf("for (const read of clockReads)"));
+  const attemptsRead = runner.indexOf("latestUnreceiptedSupervisorAttempts(selectedTasks, routineCodeChangeRetryTaskIds(clockReads))");
+  assert.ok(attemptsRead >= 0 && attemptsRead < runner.indexOf("for (const read of clockReads)"));
 });
 
 test("an unfinished round's receipt failure waits for changed inputs rather than unchanged retries", () => {

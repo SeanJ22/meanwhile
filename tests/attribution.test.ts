@@ -20,14 +20,7 @@ import type {
   LegistarEventItem,
 } from "../lib/sources/legistar/types.ts";
 
-/**
- * Agenda attribution — 4.6.9 / D19.
- *
- * Driven by the recorded Pima agenda rather than a synthetic one, because the
- * case only exists in real published text: a county board sitting as a library
- * district board, in the middle of its own meeting, marked with nothing but a
- * heading in capital letters.
- */
+/** Agenda attribution, driven by a recorded agenda: a county board sitting as a district board, marked only by a capitalised heading. */
 
 const PIMA_HOST = {
   bodyId: "ocd-division/country:us/state:az/county:pima#governing",
@@ -62,8 +55,7 @@ test("the library district's business is separated from the county board's", () 
 
   assert.ok(library, "LIBRARY DISTRICT BOARD should open its own segment");
   assert.equal(library.role, "SITTING_AS");
-  // The contract sitting under that heading is library business. Before this,
-  // it recorded as county-board business along with the other 123 items.
+  // The contract sitting under that heading is library business.
   assert.ok(library.itemIds.length > 0, "the library segment should carry its items");
   assert.ok(
     !segments[0].itemIds.some((id) => library.itemIds.includes(id)),
@@ -88,11 +80,7 @@ test("an unresolved segment attributes to nothing — never to the host", () => 
   );
 
   const library = resolved.find((s) => /library district/i.test(s.heading))!;
-  // THE WHOLE POINT. Census publishes no boundary for a special district, so
-  // the registry has no Library District division and none can be matched.
-  // Falling back to the county board would re-create the exact misattribution
-  // D19 exists to prevent — the agenda has already told us the host is not
-  // responsible for these items.
+  // Census publishes no boundary for a special district, so none can be matched; falling back to the county board would misattribute these items.
   assert.equal(library.attribution, "UNRESOLVED");
   assert.equal(library.bodyId, null);
   assert.equal(library.ocdId, null);
@@ -152,12 +140,7 @@ test("the summary counts unattributed items rather than hiding them", () => {
 });
 
 test("every item of real business is attributed to exactly one segment", () => {
-  // THE CONSERVATION LAW, and it caught a real drop. Business is anything with
-  // a matter file; each such item must land in exactly one segment. The first
-  // version skipped items with an empty title before attributing them, which
-  // silently lost the one Pima item that has a matter file and no title — 49
-  // in, 48 out, no error. Asserting the count against its denominator is the
-  // only thing that shows it.
+  // Business is anything with a matter file; each such item must land in exactly one segment, counted against its denominator.
   const items = loadItems();
   const business = items.filter((i) => i.matterFile);
   const segments = segmentAgenda(items, PIMA_HOST);
@@ -179,8 +162,7 @@ test("every item of real business is attributed to exactly one segment", () => {
 });
 
 test("resolution never reaches outside the host's own division", () => {
-  // A heading naming a body in another county must not match. Widening the
-  // scope is how a heading match turns into the name join CLAUDE.md forbids.
+  // A heading naming a body in another county must not match.
   const segment = segmentAgenda(
     [
       { id: 1, sequence: 1, title: "SITTING AS OTHER BOARDS", matterFile: null },
@@ -201,13 +183,8 @@ test("resolution never reaches outside the host's own division", () => {
   assert.equal(resolved.bodyId, null);
 });
 
-// ── The live path, D19's remaining half (g10) ─────────────────────────────
-
 test("the adapter produces acting-body rows from a real fetch shape", () => {
-  // The rows are built by normalizeWithDrops now, not only by a test calling
-  // segmentAgenda directly. This exercises the path an ingest actually takes:
-  // agenda items arrive attached to the raw event, and the meeting carries the
-  // join rows out the other side.
+  // The rows are built by normalizeWithDrops: the path an ingest takes.
   const events = JSON.parse(
     readFileSync(join(import.meta.dirname, "fixtures", "legistar-pima-events.json"), "utf8"),
   ) as LegistarEvent[];
@@ -310,8 +287,7 @@ test("the write boundary refuses a snapshot that attributes an unresolved headin
   const meeting = {
     id: "legistar:pima:1824",
     ocdId: PIMA_HOST.ocdId,
-    /* Required of every meeting since 2026-08-27 — without it the snapshot is
-     * refused for the OLDER defect and this test never reaches its own. */
+    /* Required of every meeting; without it the snapshot is refused before this test reaches its own check. */
     bodyId: PIMA_HOST.bodyId,
     bodyName: "Board of Supervisors",
     title: "Regular Meeting",
@@ -368,11 +344,7 @@ test("the write boundary refuses a snapshot that attributes an unresolved headin
 });
 
 test("a page-break marker is typography, not a body — the items after it stay put", () => {
-  // Found by running the live path (g10). Pima prints "PAGE BREAK" as an
-  // agenda item inside the sitting-as region, and the first live run opened a
-  // segment on it, cutting the following item off the district that was
-  // actually acting. Fifteen live agendas contain eight distinct headings in
-  // that region: seven real district boards and this one artifact, five times.
+  // The agenda prints "PAGE BREAK" as an item inside the sitting-as region; it must not open a segment.
   const segments = segmentAgenda(
     [
       { id: 1, sequence: 1, title: "BOARD OF SUPERVISORS SITTING AS OTHER BOARDS", matterFile: null },

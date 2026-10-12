@@ -1,24 +1,7 @@
 /**
- * **THE PERSISTED ATTEMPT MUST CARRY THE IDENTITY OF THE THING THAT RAN.**
- * (Session B closure, W3.E and its regression, 2026-08-31.)
- *
- * ## Two bugs, one behind the other
- *
- * The first: `chooseExecutor` DECIDED and the injected worker RAN, and nothing
- * connected them, so the dispatcher recorded the decision as the fact — **10
- * `BOUNDED_MODEL_WORKER` Attempts on 2026-08-31 for work a deterministic HTTP
- * walker did.**
- *
- * The second, which the first fix left standing: `ranAs` corrected the RETURNED
- * result and the Attempt had already been persisted. `dispatchOne` chose a
- * lane, built a `WorkerRef` from it, opened the Attempt with that WorkerRef,
- * and only afterwards learned what ran. So the durable record still said
- * `provider: "anthropic", version: "unspecified-model"` for a deterministic
- * walk, and the cost ledger keyed on that Attempt inherited the same fiction.
- *
- * **Every assertion below that matters reopens the PERSISTED Attempt.** A test
- * that checked only the returned object is the test that let the second bug
- * through.
+ * The persisted Attempt must carry the identity of the thing that ran, not the lane the dispatcher chose, and the
+ * cost ledger keyed on that Attempt inherits it. Every assertion that matters reopens the persisted Attempt rather
+ * than reading the returned object.
  */
 
 import assert from "node:assert/strict";
@@ -145,10 +128,7 @@ test("SEEDED W3.E: the PERSISTED Attempt carries the deterministic worker, not t
   assert.equal(result.executor, "DETERMINISTIC", "and the result says what ran");
   assert.equal(result.executorMismatch, true, "the disagreement is recorded, not hidden");
 
-  /*
-   * THE ASSERTION THAT WOULD HAVE CAUGHT THE SECOND BUG. Reopened from the
-   * store, not read off the returned object.
-   */
+  /* Reopened from the store, not read off the returned object. */
   const attempts = await attemptsForRouteTask(repos, task.id);
   assert.equal(attempts.length, 1);
   const persisted = attempts[0].value;

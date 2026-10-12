@@ -8,23 +8,12 @@ import { getTableConfig } from "drizzle-orm/pg-core";
 import * as schema from "../lib/db/schema.ts";
 
 /**
- * Structural guarantees of the persistence schema — asserted on the schema
- * objects themselves, so they hold for every row any future code could
- * write, not just rows a test happened to insert.
+ * Structural guarantees asserted on the schema objects themselves, so they hold for every row any future code could
+ * write.
  *
- * 1. **The vintage pairing (§0e).** A division identifier without the
- *    dataset vintage it was resolved against is a silent wrong-match
- *    waiting for the next redistricting cycle — it joins successfully and
- *    reports something, which is worse than nothing. Every table that
- *    carries an `ocd_id` must carry a NOT NULL `division_vintage`, and the
- *    identifier itself must be NOT NULL.
- *
- * 2. **The search log is identifier-free (two stores that never join).**
- *    No column that could name a person or a device, and no foreign key to
- *    anything. The table is honest to aggregate and sell only because it
- *    cannot be resolved to anyone; this test is that property in
- *    executable form. When a subscription store lands, this test grows the
- *    complementary assertion (no behavioral columns there, no shared key).
+ * 1. A division identifier without the dataset vintage it was resolved against is a silent wrong-match waiting for
+ *    the next redistricting, so every `ocd_id` travels with a `division_vintage`.
+ * 2. The search log is identifier-free: no column that could name a person or a device, and no foreign key.
  */
 
 const tables = Object.entries(schema).filter(
@@ -48,22 +37,9 @@ test("every table carrying a division identifier carries a NOT NULL vintage", ()
     assert.ok(vintage, `${name}: carries ocd_id but no division_vintage column`);
 
     /*
-     * THE PAIRING, which is what this rule was always about (D31, g10).
-     *
-     * It used to be asserted as "both NOT NULL", and that was right while
-     * every division identifier was mandatory. `meetings.ocd_id` is now
-     * nullable, because a government the Census does not enumerate — Pima
-     * Community College's board, an authority, the seven special districts
-     * inside Pima County's own agendas — has no division to name, and the
-     * two ways to keep the old constraint were to drop those meetings or to
-     * mint a canonical identifier for a division that does not exist.
-     *
-     * So the assertion follows the rule rather than its old spelling: the
-     * identifier and its vintage are nullable TOGETHER or not at all, and a
-     * table that lets them diverge fails here. Where the pair is nullable,
-     * the schema must additionally carry a CHECK so the DATABASE refuses a
-     * row with one and not the other — a rule only the application enforces
-     * is a rule the next writer skips.
+     * The identifier and its vintage are nullable together or not at all (a government the Census does not
+     * enumerate has no division). Where the pair is nullable, a CHECK makes the database refuse a row with one and
+     * not the other.
      */
     if (ocd.notNull) {
       assert.ok(
@@ -100,9 +76,8 @@ test("search_log also pairs its division identifiers with a vintage", () => {
 });
 
 /**
- * Column-name fragments that would mean the search log can be resolved to a
- * person or a device. `session` and `token` cover the survives-the-session
- * key CLAUDE.md forbids; `zip` is allowed only as approximate_location.
+ * Column-name fragments that would mean the search log can be resolved to a person or a device. `zip` is allowed
+ * only as approximate_location.
  */
 const FORBIDDEN_FRAGMENTS = [
   "user",
@@ -140,50 +115,21 @@ test("the search log carries no identifier of any kind and no foreign keys", () 
 });
 
 /**
- * The n-stores rule (CLAUDE.md): the collection stores — search log,
- * reactions, and the future subscription store — never join. No shared
- * identifying key, no foreign keys across them, and the reaction continuity
- * key exists on the reactions table only.
+ * The collection stores never join: no shared identifying key, no foreign keys across them, and the reaction
+ * continuity key exists on the reactions table only.
  */
 const COLLECTION_STORES = [
   "searchLog",
   "reactions",
   "feedback",
-  /*
-   * ASK03 (2026-08-27): the Ask interaction store joins the rule the day it is
-   * declared rather than the day it is switched on. `ripcord.askSignalCapture`
-   * ships PULLED so nothing is written yet — which is exactly why adding it
-   * here now is cheap and adding it later would be a retrofit. This store was
-   * born UNDER the boundary, like `speak_your_mind` before it.
-   */
   "askInteractions",
 ] as const;
 
 /**
- * THE ONE DELIBERATE EXCEPTION, NAMED PER STORE AND PER COLUMN (R41,
- * 2026-08-17, option A).
- *
- * `feedback.reply_to` holds a contact detail on purpose: a reader typed it
- * into a field labelled as an optional reply address. The exception is
- * written as an exact allow-list of (store, column) pairs rather than by
- * softening FORBIDDEN_FRAGMENTS, because loosening the fragment list would
- * quietly permit the NEXT contact column anyone adds anywhere. A second entry
- * here is a decision someone has to type out.
+ * Exact (store, column) pairs exempt from the fragment sweep. Empty: identifying values are kept out of collection
+ * stores entirely, and `tests/identity-boundary.test.ts` proves it over value spaces.
  */
 const DELIBERATE_IDENTIFIER_COLUMNS = new Set<string>([
-  // **A-001, 2026-08-24: this set is now EMPTY, and that is the fix.**
-  //
-  // It used to hold `feedback.reply_to`. The exception was written carefully — an
-  // exact (store, column) pair rather than a softened fragment list, so a
-  // second entry would have to be typed out. What no amount of care about the
-  // list could do was notice that the value it exempted was an email address,
-  // which `questionnaire_invitations.email` also holds. A named exception to a
-  // NAME-based sweep is still a name-based sweep.
-  //
-  // The address moved to `feedback_contact`, which is not a collection store,
-  // and the claim is proven over VALUE SPACES in
-  // `tests/identity-boundary.test.ts`. If anything is ever added back here, that
-  // test is the one that has to be satisfied first.
 ]);
 
 test("every collection store is identifier-free and joins nothing", () => {
@@ -218,38 +164,16 @@ test("the collection stores share no joinable column", () => {
     );
 
   /*
-   * **RULING 132 SAYS THE RULE IS PROVEN OVER VALUE SPACES, NEVER COLUMN
-   * NAMES — and until 2026-08-27 this guard only ever compared names.**
-   *
-   * Two enum columns that share a name but whose value sets do not intersect
-   * cannot join: the join yields the empty set by construction, for every row
-   * that will ever exist. The case that surfaced it is real — `feedback.surface`
-   * is SIDEBAR/TRANSPARENCY/COVERAGE and `ask_interactions.surface` is
-   * MAP/BALLOT/UNKNOWN, so no value of either is ever a value of the other.
-   *
-   * This is a STRENGTHENING, not a loosening, and the difference is the whole
-   * point. The easy alternative was to add "surface" to the allow-list by NAME,
-   * which would then have permitted some future third column called `surface`
-   * whose values DID overlap. Disjointness is checked against the actually
-   * declared values, so it stops being true the moment someone makes it untrue.
+   * Two enum columns that share a name but whose value sets do not intersect cannot join. Disjointness is checked
+   * against the declared values, so it stops being true the moment someone makes it untrue.
    */
   const disjointEnums = (a: string[] | null, b: string[] | null) =>
     a !== null && b !== null && !a.some((v) => b.includes(v));
 
   /*
-   * Context columns that carry no per-person value and cannot join rows:
-   *
-   * - `id` — a random uuid primary key, different in every store.
-   * - `occurred_at` / `received_at` — timestamps.
-   * - `ocd_ids` / `division_vintage` — the division context, identical for
-   *   every reader looking at the same place.
-   * - `run_class` / `run_id` (R40, 2026-08-17) — the C05 declaration. It is
-   *   NULL on every ORGANIC row by construction, so it can never relate two
-   *   readers' rows; on a synthetic row it relates a ROBOT's rows to the
-   *   robot, which is the whole point of the column and the opposite of the
-   *   thing this test exists to stop.
-   * - `suspect_reason` — a two-value quarantine enum. A column that can hold
-   *   "VELOCITY" cannot single anyone out.
+   * Context columns that carry no per-person value and cannot join rows: random ids, timestamps, the division
+   * context, the run declaration (NULL on every organic row), the quarantine enum, and place-level facts identical for
+   * every reader in a place (coverage tier and distribution, the typed ZIP, which is coarser than `ocd_ids`).
    */
   const allowedShared = new Set([
     "id",
@@ -260,79 +184,18 @@ test("the collection stores share no joinable column", () => {
     "run_class",
     "run_id",
     "suspect_reason",
-    /*
-     * - `coverage_tier` (RULING 6, Prompt B item 8, 2026-08-20) — a five-value
-     *   enum describing how deeply this product has researched a PLACE:
-     *   TIER_0 through TIER_3, plus UNKNOWN. It is identical for every reader
-     *   in that place and changes only when a session does research, so it
-     *   carries no per-person value and cannot relate two readers' rows —
-     *   the same reasoning as `suspect_reason` directly above. It is on both
-     *   sold stores on purpose: a buyer weighting civic-interest signal by
-     *   coverage depth needs it on the row, and interest from a Tier 3 zip
-     *   with forty candidate cards is not the same measurement as interest
-     *   from a Tier 0 zip with none.
-     */
     "coverage_tier",
-    /*
-     * - `coverage_tier_distribution` (Prompt C item 3, 2026-08-20) — the same
-     *   fact as `coverage_tier` directly above, counted rather than floored:
-     *   how many of that place's governments sit at each of the four tiers,
-     *   encoded `T0:24,T1:0,T2:3,T3:0`, or `UNKNOWN`.
-     *
-     *   It exists because the FLOOR is TIER_0 for 97.88% of zips nationally —
-     *   no special district anywhere has resolved territory and nearly every
-     *   zip contains one — so as a field on a sold row the floor separates
-     *   almost nothing. Four small integers about a PLACE, identical for every
-     *   reader in it, changing only when a session does research. It cannot
-     *   single anyone out and it cannot relate two readers' rows, exactly as
-     *   the tier cannot.
-     *
-     *   STORED ONLY: it reaches no reader-facing surface, no headline figure
-     *   and no national distribution. The floor stays the only tier stated
-     *   publicly.
-     */
     "coverage_tier_distribution",
-    /*
-     * - `approximate_location` (ASK03, 2026-08-27) — the zip a reader typed.
-     *
-     *   IT WAS NEVER ADJUDICATED BEFORE TODAY, because only one collection
-     *   store carried it and a column on one store cannot collide. The Ask
-     *   interaction store is the second, so the question arrives for the first
-     *   time and is answered here rather than by widening the loop.
-     *
-     *   THE DECIDING FACT: both stores already carry `ocd_ids`, which is
-     *   ALREADY on this list and is FINER geography than a zip — a zip crosses
-     *   municipal, school, legislative and county lines, and the division list
-     *   names those exactly. A geographic join between these two stores is
-     *   therefore already possible on a column adjudicated years of sessions
-     *   ago, and the zip adds no join surface that is not there. Refusing it
-     *   would protect nothing while removing the cohort the product rule is
-     *   stated in: readers who identified 85641 as their home zip.
-     *
-     *   And it is the `coverage_tier` argument unchanged: a value identical for
-     *   every reader in a place, shared by thousands, cannot single anyone out
-     *   and cannot relate two readers' rows. Joining on it yields a cross
-     *   product, not a person.
-     */
     "approximate_location",
   ]);
 
-  /*
-   * R41: `reply_to` is deliberately NOT in `allowedShared`. It is the one
-   * column in any collection store that could identify a person, so if it
-   * ever appears on a second store this loop fails — which is the whole
-   * protection. The reader gave one address for one message; a copy of it on
-   * the search log or the reactions table would make the two joinable and
-   * would break the n-stores rule outright.
-   */
+  /* `reply_to` must never be an allowed shared column: a copy on a second store would make the two joinable. */
   assert.ok(
     !allowedShared.has("reply_to"),
     "reply_to may never be an allowed shared column — it is the one identifying column that exists",
   );
 
-  // EVERY PAIR, not one pair. Three stores make three pairs, and a fourth
-  // store would make six — a hand-written pair was how the check would have
-  // silently stopped covering the new one.
+  // Every pair, so a new store cannot silently fall outside the check.
   for (let i = 0; i < COLLECTION_STORES.length; i++) {
     for (let j = i + 1; j < COLLECTION_STORES.length; j++) {
       const [a, b] = [COLLECTION_STORES[i], COLLECTION_STORES[j]];
@@ -340,7 +203,7 @@ test("the collection stores share no joinable column", () => {
       const bCols = columnsOf((schema as Record<string, unknown>)[b]);
       for (const [name, aEnum] of aCols) {
         if (!bCols.has(name)) continue;
-        /* Disjoint value spaces cannot join. RULING 132's own test. */
+        /* Disjoint value spaces cannot join. */
         if (disjointEnums(aEnum, bCols.get(name) ?? null)) continue;
         assert.ok(
           allowedShared.has(name),
@@ -352,16 +215,14 @@ test("the collection stores share no joinable column", () => {
 });
 
 test("the feedback store holds no continuity key of any kind", () => {
-  // Reactions need one (an answer can be changed); feedback has nothing to
-  // change, so there is no reason for a key — and where there is no reason
-  // there is no key. This is the difference stated as a schema property.
+  // Reactions need one (an answer can be changed); feedback has nothing to change, so it has no key.
   const config = getTableConfig(schema.feedback);
   const names = config.columns.map((c) => c.name);
   assert.deepEqual(names.filter((n) => /key|hash|digest/.test(n)), []);
   assert.deepEqual(
     names.sort(),
     [
-      "about", // Sean's 2026-09-30 request: the card being reported, not a reader.
+      "about", // The card being reported, not a reader.
       "contact_ref",
       "id",
       "message",
@@ -369,7 +230,7 @@ test("the feedback store holds no continuity key of any kind", () => {
       "record_id", // Public record context, never a continuity key.
       "run_class",
       "run_id",
-      "site", // Sean's approved report origin (S0 on #461, 5918009182); §9: no reader identity.
+      "site", // The report origin; no reader identity.
       "surface",
       "suspect_reason",
       "zip", // The card's ZIP, explicitly authorized with the report.
@@ -379,19 +240,8 @@ test("the feedback store holds no continuity key of any kind", () => {
 });
 
 /**
- * **A-001 · REWRITTEN, 2026-08-24.** This test used to be called *the optional
- * reply address exists on the feedback store and nowhere else*, and it passed
- * for a year while the schema falsified the constitutional claim.
- *
- * Its reasoning was the R41 note's: a column that may identify a person is
- * pinned to ONE table, so no later store can grow a copy and become joinable.
- * Being on one table was never the test. `questionnaire_invitations.email`
- * held the same KIND of value under a different name, and this guard — like
- * the fragment list above it — was looking for a spelling.
- *
- * The address is no longer in a reader collection store at all.
- * `tests/identity-boundary.test.ts` is where the claim is now proven, over
- * value spaces rather than names; this holds the mechanism in place.
+ * A column that may identify a person is not pinned by name: the address lives outside the reader collection stores,
+ * and the reader store holds only an opaque handle.
  */
 test("A-001 · the reader store holds an opaque handle, and the address is elsewhere", () => {
   for (const [name, table] of tables) {
@@ -474,9 +324,8 @@ test("reactions are tier-stamped from the first row", () => {
 });
 
 test("no table sneaks in a ranking or recommendation column", () => {
-  // CLAUDE.md: no candidate or measure record may grow a score/rank/... key.
-  // Meetings are not candidates, but the guard is cheap and the failure mode
-  // (a 'relevance' column that becomes an ordering) is the same shape.
+  // No candidate or measure record may grow a score/rank key; a 'relevance' column on meetings would become an
+  // ordering the same way.
   const forbidden = /score|rank|rating|match|fit|grade|alignment|recommend/;
   for (const [name, table] of tables) {
     const config = getTableConfig(table as Parameters<typeof getTableConfig>[0]);
@@ -490,9 +339,7 @@ test("no table sneaks in a ranking or recommendation column", () => {
 });
 
 test("a generated migration exists and creates every schema table", () => {
-  // db:generate ran and its output is committed — hand-written SQL is the
-  // thing the repo rule forbids, and a schema change without its migration
-  // is a deploy that cannot happen.
+  // A schema change without its generated migration is a deploy that cannot happen.
   const dir = join(process.cwd(), "lib", "db", "migrations");
   const files = readdirSync(dir).filter((f) => f.endsWith(".sql"));
   assert.ok(files.length >= 1, "no migration files in lib/db/migrations");

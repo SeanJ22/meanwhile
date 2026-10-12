@@ -1,27 +1,3 @@
-/**
- * **THE FLEET, IN THE OWNER'S FOUR WORDS.** (ADM-7, 9.4.26 admin feedback.)
- *
- * The owner's understanding of Pilot Health is an area to see what all the
- * workers are doing: hunters, detectives, auditors and verifiers — what they
- * are, what they are doing, how many are doing it, and where they are
- * deployed. The control plane records workers under seven canonical roles
- * (`WORKER_ROLES` in attempt.ts). This module is the PROJECTION from those
- * roles onto his words, and it is the only place that mapping lives:
- *
- *   HUNTERS      SCOUT + ACQUIRER      find where a record is, then fetch it
- *   DETECTIVES   DETECTIVE + PARSER    read what was fetched into typed facts
- *   VERIFIERS    VALIDATOR             check a Parser's records before trust
- *   AUDITORS     ADVERSARIAL_AUDITOR   try to break a record from independent evidence
- *   ENGINEERS    ENGINEERING           turn a verified method into reviewable code
- *
- * ENGINEERING is neither a hunter nor a verifier, so it is its own line rather
- * than being folded into one of the four silently — folding it would misreport
- * the fleet. RELEASE_ORCHESTRATOR has never written an Attempt and is not shown.
- *
- * Every number is a `Measured` with its denominator, and "where deployed" is
- * derived from the WorkItem each Attempt belongs to (its subject carries the
- * state in OCD form), never typed. PURE: canonical records in, view out.
- */
 import type { Attempt, WorkerRole } from "./attempt.ts";
 import { displayNameOf } from "./display-name.ts";
 import { measured, type Measured } from "./owner-surface.ts";
@@ -37,7 +13,6 @@ export interface FleetGroupDefinition {
   readonly key: FleetGroupKey;
   readonly name: string;
   readonly roles: readonly WorkerRole[];
-  /** What they are, in one plain sentence. */
   readonly what: string;
 }
 
@@ -86,24 +61,17 @@ export interface FleetActivityLine {
 }
 
 export interface FleetGroupView extends FleetGroupDefinition {
-  /** Attempts open right now, of every Attempt recorded for these roles. */
   readonly working: Measured;
-  /** Tasks waiting for these roles, of every task registered for them. */
   readonly queued: Measured;
-  /** Attempts that finished COMPLETED, of every Attempt recorded. */
   readonly completed: Measured;
-  /** Where these roles have worked: state names (or the raw subject), most-worked first. */
   readonly deployedAt: readonly { readonly label: string; readonly attempts: number }[];
-  /** The newest activity, newest first, capped. */
   readonly latest: readonly FleetActivityLine[];
-  /** One plain sentence built from the numbers above. */
   readonly doing: string;
 }
 
 export interface FleetView {
   readonly observedAt: string;
   readonly groups: readonly FleetGroupView[];
-  /** Attempts whose role is on no group (RELEASE_ORCHESTRATOR today, or an unknown role). */
   readonly unassignedAttempts: number;
   readonly totalAttempts: number;
   readonly workingNow: number;
@@ -120,21 +88,12 @@ export const FLEET_LATEST_SHOWN = 3;
 
 const STATE_NAME: ReadonlyMap<string, string> = new Map(US_STATES.map((s) => [s.code, s.name]));
 
-/**
- * Where an Attempt worked, from its WorkItem: the state named in an OCD-shaped
- * subject (`state:az`), the plan's jurisdiction, or the subject itself. Null
- * when the WorkItem is not on record — never a guess.
- */
 export function whereOf(subject: string | null, planJurisdiction: string | null): string | null {
   const jur = (planJurisdiction ?? "").trim();
   if (jur !== "") {
     const code = jur.toLowerCase();
     return STATE_NAME.get(code) ?? jur;
   }
-  // The same structural state rule the dispatch matcher and the publisher use
-  // (`lib/control-plane/unit-state.ts`) — one reading of "which state is
-  // this", never three — in its PLACE variant, which leaves a ballot subject
-  // its own name rather than collapsing "Pima County Prop 423" to "Arizona".
   const code = stateOfSubjectPlace(subject ?? "");
   if (code) return STATE_NAME.get(code) ?? code;
   return subject && subject.trim() !== "" ? subject : null;
@@ -191,7 +150,6 @@ export function buildFleetView(input: FleetViewInput): FleetView {
         : `${working === 0 ? "None working right now" : `${plural(working, "attempt")} open right now`}; ` +
           `${plural(pending, "task")} waiting of ${tasks.length} registered; ` +
           `${completed} of ${attempts.length} recorded attempts finished` +
-          // ADM-12: a place is named, never keyed, in the sentence the owner reads.
           (deployedAt.length > 0 ? `; worked in ${deployedAt.slice(0, 3).map((d) => displayNameOf(d.label).short).join(", ")}` : "") +
           ".";
 
@@ -230,14 +188,10 @@ export function buildFleetView(input: FleetViewInput): FleetView {
   };
 }
 
-/** Every Measured the view renders, for the page's self-audit. */
 export function fleetRenderedNumbers(view: FleetView): readonly Measured[] {
   return view.groups.flatMap((g) => [g.working, g.queued, g.completed]);
 }
 
-/* ------------------------------------------------------------ deployments */
-
-/** One "Deploy fleet" the owner sent (ADM-8), with what became of it. */
 export interface DeploymentRow {
   readonly intentId: string;
   readonly requestedAt: string;
@@ -246,11 +200,9 @@ export interface DeploymentRow {
   readonly status: "HONORED" | "PENDING";
   readonly honoredAt: string | null;
   readonly honoredBy: string | null;
-  /** The runner's own sentence: what matched of what, or why nothing did. */
   readonly detail: string | null;
 }
 
-/** Every DISPATCH intent in the log, newest first, with its HONORED record joined. */
 export function dispatchHistory(log: readonly ResearchIntent[]): DeploymentRow[] {
   const honored = new Map<string, Extract<ResearchIntent, { readonly kind: "HONORED" }>>();
   for (const r of log) if (r.kind === "HONORED") honored.set(r.honors, r);

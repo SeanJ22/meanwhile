@@ -1,42 +1,11 @@
 /**
- * **A STEP THAT REPORTS SUCCESS IS ASKED WHETHER IT DID THE THING.**
- * (`NH106`, 2026-08-23. RULING 113.)
+ * Asserts, immediately after the browser install step, that the pinned
+ * Chromium is where the suite will look, and prints the root it searched, the
+ * build directories it found and what is inside each, so a failure is
+ * diagnosable at the step rather than later inside unrelated tests.
  *
- * ## What this exists for
- *
- * `main` went red at `3d453fd` with four failures and one cause:
- * `NO CHROMIUM INSTALLED. Wanted build 1234; searched /home/runner/.cache/ms-playwright`.
- * The workflow step before it — *Install the browser the suite needs* —
- * reported **success in 27 seconds**, and its own log said
- *
- * ```
- * Chrome for Testing 151.0.7922.34 (playwright chromium v1234) downloaded to
- *   /home/runner/.cache/ms-playwright/chromium-1234
- * ```
- *
- * The install worked. The install landed in exactly the directory the suite
- * searched. What failed was `lib/ops/chromium-pin.ts`, which looked for the
- * binary at the LEGACY `chrome-linux/chrome` path while Chrome for Testing
- * puts it at `chrome-linux64/chrome`.
- *
- * ## Why a separate step and not a better test
- *
- * The defect was found eighty seconds later, inside four unrelated tests, in a
- * job that had already run a 2,000-line suite. The information needed to name
- * it was available the instant the install step exited. **Where a step's
- * product can be observed, it is observed at the step** — so this runs
- * immediately after the install, fails there, and prints the root it searched,
- * the build directories it found, and what is inside each one.
- *
- * That last part is the bit that would have saved the session: the old failure
- * said "NO CHROMIUM INSTALLED" about a directory containing a Chromium, which
- * points every reader at the installer.
- *
- * ## What it must never become
- *
- * A step that passes when there is no browser. `scripts/browser.mts` refuses
- * to launch without one and that refusal is the guard; this only moves the
- * discovery earlier. There is no skip flag and no tolerated-absence path.
+ * It has no skip flag and no tolerated-absence path; `scripts/browser.mts`
+ * still refuses to launch without a browser.
  */
 import { readdirSync } from "node:fs";
 import { join } from "node:path";
@@ -77,13 +46,9 @@ for (const entry of entries) {
 }
 
 /*
- * PLAYWRIGHT'S OWN ANSWER, AND THE DRIFT CHECK BETWEEN IT AND OURS.
- *
- * `chromium.executablePath()` is the same resolution a launch performs, so it
- * is the authority. Ours has to agree with it. The two agreed
- * on the DIRECTORY and disagreed on the binary inside it for as long as this
- * pin has existed, and nothing was comparing them — which is why a green
- * install step and a red suite could coexist.
+ * Playwright's own `chromium.executablePath()` is the same resolution a launch
+ * performs, so it is the authority, and the pin must agree with it on the
+ * binary, not only the directory.
  */
 const authoritative = chromium.executablePath();
 console.log(`playwright says    : ${authoritative}`);
@@ -100,11 +65,9 @@ if (resolved.kind === "ABSENT") {
 }
 
 /*
- * The comparison is only meaningful for `EXPECTED`. A `SUBSTITUTED` resolution
- * is the deliberate case where the pinned build is ABSENT and another one is
- * launched by explicit path, so the two SHOULD differ — and `browser.mts`
- * prints that substitution rather than absorbing it. Asserting equality there
- * would turn a working fallback into a failure.
+ * The comparison applies only to `EXPECTED`. `SUBSTITUTED` is the deliberate
+ * case where the pinned build is absent and another is launched by explicit
+ * path, so the two should differ.
  */
 if (resolved.kind === "EXPECTED" && resolved.executablePath !== authoritative) {
   console.error("");

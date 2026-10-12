@@ -1,6 +1,4 @@
-import { bulkUrl, indexDivisions, normalize, pluralRosterIssue, rowsToPeople } from "./index.ts";
 import { cellText, decodeEntities, extractRoster, looksLikeNameCell } from "../../hunt/roster-page.ts";
-import { imagesIn, pickPortraits } from "../../hunt/portrait-pick.ts";
 import type { PlaceDivision } from "../../control-plane/expansion/national-geography.ts";
 import { isOfficialSource, type OfficialLinkingPage } from "../../civic-data/source-authority.ts";
 import { electionPageFields, type ElectionFieldCandidate } from "../../hunt/election-page.ts";
@@ -29,22 +27,6 @@ export interface NationalOfficialCandidate {
   readonly quote: string;
   readonly linkingPage?: OfficialLinkingPage;
   readonly portrait?: import("../../photos/evidence.ts").PortraitSources;
-  /**
-   * CA-02: set when the official's own page failed the name-and-seat check and
-   * the row is the Open States row for that seat. `document` is then the saved
-   * Open States CSV, and the publisher checks name and seat on it.
-   */
-  readonly basis?: "OPEN_STATES_ROW";
-  /** The saved Open States CSV the row came from, kept so the publisher can fall back to it if the own-page seat check fails there. */
-  readonly openStatesCapture?: WorkerPublicationCapture;
-}
-
-/** The Open States seat holders on a saved CSV: person, name and the district seat their row is in. */
-export function openStatesSeatHolders(csvText: string, state: string, divisions: readonly { readonly ocdId: string; readonly label: string; readonly divisionType: string }[], collectedAt: string):
-  readonly { readonly id: string; readonly name: string; readonly officeTitle: string; readonly divisionId: string }[] {
-  const roster = normalize(rowsToPeople(csvText, state), indexDivisions(divisions.map(d => ({ ocdId: d.ocdId, label: d.label, divisionType: d.divisionType }))), collectedAt, state);
-  const memberships = new Map(roster.divisions.map(d => [d.officeholderId, d.ocdId]));
-  return roster.officeholders.flatMap(person => memberships.has(person.id) ? [{ id: person.id, name: person.name, officeTitle: person.officeTitle, divisionId: memberships.get(person.id)! }] : []);
 }
 
 /** The kinds of fact this job collects. A family with no open blank is not read. */
@@ -102,21 +84,8 @@ export function electionDirectorySelection(page: HeldSourcePage, stateName: stri
   return null;
 }
 
-/** National sources are acquisition inputs. The ordinary §3 publisher checks
- * the saved official document and correct seat before they enter the reader.
- * The caller supplies the shared held-first source reader/vault; no per-ZIP files. */
-/**
- * CP-10: which image to offer as an official's portrait. The page is read with the same base the portrait check uses
- * (the saved copy's canonical URL), so the check sees exactly this image on it. One name-matched image on the person's
- * own saved page wins over a roster image the page does not show; several name-matched images leave the roster's lead.
- */
-export function ownPagePortrait(name: string, document: HeldSourcePage, rosterImageUrl: string | undefined): string | undefined {
-  if (!document.capture) return rosterImageUrl;
-  const named = pickPortraits(name, imagesIn(document.capture.evidence.text, document.capture.evidence.canonicalUrl));
-  if (rosterImageUrl && named.some(image => image.src === rosterImageUrl)) return rosterImageUrl;
-  return named.length === 1 ? named[0].src : rosterImageUrl;
-}
-
+/* National sources are acquisition inputs: the publisher checks the saved
+ * official document and the seat before anything reaches the reader. */
 export async function collectNationalPlaceSources(input: {
   readonly divisions: readonly PlaceDivision[];
   readonly now: string;
@@ -133,7 +102,7 @@ export async function collectNationalPlaceSources(input: {
   const sourceKnowledge = new Map<string, ReturnType<typeof fieldManualForSource>>();
   const learned = (url: string, state: string) => {
     const key = `${state}|${new URL(url).origin}`;
-    if (!sourceKnowledge.has(key)) sourceKnowledge.set(key, input.knowledge ? fieldManualForSource(input.knowledge, url, state) : []);
+    if (!sourceKnowledge.has(key)) sourceKnowledge.set(key, input.knowledge ? fieldManualForSource(input.knowledge, url) : []);
     return sourceKnowledge.get(key)!;
   };
   const orderRoutes = (urls: readonly string[], state: string) => [...new Set(urls)].sort((a, b) => {
@@ -175,53 +144,8 @@ export async function collectNationalPlaceSources(input: {
   const directory = families.officials || families.elections ? await attempt("https://www.usa.gov/state-governments") : null;
   let electionDirectory: Promise<HeldSourcePage | null> | undefined;
   await Promise.all(states.map(async state => {
-    const csv = families.officials ? await attempt(bulkUrl(state)) : null;
-    if (csv) {
-      const issue = pluralRosterIssue(csv.text);
-      if (issue) gaps.push({ sourceUrl: csv.url, detail: issue });
-      else {
-        const roster = normalize(rowsToPeople(csv.text, state), indexDivisions(input.divisions.map(d => ({ ...d, ocdId: d.id }))), csv.collectedAt, state);
-        const memberships = new Map(roster.divisions.map(d => [d.officeholderId, d.ocdId]));
-        await Promise.all(roster.officeholders.filter(person => memberships.has(person.id)).map(async person => {
-          // CA-02: when the own-page check fails, the Open States row fills the seat, marked as the Open States row.
-          const fallback = (reason: string, at?: string) => {
-            const divisionId = memberships.get(person.id)!;
-            if (at) gaps.push({ sourceUrl: at, detail: reason });
-            if (!csv.capture) return;
-            // The chamber's own word for its members in this state, from the Open States row, never read off a page.
-            officials.push({ discoveryId: person.id, divisionId, name: person.name, officeTitle: person.officeTitle, seatLabel: person.officeTitle,
-              officialUrl: person.websiteUrl ?? csv.url, document: csv, basis: "OPEN_STATES_ROW", quote: `${person.name}, ${person.officeTitle}` });
-          };
-          if (!person.websiteUrl) { fallback("", undefined); await flush(); return; }
-          const document = await attempt(person.websiteUrl);
-          if (!document) { fallback("", undefined); await flush(); return; }
-          const text = cellText(document.text).replace(/\s+/g, " ");
-          // Prefer the source's own spelling (middle initials, formal first
-          // names), without claiming a cross-source person-identity merge.
-          const heading = cellText(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i.exec(document.text)?.[1] ?? "")
-            .replace(/^(?:State )?(?:Senator|Representative|Delegate|Assemblymember)\s+/i, "")
-            .replace(/\s*[-–—]\s*District\s+.*$/i, "").trim();
-          const name = looksLikeNameCell(heading) ? heading : text.includes(person.name) ? person.name : null;
-          const at = name ? text.indexOf(name) : -1;
-          if (!name || at < 0) { fallback(`The official profile needs name extraction for ${person.name}`, document.url); await flush(); return; }
-          const divisionId = memberships.get(person.id)!;
-          const officePattern = divisionId.includes("/sldu:") ? /\b(?:State\s+)?Senator\b/i
-            : /\b(?:State\s+)?(?:Representative|Delegate|Assembly\s*member|Assemblyman|Assemblywoman)\b/i;
-          const office = officePattern.exec(text)?.[0];
-          if (!office) { fallback(`The official profile needs source seat words for ${name}`, document.url); await flush(); return; }
-          // CP-10: the portrait the person's own official page shows under their name goes live on that page alone.
-          // The roster's image URL is used when the page shows that same image; when the page names a different one
-          // (another size or path for the same person), the page's own image is the portrait, not a second-source gap.
-          const imageUrl = ownPagePortrait(name, document, person.portraitCandidate?.imageUrl);
-          officials.push({ discoveryId: person.id, divisionId, name,
-            officeTitle: office, seatLabel: person.officeTitle, officialUrl: person.websiteUrl, document, ...(csv.capture ? { openStatesCapture: csv.capture } : {}),
-            ...(imageUrl ? {portrait: {imageUrl,
-              captures:[csv.capture,document.capture].filter((c): c is WorkerPublicationCapture => c !== undefined)}} : {}),
-            quote: text.slice(Math.max(0, at - 100), at + name.length + 160) });
-          await flush();
-        }));
-      }
-    }
+    // Legislative people are acquired once per source state by the standing
+    // OpenStates contract and composed by the ordinary people reader.
     if (!directory) return;
     const anchor = [...directory.text.matchAll(/<a\b([^>]+)>[\s\S]*?<\/a>/gi)]
       .find(m => new RegExp(`\\bid=["']${state}["']`, "i").test(m[1]));

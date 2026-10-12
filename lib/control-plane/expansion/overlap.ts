@@ -1,13 +1,6 @@
 /**
- * **THE CERTAIN-OVERLAP RULE, ALONE.** (Expansion controls, 2026-09-23; split
- * out 2026-09-25 so Admin's Send preview applies the runner's rule without
- * loading the runner's modules.)
- *
- * A government is IN a scope only when the two must overlap inside at least
- * one ZCTA: it touches a ZCTA lying wholly inside the scope, or inside one
- * shared ZCTA its share and the scope's share sum past the whole by the
- * margin. `membership.ts` re-exports everything here; its header is the rule's
- * full statement. PURE.
+ * The certain-overlap rule alone, so Admin's Send preview can apply it without
+ * the runner's modules. `membership.ts` re-exports everything here. Pure.
  */
 
 /** A scope's geometry: its ZCTAs, those wholly inside it, and each partial one's area share inside it. */

@@ -1,18 +1,4 @@
-/**
- * **"TELL IT WHAT TO DO" — READ IT BACK BEFORE ANYTHING IS SENT.**
- *
- * Turns the owner's words into a list of supported actions against the selected
- * scope. It is a fixed matcher over the supported list, not a model call, so
- * operating Admin never spends money (ADMIN-V3 handoff: "Do not charge a paid
- * Ask request merely to operate Admin"). The server re-checks every action.
- *
- *   unmatched words     nothing is sent; the read-back says so
- *   a web address       needs one body; asks "Which body is this address for?"
- *                       unless the scope already is a body
- *   "everywhere"        aims at the whole country, and the preview says so
- *
- * PURE.
- */
+/** A fixed matcher over the supported actions, not a model call, so operating Admin never spends money. The server re-checks every action. */
 import type { ActionKind, Place, StuckItem } from "./model.ts";
 import { COUNTRY_KEY, isWithin, relation, type PlaceIndex } from "./places.ts";
 
@@ -45,7 +31,6 @@ export function parseInstruction(input: {
   readonly places: readonly Place[];
   readonly index: PlaceIndex;
   readonly stuck: readonly StuckItem[];
-  /** The body chosen in answer to "Which body is this address for?", if any. */
   readonly chosenBody: string | null;
 }): Parsed {
   const text = input.text.trim();

@@ -6,20 +6,17 @@ import type { PrlReaderProfile } from "@/lib/sources/prl/snapshot";
 import { PRL_CATEGORIES } from "@/lib/sources/prl/types";
 import { formatDateLong } from "@/lib/text/format-date";
 import { CardSection } from "./card-section";
+import type { PrlPersonRead } from "@/lib/sources/prl/reader";
 
 /** Shared map and ballot presentation; the source's measurement stays attributed. */
 export function PublicStatementsProfile({ subjectId, onProfile }: { subjectId: string; onProfile?: (profile: PrlReaderProfile | null) => void }) {
   return <ProfileForIdentity key={subjectId} subjectId={subjectId} onProfile={onProfile} />;
 }
 
-/** Only congressional identities have a PRL profile to look for. */
-export const PRL_SUBJECT = /^congress:[A-Z]\d{6}$/;
+/** Native person IDs are hints; the server verifies the archive's exact key. */
+export const PRL_SUBJECT = /^(?:congress:[A-Z]\d{6}|plural:[a-z]{2}:[0-9a-f-]{36}|[a-z]{2}-(?:legislature|general-court):[A-Za-z0-9_-]+|fec:[HSP][A-Z0-9]{8})$/;
 
-/**
- * What the Public statements section is showing (lead review of 49e7b4a4):
- * every fetch outcome SETTLES to exactly one state, so a card can never stay
- * on "Loading" after the answer arrived.
- */
+/** Every fetch outcome settles to exactly one state, so a card never stays on "Loading". */
 export type StatementsLoad =
   | { kind: "not-applicable" }
   | { kind: "loading" }
@@ -42,23 +39,29 @@ export function settleStatementsAnswer(
 
 function ProfileForIdentity({ subjectId, onProfile }: { subjectId: string; onProfile?: (profile: PrlReaderProfile | null) => void }) {
   const [load, setLoad] = useState<StatementsLoad>(() => statementsLoadFor(subjectId));
+  const [archive, setArchive] = useState<PrlPersonRead | null>(null);
   const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     if (!PRL_SUBJECT.test(subjectId)) return;
     const controller = new AbortController();
     void fetch(`/api/profile/${encodeURIComponent(subjectId)}`, { signal: controller.signal })
-      .then(response => { if (!response.ok) throw new Error(String(response.status)); return response.json() as Promise<{ profile: PrlReaderProfile | null }>; })
-      .then(answer => { if (!controller.signal.aborted) setLoad(settleStatementsAnswer(subjectId, answer)); })
+      .then(response => { if (!response.ok) throw new Error(String(response.status)); return response.json() as Promise<{ profile: PrlReaderProfile | null; archive?: PrlPersonRead }>; })
+      .then(answer => { if (!controller.signal.aborted) { setLoad(settleStatementsAnswer(subjectId, answer)); setArchive(answer.archive ?? null); } })
       .catch(() => { if (!controller.signal.aborted) setLoad({ kind: "failed" }); });
     return () => controller.abort();
   }, [subjectId, attempt]);
   const heldProfile = load.kind === "held" ? load.profile : null;
   useEffect(() => { onProfile?.(heldProfile); }, [heldProfile, onProfile]);
+  if (archive && (archive.statements.length > 0 || archive.summaries.length > 0)) {
+    return <CardSection title="Public statements" defaultOpen>
+      {heldProfile && <PublicStatementsProfileContent profile={heldProfile} statementsHeld={archive.statements.length > 0} />}
+      <ArchivedStatementsContent archive={archive} />
+    </CardSection>;
+  }
   switch (load.kind) {
     case "not-applicable":
     case "none":
-      // A blank never reads as "nothing here": the section says what is not
-      // held, and why it might not be.
+      // A blank never reads as "nothing here".
       return (
         <CardSection title="Public statements">
           <p className="mw-feed-gap" data-statement-feed="not-held">
@@ -94,10 +97,8 @@ function ProfileForIdentity({ subjectId, onProfile }: { subjectId: string; onPro
 }
 
 /**
- * The approved design's names for PRL's five categories, keyed by the held
- * category id. Definitions are the product's own explainers in
- * `lib/sources/prl/types.ts` (checked against PRL's codebook there), never
- * the prototype's paraphrase.
+ * Names for PRL's five categories by held category id. Definitions are in
+ * `lib/sources/prl/types.ts`.
  */
 const CATEGORY_NAME: Record<string, string> = {
   policy: "Policy discussion",
@@ -124,7 +125,7 @@ function shareOf(category: HeldCategory): number | null {
 }
 
 /** The same measured, attributed reader body for fetched UI and census render proof. */
-export function PublicStatementsProfileContent({ profile }: { profile: PrlReaderProfile }) {
+export function PublicStatementsProfileContent({ profile, statementsHeld = false }: { profile: PrlReaderProfile; statementsHeld?: boolean }) {
   const [selected, setSelected] = useState<string | null>(null);
   const categories = [...(profile.categories as HeldCategory[])].sort(
     (a, b) => CATEGORY_ORDER.indexOf(a.id) - CATEGORY_ORDER.indexOf(b.id),
@@ -137,12 +138,7 @@ export function PublicStatementsProfileContent({ profile }: { profile: PrlReader
       <div className="space-y-3 t-body">
         {numeric ? (
           <>
-            {/*
-              Approved design: five bars on ONE shared 0–100% scale. PRL's
-              categories overlap — a statement can be several at once — so the
-              bars never add to 100, are never normalized, and carry no
-              per-category count (the tracked total is not their denominator).
-            */}
+            {/* One shared 0–100% scale. Categories overlap, so bars never sum to 100 and are never normalized. */}
             <p className="mw-chart-note">
               The share of this member&apos;s tracked statements that PRL&apos;s
               classifier placed in each category. Categories overlap, so they
@@ -176,12 +172,7 @@ export function PublicStatementsProfileContent({ profile }: { profile: PrlReader
                 <span>0</span><span>20</span><span>40</span><span>60</span><span>80</span><span>100%</span>
               </span>
             </div>
-            {/*
-              The same figures in PRL's own sentences — for a screen reader, and
-              because the reader proof renders this component and checks every
-              held sentence reaches the page. Collapsed by default; in the
-              markup either way.
-            */}
+            {/* The same figures in PRL's own sentences, for screen readers; collapsed by default. */}
             <details className="mw-chart-words">
               <summary>The same figures in words</summary>
               {categories.map(category => <p key={category.id}>{category.sentence}</p>)}
@@ -212,18 +203,14 @@ export function PublicStatementsProfileContent({ profile }: { profile: PrlReader
             {categories.map(category => <p key={category.id}>{category.sentence}</p>)}
           </>
         )}
-        {/*
-          R2 (lead holding inventory, 2026-09-29): no verified per-statement
-          rows are held for any member, so the design's recent-statements feed
-          is stated as unavailable — never a sample, never a fixed state.
-        */}
-        <p className="mw-feed-gap" data-statement-feed="not-held">
+        {/* No verified per-statement rows are held, so the feed is stated as unavailable. */}
+        {!statementsHeld && <p className="mw-feed-gap" data-statement-feed="not-held">
           Individual statements aren&apos;t held here yet — only PRL&apos;s category
           shares.{" "}
           <a className="underline underline-offset-2" href={profile.attribution.url} target="_blank" rel="noreferrer">
             See PRL&apos;s data ↗
           </a>
-        </p>
+        </p>}
         <p className="t-detail text-muted-foreground">
           {profile.statementCount.toLocaleString("en-US")} statements tracked. Measured {formatDateLong(profile.measuredAt)}. Read {formatDateLong(profile.readAt.slice(0, 10))}.
         </p>
@@ -233,4 +220,27 @@ export function PublicStatementsProfileContent({ profile }: { profile: PrlReader
         </p>
       </div>
   );
+}
+
+/** Literal source text and separate attributed measurements; no inferred personal stance. */
+export function ArchivedStatementsContent({ archive }: { archive: PrlPersonRead }) {
+  return <div className="mt-3 space-y-3 t-body" data-statement-feed="held">
+    {archive.summaries.map(summary => <details key={summary.kind}>
+      <summary className="cursor-pointer text-link">{summary.kind === "state" ? "State legislator statement measurements" : "Primary campaign statement measurements"}</summary>
+      <p>{summary.profile.statementCount.toLocaleString("en-US")} statements classified by {summary.attribution.text}.</p>
+      {PRL_CATEGORIES.map(category => {
+        const share = summary.profile.shares[category.key];
+        return share === null ? null : <p key={category.key}>{category.label}: {share.toFixed(1)}%.</p>;
+      })}
+      <p className="t-detail">{summary.kind === "primary" ? "Shares calculated from PRL’s classifications of the acquired statements. " : "PRL’s published shares. "}Categories can overlap.</p>
+      <p className="t-detail"><a href={summary.sourceUrl} target="_blank" rel="noreferrer" className="text-link">Source</a>{" · "}Retrieved {summary.retrievedAt.slice(0, 10)}.</p>
+    </details>)}
+    {archive.statements.map(statement => <details key={statement.id}>
+      <summary className="cursor-pointer text-link">{formatDateLong(statement.date.slice(0, 10))} · {statement.sourceLabel}</summary>
+      <blockquote className="mt-2 whitespace-pre-wrap">{statement.text}</blockquote>
+      <p className="mt-1 t-detail">Attributed by {statement.attribution.text}. <a href={statement.sourceUrl} target="_blank" rel="noreferrer" className="text-link">Original source</a>{" · "}Retrieved {statement.retrievedAt.slice(0, 10)}.</p>
+    </details>)}
+    {archive.gaps.map(gap => <p key={gap} className="mw-feed-gap">{gap}</p>)}
+    <p className="t-detail"><a href="https://americaspoliticalpulse.com/elites/data" target="_blank" rel="noreferrer" className="text-link">America’s Political Pulse — Congressional Rhetoric Dataset</a>{" · "}<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer" className="text-link">CC BY</a></p>
+  </div>;
 }

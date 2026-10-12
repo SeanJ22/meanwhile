@@ -1,23 +1,10 @@
 /**
- * DP-20: the fix map fills from every attempt.
- *
- * Every attempt that used a reusable method leaves one fix-map result per
- * method and place: a Scout's or detective's attempt (from the entries it used
- * and how it ended), a plain-code route run, an acquirer's verdict, an audit
- * outcome. Each of those callers describes its attempt as a `MethodAttempt`
- * and hands it to `recordAttempts`; this module owns turning that into rows,
- * so no caller decides what "works" or "fails" means for itself.
- *
- * An attempt that could not tell (a held read, a refused budget, an outage
- * that says nothing about the method) writes nothing: a fix map that guessed
- * would be worse than one with a blank. A failed write is counted and
- * returned, never thrown into the attempt it describes.
- *
- * Nothing here names a place; the place is the data.
+ * Turns each attempt that used a reusable method into fix-map rows. An attempt that could not tell writes nothing. A
+ * failed write is counted and returned, never thrown into the attempt it describes.
  */
 
 import type { ScoutResult } from "../control-plane/scheduler/scout-result.ts";
-import { applyFixResult, type FixMapRepository, type FixMapRow } from "./fix-map.ts";
+import { applyFixResult, latestWorking, methodWorksOf, type FixMapRepository, type FixMapRow } from "./fix-map.ts";
 
 export const ATTEMPT_KINDS = ["SCOUT", "DETECTIVE", "ROUTE_RUN", "ACQUIRER_VERDICT", "AUDIT"] as const;
 export type AttemptKind = (typeof ATTEMPT_KINDS)[number];
@@ -89,17 +76,13 @@ export function memoryFixMap(): FixMapRepository & { readonly rows: () => readon
     rows: () => [...rows.values()],
     forPlace: async (placeId) => [...rows.values()].filter((r) => r.placeId === placeId).sort((a, b) => (a.methodId < b.methodId ? -1 : 1)),
     forMethod: async (methodId) => [...rows.values()].filter((r) => r.methodId === methodId).sort((a, b) => (a.placeId < b.placeId ? -1 : 1)),
+    worksFor: async (methodIds) => methodWorksOf([...rows.values()], methodIds),
+    workingMethods: async (limit = 200) => latestWorking([...rows.values()], limit),
     put: async (row) => { rows.set(key(row), applyFixResult(rows.get(key(row)) ?? null, row)); },
   };
 }
 
-/**
- * A Scout's or detective's attempt as the fix map reads it: the manual entries
- * it actually opened are the methods it used. Finding a route or the record's
- * evidence is a success; an exhausted ladder or an access wall is a failure of
- * what it tried; needing an adapter, a person, or a refused finish says nothing
- * about the methods, so it writes nothing.
- */
+/** A Scout's or detective's attempt: the manual entries it opened are the methods it used. */
 export function attemptFromScoutResult(
   result: Pick<ScoutResult, "attemptId" | "outcome" | "refusal" | "knowledgeReads" | "researchRole" | "unverified" | "recordedAt">,
   placeId: string,

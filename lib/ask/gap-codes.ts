@@ -1,17 +1,8 @@
 /**
- * **THE CLOSED VOCABULARY OF THE GAPS ASK STATES ABOUT A BODY.** (2026-09-25.)
- *
- * A leaf with no imports, so Ask (`held-gaps.ts`, which decides them), the
- * standing runner's `ask-gaps` provider (which turns each into tracked work)
- * and Admin (which counts them) all read ONE list. See `held-gaps.ts` for what
- * each code is decided from.
- */
-
-/*
- * `MEETINGS_NOT_HELD` (2026-09-25): Ask names a body we hold no meeting of at
- * all ("We have not recorded any meetings for …"). It is the one code the held
- * reading cannot find on its own, because the runner's provider walks the
- * bodies it holds meetings for; it becomes work when a reader was told it
+ * The closed vocabulary of the gaps Ask states about a body. A leaf with no
+ * imports, so Ask (`held-gaps.ts`, which decides them), the runner's `ask-gaps`
+ * provider and Admin all read one list. `MEETINGS_NOT_HELD` (a body we hold no
+ * meeting of) becomes work only when a reader was told it
  * (`lib/control-plane/ask-gap-observations.ts`).
  */
 export const ASK_GAP_CODES = ["OUTCOME_NOT_READ", "AGENDA_NOT_HELD", "CALENDAR_STALE", "OUTCOMES_UNREADABLE", "MEETINGS_NOT_HELD"] as const;

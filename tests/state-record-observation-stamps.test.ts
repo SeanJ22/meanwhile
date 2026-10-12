@@ -5,10 +5,7 @@ import { candidateChangeSet } from "../lib/civic-data/changes.ts";
 import type { RoutineCandidate, RoutineRecordClass } from "../lib/civic-data/types.ts";
 
 /*
- * Measured on 2026-09-24 against byte-identical New Jersey sources: every
- * roster member differed only in its provenance stamps (120 of 120), and every
- * roll call only in its own retrievedAt (about 1,500 "changed" each hour). A
- * re-read that finds the same facts is not a change. The stamps stay on the
+ * A re-read that finds the same facts is not a change. The stamps stay on the
  * stored records; they only stop deciding.
  */
 

@@ -18,14 +18,6 @@ import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
  * supervisor failure, a contained source hold, a Reader delivery failure, an
  * unproven or contradictory aggregate — and never called healthy from an
  * absent or inconsistent outcome.
- *
- * Admin redesign, 2026-09-23: the home page's latest-runner-outcome block (the
- * component that drew this classification, with the report and the exact
- * receipts behind a disclosure) was removed, and no redesigned screen draws
- * the latest digest. The classification is still used (the MapTiler attempt
- * history reads it), so it is covered here in its own words — the headline,
- * what happened and the action — and the rendering checks, including the task
- * and contract identifiers the disclosure listed, are retired.
  */
 
 const NOW = "2026-09-09T12:00:00.000Z";
@@ -172,7 +164,6 @@ test("the digest classification distinguishes a contained source hold from a suc
   );
   assert.match(words(ownerDigestAttention(contained)), /Routine source failure was contained/);
   assert.match(words(ownerDigestAttention(contained)), /1 exact source receipt\(s\) held their own LKG while 1 unaffected task\(s\) completed successfully/);
-  // Admin redesign, 2026-09-23: the disclosure that listed each task receipt by id was removed with the block that drew it.
 
   const success = digest({ references: [reference("source-good", "VERIFIED_SOURCE_SUCCESS")] });
   assert.deepEqual(
@@ -199,7 +190,6 @@ test("a Reader delivery failure is RED without reclassifying source disposition 
   const attention = ownerDigestAttention(record);
   assert.deepEqual({ level: attention.level, needsYou: attention.needsYou }, { level: "RED", needsYou: true });
   assert.match(words(attention), /Canonical Reader delivery needs attention/);
-  // Admin redesign, 2026-09-23: the disclosure that listed the failing contract and version by id was removed with the block that drew it.
   assert.match(words(attention), /Source dispositions, promoted pointers, and LKG remain unchanged/);
   assert.doesNotMatch(words(attention), /Routine civic-data cycle completed|nothing in it needs you/i);
 });

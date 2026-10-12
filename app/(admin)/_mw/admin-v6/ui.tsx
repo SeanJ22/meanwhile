@@ -1,10 +1,5 @@
 "use client";
 
-/**
- * Small building blocks every v6 screen uses. Each control that changes
- * something is an `ActionButton`: it asks the one eligibility rule, shows the
- * first reason it is off, and opens the preview dialog. Nothing here sends.
- */
 import { useEffect, useState, type ReactNode } from "react";
 
 import type { SectionId } from "./contract.ts";
@@ -74,7 +69,6 @@ export function ActionButton(props: { readonly action: ActionRef; readonly prima
   );
 }
 
-/** A row of controls, followed once by the reasons any of them are off. */
 export function Actions(props: { readonly actions: readonly ActionRef[]; readonly primaryFirst?: boolean }) {
   const v = useV6();
   if (!props.actions.length) return null;
@@ -169,7 +163,6 @@ export function Tabs<T extends string>(props: { readonly label: string; readonly
   );
 }
 
-/** Paging over a list this page already holds. The note says what the full total is. */
 export function usePager<T>(list: readonly T[], size: number): { readonly page: readonly T[]; readonly pager: ReactNode; readonly reset: () => void } {
   const [p, setP] = useState(0);
   const pages = Math.max(1, Math.ceil(list.length / size));

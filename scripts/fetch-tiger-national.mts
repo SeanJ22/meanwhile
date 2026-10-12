@@ -1,26 +1,19 @@
 /**
- * Fetch the seven national TIGER boundary files (Prompt B item 5.1,
- * 2026-08-20).
+ * Fetch the seven national TIGER boundary files.
  *
- * RULING 12 — every fetch is WALL or JOB, and this states which. A refusal,
- * challenge or timeout from census.gov is a WALL: named, its rung recorded,
- * the run continues to the next file. A write failure, a truncated file, or a
- * zip that will not open is a JOB and goes red.
+ * A refusal, challenge or timeout from census.gov is a WALL: named, and the run
+ * continues to the next file. A write failure, a truncated file, or a zip that
+ * will not open is a JOB failure and goes red.
  *
- * BATCH TIMEOUTS, NOT INTERACTIVE ONES. F22's lesson is hardcoded here: the
- * CivicPlus source was recorded as refusing us and was not — the batch job had
- * borrowed the live map's 20-second per-source budget and hung up on itself.
- * These are 20 to 70 MB files; the budget below is 15 minutes each, and any
- * expiry is reported as OUR stopwatch, never as the source's refusal.
+ * These are 20 to 70 MB files, so the timeout is a 15-minute batch budget, and
+ * an expiry is reported as our stopwatch, never as the source's refusal.
  *
- * Compliance, unchanged from every other fetch in this repo: serialized
- * requests, an identified User-Agent with a contact address, `Retry-After`
- * honoured, nothing re-fetched that is already cached and non-empty. These are
- * US Census Bureau public-domain products published for exactly this use.
+ * Serialized requests, an identified User-Agent with a contact address,
+ * `Retry-After` honoured, nothing re-fetched that is already cached and
+ * non-empty. US Census Bureau public-domain products.
  *
  * Run:  corepack pnpm tiger:fetch
  */
-
 import { mkdirSync, statSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -93,8 +86,7 @@ for (const path of FILES) {
     );
   } catch (err) {
     const aborted = (err as Error)?.name === "AbortError";
-    // Whose stopwatch ran out. F22 got this backwards once and it cost a
-    // township's meetings.
+    // Name whose stopwatch ran out.
     const why = aborted
       ? `OUR ${BATCH_TIMEOUT_MS / 60000}-minute batch budget expired — this is not a refusal by census.gov`
       : String(err);

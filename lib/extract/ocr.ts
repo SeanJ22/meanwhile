@@ -8,37 +8,11 @@ import { cannotRun, extracted, zeroRows } from "./types.ts";
 import type { ExtractResult } from "./types.ts";
 
 /**
- * LAYER 3 — OCR for scanned PDFs (F11, Prompt C item 12).
- *
- * ## Why the engine is not a dependency
- *
- * A scanned PDF is a picture of a public record, and `CLAUDE.md`'s ladder rung
- * 9 says OCR it: "paper-only" and "not machine-readable" are honest only when
- * the document does not exist online. So this layer exists.
- *
- * It shells out to a LOCAL `tesseract` binary rather than bundling an OCR
- * engine, and that is a decision rather than a shortcut. `tesseract.js` ships
- * a WASM build and language data measured in tens of megabytes; every one of
- * those bytes would join `package.json`, the lockfile, and the file-count
- * budget that already refused a build at 1138 traced files — to serve a code
- * path that runs in a hunt session and never in a request. The deploy does not
- * OCR anything.
- *
- * ## And the absence is a STATE, never an empty result
- *
- * When no engine is present this returns `CANNOT_RUN` naming the wall and the
- * install, and it NEVER returns "no text". Those are different facts: one says
- * the document has nothing on it, and the other says nobody looked. A scanned
- * agenda recorded as a document that published nothing is precisely the
- * "failed operation rendering as empty success" defect the toolkit exists to
- * refuse — and it would be a false claim about a public body.
- *
- * ## The interface
- *
- *   runOcr(bytes, source, opts?) -> ExtractResult<OcrPage>
- *
- * `opts.engine` injects a different engine for tests and for a session that
- * has something better than tesseract available.
+ * Layer 3: OCR for scanned PDFs, through a local `tesseract` binary (pages
+ * rendered first with `pdftoppm`). No OCR engine is bundled; the deploy never
+ * OCRs. With no engine present this returns `CANNOT_RUN`, never "no text":
+ * nobody looked is not the same as nothing there. `opts.engine` injects
+ * another engine.
  */
 
 export interface OcrPage {
@@ -89,11 +63,7 @@ export async function runOcr(
   } else {
     const binary = opts.binary ?? process.env.WTP_OCR_BINARY ?? "tesseract";
     if (!ocrEngineAvailable(binary)) {
-      /*
-       * THE WALL, NAMED — and named as a wall rather than as a result. The
-       * next rung is installing the engine, and saying so is what stops this
-       * being recorded as "the document has no text".
-       */
+      /* The missing engine is a wall, never "the document has no text". */
       return cannotRun(
         "OCR",
         source,

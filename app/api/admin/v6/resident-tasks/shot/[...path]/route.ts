@@ -9,7 +9,7 @@ export const runtime = "nodejs";
 
 const NO_STORE = { "cache-control": "private, no-store" };
 
-/** FE-18: one resident-task screenshot from the portrait blob store, signed-in Admin only. The public portrait route never serves this prefix. */
+/** One resident-task screenshot from the portrait blob store, signed-in Admin only. The public portrait route never serves this prefix. */
 export async function GET(request: NextRequest, context: { params: Promise<{ path: string[] }> }): Promise<Response> {
   const guard = await guardAdminRequest({
     headers: request.headers,

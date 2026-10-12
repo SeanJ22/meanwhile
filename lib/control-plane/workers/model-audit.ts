@@ -21,19 +21,9 @@ export const AUDIT_CONTEXT_MAX_BYTES = 32_000;
 
 
 /*
- * NO FORCED TOOL CHOICE (2026-09-25). The auditor runs on Claude Opus 5.5,
- * which answers `tool_choice` `{type:"tool"}` / `{type:"any"}` with HTTP 400
- * (claude-api skill, model-migration.md, "Migrating to Claude Opus 5.5",
- * breaking change 2) — every audit request since the 2026-09-22 switch would
- * have failed. The replacement the skill gives for "steering toward a tool":
- * `auto`, the system prompt naming the tool, and `strict: true` so the
- * arguments are schema-valid. Chosen over structured outputs because
- * `record_audit` is the audit's contract (its description grants no
- * authority) and the validator already reads a tool call. `auto` does not
- * guarantee a call, so a response without one FAILS CLOSED as
- * `AUDIT_MODEL_NO_TOOL_CALL` — never a verdict read out of prose. Strict mode
- * does not accept array-length constraints, so the 24-challenge limit is
- * enforced by `validateAnswer` instead of the schema.
+ * No forced tool choice (HTTP 400 on Opus 5.5): `auto`, the system prompt naming the tool, and `strict: true`. A
+ * response without a tool call fails closed as `AUDIT_MODEL_NO_TOOL_CALL`. Strict mode accepts no array-length
+ * constraints, so the 24-challenge limit is enforced by `validateAnswer`.
  */
 const RECORD_AUDIT = {
   name: "record_audit",
@@ -188,7 +178,7 @@ function rawResponse(response: ModelResponse): string {
     : block.type === "tool_use" ? canonicalJson({ type: block.type, name: block.name, input: block.input }) : "").filter(Boolean).join("\n");
 }
 function validateAnswer(response: ModelResponse, expectedModel: string, context: IndependentAuditContext): Pick<Review, "verdict" | "challenges"> {
-  // The provider answers with the dated alias of a tier's model (claude-haiku-4-5-20251001): the same model.
+  // The provider may answer with a dated alias of the model asked for: the same model.
   if (canonicalModelId(String(response.model)) !== canonicalModelId(expectedModel)) validationFailure("AUDIT_MODEL_IDENTITY_MISMATCH");
   if (!Array.isArray(response.content)) validationFailure("AUDIT_MODEL_CONTENT_INVALID");
   const tools = response.content.filter((block) => block.type === "tool_use");
@@ -219,18 +209,13 @@ function validateAnswer(response: ModelResponse, expectedModel: string, context:
   return { verdict: answer.verdict as Review["verdict"], challenges };
 }
 
-/**
- * `ceilingUsd` is the rolling ceiling IN FORCE — the owner's console override,
- * the same number the Scout admission reads (2026-09-25). Before this the
- * auditor admitted against the static `RESEARCH_BOUNDS` default, so a dial set
- * below $100 did not bind it. Absent (a manual proof), the default stands.
- */
+/** `ceilingUsd` is the rolling ceiling in force (the owner's override, the same number Scout admission reads). Absent, the default stands. */
 export function modelAuditReasoner(repos: ControlPlaneRepositories, transport: ModelTransport, now: () => string,
   options: {
     readonly ceilingUsd?: number;
-    /** CH-26: read only the cost rows the rolling window can count. */
+    /** Read only the cost rows the rolling window can count. */
     readonly scopedReads?: boolean;
-    /** MW-021 (2026-09-25): the transport for the jurisdiction a record is about, so the review is held on the area budget covering it. */
+    /** The transport for the jurisdiction a record is about, so the review is held on the area budget covering it. */
     readonly transportFor?: (jurisdiction: { readonly subjectId: string; readonly state: string | null }) => ModelTransport;
     /** A durable lifetime hunt hold, rather than the discretionary rolling ceiling, governs this exact subject. */
     readonly lifetimeHuntSubject?: (subjectId: string) => boolean;
@@ -256,24 +241,19 @@ export function modelAuditReasoner(repos: ControlPlaneRepositories, transport: M
       }
     }
     const request: ModelRequest = { model: route.model, max_tokens: 2_048,
-      ...(route.modelClass === "haiku" ? {} : { output_config: { effort: route.effort } }),
+      output_config: { effort: route.effort },
       system: [{ type: "text", text: workerSystemPrompt("AUDITOR", (await readRolePlaybook(repos, "AUDITOR")).text), cache_control: { type: "ephemeral" } }], tools: [RECORD_AUDIT],
       tool_choice: { type: "auto" },
       messages: [{ role: "user", content: body }] };
     const send = options.transportFor === undefined ? transport
       : options.transportFor({ subjectId: context.subjectId, state: context.contract.schemaVersion === 2 ? context.contract.jurisdiction.state : null });
     const response = await send(request).catch((error) => {
-      /* A budget refusal is a policy denial before any request, never a provider failure (MW-021). */
+      /* A budget refusal is a policy denial before any request, never a provider failure. */
       if (error instanceof SendBudgetRefusal) throw new Error(`DENIED_BY_POLICY:${error.code}; ${error.why}`);
       const status = error && typeof error === "object" && "status" in error && typeof error.status === "number" ? String(error.status) : "UNAVAILABLE";
       throw new Error(`AUDIT_PROVIDER_FAILURE:${status}; usage NOT MEASURED`);
     });
-    /*
-     * The provider's usage block, read once through the shared parser (2026-09-06):
-     * the five billed quantities with the cache-write split, priced by the one
-     * pricing function and carried onto the cost ledger by `meteredCostFields`.
-     * `inputTokens` on the worker usage stays the UNCACHED remainder, as before.
-     */
+    /* The provider's usage block, read once through the shared parser and priced by the one pricing function. `inputTokens` stays the uncached remainder. */
     const metered: MeteredUsage = readMeteredUsage(response.usage, response.batch === true);
     const usage = { inputTokens: metered.uncachedInputTokens, outputTokens: metered.outputTokens,
       cacheReadInputTokens: metered.cacheReadInputTokens, cacheCreationInputTokens: metered.cacheCreationInputTokens,

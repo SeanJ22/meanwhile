@@ -1,30 +1,3 @@
-/**
- * MTG-11 — ONE THING UP AT A TIME, AND IT REACHES BEYOND CARDS.
- * (2026-08-25, captures `17-22-03` and `17-23-22`. Second pass on BC-16.)
- *
- * **The reconciliation.** BC-16 (8/25 morning) made two SMALL CARDS exclude
- * each other, in `lib/state/reducer.ts`, and **it did not regress** — opening
- * either still closes the other, asserted below. The verdict is **(b): the
- * predicate is too narrow.** BC-16's exclusion covers card-versus-card and
- * nothing else, and the captures show the overlap one layer out: a reader
- * opens *Where can I vote?* and the eight-meeting Vail card is still sitting on
- * the right, still there in the next capture while they read a polling
- * address. Clicking anywhere else should put the meetings card away.
- *
- * So three controls that take the foreground — **Where can I vote?, Ask, and
- * Change Zip** — dismiss whichever small card is open.
- *
- * ## The MAP-3 exception, which is what makes this delicate
- *
- * Who Governs Here and an area's battlecard appearing TOGETHER on an area
- * click is deliberate, and it is not the overlap defect. Regressing it is a session failure, so it is asserted here rather than
- * assumed.
- *
- * It survives BY CONSTRUCTION: `takeForeground` closes the venue and district
- * SELECTIONS and is called from exactly three places, none of which runs on an
- * area click. Nothing it does touches the Who Governs Here panel.
- */
-
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -32,10 +5,6 @@ import { readFileSync } from "node:fs";
 import { INITIAL_STATE, uiReducer } from "../lib/state/reducer.ts";
 
 const entry = () => readFileSync("components/map/map-entry.tsx", "utf8");
-
-/* -------------------------------------------------------------------------- */
-/* BC-16 — unchanged, and asserted so a second pass cannot cost the first      */
-/* -------------------------------------------------------------------------- */
 
 test("BC-16: opening a district card still closes an open venue card", () => {
   const withVenue = uiReducer(INITIAL_STATE, { type: "select/venue", key: "v1" });
@@ -61,8 +30,7 @@ test("BC-16: opening a venue card still closes an open district card", () => {
 });
 
 test("BC-16: closing one card does not silently close the other", () => {
-  /* A `null` selection is a CLOSE, not an open. Dismissing one must not
-     dismiss both — the clause BC-16 called out explicitly. */
+  // A null selection is a close, not an open.
   const both = uiReducer(uiReducer(INITIAL_STATE, { type: "select/venue", key: "v1" }), {
     type: "select/venue",
     key: null,
@@ -71,17 +39,7 @@ test("BC-16: closing one card does not silently close the other", () => {
   assert.equal(both.selectedDistrictOcdId, null);
 });
 
-/* -------------------------------------------------------------------------- */
-/* MTG-11 — the three foreground controls                                     */
-/* -------------------------------------------------------------------------- */
-
 test("MTG-11: dismissal is ONE function, not three copies", () => {
-  /*
-   * The same reasoning BC-16 gives for living in the reducer: a rule spread
-   * across handlers is a rule the handler nobody thought of does not follow.
-   * Three inline pairs of dispatches would also be three duplicate
-   * implementations (RULING 103).
-   */
   const src = entry();
   const fn = /const takeForeground = useCallback\(\(\) => \{([\s\S]*?)\n  \}, \[dispatch\]\);/.exec(src);
   assert.ok(fn, "takeForeground is missing from map-entry.tsx");
@@ -93,14 +51,7 @@ test("MTG-11: dismissal is ONE function, not three copies", () => {
   );
 });
 
-/*
- * Approved reader design (2026-09-28; Sean, "one active contextual surface").
- * The three foreground controls — Where can I vote?, Ask and the ZIP — are now
- * the three SMALL POPUPS, and all three open through ONE function,
- * `openPopup`, which is the single call site of `takeForeground`. One call
- * site serving three controls is the MTG-11 rule held by construction rather
- * than by three copies that can drift.
- */
+// All three foreground controls open through `openPopup`, the single call site of `takeForeground`.
 const openPopupBody = () => {
   const src = entry().replace(/\r/g, "");
   const start = src.indexOf("const openPopup = useCallback(");
@@ -112,9 +63,9 @@ const openPopupBody = () => {
 
 test("MTG-11: all three foreground controls go through one opener", () => {
   const src = entry();
-  const calls = src.match(/takeForeground\(\); \/\/ MTG-11/g) ?? [];
+  const calls = src.match(/takeForeground\(\);/g) ?? [];
   assert.equal(calls.length, 1, "takeForeground has exactly one call site: openPopup");
-  assert.match(openPopupBody(), /takeForeground\(\); \/\/ MTG-11/);
+  assert.match(openPopupBody(), /takeForeground\(\);/);
   const cluster = readFileSync("components/shell/pill-cluster.tsx", "utf8");
   for (const pop of ["zip", "vote", "ask"]) {
     assert.ok(cluster.includes(`onOpenPop("${pop}")`), `the ${pop} control opens through onOpenPop`);
@@ -135,18 +86,8 @@ test("MTG-11: a popup closes the card BEFORE it opens", () => {
   assert.ok(closeCard >= 0 && open > closeCard, "the card closes, then the popup opens");
 });
 
-/* -------------------------------------------------------------------------- */
-/* MAP-3 — the deliberate exception, asserted rather than assumed              */
-/* -------------------------------------------------------------------------- */
-
 test("MAP-3: an area click still leaves Who Governs Here open", () => {
-  /*
-   * Protected behaviour. Selecting a district is the whole of an
-   * area click in this state, and it must not touch anything Who Governs Here
-   * reads — the panel has its own open state and this reducer holds no field
-   * for it. Asserted by NAME so that adding one and clearing it here would be
-   * a visible failure rather than a quiet regression.
-   */
+  // The panel has its own open state; this reducer must hold no field for it.
   const after = uiReducer(INITIAL_STATE, {
     type: "select/district",
     ocdId: "ocd-division/country:us/state:az/school_district:vail_unified",
@@ -163,23 +104,8 @@ test("MAP-3: an area click still leaves Who Governs Here open", () => {
   }
 });
 
-/* -------------------------------------------------------------------------- */
-/* WGH-15 — HOME LOCATION IS NOT BROWSING LOCATION                            */
-/* -------------------------------------------------------------------------- */
-
 test("WGH-15: selecting a district writes SELECTION and never the reader's home", () => {
-  /*
-   * The reported screen showed *State House District 17* on the who-governs
-   * card and *District 19* on the district popup at the same moment, and the
-   * natural suspicion is that browsing had overwritten home. **It had not**,
-   * and this is the reducer half of proving it stays that way.
-   *
-   * The MAP-3 sweep above guards the PANEL's open state. This guards the
-   * READER'S LOCATION, which is a different thing living in a different store:
-   * `sessionStorage["wtp.session_address_scope"]`, whose only writer is
-   * `components/address/address-prompt.tsx`. A field appearing on the ui state
-   * that looks like a home location is how the two would start to leak.
-   */
+  // Home location lives in sessionStorage with one writer; the ui state must not grow a field for it.
   const before = uiReducer(INITIAL_STATE, {
     type: "select/district",
     ocdId: "ocd-division/country:us/state:az/sldl:17",
@@ -214,26 +140,16 @@ test("WGH-15: selecting a district writes SELECTION and never the reader's home"
 });
 
 test("WGH-15: the map shell reads the home store, and never writes it", () => {
-  /*
-   * `writeSessionAddress` and `clearSessionAddress` are the only two writers of
-   * the reader's home. The map shell renders BOTH surfaces — the who-governs
-   * card and the district popup — so it is the one file where a browse action
-   * could reach the home store, and it must not.
-   */
+  // The map shell renders both surfaces, so it is where a browse action could reach the home store.
   const source = entry();
   assert.doesNotMatch(source, /writeSessionAddress/, "the map shell writes the home store");
   assert.doesNotMatch(source, /clearSessionAddress/, "the map shell clears the home store");
 });
 
 test("MAP-3: takeForeground does not run on an area click", () => {
-  /*
-   * The other half. Three call sites, all named, none of them a map click. If
-   * a fourth appears on a district or venue handler, MAP-3's two cards stop
-   * appearing together.
-   */
   const src = entry();
   for (const line of src.split("\n")) {
-    if (!line.includes("takeForeground(); // MTG-11")) continue;
+    if (!line.includes("takeForeground();")) continue;
     assert.ok(
       !/onDistrict|onVenue|onArea|selectDistrict|selectVenue/.test(line),
       `takeForeground is being called from what looks like an area click: ${line.trim()}`,

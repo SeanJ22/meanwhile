@@ -6,15 +6,6 @@ import { ballotQuestionShape, composeBallotSummary, composeOfficeField, contests
 import type { EvidencePack } from "../lib/ask/evidence.ts";
 import { validateAnswer } from "../lib/ask/validate.ts";
 
-/**
- * **"WHAT IS ON MY BALLOT?" AND "WHO IS RUNNING FOR STATE SENATE IN MY
- * DISTRICT?"** (2026-09-29, S3.) Both returned no answer on staging: the first
- * names nothing, the second names an office where the binder wants a contest's
- * own title. These pin the words that are read, the contests an office reaches
- * (two, for a ZIP that reaches two districts), the candidates named, and the
- * honest sentence for a contest with no one held.
- */
-
 const ELECTION: Election = { id: "az-2026-11-03", date: "2026-11-03", name: "2026 General Election", state: "az" };
 const provenance = (path: string) => ({ sourceUrl: `https://example.gov/${path}`, sourceOrg: "Example County", collectedAt: "2026-09-20", secondHand: false }) as Contest["provenance"];
 const contest = (id: string, title: string, ocdId = "ocd-division/country:us/state:az", type: Contest["type"] = "CANDIDACY"): Contest => ({

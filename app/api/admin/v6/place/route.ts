@@ -42,9 +42,8 @@ const NO_STORE = { "cache-control": "no-store, no-cache, must-revalidate" };
 const PARAMS = new Set(["scope", "group", "status", "q", "cursor", "limit", "fresh"]);
 
 /**
- * `admin-v6/checklist@1` for any ZIP, county or state: Sean's capture score
- * overall and by group, and one window of the owed list behind it. Read-only;
- * it never starts an agent and never gates publishing.
+ * `admin-v6/checklist@1` for any ZIP, county or state: the capture score overall and by group, and one
+ * window of the owed list behind it. Read-only; it never starts an agent and never gates publishing.
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const guard = await guardAdminRequest({ headers: request.headers, cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value,

@@ -1,4 +1,4 @@
-/** FE-23: the Scoreboard's look row counts the week's red and green screens, shows the newest reds with their screenshots, and each red's fix and re-look. */
+/** The Scoreboard's look row counts the week's red and green screens, shows the newest reds with their screenshots, and each red's fix and re-look. */
 import assert from "node:assert/strict";
 import test from "node:test";
 

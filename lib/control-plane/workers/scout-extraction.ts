@@ -135,8 +135,7 @@ export async function buildBoxFindings(input: {
       // The lock covers the whole page: one extraction may carry several people, even when two Sends reference it.
       await repos.locks.withLock(`box-build:${fingerprint([first.sourceUrl ?? first.id])}`, async () => {
         const pageRows = own.filter(row => row.sourceUrl === first.sourceUrl);
-        // CH-20: a mid-walk drop carries its own fact. One about another subject waits for that subject's door (BX-04),
-        // never built against this item's contract.
+        // A mid-walk drop about another subject waits for that subject's door.
         const origins = await Promise.all(pageRows.flatMap(row => row.origins.filter(origin => origin.workItemId === item.id && origin.kind === "SCOUT" &&
             (!origin.reported || row.subjectId === item.subject))
           .map(async origin => ({ row, finding: origin.reported ? reportedFinding(row, origin) : (await scoutFor(origin))?.findings[origin.findingIndex] }))));

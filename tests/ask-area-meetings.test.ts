@@ -5,14 +5,6 @@ import { AREA_MEETINGS_LISTED, areaMeetingsQuestion, composeAreaMeetings, type A
 import type { EvidencePack } from "../lib/ask/evidence.ts";
 import { validateAnswer } from "../lib/ask/validate.ts";
 
-/**
- * **"WHAT MEETINGS ARE HAPPENING THIS WEEK?" — THE CALENDAR WE HOLD FOR THE
- * READER'S GOVERNMENTS.** (2026-09-29, S3.) The question names no body, so before
- * this nothing bound and the reader got no answer. These pin the words that are
- * read, the windows (calendar days in each sitting's own zone), what the composed
- * sentence states, and the honest sentence when nothing is held.
- */
-
 const sitting = (id: string, startsAt: string, body = "Vail Unified School District Governing Board", title = "Governing Board Meeting", extra: Partial<AreaSitting> = {}): AreaSitting => ({
   id, title, bodyName: body, bodyId: `${id}#body`, startsAt, timeZone: "America/Phoenix", status: "SCHEDULED",
   provenance: { sourceUrl: `https://example.gov/${id}`, sourceOrg: "Example", collectedAt: "2026-09-28" }, ...extra,

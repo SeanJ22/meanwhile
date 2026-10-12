@@ -2,7 +2,7 @@
 /**
  * @freshness-reads-here
  *
- * **ONE LIVE-AUDIT PASS OVER WHAT READERS ARE SHOWN.** (DP-13, DP-14, DP-16.)
+ * **ONE LIVE-AUDIT PASS OVER WHAT READERS ARE SHOWN.**
  *
  * Reads each curated Reader family's promoted version, samples a few facts per
  * area (more where readers ask, where the refresh is overdue, or where one
@@ -27,6 +27,9 @@ import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-pla
 import { curatedReaderCatalog, demandRanker, type LiveFactCatalog, type PageRead } from "../lib/control-plane/workers/live-audit.ts";
 import { combinedCatalog, runLiveAuditCycle, workItemTrace } from "../lib/control-plane/workers/live-audit-run.ts";
 import { politeGetText } from "../lib/sources/http.ts";
+import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
+
+readFromHeldCopies();
 
 const now = new Date().toISOString();
 const url = controlPlaneUrlFromEnv();

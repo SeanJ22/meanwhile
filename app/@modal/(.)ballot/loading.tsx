@@ -1,6 +1,5 @@
 import { RouteCard } from "@/components/shell/route-card";
 
-/** The Ballot card while the ballot is read: the frame appears at once. */
 export default function BallotCardLoading() {
   return (
     <RouteCard kicker="Ballot">

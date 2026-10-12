@@ -8,17 +8,21 @@ import type { DirectoryFile } from "./directory.ts";
 
 export const FEDERAL_DIRECTORY_SOURCE_ID = "congress-directory-project" as const;
 export const FEDERAL_DIRECTORY_SCOPE = "US:current-congress-directory" as const;
-export const FEDERAL_DIRECTORY_PARSER_VERSION = "congress-directory/2" as const;
+export const FEDERAL_DIRECTORY_PARSER_VERSION = "congress-directory/4" as const;
 
 export interface FederalDirectoryAcquisition {
   readonly requestedUrl: string;
   readonly finalUrl: string;
   readonly httpStatus: number;
   readonly body: string;
+  readonly retrievedAt?: string;
+  readonly vaultKey?:string;
+  readonly sourceCheck?: NonNullable<import("../civic-data/types.ts").RetrievalEvidence["sourceCheck"]>;
 }
 
 export interface FederalDirectoryReadModel {
   readonly formatVersion: 1;
+  readonly currentMembershipComplete?: boolean;
   readonly sourceSha: string;
   readonly roster: OfficeholderSet;
   readonly directory: DirectoryFile;
@@ -38,14 +42,6 @@ function rawSetHash(acquisitions: readonly FederalDirectoryAcquisition[]): strin
   })).sort((left, right) => left.finalUrl.localeCompare(right.finalUrl))));
 }
 
-const REQUIRED_DIRECTORY_FILES = [
-  "legislators-current.yaml",
-  "legislators-social-media.yaml",
-  "legislators-district-offices.yaml",
-  "committees-current.yaml",
-  "committee-membership-current.yaml",
-] as const;
-
 export function federalDirectoryProjectionIssues(value: FederalDirectoryReadModel): string[] {
   const issues: string[] = [];
   const holders = value.roster?.officeholders ?? [];
@@ -57,13 +53,11 @@ export function federalDirectoryProjectionIssues(value: FederalDirectoryReadMode
   const bioguides = holders.map((holder) => holder.id.replace(/^congress:/, ""));
   if (value.formatVersion !== 1) issues.push("FORMAT_VERSION_UNSUPPORTED");
   if (!/^[a-f0-9]{40}$/.test(value.sourceSha)) issues.push("SOURCE_SHA_INVALID");
-  if (holders.length < 500) issues.push("FEDERAL_ROSTER_THIN");
-  if (Object.keys(byMember).length < 500) issues.push("FEDERAL_DIRECTORY_THIN");
-  if (Object.keys(committees).length < 40) issues.push("COMMITTEE_DIRECTORY_THIN");
+  if (holders.length === 0) issues.push("FEDERAL_ROSTER_EMPTY");
   if (new Set(holderIds).size !== holderIds.length || holderIds.some((id) => !/^congress:[A-Z]\d{6}$/.test(id))) issues.push("OFFICEHOLDER_ID_INVALID_OR_DUPLICATED");
   if (bioguides.some((id) => !byMember[id])) issues.push("OFFICEHOLDER_DIRECTORY_JOIN_MISSING");
   if (divisions.some((link) => !holderSet.has(link.officeholderId) || !link.ocdId)) issues.push("DIVISION_LINK_UNRESOLVED");
-  if (holders.some((holder) => !holder.name || !holder.officeTitle || !holder.termStart || !holder.termEnd || !holder.provenance?.sourceUrl)) issues.push("OFFICEHOLDER_REQUIRED_FACT_MISSING");
+  if (holders.some((holder) => !holder.name || !holder.officeTitle || !holder.provenance?.sourceUrl)) issues.push("OFFICEHOLDER_REQUIRED_FACT_MISSING");
   const committeeIds = new Set(Object.keys(committees));
   if (Object.values(byMember).some((entry) => entry.committees.some((seat) => !committeeIds.has(seat.committeeId)))) issues.push("COMMITTEE_MEMBERSHIP_UNRESOLVED");
   if (value.directory.source.sha !== value.sourceSha) issues.push("DIRECTORY_SOURCE_SHA_MISMATCH");
@@ -74,6 +68,7 @@ export function federalDirectoryCandidate(input: {
   readonly acquisitions: readonly FederalDirectoryAcquisition[];
   readonly retrievedAt: string;
   readonly projection: FederalDirectoryReadModel;
+  readonly excludedFacts?: RoutineCandidate["excludedFacts"];
 }): RoutineCandidate {
   const issues = federalDirectoryProjectionIssues(input.projection);
   for (const acquisition of input.acquisitions) {
@@ -87,30 +82,33 @@ export function federalDirectoryCandidate(input: {
     try { return new URL(row.finalUrl).pathname.split("/").at(-1) ?? ""; }
     catch { return ""; }
   }).sort();
-  if (input.acquisitions.length !== REQUIRED_DIRECTORY_FILES.length
-    || JSON.stringify(acquiredFiles) !== JSON.stringify([...REQUIRED_DIRECTORY_FILES].sort())) issues.push("FIVE_FILE_SOURCE_SET_INCOMPLETE");
+  if (!acquiredFiles.includes("legislators-current.yaml")) issues.push("CORE_SOURCE_MISSING");
+  if (new Set(acquiredFiles).size !== acquiredFiles.length) issues.push("DUPLICATE_SOURCE_FILE");
   const rawHash = rawSetHash(input.acquisitions);
+  const sourceCheck = input.acquisitions.flatMap(row=>row.sourceCheck ? [row.sourceCheck] : []).sort((a,b)=>b.checkedAt.localeCompare(a.checkedAt))[0];
   const normalizedPayload = {
     sourceSha: input.projection.sourceSha,
-    acquisitions: input.acquisitions.map(({ requestedUrl, finalUrl, httpStatus, body }) => ({ requestedUrl, finalUrl, httpStatus, rawHash: sha256(body), byteCount: Buffer.byteLength(body) })),
+    ...(input.excludedFacts?.length ? { excludedFacts: input.excludedFacts } : {}),
+    acquisitions: input.acquisitions.map(({ requestedUrl, finalUrl, httpStatus, body, retrievedAt, vaultKey, sourceCheck }) => ({ requestedUrl, finalUrl, httpStatus, body, rawHash: sha256(body), byteCount: Buffer.byteLength(body), ...(retrievedAt ? {retrievedAt} : {}),...(vaultKey ? {vaultKey} : {}),...(sourceCheck ? {sourceCheck} : {}) })),
   };
   const normalizedHash = sha256(canonicalCivicDataJson(input.projection));
   const normalizedPayloadHash = sha256(canonicalCivicDataJson(normalizedPayload));
   const records = civicRecordsFor("FEDERAL_DIRECTORY", input.projection);
-  const acquisitionProblems = issues.filter((issue) => /^(?:FINAL_|SOURCE_|HTTP_|EMPTY_BODY|ACQUISITION_|FIVE_FILE)/.test(issue));
+  const acquisitionProblems = issues.filter((issue) => /^(?:FINAL_|SOURCE_|HTTP_|EMPTY_BODY|ACQUISITION_|CORE_SOURCE|DUPLICATE_SOURCE)/.test(issue));
   return {
-    id: `cv-${sha256(`${FEDERAL_DIRECTORY_SOURCE_ID}\u001f${FEDERAL_DIRECTORY_SCOPE}\u001f${rawHash}\u001f${normalizedHash}\u001f${input.projection.sourceSha}\u001f${input.retrievedAt}`).slice(0, 32)}`,
+    id: `cv-${sha256(`${FEDERAL_DIRECTORY_SOURCE_ID}\u001f${FEDERAL_DIRECTORY_SCOPE}\u001f${FEDERAL_DIRECTORY_PARSER_VERSION}\u001f${rawHash}\u001f${normalizedHash}\u001f${normalizedPayloadHash}\u001f${input.projection.sourceSha}\u001f${input.retrievedAt}\u001f${canonicalCivicDataJson(sourceCheck ?? null)}`).slice(0, 32)}`,
     sourceId: FEDERAL_DIRECTORY_SOURCE_ID,
     recordClass: "FEDERAL_DIRECTORY",
     scope: FEDERAL_DIRECTORY_SCOPE,
     retrieval: {
-      succeeded: input.acquisitions.length === 5 && acquisitionProblems.length === 0,
+      succeeded: acquiredFiles.includes("legislators-current.yaml") && acquisitionProblems.length === 0,
       requestedUrl: input.acquisitions[0]?.requestedUrl ?? "",
       finalUrl: input.acquisitions[0]?.finalUrl ?? null,
       httpStatus: input.acquisitions[0]?.httpStatus ?? null,
       retrievedAt: input.retrievedAt,
       rawHash: input.acquisitions.length ? rawHash : null,
-      failureDetail: input.acquisitions.length === 5 ? undefined : "The five-file adopted directory source set was not acquired completely.",
+      ...(sourceCheck ? {sourceCheck} : {}),
+      failureDetail: acquiredFiles.includes("legislators-current.yaml") ? undefined : "The current membership source was unavailable.",
     },
     normalization: {
       succeeded: true,
@@ -140,22 +138,23 @@ export function federalDirectoryCandidate(input: {
     },
     semantics: { factKind: "attributed current federal membership, contact, district-office, social, and committee directory facts", violations: issues },
     horizon: {
-      kind: "BOUNDED",
-      query: `five congress-legislators YAML files at ${input.projection.sourceSha}`,
+      kind: input.projection.currentMembershipComplete ? "BOUNDED" : "OPEN_FACT_SET",
+      query: `independently acquired congress-legislators files at ${input.projection.sourceSha}`,
       returnedRecords: records.length,
       declaredTotal: records.length,
       paginationComplete: true,
-      claimsComplete: true,
+      claimsComplete: input.projection.currentMembershipComplete === true,
     },
     absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
     sourceProjectionEvidence: sourceProjectionEvidence(FEDERAL_DIRECTORY_SOURCE_ID, "FEDERAL_DIRECTORY", FEDERAL_DIRECTORY_SCOPE),
     dependentChecks: [
-      { consumer: "registry/representation/map/ballot", passed: input.projection.roster.officeholders.length >= 500 && input.projection.roster.divisions.length >= 500, detail: `${input.projection.roster.officeholders.length} federal holders and ${input.projection.roster.divisions.length} exact division links.` },
-      { consumer: "/api/directory and Ask", passed: Object.keys(input.projection.directory.byMember).length >= 500, detail: `${Object.keys(input.projection.directory.byMember).length} bioguide-keyed directory entries.` },
+      { consumer: "registry/representation/map/ballot", passed: input.projection.roster.officeholders.length > 0 && input.projection.roster.divisions.every(row => input.projection.roster.officeholders.some(holder => holder.id === row.officeholderId)), detail: `${input.projection.roster.officeholders.length} federal holders and ${input.projection.roster.divisions.length} exact division links.` },
+      { consumer: "/api/directory and Ask", passed: input.projection.roster.officeholders.every(holder => Boolean(input.projection.directory.byMember[holder.id.slice(9)])), detail: `${Object.keys(input.projection.directory.byMember).length} bioguide-keyed directory entries.` },
     ],
     normalizedPayload,
     readModel: input.projection,
     civicRecords: records,
+    ...(input.excludedFacts?.length ? { excludedFacts: input.excludedFacts } : {}),
   };
 }
 

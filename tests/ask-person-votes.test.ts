@@ -6,18 +6,6 @@ import { composePersonVotes, personVotesQuestionShape, topicTerms } from "../lib
 import { validateAnswer } from "../lib/ask/validate.ts";
 import { WRITER_PERSON_VOTE_RECORDS, writerInputProof, writerSelection } from "../lib/ask/writer-selection.ts";
 
-/**
- * **HOW A NAMED PERSON VOTED: COMPOSED FROM THE ROLL CALLS WE HOLD, AND THE
- * WRITER SENT ONLY THE ONES THE QUESTION IS ABOUT.** (2026-09-29, S3.)
- *
- * Measured on staging: "How did Juan Ciscomani vote on the budget?" sent the fast
- * writer 104 records (about 36,000 tokens); it timed out and the escalation
- * writer answered at 11.6 s. "How has Juan Ciscomani voted?" was rejected for
- * length by both writers. These pin the shapes that are read in code, what the
- * composed answer states, when it steps aside for a writer, and how the writer's
- * selection is bounded without ever calling a held vote unpublished.
- */
-
 const rollCall = (n: number, what: string, date = `2026-09-${String(10 + n).padStart(2, "0")}`, position = "YES"): EvidenceRecord => ({
   kind: "ROLL_CALL_VOTE", id: `congress:C1#house:119-2:${n}`,
   text: `Juan Ciscomani, U.S. Representative: voted ${position} on ${what} — On Passage, ${date}. Passed 300–100.`,

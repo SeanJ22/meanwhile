@@ -1,35 +1,21 @@
-/**
- * SC-13: the launch gates (GATE-02 to GATE-12 in the State Run Checklist) as
- * health readings for the Scoreboard's GATE group.
- *
- * Each gate shows as pass, attention or not measured. None of them can hold
- * publishing: this module only reads, returns rows, and has no way to stop
- * anything (rulings §3). A gate that has no reading today says "not measured"
- * and why, never a guessed pass.
- */
+/** Read-only health rows: no gate here can hold publishing. A gate with no reading says "not measured" and why, never a guessed pass. */
 import type { RunnerHeartbeat } from "../owner-surface.ts";
 import { livenessOf } from "../owner-surface.ts";
 
 export type GateHealthState = "pass" | "attention" | "not_measured";
 
 export interface GateHealthRow {
-  /** Checklist id, kept for Technical details only. */
   readonly id: string;
-  /** Plain-English name shown on the Scoreboard. */
   readonly name: string;
   readonly state: GateHealthState;
-  /** One sentence that says what was read, or why it was not. */
   readonly sentence: string;
 }
 
 export interface GateHealthReadings {
   readonly nowIso: string;
   readonly heartbeat: RunnerHeartbeat | null;
-  /** Database reach from the last normal cycle; null when no cycle has reported it. */
   readonly databaseReachable: boolean | null;
-  /** The last normal dispatch: when it finished and whether it left a durable result. */
   readonly lastDispatch: { readonly finishedAt: string; readonly durableResult: boolean } | null;
-  /** Spend counted against the effective ceiling; null parts show as not measured. */
   readonly spend: {
     readonly rolling24HoursUsd: number | null;
     readonly effectiveCeilingUsd: number | null;
@@ -37,7 +23,6 @@ export interface GateHealthReadings {
   } | null;
 }
 
-/** The gates that have no reading today, with the reason. */
 const NOT_MEASURED: readonly { id: string; name: string; why: string }[] = [
   { id: "GATE-05", name: "Scouts receive what we already know", why: "No reading yet records what an actual scout was handed." },
   { id: "GATE-08", name: "Bad data cannot replace good data", why: "Publication refusals are counted elsewhere; no single reading covers this yet." },
@@ -119,7 +104,6 @@ function overnight(r: GateHealthReadings): GateHealthRow {
   return row("GATE-12", name, "pass", "The runner is beating and its last cycle finished cleanly.");
 }
 
-/** The GATE group in checklist order. Gates with no reading are listed as not measured, with the reason. */
 export function readGateHealth(readings: GateHealthReadings): readonly GateHealthRow[] {
   const measured = [
     runningRelease(readings),

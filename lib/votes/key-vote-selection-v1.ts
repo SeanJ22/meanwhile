@@ -23,10 +23,8 @@ interface SelectedQuestion {
 }
 
 /**
- * Reviewed selection v1. This is the only software-versioned part of the
- * key-vote product: question identities and the official rolls selected to
- * answer them. Official wording, tallies, URLs, verification times, and
- * member positions are deliberately absent and belong to the data plane.
+ * Reviewed selection v1: question identities and the official rolls that answer
+ * them. Wording, tallies, URLs and member positions belong to the data plane.
  */
 export const FEDERAL_KEY_VOTE_SELECTION_V1 = [
   { id: "cares-act", house: [], senate: [{ congress: 116, session: 2, rollNumber: 80 }] },
@@ -76,11 +74,7 @@ function selectedRef(chamber: "house" | "senate", ref: SelectedRollIdentity): Ro
 }
 
 function curatedEntry(entry: KeyVoteEntry, selected: SelectedQuestion): KeyVoteEntry {
-  // Search phrases are reviewed acquisition hints, not official runtime facts
-  // and not Reader output. Current pending/chamber status is also excluded:
-  // it may enter a later schema only through a fresh official acquisition
-  // represented in the durable receipt. The selected roll identities
-  // supersede the old resolver hints here.
+  // Search hints and pending status are acquisition inputs, not reader facts.
   const {
     lawSearch: _lawSearch,
     pending: _pending,
@@ -116,14 +110,6 @@ function selectionShape(snapshot: FederalKeyVotesSnapshot): unknown {
   };
 }
 
-function rollIdentityShape(snapshot: FederalKeyVotesSnapshot): unknown {
-  return snapshot.entries.map((entry) => ({
-    id: entry.id,
-    house: entry.house.map(({ congress, session, rollNumber }) => ({ congress, session, rollNumber })),
-    senate: entry.senate.map(({ congress, session, rollNumber }) => ({ congress, session, rollNumber })),
-  }));
-}
-
 /** Build the acquisition input from reviewed software, never from runtime facts. */
 export function federalKeyVoteSelectionV1Snapshot(fetchedAt: string): FederalKeyVotesSnapshot {
   const selectedById = new Map<string, SelectedQuestion>(FEDERAL_KEY_VOTE_SELECTION_V1.map((entry) => [entry.id, entry]));
@@ -147,28 +133,4 @@ export function federalKeyVoteSelectionV1Issue(snapshot: FederalKeyVotesSnapshot
   return canonicalCivicDataJson(selectionShape(snapshot)) === canonicalCivicDataJson(selectionShape(expected))
     ? null
     : "REVIEWED_KEY_VOTE_SELECTION_V1_MISMATCH";
-}
-
-/**
- * The bundled file contributes only its first-seed official facts. Reviewed
- * question copy comes from the versioned selection, so stale tracked copy can
- * neither override it nor become a second authority.
- */
-export function hydrateFederalKeyVoteBootstrapV1(snapshot: FederalKeyVotesSnapshot): FederalKeyVotesSnapshot {
-  const expected = federalKeyVoteSelectionV1Snapshot(snapshot.fetchedAt);
-  if (canonicalCivicDataJson(rollIdentityShape(snapshot)) !== canonicalCivicDataJson(rollIdentityShape(expected))) {
-    throw new Error("FEDERAL_KEY_VOTE_BOOTSTRAP_ROLL_SELECTION_MISMATCH");
-  }
-  return {
-    formatVersion: 1,
-    fetchedAt: snapshot.fetchedAt,
-    criteria: expected.criteria,
-    entries: expected.entries.map((entry, index) => ({
-      ...entry,
-      house: snapshot.entries[index].house,
-      senate: snapshot.entries[index].senate,
-    })),
-    misses: snapshot.misses,
-    ...(snapshot.lawMisses ? { lawMisses: snapshot.lawMisses } : {}),
-  };
 }

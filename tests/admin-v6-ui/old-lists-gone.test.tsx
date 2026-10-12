@@ -1,5 +1,5 @@
 /**
- * BR-34: the old order and stuck lists are gone. Each order, hunt, stuck item and fix item is on the Queue only: Work has no
+ * The old order and stuck lists are gone. Each order, hunt, stuck item and fix item is on the Queue only: Work has no
  * Lanes or History tab, Workers has no "Your instructions", and the Fix list is not a page of its own.
  */
 import assert from "node:assert/strict";

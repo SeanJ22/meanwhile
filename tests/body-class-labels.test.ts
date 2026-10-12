@@ -15,11 +15,7 @@ import { TRIBAL_NATIONS, tribalNationsInState } from "../lib/registry/tribal-nat
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
-/**
- * **RULING 118** — an appointed official never carries the govern verb.
- * **RULING 119** — a sovereign tribal nation is its own category of government.
- * (Both adopted 2026-08-24, closing `NS07` and `NS08`.)
- */
+/** An appointed official never carries the govern verb, and a sovereign tribal nation is its own category of government. */
 
 test("every body class has a reader label and a stated reason", () => {
   for (const [key, label] of Object.entries(BODY_CLASS_LABELS)) {
@@ -33,7 +29,7 @@ test("every body class has a reader label and a stated reason", () => {
   }
 });
 
-test("RULING 118 — the govern verb never attaches to an appointed-led body", () => {
+test("the govern verb never attaches to an appointed-led body", () => {
   for (const bodyClass of APPOINTED_LED) {
     assert.equal(
       governVerbMayAttach(bodyClass),
@@ -47,7 +43,7 @@ test("RULING 118 — the govern verb never attaches to an appointed-led body", (
   assert.equal(governVerbMayAttach("REGIONAL"), true);
 });
 
-test("RULING 119 — a sovereign nation is labelled as one, and the verb does not attach", () => {
+test("a sovereign nation is labelled as one, and the verb does not attach", () => {
   assert.equal(bodyClassShort("SOVEREIGN_TRIBAL"), "Sovereign nation");
   assert.equal(bodyClassLong("SOVEREIGN_TRIBAL"), "Sovereign tribal nation");
   /*
@@ -63,15 +59,7 @@ test("a private association is never presented as a government", () => {
 });
 
 test("NO SURFACE KEEPS ITS OWN CLASS-LABEL MAP — the duplicate-implementation guard", () => {
-  /*
-   * **RULING 103.** There were THREE copies of these labels, and the third was
-   * a BINARY — `bodyClass === "GOVERNING" ? "Governing" : "Advisory"` — which
-   * would have called a sovereign tribal nation advisory the day one shipped.
-   * Grepping the symptom could not find them: they shared no string.
-   *
-   * So this searches by SHAPE (RULING 110): any component that maps a
-   * bodyClass to its own hardcoded label literal.
-   */
+  /* Searches by shape for any component mapping a bodyClass to its own hardcoded label literal. */
   const dirs = ["components", "app"];
   const offenders: string[] = [];
   const walk = (dir: string): string[] => {
@@ -102,15 +90,12 @@ test("NO SURFACE KEEPS ITS OWN CLASS-LABEL MAP — the duplicate-implementation 
 });
 
 test("the instrument catches a real instance — the binary it was written for", () => {
-  /*
-   * RULING 110: a sweep that cannot find the defect it was written for is a
-   * sweep reporting green about nothing. This is the shipped copy verbatim.
-   */
+  /* A sweep must find the defect it was written for: this is the shipped copy verbatim. */
   const theRealThing = `{body.bodyClass === "GOVERNING" ? "Governing" : "Advisory"}`;
   assert.match(theRealThing, /bodyClass\s*===\s*"GOVERNING"\s*\?\s*"/);
 });
 
-test("RULING 119 — the three nations are named, with a federal code behind each id", () => {
+test("the three nations are named, with a federal code behind each id", () => {
   assert.equal(TRIBAL_NATIONS.length, 3);
   const names = TRIBAL_NATIONS.map((n) => n.name);
   assert.ok(names.includes("Navajo Nation"));
@@ -142,18 +127,10 @@ test("the three Pima-area nations resolve for Arizona", () => {
 });
 
 test("the minted identifier declares itself as minted", () => {
-  /*
-   * The canonical OCD registry has no tribal division type. That is a FINDING
-   * and the module says so — a later session must not read these ids as
-   * looked-up when they were built from a federal code by this project.
-   */
+  /* The canonical OCD registry has no tribal division type, and the module must say these ids were built from a federal code, not looked up. */
   const source = readFileSync(join(ROOT, "lib", "registry", "tribal-nations.ts"), "utf8");
   assert.match(source, /PROJECT-MINTED/);
-  /*
-   * Whitespace-tolerant, because the sentence is line-wrapped in a doc comment
-   * and a literal-string search would report "not found" about text that is
-   * plainly there — which is the wrong-FORM search RULING 110 names.
-   */
+  /* Whitespace-tolerant: the sentence is line-wrapped in a doc comment. */
   const prose = source.replace(/\s*\n\s*\*\s*/g, " ");
   assert.match(prose, /no tribal division type/i);
 });

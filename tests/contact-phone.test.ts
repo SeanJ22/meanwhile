@@ -5,25 +5,6 @@ import test from "node:test";
 
 import { phoneChoicesFor, telHref } from "../lib/officials/phone-numbers.ts";
 
-/**
- * **R39 — one Phone pill replaces stacked numbers, everywhere.**
- *
- * 2026-08-17, the author's production feedback. Jeanne Shaheen's card rendered
- * seven stacked phone rows; the author's standing rule is that a named
- * instance is an EXAMPLE of a class, so the guard here is about the RULE, not
- * about Shaheen.
- *
- * The rule, in three parts, each of which can fail on its own:
- *
- * 1. The number of numbers is computed ONCE, from the recorded data, and the
- *    render's shape follows from it. Two numbers is a modal; one is a direct
- *    `tel:` link; none is no pill at all.
- * 2. Labels come from the record. Never from an area code — that would be a
- *    generated claim about where a public official's line goes.
- * 3. The displayed number keeps its published formatting, and only the `href`
- *    is stripped to digits.
- */
-
 function code(path: string[]): string {
   return readFileSync(join(process.cwd(), ...path), "utf8");
 }
@@ -33,8 +14,6 @@ const MODAL = code(["components", "officials", "phone-choice-modal.tsx"]);
 const CSS = code(["app", "globals.css"]);
 
 test("seven offices collect to seven choices, district first, Washington last", () => {
-  // Shaheen's shape, as the directory publishes it: six district offices and
-  // the term record's Washington line.
   const choices = phoneChoicesFor({
     phone: "(202) 224-2841",
     districtOffices: [
@@ -49,8 +28,6 @@ test("seven offices collect to seven choices, district first, Washington last", 
   });
 
   assert.equal(choices.length, 7);
-  // District first — it is the one that answers. g4 item 8's finding, which
-  // R39 did not change; it changed only what happens to the list.
   assert.equal(choices[0].label, "Manchester office");
   assert.equal(choices[6].label, "Washington office");
   assert.equal(choices[6].phone, "(202) 224-2841");
@@ -71,8 +48,6 @@ test("no recorded number is no choices — never a placeholder row", () => {
 });
 
 test("offices sharing a switchboard collapse to one row", () => {
-  // Four offices, one number. Four identical rows in the chooser would be the
-  // wall this was built to remove, rebuilt inside the fix.
   const choices = phoneChoicesFor({
     phone: null,
     districtOffices: [
@@ -93,7 +68,6 @@ test("a Washington number that IS a district number is one number, not two", () 
     ownLabel: "Washington office",
   });
   assert.equal(choices.length, 1);
-  // It keeps the label the record supports for it.
   assert.equal(choices[0].label, "Concord office");
 });
 
@@ -103,8 +77,7 @@ test("a label is never invented — an office with no published city says so", (
     districtOffices: [{ city: null, phone: "(603) 555-0111" }],
   });
   assert.equal(choices[0].label, "District office");
-  // And no label anywhere is derived from the number itself. An area code is
-  // where a number was ISSUED, not where the line rings.
+  // An area code is where a number was issued, not where the line rings.
   const source = code(["lib", "officials", "phone-numbers.ts"]);
   assert.ok(
     !/phone\.(slice|substring|match|replace)\([^)]*\)[^;]*label/i.test(source),
@@ -120,7 +93,6 @@ test("the href strips to digits; the displayed number keeps its formatting", () 
   }
   assert.equal(telHref("+1 (973) 627-2000 ext 0228"), "tel:+19736272000;ext=0228");
   assert.equal(telHref("311"), "tel:311");
-  // The choice itself is untouched — the render puts this on the face.
   const choices = phoneChoicesFor({ phone: "(603) 647-7500" });
   assert.equal(choices[0].phone, "(603) 647-7500");
 });
@@ -142,7 +114,6 @@ test("the pill row branches on the COUNT, and only above one opens a modal", () 
     /href=\{telHref\(phoneChoices\[0\]\.phone\)\}/.test(PILLS),
     "the single-number pill must be the tel: link itself, with no modal",
   );
-  // The old shape, gone: no loop pushing one pill per number.
   assert.ok(
     !/for \(const \[index, office\] of districtPhones/.test(PILLS),
     "the per-number pill loop must not come back",
@@ -166,13 +137,11 @@ test("the modal dials, dismisses, and leaves the card underneath alone", () => {
     /event\.target === event\.currentTarget/.test(MODAL),
     "a backdrop press must close it, and a press on the panel must not",
   );
-  // M90: the card behind must be untouched by the press that closes this.
   // `useDismissOnOutside` reads this attribute.
   assert.ok(
     /data-dismiss-exempt/.test(MODAL),
     "the overlay must be exempt from the battlecard's outside-press dismissal",
   );
-  // M52: an overlay that pushes history gets its island remounted and dies.
   assert.ok(
     !/pushState|history\.push/.test(MODAL),
     "no history entry may be pushed",

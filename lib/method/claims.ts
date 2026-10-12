@@ -1,63 +1,7 @@
 /**
- * **THE FOUR CLAIM CLASSES, AND WHY A ROUTE IS NOT ONE CLAIM.** (2026-08-28.)
- *
- * Canonical method knowledge is INHERITED BY FUTURE WORKERS. That is the whole
- * value of the store and it is also the whole of its danger: a sentence written
- * here is read by every later session as settled, and none of them re-derives
- * it. So a wrong sentence does not cost one session — it costs every session
- * after it, and it arrives pre-argued.
- *
- * The Pima case is the worked example and it is exact. A session measured
- * `webapi.legistar.com/v1/pima/events` correctly, reconciled the adapter's
- * denominators correctly, and then wrote down that Pima County publishes its
- * September sittings only as a recurring rule. All three sittings were
- * individually published on the county's own portal at that moment. The
- * measurement was true; the conclusion drawn from it was false; and both were
- * stored in the same prose field, at the same authority, on the same route.
- *
- * ## Correcting the prose was necessary and insufficient
- *
- * A store that holds one undifferentiated blob per route has exactly two moves
- * when part of it turns out to be wrong: rewrite the blob, or delete the route.
- * Rewriting loses the history. Deleting throws away a route that was never
- * wrong — and a deleted route is one a later session rediscovers as new
- * (RULING 63). Neither is available if the false part and the true part are
- * separable, and here they always are:
- *
- *   A. `ROUTE_EXISTENCE`     — "this public route exists"
- *   B. `ROUTE_OUTCOME`       — "it yielded / zeroed / failed / was blocked in
- *                              jurisdiction X on date Y"
- *   C. `COVERAGE_CLAIM`      — "this route appears complete or incomplete for
- *                              field or class X"
- *   D. `DERIVED_CONCLUSION`  — "the public record universe contains, or does
- *                              not contain, X"
- *
- * **A FALSE C OR D MUST NOT CAUSE A VALID A TO BE DELETED.** That is the
- * structural property this module exists to hold, and it is held by giving each
- * assertion its own record with its own retraction, rather than by asking a
- * future worker to be careful with a paragraph.
- *
- * ## Why the values are named rather than lettered
- *
- * `MethodRoute.tier` is already `A0 | A1 | B | C`. A claim class stored as
- * `"A"`, `"B"`, `"C"` or `"D"` would collide with it in every grep, every log
- * line and every reader's eye, and a class that is *sometimes* the tier is a
- * defect waiting for a hurry. The letters survive as a derived label
- * (`CLAIM_CLASS_LETTER`) for reports that want to speak the brief's language.
- *
- * ## Provenance is REQUIRED for C and D, and that is the point
- *
- * A route's existence and a route's outcome are self-evidencing: the id is the
- * route, and an outcome already carries its jurisdiction and its date. A
- * coverage claim and a derived conclusion are not. They are the two classes
- * that PROPAGATE — a later session inherits them as reasons to stop looking —
- * so each one must be auditable back to the artifact that evidenced it, the
- * route disposition that produced it, the jurisdictions and vendors it covers,
- * and the date it was observed on.
- *
- * **A coverage claim or a derived conclusion may not become inherited authority
- * merely because the worker that wrote it believed it.** The validator refuses
- * it, and `tests/method-claims.test.ts` plants one to prove the refusal fires.
+ * A route's assertions as four classes, each its own record with its own retraction, so a false coverage claim or
+ * derived conclusion never deletes a valid route. Coverage claims and derived conclusions propagate to later work as
+ * reasons to stop looking, so they require provenance.
  */
 
 /** The four classes. Ordered A, B, C, D. */
@@ -94,13 +38,7 @@ export function requiresProvenance(c: ClaimClass): boolean {
 export const CLAIM_DISPOSITIONS = ["YIELDED", "ZERO", "FAILED", "BLOCKED"] as const;
 export type ClaimDisposition = (typeof CLAIM_DISPOSITIONS)[number];
 
-/**
- * Enough to audit a claim back to evidence, and no more.
- *
- * Every field here answers a question a later session actually asks before
- * trusting an inherited conclusion: *what did you look at, how did you get it,
- * where does it apply, and when?*
- */
+/** Enough to audit a claim back to evidence. */
 export interface ClaimProvenance {
   /** The source artifact: a URL, a record reference, or a committed file path. */
   artifact: string;
@@ -115,39 +53,13 @@ export interface ClaimProvenance {
   /** ISO date, from `pnpm stamp`. An agent does not know today's date. */
   observedOn: string;
   /**
-   * **THE ATTEMPT THAT PRODUCED THE OBSERVATION.** (2026-08-29.)
-   *
-   * `artifact` is a URL, a record reference or a path — a STRING a person
-   * wrote. It is enough for a human to go and look, and it is not a join: two
-   * artifacts can carry the same URL, a URL can be rewritten, and nothing in it
-   * says which execution fetched it, under which method version, at which cost,
-   * or whether that execution ever reached a completion boundary. An audit that
-   * has only the prose has to trust the prose.
-   *
-   * With this field the chain is mechanical and every hop is an identifier:
-   *
-   *     claim -> provenance.attemptId -> Attempt.routeTaskId -> RouteTask
-   *           -> RouteTask.disposition.artifactIds -> the vault
-   *
-   * `auditTrailFor()` below walks exactly that and refuses to substitute
-   * `artifact` for any hop of it.
-   *
-   * **OPTIONAL, and it stays optional.** 116 routes and their claims predate
-   * the control plane, and back-filling an Attempt id for an execution that had
-   * no Attempt would be inventing a provenance record — the precise failure the
-   * provenance requirement exists to prevent. An absent `attemptId` is reported
-   * as a NAMED GAP by the traversal, never silently repaired.
+   * The Attempt that produced the observation: the identifier the audit chain joins on. Optional; an absent id is
+   * reported as a named gap, never back-filled.
    */
   attemptId?: string;
 }
 
-/**
- * Whether anything independent has confirmed the claim.
- *
- * `UNVALIDATED` is a permitted, honest value — most claims start there. What is
- * refused is SILENCE: a coverage claim or a derived conclusion that never says
- * whether it was checked reads to a later session as though it had been.
- */
+/** Whether anything independent has confirmed the claim; `UNVALIDATED` is honest, silence is refused. */
 export const CLAIM_VALIDATION_STATES = [
   "UNVALIDATED",
   "VALIDATED",
@@ -165,14 +77,7 @@ export interface ClaimValidation {
   note?: string;
 }
 
-/**
- * A retraction. **History is preserved; nothing is ever erased.**
- *
- * The claim stays in the store carrying this record, exactly as a failed
- * inherited route stays as a sub-branch (RULING 60). What changes is that the
- * consumer read path stops offering it as current and starts offering what
- * superseded it.
- */
+/** A retraction. The claim stays in the store; only the consumer read path stops offering it as current. */
 export const RETRACTION_KINDS = [
   "RETRACTED",
   "SUPERSEDED",
@@ -194,38 +99,18 @@ export interface ClaimRetraction {
    * carries the whole of what is left standing.
    */
   supersededBy: string | null;
-  /**
-   * **WHAT SURVIVES.** Required, and it is the field that stops a correction
-   * eating the route underneath it. A retraction that cannot name what remains
-   * true is a retraction nobody has thought through.
-   */
+  /** What remains true. Required, so a correction never eats the route underneath it. */
   survives: string;
 }
 
-/**
- * One assertion the method store makes.
- *
- * A route carries several: it exists (A), it did something somewhere (B), and
- * sometimes it was read as saying something about coverage (C) or about the
- * public record (D). Separating them is what lets the third and fourth be
- * withdrawn while the first and second stand.
- */
+/** One assertion the method store makes. */
 export interface MethodClaim {
   /** Canonical and referenceable. Convention: `<routeId>#<slug>`. */
   id: string;
   class: ClaimClass;
   /** What is asserted, in one sentence a later session can act on. */
   statement: string;
-  /**
-   * **THE DEPENDENCY EDGE, DECLARED.** Claim ids and route ids this assertion
-   * rests on.
-   *
-   * It is declared rather than inferred on purpose. Inferring dependence by
-   * matching text would be a guess wearing a mechanism's clothes: it would miss
-   * the dependency that is phrased differently and invent the one that shares a
-   * word. An entry names what it rests on, and the flagging is derived from
-   * what it named.
-   */
+  /** Claim and route ids this assertion rests on: declared, never inferred from text. */
   restsOn: string[];
   /** REQUIRED for `COVERAGE_CLAIM` and `DERIVED_CONCLUSION`. */
   provenance?: ClaimProvenance;
@@ -235,13 +120,7 @@ export interface MethodClaim {
   retraction?: ClaimRetraction;
 }
 
-/**
- * The minimum shape this module needs from the store.
- *
- * Declared structurally so `claims.ts` never imports `knowledge.ts` — the
- * dependency runs one way, and `MethodKnowledge` satisfies this by being what
- * it already is.
- */
+/** The minimum shape needed from the store, declared structurally so this module never imports `knowledge.ts`. */
 export interface ClaimBearingRoute {
   id: string;
   claims?: MethodClaim[];
@@ -270,8 +149,6 @@ export function isRetracted(c: MethodClaim): boolean {
   return Boolean(c.retraction);
 }
 
-/* ------------------------------------------------------------ DEPENDENCY FLAGGING */
-
 export interface DependencyFlag {
   /** The retracted claim id, or the retired route id. */
   upstream: string;
@@ -282,26 +159,14 @@ export interface DependencyFlag {
   dependent: string;
   dependentRoute: string;
   dependentClass: ClaimClass;
-  /**
-   * `STALE` means this assertion is still being taught as current while what it
-   * rests on has been withdrawn. That is the failure mode the whole mechanism
-   * exists to make impossible to miss.
-   */
+  /** `STALE`: still taught as current while what it rests on has been withdrawn. */
   status: "STALE" | "DISPOSITIONED";
   why: string;
 }
 
 /**
- * **WHAT A RETRACTION MECHANICALLY FLAGS.**
- *
- * Every claim that NAMED the withdrawn assertion in `restsOn` is surfaced, by
- * id, with the reason. Nobody has to notice. A dependent counts as
- * DISPOSITIONED only when it has itself been retracted, or has been explicitly
- * revalidated on or after the upstream retraction's own date — a revalidation
- * stamped BEFORE the retraction revalidated something else and does not count.
- *
- * A retired route flags the claims resting on it for the same reason, which is
- * the case where the ground itself is withdrawn rather than a sentence about it.
+ * Every claim that named a withdrawn assertion (or retired route) in `restsOn`, by id. A dependent is dispositioned only
+ * when retracted or revalidated on or after the upstream retraction's own date.
  */
 export function findDependencyFlags(k: ClaimStore): DependencyFlag[] {
   const located = allClaims(k);
@@ -353,8 +218,6 @@ export function staleDependents(k: ClaimStore): DependencyFlag[] {
   return findDependencyFlags(k).filter((f) => f.status === "STALE");
 }
 
-/* ------------------------------------------------------------ THE CONSUMER READ PATH */
-
 export interface CurrentTruth {
   asked: string;
   status: "CURRENT" | "SUPERSEDED" | "WITHDRAWN" | "UNKNOWN_ID";
@@ -365,19 +228,7 @@ export interface CurrentTruth {
   why: string;
 }
 
-/**
- * **WHAT A FUTURE SESSION IS HANDED WHEN IT ASKS.**
- *
- * Ask by the id of a claim that has since been withdrawn and you receive the
- * one that corrected it, with the retracted text kept beside it and clearly
- * labelled as retracted. That is the property the whole exercise is for: a
- * superseded conclusion must never be surfaced as current, and the history must
- * never be lost.
- *
- * The chain is followed with a cycle guard, because two claims that supersede
- * each other are a data defect and must not become an infinite loop in a
- * consumer.
- */
+/** A withdrawn claim's id resolves to what corrected it, with the retracted text kept beside it. Cycles are guarded. */
 export function currentTruthFor(k: ClaimStore, id: string): CurrentTruth {
   const start = findClaim(k, id);
   if (!start) {
@@ -433,22 +284,13 @@ export function currentTruthFor(k: ClaimStore, id: string): CurrentTruth {
 
 export interface RouteClaimView {
   routeId: string;
-  /**
-   * **A RETRACTED CLAIM NEVER RETIRES ITS ROUTE.** This is `true` for every
-   * route that is not itself retired, including one whose coverage claim or
-   * derived conclusion has just been withdrawn.
-   */
+  /** A retracted claim never retires its route. */
   routeUsable: boolean;
   /** Declared, un-retracted claims. What a consumer may act on. */
   current: MethodClaim[];
   /** Withdrawn claims, kept, each pointing at what corrected it. */
   retracted: Array<{ claim: MethodClaim; correctedBy: MethodClaim | null }>;
-  /**
-   * `UNCLASSIFIED_LEGACY` means the entry predates claim classes and NOBODY
-   * DECLARED ITS CLASS. It does not mean the entry contains no conclusion —
-   * its prose may well carry an undeclared C or D — and a consumer must not
-   * read the absence of a declared class as a declaration of class A.
-   */
+  /** Predates claim classes and nobody declared its class; never read as class A. */
   classification: "CLASSIFIED" | "UNCLASSIFIED_LEGACY";
 }
 
@@ -501,8 +343,6 @@ export function classificationCoverage(k: ClaimStore): {
   };
 }
 
-/* ------------------------------------------------------------------- VALIDATION */
-
 export interface ClaimIssue {
   id: string;
   rule: string;
@@ -518,14 +358,7 @@ function nonEmpty(v: unknown): boolean {
   return typeof v === "string" && v.trim().length > 0;
 }
 
-/**
- * Everything the validator refuses about claims.
- *
- * The load-bearing two are `claim-provenance-required` — which is what stops a
- * belief becoming inherited authority — and `stale-dependent-assertion`, which
- * is what stops a withdrawn conclusion quietly continuing to teach through
- * something that rested on it.
- */
+/** Everything the validator refuses about claims. */
 export function validateClaims(k: ClaimStore): ClaimIssue[] {
   const out: ClaimIssue[] = [];
   const bad = (id: string, rule: string, detail: string) => out.push({ id, rule, detail });
@@ -577,13 +410,7 @@ export function validateClaims(k: ClaimStore): ClaimIssue[] {
         if (!Array.isArray(p.jurisdictions) || p.jurisdictions.length === 0) missing.push("jurisdictions");
         if (!Array.isArray(p.vendors)) missing.push("vendors");
         if (!isIsoDate(p.observedOn)) missing.push("observedOn");
-        /*
-         * `attemptId` is OPTIONAL — omitting it is the honest state of every
-         * claim written before the control plane existed. What is refused is a
-         * PRESENT one that is blank, which reads to a traversal as a real join
-         * key and resolves to nothing. Declaring the key is a promise the audit
-         * chain can be walked; an empty string breaks it silently.
-         */
+        // `attemptId` is optional; a present but blank one is refused, since it reads as a join key that resolves to nothing.
         if (p.attemptId !== undefined && !nonEmpty(p.attemptId)) {
           bad(
             claim.id,
@@ -664,8 +491,7 @@ export function validateClaims(k: ClaimStore): ClaimIssue[] {
     }
   }
 
-  // THE LOAD-BEARING ONE. A withdrawn assertion whose dependents are still
-  // being taught is exactly the Pima failure, one level up.
+  // A withdrawn assertion whose dependents are still being taught.
   for (const f of staleDependents(k)) {
     bad(f.dependent, "stale-dependent-assertion", f.why);
   }
@@ -673,18 +499,7 @@ export function validateClaims(k: ClaimStore): ClaimIssue[] {
   return out;
 }
 
-/* ------------------------------------------------------------------- THE AUDIT JOIN */
-
-/**
- * The minimum this module needs from a control-plane `Attempt`.
- *
- * Declared structurally for the same reason `ClaimStore` is: the dependency
- * runs ONE WAY. `lib/control-plane/preflight.ts` already imports the method
- * store, so a method module importing the control plane back would close a
- * package-level loop for the sake of two field names. The real `Attempt` in
- * `lib/control-plane/attempt.ts` satisfies this by being what it already is,
- * and `tests/method-claims.test.ts` passes a real one in to prove it.
- */
+/** The minimum needed from a control-plane `Attempt`, declared structurally so the dependency runs one way. */
 export interface AuditableAttempt {
   readonly id: string;
   readonly routeTaskId: string;
@@ -723,10 +538,7 @@ export interface AuditTrail {
   readonly attemptId: string | null;
   readonly routeTaskId: string | null;
   readonly artifactIds: readonly string[];
-  /**
-   * The prose reference, CARRIED BUT NEVER JOINED ON. It is here so a human can
-   * open it, and it is named in a way no traversal can mistake for a key.
-   */
+  /** The prose reference, carried for a human and never joined on. */
   readonly proseArtifactNotAJoin: string | null;
   /** Where the chain stopped, by name. Empty when `complete` is true. */
   readonly gaps: readonly string[];
@@ -734,30 +546,8 @@ export interface AuditTrail {
 }
 
 /**
- * **WALK CLAIM -> ASSERTION -> ATTEMPT -> ROUTETASK -> ARTIFACTS, ON IDENTIFIERS.**
- * (2026-08-29.)
- *
- * A later session inherits a coverage claim or a derived conclusion as a reason
- * to stop looking. The only defensible ground for that is being able to get back
- * to the bytes that were actually fetched — mechanically, without trusting the
- * sentence that says where they came from.
- *
- * Before `provenance.attemptId` existed, the only link from a claim to evidence
- * was `provenance.artifact`: a URL somebody typed. A URL is not a join. It does
- * not identify an execution, it does not say whether that execution reached a
- * completion boundary, and two different fetches of the same URL on the same day
- * are indistinguishable in it. So an "audit" over prose is a re-reading of the
- * claim, which is what the Pima case already proved insufficient.
- *
- * This function refuses to substitute the prose for any hop. When a hop cannot
- * be made it stops and NAMES which one — `attemptId` absent, Attempt unknown,
- * RouteTask unknown, no artifacts recorded — because a partial chain reported as
- * an audit is worse than no audit at all (RULING 100).
- *
- * The `routeId` cross-check is deliberate: the RouteTask the Attempt belongs to
- * must name the same route the provenance said produced the observation. Two
- * identifiers that both resolve and disagree is a defect the chain would
- * otherwise walk straight past.
+ * Walk claim -> assertion -> attempt -> route task -> artifacts on identifiers only, never substituting the prose
+ * `artifact`. A broken chain names the hop that broke. The route task must name the same route the provenance names.
  */
 export function auditTrailFor(
   k: ClaimStore,
@@ -897,16 +687,7 @@ export function auditCoverage(
   return { total: trails.length, auditable: trails.filter((t) => t.complete).length, trails };
 }
 
-/* --------------------------------------------------------------------- MUTATION */
-
-/**
- * Attach claims to a route. **Additive only.**
- *
- * A claim id already on the route is left exactly as it is — replacing it would
- * be a silent mutation of somebody else's observation, which is the same rule
- * `learnBatch` applies to `effort`. That is also what makes an amendment script
- * safe to re-run.
- */
+/** Attach claims to a route, additively: a claim id already on the route is left exactly as it is. */
 export function attachClaims<T extends ClaimBearingRoute>(
   routes: readonly T[],
   routeId: string,
@@ -932,13 +713,7 @@ export function attachClaims<T extends ClaimBearingRoute>(
   return { routes: out, added, already, missingRoute: false };
 }
 
-/**
- * Withdraw a claim. **The claim is kept; only its currency changes.**
- *
- * Refuses an unknown id, and refuses to re-retract — so an amendment script is
- * idempotent and a second run cannot overwrite the first run's reasoning with
- * a differently worded version of it.
- */
+/** Withdraw a claim, which is kept. Refuses an unknown id and a re-retraction, so an amendment is idempotent. */
 export function retractClaim<T extends ClaimBearingRoute>(
   routes: readonly T[],
   claimId: string,

@@ -2,7 +2,7 @@ import type { MethodCandidate } from "../method/candidate.ts";
 import type { ConclusionRecord } from "../method/conclusions.ts";
 import type { MethodKnowledge, MethodRoute } from "../method/knowledge.ts";
 import type { ControlPlaneRepositories } from "./repository/types.ts";
-import type { ActivationGateReading, TransitionRecord } from "./promotion/types.ts";
+import type { TransitionRecord } from "./promotion/types.ts";
 import { deriveItemState, isPipelineRecord, validateTransition } from "./promotion/pipeline.ts";
 import { isWindowRunRecord } from "./promotion/window.ts";
 import { readAutonomousActivity, type AutonomousObligationActivity } from "./workers/activity.ts";
@@ -80,7 +80,6 @@ export function projectResearchProgression(input: {
   readonly candidates: readonly MethodCandidate[];
   readonly knowledge: MethodKnowledge;
   readonly conclusions: readonly ConclusionRecord[];
-  readonly gate: ActivationGateReading;
 }): ResearchWindowProgression {
   const start = instant(input.since), end = instant(input.through);
   if (end < start || !input.windowId) throw new Error("RESEARCH_WINDOW_INVALID");
@@ -177,7 +176,6 @@ export function projectResearchProgression(input: {
       oldestObligationAt:oldest,oldestAgeHours:(end-instant(oldest))/3600000,ageBasis:"AFFECTED_OBLIGATION_CREATION",owningWorkerGroup:g.owner,reusableAction:g.action,
       drillDown:held.map(r => ({workItemId:r.activity.workItem.id,subject:r.activity.workItem.subject,evidenceIds:[...new Set(r.evidenceIds)].sort()})).sort((a,b) => a.workItemId.localeCompare(b.workItemId)) };
   }).sort((a,b) => b.affectedObligationCount-a.affectedObligationCount || a.code.localeCompare(b.code));
-  const noPromotion = !input.gate.promotionEnabled && input.gate.mode === "SHADOW";
   const exactMethodEvent = (id: string, at: string): boolean => {
     if (/^\d{4}-\d{2}-\d{2}$/.test(at)) {
       if (beforeEnd(at)) gaps.add(`METHOD_EVENT_WINDOW_UNATTRIBUTABLE:${id}`);
@@ -203,15 +201,15 @@ export function projectResearchProgression(input: {
   return { formatVersion:1,windowId:input.windowId,windowKind:input.windowKind??"NIGHTLY_PROMOTION",previousCompletedWindowId:input.previousCompletedWindowId,since:input.since,through:input.through,
     interval:"PREVIOUS_COMPLETED_WINDOW_EXCLUSIVE_TO_THIS_WINDOW_INCLUSIVE",scope:{kind:"REGISTERED_AUTONOMOUS_CIVIC_PLANS",obligations:rows.length,excludedUnclassifiedWorkItems:input.excludedUnclassifiedWorkItems},milestones,
     activity:{obligationsWorked:worked.size,newEvidenceArtifacts:newArtifacts.size,completedResults:[...completed.values()].map(g=>({role:g.role,verdict:g.verdict,count:g.ids.size,evidenceIds:[...g.ids].sort()})).sort((a,b)=>a.role.localeCompare(b.role)||a.verdict.localeCompare(b.verdict))},
-    promoted:{count:noPromotion?0:null,unit:"RECORDS",reason:noPromotion?"The canonical window is SHADOW; no promotion is permitted.":"Per-record promotion receipts are required."},
-    readerVisible:{count:noPromotion?0:null,unit:"RECORDS",reason:noPromotion?"No records were promoted by this SHADOW window.":"Served reader proof linked to each promoted record is required."},
+    promoted:{count:null,unit:"RECORDS",reason:"Per-record promotion receipts are required."},
+    readerVisible:{count:null,unit:"RECORDS",reason:"Served reader proof linked to each promoted record is required."},
     reopened,regressions,methodSnapshotVersion:input.knowledge.version,admittedMethods,reopenedConclusions,
     candidateMethods,bottlenecks,evidenceGaps:[...gaps].sort() };
 }
 
-/** Uses existing completed nightly-window boundaries and canonical research logs. No new store. */
+/** Uses completed window boundaries and canonical research logs. No new store. */
 export async function readResearchProgression(repos: ControlPlaneRepositories, input: {
-  readonly windowId: string; readonly through: string; readonly gate: ActivationGateReading; readonly candidates: readonly MethodCandidate[];
+  readonly windowId: string; readonly through: string; readonly candidates: readonly MethodCandidate[];
   readonly knowledge: MethodKnowledge; readonly conclusions: readonly ConclusionRecord[];
   /** A completed research cycle supplies its own canonical boundary; it is not a promotion window. */
   readonly researchBoundary?: { readonly since: string; readonly previousCompletedWindowId: string | null };

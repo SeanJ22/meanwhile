@@ -7,50 +7,9 @@ import { MAPTILER, PROVIDER_ACCESS_VAR, PROVIDER_CEILING_VAR } from "../lib/ops/
 import { SYNTHETIC_RUN_HEADER } from "../lib/db/run-marker.ts";
 
 /**
- * **THE BARRIER IS PROVEN BY RUNNING IT** (MAPQ-1 and MAPQ-8, 2026-09-07).
- *
- * ## The measurement this exists to stop repeating
- *
- * The first MapTiler billing period closed at **101,863 requests against a
- * 100,000-request free allowance** while public readership was tiny. The
- * strongest correlation in the repository is dated: `lib/ops/origin-confinement.ts`
- * records that on 2026-08-22 our own run-marker header stopped breaking
- * MapTiler's CORS preflight, so synthetic browser sessions could reach the
- * provider again — and provider traffic rose from there. Every capture, walk
- * and local browser test carrying the real public key was spending the real
- * allowance. **"Local" is not evidence of "offline".**
- *
- * ## The plant, and why it is not a raw browser
- *
- * `tests/beacon-guard.test.ts` proves its guard by building an UNGUARDED
- * context that genuinely leaks. That shape is wrong here, because the
- * pre-repair class was never about an unguarded context: **a fully guarded
- * synthetic browser, with a configured key, reached MapTiler.** So the plant
- * is the guarded browser itself with the barrier opened — the exact code path
- * that produced the bill — and the assertion is that the request LANDS. Then
- * the same page, the same key and the same harness with the barrier at its
- * default is asserted to land nothing. One difference between the two runs,
- * and it is the thing this session added.
- *
- * ## No request in this file can reach MapTiler, twice over
- *
- * A test that proves a quota barrier must not spend quota proving it, and a
- * regression in the barrier must not turn this file into a leak of its own.
- *
- *   1. Every browser here launches with `--host-resolver-rules` mapping
- *      `*.maptiler.com` at a local server this test owns. There is no route out
- *      of the process to the real provider even if the barrier is deleted.
- *   2. The key in the URL is a fixed literal that is not, and has never been,
- *      anybody's key. It is valid-SHAPED, which is what the acceptance row asks
- *      for — the point is that a configured-looking key does not get through.
- *
- * The local server is therefore both the blackhole and the instrument: a hit on
- * it is positive proof that a request left the browser, and its silence is
- * positive proof that one did not. That is a stronger observation than reading
- * an error string, because "blocked" and "never attempted" produce the same
- * silence at the network and must not be confused for one another — so the
- * count of requests the PAGE issued is asserted separately, from the browser
- * side, and it is non-zero in every case below.
+ * No request in this file can reach MapTiler: every browser maps `*.maptiler.com` to a local server this test
+ * owns, and the key is a valid-shaped literal that is nobody's key. The local server is both the blackhole and
+ * the instrument: a hit on it proves a request left the browser.
  */
 
 /** Valid-shaped and owned by nobody. Never a real key, in a file or in a report. */
@@ -66,14 +25,8 @@ interface Landed {
 }
 
 /**
- * The page under test: it asks for the provider style exactly as MapLibre
- * would, from script, and reports how many requests it issued.
- *
- * `http:` rather than `https:` so a landed request is served rather than
- * dying in a TLS handshake against a plain server. The barrier is
- * scheme-agnostic by construction (`providerOf` accepts both and
- * `tests/provider-access.test.ts` walks both), so this costs the proof
- * nothing and buys it a positive observation.
+ * The page under test asks for the provider style from script and counts its requests. `http:` so a landed
+ * request is served rather than dying in a TLS handshake; the barrier is scheme-agnostic.
  */
 const PAGE_HTML = `<!doctype html><meta charset="utf-8"><title>barrier</title>
 <script>
@@ -122,10 +75,7 @@ async function serve(landed: Landed[]): Promise<{ server: Server; port: number }
   return { server, port: address.port };
 }
 
-/**
- * The blackhole. Every MapTiler host resolves to the local server, so nothing
- * in this file can reach the real provider whatever the barrier does.
- */
+/** Every MapTiler host resolves to the local server, whatever the barrier does. */
 function blackhole(port: number) {
   return {
     args: [`--host-resolver-rules=MAP *.maptiler.com 127.0.0.1:${port},MAP maptiler.com 127.0.0.1:${port}`],
@@ -147,12 +97,7 @@ function withEnv(t: { after: (fn: () => void) => void }, name: string, value: st
 }
 
 test("THE PLANT: a guarded synthetic browser with a configured key does reach MapTiler", async (t) => {
-  /*
-   * This is the pre-repair class, reproduced exactly and on purpose. If it ever
-   * stops landing, the page has stopped asking for a basemap and every
-   * assertion below is measuring the wrong thing — so a green "nothing landed"
-   * here is a failure, not a pass.
-   */
+  // The open-barrier control: if this stops landing, the assertions below measure nothing.
   const landed: Landed[] = [];
   const { server, port } = await serve(landed);
   t.after(() => {
@@ -183,8 +128,7 @@ test("THE PLANT: a guarded synthetic browser with a configured key does reach Ma
   assert.equal(browser.provider.spent, 1, "the run ledger must record the request it let out");
   assert.equal(browser.provider.blocked, 0);
 
-  /* RULING 101 still holds under the new ordering: the marker is a fact about
-   * our origin and does not cross to a third party, barrier or no barrier. */
+  // The run marker never crosses to a third-party host.
   assert.equal(
     landed[0].headers[SYNTHETIC_RUN_HEADER],
     undefined,
@@ -200,12 +144,7 @@ test("THE BARRIER: the same page, the same key, and nothing reaches the provider
     return new Promise<void>((r) => server.close(() => r()));
   });
 
-  /*
-   * The environment still says the operator once opted in. That is deliberate:
-   * a shell that exported the variable is exactly how a broad visual sweep
-   * would silently inherit the ability to spend, and the second gate is what
-   * stops it. This run does not ask, so this run does not spend.
-   */
+  // The environment still opts in; without the launch option, nothing is spent.
   withEnv(t, PROVIDER_ACCESS_VAR, MAPTILER);
   const browser = await launchGuarded({ label: "maptiler-barrier", ...blackhole(port) });
   t.after(() => browser.close());
@@ -225,9 +164,7 @@ test("THE BARRIER: the same page, the same key, and nothing reaches the provider
   assert.equal(browser.provider.policy.mode, "BLOCKED");
   assert.deepEqual([...browser.provider.hosts], ["api.maptiler.com"]);
 
-  /* The page sees a network failure, which is the same thing it sees when a
-   * reader is offline — and `components/map/map-canvas.tsx` already answers
-   * that by dropping to FALLBACK_STYLE and raising its own notice. */
+  // The page sees a network failure, the same as an offline reader.
   for (const r of results) {
     assert.match(r, /^threw:/, `the page must see a failed request, saw ${r}`);
   }

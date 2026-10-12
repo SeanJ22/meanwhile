@@ -1,12 +1,3 @@
-/**
- * Plain-code reading of a saved official election page (the cheapest route:
- * held data, then code, before any model). A city or county "Voting" page
- * names the offices that run elections with their phone lines: "Early
- * ballots can be requested through the Cochise County Elections Office,
- * (520) 432-8970." Each becomes an `election_office` field for the
- * government whose page says it; the §3 check in `publishElectionFields`
- * confirms the office, its phone and the sentence are on the saved page.
- */
 import type { ElectionFieldInput } from "./election-fields.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/repository/types.ts";
@@ -25,7 +16,6 @@ import { electionFieldState } from "./election-fields.ts";
 
 export const NATIONAL_ELECTION_OFFICES_URL = "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/";
 
-/** One saved national directory supplies offices for every jurisdiction it names. */
 export function heldNationalElectionOfficeFields(capture: WorkerPublicationCapture): readonly ElectionFieldInput[] {
   if (capture.evidence.canonicalUrl !== NATIONAL_ELECTION_OFFICES_URL || !captureIntact(capture)) return [];
   let inventory: ReturnType<typeof inventoryRecordEvidence>;
@@ -50,10 +40,8 @@ export function heldNationalElectionOfficeFields(capture: WorkerPublicationCaptu
 }
 
 export interface HeldElectionOffice {
-  /** The office as the page names it. */
   readonly office: string;
   readonly phone: string;
-  /** The page's sentence that names the office and its phone, as written. */
   readonly quote: string;
 }
 
@@ -65,11 +53,9 @@ const decode = (text: string) => text
 const visible = (html: string) => decode(html.replace(/<[^>]*>/g, " ")).replace(/\s+/g, " ").trim();
 
 const ELECTION_PAGE = /\b(elections?|voting|voters?|vote|ballots?|polls?)\b/i;
-/** "Cochise County Elections Office", "Cochise County Recorder's Office", "Board of Elections", "the Town Clerk". */
 const OFFICE = /\b((?:[A-Z][\w.&-]*\s+){0,4}(?:Elections?|Recorder['’]?s?|Registrar(?: of Voters)?|Board of Elections|Voter Registration|(?:City|Town|County|Township|Village) Clerk['’]?s?)(?:\s+(?:Office|Department|Division|Services))?)\b/g;
 const PHONE = /\(?\b\d{3}\)?[\s.-]*\d{3}[\s.-]\d{4}\b/;
 
-/** The election offices, with a phone, that a saved election page names; empty when it is not an election page. */
 export function readHeldElectionOffices(html: string): readonly HeldElectionOffice[] {
   const title = visible(/<title\b[^>]*>([\s\S]*?)<\/title\s*>/i.exec(html)?.[1] ?? "");
   const main = /<main\b[^>]*>([\s\S]*?)<\/main\s*>/i.exec(html)?.[1] ?? html;
@@ -85,7 +71,7 @@ export function readHeldElectionOffices(html: string): readonly HeldElectionOffi
       const next = after.search(OFFICE);
       const phone = PHONE.exec(next >= 0 ? after.slice(0, next) : after)?.[0];
       if (!phone) continue;
-      // One office per line: "Cochise County Recorder" in the Spanish paragraph is the Recorder's Office already read.
+            // One office per line; a repeat in another language is the office already read.
       const line = phone.replace(/\D/g, "");
       if (office.split(/\s+/).length < 2 || found.has(line)) continue;
       found.set(line, { office, phone, quote: sentence });
@@ -94,11 +80,6 @@ export function readHeldElectionOffices(html: string): readonly HeldElectionOffi
   return [...found.values()];
 }
 
-/**
- * The saved page's election offices as `election_office` fields for the
- * government whose page it is, ready for `publishElectionFields` with
- * `section3Record` as the verifier.
- */
 export function heldElectionOfficeFields(input: { readonly divisionId: string; readonly capture: WorkerPublicationCapture }): readonly ElectionFieldInput[] {
   const { capture } = input;
   if (capture.evidence.canonicalUrl === NATIONAL_ELECTION_OFFICES_URL) {
@@ -112,13 +93,6 @@ export function heldElectionOfficeFields(input: { readonly divisionId: string; r
   }));
 }
 
-/**
- * Owed voter-access work with no extraction yet: read the government's saved
- * election pages (any job's captures for the same government) in plain code
- * and publish each election office that passes §3, through the existing
- * ballot-navigation publisher. Every item gets its outcome; unread pages stay
- * owed work and are re-read hourly.
- */
 export async function publishHeldElectionOffices(input: {
   readonly repos: ControlPlaneRepositories; readonly store: RoutineDataStore;
   readonly workItemIds: readonly string[]; readonly now: string;
@@ -126,8 +100,6 @@ export async function publishHeldElectionOffices(input: {
   readonly limit?: number;
 }): Promise<readonly { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[]> {
   const registry = await readRegistryRuntimePrior(input.store, input.now);
-  /* Only the owed items and their governments' sibling work are read: point reads by id, and the indexed
-     subject filter (a plan's contract subject is its item's subject; the coordinator refuses any other). */
   const owed = (await Promise.all(input.workItemIds.map(id => input.repos.workItems.read(id))))
     .map(row => row?.value).filter((item): item is WorkItem => Boolean(item?.autonomousPlan?.publication));
   const siblings = new Map<string, Promise<readonly WorkItem[]>>();
@@ -152,7 +124,6 @@ export async function publishHeldElectionOffices(input: {
   for (const item of owed) {
     const plan = item.autonomousPlan!;
     const body = registry?.payload.registry.bodies.find(row => row.id === plan.publication!.bodyId);
-    // The government the owed work names: its registry division, whose saved pages speak for it.
     const divisionId = body?.ocdId ?? null;
     const division = divisionId ? registry!.payload.registry.divisions.find(row => row.ocdId === divisionId) : undefined;
     if (!division) { fieldsByItem.set(item.id, -1); continue; }
@@ -167,7 +138,6 @@ export async function publishHeldElectionOffices(input: {
       for (const artifact of candidates) {
         if (readUrls.has(artifact.canonicalUrl)) continue;
         const capture = await input.readHeld(artifact);
-        // The right place: the government's own saved page names that government.
         if (!capture || !captureIntact(capture) ||
           (capture.evidence.canonicalUrl !== NATIONAL_ELECTION_OFFICES_URL && !pageWords(capture.evidence.text).includes(division.label.toLowerCase()))) continue;
         readUrls.add(artifact.canonicalUrl);

@@ -1,38 +1,3 @@
-/**
- * **THE DERIVED DOOR: A CANDIDATE WITH NO ROUTE OF ITS OWN IS AUTHENTIC ONLY AS
- * ITS EXACT INPUTS.** (C16, 2026-09-24. RULING 282/283: still the one door.)
- *
- * Two routine authorities have no HTTP route of their own:
- *
- * - `meeting-source-wiring` computes the wiring version only from what is
- *   already promoted or vaulted: the reviewed crosswalk, registration, the
- *   discovery walks and their vaulted evidence. Its authority also keeps the
- *   automatic crosswalk (`meeting-body-crosswalk-derived`, 2026-09-25): rows
- *   the runner's deterministic reviewer accepted from the same walks, the
- *   same vault and registration, checked here the same way.
- * - `meetings-derived-routes` is each state's derived meeting family. Its
- *   members' reads are real HTTP reads, and what authorizes each is the
- *   promoted wiring version's ACTIVE row for that member, on that row's
- *   attested host.
- * - `candidate-campaign-site-chain` (2026-09-25) is the verified campaign
- *   sites the campaign-site chain approved: each row cites its pipeline
- *   approval and the vaulted bytes of its verifying read, and the version
- *   names the promoted `candidate-profiles` version it was composed against.
- *
- * So SOURCE_AUTHENTICITY for them is not a final URL. It is:
- *
- * 1. (pure, the validator) the candidate names its inputs, each of a kind its
- *    authority declares, each well formed, and its raw hash and retrieval time
- *    are exactly `derivedRetrieval` of those inputs: the same inputs always give
- *    the same hash, and the version is never fresher than its newest input;
- * 2. (the door, with the store) every promoted version it names exists, is of
- *    the named class and scope, and holds exactly the read model hashed; and
- *    every member read is on a host the named wiring version's ACTIVE row for
- *    that member attests.
- *
- * A failure of either refuses the candidate by name, and its last known good
- * stays live.
- */
 import { createHash } from "node:crypto";
 
 import { canonicalCivicDataJson } from "./changes.ts";
@@ -40,11 +5,14 @@ import { derivedRetrieval, type DerivedInputRef } from "./derived-authority.ts";
 import { sourceAuthority } from "./source-authority.ts";
 import type { CandidateVersionRecord, RoutineCandidate, SourceAuthorityContract } from "./types.ts";
 
-/** The wiring store every derived meeting family is authorized by. */
+/**
+ * A derived candidate has no route of its own; it is authentic only as its exact inputs. Pure check: every input is
+ * well formed, and the raw hash and retrieval time equal `derivedRetrieval` of them. At the door: every named version
+ * exists and holds the hashed read model, and every member read is on the host its wiring row attests.
+ */
 export const DERIVED_WIRING_RECORD_CLASS = "CURATED_READER_RECORD" as const;
 export const DERIVED_WIRING_SCOPE = "US:meeting-source-wiring" as const;
 
-/** The request a derived candidate names in place of a URL. */
 export function derivedRequestedUrl(sourceId: string, scope: string): string {
   return `derived:${sourceId}:${scope}`;
 }
@@ -89,6 +57,10 @@ export function derivedInputIssue(input: DerivedInputRef): string | null {
           SHA256.test(input.rawHash) && instant(input.retrievedAt)
         ? null
         : `a member read lacks its member, https URLs, a 2xx status, its sha256 or its time`;
+    case "DOOR_RECORD":
+      return text(input.doorId) && Number.isInteger(input.revision) && input.revision > 0 && instant(input.updatedAt) && SHA256.test(input.recordSha256)
+        ? null
+        : `a door-record input lacks its door, revision, write time or sha256`;
     default:
       return `an input of unknown kind`;
   }
@@ -133,7 +105,6 @@ export function derivedAuthorityFor(candidate: RoutineCandidate): DerivedAuthori
   return { ok: true, contract: authority };
 }
 
-/** The store reads the door needs: a named version by id. */
 export interface DerivedDoorStore {
   readCandidate(candidateId: string): Promise<CandidateVersionRecord | null>;
 }
@@ -141,7 +112,6 @@ export interface DerivedDoorStore {
 const readModelSha256 = (record: CandidateVersionRecord): string =>
   createHash("sha256").update(canonicalCivicDataJson(record.candidate.readModel)).digest("hex");
 
-/** A wiring version's rows as the door reads them: only what authorizes a member read. */
 interface WiringRowForDoor {
   readonly key: string;
   readonly status: string;

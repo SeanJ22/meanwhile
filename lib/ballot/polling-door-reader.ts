@@ -34,11 +34,9 @@ function coordinate(value: unknown, limit: number): number | null {
   return number;
 }
 
-/** Read saved official source rows; no source list, network call or geocoding. */
 export function readPollingDoor(input: {
   readonly door: DoorRecord;
   readonly capture: WorkerPublicationCapture;
-  /** Exact registered label of door.ocdId; the source must name that jurisdiction. */
   readonly jurisdictionName: string;
   readonly linkingPage?: OfficialLinkingPage;
 }): VotingJurisdiction {
@@ -76,7 +74,6 @@ export function readPollingDoor(input: {
     if (words(string(value.jurisdictionName)) !== words(input.jurisdictionName)) throw new Error("A polling source row belongs to another jurisdiction.");
     models.add(model(value.model));
     const sourceLat = coordinate(value.lat, 90), sourceLng = coordinate(value.lng, 180);
-    // A verified site remains listed when a complete point is unreported.
     const lat = sourceLng === null ? null : sourceLat, lng = sourceLat === null ? null : sourceLng;
     return { id: `voting-site:${digest(`${door.doorId}\n${row.id}`)}`, name: string(value.name), address: string(value.address),
       room: string(value.room) || null, lat, lng, kind: kind(value.kind),

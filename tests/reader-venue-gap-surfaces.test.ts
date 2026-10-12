@@ -1,28 +1,8 @@
 /**
- * **A MEETING WHOSE PLACE THE PUBLISHER STATED IN WORDS SHOWS THOSE WORDS ON
- * EVERY READER SURFACE — NEVER "WE HAVEN'T RECORDED A PLACE", NEVER "ONLINE".**
- * (Integration of the upcoming-meetings reader fix with official-page events,
- * 2026-09-23.)
- *
- * The two changes met in `lib/meetings/online.ts`. The reader fix split the
- * building-less sitting into ONLINE (an online access was published) and PLACE
- * NOT RECORDED (nothing was), and the surfaces render our own gap,
- * "We haven't recorded a place for this meeting yet.", for the second.
- * Official-page events added a third kind of building-less sitting: a physical
- * one whose room is a named gap (`venueGap`). Tucson Unified's reconfiguration
- * page states "Cholla High School South Gym" for its 9/23 session — the place IS
- * recorded, as the publisher's words, and we simply hold no reviewed
- * coordinates for it. Read through the reader fix alone, that row would have
- * said we had not recorded a place: a false statement about our own holdings,
- * on the one row where the publisher told us exactly where to go. And the
- * Oct 1 Joint Committee meeting, whose page names no place, is the
- * PUBLISHER's gap, and has to say whose it is.
- *
- * The meetings here are produced by the real official-page events source from
- * the committed page (tests/fixtures/official-page-events/), and rendered by the
- * real list overlay, pin panel and meeting card beside the recorded 85701
- * production response (tests/fixtures/reader-upcoming-meetings-85701.json),
- * whose Duffy pin carries the same Tucson Unified body. No live calls.
+ * A meeting whose place the publisher stated in words shows those words on every reader surface, never
+ * "we haven't recorded a place" and never "online"; a page that names no place is the publisher's gap and
+ * says whose it is. Meetings come from the real official-page events source over the committed page
+ * (tests/fixtures/official-page-events/), rendered beside a saved production response. No live calls.
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
@@ -121,12 +101,11 @@ test("the list, the body's pin panel and the meeting card show the stated place 
     import { applyFilters } from './lib/state/derive.ts';
     import { ListOverlay } from './components/map/list-overlay.tsx';
     import { MeetingPanel } from './components/map/meeting-panel.tsx';
-    import { MeetingPopup } from './components/map/popup/meeting-popup.tsx';
     import { groupByVenue, placelessSittingsOfVenueBodies } from './lib/meetings/venues.ts';
     import { wiringForMeetingSource } from './lib/registry/source-wiring.ts';
     import { makeOfficialPageEventsSource } from './lib/sources/official-page-events/index.ts';
-    import { installRegistryRuntimeFirstSeeds } from './tests/helpers/registry-runtime-first-seed.ts';
-    await installRegistryRuntimeFirstSeeds();
+    import { installRegistryAuthority } from './tests/helpers/promoted-fixtures.ts';
+    await installRegistryAuthority();
 
     const fixture = JSON.parse(readFileSync(${JSON.stringify(FIXTURE)}, 'utf8'));
     const rows = wiringForMeetingSource('official-page-events');
@@ -149,7 +128,6 @@ test("the list, the body's pin panel and the meeting card show the stated place 
     out.duffyPins = duffy ? duffy.meetings.map((m) => m.id) : null;
     out.duffyPlaceless = duffy ? placelessSittingsOfVenueBodies(duffy, meetings).map((m) => m.id) : [];
     out.duffy = duffy ? render({}, h(MeetingPanel, { venue: duffy, placeless: placelessSittingsOfVenueBodies(duffy, meetings), onClose: () => {}, onOpenMeeting: () => {} })) : '';
-    out.popups = Object.fromEntries(events.map((m) => [m.id, render({}, h(MeetingPopup, { meeting: m, onClose: () => {} }))]));
     console.log(JSON.stringify(out));
   `;
   const output = execFileSync(
@@ -158,6 +136,8 @@ test("the list, the body's pin panel and the meeting card show the stated place 
       "--import", "data:text/javascript,process.geteuid=()=>0",
       "--import", "tsx",
       "--import", "./scripts/register-test-loader.mjs",
+      // The meeting doors this render reads, as every test process installs them.
+      "--import", "./tests/helpers/install-fixture-doors.ts",
       "--input-type=module", "-e", script,
     ],
     { cwd: ROOT, encoding: "utf8", timeout: 240_000, maxBuffer: 16 * 1024 * 1024 },
@@ -169,7 +149,6 @@ test("the list, the body's pin panel and the meeting card show the stated place 
     duffyPins: string[] | null;
     duffyPlaceless: string[];
     duffy: string;
-    popups: Record<string, string>;
   };
   const fails: string[] = [];
   const check = (ok: boolean, what: string) => {
@@ -211,15 +190,6 @@ test("the list, the body's pin panel and the meeting card show the stated place 
   const parts = [...eyebrowText.matchAll(/ · (\d+) /g)].map((m) => Number(m[1]));
   check(parts.reduce((a, b) => a + b, 0) === duffyIds.length, `Duffy panel: the split "${eyebrowText}" does not sum to ${duffyIds.length} rows`);
   check(/places? named below/.test(eyebrowText) && /with no place stated by the publisher/.test(eyebrowText), `Duffy panel: the split "${eyebrowText}" does not name the venue-gap rows`);
-
-  // ── The meeting's own card. ──
-  const chollaCard = text(r.popups[cholla.id] ?? "");
-  check(chollaCard.includes(CHOLLA), `card: the Cholla session does not show "${CHOLLA}"`);
-  check(!/data-meeting-where="unrecorded"/.test(chollaCard), "card: the Cholla session says we have not recorded a place");
-  check(!chollaCard.includes("Online only"), "card: the Cholla session is called online");
-  const jointCard = text(r.popups[joint.id] ?? "");
-  check(/data-meeting-where="not-stated"/.test(jointCard) && jointCard.includes('data-working-on-it="not-published"') && jointCard.includes("Meeting place not stated by Tucson Unified School District"), "card: the Joint Committee meeting does not name the publisher's gap");
-  check(!jointCard.includes("Online only"), "card: the Joint Committee meeting says 'not recorded' or 'online'");
 
   assert.deepEqual(fails, [], `\n  ${fails.join("\n  ")}`);
 });

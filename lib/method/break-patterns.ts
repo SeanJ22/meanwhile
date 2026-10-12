@@ -1,14 +1,6 @@
 /**
- * **DP-32 · PATTERNS IN WHEN DOORS BREAK ARE LEARNED.**
- *
- * A simple pass over the fix list's history (DP-30): when the same door or
- * method breaks in the same month in two or more years, or within a few days
- * after the same known event more than once, it writes one lesson to the
- * field manual naming the pattern and the fix that worked last time, so the
- * next fix is ready before the break comes. It only pays off once history
- * builds up; with too little history it writes nothing.
- *
- * Plain code, no model. Nothing here names a place; the place is the data.
+ * When the same door or method breaks in the same month in two or more years, or right after the same known event
+ * more than once, one lesson names the pattern and the fix that worked last time. Writes nothing without enough history.
  */
 import { fixEpisodes, type FixEpisode, type FixItemWithHistory } from "../control-plane/fix-history.ts";
 import { fixItems } from "../control-plane/fix-list.ts";

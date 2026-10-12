@@ -164,7 +164,7 @@ test("binary Office bytes retain their URL/hash but never become Reader text or 
   assert.doesNotMatch(JSON.stringify(legacy), /\\u0000/);
 });
 
-/* ------------------- RULING 269: a read that returned nothing is failed --- */
+/* ------------------- a read that returned nothing is failed --- */
 
 /** A one-page PDF with an empty content stream, xref offsets computed. */
 function blankPdf(): Uint8Array<ArrayBuffer> {
@@ -240,7 +240,7 @@ test("a one-line notice is a document, not a failure: no length threshold decide
 
 test("the same words another sitting's page says are the publisher's page: failed, witness named", async () => {
   const held = new AgendaDocumentStore();
-  // What production holds for another Tucson Unified sitting, word for word.
+  // Another sitting's held page, word for word.
   held.append(heldHtml("stub:x:2", `${portal}500`, "Skip Navigation Jump to SideBar Example Unified School District"));
   const doc = await retrieveAgendaDocument(
     { ...meetingWithAgenda, agendaUrl: `${portal}502` },

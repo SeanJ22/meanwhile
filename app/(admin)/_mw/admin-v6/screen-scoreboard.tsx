@@ -1,10 +1,5 @@
 "use client";
 
-/**
- * **SCOREBOARD.** One card per number with its value and the counts behind it; a number we do not have shows "—" and says why.
- * Rows are never added together. The launch-gate health checks and readiness counts sit in their own groups, then the
- * weekly learning series that used to be "Is it learning".
- */
 import { WeeklyColumns } from "./charts.tsx";
 import { useV6 } from "./context.tsx";
 import type { ScoreboardGateRow } from "./model.ts";

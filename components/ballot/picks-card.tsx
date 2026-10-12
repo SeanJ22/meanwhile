@@ -14,59 +14,16 @@ import {
 import { PRODUCT_NAME } from "@/lib/brand";
 
 /**
- * The picks card (session item 5, wall clock 2026-08-14 second session):
- * the reader's OWN ballot, screenshottable. The
- * tester's use case verbatim — build picks on the couch, screenshot one
- * card, carry it into the booth.
- *
- * HARD CONSTRAINTS, from the brief: the reader's device-local picks
- * ONLY. No aggregates, no reactions, no totals, no app commentary, no
- * candidate photos. The card carries the app name and "My picks — made
- * with <PRODUCT_NAME>, [date]" and nothing evaluative. It is the
- * reader's artifact, not the app's opinion. The name is the constant,
- * never a literal: B01's interim rename (2026-08-17) moved it once and
- * is expected to move it again.
- *
- * Nothing about the picks store changes: the card is drawn onto a
- * <canvas> from localStorage entirely in the browser — creating or
- * downloading it transmits nothing.
+ * The reader's own picks drawn onto a `<canvas>` in the browser for a
+ * screenshot. Device-local picks only: no aggregates, reactions, photos or
+ * commentary. Creating or downloading it transmits nothing.
  */
 
 const WIDTH = 360;
 const SCALE = 3; // crisp on a phone screen
 const PAD = 24;
 
-/**
- * **THE CARD FOLLOWS THE THEME** — F01 12.2, 2026-08-19.
- *
- * In light mode the card rendered dark; it follows whichever theme the reader
- * selected, light or dark.
- *
- * The old single palette was a DELIBERATE choice with a stated reason — "the
- * card leaves the app, so it must stand alone" — and it is now replaced, for
- * the thing that matters: a reader in light mode presses a button and gets a
- * dark rectangle, which reads as a bug long before anyone reasons about where
- * the image will end up.
- *
- * The old reason is not thrown away, it is answered: BOTH palettes stand alone.
- * The card is drawn on a `<canvas>`, so it cannot inherit a CSS variable and
- * has to carry literal values either way; what changes is that there are now
- * two sets and the reader's own choice picks between them.
- *
- * ## The class audit 12.2 asks for
- *
- * *"Class-wide: audit for any other surface that ignores the theme."* Swept
- * every hard-coded hex in `app/`, `components/` and `lib/`. Three kinds, and
- * only one was a defect:
- *
- *  1. **This file** — the defect, fixed here.
- *  2. `components/calendar/calendar-marks.tsx` — the Apple, Google and Outlook
- *     logos. Third-party marks are fixed by their owners and MUST NOT follow
- *     our theme; recolouring a trademark is not theme support.
- *  3. `components/map/state-focus-overlay.tsx` — already switches on `theme`.
- *
- * No other surface ignores the reader's choice.
- */
+/** Literal colors, because a canvas cannot read CSS variables; one set per theme. */
 type CardPalette = {
   bg: string;
   rule: string;
@@ -197,12 +154,8 @@ export function PicksCardControls({
 }: {
   picks: StoredPick[];
   /**
-   * F01-continued item 9. The clear has to reach DERIVED picks, and a
-   * derived pick exists nowhere to be deleted — it is recomputed at render
-   * from the device's own Yes answers. So the confirm records what is
-   * resolved on screen right now as suppressed, and these three props are
-   * what "right now" is made of. Defaulted so a caller with no ballot
-   * context still gets the old explicit-only clear rather than a crash.
+   * What is resolved on screen now, so the clear can suppress derived picks.
+   * Defaulted so a caller without ballot context gets an explicit-only clear.
    */
   pickable?: PickableContest[];
   yesTargets?: ReadonlySet<string>;
@@ -211,31 +164,13 @@ export function PicksCardControls({
   const [showCard, setShowCard] = useState(false);
   const [confirmingClear, setConfirmingClear] = useState(false);
 
-  // Derived, never stored: the card re-draws from the CURRENT picks on
-  // every change while open, so a stale card never sits behind a fresh
-  // list. The picks serialization is the dependency the list identity
-  // can't provide.
-  // F01 12.2: the reader's own choice decides the card's palette. Before
-  // hydration `restored` is false and the snapshot answers dark, which is the
-  // safe way round — the card is not drawn until the reader presses the button,
-  // which cannot happen before hydration.
+  // The card re-draws from the current picks and theme while open.
   const { theme } = useStoredTheme();
 
   const picksKey = JSON.stringify(picks);
   const cardUrl = useMemo(() => {
     if (!showCard || picks.length === 0) return null;
-    /*
-     * **BC-12 (2026-08-24): the THIRD date-format implementation, consolidated.**
-     *
-     * It spelled the month out already and stopped there — "August 24, 2026"
-     * against the house "August 24th, 2026" — so it was close enough to look
-     * right and different enough to be a separate convention. That is the
-     * duplicate-implementation shape RULING 103 names: a sweep for the numeric
-     * form would never have found it.
-     *
-     * `en-CA` gives the local calendar date as `YYYY-MM-DD`, which is what the
-     * one formatter takes.
-     */
+    /* `en-CA` gives the local date as `YYYY-MM-DD`, which the formatter takes. */
     const today = new Date().toLocaleDateString("en-CA");
     return drawCard(picks, formatDateLong(today) ?? today, cardPalette());
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -260,9 +195,7 @@ export function PicksCardControls({
         </button>
       </p>
 
-      {/* Item 8 (design pass): a real confirmation dialog — same question
-          the inline line asked, in the app's dialog language. Portaled to
-          <body> so no ancestor transform can trap the overlay. */}
+      {/* Portaled to <body> so no ancestor transform can trap the overlay. */}
       {confirmingClear &&
         typeof document !== "undefined" &&
         createPortal(
@@ -277,25 +210,6 @@ export function PicksCardControls({
               className="absolute inset-0 bg-black/45 backdrop-blur-sm"
               onClick={() => setConfirmingClear(false)}
             />
-            {/*
-              Item 6 (2026-08-15) — and it is SUBTRACTION.
-
-              The second sentence used to read "your picks were never sent
-              anywhere, so there is nothing to clear elsewhere." Half of that
-              is true: the picks themselves are device-local. The other half
-              quietly wasn't — the taps that created them joined anonymous
-              local totals, exactly as the capture disclosure says they do,
-              and those totals cannot be un-joined by this button. A reader
-              who reads that sentence and clicks Clear believes something
-              about this product that is not so.
-
-              The fix is not a longer, more careful sentence. It is no
-              sentence: the dialog asks its question, and the data story
-              stays where it already lives and is already true — the one-time
-              notice at the point of capture, and "What this site collects".
-              A dialog is not the place to re-explain the business model, and
-              a half-truth is worse than a link.
-            */}
             <div className="panel relative w-full max-w-sm p-5">
               <p className="t-heading font-semibold leading-snug text-paper">
                 Really clear every pick?
@@ -305,18 +219,9 @@ export function PicksCardControls({
                   type="button"
                   onClick={() => {
                     /*
-                     * F01-continued item 9. `clearAllPicks()` alone emptied
-                     * the explicit file and left every derived pick standing
-                     * on the page below — the card went, the picks did not,
-                     * and a control that reads as a delete was not one.
-                     *
-                     * The suppression is resolved against NO explicit picks,
-                     * because this call is about to remove them: a contest
-                     * holding both a tapped pick and a Yes would otherwise
-                     * resolve EXPLICIT, escape suppression, and re-derive the
-                     * Yes in the same render. That is what shipped in the
-                     * first draft of this fix and what the four-zip walk
-                     * caught.
+                     * Suppression is resolved against no explicit picks, since
+                     * they are about to be removed; otherwise a contest with both
+                     * would re-derive its Yes in the same render.
                      */
                     clearAllPicks(derivedToSuppress(pickable, yesTargets, cleared));
                     setConfirmingClear(false);
@@ -340,26 +245,7 @@ export function PicksCardControls({
           document.body,
         )}
 
-      {/*
-        F01 12.1 (2026-08-19): "Create my card" should pop up as its own
-        phone-style screenshot, rounded at the edges, with the background
-        still visible — like taking a screenshot of what is on screen now.
-
-        It used to render inline, in the page flow, as a bare rectangle under
-        two links — the thing itself, unframed, with no sense that it was a
-        picture the reader was about to take out of the app.
-
-        It is now a PORTALED overlay: the live page stays visible behind a light
-        scrim, and the card sits inside a phone-shaped frame — rounded corners,
-        a device bezel, the shadow that lifts it off what is behind. The reader
-        is looking at a screenshot of their own screen, which is exactly the
-        thing they are about to make.
-
-        Portaled to `<body>` for the same reason the clear dialog is: an
-        ancestor transform would trap a fixed overlay. Dismissal follows the
-        product's rule — the scrim closes it, Escape closes it, and there is an
-        explicit control, because a gesture nobody discovers is not an exit.
-      */}
+      {/* Portaled overlay; scrim, Escape and an explicit control all close it. */}
       {cardUrl &&
         typeof document !== "undefined" &&
         createPortal(
@@ -372,8 +258,6 @@ export function PicksCardControls({
               if (e.key === "Escape") setShowCard(false);
             }}
           >
-            {/* Light enough that the page reads THROUGH it — the point is that
-                the reader can still see what they were looking at. */}
             <div
               aria-hidden="true"
               className="absolute inset-0 bg-black/30 backdrop-blur-[2px]"
@@ -382,8 +266,7 @@ export function PicksCardControls({
 
             <div className="relative flex max-h-full w-full max-w-[320px] flex-col items-center">
               <div className="picks-phone">
-                {/* A plain <img> inside the frame, so a long-press or a
-                    screenshot works exactly as the reader expects. */}
+                {/* A plain <img> so long-press and screenshot work. */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={cardUrl}

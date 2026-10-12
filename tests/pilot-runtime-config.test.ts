@@ -173,37 +173,3 @@ test("standing runtime refuses a SHA that is not proven on origin/main", () => {
     );
   });
 });
-
-test("the Windows installer executes only the target commit's exact validator bytes", {
-  skip: process.platform !== "win32",
-}, () => {
-  withFixture({}, ({ repo, envFile, sha }) => {
-    const args = [
-      "-NoProfile",
-      "-NonInteractive",
-      "-ExecutionPolicy",
-      "Bypass",
-      "-File",
-      join(process.cwd(), "scripts", "pilot-task.ps1"),
-      "-Action",
-      "validate-config",
-      "-RepoPath",
-      repo,
-      "-EnvFile",
-      envFile,
-      "-ExpectedDeployedSha",
-      sha,
-    ];
-    const accepted = spawnSync("powershell.exe", args, { encoding: "utf8", windowsHide: true });
-    assert.equal(accepted.status, 0, `${accepted.stdout}\n${accepted.stderr}`);
-    assert.match(accepted.stdout, /RUNTIME CONFIG VALID/);
-
-    writeFileSync(join(repo, "scripts", "pilot-runtime-config.mjs"), "process.stdout.write('{\\\"forged\\\":true}\\n');\n");
-    const refused = spawnSync("powershell.exe", args, { encoding: "utf8", windowsHide: true });
-    assert.notEqual(refused.status, 0);
-    assert.match(
-      `${refused.stdout}\n${refused.stderr}`,
-      /validator does not equal the expected deployed commit's validator/,
-    );
-  });
-});

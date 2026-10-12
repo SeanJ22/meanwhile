@@ -13,12 +13,8 @@ import {
 } from "../lib/control-plane/owner-surface.ts";
 
 /**
- * THE PILOT-HEALTH VIEW IS A PURE PROJECTION (control-centre closure, 2026-09-04).
- *
- * The page repair changes presentation, never the health truth: `overall`
- * follows `pilotGreen` exactly, and the view only ADDS the failing-vs-stale
- * distinction (RED vs AMBER) that the four contract states already carry. These
- * tests pin that mapping so the compact cards can never disagree with the runner.
+ * The pilot-health view is a pure projection: `overall` follows `pilotGreen` exactly, and the view only adds the
+ * failing-vs-stale distinction (RED vs AMBER) the contract states already carry.
  */
 
 const NOW = "2026-09-04T12:00:00.000Z";

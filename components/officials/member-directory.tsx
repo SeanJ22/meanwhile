@@ -21,44 +21,16 @@ import type { SeatHolder } from "@/lib/officials/lookup";
 
 import { CardSection } from "./card-section";
 
-/*
- * BAL-34: the titles and the empty lines come from the SAME table the ballot
- * battlecard reads, so the two surfaces cannot word one absence two ways.
- */
+/* Titles and empty lines come from the same table the ballot battlecard reads. */
 const sectionTitle = (id: BattlecardSectionId) => battlecardSectionTitle(id);
 const sectionEmptyLine = (id: BattlecardSectionId) =>
   BATTLECARD_SECTIONS.find((s) => s.id === id)?.emptyLine ?? "";
 
 /**
- * **Committees, and the offices near the reader** — item 7's render
- * surfaces, 2026-08-16.
- *
- * ## Two sections, identical for all 537
- *
- * Equal effort applies to the SET of sections as much as to the hunt: a
- * rank-and-file member with no chair title renders the same two headers a
- * committee chairman does, with the honest content behind each. Collapse is
- * organization; it is never a way to render some people smaller than others.
- *
- * ## The clean render
- *
- * Directory facts carry NO per-surface source annotations. Full provenance
- * lives in the snapshot — SHA, read date, per-row tags — and one line on the
- * sources page; the card's Sources section names the project once for all of
- * it, not once per row. **Money, votes and PRL keep their per-section
- * citations**: a claim surface is a different register from a directory fact,
- * and that doctrine is unchanged.
- *
- * A committee's JURISDICTION is one tap down and does carry its source,
- * because a jurisdiction statement is prose about what a committee may do
- * rather than a directory entry.
- *
- * ## The key prop
- *
- * Keyed on the holder by the parent (D40 hygiene): a fetched slice must never
- * survive a holder change. A client component holding fetched state and not
- * resetting it when its key changes is the same defect class as a cache
- * keyed on the wrong thing.
+ * Committees and offices near the reader. Directory facts carry no per-row
+ * source annotation; the card's Sources section names the project once. A
+ * committee's jurisdiction, one tap down, carries its source. Keyed on the
+ * holder by the parent.
  */
 
 export function MemberDirectory({ holder }: { holder: SeatHolder }) {
@@ -67,17 +39,8 @@ export function MemberDirectory({ holder }: { holder: SeatHolder }) {
 
 
 /**
- * **THE SAME TWO SECTIONS, AS CONTENT ONLY** (BC-1, 2026-08-22, item 14).
- *
- * The ballot page battlecard renders a FIXED set of seven drop-downs and owns
- * the headers itself, so it needs what goes INSIDE Committees and Offices near
- * you rather than two more collapsible sections nested inside its own.
- *
- * Both return null where the member is outside the source scope — sitting
- * federal members only — and a null slot renders the battlecard own honest
- * empty line. For a school-board candidate that is the correct answer: not
- * "no committees", but nothing on record from a source that does not reach
- * them.
+ * The same two sections as content only, for the ballot battlecard's fixed
+ * sections. Null outside the source scope; the slot renders its own empty line.
  */
 export function MemberCommitteesContent({ holder }: { holder: SeatHolder }) {
   return <DirectoryContent key={holder.id} holder={holder} only="committees" />;
@@ -87,14 +50,7 @@ export function MemberOfficesContent({ holder }: { holder: SeatHolder }) {
   return <DirectoryContent key={holder.id} holder={holder} only="offices" />;
 }
 
-/**
- * The two section BODIES, with no headers of their own.
- *
- * One implementation, two callers: the officials modal wraps these in its own
- * CardSections below, and the ballot battlecard drops them straight into its
- * fixed seven. A second copy of either body is a second place for the loading,
- * failed and empty branches to drift apart.
- */
+/** The two section bodies without headers, shared by the officials modal and the ballot battlecard. */
 function DirectoryContent({
   holder,
   only,
@@ -102,13 +58,14 @@ function DirectoryContent({
   holder: SeatHolder;
   only: "committees" | "offices";
 }) {
-  const { directory, failed } = useMemberDirectory(holder.id);
-  return <DirectoryRecordsContent holderId={holder.id} only={only} directory={directory} failed={failed} />;
+  const { directory, failed } = useMemberDirectory(holder.id,holder.state);
+  return <DirectoryRecordsContent holderId={holder.id} state={holder.state} only={only} directory={directory} failed={failed} />;
 }
 
 /** The exact fetched body, also executable for every canonical directory slice. */
-export function DirectoryRecordsContent({ holderId, only, directory, failed }: {
+export function DirectoryRecordsContent({ holderId, state, only, directory, failed }: {
   holderId: string;
+  state?:string;
   only: "committees" | "offices";
   directory: DirectoryPayload | null;
   failed: boolean;
@@ -117,15 +74,8 @@ export function DirectoryRecordsContent({ holderId, only, directory, failed }: {
   const committees = directory?.committees ?? null;
 
   // Committees are sourced for sitting federal members only; offices also for
-  // state legislators. Anyone a section's source does not reach renders
-  // nothing here rather than an empty heading, which would read as "this
-  // person sits on none".
-  //
-  // The predicate is `lib/officials/member-directory-scope.ts` and it is the
-  // ONE copy: a caller that does not ask it hands this component a slot that
-  // looks filled and renders blank, which is what a reader met on the ballot
-  // battlecard (Part C, 2026-08-31).
-  if (!memberDirectoryReaches(holderId, only)) return null;
+  // state legislators. The predicate is lib/officials/member-directory-scope.ts.
+  if (!memberDirectoryReaches(holderId, only,state)) return null;
   const details = directory?.officeDetails ?? null;
 
   if (only === "committees") {
@@ -140,15 +90,7 @@ export function DirectoryRecordsContent({ holderId, only, directory, failed }: {
         ) : committees.length === 0 ? (
           <WorkingOnIt />
         ) : (
-          /* F01 4.2 (2026-08-19): PARENTS AND SUBCOMMITTEES, TOLD APART.
-             The list was flat, so "Senate Committee on Armed Services" and
-             "Senate Committee on Armed Services — Airland" read as two peers
-             and a reader could not see that the second sits under the
-             first. Subcommittees now indent behind a rule under the parent
-             they belong to, and drop the parent's name from their own label
-             because it is directly above them. See lib/officials/committee-tree.ts
-             for how the relationship is derived and what happens if the
-             source's convention ever stops holding. */
+          /* Subcommittees indent under their parent and drop its name (lib/officials/committee-tree.ts). */
           <ul>
             {buildCommitteeTree(committees).map((node) => (
               <li
@@ -187,7 +129,7 @@ export function DirectoryRecordsContent({ holderId, only, directory, failed }: {
           <>
             <p className="mb-1.5 t-caption leading-relaxed text-voice">
               {details
-                ? <>Where to reach this legislator in person: their office at the capitol and in the district, as Open States lists them.{details.some((d) => !d.official) ? " Not yet checked against the legislature’s own site." : ""}</>
+                ? <>Office contacts at the capitol and in the district, as Open States lists them.{details.some((d) => !d.official) ? " Not yet checked against the legislature’s own site." : ""}</>
                 : <>These are the member&apos;s offices in the district, not the one in Washington. They are usually the ones that answer.</>}
             </p>
             <ul>
@@ -202,17 +144,11 @@ export function DirectoryRecordsContent({ holderId, only, directory, failed }: {
                     {office.city}
                     {office.state ? `, ${office.state}` : ""}
                   </p>
-                  {/* F01 4.3 (2026-08-19): the address is a handoff to Google
-                      Maps with the office loaded and ready to navigate. A
-                      DECLARED exception to nothing-leaves-the-app, in the same
-                      class as B19's directions link from a polling-place pin —
-                      the reader's next action is physically going there. The
-                      link carries the published address verbatim; nothing is
-                      geocoded here.
-
-                      A row whose address is missing renders as plain text
-                      rather than a dead link, because a link that opens a map
-                      of a city is an answer-shaped non-answer. */}
+                  {/*
+                    A handoff to Google Maps with the published address
+                    verbatim; nothing is geocoded. A missing address renders as
+                    plain text.
+                  */}
                   {office.address &&
                     (() => {
                       const url = officeDirectionsUrl({
@@ -250,6 +186,14 @@ export function DirectoryRecordsContent({ holderId, only, directory, failed }: {
                       {office.phone}
                     </a>
                   )}
+                  {office.email && (
+                    <a
+                      href={`mailto:${office.email}`}
+                      className="mt-1 block t-detail text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
+                    >
+                      {office.email}
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>
@@ -264,7 +208,7 @@ function useDirectoryCounts(holder: SeatHolder): {
   committees: number | null;
   offices: number | null;
 } {
-  const { directory } = useMemberDirectory(holder.id);
+  const { directory } = useMemberDirectory(holder.id,holder.state);
   return {
     committees: directory?.committees?.length ?? null,
     offices: directory?.districtOffices?.length ?? null,
@@ -272,32 +216,13 @@ function useDirectoryCounts(holder: SeatHolder): {
 }
 
 /**
- * **BAL-34 (2026-08-31) — THE SECTIONS EXIST FOR EVERYONE, OR THEY ARE A
- * SIGNAL ABOUT THE PERSON.**
- *
- * The map battlecard was missing its *Offices near you* pill.
- * The cause was the line below this comment: `if (!holder.id.startsWith(
- * "congress:")) return null` — the whole component, headers included, vanished
- * for every state legislator, mayor and school-board member in the product.
- *
- * The ballot battlecard has not had this shape since BC-1: it renders the
- * fixed SEVEN drop-downs on EVERY card, always, and fills an absent slot with
- * the section's own honest empty line. Its reasoning is the equal-effort rule,
- * and it applies here word for word — *a card class that answers the question
- * differently is fine; a card class that cannot answer it at all was the
- * defect.* A pill present for federal members and absent for local ones is a
- * completeness claim about the PERSON, made by a missing header.
- *
- * So the sections are unconditional and the SCOPE fact moves inside them,
- * where it is a sentence about our source rather than a hole in the card.
- * `DirectoryContent` already returns null out of scope, and the empty lines
- * come from `BATTLECARD_SECTIONS` — the same table the ballot card reads, so
- * the two surfaces cannot word the same absence differently.
+ * The sections render for everyone; out of scope, `DirectoryContent` returns
+ * null and the section shows its empty line from `BATTLECARD_SECTIONS`.
  */
 function MemberDirectoryInner({ holder }: { holder: SeatHolder }) {
   const counts = useDirectoryCounts(holder);
   const inScope = memberDirectoryReaches(holder.id);
-  const officesInScope = memberDirectoryReaches(holder.id, "offices");
+  const officesInScope = memberDirectoryReaches(holder.id, "offices",holder.state);
   return (
     <>
       <CardSection
@@ -330,28 +255,9 @@ function MemberDirectoryInner({ holder }: { holder: SeatHolder }) {
 }
 
 /**
- * One committee seat — F01 4.2, 2026-08-19.
- *
- * ## "Only some rows say what the committee handles"
- *
- * The other half of 4.2: a member sits on several committees, but only some
- * rows say what the committee handles.
- *
- * That is a SOURCE fact, and it is now stated as one instead of rendering as
- * silence. The directory's jurisdiction text comes from
- * `unitedstates/congress-legislators`, whose `committees-current` file carries
- * `jurisdiction` on 42 of 49 parent committees and — verified against the LIVE
- * file on 2026-08-19, not only the pinned snapshot — on **0 of 181
- * subcommittees**. The field does not exist there. So a subcommittee row with
- * no description is not a row somebody forgot to fill in; it is a rung of the
- * ladder that this source does not have, and the next rung is each committee's
- * own published rules. That hunt is recorded in `docs/source-ladder.md` and
- * tracked; it is not something a render change can close.
- *
- * Until it lands, the row says so, in the gap's own register (`CLAUDE.md`: a
- * null renders as its NAMED GAP, on every surface, always — and the name says
- * whose gap it is). "We haven't sourced what this subcommittee handles yet" is
- * a fact about us. Silence would have read as a fact about the subcommittee.
+ * One committee seat. The jurisdiction text comes from
+ * `unitedstates/congress-legislators`, which carries none for subcommittees;
+ * a row without it renders the named gap.
  */
 function CommitteeRow({ node, sub = false }: { node: CommitteeNode; sub?: boolean }) {
   const { seat, label } = node;
@@ -364,11 +270,7 @@ function CommitteeRow({ node, sub = false }: { node: CommitteeNode; sub?: boolea
             : "t-body leading-snug text-paper"
         }
       >
-        {/* Names AS FILED, and the title in front of the committee the way the
-            chamber states it: "Chairman, Armed Services". Never a rank
-            rendered as a rating. On a child row the title belongs to the
-            SUBCOMMITTEE — Kelly is ranking member of Airland, not of Armed
-            Services — which the flat list made impossible to see. */}
+        {/* Names as filed, with the chamber's title for this (sub)committee; never a rank. */}
         {seat.title ? `${seat.title}, ` : ""}
         {label}
       </p>

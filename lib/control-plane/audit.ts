@@ -1,17 +1,8 @@
 /**
- * VALIDATION, CONTRADICTION, AND ADVERSARIAL AUDIT.
- *
- * Two different questions, deliberately answered by two different roles:
- *
- *   VALIDATOR  — did this result satisfy the contract?
- *   AUDITOR    — assume it satisfied the contract and is still wrong. Can I
- *                break it?
- *
- * The separation is not ceremony. A validator that also audits will, in
- * practice, validate; it has already decided what the answer looks like. The
- * auditor's independence is enforced structurally in `AuditFinding.startedFrom`
- * — an audit that began from the original worker's own summary is recorded as
- * NOT independent and does not satisfy `requiresAudit`.
+ * Validation and adversarial audit, answered by different roles: the VALIDATOR
+ * asks whether the result satisfied the contract; the AUDITOR assumes it did
+ * and tries to break it. An audit that started from the original worker's own
+ * summary is not independent and does not satisfy `requiresAudit`.
  */
 
 /** The permanent attack modes. New modes are added; none is ever removed. */
@@ -32,15 +23,7 @@ export const ATTACK_MODES = [
 ] as const;
 export type AttackMode = (typeof ATTACK_MODES)[number];
 
-/**
- * Where an audit got its evidence.
- *
- * `OUR_SUMMARY` is recorded rather than forbidden, because an auditor may
- * legitimately READ our summary to learn what claim it is attacking. What it
- * may not do is treat that summary as its evidence universe — so a finding
- * whose evidence base is only our own summary cannot discharge an audit
- * requirement.
- */
+/** Where an audit got its evidence. A finding based only on our own summary cannot discharge an audit requirement. */
 export const AUDIT_EVIDENCE_BASES = [
   "OUR_SUMMARY",
   "CANONICAL_SUBJECT_IDENTITY",
@@ -74,14 +57,7 @@ export interface AuditFinding {
   readonly resolvedAt: string | null;
 }
 
-/**
- * Did this audit look outside our own account of ourselves?
- *
- * The Pima catch the architecture document asks to be reproducible is exactly
- * this: our adapter reported an internally perfect denominator, and only an
- * independent look at the publisher's own surfaces showed the universe was
- * larger. An audit that never left our pipeline could not have found it.
- */
+/** Did this audit look outside our own account of ourselves? */
 export function isIndependent(finding: AuditFinding): boolean {
   return finding.startedFrom.some((b) => INDEPENDENT_BASES.includes(b));
 }

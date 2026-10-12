@@ -11,8 +11,7 @@ function originalDefinition(record: TextTranslation | null) {
   return record ? citation ? {text:record.text,basis:citation.basis,basisUrl:citation.url,readOn:citation.readOn ?? ""}
     : {text:record.text,basis:record.label,basisUrl:record.sourceUrl,readOn:record.retrievedAt} : null;
 }
-/** Same layering/body-identity rules, same original text and citations. The
- * retained static selector is the way back until River checks the replacement. */
+/** Same layering and body-identity rules, original text and citations as the static selector. */
 export async function readCuratedBodyDefinitions(input: Parameters<typeof definitionsForBody>[0], options: PromotedCivicDataReadOptions = {}) {
   const legacy=definitionsForBody(input), jurisdiction=jurisdictionFromOcdId(input.ocdId);
   if(!input.ocdId || !jurisdiction)return legacy;

@@ -12,8 +12,8 @@ import {
   preparePublishedMeetingSnapshot,
   readPreparedMeetingsProjection,
 } from "../lib/meetings/prepared-snapshot.ts";
-import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
-import type { MeetingsProjectionReadResult } from "../lib/meetings/snapshot.ts";
+import { MEETING_PARTITION_CONTRACTS, meetingHistoryContract } from "../lib/civic-data/meeting-partitions.ts";
+import type { MeetingsProjectionReadResult, MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 
 function preparedInput(overrides: Partial<PreparedReaderProjectionInput> = {}): PreparedReaderProjectionInput {
   const generatedAt = overrides.generatedAt ?? "2026-09-01T00:00:00.000Z";
@@ -90,6 +90,7 @@ test("the reader fast-path serves the one prepared row and reconstructs the exac
   const composedFrom = [
     { contractId: contracts[0]!.id, versionId: "ver-a" },
     { contractId: contracts[1]!.id, versionId: "ver-b" },
+    { contractId: meetingHistoryContract(contracts[0]!).id, versionId: "history-a" },
   ];
   const payload = { formatVersion: 1, generatedAt: "2026-09-05T00:00:00.000Z", counts: { fresh: 1, carried: 0, total: 1 }, sources: [], meetings: [{ id: "x" }], agendaDocuments: [] };
   const store = fakeStore({
@@ -116,6 +117,7 @@ test("the reader fast-path serves the one prepared row and reconstructs the exac
   const promoted = result.partitions.filter((p) => p.kind === "PROMOTED");
   assert.equal(promoted.length, 2, "exactly the composed partitions are PROMOTED");
   assert.equal(promoted.find((p) => p.contractId === contracts[0]!.id)?.versionId, "ver-a");
+  assert.equal(promoted.find((p) => p.contractId === contracts[0]!.id)?.history?.versionId, "history-a");
   assert.ok(result.partitions.some((p) => p.kind === "NOT_RECORDED"), "uncomposed partitions are NOT_RECORDED, not invented");
   assert.match(result.detail, /prepared reader snapshot/);
 });
@@ -150,9 +152,8 @@ test("preparing over an unchanged promoted set is idempotent and never recompose
     receipt: {} as never,
   }));
   const composedFrom = contracts.map((contract) => ({ contractId: contract.id, versionId: `ver-${contract.id}` }));
-  // The idempotent pass decides from identities and the serving copy's
-  // coupling alone: neither the partitions' payloads (7.8 MB per pass) nor
-  // the composed payload (7.5 MB) is read to learn that nothing changed.
+  // The idempotent pass decides from identities and the serving copy's coupling alone: no partition or composed
+  // payload is read to learn that nothing changed.
   const store = fakeStore({
     readPromotions: async () => { throw new Error("PARTITION_PAYLOADS_MUST_NOT_BE_READ_ON_IDEMPOTENT_PREPARE"); },
     readPromotionIdentities: async () => promotions.map(({ payload: _payload, receipt: _receipt, ...identity }) => identity),
@@ -309,4 +310,45 @@ test("prepare composes through the pass's shared composition, and only when the 
   const current = await preparePublishedMeetingSnapshot(store, "2026-09-06T00:10:00.000Z", { aggregate });
   assert.equal(current.status, "CURRENT");
   assert.equal(composed, 1, "an unchanged set asks for no composition");
+});
+
+test("history-only changes republish, and an unreadable history keeps its accepted records and version", async () => {
+  const partition = MEETING_PARTITION_CONTRACTS[0]!;
+  const history = meetingHistoryContract(partition);
+  const memory = new MemoryRoutineDataStore();
+  let historyVersion = "history-1", unavailable = false, compositions = 0;
+  const identity = (scope: string, versionId: string) => ({ key: `MEETING:${scope}`, sourceId: partition.sourceId,
+    recordClass: "MEETING" as const, scope, versionId, lastKnownGoodVersionId: versionId, promotedAt: "2026-09-01T00:00:00Z" });
+  const store = fakeStore({
+    readPromotionIdentities: async (_recordClass, scopes) => [identity(partition.scope, "live-1"), identity(history.scope, historyVersion)].filter(row => scopes.includes(row.scope)),
+    readPreparedReaderProjection: memory.readPreparedReaderProjection.bind(memory),
+    readPreparedReaderProjectionCoupling: memory.readPreparedReaderProjectionCoupling.bind(memory),
+    writePreparedReaderProjection: memory.writePreparedReaderProjection.bind(memory),
+  });
+  const aggregate = async (): Promise<MeetingsProjectionReadResult> => {
+    compositions++;
+    const snapshot: MeetingsSnapshot = { formatVersion: 1, generatedAt: "2026-09-06T00:00:00Z", counts: { fresh: 0, carried: 1, total: 1 }, sources: [],
+      meetings: unavailable ? [] : [{ id: `${partition.meetingSource}:retained`, bodyId: partition.bodyId, title: historyVersion,
+        startsAt: "2025-01-01T00:00:00Z", status: "CONCLUDED", agendaUrl: "https://official.example/agenda" } as MeetingsSnapshot["meetings"][number]], agendaDocuments: [] };
+    return { kind: "PROMOTED", value: snapshot, detail: "fixture composition", metadata: {
+      recordClass: "MEETING", scope: "meetings", sourceId: "meetings", version: null, versionId: null,
+      lastKnownGoodVersionId: null, sourceThrough: null, retrievedAt: null, promotedAt: null, stale: "CURRENT", staleAt: null,
+    }, partitions: [{ contractId: partition.id, source: partition.meetingSource, bodyId: partition.bodyId, scope: partition.scope,
+      kind: "PROMOTED", versionId: "live-1", detail: null,
+      ...(unavailable ? { historyIssue: "fixture history unavailable" } : { history: { contractId: history.id, versionId: historyVersion } }),
+    }] } as MeetingsProjectionReadResult;
+  };
+  assert.equal((await preparePublishedMeetingSnapshot(store, "2026-09-06T01:00:00Z", { aggregate })).status, "PUBLISHED");
+  assert.equal((await preparePublishedMeetingSnapshot(store, "2026-09-06T01:01:00Z", { aggregate })).status, "CURRENT");
+  assert.equal(compositions, 1);
+  historyVersion = "history-2";
+  assert.equal((await preparePublishedMeetingSnapshot(store, "2026-09-06T01:02:00Z", { aggregate })).status, "PUBLISHED");
+  let row = (await memory.readPreparedReaderProjection("MEETING", MEETINGS_PREPARED_SCOPE))!;
+  assert.equal((row.payload as MeetingsSnapshot).meetings[0].title, "history-2");
+  assert.equal(row.composedFrom.find(entry => entry.contractId === history.id)?.versionId, "history-2");
+  historyVersion = "history-3"; unavailable = true;
+  assert.equal((await preparePublishedMeetingSnapshot(store, "2026-09-06T01:03:00Z", { aggregate })).status, "PUBLISHED");
+  row = (await memory.readPreparedReaderProjection("MEETING", MEETINGS_PREPARED_SCOPE))!;
+  assert.equal((row.payload as MeetingsSnapshot).meetings[0].title, "history-2");
+  assert.equal(row.composedFrom.find(entry => entry.contractId === history.id)?.versionId, "history-2", "a failed read never claims the new history version");
 });

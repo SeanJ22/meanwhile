@@ -70,3 +70,23 @@ test("object keys refuse traversal and absolute paths", () => {
   assert.throws(() => assertSafeObjectKey("a\\b"), /UNSAFE/);
   assert.doesNotThrow(() => assertSafeObjectKey("statements-national/2026-09-17/part-00000.csv"));
 });
+
+test("S3 ListObjectsV2 uses the bucket root and follows opaque continuation tokens", async () => {
+  const { S3ArchiveStore } = await import("../lib/sources/prl/archive-store.ts");
+  const priorFetch = globalThis.fetch;
+  const urls: URL[] = [];
+  globalThis.fetch = (async (value: string | URL | Request) => {
+    const url = new URL(String(value)); urls.push(url);
+    assert.equal(url.pathname, "/bucket");
+    assert.equal(url.searchParams.get("prefix"), "archive/");
+    return new Response(urls.length === 1
+      ? "<ListBucketResult><Contents><Key>archive/a.json</Key><Size>2</Size></Contents><IsTruncated>true</IsTruncated><NextContinuationToken>a&amp;b</NextContinuationToken></ListBucketResult>"
+      : "<ListBucketResult><Contents><Key>archive/b.json</Key><Size>3</Size></Contents><IsTruncated>false</IsTruncated></ListBucketResult>");
+  }) as typeof fetch;
+  try {
+    const store = new S3ArchiveStore({ endpoint: "https://archive.example", region: "us-east-1", bucket: "bucket", accessKeyId: "fixture", secretAccessKey: "fixture" });
+    assert.deepEqual(await store.list("archive/"), [{ key: "archive/a.json", size: 2 }, { key: "archive/b.json", size: 3 }]);
+    assert.equal(urls[1].searchParams.get("continuation-token"), "a&b");
+    await assert.rejects(store.get(""), /UNSAFE/);
+  } finally { globalThis.fetch = priorFetch; }
+});

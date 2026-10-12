@@ -1,8 +1,7 @@
 /**
- * MW-015 / MW-016 / MW-035 — a dead end explains itself from the records the
- * work already wrote, a missing field names its gap, an assignment is complete
- * only when every member obligation passes the completion evaluator, and a
- * Scout's "why a paid model" is the executor decision's own words.
+ * A dead end explains itself from the records the work already wrote, a missing field names its
+ * gap, an assignment is complete only when every member obligation passes the completion
+ * evaluator, and a Scout's "why a paid model" is the executor decision's own words.
  */
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -57,7 +56,7 @@ function scout(over: Partial<ScoutResult> = {}): ScoutResult {
   };
 }
 
-/* ------------------------------------------------------------ MW-016: the walk */
+/* ------------------------------------------------------------ the walk */
 
 test("MW-016: a walk's failed rungs are what it ruled out, its next rungs what would settle it, its outcome who moves", () => {
   const d = scoutDeadEnd(scout(), { retryAt: "2026-09-25T18:00:00.000Z" });
@@ -83,7 +82,7 @@ test("MW-016: a field the walk cannot answer stays null and names its gap", () =
   assert.equal(latestScout([scout({ recordedAt: "2026-09-20T00:00:00.000Z", attemptId: "old" }), scout({ attemptId: "new" })])?.attemptId, "new");
 });
 
-/* ------------------------------------------------------------ MW-016: routine reads */
+/* ------------------------------------------------------------ routine reads */
 
 test("MW-016: a run of the same failed read rules out a one-off; our own failure rules out nothing about the site", () => {
   const read = (at: string, failed: boolean, jobFailure = false) => ({ state: failed ? "SOURCE_BLOCKED" : "PROMOTED", failureCode: failed ? "SOURCE_RETRIEVAL_FAILED" : null, acquisitionSucceeded: !failed, attemptedAt: at, failed, jobFailure });
@@ -107,7 +106,7 @@ test("MW-016: a run of the same failed read rules out a one-off; our own failure
   assert.match(single!.deadEnd?.gaps?.ruledOut ?? "", /only this one read is recorded/);
 });
 
-/* ------------------------------------------------------------ MW-015: visited is not finished */
+/* ------------------------------------------------------------ visited is not finished */
 
 function snapshotFor(state: "DONE" | "OUTSTANDING"): CompletionSnapshot {
   const item: WorkItem = {

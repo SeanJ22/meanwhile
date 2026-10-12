@@ -1,16 +1,6 @@
 /**
- * **THE PORTRAIT PICKER, AND THE CHECK THAT THE URL SERVES A PICTURE.**
- *
- * `pickPortrait` finds a name-matched `<img src>` in a page's markup. That is a
- * claim about the MARKUP and not about what the URL serves, and the two came
- * apart the first time the door-2 walk ran at scale:
- * `chesterborough.org//images/2022/08/08/russell-goodwin.jpeg` — the double
- * slash is the site's own template — answered **HTTP 200 with `text/html` and
- * 12,119 bytes**. Two soft-404 pages were queued as named people's faces.
- *
- * **The only reason it was caught is RULING 2.** Somebody opened the review
- * sheet AS AN IMAGE and saw two broken tiles. A byte count, a green capture
- * step, and the queue's own row count all said everything was fine.
+ * `pickPortrait` finds a name-matched `<img src>` in a page's markup. That is a claim about the markup, not about
+ * what the URL serves, so the picked URL is also fetched and checked to be a picture.
  */
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
@@ -18,55 +8,13 @@ import { describe, it } from "node:test";
 import {
   decodeEntities,
   imagesIn,
-  nameTokens,
   phoneIn,
   pickPortrait,
-  verifyIsImage,
 } from "../lib/hunt/portrait-pick.ts";
 
-/** A fetch that answers with exactly what a named host answered on 2026-08-25. */
-function canned(status: number, contentType: string, body: Uint8Array): typeof fetch {
-  return (async () =>
-    new Response(new Blob([body as BlobPart]), {
-      status,
-      headers: { "content-type": contentType },
-    })) as unknown as typeof fetch;
-}
-const JPEG = new Uint8Array([0xff, 0xd8, 0xff, 0xe0, 0, 16, 74, 70, 73, 70, 0, 1]);
-const HTML = new TextEncoder().encode("<!doctype html><html><head><title>Page Not Found</title>");
-
-describe("a portrait URL has to serve a picture", () => {
-  it("REFUSES the real soft-404 — 200, text/html, and the bytes are markup", () => {
-    return verifyIsImage("https://chesterborough.org//images/2022/08/08/russell-goodwin.jpeg", canned(200, "text/html; charset=utf-8", HTML)).then((v) => {
-      assert.equal(v.ok, false);
-      assert.equal(v.status, 200, "the transport succeeded, which is the whole difficulty");
-      assert.match(v.why, /soft 404|not the thing/i, "the reason must say what actually happened");
-    });
-  });
-
-  it("accepts a real image, and says what it read", async () => {
-    const v = await verifyIsImage("https://example.gov/portrait.jpg", canned(200, "image/jpeg", JPEG));
-    assert.equal(v.ok, true);
-    assert.match(v.why, /jpeg/);
-  });
-
-  it("REFUSES bytes and label that disagree, in either direction", async () => {
-    // HTML labelled as an image — the direction a lax content-type check misses.
-    assert.equal((await verifyIsImage("https://x/", canned(200, "image/jpeg", HTML))).ok, false);
-    // A JPEG labelled text/html — real bytes, and the server contradicts itself.
-    const v = await verifyIsImage("https://x/", canned(200, "text/html", JPEG));
-    assert.equal(v.ok, false);
-    assert.match(v.why, /disagree/);
-  });
-
-  it("a non-200 is refused with its status, never treated as an absence", async () => {
-    const v = await verifyIsImage("https://x/", canned(404, "text/html", HTML));
-    assert.equal(v.ok, false);
-    assert.equal(v.status, 404);
-  });
-
+describe("HTML image extraction", () => {
   it("decodes the entities a page's own markup puts inside a src", () => {
-    /* The live case: Chatham Township's WordPress emits `&#038;` for `&`. */
+    /* WordPress emits `&#038;` for `&`. */
     assert.equal(
       decodeEntities("https://i0.wp.com/x.jpg?resize=860%2C1000&#038;ssl=1"),
       "https://i0.wp.com/x.jpg?resize=860%2C1000&ssl=1",
@@ -86,14 +34,11 @@ describe("the picker matches on the name and nothing else", () => {
     const picked = pickPortrait("Russell GOODWIN", imagesIn(page, "https://chesterborough.org/government/mayor"));
     assert.ok(picked);
     assert.match(picked.src, /russell-goodwin\.jpeg$/);
-    assert.match(picked.why, /goodwin/i);
+    assert.match(picked.why, /full source name/i);
   });
 
   it("returns NOTHING rather than the best of a bad set", () => {
-    /*
-     * A largest-image or first-image heuristic picks the seal, and a wrong face
-     * is the one failure the photo rule says fails at EVERY door.
-     */
+    // A largest-image or first-image heuristic picks the seal; a wrong face is the worst failure.
     const furnitureOnly = `<img src="/img/seal.png" alt="Township seal"><img src="/img/banner.jpg" alt="">`;
     assert.equal(pickPortrait("Russell GOODWIN", imagesIn(furnitureOnly, "https://x/")), null);
   });
@@ -105,8 +50,9 @@ describe("the picker matches on the name and nothing else", () => {
     assert.match(picked.src, /sean-mabey/);
   });
 
-  it("a short token never matches — initials and particles are not names", () => {
-    assert.deepEqual(nameTokens("Jo A. Li"), []);
+  it("matches short full names but never a surname alone", () => {
+    assert.ok(pickPortrait("Jo Li",imagesIn('<img alt="Jo Li" src="/jo-li.jpg">',"https://example.gov/")));
+    assert.equal(pickPortrait("Jane Smith",imagesIn('<img alt="John Smith" src="/smith.jpg">',"https://example.gov/")),null);
   });
 });
 

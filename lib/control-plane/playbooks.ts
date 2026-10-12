@@ -25,7 +25,7 @@ export function rolePlaybook(entries: readonly FieldManualEntry[], role: FieldMa
 }
 
 export async function readRolePlaybook(repos: FieldManualRepos, role: FieldManualRole): Promise<WorkerPlaybook> {
-  const read = await readFieldManual(repos, { role });
+  const read = await readFieldManual(repos, { role, kinds: ["PLAYBOOK"], everywhere: true });
   return { ...rolePlaybook(read.store.entries, role), ...(read.error ? { error: read.error } : {}) };
 }
 
@@ -36,6 +36,6 @@ export function workerSystemPrompt(role: FieldManualRole, text: string): string 
 export function defaultPlaybookEntries(roles: readonly FieldManualRole[]): FieldManualEntry[] {
   return roles.map(role => newFieldManualEntry("role-playbook", role, {
     role, kind: "PLAYBOOK", title: `${role.toLowerCase()} playbook`, summary: "Current written instructions for this role",
-    outcome: "REFERENCE", payload: { text: defaultPlaybookText(role) },
+    outcome: "REFERENCE", portable: true, payload: { text: defaultPlaybookText(role) },
   }));
 }

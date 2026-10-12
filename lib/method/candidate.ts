@@ -1,55 +1,7 @@
 /**
- * **THE ADMISSION GATE: A DURABLE CANDIDATE, AND THE ONE GOVERNED WRITE PATH
- * INTO CANONICAL METHOD KNOWLEDGE.** (2026-08-29.)
- *
- * Two things live here because they are one thing. A candidate is something
- * OFFERED to project knowledge; the governed writer is the only door it can come
- * through; and every canonical write is the admission of something.
- *
- * ## The defect this closes, exactly
- *
- * `runLearnBatch` was an UNCONDITIONAL canonical writer. It read
- * `data/method/knowledge.json`, called `learnBatch`, and `writeFileSync`'d the
- * result. There was no validation gate on that path at all — not a weak one, not
- * one with an escape hatch, none. A route carrying an outcome value off the
- * closed set, a claim class the validator refuses, a `NATIONWIDE` applicability
- * on one state's evidence: every one of those landed in the canonical store, and
- * the first thing that noticed was `pnpm method:check`, afterwards, if somebody
- * ran it. The store's own history records that sequence happening twice — the
- * `effort` note and the `outcome` note in `validateKnowledge` are both accounts
- * of a bad value reaching the canonical store while the check reported PASSED.
- *
- * A validator that runs after the write is a report. A validator that runs
- * before it is a gate. **`writeMethodStore` is the gate**, and it is a gate
- * rather than a convention because no caller can forget to call something it has
- * to call to write at all.
- *
- * ## Why a REJECTED candidate is durable
- *
- * The obvious implementation of "refuse a bad route" is to not write it and
- * print why. That loses the evidence the moment the terminal scrolls. A rejected
- * candidate is a real finding: it says an Attempt proposed something, what it
- * proposed, which method version it was looking at, and exactly which rule
- * refused it. **Silence is not a rejection record.** A route rejected three
- * times for the same issue is a signal; three unrecorded refusals are three
- * sessions each discovering it alone.
- *
- * ## What the version precondition does and does not do
- *
- * `expectedVersion` is optimistic concurrency: a writer that read version N
- * refuses to overwrite a store that has since become N+1, and says so with both
- * numbers. It NARROWS the read-modify-write window; it does not eliminate it,
- * because the check and the rename are two syscalls and nothing here holds a
- * lock. What would close it is a lock file or a single-writer daemon, and
- * neither exists yet — so the honest statement is the one in this paragraph
- * rather than a claim of atomicity the code cannot keep.
- *
- * ## Time
- *
- * No function in this file reads a clock. Every date is a parameter, from
- * `pnpm stamp`. `process.pid` appears in the temp-file name, which is process
- * identity rather than time, and is what keeps two concurrent writers from
- * clobbering each other's temp file before the rename.
+ * The one governed write path into canonical method knowledge: every write is a candidate validated before it lands,
+ * and a rejected candidate is recorded durably. `expectedVersion` narrows the read-modify-write window but does not
+ * close it; nothing here holds a lock. No function here reads a clock.
  */
 
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
@@ -65,19 +17,7 @@ import {
 } from "./knowledge.ts";
 import type { LearnedRoute } from "./learn-batch.ts";
 
-/* ------------------------------------------------------------------ THE CANDIDATE */
-
-/**
- * The lifecycle, reconciled with the code that actually exists.
- *
- * `PROPOSED -> VALIDATED -> ADMITTED | REJECTED` is the intended path. A
- * candidate may also go `PROPOSED -> REJECTED` directly, and that is not a
- * shortcut past validation: it is the case where the store moved underneath the
- * submitter, or the proposal could not be read at all, so there was never a
- * prospective store to validate. Recording that as REJECTED with its own code is
- * the point — the alternative is a candidate stuck at PROPOSED forever, which
- * reads as "still being considered".
- */
+/** `PROPOSED -> VALIDATED -> ADMITTED | REJECTED`; `PROPOSED -> REJECTED` when there was never a prospective store to validate. */
 export const CANDIDATE_LIFECYCLE_STATES = ["PROPOSED", "VALIDATED", "ADMITTED", "REJECTED"] as const;
 export type CandidateLifecycle = (typeof CANDIDATE_LIFECYCLE_STATES)[number];
 
@@ -134,41 +74,20 @@ export interface CandidateAdmission {
   readonly methodVersionAfter: number;
 }
 
-/**
- * One route offered to project knowledge, and what became of it.
- *
- * `proposal` is a `LearnedRoute` — the SAME shape `learnBatch` accepts, imported
- * rather than re-declared. A forked proposal type would drift from the thing it
- * proposes within one session, and then a candidate would validate against a
- * shape the store cannot hold.
- */
 export interface MethodCandidate {
   readonly id: string;
   /** The Attempt that submitted it. A candidate with no Attempt has no author. */
   readonly attemptId: string;
   readonly proposal: LearnedRoute;
   readonly submittedAt: string;
-  /**
-   * **THE METHOD VERSION OBSERVED WHEN IT WAS SUBMITTED.** Not the version it
-   * was admitted at. A candidate conceived against v55 and admitted at v61 was
-   * reasoned about under v55's knowledge, and a replay that used the later
-   * number would be replaying a different decision.
-   */
+  /** The method version observed when it was submitted, not the version it was admitted at. */
   readonly observedMethodVersion: number;
   readonly lifecycle: CandidateLifecycle;
   readonly validation: CandidateValidation | null;
   readonly admission: CandidateAdmission | null;
   /** Retained forever on a refusal. A rejection is evidence, never a silence. */
   readonly rejection: CandidateRejection | null;
-  /**
-   * **THE MODEL'S OWN PROVENANCE STATEMENTS, RECORDED AND NEVER USED.**
-   * (RULING 243, 2026-09-02.) `proposal.origin`, `proposal.note` and the
-   * claims' statements carry MACHINE-derived values (observedOn from the
-   * artifact record, permission from the retrieval verdict, recordClass from
-   * the obligation). What the model said about those facts is kept here so an
-   * audit can see the disagreement; it is never copied into the proposal.
-   * Optional: candidates submitted before the ruling carry none.
-   */
+  /** The model's own provenance statements, kept for audit and never copied into the proposal. */
   readonly modelClaims?: {
     readonly observedOn: string | null;
     readonly permission: string | null;
@@ -194,15 +113,7 @@ export function emptyCandidateStore(): CandidateStore {
   return { storeVersion: 1, updatedOn: null, candidates: [] };
 }
 
-/**
- * The candidate's id, DERIVED from what it is rather than assigned.
- *
- * Same reasoning as every control-plane id: two workers that independently
- * submit the same proposal on the same day collide instead of creating two
- * records of one offer, and a replay computes the same id. `submittedAt` is in
- * the digest so a genuine resubmission on a later date is a distinct record —
- * re-offering a route the store has since changed under is a different event.
- */
+/** Derived from what the candidate is, so identical offers on one day collide and a replay computes the same id. */
 export function methodCandidateId(attemptId: string, routeId: string, submittedAt: string): string {
   return `mc-${fingerprint([attemptId, routeId, submittedAt])}`;
 }
@@ -243,11 +154,7 @@ export function findCandidate(store: CandidateStore, id: string): MethodCandidat
   return store.candidates.find((c) => c.id === id) ?? null;
 }
 
-/**
- * Record an offer. Idempotent by derived id: re-proposing the identical offer
- * returns the existing record rather than a second copy of it, so a replayed
- * Attempt does not inflate the candidate corpus.
- */
+/** Record an offer; idempotent by derived id. */
 export function proposeCandidate(
   store: CandidateStore,
   input: {
@@ -307,13 +214,7 @@ export function markAdmitted(
   return { store: replace(store, next, admission.at), candidate: next };
 }
 
-/**
- * Refuse a candidate, DURABLY.
- *
- * The reason and the exact issues are retained on the record. A refusal that
- * only printed would be indistinguishable, an hour later, from a proposal
- * nobody ever made.
- */
+/** Refuse a candidate durably: the reason and exact issues stay on the record. */
 export function markRejected(
   store: CandidateStore,
   id: string,
@@ -342,23 +243,12 @@ export function rejectedCandidates(store: CandidateStore): MethodCandidate[] {
   return store.candidates.filter((c) => c.lifecycle === "REJECTED");
 }
 
-/* ------------------------------------------------------------------- VALIDATION */
-
 /** A stable key for an issue, so "did this candidate INTRODUCE it" is decidable. */
 export function issueKey(i: MethodIssue): string {
   return `${i.id} ${i.rule}`;
 }
 
-/**
- * **THE CANONICAL VALIDATORS, BOTH OF THEM, AND NO SECOND SET OF RULES.**
- *
- * `validateKnowledge` already composes `validateClaims`, so naming both here is
- * belt and braces — and it is deliberate. The one thing that must never happen
- * on this path is a fork: a gate that implements "its own" idea of a valid store
- * would drift from the validator `pnpm method:check` runs, and then the gate and
- * the check would disagree about the same bytes. The union is de-duplicated by
- * (id, rule, detail) so calling both costs nothing.
- */
+/** The canonical validators, never a second set of rules; issues are de-duplicated by (id, rule, detail). */
 export function methodStoreIssues(
   k: MethodKnowledge,
   conclusions: readonly PriorConclusion[] = [],
@@ -374,16 +264,7 @@ export function methodStoreIssues(
   return out;
 }
 
-/**
- * Issues the prospective store raises that the current one does not.
- *
- * Refusing on INTRODUCED issues rather than on ALL issues is the same rule
- * `runClaimAmendment` already applies, and it exists so a writer is never
- * blamed for a defect it inherited. A store carrying a pre-existing issue is
- * still reported; it just does not make every subsequent write impossible,
- * which would be a gate that has to be disabled to fix the thing it is
- * complaining about.
- */
+/** Issues the prospective store raises that the current one does not, so a writer is never blamed for inherited ones. */
 export function introducedIssues(
   before: MethodKnowledge,
   after: MethodKnowledge,
@@ -393,8 +274,6 @@ export function introducedIssues(
   const all = methodStoreIssues(after, conclusions);
   return { introduced: all.filter((i) => !baseline.has(issueKey(i))), preExisting: baseline.size };
 }
-
-/* ------------------------------------------------------- FILE WRITES */
 
 export class MethodStoreUnreadable extends Error {
   readonly path: string;
@@ -406,18 +285,7 @@ export class MethodStoreUnreadable extends Error {
   }
 }
 
-/**
- * Write a JSON document by TEMP FILE AND RENAME.
- *
- * A truncating write that dies halfway leaves a syntactically broken canonical
- * store, and `data/method/knowledge.json` is the file every later session reads
- * to know what the project has learned. Rename is atomic within a filesystem, so
- * a reader sees either the old document or the new one and never half of either.
- *
- * The pid in the temp name is process identity, not a clock: two writers racing
- * must not share a temp path, or the loser corrupts the winner's bytes before
- * either rename happens.
- */
+/** Write a JSON document by temp file and rename, so a reader never sees half a document. The pid keeps racing writers' temp paths apart. */
 export function atomicWriteJson(path: string, value: unknown): number {
   const body = `${JSON.stringify(value, null, 2)}\n`;
   mkdirSync(dirname(path), { recursive: true });
@@ -426,8 +294,6 @@ export function atomicWriteJson(path: string, value: unknown): number {
   renameSync(tmp, path);
   return Buffer.byteLength(body, "utf8");
 }
-
-/* ------------------------------------------------------- THE DURABLE CANDIDATE STORE */
 
 export function readCandidateStore(path: string): CandidateStore {
   if (!existsSync(path)) return emptyCandidateStore();

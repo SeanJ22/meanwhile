@@ -1,23 +1,6 @@
 /**
- * **ADM-C14 — MODEL COST, CACHE AND BATCH HEALTH.** (Admin C, LANE H, from the
- * 9.6.26 owner feedback: ADM-26, ADM-33, ADM-36, ADM-45, ADM-47; §9A.4 and the
- * new monthly UTC window, §9A.23.)
- *
- * The load-bearing guard in this file is the FIRST one. §9A.4 says a role may
- * not be called free by design unless *current canonical execution policy*
- * proves it never makes a paid-model request, and `ROLE_COST_POLICY` makes
- * exactly that claim for six of the eight roles. A table that claims to read
- * the code is worth nothing unless something re-reads the code — so that test
- * sweeps the executors themselves and fails the day a new one hands a model to
- * a role this table calls plain code. It carries a plant, because a sweep that
- * has never been seen to fire is indistinguishable from a regex that matches
- * nothing.
- *
- * Everything else is arithmetic over the ledger, pinned against hand-computed
- * dollars, and the screen's own source read as text. (Admin redesign,
- * 2026-09-23: the Pilot health cost section this file was written for was
- * replaced by Fleet · Money; the ledger arithmetic still feeds the published
- * snapshot Money reads, and the last guard follows the screen.)
+ * The first test re-reads the executors, so ROLE_COST_POLICY cannot call a role plain code once an executor hands
+ * it a model. It carries a planted positive control, because a sweep never seen to fire proves nothing.
  */
 
 import assert from "node:assert/strict";
@@ -40,7 +23,6 @@ import {
   roleBarClass,
   shareSentence,
   spendWindowRows,
-  subscriptionJobsReading,
   utcStamp,
   costSectionNumbers,
 } from "../lib/control-plane/cost-panel.ts";
@@ -75,10 +57,6 @@ function predatingCost(usd: number | null): AttemptCost {
   return { inputTokens: null, outputTokens: null, usd, durationMs: null, bytesFetched: null, requestCount: 1 } as unknown as AttemptCost;
 }
 
-/* ================================================================== *
- * §9A.4 — THE FREE-BY-DESIGN CLAIM, RE-DERIVED FROM THE EXECUTORS
- * ================================================================== */
-
 test("§9A.4: every role the cost policy calls plain code is one no executor hands a model to, re-read from the code", () => {
   /* The table covers every role there is; a new role cannot slip past it. */
   assert.deepEqual(
@@ -92,15 +70,11 @@ test("§9A.4: every role the cost policy calls plain code is one no executor han
   }
   assert.deepEqual(
     WORKER_ROLES.filter((r) => ROLE_COST_POLICY[r].access === "ROUTED_TO_A_PAID_MODEL").sort(),
-    ["ADVERSARIAL_AUDITOR", "DETECTIVE", "ENGINEERING", "PARSER", "SCOUT"],
+    ["ADVERSARIAL_AUDITOR", "DETECTIVE", "PARSER", "SCOUT"],
     "every role that may escalate is distinguished from roles that always run plain code",
   );
 
-  /*
-   * THE SWEEP. `assertStepMayInvokeModel` is the one gate before any transport
-   * call, so every model-spending path in lib/ is a caller of it. Two files
-   * call it, and each declares which role it runs as.
-   */
+  /* `assertStepMayInvokeModel` is the one gate before any transport call, so every model-spending path in lib/ calls it. */
   const callers = ["scheduler/scout-executor.ts", "workers/model-audit.ts", "workers/model-parser.ts", "scheduler/model-routing.ts"];
   const swept: string[] = [];
   for (const file of ["scheduler/scout-executor.ts", "workers/model-audit.ts", "workers/model-parser.ts", "workers/runtime.ts", "workers/research-runtime.ts", "scheduler/model-routing.ts", "scheduler/dispatch.ts"]) {
@@ -124,23 +98,16 @@ test("§9A.4: every role the cost policy calls plain code is one no executor han
   assert.match(runtime, /const parseAssisted = usesModelParse\(runtime, spec\)/, "Parser model fallback is included in the spend policy");
 
   const research = codeOf("lib/control-plane/workers", "research-runtime.ts");
-  assert.match(research, /\["ACQUIRER","ENGINEERING"\]/, "the research executor still owns exactly those two roles");
+  assert.match(research, /spec\.role !== "ACQUIRER"/, "the research executor still owns exactly the acquirer role");
   assert.match(research, /provider:\s*"we-the-people"/, "and still declares itself deterministic");
-  assert.doesNotMatch(research, /anthropic/i, "no Anthropic provider is declared for an acquirer or engineering Attempt");
+  assert.doesNotMatch(research, /anthropic/i, "no Anthropic provider is declared for an acquirer Attempt");
 
-  /*
-   * POSITIVE CONTROL. The instrument is shown catching the defect it exists
-   * for: a runtime that model-assists a second role.
-   */
+  /* Positive control: the detector catches a runtime that model-assists a second role. */
   const PLANT = 'const assisted = role === "DETECTIVE" && runtime.auditReasoner !== undefined;';
   const planted = [...PLANT.matchAll(/role === "([A-Z_]+)"[^;\n]*auditReasoner/g)].map((m) => m[1]);
   assert.deepEqual(planted, ["DETECTIVE"], "the detector reads the role out of an assisted branch");
   assert.equal(ROLE_COST_POLICY.DETECTIVE.access, "ROUTED_TO_A_PAID_MODEL", "Detective failure response must never be presented as free by design");
 });
-
-/* ================================================================== *
- * ADM-33 — THE SIX CLASSES
- * ================================================================== */
 
 test("ADM-33: a role that can spend and did not reads '$0 this run'; only a role the policy proves reads 'Plain code'", () => {
   const panel = buildCostPanel({
@@ -165,7 +132,7 @@ test("ADM-33: a role that can spend and did not reads '$0 this run'; only a role
   assert.equal(of("SCOUT").cls, "PAID_MODEL");
   assert.match(of("SCOUT").says, /\$0\.31 measured/);
 
-  /* THE ADM-33 CORRECTION: the auditor CAN spend, so its silence is not freedom. */
+  /* The auditor can spend, so its silence is not freedom. */
   assert.equal(of("ADVERSARIAL_AUDITOR").cls, "ZERO_THIS_RUN");
   assert.equal(of("ADVERSARIAL_AUDITOR").words, "$0 this run");
   assert.match(of("ADVERSARIAL_AUDITOR").says, /not a claim the role is free/);
@@ -206,18 +173,13 @@ test("ADM-33: a model attempt with no dollars is 'Not measured'; rows predating 
   assert.match(orphan.says, /not in the attempts list/);
 
   assert.equal(costClassOf({ key: NO_MODEL_KEY, kind: "FREE_BY_DESIGN", usd: held(measured(0, 0, "c", "s")) }).cls, "PLAIN_CODE");
-  assert.deepEqual(Object.values(COST_CLASS_WORDS).sort(), ["$0 this run", "Not measured", "Paid model", "Plain code", "Predates measurement fields", "Subscription job"]);
+  assert.deepEqual(Object.values(COST_CLASS_WORDS).sort(), ["$0 this run", "Not measured", "Paid model", "Plain code", "Predates measurement fields"]);
 });
-
-/* ================================================================== *
- * ADM-26 — THE WINDOW TABLE, TO THE CENT
- * ================================================================== */
 
 test("ADM-26: the three windows render as the brief's own rows, to the cent, and an unmeasured window is never $0.00", () => {
   const rows = spendWindowRows({ cycleUsd: 0, operationalNightUsd: 0, rolling24HourUsd: 0.4404, ceilings: CEILINGS });
   assert.deepEqual(rows.map((r) => r.window), ["Current cycle", "Operational night", "Last 24 hours"]);
-  // Every window is framed against the one rolling daily ceiling now; the
-  // per-cycle and operational-night caps are retired.
+  // Every window is framed against the one rolling daily ceiling.
   assert.deepEqual(rows.map((r) => r.shown), ["$0.00 of $25.00", "$0.00 of $25.00", "$0.44 of $25.00"]);
   assert.ok(rows[1].defines?.includes("6pm to 6am"), "the one window whose name does not explain itself is defined");
   assert.ok(rows.every((r) => !r.unmeasured));
@@ -227,10 +189,6 @@ test("ADM-26: the three windows render as the brief's own rows, to the cent, and
   assert.doesNotMatch(blind[0].shown, /\$0\.00 of/);
   assert.match(blind[0].shown, /not measured/);
 });
-
-/* ================================================================== *
- * §9A.4 — CAPACITY, AND ADM-47's ZERO THAT SAYS WHY
- * ================================================================== */
 
 test("§9A.4: the capacity sentence is computed from the ledger and matches the owner's shape; an unmeasured window says so", () => {
   const now = "2026-09-06T18:00:00.000Z";
@@ -268,10 +226,6 @@ test("ADM-47: each of the three zeroes on the model share says which zero it is"
   assert.equal(shareSentence(held(measured(7, 10, "c", "s"))), "70% of this cycle's 10 jobs ran as plain code; 3 used a paid model.");
   assert.equal(shareSentence(gap("OURS", "no cycle has recorded its lane split yet.")), "no cycle has recorded its lane split yet.");
 });
-
-/* ================================================================== *
- * §9A.23 — THE UTC MONTH
- * ================================================================== */
 
 test("§9A.23: the window is the UTC calendar month, and the UTC/Eastern day edge does not move it", () => {
   const mid = utcMonthWindow("2026-09-06T18:00:00.000Z");
@@ -377,7 +331,7 @@ test("§9A.23: the month totals by provider, model and role, prices the savings 
   assert.deepEqual(view.unmeasured, { predatesFields: 1, providerReportedNothing: 1, noDollarFigure: 1 });
   assert.deepEqual(view.history.map((h) => [h.label, h.usd, h.complete]), [["September 2026", 0.9, false], ["August 2026", 4, true]]);
   assert.equal(view.ledgerBeginsAt, "2026-08-14T10:00:00.000Z");
-  /* ADM-C14: the billed quantities are carried per model, not only in aggregate. */
+  /* The billed quantities are carried per model, not only in aggregate. */
   const opus = view.byModel.find((r) => r.key === "claude-opus-5")!;
   const haiku = view.byModel.find((r) => r.key === "claude-haiku-4-5")!;
   assert.equal(opus.tokens.cacheReadInputTokens.total, 40_000, "only the Opus row read from the cache");
@@ -386,7 +340,7 @@ test("§9A.23: the month totals by provider, model and role, prices the savings 
   assert.equal(opus.batchedRows, 0);
   assert.equal(view.byModel.find((r) => r.key === NO_MODEL_KEY)!.tokens.inputTokens.total, null, "the deterministic rows reported no prompt at all");
 
-  /* ADM-C14: per-model cache hit rate and per-model saving, carried on the row, not recomputed in the render. */
+  /* Per-model cache hit rate and saving are carried on the row, not recomputed in the render. */
   assert.ok(
     opus.cacheHitRate.held && opus.cacheHitRate.value.value === 40_000 && opus.cacheHitRate.value.denominator === 46_000,
     "Opus hit rate is cache reads / (reads + writes + uncached) = 40000 / 46000",
@@ -416,10 +370,6 @@ test("§9A.23: the month totals by provider, model and role, prices the savings 
   assert.equal(buildCostPanel({ costs, attempts, cacheByRole: null, share: null, verifiedRecords: null }).monthlySpend, null);
 });
 
-/* ================================================================== *
- * ADM-C14 — CACHE HEALTH, SUBSCRIPTION SEPARATION, COLOUR, THE AUDIT
- * ================================================================== */
-
 test("ADM-C14: the cache row carries the defect counts, the batch share and the saving the cycle measured", () => {
   const panel = buildCostPanel({
     costs: [],
@@ -442,19 +392,9 @@ test("ADM-C14: the cache row carries the defect counts, the batch share and the 
   assert.ok(row.hitRate.held && row.hitRate.value.value === 40_867);
 });
 
-test("ADM-C14: subscription jobs are three different readings, and an absent log never reads as an empty one", () => {
-  assert.equal(subscriptionJobsReading(null).state, "NOT_WIRED");
-  assert.match(subscriptionJobsReading(null).says, /not a finding that no subscription job has run/);
-  assert.equal(subscriptionJobsReading([]).state, "EMPTY");
-  assert.match(subscriptionJobsReading([]).says, /outside the API ledger/);
-  const held1 = subscriptionJobsReading([{ what: "Nightly holdings sweep", at: "2026-09-06T02:00:00.000Z", outcome: "Finished" }]);
-  assert.equal(held1.state, "HELD");
-  assert.match(held1.says, /outside the API ledger/);
-  assert.notEqual(subscriptionJobsReading(null).says, subscriptionJobsReading([]).says, "never collapsed into one sentence");
-});
 
 test("search API charges are broken down by host and never counted as model spend", () => {
-  // The discovery search rung (RouteTask, 2026-09-23): one DISCOVERY_SEARCH row per request, source = the API host, usd the published price or null.
+  // One DISCOVERY_SEARCH row per request: source is the API host, usd the published price or null.
   const now = "2026-09-23T18:00:00.000Z";
   const search = (id: string, usd: number | null, source: string | null): CostEntry => ({ ...entry(id, "DISCOVERY_SEARCH" as WorkerRole, usd, "2026-09-23T12:00:00.000Z"), source });
   const costs = [
@@ -503,6 +443,6 @@ test("every number the cost section draws itself carries a denominator and a con
   assert.ok(numbers.length >= 3, `expected the section's own figures, saw ${numbers.length}`);
   assert.equal(auditRenderedNumbers(numbers).ok, true, auditRenderedNumbers(numbers).detail);
   assert.ok(!numbers.some((n) => n.label.includes("Operational night")), "an unmeasured window is not pushed as a number");
-  /* POSITIVE CONTROL: the audit really does refuse a figure with no denominator. */
+  /* Positive control: the audit really does refuse a figure with no denominator. */
   assert.equal(auditRenderedNumbers([{ label: "x", value: 1, denominator: null, contract: "c" }]).ok, false);
 });

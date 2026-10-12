@@ -1,10 +1,5 @@
 "use client";
 
-/**
- * **NOW.** What readers can see, what is stuck and why, what is happening, what
- * it cost, and what Sean can do — for the selected place. The national map and
- * state table lead at country scope.
- */
 import { useMemo, useState } from "react";
 
 import { periodLabel } from "@/lib/control-plane/admin-view/periods.ts";
@@ -43,7 +38,6 @@ export function NowScreen() {
         <h1 className={s.h1}>Now</h1>
       </header>
       <Matters />
-      {/* The control Sean uses most (daily budget, paid search, start a hunt): one click to open. */}
       <DirectWork />
       {nationalDepth(v.scopeKey) !== null && <National />}
       <Instruction />
@@ -51,11 +45,8 @@ export function NowScreen() {
   );
 }
 
-/* ----------------------------------------------------- what matters now */
-
 const MOTION_KINDS = new Set(["order", "scheduled", "send", "hunt"]);
 
-/** The four things that matter, each with one sentence saying what it means. */
 function Matters() {
   const v = useV6();
   const { rows, unread } = useQueueRows();
@@ -90,12 +81,9 @@ function Matters() {
   );
 }
 
-/* ------------------------------------------------------ the last full hours */
-
 const gb = (n: number | null): string => (n === null ? "—" : `${n.toFixed(2)} GB`);
 const orDash = (n: number | null, f: (n: number) => string): string => (n === null ? "—" : f(n));
 
-/** The last two full hours from the runner's hourly row. A number nobody recorded shows "—", never zero. */
 function LastHours() {
   const v = useV6();
   const hours = v.data.scoreboard.data?.vital ?? null;
@@ -125,8 +113,6 @@ function LastHours() {
   );
 }
 
-/* ---------------------------------------------------------------- national */
-
 type NatKey = "name" | "hunts" | "zips" | "score" | "stuck";
 interface NatSort { readonly key: NatKey; readonly down: boolean }
 
@@ -137,7 +123,6 @@ const NAT_COLUMNS: readonly { readonly key: NatKey; readonly label: string; read
   { key: "score", label: "Completeness", num: true },
   { key: "stuck", label: "Stuck", num: true },
 ];
-/** Rows shown before "Show all": a state list opens on the tracked states and hunts, a district or ZIP list on its first rows. */
 const NAT_TOP = 12;
 
 function natNumber(r: StateRow, key: Exclude<NatKey, "name">): number | null {
@@ -244,8 +229,6 @@ function National() {
   );
 }
 
-/* ------------------------------------------------------------ instruction */
-
 function Instruction() {
   const v = useV6();
   const { text, chosenBody } = v.instructionDraft;
@@ -297,8 +280,6 @@ function Instruction() {
   );
 }
 
-/* -------------------------------------------------------------- readers */
-
 export function ResultRow(props: { readonly r: ReaderResult; readonly shared?: boolean }) {
   const v = useV6();
   const r = props.r;
@@ -331,8 +312,6 @@ export function Readers() {
   );
 }
 
-/* ---------------------------------------------------------------- stuck */
-
 export function StuckRow(props: { readonly item: StuckItem; readonly shared?: boolean; readonly withActions?: boolean }) {
   const v = useV6();
   const i = props.item;
@@ -351,16 +330,12 @@ export function StuckRow(props: { readonly item: StuckItem; readonly shared?: bo
   );
 }
 
-/* ----------------------------------------------------------- direct work */
-
 function DirectWork() {
   const v = useV6();
   const hunt = huntAt(v.index, v.hunts, v.scopeKey);
   const inside = huntsWithin(v.index, v.hunts, v.scopeKey);
   const cards = hunt ? [hunt] : inside;
   const [open, setOpen] = useState(!!hunt);
-  // Start a hunt and the whole-system controls are what gets used most, so a place with many hunts inside it shows them first;
-  // a place that has its own hunt shows that hunt first.
   const huntCards = (
     <>
       {cards.map((h) => (

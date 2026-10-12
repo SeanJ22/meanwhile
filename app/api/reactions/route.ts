@@ -37,34 +37,18 @@ import { settleStateMoneyRead, stateMoneyForTarget } from "@/lib/funding/state-s
 import { FEDERAL_CONTEST, directFundingTargetPlan } from "@/lib/funding/target-authorities";
 
 /**
- * POST /api/reactions — the reaction write path (P03), hardened (T08).
+ * POST /api/reactions. Validation fails closed and is never behind a flag: anything unknown, invented,
+ * oversized or malformed is a 400 and nothing is stored.
  *
- * Validation fails closed and is never behind any flag: an unknown enum
- * value, an invented target id, an oversized payload, a malformed key —
- * all 400, nothing stored, nothing coerced. A tap from the real app always
- * passes because the app only offers real targets.
+ * Protections, cheapest first, inside `ripcord.rateLimits`:
  *
- * The protections (T08), cheapest first, all inside `ripcord.rateLimits`:
+ * 1. Same-origin.
+ * 2. In-memory sliding windows per device key and per IP. The IP appears in no log, row or error message.
+ * 3. The authoritative counters (lib/db/intake-limiter.ts): past the hard limit, refused; past the soft
+ *    threshold, stored but quarantined; counters unavailable, stored quarantined as LIMITER_UNAVAILABLE.
  *
- * 1. Same-origin — the write must come from a page this site served.
- * 2. In-memory sliding windows per device key and per IP — instance-local,
- *    free, catch a single-instance burst immediately. The IP is read for
- *    limiting only and appears in no log line, no row, no error message.
- * 3. The authoritative counters (lib/db/intake-limiter.ts) — one atomic
- *    upsert per submission, counted across every instance: past the hard
- *    per-minute limit or the daily ceiling, refused; past the soft
- *    velocity threshold, stored but QUARANTINED (suspect_reason, excluded
- *    from every aggregate); counters unavailable, stored quarantined as
- *    LIMITER_UNAVAILABLE — never trusted through.
- *
- * The limiter state lives in its own table with a digest that cannot join
- * the reaction store (n-stores-never-join under load — CLAUDE.md). The
- * master ripcord `ripcord.reactionIntake` closes this route entirely with
- * a 503; the client's honesty rendering (P11) turns any non-204 into the
- * not-counted line, so a closed intake is honest with zero client change.
- *
- * A missing database remains a 202 (accepted, not stored) so a demo
- * without DATABASE_URL still behaves honestly.
+ * The limiter's digest cannot join the reaction store. `ripcord.reactionIntake` closes the route with a 503.
+ * A missing database is a 202 (accepted, not stored).
  */
 
 export const runtime = "nodejs";
@@ -148,7 +132,7 @@ export async function validReactionTargetsFor(
 }
 
 async function postWithSettings(request: Request) {
-  // The master ripcord (T08): intake closed means every write refused
+  // The master ripcord: intake closed means every write refused
   // before anything is read or counted. The reader's tap renders the
   // honest not-counted line; nothing silently records.
   if (ripcordPulled("ripcord.reactionIntake")) {
@@ -172,7 +156,7 @@ async function postWithSettings(request: Request) {
     targetId?: unknown;
     reaction?: unknown;
     reactionKey?: unknown;
-    /** The optional verbatim (P03). Absent is the ordinary case. */
+    /** The optional verbatim. Absent is the ordinary case. */
     text?: unknown;
     zip?: unknown;
     lat?: unknown;
@@ -192,15 +176,15 @@ async function postWithSettings(request: Request) {
     return Response.json({ error: "malformed targetId" }, { status: 400 });
   }
   // The verbatim's SHAPE is checked here and always — validation is never
-  // behind any flag (CLAUDE.md, the collection-stores rule). Whether the
+  // behind any flag. Whether the
   // text is CAPTURED is the ripcord's business, further down.
   if (!isValidFreeText(submission.text)) {
     return Response.json({ error: "malformed text" }, { status: 400 });
   }
 
   // The target must exist in the canonical data for its type — votes in
-  // the promoted vote projection, candidates in the ballot projection (3d), funding
-  // reactions in the FEC projection (D34). An unavailable authority fails closed —
+  // the promoted vote projection, candidates in the ballot projection, funding
+  // reactions in the FEC projection. An unavailable authority fails closed —
   // better to refuse a reaction than to store one against a target nothing
   // can render. The CONTRIBUTOR_REACTION set is empty while
   // ripcord.fecContributorDisplay is pulled, so the control's write path
@@ -219,13 +203,13 @@ async function postWithSettings(request: Request) {
     return Response.json({ error: "unknown targetId" }, { status: 400 });
   }
 
-  // The context table (M63): a value whose meaning depends on the contest's
+  // The context table: a value whose meaning depends on the contest's
   // shape is refused wherever that shape does not hold. SOMEONE_ELSE only
   // means what it says in a race with one candidate; accepted on a contested
   // race it would pour a different question's answers into the same bucket.
   // Enforced here rather than trusted to the UI — the UI decides what to
   // offer, the server decides what is true.
-  // The scale gate (2026-08-15), and it runs in BOTH directions: a
+  // The scale gate runs in BOTH directions: a
   // five-point funding answer is refused on a vote, AND yes/no/unsure is
   // refused on a funding target. The second direction is what keeps the
   // scale break clean — a stale client writing v1 answers into a v2 column
@@ -260,7 +244,6 @@ async function postWithSettings(request: Request) {
     }
   }
 
-  // ── The T08 protections, cheapest first — the ripcord.rateLimits family ──
   let suspectReason: "VELOCITY" | "LIMITER_UNAVAILABLE" | null = null;
   if (!ripcordPulled("ripcord.rateLimits")) {
     // Same-origin: taps come from pages this site served. A browser
@@ -274,8 +257,7 @@ async function postWithSettings(request: Request) {
     }
 
     // In-memory windows: instance-local, free. The IP is used here and
-    // discarded — never stored, never logged (CLAUDE.md: IP for rate
-    // limiting only).
+    // discarded, never stored, never logged.
     const ip =
       request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
     const { perKey, perIp } = intakeWindows("reactions");
@@ -294,7 +276,7 @@ async function postWithSettings(request: Request) {
     } else {
       const disposition = classifySubmission(counters);
       if (disposition.kind === "REFUSE_DAILY") {
-        // The quiet refusal past the daily ceiling (T08 1b): no real
+        // The quiet refusal past the daily ceiling: no real
         // reader reaches it; the client renders the honest line.
         return new Response(null, {
           status: 429,
@@ -314,18 +296,7 @@ async function postWithSettings(request: Request) {
   // the same approximate-location basis as the search log. Optional: a
   // reaction with no resolvable view stores with no divisions rather than
   // guessed ones.
-  /*
-   * ITEM 1b (2026-08-17), hardened rather than fixed — this route was audited
-   * and found NOT to manufacture a claim, but it carries the same shape and
-   * the shape is the defect.
-   *
-   * `Number(null)` is 0, so a body sending `{lat: null, lng: null}` passed
-   * every finite-and-in-range guard below and resolved coverage at 0°N 0°E.
-   * It happened to be harmless — the Gulf of Guinea has no divisions, so
-   * `ocdIds` came back empty, which is the same answer as "no resolvable
-   * view". Harmless by luck is not the standard: the guard now requires an
-   * actual number on the wire, so a null is absent rather than the equator.
-   */
+  /* The guard requires an actual number on the wire: `Number(null)` is 0, so a null is absent, not the equator. */
   const lat = typeof submission.lat === "number" ? submission.lat : Number.NaN;
   const lng = typeof submission.lng === "number" ? submission.lng : Number.NaN;
   let ocdIds: string[] = [];
@@ -341,7 +312,7 @@ async function postWithSettings(request: Request) {
     }
   }
 
-  // Everything a reader types is captured (Sean, October 1, 2026); the verbatim
+  // Everything a reader types is captured; the verbatim
   // is still validated and scrubbed by `normalizeFreeText`.
   const freeText = normalizeFreeText(submission.text);
 
@@ -354,7 +325,7 @@ async function postWithSettings(request: Request) {
       ocdIds,
       suspectReason,
       freeText,
-      // Item 0D: the declaration is required by `writeReaction`, and this is
+      // The declaration is required by `writeReaction`, and this is
       // the one place a reaction row learns whose traffic it is. An absent
       // header resolves to ORGANIC here — a real browser is still a reader,
       // decided in a function that can be read rather than by a default
@@ -363,12 +334,7 @@ async function postWithSettings(request: Request) {
     });
     return new Response(null, { status: stored ? 204 : 202 });
   } catch (error) {
-    /*
-     * **RULING 25 — UNCHANGED FOR THE READER** (Prompt D item 6, D73). The
-     * 500 and its body are exactly what shipped before; a visitor sees no
-     * difference. `raiseWriteAlarm` is the second path, and it never throws,
-     * so it cannot turn a stored-reaction failure into a worse one.
-     */
+    /* `raiseWriteAlarm` never throws, so it cannot turn a stored-reaction failure into a worse one. */
     console.error("reaction write failed", error);
     await raiseWriteAlarm("reactions", error);
     return Response.json({ error: "could not store the reaction" }, { status: 500 });

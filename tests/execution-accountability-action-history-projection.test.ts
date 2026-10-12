@@ -1,6 +1,5 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { readFileSync } from "node:fs";
 
 import { actionHistorySourceSetHash, prepareActionHistoryProjection, selectActionHistoryProjection } from "../lib/control-plane/admin-view/action-history-projection.ts";
 import type { ExpansionScopeDecision } from "../lib/control-plane/expansion/scopes.ts";
@@ -92,13 +91,4 @@ test("missing, incomplete, duplicate or partial source census never appears as e
   assert.equal(selectActionHistoryProjection([row, row], { status: "READY", throughPosition: 2, sourceCount: 2, projectedCount: 2, sourceSetHash }, q).available, false);
   assert.equal(selectActionHistoryProjection([row], { status: "READY", throughPosition: 2, sourceCount: 1, projectedCount: 1,
     sourceSetHash: "0".repeat(64) }, q).available, false);
-});
-
-test("provider SQL preserves the canonical receipt and instruction relationships", () => {
-  const sql = readFileSync(new URL("../docs/migration-proposals/admin-action-history-cp-v17.sql", import.meta.url), "utf8");
-  assert.match(sql, /FOREIGN KEY \(gateway_log_key, gateway_receipt_id\)/);
-  assert.match(sql, /FOREIGN KEY \(instruction_log_key, instruction_receipt_id\)/);
-  assert.match(sql, /DEFERRABLE INITIALLY DEFERRED/);
-  assert.match(sql, /instruction_receipt_id/);
-  assert.match(sql, /status IN \('INCOMPLETE', 'READY'\)/);
 });

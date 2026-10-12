@@ -1,43 +1,10 @@
 /**
- * **PROVIDER SIX — MEETINGS DISCOVERY, WHERE THE OWNER SENT THE FLEET.**
- * (MW-028, 2026-09-23. RULING 248, RULING 249, RULING 251.)
+ * Meetings discovery for governments the owner's dispatch materialized, in the registry derivation's shape
+ * (`lib/hunt/meetings-discovery.ts`). Discovery, never acquisition: the opening is NOT_MACHINE_EXECUTABLE, and
+ * a discovered route becomes a clock only by being wired into a meeting partition.
  *
- * Every enumerated government's meetings are owed to the reader. Its registry
- * records where they have not been found: its own site is known and unwalked
- * (`SOURCE_DISCOVERY_OWED`), or no site is recorded at all
- * (`NO_MEETINGS_SOURCE_RECORDED`). `lib/hunt/meetings-discovery.ts` derives
- * that list from the promoted jurisdiction registries, and this provider uses
- * the same derivation — the same shapes, never a second list.
- *
- * ## What it schedules
- *
- * Only the needs the owner's dispatch MATERIALIZED (`dispatch-work.ts`): one
- * obligation per government in a geography the owner sent the fleet to, in
- * the registry derivation's shape. The rest stay owed; the mission map's calendar blanks are walked free (CH-21);
- * a dispatch or a selected scope is what turns a need into scheduled work.
- *
- * ```
- *   id          freshness:meetings-discovery:<jurisdiction id>#<route>
- *   route       own-site-meetings   basis SOURCE_DISCOVERY_OWED: walk the
- *                                   government's recorded own site
- *               find-own-site       basis NO_MEETINGS_SOURCE_RECORDED: no site
- *                                   is recorded, so finding it is the first step
- *   subject     the jurisdiction id, as in the registry
- *   class       BOUNDED_MODEL_WORKER with a NOT_MACHINE_EXECUTABLE opening:
- *               discovery, never acquisition
- * ```
- *
- * A consumer maps an obligation back to its need with `meetingsDiscoveryNeedFor`
- * and the jurisdiction id; nothing about the need is re-encoded here.
- *
- * ## Never a second meetings clock
- *
- * A discovery obligation opens nothing a deterministic client can fetch: its
- * route is not machine-executable, so the plain-code lane can only dispose it
- * REQUIRES_NEW_ADAPTER, and a Scout (while the paid lane is open) can only
- * propose a route candidate. Meetings ACQUISITION stays with the production
- * meeting partitions (RULING 282/283), and a discovered route becomes a clock
- * only by being wired there.
+ *   id     freshness:meetings-discovery:<jurisdiction id>#<route>
+ *   route  own-site-meetings (SOURCE_DISCOVERY_OWED) or find-own-site (NO_MEETINGS_SOURCE_RECORDED)
  */
 
 import type { JurisdictionRegistry } from "../../../hunt/jurisdiction-universe.ts";
@@ -104,8 +71,8 @@ export function meetingsDiscoveryRoute(reg: JurisdictionRegistry, need: Meetings
         ? `${source?.owed ?? "walk the government's own recorded site for its meetings"} ` +
           "REQUIRES_NEW_ADAPTER: this is a fact about our tooling and our reading, never about the record."
         : "no website is recorded for this government, so its meetings have no source yet. The first step is " +
-          "its own site (RULING 249, Tier B), found from what the tier above publishes about it; an absence is " +
-          "argued, never asserted (RULING 250). REQUIRES_NEW_ADAPTER: a fact about our reading, never about the record.",
+          "its own site (Tier B), found from what the tier above publishes about it; an absence is " +
+          "argued, never asserted. REQUIRES_NEW_ADAPTER: a fact about our reading, never about the record.",
     },
     citation:
       source?.citation ??
@@ -116,20 +83,7 @@ export function meetingsDiscoveryRoute(reg: JurisdictionRegistry, need: Meetings
   };
 }
 
-/**
- * **REUSE THE FREE WALK WITHOUT REQUIRING IT FIRST.** (2026-09-26.)
- *
- * A meetings-discovery obligation is model-class, so it would otherwise go to
- * the paid Scout lane whenever that lane is open. The unpaid discovery
- * executor walks the same governments first — the ones the owner's dispatch
- * materialized, then the mission map's calendar blanks (CH-21) — and the paid lane may never
- * re-walk an already confirmed route. An unattempted free walk is not a paid
- * admission prerequisite: the owner permits an appropriate paid route early,
- * within the existing authorization and token reservations. An unread log holds,
- * so a failed read never opens the paid lane.
- *
- * Returns null for any other obligation, and for one the paid lane may take.
- */
+/** Whether the paid lane must wait for the free walk. A confirmed route is never re-walked by the paid lane, and an unread log holds. Null for any other obligation, or one the paid lane may take. */
 export const FREE_WALK_FIRST = "FREE_WALK_FIRST";
 
 export function paidDiscoveryHold(
@@ -147,21 +101,7 @@ export function paidDiscoveryHold(
   return { code: FREE_WALK_FIRST, why };
 }
 
-/**
- * The needs the owner's dispatch materialized, each with the promoted registry
- * it derives from. There is one registry reading per state, by the gap
- * ledger's own derivation (`meetingsDiscoveryNeeds`), never a second list.
- *
- * The provider emits its obligations from these. The runner hands the same
- * needs to the free walk, which goes first on dispatched governments. The
- * committed ledger the walk otherwise reads is a snapshot that may not hold
- * them, for example a state promoted after it was built.
- *
- * An id is left out when the registry no longer records its government, or
- * when its basis moved: the row leaves the corpus and its provider's
- * retirement judges it. A state whose registry cannot be read is named, and
- * none of its governments are guessed at.
- */
+/** The needs the owner's dispatch materialized, each with the registry it derives from. A state whose registry cannot be read is named. */
 export function materializedDiscoveryNeeds(
   ids: Iterable<string>,
   registryFor: (stateCode: string) => JurisdictionRegistry = requiredJurisdictionRegistry,
@@ -198,10 +138,7 @@ export function materializedDiscoveryNeeds(
   return { entries, failures };
 }
 
-/**
- * Where a dispatched need's address was recorded, so a route the walk finds from it can be attested (NH330): the
- * promoted reviewed reference, or — for a state with no reviewed registry — its registration (2026-09-25).
- */
+/** Where a dispatched need's address was recorded: the promoted reviewed reference, or the state's registration. */
 export function dispatchedAddressSource(reg: JurisdictionRegistry, reviewedVersionId: string | null): DiscoveryAddressSource {
   return reg.registration === undefined
     ? { source: "OPERATIONAL_REFERENCE", versionId: reviewedVersionId }

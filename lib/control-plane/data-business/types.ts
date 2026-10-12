@@ -1,7 +1,5 @@
 /**
- * **THE DATA BUSINESS, IN ONE PLACE: what goes in, what may come out.** (S12, Sean's 2:30 PM MST note, October 1, 2026.)
- *
- * Capture (S2.4) and the event store (S6.8, `lib/db/reader-events.ts`) hold what readers did. This folder turns it into
+ * The data business: what goes in, what may come out. Capture and the event store (`lib/db/reader-events.ts`) hold what readers did. This folder turns it into
  * numbers. A number is a **recipe** (`recipes.ts`), one small named function over the captured events; **one read**
  * (`read.ts`) takes any recipe and any slice; **a switch** per recipe per audience (`switches.ts`) decides who may see it.
  *
@@ -44,7 +42,7 @@ export interface CapturedEvent {
   readonly topic: string;
   readonly reaction: string | null;
   readonly ballotPick: { readonly contestId: string; readonly candidateIds: readonly string[]; readonly choice: "PICKED" | "UNSURE" | "BLANK" } | null;
-  /** Collected by a tester or bot (Sean, October 1, 2026): kept out of anything sold unless asked for. */
+  /** Collected by a tester or bot: kept out of anything sold unless asked for. */
   readonly tester: boolean;
 }
 

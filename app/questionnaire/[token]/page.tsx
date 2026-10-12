@@ -10,33 +10,9 @@ import {
 } from "@/lib/questionnaire/instrument";
 
 /**
- * The page a candidate lands on.
- *
- * ## What this is, and what it is not
- *
- * `NH104`. It is the surface a candidate types into. **It is not the send
- * path** — nothing in this repo emails anybody, and `NH108`'s four sending
- * decisions are Sean's: the domain, the provider credential, the deliverability
- * warm-up, and the timing. A candidate reaches this page by holding a link.
- *
- * ## Why the refusals are separate sentences
- *
- * A link that is unknown, expired or already used are three different facts
- * about a candidate's situation and they need three different next steps.
- * `tokenRefusalLine` holds the wording; this page never collapses them into
- * "invalid link". And a store we cannot reach is a fact about US — it renders
- * as its own named gap and never as "your link does not work", which would be
- * the render-default rule's exact failure pointed at the person we are asking
- * for a favour.
- *
- * ## No new identifier
- *
- * RULING 112: a single-use expiring token to the email already on the certified
- * filing. No account, no password, no new identifier, and only `sha256(token)`
- * is stored. The token appears in the URL and is hashed before it touches the
- * database — there is no code path here that logs or persists a raw one.
- *
- * `noindex` is set for the same reason: this URL carries a credential.
+ * The page a candidate lands on. Unknown, expired and used links are separate refusals (`tokenRefusalLine`),
+ * and an unreachable store is its own named gap. Only `sha256(token)` is stored; `noindex` because the URL
+ * carries a credential.
  */
 export const dynamic = "force-dynamic";
 

@@ -1,5 +1,5 @@
 /**
- * `scripts/river.mjs` — the streams → river → main path (RL-03, RL-05).
+ * `scripts/river.mjs` — the streams → river → main path.
  *
  * The decisions are pure and tested directly: status parsing, READY detection,
  * fold order, lock ownership, release contents, post-deploy reuse and migration

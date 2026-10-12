@@ -5,7 +5,9 @@ import {
   OFFICIAL_STATE_LEGISLATOR_TARGETS,
   OFFICIAL_STATE_ROLL_CALL_TARGETS,
 } from "../state-rollcalls/authority.ts";
-import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ID, REGISTRATION_SOURCE_URL, REGISTRATION_TARGETS } from "../registration/publication.ts";
+import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ID, REGISTRATION_TARGETS } from "../registration/publication.ts";
+
+import { PLURAL_STATES, PLURAL_PARSER_VERSION, PLURAL_SOURCE_ID } from "../sources/plural/targets.ts";
 
 const HOUR = 60 * 60 * 1_000;
 const DAY = 24 * HOUR;
@@ -20,21 +22,6 @@ export interface RoutineCadencePolicy {
   }[];
 }
 
-/**
- * **MEETING SOURCES FOLLOW THEIR SITTINGS** (owner decision, 2026-09-24).
- *
- * A meeting source is re-read hourly while its body has any sitting, upcoming
- * or past, within seven days of now, and twice daily otherwise. The window
- * rolls with the clock: a sitting entering it makes the source hourly at that
- * instant, and the source leaves it seven days after its last sitting. It
- * covers calendars, agendas, changes, cancellations, decisions and minutes;
- * an outcome routine follows the partitions that carry its body's sittings.
- *
- * This is how often the runner re-reads, never how old a Reader may see a
- * record: Reader freshness stays on each contract's `cadence`, which must
- * outlast `baseEveryMs` so a re-read lands before the record reads STALE. No
- * other data family's schedule is changed by this policy.
- */
 export interface SittingWindowSchedule {
   readonly kind: "SITTING_WINDOW";
   /** A sitting starting within this distance of now, on either side, makes the source hot. */
@@ -52,10 +39,8 @@ export const MEETING_SITTING_WINDOW = {
   baseEveryMs: 12 * HOUR,
 } as const satisfies SittingWindowSchedule;
 
-/** Polling admission is not acquisition; source contracts retain their own cadence. */
 export const ROUTINE_DATA_ADMISSION_MS = 5 * 60_000;
 
-/** Paid derived work stays inside an admitted worker's existing Fleet/area transport. */
 export const PLAIN_ENGLISH_TRANSLATION_ROUTINE = {
   id: "plain-english-translations",
   inputRecordClass: "BALLOT_MEASURE",
@@ -91,7 +76,6 @@ export function sittingWindowHot(
   return unknown ? undefined : false;
 }
 
-/** How long after its last success a sitting-window task is re-read; unknown counts as hot. */
 export function sittingWindowRereadMs(schedule: SittingWindowSchedule, hot: boolean | undefined): number {
   return hot === false ? schedule.baseEveryMs : schedule.hotEveryMs;
 }
@@ -128,10 +112,6 @@ export interface RoutineSourceContract {
         readonly command: readonly string[];
       }
     | {
-        /**
-         * No route of its own: the candidate is authentic only as the exact promoted, vaulted or member-read
-         * inputs it names, checked by the validator and at the door (`lib/civic-data/derived-door.ts`). C16.
-         */
         readonly authorityMode: "DERIVED";
         readonly command: readonly string[];
       };
@@ -159,16 +139,6 @@ export interface RoutineSourceContract {
   readonly classification: RoutineDataClassification;
   /** Bundled inputs are seed/test material only; never a store-error fallback. */
   readonly bootstrapFixturePaths: readonly string[];
-  /**
-   * Terminal live-proof law. Omitted means two post-deploy source-authenticated
-   * GOOD versions are required. A bounded source whose complete official
-   * horizon is not yet available may instead prove one durable fail-closed
-   * attempt while preserving an exact LKG or an honest not-recorded pointer.
-   */
-  readonly liveAcceptance?: {
-    readonly kind: "AUTHENTICATED_FAIL_CLOSED_ATTEMPT";
-    readonly acceptedStates: readonly ["SOURCE_BLOCKED", "HORIZON_UNRESOLVED"];
-  };
 }
 
 const STORE = "civic_data_candidates+civic_data_candidate_events+civic_data_promotions" as const;
@@ -179,10 +149,6 @@ const MEETING_CADENCE: RoutineCadencePolicy = {
   phases: [{ through: "2026-11-04T00:00:00.000Z", everyMs: DAY, description: "daily through 2026-11-03" }],
 };
 
-/**
- * Shared policy for SOURCE_WIRING-derived meeting partition contracts. This
- * is not itself a contract, pointer, promotion scope, or executable task.
- */
 export const MEETING_PARTITION_POLICY = {
   sourceId: "meetings-public-bodies",
   recordClass: "MEETING",
@@ -198,28 +164,9 @@ export const MEETING_PARTITION_POLICY = {
   readerConsumers: ["/api/meetings", "/api/agenda", "Ask", "Admin", "map"],
 } as const;
 
-/**
- * **THE DERIVED MEETING FAMILIES** (labelled C16; the authority is rulings §3, not an owner decision).
- *
- * One partition per registered state whose members are the promoted
- * meeting-source wiring's ACTIVE rows for that state, read at runtime. A
- * reviewed crosswalk row plus a route discovery validated therefore publishes
- * through the standing runner with no code release. The family is its scope's
- * only writer; each member keeps its own last verified rows when it fails or
- * is suspended; an unreadable wiring store blocks the family's candidate and
- * keeps its last known good.
- *
- * **EVERY REGISTERED STATE HAS ONE** (2026-09-25). The list is registration's
- * own (`REGISTRATION_TARGETS`: every state, DC and territory in the FIPS
- * table), never a chosen subset, so a calendar connected in a state no one
- * has worked before publishes with no code change. A family with no member yet
- * makes no read of any publisher: its child reads the wiring first and records
- * a named refusal, and it is asked again on the unpublished twice-daily clock.
- */
 export const DERIVED_MEETING_FAMILY_STATES: readonly DerivedMeetingFamilyState[] = REGISTRATION_TARGETS.map(
   (target) => target.jurisdiction as DerivedMeetingFamilyState,
 );
-/** A covered state's family key, `US-OH`. */
 export type DerivedMeetingFamilyState = `US-${string}`;
 
 export const DERIVED_MEETING_FAMILY_POLICY = {
@@ -249,7 +196,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     recordClass: "FEC_FUNDING",
     scope: "federal-supported",
     acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/fetch-fec.mts", "--promote"], requestedUrl: "https://api.open.fec.gov/v1/" },
-    parserNormalizerVersion: "fec-funding/2",
+    parserNormalizerVersion: "fec-funding/3",
     cadence: { description: "weekly", defaultEveryMs: 7 * DAY },
     retry: { afterMs: 6 * HOUR, description: "six hours after a failed attempt" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "fec-open-api" },
@@ -273,7 +220,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "nh-general-court" },
     validationContract: CHECKS,
     canonicalProductionStore: STORE,
-    readerProjection: { id: "nh-state-members", consumers: ["app/api/state-members/route.ts", "lib/ballot/seat-holders.ts", "ballot"] },
+    readerProjection: { id: "nh-state-members", consumers: ["lib/ballot/seat-holders.ts", "ballot"] },
     lkgBehavior: "The current atomic pointer remains on the last GOOD complete official roster after refusal.",
     autoPromotable: true,
     classification: "RUNTIME_CIVIC_DATA",
@@ -299,7 +246,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
       canonicalProductionStore: STORE,
       readerProjection: {
         id: `${target.state.toLowerCase()}-official-state-legislators`,
-        consumers: ["lib/registry/server.ts", "app/api/state-members/route.ts", "map", "ballot", "Ask", "Admin"],
+        consumers: ["lib/registry/server.ts", "map", "ballot", "Ask", "Admin"],
       },
       lkgBehavior:
         `Only ${target.publisher} evidence may move ${target.jurisdiction}. An unavailable or incomplete roster leaves that state's prior GOOD pointer live and cannot affect another state.`,
@@ -307,12 +254,45 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
       classification: "RUNTIME_CIVIC_DATA",
       bootstrapFixturePaths: [],
     })),
-  ...OFFICIAL_STATE_ROLL_CALL_TARGETS.map((target): RoutineSourceContract => {
-    // New Hampshire promotes through the per-legislator fan-out — one contract,
-    // one per-state clock, bounded per-member writes — so the largest
-    // legislature we will ever load never exceeds the write path. Arizona and
-    // New Jersey keep the per-jurisdiction STATE_ROLL_CALL path until they are
-    // migrated the same way.
+  ...PLURAL_STATES.map((state): RoutineSourceContract => ({
+    id: `openstates-people-${state}`,
+    sourceId: PLURAL_SOURCE_ID,
+    recordClass: "STATE_LEGISLATOR",
+    scope: `US-${state.toUpperCase()}:openstates-people:v1`,
+    acquisitionFailureDomain: `routine-source:${PLURAL_SOURCE_ID}:${state}`,
+    acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/openstates-people-refresh.mts", "--promote", `--state=${state}`] },
+    parserNormalizerVersion: PLURAL_PARSER_VERSION,
+    cadence: { description: "daily known-source people refresh, independent of Sends", defaultEveryMs: DAY },
+    retry: { afterMs: HOUR, description: "one hour after a failed state acquisition; other states remain independent" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: PLURAL_SOURCE_ID },
+    validationContract: CHECKS,
+    canonicalProductionStore: STORE,
+    readerProjection: { id: `${state}-openstates-people`, consumers: ["lib/registry/server.ts", "people", "map", "ballot", "Ask", "Admin"] },
+    lkgBehavior: "Unusable release bytes leave this state's existing people live. Official source facts retain their authority; source-native people do not require local boundary coverage.",
+    autoPromotable: true,
+    classification: "RUNTIME_CIVIC_DATA",
+    bootstrapFixturePaths: [],
+  })),
+  {
+    id: "az-openstates-votes",
+    sourceId: "plural-openstates-votes",
+    recordClass: "STATE_ROLL_CALL",
+    scope: "US-AZ:openstates-votes:v1",
+    acquisitionFailureDomain: "routine-source:plural-openstates-votes",
+    acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/az-votes-refresh.mts", "--promote"] },
+    parserNormalizerVersion: "plural-votes/1",
+    cadence: { description: "daily native Arizona vote refresh from the existing Open States API", defaultEveryMs: DAY },
+    retry: { afterMs: HOUR, description: "one hour after a failed known bill or vote acquisition" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "plural-openstates-votes" },
+    validationContract: CHECKS,
+    canonicalProductionStore: STORE,
+    readerProjection: { id: "az-openstates-native-votes", consumers: ["app/api/votes/route.ts", "lib/ask/votes.ts", "Ask", "map", "ballot", "Admin"] },
+    lkgBehavior: "Each exact native vote merges independently. Partial source coverage makes no absence claim and preserves prior verified votes.",
+    autoPromotable: true,
+    classification: "RUNTIME_CIVIC_DATA",
+    bootstrapFixturePaths: [],
+  },
+  ...OFFICIAL_STATE_ROLL_CALL_TARGETS.filter(target => target.state !== "AZ").map((target): RoutineSourceContract => {
     const fanOut = target.state === "NH";
     return {
       id: target.contractId,
@@ -341,15 +321,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
       autoPromotable: true,
       ...(fanOut ? { fanOut: true as const } : {}),
       classification: "RUNTIME_CIVIC_DATA",
-      // The retained LegiScan aggregate is research/test evidence, never a
-      // bootstrap or store-error fallback for an official production pointer.
       bootstrapFixturePaths: [],
-      ...(target.state === "AZ" ? {
-        liveAcceptance: {
-          kind: "AUTHENTICATED_FAIL_CLOSED_ATTEMPT" as const,
-          acceptedStates: ["SOURCE_BLOCKED", "HORIZON_UNRESOLVED"] as const,
-        },
-      } : {}),
     };
   }),
   {
@@ -368,7 +340,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     lkgBehavior: "The current atomic pointer remains on the last GOOD complete ACS projection after refusal.",
     autoPromotable: true,
     classification: "OPERATIONAL_REFERENCE_DATA",
-    bootstrapFixturePaths: ["data/reference/acs5_2024_b01003_zcta.csv", "data/reference/acs5_2024_b01003_state.csv"],
+    bootstrapFixturePaths: [],
   },
   {
     id: "census-geography-overlaps",
@@ -411,7 +383,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     lkgBehavior: "The current ballot pointer and complete removal history remain on the last GOOD filing projection after refusal.",
     autoPromotable: true,
     classification: "RUNTIME_CIVIC_DATA",
-    bootstrapFixturePaths: ["data/states/nj/ballot/nj-morris-2026.json", "data/states/nj/ballot/nj-morris-2026-contacts.json"],
+    bootstrapFixturePaths: [],
   },
   {
     id: "pima-legistar-outcomes",
@@ -419,20 +391,17 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     recordClass: "MEETING_OUTCOME",
     scope: "US-AZ:county:pima:legistar-outcomes",
     acquisitionAdapter: {
-      authorityMode: "SINGLE_ROUTE",
+      // Native body lookup, events, items and votes all stay within the registered Pima tenant.
+      authorityMode: "REGISTERED_SOURCE_ROUTES",
       command: ["scripts/legistar-outcomes-ingest.mts", "--promote", "--slug", "pima"],
-      requestedUrl: "https://webapi.legistar.com/v1/pima/events",
     },
     parserNormalizerVersion: "pima-legistar-outcomes/2",
-    // Reader freshness only; re-reads follow the Board's sitting window below.
     // Fourteen hours outlasts the twelve-hour re-read plus one failed retry.
     cadence: {
       description: "fresh for fourteen hours through the 2026 general election, then a day",
       defaultEveryMs: DAY,
       phases: [{ through: "2026-11-04T00:00:00.000Z", everyMs: 14 * HOUR, description: "fourteen hours through 2026-11-03" }],
     },
-    // The Board of Supervisors' sittings are carried by both of its partitions:
-    // the Legistar Web API events and the InSite portal grid.
     schedule: {
       ...MEETING_SITTING_WINDOW,
       follows: [
@@ -448,23 +417,13 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     lkgBehavior: "A failed sitting/items/votes acquisition is stored as a refused candidate; prior GOOD outcomes remain live and later unaffected sitting candidates may still promote.",
     autoPromotable: true,
     classification: "RUNTIME_CIVIC_DATA",
-    bootstrapFixturePaths: ["data/states/az/outcomes/legistar-outcomes.json"],
+    bootstrapFixturePaths: [],
   },
-  /*
-   * Mesa City Council decisions, read off the council's own minutes (NH332,
-   * 2026-09-25). Mesa's clerk enters no action in the Legistar Web API, so the
-   * route behind Pima's outcomes gives Mesa nothing; the minutes are published
-   * on the permitted portal host (`View.ashx?M=M`, linked from the calendar
-   * grid) while the API's minutes file sits on legistar.granicus.com, which
-   * robots.txt refuses us.
-   */
   {
     id: "mesa-legistar-minutes-outcomes",
     sourceId: "mesa-legistar-minutes-outcomes",
     recordClass: "MEETING_OUTCOME",
     scope: "US-AZ:place:mesa:legistar-minutes-outcomes",
-    // One host, one lane: the calendar and the minutes are read from the same
-    // portal as the council's InSite meeting partition, one request at a time.
     acquisitionFailureDomain: "meeting-upstream:mesa.legistar.com",
     acquisitionAdapter: {
       authorityMode: "SINGLE_ROUTE",
@@ -472,14 +431,11 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
       requestedUrl: "https://mesa.legistar.com/Calendar.aspx",
     },
     parserNormalizerVersion: "mesa-legistar-minutes-outcomes/1",
-    // Reader freshness as Pima's outcomes: the twelve-hour re-read plus one
-    // failed retry lands inside it.
     cadence: {
       description: "fresh for fourteen hours through the 2026 general election, then a day",
       defaultEveryMs: DAY,
       phases: [{ through: "2026-11-04T00:00:00.000Z", everyMs: 14 * HOUR, description: "fourteen hours through 2026-11-03" }],
     },
-    // Re-reads follow the council's sittings, which its InSite partition carries.
     schedule: {
       ...MEETING_SITTING_WINDOW,
       follows: [{ meetingSource: "legistar-insite", bodyId: "ocd-division/country:us/state:az/place:mesa#governing" }],
@@ -510,50 +466,32 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     lkgBehavior: "The current operational pointer remains on the last GOOD complete CISA registry projection after refusal.",
     autoPromotable: true,
     classification: "OPERATIONAL_REFERENCE_DATA",
-    bootstrapFixturePaths: ["data/dotgov/snapshot.json"],
+    bootstrapFixturePaths: [],
   },
-  /*
-   * REGISTRATION (2026-09-23): one contract per state, DC and territory in the
-   * FIPS table — every state trackable from data, never a chosen list. Each
-   * confirms census.gov still serves the pinned Census of Governments bytes and
-   * registers that state's governments on their Census divisions, never an id
-   * the reviewed registry writes. They share one failure domain, so the runner
-   * takes one state per pass and one Census request at a time; the request is
-   * conditional, so an unchanged file downloads nothing (lib/registration/acquire.ts).
-   */
   ...REGISTRATION_TARGETS.map((target): RoutineSourceContract => ({
     id: target.contractId,
     sourceId: REGISTRATION_SOURCE_ID,
     recordClass: "REGISTRATION",
     scope: target.scope,
-    acquisitionFailureDomain: `routine-source:${REGISTRATION_SOURCE_ID}`,
+    acquisitionFailureDomain: `routine-source:${REGISTRATION_SOURCE_ID}:${target.state}`,
     acquisitionAdapter: {
-      authorityMode: "SINGLE_ROUTE",
+      authorityMode: "REGISTERED_SOURCE_ROUTES",
       command: ["scripts/registration-refresh.mts", "--promote", `--state=${target.state}`],
-      requestedUrl: REGISTRATION_SOURCE_URL,
     },
     parserNormalizerVersion: REGISTRATION_PARSER_VERSION,
-    // Census publishes this file every five years; each check asks conditionally, so an unchanged file is a 304 with no body.
-    cadence: { description: "every 90 days, a conditional request confirms census.gov still serves the pinned Census of Governments vintage", defaultEveryMs: 90 * DAY },
+    // Versioned held bytes are replayed before a conditional publisher check.
+    cadence: { description: "known government and school directory checks every 90 days", defaultEveryMs: 90 * DAY },
     retry: { afterMs: 6 * HOUR, description: "six hours after a failed attempt" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: REGISTRATION_SOURCE_ID },
     validationContract: CHECKS,
     canonicalProductionStore: STORE,
     readerProjection: { id: `${target.state.toLowerCase()}-registration`, consumers: ["lib/registration/reader.ts"] },
     lkgBehavior:
-      `Only the pinned Census of Governments may move ${target.jurisdiction}'s registration. A changed or unavailable Census file leaves that state's prior GOOD registration live and cannot affect another state.`,
+      `Versioned known-source government listings may move ${target.jurisdiction}'s registration after validation. An unavailable or incomplete release leaves that state's prior GOOD registration live and cannot affect another state.`,
     autoPromotable: true,
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
   })),
-  /*
-   * AUTOMATIC CALENDAR-TO-BODY RECORDS (C16 option A: agents review; 2026-09-25). The runner's own deterministic
-   * reviewer (lib/control-plane/discovery/auto-crosswalk.ts) reads each discovery walk that found an iCal feed or an
-   * official events page on the government's attested own host, and accepts a row only when every C16 check passes
-   * on the vaulted bytes; everything else is held by name. It shares the wiring store's authority (the standing
-   * runner, from promoted and vaulted inputs only), and the wiring derive reads its rows beside the reviewed manual
-   * crosswalk, the manual rows winning.
-   */
   {
     id: "meeting-body-crosswalk-derived",
     sourceId: "meeting-source-wiring",
@@ -569,6 +507,25 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     canonicalProductionStore: STORE,
     readerProjection: { id: "meeting-body-crosswalk-derived", consumers: ["derived meeting-source wiring", "Admin"] },
     lkgBehavior: "A version with a malformed row, a conflicting pair, an input the door cannot find promoted, or any other failed check records its refusal and leaves the prior GOOD rows live; an accepted row is never dropped, and an outage or an absent walk carries it exactly as it was.",
+    autoPromotable: true,
+    classification: "RUNTIME_CIVIC_DATA",
+    bootstrapFixturePaths: [],
+  },
+  {
+    id: "meeting-doors",
+    sourceId: "meeting-doors",
+    recordClass: "CURATED_READER_RECORD",
+    scope: "US:meeting-doors",
+    acquisitionFailureDomain: "derived:meeting-doors",
+    acquisitionAdapter: { authorityMode: "DERIVED", command: ["scripts/publish-meeting-doors.mts", "--promote"] },
+    parserNormalizerVersion: "meeting-doors/1",
+    cadence: { description: "at the start of every routine pass, before any meeting door is read", defaultEveryMs: ROUTINE_DATA_ADMISSION_MS },
+    retry: { afterMs: ROUTINE_DATA_ADMISSION_MS, description: "the next routine pass" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "meeting-doors" },
+    validationContract: CHECKS,
+    canonicalProductionStore: STORE,
+    readerProjection: { id: "meeting-doors", consumers: ["meeting partitions", "the Reader's covered bodies", "agenda reads", "Admin"] },
+    lkgBehavior: "A version with no door, a malformed door or an input the door cannot vouch for is refused and the prior GOOD doors stay in use; an unchanged registry re-confirms the version it already points at.",
     autoPromotable: true,
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
@@ -592,14 +549,6 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
   },
-  /*
-   * VERIFIED CAMPAIGN SITES, PUBLISHED AUTOMATICALLY (Sean, 2026-09-21: "You may enable automatic promotion for
-   * qualifying results. Fix the gap, recover value already paid for."; RULING 292). The standing runner's
-   * campaign-site chain (lib/control-plane/promotion/campaign-site-chain.ts) approves a site only after our own
-   * robots-first read, five measured checks and an audit with an independent second signal. This DERIVED store is
-   * the one writer of its own pointer; the owner's `candidate-profiles` door stays the only writer of profiles, and
-   * the profile Reader composes the two, a reviewed campaign link always winning (lib/ballot/candidate-sites.ts).
-   */
   {
     id: "candidate-campaign-sites-derived",
     sourceId: "candidate-campaign-site-chain",
@@ -640,7 +589,6 @@ export function requiredRoutineContract(id: string): RoutineSourceContract {
   return contract;
 }
 
-/** Reader freshness is derived from the same phase policy as standing execution. */
 export function routineFreshnessMs(id: string, now: string): number {
   return cadenceMsAt(requiredRoutineContract(id), Date.parse(now));
 }

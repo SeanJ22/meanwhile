@@ -1,14 +1,9 @@
 /**
- * **EVERY SCOUT REQUEST IS VALID ON AN ACCOUNT THAT ENFORCES PRESERVED
- * THINKING.** (Claude Opus 5.5, 2026-09-25.)
- *
  * On Claude Opus 5.5 a thinking block is bound to the model that produced it
  * and to the conversation before it; replaying a block after an edit of the
- * system, the tools or an earlier message is HTTP 400 on accounts created on
- * or after 2026-08-31 (claude-api skill, model-migration.md, "Migrating to
- * Claude Opus 5.5", breaking change 3). Offline, with a fake provider that
- * answers with thinking blocks and a fake toolkit; nothing here reaches a
- * model or a host.
+ * system, the tools or an earlier message is HTTP 400 on newer accounts.
+ * Offline, with a fake provider that answers with thinking blocks and a fake
+ * toolkit; nothing here reaches a model or a host.
  *
  *   PT-1  across a whole Attempt the conversation is append-only: each request
  *         extends the one before byte-for-byte, except a restart, which
@@ -192,7 +187,6 @@ const json = (v: unknown): string => JSON.stringify(v);
 const isRestart = (messages: ModelRequest["messages"]): boolean =>
   messages.length === 1 && json(messages[0]).includes(SCOUT_CARRIED_FORWARD_MARK);
 
-/* --------------------------------------------------------------------- PT-1 */
 
 test("PT-1: the conversation is append-only — each request extends the one before byte-for-byte, except a restart, which replays no earlier turn or thinking block — and the payload stays bounded", async () => {
   const sonnet: Turn[] = [1, 2, 3, 4, 5].map((k) => [thinking(`sig-s${k}`), fetchOf(`u${k}`, `https://a.gov/page-${k}`)]);
@@ -249,7 +243,6 @@ test("transport carries provider capacity and Retry-After from an unsent retry",
       requestsResetAt: null, inputResetAt: null, outputResetAt: null } }]);
 });
 
-/* --------------------------------------------------------------------- PT-2 */
 
 test("PT-2: the escalation appends to the same conversation — Sonnet's reply, thinking blocks included, reaches Opus 5.5 unchanged — and both models state drop_block", async () => {
   const sonnetReply: Turn = [thinking("sig-sonnet"), { type: "text", text: "I would look at the meetings page." }];
@@ -281,7 +274,6 @@ test("PT-2: the escalation appends to the same conversation — Sonnet's reply, 
   assert.doesNotMatch(outcome.detail, /THINKING DROPPED/);
 });
 
-/* --------------------------------------------------------------------- PT-3 */
 
 test("PT-3: a prefix-binding drop — our history changed under a block — is recorded on the result and named on the outcome", async () => {
   const provider = fakeProvider(
@@ -294,7 +286,6 @@ test("PT-3: a prefix-binding drop — our history changed under a block — is r
   assert.match(outcome.detail, /THINKING DROPPED \(prefix_binding_mismatch: our history changed under a block\) on turn\(s\) 2/);
 });
 
-/* --------------------------------------------------------------------- PT-4 */
 
 test("PT-4: the transport sends the thinking-binding beta header exactly when the body carries block_binding — a request without it sends none", async () => {
   const seen: { headers: Record<string, string>; body: Record<string, unknown> }[] = [];

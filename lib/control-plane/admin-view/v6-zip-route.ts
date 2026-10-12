@@ -5,10 +5,7 @@ import { guardAdminRequest } from "../gateway/admin-guard.ts";
 
 const NO_STORE = { "cache-control": "private, no-store, no-cache, must-revalidate" };
 
-/**
- * `GET ?zip=85635` -> `{ zip, state }`: the state the national ZIP index files a ZIP under, so Change place can open any ZIP the
- * owner types, not only ZIPs that already hold a hunt. Read-only; a ZIP the index lacks is a 404, never a guess.
- */
+/** A ZIP the national ZIP index lacks is a 404, never a guess. */
 export async function v6ZipGet(request: NextRequest, seams: { readonly stateOf?: (zip: string) => Promise<string | null> } = {}): Promise<NextResponse> {
   const guard = await guardAdminRequest({ headers: request.headers, cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
     checkOrigin: false, nowSeconds: Math.floor(Date.now() / 1000) });

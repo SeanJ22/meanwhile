@@ -1,14 +1,11 @@
 import { ReaderPersonIdentityError } from "./reader-person.ts";
 
 /**
- * CA-13 · A topic chip answers on the first click.
- *
- * The person keys a chip needs come from projections that load lazily. Refresh
- * every projection the subject's chain can touch, then resolve. When one of
- * those projections could not be read, the missing bridge is a fact about
- * what we hold, not about the person: the subject resolves to its own key and
- * the statements held under that key still answer. A refusal is kept only for a
- * conflict found with every needed projection in hand.
+ * A topic chip answers on the first click: every projection the subject's
+ * chain can touch is refreshed, then the person keys are resolved. When one
+ * could not be read, the subject resolves to its own key and the statements
+ * held under it still answer. A refusal is kept only for a conflict found with
+ * every needed projection in hand.
  */
 export interface PositionIdentityReaders {
   /** The registry bridge and rosters; the one projection every subject needs. */

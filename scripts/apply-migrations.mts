@@ -1,40 +1,21 @@
 /**
- * `pnpm db:apply` — apply the committed Drizzle migrations to a database
- * this repo can actually reach (g11, 2026-08-17).
+ * `pnpm db:apply` — apply the committed Drizzle migrations over the HTTP
+ * driver (`drizzle-kit migrate`'s websocket driver does not connect through the
+ * Neon pooler here).
  *
- * ## Why this exists when `pnpm db:migrate` already does
- *
- * `drizzle-kit migrate` exits 1 with no message on this machine — its
- * websocket driver never connects through the Neon pooler here. g9 and g10
- * both hit it and both applied their migration by executing the file's own
- * SQL and inserting the journal row by hand, matching the sha256 hash Drizzle
- * records. That worked twice and is exactly the kind of hand pass that goes
- * wrong the third time: the hash is easy to compute differently, and a
- * migration applied without its journal row re-runs forever.
- *
- * So the hand pass becomes a command. It uses the HTTP driver the rest of the
- * repo uses and applies each pending migration's statements plus its journal
- * row in one Postgres transaction. `hash` is sha256 of the file's raw bytes;
- * `created_at` is the journal's own `when`. A failed statement rolls the whole
- * migration back, so production cannot be left half-migrated and unjournalled.
- * A later `drizzle-kit migrate`, if its driver is ever fixed, reads this table
- * and sees the work as done.
- *
- * ## Which database, and the refusals
+ * Each pending migration's statements and its journal row are applied in one
+ * Postgres transaction: `hash` is sha256 of the file's raw bytes and
+ * `created_at` is the journal's own `when`, so a later `drizzle-kit migrate`
+ * sees the work as done. A failed statement rolls the whole migration back.
  *
  * `--target=production` resolves `WTP_PRODUCTION_DATABASE_URL_WRITE` through
- * `lib/db/write-handle.ts`, which refuses the READONLY variable by name and
- * refuses any string whose user is read-only. Anything else targets
- * `DATABASE_URL`, and then refuses to run unless `WTP_DB_ROLE=local` — the
- * same reading `lib/db/write-guard.ts` applies at runtime, not a second
- * opinion about it.
+ * `lib/db/write-handle.ts`, which refuses read-only credentials. Anything else
+ * targets `DATABASE_URL` and refuses unless `WTP_DB_ROLE=local`, the same
+ * reading `lib/db/write-guard.ts` applies at runtime.
  *
- * ## What it prints
- *
- * The role and host before anything else; the pending list before it applies
- * anything; each statement's result; and the journal count after. `--dry`
- * prints the plan and touches nothing. A migration that applies zero
- * statements is reported as zero, never as success — the empty-success shape.
+ * It prints the role and host, the pending list, each statement's result and
+ * the journal count after. `--dry` prints the plan and touches nothing. A
+ * migration that applies zero statements is reported as zero, never success.
  *
  * Run: `pnpm db:apply [--target=production] [--dry]`
  */
@@ -222,18 +203,10 @@ export async function applyMigrations(args: string[], options: { beforeContract?
   const appliedWhen = new Set(applied.map((r) => Number(r.created_at)));
 
   /*
-   * `--upto=<tag>` — stop after that migration, inclusive (Prompt C, 2026-08-20).
-   *
-   * A NOT NULL column with no default may only lose its default once the code
-   * that fills it is live, so its two halves land on either side of a deploy.
-   * Without this flag the only way to apply the first half alone is to take the
-   * second out of the journal and put it back afterwards, which is a hand pass
-   * over the exact file that must not be hand-edited. See migrations 0013 and
-   * 0014, which are that pair.
-   *
-   * An unknown tag REFUSES rather than applying everything — a typo that
-   * silently means "all of it" is how this flag would cause the failure it
-   * exists to prevent.
+   * `--upto=<tag>` — stop after that migration, inclusive, so the two halves of
+   * a NOT NULL-without-default change can land on either side of a deploy
+   * without hand-editing the journal. An unknown tag REFUSES rather than
+   * applying everything.
    */
   const uptoIndex = UPTO ? journal.entries.findIndex((e) => e.tag === UPTO) : -1;
   const boundedPending = (UPTO ? journal.entries.slice(0, uptoIndex + 1) : journal.entries)
@@ -254,11 +227,9 @@ export async function applyMigrations(args: string[], options: { beforeContract?
       `${applied.length} already applied here · ${pending.length} pending`,
   );
   for (const e of pending) console.log(`  pending: ${e.tag}`);
-  // Deliberately NOT process.exit() on the paths below: the Neon HTTP driver
-  // still holds a libuv handle at this point, and exiting through it aborts with
-  // an assertion and a Windows exit code of 3221226505 — a run that did its work
-  // correctly reporting failure to every caller that checks one. Letting the
-  // event loop drain on its own gives the true code.
+  // Deliberately NOT process.exit() below: the Neon HTTP driver still holds a
+  // libuv handle, and exiting through it aborts with a failure exit code
+  // (3221226505 on Windows). Letting the event loop drain gives the true code.
   const nothingPending = pending.length === 0;
   if (INSPECT_ONLY && !nothingPending) {
     throw new Error("db:apply: REFUSED — pending expand migrations require WTP_PRODUCTION_DATABASE_URL_WRITE; inspection writes=0");

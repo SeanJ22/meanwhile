@@ -25,11 +25,14 @@ import {
 import { methodFixture } from "./method-store-fixture.ts";
 
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
-installOperationalReferenceBundle(operationalReferenceBundle({
-  az: JSON.parse(readFileSync(path.join(ROOT, "data/states/az/jurisdictions/az.json"), "utf8")),
-  nh: JSON.parse(readFileSync(path.join(ROOT, "data/states/nh/jurisdictions/nh.json"), "utf8")),
-  nj: JSON.parse(readFileSync(path.join(ROOT, "data/states/nj/jurisdictions/nj.json"), "utf8")),
-}));
+const REGISTRIES = JSON.parse(readFileSync(path.join(ROOT, "tests/fixtures/jurisdiction-registries.json"), "utf8"));
+REGISTRIES.az.jurisdictions.push({
+  id: "az:city:city-of-avondale", stateCode: "AZ", name: "CITY OF AVONDALE", govClass: "CITY_OR_TOWN", countyName: "MARICOPA",
+  enumeratedFrom: "census-govt-units-2022", ownWebAddress: "http://www.avondale.org",
+  sourceIds: ["MEETINGS:THIS_JURISDICTION:this-government-itself"],
+});
+REGISTRIES.az.counts.CITY_OR_TOWN += 1;
+installOperationalReferenceBundle(operationalReferenceBundle(REGISTRIES));
 const SUBJECT = "az:city:city-of-avondale";
 const START = "2026-09-03T04:00:00.000Z";
 const API = "https://avondaleaz.api.civicclerk.com/v1/Events";

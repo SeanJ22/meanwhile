@@ -1,7 +1,5 @@
 /**
- * MW-021 (2026-09-25): a Send's budget and an area's budget are HARD caps.
- * Sean, 10:00 PM MST: "Fix and verify hard Send budgets, including concurrent
- * work, retries and escalations."
+ * A Send's budget and an area's budget are HARD caps.
  *
  * Every case runs the real holds on the one shared budget ledger
  * (`BudgetRepository.mutate`, in memory) with fake model transports that
@@ -73,7 +71,7 @@ const request = (maxTokens = 8_192): ModelRequest => ({ model: MODELS.sonnet.mod
 test("the initial hold uses the response allowance at the starting tier; requests extend it before sending", () => {
   assert.equal(WORST, scoutAttemptWorstCaseUsd(MODELS.haiku.model, RESEARCH_BOUNDS.perDispatch));
   /* One maximum response initially held at each execution tier. */
-  assert.ok(Math.abs(WORST - 0.04096) < 1e-9, `worst case ${WORST}`);
+  assert.ok(Math.abs(WORST - 0.02048) < 1e-9, `worst case ${WORST}`);
   assert.ok(Math.abs(scoutAttemptWorstCaseUsd(MODELS.opus.model, RESEARCH_BOUNDS.perDispatch)! - 0.16384) < 1e-9, "the escalation's worst case at Opus 5.5");
 });
 
@@ -84,7 +82,7 @@ test("a job that would exceed the Send's budget is refused before any spend", as
   const admitted = await job.admit(WORST, "one Scout job");
   assert.equal(admitted.admit, false);
   assert.equal(!admitted.admit && admitted.code, "ASSIGNMENT_BUDGET");
-  assert.match(!admitted.admit ? admitted.why : "", /\$0\.01 left.*\$0\.04\) does not fit/);
+  assert.match(!admitted.admit ? admitted.why : "", /\$0\.01 left.*\$0\.02\) does not fit/);
   assert.equal(sent.length, 0, "no request was ever sent");
   /* The area's own cap refuses the same way, even with the Send's room. */
   const other = new JobSpend(spend, "job-2", "ob-2", lines([send(100)], [area(0.04, 0.035)]));
@@ -279,7 +277,7 @@ test("an exhausted Send in NJ does not block an autonomous AZ job: autonomous wo
   const njSend = send(WORST, 0, "send:dispatch:ri-nj");
   assert.equal((await new JobSpend(spend, "nj-scout", "ob-nj", lines([njSend])).admit(WORST, "one Scout job")).admit, true);
   assert.equal((await new JobSpend(spend, "nj-scout-2", "ob-nj-2", lines([njSend])).admit(WORST, "one Scout job")).admit, false, "the NJ Send has nothing left");
-  /* An autonomous job researching Pima County, AZ, inside an AZ area with room: it runs, held on the AZ area only. */
+  /* An autonomous job researching an AZ county, inside an AZ area with room: it runs, held on the AZ area only. */
   const { sent, transport } = fakeTransport();
   await autonomous(spend, areaGate([azScope(50, 1)]), { subjectId: PIMA, state: "AZ" }, transport)(request());
   assert.equal(sent.length, 1);
@@ -294,7 +292,7 @@ test("an exhausted Send in NJ does not block an autonomous AZ job: autonomous wo
 test("an exhausted AZ area budget blocks an autonomous AZ job before it sends, whether the area is matched by member or by state", async () => {
   const { spend } = holds();
   const { sent, transport } = fakeTransport();
-  /* A resolved area with Pima as a member, $0.01 left. */
+  /* A resolved area with the county as a member, $0.01 left. */
   await assert.rejects(
     autonomous(spend, areaGate([azScope(5, 4.99)]), { subjectId: PIMA, state: "AZ" }, transport)(request()),
     (error: unknown) => error instanceof SendBudgetRefusal && error.code === "SCOPE_BUDGET" && /ZIP 85701 has \$0\.01 of its \$5\.00/.test(error.why),
@@ -381,7 +379,7 @@ test("the auditor's review goes through the jurisdiction's transport, and a budg
 
 test("the runner wires autonomous work to its jurisdiction's area only, never to a Send's budget", () => {
   const runner = readFileSync(join(process.cwd(), "scripts", "freshness-shadow.mts"), "utf8");
-  /* CH-24: the guards are built in paid-work-guards.ts, which the round calls. */
+  /* The guards are built in paid-work-guards.ts, which the round calls. */
   const guards = readFileSync(join(process.cwd(), "lib", "control-plane", "workers", "paid-work-guards.ts"), "utf8");
   assert.match(runner, /const \{ budgetLinesFor, guardedMessagesFor, autonomousTransportFor, paidWorkerCapacity \} = guards;/);
   const start = guards.indexOf("const autonomousTransportFor =");

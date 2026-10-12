@@ -1,16 +1,4 @@
-/**
- * **THE PLAIN-ENGLISH RENDER LAW, AND THE STATE A UNIT OF WORK BELONGS TO.**
- * (Admin C — ADM-25, ADM-26, ADM-28, ADM-29, ADM-30, ADM-33; §9A.1 and §9A.3.)
- *
- * The owner named these on one screen each and every one of them exists on
- * every screen (RULING 262), so the guard is on the shared layer rather than on
- * a component: if `plainCode` can be made to emit an underscore, every surface
- * can.
- *
- * Each block carries a POSITIVE CONTROL — the real defect string the owner
- * photographed — so the instrument is proven to catch the thing it exists for
- * rather than proven to agree with itself.
- */
+/** Plain-English rendering of machine codes, money, model ids and ages, and which state a unit of work belongs to. */
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
@@ -27,24 +15,14 @@ import {
   usdCents,
   usdOf,
 } from "../lib/control-plane/plain-words.ts";
-import {
-  FRESHNESS_DEBT_MEANS,
-  INCIDENT_MEANS,
-  OBLIGATION_MEANS,
-  STUCK_HOURS,
-  groupIncidents,
-  incidentLine,
-  type IncidentRow,
-} from "../lib/control-plane/incident-groups.ts";
 import { stateCodeOf, unitBelongsToState } from "../lib/control-plane/unit-state.ts";
 import { unitCarriesState } from "../lib/control-plane/scheduler/dispatch-target.ts";
 import { spendWindowRows } from "../lib/control-plane/cost-panel.ts";
 import { FLEET_SAFETY_BOUNDS, type FleetSafetySnapshot } from "../lib/control-plane/fleet-safety.ts";
 
-/* --------------------------------------------------------------- ADM-25 */
+/* ------------------------------------------------------- machine codes */
 
 test("ADM-25 · no constant the owner photographed renders with an underscore", () => {
-  // The exact strings from the 9.6.26 feedback and the screenshots.
   const photographed = [
     "CYCLE_DEFERRED",
     "WALL_CLOCK_CEILING",
@@ -86,7 +64,6 @@ test("ADM-25 · text that is not a machine constant is left alone", () => {
 });
 
 test("ADM-25 · POSITIVE CONTROL — the runner's own stop sentence loses every code", () => {
-  // Verbatim from the 18-38-03 screenshot.
   const asPhotographed =
     "CYCLE_DEFERRED: the cycle's dispatch budget was spent at September 6, 2026, 9:10 PM ET " +
     "before this item was reached. It keeps its next-due and is dispatched by a later cycle; " +
@@ -106,7 +83,7 @@ test("ADM-25 · an environment variable never renders its own name", () => {
   assert.ok(line.includes("a credential held on the server"), line);
 });
 
-/* --------------------------------------------------- ADM-26 and ADM-33 */
+/* ----------------------------------------------- money, models, counts */
 
 test("ADM-26 · dollars render to the cent, never to four places", () => {
   assert.equal(usdCents(0.4394), "$0.44");
@@ -134,82 +111,12 @@ test("ADM-30 · an age in hours reads as ordinary time", () => {
   assert.equal(ageWords(0.5), "under an hour");
   assert.equal(ageWords(1), "1 hour");
   assert.equal(ageWords(118), "4 days");
-  // 577 h is the oldest incident in the screenshot; nobody reads that as weeks.
   assert.equal(ageWords(577), "3 weeks");
 });
 
-/* ---------------------------------------------------- ADM-28 and ADM-30 */
-
-test("ADM-28 · the three headline words are defined once, in plain English", () => {
-  for (const [name, text] of [
-    ["obligation", OBLIGATION_MEANS],
-    ["freshness debt", FRESHNESS_DEBT_MEANS],
-    ["incident", INCIDENT_MEANS],
-  ] as const) {
-    assert.ok(text.length > 20, `${name} has no definition`);
-    assert.ok(!/[A-Z][A-Z0-9]*_[A-Z0-9]/.test(text), `${name}'s definition carries a machine code`);
-    assert.ok(!/\bour\b/i.test(text), `${name}'s definition says "our"`);
-  }
-});
-
-test("ADM-30 · thirty incident lines become owner groups with actions", () => {
-  // The real shape from the 18-38-27 screenshot.
-  const incidents: IncidentRow[] = [
-    { cause: "UPSTREAM_ERROR", target: "Candidate Marginalia Index", obligationsAffected: 104, oldestHours: 577 },
-    { cause: "REFUSED_BY_HOST", target: "Candidate Authored Awaits Site", obligationsAffected: 64, oldestHours: 126 },
-    { cause: "NEVER_DISPATCHED", target: "Candidate Wikipedia API", obligationsAffected: 7, oldestHours: 577 },
-    { cause: "REFUSED_BY_HOST", target: "Town of Sutton", obligationsAffected: 3, oldestHours: 4 },
-    { cause: "WORKER_LOST", target: "A worker", obligationsAffected: 1, oldestHours: 2 },
-  ];
-  const groups = groupIncidents(incidents);
-  const byKey = new Map(groups.map((g) => [g.key, g]));
-
-  // Old and still failing → the owner is told, with an action.
-  const needs = byKey.get("NEEDS_YOU");
-  assert.ok(needs, "a 577-hour-old refusal must reach Needs you");
-  assert.equal(needs.incidents.length, 2, "both the 577h and the 126h rows are past the threshold");
-  assert.ok(needs.action !== null, "a Needs-you group must carry an action");
-  assert.equal(needs.obligations, 168);
-
-  // Fresh and self-retrying → not the owner's problem.
-  const retry = byKey.get("WILL_RETRY");
-  assert.ok(retry, "a 4-hour-old refusal retries by itself");
-  assert.equal(retry.incidents.length, 1);
-  assert.equal(retry.action, null);
-
-  // Never dispatched is its own thing, not breakage.
-  assert.equal(byKey.get("NOT_REACHED")?.incidents.length, 1);
-  assert.equal(byKey.get("WAITING")?.incidents.length, 1);
-
-  // Every rendered row is accounted for: stated N equals rendered rows.
-  assert.equal(
-    groups.reduce((n, g) => n + g.incidents.length, 0),
-    incidents.length,
-  );
-  for (const g of groups) {
-    assert.ok(!/[A-Z][A-Z0-9]*_[A-Z0-9]/.test(g.says), `group says a code: ${g.says}`);
-    assert.ok(!/[A-Z][A-Z0-9]*_[A-Z0-9]/.test(g.means), `group means a code: ${g.means}`);
-  }
-});
-
-test("ADM-30 · the escalation threshold is age, not cause", () => {
-  const fresh: IncidentRow = { cause: "REFUSED_BY_HOST", target: "x", obligationsAffected: 1, oldestHours: STUCK_HOURS - 1 };
-  const stale: IncidentRow = { cause: "REFUSED_BY_HOST", target: "x", obligationsAffected: 1, oldestHours: STUCK_HOURS };
-  assert.equal(groupIncidents([fresh])[0].key, "WILL_RETRY");
-  assert.equal(groupIncidents([stale])[0].key, "NEEDS_YOU");
-});
-
-test("ADM-30 · one incident line answers what happened, not what the code is", () => {
-  const line = incidentLine({ cause: "REFUSED_BY_HOST", target: "CFS Transaction Detail", obligationsAffected: 1, oldestHours: 118 });
-  assert.equal(line.cause, "The source refused the request");
-  assert.ok(line.says.includes("4 days"), line.says);
-  assert.ok(!line.says.includes("_"), line.says);
-});
-
-/* -------------------------------------------------------------- ADM-29 */
+/* ------------------------------------------------- state attribution */
 
 test("ADM-29 · POSITIVE CONTROL — a New Jersey candidate named De Venezia is not Delaware", () => {
-  // The exact id read back from the production control plane on 2026-09-06.
   const id =
     "freshness:candidate-enrichment:nj:2026:state-nj-place-boonton:member-of-the-town-council-ward-2:de-venezia-marie#candidate-wikipedia-api";
   const subject = "nj:2026:state-nj-place-boonton:member-of-the-town-council-ward-2:de-venezia-marie";
@@ -247,7 +154,7 @@ test("ADM-29 · the dispatch matcher and the attribution agree, by construction"
   assert.ok(!unitCarriesState(nj, "de"));
 });
 
-/* ------------------------------------------------- ADM-24 and ADM-27 */
+/* ------------------------------------------------------ spend windows */
 
 const SAFETY: FleetSafetySnapshot = {
   formatVersion: 1,
@@ -274,11 +181,7 @@ test("a cycle-time stop never borrows the paid-pause timestamp or claims a dolla
   assert.match(plainMeaning("CYCLE_DEFERRED")!, /not a dollar spending limit/);
 });
 
-/**
- * ONE implementation of the three windows (RULING 103): the cost panel owns it,
- * and the runner card renders the same rows, so the two can never disagree
- * about what a cycle has spent.
- */
+/** The cost panel owns the three windows; the runner card renders the same rows. */
 const windowsOf = (safety: FleetSafetySnapshot) =>
   spendWindowRows({
     cycleUsd: safety.cycle.modelUsd,
@@ -290,9 +193,7 @@ const windowsOf = (safety: FleetSafetySnapshot) =>
 test("ADM-26 · the spend windows are a three-row table to the cent, each framed against the one daily ceiling", () => {
   const rows = windowsOf(SAFETY);
   assert.equal(rows.length, 3);
-  // Every window is framed against the single rolling daily ceiling; the per-cycle
-  // and operational-night caps are retired. The ceiling is read from the constant
-  // so this holds whether it is $25 (the 2026-09-19 interim brake), $100, or another cap.
+  // Every window is framed against the single rolling daily ceiling, read from the constant.
   const ceiling = usdCents(FLEET_SAFETY_BOUNDS.rolling24HourModelUsd);
   assert.equal(rows[0].shown, `$0.00 of ${ceiling}`);
   assert.equal(rows[1].shown, `$0.00 of ${ceiling}`);

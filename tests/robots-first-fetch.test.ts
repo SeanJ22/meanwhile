@@ -1,17 +1,9 @@
 /**
- * **A RESEARCH FETCH READS ROBOTS.TXT FIRST, TO EVERY ORIGIN, AND RECORDS IT.**
- * (2026-09-24, R15; robots made a record rather than a refusal by the owner
- * decision of 2026-09-25.)
- *
- * `lib/hunt/robots-first-fetch.ts` against a recorded fake transport; no test
- * reaches the network. On 2026-09-24 a research agent's own script read an
- * unread robots.txt redirect as "no robots file". These tests hold the
- * construction: robots.txt is the first request to every origin, a redirect's
- * new origin is read again, a chain that ends unread is recorded CANNOT_TELL
- * (never "no robots file"), a disallow is recorded with its rule and the public
- * page is still read, recorded walls are never asked anything, an access
- * control on the page is named and never pushed through, and one host is
- * spaced.
+ * `lib/hunt/robots-first-fetch.ts` against a recorded fake transport; no test reaches the network.
+ * robots.txt is the first request to every origin, a redirect's new origin is read again, a chain that ends
+ * unread is recorded CANNOT_TELL (never "no robots file"), a disallow is recorded with its rule and the
+ * public page is still read, recorded walls are never asked anything, an access control on the page is named
+ * and never pushed through, and one host is spaced.
  */
 
 import assert from "node:assert/strict";
@@ -179,7 +171,7 @@ test("THE COMMAND LINE HAS NO WAY AROUND IT: it fetches only through researchFet
   const cli = readFileSync("scripts/research-fetch.mts", "utf8");
   assert.match(cli, /await researchFetch\(target, \{/);
   assert.equal((cli.match(/\bfetch\(/g) ?? []).length, 0, "no transport of its own");
-  // 2026-09-25: the module's transport, asked once more through curl as who we are on a 403
+  // The module's transport, asked once more through curl on a 403
   // (lib/hunt/research-transport.ts). It is handed to researchFetch like the Node one, so robots.txt
   // is still read first and every redirect's origin asked again.
   assert.match(cli, /\n\s+get: identifiedResearchGet\(\),\n/, "it hands researchFetch the module's one transport");

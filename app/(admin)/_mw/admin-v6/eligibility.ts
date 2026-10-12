@@ -1,19 +1,13 @@
 /**
- * **ONE RULE FOR WHETHER A BUTTON THAT CHANGES THINGS IS ON.**
- *
- * Checked in this order, and the first failure is the reason shown
- * (INTERACTIONS-AND-DATA.md, "One eligibility rule"):
+ * Checked in this order; the first failure is the reason shown:
  *
  *   1. the connection is live
  *   2. the role allows it (viewer: nothing; spending needs its own permission)
  *   3. no earlier send of the same action on the same target is pending
- *   4. something real can carry it out (live mode only: a named dependency)
+ *   4. something real can carry it out
  *   5. the item is in the right state
  *
- * The server re-checks all of it; this is only so the owner is never offered a
- * control that would be refused for a reason the page already knows.
- *
- * PURE.
+ * The server re-checks all of it.
  */
 import type { ActionDef } from "./actions.ts";
 import { mst, PENDING_STATUSES, type UiReceipt } from "./model.ts";
@@ -50,9 +44,7 @@ export function whyNot(input: {
   readonly target: string;
   readonly receipts: readonly UiReceipt[];
   readonly mode: "live" | "sample";
-  /** Live mode: the backend positively supports this action (wired, or announced on the pulse). */
   readonly supported: boolean;
-  /** The item-specific reason, when the item is not in a state this action applies to. */
   readonly itemState?: string | null;
 }): string | null {
   const { connection, access, def } = input;

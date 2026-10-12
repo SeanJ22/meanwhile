@@ -1,83 +1,52 @@
-/**
- * **"DONE" MEANS THE RUNNER SAYS SO.** (S11, rulings §0 test 5 and §6.)
- *
- * A click saves a receipt. A saved receipt proves the console recorded the
- * request; it does not prove anything has acted on it. This module asks the one
- * question the owner cares about — *has the runner picked this up?* — by
- * reading what the runner already writes, for each kind of action. It writes
- * nothing, and it adds no ledger: the receipts stay immutable and the runner's
- * own records are the proof.
- *
- * ```
- *   runner.pause / runner.resume / runner.runCycleNow / research.pause /
- *   fleet.deployHere        the runner's HONORED record beside the intent. The
- *                           receipt's subject IS the intent id, and the record's
- *                           `honors` names it: one point read, found by content
- *   expansion.scope.set     the runner's assignment reading names this receipt
- *                           (written when a round starts), else a round that
- *                           started after the save has read the new list
- *   config.setDiscoverySearch
- *                           the runner's own heartbeat names this receipt
- *   config.setFleetSpendCeiling / config.setPlaceTarget / expansion.scope.remove
- *                           a round started after the save: the runner reads
- *                           these when a round starts
- *   everything else         finished inside the console; nothing for the runner
- *                           (config.setDataSwitch is read at each read of a number, so it is in force when saved)
- * ```
- *
- * A round that has not started since the save is "waiting", and a paused runner
- * starts none: the words say so rather than pretend.
- *
- * PURE apart from the reads it is handed.
- */
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { RESEARCH_INTENT_LOG_KEY, RESEARCH_STATE_ID, type ResearchIntent } from "../scheduler/research-policy.ts";
 import { RUNNER_ID } from "../admin-data.ts";
 import type { ActionReceipt } from "./contract.ts";
 import type { RunnerHeartbeat } from "../owner-surface.ts";
 import { formatEastern } from "../eastern-time.ts";
+import { isLeadOrder, leadCounts, leadCountsWords, leadItems, LEADS_ACTION, rowOpen, type LeadOrder } from "../leads/order.ts";
 
 export type ConfirmationState =
-  /** The runner has picked it up. */
   | "applied"
-  /** Saved, and the runner has not picked it up yet. */
   | "waiting"
-  /** Finished inside the console; there is nothing for the runner to do. */
   | "not-needed"
-  /** The runner's records could not be read, so nothing is claimed either way. */
   | "unread"
   /** Saved, the runner has not taken it, and it is overdue: its heartbeat is silent or a round due after the save has passed. */
-  | "not-picked-up";
+  | "not-picked-up"
+  /** The runner has started on it and has not finished. */
+  | "working";
 
-/** BR-12: what accepting an order means, in four plain parts. Built only from data already read. */
 export interface OrderPlan {
-  /** Who does it: "Runner" or "Admin". */
   readonly who: string;
-  /** What changes, one phrase. */
   readonly change: string;
   /** How many items it creates, or null when the order creates none or it is not counted. */
   readonly creates: number | null;
-  /** When the first results are due: the heartbeat's next round time, or null when unknown. */
   readonly resultsBy: string | null;
 }
 
-/** One progress bar per order: setting is one step; a send is created out of created plus deferred; a hunt is the place's score change. */
 export interface OrderProgress {
   readonly done: number | null;
   readonly of: number | null;
+}
+
+/** One part of an order, as order tracking lists it. */
+export interface OrderItem {
+  readonly name: string;
+  readonly status: "done" | "failed" | "queued" | "running";
+  readonly label: string;
+  readonly note: string;
 }
 
 export interface Confirmation {
   readonly state: ConfirmationState;
   readonly plan?: OrderPlan;
   readonly progress?: OrderProgress;
-  /** When the runner picked it up, when it has. */
+  /** Each part's own status, for an order made of many. */
+  readonly items?: readonly OrderItem[];
   readonly at: string | null;
-  /** One plain sentence for the owner. */
   readonly words: string;
 }
 
-/** Actions whose receipt subject is a research intent id the runner honors. */
 export const INTENT_ACTIONS: ReadonlySet<string> = new Set([
   "runner.pause",
   "runner.resume",
@@ -87,7 +56,6 @@ export const INTENT_ACTIONS: ReadonlySet<string> = new Set([
   "fleet.deployHere",
 ]);
 
-/** Actions the runner reads when a round starts. */
 const ROUND_ACTIONS: ReadonlySet<string> = new Set([
   "config.setFleetSpendCeiling",
   "config.setPlaceTarget",
@@ -98,7 +66,6 @@ const ROUND_ACTIONS: ReadonlySet<string> = new Set([
   "expansion.scope.remove",
 ]);
 
-/** What each action's pickup means, in the owner's words. */
 const APPLIED_WORDS: Readonly<Record<string, string>> = {
   "runner.pause": "Paused.",
   "runner.resume": "Resumed.",
@@ -144,6 +111,7 @@ interface AssignmentReading {
 
 /** Has the runner picked this receipt's action up? Never throws: an unreadable record is "unread". */
 export async function confirmReceipt(repos: ControlPlaneRepositories, receipt: ActionReceipt, nowMs: number = Date.now()): Promise<Confirmation> {
+  if (receipt.type === LEADS_ACTION && receipt.outcome !== "REFUSED") return confirmLeads(repos, receipt, nowMs);
   let core = await confirmCore(repos, receipt);
   if (receipt.outcome === "REFUSED") return core;
   let nextRound: string | null = null;
@@ -151,17 +119,35 @@ export async function confirmReceipt(repos: ControlPlaneRepositories, receipt: A
     const beat = (await repos.runnerHeartbeat.read(RUNNER_ID))?.value ?? null;
     nextRound = beat?.nextCycleDueAt ?? null;
     if (core.state === "waiting") core = notPickedUp(core, beat, receipt, nowMs);
-  } catch { /* the plan says — */ }
+  } catch { }
   return { ...core, plan: orderPlan(receipt, nextRound), progress: orderProgress(receipt, core) };
+}
+
+/** A leads order, from its own rows: each row's status, how many are finished, and whether the runner has started. */
+async function confirmLeads(repos: ControlPlaneRepositories, receipt: ActionReceipt, nowMs: number): Promise<Confirmation> {
+  let beat: RunnerHeartbeat | null = null;
+  let order: LeadOrder | null = null;
+  try {
+    beat = (await repos.runnerHeartbeat.read(RUNNER_ID))?.value ?? null;
+    const row = await repos.leadOrders.read(receipt.receiptId);
+    order = row !== null && isLeadOrder(row.value) ? row.value : null;
+  } catch { }
+  if (order === null) return { state: "unread", at: null, words: "Saved. Runner status —", plan: leadsPlan(receipt, null, beat) };
+  const counts = leadCounts(order);
+  const base = { plan: leadsPlan(receipt, counts.queued, beat), progress: { done: order.rows.filter((r) => !rowOpen(r)).length, of: counts.total }, items: leadItems(order) };
+  if (!order.open) return { ...base, state: "applied", at: order.updatedAt, words: `Done: ${leadCountsWords(counts)}` };
+  if (counts.tested > 0) return { ...base, state: "working", at: null, words: `Testing links: ${leadCountsWords(counts)}` };
+  const waiting: Confirmation = { state: "waiting", at: null, words: `Saved. Waiting for the runner to test ${counts.queued.toLocaleString("en-US")} link${counts.queued === 1 ? "" : "s"}.` };
+  return { ...base, ...notPickedUp(waiting, beat, receipt, nowMs) };
+}
+
+function leadsPlan(receipt: Pick<ActionReceipt, "label">, toTest: number | null, beat: Pick<RunnerHeartbeat, "nextCycleDueAt"> | null): OrderPlan {
+  return { who: "Runner", change: receipt.label, creates: toTest !== null && toTest > 0 ? toTest : null, resultsBy: beat?.nextCycleDueAt ?? null };
 }
 
 /** A runner that has not beaten for this long is silent. Rounds beat far more often than this. */
 export const RUNNER_SILENT_MS = 15 * 60 * 1000;
 
-/**
- * BR-02: a waiting order that is overdue says why. Overdue means the runner's last beat is old, or a round that was
- * due after the save has come and gone with nothing picking the order up. Pure.
- */
 export function notPickedUp(
   waiting: Confirmation,
   beat: Pick<RunnerHeartbeat, "beatAt" | "nextCycleDueAt"> | null,
@@ -170,7 +156,6 @@ export function notPickedUp(
 ): Confirmation {
   const savedAt = Date.parse(receipt.completedAt ?? receipt.startedAt);
   const beatAt = beat ? Date.parse(beat.beatAt) : NaN;
-  // A runner that has never beaten is silent once the order has waited as long as a beat may be late.
   const silent = Number.isFinite(beatAt) ? nowMs - beatAt > RUNNER_SILENT_MS : nowMs - savedAt > RUNNER_SILENT_MS;
   const due = beat?.nextCycleDueAt ? Date.parse(beat.nextCycleDueAt) : NaN;
   const roundPassed = Number.isFinite(due) && due > savedAt && due < nowMs;
@@ -181,7 +166,6 @@ export function notPickedUp(
 
 const SETTING_ACTIONS: ReadonlySet<string> = new Set(["config.setSetting", "config.setFleetSpendCeiling", "config.setPlaceTarget", "config.setDiscoverySearch", "config.setDataSwitch"]);
 
-/** The plan for an accepted order. Pure. */
 export function orderPlan(receipt: Pick<ActionReceipt, "type" | "openedWork" | "label">, nextRoundAt: string | null): OrderPlan {
   const runner = INTENT_ACTIONS.has(receipt.type) || ROUND_ACTIONS.has(receipt.type);
   const created = receipt.openedWork.length;
@@ -193,12 +177,10 @@ export function orderPlan(receipt: Pick<ActionReceipt, "type" | "openedWork" | "
   };
 }
 
-/** Progress per order type, from what the confirmation already says. Pure. */
 export function orderProgress(receipt: Pick<ActionReceipt, "type" | "openedWork">, confirmation: Pick<Confirmation, "state">): OrderProgress {
   const finished = confirmation.state === "applied" || confirmation.state === "not-needed";
   if (SETTING_ACTIONS.has(receipt.type)) return { done: finished ? 1 : 0, of: 1 };
   if (receipt.type === "fleet.deployHere") return { done: finished ? receipt.openedWork.length : 0, of: receipt.openedWork.length || null };
-  // A hunt or mission is measured by the place's score since it was accepted; no score is held here.
   return { done: null, of: null };
 }
 

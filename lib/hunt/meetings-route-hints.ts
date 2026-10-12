@@ -1,39 +1,20 @@
 /**
- * **WHERE A GOVERNMENT'S MEETINGS ARE ALREADY KNOWN TO BE.** (2026-09-24.)
+ * Where a government's meetings are already known to be, beyond the Census
+ * web address the jurisdiction reference records:
  *
- * The meetings-discovery walk starts from the address the jurisdiction
- * reference records: the Census 2022 Government Units WEB column. That address
- * cannot carry two things.
- *
- * 1. **The current official site, when the recorded one is stale.** Census
- *    recorded addresses that have since died, moved or were mistyped (six
- *    Arizona cities and three New Hampshire governments by 2026-09-24). The
- *    reference has no correction path of its own: its authority reads only
- *    Census and the Arizona Secretary of State. So the walk kept knocking on
- *    a dead or parked host. An official-site hint names the current site and
- *    the evidence that it is the government's own, strongest first: its .gov
+ * 1. The current official site, when the recorded one is stale, with the
+ *    evidence that it is the government's own, strongest first: its .gov
  *    registration, the old host's own redirect, or another government's
  *    official page that links it.
- * 2. **Routes found on the government's own publications that its homepage
- *    does not link.** For example, a committee's own notice feed.
+ * 2. Routes on the government's own publications that its homepage does not
+ *    link, such as a committee's notice feed.
  *
- * The walk tries a government's hints first. Every request is robots-first,
- * like every other, and each route is confirmed by content where a check
- * exists for its kind. Being listed never makes a hint a find. A hint whose
- * kind no check covers is recorded as a lead, and a witness corroborates a
- * sitting but is never a sitting on its own. What a hint yields is written the
- * way every walk's results are, to the attempt and to the field manual's routes
- * and leads, so later walks and scouts inherit it (RULING 252). A hint that
- * stops answering is recorded as the walk found it; nothing here is a
- * disposition.
- *
- * Each hint is something a person or session observed, and it says who
- * observed it, when, and on what evidence, so a reviewer can check it again.
- * Hints are committed and reviewed with the change that adds them. Only the
- * discovery walk reads them: they never write reader truth and never wire a
- * body.
- *
- * PURE: no fetch, no clock, no store.
+ * The discovery walk tries hints first, robots-first, and confirms each route
+ * by content where a check exists for its kind. Being listed never makes a
+ * hint a find: a hint no check covers is recorded as a lead, and a witness
+ * corroborates a sitting but is never one. Each hint says who observed it,
+ * when, and on what evidence. Hints never write reader truth or wire a body.
+ * Pure.
  */
 
 import { fingerprint } from "../control-plane/ids.ts";
@@ -74,9 +55,8 @@ export interface OfficialSiteHint {
   readonly origin: string;
   /**
    * The name the walk requires the homepage to carry: the government's name as its homepage gave it when
-   * observed ("City of El Mirage"), or, when the homepage served a challenge and could not be observed, the
-   * government's short name. The walk treats the site as the government's only while its homepage carries
-   * it: a lapsed domain can be anyone's.
+   * observed, or its short name when the homepage served a challenge. The site is treated as the
+   * government's only while its homepage carries it: a lapsed domain can be anyone's.
    */
   readonly selfName: string;
   /** The address the reference records, which this replaces for the walk. */
@@ -94,36 +74,22 @@ export interface JurisdictionRouteHints {
   readonly routes: readonly RouteHint[];
 }
 
-/**
- * The New Hampshire routes the Backend session found on 2026-09-24. Each host's robots.txt was read first and
- * evaluated for `*`; one GET per URL; every redirect hop checked. They are bodies the town's own iCal never
- * carries.
- */
+/** Routes for bodies a town's own iCal never carries; each host's robots.txt read first, every redirect hop checked. */
 const NH_LEDGER: HintObservation = { at: "2026-09-24T04:33:00Z", by: "Backend session ledger, 2026-09-24 04:03-04:33Z, robots-checked" };
 
 /**
- * Chandler's own publications, found by the RouteTask session's research on 2026-09-24 (robots.txt read first on
- * every host; about 90 requests, none to destinyhosted.com). Every agenda, result and set of minutes is published
- * only on destinyhosted.com, whose robots.txt reads as disallow-all. On 2026-09-24 that host waited on the owner;
- * since the owner decision of 2026-09-25 (robots.txt alone must not block acquisition) it may be read, and what
- * is missing is an adapter that follows the city's Destiny agenda links. The city's own pages date the sittings.
- * The official-page-events check reads no dated event from them yet, so the walk records them as leads until it
- * does; then they are finds with no change here. The observation strings below are the 2026-09-24 record as made.
+ * A city's own publications that date its sittings. Its agendas and minutes live only on a vendor host that
+ * needs an adapter following the city's agenda links. The official-page-events check reads no dated event from
+ * these pages yet, so the walk records them as leads until it does.
  */
 const CHANDLER_RESEARCH: HintObservation = { at: "2026-09-24T18:24:00Z", by: "RouteTask session research, robots-checked, destinyhosted.com never requested" };
 
-/**
- * The current official sites of governments whose recorded addresses went stale, verified by the RouteTask
- * session's research on 2026-09-24: robots.txt read first on every host, no challenge passed. The .gov rows
- * are from CISA's registry (current-full.csv, read 2026-09-24T18:03:54Z, sha256 62de2f53…07e4f).
- */
+/** Current official sites of governments whose recorded addresses went stale; robots.txt read first, no challenge passed. */
 const SITE_RESEARCH = "RouteTask session research, robots-checked";
 const DOTGOV = "the .gov registry (CISA current-full.csv, read 2026-09-24T18:03:54Z) lists";
 /**
- * The class behind the six (2026-09-24): 262 of the 1,975 governments owed discovery had a recorded host that does
- * not resolve at all (checked against 1.1.1.1 and 8.8.8.8). Forty matched exactly one .gov registry row by name and
- * state; each of those homepages was read robots-first, and the ones that name the government (or plainly the place)
- * are hinted below. Unreadable robots, challenges, refusals and failed fetches are not.
+ * Recorded hosts that do not resolve, matched to exactly one .gov registry row by name and state, whose
+ * homepages (read robots-first) name the government.
  */
 const DOTGOV_SWEEP = "RouteTask .gov sweep: one exact registry match by name and state, homepage read robots-first";
 
@@ -132,18 +98,15 @@ function siteHint(jurisdictionId: string, officialSite: OfficialSiteHint): Juris
 }
 
 /*
- * Cottonwood, Douglas, El Mirage, Eloy, Flagstaff and Holbrook left this list on 2026-09-24, and Newbury's and
- * Kearsarge's official-site parts with them: their current sites are reviewed website corrections now (C15,
- * `lib/civic-data/website-corrections.ts`), so the gap ledger records the corrected address itself and a hint
- * replacing the old one would name an address no longer on record. Newbury's and Kearsarge's routes stay.
+ * A government whose current site is a reviewed website correction (`lib/civic-data/website-corrections.ts`)
+ * carries no official-site hint here: the corrected address is already on record.
  */
 /** The committed hints. Each entry names what it was observed on; the walk re-checks all of it. */
 export const ROUTE_HINTS: readonly JurisdictionRouteHints[] = [
   {
     /*
-     * C16's first reviewed calendar (2026-09-24): the walk confirms this feed so the reviewed crosswalk rows for the
-     * city's commissions can connect to it. The feed never names a body on its own; each crosswalk row's reviewed
-     * title filter does, on the city's own event page naming the commission.
+     * The walk confirms this feed so reviewed crosswalk rows for the city's commissions can connect to it. The
+     * feed never names a body; each crosswalk row's reviewed title filter does.
      */
     jurisdictionId: "az:city:city-of-flagstaff",
     officialSite: null,
@@ -185,11 +148,8 @@ export const ROUTE_HINTS: readonly JurisdictionRouteHints[] = [
     observed: { at: "2026-09-24T19:33:49Z", by: DOTGOV_SWEEP },
   }),
   /*
-   * The 85635 expansion (2026-09-26): the district's recorded k12.az.us host no longer resolves. The federal
-   * school-district directory names its current site, and that site names the district. Its board's agendas are on
-   * Diligent (fhasd.community.highbond.com) and BoardDocs (boarddocs.com/az/fhas).
-   * Diligent's public MeetingsService now uses the standing adapter after linked-page identity verification;
-   * the annual schedule remains complementary evidence when the portal omits later dates.
+   * The district's recorded host no longer resolves; the federal school-district directory names its current
+   * site, which names the district. Its board's agendas are on Diligent and BoardDocs.
    */
   siteHint("az:depschool:fort-huachuca-accommodation-school", {
     origin: "https://www.fhasd.org",
@@ -204,12 +164,9 @@ export const ROUTE_HINTS: readonly JurisdictionRouteHints[] = [
   }),
   {
     /*
-     * The 85635 expansion (2026-09-26). The city publishes its sittings on its own "Calendar Meeting List" page as
-     * schema.org Event JSON-LD, which the official-page-events adapter already reads. The page never names the city
-     * in an event's title, so the walk could not confirm it for the city by name; the body this hint names, "City
-     * Council", is the name its governing body's events carry. No other route exists that an adapter reads: neither
-     * this page nor the council's own meetings page links an iCal or RSS feed or an agenda portal (only a YouTube
-     * channel and the city's own agendas-and-minutes document page), read 2026-09-26.
+     * The city's "Calendar Meeting List" page carries schema.org Event JSON-LD, which the official-page-events
+     * adapter reads. Event titles never name the city, so the hint names the body its governing body's events
+     * carry. No iCal, RSS or agenda portal is linked.
      */
     jurisdictionId: "az:city:city-of-sierra-vista",
     officialSite: null,

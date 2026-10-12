@@ -1,56 +1,7 @@
-/**
- * **RULING 117 — THE ASSET STORE HAS A PUBLIC ADDRESS, AND A RESTORE IS
- * VERIFIED BY HASH RATHER THAN BY STATUS CODE.** (Sean's decision of
- * 2026-08-24, closing `R57`.)
- *
- * ## What was open, and for how long
- *
- * `RULING 20` moved portrait and PDF bytes out of git and into a
- * content-addressed store, and it worked: 956 rows, every one carrying its
- * hash, its size and the provenance the photo rule requires. What it could not
- * do was finish, because the store was **a local path on one development
- * machine** and Netlify cannot reach a local path. So the committed portraits
- * were deliberately NOT deleted — removing them would have blanked every
- * candidate and official card in production — and the repo carried both the
- * bytes and the mechanism built to replace them.
- *
- * The cost was not only repository size. `NH101` had **97 sitting members of
- * Congress** whose portraits were retrieved, licence-confirmed (CC0 1.0
- * Universal, GPO works, door 1) and byte-verified, and **could not ship**,
- * because there was nowhere to put them that a build could read.
- *
- * The design: a dedicated **public** GitHub repository, created automatically.
- * It is <https://github.com/SeanJ22/wtp-assets>.
- *
- * ## Public is the correct posture, not a convenience
- *
- * Everything in the store was already published — by a government body, by a
- * campaign about itself, or under an explicit open licence. A private store
- * would need a credential in the build, and a credential is a thing that
- * expires, leaks, or sits unused while somebody hits a rate limit beside it
- * (RULING 90.5). There is nothing here to protect that publication has not
- * already given away.
- *
- * ## Why the hash is checked and the status code is not trusted
- *
- * A 200 that is not the thing is not a document. GitHub serves a styled HTML
- * page for a missing raw path in some configurations, and a proxy or a captive
- * network can answer 200 with anything at all. A content-addressed store makes
- * the check free and total: **the name of the file IS the hash of its correct
- * contents**, so bytes that do not hash to the name they were requested under
- * are refused, whatever the transport said. This is the control-query
- * discipline (RULING 68) applied where it costs nothing.
- *
- * A refusal here is a **CANNOT RUN for that row**, never a decision to serve
- * nothing (RULING 24).
- */
+/** The asset store's public address; a restore is verified by hash, never by status code. */
 import { createHash } from "node:crypto";
 
-/**
- * The public store. Overridable by `WTP_ASSET_REMOTE` so a fork, a mirror or a
- * test can point elsewhere — but it has a working default, because a default
- * that must be configured is a restore path that silently does not run.
- */
+/** The public store, overridable by `WTP_ASSET_REMOTE`; it has a working default so a restore never silently skips. */
 export const DEFAULT_ASSET_REMOTE =
   "https://raw.githubusercontent.com/SeanJ22/wtp-assets/main";
 
@@ -62,13 +13,7 @@ export function assetRemoteBase(env: NodeJS.ProcessEnv = process.env): string {
   );
 }
 
-/**
- * The remote address of one asset.
- *
- * The shard is the first two hex characters, which is the same layout the
- * local store uses — so the same hash resolves to the same relative path in
- * both places and neither can drift from the other.
- */
+/** The remote address of one asset, sharded by the first two hex characters exactly as the local store is. */
 export function remoteAssetUrl(
   sha256: string,
   extension: string,
@@ -94,13 +39,7 @@ export interface RemoteAssetResult {
   refusal?: string;
 }
 
-/**
- * Fetch one asset and prove it is the asset asked for.
- *
- * Never throws on a transport failure — it returns a refusal carrying what it
- * saw, because a caller restoring 900 files needs a per-row verdict rather
- * than an exception that ends the run.
- */
+/** Fetch one asset and prove it is the asset asked for; a transport failure is a refusal, never a throw. */
 export async function fetchAssetFromRemote(
   sha256: string,
   extension: string,
@@ -144,11 +83,7 @@ export async function fetchAssetFromRemote(
   const got = createHash("sha256").update(body).digest("hex");
 
   if (got !== sha256) {
-    /*
-     * THIS is the branch a status-code check cannot reach. The transport
-     * succeeded and the bytes are wrong — an error page, a proxy interstitial,
-     * a truncated read, a file replaced at the same name.
-     */
+    // The transport succeeded and the bytes are wrong: an error page, an interstitial, a truncated read or a replaced file.
     return {
       ok: false,
       status: response.status,

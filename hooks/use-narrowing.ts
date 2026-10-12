@@ -8,19 +8,11 @@ import {
 } from "@/lib/state/subscribe-to-storage";
 
 /**
- * The reader's narrowing choices — M26/4.6.3c, device-local by design.
- *
- * Exactly two localStorage keys, per the approved spec:
- * `wtp.selected_divisions` (the divisions the reader picked) and
- * `wtp.selected_street` (the street they typed). **Neither value is ever
- * transmitted or tied to an account** — the street index is fetched as a
- * static per-zip file and matched against on the device, so the server only
- * ever sees a zip-level request it already knew about. Both values carry
- * the zip they were made for: a new zip makes them silently inert rather
- * than misapplying one town's choice to another.
- *
- * Same useSyncExternalStore shape as use-stored-zip: the server renders
- * unset, and a returning reader never sees their narrowing flash off.
+ * The reader's narrowing choices, device-local in exactly two localStorage
+ * keys: `wtp.selected_divisions` and `wtp.selected_street`. Neither is ever
+ * transmitted; the street index is a static per-zip file matched on the
+ * device. Both carry their zip, so a new zip makes them inert. Read through
+ * useSyncExternalStore, so a returning reader never sees them flash off.
  */
 
 const DIVISIONS_KEY = "wtp.selected_divisions";
@@ -30,12 +22,7 @@ export interface NarrowingState {
   /** OCD-IDs the reader chose, scoped to the zip they chose them for. */
   divisions: string[];
   street: string | null;
-  /**
-   * The reader answered "no thanks, show me everything" (3b, 2026-08-16).
-   * Persisted INSIDE the divisions key's value — still exactly two
-   * localStorage keys — so the modal asks once per zip, never on every
-   * visit. A recorded decline is a response, not a narrowing.
-   */
+  /** The reader declined narrowing for this zip; stored inside the divisions key, so asked once per zip. */
   declined: boolean;
 }
 

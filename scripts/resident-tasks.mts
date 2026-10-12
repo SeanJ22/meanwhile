@@ -1,17 +1,12 @@
 #!/usr/bin/env node
 /**
- * **RESIDENT TASKS, RUN ON THE LIVE SITE.** (FE-18.)
+ * Resident tasks, run on the live site: drives each task in
+ * data/health/resident-tasks.json by the scripted taps in
+ * lib/health/resident-tasks.ts, at ZIPs sampled from the published places, on a
+ * phone (390 by 844) and a desktop. Each step records time from tap to usable
+ * result, a screenshot and page measurements. Every published ZIP never run
+ * before is queued first.
  *
- * Drives each task in data/health/resident-tasks.json (FE-17) the way a
- * resident would, by the scripted taps in lib/health/resident-tasks.ts, at
- * ZIPs sampled from the published places, on a phone (390 by 844) and a
- * desktop. Each step records the time from the tap to a usable result, a
- * screenshot and the page measurements (FE-16); each run records its taps,
- * dead end and what the page never showed, and passes or fails. Every
- * published ZIP never run before is queued first, so a newly published place
- * gets its first run on the next pass.
- *
- * Runs on the runner host, by the pattern of served-reader-production.ts:
  *   node --experimental-strip-types --import ./scripts/register-test-loader.mjs scripts/resident-tasks.mts [--if-queued] [--dry-run[=dir]] [--zip=NNNNN]
  *
  *   --if-queued   run only when a published ZIP has never been run (cheap; one read of the live site and the log)
@@ -19,11 +14,10 @@
  *   --zip=NNNNN   run at this ZIP only (checking by hand)
  *
  * Screenshots go to the portrait blob store under `resident-tasks/`; the pass
- * goes to the live-audit log, and Admin reads both. Writes are blocked in every
- * visit except Ask's, which must reach /api/ask; Ask tasks run at one ZIP on a
- * phone (WTP_TASK_ASK_ZIPS, default 1; 0 leaves Ask out), with the run's
- * synthetic marker so they are not counted as readers. Exit 0 with a one-line
- * summary; exit 1 when the control plane is not configured or no published
+ * goes to the live-audit log. Writes are blocked in every visit except Ask's,
+ * which must reach /api/ask; Ask tasks run at one ZIP on a phone
+ * (WTP_TASK_ASK_ZIPS, default 1; 0 leaves Ask out), with the run's synthetic
+ * marker. Exit 1 when the control plane is not configured or no published
  * place could be read.
  */
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -42,6 +36,9 @@ import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 import { publishedPlaces } from "../lib/ops/post-deploy-warm.ts";
 import { storeRunScreenshot } from "../lib/photos/store.ts";
 import { launchGuarded, seedZip, type GuardedBrowser } from "./browser.mts";
+import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
+
+readFromHeldCopies();
 
 const BASE = (process.env.SHOOT_BASE_URL ?? PUBLIC_SITE_ORIGIN).replace(/\/$/, "");
 const ZIP_COUNT = Number(process.env.WTP_TASK_ZIPS ?? 2);

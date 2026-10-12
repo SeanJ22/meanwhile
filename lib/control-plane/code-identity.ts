@@ -1,64 +1,20 @@
 /**
- * **WHICH CODE IS THE RUNNER ACTUALLY RUNNING — THREE SHAS, NOT ONE.**
- * (Fleet Promotion Readiness, PRDY-1, 2026-09-06.)
- *
- * ## The defect this answers (ACT-1)
- *
- * The Fleet Promotion Activation Audit compared the runner heartbeat's
- * `testedSha` with the raw tip of `main` and read the runner as STALE. The tip
- * was `54d4d946`, a then-Git-backed post-deploy integrity reading that changed
- * `data/ops/production-integrity.json` and `docs/status-ledger.md` and nothing
- * else; the runner had tested `972d1a60`, its parent, which was the newest
- * commit whose tree changes anything the runner executes. The runner was
- * current. The EVIDENCE MODEL was wrong: one SHA cannot say both "what main
- * points at" and "what code is current" when a non-shipping commit follows an
- * application-bearing one. The observer Git writer that exposed this defect is
- * now retired; the distinction remains valid for human-authored non-shipping
- * evidence commits.
- *
- * ## Three identities, one classification
+ * Which code the runner is actually running, as three SHAs:
  *
  * ```
- *   rawMainSha               what the integration ref pointed at when this was read
- *   effectiveExecutableSha   the newest first-parent commit on main whose landing
- *                            changed a path the canonical deploy classification
- *                            calls production-bearing — SHIPPING or UNKNOWN,
- *                            never a positively proven NON_SHIPPING commit
+ *   rawMainSha               what the integration ref pointed at when read
+ *   effectiveExecutableSha   the newest first-parent commit on main that
+ *                            `classifyDeploy` does not positively call
+ *                            NON_SHIPPING (SHIPPING or UNKNOWN)
  *   runnerTestedSha          what the runner's own process reports it executed
  * ```
  *
- * The classification is `classifyDeploy` from `lib/ops/deploy-paths.ts` — the
- * existing answer to "can these changed paths affect what production serves".
- * CI has no path-cost exception. There is no second path table here: a
- * docs/evidence commit is one the deploy rule
- * already cancels, and a
- * commit that rule cannot classify (a merge with no first-parent diff, a root
- * commit, an unreadable diff) counts as EXECUTABLE. Unknown never weakens the
- * stale reading; it can only make the runner look behind, never current.
+ * A commit `classifyDeploy` cannot classify (no first-parent diff, root commit,
+ * unreadable diff) counts as executable, so unknown can only make the runner
+ * look behind, never current. `CANNOT_TELL` is never rendered as current.
  *
- * ## The verdict, and the direction of every unanswerable question
- *
- * ```
- *   CONSISTENT                 the runner tested the executable head, or a
- *                              commit above it on main that differs from it only
- *                              by non-shipping commits
- *   RUNNER_BEHIND_EXECUTABLE   executable code landed on main after the SHA the
- *                              runner tested — the REAL stale case, undiminished
- *   RUNNER_AHEAD_OF_MAIN       the runner tested a commit that contains raw main
- *                              but is not raw main — our view of main is behind
- *                              the runner, not the other way round
- *   RUNNER_NOT_ON_MAIN         no ancestry either way — a branch or a worktree
- *   CANNOT_TELL                a SHA is missing, git could not answer, or the
- *                              walk hit its bound without finding an executable
- *                              commit
- * ```
- *
- * `CANNOT_TELL` is never rendered as current. A future audit reads the record
- * this module writes into the heartbeat and can re-derive every field from the
- * repository alone (`pnpm code-identity:readback`).
- *
- * PURE where it can be: `deriveEffectiveExecutable` and `judgeCodeIdentity`
- * take commits and an ancestry oracle; only `readCodeIdentity` talks to git.
+ * `deriveEffectiveExecutable` and `judgeCodeIdentity` are pure; only
+ * `readCodeIdentity` talks to git.
  */
 import { execFileSync } from "node:child_process";
 
@@ -127,12 +83,9 @@ export interface CodeIdentity {
 }
 
 /**
- * Walk main's first-parent line from the raw tip downward and stop at the first
- * commit the canonical rule does not positively call NON_SHIPPING.
- *
- * `commits` is newest first, starting at raw main. A commit whose changed-path
- * list is null or empty is UNKNOWN under `classifyDeploy` and therefore
- * EXECUTABLE here — the same fail-closed direction the deploy rule takes.
+ * Walk main's first-parent line from the raw tip (`commits` newest first) and
+ * stop at the first commit not positively NON_SHIPPING. A null or empty path
+ * list is UNKNOWN and therefore executable.
  */
 export function deriveEffectiveExecutable(
   commits: readonly WalkedCommit[],
@@ -297,14 +250,7 @@ export function firstParentChangedPaths(sha: string, cwd: string, deadlineMs: nu
   return diff.out.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
 }
 
-/**
- * Main's first-parent line from `tip`, newest first, at most `bound` commits.
- *
- * Each commit's changed paths are read when first asked for, not up front.
- * The walk stops at the first commit that is not NON_SHIPPING, so it reads one
- * or a few diffs where reading all `bound` of them spawned two git processes
- * per commit — 128 on every cycle's finalization (2026-09-23).
- */
+/** Main's first-parent line from `tip`, newest first, at most `bound` commits. Changed paths are read lazily. */
 export function walkFirstParent(
   tip: string,
   cwd: string,
@@ -330,16 +276,10 @@ export function walkFirstParent(
 }
 
 /**
- * Read the three identities from a checkout.
- *
- * `origin/main` is refreshed with a bounded fetch when `fetch` is true; a fetch
- * that fails or times out leaves the remote-tracking ref as last seen and the
- * record says so (`rawMainFetched: false`). A checkout without an `origin`
- * answers from its local `main`.
- *
- * `budgetMs` bounds the whole read: every git call gets the time left, and a
- * call the budget no longer covers is not made, so its question reads as one
- * git could not answer — CANNOT_TELL, never current (2026-09-23).
+ * Read the three identities from a checkout. A failed or timed-out fetch leaves
+ * the remote-tracking ref as last seen (`rawMainFetched: false`); without an
+ * `origin`, local `main` answers. `budgetMs` bounds the whole read: a git call
+ * the budget no longer covers is not made and reads as CANNOT_TELL.
  */
 export function readCodeIdentity(input: {
   readonly cwd: string;

@@ -1,21 +1,14 @@
 /**
- * **FLEET · NOW AND READINESS READ THE FIELDS THEY DRAW, NOT THE WHOLE ROWS.**
- * (Sean, 2026-09-24: every Admin page loads under three seconds, cold starts
- * included. Measured after batch C on 2026-09-25: Fleet · Now 3.03 s on a cold
- * instance, Readiness 2.00 s.)
+ * Fleet · Now and Readiness read the fields they draw, not the whole rows.
  *
  * ```
- *   readNarrowed   an aggregate narrowed by the store, with its revision; an
- *                  empty projection is the revision alone. Every provider
- *                  answers alike.
- *   the pulse      the snapshot's four counted fields and the research state's
- *                  lane queue, never the whole rows (1.37 MB -> 0.15 MB on
- *                  production), and the same pulse, field for field
- *   Fleet · Now    its decision cards alone (418 KB -> 83 KB)
- *   Readiness      each state's grid, without the ZIP rows it never draws
- *                  (907 KB -> 111 KB for the three states), beside its counties,
+ *   readNarrowed   an aggregate narrowed by the store, with its revision; an empty projection is
+ *                  the revision alone. Every provider answers alike.
+ *   the pulse      the snapshot's four counted fields and the research state's lane queue, never
+ *                  the whole rows, and the same pulse, field for field
+ *   Fleet · Now    its own cards alone
+ *   Readiness      each state's grid, without the ZIP rows it never draws, beside its counties,
  *                  every read started before the policy row
- *   the body read  the day tally beside the snapshot, not after it in it
  * ```
  */
 import assert from "node:assert/strict";
@@ -226,17 +219,4 @@ test("Fleet · Now's decision cards are the snapshot's, in the snapshot read's w
   const src = readFileSync("app/(admin)/admin/page.tsx", "utf8");
   assert.doesNotMatch(src, /readDecisionCards\(/, "the home screen no longer reads the old tracker's decision cards");
   assert.doesNotMatch(src, /readSnapshot\(/, "the page never reads the whole snapshot");
-});
-
-/* ------------------------------------------------------------------ the body read */
-
-test("the day tally runs beside the body snapshot, and the snapshot keeps the figures that must agree", () => {
-  const store = readFileSync("app/(admin)/_mw/data/body-store.ts", "utf8");
-  const read = store.slice(store.indexOf("export async function readBodyStore("), store.indexOf("export async function readBodyStanding("));
-  const snapshot = read.slice(read.indexOf("const snapshot = sql.transaction("), read.indexOf("const day = "));
-  for (const kept of ["VERSIONS_WITH_CLOCK", "ATTEMPTS", "VERSION_READBACKS"]) assert.match(snapshot, new RegExp(`\\b${kept}\\b`));
-  assert.doesNotMatch(snapshot, /\bDAY\b/);
-  assert.match(snapshot, /isolationLevel: "RepeatableRead"/);
-  assert.match(read, /const day = sql\.transaction\(\[sql\.query\(limit\), statement\(DAY, \[nowIso\]\)\], \{ readOnly: true \}\)/);
-  assert.match(read, /await Promise\.all\(\[snapshot, day, history\]\)/, "a failed day tally still fails the body read, as before");
 });

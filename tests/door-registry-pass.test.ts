@@ -1,23 +1,19 @@
 import assert from "node:assert/strict";
 import { afterEach, describe, it } from "node:test";
 import { MEETING_PARTITION_CONTRACTS, refreshMeetingPartitions, sittingWindowSourceIds } from "../lib/civic-data/meeting-partitions.ts";
-import { installRegistryWiring, SOURCE_WIRING, type BodySourceWiring } from "../lib/registry/source-wiring.ts";
+import { activeWiring, type BodySourceWiring } from "../lib/registry/source-wiring.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { seedMeetingDoors } from "../lib/doors/seed-meetings.ts";
 import { refreshDoorsForPass } from "../lib/doors/install.ts";
+import { FIXTURE_DOOR_ROWS, installFixtureDoors } from "./helpers/meeting-doors-fixture.ts";
 
-const code = SOURCE_WIRING.slice();
+const code = FIXTURE_DOOR_ROWS.slice();
 const AT = "2026-10-04T12:00:00.000Z";
 
-function restore(): void {
-  installRegistryWiring(null);
-  refreshMeetingPartitions(code);
-}
-
 describe("DB-13: meeting work follows the doors in use each pass", () => {
-  afterEach(restore);
+  afterEach(() => installFixtureDoors());
 
-  it("adds a partition for a door the code does not name, and takes it away again", () => {
+  it("adds a partition for a new door, and takes it away again", () => {
     const before = MEETING_PARTITION_CONTRACTS.length;
     const example = code.find((row) => row.agendaSourceType !== undefined)!;
     const added: BodySourceWiring = { ...example, bodyId: `${example.bodyId}-added-by-a-door-row` };
@@ -30,19 +26,21 @@ describe("DB-13: meeting work follows the doors in use each pass", () => {
     assert.equal(MEETING_PARTITION_CONTRACTS.length, before);
   });
 
-  it("leaves the last good list in place when a door cannot be built", () => {
-    const before = MEETING_PARTITION_CONTRACTS.slice();
+  it("leaves out a door that cannot be built, with its reason, and keeps every other door's work", () => {
+    const before = MEETING_PARTITION_CONTRACTS.map((c) => c.id).sort();
     const doubled = [...code, code[0]!];
     const result = refreshMeetingPartitions(doubled);
-    assert.equal(result.refreshed, false);
-    assert.match(result.reason ?? "", /previous list stays in use/);
-    assert.deepEqual(MEETING_PARTITION_CONTRACTS.map((c) => c.id), before.map((c) => c.id));
+    assert.equal(result.refreshed, true);
+    assert.equal(result.skipped.length, 1);
+    assert.match(result.skipped[0]!, /MEETING_PARTITION_COLLISION/);
+    assert.deepEqual(MEETING_PARTITION_CONTRACTS.map((c) => c.id).sort(), before);
   });
 
-  it("with the switch off nothing is read or rebuilt", async () => {
-    const repo = { list: () => { throw new Error("must not be read"); } } as never;
-    const result = await refreshDoorsForPass(repo, { mode: "code" });
-    assert.equal(result.reading, "code");
+  it("a registry that cannot be read gives the pass no doors and says why", async () => {
+    const repo = { list: () => { throw new Error("offline"); }, listPage: () => { throw new Error("offline"); } } as never;
+    const result = await refreshDoorsForPass(repo);
+    assert.equal(result.rows, 0);
+    assert.match(result.reason ?? "", /could not be read/);
     assert.equal(result.partitions, null);
   });
 
@@ -52,10 +50,11 @@ describe("DB-13: meeting work follows the doors in use each pass", () => {
     const added: BodySourceWiring = { ...example, bodyId: `${example.bodyId}-added-by-a-door-row` };
     await seedMeetingDoors({ repo: repos.doors, wiring: [...code, added], derived: [], deriveInputAt: AT, at: AT });
     const before = MEETING_PARTITION_CONTRACTS.length;
-    const pass = await refreshDoorsForPass(repos.doors, { mode: "registry" });
-    assert.equal(pass.reading, "registry", pass.reason ?? "");
+    const pass = await refreshDoorsForPass(repos.doors);
+    assert.equal(pass.reason, null);
     assert.equal(pass.partitions?.refreshed, true);
     assert.ok(MEETING_PARTITION_CONTRACTS.length > before);
     assert.ok(MEETING_PARTITION_CONTRACTS.some((contract) => contract.bodyId === added.bodyId));
+    assert.ok(activeWiring().some((row) => row.bodyId === added.bodyId));
   });
 });

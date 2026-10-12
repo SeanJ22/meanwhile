@@ -1,57 +1,4 @@
-/**
- * A minimal, dependency-free, in-memory reader for the one xlsx we consume: the
- * OMB CBSA delineation (`list1_2023.xlsx`). Census publishes the delineation ONLY
- * as xlsx — there is no CSV/TXT variant (verified against the source directory) —
- * so we parse it ourselves rather than add a spreadsheet dependency or force a
- * manual conversion into the pipeline.
- *
- * xlsx is a ZIP of XML parts. This reads the ZIP central directory, inflates the
- * parts we need with the Node builtin `zlib`, and pulls the first worksheet's
- * cells (resolving shared strings). No filesystem access: this runs on the
- * standing runner's routine acquisition path, where the civic-data firewall
- * forbids a reachable filesystem writer. It is deliberately just enough to read
- * a flat delineation table, not a general spreadsheet engine.
- */
-import { inflateRawSync } from "node:zlib";
-
-/** Read every entry of a ZIP archive into memory, keyed by entry name. */
-function readZipEntries(bytes: Buffer): Map<string, Buffer> {
-  const EOCD_SIG = 0x06054b50;
-  const CDIR_SIG = 0x02014b50;
-  const LOCAL_SIG = 0x04034b50;
-  // Find the End Of Central Directory record by scanning backwards (its own
-  // record is 22 bytes; a trailing comment can add up to 65535 more).
-  let eocd = -1;
-  const minScan = Math.max(0, bytes.length - 22 - 0xffff);
-  for (let i = bytes.length - 22; i >= minScan; i--) {
-    if (bytes.readUInt32LE(i) === EOCD_SIG) {
-      eocd = i;
-      break;
-    }
-  }
-  if (eocd < 0) throw new Error("xlsx: not a ZIP (no end-of-central-directory record)");
-  const entryCount = bytes.readUInt16LE(eocd + 10);
-  let off = bytes.readUInt32LE(eocd + 16);
-  const entries = new Map<string, Buffer>();
-  for (let e = 0; e < entryCount; e++) {
-    if (bytes.readUInt32LE(off) !== CDIR_SIG) throw new Error("xlsx: corrupt central directory");
-    const method = bytes.readUInt16LE(off + 10);
-    const compSize = bytes.readUInt32LE(off + 20);
-    const nameLen = bytes.readUInt16LE(off + 28);
-    const extraLen = bytes.readUInt16LE(off + 30);
-    const commentLen = bytes.readUInt16LE(off + 32);
-    const localOff = bytes.readUInt32LE(off + 42);
-    const name = bytes.toString("utf8", off + 46, off + 46 + nameLen);
-    if (bytes.readUInt32LE(localOff) !== LOCAL_SIG) throw new Error(`xlsx: corrupt local header for ${name}`);
-    const lNameLen = bytes.readUInt16LE(localOff + 26);
-    const lExtraLen = bytes.readUInt16LE(localOff + 28);
-    const dataStart = localOff + 30 + lNameLen + lExtraLen;
-    const comp = bytes.subarray(dataStart, dataStart + compSize);
-    entries.set(name, method === 0 ? Buffer.from(comp) : inflateRawSync(comp));
-    off += 46 + nameLen + extraLen + commentLen;
-  }
-  return entries;
-}
+import { readZipEntries } from "../sources/archive.ts";
 
 function decodeEntities(s: string): string {
   return s.replace(/&(#x?[0-9a-fA-F]+|amp|lt|gt|quot|apos);/g, (_m, ent: string) => {
@@ -68,7 +15,6 @@ function decodeEntities(s: string): string {
   });
 }
 
-/** Concatenate the decoded text of every <t> inside an <si>/<is> fragment. */
 function extractText(fragment: string): string {
   let out = "";
   const re = /<t\b[^>]*>([\s\S]*?)<\/t>/g;
@@ -122,13 +68,7 @@ function firstWorksheetPart(entries: Map<string, Buffer>): string {
  * strings; numeric cells keep their raw textual value (leading zeros in codes
  * that Excel stored as numbers must be restored by the caller).
  */
-export function readXlsxFirstSheet(bytes: Buffer): string[][] {
-  const entries = readZipEntries(bytes);
-  const shared = parseSharedStrings(entries.get("xl/sharedStrings.xml")?.toString("utf8"));
-  const sheetXml = entries.get(firstWorksheetPart(entries))?.toString("utf8");
-  if (!sheetXml) throw new Error("xlsx: worksheet part is empty");
-
-  const rows: string[][] = [];
+function* worksheetRows(sheetXml: string, shared: readonly string[]): Generator<string[]> {
   const rowRe = /<row\b[^>]*>([\s\S]*?)<\/row>|<row\b[^>]*\/>/g;
   const cellRe = /<c\b([^>]*?)(?:\/>|>([\s\S]*?)<\/c>)/g;
   let rowM: RegExpExecArray | null;
@@ -159,7 +99,39 @@ export function readXlsxFirstSheet(bytes: Buffer): string[][] {
       row[col] = value;
     }
     for (let i = 0; i < row.length; i++) if (row[i] === undefined) row[i] = "";
-    rows.push(row);
+    yield row;
   }
-  return rows;
+}
+
+/** Iterate every named worksheet without materializing all national records.
+ * Archive validation happens before the first row can be consumed. */
+export function* readXlsxSheets(bytes: Buffer): Generator<{ name: string; rows: Iterable<string[]> }> {
+  const entries = new Map(readZipEntries(bytes).map(entry => [entry.name, entry.data]));
+  const shared = parseSharedStrings(entries.get("xl/sharedStrings.xml")?.toString("utf8"));
+  const workbook = entries.get("xl/workbook.xml")?.toString("utf8") ?? "";
+  const relationships = entries.get("xl/_rels/workbook.xml.rels")?.toString("utf8") ?? "";
+  const targets = new Map<string, string>();
+  for (const match of relationships.matchAll(/<Relationship\b([^>]+)\/?\>/g)) {
+    const id = /\bId="([^"]+)"/.exec(match[1])?.[1];
+    const target = /\bTarget="([^"]+)"/.exec(match[1])?.[1];
+    if (id && target && !/\bTargetMode="External"/.test(match[1])) targets.set(id, target.replace(/^\//, "").replace(/^xl\//, ""));
+  }
+  for (const match of workbook.matchAll(/<sheet\b([^>]+)\/?\>/g)) {
+    const name = /\bname="([^"]+)"/.exec(match[1])?.[1];
+    const id = /\br:id="([^"]+)"/.exec(match[1])?.[1];
+    const target = id ? targets.get(id) : undefined;
+    if (!name || !target || target.split("/").includes("..")) throw new Error("xlsx: invalid worksheet relationship");
+    const xml = entries.get(`xl/${target}`)?.toString("utf8");
+    if (!xml) throw new Error("xlsx: worksheet part is empty");
+    yield { name: decodeEntities(name), rows: worksheetRows(xml, shared) };
+  }
+}
+
+export function readXlsxFirstSheet(bytes: Buffer): string[][] {
+  const first = readXlsxSheets(bytes).next().value;
+  if (first) return [...first.rows];
+  const entries = new Map(readZipEntries(bytes).map(entry => [entry.name, entry.data]));
+  const xml = entries.get(firstWorksheetPart(entries))?.toString("utf8");
+  if (!xml) throw new Error("xlsx: no worksheet");
+  return [...worksheetRows(xml, parseSharedStrings(entries.get("xl/sharedStrings.xml")?.toString("utf8")))];
 }

@@ -1,9 +1,7 @@
 /**
- * The Linux runner must never be set up to publish reader pages to a local
- * folder. `WTP_READER_EDGE_DIR` makes `resolveReaderArtifactWriteStore()` prefer
- * a folder on the droplet over the live site, which left readers on a six-day-old
- * snapshot (board/river releases/stale-reader-snapshot.md). The setup converter
- * neither adds it nor passes a stray copy through from the source settings.
+ * The Linux runner setup never sets `WTP_READER_EDGE_DIR`, which would make
+ * `resolveReaderArtifactWriteStore()` publish reader pages to a local folder
+ * instead of the live site; the converter neither adds it nor passes a stray copy through.
  *
  * The converter is PowerShell. When `pwsh` is present the real function runs;
  * otherwise the test reads its override table and skip condition and applies

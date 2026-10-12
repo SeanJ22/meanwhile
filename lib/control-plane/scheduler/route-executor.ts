@@ -1,47 +1,8 @@
 /**
- * **THE ROUTE-AWARE EXECUTOR.** (Session C, PART D1/D2, 2026-08-31.)
- *
- * `http-executor.ts` opens one thing: a GET against a URL looked up by
- * obligation id. That is exactly right for the meetings corpus and cannot
- * express a single campaign-finance route — the two live ones are POSTs whose
- * BODIES are their schemas, one route is an FTP drop no HTTP client can open,
- * and one ends in a human act.
- *
- * So this executor takes a `RouteDescriptor` per obligation and opens what the
- * descriptor says. It reuses `http-executor.ts`'s disposition mapping verbatim
- * where it applies, because that mapping is the honesty and duplicating it
- * would let the two drift.
- *
- * ## Three things it adds, and each closes a specific way to be wrong
- *
- * **1. THE YIELD CONTRACT.** A 200 with bytes is INGESTED under the plain
- * mapping. `seethemoney.az.gov` answered HTTP 200 with a two-byte empty JSON
- * string to every guessed body for a week. Without a contract this executor
- * would write a terminal INGESTED, record two bytes as Arizona's filer index,
- * clear the debt and move the clock — a wrong answer about a government,
- * produced by arithmetic. A response that misses the declared contract is an
- * ABORTED attempt naming what was expected and what arrived.
- *
- * **2. A ZERO ROW COUNT IS A FAILED EXTRACTION.** A response that satisfies the
- * shape and carries zero rows does NOT become `WALKED_NO_YIELD`. That
- * disposition asserts the route was reached and the publisher genuinely had
- * nothing, which is a claim about a government; nothing observable here
- * justifies it for an index that returned 370 rows a day ago.
- *
- * **3. `REQUIRES_NEW_ADAPTER` IS A REAL DISPOSITION AND IS WRITTEN AS ONE.** A
- * route this process holds no client for closes its RouteTask honestly and
- * keeps the record obligation live: `REQUIRES_NEW_ADAPTER` is absent from
- * `TERMINAL_DISPOSITIONS` and from `DISCHARGING_DISPOSITIONS`, so the debt
- * accrues, the next-due stands and the digest names the missing adapter. That
- * is "a blocked route may never become a blocked fact", implemented.
- *
- * ## No secret is read, written, logged or sent
- *
- * Nothing in this module reads a credential. Route headers come from committed
- * descriptors, and the only environment variable any provider consults is read
- * by NAME for an identification header. `WTP_WORKERS_ANTHROPIC_API_KEY` is the
- * variable a bounded model worker would need; no route here uses one, and no
- * value of any variable is ever placed in a row, a log, a prompt or an artifact.
+ * The route-aware executor: opens what each `RouteDescriptor` says (GET, POST, or nothing), reusing
+ * `http-executor.ts`'s disposition mapping. A response that misses the declared yield contract is ABORTED; a
+ * zero row count is a failed extraction, never WALKED_NO_YIELD; a route with no client is written
+ * REQUIRES_NEW_ADAPTER, which keeps the record owed. No credential value is read or recorded.
  */
 
 import { assertPublicUrl } from "../../hunt/egress.ts";
@@ -71,16 +32,7 @@ export type OpenOne = (input: {
   readonly timeoutMs: number;
 }) => Promise<FetchOutcome>;
 
-/**
- * The default identification.
- *
- * Named, never disguised: the transparency mandate permits persistence and
- * forbids residential-proxy spoofing, and a User-Agent that says who we are
- * gives an administrator someone to contact. A descriptor may override it —
- * `www.sos.nh.gov` refuses this project's name and serves a bare client, so
- * that route moves the identification into `From:` and `X-Purpose:`, which is
- * still identification.
- */
+/** The default identification: named, never disguised. A descriptor may move it into `From:` and `X-Purpose:`. */
 export { DEFAULT_USER_AGENT };
 
 export const realOpen: OpenOne = async ({ url, method, headers, body, timeoutMs }) => {
@@ -140,16 +92,7 @@ export interface ContractReading {
   readonly detail: string;
 }
 
-/**
- * Check a response body against a route's declared yield contract.
- *
- * Exported and tested directly. The interesting cases are all zero-shaped and
- * they must not collapse into one: the shape can be MISSING (we are talking to
- * something else, or to an error page), the shape can be PRESENT with zero rows
- * (a failed extraction), or the contract can be absent altogether (the caller
- * falls back to bytes, which is only safe where nothing has ever answered 200
- * with nothing).
- */
+/** Check a body against a route's yield contract. Missing shape, present with zero rows, and no contract are three different outcomes. */
 export function checkYield(contract: YieldContract, body: string): ContractReading {
   const missing = contract.requireAll.filter((token) => !body.includes(token));
   if (missing.length > 0) {
@@ -232,29 +175,13 @@ export function checkYield(contract: YieldContract, body: string): ContractReadi
   };
 }
 
-/**
- * **WHERE THE BYTES GO.**
- *
- * The pre-existing `httpExecutor` recorded artifact METADATA against the
- * Attempt and wrote the bytes NOWHERE, while its own disposition note said
- * "captured to the vault". That is a citation to a body no store holds, and
- * RULING 224's promotion tail cannot run over it: normalization needs the
- * bytes. This seam is what makes the note true.
- *
- * A successful HTTP response is acquired only when its readable bytes are
- * saved. A storage refusal leaves the source owed through the existing retry.
- */
+/** A successful HTTP response is acquired only when its readable bytes are saved; a storage refusal leaves the source owed. */
 export type VaultPut = (
   artifact: Artifact,
   body: string,
 ) => Promise<{ readonly stored: boolean; readonly where: string; readonly why: string }>;
 
-/**
- * Build the executor.
- *
- * `routeFor` is the registry's lookup. An obligation with no descriptor is an
- * ABORTED attempt naming OUR gap, never a conclusion about the publisher.
- */
+/** Build the executor. An obligation with no descriptor is an ABORTED attempt naming our gap. */
 export function routeExecutor(input: {
   readonly routeFor: (obligationId: string) => RouteDescriptor | null;
   readonly openOne?: OpenOne;
@@ -285,13 +212,7 @@ export function routeExecutor(input: {
       };
     }
 
-    /*
-     * A ROUTE WE HOLD NO CLIENT FOR CLOSES ITS TASK AND KEEPS THE RECORD OWED.
-     *
-     * `REQUIRES_NEW_ADAPTER` is absent from both `TERMINAL_DISPOSITIONS` and
-     * `DISCHARGING_DISPOSITIONS`, so this commits a disposition, accrues debt,
-     * and leaves the next-due standing. The named next move travels with it.
-     */
+    /* A route we hold no client for commits REQUIRES_NEW_ADAPTER: debt accrues and the next-due stands. */
     if (route.open.kind === "NOT_MACHINE_EXECUTABLE") {
       return {
         ranAs: RAN_AS,
@@ -300,12 +221,7 @@ export function routeExecutor(input: {
           disposition: "REQUIRES_NEW_ADAPTER",
           observation: null,
           permission: "CANNOT_TELL",
-          /*
-           * `OTHER_NAMED_FAILURE` and NOT a guess at what the transport would
-           * have done. Nothing was sent, so REACHABLE would be a claim and
-           * FAILED_AT_RUNG would be a claim; the failure is that this process
-           * has no client, which is named in full in the note beside it.
-           */
+          /* Nothing was sent, so the transport is `OTHER_NAMED_FAILURE`, not a guess. */
           transport: "OTHER_NAMED_FAILURE",
           note:
             `${route.label}: NO CLIENT IN THIS PROCESS — nothing was sent, so nothing was observed ` +
@@ -319,16 +235,7 @@ export function routeExecutor(input: {
       };
     }
 
-    /*
-     * A ROUTE A ROUTINE CONTRACT CARRIES IS NEVER OPENED HERE (2026-09-25).
-     *
-     * The record is read on the routine contract's own clock; a fetch from this
-     * process would be a second clock on the same feed. Nothing is sent. The
-     * round closes `DISCOVERED` — the route to the record is known and the
-     * record itself is still owed — which is neither terminal nor discharging,
-     * so the obligation stays live until the provider stops emitting it (the
-     * routine read closed the gap) and its retirement names that.
-     */
+    /* A route a routine contract carries is never opened here: nothing is sent and the round closes `DISCOVERED`, neither terminal nor discharging. */
     if (route.open.kind === "ROUTINE_READ") {
       const failure = route.open.cadenceFailure;
       return {
@@ -441,9 +348,7 @@ export function routeExecutor(input: {
         disposition: {
           disposition: "BLOCKED_CURRENTLY",
           observation: null,
-          /* RULING 182: a 403 refuses THIS CLIENT and reads no rule, so
-             permission is CANNOT_TELL and fails safe rather than being written
-             down as DISALLOWED. */
+          /* A 403 refuses this client and reads no rule, so permission is CANNOT_TELL. */
           permission: "CANNOT_TELL",
           transport: "CHALLENGED",
           note:
@@ -483,16 +388,7 @@ export function routeExecutor(input: {
   };
 }
 
-/**
- * A satisfied retrieval: classify the bytes, vault them, attribute them.
- *
- * **THE TIER IS DECIDED BY SCANNING THE BYTES**, through the shipped
- * `classifyAcquisition` inside `recordAcquisition`, and not hard-coded. The
- * previous executor wrote `tier: "RESTRICTED_RAW"` for every artifact, which is
- * both an over-classification of a public state record and — because the
- * durable vault refuses that tier without an encrypted, access-controlled
- * provider — the reason those bytes could never have been stored at all.
- */
+/** A satisfied retrieval: classify the bytes (the tier comes from scanning them), vault them, attribute them. */
 async function ingested(input: {
   readonly route: RouteDescriptor;
   readonly url: URL;
@@ -524,9 +420,7 @@ async function ingested(input: {
   let artifact = raw;
   let body = got.body;
   if (raw.tier === "RESTRICTED_RAW") {
-    // Public portals embed credentials unrelated to their civic content. Use
-    // the same derivative as Scout: retain the source hash and redactions,
-    // while giving parsers the saved, readable page instead of a missing raw copy.
+    // Public portals embed unrelated credentials: keep the source hash and redactions, and give parsers the saved readable page.
     if (input.vault) {
       try { await input.vault(raw, body); }
       catch { /* A restricted substrate is optional; the derivative is still owed. */ }
@@ -558,12 +452,7 @@ async function ingested(input: {
     disposition: {
       disposition: "INGESTED",
       observation: {
-        /*
-         * `rawCount` is the ROWS the response carried when the contract names
-         * where to count them, and 1 (the document itself) when it does not.
-         * `normalizedCount` is deliberately ZERO: normalization is the next
-         * stage and claiming it here would report parsing that did not happen.
-         */
+        /* `rawCount` is the rows the contract counts (or 1, the document); `normalizedCount` is zero because normalization is the next stage. */
         rawCount: rows ?? 1,
         normalizedCount: 0,
         routeOnlyCount: null,

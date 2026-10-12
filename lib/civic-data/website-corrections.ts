@@ -1,70 +1,27 @@
-/**
- * **A GOVERNMENT'S CURRENT WEBSITE, CORRECTED ON ITS OWN EVIDENCE.** (C15, 2026-09-24.)
- *
- * The jurisdiction reference records each government's website from the
- * Census 2022 Government Units file, and some of those addresses have since
- * died, moved or were mistyped. One correction path, for the website field
- * only, under docs/rulings.md §3 ("C15" is an earlier session's label, not
- * Sean's decision: Sean, 2026-10-01; see `WEBSITE_CORRECTION_AUTHORIZATION`):
- *
- * - the official homepage and the federal .gov registry must identify the SAME
- *   government. A registry row naming a parent (the State of Arizona for
- *   `flagstaff.az.gov`) identifies the parent, not the city;
- * - where the site is not .gov, or the registry names a parent, other
- *   authoritative evidence is required: another government's own publication
- *   naming the site as this government's (a state or county listing, a
- *   federal directory, a member town's page for a regional district). Where
- *   none holds, the case stays unresolved and is named, never assumed;
- * - the evidence and the actual reviewer are recorded. The reviewer is the
- *   agent session that checked it.
- *
- * This establishes WHICH SITE is the government's. It never says which board a
- * calendar on that site belongs to: domain ownership does not prove that, and
- * nothing here may feed meetings body attribution (the crosswalk carries its
- * own reviewed evidence).
- *
- * The reference builder applies a correction only while the Census value is
- * still the address it replaces, and re-verifies it when the reference is
- * promoted (`acquireWebsiteCorrections`): a homepage or registry that no
- * longer names the government refuses the correction; a transient outage
- * leaves the reviewed evidence standing.
- *
- * PURE: no fetch, no clock.
- */
+/** Establishes which site is a government's; it never attributes a calendar on that site to a board. */
 
-/**
- * The citation text carried wherever a correction is used. Kept byte-identical
- * so stored corrections still match; despite its words it is not an owner
- * decision. The authority is docs/rulings.md §3 (Sean, 2026-10-01).
- */
+/** Byte-identical to the citation already stored on corrected rows. */
 export const WEBSITE_CORRECTION_AUTHORIZATION =
   "Owner decision C15, recorded 2026-09-24T22:43Z in the session closeout list: authorize the additional evidence for the website field only; the official homepage and federal .gov registry must identify the same government; record the evidence and the actual reviewer.";
 
-/** The short citation a corrected row carries. */
 export const WEBSITE_CORRECTION_CITATION = "C15: owner decision recorded 2026-09-24T22:43Z (website field only)" as const;
 
-/** The reviewer of every correction below: the agent session that checked it. */
 export const WEBSITE_CORRECTION_REVIEWER = "RouteTask agent session (Claude Code, claude-opus-5-5)";
 
-/** The CISA .gov registry file the registry rows were read from. */
 export const DOTGOV_REGISTRY_URL = "https://raw.githubusercontent.com/cisagov/dotgov-data/main/current-full.csv";
 
 export interface RegistryEvidence {
-  /** The registered domain as the registry lists it. */
   readonly domain: string;
   readonly domainType: string;
   readonly organization: string;
   readonly city: string;
   readonly state: string;
-  /** The registry file read, and its sha256 (bare hex) at that reading. */
   readonly source: { readonly url: string; readonly sha256: string; readonly readAt: string };
 }
 
 export interface HomepageEvidence {
-  /** The homepage as read, after its redirects. */
   readonly url: string;
   readonly title: string;
-  /** The government's name as the homepage itself prints it; it must stay on the page. */
   readonly selfName: string;
   readonly sha256: string;
   readonly readAt: string;
@@ -74,7 +31,6 @@ export interface OtherEvidence {
   readonly kind: "STATE_LISTING" | "STATE_PUBLICATION" | "COUNTY_PAGE" | "MEMBER_TOWN_PAGE" | "FEDERAL_LISTING" | "RECORDED_HOST_REDIRECT";
   readonly publisher: string;
   readonly url: string;
-  /** A short excerpt of the page, as printed, that names the site as this government's. */
   readonly quote: string;
   readonly sha256: string;
   readonly readAt: string;
@@ -82,25 +38,18 @@ export interface OtherEvidence {
 
 export interface WebsiteCorrection {
   readonly jurisdictionId: string;
-  /** The government's name as its own evidence gives it ("City of Cottonwood"). */
   readonly governmentName: string;
-  /** The Census address this corrects, exactly as the reference records it. */
   readonly recorded: string;
-  /** The current official site: an https origin, no path. */
   readonly corrected: string;
   /** Null when the site is not .gov. */
   readonly registry: RegistryEvidence | null;
-  /** Null when the homepage could not be read as the government's (a challenge); other evidence must then hold. */
   readonly homepage: HomepageEvidence | null;
   readonly other: readonly OtherEvidence[];
   readonly reviewedBy: string;
   readonly reviewedAt: string;
 }
 
-/**
- * A government's name, compared: case, punctuation and spacing aside, and the registry's inverted form
- * ("Holbrook, City of") read as "City of Holbrook".
- */
+/** Case, punctuation and spacing aside; the registry's inverted form ("Town of X" as "X, Town of") reads the same. */
 export function normalizedGovernmentName(name: string): string {
   const flat = name.toUpperCase().replace(/&/g, " AND ").replace(/[^A-Z0-9, ]/g, " ").replace(/\s+/g, " ").trim();
   const inverted = /^(.+?),\s*(CITY|TOWN|TOWNSHIP|VILLAGE|BOROUGH|COUNTY)\s+OF$/.exec(flat);
@@ -121,16 +70,12 @@ function hostOf(origin: string): string | null {
 
 const bareHost = (host: string): string => host.replace(/^www\./, "");
 
-/** Whether the registry row is the corrected site's own domain (not a parent zone that delegates it). */
 export function registryIsTheSitesOwn(correction: Pick<WebsiteCorrection, "corrected" | "registry">): boolean {
   const host = hostOf(correction.corrected);
   return host !== null && correction.registry !== null && bareHost(host) === correction.registry.domain.toLowerCase();
 }
 
-/**
- * Why a correction does not meet the owner's rule, one sentence each; empty when it does. A correction that
- * does not meet it is never applied.
- */
+/** Why a correction does not meet the rule, one sentence each; empty when it does. */
 export function websiteCorrectionIssues(c: WebsiteCorrection): readonly string[] {
   const issues: string[] = [];
   const who = c.jurisdictionId;
@@ -148,12 +93,7 @@ export function websiteCorrectionIssues(c: WebsiteCorrection): readonly string[]
   }
   /* A source that names a different government is a conflict, and no other evidence outweighs it. */
   if (issues.length > 0) return issues;
-  /* The rule itself: the homepage and the site's own .gov registry row name the same government. */
   if (homepageNames && registryNames) return issues;
-  /*
-   * Otherwise (not .gov, a registry row naming a parent, or a homepage that could not be read), another
-   * government's own publication must name the site as this government's.
-   */
   const otherHolds = c.other.some((o) => o.kind !== "RECORDED_HOST_REDIRECT" && o.quote.trim() !== "" && /^[0-9a-f]{64}$/.test(o.sha256));
   if (!otherHolds) {
     issues.push(
@@ -164,7 +104,6 @@ export function websiteCorrectionIssues(c: WebsiteCorrection): readonly string[]
   return issues;
 }
 
-/** Every correction's issues; empty when the whole list meets the rule. */
 export function websiteCorrectionListIssues(list: readonly WebsiteCorrection[]): readonly string[] {
   const issues = list.flatMap(websiteCorrectionIssues);
   const ids = list.map((c) => c.jurisdictionId);
@@ -172,16 +111,10 @@ export function websiteCorrectionListIssues(list: readonly WebsiteCorrection[]):
   return issues;
 }
 
-/** The corrections that meet the rule, by jurisdiction id. */
 export function applicableWebsiteCorrections(list: readonly WebsiteCorrection[]): ReadonlyMap<string, WebsiteCorrection> {
   return new Map(list.filter((c) => websiteCorrectionIssues(c).length === 0).map((c) => [c.jurisdictionId, c] as const));
 }
 
-/**
- * What a corrected row carries, so the address never reads as the Census record it replaced. REVIEWED: applied on
- * the reviewed evidence as committed (a build that reads nothing). The others are the reference promotion's reading
- * of the sources again (`acquireWebsiteCorrections`); a REFUSED row keeps the Census address and says why.
- */
 export interface WebsiteAddressCorrectionNote {
   readonly recorded: string;
   readonly corrected: string;
@@ -193,7 +126,6 @@ export interface WebsiteAddressCorrectionNote {
   readonly authorization: typeof WEBSITE_CORRECTION_CITATION;
 }
 
-/** An address as a comparable key: scheme, a leading www., case and a trailing slash aside. */
 function addressKey(address: string): string {
   const raw = /^[a-z]+:\/\//i.test(address.trim()) ? address.trim() : `http://${address.trim()}`;
   try {
@@ -204,10 +136,7 @@ function addressKey(address: string): string {
   }
 }
 
-/**
- * The reviewed correction for a jurisdiction, applied only while the address on record is still the one it
- * replaces; null otherwise (no correction, one that does not meet the rule, or a record that has since changed).
- */
+/** Applied only while the address on record is still the one it replaces. */
 export function websiteCorrectionFor(
   jurisdictionId: string,
   recorded: string | null,
@@ -235,10 +164,6 @@ export function websiteCorrectionNote(
   };
 }
 
-/**
- * Why a row's correction note does not match the reviewed list, or null. A note must name an applicable correction
- * exactly, and the row's address must be the corrected one, or the recorded one when the reading refused it.
- */
 export function websiteCorrectionRowIssue(
   row: { readonly id: string; readonly ownWebAddress: string | null; readonly ownWebAddressCorrection?: WebsiteAddressCorrectionNote },
   list: readonly WebsiteCorrection[] = WEBSITE_CORRECTIONS,
@@ -254,10 +179,6 @@ export function websiteCorrectionRowIssue(
   return row.ownWebAddress === expected ? null : `${row.id}: records ${row.ownWebAddress ?? "no address"} under a ${note.reading} correction`;
 }
 
-/**
- * Why a receipt read to confirm a correction is not one the reviewed list names, or null. The receipt's source id
- * fixes which page it may be, so a receipt cannot stand in for another government's evidence.
- */
 export function websiteCorrectionReceiptIssue(
   receipt: { readonly sourceId: string; readonly requestedUrl: string; readonly finalUrl: string; readonly httpStatus: number; readonly retrievedAt: string; readonly rawHash: string; readonly byteCount: number },
   list: readonly WebsiteCorrection[] = WEBSITE_CORRECTIONS,
@@ -295,7 +216,6 @@ export function websiteCorrectionReceiptIssue(
   return null;
 }
 
-/** Whether a homepage body still names the government as reviewed (case, spacing and common entities aside). */
 export function homepageStillNamesGovernment(html: string, selfName: string): boolean {
   const flat = (s: string): string =>
     s.replace(/&nbsp;|&#160;/gi, " ").replace(/&amp;|&#38;/gi, "&").replace(/\s+/g, " ").toLowerCase();
@@ -325,7 +245,6 @@ const CSV_ROW = (line: string): string[] => {
   return out;
 };
 
-/** The registry's row for a domain, read from the CISA current-full.csv text; null when it lists none. */
 export function registryRowFor(csv: string, domain: string): { domainType: string; organization: string; city: string; state: string } | null {
   const lines = csv.split(/\r?\n/);
   const header = CSV_ROW(lines[0] ?? "").map((h) => h.trim().toLowerCase());
@@ -341,17 +260,12 @@ export function registryRowFor(csv: string, domain: string): { domainType: strin
   return null;
 }
 
-/** The CISA registry file as read for the corrections below (sha256 of the whole file, bare hex). */
 const CISA_READ = {
   url: DOTGOV_REGISTRY_URL,
   sha256: "62de2f534687bced651562d765cb128a4ea1651ba8e7a3d56c43977c48707e4f",
   readAt: "2026-09-24T18:03:54Z",
 } as const;
 
-/**
- * The reviewed corrections. Each carries its evidence as read (robots.txt first, no challenge passed) and the
- * reviewing agent session; `websiteCorrectionIssues` must find nothing wrong with any of them.
- */
 export const WEBSITE_CORRECTIONS: readonly WebsiteCorrection[] = [
   {
     jurisdictionId: "az:city:city-of-cottonwood",
@@ -423,12 +337,6 @@ export const WEBSITE_CORRECTIONS: readonly WebsiteCorrection[] = [
     reviewedBy: WEBSITE_CORRECTION_REVIEWER,
     reviewedAt: "2026-09-24T18:08:06Z",
   },
-  /*
-   * The three below are not their own .gov registrations: flagstaff.az.gov and newbury.nh.gov are names inside
-   * their states' zones (the registry row is the state's), and kearsarge.org is not .gov. Each rests on another
-   * government's own page naming the site, read robots-first by the session's research subagent and checked here
-   * (every sha256 recomputed from the saved bytes, every quote found in them).
-   */
   {
     jurisdictionId: "az:city:city-of-flagstaff",
     governmentName: "City of Flagstaff",
@@ -469,7 +377,6 @@ export const WEBSITE_CORRECTIONS: readonly WebsiteCorrection[] = [
       domain: "nh.gov", domainType: "State or territory", organization: "State of New Hampshire", city: "Concord", state: "NH",
       source: { ...CISA_READ, readAt: "2026-09-24T22:56:24Z" },
     },
-    /* Its homepage answered a Cloudflare challenge (HTTP 403) to the research read, so it is not a reading. */
     homepage: null,
     other: [
       {
@@ -490,7 +397,6 @@ export const WEBSITE_CORRECTIONS: readonly WebsiteCorrection[] = [
     recorded: "http://www.kearsarge.k12.nh.us/",
     corrected: "https://www.kearsarge.org",
     registry: null,
-    /* Its homepage answered a Cloudflare challenge (HTTP 403) to the research read, so it is not a reading. */
     homepage: null,
     other: [
       {
@@ -515,10 +421,6 @@ export const WEBSITE_CORRECTIONS: readonly WebsiteCorrection[] = [
   },
 ];
 
-/**
- * A case the rule does not resolve, named with what would resolve it (the owner's words: "report the specific
- * unresolved case"). Its Census address stays until one of those holds; nothing here is applied.
- */
 export interface UnresolvedWebsiteCase {
   readonly jurisdictionId: string;
   readonly governmentName: string;

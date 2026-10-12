@@ -1,56 +1,25 @@
 import { canonicalCivicDataJson } from "./changes.ts";
 import { derivedRequestedUrl } from "./derived-door.ts";
-import type { RoutineRecordClass } from "./types.ts";
+import type { RoutineRecordClass, SourceCheckEvidence } from "./types.ts";
+import { sourceCheckIssue } from "./source-check.ts";
+import { authorityFor } from "./source-authority.ts";
 
-/**
- * **A RE-CHECK THAT FOUND NOTHING NEW KEEPS READERS ON THEIR VERSION** (2026-09-24).
- *
- * In the 24 hours to 2026-09-24T16:00Z, 954 of 1,119 promotions were UNCHANGED
- * (923 of them meeting partitions): a successful re-check promoted a new
- * version whose read model was identical to the current one, and every such
- * move paid its readback, its recomposition and its readers' reloads. RULING
- * 283's other outcome is a durably receipted validated no-change, and this is
- * that receipt: an append-only event on the POINTED candidate itself (state
- * PROMOTED, next sequence), naming the version it confirms and the acquisition
- * that confirmed it. The pointer, the candidate row and every reader stay as
- * they are. The clock reads the latest confirmation as the source's latest
- * attempt and success, and Reader freshness reads its retrieval instant.
- *
- * Candidate and event states are database-constrained (migration 0026), so a
- * confirmation is not a new state or row; it is typed evidence, like a Reader
- * readback receipt.
- */
+/** An append-only event on the pointed candidate naming the version it confirms; the pointer, candidate row and readers stay as they are. */
 export const UNCHANGED_CONFIRMATION_PREFIX = "UNCHANGED_CONFIRMATION_V1 ";
 
-/**
- * READ_MODEL_RECOMPUTED: the source was acquired and normalized, and the read
- * model hashed equal to the pointer's. CHANGE_SET_UNCHANGED: the source was
- * acquired, normalized and validated, and its change set against the pointed
- * version added, changed and removed nothing, with the same held records; only
- * observation stamps (a meeting row's collectedAt, the snapshot's generatedAt
- * and counts) differ, and those never decide a change (civicRecordFacts).
- * PUBLISHER_STAMPS_UNCHANGED: the publisher's own change stamps for every held
- * record equal the held ones, so the read model is unchanged by construction;
- * the stamps are the evidence.
- */
+/** Only observation stamps may differ between a confirmed re-check and the pointed version; they never decide a change. */
 export type UnchangedBasis = "READ_MODEL_RECOMPUTED" | "CHANGE_SET_UNCHANGED" | "PUBLISHER_STAMPS_UNCHANGED";
 
-/**
- * A fetched version names its 2xx status and final URL. A derived version (a
- * meeting family or the source wiring, built from already-promoted inputs)
- * fetched nothing, so it has neither: its status is null, and its requested URL
- * is its own `derived:<sourceId>:<scope>` route (R23). Migration 0029's event
- * rule admits exactly this pair and nothing looser.
- */
+/** A derived version fetched nothing: null status, and its own `derived:<sourceId>:<scope>` route as the requested URL. */
 export interface UnchangedConfirmationRetrieval {
   readonly requestedUrl: string;
   readonly finalUrl: string | null;
   readonly httpStatus: number | null;
   readonly rawHash: string;
   readonly retrievedAt: string;
+  readonly sourceCheck?: SourceCheckEvidence;
 }
 
-/** Whether `retrieval` is the named version's own derived retrieval (no fetch, no status). */
 function isOwnDerivedRetrieval(retrieval: Record<string, unknown>, sourceId: unknown, scope: unknown): boolean {
   return retrieval.httpStatus === null &&
     typeof sourceId === "string" && typeof scope === "string" &&
@@ -58,7 +27,6 @@ function isOwnDerivedRetrieval(retrieval: Record<string, unknown>, sourceId: unk
     (retrieval.finalUrl === null || retrieval.finalUrl === retrieval.requestedUrl);
 }
 
-/** One held record's publisher stamps, as held and as fetched now. */
 export interface PublisherStampComparison {
   readonly key: string;
   readonly held: Readonly<Record<string, string | null>>;
@@ -71,16 +39,12 @@ export interface UnchangedConfirmation {
   readonly recordClass: RoutineRecordClass;
   readonly scope: string;
   readonly pointerKey: string;
-  /** The pointed version this re-check confirms. */
   readonly versionId: string;
-  /** Equal to the pointed candidate's normalized (read-model) hash. */
   readonly readModelHash: string;
   readonly basis: UnchangedBasis;
   readonly parserVersion: string;
   readonly retrieval: UnchangedConfirmationRetrieval;
-  /** PUBLISHER_STAMPS_UNCHANGED: every held record's stamps; otherwise optional source evidence. */
   readonly stamps: readonly PublisherStampComparison[] | null;
-  /** The store-observed instant; the event's `at`. */
   readonly observedAt: string;
 }
 
@@ -109,7 +73,6 @@ function stampsEqual(held: Readonly<Record<string, unknown>>, fetched: Readonly<
   return keys.size > 0 && [...keys].every((key) => Object.hasOwn(held, key) && Object.hasOwn(fetched, key) && held[key] === fetched[key]);
 }
 
-/** Why a value is not a well-formed confirmation, or null. Pointer facts are checked by the store. */
 export function unchangedConfirmationShapeIssue(value: unknown): string | null {
   if (!value || typeof value !== "object") return "not an object";
   const row = value as Record<string, unknown>;
@@ -132,6 +95,12 @@ export function unchangedConfirmationShapeIssue(value: unknown): string | null {
     !isInstant(retrieval.retrievedAt)
   ) return "the retrieval is not a successful acquisition";
   if (Date.parse(retrieval.retrievedAt) > Date.parse(row.observedAt)) return "retrieved after it was observed";
+  const checkIssue = sourceCheckIssue(retrieval.sourceCheck, row.observedAt);
+  if (checkIssue !== null) return checkIssue;
+  if (retrieval.sourceCheck !== undefined) {
+    const check = retrieval.sourceCheck as SourceCheckEvidence;
+    if ([check.requestedUrl, check.finalUrl].some(url => !authorityFor(String(row.sourceId), row.recordClass as RoutineRecordClass, url).ok)) return "The source check is outside this source's registered authority.";
+  }
   const stamps = row.stamps;
   if (row.basis === "PUBLISHER_STAMPS_UNCHANGED") {
     if (!Array.isArray(stamps) || stamps.length === 0) return "a stamp basis needs every held record's stamps";
@@ -160,25 +129,17 @@ export interface ConfirmUnchangedInput {
   readonly basis: UnchangedBasis;
   readonly retrieval: UnchangedConfirmationRetrieval;
   readonly stamps?: readonly PublisherStampComparison[] | null;
-  /** The confirming acquisition's retained source bytes, kept in a companion event. */
   readonly retainedSourceResponses?: readonly unknown[] | null;
 }
 
 export type ConfirmUnchangedOutcome =
   | { readonly kind: "CONFIRMED"; readonly versionId: string; readonly at: string }
   | {
-      /**
-       * POINTER_MOVED: the pointer no longer names the version. HASH_DIFFERS: its read
-       * model is not the confirmed one. POINTER_IS_IMPORT: a trusted-LKG import is
-       * never confirmed; a live read of it promotes. EVIDENCE_INVALID: malformed.
-       * STORE_REFUSED: the database's event rule does not yet admit the receipt
-       * (its migration is not applied); the caller promotes exactly as before.
-       */
+            /** STORE_REFUSED: the database's event rule does not yet admit the receipt; the caller promotes instead. */
       readonly kind: "POINTER_MOVED" | "HASH_DIFFERS" | "POINTER_IS_IMPORT" | "EVIDENCE_INVALID" | "STORE_REFUSED";
       readonly detail: string;
     };
 
-/** The confirmation `input` records at `observedAt`, or why it cannot be recorded. */
 export function buildUnchangedConfirmation(
   input: ConfirmUnchangedInput,
   pointerKey: string,
@@ -200,6 +161,7 @@ export function buildUnchangedConfirmation(
       httpStatus: input.retrieval.httpStatus,
       rawHash: input.retrieval.rawHash,
       retrievedAt: input.retrieval.retrievedAt,
+      ...(input.retrieval.sourceCheck ? { sourceCheck: input.retrieval.sourceCheck } : {}),
     },
     stamps: input.stamps ?? null,
     observedAt,
@@ -208,7 +170,6 @@ export function buildUnchangedConfirmation(
   return issue === null ? { ok: true, confirmation } : { ok: false, detail: issue };
 }
 
-/** The newest confirmation of `versionId` among a candidate's events, or null. */
 export function latestUnchangedConfirmation(
   events: readonly { readonly sequence: number; readonly detail: string }[],
   versionId: string,
@@ -222,12 +183,6 @@ export function latestUnchangedConfirmation(
   return latest?.confirmation ?? null;
 }
 
-/**
- * The confirming acquisition's retained source bytes, preserved exactly as a
- * promoted candidate would have preserved them (source history is kept), in a
- * companion event written in the same guarded step. Nothing routine reads it:
- * the clock and Reader freshness read only the small receipt.
- */
 export const UNCHANGED_CONFIRMATION_SOURCES_PREFIX = "UNCHANGED_CONFIRMATION_SOURCES_V1 ";
 
 export function serializeUnchangedConfirmationSources(
@@ -241,16 +196,10 @@ export function serializeUnchangedConfirmationSources(
   })}`;
 }
 
-/**
- * A confirmation receipt or its companion sources event: the two events a
- * version gathers on every quiet re-check while it stays pointed. Only the
- * clock and Reader freshness read them, through their own one-row reads.
- */
 export function isUnchangedConfirmationEvent(event: { readonly state: string; readonly detail: string }): boolean {
   return event.state === "PROMOTED" && isUnchangedConfirmationDetail(event.detail);
 }
 
-/** The detail test alone, for readers that classify events by detail (the database admits these only as PROMOTED). */
 export function isUnchangedConfirmationDetail(detail: string): boolean {
   return detail.startsWith(UNCHANGED_CONFIRMATION_PREFIX) || detail.startsWith(UNCHANGED_CONFIRMATION_SOURCES_PREFIX);
 }

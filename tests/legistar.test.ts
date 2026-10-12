@@ -19,17 +19,6 @@ import type {
   LegistarEventItem,
 } from "../lib/sources/legistar/types.ts";
 
-/**
- * The Legistar transform, against responses recorded from the live `pima`
- * client on 2026-08-12. No test here touches the network — the fixtures are the
- * contract, and if Granicus changes the shape these fail rather than the map
- * quietly emptying.
- *
- * What is worth pinning: this API sends a calendar date and a wall-clock time
- * with **no zone**, and **no coordinates at all**. Both are places where a
- * plausible guess would look right and be wrong.
- */
-
 function load<T>(name: string): T {
   return JSON.parse(
     readFileSync(new URL(`./fixtures/${name}`, import.meta.url), "utf8"),
@@ -47,11 +36,7 @@ const ITEMS_REGULAR = load<LegistarEventItem[]>(
 const COLLECTED_AT = "2026-08-12T22:00:00.000Z";
 const NOW = new Date("2026-08-12T22:00:00.000Z");
 
-/**
- * `items` defaults to `null` — "this run did not read the agenda" — because
- * that is what the recorded events fixture actually represents. The item
- * fixtures are attached deliberately, per event, by the D19 tests below.
- */
+/** `items` defaults to `null`: "this run did not read the agenda". */
 function wrap(
   events: LegistarEvent[],
   itemsByEventId: Record<number, LegistarEventItem[]> = {},
@@ -75,8 +60,7 @@ test("normalizes recorded Pima events into Meetings", () => {
 });
 
 test("wall-clock time is reassembled against the body's zone, not UTC", () => {
-  // EventId 1823: EventDate 2026-08-11, EventTime "1:30 PM", America/Phoenix.
-  // Phoenix never observes DST, so this is UTC-7 year round: 20:30Z.
+  // Phoenix never observes DST, so a 1:30 PM local time is 20:30Z year round.
   const event = EVENTS.find((e) => e.EventId === 1823);
   assert.ok(event, "fixture must still contain event 1823");
 
@@ -104,15 +88,6 @@ test("every meeting carries real provenance, and the org is the body not the ven
   }
 });
 
-/*
- * CHANGED ON PURPOSE (the venue-gap class, 2026-09-23). This test used to be
- * "a meeting with no known venue is dropped" and pinned `meetings.length === 0`.
- * The drop was the defect: a sitting the county published was withheld because
- * OUR venue table lacked a row, and the same rule, applied to an empty venue
- * scope, failed Pima's whole partition from 2026-09-14. The owner's rule is that
- * a missing or unreviewed place never suppresses a meeting. What this test
- * still pins is the half that was always right: no approximate pin, ever.
- */
 test("a meeting with no known venue is published with the county's own words, never given an approximate pin", () => {
   const invented: LegistarEvent = {
     ...EVENTS[0],
@@ -155,8 +130,6 @@ test("a virtual meeting is KEPT, with no place and no invented pin (D18)", () =>
 
   const { meetings, drops } = normalizeWithDrops(wrap([virtual]), NOW);
 
-  // It used to be DROPPED. It is a real public meeting a reader could have
-  // attended, and the map's constraint was being applied to the reader.
   assert.equal(meetings.length, 1, "a virtual meeting is a meeting");
   assert.equal(meetings[0].location, null, "no building means no coordinates");
   assert.equal(
@@ -169,8 +142,6 @@ test("a virtual meeting is KEPT, with no place and no invented pin (D18)", () =>
     null,
     "Legistar publishes no join link on the event, and nothing invents one",
   );
-  // The counter keeps its name and its meaning: it counts meetings with no
-  // physical place, which is the same quantity it always counted.
   assert.equal(drops.placeless, 1);
   assert.equal(
     drops.unknownVenue,
@@ -190,10 +161,7 @@ test("coordinates only ever come from the curated venue table", () => {
   const { meetings } = normalizeWithDrops(wrap(EVENTS), NOW);
   const known = LEGISTAR_CLIENTS[0].venues;
 
-  // A meeting held online has no coordinates at all, which satisfies this
-  // rule in the strongest possible way (D18) — but `some()` over an empty
-  // comparison would report it as a violation, so it is stated rather than
-  // swept into the loop.
+  // An online meeting has no coordinates, so it is checked apart from the venue-table loop.
   const online = meetings.filter((m) => m.location === null);
   assert.ok(online.length > 0, "the fixture still contains a virtual meeting");
   for (const meeting of online) assert.equal(meeting.online?.joinUrl, null);
@@ -266,15 +234,22 @@ test("status is decided against the passed clock, not the wall clock", () => {
   );
 });
 
-test("a meeting with no usable time is dropped rather than placed at midnight", () => {
+test("a sourced meeting date publishes while its start time remains unknown", () => {
   const base = EVENTS[0];
   const { meetings, drops } = normalizeWithDrops(
     wrap([{ ...base, EventId: 999_002, EventTime: null }]),
     NOW,
   );
 
+  assert.equal(meetings.length, 1);
+  assert.equal(meetings[0].startPrecision, "DAY");
+  assert.equal(drops.unplaceableInTime, 0);
+});
+
+test("a sibling body on the same tenant cannot inherit the bound body's identity", () => {
+  const { meetings, drops } = normalizeWithDrops(wrap([{ ...EVENTS[0], EventBodyId: 999, EventBodyName: "Planning Commission" }]), NOW);
   assert.equal(meetings.length, 0);
-  assert.equal(drops.unplaceableInTime, 1);
+  assert.equal(drops.notConfigured, 1);
 });
 
 test("ids are namespaced by source and client", () => {
@@ -283,9 +258,6 @@ test("ids are namespaced by source and client", () => {
 });
 
 test("detects the board sitting as another body — the 4.6.9 case, in real data", () => {
-  // Pima's Board of Supervisors regular meeting of 2026-08-11 carries
-  // "BOARD OF SUPERVISORS SITTING AS OTHER BOARDS" and a LIBRARY DISTRICT
-  // BOARD heading. A special district's business inside a county feed.
   const found = detectSittingAs(ITEMS_REGULAR);
 
   assert.ok(found.length > 0, "expected a sitting-as heading in the regular meeting");
@@ -300,8 +272,7 @@ test("a study session with no other-body business reports none", () => {
 });
 
 test("status codes are described the way the API actually behaves", () => {
-  // Measured across nine slugs on 2026-08-12. A 500 here is a wrong slug, not
-  // an outage, and retrying it asks the same wrong question again.
+  // A 500 here is a wrong slug, not an outage.
   assert.match(describeStatus(500), /not a Legistar client/i);
   assert.match(describeStatus(403), /token/i);
 });

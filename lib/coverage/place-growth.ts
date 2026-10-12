@@ -1,10 +1,9 @@
 import { placeMeasures, type Measure, type MeasureRow } from "./place-measures.ts";
 
 /**
- * **THE STARTING LIST AND THE GROWN LIST, SIDE BY SIDE (SC-10).** A mission starts with what the place was known to owe. Hunts then
- * find more bodies, seats and contests, so the owed list grows. Completeness is counted on both: the starting list (everything
- * owed from before the mission started) and the grown list (everything owed now). A new find adds blanks to the grown list only,
- * so it can never pull the starting figure down. Counts only; nothing here gates publishing. PURE.
+ * Completeness on the starting list (owed before the mission started) and the
+ * grown list (owed now). A new find adds blanks to the grown list only, so it
+ * never lowers the starting figure. Pure.
  */
 export interface GrowthRow extends MeasureRow {
   /** When the blank started being owed; null when it was owed from the start or no record dates it. */

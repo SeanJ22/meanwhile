@@ -1,61 +1,17 @@
 /**
- * STATE, COUNTY AND LOCAL CAMPAIGN MONEY — the half the FEC cannot answer.
+ * State, county and local campaign money: the half the FEC cannot answer.
+ * These records render for readers and never enter an export or a sold
+ * aggregate. They extend the funding corpus's data-class union and share its
+ * render path.
  *
- * Session 2026-08-24. The filing records in here render for readers and never
- * enter an export or a sold aggregate; reactions to their display count and are
- * sold like any other reaction (Sean, 2026-10-01).
+ * An absence of filings is not zero dollars: small-race candidates may sit
+ * under a reporting threshold, and `$0` would be a false claim while blank
+ * would look like we never looked. See `FilingState`.
  *
- * ## The gap this closes, stated as a fact about a card
- *
- * Every Campaign money drop-down in this product is FEC-fed, and the FEC is
- * federal-only. **A Morris County commissioner candidate files with the New
- * Jersey Election Law Enforcement Commission, not the FEC** — so the drop-down
- * on their card structurally could not fill. Not "had no data yet": could not.
- * The same is true of every state, county, municipal and school-board candidate
- * on every ballot this product renders, which at 07866 alone is most of 272
- * candidacies.
- *
- * ## THIS EXTENDS THE FUNDING CORPUS RATHER THAN DUPLICATING IT
- *
- * `lib/funding/types.ts` already models money beside a candidate, already
- * carries a provenance tag per record, and is already structurally unreachable
- * from the aggregation and export path. Building a second corpus beside it
- * would be the duplicated implementation RULING 103 was adopted over, and would
- * give the firewall two places to be enforced instead of one. So the data class
- * union grows and the render path is shared.
- *
- * ## THE SPLIT STATE IS THE DESIGN, NOT A CONVENIENCE
- *
- * **An absence of filings is not zero dollars.** Small-race candidates file
- * short forms, or sit under a reporting threshold entirely — New Hampshire's
- * thresholds exempt most town-level candidates, so a sourced "no reports" will
- * be a common outcome there and that is a correct result rather than a thin
- * one. Rendering that as `$0` would be a false claim about a named person's
- * campaign, and rendering it as blank would be indistinguishable from our not
- * having looked.
- *
- * It began as three states. **It is five, because two of the three were each
- * doing more than one job and the extra jobs were false sentences about named
- * people** — see `FilingState` below, which carries the amendment and the
- * audit that forced it.
- *
- * **It is SIX as of 2026-08-31 (Session C2)**, and the sixth is the reader's
- * half of RULING 224: `OURS_GAP` renders, and it renders no money. See
- * `FilingState` below.
- *
- * ## MATCHING IS THE DANGEROUS PART, AND THE BAR IS DELIBERATELY HIGH
- *
- * A candidate joined to the wrong committee renders someone else's money on
- * their card, under their name and their photograph. That is a worse failure
- * than an empty drop-down by a wide margin, and it is the exact class RULING
- * 111 names: a join on names always drops and mismatches rows, and a dropped
- * row comes back looking identical to a genuine absence.
- *
- * So a match requires **all three** of the committee's registered name, the
- * office sought, and the election year to agree with our certified-ballot row.
- * Anything less is a `LEAD` and does not render. `matchedOn` records which
- * criteria were checked and how, per record, so a wrong match is reviewable
- * rather than merely regrettable.
+ * Matching is the dangerous part: a wrong join renders someone else's money
+ * on a candidate's card. A match requires all three of registered name,
+ * office sought and election year to agree with our certified-ballot row;
+ * anything less is a `LEAD` and does not render.
  */
 
 import type { Provenance } from "../sources/types.ts";
@@ -67,35 +23,15 @@ export type MoneyJurisdiction = string;
 /**
  * Whether this candidate's money is filed, absent, or merely suspected.
  *
- * ## IT WAS THREE STATES AND TWO OF THEM WERE DOING FOUR JOBS
- *
- * Amended 2026-08-31 (Session C) after an audit found the New Hampshire
- * collector writing `NO_REPORTS_ON_FILE` — a SOURCED, DATED claim about a
- * government's records — for three things that are not that claim:
- *
- * - a committee the state NAMES, with an id, a registered name, an office and
- *   an election cycle, whose published totals happen to be zero;
- * - a surname query that returned HTTP 500;
- * - a row we could not match to a person because the ballot says `Jon` and the
- *   filing says `Jonathan`.
- *
- * All three are different sentences and one of them is not about the state at
- * all. So the union grows, and it grows in the direction of saying LESS:
- *
- * - `FILED` — reports are on file and the totals below are what they say.
- * - `REGISTERED_NO_ACTIVITY_REPORTED` — the agency holds this committee and
- *   publishes zero receipts and zero expenditures for it. A statement about a
- *   REGISTERED committee's reported activity, which is a different fact about
- *   a different thing from the registry holding nothing. **Renders**, with its
- *   own sentence.
- * - `NO_REPORTS_ON_FILE` — the agency was asked, on `checkedAt`, with a read
- *   proven complete against the agency's own published count, and holds
- *   nothing that could be this candidate. A SOURCED, DATED statement.
- * - `LEAD` — something plausible was found and it does not meet the matching
- *   bar. **It does not render.**
- * - `ROUTE_UNREAD` — the route did not answer. An OURS gap, never theirs.
- *   **It does not render**: RULING 139 forbids the product announcing its own
- *   failure to a reader, and a card with nothing to say says nothing.
+ * - `FILED`: reports are on file and the totals are what they say.
+ * - `REGISTERED_NO_ACTIVITY_REPORTED`: the agency holds this committee and
+ *   publishes zero receipts and expenditures. Renders, with its own sentence.
+ * - `NO_REPORTS_ON_FILE`: the agency was asked on `checkedAt`, with a read
+ *   proven complete against its own published count, and holds nothing that
+ *   could be this candidate. A sourced, dated statement.
+ * - `LEAD`: something plausible that does not meet the matching bar. Does not render.
+ * - `ROUTE_UNREAD`: the route did not answer. Our gap; does not render.
+ * - `OURS_GAP`: see below.
  */
 export type FilingState =
   | "FILED"
@@ -104,27 +40,11 @@ export type FilingState =
   | "LEAD"
   | "ROUTE_UNREAD"
   /*
-   * **THE SIXTH, ADDED 2026-08-31 (Session C2) UNDER RULING 224.**
-   *
-   * A record for this person EXISTS at the agency, we have read it, and
-   * something WE have not resolved stands between it and a figure — the seat
-   * the agency states is not the seat on this ballot, or our name test cannot
-   * bridge a diminutive it must not guess at.
-   *
-   * It is NOT `LEAD` and it is NOT `ROUTE_UNREAD`. `LEAD` is silent because the
-   * money cannot be safely attributed, and silence was leaving a candidate we
-   * had actively investigated rendering the card's generic line — word for word
-   * what a candidate nobody had ever looked for renders. `ROUTE_UNREAD` is
-   * silent because the route did not answer and there is nothing to say; here
-   * the route ANSWERED and there is something to say.
-   *
-   * **It RENDERS and it carries no receipts, no expenditures, no committee
-   * attribution and no dollar figure of any kind.** The prohibition `LEAD`
-   * enforces is intact — what may never reach a reader is an unproven
-   * committee's FIGURES — and what reaches the reader is a sentence about US
-   * plus the agency's own next filing deadline. RULING 139 strikes a VERDICT on
-   * ourselves; the constitution separately REQUIRES that a gap name whose it is,
-   * and "we haven't matched this yet" is that attribution, not a verdict.
+   * A record for this person exists at the agency and we have read it, but
+   * something we have not resolved (a different seat, a name we must not
+   * guess at) stands between it and a figure. Renders, with no receipts,
+   * expenditures, committee or dollar figure: a sentence about us plus the
+   * agency's own next filing deadline.
    */
   | "OURS_GAP";
 /** Which of the three matching criteria were satisfied, and by what. */
@@ -144,13 +64,8 @@ export interface MatchBasis {
 }
 
 /**
- * Top-line figures only.
- *
- * Every field is nullable and that is not laziness: the three agencies publish
- * different summary lines, and a state that does not publish cash-on-hand must
- * render as not publishing it rather than as zero. A render default that turned
- * a null into a number would be the render-default rule's exact failure, in
- * money.
+ * Top-line figures only. Every field is nullable: a state that does not
+ * publish a line renders as not publishing it, never as zero.
  */
 export interface StateMoneyTotals {
   receipts: number | null;
@@ -163,6 +78,8 @@ export interface StateMoneyTotals {
 }
 
 export interface StateMoneyRecord {
+  /** A source-native filer may publish before a cross-source person binding exists. */
+  identityBasis?: "NATIVE_FILER" | "CANDIDACY";
   /** Held source descriptor and key reference; never a credential value. */
   detailSource?: import("./finance-detail-source.ts").FinanceDoorDetailSource;
   dataClass: "STATE_COMMITTEE";
@@ -187,32 +104,22 @@ export interface StateMoneyRecord {
   targetKeys: string[];
   match: MatchBasis;
   /**
-   * The date the agency was asked. Present on EVERY record including
-   * `NO_REPORTS_ON_FILE`, because a sourced absence with no date is not a
-   * sourced absence (RULING 53, RULING 107 — this is a read stamp, minted by
-   * the code path that performed the read).
+   * The date the agency was asked, on every record including
+   * `NO_REPORTS_ON_FILE`: a read stamp, minted by the code path that read.
    */
   checkedAt: string;
   provenance: Provenance;
   /**
-   * Set when a refresh could NOT read the route and this record was carried
-   * forward from the previous snapshot rather than replaced.
-   *
-   * `checkedAt` stays the date the facts were actually read, so the reader's
-   * attribution line remains true; this field is the auditor's half. It is not
-   * an announcement — RULING 139 strikes a verdict on ourselves from a reader
-   * surface, and the read date is the whole of what a reader is owed.
+   * Set when a refresh could not read the route and this record was carried
+   * forward. `checkedAt` stays the date the facts were actually read; this
+   * field is for audit, not for readers.
    */
   retainedFrom?: { attemptedAt: string; reason: string } | null;
   /**
-   * PRESENT ONLY ON `OURS_GAP`, AND IT IS WHAT MAKES THAT STATE HONEST.
-   *
-   * `whatIsMissing` is one plain sentence about US — what we could not settle —
-   * never a characterization of the candidate or their money. `nextDue` is the
-   * agency's OWN next filing deadline, read from the state's published filing
-   * calendar; a date this product invented would make the promise worse than no
-   * promise. `null` means the calendar states none after today, which is a fact
-   * about the calendar and renders as one.
+   * Present only on `OURS_GAP`. `whatIsMissing` is one plain sentence about
+   * what we could not settle. `nextDue` is the agency's own next filing
+   * deadline from its published calendar; `null` means it states none after
+   * today.
    */
   ourGap?: {
     whatIsMissing: string;
@@ -226,10 +133,7 @@ export interface StateMoneySnapshot {
   /** A read stamp: the day the agencies were actually called. */
   collectedAt: string;
   cycle: number;
-  /**
-   * The three-way split, stated with its denominator. Never a bare count —
-   * RULING 105, and the two-numbers rule it extends.
-   */
+  /** The three-way split, stated with its denominator. */
   split: {
     candidaciesInScope: number;
     filed: number;
@@ -242,9 +146,8 @@ export interface StateMoneySnapshot {
     /** In scope, asked, and not yet resolved to any of the three. */
     unresolved: number;
     /**
-     * Committee records behind `filed`. Higher than `filed` is CORRECT — a
-     * candidate may file a primary committee and a general one. Stated as its
-     * own number so the coverage figure can never read over 100%.
+     * Committee records behind `filed`. May exceed `filed` (primary and general
+     * committees), so it is its own number and coverage never reads over 100%.
      */
     filedRecords: number;
   };
@@ -256,26 +159,37 @@ export interface StateMoneySnapshot {
       filed: number;
       noReports: number;
       lead: number;
-      /**
-       * The two states added 2026-08-31. Optional because the New Jersey and
-       * Arizona snapshots predate them and a snapshot is a WRITTEN FILE — a
-       * required field here would make a committed, honest, older file fail to
-       * type rather than making it truer.
-       */
+      /** Optional: older written snapshots predate these two states. */
       registeredNoActivityReported?: number;
       routeUnread?: number;
     }
   >;
   records: StateMoneyRecord[];
+  /** Standing refresh cursor; fact dates remain on each source-bound record. */
+  refreshAttempts?: Record<string, string>;
+  acquisitionCursors?: Record<string, number>;
+}
+
+/** Filing status can change without replacing the agency's committee for a period. */
+export function stateMoneyRecordKey(record: {
+  readonly jurisdiction: string;
+  readonly electionYear: string | number;
+  readonly committeeId: string | null;
+  readonly targetKeys: readonly string[];
+  readonly filingState: string;
+}, index: number): string {
+  const scope = `state-money:${record.jurisdiction}:${record.electionYear}`;
+  if (record.committeeId) return `${scope}:${record.committeeId}`;
+  // Unresolved candidacy gaps have no native committee; retain their exact
+  // target identity until source evidence resolves that relationship.
+  const target = record.targetKeys.slice().sort().join("+") || `unresolved-${index}`;
+  return `${scope}:${target}:${record.filingState}`;
 }
 
 /**
- * THE MATCHING BAR, in one function so no caller can lower it locally.
- *
- * RULING 111: state which side holds the fact and whether the join can drop
- * rows. Here the agency holds the money and our certified ballot holds the
- * office and the cycle; the join is on a NAME, which always can. So the bar is
- * a conjunction and the failure mode is `LEAD`, never a silent drop.
+ * The matching bar, in one function so no caller can lower it. The join is on
+ * a name, which can always drop or mismatch rows, so the bar is a
+ * conjunction and its failure is `LEAD`, never a silent drop.
  */
 export function judgeMatch(input: {
   registeredName: string;
@@ -326,16 +240,10 @@ export function judgeMatch(input: {
 }
 
 /**
- * Name agreement, deliberately conservative.
- *
- * Agencies file `SURNAME, FORENAME MIDDLE SUFFIX` in caps; ballots carry
- * `Forename Surname`. Comparing the token SETS after stripping punctuation,
- * suffixes and single-letter initials answers that without inventing a
- * fuzzy-distance threshold nobody could defend on a candidate's card.
- *
- * A suffix is stripped rather than compared because the same person appears
- * with and without it across sources — and because getting it wrong is what
- * rendered `Thomas J. Haynes III` as "TI" (RULING 103).
+ * Name agreement, deliberately conservative. Agencies file
+ * `SURNAME, FORENAME MIDDLE SUFFIX`; ballots carry `Forename Surname`. Token
+ * sets are compared after stripping punctuation, suffixes and single-letter
+ * initials, with no fuzzy-distance threshold.
  */
 const SUFFIXES = new Set(["jr", "sr", "ii", "iii", "iv", "v"]);
 
@@ -349,31 +257,13 @@ export function nameTokens(name: string): string[] {
 }
 
 /**
- * **A DELIBERATELY WEAK TEST THAT MAY ONLY EVER WITHHOLD A CLAIM.**
+ * A deliberately weak test that may only ever withhold a claim: could the row
+ * the agency handed us be about this person? It forbids claiming an absence;
+ * it never licenses a match, fills a field or reaches a reader. `namesAgree`
+ * stays the strict matching bar.
  *
- * `namesAgree` is the MATCHING bar and it stays exactly as strict as it was:
- * it decides whether a committee's money may appear on a named person's card,
- * and loosening it puts a stranger's money there.
- *
- * This answers a different question — *could the row the agency just handed us
- * be about this person?* — and it exists for one purpose: **to forbid the
- * product from claiming an absence.** It never licenses a match, never fills a
- * field and never reaches a reader. Because its only effect is to make the
- * product say less, being generous here is the safe direction, which is the
- * opposite of `namesAgree`, where being generous is the dangerous one.
- *
- * The case that produced it: New Hampshire's registry holds
- * `Raiche, Jonathan M. (Raiche, Jon )` for 2026 Merrimack County Attorney; the
- * certified ballot carries `Jon Raiche` for Merrimack County Attorney. The
- * strict bar correctly refuses that as a match. What was NOT correct is that
- * the product then published *"No reports on file with the New Hampshire
- * Secretary of State"* — a claim about a government's records that the
- * government's own answer contradicted.
- *
- * Surname must agree exactly. A forename pair counts as compatible when the
- * two are equal, or one is a prefix of the other of at least two characters —
- * `Jon`/`Jonathan`, `Meg`/`Meghan`. That is a stated, checkable rule rather
- * than a distance threshold, and `Allen`/`Erica` is not compatible under it.
+ * Surname must agree exactly. Forenames are compatible when equal, or one is
+ * a prefix of the other of at least two characters (`Jon`/`Jonathan`).
  */
 export function mayBeSamePerson(a: string, b: string): boolean {
   const ta = nameTokens(a);
@@ -412,81 +302,27 @@ export function namesAgree(a: string, b: string): boolean {
 }
 
 /**
- * OFFICE AGREEMENT IS A COMPARISON OF CLASSES, NOT OF WORDS.
+ * Office agreement compares classes, not words: an agency may file an office
+ * category (`MUNICIPAL OFFICE`, `SCHOOL BOARD`) while the ballot carries the
+ * title (`Member of the Township Committee`). Each side maps to a class; an
+ * unmapped side is `null`, and `null` never agrees.
  *
- * The first version of this compared token overlap and rejected every single
- * match — 175 LEADs and 0 FILED across the whole Morris County ballot. The
- * reason is not a threshold that needed loosening; it is that **the two sides
- * speak different vocabularies.**
- *
- * NJ ELEC files an office CATEGORY: `MUNICIPAL OFFICE`, `SCHOOL BOARD`,
- * `COUNTY COMMISSIONER`. The certified ballot carries the office TITLE:
- * `Member of the Township Committee`, `Member of the Board of Education`,
- * `Member of the Board of County Commissioners`. `MUNICIPAL OFFICE` and
- * `Member of the Township Committee` share no word at all and describe the
- * same seat. No amount of token matching bridges that, and a fuzzy-distance
- * threshold that appeared to would be worse — it would start matching a school
- * board to a township committee, which is a wrong person's money on a card.
- *
- * So each side is mapped to a CLASS and the classes are compared. A side that
- * maps to no class is `null`, and `null` never agrees with anything — an
- * unrecognised office is a LEAD, which is the safe direction.
- *
- * **Order is load-bearing.** `Member of the Board of County Commissioners`
- * contains the word `commissioner`, so COUNTY must be tested before MUNICIPAL
- * or every county commissioner would classify as a municipal seat.
+ * Order is load-bearing: `Member of the Board of County Commissioners`
+ * contains `commissioner`, so COUNTY is tested before MUNICIPAL, and STATE
+ * (e.g. `Executive Council`) before MUNICIPAL's `council`.
  */
 export type OfficeClass = "COUNTY" | "SCHOOL" | "MUNICIPAL" | "STATE" | "FEDERAL";
 
 const OFFICE_CLASS_RULES: readonly { cls: OfficeClass; pattern: RegExp }[] = [
   { cls: "FEDERAL", pattern: /\b(united states senat(e|or)|house of representatives|congress(ional)?|president)\b/ },
   /*
-   * **NEW HAMPSHIRE'S VOCABULARY, ADDED 2026-08-31 (Session C).**
-   *
-   * Three of these were not additions but REPAIRS, and one of them was
-   * dangerous rather than merely absent:
-   *
-   * - `Executive Council` matched the MUNICIPAL rule's `council`, so New
-   *   Hampshire's statewide executive council classified as a town council.
-   *   That is a WRONG class, not a null — and a wrong class is the one thing
-   *   `officesAgree` cannot defend against, because two wrong classes can
-   *   agree with each other. STATE is tested before MUNICIPAL, so naming it
-   *   here fixes it.
-   * - `state senate` did not match `State Senator` and `State Senator,
-   *   District 7`: the word boundary after `senate` fails against the `r`.
-   *   The ballot says senator and the filing says senate, so BOTH spellings
-   *   are named rather than relying on one side's habit.
-   * - `State Representative` matched nothing at all, which is most of a New
-   *   Hampshire ballot.
-   *
-   * The county additions are NH's actual filed office names, read from the
-   * CFS filer records rather than guessed: `County Attorney`, `County
-   * Treasurer`, `Register of Deeds`, `Register of Probate`.
-   *
-   * This widens what can be RECOGNISED. It does not loosen agreement:
-   * `officesAgree` still demands two classes that are equal, and an office
-   * neither side can classify is still a LEAD.
+   * Both `senate` and `senator` are named, because the ballot and the filing
+   * use different forms.
    */
   /*
-   * **ARIZONA'S STATEWIDE VOCABULARY, ADDED 2026-08-31 (Session C2).**
-   *
-   * Arizona elects six statewide executives besides the Governor, plus an
-   * elected Corporation Commission that has no New England or New Jersey
-   * analogue. NONE of them matched any rule: `Secretary of State`, `Attorney
-   * General`, `State Treasurer`, `Superintendent of Public Instruction`,
-   * `State Mine Inspector` and `Corporation Commissioner` all classified as
-   * `null`, and `null` is a LEAD. That is 22 of the 49 non-federal candidacies
-   * on the Arizona pilot ballot unable to match a filing that exists.
-   *
-   * Each addition is a full multi-word office title, and that is deliberate
-   * rather than terse. The dangerous direction here is a WRONG class, not a
-   * null: `officesAgree` defends against one side being unrecognised and
-   * cannot defend against two sides that are both wrong in the same way. A
-   * bare `\btreasurer\b` would swallow `County Treasurer`, and a bare
-   * `\bcommissioner\b` would swallow `County Commissioner` — which is a
-   * county candidate's money on a statewide candidate's card. The titles
-   * below cannot collide with a county or municipal office because no county
-   * or municipal office is called any of them.
+   * Statewide executive offices are full multi-word titles so they cannot
+   * swallow a county office: a bare `treasurer` or `commissioner` would put a
+   * county candidate's money on a statewide card.
    */
   {
     cls: "STATE",
@@ -515,31 +351,15 @@ export function officeClassOf(office: string): OfficeClass | null {
 export function officesAgree(a: string, b: string): boolean {
   const ca = officeClassOf(a);
   const cb = officeClassOf(b);
-  // An office neither side can classify is never agreement. A LEAD is the
-  // correct outcome for an office we do not understand.
+  // An office neither side can classify is never agreement.
   if (ca === null || cb === null) return false;
   return ca === cb;
 }
 
 /**
- * The split, recomputed from the records themselves.
- *
- * **THE SPLIT COUNTS CANDIDACIES; THE RECORD COUNT IS A SEPARATE NUMBER.**
- *
- * The first version counted RECORDS and reported `FILED 296 of 235` — more
- * answers than there were questions. The cause is real and it is not a bug in
- * the data: **one candidate legitimately has several committees.** A New Jersey
- * candidate may file a primary committee and a general committee, and a joint
- * candidates committee alongside a personal one, and ELEC lists each.
- *
- * So the two are different questions and both get answered. *How many of the
- * 235 candidacies now have money on their card* is the coverage figure. *How
- * many committee records back them* is a different fact, and running the two
- * together produces a percentage over 100 — which is how a reader learns the
- * number is not to be trusted.
- *
- * **Stated N equals rendered rows**: both are computed from the same array the
- * surface renders, in the same pass.
+ * The split, recomputed from the records themselves. It counts candidacies;
+ * the committee record count is a separate number, since one candidate can
+ * have several committees. Both come from the array the surface renders.
  */
 export function computeSplit(
   records: readonly StateMoneyRecord[],
@@ -587,27 +407,17 @@ export function computeSplit(
 }
 
 /**
- * Only a record that states a FACT ABOUT THE AGENCY'S HOLDINGS may reach a
- * reader — a filing, a registered committee's reported activity, or a sourced
- * dated absence. Asked here rather than at each surface, so no surface can
- * decide otherwise (the RULING 118 shape: ask once).
- *
- * The two that never render are the two that are about US: a `LEAD` is a guess
- * about a named person's money, and a `ROUTE_UNREAD` is our own failed
- * retrieval. RULING 139 — the product does not announce its own failure; it
- * states what is known and moves on.
+ * Only a record that states a fact about the agency's holdings may reach a
+ * reader: a filing, a registered committee's reported activity, a sourced
+ * dated absence, or an `OURS_GAP` sentence. A `LEAD` and a `ROUTE_UNREAD`
+ * never render. Asked here so no surface decides otherwise.
  */
 export function isRenderable(record: StateMoneyRecord): boolean {
   return (
     record.filingState === "FILED" ||
     record.filingState === "REGISTERED_NO_ACTIVITY_REPORTED" ||
     record.filingState === "NO_REPORTS_ON_FILE" ||
-    /*
-     * `OURS_GAP` renders and carries no money (RULING 224). What may never
-     * reach a reader is an unproven committee's FIGURES, and this record has
-     * none: `totals` is null throughout and no committee is attributed. What
-     * reaches the reader is a sentence about us and a date.
-     */
+    /* `OURS_GAP` renders with no money: totals are null and no committee is attributed. */
     record.filingState === "OURS_GAP"
   );
 }

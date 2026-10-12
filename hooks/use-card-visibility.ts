@@ -8,12 +8,9 @@ import { captureEvent } from "@/lib/events/client";
 const MIN_VISIBLE_MS = 1_000;
 
 /**
- * **HOW LONG A CARD IS ON SCREEN** (S2.4, October 1, 2026).
- *
- * Counts the time the element is at least half visible AND the tab is in the
+ * Counts the time the element is at least half visible with the tab in the
  * foreground, and records one `CARD_VISIBLE` event with the total when the card
- * leaves view or unmounts. One event per appearance, not a stream; the batcher
- * sends it with the rest.
+ * leaves view or unmounts.
  */
 export function useCardVisibility(
   ref: RefObject<Element | null>,

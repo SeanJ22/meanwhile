@@ -1,16 +1,9 @@
 /**
- * **A SCOUT'S ACCUMULATED CONTEXT IS BOUNDED, SO IT CANNOT HIT PAYLOAD_BYTE_CEILING —
- * AND IT IS BOUNDED WITHOUT EDITING HISTORY.** (2026-09-17; append-only 2026-09-25.)
- *
- * Every turn re-sends the whole conversation and the FleetSafetyController counts
- * each re-send against the cycle's 16 MiB payload budget. Unbounded, a scout that
- * fetched a few large pages grew its messages until a turn's projected request
- * crossed the ceiling and ABORTED — the failure that stopped every scout from
- * 2026-09-15 on. Until 2026-09-25 the bound elided older tool results IN PLACE,
- * which on Claude Opus 5.5 invalidates every later thinking block (HTTP 400 on
- * accounts created on or after 2026-08-31). The bound is now a RESTART: the next
- * request is the brief plus one carried-forward block built from the machine's
- * record (`scoutCarriedForward`), with nothing earlier replayed.
+ * Every turn re-sends the whole conversation against the cycle's payload budget,
+ * so a Scout's accumulated context is bounded. The bound is a RESTART, never an
+ * in-place edit of history (which invalidates every later thinking block): the
+ * next request is the brief plus one carried-forward block built from the
+ * machine's record (`scoutCarriedForward`), with nothing earlier replayed.
  */
 import assert from "node:assert/strict";
 import test from "node:test";

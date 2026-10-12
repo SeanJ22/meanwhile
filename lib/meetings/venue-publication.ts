@@ -1,11 +1,6 @@
 /**
- * BX-09: venue pins publish on their own. Every address a meeting pass freshly matches to one exact Census street
- * point (lib/meetings/automatic-venue-resolutions.ts) is promoted into the `venue-resolutions` pointer by this code,
- * with the same receipts that proved it, so later passes and other bodies reuse the pin without any person's review.
- * `reviewedBy` is the automatic reviewer's code version; the §3 validator (manual-projections.ts) is the only check.
- *
- * A refused or failed promotion holds only this pointer: the meeting pass has already promoted its own sittings,
- * the prior GOOD resolutions stay live, and the same addresses are matched again on the next pass.
+ * Every address a meeting pass freshly matches to one exact Census street point is promoted into the
+ * `venue-resolutions` pointer with the receipts that proved it. A refused promotion holds only this pointer.
  */
 import type { ManualProjectionPackage } from "../civic-data/manual-projections.ts";
 import { prepareManualProjectionSuccessor } from "../civic-data/manual-successor.ts";

@@ -1,10 +1,6 @@
 /**
- * @freshness-reads-here
- *
- * RULING 107 — the clock stamps in this file are minted by the code path that
- * performs the read: the freshness date is taken at the moment of the fetch,
- * which is what the ruling asks for rather than what it forbids. Verified
- * 2026-08-23 by reading each stamp site against the retrieval it sits in.
+ * @freshness-reads-here — the freshness date is taken at the moment of the
+ * fetch, by the code path that performs the read.
  */
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import { resolveVenue } from "../../meetings/venue-cache.ts";
@@ -23,34 +19,18 @@ import {
 } from "../normalize-account.ts";
 
 /**
- * Hyland OnBase Agenda Online meeting source — tracker **D16**, reversed.
+ * Hyland OnBase Agenda Online meeting source.
  *
  * Server-rendered ASP.NET: the landing page carries the whole upcoming
  * meeting list as plain table rows (`<tr id="meeting-<id>-row">`), each with
  * the meeting name, type, a wall-clock date string, a ViewMeeting permalink
- * and a direct agenda-PDF download. One GET per ingest. No JS, no session, no
- * postbacks.
+ * and a direct agenda-PDF download. One GET per ingest.
  *
- * D14's original conclusion was "do not build" on Hyland's terms; the 2026-08
- * reprioritization reversed it: the terms enumerate five `hyland.com` hosts
- * and do not reach `hylandcloud.com` where the tenant lives, and the records
- * are the City of Tucson's — a public body statutorily obliged to publish
- * them (A.R.S. § 38-431.02). See `docs/vendor-review.md` for the reversal.
- *
- * **The list carries no location field anywhere** (verified on the list and
- * the ViewMeeting page both), so venue resolution keys on the meeting *name*
- * via the venue cache. A name the cache does not know drops the meeting and
- * counts it — the Joint Meeting and the Public Housing Authority Board stay
- * unplaced until someone cites where they actually meet.
- *
- * **The one deliberate exception to the venue-gap class** (2026-09-23, every
- * other adapter publishes an unplaced sitting with its gap named). The tenant
- * lists every body's meetings on one page and this adapter has no body filter
- * of its own: the name key is ALSO the only thing that says a row is the
- * wired body's sitting. An unmatched name is therefore not an otherwise
- * verified sitting of this body, and publishing it would attribute another
- * body's meeting to the Mayor and Council. It keeps dropping, counted, until
- * the wiring row states which published names are this body's.
+ * The list carries no location field, so venue resolution keys on the meeting
+ * NAME via the venue cache. Unlike other adapters, an unmatched name is
+ * dropped (counted) rather than published with a venue gap: the tenant lists
+ * every body's meetings on one page, and the name key is also the only thing
+ * that says a row is the wired body's sitting.
  */
 
 const SOURCE_NAME = "onbase";
@@ -133,8 +113,7 @@ export function makeOnBaseSource(
       notConfigured: 0,
     };
 
-    // A-002 · counted in the unit the disposition happens in. One raw row is
-    // one landing page and carries the whole upcoming list.
+    // Counted per landing page, which carries the whole upcoming list.
     let considered = 0;
 
     for (const { wiring, html, collectedAt } of raw) {
@@ -157,7 +136,7 @@ export function makeOnBaseSource(
         );
 
         // No location field exists in this system; the meeting name is the
-        // only observed string that distinguishes venues. See venue-cache.ts.
+        // only observed string that distinguishes venues.
         const venue = resolveVenue(SOURCE_NAME, wiring.ocdId, row.name);
         if (!venue) {
           drops.unknownVenue++;
@@ -171,7 +150,6 @@ export function makeOnBaseSource(
         meetings.push({
           id: `${SOURCE_NAME}:${wiring.config.slug ?? "tucson"}:${row.meetingId}`,
           ocdId: wiring.ocdId,
-          /* NH-RC4: the body, from the wiring row that produced this meeting. */
           bodyId: wiring.bodyId,
           bodyName,
           title: row.name,

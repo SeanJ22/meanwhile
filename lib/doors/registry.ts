@@ -1,23 +1,27 @@
 /**
- * THE DOOR REGISTRY (DB-09): one editable list of every door.
- *
- * A "door" is one way Meanwhile reads government information: a meeting
- * calendar, a roll-call feed, a money filing feed. Before this list, which
- * doors existed was decided in code. Here a door is a record, edited through
- * one gateway action with a receipt (`./actions.ts`) and taking effect without
- * a release (rulings §9).
- *
- * Nothing here names a place. A door carries the OCD division and body ids it
- * serves as data, never as branches in code.
- *
- * PURE: no store, no clock, no environment. Callers hand in the repository and
- * the time.
+ * The door registry: one editable list of every way Meanwhile reads government
+ * information (a meeting calendar, a roll-call feed, a money filing feed). A
+ * door is a record, edited through one gateway action (`./actions.ts`), that
+ * takes effect without a release. A door carries its division and body ids as
+ * data. Pure: callers hand in the repository and the time.
  */
 
-import type { AggregateRepository } from "../control-plane/repository/types.ts";
+import { canonicalJson, type AggregateRepository } from "../control-plane/repository/types.ts";
 
 /** Whether a door is read, shut because it stopped working, or deliberately set aside. */
 export const DOOR_STATUSES = ["OPEN", "SHUT", "SUSPENDED"] as const;
+
+/** The kinds of door a routine source task reads on its clock, one door per task. */
+export const FEED_DOOR_KINDS: readonly string[] = ["source-feed", "derived-feed"];
+export const feedDoorId = (taskId: string): string => `feed:${taskId}`;
+
+/**
+ * Whether a routine task reads this door on a clock: a meeting door or a feed. Other doors (found pages, route
+ * hints, link sweeps) are read when work needs them, so they owe no scheduled read.
+ */
+export function readOnSchedule(door: Pick<DoorRecord, "kind" | "meeting">): boolean {
+  return door.meeting != null || FEED_DOOR_KINDS.includes(door.kind);
+}
 export type DoorStatus = (typeof DOOR_STATUSES)[number];
 
 /** Who last wrote the record: a person through the gateway, or a derive step. */
@@ -28,7 +32,7 @@ export type DoorConfigValue = string | number | boolean | readonly string[];
 
 /**
  * What a meeting door needs beyond the common fields so an adapter can read
- * it exactly as it reads a wiring row today (DB-12). Absent on non-meeting doors.
+ * it as it reads a wiring row. Absent on non-meeting doors.
  */
 export interface DoorMeeting {
   /** The adapter's agenda source type, as wiring names it (e.g. `ICAL`). */
@@ -49,7 +53,7 @@ export interface DoorMeeting {
   readonly family: string | null;
 }
 
-/** What the last first look saw (DB-25). Stored on the door so the next look can be conditional. */
+/** What the last first look saw. Stored on the door so the next look can be conditional. */
 export interface DoorValidators {
   readonly etag: string | null;
   readonly lastModified: string | null;
@@ -86,17 +90,17 @@ export interface DoorRecord {
   readonly lastFailureAt: string | null;
   /** When the door last went SHUT. Null unless it is. */
   readonly shutSince: string | null;
-  /** DB-32, system-kept: consecutive reads that could not reach the door. Absent means none. */
+  /** System-kept: consecutive reads that could not reach the door. Absent means none. */
   readonly transportFailures?: number;
-  /** DB-32, system-kept: in a sentence, why the door went SHUT. Null unless it is. */
+  /** System-kept: in a sentence, why the door went SHUT. Null unless it is. */
   readonly shutReason?: string | null;
-  /** DB-32, system-kept: when the door last reopened after being shut. */
+  /** System-kept: when the door last reopened after being shut. */
   readonly reopenedAt?: string | null;
-  /** DB-30, system-kept: when a read of this door last promoted something different from before. Absent means never seen. */
+  /** System-kept: when a read of this door last promoted something different from before. Absent means never seen. */
   readonly lastChangedAt?: string | null;
-  /** DB-30, system-kept: minutes between its changed promotions, as a running average (lib/doors/observed-rate.ts). Absent until two have been seen. */
+  /** System-kept: minutes between its changed promotions, as a running average (lib/doors/observed-rate.ts). Absent until two have been seen. */
   readonly observedChangeMinutes?: number | null;
-  /** DB-30, system-kept: how many changed promotions the average rests on. */
+  /** System-kept: how many changed promotions the average rests on. */
   readonly observedChanges?: number;
   /** Read at the next opportunity instead of waiting for the schedule. */
   readonly readNow: boolean;
@@ -311,7 +315,7 @@ function shutSinceFor(status: DoorStatus, previous: DoorRecord | null, at: strin
   return previous !== null && previous.status === "SHUT" && previous.shutSince !== null ? previous.shutSince : at;
 }
 
-/** DB-32's system-kept fields carried over from what was there; the shut reason follows the status. */
+/** The system-kept shut fields carried over from what was there; the shut reason follows the status. */
 function healthKept(previous: DoorRecord | null, status: DoorStatus): Partial<DoorRecord> {
   if (previous === null) return {};
   return {
@@ -341,12 +345,9 @@ export function applyManualEdit(previous: DoorRecord | null, draft: Required<Doo
 }
 
 /**
- * A derived row (from wiring or a crosswalk) offered to the registry.
- *
- * Upserts by door id and never overwrites a manual edit that is newer than the
- * input it was derived from: `deriveInputAt` is when the derive input last
- * changed. Returns the record to store, or null when the stored record stands
- * unchanged.
+ * A derived row (from wiring or a crosswalk) offered to the registry. Upserts
+ * by door id and never overwrites a manual edit newer than `deriveInputAt`.
+ * Returns the record to store, or null when the stored record stands.
  */
 export function applyDerivedRow(
   previous: DoorRecord | null,
@@ -375,8 +376,9 @@ export function applyDerivedRow(
 }
 
 const FIELDS = ["kind", "ocdId", "bodyIds", "hosts", "config", "holds", "checkEveryMinutes", "notes", "meeting", "status", "readNow"] as const;
+/** Key order is not compared: the store hands settings back in its own order. */
 function sameFields(a: DoorRecord, b: DoorRecord): boolean {
-  return FIELDS.every((f) => JSON.stringify(a[f]) === JSON.stringify(b[f]));
+  return FIELDS.every((f) => canonicalJson(a[f]) === canonicalJson(b[f]));
 }
 
 /** The editable fields only, for showing what an edit changed. */
@@ -397,7 +399,7 @@ export function editableFieldsOf(record: DoorRecord): Required<DoorDraft> {
   };
 }
 
-/** Every door, shut ones first (DB-34 refines this), then by id. Rows that are not doors are skipped, not hidden: `unreadable` counts them. */
+/** Every door, shut ones first, then by id. Rows that are not doors are skipped and counted in `unreadable`. */
 export async function listDoors(repo: DoorRepository): Promise<{ readonly doors: readonly DoorRecord[]; readonly unreadable: number }> {
   const rows = await repo.list();
   const doors: DoorRecord[] = [];

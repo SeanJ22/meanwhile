@@ -1,78 +1,17 @@
 /**
- * THE EVIDENCE PLANE, PART FOUR — THE FIRST DURABLE ADAPTER.
+ * `EvidenceStore` over a local content-addressed filesystem root (`durable = true`).
  *
- * ## What this is, and what the design said it would be
+ *   1. Writes are atomic: temp name in the same directory, then `rename`.
+ *   2. The sidecar `<key>.meta.json` is the commit point, written after the
+ *      body; an object without one does not exist to `head`, `get` or `list`.
+ *   3. `get` re-verifies the digest against the sidecar; corruption is a failed
+ *      read naming both digests.
+ *   4. Immutability is enforced here too, via `reconcileExistingObject`.
  *
- * The technical design says *"the evidence vault is not a second asset store; it
- * extends the content-addressed store `lib/ops/asset-remote.ts` already
- * operates"*. Reading that module rather than the sentence about it changes what
- * can honestly be built on it:
+ * `RESTRICTED_RAW` is refused by name unless a `RestrictedEvidenceProvider`
+ * declaring encryption at rest and access control is supplied.
  *
- *   - `lib/ops/asset-remote.ts` is a **READ path**. `fetchAssetFromRemote` GETs
- *     from `https://raw.githubusercontent.com/SeanJ22/wtp-assets/main` and
- *     verifies the bytes against the hash they were requested under. There is no
- *     write verb in it, from this process or any other.
- *   - The store it reads is **PUBLIC**, and RULING 117 says that is the correct
- *     posture *for that store* — everything in it was already published by a
- *     government body or under an open licence, so there is nothing to protect.
- *
- * What it shares with the vault is the discipline, and that is the part worth
- * inheriting: **the name of the object IS the hash of its correct contents**, so
- * a read verifies for free and a 200 that is not the thing is not a document.
- * What it cannot supply is a write path or a private one.
- *
- * So this adapter implements `EvidenceStore` over a **local content-addressed
- * filesystem root** — the same substrate class every canonical store in this
- * repository already uses — with `durable = true`. It is the smallest thing that
- * is honestly durable: bytes that survive the process, verified on the way in and
- * again on the way out.
- *
- * ## FOUR PROPERTIES, EACH ONE CLOSING A SPECIFIC FAILURE
- *
- *   1. **The write is ATOMIC.** Body to a temp name in the same directory, then
- *      `rename`. A process killed mid-write leaves a temp file, never a truncated
- *      body at the real key — and a truncated body at a real key is the worst
- *      outcome available here, because it reads back as evidence, hashes to
- *      nothing anyone recorded, and is indistinguishable from a publisher having
- *      served something different.
- *   2. **The sidecar is the COMMIT POINT.** `<key>.meta.json` is written after
- *      the body, and an object without one does not exist as far as `head`, `get`
- *      and `list` are concerned. A crash between the two leaves an orphan body
- *      that is garbage rather than a half-declared artifact, and the next `put`
- *      of that key renames over it atomically.
- *   3. **`get` RE-VERIFIES.** Every read recomputes the digest of the bytes on
- *      disk and compares it with what the sidecar recorded at write time. Silent
- *      corruption — a bad sector, a partial restore, a file replaced under the
- *      same name — is a FAILED READ that names the corruption and both digests.
- *      It is never a returned body and never an empty document.
- *   4. **The immutability contract is enforced HERE TOO**, through the same
- *      `reconcileExistingObject` the in-memory double uses. A rule that lived
- *      only in `putArtifact` would be bypassed by the first caller that held a
- *      store reference, and the store reference is what every provider hands out.
- *
- * ## `RESTRICTED_RAW` IS REFUSED, BY NAME, AND THE TIER IS NOT WEAKENED
- *
- * The design's own words for the quarantined tier are *"encrypted,
- * access-controlled, excluded from git, logs and prompts"*. A plain filesystem
- * root is none of the first two, and the public asset store is the opposite of
- * both. There are two ways to make the tier fit a substrate that cannot hold it:
- * weaken the tier, or refuse the write. Weakening the tier is how PR #217
- * happens again with a record saying it did not.
- *
- * So this adapter **refuses a `RESTRICTED_RAW` artifact by name** unless it was
- * constructed with a `RestrictedEvidenceProvider` — the seam an encrypted,
- * access-controlled substrate implements — and the refusal names the missing
- * activation rather than pretending the tier does not exist. A provider that
- * declares it is NOT encrypted at rest or NOT access-controlled is refused by the
- * same rule, so the seam cannot be satisfied by re-wrapping this class in a
- * different name.
- *
- * ## TIME AND ENTROPY
- *
- * No clock is read. Nothing here stamps a document; the only timestamps that
- * reach disk are the ones the caller already put in the artifact. The temp-file
- * suffix uses `randomBytes` and is never persisted, never compared and never part
- * of any identity — a name that exists for the duration of one `rename`.
+ * No clock is read. The temp-file suffix is random and never persisted.
  */
 
 import { netlifyEvidenceStoreFromEnv } from "./netlify-store.ts";
@@ -95,19 +34,10 @@ import {
 /** ------------------------------------------------- the restricted seam */
 
 /**
- * THE SEAM A SUBSTRATE FIT FOR QUARANTINED BYTES IMPLEMENTS.
- *
- * Narrow on purpose: the four verbs `EvidenceStore` already has, plus two
- * DECLARATIONS about the substrate. The declarations are the point. Without them
- * "has a restricted provider" would mean "somebody passed an object", and the
- * cheapest object to pass is another plain filesystem store — which is precisely
- * the substitution the refusal exists to prevent.
- *
- * The declarations are claims by the implementer, not proofs. This module cannot
- * verify that a remote KMS actually encrypts; what it can do is refuse to write
- * quarantined bytes to something that does not even claim to, and make the claim
- * a visible line of code in whatever implements this rather than an assumption
- * living in a comment. The real proof belongs to the provider's own tests.
+ * The seam a substrate fit for quarantined bytes implements: the four
+ * `EvidenceStore` verbs plus declarations about the substrate. The declarations
+ * are the implementer's claims; this module refuses anything that does not
+ * make them.
  */
 export interface RestrictedEvidenceProvider {
   /** A stable, non-secret identifier for the substrate. Never a credential. */
@@ -123,18 +53,9 @@ export interface RestrictedEvidenceProvider {
 }
 
 /**
- * A `RESTRICTED_RAW` body was offered to a substrate that cannot hold one.
- *
- * A named subclass so a caller can tell it from every other refusal in this
- * module. "This store will not take these bytes" and "these bytes are wrong" are
- * opposite diagnoses: the first is an activation the project has not done yet and
- * is fixed by configuration, the second is a defect in the retrieval. Collapsing
- * them would have somebody re-walk a route to fix a missing provider.
- *
- * The message names the ARTIFACT and the MISSING ACTIVATION. It never names a
- * credential, a class or a fingerprint — this refusal is read wherever writes are
- * logged, and a refusal about credential-bearing bytes has no business hinting at
- * what they contain.
+ * A `RESTRICTED_RAW` body was offered to a substrate that cannot hold one: a
+ * missing activation, not a bad retrieval. The message never names a
+ * credential, class or fingerprint.
  */
 export class RestrictedDurabilityUnavailable extends EvidenceStoreRefusal {
   readonly key: string;
@@ -207,16 +128,8 @@ export const SIDECAR_SUFFIX = ".meta.json";
 const TEMP_PREFIX = ".wtp-evidence-tmp-";
 
 /**
- * MAP A KEY ONTO A RELATIVE PATH, OR REFUSE IT BY NAME.
- *
- * Object keys contain `/` and the natural mapping is nested directories. That
- * mapping is also the classic path-traversal hole, so every refusal is explicit
- * rather than left to `path.resolve` to sort out — `resolve` is happy to leave
- * the root and would do so silently.
- *
- * The final containment check is kept even though every listed rule above it
- * already prevents escape. It costs one comparison and it is the check that still
- * holds if one of the rules is ever loosened.
+ * Map a key onto a relative path, or refuse it by name. Every traversal case is
+ * refused explicitly; the final containment check stays as a backstop.
  */
 export function keyToRelativePath(key: string): string {
   if (typeof key !== "string" || key.length === 0) {
@@ -262,17 +175,9 @@ export function keyToRelativePath(key: string): string {
 }
 
 /**
- * WHAT A WINDOWS PATH SEGMENT CANNOT HOLD, ENCODED; EVERYTHING ELSE UNTOUCHED.
- *
- * The standing runner's host is Windows. A key is an object-store key, where
- * `:` is legal, but a Windows directory name cannot hold `<>:"|?*` or a control
- * character, and Windows silently strips a trailing `.` or space. A discovery
- * work id with `:` failed every write with ENOENT (2026-09-24). So on disk each
- * of those is percent-encoded, as is `%` itself so the mapping reverses. `list`
- * decodes names back to the exact key.
- *
- * A segment holding none of them maps to itself, so every object already on
- * disk keeps its path.
+ * Percent-encodes what a Windows path segment cannot hold (`<>:"|?*`, control
+ * characters, a trailing `.` or space) and `%` itself, so the mapping reverses.
+ * A segment holding none of them maps to itself.
  */
 const UNSAFE_IN_PATH_SEGMENT = /[<>:"|?*%\u0001-\u001f]|[. ]$/g;
 
@@ -288,20 +193,10 @@ export function decodePathSegment(name: string): string {
 /** ---------------------------------------------------------- the sidecar */
 
 /**
- * WHAT SITS BESIDE EVERY BODY.
- *
- * `meta` answers `head` without transferring bytes — the verb a retention sweep
- * and an integrity check use, and the reason neither has to read a megabyte of
- * HTML to answer a question about it.
- *
- * `bodySha256` is recorded SEPARATELY from `meta.contentHash` and is what `get`
- * verifies against. They are the same value for an `IMMUTABLE_BODY`, and they are
- * deliberately two fields: `meta.contentHash` is the caller's CLAIM about the
- * artifact, and `bodySha256` is what this store actually hashed on the way in.
- * The manifest is the case that proves they are different questions — its
- * `contentHash` is `manifest:<workItemId>`, which no bytes will ever hash to, and
- * without a separate recorded digest a rebuilt index would be the one object in
- * the store that no read could verify.
+ * What sits beside every body. `meta` answers `head` without reading bytes.
+ * `bodySha256` is what this store hashed and what `get` verifies;
+ * `meta.contentHash` is the caller's claim (for a manifest it is
+ * `manifest:<workItemId>`, which no bytes hash to).
  */
 interface Sidecar {
   readonly key: string;
@@ -315,28 +210,16 @@ interface Sidecar {
 export interface DurableEvidenceStoreOptions {
   /** Null selects the local source during an explicit transfer. */
   readonly remote?: EvidenceStore | null;
-  /**
-   * The substrate for `RESTRICTED_RAW` bodies. Absent means this store refuses
-   * them by name — which is the correct behaviour and not a degraded one.
-   */
+  /** The substrate for `RESTRICTED_RAW` bodies. Absent, this store refuses them by name. */
   readonly restricted?: RestrictedEvidenceProvider;
 }
 
 /**
- * `EvidenceStore` OVER A LOCAL CONTENT-ADDRESSED FILESYSTEM ROOT.
- *
- * `durable` is `true`, so `assertDurable` passes — and that claim is the reason
- * every property above is enforced rather than described. A store that says it is
- * durable and loses a body on a crash is worse than the in-memory double, because
- * the double is honest about what it is.
- *
- * The root is a constructor parameter and nothing else. No environment variable
- * is consulted, no default path is invented, and no directory is chosen from a
- * clock or a run id. A store that picks its own location is a store two processes
- * can disagree about, and the disagreement shows up as missing evidence.
+ * `EvidenceStore` over a local content-addressed filesystem root. The root is
+ * a constructor parameter only: no environment variable or default path.
  */
 export class DurableEvidenceStore implements EvidenceStore {
-  /** Read by `assertDurable`. True, and every property above is why. */
+  /** Read by `assertDurable`. */
   readonly durable: boolean;
 
   readonly root: string;
@@ -378,12 +261,7 @@ export class DurableEvidenceStore implements EvidenceStore {
       text = await readFile(this.sidecarPath(key), "utf8");
     } catch (cause) {
       if ((cause as NodeJS.ErrnoException).code === "ENOENT") return null;
-      /*
-       * A sidecar that exists and cannot be read is NOT an absent object. EACCES,
-       * EISDIR and EIO all mean "this store cannot answer the question", and
-       * answering "no such key" would turn a broken store into a fact about the
-       * evidence — the exact substitution CLAUDE.md forbids.
-       */
+      /* A sidecar that exists and cannot be read is a failed read, never an absent object. */
       throw new EvidenceStoreRefusal(
         `The metadata for key ${key} exists and could not be read ` +
           `(${(cause as NodeJS.ErrnoException).code ?? "unknown"}). A failed read is a FAILED ` +
@@ -403,13 +281,9 @@ export class DurableEvidenceStore implements EvidenceStore {
   }
 
   /**
-   * Is this object's tier one the plain filesystem root may hold?
-   *
-   * Read from `custom.tier`, which `artifactMeta` always sets. An object with NO
-   * declared tier is treated as unrestricted — it is the manifest and the
-   * ordinary-body case — and that is safe in the one direction that matters: a
-   * `RESTRICTED_RAW` artifact always carries its tier, because `putArtifact`
-   * copies it from the artifact and the artifact cannot be built without one.
+   * Is this object's tier one the plain filesystem root may hold? An object with
+   * no declared tier is unrestricted; a `RESTRICTED_RAW` artifact always
+   * carries its tier.
    */
   private restrictedRouting(key: string, meta: ObjectMeta): RestrictedEvidenceProvider | null {
     const tier = meta.custom?.tier as ArtifactTier | undefined;
@@ -433,27 +307,10 @@ export class DurableEvidenceStore implements EvidenceStore {
   /**
    * Write body then sidecar, each through a temp name and a `rename`.
    *
-   * `rename` within one directory is the atomic primitive every filesystem this
-   * runs on provides. Writing the body directly would leave a partial file at the
-   * real key on a crash, and a partial file at a real key reads back as evidence.
-   *
-   * ## THE LOST RACE IS NOT A FAILURE, AND ON WINDOWS IT IS NOT RARE
-   *
-   * POSIX `rename` replaces an existing destination atomically and two workers
-   * racing the same retrieval simply both succeed. **Windows does not.**
-   * `MoveFileExW` refuses with `EPERM`/`EACCES`/`EEXIST` when another process is
-   * renaming onto the same destination at that instant — and this project's
-   * primary development platform is Windows, so the failure is the ordinary case
-   * rather than a curiosity. It was found by the concurrent-put test and not by
-   * reasoning, which is why that test exists.
-   *
-   * Rethrowing would make two workers racing one retrieval — the exact scenario
-   * the content address exists to make safe — an error on one of them. So a lost
-   * rename consults `acceptExisting`: when the object now at the destination is
-   * EQUIVALENT to the one being written, the other writer won and this write is
-   * complete. When it is not, the error is rethrown unchanged. The predicate is
-   * mandatory at the call site rather than defaulted, because "accept whatever is
-   * there" is the one thing this store must never do.
+   * On Windows, a rename onto a destination another process is renaming onto
+   * fails with `EPERM`/`EACCES`/`EEXIST`. A lost rename consults the mandatory
+   * `acceptExisting`: an equivalent object already there means the other writer
+   * won; otherwise the error is rethrown.
    */
   private async atomicWrite(
     absolutePath: string,
@@ -474,8 +331,7 @@ export class DurableEvidenceStore implements EvidenceStore {
         // The other writer won the race with an equivalent object. Nothing to do.
       }
     } finally {
-      // A no-op after a successful rename; the cleanup that matters is the one
-      // after a failure, which would otherwise leave a temp file behind forever.
+      // Cleanup after a failure, which would otherwise leave a temp file behind.
       await rm(temp, { force: true }).catch(() => undefined);
     }
   }
@@ -490,12 +346,9 @@ export class DurableEvidenceStore implements EvidenceStore {
     const objectClass = objectClassOf(meta);
 
     /*
-     * The content address is verified at the PROVIDER boundary as well as in
-     * `putArtifact`. A rule enforced only by the helper is bypassed by the first
-     * caller holding a store reference, and the store reference is what every
-     * provider hands out. A `MUTABLE_INDEX` is exempt by construction: its
-     * `contentHash` names the obligation, not the bytes, and `bodySha256` is what
-     * a read of it verifies against.
+     * The content address is verified at the provider boundary too. A
+     * `MUTABLE_INDEX` is exempt: its `contentHash` names the obligation, and
+     * `bodySha256` is what a read verifies.
      */
     if (objectClass === "IMMUTABLE_BODY" && meta.contentHash !== offeredSha) {
       throw new EvidenceStoreRefusal(
@@ -507,8 +360,7 @@ export class DurableEvidenceStore implements EvidenceStore {
 
     const existing = await this.readSidecar(key);
     if (existing) {
-      // The shared rule, so this adapter and the in-memory double cannot come to
-      // disagree about what "already there" means.
+      // The shared rule, so this adapter and the in-memory double agree on "already there".
       const noop = reconcileExistingObject(key, bytes, meta, { meta: existing.meta });
       if (objectClass === "IMMUTABLE_BODY") {
         if (existing.bodySha256 !== offeredSha) {
@@ -525,19 +377,11 @@ export class DurableEvidenceStore implements EvidenceStore {
       }
     }
 
-    /*
-     * A lost body rename is accepted only when the body already there hashes to
-     * the same value — which is the definition of the same object at this key, and
-     * is the only thing that makes a concurrent write of one retrieval safe.
-     */
+    /* A lost body rename is accepted only when the body already there hashes the same. */
     await this.atomicWrite(bodyPath, bytes, (existing) => contentHash(existing) === offeredSha);
     await this.readBody(key, offeredSha, bytes.byteLength);
 
-    /*
-     * THE SIDECAR IS THE COMMIT POINT and is written second. A crash between the
-     * two leaves an orphan body that `head`, `get` and `list` all treat as absent
-     * — garbage rather than a half-declared artifact.
-     */
+    /* The sidecar is the commit point and is written second. */
     const sidecar: Sidecar = {
       key,
       meta,
@@ -548,12 +392,7 @@ export class DurableEvidenceStore implements EvidenceStore {
       `${bodyPath}${SIDECAR_SUFFIX}`,
       new TextEncoder().encode(`${JSON.stringify(sidecar, null, 2)}\n`),
       objectClass === "MUTABLE_INDEX"
-        ? /*
-           * NO acceptance for a rebuilt index. Two rebuilds racing one manifest
-           * genuinely disagree about its contents — accepting whichever landed
-           * first would silently drop an artifact from the obligation's index,
-           * and a replay reading it would find one fewer body than exists.
-           */
+        ? /* No acceptance for a rebuilt index: two racing rebuilds genuinely disagree. */
           null
         : (existing) => {
             try {
@@ -575,17 +414,8 @@ export class DurableEvidenceStore implements EvidenceStore {
   }
 
   /**
-   * READ, AND PROVE THE BYTES ARE THE BYTES.
-   *
-   * The digest is recomputed on every read and compared with what the sidecar
-   * recorded at write time. This is `fetchAssetFromRemote`'s discipline applied
-   * where it costs even less: a store that verified only on the way in would
-   * still hand back a body a bad sector had rewritten, and a parse of the wrong
-   * bytes is a false claim about a government that nothing downstream can detect.
-   *
-   * A body with no sidecar is an INCOMPLETE WRITE, and it returns `null` — the
-   * object was never committed. A sidecar with no body is a failed read and says
-   * so, because something did commit and the body is gone.
+   * Read, recomputing the digest against the sidecar. A body with no sidecar is
+   * an incomplete write and returns `null`; a sidecar with no body is a failed read.
    */
   async get(key: string): Promise<StoredObject | null> {
     if (this.restricted) {
@@ -622,15 +452,7 @@ export class DurableEvidenceStore implements EvidenceStore {
     return bytes;
   }
 
-  /**
-   * Keys under a prefix, in lexicographic order.
-   *
-   * Only COMMITTED objects are listed: the walk enumerates sidecars and derives
-   * the key from each, so an orphan body from an interrupted write is invisible
-   * and a temp file is never mistaken for evidence. Sorted, so a test asserting
-   * key order asserts the design rather than the order a directory happened to be
-   * read in — which differs between filesystems.
-   */
+  /** Committed keys under a prefix, sorted. Orphan bodies and temp files are never listed. */
   async list(prefix: string): Promise<string[]> {
     const keys = this.remote ? await this.remote.list(prefix) : await this.walk(this.root, "");
     if (this.restricted) keys.push(...(await this.restricted.list(prefix)));
@@ -642,9 +464,7 @@ export class DurableEvidenceStore implements EvidenceStore {
     try {
       entries = await readdir(directory, { withFileTypes: true });
     } catch (cause) {
-      // An absent root is an EMPTY store, which is a true statement about a store
-      // nothing has been written to yet. Every other errno is a failed read and
-      // is thrown, because "this store cannot answer" is never "there is nothing".
+      // An absent root is an empty store; every other errno is a failed read.
       if ((cause as NodeJS.ErrnoException).code === "ENOENT") return [];
       throw cause;
     }
@@ -666,16 +486,8 @@ export class DurableEvidenceStore implements EvidenceStore {
 }
 
 /**
- * AN IN-MEMORY `RestrictedEvidenceProvider`, FOR TESTS AND FOR NOTHING ELSE.
- *
- * It exists so the SEAM can be exercised — that a `RESTRICTED_RAW` body routes to
- * the provider and never touches the filesystem root — without pretending the
- * project has an encrypted substrate. Its declarations are constructor
- * parameters, so a test can also assert the refusal a provider that declares
- * `encryptedAtRest: false` receives.
- *
- * `durable` is deliberately absent: this is not durability and must never satisfy
- * `assertDurable` on its own.
+ * An in-memory `RestrictedEvidenceProvider` for tests only. Its declarations are
+ * constructor parameters; it has no `durable` and never satisfies `assertDurable`.
  */
 export class InMemoryRestrictedProvider implements RestrictedEvidenceProvider {
   readonly providerId: string;

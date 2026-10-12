@@ -1,39 +1,20 @@
 /**
- * **WHAT THE OWNER HAS TOLD US ABOUT MONEY WE CANNOT READ.** (Admin redesign,
- * 2026-09-23 — COST-ACCOUNTING.md §2; MW-041, MW-042, MW-043, MW-045.)
- *
- * Most of what this system costs is billed somewhere it cannot look: the
- * model provider's own bill, two subscriptions, a prepaid search balance, a
- * search provider's usage, two databases, the host, the code host and the
- * development tools. None of those accounts is readable with a credential the
- * system holds (the model key reads no bill; the database and host tokens carry
- * no billing scope). The design's rule for that case is a manual entry or an
- * import that carries its billing period, where it was read and when, and
- * never a guess — "Do not invent a billing API and do not assume account access
- * exists."
- *
- * So a billing fact is an ATTESTATION: a figure the owner read from a
- * provider's console, invoice or export, recorded with the period it covers,
- * the date he read it and where, by the one owner-only door
- * (`billing.fact.record`). It lives on the owner's policy row beside the other
- * things only he can say (`AdminConfig.billingFacts`), because it shares that
- * row's write path and its who-and-when record — but it is not policy and it
- * drives nothing: no ceiling, no budget and no runner decision reads it. It is
- * rendered, reconciled and never added to anything it duplicates.
- *
- * The kinds are the distinctions the design insists on, one per slot:
+ * Billing facts the owner read from a provider console, invoice or export,
+ * recorded with the period they cover and when and where they were read. They
+ * live on the owner's policy row (`AdminConfig.billingFacts`) but drive
+ * nothing: no ceiling, budget or runner decision reads them.
  *
  * ```
  *   BILLED          a closed billing period's final amount (an invoice)
- *   MONTH_TO_DATE   a running figure read from a console — not a final bill
+ *   MONTH_TO_DATE   a running figure read from a console, not a final bill
  *   SUBSCRIPTION    a fixed charge per month or year, with its renewal date
- *   BALANCE         prepaid credit REMAINING on a date — not consumption
- *   PURCHASE        prepaid credit BOUGHT on a date — not consumption either
+ *   BALANCE         prepaid credit remaining on a date, not consumption
+ *   PURCHASE        prepaid credit bought on a date, not consumption
  *   USAGE_IMPORT    a usage total for a period, summed from the provider's export
- *   LIMIT           a spending cap set in the provider's console — a limit, not a charge
+ *   LIMIT           a spending cap set in the provider's console, not a charge
  * ```
  *
- * PURE. No store, no clock, no environment.
+ * Pure. No store, no clock, no environment.
  */
 
 export const BILLING_PROVIDERS = [
@@ -370,10 +351,9 @@ export function validateBillingFact(raw: Readonly<Record<string, unknown>>, toda
 }
 
 /**
- * The slot a fact fills. The same provider, product, kind and period is one
- * slot — entering it again corrects it rather than adding a second figure for
- * the same money, which is how a double count would begin. A balance or a
- * purchase is a slot per day read.
+ * The slot a fact fills: one per provider, product, kind and period, so
+ * re-entering corrects rather than double-counts. A balance or purchase is a
+ * slot per day read.
  */
 export function billingFactId(input: Pick<BillingFactInput, "provider" | "label" | "kind" | "periodStart" | "asOf">): string {
   const who = input.label === null ? input.provider : `${input.provider}/${input.label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`;

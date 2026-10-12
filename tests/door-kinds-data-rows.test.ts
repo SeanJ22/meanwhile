@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { SOURCE_WIRING, meetingSourceNamesForWiring } from "@/lib/registry/source-wiring.ts";
+import { meetingSourceNamesForWiring } from "@/lib/registry/source-wiring.ts";
+import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import { CAPABILITIES, buildCompositeSource } from "@/lib/sources/composite/wiring.ts";
 import { DATA_DOOR_KINDS, DOOR_KIND_SPECS, dataDoorConfig } from "@/lib/civic-data/derived-door-kinds.ts";
 import { CROSSWALK_KINDS } from "@/lib/civic-data/meeting-body-crosswalk.ts";
@@ -11,7 +12,7 @@ import { wiringShapeFor } from "@/lib/control-plane/discovery/derived-wiring.ts"
 /** Settings a reviewer would supply, taken from a body the code already wires on the same adapter. */
 function sampleFilter(kind: (typeof DATA_DOOR_KINDS)[number]): Record<string, string> {
   const spec = DOOR_KIND_SPECS[kind];
-  const row = SOURCE_WIRING.find((r) => r.agendaSourceType === spec.agendaSourceType && (kind !== "LEGISTAR_INSITE" || r.config.insiteHost) && spec.required.every((key) => r.config[key] !== undefined));
+  const row = FIXTURE_DOOR_ROWS.find((r) => r.agendaSourceType === spec.agendaSourceType && (kind !== "LEGISTAR_INSITE" || r.config.insiteHost) && spec.required.every((key) => r.config[key] !== undefined));
   assert.ok(row, `${kind}: no existing row carries every required setting`);
   return Object.fromEntries(spec.allowed.filter((key) => row.config[key] !== undefined).map((key) => [key, row.config[key]!]));
 }
@@ -25,7 +26,7 @@ for (const kind of DATA_DOOR_KINDS) {
     assert.ok(capability, "the adapter is registered");
     assert.ok(capability.types.includes(spec.agendaSourceType));
     // Every setting the kind declares is one an existing body of that adapter carries.
-    const same = SOURCE_WIRING.filter((r) => r.agendaSourceType === spec.agendaSourceType);
+    const same = FIXTURE_DOOR_ROWS.filter((r) => r.agendaSourceType === spec.agendaSourceType);
     for (const key of [spec.route.key, ...spec.allowed]) {
       assert.ok(same.some((r) => r.config[key] !== undefined), `${kind}: no body carries ${key}`);
     }

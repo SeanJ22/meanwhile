@@ -1,31 +1,8 @@
 /**
- * **FROM A SCOUT'S ROUTE CANDIDATE TO THE METHOD-CANDIDATE STORE.**
- * (Level 1 activation, 2026-09-01. RULING 240. Machine-owned provenance,
- * 2026-09-02, RULING 243.)
- *
- * Models handle novelty; code handles learned procedure. The bridge is the
- * EXISTING candidate lifecycle in `lib/method/candidate.ts` —
- * `PROPOSED -> VALIDATED -> ADMITTED | REJECTED`. A route that validates on
- * the Attempt that opened it is written to the field manual and admitted at
- * once, so it is used the moment it works (DP-25). Two Attempts offering the
- * same route id prove nothing: whether a method is Proven comes only from the
- * fix map and the bar.
- *
- * Only a candidate whose URL the Attempt actually OPENED (an artifact with
- * that canonical URL) is proposed: a route the method store learns carries an
- * outcome in a jurisdiction, and a URL merely observed on a page has none.
- * The rest stay on the typed Scout result, marked unverified.
- *
- * ## What reaches durable provenance (RULING 243)
- *
- * `learnedRouteFrom` writes `origin`, `note` and the ROUTE_EXISTENCE claim
- * from the candidate's MACHINE-OWNED fields — `observedOn`, `permission`,
- * `recordClass`, `evidenceArtifactIds` — which the executor derived from the
- * artifact, obligation and permission records before it accepted the finish.
- * The model's own statements about those facts travel separately as
- * `modelClaims` on the candidate record and are never written into the
- * proposal. A candidate without a machine derivation (no `provenance`) is a
- * pre-ruling shape and is not proposed.
+ * From a Scout's route candidate to the method-candidate store (`PROPOSED -> VALIDATED -> ADMITTED | REJECTED`).
+ * Only a candidate whose URL the Attempt actually opened is proposed, and its provenance is written only from
+ * machine-owned fields; the model's own claims travel separately as `modelClaims`. A route that validates is
+ * admitted at once.
  */
 
 
@@ -40,7 +17,7 @@ import {
   type CandidateLifecycle,
   type MethodCandidate,
 } from "../../method/candidate.ts";
-import { ConcurrentModification, IdentityCollision, type ControlPlaneRepositories } from "../repository/types.ts";
+import { ConcurrentModification, IdentityCollision, type ControlPlaneRepositories, type Persisted } from "../repository/types.ts";
 import { learnBatch, type LearnedRoute } from "../../method/learn-batch.ts";
 import { readMethodKnowledge } from "../../method/manual-bridge.ts";
 import { newFieldManualEntry, writeFieldManual } from "../field-manual.ts";
@@ -50,6 +27,21 @@ import type { ScoutCandidate, ScoutResult } from "./scout-result.ts";
 
 /** One authoritative lifecycle aggregate in the standing production plane. */
 export const METHOD_CANDIDATE_STORE_ID = "live" as const;
+
+/** This process's last read or write of the live store, per repositories; one revision is one value. */
+const lastSeen = new WeakMap<object, Persisted<CandidateStore>>();
+
+/**
+ * The live store with its revision. While its revision is the one this process last read or wrote, that copy is
+ * the store; otherwise it is read as the table's list, which on the runner is its held copy.
+ */
+async function readLiveCandidates(repos: Pick<ControlPlaneRepositories, "methodCandidates">) {
+  const seen = lastSeen.get(repos);
+  if (seen && (await repos.methodCandidates.readNarrowed(METHOD_CANDIDATE_STORE_ID, {}))?.revision === seen.revision) return seen;
+  const row = (await repos.methodCandidates.list()).find((entry) => entry.id === METHOD_CANDIDATE_STORE_ID) ?? null;
+  if (row) lastSeen.set(repos, row);
+  return row;
+}
 
 export interface ProposedCandidate {
   readonly routeId: string;
@@ -77,7 +69,7 @@ export interface MachineOwnedProvenance {
 
 /** The origin line, written from machine-owned values only. */
 export function originLine(attemptId: string, obligationId: string, observedOn: string): string {
-  return `SCOUT Attempt ${attemptId} on ${obligationId}, observed ${observedOn} (provenance machine-derived from the artifact record, RULING 243)`;
+  return `SCOUT Attempt ${attemptId} on ${obligationId}, observed ${observedOn} (provenance machine-derived from the artifact record)`;
 }
 
 /** The ROUTE_EXISTENCE statement, written from machine-owned values only. */
@@ -148,7 +140,7 @@ export async function proposeScoutCandidates(input: {
 }): Promise<ProposalReport> {
   for (let attempt = 0; attempt < 4; attempt += 1) {
     const knowledge = await readMethodKnowledge(input.repos);
-    const current = await input.repos.methodCandidates.read(METHOD_CANDIDATE_STORE_ID);
+    const current = await readLiveCandidates(input.repos);
     if (current === null) {
       throw new Error("METHOD_CANDIDATE_STORE_NOT_SEEDED: refusing to treat an absent canonical store as an empty candidate population");
     }
@@ -170,7 +162,7 @@ export async function proposeScoutCandidates(input: {
     if (c.provenance === undefined) {
       notProposed.push({
         routeId: c.routeId,
-        why: "the candidate carries no machine provenance derivation (RULING 243); a proposal whose provenance the model wrote is not learned",
+        why: "the candidate carries no machine provenance derivation; a proposal whose provenance the model wrote is not learned",
       });
       continue;
     }
@@ -186,7 +178,7 @@ export async function proposeScoutCandidates(input: {
       observedMethodVersion: knowledge.version,
     });
     store = offered.store;
-    // DP-25: an offer already admitted is done; one validated but not yet written (a failed manual write) finishes admission below.
+    // An offer already admitted is done; one validated but not yet written finishes admission below.
     if (offered.already && offered.candidate.lifecycle !== "VALIDATED") {
       proposed.push({ routeId: c.routeId, candidateId: offered.candidate.id, lifecycle: offered.candidate.lifecycle, issues: [], already: true });
       continue;
@@ -236,11 +228,7 @@ export async function proposeScoutCandidates(input: {
       store = r.store;
       proposed.push({ routeId: c.routeId, candidateId: r.candidate.id, lifecycle: r.candidate.lifecycle, issues: [r.candidate.rejection?.reason ?? "malformed"], already: false });
     }
-    /*
-     * DP-25: a validated route is used the moment it works once, as this place's door entry. Whether the method is
-     * proven comes only from the fix map and the bar (lib/method/fix-status.ts), never from two Attempts offering the
-     * same route id.
-     */
+    /* A validated route is used the moment it works once; whether a method is proven comes only from the fix map and the bar. */
     if (store.candidates.find((candidate) => candidate.id === offered.candidate.id)?.lifecycle === "VALIDATED") {
       const learned = learnBatch(knowledge, prior ? [prior.proposal, proposal] : [proposal], input.stamp);
       const route = learned.knowledge.routes.find((route) => route.id === c.routeId)!;
@@ -271,7 +259,7 @@ export async function proposeScoutCandidates(input: {
     const report = { proposed, notProposed, counts: candidateCounts(store), storeVersionObserved: knowledge.version };
     if (!wrote) return report;
     try {
-      await input.repos.methodCandidates.compareAndSet(METHOD_CANDIDATE_STORE_ID, current.revision, store, input.stamp);
+      lastSeen.set(input.repos, await input.repos.methodCandidates.compareAndSet(METHOD_CANDIDATE_STORE_ID, current.revision, store, input.stamp));
       return report;
     } catch (error) {
       if (!(error instanceof ConcurrentModification) && !(error instanceof IdentityCollision)) throw error;
@@ -283,7 +271,7 @@ export async function proposeScoutCandidates(input: {
 
 /** The one canonical store; absence is not an empty candidate population. */
 export async function readMethodCandidateStore(repos: ControlPlaneRepositories): Promise<CandidateStore> {
-  const current = await repos.methodCandidates.read(METHOD_CANDIDATE_STORE_ID);
+  const current = await readLiveCandidates(repos);
   if (current === null) throw new Error("METHOD_CANDIDATE_STORE_NOT_SEEDED");
   if (current.value.storeVersion !== 1 || !Array.isArray(current.value.candidates)) {
     throw new Error("METHOD_CANDIDATE_STORE_UNREADABLE");

@@ -12,17 +12,8 @@ import { collapseDuplicateSittings } from "../lib/sources/composite/index.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 
 /**
- * The composed snapshot's accounting when the cross-route merge drops a CARRIED
- * row (lib/meetings/snapshot.ts `accountCarriedCollapses`).
- *
- * The defect, on production 2026-09-25 from 6:27 PM MST: Arizona's derived
- * meeting family carried Flagstaff's Tourism Commission Sep 24 sitting from its
- * calendar feed (the feed stopped listing it) while the family's events-page
- * route listed the same sitting fresh. The merge kept the fresh row and dropped
- * the carried one, and the composition counted the carried row as a collapsed
- * FRESH row: "snapshot states 856 fresh meetings plus 27 collapsed but sources
- * claim 882". Every composition was refused, so the runner's serving copy
- * stopped at 5:38 PM MST and the Reader proof could not capture its pin.
+ * The composed snapshot's accounting when the cross-route merge drops a CARRIED row
+ * (lib/meetings/snapshot.ts `accountCarriedCollapses`): a dropped carried row is not a collapsed fresh row.
  */
 
 const GENERATED_AT = "2026-09-26T01:27:53.681Z";

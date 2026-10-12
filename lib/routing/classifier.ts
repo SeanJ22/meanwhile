@@ -5,44 +5,15 @@ import { modelRequestFields, servedModelOf } from "../models.ts";
 import { TOPIC_ROUTES } from "./topics.ts";
 
 /**
- * **The Level 1 classifier — 6d, built 2026-08-15.**
- *
- * The ask box matches a question against curated keyword lists (`match.ts`)
- * and refuses when the evidence does not decide. That refusal is honest and
- * it is also the product's biggest gap: the refusal log is full of questions
- * a person could route in a second — "who fixes the light outside my house",
- * "the field behind the school is flooded" — that share no keyword with any
- * curated list.
- *
- * This is the second rung, and it is deliberately the *smallest* thing that
- * closes that gap:
- *
- * - **Keyword-first, always.** The classifier is only consulted when
- *   `matchTopic` returns null. A question the deterministic matcher can route
- *   never leaves the device, and the classifier can never overrule it.
- * - **A closed enum, twice.** The model is given the curated topic ids and
- *   told to answer with exactly one of them or `NONE`, through a JSON schema
- *   that constrains the response — and the answer is then checked against the
- *   same list here, because a schema is a contract with a server and this is
- *   a claim about a government.
- * - **It picks a topic. It never writes one.** The reader-facing answer is
- *   the same curated route the keyword path produces, assembled from the same
- *   registry and the same sourced people. **No sentence a reader sees is ever
- *   generated** — the model's entire output is one identifier out of a fixed
- *   list, and nothing else it says is read. That is what keeps this inside
- *   CLAUDE.md's no-generation rule rather than beside it.
- * - **The question is scrubbed before it leaves.** The same scrub the refusal
- *   log runs — phone-, email- and address-shaped text blanked — applies here
- *   too, so nothing shaped like a personal detail is sent anywhere.
- * - **A cache and a ceiling.** Identical questions are answered from memory;
- *   a daily call ceiling bounds spend, and the ceiling REFUSES rather than
- *   degrading — an over-ceiling ask gets the honest keyword refusal it would
- *   have had, never a worse answer dressed as an answer.
- * - **`ripcord.askClassifier`.** One flag turns the rung off entirely and the
- *   box returns to keyword-only, which is a complete product on its own.
- *
- * Nothing here is client-reachable: the route is the only caller, the key
- * never leaves the server, and the question is not stored by this module.
+ * The Level 1 classifier: the ask box's second rung, consulted only when `matchTopic` returns null.
+ * - Keyword-first, always: a question the deterministic matcher routes never leaves the device.
+ * - A closed enum, twice: a JSON schema constrains the response, and the answer is checked against the
+ *   same curated topic ids here.
+ * - It picks a topic; it never writes one. No sentence a reader sees is generated.
+ * - The question is scrubbed of phone-, email- and address-shaped text before it leaves.
+ * - A cache and a daily ceiling; over the ceiling it refuses rather than degrading.
+ * - `ripcord.askClassifier` turns the rung off; keyword-only is a complete product.
+ * Server-only: the route is the only caller, and the question is not stored here.
  */
 
 /** The answer this rung is allowed to give: one curated topic, or nothing. */
@@ -162,47 +133,9 @@ function noteCall(): boolean {
 const MESSAGES_URL = "https://api.anthropic.com/v1/messages";
 
 /**
- * The model, READ FROM `lib/ask/model.ts` rather than declared here.
- * (ITEM K, 2026-09-01.)
- *
- * This rung is an Ask call site — the ask box's second rung — so its model
- * comes from the Ask role table. It used to declare its own `claude-opus-5`
- * literal, and four literals kept equal by hand drift. Importing the shared
- * table means a model change is one edit.
- *
- * `low` effort with thinking off is unchanged and is still this rung's own
- * choice — the task is one label out of sixteen. The cost lever remains effort
- * and the ceiling. Verified against `claude-sonnet-5` by an actual request:
- * thinking-disabled at `low` effort answers HTTP 200 on this model.
+ * The model comes from `lib/ask/model.ts`'s role table, resolved per call so a `WTP_ASK_MODEL` override
+ * reaches this rung and the resolved value is what gets recorded.
  */
-/**
- * **RESOLVED AT CALL TIME, NOT BOUND AT MODULE LOAD.**
- * (Repaired 2026-09-01, found while attributing a walk regression.)
- *
- * This read `const MODEL = ASK_SYNTHESIS_MODEL`, which binds the CONSTANT
- * once when the module is first imported. `WTP_ASK_MODEL` is applied by
- * {@link resolveAskModel}, so this rung ignored the override entirely —
- * `lib/ask/synthesize.ts` honoured it and three other Ask call sites did not.
- *
- * ITEM K's brief permits the override on two conditions: it defaults to the
- * constant when unset, and **the RESOLVED value — not the default — is what
- * gets recorded and logged**. A rung that reads the constant satisfies the
- * first and silently breaks the second.
- *
- * The cost is not hypothetical. RULING 234 makes the measurement the
- * reversibility mechanism for the Sonnet 5 switch — *if it fails a required
- * question the incumbent held, revert the one constant and report the
- * question.* With three rungs bound at load, an experiment or an emergency
- * revert through the environment would have moved ONE of four call sites while
- * reporting that it had moved the model, and the run that proved it would have
- * been measuring a mixture.
- *
- * It was found exactly that way: an isolation walk with
- * `WTP_ASK_MODEL=claude-opus-5` reproduced the failure identically, which
- * looked like proof the model was innocent and was really proof that the
- * override never reached this code.
- */
-/* 2026-09-25: the CLASSIFIER role of `lib/ask/model.ts`'s one table, resolved per call. */
 const askModel = (): string => resolveAskRoleModel("CLASSIFIER");
 
 export interface ClassifyOptions {
@@ -231,10 +164,9 @@ export async function classifyQuestion(
   if (!noteCall()) return { kind: "UNAVAILABLE", why: "ceiling" };
 
   const impl = meteredAskFetch(options.fetchImpl ?? fetch, "classifier", options.recordCost);
-  /* Resolved once: the same id is sent and recorded. Thinking OFF where the
-     model accepts `{type: "disabled"}`; on a model that always thinks (Opus
-     5.5, where the field is a 400) it is omitted, effort stays low and
-     `max_tokens` leaves room for the thinking (lib/models.ts). */
+  // Resolved once: the same id is sent and recorded. Thinking is off where the model accepts
+  // `{type: "disabled"}`; on a model that always thinks it is omitted, effort stays low and `max_tokens`
+  // leaves room for the thinking (lib/models.ts).
   const model = askModel();
   const fields = modelRequestFields(model, { thinking: ASK_MODEL_ROLES.CLASSIFIER.thinking, effort: ASK_MODEL_ROLES.CLASSIFIER.effort });
   try {

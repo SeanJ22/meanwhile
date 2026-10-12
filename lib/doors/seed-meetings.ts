@@ -1,20 +1,14 @@
 /**
- * DB-10: today's meeting doors, as registry records.
- *
- * Door ids follow how partitions really work. A hand-wired door is
- * (meeting source, body), which is today's partition id
- * (`meetings:<source>:<bodyId>`); one wiring row can produce several sources
- * and so several doors. A derived member's door id is its derived wiring row
- * id, and it stays a member of its state's family partition
- * (`meetings:derived:<state>`), named in its settings.
- *
- * PURE: mapping only. `scripts/seed-doors-from-meetings.mts` does the one-time
- * write. Pointers and last-known-good data are not touched here: the registry
- * records doors, it does not move what readers see.
+ * Today's meeting doors as registry records. A hand-wired door is (meeting
+ * source, body), its partition id `meetings:<source>:<bodyId>`; one wiring row
+ * can produce several. A derived member's door id is its derived wiring row id,
+ * and it stays in its state's family partition (`meetings:derived:<state>`).
+ * Pure mapping; the registry records doors and does not move what readers see.
  */
 
 import { derivedMeetingFamilyId, meetingAcquisitionFailureDomain, meetingPartitionId } from "../civic-data/meeting-partitions.ts";
 import { DERIVED_WIRING_SOURCE_NAMES, type DerivedWiringRecord } from "../civic-data/derived-meeting-wiring.ts";
+import type { DerivedMeetingFamilyState } from "../civic-data/contracts.ts";
 import { meetingSourceNamesForWiring, type BodySourceWiring } from "../registry/source-wiring.ts";
 import { normalizeHost, upsertDerivedDoor, type DoorDraft, type DoorRepository } from "./registry.ts";
 
@@ -76,7 +70,7 @@ export function doorFromDerivedRecord(record: DerivedWiringRecord): DoorDraft {
     ocdId: row.ocdId,
     bodyIds: [row.bodyId],
     hosts: hostsOfConfig(row.config, [row.route, `https://${row.officialHost}/`]),
-    config: { ...row.config, route: row.route, familyPartition: derivedMeetingFamilyId(row.state.replace(/^US-/, "") as never) },
+    config: { ...row.config, route: row.route, familyPartition: derivedMeetingFamilyId(row.state as DerivedMeetingFamilyState) },
     holds: ["meetings"],
     checkEveryMinutes: null,
     notes: `Derived meeting door for ${row.publishingOrg}, from the reviewed crosswalk row ${row.crosswalkRowId} (reviewed ${row.reviewedAt}).`,
@@ -86,7 +80,7 @@ export function doorFromDerivedRecord(record: DerivedWiringRecord): DoorDraft {
       publishingOrg: row.publishingOrg,
       timeZone: row.timeZone,
       verifiedAt: row.verifiedAt,
-      family: derivedMeetingFamilyId(row.state.replace(/^US-/, "") as never),
+      family: derivedMeetingFamilyId(row.state as DerivedMeetingFamilyState),
     },
     status: record.status === "SUSPENDED" ? "SUSPENDED" : "OPEN",
     readNow: false,

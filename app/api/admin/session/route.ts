@@ -1,43 +1,18 @@
 /**
- * **THE BREAK-GLASS, AND SIGN-OUT.** (Session C final, ITEM H, 2026-09-01.
- * Retired as a login path and retained as the RULING 245 break-glass under
- * RULING 238 custody, 2026-09-02.)
- *
- * ## POST — the break-glass
- *
- * This was the login. It is not any more: the owner signs in with Google
- * (`app/(admin)/admin/auth/`). The shared secret survives here for exactly the
- * case RULING 245 permits — a documented, rate-limited, incident-logged path
- * held by the owner — and it is RETAINED rather than removed because the Google
- * path could not be proven live in the session that built it: the OAuth client
- * variables were not on the Netlify site, so a removed secret would have left
- * the owner with no way into his own control centre while that stays true.
+ * POST is the break-glass:
  *
  * ```
  *   HOST          404 on any host but the admin host
- *   FLAG          404 unless WTP_ADMIN_BREAK_GLASS=enabled — the path does not
- *                 exist until the owner turns it on, and a 404 is what the
- *                 public host says too, so a prober learns nothing
+ *   FLAG          404 unless WTP_ADMIN_BREAK_GLASS=enabled, so a prober learns nothing
  *   ORIGIN        the Origin header must be the admin origin
- *   INCIDENT LOG  the durable control plane must open, or the attempt is refused
- *                 as INCIDENT_LOG_UNAVAILABLE — an unloggable break-glass is
- *                 the old login with a new name
- *   RATE LIMIT    read from the log itself: more than N attempts in the window
- *                 is RATE_LIMITED, refused WITHOUT appending
- *   COMPARE       constant-time against WTP_ADMIN_SECRET, by name
- *   APPEND        one incident record per attempt — class, moment, outcome,
- *                 the opaque session id issued. Appended BEFORE the session is
- *                 issued; a failed append refuses even a correct secret
+ *   INCIDENT LOG  the control plane must open, or the attempt is refused as INCIDENT_LOG_UNAVAILABLE
+ *   RATE LIMIT    read from the log: more than N attempts in the window is RATE_LIMITED, not appended
+ *   COMPARE       constant-time against WTP_ADMIN_SECRET
+ *   APPEND        one incident record per attempt, before the session is issued; a failed append refuses
  *   ISSUE         the existing session cookie, marked `via: "break-glass"`
  * ```
  *
- * Nothing about the submitted value is logged, ever — not its length, not a
- * prefix, not a hash. The incident record names the CLASS of the outcome.
- *
- * ## DELETE — sign-out
- *
- * Unchanged, and NOT behind the flag: a Google-issued session needs a way out
- * regardless of whether the break-glass is on.
+ * Nothing about the submitted value is logged. DELETE is sign-out and is not behind the flag.
  */
 
 import { NextResponse, type NextRequest } from "next/server";

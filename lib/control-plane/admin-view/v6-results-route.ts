@@ -11,7 +11,6 @@ const NO_STORE = { "cache-control": "no-store, no-cache, must-revalidate" };
 const MEMO_MS = 60_000;
 let memo: { at: number; read: PipelineRead } | null = null;
 
-/** The pipeline counts are the same for every wide scope, so one read serves the country and every state for a minute. */
 async function pipeline(nowIso: string): Promise<PipelineRead | PipelineUnread | null> {
   if (memo && Date.now() - memo.at < MEMO_MS) return memo.read;
   const url = controlPlaneUrlFromEnv();
@@ -29,9 +28,7 @@ async function witnessesFor(zip: string): Promise<readonly ZipWitnessRow[] | nul
 
 const unread = (says: string) => NextResponse.json({ state: "UNREAD", says }, { status: 503, headers: NO_STORE });
 
-/**
- * Read-only. `data` is null for a scope with no results read (another kind of geography, a body): the page shows "—", never "none".
- */
+/** `data` is null for a scope with no results read: the page shows "—", never "none". */
 export async function v6ResultsGet(request: NextRequest): Promise<NextResponse> {
   const guard = await guardAdminRequest({ headers: request.headers, cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
     checkOrigin: false, nowSeconds: Math.floor(Date.now() / 1000) });

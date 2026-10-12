@@ -1,60 +1,18 @@
 /**
- * THE FILING-REGIME REGISTRY — routing as DATA, refusal as CODE.
+ * The filing-regime registry: routing as data
+ * (`data/campaign-finance/filing-regimes.json`), refusal as code. This module
+ * loads and validates the registry (refusing malformed or ambiguous records by
+ * stable code), selects the regime for a (jurisdiction, office class, date)
+ * question, and reports NO_REGIME_ON_RECORD when nothing governs it. That is a
+ * claim about this registry, never about a government, and there is no
+ * fall-through default.
  *
- * ## The problem this file exists to prevent
+ * `effective.from`/`through` bound a regime; a null bound is unbounded for
+ * routing and an open provenance question on `effective.openQuestion`. Two
+ * regimes may overlap only when linked by `supersedes`/`supersededBy`;
+ * otherwise the whole registry is refused (`REGIME_AMBIGUOUS_OVERLAP`).
  *
- * `authority.ts` proved the hard part: the filing authority for a contest is
- * settled by a STATUTE, not by which portal answers, and the authority's level
- * need not match the office's — A.R.S. § 16-928 sends a SCHOOL DISTRICT election
- * to the COUNTY officer in charge of elections. That finding is worth exactly as
- * much as the number of jurisdictions it can be carried into.
- *
- * The way it fails to be carried is well known and it is not subtle: a
- * `if (state === "AZ") … else if (state === "NH") …` tree. Fifty branches of it
- * are unreviewable, untestable one at a time, and — the part that matters here —
- * **the fifty-first state falls off the end into whatever the last `else` says.**
- * A fall-through `else` in a filing-authority resolver is how a jurisdiction
- * nobody has read acquires a custodian nobody checked, and then an absence gets
- * asserted about a government that was never asked.
- *
- * So the routing rules live in `data/campaign-finance/filing-regimes.json` and
- * this file does three things and no fourth:
- *
- *   1. **Loads and VALIDATES** that registry, refusing malformed or AMBIGUOUS
- *      records by name with a stable code, rather than picking one.
- *   2. **Selects** the regime governing a (jurisdiction, office class, date)
- *      question — effective-period aware, supersession aware.
- *   3. **Reports NO_REGIME_ON_RECORD** when nothing governs it. That is a
- *      first-class value, not an error and not a default. It is the most
- *      important state in this module.
- *
- * ## Why "we do not know" is the most important field
- *
- * Every other routing state is a claim about a government. `NO_REGIME_ON_RECORD`
- * is a claim about US: this registry has not read that jurisdiction's statute.
- * It must therefore be impossible to confuse with (a) a resolved custodian,
- * (b) the FEC, or (c) a closed contest. `selectRegime` returns null rather than
- * a fallback; `resolveFilingAuthority` in `authority.ts` surfaces the state; and
- * `unresolvedAuthorityKeepsCoverageOpen` there proves the third — there is no
- * input to it that yields closure.
- *
- * ## Effective periods
- *
- * A regime that applied in 2022 need not apply in 2026, and a statute read on
- * one date is evidence about that date. `effective.from` / `effective.through`
- * are the window; a `null` bound is UNBOUNDED for routing and an OPEN PROVENANCE
- * QUESTION for the record, carried on `effective.openQuestion` so the two are
- * never confused. Two regimes may overlap ONLY when one names the other in
- * `supersedes` / `supersededBy`; an unlinked overlap is `REGIME_AMBIGUOUS_OVERLAP`
- * and the loader refuses the whole registry rather than flipping a coin about
- * whose money we are describing.
- *
- * ## Time
- *
- * Nothing here reads a clock. `asOf` is a caller-supplied parameter, and when it
- * is omitted the selector uses SUPERSESSION rather than a guessed today: the
- * regimes that nothing supersedes. An agent does not know today's date, and a
- * library that thinks it does misdates every conclusion built on it.
+ * Nothing here reads a clock. Without `asOf`, selection uses supersession.
  */
 
 import {
@@ -86,16 +44,7 @@ export const FILING_REGIME_REGISTRY_PATH = ["data", "campaign-finance", "filing-
 
 /* ── The registry shape ───────────────────────────────────────────────────── */
 
-/**
- * How the concrete custodian is pinned down inside one regime.
- *
- * This is the field that makes federation expressible without code. Arizona's
- * statute has all three shapes in one section: statewide and legislative money
- * goes to one office for the whole state, county and district money goes to one
- * of fifteen county officers, and city and town money goes to one of ninety-three
- * clerks. A resolver that knew only "the state authority" could not represent the
- * second and third at all.
- */
+/** How the concrete custodian is pinned down inside one regime: one for the whole jurisdiction, per county, or per municipality. */
 export const CUSTODIAN_SCOPES = [
   /** One custodian for the whole jurisdiction. `scopeKey` is null. */
   "JURISDICTION_WIDE",
@@ -107,16 +56,9 @@ export const CUSTODIAN_SCOPES = [
 export type CustodianScope = (typeof CUSTODIAN_SCOPES)[number];
 
 /**
- * WHO ACTUALLY SERVES THE RECORDS — which may be neither the office nor the
- * authority.
- *
- * Pima County is the proving case and it has three distinct parties: Vail
- * Unified School District holds the election, the county officer in charge of
- * elections is the filing officer by statute, and a commercial vendor
- * (EasyVote) serves the filings. Collapsing publisher into authority would
- * either credit a government with a vendor's platform or credit a vendor with a
- * statutory role, and `isVendorPlatform` is the field that keeps the permission
- * question askable separately from the custody question.
+ * Who serves the records, which may be neither the office nor the authority
+ * (e.g. a commercial vendor). `isVendorPlatform` keeps the permission question
+ * separate from the custody question.
  */
 export interface RegimePublisher {
   readonly name: string;
@@ -133,15 +75,9 @@ export interface RegimeCustodian {
 }
 
 /**
- * The provenance that MAKES this regime a claim rather than an opinion.
- *
- * `statutoryQuote` is the operative sentence verbatim. Never a paraphrase: a
- * paraphrase of a routing rule is a different routing rule, and this is the one
- * field whose entire job is being checkable against the government's own page.
- * When the statute has not been read, both it and `statutoryBasis` are null and
- * `openQuestion` says what is owed — the federal regime is in exactly that
- * state, established by the FEC's own administrative directory while the
- * provision naming it remains unread.
+ * The provenance that makes this regime a claim. `statutoryQuote` is the
+ * operative sentence verbatim, never a paraphrase. When the statute has not been
+ * read, it and `statutoryBasis` are null and `openQuestion` says what is owed.
  */
 export interface RegimeProvenance {
   readonly statutoryBasis: string | null;
@@ -220,12 +156,7 @@ export interface FilingRegimeRegistry {
 
 /* ── Refusals, by stable code ─────────────────────────────────────────────── */
 
-/**
- * Every way a registry can be refused, each with a code that does not change.
- *
- * Codes are stable because a refusal is a thing a later session greps for. A
- * message may be reworded; `REGIME_AMBIGUOUS_OVERLAP` may not.
- */
+/** Every way a registry can be refused. Codes are stable; messages may be reworded. */
 export const REGISTRY_ISSUE_CODES = [
   /** The file does not parse as a registry object at all. */
   "REGISTRY_MALFORMED",
@@ -255,16 +186,9 @@ export const REGISTRY_ISSUE_CODES = [
   "REGIME_SUPERSESSION_DANGLING",
   /** A regime supersedes itself. */
   "REGIME_SUPERSESSION_SELF",
-  /**
-   * TWO REGIMES CLAIM THE SAME JURISDICTION AND OFFICE CLASS OVER OVERLAPPING
-   * DATES WITH NO SUPERSESSION LINK. This is an ambiguity, not a coin flip:
-   * picking either one is picking whose money we describe, without evidence.
-   */
+  /** Two regimes claim the same jurisdiction and office class over overlapping dates with no supersession link. */
   "REGIME_AMBIGUOUS_OVERLAP",
-  /**
-   * A regime carries neither a quoted statute nor any official record. An
-   * unbacked regime record is a fabricated claim about a government.
-   */
+  /** A regime carries neither a quoted statute nor any official record. */
   "REGIME_PROVENANCE_ABSENT",
   /** A `statutoryBasis` with no `statutoryQuote`, or a quote with no basis. */
   "REGIME_PROVENANCE_INCOMPLETE",
@@ -283,11 +207,7 @@ export interface RegistryIssue {
 }
 
 export class FilingRegimeRegistryInvalid extends Error {
-  /**
-   * Explicit field declarations: this repository runs Node with
-   * `--experimental-strip-types`, under which a TypeScript parameter property
-   * (`constructor(readonly x: T)`) does not parse and kills the whole file.
-   */
+  /** Declared explicitly: strip-types mode does not parse parameter properties. */
   readonly issues: readonly RegistryIssue[];
   readonly source: string;
 
@@ -447,7 +367,7 @@ function validateRoute(
         "REGIME_VOCABULARY_UNKNOWN",
         regimeId,
         `${where}.permission is ${JSON.stringify(permission)}, outside PERMISSION_STATES`,
-        "Permission and transport are orthogonal (RULING 182); an unrecognised permission value " +
+        "Permission and transport are orthogonal; an unrecognised permission value " +
           "collapses that distinction.",
       ),
     );
@@ -867,11 +787,7 @@ export function regimeEffectiveOn(regime: FilingRegimeRecord, asOf: string): boo
   return true;
 }
 
-/**
- * The non-throwing validator. `loadFilingRegimeRegistry` is the throwing face of
- * this one function — RULING 103, one implementation rather than two that are
- * free to disagree.
- */
+/** The non-throwing validator. `loadFilingRegimeRegistry` is its throwing face. */
 export function validateFilingRegimeRegistry(
   raw: unknown,
   source: string,
@@ -1065,15 +981,7 @@ export function validateFilingRegimeRegistry(
   };
 }
 
-/**
- * Load a registry from an already-parsed object, throwing
- * `FilingRegimeRegistryInvalid` on any issue.
- *
- * Refusal is WHOLE. A partly-loaded routing table is worse than none: the
- * regimes that survived would answer, and the ones that did not would look like
- * jurisdictions nobody has read — which is the one state this module is built to
- * keep honest.
- */
+/** Load a registry from a parsed object, throwing `FilingRegimeRegistryInvalid` on any issue. Refusal is whole. */
 export function loadFilingRegimeRegistry(raw: unknown, source: string): FilingRegimeRegistry {
   const { registry, issues } = validateFilingRegimeRegistry(raw, source);
   if (!registry) throw new FilingRegimeRegistryInvalid(issues, source);
@@ -1094,33 +1002,18 @@ export interface RegimeSelection {
 export interface RegimeQuery {
   readonly jurisdiction: string;
   readonly officeLevel: OfficeLevel;
-  /**
-   * The date the question is asked ABOUT — an election date, a filing date. When
-   * omitted, selection falls back to supersession rather than to a guessed
-   * today: nothing here reads a clock.
-   */
+  /** The date the question is asked about. Omitted selects by supersession; nothing here reads a clock. */
   readonly asOf?: string | null;
 }
 
-/**
- * A FEDERAL office files federally wherever it is on the ballot.
- *
- * This is the one normalisation in the selector and it is a rule about the
- * OFFICE CLASS, not a branch on a state name: AZ-06 is a federal contest printed
- * on an Arizona ballot, and its money is the FEC's regardless. Written here once
- * rather than duplicated as a `jurisdiction === "US"` test in every caller.
- */
+/** A federal office files federally wherever it is on the ballot: a rule on office class, not state. */
 function selectionJurisdiction(query: RegimeQuery): string {
   return query.officeLevel === "FEDERAL" ? "US" : query.jurisdiction;
 }
 
 /**
- * The regime governing one (jurisdiction, office class, date) question, or null.
- *
- * **There is no fall-through.** No nearest match, no state-authority default, no
- * FEC default. A question this registry does not answer returns `regime: null`,
- * and the caller reports that as `NO_REGIME_ON_RECORD` — a statement about this
- * repository, never about a government.
+ * The regime governing one (jurisdiction, office class, date) question, or
+ * null. No nearest match and no state or FEC default.
  */
 export function selectRegime(registry: FilingRegimeRegistry, query: RegimeQuery): RegimeSelection {
   const jurisdiction = selectionJurisdiction(query);
@@ -1162,9 +1055,7 @@ export function selectRegime(registry: FilingRegimeRegistry, query: RegimeQuery)
   }
 
   if (inWindow.length > 1) {
-    // A successor and its predecessor may both be in force on a boundary date.
-    // The successor wins, and only when the link makes that a fact rather than
-    // an ordering: `filter` here drops any member superseded BY another member.
+    // On a boundary date the successor wins, only via an explicit supersession link.
     const successors = inWindow.filter(
       (r) => !inWindow.some((other) => other !== r && r.supersededBy === other.regimeId),
     );
@@ -1204,15 +1095,9 @@ export function selectRegime(registry: FilingRegimeRegistry, query: RegimeQuery)
 }
 
 /**
- * The custodian for one place inside a regime, or null when the routing rule is
- * known and the office holding it is not.
- *
- * `null` here is the second most important value in this module: it is
- * "A.R.S. § 16-928 says the county officer in charge of elections, and this
- * repository has walked that officer for Pima only" — a KNOWN rule with an
- * UNKNOWN office. It must never fall back to the jurisdiction-wide custodian,
- * because answering the statute question with the state portal is the exact
- * error this whole domain exists to prevent.
+ * The custodian for one place inside a regime, or null when the rule is known
+ * and the office holding it is not. Never falls back to the jurisdiction-wide
+ * custodian.
  */
 export function selectCustodian(
   regime: FilingRegimeRecord,
@@ -1236,14 +1121,9 @@ export function selectCustodian(
 /* ── Derived views ────────────────────────────────────────────────────────── */
 
 /**
- * The jurisdiction's `FilingRegime` — the shape `authority.ts` and
- * `FilingAuthorityResolution` already speak, assembled from the registry rows
- * rather than typed a second time (RULING 103).
- *
- * One `FilingRegime.routing` row per (regime, office level) pair, so the
- * disagreement between an office's level and its authority's level stays visible
- * as a TABLE — four of Arizona's eight rows disagree, and that disagreement is
- * the finding.
+ * The jurisdiction's `FilingRegime`, assembled from the registry rows. One
+ * routing row per (regime, office level), so an office level differing from its
+ * authority level stays visible.
  */
 export function jurisdictionFilingRegime(
   registry: FilingRegimeRegistry,
@@ -1295,14 +1175,7 @@ export function authoritiesById(registry: FilingRegimeRegistry): ReadonlyMap<str
   return map;
 }
 
-/**
- * One authority by id, or a thrown refusal naming what was asked for.
- *
- * Throws rather than returning null because the callers are module-level
- * constants in `authority.ts`: a missing custodian there is a registry that no
- * longer says what the code believes, and discovering that at import time is
- * strictly better than discovering it as an `undefined.id` on a reader surface.
- */
+/** One authority by id, or a thrown refusal. Callers are import-time constants in `authority.ts`. */
 export function requireAuthority(registry: FilingRegimeRegistry, id: string): FilingAuthority {
   const found = authoritiesById(registry).get(id);
   if (!found) {

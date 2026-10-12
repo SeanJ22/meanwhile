@@ -1,27 +1,8 @@
 /**
- * **A COLOUR IS AUTHORED IN BOTH THEMES, OR IT IS NOT A COLOUR TOKEN.**
- * (The visual-polish session, 2026-09-03. WORK ITEM 7.)
- *
- * The theme system is dark-first: `:root` holds the dark palette and
- * `[data-theme="light"]` overrides it. A token given a LITERAL colour in one
- * block and not the other renders its dark bytes in light (or the reverse) —
- * the failure mode the contrast audit cannot see, because it seeds the light
- * map from dark and so never notices the value it inherited was never chosen.
- *
- * The rule this enforces, and its one deliberate exemption:
- *
- *   - A token whose value is a LITERAL colour (`#hex`, `rgb()/rgba()`,
- *     `hsl()/hsla()`, or a `color-mix()` carrying a literal) must be declared
- *     in BOTH blocks. Dark-only or light-only fails.
- *   - A token whose value is a VAR ALIAS or a derivation of other tokens
- *     (`var(--link)`, `color-mix(in srgb, var(--link) …)`) is exempt: it
- *     inherits the theme variance of what it references, so `--signal:
- *     var(--link)` is correct in both themes with one declaration. Duplicating
- *     it would create two copies to drift apart, which is the opposite of the
- *     goal.
- *
- * Dimension tokens (`--dur-*`, `--space-*`, `--radius-*`, `--text-*`) are not
- * colours and are theme-independent by nature; they never enter this check.
+ * Theme parity: `:root` holds the dark palette and `[data-theme="light"]`
+ * overrides it. A token whose value is a literal colour (hex, rgb/hsl, or a
+ * color-mix carrying a literal) must be declared in both blocks. A var alias
+ * or a derivation of other tokens is exempt: it inherits theme variance.
  */
 
 export interface ThemeToken {

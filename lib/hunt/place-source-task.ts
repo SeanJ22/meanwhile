@@ -127,6 +127,8 @@ export async function runNationalPlaceTask(input: {
   publish: (input: NationalPlacePublicationInput) => Promise<unknown>;
   publishElection?: Parameters<typeof runPlaceSource>[0]["publishElection"];
   acquire?: typeof runPlaceSource;
+  /** Reuse an already scoped geography read when the caller has one. */
+  readPublished?: typeof heldDivisionsForZip;
 }) {
   const reports: (Awaited<ReturnType<typeof runPlaceSource>> | { zip: string; deferred: string })[] = [];
   let deferred: string | null = null;
@@ -151,9 +153,9 @@ export async function runNationalPlaceTask(input: {
     const scheduled = await scheduleNationalPlace(tools.repos, durable, now, belowTarget, requests.get(zip));
     if (!("cadenceHours" in scheduled)) throw new Error(scheduled.reason);
     if (Date.parse(scheduled.nextDueAt) > Date.parse(now)) continue;
-    const publishedGeography = deferred ? [] : await heldDivisionsForZip(zip);
+    const publishedGeography = deferred ? [] : await (input.readPublished ?? heldDivisionsForZip)(zip);
     const state = publishedGeography.find(division => division.divisionType === "state")?.id.split("/state:")[1];
-    const knowledge = deferred ? undefined : await readFieldManual(tools.repos, { state });
+    const knowledge = deferred ? undefined : await readFieldManual(tools.repos, { state, ocdIds: publishedGeography.map(division => division.id) });
     const opened = prior ?? await openOccurrence(tools.repos, { obligation: durable, dueAt: scheduled.nextDueAt, now });
     if (!opened) throw new Error("National source occurrence could not open");
     const routeTaskId = "routeTaskId" in opened ? opened.routeTaskId : opened.routeTask.id;

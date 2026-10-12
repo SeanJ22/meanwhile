@@ -1,10 +1,6 @@
 /**
- * **MW-013 — SPEND BY PLACE.** `buildSpendByPlace` rolls the whole cost ledger
- * up by state, then the jurisdiction under it, so Admin can answer "what did we
- * spend at Pima County / this district?". These pin the arithmetic and the two
- * honesty rules that matter: an unmeasured charge is counted OUT of the total
- * (never as a zero), and a charge whose source names no place lands in a named
- * bucket rather than being dropped or folded into a state.
+ * An unmeasured charge is counted out of the total (never as a zero), and a charge whose source names no place lands
+ * in a named bucket rather than being dropped or folded into a state.
  */
 
 import assert from "node:assert/strict";

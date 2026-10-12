@@ -1,10 +1,4 @@
-/**
- * **THE QUEUE: EVERYTHING IN MOTION IN ONE LIST (BR-14).** Orders, scheduled orders, instructions sent to the fleet, hunts and
- * missions, stuck cases, doors shut now and fix-list items, each one once. A row says what it is, where it stands (a status chip
- * and one of five filters), who has it, when it is due, the next step and how far along it is, and carries the one control that
- * stops or pauses that kind of thing. PURE: the loaded sections in, rows out; a section that could not be read is null and adds no
- * rows (the screen says it could not be read, never "nothing in motion").
- */
+/** A section that could not be read is null and adds no rows. */
 import type { ActionRef, ClosedFix, FixView, Hunt, Lane, LookView, OpenFix, SentInstruction, StuckItem, TestingFix, UiReceipt } from "./model.ts";
 import { orderStepsReached, ORDER_STEPS } from "./receipts.ts";
 import { mst, TASK_STAGES } from "./model.ts";
@@ -40,9 +34,7 @@ export interface QueueRow {
   readonly open: { readonly type: "stuck" | "fix" | "look"; readonly id: string } | null;
   /** Newest first within a filter. */
   readonly at: string | null;
-  /** The saved order, for an order row: its seven facts and its own follow-up controls sit behind "Show details". */
   readonly receipt: UiReceipt | null;
-  /** For an instruction sent to the fleet that the runner has taken up: what its work reached. */
   readonly sendId: string | null;
 }
 
@@ -144,7 +136,7 @@ function closedFixRow(c: ClosedFix, returned: boolean): QueueRow {
   };
 }
 
-/** DP-26: a fix proving itself across places. Once proven it leaves the Queue; its one Proven update shows on Now. */
+/** A fix proving itself across places. Once proven it leaves the Queue. */
 function testingRow(t: TestingFix): QueueRow {
   return {
     key: `testing:${t.id}`, kind: "testing", what: `Testing: ${t.title}`, chip: t.brokeSince ? `Proven, broke since ${t.brokeSince}` : "Testing",
@@ -154,7 +146,7 @@ function testingRow(t: TestingFix): QueueRow {
   };
 }
 
-/** FE-21: the latest deploy's look check on the live site. Red needs someone; green is done; not reviewed is still waiting. */
+/** The latest deploy's look check on the live site. Red needs someone; green is done; not reviewed is still waiting. */
 function lookRow(l: LookView): QueueRow {
   return {
     key: `look:${l.sha}`, kind: "look", what: "Look check of the latest deploy", chip: l.verdict === "Green" ? "Looks right" : l.verdict === "Red" ? "Looks wrong" : "Not judged",

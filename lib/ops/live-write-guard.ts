@@ -1,15 +1,4 @@
-/**
- * **A WALK OF THE LIVE SITE READS AND NEVER WRITES** (FE-01).
- *
- * The harnesses used to refuse any non-local target (RULING 125) because every
- * visit wrote rows into stores we sell. Current rulings (§6) require looking at
- * the live page, and the runner already marks its browsing as synthetic. This
- * is the other half: the routes that record what a visitor did or asked are
- * aborted in the browser, so a walk against production leaves no search-log,
- * event, reaction, feedback, Ask or Send row behind.
- *
- * Pure over (url, method) so a unit test can walk it without a browser.
- */
+/** A walk of the live site reads and never writes: the routes that record a visitor's actions are aborted in the browser. */
 
 /** Our write routes. Matched on the path, whatever the method. */
 export const LIVE_WRITE_PATHS: readonly string[] = [

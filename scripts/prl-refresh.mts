@@ -1,77 +1,73 @@
-/**
- * PRL ingestion: acquire one dataset (or all), land its rows in object storage,
- * precompute the per-official percentages, and write the receipt beside them.
- *
- * The receipt's high-water mark is the durable, restartable cursor: a run reads
- * the prior receipt from the store, takes only rows newer than its mark (capped
- * at now, so a future-dated row never advances it), writes the new rows, and
- * writes the advanced receipt. A failure at one dataset leaves the others'
- * receipts untouched, so a retry skips what already landed.
- *
- * This writes to object storage only — no Postgres, no promotion plane. The
- * bucket is the Neon storage bucket when `PRL_ARCHIVE_S3_*` is set, else the
- * durable local store. Wiring the precomputed percentages into a reader
- * projection is a later presentation session's job.
- *
- * @freshness-reads-here — the receipt's retrieval time is captured when the
- * archive body is decoded.
- */
-import { prlIngestibleDatasets, requiredPrlDataset, type PrlDataset } from "../lib/sources/prl/inventory.ts";
+/** The single PRL acquisition service, invoked by both the standing runner and its owner command. */
+import { requiredPrlDataset, type PrlDataset } from "../lib/sources/prl/inventory.ts";
 import { openPrlSource } from "../lib/sources/prl/fetch-source.ts";
-import { ingestDataset } from "../lib/sources/prl/ingest.ts";
-import { resolvePrlArchiveStore } from "../lib/sources/prl/archive-store-local.ts";
+import { ingestDataset, PRL_INGEST_PARSER_VERSION } from "../lib/sources/prl/ingest.ts";
+import { resolveS3ArchiveStore, type PrlArchiveStore } from "../lib/sources/prl/archive-store.ts";
 import { readReceipt, writeReceipt } from "../lib/sources/prl/holding.ts";
 import { prlReceiptViolations } from "../lib/sources/prl/receipt.ts";
+import { prlCandidate } from "../lib/sources/prl/data-plane.ts";
+import { PRL_RHETORIC_ATTRIBUTION, type PrlMemberProfile, type PrlSnapshot } from "../lib/sources/prl/types.ts";
+import { prlArchiveCandidate, readPrlArchiveProjection, type PrlArchiveProjection } from "../lib/sources/prl/archive-publication.ts";
+import { PostgresRoutineDataStore, type RoutineDataStore } from "../lib/civic-data/store.ts";
+import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
+import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
+import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
+import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
+import { isDirectModuleExecution } from "../lib/ops/main-module.ts";
 
-const args = process.argv.slice(2);
-const datasetArg = args.find((arg) => arg.startsWith("--dataset="))?.slice("--dataset=".length);
-const all = args.includes("--all");
-if (!datasetArg && !all) {
-  throw new Error("PRL refresh requires --dataset=<id> or --all.");
+const ARCHIVES = ["profiles-state", "primary-rhetoric", "state-rhetoric", "statements-national", "newsletters", "press-releases", "floor-speeches"] as const;
+export async function refreshPrl(input: { archives: boolean; store: RoutineDataStore; archive: PrlArchiveStore; fetchImpl?: typeof fetch }) {
+  const contractId = input.archives ? "prl-archives" : "prl";
+  const contract = requiredManualProductionContract(contractId);
+  const datasets: PrlDataset[] = (input.archives ? ARCHIVES : ["profiles-national"]).map(requiredPrlDataset);
+  const held = input.archives ? await readPrlArchiveProjection({ store: input.store, bypassCache: true }) : null;
+  if (held && held.kind !== "PROMOTED" && held.kind !== "NOT_RECORDED") throw new Error("PRL_ARCHIVE_PRIOR_UNAVAILABLE");
+  let projection: PrlArchiveProjection = held?.kind === "PROMOTED" ? held.value : { formatVersion: 1, datasets: {} };
+  let last: Awaited<ReturnType<typeof processRegisteredManualCandidate>> | null = null;
+  const failures: string[] = [];
+  for (const dataset of datasets) {
+    try {
+      const prior = projection.datasets[dataset.id] ?? await readReceipt(input.archive, dataset.id);
+      const receipt = await ingestDataset({ dataset, archive: input.archive, now: Date.now(), priorReceipt: prior,
+        open: () => openPrlSource(dataset, input.fetchImpl, input.archive,
+          prior?.parserVersion === PRL_INGEST_PARSER_VERSION ? prior.sourceSha256 : undefined) });
+      const violations = prlReceiptViolations(receipt);
+      if (violations.length) throw new Error(violations.join("; "));
+      const checkedAt = new Date().toISOString();
+      const profiles = receipt.profiles as readonly PrlMemberProfile[];
+      const snapshot: PrlSnapshot | null = input.archives ? null : {
+        formatVersion: 1, fetchedAt: receipt.fetchedAt, sourceFile: `${receipt.member} (sha256 ${receipt.sourceSha256})`,
+        sourceUrl: dataset.url, rowsInFile: receipt.rowsSeen, rowsWithStatements: profiles.length,
+        profiles: [...profiles], rosterMisses: [], attribution: PRL_RHETORIC_ATTRIBUTION,
+      };
+      const next: PrlArchiveProjection = { formatVersion: 1, datasets: { ...projection.datasets, [dataset.id]: receipt } };
+      const candidate = snapshot ? prlCandidate({ snapshot, sourceEvidence: { sha256: receipt.sourceSha256, bytes: receipt.sourceBytes ?? 0 },
+        finalUrl: receipt.sourceFinalUrl ?? receipt.sourceUrl, retrievedAt: receipt.fetchedAt }) : prlArchiveCandidate({ projection: next, receipt, checkedAt });
+      last = await processRegisteredManualCandidate(input.store, contractId, candidate, checkedAt);
+      if (!last.promoted) throw new Error(last.candidate.failureCode ?? "PRL_PUBLICATION_REFUSED");
+      projection = next;
+      await writeReceipt(input.archive, receipt);
+    } catch (error) {
+      failures.push(`${dataset.id}: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+  if (failures.length) {
+    const attemptedAt = new Date().toISOString();
+    const candidate = failedAcquisitionCandidate({ sourceId: contract.sourceId, recordClass: contract.recordClass, scope: contract.scope,
+      requestedUrl: datasets[0].url, attemptedAt, failureDetail: failures.join("; "), parserVersion: contract.parserNormalizerVersion });
+    last = await processRegisteredManualCandidate(input.store, contractId, candidate, attemptedAt);
+  }
+  if (!last) throw new Error("PRL_NO_SOURCE_ATTEMPT");
+  printSourceRunnerReceipt(contractId, last.candidate.candidate, last);
+  return failures.length ? 2 : 0;
 }
 
-const datasets: readonly PrlDataset[] = all
-  ? prlIngestibleDatasets().filter((dataset) => dataset.target !== "reference")
-  : [requiredPrlDataset(datasetArg!)];
-
-async function refresh(dataset: PrlDataset): Promise<boolean> {
-  if (dataset.target === "reference") {
-    console.log(`PRL ${dataset.id}: committed reference dictionary; nothing to fetch.`);
-    return true;
+if (isDirectModuleExecution(import.meta.url)) {
+  const args = process.argv.slice(2);
+  if (!args.includes("--promote") || !(args.includes("--archives") || args.includes("--dataset=profiles-national"))) {
+    throw new Error("Use --promote with --archives or --dataset=profiles-national through the registered source task.");
   }
-  const archive = resolvePrlArchiveStore();
-  const now = Date.now();
-  const prior = await readReceipt(archive, dataset.id);
-  const receipt = await ingestDataset({
-    dataset,
-    archive,
-    now,
-    priorReceipt: prior,
-    open: () => openPrlSource(dataset),
-  });
-  const violations = prlReceiptViolations(receipt);
-  if (violations[0]) {
-    console.error(`PRL ${dataset.id} FAILED validation: ${violations.join("; ")}`);
-    return false;
-  }
-  await writeReceipt(archive, receipt);
-  console.log(
-    `PRL ${dataset.id}: ${receipt.rowsSeen} rows seen; ${receipt.rowsWritten} written; ` +
-    `${receipt.rowsAfterNow} future-dated; store ${archive.kind}; ` +
-    `mark ${receipt.highWaterMark ?? "none"}; profiles ${receipt.profileKind ?? "none"}`,
-  );
-  return true;
+  prepareProductionCivicDataWrite();
+  process.exitCode = await refreshPrl({ archives: args.includes("--archives"), store: new PostgresRoutineDataStore(), archive: resolveS3ArchiveStore() });
 }
-
-let failed = 0;
-for (const dataset of datasets) {
-  try {
-    if (!(await refresh(dataset))) failed += 1;
-  } catch (error) {
-    failed += 1;
-    console.error(`PRL ${dataset.id} FAILED: ${error instanceof Error ? error.message : String(error)}`);
-    // Continue to the next dataset: a failure at one never blocks the others,
-    // and each dataset's receipt is its own restart point.
-  }
-}
-if (failed > 0) process.exitCode = 2;

@@ -4,14 +4,11 @@ import { test } from "node:test";
 import { COMMENT_ACCESS, commentAccessFor } from "../lib/registry/comment-access.ts";
 import registry from "../lib/registry/registry.json" with { type: "json" };
 
-/** D25 — how to be heard, and what a curated row is allowed to claim. */
-
 test("every comment-access row names a real registry body and cites a source", () => {
   const bodyIds = new Set(registry.bodies.map((b) => b.id));
   for (const row of COMMENT_ACCESS) {
     assert.ok(bodyIds.has(row.bodyId), `${row.bodyId} is not in the registry`);
     if (row.ocdId === null) {
-      // Division-less bodies (D28) use the documented curated: id scheme.
       assert.match(row.bodyId, /^curated:/, row.bodyId);
     } else {
       assert.equal(row.bodyId.split("#")[0], row.ocdId, row.bodyId);
@@ -21,9 +18,6 @@ test("every comment-access row names a real registry body and cites a source", (
 });
 
 test("an UNKNOWN row claims nothing beyond its link", () => {
-  // "Unknown" must never arrive dressed as knowledge: a row that cannot say
-  // whether a comment period exists cannot say where it falls or how long a
-  // speaker gets.
   for (const row of COMMENT_ACCESS) {
     if (row.commentPeriod !== "UNKNOWN") continue;
     assert.equal(row.commentPeriodDetail, null, row.bodyId);
@@ -40,18 +34,11 @@ test("a YES row states where the period falls, in the body's own terms", () => {
 });
 
 test("lookup is by division plus published body name, never the wrong body's rule", () => {
-  // Tucson now carries several bodies (D29). The Mayor & Council rule must
-  // resolve for Mayor & Council meetings and must NOT resolve for a board
-  // meeting in the same division — a Planning Commission meeting rendering
-  // speaker-card rules it does not follow is a false claim.
   const tucsonOcd = "ocd-division/country:us/state:az/place:tucson";
   const mc = commentAccessFor(tucsonOcd, "Mayor & Council");
   assert.ok(mc);
   assert.equal(mc.timeLimit, "3 minutes per speaker.");
 
-  // Closed 2026-08-18 (g19) from the Commission's own agenda. The guard is
-  // stronger stated as identity than as a value: this must be the Planning
-  // Commission's OWN row, never Mayor & Council's, whatever either says.
   const pc = commentAccessFor(tucsonOcd, "Planning Commission");
   assert.ok(pc);
   assert.ok(pc.bodyId.endsWith("#planning-commission"));
@@ -59,11 +46,9 @@ test("lookup is by division plus published body name, never the wrong body's rul
   assert.notEqual(pc.signup, mc.signup);
   assert.notEqual(pc.timeLimit, mc.timeLimit);
 
-  // A body with no row of its own gets nothing — never a sibling's rule.
   assert.equal(commentAccessFor(tucsonOcd, "Design Review Board"), undefined);
   assert.equal(commentAccessFor(tucsonOcd), undefined);
 
-  // Divisionless bodies resolve by the committed identity, never the null key.
   const pcc = commentAccessFor(null, "Regular Governing Board", "curated:az/pima-community-college#governing");
   assert.ok(pcc);
   assert.equal(pcc.commentPeriod, "YES");

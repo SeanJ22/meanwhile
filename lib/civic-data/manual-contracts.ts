@@ -109,7 +109,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     readerProjection: { id: "state-election-ballots", consumers: ["Admin", "Ask", "/ballot"] },
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
-    lkgBehavior: "Each contest publishes only with its complete saved official candidate list; incomplete contests retain their prior GOOD candidates together and remain owed work.",
+    lkgBehavior: "Each verified candidate publishes with its sourced contest. Partial lists preserve prior candidates; only a complete successor from the same election authority can remove omitted candidacies.",
   },
   {
     id: "congress-bulk-roster",
@@ -118,14 +118,14 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     recordClass: "FEDERAL_DIRECTORY",
     scope: "US:current-congress-directory",
     command: ["scripts/fetch-congress-legislators.mts", "--promote"],
-    parserNormalizerVersion: "congress-directory/2",
+    parserNormalizerVersion: "congress-directory/4",
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "congress-directory-project" },
     validationContract: VALIDATION_CHECKS,
     canonicalProductionStore: STORE,
     readerProjection: { id: "federal-membership-contact-directory", consumers: ["registry", "/api/directory", "representation", "map", "ballot", "Ask", "funding identity"] },
     classification: "RUNTIME_CIVIC_DATA",
-    bootstrapFixturePaths: ["lib/registry/officeholders-us.json", "data/congress-legislators/directory.json"],
-    lkgBehavior: "A missing/thin source file, unresolved identity, destructive roster, or dependent-reader failure records a refusal and leaves the prior GOOD federal directory live.",
+    bootstrapFixturePaths: [],
+    lkgBehavior: "A missing current-member file or invalid identity retains prior membership; optional files publish independently and retain prior valid facts and acquisition dates when unavailable.",
   },
   {
     id: "registry-runtime-bindings",
@@ -140,7 +140,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     canonicalProductionStore: STORE,
     readerProjection: { id: "reader-registry-runtime-bindings", consumers: ["registry", "directory", "representation", "map", "ballot", "Ask", "funding identity"] },
     classification: "RUNTIME_CIVIC_DATA",
-    bootstrapFixturePaths: ["lib/registry/registry.json", "lib/registry/promoted-bodies.json", "lib/registry/body-rosters.ts", "lib/officials/statewide-executives.ts", "lib/registry/official-photos.json", "lib/registry/roster-photos.json", "lib/registry/fixtures/official-candidacies-first-seed.json"],
+    bootstrapFixturePaths: ["lib/registry/registry.json", "lib/registry/promoted-bodies.json", "lib/registry/body-rosters.ts", "lib/officials/statewide-executives.ts"],
     lkgBehavior: "Each malformed, blocked, or incompletely receipted body/person/photo/candidacy member retains only its own prior GOOD member while independently proven members may advance; relationally inseparable rows remain fail-closed together.",
   },
   {
@@ -156,7 +156,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     canonicalProductionStore: STORE,
     readerProjection: { id: "federal-recent-rollcalls", consumers: ["/api/votes", "/api/reactions", "Ask", "map", "ballot"] },
     classification: "RUNTIME_CIVIC_DATA",
-    bootstrapFixturePaths: ["data/votes/votes-snapshot.json", "data/votes/bill-summaries.json"],
+    bootstrapFixturePaths: [],
     lkgBehavior: "A failed, partial, older, or semantically invalid official roll window leaves the prior GOOD projection live.",
   },
   {
@@ -172,7 +172,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     canonicalProductionStore: STORE,
     readerProjection: { id: "federal-key-votes", consumers: ["/api/votes", "Ask", "map", "ballot"] },
     classification: "RUNTIME_CIVIC_DATA",
-    bootstrapFixturePaths: ["data/votes/key-votes-snapshot.json", "data/votes/key-vote-positions.json"],
+    bootstrapFixturePaths: [],
     lkgBehavior: "Every selected official roll must validate as a set; a missing or malformed roll holds the prior GOOD question/position projection.",
   },
   {
@@ -188,14 +188,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     canonicalProductionStore: STORE,
     readerProjection: { id: "az-2026-ballot-and-identity", consumers: ["/ballot", "/api/ballot/scope", "Ask", "funding identity"] },
     classification: "RUNTIME_CIVIC_DATA",
-    bootstrapFixturePaths: [
-      "data/states/az/ballot/az-pima-2026.json",
-      "data/states/az/ballot/az-general-lineup-2026.json",
-      "data/states/az/ballot/az-analyses-2026.json",
-      "data/states/az/candidates/az-2026-sos-candidate-filings.json",
-      "data/states/az/identity/az-2026-candidate-registry.json",
-      "data/states/az/identity/az-2026-certified-lineup-reconciliation.json",
-    ],
+    bootstrapFixturePaths: ["data/states/az/ballot/az-pima-2026.json"],
     lkgBehavior: "A refused manual ballot/identity package leaves the prior exact Arizona ballot, lineup, analyses, and identity projection live atomically.",
   },
   {
@@ -211,7 +204,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     canonicalProductionStore: STORE,
     readerProjection: { id: "nh-merrimack-2026-ballot", consumers: ["/ballot", "/api/ballot/scope", "Ask"] },
     classification: "RUNTIME_CIVIC_DATA",
-    bootstrapFixturePaths: ["data/states/nh/ballot/nh-merrimack-2026.json"],
+    bootstrapFixturePaths: [],
     lkgBehavior: "A refused manual New Hampshire filing package leaves the prior GOOD ballot projection live.",
   },
   {
@@ -227,7 +220,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     canonicalProductionStore: STORE,
     readerProjection: { id: "candidate-profile-cards-and-links", consumers: ["/ballot", "Ask candidate profiles"] },
     classification: "RUNTIME_CIVIC_DATA",
-    bootstrapFixturePaths: ["data/ballot/candidate-cards-2026.json", "data/ballot/candidate-links-2026.json"],
+    bootstrapFixturePaths: [],
     lkgBehavior: "A malformed, ambiguously keyed, or incompletely reviewed profile package is held while the prior GOOD card/link projection remains live.",
   },
   {
@@ -243,7 +236,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     canonicalProductionStore: STORE,
     readerProjection: { id: "candidate-publication-corpus", consumers: ["/ballot", "/api/positions", "Ask"] },
     classification: "RUNTIME_CIVIC_DATA",
-    bootstrapFixturePaths: ["data/candidates/corpus-2026.json"],
+    bootstrapFixturePaths: [],
     lkgBehavior: "A failed or invalid reviewed collection records its refusal and leaves every previously promoted candidate publication available.",
   },
   {
@@ -259,7 +252,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     canonicalProductionStore: STORE,
     readerProjection: { id: "officeholder-primary-statement-corpus", consumers: ["/api/positions", "Ask statements", "official positions"] },
     classification: "RUNTIME_CIVIC_DATA",
-    bootstrapFixturePaths: ["data/corpus/statements.json", "lib/corpus/fixtures/statement-identity-first-seed-v1.json"],
+    bootstrapFixturePaths: [],
     lkgBehavior: "A failed acquisition, unreadable source set, invalid identity, or malformed snapshot is durably refused while the prior GOOD statement corpus remains live.",
   },
   {
@@ -278,11 +271,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
       consumers: ["standing local-jurisdictions provider", "readiness/Admin", "bounded worker canonical-scope checks"],
     },
     classification: "OPERATIONAL_REFERENCE_DATA",
-    bootstrapFixturePaths: [
-      "data/states/az/jurisdictions/az.json",
-      "data/states/nh/jurisdictions/nh.json",
-      "data/states/nj/jurisdictions/nj.json",
-    ],
+    bootstrapFixturePaths: [],
     lkgBehavior: "A missing, malformed, shrinking, or internally inconsistent jurisdiction bundle records a refusal and leaves the prior promoted operational-reference version live.",
   },
   {
@@ -298,7 +287,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     canonicalProductionStore: STORE,
     readerProjection: { id: "az-jurisdiction-operational-reference", consumers: ["original Arizona Send", "standing local-jurisdictions provider", "readiness/Admin"] },
     classification: "OPERATIONAL_REFERENCE_DATA",
-    bootstrapFixturePaths: ["data/states/az/jurisdictions/az.json"],
+    bootstrapFixturePaths: [],
     lkgBehavior: "A missing, malformed, shrinking, or inconsistent Arizona projection refuses only its scoped candidate and retains the prior promoted Arizona version.",
   },
   {
@@ -308,17 +297,13 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     recordClass: "STATE_CAMPAIGN_FINANCE",
     scope: "US-AZ:campaign-finance:2026",
     command: ["scripts/state-money-az.mts", "--promote"],
-    parserNormalizerVersion: "az-campaign-finance/2",
+    parserNormalizerVersion: "az-campaign-finance/4",
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "az-sos-campaign-finance" },
     validationContract: VALIDATION_CHECKS,
     canonicalProductionStore: STORE,
     readerProjection: { id: "az-state-campaign-finance", consumers: ["/ballot", "/api/funding", "Ask", "map"] },
     classification: "RUNTIME_CIVIC_DATA",
-    bootstrapFixturePaths: [
-      "data/states/az/funding/state-money-az-2026.json",
-      "data/states/az/campaign-finance/az-2026-statewide-corpus.json",
-      "data/states/az/campaign-finance/az-seethemoney-2026-reconciliation.json",
-    ],
+    bootstrapFixturePaths: [],
     lkgBehavior: "A failed acquisition, unreconciled dollar figure, ambiguous identity, or destructive candidate is held and the prior GOOD Arizona projection remains live.",
   },
   {
@@ -328,16 +313,13 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     recordClass: "STATE_CAMPAIGN_FINANCE",
     scope: "US-NH:campaign-finance:2026",
     command: ["scripts/state-money-nh.mts", "--promote"],
-    parserNormalizerVersion: "nh-campaign-finance/2",
+    parserNormalizerVersion: "nh-campaign-finance/4",
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "nh-sos-campaign-finance" },
     validationContract: VALIDATION_CHECKS,
     canonicalProductionStore: STORE,
     readerProjection: { id: "nh-state-campaign-finance", consumers: ["/ballot", "/api/funding", "Ask", "map"] },
     classification: "RUNTIME_CIVIC_DATA",
-    bootstrapFixturePaths: [
-      "data/states/nh/funding/state-money-nh-2026.json",
-      "data/states/nh/campaign-finance/nh-cfs-filer-index-2026.json",
-    ],
+    bootstrapFixturePaths: [],
     lkgBehavior: "A source failure, short statewide index, invalid match, or malformed candidate records a refusal and leaves the prior GOOD New Hampshire projection live.",
   },
   {
@@ -347,17 +329,13 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     recordClass: "STATE_CAMPAIGN_FINANCE",
     scope: "US-NJ:campaign-finance:2026",
     command: ["scripts/state-money-nj.mts", "--promote"],
-    parserNormalizerVersion: "nj-campaign-finance/2",
+    parserNormalizerVersion: "nj-campaign-finance/4",
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "nj-elec-campaign-finance" },
     validationContract: VALIDATION_CHECKS,
     canonicalProductionStore: STORE,
     readerProjection: { id: "nj-state-campaign-finance", consumers: ["/ballot", "/api/funding", "Ask", "map"] },
     classification: "RUNTIME_CIVIC_DATA",
-    bootstrapFixturePaths: [
-      "data/states/nj/funding/state-money-nj-2026.json",
-      "data/states/nj/campaign-finance/nj-elec-location-universe.json",
-      "data/states/nj/campaign-finance/nj-elec-entity-corpus-2026.json",
-    ],
+    bootstrapFixturePaths: [],
     lkgBehavior: "A source failure, control failure, short location, or invalid filing projection cannot move the pointer; the prior GOOD New Jersey projection remains live.",
   },
   {
@@ -373,10 +351,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     canonicalProductionStore: STORE,
     readerProjection: { id: "pima-local-campaign-finance", consumers: ["Ask local finance", "Admin source outcomes"] },
     classification: "RUNTIME_CIVIC_DATA",
-    bootstrapFixturePaths: [
-      "data/states/az/campaign-finance/az-pima-2026-held.json",
-      "data/states/az/campaign-finance/az-pima-2026-transactions.json",
-    ],
+    bootstrapFixturePaths: [],
     lkgBehavior: "A failed filer/transaction acquisition, suspected cap, malformed record, or unknown identity records its outcome and leaves the prior GOOD Pima projection live.",
   },
   {
@@ -392,7 +367,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     canonicalProductionStore: STORE,
     readerProjection: { id: "official-voting-sites", consumers: ["/api/voting-sites", "ballot voting-sites panel", "map"] },
     classification: "RUNTIME_CIVIC_DATA",
-    bootstrapFixturePaths: ["data/voting-sites.json"],
+    bootstrapFixturePaths: [],
     lkgBehavior: "Each election authority is isolated. A failed or empty authority retains only its prior GOOD jurisdiction scope, and a globally empty candidate cannot move the pointer.",
   },
   {
@@ -401,15 +376,31 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     sourceId: "prl",
     recordClass: "PRL_PROFILE",
     scope: "US:congressional-rhetoric:attributed-profiles",
-    command: ["scripts/fetch-prl.mts", "--promote"],
+    command: ["scripts/prl-refresh.mts", "--promote", "--dataset=profiles-national"],
     parserNormalizerVersion: "prl-rhetoric/2",
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "prl" },
     validationContract: VALIDATION_CHECKS,
     canonicalProductionStore: STORE,
     readerProjection: { id: "prl-attributed-rhetoric-profiles", consumers: ["/api/profile/[subject]", "ballot and map public-statements profile"] },
     classification: "RUNTIME_CIVIC_DATA",
-    bootstrapFixturePaths: ["data/prl/prl-profiles.json"],
+    bootstrapFixturePaths: [],
     lkgBehavior: "A failed download, schema change, attribution/licence defect, forbidden ranking field, or invalid Bioguide identity records a refusal and leaves the prior attributed GOOD projection live.",
+  },
+  {
+    id: "prl-archives",
+    execution: "EXPLICIT_OWNER_INVOCATION_ONLY",
+    sourceId: "prl",
+    recordClass: "PRL_ARCHIVE",
+    scope: "US:prl:known-archives",
+    command: ["scripts/prl-refresh.mts", "--promote", "--archives"],
+    parserNormalizerVersion: "prl-ingest/2",
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "prl" },
+    validationContract: VALIDATION_CHECKS,
+    canonicalProductionStore: STORE,
+    readerProjection: { id: "prl-person-archives", consumers: ["Ask", "official statements", "profiles"] },
+    classification: "RUNTIME_CIVIC_DATA",
+    bootstrapFixturePaths: [],
+    lkgBehavior: "Each completed source release publishes independently. Failed or truncated archives keep the prior manifest and original source dates; person readers load only that native person's immutable partitions.",
   },
   {
     id: "az-official-actions",
@@ -424,7 +415,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     canonicalProductionStore: STORE,
     readerProjection: { id: "az-governor-official-actions", consumers: ["/api/official-actions", "Ask", "official cards"] },
     classification: "RUNTIME_CIVIC_DATA",
-    bootstrapFixturePaths: ["data/states/az/officials/az-governor-actions.json"],
+    bootstrapFixturePaths: [],
     lkgBehavior: "A missing source receipt, unread disposition, invalid action, or destructive reviewed package records a refusal and leaves the prior GOOD action projection live.",
   },
   {
@@ -507,13 +498,8 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     bootstrapFixturePaths: ["lib/officials/campaign-sites.ts"],
     lkgBehavior: "A failed site verification, retired identity, or missing exact source receipt holds only campaign-site bindings and leaves their prior GOOD version live.",
   },
-  /*
-   * STATE LEGISLATORS' CAPITOL AND DISTRICT OFFICES (Sean, 2026-10-01: Open States is an acceptable source for these
-   * offices; official values win; an office no official page states carries `official: false`). The continuous
-   * runner refreshes it daily (lib/civic-data/automatic-refresh.ts); each office is joined to the legislature's own
-   * roster row (lib/officials/member-offices.ts) and published through this one curated pointer.
-   */
   {
+    // Open States may supply a legislator's offices; official values win, and an office no official page states carries `official: false`.
     id: "member-offices",
     execution: "EXPLICIT_OWNER_INVOCATION_ONLY",
     sourceId: "curated-reader-primary-sources",
@@ -562,7 +548,6 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     lkgBehavior: "A row whose evidence is not its receipted bytes, whose body or filter is not established, or that conflicts with another row holds only itself; every other reviewed row and the prior GOOD crosswalk stay live. A row leaves only when a later review withdraws it.",
     delegatedInvocation: {
       to: "REVIEWING_AGENT_SESSION",
-      /* Stored citation text, kept byte-identical; not an owner decision. The authority is rulings §3 (Sean, 2026-10-01). */
       authorization: "C16: owner decision recorded 2026-09-24T22:43Z — \"Agents may review and promote the records connecting a calendar to its governing body.\"",
     },
   },

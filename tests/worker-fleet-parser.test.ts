@@ -214,8 +214,6 @@ test("unexpected implementation errors escape for the execution broker instead o
 });
 
 function civicClerkInput(): ParserWorkerInput {
-  // Synthetic mixed-category control. The separate live W4 run reads the
-  // immutable CivicClerk capture directly from its existing evidence custody.
   const rows = [
     { id: 101, eventName: "Possible Quorum", categoryId: 47, eventCategoryName: "Possible Quorum" },
     { id: 102, eventName: "City Council Meeting", categoryId: 26, eventCategoryName: "City Council" },

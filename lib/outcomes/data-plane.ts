@@ -28,12 +28,6 @@ export const PIMA_LEGISTAR_OUTCOMES_CONTRACT = {
   parserVersion: "pima-legistar-outcomes/2",
 } as const;
 
-/**
- * Mesa City Council decisions read off the council's own minutes on the
- * permitted portal host (NH332, 2026-09-25). Its own scope and pointer: a
- * Mesa refusal never touches Pima's outcomes, and the Reader combines the two
- * pointers (lib/outcomes/store.ts) with each tenant's provenance intact.
- */
 export const MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT = {
   contractId: "mesa-legistar-minutes-outcomes",
   sourceId: "mesa-legistar-minutes-outcomes",
@@ -44,11 +38,7 @@ export const MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT = {
   calendarUrl: "https://mesa.legistar.com/Calendar.aspx",
 } as const;
 
-/**
- * One Legistar body's outcome tenant (DB-22): the facts a candidate builder needs that differ between bodies. The
- * defaults below are Pima's and Mesa's own contracts, so their candidates are built exactly as before; a body added
- * as a door builds the same candidate from the tenant `lib/civic-data/outcome-partitions.ts` makes for it.
- */
+/** One Legistar body's outcome tenant: the facts a candidate builder needs that differ between bodies. */
 export interface OutcomeTenant {
   readonly contractId: string;
   readonly sourceId: string;
@@ -57,13 +47,13 @@ export interface OutcomeTenant {
   readonly parserVersion: string;
   /** The `{client}` segment at webapi.legistar.com, and the tenant name every sitting carries. */
   readonly slug: string;
-  /** A name for the body's government in a sentence ("Pima", "Mesa"). */
+  /** A name for the body's government in a sentence. */
   readonly label: string;
   /** The state jurisdiction a sitting's identity is filed under, e.g. `US-AZ`. */
   readonly jurisdiction: string;
   /** The first route the run reads; named when no response was acquired. */
   readonly requestedUrl: string;
-  /** The portal host the minutes route reads (`mesa.legistar.com`); the API route has none. */
+  /** The portal host the minutes route reads (`<client>.legistar.com`); the API route has none. */
   readonly portalHost: string | null;
 }
 
@@ -226,11 +216,7 @@ function actionMembers(store: ExecutiveActionStore): readonly CivicRecordMember[
   ].sort((left, right) => left.key.localeCompare(right.key));
 }
 
-/**
- * Candidate for a reviewed set of Arizona Governor/Legislature publications.
- * The receipt is an exact-byte source set: a tracked projection is never
- * accepted as publisher evidence and cannot move this pointer on its own.
- */
+/** Candidate for a reviewed set of state publications; the receipt is an exact-byte source set, never a tracked projection. */
 export function azOfficialActionsCandidate(input: {
   readonly store: ExecutiveActionStore;
   readonly sourceReceipt: ManualSourceSetReceipt;
@@ -394,9 +380,9 @@ function sittingMembers(sitting: PersistedSittingOutcomes): CivicRecordMember[] 
         minutesPointer: sitting.minutesPointer,
         routesWalked: sitting.routesWalked,
         publicationObservations: sitting.publicationObservations,
-        // Minutes-route sittings only (NH332); absent, and so unchanged, on Pima's.
+        // Minutes-route sittings only.
         ...(sitting.minutesDocument ? { minutesDocument: sitting.minutesDocument } : {}),
-        // A held failed minutes extraction and the bytes it failed on (2026-09-25); absent elsewhere.
+        // A held failed minutes extraction and the bytes it failed on; absent elsewhere.
         ...(sitting.failedMinutesRead ? { failedMinutesRead: sitting.failedMinutesRead } : {}),
       },
     },
@@ -410,7 +396,7 @@ function acquisitionHash(evidence: readonly SourceAcquisitionEvidence[]): string
   return sha256(canonicalCivicDataJson(evidence.map(({ source: _source, ...row }) => row)));
 }
 
-/** A Legistar candidate for one tenant (Pima unless told otherwise), built only from exact HTTP-response receipts. */
+/** A Legistar candidate for one tenant, built only from exact HTTP-response receipts. */
 export function legistarOutcomesCandidate(input: {
   readonly snapshot: OutcomeSnapshot;
   readonly acquisitions: readonly SourceAcquisitionEvidence[];
@@ -528,7 +514,6 @@ export function legistarOutcomesCandidate(input: {
   };
 }
 
-/** Pima's candidate, as it has always been built. */
 export function pimaLegistarOutcomesCandidate(input: Parameters<typeof legistarOutcomesCandidate>[0]): RoutineCandidate {
   return legistarOutcomesCandidate(input, PIMA_OUTCOME_TENANT);
 }
@@ -543,20 +528,14 @@ export function minutesOutcomeScopeIssue(snapshot: OutcomeSnapshot, tenant: Outc
   return stray ? `${stray.meetingId} crosses the ${tenant.label} tenant or its portal meeting-id scope.` : null;
 }
 
-/** Mesa's projection identity, as it has always been checked. */
 export function mesaMinutesOutcomeScopeIssue(snapshot: OutcomeSnapshot): string | null {
   return minutesOutcomeScopeIssue(snapshot, MESA_OUTCOME_TENANT);
 }
 
 /**
- * A Mesa minutes-outcome candidate built only from exact HTTP-response
- * receipts: the calendar grid read and each minutes document walked this run.
- *
- * A sitting whose minutes request failed refuses the candidate (the prior GOOD
- * pointer stays live); a sitting whose read minutes yielded nothing is held as
- * the failed extraction it is, with the bytes it failed on (2026-09-25). A
- * sitting whose minutes are not yet published is a valid, stated row — a fact
- * about the publisher, never a failure of ours.
+ * A minutes-outcome candidate built only from exact HTTP-response receipts. A failed minutes request refuses the
+ * candidate; a read whose extraction failed is held as a failed extraction with its bytes; minutes not yet published
+ * are a stated row, a fact about the publisher.
  */
 export function legistarMinutesOutcomesCandidate(input: {
   readonly snapshot: OutcomeSnapshot;
@@ -575,11 +554,9 @@ export function legistarMinutesOutcomesCandidate(input: {
   const scopeIssue = minutesOutcomeScopeIssue(snapshot, tenant);
   if (scopeIssue) violations.push(scopeIssue);
   /*
-   * A failed REQUEST read no bytes and is retried soon: it refuses the candidate and the prior GOOD pointer stays
-   * live. A document read whose extraction failed on its bytes, held with those bytes' identity
-   * (`failedMinutesRead`, 2026-09-25), is a named failure of ours, not a retryable request: it is admitted as
-   * the failed extraction it is, with no record, so the same unchanged document is not downloaded and failed
-   * again on every hourly retry. The fail-closed rule is unchanged: it claims nothing about what was decided.
+   * A failed request refuses the candidate and the prior GOOD pointer stays live. A document whose extraction failed on
+   * its bytes is admitted as that failed extraction, with no record, so the unchanged document is not re-downloaded and
+   * failed again on every retry.
    */
   const failed = snapshot.sittings.filter((sitting) =>
     sitting.extraction === "REQUEST_FAILED" || (sitting.extraction === "ZERO_ROWS_FAILED" && sitting.failedMinutesRead === undefined));
@@ -715,7 +692,6 @@ export function legistarMinutesOutcomesCandidate(input: {
   };
 }
 
-/** Mesa's candidate, as it has always been built. */
 export function mesaLegistarMinutesOutcomesCandidate(input: Parameters<typeof legistarMinutesOutcomesCandidate>[0]): RoutineCandidate {
   return legistarMinutesOutcomesCandidate(input, MESA_OUTCOME_TENANT);
 }

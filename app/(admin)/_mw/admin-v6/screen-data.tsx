@@ -1,6 +1,5 @@
 "use client";
 
-/** **DATA BUSINESS.** How readers use the product and whether capture works: reader demand, capture health, topic counts and the switches that control them. */
 import { CaptureHealthPanel } from "./capture-health.tsx";
 import { DataSwitchesPanel } from "./data-switches.tsx";
 import { ReaderDemandPanel } from "./reader-demand.tsx";

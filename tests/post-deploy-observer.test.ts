@@ -14,21 +14,8 @@ import {
 } from "../scripts/post-deploy-observer.mts";
 
 /**
- * NH273 PART 2 — THE OBSERVER'S NEGATIVE CONTROLS.
- *
- * The observer exists because nothing ran the reading automatically. Every test
- * here plants a condition it must NOT report as a healthy deploy, and the most
- * important one is live on this repository right now: NH281 is open, production
- * has been failing to deploy application-bearing commits, and the observer's
- * bounded poll is going to time out for real. A timeout that recorded DEGRADED
- * would write a false claim about production's SCHEMA into the durable record
- * the release gate trusts — a fact about our build pipeline, laundered into a
- * fact about a database.
- *
- * NOTHING HERE TOUCHES THE NETWORK. `probe` and `sleep` are handed in, which is
- * what makes the timeout branch testable at all: a real one takes ten minutes,
- * and a suite that waits ten minutes is discovered as a platform kill with no
- * step named.
+ * Negative controls for the post-deploy observer: each test plants a condition it must not report as a healthy
+ * deploy. `probe` and `sleep` are injected, so the timeout branch runs without the network or the real wait.
  */
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -71,9 +58,7 @@ test("OB1: the observer sees the expected commit and says which attempt saw it",
 });
 
 test("OB1b: an abbreviated expectation still matches the full served commit", () => {
-  // git's own default abbreviation is what a person writes down; a strict
-  // equality here would poll to the bound against the very commit it was
-  // watching for.
+  // A short sha is what a person writes down; strict equality would poll to the bound against the watched commit.
   return pollUntilServed({
     expectedSha: SHA_EXPECTED.slice(0, 8),
     probe: always(SHA_EXPECTED),
@@ -97,12 +82,8 @@ test("OB2: the bound elapsing while production serves something else is PRODUCTI
   assert.equal(r.servedSha, SHA_OLD);
   assert.equal(r.attempts, 4, "it used its whole allowance before concluding");
 
-  /*
-   * THE CLAIM UNDER TEST, and it is the reason this file exists. A deploy that
-   * never arrived is a fact about the BUILD, and production's schema integrity
-   * is a different subject entirely. The outcome vocabulary must not contain a
-   * word that would let one be read as the other.
-   */
+  // A deploy that never arrived is a fact about the build, not about production's schema; the outcome words must
+  // not let one be read as the other.
   assert.ok(
     !(OBSERVER_OUTCOMES as readonly string[]).includes("DEGRADED"),
     "the observer may not have a DEGRADED outcome — that word belongs to the schema reading",
@@ -113,11 +94,7 @@ test("OB2: the bound elapsing while production serves something else is PRODUCTI
 });
 
 test("OB2b: a production that never ANSWERS is COULD_NOT_TELL, not PRODUCTION_BEHIND", async () => {
-  /*
-   * The two endings of the same loop, and they may never be printed alike.
-   * Production answering with an older commit is a measurement; production not
-   * answering at all is the absence of one (RULING 24).
-   */
+  // An older served commit is a measurement; no answer is the absence of one. They are never printed alike.
   const r = await pollUntilServed({
     expectedSha: SHA_EXPECTED,
     probe: always(null),
@@ -164,13 +141,7 @@ test("OB3b: the total-wait ceiling stops the loop before the attempt ceiling doe
 /** ---------------------- 4. reading the endpoint honestly ---------------- */
 
 test("OB4: an `unknown` commit is an ABSENCE, never a served sha", async () => {
-  /*
-   * `app/api/build/route.ts` returns `"unknown"` honestly when the build carried
-   * no COMMIT_REF. Reading that as a sha would have every comparison in the
-   * observer compare against a word — and `"unknown" !== expected` forever,
-   * which would report PRODUCTION_BEHIND for an endpoint that simply had nothing
-   * to say.
-   */
+  // The build endpoint returns "unknown" when the build carried no commit; that is not a sha to compare against.
   const served = await fetchServedCommit("https://example.invalid", {
     fetchImpl: (async () =>
       new Response(JSON.stringify({ commit: "unknown", commitShort: "unknown" }), {
@@ -201,13 +172,7 @@ test("OB4b: a non-200 and a refused connection are both `null`, and each says wh
 });
 
 test("OB4c: every probe declares itself synthetic", async () => {
-  /*
-   * `app/api/build/route.ts` writes nothing — it is a `Response.json` over five
-   * build-time constants, with no database handle and no search-log row — so
-   * this cannot contaminate the sold store today. The declaration goes anyway:
-   * an automated request to production that skips it is the exception that
-   * teaches the next script to skip it too, and the next route may well log.
-   */
+  // The build route writes nothing today, but an automated request to production still declares itself.
   let sent: Record<string, string> = {};
   await fetchServedCommit(PRODUCTION_BASE_URL, {
     runId: "a-test-run",
@@ -242,8 +207,7 @@ test("OB6: the observer contains no rollback action of any kind", () => {
   const ROLLBACK =
     /\b(git\s+revert|git\s+reset\s+--hard|netlify\s+(api\s+)?rollback|restoreDeploy|rollbackDeploy|--rollback)\b/i;
 
-  // Comments stripped: both files explain at LENGTH why nothing rolls back, and
-  // a sweep that reads its own reasoning as the defect is the guard failing.
+  // Comments stripped: both files explain why nothing rolls back.
   const code = text.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
   const yaml = workflow.replace(/^\s*#.*$/gm, "");
   assert.doesNotMatch(code, ROLLBACK, "NH273 forbids automatic rollback");
@@ -254,18 +218,12 @@ test("OB6: the observer contains no rollback action of any kind", () => {
 /** ---------------------- 7. it runs the EXISTING gate -------------------- */
 
 test("OB7: the observer spawns the existing reading rather than asking the database itself", () => {
-  /*
-   * `tests/migration-shipping-invariant.test.ts` holds the set of files
-   * permitted to query `drizzle.__drizzle_migrations` closed to FOUR. A fifth
-   * would break it — correctly, because two implementations of "does production
-   * hold the migrations this commit ships" are two verdicts free to disagree
-   * with the one branch protection already trusts.
-   */
+  // The set of files permitted to query `drizzle.__drizzle_migrations` is closed; a second implementation of the
+  // migration check would be a second verdict.
   const text = readFileSync(join(ROOT, "scripts", "post-deploy-observer.mts"), "utf8");
   const code = text.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
 
-  // The path is BUILT with `join`, not written as a literal, so the match is on
-  // the file name the spawn names rather than on a separator-bearing string.
+  // The path is built with `join`, so the match is on the file name, not a separator-bearing string.
   assert.match(code, /"production-integrity\.mts"/, "it must spawn the existing reading");
   assert.doesNotMatch(code, /__drizzle_migrations/, "it may not query the migrations table itself");
   assert.doesNotMatch(code, /drizzle-orm|neon|postgres/i, "it opens no database handle at all");
@@ -275,13 +233,7 @@ test("OB7: the observer spawns the existing reading rather than asking the datab
 
 test("OB8: the workflow is bounded, exact-head, read-only in Git, and appends canonical outcome", () => {
   const raw = readFileSync(join(ROOT, ".github", "workflows", "post-deploy-integrity.yml"), "utf8");
-  /*
-   * COMMENTS STRIPPED FOR THE NEGATIVE ASSERTIONS. The workflow's header
-   * explains at length WHY it does not listen for `deployment_status` — and the
-   * first run of this test read that explanation as the defect it was written
-   * to prevent. A guard that flags its own reasoning is the guard failing, not
-   * the file.
-   */
+  // Comments stripped for the negative assertions: the workflow header explains what it does not listen for.
   const w = raw.replace(/^\s*#.*$/gm, "");
 
   assert.match(w, /\n\s*push:\s*\n\s*branches: \[main\]/, "it must fire on the push that causes the deploy");

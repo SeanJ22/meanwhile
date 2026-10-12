@@ -1,8 +1,5 @@
 /**
- * @freshness-reads-here
- *
- * RULING 107 — the clock stamps in this file are minted by the code path that
- * performs the read: `collectedAt` is taken at the moment of the fetch.
+ * @freshness-reads-here — `collectedAt` is taken at the moment of the fetch.
  */
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import {
@@ -31,67 +28,28 @@ import type {
 } from "../types.ts";
 
 /**
- * **Pima Community College's own publication of its Governing Board sittings.**
- * (2026-09-23, the Pima school-agenda routes session.)
+ * A community college's own first-party publication of its Governing Board
+ * sittings:
  *
- * ## Why this route exists
+ * - the board's documents page — the year's table of every sitting, each row
+ *   carrying the college's own agenda, approved-items and video links;
+ * - the events calendar filtered to the board — every UPCOMING sitting, whose
+ *   per-event add-to-calendar link states start, end and room as data;
+ * - one committee's schedule (date, start time, location) and document table.
  *
- * The college publishes its agendas through a Diligent Community tenant,
- * `pima.community.highbond.com`, and this project read that tenant's meeting
- * service every day. Its `robots.txt` is an allowlist: six named search crawlers
- * may read `/Portal/`, `/document/` and `/Services/`, and `User-agent: *`
- * carries `Disallow: /` — read 2026-09-23T20:02Z, 23,479 bytes, the same file
- * every Diligent Community tenant serves. That reading alone retired the
- * tenant route on 2026-09-23. Since the owner decision of 2026-09-25 robots.txt
- * is recorded and blocks nothing; the route stays retired because this one
- * carries every sitting it did, and five more.
- *
- * The college publishes the same sittings, and some of the agendas themselves,
- * on its own hosts:
- *
- * - `www.pima.edu/.../board-meetings/documents.html` — the year's table of
- *   every Governing Board sitting (regular, executive session, study session,
- *   retreat), each row carrying the college's own links: the agenda (a
- *   first-party PDF on `www.pima.edu`, or the college's link into its Diligent
- *   tenant), the approved items and the video;
- * - `events.pima.edu` — the "Board of Governors" calendar, carrying every
- *   UPCOMING sitting with its time and room (the per-event page's own
- *   add-to-calendar link states start, end and room as data);
- * - `.../finance-advisory-committee/index.html` and `agendas-minutes.html` —
- *   the Finance and Audit Committee's fiscal-year schedule (date, start time,
- *   location) and its per-sitting document table.
- *
- * Every host is asked before every run (`../permission-gate.ts`); both answer
- * `User-agent: *` with narrow disallows that do not reach these paths.
- *
- * ## What is carried, and what is deliberately not
+ * Every host is asked before every run (`../permission-gate.ts`).
  *
  * - **The agenda link is the college's own link, whatever host it names.** A
- *   first-party PDF on `www.pima.edu` is retrieved and read by the ingest, and
- *   so is a link into the Diligent tenant: the tenant's route is retired
- *   (`RETIRED_MEETING_ROUTES` in `lib/registry/source-wiring.ts`), for
- *   robots.txt alone, and its host stays readable (`hostsReadable`) since the
- *   owner decision of 2026-09-25 that robots.txt blocks nothing. That link is
- *   the tenant's meeting page (`/Portal/MeetingInformation.aspx`), which states
- *   no agenda item itself; the agenda text is behind the page's own
- *   `/document/…` link, which nothing follows yet.
- * - **Time and place come from a sitting-specific statement or not at all.**
- *   The event page's own calendar link, the committee schedule's row, or the
- *   first-party agenda's header (`August 10, 2026 at 5:00 p.m. … VIRTUAL
- *   MEETING*`). A sitting none of them places is never placed by habit — a
- *   standing "board meetings are held at the District Office" is a habit, not
- *   a statement about that sitting — and never suppressed either (the
- *   venue-gap class, 2026-09-23): it is published with no pin and counted as
- *   `unknownVenue`, its gap named as the college's own words for a place we
- *   hold no reviewed row for, or as our own place-not-recorded gap where no
- *   sitting-specific statement names a place at all.
- * - **An unlinked "Agenda" cell is not recorded as an empty slot.** This page
- *   mirrors the college's agenda platform and can lag it, so "the page linked
- *   nothing yet" is not "the college posted nothing"; the reader keeps the OURS
- *   gap (`lib/sources/agenda-slot.ts`).
- * - **"Approved Items" are not the agenda.** They list the action items the
- *   board approved, not the agenda's discussion items, so they are never
- *   substituted for an agenda (never ship partial data as complete).
+ *   first-party PDF is read by the ingest; a link into the college's agenda
+ *   platform names a meeting page whose agenda text nothing follows yet.
+ * - **Time and place come from a sitting-specific statement or not at all**:
+ *   the event's calendar link, the committee schedule row, or the first-party
+ *   agenda's header. A standing "meetings are held at …" is a habit, not a
+ *   statement about that sitting. An unplaced sitting is still published, with
+ *   no pin, counted `unknownVenue` and its gap named.
+ * - **An unlinked "Agenda" cell is not an empty slot.** The page can lag the
+ *   agenda platform, so the reader keeps our own gap.
+ * - **"Approved Items" are not the agenda** and are never substituted for one.
  *
  * ## Configuration (wiring row `config`)
  *
@@ -101,11 +59,10 @@ import type {
  * - `committeeName` — the published name of the one wired committee.
  * - `committeeScheduleUrl`, `committeeDocumentsUrl` — its schedule and table.
  * - `venueSourceId`, `venueTenant` — the reviewed venue namespace these sittings
- *   resolve against (the promoted `venue-resolutions` rows for the District
- *   Office rooms, reviewed 2026-08-14 against the same board-meetings page).
+ *   resolve against.
  * - `venueRoom:<code>` — the reviewed venue spelling for a room code the
- *   college prints (`C-105`, `C-228`); `venueBuilding` — the reviewed spelling
- *   for the building when the college names no room.
+ *   college prints; `venueBuilding` — the reviewed spelling for the building
+ *   when the college names no room.
  */
 
 const SOURCE_NAME = "pima-edu";
@@ -397,11 +354,10 @@ export interface AgendaHeaderFacts {
 }
 
 /**
- * The header a PCC agenda opens with: `Governing Board Study Session Agenda
- * August 10, 2026 at 5:00 p.m. Pima Community College, District Office VIRTUAL
- * MEETING*`. Read only for the sitting's own date, so a later sentence that
- * mentions another meeting (item 2.3 reschedules "September 14, 2026") is
- * never taken for this one.
+ * The header a first-party agenda opens with (`Governing Board Study Session
+ * Agenda <date> at <time> <college>, <building> VIRTUAL MEETING*`). Read only
+ * for the sitting's own date, so a later sentence naming another meeting's date
+ * is never taken for this one.
  */
 export function parseAgendaHeader(text: string, date: CivilDate): AgendaHeaderFacts | null {
   const monthName = MONTHS[date.m - 1];
@@ -461,7 +417,7 @@ function dayWindow(now: Date): { lower: number; upper: number } {
 
 function inWindowDay(date: CivilDate, now: Date): boolean {
   const { lower, upper } = dayWindow(now);
-  const noonUtc = Date.UTC(date.y, date.m - 1, date.d, 19); // noon in Arizona, any season
+  const noonUtc = Date.UTC(date.y, date.m - 1, date.d, 19); // local noon in a UTC-7 zone with no DST
   return noonUtc >= lower - DAY_MS && noonUtc <= upper + DAY_MS;
 }
 
@@ -496,10 +452,8 @@ export function mergeSittings(raw: PimaEduRaw): {
       date: row.date,
       kind: row.kind,
       bodyName: "Governing Board",
-      // The label alone. The row's "(Hybrid)" is a statement about PLACE, and
-      // place comes from the most sitting-specific statement the college made
-      // — Aug 10's own agenda says VIRTUAL MEETING while this row says Hybrid,
-      // and a title must not contradict the place printed beside it.
+      // The label alone: place comes from the most sitting-specific statement,
+      // and a row's "(Hybrid)" can contradict the agenda's own place.
       title: row.label,
       canceled: row.canceled,
       agendaHref: row.agendaHref,
@@ -656,14 +610,10 @@ export function makePimaEduSource(
           ? resolveVenue(cfg.venueSourceId ?? SOURCE_NAME, wiring.ocdId, spelling, cfg.venueTenant ?? cfg.slug)
           : undefined;
         /*
-         * No reviewed place never suppresses the sitting (the venue-gap class,
-         * 2026-09-23): it is published with no pin, counted `unknownVenue` and
-         * kept. A place the college printed for THIS sitting renders as its
-         * words (`STATED_NOT_PLACED`); a sitting no sitting-specific statement
-         * places keeps our own place-not-recorded gap — several surfaces were
-         * read and none of them named one, which is a fact about what we hold,
-         * not a claim that the college's page is silent. Both used to
-         * `continue`.
+         * No reviewed place never suppresses the sitting: it is published with
+         * no pin and counted `unknownVenue`. A place the college printed for
+         * THIS sitting renders as its words (`STATED_NOT_PLACED`); otherwise our
+         * own place-not-recorded gap applies.
          */
         const venueGap = !online && !venue && s.place ? unplacedVenueGap(s.place, wiring.publishingOrg) : null;
         if (!online && !venue) {

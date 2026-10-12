@@ -1,6 +1,5 @@
 /**
- * RULING 52/53 enforced for the scout scheduler: a proven absence is recorded
- * and expires on a clock, so a correct negative is not re-walked every cycle.
+ * A proven absence is recorded and expires on a clock, so a correct negative is not re-walked every cycle.
  */
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -36,7 +35,7 @@ test("a standing (future) absence holds the next reading to the expiry, not the 
   assert.ok(isScheduled(plain) && Date.parse(plain.nextDueAt) <= NOW_MS, "the same row is due now without the absence");
 });
 
-test("an EXPIRED absence is ignored — the row comes due on its ordinary cadence again (RULING 53)", () => {
+test("an EXPIRED absence is ignored — the row comes due on its ordinary cadence again", () => {
   const past = new Date(NOW_MS - 3_600_000).toISOString(); // expired an hour ago
   const row = scheduleObligation({ ...BASE, absentUntil: past }, NOW_MS);
   assert.ok(isScheduled(row));
@@ -50,7 +49,7 @@ test("isArguedAbsence: only a finished, floor-clearing NO_PROGRESS is an absence
   const argued = { outcome: "NO_PROGRESS", stoppedBy: "BOUND", distinctEvidenceRungs: 8, refusal: null, researchRole: "DETECTIVE" as const };
   assert.equal(isArguedAbsence(argued, min), true, "the ladder was walked to the floor and nothing is there");
   assert.equal(isArguedAbsence({ ...argued, stoppedBy: "MODEL" }, min), true, "the model's own judgment that nothing is there is an absence too");
-  assert.equal(isArguedAbsence({ ...argued, outcome: "BLOCKED", stoppedBy: "MODEL" }, min), false, "BLOCKED is an obstruction (RULING 250), retried on its cadence, never a recorded absence");
+  assert.equal(isArguedAbsence({ ...argued, outcome: "BLOCKED", stoppedBy: "MODEL" }, min), false, "BLOCKED is an obstruction, retried on its cadence, never a recorded absence");
   assert.equal(isArguedAbsence({ ...argued, refusal: [{ code: "SCOUT_NO_FINISH" }] }, min), false, "a refusal is debt/retry, not an absence");
   assert.equal(isArguedAbsence({ ...argued, outcome: "EVIDENCE_FOUND" }, min), false, "a find is not an absence");
   assert.equal(isArguedAbsence({ ...argued, distinctEvidenceRungs: min - 1 }, min), false, "below the floor, absence is asserted not argued");
@@ -62,7 +61,7 @@ test("isArguedAbsence: only a finished, floor-clearing NO_PROGRESS is an absence
 test("recordArguedAbsence sets absentUntil and advances the stored next-due to the expiry", async () => {
   const repos = createMemoryRepositories();
   await repos.obligations.put(BASE.id, standing(BASE, NOW), NOW);
-  /* DP-11: the hold is the owner's setting tied to the source's pace (5 days at most by default), never the old 30. */
+  /* The hold is the owner's setting tied to the source's pace (5 days at most by default). */
   const until = absenceHold(standing(BASE, NOW), NOW, null).until;
   assert.ok(until < absenceExpiry(NOW));
   await recordArguedAbsence(repos, { obligationId: BASE.id, absentUntil: absenceExpiry(NOW), now: NOW });

@@ -1,22 +1,7 @@
 /**
- * **SETTINGS WITH A LOG AND UNDO (BR-05).**
- *
- * One typed map on `AdminConfig.settings`, changed through one gateway action
- * (`config.setSetting {key, value, why}`), with every change appended to
- * `AdminConfig.settingHistory` carrying when it changed and its value before.
- *
- * Each lane registers its own keys here with `registerSetting`, its own
- * validation and its code default. The runner calls `readSetting(config, key,
- * default)` on the config it re-reads every pass; there is no process-wide
- * snapshot. Reader-facing keys are published to the reader edge
- * (`lib/civic-data/reader-settings-publication.ts`); the site never reads the
- * control plane per request.
- *
- * A change names who made it only when the factory made it (rulings §0.4):
- * Sean is the only person who changes settings, so a change from Admin carries
- * no name, and `factory` is set only by code paths (`settings-write.ts`).
- *
- * PURE. No store, no clock, no environment.
+ * Typed settings on `AdminConfig.settings`, changed through one gateway action with every change logged for
+ * undo. Each lane registers its keys with `registerSetting`; the runner reads them from the config it re-reads
+ * every pass. A change names its maker only when factory code made it. Pure.
  */
 import type { AdminConfig } from "./gateway/admin-config.ts";
 
@@ -71,9 +56,8 @@ export function registerSetting<T extends SettingValue>(definition: SettingDefin
   definitions.set(definition.key, definition as unknown as SettingDefinition);
 }
 
-/* ------------------------------------------------------- the first key */
 
-/** DP-02's shut threshold: consecutive failures before a door goes to a detective. The code default stays 3. */
+/** Consecutive failures before a door goes to a detective. The code default stays 3. */
 export const DETECTIVE_SHUT_THRESHOLD_SETTING = "detective.shutThreshold";
 registerSetting({
   key: DETECTIVE_SHUT_THRESHOLD_SETTING, label: "Failures before a detective is sent", defaultValue: 3, unit: "failures in a row",
@@ -81,11 +65,7 @@ registerSetting({
   validate: (value): value is number => typeof value === "number" && Number.isSafeInteger(value) && value > 0 && value <= 100,
 });
 
-/**
- * SC-19's core information: the checklist items a county's residents most need, whose arrival the Scoreboard times from a mission's start.
- * The starting value is the governments and their governing bodies (GOV-01, GOV-02), every seat's current holder (OFF-04) and each
- * meeting's date (MTG-06). Changing it changes what the "time to core information live" figure waits for.
- */
+/** The checklist items a county's residents most need, whose arrival the Scoreboard times from a mission's start. Changing it changes what the "time to core information live" figure waits for. */
 export const CORE_ITEMS_SETTING = "scorecard.coreItems";
 export const CORE_ITEMS_DEFAULT: readonly string[] = ["GOV-01", "GOV-02", "OFF-04", "MTG-06"];
 registerSetting({
@@ -100,7 +80,6 @@ registerSetting({
  */
 export const SPEND_CEILING_LOG_KEY = "fleet.spendCeilingUsd";
 
-/* ----------------------------------------------------------------- reads */
 
 export function settingDefinition(key: string): SettingDefinition | null { return definitions.get(key) ?? null; }
 export function settingDefinitions(): readonly SettingDefinition[] { return [...definitions.values()]; }
@@ -111,7 +90,7 @@ export function controlOf(definition: SettingDefinition): SettingControl {
 }
 
 /** Pass the newly read config each runner pass; no process-wide settings snapshot. An invalid stored value reads as the fallback. */
-export function readSetting<T extends SettingValue>(config: AdminConfig | null, key: string, fallback: T): T {
+export function readSetting<T extends SettingValue>(config: Pick<AdminConfig, "settings"> | null, key: string, fallback: T): T {
   const definition = settingDefinition(key);
   const value = config?.settings?.[key];
   return definition && value !== undefined && definition.validate(value) ? value as T : fallback;
@@ -125,7 +104,6 @@ export function settingLog(config: AdminConfig | null, key: string): readonly Se
   return (config?.settingHistory ?? []).filter((entry) => entry.key === key).reverse();
 }
 
-/* ---------------------------------------------------------------- writes */
 
 function appendHistory(history: readonly SettingChange[], entry: SettingChange): readonly SettingChange[] {
   const next = [...history, entry];
@@ -166,7 +144,6 @@ export function readerSettings(config: AdminConfig | null): Readonly<Record<stri
     .map((definition) => [definition.key, readSetting(config, definition.key, definition.defaultValue)]));
 }
 
-/* -------------------------------------------- the runner's acknowledgement */
 
 /** What the runner applied on a pass, written into its heartbeat so Admin can say a value is in force. */
 export interface RunnerSettingsApplied {
@@ -182,7 +159,6 @@ export function runnerSettingsEcho(config: AdminConfig | null, appliedAt: string
     .map((definition) => [definition.key, readSetting(config, definition.key, definition.defaultValue)])) };
 }
 
-/* ----------------------------------------------------------------- words */
 
 /** A value in plain words for Admin. */
 export function settingValueWords(value: SettingValue, unit?: string): string {

@@ -1,16 +1,7 @@
 /**
- * **THE QUOTE PROOF — PURE, SO THE PARSER, THE VALIDATOR AND THE AUDITOR RUN THE SAME CODE.**
- *
- * A model proposes records with the exact passage each field came from
- * (model-parser.ts). Nothing the model says is a fact until this module has
- * checked it against the saved document: the quote is in the document character
- * for character, the value is inside its quote, and the record carries every
- * required and identity field. The Validator re-runs `quotedSourceFindings` and
- * the post-publication Auditor re-runs `quotesHoldAgainst` on the immutable
- * artifact, with no model in the loop.
- *
- * No host imports: this module is bundled into the isolated worker realm with
- * the Validator, so it may import only types and other pure modules.
+ * The quote proof, pure so the Parser, Validator and Auditor run the same code: the quote is in the saved
+ * document character for character, the value is inside its quote, and the record carries every required and
+ * identity field. No host imports: it is bundled into the isolated worker realm.
  */
 
 import { personNameField, recordBlockAt } from "./record-block.ts";
@@ -23,7 +14,6 @@ export const MAX_QUOTE_CHARS = 600;
 
 const stable = (fields: Readonly<Record<string, FieldValue>>): string => JSON.stringify(Object.keys(fields).sort().map((k) => [k, fields[k]]));
 
-/* ------------------------------------------------------- the proof */
 
 /** `[Page N]` markers a transcribed PDF carries, so a span can name its page. */
 function pageStarts(text: string): { readonly at: number; readonly page: number }[] {
@@ -62,12 +52,7 @@ export interface ConfirmedExtraction {
   readonly proposed: number;
 }
 
-/**
- * **THE PROOF.** Every kept field is a value that sits inside a quote that sits,
- * character for character, in the saved document. Pure and deterministic: the
- * same document and the same claims always give the same records, and the
- * Validator and Auditor re-run it against the immutable artifact.
- */
+/** The proof: every kept field is a value inside a quote that sits, character for character, in the saved document. Pure and deterministic. */
 export function confirmQuotedRecords(
   input: Pick<ParserWorkerInput, "evidence"> & { readonly contract: GeneralizedCivicExtractionContract },
   proposals: readonly (ProposedRecord & { readonly windowStart: number })[],
@@ -192,13 +177,7 @@ export function isQuotedExtraction(contract: GeneralizedCivicExtractionContract,
 
 const blocking = (code: string, detail: string, recordId?: string): WorkerFinding => ({ code, detail, severity: "BLOCKING", ...(recordId ? { recordId } : {}) });
 
-/**
- * **THE VALIDATOR'S REPLAY OF A QUOTED EXTRACTION.** The Validator reads the
- * immutable artifact itself and confirms, without the model: every span belongs
- * to that artifact and hash; every quote is at its recorded range; every value is
- * inside its quote; every required and identity field is present; and each
- * record's id is the identity its own fields give. Any failure is BLOCKING.
- */
+/** The Validator's replay of a quoted extraction against the immutable artifact, with no model: spans, ranges, values, required fields and record ids. Any failure is BLOCKING. */
 export function quotedSourceFindings(candidate: ParserResult, contract: GeneralizedCivicExtractionContract, evidence: WorkerEvidence): WorkerFinding[] {
   const out: WorkerFinding[] = [];
   if (candidate.implementation === BOX_PARSER_IMPLEMENTATION) {

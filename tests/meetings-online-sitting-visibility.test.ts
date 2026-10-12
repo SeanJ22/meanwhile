@@ -1,23 +1,7 @@
 /**
- * **A BODY IS IN VIEW BY ITS BUILDING, WHICHEVER LIST THE BUILDING IS IN.**
- * (2026-09-24.)
- *
- * `/api/meetings` at 85701 (32.2217, -110.9695, radiusKm=40) stopped serving
- * two concluded sittings of Pima Community College's Governing Board once the
- * college's own pages replaced its Diligent tenant: the 10 August study
- * session ("VIRTUAL MEETING") and the 28 August Finance and Audit Committee
- * ("Zoom Webinar"). Both are online and the college has no division, so the
- * only clause that can put them in view is "one of the same body's physical
- * sittings is in radius" — and `within()` answered it from the list it was
- * filtering. The college's building, the District Office, appeared only among
- * its upcoming sittings, so the concluded list, asked about itself, found no
- * building and dropped both. Before the cutover the 10 August row carried the
- * building, which is why the old rows were served.
- *
- * These run the real `searchMeetings` over an injected snapshot through
- * `snapshotSourceFor`, exactly as the route does. No live calls. The college's
- * sittings carry the ids, dates and places `tests/pima-edu-source.test.ts`
- * normalizes from the recorded pages; the other bodies are fixtures.
+ * A body is in view by its building, whichever list the building is in: a division-less body's online sittings
+ * ride along when one of the same body's physical sittings, upcoming or concluded, is in radius. These run the real
+ * `searchMeetings` over an injected snapshot through `snapshotSourceFor`, as the route does.
  */
 
 import assert from "node:assert/strict";
@@ -27,7 +11,7 @@ import { searchMeetings } from "../lib/meetings/query.ts";
 import { snapshotSourceFor } from "../lib/meetings/registry.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 
-/** The instant production was measured at. */
+/** The instant the fixture is judged at. */
 const NOW = new Date("2026-09-24T06:07:00.000Z");
 
 const AT_85701 = { lat: 32.2217, lng: -110.9695 };
@@ -36,7 +20,7 @@ const DIVISIONS_AT_85701: ReadonlySet<string> = new Set([
   "ocd-division/country:us/state:az/county:pima",
   "ocd-division/country:us/state:az/place:tucson",
 ]);
-/** ZCTA 85614: the District Office is ~41 km away, outside 25 and inside 60. */
+/** About 41 km from the District Office: outside 25 and inside 60. */
 const GREEN_VALLEY = { lat: 31.86404, lng: -110.99902 };
 /** ~176 km from the District Office: outside every rung. */
 const PHOENIX = { lat: 33.4484, lng: -112.074 };
@@ -116,15 +100,12 @@ test("(a) a division-less body's online concluded sittings are in view by its up
 });
 
 test("(b) with none of the body's buildings in radius in either list, none of its online sittings is in view", async () => {
-  // Outside every rung: nothing of the college's is in view, and the concluded
-  // fallback does not reach for its online sittings either.
+  // Outside every rung: nothing of the college's is in view.
   const far = await searchMeetings(PHOENIX.lat, PHOENIX.lng, 25, NOW, new Set(), served(PCC));
   assert.equal(far.tier, "none");
   assert.deepEqual(far.meetings, []);
 
-  // Inside the ladder, at a rung another body earns: the District Office is
-  // ~41 km out, so at 25 km none of the college's sittings, online or not,
-  // upcoming or concluded, rides along.
+  // At 25 km, a rung another body earns, the District Office is out of radius, so none of the college's sittings ride along.
   const TOWN = "ocd-division/country:us/state:az/place:sahuarita";
   const neighbour = sitting(
     "fixture:neighbour:2026-09-30",
@@ -157,9 +138,7 @@ test("(c) the division clause still reaches an online sitting whose division con
 });
 
 test("(d) the widened tier behaves as before, and the rule holds at the rung it lands on", async () => {
-  // A second division-less body with only a recent past: its building is ~1 km
-  // from the centre. It rides along, and it must not earn the 25 km rung —
-  // the recent past places a body but never counts as a hit.
+  // A second division-less body with only a recent past, its building near the centre: it rides along but never earns a rung.
   const recentOnly = [
     sitting("fixture:recent-only:2026-09-02", "2026-09-02T18:00:00-07:00", {
       building: "Fixture Community Center",
@@ -171,13 +150,11 @@ test("(d) the widened tier behaves as before, and the rule holds at the rung it 
 
   const result = await searchMeetings(GREEN_VALLEY.lat, GREEN_VALLEY.lng, 25, NOW, new Set(), served([...PCC, ...recentOnly]));
 
-  // What the cascade said before the fix: nothing upcoming in view at 25 km,
-  // so it stepped out to 60 and said so.
+  // Nothing upcoming in view at 25 km, so the cascade steps out to 60 and says so.
   assert.equal(result.tier, "widened");
   assert.equal(result.radiusKm, 60);
   assert.equal(result.requestedRadiusKm, 25);
-  // At 60 km the District Office is in radius, so the college's concluded
-  // online sittings ride along beside the rest.
+  // At 60 km the District Office is in radius, so the college's concluded online sittings ride along.
   assert.deepEqual(ids(result.meetings), [
     "pima-edu:pcc:2026-08-10-study-session",
     "pima-edu:pcc:2026-08-28-committee",
@@ -189,10 +166,7 @@ test("(d) the widened tier behaves as before, and the rule holds at the rung it 
 });
 
 test("the reverse holds too: a building among concluded sittings keeps the body's online upcoming ones in view", async () => {
-  // The Diligent-era shape: the 10 August row carried the District Office,
-  // and every upcoming sitting is online. Asked about itself, the upcoming
-  // list found no building, no rung was earned, and the reader was told the
-  // college had nothing upcoming while its committee was due to meet.
+  // The building is on a concluded sitting and every upcoming sitting is online.
   const rows = [
     sitting("pima-edu:pcc:2026-08-10-study-session", "2026-08-10T17:00:00-07:00", {
       building: "PCC District Office",

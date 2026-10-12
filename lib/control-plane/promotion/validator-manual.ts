@@ -1,14 +1,8 @@
 /**
- * The Validator and the shared field manual (S5's one read, one write). Each
- * publication pass reads what earlier passes learned before it checks
- * anything, and writes back what this pass learned:
- *
- * - OFFICIAL_LINK: a non-`.gov` host that an official page links, with the
- *   saved page that links it. Any later job for that host reuses that saved
- *   page as its official link, even when its own work never captured it.
- * - SOURCE_REGISTER: a saved official page that passed §3, and for what.
- * - SECTION3_REFUSAL: a page §3 refused and the plain reason, so the next
- *   Scout or Acquirer fetches what was missing instead of the same page again.
+ * Each publication pass reads the shared field manual before checking anything and writes back what it learned:
+ * - OFFICIAL_LINK: a non-`.gov` host an official page links, with that saved page; later jobs reuse it.
+ * - SOURCE_REGISTER: a saved official page that passed, and for what.
+ * - SECTION3_REFUSAL: a refused page and the reason, so the next worker fetches what was missing.
  */
 import {
   newFieldManualEntry,
@@ -21,7 +15,6 @@ import { rolePlaybook } from "../playbooks.ts";
 
 const SOURCE = "section3-validator";
 
-/** What the Validator carries from the manual into one pass. */
 export interface ValidatorManual {
   /** host → saved official pages (artifact ids) that link it, newest first. */
   readonly officialLinks: ReadonlyMap<string, readonly string[]>;
@@ -35,7 +28,7 @@ export const hostOfUrl = (url: string): string | null =>
 
 /** THE READ, once per pass, before any record is checked. A failed read checks without inherited links. */
 export async function readValidatorManual(repos: FieldManualRepos): Promise<ValidatorManual> {
-  const read = await readFieldManual(repos, { role: "VALIDATOR" });
+  const read = await readFieldManual(repos, { role: "VALIDATOR", kinds: ["OFFICIAL_LINK", "PLAYBOOK"], everywhere: true });
   const links = new Map<string, string[]>();
   // Every official link counts, whatever state or record class learned it.
   const entries = read.store.entries.filter(e => e.kind === "OFFICIAL_LINK").sort((a, b) => (b.observedAt ?? "").localeCompare(a.observedAt ?? ""));
@@ -47,21 +40,18 @@ export async function readValidatorManual(repos: FieldManualRepos): Promise<Vali
   return { officialLinks: links, offered: read.projection.entryIds.length, playbook: rolePlaybook(read.store.entries, "VALIDATOR").text, ...(read.error ? { error: read.error } : {}) };
 }
 
-/** One publication attempt, as the Validator saw it. */
 export interface ValidatorObservation {
   readonly recordClass: string;
   readonly state: string | null;
   readonly workItemId: string;
-  /** The saved page the records were read from. */
   readonly page: { readonly url: string; readonly artifactId: string; readonly contentHash: string } | null;
   /** The saved official page that made a non-`.gov` page official. */
   readonly linking: { readonly url: string; readonly artifactId: string } | null;
   readonly published: number;
-  /** A §3 refusal of the source itself (not a transient publisher hold). */
+  /** A refusal of the source itself, not a transient publisher hold. */
   readonly refusal: { readonly code: string; readonly detail: string } | null;
 }
 
-/** What one attempt teaches the next worker of any role. */
 export function validatorLessons(o: ValidatorObservation, now: string): FieldManualEntry[] {
   if (!o.page) return [];
   const host = hostOfUrl(o.page.url);

@@ -5,7 +5,7 @@ import type { FreshnessDebt } from '../lib/control-plane/scheduler/debt.ts';
 import type { RouteDescriptor } from '../lib/control-plane/scheduler/registry.ts';
 import { earlierFixes, failureResponderExecutor, lastFixBrief, repeatBreakRetry, solvedScoutResult } from '../lib/control-plane/workers/detective.ts';
 
-/* DP-31: a door that breaks again starts from what fixed it last time, in plain code before any model call. */
+/* A door that breaks again starts from what fixed it last time, in plain code before any model call. */
 
 const candidate = (url: string) => ({ url, evidenceArtifactIds: ['captured:' + url], routeId: url });
 const fix = (attemptId: string, recordedAt: string, ...urls: string[]) => ({ attemptId, recordedAt, refusal: null, outcome: 'ROUTE_CANDIDATE',

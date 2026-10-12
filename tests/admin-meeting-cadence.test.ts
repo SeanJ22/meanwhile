@@ -1,20 +1,10 @@
 /**
- * **ADMIN STATES THE MEETING CADENCE THE RUNNER KEEPS** (2026-09-25).
- *
- * Production, signed in, 1:40 PM MST: Pima County's Board of Supervisors card
- * said "How often: Daily through the 2026 general election, then weekly" and
- * "Next look: Due Sep 26, 4:30 PM ET" beside "62 of 62 reads got in in the
- * last 24 hours". Both came from the contract's `cadence`, which is how old a
- * Reader may see a record, not when the runner reads. The runner reads every
- * meeting source on its sitting-window `schedule` (C6): twice a day, and within
- * the hour while a sitting is within seven days ahead or behind.
- *
- * These pin the card to the runner: each instant is checked against the
- * runner's own `routineTaskDeadlineMs` / `routineTaskDue` for the same facts,
- * and a body without a sitting window keeps its cadence words unchanged.
+ * Admin states the meeting cadence the runner keeps. A contract's `cadence` is how old a Reader may
+ * see a record, not when the runner reads; the runner reads every meeting source on its
+ * sitting-window `schedule`. Each instant is checked against the runner's own
+ * `routineTaskDeadlineMs` / `routineTaskDue`, and a body without a sitting window keeps its cadence words.
  */
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import { MEETING_PARTITION_POLICY, MEETING_SITTING_WINDOW } from "../lib/civic-data/contracts.ts";
@@ -34,7 +24,7 @@ import {
   type WatchedContract,
 } from "../lib/control-plane/admin-view/bodies.ts";
 
-const NOW = "2026-09-25T20:40:00.000Z"; // 1:40 PM MST, when the defect was seen
+const NOW = "2026-09-25T20:40:00.000Z";
 const NOW_MS = Date.parse(NOW);
 const HOUR = 3_600_000;
 const DAY = 24 * HOUR;
@@ -87,21 +77,10 @@ function runnerSays(clock: RoutineTaskClock, sittings: readonly SittingFacts[] |
   };
 }
 
-test("the watched meeting partitions all carry the runner's sitting-window schedule, and the loader passes it on", () => {
+test("the watched meeting partitions all carry the runner's sitting-window schedule", () => {
   assert.ok(MEETING_PARTITION_CONTRACTS.length > 50);
   for (const c of MEETING_PARTITION_CONTRACTS) assert.equal(c.schedule, MEETING_SITTING_WINDOW, c.id);
   assert.ok(PARTITION && TASK, "the Pima Legistar partition and its runner task exist");
-  const loader = readFileSync("app/(admin)/_mw/data/load-bodies.ts", "utf8");
-  assert.match(loader, /\.\.\.\(c\.schedule \? \{ schedule: c\.schedule \} : \{\}\)/);
-  const bodyStore = readFileSync("app/(admin)/_mw/data/body-store.ts", "utf8");
-  const versions = bodyStore.slice(bodyStore.indexOf("const VERSIONS"), bodyStore.indexOf("const ATTEMPTS"));
-  for (const col of ["observed_at", "confirmed_at", "sittings", "import_kind"]) assert.match(versions, new RegExp(`\\b${col}\\b`), col);
-  assert.match(versions, /e\.candidate_id = p\.current_version_id AND e\.sequence = 1\) AS observed_at/, "the success instant is the version's first event, as the runner reads it");
-  const full = bodyStore.slice(bodyStore.indexOf("export async function readBodyStore("), bodyStore.indexOf("export async function readBodyStanding("));
-  const standing = bodyStore.slice(bodyStore.indexOf("export async function readBodyStanding("));
-  // Through the scope-narrowing helper when an opened read asks for one body (claude/ac-admin-first-open).
-  assert.match(full, /(?:sql\.query|statement)\(VERSIONS_WITH_CLOCK, \[nowIso, CONFIRMATION_LIKE\]\)/, "the full read carries the clock");
-  assert.doesNotMatch(standing, /VERSIONS_WITH_CLOCK|CONFIRMATION_LIKE/, "the preview's standing read never pays for a schedule it does not show");
 });
 
 test("the rule is worded from the schedule's own numbers", () => {

@@ -1,408 +1,234 @@
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
-
-import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
+import { zip } from "../scripts/xlsx.mjs";
+import { requiredRoutineContract, ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
-import { isSourceAcquisitionFailure } from "../lib/civic-data/source-acquisition-failure.ts";
-import { SOURCE_AUTHORITIES } from "../lib/civic-data/source-authority.ts";
+import { routineBaselineOwed, routineTaskDue, routineTaskFromContract } from "../lib/civic-data/runner.ts";
+import { durableRoutineRunnerReceiptIssue, routineReceiptFields } from "../lib/civic-data/runner-receipt.ts";
+import { recordRegisteredSourceAcquisitionFailure, sourceAcquisitionFailure } from "../lib/civic-data/source-acquisition-failure.ts";
+import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { notModifiedIssue, validateRoutineCandidate } from "../lib/civic-data/validate.ts";
-import { acquireRegistrationSource, type RegistrationSourceReceipt } from "../lib/registration/acquire.ts";
-import { escapedJsonBytes, registrationCandidate, type RegistrationReadModel, type ReviewedRegistryIds } from "../lib/registration/candidate.ts";
-import {
-  REGISTRATION_MAX_CANDIDATE_BYTES,
-  REGISTRATION_SOURCE_BYTES,
-  REGISTRATION_SOURCE_LAST_MODIFIED,
-  REGISTRATION_SOURCE_SHA256,
-  REGISTRATION_SOURCE_URL,
-  REGISTRATION_TARGETS,
-  registrationTarget,
-} from "../lib/registration/publication.ts";
+import { validateRoutineCandidate } from "../lib/civic-data/validate.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { acquireRegistrationSource, heldRegistrationReceipt, registrationSourceCheck } from "../lib/registration/acquire.ts";
+import { registrationCandidate, type RegistrationReadModel } from "../lib/registration/candidate.ts";
 import { composeRegistration } from "../lib/registration/compose.ts";
+import { REGISTRATION_SOURCE_URL, REGISTRATION_TARGETS, registrationTarget } from "../lib/registration/publication.ts";
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
-
-/**
- * **EVERY STATE REGISTERS FROM DATA, THROUGH THE ONE DOOR, AND NEVER OVER THE
- * REVIEWED REGISTRY.** (2026-09-23; `lib/registration/`.)
- *
- * Sean's direction: every state trackable without a code change, kept current
- * by the runner. These pin that there is one registration contract per state
- * in the FIPS table; that a state's candidate promotes through the ordinary
- * engine and reads back through its typed reader; that an unchanged month
- * confirms UNCHANGED without a new candidate (§0/§5/§7 and Sean's S6 instruction);
- * that source holdings survive reviewed-registry changes while reviewed
- * records win in composition; and that changed Census bytes are refused.
- */
+import { registrationReferenceFromRelease } from "../lib/registration/source-reference.ts";
+import { referenceGovernmentListings } from "../lib/registration/listings.ts";
 
 const ROOT = join(import.meta.dirname, "..");
-const RECEIPT: RegistrationSourceReceipt = {
-  requestedUrl: REGISTRATION_SOURCE_URL,
-  finalUrl: REGISTRATION_SOURCE_URL,
-  httpStatus: 200,
-  // Anchored to the real clock: the engine refuses an event dated in the future.
-  retrievedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-  sha256: REGISTRATION_SOURCE_SHA256,
-  bytes: REGISTRATION_SOURCE_BYTES,
-  confirmedBy: "BYTES_HASHED",
-};
+const observed = "2026-10-01T12:00:00.000Z";
+const input = (state: string) => ({ target: registrationTarget(state), reference: loadRegistrationReference(ROOT, state), receipt: heldRegistrationReceipt() });
 
-/** The reviewed registry's ids, from its committed first seed (the promoted projection's shape). */
-function reviewedFromFirstSeed(): ReviewedRegistryIds {
-  const registry = JSON.parse(readFileSync(join(ROOT, "lib", "registry", "registry.json"), "utf8")) as {
-    divisions: { ocdId: string }[];
-    bodies: { id: string; ocdId: string | null }[];
-  };
-  return {
-    versionId: "cv-reviewed-first-seed",
-    divisionIds: new Set(registry.divisions.map((d) => d.ocdId)),
-    bodyIds: new Set(registry.bodies.map((b) => b.id)),
-    bodyDivisionIds: new Set(registry.bodies.map((b) => b.ocdId).filter((id): id is string => typeof id === "string")),
-  };
+test("every state has one ordinary automatic registration contract", () => {
+  const contracts = ROUTINE_SOURCE_CONTRACTS.filter(contract => contract.recordClass === "REGISTRATION");
+  assert.deepEqual(contracts.map(contract => contract.id), REGISTRATION_TARGETS.map(target => target.contractId));
+  assert.equal(contracts.length, 56);
+  assert.ok(contracts.every(contract => contract.acquisitionAdapter.authorityMode === "REGISTERED_SOURCE_ROUTES"));
+  assert.ok(contracts.every(contract => contract.cadence.defaultEveryMs === 90 * 86400000));
+});
+
+test("held native listings promote and read independently; a replay keeps their source date and accepted version", async () => {
+  const store = new MemoryRoutineDataStore(), args = input("NH");
+  const first = registrationCandidate(args);
+  const outcome = await processRegisteredRoutineCandidate(store, args.target.contractId, first, observed);
+  assert.equal(outcome.promoted?.versionId, first.id, outcome.candidate.failureDetail ?? "");
+  const read = await readRegistrationProjection("NH", { store, now: observed, bypassCache: true });
+  assert.equal(read.kind, "PROMOTED");
+  const model = read.value as RegistrationReadModel;
+  assert.equal(model.bodies.length, 0);
+  assert.ok(model.governments!.some(row => row.kind === "EDUCATION_AGENCY"));
+  assert.ok(model.governments!.some(row => row.kind === "DEPENDENT_SCHOOL_SYSTEM"));
+  assert.ok(model.governments!.some(row => row.associations.length === 0 && row.name));
+  const second = registrationCandidate({ ...args, receipt: { ...args.receipt, checkedAt: observed } });
+  const replay = await processRegisteredRoutineCandidate(store, args.target.contractId, second, observed);
+  assert.equal(replay.promoted?.versionId, first.id);
+  assert.equal(second.retrieval.retrievedAt, "2026-09-23T00:00:00.000Z");
+  assert.equal(second.retrieval.sourceCheck?.checkedAt, "2026-09-23T00:00:00.000Z");
+});
+
+async function registrationWithPreviousParser() {
+  const store = new MemoryRoutineDataStore(), args = input("NH");
+  const next = registrationCandidate(args);
+  const previous = { ...next, id: `${next.id}:previous-parser`,
+    normalization: { ...next.normalization, parserVersion: "registration/3" } };
+  const validated = validateRoutineCandidate(next, null, observed);
+  assert.equal(validated.state, "VALIDATED");
+  const receipt = { ...validated.receipt, candidateId: previous.id };
+  await store.create({ candidate: previous, state: "FETCHED", acquisitionSucceeded: true, receipt: null,
+    promotedVersion: null, lastKnownGoodVersion: null, failureCode: null, failureDetail: null },
+  { candidateId: previous.id, sequence: 1, state: "FETCHED", at: observed, detail: "Historical source acquisition." });
+  await store.transition(previous.id, "NORMALIZED", observed, "Historical normalization.");
+  await store.transition(previous.id, "VALIDATED", observed, "Historical GOOD.", receipt);
+  await store.promote(previous.id, receipt, observed);
+  const task = routineTaskFromContract(requiredRoutineContract(args.target.contractId));
+  return { store, args, previous, next, task };
 }
 
-test("one registration contract per state, DC and territory in the FIPS table, each its own scope, command and state", () => {
-  const contracts = ROUTINE_SOURCE_CONTRACTS.filter((c) => c.recordClass === "REGISTRATION");
-  assert.equal(contracts.length, 56);
-  assert.deepEqual(contracts.map((c) => c.id), REGISTRATION_TARGETS.map((t) => t.contractId));
-  assert.equal(new Set(contracts.map((c) => c.scope)).size, 56);
-  assert.equal(new Set(contracts.map((c) => c.acquisitionAdapter.command.join(" "))).size, 56, "the firewall's full command lines are unique");
-  assert.equal(new Set(contracts.map((c) => c.acquisitionFailureDomain)).size, 1, "one Census download at a time: the runner takes one state per pass");
-  for (const c of contracts) {
-    assert.equal(c.acquisitionAdapter.authorityMode, "SINGLE_ROUTE");
-    assert.equal(c.acquisitionAdapter.requestedUrl, REGISTRATION_SOURCE_URL);
-    assert.equal(c.cadence.defaultEveryMs, 90 * 24 * 60 * 60 * 1000, "a five-yearly Census file is confirmed every 90 days");
-    assert.ok(c.readerProjection?.consumers.includes("lib/registration/reader.ts"));
-  }
-  assert.ok(existsSync(join(ROOT, "scripts", "registration-refresh.mts")));
-  const authority = SOURCE_AUTHORITIES["census-governments-registration"];
-  assert.deepEqual([...authority.jurisdictions].sort(), REGISTRATION_TARGETS.map((t) => t.jurisdiction).sort(), "every state's jurisdiction is inside the authority");
-  assert.equal(authority.routineAutoPromotion, true);
-  assert.ok(authority.routePrefixes.every((p) => new URL(p).hostname === "www2.census.gov"));
-  const index = JSON.parse(readFileSync(join(ROOT, "data", "derived", "registration", "index.json"), "utf8")) as { states: Record<string, unknown> };
-  assert.deepEqual(Object.keys(index.states).sort(), REGISTRATION_TARGETS.map((t) => t.state.toLowerCase()).sort(), "the reference carries exactly the FIPS table's states");
+test("the current registration parser replays held evidence after registration/3 GOOD, then keeps the 90-day source clock", async () => {
+  const { store, args, previous, next, task } = await registrationWithPreviousParser();
+  const clock = await store.clock(task.sourceId, task.recordClass, task.scope, task.parserVersion);
+  assert.equal(clock.lastSucceededParserVersion, "registration/3");
+  assert.equal(clock.lastAttemptedAt, undefined, "the old parser has not attempted this implementation");
+  assert.equal(clock.lastSucceededAt, previous.retrieval.retrievedAt);
+  assert.equal(routineBaselineOwed(task, clock), true);
+  assert.equal(routineTaskDue(task, clock, Date.parse(observed)), true);
+  assert.equal((await readRegistrationProjection("NH", { store, now: observed, bypassCache: true })).kind, "PROMOTED",
+    "the prior GOOD stays readable while its held evidence awaits reparse");
+  const result = await processRegisteredRoutineCandidate(store, args.target.contractId, next, observed);
+  assert.equal(result.promoted?.versionId, next.id, result.candidate.failureDetail ?? "");
+  const replayed = await store.clock(task.sourceId, task.recordClass, task.scope, task.parserVersion);
+  assert.equal(replayed.lastSucceededParserVersion, task.parserVersion);
+  assert.equal(replayed.lastSucceededAt, clock.lastSucceededAt);
+  assert.equal(replayed.lastSucceededObservedAt, clock.lastSucceededObservedAt, "reprocessing does not manufacture a publisher check");
+  assert.equal(routineBaselineOwed(task, replayed), false);
+  const nextCheck = Date.parse(replayed.lastSucceededObservedAt!) + 90 * 86400000;
+  assert.equal(routineTaskDue(task, replayed, nextCheck - 1), false);
+  assert.equal(routineTaskDue(task, replayed, nextCheck), true);
 });
 
-test("a state's registration promotes through the engine, reads back through its typed reader, and an unchanged month confirms its live version", async () => {
-  const target = registrationTarget("NH");
-  const reviewed = reviewedFromFirstSeed();
-  const reference = loadRegistrationReference(ROOT, "NH");
-  const store = new MemoryRoutineDataStore();
-
-  const first = registrationCandidate({ target, reference, receipt: RECEIPT, reviewed });
-  assert.deepEqual(first.semantics.violations, []);
-  const promoted = await processRegisteredRoutineCandidate(store, target.contractId, first, RECEIPT.retrievedAt);
-  assert.equal(promoted.promoted?.versionId, first.id, `NH promoted: ${promoted.candidate.failureCode ?? ""} ${promoted.candidate.failureDetail ?? ""}`);
-  const read = await readRegistrationProjection("NH", { store, now: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), bypassCache: true });
-  assert.equal(read.kind, "PROMOTED");
-  assert.equal(read.metadata.versionId, first.id);
-  const model = read.value as RegistrationReadModel;
-  assert.ok(model.bodies.length > 0 && model.divisions.length > 0);
-
-  const later = { ...RECEIPT, retrievedAt: new Date(Date.now() - 60 * 60 * 1000).toISOString() };
-  const second = registrationCandidate({ target, reference, receipt: later, reviewed });
-  const again = await processRegisteredRoutineCandidate(store, target.contractId, second, later.retrievedAt);
-  // §0/§5/§7: Sean's S6 instruction retires storing unchanged payloads anew.
-  assert.equal(again.promoted?.versionId, first.id);
-  assert.equal(again.confirmed?.recheck.changeSet?.outcome, "UNCHANGED", "the same Census bytes, reference and reviewed registry change nothing");
-  assert.equal(await store.readCandidate(second.id), null, "the recheck is not a new stored candidate");
-  assert.equal((await store.readPromotion("REGISTRATION", target.scope))?.versionId, first.id);
+test("a failed current-parser registration attempt keeps the prior GOOD and its existing six-hour retry", async () => {
+  const { store, args, previous, task } = await registrationWithPreviousParser();
+  const failedAt = "2026-10-01T13:00:00.000Z";
+  await recordRegisteredSourceAcquisitionFailure({ store, contractId: args.target.contractId, attemptedAt: failedAt,
+    requestedUrl: REGISTRATION_SOURCE_URL, failure: sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", "Census unavailable.") });
+  const clock = await store.clock(task.sourceId, task.recordClass, task.scope, task.parserVersion);
+  assert.equal(clock.lastSucceededParserVersion, "registration/3");
+  assert.equal(clock.lastAttemptedAt, failedAt);
+  assert.equal((await store.readPromotionIdentity(task.recordClass, task.scope))?.versionId, previous.id);
+  assert.equal(routineTaskDue(task, clock, Date.parse(failedAt) + task.retryMs - 1), false);
+  assert.equal(routineTaskDue(task, clock, Date.parse(failedAt) + task.retryMs), true);
 });
 
-test("sourced registration survives reviewed changes, and composition still prefers the current reviewed body", () => {
-  const reviewed = reviewedFromFirstSeed();
-  for (const state of ["NH", "NJ", "AZ", "TN"]) {
-    const input = { target: registrationTarget(state), reference: loadRegistrationReference(ROOT, state), receipt: RECEIPT };
-    const model = registrationCandidate({ ...input, reviewed }).readModel as RegistrationReadModel;
-    const empty = registrationCandidate(input).readModel as RegistrationReadModel;
-    assert.deepEqual(model, empty, state + ": sourced holdings do not depend on reviewed ownership or version");
-    assert.equal(model.reviewedRegistryVersionId, null);
-    const claimed = { versionId: "fixture:reviewed-new-edition", divisionIds: new Set(model.divisions.map(d => d.ocdId)),
-      bodyIds: new Set(model.bodies.map(b => b.id)), bodyDivisionIds: new Set(model.bodies.map(b => b.ocdId)) };
-    assert.deepEqual(registrationCandidate({ ...input, reviewed: claimed }).readModel, model,
-      state + ": a reviewed edition owning every id cannot erase the source registration");
-    const body = model.bodies.find(b => b.jurisdictionId !== null)!;
-    assert.ok(body, state + ": a source-backed government has a body");
-    assert.equal(composeRegistration({ divisions: [], bodies: [body] }, model, "fixture:registration").bodies.some(b => b.id === body.id), false);
-    assert.equal(composeRegistration({ divisions: [], bodies: [] }, model, "fixture:registration").bodies.some(b => b.id === body.id), true,
-      state + ": if the reviewed edition no longer holds it, the same registration still supplies it");
-  }
-  const nh = registrationCandidate({ target: registrationTarget("NH"), reference: loadRegistrationReference(ROOT, "NH"), receipt: RECEIPT }).readModel as RegistrationReadModel;
-  const alternate = nh.bodies.find(b => b.alsoServesOcdIds?.length)!;
-  assert.ok(alternate, "the sourced primary/alternate government pairing is retained");
-  const other = alternate.alsoServesOcdIds![0];
-  const reviewedAlternate = { id: other + "#governing", ocdId: other };
-  assert.equal(composeRegistration({ divisions: [], bodies: [reviewedAlternate] }, nh, "fixture:registration").bodies.some(b => b.id === alternate.id), false,
-    "a reviewed body on the exact alternate still takes precedence");
+test("registration held replay and independent school delivery do not erase a later source failure or delay its retry", async () => {
+  const store = new MemoryRoutineDataStore(), args = input("NH");
+  const first = registrationCandidate(args);
+  await processRegisteredRoutineCandidate(store, args.target.contractId, first, observed);
+  const failedAt = "2026-10-01T13:00:00.000Z", replayAt = "2026-10-01T14:00:00.000Z";
+  await recordRegisteredSourceAcquisitionFailure({ store, contractId: args.target.contractId, attemptedAt: failedAt,
+    requestedUrl: REGISTRATION_SOURCE_URL,
+    failure: sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", "Census release timed out.") });
+  const failedClock = await store.clock(first.sourceId, first.recordClass, first.scope);
+  await processRegisteredRoutineCandidate(store, args.target.contractId, registrationCandidate(args), replayAt);
+  assert.deepEqual(await store.clock(first.sourceId, first.recordClass, first.scope), failedClock);
+
+  const schoolCheck = { requestedUrl: "https://nces.ed.gov/ccd/Data/ccd_lea_029_2526.zip", finalUrl: "https://nces.ed.gov/ccd/Data/ccd_lea_029_2526.zip",
+    httpStatus: 200 as const, rawHash: "b".repeat(64), checkedAt: replayAt };
+  const listings = referenceGovernmentListings(args.reference).map(row => row.kind === "EDUCATION_AGENCY"
+    ? { ...row, officePhone: "6035550100" } : row);
+  const delivered = registrationCandidate({ ...args, reference: { ...args.reference, listings },
+    receipt: { ...args.receipt, sourceCheck: registrationSourceCheck(args.receipt, [schoolCheck]) } });
+  const outcome = await processRegisteredRoutineCandidate(store, args.target.contractId, delivered, replayAt);
+  assert.equal(outcome.promoted?.versionId, delivered.id, outcome.candidate.failureDetail ?? "");
+  const clock = await store.clock(first.sourceId, first.recordClass, first.scope);
+  assert.deepEqual(clock, failedClock, "newly delivered school facts retain the failed Census check and its retry");
+  const task = routineTaskFromContract(requiredRoutineContract(args.target.contractId));
+  assert.equal(routineTaskDue(task, clock, Date.parse(failedAt) + task.retryMs - 1), false);
+  assert.equal(routineTaskDue(task, clock, Date.parse(failedAt) + task.retryMs), true);
+  const finalFailure = await recordRegisteredSourceAcquisitionFailure({ store, contractId: args.target.contractId, attemptedAt: "2026-10-01T14:00:01.000Z",
+    requestedUrl: REGISTRATION_SOURCE_URL,
+    failure: sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", "Census release remains unavailable.") });
+  assert.equal(finalFailure.receipt.lastKnownGoodVersion, delivered.id);
+  assert.equal(await durableRoutineRunnerReceiptIssue(finalFailure.receipt, task, store, "HELD"), null);
 });
 
-test("the largest state stays well inside the response bound, and a state with no government is a named violation", () => {
-  const reviewed = reviewedFromFirstSeed();
-  const il = registrationCandidate({ target: registrationTarget("IL"), reference: loadRegistrationReference(ROOT, "IL"), receipt: RECEIPT, reviewed });
-  const bytes = escapedJsonBytes(il) + escapedJsonBytes({ divisions: (il.readModel as RegistrationReadModel).divisions, bodies: (il.readModel as RegistrationReadModel).bodies });
-  assert.ok(bytes < REGISTRATION_MAX_CANDIDATE_BYTES / 2, `Illinois measures ${bytes} escaped bytes`);
-  assert.deepEqual(il.semantics.violations, []);
-
-  const empty = loadRegistrationReference(ROOT, "NH");
-  const hollow = registrationCandidate({
-    target: registrationTarget("NH"),
-    reference: { ...empty, reference: { ...empty.reference, governments: empty.reference.governments.filter((g) => g[3] === "STATE") } },
-    receipt: RECEIPT,
-    reviewed,
-  });
-  assert.match(hollow.semantics.violations.join(" "), /lists no government in NH: a failed extraction/);
+test("the oldest acquired input check can be NCES; unchanged delivery receipts name the pointed version", async () => {
+  const store = new MemoryRoutineDataStore(), args = input("NH");
+  const ncesCheck = { requestedUrl: "https://nces.ed.gov/ccd/Data/ccd_lea_029_2526.zip", finalUrl: "https://nces.ed.gov/ccd/Data/ccd_lea_029_2526.zip",
+    httpStatus: 304 as const, rawHash: "b".repeat(64), checkedAt: "2026-09-24T00:00:00.000Z" };
+  const receipt = { ...args.receipt, sourceCheck: { ...args.receipt.sourceCheck!, checkedAt: "2026-09-25T00:00:00.000Z" } };
+  const oldest = registrationSourceCheck(receipt, [ncesCheck]);
+  assert.deepEqual(oldest, ncesCheck);
+  const first = registrationCandidate({ ...args, receipt: { ...receipt, sourceCheck: oldest } });
+  assert.equal(validateRoutineCandidate(first, null, observed).state, "VALIDATED");
+  await processRegisteredRoutineCandidate(store, args.target.contractId, first, observed);
+  const proposal = { ...first, id: `${first.id}-new-envelope`, retrieval: { ...first.retrieval, rawHash: "c".repeat(64) } };
+  const outcome = await processRegisteredRoutineCandidate(store, args.target.contractId, proposal, "2026-10-01T13:00:00.000Z");
+  assert.equal(outcome.confirmed?.versionId, first.id);
+  assert.equal(await store.readCandidateSummary(proposal.id), null);
+  const fields = { source: args.target.contractId, ...routineReceiptFields(proposal, outcome), structuralReleaseContract: ZERO_RELEASE_EVENTS };
+  assert.equal(fields.candidateId, first.id);
+  assert.equal(fields.confirmedAt, outcome.confirmed?.at);
+  assert.equal(await durableRoutineRunnerReceiptIssue(fields, routineTaskFromContract(requiredRoutineContract(args.target.contractId)), store, "SUCCESS"), null);
+  const schoolFailure = await recordRegisteredSourceAcquisitionFailure({ store, contractId: args.target.contractId,
+    requestedUrl: ncesCheck.requestedUrl, attemptedAt: "2026-10-01T14:00:00.000Z",
+    failure: sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", "NCES archive timed out.") });
+  assert.equal(schoolFailure.outcome.candidate.candidate.retrieval.requestedUrl, ncesCheck.requestedUrl);
+  assert.equal(schoolFailure.receipt.lastKnownGoodVersion, first.id);
+  const task = routineTaskFromContract(requiredRoutineContract(args.target.contractId));
+  assert.equal(await durableRoutineRunnerReceiptIssue(schoolFailure.receipt, task, store, "HELD"), null);
+  const failedClock = await store.clock(first.sourceId, first.recordClass, first.scope);
+  await processRegisteredRoutineCandidate(store, args.target.contractId, proposal, "2026-10-01T15:00:00.000Z");
+  assert.deepEqual(await store.clock(first.sourceId, first.recordClass, first.scope), failedClock);
+  assert.equal(routineTaskDue(task, failedClock, Date.parse("2026-10-01T14:00:00.000Z") + task.retryMs), true);
 });
 
-test("only the pinned Census bytes from census.gov over HTTPS are accepted; anything else is refused by name", async () => {
-  const signal = new AbortController().signal;
-  const serve = (body: Uint8Array<ArrayBuffer>, init: { status?: number; url?: string } = {}): typeof fetch =>
-    (async () => {
-      const response = new Response(body, { status: init.status ?? 200, headers: { "content-length": String(body.byteLength) } });
-      Object.defineProperty(response, "url", { value: init.url ?? REGISTRATION_SOURCE_URL });
-      return response;
-    }) as typeof fetch;
-  const refusal = async (fetchImpl: typeof fetch) => {
-    try {
-      await acquireRegistrationSource({ signal, fetchImpl });
-    } catch (error) {
-      assert.ok(isSourceAcquisitionFailure(error), String(error));
-      return (error as { code: string }).code;
-    }
-    return "ACCEPTED";
-  };
-  assert.equal(await refusal(serve(new Uint8Array(REGISTRATION_SOURCE_BYTES))), "PUBLISHER_DOCUMENT_INVALID", "the right size with the wrong bytes is a different file");
-  assert.equal(await refusal(serve(new Uint8Array(1024))), "PUBLISHER_DOCUMENT_INVALID");
-  assert.equal(await refusal(serve(new Uint8Array(1024), { url: "https://example.org/govt_units_2022.ZIP" })), "PUBLISHER_RESPONSE_REFUSED");
-  assert.equal(await refusal(serve(new Uint8Array(1024), { status: 503 })), "PUBLISHER_RESPONSE_REFUSED");
+test("different native governments sharing a geometry stay separate; reviewed bodies bind only by native ID", () => {
+  const args = input("NJ"), reference = args.reference;
+  const source = reference.reference.governments.find(row => row[3] === "COUNTY")!;
+  const other = ["999999", "nj:county:separate-government", "SEPARATE GOVERNMENT", source[3], source[4], source[5], source[6]] as const;
+  const model = registrationCandidate({ ...args, reference: { ...reference, reference: { ...reference.reference, governments: [...reference.reference.governments, other] } } }).readModel as RegistrationReadModel;
+  const first = model.governments!.find(row => row.nativeIds.census_pid6 === source[0])!;
+  const second = model.governments!.find(row => row.nativeIds.census_pid6 === other[0])!;
+  assert.notEqual(first.id, second.id);
+  assert.deepEqual(first.associations, second.associations);
+  const layer = composeRegistration({ divisions: [], bodies: [{ id: "reviewed-county-board", ocdId: first.associations[0].divisionId, censusId: source[0] }] }, model, "native-reg");
+  assert.deepEqual(layer.governments.find(row => row.id === first.id)?.bodyIds, ["reviewed-county-board"]);
+  assert.deepEqual(layer.governments.find(row => row.id === second.id)?.bodyIds, []);
 });
 
-test("census.gov is asked conditionally: a 304 confirms the pinned file with no body, and a changed date is refused before its body is read", async () => {
-  const signal = new AbortController().signal;
-  const sent: Headers[] = [];
-  let pulled = false;
-  const answer = (status: number, headers: Record<string, string> = {}): typeof fetch =>
-    (async (_url: string | URL | Request, init?: RequestInit) => {
-      sent.push(new Headers(init?.headers));
-      // A zero high-water mark: the stream is pulled only when something reads it, never to fill its own queue.
-      const body = status === 304 ? null : new ReadableStream<Uint8Array>({ pull(controller) { pulled = true; controller.enqueue(new Uint8Array(1024)); controller.close(); } }, { highWaterMark: 0 });
-      const response = new Response(body, { status, headers });
-      Object.defineProperty(response, "url", { value: REGISTRATION_SOURCE_URL });
-      return response;
-    }) as typeof fetch;
-
-  const confirmed = await acquireRegistrationSource({ signal, fetchImpl: answer(304) });
-  assert.equal(sent[0].get("if-modified-since"), REGISTRATION_SOURCE_LAST_MODIFIED, "every check is conditional on the pinned Last-Modified");
-  assert.deepEqual(
-    { status: confirmed.httpStatus, sha256: confirmed.sha256, bytes: confirmed.bytes, confirmedBy: confirmed.confirmedBy },
-    { status: 304, sha256: REGISTRATION_SOURCE_SHA256, bytes: REGISTRATION_SOURCE_BYTES, confirmedBy: "NOT_MODIFIED_SINCE_PIN" },
-  );
-
-  pulled = false;
-  await assert.rejects(
-    acquireRegistrationSource({ signal, fetchImpl: answer(200, { "last-modified": "Tue, 01 Jun 2027 00:00:00 GMT" }) }),
-    (error: unknown) => isSourceAcquisitionFailure(error) && (error as { code: string }).code === "PUBLISHER_DOCUMENT_INVALID" && /its body was not read/.test(String((error as Error).message)),
-  );
-  assert.equal(pulled, false, "a new vintage costs no download");
-
-  // A server that ignored the condition answers 200 with the pinned date: its body is read and held to the pinned hash.
-  pulled = false;
-  await assert.rejects(
-    acquireRegistrationSource({ signal, fetchImpl: answer(200, { "last-modified": REGISTRATION_SOURCE_LAST_MODIFIED }) }),
-    (error: unknown) => isSourceAcquisitionFailure(error) && /not the pinned 11459763 bytes/.test(String((error as Error).message)),
-  );
-  assert.equal(pulled, true, "the probe sees a read, so its silence above is a real no-download");
+test("a migration keeps old durable body aliases while retiring inventory-created boards", () => {
+  const args = input("OH");
+  const initial = registrationCandidate(args).readModel as RegistrationReadModel;
+  const government = initial.governments!.find(row => row.nativeIds.census_pid6)!;
+  const previous = { ...initial, governments: undefined, bodies: [{ id: "legacy-body", censusId: government.nativeIds.census_pid6 }] } as unknown as RegistrationReadModel;
+  const migrated = registrationCandidate({ ...args, previous }).readModel as RegistrationReadModel;
+  assert.ok(migrated.governments!.find(row => row.id === government.id)?.aliases.includes("legacy-body"));
+  assert.equal(migrated.bodies.length, 0);
 });
 
-test("a 304 is authentic only as registration's pinned file; any other 304 is refused by name", async () => {
-  const target = registrationTarget("NH");
-  const reviewed = reviewedFromFirstSeed();
-  const reference = loadRegistrationReference(ROOT, "NH");
-  const store = new MemoryRoutineDataStore();
-
-  // First the hashed read, then a later 304: the bound pairing promotes, and nothing changed.
-  const first = registrationCandidate({ target, reference, receipt: RECEIPT, reviewed });
-  assert.equal((await processRegisteredRoutineCandidate(store, target.contractId, first, RECEIPT.retrievedAt)).promoted?.versionId, first.id);
-  const notModified: RegistrationSourceReceipt = { ...RECEIPT, httpStatus: 304, confirmedBy: "NOT_MODIFIED_SINCE_PIN", retrievedAt: new Date(Date.now() - 60 * 60 * 1000).toISOString() };
-  const second = registrationCandidate({ target, reference, receipt: notModified, reviewed });
-  assert.equal(notModifiedIssue(second), null);
-  const again = await processRegisteredRoutineCandidate(store, target.contractId, second, notModified.retrievedAt);
-  assert.equal(again.promoted?.versionId, second.id, `${again.candidate.failureCode ?? ""} ${again.candidate.failureDetail ?? ""}`);
-  assert.equal(again.candidate.candidate.changeSet?.outcome, "UNCHANGED", "a 304 is the validated no-change receipt");
-  assert.match(JSON.stringify(again.candidate.receipt), /304 Not Modified against the pinned Last-Modified/);
-
-  // A 304 naming some other bytes is refused.
-  const otherBytes = registrationCandidate({ target, reference, receipt: { ...notModified, sha256: "0".repeat(64) }, reviewed });
-  const refusedOther = validateRoutineCandidate(otherBytes, null, notModified.retrievedAt);
-  const authenticity = refusedOther.receipt.checks.find((c) => c.check === "SOURCE_AUTHENTICITY");
-  assert.equal(authenticity?.verdict, "FAIL");
-  assert.equal(authenticity?.code, "NOT_MODIFIED_WITHOUT_BOUND_PIN");
-
-  // A 304 whose raw hash is not built from the pinned bytes is refused.
-  const forged = { ...second, retrieval: { ...second.retrieval, rawHash: "f".repeat(64) } };
-  assert.match(notModifiedIssue(forged) ?? "", /raw hash is not the one registration builds/);
-
-  // A 304 for a class that pins no bytes to a Last-Modified is refused: nothing was acquired.
-  assert.match(notModifiedIssue({ ...second, recordClass: "MEETING" }) ?? "", /pins no bytes to a Last-Modified/);
-});
-
-test("registration emits the registry's own shapes, so the reader composes it without translation", () => {
-  const oh = registrationCandidate({ target: registrationTarget("OH"), reference: loadRegistrationReference(ROOT, "OH"), receipt: RECEIPT, reviewed: reviewedFromFirstSeed() }).readModel as RegistrationReadModel;
-  // The registry holds no state division; the state is the scope.
-  assert.ok(oh.divisions.length > 0 && oh.divisions.every((d) => d.divisionType !== ("state" as string)), "no state division is registered");
-  for (const d of oh.divisions) {
-    assert.equal(d.sourceDataset, "TIGER_CB2023");
-    assert.match(d.provenance.sourceUrl ?? "", /^https:\/\/www2\.census\.gov\/geo\/tiger\/GENZ2023\/shp\/cb_2023_us_(county|place|cousub|unsd|elsd|scsd)_500k\.zip$/);
-    assert.deepEqual([d.lsad, d.funcstat, d.classfp, d.canonicalOcdId, d.canonicalMatch, d.canonicalGap], [null, null, null, null, "none", "UNDETERMINED"], "no canonical match is claimed");
-  }
-  for (const b of oh.bodies) {
-    assert.equal(b.name, null, "a name is null until sourced");
-    assert.equal(b.coverageStatus, "NOT_ATTEMPTED");
-    if (b.bodyOrigin === "REGISTERED_FROM_CENSUS_OF_GOVERNMENTS") {
-      assert.equal(b.sourceDataset, "COG_2022");
-      assert.equal(b.provenance.sourceUrl, REGISTRATION_SOURCE_URL);
-      assert.ok(typeof b.censusId === "string" && typeof b.censusUnitType === "string");
-    } else {
-      assert.equal(b.bodyOrigin, "DERIVED_FROM_DIVISION_TYPE");
-      assert.equal(b.sourceDataset, "TIGER_CB2023");
-      assert.equal(b.censusId, undefined, "a school district no listed government claimed carries no Census id");
-    }
-  }
-});
-
-test("the reader composes a state's registration beside the reviewed registry it holds now, and reviewed still wins", () => {
-  const reviewed = JSON.parse(readFileSync(join(ROOT, "lib", "registry", "registry.json"), "utf8")) as {
-    divisions: { ocdId: string }[];
-    bodies: { id: string; ocdId: string | null; alsoServesOcdIds?: string[]; censusId?: string }[];
-  };
-  const oh = registrationCandidate({ target: registrationTarget("OH"), reference: loadRegistrationReference(ROOT, "OH"), receipt: RECEIPT, reviewed: reviewedFromFirstSeed() }).readModel as RegistrationReadModel;
-  const composed = composeRegistration(reviewed, oh, "cv-oh");
-  assert.equal(composed.state, "OH");
-  assert.equal(composed.divisions.length, oh.divisions.length, "the reviewed registry holds nothing in Ohio yet");
-  assert.equal(composed.bodies.length, oh.bodies.length);
-
-  // The reviewed registry moves after Ohio registered: it now holds one of Ohio's divisions, keys a body on
-  // another, and lists a third government by its Census id. None of those is composed from registration.
-  const [heldDivision, keyedBody, censusBody] = [oh.divisions[0], oh.bodies[0], oh.bodies.find((b) => b.censusId !== undefined && b !== oh.bodies[0])!];
-  const later = {
-    divisions: [...reviewed.divisions, { ocdId: heldDivision.ocdId }],
-    bodies: [
-      ...reviewed.bodies,
-      { id: "reviewed-body-on-a-registered-division", ocdId: keyedBody.ocdId },
-      { id: "reviewed-body-for-the-same-government", ocdId: null, censusId: censusBody.censusId },
-    ],
-  };
-  const after = composeRegistration(later, oh, "cv-oh");
-  assert.equal(after.divisions.some((d) => d.ocdId === heldDivision.ocdId), false, "a division the reviewed registry holds now");
-  assert.equal(after.bodies.some((b) => b.id === keyedBody.id), false, "a division the reviewed registry now keys a body on");
-  assert.equal(after.bodies.some((b) => b.id === censusBody.id), false, "a government the reviewed registry now lists by its Census id");
-  assert.equal(after.bodies.length, oh.bodies.length - 2);
-});
-
-test("a territory registers a body only where TIGER/Line records a governing status, never from geography (2026-09-25)", async () => {
-  const reviewed = reviewedFromFirstSeed();
-  const target = registrationTarget("PR");
-  const reference = loadRegistrationReference(ROOT, "PR");
-  const pr = registrationCandidate({ target, reference, receipt: RECEIPT, reviewed });
-  assert.deepEqual(pr.semantics.violations, [], "Puerto Rico registers: the Census of Governments' silence is no longer read as its only word");
-  const model = pr.readModel as RegistrationReadModel;
-  assert.equal(model.vintage.governments, "2023 TIGER/Line functional status");
-  assert.equal(model.bodies.length, 78, "the 78 municipios, FUNCSTAT A");
-  const municipios = new Set(model.divisions.filter((d) => d.divisionType === "county").map((d) => d.ocdId));
-  for (const b of model.bodies) {
-    assert.ok(municipios.has(b.ocdId) && b.id === `${b.ocdId}#governing`, `${b.id} is a municipio's government`);
-    assert.equal(b.bodyOrigin, "REGISTERED_FROM_TIGER_FUNCSTAT");
-    assert.equal(b.sourceDataset, "TIGER_LINE2023");
-    assert.equal(b.provenance.sourceUrl, "https://www2.census.gov/geo/tiger/TIGER2023/COUNTY/tl_2023_us_county.zip");
-    assert.equal(b.censusId, undefined, "no Census of Governments id is claimed for it");
-    assert.match(b.jurisdictionId ?? "", /^pr:county:[a-z0-9-]+$/);
-  }
-  // The barrios (N), the zonas urbanas (S), the Department of Education's school district and the territory itself: geography only.
-  assert.equal(model.bodies.some((b) => b.ocdId === "ocd-division/country:us/territory:pr" || b.id.endsWith("#board")), false);
-  const barrio = model.divisions.find((d) => d.ocdId === "ocd-division/country:us/territory:pr/county:adjuntas_municipio/place:adjuntas_barrio_pueblo")!;
-  assert.deepEqual([barrio.lsad, barrio.funcstat, barrio.classfp], ["41", "N", "Z1"], "the division records its Census status");
-  assert.deepEqual(model.functionalStatus?.divisionsByStatus, { A: 78, N: 901, S: 292 });
-  assert.equal(model.functionalStatus?.noLocalGovernment, null);
-  const promoted = await processRegisteredRoutineCandidate(new MemoryRoutineDataStore(), target.contractId, pr, RECEIPT.retrievedAt);
-  assert.equal(promoted.promoted?.versionId, pr.id, `PR promoted: ${promoted.candidate.failureCode ?? ""} ${promoted.candidate.failureDetail ?? ""}`);
-
-  // A government row that claims a status its division does not carry mints nothing, and says so.
-  const forged = { ...reference.reference, governments: [...reference.reference.governments, ["cousub:7200100401", "pr:city:forged", "Adjuntas barrio-pueblo", "COUNTY SUBDIVISION GOVERNMENT", reference.reference.divisions.findIndex((d) => d[0] === barrio.ocdId), "TIGER_FUNCSTAT", -1] as const] };
-  const refused = registrationCandidate({ target, reference: { ...reference, reference: forged }, receipt: RECEIPT, reviewed });
-  assert.equal((refused.readModel as RegistrationReadModel).bodies.some((b) => b.ocdId === barrio.ocdId), false);
-  assert.match(refused.semantics.violations.join(" "), /carries N status: no government is minted from geography/);
-
-  const as = registrationCandidate({ target: registrationTarget("AS"), reference: loadRegistrationReference(ROOT, "AS"), receipt: RECEIPT, reviewed }).readModel as RegistrationReadModel;
-  const mp = registrationCandidate({ target: registrationTarget("MP"), reference: loadRegistrationReference(ROOT, "MP"), receipt: RECEIPT, reviewed }).readModel as RegistrationReadModel;
-  assert.deepEqual([as.bodies.length, mp.bodies.length], [94, 4], "American Samoa's districts, counties and villages (A); the Northern Marianas' four municipalities (A, B)");
-});
-
-test("Guam and the Virgin Islands register with the Census's own record of no local government; a state with none is still a failed extraction", async () => {
-  const reviewed = reviewedFromFirstSeed();
-  for (const [state, name, divisions] of [["GU", "Guam", 77], ["VI", "U.S. Virgin Islands", 33]] as const) {
-    const target = registrationTarget(state);
-    const candidate = registrationCandidate({ target, reference: loadRegistrationReference(ROOT, state), receipt: RECEIPT, reviewed });
+test("all held states validate, retain names and native IDs, and never infer a board from an inventory", () => {
+  for (const target of REGISTRATION_TARGETS) {
+    const candidate = registrationCandidate(input(target.state));
+    const result = validateRoutineCandidate(candidate, null, observed);
+    assert.equal(result.state, "VALIDATED", `${target.state}: ${JSON.stringify(result.receipt.checks.filter(check => check.verdict !== "PASS"))}`);
     const model = candidate.readModel as RegistrationReadModel;
-    assert.deepEqual(candidate.semantics.violations, [], `${state} is not refused`);
-    assert.equal(model.bodies.length, 0, `${state}: no body, not even its department of education's`);
-    assert.match(model.functionalStatus?.noLocalGovernment ?? "", new RegExp(`^No local government recorded by the Census for ${name}: none of its ${divisions} county`));
-    assert.equal(candidate.dependentChecks[0].passed, true);
-    const promoted = await processRegisteredRoutineCandidate(new MemoryRoutineDataStore(), target.contractId, candidate, RECEIPT.retrievedAt);
-    assert.equal(promoted.promoted?.versionId, candidate.id, `${state} promoted: ${promoted.candidate.failureCode ?? ""} ${promoted.candidate.failureDetail ?? ""}`);
+    assert.equal(model.bodies.length, 0);
+    assert.equal(new Set(model.governments!.map(row => row.id)).size, model.governments!.length);
+    assert.ok(model.governments!.every(row => row.name && Object.keys(row.nativeIds).length));
   }
-  // Without its statuses, the same territory's silence is a failed extraction again: zero is never evidence by itself.
-  const gu = loadRegistrationReference(ROOT, "GU");
-  const unstated = registrationCandidate({
-    target: registrationTarget("GU"),
-    reference: { ...gu, reference: { ...gu.reference, divisions: gu.reference.divisions.map((d) => [d[0], d[1], d[2], d[3]] as const) } },
-    receipt: RECEIPT,
-    reviewed,
-  });
-  assert.match(unstated.semantics.violations.join(" "), /carry no TIGER\/Line functional status/);
-  assert.match(unstated.semantics.violations.join(" "), /lists no government in GU, and its TIGER\/Line functional status does not show that none governs/);
-  // A state keeps the Census of Governments rule exactly: its statuses are never read, so zero is always a failure.
-  const oh = loadRegistrationReference(ROOT, "OH");
-  const hollow = registrationCandidate({ target: registrationTarget("OH"), reference: { ...oh, reference: { ...oh.reference, governments: oh.reference.governments.filter((g) => g[3] === "STATE") } }, receipt: RECEIPT, reviewed });
-  assert.match(hollow.semantics.violations.join(" "), /lists no government in OH: a failed extraction, never a state with no government/);
 });
 
-test("every county subdivision's parent is its county, read off its GEOID, and no committed id moves (2026-09-25)", () => {
-  const reviewed = reviewedFromFirstSeed();
-  let cousubs = 0;
-  for (const target of REGISTRATION_TARGETS) {
-    const reference = loadRegistrationReference(ROOT, target.state);
-    const ids = new Set(reference.reference.divisions.map((d) => d[0]));
-    const model = registrationCandidate({ target, reference, receipt: RECEIPT, reviewed }).readModel as RegistrationReadModel;
-    // The reference's ids are the registration's ids, unchanged: parents are resolved, never rewritten into the ids.
-    assert.ok(model.divisions.every((d) => ids.has(d.ocdId)), `${target.state}: every registered id is the reference's`);
-    const dangling = model.divisions.filter((d) => d.parentOcdId !== null && !ids.has(d.parentOcdId));
-    assert.deepEqual(dangling.map((d) => d.ocdId).slice(0, 3), [], `${target.state}: every parent is a division of the state`);
-    for (const d of model.divisions) {
-      if (!/\/county:[^/]+\/place:[^/]+$/.test(d.ocdId)) continue;
-      cousubs++;
-      const county = reference.reference.divisions.find((c) => c[1] === "county" && c[2] === d.geoid!.slice(0, 5));
-      assert.equal(d.parentOcdId, county?.[0], `${d.ocdId} sits in the county its GEOID names`);
-    }
-  }
-  assert.ok(cousubs > 30_000, `${cousubs} county subdivisions checked`);
-  const pr = registrationCandidate({ target: registrationTarget("PR"), reference: loadRegistrationReference(ROOT, "PR"), receipt: RECEIPT, reviewed }).readModel as RegistrationReadModel;
-  assert.equal(
-    pr.divisions.find((d) => d.ocdId === "ocd-division/country:us/territory:pr/county:adjuntas_municipio/place:adjuntas_barrio_pueblo")?.parentOcdId,
-    "ocd-division/country:us/territory:pr/county:adjuntas",
-    "the barrio keeps its committed id and resolves to the municipio's",
-  );
+test("changed valid release bytes are parsed and a failed update preserves the exact held release", async () => {
+  const store = new MemoryEvidenceStore(), { locks } = createMemoryRepositories();
+  let now = new Date("2026-01-01T00:00:00Z"), calls = 0;
+  const government = input("OH").reference.reference.governments.find(row => row[3] === "COUNTY")!;
+  const archive = (name: string) => zip([{ name: "government.csv", data: Buffer.from(`PID6,UNIT_NAME,GOV_TYPE,FIPS_STATE,FIPS_COUNTY,STATE\n${government[0]},${name},COUNTY,39,001,OH\n`) }], "2026-01-01");
+  let body: Buffer = archive("OLD NAME");
+  const options = { signal: AbortSignal.timeout(10000), store, locks, now: () => now,
+    readHeld: async () => null, fetchImpl: (async () => { calls++; return new Response(new Uint8Array(body), { headers: { "content-type": "application/zip", etag: `"${calls}"` } }); }) as typeof fetch };
+  const first = await acquireRegistrationSource(options);
+  await acquireRegistrationSource(options);
+  assert.equal(calls, 1, "state consumers share the national release");
+  now = new Date("2026-05-01T00:00:00Z"); body = archive("NEW NAME");
+  const changed = await acquireRegistrationSource(options);
+  assert.notEqual(changed.sha256, first.sha256);
+  const updated = registrationReferenceFromRelease(input("OH").reference, changed.release!);
+  assert.equal(updated.listings?.find(row => row.nativeIds.census_pid6 === government[0])?.name, "NEW NAME");
+  assert.ok(updated.reference.governments.length > 1000, "missing source classes retain their prior evidence");
+  now = new Date("2026-09-01T00:00:00Z"); body = Buffer.from("truncated");
+  await assert.rejects(acquireRegistrationSource(options), /could not be acquired or decoded/);
+  now = new Date("2026-05-02T00:00:00Z");
+  assert.equal((await acquireRegistrationSource(options)).sha256, changed.sha256);
 });
 
-test("registration never mints a body on a Census placeholder division, in any state; the division stays as geography", async () => {
-  const { isCensusPlaceholderDivision } = await import("../lib/registry/census-placeholders.ts");
-  const reviewed = reviewedFromFirstSeed();
-  let placeholderDivisions = 0;
-  for (const target of REGISTRATION_TARGETS) {
-    const model = registrationCandidate({ target, reference: loadRegistrationReference(ROOT, target.state), receipt: RECEIPT, reviewed }).readModel as RegistrationReadModel;
-    const placeholders = new Set(model.divisions.filter((d) => isCensusPlaceholderDivision(d)).map((d) => d.ocdId));
-    placeholderDivisions += placeholders.size;
-    assert.equal(model.bodies.filter((b) => placeholders.has(b.ocdId)).length, 0, `${target.state}: no body on a placeholder`);
-  }
-  assert.ok(placeholderDivisions > 0, "some state registers a placeholder division, so the rule is exercised");
+test("a raw 304 cannot be used as civic source bytes", () => {
+  const args = input("NH");
+  const candidate = registrationCandidate({ ...args, receipt: { ...args.receipt, httpStatus: 304 } });
+  assert.equal(validateRoutineCandidate(candidate, null, observed).state, "SOURCE_BLOCKED");
 });

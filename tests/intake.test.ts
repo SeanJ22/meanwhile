@@ -3,16 +3,13 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 
-import { initializeFederalVoteFirstSeed } from "./helpers/federal-vote-first-seed.ts";
+import { FEDERAL_ROLLCALL_SCOPE, FEDERAL_VOTES_SOURCE_ID } from "../lib/votes/data-plane.ts";
+import { readFederalRollCallsProjection } from "../lib/votes/snapshot.ts";
+import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 
 /**
- * T08 — the store defends itself. Every test here asserts a MECHANISM
- * refusing, quarantining, or accepting — never the absence of an error.
- *
- * Threshold env vars are set LOW before the route modules load (they read
- * limits at first use), so a "script-speed burst" is six requests instead
- * of forty-one. The mechanism is identical; only the number moves, which
- * is exactly what the tunable-threshold design promises.
+ * Every test asserts a mechanism refusing, quarantining or accepting. Threshold env vars are set low before
+ * the route modules load (they read limits at first use).
  */
 
 process.env.WTP_LIMIT_REACTIONS_PER_MINUTE = "5";
@@ -23,12 +20,21 @@ process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "5";
 // the authoritative counters answer "unavailable" — both paths asserted.
 delete process.env.DATABASE_URL;
 
-await initializeFederalVoteFirstSeed();
+// The promoted federal roll calls, carried as the Reader edge carries a proven
+// pointer: the route's own refresh reads this copy (no database in tests).
+const promotedVotes = provenEdgeEntry({
+  recordClass: "FEDERAL_ROLL_CALL", scope: FEDERAL_ROLLCALL_SCOPE, sourceId: FEDERAL_VOTES_SOURCE_ID, versionId: "cv-intake-votes",
+  value: { formatVersion: 1, snapshot: { congress: 119, session: 1, votes: [{ id: "house:119-1:1" }], positions: [] }, billSummaries: { summaries: {}, pending: [] } },
+});
+const votesEdge = { promoted: new Map([[`FEDERAL_ROLL_CALL:${FEDERAL_ROLLCALL_SCOPE}`, promotedVotes]]) };
+await readFederalRollCallsProjection({ edge: promotedVotes });
 
 const { classifySubmission, intakeLimits, isSameOriginSubmission } = await import(
   "../lib/signal/intake-limits.ts"
 );
-const { POST: postReaction } = await import("../app/api/reactions/route.ts");
+const { POST: postPromotedReaction } = await import("../app/api/reactions/route.ts");
+const { withReaderAuthorityEdge } = await import("../lib/registry/runtime-edge.ts");
+const postReaction = (request: Request) => withReaderAuthorityEdge(votesEdge, () => postPromotedReaction(request));
 const { POST: postLog } = await import("../app/api/log/route.ts");
 const { getVoteIds } = await import("../lib/votes/snapshot.ts");
 const { analyzeStore } = await import(
@@ -39,7 +45,7 @@ const { aggregateReactions, rowsEligibleForAggregation } = await import(
 );
 
 const realVoteId = [...getVoteIds()][0];
-assert.ok(realVoteId, "the committed votes snapshot must offer a real target");
+assert.ok(realVoteId, "the votes snapshot must offer a real target");
 
 /** A valid reaction request; overrides let each test break one thing. */
 function reactionRequest(overrides: {
@@ -96,8 +102,6 @@ function logRequest(overrides: {
   });
 }
 
-// ── The classifier — the authoritative dispositions, counts in, verdict out ─
-
 test("classify: a human pace is allowed, velocity quarantines, the hard limit and the daily ceiling refuse", () => {
   const limits = {
     ...intakeLimits(),
@@ -134,8 +138,6 @@ test("thresholds read their env vars — tuning needs no deploy of code", () => 
   assert.equal(limits.reactionsPerMinuteSoft, 3);
 });
 
-// ── Same-origin enforcement ──────────────────────────────────────────────
-
 test("same-origin: matching origin passes, missing and foreign origins fail", () => {
   assert.ok(isSameOriginSubmission(reactionRequest({})));
   assert.ok(!isSameOriginSubmission(reactionRequest({ origin: null })));
@@ -150,8 +152,6 @@ test("a valid submission from a foreign origin is refused with a 403", async () 
   );
   assert.equal(response.status, 403);
 });
-
-// ── The route end to end: refusals and the honest acceptance ─────────────
 
 test("an invented target id is refused — the registry is the gate", async () => {
   const response = await postReaction(
@@ -192,9 +192,7 @@ test("a script-speed burst is refused by the in-memory window — and the refusa
 
 test("the per-IP window refuses a burst that rotates device keys", async () => {
   const ip = "203.0.113.99";
-  // Fresh key each request — the per-key window never trips; the IP window
-  // must. Uses the log route's tighter env (5/min) via its own limiter?
-  // No — reactions per-IP is 100 here, so drive 101 requests cheaply.
+  // Fresh key each request, so only the per-IP window can trip.
   let refused = false;
   for (let i = 0; i < 101 && !refused; i++) {
     const response = await postReaction(
@@ -208,8 +206,6 @@ test("the per-IP window refuses a burst that rotates device keys", async () => {
   assert.ok(refused, "a key-rotating burst from one IP must be refused");
 });
 
-// ── The master ripcord — one switch closes intake, honestly ──────────────
-
 test("ripcord.reactionIntake closed: both intakes refuse with 503, and the client renders the honest line on it", async () => {
   process.env.WTP_RIPCORD_REACTION_INTAKE = "pulled";
   try {
@@ -220,7 +216,7 @@ test("ripcord.reactionIntake closed: both intakes refuse with 503, and the clien
   } finally {
     delete process.env.WTP_RIPCORD_REACTION_INTAKE;
   }
-  // And the reader's side of a 503 is the honest not-counted line (P11):
+  // And the reader's side of a 503 is the honest not-counted line:
   const { submitReaction } = await import("../lib/reactions/client.ts");
   const realFetch = globalThis.fetch;
   globalThis.fetch = (async () => new Response(null, { status: 503 })) as typeof fetch;
@@ -252,8 +248,6 @@ test("ripcord.rateLimits pulled: the protections stand down but validity never d
     delete process.env.WTP_RIPCORD_RATE_LIMITS;
   }
 });
-
-// ── Quarantine — stored, marked why, excluded from every aggregate ───────
 
 test("a quarantined row is excluded from aggregation unconditionally, and n counts only the clean pool", () => {
   const rows = [
@@ -343,8 +337,6 @@ test("the limiter digest can never join the reaction store — different hash co
   );
 });
 
-// ── The log route's server-enforced caps ─────────────────────────────────
-
 test("log intake: an over-cap detail string is refused — the server no longer trusts the client's cap", async () => {
   const response = await postLog(
     logRequest({
@@ -385,8 +377,6 @@ test("log intake: a same-origin burst past the per-IP window is refused", async 
   assert.ok(refused, "the sixth event from one IP must be refused (limit 5/min)");
 });
 
-// ── The tripwire — flags computed, stated with denominators, never acted on ─
-
 test("tripwire: a volume spike far outside the trailing range is flagged, quiet days are not", () => {
   const quiet = Array.from({ length: 10 }, (_, i) => ({
     day: `2026-08-${String(i + 1).padStart(2, "0")}`,
@@ -415,8 +405,6 @@ test("tripwire: a day where quarantined rows are a disproportionate share is fla
   assert.equal(flags[0].day, "2026-08-02");
   assert.match(flags[0].detail, /10 of 20/, "count and denominator, always");
 });
-
-// ── The permanent runtime owns the observation; GitHub owns no clock ─────
 
 test("the standing runner records the tripwire in the control plane without a tracked report", () => {
   const runner = readFileSync(join(process.cwd(), "scripts", "pilot-runner.mts"), "utf8");

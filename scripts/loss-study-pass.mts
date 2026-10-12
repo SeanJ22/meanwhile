@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * **ONE STUDY OF EVERY KIND OF LOSS.** (DP-29.)
+ * **ONE STUDY OF EVERY KIND OF LOSS.**
  *
  * Reads shut doors, standing empty hunts, checker holds, the week's auditors'
  * red flags and the latest look checks' red flags, studies each kind the way
@@ -22,6 +22,9 @@ import { addUpdates } from "../lib/control-plane/updates.ts";
 import { listDoors } from "../lib/doors/registry.ts";
 import { absenceReadings, auditReadings, doorReadings, holdReadings, lookReadings, placeTraitsFrom } from "../lib/method/loss-readings.ts";
 import { LOSS_KIND_WORDS, lessonKinds, lossLessonUpdates, studyAllLosses } from "../lib/method/study-all-losses.ts";
+import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
+
+readFromHeldCopies();
 
 const DRY = process.argv.includes("--dry-run");
 const now = new Date().toISOString();
@@ -47,7 +50,7 @@ const audits = await read("auditors' red flags", async () => (await readAuditWee
 const looks = await read("front-end red flags", () => readLatestLookPasses(repos, 7), []);
 
 const readings = [...doorReadings(doors), ...absenceReadings(obligations, now), ...holdReadings(items), ...auditReadings(audits), ...lookReadings(looks)];
-/* RULING 159: with nothing read there is no population to study; "0 lessons from 0 losses" would be a false all-clear. */
+/* With nothing read there is no population to study; "0 lessons from 0 losses" would be a false all-clear. */
 if (readings.length === 0) {
   console.error(`loss study: no doors, hunts, holds or red flags were read${unread.length ? ` (not read: ${unread.join(", ")})` : ""}; nothing was measured`);
   process.exit(1);

@@ -12,7 +12,11 @@ import {
   HELD_MEETING_PARTITIONS,
   MEETING_PARTITION_CONTRACTS,
   heldMeetingPartitionFor,
+  meetingPartitionId,
+  meetingPartitionOfId,
+  meetingHistoryContract,
 } from "../civic-data/meeting-partitions.ts";
+import { RETIRED_MEETING_ROUTES } from "../registry/source-wiring.ts";
 import {
   MEETINGS_RECORD_CLASS,
   MEETINGS_SCOPE,
@@ -22,7 +26,6 @@ import {
   type MeetingsProjectionReadResult,
   type MeetingsSnapshot,
 } from "./snapshot.ts";
-import { activeReaderProofMeetingPin, readerProofPinnedCheckedAt, type ReaderProofMeetingPin } from "./proof-pin.ts";
 import {
   applyMeetingFreshChecks,
   confirmationCheckedAt,
@@ -32,23 +35,9 @@ import {
   type FreshCheckCoupling,
 } from "./fresh-checks.ts";
 import type { PromotedPointerIdentity } from "../civic-data/types.ts";
+import { buildMeetingHistorySnapshot, mergeMeetingHistory } from "../civic-data/meeting-history.ts";
+import { meetingCarriesRecords } from "./carries-records.ts";
 
-/**
- * **The prepared reader snapshot (PDC-8b, 2026-09-15).**
- *
- * PDC moved the meetings composition ONTO the visitor's request: `/api/meetings`
- * hauled and composed 124 partitions per visit (~1.4-2.3 s, measured). This
- * module moves that work to promote time. The standing runner composes the
- * partitions once when they change and publishes one durable serving row in
- * `civic_data_reader_projections`; the reader reads that single row (~0.3 s).
- *
- * The partitions stay the sole authoritative civic truth (RULING 282). The
- * prepared row is a SERVING COPY coupled to them by the exact versionIds it was
- * composed from — RULING 283's "final projection coupled to the final promoted
- * set … when a measured dependency proves the coupling." The scope lives in the
- * reader-projections table, never as an aggregate `MEETING` promotion pointer:
- * that door stays removed (lib/civic-data/meeting-partitions.ts).
- */
 export const MEETINGS_PREPARED_SCOPE = "composed-reader-snapshot";
 
 function couplingFingerprint(coupling: readonly PreparedProjectionCoupling[]): string {
@@ -58,41 +47,24 @@ function couplingFingerprint(coupling: readonly PreparedProjectionCoupling[]): s
     .join("|");
 }
 
-/** Each coupled version's scope: a registered partition's own, or a retired route's held one. */
-const SCOPE_BY_CONTRACT: ReadonlyMap<string, string> = new Map([
-  ...MEETING_PARTITION_CONTRACTS.map((partition) => [partition.id, partition.scope] as const),
-  ...HELD_MEETING_PARTITIONS.map((held) => [held.id, held.scope] as const),
-]);
+/** A composed partition's scope, read from its id: the composition is checked whatever doors this process holds. */
+const scopeOfContract = (contractId: string): string | undefined => meetingPartitionOfId(contractId)?.scope;
 
-/**
- * The coupled versions with each one's newest successful fresh check brought up
- * to date from the pointer identities (their newest confirmation detail, one
- * narrow read): only a version that reads a source (`routes`), and only a
- * confirmation of the version the entry names (lib/meetings/fresh-checks.ts).
- */
 function withCurrentChecks(
   couplings: readonly FreshCheckCoupling[],
   identityByScope: ReadonlyMap<string, Pick<PromotedPointerIdentity, "versionId" | "latestConfirmation">>,
 ): FreshCheckCoupling[] {
   return couplings.map((coupling) => {
     if (coupling.routes === undefined) return coupling;
-    const scope = SCOPE_BY_CONTRACT.get(coupling.contractId);
+    const scope = scopeOfContract(coupling.contractId);
     const identity = scope === undefined ? undefined : identityByScope.get(scope);
     const checkedAt = laterCheck(coupling.checkedAt ?? null, confirmationCheckedAt(identity?.latestConfirmation, coupling.versionId, true));
     return checkedAt === (coupling.checkedAt ?? null) ? coupling : { ...coupling, checkedAt };
   });
 }
 
-/**
- * What the serving copy's readers are told about its checks this pass:
- * `servedGeneratedAt` is "Last checked" (the composition's own generation or a
- * later successful fresh check of any coupled version), `freshChecks` the newest
- * check of each route, and `composition` the version set the rows came from.
- * The edge republishes its manifest when these move, and nothing else.
- */
 export interface PreparedMeetingChecks {
   readonly servedGeneratedAt: string | null;
-  /** The newest successful fresh check of any coupled version that found nothing new; null when none. */
   readonly checkedAt: string | null;
   readonly freshChecks: Readonly<Record<string, string>>;
   readonly composition: string;
@@ -108,7 +80,6 @@ function preparedChecks(generatedAt: string | null, couplings: readonly FreshChe
   };
 }
 
-/** The outcome of one prepare pass — surfaced to admin so failure and lag are never silent. */
 export type PrepareMeetingSnapshotResult =
   | ({ readonly status: "CURRENT"; readonly sequence: number; readonly coupledPartitions: number; readonly generatedAt: string | null } & PreparedMeetingChecks)
   | ({ readonly status: "PUBLISHED"; readonly sequence: number; readonly coupledPartitions: number; readonly generatedAt: string } & PreparedMeetingChecks)
@@ -116,51 +87,22 @@ export type PrepareMeetingSnapshotResult =
   | { readonly status: "FAILED"; readonly error: string; readonly lastValidGeneratedAt: string | null }
   | { readonly status: "NOT_COMPOSABLE"; readonly detail: string; readonly lastValidGeneratedAt: string | null };
 
-/**
- * Compose the promoted meeting partitions ONCE and publish them as the durable
- * prepared reader snapshot — but only when the promoted partition set changed.
- * Idempotent, monotonic and last-valid-safe:
- *
- *  - It first reads only the cheap promotion POINTERS (versionIds) and compares
- *    their fingerprint to what the current prepared snapshot was composed from.
- *    Unchanged → CURRENT, without the expensive 124-partition haul. So a normal
- *    runner tick over unchanged data costs one small read and never a recompose,
- *    and the reader never pays the compose either.
- *  - Changed → it runs the exact reader composition once and publishes with a
- *    monotonic CAS, so two overlapping runner passes cannot put an older
- *    composition over a newer one (the loser sees RACED and re-reads next tick).
- *  - A composition failure returns FAILED and writes nothing, so the last valid
- *    prepared snapshot keeps serving; the caller records the failure and the
- *    publication lag in admin so staleness is never silent.
- */
 export async function preparePublishedMeetingSnapshot(
   store: RoutineDataStore,
   now: string = new Date().toISOString(),
   options: {
-    /**
-     * The pass's one aggregate composition, when the caller already runs the
-     * same `readMeetingsProjection({ store, now, bypassCache: true,
-     * allowUnconfiguredBootstrap: false })`. Called only when the coupling
-     * changed; a caller that composes once serves both this and its Reader
-     * readback from one read of every partition.
-     */
     readonly aggregate?: () => Promise<MeetingsProjectionReadResult>;
   } = {},
 ): Promise<PrepareMeetingSnapshotResult> {
-  const scopes = MEETING_PARTITION_CONTRACTS.map((partition) => partition.scope);
+  const historyContracts = MEETING_PARTITION_CONTRACTS.map(meetingHistoryContract);
+  const scopes = [...MEETING_PARTITION_CONTRACTS.map((partition) => partition.scope), ...historyContracts.map(contract => contract.scope)];
   const versionByScope = new Map<string, string>();
   const identityByScope = new Map<string, PromotedPointerIdentity>();
   try {
-    // Every pass asks only which versions are current: identity, not the
-    // partitions' payloads (7.8 MB per pass on 2026-09-23). Each identity
-    // carries its version's newest confirmation detail, the pass's checks.
     for (const promotion of await store.readPromotionIdentities(MEETINGS_RECORD_CLASS, scopes)) {
       versionByScope.set(promotion.scope, promotion.versionId);
       identityByScope.set(promotion.scope, promotion);
     }
-    // A retired route's held pointer is asked for only while its successor
-    // has none (HELD_MEETING_PARTITIONS); once superseded it costs nothing.
-    // Identity only, like the pass above.
     const awaiting = HELD_MEETING_PARTITIONS.filter((held) => !versionByScope.has(held.successorScope));
     if (awaiting.length > 0) {
       for (const promotion of await store.readPromotionIdentities(MEETINGS_RECORD_CLASS, awaiting.map((held) => held.scope))) {
@@ -171,9 +113,8 @@ export async function preparePublishedMeetingSnapshot(
   } catch (error) {
     return { status: "FAILED", error: error instanceof Error ? error.message : String(error), lastValidGeneratedAt: null };
   }
-  // A successor with no pointer of its own is composed from its retired
-  // predecessor's held version, so the coupling names that version: the
-  // successor's first promotion then changes the fingerprint and recomposes.
+  // A successor with no pointer of its own couples to its retired predecessor's held version, so the successor's
+  // first promotion changes the fingerprint and recomposes.
   const currentCoupling: PreparedProjectionCoupling[] = MEETING_PARTITION_CONTRACTS.flatMap((partition) => {
     const versionId = versionByScope.get(partition.scope);
     if (typeof versionId === "string") return [{ contractId: partition.id, versionId }];
@@ -181,15 +122,14 @@ export async function preparePublishedMeetingSnapshot(
     const heldVersionId = held ? versionByScope.get(held.scope) : undefined;
     return held && typeof heldVersionId === "string" ? [{ contractId: held.id, versionId: heldVersionId }] : [];
   });
+  for (const contract of historyContracts) {
+    const versionId = versionByScope.get(contract.scope);
+    if (versionId) currentCoupling.push({ contractId: contract.id, versionId });
+  }
   const currentFingerprint = couplingFingerprint(currentCoupling);
 
-  // The serving copy's coupling, sequence and generation time: never its
-  // composed payload (7.5 MB), which this decision does not read.
   const prepared = await store.readPreparedReaderProjectionCoupling(MEETINGS_RECORD_CLASS, MEETINGS_PREPARED_SCOPE);
   if (prepared && couplingFingerprint(prepared.composedFrom) === currentFingerprint) {
-    // The same versions: nothing is recomposed or rewritten. A quiet re-check
-    // (a confirmation) moves only what readers are told about checks, which the
-    // edge carries in its manifest (lib/meetings/fresh-checks.ts).
     return {
       status: "CURRENT",
       sequence: prepared.sequence,
@@ -203,7 +143,7 @@ export async function preparePublishedMeetingSnapshot(
   try {
     aggregate = options.aggregate
       ? await options.aggregate()
-      : await readMeetingsProjection({ store, now, bypassCache: true, allowUnconfiguredBootstrap: false });
+      : await readMeetingsProjection({ store, now, bypassCache: true });
   } catch (error) {
     return { status: "FAILED", error: error instanceof Error ? error.message : String(error), lastValidGeneratedAt: prepared?.generatedAt ?? null };
   }
@@ -215,8 +155,6 @@ export async function preparePublishedMeetingSnapshot(
     };
   }
 
-  // Each coupled version records the routes of its fresh rows and its newest
-  // check, so a later quiet re-check is applied by route without a recompose.
   const freshCheckOf = (partition: (typeof aggregate.partitions)[number]) => partition.freshCheck
     ? { routes: partition.freshCheck.routes, ...(partition.freshCheck.checkedAt ? { checkedAt: partition.freshCheck.checkedAt } : {}) }
     : {};
@@ -227,16 +165,38 @@ export async function preparePublishedMeetingSnapshot(
         ? [{ contractId: partition.heldFrom.contractId, versionId: partition.heldFrom.versionId, ...freshCheckOf(partition) }]
         : [],
   );
+  for (const partition of aggregate.partitions) if (partition.history) composedFrom.push(partition.history);
+  let value = aggregate.value;
+  const missingHistory = aggregate.partitions.filter(partition => partition.historyIssue);
+  if (prepared && missingHistory.length > 0) {
+    // Retain accepted historical facts during a storage outage, without reviving future meetings.
+    const prior = await store.readPreparedReaderProjection(MEETINGS_RECORD_CLASS, MEETINGS_PREPARED_SCOPE);
+    if (prior) {
+      const previous = prior.payload as MeetingsSnapshot;
+      const documented = new Set(previous.agendaDocuments.map(document => document.meetingId));
+      const meetings = previous.meetings.filter(meeting => Date.parse(meeting.startsAt) < Date.parse(now) &&
+        meetingCarriesRecords(meeting, documented.has(meeting.id)) && missingHistory.some(partition =>
+          meeting.bodyId === partition.bodyId || meeting.id.startsWith(`${partition.source}:`)));
+      const ids = new Set(meetings.map(meeting => meeting.id));
+      value = mergeMeetingHistory(value, buildMeetingHistorySnapshot({ history: null, moved: meetings,
+        agendaDocuments: previous.agendaDocuments.filter(document => ids.has(document.meetingId)), generatedAt: previous.generatedAt }));
+      for (const partition of missingHistory) {
+        const contract = MEETING_PARTITION_CONTRACTS.find(candidate => candidate.id === partition.contractId);
+        const held = contract && prior.composedFrom.find(coupling => coupling.contractId === meetingHistoryContract(contract).id);
+        if (held) composedFrom.push(held);
+      }
+    }
+  }
   let factSha256: string;
   try {
-    factSha256 = pdcV2CanonicalMeetingFactEvidence([aggregate.value]).sha256;
+    factSha256 = pdcV2CanonicalMeetingFactEvidence([value]).sha256;
   } catch {
-    factSha256 = createHash("sha256").update(JSON.stringify(aggregate.value)).digest("hex");
+    factSha256 = createHash("sha256").update(JSON.stringify(value)).digest("hex");
   }
   const input: PreparedReaderProjectionInput = {
     recordClass: MEETINGS_RECORD_CLASS,
     scope: MEETINGS_PREPARED_SCOPE,
-    payload: aggregate.value,
+    payload: value,
     composedFrom,
     factSha256,
     generatedAt: aggregate.value.generatedAt,
@@ -257,17 +217,15 @@ export async function preparePublishedMeetingSnapshot(
     : { status: "RACED", sequence: result.sequence, coupledPartitions: composedFrom.length };
 }
 
-/**
- * Reconstruct the per-partition readback array from the stored coupling, so the
- * prepared fast-path returns the exact `partitions` shape the composing reader
- * does (the closure proof and the freshness meta both read it).
- */
 function partitionsFromCoupling(composedFrom: readonly PreparedProjectionCoupling[]): MeetingPartitionReadback[] {
   const versionByContract = new Map(composedFrom.map((entry) => [entry.contractId, entry.versionId]));
   return MEETING_PARTITION_CONTRACTS.map((partition) => {
     const versionId = versionByContract.get(partition.id);
     const held = heldMeetingPartitionFor(partition.id);
     const heldVersionId = versionId === undefined && held ? versionByContract.get(held.id) : undefined;
+    const historyContract = meetingHistoryContract(partition);
+    const historyVersion = versionByContract.get(historyContract.id);
+    const history = historyVersion ? { history: { contractId: historyContract.id, versionId: historyVersion } } : {};
     return versionId !== undefined
       ? {
           contractId: partition.id,
@@ -277,6 +235,7 @@ function partitionsFromCoupling(composedFrom: readonly PreparedProjectionCouplin
           kind: "PROMOTED" as const,
           versionId,
           detail: null,
+          ...history,
         }
       : held && heldVersionId !== undefined
         ? {
@@ -288,6 +247,7 @@ function partitionsFromCoupling(composedFrom: readonly PreparedProjectionCouplin
             versionId: null,
             detail: `the prepared reader snapshot composed the retired route's held version ${held.id}@${heldVersionId} in this partition's place`,
             heldFrom: { contractId: held.id, scope: held.scope, versionId: heldVersionId },
+            ...history,
           }
         : {
             contractId: partition.id,
@@ -297,21 +257,11 @@ function partitionsFromCoupling(composedFrom: readonly PreparedProjectionCouplin
             kind: "NOT_RECORDED" as const,
             versionId: null,
             detail: "partition is not part of the prepared reader snapshot",
+            ...history,
           };
   });
 }
 
-/**
- * The prepared row each store last served, by the store it was read from (the
- * process's own production store is `DEFAULT_PREPARED_STORE`). Every write of
- * the row advances its `sequence` (`writePreparedReaderProjection` is a
- * monotonic compare-and-set), so a row read at a sequence is that sequence's
- * row for good. A process that already holds the current sequence asks only
- * for the coupling (sequence, generation time and versions, never the 7.5 MB
- * composed payload) before serving it again. Without it, every request that
- * reached this fallback read the whole row: each pinned reader-proof request
- * does (the edge path is bypassed while a proof pin is active).
- */
 const DEFAULT_PREPARED_STORE: object = {};
 let preparedRows = new WeakMap<object, PreparedReaderProjectionRow>();
 
@@ -337,27 +287,51 @@ async function readPreparedRowOnceUnchanged(
   return row;
 }
 
-/** Forget every held prepared row (tests; a store swap). */
+/** How long a process keeps the composition's places before it reads them again. */
+export const COMPOSED_PLACES_TTL_MS = 60_000;
+let composedPlaces: { readonly at: number; readonly places: ReadonlyMap<string, readonly string[]> } | null = null;
+
+/**
+ * The places each source serves in the composition the publisher last prepared, read from its own partition ids, in
+ * its order: a failed source is attributed to every place it serves whatever doors this process has installed. A
+ * route held for a retired one is not a source of the composition, and a body with no division has no place. Null
+ * when the composition cannot be read.
+ */
+export async function readComposedSourcePlaces(options: { readonly store?: RoutineDataStore; readonly clock?: () => number } = {}):
+  Promise<ReadonlyMap<string, readonly string[]> | null> {
+  const now = (options.clock ?? Date.now)();
+  if (options.store === undefined && composedPlaces !== null && now - composedPlaces.at < COMPOSED_PLACES_TTL_MS) return composedPlaces.places;
+  let coupling: Awaited<ReturnType<RoutineDataStore["readPreparedReaderProjectionCoupling"]>>;
+  try {
+    coupling = await (options.store ?? new PostgresRoutineDataStore()).readPreparedReaderProjectionCoupling(MEETINGS_RECORD_CLASS, MEETINGS_PREPARED_SCOPE);
+  } catch {
+    return null;
+  }
+  if (coupling === null) return null;
+  const held = new Set(RETIRED_MEETING_ROUTES.map((route) => meetingPartitionId(route.meetingSource, route.bodyId)));
+  const places = new Map<string, string[]>();
+  for (const { contractId } of coupling.composedFrom) {
+    const partition = held.has(contractId) ? null : meetingPartitionOfId(contractId);
+    if (partition === null) continue;
+    const division = partition.bodyId.split("#")[0]!;
+    const list = places.get(partition.source) ?? [];
+    if (division.startsWith("ocd-division/")) list.push(division);
+    places.set(partition.source, list);
+  }
+  if (options.store === undefined) composedPlaces = { at: now, places };
+  return places;
+}
+
 export function clearPreparedMeetingsProjectionCache(): void {
+  composedPlaces = null;
   preparedRows = new WeakMap();
   servedChecks = new WeakMap();
 }
 
-/**
- * How long a serving process reuses the checks it last read for a prepared row.
- * The edge manifest the reader normally reads is held at the CDN for the same
- * minute; within it the stated "Last checked" can only lag a newer check, never
- * claim one that did not happen.
- */
+/** Within this window the stated "Last checked" can only lag a newer check, never claim one that did not happen. */
 export const PREPARED_CHECKS_TTL_MS = 60_000;
 let servedChecks = new WeakMap<object, { readonly sequence: number; readonly readAtMs: number; readonly couplings: readonly FreshCheckCoupling[] }>();
 
-/**
- * The prepared row's coupled versions with their newest checks: its recorded
- * ones, brought up to date from the pointer identities (one narrow read, reused
- * for a minute). A failed read keeps the recorded checks: the served time is
- * then older than the newest check, never newer.
- */
 async function servedPreparedChecks(
   store: RoutineDataStore,
   scope: object,
@@ -372,7 +346,7 @@ async function servedPreparedChecks(
   try {
     const identities = await store.readPromotionIdentities(
       MEETINGS_RECORD_CLASS,
-      [...new Set(checkable.flatMap((coupling) => SCOPE_BY_CONTRACT.get(coupling.contractId) ?? []))],
+      [...new Set(checkable.flatMap((coupling) => scopeOfContract(coupling.contractId) ?? []))],
     );
     const checked = withCurrentChecks(couplings, new Map(identities.map((identity) => [identity.scope, identity])));
     servedChecks.set(scope, { sequence: prepared.sequence, readAtMs: nowMs, couplings: checked });
@@ -382,81 +356,32 @@ async function servedPreparedChecks(
   }
 }
 
-/** Whether the serving copy records the routes of every version the pin gives a check to, so it can apply them. */
-function preparedStatesPinnedChecks(couplings: readonly FreshCheckCoupling[], pin: ReaderProofMeetingPin): boolean {
-  return couplings.every((coupling) => coupling.routes !== undefined || readerProofPinnedCheckedAt(pin, coupling.contractId, coupling.versionId) === null);
-}
-
-/** The serving copy's coupled versions with the Reader proof pin's checks in place of any recorded or live one. */
-function pinnedPreparedChecks(couplings: readonly FreshCheckCoupling[], pin: ReaderProofMeetingPin): readonly FreshCheckCoupling[] {
-  return couplings.map((coupling) => coupling.routes === undefined
-    ? coupling
-    : { ...coupling, checkedAt: readerProofPinnedCheckedAt(pin, coupling.contractId, coupling.versionId) });
-}
-
-/**
- * The reader's fast path: read the single prepared reader snapshot and serve it
- * — one query, no 124-partition haul or re-compose. It NEVER recomposes on
- * routine staleness; the last valid prepared snapshot keeps serving (with its
- * own honest `generatedAt`) until the runner publishes a replacement. The only
- * fallback to the composing reader is when NO prepared snapshot exists yet
- * (initial rollout, bootstrapped before activation) or the store is unreachable
- * — a safety backstop, not the routine path.
- */
 export async function readPreparedMeetingsProjection(
-  options: { readonly store?: RoutineDataStore; readonly now?: string } = {},
+  options: { readonly store?: RoutineDataStore; readonly now?: string; readonly expectedSequence?: number } = {},
 ): Promise<MeetingsProjectionReadResult> {
+  // The meeting partitions read here are the published doors' partitions, installed in this module graph.
+  await (await import("../doors/meeting-doors.ts")).ensureMeetingDoors();
   let prepared: PreparedReaderProjectionRow | null;
   let store: RoutineDataStore | null = null;
   try {
-    // Construct the store INSIDE the try: PostgresRoutineDataStore binds getDb()
-    // in a field initializer, which throws when DATABASE_URL is unset. That must
-    // fall through to the composing reader — which first-seeds under a test
-    // fixture and returns STORE_UNREACHABLE in a misconfigured prod — never
-    // escape as an unhandled throw the route turns into a 503.
+    // Constructed inside the try: the Postgres store throws when DATABASE_URL is unset, which must fall through to
+    // the composing reader rather than escape.
     store = options.store ?? new PostgresRoutineDataStore();
     prepared = await readPreparedRowOnceUnchanged(store, options.store ?? DEFAULT_PREPARED_STORE);
   } catch {
     prepared = null;
   }
+  if (options.expectedSequence !== undefined && prepared?.sequence !== options.expectedSequence) {
+    throw new Error("PREPARED_MEETING_COPY_CHANGED_DURING_READ");
+  }
   if (prepared === null || store === null) {
     return readMeetingsProjection(options);
   }
-  // Proof-only (lib/meetings/proof-pin.ts; null in every deployed build): the
-  // serving copy is served only when it was composed from exactly the pinned
-  // versions. Otherwise the composing reader serves the pinned versions.
-  const pin = activeReaderProofMeetingPin();
-  if (
-    pin !== null &&
-    couplingFingerprint(prepared.composedFrom) !== couplingFingerprint(
-      pin.partitions.flatMap(({ contractId, kind, versionId }) =>
-        kind === "PROMOTED" && versionId !== null ? [{ contractId, versionId }] : []
-      ),
-    )
-  ) {
-    return readMeetingsProjection(options);
-  }
-  // A serving copy composed before couplings recorded their routes cannot
-  // apply the pin's checks; the composing reader applies them to the same
-  // pinned versions (batch D's second reproof: production's copy was written by
-  // a runner on the previous release).
-  if (pin !== null && !preparedStatesPinnedChecks(prepared.composedFrom as readonly FreshCheckCoupling[], pin)) {
-    return readMeetingsProjection(options);
-  }
   const partitions = partitionsFromCoupling(prepared.composedFrom);
-  // Every registered partition composed from its OWN pointer; a held version
-  // in the coupling is a retired route's, not a registered partition's.
   const ownComposed = new Set(prepared.composedFrom.map((entry) => entry.contractId));
   const allComposed = MEETING_PARTITION_CONTRACTS.every((partition) => ownComposed.has(partition.id));
-  // A quiet re-check since the composition confirmed a version without
-  // rewriting this row: "Last checked" and the re-read rows say so
-  // (lib/meetings/fresh-checks.ts). No check: the payload is served verbatim.
-  // Under a Reader proof pin the checks are the capture's, exactly as the
-  // composing reader applies them, and nothing is read live.
   const nowMs = options.now !== undefined && Number.isFinite(Date.parse(options.now)) ? Date.parse(options.now) : Date.now();
-  const checks = meetingFreshChecks(pin === null
-    ? await servedPreparedChecks(store, options.store ?? DEFAULT_PREPARED_STORE, prepared, nowMs)
-    : pinnedPreparedChecks(prepared.composedFrom as readonly FreshCheckCoupling[], pin));
+  const checks = meetingFreshChecks(await servedPreparedChecks(store, options.store ?? DEFAULT_PREPARED_STORE, prepared, nowMs));
   return {
     kind: "PROMOTED",
     value: applyMeetingFreshChecks(prepared.payload as MeetingsSnapshot, checks),

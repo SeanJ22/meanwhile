@@ -1,24 +1,11 @@
 /**
- * The sun test, as a number.
+ * `pnpm contrast` — the sun test, as a number.
  *
- *   pnpm contrast
- *
- * The tester's field finding, 2026-08-15: gold-on-light is unreadable in
- * phone glare. That is not a WCAG failure — it is a WCAG *pass* that means
- * nothing outdoors, because the standard's 4.5:1 was calibrated for a screen
- * you can see. Direct sun raises the black level of a phone display by more
- * than the whole contrast budget of a 4.5:1 pair.
- *
- * So this repo carries two bars, and the second one is the real one:
- *
- * - **4.5:1** — WCAG AA for body text. Necessary, never sufficient here.
- * - **7:1** — the SUN bar, WCAG AAA's number used for a different reason.
- *   Every reader-facing text token must clear it against the surface it
- *   actually renders on, in BOTH themes.
- *
- * Reads the tokens straight out of `app/globals.css` rather than a copy, so
- * it cannot drift from what ships. Run it after any palette change; a pair
- * below the sun bar is reported and exits non-zero.
+ * Two bars: 4.5:1 (WCAG AA) and 7:1, the sun bar. Direct sun on a phone
+ * raises the display's black level past a 4.5:1 pair's whole budget, so every
+ * reader-facing text token must clear 7:1 against the surface it renders on,
+ * in both themes. Reads the tokens from `app/globals.css` itself; a pair below
+ * its bar exits non-zero.
  */
 
 import { readFileSync } from "node:fs";
@@ -52,17 +39,11 @@ function ratio(a: string, b: string): number {
 
 /**
  * Token values for one theme block. `:root` is dark; `[data-theme="light"]`
- * overrides a subset, so light inherits everything it does not restate —
- * which is exactly how the stylesheet behaves and exactly the trap a
- * hand-maintained copy of this table would fall into.
+ * overrides a subset, so light inherits everything it does not restate.
  */
 function tokensIn(css: string, selector: string): Map<string, string> {
-  // Anchored at a line start, because both selector strings also appear in
-  // this stylesheet's own header comment — the first attempt matched the
-  // COMMENT, so the light block was never read and light reported dark's
-  // numbers with a straight face. A parser that finds the wrong thing and
-  // says nothing is the empty-success shape, in a script whose whole job is
-  // to catch things.
+  // Anchored at a line start: both selector strings also appear in the
+  // stylesheet's header comment.
   const at = css.indexOf(`\n${selector} {`);
   if (at < 0) throw new Error(`no ${selector} block at a line start`);
   const open = css.indexOf("{", at);
@@ -77,8 +58,7 @@ function tokensIn(css: string, selector: string): Map<string, string> {
   return out;
 }
 
-/** `--link: var(--accent-local)` has to become a colour before it can be
- *  measured. One hop is all the stylesheet uses; more would be a smell. */
+/** Resolves one `var(--x)` hop, which is all the stylesheet uses. */
 function resolve(tokens: Map<string, string>): Map<string, string> {
   const out = new Map(tokens);
   for (const [key, value] of tokens) {
@@ -102,15 +82,8 @@ const PAIRS: { text: string; on: string[]; note: string }[] = [
 ];
 
 /**
- * A FACT stated on a fill, held to the SUN bar, not AA.
- *
- * The party IdentityChip fills in its assigned colour and writes the party over
- * that fill. Unlike `--action` (a pressable control) it is a NONINTERACTIVE
- * FACT (`.id-chip`, docs/DESIGN.md: "an identity fact — party, state, chamber,
- * standing"), and its label is 12–13px at weight 600 — normal-size text, not the
- * large-and-bold target WCAG's 4.5:1-as-AAA is calibrated for. So the label
- * against its fill is held to the same 7:1 every other reader-facing fact clears,
- * for every filed party in both themes.
+ * A fact stated on a fill (the party chip), held to the sun bar, not AA: it is
+ * not a control, and its label is normal-size text (12–13px at weight 600).
  */
 const FACT_FILLS: { text: string; on: string; note: string }[] = [
   { text: "--party-on", on: "--party-democratic", note: "party chip (a stated fact)" },
@@ -123,22 +96,11 @@ const FACT_FILLS: { text: string; on: string; note: string }[] = [
 /** Filled controls: the text colour sits ON the accent, not on the page. */
 const FILLED: { text: string; on: string; note: string }[] = [
   { text: "--action-on", on: "--action", note: "the primary filled action" },
-  // The party chip moved OUT of FILLED to FACT_FILLS (below) at the 7:1 sun bar:
-  // it is a noninteractive identity FACT (.id-chip, docs/DESIGN.md), not a
-  // pressable control, and its label is 12–13px/600 — normal text, not the
-  // large, bold target the 4.5:1 AA exception is for. AA is not sufficient here.
-  // Item 5: the vote and reaction pills.
   { text: "--vote-text", on: "--vote-yes", note: "Voted yes" },
   { text: "--vote-text", on: "--vote-no", note: "Voted no" },
   { text: "--vote-text", on: "--vote-neutral", note: "present / recorded / unsure" },
-  // Item 5's deeper funding shades, which the pill guard also measures.
   { text: "--vote-text", on: "--vote-yes-strong", note: "Love it" },
   { text: "--vote-text", on: "--vote-no-strong", note: "Hate it" },
-  // Item 10 (2026-08-16): the selected TIER TOGGLE. It was never on this
-  // list, which is how the light theme's Local fill stayed #6d4600 — the
-  // dead interactive brown's own hex — through a palette pass whose whole
-  // point was killing that colour. A fill nobody measures is a fill nobody
-  // notices.
   { text: "--tier-fill-on", on: "--tier-fill-local", note: "selected Local toggle" },
   { text: "--tier-fill-on", on: "--tier-fill-state", note: "selected State toggle" },
   {
@@ -146,32 +108,12 @@ const FILLED: { text: string; on: string; note: string }[] = [
     on: "--tier-fill-national",
     note: "selected Federal toggle",
   },
-  /*
-   * **MTG-14 (2026-08-28): THE MEETING STATUS PILLS, WHICH NOBODY HAD EVER
-   * MEASURED.**
-   *
-   * `--online` appeared in none of PAIRS, FILLED or EXEMPT, so the pill a
-   * reader is shown to explain why a sitting is not on the map had entirely
-   * unmeasured contrast — and so did its two siblings, which have shipped
-   * longer. That is the tier-fill finding again, in the comment three entries
-   * up: *a fill nobody measures is a fill nobody notices.* Three tokens, one
-   * `.meeting-status-pill` rule, and `color: var(--bg)` on all of them.
-   *
-   * **`--concluded` on light FAILS, at 3.81:1.** It is a real defect and it is
-   * shipping; the fix is a darker light-theme value for the token, and it is
-   * reported rather than exempted. An exemption written to make a failing pair
-   * pass is how a bar stops meaning anything.
-   */
   { text: "--bg", on: "--concluded", note: "Concluded pill" },
   { text: "--bg", on: "--canceled", note: "Cancelled pill" },
   { text: "--bg", on: "--online", note: "Online only pill" },
 ];
 
-/**
- * Deliberately NOT held to the sun bar, each with its reason. A list, not an
- * absence — an exemption nobody can see is how a bar quietly stops meaning
- * anything.
- */
+/** Deliberately not held to the sun bar, each with its reason (printed with every run). */
 const EXEMPT: Record<string, string> = {
   "--text-muted":
     "pure metadata (separators, timestamps). Never carries guidance or record; a reader who cannot read it has lost nothing.",
@@ -188,8 +130,7 @@ export function auditContrast(css: string): { failures: number; rows: string[] }
   const dark = resolve(darkRaw);
   const light = resolve(lightRaw);
 
-  // The parse must not silently read one block twice — that is exactly the bug
-  // this script shipped with for ten minutes.
+  // The parse must not read one block twice.
   if (dark.get("--bg") === light.get("--bg")) {
     throw new Error("light and dark parsed to the same --bg; the block anchor is wrong");
 }
@@ -235,9 +176,7 @@ for (const [themeName, tokens] of [
       failures += 1;
       continue;
     }
-    // A filled control is a large, bold, isolated target. AA is the right bar
-    // for it, and stating that here is what keeps it from drifting to "we
-    // just lowered the bar for the thing that failed".
+    // A filled control is a large, bold, isolated target: AA is its bar.
     check(`${pair.text} on ${pair.on}`, ratio(fg, bg), AA);
   }
   for (const pair of FACT_FILLS) {
@@ -248,8 +187,6 @@ for (const [themeName, tokens] of [
       failures += 1;
       continue;
     }
-    // A stated FACT on a fill, held to the sun bar (see FACT_FILLS above): the
-    // label is normal-size text, so AA is not sufficient — 7:1, both themes.
     check(`${pair.text} on ${pair.on}`, ratio(fg, bg), SUN);
   }
 }

@@ -1,4 +1,6 @@
 #!/usr/bin/env tsx
+import { readOfficialStateLegislatorsProjection } from "../lib/state-rollcalls/legislators.ts";
+import { readCompleteResponse } from "../lib/sources/source-bytes.ts";
 /**
  * Standing official state-legislator identity boundary for AZ and NJ.
  *
@@ -100,7 +102,7 @@ async function main(): Promise<void> {
         }
         const raw = await readPublisherBody(
           `${target.publisher} current legislative roster`,
-          () => result.text(),
+          async () => new TextDecoder("utf-8",{fatal:true}).decode(await readCompleteResponse(result,16*1024*1024)),
         );
         requestSignal.throwIfAborted();
         if (raw.trim() === "") {
@@ -141,7 +143,10 @@ async function main(): Promise<void> {
     return;
   }
 
+  const prior = await readOfficialStateLegislatorsProjection(target.jurisdiction,{store,now:retrievedAt,bypassCache:true});
+  if (prior.kind === "STORE_UNREACHABLE") throw Error("STATE_PEOPLE_PRIOR_UNAVAILABLE");
   const candidate = officialStateLegislatorsCandidate({
+    priorRoster: prior.kind === "PROMOTED" || prior.kind === "BOOTSTRAP" ? prior.value.roster : null,
     sourceId: target.sourceId,
     jurisdiction: target.jurisdiction,
     requestedUrl: target.probeUrl,
@@ -180,7 +185,7 @@ async function main(): Promise<void> {
     ...routineReceiptFields(candidate, outcome),
     structuralReleaseContract: ZERO_RELEASE_EVENTS,
   }));
-  if (!outcome.promoted) process.exitCode = 2;
+  if (!outcome.promoted && !outcome.confirmed) process.exitCode = 2;
 }
 
 const invokedDirectly = (process.argv[1] ?? "").replace(/\\/g, "/").endsWith("scripts/state-legislators.mts");

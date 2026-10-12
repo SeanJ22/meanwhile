@@ -1,17 +1,12 @@
 /**
- * The frozen method store as a test fixture, and the manual entries it folds into.
- *
- * `tests/fixtures/method-knowledge.json` is the last copy of the store that
- * `data/method/knowledge.json` held before the field manual became the one
- * store. Production code never reads it; tests that need real route data
- * (the floor, the claim classes, the projection) read it here, and the tests
- * of the manual read the same routes back through `lib/method/manual-bridge.ts`.
+ * The frozen method store as a test fixture (`tests/fixtures/method-knowledge.json`), and the manual entries it
+ * folds into. Production code never reads it.
  */
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { emptyFieldManual, fieldManualEntryId, upsertEntries, type FieldManualEntry, type FieldManualOutcome, type FieldManualStore } from "../lib/control-plane/field-manual.ts";
+import { fieldManualEntryId, foldEntries, type FieldManualEntry, type FieldManualOutcome, type FieldManualStore } from "../lib/control-plane/field-manual.ts";
 import { KNOWLEDGE_SOURCE, METHOD_VERSION_KIND, ROUTE_ENTRY_KIND } from "../lib/method/manual-bridge.ts";
 import type { MethodKnowledge } from "../lib/method/knowledge.ts";
 
@@ -88,5 +83,5 @@ export function methodVersionEntry(store: Pick<MethodKnowledge, "version" | "upd
 
 /** A manual seeded with the frozen store: every route whole, plus the version entry. */
 export function seededFieldManual(store: MethodKnowledge = methodFixture()): FieldManualStore {
-  return upsertEntries(emptyFieldManual(), [...knowledgeEntries(store), methodVersionEntry(store)], "2026-09-30");
+  return ({ entries: foldEntries([...knowledgeEntries(store), methodVersionEntry(store)]) });
 }

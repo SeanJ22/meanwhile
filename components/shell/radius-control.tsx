@@ -7,23 +7,15 @@ import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
 import { useUi, useUiDispatch } from "@/lib/state/provider";
 
 /**
- * Meeting radius.
- *
- * Ports Edia's `.prox-control`: a toggle, a paired range and number input, a
- * unit label and a live count, with the radius row hidden until the toggle is
- * on.
- *
- * The cascade in lib/meetings/query.ts works in km with rungs at 25/60/150, so
- * this is a continuous slider with those as snap points and the rung the
- * current result actually came from named underneath. That last part is the
- * point: the cascade widens on its own, and a reader who cannot see which rung
- * answered cannot tell "nothing near you" from "nothing within 95 miles".
+ * Meeting radius: a toggle, a paired range and number input, and the rung the
+ * current result came from named underneath. The cascade in
+ * lib/meetings/query.ts works in km with rungs at 25/60/150, used as snap
+ * points.
  */
 
 const MIN_KM = 5;
 const MAX_KM = 200;
-/** Snap when within this of a rung, so the rungs are easy to land on without
- *  making the slider feel notched. */
+/** Snap distance to a rung, in km. */
 const SNAP_KM = 6;
 
 function snap(km: number): number {
@@ -55,12 +47,7 @@ export function RadiusControl() {
           onChange={(e) =>
             dispatch(
               e.target.checked
-                ? // Start from the rung the visible results actually came
-                  // from, not from the untouched default. On a zip the cascade
-                  // widened for — 85641 lands on the 60 km rung — seeding 25
-                  // discarded every meeting the reader was looking at the
-                  // instant they touched the control, and the map went blank
-                  // with no explanation.
+                ? // Seed from the rung the visible results came from, so touching the control keeps them.
                   { type: "radius/set", km: result?.radiusKm ?? km }
                 : { type: "radius/clear" },
             )

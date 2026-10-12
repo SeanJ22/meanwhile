@@ -16,39 +16,15 @@ import { getCandidateTargetIds } from "@/lib/ballot/candidate-targets";
 import { knownBodySubjectIds } from "@/lib/registry/server";
 
 /**
- * `POST /api/demand-signal` — the reader asking us to go get a record sooner.
- * (OWN-Q6, the owner's amendment on Q6/Q7, authorized 2026-08-31.)
- *
- * ## What it accepts, and everything else is a 400
- *
  * ```
- *   subjectType   BODY | CANDIDATE          the two cards the pill appears on
+ *   subjectType   BODY | CANDIDATE
  *   subjectId     must exist in its canonical production authority
- *   signal        WANT_THIS_SOONER          a fixed enum of one
- *   lat / lng     optional, for approximate location only
+ *   signal        WANT_THIS_SOONER
+ *   lat / lng     optional, approximate location only
  * ```
  *
- * **There is no text field and no key field, so there is nothing to validate
- * about either.** No free text on any path (the owner's instruction), and no
- * continuity key at all — `reactions` carries one so a reader can change their
- * mind, and it is the nearest thing to an identifier this product holds. A
- * reader who taps twice writes two rows and nothing relates them.
- *
- * ## Why there is no GET
- *
- * Results are never shown to readers, in any form, including aggregate. The
- * write module exports no read for the same reason: a missing function is a
- * stronger guarantee than a filter.
- *
- * ## The rate limits it does and does not use
- *
- * Same-origin and the in-memory per-IP window, both under `ripcord.rateLimits`
- * exactly as the reaction route is. The cross-instance per-KEY counter is NOT
- * used and cannot be: it counts by the continuity key this route deliberately
- * does not have. That is a real, stated cost of the no-identity instruction —
- * this endpoint is defended by origin and IP alone — and it is the right side
- * of the trade, because the alternative is putting an identifier on the
- * reader's device to protect a counter nobody reads.
+ * Anything else is a 400. There is no text field, no continuity key and no GET: results are never shown
+ * to readers. Defended by same-origin and the per-IP window only.
  */
 
 export const runtime = "nodejs";
@@ -147,10 +123,8 @@ async function postWithSettings(request: Request) {
   }
 
   /*
-   * Where the reader was looking — resolved SERVER-SIDE from the map view, the
-   * same approximate-location basis as the search log, and never an address. A
-   * `null` on the wire is ABSENT rather than the equator: `Number(null)` is 0,
-   * and the reaction route's item-1b note records what that costs.
+   * Where the reader was looking, resolved server-side from the map view, never an address. A `null` on the
+   * wire is absent, not the equator: `Number(null)` is 0.
    */
   const lat = typeof submission.lat === "number" ? submission.lat : Number.NaN;
   const lng = typeof submission.lng === "number" ? submission.lng : Number.NaN;

@@ -1,14 +1,4 @@
-/**
- * CH-05 — THE FIRST HUNT STARTS IN THE SAME ROUND AS THE ORDER.
- *
- * The owner's Send writes new standing obligations in the middle of a round,
- * after that round's due list was made. They used to join through their
- * providers next round, so a Send's first attempt waited a whole round. Here
- * the rows the step just wrote are scheduled against the same clock the round
- * used, and the due ones are handed back to be added to this round's work.
- *
- * PURE: it reads rows and a clock; the caller syncs the rows and owns the lists.
- */
+/** Schedules the rows a Send just wrote against the round's own clock, so the due ones join this round's work. Pure. */
 import { isScheduled, scheduleObligation } from "./obligation.ts";
 import type { StandingObligation } from "./durable.ts";
 

@@ -1,13 +1,8 @@
 /**
- * **FE-27 · SPEED IS MEASURED BY OUR OWN REGULAR TEST VISITS.**
- *
- * Sean decided (Oct 3, D8) not to collect real readers' page timing or errors.
- * Speed is instead measured by FE-02's worst-case pass run on a schedule: our
- * own browsers, fresh each visit, at ZIPs sampled from the published places.
- * This file is the schedule: a lane for the runner's independent scheduler, and
- * the question "is a visit due". The pass itself is scripts/worst-case-speed-pass.mts,
- * started as a child by scripts/speed-visits-runner.mts, so a slow visit never
- * holds up another lane. Plain code; no AI, no reader data.
+ * Speed is measured by our own scheduled test visits, never by real readers'
+ * timing: the worst-case speed pass, run as a child
+ * (scripts/worst-case-speed-pass.mts) on the runner's independent scheduler,
+ * at ZIPs sampled from the published places. This file is the schedule.
  */
 import type { IndependentRuntimeLane } from "../ops/independent-runtime-pass.ts";
 
@@ -16,12 +11,12 @@ export const SPEED_VISITS_TICK_MS = 15 * 60_000;
 export const SPEED_VISITS_EVERY_MS = 6 * 3_600_000;
 export const SPEED_VISITS_SINGLETON_PORT = 49_374;
 
-/** The way back: off unless WTP_SPEED_VISITS=on, so the runner behaves as before until the first scheduled pass is checked live. */
+/** Off unless WTP_SPEED_VISITS=on. */
 export function speedVisitsEnabled(env: Readonly<Record<string, string | undefined>>): boolean {
   return env.WTP_SPEED_VISITS === "on";
 }
 
-/** Register on the runner's independent scheduler: `run` starts scripts/speed-visits-runner.mts as a child. */
+/** Register on the runner's independent scheduler; `run` starts the speed pass as a child. */
 export function speedVisitsLane(run: () => Promise<void>): IndependentRuntimeLane {
   return { id: "speed-visits", everyMs: SPEED_VISITS_TICK_MS, run };
 }

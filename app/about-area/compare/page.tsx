@@ -11,24 +11,7 @@ const FACT_STATES = AREA_FACTS.map(row => ({ usps: row.state, name: row.stateNam
 import { Logo } from "@/components/brand/logo";
 import { titleFor } from "@/lib/brand";
 
-/**
- * **Two states, side by side** — tracker **D47**, the author's disposition
- * "Build pre H".
- *
- * The moving-here page carried only a one-line state picker; this is the
- * comparison that link always implied. Same questions down the left, one
- * column per state, every answer cited to that state's own agency.
- *
- * **Nothing here ranks.** No score, no total, no "better for families", no
- * ordering derived from the content — the column order is `?a=`/`?b=` as the
- * reader asked for it, and the row order is the left state's own authoring
- * order. `CLAUDE.md`'s no-composite-score rule arriving on a new surface: the
- * moment the product says one state is better, its neutrality claim is gone.
- *
- * The row's original reasoning — build only when demand appears in the
- * refusal and search logs — is superseded by the author's disposition and is
- * recorded on the tracker row rather than re-derived here.
- */
+/** Nothing here ranks: column order is `?a=`/`?b=` as asked, and row order is the left state's own authoring order. */
 
 export const runtime = "nodejs";
 
@@ -67,14 +50,7 @@ function Cell({ cell }: { cell: ComparisonCell }) {
   );
 }
 
-/**
- * One pill per selected state, each removing itself; the rest offered to add.
- *
- * `?a=` and `?b=` are the whole state of this page, so every pill is a plain
- * `Link` and there is nothing to keep in sync — a client component holding a
- * mirrored copy of the selection is how two surfaces come to disagree about
- * what is selected.
- */
+/** `?a=` and `?b=` are the whole state of this page, so every pill is a plain `Link` with nothing to keep in sync. */
 function StatePills({
   a,
   b,
@@ -148,21 +124,6 @@ export default async function CompareStatesPage({
 
   return (
     <main className="mw-page mx-auto max-w-4xl px-4 py-8 text-paper">
-      {/*
-        **AZ-2 (item 5, 2026-08-23, the author's ruling) — Back goes to the
-        MAP.**
-
-        It went to `/about-area?state=AZ` — one state, alone, which is neither
-        where the reader came from nor where they were trying to get to. The
-        author: *Back returns to Arizona alone when the expected destination is
-        the map.* The map is the product's home surface and the only
-        destination that is right from every path into this page.
-
-        Changing which comparison is on screen is the PILLS' job now, not
-        Back's — see the row below. Two controls that both change what is being
-        compared, one of them by navigating away, is the friction that made the
-        destination feel wrong in the first place.
-      */}
       <p className="text-[0.8125rem]">
         <Link
           href={zip ? `/?zip=${zip}` : "/"}
@@ -171,13 +132,7 @@ export default async function CompareStatesPage({
           ← Back to the map
         </Link>
       </p>
-      {/* ITEM J (2026-09-01): the page eyebrow was the product name typed as
-          display text in a 10px uppercase MONO treatment — the register this
-          system reserves for numerals and identifiers, worn by the one string
-          that is neither. It is the lockup now, at the 18px wordmark floor. */}
       <div className="mt-3">
-        {/* BAL-40 (2026-09-02): logo-first hierarchy — the wordmark leads the
-            page-title headline below it. */}
         <Logo variant="wordmark" size={30} />
       </div>
       <h1 className="mt-1 text-xl font-semibold">
@@ -186,22 +141,6 @@ export default async function CompareStatesPage({
           : "Two states, side by side"}
       </h1>
 
-      {/*
-        **AZ-2 — the selected states are PILLS in the title bar, and
-        deselecting one drops it from the comparison.**
-
-        The author's instruction, and the reason it beats a reset link: a
-        comparison holding one pair at a time is right, but the reader had no
-        way to say *keep Arizona, swap the other one* except by going back and
-        starting over. A pill that removes its own state leaves the other one
-        selected and the picker open beneath it, which is the gesture the
-        product already teaches everywhere else.
-
-        Playful register — this is an interaction surface, not a claim
-        surface. Nothing here orders the states by anything but the manifest's
-        own onboarding order (`FACT_STATES`), because an ordering derived from the
-        content would be a ranking wearing an ordering.
-      */}
       <StatePills a={a} b={b} zip={zip} />
       <p className="mt-3 max-w-2xl text-[0.8125rem] leading-relaxed text-paper-dim">
         {COMPARISON_INTRO}
@@ -212,9 +151,6 @@ export default async function CompareStatesPage({
           <h2 className="font-mono text-[0.625rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-muted">
             Pick two
           </h2>
-          {/* The manifest's own onboarding order, never an order derived from
-              the content — "most different first" would be a ranking wearing
-              an ordering. */}
           <ul className="mt-3 space-y-2">
             {FACT_STATES.flatMap((left) =>
               FACT_STATES.filter((right) => right.usps !== left.usps).map((right) => (
@@ -256,9 +192,6 @@ export default async function CompareStatesPage({
             ))}
           </div>
 
-          {/* The denominator, stated rather than implied. A comparison that
-              aligned nothing would render as two empty columns and read as
-              "these states are the same". */}
           <p className="mt-6 text-[0.75rem] leading-relaxed text-muted">
             {comparison.census.rows} questions, {comparison.census.bothAnswered}{" "}
             answered for both states.

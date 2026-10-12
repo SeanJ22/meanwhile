@@ -2,7 +2,6 @@ import { currentBodyRosters, rosterGapForBody } from "../registry/body-rosters.t
 import type { AskContact } from "./contacts.ts";
 import type { EvidenceGap, EvidenceRecord, EvidenceSubject } from "./evidence.ts";
 
-/** Attach only gaps from rosters actually used by this subject/its shown people. */
 export function rosterGapEvidenceFor(subject: EvidenceSubject | null, contacts: readonly AskContact[], canonicalOfficialIds: ReadonlySet<string>) {
   const records: EvidenceRecord[] = [];
   const gaps: EvidenceGap[] = [];

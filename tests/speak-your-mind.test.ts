@@ -18,14 +18,7 @@ import { KNOWN_GOOD, triage, triageRules } from "../lib/speak/triage.ts";
 
 const ROOT = process.cwd();
 
-/**
- * **BC-11 — SPEAK YOUR MIND, and its four constitutional rules.**
- * (2026-08-24.)
- *
- * The brief states them as rules with the word "constitutional" attached, and
- * asks that each ship with its enforcing test NAMED. This file is that, one
- * section per rule, in the brief's order.
- */
+/** Speak your mind, and its four rules: one section per rule. */
 
 /* ====================================================================== *
  *  RULE 1 — DISTRICT-STAMPED, JOINED TO NOTHING
@@ -56,7 +49,7 @@ test("BC-11 RULE 1: the store holds a district and no way to reach a person", ()
 test("BC-11 RULE 1: the continuity key is in its OWN digest space", () => {
   /*
    * The load-bearing assertion, and it is over the VALUES rather than over the
-   * column names (A-001, RULING 132). Three stores hash the same kind of
+   * column names. Three stores hash the same kind of
    * browser-minted key. If two of them digested the same input they would be
    * equality-joinable, and the n-stores rule would be broken by arithmetic
    * rather than by a foreign key anybody could see.
@@ -91,11 +84,11 @@ test("BC-11 RULE 1: no account, no email, no address reaches the write path", ()
    * Comments stripped first. That file's own header explains that the store
    * holds no email and no address, so a sweep over the raw text would flag the
    * record of the guarantee as a breach of it — an instrument that cannot tell
-   * shipped code from a comment about shipped code (RULING 110, in a test).
+   * shipped code from a comment about shipped code.
    */
   const write = raw.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/[^\n]*/g, "");
-  // Enforced by ABSENCE, the way RULING 112 enforces no-summarisation: there
-  // is no field for these, so no caller can supply one by accident.
+  // Enforced by ABSENCE: there is no field for these, so no caller can supply
+  // one by accident.
   for (const forbidden of ["email", "address", "accountId", "userId", "replyTo"]) {
     assert.ok(
       !new RegExp(`\\b${forbidden}\\b`, "i").test(write),
@@ -125,8 +118,8 @@ test("BC-11 RULE 3: an email, a phone and a street address are removed AND flagg
   assert.ok(!result.text.includes("@example.com"), `email survived: ${result.text}`);
   assert.ok(!/123 Main Street/.test(result.text), `address survived: ${result.text}`);
 
-  // The FLAG is the half the existing T09 scrub could not provide: a scrubbed
-  // string and a clean string are indistinguishable afterwards.
+  // The FLAG is what a scrub alone cannot provide: a scrubbed string and a
+  // clean string are indistinguishable afterwards.
   assert.deepEqual(result.flags.sort(), [
     "EMAIL",
     "PHONE_OR_NUMBER",
@@ -212,8 +205,7 @@ test("BC-11 RULE 4: a threat is HELD, with the tier recorded and nobody notified
 
 test("BC-11 RULE 4: harsh political speech is NEVER held — the product asked for it", () => {
   /*
-   * `docs/abuse-policy.md`: political speech about people seeking or holding
-   * power is harsh by design, and harshness is the signal buyers want.
+   * Political speech about people seeking or holding power is harsh by design, and harshness is the signal buyers want.
    * **Over-filtering degrades the product to guard against a rare case**, and a
    * box that promises you can say what you would say to their face and then
    * swallows it would be worse than not asking.
@@ -230,8 +222,8 @@ test("BC-11 RULE 4: harsh political speech is NEVER held — the product asked f
 
 test("BC-11 RULE 4: nothing in the triage path can contact anybody", () => {
   // Enforced by ABSENCE. There is no notifier here and no caller that could be
-  // one — `docs/abuse-policy.md`: a classifier hit is never sufficient to
-  // contact law enforcement, and every report passes human review first.
+  // one: a classifier hit is never sufficient to contact law enforcement, and
+  // every report passes human review first.
   const triageSrc = readFileSync(join(ROOT, "lib", "speak", "triage.ts"), "utf8");
   const writeSrc = readFileSync(join(ROOT, "lib", "db", "speak.ts"), "utf8");
   for (const src of [triageSrc, writeSrc]) {
@@ -270,7 +262,7 @@ test("BC-11 RULE 4: the intake limiter's attestation applies to this surface", (
 
 test("BC-11: nothing a reader writes here is rendered back to any reader", () => {
   /*
-   * `CLAUDE.md`'s no-user-to-user rule: reactions are write-only from the
+   * Reactions are write-only from the
    * reader's perspective, because showing aggregates anchors later respondents
    * and corrupts the data being sold. The same reasoning governs this, and the
    * default is recorded as REVERSIBLE.

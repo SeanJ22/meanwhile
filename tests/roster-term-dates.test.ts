@@ -3,9 +3,9 @@ import test from "node:test";
 
 import { isoTermDate, isoTermDateOnPage } from "../lib/civic-data/term-dates.ts";
 import { pageWords } from "../lib/control-plane/promotion/section3.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
-await installRegistryRuntimeFirstSeeds();
+await installRegistryAuthority();
 
 const { rosterHoldersForBody, BODY_ROSTERS } = await import("../lib/registry/body-rosters.ts");
 

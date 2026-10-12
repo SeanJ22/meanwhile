@@ -1,46 +1,23 @@
 /**
- * **ANY REGISTERED STATE'S GOVERNMENTS, AS THE JURISDICTION REGISTRY A SEND
- * READS.** (2026-09-25. docs/rulings.md §1: Admin must support adding and
- * tracking any geography through work creation, discovery, acquisition,
- * verification and public delivery.)
- *
- * A Send (Admin → `expansion.scope.set`, or a DISPATCH) creates work only from
- * a jurisdiction registry: who the governments are, and what each one owes
- * (MW-028, `lib/control-plane/expansion/dispatch-work.ts`). The reviewed
- * registries — the promoted operational reference — cover Arizona, New
- * Hampshire and New Jersey, and they WIN wherever they exist. Every other
- * state, DC and territory is registered already: REGISTRATION, one promoted
- * version per state, from the 2022 Census of Governments (TIGER/Line 2023
- * functional status for a territory). This module reads a state's registration
- * as a registry in the shape dispatch-work needs, so a Send in any registered
- * state creates work with no code change:
+ * Any registered state's governments, as the jurisdiction registry a Send reads. A Send creates work
+ * only from a jurisdiction registry (`lib/control-plane/expansion/dispatch-work.ts`). Reviewed registries
+ * win wherever they exist; every other state, DC and territory is read here from its promoted
+ * registration, so a Send in any registered state creates work with no code change:
  *
  * ```
- *   the governments   every government row of the committed reference the
- *                     promoted version was built from (its referenceSha256),
- *                     under the jurisdiction ids the reviewed registries use
+ *   the governments   every government row of the committed reference the promoted version was
+ *                     built from, under the reviewed registries' jurisdiction ids
  *                     (`<st>:<class>:<slug>`, `-<pid6>` on a collision)
- *   the body          the body that version minted for the government, on its
- *                     Census division (`ocdId`, `bodyId`); none where
- *                     registration pairs the government with no division
- *   what it owes      its meetings, and nothing else: no statute routing is
- *                     read for these states, so no campaign-finance, ballot or
- *                     roster route is invented. Where the Census of Governments
- *                     records the government's own web address, the own-site
- *                     MEETINGS source (DISCOVERY_OWED: `own-site-meetings`);
- *                     where it records none — every territory government —
- *                     no source, so the need is `find-own-site`
+ *   the body          the body that version minted for the government on its Census division;
+ *                     none where registration pairs the government with no division
+ *   what it owes      its meetings only. Where the Census records a web address, the own-site
+ *                     MEETINGS source (`own-site-meetings`); where it records none, `find-own-site`
  * ```
  *
- * Only the promoted version is read: it is the one readers use, and the
- * committed reference is read only as the exact input that version names (its
- * `referenceSha256`), never in its place. A state with no promoted registration,
- * a read that fails, or a promoted version built from another reference than
- * the committed one refuses the state by name: nothing is guessed, and its
- * governments are named as blocked rather than created.
+ * Only the promoted version is read. A state with no promoted registration, a failed read, or a version
+ * built from another reference is refused by name and its governments are named as blocked.
  *
- * SERVER-ONLY (node:fs). Only the standing runner and tests read it; a request
- * path never does.
+ * Server-only (node:fs); a request path never reads it.
  */
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -135,7 +112,7 @@ export function registrationOwnSiteSource(census: string): JurisdictionSource {
     state: "DISCOVERY_OWED",
     owed:
       "walk this row's `ownWebAddress` for the body's own meeting notices, agendas, minutes and officeholder roster, " +
-      "under RULING 166's body-own-publication-first order. The address is the Census's self-reported record, read " +
+      "under the body-own-publication-first order. The address is the Census's self-reported record, read " +
       "with minimal quality control; an address is not an acquisition.",
     citation: `${census} — the 2022 Census of Governments files this state's registration reference was built from (web_address)`,
   };
@@ -163,7 +140,7 @@ export function registrationJurisdictionRegistry(input: RegistrationRegistryInpu
   if (promoted.model.state.toLowerCase() !== state) {
     throw new Error(`REGISTRATION_STATE_MISMATCH:${postal}: the promoted version ${promoted.versionId} is ${promoted.model.state}'s`);
   }
-  if (promoted.model.vintage.referenceSha256 !== loaded.sha256) {
+  if (!promoted.model.governments && promoted.model.vintage.referenceSha256 !== loaded.sha256) {
     throw new Error(
       `REGISTRATION_REFERENCE_MISMATCH:${postal}: the promoted registration ${promoted.versionId} was built from reference ` +
         `${promoted.model.vintage.referenceSha256}, and the committed reference is ${loaded.sha256}; neither is read until they agree`,
@@ -179,7 +156,16 @@ export function registrationJurisdictionRegistry(input: RegistrationRegistryInpu
   let withSite = 0;
   const rowsRead: Record<string, number> = {};
   const jurisdictions: Jurisdiction[] = [];
-  for (const [pid6, jurisdictionId, name, govType, division, how, alternate] of ref.governments) {
+  const listingById = new Map((promoted.model.governments ?? []).flatMap(row => {
+    const native = row.nativeIds.census_pid6 ?? row.nativeIds.tiger_geoid;
+    return native ? [[native, row] as const] : [];
+  }));
+  const rows = promoted.model.governments ? [
+    ...ref.governments.filter(row => row[3] === "STATE"),
+    ...[...listingById].map(([pid, listing]) => [pid, listing.jurisdictionId ?? listing.id, listing.name, listing.governmentClass,
+      -1, listing.nativeIds.tiger_geoid ? "TIGER_FUNCSTAT" : "NATIVE_LISTING", -1] as const),
+  ] : ref.governments;
+  for (const [pid6, jurisdictionId, name, govType, , how] of rows) {
     const govClass = CLASS_OF[govType];
     if (govClass === undefined) continue;
     const enumeratedFrom =
@@ -193,15 +179,12 @@ export function registrationJurisdictionRegistry(input: RegistrationRegistryInpu
     rowsRead[enumeratedFrom] = (rowsRead[enumeratedFrom] ?? 0) + 1;
     /* A territory government has no Census of Governments row, so no address is recorded for it: none is invented. */
     const facts = govType === "STATE" || how === "TIGER_FUNCSTAT" ? undefined : census.byPid.get(pid6);
-    const site = ownWebAddress(facts?.web ?? "");
+    const site = ownWebAddress(listingById.get(pid6)?.website ?? facts?.web ?? "");
     if (site !== null) withSite += 1;
-    const slot = govType === "SCHOOL DISTRICT" || govType === "DEPENDENT SCHOOL SYSTEM" ? "board" : "governing";
-    const pairedIds = govType === "STATE" || division < 0 ? [] : [...new Set([division, alternate]
-      .filter(index => index >= 0)
-      .map(index => ref.divisions[index]?.[0])
-      .filter((id): id is string => id !== undefined))];
-    const heldBodies = pairedIds.map(id => bodyById.get(id + "#" + slot)).filter(body => body !== undefined);
+    const heldBodies = [...bodyById.values()].filter(body => body.censusId === pid6);
     const body = heldBodies.length === 1 ? heldBodies[0] : undefined;
+    const listing = listingById.get(pid6);
+    const association = listing?.associations[0];
     jurisdictions.push({
       id: jurisdictionId,
       stateCode: postal,
@@ -211,9 +194,9 @@ export function registrationJurisdictionRegistry(input: RegistrationRegistryInpu
       enumeratedFrom,
       ownWebAddress: site,
       sourceIds: site === null ? [] : [OWN_SITE_MEETINGS_SOURCE],
-      ocdId: body?.ocdId ?? null,
+      ocdId: body?.ocdId ?? association?.divisionId ?? null,
       bodyId: body?.id ?? null,
-      censusDivision: body === undefined ? null : (censusDivisionOf.get(body.ocdId) ?? null),
+      censusDivision: association ? `${association.layer}:${association.geoid}` : body ? censusDivisionOf.get(body.ocdId) ?? null : null,
       censusId: pid6,
     });
   }
@@ -332,6 +315,6 @@ export async function preloadRegistrationJurisdictions(input: {
 /** The two-letter state of a jurisdiction id (`oh:city:city-of-columbus`) or an obligation id about one, or null. */
 export function stateOfJurisdictionId(id: string): string | null {
   const rest = id.replace(/^freshness:[a-z-]+:/, "");
-  const m = /^([a-z]{2}):[a-z]+:/.exec(rest);
-  return m === null ? null : m[1]!;
+  const m = /^government:US-([A-Z]{2}):/.exec(rest) ?? /^([a-z]{2}):[a-z]+:/.exec(rest);
+  return m === null ? null : m[1]!.toLowerCase();
 }

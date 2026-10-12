@@ -1,38 +1,13 @@
 /**
- * **NEON BYTES BY CALLING CODE, PER UTC HOUR.** (Vital signs, Sean, Oct 6.)
- *
- * Release 8's first hour moved about 9.4 GB from the control-plane project and
- * nothing in the database could say which code read it: the project has no
- * pg_stat_statements, and the table read counters count rows Postgres touched,
- * not bytes sent to us. This counter names the source.
- *
- * Every Neon HTTP response already passes through `databaseTransferFetch`
- * (transfer.ts), which measures its decoded body. Here each of those bodies is
- * added to an hour bucket under a caller key:
+ * Neon response bytes by calling code, per UTC hour. Each body measured by
+ * `databaseTransferFetch` (transfer.ts) is added to an hour bucket under
  *
  *   <repository operation> ← <first frame outside the repository layer>
- *   e.g. "cp_attempts.list ← lib/control-plane/promotion/campaign-publication-cycle.ts:56"
  *
- * The operation is the name `boundedQuery` already gives every control-plane
- * call; the frame is read from the stack once per distinct stack and cached.
- * Nothing is logged per query and nothing is written to a database.
- *
- * The runner is several processes (the parent, the research child, its lease
- * workers, routine and publication children). When `WTP_VITAL_SIGNS_REPORT=1`,
- * which the standing runner sets for every child it starts, each process prints
- * its hour totals, with its other hour counters (`countVitalSign`: rounds
- * finished, killed or deferred; facts published), as one
- * `vital-signs-bytes {json}` line on its stdout once a minute and when it exits.
- * The output already reaches the runner (lease workers share the research
- * child's stdout; routine children's lines are passed on by
- * bounded-child-pass.ts); the runner takes those lines out of the stream
- * (pilot-runtime-child.mts) and alone keeps and sums the hour
- * (lib/ops/vital-signs-hours.ts). Each line is the process's whole hour so far,
- * so a lost line costs nothing once the next one arrives, and a process killed
- * without warning loses at most its last minute. This module touches no file:
- * it is in every data command's import closure, and the release firewall
- * allows no repository writer there. Outside the runner (the site, Admin,
- * tests) the counts stay in memory.
+ * When `WTP_VITAL_SIGNS_REPORT=1`, each process prints its whole hour so far
+ * as one `vital-signs-bytes {json}` stdout line once a minute and at exit; the
+ * runner parent strips and sums those lines. This module writes no files: it
+ * is in every data command's import closure. Elsewhere the counts stay in memory.
  */
 import { AsyncLocalStorage } from "node:async_hooks";
 import { basename } from "node:path";
@@ -52,6 +27,8 @@ export interface NeonBytesHour {
   readonly hour: string;
   readonly requests: number;
   readonly bytes: Readonly<Record<NeonDatabase, number>>;
+  /** Requests and request-body bytes by database: with `bytes`, the runner's rows in the daily transfer table (transfer.ts). */
+  readonly sent?: Readonly<Record<NeonDatabase, NeonSent>>;
   /** Caller key → bytes. Keys are prefixed "reader: " for the reader database. */
   readonly byCaller: Readonly<Record<string, number>>;
   /** Which processes contributed: script name and pid. */
@@ -59,6 +36,8 @@ export interface NeonBytesHour {
   /** The one process this part came from (a report line), and when it started; absent on a sum. */
   readonly pid?: number;
   readonly startedMs?: number;
+  /** That process's peak resident memory so far, in bytes; absent on a sum. */
+  readonly peakRssBytes?: number;
   /** Other hour counts (`countVitalSign`), e.g. rounds_finished. Absent on files that counted none. */
   readonly counters?: Readonly<Record<string, number>>;
 }
@@ -73,9 +52,12 @@ export interface NeonBytesSummary {
   readonly processCount: number;
 }
 
-interface Bucket { requests: number; bytes: Record<NeonDatabase, number>; byCaller: Map<string, number>; counters: Map<string, number>; dirty: boolean }
+export interface NeonSent { readonly requests: number; readonly bytes: number }
+
+interface Bucket { requests: number; bytes: Record<NeonDatabase, number>; sent: Record<NeonDatabase, NeonSent>; byCaller: Map<string, number>; counters: Map<string, number>; dirty: boolean }
 
 const scope = new AsyncLocalStorage<string>();
+const pinnedSite = new AsyncLocalStorage<string>();
 const buckets = new Map<string, Bucket>();
 const siteCache = new Map<string, string>();
 /* Stack strings run to a few KB; a small cache keeps the per-process memory under 1 MB. */
@@ -93,7 +75,18 @@ export function hourStart(nowMs: number): string {
  * asked for it. The call site is read here, synchronously with the caller.
  */
 export function withQueryCaller<T>(operation: string, run: () => T): T {
-  return scope.run(`${operation} ← ${callSite()}`, run);
+  return scope.run(`${operation} ← ${pinnedSite.getStore() ?? callSite()}`, run);
+}
+
+/**
+ * Read the calling code's site now, for a repository read whose queries start
+ * only after its own awaits (a held copy is opened first), so their bytes
+ * still count under the code that asked.
+ */
+export function withCallerSite<T>(run: () => T): T {
+  const site = callSite();
+  const outer = pinnedSite.getStore();
+  return pinnedSite.run(site === "unknown" && outer !== undefined ? outer : site, run);
 }
 
 /** The first stack frame outside the database layers, as a repo-relative "path:line". */
@@ -103,13 +96,18 @@ export function callerFromStack(stack: string | undefined): string {
   if (cached !== undefined) return cached;
   let site = "unknown";
   for (const line of stack.split("\n").slice(1)) {
-    if (/node:|node_modules|\/lib\/control-plane\/repository\/|\/lib\/db\/|\(<anonymous>\)/.test(line)) continue;
+    if (/node:|node_modules|\/lib\/control-plane\/repository\/|\/lib\/db\/|\/lib\/ops\/neon-request-deadline\.|\/lib\/control-plane\/scheduler\/cycle-(?:phases|stall)\.|\(<anonymous>\)/.test(line)) continue;
     const match = line.match(/.*[/\\]((?:lib|scripts|app|netlify|tests)[/\\][^:()]+):(\d+):\d+/);
     if (match) { site = `${match[1].replace(/\\/g, "/")}:${match[2]}`; break; }
   }
   if (siteCache.size >= SITE_CACHE_LIMIT) siteCache.clear();
   siteCache.set(stack, site);
   return site;
+}
+
+/** The code opening a database socket, under which the socket's bytes count: "websocket ← path:line". */
+export function socketCaller(): string {
+  return `websocket ← ${pinnedSite.getStore() ?? callSite()}`;
 }
 
 function callSite(): string {
@@ -121,13 +119,18 @@ function callSite(): string {
   return callerFromStack(holder.stack);
 }
 
-/** Called once per counted Neon HTTP response (transfer.ts). Never throws. */
-export function countNeonBytes(database: NeonDatabase, bytes: number, nowMs: number = Date.now()): void {
+/**
+ * Called once per counted Neon HTTP response, and per message a database socket receives or sends (transfer.ts).
+ * `sent` is the request side (one request with no body unless given); `caller` names a socket's opener. Never throws.
+ */
+export function countNeonBytes(database: NeonDatabase, bytes: number, nowMs: number = Date.now(),
+  sent: NeonSent = { requests: 1, bytes: 0 }, caller?: string): void {
   try {
-    const caller = scope.getStore() ?? `query ← ${callSite()}`;
-    const key = database === "reader" ? `reader: ${caller}` : caller;
+    const site = caller ?? scope.getStore() ?? `query ← ${callSite()}`;
+    const key = database === "reader" ? `reader: ${site}` : site;
     const bucket = bucketFor(nowMs);
-    bucket.requests += 1;
+    bucket.requests += sent.requests;
+    bucket.sent[database] = { requests: bucket.sent[database].requests + sent.requests, bytes: bucket.sent[database].bytes + sent.bytes };
     bucket.bytes[database] += bytes;
     bucket.byCaller.set(key, (bucket.byCaller.get(key) ?? 0) + bytes);
     bucket.dirty = true;
@@ -138,7 +141,9 @@ function bucketFor(nowMs: number): Bucket {
   const hour = hourStart(nowMs);
   let bucket = buckets.get(hour);
   if (!bucket) {
-    bucket = { requests: 0, bytes: { reader: 0, "control-plane": 0 }, byCaller: new Map(), counters: new Map(), dirty: false };
+    bucket = { requests: 0, bytes: { reader: 0, "control-plane": 0 },
+      sent: { reader: { requests: 0, bytes: 0 }, "control-plane": { requests: 0, bytes: 0 } },
+      byCaller: new Map(), counters: new Map(), dirty: false };
     buckets.set(hour, bucket);
   }
   return bucket;
@@ -160,7 +165,7 @@ function processLabel(): string {
 }
 
 function snapshot(hour: string, bucket: Bucket): NeonBytesHour {
-  return { hour, requests: bucket.requests, bytes: { ...bucket.bytes },
+  return { hour, requests: bucket.requests, bytes: { ...bucket.bytes }, sent: { ...bucket.sent },
     byCaller: Object.fromEntries(bucket.byCaller), processes: [processLabel()],
     ...(bucket.counters.size > 0 ? { counters: Object.fromEntries(bucket.counters) } : {}) };
 }
@@ -178,7 +183,8 @@ export function takeNeonBytesHours(nowMs: number = Date.now()): readonly NeonByt
   const current = hourStart(nowMs);
   const taken: NeonBytesHour[] = [];
   for (const [hour, bucket] of [...buckets.entries()]) {
-    if (bucket.dirty) { taken.push({ ...snapshot(hour, bucket), pid: process.pid, startedMs: Math.floor(performance.timeOrigin) }); bucket.dirty = false; }
+    if (bucket.dirty) { taken.push({ ...snapshot(hour, bucket), pid: process.pid, startedMs: Math.floor(performance.timeOrigin),
+      peakRssBytes: process.resourceUsage().maxRSS * 1024 }); bucket.dirty = false; }
     if (hour < current) buckets.delete(hour);
   }
   return taken;
@@ -271,7 +277,8 @@ export function installNeonBytesReport(): void {
   reportInstalled = true;
   const timer = setInterval(() => { reportNeonBytes(); }, 60_000);
   timer.unref();
-  process.once("exit", () => { reportNeonBytes(); });
+  /* At exit every hour this process counted is reported again, so its last part carries its peak memory. */
+  process.once("exit", () => { for (const bucket of buckets.values()) bucket.dirty = true; reportNeonBytes(); });
 }
 
 /** The runner parent sums the hour itself (takeNeonBytesHours); it never reports to its own output. */

@@ -1,10 +1,4 @@
-/**
- * **BC-26 (2026-08-25) — an appointed role never carries the Incumbent chip.**
- *
- * RULING 157: the verification exercises cases the fix was NOT derived from.
- * Vail's John Carruth is the DERIVED case — he is the one Sean photographed.
- * The independent cases are named below and come from the registry itself.
- */
+/** An appointed role never carries the Incumbent chip; the verification uses cases the fix was not derived from. */
 import test from "node:test";
 import assert from "node:assert/strict";
 
@@ -54,12 +48,7 @@ test("BC-26: an unknown or empty title defaults to ELECTED, which is the safe di
 });
 
 test("BC-26: the electedness predicate AGREES with the runs-it-day-to-day slot", () => {
-  /*
-   * RULING 103. `top-offices.ts` already decides who was HIRED — that is what
-   * the *Runs it day to day* slot means — and this decides who was ELECTED.
-   * Two vocabularies for one fact is how a renamed copy of a defect survives
-   * the fix, so the agreement is asserted rather than assumed.
-   */
+  /* Who was hired and who was elected must agree across the two vocabularies, so the agreement is asserted. */
   for (const title of ["Superintendent", "Business Administrator", "Executive Director", "Town Manager"]) {
     const top = topOfficesFor([holderWith(title)]);
     const slot = top.find((o) => o.role === "Runs it day to day");
@@ -73,10 +62,7 @@ test("BC-26: the electedness predicate AGREES with the runs-it-day-to-day slot",
 });
 
 test("BC-26 — THE CLASS: every non-elected role in the registry, with its denominator", () => {
-  /*
-   * RULING 105 — three numbers, never a bare count. The independent cases are
-   * NAMED, because "audited across the class" is a claim with no case in it.
-   */
+  /* Three numbers, never a bare count, and the independent cases are named. */
   const rows: { body: string; name: string; title: string; selection: string }[] = [];
   for (const roster of BODY_ROSTERS) {
     for (const member of roster.members ?? []) {
@@ -89,8 +75,7 @@ test("BC-26 — THE CLASS: every non-elected role in the registry, with its deno
     }
   }
 
-  // The floor (RULING 159): an empty registry reports zero mislabels and reads
-  // as a clean bill of health.
+  // The floor: an empty registry must not read as a clean bill of health.
   assert.ok(rows.length >= 100, `the audit read only ${rows.length} roster member(s)`);
 
   const appointed = rows.filter((r) => r.selection === "APPOINTED");
@@ -109,11 +94,10 @@ test("BC-26 — THE CLASS: every non-elected role in the registry, with its deno
     "an appointed role still renders the Incumbent chip",
   );
 
-  // THE INDEPENDENT CASES, by name. Vail's John Carruth is the case the fix was
-  // derived from and is deliberately not one of these.
+  // The independent cases, by name; the case the fix was derived from is deliberately not one of these.
   const independent = appointed.filter((r) => !/carruth/i.test(r.name));
   assert.ok(
     independent.length >= 2,
-    `only ${independent.length} appointed role(s) outside the derived case — RULING 157 is unsatisfied`,
+    `only ${independent.length} appointed role(s) outside the derived case — at least two are required`,
   );
 });

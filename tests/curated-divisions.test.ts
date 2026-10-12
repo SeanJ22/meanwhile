@@ -12,21 +12,14 @@ import {
 import { resolveVenue, venueScope, VENUE_CACHE } from "../lib/meetings/venue-cache.ts";
 
 /**
- * D31 — identifiers for governments the Census does not enumerate, and the
- * two consequences the row named (2026-08-17, g10).
- *
- * The convention decision itself lives in `lib/ocd/curated.ts` with the
- * evidence it was made on. What is checkable here is that the decision is
- * actually kept: ours stay distinguishable from opencivicdata's, and the
- * venue key stops collapsing when a body has no division.
+ * Identifiers for governments the Census does not enumerate stay distinguishable from opencivicdata's, and the venue
+ * key does not collapse when a body has no division.
  */
 
 const PIMA = "ocd-division/country:us/state:az/county:pima";
 
 test("a curated identifier says it is ours in its first characters", () => {
-  // The whole point of the prefix. Writing an OCD path opencivicdata does not
-  // carry, in opencivicdata's own namespace, is a minted id wearing a public
-  // vocabulary's clothes — indistinguishable downstream from a real one.
+  // An OCD path opencivicdata does not carry, written in its namespace, would be indistinguishable from a real one.
   const id = mintCuratedDivision(PIMA, "water", "Ajo Domestic Water Improvement District");
   assert.ok(id.startsWith(CURATED_PREFIX));
   assert.ok(isCurated(id));
@@ -47,27 +40,20 @@ test("stripping the prefix leaves the identifier we would propose upstream", () 
 });
 
 test("the slug rule matches the canonical list's own slugs", () => {
-  // Read off `identifiers/country-us.csv`, 2026-08-17.
   assert.equal(slugFor("Castaic Lake Water Agency"), "castaic_lake_water_agency");
   assert.equal(slugFor("Harkers Island"), "harkers_island");
   assert.equal(slugFor("Rocking K South Community Facilities District"), "rocking_k_south_community_facilities_district");
 });
 
 test("a malformed mint throws rather than returning a wrong key", () => {
-  // An identifier is a join key. A silently wrong one is the aliasing failure
-  // CLAUDE.md requires keyed joins to be checkable against.
+  // An identifier is a join key, so a silently wrong one must be checkable.
   assert.throws(() => mintCuratedDivision("state:az", "water", "Something"), /OCD parent/);
   assert.throws(() => mintCuratedDivision(PIMA, "Water District", "Something"), /snake_case/);
   assert.throws(() => mintCuratedDivision(PIMA, "water", "!!!"), /empty slug/);
 });
 
-// ── The first named consequence: the venue key that collapses ─────────────
-
 test("two division-less bodies on one source do not share a venue scope", () => {
-  // The failure this fixes: `bodyOcdId` was null for both, and null === null,
-  // so the cache treated every division-less body on a source as one body and
-  // would hand a reader the wrong building. Diligent already serves three
-  // tenants and one of them has no division.
+  // `bodyOcdId` is null for every division-less body, and null === null, so the key must not rely on it alone.
   assert.notEqual(venueScope(null, "pcc"), venueScope(null, "some-other-district"));
   assert.equal(venueScope(null, "pcc"), venueScope(null, "pcc"));
 });

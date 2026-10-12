@@ -12,12 +12,6 @@ import type {
   ReportingMeetingSource,
 } from "../lib/sources/types.ts";
 
-/**
- * The composite's own guarantees, against stub children — no adapters, no
- * network. What is pinned here is the *mechanism*: failure isolation, the
- * namespacing contract, the accounting, and the cache.
- */
-
 const QUERY: MeetingQuery = { lat: 32.2, lng: -110.9, radiusKm: 150 };
 
 test("family members share a calendar response while each keeps its acquisition, and companion feeds share the site allowance", async () => {
@@ -102,7 +96,6 @@ function stubChild(
   behave: {
     rows?: unknown[];
     failFetch?: boolean;
-    /** A specific thrown value, for the WALL/JOB classification tests. */
     failWith?: unknown;
     hangFetch?: boolean;
     onAbort?: () => void;
@@ -125,7 +118,6 @@ function stubChild(
         });
       }
       if (behave.failWith !== undefined) throw behave.failWith;
-      // A publisher-side failure, as the shared HTTP client words one.
       if (behave.failFetch) throw new Error(`HTTP 503 for https://${name}.example.gov/calendar`);
       return behave.rows ?? [];
     },
@@ -241,7 +233,6 @@ test("the cache serves a repeat query without re-fetching, and reports so", asyn
   assert.equal(fetches, 1, "second query served from cache");
   assert.equal(composite.lastReport?.fromCache, true);
 
-  // A different place is a different cache entry.
   await composite.fetch({ lat: 40.9, lng: -74.5, radiusKm: 150 });
   assert.equal(fetches, 2);
 });
@@ -268,25 +259,7 @@ test("drops from every child surface in the report, per source", async () => {
   assert.equal(report?.drops.unknownVenue, 1);
 });
 
-/* ---- F22: a wall and a broken job are not the same kind of nothing ------- */
-
-/**
- * **F22 item 2 (2026-08-20).**
- *
- * `ok: false` used to carry a vendor timeout and a violated id-namespace
- * contract in the same flag, so `scripts/ingest.ts` treated a WALL and a
- * defect in our own code identically: name it, skip it, carry its rows, exit
- * 0. A broken adapter therefore rendered as a walled vendor and kept the run
- * green — the failed-operation-as-empty-success shape, wearing the other
- * face. And the converse cost more: because everything was a wall, nothing
- * could be a job failure, so the run's exit status said nothing at all.
- *
- * The contract now: the retrieval not landing is a `WALL`; our own code
- * breaking on bytes we did hold is a `JOB` failure. `scripts/ingest.ts` reads
- * this to decide the exit status, which is why it is pinned here rather than
- * left as a comment.
- */
-test("F22: a failed FETCH is a WALL — named, skipped, and the run continues", async () => {
+test("a failed FETCH is a WALL — named, skipped, and the run continues", async () => {
   const composite = new CompositeSource([
     stubChild("walled", { failFetch: true }),
     stubChild("healthy", { rows: [1], meetings: () => [meetingOf("healthy:a")] }),
@@ -306,12 +279,6 @@ test("F22: a failed FETCH is a WALL — named, skipped, and the run continues", 
 });
 
 test("2026-09-24: an exception OUR code throws before any request is a JOB, never the publisher's wall", async () => {
-  /*
-   * From 2026-09-14 to 2026-09-24 the Pima Board and Mesa Legistar partitions
-   * threw VENUE_RESOLUTIONS_MISSING inside fetch() before a single request, and
-   * every attempt was filed as the publisher walling us. The kind is decided
-   * from the thrown value now; the healthy sibling still keeps its rows.
-   */
   const composite = new CompositeSource([
     stubChild("ours", { failWith: new Error("VENUE_RESOLUTIONS_MISSING:legistar:ocd-division/country:us/state:az/county:pima") }),
     stubChild("programming", { failWith: new TypeError("Cannot read properties of undefined (reading 'venues')") }),
@@ -326,9 +293,7 @@ test("2026-09-24: an exception OUR code throws before any request is a JOB, neve
   assert.equal(meetings.length, 1, "a JOB failure never costs a healthy sibling its rows");
 });
 
-test("F22: a broken NAMESPACE is a JOB failure — the run must go red", async () => {
-  // The child fetches fine and returns rows under someone else's namespace.
-  // Nothing about the ladder fixes this and no wall fell; it is our bug.
+test("a broken NAMESPACE is a JOB failure — the run must go red", async () => {
   const composite = new CompositeSource([
     stubChild("offender", { rows: [1], meetings: () => [meetingOf("somebodyelse:a")] }),
   ]);
@@ -344,7 +309,7 @@ test("F22: a broken NAMESPACE is a JOB failure — the run must go red", async (
   );
 });
 
-test("F22: a normalize that THROWS is a JOB failure, not a wall", async () => {
+test("a normalize that THROWS is a JOB failure, not a wall", async () => {
   const composite = new CompositeSource([
     stubChild("parser", {
       rows: [1],
@@ -365,10 +330,7 @@ test("F22: a normalize that THROWS is a JOB failure, not a wall", async () => {
   );
 });
 
-test("F22: a walled child records the ladder rung it stopped at", async () => {
-  // The shared client attaches `rung` to the error it throws; the composite
-  // forwards it verbatim and records ABSENT as absent — a rung is never
-  // filled in with a plausible number.
+test("a walled child records the ladder rung it stopped at", async () => {
   const withRung: ReportingMeetingSource<unknown> = {
     ...stubChild("rung4", {}),
     async fetch() {

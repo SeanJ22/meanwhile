@@ -8,7 +8,6 @@ import { ADMIN_V6_TRAIL_CONTRACT, TRAIL_ID, readReached, readTrail } from "./v6-
 
 const NO_STORE = { "cache-control": "no-store, no-cache, must-revalidate" };
 
-/** Exactly one of `send` (what an instruction reached) or `item` (one piece of work's evidence trail), plus the page's `scope`. */
 export function validateTrailQuery(params: URLSearchParams): { readonly ok: true; readonly send: string | null; readonly item: string | null }
   | { readonly ok: false; readonly code: string } {
   if ([...params.keys()].some((key) => key !== "scope" && key !== "send" && key !== "item")) return { ok: false, code: "UNKNOWN_PARAMETER" };

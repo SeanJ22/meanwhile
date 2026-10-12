@@ -9,25 +9,10 @@ import {
 } from "@/lib/state/derive";
 
 /**
- * A pool of markers, created once and reused.
- *
- * The port of EdiaStratMap's `buildMarkerPool()` / `rebuildMarkerPool()` /
- * `updateMarkerIcon()` and its `_previouslyVisiblePoolKeys` diffing.
- *
- * **Why this rather than the obvious thing.** The straightforward
- * implementation — remove every marker not in the current result, create one
- * for every marker that is — does DOM work proportional to the *result set* on
- * every filter keystroke. At 34 fixtures that is invisible. At real ingestion
- * scale it is the difference between a map that filters instantly and one that
- * stutters, and by then the fixtures are gone and there is nothing small enough
- * to verify a rewrite against. Building it now is the cheap moment.
- *
- * The pool holds a marker for every venue the *data* contains. Filtering
- * changes which are **visible**, never which exist, and visibility is a CSS
- * toggle on an element MapLibre is already positioning. Only the venues whose
- * visibility actually changed are touched, which is what the previous-visible
- * set is for: a filter that narrows 500 pins to 480 does 20 DOM writes, not
- * 980.
+ * A pool of markers, created once and reused. The pool holds a marker for
+ * every venue the data contains; filtering changes which are visible (a CSS
+ * toggle), never which exist, and only venues whose visibility changed are
+ * touched: narrowing 500 pins to 480 does 20 DOM writes, not 980.
  */
 
 export interface MarkerPoolEntry {
@@ -35,37 +20,17 @@ export interface MarkerPoolEntry {
   element: HTMLButtonElement;
   venue: Venue;
   /**
-   * P-004 · what this pin's appearance was last rendered FROM.
-   *
-   * `rebuildMarkerPool` used to call `updateMarkerIcon` and `setLngLat` on
-   * every surviving entry on every run, whether or not anything about the
-   * venue had changed — several DOM writes and a MapLibre reposition per pin,
-   * hundreds of times, to arrive back where the pin already was. Comparing a
-   * signature first is the same diff the visibility pass has always done, one
-   * layer over.
+   * What this pin's appearance was last rendered from, so unchanged pins skip
+   * the icon and position writes.
    */
   renderedSignature: string;
   renderedAt: { lng: number; lat: number };
 }
 
 /**
- * **P-001 / P-004 · WHAT THE POOL ACTUALLY DID, COUNTED.**
- * (Performance audit of `336a3eb`, remediated 2026-08-24.)
- *
- * The module's own doc says a filter narrowing 500 pins to 480 does 20 DOM
- * writes. Nothing measured that, and the wiring above it made it false: the
- * canvas passed FILTERED venues into the pool, so twenty filtered-out venues
- * read as vanished data and their markers were destroyed — then recreated when
- * the filter was reversed.
- *
- * A documented optimisation the wiring bypasses is the chromium-pin shape, and
- * the answer is the same one: **observe the step's product at the step**
- * (RULING 113). Visual equivalence cannot tell a reused marker from a
- * recreated one; a counter can, and the tests assert the counts rather than
- * the look.
- *
- * Cumulative for the life of the pool. `resetPoolOps` zeroes them, which is
- * what a test does between the two halves of a comparison.
+ * What the pool actually did, counted, so tests can assert reuse rather than
+ * visual equivalence. Cumulative for the life of the pool; `resetPoolOps`
+ * zeroes them.
  */
 export interface PoolOps {
   /** Markers constructed and added to the map. */
@@ -86,21 +51,13 @@ export interface MarkerPool {
   entries: Map<string, MarkerPoolEntry>;
   /** Keys visible after the last apply. The diff basis. */
   previouslyVisibleKeys: Set<string>;
-  /**
-   * P-004 · the key `applySelection` last wrote `true` for.
-   *
-   * Selection used to write `dataset.selected` on EVERY pool entry — 500
-   * writes to select one pin, and again to deselect it. Holding the previous
-   * key turns that into at most two.
-   */
+  /** The key `applySelection` last wrote `true` for, so selection writes at most two elements. */
   selectedKey: string | null;
-  /** P-001 / P-004 · see {@link PoolOps}. */
+  /** See {@link PoolOps}. */
   ops: PoolOps;
   /**
-   * The keys currently fanned out (M19), or empty. At most one group is fanned
-   * at a time: a second fan while the first is open would put the new
-   * positions on top of the old ones, which is the collision this fixes,
-   * rebuilt by the fix.
+   * The keys currently fanned out, or empty. At most one group is fanned at a
+   * time, so a second fan never lands on top of the first.
    */
   spiderfiedKeys: Set<string>;
 }
@@ -122,12 +79,9 @@ export function resetPoolOps(pool: MarkerPool): void {
 }
 
 /**
- * Everything about a pin's appearance that `updateMarkerIcon` reads — P-004.
- *
- * Derived from the venue rather than measured off the DOM, so it can be
- * compared BEFORE any write happens. It has to cover every input the icon pass
- * uses, or a real change would be skipped: the meeting count, whether every
- * meeting has concluded, and which levels of government meet here.
+ * Everything about a pin's appearance that `updateMarkerIcon` reads (the
+ * meeting count, whether all have concluded, which levels meet here), derived
+ * from the venue so it can be compared before any write.
  */
 export function renderedSignature(venue: Venue): string {
   const levels = LEVEL_ORDER.filter((level) =>
@@ -149,17 +103,10 @@ export function createMarkerPool(): MarkerPool {
 }
 
 /**
- * Fan a group of colliding pins apart, or put them back (M19, 2026-08-17).
- *
- * The offset is MapLibre's own `Marker.setOffset`, in screen pixels, which is
- * the reason this works rather than a CSS transform: MapLibre owns the
- * element's `transform` and rewrites it on every frame, so anything written
- * there is gone by the next render. An offset is re-applied by the library
- * itself, which means a fanned group survives a pan and a zoom exactly as a
- * reader would expect.
- *
- * Returns the number of markers moved, because an operation that can move
- * nothing must say what it moved.
+ * Fan a group of colliding pins apart, or put them back, through MapLibre's
+ * `Marker.setOffset` (MapLibre owns the element's `transform` and rewrites it
+ * every frame), so a fanned group survives pan and zoom. Returns the number
+ * of markers moved.
  */
 export function applySpiderfy(
   pool: MarkerPool,
@@ -167,16 +114,14 @@ export function applySpiderfy(
 ): number {
   let moved = 0;
 
-  // Put back anything fanned that is not in the new set, first — otherwise a
-  // pin could carry an old offset and a new one at once.
+  // Put back anything fanned that is not in the new set first, so no pin carries two offsets.
   for (const key of pool.spiderfiedKeys) {
     if (offsets.some((o) => o.key === key)) continue;
     const entry = pool.entries.get(key);
     if (!entry) continue;
     entry.marker.setOffset([0, 0]);
     delete entry.element.dataset.spiderfied;
-    // F01 9.3: the leg goes with the offset. A stale --spider-len on an
-    // un-fanned pin would draw a line to a point it no longer came from.
+    // The leg goes with the offset: a stale --spider-len would draw a line to a point it no longer came from.
     entry.element.style.removeProperty("--spider-len");
     entry.element.style.removeProperty("--spider-angle");
     moved++;
@@ -186,29 +131,14 @@ export function applySpiderfy(
     const entry = pool.entries.get(key);
     if (!entry) continue;
     entry.marker.setOffset([dx, dy]);
-    // The reader is told the pin moved. Without it, a pin sitting somewhere
-    // other than its building is a wrong location rather than a fanned one.
+    // The reader is told the pin moved, or it reads as a wrong location.
     entry.element.dataset.spiderfied = "true";
 
     /*
-     * F01 9.3 (2026-08-19, the author): *"when those are spidered it looks
-     * like it just simply is moving. It's not like a spider effect... the
-     * spidering effect is not very clear at all."* His before/after pair is in
-     * the Drive folder (2026-08-18_14-29-42 and _14-30-01) and he is right:
-     * the two shots differ only in where two dots sit. A dashed halo says "this
-     * pin moved"; it does not say WHERE FROM, and without that the fan reads as
-     * pins drifting rather than as one place opening up.
-     *
-     * So each fanned pin draws a LEADER LINE back to the anchor it came from,
-     * and the line's far end carries the anchor dot. That is what makes it a
-     * spider: N legs meeting at one visible point, which is the shape a reader
-     * already knows means "these all live here".
-     *
-     * The geometry is written as custom properties rather than as a transform,
-     * because MapLibre owns this element's `transform` and rewrites it every
-     * frame — the same reason the offset itself goes through `setOffset`. CSS
-     * reads these and rotates a pseudo-element, which MapLibre never touches.
-     * The angle points BACK toward the anchor: the leg is drawn from the pin.
+     * Each fanned pin draws a leader line back to its anchor, whose far end
+     * carries the anchor dot: N legs meeting at one point. The geometry is
+     * written as custom properties that CSS uses to rotate a pseudo-element,
+     * because MapLibre owns `transform`. The angle points back toward the anchor.
      */
     const length = Math.round(Math.hypot(dx, dy) * 100) / 100;
     const angle = (Math.atan2(-dy, -dx) * 180) / Math.PI;
@@ -239,11 +169,8 @@ function levelGlow(level: GovernmentLevel): string {
 }
 
 /**
- * The marker element.
- *
- * A real `<button>` with an `aria-label`, never a `div`. MapLibre will happily
- * mount an unfocusable element and leave the map unusable without a mouse, and
- * nothing in the library warns about it.
+ * The marker element: a real `<button>` with an `aria-label`, never a `div`,
+ * so the map is usable without a mouse.
  */
 export function createMarkerElement(venue: Venue): HTMLButtonElement {
   const button = document.createElement("button");
@@ -263,12 +190,8 @@ export function createMarkerElement(venue: Venue): HTMLButtonElement {
 }
 
 /**
- * Bring one marker's appearance up to date **in place**.
- *
- * Called when a venue's meetings change — a meeting concludes, a filter alters
- * the count behind a pin — so the element is mutated rather than replaced.
- * Replacing it would drop focus, which matters because these are buttons and
- * somebody may be tabbing through them.
+ * Bring one marker's appearance up to date in place. Mutated, not replaced,
+ * so a focused button keeps focus.
  */
 export function updateMarkerIcon(
   element: HTMLButtonElement,
@@ -285,12 +208,10 @@ export function updateMarkerIcon(
   element.dataset.joinUrls = JSON.stringify(venue.kind === "ONLINE_ONLY" ? venue.meetings.map(meeting => meeting.online?.joinUrl ?? null) : []);
 
   /*
-   * Dot color says which level of government meets here (2g): school, local,
-   * state or federal. A venue hosting several levels — a school board and a
-   * congressional town hall in the same building — shows a split ring with
-   * one equal slice per level, never one level's color silently standing in
-   * for all of them. Concluded venues stay hollow: the CSS rule owns their
-   * look, so the inline background must be cleared, not fought.
+   * Dot colour says which level of government meets here: school, local,
+   * state or federal. A venue hosting several levels shows a split ring with
+   * one equal slice per level. Concluded venues stay hollow; the CSS rule owns
+   * their look, so the inline background is cleared.
    */
   const dot = element.querySelector<HTMLSpanElement>(".wtp-pin-dot");
   if (dot) {
@@ -338,14 +259,8 @@ export function updateMarkerIcon(
 }
 
 /**
- * The reconciliation DECISION, with no map and no DOM in it.
- *
- * Split out from `rebuildMarkerPool` so the rule can be asserted directly
- * (R05). The rule is the whole point of this module and it is one line of
- * prose — create what is new, update what is already here, remove only what
- * the data no longer has AT ALL — but it is the kind of rule that decays into
- * "remove everything and rebuild" during an unrelated fix, and the symptom is
- * a stutter at a scale no fixture reaches.
+ * The reconciliation decision, with no map and no DOM: create what is new,
+ * update what is here, remove only what the data no longer has at all.
  */
 export function reconcileKeys(
   existingKeys: Iterable<string>,
@@ -361,27 +276,12 @@ export function reconcileKeys(
 }
 
 /**
- * Reconcile the pool against the venues the data now contains.
- *
- * Creates what is new, updates what changed, and removes only what the data no
- * longer has at all. **A venue filtered out of view is not removed** — that is
- * `applyVisibility`'s job, and conflating the two is what makes the naive
- * implementation slow.
+ * Reconcile the pool against the venues the data now contains. A venue
+ * filtered out of view is not removed; that is `applyVisibility`'s job.
  */
 /**
- * How a pin is BUILT — injectable, and injectable for one stated reason.
- *
- * P-001 asks for the pool's behaviour to be proven with operation counters
- * rather than with visual equivalence, and every other decision this module
- * makes is already testable: `reconcileKeys` is pure, the signature comparison
- * is pure, and visibility and selection touch nothing but `element.dataset`.
- * The one thing that is not is CONSTRUCTION, which needs `document` and a real
- * MapLibre `Marker` — and the create/remove counts are precisely the numbers
- * the finding is about.
- *
- * So the two calls are named here and default to the real ones. Nothing in the
- * app passes this; a test does, and what it passes is a counter's worth of
- * object rather than a DOM.
+ * How a pin is built. Defaults to the real `document` and MapLibre `Marker`;
+ * a test injects a counting stand-in to check create/remove counts.
  */
 export interface MarkerFactory {
   createElement: (venue: Venue) => HTMLButtonElement;
@@ -410,9 +310,7 @@ export function rebuildMarkerPool(
     pool.ops.removed += 1;
     pool.entries.delete(key);
     pool.previouslyVisibleKeys.delete(key);
-    // A removed pin cannot stay in the fanned set: `applySpiderfy` would
-    // otherwise keep trying to put back a marker that no longer exists, and
-    // the set would grow without bound across data refreshes.
+    // A removed pin leaves the fanned set too, or the set grows across refreshes.
     pool.spiderfiedKeys.delete(key);
   }
 
@@ -420,10 +318,7 @@ export function rebuildMarkerPool(
     const existing = pool.entries.get(venue.key);
 
     if (existing) {
-      // Same pin, possibly different contents. Mutate, never replace — and
-      // P-004: only where something actually changed. This used to write the
-      // icon and the position on every surviving entry on every run, to
-      // arrive back where the pin already was.
+      // Same pin, possibly different contents: mutate, never replace, and only where something changed.
       existing.venue = venue;
       const signature = renderedSignature(venue);
       if (signature !== existing.renderedSignature) {
@@ -441,28 +336,11 @@ export function rebuildMarkerPool(
 
     const element = factory.createElement(venue);
     /*
-     * **A NEW MARKER IS HIDDEN UNTIL `applyVisibility` SAYS OTHERWISE** —
-     * found by `pnpm walk:all` on 2026-08-24, after P-001 shipped, and it is
-     * the regression P-001 itself introduced.
-     *
-     * The pool used to hold only the FILTERED venues, so every marker in it
-     * was by definition visible and an unset `data-hidden` was correct. P-001
-     * made the pool hold every venue in the data — which is the whole point —
-     * and `applyVisibility` writes only the keys whose visibility CHANGED. A
-     * marker created for a venue the current filter excludes was therefore in
-     * neither loop: never written, `data-hidden` unset, and **visible on the
-     * map**.
-     *
-     * The walk named it two ways at once: g9's fan check saw four pins in a
-     * stack where the filter should have left fewer, and the geometry
-     * assertion failed on a stack that should not have existed.
-     *
-     * Defaulting to hidden is correct at both ends. A venue the filter
-     * excludes stays hidden because nothing shows it; a venue it includes is
-     * written `false` on the next pass, because a fresh key is not in
-     * `previouslyVisibleKeys`. It is deliberately NOT counted as a visibility
-     * write — it is part of constructing the marker, and counting it would
-     * make the 500-to-480 assertion report creations as filter work.
+     * A new marker is hidden until `applyVisibility` says otherwise: the pool
+     * holds every venue, and `applyVisibility` writes only keys whose
+     * visibility changed. A venue the filter includes is written `false` on
+     * the next pass, since a fresh key is not in `previouslyVisibleKeys`. Not
+     * counted as a visibility write; it is part of construction.
      */
     element.dataset.hidden = "true";
     const entry: MarkerPoolEntry = {
@@ -474,8 +352,7 @@ export function rebuildMarkerPool(
     };
     pool.ops.created += 1;
 
-    // Reads `entry.venue` at click time rather than closing over `venue`, so a
-    // pin whose contents were updated in place does not hand back a stale one.
+    // Reads `entry.venue` at click time, so an in-place update never hands back a stale venue.
     element.addEventListener("click", (event) => {
       event.stopPropagation();
       onSelect(entry.venue);
@@ -486,11 +363,9 @@ export function rebuildMarkerPool(
 }
 
 /**
- * Show exactly these keys, touching only what changed.
- *
- * Returns how many elements were actually written to, which is the number worth
- * watching — if it ever approaches the pool size on an ordinary filter change,
- * the diffing has stopped working.
+ * Show exactly these keys, touching only what changed. Returns how many
+ * elements were written; near the pool size on an ordinary filter change
+ * means the diffing has stopped working.
  */
 export function applyVisibility(
   pool: MarkerPool,
@@ -524,15 +399,8 @@ export function applyVisibility(
 
 /**
  * Selection is a data attribute, so it survives re-renders and filter passes.
- *
- * **P-004 · DIFFED, NOT SWEPT.** This used to write `dataset.selected` on every
- * entry in the pool — 500 writes to select one pin — and the canvas re-ran it
- * whenever `venues` changed, so a filter keystroke swept the whole pool for a
- * selection that had not moved.
- *
- * Two writes at most now: the key that was true goes false, the new one goes
- * true. It returns the number written, for the same reason `applyVisibility`
- * does — a diff that stops diffing is invisible unless something counts.
+ * Diffed: at most two writes (the old key false, the new one true). Returns
+ * the number written.
  */
 export function applySelection(
   pool: MarkerPool,

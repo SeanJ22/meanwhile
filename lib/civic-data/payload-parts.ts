@@ -10,7 +10,6 @@ const digest = (value: unknown) => createHash("sha256").update(JSON.stringify(va
 const ref = (value: unknown): value is Ref => value !== null && typeof value === "object" &&
   !Array.isArray(value) && Object.keys(value).length === 1 && typeof (value as Ref)[REF] === "string";
 
-/** Prefer a record's actual territory; no geographic or person-name inference. */
 function territory(value: unknown): string {
   if (value === null || typeof value !== "object") return "shared";
   const row = value as Record<string, unknown>;
@@ -58,15 +57,13 @@ export function partitionCivicPayload(input: unknown, inlineFields?: readonly st
         }
         group.rows.push(encoded); group.size += size; order.push(group.index);
       }
-      // Keep ordering outside state partitions: inserting Ohio never rewrites
-      // Arizona rows merely because their national array positions changed.
+            // Ordering stays outside state partitions, so adding one state never rewrites another state's rows.
       return put({ kind: "array", groups: all.map(rows => put(rows)), order: encode(JSON.stringify(order)) });
     }
     const encoded = Object.fromEntries(Object.entries(value as Record<string, unknown>).map(([key, child]) => [key, encode(child)]));
     return put({ kind: "object", value: encoded });
   };
-  // Durable JSON serialization omits optional undefined properties exactly as
-  // the existing jsonb driver does; hashes/reader values remain unchanged.
+    // Omits optional undefined properties exactly as the jsonb driver does, so hashes stay unchanged.
   const durable = JSON.parse(JSON.stringify(input));
   const value = inlineFields ? Object.fromEntries(Object.entries(durable).map(([key, child]) => [key,
     inlineFields.includes(key) ? child : encode(child),
@@ -80,7 +77,6 @@ export interface CivicPayloadPartIO {
   readonly read: (hashes: readonly string[]) => Promise<readonly Part[]>;
 }
 
-/** Same immutable part serves payload, normalized evidence and every later candidate. */
 export class CivicPayloadParts {
   private readonly cache = new Map<string, unknown>();
   private readonly io: CivicPayloadPartIO;
@@ -113,7 +109,6 @@ export class CivicPayloadParts {
       else if (value && typeof value === "object") Object.values(value).forEach(collect);
     };
     collect(input);
-    // One part is bounded. Fetch batches also stay well below Neon's response cap.
     while (needed.size) {
       const hashes = [...needed].slice(0, 8);
       hashes.forEach(hash => needed.delete(hash));

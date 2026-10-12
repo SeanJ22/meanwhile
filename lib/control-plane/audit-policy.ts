@@ -1,10 +1,7 @@
 /**
- * **THE AUDIT POLICY.** (DP-17.) How the live audit samples published facts:
- * how many per area, how many areas, how often a fact may be checked again, how
- * many pages one pass may re-read. The code default is below; the owner changes
- * it in Admin's Settings (`audit.policy`), and the next pass reads it. Only the
- * settings map is imported, so the Settings screen can list it without loading
- * the audit.
+ * How the live audit samples published facts. The owner changes it in Admin
+ * Settings (`audit.policy`). Only the settings map is imported, so Settings can
+ * list it without loading the audit.
  */
 import { registerSetting } from "./settings.ts";
 
@@ -21,7 +18,7 @@ export interface LiveAuditPolicy {
   readonly refreshMaxAgeHours: number;
   /** The most new fetches one pass makes. */
   readonly maxFetchesPerPass: number;
-  /** Extra facts an area gets when it holds past-refresh or high-demand facts (DP-16). */
+  /** Extra facts an area gets when it holds past-refresh or high-demand facts. */
   readonly boostExtraPerArea: number;
   /** A boosted fact may be audited again after this long, sooner than an ordinary one. */
   readonly boostedMinHoursBetweenAudits: number;

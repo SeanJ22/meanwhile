@@ -1,8 +1,7 @@
 /**
- * DB-50: the registry of installed feed kinds, and the declaration they make.
- *
- * Kept free of imports that load adapters or wiring, because `lib/registry/source-wiring.ts` asks it which source
- * serves a door of an installed kind and must not pull the whole source tree into its own load.
+ * The registry of installed feed kinds, and the declaration they make. Kept free of imports that load
+ * adapters or wiring, because `lib/registry/source-wiring.ts` asks it which source serves a door of an
+ * installed kind and must not pull the whole source tree into its own load.
  */
 
 import type { MeetingLocation } from "./types.ts";

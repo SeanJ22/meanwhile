@@ -1,11 +1,5 @@
 "use client";
 
-/**
- * **WHO CAN SEE EACH NUMBER — a panel on Now.** Every number the data business makes (`lib/control-plane/data-business/recipes.ts`)
- * with its switch for Admin, the dashboard, and each customer Sean has set one for. "Open that door" is flipping one switch:
- * each flip goes through the same preview and Send as every other control. With no flip, Admin is on and everyone else is off.
- * A flip takes effect on the next read, so there is nothing for the runner to pick up.
- */
 import { useState } from "react";
 
 import type { SwitchRow } from "@/lib/control-plane/data-business/switches.ts";

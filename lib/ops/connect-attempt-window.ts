@@ -1,23 +1,6 @@
 /**
- * THE CONNECT WINDOW FOR EVERY STANDING-RUNNER PROCESS. (2026-09-22.)
- *
- * Node 24 connects with happy eyeballs (`autoSelectFamily`, on by default),
- * giving each resolved address 250 ms before abandoning it for the next. Each
- * Neon endpoint resolves to three IPv4 and three IPv6 addresses. From the
- * runner host the IPv6 ones are unreachable (ENETUNREACH at once), and a raw
- * TCP connect to the IPv4 ones measured p50 159–256 ms, max 457 ms, with 1 to 8
- * of every 15 over 250 ms. When all three IPv4 attempts run long together the
- * connect fails in about 790 ms with `AggregateError: ETIMEDOUT` beneath
- * `fetch failed` — the failure that crashed a research cycle at startup, failed
- * routine tasks and reader readbacks in bursts, and read like an outage while
- * the endpoints answered every probe.
- *
- * A per-address window that fits this host's real handshake removes it without
- * retrying anything: each request stays bounded end to end by
- * installNeonRequestDeadline. The parent applies the window to itself and puts
- * it in NODE_OPTIONS, which every child environment spreads from the parent
- * (`admittedRuntimeChildEnvironment`, `runtimeProductionReadEnvironment`), so
- * each child and grandchild starts with it before any of its own code runs.
+ * The connect window for every standing-runner process: with happy eyeballs, each resolved address gets this long
+ * before the next is tried, so a slow but reachable IPv4 address is not abandoned.
  */
 import { setDefaultAutoSelectFamilyAttemptTimeout } from "node:net";
 

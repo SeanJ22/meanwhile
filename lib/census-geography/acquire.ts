@@ -6,6 +6,7 @@ import { buildCbsaScope, parseCbsaDelineation } from "./cbsa.ts";
 import { acquireGrfScopes, congressionalTarget, discoverGrfReleases, GRF_CD120, GRF_SLDU2026, GRF_SLDL2026, legislativeTarget, planApplicability, type GrfTarget } from "./grf.ts";
 import { CENSUS_ACQUISITION_PARSER, censusDirectoryFiles, censusSourceRelease, heldSourcesUnchanged, sourceValidator, type CensusSourceOptions } from "./source-release.ts";
 import { sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
+import { acquireTigerScopes, discoverTigerDistrictFiles } from "./tiger-acquire.ts";
 
 const REL = "https://www2.census.gov/geo/docs/maps-data/data/rel2020";
 
@@ -122,20 +123,6 @@ export async function discoverDistrictSources(options: CensusSourceOptions): Pro
   });
 }
 
-/** TIGER listings reveal a Congress release even before a tab20 relationship arrives. */
-export async function discoverTigerCongress(options: CensusSourceOptions): Promise<number | null> {
-  const root = "https://www2.census.gov/geo/tiger/";
-  const directories = (await censusDirectoryFiles(root, options)).filter(url => /^TIGER2\d{3}\/$/.test(url.slice(root.length))).sort().reverse();
-  if (directories.length === 0) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Census TIGER listing contains no releases");
-  for (const directory of directories) {
-    const subdirectories = await censusDirectoryFiles(directory, options);
-    if (!subdirectories.includes(`${directory}CD/`)) continue;
-    const sessions = (await censusDirectoryFiles(`${directory}CD/`, options)).flatMap(url => /_cd(\d+)\.zip$/.exec(url)?.[1] ? [Number(/_cd(\d+)\.zip$/.exec(url)![1])] : []);
-    if (sessions.length > 0) return Math.max(...sessions);
-  }
-  return null;
-}
-
 function filterScopeByStates(scope: BuiltScope, states: ReadonlySet<string>): BuiltScope {
   const groupings = scope.groupings.filter((g) => states.has(g.stateFips));
   return {
@@ -195,7 +182,7 @@ export async function acquireDataset(options: AcquireOptions = {}): Promise<Buil
     if (!source) throw new Error(`unknown census-geography source "${key}"; known: ${Object.keys(CENSUS_GEO_SOURCES).join(", ")}, cbsa, ${Object.keys(GRF_SCOPES).join(", ")}`);
     sources.set(source.version, source);
   }
-  const tigerCongress = discover ? await discoverTigerCongress(options) : null;
+  const tigerFiles = discover ? await discoverTigerDistrictFiles(options, options.states) : [];
   if (discover) for (const source of await discoverDistrictSources(options)) sources.set(source.version, source);
 
   // Each routine publication retains established older plans while adding their successors.
@@ -222,8 +209,17 @@ export async function acquireDataset(options: AcquireOptions = {}): Promise<Buil
     });
     for (const scope of built) scopes.set(scope.version, scope);
   }
-  if (tigerCongress !== null && !scopes.has(`cd:${tigerCongress}`)) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID",
-    `Census TIGER has published cd:${tigerCongress}, but its exact ZCTA relationship and GRF block assignments have not been acquired. The held district maps remain published.`);
+  if (tigerFiles.length) {
+    let countyScope: Promise<BuiltScope> | undefined;
+    const tigerScopes = await acquireTigerScopes(tigerFiles, { ...options, heldScopes: [...scopes.values()],
+      stateZctas: async stateFips => {
+        countyScope ??= Promise.resolve(scopes.get("county:2020") ?? buildScope(CENSUS_GEO_SOURCES.county, options));
+        const county = await countyScope;
+        return new Set(county.groupings.filter(group => group.stateFips === stateFips).flatMap(group => group.overlaps.map(overlap => overlap.zcta5)));
+      },
+    });
+    for (const scope of tigerScopes) scopes.set(scope.version, scope);
+  }
 
   const selected = [...scopes.values()].map(scope => options.states
     ? scope.type === "cbsa" ? filterCbsaByStates(scope, options.states) : filterScopeByStates(scope, options.states)

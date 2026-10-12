@@ -151,15 +151,30 @@ parsed. `acquireDataset({ only: ["cd120", "sldu2026", "sldl2026"], states })`
 can restrict acquisition to requested states. The routine script passes the last
 promoted dataset for reuse and retains earlier plans for their applicable dates.
 
-Every routine refresh checks Census GRF release listings, TIGER release/CD
+Every routine refresh checks Census GRF release listings, TIGER release/CD/SLDU/SLDL
 listings, and the exact `rel2020/cd-sld` relationship listing. New GRF directories
 and newly published tab20 district files are acquired without a registry or code
 change. Each state’s GRFN `CDSESSN` and `LSY` establish its actual Congress and
 legislative plan; the release directory year does not substitute for them.
-A TIGER congressional plan published before either its GRF block assignments or
-exact tab20 ZCTA relationship is an acquisition gap: the routine records the
-failure and preserves the last good publication. This path does not yet derive
-ZCTA overlaps directly from TIGER-only shapefiles.
+A district plan published first as a TIGER shapefile is acquired by the same
+routine refresh. The DBF's `CD<n>FP` column establishes the Congress and its
+`LSY` establishes the legislative plan year. The acquirer intersects that
+state's district polygons with the full-resolution 2020 ZCTA polygons from
+`TIGER2020/ZCTA520/tl_2020_us_zcta520.zip`. Positive surface-area intersections
+establish membership, including tiny slivers; line or point contact alone does
+not. Exact containment establishes whole coverage. These geometry overlaps
+carry `fractionBasis: "unknown"` and null shares because polygon surface area
+does not provide Census's tabulated land weights.
+
+The national ZCTA ZIP streams to a temporary file and immutable 4 MiB chunks
+in the existing evidence vault. Each state's geometry read returns only the
+ZCTAs in its held county relationships, and decodes one polygon record at a
+time. District files also use the shared source cache; ZIP CRC, SHP/DBF pairing,
+and geographic NAD83 coordinates are checked before admission. A failed update
+preserves both the last good source archive and published geography. Fresh
+HEAD/ETag checks reuse unchanged parsed overlaps without restoring or decoding
+their large archives. A new plan's metadata names the states whose complete
+files are held, so that plan does not cut off another state's current map.
 
 **State Senate / State House 2026 version clarity (determined from Census data).**
 The grf/2026 `SLDUST`/`SLDLST` (grfn `LSY=2026`) are the current legislative
@@ -181,6 +196,15 @@ including Alabama and Michigan’s Senate maps.
 remainder, split relationships, loud failure on a changed header) and the read
 model against the committed AZ fixture (`lib/census-geography/bootstrap-az.json`,
 all five primary groupings for Arizona).
+
+BD-02's offline checks use the committed Census-shaped binary ZIP samples in
+`tests/fixtures/census-tiger`. They test routine discovery and all three
+TIGER-only successor families through routine publication and the served lookup,
+state coverage, unchanged-source reuse,
+malformed-update preservation, holes, tiny splits, named district identity, and
+bounded streaming of an archive larger than 256 MiB. The samples have artificial
+coordinates and are parser evidence; production downloads run on the installed
+runner after River releases the code.
 
 **AZ-06 (toss-up):** the Census tab20 CD119 build returns **79 ZCTAs** (43
 whole, 36 partial). `zccd.csv` lists **87**. The 8-ZCTA difference is fully

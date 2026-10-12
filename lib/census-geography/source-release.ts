@@ -1,4 +1,4 @@
-import { acquireKnownRelease, type KnownRelease, type KnownReleaseOptions } from "../sources/known-release.ts";
+import { acquireKnownRelease, checkKnownSourceRetry, recordKnownSourceRetry, resolveKnownReleaseCache, type KnownRelease, type KnownReleaseOptions } from "../sources/known-release.ts";
 import { isSourceAcquisitionFailure, readPublisherBody, requestPublisher, sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
 import type { Provenance } from "./contract.ts";
 import { censusGeographyUserAgent } from "./http.ts";
@@ -40,17 +40,20 @@ export function sourceValidator(release: KnownRelease): NonNullable<Provenance["
 }
 
 /** Confirm held parsed overlaps without rereading the national block archive. */
-export async function heldSourcesUnchanged(provenance: Provenance, urls: readonly string[], options: CensusSourceOptions): Promise<boolean> {
-  if (provenance.parserVersion !== CENSUS_ACQUISITION_PARSER || !provenance.sourceValidators) return false;
+export async function heldSourcesUnchanged(provenance: Provenance, urls: readonly string[], options: CensusSourceOptions, parserVersion = CENSUS_ACQUISITION_PARSER): Promise<boolean> {
+  if (provenance.parserVersion !== parserVersion || !provenance.sourceValidators) return false;
   const validators = urls.map(url => provenance.sourceValidators!.find(row => row.url === url));
   if (validators.some(row => !row || !row.etag && !row.lastModified)) return false;
+  const { store } = await resolveKnownReleaseCache(options.cache);
   for (const held of validators) {
     const headers = new Headers({ "user-agent": censusGeographyUserAgent() });
     if (held!.etag) headers.set("if-none-match", held!.etag);
     else if (held!.lastModified) headers.set("if-modified-since", held!.lastModified);
+    await checkKnownSourceRetry(store, "census-geography-relationships", held!.url, new Date().toISOString());
     const response = await requestPublisher("Census geography source check", () =>
       (options.fetchImpl ?? fetch)(held!.url, { method: "HEAD", headers, signal: options.signal }));
     await readPublisherBody("Census geography source check", async () => { await response.body?.cancel(); });
+    await recordKnownSourceRetry(store, "census-geography-relationships", held!.url, response, new Date().toISOString());
     if (response.status === 304) continue;
     if (response.status === 405 || response.status === 501) return false;
     if (!response.ok) throw sourceAcquisitionFailure("PUBLISHER_RESPONSE_REFUSED", `Census source check returned HTTP ${response.status}: ${held!.url}`);

@@ -152,6 +152,8 @@ export interface Provenance {
 }
 
 export interface GeographyVersion {
+  /** States whose complete source files are held for this plan; omitted for a national source. */
+  readonly states?: readonly string[];
   readonly key: GeographyVersionKey;
   readonly type: GeographyType;
   readonly plan: string;

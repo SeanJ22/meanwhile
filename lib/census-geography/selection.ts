@@ -54,7 +54,7 @@ export function establishedApplicability(version: string): readonly GeographyApp
   }
 }
 
-type Selectable = Pick<GeographyVersion, "key" | "type"> & Partial<Pick<GeographyVersion, "applicability" | "retrievalComplete">>;
+type Selectable = Pick<GeographyVersion, "key" | "type"> & Partial<Pick<GeographyVersion, "applicability" | "retrievalComplete" | "states">>;
 
 export function applicabilityOf(version: Pick<Selectable, "key" | "applicability">): readonly GeographyApplicability[] {
   const established = establishedApplicability(version.key);
@@ -69,7 +69,8 @@ export function currentRepresentationSelection(now = new Date()): GeographySelec
 export function selectGeographyVersion<T extends Selectable>(versions: readonly T[], type: GeographyType, selection: GeographySelection, state?: string): T | null {
   const day = (selection.purpose === "election" ? selection.electionDate : selection.asOf)?.slice(0, 10);
   if (!day || !/^\d{4}-\d{2}-\d{2}$/.test(day)) return null;
-  const held = versions.filter(version => version.type === type && version.retrievalComplete !== false)
+  const held = versions.filter(version => version.type === type && version.retrievalComplete !== false &&
+    (!state || !version.states || version.states.some(heldState => heldState.toUpperCase() === state.toUpperCase())))
     .flatMap(version => applicabilityOf(version)
       .filter(interval => interval.purpose === selection.purpose &&
         (!state || !interval.exceptStates?.some(excluded => excluded.toUpperCase() === state.toUpperCase())))

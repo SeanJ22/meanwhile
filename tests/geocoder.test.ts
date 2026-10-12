@@ -19,12 +19,6 @@ import {
   streetOnly,
 } from "../lib/geo/census-geocoder.ts";
 
-/**
- * The Census geocoder does not geocode street names, only addresses, so a street is placed from a few
- * sampled house numbers that must agree, or nothing. No reader house number is ever sent, and every
- * failure lands on `null`. The recorded payloads below are real Census responses.
- */
-
 test("D53: a house number the reader types anyway is stripped before sending", () => {
   assert.equal(streetOnly("808 Green Pond Road"), "Green Pond Road");
   assert.equal(streetOnly("  12A Elm St "), "Elm St");
@@ -67,8 +61,6 @@ test("D53: a real match parses; a real miss is null, not a throw", () => {
   // A bare street name gets nothing back; this is why the sampling exists.
   assert.equal(parseCensusPoint(REAL_EMPTY), null);
 
-  // Everything unexpected is null rather than an exception, because this
-  // parses third-party JSON on the reader's device.
   for (const junk of [null, undefined, {}, { result: {} }, "nope", 42]) {
     assert.equal(parseCensusPoint(junk), null);
   }
@@ -511,36 +503,20 @@ test("M80: a browser goes through the proxy; the server calls the Bureau direct"
   );
 });
 
-test("M80: the promise changed in the same commit, on both surfaces", () => {
+test("M80: the address prompt discloses Census lookup and district-only visit storage", () => {
   const prompt = readFileSync(
     join(process.cwd(), "components", "address", "address-prompt.tsx"),
     "utf8",
   );
 
-  // The unkeepable never-store promise is gone from the reader-facing copy.
-  const promptCopy = prompt.slice(prompt.indexOf("We ask for your street"));
-  assert.ok(
-    !/never send it to us/.test(promptCopy),
-    "the narrowing prompt still makes the unkeepable promise",
-  );
-
-  // And the keepable one is on the prompt (what the site collects is stated
-  // once, on /transparency, so the page no longer describes the address).
-  for (const [name, page] of [["narrowing prompt", prompt]] as const) {
-    assert.ok(
-      /passes through our server/.test(page),
-      `${name} does not say the address passes through our server`,
-    );
-    // Scoped to the address paragraph: the transparency page's other never-logged promises are keepable.
-    const addressPara =
-      page
-        .split(/\n\s*\n|<\/p>/)
-        .find((chunk) => /Census Bureau/.test(chunk) && /passes through/.test(chunk)) ?? "";
-    assert.ok(addressPara, `${name} has no address paragraph to check`);
-    assert.ok(
-      !/never (store|log)/i.test(addressPara),
-      `${name} still makes the struck never-store/never-log promise about the address`,
-    );
+  const privacyParagraphs = [...prompt.matchAll(/<p className="address-prompt-promise">([\s\S]*?)<\/p>/g)]
+    .map((match) => match[1].replace(/\s+/g, " "));
+  const lookupDisclosure = privacyParagraphs.find((paragraph) => /Census Bureau/.test(paragraph));
+  assert.ok(lookupDisclosure, "the prompt must disclose the Census address lookup");
+  assert.match(lookupDisclosure, /house number.*check your districts.*Census Bureau/i);
+  assert.match(lookupDisclosure, /Only the district result stays on this device for this visit/);
+  for (const paragraph of privacyParagraphs) {
+    assert.doesNotMatch(paragraph, /never (?:send it to us|store|log)/i);
   }
 });
 

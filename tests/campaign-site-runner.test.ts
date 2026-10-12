@@ -969,7 +969,7 @@ test("the paid lane stays closed under the owner's pause, and the pass is plain 
   assert.match(block, /withinWallTime\(/);
   assert.match(block, /dispatchDeadlineMs \+ CAMPAIGN_SITES_SETTLE_MS - Date\.now\(\)/);
   assert.match(block, /deferred: still waiting on \$\{waitingOn\}/);
-  assert.match(block, /guardedOpenBytes\("discovery-web", "campaign-site-chain", fetch, \{ followRedirects: false \}\)/);
+  assert.match(block, /guardedOpenBytes\("discovery-web", "campaign-site-chain", undefined, \{ followRedirects: false \}\)/);
   assert.match(block, /spaceOut: spacer/);
   assert.match(runner, /campaignSiteCycleLine\(campaignSites\)/, "the pass reaches the cycle's digest");
 });

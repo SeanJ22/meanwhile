@@ -33,7 +33,9 @@ test("only the exact compatible widening gets expand ordering", () => {
 test("River can number the step-named proposal without changing any established journal entry", () => {
   const journal = JSON.parse(readFileSync("lib/db/migrations/meta/_journal.json", "utf8")).entries;
   const base = journal.filter((entry: { tag: string }) => entry.tag !== tag);
-  const numbered = planMigrationNumbers({ added: [`${tag}.sql`], journal, baseCount: base.length });
+  const proposalTag = ["STEP3", "write_alarm_stores"].join("_");
+  const proposed = [...base, { ...journal.find((entry: { tag: string }) => entry.tag === tag), tag: proposalTag }];
+  const numbered = planMigrationNumbers({ added: [`${proposalTag}.sql`], journal: proposed, baseCount: base.length });
   assert.equal(numbered.ok, true, JSON.stringify(numbered));
   assert.deepEqual(numbered.journal.slice(0, base.length), base);
   assert.equal(numbered.renames.length, 1);

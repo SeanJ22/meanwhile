@@ -92,7 +92,8 @@ for (const [device, viewport] of [
   const unexpected: string[] = [];
   let demandCalls = 0, askCalls = 0;
   const server = createServer(async (request, response) => {
-    const path = new URL(request.url ?? "/", "http://fixture.test").pathname;
+    const requestUrl = new URL(request.url ?? "/", "http://fixture.test");
+    const path = requestUrl.pathname;
     const chunks: Buffer[] = [];
     for await (const chunk of request) chunks.push(Buffer.from(chunk));
     const body = chunks.length ? JSON.parse(Buffer.concat(chunks).toString()) as Record<string, unknown> : null;

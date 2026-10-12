@@ -76,7 +76,7 @@ export async function publishStatePeople(input: {store:RoutineDataStore;state:st
   const priorFacts = held ? {...held,
     officeholders:priorPeople,
     divisions:input.roster.currentMembershipComplete ? [] : held.divisions.filter(row=>priorIds.has(row.officeholderId) && (!row.membershipId || !explicitEnded.has(row.membershipId))),
-    unmatched:input.roster.currentMembershipComplete ? [] : held.unmatched.filter(row=>priorIds.has(row.officeholderId)),
+    unmatched:input.roster.currentMembershipComplete ? [] : held.unmatched.filter(row=>priorIds.has(row.officeholderId) && !currentIds.has(row.officeholderId)),
   } : null;
   const roster = mergeStatePeople(priorFacts,input.roster);
   // Keep the original captures behind still-held facts. A malformed next

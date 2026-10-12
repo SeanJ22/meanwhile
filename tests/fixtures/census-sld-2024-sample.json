@@ -1,0 +1,1880 @@
+{
+  "sources": {
+    "census": {
+      "recordClass": "CENSUS_GEOGRAPHY",
+      "scope": "US:zcta-geography-overlaps",
+      "versionId": "cv-2a58dfdf917b660c5efb433265c9e4a3",
+      "acquiredReadOnly": "2026-10-12"
+    },
+    "openStates": {
+      "revision": "cd4335d8becbe22664e34c04ce1a2ee1920cd645",
+      "heldCsv": "data/reference/openstates_legislators.csv",
+      "retrievedAt": "2026-08-19"
+    }
+  },
+  "scopes": [
+    {
+      "row_kind": "scope",
+      "type": "state_leg_upper",
+      "version": "sldu:2024",
+      "plan": "2024 state upper-chamber plan",
+      "geoid": null,
+      "ocd_id": null,
+      "label": null,
+      "state_fips": null,
+      "state_abbr": null,
+      "cbsa_class": null,
+      "member_states": null,
+      "overlaps": null,
+      "version_meta": {
+        "key": "sldu:2024",
+        "plan": "2024 state upper-chamber plan",
+        "type": "state_leg_upper",
+        "provenance": {
+          "method": "Census 2020-tabulation ZCTA↔SLDU2024 relationship file (tab20_sldu202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+          "computedAt": "2026-09-29T01:11:56.724Z",
+          "sourceUrls": [
+            "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldu202420_zcta520_natl.txt"
+          ],
+          "sourceFiles": [
+            "tab20_sldu202420_zcta520_natl.txt"
+          ],
+          "sourceDataset": "CENSUS_TAB20_REL2020",
+          "sourceChecksums": [
+            "49f339d330c548d844c012e0cb980b65dfb8af931f437118c2eed16f21cc44a1"
+          ]
+        },
+        "effectiveFor": "current state upper-chamber districts (2024 plan)",
+        "zctaTabulation": "2020"
+      }
+    },
+    {
+      "row_kind": "scope",
+      "type": "state_leg_lower",
+      "version": "sldl:2024",
+      "plan": "2024 state lower-chamber plan",
+      "geoid": null,
+      "ocd_id": null,
+      "label": null,
+      "state_fips": null,
+      "state_abbr": null,
+      "cbsa_class": null,
+      "member_states": null,
+      "overlaps": null,
+      "version_meta": {
+        "key": "sldl:2024",
+        "plan": "2024 state lower-chamber plan",
+        "type": "state_leg_lower",
+        "provenance": {
+          "method": "Census 2020-tabulation ZCTA↔SLDL2024 relationship file (tab20_sldl202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+          "computedAt": "2026-09-29T01:11:57.319Z",
+          "sourceUrls": [
+            "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldl202420_zcta520_natl.txt"
+          ],
+          "sourceFiles": [
+            "tab20_sldl202420_zcta520_natl.txt"
+          ],
+          "sourceDataset": "CENSUS_TAB20_REL2020",
+          "sourceChecksums": [
+            "ba7458e3582d752b6de0a20f6e6ed5f018fa06f05f6763a17f6960109c598eb9"
+          ]
+        },
+        "effectiveFor": "current state lower-chamber districts (2024 plan)",
+        "zctaTabulation": "2020"
+      }
+    }
+  ],
+  "samples": [
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_upper",
+        "version": "sldu:2024",
+        "plan": "2024 state upper-chamber plan",
+        "geoid": "0200B",
+        "ocd_id": null,
+        "label": "AK State Senate District B (2024 plan)",
+        "state_fips": "02",
+        "state_abbr": "AK",
+        "cbsa_class": null,
+        "member_states": [
+          "AK"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldu:2024",
+          "plan": "2024 state upper-chamber plan",
+          "type": "state_leg_upper",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDU2024 relationship file (tab20_sldu202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:56.724Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldu202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldu202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "49f339d330c548d844c012e0cb980b65dfb8af931f437118c2eed16f21cc44a1"
+            ]
+          },
+          "effectiveFor": "current state upper-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "exact",
+      "people": [
+        {
+          "id": "ocd-person/1ae3974e-660d-4526-b351-fff9b689b51a",
+          "name": "Jesse Kiehl",
+          "state": "ak",
+          "chamber": "upper",
+          "district": "B",
+          "party": "Democratic",
+          "startDate": "2023-01-17",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/ak/legislature/Jesse-Kiehl-1ae3974e-660d-4526-b351-fff9b689b51a.yml"
+        }
+      ]
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_lower",
+        "version": "sldl:2024",
+        "plan": "2024 state lower-chamber plan",
+        "geoid": "04001",
+        "ocd_id": null,
+        "label": "AZ State House District 1 (2024 plan)",
+        "state_fips": "04",
+        "state_abbr": "AZ",
+        "cbsa_class": null,
+        "member_states": [
+          "AZ"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldl:2024",
+          "plan": "2024 state lower-chamber plan",
+          "type": "state_leg_lower",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDL2024 relationship file (tab20_sldl202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:57.319Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "ba7458e3582d752b6de0a20f6e6ed5f018fa06f05f6763a17f6960109c598eb9"
+            ]
+          },
+          "effectiveFor": "current state lower-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "exact",
+      "people": [
+        {
+          "id": "ocd-person/a4f969ab-e79a-4364-9a93-ad8c75ccf668",
+          "name": "Quang Nguyen",
+          "state": "az",
+          "chamber": "lower",
+          "district": "1",
+          "party": "Republican",
+          "startDate": "2021-01-11",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/az/legislature/Quang-Nguyen-a4f969ab-e79a-4364-9a93-ad8c75ccf668.yml"
+        },
+        {
+          "id": "ocd-person/bdcadc0a-7e86-4e6a-8e27-4896dbb094ce",
+          "name": "Selina Bliss",
+          "state": "az",
+          "chamber": "lower",
+          "district": "1",
+          "party": "Republican",
+          "startDate": "2023-01-09",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/az/legislature/Selina-Bliss-bdcadc0a-7e86-4e6a-8e27-4896dbb094ce.yml"
+        }
+      ]
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_upper",
+        "version": "sldu:2024",
+        "plan": "2024 state upper-chamber plan",
+        "geoid": "04001",
+        "ocd_id": null,
+        "label": "AZ State Senate District 1 (2024 plan)",
+        "state_fips": "04",
+        "state_abbr": "AZ",
+        "cbsa_class": null,
+        "member_states": [
+          "AZ"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldu:2024",
+          "plan": "2024 state upper-chamber plan",
+          "type": "state_leg_upper",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDU2024 relationship file (tab20_sldu202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:56.724Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldu202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldu202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "49f339d330c548d844c012e0cb980b65dfb8af931f437118c2eed16f21cc44a1"
+            ]
+          },
+          "effectiveFor": "current state upper-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "exact",
+      "people": [
+        {
+          "id": "ocd-person/77415ae8-cbbc-4f67-ac01-3f749d44ff08",
+          "name": "Mark Finchem",
+          "state": "az",
+          "chamber": "upper",
+          "district": "1",
+          "party": "Republican",
+          "startDate": "2025-01-13",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/az/legislature/Mark-Finchem-77415ae8-cbbc-4f67-ac01-3f749d44ff08.yml"
+        }
+      ]
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_lower",
+        "version": "sldl:2024",
+        "plan": "2024 state lower-chamber plan",
+        "geoid": "06001",
+        "ocd_id": null,
+        "label": "CA Assembly District 1 (2024 plan)",
+        "state_fips": "06",
+        "state_abbr": "CA",
+        "cbsa_class": null,
+        "member_states": [
+          "CA"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldl:2024",
+          "plan": "2024 state lower-chamber plan",
+          "type": "state_leg_lower",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDL2024 relationship file (tab20_sldl202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:57.319Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "ba7458e3582d752b6de0a20f6e6ed5f018fa06f05f6763a17f6960109c598eb9"
+            ]
+          },
+          "effectiveFor": "current state lower-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "exact",
+      "people": [
+        {
+          "id": "ocd-person/3b125433-5362-42e2-a2b5-b608962c9481",
+          "name": "Heather Hadwick",
+          "state": "ca",
+          "chamber": "lower",
+          "district": "1",
+          "party": "Republican",
+          "startDate": "2024-12-02",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/ca/legislature/Heather-Hadwick-3b125433-5362-42e2-a2b5-b608962c9481.yml"
+        }
+      ]
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_upper",
+        "version": "sldu:2024",
+        "plan": "2024 state upper-chamber plan",
+        "geoid": "06001",
+        "ocd_id": null,
+        "label": "CA State Senate District 1 (2024 plan)",
+        "state_fips": "06",
+        "state_abbr": "CA",
+        "cbsa_class": null,
+        "member_states": [
+          "CA"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldu:2024",
+          "plan": "2024 state upper-chamber plan",
+          "type": "state_leg_upper",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDU2024 relationship file (tab20_sldu202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:56.724Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldu202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldu202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "49f339d330c548d844c012e0cb980b65dfb8af931f437118c2eed16f21cc44a1"
+            ]
+          },
+          "effectiveFor": "current state upper-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "exact",
+      "people": [
+        {
+          "id": "ocd-person/1509d608-4d2b-4ebc-be73-b4cd6c06b7c6",
+          "name": "Megan Dahle",
+          "state": "ca",
+          "chamber": "upper",
+          "district": "1",
+          "party": "Republican",
+          "startDate": "2024-12-02",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/ca/legislature/Megan-Dahle-1509d608-4d2b-4ebc-be73-b4cd6c06b7c6.yml"
+        }
+      ]
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_lower",
+        "version": "sldl:2024",
+        "plan": "2024 state lower-chamber plan",
+        "geoid": "09ZZZ",
+        "ocd_id": null,
+        "label": "CT State House Districts not defined (2024 plan)",
+        "state_fips": "09",
+        "state_abbr": "CT",
+        "cbsa_class": null,
+        "member_states": [
+          "CT"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldl:2024",
+          "plan": "2024 state lower-chamber plan",
+          "type": "state_leg_lower",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDL2024 relationship file (tab20_sldl202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:57.319Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "ba7458e3582d752b6de0a20f6e6ed5f018fa06f05f6763a17f6960109c598eb9"
+            ]
+          },
+          "effectiveFor": "current state lower-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "unassigned",
+      "people": []
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_upper",
+        "version": "sldu:2024",
+        "plan": "2024 state upper-chamber plan",
+        "geoid": "09ZZZ",
+        "ocd_id": null,
+        "label": "CT State Senate Districts not defined (2024 plan)",
+        "state_fips": "09",
+        "state_abbr": "CT",
+        "cbsa_class": null,
+        "member_states": [
+          "CT"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldu:2024",
+          "plan": "2024 state upper-chamber plan",
+          "type": "state_leg_upper",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDU2024 relationship file (tab20_sldu202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:56.724Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldu202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldu202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "49f339d330c548d844c012e0cb980b65dfb8af931f437118c2eed16f21cc44a1"
+            ]
+          },
+          "effectiveFor": "current state upper-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "unassigned",
+      "people": []
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_upper",
+        "version": "sldu:2024",
+        "plan": "2024 state upper-chamber plan",
+        "geoid": "11002",
+        "ocd_id": null,
+        "label": "DC Ward 2 (2024 plan)",
+        "state_fips": "11",
+        "state_abbr": "DC",
+        "cbsa_class": null,
+        "member_states": [
+          "DC"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldu:2024",
+          "plan": "2024 state upper-chamber plan",
+          "type": "state_leg_upper",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDU2024 relationship file (tab20_sldu202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:56.724Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldu202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldu202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "49f339d330c548d844c012e0cb980b65dfb8af931f437118c2eed16f21cc44a1"
+            ]
+          },
+          "effectiveFor": "current state upper-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "exact",
+      "people": [
+        {
+          "id": "ocd-person/bf329860-076e-4d14-bed2-969d0d13dfec",
+          "name": "Brooke Pinto",
+          "state": "dc",
+          "chamber": "legislature",
+          "district": "Ward 2",
+          "party": "Democratic",
+          "startDate": "2020-06-27",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/dc/legislature/Brooke-Pinto-bf329860-076e-4d14-bed2-969d0d13dfec.yml"
+        }
+      ]
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_lower",
+        "version": "sldl:2024",
+        "plan": "2024 state lower-chamber plan",
+        "geoid": "10001",
+        "ocd_id": null,
+        "label": "DE State Representative District 1 (2024 plan)",
+        "state_fips": "10",
+        "state_abbr": "DE",
+        "cbsa_class": null,
+        "member_states": [
+          "DE"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldl:2024",
+          "plan": "2024 state lower-chamber plan",
+          "type": "state_leg_lower",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDL2024 relationship file (tab20_sldl202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:57.319Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "ba7458e3582d752b6de0a20f6e6ed5f018fa06f05f6763a17f6960109c598eb9"
+            ]
+          },
+          "effectiveFor": "current state lower-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "exact",
+      "people": [
+        {
+          "id": "ocd-person/fdf8cd7b-933f-469b-b1b7-119b39ba5e86",
+          "name": "Nnamdi Chukwuocha",
+          "state": "de",
+          "chamber": "lower",
+          "district": "1",
+          "party": "Democratic",
+          "startDate": "2018-11-07",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/de/legislature/Nnamdi-O-Chukwuocha-fdf8cd7b-933f-469b-b1b7-119b39ba5e86.yml"
+        }
+      ]
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_upper",
+        "version": "sldu:2024",
+        "plan": "2024 state upper-chamber plan",
+        "geoid": "10001",
+        "ocd_id": null,
+        "label": "DE State Senate District 1 (2024 plan)",
+        "state_fips": "10",
+        "state_abbr": "DE",
+        "cbsa_class": null,
+        "member_states": [
+          "DE"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldu:2024",
+          "plan": "2024 state upper-chamber plan",
+          "type": "state_leg_upper",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDU2024 relationship file (tab20_sldu202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:56.724Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldu202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldu202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "49f339d330c548d844c012e0cb980b65dfb8af931f437118c2eed16f21cc44a1"
+            ]
+          },
+          "effectiveFor": "current state upper-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "exact",
+      "people": [
+        {
+          "id": "ocd-person/2341b6b1-2501-4aae-908a-b83346da21eb",
+          "name": "Dan Cruce",
+          "state": "de",
+          "chamber": "upper",
+          "district": "1",
+          "party": "Democratic",
+          "startDate": "2025-02-16",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/de/legislature/Dan-Cruce-2341b6b1-2501-4aae-908a-b83346da21eb.yml"
+        }
+      ]
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_lower",
+        "version": "sldl:2024",
+        "plan": "2024 state lower-chamber plan",
+        "geoid": "16001",
+        "ocd_id": null,
+        "label": "ID State House District 1 (2024 plan)",
+        "state_fips": "16",
+        "state_abbr": "ID",
+        "cbsa_class": null,
+        "member_states": [
+          "ID"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldl:2024",
+          "plan": "2024 state lower-chamber plan",
+          "type": "state_leg_lower",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDL2024 relationship file (tab20_sldl202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:57.319Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "ba7458e3582d752b6de0a20f6e6ed5f018fa06f05f6763a17f6960109c598eb9"
+            ]
+          },
+          "effectiveFor": "current state lower-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "numbered-seat",
+      "people": [
+        {
+          "id": "ocd-person/a41cd894-d64d-406e-99cd-f1935e40a812",
+          "name": "Cornel Rasor",
+          "state": "id",
+          "chamber": "lower",
+          "district": "1B",
+          "party": "Republican",
+          "startDate": "2024-09-30",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/id/legislature/Cornel-Rasor-a41cd894-d64d-406e-99cd-f1935e40a812.yml"
+        },
+        {
+          "id": "ocd-person/92364a5c-40fe-4350-9604-5257be00caab",
+          "name": "Mark Sauter",
+          "state": "id",
+          "chamber": "lower",
+          "district": "1A",
+          "party": "Republican",
+          "startDate": "2022-12-01",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/id/legislature/Mark-Sauter-92364a5c-40fe-4350-9604-5257be00caab.yml"
+        }
+      ]
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_upper",
+        "version": "sldu:2024",
+        "plan": "2024 state upper-chamber plan",
+        "geoid": "16001",
+        "ocd_id": null,
+        "label": "ID State Senate District 1 (2024 plan)",
+        "state_fips": "16",
+        "state_abbr": "ID",
+        "cbsa_class": null,
+        "member_states": [
+          "ID"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldu:2024",
+          "plan": "2024 state upper-chamber plan",
+          "type": "state_leg_upper",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDU2024 relationship file (tab20_sldu202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:56.724Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldu202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldu202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "49f339d330c548d844c012e0cb980b65dfb8af931f437118c2eed16f21cc44a1"
+            ]
+          },
+          "effectiveFor": "current state upper-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "exact",
+      "people": [
+        {
+          "id": "ocd-person/76cd07b1-e4de-4e1b-bd7c-a3153493ac5f",
+          "name": "Jim Woodward",
+          "state": "id",
+          "chamber": "upper",
+          "district": "1",
+          "party": "Republican",
+          "startDate": "2024-12-01",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/id/legislature/Jim-Woodward-76cd07b1-e4de-4e1b-bd7c-a3153493ac5f.yml"
+        }
+      ]
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_lower",
+        "version": "sldl:2024",
+        "plan": "2024 state lower-chamber plan",
+        "geoid": "25006",
+        "ocd_id": null,
+        "label": "MA Barnstable-Dukes-Nantucket District (2024 plan)",
+        "state_fips": "25",
+        "state_abbr": "MA",
+        "cbsa_class": null,
+        "member_states": [
+          "MA"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldl:2024",
+          "plan": "2024 state lower-chamber plan",
+          "type": "state_leg_lower",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDL2024 relationship file (tab20_sldl202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:57.319Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "ba7458e3582d752b6de0a20f6e6ed5f018fa06f05f6763a17f6960109c598eb9"
+            ]
+          },
+          "effectiveFor": "current state lower-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "exact",
+      "people": [
+        {
+          "id": "ocd-person/ebfdda03-c083-4a13-b3a4-f87f6e24adac",
+          "name": "Thomas Moakley",
+          "state": "ma",
+          "chamber": "lower",
+          "district": "Barnstable, Dukes and Nantucket",
+          "party": "Democratic",
+          "startDate": "2025-01-01",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/ma/legislature/Thomas-Moakley-ebfdda03-c083-4a13-b3a4-f87f6e24adac.yml"
+        }
+      ]
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_lower",
+        "version": "sldl:2024",
+        "plan": "2024 state lower-chamber plan",
+        "geoid": "25058",
+        "ocd_id": null,
+        "label": "MA 3rd Hampshire District (2024 plan)",
+        "state_fips": "25",
+        "state_abbr": "MA",
+        "cbsa_class": null,
+        "member_states": [
+          "MA"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldl:2024",
+          "plan": "2024 state lower-chamber plan",
+          "type": "state_leg_lower",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDL2024 relationship file (tab20_sldl202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:57.319Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "ba7458e3582d752b6de0a20f6e6ed5f018fa06f05f6763a17f6960109c598eb9"
+            ]
+          },
+          "effectiveFor": "current state lower-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "exact",
+      "people": [
+        {
+          "id": "ocd-person/65617e1a-1834-4ec8-9f19-4ac801ce9764",
+          "name": "Mindy Domb",
+          "state": "ma",
+          "chamber": "lower",
+          "district": "3rd Hampshire",
+          "party": "Democratic",
+          "startDate": "2019-01-02",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/ma/legislature/Mindy-Domb-65617e1a-1834-4ec8-9f19-4ac801ce9764.yml"
+        }
+      ]
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_upper",
+        "version": "sldu:2024",
+        "plan": "2024 state upper-chamber plan",
+        "geoid": "25D01",
+        "ocd_id": null,
+        "label": "MA Berkshire-Hampden-Franklin-Hampshire District (2024 plan)",
+        "state_fips": "25",
+        "state_abbr": "MA",
+        "cbsa_class": null,
+        "member_states": [
+          "MA"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldu:2024",
+          "plan": "2024 state upper-chamber plan",
+          "type": "state_leg_upper",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDU2024 relationship file (tab20_sldu202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:56.724Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldu202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldu202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "49f339d330c548d844c012e0cb980b65dfb8af931f437118c2eed16f21cc44a1"
+            ]
+          },
+          "effectiveFor": "current state upper-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "exact",
+      "people": [
+        {
+          "id": "ocd-person/fd5aaac8-48f5-42c2-82a8-abaf6c5de650",
+          "name": "Paul Mark",
+          "state": "ma",
+          "chamber": "upper",
+          "district": "Berkshire, Hampden, Franklin and Hampshire",
+          "party": "Democratic",
+          "startDate": "2023-01-04",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/ma/legislature/Paul-W-Mark-fd5aaac8-48f5-42c2-82a8-abaf6c5de650.yml"
+        }
+      ]
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_upper",
+        "version": "sldu:2024",
+        "plan": "2024 state upper-chamber plan",
+        "geoid": "25D05",
+        "ocd_id": null,
+        "label": "MA Hampshire-Franklin-Worcester District (2024 plan)",
+        "state_fips": "25",
+        "state_abbr": "MA",
+        "cbsa_class": null,
+        "member_states": [
+          "MA"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldu:2024",
+          "plan": "2024 state upper-chamber plan",
+          "type": "state_leg_upper",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDU2024 relationship file (tab20_sldu202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:56.724Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldu202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldu202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "49f339d330c548d844c012e0cb980b65dfb8af931f437118c2eed16f21cc44a1"
+            ]
+          },
+          "effectiveFor": "current state upper-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "exact",
+      "people": [
+        {
+          "id": "ocd-person/2998b05b-b83e-4a9b-9659-a609ddc63a34",
+          "name": "Jo Comerford",
+          "state": "ma",
+          "chamber": "upper",
+          "district": "Hampshire, Franklin and Worcester",
+          "party": "Democratic",
+          "startDate": "2019-01-02",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/ma/legislature/Joanne-Comerford-2998b05b-b83e-4a9b-9659-a609ddc63a34.yml"
+        }
+      ]
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_lower",
+        "version": "sldl:2024",
+        "plan": "2024 state lower-chamber plan",
+        "geoid": "2401A",
+        "ocd_id": null,
+        "label": "MD State Legislative Subdistrict 1A (2024 plan)",
+        "state_fips": "24",
+        "state_abbr": "MD",
+        "cbsa_class": null,
+        "member_states": [
+          "MD"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldl:2024",
+          "plan": "2024 state lower-chamber plan",
+          "type": "state_leg_lower",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDL2024 relationship file (tab20_sldl202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:57.319Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "ba7458e3582d752b6de0a20f6e6ed5f018fa06f05f6763a17f6960109c598eb9"
+            ]
+          },
+          "effectiveFor": "current state lower-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "exact",
+      "people": [
+        {
+          "id": "ocd-person/bb4f12c9-db2f-449d-a3a3-a7f77ad5d1f9",
+          "name": "Jim Hinebaugh",
+          "state": "md",
+          "chamber": "lower",
+          "district": "1A",
+          "party": "Republican",
+          "startDate": "2023-01-11",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/md/legislature/Jim-Hinebaugh-Jr-bb4f12c9-db2f-449d-a3a3-a7f77ad5d1f9.yml"
+        }
+      ]
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_lower",
+        "version": "sldl:2024",
+        "plan": "2024 state lower-chamber plan",
+        "geoid": "24028",
+        "ocd_id": null,
+        "label": "MD State Legislative District 28 (2024 plan)",
+        "state_fips": "24",
+        "state_abbr": "MD",
+        "cbsa_class": null,
+        "member_states": [
+          "MD"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldl:2024",
+          "plan": "2024 state lower-chamber plan",
+          "type": "state_leg_lower",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDL2024 relationship file (tab20_sldl202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:57.319Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "ba7458e3582d752b6de0a20f6e6ed5f018fa06f05f6763a17f6960109c598eb9"
+            ]
+          },
+          "effectiveFor": "current state lower-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "exact",
+      "people": [
+        {
+          "id": "ocd-person/ab6c2e37-3818-467c-ad60-997274e897d0",
+          "name": "C.T. Wilson",
+          "state": "md",
+          "chamber": "lower",
+          "district": "28",
+          "party": "Democratic",
+          "startDate": "2011-01-12",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/md/legislature/C-T-Wilson-ab6c2e37-3818-467c-ad60-997274e897d0.yml"
+        }
+      ]
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_upper",
+        "version": "sldu:2024",
+        "plan": "2024 state upper-chamber plan",
+        "geoid": "24028",
+        "ocd_id": null,
+        "label": "MD State Senate District 28 (2024 plan)",
+        "state_fips": "24",
+        "state_abbr": "MD",
+        "cbsa_class": null,
+        "member_states": [
+          "MD"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldu:2024",
+          "plan": "2024 state upper-chamber plan",
+          "type": "state_leg_upper",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDU2024 relationship file (tab20_sldu202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:56.724Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldu202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldu202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "49f339d330c548d844c012e0cb980b65dfb8af931f437118c2eed16f21cc44a1"
+            ]
+          },
+          "effectiveFor": "current state upper-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "exact",
+      "people": [
+        {
+          "id": "ocd-person/ad59d051-2efb-495f-b032-524d21a95e50",
+          "name": "Arthur Ellis",
+          "state": "md",
+          "chamber": "upper",
+          "district": "28",
+          "party": "Democratic",
+          "startDate": "2019-01-09",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/md/legislature/Arthur-Ellis-ad59d051-2efb-495f-b032-524d21a95e50.yml"
+        }
+      ]
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_lower",
+        "version": "sldl:2024",
+        "plan": "2024 state lower-chamber plan",
+        "geoid": "2741A",
+        "ocd_id": null,
+        "label": "MN State House District 41A (2024 plan)",
+        "state_fips": "27",
+        "state_abbr": "MN",
+        "cbsa_class": null,
+        "member_states": [
+          "MN"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldl:2024",
+          "plan": "2024 state lower-chamber plan",
+          "type": "state_leg_lower",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDL2024 relationship file (tab20_sldl202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:57.319Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "ba7458e3582d752b6de0a20f6e6ed5f018fa06f05f6763a17f6960109c598eb9"
+            ]
+          },
+          "effectiveFor": "current state lower-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "exact",
+      "people": [
+        {
+          "id": "ocd-person/0926949b-8d9e-4fc0-b860-7662f46afdc6",
+          "name": "Wayne Johnson",
+          "state": "mn",
+          "chamber": "lower",
+          "district": "41A",
+          "party": "Republican",
+          "startDate": "2025-01-14",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/mn/legislature/Wayne-Johnson-0926949b-8d9e-4fc0-b860-7662f46afdc6.yml"
+        }
+      ]
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_lower",
+        "version": "sldl:2024",
+        "plan": "2024 state lower-chamber plan",
+        "geoid": "3804A",
+        "ocd_id": null,
+        "label": "ND State House District 4A (2024 plan)",
+        "state_fips": "38",
+        "state_abbr": "ND",
+        "cbsa_class": null,
+        "member_states": [
+          "ND"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldl:2024",
+          "plan": "2024 state lower-chamber plan",
+          "type": "state_leg_lower",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDL2024 relationship file (tab20_sldl202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:57.319Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "ba7458e3582d752b6de0a20f6e6ed5f018fa06f05f6763a17f6960109c598eb9"
+            ]
+          },
+          "effectiveFor": "current state lower-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "exact",
+      "people": [
+        {
+          "id": "ocd-person/bf09d70e-a605-43f0-bcca-57ece9c06214",
+          "name": "Lisa Finley-DeVille",
+          "state": "nd",
+          "chamber": "lower",
+          "district": "4A",
+          "party": "Democratic",
+          "startDate": "2022-12-01",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/nd/legislature/Lisa-Finley-DeVille-bf09d70e-a605-43f0-bcca-57ece9c06214.yml"
+        }
+      ]
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_lower",
+        "version": "sldl:2024",
+        "plan": "2024 state lower-chamber plan",
+        "geoid": "33001",
+        "ocd_id": null,
+        "label": "NH State House District Belknap 01 (2024 plan)",
+        "state_fips": "33",
+        "state_abbr": "NH",
+        "cbsa_class": null,
+        "member_states": [
+          "NH"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldl:2024",
+          "plan": "2024 state lower-chamber plan",
+          "type": "state_leg_lower",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDL2024 relationship file (tab20_sldl202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:57.319Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "ba7458e3582d752b6de0a20f6e6ed5f018fa06f05f6763a17f6960109c598eb9"
+            ]
+          },
+          "effectiveFor": "current state lower-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "exact",
+      "people": [
+        {
+          "id": "ocd-person/8f685697-5fb0-4966-8cd0-ad3059650f8d",
+          "name": "Tom Ploszaj",
+          "state": "nh",
+          "chamber": "lower",
+          "district": "Belknap 1",
+          "party": "Independent",
+          "startDate": "2020-12-02",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/nh/legislature/Tom-Ploszaj-8f685697-5fb0-4966-8cd0-ad3059650f8d.yml"
+        }
+      ]
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_lower",
+        "version": "sldl:2024",
+        "plan": "2024 state lower-chamber plan",
+        "geoid": "33702",
+        "ocd_id": null,
+        "label": "NH State House District Rockingham 02 (2024 plan)",
+        "state_fips": "33",
+        "state_abbr": "NH",
+        "cbsa_class": null,
+        "member_states": [
+          "NH"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldl:2024",
+          "plan": "2024 state lower-chamber plan",
+          "type": "state_leg_lower",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDL2024 relationship file (tab20_sldl202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:57.319Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "ba7458e3582d752b6de0a20f6e6ed5f018fa06f05f6763a17f6960109c598eb9"
+            ]
+          },
+          "effectiveFor": "current state lower-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "exact",
+      "people": [
+        {
+          "id": "ocd-person/2520dc46-648c-44d0-ba1f-fe09b17a9d8b",
+          "name": "Jim Spillane",
+          "state": "nh",
+          "chamber": "lower",
+          "district": "Rockingham 2",
+          "party": "Republican",
+          "startDate": "2014-12-03",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/nh/legislature/James-A-Spillane-2520dc46-648c-44d0-ba1f-fe09b17a9d8b.yml"
+        }
+      ]
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_lower",
+        "version": "sldl:2024",
+        "plan": "2024 state lower-chamber plan",
+        "geoid": "72001",
+        "ocd_id": null,
+        "label": "PR State House District 1 (2024 plan)",
+        "state_fips": "72",
+        "state_abbr": "PR",
+        "cbsa_class": null,
+        "member_states": [
+          "PR"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldl:2024",
+          "plan": "2024 state lower-chamber plan",
+          "type": "state_leg_lower",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDL2024 relationship file (tab20_sldl202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:57.319Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "ba7458e3582d752b6de0a20f6e6ed5f018fa06f05f6763a17f6960109c598eb9"
+            ]
+          },
+          "effectiveFor": "current state lower-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "exact",
+      "people": [
+        {
+          "id": "ocd-person/929bc23b-ebba-42aa-8335-7ddca4fef705",
+          "name": "Eddie Charbonier",
+          "state": "pr",
+          "chamber": "lower",
+          "district": "1",
+          "party": "Partido Nuevo Progresista",
+          "startDate": "2017-01-02",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/pr/legislature/Eddie-Charbonier-Chinea-929bc23b-ebba-42aa-8335-7ddca4fef705.yml"
+        }
+      ]
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_upper",
+        "version": "sldu:2024",
+        "plan": "2024 state upper-chamber plan",
+        "geoid": "72001",
+        "ocd_id": null,
+        "label": "PR State Senate District 1 (2024 plan)",
+        "state_fips": "72",
+        "state_abbr": "PR",
+        "cbsa_class": null,
+        "member_states": [
+          "PR"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldu:2024",
+          "plan": "2024 state upper-chamber plan",
+          "type": "state_leg_upper",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDU2024 relationship file (tab20_sldu202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:56.724Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldu202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldu202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "49f339d330c548d844c012e0cb980b65dfb8af931f437118c2eed16f21cc44a1"
+            ]
+          },
+          "effectiveFor": "current state upper-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "exact",
+      "people": [
+        {
+          "id": "ocd-person/99800ecf-b7d7-43f5-ace4-53a770ee77eb",
+          "name": "Juan Oscar Morales",
+          "state": "pr",
+          "chamber": "upper",
+          "district": "1",
+          "party": "Partido Nuevo Progresista",
+          "startDate": "2022-09-28",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/pr/legislature/Juan-Oscar-Morales-99800ecf-b7d7-43f5-ace4-53a770ee77eb.yml"
+        }
+      ]
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_lower",
+        "version": "sldl:2024",
+        "plan": "2024 state lower-chamber plan",
+        "geoid": "48001",
+        "ocd_id": null,
+        "label": "TX State House District 1 (2024 plan)",
+        "state_fips": "48",
+        "state_abbr": "TX",
+        "cbsa_class": null,
+        "member_states": [
+          "TX"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldl:2024",
+          "plan": "2024 state lower-chamber plan",
+          "type": "state_leg_lower",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDL2024 relationship file (tab20_sldl202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:57.319Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "ba7458e3582d752b6de0a20f6e6ed5f018fa06f05f6763a17f6960109c598eb9"
+            ]
+          },
+          "effectiveFor": "current state lower-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "exact",
+      "people": [
+        {
+          "id": "ocd-person/26617394-4276-4aa7-878c-d20552b260a4",
+          "name": "Gary VanDeaver",
+          "state": "tx",
+          "chamber": "lower",
+          "district": "1",
+          "party": "Republican",
+          "startDate": "2015-01-13",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/tx/legislature/Gary-VanDeaver-26617394-4276-4aa7-878c-d20552b260a4.yml"
+        }
+      ]
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_upper",
+        "version": "sldu:2024",
+        "plan": "2024 state upper-chamber plan",
+        "geoid": "48001",
+        "ocd_id": null,
+        "label": "TX State Senate District 1 (2024 plan)",
+        "state_fips": "48",
+        "state_abbr": "TX",
+        "cbsa_class": null,
+        "member_states": [
+          "TX"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldu:2024",
+          "plan": "2024 state upper-chamber plan",
+          "type": "state_leg_upper",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDU2024 relationship file (tab20_sldu202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:56.724Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldu202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldu202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "49f339d330c548d844c012e0cb980b65dfb8af931f437118c2eed16f21cc44a1"
+            ]
+          },
+          "effectiveFor": "current state upper-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "exact",
+      "people": [
+        {
+          "id": "ocd-person/8326538c-c907-43b2-a6db-76434036afd7",
+          "name": "Bryan Hughes",
+          "state": "tx",
+          "chamber": "upper",
+          "district": "1",
+          "party": "Republican",
+          "startDate": "2017-01-10",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/tx/legislature/Bryan-Hughes-8326538c-c907-43b2-a6db-76434036afd7.yml"
+        }
+      ]
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_lower",
+        "version": "sldl:2024",
+        "plan": "2024 state lower-chamber plan",
+        "geoid": "50Y-6",
+        "ocd_id": null,
+        "label": "VT Windsor-6 State House District (2024 plan)",
+        "state_fips": "50",
+        "state_abbr": "VT",
+        "cbsa_class": null,
+        "member_states": [
+          "VT"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldl:2024",
+          "plan": "2024 state lower-chamber plan",
+          "type": "state_leg_lower",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDL2024 relationship file (tab20_sldl202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:57.319Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "ba7458e3582d752b6de0a20f6e6ed5f018fa06f05f6763a17f6960109c598eb9"
+            ]
+          },
+          "effectiveFor": "current state lower-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "exact",
+      "people": [
+        {
+          "id": "ocd-person/62b30d56-d938-4882-b763-2c2495ae6fe5",
+          "name": "Esme Cole",
+          "state": "vt",
+          "chamber": "lower",
+          "district": "Windsor-6",
+          "party": "Democratic",
+          "startDate": "2023-01-04",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/vt/legislature/Esme-Cole-62b30d56-d938-4882-b763-2c2495ae6fe5.yml"
+        }
+      ]
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_upper",
+        "version": "sldu:2024",
+        "plan": "2024 state upper-chamber plan",
+        "geoid": "50CHS",
+        "ocd_id": null,
+        "label": "VT Chittenden South East Senatorial District (2024 plan)",
+        "state_fips": "50",
+        "state_abbr": "VT",
+        "cbsa_class": null,
+        "member_states": [
+          "VT"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldu:2024",
+          "plan": "2024 state upper-chamber plan",
+          "type": "state_leg_upper",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDU2024 relationship file (tab20_sldu202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:56.724Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldu202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldu202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "49f339d330c548d844c012e0cb980b65dfb8af931f437118c2eed16f21cc44a1"
+            ]
+          },
+          "effectiveFor": "current state upper-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "exact",
+      "people": [
+        {
+          "id": "ocd-person/06f7e87d-e1f3-4d29-bd2c-11cadb89069e",
+          "name": "Kesha Ram Hinsdale",
+          "state": "vt",
+          "chamber": "upper",
+          "district": "Chittenden Southeast",
+          "party": "Democratic",
+          "startDate": "2023-01-04",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/vt/legislature/Kesha-Ram-Hinsdale-06f7e87d-e1f3-4d29-bd2c-11cadb89069e.yml"
+        }
+      ]
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_lower",
+        "version": "sldl:2024",
+        "plan": "2024 state lower-chamber plan",
+        "geoid": "53001",
+        "ocd_id": null,
+        "label": "WA Legislative (House) District 1 (2024 plan)",
+        "state_fips": "53",
+        "state_abbr": "WA",
+        "cbsa_class": null,
+        "member_states": [
+          "WA"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldl:2024",
+          "plan": "2024 state lower-chamber plan",
+          "type": "state_leg_lower",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDL2024 relationship file (tab20_sldl202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:57.319Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "ba7458e3582d752b6de0a20f6e6ed5f018fa06f05f6763a17f6960109c598eb9"
+            ]
+          },
+          "effectiveFor": "current state lower-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "exact",
+      "people": [
+        {
+          "id": "ocd-person/5fd91c2d-1223-47e4-8133-ef0da7ef1898",
+          "name": "Davina Duerr",
+          "state": "wa",
+          "chamber": "lower",
+          "district": "1",
+          "party": "Democratic",
+          "startDate": "2019-07-01",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/wa/legislature/Davina-Duerr-5fd91c2d-1223-47e4-8133-ef0da7ef1898.yml"
+        }
+      ]
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_upper",
+        "version": "sldu:2024",
+        "plan": "2024 state upper-chamber plan",
+        "geoid": "53001",
+        "ocd_id": null,
+        "label": "WA Legislative (Senate) District 1 (2024 plan)",
+        "state_fips": "53",
+        "state_abbr": "WA",
+        "cbsa_class": null,
+        "member_states": [
+          "WA"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldu:2024",
+          "plan": "2024 state upper-chamber plan",
+          "type": "state_leg_upper",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDU2024 relationship file (tab20_sldu202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:56.724Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldu202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldu202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "49f339d330c548d844c012e0cb980b65dfb8af931f437118c2eed16f21cc44a1"
+            ]
+          },
+          "effectiveFor": "current state upper-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "exact",
+      "people": [
+        {
+          "id": "ocd-person/25ac8674-b208-4d11-a579-c58c004f825e",
+          "name": "Derek Stanford",
+          "state": "wa",
+          "chamber": "upper",
+          "district": "1",
+          "party": "Democratic",
+          "startDate": "2019-07-01",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/wa/legislature/Derek-Stanford-25ac8674-b208-4d11-a579-c58c004f825e.yml"
+        }
+      ]
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_lower",
+        "version": "sldl:2024",
+        "plan": "2024 state lower-chamber plan",
+        "geoid": "54001",
+        "ocd_id": null,
+        "label": "WV Delegate District 1 (2024 plan)",
+        "state_fips": "54",
+        "state_abbr": "WV",
+        "cbsa_class": null,
+        "member_states": [
+          "WV"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldl:2024",
+          "plan": "2024 state lower-chamber plan",
+          "type": "state_leg_lower",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDL2024 relationship file (tab20_sldl202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:57.319Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldl202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "ba7458e3582d752b6de0a20f6e6ed5f018fa06f05f6763a17f6960109c598eb9"
+            ]
+          },
+          "effectiveFor": "current state lower-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "exact",
+      "people": [
+        {
+          "id": "ocd-person/aa7bf09a-ce90-4e58-a893-42c813a16434",
+          "name": "Pat McGeehan",
+          "state": "wv",
+          "chamber": "lower",
+          "district": "1",
+          "party": "Republican",
+          "startDate": "2014-12-01",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/wv/legislature/Pat-McGeehan-aa7bf09a-ce90-4e58-a893-42c813a16434.yml"
+        }
+      ]
+    },
+    {
+      "row": {
+        "row_kind": "grouping",
+        "type": "state_leg_upper",
+        "version": "sldu:2024",
+        "plan": "2024 state upper-chamber plan",
+        "geoid": "54001",
+        "ocd_id": null,
+        "label": "WV State Senate District 1 (2024 plan)",
+        "state_fips": "54",
+        "state_abbr": "WV",
+        "cbsa_class": null,
+        "member_states": [
+          "WV"
+        ],
+        "overlaps": null,
+        "version_meta": {
+          "key": "sldu:2024",
+          "plan": "2024 state upper-chamber plan",
+          "type": "state_leg_upper",
+          "provenance": {
+            "method": "Census 2020-tabulation ZCTA↔SLDU2024 relationship file (tab20_sldu202420_zcta520_natl.txt); a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).",
+            "computedAt": "2026-09-29T01:11:56.724Z",
+            "sourceUrls": [
+              "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldu202420_zcta520_natl.txt"
+            ],
+            "sourceFiles": [
+              "tab20_sldu202420_zcta520_natl.txt"
+            ],
+            "sourceDataset": "CENSUS_TAB20_REL2020",
+            "sourceChecksums": [
+              "49f339d330c548d844c012e0cb980b65dfb8af931f437118c2eed16f21cc44a1"
+            ]
+          },
+          "effectiveFor": "current state upper-chamber districts (2024 plan)",
+          "zctaTabulation": "2020"
+        }
+      },
+      "match": "exact",
+      "people": [
+        {
+          "id": "ocd-person/599fd572-0475-4215-8d43-1474237f5a78",
+          "name": "Laura Chapman",
+          "state": "wv",
+          "chamber": "upper",
+          "district": "1",
+          "party": "Republican",
+          "startDate": "2022-12-01",
+          "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/wv/legislature/Laura-Wakim-Chapman-599fd572-0475-4215-8d43-1474237f5a78.yml"
+        }
+      ]
+    }
+  ],
+  "extras": [
+    {
+      "id": "ocd-person/860fa95b-c737-43bd-948d-1dd6dc1b734e",
+      "name": "Anita Bonds",
+      "state": "dc",
+      "chamber": "legislature",
+      "district": "At-Large",
+      "party": "Democratic",
+      "startDate": "2012-12-11",
+      "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/dc/legislature/Anita-Bonds-860fa95b-c737-43bd-948d-1dd6dc1b734e.yml",
+      "match": "jurisdiction-root"
+    },
+    {
+      "id": "ocd-person/e3b9567d-67ff-4cc1-89eb-1ed1af646393",
+      "name": "Phil Mendelson",
+      "state": "dc",
+      "chamber": "legislature",
+      "district": "Chairman",
+      "party": "Democratic",
+      "startDate": "1999-01-02",
+      "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/dc/legislature/Phil-Mendelson-e3b9567d-67ff-4cc1-89eb-1ed1af646393.yml",
+      "match": "jurisdiction-root"
+    },
+    {
+      "id": "ocd-person/d50dfedb-f016-4447-a258-a284a09cf36a",
+      "name": "Ada Álvarez Conde",
+      "state": "pr",
+      "chamber": "upper",
+      "district": "At-Large",
+      "party": "Partido Popular Democrático",
+      "startDate": "2025-01-02",
+      "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/pr/legislature/Ada-lvarez-Conde-d50dfedb-f016-4447-a258-a284a09cf36a.yml",
+      "match": "jurisdiction-root"
+    },
+    {
+      "id": "ocd-person/79ca9f1f-7684-470f-8590-a287e2240846",
+      "name": "Adriana Gutiérrez Colón",
+      "state": "pr",
+      "chamber": "lower",
+      "district": "At-Large",
+      "party": "Partido Independentista Puertorriqueño",
+      "startDate": "2025-01-02",
+      "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/pr/legislature/Adriana-Gutirrez-Coln-79ca9f1f-7684-470f-8590-a287e2240846.yml",
+      "match": "jurisdiction-root"
+    },
+    {
+      "id": "ocd-person/3787c84d-f615-4e9d-bac8-42f86ea308db",
+      "name": "Jess Edwards",
+      "state": "nh",
+      "chamber": "lower",
+      "district": "Rockingham 31",
+      "party": "Republican",
+      "startDate": "2022-12-07",
+      "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/nh/legislature/Jess-Edwards-3787c84d-f615-4e9d-bac8-42f86ea308db.yml",
+      "match": "not-census-area"
+    },
+    {
+      "id": "ocd-person/906cd606-c6ff-41e5-87a6-e038b711fa61",
+      "name": "Aaron Dana",
+      "state": "me",
+      "chamber": "lower",
+      "district": "Passamaquoddy Tribe",
+      "party": "Independent",
+      "startDate": "2022-10-01",
+      "sourceUrl": "https://raw.githubusercontent.com/openstates/people/cd4335d8becbe22664e34c04ce1a2ee1920cd645/data/me/legislature/Aaron-Dana-906cd606-c6ff-41e5-87a6-e038b711fa61.yml",
+      "match": "not-census-area"
+    }
+  ],
+  "coverageZip": {
+    "zip": "20603",
+    "geoid": "24028",
+    "overlap": {
+      "whole": true,
+      "zcta5": "20603",
+      "fraction": 1
+    }
+  }
+}

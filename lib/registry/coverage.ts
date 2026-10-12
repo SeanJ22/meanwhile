@@ -358,8 +358,10 @@ export function summarizeCoverage(
     };
   });
 
+  const rootLegislators = (d: Division) => stateOcdIdFrom(d.ocdId) === d.ocdId
+    ? holdersFor(officials, d.ocdId).filter(holder => holder.chamber === "upper" || holder.chamber === "lower") : [];
   const seats: Seat[] = divisions
-    .filter((d) => SEAT_TYPES.has(d.divisionType) || d.tier === "local" && holdersFor(officials, d.ocdId).length > 0)
+    .filter((d) => SEAT_TYPES.has(d.divisionType) || rootLegislators(d).length > 0 || d.tier === "local" && holdersFor(officials, d.ocdId).length > 0)
     .map((d) => ({
       ocdId: d.ocdId,
       label: d.label,
@@ -369,7 +371,7 @@ export function summarizeCoverage(
       chamber: d.chamber,
       sourceUrls: d.sourceUrls,
       tier: d.tier,
-      representatives: d.tier === "local"
+      representatives: stateOcdIdFrom(d.ocdId) === d.ocdId ? rootLegislators(d) : d.tier === "local"
         ? heldDivisionRepresentatives(d.ocdId, holdersFor(officials, d.ocdId))
         : holdersFor(officials, d.ocdId),
     }));

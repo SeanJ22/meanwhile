@@ -212,15 +212,17 @@ export function computeStats(input: {
    * are in" is only sayable once a real address has been resolved.
    */
   atAddress?: boolean;
+  /** The saved address's confirmed divisions, when an address has resolved. */
+  addressDivisionIds?: ReadonlySet<string> | null;
 }): ShellStats {
-  const { meetings, coverage, drawnDistricts, atAddress = false } = input;
+  const { meetings, coverage, drawnDistricts, atAddress = false, addressDivisionIds } = input;
   return {
     meetings: meetings.length,
     bodies: coverage ? coverage.bodies.length : 0,
     governingBodies: coverage ? coverage.counts.governing.total : null,
     districts: drawnDistricts ? drawnDistricts.length : null,
     governingDistricts:
-      atAddress && coverage ? coverage.divisions.length : null,
+      atAddress && coverage ? governingDoorRows(coverage, () => [], addressDivisionIds).length : null,
     officials: coverage ? allOfficialRows(coverage).length : 0,
     coverageAnswered: coverage !== null,
   };
@@ -280,8 +282,9 @@ export function divisionTypeLabel(divisionType: string): string {
 export function governingDoorRows(
   coverage: CoverageSummary,
   holdersFor: (ocdId: string) => SeatHolder[],
+  addressDivisionIds?: ReadonlySet<string> | null,
 ): DistrictDoorRow[] {
-  return coverage.divisions.map((d) => ({
+  return coverage.divisions.filter(d => !addressDivisionIds || addressDivisionIds.has(d.ocdId)).map((d) => ({
     ocdId: d.ocdId,
     label: d.label,
     typeLabel: divisionTypeLabel(d.divisionType),

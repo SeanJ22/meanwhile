@@ -1,7 +1,6 @@
 import type { Division, DivisionType } from "@/lib/registry/types";
 
-/** Purpose-qualified exact-address divisions can confirm a level. Agreement
- * between street samples only orients the map and never identifies a home. */
+/** Purpose-qualified exact-address divisions can confirm a level. */
 
 /** The levels a reader can be resolved at. These are `DivisionType` verbatim. */
 export type LevelKey = DivisionType;
@@ -52,19 +51,17 @@ export interface LevelResolution {
   candidates: { ocdId: string; label: string }[];
 }
 
-export type AddressBasis = "EXACT_ADDRESS" | "STREET_SAMPLE";
-
 export type AddressResolution =
   | {
       status: "RESOLVED";
-      basis?: AddressBasis;
+      basis?: "EXACT_ADDRESS";
       levels: LevelResolution[];
       /** Levels no sampled point produced. OUR gap, stated as ours. */
       unheld: LevelKey[];
     }
   | {
       status: "AMBIGUOUS";
-      basis?: AddressBasis;
+      basis?: "EXACT_ADDRESS";
       levels: LevelResolution[];
       unheld: LevelKey[];
       /** The levels the street actually crosses. Never empty in this branch. */
@@ -132,19 +129,17 @@ export function resolveLevels(samples: readonly Sample[]): {
  * Empty evidence is our unresolved lookup. Only an exact address can confirm
  * the levels present in its purpose-qualified source response.
  */
-export function resolveAddress(samples: readonly Sample[], basis: AddressBasis = "EXACT_ADDRESS"): AddressResolution {
+export function resolveAddress(samples: readonly Sample[]): AddressResolution {
   if (samples.length === 0) return { status: "FAILED", reason: "NOT_FOUND" };
 
   const resolved = resolveLevels(samples);
   const unheld = resolved.unheld;
-  const levels = basis === "STREET_SAMPLE" ? resolved.levels.map(level => ({ ...level, certain: false,
-    candidates: [...level.candidates, ...level.divisionIds.map((ocdId, i) => ({ ocdId, label: level.divisionLabels[i] }))],
-    divisionIds: [], divisionLabels: [] })) : resolved.levels;
+  const levels = resolved.levels;
   if (!levels.length) return { status: "FAILED", reason: "NOT_FOUND" };
   const split = levels.filter((l) => !l.certain).map((l) => l.level);
 
-  if (split.length === 0) return { status: "RESOLVED", basis, levels, unheld };
-  return { status: "AMBIGUOUS", basis, levels, unheld, split };
+  if (split.length === 0) return { status: "RESOLVED", basis: "EXACT_ADDRESS", levels, unheld };
+  return { status: "AMBIGUOUS", basis: "EXACT_ADDRESS", levels, unheld, split };
 }
 
 /** Every division id the reader is CONFIRMED to be in, across all certain levels. */

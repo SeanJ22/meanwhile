@@ -84,7 +84,7 @@ export function runtimeCivicReadCache(): CivicReadCache | null {
     },
     write: async (key, saved) => {
       await fetch(endpoint + "/" + key, { method: "PUT", body: saved,
-        headers: { authorization: token }, signal: AbortSignal.timeout(10_000) });
+        headers: { authorization: token } });
     },
   });
 }

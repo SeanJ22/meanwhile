@@ -31,7 +31,6 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const UPSTREAM_TIMEOUT_MS = 8000;
-const MAX_ADDRESS_CHARS = 200;
 
 const NO_STORE = {
   "cache-control": "no-store, no-cache, must-revalidate",
@@ -121,8 +120,7 @@ export async function POST(request: Request) {
   } catch {
     return empty(pollingPlaceLinks, ballotNavigationDataState, 400);
   }
-  // A validity check, never behind a flag: closed shape and a length cap.
-  if (address.length < 3 || address.length > MAX_ADDRESS_CHARS) return empty(pollingPlaceLinks, ballotNavigationDataState, 400);
+  if (address.length < 3) return empty(pollingPlaceLinks, ballotNavigationDataState, 400);
 
   const point = await geocode(address);
   if (!point) return empty(pollingPlaceLinks, ballotNavigationDataState);

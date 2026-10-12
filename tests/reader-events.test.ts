@@ -8,14 +8,17 @@ const batch: ReaderEventBatchInput = { batchId: "batch-1", continuityKey: "anony
   { id: "event-2", type: "REACTION", occurredAt: "2026-09-28T06:59:00Z", zip: "85635", topic: "water", cardId: "funding:committee:1", reaction: "agree" },
 ] };
 
-test("history preserves exact event time and card context, scrubs text and rolls counts by UTC day/week", () => {
+test("history preserves exact event time, card context and Ask words and rolls counts by UTC day/week", () => {
   const prepared = prepareReaderEventBatch(batch);
   assert.equal(prepared.body.events[0]!.occurredAt, "2026-09-28T06:59:00.000Z");
   assert.equal(eventWeek("2026-09-27"), "2026-09-21");
   assert.equal(eventWeek("2026-09-28"), "2026-09-28");
   assert.ok(!prepared.json.includes(batch.continuityKey));
-  assert.ok(!prepared.json.includes("jane@example.com") && !prepared.json.includes("Jane Smith"));
-  assert.ok(prepared.body.events[0]!.selfDisclosureFlags.includes("EMAIL"));
+  assert.equal(prepared.body.events[0]!.question, batch.events[0]!.question);
+  for (const question of ["Who represents 412 elm st phoenix?", "What happened at the 2026 Budget Hearing?", "q".repeat(900), "q".repeat(5000)]) {
+    const full = prepareReaderEventBatch({ ...batch, events: [{ ...batch.events[0]!, question }] });
+    assert.equal(full.body.events[0]!.question, question);
+  }
   const day = prepared.aggregates.find(row => row.period === "DAY" && row.zip === "85635" && row.district === "" && row.topic === "water" && row.type === "*");
   assert.equal(day?.events, 2);
   assert.equal(day?.start, "2026-09-28");

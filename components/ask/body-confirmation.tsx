@@ -1,4 +1,4 @@
-import type { AskAnswerPayload } from "@/lib/ask/answer";
+import { askResponseText, type AskAnswerPayload } from "@/lib/ask/answer";
 import type { BodyConfirmation } from "@/lib/ask/body-confirmation";
 
 /** One keyboard-operable confirmation, shared by both Ask surfaces. */
@@ -9,7 +9,7 @@ export function AskBodyConfirmation({ answer, working, onConfirm, onClarify }: {
   const suggestion = answer.confirmation;
   if (!suggestion && !answer.clarification) return null;
   return <div data-ask-body-confirmation className="t-body leading-relaxed text-paper" role="status">
-    <p>{suggestion ? `Did you mean ${suggestion.name}?` : answer.clarification}</p>
+    <p>{askResponseText(answer)}</p>
     <div className="mt-2 flex flex-wrap gap-3">
       {suggestion && <button type="button" disabled={working} onClick={() => onConfirm(suggestion)}
         className="rounded-md border border-[var(--panel-border)] px-3 py-1.5 text-link focus-visible:outline-2 focus-visible:outline-offset-2">

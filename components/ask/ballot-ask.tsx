@@ -8,13 +8,15 @@ import { useRef, useState } from "react";
 
 import { AskAnswerRecords } from "@/components/ask/answer-records";
 import { AskAnswerContacts } from "./answer-contacts";
-import { readAskAnswer, unresolvedReadLine, type AskAnswerPayload } from "@/lib/ask/answer";
+import { readAskAnswer, askResponseText, type AskAnswerPayload } from "@/lib/ask/answer";
 import { askSaveNotice } from "@/lib/ask/save-status";
 import { sourceLinks } from "@/lib/ask/host";
 import { getOrCreateBrowserKey } from "@/lib/state/browser-key";
 import { readLocationOriginFor } from "@/lib/state/location-origin";
 import type { AskSubjectRef } from "@/lib/ask/subject";
 import { gapsNotInAnswer } from "@/lib/text/say-once";
+import { useRememberedAddress } from "@/hooks/use-session-address";
+import { AddressPrompt } from "@/components/address/address-prompt";
 
 /**
  * Ask on the ballot page. Uses the same `/api/ask/grounded` engine as the map
@@ -38,6 +40,9 @@ export function BallotAsk({
    */
   activeSubjects: AskSubjectRef[];
 }) {
+  const remembered = useRememberedAddress();
+  const readerZip = remembered?.zip ?? zip;
+  const readerOcdIds = remembered?.divisionIds ?? ocdIds;
   const [text, setText] = useState("");
   const [reply, setReply] = useState<GroundedReply | null>(null);
   const [working, setWorking] = useState(false);
@@ -45,7 +50,7 @@ export function BallotAsk({
   const [saveNotice, setSaveNotice] = useState<string | null>(null);
   /* The question that produced the reply on screen. */
   const [answered, setAnswered] = useState("");
-  /* Follow-up context: the last few resolved subjects, in memory for this mount only. */
+  /* Follow-up context: the resolved subjects, in memory for this mount only. */
   const [priorSubjects, setPriorSubjects] = useState<AskSubjectRef[]>([]);
   const [priorTurns, setPriorTurns] = useState<
     { question: string; resolvedSubject: string | null }[]
@@ -53,8 +58,8 @@ export function BallotAsk({
   const inFlight = useRef<AbortController | null>(null);
 
   async function ask(confirmation?: BodyConfirmation) {
-    const question = confirmation?.question ?? text.trim();
-    if (!question || working) return;
+    const question = confirmation?.question ?? text;
+    if (!question.trim() || working) return;
     if (confirmation) setText(question);
     inFlight.current?.abort();
     const controller = new AbortController();
@@ -71,14 +76,14 @@ export function BallotAsk({
         body: JSON.stringify({
           question,
           confirmation,
-          ocdIds,
-          approximateLocation: zip,
+          ocdIds: readerOcdIds,
+          approximateLocation: readerZip,
           surface: "BALLOT",
-          activeSubjects,
+          activeSubjects: [...activeSubjects, ...(remembered?.divisionIds ?? []).map(id => ({ id, name: id, kind: "BODY", focused: false }))],
           priorSubjects,
           priorTurns,
           /* What the reader did; the server decides the confidence. */
-          locationOrigin: readLocationOriginFor(zip),
+          locationOrigin: readLocationOriginFor(readerZip),
           /* Anonymous per-browser key in its own storage slot. */
           continuityKey: getOrCreateBrowserKey("wtp.ask_key"),
         }),
@@ -98,13 +103,13 @@ export function BallotAsk({
       if (body.subject) {
         const resolved = body.subject;
         setPriorSubjects((prior) =>
-          [...prior, { id: resolved.id, name: resolved.name }].slice(-4),
+          [...prior, { id: resolved.id, name: resolved.name }],
         );
         setPriorTurns((prior) =>
-          [...prior, { question, resolvedSubject: resolved.name }].slice(-4),
+          [...prior, { question, resolvedSubject: resolved.name }],
         );
       } else {
-        setPriorTurns((prior) => [...prior, { question, resolvedSubject: null }].slice(-4));
+        setPriorTurns((prior) => [...prior, { question, resolvedSubject: null }]);
       }
     } catch (error) {
       if ((error as Error)?.name === "AbortError") return;
@@ -123,6 +128,7 @@ export function BallotAsk({
   return (
     <section className="mt-2 rounded-[10px] border border-[var(--panel-border)] bg-[var(--panel-bg)] p-4" data-ballot-ask>
       <h2 className="t-heading font-semibold">Ask about this ballot</h2>
+      {readerZip && <AddressPrompt zip={readerZip} page="ASK" trigger="Add your address to use your districts" />}
       <p className="mt-1 t-body text-[var(--text-muted)]">
         Questions are answered from records this site holds, with the source shown.
       </p>
@@ -185,14 +191,12 @@ export function BallotAsk({
           }} />
           {reply.mode === "CLARIFY" && !reply.confirmation && !reply.clarification && (
             <p>
-              More than one government here matches &ldquo;{reply.mention}&rdquo;
-              {reply.candidates?.length ? `: ${reply.candidates.join(", ")}.` : "."} Which did you
-              mean?
+              {askResponseText(reply)}
             </p>
           )}
 
           {reply.mode === "UNRESOLVED" && (
-            <p>{unresolvedReadLine(reply)}</p>
+            <p>{askResponseText(reply)}</p>
           )}
 
           {reply.subject && (
@@ -208,7 +212,7 @@ export function BallotAsk({
           )}
 
           {/* The grounded sentence, when there is one that passed validation. */}
-          {reply.answer && !reply.agendaLead && <p className="mt-2">{reply.answer}</p>}
+          {reply.answer && reply.mode !== "CLARIFY" && reply.mode !== "UNRESOLVED" && !reply.agendaLead && <p className="mt-2">{reply.answer}</p>}
 
           {/* Records render whether or not prose did. */}
           <AskAnswerRecords records={records} initiallyOpen={!reply.answer} agendaLead={reply.agendaLead} prose={reply.agendaLead ? reply.answer : null} />

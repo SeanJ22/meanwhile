@@ -7,6 +7,7 @@ import type { LocationOrigin } from "@/lib/ask/residency";
 import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
 import { useRecentZips } from "@/hooks/use-recent-zips";
 import { lookupZctaAsync, warmZctaTable } from "@/lib/geo/zcta-table";
+import { logAddressEntered, readerPageForPath } from "@/lib/log/address-events";
 
 /**
  * Changing zip from the floater: five digits of input with the device's recent
@@ -54,6 +55,7 @@ export function ZipSwitcher({
   }, []);
 
   const take = async (zip: string, origin: LocationOrigin = "TYPED_ZIP") => {
+    logAddressEntered({ zip, divisionIds: [] }, readerPageForPath(window.location.pathname));
     const found = await lookupZctaAsync(zip);
     if (!found) {
       // A fact about our data, not about the zip.

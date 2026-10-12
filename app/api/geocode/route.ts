@@ -17,8 +17,6 @@ export const dynamic = "force-dynamic";
 
 /** Long enough for the Bureau, short enough that a reader is not held. */
 const UPSTREAM_TIMEOUT_MS = 8000;
-/** A house address is far shorter than this; anything longer is not one. */
-const MAX_ADDRESS_CHARS = 200;
 
 const NO_STORE = {
   "cache-control": "no-store, no-cache, must-revalidate",
@@ -33,9 +31,7 @@ export async function POST(request: Request) {
     return Response.json({ match: false }, { status: 400, headers: NO_STORE });
   }
 
-  // A validity check, not a rate limit — closed shape, length cap, and it is
-  // never behind a flag.
-  if (address.length < 3 || address.length > MAX_ADDRESS_CHARS) {
+  if (address.length < 3) {
     return Response.json({ match: false }, { status: 400, headers: NO_STORE });
   }
 

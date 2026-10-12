@@ -157,6 +157,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { LevelTag } from "@/components/ui/level-tag";
 import type { ReactionViewContext } from "@/lib/reactions/client";
 import { BallotCapture } from "@/components/ballot/ballot-capture";
+import { RememberedBallotZip } from "@/components/ballot/remembered-ballot-zip";
 import { tierForOcdId, tierForOffice } from "@/lib/ocd/tiers";
 import { Logo } from "@/components/brand/logo";
 import { PRODUCT_NAME, titleFor } from "@/lib/brand";
@@ -883,7 +884,8 @@ export default async function BallotPage({
   return (
     /* Prose stays capped at `lg:max-w-2xl`; the extra width buys a second column of whole cards, never of label/value rows. */
     <main className="mx-auto max-w-2xl px-4 py-8 text-paper lg:max-w-[68rem] lg:px-8 lg:py-10 xl:max-w-[76rem]">
-      <BallotCapture zip={zip} />
+      <BallotCapture zip={zip} ocdIds={askOcdIds} />
+      <RememberedBallotZip zip={zip} />
       <div className="ballot-page-chrome flex items-center justify-between gap-3">
         <p className="t-body">
           <Link

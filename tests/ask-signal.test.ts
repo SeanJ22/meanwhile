@@ -3,7 +3,6 @@ import { createHash } from "node:crypto";
 import test from "node:test";
 
 import {
-  ASK_ANSWER_MAX_CHARS,
   askKeyHash,
   askRunHash,
   captureAskInteraction,
@@ -67,43 +66,23 @@ test("ASK03: with a continuity key and a write path, one Ask writes one row", as
   assert.equal(wrote, 1);
 });
 
-test("the database writer refuses client transport failures and a disabled engine without relabeling them", async () => {
-  for (const answerMode of ["OFF", "TRANSPORT_FAILED"] as const) {
-    await assert.rejects(writeAskInteraction(prepareAskInteraction(input({ answerMode }))),
-      new RegExp(`${answerMode} is not a delivered Ask interaction`));
+test("the database writer preserves unanswered transport failures and refuses a disabled engine mode", async () => {
+  await assert.rejects(writeAskInteraction(prepareAskInteraction(input({ answerMode: "OFF" }))),
+    /OFF is not a delivered Ask interaction/);
+  const row = prepareAskInteraction(input({ answerMode: "TRANSPORT_FAILED", answerText: null }));
+  assert.equal(row.answerMode, "TRANSPORT_FAILED");
+  assert.equal(row.answerText, null);
+});
+
+test("Ask questions and answers are stored character for character", () => {
+  for (const question of ["Who represents 412 elm st phoenix?", "What happened at the 2026 Budget Hearing?", "q".repeat(900),
+    "  Who represents me?\nI am Jane Doe, jane.doe@example.com, 555-123-4567, 42 Rillito Lane.  "]) {
+    const answerText = "  The board meets on September 8th, 2026.\n" + "x".repeat(9000) + "  ";
+    const row = prepareAskInteraction(input({ question, answerText }));
+    assert.equal(row.question, question);
+    assert.equal(row.answerText, answerText);
+    assert.deepEqual(row.selfDisclosure, []);
   }
-});
-
-test("ASK03: PII a reader types about themselves never reaches the stored text", () => {
-  const row = prepareAskInteraction(
-    input({
-      question:
-        "I am Jane Doe, jane.doe@example.com, 555-123-4567, 42 Rillito Lane — who fixes my street?",
-    }),
-  );
-  for (const leak of ["jane.doe@example.com", "555-123-4567", "42 Rillito"]) {
-    assert.ok(
-      !row.questionScrubbed.includes(leak),
-      `"${leak}" survived into the stored question: ${row.questionScrubbed}`,
-    );
-  }
-  // The KINDS are kept — knowing a reader disclosed an email is useful; the
-  // address is the thing the store must never contain.
-  assert.ok(row.selfDisclosure.includes("EMAIL"));
-  assert.ok(row.selfDisclosure.includes("PHONE_OR_NUMBER"));
-  assert.ok(row.selfDisclosure.length > 0);
-  // And the civic question itself survives, or the store would be worthless.
-  assert.match(row.questionScrubbed, /who fixes my street/i);
-});
-
-test("ASK03: a clean question discloses nothing, so the flag means something", () => {
-  const row = prepareAskInteraction(input());
-  assert.deepEqual(row.selfDisclosure, []);
-});
-
-test("ASK03: the stored answer is capped", () => {
-  const row = prepareAskInteraction(input({ answerText: "x".repeat(9000) }));
-  assert.equal(row.answerText?.length, ASK_ANSWER_MAX_CHARS);
 });
 
 test("ASK03: the continuity key is stored ONLY as a digest, under its own prefix", () => {
@@ -248,7 +227,7 @@ test("ASK03: an unanswered question keeps its demand signal", () => {
       evidenceSourceCount: 0,
     }),
   );
-  assert.match(row.questionScrubbed, /Empire Fire District/);
+  assert.match(row.question, /Empire Fire District/);
   assert.equal(row.answerMode, "NO_EVIDENCE");
   assert.equal(row.evidenceRecordCount, 0);
 });

@@ -52,7 +52,6 @@ test("S2.4 events: a malformed batch is refused whole, never partly accepted", (
     batch([event(1), { ...event(2), name: undefined, id: "x" }]),
     { ...batch([event(1)]), continuityKey: "short" },
     { ...batch([event(1)]), batchId: "!!" },
-    batch(Array.from({ length: MAX_EVENTS_PER_BATCH + 1 }, (_, i) => event(i))),
   ];
   for (const candidate of bad) assert.equal(readEventBatch(candidate), null, JSON.stringify(candidate)?.slice(0, 80));
 });
@@ -64,7 +63,7 @@ test("S2.4 events: the batch carries nothing a reader typed except through the A
   assert.ok(!keys.includes("question") && !keys.includes("email"));
 });
 
-test("S2.4 events: the browser batcher sends one request per batch, keeps the batch id across a retry, and stops after three tries", async () => {
+test("S2.4 events: the browser batcher retains a refused batch until a later save succeeds", async () => {
   const sent: { batchId: string; events: unknown[] }[] = [];
   let respond: number | "throw" = 503;
   const store = new Map<string, string>();
@@ -98,14 +97,20 @@ test("S2.4 events: the browser batcher sends one request per batch, keeps the ba
   assert.equal(sent.length, 3);
   flushEvents();
   await new Promise((r) => setTimeout(r, 5));
-  assert.equal(sent.length, 3, "a batch that failed three times is dropped, not retried forever");
+  assert.equal(sent.length, 4, "a stalled batch is still waiting after three failures");
+  assert.equal(sent[3].batchId, sent[0].batchId);
 
   respond = 204;
   captureEvent({ type: "ZIP_VIEW", zip: "85701" });
   flushEvents();
   await new Promise((r) => setTimeout(r, 5));
-  assert.equal(sent.length, 4);
-  assert.equal((sent[3] as unknown as { continuityKey: string }).continuityKey, (sent[0] as unknown as { continuityKey: string }).continuityKey);
+  assert.equal(sent.length, 5);
+  assert.equal(sent[4].batchId, sent[0].batchId, "the refused batch lands before the new event");
+  assert.equal((sent[4] as unknown as { continuityKey: string }).continuityKey, (sent[0] as unknown as { continuityKey: string }).continuityKey);
+  flushEvents();
+  await new Promise((r) => setTimeout(r, 5));
+  assert.equal(sent.length, 6);
+  assert.equal(sent[5].events.length, 1);
   resetEventClientForTests();
 });
 
@@ -114,5 +119,54 @@ test("S2.4 events: an id the event store would refuse is refused here, and card 
   assert.equal(readEventBatch(batch([event(1, { cardId: "POPUP:official:Jane Roe" })])), null);
   assert.equal(storeSafeId("POPUP:official:Jane Roe"), "POPUP:official:Jane_Roe");
   assert.ok(readEventBatch(batch([event(1, { cardId: storeSafeId("POPUP:official:Jane Roe") })])));
-  assert.equal(storeSafeId("x".repeat(500)).length, 200);
+  assert.equal(storeSafeId("x".repeat(500)), "x".repeat(500));
+});
+
+test("events retain all candidates, long card ids, long visits and batches beyond the transport split size", () => {
+  const cardId = "OFFICIAL:" + "a".repeat(1000);
+  const candidateIds = Array.from({ length: 20 }, (_, index) => `candidate:${index}`);
+  const events = Array.from({ length: MAX_EVENTS_PER_BATCH + 1 }, (_, index) => event(index));
+  events[0] = event(0, { cardId, durationMs: 7 * 60 * 60 * 1000, ballotPick: { contestId: "contest", candidateIds, choice: "PICKED" } });
+  const parsed = readEventBatch(batch(events));
+  assert.ok(parsed);
+  assert.equal(parsed.events.length, events.length);
+  assert.equal(parsed.events[0].cardId, cardId);
+  assert.deepEqual(parsed.events[0].ballotPick?.candidateIds, candidateIds);
+  assert.equal(parsed.events[0].durationMs, events[0].durationMs);
+});
+
+test("a stalled send retains every queued reader event", async () => {
+  const g = globalThis as unknown as Record<string, unknown>;
+  const store = new Map<string, string>();
+  g.window = {
+    addEventListener() {},
+    localStorage: { getItem: (key: string) => store.get(key) ?? null, setItem: (key: string, value: string) => void store.set(key, value) },
+  };
+  g.document = { addEventListener() {}, removeEventListener() {}, visibilityState: "visible" };
+  Object.defineProperty(globalThis, "navigator", { value: {}, configurable: true, writable: true });
+  const sent: ClientEvent[] = [];
+  let release: (() => void) | undefined;
+  let first = true;
+  g.fetch = async (_url: string, init: { body: string }) => {
+    sent.push(...JSON.parse(init.body).events);
+    if (first) {
+      first = false;
+      await new Promise<void>(resolve => { release = resolve; });
+    }
+    return { ok: true, status: 204 };
+  };
+  const { captureEvent, flushEvents, resetEventClientForTests } = await import("../lib/events/client.ts");
+  resetEventClientForTests();
+  for (let index = 0; index < 700; index++) captureEvent({ type: "CARD_OPEN", cardId: `MEETING:${index}` });
+  assert.equal(sent.length, 20, "the first request is still waiting");
+  release!();
+  await new Promise(resolve => setImmediate(resolve));
+  for (let batch = 0; batch < 6; batch++) {
+    flushEvents();
+    await new Promise(resolve => setImmediate(resolve));
+  }
+  assert.equal(sent.length, 700);
+  assert.equal(new Set(sent.map(event => event.id)).size, 700);
+  assert.deepEqual(sent.map(event => event.cardId), Array.from({ length: 700 }, (_, index) => `MEETING:${index}`));
+  resetEventClientForTests();
 });

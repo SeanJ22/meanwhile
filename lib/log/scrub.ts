@@ -1,6 +1,6 @@
 /**
- * The free-text scrub, applied before storage at the single write path
- * (lib/db/search-log.ts). Replaced with `[#]`:
+ * The free-text scrub used for comment detail and model input. Ask question
+ * and answer storage preserve the words exactly. Replaced with `[#]`:
  *  - digit runs totalling 7+ digits, separators allowed (phone, SSN, account
  *    numbers: "973-627-2000" and "9736272000" both);
  *  - email-shaped tokens (anything@anything.tld);
@@ -23,30 +23,6 @@ const LONG_DIGIT_RUN = /\(?(?:\d[\s().-]{0,2}){6}\d[\d().-]*/g;
 const STREET_ADDRESS_SHAPED = /\b\d{1,6}(?:\s+[A-Z][A-Za-z]+){1,4}\b/g;
 
 export const SCRUB_MARK = "[#]";
-
-/**
- * The contact shapes only (email and digit runs), not the address heuristic:
- * for text we generated, where spelled-out dates ("8 September 2026") look
- * like addresses. See `scrubStoredAnswer` in `lib/db/ask-signal.ts`.
- */
-export function scrubContactShapes(text: string): string {
-  return text
-    .replace(EMAIL_SHAPED, SCRUB_MARK)
-    .replace(LONG_DIGIT_RUN, SCRUB_MARK)
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-/**
- * Did either contact shape appear? Fresh regexes: `.test()` on a module-level
- * `g` regex advances `lastIndex` between calls.
- */
-export function contactShapesIn(text: string): { email: boolean; digits: boolean } {
-  return {
-    email: new RegExp(EMAIL_SHAPED.source).test(text),
-    digits: new RegExp(LONG_DIGIT_RUN.source).test(text),
-  };
-}
 
 export function scrubFreeText(text: string): string {
   return text

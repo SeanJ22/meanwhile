@@ -7,6 +7,7 @@ import {
   ANSWER_MODES,
   answerSaysSomething,
   askAnswer,
+  askResponseText,
   clarifyAnswer,
   offAnswer,
   readAskAnswer,
@@ -54,6 +55,20 @@ test("every mode carries the whole shape, so no client's `?? []` is load-bearing
     assert.ok("answer" in payload, `${payload.mode}: answer`);
     assert.ok(payload.trace, `${payload.mode}: trace`);
   }
+});
+
+test("clarifications and unresolved responses carry the exact prose shared by both reader surfaces", () => {
+  const choices = clarifyAnswer("vail", ["Vail Unified District", "Town of Vail"], emptyTrace());
+  assert.equal(choices.answer, "More than one goes by “vail”: Vail Unified District, Town of Vail. Which did you mean?");
+  assert.equal(choices.answer, askResponseText(choices));
+  const confirmation = { ...choices, confirmation: { bodyId: "body:vail", name: "Town of Vail", question: "vail" } };
+  assert.equal(askResponseText(confirmation), "Did you mean Town of Vail?");
+  assert.equal(askResponseText({ ...choices, clarification: "Which government do you mean?" }), "Which government do you mean?");
+  const unresolved = unresolvedAnswer("nowheresville", emptyTrace());
+  assert.equal(unresolved.answer, "We don't have anything recorded under “nowheresville”.");
+  assert.equal(unresolved.answer, askResponseText(unresolved));
+  assert.equal(askResponseText({ ...unresolved, denominators: { identityUnresolved: 1 } }),
+    "We could not resolve the supplied identity for “nowheresville”.");
 });
 
 test("the answer is built FROM the pack, so a reader cannot see a record validation did not", () => {

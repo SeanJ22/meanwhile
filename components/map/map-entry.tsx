@@ -19,12 +19,13 @@ import {
   useDivisionRepresentation,
   type DivisionRepresentation,
 } from "@/hooks/use-division-representation";
-import { useNarrowing } from "@/hooks/use-narrowing";
 import { useStoredTheme } from "@/hooks/use-stored-theme";
 import { useStoredZip } from "@/hooks/use-stored-zip";
 import type { SearchItem } from "@/lib/search";
 import { bodyFromRow, resolveBodyRow, sameName } from "@/lib/search/body-row";
 import { AddressResolutionProvider } from "@/components/address/address-resolution-context";
+import { RememberedAddress } from "@/components/address/remembered-address";
+import { useSessionAddressScope } from "@/hooks/use-session-address";
 import { venueLink } from "@/lib/registry/links";
 import { DataProvider, type ShellData } from "@/lib/state/data";
 import { applyFilters, noticeShouldExpand } from "@/lib/state/derive";
@@ -750,6 +751,12 @@ function MapEntryInner() {
     });
   }, [current, dispatch]);
 
+  const addressedAnswer = current ?? shown;
+  const addressZip = addressedAnswer
+    ? /^\d{5}$/.test(addressedAnswer.zip) ? addressedAnswer.zip : (addressedAnswer.nearZip ?? null)
+    : (location?.zip ?? null);
+  const savedAddress = useSessionAddressScope(addressZip);
+
   const data = useMemo<ShellData>(() => {
     /*
      * `current` is null between a settle and its reply; `shown` bridges that
@@ -769,17 +776,15 @@ function MapEntryInner() {
       drawnDistricts,
       dropped: 0,
       searchFailed: failure !== null,
-      // Only the street-point view's key starts with "street:".
-      atAddress: false, // A street/device point is approximate; only the saved address divisions are confirmed.
+      atAddress: savedAddress !== null,
       /* One set for every surface. Missing or null both become null ("cannot say"), never an empty set. */
-      governing: answer?.governingOcdIds
-        ? new Set(answer.governingOcdIds)
-        : null,
+      governing: savedAddress ? new Set(savedAddress.divisionIds)
+        : answer?.governingOcdIds ? new Set(answer.governingOcdIds) : null,
       /* Same null discipline as `governing`. */
       zipPartial: answer?.partialOcdIds ? new Set(answer.partialOcdIds) : null,
-      basis: "ZIP", // Approximate orientation never confirms an address.
+      basis: savedAddress ? "ADDRESS" : "ZIP",
     };
-  }, [current, shown, meetings, pinned?.listingIdentity, venues, location, drawnDistricts, failure]);
+  }, [current, shown, meetings, pinned?.listingIdentity, venues, location, drawnDistricts, failure, savedAddress]);
 
   /*
    * Every autocomplete row opens something. A meeting row with no venue opens
@@ -908,9 +913,6 @@ function MapEntryInner() {
    * The reader's narrowed divisions shade on the map, read for the zip the
    * who-governs card speaks. Division type comes from the OCD id's segment.
    */
-  const noticeZip =
-    result && /^\d{5}$/.test(result.zip) ? result.zip : (location?.zip ?? "");
-  const narrowing = useNarrowing(noticeZip);
   /*
    * An OCD id says `school_district:` without unified/elementary/secondary.
    * The Census gives each district exactly one, so all three sources are
@@ -918,12 +920,12 @@ function MapEntryInner() {
    */
   const narrowedDistricts = useMemo(
     () =>
-      narrowing.divisions.flatMap((ocdId) =>
+      (savedAddress?.divisionIds ?? []).flatMap((ocdId) =>
         ocdId.includes("school_district:")
           ? SCHOOL_DISTRICT_TYPES.map((type) => ({ ocdId, type }))
           : [{ ocdId, type: "municipal" as DistrictType }],
       ),
-    [narrowing.divisions],
+    [savedAddress],
   );
 
   // Applying a narrowing turns on the boundary overlay with the municipal and
@@ -1427,7 +1429,7 @@ function MapEntryInner() {
   );
 
   const zipContext = clusterZip
-    ? `Near ${clusterZip} · orientation, not your exact districts`
+    ? savedAddress ? `Your address · ${clusterZip}` : `Near ${clusterZip} · orientation, not your exact districts`
     : null;
 
   const cardBody = (() => {
@@ -1465,7 +1467,6 @@ function MapEntryInner() {
               })
             }
             onNarrowApplied={onNarrowApplied}
-            onStreetPoint={onStreetPoint}
             clusterElsewhere
           />
         );
@@ -1481,6 +1482,7 @@ function MapEntryInner() {
             drawnDistricts={drawnDistricts}
             districtOverlayOn={ui.showDistricts}
             atAddress={data.atAddress}
+            addressDivisionIds={data.atAddress ? data.governing : null}
             onShowDistricts={() => setShowDistricts(true)}
             onOpenOfficial={(holder, seatLabel, tier) =>
               openLarge({ kind: "official", holder, seatLabel, tier })
@@ -1704,6 +1706,10 @@ function MapEntryInner() {
           <div className="pointer-events-none absolute inset-0">
             <DistrictPicker />
           </div>
+        </div>
+
+        <div className="absolute bottom-4 right-4 z-20 max-w-[min(22rem,calc(100vw-2rem))] rounded-[10px] bg-[var(--panel-bg)] shadow-[var(--shadow-panel)]">
+          <RememberedAddress />
         </div>
 
         {(pillVenue || pillDistrict) && (

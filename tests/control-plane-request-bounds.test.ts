@@ -22,6 +22,8 @@ import {
 } from "../lib/control-plane/repository/request-bounds.ts";
 import { retryStartupRead } from "../lib/control-plane/startup-read-retry.ts";
 import { STANDING_NEON_REQUEST_DEADLINE_MS } from "../lib/ops/neon-request-deadline.ts";
+import { neonRequestDeadlineFetch } from "../lib/ops/neon-request-deadline.ts";
+import { statementWritesRows } from "../lib/db/sql-mutation.ts";
 
 const URL = "postgresql://user:pass@ep-request-bounds-proof.us-east-2.aws.neon.tech/neondb";
 const TINY = { POINT: 60, DOCUMENT: 90, PAGE: 120 } as const;
@@ -32,8 +34,14 @@ test("dispatch-sized POINT bursts share transport admission across repository cl
   const starts: number[] = [];
   try {
     neonConfig.fetchFunction = (async (_input: unknown, init?: { body?: string }) => {
+      const request = JSON.parse(init?.body ?? "{}") as { query: string; params: unknown[]; queries?: { query: string }[] };
+      // Operational transfer accounting is a separate store write, not one of the due-row reads.
+      if (request.queries?.every(query => /INSERT INTO database_transfer_daily/.test(query.query))) {
+        return new Response(JSON.stringify(request.queries.map(() => ({ command: "INSERT", fields: [], rows: [], rowCount: 1, rowAsArray: false }))));
+      }
+      if (/INSERT INTO database_transfer_daily/.test(request.query)) return answer([]);
       active++; peak = Math.max(peak, active); calls++;
-      starts.push(Number(JSON.parse(init?.body ?? "{}").params[0]));
+      starts.push(Number(request.params[0]));
       try {
         await new Promise(resolve => setTimeout(resolve, 8));
         return answer([]);
@@ -167,8 +175,6 @@ test("each call class takes its own bound: a large document row is DOCUMENT, a p
     const budgetAggregate = pgAggregateRepository(neon(URL), "BudgetLedger", "cp_budget", { bounds: TINY });
     const cases: [() => Promise<unknown>, string, string, number][] = [
       [() => repos.budget.read(), "cp_budget.read", "DOCUMENT", TINY.DOCUMENT],
-      [() => repos.budget.install(createLedger({ hosts: [] }), "2026-09-23T00:00:00.000Z"), "cp_budget.put", "DOCUMENT", TINY.DOCUMENT],
-      [() => repos.budget.compareAndSet(1, createLedger({ hosts: [] }), "2026-09-23T00:00:00.000Z"), "cp_budget.compareAndSet", "DOCUMENT", TINY.DOCUMENT],
       [() => budgetAggregate.readNarrowed("shared-budget-ledger", {}), "cp_budget.readNarrowed", "POINT", TINY.POINT],
       [() => repos.researchState.read("level-1"), "cp_research_state.read", "DOCUMENT", TINY.DOCUMENT],
       [() => repos.fieldManual.read("fm-x"), "cp_field_manual_entries.read", "POINT", TINY.POINT],
@@ -453,4 +459,98 @@ test("the startup-read retry re-reads a hung authority read inside connect-retry
   );
   assert.deepEqual(rows, [{ ok: true }]);
   assert.equal(calls(), 2);
+});
+
+test("row writes survive a spent read budget and retain exact parameters until the save lands", async () => {
+  let release!: () => void;
+  const held = new Promise<void>(resolve => { release = resolve; });
+  const calls: { text: string; params?: readonly unknown[]; signal?: AbortSignal }[] = [];
+  const sql: BoundableSql = {
+    query: async (text, params, options) => {
+      calls.push({ text, params, signal: options?.fetchOptions?.signal });
+      await held;
+      return [{ saved: true }];
+    },
+  };
+  const text = "WITH previous AS (SELECT 1) INSERT INTO cp_log_artifacts(value) VALUES ($1) RETURNING value";
+  const params = ["the complete original stored value"];
+  const saving = withStoreBudget("expired-read", 0, () => boundedQuery(sql,
+    { operation: "cp_log_artifacts.append:insert", callClass: "DOCUMENT" }, text, params, { bounds: TINY }));
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(calls.length, 1, "the spent read budget does not refuse the write");
+  assert.equal(calls[0].signal, undefined, "our cancellation signal never reaches persistence");
+  assert.deepEqual(calls[0].params, params);
+  release();
+  assert.deepEqual(await saving, [{ saved: true }]);
+});
+
+test("SQL mutation detection recognizes CTE writes and ignores quoted/commented words", () => {
+  for (const text of ["INSERT INTO cp_rows VALUES ($1)", "WITH old AS (SELECT 1) UPDATE cp_rows SET value=$1", "WITH old AS (UPDATE cp_rows SET value=$1 RETURNING *) SELECT * FROM old", "WITH old AS (DELETE FROM cp_rows RETURNING *) SELECT * FROM old"]) {
+    assert.equal(statementWritesRows(text), true, text);
+  }
+  for (const text of ["SELECT * FROM cp_rows FOR UPDATE", "SELECT * FROM cp_rows FOR NO KEY UPDATE", "SELECT 'INSERT INTO cp_rows' AS note", "SELECT '-- DELETE FROM cp_rows' AS note", 'SELECT "update" FROM cp_rows', "SELECT $$UPDATE cp_rows$$ AS note", "SELECT $tag$INSERT INTO cp_rows$tag$ AS note", "-- INSERT INTO cp_rows\nSELECT 1", "/* DELETE FROM cp_rows */ SELECT 1", "CREATE FUNCTION example() RETURNS void AS $$ BEGIN INSERT INTO cp_rows VALUES (1); END $$ LANGUAGE plpgsql"]) {
+    assert.equal(statementWritesRows(text), false, text);
+  }
+});
+
+test("the standing Neon read deadline never attaches a timer to single or batch row writes", async () => {
+  const requests: RequestInit[] = [];
+  const transport = neonRequestDeadlineFetch(async (_input, init) => {
+    requests.push(init ?? {});
+    return new Response("saved");
+  }, 1);
+  await transport("https://example.invalid/write", { method: "POST", body: JSON.stringify({ query: "INSERT INTO cp_rows VALUES ($1)", params: ["full value"] }) });
+  await transport("https://example.invalid/write", { method: "POST", body: JSON.stringify({ queries: [{ query: "SELECT 1" }, { query: "WITH existing AS (SELECT 1) UPDATE cp_rows SET value=$1" }] }) });
+  assert.ok(requests.every(request => request.signal === undefined));
+  let calls = 0;
+  const refusing = neonRequestDeadlineFetch(async () => { calls++; throw new Error("database refused"); }, 1);
+  await assert.rejects(refusing("https://example.invalid/write", { method: "POST", body: JSON.stringify({ query: "DELETE FROM cp_rows" }) }), /database refused/);
+  assert.equal(calls, 1, "a refused write is never replayed as a timed request");
+});
+
+test("locking SELECT reads retain their cancellation deadline", async () => {
+  for (const clause of ["FOR UPDATE", "FOR NO KEY UPDATE"]) {
+    let signal: AbortSignal | undefined;
+    const sql: BoundableSql = {
+      query: async (_text, _params, options) => {
+        signal = options?.fetchOptions?.signal;
+        return new Promise((_resolve, reject) => signal?.addEventListener("abort", () => reject(signal?.reason), { once: true }));
+      },
+    };
+    await assert.rejects(boundedQuery(sql, { operation: "cp_rows.readLocked", callClass: "POINT" },
+      `SELECT * FROM cp_rows ${clause}`, [], { bounds: TINY }), isControlPlaneRequestTimeout);
+    assert.equal(signal?.aborted, true);
+  }
+});
+
+test("a queued row write waits for transport capacity even when its enclosing read budget has expired", async () => {
+  const original = neonConfig.fetchFunction;
+  const now = "2026-10-12T12:00:00.000Z";
+  const releases: Array<() => void> = [];
+  let writeStarted = false;
+  try {
+    neonConfig.fetchFunction = (async (_input: unknown, init?: { body?: string; signal?: AbortSignal }) => {
+      const request = JSON.parse(init?.body ?? "{}") as { query: string; queries?: { query: string }[] };
+      if (request.queries?.every(query => /INSERT INTO database_transfer_daily/.test(query.query))) {
+        return new Response(JSON.stringify(request.queries.map(() => ({ command: "INSERT", fields: [], rows: [], rowCount: 1, rowAsArray: false }))));
+      }
+      if (/^UPDATE cp_budget/.test(request.query)) {
+        writeStarted = true;
+        assert.equal(init?.signal, undefined);
+        return answer([{ id: "shared-budget-ledger", revision: "2", updated_at: now }]);
+      }
+      if (/INSERT INTO database_transfer_daily/.test(request.query)) return answer([]);
+      return new Promise<Response>(resolve => releases.push(() => resolve(answer([]))));
+    }) as typeof neonConfig.fetchFunction;
+    const repos = await createPgRepositories(URL, undefined, { skipBootstrap: true });
+    const occupying = Array.from({ length: CONTROL_PLANE_QUERY_CONCURRENCY }, (_, index) => repos.occurrences.read(String(index)));
+    await new Promise(resolve => setImmediate(resolve));
+    const saving = withStoreBudget("expired-read", 0, () => repos.budget.compareAndSet(1, createLedger({ hosts: [] }), now));
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(writeStarted, false, "the write waits for the existing transport admission");
+    releases.forEach(release => release());
+    await Promise.all(occupying);
+    assert.equal((await saving).revision, 2);
+    assert.equal(writeStarted, true);
+  } finally { releases.forEach(release => release()); neonConfig.fetchFunction = original; }
 });

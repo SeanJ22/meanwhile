@@ -1,12 +1,12 @@
 import { readLocationOrigin, stampResidency, type ResidencyRelation } from "@/lib/ask/residency";
 import { appendReaderEvents } from "@/lib/db/reader-events";
 import { markerFromRequestWithBody } from "@/lib/db/run-marker";
-import { MAX_BATCH_BYTES, readEventBatch } from "@/lib/events/wire";
+import { readEventBatch } from "@/lib/events/wire";
 import { isSameOriginSubmission } from "@/lib/signal/intake-limits";
 import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
 
 /**
- * POST /api/events: batches of up to 128 reader events, validated and handed to the event store
+ * POST /api/events: reader event batches, validated and handed to the event store
  * (`lib/db/reader-events.ts`), which deduplicates by batch id. Automated runs count nothing. A malformed batch
  * is refused whole; an unreachable store answers 503 and the batcher retries the same batch id.
  */
@@ -30,10 +30,6 @@ function limiter() {
 
 export async function POST(request: Request) {
   const raw = await request.text();
-  if (raw.length > MAX_BATCH_BYTES) {
-    return Response.json({ error: "payload too large" }, { status: 413 });
-  }
-
   let body: unknown;
   try {
     body = JSON.parse(raw);

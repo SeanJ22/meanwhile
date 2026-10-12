@@ -1,7 +1,7 @@
 import { publicFetch } from "../hunt/public-transport.ts";
 import { coherentMidpoint, sampleStreetPoints } from "@/lib/geo/census-geocoder";
 import { resolveAddress } from "@/lib/geo/address-resolution";
-import { addressDivisions, lookupAddressGeographies } from "@/lib/geo/address-geographies";
+import { addressDivisions, addressStateFips, lookupAddressGeographies } from "@/lib/geo/address-geographies";
 import { ballotScopeAtAddress } from "@/lib/geo/address-ballot-scope";
 import { publishedZipDistricts } from "@/lib/geo/zip-census-districts";
 import { zipDivisionEntry } from "@/lib/geo/zip-division-index";
@@ -23,7 +23,7 @@ export async function resolveAddressRequest(request: Request, fetchImpl: typeof 
   const zip = typeof input.zip === "string" ? input.zip.trim() : "";
   const street = typeof input.street === "string" ? input.street.trim() : "";
   const house = typeof input.houseNumber === "string" ? input.houseNumber.trim() : "";
-  if (!/^\d{5}$/.test(zip) || street.length < 3 || street.length > 120 || house.length > 12) return answer({ ok: false }, 400);
+  if (!/^\d{5}$/.test(zip) || street.length < 3) return answer({ ok: false }, 400);
   // A pasted house number is treated as an exact address too; it never becomes a returned sample point.
   const embeddedHouse = /^#?\d+[a-z]?(?:[-/]\d+[a-z]?)?\s+/i.exec(street);
   if (!house && !embeddedHouse) {
@@ -51,8 +51,9 @@ export async function resolveAddressRequest(request: Request, fetchImpl: typeof 
     resolution: { status: "FAILED", reason: "NOT_FOUND", ...(found?.kind === "OTHER_ZIP" ? { resolvesInZip: found.zip } : {}) },
     contestIds: [], excludedContestIds: [] });
   const geographies = found.geographies;
-  const selection = currentRepresentationSelection();
-  const resolution = resolveAddress([addressDivisions(geographies, held, selection)], "EXACT_ADDRESS");
+  const stateFips = addressStateFips(geographies);
+  const selection = { ...currentRepresentationSelection(), ...(stateFips ? { stateFips } : {}) };
+  const resolution = resolveAddress([addressDivisions(geographies, held, selection)]);
   // The source lookup starts from every held plan touching the ZIP, not just today's representation map.
   const ids = new Set(entry?.ids ?? []);
   if (held.kind === "HELD") for (const row of held.value.containers) { const id = censusWorkDivision(row.ref); if (id) ids.add(id); }

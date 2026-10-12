@@ -12,7 +12,7 @@ const visit = (node: ts.Node) => {
 visit(source);
 assert.ok(send?.initializer);
 const makeSend = new Function("dependencies", ts.transpileModule(`
-  const { fetch, zip, street, setPhase, setError, setElsewhere, setResolution, setHouseNumber, setStreet, onPoint, onResolved, writeSessionAddress } = dependencies;
+  const { fetch, zip, street, page, readerPageForPath, logAddressEntered, setPhase, setError, setElsewhere, setResolution, setHouseNumber, setStreet, onPoint, onResolved, writeSessionAddress } = dependencies;
   return ${send.initializer.getText()};
 `, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None } }).outputText);
 
@@ -21,11 +21,14 @@ async function submit(street: string, withNumber: string, body: unknown) {
   const requests: { url: string; input: unknown }[] = [];
   const points: unknown[] = [];
   const writes: unknown[] = [];
+  const entries: unknown[] = [];
   const setter = (key: string) => (value: unknown) => {
     state[key] = typeof value === "function" ? value(state[key]) : value;
   };
   const run = makeSend({
     zip: "43215", street,
+    page: "MAP", readerPageForPath: () => "MAP",
+    logAddressEntered: (scope: unknown) => entries.push(scope),
     fetch: async (url: string, init: RequestInit) => {
       requests.push({ url, input: JSON.parse(String(init.body)) });
       assert.equal(init.method, "POST");
@@ -41,17 +44,19 @@ async function submit(street: string, withNumber: string, body: unknown) {
   await run(withNumber);
   assert.equal(requests.length, 1);
   assert.deepEqual(writes, []);
+  assert.equal(entries.length, 1, "every entry counts once, including an unresolved address");
+  assert.doesNotMatch(JSON.stringify(entries), /Capitol|\b123\b|\blat\b|\blng\b/);
   return { state, points, request: requests[0] };
 }
 
-test("a failed full address reports failure once and clears the house number in both input forms", async () => {
+test("a failed full address reports failure once and preserves the reader's input", async () => {
   for (const [street, house] of [["123 Capitol Sq", ""], ["Capitol Sq", "123"]]) {
     const { state, points } = await submit(street, house, {
       ok: true, basis: "EXACT_ADDRESS", resolution: { status: "FAILED", reason: "NOT_FOUND" },
     });
     assert.equal(state.phase, "FAILED");
-    assert.equal(state.street, "Capitol Sq");
-    assert.equal(state.houseNumber, "");
+    assert.equal(state.street, street);
+    assert.equal(state.houseNumber, house);
     assert.equal(state.elsewhere, null);
     assert.match(String(state.error), /couldn't place that address/);
     assert.doesNotMatch(String(state.error), /123/);

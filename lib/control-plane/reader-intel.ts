@@ -81,8 +81,16 @@ export interface ReaderWord {
 
 export const READER_WORDS: Readonly<Record<string, ReaderWord>> = {
   SEARCH: {
-    label: "Looked up an address or ZIP",
-    means: "Someone asked what governs a place. This is the event the whole product starts from.",
+    label: "Viewed a place on the map",
+    means: "Someone opened or moved the map to see meetings for a place.",
+  },
+  ADDRESS_ENTERED: {
+    label: "Entered an address or ZIP",
+    means: "Someone entered a place. Its ZIP and full resolved district set are recorded with the anonymous reader count.",
+  },
+  BALLOT_VIEWED: {
+    label: "Viewed a ballot",
+    means: "Someone opened the ballot for their ZIP or remembered address and districts.",
   },
   BODY_OPENED: {
     label: "Opened a governing body",
@@ -106,7 +114,7 @@ export const READER_WORDS: Readonly<Record<string, ReaderWord>> = {
   },
   QUESTION_ASKED: {
     label: "Asked a question",
-    means: "Someone typed a question into the ask box. The topic is recorded; what they typed is not, unless nothing could answer it.",
+    means: "Someone typed a question into Ask. The full question and its topic are recorded with the reader's districts.",
   },
   ORGANIC: {
     label: "Readers",

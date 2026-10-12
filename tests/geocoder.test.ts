@@ -12,9 +12,7 @@ import {
   coherentMidpoint,
   houseNumberIn,
   sampleNumbersFor,
-  locateStreetInZip,
-  locateAddressInZip,
-  lookupStreetInZip,
+  sampleStreetPoints,
   parseCensusPoint,
   streetOnly,
 } from "../lib/geo/census-geocoder.ts";
@@ -103,20 +101,6 @@ test("D53: samples that agree give a midpoint; samples that scatter give nothing
   assert.ok(single && single.spreadKm === 0);
 });
 
-function stubFetch(bodies: Record<string, unknown>): typeof fetch {
-  return (async (input: string | URL) => {
-    // Decoded, and `+` back to a space: URLSearchParams writes spaces as `+`
-    // and decodeURIComponent leaves those alone, so matching on the raw
-    // string quietly hits nothing and every stub returns "no match".
-    const url = decodeURIComponent(String(input)).replace(/\+/g, " ");
-    const key = Object.keys(bodies).find((k) => url.includes(k));
-    return new Response(JSON.stringify(key ? bodies[key] : REAL_EMPTY), {
-      status: 200,
-      headers: { "content-type": "application/json" },
-    });
-  }) as typeof fetch;
-}
-
 test("D53: the lookup never sends a reader's number and stops at four samples", async () => {
   const asked: string[] = [];
   const fetchImpl = (async (input: string | URL) => {
@@ -124,7 +108,7 @@ test("D53: the lookup never sends a reader's number and stops at four samples", 
     return new Response(JSON.stringify(REAL_EMPTY), { status: 200 });
   }) as typeof fetch;
 
-  await locateStreetInZip("808 Green Pond Road", "07866", { fetchImpl });
+  await sampleStreetPoints("808 Green Pond Road", "07866", { fetchImpl });
 
   assert.equal(
     asked.length,
@@ -182,7 +166,7 @@ test("the Vail defect: a high house number is placed, and is never itself sent",
   }
 });
 
-test("D53: every failure mode returns null rather than an error state", async () => {
+test("street sampling returns no points for failed lookups", async () => {
   const cases: Array<[string, typeof fetch]> = [
     [
       "no matches",
@@ -203,10 +187,10 @@ test("D53: every failure mode returns null rather than an error state", async ()
   ];
 
   for (const [name, fetchImpl] of cases) {
-    assert.equal(
-      await locateStreetInZip("Academy St", "07866", { fetchImpl }),
-      null,
-      `${name} did not return null`,
+    assert.deepEqual(
+      await sampleStreetPoints("Academy St", "07866", { fetchImpl }),
+      [],
+      `${name} did not return an empty sample`,
     );
   }
 
@@ -216,9 +200,9 @@ test("D53: every failure mode returns null rather than an error state", async ()
     called++;
     return new Response(JSON.stringify(REAL_EMPTY), { status: 200 });
   }) as typeof fetch;
-  assert.equal(await locateStreetInZip("St", "07866", { fetchImpl: counting }), null);
-  assert.equal(await locateStreetInZip("Academy St", "7866", { fetchImpl: counting }), null);
-  assert.equal(await locateStreetInZip("Academy St", "not a zip", { fetchImpl: counting }), null);
+  assert.deepEqual(await sampleStreetPoints("St", "07866", { fetchImpl: counting }), []);
+  assert.deepEqual(await sampleStreetPoints("Academy St", "7866", { fetchImpl: counting }), []);
+  assert.deepEqual(await sampleStreetPoints("Academy St", "not a zip", { fetchImpl: counting }), []);
   assert.equal(called, 0, "a request went out for input that could not resolve");
 });
 
@@ -255,139 +239,6 @@ test("D53/M80: the point is never stored, and the only server it touches is the 
       `the geocoder names ${host}`,
     );
   }
-});
-
-test("D53: a street whose samples agree resolves; one that scatters does not", async () => {
-  const tight = await locateStreetInZip("Academy St", "07866", {
-    fetchImpl: stubFetch({
-      "1 Academy St": {
-        result: { addressMatches: [{ addressComponents: { zip: "07866" }, coordinates: { x: -74.51317, y: 40.90273 } }] },
-      },
-      "50 Academy St": {
-        result: { addressMatches: [{ addressComponents: { zip: "07866" }, coordinates: { x: -74.5137, y: 40.90337 } }] },
-      },
-    }),
-  });
-  assert.ok(tight);
-  assert.equal(tight.samples, 2);
-  assert.equal(tight.street, "Academy St");
-  assert.ok(tight.spreadKm <= MAX_SPREAD_KM);
-
-  const scattered = await locateStreetInZip("Green Pond Road", "07866", {
-    fetchImpl: stubFetch({
-      "1 Green Pond Road": {
-        result: { addressMatches: [{ addressComponents: { zip: "07866" }, coordinates: { x: -74.50227, y: 40.9106 } }] },
-      },
-      "800 Green Pond Road": {
-        result: { addressMatches: [{ addressComponents: { zip: "07866" }, coordinates: { x: -74.49598, y: 40.96108 } }] },
-      },
-    }),
-  });
-  assert.equal(scattered, null, "a 5.6 km street produced a single confident point");
-});
-
-test("the author's ruling: a crossing street is a question, not a refusal", async () => {
-  // A street we cannot find and a street that runs across the map are different answers.
-  const crossing = await lookupStreetInZip("Green Pond Road", "07866", {
-    fetchImpl: stubFetch({
-      "1 Green Pond Road": {
-        result: { addressMatches: [{ addressComponents: { zip: "07866" }, coordinates: { x: -74.50227, y: 40.9106 } }] },
-      },
-      "800 Green Pond Road": {
-        result: { addressMatches: [{ addressComponents: { zip: "07866" }, coordinates: { x: -74.49598, y: 40.96108 } }] },
-      },
-    }),
-  });
-  assert.equal(crossing.kind, "CROSSES");
-  if (crossing.kind !== "CROSSES") return;
-  assert.equal(crossing.street, "Green Pond Road");
-  assert.ok(crossing.spreadKm > MAX_SPREAD_KM, `spread ${crossing.spreadKm}`);
-
-  // A street that agrees still resolves to a point, unchanged.
-  const tight = await lookupStreetInZip("Academy St", "07866", {
-    fetchImpl: stubFetch({
-      "1 Academy St": {
-        result: { addressMatches: [{ addressComponents: { zip: "07866" }, coordinates: { x: -74.51317, y: 40.90273 } }] },
-      },
-      "50 Academy St": {
-        result: { addressMatches: [{ addressComponents: { zip: "07866" }, coordinates: { x: -74.5137, y: 40.90337 } }] },
-      },
-    }),
-  });
-  assert.equal(tight.kind, "POINT");
-
-  // Nothing found at all is still NOT_FOUND — the refusal remains where it
-  // belongs, and a street with no matches must never produce the question.
-  const missing = await lookupStreetInZip("Nowhere Ave", "07866", {
-    fetchImpl: stubFetch({}),
-  });
-  assert.equal(missing.kind, "NOT_FOUND");
-});
-
-test("the answer resolves to the point, and the house number is never kept", async () => {
-  let asked = "";
-  const point = await locateAddressInZip("808", "Green Pond Road", "07866", {
-    fetchImpl: (async (url: string) => {
-      asked = String(url);
-      return {
-        ok: true,
-        json: async () => ({
-          result: { addressMatches: [{ addressComponents: { zip: "07866" }, coordinates: { x: -74.49598, y: 40.96108 } }] },
-        }),
-      } as unknown as Response;
-    }) as unknown as typeof fetch,
-  });
-
-  assert.ok(point);
-  assert.equal(point.samples, 1, "one exact address is one request, not four");
-  // The number went to the Bureau, which is the only place it may go.
-  assert.match(
-    decodeURIComponent(asked).replace(/\+/g, " "),
-    /808 Green Pond Road, 07866/,
-  );
-  // And it is not in what comes back. `street` is what the card renders, and
-  // a card must never become a household.
-  assert.equal(point.street, "Green Pond Road");
-  assert.ok(
-    !JSON.stringify(point).includes("808"),
-    "the house number survived into the returned point",
-  );
-
-  // No number, no request.
-  let called = false;
-  const nothing = await locateAddressInZip("", "Green Pond Road", "07866", {
-    fetchImpl: (async () => {
-      called = true;
-      return { ok: false } as unknown as Response;
-    }) as unknown as typeof fetch,
-  });
-  assert.equal(nothing, null);
-  assert.equal(called, false, "an empty house number still hit the network");
-});
-
-test("the house number never reaches the narrowing store or a log", () => {
-  const source = readFileSync(
-    new URL("../components/address/address-prompt.tsx", import.meta.url),
-    "utf8",
-  );
-  // The number lives in component state and goes to the geocoder. It must
-  // not be written to the device store, logged, or sent to our own API —
-  // the same rule the resolved point ships under.
-  for (const forbidden of [
-    "setStreet(houseNumber",
-    "writeSessionAddress({ houseNumber",
-    "houseNumber, streetLabel",
-    "/api/log",
-    "console.log(houseNumber",
-    "localStorage",
-  ]) {
-    assert.ok(
-      !source.includes(forbidden),
-      `the address prompt reaches for ${forbidden} with the house number`,
-    );
-  }
-  // And it is cleared once the request finishes, whatever the outcome (a `try`/`finally` block).
-  assert.match(source, /finally \{[\s\S]{0,200}setHouseNumber\(""\)/);
 });
 
 test("M80: the geocode route writes NOTHING — no log, no store, no echo", async () => {
@@ -494,16 +345,16 @@ test("M80: a browser goes through the proxy; the server calls the Bureau direct"
       { status: 200 },
     );
   }) as unknown as typeof fetch;
-  const point = await locateAddressInZip("1", "W Congress St", "85701", { fetchImpl });
-  assert.ok(point);
-  assert.equal(calls.length, 1);
+  const points = await sampleStreetPoints("W Congress St", "85701", { fetchImpl });
+  assert.equal(points.length, 4);
+  assert.equal(calls.length, 4);
   assert.ok(
     calls[0].startsWith(CENSUS_GEOCODER_URL),
     `server-side call went to ${calls[0]}`,
   );
 });
 
-test("M80: the address prompt discloses Census lookup and district-only visit storage", () => {
+test("the address prompt discloses Census lookup and device storage until Forget", () => {
   const prompt = readFileSync(
     join(process.cwd(), "components", "address", "address-prompt.tsx"),
     "utf8",
@@ -514,7 +365,7 @@ test("M80: the address prompt discloses Census lookup and district-only visit st
   const lookupDisclosure = privacyParagraphs.find((paragraph) => /Census Bureau/.test(paragraph));
   assert.ok(lookupDisclosure, "the prompt must disclose the Census address lookup");
   assert.match(lookupDisclosure, /house number.*check your districts.*Census Bureau/i);
-  assert.match(lookupDisclosure, /Only the district result stays on this device for this visit/);
+  assert.match(lookupDisclosure, /Your address and districts stay on this device until you press Forget this address/);
   for (const paragraph of privacyParagraphs) {
     assert.doesNotMatch(paragraph, /never (?:send it to us|store|log)/i);
   }
@@ -527,5 +378,5 @@ test("Census geocoding preserves ambiguity, rejects another ZIP, and supports US
     assert.deepEqual(parseCensusPoint({ result: { addressMatches: [{ coordinates: { x, y } }] } }), { lat: y, lng: x });
   }
   const fetchImpl = (async () => new Response(JSON.stringify(REAL_MATCH))) as typeof fetch;
-  assert.equal(await locateAddressInZip("1", "Green Pond Road", "07867", { fetchImpl }), null);
+  assert.deepEqual(await sampleStreetPoints("Green Pond Road", "07867", { fetchImpl }), []);
 });

@@ -34,7 +34,7 @@ export interface AskSitting {
 }
 
 export interface AskAnswerPayload {
-  /** One canonical body suggestion; contains no answer until confirmed. */
+  /** One canonical body suggestion to confirm before a substantive answer. */
   confirmation?: BodyConfirmation;
   clarification?: string;
   /** Held agenda records lead the reader answer, even when prose is available. */
@@ -51,7 +51,7 @@ export interface AskAnswerPayload {
   mode: AnswerMode;
   /** What the question resolved to, or null. Never a substitute. */
   subject: EvidenceSubject | null;
-  /** Validated generated prose, or null. Null is a normal, honest outcome. */
+  /** The displayed response, including clarification; null when no prose was produced. */
   answer: string | null;
   /** The evidence, whatever the mode; a rejected or unavailable synthesis still ships every record. */
   records: EvidenceRecord[];
@@ -133,12 +133,16 @@ export function clarifyAnswer(
   candidates: readonly string[],
   trace: AskTrace,
 ): AskAnswerPayload {
-  return { ...base("CLARIFY", trace), mention, candidates: [...candidates] };
+  const payload = { ...base("CLARIFY", trace), mention, candidates: [...candidates] };
+  payload.answer = askResponseText(payload);
+  return payload;
 }
 
 /** A government was named and we hold no such thing. Said, never swapped. */
 export function unresolvedAnswer(mention: string, trace: AskTrace): AskAnswerPayload {
-  return { ...base("UNRESOLVED", trace), mention };
+  const payload = { ...base("UNRESOLVED", trace), mention };
+  payload.answer = askResponseText(payload);
+  return payload;
 }
 
 /** The missing information is ours; this never creates a government or claims its calendar is empty. */
@@ -151,6 +155,17 @@ export function unresolvedReadLine(answer: { mention?: string; denominators?: Re
   return answer.denominators?.identityUnresolved
     ? `We could not resolve the supplied identity for “${answer.mention ?? "this subject"}”.`
     : `We don't have anything recorded under “${answer.mention ?? "that name"}”.`;
+}
+
+/** The same response text is shown on both Ask surfaces and saved by the route. */
+export function askResponseText(payload: Pick<AskAnswerPayload, "mode" | "answer" | "mention" | "candidates" | "confirmation" | "clarification" | "denominators">): string | null {
+  if (payload.mode === "CLARIFY") {
+    if (payload.confirmation) return `Did you mean ${payload.confirmation.name}?`;
+    if (payload.clarification) return payload.clarification;
+    return `More than one goes by “${payload.mention ?? ""}”${payload.candidates?.length ? `: ${payload.candidates.join(", ")}` : ""}. Which did you mean?`;
+  }
+  if (payload.mode === "UNRESOLVED") return unresolvedReadLine(payload);
+  return payload.answer;
 }
 
 /** The engine is switched off: a named gap of ours, with `why` for operators. */

@@ -6,6 +6,7 @@ import { servableAzBallot } from "./helpers/reader-fixtures.ts";
 import { ASK_SAVE_STATUS_HEADER, askSaveNotice } from "../lib/ask/save-status.ts";
 import { submitDemandSignal } from "../lib/demand/client.ts";
 import { submitSpeakYourMind } from "../lib/speak/client.ts";
+import { withResponseLifetime } from "../lib/log/after-response.ts";
 import { resetGroundedState } from "../lib/ask/grounded-state.ts";
 
 const candidateId = "ballot-az-pima:governor:fixture";
@@ -43,14 +44,22 @@ test("Ask, Speak and demand reach their real writers and report storage failure 
   const rows = new Map<string, Record<string, unknown>[]>();
   const failed = new Set<string>();
   const stalled = new Set<string>();
-  const committedBeforeTimeout = new Set<string>();
-  const aborted: string[] = [];
+  const releaseWrites = new Map<string, () => void>();
   let pendingWrites = 0;
   const logs: unknown[][] = [];
   t.mock.method(console, "error", (...values: unknown[]) => { logs.push(values); });
   neonConfig.fetchFunction = async (_url: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) => {
     const body = JSON.parse(String(init?.body)) as { query?: string; params?: unknown[]; queries?: { query: string; params: unknown[] }[] };
     const result = (statement: { query: string; params: unknown[] }) => {
+      const recordInsert = /insert into "([^"]+)"[\s\S]*jsonb_populate_record/i.exec(statement.query);
+      if (recordInsert) {
+        const table = recordInsert[1];
+        if (failed.has(table)) throw Object.assign(new Error("fixture write refused"), { code: "42703" });
+        const row = JSON.parse(String(statement.params[0]));
+        delete row.question_scrubbed;
+        rows.set(table, [...(rows.get(table) ?? []), row]);
+        return { command: "INSERT", rowCount: 1, rowAsArray: true, fields: [], rows: [] };
+      }
       const insert = /insert into "([^"]+)" \(([^)]+)\) values \(([^)]+)\)/i.exec(statement.query);
       if (insert) {
         const [, table, names, values] = insert;
@@ -67,15 +76,11 @@ test("Ask, Speak and demand reach their real writers and report storage failure 
     };
     const table = /insert into "([^"]+)"/i.exec(body.query ?? "")?.[1];
     if (table && stalled.has(table)) {
-      if (committedBeforeTimeout.has(table)) result({ query: body.query!, params: body.params ?? [] });
-      const signal = init?.signal;
-      assert.ok(signal, "the real Neon request must receive its cancellation signal");
+      assert.equal(init?.signal, undefined, "background writes have no timer or cancellation signal from us");
       pendingWrites++;
-      return new Promise<Response>((_resolve, reject) => {
-        const abort = () => { pendingWrites--; aborted.push(table); reject(signal.reason); };
-        if (signal.aborted) abort();
-        else signal.addEventListener("abort", abort, { once: true });
-      });
+      await new Promise<void>(resolve => releaseWrites.set(table, resolve));
+      releaseWrites.delete(table);
+      pendingWrites--;
     }
     try {
       return Response.json(body.queries ? { results: body.queries.map(result) }
@@ -96,9 +101,9 @@ test("Ask, Speak and demand reach their real writers and report storage failure 
   assert.match(savedAnswer.answer, /Fixture Candidate/);
   const questions = rows.get("ask_interactions") ?? [];
   assert.equal(questions.length, 1, "the default production writer received exactly one prepared question");
-  assert.equal(questions[0].question_scrubbed, askBody.question);
+  assert.equal(questions[0].question, askBody.question);
   assert.equal(questions[0].approximate_location, "85701");
-  assert.deepEqual(JSON.parse(String(questions[0].ocd_ids)), askBody.ocdIds);
+  assert.deepEqual((typeof questions[0].ocd_ids === "string" ? JSON.parse(questions[0].ocd_ids) : questions[0].ocd_ids), askBody.ocdIds);
   assert.equal(questions[0].answer_text, savedAnswer.answer);
   assert.doesNotMatch(JSON.stringify(questions[0]), /fixture-ask-key/);
   assert.equal(askSaveNotice(saved.headers), null);
@@ -161,34 +166,64 @@ test("Ask, Speak and demand reach their real writers and report storage failure 
   assert.ok(logs.some(line => JSON.stringify(line).includes("write alarm unavailable")));
   assert.doesNotMatch(JSON.stringify(logs), /fixture-ask-key|Please explain the school budget/);
 
-  for (const scenario of ["save", "alarm", "acknowledgement"] as const) {
+  for (const scenario of ["save", "alarm"] as const) {
     failed.clear();
     stalled.clear();
-    committedBeforeTimeout.clear();
     if (scenario === "alarm") {
       failed.add("ask_interactions");
       stalled.add("write_alarm");
-    } else {
-      stalled.add("ask_interactions");
-      if (scenario === "acknowledgement") committedBeforeTimeout.add("ask_interactions");
-    }
+    } else stalled.add("ask_interactions");
     const before = rows.get("ask_interactions")!.length;
-    let deadline: ReturnType<typeof setTimeout> | undefined;
-    const reply = await Promise.race([
-      ask(request("/api/ask/grounded", askBody)),
-      new Promise<never>((_resolve, reject) => { deadline = setTimeout(() => reject(new Error(`${scenario} stalled the answer`)), 3000); }),
-    ]).finally(() => clearTimeout(deadline));
-    assert.equal(reply.status, 200, scenario);
-    assert.equal((await reply.json()).answer, savedAnswer.answer, scenario);
-    assert.equal(reply.headers.get(ASK_SAVE_STATUS_HEADER), "FAILED", scenario);
-    assert.match(askSaveNotice(reply.headers)!, /couldn't confirm/, scenario);
-    assert.equal(aborted.at(-1), scenario === "alarm" ? "write_alarm" : "ask_interactions", scenario);
-    assert.equal(pendingWrites, 0, "the request is aborted rather than left writing after the answer");
-    assert.equal(rows.get("ask_interactions")!.length, before + (scenario === "acknowledgement" ? 1 : 0),
-      "a lost acknowledgement may follow a committed row and must not trigger a duplicate retry");
+    const work: Promise<unknown>[] = [];
+    const reply = await withResponseLifetime(promise => { work.push(promise); },
+      () => ask(request("/api/ask/grounded", askBody)));
+    assert.equal(reply.status, 200);
+    assert.equal((await reply.json()).answer, savedAnswer.answer);
+    assert.equal(reply.headers.get(ASK_SAVE_STATUS_HEADER), "QUEUED");
+    assert.equal(askSaveNotice(reply.headers), null);
+    // A controlled pause proves delivery precedes the save; no elapsed timer is needed.
+    while (!releaseWrites.has(scenario === "alarm" ? "write_alarm" : "ask_interactions")) await new Promise(resolve => setImmediate(resolve));
+    assert.equal(pendingWrites, 1, "the save survives after the answer has returned");
+    releaseWrites.get(scenario === "alarm" ? "write_alarm" : "ask_interactions")!();
+    await Promise.all(work);
+    assert.equal(pendingWrites, 0);
+    if (scenario === "save") assert.equal(rows.get("ask_interactions")!.length, before + 1, "the stalled save lands exactly once");
+    else assert.ok(rows.get("write_alarm")!.some(row => row.store === "ask_interactions"), "a refused deferred save records its alarm");
   }
   stalled.clear();
-  committedBeforeTimeout.clear();
+  failed.clear();
+
+  for (const question of ["Who represents 412 elm st phoenix?", "What happened at the 2026 Budget Hearing?", "q".repeat(900)]) {
+    const response = await ask(request("/api/ask/grounded", { ...askBody, question }));
+    const answer = await response.json();
+    assert.equal(rows.get("ask_interactions")!.at(-1)!.question, question);
+    assert.equal(rows.get("ask_interactions")!.at(-1)!.answer_text, answer.answer);
+    assert.equal((typeof rows.get("search_log")!.at(-1)!.detail === "string" ? JSON.parse(String(rows.get("search_log")!.at(-1)!.detail)) : rows.get("search_log")!.at(-1)!.detail as Record<string, unknown>).question, question);
+  }
+
+  const beforeCompositionFailure = rows.get("ask_interactions")!.length;
+  const realResponseJson = Response.json;
+  const responseMock = t.mock.method(Response, "json", (data: unknown, init?: ResponseInit) => {
+    if (data && typeof data === "object" && "mode" in data && "answer" in data) {
+      throw new Error("fixture response composition failed");
+    }
+    return realResponseJson(data, init);
+  });
+  try {
+    await assert.rejects(ask(request("/api/ask/grounded", askBody)), /fixture response composition failed/);
+    assert.equal(rows.get("ask_interactions")!.length, beforeCompositionFailure + 1);
+    assert.equal(rows.get("ask_interactions")!.at(-1)!.answer_mode, "TRANSPORT_FAILED");
+    assert.equal(rows.get("ask_interactions")!.at(-1)!.answer_text, null);
+    assert.equal(rows.get("ask_interactions")!.at(-1)!.question, askBody.question);
+  } finally { responseMock.mock.restore(); }
+
+  process.env.WTP_RIPCORD_ASK_GROUNDED = "pulled";
+  const unanswered = await ask(request("/api/ask/grounded", askBody));
+  assert.equal(unanswered.status, 200);
+  assert.equal(rows.get("ask_interactions")!.at(-1)!.answer_mode, "TRANSPORT_FAILED");
+  assert.equal(rows.get("ask_interactions")!.at(-1)!.answer_text, null);
+  assert.equal(rows.get("ask_interactions")!.at(-1)!.question, askBody.question);
+  delete process.env.WTP_RIPCORD_ASK_GROUNDED;
 
   delete process.env.DATABASE_URL;
   assert.equal((await speak(request("/api/speak", speakBody))).status, 202);

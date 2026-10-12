@@ -167,7 +167,7 @@ export class S3ArchiveStore implements PrlArchiveStore {
     });
     return fetch(url, {
       method,
-      signal: AbortSignal.timeout(30_000),
+      ...(method === "GET" || method === "HEAD" ? { signal: AbortSignal.timeout(30_000) } : {}),
       headers: { ...headers, "x-amz-date": amzDate, authorization, host: new URL(url).host },
       body: body ? Buffer.from(body) : undefined,
     });

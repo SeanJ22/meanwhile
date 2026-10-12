@@ -105,7 +105,7 @@ test("MAP-3: an area click still leaves Who Governs Here open", () => {
 });
 
 test("WGH-15: selecting a district writes SELECTION and never the reader's home", () => {
-  // Home location lives in sessionStorage with one writer; the ui state must not grow a field for it.
+  // Home location lives in localStorage with one writer; the ui state must not grow a field for it.
   const before = uiReducer(INITIAL_STATE, {
     type: "select/district",
     ocdId: "ocd-division/country:us/state:az/sldl:17",
@@ -133,7 +133,7 @@ test("WGH-15: selecting a district writes SELECTION and never the reader's home"
     assert.ok(
       !/home|address|residen|confirmedDivision|splitLevel/i.test(key),
       `the ui state has grown \`${key}\`, which looks like the reader's HOME location. ` +
-        `WGH-15: home lives in sessionStorage with exactly one writer, and the map's ` +
+        `WGH-15: home lives in localStorage with exactly one writer, and the map's ` +
         `selection reducer is not it. A district click may never rewrite where a reader lives.`,
     );
   }

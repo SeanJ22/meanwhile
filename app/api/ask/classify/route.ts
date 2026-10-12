@@ -8,9 +8,6 @@ import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
 
 export const runtime = "nodejs";
 
-const MAX_BODY_BYTES = 2048;
-const MAX_QUESTION_CHARS = 200;
-
 let ipLimiter: SlidingWindowLimiter | null = null;
 function getIpLimiter() {
   ipLimiter ??= new SlidingWindowLimiter(
@@ -43,10 +40,6 @@ export async function POST(request: Request) {
   }
 
   const raw = await request.text();
-  if (raw.length > MAX_BODY_BYTES) {
-    return Response.json({ error: "body too large" }, { status: 413 });
-  }
-
   let body: { question?: unknown };
   try {
     body = JSON.parse(raw) as { question?: unknown };
@@ -57,9 +50,7 @@ export async function POST(request: Request) {
     return Response.json({ error: "question is required" }, { status: 400 });
   }
 
-  const outcome = await classifyQuestion(
-    body.question.slice(0, MAX_QUESTION_CHARS),
-  );
+  const outcome = await classifyQuestion(body.question);
 
   // Every not-a-topic answer is the same to the reader: the honest keyword
   // refusal the box would have shown anyway. `why` is for the operator.

@@ -9,16 +9,13 @@ import { settlePositionHoldingAnswer } from "./holdings";
 
 export const runtime = "nodejs";
 
-/** A topic longer than this is not a topic. The cap is stated, not implied. */
-const MAX_TOPIC_CHARS = 120;
-
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ subject: string; topic: string }> },
 ) {
   const { subject: rawSubject, topic: rawTopic } = await params;
   const subject = decodeURIComponent(rawSubject);
-  const topic = decodeURIComponent(rawTopic).slice(0, MAX_TOPIC_CHARS);
+  const topic = decodeURIComponent(rawTopic);
 
   if (!subject || !topic.trim()) {
     return Response.json({ error: "subject and topic are required" }, { status: 400 });

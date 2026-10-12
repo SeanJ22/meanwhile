@@ -25,9 +25,9 @@ import {
  * dataset it was resolved against: district identifiers are reused across
  * redistricting cycles with different geometry.
  *
- * The collection stores (search log, reactions, feedback) are identifier-free
- * and never join: no account key, device ID, retained IP, lasting session key
- * or foreign key.
+ * Reader stores retain no account key, device ID, IP or foreign key. Ask and
+ * location events share only a digest of the browser's random continuity key
+ * so district aggregates can count distinct readers.
  */
 
 /** One sitting of a public body, keyed by the source-namespaced id the adapters emit. */
@@ -120,12 +120,9 @@ export const agendaDocuments = pgTable(
 /**
  * The search log — what was asked and where, never who.
  *
- * Deliberately no relation to any other table: no foreign keys, no account
- * or device column, nothing that could resolve a row to a person. The zip
- * is `approximate_location` per the entry-experience rule — orientation,
- * never district truth. It is honest to sell aggregates of this table only
- * because it cannot be resolved to anyone; that property is load-bearing
- * and guarded in tests, not just described here.
+ * No account, device column, street, house number or coordinates. The ZIP is
+ * orientation; district truth is the full resolved set in `ocd_ids`.
+ * `continuity_hash` uses the Ask digest to count distinct browsers by district.
  */
 export const searchLog = pgTable(
   "search_log",
@@ -141,12 +138,15 @@ export const searchLog = pgTable(
         "DISTRICT_SELECTED",
         "FILTER_APPLIED",
         "OFFICIAL_OPENED",
-        // Routed asks carry the topic id; refusals carry the capped question text.
         "QUESTION_ASKED",
+        "ADDRESS_ENTERED",
+        "BALLOT_VIEWED",
       ],
     }).notNull(),
     /** Zip as entered. Orientation only — never resolved to a person. */
     approximateLocation: text("approximate_location"),
+    /** sha256("ask-interaction:" + browser key), or null on earlier events. */
+    continuityHash: text("continuity_hash"),
     /**
      * Divisions the event touched, as OCD-IDs. One event resolves against
      * one geometry dataset, so the vintage is a row column, not per entry.
@@ -156,7 +156,7 @@ export const searchLog = pgTable(
     /**
      * Event-shaped facts with no identifier in them: the radius asked for,
      * the cascade tier answered, the filter values, the body or meeting id
-     * opened. Never free text a person typed.
+     * opened, page, and the full question as typed on QUESTION_ASKED rows.
      */
     detail: jsonb("detail").$type<Record<string, string | number | boolean>>(),
     /**
@@ -188,6 +188,10 @@ export const searchLog = pgTable(
     coverageTierDistribution: text("coverage_tier_distribution").notNull(),
   },
   (table) => [
+    check(
+      "search_log_event_type_known",
+      sql`${table.eventType} IN ('SEARCH', 'BODY_OPENED', 'MEETING_OPENED', 'DISTRICT_SELECTED', 'FILTER_APPLIED', 'OFFICIAL_OPENED', 'QUESTION_ASKED', 'ADDRESS_ENTERED', 'BALLOT_VIEWED')`,
+    ),
     index("search_log_occurred_at_idx").on(table.occurredAt),
     // Every sold aggregate filters on the class.
     index("search_log_run_class_idx").on(table.runClass),
@@ -551,8 +555,8 @@ export const speakYourMind = pgTable(
 
 /**
  * One question and its answer, in one row. `askKeyHash` is digested under its
- * own `"ask-interaction:"` prefix. No email, account, address, phone or IP;
- * subjects are public civic ids. `questionScrubbed` is the scrubbed text only.
+ * `"ask-interaction:"` prefix, shared with location events to count distinct
+ * readers. The question and answer retain the words exactly as given.
  * Writes stay off while the existing `ripcord.reactionIntake` is pulled.
  */
 export const askInteractions = pgTable(
@@ -560,9 +564,9 @@ export const askInteractions = pgTable(
   {
     id: uuid("id").primaryKey().defaultRandom(),
     occurredAt: timestamp("occurred_at", { withTimezone: true, mode: "string" }).notNull(),
-    /** The reader's words AFTER the scrub. Never the raw text. */
-    questionScrubbed: text("question_scrubbed").notNull(),
-    /** Anything the scrub blanked, as KINDS — never the values themselves. */
+    /** The reader's words exactly as typed. */
+    question: text("question").notNull(),
+    /** Retained for existing rows; current Ask capture leaves this empty. */
     selfDisclosure: jsonb("self_disclosure").$type<string[]>().notNull(),
     /** What the pipeline understood the reader to be asking for. */
     intent: text("intent").notNull(),
@@ -582,6 +586,7 @@ export const askInteractions = pgTable(
         "UNRESOLVED",
         "NO_EVIDENCE",
         "REJECTED_FELL_BACK",
+        "TRANSPORT_FAILED",
       ],
     }).notNull(),
     /** What the reader actually read. Null where no prose was produced. */
@@ -635,7 +640,7 @@ export const askInteractions = pgTable(
       enum: ["TIER_0", "TIER_1", "TIER_2", "TIER_3", "UNKNOWN"],
     }).notNull(),
     coverageTierDistribution: text("coverage_tier_distribution").notNull(),
-    /** `sha256("ask-interaction:" + key)`, its own digest space. Never exported. */
+    /** sha256("ask-interaction:" + key), also used by location events. */
     askKeyHash: text("ask_key_hash").notNull(),
     runClass: text("run_class", { enum: ["ORGANIC", "SYNTHETIC", "UNKNOWN", "AUTHOR"] })
       .notNull()

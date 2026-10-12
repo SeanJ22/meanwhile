@@ -15,7 +15,6 @@ import {
   askKeyHash,
   captureAskInteraction,
   prepareAskInteraction,
-  scrubStoredAnswer,
   normalizeApproximateLocation,
   type AskCaptureInput,
   type AskInteractionRow,
@@ -706,7 +705,7 @@ test("ASK SIGNAL: one Ask writes exactly one row — and one only", async () => 
     const row = written[0];
     /* The commercial unit, whole: question, interpretation, subject, answer,
        mode, evidence provenance, surface, cohort and confidence. */
-    assert.ok(row.questionScrubbed.length > 0, "the scrubbed question");
+    assert.ok(row.question.length > 0, "the complete question");
     assert.equal(row.intent, "UPCOMING_AGENDA");
     assert.equal(row.temporalKind, "NEXT");
     assert.deepEqual(row.subjectIds, [VAIL]);
@@ -741,46 +740,13 @@ test("ASK SIGNAL: the surfaces mint the returning-reader ID in the Ask store's o
   }
 });
 
-test("PII: a name the reader introduced and the model echoed survives in NEITHER column", () => {
-  const row = prepareAskInteraction({
-    ...captureInput({
-      question:
-        "My name is Alma Hernandez, my email is alma@example.com, I live at 4821 Camino Verde and my number is 520-555-0134. When does the board meet?",
-      answerText:
-        "Alma, the Vail Unified District board meets on Tuesday, September 8th, 2026. We can reach you at alma@example.com or 520-555-0134 about 4821 Camino Verde.",
-    }),
-    coverageTier: "TIER_1",
-    coverageTierDistribution: "T0:1,T1:1,T2:0,T3:0",
-  });
-
-  for (const value of ["Alma Hernandez", "Alma", "alma@example.com", "520-555-0134", "4821 Camino Verde"]) {
-    assert.ok(
-      !row.questionScrubbed.includes(value),
-      `the stored QUESTION still contains ${value}`,
-    );
-    assert.ok(
-      !(row.answerText ?? "").includes(value),
-      `the stored ANSWER still contains ${value}`,
-    );
-  }
-  /* And the row remembers WHAT KIND was found, so the export gate can read it. */
-  assert.ok(row.selfDisclosure.includes("SELF_NAMED"));
-  assert.ok(row.selfDisclosure.includes("EMAIL"));
-});
-
-test("PII: the scrub does not eat the answer's own meaning", () => {
-  /* The reader-text address pass would redact every spelled-out date, so the answer does not use it wholesale. */
-  const scrubbed = scrubStoredAnswer(
-    "The board meets on Tuesday, September 8th, 2026 at 7:00 PM MST at 13801 E. Benson Highway.",
-  );
-  assert.match(scrubbed.text, /September 8th, 2026/, "the meeting date must survive");
-  assert.ok(!scrubbed.flags.includes("STREET_ADDRESS"), "a date is not a self-disclosed address");
-});
-
-test("PII: an email in the answer is removed even when the reader never typed one", () => {
-  const scrubbed = scrubStoredAnswer("Write to board@vail.example.org about it.");
-  assert.ok(!scrubbed.text.includes("board@vail.example.org"));
-  assert.ok(scrubbed.flags.includes("EMAIL"));
+test("Ask saves the reader's words and delivered answer exactly", () => {
+  const question = "Who represents 412 elm st phoenix?";
+  const answerText = "The board meets on Tuesday, September 8th, 2026 at 7:00 PM MST. Contact board@vail.example.org.";
+  const row = prepareAskInteraction({ ...captureInput({ question, answerText }),
+    coverageTier: "TIER_1", coverageTierDistribution: "T0:1,T1:1,T2:0,T3:0" });
+  assert.equal(row.question, question);
+  assert.equal(row.answerText, answerText);
 });
 
 test("approximateLocation cannot drift from coarse orientation into precision", () => {
@@ -888,7 +854,7 @@ test("RESIDENCY: the wire carries the ACT and the server decides what it proves"
       !/locationConfidence|residencyRelation/.test(code(source)),
       `${name} must send the act, never the conclusion`,
     );
-    assert.match(code(source), /locationOrigin: readLocationOriginFor\(zip\)/);
+    assert.match(code(source), /locationOrigin: readLocationOriginFor\((?:readerZip|zip)\)/);
   }
 });
 

@@ -1,9 +1,11 @@
 import { neonConfig } from "@neondatabase/serverless";
+import { statementWritesRows } from "../db/sql-mutation.ts";
 
 /**
- * Canonical-store requests in a standing runtime must settle or abort. The
+ * Canonical-store reads in a standing runtime must settle or abort. The
  * source-acquisition children have an OS process ceiling; this smaller bound
- * covers the supervisor's Neon HTTP coordination, readback, and receipts.
+ * covers the supervisor's Neon HTTP coordination and readback. Row writes
+ * finish without our transport deadline.
  */
 export const STANDING_NEON_REQUEST_DEADLINE_MS = 30_000;
 
@@ -25,6 +27,15 @@ export function neonRequestDeadlineFetch(
     throw new Error(`NEON_REQUEST_DEADLINE_INVALID:${timeoutMs}`);
   }
   return async (input, init) => {
+    let persistsRows = false;
+    if (typeof init?.body === "string") {
+      try {
+        const body = JSON.parse(init.body) as { query?: unknown; queries?: { query?: unknown }[] };
+        const queries = body.queries ?? [body];
+        persistsRows = queries.some(query => typeof query.query === "string" && statementWritesRows(query.query));
+      } catch { /* A non-query request retains its existing transport deadline. */ }
+    }
+    if (persistsRows) return await underlying(input, init);
     const deadline = new AbortController();
     // Keep an outstanding request alive even when its transport has no active
     // socket (including mocked transports). AbortSignal.timeout is unref'd.

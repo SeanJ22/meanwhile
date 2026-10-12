@@ -182,6 +182,10 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 export const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
+  "STEP-7_reader_location_capture": {
+    phase: "contract",
+    why: "Renames Ask's stored question after the schema-compatible writers are serving. Adds continuity_hash and moves the bridge's retained digests into it; both writers keep complete rows across this contract.",
+  },
   "STEP3_write_alarm_stores": {
     phase: "expand",
     why: "Widens only write_alarm's allowed store names. Existing rows and writers remain valid; apply before the repaired reader writes ship.",

@@ -6,13 +6,13 @@ import { relative } from "node:path";
 import { ROOT, sourceFilesUnder } from "./read-code.ts";
 
 /**
- * `sessionStorage` fires a `storage` event in every OTHER tab and never in the
+ * `localStorage` fires a `storage` event in every OTHER tab and never in the
  * tab that performed the write, so a write must publish to its own tab's
  * listeners. The reader's own interaction in one tab is asserted in
  * `scripts/walk-all.mts` against a rendered build.
  */
 
-/** A `sessionStorage` that behaves like the browser's, for one test. */
+/** A localStorage that behaves like the browser's, for one test. */
 function fakeWindow() {
   const items = new Map<string, string>();
   const handlers = new Set<() => void>();
@@ -20,7 +20,7 @@ function fakeWindow() {
     items,
     handlers,
     window: {
-      sessionStorage: {
+      localStorage: {
         getItem: (key: string) => items.get(key) ?? null,
         setItem: (key: string, value: string) => void items.set(key, value),
         removeItem: (key: string) => void items.delete(key),
@@ -59,7 +59,7 @@ test("a same-tab write notifies the session-address subscribers", async () => {
     assert.equal(
       notifications,
       1,
-      "writeSessionAddress must publish to same-tab subscribers — sessionStorage will not",
+      "writeSessionAddress must publish to same-tab subscribers — localStorage will not",
     );
     assert.equal(
       readSessionAddress()?.divisionIds[0],
@@ -132,20 +132,34 @@ test("no module keeps a listener set that nothing ever publishes", () => {
 });
 
 
-test("legacy or previous-day address scopes cannot narrow an election, and new storage omits address text", async () => {
+test("the exact address and scope remain on the device across days and tab closure until Forget", async () => {
   const stub = fakeWindow();
   const prior = Reflect.get(globalThis, "window");
   Reflect.set(globalThis, "window", stub.window);
   try {
-    const { SESSION_ADDRESS_KEY, readSessionAddress, writeSessionAddress } = await import("../lib/geo/session-address.ts");
+    const { SESSION_ADDRESS_KEY, readSessionAddress, writeSessionAddress, clearSessionAddress } = await import("../lib/geo/session-address.ts");
     stub.items.set(SESSION_ADDRESS_KEY, JSON.stringify({ zip: "43215", contestIds: ["old"], resolvedAt: new Date().toISOString() }));
     assert.equal(readSessionAddress(), null);
-    writeSessionAddress({ zip: "43215", streetLabel: "1 Capitol Square", divisionIds: [], splitLevels: [], contestIds: ["inside"], excludedContestIds: ["outside"] });
+    const typed = "123  W Congress St, Tucson, AZ 85701";
+    const divisions = ["ocd-division/country:us/state:az/cd:7", "ocd-division/country:us/state:az/sldu:20",
+      "ocd-division/country:us/state:az/sldl:20", "ocd-division/country:us/state:az/county:pima",
+      "ocd-division/country:us/state:az/place:tucson", "ocd-division/country:us/state:az/school_district:tucson_unified"];
+    writeSessionAddress({ zip: "85701", streetLabel: typed, divisionIds: divisions,
+      divisionLabels: ["Congressional District 7", "Pima County"], splitLevels: [], contestIds: ["inside"], excludedContestIds: ["outside"] });
     assert.deepEqual(readSessionAddress()?.excludedContestIds, ["outside"]);
-    assert.doesNotMatch(stub.items.get(SESSION_ADDRESS_KEY)!, /Capitol|Square/);
+    assert.equal(readSessionAddress()?.streetLabel, typed);
+    assert.deepEqual(readSessionAddress()?.divisionIds, divisions);
     const saved = JSON.parse(stub.items.get(SESSION_ADDRESS_KEY)!);
     stub.items.set(SESSION_ADDRESS_KEY, JSON.stringify({ ...saved, resolvedAt: "2020-01-01T00:00:00Z" }));
+    assert.equal(readSessionAddress()?.streetLabel, typed, "a new UTC day cannot forget the address");
+    // A newly opened tab has a new window and the same device-local storage.
+    Reflect.set(globalThis, "window", { ...fakeWindow().window, localStorage: stub.window.localStorage });
+    assert.equal(readSessionAddress()?.streetLabel, typed);
+    assert.deepEqual(readSessionAddress()?.divisionIds, divisions);
+    assert.doesNotMatch(stub.items.get(SESSION_ADDRESS_KEY)!, /\b(?:lat|lng|coordinates)\b/);
+    clearSessionAddress();
     assert.equal(readSessionAddress(), null);
+    assert.equal(stub.items.has(SESSION_ADDRESS_KEY), false);
   } finally {
     if (prior === undefined) Reflect.deleteProperty(globalThis, "window"); else Reflect.set(globalThis, "window", prior);
   }

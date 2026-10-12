@@ -12,6 +12,18 @@ export type AddressGeographyLookup =
   | { kind: "OTHER_ZIP"; zip: string };
 const ENDPOINT = "https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress";
 const text = (value: unknown) => typeof value === "string" ? value.trim() : typeof value === "number" ? String(value) : "";
+const DISTRICT_LAYERS = [
+  ["congressional_district", "cd", /^(\d+)(?:st|nd|rd|th) Congressional Districts$/],
+  ["state_leg_upper", "sldu", /^(\d{4}) State Legislative Districts - Upper$/],
+  ["state_leg_lower", "sldl", /^(\d{4}) State Legislative Districts - Lower$/],
+] as const;
+
+/** The Census district GEOID starts with the address's two-digit state FIPS. */
+export function addressStateFips(geographies: AddressGeographies): string | null {
+  const states = new Set(Object.entries(geographies).filter(([name]) => DISTRICT_LAYERS.some(([, , pattern]) => pattern.test(name)))
+    .flatMap(([, rows]) => rows.map(row => text(row.GEOID).slice(0, 2))).filter(state => /^\d{2}$/.test(state)));
+  return states.size === 1 ? [...states][0] : null;
+}
 
 /** One Census match. Exact coordinates are validated and discarded in this function. */
 export async function lookupAddressGeographies(address: string, zip: string, options: {
@@ -38,18 +50,17 @@ export async function lookupAddressGeographies(address: string, zip: string, opt
 /** The layer version must answer for the requested purpose/date. A newer number alone proves nothing. */
 export function addressDivisions(geographies: AddressGeographies, held: Slice<CodeSlice>, selection: GeographySelection): Sample {
   const out: Sample[number][] = [];
-  if (held.kind === "HELD") for (const [type, level, pattern] of [
-    ["congressional_district", "cd", /^(\d+)(?:st|nd|rd|th) Congressional Districts$/],
-    ["state_leg_upper", "sldu", /^(\d{4}) State Legislative Districts - Upper$/],
-    ["state_leg_lower", "sldl", /^(\d{4}) State Legislative Districts - Lower$/],
-  ] as const) {
-    const version = selectGeographyVersion(held.value.scopes.map(scope => ({ ...scope, key: scope.version })), type, selection);
+  const stateFips = selection.stateFips ?? addressStateFips(geographies);
+  if (held.kind === "HELD" && stateFips) for (const [type, level, pattern] of DISTRICT_LAYERS) {
+    const scopes = held.value.scopes.filter(scope => held.value.containers.some(container => container.ref.type === scope.type &&
+      container.ref.version === scope.version && container.ref.stateFips === stateFips));
+    const version = selectGeographyVersion(scopes.map(scope => ({ ...scope, key: scope.version })), type, { ...selection, stateFips });
     if (!version) continue;
     const layers = Object.keys(geographies).filter(name => `${level}:${pattern.exec(name)?.[1]}` === version.key);
     if (layers.length !== 1) continue;
-    const rows = geographies[layers[0]];
+    const rows = geographies[layers[0]].filter(row => text(row.GEOID).startsWith(stateFips));
     const divisions = rows.map(row => held.value.containers.find(container => container.ref.type === type &&
-      container.ref.version === version.key && container.ref.geoid === text(row.GEOID)));
+      container.ref.version === version.key && container.ref.stateFips === stateFips && container.ref.geoid === text(row.GEOID)));
     // A partially mapped level remains unresolved; it cannot exclude another contest.
     if (!rows.length || divisions.some(row => !row || !censusWorkDivision(row.ref))) continue;
     for (const row of divisions) out.push({ ocdId: censusWorkDivision(row!.ref)!, divisionType: level, label: row!.ref.label });

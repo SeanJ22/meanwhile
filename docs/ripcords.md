@@ -141,9 +141,7 @@ Documented for completeness; the procedure is identical (env var, value
   one is unchanged: § 30111(a)(4) restricts commercial use of FEC
   contributor DATA, and that question is still open.
 
-Ask capture and funding reactions in aggregates are no longer ripcords (Sean,
-2026-10-01): every Ask is saved once the reader carries the anonymous
-continuity key, and funding reactions count like every other reaction. FEC
+Funding reactions in aggregates count like every other reaction. FEC
 contributor records themselves are never sold.
 
 ## After any pull

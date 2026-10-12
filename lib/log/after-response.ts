@@ -1,10 +1,18 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 
-const responseLifetime = new AsyncLocalStorage<(work: Promise<unknown>) => void>();
+const responseLifetime = new AsyncLocalStorage<{
+  waitUntil: (work: Promise<unknown>) => void;
+  responseReady: Promise<void>;
+}>();
 
 /** Host adapter supplies its own request lifetime without starting the Next server. */
 export function withResponseLifetime<T>(waitUntil: (work: Promise<unknown>) => void, run: () => Promise<T>): Promise<T> {
-  return responseLifetime.run(waitUntil, run);
+  let responseReady!: () => void;
+  const ready = new Promise<void>(resolve => { responseReady = resolve; });
+  return responseLifetime.run({ waitUntil, responseReady: ready }, async () => {
+    try { return await run(); }
+    finally { responseReady(); }
+  });
 }
 
 /**
@@ -15,8 +23,11 @@ export function withResponseLifetime<T>(waitUntil: (work: Promise<unknown>) => v
  * caller owns the work's own failures.
  */
 export async function afterResponse(work: () => Promise<unknown>): Promise<void> {
-  const waitUntil = responseLifetime.getStore();
-  if (waitUntil) { waitUntil(Promise.resolve().then(work)); return; }
+  const lifetime = responseLifetime.getStore();
+  if (lifetime) {
+    lifetime.waitUntil(lifetime.responseReady.then(work));
+    return;
+  }
   try {
     const { after } = await import("next/server");
     after(work);

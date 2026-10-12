@@ -26,6 +26,7 @@ const output = await build({ stdin: { contents: `
   import {createRoot} from "react-dom/client";
   import {AppRouterContext} from "next/dist/shared/lib/app-router-context.shared-runtime";
   import {AddressPrompt} from "./components/address/address-prompt.tsx";
+  import {RememberedAddress} from "./components/address/remembered-address.tsx";
   import {BallotNarrowing} from "./components/ballot/ballot-narrowing.tsx";
   import {MyPicks} from "./components/ballot/my-picks.tsx";
   import {PickControl} from "./components/ballot/pick-control.tsx";
@@ -50,6 +51,7 @@ const output = await build({ stdin: { contents: `
       <header><h1>Reader plan — local fixture</h1><p>Synthetic districts, people and answers. No production data or writes.</p></header>
       <main>
         <section className="fixture-card" id="address-entry"><h2>Address lookup</h2><AddressPrompt zip={zip} startOpen /></section>
+        <section className="fixture-card" id="map-memory"><h2>Map address</h2><RememberedAddress /></section>
         <section className="fixture-card" id="ballot"><h2>Ballot for {zip}</h2><BallotNarrowing zip={zip}/>
           {pickable.map(contest=><section key={contest.contestId} id={contest.contestId.split(":")[1]}
               data-contest-id={contest.contestId} data-could-govern="true">
@@ -87,7 +89,7 @@ const css = (await readFile("app/globals.css", "utf8")).replace('@import "tailwi
 for (const [device, viewport] of [
   ["desktop", { width: 1280, height: 1000 }],
   ["mobile", { width: 390, height: 844 }],
-] as const) test(`rendered ${device}: address updates ballot, picks and officials; Undo, uncertainty and save failures stay honest`, async () => {
+] as const) test(`rendered ${device}: remembered address survives browser closure; Forget restores ballot, picks and officials`, async () => {
   const requests: { path: string; body: Record<string, unknown> | null }[] = [];
   const unexpected: string[] = [];
   let demandCalls = 0, askCalls = 0;
@@ -124,7 +126,7 @@ for (const [device, viewport] of [
     else if (path === "/api/ask/grounded") { askCalls += 1; json({ mode: "STRUCTURED_GROUNDED",
       answer: "The fixture council adopts a budget at public meetings.", records: [], gaps: [], contacts: [], meetings: [] },
     200, { "x-wtp-ask-save-status": askCalls === 1 ? "FAILED" : "SAVED" }); }
-    else if (["/api/reactions", "/api/events", "/favicon.ico"].includes(path)) response.writeHead(204).end();
+    else if (["/api/log", "/api/reactions", "/api/events", "/favicon.ico"].includes(path)) response.writeHead(204).end();
     else { unexpected.push(path); json({ error: "Unexpected fixture endpoint" }, 404); }
   });
   await new Promise<void>(resolve => server.listen(0, "127.0.0.1", resolve));
@@ -133,13 +135,13 @@ for (const [device, viewport] of [
   let browser: Awaited<ReturnType<typeof launchGuarded>> | null = null;
   try {
     browser = await launchGuarded({ label: `reader-plan-${device}` });
-    const context = await browser.context({ viewport, serviceWorkers: "block" });
+    let context = await browser.context({ viewport, serviceWorkers: "block" });
     const outsideRequests: string[] = [];
     await context.route("**/*", async route => {
       if (new URL(route.request().url()).origin === origin) await route.fallback();
       else { outsideRequests.push(route.request().url()); await route.abort("blockedbyclient"); }
     });
-    const page = await context.newPage();
+    let page = await context.newPage();
     const errors: string[] = [];
     page.on("pageerror", error => errors.push(error.message));
     page.setDefaultTimeout(5000);
@@ -172,25 +174,61 @@ for (const [device, viewport] of [
       assert.equal(await page.locator("#officials").getByText("Fixture District Fifteen Member", { exact: true }).count(), 0);
       assert.equal(await page.locator("#inside").getAttribute("data-could-govern"), null);
       assert.match(await page.locator("#address-entry").innerText(), /could not check your state assembly district/);
-      const savedScope = await page.evaluate(() => sessionStorage.getItem("wtp.session_address_scope"));
+      const savedScope = await page.evaluate(() => localStorage.getItem("wtp.session_address_scope"));
       assert.ok(savedScope);
-      assert.doesNotMatch(savedScope, /Capitol|123|lat|lng|coordinates/);
+      assert.equal(JSON.parse(savedScope).streetLabel, "123 Capitol Sq");
+      assert.doesNotMatch(savedScope, /\b(?:lat|lng|coordinates)\b/);
       assert.deepEqual(JSON.parse(savedScope).excludedContestIds, ["fixture:outside"]);
       await page.screenshot({ path: join(screenshotDir, `reader-plan-${device}-narrowed.png`), fullPage: true });
 
-      await page.locator("#address-entry").getByRole("button", { name: "Show the whole area again", exact: true }).click();
+      const heldState = await context.storageState();
+      const addressItem = heldState.origins.flatMap(origin => origin.localStorage)
+        .find(item => item.name === "wtp.session_address_scope");
+      assert.ok(addressItem);
+      addressItem.value = JSON.stringify({ ...JSON.parse(addressItem.value), resolvedAt: "2020-01-01T00:00:00Z" });
+      const resolveCount = requests.filter(row => row.path === "/api/address/resolve").length;
+      await context.close();
+      await browser.close();
+      browser = await launchGuarded({ label: `reader-plan-${device}-reopened` });
+      context = await browser.context({ viewport, serviceWorkers: "block", storageState: heldState });
+      await context.route("**/*", async route => {
+        if (new URL(route.request().url()).origin === origin) await route.fallback();
+        else { outsideRequests.push(route.request().url()); await route.abort("blockedbyclient"); }
+      });
+      page = await context.newPage();
+      page.on("pageerror", error => errors.push(error.message));
+      page.setDefaultTimeout(5000);
+      await page.goto(origin);
+      for (const surface of ["#map-memory", "#ballot", "#saving"]) {
+        await page.locator(surface).getByText("Remembered address: 123 Capitol Sq", { exact: true }).waitFor();
+        await page.locator(surface).getByRole("button", { name: "Forget this address", exact: true }).waitFor();
+        assert.match(await page.locator(surface).innerText(), /Your districts: Fixture House District 3/);
+      }
+      await page.locator("#outside").waitFor({ state: "hidden" });
+      assert.equal(requests.filter(row => row.path === "/api/address/resolve").length, resolveCount,
+        "reopening reuses the district scope without another address lookup");
+      assert.equal(await page.locator("#address-entry").getByRole("textbox", { name: "Street", exact: true }).count(), 0);
+      await page.screenshot({ path: join(screenshotDir, `reader-plan-${device}-reopened.png`), fullPage: true });
+
+      const rawQuestion = "  Who represents 412 elm st phoenix?  " + "x".repeat(900);
+      await page.locator("#saving").getByRole("textbox", { name: "Ask a question about this ballot", exact: true }).fill(rawQuestion);
+      await page.locator("#saving").getByRole("button", { name: "Ask", exact: true }).click();
+      await page.locator("[data-ask-save-notice]").waitFor();
+      assert.match(await page.locator("[data-ask-save-notice]").innerText(), /couldn't confirm that this question was saved/);
+      await page.getByText("The fixture council adopts a budget at public meetings.", { exact: true }).waitFor();
+      assert.equal(requests.find(row => row.path === "/api/ask/grounded")?.body?.question, rawQuestion);
+      assert.deepEqual(requests.find(row => row.path === "/api/ask/grounded")?.body?.ocdIds, [insideDivision]);
+      assert.equal(requests.find(row => row.path === "/api/ask/grounded")?.body?.approximateLocation, "43215");
+      await page.locator("#map-memory").getByRole("button", { name: "Forget this address", exact: true }).click();
       await page.locator("#outside").waitFor({ state: "visible" });
       await page.locator("#my-picks [data-picked='2'][data-pickable='2']").waitFor();
       await page.locator("#officials").getByText("Fixture District Fifteen Member", { exact: true }).waitFor();
       assert.equal(await page.locator("#officials").getByText("Fixture District Three Member", { exact: true }).count(), 0);
       assert.equal(await page.locator("#inside").getAttribute("data-could-govern"), "true");
-      assert.equal(await page.evaluate(() => sessionStorage.getItem("wtp.session_address_scope")), null);
+      assert.equal(await page.evaluate(() => localStorage.getItem("wtp.session_address_scope")), null);
+      assert.equal(await page.locator("[data-remembered-address]").count(), 0, "Forget clears every surface on this device");
+      assert.doesNotMatch(await page.locator("#address-entry").innerText(), /123 Capitol Sq/);
 
-      await page.locator("#saving").getByRole("textbox", { name: "Ask a question about this ballot", exact: true }).fill("What does the fixture council do?");
-      await page.locator("#saving").getByRole("button", { name: "Ask", exact: true }).click();
-      await page.locator("[data-ask-save-notice]").waitFor();
-      assert.match(await page.locator("[data-ask-save-notice]").innerText(), /couldn't confirm that this question was saved/);
-      await page.getByText("The fixture council adopts a budget at public meetings.", { exact: true }).waitFor();
       await page.locator("#demand").getByRole("button").click();
       await page.locator("#demand [data-demand-state='FAILED']").waitFor();
       assert.match(await page.locator("#demand").innerText(), /couldn't confirm that was noted/);
@@ -202,12 +240,13 @@ for (const [device, viewport] of [
       await page.locator("#demand").getByRole("button").click();
       await page.locator("#demand [data-demand-state='NOTED']").waitFor();
 
-      await page.locator("#address-entry").getByRole("button", { name: "Add your address", exact: false }).click();
+      const addAddress = page.locator("#address-entry").getByRole("button", { name: "Add your address", exact: false });
+      if (await addAddress.count()) await addAddress.click();
       await page.locator("#address-entry").getByRole("textbox", { name: "Street", exact: true }).fill("123 Missing Way");
       await page.locator("#address-entry").getByRole("button", { name: "Show mine", exact: true }).click();
       await page.locator("#address-entry").getByText("We couldn't place that address in 43215. Everything stays listed.", { exact: true }).waitFor();
       assert.equal(await page.locator("#address-entry").getByRole("textbox", { name: "House number", exact: true }).count(), 0);
-      assert.equal(await page.locator("#address-entry").getByRole("textbox", { name: "Street", exact: true }).inputValue(), "Missing Way");
+      assert.equal(await page.locator("#address-entry").getByRole("textbox", { name: "Street", exact: true }).inputValue(), "123 Missing Way");
       assert.equal(await page.locator("#outside").isVisible(), true);
 
       await page.locator("#ballot").getByRole("button", { name: "Narrow this to where you live", exact: false }).click();
@@ -216,8 +255,8 @@ for (const [device, viewport] of [
       const switchZip = page.locator("#ballot").getByRole("button", { name: "Show the 43216 ballot instead", exact: true });
       await switchZip.waitFor();
       assert.equal(new URL(page.url()).searchParams.get("zip"), null);
-      assert.equal(await page.evaluate(() => sessionStorage.getItem("wtp.session_address_scope")), null);
-      assert.equal(await page.locator("#ballot").getByRole("textbox", { name: "Street", exact: true }).inputValue(), "Other Way");
+      assert.equal(await page.evaluate(() => localStorage.getItem("wtp.session_address_scope")), null);
+      assert.equal(await page.locator("#ballot").getByRole("textbox", { name: "Street", exact: true }).inputValue(), "123 Other Way");
       await page.screenshot({ path: join(screenshotDir, `reader-plan-${device}-address-recovery.png`), fullPage: true });
       await switchZip.click();
       await page.waitForURL("**/ballot?zip=43216");

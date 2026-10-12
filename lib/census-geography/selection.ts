@@ -4,6 +4,8 @@ export interface GeographySelection {
   readonly purpose: "representation" | "election";
   readonly asOf: string;
   readonly electionDate?: string;
+  /** Exact-address selections stay inside this two-digit Census state FIPS. */
+  readonly stateFips?: string;
 }
 
 export interface GeographyApplicability {

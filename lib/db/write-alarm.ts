@@ -17,22 +17,16 @@ export type SoldStore =
   /* Not sold; here so its failed writes are visible. */
   | "demand_signals";
 
-/** The database's own words are useful; a parameter echo is not. Capped. */
-const MESSAGE_CAP = 400;
-
 interface PgLikeError {
   code?: unknown;
   message?: unknown;
   cause?: unknown;
 }
 
-/** How far down the error chain to look; a cyclic chain must not hang the alarm. */
-const CAUSE_DEPTH = 5;
-
 /**
  * Drivers nest the underlying error under different names (`cause`,
  * `sourceError`, `originalError`, `error`, and `errors` on an AggregateError).
- * Walked breadth-first and depth-capped.
+ * Walked breadth-first, visiting each link once so cycles cannot hang the alarm.
  */
 const LINK_NAMES = ["cause", "sourceError", "originalError", "error"] as const;
 
@@ -40,7 +34,7 @@ function chainOf(error: unknown): PgLikeError[] {
   const out: PgLikeError[] = [];
   const seen = new Set<unknown>();
   const queue: unknown[] = [error];
-  while (queue.length > 0 && out.length < CAUSE_DEPTH) {
+  while (queue.length > 0) {
     const node = queue.shift();
     if (node === null || node === undefined) continue;
     if (seen.has(node)) continue;
@@ -52,7 +46,7 @@ function chainOf(error: unknown): PgLikeError[] {
     }
     // An AggregateError carries its real failures in `errors`.
     const aggregated = record.errors;
-    if (Array.isArray(aggregated)) for (const one of aggregated.slice(0, CAUSE_DEPTH)) queue.push(one);
+    if (Array.isArray(aggregated)) for (const one of aggregated) queue.push(one);
   }
   return out;
 }
@@ -104,7 +98,7 @@ export function errorMessageOf(error: unknown): string | null {
 
   // The deepest cause reads first; `←` points at what wrapped what.
   const flat = parts.reverse().join(" ← ");
-  return flat.length <= MESSAGE_CAP ? flat : `${flat.slice(0, MESSAGE_CAP)}… [truncated]`;
+  return flat;
 }
 
 export async function raiseWriteAlarm(store: SoldStore, error: unknown, signal?: AbortSignal): Promise<boolean> {

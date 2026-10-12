@@ -37,7 +37,7 @@ export interface InterpretContext {
   approximateLocation?: string | null;
   /** Which surface asked. Ballot questions carry different default referents. */
   surface?: "MAP" | "BALLOT" | "UNKNOWN";
-  /** The last few exchanges, capped: a growing transcript would be a person-level record. */
+  /** The conversation context the reader's device supplied. */
   priorTurns?: readonly { question: string; resolvedSubject: string | null }[];
   /** What the reader currently has open, when the surface can say. */
   activeSubjects?: readonly string[];
@@ -49,8 +49,6 @@ export type InterpretOutcome =
 
 /** How much of the inventory the model is shown. Bounded for cost and latency. */
 export const MAX_INVENTORY = 240;
-const MAX_QUESTION_CHARS = 400;
-const MAX_PRIOR_TURNS = 4;
 
 /**
  * The READER role from `lib/ask/model.ts`, resolved per call so overrides
@@ -164,7 +162,7 @@ export async function interpretQuestion(
   /* Resolved once: the same id is sent and recorded. */
   const model = askModel();
   const fields = modelRequestFields(model, { thinking: ASK_MODEL_ROLES.READER.thinking, effort: ASK_MODEL_ROLES.READER.effort });
-  const priorTurns = (context.priorTurns ?? []).slice(-MAX_PRIOR_TURNS);
+  const priorTurns = context.priorTurns ?? [];
   const system = interpretSystem(context);
 
   /*
@@ -173,7 +171,7 @@ export async function interpretQuestion(
    */
   const messages: { role: "user" | "assistant"; content: string }[] = [];
   for (const turn of priorTurns) {
-    messages.push({ role: "user", content: scrubFreeText(turn.question).slice(0, 200) });
+    messages.push({ role: "user", content: scrubFreeText(turn.question) });
     messages.push({
       role: "assistant",
       content: turn.resolvedSubject
@@ -190,7 +188,7 @@ export async function interpretQuestion(
   }
   messages.push({
     role: "user",
-    content: scrubFreeText(question).slice(0, MAX_QUESTION_CHARS),
+    content: scrubFreeText(question),
   });
 
   try {

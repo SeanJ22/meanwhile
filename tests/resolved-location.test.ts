@@ -360,7 +360,7 @@ test("deriveWhoGoverns READS standing — it used to arrive and be discarded", (
     VAIL_ADDRESS,
   );
 
-  const derived = deriveWhoGoverns(annotated, new Set<string>());
+  const derived = deriveWhoGoverns(annotated);
 
   /*
    * `elsewhere` counts rows the reader's address genuinely excludes; a row at an overlapping level is still
@@ -386,10 +386,9 @@ test("standing ANNOTATES and never filters — the denominator still holds", () 
     covered(`${D}/place:vail`, "COMMISSION"),
   ];
 
-  const plain = deriveWhoGoverns(bodies, new Set<string>());
+  const plain = deriveWhoGoverns(bodies);
   const annotated = deriveWhoGoverns(
     applyResolvedLocation(bodies, VAIL_ADDRESS),
-    new Set<string>(),
   );
 
   assert.equal(
@@ -407,7 +406,6 @@ test("with no address, nothing is excluded — and that zero says so", () => {
   const bodies = [covered(`${D}/sldl:17`), covered(`${D}/sldl:19`)];
   const zip = deriveWhoGoverns(
     applyResolvedLocation(bodies, zipOnly("85641")),
-    new Set<string>(),
   );
   assert.equal(zip.elsewhere, 0);
 
@@ -418,7 +416,6 @@ test("with no address, nothing is excluded — and that zero says so", () => {
       bodies,
       browsingSubject(VAIL_ADDRESS, `${D}/sldl:21`).location,
     ),
-    new Set<string>(),
   );
   assert.equal(browsed.elsewhere, 0, "browsing may not exclude a body from home");
 });

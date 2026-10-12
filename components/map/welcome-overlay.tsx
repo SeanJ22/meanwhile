@@ -1,4 +1,5 @@
 "use client";
+import { logAddressEntered, readerPageForPath } from "@/lib/log/address-events";
 
 import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { useEffect, useState } from "react";
@@ -55,6 +56,9 @@ export function WelcomeOverlay({
    * card knows the act; `stampResidency` on the server decides what it proves.
    */
   async function submit(value: string = zip, origin: LocationOrigin = "TYPED_ZIP") {
+    if (/^\d{5}$/.test(value.trim())) {
+      logAddressEntered({ zip: value.trim(), divisionIds: [] }, readerPageForPath(window.location.pathname));
+    }
     const result = await resolveZipAsync(value);
 
     if (!result.ok) {

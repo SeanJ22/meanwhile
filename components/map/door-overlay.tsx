@@ -39,6 +39,7 @@ export function DoorOverlay({
   drawnDistricts,
   districtOverlayOn,
   atAddress,
+  addressDivisionIds,
   onShowDistricts,
   onOpenOfficial,
   onOpenMeeting,
@@ -57,6 +58,7 @@ export function DoorOverlay({
   districtOverlayOn: boolean;
   /** A street address resolved, so the door can list the districts the reader is in. */
   atAddress: boolean;
+  addressDivisionIds?: ReadonlySet<string> | null;
   /** Turns the overlay on from inside the door. */
   onShowDistricts: () => void;
   onOpenOfficial: (
@@ -126,6 +128,7 @@ export function DoorOverlay({
             drawnDistricts={drawnDistricts}
             districtOverlayOn={districtOverlayOn}
             atAddress={atAddress}
+            addressDivisionIds={addressDivisionIds}
             onShowDistricts={onShowDistricts}
             coverage={coverage}
             onOpenOfficial={onOpenOfficial}
@@ -208,6 +211,7 @@ function DistrictsDoor({
   drawnDistricts,
   districtOverlayOn,
   atAddress,
+  addressDivisionIds,
   onShowDistricts,
   coverage,
   onOpenOfficial,
@@ -215,6 +219,7 @@ function DistrictsDoor({
   drawnDistricts: DrawnDistrict[];
   districtOverlayOn: boolean;
   atAddress: boolean;
+  addressDivisionIds?: ReadonlySet<string> | null;
   onShowDistricts: () => void;
   coverage: CoverageSummary | null;
   onOpenOfficial: (
@@ -233,7 +238,7 @@ function DistrictsDoor({
     atAddress && coverage
       ? governingDoorRows(coverage, (ocdId) =>
           representationForDivision(coverage, ocdId),
-        )
+        addressDivisionIds)
       : null;
 
   /* `districtsAreVisible` is the single rule, shared with the stats tile. */

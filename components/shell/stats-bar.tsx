@@ -24,7 +24,7 @@ const COVERAGE_LABEL = {
 } as const;
 
 export function StatsBar() {
-  const { meetings, venues, location, drawnDistricts, dropped, result, searchFailed, atAddress } =
+  const { meetings, venues, location, drawnDistricts, dropped, result, searchFailed, atAddress, governing } =
     useShellData();
   const ui = useUi();
   const dispatch = useUiDispatch();
@@ -38,8 +38,9 @@ export function StatsBar() {
         /* The real list always; `deriveStatsView` decides what it means. */
         drawnDistricts,
         atAddress,
+        addressDivisionIds: atAddress ? governing : null,
       }),
-    [meetings, drawnDistricts, result, atAddress],
+    [meetings, drawnDistricts, result, atAddress, governing],
   );
 
   // A failed operation never renders as an empty success.

@@ -1,40 +1,3 @@
-/**
- * **THE READ-ONLY WINDOW INTO THE PROVIDER'S OWN NUMBERS** (MAPQ-5, 2026-09-07).
- *
- * MapTiler's Service API answers "what did this account spend, by key and by
- * service?", and nothing else in this repository can answer it: the requests
- * are made by browsers to a third party and none of them crosses a host we own.
- *
- *   GET https://service.maptiler.com/v1/analytics/api_usage/timeline
- *       ?period=<period>&classifier=<api_keys|services>&group=<request|session>
- *   Authorization: Token <service token>
- *
- * ## Two classifiers, on purpose
- *
- * `api_keys` is what attribution needs — it is the whole point of MAPQ-3's key
- * matrix that a number can be traced to the environment that spent it.
- * `services` is fetched as well and kept, because a bill of 101,863 requests
- * that cannot say whether it was `Tiles` or `Rendered maps` is a bill nobody
- * can act on, and those two are billed differently. Collapsing them into one
- * unexplained bucket is exactly the failure the brief names.
- *
- * ## The credential
- *
- * A SERVICE token, held server-side, read from the environment by name and
- * never returned, logged, echoed into an error message, written into a
- * snapshot, or rendered. The public browser key cannot read an account and is
- * never sent here — and `lib/ops/provider-access.ts` additionally blocks a
- * browser from reaching `service.maptiler.com` at all, so a page can never be
- * the thing that holds one.
- *
- * ## GET only
- *
- * There is no write path in this module and there must never be one. This
- * reads a bill; it does not administer an account. Key creation, origin
- * restriction and plan choice are owner actions and are recorded as such in
- * `docs/maptiler-keys.md`.
- */
-
 import { createHash } from "node:crypto";
 
 import {
@@ -48,7 +11,6 @@ import {
 export const MAPTILER_ANALYTICS_BASE = "https://service.maptiler.com/v1/analytics/api_usage";
 export const MAPTILER_ANALYTICS_TIMEOUT_MS = 30_000;
 
-/** The provider's timeline response, as much of it as we depend on. */
 export interface MapTilerTimeline {
   readonly since?: string;
   readonly until?: string;
@@ -87,12 +49,7 @@ export function timelineUrl(input: {
   return url.toString();
 }
 
-/**
- * The token, or null.
- *
- * Null is a legitimate state and the caller must render it as NOT CONNECTED.
- * The variable is named in every message; the value is in none of them.
- */
+/** Null is legitimate and renders as NOT CONNECTED. Messages name the variable, never the value. */
 export function serviceTokenFromEnv(
   env: { readonly [MAPTILER_SERVICE_TOKEN_VAR]?: string | undefined } = process.env as {
     [MAPTILER_SERVICE_TOKEN_VAR]?: string;
@@ -102,13 +59,7 @@ export function serviceTokenFromEnv(
   return token ? token : null;
 }
 
-/**
- * Scrub anything that could carry a credential out of a message.
- *
- * A driver or a `fetch` implementation is entitled to put the request headers
- * in an error, and an error string is the one place a secret gets written to a
- * log without anybody deciding to write it there.
- */
+/** A fetch error may carry request headers, so credentials are scrubbed from every message. */
 export function scrubToken(text: string, token: string | null): string {
   if (!token) return text;
   return text.split(token).join("<redacted>");
@@ -119,13 +70,7 @@ export type Fetcher = (
   init: { readonly headers: Record<string, string>; readonly signal?: AbortSignal },
 ) => Promise<{ readonly status: number; text: () => Promise<string> }>;
 
-/**
- * One timeline read, with its provenance.
- *
- * A non-200 is a FAILED read and says so — never an empty timeline. RULING 269:
- * an operation that can return nothing is asked what it returned, and a
- * zero-row extraction is a failed extraction, not a zero.
- */
+/** A non-200 is a failed read, never an empty timeline. */
 export async function fetchTimeline(input: {
   readonly period: MapTilerPeriod;
   readonly classifier: MapTilerClassifier;

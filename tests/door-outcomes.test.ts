@@ -22,6 +22,7 @@ import {
   combinedOutcomeVersionId,
   combineOutcomeProjections,
   doorOutcomeParts,
+  type DoorOutcomePart,
   getOutcomeSnapshot,
   primeOutcomeProjection,
   readDoorOutcomeProjections,
@@ -36,7 +37,7 @@ import { runPimaLegistarOutcomeIngest, parsePimaOutcomeIngestArgs } from "../scr
 import { withFetch } from "./helpers/with-fetch.ts";
 
 /**
- * DB-22: a Legistar door that holds `outcomes` collects the body's decisions and roll calls in its own scope, for any
+ * A Legistar door that holds `outcomes` collects the body's decisions and roll calls in its own scope, for any
  * body on the platform, with no per-place contract and no code release.
  */
 
@@ -49,7 +50,7 @@ function door(overrides: Partial<DoorDraft> & { readonly doorId: string }): Door
     ocdId: "ocd-division/country:us/state:az/county:demo",
     bodyIds: ["ocd-division/country:us/state:az/county:demo#governing"],
     hosts: ["webapi.legistar.com"],
-    config: { slug: "demo", sourceRoutes: "legistar" },
+    config: { slug: "demo", sourceRoutes: "legistar", eventBodyId: "138" },
     holds: ["meetings", "outcomes"],
     checkEveryMinutes: null,
     notes: "test door",
@@ -170,7 +171,16 @@ function recorded<T>(path: string): T {
   return JSON.parse(readFileSync(new URL(`./fixtures/${path}`, import.meta.url), "utf8")) as T;
 }
 
-/** The recorded Pima sitting 1825 answered as the demo tenant's own routes. */
+/** One sitting in the persisted outcome shape. */
+function recordedSitting(slug: string, id: number, prefix = "legistar"): OutcomeSnapshot["sittings"][number] {
+  return {
+    slug, eventId: id, meetingId: `${prefix}:${slug}:${id}`, bodyId: `b:${slug}`, startsAt: "2026-09-01T10:00:00.000Z", extraction: "RETRIEVED",
+    extractionNote: null, sourceOrg: "Org", publication: { observedAt: AT }, minutesPointer: null, routesWalked: [], publicationObservations: [],
+    agenda: [], outcomes: [], rollCalls: [], failedRollCallExtractions: [], voteRequestFailures: [],
+  } as unknown as OutcomeSnapshot["sittings"][number];
+}
+
+/** A recorded Legistar sitting answered as the demo tenant's own routes. */
 function demoLegistar() {
   const json = (body: unknown) => new Response(JSON.stringify(body), { status: 200, headers: { "content-type": "application/json" } });
   const { EventItems: _unused, ...event } = recorded<LegistarEvent & { EventItems?: unknown }>("legistar/pima-event-1825.json");
@@ -223,9 +233,9 @@ describe("DB-22: a door's outcomes are collected, promoted and read back beside 
   it("a candidate for one door refuses another tenant's sitting", async () => {
     refreshOutcomePartitions([DEMO]);
     const [partition] = OUTCOME_PARTITION_CONTRACTS;
-    const seed = recorded<OutcomeSnapshot>("../../data/states/az/outcomes/legistar-outcomes.json" as never);
+    const other = recordedSitting("another-tenant", 1);
     const candidate = legistarOutcomesCandidate({
-      snapshot: seed,
+      snapshot: { generatedOn: "2026-10-06", generatedAt: AT, tenants: ["another-tenant"], sittings: [other] },
       acquisitions: [{ source: partition.sourceId, requestedUrl: partition.tenant.requestedUrl, finalUrl: partition.tenant.requestedUrl, httpStatus: 200, rawHash: B64, byteCount: 1 }],
       retrievedAt: AT,
       sourceThrough: AT,
@@ -234,28 +244,23 @@ describe("DB-22: a door's outcomes are collected, promoted and read back beside 
   });
 
   it("the combined version names every door, so a moved door re-publishes and an unmoved one does not", () => {
-    assert.equal(combinedOutcomeVersionId("p1", null), "p1", "no other pointer: Pima's version alone, as before");
-    assert.equal(combinedOutcomeVersionId("p1", "m1"), "p1|mesa-legistar-minutes-outcomes=m1", "Mesa alone: as before");
-    assert.equal(combinedOutcomeVersionId("p1", null, [{ contractId: "b", versionId: "2" }, { contractId: "a", versionId: "1" }]), "p1|a=1|b=2");
-    assert.equal(combinedOutcomeVersionId(null, null, [{ contractId: "a", versionId: "1" }]), "a=1");
-    assert.equal(combinedOutcomeVersionId(null, null), null);
+    assert.equal(combinedOutcomeVersionId([{ contractId: "b", versionId: "2" }, { contractId: "a", versionId: "1" }]), "a=1|b=2");
+    assert.equal(combinedOutcomeVersionId([{ contractId: "a", versionId: "1" }]), "a=1");
+    assert.equal(combinedOutcomeVersionId([]), null);
   });
 
   it("an edge artifact carries the doors' sittings and its pointers, and a reader that primes from it sees them", () => {
-    const sitting = (slug: string, id: number, prefix = "legistar") => ({
-      slug, eventId: id, meetingId: `${prefix}:${slug}:${id}`, bodyId: `b:${slug}`, startsAt: "2026-09-01T10:00:00.000Z", extraction: "RETRIEVED",
-      extractionNote: null, sourceOrg: "Org", publication: { observedAt: AT }, minutesPointer: null, routesWalked: [], publicationObservations: [],
-      agenda: [], outcomes: [], rollCalls: [], failedRollCallExtractions: [], voteRequestFailures: [],
-    }) as unknown as OutcomeSnapshot["sittings"][number];
-    const part = (slug: string, id: number, prefix = "legistar"): OutcomeSnapshot =>
-      ({ generatedOn: "2026-10-06", generatedAt: AT, tenants: [slug], sittings: [sitting(slug, id, prefix)] });
-    const combined = combineOutcomeProjections(
-      { value: part("pima", 1), versionId: "p1" },
-      { value: part("mesa", 2, "legistar-insite"), versionId: "m1" },
-      [{ value: part("demo", 3), pointers: [{ contractId: "door-a", tenant: "demo", versionId: "d1" }] }],
-    )!;
-    assert.equal(combined.versionId, "p1|mesa-legistar-minutes-outcomes=m1|door-a=d1");
-    assert.deepEqual(combined.value.pointers?.map((pointer) => pointer.contractId), ["pima-legistar-outcomes", "mesa-legistar-minutes-outcomes", "door-a"]);
+    const part = (slug: string, id: number, contractId: string, versionId: string, prefix = "legistar"): DoorOutcomePart => ({
+      value: { generatedOn: "2026-10-06", generatedAt: AT, tenants: [slug], sittings: [recordedSitting(slug, id, prefix)] },
+      pointers: [{ contractId, tenant: slug, versionId }],
+    });
+    const combined = combineOutcomeProjections([
+      part("pima", 1, "pima-legistar-outcomes", "p1"),
+      part("mesa", 2, "mesa-legistar-minutes-outcomes", "m1", "legistar-insite"),
+      part("demo", 3, "door-a", "d1"),
+    ])!;
+    assert.equal(combined.versionId, "door-a=d1|mesa-legistar-minutes-outcomes=m1|pima-legistar-outcomes=p1");
+    assert.deepEqual(combined.value.pointers?.map((pointer) => pointer.contractId), ["door-a", "mesa-legistar-minutes-outcomes", "pima-legistar-outcomes"]);
 
     resetOutcomeSnapshotCache();
     primeOutcomeProjection(combined.value, combined.versionId);

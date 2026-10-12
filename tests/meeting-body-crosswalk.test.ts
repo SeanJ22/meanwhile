@@ -14,12 +14,9 @@ import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 
 /**
- * **C16: A CALENDAR IS A BODY'S ONLY ON THE GOVERNMENT'S OWN SAVED EVIDENCE.** (2026-09-24.)
- *
- * Rulings §3 ("C16" was a session label, not Sean's decision: Sean, 2026-10-01): saved official evidence establishes
- * the exact body and which meetings belong to it, then it publishes through the existing verified publication process. Domain ownership
- * alone does not say which board a calendar belongs to, so a row names the body as the government prints it, the
- * filter that selects its meetings, and the sha256 of the pages that establish both.
+ * Saved official evidence establishes the exact body and which meetings belong to it. Domain ownership alone does
+ * not say which board a calendar belongs to, so a row names the body as the government prints it, the filter that
+ * selects its meetings, and the sha256 of the pages that establish both.
  */
 
 const OCD = "ocd-division/country:us/state:az/place:flagstaff";

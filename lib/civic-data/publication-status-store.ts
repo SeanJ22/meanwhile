@@ -1,11 +1,4 @@
-/**
- * The narrow read behind `publication-status.ts`. (2026-09-23.)
- *
- * No candidate or promotion payload is selected. The candidate JSON column is
- * never touched, not even through a path operator: unpacking it row by row is
- * what made the canonical observability read take minutes. The read uses one
- * read-only snapshot, and each statement is bounded server-side.
- */
+/** Never touches the candidate JSON column, not even through a path operator: unpacking it row by row takes minutes. */
 import { Pool } from "@neondatabase/serverless";
 import { and, inArray, like, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/neon-serverless";
@@ -15,6 +8,7 @@ import { civicDataCandidateEvents, civicDataPromotions } from "../db/schema.ts";
 import { ROUTINE_OBSERVABILITY_SNAPSHOT_OPTIONS } from "./observability-store.ts";
 import type { PublicationStatusRows } from "./publication-status.ts";
 import { READER_PROJECTION_READBACK_PREFIX } from "./reader-readback.ts";
+import { UNCHANGED_CONFIRMATION_PREFIX } from "./unchanged-confirmation.ts";
 
 function iso(value: unknown): string {
   return value instanceof Date ? value.toISOString() : new Date(String(value)).toISOString();
@@ -45,15 +39,19 @@ export async function readPublicationStatusRows(
         currentVersionId: civicDataPromotions.currentVersionId,
         promotedAt: civicDataPromotions.promotedAt,
       }).from(civicDataPromotions);
-      // The latest LOCAL attempt (the sequence-1 event), never the adapter's
-      // claimed retrieval time; a tie is broken by candidate id and said so by
-      // the caller's copy.
+      // A confirmation names its actual provider check; replaying held bytes cannot hide a later source failure.
       const latest = rowsOf(await db.execute(sql`
         SELECT DISTINCT ON (c.source_id, c.record_class, c.scope)
-               c.id AS candidate_id, c.source_id, c.record_class, c.scope, c.state, c.failure_code, e.at AS attempted_at
+               c.id AS candidate_id, c.source_id, c.record_class, c.scope, c.state, c.failure_code,
+               CASE WHEN e.state = 'PROMOTED' AND left(e.detail, ${UNCHANGED_CONFIRMATION_PREFIX.length}) = ${UNCHANGED_CONFIRMATION_PREFIX}
+                 THEN COALESCE((substring(e.detail from ${UNCHANGED_CONFIRMATION_PREFIX.length + 1})::jsonb #>> '{retrieval,sourceCheck,checkedAt}')::timestamptz, e.at)
+                 ELSE e.at END AS attempted_at
           FROM civic_data_candidates c
-          JOIN civic_data_candidate_events e ON e.candidate_id = c.id AND e.sequence = 1
-         ORDER BY c.source_id, c.record_class, c.scope, e.at DESC, c.id DESC`));
+          JOIN civic_data_candidate_events e ON e.candidate_id = c.id
+         WHERE e.sequence = 1 OR (e.state = 'PROMOTED'
+           AND left(e.detail, ${UNCHANGED_CONFIRMATION_PREFIX.length}) = ${UNCHANGED_CONFIRMATION_PREFIX}
+           AND EXISTS (SELECT 1 FROM civic_data_promotions p WHERE p.current_version_id = c.id))
+         ORDER BY c.source_id, c.record_class, c.scope, attempted_at DESC, c.id DESC`));
       const currentIds = [...new Set(promotions.map((p) => p.currentVersionId))];
       const readbacks = currentIds.length === 0
         ? []

@@ -6,6 +6,44 @@ import { readerPersonKeys } from "../lib/identity/reader-person.ts";
 import { lineupRowForCard } from "../lib/identity/az-2026.ts";
 import type { AskAnswerPayload } from "../lib/ask/answer.ts";
 import { bindNamedEntity } from "../lib/routing/named-entity.ts";
+import { createHash } from "node:crypto";
+import { installAzBallot, installCandidateCorpus, installOfficeholderStatements, installRegistryAuthority, syntheticCandidateCorpus } from "./helpers/promoted-fixtures.ts";
+import { installCandidateProfiles, servableAzBallot, syntheticCandidateCard, candidateProfilesFor } from "./helpers/reader-fixtures.ts";
+
+const HOBBS_CARD = "ballot-az-pima:governor|Katie Hobbs";
+const HOURIHAN_CARD = "ballot-az-pima:governor|Teri Ann Hourihan";
+await installRegistryAuthority();
+// A governor contest whose certified lineup reconciles one card and records one party conflict.
+await installAzBallot(servableAzBallot([{
+  id: "ballot-az-pima:governor",
+  title: "Governor",
+  candidacies: [
+    { id: "ballot-az-pima:governor:hobbs-katie", givenName: "Katie", familyName: "Hobbs" },
+    { id: "ballot-az-pima:governor:hourihan-teri-ann", givenName: "Teri Ann", familyName: "Hourihan" },
+  ],
+  lineup: [
+    { name: "Katie Hobbs", partyLabel: "Democratic", outcome: "RECONCILED", candidacyId: "ballot-az-pima:governor:hobbs-katie" },
+    { name: "Teri Ann Hourihan", partyLabel: "Independent", outcome: "PARTY_CONFLICT", candidacyId: "ballot-az-pima:governor:hourihan-teri-ann", filingParty: "Democratic" },
+  ],
+}]));
+await installOfficeholderStatements();
+// A synthetic held profile for the reconciled card.
+await installCandidateProfiles(candidateProfilesFor({
+  [HOBBS_CARD]: syntheticCandidateCard({
+    bio: "Synthetic test biography for this card.", bioSourceUrl: "https://example.test/card/about", bioSourceLabel: "Campaign site, read 2026-09-20",
+    email: "card@example.test", phone: "555-0100", phoneSource: "https://example.test/card/contact",
+  }),
+}, {
+  [HOBBS_CARD]: { official: null, campaign: { url: "https://example.test/card", verification: "Page names the candidate (test).", attemptedAt: "2026-09-20" } },
+}));
+// The synthetic publication corpus plus one campaign page held for the party-conflict card itself.
+const corpus = syntheticCandidateCorpus();
+const hourihanText = "Arizona deserves leaders who listen. As your governor I will protect Arizona's water, fund Arizona's public schools, and answer every family's questions plainly. This is a synthetic test page written for this check; it describes no real campaign, and it is long enough to be read as a held publication by the reader.";
+const hourihanHash = createHash("sha256").update(hourihanText).digest("hex");
+await installCandidateCorpus({ ...corpus, attempted: corpus.attempted + 1, documents: [...corpus.documents, {
+  ...corpus.documents[0]!, id: `${HOURIHAN_CARD}@${hourihanHash}`, candidateKey: HOURIHAN_CARD, documentUrl: "https://example.test/conflict-card/",
+  contentHash: hourihanHash, text: hourihanText, metaDescription: null,
+}] });
 
 test("generic contact words cannot masquerade as a named person or government", () => {
   const entities = [

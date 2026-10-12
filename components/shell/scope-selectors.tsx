@@ -9,19 +9,9 @@ import { useShellData } from "@/lib/state/data";
 import { useUi, useUiDispatch } from "@/lib/state/provider";
 
 /**
- * Cascading scope: Jurisdiction → Body.
- *
- * Ports EdiaStratMap's team/rep selectors. Picking a jurisdiction repopulates
- * the body dropdown and clears whatever body was chosen — the reducer does that
- * part, because a body from a different jurisdiction surviving the change is
- * exactly the kind of stale filter that produces an empty map with no
- * explanation.
- *
- * Both values are OCD-IDs. The body option value is `<ocdId>|<bodyName>`
- * because bodies have no identifier of their own until Phase 5 gives them a
- * table; it is still keyed on the division's OCD-ID rather than on the display
- * name alone, so two "Planning Commission" entries in different towns stay
- * distinct.
+ * Cascading scope: Jurisdiction → Body. Picking a jurisdiction clears the body
+ * (in the reducer). Both values key on the division's OCD-ID; the body option
+ * value is `<ocdId>|<bodyName>`.
  */
 export function ScopeSelectors({
   onJurisdictionChosen,
@@ -64,27 +54,18 @@ export function ScopeSelectors({
         });
       }
     }
-    // 6d (2026-08-17): governing bodies before advisory ones — the City
-    // Council never sorts below the Board of Adjustment. Class comes from
-    // the coverage summary, joined on the body's id (a portal's name for the
-    // sitting is not a key); a body coverage doesn't know ranks with the
-    // governments.
+    // Governing bodies before advisory ones; class joined on body id. Unknown bodies rank with governments.
     const advisory = new Map<string, boolean>();
     for (const covered of result?.coverage?.bodies ?? []) {
       advisory.set(covered.bodyId, covered.bodyClass !== "GOVERNING");
     }
     const rank = (bodyId: string | undefined) => (bodyId && advisory.get(bodyId) ? 1 : 0);
-    // Several jurisdictions have a "Governing Board", so every option names
-    // its own — unless the name already says it ("Amphitheater Unified School
-    // District Governing Board").
+    // Every option names its jurisdiction unless the name already does.
     const named = [...seen.entries()].map(([key, body]): [BodyScopeKey, string, string | undefined] => {
       const place = body.jurisdiction.replace(/,\s*[A-Z]{2}$/, "");
       const name = body.name.toLowerCase();
       const placeLower = place.toLowerCase();
-      // Named for its government ("Tucson Unified School District Governing
-      // Board", "City of Tucson Deferred Compensation Plan Management Board");
-      // a name that only happens to contain the word ("Park Tucson Commission")
-      // still gets its jurisdiction.
+      // Named for its government, not merely containing the word.
       const namesItsGovernment =
         placeLower !== "" && (name.startsWith(placeLower) || name.includes(` of ${placeLower}`));
       const label = namesItsGovernment ? body.name : `${body.name} — ${body.jurisdiction}`;
@@ -95,8 +76,7 @@ export function ScopeSelectors({
       .map(([key, label]): [BodyScopeKey, string] => [key, label]);
   }, [allMeetings, tiers, jurisdiction, result]);
 
-  // The banner slot Edia uses for #smbOppBanner: one line explaining a filter
-  // state a reader would otherwise have to infer from an empty map.
+  // One line explaining a filter state a reader would otherwise infer from an empty map.
   const banner =
     tiers.length === 0
       ? "No tier selected — turn on Local, State, or National to see meetings."

@@ -1,28 +1,7 @@
 /**
- * **A METHOD THAT WORKED IS SAVED, RETRIEVED FOR ANOTHER GOVERNMENT, AND USED
- * BY THE RUNNER; A FAILURE IS NOT PAID FOR TWICE.** (2026-09-23.)
- *
- * `lib/hunt/meetings-recipes.ts` and its use by the discovery executor. What
- * these tests hold:
- *
- * - **Substitution.** A template is filled from the government's identity; a
- *   slot the identity lacks leaves the query unsent, never half-filled.
- * - **Retrieval.** A recipe applies by body class and state; a state-specific
- *   one outranks a portable one, then successes, then recency. A recipe proven
- *   in another state does not apply here until it is portable.
- * - **The runner uses what it saved.** A walk applies a saved method only when
- *   the homepage shows its precondition, confirms the route by content, and
- *   writes the outcome back to the field manual. The next cycle reads that store
- *   and applies the method, with its counts, to a government in another state.
- * - **Failures are kept.** A failed application is recorded with its limit;
- *   while it stands, the same method is not tried on the same government again.
- * - **A corrected seed reaches the runner.** A stored copy of a seed keeps the
- *   runner's counts and failure memory; its method comes from the code.
- * - **The time ran out, not the method.** A saved method the walk did not reach
- *   before the phase's time ran out is neither credited nor charged.
- *
- * Every test that writes runs on the in-memory double AND the durable file
- * store.
+ * A method that worked is saved, retrieved for another government by body class and state, and used by the runner;
+ * a template slot the identity lacks leaves the query unsent, and a standing failure is not paid for twice. Every
+ * test that writes runs on the in-memory double and the durable file store.
  */
 
 import assert from "node:assert/strict";
@@ -220,7 +199,7 @@ test("THE RUNNER USES WHAT IT SAVED: cycle 1 confirms a saved method and writes 
     });
     const first = await runMeetingsDiscovery(repos, {
       needs: [need("az:city:city-of-benson", "benson.gov")],
-      runtime: runtime(cycle1.open, knownRecipes((await repos.fieldManual.read("live"))?.value.entries ?? [])),
+      runtime: runtime(cycle1.open, knownRecipes((await repos.fieldManual.list()).map((row) => row.value))),
       cycleIndex: 0,
       maxWalks: 5,
     });
@@ -228,7 +207,7 @@ test("THE RUNNER USES WHAT IT SAVED: cycle 1 confirms a saved method and writes 
     assert.deepEqual(first.walked[0].found.map((f) => [f.basis, f.url]), [["RECIPE", "https://benson.gov/events/list/?ical=1"]]);
     assert.deepEqual(first.recipesUpdated, [WP.recipeId]);
 
-    const stored = knownRecipes((await repos.fieldManual.read("live"))?.value.entries ?? []).find((r) => r.recipeId === WP.recipeId)!;
+    const stored = knownRecipes((await repos.fieldManual.list()).map((row) => row.value)).find((r) => r.recipeId === WP.recipeId)!;
     assert.equal(stored.successes, 1, `${label}: the success is saved in the field manual, which outlives the process`);
     assert.equal(stored.lastSuccess?.jurisdictionId, "az:city:city-of-benson");
 
@@ -240,13 +219,13 @@ test("THE RUNNER USES WHAT IT SAVED: cycle 1 confirms a saved method and writes 
     });
     const second = await runMeetingsDiscovery(repos, {
       needs: [need("nm:district:santa-fe-public-schools", "www.sfps.k12.nm.us", "NM", "SCHOOL_DISTRICT", "Santa Fe Public Schools")],
-      runtime: runtime(cycle2.open, knownRecipes((await repos.fieldManual.read("live"))?.value.entries ?? []), LATER),
+      runtime: runtime(cycle2.open, knownRecipes((await repos.fieldManual.list()).map((row) => row.value)), LATER),
       cycleIndex: 0,
       maxWalks: 5,
     });
     assert.equal(second.walked[0].outcome, "FOUND", label);
     assert.deepEqual(second.walked[0].recipes.applied.map((a) => [a.recipeId, a.verdict]), [[WP.recipeId, "YIELDED"]]);
-    const after = knownRecipes((await repos.fieldManual.read("live"))?.value.entries ?? []).find((r) => r.recipeId === WP.recipeId)!;
+    const after = knownRecipes((await repos.fieldManual.list()).map((row) => row.value)).find((r) => r.recipeId === WP.recipeId)!;
     assert.equal(after.successes, 2, `${label}: the second cycle used the saved method and added to it`);
   }
 });
@@ -267,7 +246,7 @@ test("A FAILURE IS NOT PAID FOR TWICE: a method that answered a shell is recorde
     });
     assert.equal(first.walked[0].recipes.applied[0].verdict, "NOT_CONFIRMED", label);
     assert.ok(one.seen.includes("https://shell.gov/events/list/?ical=1"));
-    const saved = knownRecipes((await repos.fieldManual.read("live"))?.value.entries ?? []).find((r) => r.recipeId === WP.recipeId)!;
+    const saved = knownRecipes((await repos.fieldManual.list()).map((row) => row.value)).find((r) => r.recipeId === WP.recipeId)!;
     assert.equal(saved.failures, 1);
     assert.match(saved.lastFailure?.limit ?? "", /content check/);
 
@@ -276,7 +255,7 @@ test("A FAILURE IS NOT PAID FOR TWICE: a method that answered a shell is recorde
     await repos.discoveryAttempts.append("az:town:shell", "force-due", { ...first.walked[0], attemptId: "force-due", recheckAfter: "2026-09-01T00:00:00.000Z" }, NOW);
     const second = await runMeetingsDiscovery(repos, {
       needs: [need("az:town:shell", "shell.gov")],
-      runtime: runtime(two.open, knownRecipes((await repos.fieldManual.read("live"))?.value.entries ?? []), LATER),
+      runtime: runtime(two.open, knownRecipes((await repos.fieldManual.list()).map((row) => row.value)), LATER),
       cycleIndex: 0,
       maxWalks: 5,
     });
@@ -311,7 +290,7 @@ test("THE TIME RAN OUT, NOT THE METHOD: a saved method the walk did not reach is
     assert.deepEqual(pass.walked[0].recipes.applied, [], `${label}: a method not reached is not applied`);
     assert.equal(pass.walked[0].leads.some((l) => l.basis === "RECIPE"), false, `${label}: a method's guess is never a lead`);
     assert.deepEqual(pass.recipesUpdated, [], label);
-    const saved = knownRecipes((await repos.fieldManual.read("live"))?.value.entries ?? []).find((r) => r.recipeId === WP.recipeId)!;
+    const saved = knownRecipes((await repos.fieldManual.list()).map((row) => row.value)).find((r) => r.recipeId === WP.recipeId)!;
     assert.equal(saved.failures, 0, `${label}: the time ran out, not the method`);
   }
 });

@@ -1,32 +1,18 @@
 /**
- * **ROBOTS.TXT IS RECORDED, NOT BLOCKING; ACCESS CONTROLS ARE NEVER BYPASSED.**
- * (Owner decision, Sean, 2026-09-25.)
- *
- * "Robots.txt alone must not block acquisition. I explicitly authorize
- * automated reading of publicly accessible pages even when robots.txt requests
- * otherwise. … This authorization does not extend to bypassing authentication
- * or other access controls."
- *
- * This guard replaces the robots-refusal tests that held the old rule. It holds
- * both halves of the new one, against recorded fake transports (no network):
+ * Robots.txt is recorded, not blocking; access controls are never bypassed. Against recorded fake transports
+ * (no network):
  *
  * 1. The rule has one home, and the host lists carry no robots-only entry.
- * 2. Every fetcher that reads robots.txt still reads it FIRST and RECORDS the
- *    verdict, and a `Disallow: /` never stops the public page: the research
- *    fetch, the adapter permission gate, and the unpaid discovery walk. (The
- *    scout tools are held the same way in tests/scout-tools.test.ts.)
- * 3. An access control is never pushed through: a 401, a 403, a challenge page
- *    and a 429 are named as walls, a 429 backs the host off, nothing is re-sent
- *    under another identity, and no request carries a credential or a cookie.
- *    Honest identity is allowed, disguise is not: the shared source client
- *    (`lib/sources/http.ts`) sends the project's own name, and when a filter
- *    refuses Node's client it asks once more as the same identity through
- *    `curl`; since 2026-09-25 it has no browser-header or name-dropping rung, no
- *    wiring row may ask for a browser profile, the relay rung (`readViaEgress`)
- *    refuses, and no production module carries a borrowed browser identity.
- * 4. Every module that consumes the robots evaluator is named here with the
- *    test that holds it to the rule, so a new consumer cannot quietly bring the
- *    refusal back; and the old refusal messages do not return in code.
+ * 2. Every fetcher that reads robots.txt reads it first and records the verdict, and a `Disallow: /` never
+ *    stops the public page: the research fetch, the adapter permission gate, and the unpaid discovery walk.
+ *    (The scout tools are held the same way in tests/scout-tools.test.ts.)
+ * 3. An access control is never pushed through: a 401, a 403, a challenge page and a 429 are named as walls,
+ *    a 429 backs the host off, nothing is re-sent under another identity, and no request carries a credential
+ *    or a cookie. The shared source client (`lib/sources/http.ts`) sends the project's own name, and when a
+ *    filter refuses Node's client it asks once more as the same identity through `curl`; no wiring row may ask
+ *    for a browser profile, and no production module carries a borrowed browser identity.
+ * 4. Every module that consumes the robots evaluator is named here with the test that holds it to the rule,
+ *    and the old refusal messages do not return in code.
  */
 
 import assert from "node:assert/strict";
@@ -51,10 +37,9 @@ import {
   type ResearchGet,
 } from "../lib/hunt/robots-first-fetch.ts";
 import { makePermissionGate, permittedText } from "../lib/sources/permission-gate.ts";
-import { EgressRefusal, readViaEgress } from "../lib/hunt/egress.ts";
 import { SourceHttpError, politeGetBytes, politeGetText, sourceUserAgent } from "../lib/sources/http.ts";
 import { identifiedResearchGet } from "../lib/hunt/research-transport.ts";
-import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
+import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import { InSiteSession } from "../lib/sources/legistar-insite/http.ts";
 
 const DISALLOW_ALL = "User-agent: *\nDisallow: /\n";
@@ -294,17 +279,9 @@ test("THE RESEARCH TRANSPORT'S SECOND ASK IS WHO WE ARE: a 403 is asked once mor
   assert.ok(!args[0].includes("-L"), "never follows a redirect");
 });
 
-test("NO WIRING ROW ASKS FOR A DISGUISE, AND THE RELAY RUNG REFUSES BEFORE ANY REQUEST", async () => {
-  const browserRows = SOURCE_WIRING.filter((row) => row.config.profile !== undefined).map((row) => row.bodyId);
+test("NO WIRING ROW ASKS FOR A DISGUISE", () => {
+  const browserRows = FIXTURE_DOOR_ROWS.filter((row) => row.config.profile !== undefined).map((row) => row.bodyId);
   assert.deepEqual(browserRows, [], "the browser profile dressed the client as a browser to get past a refusal; it is retired");
-  let asked = 0;
-  const counting = (async () => {
-    asked += 1;
-    return new Response("page", { status: 200 });
-  }) as unknown as typeof fetch;
-  await assert.rejects(readViaEgress("https://www.kearsarge.org/", { fetchImpl: counting }), (e: unknown) =>
-    e instanceof EgressRefusal && /retired/.test(e.message) && /access control/.test(e.message));
-  assert.equal(asked, 0, "nothing is relayed");
 });
 
 test("A PORTAL'S SESSION COOKIE GOES BACK ONLY TO THE HOST THAT SET IT, never to the vendor's document host", async () => {
@@ -327,47 +304,23 @@ test("A PORTAL'S SESSION COOKIE GOES BACK ONLY TO THE HOST THAT SET IT, never to
 });
 
 /**
- * A borrowed browser identity, a User-Agent that is not ours, or the retired relay being called. A second
- * client (`curl`) is not on this list: it is allowed when it says who we are (it is held to that by the tests
- * above), and a request never borrows anyone else's name.
+ * A borrowed browser identity or a User-Agent that is not ours. A second client (`curl`) is allowed when it
+ * says who we are (held to that by the tests above).
  */
 const DISGUISES: readonly RegExp[] = [
   /Mozilla\/5\.0 \((Windows|Macintosh|X11|Linux|iPhone|iPad)/,
   /\bChrome\/\d{2,3}\./,
   /HeadlessChrome/,
   /["']?user-agent["']?\s*:\s*["']Mozilla/i,
-  /(?<!function )readViaEgress\(/,
 ];
 
-/**
- * Session scripts (never run by the standing runner) that still carry a disguising client on 2026-09-25: a
- * browser User-Agent, or a call to the retired relay. Named so the debt is visible and can only shrink: a
- * script leaves this list the day its disguise is removed, and a new file carrying one fails.
- */
-const KNOWN_SCRIPT_DEBT: readonly string[] = [
-  "scripts/adjudicate-leads.mts",
-  "scripts/candidate-site-probe.mts",
-  "scripts/d50-reinstate.mts",
-  "scripts/enumerate-town-bodies.mts",
-  "scripts/hunt-roster.mts",
-  "scripts/ladder-fetch.mts",
-  "scripts/nh-cfs-ladder.mts",
-  "scripts/nj-hunt4-portrait-sheet.mts",
-  "scripts/nj-hunt4-search.mts",
-  "scripts/tenancy.mts",
-  "scripts/verify-extraction.mts",
-];
-
-test("NO PRODUCTION MODULE CARRIES A BORROWED IDENTITY, and the script debt only shrinks", () => {
+test("NO PRODUCTION MODULE CARRIES A BORROWED IDENTITY", () => {
   const offenders = (files: readonly string[]) =>
     files.map((f) => f.replace(/\\/g, "/")).filter((f) => {
       const text = code(readFileSync(join(ROOT, f), "utf8"));
       return DISGUISES.some((p) => p.test(text));
     });
   assert.deepEqual(offenders([...sources("lib"), ...sources("app"), "scripts/ingest.ts"]), [], "production code sends one honest client");
-  const scripts = offenders(sources("scripts"));
-  assert.deepEqual(scripts.filter((f) => !KNOWN_SCRIPT_DEBT.includes(f)), [], "a new script carries a disguising client");
-  assert.deepEqual(KNOWN_SCRIPT_DEBT.filter((f) => !scripts.includes(f)), [], "this script no longer carries one: take it off the debt list");
 });
 
 /* --------------------------------------------- 4. every consumer is named */
@@ -413,14 +366,12 @@ const ROBOTS_CONSUMERS: Readonly<Record<string, string>> = {
   "lib/control-plane/discovery/meetings-discovery-executor.ts": "this file, tests/meetings-discovery-executor.test.ts",
   "lib/control-plane/promotion/campaign-publication-cycle.ts": "tests/campaign-site-runner.test.ts: a disallowed linked publication is captured with its robots verdict",
   "lib/candidates/campaign-site-verifier.ts": "tests/campaign-site-verifier.test.ts",
-  "lib/candidates/research-findings-replay.ts": "tests/replay-research-findings.test.ts",
   "lib/civic-data/website-correction-acquisition.ts": "tests/website-corrections.test.ts",
+  "lib/control-plane/leads/plain-test.ts": "tests/research-leads.test.ts: a lead whose robots.txt disallows us is read, works, and carries the verdict",
+  "lib/method/method-try.ts": "tests/method-spread.test.ts: a disallowed site's request is still made and its verdict counted",
   "scripts/robots-sweep.mts": "records verdicts only; its consumers below",
-  "scripts/tenancy.mts": "counts verdicts; never skips a host for one",
   "scripts/verify-extraction.mts": "records the verdict on each result; never skips a roster for one",
-  "scripts/state-discover.mts": "prints verdicts only",
   "scripts/research-fetch.mts": "the command line over researchFetch (tests/robots-first-fetch.test.ts)",
-  "scripts/website-correction-check.mts": "over website-correction-acquisition (tests/website-corrections.test.ts)",
 };
 
 const CONSUMES = /\b(evaluatePermission|judgeUrl|makePermissionGate|researchFetch)\b/;

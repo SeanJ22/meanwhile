@@ -1,13 +1,7 @@
 /**
- * **ACCESS CONTROLS ARE NEVER BYPASSED.** (2026-09-25, beside the owner decision
- * that robots.txt alone must not block acquisition.)
- *
- * Sean's decision of 2026-09-25 authorizes automated reading of publicly
- * accessible pages even when robots.txt asks otherwise, and says in the same
- * breath that it "does not extend to bypassing authentication or other access
- * controls". Robots.txt is now evidence (`lib/control-plane/scheduler/robots.ts`,
- * `ROBOTS_BLOCKS_ACQUISITION = false`). This module is the other half: the
- * answers that DO stop a read, named once so every fetcher judges them alike.
+ * Access controls are never bypassed. Robots.txt is evidence, not a block
+ * (`lib/control-plane/scheduler/robots.ts`); these answers do stop a read,
+ * named once so every fetcher judges them alike:
  *
  * ```
  *   401 / 407   authentication required   — no credential is ever sent
@@ -18,15 +12,10 @@
  *   any status  a bot challenge page (Cloudflare, Imperva, PerimeterX …)
  * ```
  *
- * An access control is a TECHNICAL FAILURE of this route, recorded as a wall
- * and investigated by other public routes (another official host, a feed, an
- * API, an archive). It is never something to defeat: no credential, cookie or
- * token is sent to get past it, no challenge is solved, and the same request is
- * not re-sent to push through a rate limit. `tests/robots-recorded-not-blocking.test.ts`
- * holds the research fetch, the adapter permission gate, the scout tools and the
- * discovery walk to it.
- *
- * PURE: no network, no state.
+ * An access control is a technical failure of this route, recorded as a wall
+ * and pursued by other public routes. No credential, cookie or token is sent
+ * to get past it, no challenge is solved, and a rate limit is not pushed
+ * through. Pure.
  */
 
 import { challengeIn } from "../sources/challenge-signatures.ts";
@@ -56,17 +45,11 @@ export const RATE_LIMIT_BACKOFF_MS = 60_000;
 export const FORBIDDEN_REQUEST_HEADERS: readonly string[] = ["authorization", "cookie", "proxy-authorization"];
 
 /**
- * **A SCRIPT-ONLY PAGE THAT SENDS THE BROWSER BACK WITH A SIGNED TOKEN.** (2026-09-26.)
- *
- * Sierra Vista Unified School District's homepage (ZIP 85635) answered the discovery walk this way: HTTP 200,
- * 490 bytes, `<title>Loading...</title>`, a `sid` session cookie, and nothing but
- * `window.location.replace('…/?ch=1&js=<signed token>&sid=…')`. The walk read it as the homepage and recorded
- * "shows no route this walk recognises". Getting past it means returning the session cookie and the token, which
- * is a bypass, so it is a wall. The floor keeps it to pages that are nothing but the redirect.
- *
- * It is judged here, beside the shared signatures, because `lib/sources/challenge-signatures.ts` is bound by
- * the Reader proof's closure receipt: moving it there belongs with the next reader re-proof, so that the source
- * adapters judge it too.
+ * A script-only page that sends the browser back with a signed token: a tiny
+ * 200 page whose only content is `window.location.replace(...)` carrying a
+ * session token. Following it means returning the session cookie and token,
+ * which is a bypass, so it is a wall. Only pages that are nothing but the
+ * redirect match.
  */
 export const TOKEN_REDIRECT_CHALLENGE = {
   name: "JavaScript token redirect",

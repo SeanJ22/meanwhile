@@ -11,6 +11,9 @@ import type { MethodKnowledge } from "../lib/method/knowledge.ts";
 import { finishBoxFinding, takeBoxFinding } from "../lib/control-plane/box.ts";
 import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
+import { installRegistryRuntime } from "./helpers/promoted-fixtures.ts";
+
+await installRegistryRuntime();
 
 test("a lease worker builds its runtime once per process; the old per-task build stays behind its switch", async () => {
   const source = await readFile(new URL("../lib/control-plane/workers/lease-worker.ts", import.meta.url), "utf8");

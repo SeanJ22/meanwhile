@@ -1,31 +1,4 @@
-/**
- * **DATA-4 — A BODY IS DESCRIBED BY WHAT IT IS, NEVER BY WHAT SHARES ITS
- * GROUND.** (2026-08-28.)
- *
- * ## The live false claim this was written against
- *
- * `definitionsForBody` was keyed on the DIVISION. Six bodies sit on
- * `ocd-division/country:us/state:az/county:pima`, and five of them are not Pima
- * County — so the **Central Arizona Water Conservation District**, the Regional
- * Flood Control District, the Free Library District, the Stadium District and
- * Board of Adjustment District 4 each rendered the COUNTY's powers as their
- * own: county roads, the jail, the county hospital, zoning in the
- * unincorporated areas, the county budget and the property tax rate, cited to
- * **A.R.S. § 11-251**, which governs none of them. `unreadNote` was null, so
- * nothing hedged it.
- *
- * That is DATA-3's finding one layer over. PR #214 fixed the ROSTER path — a
- * body may not acquire MEMBERS because it shares an `ocdId` — and did not touch
- * the DEFINITION path, where the same join was still handing out POWERS.
- *
- * ## What is asserted here, and why in this order
- *
- * The negative controls come first, because the repair is only a repair if the
- * bodies that were RIGHT are still right: Pima County's own board must keep
- * § 11-251, and the 1,008 bodies the registry derived from their divisions must
- * keep their class definitions. A fix that silenced everything would pass a
- * naive "no false claim" test perfectly.
- */
+/** A body is described by what it is, never by what shares its division. Bodies that were right stay right; the negative controls come first. */
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -70,11 +43,7 @@ function definitionsFor(body: RegistryBody) {
     ocdId: body.ocdId,
     divisionType: (division?.divisionType ?? "place") as BodyDivisionType,
     lsad: division?.lsad ?? null,
-    // The Census dependency classification is deliberately NOT loaded here: it
-    // imports a derived JSON artifact, and the question this file asks is about
-    // IDENTITY, not about which of the two school-system definitions applies.
-    // Every branch of that choice yields a non-null class definition, so the
-    // assertions below are unaffected by leaving it unstated.
+    // The Census dependency classification is not loaded here: every branch of it yields a non-null class definition.
   });
 }
 
@@ -88,10 +57,6 @@ const PIMA = "ocd-division/country:us/state:az/county:pima";
 const CAWCD = `${PIMA}#central-arizona-water-conservation-district`;
 const PIMA_BOARD = `${PIMA}#governing`;
 
-/* ========================================================================== */
-/* The negative controls: what was right stays right                          */
-/* ========================================================================== */
-
 test("DATA-4: the county's OWN board keeps the county class definition and § 11-251", () => {
   const answer = definitionsFor(bodyById(PIMA_BOARD));
   assert.equal(answer.classKey, "county");
@@ -101,11 +66,7 @@ test("DATA-4: the county's OWN board keeps the county class definition and § 11
 });
 
 test("DATA-4: every body the registry DERIVED from its division still gets a class definition", () => {
-  /*
-   * The half a silencing "fix" would fail. These 1,008 bodies exist BECAUSE
-   * their division does — they are its government by construction — and the
-   * count is computed rather than typed so it tracks the registry.
-   */
+  /* Bodies derived from their division are its government by construction; the count is computed so it tracks the registry. */
   const derived = registry.bodies.filter((b) => b.bodyOrigin === "DERIVED_FROM_DIVISION_TYPE");
   assert.ok(derived.length > 500, `only ${derived.length} derived bodies — the filter found nothing`);
 
@@ -116,10 +77,6 @@ test("DATA-4: every body the registry DERIVED from its division still gets a cla
     `${silenced.length} of ${derived.length} division-derived bodies lost their class definition`,
   );
 });
-
-/* ========================================================================== */
-/* The defect itself                                                          */
-/* ========================================================================== */
 
 test("DATA-4: CAWCD is not described as a county, and cites no county statute", () => {
   const answer = definitionsFor(bodyById(CAWCD));
@@ -149,12 +106,7 @@ test("DATA-4: CAWCD is not described as a county, and cites no county statute", 
 });
 
 test("DATA-4: no body that is not its division's own government cites its division's statute", () => {
-  /*
-   * The CLASS sweep, and the reason this is not a CAWCD-shaped patch. It was
-   * 248 bodies, 100 of them with a LIVE calendar a reader can reach today: the
-   * four Pima districts, 28 City of Tucson boards and commissions, and the
-   * Newbury, Wilmot, New London and Rockaway Township committees.
-   */
+  /* The class sweep: no body that is not its division's own government inherits a class definition. */
   const attached = registry.bodies.filter(
     (b) => b.ocdId !== null && b.bodyOrigin !== "DERIVED_FROM_DIVISION_TYPE",
   );
@@ -169,13 +121,7 @@ test("DATA-4: no body that is not its division's own government cites its divisi
 });
 
 test("DATA-4: the id grammar and bodyOrigin agree on EVERY body in the registry", () => {
-  /*
-   * `CoveredBody` does not carry `bodyOrigin`, so `isDivisionsOwnGovernment` is
-   * written on the id grammar the registry builds derived ids under. This is
-   * what makes that legitimate rather than a guess: the two are checked against
-   * each other over all 1,998 bodies, and the day the registry derives a body
-   * under a different suffix this names it instead of a reader finding out.
-   */
+  /* isDivisionsOwnGovernment reads the id grammar; it is checked against bodyOrigin over every body. */
   const disagreements: string[] = [];
   for (const body of registry.bodies) {
     const division = body.ocdId === null ? null : (DIVISION.get(body.ocdId) ?? null);
@@ -190,20 +136,8 @@ test("DATA-4: the id grammar and bodyOrigin agree on EVERY body in the registry"
   assert.deepEqual(disagreements.slice(0, 10), [], `${disagreements.length} disagreement(s)`);
 });
 
-/* ========================================================================== */
-/* The unnamed control: a body with NO division at all                        */
-/* ========================================================================== */
-
 test("DATA-4: a LIVE body with a null ocdId is described from its own statute", () => {
-  /*
-   * **The control the brief asked for, and it is the sharper of the two.** The
-   * Rocking K South Community Facilities District Board is LIVE, reader
-   * reachable, and its `ocdId` is null — so it rendered NOTHING AT ALL, on the
-   * far side of the class layer's own guard. And its board, by Pima County
-   * Resolution 2017-2 s.4, IS the Pima County Board of Supervisors sitting ex
-   * officio. A body whose board is the county board, which must still never be
-   * described as a county.
-   */
+  /* A live body with no division whose board is the county board ex officio must still never be described as a county. */
   const rockingK = definitionsFor(bodyById("curated:az/pima-rocking-k-south-cfd#governing"));
   assert.equal(rockingK.classDefinition, null, "a body with no division may not get a class line");
   assert.equal(rockingK.classKey, null);
@@ -224,11 +158,7 @@ test("DATA-4: a LIVE body with a null ocdId is described from its own statute", 
 });
 
 test("DATA-4: the null-ocdId floor still refuses a placeholder divisionType", () => {
-  /*
-   * The 2026-08-23 guard, asserted directly now that the identity gate sits
-   * above it. `"place"` is the placeholder `CoveredBody` fills in for a body
-   * with no division, and it must never resolve to the municipality class.
-   */
+  /* "place" is the placeholder for a body with no division, and it must never resolve to the municipality class. */
   const answer = definitionsForBody({
     bodyId: "wtp-body/country:us/state:nj/southeast_regional_council#governing",
     ocdId: null,
@@ -241,10 +171,6 @@ test("DATA-4: the null-ocdId floor still refuses a placeholder divisionType", ()
   assert.equal(answer.unreadNote, null, "an apology with no description above it is the refusal again");
 });
 
-/* ========================================================================== */
-/* The body-kind library itself                                               */
-/* ========================================================================== */
-
 test("DATA-4: every body-kind row carries a citation, a URL and the date it was read", () => {
   for (const row of BODY_KIND_DEFINITIONS) {
     assert.ok(row.definition.text.length > 120, `${row.kind}: the text is too short to be a description`);
@@ -256,11 +182,7 @@ test("DATA-4: every body-kind row carries a citation, a URL and the date it was 
 });
 
 test("DATA-4: every body-kind assignment names a body that exists and resolves to a row", () => {
-  /*
-   * Both directions. A row pointing at a body id nobody has is a claim about
-   * nothing; an assignment whose kind has no definition for that body's state
-   * is a lookup that silently returns null and looks like an honest gap.
-   */
+  /* Both directions: no row points at a missing body, and no assignment's kind lacks a definition for that body's state. */
   const ids = new Set(registry.bodies.map((b) => b.id));
   const dangling = BODY_KINDS.filter((r) => !ids.has(r.bodyId)).map((r) => r.bodyId);
   assert.deepEqual(dangling, [], "these body-kind rows name bodies the registry does not have");
@@ -273,13 +195,7 @@ test("DATA-4: every body-kind assignment names a body that exists and resolves t
 });
 
 test("DATA-4: the honest denominator is reported over ALL bodies, not over the ones that pass a filter", () => {
-  /*
-   * The published figure was **1,256 of 1,256**, and it was a true count of a
-   * population that excluded 742 bodies — a third of them — one line before the
-   * number was taken. A denominator chosen by the same filter that builds the
-   * numerator cannot go below 100%, which is the only thing a completeness
-   * number is for.
-   */
+  /* The denominator is the whole registry, never a population filtered by the same rule as the numerator. */
   const all = registry.bodies.length;
   const described = registry.bodies.filter((b) => {
     const answer = definitionsFor(b);
@@ -292,7 +208,6 @@ test("DATA-4: the honest denominator is reported over ALL bodies, not over the o
     described.length < all,
     `${described.length} of ${all} — a definition layer that describes every body is a layer nobody can measure`,
   );
-  // The floor (RULING 159): the population must be established before the
-  // fraction is reportable at all.
+  // The population must be established before the fraction is reportable at all.
   assert.ok(all > 1000, `denominator ${all} — the registry did not load`);
 });

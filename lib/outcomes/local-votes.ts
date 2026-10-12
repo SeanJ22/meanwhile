@@ -2,31 +2,7 @@ import { normalizeName } from "../routing/exact-name.ts";
 import { SECTION3_MINIMUMS } from "../control-plane/promotion/section3.ts";
 import type { PersistedSittingOutcomes } from "./types.ts";
 
-/**
- * **LOCAL VOTES, LINKED TO THE PEOPLE WHO CAST THEM.** (BX-11.)
- *
- * A roll call from a body's minutes names each voter as the publisher printed
- * the name. Until now a reader asking how their mayor voted got that string
- * matched against the question by words (`voteIsBy`), so "Romero" matched any
- * voter whose name held the word. This module joins each recorded vote to the
- * published roster member who sits on the SAME body, and keeps only the votes
- * that join exactly one member:
- *
- * - The roster is the body's own (`rosterForBody`), so a same-named person on
- *   another body is never a candidate.
- * - The names are compared as whole name words, in any order, ignoring case,
- *   punctuation, titles and a single middle initial. "Romero, Regina" joins
- *   "Regina Romero"; "Romero" alone does not join anyone, and neither does a
- *   voter two members could be.
- * - A vote the roster cannot place is counted as unlinked and is not shown on
- *   any card; it stays in the sitting's roll call, whole, for the meeting page.
- *
- * Each linked vote is a VOTE record at the design minimum
- * (`SECTION3_MINIMUMS.VOTE`: person, subject, position, date). The position is
- * the publisher's own word, unmapped; the subject is the item as the agenda
- * prints it; the source is the sitting's own page. Nothing is summed or
- * characterised.
- */
+/** Local roll-call votes joined to the published roster member of the same body; only votes joining exactly one member are kept. */
 
 /** The roster members of a body, as far as the join needs them. */
 export interface LocalVoteRosterMember {
@@ -86,10 +62,7 @@ export function identityWords(name: string): string[] {
 const sameWords = (a: readonly string[], b: readonly string[]): boolean =>
   a.length >= 2 && a.length === b.length && [...a].sort().join(" ") === [...b].sort().join(" ");
 
-/**
- * The one roster member a voter's printed name joins, or null. Two or more
- * members the same name could mean, or none, is no join.
- */
+/** The one roster member a voter's printed name joins, or null when none or several could match. */
 export function rosterMemberForVoter(
   voter: string,
   roster: readonly LocalVoteRosterMember[],
@@ -106,7 +79,7 @@ function itemTitle(sitting: PersistedSittingOutcomes, eventItemId: number): stri
   return sitting.outcomes.find((record) => record.eventItemId === eventItemId)?.itemQuote ?? null;
 }
 
-/** The minimum a VOTE record needs before it is a fact (§3): every named field holds a value. */
+/** The minimum a vote record needs before it is a fact: every named field holds a value. */
 export function voteMeetsMinimum(record: Pick<LocalVoteRecord, "person" | "subject" | "position" | "date">): boolean {
   return (SECTION3_MINIMUMS.VOTE ?? []).every((field) => String((record as unknown as Record<string, unknown>)[field] ?? "").trim().length > 0);
 }

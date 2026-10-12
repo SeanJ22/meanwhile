@@ -1,26 +1,6 @@
 /**
- * Icon-size marks for the three calendar destinations (item 4, 2026-08-15).
- *
- * **What these are, stated plainly because it matters:** simplified,
- * self-drawn marks that identify which app a row sends the reader to. They
- * are NOT Apple's, Google's or Microsoft's official icon assets, and they do
- * not reproduce those companies' trademarks. Each is a calendar tile in the
- * destination's own brand colour with one distinguishing detail — which is
- * what actually does the work at 22px, where nobody reads a logo's fine
- * detail anyway; they read "red one", "the colourful one", "the blue one",
- * and the word beside it.
- *
- * Two reasons it is drawn rather than fetched. The obvious one: a published
- * page here is self-contained and an external asset is a request to somebody
- * else's server on a reader's behalf. The real one: shipping another
- * company's official mark is a claim of association this product does not
- * make and has no licence for, and "everyone does it" is not a licence.
- * Using the official assets would be a deliberate decision with a licence
- * behind it, and this file is where it would land.
- *
- * All three inherit nothing from the theme: a brand colour is the same colour
- * in dark and light, and the tile's face is drawn rather than left
- * transparent so it reads on either background.
+ * Self-drawn calendar-tile marks identifying each destination app; not the
+ * companies' official icons. Brand colours do not follow the theme.
  */
 
 const TILE = "M3 5.5A2.5 2.5 0 0 1 5.5 3h13A2.5 2.5 0 0 1 21 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 18.5z";

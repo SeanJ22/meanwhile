@@ -1,10 +1,8 @@
 /**
  * @freshness-reads-here
  *
- * RULING 107 — the clock stamps in this file are minted by the code path that
- * performs the read: the freshness date is taken at the moment of the fetch,
- * which is what the ruling asks for rather than what it forbids. Verified
- * 2026-08-23 by reading each stamp site against the retrieval it sits in.
+ * The clock stamps in this file are minted by the code path that performs the read: the freshness date
+ * is taken at the moment of the fetch.
  */
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import {
@@ -28,19 +26,11 @@ import {
 } from "../normalize-account.ts";
 
 /**
- * CivicPlus / CivicEngage meeting source — tracker **D21**.
- *
- * The best-behaved source on the board: the municipality publishes iCal and
- * RSS feeds through its own website, so this is rung 2 of the ladder —
- * first-party, machine-readable, no vendor portal in the path. Both URL
- * patterns are CivicPlus-wide, so wiring another CivicPlus municipality is a
- * `SOURCE_WIRING` row, not code.
- *
- * The iCal category feed mixes civic events in with council sittings
- * (Rockaway's carries a yard sale and an open house alongside the council).
- * Only events whose SUMMARY matches the row's `summaryMatch` — the feed's own
- * published text — are this body's meetings; the rest count as
- * `notConfigured`, never silently vanish.
+ * CivicPlus / CivicEngage meeting source: the municipality's own iCal and RSS feeds, first-party and
+ * machine-readable. Both URL patterns are CivicPlus-wide, so another CivicPlus municipality is a
+ * meeting door, not code. The iCal category feed mixes civic events with sittings; only events
+ * whose SUMMARY matches the row's `summaryMatch` are this body's meetings, and the rest count as
+ * `notConfigured`.
  */
 
 const SOURCE_NAME = "civicplus";
@@ -48,11 +38,7 @@ const SOURCE_NAME = "civicplus";
 export interface CivicPlusRaw {
   wiring: BodySourceWiring;
   ical: string;
-  /**
-   * The AgendaCenter page's HTML, when the row wires one (M59). Optional so a
-   * CivicPlus municipality without an archive stays a wiring row and not a
-   * code change.
-   */
+  /** The AgendaCenter page's HTML, when the row wires one. */
   agendaCenter?: string;
   collectedAt: string;
 }
@@ -66,18 +52,10 @@ export interface ArchivedSitting {
 }
 
 /**
- * Sittings archived under one AgendaCenter category (M59, 2026-08-15).
- *
- * CivicPlus renders each category as `<div class="listing" id="cat<N>">` and
- * every document as `/AgendaCenter/ViewFile/<Agenda|Minutes>/_MMDDYYYY-<id>`.
- * The date is in the href, so this reads dates the township itself published
- * rather than parsing a display string that varies by template.
- *
- * **The category id is required and is not guessed.** Rockaway's page hosts
- * five bodies — Board of Adjustment, Planning Board, Environmental
- * Commission and two more — and taking every document on the page would file
- * the Planning Board's meetings under the Township Council. The id is the
- * value of the category's own filter checkbox, recorded on the wiring row.
+ * Sittings archived under one AgendaCenter category. CivicPlus renders each category as
+ * `<div class="listing" id="cat<N>">` and every document as
+ * `/AgendaCenter/ViewFile/<Agenda|Minutes>/_MMDDYYYY-<id>`; the date is read from the href. The category
+ * id is required and never guessed: one page hosts several bodies.
  */
 export function parseAgendaCenter(
   html: string,
@@ -178,34 +156,17 @@ function statusOf(startsAt: string, now: Date): MeetingStatus {
 }
 
 /**
- * Whether the feed is announcing a cancellation (2026-08-15).
- *
- * **CivicPlus cancels a meeting by editing the SUMMARY text**, not by setting
- * the iCal `STATUS` property — Rockaway's feed carries `"Board of Adjustment
- * Meeting Cancelled 8/18/26"` as a live VEVENT with a real DTSTART. A
- * `summaryMatch` prefix therefore matches it, and without this it would
- * render as a sitting that is going to happen. A canceled meeting is itself
- * news and is kept; it is just never allowed to say SCHEDULED.
- *
- * Both spellings, because the township uses the British one and the next
- * township will not.
+ * Whether the feed is announcing a cancellation. CivicPlus cancels by editing the SUMMARY text, not by
+ * setting iCal `STATUS`, so a `summaryMatch` prefix still matches it. A cancelled meeting is kept; it
+ * never says SCHEDULED. Both spellings are accepted.
  */
 export function isCancelledSummary(summary: string): boolean {
   return /\bcancell?ed\b/i.test(summary);
 }
 
 /**
- * The venue string, with a notice block written into it removed (2026-08-15).
- *
- * The same cancellation the SUMMARY announces is also pasted into `LOCATION`
- * as an HTML paragraph in front of the address:
- *
- *   `<p>BOARD OF ADJUSTMENT MEETING CANCELLED AUGUST 18, 2026. …</p> -   Rockaway NJ 07866`
- *
- * The address after it is the same string every other sitting of that body
- * carries and resolves through the venue cache; without this, both canceled
- * sittings dropped as `unknownVenue`. This trims a notice the publisher put
- * in the wrong field — it never supplies a venue that was not published.
+ * The venue string, with a cancellation notice the publisher pasted into `LOCATION` removed. Never
+ * supplies a venue that was not published.
  */
 export function locationWithoutNotice(location: string): string {
   const close = location.lastIndexOf("</p>");
@@ -241,10 +202,8 @@ export function makeCivicPlusSource(
       // township's own page and cited on the wiring row; never minted.
       const bodyName =
         wiring.config.bodyName || summaryMatch || wiring.publishingOrg;
-      // Scoped to THIS row, not to the division. Three Rockaway bodies now
-      // share one ocdId, and a set keyed on the division would let the
-      // council's Tuesday suppress the planning board's Tuesday — a body's
-      // meeting vanishing because a different body met the same day.
+      // Scoped to this row, not the division: several bodies can share one ocdId, and one body's sitting must
+      // not suppress another's on the same day.
       const rowDates = new Map<string, Meeting[]>();
 
       for (const event of parseIcalEvents(ical)) {
@@ -269,14 +228,8 @@ export function makeCivicPlusSource(
         );
 
         const eventLocation = locationWithoutNotice(event.location);
-        /*
-         * A meeting held online is KEPT (D18). No building means no
-         * coordinates and no pin, but it is a real public meeting a reader
-         * could attend, and dropping it applied the map's constraint to the
-         * reader. The label is the published string verbatim; nothing here
-         * publishes a join link, so joinUrl is null and renders as the gap
-         * it is rather than as some other URL dressed up as a way in.
-         */
+        // A meeting held online is kept: no building means no pin, but it is a real public meeting. The label is
+        // the published string verbatim; no join link is published, so `joinUrl` is null.
         const online = isPlacelessLocation(eventLocation)
           ? { label: eventLocation, joinUrl: null }
           : null;
@@ -289,13 +242,8 @@ export function makeCivicPlusSource(
         const venue = online
           ? null
           : resolveVenue(SOURCE_NAME, wiring.ocdId, eventLocation) ?? null;
-        /*
-         * No reviewed venue never suppresses the sitting (the venue-gap class,
-         * 2026-09-23): it is published with no pin and its gap named — the
-         * feed's `LOCATION` verbatim (notice block removed), or the feed's
-         * silence where the event carries none — and counted as
-         * `unknownVenue`, kept. This used to `continue`.
-         */
+        // No reviewed venue never suppresses the sitting: it is published with no pin and its gap named (the
+        // feed's `LOCATION` verbatim, or its silence), counted as `unknownVenue`.
         const venueGap = !online && !venue ? unplacedVenueGap(eventLocation, wiring.publishingOrg) : null;
         if (venueGap) {
           drops.unknownVenue++;
@@ -323,10 +271,8 @@ export function makeCivicPlusSource(
             : null,
           ...(online ? { online } : {}),
           ...(venueGap ? { venueGap } : {}),
-          // The feed carries no per-meeting agenda link; the RSS channel lists
-          // agendas for other township boards only, as observed. Null is the
-          // honest value here — never a constructed AgendaCenter URL. The
-          // archive's own link for the same date is attached below.
+          // The feed carries no per-meeting agenda link; never a constructed AgendaCenter URL. The archive's own
+          // link for the same date is attached below.
           agendaUrl: null,
           jurisdiction: wiring.jurisdiction,
           status: isCancelledSummary(event.summary)
@@ -342,16 +288,8 @@ export function makeCivicPlusSource(
         rowDates.set(feedDay, [...(rowDates.get(feedDay) ?? []), meetings[meetings.length - 1]!]);
       }
 
-      // ── M59: the AgendaCenter archive ────────────────────────────────────
-      // The iCal category feed is upcoming-only — proven, not assumed: the
-      // wired feed and the same feed with startDate/endDate and from/to
-      // parameters all returned byte-identical bodies whose only past
-      // DTSTARTs were VTIMEZONE boilerplate. The township's AgendaCenter does
-      // archive the sittings, as dated agenda and minutes documents, and it
-      // publishes no start time with them. Hence `startPrecision: "DAY"`
-      // rather than the 7pm the regular meetings happen to use — a default
-      // that would be right most of the time and wrong exactly when it
-      // mattered, on the special sitting somebody wanted to attend.
+      // The AgendaCenter archive. The iCal feed is upcoming-only; the archive lists past sittings as dated
+      // agenda and minutes documents with no start time, hence `startPrecision: "DAY"`.
       const categoryId = wiring.config.agendaCenterCategoryId;
       if (!agendaCenter || !categoryId) continue;
 
@@ -367,12 +305,8 @@ export function makeCivicPlusSource(
           // A-002: the feed already produced this sitting; the archive row is
           // the same logical record arriving a second way.
           duplicates += 1;
-          // 2026-09-24: ...but it is the only representation that carries the
-          // agenda. Dropping the archive row used to drop its agenda link with
-          // it, so the sitting read as "no agenda" (and no agenda was ever
-          // retrieved) while the township had posted one. Both representations
-          // are the same record: the feed row keeps its real time, and gains
-          // the archive's own link.
+          // The archive row is the only representation carrying the agenda: the feed row keeps its real time and
+          // gains the archive's link.
           if (sitting.agendaHref) {
             const agendaUrl = new URL(sitting.agendaHref, archiveUrl).toString();
             for (const row of feedRows) if (row.agendaUrl === null) row.agendaUrl = agendaUrl;
@@ -380,14 +314,8 @@ export function makeCivicPlusSource(
           continue;
         }
         if (!venue) {
-          /*
-           * The archive states no place for any sitting — it is a dated
-           * document list — and this body has no one reviewed venue to place
-           * it with. That never suppresses the sitting (the venue-gap class,
-           * 2026-09-23): it is published with no place and our own
-           * place-not-recorded gap (there are no publisher words to quote),
-           * and counted as `unknownVenue`, kept. This used to `continue`.
-           */
+          // The archive states no place for any sitting and this body has no one reviewed venue, so the sitting is
+          // published with our own place-not-recorded gap, counted as `unknownVenue`.
           drops.unknownVenue++;
           keptButPlaceless += 1;
         }
@@ -441,21 +369,9 @@ export function makeCivicPlusSource(
   return {
     name: SOURCE_NAME,
 
-    // The g13 declaration, and the second adapter that owed it (F22,
-    // 2026-08-20). The M59 AgendaCenter rung above emits every dated sitting
-    // the archive category lists and clips nothing off the back, so this
-    // source's window is the publisher's and not the app's 90-day serving
-    // window — the same shape as revize, which declared this on 2026-08-18
-    // while civicplus (whose archive rung predates it, 269a3ce 2026-08-15)
-    // was missed.
-    //
-    // What the miss cost, measured rather than supposed: on 2026-08-20 run
-    // #30 of the meetings refresh, civicplus timed out at 20s, carry-forward
-    // judged its rows against the default 90 days, and 23 of Rockaway
-    // Township's 32 archived sittings — everything before 2026-05-21 —
-    // were dropped from the snapshot. A vendor timeout emptied two thirds of
-    // a township's published history, which is precisely the emptying
-    // lib/meetings/carry-forward.ts exists to prevent.
+    // The AgendaCenter rung emits every dated sitting the archive lists and clips nothing, so this source's
+    // lookback is the publisher's, not the app's serving window; carry-forward must judge its rows that
+    // way.
     publishedLookbackDays: null,
 
     async fetch(query?: MeetingQuery): Promise<CivicPlusRaw[]> {

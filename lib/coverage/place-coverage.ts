@@ -1,20 +1,14 @@
 import type { PlaceOwedItem } from "./place-owed.ts";
 
 /**
- * **COVERAGE, COUNTED AGAINST WHAT IS EXPECTED.** How many of a place's
- * governments, bodies, seats and people are accounted for, set against what the
- * place should have where that can be known, and plainly "total unknown" where
- * it cannot. It reads the owed list a place already has; it never gates
- * publishing and never turns an unknown total into a number.
- *
- *   governments  expected from the place's own Census and school-district
- *                divisions; statistical, inactive and fictitious Census
- *                geography is not a government
- *   bodies       no expected total exists: the found count and the sources checked
+ * Coverage counted against what the place should have, or "total unknown"
+ * where that cannot be known. Never turns an unknown total into a number.
+ *   governments  expected from the place's Census and school-district divisions;
+ *                statistical, inactive and fictitious geography is not a government
+ *   bodies       no expected total: the found count and the sources checked
  *   seats        expected from held body compositions where present, else unknown
  *   people       seats plus the candidates on held contests
- *
- * PURE.
+ * Pure.
  */
 export interface CoverageFigure {
   readonly accounted: number;

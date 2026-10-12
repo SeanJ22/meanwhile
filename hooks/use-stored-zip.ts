@@ -12,22 +12,11 @@ import {
 } from "@/lib/state/subscribe-to-storage";
 
 /**
- * The zip the reader is currently looking at, REMEMBERED BETWEEN VISITS
- * (Sean, October 1, 2026).
- *
- * Stored as `approximate_location` — orientation, not identity, and never
- * treated as district truth. It lives in `localStorage`, so reopening the site
- * opens on the reader's own area instead of asking where they are again. This
- * replaces the August rule that kept it per-tab and asked on every fresh open.
- * A link's `?zip=` still names the place to open and wins over what is stored,
- * and the intro's ZIP boxes are one tap away from the ZIP chip for anyone who
- * wants somewhere else; the recents list (`hooks/use-recent-zips.ts`) keeps
- * the other places they have looked at.
- *
- * It is an external store, so it is read through `useSyncExternalStore`: the
- * server renders `pending`, and the first client pass resolves it. That
- * distinction is what keeps the entry prompt from flashing past a returning
- * reader before their zip loads.
+ * The zip the reader is looking at, remembered in `localStorage` as
+ * `approximate_location`: orientation, never district truth. A link's `?zip=`
+ * wins over what is stored. Read through `useSyncExternalStore` with the
+ * server rendering `pending`, so the entry prompt never flashes past a
+ * returning reader.
  */
 
 const STORAGE_KEY = "wtp.approximate_location";
@@ -66,46 +55,15 @@ export function readZipChoice(): string | null {
   try {
     return window.localStorage.getItem(STORAGE_KEY);
   } catch {
-    // Private mode or storage disabled. A forgotten zip just means the entry
-    // notice shows — which is now the default anyway.
+    // Private mode or storage disabled: the entry notice shows.
     return null;
   }
 }
 
 /**
- * **P-002 · THE CENTROID TABLE ARRIVES, IT IS NOT ALREADY HERE.**
- * (Performance audit of `336a3eb`, remediated 2026-08-24.)
- *
- * This hook was the last static importer of `lib/geo/zcta.ts` in the client
- * graph, and one static importer is all it takes: 960,770 bytes of centroids —
- * 32.5% of the landing page's initial JavaScript, more than MapLibre — landed
- * in the initial bundle to answer one question on one code path.
- *
- * Converting the three components that resolve a typed zip was not enough, and
- * the measurement said so plainly: the rebuild moved 2,955,835 → 2,956,534 raw
- * bytes. UP. The table had a second async home and its old one, and the change
- * was worth nothing until this line moved too. **A change kept because it
- * sounded right, without the rebuilt number falling, is the thing the audit's
- * measurement law exists to forbid.**
- *
- * ## Why PENDING is the honest answer while it loads, and not a regression
- *
- * `useSyncExternalStore` needs a synchronous snapshot, and the stored payload
- * holds ONLY the zip — deliberately, so a Census vintage update that moves a
- * centroid cannot leave a stale coordinate behind (the comment below is that
- * decision, and it is untouched).
- *
- * So there is a moment where the zip is known and the coordinate is not, and
- * the type already has a state for it: `restored: false`, which is exactly
- * what the SERVER snapshot returns on every render today. The entry notice
- * showing for that moment is the same state a reader already sees between the
- * server render and hydration, and the surfaces downstream handle it because
- * they must handle SSR.
- *
- * The alternative was writing the coordinates into `sessionStorage` and
- * trusting them, which would have removed the pending state by removing the
- * re-resolution — trading a correctness decision somebody made on purpose for
- * a few hundred milliseconds of restore. Not that.
+ * The centroid table loads asynchronously to keep it out of the initial
+ * bundle. Until it arrives the snapshot is `PENDING` (`restored: false`), the
+ * same state as before hydration. The stored payload holds only the zip.
  */
 let centroids: CentroidTable | null = null;
 let tableRequested = false;
@@ -115,8 +73,7 @@ function ensureTable(): void {
   tableRequested = true;
   void loadZctaTable().then((table) => {
     centroids = table.centroids;
-    // Invalidate the identity cache and republish: every subscriber's snapshot
-    // moves from PENDING to the resolved location in one pass.
+    // Invalidate the identity cache and republish so subscribers move from PENDING.
     cachedRaw = undefined;
     cachedSnapshot = PENDING;
     publishToListeners(listeners);
@@ -149,9 +106,7 @@ const subscribe = (onStoreChange: () => void) => {
 function getSnapshot(): LocationSnapshot {
   ensureTable();
 
-  // P-002: nothing can be RESTORED before the table that resolves it is here.
-  // Answering `restored: true, location: null` would tell every surface the
-  // reader has no stored zip, which is a claim rather than a wait.
+  // Nothing is restored before the table that resolves it is here.
   if (!centroids) return PENDING;
 
   const raw = readZipChoice();
@@ -175,11 +130,7 @@ export function useStoredZip() {
     getServerSnapshot,
   );
 
-  /*
-   * A zip opened from a link never passes through `remember` — the link IS the
-   * choice — so it was never recorded, and the recents list skipped every zip a
-   * reader reached from a shared URL. Every route to a zip now records it.
-   */
+  /* A zip opened from a link is recorded in recents too. */
   const openedZip = snapshot.location?.zip ?? null;
   useEffect(() => {
     if (openedZip === null) return;
@@ -201,10 +152,7 @@ export function useStoredZip() {
     commitStorageWrite(
       () => window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload)),
       () => {
-        // The one thing that outlives the tab (item 3), so the next open is a
-        // tap rather than eleven. Written here so every path that sets a
-        // location — the welcome card, the switcher, Near me — records it
-        // without having to remember to. It publishes its own store.
+        // Recorded here so every path that sets a location adds it to recents.
         recordRecentZip(next.zip);
         publishToListeners(listeners);
       },

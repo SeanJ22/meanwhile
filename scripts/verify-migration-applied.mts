@@ -2,23 +2,14 @@
  * verify-migration-applied — read a target database's catalog back and diff it
  * against a committed migration's own SQL.
  *
- * Written 2026-08-23 (overnight depth hunt, item 2) for the claim that
- * `0016_known_cerebro` reached production. It is PARAMETERISED rather than
- * session-dated, per RULING 76: a tool that takes a migration tag is worth more
- * than the eleventh `verify-<date>.mts`.
- *
- * WHY IT EXISTS, and it is not the same question `db:check` answers.
- * `pnpm db:check` compares the JOURNAL — which tags the applier recorded — and
- * that is a claim about bookkeeping. This reads `information_schema` and
- * `pg_indexes` and compares the SHAPE the SQL declares against the shape the
- * server actually holds. Per RULING 113, a step whose product can be observed is
- * observed AT THE STEP: the applier printing `OK` for seven statements is the
- * applier's report of itself, not the server's.
+ * `pnpm db:check` compares the journal (bookkeeping); this reads
+ * `information_schema` and `pg_indexes` and compares the shape the SQL declares
+ * against the shape the server actually holds.
  *
  * Reads only. It connects through `WTP_PRODUCTION_DATABASE_URL_READONLY` for
  * `--target=production` and issues nothing but catalog queries and counts.
  *
- *   pnpm verify:migration --tag=0016_known_cerebro [--target=production]
+ *   pnpm verify:migration --tag=<migration tag> [--target=production]
  */
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
@@ -54,7 +45,7 @@ const envName =
 const url = process.env[envName];
 if (!url) {
   console.error(`verify:migration — ${envName} is not set, so this could not be checked at all.`);
-  console.error("That is a COULD-NOT-TELL, not a pass (RULING 24).");
+  console.error("That is a COULD-NOT-TELL, not a pass.");
   process.exit(2);
 }
 
@@ -90,9 +81,7 @@ console.log(
     `${declared.triggers.length} trigger(s)`,
 );
 
-// RULING 100: a partial that reconciles is still wrong. A migration whose SQL
-// this parser read as ZERO tables would otherwise sail through with nothing to
-// compare, and report success about a comparison it never made.
+// A migration whose SQL parsed as ZERO tables would otherwise report success about a comparison never made.
 if (declaredObjectCount === 0) {
   console.error(
     `  NOT ASSERTABLE — parsed no CREATE TABLE and no CREATE INDEX out of ${sqlPath}.` +
@@ -216,10 +205,8 @@ if (!hasExactAppliedMigrationReceipt(applied, journalWhen, migrationSha256)) {
 // The smallest read that proves each table ANSWERS rather than merely existing.
 console.log("  — smallest read, one count per table —");
 for (const table of declared.tables.keys()) {
-  // The name came out of a committed .sql file, never from a request — but a
-  // table name cannot be a bind parameter, so it is checked against the
-  // identifier shape before it is interpolated rather than trusted for its
-  // provenance.
+  // The name came from a committed .sql file, but a table name cannot be a bind parameter, so it is
+  // checked against the identifier shape before it is interpolated.
   if (!/^[a-z_][a-z0-9_]*$/.test(table)) {
     console.log(`    ${table.padEnd(30)} NOT ASSERTABLE — name is not a plain identifier`);
     continue;

@@ -1,21 +1,16 @@
 /**
- * DB-51: dead links are found before readers find them.
- *
- * A plain-code sweep (no AI, no model cost) visits the outbound links in the
- * published reader edge: sources, official sites, join links and agenda PDFs.
- * It follows the request rules of rulings §2: a known small local government
- * (under 10,000 people) or school district (under 5,000 students) gets at most
- * ten requests an hour from a pass; every other publisher is read at full
- * speed; Retry-After is honored and a 429 or 5xx is a "try again later", never a
- * dead link. Results are kept beside door health as one record per surface,
- * so Admin can show how many links are dead on each surface.
- *
- * Nothing here names a place.
+ * A plain-code sweep of the outbound links in the published reader edge:
+ * sources, official sites, join links and agenda PDFs. A known small publisher
+ * gets at most its hourly request limit, counted with every other reader of
+ * that website; others are read at full speed.
+ * Retry-After is honored, and a 429 or 5xx means try later, never dead.
+ * Results are kept beside door health as one record per surface.
  */
 
 import type { WebsiteSize } from "../control-plane/scheduler/host-supervision.ts";
 import { websiteRequestLimit } from "../control-plane/scheduler/host-supervision.ts";
 import { upsertSystemDoor } from "./link-sweep-store.ts";
+import { admitWebsiteRequest, holdWebsiteAfter, type WebsitePacing } from "../control-plane/website-pacing.ts";
 import type { ReaderArtifactStore } from "../meetings/edge-store.ts";
 import type { DoorRepository } from "./registry.ts";
 
@@ -99,22 +94,15 @@ async function look(url: string, fetchFn: SweepFetch): Promise<{ result: SweepFe
   }
 }
 
-function retryAfterMs(value: string | null | undefined, now: number): number | null {
-  if (!value) return null;
-  if (/^\d+$/.test(value.trim())) return Number(value) * 1000;
-  const at = Date.parse(value);
-  return Number.isFinite(at) ? Math.max(0, at - now) : null;
-}
-
 export interface SweepOptions {
   readonly fetchFn: SweepFetch;
   readonly now: () => number;
-  /** What is known of a link's publisher; unknown means full speed (rulings §2). */
+  /** The one count and hold per website every reader shares. */
+  readonly pacing: WebsitePacing;
+  /** What is known of a link's publisher; unknown means full speed. */
   readonly sizeFor?: (url: string) => WebsiteSize | null | undefined;
   /** Rotates which links a capped host gets this pass, so every link is reached over several passes. */
   readonly rotation?: number;
-  /** A pass never spends longer than this waiting on one host's Retry-After; past it the host is left for the next pass. */
-  readonly maxWaitMs?: number;
   /** How many hosts are read at once. */
   readonly concurrency?: number;
 }
@@ -129,24 +117,19 @@ export async function sweepLinks(links: readonly OutboundLink[], options: SweepO
   }
   const results: LinkResult[] = [];
   const hosts = [...byHost].sort(([a], [b]) => (a < b ? -1 : 1));
-  const maxWaitMs = options.maxWaitMs ?? 0;
   const readHost = async ([, hostLinks]: [string, OutboundLink[]]): Promise<void> => {
-    const cap = websiteRequestLimit(options.sizeFor?.(hostLinks[0]!.url));
     const rotation = options.rotation ?? 0;
     const start = hostLinks.length === 0 ? 0 : rotation % hostLinks.length;
     const ordered = [...hostLinks.slice(start), ...hostLinks.slice(0, start)];
-    let requests = 0;
-    let pausedUntil: number | null = null;
     for (const link of ordered) {
-      if (cap !== null && requests >= cap) {
-        results.push({ ...link, verdict: "WAITING", httpStatus: null, detail: `a small publisher is looked at ${cap} times an hour at most; this link is next in line` });
+      const cap = websiteRequestLimit(options.sizeFor?.(link.url));
+      const admitted = await admitWebsiteRequest(options.pacing, link.url, cap, options.now());
+      if (!admitted.ok) {
+        results.push(admitted.why === "ASKED_TO_WAIT"
+          ? { ...link, verdict: "LATER", httpStatus: null, detail: "the publisher asked to be left alone for now" }
+          : { ...link, verdict: "WAITING", httpStatus: null, detail: `a small publisher is looked at ${cap} times an hour at most; this link is next in line` });
         continue;
       }
-      if (pausedUntil !== null) {
-        results.push({ ...link, verdict: "LATER", httpStatus: null, detail: "the publisher asked to be left alone for now" });
-        continue;
-      }
-      requests += 1;
       const { result, code } = await look(link.url, options.fetchFn);
       if (result === null) {
         results.push(DEAD_CODES.has(code ?? "")
@@ -158,8 +141,7 @@ export async function sweepLinks(links: readonly OutboundLink[], options: SweepO
       if (status >= 200 && status < 400) results.push({ ...link, verdict: "OK", httpStatus: status, detail: "answers" });
       else if (status === 404 || status === 410) results.push({ ...link, verdict: "DEAD", httpStatus: status, detail: status === 410 ? "the page is gone" : "the page was not found" });
       else {
-        const wait = retryAfterMs(result.retryAfter, options.now());
-        if (status === 429 || status === 503 || wait !== null) pausedUntil = options.now() + (wait ?? maxWaitMs);
+        await holdWebsiteAfter(options.pacing, link.url, status, result.retryAfter, options.now());
         results.push({ ...link, verdict: "LATER", httpStatus: status, detail: status === 429 ? "the publisher asked us to slow down" : `the publisher answered ${status}; try again later` });
       }
     }

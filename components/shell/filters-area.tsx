@@ -20,13 +20,7 @@ import { activeControlCount } from "@/lib/state/reset";
 import { useUi, useUiDispatch } from "@/lib/state/provider";
 import type { BodyType, DistrictType } from "@/lib/state/types";
 
-/**
- * The filters panel.
- *
- * Ports Edia's `.filter-group` wholesale, including the staggered fade-in and
- * the active-count badge on the header (`updateFiltersActiveCount`), plus
- * `clearFilter`, `resetFilters` and `toggleFiltersPanel`.
- */
+/** The filters panel. */
 
 const STATUSES: { value: MeetingStatus; label: string; accent: string }[] = [
   { value: "SCHEDULED", label: "Upcoming", accent: "var(--accent-local)" },
@@ -47,8 +41,7 @@ const DISTRICT_LABEL: Record<DistrictType, string> = {
   "state-senate": "State Senate",
   "state-house": "State House",
   county: "County",
-  // M12 (2026-08-17): three checkboxes, three labels. Plain language — a
-  // reader who has never met an "scsd" reads "School (secondary)".
+  // Plain language for the Census school-district kinds.
   "school-unified": "School (unified)",
   "school-elementary": "School (elementary)",
   "school-secondary": "School (secondary)",
@@ -60,31 +53,17 @@ export function FiltersArea({
   districtsFailed,
   onToggleDistricts,
 }: {
-  /**
-   * The district overlay's master switch (g4 item 14).
-   *
-   * Owned by `use-district-layer`, which persists it, and threaded down from
-   * the sidebar rather than read again here — two components each holding
-   * their own copy of one switch is how a control ends up disagreeing with
-   * itself. `useDistrictLayer` is still called below for the "touching a
-   * type turns the overlay on" rule, which is a different question.
-   */
+  /** The district overlay's master switch, owned and persisted by `use-district-layer`. */
   showDistricts: boolean;
   districtsFailed: boolean;
   onToggleDistricts: (value: boolean) => void;
 }) {
   const ui = useUi();
   const dispatch = useUiDispatch();
-  // Counts every registered control, not just `filters` — and "active" means
-  // "differs from the default view", so a fresh page reads zero and Reset all
-  // visibly returns to it (M24).
+  // "Active" means differs from the default view, so a fresh page reads zero.
   const count = activeControlCount(ui);
 
-  // The district-type checkboxes used to be live while "Show districts" was
-  // off — every click a silent no-op, which read as "the checkboxes are
-  // broken" (defect 2026-08-14). Touching the group now expresses intent to
-  // see districts, so it turns the overlay on; the rule lives in
-  // lib/state/district-intent.ts where a test can hold it.
+  // Touching a district type turns the overlay on (lib/state/district-intent.ts).
   const districtLayer = useDistrictLayer();
   const overlayOff = districtLayer.restored && !districtLayer.enabled;
   const wantOverlay = (kind: DistrictInteraction) => {
@@ -94,18 +73,7 @@ export function FiltersArea({
   };
 
   return (
-    /*
-     * **LAY-6 (2026-08-24) — collapsed is the DEFAULT, and collapsed reserves
-     * NOTHING.**
-     *
-     * `filtersPanelOpen` already defaulted to false, so the panel was closed
-     * on arrival and capture `11-57-33` still shows a band of
-     * empty space under the word FILTERS: the header carried a 12px bottom
-     * margin and the area a 20px bottom padding whether or not anything
-     * followed them. Closed, that is 32px of nothing — dead space is exactly
-     * what the friction rule counts as a defect, and `data-open` is what lets
-     * the CSS charge for the gap only when there is something in it.
-     */
+    /* `data-open` lets the CSS reserve spacing only when the panel is open. */
     <div className="filters-area" data-open={ui.filtersPanelOpen || undefined}>
       <div className="filters-header">
         <button
@@ -114,10 +82,7 @@ export function FiltersArea({
           aria-expanded={ui.filtersPanelOpen}
           onClick={() => dispatch({ type: "filter/togglePanel" })}
         >
-          {/* A right-pointing arrow: closed it points
-              right, open it turns down. One control, and its direction is the
-              state — a disclosure with no marker is a button a reader has to
-              press to discover. */}
+          {/* The caret's direction is the state. */}
           <span className="filters-caret" aria-hidden="true">
             {ui.filtersPanelOpen ? "▾" : "▸"}
           </span>
@@ -143,9 +108,7 @@ export function FiltersArea({
 
       {ui.filtersPanelOpen && (
         <>
-          {/* g4 item 14: the two narrowing controls that used to live loose
-              in the rail. Radius first, because it is the one that changes
-              what is on the map rather than what is drawn over it. */}
+          {/* Radius first: it changes what is on the map. */}
           <RadiusControl />
 
           <div className="prox-control">
@@ -170,8 +133,7 @@ export function FiltersArea({
           <Group
             label="Body type"
             collapsible
-            /* LAY-2: every group states where it stands on its own header, so
-               a closed one is an answer rather than a question. */
+            /* Every group states where it stands on its header. */
             badge={
               ui.filters.bodyTypes.length === 0
                 ? "all"
@@ -238,11 +200,7 @@ export function FiltersArea({
             </div>
           </Group>
 
-          {/* Edia's dual-handle enrollment slider, measuring days instead of
-              students. The stops are the cascade's own shared forward and
-              backward horizons. The back slider counts NEGATIVE days so dragging
-              LEFT reaches further into the past — the intuitive direction —
-              and older meetings render wherever their sources publish them. */}
+          {/* The back slider counts negative days, so dragging left reaches into the past. */}
           <Group
             label="Date range"
             collapsible
@@ -251,11 +209,7 @@ export function FiltersArea({
               ui.filters.daysAhead !== UPCOMING_HORIZON_DAYS ||
               ui.filters.daysBack !== CONCLUDED_LOOKBACK_DAYS
             }
-            // The defaults match the cascade's shared served window. The
-            // clear link appears only when the reader
-            // has actually moved a handle away from it — comparing against
-            // the old `daysBack === 0` would have shown a permanently active
-            // "clear" on a fresh page, which is the M24 defect exactly.
+            // Clear appears only once a handle moved from the served window's defaults.
             onClear={
               ui.filters.daysAhead !== UPCOMING_HORIZON_DAYS ||
               ui.filters.daysBack !== CONCLUDED_LOOKBACK_DAYS
@@ -300,14 +254,10 @@ export function FiltersArea({
             </div>
           </Group>
 
-          {/* All types default on (session item 2, 2026-08-14 second
-              session): a body the who-governs card counts must be findable
-              without knowing which checkbox to tick. Reset all returns to
-              all-on. Labels hold back at low zoom to keep it legible. */}
+          {/* All types default on, so every body the who-governs card counts is findable. */}
           <Group
             label="District types"
-            // g4 item 14: collapsed by default, with the count on the header
-            // so a reader can see how many types are on without opening it.
+            // Collapsed by default, with the count on the header.
             collapsible
             badge={`${ui.filters.districtTypes.length} of ${ALL_DISTRICT_TYPES.length}`}
             openWhenNarrowed={
@@ -362,9 +312,7 @@ export function FiltersArea({
             )}
           </Group>
 
-          {/* Edia's focusStatesOn: default-on, and visibly so. A reader who
-              cannot see that jurisdictions are being hidden reads the gaps as
-              "no government here" rather than "not ingested yet". */}
+          {/* Default on, and visibly so: hidden jurisdictions must not read as "no government here". */}
           <Group
             label="Coverage quality"
             collapsible
@@ -402,42 +350,13 @@ function Group({
 }: {
   label: string;
   onClear?: () => void;
-  /** Named header links in the clear-btn style, for groups with more than
-   *  one affordance (district types: select all / clear — M25). */
+  /** Named header links, for groups with more than one action. */
   actions?: Array<{ label: string; onClick: () => void }>;
-  /**
-   * Starts CLOSED, and its header becomes the control that opens it (g4
-   * item 14).
-   *
-   * **LAY-2 (2026-08-23) — this is now EVERY group.** The comment here used
-   * to say collapsing everything would trade one wall of controls for a wall
-   * of headers, and against a panel of six open sections that was the right
-   * caution. The 8/22 pass settled it the other way: the filter panel was
-   * off-center and crammed, with coverage block, body-type block, meeting
-   * status, date range, district types and the coverage-quality toggle all
-   * competing. Six headers each carrying its own state is not a
-   * wall; six open sections of chips, sliders and checkboxes is. And
-   * `openWhenNarrowed` is what keeps a set filter from hiding behind one.
-   */
+  /** Starts closed; its header opens it. */
   collapsible?: boolean;
-  /**
-   * **LAY-2 (item 4, 2026-08-23) — a NARROWED group opens itself.**
-   *
-   * Collapsing every group is what turns the wall of controls into a list of
-   * answers, and the risk the original comment named is real: a filter the
-   * reader has set, hidden behind a closed header, is a hidden reason the map
-   * is showing less than it holds. So a group whose value is away from its
-   * default starts OPEN, and only the ones sitting at their defaults start
-   * closed. The badge carries the state either way.
-   */
+  /** A group away from its default starts open, so a set filter never hides behind a header. */
   openWhenNarrowed?: boolean;
-  /**
-   * A count on the collapsed header, "where cheap" per the item.
-   *
-   * The whole point of collapsing a group is that a reader does not have to
-   * open it to know where it stands — a closed group with no state on its
-   * header is a question, not an answer.
-   */
+  /** The group's state on its collapsed header. */
   badge?: string;
   children: React.ReactNode;
 }) {

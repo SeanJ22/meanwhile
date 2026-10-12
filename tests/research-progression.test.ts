@@ -4,13 +4,11 @@ import { autonomousHarness, FIXTURE_NOW } from "./helpers/autonomous-fleet.ts";
 import { runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
 import { readAutonomousActivity, projectAutonomousActivity } from "../lib/control-plane/workers/activity.ts";
 import { projectResearchProgression, readResearchProgression } from "../lib/control-plane/research-progression.ts";
-import type { ActivationGateReading } from "../lib/control-plane/promotion/types.ts";
 import { emptyKnowledge, unknownApplicability } from "../lib/method/knowledge.ts";
 import type { MethodCandidate } from "../lib/method/candidate.ts";
 import type { ConclusionRecord } from "../lib/method/conclusions.ts";
 
-const gate: ActivationGateReading = {promotionEnabled:false,mode:"SHADOW",openRecordClasses:[],contracts:{READER:"NOT_READY",TRUTH:"NOT_READY",FRESHNESS:"NOT_READY"},independentlyReproduced:false,readFrom:null,reason:"fixture shadow gate"};
-const window = {windowId:"fixture-window",previousCompletedWindowId:null,since:FIXTURE_NOW,through:"2026-09-03T19:00:00.000Z",excludedUnclassifiedWorkItems:0,candidates:[],knowledge:emptyKnowledge(),conclusions:[],gate};
+const window = {windowId:"fixture-window",previousCompletedWindowId:null,since:FIXTURE_NOW,through:"2026-09-03T19:00:00.000Z",excludedUnclassifiedWorkItems:0,candidates:[],knowledge:emptyKnowledge(),conclusions:[]};
 
 test("actual worker results are counted once; extraction and legacy PASS do not certify independent civic truth",async()=>{
   const h=await autonomousHarness();
@@ -28,8 +26,8 @@ test("actual worker results are counted once; extraction and legacy PASS do not 
   assert.equal(result.milestones.audited.newlyReached,0);
   assert.equal(result.milestones.promotionReady.newlyReached,0);
   assert.ok(result.bottlenecks.some(b=>b.code==="INDEPENDENT_VERIFICATION_MISSING"));
-  assert.equal(result.promoted.count,0);
-  assert.equal(result.readerVisible.count,0);
+  assert.equal(result.promoted.count,null);
+  assert.equal(result.readerVisible.count,null);
   assert.equal(result.activity.obligationsWorked,1);
   assert.equal(result.activity.completedResults.reduce((sum,row)=>sum+row.count,0),3);
   assert.ok(result.activity.newEvidenceArtifacts>0);
@@ -71,14 +69,12 @@ test("a real worker wall remains a reusable bottleneck with its obligation and h
   assert.notEqual(activities[0].workItem.state,"VERIFIED_COMPLETE");
 });
 
-test("reopening is interval-scoped, and an active gate cannot invent promoted or reader-visible counts",async()=>{
+test("reopening is interval-scoped, and promoted or reader-visible counts are never invented",async()=>{
   const h=await autonomousHarness();
   const activities=await readAutonomousActivity(h.repos,undefined,{observedAt:window.through});
   const at="2026-09-03T18:30:00.000Z";
   const changed=activities.map(a=>({...a,workItem:{...a.workItem,transitions:[...a.workItem.transitions,{from:"VERIFIED_COMPLETE" as const,to:"REOPENED" as const,at,by:"method-reopening",why:"New applicable method; prior proof preserved"}]}}));
-  // Corrupt/future persisted input remains unmeasured, even though today's gate type only permits false.
-  const unknownGate=JSON.parse(JSON.stringify({...gate,promotionEnabled:true})) as ActivationGateReading;
-  const report=projectResearchProgression({...window,activities:changed,gate:unknownGate});
+  const report=projectResearchProgression({...window,activities:changed});
   assert.equal(report.reopened.length,1);
   assert.equal(report.reopened[0].at,at);
   assert.equal(report.promoted.count,null);

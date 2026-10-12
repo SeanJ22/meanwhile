@@ -8,24 +8,17 @@ import { dollars, exactHuntAccounting, huntName, rollingWords, scopedHunts, sect
 
 export const ADMIN_V6_MONEY_CONTRACT = "admin-v6/money@1" as const;
 
-/**
- * Structurally matches Admin v6 `MoneyView` (model.ts, with the unknown-value
- * amendment) without importing the UI bundle.
- */
 export interface AdminV6MoneyView {
   readonly account: readonly { readonly provider: string; readonly amountUsd: number | null; readonly how: string; readonly old?: boolean }[];
   readonly accountMonth: string;
   readonly monthlyPlans: readonly { readonly name: string; readonly note: string }[];
   readonly limits: readonly { readonly name: string; readonly figure: string; readonly usedUsd: number | null; readonly limitUsd: number | null; readonly fraction: number | null; readonly note: string;
     readonly tone: "hunt" | "warn" | "neutral" }[];
-  /** Our recorded request costs against each provider's own report, for that report's period. Null when the attribution was not read. */
   readonly reconciliation: readonly {
     readonly provider: string; readonly periodStart: string; readonly periodEnd: string;
-    /** False for a shared platform cost (hosting, database, GitHub): no request is priced in our ledger, so nothing is compared. */
     readonly requestPriced: boolean;
     readonly huntUsd: number | null; readonly huntKnownUsd: number; readonly otherUsd: number | null; readonly otherKnownUsd: number;
     readonly providerUsd: number | null; readonly differenceUsd: number | null; readonly unpriced: number }[] | null;
-  /** What each provider's last read said, with when it was read. */
   readonly readings: readonly {
     readonly provider: string; readonly status: string; readonly stale: boolean; readonly syncedAt: string | null; readonly attemptedAt: string;
     readonly periodStart: string; readonly periodEnd: string; readonly reportedUsd: number | null; readonly estimatedUsd: number | null;
@@ -38,8 +31,8 @@ const PROVIDER_NAMES: Readonly<Record<ReportingProvider, string>> = {
   "anthropic-api": "Anthropic (API)", neon: "Neon", exa: "Exa", github: "GitHub", brave: "Brave Search", netlify: "Netlify",
 };
 
-/** Show the provider's actual billing boundaries on the Eastern clock. */
-const billingDate = (iso: string) => formatEastern(iso, {year: true});
+/** Providers bill by UTC calendar day, so period edges are shown as UTC dates, not local times. */
+const billingDate = (iso: string) => new Date(iso).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
 const monthWords = (month: string) => new Date(`${month}-01T12:00:00Z`).toLocaleString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
 
 function monthBounds(month: string): { readonly start: number; readonly end: number } {
@@ -47,7 +40,6 @@ function monthBounds(month: string): { readonly start: number; readonly end: num
   return { start: Date.UTC(y, m - 1, 1), end: Date.UTC(y, m, 1) };
 }
 
-/** A provider period inside one calendar month (UTC, as providers bill), and whether it runs to the month's end. */
 function periodWithin(reading: ProviderReading, month: string): "whole" | "to-date" | null {
   const { start, end } = monthBounds(month);
   const from = Date.parse(reading.periodStart), to = Date.parse(reading.periodEnd);
@@ -106,13 +98,7 @@ function fleetLimit(sources: V6ReadSources) {
   };
 }
 
-/**
- * **admin-v6/money@1.** Account readings by provider in their own billing
- * periods (never split by place), the limits in force, and each hunt's other
- * service costs from the same exact receipt-linked attribution the hunts
- * section uses. Hunt figures are never summed into an account total, so a
- * charge shared by two hunts is never counted twice.
- */
+/** Hunt figures are never summed into an account total, so a charge shared by two hunts is never counted twice. */
 export function v6MoneySection(input: { readonly scopeKey: string; readonly scope: V6PlaceScope | null; readonly period: V6Period;
   readonly sources: V6ReadSources }): AdminV6SectionEnvelope<AdminV6MoneyView> | V6Refusal {
   const { sources, period } = input;

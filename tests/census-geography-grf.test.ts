@@ -1,10 +1,3 @@
-/**
- * The grf/2026 importer for the UPCOMING-ELECTION (120th Congress / 2026) map.
- * Unit-tests the block-land aggregation on a synthetic block table (no network:
- * CLAUDE.md forbids live calls in tests; the real national build is a runner /
- * local acquisition). The AZ-06 = 80-ZCTA end-to-end check against real grf/2026
- * is recorded in docs/census-geography.md.
- */
 import assert from "node:assert/strict";
 import test from "node:test";
 

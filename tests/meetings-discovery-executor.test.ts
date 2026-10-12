@@ -1,31 +1,8 @@
 /**
- * **THE UNPAID MEETINGS-DISCOVERY EXECUTOR READS ROBOTS.TXT FIRST, EVERY HOST,
- * RECORDS IT, AND RECORDS EVERY WALK.** (2026-09-23; robots made a record
- * rather than a refusal by the owner decision of 2026-09-25.)
- *
- * `lib/control-plane/discovery/meetings-discovery-executor.ts`, run against a
- * recorded fake transport; no test reaches the network. What these tests hold:
- *
- * - **Robots first, recorded, never a refusal.** robots.txt is the first
- *   request to every host and its verdict is recorded on every step. A
- *   DISALLOWED or CANNOT_TELL verdict never stops the walk; a recorded wall
- *   sends nothing, and a 429 is honoured. Only an access control (a recorded
- *   wall, or the site's own 401, 403 or 429) makes a walk BLOCKED.
- * - **Evidence to find.** A route the homepage links is requested and confirmed
- *   by content; its bytes are vaulted with the walk's own identity; a vendor we
- *   cannot read is a lead and is never requested.
- * - **Bounded.** A walk stops at its request bound. A spent budget defers the
- *   remaining needs untouched. A need not yet due is passed over. Each
- *   request's timeout is cut to the time left; a walk the time runs out on
- *   before it confirmed anything is deferred and never recorded as a reading,
- *   while a route it already confirmed stands.
- * - **Recorded.** Every walk is appended to `discoveryAttempts` under its
- *   jurisdiction, found or not, and finds, leads and dead doors go to the field
- *   manual. Dispatched needs are walked first; one another executor holds is
- *   never walked.
- *
- * Every test that writes runs on the in-memory double AND the durable file
- * store.
+ * The unpaid meetings-discovery executor, against a recorded fake transport. robots.txt is the first request to
+ * every host and its verdict is recorded on every step, never a refusal; only an access control (a recorded wall,
+ * or the site's own 401, 403 or 429) makes a walk BLOCKED. Walks are bounded by requests and time, and every walk
+ * is appended to `discoveryAttempts`. Every test that writes runs on the in-memory double and the durable file store.
  */
 
 import assert from "node:assert/strict";
@@ -41,12 +18,11 @@ import {
   rotationWindow,
   runMeetingsDiscovery,
   walkMeetingsDiscoveryNeed,
-  walkableByFreeWalk,
   type DiscoveryOpen,
   type DiscoveryRuntime,
 } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
 import type { Artifact } from "../lib/control-plane/evidence/artifact.ts";
-import { meetingsDiscoveryNeeds, withWebsiteCorrection, type JurisdictionRegistryFile, type MeetingsDiscoveryNeed } from "../lib/hunt/meetings-discovery.ts";
+import type { MeetingsDiscoveryNeed } from "../lib/hunt/meetings-discovery.ts";
 import { ROUTE_HINTS, namesItself, routeHintProblems, routeHintsFingerprint, type JurisdictionRouteHints } from "../lib/hunt/meetings-route-hints.ts";
 import { eachStore } from "./control-plane-fixtures.ts";
 
@@ -493,7 +469,7 @@ test("PASS: every walk is appended under its jurisdiction; a need not yet due is
     assert.equal((await repos.discoveryAttempts.readRecent("az:b:blocked", 5))[0]?.outcome, "BLOCKED", `${label}: a blocked walk is recorded too`);
     assert.deepEqual(await repos.discoveryAttempts.readRecent("az:d:no-site", 5), [], `${label}: a need with no site is not walked`);
 
-    const manual = (await repos.fieldManual.read("live"))?.value.entries ?? [];
+    const manual = (await repos.fieldManual.list()).map((row) => row.value);
     assert.deepEqual(manual.map((e) => [e.kind, e.outcome]).sort(), [["DEAD_DOOR", "BLOCKED"], ["MEETINGS_ROUTE", "YIELDED"]], `${label}: a route and a dead door are learned`);
     assert.equal(pass.fieldManual.written, 2);
 
@@ -546,7 +522,7 @@ test("THE EVIDENCE KEY IS A LEGAL PATH ON THE RUNNER'S HOST: no character Window
   assert.notEqual(discoveryWorkId("az:a:b"), discoveryWorkId("az_a_b"), "ids that differ only in a replaced character stay apart");
   assert.equal(discoveryWorkId("az:city:city-of-chandler"), discoveryWorkId("az:city:city-of-chandler"), "the same need, the same directory");
 
-  /* The runner's own vault, on this host: the first cycle after NS28 failed here with ENOENT on Windows. */
+  /* The runner's own vault, on this host. */
   const vault = cycleVault(mkdtempSync(join(tmpdir(), "wtp-discovery-vault-")));
   const { open } = fakeOpen({
     "https://cac.example.edu/robots.txt": ALLOW,
@@ -753,25 +729,8 @@ test("A HINT LIST THAT CANNOT BE TRUSTED SAYS WHY, AND A LAPSED PAGE IS TOLD FRO
   assert.ok(!namesItself("<title>This domain may be for sale</title>", "City of El Mirage"));
 });
 
-test("THE COMMITTED HINTS ARE SOUND: each names a government its registry owes discovery, replaces exactly the address it records, and the runner passes them to every walk", () => {
+test("THE COMMITTED HINTS ARE SOUND, and the runner passes them to every walk", () => {
   assert.deepEqual(routeHintProblems(ROUTE_HINTS), []);
-  /* What the retired gap ledger held, derived as it was (CH-21): each hinted state's registry, reviewed corrections applied. */
-  const owedIn = new Map<string, readonly MeetingsDiscoveryNeed[]>();
-  const owedNeed = (id: string): MeetingsDiscoveryNeed | undefined => {
-    const state = id.split(":")[0]!;
-    if (!owedIn.has(state)) {
-      owedIn.set(state, meetingsDiscoveryNeeds([JSON.parse(readFileSync(`data/states/${state}/jurisdictions/${state}.json`, "utf8")) as JurisdictionRegistryFile]).map(withWebsiteCorrection));
-    }
-    return owedIn.get(state)!.find((n) => n.jurisdictionId === id);
-  };
-  for (const h of ROUTE_HINTS) {
-    const owed = owedNeed(h.jurisdictionId);
-    assert.ok(owed !== undefined, `${h.jurisdictionId} is not a government its registry owes meetings discovery`);
-    assert.ok(walkableByFreeWalk(owed), `${h.jurisdictionId}: the free walk cannot walk it`);
-    if (h.officialSite !== null) {
-      assert.equal(h.officialSite.replaces, owed.ownWebAddress, `${h.jurisdictionId}: the hint replaces an address the reference no longer records`);
-    }
-  }
   const runner = readFileSync("scripts/freshness-shadow.mts", "utf8");
   assert.match(runner, /directoryMeetingHints\(directoryItems, directoryRegistry\.value, ROUTE_HINTS\) : ROUTE_HINTS/, "verified directory hints extend, and never replace, the committed hints");
   assert.match(runner, /\n\s+routeHints: meetingHints,\n/, "the runner passes the combined committed and verified hints to its walks");

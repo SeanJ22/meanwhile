@@ -3,19 +3,13 @@ import { checkAdapterRepair } from "./adapter-repair-check.ts";
 import { outOfScope, repairBrief, type RepairScope } from "./adapter-repair-scope.ts";
 import { detectTenancy } from "../../hunt/platform-tenancy.ts";
 import { readRolePlaybook, workerSystemPrompt } from "../playbooks.ts";
-/**
- * Engineer publishes source adapters. Under the `pr` publication route it opens a
- * pull request that CI and the adapter merge workflow own; under `river` it
- * pushes a READY commit and status record to `stream/adapter-<kind>` for River
- * (RL-06). `adapter-publication.mjs` holds the switch both publishers read.
- */
+/** The engineer publishes source adapters as a READY commit and status record on `stream/adapter-<kind>` for River. */
 import { execFile } from 'node:child_process';
-import { readAdapterPublication } from './adapter-publication.mjs';
 import type { ScoutResult } from '../scheduler/scout-result.ts';
 import { STREAMLINE_INVENTORY_SOURCE } from './engineering-candidate.ts';
 import { installedAdapters,installedAdapterGuides } from '../scheduler/scout-adapters.ts';
 import {hasUntriedAdapter} from './detective.ts';
-import {readFieldManual,writeFieldManual,newFieldManualEntry,upsertEntries,projectFieldManual} from '../field-manual.ts';
+import {readFieldManual,writeFieldManual,newFieldManualEntry,type FieldManualQuery,type FieldManualRead} from '../field-manual.ts';
 import { MODELS, MODEL_TIERS } from '../../models.ts';
 import { recordCost } from '../repository/coordinator.ts';
 import { meteredCostFields, priceMeteredUsage, readMeteredUsage } from '../model-cost.ts';
@@ -27,7 +21,6 @@ import {SendBudgetRefusal} from '../expansion/spend-holds.ts';
 
 export const ENGINEER_ADAPTER_PREFIX = 'lib/sources/platform-adapters/';
 export interface AdapterFile {path:string;content:string}
-export interface AdapterPullRequest {url:string;number:number;branch:string}
 function adapterFiles(value:unknown, scope?:RepairScope): value is AdapterFile[] {
   return Array.isArray(value) && value.length>0 && value.every(file=>file && typeof file.path==='string' &&
     typeof file.content==='string' && file.content.trim() && (scope ? outOfScope(scope,[file.path]).length===0 : file.path.startsWith(ENGINEER_ADAPTER_PREFIX)) &&
@@ -36,12 +29,9 @@ function adapterFiles(value:unknown, scope?:RepairScope): value is AdapterFile[]
 type GitRef = {object:{sha:string}};
 type GitCommit = {tree:{sha:string}};
 type GitObject = {sha:string};
-type GitPull = {html_url:string;number:number};
-export type AdapterPublicationMode = 'pr'|'river';
 export interface AdapterCheck {ok:boolean;summary:string}
 export type AdapterChecker = (files:readonly AdapterFile[])=>Promise<AdapterCheck>|AdapterCheck;
 export interface AdapterStreamPublication {url:string;branch:string;kind:string;readySha:string;statusSha:string;created:boolean;check:AdapterCheck}
-export type AdapterPublished = AdapterPullRequest|AdapterStreamPublication;
 export type GitHubRequest = (method:string,path:string,body?:unknown)=>Promise<unknown>;
 /** JSON goes over stdin, never shell interpolation. */
 export const githubRequest: GitHubRequest = async (method,path,body) => {
@@ -57,31 +47,6 @@ export const githubRequest: GitHubRequest = async (method,path,body) => {
 export function adapterBranchKey(platform:string):string {
   return platform.toLowerCase().replace(/[^a-z0-9-]+/g,'-').replace(/^-|-$/g,'').slice(0,70);
 }
-/** Platform-wide implementation; one branch per platform prevents one PR per subject. */
-export async function publishAdapterPullRequest(input:{platform:string;files:readonly AdapterFile[];reason:string;request?:GitHubRequest;repo?:string;scope?:RepairScope;check?:AdapterChecker}):Promise<AdapterPullRequest> {
-  const request=input.request??githubRequest,repo=input.repo??'SeanJ22/meanwhile';
-  const platform=adapterBranchKey(input.platform);
-  if(!platform || !adapterFiles(input.files,input.scope) || (input.scope && input.scope.kind!==platform)) throw new Error('ENGINEER_ADAPTER_FILES_ONLY');
-  if(input.scope) { const checked=await (input.check ? input.check(input.files) : checkAdapterRepair(input.files,input.scope)); if(!checked.ok)throw new Error('ENGINEER_ADAPTER_CHECK_FAILED: '+checked.summary); }
-  const branch='engineer-adapter/'+platform;
-  const existing=await request('GET',`repos/${repo}/pulls?state=open&head=${encodeURIComponent(repo.split('/')[0]+':'+branch)}`) as GitPull[];
-  if(existing.length){await request('POST',`repos/${repo}/issues/${existing[0].number}/labels`,{labels:['engineer-adapter']});return {url:existing[0].html_url,number:existing[0].number,branch};}
-  const main=await request('GET',`repos/${repo}/git/ref/heads/main`) as GitRef;
-  const parent=await request('GET',`repos/${repo}/git/commits/${main.object.sha}`) as GitCommit;
-  const tree=await request('POST',`repos/${repo}/git/trees`,{base_tree:parent.tree.sha,tree:input.files.map(file=>({path:file.path,mode:'100644',type:'blob',content:file.content}))}) as GitObject;
-  const commit=await request('POST',`repos/${repo}/git/commits`,{message:`Add ${platform} source adapter`,tree:tree.sha,parents:[main.object.sha]}) as GitObject;
-  try {await request('POST',`repos/${repo}/git/refs`,{ref:'refs/heads/'+branch,sha:commit.sha});}
-  catch(error){
-    // An interrupted prior publication may have left this branch; never overwrite it.
-    const ref=await request('GET',`repos/${repo}/git/ref/heads/${branch}`) as GitRef;
-    const held=await request('GET',`repos/${repo}/git/commits/${ref.object.sha}`) as GitCommit;
-    if(held.tree.sha!==tree.sha)throw error;
-  }
-  const pr=await request('POST',`repos/${repo}/pulls`,{title:`Engineer adapter: ${platform}`,head:branch,base:'main',body:input.reason+'\n\nPlatform adapter only. CI runs the focused adapter tests. Auto-merge belongs to the engineer-adapter workflow; no production runner is started.'}) as GitPull;
-  await request('POST',`repos/${repo}/issues/${pr.number}/labels`,{labels:['engineer-adapter']});
-  return {url:pr.html_url,number:pr.number,branch};
-}
-
 export const ADAPTER_STREAM_PREFIX='stream/adapter-';
 const isTestFile=(path:string)=>/\.test\.(?:ts|mjs)$/.test(path);
 /**
@@ -97,7 +62,7 @@ export function adapterOwnCheck(files:readonly AdapterFile[], scope?:RepairScope
   return {ok:true,summary:`engineer check pass: ${impl} implementation, ${tests} colocated test file(s), adapter-only paths`};
 }
 
-/** `.factory/adapter-<kind>.md` in the lane status format River's `scan` reads (briefs/common.md). */
+/** `.factory/adapter-<kind>.md` in the lane status format River's `scan` reads. */
 export function adapterStatusRecord(input:{kind:string;readySha:string;check:AdapterCheck;runId:string;now:string;reason:string}):string {
   const lane='adapter-'+input.kind;
   return [`# ${lane}`,'',
@@ -109,11 +74,7 @@ export function adapterStatusRecord(input:{kind:string;readySha:string;check:Ada
     input.reason.trim(),''].join('\n');
 }
 
-/**
- * River route: one fast-forward push of a `READY: adapter <kind>` commit and the
- * status commit after it onto `stream/adapter-<kind>`, created from `river` when
- * absent. Never forced; a moved branch fails and is retried next cycle. Opens no PR.
- */
+/** One fast-forward push of a `READY: adapter <kind>` commit and its status commit onto `stream/adapter-<kind>`, created from `river` when absent. Never forced; a moved branch fails and is retried next cycle. */
 export async function publishAdapterStream(input:{platform:string;files:readonly AdapterFile[];reason:string;runId:string;now:string;
   request?:GitHubRequest;repo?:string;check?:AdapterChecker;scope?:RepairScope}):Promise<AdapterStreamPublication> {
   const request=input.request??githubRequest,repo=input.repo??'SeanJ22/meanwhile';
@@ -163,31 +124,39 @@ test('dated sitemap preserves exact publisher locators and rejects unrelated hos
 }
 
 /** Reviewed code teaches its portable instructions after deployment; unchanged versions need no write. */
-export async function learnInstalledAdapters(repos:ControlPlaneRepositories,now:string) {
-  const manual=await readFieldManual(repos,{role:'ENGINEER'});
+export async function learnInstalledAdapters(repos:ControlPlaneRepositories,now:string):Promise<FieldManualRead> {
+  const manual=await readFieldManual(repos,ENGINEER_BOOKKEEPING);
   const learned=(await installedAdapterGuides()).map(({name,version,file,guide})=>newFieldManualEntry('installed-adapter',name,{
     role:'SHARED',kind:'PLATFORM_ADAPTER',title:name,summary:guide.summary,
     outcome:'REFERENCE',recordClasses:guide.recordClasses,platforms:[name],url:guide.sourceUrls[0]??null,observedAt:now,
     payload:{platform:name,installed:true,implementationVersion:version,files:[file],sourceUrls:guide.sourceUrls,procedure:guide.procedure},
   })).filter(entry=>!manual.store.entries.some(prior=>prior.id===entry.id && prior.kind===entry.kind &&
     (prior.payload as {implementationVersion?:string|null}|null)?.implementationVersion===(entry.payload as {implementationVersion:string|null}).implementationVersion));
-  if(!learned.length)return {store:manual.store,projection:manual.projection,error:manual.error};
+  if(!learned.length)return manual;
   const saved=await writeFieldManual(repos,learned,now);
-  const store=upsertEntries(manual.store,learned,now);
-  return {store,projection:projectFieldManual(store,{role:'ENGINEER'}),error:saved.error};
+  const read=await readFieldManual(repos,ENGINEER_BOOKKEEPING);
+  return saved.error?{...read,error:saved.error}:read;
 }
 
-/** Consume needs-an-adapter work from the existing Scout results, saving the route to its PR in the bank. */
+/** What the Engineer keeps track of across platforms: adapters built and installed, investigations, and how platforms are recognized. */
+const ENGINEER_BOOKKEEPING:FieldManualQuery={role:'ENGINEER',everywhere:true,
+  kinds:['ENGINEER_ADAPTER_PR','PLATFORM_ADAPTER','ENGINEER_INVESTIGATION','PLATFORM_FINGERPRINT']};
+
+/** The Engineer's page for one platform: what is known for this platform, this place and its record class. */
+export function engineerJob(result:Pick<ScoutResult,"subjectId"|"recordClass">,platform:string):FieldManualQuery {
+  const place=result.subjectId.split('#')[0]!;
+  return {role:'ENGINEER',platform,recordClass:result.recordClass,subjectId:result.subjectId,...(place.startsWith('ocd-division/')?{ocdIds:[place]}:{})};
+}
+
+/** Consume needs-an-adapter work from the existing Scout results, saving the published route in the bank. */
 export async function workAdapterQueue(input:{repos:ControlPlaneRepositories;results:readonly ScoutResult[];
   /** Caller supplies the ordinary Fleet/area budget guard, never a raw model transport. */
   transportFor?:(result:ScoutResult)=>ModelTransport; readEvidence?:(id:string)=>Promise<WorkerEvidence>;
   now:string;request?:GitHubRequest;
-  /** Publication route; absent reads the RL-06 switch (`WTP_ADAPTER_PUBLICATION`, else the committed default). */
-  mode?:AdapterPublicationMode;check?:AdapterChecker;
-  repairScopeFor?:typeof loadAdapterRepairScope}):Promise<AdapterPublished[]> {
+  check?:AdapterChecker;
+  repairScopeFor?:typeof loadAdapterRepairScope}):Promise<AdapterStreamPublication[]> {
   const manual=await learnInstalledAdapters(input.repos,input.now);
-  const publication=input.mode?{mode:input.mode,problem:null}:readAdapterPublication(process.env);
-  const opened:AdapterPublished[]=[];
+  const opened:AdapterStreamPublication[]=[];
   const done=new Set(manual.store.entries.filter(e=>e.kind==='ENGINEER_ADAPTER_PR').map(e=>e.title));
   const installed=new Set(await installedAdapters());
   const latest=new Map<string,ScoutResult>();
@@ -218,7 +187,7 @@ export async function workAdapterQueue(input:{repos:ControlPlaneRepositories;res
       const transport=input.transportFor(result);
       const messages:Parameters<ModelTransport>[0]['messages'][number][]=[{role:'user',content:scope?repairBrief(scope):JSON.stringify({platform,
         investigation:{narrative:result.narrative,routes:result.candidates,facts:result.findings,tried:result.rungs,next:result.nextRungs},
-        knowledge:manual.projection.lines,evidence:evidence.map(e=>({sourceUrl:e.canonicalUrl,text:e.text,artifactId:e.artifactId}))})}];
+        knowledge:(await readFieldManual(input.repos,engineerJob(result,platform))).projection.lines,evidence:evidence.map(e=>({sourceUrl:e.canonicalUrl,text:e.text,artifactId:e.artifactId}))})}];
       const tried:string[]=[];
       for(const tier of MODEL_TIERS) {
         const model=MODELS[tier].model,started=Date.now();
@@ -253,29 +222,23 @@ export async function workAdapterQueue(input:{repos:ControlPlaneRepositories;res
         if(usd===null)throw new Error('ENGINEER_USAGE_UNMEASURED: no escalation until the existing budget hold is reconciled');
         messages.push({role:'assistant',content:text},{role:'user',content:reason+'. Repair the response using the supplied saved evidence, or state that evidence is insufficient.'});
       }
-      if(!candidate)await writeFieldManual(input.repos,[newFieldManualEntry('engineer-investigation',platform,{role:'ENGINEER',kind:'ENGINEER_INVESTIGATION',title:platform,
+      if(!candidate)await writeFieldManual(input.repos,[newFieldManualEntry('engineer-investigation',platform,{role:'ENGINEER',kind:'ENGINEER_INVESTIGATION',title:platform,platforms:[platform],
         summary:tried.join('; ')+'. Await new source evidence before repeating this investigation.',outcome:'BLOCKED',observedAt:input.now,
         payload:{sourceAttemptId:result.attemptId,tried}})],input.now);
     }
     if(!candidate?.files?.length)continue;
-    if(!publication.mode)throw new Error('ENGINEER_ADAPTER_ROUTE_OFF: '+publication.problem);
     const reason=`Recover ${result.recordClass} acquisition using a reusable ${candidate.platform} adapter.\n\nWhat failed: ${result.narrative}\nSource routes: ${result.candidates.map(c=>c.url).join(', ') || result.rungs.map(r=>r.target).join(', ')}`;
-    // One publisher at a time: the river route never opens a pull request.
-    const published:AdapterPublished=publication.mode==='river'
-      ?await publishAdapterStream({...candidate,reason,request:input.request,check:input.check,runId:`engineer:${result.attemptId}`,now:input.now})
-      :await publishAdapterPullRequest({...candidate,request:input.request,reason,check:input.check});
+    const published=await publishAdapterStream({...candidate,reason,request:input.request,check:input.check,runId:`engineer:${result.attemptId}`,now:input.now});
     opened.push(published);done.add(platform);
-    const route='number' in published?{pr:published}:{stream:{branch:published.branch,readySha:published.readySha,statusSha:published.statusSha,check:published.check.summary}};
-    await writeFieldManual(input.repos,[newFieldManualEntry('engineer-adapter',platform,{role:'SHARED',kind:'ENGINEER_ADAPTER_PR',title:platform,
+    const route={stream:{branch:published.branch,readySha:published.readySha,statusSha:published.statusSha,check:published.check.summary}};
+    await writeFieldManual(input.repos,[newFieldManualEntry('engineer-adapter',platform,{role:'SHARED',kind:'ENGINEER_ADAPTER_PR',title:platform,platforms:[platform],
       summary:'Adapter implementation in '+published.url,outcome:'REFERENCE',observedAt:input.now,recordClasses:[result.recordClass],url:published.url,
       payload:{platform,...route,subjectId:result.subjectId,sourceAttemptId:result.attemptId,files:candidate.files.map(file=>file.path),
         sourceUrls:[...new Set([...result.candidates.filter(c=>c.evidenceArtifactIds.length>0).map(c=>c.url),
           ...result.rungs.filter(r=>r.ok && r.artifactIds.length>0).map(r=>r.target)])]}})],input.now);
     } catch(error) {
-      await writeFieldManual(input.repos,[newFieldManualEntry('engineer-adapter-blocker',platform,{role:'ENGINEER',kind:'ENGINEER_BLOCKER',title:platform,
-        summary:error instanceof Error?error.message:String(error),outcome:'BLOCKED',observedAt:input.now,payload:{sourceAttemptId:result.attemptId,nextAction:publication.mode==='river'
-          ?`Push stream/adapter-${platform} by fast-forward after the recorded publication failure is repaired.`
-          :'Continue the existing adapter branch/PR after the recorded publication failure is repaired.'}})],input.now);
+      await writeFieldManual(input.repos,[newFieldManualEntry('engineer-adapter-blocker',platform,{role:'ENGINEER',kind:'ENGINEER_BLOCKER',title:platform,platforms:[platform],
+        summary:error instanceof Error?error.message:String(error),outcome:'BLOCKED',observedAt:input.now,payload:{sourceAttemptId:result.attemptId,nextAction:`Push stream/adapter-${platform} by fast-forward after the recorded publication failure is repaired.`}})],input.now);
     }
   }
   return opened;

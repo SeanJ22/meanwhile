@@ -1,19 +1,4 @@
-/**
- * **THE CAMPAIGN-SITE VERIFIER'S READS, RECORDED AS ACQUISITIONS.** (2026-09-25.)
- *
- * A read counts as CONFIRMATION only when the pipeline can see it for what it
- * is: a COMPLETED Attempt by a deterministic ACQUIRER — never the Scout's own
- * Attempt, never a SCOUT-role Attempt — whose artifact is in the artifact log
- * and whose bytes are vaulted. This records exactly that, through the same
- * coordinator calls every acquisition uses (work item, route task, lease,
- * Attempt, vaulted artifact, INGESTED disposition), on whatever repositories
- * and vault it is handed: an isolated in-memory plane for the replay and the
- * tests, the standing plane once the runner calls it.
- *
- * It also answers the audit's question "what did the vault hold": a read made
- * this run is served from memory; an earlier artifact (a Scout's vaulted page,
- * a previous run's read) from a read-only vault index, its bytes re-hashed.
- */
+/** A read confirms only as a COMPLETED Attempt by a deterministic ACQUIRER, never the Scout's, whose artifact is in the log and vault. */
 import { DurableEvidenceStore } from "../evidence/durable-store.ts";
 import { recordAcquisition } from "../evidence/artifact.ts";
 import { putArtifact } from "../evidence/store.ts";
@@ -218,10 +203,7 @@ export function campaignSiteReadRecorder(input: {
       retrievedAt: held.retrievedAt ?? artifact.recordedAt,
       sha256: held.contentHash.replace(/^sha256-/, ""),
     });
-    /*
-     * The robots verdict the retrieval ran under travels on the sidecar, whatever it was: recorded evidence, never a
-     * refusal (owner decision 2026-09-25). An unrecorded one is never assumed.
-     */
+    /* The robots verdict travels on the sidecar as recorded evidence, never a refusal. An unrecorded one is never assumed. */
     let origin = artifact.canonicalUrl;
     try { origin = new URL(artifact.canonicalUrl).origin; } catch { /* the URL is kept as written */ }
     const verdict = verdictOfRecordedPermission(held.permission);
@@ -233,11 +215,7 @@ export function campaignSiteReadRecorder(input: {
   return { recordRead, recordPublicationRead, recordPublicationBlock, recordPublicationAbort, heldPage };
 }
 
-/**
- * The robots verdict a read ran under, as the artifact records it: the final page's origin (the last reading when
- * none names that origin), recorded whatever it said. A read with no robots reading at all is CANNOT_TELL, never
- * ALLOWED.
- */
+/** The robots verdict for the final page's origin, as recorded. No robots reading at all is CANNOT_TELL, never ALLOWED. */
 function permissionStateOf(read: Pick<CampaignSitePageRead, "finalUrl" | "permissions">): PermissionState {
   let finalOrigin: string | null = null;
   try { finalOrigin = new URL(read.finalUrl).origin; } catch { /* no origin to match */ }

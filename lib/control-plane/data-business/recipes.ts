@@ -1,7 +1,7 @@
 /**
- * **THE RECIPE MENU: every number on any screen is one small named recipe.** (S12, Sean's 2:30 PM MST note.)
+ * The recipe menu: every number on any screen is one small named recipe.
  *
- * **To add a number, add one object to `RECIPES` below.** Nothing else changes: the one read (`read.ts`) finds it by id, checks
+ * To add a number, add one object to `RECIPES` below. Nothing else changes: the one read (`read.ts`) finds it by id, checks
  * the switch, cuts the slice, runs it and rebuilds the result from its shape's fields only; Admin lists it from the same array.
  * A recipe is `{ id, label, says, shape, source, run }`:
  *

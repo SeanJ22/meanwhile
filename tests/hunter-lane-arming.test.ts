@@ -1,5 +1,5 @@
 /**
- * CH-24 part 2: the standing hunter lane arms the same paid-work guards the
+ * The standing hunter lane arms the same paid-work guards the
  * round does, from the owner's live controls and the round's host-local Send
  * and area reading. Every unreadable or stale input holds paid work by name;
  * a task's Send lines come from its own obligation's marks; the lane's own
@@ -79,7 +79,7 @@ async function lane(options: { arming?: ReturnType<typeof reading> | "missing" |
   const ownSpend = new LaneOwnSpend();
   const conditions: string[] = [];
   const arm = () => armHunterLane({ repos, now: () => NOW, armingPath: path, messages, batch: backgroundBatchTransport({ apiKey: "" }),
-    credentialConfigured: true, credentialVar: "WTP_TEST_KEY", activation: () => ({ promotionEnabled: true, openRecordClasses: ["MEETING"] }) as never,
+    credentialConfigured: true, credentialVar: "WTP_TEST_KEY",
     providerQueue: new ModelProviderQueue(), ownSpend, circuits: null, onCondition: sentence => { conditions.push(sentence); } });
   let armed: ArmedHunterLane = await arm();
   const send = laneWorkerTransport(() => armed, ownSpend, () => NOW)(jurisdiction, task.id);

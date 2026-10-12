@@ -1,38 +1,3 @@
-/**
- * **FRESHNESS OF A LEGACY FACT PROJECTION AFTER PDC AUTHORITY TRANSFER.**
- * (Fleet Promotion Readiness, PRDY-5, 2026-09-06.)
- *
- * ## What was missing (ACT-5)
- *
- * The worker pipeline once installed one `meeting-times` and one `agendas`
- * acquisition clock per body. Those clocks opened the same official feeds as
- * the permanent meetings source, so PDC retired them as a dual authority.
- *
- * ## The obligation, and where it lives
- *
- * The old ids remain useful only to identify and retire historical rows. This
- * module may project immutable FLEET_EXTRACTION evidence, but it never opens a
- * source, derives a second cadence, or treats a legacy row as current. Until a
- * caller injects freshness from the permanent meetings receipt, the projection
- * is `NOT_SCHEDULED` and blocks approval fail-closed.
- *
- * ## The reading
- *
- * ```
- *   NOT_SCHEDULED    no obligation row yet — the registry registers it next cycle   HOLD
- *   NEVER_ACQUIRED   an obligation with no successful acquisition on record          HOLD
- *   STALE            the last successful acquisition is older than
- *                    FACT_FRESHNESS_STALE_CYCLES × the derived cadence                HOLD
- *   SOURCE_FAILING   within threshold, but the route carries debt; the facts stand,
- *                    nothing is emptied, the retry clock is quoted                    healthy
- *   DUE              within threshold and past next-due — owed, not stale             healthy
- *   FRESH            within threshold and not yet due                                 healthy
- * ```
- *
- * A HOLD is an approval burden failure and a promoter refusal; it never
- * deletes a fact or renders an absence. A legitimately NOT_DUE source is
- * healthy — being owed nothing is not being late.
- */
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { StandingObligation } from "../scheduler/durable.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
@@ -54,7 +19,6 @@ export function factObligationId(recordClass: MeetingFactClass, subjectId: strin
   return `freshness:${recordClass}:${subjectId}`;
 }
 
-/** One (record class, body) represented in immutable pipeline evidence. */
 export interface FactSubject {
   readonly recordClass: MeetingFactClass;
   readonly subjectId: string;
@@ -66,7 +30,6 @@ export interface FactSubject {
   readonly facts: number;
 }
 
-/** Enumerate fact subjects from the pipeline's own records. Pure. */
 export function factSubjectsFromStates(states: readonly PipelineItemState[], nowIso: string): FactSubject[] {
   const nowMs = Date.parse(nowIso);
   const bySubject = new Map<string, { recordClass: MeetingFactClass; subjectId: string; sourceKey: string; canonicalUrl: string; lastAcquiredAt: string | null; nextApplicableAt: string | null; facts: number }>();
@@ -103,7 +66,6 @@ export interface FactFreshnessReading {
   readonly cadenceBasis: string | null;
   readonly lastSuccessfulAcquisitionAt: string | null;
   readonly nextDueAt: string | null;
-  /** The instant the fact class becomes stale, given the last success and the cadence. */
   readonly staleAfter: string | null;
   readonly debt: FreshnessDebt | null;
   readonly retryAt: string | null;
@@ -132,12 +94,7 @@ export function permanentMeetingsReceiptId(contractId: string, scope: string): s
   return `routine-civic-data:${contractId}/MEETING/${scope}`;
 }
 
-/**
- * Select every permanent source/body authority from the same canonical
- * observability read Admin consumes. Exact identity, membership, and
- * uniqueness are part of the receipt: an aggregate or similarly named row may
- * not silently become an authority.
- */
+/** Exact identity, membership and uniqueness are required: a similarly named or aggregate row never becomes an authority. */
 export function permanentMeetingsReceipt(
   read: RoutineObservabilityRead,
 ): PermanentMeetingsReceipt {
@@ -196,11 +153,7 @@ function unavailablePermanentReading(
   };
 }
 
-/**
- * Project one legacy immutable meeting fact against the permanent meetings
- * receipt. This never schedules or opens a source. It can only consume the
- * canonical candidate/event/promotion projection already used by Admin.
- */
+/** Never schedules or opens a source; it only consumes the projection Admin already reads. */
 export function factFreshnessFromPermanentMeetings(
   receipt: PermanentMeetingsReceipt,
   input: PermanentMeetingsFreshnessInput,
@@ -326,12 +279,6 @@ export function factFreshnessFromPermanentMeetings(
   };
 }
 
-/**
- * Read one fact class's freshness for one body. The last successful
- * acquisition is the FACT's evidence (the newest immutable artifact that
- * states it), passed by the chain; the obligation supplies cadence, next-due
- * and debt.
- */
 export async function readFactFreshness(
   repos: ControlPlaneRepositories,
   input: PermanentMeetingsFreshnessInput & { readonly now: string },

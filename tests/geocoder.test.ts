@@ -20,24 +20,10 @@ import {
 } from "../lib/geo/census-geocoder.ts";
 
 /**
- * D53 (2026-08-15) — the street becomes a point, or nothing.
- *
- * The Census Bureau's geocoder is this product's external geocoding source.
- * Wiring it turned up a fact worth pinning: **the Census
- * geocoder does not geocode street names**, only addresses. So this samples a
- * few house numbers and asks whether they agree about where the street is,
- * and refuses to answer when they do not.
- *
- * These guards hold the three things that make that honest rather than
- * plausible: no reader house number is ever sent, a scattered street produces
- * nothing rather than a confident wrong pin, and every failure mode lands on
- * `null` so the caller's fallback is one branch.
- *
- * No live calls — the recorded payloads below are real Census responses,
- * fetched 2026-08-15.
+ * The Census geocoder does not geocode street names, only addresses, so a street is placed from a few
+ * sampled house numbers that must agree, or nothing. No reader house number is ever sent, and every
+ * failure lands on `null`. The recorded payloads below are real Census responses.
  */
-
-/* ------------------------------------------------------------- the input --- */
 
 test("D53: a house number the reader types anyway is stripped before sending", () => {
   assert.equal(streetOnly("808 Green Pond Road"), "Green Pond Road");
@@ -57,15 +43,13 @@ test("D53: the URL is the federal endpoint, with the sampled number and the zip"
   assert.match(url, /format=json/);
 });
 
-/* ------------------------------------------------------------ the parser --- */
-
-/** A real Census response, fetched 2026-08-15 for "808 Green Pond Road, 07866". */
+/** A recorded Census response for a matched address. */
 const REAL_MATCH = {
   result: {
     addressMatches: [
       {
         matchedAddress: "808 GREEN POND RD, ROCKAWAY, NJ, 07866",
-        coordinates: { x: -74.47412960913, y: 40.994137298987 },
+        addressComponents: { zip: "07866" }, coordinates: { x: -74.47412960913, y: 40.994137298987 },
       },
     ],
   },
@@ -80,9 +64,7 @@ test("D53: a real match parses; a real miss is null, not a throw", () => {
   assert.ok(Math.abs(point.lat - 40.9941) < 0.001);
   assert.ok(Math.abs(point.lng - -74.4741) < 0.001);
 
-  // The recorded proof that a bare street name gets nothing back. This is
-  // why the sampling exists at all; if the Bureau ever starts answering
-  // street names, this test is where that shows up.
+  // A bare street name gets nothing back; this is why the sampling exists.
   assert.equal(parseCensusPoint(REAL_EMPTY), null);
 
   // Everything unexpected is null rather than an exception, because this
@@ -101,10 +83,8 @@ test("D53: a real match parses; a real miss is null, not a throw", () => {
   );
 });
 
-/* --------------------------------------------------------- the coherence --- */
-
 test("D53: samples that agree give a midpoint; samples that scatter give nothing", () => {
-  // Academy St, 07866 — the four real samples span 0.08 km.
+  // The four recorded samples span 0.08 km.
   const tight = coherentMidpoint([
     { lat: 40.90273, lng: -74.51317 },
     { lat: 40.90337, lng: -74.5137 },
@@ -113,10 +93,7 @@ test("D53: samples that agree give a midpoint; samples that scatter give nothing
   assert.ok(tight.spreadKm < 0.2, `spread was ${tight.spreadKm}`);
   assert.ok(Math.abs(tight.lat - 40.90305) < 0.001);
 
-  // Green Pond Road, 07866 — the real samples span 5.64 km and cross a
-  // municipal line. One point cannot mean anything here, and a midpoint
-  // would sit on a road nobody asked about while quietly deciding which
-  // town's meetings the reader sees.
+  // The recorded samples span 5.64 km and cross a municipal line; a midpoint would decide which town's meetings the reader sees.
   const scattered = coherentMidpoint([
     { lat: 40.9106, lng: -74.50227 },
     { lat: 40.91418, lng: -74.50085 },
@@ -133,8 +110,6 @@ test("D53: samples that agree give a midpoint; samples that scatter give nothing
   const single = coherentMidpoint([{ lat: 31.94591, lng: -110.77451 }]);
   assert.ok(single && single.spreadKm === 0);
 });
-
-/* -------------------------------------------------------- the whole path --- */
 
 function stubFetch(bodies: Record<string, unknown>): typeof fetch {
   return (async (input: string | URL) => {
@@ -172,13 +147,6 @@ test("D53: the lookup never sends a reader's number and stops at four samples", 
     assert.ok(url.includes("07866"), "the zip is what scopes the lookup");
   }
   // The numbers sent are this module's, and they are stated.
-  //
-  // AMENDED 2026-08-26, the Vail defect. This assertion used to name
-  // `SAMPLE_HOUSE_NUMBERS` here, and that was the fixed ladder which could not
-  // place any street numbered above 800 — 10723 South Bear Table Tank Drive in
-  // 85641 is the reported instance. The guard is not weakened: it still names
-  // every number, and it still proves 808 was not one of them. What changed is
-  // WHICH numbers are correct for an input that carries a house number.
   for (const n of sampleNumbersFor(houseNumberIn("808 Green Pond Road"))) {
     assert.ok(
       asked.some((u) => u.includes(`address=${n} Green Pond Road`)),
@@ -193,18 +161,13 @@ test("D53: the lookup never sends a reader's number and stops at four samples", 
 });
 
 test("the Vail defect: a high house number is placed, and is never itself sent", () => {
-  // The reported instance. Every number in the old fixed ladder — 1, 50, 200,
-  // 800 — returns ZERO matches on this street, whose range is 10701-10899.
+  // No number in a fixed low ladder matches a street whose range is 10701-10899.
   assert.equal(houseNumberIn("10723 South Bear Table Tank Drive"), 10723);
   const vail = sampleNumbersFor(10723);
   assert.deepEqual(vail, [10701, 10725, 10775, 10799]);
   assert.ok(!vail.includes(10723), "the reader's own house number was sent");
 
-  // PARITY. The Bureau indexes each side of a street as its own range, so an
-  // even-side street answers nothing to an odd number. Probed 2026-08-26 on
-  // East Colossal Cave Road, 85641: 13002/13024/13074/13098 all match and
-  // 13001/13025 both return zero. This is the case the fix was NOT derived
-  // from, and the first version of it failed here (RULING 157).
+  // The Bureau indexes each side of a street as its own range, so an even-side street answers nothing to an odd number.
   const evenSide = sampleNumbersFor(13000);
   assert.deepEqual(evenSide, [13002, 13024, 13074, 13098]);
   assert.ok(!evenSide.includes(13000), "the reader's own house number was sent");
@@ -268,21 +231,8 @@ test("D53: every failure mode returns null rather than an error state", async ()
 });
 
 test("D53/M80: the point is never stored, and the only server it touches is the proxy", () => {
-  // Read as source, deliberately. The promise printed under the street input
-  // is now "your address passes through our server to the Census Bureau's
-  // geocoder; we never store or log it" (M80, 2026-08-15), and the cheapest
-  // way for THAT to become false is somebody adding a convenience: a
-  // localStorage cache, a log line, a write on the way past. Each is one
-  // import away and none would fail any other test here.
-  //
-  // `/api/` left this list on 2026-08-15 and the reason is the whole of M80:
-  // the Census geocoder sends no CORS header, so a browser CANNOT call it,
-  // and the route through our own server is the only one that exists. What
-  // replaced the old assertion is stricter, not weaker — the proxy is pinned
-  // to one path, and tests above prove that route writes nothing.
-  // Comments stripped first. The module's own doc block promises it does not
-  // touch localStorage, and a scan that reads prose would fail on the
-  // promise — a loose pattern verifies nothing, in either direction.
+  // Read as source: a cache, a log line or a stored write is one import away and would fail no other test here.
+  // Comments are stripped first, because the module's own doc block names what it never touches.
   const source = readFileSync(
     join(import.meta.dirname, "..", "lib", "geo", "census-geocoder.ts"),
     "utf8",
@@ -319,10 +269,10 @@ test("D53: a street whose samples agree resolves; one that scatters does not", a
   const tight = await locateStreetInZip("Academy St", "07866", {
     fetchImpl: stubFetch({
       "1 Academy St": {
-        result: { addressMatches: [{ coordinates: { x: -74.51317, y: 40.90273 } }] },
+        result: { addressMatches: [{ addressComponents: { zip: "07866" }, coordinates: { x: -74.51317, y: 40.90273 } }] },
       },
       "50 Academy St": {
-        result: { addressMatches: [{ coordinates: { x: -74.5137, y: 40.90337 } }] },
+        result: { addressMatches: [{ addressComponents: { zip: "07866" }, coordinates: { x: -74.5137, y: 40.90337 } }] },
       },
     }),
   });
@@ -334,10 +284,10 @@ test("D53: a street whose samples agree resolves; one that scatters does not", a
   const scattered = await locateStreetInZip("Green Pond Road", "07866", {
     fetchImpl: stubFetch({
       "1 Green Pond Road": {
-        result: { addressMatches: [{ coordinates: { x: -74.50227, y: 40.9106 } }] },
+        result: { addressMatches: [{ addressComponents: { zip: "07866" }, coordinates: { x: -74.50227, y: 40.9106 } }] },
       },
       "800 Green Pond Road": {
-        result: { addressMatches: [{ coordinates: { x: -74.49598, y: 40.96108 } }] },
+        result: { addressMatches: [{ addressComponents: { zip: "07866" }, coordinates: { x: -74.49598, y: 40.96108 } }] },
       },
     }),
   });
@@ -345,17 +295,14 @@ test("D53: a street whose samples agree resolves; one that scatters does not", a
 });
 
 test("the author's ruling: a crossing street is a question, not a refusal", async () => {
-  // The same two responses D53's test uses. Under `lookupStreetInZip` they
-  // stop collapsing into one null: a street we cannot find and a street that
-  // runs across the map are different answers, and only one of them has a
-  // question the reader can settle.
+  // A street we cannot find and a street that runs across the map are different answers.
   const crossing = await lookupStreetInZip("Green Pond Road", "07866", {
     fetchImpl: stubFetch({
       "1 Green Pond Road": {
-        result: { addressMatches: [{ coordinates: { x: -74.50227, y: 40.9106 } }] },
+        result: { addressMatches: [{ addressComponents: { zip: "07866" }, coordinates: { x: -74.50227, y: 40.9106 } }] },
       },
       "800 Green Pond Road": {
-        result: { addressMatches: [{ coordinates: { x: -74.49598, y: 40.96108 } }] },
+        result: { addressMatches: [{ addressComponents: { zip: "07866" }, coordinates: { x: -74.49598, y: 40.96108 } }] },
       },
     }),
   });
@@ -368,10 +315,10 @@ test("the author's ruling: a crossing street is a question, not a refusal", asyn
   const tight = await lookupStreetInZip("Academy St", "07866", {
     fetchImpl: stubFetch({
       "1 Academy St": {
-        result: { addressMatches: [{ coordinates: { x: -74.51317, y: 40.90273 } }] },
+        result: { addressMatches: [{ addressComponents: { zip: "07866" }, coordinates: { x: -74.51317, y: 40.90273 } }] },
       },
       "50 Academy St": {
-        result: { addressMatches: [{ coordinates: { x: -74.5137, y: 40.90337 } }] },
+        result: { addressMatches: [{ addressComponents: { zip: "07866" }, coordinates: { x: -74.5137, y: 40.90337 } }] },
       },
     }),
   });
@@ -393,7 +340,7 @@ test("the answer resolves to the point, and the house number is never kept", asy
       return {
         ok: true,
         json: async () => ({
-          result: { addressMatches: [{ coordinates: { x: -74.49598, y: 40.96108 } }] },
+          result: { addressMatches: [{ addressComponents: { zip: "07866" }, coordinates: { x: -74.49598, y: 40.96108 } }] },
         }),
       } as unknown as Response;
     }) as unknown as typeof fetch,
@@ -427,12 +374,6 @@ test("the answer resolves to the point, and the house number is never kept", asy
 });
 
 test("the house number never reaches the narrowing store or a log", () => {
-  /*
-   * WGH-5 (2026-08-22): the two address forms collapsed into one component,
-   * so this guard follows the house number to where it now lives. Same claim,
-   * same strength, new address — the number is component state that is spent on
-   * one request and dropped.
-   */
   const source = readFileSync(
     new URL("../components/address/address-prompt.tsx", import.meta.url),
     "utf8",
@@ -453,13 +394,9 @@ test("the house number never reaches the narrowing store or a log", () => {
       `the address prompt reaches for ${forbidden} with the house number`,
     );
   }
-  // And it is cleared once the request finishes, whatever the outcome. The one
-  // prompt uses `try`/`finally` rather than a promise `.finally()`, so the
-  // guard matches the block instead of the method — the CLAIM is unchanged.
+  // And it is cleared once the request finishes, whatever the outcome (a `try`/`finally` block).
   assert.match(source, /finally \{[\s\S]{0,200}setHouseNumber\(""\)/);
 });
-
-/* ------------------------------------------------- M80: the proxy route --- */
 
 test("M80: the geocode route writes NOTHING — no log, no store, no echo", async () => {
   const source = readFileSync(
@@ -514,7 +451,7 @@ test("M80: the geocode route writes NOTHING — no log, no store, no echo", asyn
   globalThis.fetch = (async () =>
     new Response(
       JSON.stringify({
-        result: { addressMatches: [{ coordinates: { x: -110.97, y: 32.22 } }] },
+        result: { addressMatches: [{ addressComponents: { zip: "85701" }, coordinates: { x: -110.97, y: 32.22 } }] },
       }),
       { status: 200 },
     )) as typeof fetch;
@@ -532,7 +469,7 @@ test("M80: the geocode route writes NOTHING — no log, no store, no echo", asyn
     assert.equal(body.lng, -110.97);
     // Nothing about the request is echoed back — not the address, not the
     // upstream status, not an error string.
-    assert.deepEqual(Object.keys(body).sort(), ["lat", "lng", "match"]);
+    assert.deepEqual(Object.keys(body).sort(), ["lat", "lng", "match", "zip"]);
     assert.equal(response.headers.get("cache-control"), "no-store, no-cache, must-revalidate");
   } finally {
     globalThis.fetch = realFetch;
@@ -549,11 +486,7 @@ test("M80: a browser goes through the proxy; the server calls the Bureau direct"
   );
   const { GEOCODE_PROXY_PATH } = await import("../lib/geo/census-geocoder.ts");
   assert.equal(GEOCODE_PROXY_PATH, "/api/geocode");
-  // The branch exists and is on `window`, which is the only thing that
-  // distinguishes the two runtimes. Without it the browser path is dead:
-  // the Census geocoder sends no CORS header, so a page's direct request is
-  // refused before it leaves — and no Node test can see that, because Node
-  // does not enforce CORS. That blindness is how D53 shipped dead.
+  // The branch on `window` keeps the browser path live: the Census geocoder sends no CORS header, and Node does not enforce CORS.
   assert.ok(source.includes('typeof window === "undefined"'));
   assert.ok(source.includes("GEOCODE_PROXY_PATH"));
 
@@ -564,7 +497,7 @@ test("M80: a browser goes through the proxy; the server calls the Bureau direct"
     calls.push(String(input));
     return new Response(
       JSON.stringify({
-        result: { addressMatches: [{ coordinates: { x: -110.97, y: 32.22 } }] },
+        result: { addressMatches: [{ addressComponents: { zip: "85701" }, coordinates: { x: -110.97, y: 32.22 } }] },
       }),
       { status: 200 },
     );
@@ -584,9 +517,7 @@ test("M80: the promise changed in the same commit, on both surfaces", () => {
     "utf8",
   );
 
-  // The old promise is gone from the reader-facing copy. It was unkeepable
-  // the moment the feature needed a browser, and a promise quietly retracted
-  // is worse than one honestly rewritten.
+  // The unkeepable never-store promise is gone from the reader-facing copy.
   const promptCopy = prompt.slice(prompt.indexOf("We ask for your street"));
   assert.ok(
     !/never send it to us/.test(promptCopy),
@@ -600,15 +531,7 @@ test("M80: the promise changed in the same commit, on both surfaces", () => {
       /passes through our server/.test(page),
       `${name} does not say the address passes through our server`,
     );
-    // F01 1e (2026-08-19): the never-store/never-log promise is
-    // struck wherever THE ADDRESS is described. The keepable half is the
-    // mechanism sentence asserted just above; the promise may not come back.
-    //
-    // Scoped to the address paragraph on purpose. The transparency page makes
-    // other never-logged promises — about ballot picks, which never leave the
-    // device, and about the feedback email — and those are keepable and
-    // unaffected. Banning the words page-wide would have deleted true
-    // statements to satisfy a guard, which is the opposite of the rule.
+    // Scoped to the address paragraph: the transparency page's other never-logged promises are keepable.
     const addressPara =
       page
         .split(/\n\s*\n|<\/p>/)
@@ -619,4 +542,14 @@ test("M80: the promise changed in the same commit, on both surfaces", () => {
       `${name} still makes the struck never-store/never-log promise about the address`,
     );
   }
+});
+
+
+test("Census geocoding preserves ambiguity, rejects another ZIP, and supports US territories", async () => {
+  assert.equal(parseCensusPoint({ result: { addressMatches: [...REAL_MATCH.result.addressMatches, ...REAL_MATCH.result.addressMatches] } }), null);
+  for (const [x, y] of [[144.79, 13.44], [145.75, 15.18], [-170.70, -14.28]]) {
+    assert.deepEqual(parseCensusPoint({ result: { addressMatches: [{ coordinates: { x, y } }] } }), { lat: y, lng: x });
+  }
+  const fetchImpl = (async () => new Response(JSON.stringify(REAL_MATCH))) as typeof fetch;
+  assert.equal(await locateAddressInZip("1", "Green Pond Road", "07867", { fetchImpl }), null);
 });

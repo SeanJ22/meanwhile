@@ -1,19 +1,6 @@
-/**
- * DB-17: every adapter kind can be added as a data row.
- *
- * Each kind below is one adapter in `lib/sources/composite/wiring.ts` that a
- * reviewed calendar can be wired to as data. A kind declares, in one place,
- * the adapter configuration its reader needs: which key the reviewed route
- * fills, which settings the reviewer's filter may carry, which of them are
- * required, and how the adapter's own source name is spelled. The derived
- * wiring, the crosswalk filter and the adapter digest all read this table, so
- * a new kind is one entry here and never a branch in code.
- *
- * Nothing here names a place.
- */
-
 import type { AgendaSourceType } from "../registry/types.ts";
 
+/** Each adapter kind a reviewed calendar can be wired to as data: a new kind is one entry here, never a branch in code. */
 export const DATA_DOOR_KINDS = [
   "CIVICPLUS",
   "BOARDBOOK",
@@ -30,19 +17,14 @@ export const DATA_DOOR_KINDS = [
 export type DataDoorKind = (typeof DATA_DOOR_KINDS)[number];
 
 export interface DoorKindSpec {
-  /** The composite adapter's source name; its meetings carry it. */
   readonly sourceName: string;
-  /** The wiring row's agenda source type the adapter is registered under. */
   readonly agendaSourceType: AgendaSourceType;
   /** The adapter's entry file, whose runtime closure keys its saved methods. */
   readonly entry: string;
-  /** What the reviewed route becomes in the adapter's settings. */
   readonly route: { readonly key: string; readonly as: "url" | "origin" | "lastPathSegment" };
   /** Settings the reviewer may add to the row; anything else is refused. */
   readonly allowed: readonly string[];
-  /** Settings the adapter cannot read without. */
   readonly required: readonly string[];
-  /** Fixed settings the kind always carries. */
   readonly fixed?: Readonly<Record<string, string>>;
 }
 

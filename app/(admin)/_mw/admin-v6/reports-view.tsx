@@ -2,20 +2,17 @@
 /** BR-27/28: live reports and the saved daily brief use the same three parts. */
 import type { BriefReading, BriefSnapshot } from "@/lib/control-plane/admin-view/brief.ts";
 import { plainWords } from "@/lib/control-plane/admin-view/plain-words.ts";
-import { decisionOrderAction } from "./decision-order-action.ts";
 import { mst } from "./model.ts";
-import { Actions, Card, Empty, Failed, Loading, Pill } from "./ui.tsx";
+import { Card, Empty, Failed, Loading, Pill } from "./ui.tsx";
 import { useReading } from "./use-reading.ts";
-import { BriefVitalSigns } from "./vital-signs.tsx";
 import s from "./v6.module.css";
 export function BriefParts({brief}:{readonly brief:BriefSnapshot}){
  return <div className={s.stack}>
   <p className={s.meta}>Read {mst(brief.createdAt)}</p>
-  <BriefVitalSigns reading={brief.vitalSigns ?? null}/>
   {brief.unread.length>0&&<p role="status">Could not read: {brief.unread.join(", ")}. Those parts are unknown.</p>}
   <Card title="Wins and updates">{brief.updates.length?<ul>{brief.updates.map(u=><li key={u.id}><p>{u.what} <Pill tone={u.isWin?"good":"neutral"}>{u.label}</Pill></p><p className={s.meta}>{u.when}{u.before!==null?` · Before: ${u.before}`:""}{u.after!==null?` · After: ${u.after}`:""}</p></li>)}</ul>:<Empty>No updates in this reading.</Empty>}</Card>
   <Card title="Problems">{brief.problems.length?<ul>{brief.problems.map(p=><li key={p.key}><p>{p.what} · {p.owner} · {p.next}</p></li>)}</ul>:<Empty>No problems in the parts read.</Empty>}</Card>
-  <Card title="Decisions">{brief.decisions.length?brief.decisions.map(c=><div key={c.id}><strong>{plainWords(c.recommends)}</strong><p>{plainWords(c.happening)}</p><p>Cost: {plainWords(c.cost)} · What it gets: {plainWords(c.gets)}</p><Actions actions={[decisionOrderAction(c)]}/></div>):<Empty>No decisions in this reading.</Empty>}</Card>
+  <Card title="Decisions">{brief.decisions.length?brief.decisions.map(c=><div key={c.key}><strong>{plainWords(c.what)}</strong><p>{plainWords(c.next)}</p><a href="/admin?view=queue">See in Queue</a></div>):<Empty>No decisions in this reading.</Empty>}</Card>
  </div>;
 }
 export function ReportsView(){

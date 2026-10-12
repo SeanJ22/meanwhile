@@ -2,7 +2,7 @@ import type { ScoutResult } from '../lib/control-plane/scheduler/scout-result.ts
 import { SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION } from "../lib/control-plane/scheduler/scout-result.ts";
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { publishAdapterPullRequest, plainAdapterFor, workAdapterQueue } from '../lib/control-plane/workers/engineering-adapter.ts';
+import { plainAdapterFor, workAdapterQueue } from '../lib/control-plane/workers/engineering-adapter.ts';
 import {createMemoryRepositories} from '../lib/control-plane/repository/memory.ts';
 import {MODELS} from '../lib/models.ts';
 import {SendBudgetRefusal} from '../lib/control-plane/expansion/spend-holds.ts';
@@ -104,26 +104,6 @@ test('source recovery preserves captured facts and separates Legistar tenants',a
  assert.equal(solved.findings.length,2);
 });
 
-test('adapter PR publication creates only adapter files and applies the merge label',async()=>{
- const calls:{method:string;path:string;body:unknown}[]=[];
- const pr=await publishAdapterPullRequest({platform:'calendar-platform',reason:'Repair recurring parse failures',files:[{path:'lib/sources/platform-adapters/calendar.mjs',content:'export const adapter = true;'}],request:async(method,path,body)=>{
-   calls.push({method,path,body});
-   if(path.includes('/pulls?'))return [];
-   if(path.endsWith('/git/ref/heads/main'))return {object:{sha:'base'}};
-   if(path.endsWith('/git/commits/base'))return {tree:{sha:'base-tree'}};
-   if(path.endsWith('/git/trees'))return {sha:'tree'};
-   if(path.endsWith('/git/commits'))return {sha:'commit'};
-   if(path.endsWith('/pulls'))return {html_url:'https://github.com/SeanJ22/meanwhile/pull/999',number:999};
-   return {};
- }});
- assert.equal(pr.number,999);assert.deepEqual(calls.at(-1)?.body,{labels:['engineer-adapter']});
- assert.deepEqual((calls.find(c=>c.path.endsWith('/git/trees'))?.body as {tree:{path:string}[]}).tree.map(f=>f.path),['lib/sources/platform-adapters/calendar.mjs']);
-});
-test('Engineer refuses publication outside its adapter-only ownership',async()=>{
- let called=false;
- await assert.rejects(publishAdapterPullRequest({platform:'calendar',reason:'test',files:[{path:'.github/workflows/code.yml',content:'unsafe'}],request:async()=>{called=true;return {};}}),/ADAPTER_FILES_ONLY/);
- assert.equal(called,false);
-});
 test('source backoff is per Legistar tenant, not the vendor',()=>{
  assert.notEqual(sourceReliabilityKey('https://webapi.legistar.com/v1/pima/Events'),sourceReliabilityKey('https://webapi.legistar.com/v1/tucson/Events'));
  assert.equal(sourceReliabilityKey('https://webapi.legistar.com/v1/pima/Events'),sourceReliabilityKey('https://webapi.legistar.com/v1/pima/Bodies'));
@@ -266,19 +246,14 @@ test('Engineer saves captured source URLs with its reusable adapter knowledge',a
   {path:'lib/sources/platform-adapters/test-uninstalled-source-parser.test.ts',content:'export const test=true;'}];
  await workAdapterQueue({repos,results:[source],now,readEvidence:async()=>({text:'Saved calendar source',canonicalUrl:'https://platform.example/sitemap.xml',artifactId:'held'} as never),
   transportFor:()=>async()=>({model:MODELS.haiku.model,stop_reason:'end_turn',content:[{type:'text',text:JSON.stringify({files})}],
-    usage:{input_tokens:100,output_tokens:10,cache_read_input_tokens:0,cache_creation_input_tokens:0}}),request:async(method,path)=>path.includes('/pulls?')
-  ?[{html_url:'https://github.com/SeanJ22/meanwhile/pull/999',number:999}]:{}});
+    usage:{input_tokens:100,output_tokens:10,cache_read_input_tokens:0,cache_creation_input_tokens:0}}),request:async(method,path)=>path.includes('/git/matching-refs/')?[]
+  :path.endsWith('/git/ref/heads/river')?{object:{sha:'base'}}:path.endsWith('/git/commits/base')?{tree:{sha:'base-tree'}}:{sha:'created'}});
  const entry=(await readFieldManual(repos,{role:'DETECTIVE'})).store.entries.find(e=>e.kind==='ENGINEER_ADAPTER_PR' && (e.payload as {sourceAttemptId?:string}).sourceAttemptId===source.attemptId)!;
  assert.deepEqual(entry.recordClasses,['meetings']);
  assert.deepEqual((entry.payload as {sourceUrls:string[]}).sourceUrls,['https://platform.example/first-tenant/calendar','https://platform.example/sitemap.xml']);
 });
 
-test('shared client tools preserve source bytes and date-window paging',async()=>{
- const rows=Array.from({length:90},(_,i)=>'person-'+i+',Member '+i+',lower,'+(i+1)).join('\n');
- const csv='id,name,current_chamber,current_district\n'+rows;
- const plural=await readClientSource('plural_roster',{state:'AZ'},{fetchImpl:async()=>new Response(csv) as never});
- assert.equal(JSON.parse(plural.text).data.length,90);assert.equal(JSON.parse(plural.text).captures[0].text,csv);
- assert.equal(plural.sourceUrl,'https://data.openstates.org/people/current/az.csv');
+test('the shared Legistar client preserves source bytes and date-window paging',async()=>{
  const requests:string[]=[];
  const calendar=await readClientSource('legistar_events',{tenant:'pima',from:'2026-09-29',to:'2026-12-28'},{fetchImpl:async(url)=>{requests.push(String(url));return new Response(JSON.stringify([{EventId:123,EventDate:'2026-10-01'}]));}});
  assert.equal(JSON.parse(calendar.text).data[0].EventId,123);assert.match(requests[0],/EventDate/);assert.equal(calendar.requests,1);

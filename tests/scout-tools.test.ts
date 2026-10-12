@@ -18,7 +18,7 @@ import {
   type ScoutToolContext,
   type VaultBytes,
 } from "../lib/control-plane/scheduler/scout-contract.ts";
-import { SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC, buildScoutToolkit, extractPdf, savedPageReader } from "../lib/control-plane/scheduler/scout-tools.ts";
+import { REPORT_FINDING_TOOL_SPEC, SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC, buildScoutToolkit, extractPdf, savedPageReader } from "../lib/control-plane/scheduler/scout-tools.ts";
 import { cannotRun, extracted } from "../lib/extract/types.ts";
 import type { ScoutSearch } from "../lib/control-plane/scheduler/scout-contract.ts";
 import { carriesCredential } from "../lib/hunt/access-control.ts";
@@ -41,7 +41,7 @@ import { evidenceProjection } from "../lib/control-plane/workers/evidence-projec
  * the exact refusal. A positive control proves each detector can fail.
  *
  * robots.txt is READ FIRST AND RECORDED, never a refusal of a public page
- * (owner decision 2026-09-25, ROBOTS_BLOCKS_ACQUISITION = false): the seeded
+ * (ROBOTS_BLOCKS_ACQUISITION = false): the seeded
  * robots cases below assert the document is read and vaulted, the verdict
  * travels on the rung and the artifact, and the page GET happens. An access
  * control (a 403, a bot challenge) is a WALL: vaulted DIAGNOSTIC, never shown,
@@ -79,11 +79,11 @@ test('the actual Palominas archive capture is a dead end; only the current page 
   const entries=scoutDiscoveryEntries({subjectId:'az:school:palominas-school-district-49',recordClass:'PUBLIC_COMMENT_RULE',
     attemptId:'archive-failure',recordedAt:captured,sourceDeadEnds,candidates:[],refusal:[]} as unknown as ScoutResult,['az']);
   await writeFieldManualDiscoveries(repos,entries,captured);
-  const store=(await repos.fieldManual.read('live'))!.value;
+  const store={entries:(await repos.fieldManual.list()).map(row=>row.value)};
   assert.equal(store.entries[0].kind,'SOURCE_DEAD_END');
   assert.equal(store.entries[0].outcome,'FAILED');
   assert.equal(store.entries[0].url,finalUrl);
-  assert.match(scoutFieldManualProjection(store,{subjectId:'az:school:palominas-school-district-49'}).lines.join('\n'),/2021-09-25.*Archived capture/);
+  assert.match(scoutFieldManualProjection({store},{subjectId:'az:school:palominas-school-district-49'}).lines.join('\n'),/2021-09-25.*Archived capture/);
   const expired=scoutSourceDeadEnds(kit.factEvidence!,new Date(Date.parse(captured)+(freshness.cadenceHours+1)*3_600_000).toISOString(),freshness.cadenceHours);
   assert.ok(expired.some(source=>source.artifactId===liveId && source.reason.includes('outside')),'held current pages also expire on their own cadence');
 });
@@ -409,7 +409,7 @@ test("robots: transport shapes — 404 is NO_ROBOTS; 403/429/3xx/5xx/timeout/HTM
 /* ======================================================== the specs */
 
 test("the toolkit exposes exactly the research tools with their required locator and rationale", () => {
-  assert.deepEqual([...SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC, ...SOURCE_API_SPECS].map((s) => s.name), [...SCOUT_RESEARCH_TOOLS]);
+  assert.deepEqual([...SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC, REPORT_FINDING_TOOL_SPEC, ...SOURCE_API_SPECS].map((s) => s.name), [...SCOUT_RESEARCH_TOOLS]);
   const locatorByTool: Readonly<Record<string, string | null>> = {
     read_permission: "url",
     fetch_public: "url",
@@ -419,7 +419,6 @@ test("the toolkit exposes exactly the research tools with their required locator
     read_manual: "entryId",
     read_held: "artifactId",
     run_adapter: null,
-    plural_roster: 'state',
     legistar_events: 'tenant',
     search: "query",
   };
@@ -433,7 +432,7 @@ test("the toolkit exposes exactly the research tools with their required locator
   }
 });
 
-/* ============================================= the search tool (2026-09-19) */
+/* ============================================= the search tool */
 
 const fakeSearch = (hits: { url: string; title: string; provider: "brave" | "exa" }[], extra: Partial<Awaited<ReturnType<ScoutSearch>>> = {}): ScoutSearch =>
   async () => ({ hits, requestCount: 2, bytesFetched: 1234, providersUsed: ["brave", "exa"], errors: [], ...extra });
@@ -547,7 +546,7 @@ test("POSITIVE CONTROL for (a): with an accepting vault the same body DOES reach
   assert.ok(r.forModel.includes(pagePut.artifact.id), "the envelope names the artifact");
 });
 
-/* ============== SEEDED (b): DISALLOWED is RECORDED, never a refusal (owner decision 2026-09-25) */
+/* ============== SEEDED (b): DISALLOWED is RECORDED, never a refusal */
 
 test("SEEDED (b): a DISALLOWED path is read, not refused — robots.txt is read FIRST and vaulted, the verdict is recorded on the rung and the artifact, and the GET succeeds", async () => {
   const { open, seen } = fakeTransport({

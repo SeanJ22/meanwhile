@@ -121,12 +121,12 @@ test("recovered install exits for freshly loaded dependencies before inspecting 
   assert.ok(DEFAULT_HANG_KILL_MS > RUNTIME_RELEASE_MAX_BLOCKING_MS);
 });
 
-test("console and nightly children use the research idle guard", async () => {
-  for (const name of ["publishConsoleChildren", "runNightlyWindow"]) {
+test("console children use the research idle guard", async () => {
+  for (const name of ["publishConsoleChildren"]) {
     const fn = source.match(new RegExp(`async function ${name}\\([\\s\\S]*?\\n\\}`))?.[0];
     assert.ok(fn);
     let observed: number | undefined;
-    const context = createContext({ CONSOLE_PUBLISHERS: [{ name: "fixture", args: [] }], ROOT: ".", CODE_ROOT: ".", process,
+    const context = createContext({ CONSOLE_PUBLISHERS: [{ name: "fixture", args: [] }], TS_CHILD: [], ROOT: ".", CODE_ROOT: ".", process,
       RUNTIME_NO_PROGRESS_MS: 600_000, standingChildEnvironment: () => process.env,
       recoverExitedWindowHolder: async () => {}, console: { log: () => {}, error: () => {} },
       runRuntimeChildren: async (_children: unknown, options: { noProgressMs?: number }) => {

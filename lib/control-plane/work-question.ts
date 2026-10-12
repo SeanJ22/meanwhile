@@ -1,33 +1,8 @@
 /**
- * **MW-002 — EVERY PIECE OF WORK NAMES ITS QUESTION.** (2026-09-25.)
- *
- * Six questions, closed. A piece of work asks exactly one of them of a record,
- * and an owner's instruction may ask any of them of the work it reaches:
- *
- * ```
- *   HAVE_IT           do we have this record at all?
- *   STILL_CORRECT     is what we hold still correct?
- *   ANYTHING_MISSING  is anything missing from it?
- *   HAS_CHANGED       has it changed since we last looked?
- *   READER_CAN_SEE    can a reader actually see it?
- *   CONSISTENT        is it consistent with what we hold elsewhere?
- * ```
- *
- * Where the question comes from, and where it does not:
- *
- * - **A round of a standing clock** takes its question from the obligation's
- *   own recorded state (`questionOfObligation`): never read yet is HAVE_IT; a
- *   recorded absence coming due again is STILL_CORRECT; meetings discovery
- *   walked before is ANYTHING_MISSING (new meetings appear at any time); any
- *   other clock read before is HAS_CHANGED. Never from the job type.
- * - **The owner's instruction** carries the questions the owner chose, typed
- *   (`expansion.scope.set`), onto the scope decision and onto every obligation
- *   the Send reaches. Scouts receive these questions in their task brief;
- *   deterministic checks retain their verified methods.
- * - **Anything else** carries no question, and a page says "not recorded" —
- *   never a guessed default.
- *
- * PURE and client-safe: the composer imports the words.
+ * Every piece of work names one of six closed questions (HAVE_IT, STILL_CORRECT, ANYTHING_MISSING, HAS_CHANGED,
+ * READER_CAN_SEE, CONSISTENT). A standing clock's round takes it from the obligation's recorded state; the
+ * owner's instruction carries the questions chosen; anything else carries none ("not recorded", never a
+ * guess). Pure and client-safe.
  */
 
 export const WORK_QUESTIONS = ["HAVE_IT", "STILL_CORRECT", "ANYTHING_MISSING", "HAS_CHANGED", "READER_CAN_SEE", "CONSISTENT"] as const;

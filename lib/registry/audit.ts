@@ -1,39 +1,16 @@
 import type { AgendaSourceType, CoverageStatus } from "./types.ts";
 
 /**
- * What was actually tried when someone went looking for a body's agendas.
- *
- * **The distinction this exists to make.** Before it, every one of the 265
- * derived bodies read `NO_SOURCE_FOUND`, and that single value was doing two
- * completely different jobs: *we walked the ladder and there is nothing to
- * find*, and *nobody has ever looked*. Those call for opposite actions — the
- * first is a finding, the second is a queue item — and the registry could not
- * tell them apart, because `NO_SOURCE_FOUND` was simply the derivation's
- * default for a body no human had touched.
- *
- * So `NOT_ATTEMPTED` is now the default and `NO_SOURCE_FOUND` is a *claim*: it
- * may only appear on a body that has an audit row saying the ladder was walked
- * and came back empty. **A body with no row in this file is `NOT_ATTEMPTED`**,
- * and the absence is the signal rather than an oversight.
- *
- * This file is hand-maintained, unlike everything else in `lib/registry/`. It
- * records human work — someone opened a page and read it — so it cannot be
- * generated, and every row cites the URL it was read from. `build-registry.ts`
- * overlays it onto the derived bodies; the derivation itself stays pure.
+ * What was actually tried when someone went looking for a body's agendas. `NOT_ATTEMPTED` is the
+ * default; `NO_SOURCE_FOUND` is a claim that may appear only on a body with an audit row saying the
+ * ladder was walked and came back empty. Rows record human work, so they are hand-maintained, and each
+ * cites the URL it was read from.
  */
 
 /**
- * The rungs of the source hunt, in the order they are walked.
- *
- * Ordered by how much the source can be trusted to keep working, not by how
- * easy it is to read today. A feed the body itself publishes outlives a vendor
- * contract; an HTML page outlives a scraper written against one layout.
- *
- * Rungs 1–7 are passive retrieval of something already published. **Rung 8 is
- * deliberately the last automated rung and rung 9 is not automated at all** —
- * a formal records request goes to a custodian, and in Arizona that is where
- * A.R.S. § 39-121.03's commercial-purpose statement attaches (see
- * `docs/vendor-review.md`). Nothing in this repo may walk rung 9 unattended.
+ * The rungs of the source hunt, in the order they are walked, ordered by how long the source can be
+ * trusted to keep working. Rungs 1-7 are passive retrieval. Rung 9 (a formal records request) is never
+ * automated; see `docs/vendor-review.md`.
  */
 export type LadderRung =
   /** 1. A vendor API this repo already has a cleared adapter for. */
@@ -56,12 +33,8 @@ export type LadderRung =
   | "RECORDS_REQUEST";
 
 /**
- * What a single rung returned.
- *
- * `BLOCKED_ROBOTS` is its own outcome and not a miss. Newbury's town site
- * answers 403 to any identified automated agent while serving a human the page
- * perfectly — recording that as "not found" would be false, and recording it as
- * "found" would imply we can read it on a schedule. It is neither.
+ * What a single rung returned. `BLOCKED_ROBOTS` is its own outcome, not a miss: a site that refuses
+ * automated agents is neither "not found" nor readable on a schedule.
  */
 export type RungOutcome = "HIT" | "MISS" | "BLOCKED_ROBOTS" | "BLOCKED_TERMS";
 
@@ -75,19 +48,14 @@ export interface RungResult {
 }
 
 /**
- * The outcome of the whole hunt for one body.
- *
- * `FOUND_UNBUILT` is by far the most common real answer and the one that had
- * nowhere to live: a source exists, it was opened, it is readable — and no
- * adapter reads it yet. That is a queue item with a known destination, which is
- * a completely different thing from either "covered" or "nothing to find".
+ * The outcome of the whole hunt for one body. `FOUND_UNBUILT`: a readable source exists and no adapter
+ * reads it yet, distinct from both covered and nothing-to-find.
  */
 export type HuntOutcome =
   /** An adapter reads this body today. */
   | "COVERED"
   /** A usable source was located; nothing reads it yet. */
   | "FOUND_UNBUILT"
-  /** A source was located and this repo may not read it. See `docs/vendor-review.md`. */
   | "BLOCKED"
   /** The ladder was walked to rung 8 and came back empty. */
   | "EXHAUSTED";
@@ -102,14 +70,7 @@ export interface BodyCoverageAudit {
   outcome: HuntOutcome;
   /** Every rung tried, in order, including the ones that missed. */
   rungs: RungResult[];
-  /**
-   * The body's own page, read off whichever rung produced it.
-   *
-   * This is the field that made the audit worth writing in the same change as
-   * the link ladder: a hunt that fails to find a *feed* has still visited the
-   * body's page, and throwing that URL away discards most of the work and
-   * leaves the reader with nowhere to click.
-   */
+  /** The body's own page, read off whichever rung produced it, kept even when no feed was found. */
   homepageUrl: string | null;
   /** Where the agendas actually live, when a source was found. */
   agendaSourceType: AgendaSourceType;

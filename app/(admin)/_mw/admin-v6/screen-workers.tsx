@@ -1,20 +1,13 @@
 "use client";
 
-/**
- * **WORKERS.** What each worker is doing, what waits, the last useful
- * progress, costs and the next step. Plain labels and numbers; a figure the
- * page does not have shows as "—".
- *
- * Reads `admin-v6/workers@1` as it arrives. Ages and a late round are worked
- * out from the clock each time the page draws; the existing pulse redraws the
- * page about every 45 seconds.
- */
+/** Ages and a late round are worked out from the clock on each draw; the pulse redraws the page about every 45 seconds. */
 import { Fragment, useState, useSyncExternalStore } from "react";
 
 import { useV6 } from "./context.tsx";
 import { SECTION_DEP } from "./dependencies.ts";
 import { count, mst, usd, WORKER_STAGE_WORDS, type AdminV6Data, type AgentRun, type WorkerJob, type WorkerStage, type WorkersRunning, type WorkerStatus } from "./model.ts";
 import { relation } from "./places.ts";
+import { tierShortName } from "@/lib/models.ts";
 import { runnerStateWords } from "./pulse-view.ts";
 import { EvidenceCopyControl } from "../evidence-copy-control.tsx";
 import { Actions, Card, cx, Empty, Pill, Technical, usePager } from "./ui.tsx";
@@ -22,10 +15,7 @@ import s from "./v6.module.css";
 
 const STAGES: readonly WorkerStage[] = ["finding", "collecting", "extracting", "checking", "publishing"];
 
-/** A time, or "—" when there is none. */
 const when = (iso: string | null | undefined, withDay = true): string => (iso && Number.isFinite(Date.parse(iso)) ? mst(iso, withDay) : "—");
-
-/* ------------------------------------------------------------ the clock */
 
 const MINUTE = 60_000;
 const noSubscription = () => () => {};
@@ -65,7 +55,6 @@ export interface RoundReading {
   readonly overdue: boolean;
 }
 
-/** The current or next round, including whether it is late, from saved times only. */
 export function roundReading(st: WorkerStatus | null | undefined, now: number): RoundReading {
   const cycle = st?.cycle;
   if (cycle?.finishedAt) {
@@ -92,20 +81,15 @@ export function roundReading(st: WorkerStatus | null | undefined, now: number): 
   return { headline: "The next round is late", detail: `It was due ${mst(st!.nextRoundDueAt, false)}, ${spanWords(now - due)} ago, and no newer start is saved.${last}`, overdue: true };
 }
 
-/* ------------------------------------------------- workers running now */
-
 /** Workers running now, as a number. A read that stopped at its row limit shows "500+", never a short exact figure; no figure is "—". */
 export function runningCount(running: WorkersRunning | null | undefined, jobs: readonly WorkerJob[] | null | undefined): string {
   if (running) return `${count(running.count)}${running.lowerBound ? "+" : ""}`;
   return jobs ? count(jobs.length) : "—";
 }
 
-/** The same figure for the whole system, shown beside a place's own. */
 export function systemRunningCount(running: WorkersRunning | null | undefined): string {
   return running ? `${count(running.system)}${running.lowerBound ? "+" : ""}` : "—";
 }
-
-/* ---------------------------------------------------- whole-system lanes */
 
 /** Whole-system lane totals. Running is null (unknown) when any lane's running count is unknown. */
 export function laneTotals(lanes: WorkerStatus["lanes"]): { readonly running: number | null; readonly waiting: number } | null {
@@ -115,8 +99,6 @@ export function laneTotals(lanes: WorkerStatus["lanes"]): { readonly running: nu
     waiting: lanes.reduce((a, l) => a + l.waiting, 0),
   };
 }
-
-/* ------------------------------------------------ what didn't arrive, by card */
 
 export type WorkerCard = "progress" | "jobs" | "waiting" | "events" | "other";
 
@@ -145,14 +127,11 @@ export function workersSectionArrived(src: AdminV6Data["workers"]): boolean {
   return src.state === "sample" || src.state === "live" && !(src.missingParts ?? []).includes(SECTION_DEP.workers.need);
 }
 
-/* ---------------------------------------------------------------- agents */
-
 type AgentFilter = "all" | AgentRun["state"];
 const AGENT_FILTERS: readonly (readonly [AgentFilter, string])[] = [["all", "Every run"], ["running", "Working now"], ["done", "Finished"], ["stopped", "Stopped"], ["did-not-finish", "Did not finish"]];
 const TIER_TONE: Readonly<Record<AgentRun["model"]["tier"], "info" | "good" | "gold" | "slate" | "warn">> = { haiku: "good", sonnet: "info", opus: "gold", "plain-code": "slate", older: "warn" };
-const TIER_WORDS: Readonly<Record<AgentRun["model"]["tier"], string>> = { haiku: "Haiku 4.5", sonnet: "Sonnet 5.5", opus: "Opus 5.5", "plain-code": "Plain code", older: "Older model" };
+const TIER_WORDS: Readonly<Record<AgentRun["model"]["tier"], string>> = { haiku: tierShortName("haiku"), sonnet: tierShortName("sonnet"), opus: tierShortName("opus"), "plain-code": "Plain code", older: "Older model" };
 
-/** **WHAT EACH AGENT DID.** One row per agent run, newest first: role, model tier, cost, what it found, and its saved source page. */
 function Agents() {
   const v = useV6();
   const src = v.data.agents;
@@ -202,7 +181,6 @@ function Agents() {
   );
 }
 
-/** **HOW RELIABLE OUR SOURCES ARE.** Each source's record from the workers' completed reads, with its next retry time. */
 function Reliability() {
   const v = useV6();
   const src = v.data.reliability;
@@ -226,7 +204,6 @@ function Reliability() {
   );
 }
 
-/** **PUBLISHED VERSUS READER-VISIBLE.** Counts for every routine contract; the contracts a reader cannot see yet are listed. */
 function Publication() {
   const v = useV6();
   const src = v.data.publication;
@@ -257,7 +234,6 @@ function Publication() {
   );
 }
 
-/** One stage's running jobs, paged. A live job carries only what its lease and attempt record; "—" lines are left out. */
 function StageJobs(props: { readonly stage: WorkerStage; readonly list: readonly WorkerJob[]; readonly live: boolean; readonly sample: boolean }) {
   const v = useV6();
   const { page, pager } = usePager(props.list, 10);
@@ -280,8 +256,6 @@ function StageJobs(props: { readonly stage: WorkerStage; readonly list: readonly
     </div>
   );
 }
-
-/* ---------------------------------------------------------------- screen */
 
 export function WorkersScreen() {
   const v = useV6();

@@ -1,8 +1,10 @@
+import { createHash } from "node:crypto";
 import { closeSync, openSync, readFileSync, readSync } from "node:fs";
 import { join } from "node:path";
 import type { CensusUnitTerritory } from "./membership.ts";
 
 export interface StateReference {
+  listings?: import("../../registration/listings.ts").RegistrationGovernmentListing[];
   formatVersion: 1;
   state: string;
   units: CensusUnitTerritory[];
@@ -12,7 +14,7 @@ export interface StateReference {
   exactShares: Record<string, Record<string, number>>;
 }
 
-type Span = readonly [offset: number, bytes: number];
+type Span = readonly [offset: number, bytes: number, sha256?: string];
 export interface StateReferenceIndex {
   formatVersion: 2;
   state: string;
@@ -24,9 +26,14 @@ export interface StateReferenceIndex {
   byDivision?: Record<string, number[]>;
   shares: Record<string, Span>;
   facts: Span;
+  listings?: Span;
+  /** Immutable payload filename selected by this atomically swapped index. */
+  dataFile?: string;
+  dataSha256?: string;
 }
 
 export interface StateReferenceSelection {
+  listings?: boolean;
   units?: ReadonlySet<string> | "state";
   shares?: ReadonlySet<string>;
   facts?: boolean;
@@ -41,8 +48,11 @@ export function readStateReference(root: string, state: string, selection?: Stat
   const path = join(/* turbopackIgnore: true */ root, "data", "derived", "place-reference", `${key.toLowerCase()}.json`);
   const index = JSON.parse(readFileSync(path, "utf8")) as StateReferenceIndex;
   if (index.formatVersion !== 2 || index.state !== key) throw new Error(`PLACE_REFERENCE_INVALID:${key}`);
-  const fd = openSync(join(/* turbopackIgnore: true */ root, "data", "derived", "place-reference", `${key.toLowerCase()}.jsonl`), "r");
-  const read = <T>([offset, size]: Span): T => {
+  const dataFile = index.dataFile ?? `${key.toLowerCase()}.jsonl`;
+  if (!/^[a-z]{2}(?:\.[a-f0-9]{64})?\.jsonl$/.test(dataFile) || !dataFile.startsWith(`${key.toLowerCase()}.`)) throw new Error(`PLACE_REFERENCE_DATA_INVALID:${key}`);
+  const fd = openSync(join(/* turbopackIgnore: true */ root, "data", "derived", "place-reference", dataFile), "r");
+  const read = <T>([offset, size, expectedHash]: Span): T => {
+    if (!Number.isSafeInteger(offset) || offset < 0 || !Number.isSafeInteger(size) || size < 1 || size > 32 * 1024 * 1024) throw new Error(`PLACE_REFERENCE_SPAN_INVALID:${key}`);
     const bytes = Buffer.alloc(size);
     let readBytes = 0;
     while (readBytes < size) {
@@ -50,6 +60,7 @@ export function readStateReference(root: string, state: string, selection?: Stat
       if (!count) throw new Error(`PLACE_REFERENCE_TRUNCATED:${key}`);
       readBytes += count;
     }
+    if (expectedHash && createHash("sha256").update(bytes).digest("hex") !== expectedHash) throw new Error(`PLACE_REFERENCE_HASH_MISMATCH:${key}`);
     return JSON.parse(bytes.toString("utf8")) as T;
   };
   try {
@@ -58,7 +69,8 @@ export function readStateReference(root: string, state: string, selection?: Stat
         ...[...(selection.divisions ?? [])].flatMap(division => index.byDivision?.[division] ?? [])]);
     const shard: StateReference = { formatVersion: 1, state: key, units: [...selectedUnits].map(i => read<CensusUnitTerritory>(index.units[i])),
       zips: {}, facts: selection === undefined || selection.facts ? read(index.facts) : {},
-      censusSource: index.censusSource, exactShares: {} };
+      censusSource: index.censusSource, exactShares: {},
+      ...(selection?.listings && index.listings ? { listings: read<import("../../registration/listings.ts").RegistrationGovernmentListing[]>(index.listings) } : {}) };
     for (const division of selection === undefined ? Object.keys(index.shares) : selection.shares ?? []) {
       const span = index.shares[division];
       if (!span) continue;

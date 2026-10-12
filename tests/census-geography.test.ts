@@ -1,13 +1,3 @@
-/**
- * The Census-geography ZCTA-overlap importer and read model.
- *
- * `build.ts` parses Census tab20 relationship files into overlap scopes;
- * `lookup.ts` serves the Admin contract over a built dataset. The read-model
- * assertions run against the committed AZ bootstrap fixture, and the AZ-06 =
- * 79-ZCTA figure is the verified Census tab20 CD119 result (zccd.csv's 87
- * differs by 8 ZCTAs the HUD ZIP crosswalk adds — a method difference, not a
- * coverage gap; see docs/census-geography.md).
- */
 import { readFileSync } from "node:fs";
 import assert from "node:assert/strict";
 import test from "node:test";

@@ -7,18 +7,9 @@ import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partition
 import { makeIcalSource } from "../lib/sources/ical/index.ts";
 
 /**
- * **A PUBLISHER CAN STRIKE A SERIES' FIRST SITTING.** (2026-09-24.)
- *
- * An EXDATE equal to DTSTART removes the sitting the series is anchored on.
- * The expanded path strikes it along with every other slot. A refused rule
- * publishes the first sitting alone and has its own strike (`firstOnly` in
- * lib/sources/ical/index.ts). Until now only a mid-series strike was tested.
- *
- * The event is the Town of Bradford's own, recorded 2026-09-23 in
- * tests/fixtures/ical/bradford-2026-09-23-full.ics: the Energy Committee's
- * first series (DTSTART 2021-11-16 17:00 New York, third Tuesdays, EXDATE on
- * that same first sitting). It is read here as a read on 2021-11-10 would have
- * read it, when that sitting was in the serving window.
+ * An EXDATE equal to DTSTART strikes the sitting the series is anchored on, on both the expanded path and
+ * a refused rule's first-only path. The event is a town's recorded series event, read as a read before
+ * that sitting would have read it.
  */
 
 const BRADFORD_FULL = readFileSync(join(process.cwd(), "tests", "fixtures", "ical", "bradford-2026-09-23-full.ics"), "utf8");

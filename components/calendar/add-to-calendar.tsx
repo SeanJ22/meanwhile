@@ -17,29 +17,9 @@ import {
 } from "./calendar-marks";
 
 /**
- * The ONE add-to-calendar control, on every surface a date renders.
- *
- * **Rebuilt as a centered dialog (item 4, 2026-08-15).** It used to be an
- * absolutely-positioned menu hanging off the link — which works on a desktop
- * and clips off the right edge of a phone. The author's screenshot: Apple,
- * Google and Outlook all cut in half at 390px, because a 160px menu anchored
- * to a link that already sits near the right margin has nowhere to go. The
- * fix is not a smarter anchor. An anchored menu's position is a function of
- * where its trigger happens to be, and the trigger appears inside popups,
- * bottom sheets, modal cards and page sections — there is no width at which
- * all of those leave room. A centered dialog is a function of the VIEWPORT,
- * so it is correct everywhere by construction.
- *
- * Portaled to `<body>`, so no ancestor's `overflow: hidden` or transform can
- * clip or trap it — the popup cards and the bottom sheet both scroll inside
- * themselves, and either would have eaten it.
- *
- * Three things are deliberately unchanged: the same `.ics` data href for
- * Apple and Outlook, the same Google URL, and the same single "Add to
- * calendar" affordance. This is presentation. The event shape itself lives in
- * `lib/calendar/event-links.ts`, where M59's all-day rule for a meeting whose
- * publisher never posted a start time can be tested without rendering
- * anything.
+ * The one add-to-calendar control. A centered dialog portaled to `<body>`, so
+ * no trigger position or ancestor overflow can clip it. The event shape lives
+ * in `lib/calendar/event-links.ts`.
  */
 export function AddToCalendar({
   event,
@@ -82,13 +62,9 @@ export function AddToCalendar({
             role="dialog"
             aria-modal="true"
             aria-label="Add to calendar"
-            // Above every other large surface (the doors and the list
-            // overlay sit at 1300): this dialog is opened FROM those, so it
-            // has to be able to sit over the thing that opened it.
+            // Above the doors and list overlay (z 1300), which open this dialog.
             className="fixed inset-0 z-[1400] flex items-center justify-center p-4"
-            // The dialog is exempt from the outside-press dismissal that
-            // item 1 gave the cards — a press in here must not also close
-            // the popup this was opened from.
+            // A press in here must not also close the popup this was opened from.
             data-dismiss-exempt
           >
             <div
@@ -136,9 +112,6 @@ export function AddToCalendar({
                   <span>Outlook</span>
                 </a>
               </div>
-              {/* Cancel by tapping outside is the author's spec; this is the
-                  discoverable form of the same exit, and the one a keyboard
-                  can reach. */}
               <button
                 type="button"
                 autoFocus

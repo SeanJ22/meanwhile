@@ -4,8 +4,6 @@ import { test } from "node:test";
 import { TOP_OFFICES_GAP, topOfficesFor } from "../lib/officials/top-offices.ts";
 import { BODY_ROSTERS } from "../lib/registry/body-rosters.ts";
 
-/** F01 1.2 / 2.2 — who runs this body, on every card. */
-
 const h = (id: string, name: string, officeTitle: string) =>
   ({ id, name, officeTitle }) as never;
 
@@ -48,9 +46,7 @@ test("F01 1.2: a body publishing only one of the two returns ONE, never padded",
 });
 
 test("F01 1.2: a single-seat division returns its one officeholder", () => {
-  // AZ-6 is the author's own example. A US Representative presides over
-  // nothing, so a positional rule would have shown an empty card for the
-  // best-covered body in the product.
+  // A US Representative presides over nothing; the one officeholder is shown.
   const top = topOfficesFor([h("1", "Juan Ciscomani", "U.S. Representative")]);
   assert.equal(top.length, 1);
   assert.equal(top[0].holder.name, "Juan Ciscomani");
@@ -67,8 +63,7 @@ test("F01 1.2: a mayor presides, and a town manager runs it", () => {
 });
 
 test("F01 1.2: a vice chair is never mistaken for the chair", () => {
-  // Pima publishes the VICE chair ABOVE the chair in roster order, so a naive
-  // first-match returned the wrong person. A real roster, not a hypothetical.
+  // A roster may list the vice chair above the chair.
   const top = topOfficesFor([
     h("1", "District 1", "County Supervisor, District 1"),
     h("2", "The Vice Chair", "County Supervisor, District 2 (Vice Chair)"),
@@ -90,9 +85,7 @@ test("F01 1.2: New Jersey's Commissioner Director presides", () => {
 });
 
 test("F01 1.2: a body with a Mayor AND a Council President shows both", () => {
-  // Rockaway Township. Two different people doing two different jobs, and the
-  // second slot takes the second elected head when no appointed executive is
-  // on record.
+  // The second slot takes the second elected head when no appointed executive is on record.
   const top = topOfficesFor([
     h("1", "The Mayor", "Mayor"),
     h("2", "The President", "Council President, At-Large"),
@@ -114,9 +107,6 @@ test("F01 1.2: nothing sourced returns nothing, and the gap line is OURS", () =>
 });
 
 test("F01 1.2: every curated roster resolves at least a presiding officer", () => {
-  // The denominator, stated. This is what the render will actually show at
-  // the four covered zips, so a regression in a title string shows up here
-  // rather than as a blank card.
   const results = BODY_ROSTERS.map((roster) => ({
     body: roster.bodyName,
     top: topOfficesFor(
@@ -125,26 +115,7 @@ test("F01 1.2: every curated roster resolves at least a presiding officer", () =
       ),
     ),
   }));
-  /*
-   * **THE BODIES WHOSE OWN PAGE NAMES NO OFFICER, LISTED BY NAME.**
-   * (NH Hunt, 2026-08-20.)
-   *
-   * Every body has someone presiding. Not every body's publisher SAYS SO, and
-   * those are different facts. Newbury's 2026 Advisory Budget Committee lists
-   * five people all titled "Member", and its Trustees of the Trust Funds list
-   * two "Trustee" and one with no title at all — read off the town's own pages
-   * on 2026-08-20 and verified against them.
-   *
-   * The alternative was to have `topOfficesFor` fall back to whoever is listed
-   * first, and that is a claim about which named person chairs a public body,
-   * made up from row order. This product does not do that.
-   *
-   * So the exemption is a LIST rather than a loosened rule: the thirty-odd
-   * bodies that do publish a chair still fail this test the moment a title
-   * string regresses, and the two that do not are on the record here and in
-   * `docs/gap-ledger.md` as a gap in what the TOWN publishes — not in what we
-   * looked for.
-   */
+  // Bodies whose own pages name no presiding officer are listed by name, never filled from row order.
   const NO_OFFICER_PUBLISHED = new Set([
     "Newbury 2026 Advisory Budget Committee",
     "Newbury Trustees of the Trust Funds",

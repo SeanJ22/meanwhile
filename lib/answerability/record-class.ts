@@ -1,37 +1,13 @@
 /**
- * **WHAT A RECORD CAN AND CANNOT BE ASKED.**
- *
- * An agenda proves what was NOTICED. It does not prove that an item was
- * heard, that a motion was made, that a vote was taken, or that anything was
- * decided. Items get continued, withdrawn, tabled, and pulled from the
- * consent calendar — every one of those leaves the agenda unchanged and the
- * outcome different.
- *
- * The repository already had the *ingredients* of this rule scattered across
- * prose: `lib/meetings/minutes-summaries.ts` says a summary exists only where
- * minutes were read; `lib/ask/evidence.ts` separates `AGENDA_ITEM` from
- * `ROLL_CALL_VOTE` because "the DENOMINATOR is different"; `agenda-search.ts`
- * says a failed extraction is not an agenda with nothing on it. What did not
- * exist anywhere was a MECHANISM: a place where the substitution
- * *agenda-offered-as-outcome* is refused by construction rather than by a
- * reviewer noticing.
- *
- * This file is that mechanism. It is a positive ALLOW-LIST — a record class
- * answers a question class only if the pair is written down here — so the
- * default for anything new, unknown, or mis-typed is that it answers nothing.
- * A permissive default is how an agenda becomes a vote.
+ * What a record can and cannot be asked. An agenda proves what was noticed,
+ * not what was heard or decided. A positive allow-list: a record class answers
+ * a question class only if the pair is written here, so anything new or
+ * unknown answers nothing.
  *
  * Pure, total, offline. No clock, no disk, no network.
  */
 
-/**
- * THE CLASSES OF RECORD a civic corpus can hold.
- *
- * These are classes of EVIDENCE, distinguished by what act of government
- * produced them, not by file type. Two PDFs from the same portal on the same
- * day are different classes if one is the notice the clerk posted beforehand
- * and the other is the summary the clerk posted after.
- */
+/** Classes of record, by the act of government that produced them, not by file type. */
 export const RECORD_CLASSES = [
   /** A meeting exists, with a body, a time and a place. Nothing about content. */
   "MEETING_NOTICE",
@@ -53,14 +29,9 @@ export const RECORD_CLASSES = [
 export type RecordClass = (typeof RECORD_CLASSES)[number];
 
 /**
- * THE CLASSES OF QUESTION a reader asks, separated by what each one CLAIMS.
- *
- * Deliberately not a copy of `AskIntent` in `lib/ask/intent.ts`. That
- * vocabulary describes what a reader WANTS (and mixes in tense: `PAST_MEETING`
- * vs `UPCOMING_AGENDA`). This one describes the EVIDENTIARY CLAIM an answer
- * would be making, which is the only thing a record class can be matched
- * against. `ASK_INTENT_READING` below writes the correspondence down so that
- * nobody later "reconciles" the two by minting a third enum.
+ * Classes of question, by the evidentiary claim an answer would make. Not
+ * `AskIntent` (lib/ask/intent.ts), which describes what a reader wants;
+ * `ASK_INTENT_READING` records the correspondence.
  */
 export const QUESTION_CLASSES = [
   /** "When does the board meet?" A claim about the calendar. */
@@ -79,14 +50,9 @@ export const QUESTION_CLASSES = [
 export type QuestionClass = (typeof QUESTION_CLASSES)[number];
 
 /**
- * How `AskIntent` reads against this vocabulary. Documentation, not a type.
- *
- * `PAST_MEETING` maps to NOTHING deliberately, and that null is the whole
- * point of this file: "what happened at the last meeting" is ambiguous
- * between *what was noticed* and *what was decided*, and a pipeline that
- * resolves that ambiguity by reaching for whatever it holds will hand a
- * reader an agenda as an account of a decision. The ambiguity has to be
- * resolved by the interpretation rung, not papered over here.
+ * How `AskIntent` reads against this vocabulary. `PAST_MEETING` maps to
+ * nothing: it is ambiguous between what was noticed and what was decided, and
+ * the interpretation rung must resolve that.
  */
 export const ASK_INTENT_READING: Readonly<Record<string, QuestionClass | null>> = {
   UPCOMING_AGENDA: "WHAT_WAS_NOTICED",
@@ -102,20 +68,9 @@ export const ASK_INTENT_READING: Readonly<Record<string, QuestionClass | null>> 
 };
 
 /**
- * **THE ALLOW-LIST.** A record class answers exactly the question classes
- * written beside it, and nothing else.
- *
- * The two judgements worth arguing with, both made deliberately strict:
- *
- * - `MINUTES` does NOT answer `WHAT_WAS_NOTICED`. Minutes record what the
- *   body reached; an item continued to the next sitting is on the agenda and
- *   absent from the minutes. Reading a docket off minutes silently drops
- *   exactly the items a reader most often cares about.
- * - `MINUTES` and `ACTION_SUMMARY` do NOT answer `HOW_DID_THEY_VOTE`. They
- *   routinely carry a TALLY ("4-1, one abstention" — the Pima 2026-07-28
- *   entry in `minutes-summaries.ts` is exactly this). A tally is not a
- *   member's recorded position, and deriving one member's vote from a tally
- *   is inference. `ROLL_CALL` or nothing.
+ * The allow-list. `MINUTES` does not answer `WHAT_WAS_NOTICED` (continued items
+ * are absent from minutes). `MINUTES` and `ACTION_SUMMARY` do not answer
+ * `HOW_DID_THEY_VOTE`: a tally is not a member's recorded position.
  */
 const ANSWERS: Readonly<Record<RecordClass, readonly QuestionClass[]>> = {
   MEETING_NOTICE: ["WHEN_DO_THEY_MEET"],
@@ -135,12 +90,7 @@ export function recordClassesAnswering(
   return RECORD_CLASSES.filter((rc) => ANSWERS[rc].includes(questionClass));
 }
 
-/**
- * Does this record class answer this question class?
- *
- * Unknown strings answer nothing. A record class this file has never heard of
- * is not a record class that answers everything.
- */
+/** Does this record class answer this question class? Unknown strings answer nothing. */
 export function answers(
   recordClass: RecordClass | string,
   questionClass: QuestionClass | string,
@@ -150,13 +100,7 @@ export function answers(
   return allowed.includes(questionClass);
 }
 
-/**
- * The named sentence for a refusal that a naive pipeline would otherwise make.
- *
- * Only the SUBSTITUTIONS get their own sentence — the pairs where the record
- * is genuinely nearby and genuinely tempting. Everything else gets the
- * generic form, which is still honest.
- */
+/** Sentences for the tempting substitutions; everything else gets the generic form. */
 const REFUSAL_SENTENCES: Readonly<Record<string, string>> = {
   "AGENDA->WHAT_WAS_DECIDED":
     "An agenda proves what was NOTICED, not what was decided. Items are continued, " +
@@ -231,20 +175,11 @@ export interface ClassRuling {
   readonly satisfiedBy: readonly RecordClass[];
   /** Any ONE of these would make the question answerable. */
   readonly requires: readonly RecordClass[];
-  /**
-   * Held classes that do NOT answer it, each with the sentence saying why.
-   * This is the load-bearing field: it is what lets a caller report *"we hold
-   * 30 agendas and no outcome record"* instead of answering from the agendas.
-   */
+  /** Held classes that do not answer it, each with the sentence saying why. */
   readonly refusedSubstitutions: readonly RefusedSubstitution[];
 }
 
-/**
- * Rule on a question against the record classes actually held.
- *
- * Refuses by default: `answerable` is true only when a held class is
- * affirmatively on the allow-list.
- */
+/** Rule on a question against the record classes held; answerable only by an allow-listed class. */
 export function ruleOnQuestion(
   questionClass: QuestionClass,
   heldClasses: readonly (RecordClass | string)[],
@@ -278,14 +213,7 @@ export class RecordClassRefused extends Error {
   }
 }
 
-/**
- * Throw unless a held class actually answers the question.
- *
- * This is the "mechanically impossible" half. `ruleOnQuestion` is advice a
- * caller can ignore; this is a wall a caller has to climb over on purpose.
- * The message names the substitution that was attempted, because a refusal
- * nobody can act on gets deleted.
- */
+/** Throw unless a held class answers the question; the message names the attempted substitution. */
 export function assertAnswerable(
   questionClass: QuestionClass,
   heldClasses: readonly (RecordClass | string)[],
@@ -310,13 +238,8 @@ export interface ClassedRecord {
 }
 
 /**
- * Keep only the records whose class answers the question.
- *
- * The filter exists so a caller physically cannot hand agenda records to an
- * outcome answer: the wrong-class records are not merely flagged, they are
- * gone from the returned array. `refused` carries them back with their
- * sentences so nothing is silently dropped either — a dropped record with no
- * name is how a wall becomes an emptiness.
+ * Keep only the records whose class answers the question; `refused` carries
+ * the rest back with their sentences.
  */
 export function evidenceRecordsFor<T extends ClassedRecord>(
   questionClass: QuestionClass,

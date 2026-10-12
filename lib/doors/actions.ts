@@ -1,10 +1,6 @@
 /**
- * THE DOOR REGISTRY'S GATEWAY ACTION (DB-09).
- *
- * Doors are written only here, so every change carries a receipt in the same
- * log as every other console action. The action keeps what was there in its
- * undo sentence. Registered into the closed list by one spread in
- * `lib/control-plane/gateway/registry.ts`.
+ * The door registry's gateway actions. Doors are written only here, so every
+ * change carries a receipt and an undo sentence.
  */
 
 import type { ActionResult, RegisteredAction } from "../control-plane/gateway/registry.ts";

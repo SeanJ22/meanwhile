@@ -1,7 +1,7 @@
 import { basename, join } from "node:path";
 import { readFileSync } from "node:fs";
 import { heldRosterFiles, heldRosterStates, stateDomainFiles } from "../holdings/discovery.ts";
-import { readRecords } from "../reference/index.ts";
+import { US_STATES } from "../control-plane/readiness/catalog.ts";
 import { US_JURISDICTIONS, type StateIdentity } from "./states.ts";
 
 /** Artifact availability is discovered per domain, never assigned by state. */
@@ -14,12 +14,8 @@ export function rosterFile(state: Pick<StateIdentity, "fips">): string {
   return `officeholders-${state.fips}.json`;
 }
 
-/** Reference names are sourced geography data, separate from held artifacts. */
-export const NAME_BY_USPS: Readonly<Record<string, string>> = process.env.NODE_ENV === "production" ? {} : Object.fromEntries(
-  readRecords("acs5_2024_b01003_state").flatMap(row => {
-    const state = US_JURISDICTIONS.find(state => state.fips === row.state_fips);
-    return state ? [[state.usps, row.name]] : [];
-  }),
+export const NAME_BY_USPS: Readonly<Record<string, string>> = Object.fromEntries(
+  US_STATES.map(state => [state.code.toUpperCase(), state.name]),
 );
 
 export function deriveArtifacts(root: string) {
@@ -38,9 +34,7 @@ export function deriveArtifacts(root: string) {
   };
 }
 
-// These tracked holdings are offline research and deterministic fixtures.
-// Production roster Readers resolve their canonical pointer. Keep this literal
-// build-time branch so the fixture scan cannot trace the checkout into a route.
+// Keep this literal build-time branch so the checkout is never traced into a production route.
 const held = process.env.NODE_ENV === "production"
   ? { states: [], rosters: [], ballotFiles: [], geometryStates: [] }
   : deriveArtifacts(process.cwd());

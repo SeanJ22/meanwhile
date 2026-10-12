@@ -8,21 +8,19 @@ import { readSetting, ALERTS_ON_SETTING, BRIEF_TIME_SETTING } from "@/lib/contro
 import { projectBrief, readerProblemRows, writeDailyBrief, easternBriefClock, type BriefReading } from "@/lib/control-plane/admin-view/brief.ts";
 import { briefGet } from "@/lib/control-plane/admin-view/brief-route.ts";
 import { buildQueue, type QueueInput } from "@/app/(admin)/_mw/admin-v6/queue.ts";
-import type { DecisionOrderCard } from "@/lib/control-plane/decision-cards.ts";
 import { fireDueOrders } from "@/lib/control-plane/gateway/scheduled-fire.ts";
 import { actionInput } from "@/app/(admin)/_mw/admin-v6/contract.ts";
 import { submit } from "@/lib/control-plane/gateway/gateway.ts";
 const at="2026-10-06T13:00:00Z";
-const card:DecisionOrderCard={id:"decision-one",need:"money",happening:"The approved budget is used.",recommends:"Choose whether to extend the hunt",cost:"$2",gets:"Two more records",order:{type:"runner.pause",subject:"us",input:{}},fields:[],schedulable:true,version:"one",raisedAt:at};
 const empty:QueueInput={receipts:null,sends:null,hunts:null,stuck:null,fixes:null,doors:null,scheduled:null};
-test("brief keeps updates labeled and requests a decision once; accepted cards join their child",()=>{
- const config={...defaultAdminConfig(at),decisionOrders:[card],updates:[{id:"expected",what:"A method is ready for testing",at,label:"EXPECTED" as const,before:null,after:null,evidenceHref:null,shownAt:null}]};
- const rows=buildQueue({...empty,decisions:[card],doors:[{name:"Town agendas",why:"The page moved; the team is finding it.",since:at}]});
- const brief=projectBrief(config,rows,at,["older orders"]);
- assert.equal(brief.updates[0].isWin,false);assert.match(brief.updates[0].label,/Expected/);assert.equal(brief.decisions.length,1);assert.equal(brief.alerts.length,1);assert.equal(brief.problems.length,2);assert.deepEqual(brief.unread,["older orders"]);
+test("brief keeps expected updates separate and includes real decision rows while alerts are off",()=>{
+ const config={...defaultAdminConfig(at),updates:[{id:"expected",what:"A method is ready for testing",at,label:"EXPECTED" as const,before:null,after:null,evidenceHref:null,shownAt:null}]};
+ const rows=buildQueue({...empty,doors:[{name:"Town agendas",why:"The page moved; the team is finding it.",since:at}]});
+ const decision={...rows[0],key:"order:waiting",what:"A spending decision needs attention",filter:"needs-me" as const,next:"Choose its next action in Queue"};
+ const brief=projectBrief(config,[...rows,decision],at,["older orders"]);
+ assert.equal(brief.updates[0].isWin,false);assert.match(brief.updates[0].label,/Expected/);
+ assert.equal(brief.decisions.length,1);assert.equal(brief.decisions[0].key,"order:waiting");assert.equal(brief.alerts.length,1);assert.equal(brief.problems.length,2);assert.deepEqual(brief.unread,["older orders"]);
  assert.equal(readSetting(config,ALERTS_ON_SETTING,false),false);assert.equal(readSetting(config,BRIEF_TIME_SETTING,""),"");
- assert.equal(buildQueue({...empty,decisions:[{...card,resolution:{choice:"approve",reason:null,at,receiptId:"child-one"}}]}).length,0);
- const declined=buildQueue({...empty,decisions:[{...card,resolution:{choice:"decline",reason:"Stay within the budget",at,receiptId:null}}]});assert.equal(declined[0].filter,"done");assert.equal(declined[0].next,"Stay within the budget");
 });
 test("organic reader reports go to auditors; suspect and test submissions raise no owner alert",()=>{
  const base={id:"1",receivedAt:at,site:"live" as const,message:"The agenda link is broken",surface:"card",origin:"reader" as const,about:null,zip:null,recordId:null,suspectReason:null,hasReplyAddress:true};

@@ -1,15 +1,6 @@
 /**
- * **`NJ25` — a deploy that errored, and nothing in the close-out noticed.**
- *
- * The old check compared the newest READY deploy's commit against the last
- * deploy-eligible one, so a shipped commit whose deploy failed produced *BEHIND
- * by 1* — which is exactly what a deploy still building produces. The one state
- * that demands action read like the one state that demands patience.
- *
- * There was no failed deploy in the last forty records to prove the FAILED
- * verdict against on the day this was written, so it is PLANTED. That is the
- * whole reason the decision is a pure function rather than four lines inside a
- * script that only a live API call can reach.
+ * A shipped commit whose deploy failed must not read like a deploy still building. The FAILED verdict is planted,
+ * which is why the decision is a pure function rather than logic only a live API call can reach.
  */
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
@@ -55,14 +46,8 @@ describe("NJ25 — the close-out verifies the deploy for the shipped SHA succeed
     assert.match(v.why, /building site/, "the failure must carry Netlify's own message, not a generic one");
   });
 
-  it("a FILTER CANCEL is not a failure — RULING 115, and it is the live case", () => {
-    /*
-     * Netlify's actual record for `2f86b57`, a `context.md` rewrite, read on
-     * 2026-08-25. RULING 124's deploy filter stopped it, and Netlify writes a
-     * cancel as `state: "error"` — so every quiet paperwork commit would have
-     * raised this alarm. An alarm that cannot tell an exercise from an event
-     * eventually cries wolf, and the cost is the real one nobody reads.
-     */
+  it("a FILTER CANCEL is not a failure, and it is the live case", () => {
+    /* Netlify writes a deploy-filter cancel as `state: "error"`; it must not raise the failure alarm. */
     const v = verdictForDeploys(
       [
         {
@@ -101,11 +86,7 @@ describe("NJ25 — the close-out verifies the deploy for the shipped SHA succeed
   });
 
   it("a SHORT sha matches the full ref, because that is what a caller has", () => {
-    /*
-     * Netlify records 40 characters; a session names whatever `git log
-     * --format=%h` printed. Equality would answer PENDING forever for a deploy
-     * that shipped — this failure, arriving from the other side.
-     */
+    /* Netlify records 40 characters while a session names a short hash; equality would answer PENDING forever. */
     assert.equal(verdictForDeploys([ready()], SHA.slice(0, 7)).kind, "SUCCESS");
   });
 

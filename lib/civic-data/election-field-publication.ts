@@ -8,7 +8,6 @@ import { processRegisteredManualCandidate } from "./promotion.ts";
 import type { RoutineDataStore } from "./store.ts";
 import type { ManualSourceReview } from "./types.ts";
 
-/** Pass S4's section3Record directly; this publisher adds no competing verifier. */
 export type ElectionFieldVerifier = (input: {
   readonly recordClass: string; readonly fields: Readonly<Record<string, unknown>>;
   readonly page: { readonly url: string; readonly text: string; readonly retrievedAt: string; readonly linkingPage?: ElectionFieldInput["linkingPage"] };

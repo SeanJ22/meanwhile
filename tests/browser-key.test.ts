@@ -7,21 +7,7 @@ import { getOrCreateBrowserKey, mintBrowserKey } from "../lib/state/browser-key.
 
 const ROOT = join(import.meta.dirname, "..");
 
-/* ========================================================================== */
-/* NH79 — the consolidation that would have been a privacy defect             */
-/* ========================================================================== */
-
-/**
- * `lib/feedback/client.ts` and `lib/reactions/client.ts` each held a
- * module-level `memoryKey` for the browser that refuses `localStorage`. Merging
- * those two cells into one while consolidating would have made the feedback key
- * and the reaction key **the same value** on that path — and two
- * identifier-free stores holding one identical browser-minted value are two
- * stores that JOIN, which is the n-stores rule broken by a tidy-up.
- *
- * The throwing path is the one that would have merged them, so it is the one
- * asserted hardest.
- */
+/** The feedback key and the reaction key must never be the same value, including on the path where localStorage throws: two identifier-free stores holding one value would join. */
 function withStorage(impl: {
   getItem: (k: string) => string | null;
   setItem: (k: string, v: string) => void;

@@ -219,7 +219,6 @@ function notYetPublished(key: GeographyKey, publishedVersion: string): GroupingZ
   };
 }
 
-/** A lookup that reports NOT_YET_PUBLISHED for everything (no dataset available). */
 export function notYetPublishedLookup(publishedVersion: string): CensusGeographyLookup {
   const empty: BuiltDataset = {
     formatVersion: 1,

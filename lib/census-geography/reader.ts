@@ -1,12 +1,3 @@
-/**
- * Loading the lookup from the promoted production pointer, with the committed
- * AZ bootstrap as the non-prod fallback. Kept apart from the pure `lookup.ts`
- * so `createLookup` stays importable without any I/O.
- *
- * Deployed production reads the promoted pointer (`readPromotedOrBootstrap`);
- * a store failure fails closed to NOT_YET_PUBLISHED rather than an empty answer.
- * The bootstrap is non-prod only and never overrides a promoted pointer.
- */
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -25,7 +16,6 @@ import {
   CENSUS_GEO_SOURCE_ID,
 } from "./publication.ts";
 
-/** Re-export so existing importers keep the scope constant from here. */
 export { CENSUS_GEO_SCOPE } from "./publication.ts";
 
 /**
@@ -52,15 +42,6 @@ function bootstrapDataset(): CivicDataBootstrap<BuiltDataset> {
   };
 }
 
-/**
- * The lookup Admin consumes. Reads the promoted pointer; in non-prod, falls
- * back to the AZ bootstrap; on a store failure or before first promotion,
- * returns a lookup that reports typed absence (never a false empty).
- */
-/**
- * The raw promoted read result (for the typed reader-projection verifier and
- * any consumer that needs the version metadata rather than a lookup).
- */
 export async function readCensusGeographyProjection(
   options: PromotedCivicDataReadOptions = {},
 ): Promise<CivicDataReadResult<BuiltDataset>> {
@@ -98,10 +79,6 @@ export interface PublishedLookupState {
   readonly versionId: string;
 }
 
-/**
- * Load the lookup AND state which source backs it. Production serves only
- * "published" or (before activation) "unavailable" — never "bootstrap".
- */
 export async function loadPublishedLookupState(
   options: PromotedCivicDataReadOptions = {},
 ): Promise<PublishedLookupState> {
@@ -123,10 +100,6 @@ export async function loadPublishedLookup(
   return (await loadPublishedLookupState(options)).lookup;
 }
 
-/**
- * Load the committed AZ bootstrap directly as a lookup — for local dev and
- * tests. Deployed code uses `loadPublishedLookup`.
- */
 export function loadBootstrapLookup(): CensusGeographyLookup {
   return createLookup(readBootstrapDataset(), "bootstrap:census-geography:az");
 }

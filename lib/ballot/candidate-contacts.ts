@@ -1,6 +1,5 @@
 import { currentNjMorrisReadModel, validateBallotFile } from "../sources/ballot-nj-morris/index.ts";
 
-/** Published filing contacts, attached only to an exact current candidacy ID. */
 export interface CandidateContact {
   candidacyId: string;
   email: string | null;
@@ -17,11 +16,6 @@ export interface CandidateContactCensus {
 let cachedModel: object | null = null;
 let cache: CandidateContactCensus | null = null;
 
-/**
- * This explicit reader contract admits contacts only from the same promoted
- * BALLOT_FILING projection as the ballot. A new acquisition file, parser output,
- * or directory listing cannot become Reader truth by appearing in a directory.
- */
 export function candidateContactCensus(): CandidateContactCensus {
   const projection = currentNjMorrisReadModel();
   if (cache && cachedModel === projection) return cache;
@@ -39,7 +33,6 @@ export function candidateContactCensus(): CandidateContactCensus {
       : !row.sourceUrl?.startsWith("https://") || !row.sourceOrg || !row.collectedAt ? "The contact lacks its published source or read date."
       : null;
     if (reason) { withheld.push({ candidacyId: row.candidacyId, reason }); continue; }
-    // Filed mailing addresses stay in the saved filing (rulings §9); only the email and filing link reach readers.
     contacts.push({ candidacyId: row.candidacyId, email: row.email?.trim() || null, sourceUrl: row.sourceUrl,
       sourceOrg: row.sourceOrg, collectedAt: row.collectedAt });
   }
@@ -49,7 +42,6 @@ export function candidateContactCensus(): CandidateContactCensus {
 }
 
 export function candidateContactForCandidacy(candidacyId: string): CandidateContact | null {
-  // Other authority namespaces do not depend on the Morris clerk snapshot.
   if (!candidacyId.startsWith("ballot-nj-morris:")) return null;
   return candidateContactCensus().contacts.find((contact) => contact.candidacyId === candidacyId) ?? null;
 }

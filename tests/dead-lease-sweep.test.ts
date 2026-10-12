@@ -1,24 +1,8 @@
 /**
- * **A DEAD LEASE ON A SETTLED ROUTE IS RELEASED ONCE, AND THE SWEEP NEVER
- * LISTS EVERY ATTEMPT TO FIND ONE TASK'S.** (2026-09-22.)
+ * A dead lease on a settled route is released once, and the sweep never lists every Attempt to find one task's.
  *
- * The standing runner's pre-dispatch recovery spent 348 s of a 417 s window
- * walking 66 expired leases it never released, so the deterministic lane
- * reached its admission deadline having dispatched nothing. 65 of the leases
- * sat on RouteTasks that were already DISPOSED: `reclaim()` refuses to reopen a
- * settled route, correctly, but that refusal fired inside `reclaimRouteTask`
- * BEFORE its lease release, so every cycle walked the same leases again. Each
- * walk listed EVERY Attempt (44 pages on production) to find one task's.
- *
- * The settled fixture is built with the same coordinator calls the dispatcher
- * made, in the order production made them: a task is walked to a disposition,
- * a later dispatch re-claims it, and that dispatch's abandonment is refused by
- * `reclaim()`, leaving an unreleased lease on a settled route. The re-claim is
- * the one step no longer reachable: `claimRouteTask` now refuses a disposed
- * task (`RouteTaskSettled`, tests/settled-occurrence-recovery.test.ts), so
- * `legacyReclaim` asserts that refusal and then writes the two things the old
- * claim wrote — the domain's `claim()` lease and the CLAIMED state — the way it
- * wrote them. The residue the sweep meets on production is exactly that shape.
+ * `claimRouteTask` now refuses a disposed task, so `legacyReclaim` asserts that refusal and then writes what the old
+ * claim wrote (the domain's `claim()` lease and the CLAIMED state), producing the residue the sweep meets.
  *
  * Every test runs on the in-memory double AND the durable file store.
  */
@@ -107,7 +91,7 @@ async function legacyReclaim(repos: ControlPlaneRepositories, routeTaskId: strin
   return { lease };
 }
 
-/** A disposed RouteTask carrying an unreleased lease, built the way production built 65 of them. */
+/** A disposed RouteTask carrying an unreleased lease. */
 async function settledWithDeadLease(repos: ControlPlaneRepositories, subject: string) {
   const task = await registered(repos, subject);
 
@@ -222,7 +206,7 @@ test("SEEDED: an expired lease on a DISPOSED RouteTask is released exactly once,
       dispositions: await repos.dispositions.readAll(),
       debts: await repos.debts.list(),
     };
-    /* The fixture is the production shape, asserted rather than assumed. */
+    /* The fixture shape is asserted rather than assumed. */
     assert.equal(before.task.value.disposition?.disposition, "WALKED_NO_YIELD", `${label}: settled`);
     assert.equal(before.task.value.state, "CLAIMED", `${label}: re-claimed after it was disposed`);
     assert.equal(before.lease.value.id, deadLease.id, `${label}: the re-claim's lease holds the slot`);
@@ -294,8 +278,7 @@ test("a LIVE task's expired lease is still reclaimed and the task reopened, in t
 });
 
 test("an UNDISPOSED task whose lease expired before any Attempt opened is still refused as NothingToReclaim, and not released", async () => {
-  /* The shape of the one remaining production dead lease: a contention proof's
-     claim that exited, by design, without opening an Attempt. Unchanged. */
+  /* A contention proof's claim that exited, by design, without opening an Attempt. */
   for (const [label, repos] of await eachStore()) {
     const task = await registered(repos, "wtp-body/claim-only#1");
     await claimRouteTask(repos, { routeTaskId: task.id, holder: "proof-worker", now: T0, ttlMs: TTL });

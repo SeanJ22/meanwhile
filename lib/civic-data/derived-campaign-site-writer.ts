@@ -1,36 +1,3 @@
-/**
- * **THE AUTOMATIC DOOR FOR APPROVED CAMPAIGN SITES: THE DERIVED VERSION AND ITS
- * CANDIDATE.** (2026-09-25.)
- *
- * Sean, 2026-09-21: "You may enable automatic promotion for qualifying
- * results. Fix the gap, recover value already paid for." (RULING 292.) The
- * standing runner's child (`scripts/derive-candidate-campaign-sites.mts`)
- * reads every campaign-site approval the pipeline holds, the vaulted bytes of
- * each approval's verifying read and the promoted `candidate-profiles`
- * version, and this module turns them into one version of the routine DERIVED
- * contract `candidate-campaign-sites-derived` (why a store of its own:
- * `derived-campaign-sites.ts`). No owner step: it enters
- * `processRegisteredRoutineCandidate` like every routine source.
- *
- * What it guarantees before anything is published:
- *
- * - each approval's vaulted bytes are the bytes it names (sha256), and they
- *   verify AGAIN, now, for the approval's own canonical identity, through the
- *   same verifier the chain used; the published sentence is the one the vault
- *   proves today, never the approval's copy;
- * - one person, one campaign link: two verified hosts for one candidacy hold
- *   it; several pages of one host publish the shallowest;
- * - newer fully verified evidence may refresh the same campaign URL; conflicting
- *   URLs or unproved dates retain the working link (the Reader enforces this too);
- * - the version names every input it was computed from (each approval read,
- *   each cited vaulted read, the profiles version), and its raw hash and time
- *   are exactly `derivedRetrieval` of them;
- * - everything held is an excluded fact with its reason: Admin's held records.
- *
- * Its import closure holds no filesystem writer (the civic-data firewall's
- * rule for a routine child), so the approval it reads is held structurally
- * here rather than imported from the chain.
- */
 import { createHash } from "node:crypto";
 
 import { canonicalCivicDataJson } from "./changes.ts";
@@ -68,17 +35,17 @@ export type { HeldCandidatePublicationRead as HeldLinkedPublicationRead } from "
 import type { CandidateDocument, CandidatePublicationDate } from "../candidates/corpus.ts";
 import { readHeldBytes, type HeldVaultArtifact, type VaultIndex } from "../control-plane/evidence/read-only-vault.ts";
 
-/** The door an approval names when this writer may publish it (the chain's `CAMPAIGN_SITE_PUBLICATION_DOOR`). */
+/**
+ * Builds the derived campaign-sites version from approved sites. Each approval's vaulted bytes must hash to what it
+ * names and verify again now for its own identity; one candidacy carries one campaign link; every input is named, and
+ * held records are excluded facts. Its import closure holds no filesystem writer, so the approval shape is held
+ * structurally.
+ */
 export const DERIVED_CAMPAIGN_SITE_DOOR = "CANDIDATE_CAMPAIGN_SITES_DERIVED_CONTRACT" as const;
 
-/**
- * What the writer reads of one APPROVED campaign-site pipeline record: the
- * chain's `CampaignSiteApprovedRecord`, held structurally.
- */
 export interface PublishableCampaignSiteApproval {
   readonly itemId: string;
   readonly recordId: string;
-  /** When the approval was made. */
   readonly at: string;
   readonly stage: "APPROVED_FOR_PROMOTION";
   readonly campaignSite: {
@@ -146,7 +113,6 @@ function versionedDocument(input: { candidateKey: string; documentUrl: string; c
       supersedesRevisionId: null }, ...(publicationDate ? { publicationDate } : {}) };
 }
 
-/** Whether one pipeline log row is an APPROVED campaign-site record this door publishes. A row it cannot read is not one. */
 export function isPublishableCampaignSiteApproval(value: unknown): value is PublishableCampaignSiteApproval {
   const r = value as Partial<PublishableCampaignSiteApproval> | null;
   const site = r?.campaignSite;
@@ -166,29 +132,23 @@ export const DERIVED_CAMPAIGN_SITE_HOLDS = [
   "MULTIPLE_VERIFIED_SITES",
   "PRIOR_CAMPAIGN_LINK_HELD",
   "NO_READER_KEY",
-  /** The vault does not hold the verifying read's bytes: ours to restore, and nothing is published without them. */
   "EVIDENCE_NOT_HELD",
-  /** The vaulted bytes are held but hash to other bytes, or do not verify again for the approval's own identity. */
   "REVERIFICATION_FAILED",
   "PUBLICATION_TEXT_UNREADABLE",
   "LINKED_PUBLICATION_UNVERIFIED",
 ] as const;
 export type DerivedCampaignSiteHoldCode = (typeof DERIVED_CAMPAIGN_SITE_HOLDS)[number];
 
-/** The vaulted bytes of one approval's verifying read, as the writer found them. */
 export interface HeldVerifyingRead {
   readonly body: string;
-  /** sha256 (bare hex) the vault proved the bytes hash to. */
   readonly sha256: string;
   /** The vault's tier for them; a restricted body is never cited, so the caller never hands one here. */
   readonly tier: "RAW" | "SANITIZED_DERIVED";
   /** The robots verdict the read ran under, as its sidecar recorded it: evidence carried with the read, never a refusal. */
   readonly permission: string | null;
-  /** Separately captured bytes for a current-candidacy source cited by the approval. */
   readonly cycleSource?: CampaignSiteSupportingRead & { readonly tier: "RAW" | "SANITIZED_DERIVED" };
 }
 
-/** Read each approval's own primary and supporting captures from their saved sidecars. */
 export async function heldCampaignSiteReads(vault: VaultIndex | ((artifactId: string) => Promise<HeldVaultArtifact | null>), approvals: readonly PublishableCampaignSiteApproval[]): Promise<Map<string, HeldVerifyingRead>> {
   const capture = typeof vault === "function" ? vault : async (artifactId: string) => vault.byId.get(artifactId) ?? null;
   const held = new Map<string, HeldVerifyingRead>();
@@ -224,13 +184,10 @@ function publicationEvidence(record: PublishableCampaignSiteApproval): DerivedCa
 }
 
 export interface DerivedCampaignSitesPlan {
-  /** The version's records, one per Reader key, sorted. */
   readonly records: readonly DerivedCampaignSiteRecord[];
   readonly published: readonly { readonly key: string; readonly candidacyId: string; readonly url: string; readonly approvalRecordId: string }[];
   readonly held: readonly { readonly key: string; readonly code: DerivedCampaignSiteHoldCode; readonly detail: string }[];
-  /** Every input the version was computed from, deduplicated and sorted. */
   readonly inputs: readonly DerivedInputRef[];
-  /** Already GOOD Reader facts carried through their exact promoted version. */
   readonly prior?: PromotedCampaignSites;
 }
 
@@ -241,11 +198,6 @@ export interface PromotedCampaignSites {
 
 const inputKey = (input: DerivedInputRef): string => canonicalCivicDataJson(input);
 
-/**
- * Verify one approval's vaulted bytes again, for the approval's own canonical
- * identity, exactly as the chain verified them: the verdict a published row
- * carries is the one the vault proves now, never the approval's copy.
- */
 export function reverifyApprovedSite(record: PublishableCampaignSiteApproval, held: HeldVerifyingRead):
   | { readonly ok: true; readonly verification: string }
   | { readonly ok: false; readonly detail: string } {
@@ -255,7 +207,7 @@ export function reverifyApprovedSite(record: PublishableCampaignSiteApproval, he
   }
   let origin = site.evidence.finalUrl;
   try { origin = new URL(site.evidence.finalUrl).origin; } catch { /* kept as written; the verdict refuses a malformed URL */ }
-  /* The verdict the sidecar recorded, as it was: evidence, never a refusal (owner decision 2026-09-25). None recorded, none assumed. */
+  // The verdict the sidecar recorded is evidence, never a refusal; none recorded, none assumed.
   const recorded = verdictOfRecordedPermission(held.permission);
   const read = {
     ...heldPageRead({
@@ -277,17 +229,9 @@ export function reverifyApprovedSite(record: PublishableCampaignSiteApproval, he
     : { ok: false, detail: verdict.refusals.map((r) => `${r.code}: ${r.detail}`).join("; ") };
 }
 
-/**
- * **THE DERIVED VERSION.** Every approved campaign site, one record per Reader
- * key, from the approvals and the exact prior GOOD version. An unavailable
- * capture is no withdrawal of its previously verified facts. Pure: the caller
- * reads the approvals, their vaulted bytes, the promoted profiles and prior.
- */
 export function planDerivedCampaignSites(input: {
   readonly approvals: readonly PublishableCampaignSiteApproval[];
-  /** The verifying read's vaulted bytes for one approval, or null when the vault holds none. */
   readonly held: (record: PublishableCampaignSiteApproval) => HeldVerifyingRead | null;
-  /** The promoted candidate-profiles version this version is composed against, with its links; null when none is promoted. */
   readonly profiles: { readonly input: DerivedInputRef & { readonly kind: "PROMOTED_VERSION" }; readonly links: Readonly<Record<string, CandidateLinksShape>> } | null;
   readonly linkedPublications?: readonly HeldLinkedPublicationRead[];
   readonly prior?: PromotedCampaignSites | null;
@@ -299,7 +243,6 @@ export function planDerivedCampaignSites(input: {
   const held: { key: string; code: DerivedCampaignSiteHoldCode; detail: string }[] = [];
   const byCandidacy = new Map<string, PublishableCampaignSiteApproval[]>();
   for (const record of input.approvals) {
-    /* Every approval read is an input, published or held: the version answers for each. */
     add({ kind: "PIPELINE_APPROVAL", itemId: record.itemId, recordId: record.recordId, approvedAt: record.at });
     byCandidacy.set(record.campaignSite.candidacyId, [...(byCandidacy.get(record.campaignSite.candidacyId) ?? []), record]);
   }
@@ -307,7 +250,6 @@ export function planDerivedCampaignSites(input: {
   const published: { key: string; candidacyId: string; url: string; approvalRecordId: string }[] = [];
   const profileLinks = input.profiles?.links ?? {};
   for (const [candidacyId, approvals] of [...byCandidacy].sort(([a], [b]) => a.localeCompare(b))) {
-    /* The vault first: an approval whose bytes are not what it says is held by name, and never counted as a site. */
     const verified: { record: PublishableCampaignSiteApproval; verification: string; held: HeldVerifyingRead }[] = [];
     for (const record of approvals) {
       const bytes = input.held(record);
@@ -383,7 +325,7 @@ export function planDerivedCampaignSites(input: {
         const captured = page.record.campaignSite;
         if (!captured.readerKeys.includes(key)) continue;
         let content = "";
-        try { content = extractHtmlText(page.held.body); } catch { /* named below; the separately verified link survives */ }
+        try { content = extractHtmlText(page.held.body); } catch {}
         if (!content) {
           held.push({ key: `${key}:${captured.evidence.artifactId}`, code: "PUBLICATION_TEXT_UNREADABLE",
             detail: "The campaign link is independently verified, but its captured page yielded no complete readable text. Document extraction repair remains owed; this is not publisher absence." });
@@ -424,7 +366,7 @@ export function planDerivedCampaignSites(input: {
           continue;
         }
         let content = "";
-        try { content = extractHtmlText(capture.body); } catch { /* a failed extraction stays a named hold */ }
+        try { content = extractHtmlText(capture.body); } catch {}
         if (!content) {
           held.push({ key: `${key}:${row.artifactId}`, code: "PUBLICATION_TEXT_UNREADABLE",
             detail: "The linked candidate page was captured, but complete readable text was not extracted." });
@@ -514,12 +456,6 @@ export function derivedCampaignSitesProjection(plan: DerivedCampaignSitesPlan): 
   return { kind: "candidate-campaign-sites-derived", formatVersion: 1, records: plan.records };
 }
 
-/**
- * The derived version's candidate: authentic only as the inputs it names
- * (`retrieval.derived`). Its semantic violations are every rule its records
- * break, so a malformed version is never GOOD; its holds are excluded facts,
- * Admin's held records.
- */
 export function derivedCampaignSitesCandidate(plan: DerivedCampaignSitesPlan, attemptedAt: string): RoutineCandidate {
   const readModel = derivedCampaignSitesProjection(plan);
   const retrieval = derivedRetrieval(plan.inputs);
@@ -614,7 +550,6 @@ export function derivedCampaignSitesCandidate(plan: DerivedCampaignSitesPlan, at
   };
 }
 
-/** A pass that cannot read its inputs, or has nothing approved to publish, records a refused candidate; the last known good sites stay live. */
 export function derivedCampaignSitesFailedCandidate(attemptedAt: string, failureDetail: string): RoutineCandidate {
   return {
     id: `cv-${sha256Hex(`${DERIVED_CAMPAIGN_SITES_CONTRACT_ID}\u001f${DERIVED_CAMPAIGN_SITES_SCOPE}\u001ffailed\u001f${attemptedAt}`).slice(0, 32)}`,
@@ -638,18 +573,12 @@ export function derivedCampaignSitesFailedCandidate(attemptedAt: string, failure
   };
 }
 
-/**
- * **ONE PASS OF THE DOOR.** What the child promotes, decided from what it
- * read. A read that failed, a closed gate, or no approved site yet refuses the
- * pass by name (the prior GOOD sites stay live); otherwise the planned version.
- */
 export function derivedCampaignSitesPass(input: {
   readonly approvals: readonly PublishableCampaignSiteApproval[] | { readonly unreadable: string };
   readonly held: (record: PublishableCampaignSiteApproval) => HeldVerifyingRead | null;
   readonly linkedPublications?: readonly HeldLinkedPublicationRead[];
   readonly prior?: PromotedCampaignSites | null | { readonly unreadable: string };
   readonly profiles: Parameters<typeof planDerivedCampaignSites>[0]["profiles"] | { readonly unreadable: string };
-  /** Accepted for older callers only; §3 publication is automatic. */
   readonly gateOpen?: boolean;
   readonly now: string;
 }): { readonly candidate: RoutineCandidate; readonly plan: DerivedCampaignSitesPlan | null } {

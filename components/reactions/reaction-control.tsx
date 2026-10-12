@@ -27,16 +27,9 @@ import {
 } from "@/lib/reactions/pill";
 
 /**
- * The reaction control (P03) — one component, keyed by target type + id, so
- * measures, candidates, and agenda items reuse it; votes wired first.
- *
- * There is no capture notice here: what the site collects is stated once, on
- * /transparency (Sean, October 1, 2026), so a tap records the answer at once.
- *
- * A tap is instant and changeable: the choice renders selected immediately
- * from the device's own record, and a changed answer overwrites this
- * browser's prior one server-side. No aggregate is ever rendered back —
- * reactions are write-only from the reader's side.
+ * The reaction control, keyed by target type and id. A tap records at once,
+ * renders selected from the device's own record, and a changed answer
+ * overwrites this browser's prior one. No aggregate is ever rendered back.
  */
 
 
@@ -47,26 +40,11 @@ interface ReactionControlProps {
   prompt: string;
   context: ReactionViewContext | null;
   /**
-   * This candidate is the only one in their contest (M63). The fourth
-   * answer — "Someone else" — renders only here, because only here does it
-   * mean anything: Yes is what an uncontested ballot forces, No cannot
-   * separate disliking the candidate from wanting a choice at all, and
-   * wanting somebody else is otherwise unsayable. The server enforces the
-   * same restriction; this prop decides what is offered, never what is
-   * allowed.
+   * The only candidate in the contest: offers "Someone else". The server
+   * enforces the same restriction; this decides what is offered.
    */
   singleCandidateContest?: boolean;
-  /**
-   * How loudly the frame speaks (item 6c, 2026-08-15).
-   *
-   * `"standing"` — the default, and the ballot's own treatment: a framed
-   * block in the family of THE NEXT ELECTION box, so the sensor reads as the
-   * point of the surface rather than as an afterthought under it.
-   * `"compact"` — the same component at the author's smaller size, for the
-   * vote rows inside a battlecard: "as prominent, not as large." A vote card
-   * carries a dozen of these, and a dozen full-size frames would turn the
-   * record into a questionnaire.
-   */
+  /** `"standing"` is the framed default; `"compact"` is the smaller size for vote rows inside a battlecard. */
   frame?: "standing" | "compact";
 }
 
@@ -78,39 +56,15 @@ export function ReactionControl({
   singleCandidateContest = false,
   frame = "standing",
 }: ReactionControlProps) {
-  // The scale the server will accept for this target, and nothing else.
-  // SOMEONE_ELSE rides on top of the v1 scale in a one-candidate contest,
-  // which is the only place the server accepts it either.
+  // The scale the server accepts for this target; SOMEONE_ELSE only in a one-candidate contest.
   const scale = scaleForTargetType(targetType);
   const choices = scale.values.filter(
     (value) => value !== "SOMEONE_ELSE" || singleCandidateContest,
   );
   /*
-   * The device's stored answer reads through `useSyncExternalStore`: this
-   * control also renders inside server-rendered pages (the ballot, 3d), and the
-   * store pattern hydrates against the server's blank then re-reads — no
-   * mismatch, no setState-in-effect.
-   *
-   * **IT USED TO SUBSCRIBE TO NOTHING.** (`WGH-22` class audit, 2026-08-31.)
-   *
-   * The subscribe argument was a local `emptySubscribe` returning an empty
-   * teardown, and `override` — a `useState` set on the tap — was what made this
-   * control's own selection move. That works for the control the finger landed
-   * on and for nothing else. `wtp.reactions` has a publisher
-   * (`REACTIONS_EVENT`, M134) and two other readers already subscribe to it
-   * (`pick-control.tsx`, `my-picks.tsx`); this file, the store's PRIMARY
-   * reader, was the one that could not hear it — so a second control for the
-   * same candidate on the same page kept rendering the old answer, and so did
-   * every control in a second tab, because an inert subscribe drops the
-   * cross-tab `storage` event as well.
-   *
-   * This is `WGH-22` one level down. There the writers could not reach the
-   * hook's listener set; here the reader never joined one. Same reader-visible
-   * result: the store moved and a surface went on rendering what it read at
-   * mount.
-   *
-   * `override` stays, and it is not redundant — it is what makes the tap
-   * render instantly rather than after the `fetch` in `record` settles.
+   * The stored answer reads through `useSyncExternalStore`, subscribed to
+   * `REACTIONS_EVENT` and cross-tab `storage`, so every control for the same
+   * target agrees. `override` makes the tap render before `record` settles.
    */
   const stored = useSyncExternalStore(
     subscribeReactions,
@@ -119,28 +73,13 @@ export function ReactionControl({
   );
   const [override, setOverride] = useState<ReactionValue | null>(null);
   const selected = override ?? stored;
-  // The server's answer for THIS session's tap. The selected-and-counted
-  // rendering is EARNED by the 204 (outcome === "COUNTED"): while the write
-  // is in flight the tapped choice renders as saving, and anything short of
-  // a 204 renders the honest not-counted line instead of implied success.
-  // A selection restored from device storage (no tap this session) renders
-  // selected as the device's own memory — that claim is about this browser,
-  // not the totals.
+  // Selected-and-counted is earned by the 204; in flight renders as saving,
+  // and anything else renders the not-counted line. A stored selection with no
+  // tap this session renders selected as the device's memory.
   const [outcome, setOutcome] = useState<ReactionSubmitOutcome | "SAVING" | null>(
     null,
   );
-  /*
-   * THE OPTIONAL VERBATIM (P03, 2026-08-18).
-   *
-   * "Binary carries volume; text carries color. Never require the text."
-   * So the box does not exist until an answer has landed: it opens only
-   * after a COUNTED tap, it is never a precondition for anything, and a
-   * reader who ignores it forever has given a complete answer.
-   *
-   * It also only opens on this session's tap. A reader returning to a
-   * control they answered last week sees their pill, not a text box asking
-   * them to elaborate — that would be the product nagging.
-   */
+  /* The optional text box opens only after this session's counted tap; never required. */
   const [text, setText] = useState("");
   const [textOpen, setTextOpen] = useState(false);
   const [textOutcome, setTextOutcome] = useState<
@@ -150,8 +89,7 @@ export function ReactionControl({
   const record = async (value: ReactionValue) => {
     setOverride(value);
     setOutcome("SAVING");
-    // A changed answer re-sends whatever the reader has already written, so
-    // switching from Yes to No does not silently discard their sentence.
+    // A changed answer re-sends what the reader already wrote.
     const result = await submitReaction(
       targetType,
       targetId,
@@ -185,53 +123,16 @@ export function ReactionControl({
   };
 
   return (
-    /*
-     * Item 6c (2026-08-15): the question is a FRAMED BOX now, in the family
-     * of THE NEXT ELECTION panel. The standing prominence rule already said
-     * the ask never whispers, and it still whispered — an unframed line and a
-     * row of small outlines under a candidate reads as a footer to the card
-     * above it rather than as the thing the surface is for. This is the
-     * revenue-bearing path and the transparency page describes it as the
-     * point; the rendering now says so too.
-     *
-     * The GEOMETRY TEST is the five-option funding row (D61: Love it / Like
-     * it / Don't like it / Hate it / Don't care). Five controls at 390px is
-     * the hard case, and the frame is built around it rather than retrofitted
-     * — `flex-wrap` with a `min-height` and a sane `min-width` per control,
-     * so the row wraps to two lines and every control keeps a thumb's width.
-     * Never truncated, never shrunk below tap size.
-     *
-     * Nothing here edits a question or an option set. Item 6c styles them.
-     */
+    /* Controls wrap to keep a thumb's width at 390px; never truncated or shrunk. */
     <div className="reaction-box" data-frame={frame}>
       <p className="reaction-box-prompt">{prompt}</p>
       <div className="reaction-box-choices" role="group" aria-label={prompt}>
         {choices.map((value, i) => {
-          // The full selected-and-counted rendering is earned by the 204;
-          // a stored selection with no tap this session (outcome null) is
-          // the device's own memory and renders selected on that basis.
-          //
-          // Item 5 (2026-08-16): the CONFIRMED state renders as a pill in
-          // the vote grammar — green for yes, red for no, dark gray for
-          // unsure, and the five-point funding scale in its own shades. The
-          // state machine and the tones live in lib/reactions/pill.ts so a
-          // test can tap every value and read back what it wears; the
-          // honest-outcome rendering is unchanged underneath, and SAVING and
-          // NOT_COUNTED never reach the pill.
+          // Selected-and-counted is earned by the 204; tones live in lib/reactions/pill.ts.
           const isSelected = selected === value;
           return (
             <Fragment key={value}>
-              {/*
-                g3 item 7 (2026-08-16), the author's find: on the five-point
-                row "Don't like it" sat DEAD CENTRE, and the eye defaults to
-                the middle of a row of equal buttons. That is a sensor reading
-                its own layout — a measurement instrument with a thumb on it,
-                on the one path this product sells.
-                The separators the author specified split the row into
-                favourable / unfavourable / abstain, so no single option owns
-                the centre: the centre is now a boundary rather than a button.
-                Rendered wherever this scale renders, per the ruling.
-              */}
+              {/* Separators split favourable / unfavourable / abstain, so no option owns the centre. */}
               {i > 0 && SCALE_GROUP_LEADERS.has(value) && (
                 <span className="scale-sep" aria-hidden="true" />
               )}
@@ -241,14 +142,7 @@ export function ReactionControl({
                 onClick={() => choose(value)}
                 className={reactionChoiceClass(value, isSelected, outcome)}
               >
-                {/*
-                  g4 item 7: the MARK carries the state and the colour
-                  reinforces it. A reader who cannot separate this green from
-                  this red still reads the answer off the tick or the cross.
-                  aria-hidden because `aria-pressed` above already says the
-                  same thing to a screen reader, and a literal "✓" read aloud
-                  in front of "Yes" is noise.
-                */}
+                {/* The mark carries the state; aria-hidden since `aria-pressed` already says it. */}
                 {isSelected && REACTION_MARK[value] && (
                   <span className="reaction-mark" aria-hidden="true">
                     {REACTION_MARK[value]}
@@ -261,24 +155,12 @@ export function ReactionControl({
         })}
       </div>
       {outcome === "NOT_COUNTED" && (
-        // Anything short of the 204 — 500, network failure, or the
-        // never-happens 202 — renders this line, never implied success.
+        // Anything short of the 204 renders this line.
         <p className="mt-1 text-[0.6875rem] leading-relaxed text-muted">
           {NOT_COUNTED_LINE}
         </p>
       )}
-      {/*
-        The optional verbatim (P03). Opens only after an answer has landed
-        this session, because the text is the colour on an answer and never
-        the answer itself.
-
-        Register, per the voice doctrine: the EXPANDER is an interaction
-        surface and speaks playfully; every word INSIDE it is a claim
-        surface and speaks level — the threat notice above all, which is
-        about a real consequence for a real person and says "may" because a
-        commitment we cannot honour every time is worse than a reserved
-        right.
-      */}
+      {/* Opens only after an answer landed this session. */}
       {outcome === "COUNTED" && (
         <div className="mt-2">
           {!textOpen ? (
@@ -308,8 +190,7 @@ export function ReactionControl({
                 }}
                 className="mt-1 w-full rounded border border-[var(--panel-border)] bg-transparent p-2 text-[0.75rem] leading-relaxed text-paper placeholder:text-muted focus:border-[var(--signal)] focus:outline-none"
               />
-              {/* Adjacent to the field, as CLAUDE.md requires — not in a
-                  policy page, not behind a link. */}
+              {/* Adjacent to the field, never behind a link. */}
               <p className="mt-1 text-[0.6875rem] leading-relaxed text-muted">
                 {FREE_TEXT_THREAT_NOTICE}
               </p>

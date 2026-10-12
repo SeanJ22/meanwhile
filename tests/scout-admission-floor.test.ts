@@ -34,8 +34,6 @@ async function runScoutCycle() {
     holder: "test",
     now: NOW,
     leaseTtlMs: 1000,
-    reader: { contract: "READER", state: "NOT_READY", reason: "test" },
-    truth: { contract: "TRUTH", state: "NOT_READY", reason: "test" },
     requireOpenOccurrence: true,
     research: {
       decide: () => modelDecision,

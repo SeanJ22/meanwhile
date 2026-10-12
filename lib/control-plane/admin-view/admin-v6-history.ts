@@ -1,4 +1,3 @@
-/** Admin v6 order history (BR-01): one bounded newest-first page of every order, mapped to its kind at read time. */
 import { createHash } from "node:crypto";
 import { ADMIN_RECEIPT_LOG_KEY, type ActionReceipt } from "../gateway/contract.ts";
 import { gatewayActionKind } from "../../../app/(admin)/_mw/admin-v6/actions.ts";
@@ -17,7 +16,7 @@ export interface V6HistoryReceipt {
   readonly scopeKey: string; readonly scopeName: string; readonly level: "local" | "global";
   readonly status: V6ReceiptStatus; readonly statusWords: string;
   readonly steps: readonly { readonly label: string; readonly at: string }[];
-  readonly says: string; readonly items: readonly [];
+  readonly says: string; readonly items: readonly { readonly name: string; readonly status: V6ReceiptStatus; readonly note: string; readonly label?: string }[];
   readonly lifecycle: { readonly saved: string | null; readonly workersReceived: string | null;
     readonly workStarted: null; readonly workFinished: null; readonly factsChecked: null;
     readonly published: null; readonly checkedOnPublicPage: null };
@@ -47,7 +46,6 @@ function statusOf(receipt: ActionReceipt): V6ReceiptStatus {
   if (receipt.outcome === "IN_PROGRESS") return "running";
   return eventTime(receipt.completedAt) ? "done" : "unknown";
 }
-/** What an order acted on, in words. A place is named by the page from its own place list. */
 function targetWords(kind: ActionKind): string {
   if (kind.startsWith("global-runner-")) return "the standing runner";
   if (kind === "global-ceiling") return "the daily budget";
@@ -57,17 +55,18 @@ function targetWords(kind: ActionKind): string {
   if (kind.startsWith("hunt-")) return "a hunt";
   if (kind.startsWith("target-")) return "a place's target";
   if (kind.startsWith("data-switch-")) return "who can see a number";
+  if (kind === "leads-send") return "research leads";
   return "";
 }
 function mapped(receipt: ActionReceipt, scope: string, confirmation: Confirmation | null = null): V6HistoryReceipt | null {
   const target = receipt.requestedSubject || receipt.subject;
   const kind = gatewayActionKind(receipt.type, { subject: target, says: receipt.says });
   if (receipt.formatVersion !== 1 || !kind || !receipt.receiptId || !receipt.idempotencyKey || !eventTime(receipt.startedAt)) return null;
-  const global = kind.startsWith("global-") || kind === "hunt-start-many";
+  const global = kind.startsWith("global-") || kind === "hunt-start-many" || kind === "leads-send";
   const place = /^(?:us|st:[a-z]{2}|geo:[a-z]{2}\.[a-z_]+\.[0-9A-Za-z]{1,16})$/.test(target) ? target : global ? "us" : "unknown";
   if (scope !== "us" && place !== scope && receipt.subject !== scope) return null;
   const confirmed = confirmation?.state === "applied" && receipt.outcome !== "REFUSED";
-  const status = receipt.outcome==="REFUSED" ? "refused" : confirmed ? "done" : confirmation?.state === "in-progress" ? "running" : confirmation && ["waiting","unread","not-picked-up"].includes(confirmation.state) ? "queued" : receipt.huntScores?.length ? "queued" : statusOf(receipt);
+  const status = receipt.outcome==="REFUSED" ? "refused" : confirmed ? "done" : confirmation?.state === "in-progress" || confirmation?.state === "working" ? "running" : confirmation && ["waiting","unread","not-picked-up"].includes(confirmation.state) ? "queued" : receipt.huntScores?.length ? "queued" : statusOf(receipt);
   const completed = eventTime(receipt.completedAt);
   const confirmedAt = confirmed ? eventTime(confirmation!.at) ?? completed : null;
   return {
@@ -79,11 +78,11 @@ function mapped(receipt: ActionReceipt, scope: string, confirmation: Confirmatio
     scopeKey: place, scopeName: place === "us" ? "United States" : place === "unknown" ? "Place not recorded" : "—", level: place === "us" ? "global" : "local", status,
     statusWords: confirmation?.state==="not-picked-up" ? "Not picked up" : status === "queued" ? "Request saved; runner response unknown" :
       status === "refused" ? "Request refused" : confirmed ? "Done" : status === "done" ? "Gateway action recorded" :
-      status === "running" ? "Gateway action in progress" : "Outcome unknown",
+      status === "running" ? (confirmation?.state === "working" ? "Running" : "Gateway action in progress") : "Outcome unknown",
     steps: [{ label: "Sent", at: receipt.startedAt },
       ...(completed ? [{ label: status === "refused" ? "Refused" : "Gateway receipt recorded", at: completed }] : []),
       ...(confirmedAt ? [{ label: "Runner confirmed", at: confirmedAt }] : [])],
-    says: confirmation ? confirmation.words : receipt.says, items: [],
+    says: confirmation ? confirmation.words : receipt.says, items: confirmation?.items ?? [],
     lifecycle: { saved: status === "queued" || status === "done" ? completed : null,
       workersReceived: confirmedAt, workStarted: null, workFinished: null, factsChecked: null,
       published: null, checkedOnPublicPage: null },
@@ -108,11 +107,9 @@ function parseCursor(raw: string | null | undefined, query: { scope: string; q: 
   return c as Cursor;
 }
 
-/** Pure adapter over exact gateway types. Receipt timestamps order the rows; no append-order claim. */
 export function projectV6History(
   rows: readonly ActionReceipt[],
   query: V6HistoryQuery,
-  /** What the runner did about each receipt, by receipt id. Absent means nothing is known. */
   confirmations: ReadonlyMap<string, Confirmation> = new Map(),
 ): V6HistorySection {
   const q = (query.q ?? "").trim().toLowerCase();
@@ -145,7 +142,6 @@ function readCursor(query: V6HistoryQuery): ReadCursor | null {
     value.status !== (query.status ?? "all") || !Number.isSafeInteger(value.beforePosition) || value.beforePosition! < 0) throw new Error("INVALID_HISTORY_CURSOR");
   return value as ReadCursor;
 }
-/** One bounded source page, with a stable newest-first cursor. No complete-log read. */
 export async function readV6History(repos: ControlPlaneRepositories, query: V6HistoryQuery): Promise<V6HistorySection> {
   const cursor = readCursor(query);
   const limit = Number.isInteger(query.limit) ? Math.max(1, Math.min(ADMIN_V6_HISTORY_MAX_LIMIT, query.limit!)) : ADMIN_V6_HISTORY_MAX_LIMIT;
@@ -159,7 +155,6 @@ export async function readV6History(repos: ControlPlaneRepositories, query: V6Hi
   const window = rows.slice(0, limit);
   const confirmations = new Map<string, Confirmation>();
   await Promise.all(window.map(async row => { confirmations.set(row.receipt.receiptId, await confirmReceipt(repos, row.receipt)); }));
-  // The database already applied scope refs, including legacy projection refs.
   const receipts = window.map(row => query.scope === "us" ? row.receipt : { ...row.receipt, requestedSubject: query.scope });
   const section = projectV6History(receipts, { ...query, cursor: null }, confirmations);
   const nextCursor = rows.length > limit && window.length ? Buffer.from(JSON.stringify({ v: 2, scope: query.scope,

@@ -12,12 +12,12 @@ import {
 } from "../lib/meetings/edge-serving.ts";
 import {
   primeRegistryRuntimeFromValue,
-  registryRuntimeFirstSeed,
   registryRuntimeReadState,
   getRegistryRuntimeReadModel,
 } from "../lib/registry/runtime-read-model.ts";
 import { currentRegistryRuntimeEdge, enterReaderAuthorityEdge, ReaderEdgeOnlyRefusal, settleEdgeFirst } from "../lib/registry/runtime-edge.ts";
 import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
+import { registryTransferImport } from "./helpers/promoted-fixtures.ts";
 
 function emptySnapshot(): MeetingsSnapshot {
   return {
@@ -33,7 +33,7 @@ const META = { sourceThrough: null, retrievedAt: null, promotedThrough: null };
 
 test("the runner publishes registry-runtime as a compressed artifact the reader reads back losslessly", async () => {
   const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "rt-edge-")));
-  const value = registryRuntimeFirstSeed().value;
+  const value = registryTransferImport().projection.payload;
   const versionId = "test-registry-runtime-v-lossless";
 
   const published = await publishReaderEdgeArtifacts(emptySnapshot(), META, { store, authority: { "registry-runtime": { value, versionId } } });
@@ -54,7 +54,7 @@ test("the runner publishes registry-runtime as a compressed artifact the reader 
 
 test("republishing the same authority version is idempotent; a new version advances the pointer", async () => {
   const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "rt-edge-")));
-  const value = registryRuntimeFirstSeed().value;
+  const value = registryTransferImport().projection.payload;
   const first = await publishReaderEdgeArtifacts(emptySnapshot(), META, { store, authority: { "registry-runtime": { value, versionId: "rt-v1" } } });
   assert.equal(first.status, "PUBLISHED");
   const same = await publishReaderEdgeArtifacts(emptySnapshot(), META, { store, authority: { "registry-runtime": { value, versionId: "rt-v1" } } });
@@ -64,7 +64,7 @@ test("republishing the same authority version is idempotent; a new version advan
 });
 
 test("primeRegistryRuntimeFromValue serves the value synchronously with its version, no DB", () => {
-  const value = registryRuntimeFirstSeed().value;
+  const value = registryTransferImport().projection.payload;
   primeRegistryRuntimeFromValue(value, "rt-prime-v9");
   assert.equal(getRegistryRuntimeReadModel().bodyRosters.length, value.bodyRosters.length);
   const state = registryRuntimeReadState();
@@ -99,10 +99,8 @@ test("the registry-runtime edge value is request-scoped: absent by default (runn
 });
 
 test("an unchanged authority version carries its served artifact forward; the runner never re-reads it", async () => {
-  // Every reader-repair pass once read each authority family whole (30.8 MB on
-  // 2026-09-23, 24 MB of it registry-runtime) only to find it unchanged.
   const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "rt-edge-")));
-  const value = registryRuntimeFirstSeed().value;
+  const value = registryTransferImport().projection.payload;
   const first = await publishReaderEdgeArtifacts(emptySnapshot(), META, { store, authority: { "registry-runtime": { value, versionId: "rt-v1" } } });
   assert.equal(first.status, "PUBLISHED");
   const servedManifest = (await store.readManifest())!.manifest;
@@ -133,8 +131,8 @@ test("an unchanged authority version carries its served artifact forward; the ru
   assert.equal(edge.registryRuntime?.versionId, "rt-v1");
   assert.equal(edge.registryRuntime?.value.bodyRosters.length, value.bodyRosters.length);
 
-  // A carried version the manifest no longer serves is left out, as a failed
-  // read is, so the Reader falls back to the database for that family.
+  // A stale producer cannot remove a newer served authority while publishing
+  // another family. It retries against the winning manifest.
   const moved = await publishReaderEdgeArtifacts(emptySnapshot(), META, {
     store,
     authority: {
@@ -142,13 +140,13 @@ test("an unchanged authority version carries its served artifact forward; the ru
       "campaign-sites": { value: campaignSites, versionId: "cs-v2" },
     },
   });
-  assert.equal(moved.status, "PUBLISHED");
-  assert.equal((await store.readManifest())!.manifest.authorityArtifacts?.["registry-runtime"], undefined);
+  assert.equal(moved.status, "RACED");
+  assert.deepEqual((await store.readManifest())!.manifest, manifest, "a stale carry leaves every winning artifact unchanged");
 
   // The runner asks the served manifest first and reads a family's value only
   // when its pointer has moved past the served version.
   const script = readFileSync("lib/civic-data/reader-edge-publication.ts", "utf8");
-  for (const family of ["registry-runtime", "federal-directory", "campaign-sites", "state-legislators", "meeting-outcomes", "comment-access"]) {
+  for (const family of ["registry-runtime", "federal-directory", "campaign-sites", "meeting-outcomes", "comment-access"]) {
     assert.match(script, new RegExp(`servedIfCurrent\\("${family}"`), `${family} is checked against the served manifest`);
     assert.match(script, new RegExp(`authority\\["${family}"\\] = \\{ versionId: carried, carried: true \\}`), `${family} carries forward`);
   }

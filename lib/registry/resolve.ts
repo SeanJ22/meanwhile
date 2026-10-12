@@ -3,17 +3,9 @@ import { bodyIdsAtPoint, type BodyTerritoryFile } from "./body-territory.ts";
 import { polygonContains } from "../geo/polygon.ts";
 
 /**
- * Point → divisions → bodies.
- *
- * Pure: geometry comes in as an argument, so this runs in a test, on a server,
- * or against tiles later without change. **A point is in a *set* of divisions,
- * never one** — Rockaway sits in a K-8 elementary district and a regional high
- * school district at once, and Arizona's legislative districts elect three
- * people between two chambers.
- *
- * A zip centroid is orientation only, never a claim about where anyone lives.
- * CLAUDE.md is explicit that a ZCTA cannot resolve a ballot, and nothing here
- * changes that: this answers "which bodies cover this point on the map".
+ * Point → divisions → bodies. Pure. A point is in a set of divisions, never one. A ZIP centroid is
+ * orientation only, never a claim about where anyone lives: this answers "which bodies cover this point
+ * on the map".
  */
 
 export type Ring = [number, number][];
@@ -26,9 +18,7 @@ export interface GeoFeature {
     | { type: "MultiPolygon"; coordinates: Ring[][] };
 }
 
-// NH79: one even-odd implementation for the whole repo (lib/geo/polygon.ts).
-// EXTERIOR-THEN-HOLES is preserved exactly — this path decides which
-// government covers a reader's point, and its semantics were not changed.
+// The shared even-odd implementation (lib/geo/polygon.ts), exterior then holes.
 const inPolygon = (point: [number, number], poly: Polygon): boolean =>
   polygonContains(point, poly);
 
@@ -41,18 +31,8 @@ export function contains(point: [number, number], feature: GeoFeature): boolean 
 }
 
 /**
- * How many point-in-polygon sweeps this process has run — AUD-04's instrument.
- *
- * The change that made `/api/meetings` resolve its geography once was verified
- * with a counter bolted onto the resolver for one afternoon and then removed,
- * which means the property it proved has been unguarded ever since. A second
- * sweep can return the identical answer, so an equivalence test cannot see one
- * come back: the only thing that can is a count.
- *
- * It is one integer increment on a function that walks every committed polygon,
- * so its cost is not measurable against the work it is counting.
- * `tests/resolve-once.test.ts` reads it across a real request and asserts
- * exactly one.
+ * How many point-in-polygon sweeps this process has run. A second sweep returns an identical answer, so
+ * only a count can show one; `tests/resolve-once.test.ts` asserts one per request.
  */
 let sweeps = 0;
 
@@ -62,23 +42,9 @@ export function sweepsRun(): number {
 }
 
 /**
- * **P-003 · HOW MANY FEATURES A SWEEP ACTUALLY TESTED EXACTLY.**
- * (Performance audit of `336a3eb`, remediated 2026-08-24.)
- *
- * `sweepsRun` proves the resolver runs ONCE per request, which AUD-04 needed
- * and which is still true. It says nothing about what one sweep costs, and one
- * sweep was walking every ring of every committed polygon: 118,533 coordinate
- * pairs, most of them congressional districts in states this product does not
- * cover.
- *
- * A bounding box is one comparison of four numbers and it cannot produce a
- * false negative — a point outside a feature's box is outside the feature.
- * `polygonContains` stays the final authority on everything the box lets
- * through, so the ANSWER cannot change; only the number of exact tests does.
- *
- * Counting them is what makes that claim checkable. A prefilter that silently
- * stopped filtering would be invisible in every equivalence test, which is the
- * chromium-pin shape and the reason AUD-04's counter exists at all.
+ * How many features a sweep tested exactly. The bounding-box prefilter has no false negatives and
+ * `polygonContains` stays the final authority, so the answer cannot change; this count shows the
+ * prefilter is still filtering.
  */
 let candidatesTested = 0;
 
@@ -148,11 +114,7 @@ export function divisionsAt(
   for (const [index, feature] of features.entries()) {
     const ocdId = feature.properties.ocdId;
     if (seen.has(ocdId)) continue;
-    /*
-     * P-003 · the cheap test first. A point outside the box is outside the
-     * polygon — that direction has no false negatives, which is what lets the
-     * exact test remain the only thing that ever says YES.
-     */
+    // The cheap test first. A point outside the box is outside the polygon.
     if (!inBox(point, featureBoxes[index])) continue;
     candidatesTested += 1;
     if (!contains(point, feature)) continue;
@@ -168,18 +130,8 @@ export function divisionsAt(
 }
 
 /**
- * Every body associated with the divisions covering a point.
- *
- * `resolved` (AUD-04, 2026-08-18) lets a caller that has ALREADY run
- * `divisionsAt` for this exact point hand the answer in rather than paying for
- * a second identical sweep. `/api/meetings` was the case: it resolved the point
- * for the online-meeting filter, then called this, which resolved the same
- * point against the same features all over again.
- *
- * It is an optional input and not a required one on purpose. Passing a
- * DIFFERENT point's divisions would silently answer about somewhere else, so
- * the only caller that may pass it is one holding this point's own result, and
- * every caller that does not simply gets the resolution it always got.
+ * Every body associated with the divisions covering a point. `resolved` lets a caller that already ran
+ * `divisionsAt` for this exact point skip a second sweep; it must be this point's own result.
  */
 export function bodiesAt(
   point: [number, number],
@@ -187,32 +139,15 @@ export function bodiesAt(
   divisions: Map<string, Division>,
   bodies: Body[],
   resolved?: Division[],
-  /** The committed body-territory polygons (NH233). Null when not loaded. */
+  /** The committed body-territory polygons. Null when not loaded. */
   territory?: BodyTerritoryFile | null,
 ): { divisions: Division[]; bodies: Body[] } {
   const hit = resolved ?? divisionsAt(point, features, divisions);
   const ids = new Set(hit.map((d) => d.ocdId));
-  /*
-   * **A BODY THAT SPANS TWO TOWNS IS FOUND FROM EITHER.** (RULING 121, Sean's
-   * decision of 2026-08-24, closing `NH33`.) One body, one id, rendered under
-   * every division it governs — see `alsoServesOcdIds` on `Body`. Matching only
-   * the primary id would hide Lake Todd from readers in Bradford, who are
-   * governed by it exactly as much as readers in Newbury.
-   */
-  /*
-   * **AND A BODY WHOSE OWN TERRITORY CONTAINS THE POINT.** (NH233, 2026-08-27.)
-   *
-   * Some governments are smaller than any Census division. The Rocking K South
-   * Community Facilities District taxes 2,047 acres inside a 9,200-square-mile
-   * county, so it can have no `ocdId` without over-claiming — and with none it
-   * reached no reader at all, while its card said "Boundary not published"
-   * about a boundary the county recorder publishes.
-   *
-   * `bodyIdsAtPoint` tests the district's own recorded plats with the same
-   * even-odd implementation used a few lines above, so this is not a looser
-   * kind of membership: it is the same geometric question asked of a polygon
-   * the Census does not hold. See `lib/registry/body-territory.ts`.
-   */
+  // A body that spans several divisions is found from any of them: one body, one id, rendered under every
+  // division it governs (`alsoServesOcdIds`).
+  // And a body whose own territory contains the point: governments smaller than any Census division,
+  // tested with the same even-odd implementation. See `lib/registry/body-territory.ts`.
   const territoryHits = bodyIdsAtPoint(point, territory ?? null);
 
   const serves = (b: Body): boolean =>

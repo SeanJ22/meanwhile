@@ -1,22 +1,10 @@
 import { getOrCreateBrowserKey } from "../state/browser-key.ts";
 
 /**
- * **BC-11 — the browser half of Speak Your Mind.**
- *
- * ## The continuity key gets its OWN storage key, and that is not a detail
- *
- * `NH79` consolidated the minting into `lib/state/browser-key.ts` and recorded
- * the near-miss that made it worth writing down: sharing one module-level
- * fallback cell between two callers would have made the feedback key and the
- * reaction key THE SAME VALUE for any browser that refuses `localStorage` —
- * two identifier-free stores holding one identical browser-minted value are
- * two stores that join.
- *
- * This is the third caller. `wtp.speak_key` is its own string holding its own
- * independently random value, and the shared module's per-storage-key `Map`
- * keeps the fallback path apart too. Server-side the value is hashed under its
- * own prefix as well (`lib/db/speak.ts`), so the boundary holds at both ends
- * rather than at one.
+ * The browser half of Speak Your Mind. The continuity key has its own storage
+ * key and its own random value, so it never equals the feedback or reaction
+ * key (two identifier-free stores holding one value would join). The server
+ * hashes it under its own prefix too (`lib/db/speak.ts`).
  */
 
 const KEY_STORAGE = "wtp.speak_key";
@@ -25,16 +13,12 @@ export function getOrCreateSpeakKey(): string {
   return getOrCreateBrowserKey(KEY_STORAGE);
 }
 
-/** BAL-19 (2026-08-25): a CANDIDATE is not an OFFICIAL. See `lib/db/schema.ts`. */
+/** A CANDIDATE is not an OFFICIAL. See `lib/db/schema.ts`. */
 export type SpeakSubjectType = "OFFICIAL" | "BODY" | "MEETING" | "CANDIDATE";
 
 /**
- * What the surface may tell the reader afterwards.
- *
- * **A submission never silently succeeds into a void** — the render-default
- * rule applied to a write, which a boolean cannot carry: `false` would have to
- * mean both "there is no database, which is an ordinary demo state" and "the
- * write failed", and those deserve different sentences.
+ * What the surface may tell the reader afterwards. "No database" (a demo) and
+ * "the write failed" deserve different sentences, so this is not a boolean.
  */
 export type SpeakResult = "RECORDED" | "NOT_STORED" | "REFUSED" | "FAILED";
 
@@ -65,8 +49,7 @@ export async function submitSpeakYourMind(
       keepalive: true,
     });
     if (response.status === 204) return "RECORDED";
-    // Accepted but nothing kept — a demo with no database. Honest, not a
-    // success, and the surface must not thank anybody for it.
+    // Accepted but nothing kept (no database): not a success.
     if (response.status === 202) return "NOT_STORED";
     if (response.status === 429 || response.status === 503) return "REFUSED";
     return "FAILED";

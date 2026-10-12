@@ -3,8 +3,8 @@ import { mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
-import { saveCivicReadCopy } from "../lib/db/civic-read-cache-host.ts";
+import { CivicReadCache, runtimeCivicReadCache } from "../lib/db/civic-read-cache.ts";
+import { saveCivicReadCopy, startCivicReadCacheHost } from "../lib/db/civic-read-cache-host.ts";
 
 function cache(root: string) {
   return new CivicReadCache({ read: key => readFile(join(root, key + ".json"), "utf8"),
@@ -92,4 +92,33 @@ test("corrupt or unwritable disposable copies fall back to the actual database r
   const blocked = join(root, "file-cannot-be-directory");
   await writeFile(blocked, "held file");
   assert.deepEqual(await cache(blocked).rows(input), [{ hash: "hash", payload: { verified: true } }]);
+});
+
+test("the runner's one copy host serves every child, and a child that inherits it starts no other", async t => {
+  const saved = { ...process.env };
+  const cwd = process.cwd();
+  const root = await scratch(t);
+  t.after(() => {
+    process.chdir(cwd);
+    for (const key of Object.keys(process.env)) if (!(key in saved)) delete process.env[key];
+    Object.assign(process.env, saved);
+  });
+  process.chdir(root);
+  process.env.DATABASE_URL = "postgresql://local:local@ep-cache-host.invalid/neondb";
+  delete process.env.WTP_CIVIC_READ_CACHE_URL;
+  delete process.env.WTP_CIVIC_READ_CACHE_TOKEN;
+  const runner = await startCivicReadCacheHost();
+  const url = process.env.WTP_CIVIC_READ_CACHE_URL;
+  assert.match(url ?? "", /^http:\/\/127\.0\.0\.1:\d+$/);
+  const child = await startCivicReadCacheHost();
+  await child.close();
+  assert.equal(process.env.WTP_CIVIC_READ_CACHE_URL, url, "a process that inherited the host keeps it, and its close leaves it");
+  const input = { namespace: "payload-part", keys: ["part-a"], versions: async (keys: readonly string[]) => keys.map(key => ({ key, etag: key })),
+    values: async (keys: readonly string[]) => keys.map(hash => ({ hash, payload: "held" })), keyOf: (row: { hash: string }) => row.hash };
+  await runtimeCivicReadCache()!.rows(input);
+  let read = false;
+  assert.deepEqual(await runtimeCivicReadCache()!.rows({ ...input, values: async () => { read = true; return []; } }), [{ hash: "part-a", payload: "held" }]);
+  assert.equal(read, false, "a second process reads the part from the runner's copy");
+  await runner.close();
+  assert.equal(process.env.WTP_CIVIC_READ_CACHE_URL, undefined);
 });

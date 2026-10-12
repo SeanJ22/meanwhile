@@ -1,19 +1,10 @@
 /**
- * **WHAT A PIECE OF WORK IS ABOUT, READ FROM ITS OWN ID.** (Expansion controls, 2026-09-23.)
+ * What a piece of work is about, read from its own id. Every expansion-scope
+ * reading keys on the obligation's `subjectId`, the same value written into
+ * every cost-ledger row's `jurisdiction`. Standing obligation ids are
+ * `freshness:<provider>:<subjectId>#<routeId>`.
  *
- * The join key every expansion-scope reading uses is the obligation's
- * `subjectId` — the value the standing obligation registers under, and the
- * value `dispatch.ts` writes into every cost-ledger row's `jurisdiction`
- * field. Membership, spend and the assignment filter therefore all key on the
- * same string, and none of them re-derives it from a name.
- *
- * The standing providers build their obligation ids as
- * `freshness:<provider>:<subjectId>#<routeId>` (`scheduledId` in each provider),
- * so the subject is recoverable from an assignment row's id without a read.
- * The meetings-discovery rows the owner's dispatch materialized (MW-028) are
- * about a jurisdiction in the same way.
- *
- * PURE.
+ * Pure.
  */
 
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
@@ -44,18 +35,14 @@ const US_STATE_CODES = new Set(Object.values(FIPS_TO_STATE).map((entry) => entry
 
 /**
  * The two-letter state a subject belongs to, uppercased, or null when its id
- * does not say.
- *
- * The registry ids (`az:county:county-of-pima`), candidacy ids
- * (`az:2026:state-az:governor:…`), statewide finance subjects
- * (`az-sos-cfs-2026`) and ballot contests (`ballot-az-pima:prop-423`) all carry
- * their state in a fixed place. Anything else answers null — an unknown state,
- * never a guessed one.
+ * does not say. Registry ids (`<st>:county:…`), candidacy ids, statewide
+ * finance subjects (`<st>-sos-…`) and ballot contests (`ballot-<st>-…`) carry
+ * it in a fixed place.
  */
 export function stateOfSubject(subjectId: string): string | null {
   const lower = subjectId.toLowerCase();
   const ballot = /^ballot-([a-z]{2})[-:]/.exec(lower);
-  const lead = ballot ?? /^ocd-division\/country:us\/(?:state|district|territory):([a-z]{2})(?:\/|$)/.exec(lower) ?? /^([a-z]{2})[:-]/.exec(lower);
+  const lead = /^government:us-([a-z]{2}):/.exec(lower) ?? ballot ?? /^ocd-division\/country:us\/(?:state|district|territory):([a-z]{2})(?:\/|$)/.exec(lower) ?? /^([a-z]{2})[:-]/.exec(lower);
   if (lead === null) return null;
   return US_STATE_CODES.has(lead[1]) ? lead[1].toUpperCase() : null;
 }

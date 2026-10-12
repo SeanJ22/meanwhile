@@ -1,22 +1,10 @@
 import type { Meeting, MeetingLocation } from "../sources/types.ts";
 
 /**
- * Somewhere to click.
- *
- * **The gap this closes.** "Select Board — Regular Meeting, Fri Aug 14" was
- * plain text. A reader who wanted the Town of Newbury — the agenda, the board,
- * anything — had no route out of the card, and the venue address sat there
- * inert beside it. The app knew things it never offered: the body's own page,
- * the system the record was read from, coordinates precise enough to navigate
- * to. All of it was in the data and none of it was reachable.
- *
- * **The rule that shapes it.** Every link here is either something observed —
- * a URL a person or an adapter actually opened — or something explicitly
- * marked `DERIVED`, and the two may never be presented as the same kind of
- * thing. A constructed URL that looks like a citation is the exact failure
- * 4.5.3 nulled 34 fixtures over: invisible until a reader clicks it. So there
- * is no fallback rung that builds a plausible address, and a meeting with
- * nothing to offer renders as having nothing rather than as having a guess.
+ * Outbound links for a meeting, best-first. Every link is either observed (a URL a person or adapter
+ * actually opened) or explicitly `DERIVED`, and the two are never presented as the same kind of thing.
+ * There is no fallback rung that builds a plausible address; a meeting with nothing to offer renders as
+ * having nothing.
  */
 
 /** Which rung of the ladder produced this link. Ordered best-first. */
@@ -67,53 +55,17 @@ export interface LinkableBody {
 }
 
 /**
- * Google Maps directions, at the coordinates we already hold.
- *
- * 2026-08-14, friction pass: directions default to Google Maps on every
- * venue link. The earlier OpenStreetMap choice read
- * `CLAUDE.md`'s "Not Google Maps" too broadly — that rule is about the
- * basemap, not about where a reader gets driving directions. The
- * `maps/dir/?api=1` form is Google's documented universal link: it opens the
- * native app where one is installed (iOS and Android alike) and the website
- * everywhere else, which is the platform-appropriate fallback in one URL.
- * The coordinates are already sourced — the Census geocoder, cited per venue
- * in `lib/sources/legistar/client-registry.ts` — so this renders data we hold rather
- * than fetching anything new.
- *
- * It is still `DERIVED`. The URL was constructed here; nobody opened it.
+ * Google Maps directions at coordinates we already hold. The `maps/dir/?api=1` form opens the native app
+ * where installed and the website elsewhere. Still `DERIVED`: the URL was constructed here.
  */
 function directionsUrl(lat: number, lng: number): string {
   return `https://www.google.com/maps/dir/?api=1&destination=${lat.toFixed(6)}%2C${lng.toFixed(6)}`;
 }
 
 /**
- * **A district office's address, handed to Google Maps** — F01 4.3, 2026-08-19.
- *
- * Each address under "Offices near you" links out to Google Maps: a click on
- * 2201 East Camelback Road opens that address in Google Maps, ready to ask
- * whether the reader wants to go there.
- *
- * ## A DECLARED EXCEPTION to nothing-leaves-the-app
- *
- * `CLAUDE.md`'s standing rule is that every row opens a card and nothing leaves
- * the product. This is the second sanctioned exception, in the same class as
- * B19's directions handoff from a polling-place pin, and for the same reason:
- * the reader's next action is physically going there, and no card this product
- * could build is a substitute for turn-by-turn navigation on the device they
- * are holding. Recording it as an exception rather than quietly making one.
- *
- * ## Why the ADDRESS and not coordinates
- *
- * `directionsUrl` above is the coordinate form, used where we hold a geocoded
- * point. A congressional district office in the directory carries a street
- * address, a city, a state and a zip and NO coordinates that we have sourced —
- * `lat`/`lng` are present in the schema and null for these rows. Geocoding them
- * ourselves to build a coordinate link would be inventing a point; passing the
- * published address straight through hands Google the same string the member
- * publishes, and lets their geocoder be the one that resolves it.
- *
- * The `?api=1&destination=` form is Google's documented universal link: it opens
- * the native app where one is installed and the website everywhere else.
+ * A district office's address, handed to Google Maps: a sanctioned exception to nothing-leaves-the-app,
+ * because the reader's next action is physically going there. Uses the published address rather than
+ * coordinates, which we do not hold for these rows; geocoding them ourselves would invent a point.
  */
 export function officeDirectionsUrl(parts: {
   address: string | null;
@@ -121,8 +73,8 @@ export function officeDirectionsUrl(parts: {
   state: string | null;
   zip: string | null;
 }): string | null {
-  // The street is the load-bearing part. A link to "Tucson, AZ" would open a
-  // map of the city, which looks like an answer and is not one.
+  // The street is the load-bearing part: a link to just a city would open a map of the city, which looks
+  // like an answer and is not one.
   if (!parts.address?.trim()) return null;
   const destination = [parts.address, parts.city, parts.state, parts.zip]
     .map((part) => part?.trim())
@@ -158,17 +110,9 @@ export function venueLink(location: MeetingLocation): OutboundLink | null {
 }
 
 /**
- * Build the ladder for one meeting.
- *
- * Returns rungs in order and **omits every one it cannot fill**, so an empty
- * array is a true statement that this meeting has nowhere to go rather than a
- * signal to invent something. The caller renders "nothing to link to yet",
- * which is the same honesty `meeting-panel.tsx` already applies to a null
- * agenda URL.
- *
- * `body` is optional because the meeting sources and the registry are joined at
- * the read layer, and a meeting whose division has no registry body still gets
- * its agenda and venue rungs.
+ * Build the ladder for one meeting. Rungs come back in order and every one that cannot be filled is
+ * omitted, so an empty array means this meeting has nowhere to go. `body` is optional: a meeting whose
+ * division has no registry body still gets its agenda and venue rungs.
  */
 export function linksForMeeting(
   meeting: Meeting,
@@ -225,9 +169,7 @@ export function linksForMeeting(
     });
   }
 
-  // A venue link is a map link, and a meeting held online has no venue to
-  // map (D18). The reader's way in is the join link, which the card renders
-  // from `online` — or the named gap, when the body published none.
+  // A meeting held online has no venue to map; the card renders its join link or the named gap.
   const venue = meeting.location ? venueLink(meeting.location) : null;
   if (venue) links.push(venue);
 

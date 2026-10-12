@@ -6,46 +6,51 @@ import test from "node:test";
 
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
-import { POST_FIXTURE_MEETING_PARTITIONS } from "./helpers/meeting-partition-fixture.ts";
 import {
   readMeetingsProjection,
-  readSnapshot,
   type MeetingsSnapshot,
 } from "../lib/meetings/snapshot.ts";
 import {
   candidateForMeetingPartition,
-  meetingsWiringCoverage,
   promoteMeetingPartition,
   readPreviousMeetingPartition,
 } from "../scripts/ingest.ts";
 import { captureSourceAcquisitions } from "../lib/sources/acquisition-trace.ts";
 import { readValidatedResponse } from "../lib/sources/http.ts";
 import { authorityFor } from "../lib/civic-data/source-authority.ts";
+import type { Meeting } from "../lib/sources/types.ts";
 
-const loadedFixture = readSnapshot();
-assert.ok(loadedFixture, "the explicit meetings bootstrap fixture must exist");
-const fixture: MeetingsSnapshot = loadedFixture;
+const GENERATED_AT = "2026-09-20T12:00:00.000Z";
 
-const partition = MEETING_PARTITION_CONTRACTS.find((candidate) =>
-  fixture.meetings.some((meeting) =>
-    meeting.bodyId === candidate.bodyId && meeting.id.startsWith(`${candidate.meetingSource}:`),
-  ),
-)!;
-assert.ok(partition, "the fixture must contain at least one registered source/body partition");
+const partition = MEETING_PARTITION_CONTRACTS.find((p) => p.id === "meetings:legistar:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fcounty%3Apima%23governing")!;
+assert.ok(partition, "the registered Legistar county partition");
 
-function fixturePartition(snapshot: MeetingsSnapshot): MeetingsSnapshot {
-  const meetings = snapshot.meetings.filter((meeting) =>
-    meeting.bodyId === partition.bodyId && meeting.id.startsWith(`${partition.meetingSource}:`),
-  );
-  const ids = new Set(meetings.map((meeting) => meeting.id));
-  const source = snapshot.sources.find((row) => row.source === partition.meetingSource);
-  assert.ok(source);
+function sitting(suffix: string, startsAt: string): Meeting {
+  return {
+    id: `${partition.meetingSource}:pima:${suffix}`,
+    ocdId: partition.ocdId,
+    bodyId: partition.bodyId,
+    bodyName: partition.wiring!.publishingOrg,
+    title: `Regular Meeting ${suffix}`,
+    startsAt,
+    timeZone: partition.wiring!.timeZone,
+    location: null,
+    online: { label: "Zoom Webinar", joinUrl: null },
+    agendaUrl: null,
+    jurisdiction: partition.wiring!.jurisdiction,
+    status: "SCHEDULED",
+    provenance: { sourceUrl: "https://webapi.legistar.com/v1/pima/events", sourceOrg: partition.wiring!.publishingOrg, collectedAt: GENERATED_AT, verifiedAt: null },
+  };
+}
+
+function fixturePartition(): MeetingsSnapshot {
+  const meetings = [sitting("1", "2026-10-06T17:00:00.000Z"), sitting("2", "2026-10-20T17:00:00.000Z")];
   return {
     formatVersion: 1,
-    generatedAt: snapshot.generatedAt,
+    generatedAt: GENERATED_AT,
     counts: { fresh: meetings.length, carried: 0, total: meetings.length },
     sources: [{
-      ...source,
+      source: partition.meetingSource,
       ok: true,
       error: null,
       fetched: meetings.length,
@@ -53,7 +58,7 @@ function fixturePartition(snapshot: MeetingsSnapshot): MeetingsSnapshot {
       drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 },
     }],
     meetings,
-    agendaDocuments: snapshot.agendaDocuments.filter((document) => ids.has(document.meetingId)),
+    agendaDocuments: [],
   };
 }
 
@@ -78,18 +83,7 @@ function withAcquisitionEvidence(snapshot: MeetingsSnapshot): MeetingsSnapshot {
   };
 }
 
-test("meetings bootstrap is selected only after an answered absent pointer", async () => {
-  const read = await readMeetingsProjection({
-    store: new MemoryRoutineDataStore(),
-    now: fixture.generatedAt,
-    bypassCache: true,
-  });
-  assert.equal(read.kind, "BOOTSTRAP");
-  assert.equal(read.metadata.versionId?.startsWith("bootstrap:MEETING:source-wiring-partitions:"), true);
-  assert.equal(read.value, fixture);
-});
-
-test("an unreachable store never masquerades as the bundled fixture", async () => {
+test("an unreachable store is reported as unreachable", async () => {
   const read = await readMeetingsProjection({
     store: {
       async readPromotion() {
@@ -99,29 +93,11 @@ test("an unreachable store never masquerades as the bundled fixture", async () =
         throw new Error("must not be reached");
       },
     },
-    now: fixture.generatedAt,
+    now: GENERATED_AT,
     bypassCache: true,
   });
   assert.equal(read.kind, "STORE_UNREACHABLE");
   if (read.kind === "STORE_UNREACHABLE") assert.equal(read.code, "STORE_READ_FAILED");
-});
-
-test("production refuses the meetings fixture even when a caller requests it", async () => {
-  const mutableEnv = process.env as unknown as Record<string, string | undefined>;
-  const previous = mutableEnv.NODE_ENV;
-  mutableEnv.NODE_ENV = "production";
-  try {
-    const read = await readMeetingsProjection({
-      store: new MemoryRoutineDataStore(),
-      now: fixture.generatedAt,
-      bypassCache: true,
-      allowUnconfiguredBootstrap: true,
-    });
-    assert.equal(read.kind, "NOT_RECORDED");
-  } finally {
-    if (previous === undefined) delete mutableEnv.NODE_ENV;
-    else mutableEnv.NODE_ENV = previous;
-  }
 });
 
 test("promotion carry-forward reads canonical first and does not fallback on DB error", async () => {
@@ -137,7 +113,7 @@ test("promotion carry-forward reads canonical first and does not fallback on DB 
 
 test("one partition carry-forward opens only its own pointer and ignores an unreachable sibling", async () => {
   const store = new MemoryRoutineDataStore();
-  const promoted = await promoteMeetingPartition(store, partition, withAcquisitionEvidence(fixturePartition(fixture)));
+  const promoted = await promoteMeetingPartition(store, partition, withAcquisitionEvidence(fixturePartition()));
   assert.equal(promoted.outcome.candidate.state, "PROMOTED");
   const sibling = MEETING_PARTITION_CONTRACTS.find((candidate) => candidate.id !== partition.id)!;
   const originalReadPromotion = store.readPromotion.bind(store);
@@ -154,38 +130,8 @@ test("one partition carry-forward opens only its own pointer and ignores an unre
   assert.deepEqual(previous, promoted.outcome.promoted?.payload);
 });
 
-test("meetings candidate proves SOURCE_WIRING obligations independently of row count", async () => {
-  const coverage = meetingsWiringCoverage(fixture);
-  /*
-   * The bootstrap fixture was frozen at the permanent data-plane cutover
-   * (generatedAt 2026-09-06). A route wired after it cannot be represented in
-   * it, so each such row is NAMED here rather than the check widened: Pima
-   * Community College moved from its Diligent tenant to its own pima.edu pages
-   * on 2026-09-23 (RETIRED_MEETING_ROUTES), and the fixture
-   * still holds its sittings under the retired `diligent` route.
-   */
-  const WIRED_AFTER_FIXTURE = ["curated:az/pima-community-college#governing:PIMA_EDU"];
-  // The bundled fixture is frozen at the PDC v2 import: the only other
-  // obligations it may leave unaccounted are rows whose partitions were
-  // registered after it, each named in POST_FIXTURE_MEETING_PARTITIONS.
-  /*
-   * Coverage is counted by source route: a post-import row on a route the fixture already carries (C9's two
-   * Newbury rows and Chandler's row, all on schedulepage, 2026-09-24) is represented by that route's rows and is not missing. Every post-import row
-   * on a route the fixture lacks must be. A derived state family (C16) is no SOURCE_WIRING row, so the wiring coverage never counts it.
-   */
-  const postImport = MEETING_PARTITION_CONTRACTS.filter((p) => p.wiring !== null && POST_FIXTURE_MEETING_PARTITIONS.includes(p.id));
-  const fixtureRoutes = new Set(fixture.sources.map((source) => source.source));
-  const expectedMissing = [
-    ...WIRED_AFTER_FIXTURE,
-    ...postImport.filter((p) => !fixtureRoutes.has(p.meetingSource)).map((p) => `${p.bodyId}:${p.wiring!.agendaSourceType}`),
-  ];
-  assert.ok(postImport.some((p) => fixtureRoutes.has(p.meetingSource)), "the case this guards: a post-import row on a route the fixture carries");
-  assert.deepEqual([...coverage.missing].sort(), [...expectedMissing].sort());
-  assert.equal(coverage.accounted, coverage.denominator - expectedMissing.length);
-  assert.equal(coverage.denominator > 0, true);
-  assert.equal(coverage.denominator === fixture.meetings.length, false);
-
-  const evidenced = withAcquisitionEvidence(fixturePartition(fixture));
+test("meetings candidate proves its meeting door's obligations independently of row count", async () => {
+  const evidenced = withAcquisitionEvidence(fixturePartition());
   const candidate = candidateForMeetingPartition(partition, evidenced);
   assert.equal(candidate.retrieval.requestedUrl, "https://webapi.legistar.com/v1/pima/events");
   assert.equal(candidate.retrieval.finalUrl, "https://webapi.legistar.com/v1/pima/events");
@@ -196,24 +142,22 @@ test("meetings candidate proves SOURCE_WIRING obligations independently of row c
   assert.match(candidate.horizon.query, new RegExp(partition.meetingSource));
   assert.equal(
     candidate.dependentChecks.find((check) =>
-      check.consumer.includes("SOURCE_WIRING"),
+      check.consumer.startsWith("meeting door "),
     )?.passed,
     true,
   );
 
-  const before = readFileSync("data/meetings-snapshot.json", "utf8");
   const store = new MemoryRoutineDataStore();
   const promoted = await promoteMeetingPartition(store, partition, evidenced);
   assert.equal(promoted.outcome.candidate.state, "PROMOTED");
   assert.deepEqual(promoted.outcome.promoted?.payload, evidenced);
-  assert.equal(readFileSync("data/meetings-snapshot.json", "utf8"), before);
 
   const previous = await readPreviousMeetingPartition(store, partition);
   assert.ok(previous);
 
   const read = await readMeetingsProjection({
     store,
-    now: fixture.generatedAt,
+    now: GENERATED_AT,
     bypassCache: true,
   });
   assert.equal(read.kind, "PROMOTED");
@@ -221,7 +165,7 @@ test("meetings candidate proves SOURCE_WIRING obligations independently of row c
 });
 
 test("meetings promotion fails closed without per-child bytes or on an untrusted child redirect", async () => {
-  const partitionFixture = fixturePartition(fixture);
+  const partitionFixture = fixturePartition();
   const missing = await promoteMeetingPartition(new MemoryRoutineDataStore(), partition, partitionFixture);
   assert.equal(missing.outcome.promoted, null);
   assert.equal(missing.outcome.candidate.failureCode, "SOURCE_RETRIEVAL_FAILED");
@@ -314,7 +258,7 @@ test("validated curl-rung bytes retain curl's effective redirect URL", async () 
 });
 
 test("the live Pima Legistar/InSite schedule bridge is an exact registered authority route", () => {
-  // The county's current page (C18, 2026-09-24) and the /2559/ address it moved from.
+  // The county's current page and the address it moved from.
   const route = "https://www.pima.gov/board-of-supervisors-meeting-schedule";
   assert.equal(authorityFor("meetings-public-bodies", "MEETING", route).ok, true);
   assert.equal(authorityFor("meetings-public-bodies", "MEETING", "https://www.pima.gov/2559/Board-of-Supervisors-Meeting-Schedule").ok, true);
@@ -346,7 +290,6 @@ test("all assigned runtime consumers use the promoted meetings projection", () =
 });
 
 test("production-capable composite ingest has no non-promotion file door", () => {
-  const before = readFileSync("data/meetings-snapshot.json", "utf8");
   const run = spawnSync(
     process.execPath,
     ["--experimental-strip-types", "scripts/ingest.ts", "composite"],
@@ -354,5 +297,4 @@ test("production-capable composite ingest has no non-promotion file door", () =>
   );
   assert.equal(run.status, 1);
   assert.match(run.stderr, /requires --promote/);
-  assert.equal(readFileSync("data/meetings-snapshot.json", "utf8"), before);
 });

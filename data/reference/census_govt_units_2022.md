@@ -19,17 +19,14 @@
 - **Attested 2026-09-23 (Phoenix):** fetched directly from the source URL above, it is 11,459,763 bytes
   (`Last-Modified: Thu, 24 Aug 2023 12:44:48 GMT`) with sha256
   `3ef3d93c91697b00d4d53384176dc584db9dacbd0f0a23e45657f0a3a1058c28` — byte-identical to the supplied file.
-  The registration contract (`lib/registration/`) pins exactly these bytes on every routine acquisition.
+  The registration contract (`lib/registration/`) retains this attestation for held evidence.
 - **Conditional requests, measured 2026-09-23 (Phoenix, evening):** census.gov (served through Cloudflare)
   sends no ETag. A HEAD answers 200 with `content-length: 11459763` and the same `Last-Modified`. A GET with
   `If-Modified-Since: Thu, 24 Aug 2023 12:44:48 GMT` answers **304 with a 0-byte body**; a stale
   `If-None-Match` answers 200, so the 304 is a real condition, not a blanket reply. One full GET in the same
   session again returned 11,459,763 bytes with sha256 `3ef3d93c…058c28` under that `Last-Modified`, binding
-  the date to the pinned bytes. So each state's registration check asks conditionally
-  (`REGISTRATION_SOURCE_LAST_MODIFIED`): a 304 confirms the pinned file without a download, a 200 with any
-  other date is refused on its headers before its body is read, and a 200 that ignored the condition is
-  hashed as before. The validator accepts a 304 only as this pairing (`notModifiedIssue` in
-  `lib/civic-data/validate.ts`).
+  the date to the held bytes. Registration now caches identified immutable releases and checks conditionally.
+  A 304 retains the original observation date; changed complete bytes are parsed and validated before publication.
 - Archive contents: `Govt_Units_2022_Final.xlsx` (11,395,131 b, dated 2023-08-21) and
   `Government_Units_List_Documentation_2022.pdf` (206,919 b, dated 2023-08-24).
 - Source format: XLSX (4 sheets). Output format: UTF-8 CSV, header row, 25 columns.

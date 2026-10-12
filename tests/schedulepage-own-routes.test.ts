@@ -3,26 +3,12 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 
-import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
+import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import {
   makeSchedulePageSource,
   parseNextMeetingLine,
   parseNoticeFeed,
 } from "../lib/sources/schedulepage/index.ts";
-
-/**
- * **TWO NEWBURY BODIES, READ FROM THEIR OWN PAGES.** (C9, 2026-09-24.)
- *
- * The town's calendar never carries the Library Trustees or the Energy
- * Committee, so their `ICAL` rows have never matched a sitting. Sean's
- * direction on 2026-09-24: "No publisher emails now. Investigate every
- * practical route using available tools, feeds, APIs, documents, archives."
- * Each body publishes its own sittings on its own site, and both hosts
- * answered a robots-checked GET with no challenge.
- *
- * The fixtures are the exact bytes read that day: the library's WordPress
- * feed at 04:31Z and the Energy Committee's home page at 18:2xZ.
- */
 
 const fixture = (name: string) => readFileSync(join(import.meta.dirname, "fixtures", "schedulepage", name), "utf8");
 const FEED = fixture("newbury-library-feed-2026-09-24.xml");
@@ -79,7 +65,7 @@ test("the Energy Committee's home page yields its next sitting in its own words"
 });
 
 test("both rows reach readers as sittings of their registered bodies", async () => {
-  const rows = SOURCE_WIRING.filter((row) =>
+  const rows = FIXTURE_DOOR_ROWS.filter((row) =>
     row.config.slug === "newbury-library-trustees-notices" || row.config.slug === "newbury-energy-committee-page");
   assert.equal(rows.length, 2, "both rows are wired");
   const pages: Record<string, string> = {

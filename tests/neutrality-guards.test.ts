@@ -7,23 +7,11 @@ import { tsFilesUnder } from "./read-code.ts";
 import * as schema from "../lib/db/schema.ts";
 
 /**
- * Two constraints from CLAUDE.md, written as tests so they cannot arrive by
- * accretion — the shape of the existing officeholder guard, applied forward.
- *
- * Both scan what exists rather than asserting absence: the rule applies to
- * every candidate/measure record and every store that is ever declared, from
- * the moment it is declared, and a new declaration walks straight into the
- * guard instead of waiting for someone to remember to extend a test.
+ * The product never tells anyone how to vote, and the search log never joins the subscription store. Both guards
+ * scan what exists, so a new declaration walks straight into them.
  */
 
-/**
- * Every .ts file under lib/, recursively.
- *
- * The walk itself moved to `./read-code.ts` on 2026-08-28 under RULING 103 —
- * `tenant-body-binding.test.ts` needed the same sweep over `lib/sources/`, and
- * a byte-identical second copy of a guard's DENOMINATOR is the class that
- * ruling exists for. This stays as the name this file reads by.
- */
+/** Every .ts file under lib/, recursively. */
 const libFiles = () => tsFilesUnder("lib");
 
 /** interface/type blocks whose name matches, with their body text. */
@@ -52,17 +40,14 @@ function declaredShapes(
 }
 
 test("no candidate or measure record grows a ranking key", () => {
-  // CLAUDE.md: the product never tells anyone how to vote. The moment a
-  // candidate or measure record carries a score/rank/match key, a ranking UI
-  // is one map() away — so the key itself is forbidden at the record level.
+  // A score/rank/match key on a candidate or measure record is one map() away from a ranking UI.
   const forbidden =
     /^\s*(score|rank|rating|match|fit|grade|alignment|recommendation)\s*[?:]/im;
 
   const offenders: string[] = [];
   for (const file of libFiles()) {
     const source = readFileSync(file, "utf8");
-    // `candida` catches Candidacy as well as Candidate; contest and election
-    // joined the vocabulary with the S2 ballot shapes.
+    // `candida` catches Candidacy as well as Candidate.
     for (const shape of declaredShapes(
       source,
       /candida|contest|measure|ballot|election/i,
@@ -75,8 +60,7 @@ test("no candidate or measure record grows a ranking key", () => {
 });
 
 test("no committed ballot data record carries a ranking key", () => {
-  // The same rule at the data layer: a curated file must not smuggle in what
-  // the type guard forbids — JSON has no types to scan.
+  // The same rule at the data layer: JSON has no types to scan.
   const forbiddenKey =
     /^(score|rank|rating|match|fit|grade|alignment|recommendation)$/i;
   const dir = join(process.cwd(), "data", "ballot");
@@ -100,12 +84,7 @@ test("no committed ballot data record carries a ranking key", () => {
   }
 });
 
-/**
- * CLAUDE.md's two-store constraint. The search log and the subscription
- * store never join: no shared column, no foreign key, no third table mapping
- * between them. Runs against whatever `lib/db/schema.ts` declares — empty
- * today, binding from the first migration that lands.
- */
+/** The search log and the subscription store never join: no shared column, no foreign key, no mapping table. */
 function tablesMatching(pattern: RegExp): Array<{ name: string; columns: string[] }> {
   const found: Array<{ name: string; columns: string[] }> = [];
   for (const [name, value] of Object.entries(schema)) {
@@ -144,9 +123,7 @@ test("the search log and the subscription store share no key", () => {
 });
 
 test("the search log carries no identifier of any kind", () => {
-  // Not who — only what was asked and where. The row must be impossible to
-  // resolve to a person, which is the only thing that makes it honest to
-  // aggregate and sell.
+  // The row must be impossible to resolve to a person.
   const identifier =
     /email|phone|token|subscriber|account|device|session|fingerprint|user_?id|ip_?addr/i;
 

@@ -1,87 +1,3 @@
-/**
- * **READER INTELLIGENCE — WHAT AND WHERE, NEVER WHO.** (Admin Pass C, ADM-C12,
- * from the 9.6.26 owner feedback; §3.10 privacy, §3.11 the two databases,
- * §5 the existing product-intelligence contract, §16 bounded reads.)
- *
- * This is the read model behind `/admin/reader`. It is the FIRST admin surface
- * in this repository that opens the **application** database. Everything else
- * under `app/(admin)/` reads the control plane, and the two must never be
- * conflated (§3.11): operational state — work items, attempts, obligations,
- * receipts — lives in the control plane; what a reader did lives here, in the
- * collection stores. They are different Neon projects, named by different
- * variables, and this module reads exactly one of them.
- *
- * ## The privacy model, and why "users" is not a word this file can use
- *
- * There is no person in these stores. `search_log` records an event type, the
- * divisions it touched, a five-digit ZIP as orientation, a bounded scalar
- * detail bag and nothing else; `lib/db/search-log.ts` refuses a detail key
- * containing user/session/device/ip/email and scrubs every string value before
- * insert. `reactions` carries a hashed browser continuity key in its own
- * digest namespace. `feedback` carries a random contact reference minted per
- * submission and never derived from the address — and this module DOES NOT
- * READ THE FEEDBACK STORE AT ALL, because the one thing §5.3 forbids by name
- * is joining that reference to search behaviour, Ask activity, reaction
- * history or ZIP usage. The cheapest way to never make that join is to never
- * hold both halves in one place. The feedback inbox is its own surface.
- *
- * So every figure this module produces is a count of EVENTS, and the page says
- * so. "43% of users" is not a number that can be computed here, and it is not
- * a number that is being withheld — the concept does not exist in the schema.
- * Every rate therefore travels as a {@link Measured}: a value, the exact
- * denominator it came out of, the sentence saying what it licenses, and where
- * the denominator itself came from.
- *
- * ## ORGANIC is the default, and the other three classes are named, not hidden
- *
- * Every collection row carries a `run_class`. Roughly 537 rows on production
- * were written by this project's own Playwright walks and every walk adds ~28
- * more, because the map sends a `SEARCH` row for every meetings answer it
- * receives (the client's `/api/log` beacon since PDC-9; `/api/meetings` itself
- * writes nothing, and a CDN-held answer never reaches it). Counting
- * those as readers would be a false claim about demand — the exact failure
- * `lib/signal/search-log-reads.ts` exists to prevent, and the reason
- * `tests/search-log-exclusion.test.ts` refuses any read of that table which
- * does not carry the organic filter.
- *
- * This module carries it. Every aggregate here is filtered to EXACTLY ONE run
- * class; there is no "all classes" aggregate and no parameter that removes the
- * filter. The default is `ORGANIC` and an unrecognised request falls back to
- * `ORGANIC` rather than widening. The owner may select `AUTHOR`, `SYNTHETIC`
- * or `UNKNOWN` deliberately — the brief requires it — and when he does, the
- * page states which class every number on it counted. The only unfiltered read
- * is the four-class census, whose entire job is to describe the window
- * including the part that is not readers, and which reconciles against the
- * total the way `scripts/census-run-class.mts` does: `run_class` has no CHECK
- * constraint, so four buckets summing to the total is a fact to be checked
- * rather than assumed.
- *
- * ## Bounded and scoped (§16)
- *
- * No card loads a collection. Every query is a single server-side aggregation
- * over one stated window with a stated denominator: the census and the
- * per-event counts are closed-cardinality `GROUP BY`s, and every "top" list is
- * ranked inside Postgres with `ROW_NUMBER()` and cut at {@link READER_TOP_N},
- * carrying its own distinct-key count so the page can say "top 8 of 61" rather
- * than implying it showed everything. The window is a half-open interval
- * computed once, so every panel on one render describes the same span.
- *
- * ## What is deliberately not here
- *
- * - **No free text, ever.** A refused Ask question rides in `detail->>'question'`
- *   capped and scrubbed; this module counts refusals by topic and never selects
- *   that key. Reaction verbatims (`free_text`) are not read.
- * - **No `coverage_tier_distribution`.** The encoded per-government
- *   distribution is stored-only by decision (`lib/db/schema.ts`) and appears on
- *   no surface. Rendering it would be the first surface to do so, which is an
- *   author decision and not an implementation detail. The floor tier, which is
- *   stated publicly, is aggregated.
- * - **No cross-store run rollup.** `search_log.run_id` holds a raw label while
- *   every other store holds a digest in its own namespace. There is no session,
- *   no device and no visit in this product, so there is no such rollup to build.
- *
- * Server-side only. `DATABASE_URL` is read here and its value never leaves.
- */
 import { neon } from "@neondatabase/serverless";
 
 import { SEARCH_LOG_EVENT_TYPES, type SearchLogEventType } from "../db/search-log.ts";
@@ -94,27 +10,11 @@ import {
   type ScaleVersion,
 } from "../signal/reactions.ts";
 import { organicDenominatorSentence, type RunClassCensus } from "../signal/search-log-reads.ts";
-/*
- * The three-answer read outcome and its failure constructor, taken from the
- * control-plane read model because there is exactly one implementation of that
- * shape in this repository (RULING 103). Nothing else is taken from it: no
- * connection, no read, no control-plane record ever reaches this file.
- */
+/* The read-outcome shape is shared with the control-plane read model; nothing else crosses over. */
 import { unreachable, type ReadOutcome } from "./admin-data.ts";
 import { assertAggregateOnly, gap, held, measured, type Held, type Measured, type RenderedNumber, type CountClaim } from "./owner-surface.ts";
 import { plainCode } from "./plain-words.ts";
 
-/* ------------------------------------------------------------------ *
- * 1. SCOPE — WHOSE TRAFFIC, AND OVER WHAT SPAN
- * ------------------------------------------------------------------ */
-
-/**
- * The four classes a collection row can declare itself.
- *
- * ORGANIC first because it is the default and the only one the product's
- * demand figures are ever about. The other three exist so that traffic which
- * is NOT a reader can be looked at deliberately rather than silently mixed in.
- */
 export type ReaderRunClass = "ORGANIC" | "AUTHOR" | "SYNTHETIC" | "UNKNOWN";
 
 export const READER_RUN_CLASSES: readonly ReaderRunClass[] = [
@@ -135,14 +35,7 @@ export const DEFAULT_READER_WINDOW_DAYS = 30;
 /** How many rows a "top" list shows. Every such list also states how many exist. */
 export const READER_TOP_N = 8;
 
-/**
- * The class a request asked for, or ORGANIC.
- *
- * Deliberately total: anything unrecognised — a typo, a stale bookmark, a
- * hand-edited query string — resolves to ORGANIC. A parser that threw would
- * turn a bad link into a broken page, and a parser that widened would turn one
- * into a demand chart quietly counting the project's own walks.
- */
+/** Anything unrecognised resolves to ORGANIC, never widened. */
 export function readerRunClassFromParam(raw: string | string[] | undefined): ReaderRunClass {
   const one = Array.isArray(raw) ? raw[0] : raw;
   const wanted = (one ?? "").trim().toUpperCase();
@@ -165,14 +58,7 @@ export interface ReaderWindow {
   readonly toIso: string;
 }
 
-/**
- * Build the window once, from the page's own render clock.
- *
- * Computed in JavaScript rather than as `now() - interval` in each query so
- * that eight aggregates issued in parallel cannot describe eight slightly
- * different spans — the shape that makes two cards on one screen disagree by a
- * row and look like a bug in the arithmetic.
- */
+/** Built once from the render clock so parallel aggregates describe one span. */
 export function readerWindow(nowIso: string, days: number): ReaderWindow {
   const to = Date.parse(nowIso);
   if (!Number.isFinite(to)) {
@@ -188,26 +74,12 @@ export function readerWindow(nowIso: string, days: number): ReaderWindow {
   };
 }
 
-/* ------------------------------------------------------------------ *
- * 2. WORDING — A STORED CONSTANT IS NOT DISPLAY TEXT
- * ------------------------------------------------------------------ */
-
-/** A stored constant as the owner reads it, with the sentence that says what it is. */
 export interface ReaderWord {
   readonly label: string;
   readonly means: string;
 }
 
-/**
- * The reader domain's constants in ordinary English.
- *
- * `app/(admin)/fleet-wording.ts` is the precedent: a machine key renders as a
- * name on the face and keeps its raw form in the hover. The shared dictionary
- * in `plain-words.ts` covers the control plane's constants; these are the
- * collection stores' and they belong beside the queries that produce them.
- */
 export const READER_WORDS: Readonly<Record<string, ReaderWord>> = {
-  /* ------------------------------------------------- search_log.event_type */
   SEARCH: {
     label: "Looked up an address or ZIP",
     means: "Someone asked what governs a place. This is the event the whole product starts from.",
@@ -236,7 +108,6 @@ export const READER_WORDS: Readonly<Record<string, ReaderWord>> = {
     label: "Asked a question",
     means: "Someone typed a question into the ask box. The topic is recorded; what they typed is not, unless nothing could answer it.",
   },
-  /* -------------------------------------------------------------- run_class */
   ORGANIC: {
     label: "Readers",
     means: "Traffic that arrived with no automation marker on it. This is the only class product demand is ever measured from.",
@@ -253,12 +124,10 @@ export const READER_WORDS: Readonly<Record<string, ReaderWord>> = {
     label: "Cannot be attributed",
     means: "Rows written before the marker existed, or that arrived declaring automation without a usable run id. Never counted as readers in either direction.",
   },
-  /* ---------------------------------------------------------- coverage_tier */
   TIER_0: { label: "Floor coverage", means: "The place is covered at the base tier only." },
   TIER_1: { label: "Tier 1 coverage", means: "The place is covered one tier above the floor." },
   TIER_2: { label: "Tier 2 coverage", means: "The place is covered two tiers above the floor." },
   TIER_3: { label: "Tier 3 coverage", means: "The place is covered at the deepest tier recorded." },
-  /* ------------------------------------------------- reactions.target_type */
   FEDERAL_VOTE: { label: "A vote in Congress", means: "A recorded federal vote a reader answered about." },
   CANDIDATE: { label: "A candidate", means: "A candidate on a ballot a reader answered about." },
   MEASURE_PROVISION: { label: "Part of a ballot measure", means: "One provision of a measure a reader answered about." },
@@ -270,7 +139,6 @@ export const READER_WORDS: Readonly<Record<string, ReaderWord>> = {
     label: "Who gave to a campaign",
     means: "A reader's answer about a campaign's contributors. Campaign finance renders for you and never enters anything sold.",
   },
-  /* ----------------------------------------------- reactions.reaction values */
   YES: { label: "Yes", means: "" },
   NO: { label: "No", means: "" },
   UNSURE: { label: "Not sure", means: "" },
@@ -280,13 +148,10 @@ export const READER_WORDS: Readonly<Record<string, ReaderWord>> = {
   DISLIKE: { label: "Dislike it", means: "" },
   HATE: { label: "Hate it", means: "" },
   DONT_CARE: { label: "Do not care", means: "" },
-  /* --------------------------------------- reactions.verification_tier */
   ANONYMOUS: { label: "Anonymous", means: "Nothing about the person was checked, and nothing was asked." },
   LOCALITY_VERIFIED: { label: "Place checked", means: "The place the answer came from was checked. The person was not." },
   VOTER_MATCHED: { label: "Matched to a voter file", means: "A path that exists in the schema and is not in use." },
-  /* -------------------------------------------- demand_signals.subject_type */
   BODY: { label: "A governing body", means: "" },
-  /* ------------------------------------- ask topic sentinels (detail.topic) */
   NO_ROUTE: {
     label: "Nothing could answer it",
     means: "The question reached the ask box and no route, digest or grounded answer could take it. This is the roadmap.",
@@ -304,15 +169,7 @@ export function readerWord(key: string | null | undefined): ReaderWord {
   return { label: plainCode(raw), means: "" };
 }
 
-/**
- * Which key in a row's `detail` bag names the thing that was opened.
- *
- * These are the keys the browser actually writes (`components/map/map-entry.tsx`
- * and `components/ask/ask-box.tsx`). The SQL below hard-writes the same pairs
- * into a `CASE`, and `tests/admin-reader-intel.test.ts` asserts the two agree —
- * a map that drifted from the query would produce an empty "top bodies" list
- * that looked exactly like nobody opening a body.
- */
+/** Detail keys the browser writes; the SQL CASE below mirrors these pairs and a test asserts they agree. */
 export const DETAIL_KEY_BY_EVENT: Readonly<Partial<Record<SearchLogEventType, string>>> = {
   BODY_OPENED: "venueKey",
   MEETING_OPENED: "meetingId",
@@ -321,41 +178,15 @@ export const DETAIL_KEY_BY_EVENT: Readonly<Partial<Record<SearchLogEventType, st
   QUESTION_ASKED: "topic",
 };
 
-/* ------------------------------------------------------------------ *
- * 3. THE CONNECTION — THE APPLICATION DATABASE, BY ITS OWN VARIABLE
- * ------------------------------------------------------------------ */
-
-/**
- * The variable the application itself uses for its own database
- * (`lib/db/index.ts`). Named here so a failure can say WHICH handle is missing
- * without ever printing its value, and so the difference from the control
- * plane's variable is legible in one line rather than inferred.
- */
+/** Named so a failure can say which handle is missing without printing its value. */
 export const READER_STORE_URL_VAR = "DATABASE_URL";
 
-/**
- * A tagged-template query against the reader store.
- *
- * Narrowed to the one shape this module uses so a test can hand `readReaderIntel`
- * a recorded fake and exercise every projection without a live database. The
- * driver's own overloads are wider than this; the cast at the open site is the
- * only place the two meet.
- */
 export type ReaderStoreQuery = (
   strings: TemplateStringsArray,
   ...values: unknown[]
 ) => Promise<Record<string, unknown>[]>;
 
-/**
- * Open the application database, or say precisely why not.
- *
- * A missing variable is a legitimate state on a machine that has no reader
- * store bound, and it must not read as an outage — but on the deployed admin
- * host it is a real defect, because this page has nothing else to read. So the
- * detail names the variable and never its value: some driver errors carry the
- * whole connection string in the message, which is why the failure branch
- * reports the error's NAME rather than its text.
- */
+/** The detail names the variable, never its value, and a failure reports the error's name, never its text. */
 export function openReaderStore(
   env: Record<string, string | undefined> = process.env,
 ): { readonly ok: true; readonly sql: ReaderStoreQuery } | { readonly ok: false; readonly detail: string } {
@@ -381,24 +212,17 @@ export function openReaderStore(
   }
 }
 
-/* ------------------------------------------------------------------ *
- * 4. THE READINGS
- * ------------------------------------------------------------------ */
-
-/** One aggregated row: the stored key, what it reads as, and how many events. */
 export interface CountedKey {
   readonly key: string;
   readonly label: string;
   readonly count: number;
 }
 
-/** One day of the window, in Eastern days, so the strip matches every stamp on the page. */
 export interface CountedDay {
   readonly day: string;
   readonly count: number;
 }
 
-/** A ranked list that knows what it left out. */
 export interface TopList {
   readonly rows: readonly CountedKey[];
   /** How many distinct keys exist in the window for this class. */
@@ -409,9 +233,7 @@ export interface TopList {
 
 export const EMPTY_TOP_LIST: TopList = { rows: [], distinct: 0, keyed: 0 };
 
-/** What the search log holds for one class over one window. */
 export interface ActivityReading {
-  /** All four classes over the window, whatever class is being viewed. */
   readonly census: RunClassCensus;
   /** Do the four classes account for every row? `run_class` has no CHECK constraint. */
   readonly reconciles: boolean;
@@ -426,7 +248,6 @@ export interface ActivityReading {
   /** The first three digits of a ZIP — the coarse geography the brief asks for. */
   readonly topZipAreas: TopList;
   readonly topDivisions: TopList;
-  /** How many division memberships the events in this class touched in total. */
   readonly divisionTouches: number;
   readonly topBodies: TopList;
   readonly topMeetings: TopList;
@@ -435,7 +256,6 @@ export interface ActivityReading {
   readonly topAskTopics: TopList;
 }
 
-/** One answer group: a target type, the instrument that asked, the answer, the count. */
 export interface AnswerGroup {
   readonly targetType: ReactionTargetType;
   readonly scaleVersion: ScaleVersion;
@@ -468,13 +288,10 @@ export interface DemandReading {
   readonly topSubjects: TopList;
 }
 
-/** The Ask store. */
 export interface AskReading {
-  /** Rows in the window, every class. */
   readonly rowsInWindow: number;
 }
 
-/** Everything one render of the page reads, with each panel's own outcome. */
 export interface ReaderIntel {
   readonly window: ReaderWindow;
   readonly runClass: ReaderRunClass;
@@ -483,8 +300,6 @@ export interface ReaderIntel {
   readonly demand: ReadOutcome<DemandReading>;
   readonly ask: ReadOutcome<AskReading>;
 }
-
-/* -------------------------------------------------------- row coercion */
 
 function numAt(row: Record<string, unknown>, key: string): number {
   const raw = row[key];
@@ -508,14 +323,7 @@ function censusFrom(rows: Record<string, unknown>[]): RunClassCensus {
   };
 }
 
-/**
- * Do the four named classes account for every row in the window?
- *
- * `run_class` carries no CHECK constraint — the four values are a TypeScript
- * union only — so a fifth value can exist in the data before it exists in this
- * file. `scripts/census-run-class.mts` reports that as DOES NOT RECONCILE
- * rather than smoothing it, and so does the page.
- */
+/** `run_class` has no CHECK constraint, so a fifth value can exist in the data; this reports it. */
 export function censusReconciles(census: RunClassCensus): boolean {
   return census.organic + census.synthetic + census.unknown + census.author === census.total;
 }
@@ -541,20 +349,7 @@ function topListFrom(rows: Record<string, unknown>[], keyColumn: string): TopLis
   };
 }
 
-/* --------------------------------------------------------- the queries */
-
-/**
- * The search log for one class over one window.
- *
- * Seven statements, issued together. Each is a single server-side aggregation:
- * no card walks a collection, and the two ranked projections cut inside
- * Postgres with `ROW_NUMBER()` while carrying their own `COUNT(*) OVER` and
- * `SUM(n) OVER` so the page can state what it did not show.
- *
- * The class predicate is a bound parameter and the census below is the one
- * unfiltered read — the four-class description of the window that makes the
- * excluded rows visible instead of merely absent.
- */
+/** Each statement is one server-side aggregation; ranked lists are cut inside Postgres with `ROW_NUMBER()`. */
 export async function readActivity(
   sql: ReaderStoreQuery,
   window: ReaderWindow,
@@ -649,14 +444,7 @@ export async function readActivity(
           )
           SELECT ocd_id, n, distinct_keys, keyed_rows FROM ranked WHERE rk <= ${topN}::int ORDER BY rk
         `,
-        /*
-         * The four "what was opened" lists in ONE statement, ranked per event
-         * type. The CASE names the detail key each browser event writes; the
-         * pairs are mirrored in DETAIL_KEY_BY_EVENT and the test asserts the
-         * two agree. A row whose detail bag carries no such key groups to NULL
-         * and is dropped here — `keyed_rows` then differs from the event's own
-         * count, which is the honest way to say "of the N opens, M carried an id".
-         */
+        /* The CASE names the detail key each browser event writes, mirrored in DETAIL_KEY_BY_EVENT. */
         sql`
           WITH keyed AS (
             SELECT event_type,
@@ -687,12 +475,7 @@ export async function readActivity(
       ]);
 
     const census = censusFrom(censusRows);
-    /*
-     * Nothing at all in the window, in any class. That is a different answer
-     * from "nothing in the class you selected", which is a HELD reading with a
-     * zero in it and a census beside it saying where the rows went, and it is a
-     * different answer again from a store that could not be reached.
-     */
+    /* Nothing in any class differs from nothing in the selected class, and from an unreachable store. */
     if (census.total === 0) {
       return {
         kind: "NOT_RECORDED",
@@ -744,19 +527,9 @@ export async function readActivity(
 }
 
 /**
- * Reactions for one class over one window.
- *
- * Three things this reading refuses to blend, each for a reason that has
- * already cost this product a wrong number once:
- *
- *   scale versions   v1, v2 and v3 are different questions. Pooling them
- *                    reports a trend caused by the wording changing.
- *   quarantine       velocity-held rows are stored and excluded from every
- *                    aggregate, and shown separately rather than hidden.
- *   the row count    `reactions` is an upsert keyed on
- *                    (continuity hash, target type, target id), and an
- *                    overwrite re-stamps `occurred_at`. So a count here is
- *                    CURRENT POSITIONS LAST CHANGED IN THE WINDOW, never taps.
+ * Never blended: scale versions (different questions), quarantined rows (shown separately), and
+ * row counts. `reactions` is an upsert that re-stamps `occurred_at`, so a count is current positions
+ * last changed in the window, never taps.
  */
 export async function readReactions(
   sql: ReaderStoreQuery,
@@ -846,12 +619,7 @@ export async function readReactions(
         numAt(row, "n"),
       );
     }
-    /*
-     * Every group the data produced, in a stable order, and no group the data
-     * did not produce: an answer value that never came in is absent rather than
-     * shown at zero, because a zero here would read as "nobody chose it" on a
-     * scale that may not even have been offered for that target type.
-     */
+    /* An answer value that never came in is absent, not zero. */
     const byAnswer: AnswerGroup[] = [];
     for (const targetType of REACTION_TARGET_TYPES) {
       for (const version of [1, 2, 3] as ScaleVersion[]) {
@@ -962,10 +730,7 @@ export async function readDemand(
   }
 }
 
-/**
- * The Ask store: how many Ask interactions were saved in the window. Capture
- * is on (Sean, 2026-10-01); rows appear once readers carry a continuity key.
- */
+/** How many Ask interactions were saved in the window. */
 export async function readAsk(
   sql: ReaderStoreQuery,
   window: ReaderWindow,
@@ -982,14 +747,7 @@ export async function readAsk(
   }
 }
 
-/**
- * One render's whole reading, issued in one round.
- *
- * Four reads, in parallel, against one connection. They are separate outcomes
- * on purpose: a reaction table that cannot be reached must not blank the
- * activity panel, and a page that reported all four as one failure would send
- * the owner looking in the wrong place.
- */
+/** Separate outcomes: one unreachable table must not blank another panel. */
 export async function readReaderIntel(
   sql: ReaderStoreQuery,
   window: ReaderWindow,
@@ -1003,31 +761,11 @@ export async function readReaderIntel(
     readAsk(sql, window),
   ]);
   const intel: ReaderIntel = { window, runClass, activity, reactions, demand, ask };
-  /*
-   * The boundary reaching the one surface a human reads. Aggregate-only is a
-   * rule about EXPOSURE, and the owner reading his own console is an exposure
-   * like any other — so the record is walked by field name before the page
-   * gets it, and a field that could key back to one reader refuses the render
-   * instead of appearing on it.
-   */
+  /* Walked by field name before the page gets it: the owner's console is an exposure too. */
   assertAggregateOnly(intel, "the reader-intelligence reading");
   return intel;
 }
 
-/* ------------------------------------------------------------------ *
- * 5. THE RENDER CONTRACT
- * ------------------------------------------------------------------ */
-
-/**
- * The sentence that must sit beside any figure this page states.
- *
- * For ORGANIC it is the project's existing denominator sentence, unchanged and
- * shared, so the console and every export say the same words. For a class the
- * owner selected deliberately it says what he is looking at INSTEAD — because
- * the danger there is the opposite one: not that automated rows leak into a
- * demand figure, but that a deliberate look at automated rows is later
- * remembered as a reading about readers.
- */
 export function scopeSentence(runClass: ReaderRunClass, census: RunClassCensus): string {
   if (runClass === "ORGANIC") return organicDenominatorSentence(census);
   const counted = censusCountFor(census, runClass);
@@ -1044,14 +782,7 @@ export function windowSentence(window: ReaderWindow): string {
   return `Everything below counts the last ${window.days} days only. Nothing on this page reads the whole history.`;
 }
 
-/**
- * A count out of the reading's own denominator, or the named gap where the
- * denominator itself is missing.
- *
- * A zero denominator is the shape `measured()` cannot express and must not be
- * papered over: nought out of nought is not nought percent, it is a question
- * nobody asked. It comes back as a gap that says whose it is.
- */
+/** A zero denominator renders as a named gap, never as a percentage. */
 export function share(
   value: number,
   denominator: number,
@@ -1074,28 +805,13 @@ export function share(
   return held(measured(value, denominator, contract, denominatorSource));
 }
 
-/**
- * Numbers the page is about to print whose numerator exceeds their denominator.
- *
- * `measured()` refuses that shape by throwing, which is correct for a
- * constructor and wrong for a page: a throw on a server component is a 500
- * where a refusal would have been a sentence the owner can read. So the same
- * property is checked against the page's own declared output, and a failure
- * replaces the numbers rather than the page. Expected to be empty — it is a
- * seeded failure, and the projection that starts dividing two different
- * populations by each other is the one nobody notices.
- */
+/** `measured()` throws on these; the page refuses them instead of failing with a 500. */
 export function impossibleNumbersIn(numbers: readonly RenderedNumber[]): string[] {
   return numbers
     .filter((n) => n.denominator !== null && n.value > n.denominator)
     .map((n) => `${n.label}: ${n.value} counted out of ${n.denominator}`);
 }
 
-/**
- * Every number the page is about to print, declared for the page's audit of
- * itself. A figure that reaches the screen without a denominator and an
- * interpretation contract replaces the numbers with a refusal.
- */
 export function renderedNumbersOf(intel: ReaderIntel): RenderedNumber[] {
   const out: RenderedNumber[] = [];
   const days = intel.window.days;
@@ -1219,23 +935,10 @@ export function renderedNumbersOf(intel: ReaderIntel): RenderedNumber[] {
   return out;
 }
 
-/**
- * What the page said it would show, against what it will actually render.
- *
- * The two halves come from different places on purpose: `stated` is the
- * reading's own totals, `rendered` is the length of the array the page maps
- * over. Comparing anything else would compare a number to itself.
- */
+/** `stated` comes from the reading's totals and `rendered` from the array the page maps over. */
 export function countClaimsOf(intel: ReaderIntel, topN: number = READER_TOP_N): CountClaim[] {
   const claims: CountClaim[] = [];
-  /*
-   * Only claims whose two halves come from DIFFERENT places are here. "Days in
-   * the window: as many as the query returned, and the page drew as many as the
-   * query returned" is a number compared to itself, and a check that cannot
-   * fail is a check that reports green about nothing. The distinct-key counts
-   * come out of Postgres's own `COUNT(*) OVER`; the rendered counts are the
-   * lengths of the arrays the page maps over.
-   */
+  /* Only claims whose two halves come from different places; a number compared to itself cannot fail. */
   if (intel.activity.kind === "HELD") {
     const a = intel.activity.value;
     claims.push({
@@ -1287,12 +990,7 @@ export function countClaimsOf(intel: ReaderIntel, topN: number = READER_TOP_N): 
   return claims;
 }
 
-/**
- * The line a top list carries so it never implies it showed everything.
- *
- * "Top 8" over a list of eight with sixty-one behind it is the same defect as
- * a headline of seven over five rows, in the other direction.
- */
+/** A top list always says how many were left out. */
 export function topListSentence(list: TopList, one: string, many: string): string {
   if (list.distinct === 0) return `No ${one} was named by any event in this window.`;
   const named = list.distinct === 1 ? one : many;

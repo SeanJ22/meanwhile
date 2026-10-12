@@ -38,11 +38,7 @@ function sourceProjectionObservedAt(store: RoutineDataStore, requested: string):
   return store instanceof PostgresRoutineDataStore ? new Date().toISOString() : requested;
 }
 
-/**
- * Bound the contract check, typed preflight, validation, and pointer move to
- * one immutable-by-ownership JSON value. An adapter retaining references to
- * its input cannot swap both payload and digest between those async steps.
- */
+/** One frozen JSON value, so an adapter holding references cannot swap payload and digest between async steps. */
 function durableCandidateSnapshot(candidate: RoutineCandidate): RoutineCandidate {
   try {
     const encoded = JSON.stringify(candidate);
@@ -64,15 +60,10 @@ export interface PromotionOutcome {
   readonly candidate: CandidateVersionRecord;
   readonly promoted: PromotedProjection | null;
   readonly readerReadback: ReaderProjectionReadbackReceipt | null;
-  /**
-   * Present when a validated re-check found nothing new and was confirmed on
-   * the pointed version instead of promoted: `candidate` is then the pointed
-   * record and `promoted` the unchanged pointer (see UnchangedConfirmation).
-   */
+    /** Present when a re-check found nothing new: `candidate` is the pointed record and `promoted` the unchanged pointer. */
   readonly confirmed?: {
     readonly versionId: string;
     readonly at: string;
-    /** The validated re-check that found nothing new; never stored as a candidate. */
     readonly recheck: RoutineCandidate;
   };
 }
@@ -83,7 +74,6 @@ async function appendTypedReaderProjectionReadback(
   outcome: PromotionOutcome,
   requestedAt: string,
 ): Promise<PromotionOutcome> {
-  // A confirmation leaves the pointed version, and its readback, as they were.
   if (outcome.promoted === null || outcome.confirmed || contract.readerProjection === null) return outcome;
   const receipt = await recordRoutineReaderProjectionReadback(store, contract, outcome.promoted, requestedAt);
   return { ...outcome, readerReadback: receipt };
@@ -111,7 +101,6 @@ function routineCandidateContractIssueFor(
     return null;
   }
   if (task.authorityMode === "DERIVED") {
-    /* No route to authorize: the validator checks the named inputs, and the door checks them against the store. */
     if (candidate.retrieval.requestedUrl !== task.requestedUrl) return `a derived candidate requests ${task.requestedUrl}, not ${candidate.retrieval.requestedUrl}`;
     if (candidate.retrieval.finalUrl !== null) return "a derived candidate has no final URL";
     if (candidate.retrieval.succeeded && candidate.retrieval.derived === undefined) return "a derived candidate names the inputs it was computed from";
@@ -135,7 +124,6 @@ export function routineCandidateContractIssue(contractId: string, candidate: Rou
   return routineCandidateContractIssueFor(requiredRoutineContract(contractId), candidate);
 }
 
-/** Standing adapters enter promotion only through their exact registered contract. */
 export async function processRegisteredRoutineCandidate(
   store: RoutineDataStore,
   contractId: string,
@@ -193,15 +181,7 @@ export async function processRegisteredRoutineCandidate(
   );
 }
 
-/**
- * A fan-out contract owns a scope family, not a single scope: its own per-state
- * marker at the contract scope, plus one bounded per-member candidate at
- * `<sourceId>:<officeholderId>`. The runner still enumerates and clocks exactly
- * one contract per state; the family lives inside the child. Every member and
- * the marker still pass the identical GOOD contract, authority, and typed
- * per-contract verification below — only the one-scope equality is widened to
- * the declared family.
- */
+/** A fan-out contract owns a scope family: its per-state marker plus one candidate per `<sourceId>:<officeholderId>`. */
 function routineCandidateFanOutContractIssue(
   contract: RoutineSourceContract,
   candidate: RoutineCandidate,
@@ -221,12 +201,6 @@ function routineCandidateFanOutContractIssue(
   return null;
 }
 
-/**
- * Promote one candidate of a state's per-legislator fan-out — its per-state
- * marker or one member — through the exact registered fan-out contract. Each
- * call is one bounded write; the caller promotes the marker and every changed
- * member, and re-promotes only members whose votes changed this cycle.
- */
 export async function processRegisteredFanOutCandidate(
   store: RoutineDataStore,
   contractId: string,
@@ -264,17 +238,7 @@ export async function processRegisteredFanOutCandidate(
   );
 }
 
-/**
- * A meeting route/body enters the plane only through its SOURCE_WIRING-derived contract.
- *
- * Its Reader readback is not taken here. The Reader of a meeting partition is
- * the aggregate meetings Reader, which composes every partition, so a readback
- * per promotion moved all 84 partitions' payloads and candidate rows (~24 MB)
- * once per promoted partition. `repairMeetingReaderProjectionReadbacks`, the
- * meeting Reader domain of every routine pass, appends the same typed receipt
- * to each newly promoted partition from one aggregate read; the pass that
- * promotes a partition records its readback before it ends.
- */
+/** No readback here: `repairMeetingReaderProjectionReadbacks` records each partition's from one aggregate read per pass. */
 export async function processRegisteredMeetingPartitionCandidate(
   store: RoutineDataStore,
   partitionId: string,
@@ -310,11 +274,6 @@ export async function processRegisteredMeetingPartitionCandidate(
   );
 }
 
-/**
- * A partition's durable history enters only through its own partition's registered authority (DB-06): the partition's
- * child holds the contract, and the history contract is derived from it. Its candidate names the promoted partition
- * version the sittings were taken from, checked against the store like any derived input.
- */
 export async function processRegisteredMeetingHistoryCandidate(
   store: RoutineDataStore,
   partitionId: string,
@@ -348,7 +307,6 @@ export async function processRegisteredMeetingHistoryCandidate(
   );
 }
 
-/** A partition candidate that removes sittings into history is refused, by name, unless the history pointer holds them. */
 async function withMovedToHistoryAuthority(store: RoutineDataStore, candidate: RoutineCandidate): Promise<RoutineCandidate> {
   const issue = await movedToHistoryAuthorityIssue(store, candidate);
   return issue === null
@@ -362,11 +320,6 @@ async function withMovedToHistoryAuthority(store: RoutineDataStore, candidate: R
       };
 }
 
-/**
- * A DERIVED contract's candidate enters only with its named inputs checked against the store (C16): every promoted
- * version it names exists as hashed, and every member read is on a host its named wiring version attests. A failure
- * is a named failing dependent check, so the refusal is durable and the last known good stays live.
- */
 async function withDerivedInputAuthority(
   store: RoutineDataStore,
   contract: RoutineSourceContract,
@@ -425,7 +378,6 @@ export function manualCandidateContractIssue(contractId: ManualProductionContrac
   return null;
 }
 
-/** Owner-invoked sources enter the durable plane through their exact manual contract. */
 export async function processRegisteredManualCandidate(
   store: RoutineDataStore,
   contractId: ManualProductionContractId,
@@ -468,27 +420,14 @@ function invalidLkgReceipt(receipt: ValidationReceipt, code: string, detail: str
   };
 }
 
-/**
- * The only transition driver. A successful fetch is persisted even when a
- * later check refuses promotion; the existing pointer is never cleared.
- */
-/**
- * A record newly held (the source stopped listing it) or newly released is
- * evidence the pointed version does not carry, so such a re-check promotes.
- */
+/** A newly held or released record is evidence the pointed version lacks, so such a re-check promotes. */
 function sameHeldRecords(candidate: RoutineCandidate, pointed: RoutineCandidate): boolean {
   const keys = (value: RoutineCandidate) => [...new Set((value.excludedFacts ?? []).map((fact) => fact.key))].sort();
   const [left, right] = [keys(candidate), keys(pointed)];
   return left.length === right.length && left.every((key, index) => key === right[index]);
 }
 
-/**
- * The authority a read model cites outside its own records: a roll call's
- * member join names the exact roster version it was checked against
- * (`officialStateRollIdentityAuthorityIssue`), which its change set never
- * sees. A re-check that cites a moved authority promotes, so a pointed version
- * never keeps naming a superseded one.
- */
+/** A re-check whose read model cites a moved outside authority (a roll call's roster version) promotes. */
 export function sameCitedAuthority(candidate: RoutineCandidate, pointed: RoutineCandidate): boolean {
   const cited = (value: RoutineCandidate) => {
     const readModel = value.readModel as { readonly officialIdentityAuthority?: unknown } | null;
@@ -559,38 +498,35 @@ export async function processRoutineCandidate(
   const trustedPredecessorVersionId = trustedLkgPredecessorVersionId(candidate);
   const continuingExactLkg = trustedPredecessorVersionId !== null &&
     lkg?.candidate.id === trustedPredecessorVersionId;
-  // A trusted first-pointer candidate is evaluated against the empty base it
-  // actually names. If a pointer appeared after its scan, the later CAS branch
-  // records that race; feeding the new pointer into validation would instead
-  // manufacture an earlier TRUSTED_LKG_IMPORT_REQUIRES_EMPTY_POINTER failure
-  // and make the durable receipt disagree with the real disposition.
+    // Evaluate a trusted first-pointer candidate against the empty base it names; a pointer that appeared since is
+    // recorded by the later CAS branch, not turned into an earlier validation failure.
   const validationLkg = preloadedBaseChanged
     ? exactDeclaredBase
     : continuingExactLkg || lkgProofIssue === null ? lkg : null;
-  // A prior publication/readback in this pass may be later than its start.
-  // Production observes this write's time and never trusts an adapter clock.
+    // Production observes this write's time and never trusts an adapter clock.
   const transitionAt = await routineEventObservedAt(store, candidate.recordClass, candidate.scope, now);
+  const nativeRetirementCheck=candidate.sourceId === "plural-openstates" && candidate.recordClass === "STATE_LEGISLATOR" &&
+    (candidate.changeSet?.removed.length ?? 0)>0 && !candidate.horizon.claimsComplete
+    ? (await import("../sources/plural/retirement.ts")).statePeopleRetirementSourceCheck(candidate,validationLkg,transitionAt) : null;
   const validated = validateRoutineCandidate(
     candidate,
     validationLkg,
     transitionAt,
-    sourceProjectionVerification === null ? [] : [{
+    [...(sourceProjectionVerification === null ? [] : [{
       consumer: `${sourceProjectionVerification.verifierId} (source-scoped pre-promotion)`,
       passed: sourceProjectionVerification.status === "PASS",
       detail: sourceProjectionVerification.detail,
-    }],
+    }]),...(nativeRetirementCheck ? [nativeRetirementCheck] : [])],
   );
-  // A validated re-check whose read model is exactly the pointed one is a
-  // durably receipted no-change (RULING 283): readers keep their version and
-  // nothing is recomposed, read back or republished. Any refusal (the pointer
-  // moved, an import is pointed, the hash differs, the evidence is malformed)
-  // falls through to the ordinary candidate and promotion below.
+    // A re-check whose read model is exactly the pointed one is a receipted no-change; any refusal falls through to
+    // the ordinary candidate and promotion below.
   if (
     options.confirmUnchanged !== false &&
     typeof store.confirmUnchanged === "function" &&
     current !== null && lkg !== null && lkgProofIssue === null && !preloadedBaseChanged &&
     current.versionId === current.lastKnownGoodVersionId && lkg.candidate.id === current.versionId &&
     candidate.retrieval.succeeded && candidate.normalization.succeeded &&
+    candidate.normalization.parserVersion === lkg.candidate.normalization.parserVersion &&
     validated.state === "VALIDATED" && validated.receipt.decision === "GOOD" &&
     candidate.changeSet?.outcome === "UNCHANGED" &&
     typeof lkg.candidate.normalization.normalizedHash === "string" &&
@@ -604,13 +540,10 @@ export async function processRoutineCandidate(
       scope: candidate.scope,
       parserVersion: candidate.normalization.parserVersion,
       pointerVersionId: current.versionId,
-      // The pointed version's read model is the one this re-check confirms.
       readModelHash: lkg.candidate.normalization.normalizedHash,
       basis: candidate.normalization.normalizedHash === lkg.candidate.normalization.normalizedHash
         ? "READ_MODEL_RECOMPUTED"
         : "CHANGE_SET_UNCHANGED",
-      // A derived version fetched nothing: its status and final URL stay null
-      // and the receipt's shape rule admits that only for its own derived route.
       retrieval: {
         requestedUrl: candidate.retrieval.requestedUrl,
         finalUrl: candidate.retrieval.httpStatus === null
@@ -619,6 +552,7 @@ export async function processRoutineCandidate(
         httpStatus: candidate.retrieval.httpStatus,
         rawHash: candidate.retrieval.rawHash ?? "",
         retrievedAt: candidate.retrieval.retrievedAt,
+        ...(candidate.retrieval.sourceCheck ? { sourceCheck: candidate.retrieval.sourceCheck } : {}),
       },
       retainedSourceResponses: retained ?? null,
     }, transitionAt);
@@ -652,16 +586,10 @@ export async function processRoutineCandidate(
   if (!candidate.retrieval.succeeded) {
     return { candidate: (await store.readCandidate(candidate.id))!, promoted: null, readerReadback: null };
   }
-  // The envelope this run created is the durable one: each transition verifies
-  // it against the row's hash columns and returns it, so no step reads the
-  // dataset back (R26).
   const held = { candidate };
   if (!candidate.normalization.succeeded || validated.receipt.checks.find((check) => check.check === "SCHEMA_PARSE_VALIDITY")?.verdict !== "PASS") {
     const failed = failureOf(validated.receipt);
-    // The receipt is ordered by the GOOD contract. If authenticity failed
-    // before parsing (for example an unregistered redirect returned HTML), the
-    // terminal state must preserve that earlier cause instead of relabeling it
-    // as a parser defect merely because the payload also failed to normalize.
+        // Preserve an earlier authenticity failure as the terminal cause instead of relabeling it a parser defect.
     const terminal = validated.state === "VALIDATED" ? "PARSE_INVALID" : validated.state;
     const record = await store.transition(candidate.id, terminal, transitionAt, failed.detail, validated.receipt, failed, held);
     return { candidate: record, promoted: null, readerReadback: null };
@@ -708,9 +636,6 @@ export async function processRoutineCandidate(
     const record = await store.transition(candidate.id, "CANNOT_TELL", transitionAt, detail, receipt, { code, detail }, held);
     return { candidate: record, promoted: null, readerReadback: null };
   }
-  // The promoted row's columns, read after the move; its envelope is the
-  // durable one the VALIDATED transition returned (written once at create,
-  // never updated), so the dataset is not read back a further time.
   const summary = await store.readCandidateSummary(candidate.id);
   if (summary === null) throw new Error(`CANDIDATE_NOT_FOUND:${candidate.id}`);
   const { candidate: _sameRow, ...promotedColumns } = summary;

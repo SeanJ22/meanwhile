@@ -26,6 +26,9 @@ import { claimRouteTask, registerRouteTask } from "../lib/control-plane/reposito
 import { transpileModule, ScriptTarget, ModuleKind } from "typescript";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import { huntRoundComparator } from "../lib/control-plane/scheduler/shadow-loop.ts";
+import { withPromotedFixturesInChildren } from "./helpers/promoted-fixtures.ts";
+
+
 
 async function acceptRecordedScout(h:Awaited<ReturnType<typeof autonomousHarness>>) {
   const metadata=(await h.repos.artifacts.readAll())[0]; const held=await researchVaultResolver(h.repos,h.store,h.item.project)(metadata.artifactId);
@@ -376,19 +379,50 @@ test("Hunter transport failure is durable OPEN evidence and retry reuses the can
   const result=await dispatchWorkerTask(h.runtime,first.task!); assert.equal(result.outcome,"WORKED",result.detail);
   const record=(await h.repos.workerResults.readAll())[0]; assert.equal(record.result.role,"ACQUIRER"); if(record.result.role!=="ACQUIRER") throw new Error("wrong role");
   assert.equal(record.result.verdict,"BLOCKED"); assert.equal(record.result.walkState.state,"OPEN"); assert.equal(record.result.artifacts.length,0); assert.equal(record.result.walk.at(-1)?.transport,"TIMEOUT");
+  let latestFailure = record;
+  for (const backoff of [FIRST_BACKOFF_MINUTES, 2 * FIRST_BACKOFF_MINUTES]) {
+    assert.equal((await nextAutonomousOperation(h.runtime, h.item.id)).action, "BLOCKED", "a passing outage owes a free retry first");
+    h.advanceTo(new Date(Date.parse(latestFailure.endedAt) + (backoff + 1) * 60_000).toISOString());
+    const due = await nextAutonomousOperation(h.runtime, h.item.id);
+    assert.equal(due.task?.workerTask?.role, "ACQUIRER", due.reason);
+    const retried = await dispatchWorkerTask(h.runtime, due.task!);
+    assert.equal(retried.outcome, "WORKED", retried.detail);
+    latestFailure = (await h.repos.workerResults.readAll()).find(row => row.attemptId === retried.attemptId)!;
+  }
   const novelty=await nextAutonomousOperation(h.runtime,h.item.id);
   assert.equal(novelty.action,"SCOUT"); assert.match(novelty.task!.routeId,/autonomous:novelty:/);
   assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).task?.id,novelty.task?.id,"restart reuses the same novelty task");
-  // Even after retry becomes due, the old route cannot starve the branch.
-  h.advanceTo(new Date(Date.parse(record.endedAt)+16*60_000).toISOString());
-  assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"SCOUT");
   const scout=await runAutonomousCoordinator(h.runtime,{maximum:1,maxScoutDispatches:1});
   assert.equal((await h.repos.attempts.mustRead(scout.dispatches[0].attemptId!)).value.outcome,"DENIED_BY_POLICY","offline fixture has no model transport; denial stays attributable");
+  h.advanceTo(new Date(Date.parse(latestFailure.endedAt) + (4 * FIRST_BACKOFF_MINUTES + 1) * 60_000).toISOString());
   const retry=await nextAutonomousOperation(h.runtime,h.item.id); assert.equal(retry.task?.workerTask?.role,"ACQUIRER"); assert.notEqual(retry.task?.id,first.task?.id);
   const restart=await nextAutonomousOperation(h.runtime,h.item.id); assert.equal(restart.task?.id,retry.task?.id);
   assert.ok(!(await h.repos.routeTasks.list()).some(t=>t.value.workerTask?.role==="PARSER"));
   const activity=(await readAutonomousActivity(h.repos,undefined,{observedAt:h.now()}))[0]; assert.equal(activity.walk.state,"OPEN"); assert.ok(activity.timeline.some(event=>event.walk?.transport==="TIMEOUT"));
 });
+
+test("CH-23 part 3 (DP-02): a passing outage on a known door is a free plain retry, and a shut door goes to the investigation", async t => {
+  const h=await autonomousHarness({response:{transportError:"socket timeout"}});
+  const failOnce=async()=>{
+    const op=await nextAutonomousOperation(h.runtime,h.item.id); assert.equal(op.task?.workerTask?.role,"ACQUIRER",op.reason);
+    assert.equal((await dispatchWorkerTask(h.runtime,op.task!)).outcome,"WORKED");
+    return (await h.repos.workerResults.readAll()).map(row=>row).sort((a,b)=>b.endedAt.localeCompare(a.endedAt))[0];
+  };
+  const first=await failOnce();
+  const waiting=await nextAutonomousOperation(h.runtime,h.item.id);
+  assert.equal(waiting.action,"BLOCKED","a single timeout owes no paid walk");
+  assert.match(waiting.reason,/passing outage.*read again with plain code at/);
+  assert.ok(!(await h.repos.routeTasks.list()).some(row=>/autonomous:novelty:/.test(row.value.routeId)),"no Scout task was opened");
+  h.advanceTo(new Date(Date.parse(first.endedAt)+(FIRST_BACKOFF_MINUTES+1)*60_000).toISOString());
+  const second=await failOnce();
+  assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"BLOCKED");
+  h.advanceTo(new Date(Date.parse(second.endedAt)+(2*FIRST_BACKOFF_MINUTES+1)*60_000).toISOString());
+  await failOnce();
+  // Three consecutive failures: the door is shut, so the investigation gets the turn before the next plain re-read is due.
+  const shut=await nextAutonomousOperation(h.runtime,h.item.id);
+  assert.equal(shut.action,"SCOUT",shut.reason); assert.match(shut.task!.routeId,/autonomous:novelty:/);
+});
+
 
 test("an elapsed acquisition cadence finishes retained worker handoffs before a real refresh",async()=>{
   const h=await autonomousHarness(); const acquired=await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1});
@@ -490,12 +524,12 @@ test("coordinator selection hands out canonical tasks without running tools or o
     await registerRouteTask(repos, second, h.now());
     const pids: number[] = [];
     let pulls = 0;
-    const results = await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
+    const results = await withPromotedFixturesInChildren(() => runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
       config: { root: process.cwd(), fileStoreRoot: root, postgres: false, taskIds: [selected.task!.id, second.id],
         modelEnabled: false, searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] },
       capacity: () => 2, onStarted: pid => pids.push(pid),
       orderPending: async ids => { pulls++; return [...ids].reverse(); },
-      transportFor: () => async () => { throw new Error("unexpected paid call"); } });
+      transportFor: () => async () => { throw new Error("unexpected paid call"); } }));
     assert.equal(pids.length, 2);
     assert.ok(pulls >= 2, "each worker asks the parent for current priority before claiming a lease");
     assert.ok(pids.every(pid => pid !== process.pid));
@@ -648,11 +682,11 @@ test("one work-item read failure costs one task and the same lease child reaches
       routeLabel: "Unreadable work item", target: "https://example.gov/", inherited: false, now: h.now() });
     await repos.routeTasks.put(unreadable.id, unreadable, h.now());
     let forks = 0;
-    const results = await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
+    const results = await withPromotedFixturesInChildren(() => runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
       config: { root: process.cwd(), fileStoreRoot: root, postgres: false, taskIds: [unreadable.id, selected.task!.id],
         modelEnabled: false, searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] },
       capacity: () => 1, onStarted: () => { forks++; }, orderPending: async ids => ids,
-      transportFor: () => async () => { throw new Error("unexpected paid call"); } });
+      transportFor: () => async () => { throw new Error("unexpected paid call"); } }));
     const failedRead = results.find(row => row.routeTaskId === unreadable.id)!;
     assert.equal(failedRead.outcome, "FAILED");
     assert.equal(failedRead.attemptId, null);

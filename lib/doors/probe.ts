@@ -1,20 +1,13 @@
 /**
- * DB-25: each check looks before it reads.
- *
- * Before a scheduled read, one cheap first look per feed: a conditional request
- * (the stored ETag or Last-Modified) or, when the publisher offers neither, a
- * hash of the listing page or feed bytes. Nothing more is read when nothing
- * changed, which keeps small governments well under ten requests an hour. There
- * is no AI cost anywhere in this file.
- *
- * Probes are keyed by the URL looked at, so one probe covers every body (and
- * every door) behind one feed. `fetchFn` is injected: the runner passes its
- * paced, host-limited fetch, so request pacing and Retry-After handling stay
- * where they already live.
+ * One cheap first look per feed before a scheduled read: a conditional request
+ * (stored ETag or Last-Modified) or, when the publisher offers neither, a hash
+ * of the page bytes. Probes are keyed by URL, so one covers every door behind
+ * a feed. `fetchFn` is injected so pacing and Retry-After stay with the caller.
  */
 
 import { createHash } from "node:crypto";
 
+import { WebsiteWait } from "./probe-fetch.ts";
 import { isDoorRecord, type DoorRecord, type DoorRepository, type DoorValidators } from "./registry.ts";
 
 export interface ProbeResponse {
@@ -37,7 +30,8 @@ export function probeUrlFor(door: DoorRecord): string | null {
   return null;
 }
 
-export type ProbeVerdict = "CHANGED" | "UNCHANGED" | "FAILED" | "NOT_PROBEABLE";
+/** WAITING: the website could not be asked now (it asked every reader to wait, or a small publisher's hour is used). */
+export type ProbeVerdict = "CHANGED" | "UNCHANGED" | "FAILED" | "WAITING" | "NOT_PROBEABLE";
 
 export interface ProbeResult {
   readonly url: string | null;
@@ -59,6 +53,7 @@ export async function firstLook(url: string, previous: DoorValidators | null | u
   try {
     response = await fetchFn(url, headers);
   } catch (error) {
+    if (error instanceof WebsiteWait) return { url, verdict: "WAITING", validators: null, requests: 0, detail: error.message };
     return { url, verdict: "FAILED", validators: null, requests: 1, detail: `the first look could not reach the page (${(error as Error)?.name ?? "error"})` };
   }
   if (response.status === 304) {

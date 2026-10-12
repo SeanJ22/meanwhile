@@ -57,7 +57,7 @@ test("a finished receipt no longer blocks a new send of the same action", () => 
 
 test("only the kinds a real registry action carries out are wired, each to its own gateway type", () => {
   assert.deepEqual([...connectedKinds()].sort(), [
-    "cancel-send", "data-switch-off", "data-switch-on", "decide", "global-ceiling", "global-paid", "global-paid-resume", "global-runner-pause", "global-runner-resume", "global-search-off", "global-search-on", "hunt-limit", "hunt-pause", "hunt-resume", "hunt-start", "hunt-start-many", "hunt-stop", "order-schedule", "order-unschedule", "owed-add", "owed-decline", "owed-undo", "send-agents", "setting-set", "setting-undo", "target-clear", "target-set",
+    "cancel-send", "data-switch-off", "data-switch-on", "global-ceiling", "global-paid", "global-paid-resume", "global-runner-pause", "global-runner-resume", "global-search-off", "global-search-on", "hunt-limit", "hunt-pause", "hunt-resume", "hunt-start", "hunt-start-many", "hunt-stop", "leads-send", "order-schedule", "order-unschedule", "owed-add", "owed-decline", "owed-undo", "send-agents", "setting-set", "setting-undo", "target-clear", "target-set",
   ]);
   assert.equal(actionDef("cancel-send").gateway?.type, "fleet.cancelDispatch");
   assert.equal(actionDef("send-agents").gateway?.type, "fleet.deployHere");
@@ -70,20 +70,17 @@ test("only the kinds a real registry action carries out are wired, each to its o
   assert.equal(actionDef("global-search-off").gateway?.type, "config.setDiscoverySearch");
   assert.equal(actionDef("hunt-start").gateway?.type, "expansion.scope.setMany");
   assert.equal(actionDef("hunt-start-many").gateway?.type, "expansion.scope.setMany");
+  assert.equal(actionDef("leads-send").gateway?.type, "leads.upload");
   for (const k of ["hunt-limit", "hunt-pause", "hunt-resume"] as const) assert.equal(actionDef(k).gateway?.type, "expansion.scope.budget");
   assert.equal(actionDef("hunt-stop").gateway?.type, "expansion.scope.remove");
   assert.equal(actionDef("setting-set").gateway?.type, "config.setSetting");
   assert.equal(actionDef("setting-undo").gateway?.type, "config.setSetting");
-  for (const d of ACTIONS.values()) if (!d.gateway) assert.ok(d.dependency, `${d.kind} names what it is waiting for`);
+  for (const d of ACTIONS.values()) assert.ok(d.gateway, `${d.kind} has an executor`);
 });
 
 test("previews never promise more than the action does", () => {
   const ctx = { target: "x", targetName: "X", scopeName: "Arizona", scopeIsCountry: false, outreachAuthorized: false };
-  assert.match(actionDef("decide").doneWords, /Decision saved/);
-  const decide = actionDef("decide").preview({ ...ctx, payload: {name:"Raise the ceiling",happening:"Work is waiting",recommends:"Raise it",cost:"$80 a day",gets:"Waiting work can run",fields:JSON.stringify([{key:"rollingCeilingUsd",label:"Daily ceiling",kind:"number",initial:"80"}]),schedulable:"true"} });
-  assert.deepEqual(decide.options?.map(o=>o.id),["approve","decline","change","schedule"]);
-  assert.equal(decide.invalid?.({option:"decline",words:" ",amount:"",selected:0}),"Say why you are declining.");
-  assert.equal(decide.fields?.[0].initial,"80");
+  assert.equal(ACTIONS.has("decide"), false, "the unproduced recommendation control is removed");
   const limit = actionDef("hunt-limit").preview({ ...ctx, hunt: { id: "h", placeKey: "p", name: "H", startedAt: "", limitUsd: 50, limitSource: "", spentUsd: 15, heldUsd: 6, unpricedEntries: 0, status: "running", researchWorkers: 1 } });
   assert.equal(limit.invalid?.({ option: null, words: "", amount: "20", selected: 0 }), "That’s below what’s already spent or set aside.");
 });
@@ -150,17 +147,18 @@ test("an unannounced action is not sent; an announced one sends its exact contra
 
 test("a moving-world action quotes the latest pulse revision, and is not sent without one", async () => {
   const bodies: Record<string, unknown>[] = [];
-  const caps = capabilitiesOf({ v6: { version: 1, sections: {}, actions: { decide: { contract: "admin-v6/action/decide@1", type: "decision.record", requiresStateVersion: true } } } });
+  const caps = capabilitiesOf({ v6: { version: 1, sections: {}, actions: { "send-agents": { contract: "admin-v6/action/send-agents@1", type: "fleet.deployHere", requiresStateVersion: true } } } });
   let rev: string | null = null;
   const ex = liveExecutor({ capabilities: () => caps, stateVersion: () => rev, fetch: async (_u, init) => { bodies.push(JSON.parse(init.body ?? "{}")); return { status: 200, json: async () => null }; } });
-  const req = { def: actionDef("decide"), target: "morris", scopeKey: "us", option: "clerk", words: "", amount: "", selectedItems: [] as string[] };
+  const def = { ...actionDef("send-agents"), gateway: { type: "fleet.deployHere", requiresStateVersion: true } };
+  const req = { def, target: "morris", scopeKey: "us", option: null, words: "", amount: "", selectedItems: [] as string[] };
   const out: UiReceipt[] = [];
-  await ex.send(receipt({ kind: "decide", target: "morris" }), req, (r) => out.push(r));
+  await ex.send(receipt({ kind: "send-agents", target: "morris" }), req, (r) => out.push(r));
   assert.equal(bodies.length, 0, "no rendered state yet, so nothing is sent");
   assert.equal(out.at(-1)?.status, "refused");
   rev = "beat|3|9";
-  await ex.send(receipt({ kind: "decide", target: "morris", key: "k3" }), req, () => {});
-  assert.deepEqual(bodies[0], { type: "decision.record", subject: "morris", stateVersion: "beat|3|9", idempotencyKey: "k3", decisionId: "morris", option: "clerk", words: null });
+  await ex.send(receipt({ kind: "send-agents", target: "morris", key: "k3" }), req, () => {});
+  assert.deepEqual(bodies[0], { type: "fleet.deployHere", subject: "morris", stateVersion: "beat|3|9", idempotencyKey: "k3", note: "" });
 });
 
 test("“Check what happened” asks the receipt lookup and never resends", async () => {
@@ -296,12 +294,10 @@ test("a place target is wired to its own gateway action, and its input carries t
   assert.equal(actionDef("data-switch-off").gateway?.type, "config.setDataSwitch");
 });
 
-test("returned screen controls remain unavailable; the old instruction box stays retired", () => {
+test("retired screen controls and the old instruction box are deleted", () => {
   for (const kind of ["contain", "uncontain", "recheck", "workfirst", "fixfirst", "stopmethod", "scope-stop", "stoprepeats", "scope-recheck", "doc-request", "reprocess", "retry-method", "resume-publish", "eng-task", "job-stop", "focus", "scope-first", "use-url"]) {
     const def = ACTIONS.get(kind as never);
-    assert.ok(def, kind);
-    assert.equal(def.gateway, null, kind);
-    assert.ok(def.dependency, kind);
+    assert.equal(def, undefined, kind);
   }
   assert.doesNotMatch(readFileSync(join(V6, "screen-now.tsx"), "utf8"), /Tell it what to do|<Instruction/);
   assert.ok(!readdirSync(V6).includes("instruction.ts"));
@@ -322,26 +318,4 @@ test("BR-39: every Admin view keeps planted code names and raw errors behind Tec
     check(html);
   }
   assert.throws(()=>check("<p>SCOUT_POLICY_DENIED</p>"),"positive control: leaking an error onto the face fails the check");
-});
-
-
-test("Money renders the measured cost in its existing Hunts table and keeps dates Eastern", () => {
-  const at = "2026-10-06T02:00:00Z";
-  const liveSection = (data: unknown) => ({phase:"live",data,asOf:at,revision:"cost-v1",missingParts:[],attempts:0}) as SectionState;
-  const snapshot = { ...waiting,
-    hunts: liveSection([{id:"measured-hunt",placeKey:"us",name:"Measured hunt",startedAt:at,limitUsd:50,limitSource:"your hunt instruction",spentUsd:38,reportedSpendUsd:1.25,heldUsd:2,status:"unreported",researchWorkers:null,unpricedEntries:0}]),
-    spend: liveSection({windowDays:30,byTier:[],byDay:[],byMonth:[],work:[],anthropicUsd:0,searchUsd:0,unpricedRows:0,neon:{kind:"not-recorded",detail:"Unread",days:[]},readAt:at,batchSpend:{from:at,through:at,rows:[{role:"SCOUT",mode:"batch",usd:.5,charges:1,unpriced:0},{role:"SCOUT",mode:"standard",usd:1,charges:1,unpriced:0}]}}),
-  };
-  const html = renderToStaticMarkup(h(CommandCenter,{data:buildLiveBundle(snapshot,ref,workerStatusFromPulse(null)),mode:"live",executor:liveExecutor({capabilities:()=>null}),scopeKey:"us",onScopeChange:()=>{},connection:"live",lastGoodAt:null,recovered:false,access:owner,initialView:"money"}));
-  const tables = [...html.matchAll(/<table[^>]*>(.*?)<\/table>/g)].map(m=>m[1]);
-  const huntTables = tables.filter(t=>t.includes("ZIP") && t.includes("Set aside"));
-  assert.equal(huntTables.length,1);
-  assert.match(huntTables[0],/\$1\.25/);
-  assert.match(huntTables[0],/\$2\.00/);
-  assert.match(huntTables[0],/\$50\.00/);
-  assert.doesNotMatch(huntTables[0],/\$38\.00/);
-  assert.match(html,/Oct 5.*10:00 PM EDT/);
-  assert.match(html,/Batch and full-price spend by role/);
-  assert.match(html,/Whole factory · last 24 hours/);
-  assert.doesNotMatch(html,/spend with no result|No result recorded| UTC| MST/);
 });

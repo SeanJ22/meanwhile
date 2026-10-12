@@ -1,27 +1,11 @@
 /**
- * **MEETINGS DISCOVERY OWED, BY JURISDICTION.** (2026-09-23.)
+ * Meetings discovery owed, by jurisdiction. Turns the promoted jurisdiction
+ * registries into discovery needs for the free walk: rows whose own-site
+ * MEETINGS source is DISCOVERY_OWED, or that carry no MEETINGS source. Pure.
  *
- * Every enumerated government's meetings are owed to the reader (RULING 248).
- * The jurisdiction registries record how each one's meetings would be found:
- * the own-site MEETINGS source, state DISCOVERY_OWED ("walk this row's
- * `ownWebAddress` for the body's own meeting notices, agendas, minutes and
- * officeholder roster"). Where no website was recorded, no MEETINGS source was
- * recorded at all.
- *
- * Since 902f5c50 (2026-09-10) no freshness obligation carries that need. The
- * permanent meeting-partition contracts are the only production meeting clock,
- * and they cover the bodies wired in SOURCE_WIRING, not jurisdictions.
- *
- * This module turns the promoted registries into the discovery needs the
- * owner's dispatch and the mission map (CH-21,
- * `lib/hunt/mission-meetings-discovery.ts`) hand the free walk. It is PURE:
- * the caller reads the files.
- *
- * What it does not do: subtract jurisdictions a meeting partition already
- * covers. No reviewed jurisdiction→body crosswalk exists, and inferring one
- * from names is refused (`lib/control-plane/zip-gap-resolution.ts`). So the
- * list overstates by at most the partitions' roughly 22 governments, and says
- * so.
+ * It does not subtract jurisdictions a meeting partition already covers: no
+ * reviewed jurisdiction→body crosswalk exists, and inferring one from names is
+ * refused, so the list slightly overstates.
  */
 
 import {
@@ -64,20 +48,19 @@ export interface MeetingsDiscoveryNeed {
   /** The DISCOVERY_OWED MEETINGS sources the need rests on; empty when none was recorded. */
   readonly sources: readonly string[];
   /**
-   * Where `ownWebAddress` came from, so a route found from it can be attested later (NH330): the promoted
+   * Where `ownWebAddress` came from, so a route found from it can be attested later: the promoted
    * jurisdiction reference (its version id) or the state's registration. Absent when unrecorded.
    */
   readonly addressSource?: DiscoveryAddressSource;
-  /** Present when `ownWebAddress` is a reviewed website correction, not the Census record (C15). */
+  /** Present when `ownWebAddress` is a reviewed website correction, not the Census record. */
   readonly addressCorrection?: WebsiteAddressCorrectionNote;
 }
 
 export interface DiscoveryAddressSource {
   readonly source: "GAP_LEDGER" | "OPERATIONAL_REFERENCE" | "REGISTRATION";
   /**
-   * GAP_LEDGER: the sha256 (bare hex) of the retired gap ledger file a walk read before CH-21; kept so recorded
-   * walks still read, never produced now. OPERATIONAL_REFERENCE: the promoted version id.
-   * REGISTRATION (a state with no reviewed registry, 2026-09-25): the promoted registration version id.
+   * GAP_LEDGER: the sha256 of a retired gap ledger file, kept so recorded walks still read; never produced now.
+   * OPERATIONAL_REFERENCE: the promoted version id. REGISTRATION: the promoted registration version id.
    */
   readonly versionId: string | null;
 }
@@ -108,9 +91,8 @@ export function meetingsDiscoveryNeeds(files: readonly JurisdictionRegistryFile[
 }
 
 /**
- * The need with its reviewed website correction applied (C15): while the address on record is still the one a
- * reviewed correction replaces, the need walks the corrected site and says so. A build reads nothing, so the
- * correction is applied as reviewed; the jurisdiction reference's promotion reads its sources again.
+ * The need with its reviewed website correction applied: while the address on record is still the one a
+ * reviewed correction replaces, the need walks the corrected site and says so.
  */
 export function withWebsiteCorrection(need: MeetingsDiscoveryNeed): MeetingsDiscoveryNeed {
   const c = websiteCorrectionFor(need.jurisdictionId, need.ownWebAddress);

@@ -1,12 +1,7 @@
 /**
- * **MODELS HANDLE NOVELTY; CODE HANDLES LEARNED PROCEDURE — THE GRADUATION PATH.**
- * (Level 1 activation, 2026-09-01. RULING 240.)
- *
- * A Scout's route candidate must be able to enter the EXISTING method-candidate
- * lifecycle, be validated by the canonical validators, and — the moment it
- * works once (DP-25) — be selected for DETERMINISTIC replay by the executor
- * decision rule, so no later worker pays a model to rediscover it. Two
- * Attempts offering the same route id are no longer proof of anything.
+ * A Scout's route candidate enters the method-candidate lifecycle, is validated
+ * by the canonical validators, and once it works is selected for DETERMINISTIC
+ * replay, so no later worker pays a model to rediscover it.
  *
  *   1  an opened, evidence-backed candidate is admitted on its first Attempt
  *   2  a candidate whose URL the Attempt never opened is NOT proposed
@@ -56,7 +51,7 @@ const candidate = (over: Partial<ScoutCandidate> = {}): ScoutCandidate => ({
   recordClass: "meetings",
   deterministic: true,
   unverified: [],
-  /* RULING 243: the executor writes these before a candidate reaches this module. */
+  /* The executor writes these before a candidate reaches this module. */
   claims: { observedOn: "2026-01-01", permission: "ALLOWED", recordClass: "meetings" },
   provenance: { derivedFrom: ["raw-1"], rule: "test derivation" },
   ...over,
@@ -123,14 +118,14 @@ test("1. an opened, evidence-backed candidate is validated and used the moment i
   assert.equal(await readMethodVersion(repos), report.storeVersionObserved + 1, "the route is learned at once");
   assert.deepEqual(await candidateStoreCounts(repos), { PROPOSED: 0, VALIDATED: 0, ADMITTED: 1, REJECTED: 0 });
 
-  /* RULING 243: durable provenance carries the MACHINE's observedOn; the model's 2026-01-01 is a recorded claim beside it. */
+  /* Durable provenance carries the MACHINE's observedOn; the model's 2026-01-01 is a recorded claim beside it. */
   const rec = store.candidates[0];
   assert.match(rec.proposal.origin, new RegExp(`observed ${STAMP}`));
   assert.doesNotMatch(rec.proposal.origin, /2026-01-01/);
   assert.match(rec.proposal.claims?.[0]?.statement ?? "", new RegExp(`on ${STAMP};`));
   assert.deepEqual(rec.modelClaims, { observedOn: "2026-01-01", permission: "ALLOWED", recordClass: "meetings" });
 
-  /* A candidate with no machine derivation is a pre-ruling shape and is not learned. */
+  /* A candidate with no machine derivation is an older shape and is not learned. */
   const unowned = { ...candidate({ routeId: "testville-unowned" }) } as Record<string, unknown>;
   delete unowned.provenance;
   const noDerivation = await proposeScoutCandidates({ repos, result: result([unowned as never]), artifacts: opened, stamp: STAMP });
@@ -189,7 +184,7 @@ test("4. the first Attempt that makes it work admits the candidate into the manu
   assert.equal(report.proposed[0].lifecycle, "ADMITTED");
   const candidates = (await readMethodCandidateStore(repos)).candidates;
   assert.equal(candidates.length, 1);
-  const manual = await readFieldManual(repos, { role: "SCOUT", recordClass: "meetings" });
+  const manual = await readFieldManual(repos, { role: "SCOUT", recordClass: "meetings", ocdIds: ["ocd-division/country:us/state:az/place:testville"] });
   const entry = manual.store.entries.find((entry) => entry.source === "scout-candidate");
   assert.ok(entry);
   assert.equal(entry.kind, "ROUTE");
@@ -229,13 +224,35 @@ test("6. a failed manual write leaves the candidate validated and a replay finis
   const repos = await seededRepos();
   await seedFixtureStore(repos);
   const write = repos.fieldManual.compareAndSet.bind(repos.fieldManual);
+  const create = repos.fieldManual.put.bind(repos.fieldManual);
   repos.fieldManual.compareAndSet = async () => { throw new Error("manual unavailable"); };
+  repos.fieldManual.put = async () => { throw new Error("manual unavailable"); };
   const input = { repos, result: result([candidate()]), artifacts: opened, stamp: STAMP };
   const failed = await proposeScoutCandidates(input);
   assert.equal(failed.proposed[0].lifecycle, "VALIDATED");
   assert.match(failed.proposed[0].issues.join(), /manual unavailable/);
   assert.equal((await methodMaturityFromManual(repos))(candidate().routeId), "UNGRADUATED");
   repos.fieldManual.compareAndSet = write;
+  repos.fieldManual.put = create;
   assert.equal((await proposeScoutCandidates(input)).proposed[0].lifecycle, "ADMITTED");
   assert.equal((await readMethodVersion(repos)), failed.storeVersionObserved + 1);
+});
+
+test("7. the store is read whole only when its revision moved since this process last read or wrote it", async () => {
+  const repos = await seededRepos();
+  await seedFixtureStore(repos);
+  const list = repos.methodCandidates.list.bind(repos.methodCandidates);
+  let whole = 0;
+  repos.methodCandidates.list = async () => { whole += 1; return list(); };
+  await readMethodCandidateStore(repos);
+  await readMethodCandidateStore(repos);
+  assert.equal(whole, 1, "an unchanged revision reuses the store this process holds");
+  await proposeScoutCandidates({ repos, result: result([candidate()]), artifacts: opened, stamp: STAMP });
+  assert.equal(whole, 1, "the process's own write is the store it holds next");
+  assert.equal((await readMethodCandidateStore(repos)).candidates.length, 1);
+  assert.equal(whole, 1);
+  const elsewhere = await repos.methodCandidates.read(METHOD_CANDIDATE_STORE_ID);
+  await repos.methodCandidates.compareAndSet(METHOD_CANDIDATE_STORE_ID, elsewhere!.revision, emptyCandidateStore(), STAMP);
+  assert.equal((await readMethodCandidateStore(repos)).candidates.length, 0, "another writer's revision is read whole");
+  assert.equal(whole, 2);
 });

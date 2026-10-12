@@ -1,30 +1,3 @@
-/**
- * **A MEETING ITS PUBLISHER RE-ISSUES UNDER A NEW ID SHOWS ONCE.** (2026-09-24.)
- *
- * The defect, measured in production at 2026-09-24T06:46Z (read-only): Tucson
- * Unified's Diligent partition served its Audit Committee's 16 September
- * 14:30 sitting twice. The portal had re-issued the sitting as meeting 501.
- * The partition writer still held meeting 495, which the portal no longer
- * listed, as a carried row (`UNEXPLAINED_DISAPPEARANCE`), because nothing named
- * 501 as its successor. A reader saw two rows for one meeting, and every count
- * stated for the body included both.
- *
- * The rule (`reissuesSitting` in lib/sources/event-identity.ts, applied by
- * `reconcileSuccessfulMeetingPartition` in scripts/ingest.ts and re-run by the
- * promotion door in lib/civic-data/validate.ts): a row that would be carried
- * yields to a fresh row of the same partition that is the same sitting (the
- * same body id, the same body key from both the body name and the title, the
- * same local date and minute in the same zone) and leaves with removal evidence
- * `SUPERSEDED_BY_OCCURRENCE_IDENTITY` naming that row. With no such twin it is
- * carried exactly as before.
- *
- * No live calls. Meetings 495 and 501 are the two production rows as measured,
- * field for field where the measurement stated them; every other field is what
- * the Diligent adapter writes from the partition's own wiring row, and 501's
- * place, which the measurement did not state, is not claimed. The neighbouring
- * TUSD sittings are rows of the recorded portal read in
- * tests/fixtures/tusd-govboard/diligent-tusd-portal-rows.json.
- */
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
@@ -46,24 +19,17 @@ const TUSD = MEETING_PARTITION_CONTRACTS.find((partition) =>
   partition.bodyId === "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
 )!;
 
-/** The portal's own permalink pattern (`serviceBase` + `meetingPath` on the wiring row). */
 const PORTAL = "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=";
 
-/** The last read whose answer listed meeting 495. */
 const LAST_LISTED_495 = "2026-09-08T21:40:32.007Z";
-/** The 06:45Z read: 501 fresh, 495 carried beside it. The version measured at 06:46Z. */
 const MEASURED_READ = "2026-09-24T06:45:00.000Z";
-/**
- * The partition's next read, which again lists the sitting once, as 501. (The
- * store refuses an event stamped in its future, so every instant here is past.)
- */
+// The store refuses an event stamped in its future, so every instant here is past.
 const NEXT_READ = "2026-09-24T07:00:00.000Z";
 
 const SITTING_STARTS = "2026-09-16T14:30:00-07:00";
 
 const sha256 = (value: string) => createHash("sha256").update(value).digest("hex");
 
-/** Meeting 495 exactly as the measured version held it. */
 const CARRIED_495: Meeting = {
   id: "diligent:tusd1:495",
   ocdId: TUSD.ocdId,
@@ -86,7 +52,6 @@ const CARRIED_495: Meeting = {
   carried: { reason: "UNEXPLAINED_DISAPPEARANCE", source: "diligent", lastFreshAt: LAST_LISTED_495 },
 };
 
-/** Meeting 501: the same sitting, re-issued by the portal, as a read at `collectedAt` produces it. */
 function fresh501(collectedAt: string, over: Partial<Meeting> = {}): Meeting {
   return {
     id: "diligent:tusd1:501",
@@ -105,7 +70,6 @@ function fresh501(collectedAt: string, over: Partial<Meeting> = {}): Meeting {
   };
 }
 
-/** Recorded portal row 502: the Bond Oversight Committee, 17 September 13:00, at Duffy. */
 function bondOversight502(collectedAt: string): Meeting {
   return {
     id: "diligent:tusd1:502",
@@ -128,7 +92,6 @@ function bondOversight502(collectedAt: string): Meeting {
   };
 }
 
-/** Another committee of the same board at the very minute of the Audit Committee sitting. */
 function budgetAdvisoryAtSameMinute(collectedAt: string): Meeting {
   return {
     ...fresh501(collectedAt),
@@ -140,7 +103,6 @@ function budgetAdvisoryAtSameMinute(collectedAt: string): Meeting {
   };
 }
 
-/** One authenticated answer from the portal's meetings service, with exact-byte evidence. */
 function answered(at: string, rows: number): ChildRunReport {
   const service = TUSD.wiring!.config.serviceBase!;
   const bytes = `diligent tusd1 MeetingsService answer read at ${at}`;
@@ -162,7 +124,6 @@ function answered(at: string, rows: number): ChildRunReport {
   };
 }
 
-/** A partition snapshot of `meetings` as its writer states it, carried rows counted. */
 function partitionSnapshot(at: string, meetings: readonly Meeting[]): MeetingsSnapshot {
   const fresh = meetings.filter((row) => !row.carried).length;
   const carried = meetings.length - fresh;
@@ -180,7 +141,6 @@ function partitionSnapshot(at: string, meetings: readonly Meeting[]): MeetingsSn
   };
 }
 
-/** Promote `meetings` through the real door as the partition's LKG, and return what was promoted. */
 async function seed(store: MemoryRoutineDataStore, at: string, meetings: readonly Meeting[]) {
   const snapshot = partitionSnapshot(at, meetings);
   const seeded = await promoteMeetingPartition(store, TUSD, snapshot);
@@ -188,12 +148,11 @@ async function seed(store: MemoryRoutineDataStore, at: string, meetings: readonl
   return { snapshot, versionId: seeded.outcome.promoted!.versionId };
 }
 
-/** The version production served at 06:46Z. */
 const seedMeasuredVersion = (store: MemoryRoutineDataStore) =>
   seed(store, MEASURED_READ, [fresh501(MEASURED_READ), CARRIED_495]);
 
 async function readerRows(store: MemoryRoutineDataStore, now: string): Promise<MeetingsSnapshot> {
-  const read = await readMeetingsProjection({ store, bypassCache: true, allowUnconfiguredBootstrap: false, now });
+  const read = await readMeetingsProjection({ store, bypassCache: true, now });
   assert.equal(read.kind, "PROMOTED");
   return (read as { value: MeetingsSnapshot }).value;
 }
@@ -204,7 +163,6 @@ const atTheSitting = (snapshot: MeetingsSnapshot) =>
     .map(({ id }) => id)
     .sort();
 
-/** The reconciliation alone, for the rule's boundaries: `prior` rows against `fresh` rows. */
 function reconcile(prior: readonly Meeting[], fresh: readonly Meeting[], sourceName = "diligent") {
   return reconcileSuccessfulMeetingPartition({
     sourceName,
@@ -222,8 +180,6 @@ function reconcile(prior: readonly Meeting[], fresh: readonly Meeting[], sourceN
   });
 }
 
-/* ── (a) the recorded case ───────────────────────────────────────────────── */
-
 test("CARRIED-SUPERSEDE · (a) Tucson Unified's re-issued Audit Committee sitting: carried 495 yields to fresh 501, and a reader sees one meeting", async () => {
   assert.ok(TUSD, "the Tucson Unified Diligent partition is registered");
   assert.equal(
@@ -235,7 +191,6 @@ test("CARRIED-SUPERSEDE · (a) Tucson Unified's re-issued Audit Committee sittin
 
   const store = new MemoryRoutineDataStore();
   await seedMeasuredVersion(store);
-  // The defect as measured: the Reader composition held the one sitting twice.
   assert.deepEqual(atTheSitting(await readerRows(store, MEASURED_READ)), ["diligent:tusd1:495", "diligent:tusd1:501"]);
 
   const [next] = await promoteMeetingPartitions({
@@ -268,19 +223,15 @@ test("CARRIED-SUPERSEDE · (a) Tucson Unified's re-issued Audit Committee sittin
     "nothing is retained as an unexplained disappearance",
   );
 
-  // On the reader's path: one row for the sitting, and the stated count is the rows.
   const composed = await readerRows(store, NEXT_READ);
   assert.deepEqual(atTheSitting(composed), ["diligent:tusd1:501"]);
   assert.equal(composed.counts.total, composed.meetings.length);
 });
 
-/* ── (b) no twin, no change ──────────────────────────────────────────────── */
-
 test("CARRIED-SUPERSEDE · (b) a carried row with no fresh twin stays carried, with its reason and its last-listed instant", async () => {
   const store = new MemoryRoutineDataStore();
   const { versionId } = await seed(store, MEASURED_READ, [bondOversight502(MEASURED_READ), CARRIED_495]);
 
-  // The portal answers again and lists another committee's sitting, not this one.
   const [next] = await promoteMeetingPartitions({
     store,
     partitions: [TUSD],
@@ -290,8 +241,6 @@ test("CARRIED-SUPERSEDE · (b) a carried row with no fresh twin stays carried, w
     generatedAt: NEXT_READ,
   });
   assert.equal(next?.outcome.candidate.state, "PROMOTED", next?.outcome.candidate.failureDetail ?? "");
-  // Still unlisted, still carried: nothing new, so the re-check is confirmed on
-  // the pointed version and readers keep the carried row as it was.
   assert.ok(next!.outcome.confirmed, "a re-check with no new fact is confirmed, not republished");
   const payload = next!.outcome.promoted!.payload as MeetingsSnapshot;
   assert.deepEqual(payload.meetings.map(({ id }) => id).sort(), ["diligent:tusd1:495", "diligent:tusd1:502"]);
@@ -309,8 +258,6 @@ test("CARRIED-SUPERSEDE · (b) a carried row with no fresh twin stays carried, w
   );
   assert.equal(next!.outcome.promoted!.versionId, versionId);
 });
-
-/* ── (c) the same body at another time ───────────────────────────────────── */
 
 test("CARRIED-SUPERSEDE · (c) the same normalized body at another local time is another sitting: both are kept", () => {
   const carriedAs = (row: Meeting) => ({ ...row, carried: CARRIED_495.carried });
@@ -351,16 +298,10 @@ test("CARRIED-SUPERSEDE · (c) the same normalized body at another local time is
   }
 });
 
-/* ── (d) another body at the same time ───────────────────────────────────── */
-
 test("CARRIED-SUPERSEDE · (d) another body at the same minute is another sitting: both are kept, on every source", () => {
-  // Another committee of the same board, same minute.
   const budget = budgetAdvisoryAtSameMinute(NEXT_READ);
-  // Another registry body, in the same words, same minute.
   const elsewhere = fresh501(NEXT_READ, { id: "diligent:tusd1:507", bodyId: `${TUSD.bodyId}-elsewhere` });
 
-  // A feed that gives every row one body name and names each committee only in
-  // its title (the iCalendar adapter writes the wiring row's body name).
   const ical = MEETING_PARTITION_CONTRACTS.find((partition) => partition.meetingSource === "ical")!;
   const town = ical.wiring!.config.bodyName ?? ical.wiring!.publishingOrg;
   const townSitting = (uid: string, title: string, carried?: Meeting["carried"]): Meeting => ({
@@ -396,8 +337,6 @@ test("CARRIED-SUPERSEDE · (d) another body at the same minute is another sittin
     assert.deepEqual(reconciled.meetings.map(({ id }) => id).sort(), [prior.id, fresh.id].sort(), label);
   }
 });
-
-/* ── (e) the promotion door ──────────────────────────────────────────────── */
 
 test("CARRIED-SUPERSEDE · (e) the promotion door re-derives the re-issue claim: the honest one promotes, a forged one is refused", async () => {
   const honest: RoutineRemovalEvidence = {
@@ -446,7 +385,6 @@ test("CARRIED-SUPERSEDE · (e) the promotion door re-derives the re-issue claim:
     assert.equal((await store.readPromotion("MEETING", TUSD.scope))?.versionId, versionId, `${label} moved the pointer`);
   }
 
-  // The honest claim is exactly what the reconciliation writes, and the door accepts it.
   const store = new MemoryRoutineDataStore();
   const { snapshot: measured } = await seedMeasuredVersion(store);
   const reconciled = reconcileSuccessfulMeetingPartition({

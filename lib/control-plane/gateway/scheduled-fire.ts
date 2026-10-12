@@ -1,9 +1,4 @@
-/**
- * **FIRING SCHEDULED ORDERS ON TIME (BR-16, the library half of BR-37).** The runner's always-running parent timer
- * calls `fireDueOrders` between rounds and outside them, and once at start for anything overdue. A due order is sent
- * through the gateway's `submit()` under an idempotency key made from the order and its occurrence, so a restart, a
- * second timer or a hung round never sends it twice. A one-time order is removed once sent; a repeating one moves on.
- */
+/** Each due occurrence is sent under a key made from the order and its moment, so a restart or a second timer never sends it twice. */
 import { writeDailyBrief } from "../admin-view/brief.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig, type AdminConfig } from "./admin-config.ts";
 import { refreshFixDispatchHonors } from "../fix-list.ts";
@@ -33,19 +28,14 @@ export function expired(order: ScheduledOrder, nowMs: number): boolean {
 
 export interface FiredOrder { readonly id: string; readonly orderType: string; readonly occurrence: string; readonly ok: boolean }
 
-/** Key for one occurrence of one order: the same order and moment is the same key. Only characters the gateway accepts. */
 export function occurrenceKey(orderId: string, occurrence: string): string {
   return `sched-${orderId}-${occurrence}`.replace(/[^A-Za-z0-9_.:-]/g, "-").slice(0, 120);
 }
 
-/**
- * Send every order that is due at `nowIso`. Safe to call from two places at once and after a restart: each occurrence
- * has one key. Returns what was sent this call.
- */
 export async function fireDueOrders(deps: GatewayDeps, nowIso: string, lastFired: ReadonlyMap<string, string> = new Map()): Promise<readonly FiredOrder[]> {
-  await writeDailyBrief(deps.repos,nowIso).catch(() => undefined);
-  await migrateQueuedFixes(deps, nowIso).catch(() => undefined);
-  await refreshFixDispatchHonors(deps.repos, nowIso).catch(() => undefined);
+  await writeDailyBrief(deps.repos,nowIso).catch(error => console.error("The daily brief could not be written:", error));
+  await migrateQueuedFixes(deps, nowIso).catch(error => console.error("The queued fixes could not be imported:", error));
+  await refreshFixDispatchHonors(deps.repos, nowIso).catch(error => console.error("The runner's fix acknowledgments could not be read:", error));
   const nowMs = Date.parse(nowIso);
   const held = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
   const config: AdminConfig | null = held && isAdminConfig(held.value) ? held.value : null;

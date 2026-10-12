@@ -3,23 +3,9 @@ import { boundedQuery } from "../repository/request-bounds.ts";
 import { MODELS, canonicalModelId, modelTierFor } from "../../models.ts";
 import type { DailyDatabaseTransferRead } from "../../db/transfer.ts";
 
-/**
- * **admin-v6/spend@1 — WHAT THE AGENTS COST, BY MODEL TIER, BY DAY AND BY MONTH, AND WHAT THE DATABASE SENT.**
- *
- * One bounded aggregate over the last twelve Eastern months of the cost ledger: per month, and for the last 31 days
- * per Eastern day, per model, priced dollars. A second one ranks the costliest pieces of work. A charge split across
- * models (`byModel`) is counted at each model's own share; a row that names no model falls back to its attempt's
- * recorded model; a row with neither is "model not recorded", never guessed. Search is the ledger's DISCOVERY_SEARCH
- * rows, kept apart from model money. Nothing here invents a figure: a day with no rows is absent, and a price the
- * ledger never had is counted beside as unpriced.
- *
- * Database transfer is S6's daily counter (`readDailyDatabaseTransfer`), passed in. Until its migration is applied
- * it reads "not recorded yet", never zero.
- */
+/** A row naming no model falls back to its attempt's model, else "model not recorded". A day with no rows is absent; unpriced charges are counted apart. */
 export const ADMIN_V6_SPEND_CONTRACT = "admin-v6/spend@1" as const;
-/** Eastern days of daily detail: enough for Today, Last 7 days and Last 30 days with a day to spare. */
 export const SPEND_DAYS = 31;
-/** The costliest-work ranking keeps its own, shorter window. */
 export const WORK_DAYS = 14;
 export const SPEND_MONTHS = 12;
 export const WORK_LIMIT = 15;
@@ -28,7 +14,6 @@ export type TierKey = "haiku" | "sonnet" | "opus" | "older" | "unrecorded";
 export interface TierSpend { readonly key: string; readonly tier: TierKey; readonly name: string; readonly usd: number; readonly requests: number }
 export interface DaySpend { readonly day: string; readonly anthropicUsd: number; readonly searchUsd: number; readonly byModel: readonly { readonly name: string; readonly usd: number }[]; readonly rows: number }
 export interface MonthSpend { readonly month: string; readonly anthropicUsd: number; readonly searchUsd: number; readonly byTier: readonly { readonly name: string; readonly usd: number }[]; readonly rows: number }
-/** One piece of work and what its paid tries cost. Structurally `WorkCost` in app/(admin)/_mw/admin-v6/model.ts. */
 export interface WorkCost {
   readonly work: string;
   readonly models: string;
@@ -36,10 +21,8 @@ export interface WorkCost {
   readonly costUsd: number | null;
   readonly movedUpWhy: string;
   readonly benefit: string;
-  /** The place keys this work serves, so a place view shows the work that covers it. */
   readonly applies: readonly string[];
 }
-/** One kind of work and how its Scouts ended in the last 24 hours. `found` is evidence found, `route` a route found, `total` every result. */
 export interface ScoutOutcomeLine { readonly recordClass: string; readonly found: number; readonly route: number; readonly total: number }
 export interface NeonTransfer {
   readonly kind: "recorded" | "not-recorded";
@@ -48,41 +31,27 @@ export interface NeonTransfer {
 }
 /** Structurally `SpendView` in app/(admin)/_mw/admin-v6/model.ts. */
 export interface AdminV6SpendView {
-  readonly flow?: import("./cost-reporting.ts").FlowSummary;
-  readonly batchSpend?: import("./cost-reporting.ts").BatchSpend | null;
-  readonly neonProjects?: readonly import("./spend-summary.ts").NeonProjectTransfer[] | null;
-  readonly vendors?: import("./vendor-spend.ts").VendorSpendReading;
   readonly windowDays: number;
   readonly byTier: readonly TierSpend[];
   readonly byDay: readonly DaySpend[];
-  /** Newest first. The first row is the month in progress. */
   readonly byMonth: readonly MonthSpend[];
-  /** The costliest work over the same days, costliest first. */
   readonly work: readonly WorkCost[];
   readonly anthropicUsd: number;
   readonly searchUsd: number;
   readonly unpricedRows: number;
   readonly neon: NeonTransfer;
-  /** Paid model money settled in the last 24 hours, straight from the cost ledger; null when that read failed. */
   readonly last24h?: { readonly modelUsd: number; readonly unpricedRows: number } | null;
-  /** When this view was read from the ledger. */
   readonly readAt?: string;
-  /** What Scouts reported in the last 24 hours, by kind of work; null when that read failed. */
   readonly scoutOutcomes?: readonly ScoutOutcomeLine[] | null;
-  /** Open reservations right now, over every hunt (the owner snapshot's attribution); null when it was not read. Filled by the route. */
   readonly setAsideUsd?: number | null;
-  /** The daily spending limit (the rolling 24-hour ceiling in force); null when the policy row was not read. Filled by the route. */
   readonly dailyLimitUsd?: number | null;
-  /** BR-21: how many paid hunters the daily limit buys at once right now; null when the limit or the last 24 hours of spend was not read. Filled by the route. */
   readonly huntersNow?: number | null;
-  /** BR-21: charges in the last 24 hours counted at their worst case because no price was recorded; null when not read. Filled by the route. */
   readonly worstCaseCharges?: number | null;
 }
 
 /** `day` is null for a row older than the day window: it counts toward its month and nothing else. */
 export interface SpendRowRaw { readonly month: string; readonly day: string | null; readonly role: string; readonly model: string | null; readonly usd: number | null; readonly n: number }
 
-/** The model as Admin names it: a current tier by its catalog name, an older one by its family with "(older)", else unrecorded. */
 export function modelLabel(id: string | null): { readonly key: string; readonly tier: TierKey; readonly name: string } {
   if (id === null || !/claude/i.test(id)) return { key: "unrecorded", tier: "unrecorded", name: "Model not recorded" };
   const current = modelTierFor(canonicalModelId(id));
@@ -162,16 +131,13 @@ export const SPEND_SQL = `WITH rows AS (
   LEFT JOIN cp_attempts a ON a.id = r.attempt_id
 ) x WHERE x.role <> 'ACQUIRER' OR x.usd IS NOT NULL GROUP BY 1, 2, 3, 4`;
 
-/** The paid model money settled in the last 24 hours, and how many model charges had no price. Search is not model money. */
 export const ROLLING_SQL = `SELECT coalesce(sum(usd) FILTER (WHERE role <> 'DISCOVERY_SEARCH'), 0)::float8 AS model_usd,
   count(*) FILTER (WHERE usd IS NULL AND role NOT IN ('DISCOVERY_SEARCH', 'ACQUIRER'))::int AS unpriced
 FROM (SELECT c.record->>'role' AS role, (c.record->'cost'->>'usd')::float8 AS usd FROM cp_log_costs c WHERE c.recorded_at > now() - interval '24 hours') x`;
 
-/** What Scouts reported in the last 24 hours, by the kind of work (the obligation's record class) and how they ended. */
 export const OUTCOMES_SQL = `SELECT s.record->>'recordClass' AS record_class, s.record->>'outcome' AS outcome, count(*)::int AS n
 FROM cp_log_scout_results s WHERE s.recorded_at > now() - interval '24 hours' GROUP BY 1, 2`;
 
-/** Scout results into one line per kind of work, most results first. */
 export function scoutOutcomeLines(rows: readonly { readonly recordClass: string | null; readonly outcome: string | null; readonly n: number }[]): readonly ScoutOutcomeLine[] {
   const by = new Map<string, { found: number; route: number; total: number }>();
   for (const r of rows) {
@@ -185,7 +151,6 @@ export function scoutOutcomeLines(rows: readonly { readonly recordClass: string 
   return [...by].map(([recordClass, l]) => ({ recordClass, ...l })).sort((a, b) => b.total - a.total || a.recordClass.localeCompare(b.recordClass));
 }
 
-/** The costliest pieces of work in the day window: paid model charges grouped by the obligation they served, with what their results said. */
 export const WORK_SQL = `WITH rows AS (
   SELECT COALESCE(c.record->>'obligationId', c.record->>'workItemId', c.record->>'routeId') AS work, c.record->>'jurisdiction' AS jur,
     c.record->'byModel' AS by_model, c.record->>'model' AS row_model, (c.record->'cost'->>'usd')::float8 AS usd, c.record->>'attemptId' AS attempt_id
@@ -218,7 +183,6 @@ const TIER_ORDER: readonly TierKey[] = ["haiku", "sonnet", "opus", "older", "unr
 const titleCase = (slug: string) => slug.replace(/^(city|town|county|village|borough|township)-of-/, "$1 of ").replaceAll("-", " ").replaceAll("_", " ")
   .replace(/\b([a-z])/g, (m) => m.toUpperCase()).replace(/\b(Of|And|The)\b/g, (m) => m.toLowerCase());
 
-/** A readable name for work by its obligation: the jurisdiction's own name and the kind of record (`...:az:city:city-of-phoenix#campaign-finance-0`). */
 export function workName(work: string, jurisdiction: string | null): string {
   if (/^scout-prewarm/.test(work) || /#?scout:prewarm/.test(work)) return "Hourly prompt-cache warm-up (no place)";
   const family = /#([a-z0-9:_-]+?)(?:-\d+)?$/.exec(work)?.[1];
@@ -251,7 +215,6 @@ export async function readSpend(sql: Sql, transfer: DailyDatabaseTransferRead | 
   const [raw, workRaw, rolling, outcomes] = await Promise.all([
     boundedQuery(sql, { operation: "cp_log_costs.spend_by_month_day_and_model", callClass: "PAGE" }, SPEND_SQL, [SPEND_DAYS, SPEND_MONTHS]) as Promise<readonly Record<string, unknown>[]>,
     boundedQuery(sql, { operation: "cp_log_costs.costliest_work", callClass: "PAGE" }, WORK_SQL, [WORK_DAYS, WORK_LIMIT]) as Promise<readonly Record<string, unknown>[]>,
-    // The two extras answer "is money moving, and are agents finding anything"; one failing leaves the rest of the view standing.
     (boundedQuery(sql, { operation: "cp_log_costs.rolling_24h_model_spend", callClass: "PAGE" }, ROLLING_SQL, []) as Promise<readonly Record<string, unknown>[]>).catch(() => null),
     (boundedQuery(sql, { operation: "cp_log_scout_results.outcomes_24h", callClass: "PAGE" }, OUTCOMES_SQL, []) as Promise<readonly Record<string, unknown>[]>).catch(() => null),
   ]);

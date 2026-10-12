@@ -1,20 +1,7 @@
 /**
- * **ROBOTS.TXT READ AND RECORDED BEFORE THE FIRST BYTE, INSIDE A MEETING
- * ADAPTER.** (2026-09-23, the Pima school-agenda routes session; made a record
- * rather than a refusal by the owner decision of 2026-09-25.)
- *
- * The gate was born to refuse: three Diligent Community tenants whose
- * `robots.txt` reads `User-agent: *` / `Disallow: /` had stayed on the routine
- * clock after `docs/sources.md` recorded them `DISALLOWED`, and from 2026-09-23
- * this gate threw on DISALLOWED and CANNOT_TELL so the partition walled.
- *
- * On 2026-09-25 Sean decided: "Robots.txt alone must not block acquisition. I
- * explicitly authorize automated reading of publicly accessible pages even
- * when robots.txt requests otherwise." So an adapter that opts in still asks
- * the host itself, every run, with the one evaluator the control plane uses
- * (`lib/control-plane/scheduler/robots.ts`, product token `we-the-people`,
- * falling to the `*` group), before it requests the page — and every verdict
- * is RECORDED and none refuses (`ROBOTS_BLOCKS_ACQUISITION` is false):
+ * Robots.txt read and RECORDED before an opted-in meeting adapter's first
+ * request. Every verdict is recorded and none refuses
+ * (`ROBOTS_BLOCKS_ACQUISITION` is false):
  *
  * ```
  *   ALLOWED | NO_ROBOTS   → recorded; the request proceeds
@@ -23,16 +10,13 @@
  *                           page's own answer decides
  * ```
  *
- * What still stops a read is an access control on the page itself — a 401, a
- * 403, a 429, a bot challenge — which the shared polite client reports as a
- * WALL (`SourceHttpError`) and which is never defeated with a credential, a
- * cookie or a solved challenge (`lib/hunt/access-control.ts`).
+ * What still stops a read is an access control on the page itself (401, 403,
+ * 429, a bot challenge), which the polite client reports as a WALL and which
+ * is never defeated.
  *
- * The robots document is read ONCE per origin per gate (one fetch run), with
- * this project's own identified client, and — because the composite's
- * acquisition trace records every successful response — its exact bytes land
- * in the candidate's acquisition evidence beside the pages it was read over.
- * That is the robots reading travelling with the data, as evidence.
+ * The robots document is read once per origin per gate with the evaluator in
+ * `lib/control-plane/scheduler/robots.ts`, and its bytes land in the
+ * candidate's acquisition evidence.
  */
 
 import {
@@ -49,21 +33,15 @@ export interface PermissionGateOptions {
 }
 
 export interface PermissionGate {
-  /**
-   * Read (once per origin) and record the robots.txt verdict for this URL, and resolve with it. Never throws for a
-   * robots verdict: robots.txt is recorded, not blocking (owner decision 2026-09-25). The name is historical.
-   */
+  /** Reads (once per origin) and records the robots.txt verdict for this URL. Never throws for a robots verdict. */
   readonly assertPermitted: (url: string) => Promise<PermissionReading>;
   /** Every reading this gate made, in order — for a report, never for a decision. */
   readonly readings: () => readonly { readonly url: string; readonly reading: PermissionReading }[];
 }
 
 /**
- * One GET with its robots reading: the gate records the verdict for this exact
- * URL first, then the shared polite client requests it. The single way an
- * opted-in adapter reads a page, so the robots record cannot be skipped by one
- * call site and kept by another. An access control on the page is the polite
- * client's WALL, never something this function works around.
+ * One GET with its robots reading recorded first. The single way an opted-in
+ * adapter reads a page, so the record cannot be skipped by one call site.
  */
 export async function permittedText(
   gate: PermissionGate,
@@ -124,7 +102,6 @@ export function makePermissionGate(options: PermissionGateOptions = {}): Permiss
         byOrigin.set(origin, pending);
       }
       const reading = evaluatePermission(await pending, url);
-      /* Recorded, never a refusal: ROBOTS_BLOCKS_ACQUISITION is false (owner decision 2026-09-25). */
       made.push({ url, reading });
       return reading;
     },

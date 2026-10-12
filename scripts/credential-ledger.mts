@@ -1,60 +1,25 @@
 /**
- * `pnpm credentials` — **PROVE EVERY CREDENTIAL BY CALLING IT.**
+ * `pnpm credentials` — proves every credential in `.env.local` by calling it,
+ * and prints the result.
  *
- * Written 2026-08-22 (Discovery Conduct session, item 2). It generates
- * `docs/credential-ledger.md`, which is the artifact — **this file is the
- * generator and the artifact is never hand-edited** (RULING 92).
+ * `PROVEN` requires all of: the call was made, the transport succeeded, the
+ * body carried the route's control fact (the payload is about the subject
+ * asked for), and a deliberately bogus control request came back different.
+ * Anything else is `FAILED` with the reason stated. Status codes alone are not
+ * trusted: `api.census.gov` answers a rejected key with HTTP 200 and an HTML
+ * page titled "Invalid Key".
  *
- * ## Why this exists when `pnpm keys:walk` already exists
- *
- * `keys:walk` asks *what did this key CLOSE for these two zips* — it is a hunt
- * instrument and its answer moves with the zip. This asks a smaller and colder
- * question that must be answerable on any day in any state: **does the
- * credential work at all, and is the thing that came back about the thing we
- * asked for?**
- *
- * Three failure shapes this is built against, every one of them observed in
- * this repo:
- *
- * 1. **A 200 that is an error page.** `api.census.gov` used to answer a bad key
- *    with `302` + `X-DataWebAPI-KeyError: 1`. It now answers **HTTP 200 with an
- *    HTML body titled "Invalid Key"**. A check written against the status code,
- *    or against that header, now reads a dead credential as healthy. So the
- *    control is *did the body parse as the data we asked for*, never *did the
- *    call succeed*.
- * 2. **A host that answers identically for any handle.** RULING 68 makes
- *    control queries mandatory: a site returning byte-identical responses for
- *    a real handle and a nonsense one produced 32 reported findings in this
- *    project that did not exist. Every route below sends a deliberately bogus
- *    second request and the two bodies must DIFFER.
- * 3. **A redirect followed blindly.** Following the redirect turns a rejected
- *    credential into HTTP 200 and a page of HTML, which parses as zero rows —
- *    the zero-row-is-a-failed-extraction rule wearing a shrug.
- *
- * ## What counts as proven
- *
- * `PROVEN` requires all four: the call was made, the transport succeeded, the
- * body satisfied the route's **control string** (the fact that says the payload
- * is about the subject), and the **control query** came back different. Anything
- * else is `FAILED` with the reason stated in the row. There is no partial
- * credit, because a credential that is 'probably fine' is one a later session
- * will burn a free quota beside.
- *
- * Connection strings are proven differently and honestly: the endpoint is the
- * database host, the "rows" are the rows a `select` returned, and the control is
- * that `current_user` is the role the string names. No write is attempted by
- * this script against anything.
- *
- * Secrets never reach the artifact. Every endpoint is printed with the
- * credential replaced by `<KEY>`, and connection strings print as
- * `role@host/database` with no password.
+ * Connection strings are proven read-only: the control is that `current_user`
+ * is the role the string names. No write is attempted against anything.
+ * Secrets are never printed: endpoints show `<KEY>` and connection strings
+ * print as `role@host/database`.
  *
  * ```
- * pnpm credentials              # call everything, write the ledger
- * pnpm credentials --check      # call everything, write nothing, exit 1 on any failure
+ * pnpm credentials              # call everything, print the ledger
+ * pnpm credentials --check      # the same, and exit 1 on any failure
  * ```
  */
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { neon } from "@neondatabase/serverless";
@@ -80,12 +45,7 @@ function env(): Record<string, string> {
 }
 const E: Record<string, string> = { ...env(), ...(process.env as Record<string, string>) };
 
-/**
- * `.env.local` is put onto `process.env` so the basemap rows below can be
- * proven through `resolveBasemap` — the app's OWN URL builder — rather than
- * through a second copy of its URL shape here. A ledger that re-implements the
- * thing it is proving proves the copy.
- */
+/** Put onto `process.env` so the basemap rows are proven through the app's own `resolveBasemap`. */
 for (const [k, v] of Object.entries(E)) if (process.env[k] === undefined) process.env[k] = v;
 
 const sleep = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
@@ -104,7 +64,7 @@ interface Row {
   rows: number;
   /** Did the body carry the control fact — is it ABOUT the thing asked for? */
   aboutIt: boolean;
-  /** Did a deliberately bogus request come back DIFFERENT? RULING 68. */
+  /** Did a deliberately bogus request come back DIFFERENT? */
   controlDiffered: boolean | null;
   /** PROVEN or FAILED. */
   verdict: "PROVEN" | "FAILED";
@@ -124,10 +84,8 @@ interface Answer {
 }
 
 /**
- * A GET that does NOT follow a credential-rejection redirect.
- *
- * Following it hid an invalid Census credential behind HTTP 200 and a page of
- * HTML. A redirect that is plainly not about credentials is followed once.
+ * A GET that does not follow a credential-rejection redirect (following it
+ * turns a rejected key into HTTP 200 and HTML). Any other redirect is followed once.
  */
 async function get(url: string, headers: Record<string, string> = {}): Promise<Answer> {
   const controller = new AbortController();
@@ -163,7 +121,7 @@ async function get(url: string, headers: Record<string, string> = {}): Promise<A
   }
 }
 
-/** Replace the credential with `<KEY>` so nothing secret reaches the artifact. */
+/** Replace the credential with `<KEY>` so nothing secret is printed. */
 function redact(url: string, ...secrets: (string | undefined)[]): string {
   let out = url;
   for (const s of secrets) {
@@ -173,12 +131,8 @@ function redact(url: string, ...secrets: (string | undefined)[]): string {
 }
 
 /**
- * The one place a row is built, so no route can quietly define its own bar.
- *
- * `PROVEN` needs the control fact present AND the bogus request different.
- * `controlDiffered === null` means the route has no meaningful bogus form (a
- * collection listing that takes no handle); it does not lower the bar, it says
- * the second test was not applicable and the row says so in its note.
+ * The one place a row is built. `controlDiffered === null` means the route has
+ * no meaningful bogus form; the second test is not applicable, not waived.
  */
 function record(r: Omit<Row, "verdict">): void {
   const ok = r.aboutIt && r.controlDiffered !== false;
@@ -187,7 +141,7 @@ function record(r: Omit<Row, "verdict">): void {
   console.log(`  ${mark.padEnd(6)} ${r.key.padEnd(38)} ${String(r.status).padEnd(6)} rows=${r.rows}`);
 }
 
-/** A missing credential is a row, not a skip — silence is how one gets forgotten. */
+/** A missing credential is a row, not a skip. */
 function absent(key: string, what: string, readBy: string): boolean {
   if (E[key] !== undefined && E[key].length > 0) return false;
   record({
@@ -244,10 +198,8 @@ console.log(`\ncredential ledger — calling every credential in .env.local (${A
 
 /* ------------------------- 2 & 3. the two MAPTILER STYLE NAMES — config, not keys --- */
 /**
- * These hold a MapTiler style NAME (`basic-v2-dark`), not a URL. That caught
- * this generator on its first run and is worth stating: the row is proven by
- * asking the app's own `resolveBasemap` to build the URL, so what is verified
- * is the URL the reader's map actually requests.
+ * These hold a MapTiler style NAME (`basic-v2-dark`), not a URL; the row is
+ * proven on the URL the app's own `resolveBasemap` builds from it.
  */
 for (const spec of [
   { key: "NEXT_PUBLIC_MAPTILER_STYLE", theme: "dark" as const },
@@ -293,8 +245,7 @@ for (const spec of [
     const url = `https://api.congress.gov/v3/member/congress/119/NJ?format=json&limit=5&currentMember=true&api_key=${E[key]}`;
     const real = await get(url);
     await sleep(1000);
-    // Control: a state code that does not exist. A host answering identically
-    // for ZZ and for NJ is answering about nothing.
+    // Control: a state code that does not exist.
     const bogus = await get(
       `https://api.congress.gov/v3/member/congress/119/ZZ?format=json&limit=5&currentMember=true&api_key=${E[key]}`,
     );
@@ -331,8 +282,7 @@ for (const spec of [
       "https://api.census.gov/data/2023/acs/acs5?get=NAME,B01003_001E&for=zip%20code%20tabulation%20area:07866";
     const real = await get(`${path}&key=${E[key]}`);
     await sleep(400);
-    // Control: the SAME call with no key at all. If the two bodies are the
-    // same, the key is doing nothing either way.
+    // Control: the same call with no key at all.
     const bogus = await get(path);
     let dataRows = 0;
     let parsed = false;
@@ -474,7 +424,7 @@ for (const spec of [
 /* ------------------------------------------------------------ 9. LEGISCAN_API_KEY --- */
 {
   const key = "LEGISCAN_API_KEY";
-  const readBy = "`scripts/api-keys-walk.mts` research credential probe only; no production promotion door";
+  const readBy = "**nothing**";
   const what = "LegiScan — state bills and roll-call votes (CC BY 4.0, attribution is law)";
   if (!absent(key, what, readBy)) {
     const url = `https://api.legiscan.com/?key=${E[key]}&op=getSessionList&state=NJ`;
@@ -578,11 +528,7 @@ for (const spec of [
 }
 
 /* ---------------------------------------------- 12-14. the three connection strings --- */
-/**
- * Read-only probes. This script attempts no write against any database, and the
- * production WRITE string is proven only by asking who it is — that is enough to
- * say the credential authenticates, and it is the largest claim a ledger needs.
- */
+/** Read-only probes: even the production write string is proven only by asking who it is. */
 for (const spec of [
   {
     key: "DATABASE_URL",
@@ -646,19 +592,9 @@ for (const spec of [
 
 /* --------------------------------------------------------------- 15. WTP_DB_ROLE --- */
 /**
- * Not a credential and not callable. It is a DECLARATION: it says what
- * `DATABASE_URL` points at, `local` or `production`, because a URL cannot be
- * asked which it is and the write guard has to know.
- *
- * The first version of this row proved it against `current_user`, which is the
- * wrong thing — `WTP_DB_ROLE` is not a Postgres role name and never was. It is
- * recorded here because that mistake is exactly the shape the ledger exists to
- * catch: a check that looked like it passed on something it was not measuring.
- *
- * The structural proof, the same one `verify-readonly` uses: if the declaration
- * says `local`, then `DATABASE_URL` must NOT resolve to the same host as either
- * production string. A `local` declaration over a production host is the single
- * mistake that would let a development write reach the sold store.
+ * Not a credential: a declaration of what `DATABASE_URL` points at (`local` or
+ * `production`); it is not a Postgres role name. Proven structurally: a
+ * `local` declaration must not resolve to either production string's host.
  */
 {
   const key = "WTP_DB_ROLE";
@@ -701,87 +637,23 @@ for (const spec of [
   }
 }
 
-/* ------------------------------------------------------------------- artifact --- */
+/* ------------------------------------------------------------------- result --- */
 
 const proven = rows.filter((r) => r.verdict === "PROVEN").length;
 const failed = rows.filter((r) => r.verdict === "FAILED").length;
 
-function cell(v: string): string {
-  return v.replace(/\|/g, "\\|");
-}
-
-const lines: string[] = [];
-lines.push("# The credential ledger — proven by calling, never by reading the register");
-lines.push("");
-lines.push(
-  "**Generated by `pnpm credentials` (`scripts/credential-ledger.mts`). Never hand-edited — RULING 92 says fix the generator, never the artifact.**",
-);
-lines.push("");
-lines.push(`**Last regenerated: ${AS_OF}.**`);
-lines.push("");
-lines.push(
-  "Every hunt session regenerates this at session start by CALLING each credential. A key not called this session is reported as **unproven**, and an invalid key opens a Needs Sean P1 row the same session.",
-);
-lines.push("");
-lines.push("## What `PROVEN` means here, and why the bar is where it is");
-lines.push("");
-lines.push(
-  "A row reads `PROVEN` only when all of these hold: the call was made, the transport succeeded, the body carried the **control fact** that says the payload is about the subject asked for, and a deliberately **bogus control request** came back different.",
-);
-lines.push("");
-lines.push(
-  "The bar is not paranoia. `api.census.gov` answers a rejected key with **HTTP 200 and an HTML page titled “Invalid Key”** — a check written against the status code reads a dead credential as healthy. And a host that answers byte-identically for any handle produced 32 reported findings in this project that did not exist, which is why RULING 68 makes the control query mandatory rather than advisable.",
-);
-lines.push("");
-lines.push(
-  "`control differed` reads `n/a` where the route takes no handle to falsify (a collection listing, a connection string). That does not lower the bar for those rows; it states that the second test was not applicable.",
-);
-lines.push("");
-lines.push(`## The ledger — ${proven} of ${rows.length} proven, ${failed} failed`);
-lines.push("");
-lines.push("| Credential | What it is for | Endpoint called | Status | Rows | About the thing asked for | Control differed | Verdict |");
-lines.push("|---|---|---|---:|---:|:---:|:---:|:---:|");
+console.log(`\n${proven} of ${rows.length} proven, ${failed} failed (${AS_OF})\n`);
 for (const r of rows) {
-  lines.push(
-    `| \`${r.key}\` | ${cell(r.what)} | \`${cell(r.endpoint)}\` | ${cell(String(r.status))} | ${r.rows} | ${r.aboutIt ? "yes" : "**no**"} | ${r.controlDiffered === null ? "n/a" : r.controlDiffered ? "yes" : "**no**"} | ${r.verdict === "PROVEN" ? "**PROVEN**" : "**FAILED**"} |`,
-  );
-}
-lines.push("");
-lines.push("## What each call actually returned");
-lines.push("");
-lines.push("| Credential | Read by | What came back |");
-lines.push("|---|---|---|");
-for (const r of rows) {
-  lines.push(`| \`${r.key}\` | ${cell(r.readBy)} | ${cell(r.note)} |`);
-}
-lines.push("");
-if (failed > 0) {
-  lines.push("## Failures");
-  lines.push("");
-  lines.push("Each of these opens a **Needs Sean P1** row naming the key.");
-  lines.push("");
-  for (const r of rows.filter((x) => x.verdict === "FAILED")) {
-    lines.push(`- **\`${r.key}\`** — ${r.note}`);
-  }
-  lines.push("");
-}
-lines.push("---");
-lines.push("");
-lines.push(
-  "*A credential is a route somebody already paid for. Burning a free quota beside an uncalled key is the free-source floor of RULING 83 with the sign flipped, and it is just as wasteful — RULING 90 item 5.*",
-);
-lines.push("");
-
-const out = join(ROOT, "docs", "credential-ledger.md");
-if (!CHECK_ONLY) {
-  writeFileSync(out, lines.join("\n"), "utf8");
-  console.log(`\nwrote docs/credential-ledger.md — ${proven} of ${rows.length} proven, ${failed} failed`);
-} else {
-  console.log(`\n--check: ${proven} of ${rows.length} proven, ${failed} failed (nothing written)`);
+  console.log(`${r.verdict.padEnd(6)} ${r.key}`);
+  console.log(`  for:              ${r.what}`);
+  console.log(`  endpoint:         ${r.endpoint}`);
+  console.log(`  status:           ${r.status}; rows ${r.rows}; about it ${r.aboutIt ? "yes" : "no"}; control differed ${r.controlDiffered === null ? "n/a" : r.controlDiffered ? "yes" : "no"}`);
+  console.log(`  read by:          ${r.readBy}`);
+  console.log(`  what came back:   ${r.note}`);
 }
 
 if (failed > 0) {
-  console.log("\nFAILED credentials — each needs a Needs Sean P1 row:");
+  console.log("\nFAILED credentials:");
   for (const r of rows.filter((x) => x.verdict === "FAILED")) console.log(`  ${r.key} — ${r.note}`);
   if (CHECK_ONLY) process.exit(1);
 }

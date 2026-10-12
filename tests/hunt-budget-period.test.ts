@@ -30,9 +30,7 @@ test("$50 is shared across concurrent work in one hunt and cannot reset after a 
   const admitted = await Promise.all(Array.from({ length: 12 }, (_,i) => new JobSpend(spend, `job-${i}`, `ob-${i}`, { sends: [], areas: [line] }).admit(10, "bounded request")));
   assert.equal(admitted.filter(a => a.admit).length, 5);
   now = "2026-09-28T08:00:00.000Z";
-  /* Two days and a restart later the five jobs' rounds are long over (2026-10-06: a hold leaves once no job of
-     its round can be running). The hunt's budget does not reset: its line reads the hunt's whole recorded spend
-     from the cost ledger since the hunt began, and the jobs' dead holds no longer count on top of it. */
+  /* Once no job of a round can be running its holds leave; the hunt's line reads its whole recorded spend since it began, so dead holds no longer count on top of it. */
   const restarted = new DurableSpendHolds({ budget: repos.budget, table: repos.spendHolds, now: () => now, sleep: async () => undefined });
   const afterRestart: BudgetLine = { ...line, historicalUsd: 50, historyReadAt: now };
   const refusal = await new JobSpend(restarted, "retry-next-day", "ob-1", { sends: [], areas: [afterRestart] }).admit(0.01, "retry or escalation");

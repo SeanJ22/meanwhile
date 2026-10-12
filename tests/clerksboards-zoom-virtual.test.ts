@@ -7,17 +7,6 @@ import { isPlacelessLocation } from "../lib/meetings/venue-cache.ts";
 import { makeClerksBoardsSource, parseBoardPage, type ClerksBoardsRaw } from "../lib/sources/clerksboards/index.ts";
 import type { BodySourceWiring } from "../lib/registry/source-wiring.ts";
 
-/**
- * **"ZOOM (VIRTUAL)" IS AN ONLINE SITTING, NOT A PLACE WE FAILED TO PIN.**
- * (2026-09-24.)
- *
- * The City of Tucson Clerk's page for the Public Art and Community Design
- * Committee (board 49, recorded 2026-09-24 from clerksboards.tucsonaz.gov)
- * gives its Meeting Location as "Zoom (Virtual)". Seven served sittings carried
- * it as STATED_NOT_PLACED: "the publisher named a place we have no pin for".
- * The publisher named no place. The sitting is online, and the card says so.
- */
-
 const TUCSON = "ocd-division/country:us/state:az/place:tucson";
 const page = readFileSync(join(import.meta.dirname, "fixtures", "clerksboards", "b49.html"), "utf8");
 const wiring: BodySourceWiring = {

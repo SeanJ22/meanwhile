@@ -1,5 +1,5 @@
 /**
- * BR-14: the Queue lists every order, scheduled order, send, hunt, stuck case, shut door and fix item exactly once, under the
+ * The Queue lists every order, scheduled order, send, hunt, stuck case, shut door and fix item exactly once, under the
  * right filter, each with the control that stops or pauses it. A section that was not read adds nothing and is not a zero.
  */
 import assert from "node:assert/strict";

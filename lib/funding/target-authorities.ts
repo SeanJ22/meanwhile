@@ -25,11 +25,12 @@ export function stateFromContest(contestId: string | null): StateCampaignFinance
 /** Exact source-namespaced targets select their authority without another store. */
 export function directFundingTargetPlan(target: string): FundingTargetPlan {
   const contestId = contestIdFromBallotTarget(target);
-  const state = stateFromContest(contestId);
+  const nativeState = /^state-finance:([A-Z]{2}):/.exec(target)?.[1] as StateCampaignFinanceJurisdiction | undefined;
+  const state = stateFromContest(contestId) ?? (nativeState && Object.hasOwn(STATE_CAMPAIGN_FINANCE_SOURCES, nativeState) ? nativeState : null);
   return {
     contestId,
-    federal: target.startsWith("congress:") || (contestId !== null && FEDERAL_CONTEST.test(contestId)),
+    federal: target.startsWith("congress:") || /^fec:[HS]\d[A-Z]{2}\d{5}$/.test(target) || (contestId !== null && FEDERAL_CONTEST.test(contestId)),
     state,
-    azIdentity: state === "AZ",
+    azIdentity: state === "AZ" && target.includes("|"),
   };
 }

@@ -11,9 +11,9 @@ import type { CardSource } from "@/lib/officials/card-sources";
 import { useReaderCopy } from "@/hooks/use-reader-copy";
 
 /**
- * What a reader sees wherever we do not hold the information yet (rulings §10):
- * the one sentence, and the existing "Want us to get this info sooner?" tap
- * where the gap belongs to a body or a candidate.
+ * What a reader sees wherever we do not hold the information yet: the one
+ * sentence, plus the "Want us to get this info sooner?" tap where the gap
+ * belongs to a body or a candidate.
  */
 export const WORKING_ON_IT = copy("copy.working");
 
@@ -36,7 +36,7 @@ export function WorkingOnIt({
   state,
   inline = false,
 }: {
-  /** A name the gap is about, said after the sentence ("…on Vail School District"). */
+  /** A name the gap is about, said after the sentence. */
   about?: string | null;
   /** The body or candidate the tap is for. No subject, no pill. */
   subject?: { type: DemandSubjectType; id: string } | null;

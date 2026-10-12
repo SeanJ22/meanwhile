@@ -1,21 +1,5 @@
-/**
- * **The initials that stand in for a face.** (NJ Hunt 6, 2026-08-22.)
- *
- * Found by reading a capture as an image, which is the whole reason RULING 2
- * exists: **Thomas J. Haynes III rendered as `TI`** on the Rockaway Borough
- * council. Every DOM assertion in the suite was happy — the element was present,
- * painted, and carried two letters.
- *
- * The sweep that followed found the same function written out THREE times, in
- * `person-identity.tsx`, `official-popup.tsx` and `candidate-card.tsx`, with
- * three different behaviours — the third took the first two alphabetic tokens,
- * so `Thomas J. Haynes` initialled a middle name and rendered `TJ`. All three
- * now call one implementation, and this holds it.
- *
- * It is a small thing on a named public person's row, which is where small
- * things matter most: the initials are what a reader sees INSTEAD of him, and
- * getting them wrong makes our missing photo look like a defect about him.
- */
+// The initials stand in for a missing photo, so all surfaces share this one implementation.
+
 import test from "node:test";
 import assert from "node:assert/strict";
 

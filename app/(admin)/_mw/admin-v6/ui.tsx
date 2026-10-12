@@ -11,6 +11,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import type { SectionId } from "./contract.ts";
 
 import { useV6 } from "./context.tsx";
+import { ACTIONS } from "./actions.ts";
 import { STAGE_NAMES, type ActionRef, type Sourced, type StageMark, type UiReceipt } from "./model.ts";
 import { STATUS_TONE } from "./receipts.ts";
 import s from "./v6.module.css";
@@ -58,6 +59,7 @@ export function Failed(props: { readonly what: string; readonly retry?: () => vo
 /** A control that changes something. Off controls stay focusable and say why. */
 export function ActionButton(props: { readonly action: ActionRef; readonly primary?: boolean; readonly label?: string }) {
   const v = useV6();
+  if (!ACTIONS.has(props.action.kind)) return null;
   const def = v.defOf(props.action);
   const why = v.whyNot(props.action);
   const global = def.preview({ target: props.action.target, targetName: "", scopeName: v.place.name, scopeIsCountry: v.place.kind === "Country", outreachAuthorized: v.access.outreachAuthorized }).level === "global";
@@ -75,15 +77,15 @@ export function ActionButton(props: { readonly action: ActionRef; readonly prima
   );
 }
 
-/** A row of controls, followed once by the reasons any of them are off. */
 export function Actions(props: { readonly actions: readonly ActionRef[]; readonly primaryFirst?: boolean }) {
   const v = useV6();
-  if (!props.actions.length) return null;
-  const reasons = [...new Set(props.actions.map((a) => v.whyNot(a)).filter((x): x is string => !!x))];
+  const actions = props.actions.filter(action => ACTIONS.has(action.kind));
+  if (!actions.length) return null;
+  const reasons = [...new Set(actions.map((a) => v.whyNot(a)).filter((x): x is string => !!x))];
   return (
     <div className={s.stack} style={{ gap: 6 }}>
       <div className={s.inline}>
-        {props.actions.map((a, i) => <ActionButton key={`${a.kind}|${a.target}|${i}`} action={a} primary={props.primaryFirst && i === 0} />)}
+        {actions.map((a, i) => <ActionButton key={`${a.kind}|${a.target}|${i}`} action={a} primary={props.primaryFirst && i === 0} />)}
       </div>
       {reasons.map((r) => <p key={r} className={s.why}>{r}</p>)}
     </div>
@@ -170,7 +172,6 @@ export function Tabs<T extends string>(props: { readonly label: string; readonly
   );
 }
 
-/** Paging over a list this page already holds. The note says what the full total is. */
 export function usePager<T>(list: readonly T[], size: number): { readonly page: readonly T[]; readonly pager: ReactNode; readonly reset: () => void } {
   const [p, setP] = useState(0);
   const pages = Math.max(1, Math.ceil(list.length / size));

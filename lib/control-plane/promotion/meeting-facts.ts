@@ -1,53 +1,3 @@
-/**
- * **FROM AN EXTRACTION CHAIN TO A CIVIC FACT — MEETING TIMES AND AGENDAS ONLY.**
- * (Fleet Promotion Readiness, PRDY-2, 2026-09-06.)
- *
- * ## What was missing (ACT-3, ACT-4)
- *
- * The worker fleet produced extractions — rows with scalar fields and evidence
- * spans, validated and audited — and the promotion pipeline offered them as
- * items whose "record class" was the CONTRACT's class (`CIVICCLERK_EVENTS`,
- * `OFFICIAL_MEETING_DOCUMENT_INVENTORY`). Nothing turned a validated row into
- * the thing a reader receives: a `Meeting` with a canonical body, a start
- * instant in the body's zone, a venue or an honest online label, an agenda
- * link the publisher actually stated, and provenance naming the page it came
- * from. So no item could ever be a meeting-time or an agenda candidate.
- *
- * ## The bridge, and what it deliberately reuses
- *
- * A fact is produced ONLY by the canonical Reader adapter for the source —
- * `normalizeWithDrops` from `lib/sources/legistar` and the CivicClerk source's
- * `normalizeWithDrops` — run over the IMMUTABLE artifact bytes the parser
- * extracted from. There is no second meeting model here and no second
- * normalizer: the bridge decodes the same JSON the adapter would have fetched,
- * hands it to the adapter, and then cross-checks every scalar the adapter
- * consumed against the record the VALIDATOR passed. A row the adapter drops
- * (no venue, no clock, unwired tenant) is a REFUSAL with the adapter's own drop
- * accounting, never a fact with a guessed field.
- *
- * Canonical identity comes from SOURCE_WIRING. The Legistar slug lookup is a
- * derived view of those same rows, not another membership list. A tenant with
- * no row — Avondale today — yields no fact and a named
- * refusal (`BODY_IDENTITY_UNRESOLVED`), because a body id is a claim about
- * which government met and this module invents none.
- *
- * ## Two classes, one meeting
- *
- * ```
- *   meeting-times   factKey <meetingId>@<startsAt>          the sitting and its instant
- *   agendas         factKey <meetingId>#agenda@<urlHash>    the published agenda link
- * ```
- *
- * A meeting whose adapter output carries no `agendaUrl` yields a meeting-time
- * fact and NO agenda fact — an absence is never a fact of the agendas class.
- * Agenda items travel only when the source exposes them; the Events feeds
- * these two adapters read do not, so `items` is null and `itemsExposed` false,
- * which is the honest shape ("nobody asked" is not "there are none").
- *
- * The existing `OFFICIAL_MEETING_DOCUMENT_INVENTORY` class and every
- * generalized (schemaVersion 2) contract are refused here by class: a URL
- * inventory is not a meeting time and is not renamed into one.
- */
 import { createHash } from "node:crypto";
 
 import type { AgendaDocument } from "../../meetings/agenda-documents.ts";
@@ -63,7 +13,7 @@ import { isFieldValue, type LegacyCivicExtractionContract, type WorkerResultReco
 
 export const MEETING_FACT_BRIDGE_VERSION = "meeting-facts/1";
 
-/** The only two record classes this bridge produces — the proposed activation scope, and nothing wider. */
+/** The only two record classes this bridge produces. */
 export const MEETING_FACT_CLASSES = ["meeting-times", "agendas"] as const;
 export type MeetingFactClass = (typeof MEETING_FACT_CLASSES)[number];
 
@@ -71,7 +21,6 @@ export function isMeetingFactClass(value: string): value is MeetingFactClass {
   return (MEETING_FACT_CLASSES as readonly string[]).includes(value);
 }
 
-/** The worker contract classes whose extractions can become meeting facts. */
 export const MEETING_FACT_SOURCE_CLASSES = ["LEGISTAR_EVENTS", "CIVICCLERK_EVENTS"] as const;
 export type MeetingFactSourceClass = (typeof MEETING_FACT_SOURCE_CLASSES)[number];
 
@@ -79,7 +28,6 @@ export function isMeetingFactSourceClass(value: string): value is MeetingFactSou
   return (MEETING_FACT_SOURCE_CLASSES as readonly string[]).includes(value);
 }
 
-/** The canonical body the fact is about, and which registry said so. */
 export interface FactBodyIdentity {
   readonly bodyId: string;
   readonly ocdId: string | null;
@@ -87,10 +35,9 @@ export interface FactBodyIdentity {
   readonly bodyName: string;
   readonly jurisdiction: string;
   readonly publishingOrg: string;
-  readonly resolvedBy: "LEGISTAR_CLIENT_REGISTRY" | "SOURCE_WIRING";
+  readonly resolvedBy: "LEGISTAR_CLIENT_REGISTRY" | "MEETING_DOORS";
 }
 
-/** The immutable acquisition the fact was read from. */
 export interface FactSourceIdentity {
   readonly sourceId: "legistar" | "civicclerk";
   readonly publisherSlug: string;
@@ -100,13 +47,11 @@ export interface FactSourceIdentity {
   readonly artifactId: string;
   readonly contentHash: string;
   readonly byteLength: number;
-  /** When the artifact was recorded — the acquisition timestamp. */
   readonly acquiredAt: string;
   readonly acquiredByAttemptId: string;
   readonly workItemId: string;
 }
 
-/** The exact worker results and evidence spans the fact rests on. */
 export interface FactChainIdentity {
   readonly parserResultId: string;
   readonly parserAttemptId: string;
@@ -137,13 +82,11 @@ interface FactBase {
   readonly meetingId: string;
   readonly body: FactBodyIdentity;
   readonly time: FactTime;
-  /** The canonical Reader representation, exactly as the adapter produced it. */
   readonly meeting: Meeting;
   readonly source: FactSourceIdentity;
   readonly chain: FactChainIdentity;
   /** The instant the fact applies to: the meeting start. */
   readonly applicableAt: string;
-  /** When the publisher's representation was observed (the acquisition). */
   readonly observedAt: string;
   readonly status: Meeting["status"];
 }
@@ -163,7 +106,6 @@ export interface AgendaFact extends FactBase {
     /** The Events feeds expose no items; null means nobody asked, never "none". */
     readonly items: null;
     readonly itemsExposed: false;
-    /** The retrieved document, when the caller retrieved it through the canonical retriever. */
     readonly document: AgendaDocument | null;
   };
 }
@@ -177,7 +119,6 @@ export interface FactRefusal {
   readonly recordId: string | null;
 }
 
-/** The canonical adapter's reading of one artifact: meetings, drops, and the rows they came from. */
 export interface NormalizedSource {
   readonly sourceId: "legistar" | "civicclerk";
   readonly publisherSlug: string;
@@ -220,11 +161,7 @@ function meetingIdFor(sourceId: "legistar" | "civicclerk", slug: string, row: Re
   return typeof id === "number" && Number.isSafeInteger(id) ? `${sourceId}:${slug}:${id}` : null;
 }
 
-/**
- * Run the canonical adapter over immutable bytes. Pure apart from the clock
- * the adapter needs for SCHEDULED/CONCLUDED; the wiring is injectable so a
- * test can hold a tenant the committed registry does not.
- */
+/** Pure apart from the clock the adapter needs for SCHEDULED/CONCLUDED. */
 export function normalizeFactsFromBytes(input: {
   readonly contract: LegacyCivicExtractionContract;
   readonly artifact: ArtifactRecord;
@@ -263,11 +200,11 @@ export function normalizeFactsFromBytes(input: {
   const wired = (input.wiring ?? activeWiring()).filter((row) => row.agendaSourceType === "CIVICCLERK" && row.config.slug === slug);
   if (wired.length === 0) {
     return { ...base, rows, rowById, body: null, considered: rows.length,
-      refusal: { code: "BODY_IDENTITY_UNRESOLVED", detail: `no SOURCE_WIRING row serves CivicClerk tenant ${slug}; the canonical body cannot be named`, recordId: null } };
+      refusal: { code: "BODY_IDENTITY_UNRESOLVED", detail: `no meeting door serves CivicClerk tenant ${slug}; the canonical body cannot be named`, recordId: null } };
   }
   if (wired.length > 1) {
     return { ...base, rows, rowById, body: null, considered: rows.length,
-      refusal: { code: "BODY_IDENTITY_AMBIGUOUS", detail: `${wired.length} SOURCE_WIRING rows serve CivicClerk tenant ${slug}; one feed row would attribute to more than one body`, recordId: null } };
+      refusal: { code: "BODY_IDENTITY_AMBIGUOUS", detail: `${wired.length} meeting doors serve CivicClerk tenant ${slug}; one feed row would attribute to more than one body`, recordId: null } };
   }
   const wiring = wired[0];
   let apiHost: string | null = null;
@@ -280,11 +217,10 @@ export function normalizeFactsFromBytes(input: {
   }
   const out = makeCivicClerkSource([wiring]).normalizeWithDrops([{ wiring, events: rows as unknown as CivicClerkEvent[], collectedAt }], now);
   return { ...base, rows, rowById, considered: rows.length, meetings: out.meetings, drops: { ...out.drops },
-    body: { bodyId: wiring.bodyId, ocdId: wiring.ocdId, jurisdiction: wiring.jurisdiction, publishingOrg: wiring.publishingOrg, resolvedBy: "SOURCE_WIRING" },
+    body: { bodyId: wiring.bodyId, ocdId: wiring.ocdId, jurisdiction: wiring.jurisdiction, publishingOrg: wiring.publishingOrg, resolvedBy: "MEETING_DOORS" },
     refusal: null };
 }
 
-/** The contract a completed worker result was extracted under, or null when it is not a legacy meeting contract. */
 export function meetingFactContract(result: WorkerResultRecord): LegacyCivicExtractionContract | null {
   const contract = result.completion?.completedTask?.workerTask?.contract;
   if (!contract || contract.schemaVersion !== 1) return null;
@@ -309,7 +245,6 @@ export interface FactBridgeInput {
   readonly text: string;
   readonly now: string;
   readonly wiring?: readonly BodySourceWiring[];
-  /** Agenda documents already retrieved through the canonical retriever, matched by meeting id and URL. */
   readonly agendaDocuments?: readonly AgendaDocument[];
 }
 
@@ -324,10 +259,7 @@ function refusalOnly(refusals: FactRefusal[], source: NormalizedSource | null = 
   return { facts: [], refusals, source, contract };
 }
 
-/**
- * Bridge one completed extraction into facts. Every refusal names the record
- * it is about; a bridge that produced nothing says why for each row.
- */
+/** Every refusal names the record it is about. */
 export function bridgeMeetingFacts(input: FactBridgeInput): FactBridge {
   const refusals: FactRefusal[] = [];
   const parsed = input.parser.result;
@@ -453,7 +385,6 @@ export function bridgeMeetingFacts(input: FactBridgeInput): FactBridge {
   return { facts, refusals, source, contract };
 }
 
-/** One line naming the fact, for a SCOUTED summary or a digest. */
 export function factSummary(fact: MeetingFact): string {
   const head = `${fact.recordClass} ${fact.body.bodyName} (${fact.body.bodyId}) ${fact.time.startsAt} ${fact.time.timeZone}`;
   return fact.recordClass === "agendas" ? `${head} agenda ${fact.agenda.documentUrl}` : `${head} at ${fact.meeting.location?.name ?? fact.meeting.online?.label ?? "(no place carried)"}`;

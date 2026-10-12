@@ -1,16 +1,8 @@
 import { getFederalDirectoryFile } from "./federal-directory-read-model.ts";
 
 /**
- * The congress-legislators directory table (item 7, 2026-08-16).
- *
- * Read from the GOOD federal-directory projection initialized by the request
- * boundary. The tracked JSON is an explicit first seed only; a store error
- * never reopens it.
- *
- * **Kept out of the coverage payload on purpose.** 3,891 committee
- * membership rows and 1,306 district offices have no business travelling
- * with every map click; the battlecard asks for one member's slice when it
- * opens, the same way it already asks for one member's votes.
+ * The congress-legislators directory, read from the GOOD federal-directory projection. Kept out of the coverage
+ * payload: the battlecard asks for one member's slice when it opens.
  */
 
 export interface DirectoryOffice {
@@ -19,6 +11,7 @@ export interface DirectoryOffice {
   address: string | null;
   zip: string | null;
   phone: string | null;
+  email?: string | null;
   lat: number | null;
   lng: number | null;
 }
@@ -61,14 +54,7 @@ export function directorySource(): DirectorySource {
   return getFederalDirectoryFile().source;
 }
 
-/**
- * One member's slice, joined by BIOGUIDE — never by name.
- *
- * `congress:A000370` → `A000370`. A holder id in any other namespace is not
- * a federal member and returns null, which is a real answer: the source's
- * scope is sitting federal members, and a scope is not widened by wanting it
- * to be.
- */
+/** One member's slice, joined by BIOGUIDE, never by name; a non-federal holder id returns null. */
 export function directoryFor(holderId: string): {
   source: DirectorySource;
   entry: MemberDirectoryEntry;

@@ -1,40 +1,11 @@
 import type { EvidenceRecord } from "./evidence.ts";
 
 /**
- * **WHO A READER CAN ACTUALLY CONTACT, AND WHY THEM.**
- * (PR #212 follow-up, 2026-08-28.)
- *
- * ## What this refuses to be
- *
- * It is not a ranking, a shortlist, or an answer to *"who matters most"*. The
- * product may not order people by influence, effectiveness, alignment or
- * likelihood of helping — and a contact list is exactly where such an ordering
- * would arrive without anybody deciding to build one, disguised as
- * helpfulness. So every entry here answers one question and only one:
- *
- * ```
- *   WHAT IS THE SOURCED, FACTUAL RELATIONSHIP BETWEEN THIS PERSON
- *   AND THE THING THE READER ASKED ABOUT?
- * ```
- *
- * "Board president of the district you asked about." "Superintendent, hired by
- * that board." "Your state senator." Each is read off a record with a
- * publisher and a read date. None of them is a claim that this person is the
- * right one to email, and none of them ranks anybody.
- *
- * ## Why they are EVIDENCE RECORDS rather than a separate field
- *
- * Because the synthesis rung may explain a contact and may never invent one,
- * and the only mechanism that enforces that is the evidence pack. A contact
- * arriving outside the pack would be a fact the model could see and validation
- * could not check. Inside it, a contact carries its own `sourceUrl` — which is
- * the same allow-list every other sentence in the answer is checked against.
- *
- * ## Order is alphabetical, deliberately
- *
- * Any other order is an ordering a reader can read meaning into, which is what
- * `indexByDivision` already decided for the same reason. Role order would rank;
- * source order would leak collection sequence.
+ * Who a reader can contact, and why them. Every entry states one sourced,
+ * factual relationship between the person and what the reader asked about,
+ * read off a record with a publisher and read date; nothing ranks anybody.
+ * Contacts are evidence records, so validation checks their `sourceUrl` like
+ * any other sentence. Order is alphabetical.
  */
 
 export { contactReadLine } from "./contact-render.ts";
@@ -73,16 +44,7 @@ export interface AskContact {
   office?: { address: string; hours: string | null; kind: string } | null;
 }
 
-/**
- * Titles that mark a roster entry as APPOINTED STAFF rather than a seated
- * member.
- *
- * The distinction is a fact a reader needs and it is already recorded — Vail's
- * roster carries John Carruth with `termNote: "Appointed by the Governing
- * Board, not elected"`. Calling him a board member would be false; leaving him
- * out would drop the single most useful contact for a question about a school
- * district. So he is included and correctly described.
- */
+/** Titles that mark a roster entry as appointed staff rather than a seated member. */
 const STAFF_TITLES = /\b(superintendent|manager|administrator|clerk of the|director of)\b/i;
 
 function isStaff(holder: SeatHolder): boolean {
@@ -90,24 +52,10 @@ function isStaff(holder: SeatHolder): boolean {
 }
 
 /**
- * The verified people attached to one DIVISION's government.
- *
- * **Through the promoted server-side roster projection for the division's
- * exact governing body** — and not through the client representation helper.
- * That helper now consumes rosters already projected onto a coverage response;
- * Ask runs at the server request boundary and has no such response to borrow.
- *
- * That ban is right and it is worth restating rather than routing around: a
- * BODY's members come from `lib/registry/body-membership.ts` and from
- * nowhere else, because the convenient division fallback is what once gave a
- * Tucson advisory board the Mayor and Council as its membership. Ask is not
- * rendering a body's roster here; it is answering "who can I contact about this
- * district", which is the division question, and it asks the resolver that owns
- * it.
- *
- * Both recognized governing suffixes are exact keys. The first populated one
- * wins, so an advisory body sharing the division can never leak into the
- * answer and the promoted runtime roster remains the sole person authority.
+ * The verified people attached to one division's government, through the
+ * promoted server-side roster projection for that division's exact governing
+ * body. Both governing suffixes are exact keys; the first populated wins, so an
+ * advisory body sharing the division never leaks in.
  */
 export function contactsForDivision(ocdId: string, bodyName: string): AskContact[] {
   const governing = rosterHoldersForBody(`${ocdId}#governing`);
@@ -142,31 +90,10 @@ export function contactsForDivision(ocdId: string, bodyName: string): AskContact
 }
 
 /**
- * **THE PEOPLE ON ONE EXACT BODY — and nobody, where we cannot say who.**
- * (2026-08-29, the exact-body-identity session.)
- *
- * `contactsForDivision` above answers *who represents this AREA*. That is a
- * different question from *who sits on THIS BODY*, and the two were one
- * function because Ask could only name divisions. Now that a reader can bind
- * the Tucson Design Review Board, the difference is load-bearing: the division
- * resolver would hand back Tucson's Mayor and Council, and the caller would
- * render them as *"Member on Design Review Board"* — a sourced-looking sentence
- * about real named people that is simply false.
- *
- * That is the exact failure this module's own doc block already warned about
- * one layer down, where `tests/body-composition.test.ts` bans
- * `governingRosterHoldersForDivision` outside two callers *because the
- * convenient division fallback is what once gave a Tucson advisory board the
- * Mayor and Council as its membership*. The ban was right; the division
- * question simply arrived through a different door.
- *
- * The canonical `membersOfBody` selector supplies direct rosters and explicitly
- * sourced legal aliases, exactly as on the map. A division's representatives
- * are offered only for the body that is that division's own government. A
- * neighboring advisory body inherits no contact from that geography.
- *
- * Returning nothing is the conservative direction and it is a REAL answer. The
- * alternative on offer is not "more contacts", it is wrong contacts.
+ * The people on one exact body, from `membersOfBody` (direct rosters and
+ * sourced legal aliases). A division's representatives are offered only for
+ * the body that is that division's own government. Returning nothing is a real
+ * answer.
  */
 export function contactsForBody(
   body: { bodyId: string; ocdId: string | null; divisionType: string | null },
@@ -190,29 +117,15 @@ export function contactsForBody(
     })).sort((a, b) => a.name.localeCompare(b.name));
   }
   if (!ocdId || !divisionType) return [];
-  /*
-   * The cast is to the registry's own vocabulary and it is safe in the only
-   * direction that matters: `isDivisionsOwnGovernment` looks the value up in
-   * `DERIVED_BODY_SUFFIX` and returns FALSE for anything it does not know. An
-   * unrecognised division type therefore yields no contacts rather than the
-   * wrong ones.
-   */
+  /* `isDivisionsOwnGovernment` returns false for an unknown division type, so it yields no contacts. */
   const known = divisionType as BodyDivisionType;
   if (!isDivisionsOwnGovernment(bodyId, ocdId, known)) return [];
   return contactsForDivision(ocdId, bodyName);
 }
 
 /**
- * A legislator who represents a division the reader is standing in.
- *
- * **The relationship claim is bounded by what a division membership proves.**
- * A reader whose ZIP reaches a state legislative district is *in that
- * district's territory*; that is what the geometry established and it is what
- * the sentence says. It is not an address-verified constituency, and
- * `lib/ask/residency.ts` holds the same distinction for the signal row. The
- * wording — "your state senator" — is the one the product already uses on the
- * who-governs card for exactly this relationship, so the two surfaces make the
- * same claim rather than two slightly different ones.
+ * A legislator for a division the reader's ZIP reaches. The claim is
+ * territorial ("your state senator"), not an address-verified constituency.
  */
 export function contactsForRepresentatives(
   holders: readonly {
@@ -246,15 +159,7 @@ export function contactsForRepresentatives(
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
-/**
- * **THE OFFICE THE QUESTION IS ABOUT, as its own contact.**
- *
- * For a question about a sitting officeholder this is the most relevant
- * contact there is, and it was the one missing: an answer about the Governor
- * listed the reader's state senator and not the Governor's own published
- * office. The relationship is the plainest one in the file — this is the office
- * you asked about — and the channels are the ones that office publishes.
- */
+/** The office the question is about, as its own contact with the channels it publishes. */
 export function contactForOfficeholder(seat: {
   id: string;
   name: string;
@@ -281,19 +186,15 @@ export function contactForOfficeholder(seat: {
   };
 }
 
-/**
- * **AN OFFICE AS A CONTACT** (CA-07): the address and hours a body, a member
- * or a campaign publishes for an office, carrying that page as its source.
- * The relationship says whose office it is; nothing is ranked.
- */
+/** An office as a contact: the address and hours its page publishes, with that page as source. */
 export function contactForOfficeLocation(location: OfficeLocation, name: string, relationship: string): AskContact {
   return {
-    id: `office-location:${location.ownerId}:${location.kind.toLowerCase()}`,
+    id: `office-location:${location.ownerId}:${location.kind.toLowerCase()}:${encodeURIComponent(location.address)}`,
     name,
     officeTitle: relationship,
     relationship,
     basis: "SUBJECT_OFFICE",
-    email: null,
+    email: location.email ?? null,
     phone: location.phone,
     websiteUrl: null,
     sourceUrl: location.sourceUrl,
@@ -304,13 +205,8 @@ export function contactForOfficeLocation(location: OfficeLocation, name: string,
 }
 
 /**
- * A contact as an evidence record.
- *
- * The text is a MECHANICAL READ of the fields — name, relationship, and the
- * channels the publisher actually printed. Nothing is summarised and no channel
- * is invented: a person with no published email carries no email, and the
- * sentence simply does not mention one. An absence here is a real absence, and
- * "contact them through the district office" would be us making one up.
+ * A contact as an evidence record: a mechanical read of name, relationship
+ * and the channels the publisher printed. No channel is invented.
  */
 export function contactRecord(contact: AskContact): EvidenceRecord {
   const channels: string[] = [];

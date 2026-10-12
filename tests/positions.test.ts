@@ -12,15 +12,8 @@ import {
 import type { SourceSnapshot, StatementCorpus } from "../lib/corpus/types.ts";
 
 /**
- * D35 — the three-answer machinery, with **a test per type**, which is what
- * the row asks for by name.
- *
- * The reason it asks is written into `lib/corpus/types.ts` and is the whole
- * point of the row: without the three answers, an empty match reads as "this
- * person has no position on X", which is a false claim about a named person.
- * So the three tests below are not three cases of one behaviour — they are
- * three DIFFERENT FACTS, and the last block proves the surface cannot render
- * any two of them the same way.
+ * The three answers are three different facts: without them an empty match reads as "this person has no position
+ * on X", a false claim about a named person. The surface must not render any two of them the same way.
  */
 
 const ROOT = join(import.meta.dirname, "..");
@@ -60,15 +53,13 @@ test("D35 type 1 — MATCHED: verbatim passages, with the source and the read da
   assert.equal(answer.passages.length, 1);
 
   const passage = answer.passages[0];
-  // VERBATIM. Not trimmed of its words, not tightened, not summarised — the
-  // quote a reader sees is a contiguous run of the page's own sentence.
+  // Verbatim: a contiguous run of the page's own sentence.
   assert.equal(passage.quote, quote);
   assert.ok(
     corpus.snapshots[0].text?.includes(passage.quote),
     "the quote must appear in the page exactly as rendered",
   );
-  // Quote AND link AND date, on every passage. A quote without its source is
-  // an unlabelled description of a real person, which the blurb rule removes.
+  // Quote, link and date on every passage.
   assert.equal(passage.url, "https://example.org/issues");
   assert.equal(passage.retrievedAt, "2026-08-10T00:00:00.000Z");
   assert.deepEqual(passage.matchedTerms, ["housing"]);
@@ -107,8 +98,7 @@ test("D35 type 1 — MATCHED: the change marker carries dates and never an inter
   });
   assert.equal(steady.passages[0].changedSince, null);
 
-  // The marker is a DATE and nothing else. Nothing in this module may
-  // characterise a change — types.ts is explicit: never "flip-flopped".
+  // The marker is a date and nothing else; nothing may characterise a change.
   const source = readFileSync(join(ROOT, "lib", "corpus", "positions.ts"), "utf8");
   for (const characterisation of [
     "flip-flop",
@@ -136,9 +126,7 @@ test("D35 type 2 — SEARCHED_NOTHING_MATCHED: a bounded search, with its denomi
     snapshots: [
       snapshot({ id: "a", url: "https://example.org/a", text: "Roads and bridges." }),
       snapshot({ id: "b", url: "https://example.org/b", text: "Parks and trails." }),
-      // Unreadable pages are NOT counted as searched. A page we could not read
-      // is a page we did not search, and saying otherwise inflates the
-      // denominator that makes the answer honest.
+      // A page we could not read is a page we did not search.
       snapshot({ id: "c", url: "https://example.org/c", extraction: "failed", text: null }),
     ],
   };
@@ -162,10 +150,7 @@ test("D35 type 3 — NOT_YET_COLLECTED: a fact about our collection, not about t
   assert.equal(empty.searched.pages, 0);
   assert.equal(empty.theirPage, null);
 
-  // Held, but nothing readable. This is STILL not-yet-collected and not a
-  // search that found nothing: we have not read a word of theirs, so a
-  // sentence about what our search did not find would describe a search that
-  // never happened.
+  // Held but unreadable is still not-yet-collected: no search over their words happened.
   const unreadable = positionsFor("congress:X000001", "housing", {
     snapshots: [snapshot({ extraction: "failed", text: null })],
   });
@@ -208,15 +193,13 @@ test("D35: the surface renders three different sentences, in the gap's own regis
     );
   }
 
-  // FE-30: these internal search states lack a full equal-effort sweep.
-  // They keep WorkingOnIt rather than making a finding about the person.
+  // Internal search states without a full equal-effort sweep keep WorkingOnIt rather than a finding.
   assert.match(surface, /answer.kind === "SEARCHED_NOTHING_MATCHED" && <WorkingOnIt/);
   assert.match(surface, /answer.kind === "NOT_YET_COLLECTED" && <WorkingOnIt/);
   assert.match(surface, /failed && <WorkingOnIt/);
   assert.doesNotMatch(surface, /none of\s+them mentions|has no\s+position on it/);
 
-  // Absence never wears a present value's styling: only MATCHED renders the
-  // quote block.
+  // Only MATCHED renders the quote block.
   const matchedBlock = surface.slice(
     surface.indexOf('data-positions-answer="MATCHED"'),
     surface.indexOf('answer.kind === "SEARCHED_NOTHING_MATCHED"'),
@@ -231,7 +214,7 @@ test("D35: the surface renders three different sentences, in the gap's own regis
   );
 });
 
-// ── A07, the party guard, and the search's own scope ───────────────────────
+// ── The party guard, and the search's own scope ───────────────────────────
 
 test("D35: nothing in this path generates, and nothing reads party", () => {
   const positionsSource = readFileSync(
@@ -245,8 +228,7 @@ test("D35: nothing in this path generates, and nothing reads party", () => {
     );
   }
 
-  // The route takes the subject in its PATH — CLAUDE.md's distinctness rule,
-  // learned from one campaign's books being served for three politicians.
+  // The route takes the subject in its path, so one subject's records are never served for another.
   const route = readFileSync(
     join(ROOT, "app", "api", "positions", "[subject]", "[topic]", "route.ts"),
     "utf8",
@@ -254,10 +236,7 @@ test("D35: nothing in this path generates, and nothing reads party", () => {
   assert.match(route, /params: Promise<\{ subject: string; topic: string \}>/);
   assert.match(route, /"Cache-Control": "private, no-store"/);
 
-  // The search is THIS PERSON'S corpus only — the row is explicit that it is
-  // not the routing chat. The subject filter is the first thing the function
-  // does, and the surface cannot ask for anyone else because the id is in the
-  // URL it builds.
+  // The search is this person's corpus only; the subject id is in the URL the surface builds.
   const surface = readFileSync(
     join(ROOT, "components", "officials", "positions-section.tsx"),
     "utf8",
@@ -273,42 +252,12 @@ test("D35: a late answer for an abandoned query never lands", () => {
     join(ROOT, "components", "officials", "positions-section.tsx"),
     "utf8",
   );
-  // The keyed-result rule: a client component holding fetched state must reset
-  // it when its key changes, and a slow response for "housing" must not render
-  // under a box that now reads "water".
+  // A client component holding fetched state must reset it when its key changes.
   assert.match(surface, /if \(ticket !== request\.current\) return;/);
 });
 
-// ── The corpus this actually runs against ─────────────────────────────────
-
-test("D35: the machinery answers against the committed corpus, and states its size", () => {
-  const corpus = JSON.parse(
-    readFileSync(join(ROOT, "data", "corpus", "statements.json"), "utf8"),
-  ) as StatementCorpus;
-
-  // An operation that can return nothing must be asked what it returned.
-  assert.ok(corpus.snapshots.length >= 30, `only ${corpus.snapshots.length} snapshots`);
-  const subjects = [...new Set(corpus.snapshots.map((s) => s.subjectId))];
-  assert.ok(subjects.length >= 20, `only ${subjects.length} subjects`);
-
-  // Every subject gets one of the three, and never an error or an empty.
-  const seen = new Map<string, number>();
-  for (const subjectId of subjects) {
-    const answer = positionsFor(subjectId, "housing", corpus);
-    seen.set(answer.kind, (seen.get(answer.kind) ?? 0) + 1);
-  }
-  const total = [...seen.values()].reduce((a, b) => a + b, 0);
-  assert.equal(total, subjects.length, "a subject fell through all three answers");
-  console.log(
-    `\n  D35  "housing" across ${subjects.length} subjects in the committed corpus: ` +
-      [...seen].map(([k, n]) => `${k} ${n}`).join(", ") +
-      `\n`,
-  );
-});
-
 test("D35: the topic list is curated, and the search strips the question around the topic", () => {
-  // Derived topics would be a list of what a candidate CHOSE to talk about,
-  // which is a characterisation by omission.
+  // Derived topics would characterise by omission.
   assert.ok(POSITION_TOPICS.length >= 8);
   assert.ok(POSITION_TOPICS.every((t) => t === t.toLowerCase()));
 

@@ -58,7 +58,7 @@ function provenFundingCandidate() {
   });
 }
 
-test("R29: a proven read in a fresh process still runs the full proof; later reads share it instead of re-downloading", async () => {
+test("a proven read in a fresh process still runs the full proof; later reads share it instead of re-downloading", async () => {
   class CountingStore extends MemoryRoutineDataStore {
     readonly reads = { promotion: 0, candidate: 0 };
     tamper = false;

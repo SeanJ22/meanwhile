@@ -1,7 +1,5 @@
 /**
- * @freshness-reads-here
- *
- * RULING 107 — `collectedAt` is taken at the moment of the fetch.
+ * @freshness-reads-here — `collectedAt` is taken at the moment of the fetch.
  */
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import {
@@ -21,48 +19,29 @@ import type {
 } from "../types.ts";
 
 /**
- * **ParentSquare SmartSites — a school district's own calendar, read from the
- * JSON its calendar component already fetches.** (2026-09-23, the Pima
- * school-agenda routes session. As a standalone replacement for the portal it
- * is built and held. Sunnyside's calendar JSON itself IS wired: its partition
- * unions the forward-window sittings with the portal's list through
- * lib/sources/diligent/schedule-union.ts, which reuses `calendarApiUrl`.)
+ * ParentSquare SmartSites — a school district's own calendar, read from the
+ * JSON its calendar component already fetches. `calendarApiUrl` is also reused
+ * by lib/sources/diligent/schedule-union.ts.
  *
- * ## The route, because the route is the reusable part
- *
- * A SmartSites district home page carries a "calendar-events" component whose
- * configuration is a JSON block in the page itself
- * (`<script type="application/json" data-view-data-events-sliders="…">`,
- * `"calendarApiID": 150042` on Sunnyside's), and whose bundle
- * (`/dist/assets/EventsRepository-*.js`) calls
+ * A SmartSites home page carries a "calendar-events" component configured by a
+ * JSON block in the page (`<script type="application/json"
+ * data-view-data-events-sliders="…">`, carrying `"calendarApiID"`), whose
+ * bundle calls
  *
  *   `<site>/api/calendars/<calendarApiID>/events?start_date=&end_date=&view_source=`
  *
- * on the district's own origin. Ladder rung 7 — the page's own call — on a
- * host whose robots.txt disallows only `/admin`, `/*lesson_plan` and
- * `/userFiles` (read 2026-09-23). Every SmartSites district is one page read
- * away from this, which is why it is an adapter and not a Sunnyside script.
- * (The tenant's FILE host, `files.smartsites.parentsquare.com`, is
- * `Disallow: /` and is never read.)
+ * on the district's own origin. The tenant's file host
+ * (`files.smartsites.parentsquare.com`) is never read.
  *
- * ## Two facts the payload gets wrong or leaves out, handled rather than trusted
- *
- * - **The wall clock is right and the offset is not.** Sunnyside's tenant is
- *   configured `America/Denver`, so `start_datetime` carries `-06:00` in summer
- *   for a 4:30 pm Arizona sitting; the event page prints "4:30 PM … MT". The
- *   district's clock is the one it typed, so `start_date` + `start_time` are
- *   read as a wall clock in the body's own zone (`wiring.timeZone`), and the
- *   payload's offset is never applied. Verified against the district's
- *   Diligent record of the same sittings (16:30 and 18:30 Phoenix).
- * - **A board event states no place.** `address` is empty on every Governing
- *   Board event read; the district's standing sentence ("take place at the
- *   District Administration Building … unless otherwise noted") is a habit, and
- *   its agenda platform marks two upcoming sittings VIRTUAL that this calendar
- *   does not. So a sitting whose own event states no place is never placed by
- *   the standing sentence — and never suppressed either (the venue-gap class,
- *   2026-09-23): it is published with no pin and the district's own silence as
- *   its named gap, counted as `unknownVenue`. An address with no reviewed
- *   spelling is published the same way, in the district's own words.
+ * - **The wall clock is right and the offset may not be.** A tenant can be
+ *   configured in the wrong zone, so `start_date` + `start_time` are read as a
+ *   wall clock in the body's own zone (`wiring.timeZone`) and the payload's
+ *   offset is never applied.
+ * - **A board event may state no place.** A district's standing "meetings take
+ *   place at …" sentence is a habit, not a statement about the sitting, so it
+ *   never places one. An unplaced sitting is published with no pin and its gap
+ *   named, counted as `unknownVenue`; an address with no reviewed spelling is
+ *   published the same way, in the district's own words.
  *
  * ## Configuration
  *
@@ -153,10 +132,9 @@ export function makeSmartSitesSource(
         const venue = spelling
           ? resolveVenue(cfg.venueSourceId ?? SOURCE_NAME, wiring.ocdId, spelling, cfg.venueTenant ?? cfg.slug)
           : undefined;
-        // No reviewed place never suppresses the sitting (the venue-gap class,
-        // 2026-09-23): published with no pin and its gap named — the event's
-        // `address` verbatim, or the district's silence where it is empty —
-        // counted as `unknownVenue` and kept. This used to `continue`.
+        // No reviewed place never suppresses the sitting: published with no
+        // pin and its gap named (the event's `address` verbatim, or the
+        // district's silence), counted as `unknownVenue`.
         const venueGap = !online && !venue ? unplacedVenueGap(address, wiring.publishingOrg) : null;
         if (venueGap) {
           drops.unknownVenue += 1;

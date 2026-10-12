@@ -1,44 +1,9 @@
-/**
- * **THE TYPED DETERMINISTIC QUERIES — one per question the console answers.**
- * (ADM-C7, the 9.6.26 Operator Control Room brief.)
- *
- * > Deterministic status questions should use deterministic read models. **Do
- * > not invoke a model merely to answer an exact database/status question when
- * > a typed deterministic query exists.**
- *
- * These are those queries. Each takes an {@link OperatorContext} — records
- * already read, each carrying which of the store's three answers it got — and
- * returns a {@link ChatAnswer}: sentences, the sources behind them, one number
- * with its denominator, whether the owner is needed, and the named gaps for
- * everything the answer could not cover.
- *
- * ## Nothing here derives a projection that already exists
- *
- * RULING 103 is the reason this module is mostly composition. The runner's
- * standing comes from `runnerStanding`, the fleet's shape from `buildFleetView`,
- * the decision split from `splitDecided`, the code identities from
- * `codeIdentityLine`, the plain words from `plain-words.ts`. A second reading of
- * "is the runner paused" written here would disagree with the page the first
- * time either changed, and the owner would be told two different things by one
- * console.
- *
- * ## Absence is argued, never asserted
- *
- * Every one of these can be asked when a record is missing or a store is down,
- * and none of them answers zero. A reading that is not HELD becomes a named
- * {@link Gap} on the answer with the owner of the gap attached, and the
- * sentence that would have used it is not written at all.
- *
- * PURE. No store, no clock, no environment, no model — `nowIso` arrives on the
- * context.
- */
-
 import { formatEastern } from "../eastern-time.ts";
 import { ageWords, count, plainCode, plainText, usdCents } from "../plain-words.ts";
 import { codeIdentityLine } from "../code-identity.ts";
 import { collapseDecisionLog } from "../decision-log.ts";
-import { splitDecided } from "../decision-receipt.ts";
-import { fixQueueView } from "../fix-queue.ts";
+import { isFeedbackTriageIntent } from "../feedback-inbox.ts";
+import { fixQueueView, isRowDecision } from "../fix-queue.ts";
 import { buildFleetView, whereOf } from "../fleet-view.ts";
 import { decisionCardKind, measured, type Gap, type Held } from "../owner-surface.ts";
 import { readIntents } from "../scheduler/research-policy.ts";
@@ -55,12 +20,6 @@ import {
   type ChatTopic,
 } from "./contract.ts";
 
-/* ------------------------------------------------------------- assembling */
-
-/**
- * The one place an answer is built, so every answer carries the same four
- * things and `usedModel` cannot be forgotten on one of them.
- */
 interface Draft {
   readonly says: readonly string[];
   readonly denominator: Held<AnswerDenominator>;
@@ -80,16 +39,13 @@ function assemble(topic: ChatTopic, draft: Draft): ChatAnswer {
     sources: draft.sources,
     needsYou: draft.needsYou,
     gaps: draft.gaps,
-    // Stated rather than defaulted: the brief asks that an answer which used a
-    // model says so, and the honest form of that on a console which never
-    // calls one is to carry the field and say the opposite out loud.
+    // Stated, never defaulted: this console never calls a model.
     usedModel: false,
     readBackAt: definition.readBackAt,
     detail: draft.detail,
   };
 }
 
-/** A denominator, with its sentence, refusing every shape `measured` refuses. */
 function denominator(
   says: string,
   value: number,
@@ -100,12 +56,10 @@ function denominator(
   return { held: true, value: { says, measured: measured(value, of, contract, from) } };
 }
 
-/** A gap where the number would have been, in the words of the reading that failed. */
 function noNumber(gapValue: Gap): Held<AnswerDenominator> {
   return { held: false, gap: gapValue };
 }
 
-/** Collect the gap out of a holding, for the answer's gap list. */
 function gapsOf(...holdings: readonly Held<unknown>[]): readonly Gap[] {
   return holdings.filter((h) => !h.held).map((h) => (h as { gap: Gap }).gap);
 }
@@ -116,16 +70,6 @@ function source(says: string, at: string | null, raw: string): AnswerSource {
 
 const NOTHING_NEEDED: ChatNeedsYou = { needed: false };
 
-/* ------------------------------------------------------------------ topic 1 */
-
-/**
- * "What is blocking the Fleet?"
- *
- * Four domains in one answer, which is what makes it the cross-domain case:
- * the runner's own standing, the safety record it wrote at the end of its last
- * cycle, the work on record, and the incidents in the published snapshot. Each
- * contributes only if it was read; none of them substitutes for another.
- */
 export function fleetBlockers(ctx: OperatorContext): ChatAnswer {
   const heartbeat = holding(ctx.heartbeat, "the runner's heartbeat");
   const research = holding(ctx.research, "the safety record the runner writes at the end of every cycle");
@@ -244,9 +188,6 @@ export function fleetBlockers(ctx: OperatorContext): ChatAnswer {
   });
 }
 
-/* ------------------------------------------------------------------ topic 2 */
-
-/** "What changed since the last cycle?" */
 export function sinceLastCycle(ctx: OperatorContext): ChatAnswer {
   const heartbeat = holding(ctx.heartbeat, "the runner's heartbeat");
   const digests = holding(ctx.digests, "the digests the runner writes after each cycle");
@@ -255,12 +196,7 @@ export function sinceLastCycle(ctx: OperatorContext): ChatAnswer {
   const says: string[] = [];
   const detail: string[] = [];
   const sources: AnswerSource[] = [];
-  /*
-   * The default is a GAP rather than a zero, and which gap depends on which
-   * reading failed: with no heartbeat there is no boundary to count from, and
-   * with a heartbeat that carries no cycle start there is a record and no
-   * boundary in it. Those are different facts and the sentence says which.
-   */
+  /* The default is a gap, not zero, and which gap depends on which reading failed. */
   let number: Held<AnswerDenominator> = heartbeat.held
     ? noNumber({ whose: "OURS", says: "The heartbeat records no start time for the last cycle, so there is no boundary to count changes from." })
     : noNumber(heartbeat.gap);
@@ -329,9 +265,6 @@ export function sinceLastCycle(ctx: OperatorContext): ChatAnswer {
   });
 }
 
-/* ------------------------------------------------------------------ topic 3 */
-
-/** "Which sources are overdue?" */
 export function overdueSources(ctx: OperatorContext): ChatAnswer {
   const snapshot = holding(ctx.snapshot, "the published control-centre snapshot");
   if (!snapshot.held) {
@@ -403,18 +336,9 @@ export function overdueSources(ctx: OperatorContext): ChatAnswer {
   });
 }
 
-/* ------------------------------------------------------------------ topic 4 */
-
-/** Roles whose work is an acquisition, when the question said "acquisition". */
 const ACQUIRING_ROLES: readonly string[] = ["ACQUIRER", "SCOUT"];
 
-/**
- * "Show me the latest failed acquisition."
- *
- * A failure is an Attempt with an outcome that is not COMPLETED. An Attempt
- * with a NULL outcome is still running and is not a failure — collapsing the
- * two would report every open job as a failure the moment a cycle started.
- */
+/** An Attempt with a null outcome is still running, not a failure. */
 export function latestFailedAcquisition(ctx: OperatorContext, acquisitionsOnly: boolean): ChatAnswer {
   const fleet = holding(ctx.fleet, "the attempts and work items on record");
   if (!fleet.held) {
@@ -476,16 +400,6 @@ export function latestFailedAcquisition(ctx: OperatorContext, acquisitionsOnly: 
   });
 }
 
-/* ------------------------------------------------------------------ topic 5 */
-
-/**
- * "What is waiting on me?"
- *
- * The split is the answer. Cards waiting on a decision are his; intents the
- * runner has not honoured yet are the runner's; queued fixes are his to send.
- * A count that lumped the three together would tell him to act on work that is
- * already moving.
- */
 export function waitingOnYou(ctx: OperatorContext): ChatAnswer {
   const snapshot = holding(ctx.snapshot, "the published control-centre snapshot");
   const decisions = holding(ctx.decisions, "the decisions you have already recorded");
@@ -502,13 +416,14 @@ export function waitingOnYou(ctx: OperatorContext): ChatAnswer {
 
   if (snapshot.held) {
     const cards = snapshot.value.decisionCards;
-    const split = splitDecided(cards, collapsed);
-    const forks = split.waiting.filter((c) => decisionCardKind(c) === "DECISION");
-    const acknowledge = split.waiting.filter((c) => decisionCardKind(c) === "ACKNOWLEDGE");
-    const blocked = split.waiting.filter((c) => decisionCardKind(c) === "BLOCKED_WHILE");
+    const decidedRows = new Set(collapsed.filter((d) => isRowDecision(d) && !isFeedbackTriageIntent(d)).map((d) => d.subjectId));
+    const waiting = cards.filter((c) => !decidedRows.has(c.rowId));
+    const forks = waiting.filter((c) => decisionCardKind(c) === "DECISION");
+    const acknowledge = waiting.filter((c) => decisionCardKind(c) === "ACKNOWLEDGE");
+    const blocked = waiting.filter((c) => decisionCardKind(c) === "BLOCKED_WHILE");
 
     if (forks.length === 0) {
-      says.push(`Nothing on the published queue is waiting for a decision from you. ${count(cards.length)} ${cards.length === 1 ? "card was" : "cards were"} published and ${count(split.decided.length)} already carry a recorded decision.`);
+      says.push(`Nothing on the published queue is waiting for a decision from you. ${count(cards.length)} ${cards.length === 1 ? "card was" : "cards were"} published and ${count(decidedRows.size)} already carry a recorded decision.`);
     } else {
       const oldest = [...forks].sort((a, b) => (b.ageDays ?? 0) - (a.ageDays ?? 0))[0];
       says.push(
@@ -519,7 +434,7 @@ export function waitingOnYou(ctx: OperatorContext): ChatAnswer {
     if (acknowledge.length > 0) says.push(`${count(acknowledge.length)} more ${acknowledge.length === 1 ? "card is" : "cards are"} for your information only; reading them closes them.`);
     if (blocked.length > 0) says.push(`${count(blocked.length)} ${blocked.length === 1 ? "card is" : "cards are"} blocked on something outside this console and carries no button.`);
 
-    detail.push(...split.waiting.map((c) => `${c.rowId} ${decisionCardKind(c)} — ${c.title}`));
+    detail.push(...waiting.map((c) => `${c.rowId} ${decisionCardKind(c)} — ${c.title}`));
     sources.push(source("the control-centre snapshot the runner publishes after every cycle", snapshot.value.publishedAt, "cp_owner_snapshots #current"));
     number = denominator(
       `${count(forks.length)} of the ${count(cards.length)} published cards are waiting for a decision from you`,
@@ -573,18 +488,6 @@ export function waitingOnYou(ctx: OperatorContext): ChatAnswer {
   });
 }
 
-/* ------------------------------------------------------------------ topic 6 */
-
-/**
- * "Compare production, main, and staging."
- *
- * FIVE identities, not three: production's own build, staging's own manifest,
- * the tip of the integration branch, the newest commit on it that changes
- * anything executable, and the commit the runner reports having executed. The
- * last three come from the runner's heartbeat because only the runner can say
- * what it ran, and the distinction between the tip and the executable head is
- * what stops an observer-only commit reading as a stale runner.
- */
 export function compareEnvironments(ctx: OperatorContext): ChatAnswer {
   const heartbeat = holding(ctx.heartbeat, "the runner's heartbeat");
   const environments = holding(ctx.environments, "production's build identity and the staging release manifest");
@@ -650,18 +553,6 @@ export function compareEnvironments(ctx: OperatorContext): ChatAnswer {
   });
 }
 
-/* ------------------------------------------------------------------ topic 7 */
-
-/**
- * "Why is this PR not integrated?"
- *
- * The honest half of this answer is what the console CANNOT see. Nothing in
- * the control plane records a pull request, a check run or a merge queue, and
- * the Admin never reads GitHub — so the console says exactly what it holds
- * about integration (the staging manifest's review state, production's build,
- * and the runner's code identities) and names the missing seam rather than
- * inventing a status.
- */
 export const NO_PULL_REQUEST_RECORD: Gap = {
   whose: "OURS",
   says:
@@ -809,14 +700,6 @@ export function spendAndFacts(ctx: OperatorContext): ChatAnswer {
     detail: [`facts live ${line.facts}`, `settled spend ${line.spendUsd ?? "not known"}`],
   });
 }
-
-/* --------------------------------------------------------------- the switch */
-
-/**
- * The one place a topic becomes an answer. Exhaustive over {@link ChatTopic},
- * so adding a topic without a query is a compile error rather than a blank
- * panel.
- */
 
 export function answerFor(topic: ChatTopic, ctx: OperatorContext, asked: string, subject: string | null): ChatAnswer {
   switch (topic) {

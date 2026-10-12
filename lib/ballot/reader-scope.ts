@@ -7,7 +7,6 @@ export interface CertifiedContestScope {
   readAt: string;
 }
 
-/** Current reader qualification, distinct from the dated source filing note. */
 export function readerContestScope(
   contest: Pick<Contest, "type" | "scopeNote" | "provenance">,
   options: { certified?: CertifiedContestScope | null; questionTextHeld?: boolean } = {},

@@ -5,19 +5,9 @@ import { US_STATES } from "../readiness/catalog.ts";
 import { ageOf, causeOf, NEED_WORDS, placeKeyOfRow, sendWordsFor, stateOfRow, type BlockerLane, type Cause, type StuckRowLike } from "./blocker-causes.ts";
 import { parseV6PlaceKey, type V6PlaceScope } from "./v6-hunts-read.ts";
 
-/**
- * **admin-v6/stuck@1 and admin-v6/sameCause@1 — EVERY STUCK ITEM, GROUPED BY CAUSE.**
- *
- * The published owner snapshot holds the full assignment index (the runner
- * writes it every cycle). It is several megabytes, so nothing here loads it:
- * one statement unpacks the index inside the database and returns only the rows
- * that are stuck, with the few fields this view reads. A row is stuck when it
- * failed, is blocked or unknown, or is waiting past its due time. Nothing is
- * inferred about rows outside those states.
- */
+/** The index is unpacked inside the database; only stuck rows (failed, blocked, unknown, or waiting past due) return. */
 export const ADMIN_V6_STUCK_CONTRACT = "admin-v6/stuck@1" as const;
 export const ADMIN_V6_SAME_CAUSE_CONTRACT = "admin-v6/sameCause@1" as const;
-/** The most items one response carries; the cause groups count every stuck row. */
 export const STUCK_ITEM_LIMIT = 300;
 
 export const STUCK_INDEX_SQL = `SELECT x->>'id' AS id, x->>'state' AS state, x->>'lane' AS lane, x->>'owner' AS owner,
@@ -49,8 +39,6 @@ export async function readStuckPopulation(sql: Sql): Promise<StuckPopulation> {
   return { state: "READ", rows, publishedAt };
 }
 
-/* ------------------------------------------------------------- the views */
-
 export interface StuckActionRef { readonly kind: "send-agents"; readonly target: string; readonly label: string; readonly payload: Readonly<Record<string, string>> }
 /** Structurally `StuckItem` in app/(admin)/_mw/admin-v6/model.ts. */
 export interface AdminV6StuckItem {
@@ -67,7 +55,6 @@ export interface AdminV6SameCause {
 
 const stateNameOf = (code: string | null) => (code ? US_STATES.find((s) => s.code === code.toLowerCase())?.name ?? null : null);
 
-/** Is this row this scope's own (`local`), a wider place's that covers it (`shared`), or neither? */
 export function relationOfRow(scope: V6PlaceScope | null, row: StuckRowLike): "local" | "shared" | null {
   if (scope === null || scope.kind === "country") return "local";
   const code = stateOfRow(row);
@@ -94,7 +81,6 @@ export function stuckViews(rows: readonly StuckRowLike[], scopeKey: string, nowI
     return { row, cause, age, score: urgency * 100 + harm * 30 + Math.min(age.rank, 60) };
   }).sort((a, b) => b.score - a.score || a.row.id.localeCompare(b.row.id));
   const place = (row: StuckRowLike) => placeKeyOfRow(row);
-  // DB-34: shut doors rank first in every scope (the door is already live), longest shut first.
   const items = [...shutDoors, ...scored.slice(0, STUCK_ITEM_LIMIT - shutDoors.length).map(({ row, cause, age }): AdminV6StuckItem => {
     const at = place(row);
     const title = plainWords([row.label, row.subjectName && row.label && !row.label.includes(row.subjectName) ? row.subjectName : null].filter(Boolean).join(" — ") || "Work waiting for repair", "Work waiting for repair");

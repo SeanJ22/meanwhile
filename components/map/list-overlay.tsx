@@ -9,7 +9,7 @@ import { MeetingListingNotice } from "./meeting-listing-notice";
 
 import { haversineKm } from "@/lib/geo/distance";
 import { orderByUpcomingFirst } from "@/lib/meetings/ordering";
-import { concludedGapNote } from "@/lib/meetings/history-gaps";
+import { concludedGapNoteFor } from "@/lib/meetings/history-gaps";
 
 import { focusList } from "@/lib/state/list-focus";
 
@@ -28,16 +28,8 @@ import type { Meeting } from "@/lib/sources/types";
 import { tierVars } from "../shell/tier-style";
 
 /**
- * The full-panel list of what is currently on the map.
- *
- * Ports `toggleAccountListOverlay` from Edia's account-list.js: sort, group-by,
- * collapsible groups, a display cap with a "show more", and rows that open the
- * detail view.
- *
- * The cap matters. Rendering every row of a real ingestion run is how a list
- * view becomes the slowest screen in the app; 200 is enough that no reader
- * scrolls past it by accident, and the count of what is hidden is stated rather
- * than the list just ending.
+ * The full-panel list of what is on the map: sort, group-by, collapsible
+ * groups, and a display cap of 200 with the hidden count stated.
  */
 
 const PAGE = 200;
@@ -91,23 +83,19 @@ export function ListOverlay({
   const dispatch = useUiDispatch();
   const [limit, setLimit] = useState(PAGE);
 
-  // M58: the honest line behind an empty Concluded filter.
+  // The line explaining an empty Concluded filter.
   const gapNote = useMemo(
     () =>
-      concludedGapNote(
+      concludedGapNoteFor(
         ui.filters.statuses.includes("CONCLUDED"),
-        result?.coverage?.bodies ?? [],
+        (result?.coverage?.bodies ?? []).flatMap((body) => body.historyGap ?? []),
       ),
     [ui.filters.statuses, result],
   );
 
   /*
-   * NO pushed history entry (2026-08-14 third session, same diagnosis as
-   * official-modal.tsx): pushing {overlay:true} makes Next's App Router
-   * re-render the route and remount the islands — the pattern killed the
-   * official modal at every phone viewport the moment it opened. The
-   * Edia approach assumed a router that leaves history alone; Next
-   * doesn't. Escape and the close control close; back navigates.
+   * No pushed history entry: pushing one makes the App Router remount the
+   * islands. Escape and the close control close; back navigates.
    */
 
   useEffect(() => {
@@ -119,62 +107,23 @@ export function ListOverlay({
     return () => window.removeEventListener("keydown", onKey);
   }, [ui.listOverlayOpen, dispatch, embedded]);
 
-  /*
-   * ONE `now` for the whole render.
-   *
-   * The ordering and the Concluded pill both hang off it, and reading the
-   * clock separately in each would let a row sort as upcoming and render as
-   * concluded on the same pass. Recomputed when the meetings change, which is
-   * the only moment the answer can move.
-   */
+  /* One `now` for the whole render, so sort and Concluded pill agree. */
   const [now, setNow] = useState(0);
   useEffect(() => {
     /*
-     * Read in an EFFECT and published on a FRAME.
-     *
-     * `Date.now()` is impure, so calling it during render makes the same
-     * component render differently on two passes with identical props — for
-     * this value that means a row could sort as upcoming and paint its
-     * Concluded pill on the same commit. And setting state synchronously
-     * inside an effect cascades a render, which is the same pattern
-     * `state-focus-overlay.tsx` routes through an animation frame for the
-     * same reason.
-     *
-     * Zero until the frame runs puts every meeting in the upcoming block for
-     * one paint, which is the safe direction: nothing is labelled finished on
-     * the strength of a clock we have not read yet.
+     * `Date.now()` is impure, so it is read in an effect and published on a
+     * frame. Zero until then puts every meeting in the upcoming block, so
+     * nothing is labelled finished early.
      */
     const frame = window.requestAnimationFrame(() => setNow(Date.now()));
     return () => window.cancelAnimationFrame(frame);
   }, [meetings]);
 
   /*
-    * ── ASK-22 ── **AN ANSWER'S SUBJECT REACHES THE LIST IT OPENS.**
-    * (2026-08-31.)
-    *
-    * The owner: *"Meetings near you sends the user hunting."* The pill on an
-    * answer about one body opened this overlay with no subject, so a reader who
-    * had just been told about the Mayor and Council got all 149 meetings in the
-    * ZIP and had to find it again.
-    *
-    * Applied BEFORE the sort so every sort mode honours it, and NEVER silently:
-    * the chip below names the body and clears the focus in one tap. A filter a
-    * reader cannot see is how the gaps it creates get read as "no government
-    * here" — this file's own `hideUncovered` note says exactly that.
-    *
-    * A focus that matches NOTHING falls back to the full list rather than
-    * rendering an empty overlay. An answer can name a body whose sittings are
-    * all outside the current window, and an empty list would tell the reader
-    * that body has no meetings — a claim about a government made out of a
-    * filter interaction.
-    */
-   /*
-    * 2026-09-23: the same mechanism now carries the district card's "Upcoming
-    * N" door — a DIVISION focus narrowed by the very predicate the card counted
-    * with. It used to dispatch a Body scope keyed on a bare OCD-ID, which no
-    * meeting can match, and this overlay read "0 meetings" under a card that
-    * said "Upcoming 3". See lib/state/list-focus.ts.
-    */
+   * A body or division focus, applied before the sort and always shown as a
+   * chip that clears it. A focus matching nothing falls back to the full list.
+   * See lib/state/list-focus.ts.
+   */
    const focused = useMemo(
      () => focusList(meetings, ui),
      [meetings, ui],
@@ -187,12 +136,7 @@ export function ListOverlay({
     switch (ui.listSort) {
       case "distance": {
         if (!center) return list;
-        /*
-         * A meeting held online has no distance (D18), so it cannot be
-         * ordered against ones that do. It sorts to the END rather than to
-         * the front, because Infinity at the front would read as "nearest"
-         * — a number nobody stated, rendered as a claim.
-         */
+        /* Online meetings have no distance and sort to the end, never to "nearest". */
         const km = (m: Meeting) =>
           m.location
             ? haversineKm(center.lat, center.lng, m.location.lat, m.location.lng)
@@ -204,23 +148,15 @@ export function ListOverlay({
       case "jurisdiction":
         return list.sort((a, b) => a.jurisdiction.localeCompare(b.jurisdiction));
       default:
-        /*
-         * g4 item 11: UPCOMING FIRST, then past — never a plain ascending
-         * sort. With ninety days of history in the serving window, ascending
-         * put three months of finished meetings above everything a reader
-         * could still attend. The rule is shared with every other surface
-         * that lists meetings; see lib/meetings/ordering.ts.
-         */
+        /* Upcoming first, then past; see lib/meetings/ordering.ts. */
         return orderByUpcomingFirst(list, now);
     }
   }, [focused, ui.listSort, ui.nearMe, location, now]);
 
   /*
-   * Meetings of the bodies that govern this ZIP lead; nearby ones follow. The
-   * chosen sort still orders each block, so a reader who sorts by date sees
-   * their own government's next meeting first rather than a bigger neighbour's
-   * ninety. When the division lookup failed (`governing` is null) nothing is
-   * known to govern, so nothing is promoted.
+   * Meetings of the bodies that govern this ZIP lead; nearby ones follow,
+   * each block in the chosen sort. When the division lookup failed
+   * (`governing` is null), nothing is promoted.
    */
   const sorted = useMemo(() => {
     if (!governing) return ordered;
@@ -263,7 +199,7 @@ export function ListOverlay({
       aria-label={embedded ? undefined : `Visible ${listingCount.heading.toLowerCase()}`}
       onClick={(e) => {
         if (embedded) return;
-        // A large popup, not a takeover (3): clicking the backdrop closes.
+        // Clicking the backdrop closes.
         if (e.target === e.currentTarget)
           dispatch({ type: "list/open", open: false });
       }}
@@ -273,7 +209,7 @@ export function ListOverlay({
         <span className="al-overlay-count">
           {sorted.length} {listingCount.unit}
         </span>
-        {/* ASK-22: the focus is stated and one tap clears it. */}
+        {/* The focus is stated and one tap clears it. */}
         {focused.applied && focused.chip && (
           <button
             type="button"
@@ -288,12 +224,7 @@ export function ListOverlay({
           </button>
         )}
         {focused.unmatched && focused.chip && (
-          /*
-           * The answer (or the count) named a subject and this window holds none
-           * of its sittings. Said out loud, with the full list underneath,
-           * because an empty overlay here would read as "that body has no
-           * meetings".
-           */
+          /* The subject has no sittings in this window: said, with the full list underneath. */
           <span className="al-focus-chip" data-list-focus-empty>
             {focused.chip}
           </span>
@@ -346,23 +277,14 @@ export function ListOverlay({
       </div>
 
       <div className="al-overlay-body">
-        {/* The unresolved-listing notice lives in this scrolling body, not
-            between the pinned header and controls: it grows one line per
-            listing group, and outside the scroll region a long one can take
-            the panel's whole height cap (`.al-panel` is `overflow: hidden`),
-            leaving the rows below it zero height. Same defect, and same fix,
-            as the venue panel (components/map/meeting-panel.tsx). */}
+        {/* In the scrolling body: in the pinned header a long notice can take the whole height cap. */}
         {listingCount.unresolved && <div className="px-4"><MeetingListingNotice groups={listingCount.groups} /></div>}
         {sorted.length === 0 && (
           <p className="al-empty">
             Nothing matches the current filters.
             <br />
             Clearing a filter or turning a tier back on will bring meetings back.
-            {/* M58: never a silent empty on the Concluded filter. Where a
-                body's system publishes no past meetings, the reader is told
-                which body and why — an unexplained empty list reads as
-                "this council doesn't meet", which is a false claim about a
-                government made by our own plumbing. */}
+            {/* Never a silent empty on the Concluded filter. */}
             {gapNote && (
               <>
                 <br />
@@ -373,14 +295,10 @@ export function ListOverlay({
         )}
 
         {groups.map((group) => {
-          // Closed unless the reader opened it (g4 item 11).
+          // Closed unless the reader opened it.
           const collapsed = Boolean(group.key) && !ui.expandedGroups.includes(group.key);
 
-          /*
-           * The group's jurisdiction answer, where every meeting in it gets
-           * the same one. Null where they disagree, or where the list is
-           * ungrouped — in both cases the rows carry their own.
-           */
+          /* The group's shared jurisdiction answer; null where rows disagree or the list is ungrouped. */
           const groupBadges = group.key
             ? new Set(
                 group.items.map((m) => badgeOf(m)),
@@ -409,21 +327,6 @@ export function ListOverlay({
                 </button>
               )}
 
-              {/*
-                JUR-4 (2026-08-23) — said ONCE per group rather than on every
-                row.
-
-                Read as an image at 430×932: nineteen consecutive rows under
-                ROCKAWAY TOWNSHIP, NJ each carrying "Could govern you". That is
-                the repetition the author named the headline UX problem of the
-                New Jersey pass, and the WGH panel already fixed it the same
-                way — one pill for the whole panel, not one per row.
-
-                Only where the group AGREES. A group whose meetings do not all
-                get the same answer cannot be answered once, and collapsing it
-                would be a claim about rows that do not carry it — so those
-                keep their per-row badges and this renders nothing.
-              */}
               {!collapsed && <CardSourcesContribution id={`meeting-list:${group.key}`} sources={group.items.flatMap(meeting => meetingCardSources(meeting, []))} />}
 
               {!collapsed && groupBadge !== null && (

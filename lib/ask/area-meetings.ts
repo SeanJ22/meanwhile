@@ -3,24 +3,14 @@ import type { EvidenceGap, EvidenceRecord } from "./evidence.ts";
 import { localDate, readableSitting, type SittingTime } from "./meeting-time.ts";
 
 /**
- * **"WHAT MEETINGS ARE HAPPENING THIS WEEK?" IS THE CALENDAR WE HOLD FOR THE
- * READER'S GOVERNMENTS.** (2026-09-29, S3.)
+ * "What meetings are happening this week?": a question about meetings in a
+ * window, naming no body, answered from the sittings held for the reader's
+ * divisions. The next few by time, each with its body, title and zone, and how
+ * many more are held in the window.
  *
- * Measured on staging that day, at 85635 and 85641: the question named no body,
- * so nothing bound, the model reading it found no subject, and the reader got no
- * answer — while the same records draw the map's rolling calendar. §0 lists
- * "what boards and meetings are happening, with when the next meeting is" among
- * the things a resident must see. So a question about meetings in a window ("this
- * week", "today", "tomorrow", "next week", "this month", "soon", or none) is read
- * from its words and answered from the sittings held for the divisions the reader
- * is in: the next few by time, each with its body, its own title and its own zone,
- * and how many more we hold in the window.
- *
- * **Windows are calendar days in each sitting's own zone**, counted from today in
- * that same zone, so "tomorrow" is the sitting's tomorrow. "This week" is the
- * next seven days (a resident asking on a Thursday means the coming days, not
- * Monday's), and the answer says so in its own words. A window with nothing in it
- * is a named gap of OURS — "we hold none", never "none are held".
+ * Windows are calendar days in each sitting's own zone, counted from today in
+ * that zone. "This week" is the next seven days. An empty window is a named
+ * gap of ours.
  */
 
 export type AreaWindow = "TODAY" | "TOMORROW" | "THIS_WEEK" | "NEXT_WEEK" | "THIS_MONTH" | "SOON";

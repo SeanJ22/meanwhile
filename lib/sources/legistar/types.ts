@@ -1,28 +1,13 @@
 /**
- * The Granicus Legistar Web API response shapes.
- *
- * These mirror what `webapi.legistar.com/v1/{client}/...` actually returns,
- * field names and all, rather than a tidied-up version. The tidying is
- * normalize()'s job and keeping the raw shape honest is what makes the recorded
- * test fixture worth anything.
- *
- * Recorded live from the `pima` client on 2026-08-12. Only the fields the
- * adapter reads are typed; the API returns more (row versions, GUIDs, video
- * paths) and dropping them here is deliberate.
+ * The Granicus Legistar Web API response shapes, mirroring what `webapi.legistar.com/v1/{client}/...`
+ * returns, field names and all. Only the fields the adapter reads are typed.
  */
 
 /**
- * One sitting, from `/v1/{client}/events`.
- *
- * The shape worth noticing: **`EventDate` and `EventTime` are separate strings
- * and neither carries a zone.** `EventDate` arrives as a full ISO timestamp
- * whose time component is always midnight and is meaningless; `EventTime` is a
- * 12-hour wall clock. Reassembling them against the client's IANA zone is the
- * only interesting part of the transform, and it is why `lib/time/zoned.ts`
- * exists.
- *
- * **There are no coordinates.** `EventLocation` is a room name — "Board of
- * Supervisors' Hearing Room" — so a pin requires a venue table. See clients.ts.
+ * One sitting, from `/v1/{client}/events`. `EventDate` and `EventTime` are separate strings and neither
+ * carries a zone: `EventDate` is a full ISO timestamp whose time is always midnight; `EventTime` is a
+ * 12-hour wall clock. They are reassembled against the client's IANA zone (`lib/time/zoned.ts`). There are
+ * no coordinates: `EventLocation` is a room name, so a pin requires a venue table.
  */
 export interface LegistarEvent {
   EventId: number;
@@ -34,30 +19,17 @@ export interface LegistarEvent {
   EventTime: string | null;
   /** A room name, not an address, and never coordinates. */
   EventLocation: string | null;
-  /** Free text. Observed values on `pima`: null, "Study Session", "Special Meeting", "Joint Meeting". */
+  /** Free text, e.g. null, "Study Session", "Special Meeting", "Joint Meeting". */
   EventComment: string | null;
   /** "Final", "Draft", or null. */
   EventAgendaStatusName: string | null;
   /**
-   * The numeric companion to the name above — 10 for "Final", 9 for "Draft" on
-   * Pima. Carried because the NAME is a per-tenant label a clerk can rename and
-   * the ID is the vendor's enum; keeping both means a tenant that prints
-   * "Published" instead of "Final" is still comparable.
-   *
-   * Neither is read as a claim about the MEETING. An agenda status is a fact
-   * about a DOCUMENT's publication state and nothing else.
+   * The numeric companion to the name above: the vendor's enum, kept because the name is a per-tenant label
+   * a clerk can rename. Neither is a claim about the meeting, only about a document's publication state.
    */
   EventAgendaStatusId?: number | null;
   EventMinutesStatusId?: number | null;
-  /**
-   * **When the publisher last put out the agenda document, in UTC.**
-   *
-   * The correct field for "is the agenda currently published, and how current
-   * is it" — and the reason that question never needs to be answered by
-   * guessing from a document URL's existence. Observed on Pima event 1825:
-   * `2026-08-25T18:04:04.46`, no zone suffix, which is Legistar's habit and is
-   * documented as UTC by the field name rather than by the value.
-   */
+  /** When the publisher last put out the agenda document, in UTC (no zone suffix; the field name says UTC). */
   EventAgendaLastPublishedUTC?: string | null;
   /** The same, for the minutes document. Null when none has been published. */
   EventMinutesLastPublishedUTC?: string | null;
@@ -65,25 +37,21 @@ export interface LegistarEvent {
   EventGuid?: string | null;
   /** "Public", "Not Viewable", null. A MEDIA_RECORD fact, never an outcome. */
   EventVideoStatus?: string | null;
-  /** The recording's address on the publisher's video host; only a link while `EventVideoStatus` is "Public" (BX-10). */
+  /** The recording's address on the publisher's video host; only a link while `EventVideoStatus` is "Public". */
   EventVideoPath?: string | null;
+  /** A clip id on the publisher's video host when the recording has no direct path. */
+  EventMedia?: string | null;
   /**
-   * "Final", "Draft", or null. **"Draft" on all 20 Pima Board sittings from
-   * 2026-05-05 to 2026-08-25**, including sittings four months old — so
-   * "Draft" here is the tenant's steady state and never a signal that minutes
-   * are still coming.
+   * "Final", "Draft", or null. Some tenants leave every sitting at "Draft", so it is never a signal that
+   * minutes are still coming.
    */
   EventMinutesStatusName: string | null;
   /** Direct link to the published agenda PDF. */
   EventAgendaFile: string | null;
   /**
-   * A URL, and a POINTER rather than a record.
-   *
-   * It resolves to `legistar.granicus.com`, which answers `User-agent: *` with
-   * `Disallow: /` (docs/sources.md, recorded 2026-08-29). Nothing in this
-   * adapter fetches it, and `outcomes.ts` models it as a discovery lead with
-   * NO record class — precisely so a minutes document we have never read can
-   * never be offered as evidence of what a body decided.
+   * A URL, and a pointer rather than a record. Nothing in this adapter fetches it; `outcomes.ts` models it
+   * as a discovery lead with no record class, so an unread minutes document is never evidence of what a
+   * body decided.
    */
   EventMinutesFile: string | null;
   /** The public InSite permalink for this meeting. Real, and the right `sourceUrl`. */
@@ -92,19 +60,10 @@ export interface LegistarEvent {
 }
 
 /**
- * One agenda item, from `/v1/{client}/events/{id}/eventitems`.
- *
- * **Two records share this row, and they are not the same record.** The
- * sequence, the title and the matter file are what the clerk NOTICED. The
- * action, the pass flag, the mover, the seconder and the action text are what
- * the body DID, entered afterwards. `lib/answerability/record-class.ts` is the
- * rule that keeps them apart; `outcomes.ts` in this directory is the transform
- * that splits one row into the two record classes rather than one wide object.
- *
- * The outcome half was declared here and read NOWHERE until 2026-08-29 — the
- * fields below existed on the wire and `toAgendaItems()` mapped every row down
- * to four notice-class fields, so the repository could say what was on an
- * agenda and could not say what a body decided.
+ * One agenda item, from `/v1/{client}/events/{id}/eventitems`. Two records share this row: the sequence,
+ * title and matter file are what the clerk noticed; the action, pass flag, mover, seconder and action
+ * text are what the body did. `outcomes.ts` splits the row into the two record classes
+ * (`lib/answerability/record-class.ts`).
  */
 export interface LegistarEventItem {
   EventItemId: number;
@@ -123,22 +82,16 @@ export interface LegistarEventItem {
   EventItemMatterFile: string | null;
   EventItemMatterType?: string | null;
   /**
-   * The clerk's status for the underlying matter — observed on Pima across 20
-   * Board sittings (2026-05-01 .. 2026-08-29): null 823, "Approved" 391,
-   * "Public Hearing" 65, "Agenda Ready" 49, "Addendum Ready" 19, "No Action"
-   * 10, "Continued" 3.
+   * The clerk's status for the underlying matter (e.g. "Approved", "Public Hearing", "Agenda Ready",
+   * "Continued").
    */
   EventItemMatterStatus?: string | null;
 
-  /* ---- the outcome half. Present on the wire; unread until 2026-08-29. ---- */
+  // ---- the outcome half ----
 
   /**
-   * The verb the body applied — "approve", "continue", "adopt", "approve on
-   * the Consent Calendar". **Free text authored by a clerk**, never an enum,
-   * and carried verbatim for exactly that reason.
-   *
-   * Null means NO ACTION IS RECORDED for this item, which is not the same fact
-   * as the item having failed. 835 of 1360 Pima Board items carry no action.
+   * The verb the body applied ("approve", "continue", "adopt"). Free text authored by a clerk, never an enum,
+   * carried verbatim. Null means no action is recorded, which is not the same fact as the item having failed.
    */
   EventItemActionName?: string | null;
   /**
@@ -152,18 +105,11 @@ export interface LegistarEventItem {
   EventItemActionId?: number | null;
   /** 1 / 0 companion to the name below. Cross-checked, never trusted alone. */
   EventItemPassedFlag?: number | null;
-  /**
-   * **"Pass" or null on every one of the 465 flagged Pima Board items measured
-   * on 2026-08-29. "Fail" was not observed at all.** So a null here is a fact
-   * about the clerk's data entry and can never be read as a failure — doing so
-   * would have manufactured 895 defeats out of one county's four months.
-   */
+  /** "Pass" or null in practice. A null is a fact about the clerk's data entry and is never read as a failure. */
   EventItemPassedFlagName: string | null;
   /**
-   * **NOT a marker that per-person votes exist.** On Pima it is 1 on exactly
-   * one item per sitting — the literal "ROLL CALL" attendance item, which has
-   * no action and whose votes endpoint returns zero rows — and 0 on every item
-   * that does carry a per-person roll call. Measured 20 of 20 sittings.
+   * Not a marker that per-person votes exist: it can be 1 only on an attendance "ROLL CALL" item with no
+   * action, and 0 on items that do carry a per-person roll call.
    */
   EventItemRollCallFlag: number | null;
   /** Who moved it, as the clerk typed the name. Not a person id we join on. */
@@ -171,10 +117,7 @@ export interface LegistarEventItem {
   EventItemMoverId?: number | null;
   EventItemSeconder?: string | null;
   EventItemSeconderId?: number | null;
-  /**
-   * A vote summary string. Null on all 1360 Pima Board items measured, so this
-   * adapter has never seen it populated and asserts nothing about its format.
-   */
+  /** A vote summary string. Not seen populated; nothing is asserted about its format. */
   EventItemTally?: string | null;
   /** 1 when the item rode the consent calendar. */
   EventItemConsent?: number | null;
@@ -195,9 +138,8 @@ export interface LegistarVote {
   /** As the clerk typed it — "Rex Scott", "Andrés Cano". Rendered verbatim. */
   VotePersonName: string | null;
   /**
-   * The cast value. Observed on Pima: "Aye", "Not Present". Free text, carried
-   * verbatim — mapping it to a yes/no vocabulary would erase "Not Present",
-   * "Abstain" and "Recused", which are positions and not missing data.
+   * The cast value (e.g. "Aye", "Not Present"). Free text, carried verbatim: "Not Present", "Abstain" and
+   * "Recused" are positions, not missing data.
    */
   VoteValueName: string | null;
   VoteValueId: number | null;

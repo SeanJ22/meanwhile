@@ -2,7 +2,7 @@ import { boxIndexEnabled, indexDetectiveFindings } from "../box.ts";
 import { endAttempt, isExpired, release, type Attempt } from "../attempt.ts";
 import type { AuditFinding, ValidationRecord } from "../audit.ts";
 import type { RouteTask } from "../route-task.ts";
-import { canonicalJson, type ControlPlaneRepositories } from "./types.ts";
+import { canonicalJson, readByKeys, type ControlPlaneRepositories } from "./types.ts";
 import { recordCost, transitionWorkItem } from "./coordinator.ts";
 import { assertFleetResult, type WorkerResultRecord } from "../workers/types.ts";
 import { costEntryWithModel, type CostEntry } from "../cost.ts";
@@ -69,7 +69,7 @@ export async function applyWorkerCompletion(repos: ControlPlaneRepositories, rec
   const result = record.result;
   // Research computation never rewinds an obligation already awaiting independent review.
   // Its blockers and next actions are canonical in the result, not civic dispositions.
-  if (result.role === "ACQUIRER" || result.role === "DETECTIVE" || result.role === "ENGINEERING") return;
+  if (result.role === "ACQUIRER" || result.role === "DETECTIVE") return;
   const to = result.role === "PARSER" ? (result.verdict === "EXTRACTED" ? "AWAITING_VALIDATION" : "BLOCKED")
     : result.role === "VALIDATOR" ? (result.verdict === "PASS" ? "AWAITING_AUDIT" : "BLOCKED")
     : result.verdict === "BROKE" ? "REOPENED" : result.verdict === "INCONCLUSIVE" ? "BLOCKED" : "OPEN";
@@ -93,14 +93,7 @@ export async function applyWorkerCompletion(repos: ControlPlaneRepositories, rec
 /** How far before a process's last pass its next pass re-reads appended results, so a writer's clock running ahead loses none. */
 export const RECONCILE_APPEND_SLACK_MS = 10 * 60_000;
 
-/**
- * Per process and store: when the last pass started, and the results it has
- * not yet seen fully applied. The first pass in a process reads every result;
- * later passes read only what was appended since (with slack) plus those still
- * pending, so a quiet pass is one empty query instead of six whole tables
- * (2026-10-06: this ran on every worker drain and lease sweep and listed all of
- * cp_attempts, cp_route_tasks, cp_leases, cp_work_items and the cost log).
- */
+/** Per process and store: the first pass reads every result; later passes read what was appended since (with slack) plus those still pending. */
 const reconcileState = new WeakMap<ControlPlaneRepositories, { since: string; pending: Map<string, WorkerResultRecord> }>();
 
 async function readByIds<T>(repo: { readMany?(ids: readonly string[]): Promise<readonly { id: string; value: T }[]>; read(id: string): Promise<{ id: string; value: T } | null> },
@@ -120,11 +113,8 @@ export async function reconcileWorkerCompletions(repos: ControlPlaneRepositories
   for (const record of appended) candidates.set(record.id, record);
   const records = [...candidates.values()];
   if (records.length === 0) { reconcileState.set(repos, { since: passStartedAt, pending: new Map() }); return; }
-  // Recovery must not pay several network round trips for every historical
-  // success before admitting today's work. Only exact, fully applied commits
-  // can skip replay; incomplete projections still use the guarded writer.
-  // Only the rows these results name are read: their Attempts, RouteTasks,
-  // leases (keyed by RouteTask), WorkItems and the cost rows of those items.
+  // Only exact, fully applied commits skip replay; incomplete projections use the guarded writer.
+  // Only the rows these results name are read.
   const itemIds = [...new Set(records.map(record => record.workItemId))];
   const needsDependents = records.some(record => record.result.role === "ADVERSARIAL_AUDITOR" && record.result.verdict === "BROKE");
   const [attempts, tasks, leases, costs, items, dependentRows] = await Promise.all([
@@ -149,7 +139,7 @@ export async function reconcileWorkerCompletions(repos: ControlPlaneRepositories
     const lease = leases.get(record.routeTaskId);
     const result = record.result;
     const noTransition = record.completion.completedTask.workerTask?.purpose === "DIAGNOSTIC_REPLAY" ||
-      result.role === "ACQUIRER" || result.role === "DETECTIVE" || result.role === "ENGINEERING";
+      result.role === "ACQUIRER" || result.role === "DETECTIVE";
     const transitioned = noTransition || items.get(record.workItemId)?.transitions.some(t => t.by === `worker-result:${record.id}`);
     const expectedCost = task?.workerTask ? costEntryWithModel({
       attemptId: record.attemptId, workItemId: record.workItemId, routeTaskId: record.routeTaskId,
@@ -158,8 +148,7 @@ export async function reconcileWorkerCompletions(repos: ControlPlaneRepositories
       model: record.executionMode === "MODEL_ASSISTED" ? (record.modelParse?.model ?? record.modelReview?.model ?? record.worker.version) : null,
       ...(record.modelParse?.byModel ? { byModel: record.modelParse.byModel } : {}),
     }, record.executionMode === "MODEL_ASSISTED" ? (record.modelParse?.model ?? record.modelReview?.model ?? record.worker.version) : null) : null;
-    // Model/tier annotations were added after these immutable charges. Compare
-    // the same committed cost under today's shape without rewriting history.
+    // Cost annotations were added after these immutable charges: compare under today's shape without rewriting history.
     const costApplied = expectedCost !== null && (costsByAttempt.get(record.attemptId) ?? []).some(cost =>
       canonicalJson(costEntryWithModel(cost, expectedCost.model ?? null)) === canonicalJson(expectedCost));
     const dependentsApplied = noTransition || result.role !== "ADVERSARIAL_AUDITOR" || result.verdict !== "BROKE" ||
@@ -206,10 +195,7 @@ export async function readCompletedWorkerResults(repos: ControlPlaneRepositories
   /* One item's results can only have been produced by that item's Attempts
      (`completeWorkerTask` refuses a result whose Attempt belongs to another
      item), so an item-scoped read lists only those Attempts. */
-  /* The unscoped read checks every result against its own Attempt only, so it
-     point-reads those Attempts by id. Listing all of cp_attempts (42,400 rows,
-     ~42 MB on 2026-10-06) to check 83 results was the control plane's largest
-     read, repeated by every publication child of the routine pass. */
+  /* The unscoped read point-reads each result's own Attempt by id rather than listing all Attempts. */
   const [records, scopedAttempts] = await Promise.all([
     workItemId === undefined ? repos.workerResults.readAll() : repos.workerResults.read(workItemId),
     workItemId === undefined ? Promise.resolve(null) : repos.attempts.listWhere(["workItemId"], workItemId),
@@ -221,6 +207,18 @@ export async function readCompletedWorkerResults(repos: ControlPlaneRepositories
     if (!attempt) return false;
     try { assertCompletedWorkerResult(record, attempt); return true; }
     catch { return false; /* Uncommitted or malformed history is never inherited as evidence. */ }
+  });
+}
+
+/** `readCompletedWorkerResults` for the named work items only, in one batched read of their results and of each result's own Attempt. */
+export async function readCompletedWorkerResultsOf(repos: ControlPlaneRepositories, workItemIds: readonly string[]): Promise<readonly WorkerResultRecord[]> {
+  const records = [...(await readByKeys(repos.workerResults, workItemIds)).values()].flat();
+  const attempts = new Map((await readAttemptsById(repos, records.map(record => record.attemptId))).map(row => [row.id, row.value]));
+  return records.filter(record => {
+    const attempt = attempts.get(record.attemptId);
+    if (!attempt) return false;
+    try { assertCompletedWorkerResult(record, attempt); return true; }
+    catch { return false; }
   });
 }
 
@@ -249,18 +247,9 @@ function executionHead(tasks: readonly RouteTask[], attempts: readonly Attempt[]
   return heads.length === 0 || !Number.isFinite(heads[0].at) || (heads.length > 1 && heads[0].at === heads[1].at) ? null : heads[0];
 }
 
-/**
- * Translate the current exact worker chains into the existing completion
- * interfaces. One aggregate validation avoids the legacy evaluator's any-PASS
- * rule letting a good artifact hide another pending or failed artifact.
- * Captured-artifact audits remain diagnostic to whole-obligation completion.
- */
+/** One aggregate validation, so a good artifact cannot hide another pending or failed one. */
 export async function loadWorkerCompletionEvidence(repos: ControlPlaneRepositories, workItemId: string): Promise<WorkerCompletionEvidence> {
-  /* One work item's rows only, filtered in the database: its RouteTasks and
-     Attempts by the item they belong to, and its results by their log key
-     (`completeWorkerTask` appends every result under its own work item). The
-     whole three tables, read once per work item, moved ~11 MB per call on
-     2026-09-24, twice per work item in every research cycle's projection. */
+  /* One work item's rows only, filtered in the database. */
   const [taskRows, attemptRows, allResults] = await Promise.all([
     repos.routeTasks.listWhere(["workItemId"], workItemId),
     repos.attempts.listWhere(["workItemId"], workItemId),

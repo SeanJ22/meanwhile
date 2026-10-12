@@ -1,7 +1,7 @@
 import { fork } from "node:child_process";
 import { createHash, randomUUID } from "node:crypto";
 import { createServer } from "node:http";
-import { narrowFieldManual, type FieldManualQuery, type FieldManualRead } from "../field-manual.ts";
+import { readFieldManualRows, type FieldManualQuery, type FieldManualRepos } from "../field-manual.ts";
 import type { BrowseFn } from "../scheduler/scout-contract.ts";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -13,8 +13,8 @@ import { endOwnedProcessTree } from "../../../scripts/pilot-runtime-child.mts";
 export { workerProcessSlots, type WorkerProcessSlots } from "./worker-slots.ts";
 const processMemorySlots = workerProcessSlots(() => Number.MAX_SAFE_INTEGER);
 
-/** Transient tools on this host; leases, costs and publications keep their existing stores. */
-export async function startWorkerToolsHost(input: { knowledge: FieldManualRead; browse: BrowseFn }) {
+/** Transient tools on this host; leases, costs and publications keep their existing stores. A manual read takes only the asking job's rows. */
+export async function startWorkerToolsHost(input: { repos: FieldManualRepos; browse: BrowseFn }) {
   const token = randomUUID();
   const server = createServer(async (request, response) => {
     if (request.method !== "POST" || request.url !== "/" || request.headers.authorization !== token) {
@@ -24,7 +24,7 @@ export async function startWorkerToolsHost(input: { knowledge: FieldManualRead; 
       const chunks: Buffer[] = [];
       for await (const chunk of request) chunks.push(Buffer.from(chunk));
       const message = JSON.parse(Buffer.concat(chunks).toString("utf8")) as { kind: string; body: unknown };
-      const result = message.kind === "manual" ? narrowFieldManual(input.knowledge, message.body as FieldManualQuery)
+      const result = message.kind === "manual" ? await readFieldManualRows(input.repos, message.body as FieldManualQuery)
         : message.kind === "browse" ? await input.browse(message.body as Parameters<BrowseFn>[0]) : null;
       if (result === null) { response.writeHead(404).end(); return; }
       response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify(result));
@@ -47,6 +47,7 @@ import type { ScoutToolContext } from "../scheduler/scout-contract.ts";
 import type { AutonomousJurisdiction } from "../expansion/spend-holds.ts";
 import type { runNationalPlaceTask } from "../../hunt/place-source-task.ts";
 import type { NationalPlacePublicationInput } from "../../hunt/place-source.ts";
+import type { MissionBlank } from "./mission-brief.ts";
 
 export type NationalPlaceReport = Awaited<ReturnType<typeof runNationalPlaceTask>>[number];
 type NationalPublication = Omit<NationalPlacePublicationInput, "store">;
@@ -67,7 +68,7 @@ export interface LeaseWorkerConfig {
   readonly searchEnabled: boolean;
   readonly ceilingUsd: number;
   readonly fundedSubjects: readonly string[];
-  /** Plain-code ZIP tasks use S9's ordinary canonical acquisition lease. */
+  /** Plain-code ZIP tasks use the ordinary canonical acquisition lease. */
   readonly nationalZips?: readonly string[];
   readonly routeDispatch?: { readonly input: ScoutProcessDispatch; readonly route: RouteDescriptor | null };
   readonly scoutDispatch?: {
@@ -88,6 +89,35 @@ export function workerDispatchFailure(taskId: string, error: unknown, obligation
     cost: beforeClaim ? { ...ZERO_COST, usd: 0, requestCount: 0, durationMs: 0 } : null, worker: null,
     detail: `Worker task deferred: ${error instanceof Error ? error.message : String(error)}; work remains owed` };
 }
+
+/** A worker the standing lane ended alone: what it held, what it was waiting on, when it last moved. */
+export interface StuckWorker {
+  readonly pid: number;
+  /** The task it was working, or null when it was starting up or between tasks. */
+  readonly taskId: string | null;
+  /** In words: the lane's reply it was waiting for, or its own work. */
+  readonly waitingOn: string;
+  readonly startedAt: string;
+  readonly lastMovedAt: string;
+  readonly quietMs: number;
+  /** Tasks it finished before it stopped moving. */
+  readonly tasksDone: number;
+}
+
+/** The standing hunter lane's pool: each worker has its own progress clock, and a worker quiet for `quietMs` is ended alone with its state recorded. New queued tasks join the running pool. */
+export interface StandingPoolOptions {
+  /** Tasks queued since the pool started; each new id joins the pool. Polled about once a second. */
+  readonly moreTasks?: () => readonly string[];
+  readonly quietMs: number;
+  /** A worker older than this takes no further task: it finishes the one it holds and a fresh worker takes its place. */
+  readonly retireAfterMs?: number;
+  readonly onStuck?: (worker: StuckWorker) => void;
+  /** Any message either way: the lane's own progress signal. */
+  readonly onMoved?: () => void;
+}
+
+/** Standing workers that fail this many times in a row before their first task close the pool's admission. */
+export const STANDING_STARTUP_FAILURES = 3;
 
 /** Only memory admission happens before a child can claim a lease or send a request. */
 class WorkerAdmissionRefusal extends Error {
@@ -142,6 +172,8 @@ export async function runLeaseWorkerProcesses(input: {
   readonly onExited?: (pid: number, why: string) => void;
   /** Read current place priority before the next existing lease is claimed. */
   readonly orderPending?: (ids: readonly string[]) => Promise<readonly string[]>;
+  /** The mission's open blanks related to one government, held in this process. Absent: none. */
+  readonly missionBlanksFor?: (subjectId: string) => readonly MissionBlank[];
   readonly onDispatched?: (result: DispatchResult) => void | Promise<void>;
   readonly route?: { readonly tool: (name: string, args: readonly unknown[]) => Promise<unknown> };
   readonly scout?: {
@@ -154,15 +186,23 @@ export async function runLeaseWorkerProcesses(input: {
     readonly publishElection: ElectionPublisher;
     readonly onResult: (report: NationalPlaceReport) => void | Promise<void>;
   };
+  /** The standing lane's per-job clocks and live queue; the round's waves leave it unset. */
+  readonly standing?: StandingPoolOptions;
 }): Promise<DispatchResult[]> {
   const timeoutMs = input.childTimeoutMs ?? 10 * 60_000;
   if (!Number.isSafeInteger(timeoutMs) || timeoutMs <= 0) throw new Error("WORKER_CHILD_TIMEOUT_INVALID");
+  const standing = input.standing ?? null;
+  if (standing !== null && (!Number.isSafeInteger(standing.quietMs) || standing.quietMs <= 0)) throw new Error("WORKER_QUIET_LIMIT_INVALID");
   const results: DispatchResult[] = [];
   const pending = new Set(input.config.taskIds);
+  /* Standing: every id this pool has held, so a finished task never rejoins; and the task each live worker is on. */
+  const seen = new Set(input.config.taskIds);
+  const inFlight = new Map<string, number>();
   const assigned = new Set<string>();
   const active = new Set<Promise<void>>();
   let launched = 0;
   let admissionClosed = false;
+  let startupFailures = 0;
   const failures: { ids: readonly string[]; error: unknown }[] = [];
   const launch = async (): Promise<void> => {
     if (Date.now() >= (input.deadlineMs ?? Infinity)) throw new WorkerAdmissionRefusal(new Error("WORKER_DISPATCH_SLICE: work remains owed"));
@@ -197,21 +237,64 @@ export async function runLeaseWorkerProcesses(input: {
     };
     const killTimer = setTimeout(() => terminate(new Error(`WORKER_CHILD_TIMEOUT:${child.pid}: work remains owed`)),
       Math.max(1, Math.min(timeoutMs, (input.deadlineMs ?? Infinity) - Date.now())));
+    /* Standing: this worker's own clock. Any message either way renews it; quiet past the limit ends this worker alone. */
+    const startedAt = Date.now();
+    let lastMovedAt = startedAt;
+    let current: string | null = null;
+    let tasksDone = 0;
+    let retired = false;
+    const asked = new Map<string, { kind: string; taskId: string; at: number }>();
+    let quietTimer: ReturnType<typeof setTimeout> | undefined;
+    const stuck = (): void => {
+      if (standing === null || terminating) return;
+      const pid = child.pid ?? 0;
+      const question = [...asked.values()].sort((a, b) => a.at - b.at)[0];
+      const waitingOn = question !== undefined
+        ? `the lane's answer to its ${question.kind} request for task ${question.taskId || "(none)"}, asked ${Math.round((Date.now() - question.at) / 1000)} s before`
+        : current !== null ? `its own work on task ${current} (no request to the lane)` : tasksDone === 0 ? "starting up (no task yet)" : "between tasks";
+      const record: StuckWorker = { pid, taskId: current, waitingOn, startedAt: new Date(startedAt).toISOString(),
+        lastMovedAt: new Date(lastMovedAt).toISOString(), quietMs: standing.quietMs, tasksDone };
+      standing.onStuck?.(record);
+      terminate(new Error(`WORKER_STUCK:${pid}: no progress for ${Math.round(standing.quietMs / 60_000)} min while waiting on ${waitingOn}; work remains owed`));
+    };
+    const moved = (): void => {
+      if (standing === null) return;
+      lastMovedAt = Date.now();
+      clearTimeout(quietTimer);
+      quietTimer = setTimeout(stuck, standing.quietMs);
+      standing.onMoved?.();
+    };
+    const reply = (payload: { id: string; body?: unknown; error?: unknown }): void => {
+      asked.delete(payload.id);
+      if (child.connected) { child.send(payload); moved(); }
+    };
     const reservations = new Map<string, Awaited<ReturnType<NonNullable<ScoutExecutorDeps["reserveEscalation"]>>>>();
     const offset = (launched - 1) % ids.length;
     child.once("spawn", () => { release?.observe?.(child.pid!); input.onStarted?.(child.pid!); child.send({ ...input.config,
-      taskIds: [...ids.slice(offset), ...ids.slice(0, offset)] }); });
-    child.on("error", error => { clearTimeout(killTimer); terminate(error); if (!child.pid) reject(error); });
+      taskIds: [...ids.slice(offset), ...ids.slice(0, offset)] }); moved(); });
+    child.on("error", error => { clearTimeout(killTimer); clearTimeout(quietTimer); terminate(error); if (!child.pid) reject(error); });
     child.on("message", async (raw: unknown) => {
       const message = raw as { kind: string; id: string; taskId: string; jurisdiction: AutonomousJurisdiction; body: unknown };
+      if (standing !== null && terminating) return;
+      moved();
+      if (message.kind === "task-start") {
+        current = String(message.body);
+        if (standing !== null) inFlight.set(current, child.pid ?? 0);
+        return;
+      }
       if (message.kind === "result") {
         const result = message.body as DispatchResult;
         results.push(result);
-        if (result.routeTaskId) pending.delete(result.routeTaskId);
+        if (result.routeTaskId) { pending.delete(result.routeTaskId); inFlight.delete(result.routeTaskId); }
+        if (current !== null && current === result.routeTaskId) { current = null; tasksDone += 1; }
         await input.onDispatched?.(result);
         return;
       }
-      if (message.kind === "finished") { for (const id of message.body as string[]) pending.delete(id); return; }
+      if (message.kind === "finished") {
+        /* A retired standing worker tried none of its remaining ids; they stay for a fresh worker. */
+        if (!retired) for (const id of message.body as string[]) if (!inFlight.has(id)) pending.delete(id);
+        return;
+      }
       if (message.kind === "draw" || message.kind === "release") {
         const reservation = reservations.get(message.id);
         if (reservation?.admit) {
@@ -220,11 +303,15 @@ export async function runLeaseWorkerProcesses(input: {
         }
         return;
       }
+      if (message.id) asked.set(message.id, { kind: message.kind, taskId: message.taskId, at: Date.now() });
       try {
         let body: unknown;
         if (message.kind === "pending-order") {
-          const requested = (message.body as readonly string[]).filter(id => pending.has(id));
-          body = input.orderPending ? await input.orderPending(requested) : requested;
+          const requested = (message.body as readonly string[]).filter(id => pending.has(id) && !inFlight.has(id));
+          if (standing?.retireAfterMs !== undefined && Date.now() - startedAt >= standing.retireAfterMs) { retired = true; body = []; }
+          else body = input.orderPending ? await input.orderPending(requested) : requested;
+        } else if (message.kind === "mission-blanks") {
+          body = input.missionBlanksFor?.(String(message.body)) ?? [];
         } else if (message.kind === "route-tool") {
           if (!input.route) throw new Error("ROUTE_PROCESS_BROKER_UNAVAILABLE");
           const request = message.body as { name: string; args: readonly unknown[] };
@@ -291,15 +378,25 @@ export async function runLeaseWorkerProcesses(input: {
           if (reserved.admit) reservations.set(message.id, reserved);
           body = reserved.admit ? { admit: true, reservedUsd: reserved.reservedUsd, reservationId: message.id } : reserved;
         } else throw new Error("WORKER_IPC_OPERATION_UNKNOWN");
-        if (child.connected) child.send({ id: message.id, body });
+        reply({ id: message.id, body });
       } catch (error) {
         const e = error as Error & { status?: number; retryAfterMs?: number; code?: string; why?: string };
-        if (child.connected) child.send({ id: message.id, error: { name: e.name, message: e.message,
+        reply({ id: message.id, error: { name: e.name, message: e.message,
           status: e.status, retryAfterMs: e.retryAfterMs, code: e.code, why: e.why } });
       }
     });
     child.once("exit", code => {
       clearTimeout(killTimer);
+      clearTimeout(quietTimer);
+      /* Standing: workers that keep failing before their first task close admission instead of restarting every second. */
+      if (standing !== null) startupFailures = code !== 0 && tasksDone === 0 && !terminationError ? startupFailures + 1 : 0;
+      /* Standing: the task a worker held when it was ended (stuck, its wall) or crashed gets its own deferral; its siblings' tasks are theirs. */
+      if (standing !== null && current !== null && (terminationError || code !== 0) && pending.delete(current)) {
+        const failed = workerDispatchFailure(current, terminationError ?? new Error(`LEASE_WORKER_EXIT:${child.pid}:${code}`));
+        results.push(failed);
+        void input.onDispatched?.(failed);
+      }
+      for (const [id, pid] of inFlight) if (pid === child.pid) inFlight.delete(id);
       if (child.pid) input.onExited?.(child.pid, terminationError ? (terminationError as Error).message : `exit ${code}`);
       const finish = () => {
         if (input.config.nationalZips) for (const id of ids) { assigned.delete(id); pending.delete(id); }
@@ -312,6 +409,15 @@ export async function runLeaseWorkerProcesses(input: {
     });
     }); } finally { release?.(); }
   };
+  const joinQueued = (): void => {
+    for (const id of standing?.moreTasks?.() ?? []) if (!seen.has(id)) { seen.add(id); pending.add(id); }
+  };
+  /* Standing: another worker while tasks wait that no idle worker can take. A worker waiting on memory counts as idle. */
+  const standingWants = (capacity: number): boolean => {
+    const waiting = [...pending].filter(id => !inFlight.has(id)).length;
+    return active.size < capacity && waiting > active.size - inFlight.size;
+  };
+  joinQueued();
   while (pending.size) {
     const capacity = Math.min(pending.size, input.capacity());
     if (!Number.isSafeInteger(capacity) || capacity < 0) throw new Error("LEASE_WORKER_CAPACITY_INVALID");
@@ -319,12 +425,15 @@ export async function runLeaseWorkerProcesses(input: {
     // siblings may still own the remaining leases when their result is in transit.
     while (!admissionClosed && (input.config.nationalZips
       ? active.size < capacity && [...pending].some(id => !assigned.has(id))
-      : launched < capacity)) {
+      : standing !== null ? standingWants(capacity) : launched < capacity)) {
       launched++;
       const ids = [...pending];
       const worker = launch().catch(error => {
-        if (error instanceof WorkerAdmissionRefusal) admissionClosed = true;
-        failures.push({ ids, error });
+        /* Standing: a memory wait that ran out keeps the work queued for the next admission; a closed lane closes admission. */
+        const memoryWait = standing !== null && error instanceof WorkerAdmissionRefusal && /WORKER_MEMORY_DEADLINE/.test(error.message);
+        if (error instanceof WorkerAdmissionRefusal && !memoryWait) admissionClosed = true;
+        if (standing !== null && startupFailures >= STANDING_STARTUP_FAILURES) admissionClosed = true;
+        if (standing === null || error instanceof WorkerAdmissionRefusal || admissionClosed) { if (!memoryWait) failures.push({ ids, error }); }
       }).finally(() => { active.delete(worker); });
       active.add(worker);
     }
@@ -332,6 +441,7 @@ export async function runLeaseWorkerProcesses(input: {
     let timer: ReturnType<typeof setTimeout> | undefined;
     await Promise.race([...active, new Promise<void>(resolve => { timer = setTimeout(resolve, 1000); })]);
     clearTimeout(timer);
+    joinQueued();
   }
   await Promise.all(active);
   for (const { ids, error } of failures) {

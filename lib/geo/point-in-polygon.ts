@@ -1,26 +1,7 @@
 /**
- * Point-in-polygon, accelerated by a latitude-band edge index (Prompt B item
- * 5, 2026-08-20).
- *
- * The national join asks "which governments contain this point" a few million
- * times across six boundary layers. A plain ray cast is O(vertices), and the
- * layers this runs against carry 3.4 million vertices (county subdivisions)
- * and 2.2 million (unified school districts). Done plainly the join does not
- * finish; done with an index it takes minutes.
- *
- * THE INDEX. A ray cast only ever consults edges whose latitude range spans
- * the query point. So each polygon's edges are bucketed by latitude band
- * once, and a query touches one band instead of every edge. Bands are sized
- * from the polygon's own height, so a small place and a large county each get
- * a useful bucket size.
- *
- * THE RULE IS EVEN-ODD, ACROSS ALL RINGS TOGETHER. A shapefile polygon's
- * inner rings are holes, and counting crossings across every ring at once is
- * exactly what makes a point in a hole read as outside. That is the correct
- * answer for a lake inside a county: the county does not govern the water's
- * surface any differently, but the boundary file says the ring is not part of
- * the polygon, and this reader reports what the boundary file says rather
- * than what it supposes.
+ * Point-in-polygon with each polygon's edges bucketed by latitude band, so a
+ * query scans only the edges in its band. Even-odd across all rings together,
+ * so a point inside an inner ring (hole) reads as outside.
  */
 
 import type { Ring } from "./shapefile.ts";
@@ -82,14 +63,8 @@ export function indexPolygon(rings: Ring[], bbox: [number, number, number, numbe
 }
 
 /**
- * Even-odd ray cast to the east.
- *
- * The `(y1 > y) !== (y2 > y)` test is the half-open convention: an edge
- * counts when the ray passes its lower endpoint and not its upper one. That
- * is what stops a ray passing exactly through a shared vertex from counting
- * the crossing twice, which would flip an interior point to exterior — the
- * classic failure, and the one that would show up here as a zip losing its
- * county along a straight boundary.
+ * Even-odd ray cast to the east. The half-open test `(y1 > y) !== (y2 > y)`
+ * keeps a ray through a shared vertex from counting the crossing twice.
  */
 export function containsPoint(poly: IndexedPolygon, x: number, y: number): boolean {
   const [minX, minY, maxX, maxY] = poly.bbox;
@@ -114,9 +89,7 @@ export function containsPoint(poly: IndexedPolygon, x: number, y: number): boole
   return inside;
 }
 
-/* -------------------------------------------------------------------------- */
-/* A coarse grid, so a query does not consider every polygon in the country.   */
-/* -------------------------------------------------------------------------- */
+/** Coarse grid over polygon bboxes so a query only considers nearby polygons. */
 
 export type GridIndex = {
   cell: number;

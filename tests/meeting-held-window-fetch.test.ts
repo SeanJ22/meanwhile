@@ -5,12 +5,12 @@ import test from "node:test";
 import { MEETING_HELD_LOOKBACK_DAYS } from "../lib/meetings/constants.ts";
 import { HELD_WINDOW_FETCH_SOURCES, meetingFetchedWindowFor } from "../lib/meetings/fetch-window.ts";
 
-/** DB-03 to DB-05: every adapter that fetches the held window derives it from the held constants, never the shown ones. */
+/** Every adapter that fetches the held window derives it from the held constants, never the shown ones. */
 
 const ANCHOR = "2026-09-23T16:00:00.000Z";
 const DAY = 86_400_000;
 
-// Adapters that decide their own window; `apptegy` takes the query's dates (the shared fetch bounds, DB-02).
+// Adapters that decide their own window; `apptegy` takes the query's dates (the shared fetch bounds).
 const OWN_WINDOW = [...HELD_WINDOW_FETCH_SOURCES].filter((name) => name !== "apptegy");
 
 test("DB-03 to DB-05: an adapter in the held-window set takes its window from the held constants", () => {

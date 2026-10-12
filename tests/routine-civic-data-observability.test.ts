@@ -1870,7 +1870,7 @@ test("a confirmed re-check keeps Admin current: the newest confirmation is the l
     sourceId: contract.sourceId,
     recordClass: contract.recordClass,
     scope: contract.scope,
-    parserVersion: "fec-funding/2",
+    parserVersion: "fec-funding/3",
     pointerVersionId: row.id,
     readModelHash: (row.candidate as { normalization: { normalizedHash: string } }).normalization.normalizedHash,
     basis: "READ_MODEL_RECOMPUTED",
@@ -1899,6 +1899,31 @@ test("a confirmed re-check keeps Admin current: the newest confirmation is the l
   assert.equal(source.cadence.operationalState, "HEALTHY");
   assert.equal(source.cadence.nextDue.kind, "MEASURED");
   if (source.cadence.nextDue.kind === "MEASURED") assert.ok(Date.parse(source.cadence.nextDue.value) > Date.parse(confirmedAt));
+  const failedAt = "2026-09-08T10:00:00.000Z";
+  const failed = candidateRow(contract, { id: "fec-intermediate-failure", at: failedAt, state: "SOURCE_BLOCKED",
+    acquisitionSucceeded: false, receipt: validationReceipt(contract, "fec-intermediate-failure", failedAt, "FAIL"),
+    promotedVersionId: null, lastKnownGoodVersionId: row.id, failureCode: "SOURCE_UNAVAILABLE", failureDetail: "Temporarily unavailable" });
+  const recovered = projectRoutineDataObservability({ candidates: [row, failed],
+    events: [...history, ...sourceHistory(failed), confirmation], promotions: [promotion(contract, row)] }, NOW, [contract], READER_BUILD).contracts[0];
+  assert.equal(recovered.cadence.operationalState, "HEALTHY", "a later confirmation supersedes the earlier failed attempt");
+  assert.deepEqual(recovered.latestHeld, { kind: "MEASURED", value: [] });
+  assert.deepEqual(recovered.latestRefused, { kind: "MEASURED", value: [] });
+  const laterFailedAt = "2026-09-08T11:30:00.000Z";
+  const laterFailure = candidateRow(contract, { id: "fec-after-provider-check", at: laterFailedAt, state: "SOURCE_BLOCKED",
+    acquisitionSucceeded: false, receipt: validationReceipt(contract, "fec-after-provider-check", laterFailedAt, "FAIL"),
+    promotedVersionId: null, lastKnownGoodVersionId: row.id, failureCode: "SOURCE_UNAVAILABLE", failureDetail: "Temporarily unavailable" });
+  const heldReplay = { ...built.confirmation, observedAt: "2026-09-08T11:45:00.000Z", retrieval: {
+    ...built.confirmation.retrieval,
+    sourceCheck: { requestedUrl: "https://api.open.fec.gov/v1/", finalUrl: "https://api.open.fec.gov/v1/",
+      httpStatus: 304 as const, rawHash: "c".repeat(64), checkedAt: confirmedAt },
+  } };
+  const afterReplay = projectRoutineDataObservability({ candidates: [row, laterFailure],
+    events: [...history, confirmation, ...sourceHistory(laterFailure), { ...confirmation, id: "held-replay",
+      sequence: confirmation.sequence + 1, at: heldReplay.observedAt, detail: serializeUnchangedConfirmation(heldReplay) }],
+    promotions: [promotion(contract, row)] }, NOW, [contract], READER_BUILD).contracts[0];
+  assert.deepEqual(afterReplay.lastAttemptedAcquisition, { kind: "MEASURED", value: laterFailedAt });
+  assert.deepEqual(afterReplay.lastSuccessfulAcquisition, { kind: "MEASURED", value: confirmedAt });
+  assert.equal(afterReplay.cadence.operationalState, "RETRYING", "held replay cannot clear a later provider failure");
   const { serializeUnchangedConfirmationSources } = await import("../lib/civic-data/unchanged-confirmation.ts");
   const sources = { ...confirmation, id: "retained-sources", sequence: confirmation.sequence + 1,
     detail: serializeUnchangedConfirmationSources(built.confirmation, []) };
@@ -1960,7 +1985,7 @@ test("R20: Admin shows the retry the runner admits on; a meeting partition never
     [contract],
   ).contracts[0];
   assert.equal(unpublished.canonicalPromotion.kind, "NOT_RECORDED");
-  // Owed twelve hours after the attempt, admitted 2 hours before (C6).
+  // Owed twelve hours after the attempt, admitted 2 hours before.
   assert.deepEqual(unpublished.cadence.nextDue, { kind: "MEASURED", value: "2026-09-08T21:30:00.000Z" });
   assert.equal(unpublished.cadence.operationalState, "RETRYING");
   assert.match(unpublished.cadence.operationalDetail, /retry is due 2026-09-08T21:30:00\.000Z/);

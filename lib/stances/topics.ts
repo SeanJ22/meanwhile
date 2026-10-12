@@ -1,19 +1,14 @@
 /**
- * **THE TEN STANCE TOPICS (CA-10).**
+ * The ten stance topics. The person card's topic chips and the ballot card's
+ * passages both read this list. A topic is a plain noun, never a framing
+ * ("housing", not "the housing crisis").
  *
- * One list, one setting. The person card's topic chips and the ballot card's
- * passages both read it, so both show the same ten plain nouns. A topic is a
- * plain noun, never a framing ("housing", not "the housing crisis"): a framing
- * on the card is the product taking a position through the label.
+ * Each topic carries lowercased search phrases looked for in a person's own
+ * published text, multi-word by preference. Every person is searched for the
+ * same list in the same order.
  *
- * Each topic carries the lowercased search phrases looked for in a person's own
- * published text. Phrases are multi-word by preference — one loose word turns a
- * search into noise the reader has to filter for us. Every person is searched
- * for the same list in the same order; nothing here takes a person.
- *
- * The list is the code default of the reader-facing setting `stances.topics`
- * (BR-05). A change in Admin reaches readers through the reader-edge settings
- * publication; the site never reads the control plane per request.
+ * This is the code default of the reader-facing setting `stances.topics`; a
+ * change in Admin reaches readers through the reader-edge settings publication.
  */
 import { registerSetting, type SettingValue } from "../control-plane/settings.ts";
 

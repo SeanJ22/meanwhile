@@ -12,34 +12,6 @@ import {
 } from "../lib/sources/normalize-account.ts";
 import type { Meeting, ReportingMeetingSource } from "../lib/sources/types.ts";
 
-/**
- * **RULING 43 — THE ZERO-ROW SHAPE FAILS AT BUILD, NOT ON THE SITE.**
- * (Adopted 2026-08-20. This test is the "fails at build" half.)
- *
- * A source may not report success with zero normalized rows from a non-zero
- * fetch. Five written prohibitions did not stop the sixth sighting, which
- * reached a reader: Wilmot, New Hampshire lost 23 meetings while `ical`
- * reported ok / fetched 3 / normalized 0 / drops 0.
- *
- * The fix is a branded return type — see `lib/sources/normalize-account.ts`.
- * This file holds the three things the type alone cannot assert:
- *
- * 1. the factory REFUSES the shape rather than returning a value;
- * 2. every adapter actually routes through the factory (a plain literal is a
- *    compile error, but a hand-attached brand would not be — that is the
- *    module's stated honest limit, and this is the check that closes it);
- * 3. the composite turns the refusal into `JOB`, so the run goes red rather
- *    than carrying an emptiness onto a page.
- *
- * ## Why the sweep is a filesystem walk
- *
- * Same reason as `tests/no-suppression.test.ts`: ripgrep skips NUL-byte files
- * and hidden paths and reports nothing found without having looked, and
- * `git grep` needs a git checkout a test cannot assume. The walk counts what
- * it read, because an operation that can return nothing must be asked what it
- * returned.
- */
-
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SOURCES = join(ROOT, "lib", "sources");
 
@@ -124,13 +96,7 @@ test("the three honest empties still pass", () => {
   );
 });
 
-/**
- * How a file DECLARES that its accounting is another module's.
- *
- * A marker rather than an inference: the sweep must not decide by string
- * coincidence which delegations are honest, and the declaration is checked
- * against a real branding implementor below.
- */
+/** A file declares that another module owns its accounting with this marker. */
 const DELEGATION_MARKER = /@accounting-delegated-to\s+`?([\w./-]+)`?/;
 
 test("every adapter routes its normalize result through the factory", () => {
@@ -151,26 +117,7 @@ test("every adapter routes its normalize result through the factory", () => {
     if (!/normalizeWithDrops[(:,]/.test(text)) continue;
     if (!/normalizeWithDrops\s*[(:]|normalizeWithDrops,/.test(text)) continue;
     implementors.push(rel);
-    /*
-     * Routed means THE RESULT CARRIES THE BRAND, and there are two honest ways
-     * to arrange that: brand it here, or return a result another implementor
-     * already branded.
-     *
-     * The second is not a loophole and it is not a string coincidence — it is
-     * DECLARED, with `@accounting-delegated-to <module>`, and the module it
-     * names is checked below to be an implementor that brands. A declaration
-     * costs a diff, which is the same mechanism `tests/guard-census.json` uses
-     * to let a guard leave and `@freshness-reads-here` uses to let a clock
-     * stamp a freshness field (RULING 107). A carve-out nobody has to write
-     * down is a carve-out that grows.
-     *
-     * The live case is `composite/wiring.ts`. It used to brand legistar's
-     * result a SECOND time and that second branding lost the
-     * `countedButProduced` option the adapter had passed, so every online
-     * meeting was counted once as produced and once as dropped — which took the
-     * daily refresh red on 2026-08-25. Deleting the second branding is the fix;
-     * requiring one here would be requiring the defect.
-     */
+    // Routed means the result carries the brand: branded here, or returned by a declared delegate that brands.
     if (text.includes("accountedNormalize(")) routed.push(rel);
     else {
       const declared = DELEGATION_MARKER.exec(text);
@@ -256,21 +203,6 @@ test("the brand is a real runtime symbol on a returned result", () => {
   );
 });
 
-/**
- * **A-002 · EVERY ADAPTER DECLARES ITS LOGICAL-RECORD COUNT, OR NAMES WHY IT
- * CANNOT.**
- *
- * The conservation contract accepts `COULD_NOT_ASSERT` on purpose — a pass that
- * genuinely cannot count must be able to say so rather than guess (RULING 100).
- * The risk in that is obvious and is the whole reason for this sweep: silence
- * is indistinguishable from honesty at the call site, so an adapter that simply
- * never got updated would report `COULD_NOT_ASSERT` forever and read as a
- * considered decision.
- *
- * So the sweep is by SHAPE (RULING 110) rather than by counting call sites: an
- * `accountedNormalize` call must mention `logicalInput`, and the one adapter
- * that passes `null` has to do it in a branch with a reason beside it.
- */
 test("A-002 · every adapter's normalize declares logicalInput", () => {
   const files = walk(SOURCES);
   const missing: string[] = [];
@@ -280,9 +212,7 @@ test("A-002 · every adapter's normalize declares logicalInput", () => {
     const rel = relative(ROOT, file).split(sep).join("/");
     if (rel.endsWith("normalize-account.ts")) continue;
     const text = readFileSync(file, "utf8");
-    // Comment lines are stripped first: `types.ts` NAMES the factory in a doc
-    // block and calls nothing, and a sweep that counted that as a call site
-    // would be looking for the letters rather than for the thing (RULING 110).
+    // Comment lines are stripped first: a doc block may name the factory without calling it.
     const code = text
       .split("\n")
       .filter((line) => !/^\s*(\*|\/\/|\/\*)/.test(line))
@@ -300,15 +230,7 @@ test("A-002 · every adapter's normalize declares logicalInput", () => {
   );
 });
 
-/**
- * And the one adapter that legitimately cannot count says so in a NAMED branch.
- *
- * `clerksboards` expands "the third Tuesday of each month" into sittings. Where
- * the Clerk writes "Meets as required", one counted drop stands in for an
- * unknowable number, and no honest number exists. That is the case
- * `COULD_NOT_ASSERT` was built for, and it is pinned here so that removing the
- * branch — or spreading it to an adapter that CAN count — is a visible diff.
- */
+/** `clerksboards` cannot count "Meets as required" sittings, so it alone passes `null`. */
 test("A-002 · COULD_NOT_ASSERT is used in exactly the place that cannot count", () => {
   const files = walk(SOURCES);
   const nullers: string[] = [];

@@ -177,6 +177,3 @@ export function buildDecisionCards(input: {
     return a.rowId.localeCompare(b.rowId);
   });
 }
-
-export { raiseDecisionOrder, decisionOrders, executeDecisionOrder } from "./decision-orders.ts";
-export type { DecisionOrderCard, DecisionOrdersView } from "./decision-orders.ts";

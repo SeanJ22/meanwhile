@@ -1,5 +1,5 @@
 /**
- * **THE FIX LIST (BR-03) — the one list of broken things and their repairs.**
+ * The fix list: the one list of broken things and their repairs.
  *
  * Items live on the Admin config row, written through the gateway or by code
  * through `addFixItem`, so an item added in Admin is still there after a reload
@@ -127,15 +127,6 @@ export async function addFixItem(repos: Repos, add: { where: string; says: strin
   return fixSubjectId(add.where, add.sourceKey ?? add.says);
 }
 
-/** Owner return: a confirmed paid NOTHING ending opens a repair at its actual cause.
- * The ending producer supplies the cause; missing or legacy ending data is never guessed. */
-export async function openPaidEndingFix(repos: Repos, ending: {
-  paid: boolean; endingKind: string | null; causeKey: string | null;
-  where: string; says: string; at: string; technical?: readonly string[];
-}): Promise<string | null> {
-  if (!ending.paid || ending.endingKind !== "NOTHING" || !ending.causeKey?.trim()) return null;
-  return addFixItem(repos, { where: ending.where, says: ending.says, by: "The team", at: ending.at, sourceKey: `paid-ending:${ending.causeKey}`, technical: ending.technical });
-}
 
 export async function startFixItem(repos: Repos, id: string, at: string): Promise<void> {
   await mutate(repos, at, (c) => withFixStarted(c, id, at));

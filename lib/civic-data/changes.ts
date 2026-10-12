@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 
 import { agendaContentGroups, type AgendaContentRow } from "../meetings/agenda-content.ts";
+import { stateMoneyRecordKey } from "../funding/state-money.ts";
 import type {
   CivicRecordMember,
   RoutineCandidate,
@@ -40,13 +41,6 @@ function keyed(prefix: string, values: readonly unknown[], keys: readonly string
   });
 }
 
-/**
- * Append-only observations can legitimately repeat the same subject. Give each
- * distinct observation a content address and preserve the multiplicity of
- * byte-identical observations. Sorting before assigning the occurrence makes
- * the projection independent of JSON array order; no Map consumer can silently
- * collapse two source observations into one changed-record member.
- */
 function keyedObservations(prefix: string, values: readonly unknown[], keys: readonly string[]): CivicRecordMember[] {
   const observations = values.map((record) => {
     const subject = textKey(record, keys) ?? "unkeyed";
@@ -64,21 +58,7 @@ function keyedObservations(prefix: string, values: readonly unknown[], keys: rea
   });
 }
 
-/**
- * **A SITTING'S HELD AGENDA IS ONE CIVIC RECORD, KEYED BY THE SITTING.**
- * (2026-09-22.)
- *
- * Stored agenda rows are append-only versions whose ids embed a per-fetch
- * byte hash (`<meetingId>@<contentHash>`). Keyed by that id, a publisher page
- * whose bytes change on every request (Tucson Unified `tusd1:497-502`, Pima
- * Community College `pcc:698-707`) was "added" to the change set every hour
- * under a new key while its words never changed. The record is now the
- * sitting's agenda: its key is the vendor-namespaced meeting id, and its value
- * is each DISTINCT content held for it (`sameAgendaContent`), earliest read
- * first. A re-fetch of the same words changes nothing; a revision of the words
- * is a CHANGE of this one record, never an add/remove pair. Every stored row
- * stays in the read model untouched; this is only the unit the delta counts.
- */
+/** A sitting's held agenda is one civic record keyed by the sitting, holding each distinct content read; a re-fetch of the same words changes nothing. */
 export function agendaDocumentRecordKey(document: { readonly meetingId: string }): string {
   return `agenda-document:${document.meetingId}`;
 }
@@ -111,28 +91,11 @@ function agendaDocumentMembers(values: readonly unknown[]): CivicRecordMember[] 
   ];
 }
 
-/**
- * **WHAT DECIDES A CHANGE: THE FACTS, NEVER THE OBSERVATION STAMPS.**
- * (2026-09-22.)
- *
- * Every fetch stamps each meeting row's `provenance.collectedAt` with its own
- * read instant. Compared whole, every unchanged meeting was "changed" on every
- * run — Rockaway Township's Board of Adjustment re-promoted 23 times in 24 hours
- * with no new fact — so a validated no-change could never be recorded. The
- * stamp stays on the stored record and in the persisted before/after as
- * provenance; it only stops deciding whether a fact moved.
- */
+/** Facts decide a change; observation stamps such as `collectedAt` stay on the record but never decide it. */
 export function civicRecordFacts(recordClass: RoutineRecordClass, member: CivicRecordMember): unknown {
   if (recordClass === "MEETING" && member.key.startsWith("meeting:")) {
     return withoutProvenanceStamps(member.record, ["collectedAt"]);
   }
-  /*
-   * The same class, measured on 2026-09-24. On a byte-identical source, every
-   * New Jersey roster member differed only in `provenance.collectedAt` and
-   * `provenance.verifiedAt`, both stamped with the fetch instant (120 of 120).
-   * Every New Jersey roll differed only in its own `retrievedAt` (about 1,500
-   * "changed" hourly).
-   */
   if (recordClass === "STATE_LEGISLATOR" && member.key.startsWith("member:")) {
     return withoutProvenanceStamps(member.record, ["collectedAt", "verifiedAt"]);
   }
@@ -173,7 +136,6 @@ function withoutProvenanceStamps(record: unknown, stamps: readonly string[]): un
   return { ...row, provenance: factualProvenance };
 }
 
-/** Exact civic member projection shared by promotion receipts and Admin. */
 export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknown): readonly CivicRecordMember[] {
   const root = object(payload) ?? {};
   switch (recordClass) {
@@ -360,7 +322,7 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
         const geoid = row && typeof row.geoid === "string" ? row.geoid : "";
         return { key: ocdId && geoid ? `division:${ocdId}|${geoid}` : "", record };
       });
-      return [...divisions, ...keyed("body", array(root.bodies), ["id"])].sort((left, right) => left.key.localeCompare(right.key));
+      return [...divisions, ...keyed("body", array(root.bodies), ["id"]), ...keyed("government", array(root.governments), ["id"])].sort((left, right) => left.key.localeCompare(right.key));
     }
     case "MEETING":
       return [
@@ -434,6 +396,8 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
       ];
     case "OFFICEHOLDER_STATEMENT":
       return keyed("statement", array(root.snapshots), ["id"]);
+    case "PRL_ARCHIVE":
+      return Object.entries(object(root.datasets) ?? {}).map(([key, record]) => ({ key: `dataset:${key}`, record })).sort((a, b) => a.key.localeCompare(b.key));
     case "STATE_EXECUTIVE_ACTION":
       return [
         { key: "projection:note", record: root.note },
@@ -460,9 +424,8 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
               minutesPointer: sitting.minutesPointer,
               routesWalked: sitting.routesWalked,
               publicationObservations: sitting.publicationObservations,
-              // Minutes-route sittings only (NH332): the document read and its standing.
               ...(sitting.minutesDocument !== undefined ? { minutesDocument: sitting.minutesDocument } : {}),
-              // A held failed minutes extraction and the bytes it failed on (2026-09-25): a change to it is a change.
+              // A held failed minutes read and its bytes: a change to it is a change.
               ...(sitting.failedMinutesRead !== undefined ? { failedMinutesRead: sitting.failedMinutesRead } : {}),
             },
           },
@@ -477,10 +440,14 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
     case "STATE_CAMPAIGN_FINANCE":
       return array(root.records).map((record, index) => {
         const row = object(record) ?? {};
-        const targets = array(row.targetKeys).filter((value): value is string => typeof value === "string").sort().join("+");
-        const identity = textKey(row, ["committeeId"]) || targets || `unresolved-${index}`;
         return {
-          key: `state-money:${textKey(row, ["jurisdiction"]) ?? "unknown"}:${textKey(row, ["electionYear"]) ?? "unknown"}:${identity}:${textKey(row, ["filingState"]) ?? "unknown"}`,
+          key: stateMoneyRecordKey({
+            jurisdiction: textKey(row, ["jurisdiction"]) ?? "unknown",
+            electionYear: textKey(row, ["electionYear"]) ?? "unknown",
+            committeeId: textKey(row, ["committeeId"]),
+            targetKeys: array(row.targetKeys).filter((value): value is string => typeof value === "string"),
+            filingState: textKey(row, ["filingState"]) ?? "unknown",
+          }, index),
           record,
         };
       }).sort((a, b) => a.key.localeCompare(b.key));
@@ -512,7 +479,6 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
   }
 }
 
-/** Stable JSON identity used by both persisted deltas and their owner view. */
 export function canonicalCivicDataJson(value: unknown): string {
   if (value === null || typeof value !== "object") return JSON.stringify(value);
   if (Array.isArray(value)) return `[${value.map(canonicalCivicDataJson).join(",")}]`;
@@ -532,19 +498,11 @@ export interface CivicChangeContract {
   readonly facts: (recordClass: RoutineRecordClass, member: CivicRecordMember) => unknown;
 }
 
-/** Every live candidate's delta: sitting-keyed agenda records, fact-only comparison. */
 export const CIVIC_CHANGE_CONTRACT: CivicChangeContract = {
   members: civicRecordsFor,
   facts: civicRecordFacts,
 };
 
-/**
- * The projection before 2026-09-22: one member per stored agenda row, keyed by
- * its `<meetingId>@<contentHash>` id, compared whole. The PDC-v2 trusted-LKG
- * transfers were written under it and still serve as some partitions' pointers,
- * so their persisted members and deltas are re-proved against exactly it on
- * every read — never against a later contract they could not have followed.
- */
 export function rowKeyedCivicRecordsFor(recordClass: RoutineRecordClass, payload: unknown): readonly CivicRecordMember[] {
   if (recordClass !== "MEETING") return civicRecordsFor(recordClass, payload);
   const root = object(payload) ?? {};
@@ -554,6 +512,7 @@ export function rowKeyedCivicRecordsFor(recordClass: RoutineRecordClass, payload
   ];
 }
 
+/** The earlier projection: one member per stored row, compared whole. Pointers written under it are re-proved against it, never against a later contract. */
 export const ROW_KEYED_CIVIC_CHANGE_CONTRACT: CivicChangeContract = {
   members: rowKeyedCivicRecordsFor,
   facts: (_recordClass, member) => member.record,

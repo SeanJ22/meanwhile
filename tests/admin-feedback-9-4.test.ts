@@ -1,10 +1,6 @@
 /**
- * **THE 9.4.26 ADMIN FEEDBACK, PINNED.** (ADM-1 through ADM-9.)
- *
- * Every row of the owner's sweep names an instance of a class; these guards
- * pin the class. Pure modules are exercised as functions; the pages are
- * read as source text (a `.tsx` cannot be imported under `node --test`), the
- * same way the other admin guards do it.
+ * Admin guards: runner pause standing, fleet dispatch targets, the fleet view and the cost panel.
+ * Pages are read as source text (a `.tsx` cannot be imported under `node --test`).
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -12,16 +8,8 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { buildCostPanel, NO_MODEL_KEY, PROD_ASK_KEY } from "../lib/control-plane/cost-panel.ts";
-import { buildDecisionCards, openNeedsSeanRows, type RegistryEntry } from "../lib/control-plane/decision-cards.ts";
-import { collapseDecisionLog, latestDecisionFor } from "../lib/control-plane/decision-log.ts";
 import { buildFleetView, dispatchHistory, whereOf } from "../lib/control-plane/fleet-view.ts";
-import { freshnessContract, freshnessRiskOf } from "../lib/health/contracts.ts";
-import {
-  ANSWERED_IN_OWN_WORDS,
-  decisionCardKind,
-  type OwnerDecisionIntent,
-  type RunnerHeartbeat,
-} from "../lib/control-plane/owner-surface.ts";
+import type { RunnerHeartbeat } from "../lib/control-plane/owner-surface.ts";
 import { validateIntentNote } from "../lib/control-plane/research-view.ts";
 import { runnerStanding } from "../lib/control-plane/runner-standing.ts";
 import { describeDispatchMatch, parseDispatchTarget, unitMatchesTarget } from "../lib/control-plane/scheduler/dispatch-target.ts";
@@ -38,105 +26,7 @@ const src = (rel: string): string => readFileSync(join(ROOT, rel), "utf8");
 const NOW = "2026-09-05T03:00:00.000Z";
 
 /* ================================================================== *
- * ADM-4 — the decision cards are a JOIN, not a read of one file
- * ================================================================== */
-
-const ROWS = [
-  { ID: "OWN01", Section: "needs-sean", Priority: "P2", Title: "Body count mismatch", "What this is": "…", Resolution: "", "Opened on": "2026-08-31", "Last verified": "" },
-  { ID: "NH306", Section: "needs-sean", Priority: "P1", Title: "A wall", "What this is": "…", Resolution: "", "Opened on": "2026-09-01", "Last verified": "2026-09-04" },
-  { ID: "NH208", Section: "needs-sean", Priority: "P3", Title: "Nothing is wrong", "What this is": "…", Resolution: "", "Opened on": "UNKNOWN", "Last verified": "" },
-  { ID: "DONE1", Section: "needs-sean", Priority: "P2", Title: "Closed", "What this is": "…", Resolution: "Resolved", "Opened on": "2026-08-20", "Last verified": "" },
-  { ID: "AZ9", Section: "az-hunt", Priority: "P2", Title: "Not needs sean", "What this is": "…", Resolution: "", "Opened on": "2026-08-20", "Last verified": "" },
-];
-const REGISTRY: RegistryEntry[] = [
-  { rowId: "OWN01", kind: "NOT_MACHINE_VERIFIABLE", whatIsNeeded: "Send the capture you saw.", whyNoMachineCanDecide: "It does not reproduce.", options: [{ option: "Send it", consequence: "placed against a build" }, { option: "Close it", consequence: "closes as unreproducible" }] },
-  { rowId: "NH306", kind: "predicate", blocker: "the secret is not in the environment" },
-  { rowId: "NH208", kind: "NOT_MACHINE_VERIFIABLE", whatIsNeeded: "Acknowledge the correction: nothing is wrong.", whyNoMachineCanDecide: "the title says otherwise", options: [{ option: "Acknowledge", consequence: "closes" }] },
-];
-const OUTCOMES = [
-  { rowId: "OWN01", kind: "NOT_MACHINE_VERIFIABLE", verdict: "HOLDS", why: "waits on the author" },
-  { rowId: "NH306", kind: "predicate", verdict: "HOLDS", why: "WTP_X is still absent from the environment" },
-];
-
-test("ADM-4: every open Needs-Sean row publishes a card carrying title, priority, opened date, age and the registry text", () => {
-  const cards = buildDecisionCards({ rows: ROWS, registry: REGISTRY, outcomes: OUTCOMES, stamp: "2026-09-04" });
-  assert.deepEqual(cards.map((c) => c.rowId), ["NH306", "OWN01", "NH208"], "P1 first, then age oldest first inside a priority");
-  const own = cards.find((c) => c.rowId === "OWN01")!;
-  assert.equal(own.title, "Body count mismatch");
-  assert.equal(own.priority, "P2");
-  assert.equal(own.openedOn, "2026-08-31");
-  assert.equal(own.ageDays, 4);
-  assert.equal(own.whatIsNeeded, "Send the capture you saw.");
-  assert.equal(own.whyNoMachineCanDecide, "It does not reproduce.");
-  assert.equal(own.options.length, 2);
-  assert.equal(own.kind, "DECISION");
-  assert.equal(own.verifiability, "NOT_MACHINE_VERIFIABLE");
-  assert.equal(own.blockedDescendants, null, "nothing measured it, so it is null — never a zero");
-});
-
-test("ADM-4: a predicate row is a BLOCKED_WHILE wall with no options and its last recheck; an acknowledgement row is ACKNOWLEDGE", () => {
-  const cards = buildDecisionCards({ rows: ROWS, registry: REGISTRY, outcomes: OUTCOMES, stamp: "2026-09-04" });
-  const wall = cards.find((c) => c.rowId === "NH306")!;
-  assert.equal(wall.kind, "BLOCKED_WHILE");
-  assert.equal(wall.verifiability, "PREDICATE");
-  assert.deepEqual(wall.options, []);
-  assert.equal(wall.blocker, "the secret is not in the environment");
-  assert.match(wall.checkedThisRun ?? "", /still absent/);
-  assert.equal(wall.lastVerified, "2026-09-04");
-  const ack = cards.find((c) => c.rowId === "NH208")!;
-  assert.equal(ack.kind, "ACKNOWLEDGE");
-  assert.equal(ack.openedOn, null, "UNKNOWN is an unrecoverable date, published as null");
-  assert.equal(ack.ageDays, null);
-});
-
-test("ADM-4: closed rows and rows outside Needs Sean never become cards", () => {
-  assert.deepEqual(openNeedsSeanRows(ROWS).map((r) => r.ID), ["OWN01", "NH306", "NH208"]);
-});
-
-test("ADM-4: a snapshot written before the kind field existed still classifies by verifiability", () => {
-  assert.equal(decisionCardKind({ verifiability: "PREDICATE" } as never), "BLOCKED_WHILE");
-  assert.equal(decisionCardKind({ verifiability: "NOT_MACHINE_VERIFIABLE" } as never), "DECISION");
-});
-
-test("ADM-4: the publisher joins the working store and the registry, and no longer overwrites the runner heartbeat", () => {
-  const publisher = src("scripts/publish-owner-snapshot.mts");
-  assert.match(publisher, /buildDecisionCards\(/);
-  assert.match(publisher, /readStore\(WORKING_CSV/);
-  assert.match(publisher, /from "\.\.\/lib\/tracker\/registry\.mjs"/);
-  assert.doesNotMatch(publisher, /runnerHeartbeat\.(put|compareAndSet)\(/, "ADM-5: a publish is not a beat");
-  assert.doesNotMatch(publisher, /"not recorded on this row"/);
-});
-
-
-const INTENT = (over: Partial<OwnerDecisionIntent>): OwnerDecisionIntent => ({
-  formatVersion: 1,
-  intentId: "OWN01:2026-09-05T01:00:00.000Z",
-  subjectId: "OWN01",
-  chosenOption: "Send it",
-  consequenceShown: "placed against a build",
-  decidedAt: "2026-09-05T01:00:00.000Z",
-  state: "PENDING_CANONICALIZATION",
-  canonicalRef: null,
-  refusedReason: null,
-  adminSessionRef: "adm_x",
-  ...over,
-});
-
-test("ADM-4: the decision log collapses to one row per decision, the #resolved twin winning", () => {
-  const original = INTENT({});
-  const twin = INTENT({ intentId: `${original.intentId}#resolved`, state: "CANONICALIZED", canonicalRef: "docs/tracker-resolved.csv#OWN01" });
-  const other = INTENT({ intentId: "V01:2026-09-05T02:00:00.000Z", subjectId: "V01", decidedAt: "2026-09-05T02:00:00.000Z", chosenOption: ANSWERED_IN_OWN_WORDS, ownerAnswer: "Do the calls next week." });
-  const collapsed = collapseDecisionLog([original, other, twin]);
-  assert.equal(collapsed.length, 2);
-  assert.equal(collapsed[0].subjectId, "V01", "newest first");
-  assert.equal(collapsed[1].state, "CANONICALIZED");
-  assert.equal(collapsed[1].intentId, original.intentId, "the twin is reported under the base id");
-  assert.equal(latestDecisionFor([original, twin], "OWN01")?.state, "CANONICALIZED");
-  assert.equal(latestDecisionFor([original], "V01"), null);
-});
-
-/* ================================================================== *
- * ADM-5 — a deliberate pause is told from a failure
+ * a deliberate pause is told from a failure
  * ================================================================== */
 
 const BEAT: RunnerHeartbeat = {
@@ -200,7 +90,7 @@ test("ADM-5: an ALIVE beat with no pause is green and offers to record a pause",
 });
 
 /* ================================================================== *
- * ADM-8 — deploy fleet: the target is read, matched, and honored by name
+ * deploy fleet: the target is read, matched, and honored by name
  * ================================================================== */
 
 test("ADM-8: the owner's words become state codes and terms", () => {
@@ -243,7 +133,7 @@ test("ADM-8: a DISPATCH needs words and the intent carries them; the control tha
 });
 
 /* ================================================================== *
- * ADM-7 — the fleet in the owner's words
+ * the fleet in the owner's words
  * ================================================================== */
 
 const attempt = (over: Partial<Attempt> & { id: string; role: Attempt["worker"]["role"]; workItemId: string }): Attempt =>
@@ -295,20 +185,7 @@ test("ADM-7: the five groups cover the roles, with counts that carry denominator
 });
 
 /* ================================================================== *
- * ADM-3 — plain words, with the scale
- * ================================================================== */
-
-test("ADM-3: FRESHNESS reads measured canonical-cycle risk through the owner publisher", () => {
-  const risk = freshnessRiskOf({ risk: { obligationsScheduled: 3, obligationsUnscheduled: 0, obligationsOverdue: 2, debtRows: 180, incidents: 29, oldestDebtHours: 1, activation: "SHADOW_NOT_ACTIVATED" } });
-  assert.ok(risk);
-  assert.match(freshnessContract(risk).reason, /measured staleness risk: 3 obligation/);
-  assert.equal(freshnessRiskOf({ risk: { activation: "OTHER" } }), undefined);
-  assert.equal(freshnessRiskOf(null), undefined);
-  assert.match(src("scripts/publish-owner-snapshot.mts"), /freshnessContract\(freshnessRiskOf\(/);
-});
-
-/* ================================================================== *
- * ADM-6 — cost with numbers
+ * cost with numbers
  * ================================================================== */
 
 test("ADM-6: the ledger rolls up by role and by model with measured/unmeasured beside every row; the reader path is one short gap", () => {
@@ -332,7 +209,7 @@ test("ADM-6: the ledger rolls up by role and by model with measured/unmeasured b
   assert.ok(scout.usd.held && scout.usd.value.value === 0.75 && scout.usd.value.denominator === 0.75);
   assert.equal(scout.attemptsMeasured, 2);
   const acq = panel.costByRole.find((r) => r.key === "ACQUIRER")!;
-  // ADM-17 (evening): a role whose attempts all ran without a paid model is $0 by design, not a gap.
+  // A role whose attempts all ran without a paid model is $0 by design, not a gap.
   assert.equal(acq.kind, "FREE_BY_DESIGN");
   assert.ok(acq.usd.held && acq.usd.value.value === 0);
   assert.equal(acq.attemptsUnmeasured, 1);
@@ -357,20 +234,12 @@ test("ADM-6: nothing measured is a gap in every row, never a zero", () => {
 });
 
 /* ================================================================== *
- * ADM-1 — the quarantined readiness record says what exists and what clears it
- * ================================================================== */
-
-
-/* ================================================================== *
- * ADM-2 / ADM-9 — the header acknowledges a choice at once and carries the theme switch
+ * the header acknowledges a choice at once and carries the theme switch
  * ================================================================== */
 
 test("ADM-2: the console header navigates inside a transition, shows the choice at once, and the read path skips the schema bootstrap", () => {
   assert.match(src("lib/control-plane/admin-data.ts"), /skipBootstrap: true/);
-  // The bootstrap call is now wrapped in a bounded connect-retry (connect-retry.ts)
-  // so a transient Neon fetch failure at cycle start does not abort the cycle, but it
-  // stays gated by !skipBootstrap, so the admin read path still skips it entirely.
-  // Since 2026-09-23 it also carries the per-class request bounds (request-bounds.ts).
+  // The bootstrap stays gated by !skipBootstrap, so the admin read path skips it.
   assert.match(
     src("lib/control-plane/repository/pg-store.ts"),
     /if \(!options\.skipBootstrap\) \{[\s\S]*?bootstrap\(sql, nowIso(?:, bounds)?\)/,

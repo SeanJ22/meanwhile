@@ -1,60 +1,17 @@
 /**
- * The .gov registry snapshot — item 9, 2026-08-16.
+ * The .gov registry snapshot. `cisagov/dotgov-data` publishes
+ * `current-full.csv`: every .gov domain with its registrant's organization,
+ * city, state and CISA's own `Domain type`. It is a link-ladder rung ("where
+ * might this government publish"), and CISA's election-office type names the
+ * rung for ballot and candidate-filing hunts.
  *
- * `cisagov/dotgov-data` publishes `current-full.csv`: every domain in the
- * .gov TLD, with the registrant's own organization name, city, state, and
- * CISA's own `Domain type` classification. It is the closest thing that
- * exists to a machine-readable roster of American government web presence.
+ * Domains are not a denominator: a government with no .gov domain is missing
+ * entirely, one government can hold several domains, and a domain is not a
+ * body. Never count governments from it.
  *
- * ## What it is FOR here
- *
- * A LINK LADDER RUNG, and nothing else yet. When a hunt needs "does this
- * county publish anything, and where", a registry of every .gov domain with
- * its registrant is the cheapest first rung there is — and the 693 domains
- * CISA itself types as election offices are the named rung for the ballot
- * and candidate-filing hunts.
- *
- * ## THE BOUNDARY, and it is the important half: DOMAINS ARE NOT A
- * DENOMINATOR.
- *
- * CLAUDE.md's coverage rule is that "we watch N of M bodies here" takes M
- * from the Census of Governments and the official enumerations — never from
- * counting our own records. This file is not one of those enumerations and
- * must never be used as one:
- *
- * - **A government with no .gov domain is missing from it entirely.** Small
- *   towns, school districts and special districts routinely publish on a
- *   `.org`, a `.us`, a vendor subdomain, or a Facebook page. Counting .gov
- *   domains would undercount exactly the bodies hardest to cover, which is
- *   the Sunnyside class of miss the coverage rule exists to catch.
- * - **A government can hold several domains**, and one domain can front
- *   several governments, so the count is not a count of governments in
- *   either direction.
- * - **A domain is not a body.** `chicagoelections.gov` is one domain and the
- *   Chicago Board of Election Commissioners is one body; nothing here maps
- *   the two, and nothing here should be made to look as though it does.
- *
- * So the snapshot records what it is: a list of domains, with CISA's own
- * types and counts. It answers "where might this government publish", never
- * "how many governments are there".
- *
- * ## SHA-resolved then pinned, never an unrecorded `main`
- *
- * The operation first asks the repository API for the current commit touching
- * `current-full.csv`, then reads that exact SHA and records it in the durable
- * candidate. The moving name is never used to fetch the civic payload.
- *
- * ## Thin-guard
- *
- * The registry holds ~16,500 domains and CISA types ~693 of them as election
- * offices. A truncation, a redirect to an HTML error page, or a column
- * rename all present as "fewer rows than there should be", and every one of
- * them would otherwise write a snapshot that reports success while holding
- * nothing. An operation that can return nothing is asked what it returned.
- *
- * ## Licence
- *
- * US Government work, public domain. Cited; nothing else is owed.
+ * The current commit touching the CSV is resolved first and the payload is read
+ * at that exact SHA. Floors well below the observed counts refuse a truncation
+ * or an HTML error page. US Government work, public domain.
  *
  * Production cadence and owner-initiated promotion enter through the installed
  * runtime dispatcher; this file is the internal `dotgov` acquisition adapter.
@@ -120,12 +77,7 @@ export interface DotGovSnapshot {
     /** Every CISA type, with its count. The file's own shape, stated. */
     byType: Record<string, number>;
   };
-  /**
-   * The election subset, in full. The rest of the registry is recorded by
-   * COUNT rather than committed: the ladder needs the election offices by
-   * name, and 16,500 rows of JSON in the bundle would be a cost with no
-   * reader on the other end of it.
-   */
+  /** The election subset, in full; the rest of the registry is recorded by count. */
   electionDomains: DotGovDomain[];
   /** Stated in the file so nobody has to find the script to learn it. */
   boundary: string;
@@ -215,10 +167,8 @@ export async function acquireDotGov(signal?: AbortSignal): Promise<DotGovAcquisi
   }
   const csv = await readPublisherBody("CISA dotgov registry", () => response.text());
   signal?.throwIfAborted();
-  // Before the row count is trusted, ask whether the whole file arrived. The
-  // thin-guard below refuses a body too SHORT to be the registry; this refuses
-  // a transfer cut short of the length the server declared — a truncation that
-  // dropped the tail of the file could still clear the row floor.
+  // Refuse a transfer shorter than the server's declared length: a dropped tail
+  // could still clear the row floor.
   const short = shortTransfer(response.headers, csv);
   if (short !== null) {
     throw sourceAcquisitionFailure(
@@ -247,9 +197,7 @@ export async function acquireDotGov(signal?: AbortSignal): Promise<DotGovAcquisi
     }
     const type = row[1]?.trim() ?? "";
     byType[type] = (byType[type] ?? 0) + 1;
-    // CISA's OWN type is the filter. Not a name match on "vote" or
-    // "election", which would both miss `sos.gov`-style offices and sweep in
-    // a city called Election. The registry classified these; we read it.
+    // CISA's own type is the filter, never a name match on "vote" or "election".
     if (!/election/i.test(type)) continue;
     electionDomains.push({
       domain: row[0]!.trim(),
@@ -332,8 +280,6 @@ async function main() {
   const snapshot = acquisition.snapshot;
   const candidate = dotGovCandidate(acquisition);
   const outcome = await processRegisteredRoutineCandidate(store, "dotgov", candidate, acquisition.retrievedAt);
-  // Every count, stated. A run that says nothing about what it fetched is
-  // indistinguishable from one that fetched nothing.
   console.log(`dotgov: ${snapshot.counts.domains} domains at ${snapshot.source.sha}`);
   console.log(
     `dotgov: ${snapshot.counts.electionDomains} typed as election offices — the named rung list`,

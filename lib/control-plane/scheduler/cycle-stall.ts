@@ -1,30 +1,3 @@
-/**
- * **A CYCLE THAT RUNS INTO THE WALL SAYS WHAT IT WAS WAITING ON.**
- * (Runner bounded store calls, 2026-09-23.)
- *
- * On 2026-09-23 four research cycles were killed at the supervisor's 15-minute
- * wall with nothing on stderr and no local record, so what each was waiting on
- * could only be guessed from the phases it had recorded before. This names it.
- *
- * The main thread keeps a small account of what it is waiting on and publishes
- * it (cycle-stall-report.ts):
- *
- * ```
- *   the last phase     every finishPhase() of the cycle
- *   labelled awaits    a label per await site in finalization, and around the
- *                      later phases (`step`, `enter`, `sync`)
- *   store calls        every repository call in flight (`trackStoreCalls`)
- *   event-loop turns   a ping every few seconds, so a blocked loop shows
- * ```
- *
- * A worker thread (cycle-stall-worker.ts) wakes about 90 s before the wall. If
- * the cycle has not written its record by then, it writes the pending await,
- * the store calls in flight, the last phase and whether the event loop is
- * blocked to stderr — which the runner's digest carries for a failed cycle —
- * and into the cycle's local record at the path reserved at start. It never
- * ends the cycle: the wall stays the supervisor's. A cycle that then finishes
- * carries the stall block forward into its own record at the same path.
- */
 import { readFileSync } from "node:fs";
 import { Worker } from "node:worker_threads";
 
@@ -46,10 +19,8 @@ import {
 
 /** The diagnostic fires this long before the supervisor's wall. */
 export const CYCLE_STALL_LEAD_MS = 90_000;
-/** How often the main thread reports an event-loop turn. */
 export const MAIN_THREAD_PING_MS = 5_000;
 
-/** What the cycle is waiting on, kept by the main thread and published for the worker. */
 export class PendingOperations {
   readonly sab: SharedArrayBuffer;
   private readonly now: () => number;
@@ -76,7 +47,6 @@ export class PendingOperations {
     this.publish();
   }
 
-  /** Enter a labelled await site; the returned function leaves it (idempotent). */
   enter(label: string): () => void {
     const step: PendingStep = { label, since: this.iso() };
     this.steps.push(step);
@@ -147,7 +117,6 @@ export class PendingOperations {
   }
 }
 
-/** One line naming what was pending, for a crash record or a digest. */
 export function describePending(snapshot: PendingSnapshot): string {
   const step = snapshot.steps.at(-1);
   const store = snapshot.store.map((c) => c.call);
@@ -200,14 +169,9 @@ export interface CycleStallDiagnostic {
    * so the cycle's record carries it forward; null when the cycle was first.
    */
   readonly claimRecord: () => StallDiagnosticBlock | null;
-  /** Stop pinging and end the worker. */
   readonly stop: () => Promise<void>;
 }
 
-/**
- * Start the diagnostic. The worker writes at `fireAtMs` unless the cycle
- * claimed its record first; `stdoutFd` and `stderrFd` default to the process's.
- */
 export function startCycleStallDiagnostic(input: {
   readonly pending: PendingOperations;
   readonly fireAtMs: number;
@@ -220,7 +184,6 @@ export function startCycleStallDiagnostic(input: {
   readonly stdoutFd?: number;
   readonly stderrFd?: number;
   readonly pingMs?: number;
-  /** A main thread silent this long reads as blocked. Default MAIN_THREAD_BLOCKED_AFTER_MS. */
   readonly blockedAfterMs?: number;
 }): CycleStallDiagnostic {
   const sab = input.pending.sab;

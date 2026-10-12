@@ -1,31 +1,10 @@
-/**
- * THE WORK ITEM — the durable obligation.
- *
- * A WorkItem outlives every worker that ever touches it. It is the answer to
- * "what does this project still owe?", and it is deliberately not a task, not a
- * ticket, and not a chat session. Workers are per-Attempt and disposable; this
- * is the thing that is not.
- *
- * The completion contract is the part that matters most. `lib/workstate` already
- * establishes that item completion is DERIVED from child state and that a model
- * may not type "done" while unresolved required children exist. This file
- * carries that rule into route-level execution: a WorkItem may not reach a
- * terminal state while an applicable INHERITED route has no disposition, which
- * is the mechanical form of "a worker cannot silently forget a known API".
- */
+/** The durable obligation. It outlives every worker, and may not reach a terminal state while an applicable inherited route has no disposition. */
 
 import type { Disposition } from "../workstate/types.ts";
 import { workItemId } from "./ids.ts";
 import type { WorkQuestion } from "./work-question.ts";
 
-/**
- * The states a WorkItem may occupy.
- *
- * The terminal set is drawn from the target architecture's list, and every
- * member of it is an AFFIRMATIVE finding. There is deliberately no
- * `NOT_FOUND`, no `EXHAUSTED`, and no `GAVE_UP`: those describe a session, and
- * a session is not allowed to describe a government (RULING 170, RULING 184).
- */
+/** The states a WorkItem may occupy. Every terminal state is an affirmative finding; there is no NOT_FOUND, EXHAUSTED or GAVE_UP. */
 export const WORK_ITEM_STATES = [
   "OPEN",
   "BLOCKED",
@@ -60,13 +39,7 @@ export function isTerminalState(state: WorkItemState): boolean {
   return TERMINAL_WORK_ITEM_STATES.includes(state);
 }
 
-/**
- * Why one WorkItem waits for another.
- *
- * The `reason` is prose for a human, but `kind` is what the orchestration guard
- * can actually check. RULING 194 and `classifyOrchestration` already refuse an
- * edge backed by prose alone; the same standard applies here.
- */
+/** Why one WorkItem waits for another. `kind` is what the orchestration guard checks; prose alone does not prove an edge. */
 export const DEPENDENCY_KINDS = [
   /** Upstream produces data/artifacts this item consumes. */
   "PRODUCES_CONSUMES",
@@ -85,12 +58,7 @@ export interface WorkDependency {
   readonly evidence: readonly string[];
 }
 
-/**
- * What this WorkItem must satisfy before it may reach a terminal state.
- *
- * Every flag here defaults to the SAFE reading. A contract that requires
- * nothing is a contract a worker can satisfy by doing nothing.
- */
+/** What this WorkItem must satisfy before a terminal state. Every flag defaults to the safe reading. */
 export interface CompletionContract {
   /**
    * Route ids from the inherited method floor that are APPLICABLE to this
@@ -109,44 +77,9 @@ export interface CompletionContract {
    */
   readonly requiresCompleteDenominator: boolean;
   /**
-   * The dispositions permitted to satisfy this obligation, if narrower than the
-   * governed default. `null` means "the governed default", which is the
-   * `OPEN_DISPOSITIONS` / `TERMINAL_DISPOSITIONS` split in
-   * `lib/workstate/types.ts` and nothing else.
-   *
-   * ## What it is applied TO, and why that is the narrow reading
-   *
-   * When non-null, this list narrows the clause it is written next to: the
-   * INHERITED ROUTE FLOOR. `evaluateCompletion` therefore applies it to route
-   * tasks with `inherited === true` that carry a disposition, and refuses
-   * `DISPOSITION_OUTSIDE_CONTRACT` when one of them landed outside the set.
-   *
-   * Two wider readings were considered and rejected:
-   *
-   *   1. **Every RouteTask, inherited or not.** Rejected because it would let a
-   *      contract written about the floor silently govern routes the contract
-   *      never contemplated. Discovery is a tree (RULING 52) and a route found
-   *      mid-walk is, by construction, not part of the floor computed at
-   *      preflight. Under this reading a scout that discovered a bonus endpoint
-   *      and honestly recorded `POINTER_ONLY` on it would BLOCK an obligation
-   *      whose whole floor was walked clean — punishing extra hunting, which is
-   *      exactly backwards for this product.
-   *   2. **Only route tasks whose `routeId` appears literally in
-   *      `inheritedRouteFloor`.** Rejected as too narrow in the unsafe
-   *      direction: `inheritedRouteFloor` holds route ids while a RouteTask is
-   *      keyed on (route id, target), so a floor route walked against a second
-   *      target — the same Legistar route against a second host — would escape
-   *      the filter entirely. `inherited` is the flag the preflight actually
-   *      sets when it materialises the floor, so it is the honest join.
-   *
-   * The chosen reading is strictly narrower than (1) and strictly safer than
-   * (2). It also fails CLOSED in the only direction that matters: a route the
-   * contract cares about that landed on a disposition the contract does not
-   * accept refuses completion rather than being averaged away.
-   *
-   * This list never WIDENS anything. An `OPEN_DISPOSITION` named here does not
-   * become terminal; clause 2 of the evaluator still refuses it as outstanding.
-   * A contract may only ever tighten what closes an obligation.
+   * The dispositions permitted to satisfy this obligation, if narrower than the governed default (`null`).
+   * Applied only to inherited route tasks that carry a disposition; one outside the set refuses completion
+   * (`DISPOSITION_OUTSIDE_CONTRACT`). It may only tighten, never widen, what closes an obligation.
    */
   readonly acceptableDispositions: readonly Disposition[] | null;
   /**
@@ -162,32 +95,8 @@ export interface CompletionContract {
 }
 
 /**
- * **A VERDICT AN OBLIGATION MUST EARN FROM A NAMED INSTRUMENT.**
- * (A.1 WI3, 2026-08-30.)
- *
- * ## Why prose was not enough
- *
- * `diagnosticWorkItemFor` wrote the completion condition into `why`:
- * *"The completion contract is that question turning green on a recorded
- * evaluation run."* That sentence is correct and it is not a contract. Nothing
- * read it, nothing could check it, and the item it described carried
- * `{...DEFAULT_CONTRACT}` — which requires a validation record and nothing
- * about the question at all. An item created because a reader could not learn
- * a fact could therefore be closed by a validator that never asked the
- * question again.
- *
- * A completion condition a machine cannot evaluate is a completion condition
- * that closes on someone's judgement, and the whole point of the control plane
- * is that obligations do not close on judgement.
- *
- * ## What this requires, and why each field is here
- *
- * `instanceId` is THAT question, not a question like it: the reader contract
- * is per-instance, and a sibling instance turning green says nothing about
- * this one. `createdAtSha` is the tree the failure was observed on, so a run
- * recorded BEFORE the defect existed cannot close it — an older green is
- * evidence about older code. `requiredVerdict` is stated rather than assumed
- * so the field cannot quietly come to mean "any recorded verdict".
+ * A verdict an obligation must earn from a named instrument's canonical run record. `instanceId` is that exact
+ * instance; `createdAtSha` is the tree the failure was observed on, so an older run cannot close it.
  */
 export interface InstrumentEvidenceRequirement {
   /** Which instrument's canonical run record may satisfy this. */
@@ -231,34 +140,14 @@ export interface Escalation {
    */
   readonly snoozedUntil: string | null;
   /**
-   * Whether this escalation still stands between the obligation and a terminal
-   * state, independent of whether anyone wants to look at it today.
-   *
-   * The two questions are separate and were previously conflated. Snoozing is a
-   * statement about the Needs Sean queue — "not this week" — and a snooze that
-   * could retire an obligation would mean an owner dismissing a notification
-   * had, without ever deciding anything, converted an unanswered question into
-   * a settled fact about a government. That is the same class of error as a
-   * timeout becoming an emptiness.
-   *
-   * So `completionBlockingEscalations` reads THIS field and ignores the snooze
-   * entirely, and it is `true` by default everywhere an Escalation is built in
-   * this module. A field nobody set must never be the reason an obligation
-   * closed. `false` is an affirmative decision that this escalation is about
-   * US — a vendor account, a spend approval, a naming choice — and therefore
-   * cannot make a public record any less true.
+   * Whether this escalation still stands between the obligation and a terminal state, independent of any snooze.
+   * `true` by default; `false` is an affirmative decision that the escalation is about us and cannot change a
+   * public fact.
    */
   readonly blocksCompletion: boolean;
 }
 
-/**
- * Build an Escalation with the safe defaults already in place.
- *
- * `blocksCompletion` defaults to `true` and `resolvedAt`/`snoozedUntil` to
- * `null`, so the value a caller gets for free is the value that refuses. A
- * caller that genuinely knows the question is about us rather than about a
- * publisher has to say so, in writing, at the call site.
- */
+/** Build an Escalation with the safe defaults: `blocksCompletion` true, `resolvedAt` and `snoozedUntil` null. */
 export function createEscalation(input: {
   id: string;
   reason: string;
@@ -295,8 +184,11 @@ export interface WorkItem {
   readonly publicationOutcome?: {
     readonly at: string; readonly workerResultId: string; readonly status: "PUBLISHED" | "PARTIALLY_PUBLISHED" | "HELD";
     readonly code: string; readonly detail: string; readonly candidateId: string | null; readonly versionId: string | null;
+    /** Original successful source observation, retained when held bytes are republished. */
+    readonly sourceObservedAt?: string;
+    readonly sourceArtifactId?: string;
     readonly recovery?: "WORKER" | "PUBLISHER";
-    /** The door (registry id of the saved page) the published facts were read through (DB-28). */
+    /** The door (registry id of the saved page) the published facts were read through. */
     readonly doorId?: string;
     /** Verified reader records compared with this body's previous published records. */
     readonly records?: { readonly added: number; readonly changed: number; readonly reused: number };
@@ -317,10 +209,7 @@ export interface WorkItem {
   readonly obligation: string;
   /** Why it is owed. A WorkItem with no reason is a WorkItem nobody can retire. */
   readonly why: string;
-  /**
-   * MW-002: which of the six questions this work asks of its record. Absent
-   * when nothing recorded it — a page says "not recorded", never a guess.
-   */
+  /** Which of the six questions this work asks of its record. Absent when nothing recorded it. */
   readonly question?: WorkQuestion;
   readonly priority: "P0" | "P1" | "P2" | "P3";
   readonly state: WorkItemState;
@@ -345,7 +234,7 @@ export function createWorkItem(input: {
   subject: string;
   obligation: string;
   why: string;
-  /** MW-002. Not part of the id: the same work asks the same question. */
+  /** Not part of the id: the same work asks the same question. */
   question?: WorkQuestion;
   priority?: WorkItem["priority"];
   contract?: Partial<CompletionContract>;
@@ -376,22 +265,7 @@ export function withRouteTasks(item: WorkItem, taskIds: readonly string[]): Work
   return { ...item, routeTaskIds: [...merged] };
 }
 
-/**
- * THE QUEUE VIEW. What the Needs Sean queue shows at `now`, and nothing else.
- *
- * Unresolved, and either never snoozed or snoozed to a moment that has passed.
- * That is a rendering question — which rows an owner should be looking at
- * today — and it is answered against a caller-supplied clock because rendering
- * is the one place a clock genuinely belongs.
- *
- * **This function must never be used as a completion input.** It was, and the
- * consequence was mechanical: snoozing an escalation past `now` removed it from
- * this list, clause 7 of the evaluator read this list, and the obligation
- * completed. An owner pressing "not this week" is not an owner answering the
- * question, and a notification preference cannot be allowed to decide whether a
- * public record is settled. Completion asks
- * `completionBlockingEscalations(item)`, which takes no clock at all.
- */
+/** The Needs Sean queue at `now`: unresolved and not snoozed past `now`. Never a completion input; use `completionBlockingEscalations`. */
 export function openEscalations(item: WorkItem, now: string): readonly Escalation[] {
   return item.escalations.filter(
     (e) =>
@@ -400,15 +274,7 @@ export function openEscalations(item: WorkItem, now: string): readonly Escalatio
   );
 }
 
-/**
- * THE COMPLETION VIEW. Escalations that still stand between this obligation and
- * a terminal state.
- *
- * Unresolved AND `blocksCompletion`. The snooze is not consulted, and there is
- * deliberately no `now` parameter — a function that cannot see the clock cannot
- * be talked out of a refusal by moving it. The only thing that clears a
- * blocking escalation is `resolvedAt`: somebody actually answered.
- */
+/** Escalations that still block completion: unresolved and `blocksCompletion`. Takes no clock, so a snooze cannot clear one. */
 export function completionBlockingEscalations(item: WorkItem): readonly Escalation[] {
   return item.escalations.filter((e) => e.resolvedAt === null && e.blocksCompletion);
 }

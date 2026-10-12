@@ -1,25 +1,7 @@
 /**
- * **DP-33 · AUDITORS CHECK THE TEAM'S OWN CLAIMS.**
- *
- * Once a week a sample of claimed wins (updates shown to Sean as Proven or as
- * done) and of the Proven labels Admin carries is recomputed from the source
- * records, and each is marked confirmed or wrong:
- *
- * ```
- *   "Proven: worked in X places, failed in Y"   the fix map, as it stood then
- *   a Proven label on a fix                      the fix map and today's bar
- *   "Fixed: …" on the fix list                   the fix list item itself
- * ```
- *
- * A wrong claim is a red flag on the team (a fix-list item) and a lesson with
- * its cause. A claim whose records are gone or changed since is "could not
- * check", never confirmed. The pass is kept in the live-audit log, so the
- * Scoreboard's "Report accuracy" row reads it.
- *
- * A controlled run feeds a false claim through the same code against in-memory
- * records and writes nothing anywhere; it is never shown to Sean as real.
- *
- * Nothing here names a place.
+ * Weekly, a sample of claimed wins and Proven labels is recomputed from the source records and marked confirmed
+ * or wrong. A wrong claim raises a fix-list item and a lesson; a claim whose records are gone or changed is
+ * "could not check", never confirmed. A controlled run writes nothing and is never shown as real.
  */
 import { createHash } from "node:crypto";
 
@@ -188,7 +170,7 @@ export function claimLesson(check: ClaimCheck, at: string): FieldManualEntry {
     role: "AUDITOR", kind: "CLAIM_LESSON",
     title: `A claimed win was wrong (${kind === "PROVEN_LABEL" ? "a Proven label" : kind === "FIX_PROVEN" ? "a Proven count" : "a fix reported done"})`,
     summary: `recompute from source records before claiming: ${check.cause ?? "the claim did not match"}`.slice(0, 240),
-    outcome: "FAILED", observedAt: at.slice(0, 10), payload: { claimId: check.claimId, claimed: check.claimed, recomputed: check.recomputed },
+    outcome: "FAILED", observedAt: at.slice(0, 10), portable: true, payload: { claimId: check.claimId, claimed: check.claimed, recomputed: check.recomputed },
   });
 }
 

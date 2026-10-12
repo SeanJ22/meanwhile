@@ -1,37 +1,3 @@
-/**
- * **VERIFIED CAMPAIGN SITES THE STANDING RUNNER PUBLISHES, READ BESIDE THE
- * CANDIDATE PROFILES.** (2026-09-25.)
- *
- * Sean, 2026-09-21: "You may enable automatic promotion for qualifying
- * results. Fix the gap, recover value already paid for." (RULING 292.) A
- * campaign site qualifies only through the complete chain
- * (`lib/control-plane/promotion/campaign-site-chain.ts`): our own robots-first
- * read, five measured checks, an audit with measured controls and an
- * independent second signal, and the approval burdens.
- *
- * ## Why a derived store of its own, not the `candidate-profiles` pointer
- *
- * `candidate-profiles` is the owner's door (EXPLICIT_OWNER_INVOCATION_ONLY),
- * and one pointer has one writer: the civic-data firewall refuses a routine
- * adapter that reaches a manual door, and a second, clocked writer of the
- * profiles pointer would race the owner's reviewed packages. So the runner
- * writes this store only (routine contract `candidate-campaign-sites-derived`,
- * DERIVED: authentic only as its pipeline approvals, their vaulted bytes and
- * the promoted `candidate-profiles` version it was composed against), and the
- * profile Reader composes the two:
- *
- * - a derived link fills a missing campaign slot or refreshes the same URL
- *   with a newer fully verified observation; a conflicting URL or unproved
- *   observation order preserves the prior link across the candidacy's keys;
- * - the key's official link, card and hunts stay exactly as `candidate-profiles`
- *   holds them;
- * - the link renders through the same slot and the same `{url, verification,
- *   attemptedAt}` every campaign link uses, so /ballot and Ask show it exactly
- *   as they show a reviewed one; Ask names this pointer as the link's holding.
- *
- * A malformed version is never served, and a store error stays an error: the
- * profile Reader then shows what `candidate-profiles` holds and nothing more.
- */
 import {
   civicDataReadNotInitialized,
   readPromotedCivicData,
@@ -59,12 +25,16 @@ export interface CandidateLinksShape {
   readonly campaign: VerifiedLinkShape | null;
 }
 
+/**
+ * Campaign sites the standing runner publishes, in a store of their own so `candidate-profiles` keeps one writer.
+ * The profile Reader composes the two: a derived link fills a missing campaign slot or refreshes the same URL with
+ * newer verified evidence, and a conflicting URL keeps the prior link. A malformed version is never served.
+ */
 export const DERIVED_CAMPAIGN_SITES_CONTRACT_ID = "candidate-campaign-sites-derived" as const;
 export const DERIVED_CAMPAIGN_SITES_SOURCE_ID = "candidate-campaign-site-chain" as const;
 export const DERIVED_CAMPAIGN_SITES_RECORD_CLASS = "CURATED_READER_RECORD" as const;
 export const DERIVED_CAMPAIGN_SITES_SCOPE = "US:candidate-campaign-sites-derived" as const;
 
-/** What a published link rests on: the verifying read's vaulted bytes and the approval, named exactly. */
 export interface DerivedCampaignSiteEvidence {
   readonly verifierId: string;
   readonly artifactId: string;
@@ -79,8 +49,6 @@ export interface DerivedCampaignSiteEvidence {
   readonly approvalItemId: string;
   readonly approvalRecordId: string;
   readonly approvedAt: string;
-  /** The audit's independent second signal, as it recorded it. */
-  /** Historical evidence only; the campaign page identity is sufficient. */
   readonly secondSignal?: string;
 }
 
@@ -106,14 +74,10 @@ export interface DerivedLinkedPublicationEvidence {
   readonly readAt: string;
 }
 
-/** A campaign link as this store publishes it: the Reader's own link shape, and its evidence. */
 export type DerivedCampaignLink = VerifiedLinkShape & { readonly evidence: DerivedCampaignSiteEvidence };
 
-/** One Reader key's verified campaign site. */
 export interface DerivedCampaignSiteRecord {
-  /** The Reader key: a ballot candidacy id, or a lineup nominee's `<contestId>|<Name>`. */
   readonly id: string;
-  /** The canonical candidacy the site verified for. */
   readonly candidacyId: string;
   readonly candidateName: string;
   readonly campaign: DerivedCampaignLink;
@@ -128,7 +92,6 @@ export interface DerivedCampaignSitesProjection {
   readonly records: readonly DerivedCampaignSiteRecord[];
 }
 
-/** The one sentence template every verified campaign link carries (the chain's rendering-symmetry check). */
 export const CAMPAIGN_SITE_VERIFICATION_TEMPLATE = /^Fetched \d{4}-\d{2}-\d{2} \(campaign-site-verifier\/1\): '.+' — names .+, the (office|district) \(".+"\)(?:, and|; https:\/\/\S+ identifies) the \d{4} election\.$/;
 
 const SHA256 = /^[a-f0-9]{64}$/;
@@ -296,14 +259,12 @@ export function derivedCampaignSitesReadState(): CivicDataReadResult<DerivedCamp
   return installed ?? civicDataReadNotInitialized(DERIVED_CAMPAIGN_SITES_RECORD_CLASS, DERIVED_CAMPAIGN_SITES_SCOPE, "The derived candidate campaign sites have not been read for this process.");
 }
 
-/** Where Ask names a derived link as held: this pointer, at the record's own Reader key. */
 export function derivedCampaignSiteHoldingPath(key: string): string {
   return `civic-data:${DERIVED_CAMPAIGN_SITES_RECORD_CLASS}:${DERIVED_CAMPAIGN_SITES_SCOPE}#/records/${key.replaceAll("~", "~0").replaceAll("/", "~1")}/campaign`;
 }
 
 export interface ComposedCandidateLinks<L extends CandidateLinksShape> {
   readonly links: Readonly<Record<string, L | CandidateLinksShape>>;
-  /** The Reader keys whose campaign link this store supplied. */
   readonly derivedKeys: ReadonlySet<string>;
 }
 
@@ -332,7 +293,6 @@ export function composeCampaignLinks<L extends CandidateLinksShape>(
 
 const NO_RECORDS: readonly DerivedCampaignSiteRecord[] = [];
 
-/** The derived records this process holds for the Reader, or none when the store was not read, is empty, or failed. */
 export function currentDerivedCampaignSiteRecords(): readonly DerivedCampaignSiteRecord[] {
   const state = derivedCampaignSitesReadState();
   return state.kind === "PROMOTED" ? state.value.records : NO_RECORDS;

@@ -201,7 +201,7 @@ export async function readReaderEventTotals(options: { period?: EventPeriod; day
     throw error;
   }
 }
-/** S12's existing weekly topic read, with optional day grouping for recipes. */
+/** Weekly topic counts, with optional day grouping. */
 export async function readTopicCounts(options: { weeks?: number; days?: number; period?: EventPeriod; limit?: number } = {}) {
   const read = await readReaderEventTotals({ ...options, period: options.period ?? "WEEK", topicsOnly: true });
   return read.kind === "NOT_INSTALLED" ? read : { ...read, rows: read.rows

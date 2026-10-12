@@ -47,35 +47,6 @@ import {
   type DispositionCommit,
 } from "../lib/control-plane/repository/types.ts";
 
-/**
- * THE DURABLE RUNTIME SUITE — every concurrency property the control plane
- * claims, each one planted as a defect and caught by an exact named refusal.
- *
- * The rest of the control-plane suites prove that PURE rules say no. This one
- * proves that the rules still say no when the state they govern is on a disk,
- * two workers are reaching for it, and one of them has been dead for a minute
- * without knowing it.
- *
- * EVERY property below has BOTH halves: a seeded failure that must be refused by
- * name, and a POSITIVE CONTROL in which the legitimate actor succeeds. A refusal
- * nobody has watched permit the right thing is a refusal that might simply be
- * refusing everything.
- *
- * WHAT THESE TESTS GENUINELY OBSERVE, stated so no reader over-reads them:
- *
- *   - Compare-and-set contention is REAL here. Two `await`ed writers that both
- *     read one revision are genuinely interleaved by the event loop, and the
- *     loser genuinely finds the store has moved.
- *   - Exclusive creation is REAL here. Two concurrent `put`s of different values
- *     to one id really do resolve to one winner, because the winner is decided
- *     by a single filesystem operation.
- *   - TRUE SIMULTANEITY IS NOT OBSERVED. One process cannot tear another's
- *     write mid-syscall. The defences against that — atomic link-into-place,
- *     `O_APPEND` histories, `wx` locks — are structural, and `file-store.ts`
- *     says so in its own docstring rather than letting a green suite imply a
- *     proof it did not deliver.
- */
-
 const PROJECT = "meanwhile";
 const SUBJECT = "ocd-division/country:us/state:az/county:pima";
 const ROUTE_ID = "LEGISTAR_EVENTDATES";
@@ -90,8 +61,6 @@ const T45S = "2026-08-29T00:00:45.000Z";
 const T2M = "2026-08-29T00:02:00.000Z";
 const T3M = "2026-08-29T00:03:00.000Z";
 const T5M = "2026-08-29T00:05:00.000Z";
-
-/* -------------------------------------------------------------- fixtures */
 
 function workerRef(instance: string): WorkerRef {
   return { role: "ACQUIRER", provider: "anthropic", version: "opus-5", instance };
@@ -160,9 +129,6 @@ function pimaHost(over: Partial<HostBudget> = {}): HostBudget {
   };
 }
 
-/* --------------------------------------------------------------- harness */
-
-/** `assert.rejects` swallows the value; the thrown object is captured directly. */
 async function caught(fn: () => Promise<unknown>): Promise<unknown> {
   try {
     await fn();
@@ -183,12 +149,6 @@ async function withFileRepos<R>(
   }
 }
 
-/**
- * Run one body against BOTH providers.
- *
- * The double exists to pin semantics, so any rule it does not enforce
- * identically is a rule the fast suite is lying about.
- */
 async function forBothProviders(
   body: (repos: ControlPlaneRepositories, label: string) => Promise<void>,
 ): Promise<void> {
@@ -206,18 +166,14 @@ async function seeded(
   return { item, task };
 }
 
-/* ------------------------------------------------------ 1. idempotency */
-
 test("SEEDED: a DIFFERENT value under one derived id is refused; an identical re-put is a no-op", async () => {
   await forBothProviders(async (repos, label) => {
     const { task } = await seeded(repos);
 
-    // POSITIVE CONTROL: re-putting exactly what is there succeeds and changes nothing.
     const again = await repos.routeTasks.put(task.id, task, T30S);
     assert.equal(again.created, false, `${label}: an identical re-put creates nothing`);
     assert.equal(again.persisted.revision, 1, `${label}: and does not move the revision`);
 
-    // SEEDED FAILURE: same derived id, different obligation.
     const impostor: RouteTask = { ...task, routeLabel: "Legistar /Events (a different route)" };
     assert.equal(impostor.id, task.id, "the fixture must collide on id or it proves nothing");
     const thrown = await caught(() => repos.routeTasks.put(impostor.id, impostor, T30S));
@@ -227,14 +183,11 @@ test("SEEDED: a DIFFERENT value under one derived id is refused; an identical re
     assert.equal(thrown.id, task.id);
     assert.match(thrown.message, /already holds a DIFFERENT value/);
 
-    // The store still holds the original, unmodified.
     const persisted = await repos.routeTasks.mustRead(task.id);
     assert.equal(persisted.value.routeLabel, "Legistar /EventDates");
     assert.equal(persisted.revision, 1);
   });
 });
-
-/* ------------------------------------------------------- 2. append-only */
 
 test("SEEDED: rewriting a recorded history entry is refused as AppendOnlyViolation", async () => {
   await forBothProviders(async (repos, label) => {
@@ -244,12 +197,10 @@ test("SEEDED: rewriting a recorded history entry is refused as AppendOnlyViolati
     const first = await repos.artifacts.append(item.id, record.artifactId, record, T0);
     assert.equal(first.appended, true, `${label}: the first append lands`);
 
-    // POSITIVE CONTROL: a byte-identical retry is a no-op success, not a duplicate.
     const retry = await repos.artifacts.append(item.id, record.artifactId, record, T30S);
     assert.equal(retry.appended, false, `${label}: an identical retry adds nothing`);
     assert.equal((await repos.artifacts.read(item.id)).length, 1);
 
-    // SEEDED FAILURE: the same record id, re-attributed to a different Attempt.
     const rewritten = { ...record, attemptId: "at-beta" };
     const thrown = await caught(() =>
       repos.artifacts.append(item.id, record.artifactId, rewritten, T30S),
@@ -265,15 +216,12 @@ test("SEEDED: rewriting a recorded history entry is refused as AppendOnlyViolati
   });
 });
 
-/* -------------------------------------------------- 3. compare-and-set */
-
 test("SEEDED: a write quoting a stale revision is refused, naming expected versus found", async () => {
   await forBothProviders(async (repos, label) => {
     const { task } = await seeded(repos);
     const first = await repos.routeTasks.read(task.id);
     assert.ok(first !== null);
 
-    // POSITIVE CONTROL: a write at the revision actually read is accepted.
     const moved = await repos.routeTasks.compareAndSet(
       task.id,
       first.revision,
@@ -283,7 +231,6 @@ test("SEEDED: a write quoting a stale revision is refused, naming expected versu
     assert.equal(moved.revision, first.revision + 1, `${label}: the revision advances by one`);
     assert.equal(moved.value.state, "CLAIMED");
 
-    // SEEDED FAILURE: a second writer still holding the first read.
     const thrown = await caught(() =>
       repos.routeTasks.compareAndSet(
         task.id,
@@ -304,14 +251,10 @@ test("SEEDED: a write quoting a stale revision is refused, naming expected versu
   });
 });
 
-/* ------------------------------------------------------------ 4. claim */
-
 test("SEEDED: two workers race for one available RouteTask and exactly one holds the lease", async () => {
   await withFileRepos(async (repos, root) => {
     const { task } = await seeded(repos);
 
-    // The raw primitive first: two concurrent creations of one lease slot,
-    // started before either resolves. Exactly one creation may win.
     const alphaLease = claim(task.id, "worker-alpha", T0, TTL, null);
     const betaLease = claim(task.id, "worker-beta", T0, TTL, null);
     const raw = await Promise.allSettled([
@@ -324,7 +267,6 @@ test("SEEDED: two workers race for one available RouteTask and exactly one holds
     assert.ok(loser !== undefined, "and the other is refused rather than silently overwriting");
     assert.ok((loser as PromiseRejectedResult).reason instanceof IdentityCollision);
 
-    // Now the coordinator path, on a fresh task, genuinely interleaved.
     await withFileRepos(async (fresh, freshRoot) => {
       const seededFresh = await seeded(fresh);
       const results = await Promise.allSettled([
@@ -352,8 +294,6 @@ test("SEEDED: two workers race for one available RouteTask and exactly one holds
       assert.equal(refusal.routeTaskId, seededFresh.task.id);
       assert.match(refusal.message, /A second claim is refused rather than duplicating/);
 
-      // The DURABLE state shows exactly one holder, read by an instance that
-      // knows nothing about the race that produced it.
       const observer = await createFileRepositories(freshRoot);
       const held = await observer.leases.mustRead(seededFresh.task.id);
       assert.equal(held.value.holder, refusal.heldBy, "the durable holder is the winner");
@@ -364,7 +304,6 @@ test("SEEDED: two workers race for one available RouteTask and exactly one holds
       );
     });
 
-    // POSITIVE CONTROL: once the lease expires, a third worker claims cleanly.
     const winner = (await repos.leases.mustRead(task.id)).value.holder;
     const later = await claimRouteTask(repos, {
       routeTaskId: task.id,
@@ -380,8 +319,6 @@ test("SEEDED: two workers race for one available RouteTask and exactly one holds
   });
 });
 
-/* ------------------------------------------------------- 5. lease ownership */
-
 test("SEEDED: a stranger renewing someone else's LIVE lease is refused as LeaseNotHeld", async () => {
   await forBothProviders(async (repos, label) => {
     const { task } = await seeded(repos);
@@ -393,8 +330,7 @@ test("SEEDED: a stranger renewing someone else's LIVE lease is refused as LeaseN
     });
     const before = await repos.leases.mustRead(task.id);
 
-    // SEEDED FAILURE: beta renews alpha's lease. `heartbeat()` in attempt.ts
-    // checks EXPIRY and cannot check ownership — it never learns who is asking.
+    // `heartbeat()` in attempt.ts checks expiry, not ownership.
     const thrown = await caught(() =>
       renewLease(repos, { routeTaskId: task.id, holder: "worker-beta", now: T30S, ttlMs: TTL }),
     );
@@ -408,7 +344,6 @@ test("SEEDED: a stranger renewing someone else's LIVE lease is refused as LeaseN
     assert.equal(untouched.revision, before.revision, `${label}: the lease did not move`);
     assert.equal(untouched.value.expiresAt, before.value.expiresAt);
 
-    // POSITIVE CONTROL: the actual holder renews, and the DURABLE expiry moves.
     const renewed = await renewLease(repos, {
       routeTaskId: task.id,
       holder: "worker-alpha",
@@ -434,7 +369,6 @@ test("SEEDED: an EXPIRED lease cannot be renewed, not even by its own holder", a
       ttlMs: TTL,
     });
 
-    // POSITIVE CONTROL: a renewal inside the window is accepted.
     const inTime = await renewLease(repos, {
       routeTaskId: task.id,
       holder: "worker-alpha",
@@ -444,8 +378,6 @@ test("SEEDED: an EXPIRED lease cannot be renewed, not even by its own holder", a
     assert.equal(inTime.value.heartbeatAt, T45S, `${label}: a live lease renews`);
     const before = await repos.leases.mustRead(task.id);
 
-    // SEEDED FAILURE: the same holder, after expiry. The rule belongs to
-    // attempt.ts and is CALLED here, never re-implemented.
     const thrown = await caught(() =>
       renewLease(repos, { routeTaskId: task.id, holder: "worker-alpha", now: T5M, ttlMs: TTL }),
     );
@@ -481,8 +413,6 @@ test("SEEDED: reclaiming a task whose lease is still LIVE is refused as LeaseSti
       policyVersion: POLICY,
     });
 
-    // SEEDED FAILURE: an impatient sweeper reclaims a lease that is still being
-    // renewed. Death is observed from a lease that STOPPED, never from a guess.
     const thrown = await caught(() =>
       reclaimRouteTask(repos, { routeTaskId: task.id, now: T30S, observedBy: "impatient-sweeper" }),
     );
@@ -492,7 +422,6 @@ test("SEEDED: reclaiming a task whose lease is still LIVE is refused as LeaseSti
 
     assert.equal((await repos.routeTasks.mustRead(task.id)).value.state, "CLAIMED");
 
-    // POSITIVE CONTROL: past expiry, the same sweeper reclaims.
     const reclaimed = await reclaimRouteTask(repos, {
       routeTaskId: task.id,
       now: T2M,
@@ -505,13 +434,10 @@ test("SEEDED: reclaiming a task whose lease is still LIVE is refused as LeaseSti
   });
 });
 
-/* ------------------------------------------------- 7. the stale disposer */
-
 test("SEEDED: a stale worker cannot dispose a route that moved underneath it", async () => {
   await withFileRepos(async (repos) => {
     const { task } = await seeded(repos);
 
-    // Worker A claims and starts, then dies without a terminal disposition.
     const alphaClaim = await claimRouteTask(repos, {
       routeTaskId: task.id,
       holder: "worker-alpha",
@@ -529,7 +455,6 @@ test("SEEDED: a stale worker cannot dispose a route that moved underneath it", a
     });
     const staleRevision = alphaClaim.task.revision;
 
-    // The control plane observes the death from outside and hands the route on.
     await reclaimRouteTask(repos, {
       routeTaskId: task.id,
       now: T2M,
@@ -551,8 +476,6 @@ test("SEEDED: a stale worker cannot dispose a route that moved underneath it", a
       policyVersion: POLICY,
     });
 
-    // SEEDED FAILURE 1 — the revision guard. Alpha comes back holding the
-    // RouteTask revision it read before it died.
     const staleWrite = await caught(() =>
       disposeRouteTask(repos, {
         routeTaskId: task.id,
@@ -571,8 +494,6 @@ test("SEEDED: a stale worker cannot dispose a route that moved underneath it", a
       "the refusal names the revision that actually landed",
     );
 
-    // SEEDED FAILURE 2 — the lease guard, independent of the revision guard.
-    // Alpha now quotes the CORRECT revision; the lease is still not its own.
     const current = await repos.routeTasks.mustRead(task.id);
     const wrongHolder = await caught(() =>
       disposeRouteTask(repos, {
@@ -587,7 +508,6 @@ test("SEEDED: a stale worker cannot dispose a route that moved underneath it", a
     assert.ok(wrongHolder instanceof LeaseNotHeld, "refused by the lease guard, by name");
     assert.equal(wrongHolder.actualHolder, "worker-beta");
 
-    // POSITIVE CONTROL: the live holder disposes, at the revision it read.
     const live = await repos.routeTasks.mustRead(task.id);
     const disposed = await disposeRouteTask(repos, {
       routeTaskId: task.id,
@@ -600,7 +520,6 @@ test("SEEDED: a stale worker cannot dispose a route that moved underneath it", a
     assert.equal(disposed.task.value.state, "DISPOSED");
     assert.equal(disposed.attempt.value.outcome, "COMPLETED");
 
-    // EXACTLY ONE disposition exists, and it belongs to the worker that earned it.
     const commits = await repos.dispositions.read(task.id);
     assert.equal(commits.length, 1, "exactly one disposition commit");
     assert.equal(commits[0].attemptId, betaAttempt.value.id);
@@ -610,8 +529,6 @@ test("SEEDED: a stale worker cannot dispose a route that moved underneath it", a
     );
   });
 });
-
-/* --------------------------------------------- 8. transactional disposition */
 
 test("SEEDED: a crash between COMMIT and APPLY leaves no half-write a reader can see", async () => {
   await withFileRepos(async (repos, root) => {
@@ -632,10 +549,6 @@ test("SEEDED: a crash between COMMIT and APPLY leaves no half-write a reader can
       policyVersion: POLICY,
     });
 
-    // SEED THE HALF-WRITE: append exactly the commit `disposeRouteTask` would
-    // have appended, and then die before applying it. The two values are
-    // computed by the DOMAIN functions, so this is the real commit, not a
-    // plausible-looking imitation of one.
     const taskRow = await repos.routeTasks.mustRead(task.id);
     const disposition = ingested(attempt.value.id, ["ar-alpha"], T3M);
     const closedAttempt = endAttempt(attempt.value, "COMPLETED", T3M, {
@@ -656,8 +569,6 @@ test("SEEDED: a crash between COMMIT and APPLY leaves no half-write a reader can
     };
     await repos.dispositions.append(task.id, commit.commitId, commit, T3M);
 
-    // POSITIVE CONTROL FOR THE SEED: the half-write really is half. If this
-    // passed trivially the recovery below would be proving nothing.
     assert.equal(
       (await repos.routeTasks.mustRead(task.id)).value.disposition,
       null,
@@ -669,7 +580,6 @@ test("SEEDED: a crash between COMMIT and APPLY leaves no half-write a reader can
       "the Attempt has not yet been closed",
     );
 
-    // A FRESH instance — a replacement process — finishes what was committed.
     const restarted = await createFileRepositories(root);
     const report = await reconcile(restarted, T5M);
     assert.equal(report.commitsSeen, 1);
@@ -682,7 +592,6 @@ test("SEEDED: a crash between COMMIT and APPLY leaves no half-write a reader can
     assert.equal(healedTask.value.disposition?.attemptId, attempt.value.id);
     assert.equal(healedAttempt.value.outcome, "COMPLETED");
 
-    // Recovery is idempotent: a second run finds nothing left to do.
     const second = await reconcile(await createFileRepositories(root), T5M);
     assert.equal(second.commitsSeen, 1);
     assert.deepEqual(second.healed, [], "a completed recovery does not re-apply itself");
@@ -709,8 +618,6 @@ test("SEEDED: a refused disposition writes NEITHER aggregate and commits nothing
     });
     const before = await repos.routeTasks.mustRead(task.id);
 
-    // SEEDED FAILURE: INGESTED with no artifact — a yield that cannot be
-    // replayed. The rule is `disposeRoute`'s and fires before any write.
     const thrown = await caught(() =>
       disposeRouteTask(repos, {
         routeTaskId: task.id,
@@ -733,7 +640,6 @@ test("SEEDED: a refused disposition writes NEITHER aggregate and commits nothing
       "and the Attempt was not closed",
     );
 
-    // POSITIVE CONTROL: the same disposition WITH an artifact is accepted.
     const ok = await disposeRouteTask(repos, {
       routeTaskId: task.id,
       attemptId: attempt.value.id,
@@ -746,8 +652,6 @@ test("SEEDED: a refused disposition writes NEITHER aggregate and commits nothing
     assert.equal((await repos.dispositions.read(task.id)).length, 1);
   });
 });
-
-/* ---------------------------------------------------- 9. shared budgets */
 
 test("SEEDED: twelve workers on one publisher contend on ONE DURABLE HostBudget", async () => {
   await withFileRepos(async (repos, root) => {
@@ -769,8 +673,6 @@ test("SEEDED: twelve workers on one publisher contend on ONE DURABLE HostBudget"
       assert.match(r.reason, /3/);
     }
 
-    // THE POINT: a FRESH instance over the same root inherits the contention.
-    // A per-worker ledger would hand this process a full allowance.
     const restarted = await createFileRepositories(root);
     const ledger = await restarted.budget.read();
     assert.equal(ledger.value.hostState[HOST].inFlight, 3, "in-flight survived the restart");
@@ -779,7 +681,6 @@ test("SEEDED: twelve workers on one publisher contend on ONE DURABLE HostBudget"
     assert.equal(thirteenth.granted, false, "a brand-new process gets no second allowance");
     assert.equal(thirteenth.refusal, "HOST_CONCURRENCY");
 
-    // POSITIVE CONTROL: releasing frees exactly the slots released, no more.
     await releaseHostBudget(restarted, { host: HOST, now: T0 });
     await releaseHostBudget(restarted, { host: HOST, now: T0 });
     assert.equal((await acquireHostBudget(restarted, { host: HOST, now: T0 })).granted, true);
@@ -790,48 +691,31 @@ test("SEEDED: twelve workers on one publisher contend on ONE DURABLE HostBudget"
   });
 });
 
-/* ------------------------------------------- 10. cost is not truth */
-
-/** Comments are stripped so a guard reads the CODE, not a docstring quoting it. */
 function stripComments(source: string): string {
   return source.replace(/\/\*[\s\S]*?\*\//g, " ").replace(/(^|[^:])\/\/.*$/gm, "$1");
 }
 
-/**
- * Every conditional in a source slice that BRANCHES on a cost or budget value.
- *
- * The prohibition is not "cost is unmentionable" — an Attempt records what it
- * spent, and that measurement passes through the disposition call. The
- * prohibition is that no cost value may DECIDE anything on the path that writes
- * a finding about a government.
- */
 function costGatedBranches(source: string): string[] {
   return stripComments(source)
     .split("\n")
     .filter((line) => /\b(if|while)\s*\(/.test(line))
-    // Substrings, not whole words: the defect wears camelCase. `spentUsd`,
-    // `capUsd` and `hostBudget` are exactly the identifiers a cost gate would be
-    // written with, and a word-boundary match would sail straight past all three.
+    // Substrings, not whole words: camelCase identifiers like `spentUsd` must match.
     .filter((line) => /(budget|cap|spend|spent|usd|token|ledger|acquire|cost)/i.test(line));
 }
 
 test("SEEDED: no cost or budget refusal can produce or alter a RouteDisposition", async () => {
-  // POSITIVE CONTROL FOR THE DETECTOR. A detector nobody has watched fire is a
-  // detector nobody has tested.
   const planted = costGatedBranches(
     ["async function disposeRouteTask() {", "  if (spentUsd >= capUsd) return null;", "}"].join("\n"),
   );
   assert.equal(planted.length, 1, "the detector fires on a cost-gated branch");
   assert.match(planted[0], /spentUsd/);
 
-  // And it is not fooled by a comment that merely discusses one.
   assert.deepEqual(
     costGatedBranches("// if (spentUsd >= capUsd) this would be a defect\nreturn null;"),
     [],
     "a comment naming the defect is not the defect",
   );
 
-  // THE SUBJECT: the disposition path itself, sliced out of the coordinator.
   const file = fileURLToPath(
     new URL("../lib/control-plane/repository/coordinator.ts", import.meta.url),
   );
@@ -845,7 +729,6 @@ test("SEEDED: no cost or budget refusal can produce or alter a RouteDisposition"
     "nothing on the disposition path branches on a cost or budget value",
   );
 
-  // THE BEHAVIOUR: a hard cap stops the run and cannot conclude anything.
   await withFileRepos(async (repos) => {
     const { task } = await seeded(repos);
     const claimed = await claimRouteTask(repos, {
@@ -868,7 +751,6 @@ test("SEEDED: no cost or budget refusal can produce or alter a RouteDisposition"
     assert.ok(capped instanceof CostCapExceeded, "the cap fires at the cap");
     assert.match(capped.message, /A hard cap stops SCHEDULING/);
 
-    // The worker stops. Its Attempt ends ABORTED with the cap as the reason.
     const abandoned = endAttempt(attempt.value, "ABORTED", T3M, {
       abortReason: `Scheduling stopped: ${capped.message}`,
     });
@@ -879,7 +761,6 @@ test("SEEDED: no cost or budget refusal can produce or alter a RouteDisposition"
     );
     await repos.attempts.compareAndSet(attempt.value.id, attempt.revision, abandoned, T3M);
 
-    // SEEDED FAILURE: try to turn the cost stop into a finding anyway.
     const row = await repos.routeTasks.mustRead(task.id);
     const thrown = await caught(() =>
       disposeRouteTask(repos, {
@@ -906,18 +787,14 @@ test("SEEDED: no cost or budget refusal can produce or alter a RouteDisposition"
   });
 });
 
-/* -------------------------------------------- 11. a failed read is not empty */
-
 test("SEEDED: corrupt persisted state is a FAILED read, never an empty result set", async () => {
   await withFileRepos(async (repos, root) => {
     const { item, task } = await seeded(repos);
 
-    // POSITIVE CONTROL: intact state reads back, and an empty log is honestly empty.
     assert.equal((await repos.routeTasks.mustRead(task.id)).value.routeId, ROUTE_ID);
     assert.equal((await repos.routeTasks.list()).length, 1);
     assert.deepEqual(await repos.dispositions.readAll(), [], "a store with no commits is empty");
 
-    // SEEDED FAILURE 1: the aggregate file is truncated.
     const dir = path.join(root, "aggregates", "route-tasks");
     const [name] = (await readdir(dir)).filter((n) => n.endsWith(".json"));
     await writeFile(path.join(dir, name), '{ "id": "rt-', "utf8");
@@ -927,13 +804,10 @@ test("SEEDED: corrupt persisted state is a FAILED read, never an empty result se
     assert.match(onRead.location, /route-tasks/);
     assert.match(onRead.message, /This is a FAILED read/);
 
-    // THE LOAD-BEARING ONE: `list()` must not answer an unreadable store with
-    // `[]`. An isOutstanding-style caller reading `[]` would conclude there is
-    // no owed route work, which is our failure describing a government.
+    // `list()` must not answer an unreadable store with `[]`: a caller would conclude no route work is owed.
     const onList = await caught(() => repos.routeTasks.list());
     assert.ok(onList instanceof CorruptPersistedState, "a listing over corruption also refuses");
 
-    // SEEDED FAILURE 2: a structurally valid file with an unusable revision.
     await writeFile(
       path.join(dir, name),
       JSON.stringify({ id: task.id, revision: 0, updatedAt: T0, value: task }),
@@ -944,7 +818,6 @@ test("SEEDED: corrupt persisted state is a FAILED read, never an empty result se
     assert.match(onRevision.message, /revision 0/);
     assert.match(onRevision.message, /makes every CAS unsound/);
 
-    // SEEDED FAILURE 3: a history line that cannot be parsed.
     await repos.artifacts.append(
       item.id,
       "ar-1",
@@ -960,8 +833,6 @@ test("SEEDED: corrupt persisted state is a FAILED read, never an empty result se
     assert.match(onLine.message, /silently shorten the record/);
   });
 
-  // SEEDED FAILURE 4: the store root itself is gone. "We cannot reach it" and
-  // "it is empty" must never return the same answer.
   const root = await mkdtemp(path.join(tmpdir(), "wtp-cp-"));
   const repos = await createFileRepositories(root);
   assert.deepEqual(await repos.routeTasks.list(), [], "a fresh root is honestly empty");
@@ -971,11 +842,8 @@ test("SEEDED: corrupt persisted state is a FAILED read, never an empty result se
   assert.match(gone.message, /the store root itself is absent/);
 });
 
-/* ------------------------------------------------------------- 12. locks */
-
 test("SEEDED: a read-modify-write section entered while held is refused as RepositoryLockHeld", async () => {
   await forBothProviders(async (repos, label) => {
-    // SEEDED FAILURE: re-enter the same lock from inside itself.
     const thrown = await caught(() =>
       repos.locks.withLock("host:pima", async () =>
         repos.locks.withLock("host:pima", async () => "should never run"),
@@ -985,12 +853,10 @@ test("SEEDED: a read-modify-write section entered while held is refused as Repos
     assert.equal(thrown.lockName, "host:pima");
     assert.match(thrown.message, /refused\s+rather than interleaved/);
 
-    // POSITIVE CONTROL: sequential sections both run.
     assert.equal(await repos.locks.withLock("host:pima", async () => "first"), "first");
     assert.equal(await repos.locks.withLock("host:pima", async () => "second"), "second");
 
-    // And the lock is released even when the body throws — otherwise one failed
-    // acquire would wedge the host forever.
+    // The lock is released even when the body throws.
     const inner = await caught(() =>
       repos.locks.withLock("host:pima", async () => {
         throw new Error("the body failed");
@@ -1005,8 +871,6 @@ test("SEEDED: a read-modify-write section entered while held is refused as Repos
   });
 });
 
-/* -------------------------------------------------------- 13. durability */
-
 test("SEEDED: an in-memory store is refused where durability is the property under test", async () => {
   const thrown = await caught(async () =>
     assertDurableRepositories(createMemoryRepositories(), "the crash-recovery acceptance test"),
@@ -1015,19 +879,15 @@ test("SEEDED: an in-memory store is refused where durability is the property und
   assert.match((thrown as Error).message, /the crash-recovery acceptance test/);
   assert.match((thrown as Error).message, /loses every obligation the moment the process ends/);
 
-  // POSITIVE CONTROL: the durable store passes the same assertion.
   await withFileRepos(async (repos, root) => {
     assertDurableRepositories(repos, "the crash-recovery acceptance test");
     assert.equal(repos.durable, true);
     assert.ok(repos.describe().includes(path.resolve(root)), "and names where the state lives");
   });
 
-  // And the factory refuses to invent a root of its own.
   const noRoot = await caught(() => createFileRepositories("   "));
   assert.match((noRoot as Error).message, /requires an explicit root directory/);
 });
-
-/* ------------------------------------------------------- 14. attempt view */
 
 test("attempts are listed against their RouteTask from durable state alone", async () => {
   await withFileRepos(async (repos, root) => {

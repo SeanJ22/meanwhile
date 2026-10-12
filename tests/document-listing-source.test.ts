@@ -1,15 +1,8 @@
 /**
- * **HOLBROOK'S CITY COUNCIL, FROM THE CITY'S OWN AGENDAS-AND-MINUTES PAGE.**
- * (2026-09-25.)
+ * A city council's sittings, from the city's own agendas-and-minutes page: one page per year, one link per agenda and
+ * per set of minutes, each labelled with the sitting's kind and date.
  *
- * The City of Holbrook, AZ publishes its council's sittings on its own site,
- * one page per year, one link per agenda and per set of minutes, each labelled
- * with the sitting's kind and date. Its discovered iCal feed stays held
- * (local times stored as UTC, no council meeting in it); this is the route
- * that reaches readers instead.
- *
- * No live calls: `tests/fixtures/holbrook/` holds the recorded page and the
- * robots.txt it was read under (retrieval.json says when and how).
+ * No live calls: `tests/fixtures/holbrook/` holds the recorded page and the robots.txt it was read under.
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -20,7 +13,7 @@ import { authorityFor } from "../lib/civic-data/source-authority.ts";
 import { WEBSITE_CORRECTIONS } from "../lib/civic-data/website-corrections.ts";
 import { meetingPartitionForRow } from "../lib/civic-data/meeting-partitions.ts";
 import { POST_FIXTURE_MEETING_PARTITIONS } from "./helpers/meeting-partition-fixture.ts";
-import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
+import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import {
   datedLabel,
   listedDocuments,
@@ -36,7 +29,7 @@ const PAGE_2026 = readFileSync(join(FIXTURES, "council-2026-agendas-minutes.html
 const ROBOTS = readFileSync(join(FIXTURES, "robots.txt"), "utf8");
 const URL_2026 = "https://holbrookaz.gov/government/council-agenda/2026-agendas-minutes/";
 const URL_2027 = "https://holbrookaz.gov/government/council-agenda/2027-agendas-minutes/";
-const WIRING = SOURCE_WIRING.find((row) => row.agendaSourceType === "DOCUMENT_LISTING" && row.config.slug === "holbrook-city-council")!;
+const WIRING = FIXTURE_DOOR_ROWS.find((row) => row.agendaSourceType === "DOCUMENT_LISTING" && row.config.slug === "holbrook-city-council")!;
 const READ_AT = "2026-09-25T17:46:24.000Z";
 /** The clock a fetch picks "this year's" required page by, fixed so the test cannot rot. */
 const SEPT_25 = () => new Date("2026-09-25T18:00:00Z");
@@ -90,7 +83,7 @@ test("HOLBROOK · in-window sittings reach readers date-only, each citing its ow
   const source = makeDocumentListingSource([WIRING]);
   const { meetings, drops, accounting } = source.normalizeWithDrops([raw()], new Date("2026-09-25T18:00:00Z"));
   assert.equal(accounting.outcome, "CONSERVED");
-  // DB-05 (2026-10-04): the adapter holds 120 days, so the three sittings of 10 and 24 June (between 90 and 120 days back) are in.
+  // The adapter holds 120 days, so sittings between 90 and 120 days back are in.
   assert.deepEqual(meetings.map((m) => m.id), [
     "document-listing:holbrook-city-council:2026-06-10:regular-meeting",
     "document-listing:holbrook-city-council:2026-06-24:special-meeting",
@@ -199,7 +192,7 @@ test("HOLBROOK · the current year's page failing is the row failing, never an e
     () => makeDocumentListingSource([WIRING], gone, SEPT_25).fetch({ lat: 34.9, lng: -110.16, radiusKm: 25, startsAfter: "2026-06-27T00:00:00Z", startsBefore: "2027-01-23T00:00:00Z" }),
     /HTTP 404/,
   );
-  /* A Disallow is recorded and never stops the read (owner decision 2026-09-25): the page's own 404 is what fails the row. */
+  /* A Disallow is recorded and never stops the read: the page's own 404 is what fails the row. */
   const disallowedAsked: string[] = [];
   const disallowed: typeof fetch = (async (input: string | URL | Request) => {
     const url = String(input);

@@ -4,13 +4,7 @@ import { huntPlaceKey } from "./v6-hunts-read.ts";
 import type { ExpansionScopeDecision } from "../expansion/scopes.ts";
 import type { PlaceOwedRead, PlaceOwedRefusal } from "./place-owed-read.ts";
 
-/**
- * **THE DAILY POINT FOR EACH PLACE WITH A SAVED SCOPE.** The owner snapshot
- * publisher calls this each round. A place already holding today's point is
- * skipped, so the owed list is read at most once a day per place, through the
- * same memoized read the Admin card uses. Places without a saved scope are never
- * scored here. A place that cannot be read keeps its earlier points untouched.
- */
+/** A place already holding today's point is skipped; a place that cannot be read keeps its earlier points. */
 export async function collectPlaceHistory(input: {
   readonly scopes: readonly Pick<ExpansionScopeDecision, "geography">[] | null;
   readonly previous: Readonly<Record<string, unknown>> | undefined;

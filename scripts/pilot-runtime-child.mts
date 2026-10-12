@@ -1,12 +1,24 @@
 import { spawn, type ChildProcess } from "node:child_process";
 import type { BoundedChildCommand, BoundedChildResult } from "../lib/civic-data/bounded-child-pass.ts";
 import { RESEARCH_STALL_PROBE, progressLines } from "../lib/control-plane/scheduler/round-progress.ts";
+import { vitalSignsLineFilter, type NeonBytesHour } from "../lib/db/transfer-by-caller.ts";
 
 export const RUNTIME_NO_PROGRESS_MS = 10 * 60_000;
 /** How long before the no-progress limit the child is asked what it is waiting on; its answer is not progress. */
 export const STALL_PROBE_LEAD_MS = 60_000;
 const ownedChildren = new Set<{ lastProgressAt: number; stop: (reason: string) => Promise<void> }>();
 const progressListeners = new Set<() => void>();
+let vitalSignsSink: ((part: NeonBytesHour) => void) | null = null;
+
+/**
+ * Children print their hour totals as report lines
+ * (lib/db/transfer-by-caller.ts). With a sink set, every child started here has
+ * those lines taken out of its output (never shown, buffered or counted as
+ * progress) and handed to the sink. The standing runner sets it once.
+ */
+export function receiveChildVitalSigns(sink: ((part: NeonBytesHour) => void) | null): void {
+  vitalSignsSink = sink;
+}
 
 /** Only the process group we spawned, or that exact Windows child's tree. */
 export async function endOwnedProcessTree(child: ChildProcess): Promise<void> {
@@ -88,6 +100,8 @@ export async function runRuntimeChildren(
     let idle: ReturnType<typeof setTimeout> | undefined;
     let probe: ReturnType<typeof setTimeout> | undefined;
     const progress = { stdout: progressLines(), stderr: progressLines() };
+    const report = (part: NeonBytesHour) => vitalSignsSink?.(part);
+    const reports = { stdout: vitalSignsLineFilter(report), stderr: vitalSignsLineFilter(report) };
     const child = spawn(command.executable, [...command.args], {
       cwd: options.cwd,
       env: command.env ?? options.env,
@@ -123,7 +137,9 @@ export async function runRuntimeChildren(
           .catch(error => { errorMessage = `${errorMessage}; ${String(error)}`; child.kill("SIGKILL"); });
       }, options.noProgressMs);
     };
-    const output = (stream: "stdout" | "stderr", chunk: string): void => {
+    const output = (stream: "stdout" | "stderr", received: string, ended = false): void => {
+      const chunk = vitalSignsSink ? reports[stream].take(received) + (ended ? reports[stream].end() : "") : received;
+      if (!chunk) return;
       const remaining = Math.max(0, options.maxBufferBytes - bytes[stream]);
       bytes[stream] += Buffer.byteLength(chunk);
       const saved = bytes[stream] > options.maxBufferBytes ? Buffer.from(chunk).subarray(0, remaining).toString("utf8") : chunk;
@@ -140,6 +156,8 @@ export async function runRuntimeChildren(
     child.once("spawn", () => options.onStarted?.(command.id, child));
     child.once("error", error => { errorMessage = error.message; });
     child.once("close", (code, signal) => {
+      output("stdout", "", true);
+      output("stderr", "", true);
       clearTimeout(idle);
       clearTimeout(probe);
       ownedChildren.delete(owned);

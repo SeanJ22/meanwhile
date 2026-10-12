@@ -51,31 +51,12 @@ import { createWorkItem } from "@/lib/control-plane/work-item.ts";
 import { questionOfObligation, validateWorkQuestions } from "@/lib/control-plane/work-question.ts";
 import type { JurisdictionRegistry } from "@/lib/hunt/jurisdiction-universe.ts";
 
-/**
- * **AN ASSIGNMENT IS A THING THE SYSTEM KNOWS ABOUT.** (2026-09-25.)
- *
- * MW-001 — a Send records itself on every obligation it creates or finds on a
- * clock, appended, and every charge names its obligation and its Sends.
- * MW-021 — each Send's own budget, spent / held / left, honoured by name.
- * MW-002 — every round names its question; the owner's questions travel typed.
- * MW-013 — every charge says what it was for; Money splits by it.
- * MW-024 — proof runs are their own project and marked; real money, apart.
- * And the malformed policy row fails closed.
- *
- * In-memory repositories, committed registries, fixed clocks. No network, no
- * database, no model.
- */
-
 const ROOT = join(import.meta.dirname, "..");
 const T0 = "2026-09-25T15:00:00.000Z";
 const T1 = "2026-09-25T16:00:00.000Z";
 const T2 = "2026-09-25T17:00:00.000Z";
 
-const REGISTRIES: Record<"az" | "nh" | "nj", JurisdictionRegistry> = {
-  az: JSON.parse(readFileSync(join(ROOT, "data/states/az/jurisdictions/az.json"), "utf8")),
-  nh: JSON.parse(readFileSync(join(ROOT, "data/states/nh/jurisdictions/nh.json"), "utf8")),
-  nj: JSON.parse(readFileSync(join(ROOT, "data/states/nj/jurisdictions/nj.json"), "utf8")),
-};
+const REGISTRIES = JSON.parse(readFileSync(join(ROOT, "tests/fixtures/jurisdiction-registries.json"), "utf8")) as Record<"az" | "nh" | "nj", JurisdictionRegistry>;
 installOperationalReferenceBundle(operationalReferenceBundle(REGISTRIES));
 
 /** One runner cycle up to the dispatch-work step, exactly as the runner builds it. */
@@ -103,10 +84,6 @@ async function cycleWorld(repos: ControlPlaneRepositories, now: string): Promise
 }
 
 const CONTEXT = { at: T0, modelLaneClosed: null, ceilingUsd: 105, ceilingSource: "OVERRIDE" as const, writes: "APPLIED" as const, planOnlyWhy: null };
-
-/* ======================================================================= *
- * MW-001 — the Send is recorded on the work it reached
- * ======================================================================= */
 
 test("a Send records itself on what it created and on what it found already on a clock — appended, never overwritten", async () => {
   const repos = createMemoryRepositories();
@@ -217,10 +194,6 @@ test("syncObligations keeps the Sends a row records when a provider's signals mo
   assert.equal(withAssignment(held, { ...entry, relation: "REORDERED" }).length, 2);
 });
 
-/* ======================================================================= *
- * MW-001 / MW-013 / MW-024 — every charge says what it was for
- * ======================================================================= */
-
 const COST: AttemptCost = { ...ZERO_COST, usd: 0.25, inputTokens: 1000, outputTokens: 100, requestCount: 1, durationMs: 10 };
 
 function walker(kind: "DISPOSED" | "ABORTED"): DeclaredExecutor {
@@ -292,10 +265,6 @@ test("a proof run charges under its own project, marked non-production — real 
   assert.equal(isNonProductionCost({ project: "freshness" }), false);
   assert.equal(isProofRecord({ project: AUTONOMOUS_FLEET_PROOF_PROJECT }), true, "its assignments sit in the proof lane");
 });
-
-/* ======================================================================= *
- * MW-002 — every round names its question
- * ======================================================================= */
 
 test("a round names its question from the obligation's own state, never from the job type, and none when that state is missing", async () => {
   const base = { recordClass: "local-jurisdiction" };
@@ -371,10 +340,6 @@ test("a deployment may carry its own budget, kept on the DISPATCH intent", async
   assert.equal(specs[0].budgetUsd, 2.5);
   assert.match(specs[0].key, /^dispatch:DISPATCH:/);
 });
-
-/* ======================================================================= *
- * MW-021 — each Send's own budget, honoured by name
- * ======================================================================= */
 
 const A: AssignmentBudgetSpec = { key: "county:2020/04019", kind: "SCOPE", label: "Pima County, Arizona", ref: "r-a", budgetUsd: 5, sentAt: "2026-09-24T00:00:00.000Z" };
 const B: AssignmentBudgetSpec = { key: "dispatch:i-b", kind: "DISPATCH", label: "Tucson meetings", ref: "i-b", budgetUsd: 3, sentAt: "2026-09-25T00:00:00.000Z" };
@@ -522,10 +487,6 @@ test("the runner's reading names what each Send reached and its budget — spent
   assert.match(q.budgetWhyNot ?? "", /sent without a budget of its own/);
 });
 
-/* ======================================================================= *
- * Admin — Fleet · Work reads the stored record; Money splits by purpose
- * ======================================================================= */
-
 function decision(): ExpansionScopeDecision {
   return withScopeSet([], { geography: { type: "county", geoid: "04019", version: "county:2020", label: "Pima County, Arizona", stateAbbr: "AZ" }, priority: 1, budgetUsd: 5, note: null, questions: ["HAVE_IT"], decidedAt: JOINED, decidedBy: "adm", receiptId: "r-a" }).scopes[0];
 }
@@ -544,10 +505,6 @@ test("a Send's completion uses the same created and reordered members as its lin
   assert.equal(completion.settled, 1);
   assert.deepEqual(completion.exceptions.map((e) => e.obligationId), ["created"]);
 });
-
-/* ======================================================================= *
- * A malformed policy row fails closed
- * ======================================================================= */
 
 test("a policy row that is not a policy holds paid work, by name, instead of reading as no scope", async () => {
   const repos = createMemoryRepositories();

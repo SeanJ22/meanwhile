@@ -1,21 +1,11 @@
 /**
  * A last-resort watchdog for a HUNG (but still alive) standing runner.
  *
- * The Scheduled Task relaunch trigger (`scripts/pilot-task.ps1`) only starts a
- * new instance AFTER the old one ENDS: with `MultipleInstances IgnoreNew` and
- * `ExecutionTimeLimit 0`, it cannot recover a process whose event loop is
- * blocked (an unbounded wait, a deadlock, a huge synchronous op). That is why
- * the real 2026-09 multi-hour outages were recovered only by a human noticing —
- * "there is no automatic watchdog for a hang."
- *
- * This runs the check in a WORKER THREAD — its own event loop — so it stays
- * responsive even when the MAIN thread is fully blocked, which is the only
- * situation it exists for. The main thread pings a shared timestamp on a timer
- * that keeps firing while it awaits a bounded cycle child or sleeps between
- * cycles (async awaits leave the event loop free); only a blocked event loop
- * lets the ping go stale. Past the threshold the worker force-terminates the
- * whole process, and the 5-minute relaunch trigger brings a fresh instance back
- * within minutes instead of hours.
+ * A relaunch only happens after the old process ends, so a blocked event loop
+ * is never recovered by it. This runs the check in a worker thread, which stays
+ * responsive when the main thread is blocked. The main thread pings a shared
+ * timestamp on a timer (async awaits leave the loop free, so only a blocked loop
+ * lets it go stale); past the threshold the worker force-terminates the process.
  *
  * Tunable/disable via env: `WTP_RUNNER_HANG_KILL_MS` (default 34 min; <= 0
  * disables) and `WTP_RUNNER_HANG_PING_MS` (default 30 s).
@@ -59,11 +49,8 @@ export function startHangWatchdog(options: { readonly killAfterMs?: number; read
   const pinger = setInterval(beat, pingMs);
   pinger.unref();
 
-  // The check runs in a separate ESM module (no eval string, so no CommonJS
-  // `require` — RULING 46), loaded by URL beside this file. It mirrors
-  // hangShouldTerminate() from lib/control-plane/runner-liveness.ts. execArgv is
-  // pinned to the one flag it needs to load a .mts, dropping any inherited
-  // --env-file the watchdog has no use for.
+  // The check runs in a separate ESM module loaded by URL beside this file, mirroring hangShouldTerminate()
+  // from lib/control-plane/runner-liveness.ts. execArgv is pinned to the one flag it needs to load a .mts.
   const worker = new Worker(new URL("./runner-hang-watchdog-worker.mts", import.meta.url), {
     execArgv: ["--experimental-strip-types"],
     workerData: { sab, killAfterMs, pingMs },

@@ -1,14 +1,7 @@
 /**
- * DB-36: a door edit is applied at once, not on a six-hour clock.
- *
- * Editing a door (Admin's door.save, a repair, a detective's fix) stamps the
- * record's `editedAt`. The two derive steps that build records from doors and
- * walks (the body crosswalk and the source wiring) ran only on their own
- * six-hour clocks, so a derived record could contradict the edit for hours.
- * Here every door edited inside the request lifetime asks for both derives to
- * run in the very next pass, as the same due request an owner's controlled
- * refresh makes. The derives never overwrite a newer manual edit
- * (`applyDerivedRow`), so running them early is safe.
+ * Every door edited within the due-request lifetime asks for the derive steps
+ * (body crosswalk, source wiring) to run in the next pass rather than on their
+ * own six-hour clocks. Derives never overwrite a newer manual edit.
  */
 
 import { DOOR_DERIVE_CONTRACT_IDS, ROUTINE_DUE_REQUEST_MAX_LIFETIME_MS, type RoutineDueRequest } from "../civic-data/routine-due-request.ts";

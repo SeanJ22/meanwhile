@@ -1,21 +1,8 @@
 import { currentAzBallotProjection } from "../civic-data/manual-read-models.ts";
-import { azContestRecord } from "./az-contest-record.ts";
-
-/**
- * The certified general-election lineup (6a): each party's primary winner
- * per the state's own canvass, read from the canvass document and cited to
- * it. The filing-list fallback retires for any contest with a lineup entry
- * — a certified nominee list and a filed-candidate list are different
- * claims, and the certified one wins the moment it exists.
- *
- * `tests/ballot.test.ts` guards the shape (no ranking keys; every file
- * cites its canvass) alongside the other committed ballot data.
- */
 
 export interface LineupNominee {
   name: string;
   partyLabel: string;
-  /** A fact from the canvass worth stating ("won as a write-in"). */
   note: string | null;
 }
 
@@ -38,11 +25,17 @@ export interface GeneralLineup {
   contests: LineupContest[];
 }
 
-/** The lineup embedded in the exact promoted Arizona ballot projection. */
 export function getGeneralLineup(): GeneralLineup | null {
   return currentAzBallotProjection().generalLineup;
 }
 
+/** Null when the ballot projection holding it cannot be read in this process. */
 export function lineupForContest(contestId: string): LineupContest | null {
-  return azContestRecord(contestId, () => getGeneralLineup()?.contests);
+  let records: readonly LineupContest[] | undefined;
+  try {
+    records = getGeneralLineup()?.contests;
+  } catch {
+    return null;
+  }
+  return records?.find(record => record.contestId === contestId) ?? null;
 }

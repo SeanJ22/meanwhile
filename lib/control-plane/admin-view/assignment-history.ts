@@ -14,10 +14,6 @@ const text = (value: unknown): string | null => typeof value === "string" && val
   ? value.replace(/[\u0000-\u001f\u007f]/g," ").replace(/\s+/g," ").trim() : null;
 const code = (value: unknown): string | null => typeof value === "string" && /^[A-Z][A-Z0-9_:-]*$/.test(value) ? value : null;
 
-/** Search every retained execution record, before display clipping. Membership
- * comes from the existing assignment builder, including validated successors;
- * this function cannot infer a person's geography or create another join.
- * Matching a parsed identity means it was encountered, not verified/published. */
 export function assignmentHistoryTerms(sources: HistorySources,
   memberships: ReadonlyMap<string,Membership>): ReadonlyMap<string,readonly string[]> {
   const byWork = new Map<string,Set<string>>();

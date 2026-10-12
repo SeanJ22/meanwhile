@@ -20,18 +20,13 @@ export function routineRefreshSelection(args: readonly string[]): { contractId: 
   if (contracts.length !== 1 || attempts.length > 1 || args.length !== contracts.length + attempts.length) throw new Error("OWNER_REFRESH_EXACT_SELECTION_REQUIRED");
   const contractId = contracts[0].slice("--contract=".length);
   const maximumAttempts = attempts.length ? Number(attempts[0].slice("--attempts=".length)) : 1;
-  // Exactly one REGISTERED routine task: a meeting partition or a routine source
-  // contract. Either way the standing parent launches it through its own
-  // routine child, so the request never becomes a second clock or door.
   const registered = [...MEETING_PARTITION_CONTRACTS, ...ROUTINE_SOURCE_CONTRACTS, ...RUNTIME_ROUTINE_CONTRACTS].some(contract => contract.id === contractId);
   if (!registered) throw new Error("OWNER_REFRESH_REGISTERED_CONTRACT_REQUIRED");
   if (!Number.isSafeInteger(maximumAttempts) || maximumAttempts < 1 || maximumAttempts > 2) throw new Error("OWNER_REFRESH_ATTEMPT_BOUND");
   return { contractId, maximumAttempts };
 }
 
-/** A request only changes owner policy. The standing parent remains the only source clock. */
 export async function requestRoutineRefresh(repos: ControlPlaneRepositories, args: readonly string[], now: string) {
-  // DB-14: a door added as data is a partition this request may name.
   await refreshDoorsForPass(repos.doors);
   const selection = routineRefreshSelection(args);
   const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);

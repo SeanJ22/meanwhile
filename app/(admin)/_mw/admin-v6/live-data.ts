@@ -1,15 +1,3 @@
-/**
- * **THE PRODUCTION DATA BUNDLE, BUILT FROM REAL READS ONLY.**
- *
- * Reference data the repository already holds is real and shown at once:
- * the 56 states and territories (`US_STATES`) and the 325 checklist definitions
- * (`CHECKLIST_PROFILE`), passed in by the server page. Every other section comes
- * from `LiveSync`: live when the backend announces and serves it, otherwise a
- * recoverable "waiting" state with its named dependency. Nothing here is sample
- * data, and nothing from ./sample/ is imported.
- *
- * PURE.
- */
 import { allDistricts } from "@/lib/control-plane/admin-view/district-catalog.ts";
 import { SECTION_DEP } from "./dependencies.ts";
 import type { SectionId } from "./contract.ts";
@@ -24,15 +12,10 @@ export interface LiveReference {
   readonly definitions: readonly Definition[];
   readonly profileVersion: string;
   readonly groupNames: Readonly<Record<string, string>>;
-  /** The Census geography the URL scope names, when it is one, with its label. */
   readonly geo: { readonly key: string; readonly name: string; readonly kind: Place["kind"]; readonly state: string } | null;
   readonly observedAt: string;
 }
 
-/**
- * The places The country's rows stand for, so a district or ZIP the owner opens from the list is a place Change place and
- * the breadcrumbs know. States are already listed from the reference; every other row is filed under the place it sits in.
- */
 export function placesFromNational(rows: readonly StateRow[] | null): readonly Place[] {
   return (rows ?? []).flatMap((r): Place[] => {
     if ((r.kind !== "District" && r.kind !== "ZIP") || r.parentKey === undefined) return [];
@@ -53,15 +36,13 @@ export function referencePlaces(ref: LiveReference, hunts: readonly Hunt[] = [],
   const out: Place[] = [{ key: COUNTRY_KEY, name: "United States", kind: "Country", navParent: null, within: [] }];
   for (const s of ref.states) out.push({ key: `st:${s.code}`, name: s.name, kind: "State", navParent: COUNTRY_KEY, within: [COUNTRY_KEY], code: s.code.toUpperCase(), tracked: s.tracked });
   if (ref.geo) out.push({ key: ref.geo.key, name: ref.geo.name, kind: ref.geo.kind, navParent: `st:${ref.geo.state}`, within: [`st:${ref.geo.state}`] });
-  // A live hunt's own place, filed under the state its saved Census lookup names, until a places section exists.
   for (const h of hunts) {
     const geo = /^geo:([a-z]{2})\.([a-z_]+)\.[0-9A-Za-z]+$/.exec(h.placeKey);
     if (geo && !out.some((p) => p.key === h.placeKey)) out.push({ key: h.placeKey, name: h.name.replace(/ hunt$/, ""), kind: geo[2] === "zcta" ? "ZIP" : geo[2] === "county" ? "County" : "Area", navParent: `st:${geo[1]}`, within: [`st:${geo[1]}`] });
   }
-  // Every congressional district is a place before anyone opens it (AZ-06 and any district typed into Change place).
+  // Every congressional district is a place before anyone opens it.
   const listed = new Set(out.map((p) => p.key));
   for (const d of allDistricts()) if (!listed.has(d.placeKey)) out.push({ key: d.placeKey, name: d.label, kind: "Area", navParent: `st:${d.state}`, within: [`st:${d.state}`] });
-  // A district or ZIP opened from The country: its place is the one the list filed it under, so its breadcrumbs run through the district.
   for (const p of seen) {
     const at = out.findIndex((x) => x.key === p.key);
     if (at < 0) out.push(p);

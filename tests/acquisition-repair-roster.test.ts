@@ -70,7 +70,7 @@ test("saved Sierra Vista roster replays from the original hash-verified bytes wh
     extraction: { format: "UNSUPPORTED", mediaType: "unobserved", fields: {}, reason: "Source mapping not yet repaired" },
     verification: { required: true, authorities: [] } };
   const plan: AutonomousWorkPlan = { version: 1, capability: "officials/offices", jurisdiction: "AZ", sourceRegistryReferences: [subjectId],
-    seedUrls: [], sources: [], acquisition: [], engineering: [], auditScope: "SOURCE_UNIVERSE", contract };
+    seedUrls: [], sources: [], acquisition: [], auditScope: "SOURCE_UNIVERSE", contract };
   const candidate: ScoutCandidate = { routeId: "sierravista-council-roster", title: "Official council contact", url: sourceUrl,
     procedure: "Read retained official HTML", relevance: "Sierra Vista council", permission: "ALLOWED", permissionReading: "Recorded public response",
     evidenceArtifactIds: [evidence.artifactId], observedOn: "2026-09-28", recordClass: "OFFICIAL_ROSTER", deterministic: true,

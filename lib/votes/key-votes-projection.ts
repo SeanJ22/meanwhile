@@ -1,24 +1,16 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-
 import {
   CivicDataStoreUnavailableError,
   civicDataReadNotInitialized,
-  mayUseTestFixture,
-  readPromotedOrBootstrap,
-  type CivicDataBootstrap,
+  readPromotedCivicData,
   type CivicDataReadResult,
   type PromotedCivicDataReadOptions,
 } from "../civic-data/read-model.ts";
 import {
   FEDERAL_KEY_VOTE_SCOPE,
-  FEDERAL_VOTES_SOURCE_ID,
-  type FederalKeyVotePositions,
   type FederalKeyVotesReadModel,
-  type FederalKeyVotesSnapshot,
 } from "./data-plane.ts";
 import { KEY_VOTES_CRITERIA } from "./key-votes.ts";
-import { federalKeyVoteSelectionV1Issue, hydrateFederalKeyVoteBootstrapV1 } from "./key-vote-selection-v1.ts";
+import { federalKeyVoteSelectionV1Issue } from "./key-vote-selection-v1.ts";
 import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 
 let cache: FederalKeyVotesReadModel | null = null;
@@ -58,35 +50,10 @@ function validateProjection(value: FederalKeyVotesReadModel, versionId: string):
   }
 }
 
-/** Exact reviewed-v1 payload and provenance for one explicit durable first-seed import. */
-export function federalKeyVotesFirstSeed(): CivicDataBootstrap<FederalKeyVotesReadModel> {
-  const tracked = JSON.parse(readFileSync(join(process.cwd(), "data", "votes", "key-votes-snapshot.json"), "utf8")) as FederalKeyVotesSnapshot;
-  const snapshot = hydrateFederalKeyVoteBootstrapV1(tracked);
-  const positions = JSON.parse(readFileSync(join(process.cwd(), "data", "votes", "key-vote-positions.json"), "utf8")) as FederalKeyVotePositions;
-  const value: FederalKeyVotesReadModel = { formatVersion: 1, selectionVersion: "v1", snapshot, positions };
-  validateProjection(value, "bundled first seed");
-  return {
-    value,
-    sourceId: FEDERAL_VOTES_SOURCE_ID,
-    version: "v1",
-    versionId: `bootstrap:FEDERAL_KEY_VOTE:v1:${positions.fetchedAt}`,
-    sourceThrough: positions.fetchedAt,
-    retrievedAt: positions.fetchedAt,
-    detail: "The canonical key-vote store answered with no pointer; serving the reviewed v1 first-seed projection explicitly.",
-  };
-}
-
-/** A configured store failure never opens the tracked first-seed files. */
 export async function readFederalKeyVotesProjection(
   options: PromotedCivicDataReadOptions = {},
 ): Promise<CivicDataReadResult<FederalKeyVotesReadModel>> {
-  const result = await readPromotedOrBootstrap({
-    ...options,
-    recordClass: "FEDERAL_KEY_VOTE",
-    scope: FEDERAL_KEY_VOTE_SCOPE,
-    bootstrap: federalKeyVotesFirstSeed,
-    allowUnconfiguredBootstrap: process.env.NODE_ENV === "development" || mayUseTestFixture(),
-  });
+  const result = await readPromotedCivicData<FederalKeyVotesReadModel>("FEDERAL_KEY_VOTE", FEDERAL_KEY_VOTE_SCOPE, options);
   readState = result;
   if (result.kind === "PROMOTED" || result.kind === "BOOTSTRAP") {
     validateProjection(result.value, result.metadata.versionId ?? result.kind);
@@ -104,7 +71,7 @@ export async function refreshFederalKeyVotesFromPromoted(options: PromotedCivicD
   return result.kind === "PROMOTED" ? result.metadata.versionId : null;
 }
 
-/** The key-vote preload, edge first (2026-09-25): the reader edge's proven copy through this Reader, else the database. */
+/** The key-vote preload: the reader edge's proven copy, else the database. */
 export const settleFederalKeyVotesRead = (): Promise<string | null> =>
   readPromotedEdgeFirst("FEDERAL_KEY_VOTE", FEDERAL_KEY_VOTE_SCOPE, refreshFederalKeyVotesFromPromoted, "The federal key votes");
 

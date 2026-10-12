@@ -4,7 +4,7 @@ import { test } from "node:test";
 import { surnameDisplayCase } from "../lib/ballot/name-case.ts";
 
 /**
- * 2d (2026-08-17): filed ledger-caps surnames render as names, not shouting.
+ * Filed ledger-caps surnames render as names, not shouting.
  * The pass is display-only and fires only on all-caps input.
  */
 

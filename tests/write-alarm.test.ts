@@ -9,30 +9,8 @@ import { errorCodeOf, errorMessageOf } from "../lib/db/write-alarm.ts";
 
 import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 
-/**
- * **D73's CLASS, GUARDED** (Prompt D item 6.4, 2026-08-20).
- *
- * The defect: migration 0011 added `coverage_tier` to `search_log` and
- * `reactions`, the code shipped, the migration was never applied, every insert
- * into both sold stores failed for four hours, and the only trace was a
- * `console.error` in a serverless function log this repo cannot read. The site
- * was up. The pages rendered. The walk was green.
- *
- * Two things had to be true for that to be invisible, and both are guarded
- * here: a write to a sold store could fail without raising anywhere reachable,
- * and nothing could be ASKED whether the schema matched.
- *
- * RULING 25 is the constraint on the fix and it is asserted too: the
- * reader-facing catches are unchanged, so no visitor sees any difference.
- */
-
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
-/**
- * Every route that writes to a sold store. Derived from the source rather than
- * hand-listed — a fourth call site added tomorrow joins this list on its first
- * test run rather than on the day somebody remembers.
- */
 function soldStoreWriteRoutes(): string[] {
   const files = filesThatWouldBeCommitted({ cwd: ROOT, paths: ["app"] })
     .map((f) => f.trim())
@@ -68,16 +46,6 @@ test("6.4: every sold-store write path raises on the alarm path", () => {
 });
 
 test("6.4: the alarm is raised on the SAME catch that swallows, in every route", () => {
-  /*
-   * The weaker version of the check above passes if `raiseWriteAlarm` appears
-   * anywhere in the file. This one asserts it appears inside every catch that
-   * handles a sold-store write — the failure mode being an alarm added for one
-   * error path while a second path beside it keeps swallowing.
-   *
-   * Read as source because the alternative is executing route handlers against
-   * a database that is deliberately broken, and a test that needs a broken
-   * production database to prove a point is a test nobody runs.
-   */
   const routes = soldStoreWriteRoutes();
   const offenders: string[] = [];
   for (const f of routes) {
@@ -92,10 +60,7 @@ test("6.4: the alarm is raised on the SAME catch that swallows, in every route",
         .filter((n) => Number.isFinite(n)),
     );
     const after = src.slice(writeAt);
-    // `async` handlers count. Prompt E made the meetings route's `.catch`
-    // async so it could `await` the alarm inside an `after()`, and the
-    // narrower pattern read that as "handles no error at all" — a guard
-    // reporting a route unguarded because it did not recognise the guard.
+    // `async` catch handlers count.
     const catches = [
       ...after.matchAll(/(\}\s*catch\s*(\([^)]*\))?\s*\{|\.catch\(\s*(async\s+)?\()/g),
     ];
@@ -113,21 +78,6 @@ test("6.4: the alarm is raised on the SAME catch that swallows, in every route",
 });
 
 test("6.5: the alarm is not left as an unawaited promise", () => {
-  /*
-   * **THE DEFECT THE LIVE PROBE FOUND, GUARDED** (Prompt D item 6.5,
-   * 2026-08-20).
-   *
-   * The first version of the alarm fired as `void raiseWriteAlarm(...)` and
-   * returned on the next line. Every test passed, every route compiled, and on
-   * the live deploy NOTHING LANDED: a serverless invocation ends when the
-   * response is returned, and a promise still in flight is dropped. The alarm
-   * built to catch a silent failure failed silently.
-   *
-   * So a bare `void raiseWriteAlarm` is banned. Either the handler AWAITS it —
-   * safe, because it never throws, and the reader is already receiving an
-   * error on that branch — or it is scheduled through `after()`, which is the
-   * platform's own primitive for work that outlives the response.
-   */
   for (const f of soldStoreWriteRoutes()) {
     const src = readFileSync(join(ROOT, f), "utf8");
     assert.ok(
@@ -143,19 +93,7 @@ test("6.5: the alarm is not left as an unawaited promise", () => {
   }
 });
 
-test("6.4 / RULING 25: the reader-facing answers on the write paths are unchanged", () => {
-  /*
-   * Reader-facing behaviour is not degraded to fix an internal problem. These
-   * are the exact statuses and bodies that shipped before the alarm existed,
-   * pinned so a later edit to the alarm cannot quietly change what a visitor
-   * gets.
-   */
-  // PDC-9: the SEARCH write is no longer on /api/meetings — it moved to the
-  // /api/log beacon (fire-and-forget in lib/log/client.ts, which swallows every
-  // failure so a lost log row never costs the reader). The former assertion that
-  // the meetings route swallows a search-log failure is therefore retired; the
-  // reader-facing swallow now lives in the beacon client and /api/log's answer
-  // is pinned below.
+test("6.4: the reader-facing answers on the write paths are unchanged", () => {
   const reactions = readFileSync(join(ROOT, "app", "api", "reactions", "route.ts"), "utf8");
   assert.match(
     reactions,
@@ -172,14 +110,6 @@ test("6.4 / RULING 25: the reader-facing answers on the write paths are unchange
 });
 
 test("6.2: the alarm table holds no column that could join to a store", () => {
-  /*
-   * n-stores-never-join, applied to the protection. The alarm records THAT a
-   * write to a named store failed and the database's own words about why —
-   * never a zip, a division, a continuity key, a run id, an IP or a foreign
-   * key. A protection that violates the rule to enforce it has failed.
-   * `tests/db-schema.test.ts` holds the same line against the live schema
-   * object; this holds it against the migration a database will actually run.
-   */
   const sql = readFileSync(
     join(ROOT, "lib", "db", "migrations", "0015_fast_mojo.sql"),
     "utf8",
@@ -211,9 +141,7 @@ test("6.2: the alarm records the database's own words, capped", () => {
   assert.equal(errorCodeOf(err), "42703");
   assert.equal(errorMessageOf(err), 'column "coverage_tier" does not exist');
 
-  // A message that could carry a value is truncated, and the truncation is
-  // STATED rather than silent — a clipped string that reads as complete is the
-  // same defect one layer down.
+  // A truncated message states its truncation.
   const long = Object.assign(new Error("x".repeat(900)), { code: "42703" });
   const capped = errorMessageOf(long)!;
   assert.ok(capped.length < 900, "capped");
@@ -228,17 +156,6 @@ test("6.2: the alarm records the database's own words, capped", () => {
 });
 
 test("6.2: the alarm carries the reason and NEVER the values", () => {
-  /*
-   * **THE ALARM'S FIRST REAL FIRING CAUGHT THIS** (2026-08-20, the Prompt D
-   * close-out walk). One search_log insert failed transiently out of 94, the
-   * alarm fired exactly as designed, and the row it wrote carried a reader's
-   * zip and the divisions their search had resolved to — because the Neon
-   * driver wraps a failure as the QUERY plus its PARAMS.
-   *
-   * The alarm's whole design is that it holds nothing about who was writing,
-   * and a column guard cannot see a value smuggled inside a text field it
-   * permits. So the shape is guarded there and the CONTENT is guarded here.
-   */
   const real = new Error(
     'Failed query: insert into "search_log" ("id", "occurred_at", "approximate_location", ' +
       '"ocd_ids") values (default, $1, $2, $3) params: 2026-08-21T00:20:53.025Z,SEARCH,03255,' +
@@ -257,8 +174,6 @@ test("6.2: the alarm carries the reason and NEVER the values", () => {
   assert.ok(!scrubbed.includes("85701"), "a bare five-digit run is scrubbed");
   assert.ok(!scrubbed.includes("ocd-division/country"), "a bare division id is scrubbed");
 
-  // And the sentence worth keeping is untouched by any of it. This is the one
-  // that would have closed D73 in a minute.
   assert.equal(
     errorMessageOf(new Error('column "coverage_tier" does not exist')),
     'column "coverage_tier" does not exist',
@@ -277,8 +192,7 @@ test("6.1: the schema gate names the missing migration, and never rounds up", ()
   assert.equal(synced.codeHead, "0002_c");
   assert.deepEqual(synced.missing, []);
 
-  // D73's exact shape: the code names a column a migration adds, and the
-  // migration is not applied.
+  // The code names a column a migration adds, and the migration is not applied.
   const drifted = compareSchemaState(journal, [1, 2]);
   assert.equal(drifted.inSync, false);
   assert.deepEqual(drifted.missing, ["0002_c"], "missing migrations are named BY TAG");
@@ -303,12 +217,6 @@ test("6.1: the schema gate names the missing migration, and never rounds up", ()
 });
 
 test("6.1: the committed journal head matches the newest migration file", () => {
-  /*
-   * The gate compares the DATABASE against the journal. This compares the
-   * journal against the files, so a migration generated and not journalled —
-   * or journalled and not committed — cannot make the gate report in-sync
-   * about a schema nobody has.
-   */
   const journal = JSON.parse(
     readFileSync(join(ROOT, "lib", "db", "migrations", "meta", "_journal.json"), "utf8"),
   ) as { entries: { tag: string }[] };
@@ -325,42 +233,14 @@ test("6.1: the committed journal head matches the newest migration file", () => 
   );
 });
 
-/* ========================================================================== */
-/* PD04 (Prompt E item 4, 2026-08-20) — the write itself, and the error chain */
-/* ========================================================================== */
-
 test("PD04: no sold-store WRITE is left as a floating promise either", () => {
-  /*
-   * **THE CLASS, NOT THE INSTANCE.**
-   *
-   * Prompt D banned a floating `raiseWriteAlarm` because a promise still in
-   * flight when a serverless invocation returns is dropped by the runtime. The
-   * INSERT it was watching had exactly the same shape, in the same function,
-   * five lines further up: `logSearchEvent({…}).catch(…)` with nothing awaiting
-   * it and `return Response.json(…)` immediately below. Every row that had not
-   * reached Neon by the time the response went out was dropped — silently, and
-   * with no alarm, because a dropped promise never rejects and there is nothing
-   * for a `.catch` to catch.
-   *
-   * That is `PD04`: the alarm could only ever see the writes that got far
-   * enough to be REFUSED. So the ban is widened from the alarm to the write.
-   *
-   * A write qualifies if it is `await`ed, or if it is the body of an `after()`.
-   * The `after(` test is deliberately positional — the call must open before
-   * the write does — because `after()` somewhere else in the file proves
-   * nothing about this write.
-   */
+  // A write qualifies if it is awaited, or is the body of an `after()` that opens before it.
   const routes = soldStoreWriteRoutes();
   assert.ok(routes.length >= 2, `only ${routes.length} sold-store write route(s) found (PDC-9: SEARCH moved to the /api/log beacon)`);
 
   const floating: string[] = [];
   for (const f of routes) {
-    /*
-     * Comments out first. This file's own doc block explains the defect and
-     * quotes the dead call — `logSearchEvent({…}).catch(…)` — and a sweep that
-     * reads its own explanation as a call site reports a defect that is not
-     * there. Same trap `tests/no-suppression.test.ts` strips comments for.
-     */
+    // Comments are stripped so a quoted dead call is not read as a call site.
     const src = readFileSync(join(ROOT, f), "utf8")
       .replace(/\/\*[\s\S]*?\*\//g, "")
       .replace(/^[ \t]*\/\/.*$/gm, "");
@@ -372,10 +252,7 @@ test("PD04: no sold-store WRITE is left as a floating promise either", () => {
         // `import { logSearchEvent }` and the export itself are not call sites.
         if (/import\s*\{[^}]*$/.test(before)) continue;
         const awaited = /\bawait$/.test(before);
-        // `after()` itself, or the wrapper that falls back to running the work
-        // when there is no request scope to defer into — `lib/log/after-response.ts`,
-        // which exists because a bare `after()` throws in every test that calls
-        // a route handler directly.
+        // `after()` itself, or `lib/log/after-response.ts`, which runs the work when there is no request scope.
         const deferred = /after(?:Response)?\(\s*(async\s*)?\(\s*\)\s*=>$/.test(before);
         if (!awaited && !deferred) floating.push(`${f} — ${call}()`);
       }
@@ -391,21 +268,7 @@ test("PD04: no sold-store WRITE is left as a floating promise either", () => {
 });
 
 test("PD04: the alarm reads SQLSTATE and the reason from the CAUSE, not the wrapper", () => {
-  /*
-   * **THE INSTRUMENT DEFECT, PROVED FROM THE DRIVER'S OWN SOURCE.**
-   *
-   * `drizzle-orm/errors.js` — read, not assumed — defines `DrizzleQueryError`
-   * as four assignments: a message of `Failed query: <sql>\nparams: <params>`,
-   * `this.query`, `this.params`, and `this.cause`. It carries no `code`.
-   *
-   * So an alarm that reads `.code` off the object it is handed records `null`
-   * for EVERY query failure, structurally — not because the database withheld
-   * a SQLSTATE, but because it was asked the wrong object. And an alarm that
-   * reads `.message` off that object records the STATEMENT where the reason
-   * should be. `PD04`'s one row read exactly that: no code, and the SQL.
-   *
-   * The fixture below is the real shape, not a mock of a convenient one.
-   */
+  // `DrizzleQueryError` carries no `code` and its message is the statement; the reason is on `cause`.
   const driverError = Object.assign(
     new Error(`column "coverage_tier" does not exist`),
     { code: "42703" },
@@ -441,11 +304,6 @@ test("PD04: the alarm reads SQLSTATE and the reason from the CAUSE, not the wrap
 });
 
 test("PD04: the chain walk terminates on a cycle and on a bare error", () => {
-  /*
-   * An alarm that hangs takes down the path it is watching, so the walk is
-   * depth-capped and cycle-safe. A `cause` pointing back at its own wrapper is
-   * not hypothetical — it is what a re-thrown error can produce.
-   */
   const a: { message: string; cause?: unknown } = { message: "outer" };
   const b: { message: string; cause?: unknown } = { message: "inner", cause: a };
   a.cause = b;
@@ -458,16 +316,8 @@ test("PD04: the chain walk terminates on a cycle and on a bare error", () => {
   assert.equal(errorMessageOf(new Error("plain")), "plain");
 });
 
-/* ========================================================================== */
-/* NH32 — the SQLSTATE is looked for everywhere a driver hides it             */
-/* ========================================================================== */
-
 test("NH32: the code is found under sourceError, not only under cause", () => {
-  /*
-   * The alarm of 2026-08-21 recorded no SQLSTATE and the report printed five
-   * dashes where the reason belonged. Walking only `.cause` was the reason:
-   * pooled drivers in this family nest the real error under other names.
-   */
+  // Pooled drivers nest the real error under names other than `cause`.
   const inner = Object.assign(new Error('column "coverage_tier" does not exist'), {
     code: "42703",
   });
@@ -498,10 +348,6 @@ test("NH32: an AggregateError's real failures are reached", () => {
 });
 
 test("NH32: a cyclic error chain does not hang the alarm", () => {
-  /*
-   * A hang inside an alarm takes down the path the alarm is watching, which is
-   * strictly worse than the missing code it was trying to find.
-   */
   const a = Object.assign(new Error("a"), { cause: undefined as unknown });
   const b = Object.assign(new Error("b"), { cause: a });
   (a as { cause: unknown }).cause = b;
@@ -510,11 +356,6 @@ test("NH32: a cyclic error chain does not hang the alarm", () => {
 });
 
 test("NH32: a genuinely absent code is still null — the widening did not invent one", () => {
-  /*
-   * The direction that matters. A chain walk that started returning a code for
-   * an error that carries none would be worse than five dashes: it would put a
-   * confident wrong SQLSTATE in front of whoever is diagnosing.
-   */
   const outer = Object.assign(new Error("Failed query: insert into search_log"), {
     sourceError: new Error("no code on this one either"),
   });

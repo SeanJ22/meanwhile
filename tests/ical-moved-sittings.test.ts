@@ -6,16 +6,7 @@ import test from "node:test";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
 import { makeIcalSource, movedOffItsDay, parseDtStart } from "../lib/sources/ical/index.ts";
 
-/**
- * **A SITTING THE BODY MOVED OFF ITS DAY WAS NOT HELD ON IT.** (2026-09-24.)
- *
- * Warner's Select Board sittings of 2026-09-08 ("RESCHEDULED Select Brd
- * -9/15") and 2026-09-22 ("Rescheduled Select Board Mt 9/29"), and its Parks
- * and Recreation sitting of 09-14 ("P&R Rescheduled to 9/21"), were served as
- * CONCLUDED: held, the reader was told, when the town itself said they moved.
- * Every rescheduled or postponed summary in the recorded feeds is read here,
- * as the town published it.
- */
+/** A sitting the body moved off its day was not held on it: every rescheduled or postponed summary in the recorded feeds, as published. */
 
 const FIXTURES = join(process.cwd(), "tests", "fixtures", "ical");
 const ZONE = "America/New_York";

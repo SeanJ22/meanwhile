@@ -1,40 +1,22 @@
 /**
- * **THE OWNER'S EXPANSION SCOPES — WHICH GEOGRAPHY, IN WHAT ORDER, AT WHAT SPEND.**
- * (Expansion controls, 2026-09-23.)
- *
- * An expansion scope is ONE geography from the Census geography lookup (a
- * county, a congressional district, a metro/micro area, a state upper- or
- * lower-chamber district, or a whole state), with two owner decisions attached:
+ * The owner's expansion scopes: one geography from the Census geography lookup
+ * (county, congressional district, metro/micro area, state legislative
+ * district, or state) with two owner decisions:
  *
  * ```
  *   priority   an integer order among the selected scopes; 1 runs first
- *   budgetUsd  a rolling-24-hour cap on PAID model work (Scouts) for work in
+ *   budgetUsd  a rolling-24-hour cap on paid model work (Scouts) for work in
  *              that scope; 0 is allowed and means "no paid work there"
  * ```
  *
- * ## What a scope can and cannot do
+ * A scope reorders, restricts and (through the runner, `dispatch-work.ts`)
+ * materializes missing requirement instances. Its budget only refuses paid
+ * work; the Fleet's rolling ceiling stays the global cap.
  *
- * A scope REORDERS, RESTRICTS, and — through the runner — MATERIALIZES what
- * is missing. Selecting one starts nothing in the request that records it: at
- * the start of its next cycle the standing runner creates the requirement
- * instances the promoted registry defines for the governments in the geography
- * that no clock carries yet (MW-028, `dispatch-work.ts`), bounded per cycle and
- * per scope. It opens no paid lane (`lib/control-plane/scheduler/model-lane.ts`
- * still decides that), registers no body or source a registry does not define,
- * promotes no jurisdiction, and changes no covered state. Its budget can only
- * refuse paid work — the Fleet's rolling ceiling (`AdminConfig.fleetSpendCeiling`,
- * fallback in `fleet-safety.ts`) stays the one global cap and nothing here
- * raises it.
+ * Stored on `AdminConfig.expansionScopes`, written only by
+ * `expansion.scope.set` / `expansion.scope.remove`.
  *
- * ## Where it lives
- *
- * On the owner's policy row (`AdminConfig.expansionScopes`), written only by
- * the gateway actions `expansion.scope.set` / `expansion.scope.remove`, each
- * stamped with the session reference and the receipt that carried it — the
- * same shape as the Fleet spend-ceiling dial. The runner reads the row at the
- * start of every cycle.
- *
- * PURE. No store, no clock, no environment.
+ * Pure. No store, no clock, no environment.
  */
 
 import { isWorkQuestion, type WorkQuestion } from "../work-question.ts";
@@ -108,11 +90,7 @@ export interface ExpansionScopeDecision {
   /** Send implementation version: old saved scopes do not silently launch newly connected acquisition. */
   readonly sourceWorkVersion?: 1;
   readonly note: string | null;
-  /**
-   * MW-002: the questions the owner asked of this Send, typed — not folded into
-   * the note. The runner records them on every obligation the Send reaches.
-   * Absent on decisions made before they were kept, and when none was asked.
-   */
+  /** The questions the owner asked of this Send, recorded on every obligation it reaches. Absent when none was asked. */
   readonly questions?: readonly WorkQuestion[];
   readonly decidedAt: string;
   /** The admin session reference that decided it. Never a person's name. */
@@ -224,13 +202,8 @@ export function isExpansionScopeDecision(value: unknown): value is ExpansionScop
 }
 
 /**
- * The scopes a stored policy carries, in run order, and how many stored
- * entries could not be read as a scope.
- *
- * `malformed` is not dropped quietly: a scope budget is a restriction, and a
- * restriction that silently disappears is the one failure a spend control may
- * not have. The runner refuses paid work while any entry is unreadable, and the
- * page names the count.
+ * The scopes a stored policy carries, in run order, and how many entries could
+ * not be read. The runner refuses paid work while any entry is unreadable.
  */
 export function expansionScopesOf(config: { readonly expansionScopes?: unknown } | null): {
   readonly scopes: readonly ExpansionScopeDecision[];
@@ -278,7 +251,7 @@ export function withScopeSet(
     /** An explicit new hunt gets a separate accounting period; edits never reset it. */
     readonly newHunt?: boolean;
     readonly note: string | null;
-    /** MW-002. Absent or empty: the Send asked no question. */
+    /** Absent or empty: the Send asked no question. */
     readonly questions?: readonly WorkQuestion[];
     readonly decidedAt: string;
     readonly decidedBy: string;

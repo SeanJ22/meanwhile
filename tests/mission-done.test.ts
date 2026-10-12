@@ -1,5 +1,5 @@
 /**
- * CH-19: a mission is done when its map is full and its doors refresh. Done is read from the mission map and the
+ * A mission is done when its map is full and its doors refresh. Done is read from the mission map and the
  * doors' next reads, never from registry obligations alone; it changes no record, and a new owed row reopens it.
  */
 import assert from "node:assert/strict";

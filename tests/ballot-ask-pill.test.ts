@@ -3,26 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-/**
- * **BAL-26 (2026-08-28) — ASK WAS THE LAST THING ON THE BALLOT PAGE.**
- *
- * `<BallotAsk>` was mounted below every contest, every footnote, the measures,
- * the notes block, the absence blocks and the collection note, on a page that
- * measures roughly 20,000px at 1280 and 25,000px at 390. The engine was already
- * right — it posts to `/api/ask/grounded` with `surface: "BALLOT"` — so this
- * was placement, and these tests hold the placement rather than the answering.
- *
- * They also hold the three token defects the move surfaced, because each one
- * was invisible: a `var()` that resolves to nothing does not throw, does not
- * warn, and renders a plausible-looking panel with the wrong borders.
- *
- * **EVERYTHING HERE IS READ AS SOURCE RATHER THAN IMPORTED.** `pnpm test` runs
- * node's own runner with the alias loader, which resolves `@/` but does not
- * compile JSX: a `.tsx` import fails with `ERR_UNKNOWN_FILE_EXTENSION`, and a
- * guard that cannot run is not a guard. `tests/no-suppression.test.ts` reads
- * `INCUMBENCY_FOOTNOTE` out of its component the same way and for the same
- * reason.
- */
+/** Everything here is read as source: the test runner does not compile JSX. */
 
 const ROOT = process.cwd();
 const PILL = readFileSync(
@@ -77,15 +58,7 @@ test("BAL-26: Ask is reachable from the pill row under the heading, and mounted 
   );
 });
 
-/**
- * G07: the pill's label carries the teaching, and a bare "Ask" is not allowed
- * anywhere. The label lives beside the component rather than in
- * `lib/routing/ask-pill-labels.ts` because `tests/pill-cluster.test.ts`
- * asserts that the shared file's placement set is exactly `map`, `sidebar`,
- * `wgh` "and no others", and `AskPillPlacement` is documented as TOTAL over
- * those three. A local label is not an exemption from the rule, so the rule is
- * applied to it here.
- */
+/** A bare "Ask" label is not allowed anywhere; the ballot label lives beside its component. */
 test("G07: the ballot's Ask pill names a concrete question and is not a bare verb", () => {
   assert.notEqual(BALLOT_ASK_PILL_LABEL.trim().toLowerCase(), "ask");
   assert.notEqual(BALLOT_ASK_PILL_LABEL.trim().toLowerCase(), "ask…");
@@ -118,8 +91,7 @@ test("BAL-26: the pill carries the disclosure state and Escape closes it", () =>
     "focus lands in the input one frame after it mounts",
   );
 
-  /* The ballot has no map floaters to raise above. MTG-11's foreground
-     machinery is map-only and importing it here would be cargo. */
+  /* The ballot has no map floaters to raise above. */
   assert.ok(!/takeForeground/.test(src), "the ballot must not import map machinery");
 });
 
@@ -153,32 +125,7 @@ test("BAL-26: Escape on the input clears a half-typed question before it closes 
   );
 });
 
-/**
- * **THE TOKENS THAT RESOLVED TO NOTHING.**
- *
- * `--line` is defined in no file in this repository, and `ballot-ask.tsx` used
- * it as a Tailwind arbitrary border colour for the panel border, the input
- * border and the Ask button's border — three borders falling back to
- * `currentColor`. `--muted` is likewise defined nowhere and was used for five
- * text colours here plus one in `app/globals.css` (`.could-govern-action`).
- * The real token is `--text-muted`.
- *
- * The arbitrary-value form is what makes this class of defect silent: the
- * Tailwind utility `text-muted` works through `--color-muted`, so a reader of
- * the source sees a working utility one line away from a broken one. Reading
- * the stylesheet is not enough either — a `@theme inline` block emits no
- * custom property at all — so this asserts a real `--token:` declaration.
- *
- * **THE CLASS NAME IS NOT WRITTEN OUT ABOVE, AND THAT IS DELIBERATE**
- * (ITEM J, 2026-09-01). Tailwind v4 detects its sources automatically and
- * scans every file this repository tracks, comments included. The literal
- * arbitrary-value class that used to sit in this paragraph was therefore
- * COMPILED, and the shipped stylesheet carried a live
- * `border-color: var(--line)` rule that no element wore — a fixed defect's own
- * documentation regenerating the defect in production CSS. A browser-side
- * sweep of the built chunk is what found it; reading the source never would
- * have.
- */
+/** Tokens used as arbitrary values must be declared custom properties. The broken class name is not written here: Tailwind scans comments too. */
 test("BAL-26: every custom property the Ask surfaces name is actually defined", () => {
   const named = new Set<string>();
   for (const src of [ASK, PILL]) {

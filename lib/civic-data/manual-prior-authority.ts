@@ -9,11 +9,7 @@ import type { CandidateVersionRecord, RoutineCandidate } from "./types.ts";
 
 const hash = (value: unknown) => createHash("sha256").update(canonicalCivicDataJson(value)).digest("hex");
 
-/**
- * The classes whose successor may inherit unchanged members from its exact GOOD
- * base. The registry joined on 2026-09-23 (Sean): its owner door builds on the
- * transfer-time import, whose untouched members carry that import's authority.
- */
+/** Classes whose successor may inherit unchanged members from its exact GOOD base. */
 const INHERITING_CLASSES: ReadonlySet<string> = new Set(["CURATED_READER_RECORD", "REGISTRY_RUNTIME_BINDING"]);
 
 /**

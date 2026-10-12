@@ -1,15 +1,7 @@
 /**
- * **WHERE A CONSOLE FORM MAY RETURN TO.** (ADM-15 and ADM-20, the 9.4.26
- * evening admin feedback.)
- *
- * Every console button is a plain form POST that ends in a 303 back to a
- * page. The destination comes from the form's `returnTo` field, and a
- * redirect target read off a request body is validated against a closed list
- * — never an arbitrary URL. The list is the console itself: the command center,
- * and nothing else: it is the only Admin page.
- *
- * PURE, and shared by both admin routes so they cannot disagree about what
- * the console is.
+ * Where a console form may return to. A redirect target read off a request
+ * body is validated against a closed list (the console itself), never an
+ * arbitrary URL. Shared by both admin routes.
  */
 
 export const CONSOLE_VIEWS: readonly string[] = [

@@ -1,42 +1,26 @@
 /**
- * **ASK COUNTS THE GAPS IT TOLD A READER — BY BODY, GAP AND DAY — AND NOTHING
- * ABOUT THE READER.** (2026-09-25.)
+ * Ask counts the coded gaps it told a reader, by body, gap and UTC day, and
+ * nothing about the reader. Each stated gap (`gap-codes.ts`) adds one to that
+ * body's count for that gap and day in
+ * `lib/control-plane/ask-gap-observations.ts`. This module is handed only the
+ * gaps: never the request, the question, the reader's place, a key, or a clock
+ * finer than the day.
  *
- * The owner's decision (Sean, 2026-09-25): "Recording the government body
- * behind an unanswered Ask question is approved. Record the body identifier
- * and necessary work metadata so the system can create targeted work to fill
- * the information gap. This does not approve new storage of personal
- * information, raw question histories, or tracking individual readers."
- *
- * So after an answer, each coded gap it STATED (`gap-codes.ts`: an agenda not
- * held, an outcome not read, a stale calendar, an unreadable outcome store, a
- * body we hold no meeting of) adds one to that body's count for that gap and
- * that UTC day. The row is `lib/control-plane/ask-gap-observations.ts`'s: the
- * body id, the code, its record class, the day, the count. This module is the
- * only way Ask reaches it, and it is handed only the gaps — never the request,
- * the question, the reader's place, a key or a clock finer than the day.
- *
- * ## When nothing is written, by name
+ * Nothing is written, by name, when:
  *
  * ```
  *   NO_CODED_GAP        the answer stated no coded gap about a body
- *   NOT_A_READER        a declared synthetic run (the reader proofs, walks,
- *                       keep-warm): only a reader's ask raises work
+ *   NOT_A_READER        a declared synthetic run: only a reader's ask raises work
  *   EDGE_ONLY_CONTEXT   a reader-edge context that refuses the database
- *                       (lib/registry/runtime-edge.ts) — decided in the
- *                       handler, where that context is visible
- *   NO_STORE            not the production runtime, or no control plane is
- *                       configured: a local server never counts into
- *                       production's work
- *   REFUSED             a value that is not exactly an observation (a caller
- *                       bug, named rather than laundered)
+ *                       (lib/registry/runtime-edge.ts), decided in the handler
+ *   NO_STORE            not the production runtime, or no control plane
+ *                       configured
+ *   REFUSED             a value that is not exactly an observation
  *   FAILED              the store refused or did not answer within its bound
  * ```
  *
  * The write runs after the response (`lib/log/after-response.ts`), bounded.
- * A failure, a refusal, and a production runtime with no control plane are
- * logged by name (error name and code only — a driver message can carry its
- * connection string). None of it reaches the reader.
+ * Failures are logged by error name and code only; none reach the reader.
  */
 import type { RunMarker } from "../db/run-marker.ts";
 import { ReaderEdgeOnlyRefusal, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";

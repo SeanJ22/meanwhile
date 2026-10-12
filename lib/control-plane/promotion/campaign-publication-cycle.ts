@@ -1,20 +1,22 @@
-/** @freshness-reads-here The retrievedAt clock is recorded only after this
- * adapter receives the complete publisher body and verifies its byte hash. */
+/** `retrievedAt` is recorded only after the complete publisher body is received and its byte hash verified. */
 import { createHash } from "node:crypto";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
+import type { Attempt } from "../attempt.ts";
 import type { VaultIndex } from "../evidence/read-only-vault.ts";
-import { readPipelineStates } from "./pipeline.ts";
+import { readPipelineStatesWhere } from "./pipeline.ts";
 import { CANDIDATE_PUBLICATION_READ_ROUTE, campaignSiteReadRecorder } from "./campaign-site-reads.ts";
 import { candidatePublicationLinks, candidatePublicationCaptureUrls, candidatePublicationCaptureIssue,
   heldCandidatePublicationRead } from "./campaign-publication-links.ts";
 import { withinWallTime } from "./campaign-site-cycle.ts";
-import type { CampaignSiteApprovedRecord } from "./campaign-site-chain.ts";
+import { CAMPAIGN_SITE_FIELD, type CampaignSiteApprovedRecord } from "./campaign-site-chain.ts";
 import { memoryInProcess, researchFetch, type ResearchGet, type ResearchRuntime } from "../../hunt/robots-first-fetch.ts";
 
 export const CANDIDATE_PUBLICATION_MAX_READS = 2;
 export const CANDIDATE_PUBLICATION_RECHECK_MS = 7 * 24 * 60 * 60 * 1000;
 /** Newest captures read per source URL; a page is re-read at most weekly, so this spans about two years of captures. */
 export const CANDIDATE_PUBLICATION_CAPTURES_PER_URL = 100;
+/** Per-key reads in flight at once while the pass loads its scope. */
+export const CANDIDATE_PUBLICATION_READ_CONCURRENCY = 8;
 
 export interface CandidatePublicationCycleReport {
   readonly inventoried: number;
@@ -23,11 +25,30 @@ export interface CandidatePublicationCycleReport {
   readonly deferred: number;
   readonly failed: number;
   readonly outcomes: readonly { readonly candidacyId: string; readonly url: string; readonly code: string; readonly artifactId: string | null }[];
+  /** The loading step the round's dispatch cutoff stopped, when it stopped one: every page of the pass then stays owed. */
+  readonly stoppedLoading?: string;
 }
 
-/** The original instruction controls which canonical candidacies may acquire
- * deeper pages. Every other approved site remains available to the existing
- * campaign-link routine but receives no new work from this pass. */
+/** Null when it stopped before the end. */
+async function inBatches<T, R>(items: readonly T[], stop: () => boolean, run: (item: T) => Promise<R>): Promise<R[] | null> {
+  const out: R[] = [];
+  for (let at = 0; at < items.length; at += CANDIDATE_PUBLICATION_READ_CONCURRENCY) {
+    if (stop()) return null;
+    out.push(...await Promise.all(items.slice(at, at + CANDIDATE_PUBLICATION_READ_CONCURRENCY).map(run)));
+  }
+  return out;
+}
+
+async function readByIds<T>(repo: { readMany?(ids: readonly string[]): Promise<readonly { id: string; value: T }[]>;
+  read(id: string): Promise<{ id: string; value: T } | null> }, ids: readonly string[]): Promise<Map<string, T>> {
+  const unique = [...new Set(ids)];
+  if (unique.length === 0) return new Map();
+  const rows = repo.readMany ? await repo.readMany(unique)
+    : (await Promise.all(unique.map(id => repo.read(id)))).filter((row): row is { id: string; value: T } => row !== null);
+  return new Map(rows.map(row => [row.id, row.value]));
+}
+
+/** Only the original instruction's candidacies may acquire deeper pages; other approved sites get no new work from this pass. */
 export async function runCandidatePublicationCycle(input: {
   readonly repos: ControlPlaneRepositories;
   readonly eligibleCandidacyIds: ReadonlySet<string>;
@@ -50,8 +71,11 @@ export async function runCandidatePublicationCycle(input: {
   if (!Number.isFinite(recheckMs) || recheckMs < 0) throw new Error("CANDIDATE_PUBLICATION_RECHECK_INVALID");
   const recorder = campaignSiteReadRecorder({ repos: input.repos, vaultRoot: input.vaultRoot,
     methodVersion: input.methodVersion, now: () => new Date(input.clock()).toISOString(), heldVault: input.heldVault });
-  const [states, attemptRows, routeRows, workRows] = await Promise.all([readPipelineStates(input.repos),
-    input.repos.attempts.list(), input.repos.routeTasks.list(), input.repos.workItems.list()]);
+  /* Rows read scale with the eligible candidacies, never with whole tables. */
+  const stop = () => input.deadlineMs !== undefined && input.clock() >= input.deadlineMs;
+  const stopped = (step: string): CandidatePublicationCycleReport => ({ ...empty, stoppedLoading: step });
+  if (stop()) return stopped("the approved campaign sites");
+  const states = await readPipelineStatesWhere(input.repos, [{ path: ["campaignSite", "field"], value: CAMPAIGN_SITE_FIELD }]);
   const sourceReads = new Map<string, Awaited<ReturnType<NonNullable<ControlPlaneRepositories["artifactsByCanonicalUrl"]>>>>();
   const sourceRecords = async (url: string) => {
     const cached = sourceReads.get(url);
@@ -61,20 +85,6 @@ export async function runCandidatePublicationCycle(input: {
     sourceReads.set(url, rows);
     return rows;
   };
-  const attempts = new Map(attemptRows.map(row => [row.id, row.value]));
-  const workSubjects = new Map(workRows.map(row => [row.id, row.value.subject]));
-  const lastAttemptByLink = new Map<string, number>();
-  for (const row of routeRows) {
-    const task = row.value;
-    if (!task.routeId.startsWith(`${CANDIDATE_PUBLICATION_READ_ROUTE}:`) || task.attemptIds.length === 0) continue;
-    const subject = workSubjects.get(task.workItemId);
-    if (!subject?.startsWith("candidate-publication:")) continue;
-    const key = `${subject.slice("candidate-publication:".length)}\u0000${task.target}`;
-    for (const attemptId of task.attemptIds) {
-      const attempted = Date.parse(attempts.get(attemptId)?.startedAt ?? "");
-      if (Number.isFinite(attempted)) lastAttemptByLink.set(key, Math.max(lastAttemptByLink.get(key) ?? -Infinity, attempted));
-    }
-  }
   const approvals = states.flatMap(state => {
     const row = state.byStage.APPROVED_FOR_PROMOTION;
     return row && "campaignSite" in row && input.eligibleCandidacyIds.has(state.subjectId ?? "")
@@ -85,6 +95,27 @@ export async function runCandidatePublicationCycle(input: {
     const site = approval.campaignSite;
     const found = hosts.get(site.candidacyId) ?? new Set<string>();
     found.add(site.host); hosts.set(site.candidacyId, found);
+  }
+  /* Only a candidacy with exactly one approved host inventories links, so only its history orders them. */
+  const readable = [...hosts].filter(([, found]) => found.size === 1).map(([candidacyId]) => candidacyId).sort();
+  const workRows = await inBatches(readable, stop, id => input.repos.workItems.listWhere(["subject"], `candidate-publication:${id}`));
+  if (workRows === null) return stopped("the candidacies' publication work items");
+  const workSubjects = new Map(workRows.flat().map(row => [row.id, row.value.subject]));
+  const routeRows = await inBatches([...workSubjects.keys()], stop, id => input.repos.routeTasks.listWhere(["workItemId"], id));
+  if (routeRows === null) return stopped("the publication route tasks");
+  const tasks = routeRows.flat().map(row => row.value)
+    .filter(task => task.routeId.startsWith(`${CANDIDATE_PUBLICATION_READ_ROUTE}:`) && task.attemptIds.length > 0);
+  if (stop()) return stopped("the publication Attempts");
+  const attempts = new Map<string, Attempt>(await readByIds(input.repos.attempts, tasks.flatMap(task => task.attemptIds)));
+  const lastAttemptByLink = new Map<string, number>();
+  for (const task of tasks) {
+    const subject = workSubjects.get(task.workItemId);
+    if (!subject?.startsWith("candidate-publication:")) continue;
+    const key = `${subject.slice("candidate-publication:".length)}\u0000${task.target}`;
+    for (const attemptId of task.attemptIds) {
+      const attempted = Date.parse(attempts.get(attemptId)?.startedAt ?? "");
+      if (Number.isFinite(attempted)) lastAttemptByLink.set(key, Math.max(lastAttemptByLink.get(key) ?? -Infinity, attempted));
+    }
   }
   const inventory = new Map<string, ReturnType<typeof candidatePublicationLinks>[number]>();
   const parentHtml = new Map<string, string>();
@@ -110,7 +141,16 @@ export async function runCandidatePublicationCycle(input: {
   }
   const now = input.clock();
   const captures: Awaited<ReturnType<typeof sourceRecords>>[number][] = [];
-  for (const url of candidatePublicationCaptureUrls([...inventory.values()], input.heldVault)) captures.push(...await sourceRecords(url));
+  for (const url of candidatePublicationCaptureUrls([...inventory.values()], input.heldVault)) {
+    if (stop()) {
+      /* The links are known: each one stays owed by name. */
+      const owed = [...inventory.values()].map(link => ({ candidacyId: link.source.candidacyId, url: link.url, code: "NOT_READ_DEADLINE", artifactId: null }));
+      return { ...stopped("the held captures of linked pages"), inventoried: inventory.size, due: owed.length, deferred: owed.length, outcomes: [...outcomes, ...owed] };
+    }
+    captures.push(...await sourceRecords(url));
+  }
+  for (const [id, attempt] of await readByIds(input.repos.attempts, captures.map(row => row.attemptId).filter(id => !attempts.has(id)))) attempts.set(id, attempt);
+  for (const [id, item] of await readByIds(input.repos.workItems, captures.map(row => row.workItemId).filter(id => !workSubjects.has(id)))) workSubjects.set(id, item.subject);
   const due = [] as ReturnType<typeof candidatePublicationLinks>;
   for (const link of inventory.values()) {
     let reused = false;

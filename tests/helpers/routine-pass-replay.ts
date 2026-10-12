@@ -25,19 +25,9 @@ import {
 } from "../../lib/civic-data/runner.ts";
 
 /*
- * **ONE ROUTINE PASS UNDER A CONTROLLED CLOCK, AS THE RUNNER RUNS IT (C6).**
- *
- * The replays in tests/routine-civic-data-frontier.test.ts and
- * tests/meeting-refresh-schedule-clock.test.ts decide each pass's admission
- * with the runner's own functions. This runs the pass itself with production's
- * code, not a copy: the source reads through `runBoundedChildPass` (four
- * children, the same-host gap), then the Reader repair, with the catch-up of
- * lib/civic-data/hot-read-catch-up.ts for as long as either holds the pass open
- * (`runRoutinePassWithHotReadCatchUp`, `hotReadCatchUpAdmission`, two children,
- * the same-host gap, the pass's time limits and the racing repairs' gate), as
- * scripts/routine-civic-data-runner.mts composes them. `Date.now` and
- * `setTimeout` read the controlled clock while a replay runs, so the pool's own
- * gap timers move with it and nothing waits in real time.
+ * One routine pass under a controlled clock, run with production's own code as
+ * scripts/routine-civic-data-runner.mts composes it. `Date.now` and `setTimeout`
+ * read the controlled clock while a replay runs, so nothing waits in real time.
  */
 
 const MIN = 60_000;

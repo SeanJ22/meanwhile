@@ -1,18 +1,7 @@
 /**
- * **THE LATEST VERIFIED RESULT THAT FALLS IN ONE STATE.** (S12.3, 2026-10-01.)
- *
- * Two bounded statements, one row each, newest first:
- *
- *   - a promotion pipeline item that reached APPROVED_FOR_PROMOTION, placed by
- *     the subject its SCOUTED record names;
- *   - a worker result that is a verified result (a Validator's PASS or an
- *     Auditor's SURVIVED), placed by the subject of its own work item.
- *
- * A subject falls in a state only by the rule `stateOfSubject` states (an id
- * that carries its state in a fixed place). The statement applies that rule's
- * pattern in SQL so the newest row for THIS state is returned, not the newest
- * row overall; the caller re-checks the subject with `stateOfSubject`. A state
- * with no such record returns null, which Admin shows as "—".
+ * The newest verified result in one state: a pipeline item that reached APPROVED_FOR_PROMOTION, or a
+ * Validator PASS / Auditor SURVIVED worker result. The SQL applies the `stateOfSubject` pattern and the
+ * caller re-checks the subject. Null when there is none.
  */
 import { stateOfSubject } from "../expansion/subjects.ts";
 import { boundedQuery } from "./request-bounds.ts";

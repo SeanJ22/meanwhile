@@ -7,45 +7,6 @@ import type { HeldMeetingAction } from "./meeting-outcomes.ts";
 import { localDate, localTime, localWeekday, startTimePosted, zoneOf } from "./meeting-time.ts";
 import type { ValidationVerdict } from "./validate.ts";
 
-/**
- * **WHEN A BODY MEETS IS A FACT WE HOLD, NOT A PARAGRAPH TO WRITE.**
- * (2026-09-25, the Ask latency repair.)
- *
- * Measured on production 2026-09-25: *"When does the Mesa City Council meet
- * next?"* spent 7.2 s in the synthesis rung on a cold instance and 4-6.5 s on
- * a warm one, to say what two MEETING records already said — the sitting, its
- * date and time in the body's own zone, and the named gap about its agenda.
- * The model also opened with a definition of a city council that no record
- * supplied. Sean's bar is three seconds to a usable answer.
- *
- * So when a question asks WHEN a named body sits — or asks for its agenda or
- * its decisions and the pack holds nothing to summarise, only the sitting and
- * the named gaps — the answer is composed here, in code, from those records,
- * exactly as a topic timeline is (`lib/ask/topic-timeline.ts`):
- *
- * - every date and time is the MEETING record's own, read in the body's zone
- *   through `lib/ask/meeting-time.ts`, the module the record text uses;
- * - every title is the publisher's calendar title, quoted;
- * - every limitation is a named gap the route attached to THAT sitting, in its
- *   own words, so OURS and THEIRS can never be swapped by a paraphrase;
- * - the whole stays inside the one length contract, and the caller holds it to
- *   the same validator a model answer faces.
- *
- * It returns null — and the model writes the answer exactly as before —
- * whenever there is something to summarise (agenda items, recorded actions,
- * votes, minutes or notice summaries on an agenda or outcome question), when a
- * calendar listing's meeting identity is unresolved, when a sitting is
- * cancelled, or when a body's time zone is not recorded. Composition never
- * decides that a record does not matter; it only answers where no record
- * needs explaining.
- *
- * Two outcome answers ARE the records, and are read off them rather than
- * summarised: how each member voted (the publisher's roll calls,
- * `composeVoteAnswer`) and what the body decided (its recorded actions, each
- * motion and result in the record's own words, `composeDecisionAnswer`).
- */
-
-/** A sitting as the route resolved it (`AskSitting`), narrowed to what is read here. */
 export interface ComposableSitting {
   id: string;
   title: string;
@@ -57,33 +18,24 @@ export interface ComposableSitting {
   location?: { name: string; address: string | null } | null;
 }
 
-/** A venue is held meeting data, never a body's contact address. */
 export function sittingVenue(sitting: ComposableSitting): string {
   return sitting.location
     ? [...new Set([sitting.location.name, sitting.location.address].filter(Boolean))].join(", ")
     : "";
 }
 
-/** " at 5:45 PM MST", or nothing for a date-only posting (its midnight is never a time). */
 function atTime(sitting: ComposableSitting): string {
   return startTimePosted(sitting) ? ` at ${localTime(sitting)}` : "";
 }
 
-/**
- * Why a gap was attached to the sitting. The order a composed answer states
- * them in depends on the question: an outcome question leads with whether the
- * outcome is held.
- */
 export type SittingGapRole = "NO_SITTING" | "LISTING" | "AGENDA" | "NOTICE" | "MINUTES" | "OUTCOME" | "COMMENT";
 
 export interface SittingGap {
   role: SittingGapRole;
   gap: EvidenceGap;
-  /** The sitting the gap was attached for, where the route attached it for one. */
   meetingId?: string;
 }
 
-/** Records that carry something to summarise, not merely a sitting or a gap. */
 const CONTENT_KINDS: ReadonlySet<EvidenceRecord["kind"]> = new Set([
   "AGENDA_ITEM",
   "AGENDA_MENTION",
@@ -96,42 +48,20 @@ const CONTENT_KINDS: ReadonlySet<EvidenceRecord["kind"]> = new Set([
 export interface SittingAnswerInput {
   shape: SittingShape;
   subjectName: string;
-  /** The chosen sitting FIRST, then any other sitting the body holds that local day. */
   sittings: readonly ComposableSitting[];
-  /** The gated pack records — the same ones the validator checks. */
   records: readonly EvidenceRecord[];
-  /** The gaps the route attached to these sittings, in the order it attached them. */
   sittingGaps: readonly SittingGap[];
   now: number;
   includeLocation?: boolean;
-  /** Exact date already selected by the route; never label it next or latest. */
   requestedLocalDate?: string | null;
-  /** The route's own reading of an outcome question (`outcomeQuestionClass`), when it made one. */
   questionClass?: string | null;
-  /**
-   * The recorded actions the route held for these sittings, read beside the
-   * records (`lib/ask/meeting-outcomes.ts` `HeldMeetingAction`). Only a "what
-   * did they decide" answer reads them, and only through the records they name.
-   */
   actions?: readonly HeldMeetingAction[];
-  /**
-   * Whether one described action may be quoted: the caller's validator over
-   * the phrase alone, so an item whose own title names another government is
-   * left to the records rather than failing the whole answer.
-   */
   admissible?: (text: string) => boolean;
 }
 
 /** `On "<title>", <member> voted <value>.` — the text `lib/ask/meeting-outcomes.ts` mints for a member-vote row. */
 const MEMBER_VOTE_TEXT = /^On "([\s\S]+)", (.+) voted (.+)\.$/;
 
-/**
- * A clerk's item title, quoted from its start with its line breaks read as
- * spaces, cut at a word under ~110 characters. Not the first line alone: a
- * Legistar title's first line is often a section heading ("UNFINISHED
- * BUSINESS (6/23/26)") or a class ("Board of Supervisors Policy") that two
- * items share.
- */
 function titleQuote(title: string): string {
   const line = title.replace(/\s+/g, " ").trim();
   if (line.length <= 110) return line;
@@ -143,22 +73,6 @@ function joined(names: readonly string[]): string {
   return names.length <= 2 ? names.join(" and ") : `${names.slice(0, -1).join(", ")} and ${names.at(-1)}`;
 }
 
-/**
- * **HOW EACH MEMBER VOTED, READ OFF THE PUBLISHER'S OWN ROLL CALLS.**
- * (2026-09-25, the Ask latency repair.)
- *
- * Measured that day on the Pima County Board of Supervisors' September 22
- * sitting (48 roll calls): the fast model writer took 2.8-3.7 s and, on one
- * draw, wrote that a member "voted no" on an item the roll call records him
- * as "Recused". A vote is the one fact a reader asks this question for, and
- * the rows already say it exactly. So a "how did they vote" question is
- * answered from the member-vote rows the route retrieved, in their order —
- * the items the question names, then split votes, first — each member's
- * value in the publisher's own word ("Aye", "Nay", "Recused", "Not
- * Present"), never mapped and never totalled. Every row stays in the records
- * the reader sees. Null when a row's text is not the shape
- * `lib/ask/meeting-outcomes.ts` mints, or nothing fits the length contract.
- */
 function composeVoteAnswer(input: SittingAnswerInput, chosen: ComposableSitting, meetingUrls: readonly string[]): { answer: string; citedUrls: string[] } | null {
   const rows = input.records.filter((record) => record.kind === "MEETING_MEMBER_VOTE");
   const items: { key: string; title: string; url: string | null; values: Map<string, string[]> }[] = [];
@@ -191,16 +105,10 @@ function composeVoteAnswer(input: SittingAnswerInput, chosen: ComposableSitting,
   return { answer: `${sentences.join(". ")}.`, citedUrls: cited };
 }
 
-/** Whitespace is not content: a clerk's line break reads as a space. */
 function squash(text: string): string {
   return text.replace(/\s+/g, " ").trim();
 }
 
-/**
- * A verbatim span: the text's first sentence when that is a sentence of its
- * own under `max` characters (a clerk's item is often a sentence and then its
- * detail), else cut at a word under `max` and marked "…".
- */
 function clip(text: string, max: number): string {
   const line = squash(text);
   if (line.length <= max) return line;
@@ -211,48 +119,16 @@ function clip(text: string, max: number): string {
   return `${cut.slice(0, space > max / 2 ? space : max).replace(/[\s,;:]+$/, "")}…`;
 }
 
-/** Quoted without changing a word: an inner double quote reads as a single one, as every composed quote here does. */
 function inQuotes(text: string): string {
   return `"${text.replace(/"/g, "'")}"`;
 }
 
-/**
- * **WHAT A BODY DECIDED, READ OFF ITS OWN RECORD OF THE SITTING.**
- * (2026-09-25, the Ask three-second repair.)
- *
- * Measured warm, locally, that day: *"What did the Pima board decide at its
- * last meeting?"* took 3.1-3.8 s end to end, all but ~0.3 s of it the fast
- * model writing a paragraph out of the `MEETING_ACTION` records — the
- * publisher's own verb for each motion and its own pass/fail word. Sean's bar
- * is three seconds. So this answer is composed here, exactly as the vote
- * answer above is:
- *
- * - the sitting's date in the body's own zone, and how many actions its record
- *   holds;
- * - the result counts, each with its denominator (`floored` / `floorLine`),
- *   in the publisher's own result words — never mapped to "passed";
- * - as many actions as fit the one length contract, each as the item, the
- *   motion and the result in the record's own words — failed motions and
- *   split roll calls first, then the publisher's order, motions with no
- *   result recorded last;
- * - an action with no result recorded is SAID to have none. A result is never
- *   inferred from a motion, a tally or a roll call;
- * - minutes that are not the approved record say so, in their own words;
- * - how many actions are described, of how many — the records carry them all.
- *
- * Every quoted span is checked to be a span of the record the reader is
- * shown before it is quoted. Null — and the model writes, as before — when the
- * chosen sitting holds no action, a sitting is cancelled, unzoned or an
- * unresolved listing, a same-day sitting holds neither an action nor a named
- * outcome gap, two action records share an id, or any span fails that check.
- */
 function composeDecisionAnswer(input: SittingAnswerInput, chosen: ComposableSitting): { answer: string; citedUrls: string[] } | null {
   const actionRecords = input.records.filter((record) => record.kind === "MEETING_ACTION");
   if (new Set(actionRecords.map((record) => record.id)).size !== actionRecords.length) return null;
   const held = input.actions ?? [];
   if (new Set(held.map((action) => action.recordId)).size !== held.length) return null;
   const byId = new Map(actionRecords.map((record) => [record.id, record]));
-  // Every recorded action in the pack is one the route held for these sittings, and the reverse.
   if (held.length !== actionRecords.length || !held.every((action) => byId.has(action.recordId))) return null;
   for (const action of held) {
     const text = squash(byId.get(action.recordId)!.text);
@@ -270,11 +146,9 @@ function composeDecisionAnswer(input: SittingAnswerInput, chosen: ComposableSitt
   const minutes = mine.every((action) => action.source === "MINUTES");
   const others = input.sittings.slice(1);
 
-  /* 1. The sitting, how many actions its record holds, and the results, each counted over them. */
   const results = new Map<string, number>();
   for (const action of mine) if (action.resultState === "STATED") results.set(action.result!, (results.get(action.result!) ?? 0) + 1);
   const counts: string[] = [];
-  // A result a clerk wrote as a sentence is quoted per action below, never repeated as a count label.
   if ([...results.keys()].every((word) => word.length <= 40)) {
     for (const [word, count] of results) counts.push(floorLine(floored(`${minutes ? "result in the minutes" : "published result"} ${inQuotes(word)}`, where, total, count)));
   }
@@ -286,7 +160,6 @@ function composeDecisionAnswer(input: SittingAnswerInput, chosen: ComposableSitt
   const lead = `At its ${dayOf(chosen)} meeting${titled}, the ${proseName(input.subjectName)} recorded ${total} action${total === 1 ? "" : "s"}, ` +
     `${total === 1 ? "in the records" : "each in the records"} with this answer${counts.length ? `; ${counts.join("; ")}` : ""}`;
 
-  /* 2. Every other sitting that day: its own actions counted, or its named outcome gap. */
   const afterwards: string[] = [];
   for (const sitting of others) {
     const theirs = held.filter((action) => action.meetingId === sitting.id).length;
@@ -305,13 +178,8 @@ function composeDecisionAnswer(input: SittingAnswerInput, chosen: ComposableSitt
       afterwards.push(`For the ${quoted(sitting.title)} sitting ${when}: ${plain.replace(/[.\s]+$/, "")}`);
     }
   }
-  // The standing of minutes that are not the approved record travels with any answer read from them.
   const standing = [...new Set(mine.flatMap((action) => action.standing ? [squash(action.standing)] : []))];
 
-  /* 3. As many actions as fit, the decisive first: a failed motion, a result
-     that contradicts itself, a split roll call, then the publisher's order —
-     its own agenda before its consent calendar, and an item it records no
-     result for last (the count above already says how many there are). */
   const rank = (action: HeldMeetingAction) => action.disposition === "FAILED" ? 0
     : action.resultState === "CONTRADICTORY" ? 1
       : action.resultState === "ABSENT" ? 5
@@ -320,7 +188,6 @@ function composeDecisionAnswer(input: SittingAnswerInput, chosen: ComposableSitt
   const ordered = mine.map((action, index) => ({ action, index }))
     .sort((a, b) => rank(a.action) - rank(b.action) || a.index - b.index)
     .map(({ action }) => action);
-  /* An action with nothing to name it by is left to the records. */
   const phrase = (action: HeldMeetingAction): string | null => {
     const label = action.item ? inQuotes(clip(action.item, 80)) : action.matterFile ?? "";
     const head = [action.itemReference ? `Item ${action.itemReference}` : "", label].filter(Boolean).join(", ");
@@ -331,7 +198,6 @@ function composeDecisionAnswer(input: SittingAnswerInput, chosen: ComposableSitt
         : action.source === "MINUTES" ? "without a result in the minutes text we could read" : "without a published result";
     return `${head}: ${[motion, result].filter(Boolean).join(", ")}`;
   };
-  // The described actions are counted over all of them, in the sentence that describes them.
   const described = (shown: readonly string[]) => `${floorLine(floored("Recorded actions described here", where, total, shown.length))} — ${shown.join("; ")}`;
   const assemble = (shown: readonly string[]) => [lead, described(shown), ...afterwards, ...standing]
     .map((sentence) => sentence.replace(/[.\s]+$/, ""));
@@ -366,7 +232,6 @@ function quoted(title: string): string {
   return `"${title.replace(/"/g, "'").trim()}"`;
 }
 
-/** "Pima County Board Of Supervisors" reads as "Pima County Board of Supervisors" in a sentence. */
 export function proseName(name: string): string {
   const connectors = new Set(["Of", "And", "The", "For", "In", "On", "At", "To"]);
   return name.split(" ").map((word, index) => (index > 0 && connectors.has(word) ? word.toLowerCase() : word)).join(" ");
@@ -374,12 +239,6 @@ export function proseName(name: string): string {
 
 const ISO_INSTANT_SOURCE = "(\\bat )?\\b(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}(?::\\d{2}(?:\\.\\d+)?)?(?:Z|[+-]\\d{2}:\\d{2}))";
 
-/**
- * A named gap in its own words, with any machine timestamp it carries spelled
- * out in the body's own zone — the plain-language rule for prose. The instant
- * is the same instant; only its spelling changes. Null when a timestamp is
- * present and no zone is known to spell it in.
- */
 export function plainGapStatement(statement: string, zone: string | null): string | null {
   if (!new RegExp(ISO_INSTANT_SOURCE).test(statement)) return statement;
   if (!zone) return null;
@@ -398,12 +257,7 @@ function listed(sittings: readonly ComposableSitting[]): string {
   return parts.length <= 2 ? parts.join(" and ") : `${parts.slice(0, -1).join(", ")} and ${parts.at(-1)}`;
 }
 
-/**
- * **A COMPOSED ANSWER SHIPS ONLY ON A PASSING VERDICT.** The composition is
- * held to the validator a model answer faces, and a failed check discards it
- * whole — the caller then asks the model exactly as it did before this module
- * existed. It is never repaired, trimmed or shipped with a warning.
- */
+/** A composed answer ships only on a passing verdict; a failed one is discarded whole and the model writes. */
 export function settleSittingComposition(
   composed: { answer: string; citedUrls: string[] } | null,
   validate: (answer: string, citedUrls: readonly string[]) => ValidationVerdict,
@@ -413,10 +267,8 @@ export function settleSittingComposition(
   return { composed: verdict.kind === "PASSED" ? composed : null, verdict };
 }
 
-/** Which records a composed sitting answer was read from, for the trace. */
 export type SittingAnswerBasis = "RECORDED_ACTIONS" | "ROLL_CALLS" | "SITTING_AND_GAPS";
 
-/** The composed answer and the records it was read from; `composed` is null when a model should write it. */
 export function composeSittingAnswerWithBasis(input: SittingAnswerInput): { composed: { answer: string; citedUrls: string[] } | null; basis: SittingAnswerBasis } {
   if (input.shape === "MEETING_OUTCOME" && input.questionClass === "WHAT_WAS_DECIDED" &&
     input.records.some((record) => record.kind === "MEETING_ACTION")) {
@@ -427,7 +279,6 @@ export function composeSittingAnswerWithBasis(input: SittingAnswerInput): { comp
   return { composed: composeSittingAnswer(input), basis };
 }
 
-/** The decisions answer's own gate: a concluded, zoned, uncancelled sitting whose identity is resolved. */
 function decisionAnswer(input: SittingAnswerInput): { answer: string; citedUrls: string[] } | null {
   const [chosen] = input.sittings;
   if (!chosen || Date.parse(chosen.startsAt) >= input.now) return null;
@@ -436,10 +287,6 @@ function decisionAnswer(input: SittingAnswerInput): { answer: string; citedUrls:
   return composeDecisionAnswer(input, chosen);
 }
 
-/**
- * Compose the answer, or null when a model should write it. See the module
- * note for exactly when each applies.
- */
 export function composeSittingAnswer(input: SittingAnswerInput): { answer: string; citedUrls: string[] } | null {
   if (input.shape === "MEETING_OUTCOME" && input.questionClass === "WHAT_WAS_DECIDED" &&
     input.records.some((record) => record.kind === "MEETING_ACTION")) {
@@ -458,11 +305,8 @@ export function composeSittingAnswer(input: SittingAnswerInput): { answer: strin
   }
   const summarisable = input.records.some((record) => CONTENT_KINDS.has(record.kind) &&
     !(input.shape === "MEETING_OUTCOME" && (record.kind === "AGENDA_ITEM" || record.kind === "AGENDA_MENTION")));
-  /* "How can I comment?" is a meeting-time answer with the body's standing comment rules beside it. */
   const timeLike = input.shape === "MEETING_TIME" || input.shape === "PUBLIC_COMMENT";
   if (!timeLike && summarisable) return null;
-  /* An agenda or outcome question about a sitting is answered by the gap that
-     says what is not held. Without one, there is no composed answer to give. */
   const roles = new Set(input.sittingGaps.map((entry) => entry.role));
   if (input.sittings.length > 0 && input.shape === "MEETING_OUTCOME" && !roles.has("OUTCOME") && !roles.has("MINUTES")) return null;
   if (input.sittings.length > 0 && input.shape === "BODY_AGENDA" && !roles.has("AGENDA")) return null;
@@ -484,7 +328,6 @@ export function composeSittingAnswer(input: SittingAnswerInput): { answer: strin
   if (chosen) {
     if (input.sittings.some((sitting) => sitting.status === "CANCELED" || !zoneOf(sitting).known)) return null;
     const meetingRecords = new Map(input.records.filter((record) => record.kind === "MEETING").map((record) => [record.id, record]));
-    // Every sitting described must be a record the reader is shown.
     if (!input.sittings.every((sitting) => meetingRecords.has(sitting.id))) return null;
     const upcoming = Date.parse(chosen.startsAt) >= input.now;
     const lead = input.requestedLocalDate
@@ -502,8 +345,6 @@ export function composeSittingAnswer(input: SittingAnswerInput): { answer: strin
       const url = meetingRecords.get(sitting.id)?.sourceUrl;
       if (url && !cited.includes(url)) cited.push(url);
     }
-    /* Before/after is only meaningful between two posted times; a date-only
-       sitting (either side) is simply "also that day". */
     const timed = startTimePosted(chosen) ? sameDay.filter(startTimePosted) : [];
     const untimed = sameDay.filter((sitting) => !timed.includes(sitting));
     const later = timed.filter((sitting) => sitting.startsAt > chosen.startsAt);
@@ -514,7 +355,6 @@ export function composeSittingAnswer(input: SittingAnswerInput): { answer: strin
     if (earlier.length) add(`Earlier that day: ${listed(earlier)}`);
     if (untimed.length) add(`Also that day: ${listed(untimed)}`);
     if (timeLike) {
-      // Held agenda items, counted per sitting: two sittings one day are two dockets.
       for (const sitting of input.sittings) {
         const items = input.records.filter((record) => record.kind === "AGENDA_ITEM" &&
           (record.meetingId ?? chosen.id) === sitting.id).length;
@@ -523,7 +363,6 @@ export function composeSittingAnswer(input: SittingAnswerInput): { answer: strin
     }
   }
 
-  /* A public-comment question states the body's standing rules in their own words, as many as fit. */
   if (input.shape === "PUBLIC_COMMENT") {
     const rules = input.records.filter((record) => record.kind === "PUBLIC_COMMENT_ACCESS");
     let stated = 0;
@@ -535,12 +374,9 @@ export function composeSittingAnswer(input: SittingAnswerInput): { answer: strin
     if (rules.length > 0 && stated === 0) return null;
   }
 
-  /* The named gaps, in their own words. An outcome question leads with
-     whether the outcome is held; every other question with the agenda. */
   const order: readonly SittingGapRole[] = input.shape === "MEETING_OUTCOME"
     ? ["NO_SITTING", "OUTCOME", "MINUTES", "AGENDA", "NOTICE", "LISTING"]
     : input.shape === "PUBLIC_COMMENT"
-      /* The comment gap is the answer to a comment question: before the agenda's. */
       ? ["NO_SITTING", "COMMENT", "AGENDA", "LISTING", "NOTICE", "MINUTES", "OUTCOME"]
       : ["NO_SITTING", "AGENDA", "COMMENT", "LISTING", "NOTICE", "MINUTES", "OUTCOME"];
   const required: readonly SittingGapRole[] = input.shape === "MEETING_OUTCOME"
@@ -553,22 +389,15 @@ export function composeSittingAnswer(input: SittingAnswerInput): { answer: strin
     for (const { gap } of input.sittingGaps.filter((entry) => entry.role === role)) {
       if (said.has(gap.statement)) continue;
       said.add(gap.statement);
-      /* A comment gap that points at the body's own page carries a link no record holds: the sentence is said without it (the gap, link and all, is still in the reader's gaps). */
       const statement = role === "COMMENT" ? gap.statement.replace(/; its own page is \S+?\.?$/, ".") : gap.statement;
       if (role === "COMMENT" && /https?:/.test(statement)) return null;
       const plain = plainGapStatement(statement, zone);
-      // A gap that cannot be said plainly is never dropped from a composed
-      // answer: the model writes the answer instead.
       if (plain === null) return null;
-      // The gap that IS the answer (no sitting; no outcome for an outcome
-      // question; no agenda for an agenda question) must fit, or the model
-      // writes it. Any other gap that does not fit stays in the named gaps.
       if (!add(plain) && required.includes(role)) return null;
     }
   }
 
   if (sentences.length === 0) return null;
-  // With no sitting, the answer is the named gap and nothing else.
   if (!chosen && !input.sittingGaps.some((entry) => entry.role === "NO_SITTING")) return null;
   return { answer: `${sentences.join(". ")}.`, citedUrls: cited };
 }

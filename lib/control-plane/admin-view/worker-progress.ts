@@ -1,9 +1,3 @@
-/** Durable, per-WorkItem worker progress for an on-demand Admin read.
- *
- * This is an event projection, not a new event log. An Attempt start, a saved
- * Scout/fleet result, and an Attempt end are the only milestones it can prove.
- * No model's narrative, source text, or worker note crosses this boundary.
- */
 import type { Attempt, ExecutionLease } from "../attempt.ts";
 import { unreachable, type ReadOutcome } from "../admin-data.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
@@ -25,7 +19,6 @@ export type WorkerProgressEvent = {
   readonly role: string;
   readonly at: string | null;
   readonly kind: "ATTEMPT_STARTED" | "RESULT_RECORDED" | "ATTEMPT_ENDED";
-  /** A saved result verdict or terminal Attempt outcome. Null on start. */
   readonly outcome: string | null;
   /** Only an unclosed Attempt with a live lease can be called active. */
   readonly active: boolean;
@@ -72,7 +65,6 @@ async function batches<T, R>(items: readonly T[], read: (item: T) => Promise<R>)
   return out;
 }
 
-/** Pure projection; the complete count is computed before the bounded page. */
 export function projectWorkerProgress(sources: ProgressSources, observedAt: string, requestedLimit = WORKER_PROGRESS_DEFAULT_LIMIT): WorkerProgressRead {
   const limit = Number.isInteger(requestedLimit) ? Math.max(1, Math.min(WORKER_PROGRESS_MAX_LIMIT, requestedLimit)) : WORKER_PROGRESS_DEFAULT_LIMIT;
   const issues = new Set<string>();
@@ -143,7 +135,6 @@ export function projectWorkerProgress(sources: ProgressSources, observedAt: stri
     hasEarlier: events.length > page.length, events: page, issues: [...issues], provesPublicDelivery: false };
 }
 
-/** Point reads only: no fleet scan, no broad result log, and no new writer. */
 export async function readWorkerProgress(repos: ControlPlaneRepositories, workItemId: string, observedAt: string,
   limit = WORKER_PROGRESS_DEFAULT_LIMIT): Promise<ReadOutcome<WorkerProgressRead>> {
   try {

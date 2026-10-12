@@ -1,58 +1,7 @@
 /**
- * The admin surface's own shell. (Session C final, ITEM H, 2026-09-01; the
- * Lumen Edge pass for the 9.4.26 evening admin feedback, ADM-21, 2026-09-05.)
- *
- * Styles are scoped here rather than in `app/globals.css` because the control
- * centre is not the product: it has no reader to consider and no business
- * being in the stylesheet every reader downloads. It DOES now have a design
- * language of its own, and this file is the whole of it.
- *
- * ## Lumen Edge, with our colours on top
- *
- * The project licensed the Lumen Edge system (uiverse, Uiverse Design System
- * License v1 — the extracted tokens may live in this private repository; the
- * ZIP may not be redistributed) and uses its flow on the admin dashboard
- * ONLY — the consumer app's design overhaul is tabled and stays out of this
- * file. Four signals carry the whole look, each mapped to a token below:
- *
- *   1  the surface gradient   light from underneath: an ellipse anchored at
- *                             the bottom edge, brightest at 0%, floor by ~45–65%
- *   2  the hairline rim       a 1px INSET box-shadow at low alpha — never a
- *                             border — strengthening on hover and focus
- *   3  the horizon line       a 70%-wide gradient at the base of every card and
- *                             control, dim at rest, lit on interaction
- *   4  elevation and motion   a tight contact shadow plus a long blurred drop,
- *                             and one signature 1s curve
- *
- * And the one departure: COLOUR WHEREVER A JURISDICTION LEVEL IS EXPRESSED.
- * Lumen Edge is chromaless by design, but the level colours carry meaning, and
- * the compromise the system survives is that HUE rides on the horizon line and
- * the pill, never on the surfaces or the body text. The four hues are the reader map legend's own
- * tokens (`app/globals.css` `--accent-local/state/school/national`), copied
- * here verbatim for dark and for light so the two surfaces agree.
- *
- * Fonts stay ours (no third-party font import from the licensed system). Health
- * grades and readiness cell states keep their legend colours: those are a
- * scale the owner reads, not decoration.
- *
- * ## The recipe layer (Admin Pass A, 2026-09-06)
- *
- * Every GENERIC rule — an element under `.admin`, the card, the button, the
- * field, the select — lives in `@layer ce-recipe`. A cascade layer ranks below
- * every unlayered rule whatever its specificity, so a state or semantic class
- * declared outside the layer (a readiness swatch, a health band, a grade
- * colour, a violation ring) can never be outranked by a recipe, however
- * specific a later restyle makes one. The first restyle proved the
- * alternative: `.admin button.rq-cell { background: none }` beat
- * `.admin .rq-current` on specificity alone, and every readiness cell rendered
- * blank while its legend swatch kept its colour. The rule is structural now
- * and `tests/admin-readiness-cell-state.test.ts` holds it: a control rule
- * outside the layer may not declare a background or a box-shadow, the swatch
- * classes may not move in, and the computed colours are read from Chromium.
- *
- * `noindex` is belt to `netlify.toml`'s braces. The admin host should never be
- * crawled, and the one thing worse than a crawler finding it is a crawler
- * finding it and caching what it saw.
+ * Every generic rule lives in `@layer ce-recipe`, which ranks below every unlayered rule whatever its
+ * specificity, so a state or semantic class declared outside the layer is never outranked by a recipe.
+ * A control rule outside the layer may not declare a background or a box-shadow.
  */
 
 import type { Metadata } from "next";

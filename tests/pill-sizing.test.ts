@@ -1,10 +1,5 @@
-/**
- * **BAL-12 (2026-08-25) — pill sizing uniformity, with its denominator.**
- *
- * Reported as a three-way split (RULING 105), because a bare count of
- * differences cannot tell a decision from a drift. Only the third number is a
- * defect, and it is the one asserted at zero.
- */
+// Pill sizing: each pill is uniform, out of scope with a recorded reason, or a difference with no reason. Only the
+// third is a defect.
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -23,8 +18,7 @@ const reasons = () =>
   JSON.parse(readFileSync(join(ROOT, "tests", "pill-sizing-reasons.json"), "utf8")) as PillReasons;
 
 test("BAL-12: the census reaches the stylesheet at all", () => {
-  // The floor (RULING 159). A parse that found nothing would report perfect
-  // uniformity, which is the failure this instrument exists to avoid.
+  // The floor: a parse that found nothing would report perfect uniformity.
   const census = pillCensus(css());
   assert.ok(census.measured.length >= 20, `only ${census.measured.length} pill rule(s) were found`);
   assert.ok(census.reference, `the reference ${REFERENCE_SELECTOR} is not in the stylesheet`);
@@ -40,22 +34,13 @@ test("BAL-12: every sizing difference from the reference has a STATED REASON", (
 });
 
 test("BAL-12: a reason for a difference that no longer exists is removed", () => {
-  /*
-   * The other direction, and the one nobody watches. A recorded reason for a
-   * difference that has since been normalised is a note explaining something
-   * that is not there — it reads as a live decision and is a fossil.
-   */
+  // A recorded reason for a difference that has since been normalised is stale.
   const split = splitCensus(pillCensus(css()), reasons());
   assert.deepEqual(split.stale, [], "these reasons describe differences that no longer exist");
 });
 
 test("BAL-12: the TAG pills carry the reference treatment exactly", () => {
-  /*
-   * The uniformity Sean actually asked for. These are non-tappable LABELS, and
-   * `.vote-pill` is the one he named as the reference (BAL-22) — so they take
-   * its inset and its type, and any of them drifting is a defect rather than a
-   * decision.
-   */
+  // Non-tappable labels take the `.vote-pill` reference's inset and type.
   const census = pillCensus(css());
   const ref = census.reference!;
   for (const selector of [
@@ -78,9 +63,7 @@ test("BAL-12: the TAG pills carry the reference treatment exactly", () => {
 });
 
 test("BAL-12: the ACTION pills share one inset and one tap target", () => {
-  // Font size is deliberately NOT flattened across these — the reasons file
-  // says why, per pill. What is uniform is the thing Sean photographed: the
-  // height and the inset.
+  // Font size is deliberately not flattened across these (the reasons file says why); height and inset are.
   const census = pillCensus(css());
   for (const selector of [".ask-pill", ".speak-pill", ".contact-pill"]) {
     const rule = census.measured.find((r) => r.selector === selector);

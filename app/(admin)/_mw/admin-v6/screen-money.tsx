@@ -1,20 +1,13 @@
 "use client";
 
-/**
- * **MONEY.** One summary row, then one table. Every summary figure is `moneySummary` over the one cost-ledger read for the period in the
- * picker: Spent (settled paid-AI charges, the tiers add up to it), Search, Set aside (open reservations now), Today (settled today plus
- * set aside) against the daily limit, Left today (the limit minus Today), and the tiers. A hunt's own limit appears only in the table.
- */
 import { useMemo, useState } from "react";
 
-import { plainWords } from "@/lib/control-plane/admin-view/plain-words.ts";
 import { dailyRows, moneySummary } from "@/lib/control-plane/admin-view/spend-period.ts";
 
 import { useV6 } from "./context.tsx";
-import { usd, type Hunt } from "./model.ts";
-import { moneyTime, roleWords, measuredHuntSpend } from "../../../../lib/control-plane/admin-view/cost-reporting-view.ts";
+import { mst, usd, type Hunt } from "./model.ts";
 import { huntAt, huntsWithin } from "./places.ts";
-import { Card, cx, Technical } from "./ui.tsx";
+import { Card, cx } from "./ui.tsx";
 import s from "./v6.module.css";
 
 const DASH = "—";
@@ -45,7 +38,7 @@ export function MoneyScreen() {
       switch (sort.key) {
         case "zip": return zipOf(h.placeKey);
         case "place": return placeOf(h);
-        case "spent": return measuredHuntSpend(h) ?? -1;
+        case "spent": return h.spentUsd;
         case "held": return h.heldUsd;
         case "limit": return h.limitUsd;
         case "status": return STATUS[h.status];
@@ -65,6 +58,8 @@ export function MoneyScreen() {
   });
 
   const spendData = v.data.spend.data;
+  const hunters = spendData?.huntersNow ?? null;
+  const dialWords = hunters === null || sum.dailyLimitUsd === null ? DASH : `${usd(sum.dailyLimitUsd)} a day → about ${hunters} hunter${hunters === 1 ? "" : "s"} at once now`;
   const worstCase = spendData?.worstCaseCharges ?? 0;
 
   const days = v.data.spend.data ? dailyRows(v.data.spend.data, v.period, new Date()) : [];
@@ -86,41 +81,20 @@ export function MoneyScreen() {
         <h1 className={s.h1}>Money</h1>
       </header>
 
-      <Card title="Spend by vendor" aside={<span className={s.meta}>{spendData?.vendors ? `Today (${spendData.vendors.day}) · month (${spendData.vendors.month}) · read ${moneyTime(spendData.vendors.readAt)}` : DASH}</span>}>
-        <div className={s.tableWrap}><table className={s.table}>
-          <thead><tr><th>Vendor</th><th>Today</th><th>Daily limit</th><th>Month to date</th><th>Monthly limit</th></tr></thead>
-          <tbody>{(spendData?.vendors?.vendors ?? ["Anthropic","Neon","DigitalOcean","Netlify","GitHub"].map(vendor=>({vendor,todayUsd:null,monthUsd:null,dailyLimitUsd:null,monthlyLimitUsd:null,todayBytes:null,monthBytes:null,todayPeriodStart:undefined as string|undefined,todayPeriodEnd:undefined as string|undefined,detail:"The vendor reading is not available yet."}))).map(r=><tr key={r.vendor}>
-            <th scope="row">{r.vendor}<Technical lines={[r.detail]}/></th><td>{money(r.todayUsd)}{r.todayPeriodStart&&r.todayPeriodEnd&&<div className={s.small}>Provider day: {moneyTime(r.todayPeriodStart)} to {moneyTime(r.todayPeriodEnd)}</div>}{r.todayBytes!==null&&<div className={s.small}>{gigabytes(r.todayBytes)} transferred</div>}</td><td>{money(r.dailyLimitUsd)}</td><td>{money(r.monthUsd)}{r.monthBytes!==null&&<div className={s.small}>{gigabytes(r.monthBytes)} transferred</div>}</td><td>{money(r.monthlyLimitUsd)}</td>
-          </tr>)}</tbody>
-        </table></div>
-      </Card>
-
-      <Card title="Database transfer by project and day">
-        {spendData?.neonProjects ? <div className={s.tableWrap}><table className={s.table}><thead><tr><th>Project</th><th>Day (Eastern)</th><th>Sent and received</th><th>Why it rose</th></tr></thead><tbody>
-          {spendData.neonProjects.map(r=><tr key={`${r.project}:${r.day}`}><th scope="row">{r.project==="control-plane"?"Control plane":"Civic database"}</th><td>{dayWords(r.day)}</td><td>{gigabytes(r.requestBytes+r.responseBytes)}</td><td>{r.cause===null?DASH:plainWords(r.cause)}{r.cause!==null&&<Technical lines={[r.cause]}/>}</td></tr>)}
-        </tbody></table></div> : <><p className={s.p}>{DASH}</p><Technical lines={["The runner has not published measured daily transfer and cause attribution by database project."]}/></>}
-      </Card>
-
-      <Card title="Batch and full-price spend by role" aside={<span className={s.meta}>Whole factory · last 24 hours</span>}>
-        {spendData?.batchSpend ? <div className={s.tableWrap}><table className={s.table}>
-          <thead><tr><th>Role</th><th>Request pricing</th><th>Settled spend</th><th>Charges</th></tr></thead>
-          <tbody>{spendData.batchSpend.rows.map(r => <tr key={`${r.role}:${r.mode}`}><th scope="row">{roleWords(r.role)}<Technical lines={[r.role]} /></th><td>{r.mode === "batch" ? "Batch" : r.mode === "standard" ? "Full-price" : "—"}</td><td>{money(r.usd)}{r.unpriced > 0 && <Technical lines={[`${r.unpriced} charges have no reported price.`]} />}</td><td>{r.charges}</td></tr>)}</tbody>
-        </table><Technical lines={["Full-price means requests recorded outside the batch API. Amounts include the provider's measured cache pricing. A missing batch flag is not assigned to either price."]} /></div> : <p className={s.p}>—</p>}
-      </Card>
-
-      <Card title="Summary" aside={<span className={s.meta}>{v.data.spend.data?.readAt ? `Read ${moneyTime(v.data.spend.data.readAt)}` : DASH}</span>}>
+      <Card title="Summary" aside={<span className={s.meta}>{v.data.spend.data?.readAt ? `Read ${mst(v.data.spend.data.readAt)}` : DASH}</span>}>
         <div className={s.gridTiles}>
           <div className={s.row}><span className={s.eyebrow}>Spent</span><span className={s.big}>{money(sum.spentUsd)}</span></div>
           <div className={s.row}><span className={s.eyebrow}>Last 24 hours</span><span className={s.big}>{money(v.data.spend.data?.last24h?.modelUsd ?? null)}</span></div>
           <div className={s.row}><span className={s.eyebrow}>Search</span><span className={s.big}>{money(sum.searchUsd)}</span></div>
           <div className={s.row}><span className={s.eyebrow}>Database sent</span><span className={s.big}>{gigabytes(sum.neonBytes)}</span></div>
           <div className={s.row}><span className={s.eyebrow}>Hosting</span><span className={s.big}>{money(hosting)}</span></div>
-          <div className={s.row}><span className={s.eyebrow}>Set aside for running jobs</span><span className={s.big}>{money(sum.setAsideUsd)}</span>{sum.setAsideUsd===null&&<Technical lines={["Running-job reservations have not been read. Historical or crashed reservations are not counted as running jobs."]}/>}</div>
+          <div className={s.row}><span className={s.eyebrow}>Set aside</span><span className={s.big}>{money(sum.setAsideUsd)}</span></div>
           <div className={s.row}>
             <span className={s.eyebrow}>Today against the daily limit</span>
             <span className={s.big}>{money(sum.todayUsd)} <span className={s.dim}>of {money(sum.dailyLimitUsd)}</span></span>
           </div>
           <div className={s.row}><span className={s.eyebrow}>Left today</span><span className={s.big}>{money(sum.leftUsd)}</span></div>
+          <div className={s.row}><span className={s.eyebrow}>What the daily limit buys</span><span className={s.big}>{dialWords}</span></div>
           <div className={s.row}>
             <span className={s.eyebrow}>By model tier</span>
             {sum.tiers === null ? <span className={s.big}>{DASH}</span> : sum.tiers.map((t) => <span key={t.name} className={s.small}>{t.name} <span className={s.mono}>{usd(t.usd)}</span></span>)}
@@ -173,7 +147,7 @@ export function MoneyScreen() {
                     <tr key={h.id}>
                       <th scope="row" style={{ textTransform: "none", fontSize: 13, color: "var(--text)" }}>{zip}</th>
                       <td>{place}</td>
-                      <td className={s.num}>{money(measuredHuntSpend(h))}</td>
+                      <td className={s.num}>{usd(h.spentUsd)}</td>
                       <td className={s.num}>{usd(h.heldUsd)}</td>
                       <td className={s.num}>{usd(h.limitUsd)}</td>
                       <td>{STATUS[h.status]}</td>

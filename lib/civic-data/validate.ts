@@ -1,4 +1,6 @@
 import { createHash } from "node:crypto";
+import { sourceCheckIssue } from "./source-check.ts";
+import { pluralRetirementCheckConsumer } from "../sources/plural/targets.ts";
 
 import { authorityFor, authorityForManualReceipt, sourceAuthority } from "./source-authority.ts";
 import { derivedAuthorityFor } from "./derived-door.ts";
@@ -19,7 +21,7 @@ import {
   type ListedSittingFacts,
 } from "../sources/event-identity.ts";
 import { isCensusPlaceholderDivision } from "../registry/census-placeholders.ts";
-import { REGISTRATION_SOURCE_LAST_MODIFIED, REGISTRATION_SOURCE_SHA256, REGISTRATION_SOURCE_URL } from "../registration/publication.ts";
+import { registrationHeldReplayIsExact } from "../registration/held-evidence.ts";
 import type {
   CandidateDecision,
   CandidateState,
@@ -41,34 +43,9 @@ function sha256(value: string): string {
   return createHash("sha256").update(value).digest("hex");
 }
 
-/**
- * A 304 Not Modified carries no bytes. It is authentic only where a contract
- * pins exact bytes to the Last-Modified they were served with, and only for a
- * candidate built from exactly those bytes. Today that is registration's Census
- * of Governments file (`lib/registration/publication.ts`, bound by one full
- * read); a 304 anywhere else acquired nothing. The raw hash must be the one
- * registration builds from the pinned sha, its reference and the reviewed
- * registry version, so a 304 cannot carry another file's provenance.
- */
+/** A conditional check must cite its previously captured 200 bytes. */
 export function notModifiedIssue(candidate: RoutineCandidate): string | null {
-  if (candidate.recordClass !== "REGISTRATION") {
-    return `HTTP 304 carries no bytes, and ${candidate.recordClass} pins no bytes to a Last-Modified, so nothing was acquired.`;
-  }
-  if (candidate.retrieval.requestedUrl !== REGISTRATION_SOURCE_URL) {
-    return `A registration 304 is bound only to ${REGISTRATION_SOURCE_URL}, not ${candidate.retrieval.requestedUrl}.`;
-  }
-  const payload = (candidate.normalizedPayload ?? {}) as {
-    readonly sourceSha256?: unknown;
-    readonly referenceSha256?: unknown;
-    readonly reviewedRegistryVersionId?: unknown;
-  };
-  if (payload.sourceSha256 !== REGISTRATION_SOURCE_SHA256) {
-    return `The 304 names source bytes ${String(payload.sourceSha256)}, not the pinned ${REGISTRATION_SOURCE_SHA256} bound to Last-Modified ${REGISTRATION_SOURCE_LAST_MODIFIED}.`;
-  }
-  if (candidate.retrieval.rawHash !== sha256(`${REGISTRATION_SOURCE_SHA256}\n${String(payload.referenceSha256)}\n${String(payload.reviewedRegistryVersionId)}`)) {
-    return "The 304's raw hash is not the one registration builds from the pinned bytes, its reference and the reviewed registry version.";
-  }
-  return null;
+  return `HTTP 304 carries no bytes for ${candidate.recordClass}; replay the identified held response with its original status and observation date.`;
 }
 
 function durableCanonicalJson(value: unknown): { readonly canonical: string | null; readonly issue: string | null } {
@@ -103,21 +80,9 @@ function jurisdictionAllowed(candidate: RoutineCandidate, allowed: readonly stri
   return candidate.identities.every((identity) => allowed.includes(identity.jurisdiction));
 }
 
-/**
- * **A VERSION THAT NAMES A PUBLICATION IS NOT AN ORDER.** (2026-09-24.)
- * CISA's registry is versioned by the git commit of `current-full.csv`, and two
- * commit hashes compared as strings say nothing about which came first: every
- * daily revision from 2026-09-15 to 09-24 was refused as "11fe34b4… precedes
- * promoted e68adb11…", eight upstream updates in a row, while the pointer sat on
- * the 09-15 registry. For these classes the version still has to equal the
- * expected one; which publication is newer is decided by the acquisition and
- * source-through order checked beside it, never by the hash.
- */
-const UNORDERED_VERSION_CLASSES: ReadonlySet<RoutineCandidate["recordClass"]> = new Set(["DOTGOV_REFERENCE"]);
+/** For these classes the version names a publication, not an order: which is newer is decided by acquisition and source-through order. */
+const UNORDERED_VERSION_CLASSES: ReadonlySet<RoutineCandidate["recordClass"]> = new Set(["DOTGOV_REFERENCE", "FEDERAL_DIRECTORY"]);
 
-/** Worker publication editions identify audited attempts, not sortable source
- * vintages. Exact expected-version agreement and both real time-order checks
- * below still apply; random hash spelling cannot establish chronology. */
 function hasOpaqueWorkerEdition(candidate: RoutineCandidate): boolean {
   return (candidate.sourceId === "registry-reviewed-bindings" && candidate.recordClass === "REGISTRY_RUNTIME_BINDING" &&
     /^worker-roster:wr-[a-f0-9]{24}$/.test(candidate.temporal.version)) ||
@@ -141,10 +106,7 @@ function object(value: unknown): Record<string, unknown> | null {
     : null;
 }
 
-/** A gap becoming an official filing is a reclassification of the same
- * candidacy, although the legacy finance member key changes from its target
- * key to the newly known committee ID. Prove that pair; an unmatched loss
- * remains an incomplete-horizon removal and must still be held. */
+/** A gap becoming an official filing reclassifies the same candidacy though its finance member key changes; an unmatched loss stays held. */
 function stateFinanceGapResolution(candidate: RoutineCandidate): ValidationCheck | null {
   if (candidate.recordClass !== "STATE_CAMPAIGN_FINANCE" || (candidate.removalEvidence?.length ?? 0) > 0) return null;
   const removed = candidate.changeSet?.removed ?? [];
@@ -180,11 +142,7 @@ function stateFinanceGapResolution(candidate: RoutineCandidate): ValidationCheck
   );
 }
 
-/**
- * Removals an auditor's BROKE verdict caused (DP-15). Every removed key must be named by exactly one
- * pull row and be held by this candidate as an audit-pulled excluded fact for the same member, so a
- * removal can never be claimed without the pull that explains it. Anything else falls through.
- */
+/** Every removed key must be named by exactly one pull row and held as an audit-pulled excluded fact for the same member. */
 function auditPullRemovalCheck(candidate: RoutineCandidate, removed: readonly { readonly key: string }[],
   evidence: NonNullable<RoutineCandidate["removalEvidence"]>): ValidationCheck | null {
   if (candidate.recordClass !== "CURATED_READER_RECORD" || removed.length === 0 || evidence.length !== removed.length) return null;
@@ -201,7 +159,53 @@ function auditPullRemovalCheck(candidate: RoutineCandidate, removed: readonly { 
     `${removed.length} record(s) left this version because an auditor broke them.`);
 }
 
-function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationCheck | null {
+/** An explicit source end date is a fact even when another native record could not be parsed. */
+function statePeopleRetirementCheck(candidate: RoutineCandidate, prior: CandidateVersionRecord | null, validatedAt: string, sourceChecks:readonly DependentCheck[]): ValidationCheck | null {
+  if (candidate.recordClass !== "STATE_LEGISLATOR" || candidate.sourceId !== "plural-openstates" ||
+    !prior || prior.candidate.sourceId !== candidate.sourceId || prior.candidate.scope !== candidate.scope ||
+    (candidate.removalEvidence?.length ?? 0) > 0) return null;
+  const nativeSourceCheck=sourceChecks.find(check=>check.consumer === pluralRetirementCheckConsumer(candidate,prior));
+  if (!nativeSourceCheck) return null;
+  if (!nativeSourceCheck.passed) return result("COMPLETENESS_HORIZON_VALIDITY","FAIL","NATIVE_MEMBERSHIP_END_SOURCE_UNPROVEN",nativeSourceCheck.detail);
+  const rows = (value:unknown) => Array.isArray(value) ? value.map(object).filter((row):row is Record<string,unknown>=>row !== null) : [];
+  const roster=object(object(candidate.readModel)?.roster);
+  const ended=rows(roster?.endedMemberships), sourceEnds=rows(object(candidate.normalizedPayload)?.endedMemberships);
+  const day=validatedAt.slice(0,10);
+  const nativeDate=(value:unknown):value is string => typeof value === "string" && /^\d{4}(?:-\d{2}(?:-\d{2})?)?$/.test(value) &&
+    Number.isFinite(Date.parse(value)) && new Date(value).toISOString().slice(0,value.length) === value;
+  const captured=(source:RoutineCandidate,url:unknown):boolean => {
+    if (typeof url !== "string") return false;
+    const path=/^https:\/\/raw\.githubusercontent\.com\/openstates\/people\/([a-f0-9]{40})\/(data\/[a-z]{2}\/(?:legislature|executive|municipal|municipalities)\/.+\.ya?ml)$/.exec(url);
+    if (!path || candidate.scope.slice(3,5).toLowerCase() !== path[2].split("/")[1]) return false;
+    return rows(object(source.normalizedPayload)?.acquisitions).some(acquisition=>{
+      const origin=object(acquisition.extractedFrom);
+      return origin?.member === path[2] && acquisition.requestedUrl === `https://codeload.github.com/openstates/people/zip/${path[1]}` &&
+        origin.requestedUrl === acquisition.requestedUrl && origin.finalUrl === acquisition.finalUrl &&
+        typeof origin.sha256 === "string" && SHA256.test(origin.sha256) && origin.sha256 === acquisition.rawHash &&
+        typeof acquisition.httpStatus === "number" && acquisition.httpStatus >= 200 && acquisition.httpStatus < 300 &&
+        typeof acquisition.body === "string" && acquisition.body.length > 0;
+    });
+  };
+  const removed=candidate.changeSet?.removed ?? [];
+  if (!removed.length) return null;
+  for (const delta of removed) {
+    const before=object(delta.before), memberships=rows(before?.memberships).filter(row=>row.current !== false);
+    if (!before || delta.key !== `member:${before.id}` || typeof before.personId !== "string" || !memberships.length) return null;
+    for (const membership of memberships) {
+      const matches=ended.filter(row=>row.id === membership.id), end=matches[0];
+      if (matches.length !== 1 || end.current !== false || end.personId !== before.personId || end.personId !== membership.personId ||
+        end.officeId !== membership.officeId || end.jurisdiction !== membership.jurisdiction ||
+        (end.termStart ?? null) !== (membership.termStart ?? null) || !nativeDate(end.termEnd) || end.termEnd >= day.slice(0,end.termEnd.length) ||
+        end.termStart != null && (!nativeDate(end.termStart) || end.termStart.slice(0,Math.min(end.termStart.length,end.termEnd.length)) > end.termEnd.slice(0,Math.min(end.termStart.length,end.termEnd.length))) ||
+        !captured(prior.candidate,membership.sourceUrl) || !captured(candidate,end.sourceUrl) ||
+        sourceEnds.filter(row=>canonicalCivicDataJson(row) === canonicalCivicDataJson(end)).length !== 1) return null;
+    }
+  }
+  return result("COMPLETENESS_HORIZON_VALIDITY","PASS","NATIVE_MEMBERSHIPS_EXPLICITLY_ENDED",
+    `${removed.length} current person record(s) left only after every active native tenure ended; exact identities, original captures and historical memberships remain held.`);
+}
+
+function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: CandidateVersionRecord | null, validatedAt: string, sourceChecks:readonly DependentCheck[]): ValidationCheck | null {
   const removed = candidate.changeSet?.removed ?? [];
   const evidence = candidate.removalEvidence ?? [];
   const reconciledCompleteHorizon = candidate.horizon.kind === "BOUNDED" &&
@@ -235,6 +239,9 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
 
   const auditPull = auditPullRemovalCheck(candidate, removed, evidence);
   if (auditPull !== null) return auditPull;
+
+  const statePeopleRetirement=statePeopleRetirementCheck(candidate,prior,validatedAt,sourceChecks);
+  if (statePeopleRetirement !== null) return statePeopleRetirement;
 
   if (candidate.recordClass !== "MEETING" && candidate.recordClass !== "REGISTRY_RUNTIME_BINDING") {
     return result(
@@ -271,7 +278,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
   // A meeting removal is proven only by a meeting's authority; the registry's placeholder code never proves one.
   const validMeetingEvidence = new Map<string, Exclude<RoutineRemovalEvidence, CensusPlaceholderBodyRemovalEvidence | AuditPullRemovalEvidence>>();
   const registeredWindow = meetingReaderServingWindowAt(candidate.retrieval.retrievedAt);
-  // One pass after DB-01: a `V1` row (the old shown window) is still accepted.
+    // A `V1` row (the old shown window) is still accepted.
   const legacyWindow = meetingLegacyServingWindowAt(candidate.retrieval.retrievedAt);
   let currentMembers: ReadonlyMap<string, unknown> | null = null;
   const currentMember = (key: string): unknown => {
@@ -292,16 +299,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
     const meetingId = typeof before?.id === "string" ? before.id : null;
     const startsAt = typeof before?.startsAt === "string" ? before.startsAt : null;
     if (row.code === "SUPERSEDED_BY_OCCURRENCE_IDENTITY") {
-      /*
-       * A prior record replaced by the fresh record that now holds its
-       * sitting: an occurrence of its recurring series (2026-09-23,
-       * `supersedesSeriesRecord`), or the same sitting its publisher re-issued
-       * under a new id (2026-09-24, `reissuesSitting`). Nothing in the evidence
-       * row is taken on trust: the successor is looked up among THIS
-       * candidate's own members, must be a fresh row rather than a carried
-       * one, and must pass the same tests the reconciliation applied, re-run
-       * here on the stored records.
-       */
+            /* The successor must be a fresh member of this candidate and pass the same reconciliation tests, re-run here. */
       const successor = typeof row.successorKey === "string" ? object(currentMember(row.successorKey)) : null;
       const successorId = typeof successor?.id === "string" ? successor.id : null;
       const successorStartsAt = typeof successor?.startsAt === "string" ? successor.startsAt : null;
@@ -335,12 +333,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
       continue;
     }
     if (row.code === "EXCLUDED_BY_PUBLISHER") {
-      /*
-       * A sitting the publisher struck out of its series (2026-09-23). The
-       * statement must be one THIS read recorded, as a held fact of this
-       * candidate, for this record's own body; the removed record must be
-       * that very sitting; and the candidate must not publish it anyway.
-       */
+            /* The strike must be a held fact this read recorded for this record's own body, and the sitting must not publish. */
       const stated = (candidate.excludedFacts ?? [])
         .filter((fact) => fact.code === "MEETING_EXCLUDED_BY_PUBLISHER")
         .map((fact) => object(fact.record))
@@ -365,12 +358,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
       continue;
     }
     if (row.code === "MOVED_TO_HISTORY") {
-      /*
-       * A concluded sitting leaves its live partition only into the partition's durable history (DB-06). The record
-       * must have been concluded, started before this clock's held window, and be named here under exactly its own
-       * partition's history scope. That the named history version really holds the record is the door's check against
-       * the store (`movedToHistoryAuthorityIssue`), which runs before this validator.
-       */
+            /* That the named history version holds the record is the door's check (`movedToHistoryAuthorityIssue`), run before this. */
       const heldWindow = registeredWindow;
       const prior = Date.parse(row.priorStartsAt);
       const lower = Date.parse(row.lowerBound);
@@ -453,15 +441,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
   return null;
 }
 
-/**
- * A registry member may leave an open fact set only as a body minted on a
- * Census "no district here" placeholder (Sean, 2026-09-23). Nothing in the
- * evidence row is taken on trust; every clause is re-derived from this
- * candidate: the removed record is exactly `body:<its id>`, it sat on exactly
- * the named division, and the candidate still holds that division, a
- * placeholder by its own Census code (lib/registry/census-placeholders.ts).
- * Every other registry removal stays refused.
- */
+/** A registry member may leave only as a body on a Census placeholder division, re-derived from this candidate. */
 function registryPlaceholderRemovalCheck(
   candidate: RoutineCandidate,
   removed: RoutineChangeSet["removed"],
@@ -478,6 +458,17 @@ function registryPlaceholderRemovalCheck(
     const row = evidenceByKey.get(delta.key)!;
     const before = object(delta.before);
     if (row.code === "OFFICIAL_ROSTER_NO_LONGER_LISTS") {
+      if (row.replacementHolderId) {
+        const executives = object(candidate.readModel)?.statewideExecutives;
+        const replacement = Array.isArray(executives) ? executives.map(object).find(entry=>object(entry?.holder)?.id === row.replacementHolderId) : null;
+        if (!replacement || replacement.stateOcdId !== row.bodyId || replacement.sourceUrl !== row.sourceUrl || object(replacement.holder)?.officeTitle !== row.officeTitle || row.holderId === row.replacementHolderId ||
+          !["statewide-executive","roster-disposition","official-candidacy","official-photo","roster-photo"].some(kind=>delta.key===`${kind}:${row.holderId}`) ||
+          delta.key===`statewide-executive:${row.holderId}` && (object(before?.holder)?.officeTitle !== row.officeTitle || before?.stateOcdId !== row.bodyId)) {
+          return result("COMPLETENESS_HORIZON_VALIDITY","FAIL","REMOVAL_EVIDENCE_MISMATCH",`${delta.key} lacks an exact sourced successor for that executive office.`);
+        }
+        continue;
+      }
+
       // A departure: this candidate's complete official roster for the body, from that page, no longer lists the holder.
       const roster = rosters.find(r => r?.bodyId === row.bodyId);
       const listed = Array.isArray(roster?.members) && roster.members.some(member => object(member)?.id === row.holderId);
@@ -517,7 +508,6 @@ export function failureStateFor(check: ValidationCheck): CandidateState {
   }
 }
 
-/** Every decision below is deterministic and tied to one named GOOD check. */
 export function validateRoutineCandidate(
   candidate: RoutineCandidate,
   lastKnownGood: CandidateVersionRecord | null,
@@ -537,7 +527,6 @@ export function validateRoutineCandidate(
   const readModel = durableCanonicalJson(candidate.readModel);
   const suppliedCivicRecords = candidate.civicRecords === undefined ? null : canonicalMembers(candidate.civicRecords);
   const canonicalDerivedCivicRecords = canonicalMembers(derivedCivicRecords);
-  /* A DERIVED authority has no route: its candidate is authentic only as the exact inputs it names (derived-door.ts). */
   const authority = candidate.retrieval.derived
     ? derivedAuthorityFor(candidate)
     : candidate.retrieval.manualSourceReceipt
@@ -557,6 +546,10 @@ export function validateRoutineCandidate(
       : null;
   const inheritedAuthorityIssue = manualPriorAuthorityIssue(candidate, lastKnownGood);
   const inheritedAuthority = manualPriorAuthorityOf(candidate);
+  const sourceCheck = candidate.retrieval.sourceCheck;
+  const checkIssue = sourceCheckIssue(sourceCheck, validatedAt) ?? (sourceCheck &&
+    [sourceCheck.requestedUrl, sourceCheck.finalUrl].some(url => !authorityFor(candidate.sourceId, candidate.recordClass, url).ok)
+    ? "The checked source URL is outside this source's registered authority." : null);
 
   if (candidate.bootstrapImport) {
     const reattestation = candidate.bootstrapImport.kind === "TRUSTED_LKG_REATTESTATION";
@@ -603,6 +596,8 @@ export function validateRoutineCandidate(
     checks.push(result("SOURCE_AUTHENTICITY", "FAIL", authority.code, authority.detail));
   } else if (!candidate.retrieval.rawHash || !SHA256.test(candidate.retrieval.rawHash)) {
     checks.push(result("SOURCE_AUTHENTICITY", "FAIL", "RAW_HASH_INVALID", "Acquired bytes do not carry a lowercase SHA-256 hash."));
+  } else if (checkIssue !== null) {
+    checks.push(result("SOURCE_AUTHENTICITY", "FAIL", "SOURCE_CHECK_INVALID", checkIssue));
   } else if (candidate.retrieval.httpStatus === 304 && notModifiedIssue(candidate) !== null) {
     checks.push(result("SOURCE_AUTHENTICITY", "FAIL", "NOT_MODIFIED_WITHOUT_BOUND_PIN", notModifiedIssue(candidate) ?? ""));
   } else if (inheritedAuthorityIssue !== null) {
@@ -611,12 +606,9 @@ export function validateRoutineCandidate(
     checks.push(result("SOURCE_AUTHENTICITY", "PASS", "CURRENT_SOURCES_AND_EXACT_PRIOR_AUTHORITY_VALID",
       `${authority.contract.publisher}; current acquired sources plus ${inheritedAuthority.retainedMembers.length} unchanged members inherited from GOOD version ${inheritedAuthority.versionId}. Inherited members retain their prior provenance; no fresh HTTP retrieval is asserted for them.`));
   } else {
-    const confirmed = candidate.retrieval.httpStatus === 304
-      ? `; 304 Not Modified against the pinned Last-Modified ${REGISTRATION_SOURCE_LAST_MODIFIED}, confirming the pinned bytes ${REGISTRATION_SOURCE_SHA256} without a download`
-      : "";
     checks.push(candidate.retrieval.derived
       ? result("SOURCE_AUTHENTICITY", "PASS", "DERIVED_INPUTS_AND_RAW_PROVENANCE_VALID", `${authority.contract.publisher}; derived from ${candidate.retrieval.derived.inputs.length} named input(s); raw ${candidate.retrieval.rawHash}.`)
-      : result("SOURCE_AUTHENTICITY", "PASS", "AUTHORITY_AND_RAW_PROVENANCE_VALID", `${authority.contract.publisher}; ${candidate.retrieval.finalUrl}${confirmed}; raw ${candidate.retrieval.rawHash}.`));
+      : result("SOURCE_AUTHENTICITY", "PASS", "AUTHORITY_AND_RAW_PROVENANCE_VALID", `${authority.contract.publisher}; ${candidate.retrieval.finalUrl}; raw ${candidate.retrieval.rawHash}.`));
   }
 
   if (!candidate.normalization.succeeded) {
@@ -712,10 +704,10 @@ export function validateRoutineCandidate(
     checks.push(result("IDENTITY_JURISDICTION_VALIDITY", "FAIL", "JURISDICTION_OUTSIDE_AUTHORITY", `One or more identities fall outside ${registered.jurisdictions.join(", ")}.`));
   } else if (identifierContractFailure) {
     checks.push(result("IDENTITY_JURISDICTION_VALIDITY", "FAIL", "REGISTERED_IDENTIFIER_MISSING", `${identifierContractFailure.subjectId} carries none of the registered keys: ${registered!.expectedIdentifierKeys.join(", ")}.`));
-  } else if (candidate.recordClass === "STATE_LEGISLATOR" && candidate.identities.some((identity) => !identity.chamber || !identity.term || !identity.office)) {
-    checks.push(result("IDENTITY_JURISDICTION_VALIDITY", "FAIL", "STATE_MEMBER_SEAT_IDENTITY_INCOMPLETE", "Every state member requires exact office, chamber, and term."));
+  } else if (candidate.recordClass === "STATE_LEGISLATOR" && candidate.identities.some((identity) => !identity.office)) {
+    checks.push(result("IDENTITY_JURISDICTION_VALIDITY", "FAIL", "STATE_MEMBER_SEAT_IDENTITY_INCOMPLETE", "Every state member requires its sourced office; optional term dates never withhold the person."));
   } else if (candidate.recordClass === "STATE_LEGISLATOR" && candidate.identities.some((identity) =>
-    identity.term !== candidate.temporal.version ||
+    (candidate.sourceId !== "plural-openstates" && identity.term !== undefined && identity.term !== candidate.temporal.version) ||
     (candidate.sourceId === "nh-general-court" && identity.identifiers.chamber !== identity.chamber)
   )) {
     checks.push(result("IDENTITY_JURISDICTION_VALIDITY", "FAIL", "STATE_MEMBER_CHAMBER_TERM_MISMATCH", "Every state member's chamber identifier and term must agree with the normalized seat and candidate period."));
@@ -733,6 +725,8 @@ export function validateRoutineCandidate(
   const validationAt = Date.parse(validatedAt);
   const candidateOrder = temporalOrder(candidate.temporal.sourceThrough);
   const currentOrder = current ? temporalOrder(current.sourceThrough) : null;
+  const heldRegistrationReplay = currentRetrievedAt !== null && Number.isFinite(currentRetrievedAt) &&
+    retrievedAt < currentRetrievedAt && registrationHeldReplayIsExact(candidate, lastKnownGood);
   if (!Number.isFinite(retrievedAt) || !Number.isFinite(validationAt)) {
     checks.push(result("TEMPORAL_VALIDITY", "FAIL", "ACQUISITION_TIME_INVALID", "The acquisition or validation instant is not a valid timestamp."));
   } else if (retrievedAt > validationAt) {
@@ -742,7 +736,8 @@ export function validateRoutineCandidate(
       "ACQUISITION_TIME_AFTER_VALIDATION",
       `The acquisition instant ${candidate.retrieval.retrievedAt} is later than validation ${validatedAt}.`,
     ));
-  } else if (currentRetrievedAt !== null && Number.isFinite(currentRetrievedAt) && retrievedAt < currentRetrievedAt) {
+  } else if (currentRetrievedAt !== null && Number.isFinite(currentRetrievedAt) && retrievedAt < currentRetrievedAt &&
+    !heldRegistrationReplay) {
     checks.push(result(
       "TEMPORAL_VALIDITY",
       "FAIL",
@@ -765,14 +760,17 @@ export function validateRoutineCandidate(
   } else if ((hasOpaqueWorkerEdition(candidate) || (lastKnownGood && hasOpaqueWorkerEdition(lastKnownGood.candidate))) &&
     (candidateOrder === null || (current && currentOrder === null))) {
     checks.push(result("TEMPORAL_VALIDITY", "CANNOT_TELL", "WORKER_SOURCE_CHRONOLOGY_UNKNOWN", "An opaque worker edition requires ordered source-through evidence; its hash is not a clock."));
-  } else if (current && !UNORDERED_VERSION_CLASSES.has(candidate.recordClass) &&
+  } else if (current && !UNORDERED_VERSION_CLASSES.has(candidate.recordClass) && candidate.sourceId !== "plural-openstates" &&
     !hasOpaqueWorkerEdition(candidate) && !(lastKnownGood && hasOpaqueWorkerEdition(lastKnownGood.candidate)) &&
     candidate.temporal.version < current.version) {
     checks.push(result("TEMPORAL_VALIDITY", "FAIL", "VERSION_REGRESSION", `${candidate.temporal.version} precedes promoted ${current.version}.`));
   } else if (candidateOrder !== null && currentOrder !== null && candidateOrder < currentOrder) {
     checks.push(result("TEMPORAL_VALIDITY", "FAIL", "SOURCE_THROUGH_REGRESSION", `${candidate.temporal.sourceThrough} precedes promoted ${current!.sourceThrough}.`));
   } else {
-    checks.push(result("TEMPORAL_VALIDITY", "PASS", "TEMPORAL_VERSION_VALID", `${candidate.temporal.version}; source through ${candidate.temporal.sourceThrough}.`));
+    checks.push(result("TEMPORAL_VALIDITY", "PASS", heldRegistrationReplay ? "REGISTRATION_HELD_SOURCE_REPLAY" : "TEMPORAL_VERSION_VALID",
+      heldRegistrationReplay
+        ? `Same archive and state reference as GOOD ${lastKnownGood!.candidate.id}; original capture ${candidate.retrieval.retrievedAt}, prior provider check ${candidate.retrieval.sourceCheck!.checkedAt}. Source dates and held division facts are preserved.`
+        : `${candidate.temporal.version}; source through ${candidate.temporal.sourceThrough}.`));
   }
 
   if (candidate.semantics.violations.length > 0) {
@@ -783,7 +781,7 @@ export function validateRoutineCandidate(
     checks.push(result("SEMANTIC_VALIDITY", "PASS", "FACT_INTERPRETATION_VALID", `${candidate.semantics.factKind}${candidate.semantics.actionStage ? ` at ${candidate.semantics.actionStage}` : ""}.`));
   }
 
-  const removalCheck = incompleteHorizonRemovalCheck(candidate);
+  const removalCheck = incompleteHorizonRemovalCheck(candidate,lastKnownGood,validatedAt,sourceScopedChecks);
   if (candidate.horizon.returnedRecords !== candidate.normalization.outputRecords) {
     checks.push(result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "HORIZON_RECORD_COUNT_MISMATCH", `${candidate.horizon.returnedRecords} horizon rows != ${candidate.normalization.outputRecords} normalized rows.`));
   } else if (candidate.horizon.claimsComplete && candidate.horizon.kind !== "BOUNDED") {
@@ -853,7 +851,6 @@ export function validateRoutineCandidate(
   return { receipt, state: blocking ? failureStateFor(blocking) : "VALIDATED" };
 }
 
-/** A concluded meeting row that names an agenda, minutes, an outcome or a vote is a kept record (DB-01). */
 function meetingRowCarriesRecords(row: Record<string, unknown>): boolean {
   if (typeof row.agendaUrl === "string" && row.agendaUrl !== "") return true;
   const links = Array.isArray(row.publishedLinks) ? row.publishedLinks : [];

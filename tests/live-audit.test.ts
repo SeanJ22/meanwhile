@@ -1,4 +1,4 @@
-/** DP-13: the live-audit pass samples published facts by area, re-reads their pages, and answers green or red per fact ID. */
+/** The live-audit pass samples published facts by area, re-reads their pages, and answers green or red per fact ID. */
 import assert from "node:assert/strict";
 import test from "node:test";
 

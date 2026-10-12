@@ -1,60 +1,26 @@
 /**
- * THE COVERAGE TIER (RULING 6, Prompt B item 6, 2026-08-20).
+ * The coverage tier: a stamped position on a ladder defined outside us. Not
+ * the OCD level `tier` in lib/ocd/tiers.ts.
  *
- * Until now this product reported coverage against its own registry — how
- * many of the bodies we already knew about were filled in. That number always
- * looked good and meant nothing, because a registry that defines its own
- * denominator cannot be caught missing anything. The coverage tier replaces it
- * with a stated position on a ladder whose rungs are defined OUTSIDE us.
+ *   TIER_0  roster only        In the Census or NCES universe; nothing else known.
+ *   TIER_1  territory resolved Confirmed to govern this zip.
+ *   TIER_2  bodies enumerated  Its councils, boards and commissions are known
+ *                              (never derivable from geometry or government counts).
+ *   TIER_3  Kelly depth        Every official and candidate has photo, phone,
+ *                              working contact, a verified page and a campaign site.
  *
- * NAMING, because this repo already uses the word. `lib/ocd/tiers.ts` has a
- * `tier` meaning the OCD LEVEL axis — federal, state, local. That is a
- * different thing entirely and the two must never be confused, so everything
- * here says COVERAGE tier, in full, in every identifier and every column name.
- *
- * THE FOUR TIERS, in RULING 6's vocabulary verbatim:
- *
- *   TIER_0  roster only        The government appears in the Census or NCES
- *                              universe. Nothing else is known.
- *   TIER_1  territory resolved The government is confirmed to govern this zip.
- *   TIER_2  bodies enumerated  The governing bodies inside that government are
- *                              known — councils, boards, commissions — not
- *                              merely the government itself.
- *   TIER_3  Kelly depth        Every official and candidate carries photo,
- *                              phone, working contact, a specific verified
- *                              page, and a campaign site.
- *
- * RULING 9 IS THE HINGE BETWEEN 1 AND 2. Census counts GOVERNMENTS; this
- * product renders BODIES. Tucson is one row in the Census file and holds a
- * dozen governing bodies. So Census and NCES can establish Tier 0 and Tier 1
- * and can NEVER establish Tier 2 — no amount of boundary geometry tells you
- * that a city has a council, a planning commission and a board of adjustment.
- * `promote()` below enforces exactly that: a Tier 2 claim requires enumerated
- * bodies as evidence and refuses geometry as a substitute.
- *
- * THE TIER IS STORED AND STAMPED, NEVER INFERRED AT READ TIME. A tier
- * computed from "what happens to be present when someone asks" drifts
- * silently every time a fetch fails: a bad afternoon at one vendor would
- * demote a zip, and a lucky cache would promote one. Stamped, a tier is a
- * claim somebody made on a date, and a later session can be held to it.
- *
- * RULING 6, LAST CLAUSE: **a tier may never be raised by a session that did
- * not do the work that raises it.** `promote()` takes EVIDENCE, not a tier,
- * and computes the tier from it. There is no setter.
+ * Tiers are stored and stamped, never inferred at read time. promote() takes
+ * evidence and computes the tier; there is no setter.
  */
 
 export const COVERAGE_TIERS = ["TIER_0", "TIER_1", "TIER_2", "TIER_3"] as const;
 export type CoverageTier = (typeof COVERAGE_TIERS)[number];
 
-/**
- * What an aggregate record carries when the tier at the time of writing is not
- * recoverable. It is NOT a fifth tier and it is never ordered against the
- * four — it is the absence of a tier, named, per the render-default rule.
- */
+/** The absence of a tier, not a fifth tier; never ordered against the four. */
 export const COVERAGE_TIER_UNKNOWN = "UNKNOWN" as const;
 export type CoverageTierOrUnknown = CoverageTier | typeof COVERAGE_TIER_UNKNOWN;
 
-/** Reader-facing wording, item 7.1. Plain language; never "Tier 1". */
+/** Reader-facing wording; never "Tier 1". */
 export const COVERAGE_TIER_READER_LABEL: Record<CoverageTier, string> = {
   TIER_0: "We know this government exists. We have not confirmed what it covers.",
   TIER_1: "We have confirmed which governments cover this area.",
@@ -62,11 +28,7 @@ export const COVERAGE_TIER_READER_LABEL: Record<CoverageTier, string> = {
   TIER_3: "We have the people too — who they are, and how to reach them.",
 };
 
-/**
- * A one-line summary for a zip surface. Deliberately about US and what WE
- * have done, never about the place: "we have not confirmed" is a fact about
- * our research, and "this town has nothing" would be a fact about the town.
- */
+/** Always about our research, never a claim about the place. */
 export const COVERAGE_TIER_ZIP_HEADLINE: Record<CoverageTier, string> = {
   TIER_0:
     "We have some of the governments that cover this ZIP code, and we are still working out the rest.",
@@ -75,7 +37,7 @@ export const COVERAGE_TIER_ZIP_HEADLINE: Record<CoverageTier, string> = {
   TIER_3: "We have the governments here, their boards and councils, and the people who sit on them.",
 };
 
-/** What specifically stands between a tier and the next one. Item 11.3. */
+/** What stands between a tier and the next one. */
 export const COVERAGE_TIER_NEXT_STEP: Record<CoverageTier, string> = {
   TIER_0: "Work out which of the remaining governments reach this ZIP code.",
   TIER_1: "Enumerate the governing bodies inside each resolved government.",
@@ -90,39 +52,21 @@ export const COVERAGE_TIER_RANK: Record<CoverageTier, number> = {
   TIER_3: 3,
 };
 
-/* -------------------------------------------------------------------------- */
-/* Promotion                                                                  */
-/* -------------------------------------------------------------------------- */
 
-/**
- * The evidence a promotion is computed FROM. Every field is a count of
- * something checkable, so a claimed tier can always be re-derived and a
- * disagreement is a bug rather than an opinion.
- */
+/** Every field is a checkable count, so a stamped tier can always be re-derived. */
 export interface CoverageEvidence {
   /** Governments in the Census/NCES universe touching this zip. */
   universeGovernments: number;
   /** Of those, confirmed by territory to govern this zip. */
   territoryResolved: number;
-  /**
-   * Of the territory-resolved governments, how many have their BODIES
-   * enumerated — councils, boards, commissions. RULING 9: this can never be
-   * derived from a government count, and nothing in this module will do so.
-   */
+  /** Of the territory-resolved governments, how many have their bodies enumerated. */
   bodiesEnumeratedFor: number;
   /** Officials and candidates on those bodies, and how many are Kelly-complete. */
   people: number;
   peopleAtKellyDepth: number;
 }
 
-/**
- * The promotion rules, checkable (item 6.2).
- *
- * Each rung is ALL-OR-NOTHING against its own denominator. A zip where nine of
- * ten governments are territory-resolved is not Tier 1: the tenth is exactly
- * the government a reader might live under, and a tier that rounds up is a
- * coverage claim that flatters itself — the thing this whole model replaces.
- */
+/** Each rung is all-or-nothing against its own denominator. */
 export function promote(evidence: CoverageEvidence): CoverageTier {
   const {
     universeGovernments,
@@ -132,28 +76,15 @@ export function promote(evidence: CoverageEvidence): CoverageTier {
     peopleAtKellyDepth,
   } = evidence;
 
-  // Nothing in the universe means nothing has been established at all. This is
-  // Tier 0 rather than an error: a zip we have not looked up yet is honestly
-  // described by "we know governments exist; we have not confirmed what covers
-  // this."
   if (universeGovernments <= 0) return "TIER_0";
   if (territoryResolved < universeGovernments) return "TIER_0";
   if (bodiesEnumeratedFor < territoryResolved) return "TIER_1";
-  // Tier 3 requires PEOPLE, and zero people is not "all of them are complete".
-  // An empty set trivially satisfies "every element has property P", which is
-  // exactly how a vacuous truth becomes a false coverage claim.
+  // Zero people is not "all complete".
   if (people <= 0 || peopleAtKellyDepth < people) return "TIER_2";
   return "TIER_3";
 }
 
-/**
- * Does the stamped tier exceed what the evidence supports? (item 6.5)
- *
- * Asymmetric on purpose. A stamped tier BELOW the evidence is fine — it means
- * work was done and the stamp has not caught up, which is the safe direction.
- * A stamped tier ABOVE the evidence is a false coverage claim, and that is the
- * only thing this returns true for.
- */
+/** True only when the stamp is above the evidence; a stamp below it is the safe direction. */
 export function tierExceedsEvidence(
   stamped: CoverageTier,
   evidence: CoverageEvidence,
@@ -169,15 +100,8 @@ export function isCoverageTierOrUnknown(v: unknown): v is CoverageTierOrUnknown 
   return isCoverageTier(v) || v === COVERAGE_TIER_UNKNOWN;
 }
 
-/* -------------------------------------------------------------------------- */
-/* The stamped record                                                         */
-/* -------------------------------------------------------------------------- */
 
-/**
- * A stamped tier. `stampedAt` is a wall-clock date from `corepack pnpm stamp`
- * (America/Phoenix) — an agent does not know today's date, and a stamp is the
- * whole reason this is a claim rather than a guess.
- */
+/** `stampedAt` is a wall-clock date (America/Phoenix) from `corepack pnpm stamp`. */
 export interface StampedCoverageTier {
   tier: CoverageTier;
   stampedAt: string;

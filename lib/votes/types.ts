@@ -1,23 +1,14 @@
 /**
  * The votes corpus — how members actually voted, from the chambers' own
- * published roll calls (5).
+ * published roll calls. RECORD-tier evidence that never merges with the
+ * STATEMENT-tier corpus in `lib/corpus/`.
  *
- * **Votes and statements are separate corpora and never merge** — this store
- * holds RECORD-tier evidence (clerk.house.gov and senate.gov roll-call XML);
- * `lib/corpus/` holds STATEMENT-tier snapshots. A join between them is how a
- * summary starts blending rhetoric into record.
+ * Never characterized by us: titles are official words, positions are the
+ * chamber's recorded value mapped onto four states, and no record carries a
+ * score, rating, rank, match, fit, grade, alignment or recommendation key.
  *
- * **Never characterized by us.** The title is the chamber's or the bill's
- * official words; the position is the chamber's recorded value mapped onto
- * four states and nothing else. No record here may carry a score, rating,
- * rank, match, fit, grade, alignment or recommendation key —
- * `tests/votes.test.ts` holds that, the same guard family as candidates and
- * measures. The colors on the surface state the member's vote, never
- * approval.
- *
- * Runtime facts are read from a proof-validated promoted projection. The
- * bundled snapshot is first-seed material only; it is never a store-error
- * fallback and no request fetches a publisher live.
+ * Runtime facts are read from a proof-validated promoted projection; no
+ * request fetches a publisher live.
  */
 
 /** Normalized Reader states; UNKNOWN preserves an unclassified publisher row. */
@@ -66,9 +57,8 @@ export interface VotesSnapshot {
   /** The bounded window this snapshot covers, stated. */
   window: { houseRolls: number[]; senateRolls: number[] };
   /**
-   * The identifier-set comparison, per the standing rule: how many chamber
-   * identifiers matched the roster, out of how many. A silent zero-match
-   * join is the cd:0 failure again.
+   * How many chamber identifiers matched the roster, out of how many; a silent
+   * zero-match join must be visible.
    */
   identifierMatch: {
     houseMatched: number;

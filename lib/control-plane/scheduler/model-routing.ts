@@ -1,41 +1,11 @@
 /**
- * **THE STEP REGISTRY — WHICH STEPS MAY SPEND A MODEL, WHICH MODEL, AT WHAT
- * EFFORT, AND HOW MUCH THE MODEL MAY BE SHOWN.** (Worker Efficiency Law,
- * 2026-09-02, RULING 244.)
- *
- * The law, as this file enforces it:
- *
- * ```
- *   A STEP DETERMINISTIC CODE CAN PERFORM NEVER CONSUMES A MODEL
- *       `assertStepMayInvokeModel` throws for a DETERMINISTIC step; the
- *       executor calls it before every transport call, so a model turn on a
- *       deterministic step is a thrown defect, never a billed one.
- *   EACH MODEL STEP ROUTES TO THE CHEAPEST CLASS THAT MEETS ITS STANDARD
- *       extraction / classification: Haiku, then Sonnet on escalation; the
- *       Scout research loop: Haiku, then Sonnet and the frontier on escalation
- *       (MW-033, 2026-09-25); independent audit: the same cheaper-first order,
- *       with durable evidence-backed escalations. A cheaper model that fails a
- *       step's standard ESCALATES only for a reason in the closed
- *       `MODEL_ESCALATION_REASONS`, and the reason, its evidence and the cost
- *       of both attempts are recorded on the step's result, never silent.
- *   EFFORT IS SET PER ROLE
- *       `output_config.effort` comes from `ROLE_EFFORT`, is recorded on the
- *       result, and never varies within an Attempt (an effort change
- *       invalidates the provider's message cache).
- *   THE MODEL RECEIVES A SANITIZED REPRESENTATION SIZED TO THE STEP
- *       `REPRESENTATION_BUDGETS` states, per tool, how many bytes a tool
- *       result may hand the model. Past the budget the result is TRUNCATED
- *       with a stated truncation and a pointer to the artifact id — never
- *       silently, and never a raw DOM.
- * ```
- *
- * The registry is CLOSED and typed: a step name outside it cannot be routed,
- * which is how a new sub-call is forced to declare its class here before it
- * can run anywhere.
+ * The closed step registry: which steps may spend a model, which class and effort, and how many bytes a tool
+ * result may hand the model. A deterministic step never consumes a model (`assertStepMayInvokeModel` throws);
+ * a step name outside the registry cannot be routed.
  */
 
 import { MODELS } from "../../models.ts";
-import { MODEL_WORKER_MODEL, rateFor } from "../model-cost.ts";
+import { MODEL_WORKER_MODEL, highestRates, rateFor } from "../model-cost.ts";
 
 /** The model classes a step may route to. Cheapest first. */
 export const MODEL_CLASSES = ["haiku", "sonnet", "frontier"] as const;
@@ -52,7 +22,7 @@ export type ModelEffort = "low" | "medium" | "high";
 
 /** The roles that invoke a model in this lane, and the effort each runs at. */
 export const ROLE_EFFORT = {
-  /** The Scout's research loop, on whichever class runs it. Medium — the cap is economic, never a truth judgement. */
+  /** The Scout's research loop, on whichever class runs it. */
   SCOUT: "medium",
   /** Sub-steps (extraction, classification, summarization): terse, single-purpose. */
   SUB_STEP: "low",
@@ -75,13 +45,8 @@ export type StepRoute =
       readonly why: string;
     };
 
-/**
- * THE STEPS. Every place in the lane that could spend a model is named here,
- * and the deterministic ones say where the code is.
- */
 export const SCOUT_STEPS = {
-  /** Acquisition starts with Haiku. Unsupported adaptive-thinking/effort fields
-   * are omitted by the request builder; configuration is not evidence of quality.
+  /** Acquisition starts with Haiku; configuration is not evidence of quality.
    * A failed standard must carry an observed reason before escalation. */
   "scout-research-loop": {
     kind: "MODEL",
@@ -106,7 +71,7 @@ export const SCOUT_STEPS = {
   "date-parsing": {
     kind: "DETERMINISTIC",
     implementedIn: "lib/control-plane/scheduler/scout-result.ts (deriveCandidateProvenance)",
-    why: "RULING 243: provenance dates are written by the machine from the artifact record; a model's date is a claim",
+    why: "provenance dates are written by the machine from the artifact record; a model's date is a claim",
   },
   /** A sub-call that extracts a field from a representation. Haiku, escalating to Sonnet. */
   extraction: {
@@ -132,9 +97,7 @@ export const SCOUT_STEPS = {
     escalateTo: "frontier",
     why: "summarization for a reader-facing owner surface needs Sonnet's standard; ambiguity escalates to the frontier and is recorded",
   },
-  /** Independent evidence context and machine verification remain mandatory.
-   * Acquisition routing follows the owner's cheaper-first hunt instruction;
-   * an inconclusive response can escalate through separate durable attempts. */
+  /** Independent evidence context and machine verification remain mandatory; an inconclusive response can escalate through separate durable attempts. */
   "adversarial-audit": {
     kind: "MODEL",
     modelClass: "haiku",
@@ -156,7 +119,7 @@ export class DeterministicStepInvokedModel extends Error {
   constructor(step: string, implementedIn: string) {
     super(
       `STEP ROUTING REFUSED: "${step}" is a DETERMINISTIC step (${implementedIn}) and may never consume a model. ` +
-        "RULING 244: a step deterministic code can perform never spends a model.",
+        "A step deterministic code can perform never spends a model.",
     );
     this.name = "DeterministicStepInvokedModel";
     this.step = step;
@@ -190,21 +153,8 @@ export function assertStepMayInvokeModel(
   return { model: MODEL_FOR_CLASS[modelClass], modelClass, effort: ROLE_EFFORT[route.role], role: route.role };
 }
 
-/* ------------------------------------------------ the escalation vocabulary */
 
-/**
- * **WHY A MODEL STEP MOVED UP A CLASS — A CLOSED LIST.** (MW-031, MW-033,
- * 2026-09-25.)
- *
- * `assertStepMayInvokeModel(step, escalated)` takes escalation as a yes-or-no,
- * so it could never say why. A step moves up only for one of these reasons, each
- * OBSERVED on the cheaper attempt by the executor — never the model's own claim
- * that it needs help — and the reason travels with a short machine-written
- * evidence line and the cost of both attempts on the step's own result.
- *
- * This is MODEL-ROUTING escalation. It is not the owner escalation in
- * `work-item.ts` (work handed to a person); the two are never mixed.
- */
+/** Why a model step moved up a class: a closed list of reasons observed on the cheaper attempt, never the model's own claim. Not the owner escalation in `work-item.ts`. */
 export const MODEL_ESCALATION_REASONS = [
   /** The cheaper attempt reached its turn, tool-call or token bound (or the early stop) and still produced no accepted typed result. */
   "BOUND_EXHAUSTED_WITHOUT_RESULT",
@@ -214,16 +164,12 @@ export const MODEL_ESCALATION_REASONS = [
   "NO_TYPED_RESULT",
   /** The provider refused the cheaper model's request as invalid for it (HTTP 400) — a capability the cheaper model lacks. */
   "CAPABILITY_ERROR",
-  /** CH-30: the AI service did not answer the cheaper model on repeated attempts, so the next attempt starts a tier up. */
+  /** The AI service did not answer the cheaper model on repeated attempts, so the next attempt starts a tier up. */
   "PROVIDER_UNAVAILABLE",
 ] as const;
 export type ModelEscalationReason = (typeof MODEL_ESCALATION_REASONS)[number];
 
-/**
- * **WHY AN ESCALATION THE LADDER CALLED FOR DID NOT RUN — ALSO CLOSED.** A
- * refused escalation is recorded on the result with the reason it would have
- * run for; the Attempt then ends on the cheaper attempt's own outcome.
- */
+/** Why an escalation the ladder called for did not run. Recorded; the Attempt ends on the cheaper attempt's outcome. */
 export const MODEL_ESCALATION_REFUSALS = [
   /** No reservation seam was supplied, so the second attempt could not be reserved first: fail closed. */
   "NOT_RESERVED",
@@ -281,24 +227,10 @@ export function assertStepMayEscalate(
   return { ...up, escalatedFrom: from ?? base.modelClass };
 }
 
-/* ------------------------------------------------------- the model ceiling */
 
 /**
- * **OPUS IS THE CEILING, AND NO MODEL NAMED "FABLE" EVER ROUTES.** (MW-034;
- * owner rule, 2026-09-21.)
- *
- * The ladder tops out at the frontier class (`escalateTo: null`), so structurally
- * nothing escalates past it. That was true by construction and by nothing else —
- * a one-character edit to `MODEL_FOR_CLASS` could point any class at a costlier
- * model or at a Fable, and only a human noticing would have caught it. This makes
- * the ceiling a GUARD: a pure predicate, run as a module-load invariant over
- * `MODEL_FOR_CLASS`, so a routing edit that breaches the ceiling throws at import —
- * in tests, and at boot — before any step can route to it.
- *
- * "Above the ceiling" is read from the rate table (`model-cost.ts`): a class whose
- * model is priced above the frontier's input OR output rate is above the ceiling.
- * A model with no rate row is UNAPPROVED — it cannot be certified within the
- * ceiling, so it is refused rather than waved through.
+ * The model ceiling: nothing routes above the frontier class or to a model named Fable. Checked at module
+ * load over `MODEL_FOR_CLASS`. A model priced above the frontier on either rate, or with no rate row, is refused.
  */
 export const MODEL_CEILING = MODEL_WORKER_MODEL;
 
@@ -329,10 +261,11 @@ export function modelCeilingViolation(model: string): string | null {
   }
   const ceiling = rateFor(MODEL_CEILING);
   if (ceiling === null) return "the ceiling model itself has no rate row (control-plane misconfiguration)";
-  if (rate.inputUsdPerMillion > ceiling.inputUsdPerMillion || rate.outputUsdPerMillion > ceiling.outputUsdPerMillion) {
+  const [card, top] = [highestRates(rate), highestRates(ceiling)];
+  if (card.inputUsdPerMillion > top.inputUsdPerMillion || card.outputUsdPerMillion > top.outputUsdPerMillion) {
     return (
-      `it is priced above the ceiling (${rate.inputUsdPerMillion}/${rate.outputUsdPerMillion} vs ` +
-      `${ceiling.inputUsdPerMillion}/${ceiling.outputUsdPerMillion} USD per million in/out)`
+      `it is priced above the ceiling (${card.inputUsdPerMillion}/${card.outputUsdPerMillion} vs ` +
+      `${top.inputUsdPerMillion}/${top.outputUsdPerMillion} USD per million in/out)`
     );
   }
   return null;
@@ -353,24 +286,11 @@ export function assertModelClassesWithinCeiling(
   }
 }
 
-// The invariant. A routing edit that points a class above Opus or at a Fable
-// fails at import — in every test and at boot — not in production.
+// Module-load invariant: a routing edit that breaches the ceiling fails at import.
 assertModelClassesWithinCeiling();
 
-/* -------------------------------------------------- representation budgets */
 
-/**
- * **HOW MUCH A TOOL RESULT MAY HAND THE MODEL, IN BYTES.**
- *
- * Sized to what the step needs: a page's visible text, its links and the
- * envelope; a browse's text plus its observed request list; a permission
- * reading's operative lines; the inherited summary. The toolkit already caps
- * body text at `TEXT_CAP_CHARS`; this is the outer bound on the WHOLE result
- * the executor enforces, so a tool that grew a new section could not quietly
- * hand the model a raw document. A result past its budget is truncated with a
- * stated truncation and the artifact id(s) it came from, and the overrun is
- * recorded on the result.
- */
+/** The outer byte bound on a whole tool result handed to the model. Past it the result is truncated with a stated truncation and the artifact id(s). */
 export const REPRESENTATION_BUDGETS: Readonly<Record<string, number>> = {
   fetch_public: 64_000,
   browse: 96_000,
@@ -402,55 +322,18 @@ export function fitRepresentation(tool: string, text: string, artifactIds: reado
   const bytes = Buffer.byteLength(text, "utf8");
   if (bytes <= budget) return { text, bytes, budget, truncated: false };
   const notice =
-    `\n--- REPRESENTATION TRUNCATED: ${bytes} bytes exceeds the ${tool} budget of ${budget} bytes (RULING 244); ` +
+    `\n--- REPRESENTATION TRUNCATED: ${bytes} bytes exceeds the ${tool} budget of ${budget} bytes; ` +
     `the vaulted artifact${artifactIds.length === 1 ? "" : "s"} ${artifactIds.join(", ") || "(none)"} hold${artifactIds.length === 1 ? "s" : ""} the rest ---`;
   const room = Math.max(0, budget - Buffer.byteLength(notice, "utf8"));
   return { text: Buffer.from(text, "utf8").subarray(0, room).toString("utf8") + notice, bytes, budget, truncated: true };
 }
 
-/* ------------------------------------------------------- the cache policy */
 
-/**
- * **THE TTL, AND WHY IT IS THE DEFAULT FIVE MINUTES.**
- *
- * The turns of one Attempt are seconds apart (a tool runs, the next request
- * starts), and a cache read refreshes the entry's timer at no cost, so the
- * entry stays warm for the whole Attempt without anyone paying for retention.
- * The 1-hour TTL costs 2x on write against 1.25x and only pays when the gap
- * between requests sharing the prefix is 5-60 minutes; the only such gap in
- * this lane is between Attempts on the same obligation, which are at least a
- * cycle (an hour) apart, so the 1-hour TTL would buy nothing there either.
- * The reasoning is `lib/ask/prompt-cache.ts`'s SYNTHESIS_CACHE_TTL, which
- * fits this traffic unchanged; the wire form is the bare ephemeral marker.
- */
+/** Five-minute TTL: turns of one Attempt are seconds apart, and Attempts on one obligation are at least a cycle apart, so a 1-hour TTL buys nothing. */
 export const SCOUT_CACHE_POLICY = {
-  /**
-   * The TTL of every breakpoint this lane sends. Measured 2026-09-06 against
-   * the ledger and the cycle records (prompt-caching session): consecutive
-   * Scout cycles start 70–76 minutes apart (median 76.2 min between the
-   * SCOUT ledger rows of consecutive cycles, 71 min start-to-start between
-   * the runner's cycle records), so a 1-hour entry written by one cycle has
-   * expired before the next cycle could read it; the 2× write price would buy
-   * no cross-cycle read. Inside a cycle the turns are seconds apart and the
-   * concurrent Attempts start together, which the 5-minute entry covers. The
-   * ordering rule the API enforces when a 1h entry IS used — every 1h marker
-   * must precede every 5m marker across tools → system → messages — is
-   * asserted by `tests/scout-prewarm.test.ts` against the message the API
-   * returned that day.
-   */
   ttl: "5m",
   cacheControl: { type: "ephemeral" } as const,
-  /**
-   * WHERE THE MOVING BREAKPOINT LIVES (2026-09-06). `TOP_LEVEL`: the request
-   * carries `cache_control` at the top level and the API places the
-   * breakpoint on the last cacheable block and moves it forward each turn
-   * (accepted HTTP 200 on 2026-09-06, `tests/scout-prewarm.test.ts` records
-   * the shape). `LAST_BLOCK`: the fallback for a platform that rejects the
-   * top-level field — the executor marks the last content block of the newest
-   * user turn itself, which is what this lane did from 2026-09-02 to
-   * 2026-09-06 and what the five instrumented Attempts of that window proved
-   * to read the prefix turn over turn.
-   */
+  /** `TOP_LEVEL`: the API places and moves the breakpoint. `LAST_BLOCK`: fallback that marks the last block of the newest user turn. */
   movingBreakpoint: "TOP_LEVEL" as "TOP_LEVEL" | "LAST_BLOCK",
   /**
    * The breakpoints, in render order. The static prefix (tools + system)
@@ -465,14 +348,6 @@ export const SCOUT_CACHE_POLICY = {
   ],
   /** Provider limit; the three above leave one slot spare. */
   maxBreakpoints: 4,
-  /**
-   * The frontier (claude-opus-5-5) minimum, kept as this lane's default and
-   * fallback. The provider silently never caches below it; tools + system alone
-   * exceed it (4,586 tokens measured 2026-09-06; Opus 5.5's minimum is also
-   * 512). The cache-defect detector is fed the ATTEMPT's own model minimum via
-   * `minimumCacheablePrefixTokensFor` (model-cost.ts) — a cheaper class's
-   * minimum is HIGHER (Sonnet 1024, Haiku 4096), so this single scalar serves
-   * only the frontier and the unrated fallback, never a cheaper class.
-   */
+  /** The frontier model's minimum cacheable prefix, used as the default and fallback. A cheaper class's minimum is higher; see `minimumCacheablePrefixTokensFor`. */
   minimumCacheablePrefixTokens: 512,
 } as const;

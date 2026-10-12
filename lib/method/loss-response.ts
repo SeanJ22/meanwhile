@@ -1,23 +1,7 @@
 /**
- * DP-28: lessons from losses: predict, build a variant, or call the engineers.
- *
- * Runs after fix-map updates, on the studies DP-27 produces. For each method
- * whose failures share a trait:
- *
- *  - a lesson ("method M fails where T") for the field manual, one entry per
- *    method and trait set, so a repeat study updates it instead of adding;
- *  - every place we hold traits for that has no result for the method yet and
- *    states the same traits is marked as predicted to fail (an UNTRIED
- *    fix-map row whose cause begins `PREDICTED_FAIL:`), so no budget is spent
- *    trying it blind;
- *  - one detective case to build a variant, which enters Testing as a new
- *    method. No second case opens while one is open for that method.
- *
- * When the failures share nothing, one fix-list item goes to the engineers.
- * A method already handed to the engineers is not handed over again.
- *
- * PURE: no store, no clock beyond `now`, no network. Nothing here names a
- * place; the caller writes the lessons, rows, cases and items it is handed.
+ * Lessons from losses. For each method whose failures share a trait: one field-manual lesson, a predicted failure for
+ * every untried place with the same traits, and one variant case unless one is open. When the failures share
+ * nothing, one item goes to the engineers, once per method. Pure: the caller writes what it is handed.
  */
 
 import { newFieldManualEntry, type FieldManualEntry } from "../control-plane/field-manual.ts";
@@ -56,7 +40,6 @@ export interface LossResponseInput {
   readonly now: string;
   /** Methods that already have an open variant case. */
   readonly openVariantMethodIds?: ReadonlySet<string>;
-  /** Methods already handed to the engineers. */
   readonly engineerMethodIds?: ReadonlySet<string>;
 }
 
@@ -66,6 +49,13 @@ function placeIdsOf(traits: LossResponseInput["placeTraits"]): string[] {
 
 function traitsOf(traits: LossResponseInput["placeTraits"], placeId: string): PlaceTraits | undefined {
   return traits instanceof Map ? traits.get(placeId) : (traits as Record<string, PlaceTraits>)[placeId];
+}
+
+/** Where a loss lesson applies: the platforms and states its failures share, or, when they share neither, wherever the method is tried. */
+function lessonReach(shared: LossStudy["shared"]): Pick<FieldManualEntry, "platforms" | "states" | "portable"> {
+  const platforms = shared.flatMap((s) => (s.trait === "platform" ? [s.value] : []));
+  const states = shared.flatMap((s) => (s.trait === "state" && /^[a-z]{2}$/.test(s.value) ? [s.value] : []));
+  return platforms.length + states.length > 0 ? { platforms, states } : { platforms, states, portable: true };
 }
 
 function causeText(study: LossStudy): string {
@@ -98,6 +88,7 @@ export function respondToLosses(input: LossResponseInput): LossResponse {
       summary: `Method ${study.methodId} fails where ${cause}; ${study.says}.`.replace(/\s+/g, " ").slice(0, 280),
       outcome: "FAILED",
       observedAt: input.now,
+      ...lessonReach(study.shared),
       payload: { methodId: study.methodId, shared: study.shared, failures: study.failures, works: study.works },
     }));
     const known = new Set(rows.filter((r) => r.state !== "UNTRIED").map((r) => r.placeId));

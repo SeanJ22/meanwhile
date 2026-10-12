@@ -12,44 +12,9 @@ import {
 } from "@/lib/feedback/shape";
 
 /**
- * The feedback form (R40, 2026-08-17: 1A, in-app).
- *
- * ## What it replaced
- *
- * `mailto:` links to the author's personal address, on the sidebar footer and
- * twice on /transparency. A personal address in a shipped product is a
- * standing invitation for every scraper that reads the page, and it is also a
- * worse reader experience than it looks: a `mailto:` on a phone opens
- * whatever mail client the OS thinks is default, which for a lot of people is
- * nothing at all.
- *
- * ## The one rule that shaped it
- *
- * **A submission never silently succeeds into a void.** Three states, and
- * they are never blurred:
- *
- * - `idle`/`sending` — the button says which.
- * - `stored` — a 204 came back. Only then is anyone thanked.
- * - `failed` — anything else, rendered with the SERVER'S OWN sentence about
- *   what happened, and with the reader's text still in the box. A form that
- *   clears the field on failure has destroyed the thing it failed to save.
- *
- * ## Register
- *
- * The ask is playful (it is an interaction surface); everything that makes a
- * CLAIM — what we store, what we scrub, that we cannot write back — is level.
- * The seam runs right down the middle of this component and that is the rule
- * working, not an inconsistency.
- *
- * ## The optional reply address (R41, 2026-08-17, option A)
- *
- * One more field, and everything about it is designed so that leaving it
- * alone stays the effortless default: it is blank, it is labelled optional in
- * its own label rather than in fine print below it, and the submit button
- * never waits on it. The claim beside it is level and says exactly what the
- * two outcomes are — an address means a reply is possible, blank means it is
- * not — because the previous version of this form promised flatly that nobody
- * could write back, and that sentence is now only true of the blank case.
+ * The in-app feedback form. Only a 204 thanks the reader; any other outcome
+ * shows the server's own message and keeps the text in the box. The reply
+ * address is optional and blank by default.
  */
 export function FeedbackForm({
   surface,
@@ -63,11 +28,7 @@ export function FeedbackForm({
 }) {
   const [message, setMessage] = useState(initialMessage);
   const [replyTo, setReplyTo] = useState("");
-  /**
-   * Whether the submission that SUCCEEDED carried an address — captured at
-   * send time, not read off the live field, because the confirmation is a
-   * claim about what was stored and the field is cleared behind it.
-   */
+  /** Whether the stored submission carried an address, captured at send time. */
   const [sentWithReply, setSentWithReply] = useState(false);
   const [state, setState] = useState<"idle" | "sending" | "stored" | "failed">(
     "idle",
@@ -77,21 +38,12 @@ export function FeedbackForm({
   const trimmed = message.trim();
   const tooLong = message.length > FEEDBACK_MAX_CHARS;
   const trimmedReply = replyTo.trim();
-  // Only ever a complaint about something the reader actually typed. An
-  // untouched field is never wrong, because blank is what the form expects.
   const replyMalformed = trimmedReply.length > 0 && !isReplyToShaped(trimmedReply);
 
   if (state === "stored") {
     return (
       <div className="mt-6 rounded border border-[var(--panel-border)] bg-[var(--panel)] p-4">
         <p className="text-[0.9375rem] font-medium text-paper">Got it — thank you.</p>
-        {/* Level, because it is a claim about what happens next. */}
-        {/*
-          Two different facts, and they may not render as the same sentence.
-          A reader who gave an address is told a reply is possible; a reader
-          who did not is told plainly that it is not, rather than being left
-          to wonder.
-        */}
         <p className="mt-1.5 text-[0.875rem] leading-relaxed text-paper-dim">
           {sentWithReply
             ? "It is stored and the author reads it. Because you left an address, a reply is possible — though this is one person reading, so it may take a while."
@@ -127,8 +79,7 @@ export function FeedbackForm({
           setSentWithReply(trimmedReply.length > 0);
           setState("stored");
         } else {
-          // The text stays in the box. It is the reader's, and we just failed
-          // to keep it.
+          // The text stays in the box.
           setFailure(outcome.message);
           setState("failed");
         }
@@ -151,7 +102,6 @@ export function FeedbackForm({
       />
 
       <div className="mt-1.5 flex flex-wrap items-baseline justify-between gap-2">
-        {/* Level: a limit is a fact, and a reader who hits it needs the number. */}
         <p className="text-[0.75rem] text-muted">
           {message.length > FEEDBACK_MAX_CHARS - 200
             ? `${message.length} of ${FEEDBACK_MAX_CHARS} characters`
@@ -159,12 +109,6 @@ export function FeedbackForm({
         </p>
       </div>
 
-      {/*
-        R41. The optionality is in the LABEL, not in fine print underneath it:
-        a reader scanning the form sees "optional" at the moment they see the
-        field, and skipping it costs nothing — no asterisk, no confirmation,
-        no disabled button waiting on it.
-      */}
       <div className="mt-5">
         <label
           htmlFor="feedback-reply-to"
@@ -184,12 +128,6 @@ export function FeedbackForm({
           onChange={(event) => setReplyTo(event.target.value)}
           className="mt-2 w-full rounded border border-[var(--panel-border)] bg-[var(--panel)] p-3 text-[0.9375rem] leading-relaxed text-paper outline-none focus:border-[var(--link)]"
         />
-        {/*
-          Level: this is a claim about what we store and what we do with it.
-          It states the scrub asymmetry out loud, because a reader who has
-          read the old promise deserves to know why this field survives when
-          an address typed into the message above does not.
-        */}
         <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
           Only used to reply to you, and stored with your message and nothing
           else. Anything that looks like contact details in the message itself

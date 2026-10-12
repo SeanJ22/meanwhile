@@ -8,48 +8,27 @@ import { bodyNameOf, parseCalendarFragment } from "../tusd-govboard/index.ts";
 import type { Meeting } from "../types.ts";
 
 /**
- * **ONE PARTITION, EVERY SITTING EITHER OF THE BODY'S OWN PUBLICATIONS VERIFIES.**
- * (2026-09-23, the Pima school-agenda routes session; the owner's directive of
- * that evening: "Reconcile the governing-board schedule on the district's own
- * site throughout our configured forward window.")
+ * One partition, every sitting either of the body's own publications verifies. Some bodies publish
+ * sittings twice: in their Diligent Community portal (with agenda links and cancellation notes) and on
+ * their own board site's calendar, which can list sittings months earlier. Neither is a superset, so the
+ * partition publishes the union for the forward window (through `UPCOMING_HORIZON_DAYS`):
  *
- * Tucson Unified publishes its sittings twice: in its Diligent Community
- * portal (the partition's list, with agenda links and cancellation notes) and
- * on its own board site's calendar (`govboard.tusd1.org`, permitted), which
- * lists Governing Board sittings months before the portal carries them. Neither
- * is a superset. So the partition publishes the UNION for the forward window
- * (now through `UPCOMING_HORIZON_DAYS`), from one writer:
+ * - A calendar sitting matching a portal sitting (same body, same local date and time) is the same
+ *   sitting and is counted as a duplicate; the portal row stands.
+ * - A calendar sitting the portal does not list is published from the calendar, with the place the
+ *   body's own sentence names, `online` when it says Zoom, and no place when it names none. Absence from
+ *   the portal is never read as cancellation.
+ * - Concluded sittings stay the portal's list; the calendar's past entries are counted out of window.
  *
- * - A calendar sitting that matches a portal sitting — same body, same local
- *   date and time — is the SAME sitting and is counted as a duplicate; the
- *   portal row stands with its agenda link and its cancellation note.
- * - A calendar sitting the portal does not list is published from the
- *   calendar, with the place the district's own sentence names, `online` when
- *   it says Zoom, and NO place when it names none ("location TBD"). A missing
- *   place or a missing agenda never suppresses a sitting the district's own
- *   site verifies, and absence from the portal is never read as cancellation.
- * - Concluded sittings stay the portal's list (with the Board Actions
- *   records); the calendar route's window is the forward window, and its past
- *   entries are counted out of window rather than published a second time.
- *
- * ## Identity: body plus local date and time, stable across the two sources
- *
- * A sitting first published from the calendar will later appear in the portal
- * too. If its id changed at that moment, the partition would carry the old row
- * forward beside the new one (an in-window disappearance is carried, never
- * dropped). So every sitting that is new to the partition is identified by
- * what both sources agree on — `<YYYY-MM-DD>T<HHMM>-<body key>` — whichever
- * source lists it, and the portal rows readers already hold keep the portal's
- * ids (`legacyIdsThrough`: the highest portal id published before the union).
- * The upcoming legacy sittings are named in `legacySitting:<id>` so that, if
- * the portal ever stops returning one while the calendar still lists it, the
- * calendar row inherits the id readers already have instead of appearing twice.
+ * Identity: every sitting new to the partition is identified by `<YYYY-MM-DD>T<HHMM>-<body key>`,
+ * whichever source lists it, so its id survives the portal picking it up later. Portal rows readers
+ * already hold keep the portal's ids (`legacyIdsThrough`), and `legacySitting:<id>` lets a calendar row
+ * inherit an id if the portal stops returning it.
  */
 
 /**
- * The body a sitting belongs to, as both publications spell it. Defined once,
- * in lib/sources/event-identity.ts, where the partition writer's
- * re-issued-sitting test reads the same key (2026-09-24).
+ * The body a sitting belongs to, as both publications spell it. Defined once in
+ * lib/sources/event-identity.ts.
  */
 export { sittingBodyKey };
 
@@ -247,8 +226,7 @@ export function calendarSittingsNotInPortal(input: {
       title: s.title,
       startsAt,
       timeZone: wiring.timeZone,
-      // No place named, or a place with no reviewed spelling: published
-      // with no place rather than withheld (the owner's 2026-09-23 rule).
+      // No place named, or a place with no reviewed spelling: published with no place rather than withheld.
       location: venue ? { name: venue.name, address: venue.address, lat: venue.lat, lng: venue.lng } : null,
       ...(online ? { online } : {}),
       // Posted before its agenda exists: a null is a fact about us.

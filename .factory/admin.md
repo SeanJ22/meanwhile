@@ -1,28 +1,14 @@
-build_state: waiting — mission WIP checked; no independent step ready before shared writers/live verification
-worker: codex-admin
+build_state: lane done
+worker: Codex
 provider: Codex
-run_id: codex-admin-0a20c74f8d1a49a49f492bf94bfe2e71
+run_id: codex-reconcile-2026-10-12
 lock: none
-heartbeat: 2026-10-06T06:22:48.242825Z
-on_river: promoted river 8e47854b1; main release 8 a5fd753b7; existing integrated Admin steps preserved
-ready: none newly live-verified; historical READY 734ee9633567651c94a6bb12a0628c7b965a4102 is RETURNED and superseded, not foldable
-working_on: none; exact WIP application07fcad7eda5b152314a8180d3169215d495cdd0d and all evidence pushed for continuation
-checks: exact WIP07fcad7eda5b152314a8180d3169215d495cdd0d types PASS; 348 focused PASS/0 FAIL/0 SKIP across45 files. Frozen aa40 full9852 total/9817 PASS/25 FAIL/10 SKIP: nine clock fixtures corrected,16 browser-related unverified. Gates finished10/12; default build, bundle and standalone PASS. Recent-vote bounded83s termination, timing incomplete/unusable. No FULL/browser/live PASS claim. Portable record admin-mission-gates-aa40.json; final proof admin-mission-evidence.json.
-returned: fix:5abe56f2 compatibility repaired with disabled metadata for 18 gateway-null controls, conditional existing Work reader, Look/Testing/Queue/owed/target/data/settings retained. New 1:50 AM EDT BR-31 overlap reconciled against measures exact 30922c2e1 locally: one authoritative Scoreboard/chat flow reader and SPEND_AND_FACTS topic; Money summary separate. Await promoted release 9 for final catch-up.
-waiting_on: River cp_vital_signs schema; hunters hourly writer/query-byte counter; slide publish/sample counters; normal deployment and named live Now/brief checks. Remaining shared writer connections below.
-needs_River:
-  - CURRENT live read-only proof2:21:15AM EDT: cp_schema_version24, cp_spend_holds present, runner heartbeat2:21:01AM EDT testedSha a5fd753b740f9e1f7620460ab3dd6d4250fd6a3c (release8). cp_vital_signs still absent and spendSummary still absent. Runner adoption/hold schema are no longer current blockers. No hourly number can be read yet; only schema/writer/summary/deployment/live checks remain.
-  - Historical live read-only Neon proof: project withered-sunset-39821877, default production branch br-tiny-frog-aeufpjeq, neondb. At 1:53:26 AM EDT cp_vital_signs and cp_spend_holds both absent (to_regclass NULL). At 1:54:20 AM EDT runner heartbeat still 1:08:44 AM EDT, testedSha f545fcf9493def91294bccf219ed65071b2093b1. No new hourly row exists to render. At 1:56:17 AM EDT schema_version=23; cp_owner_snapshots.current updated Oct 4, 9:38 AM EDT and has no spendSummary. Do not confuse deployed web release 8 with migrated/restarted runner.
-  - Hourly reader follows board/river:vital-signs.md only: readHourlyVitalSigns(sql,at,2|24) in lib/control-plane/admin-view/hourly-vital-signs.ts. One indexed cp_vital_signs query; excludes running hour and crash-left partial rows via written_at >= hour+1h. Confirm writer uses JSON numeric map top20+other for neon_bytes_by_caller and this completion signal. Missing/unpriced values remain —. No OwnerSnapshot hourly fallback.
-  - Signed-in checklist prepared: .factory/admin-live-checks.md, for River releases/admin-checks.md. Live cp_admin_config at2:12:39AM EDT has no brief.time and no latestBrief. Resolve the actual configured owner time through the existing setting after deployment; do not guess one.
-  - Named live check: inspect actual completed row and live Now (last two) plus daily brief (last 24), confirming facts/spend/cost/Neon causes/finished/killed/empty-paid, sample counts and EDT times match that row. User requires live proof before new READY. Keep WIP available for River's normal integration/release path; resolve publication order through River, no invented READY exception.
-  - Added read estimate: assuming 2 KiB per hourly row, Now 2 rows/minute ≈240 KiB/hour; daily brief 24 rows/minute ≈2.81 MiB/hour when open. Combined ≈0.0032 GB/hour per tab, request overhead excluded. Measured runner hour must check actual transfer. Formatter and compatibility add no SQL reads.
-  - Money publisher: existing scripts/publish-owner-snapshot.mts should call buildSpendSummary({now,sql,transfer,billing,dailyLimitUsd,liveSetAsideUsd,neonProjects}). No duplicate BR-31 flow collection remains. Supply distinct unsettled liveSpendHolds once per hold, measured per-project transfer and actual causes. Admin GET spend reads one narrowed ownerSnapshots.current {spendSummary:true}; no raw/vendor fallback on refresh. Existing Hunts table uses exact receipt-linked allocated costs, unknown stays unknown; batch/full-price by role uses actual recorded batch flags.
-  - Paid NOTHING fix: actual River/hunters ending producer calls openPaidEndingFix in lib/control-plane/fix-list.ts with actual paid/endingKind/causeKey. Missing legacy ending does not count as NOTHING. Withdrawn no-result spend line remains absent from Money/digest.
-  - BR-20 hunters actual recommendation raiser -> raiseDecisionOrder; BR-36 River pg-store registeredHistoryEvidence writer + pg-schema + numbered BR-36 migration/journal; BR-19 requires BR-22 exact kind family/division preservation/enforcement. No broad replacement dispatch.
-  - Live browser gap: Admin URL CONNECT403 in this environment; no signed-in Admin session. Neon connector works for read-only production inspection, so database credentials are not a blanket blocker. Use authorized River live observation path; no egress/auth bypass.
-needs_Sean: none invented; genuine owner/credential decisions go through River
-seen_not_fixed: pinned Playwright headless shell 1234 unavailable in prior runs; no browser pass assumed. Historical gate evidence and checkpoint SHAs preserved.
-continuation: this exact chat has an enabled native every-90-minute check-in; rereads mission, fetches assignments/returns, skips while active, exits without writing after Claude handoff. Keep quiet on unchanged/non-actionable state.
-runs_and_working_minutes: current run claimed 1:25 AM EDT; active minutes not measured
-run_end: October 6, 2026, 2:22 AM EDT — nothing ready; waiting on River/hunters/slide hourly producers, Money publisher, promoted release9 and named live checks; lock released.
+on_river: merged river 8d68f46721de856247c38dd39680db15e5a9f37e
+ready: BR-04 BR-07 BR-11 BR-12 BR-13 BR-16 BR-17 BR-18 BR-26 BR-27 BR-28 BR-29 BR-35 BR-39, this READY commit
+checks: 268 focused fixtures passed, 0 failed, 0 skipped (28 files); types and changed-file lint passed. Database and asset-store connections removed. Rendered command-center views, actual gateway submissions, restart/concurrent scheduling, installed plain-Node brief timer, lead-order compatibility and both Eastern clock changes checked.
+closed_no_change: PB-01 playbook editor and Settings screen are exactly river; docs/rulings.md unchanged; river's integrated BR-31 flow and vital readers preserved.
+dropped: BR-20 (no recommendation producer); BR-31/Money add-on (missing summary publisher and measured inputs); BR-36 (missing writer/schema/applied migration); BR-19 later WIP (missing BR-22 kind preservation); paid-NOTHING hook (no ending caller). Reasons in READY commit.
+working_on: none
+waiting_on: River folds this exact READY and runs combination gates and release/live checks.
+needs_hook: none
+needs_Sean: none

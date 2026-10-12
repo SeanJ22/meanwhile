@@ -1,20 +1,9 @@
 import { METRO_ZOOM } from "./style.ts";
 
 /**
- * Deliberate first-view altitudes per covered zip (6f).
- *
- * The rule: the first view frames the reader's town AND its surroundings —
- * never a wall of street names, never a whole-state overview. Each value
- * below was picked by looking at the framing, not derived:
- *
- * - 85701 — downtown Tucson; the metro default already reads right.
- * - 85641 — Vail sprawls across unincorporated desert; one step out shows
- *   the area between Vail and Tucson's edge that its government spans.
- * - 07866 — Rockaway Township is long and narrow with its neighbors tight
- *   around it; a step and a half out shows the township AND Denville /
- *   Dover / Boonton, which is where its meetings actually cluster.
- * - 03255 — rural Newbury on Lake Sunapee; two steps out shows the towns
- *   an NH reader actually drives between.
+ * Hand-picked first-view altitudes for some zips: the first view frames the
+ * reader's town and its surroundings, never a wall of street names or a whole
+ * state. Every other zip uses the metro default.
  */
 const INITIAL_ZOOM_BY_ZIP: Record<string, number> = {
   "85701": METRO_ZOOM, // 11

@@ -1,17 +1,7 @@
 "use client";
 // @server-boundary-exempt CommandCenter takes a live Executor object and callbacks; only client entry points (LiveCommandCenter, the dev preview harness) render it, never a Server Component.
 
-/**
- * **MEANWHILE ADMIN COMMAND CENTER (v6).** The seven screens in one shell.
- *
- * This component owns only interface state: which screen, which detail, the
- * picker, the search box, the open action preview, and the receipts of sends
- * made on this page. Data arrives as `AdminV6Data` (live: from LiveSync;
- * development preview: from ./sample/). Outcomes come only from the executor.
- *
- * Scope, filters, open detail and unsent input survive data refreshes because
- * refreshing replaces `data`, never this component's state.
- */
+/** Interface state only; refreshing replaces `data`, never this component's state, so scope, filters and unsent input survive. */
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import { easternMonth, isPeriod, periodGroups } from "@/lib/control-plane/admin-view/periods.ts";
@@ -20,7 +10,7 @@ import { ActionDialog, type DialogSend } from "./action-dialog.tsx";
 import { ChangesView } from "./changes-view.tsx";
 import { ChatView } from "./chat-view.tsx";
 import { actionDef, isZipPlace, type PreviewContext } from "./actions.ts";
-import { BulkHunts, bulkPickOf, type BulkItem, type BulkMission, type BulkPick } from "./bulk-hunts.tsx";
+import { BulkHunts, bulkPickOf, type BulkItem, type BulkLead, type BulkMission, type BulkPick } from "./bulk-hunts.tsx";
 import type { SectionId } from "./contract.ts";
 import { V6Context, VIEWS, type Detail, type V6, type View } from "./context.tsx";
 import { DetailPanel } from "./details.tsx";
@@ -55,15 +45,11 @@ export interface CommandCenterProps {
   readonly lastGoodAt: string | null;
   readonly recovered: boolean;
   readonly access: Access;
-  /** Item-state reason (eligibility rule 5), when the data source knows one. */
   readonly itemState?: (kind: ActionKind, target: string) => string | null;
   readonly initialView?: View;
-  /** The console's own controls, in words, for the Ask view to list. Read on the server. */
   readonly chatControls?: readonly string[];
   readonly onViewChange?: (view: View) => void;
-  /** Live paged sections: forward search, filters and cursors to the data source. */
   readonly onQuery?: (section: SectionId, params: Readonly<Record<string, string>>) => void;
-  /** Extra header content for the development preview's review controls. */
   readonly reviewPanel?: ReactNode;
 }
 
@@ -94,7 +80,6 @@ export function CommandCenter(props: CommandCenterProps) {
   const pickerButton = useRef<HTMLButtonElement>(null);
   const mainRef = useRef<HTMLElement>(null);
 
-  /** ZIPs the owner typed into Change place that no hunt or visit had listed: the state comes from the national ZIP index. */
   const [typedZips, setTypedZips] = useState<readonly Place[]>([]);
   const places = useMemo(() => {
     const listed = data.places.data ?? [];
@@ -120,7 +105,6 @@ export function CommandCenter(props: CommandCenterProps) {
 
   const receipts = useMemo(() => {
     const keys = new Set(sent.map((r) => r.key));
-    // History rows carry the place key; the page names it from its own place list.
     return [...sent, ...(data.history.data ?? []).filter((r) => !keys.has(r.key)).map((r) => ({ ...r,
       scopeName: index.get(r.scopeKey)?.name ?? r.scopeName, targetName: index.get(r.target)?.name ?? r.targetName }))];
   }, [sent, data.history.data, index]);
@@ -186,7 +170,7 @@ export function CommandCenter(props: CommandCenterProps) {
     });
     update(receipt);
     setDialog(null);
-    void props.executor.send(receipt, { def, target, scopeKey, option: send.option, words: send.words, amount: send.amount, selectedItems: send.selected, fields:send.fields, startAt:send.startAt, when:send.when, payload: ref.payload }, update);
+    void props.executor.send(receipt, { def, target, scopeKey, option: send.option, words: send.words, amount: send.amount, selectedItems: send.selected, when:send.when, payload: ref.payload }, update);
   };
 
   const doSendBulk = (send: { readonly items: readonly BulkItem[]; readonly missions: readonly BulkMission[]; readonly priority: number }) => {
@@ -201,6 +185,21 @@ export function CommandCenter(props: CommandCenterProps) {
     update(receipt);
     setBulk(null);
     void props.executor.send(receipt, { def, target: "hunts", scopeKey, option: null, words: "", amount: "", selectedItems: [], payload: { items: JSON.stringify([...send.items, ...send.missions.map((m) => ({ geography: m.geography, budgetUsd: m.budgetUsd, group: null }))]), priority: String(send.priority) } }, update);
+  };
+
+  const doSendLeads = (leads: readonly BulkLead[]) => {
+    const def = actionDef("leads-send");
+    const key = newActionKey();
+    if (sendingKeys.current.has(key)) return;
+    sendingKeys.current.add(key);
+    const receipt = startReceipt({
+      key, def, target: "leads", targetName: `${leads.length.toLocaleString("en-US")} link${leads.length === 1 ? "" : "s"}`, label: def.label,
+      scopeKey, scopeName: place.name, level: "global", at: new Date().toISOString(), simulated: props.mode === "sample",
+    });
+    update(receipt);
+    setBulk(null);
+    void props.executor.send(receipt, { def, target: "leads", scopeKey, option: null, words: "", amount: "", selectedItems: [],
+      payload: { rows: JSON.stringify(leads.map((l) => ({ link: l.link, notes: l.notes }))) } }, update);
   };
 
   const openDetail = (d: Detail) => {
@@ -296,7 +295,7 @@ export function CommandCenter(props: CommandCenterProps) {
               ))}
             </nav>
             {props.mode === "sample" ? <span className={s.badge}>SAMPLE DATA</span> : null}
-            <button type="button" className={s.navBtn} onClick={() => setBulk({ pick: isZipPlace(scopeKey) ? null : bulkPickOf(scopeKey, place.name) })}>Start many hunts</button>
+            <button type="button" className={s.navBtn} onClick={() => setBulk({ pick: isZipPlace(scopeKey) ? null : bulkPickOf(scopeKey, place.name) })}>Start hunts or send leads</button>
             <form className={s.search} role="search" onSubmit={(e) => { e.preventDefault(); if (query.trim()) openDetail({ type: "search", query: query.trim() }); }}>
               <input className={s.input} aria-label="Search everything in the selected place" placeholder="Search bodies, people, meetings, requirements, failures" value={query}
                 onChange={(e) => setQuery(e.target.value)} onKeyDown={(e) => { if (e.key === "Escape") setQuery(""); }} />
@@ -389,6 +388,8 @@ export function CommandCenter(props: CommandCenterProps) {
             initialPick={bulk.pick}
             blocked={whyNotRef({ kind: "hunt-start-many", target: "hunts" })}
             onSend={doSendBulk}
+            leadsBlocked={whyNotRef({ kind: "leads-send", target: "leads" })}
+            onSendLeads={doSendLeads}
             onClose={() => setBulk(null)}
           />
         )}

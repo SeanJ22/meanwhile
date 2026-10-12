@@ -5,10 +5,8 @@ import test from "node:test";
 
 import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { candidateChangeSet, canonicalCivicDataJson, civicRecordsFor } from "../lib/civic-data/changes.ts";
-import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { projectRoutineDataObservability } from "../lib/civic-data/observability.ts";
 import { sourceProjectionEvidence } from "../lib/civic-data/types.ts";
 import {
   FEDERAL_KEY_VOTE_SCOPE,
@@ -23,15 +21,15 @@ import {
 } from "../lib/votes/data-plane.ts";
 import {
   federalKeyVoteSelectionV1Issue,
-  hydrateFederalKeyVoteBootstrapV1,
+  federalKeyVoteSelectionV1Snapshot,
 } from "../lib/votes/key-vote-selection-v1.ts";
-import { federalKeyVotesFirstSeed, readFederalKeyVotesProjection } from "../lib/votes/key-votes-projection.ts";
+import { readFederalKeyVotesProjection } from "../lib/votes/key-votes-projection.ts";
 import {
   billSummariesForRollCallAcquisition,
-  federalRollCallsFirstSeed,
   readFederalRollCallsProjection,
 } from "../lib/votes/snapshot.ts";
-import type { VotesSnapshot } from "../lib/votes/types.ts";
+import type { BillSummariesFile } from "../lib/votes/bill-summaries.ts";
+import type { RollCallVote, VotesSnapshot } from "../lib/votes/types.ts";
 
 const T0 = "2026-09-08T12:00:00.000Z";
 const T1 = "2026-09-08T12:01:00.000Z";
@@ -58,16 +56,58 @@ function acquisitionsForKeyVotes(snapshot: FederalKeyVotesSnapshot, suffix = "go
   ]);
 }
 
-async function rollCallSeed() {
-  const result = await readFederalRollCallsProjection({ store: new MemoryRoutineDataStore(), bypassCache: true });
-  if (result.kind !== "BOOTSTRAP") throw new Error(`expected roll-call BOOTSTRAP, received ${result.kind}`);
-  return result.value;
+/** A small synthetic roll-call window: two House rolls, one Senate roll, two summaries and one pending review. */
+async function rollCallSeed(): Promise<{ snapshot: VotesSnapshot; billSummaries: BillSummariesFile }> {
+  const congress = 119;
+  const session = 2;
+  const bill = (n: number) => `https://www.congress.gov/bill/119th-congress/house-bill/${n}`;
+  const vote = (chamber: "house" | "senate", rollNumber: number, billUrl: string | null): RollCallVote => ({
+    id: `${chamber}:${congress}-${session}:${rollNumber}`, chamber, congress, session, rollNumber, date: "2026-09-01",
+    title: `Bill ${rollNumber}`, titleSource: "BILL_TITLE", question: "On Passage", legisNum: billUrl ? `H.R. ${rollNumber}` : null,
+    result: "Passed 218-210", billUrl, rollCallUrl: rollUrl(chamber, congress, session, rollNumber), retrievedAt: T0,
+  });
+  return {
+    snapshot: {
+      generatedAt: T0, congress, session,
+      window: { houseRolls: [1, 2], senateRolls: [3] },
+      identifierMatch: { houseMatched: 1, houseTotal: 1, senateMatched: 1, senateTotal: 1 },
+      votes: [vote("house", 1, bill(1)), vote("house", 2, bill(2)), vote("senate", 3, bill(3))],
+      positions: [
+        { officeholderId: "congress:A000001", voteId: `house:${congress}-${session}:1`, position: "YES" },
+        { officeholderId: "congress:B000002", voteId: `senate:${congress}-${session}:3`, position: "NO" },
+      ],
+    },
+    billSummaries: {
+      curatedAt: T0,
+      summaries: {
+        [bill(1)]: { legisNum: "H.R. 1", title: "Bill 1", summary: "What bill 1 does.", basis: "Official summary.", curatedAt: T0 },
+        [bill(2)]: { legisNum: "H.R. 2", title: "Bill 2", summary: "What bill 2 does.", basis: "Official summary.", curatedAt: T0 },
+      },
+      pending: [{ billUrl: bill(3), legisNum: "H.R. 3", title: "Bill 3", reason: "No official summary yet." }],
+    },
+  };
 }
 
-async function keyVoteSeed() {
-  const result = await readFederalKeyVotesProjection({ store: new MemoryRoutineDataStore(), bypassCache: true });
-  if (result.kind !== "BOOTSTRAP") throw new Error(`expected key-vote BOOTSTRAP, received ${result.kind}`);
-  return result.value;
+/** The reviewed v1 selection with every selected roll's official facts filled and one position each. */
+async function keyVoteSeed(): Promise<{ snapshot: FederalKeyVotesSnapshot; positions: FederalKeyVotePositions }> {
+  const base = federalKeyVoteSelectionV1Snapshot(T0);
+  const fill = (chamber: "house" | "senate") => (ref: FederalKeyVotesSnapshot["entries"][number]["house"][number]) => ({
+    ...ref, url: rollUrl(chamber, ref.congress, ref.session, ref.rollNumber), question: "On Passage", tally: "60-40", verifiedAt: "2026-08-15",
+  });
+  const snapshot: FederalKeyVotesSnapshot = {
+    ...base,
+    entries: base.entries.map((entry) => ({ ...entry, house: entry.house.map(fill("house")), senate: entry.senate.map(fill("senate")) })),
+    misses: [{ id: "stock-trading-ban", chamber: "senate", reason: "The Senate has taken no vote." }],
+  };
+  const positions: FederalKeyVotePositions = {
+    formatVersion: 1,
+    fetchedAt: T0,
+    positions: Object.fromEntries(snapshot.entries.flatMap((entry) => [
+      ...entry.house.map((ref) => `${entry.id}|house|${ref.congress}-${ref.session}:${ref.rollNumber}`),
+      ...entry.senate.map((ref) => `${entry.id}|senate|${ref.congress}-${ref.session}:${ref.rollNumber}`),
+    ]).map((key) => [key, { "congress:A000001": "YES" as const }])),
+  };
+  return { snapshot, positions };
 }
 
 test("congress-rollcalls promotes to the canonical plane and its Reader follows the exact GOOD pointer", async () => {
@@ -390,7 +430,7 @@ test("a store error never opens either tracked first seed", async () => {
   assert.equal(candidateReads, 0);
 });
 
-test("first live roll-call acquisition may use only the immutable bill-summary seed after an answered absent pointer", () => {
+test("a roll-call acquisition with an answered absent pointer refuses rather than opening a seed", () => {
   const absent = {
     kind: "NOT_RECORDED" as const,
     value: null,
@@ -409,10 +449,7 @@ test("first live roll-call acquisition may use only the immutable bill-summary s
     },
     detail: "The canonical store answered with no pointer.",
   };
-  assert.deepEqual(
-    billSummariesForRollCallAcquisition(absent),
-    federalRollCallsFirstSeed().value.billSummaries,
-  );
+  assert.throws(() => billSummariesForRollCallAcquisition(absent), /The canonical store answered with no pointer\./);
 
   const unreachable = {
     ...absent,
@@ -436,34 +473,4 @@ test("the two live federal acquisition commands have no circular canonical-point
   assert.doesNotMatch(keyVotes, /readFederalKeyVotesProjection/);
   assert.doesNotMatch(keyVotes, /current\.kind\s*!==\s*"PROMOTED"/);
   assert.match(keyVotes, /federalKeyVoteSelectionV1Snapshot/);
-});
-
-test("tracked vote JSON is first-seed-only and the manual contracts have no clock", () => {
-  const ids = ["congress-rollcalls", "federal-key-votes"];
-  const contracts = MANUAL_PRODUCTION_SOURCE_CONTRACTS.filter((contract) => ids.includes(contract.id));
-  assert.equal(contracts.length, 2);
-  assert.ok(contracts.every((contract) => contract.execution === "EXPLICIT_OWNER_INVOCATION_ONLY"));
-  assert.ok(contracts.every((contract) => !("cadence" in contract) && !("retry" in contract)));
-  const view = projectRoutineDataObservability({ candidates: [], events: [], promotions: [] }, T0, contracts);
-  assert.deepEqual(view.contracts.map((row) => row.cadence.clock), ["MANUAL", "MANUAL"]);
-  assert.ok(view.contracts.every((row) => row.cadence.nextDue.kind === "NOT_APPLICABLE"));
-
-  const keySeed = JSON.parse(readFileSync("data/votes/key-votes-snapshot.json", "utf8")) as FederalKeyVotesSnapshot;
-  const hydratedKeySeed = hydrateFederalKeyVoteBootstrapV1(keySeed);
-  const positionSeed = JSON.parse(readFileSync("data/votes/key-vote-positions.json", "utf8")) as FederalKeyVotePositions;
-  assert.equal(federalKeyVoteSelectionV1Issue(hydratedKeySeed), null);
-  const rollImport = federalRollCallsFirstSeed();
-  const keyImport = federalKeyVotesFirstSeed();
-  assert.equal(rollImport.sourceId, FEDERAL_VOTES_SOURCE_ID);
-  assert.equal(keyImport.sourceId, FEDERAL_VOTES_SOURCE_ID);
-  assert.match(rollImport.versionId, /^bootstrap:FEDERAL_ROLL_CALL:/);
-  assert.match(keyImport.versionId, /^bootstrap:FEDERAL_KEY_VOTE:/);
-  assert.ok(rollImport.value.snapshot.votes.length > 0);
-  assert.ok(keyImport.value.snapshot.entries.length > 0);
-  assert.deepEqual(keyImport.value.snapshot, hydratedKeySeed, "every selected question, title, official roll, tally, and verification fact comes from the complete reviewed seed");
-  assert.deepEqual(keyImport.value.positions, positionSeed, "every selected roll's member positions come from the complete position seed");
-  const reader = readFileSync("lib/votes/key-votes-projection.ts", "utf8");
-  assert.match(reader, /key-votes-snapshot\.json/);
-  assert.match(reader, /key-vote-positions\.json/);
-  assert.doesNotMatch(reader, /law-titles-cache/, "the non-serving full-title acquisition surplus cannot become a hidden Reader dependency");
 });

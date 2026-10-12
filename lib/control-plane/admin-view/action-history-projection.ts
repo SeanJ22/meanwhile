@@ -1,10 +1,4 @@
-/** Unwired, pure foundation for a receipt-owned Admin history projection.
- *
- * The canonical action receipt remains the authority. Callers must obtain the
- * position and recordedAt from its committed cp_log_admin_receipts row. The
- * companion cannot be used as a complete read until an atomic writer and
- * audited readiness watermark are installed in the control-plane database.
- */
+/** Unwired: not a complete read until an atomic writer and audited readiness watermark exist. Position and recordedAt come from the committed receipt row. */
 import { createHash } from "node:crypto";
 import { scopeKeyOf, type ExpansionScopeDecision } from "../expansion/scopes.ts";
 import { receiptIdFor, type ActionReceipt } from "../gateway/contract.ts";
@@ -12,7 +6,7 @@ import { canonicalJson } from "../repository/types.ts";
 
 export const ACTION_HISTORY_PROJECTION_VERSION = 1 as const;
 export const ACTION_HISTORY_MAX_PAGE = 50;
-export type ProjectedActionKind = string;
+export type ProjectedActionKind = "global-runner-pause" | "global-runner-resume";
 export type UnmappedReason = "VALIDATED_ACTION_UNAVAILABLE" | "LEGACY_ACTION_UNCLASSIFIED" |
   "SCOPE_SET_V6_KIND_UNPROVEN";
 export type ScopeRef = { readonly scopeKey: string; readonly instructionReceiptId: string | null;
@@ -22,7 +16,6 @@ export interface ActionHistoryProjection {
   readonly gatewayReceiptId: string;
   readonly gatewayType: string;
   readonly idempotencyKey: string;
-  /** Position and timestamp copied from the committed canonical receipt log. */
   readonly sourcePosition: number;
   readonly sourceRecordedAt: string;
   readonly sourceHash: string;
@@ -31,11 +24,9 @@ export interface ActionHistoryProjection {
   readonly scopeRefs: readonly ScopeRef[];
   readonly targetRef: string | null;
   readonly targetLabel: string | null;
-  /** A queued action has no inferred runner/work/public effect. */
   readonly effectRefs: readonly [];
 }
 export type ValidatedActionEvidence =
-  | { readonly kind: "REGISTERED"; readonly type: string; readonly scopeKey: string }
   | { readonly kind: "GLOBAL_RUNNER"; readonly type: "runner.pause" | "runner.resume" }
   | { readonly kind: "SCOPE_SET_COMMITTED"; readonly canonicalScopeKey: string;
       readonly savedDecision: ExpansionScopeDecision }
@@ -46,7 +37,6 @@ export type CommittedReceiptEvidence = { readonly receipt: ActionReceipt; readon
 function validInstant(value: string): boolean { return value.length > 0 && Number.isFinite(Date.parse(value)); }
 function validId(value: string): boolean { return value.length > 0 && value.length <= 512 && !/[\u0000-\u001f\u007f]/.test(value); }
 
-/** Build an immutable companion from a committed receipt and validated command evidence. */
 export function prepareActionHistoryProjection(input: CommittedReceiptEvidence): ActionHistoryProjection {
   const { receipt, sourcePosition, sourceRecordedAt, validatedAction } = input;
   if (!Number.isSafeInteger(sourcePosition) || sourcePosition < 0 || !validInstant(sourceRecordedAt) ||
@@ -59,15 +49,6 @@ export function prepareActionHistoryProjection(input: CommittedReceiptEvidence):
     sourceHash: createHash("sha256").update(canonicalJson(receipt)).digest("hex"),
     effectRefs: [] as const,
   };
-  if (validatedAction.kind === "REGISTERED") {
-    if (validatedAction.type !== receipt.type || !validId(validatedAction.scopeKey) ||
-      (validatedAction.scopeKey !== "us" && validatedAction.scopeKey !== receipt.subject && validatedAction.scopeKey !== receipt.requestedSubject))
-      throw new Error("ACTION_HISTORY_VALIDATION_MISMATCH");
-    return { ...base, actionKind: receipt.type, unmappedReason: null,
-      scopeRefs: [{ scopeKey: validatedAction.scopeKey, instructionReceiptId: validatedAction.scopeKey === "us" ? null : receipt.receiptId,
-        kind: validatedAction.scopeKey === "us" ? "GLOBAL" : "INSTRUCTION" }],
-      targetRef: receipt.subject ?? receipt.requestedSubject ?? null, targetLabel: null };
-  }
   if (validatedAction.kind === "GLOBAL_RUNNER") {
     if (validatedAction.type !== receipt.type || receipt.subjectKind !== "the standing runner")
       throw new Error("ACTION_HISTORY_VALIDATION_MISMATCH");
@@ -93,7 +74,6 @@ export function prepareActionHistoryProjection(input: CommittedReceiptEvidence):
 
 export type ProjectionReadiness = { readonly status: "READY" | "INCOMPLETE";
   readonly throughPosition: number; readonly sourceCount: number; readonly projectedCount: number;
-  /** Hash of the canonical source log's ordered (position, receiptId) pairs. */
   readonly sourceSetHash: string };
 export type ProjectionPageQuery = { readonly scopeKey: string; readonly instructionReceiptId?: string | null;
   readonly afterPosition?: number | null; readonly limit?: number };
@@ -102,7 +82,6 @@ export type ProjectionPage = { readonly available: boolean; readonly reason: str
   /** Null while any source receipt lacks a provable scope, even if the source window itself is complete. */
   readonly total: number | null };
 
-/** The same pair serialization must be computed independently from source rows for readiness. */
 export function actionHistorySourceSetHash(rows: readonly Pick<ActionHistoryProjection, "sourcePosition" | "gatewayReceiptId">[]): string {
   const pairs = rows.map(row => [row.sourcePosition, row.gatewayReceiptId] as const)
     .sort((a, b) => a[0] - b[0] || a[1].localeCompare(b[1]));

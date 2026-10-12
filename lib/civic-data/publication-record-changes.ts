@@ -10,9 +10,10 @@ export interface PublicationRecordChange {
   readonly factsHash: string;
 }
 
-// Evidence freshness is not a change to the civic fact. Preserve all other
-// fields, including source URLs and actual event/filing/publication dates.
-const PROVENANCE_FIELDS = new Set(["collectedAt", "verifiedAt", "fieldSources", "membershipSource", "retainedFieldSources"]);
+// Evidence refresh and exact source aliases do not change the civic fact. The
+// accepted record and reader identities remain explicit on each change row.
+const PROVENANCE_FIELDS = new Set(["collectedAt", "verifiedAt", "fieldSources", "membershipSource", "retainedFieldSources",
+  "nativeIds", "personId", "sourceRecordId"]);
 function facts(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(facts);
   if (value !== null && typeof value === "object") return Object.fromEntries(Object.entries(value)
@@ -21,8 +22,6 @@ function facts(value: unknown): unknown {
 }
 const hash = (value: unknown) => createHash("sha256").update(canonicalJson(facts(value))).digest("hex");
 
-/** Compare only independently accepted records against the exact prior GOOD
- * version. Carry-forward neighbours and an omitted baseline earn no credit. */
 export function publicationRecordChanges(input: {
   previousVersionId: string | null;
   accepted: readonly { recordId: string; readerId: string; value: unknown; previous?: unknown }[];

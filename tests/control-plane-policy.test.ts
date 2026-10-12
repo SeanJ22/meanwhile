@@ -40,16 +40,6 @@ import {
 } from "../lib/control-plane/cost.ts";
 import { WORKER_ROLES, type AttemptCost, type WorkerRole } from "../lib/control-plane/attempt.ts";
 
-/**
- * THE SEEDED FAILURE SUITE — policy, budget and cost.
- *
- * Same discipline as the execution suite: each test plants a failure the
- * architecture is meant to make impossible and asserts the exact refusal that
- * catches it. A green happy path proves the code runs. Only these prove it says
- * NO when a worker is wrong, which is the only property that matters at 3am with
- * twelve workers pointed at one county.
- */
-
 const T0 = "2026-08-28T00:00:00.000Z";
 const POLICY = "policy-2026-08-28";
 
@@ -57,7 +47,6 @@ function grantFor(role: WorkerRole): CapabilityGrant {
   return defaultGrant({ role, project: "meanwhile", policyVersion: POLICY, grantedAt: T0 });
 }
 
-/** `assert.throws` returns void, so the thrown value is captured directly. */
 function caught(fn: () => unknown): unknown {
   try {
     fn();
@@ -67,8 +56,6 @@ function caught(fn: () => unknown): unknown {
   return null;
 }
 
-/* ------------------------------------------------------------------ policy */
-
 test("SEEDED #7: a PARSER asking for NETWORK_PUBLIC_READ is refused BY NAME", () => {
   const grant = grantFor("PARSER");
   const result = authorize(grant, "NETWORK_PUBLIC_READ");
@@ -76,8 +63,6 @@ test("SEEDED #7: a PARSER asking for NETWORK_PUBLIC_READ is refused BY NAME", ()
   assert.equal(result.allowed, false, "a parser must never be authorized for the network");
   assert.equal(result.role, "PARSER");
   assert.equal(result.capability, "NETWORK_PUBLIC_READ");
-  // The refusal names BOTH the role and the capability in its prose, so a
-  // report that only carries the message is still actionable.
   assert.match(result.reason, /PARSER/);
   assert.match(result.reason, /NETWORK_PUBLIC_READ/);
 
@@ -101,7 +86,6 @@ test("a PARSER is refused VAULT_READ_RESTRICTED and holds sanitized read only", 
     ["VAULT_READ_SANITIZED"],
     "the parser default grant is exactly one capability",
   );
-  // Stated as a property rather than a list: no network capability of any kind.
   for (const capability of DEFAULT_GRANTS.PARSER) {
     assert.ok(
       !["NETWORK_PUBLIC_READ", "BROWSER_DRIVE"].includes(capability),
@@ -165,7 +149,6 @@ test("DEFAULT DENY: unknown capability, unknown role and absent grant are all re
   assert.equal(empty.allowed, false);
   assert.match(empty.reason, /\(nothing\)/);
 
-  // Every role x every capability: nothing is allowed that the grant lacks.
   for (const role of WORKER_ROLES) {
     const roleGrant = grantFor(role);
     for (const capability of CAPABILITIES) {
@@ -219,8 +202,6 @@ test("neutrality is an invariant, not a flag: disabling it throws", () => {
   assert.ok(symmetry instanceof NeutralityDisabled);
   assert.equal(symmetry.invariant, "COVERAGE_SYMMETRY");
 
-  // Neutrality is not reachable through the capability system at all: there is
-  // no capability that grants or revokes it.
   assert.equal(
     CAPABILITIES.filter((c) => /NEUTRAL|SYMMETR|RANK|SCORE/i.test(c)).length,
     0,
@@ -228,14 +209,7 @@ test("neutrality is an invariant, not a flag: disabling it throws", () => {
   );
 });
 
-/* ------------------------------------------------------------------ budget */
-
-/**
- * Concurrency is isolated here by setting `minIntervalMs` to 0. With a nonzero
- * interval the SECOND acquire at the same instant would be refused on the
- * interval before concurrency was ever reached, and this test is about the
- * shared slot count. The interval has its own test below.
- */
+// minIntervalMs is 0 so the second same-instant acquire reaches the concurrency check rather than the interval.
 function pimaHost(over: Partial<HostBudget> = {}): HostBudget {
   return {
     host: "pima.legistar.com",
@@ -271,7 +245,6 @@ test("SEEDED #9: twelve workers on one publisher contend on ONE shared HostBudge
     assert.match(r.reason, /3/);
   }
 
-  // Releasing frees exactly the slots released — no more.
   ledger = release(ledger, "pima.legistar.com");
   ledger = release(ledger, "pima.legistar.com");
 
@@ -287,9 +260,6 @@ test("SEEDED #9: twelve workers on one publisher contend on ONE shared HostBudge
 });
 
 test("per-worker politeness MULTIPLIES: twelve private ledgers allow twelve", () => {
-  // The failure mode this whole module exists to prevent, demonstrated. Each of
-  // these twelve workers is individually, provably polite. Together they are
-  // twelve concurrent requests at a publisher that was told three.
   let privateGrants = 0;
   for (let worker = 0; worker < 12; worker += 1) {
     const own = createLedger({ hosts: [pimaHost()] });
@@ -368,7 +338,6 @@ test("a 429 backs the host off for everyone, and the backoff cannot be lifted ea
   assert.equal(refused.waitMs, 60 * 60 * 1000);
   assert.match(refused.reason, /HTTP 429/);
 
-  // A shorter backoff never shortens a longer one already in force.
   const shortened = backoff(ledger, "pima.legistar.com", "2026-08-28T00:10:00.000Z", "guess");
   assert.equal(
     shortened.hostState["pima.legistar.com"].backoffUntil,
@@ -402,25 +371,20 @@ test("a daily cap is shared too, and a credential quota follows the key", () => 
   assert.equal(b.granted, false);
   assert.equal(b.refusal, "CREDENTIAL_DAILY_CAP");
 
-  // Without the key the host cap still bites at 2.
   const c = tryAcquire(a.ledger, "pima.legistar.com", T0);
   assert.equal(c.granted, true);
   const d = tryAcquire(c.ledger, "pima.legistar.com", T0);
   assert.equal(d.granted, false);
   assert.equal(d.refusal, "HOST_DAILY_CAP");
 
-  // A later UTC day rolls the counter over.
   ledger = c.ledger;
   const nextDay = tryAcquire(ledger, "pima.legistar.com", "2026-08-29T00:00:00.000Z");
   assert.equal(nextDay.granted, true);
 
-  // Against a ledger still under the host cap, so the refusal is the key's own.
   const unknownKey = tryAcquire(a.ledger, "pima.legistar.com", T0, { credentialId: "key-9" });
   assert.equal(unknownKey.granted, false);
   assert.equal(unknownKey.refusal, "CREDENTIAL_UNKNOWN");
 });
-
-/* -------------------------------------------------------------------- cost */
 
 function entry(over: Partial<CostEntry> & { cost: AttemptCost }): CostEntry {
   return {
@@ -467,8 +431,6 @@ test("an UNMEASURED token count is reported as unmeasured, never as zero", () =>
   assert.equal(tokens.measured, 1, "one entry reported input tokens");
   assert.equal(tokens.unmeasured, 1, "the null is COUNTED, not coerced to 0");
   assert.equal(tokens.complete, false);
-  // The defect being guarded: total 5 over measured 2, which reads as an
-  // average half the real one and a run that looks cheaper than it was.
   assert.notEqual(tokens.measured, 2);
 
   // A metric nothing reported totals to null, because the sum of no
@@ -572,17 +534,6 @@ test("cost answers ONLY whether to schedule more work, and says what it could no
   assert.match(blind.reason, /unmeasured/i);
 });
 
-/* ------------------------------------------------------------ source sweep */
-
-/**
- * COST INFORMS SCHEDULING, NEVER TRUTH.
- *
- * The invariant is asserted against the module's own source: no EXPORTED
- * function in `cost.ts` may be shaped like a judgement about whether something
- * is right. A cheaply obtained wrong answer is still wrong, and an expensive
- * correction is still owed — so there must be no seam through which a price can
- * enter that conversation at all.
- */
 const EXPORTED_FUNCTION =
   /export\s+(?:async\s+)?function\s+([A-Za-z0-9_]+)|export\s+const\s+([A-Za-z0-9_]+)\s*(?::[^=]+)?=\s*(?:async\s*)?\(/g;
 
@@ -615,9 +566,6 @@ test("no exported function in cost.ts is shaped like a claim about truth", () =>
     "cost informs scheduling, never truth; these exports read as truth judgements",
   );
 
-  // POSITIVE CONTROL. A sweep that has never been seen to fire proves nothing —
-  // it is indistinguishable from a regex that matches nothing at all. This is
-  // the module that WOULD be the defect, run through the same detector.
   const CONTROL = [
     "export function shouldCorrectFactBasedOnCost(spent: number): boolean { return spent < 5; }",
     "export const isClaimValidForItsPrice = (usd: number) => usd > 1;",

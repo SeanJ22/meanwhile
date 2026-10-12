@@ -1,12 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { NextRequest } from "next/server";
 import { EXACT_SERVED_WITNESS_SQL, parsePublishedResultSubjectKey,
   readExactServedWitness, readPublishedResultObservation } from "../lib/control-plane/admin-view/public-reader-observation-read.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
-import { ADMIN_HOST, PUBLIC_HOST, adminSessionCookie, withAdminSessionKey } from "./admin-session.ts";
 
 const item = {
   id: "wi-123", project: "Meanwhile", subject: "ocd-division/country:us/state:az/place:sierra_vista",

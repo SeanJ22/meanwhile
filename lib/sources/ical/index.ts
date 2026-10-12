@@ -1,10 +1,8 @@
 /**
  * @freshness-reads-here
  *
- * RULING 107 — the clock stamps in this file are minted by the code path that
- * performs the read: the freshness date is taken at the moment of the fetch,
- * which is what the ruling asks for rather than what it forbids. Verified
- * 2026-08-23 by reading each stamp site against the retrieval it sits in.
+ * The clock stamps in this file are minted by the code path that performs the read: the freshness date
+ * is taken at the moment of the fetch.
  */
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import {
@@ -42,62 +40,29 @@ import {
 } from "../normalize-account.ts";
 
 /**
- * **An `.ics` feed is a calendar handed to us** — ladder rung 8, and the first
- * adapter for the `ICAL` source type, which had sat in the enum with nothing
- * behind it since the enum was written (M123, 2026-08-19).
+ * An `.ics` feed is a calendar handed to us: a format, not a vendor. A town publishing through any
+ * iCalendar-speaking calendar hands over start, end, title, venue string and often the board's own name
+ * in `CATEGORIES`.
  *
- * Not a vendor: a FORMAT. A town publishing its boards through WordPress's
- * The Events Calendar, or through any of the plugins that speak iCalendar,
- * hands over start time, end time, title, venue string and — crucially — the
- * board's own name in `CATEGORIES`. That is better data than the HTML the
- * plugin renders from it, and it is one parse for every town that publishes
- * one.
+ * The Events Calendar's `/events/?ical=1` returns only the current view; `/events/list/?ical=1` returns the
+ * whole calendar. So the wiring row names the full feed URL explicitly, and the parsed count is reported
+ * per row.
  *
- * ## The trap this adapter was written around, and it cost 5x
- *
- * `https://<town>/events/?ical=1` returns **the current VIEW**, not the
- * calendar. On Wilmot NH that is the month view: **four** events, HTTP 200,
- * `text/calendar`, perfectly well-formed. The list view at
- * `/events/list/?ical=1` returns **twenty-three** — the same total the
- * plugin's own REST API reports.
- *
- * A feed that answers 200 with a fifth of the calendar is the empty-success
- * shape wearing a healthier face: nothing errors, nothing is malformed, and
- * nineteen public meetings are missing. So the wiring row names the FULL
- * feed URL explicitly rather than the adapter constructing one, and this
- * adapter reports its parsed count per row so a five-becomes-four regression
- * is visible rather than silent.
- *
- * ## What is dropped, and counted
- *
+ * What is dropped, and counted:
  * * An event with no parseable `DTSTART` → `unplaceableInTime`.
- * * An event whose `LOCATION` does not resolve to a curated venue, and whose
- *   row's `venueMatch` does not either → counted `unknownVenue` and KEPT, with
- *   no pin and its venue gap named (the venue-gap class, 2026-09-23): never
- *   suppressed, never placed. Wilmot writes `LOCATION:NH` on nine of its
- *   twenty-three, which is a state, not a building, and pinning a meeting on
- *   the middle of New Hampshire would be a fabricated location.
- * * An event whose `CATEGORIES` does not name a board this row serves →
- *   `notConfigured`. A town calendar is mostly not board meetings.
- * * A second event on an id already produced → `duplicates`, and the
- *   publisher's latest revision keeps the id, never the first one listed.
+ * * An event whose `LOCATION` and row `venueMatch` resolve to no curated venue → counted `unknownVenue` and
+ *   kept, with no pin and its venue gap named; never suppressed, never placed.
+ * * An event whose `CATEGORIES` does not name a board this row serves → `notConfigured`.
+ * * A second event on an id already produced → `duplicates`; the publisher's latest revision keeps the id.
  *
- * ## A recurring series is one record per sitting
+ * A recurring series is one record per sitting: `ical:<slug>:<UID>/<slot>` (see `occurrenceId` in
+ * `lib/sources/event-identity.ts`). The master's `RRULE` is expanded into its in-window sittings when every
+ * part of it is supported (`lib/sources/ical/recurrence.ts`); otherwise the refused part is named in
+ * `recurrence.notExpanded` and the master stands for its own first sitting. An edited sitting belongs to its
+ * series' body.
  *
- * A series is one `UID` across a master and its overrides. Each sitting of a
- * series is keyed by the `UID` plus its recurrence slot, `ical:<slug>:<UID>/
- * <slot>`; an event outside any series keeps `ical:<slug>:<UID>`. See
- * `occurrenceId` in `lib/sources/event-identity.ts`. The master's `RRULE` is
- * expanded into its in-window sittings when every part of it is one the
- * recorded feeds use (`lib/sources/ical/recurrence.ts`); otherwise the refused
- * part is named in `recurrence.notExpanded` and the master stands for its own
- * first sitting only. An edited sitting belongs to its series' body.
- *
- * ## Per-body isolation
- *
- * One row is one feed. A host refusing us empties that row and NOTHING else,
- * and the refusal is reported as a refusal rather than written into the data
- * as an absence — the refresh corollary, applied at the adapter.
+ * Per-body isolation: one row is one feed. A host refusing us empties that row and nothing else, and the
+ * refusal is reported as a refusal, never written into the data as an absence.
  */
 
 const SOURCE_NAME = "ical";
@@ -105,16 +70,12 @@ const SOURCE_NAME = "ical";
 const WINDOW_FORWARD_DAYS = MEETING_HELD_HORIZON_DAYS;
 const WINDOW_BACK_DAYS = MEETING_HELD_LOOKBACK_DAYS;
 
-/**
- * The body itself says so, in its own summary. Warner also writes the bare
- * verb: "CANCEL Select Board Meeting" (2025-11-11), "CANCEL Bee Keepers".
- */
+/** The body itself says so, in its own summary (including the bare verb "CANCEL"). */
 const CANCELED = /\bcancel(?:l?ed)?\b/i;
 
 /**
- * A `LOCATION` that names no place a reader could go: blank, or a bare state
- * ("NH", Wilmot's Selectboard). Only then may a row's standing `venueMatch`
- * stand in for it; any other text is the town's own words for the place.
+ * A `LOCATION` that names no place a reader could go: blank, or a bare state code. Only then may a row's
+ * standing `venueMatch` stand in for it; any other text is the town's own words for the place.
  */
 export function namesNoPlace(rawLocation: string): boolean {
   const text = rawLocation.trim().replace(/[.,]+$/, "");
@@ -155,27 +116,12 @@ function namedDay(own: number, month: number, day: number, year: string | undefi
 }
 
 /**
- * **A SITTING THE BODY MOVED OFF ITS DAY WAS NOT HELD ON IT.** (2026-09-24.)
- *
- * A town edits the sitting it moved rather than deleting it. Warner's Select
- * Board sitting of 2026-09-08 reads "RESCHEDULED Select Brd -9/15", its 09-14
- * Parks and Recreation sitting "P&R Rescheduled to 9/21", and Bradford's
- * 2025-02-06 sitting "Budget Mgts Rescheduled to 2/13". Once the hour passed,
- * the clock called each of them CONCLUDED, telling a reader that a meeting
- * was held when the body itself said it was moved.
- *
- * So a summary that says rescheduled or postponed is read for the day it
- * names:
- * - "to <day>" names where the sitting went. A later bare day does too
- *   ("-9/15" on 9/8). This sitting was not held here.
- * - "from <day>" names where it came from, as in "Select Board (rescheduled
- *   from 10/13)" on 10/6. An earlier bare day does too ("SB Rescheduled
- *   12/15/25 SB Mtg" on 12/16), and so does the sitting's own day. This
- *   sitting is the moved one, on its new day, so it keeps the clock's status.
- * - A summary that names no day says "postponed" of this sitting
- *   ("Postponed-Cemetery Commission"). But it can say "rescheduled" of either
- *   end ("Select Board Meeting Rescheduled" on 9/29 is the moved sitting), so
- *   only "postponed" counts.
+ * A sitting the body moved off its day was not held on it. A summary that says rescheduled or postponed
+ * is read for the day it names:
+ * - "to <day>", or a later bare day, names where the sitting went: not held here.
+ * - "from <day>", an earlier bare day, or the sitting's own day names where it came from: this is the
+ *   moved sitting on its new day, and it keeps the clock's status.
+ * - A summary naming no day: only "postponed" counts, since "rescheduled" can describe either end.
  */
 export function movedOffItsDay(title: string, startsAt: string, zone: string): boolean {
   const said = MOVED.exec(title);
@@ -210,12 +156,8 @@ export interface IcalRaw {
   /** The furthest ladder rung the refused retrieval reached, when the client knew it. */
   refusedRung?: number;
   /**
-   * A-004 · the UPCOMING feed answered and the town's PAST feed did not.
-   *
-   * The row still produces its upcoming sittings, so it is not `refused`.
-   * What it is, is PARTIAL — and until A-004 there was no way to say that, so
-   * an archive outage read as a town with no history and carry-forward
-   * preserved nothing.
+   * The upcoming feed answered and the past feed did not: the row still produces its upcoming sittings, so
+   * it is partial, not refused.
    */
   archiveRefused?: string;
   sourceUrl: string;
@@ -270,21 +212,10 @@ export interface IcalEvent {
 const RECORD_KEEPING = new Set(["UID", "DTSTAMP", "CREATED", "LAST-MODIFIED", "SEQUENCE"]);
 
 /**
- * **WHAT AN EVENT PUBLISHED, WITH ITS OWN ID TAKEN OUT.** (2026-09-25.)
- *
- * Every unfolded property line of the event, in the order served — `SUMMARY`,
- * `DTSTART` with its `TZID`, `DTEND`, `LOCATION`, `DESCRIPTION`, `STATUS`,
- * `URL`, `CATEGORIES`, any rule, and anything else the publisher wrote — less
- * the `RECORD_KEEPING` lines. In a `URL`, a path segment or query value that
- * IS the `UID`'s own number is written `{uid}`: the Town of Newbury's
- * `URL:https://www.newbury.nh.gov/home/events/42976` beside
- * `UID:calendar.42976.field_date_and_time.0@www.newbury.nh.gov` is the entry's
- * id again, not a different page about a different sitting. Only a token that
- * carries a digit is treated so, so a word both happen to contain
- * ("calendar") is never erased from a URL.
- *
- * Two events whose strings are equal published the same thing in every field
- * a reader could see. One character of difference anywhere keeps them apart.
+ * What an event published, with its own id taken out: every unfolded property line in the order served,
+ * less the `RECORD_KEEPING` lines. In a `URL`, a path segment or query value that is the `UID`'s own
+ * number is written `{uid}` (only tokens carrying a digit). Two events whose strings are equal published
+ * the same thing in every field a reader could see.
  */
 export function publishedFieldsOf(body: string, uid: string | null): string {
   const idTokens = new Set((uid ?? "").split(/[^A-Za-z0-9]+/).filter((t) => t.length >= 3 && /\d/.test(t)));
@@ -319,14 +250,8 @@ function listedValues(body: string, name: string): string[] {
 }
 
 /**
- * Unfold RFC 5545 line folding, then split into events.
- *
- * The unfolding is not optional politeness: a `LOCATION` line carrying a
- * street address is routinely longer than 75 octets and arrives split across
- * a newline plus one space. Parsing without unfolding truncates the address
- * at a byte boundary and produces a venue string that matches nothing —
- * which would render as "we could not place this meeting" about a meeting
- * whose address the town published in full.
+ * Unfold RFC 5545 line folding, then split into events. Without unfolding a long `LOCATION` is truncated at
+ * a byte boundary and matches nothing.
  */
 export function parseIcs(ics: string): IcalEvent[] {
   const unfolded = ics.replace(/\r\n[ \t]/g, "").replace(/\n[ \t]/g, "");
@@ -425,19 +350,8 @@ export function parseDtStart(
   // boundary — a fixed offset is right for half the year.
   const naive = Date.UTC(+y, +mo - 1, +d, +hh, +mi, +ss);
   const offset = wallClockOffsetMs(naive, tzid);
-  /*
-   * A-007 · A ZONE WE COULD NOT INTERPRET PRODUCES NO TIMESTAMP.
-   *
-   * `zoneOffsetMs` used to answer `0` for a `TZID` `Intl` refused, and zero
-   * is not a missing offset — it is UTC, which is a confident claim about when
-   * a public meeting starts. Measured on the shipped code: a 7pm Eastern
-   * sitting rendered four hours early, and a 1am sitting on 8 September
-   * rendered as 9pm on the 7th. **The wrong DAY, from a catch block.**
-   *
-   * The caller counts this as `unplaceableInTime`, which is the disposition it
-   * has always had for an event whose start cannot be read. An event we cannot
-   * place in time is not an event at a plausible time.
-   */
+  // A zone we could not interpret produces no timestamp: the caller counts it as `unplaceableInTime`.
+  // Defaulting to UTC would put a meeting hours (or a day) off.
   if (offset === null) return null;
   return { iso: new Date(naive - offset).toISOString(), dayOnly };
 }
@@ -470,20 +384,8 @@ function splitOnce(s: string, sep: string): [string, string] {
 }
 
 /**
- * How far the named zone was from UTC at `utcMs`, in milliseconds — or `null`
- * when the zone cannot be interpreted at all.
- *
- * **A-007** (external correctness audit of `336a3eb`, remediated 2026-08-24).
- * This returned `0` from its catch. Zero is a VALUE: it says the meeting is in
- * UTC, and it says it with the same confidence as a zone we actually read. A
- * feed carrying `TZID=US/Eastern-ish`, a typo, or a zone this runtime's ICU
- * build does not carry would put a New Hampshire meeting four or five hours
- * out and, near midnight, on the wrong day.
- *
- * That is the render-default rule in the time domain: a default may never
- * manufacture a claim, and an absence must render as its named gap. `null`
- * propagates to `unplaceableInTime`, which is a fact about the record rather
- * than an assertion about the meeting.
+ * How far the named zone was from UTC at `utcMs`, in milliseconds, or `null` when the zone cannot be
+ * interpreted. Never 0 as a fallback: zero is a claim that the meeting is in UTC.
  */
 /**
  * One formatter per zone, because constructing one is the expensive part and
@@ -551,23 +453,19 @@ function lastModifiedAt(value: string | null): number | null {
   return m ? Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6]) : null;
 }
 
-/** The publisher's own `LAST-MODIFIED` as an ISO instant (DB-27), or null when the event states none. `DTSTAMP` is never used. */
+/**
+ * The publisher's own `LAST-MODIFIED` as an ISO instant, or null when the event states none. `DTSTAMP` is
+ * never used.
+ */
 export function publisherPostedAt(event: Pick<IcalEvent, "lastModified">): string | null {
   const at = lastModifiedAt(event.lastModified);
   return at === null ? null : new Date(at).toISOString();
 }
 
 /**
- * **WHICH OF TWO EVENTS ON ONE ID KEEPS IT, DECIDED BY WHAT THEY SAY.**
- * (2026-09-23.)
- *
- * Two events on one id are the feed publishing one sitting twice. The first
- * one listed used to win, and Google Calendar lists its events in a different
- * order on every request, so the record changed with the order. The winner is
- * now the publisher's latest revision: the higher `SEQUENCE` (absent is 0,
- * RFC 5545's default), then the later `LAST-MODIFIED`. Two copies at the same
- * revision are the same statement twice; the tie is broken on their content,
- * so the answer cannot depend on position.
+ * Which of two events on one id keeps it, decided by what they say: the publisher's latest revision (the
+ * higher `SEQUENCE`, absent is 0, then the later `LAST-MODIFIED`); at the same revision the tie is broken
+ * on content, so the answer never depends on feed order.
  */
 function preferredClaim(held: IdentityClaim, incoming: IdentityClaim): IdentityClaim {
   const sequence = (claim: IdentityClaim) => claim.event.sequence ?? 0;
@@ -597,48 +495,12 @@ export function relistedNote(listings: number): string {
 }
 
 /**
- * **ONE SITTING THE PUBLISHER'S OWN CALENDAR LISTS TWICE IS ONE SITTING.**
- * (2026-09-25.)
- *
- * ## What was wrong
- *
- * The Town of Newbury's Drupal calendar carries some sittings under two
- * recurring series at once: its Selectboard of 26 October 2026 at 18:00 is
- * `calendar.42976…` (created 2026-03-31) and `calendar.44076…` (created
- * 2026-09-22), each its own `UID` and its own event page, every published
- * field the same. Keyed on the `UID`, each became a meeting, and readers saw
- * seven Selectboard, three Conservation Commission and two Zoning Board
- * sittings twice. The listing-identity notice (`lib/meetings/listing-identity.ts`,
- * f676aa9b) flagged every pair and, by design, merged none, and the
- * cross-source collapse (`collapseDuplicateSittings`) leaves one source's own
- * catalogue alone.
- *
- * ## The rule
- *
- * Within ONE wiring row (one body, one feed), two or more claims merge only
- * when the events they came from published exactly the same thing
- * (`IcalEvent.publishedFields`: title, start with its zone, end, place,
- * description, status, URL, categories, rule, every other property, in the
- * order served) and state the same sitting instant. Only the publisher's
- * record-keeping may differ: the `UID`, the `UID`'s own number where the `URL`
- * repeats it, and the created / modified / stamped / sequence lines. Anything
- * else that differs — one word of a title ("Selectboard Meeting Public
- * Hearing" beside "Selectboard Meeting" on 13 April 2026), a room, a
- * description — keeps both listings, each with the listing-identity notice.
- *
- * The survivor is the lowest id, so the answer does not depend on feed order,
- * and it carries every listing's id and page (`provenance.publisherListings`).
- * A prior version that held the other id yields to the survivor as a re-issued
- * sitting (`reissuesSitting`), never as an unexplained disappearance.
- *
- * ## Whose decision this is
- *
- * Merging these was first framed as an owner decision. It is recorded here as
- * an ENGINEERING correctness rule — agents own engineering choices, and
- * `docs/rulings.md` §9 keeps an engineering choice from being recorded as
- * Sean's decision — and it is stated so the owner can reverse it: remove the
- * one call in `normalizeWithDrops` and every pair returns as two listings,
- * each flagged by the notice as before.
+ * One sitting the publisher's own calendar lists twice is one sitting. Within one wiring row, claims
+ * merge only when their events published exactly the same thing (`IcalEvent.publishedFields`) and state
+ * the same sitting instant; only the publisher's record-keeping may differ. Anything else that differs
+ * keeps both listings, each with the listing-identity notice. The survivor is the lowest id and carries
+ * every listing's id and page (`provenance.publisherListings`). An engineering correctness rule: remove the
+ * one call in `normalizeWithDrops` and every pair returns as two listings.
  */
 export function collapsePublisherRelistings(
   claims: readonly IdentityClaim[],
@@ -826,20 +688,11 @@ function planSeries(input: {
 }
 
 /**
- * **A FEED THAT PUBLISHES EVERY SITTING, WITH THE SERIES' RULE ON EACH.**
- *
- * The Town of Newbury's Drupal calendar exports each sitting of a repeating
- * meeting as its own event, under its own `UID`, and writes the whole series'
- * `RRULE` on every one of them: 25 fortnightly Selectboard sittings, each
- * carrying `FREQ=WEEKLY;COUNT=25;INTERVAL=2;BYDAY=MO`. Expanding those as RFC
- * 5545 reads them would publish each sitting up to 25 times and invent
- * sittings past the series' end.
- *
- * The evidence is in the feed itself: two events with different `UID`s, the
- * same title and the same rule, the later one starting on a sitting of the
- * earlier one's rule. A feed that shows it publishes its sittings one by one,
- * so no rule in it is expanded and every event is one sitting, keyed exactly
- * as a single event always was. Returns the evidence, or null.
+ * A feed that publishes every sitting as its own event while restating the series' `RRULE` on each.
+ * Expanding those would publish each sitting many times and invent sittings past the series' end. The
+ * evidence: two events with different `UID`s, the same title and rule, the later starting on a sitting of
+ * the earlier one's rule. Then no rule is expanded and every event is one sitting. Returns the evidence,
+ * or null.
  */
 function ruleRestatedOnSittings(events: readonly IcalEvent[]): string | null {
   const groups = new Map<string, IcalEvent[]>();
@@ -908,34 +761,23 @@ export function makeIcalSource(
     /** A-002 · events whose identity had already been produced. */
     let duplicates = 0;
     /**
-     * A-002 · sittings TALLIED in `placeless` (online, D18) or `unknownVenue`
-     * (no reviewed place, the venue-gap class) that are then kept and go on to
-     * be produced or counted as duplicates — so the tally is not a drop.
+     * Sittings tallied in `placeless` or `unknownVenue` that are then kept and produced (or counted as
+     * duplicates), so the tally is not a drop.
      */
     let keptButPlaceless = 0;
     /** A-005 · the feed published the same UID twice. Its own doing. */
     let exactDuplicates = 0;
     /**
-     * A-005 · two UID-less records this code judged to be the same sitting.
-     *
-     * Counted separately from an exact duplicate because it is OUR judgement
-     * rather than the feed's statement, and a judgement that starts firing is
-     * evidence the fallback identity is too weak for some town's feed.
+     * Two UID-less records this code judged to be the same sitting, counted apart from exact duplicates
+     * because it is our judgement rather than the feed's statement.
      */
     let weakIdCollisions = 0;
     /**
-     * Listings the publisher's own calendar carried a second (or third) time
-     * under another id, every published field identical, and merged into the
-     * one sitting they list (`collapsePublisherRelistings`). Counted apart from
-     * the two above: neither the same id twice nor a judgement about UID-less
-     * records, but two ids the feed itself gave to one sitting.
+     * Listings the publisher's calendar carried more than once under another id, every published field
+     * identical, merged by `collapsePublisherRelistings`.
      */
     let publisherRelisted = 0;
-    /**
-     * A-004 · divisions whose ARCHIVE feed refused while their upcoming feed
-     * answered. Collected per cause so the report says what refused, not only
-     * that something did.
-     */
+    /** Divisions whose archive feed refused while their upcoming feed answered, collected per cause. */
     const archiveRefusals = new Map<string, (string | null)[]>();
 
     const from = new Date(now.getTime() - WINDOW_BACK_DAYS * 86_400_000);
@@ -954,52 +796,15 @@ export function makeIcalSource(
         continue;
       }
 
-      /*
-       * **WHICH EVENTS ON THIS CALENDAR ARE THIS BODY'S SITTINGS.**
-       *
-       * Two answers, because two real feeds answer differently, and one of
-       * them is required — without either, every town event on the calendar
-       * would become a sitting of this board.
-       *
-       * `categoryMatch` — the feed's own `CATEGORIES` names the board. This is
-       * the better signal and the one Wilmot's WordPress plugin gives, because
-       * it is the publisher's own classification rather than our reading of a
-       * title.
-       *
-       * `titleMatch` — a comma-separated list of phrases, any of which in the
-       * `SUMMARY` makes the event this body's (NH Hunt, 2026-08-20). Added for
-       * the Town of Newbury, whose own Drupal calendar publishes **1,157
-       * events with no `CATEGORIES` field at all** — 272 Selectboard sittings,
-       * 116 Conservation Commission, 108 Zoning Board, 84 Planning Board, and
-       * ninety-four of them still upcoming. A category-only adapter reads that
-       * feed as a calendar belonging to nobody, which is how a town publishing
-       * everything ends up rendering as a town publishing nothing.
-       *
-       * **It is a LIST because a body's name is spelled several ways on its
-       * own calendar**, and dropping the variants would silently lose real
-       * sittings: Newbury writes "Supervisors of the Checklist" and
-       * "Supervisions of the Checklist" — a typo the town has repeated for
-       * years — and its Energy Committee appears as both "Energy Committee
-       * Meeting" and "Newbury Energy Committee Meeting". The list is what the
-       * wiring row states it is; nothing is inferred from a near-miss.
-       *
-       * `titleExclude` removes what the phrase would over-catch. Nothing needs
-       * it at Newbury today; it exists because the first town whose "Planning
-       * Board" also runs a "Planning Board Budget Hearing (staff only)" should
-       * be a wiring row and not a code change.
-       *
-       * `feedScope: "category"` — the feed IS the body's calendar (2026-09-26,
-       * the 85635 expansion). A CivicPlus site serves one feed per calendar
-       * category, and Cochise County files its Board of Supervisors' sittings
-       * in a "Board of Supervisors" feed whose events carry no `CATEGORIES`
-       * and whose titles never name the board ("Special Board Meeting",
-       * "Jail District Meeting"). The site's own category name is the
-       * publisher's classification, the signal `categoryMatch` reads, stated
-       * once for the whole feed. Every event of the feed is the body's, less
-       * any `titleExclude` names. Only a reviewed row sets it, and the row check
-       * (`crosswalkRowIssue`) admits it only on a category-scoped feed and
-       * never beside `titleMatch` or `categoryMatch`.
-       */
+      // Which events on this calendar are this body's sittings; one of these is required:
+      // - `categoryMatch`: the feed's own `CATEGORIES` names the board (the publisher's classification).
+      // - `titleMatch`: comma-separated phrases, any of which in the `SUMMARY` makes the event this body's. A list
+      //   because a body's name is spelled several ways on its own calendar; nothing is inferred from a
+      //   near-miss.
+      // - `feedScope: "category"`: the feed is the body's own calendar category, so every event is the body's.
+      //   Only a reviewed row sets it, and `crosswalkRowIssue` admits it only on a category-scoped feed and never
+      //   beside `titleMatch` or `categoryMatch`.
+      // `titleExclude` removes what a phrase would over-catch.
       const feedScope = wiring.config.feedScope ?? "";
       const category = wiring.config.categoryMatch ?? "";
       const titleTerms = (wiring.config.titleMatch ?? "")
@@ -1057,38 +862,17 @@ export function makeIcalSource(
               titleTerms.some((t) => summary.includes(t)) &&
               !excludeTerms.some((t) => summary.includes(t));
       };
-      /*
-       * The evidence is read from THIS BODY's own series (2026-09-25). It was
-       * read from the whole feed, and a Google calendar's ordinary history
-       * supplies it by accident: Warner's "Warner Events" calendar (3,522
-       * events) carries a book club split "this and following" (a new UID
-       * starting on a sitting of the old rule) and a Zumba series entered
-       * twice, so no rule in the feed was expanded and the river committee's
-       * every-other-month series produced only its one edited sitting. Newbury's
-       * restated sittings restate THEIR OWN body's series, so each body there
-       * still carries the evidence itself.
-       */
+      // The evidence is read from this body's own series, not the whole feed, where unrelated series can
+      // supply it by accident.
       const restated = ruleRestatedOnSittings(events.filter(namesThisBody));
 
       for (const event of events) {
         // A-002 · the logical record here is the EVENT, never the document.
         // One `.ics` file is one raw row and, at Newbury, 1,157 of these.
         considered += 1;
-        /*
-         * **AN EDITED SITTING BELONGS TO ITS SERIES' BODY, NOT TO ITS OWN
-         * TITLE.** (2026-09-23.)
-         *
-         * An override (`RECURRENCE-ID`) is one sitting of the series its `UID`
-         * names, and the series is what says which board sits. Warner's Select
-         * Board edited its 8 September sitting to read "RESCHEDULED Select Brd
-         * -9/15"; read by its own title that is no board at all, so the edited
-         * sitting was dropped and the series' unedited first sitting stood in
-         * for it. The series' own event decides the body; the override's own
-         * `DTSTART` says when the sitting now is, and its own title is shown as
-         * the town wrote it. Nothing is read out of a title but the body match.
-         * An override whose series event is not in the feed is read by its own
-         * fields, as before: there is nothing else to read it by.
-         */
+        // An edited sitting belongs to its series' body, not its own title: the series event decides the body,
+        // the override's `DTSTART` says when the sitting now is, and its title is shown as written. An override
+        // whose series event is not in the feed is read by its own fields.
         const owners = event.uid && event.recurrenceId ? seriesOwners.get(event.uid) : undefined;
         const matched = owners && owners.length > 0
           ? owners.some(namesThisBody)
@@ -1195,86 +979,21 @@ export function makeIcalSource(
         }
 
         const rawLocation = (event.location ?? "").trim();
-        /*
-         * **AN EMPTY `LOCATION` IS NOT A PLACELESS MEETING** (NH Hunt,
-         * 2026-08-20), and the distinction is worth twenty-four of Newbury's
-         * public meetings.
-         *
-         * `placeless` means D18's fact: the body PUBLISHED a location string
-         * and that string names no building — "Virtual Meeting", "Microsoft
-         * Teams". Those are real, attendable meetings kept with a null
-         * `location` and an `online` block.
-         *
-         * The Town of Newbury publishes **no `LOCATION` line at all** on any of
-         * its 1,157 events. That is not a claim that the meeting is nowhere; it
-         * is the feed saying nothing about where. Dropping it as `placeless`
-         * read the town's silence as an assertion — the render-default failure,
-         * one layer upstream in the data — and it did so BEFORE the row's own
-         * `venueMatch` was ever consulted, so a body with a standing, sourced,
-         * published meeting place never got to use it.
-         *
-         * So an empty location falls through to `venueMatch` exactly as an
-         * unrecognised one does. With no `venueMatch` on the row it used to be
-         * a `placeless` drop; it is now KEPT with the feed's silence as its
-         * named gap, below (the venue-gap class, 2026-09-23).
-         */
-        /*
-         * THE FEED'S OWN LOCATION FIRST, and the BODY'S OWN STANDING
-         * STATEMENT second — never a guess between them.
-         *
-         * Wilmot writes `LOCATION:NH` on every Selectboard sitting: a state,
-         * not a building. Nine real public meetings would drop, and a pin in
-         * the middle of New Hampshire would be a fabricated location.
-         *
-         * What rescues them is not an inference from a neighbouring event. It
-         * is the board's OWN page, in its own words: "The Selectboard meets
-         * every other Wednesday at 6:00 p.m. in the Town Office Building at 9
-         * Kearsarge Valley Road in Wilmot." A wiring row may name that
-         * curated venue as `venueMatch`, and the venue row carries the board
-         * page as its `addressSourceUrl` — so this is a sourced claim with a
-         * citation, exactly like every other row in the venue cache, rather
-         * than the nearest-plausible-building guess the rule forbids.
-         *
-         * It applies ONLY when the feed gave nothing usable. A feed that
-         * names a hall wins, every time.
-         */
-        /*
-         * "ONLY when the feed gave nothing usable" is now what the code does
-         * (2026-09-25). It used to reach `venueMatch` for any LOCATION with no
-         * reviewed row, so a feed that named ANOTHER place was pinned at the
-         * standing hall: measured over all 59 ICAL rows' live feeds that day,
-         * 15 sittings — Warner's Village Water District commissioners at "55
-         * West Joppa Rd." (the treatment plant), its Housing Committee at the
-         * "pillsbury library", its Road Committee at the "State Highway Garage
-         * Rt 103" — all pinned at Warner Town Hall. A LOCATION that names a
-         * place is the town's own words and renders as its named gap below; only
-         * a blank one or a bare state (Wilmot's "NH", 12 sittings) reaches the
-         * body's standing statement.
-         */
+        // Venue resolution. An empty `LOCATION` is not a placeless meeting: `placeless` means the body published
+        // a location string naming no building ("Virtual Meeting"). The feed's own location comes first; only a
+        // blank one or a bare state code reaches the row's `venueMatch` (the body's own sourced standing
+        // statement). A `LOCATION` naming another place is the town's own words and renders as its named gap.
         let venue = resolveVenue(SOURCE_NAME, wiring.ocdId, rawLocation);
         if (!venue && wiring.config.venueMatch && namesNoPlace(rawLocation)) {
           venue = resolveVenue(SOURCE_NAME, wiring.ocdId, wiring.config.venueMatch);
         }
-        /*
-         * **NEITHER RESOLVES: KEPT, NEVER PLACED, NEVER SUPPRESSED** (the
-         * venue-gap class, 2026-09-23). This used to `continue`, losing every
-         * sitting the event states. Now each is published with no pin:
-         *
-         * - a `LOCATION` that names no building ("Virtual Meeting") is online
-         *   (D18), counted `placeless`;
-         * - any other `LOCATION` is the town's own words for the place, and
-         *   they render as its named gap (`STATED_NOT_PLACED`);
-         * - no `LOCATION` and no `venueMatch` is the feed's silence, the
-         *   publisher's own gap (`NOT_STATED_BY_PUBLISHER`);
-         * - no `LOCATION`, and a `venueMatch` with no reviewed row: the body's
-         *   standing statement names a place we cannot place and cannot quote
-         *   (the match is our key, not the feed's words), so it keeps our own
-         *   place-not-recorded gap.
-         *
-         * Every one is counted as it was (`unknownVenue` for the last three)
-         * and is then produced — or collapsed as a duplicate — so the tally
-         * is `keptButPlaceless`, never a drop.
-         */
+        // Neither resolves: kept, never placed, never suppressed:
+        // - a `LOCATION` naming no building is online, counted `placeless`;
+        // - any other `LOCATION` is the town's own words, rendered as its named gap (`STATED_NOT_PLACED`);
+        // - no `LOCATION` and no `venueMatch` is the publisher's own gap (`NOT_STATED_BY_PUBLISHER`);
+        // - no `LOCATION` and a `venueMatch` with no reviewed row keeps our own place-not-recorded gap.
+        // Each is counted (`unknownVenue` for the last three) and then produced, so the tally is
+        // `keptButPlaceless`, never a drop.
         let online: OnlineAccess | null = null;
         let venueGap: MeetingVenueGap | null = null;
         if (!venue) {
@@ -1291,25 +1010,9 @@ export function makeIcalSource(
         }
 
         const title = (event.summary ?? wiring.publishingOrg).trim();
-        /*
-         * A-005 · IDENTITY, WHEN THE FEED GIVES US NONE.
-         *
-         * A `UID` is the feed's own identifier and is the identity whenever it
-         * exists. The fallback used to be the START INSTANT ALONE — so two
-         * different boards of the same town, both sitting at 7pm on the same
-         * Tuesday, produced the same id and the second one vanished into the
-         * `seen` set without a counter, a drop, or a line anywhere.
-         *
-         * Same-night, same-time sittings are not an edge case in the towns
-         * this product exists for. They are the norm: a Zoning Board and a
-         * Conservation Commission on alternate Tuesdays at 7 in the same town
-         * hall is how small New England government schedules itself.
-         *
-         * So a UID-less event is identified by everything the feed DID publish
-         * about it — the body slug, the start, the summary, the location and
-         * the description. Two records that agree on all five are the same
-         * sitting published twice; two that differ anywhere are two sittings.
-         */
+        // Identity when the feed gives none. A `UID` is the identity whenever it exists; a UID-less event is
+        // identified by everything the feed did publish (body slug, start, summary, location, description), so
+        // two boards sitting at the same time stay two sittings.
         const fallbackIdentity = weakEventIdentity({
           slug: wiring.config.slug,
           startIso: start.iso,
@@ -1320,18 +1023,9 @@ export function makeIcalSource(
         const seriesId = `${SOURCE_NAME}:${wiring.config.slug}:${event.uid ?? fallbackIdentity}`;
 
         for (const sitting of sittings) {
-          /*
-           * ONE SITTING OF A RECURRING SERIES IS ONE RECORD (2026-09-23; see
-           * `occurrenceId` in lib/sources/event-identity.ts).
-           *
-           * A series is one `UID` across several events, the master and its
-           * overrides, and keying on the `UID` alone made them compete for
-           * one id that feed order then decided. A sitting of a series is
-           * identified by the `UID` plus its recurrence SLOT: the
-           * `RECURRENCE-ID` of an override, or the instance the series' rule
-           * places, whose slot is the same key an override of it would carry.
-           * A single event keeps the id it always had.
-           */
+          // One sitting of a recurring series is one record: the `UID` plus its recurrence slot (an override's
+          // `RECURRENCE-ID`, or the instance the rule places). A single event keeps the id it always had. See
+          // `occurrenceId` in lib/sources/event-identity.ts.
           const id = sitting.slot === null ? seriesId : occurrenceId(seriesId, sitting.slot);
           const meeting: Meeting = {
             id,
@@ -1372,19 +1066,8 @@ export function makeIcalSource(
           const claim: IdentityClaim = { meeting, event };
           const held = claims.get(id);
           if (held) {
-            /*
-             * A-002 and A-005 · this was a bare `continue` that left the
-             * record with no disposition at all. The two kinds are counted
-             * apart, because they mean different things: an EXACT duplicate
-             * is a feed publishing the same identity twice, and a WEAK-ID
-             * collision is two records this code decided were the same
-             * without the feed saying so. The second is the one worth
-             * watching, and pooling them would hide it inside the first.
-             *
-             * WHICH ONE KEEPS THE ID is `preferredClaim`, not arrival order:
-             * a feed that reorders itself between reads must not change what
-             * a record says (2026-09-23).
-             */
+            // Counted, with exact duplicates (the feed repeating an identity) apart from weak-id collisions (our
+            // judgement). Which one keeps the id is `preferredClaim`, not arrival order.
             duplicates += 1;
             if (event.uid) exactDuplicates += 1;
             else weakIdCollisions += 1;
@@ -1453,14 +1136,8 @@ export function makeIcalSource(
             }
           : {}),
       },
-      // A refused row carries no document, so it is not one this pass could
-      // have extracted from. See `accountedNormalize`.
-      //
-      // A-002 · `unretrieved` is at the DOCUMENT layer and `logicalInput` is at
-      // the EVENT layer, and they are deliberately not added together: a
-      // refused feed contributes zero events to `considered`, so it is already
-      // absent from the conservation sum. It is passed on because the zero-row
-      // check below still asks a question about documents in hand.
+      // A refused row carries no document. `unretrieved` is at the document layer and `logicalInput` at the event
+      // layer, deliberately not added together: a refused feed contributes zero events to `considered`.
       {
         unretrieved: raw.filter((r) => r.refused).length,
         outOfWindow,
@@ -1476,24 +1153,8 @@ export function makeIcalSource(
 
     async fetch(query: MeetingQuery): Promise<IcalRaw[]> {
       const collected: IcalRaw[] = [];
-      /*
-       * **ONE FEED IS FETCHED ONCE, HOWEVER MANY BODIES IT SERVES.**
-       * (NH Hunt, 2026-08-20.)
-       *
-       * Ten Newbury bodies are wired to the same `export.ics`, and the loop
-       * below is per WIRING ROW — so the town was being asked for the same
-       * 466 KB document ten times per refresh, and Wilmot for the same
-       * document three times. That is not a performance note: `CLAUDE.md`
-       * forbids requesting at a rate that degrades service, and a tenfold
-       * duplicate of a half-megabyte file is exactly the behaviour a
-       * reputation limiter is built to stop. Newbury's did, mid-hunt, and it
-       * refused all ten rows at once.
-       *
-       * The cache is per RUN and lives only for this call. A row still gets
-       * its own `IcalRaw` with its own wiring, so nothing downstream changes;
-       * a refusal is shared by every row on that URL, which is correct,
-       * because it is one retrieval and one wall.
-       */
+      // One feed is fetched once per run, however many bodies it serves, so a town is never asked for the same
+      // document once per wiring row. A refusal is shared by every row on that URL: one retrieval, one wall.
       const fetched = new Map<string, { ics: string; refused: boolean; refusedReason?: string; refusedKind?: "WALL" | "JOB"; refusedRung?: number }>();
       for (const wiring of wiringRows) {
         const url = wiring.config.feedUrl;
@@ -1533,27 +1194,12 @@ export function makeIcalSource(
             fetchImpl,
             accept: "text/calendar,text/plain;q=0.9,*/*;q=0.8",
             signal: query.signal,
-            // A 200 with no VCALENDAR in it is not this town's empty calendar;
-            // it is a retrieval that failed while looking like a success. See
-            // `expect` in lib/sources/http.ts — this is the case that put
-            // `Refresh meetings snapshot` in the red on 2026-08-21.
+            // A 200 with no VCALENDAR in it is a failed retrieval, not an empty calendar. See `expect` in
+            // lib/sources/http.ts.
             expect: { label: "a calendar feed", marker: "BEGIN:VCALENDAR" },
           });
-          /*
-           * ASK FOR THE PAST AS WELL (M58's shape, applied here).
-           *
-           * The list view serves UPCOMING events, so a town wired on it alone
-           * can never show a concluded meeting — and the reader's Concluded
-           * filter would be empty by construction rather than by fact. Wilmot
-           * publishes its past sittings at the same feed with
-           * `tribe_event_display=past`: thirty of them, measured. The row
-           * names that URL rather than the adapter constructing one, for the
-           * same reason `feedUrl` does.
-           *
-           * A past feed that refuses does NOT fail the row — the upcoming
-           * calendar is the thing a reader came for, and losing it because
-           * the archive was unreachable would be the wrong trade.
-           */
+          // Ask for the past as well: the list view serves upcoming events only, so the row may name a past feed URL
+          // (e.g. `tribe_event_display=past`). A past feed that refuses does not fail the row.
           let ics = res.text;
           let archiveRefused: string | undefined;
           if (wiring.config.pastFeedUrl) {
@@ -1566,54 +1212,15 @@ export function makeIcalSource(
               });
               ics += past.text;
             } catch (error) {
-              /*
-               * A-004 · THIS CATCH USED TO BE EMPTY, and its comment said the
-               * absence would be "visible as a jurisdiction with no concluded
-               * meetings". That sentence is the render-default failure written
-               * down as a design note: an outage rendering as a fact about the
-               * town.
-               *
-               * The trade above it is still right — losing the upcoming
-               * calendar because the archive is down would be worse. What was
-               * missing is the third state between success and failure. The
-               * row now carries the cause, the normalize pass turns it into a
-               * scoped partial, and carry-forward preserves the CONCLUDED
-               * rows for this division and nothing else.
-               */
+              // The archive refused: the row carries the cause, normalize turns it into a scoped partial, and
+              // carry-forward preserves the concluded rows for this division only.
               archiveRefused = String((error as Error)?.message ?? error);
             }
           }
-          /*
-           * **A CALENDAR WITH NO EVENTS IN IT IS A FAILED RETRIEVAL, NOT AN
-           * EMPTY CALENDAR** (NH Hunt 4, 2026-08-21, item 7).
-           *
-           * This is the named cause of the meetings refresh failing 14 of 37
-           * runs. The composite's RULING 43 guard was doing its job and going
-           * red on `ical: fetched 3 document(s) and extracted 0 meeting(s)`,
-           * with every drop counter at zero — and zero drops is the tell: with
-           * three rows over one feed, ANY event at all would have produced
-           * `notConfigured` hits on the rows it did not belong to. Zero drops
-           * means the document that arrived contained **no VEVENT at all**.
-           *
-           * `politeGetText` cannot catch it. NH Hunt 3 taught the fetch layer
-           * to refuse a blank body and a wrong-format body; this is the third
-           * shape — a well-formed `BEGIN:VCALENDAR` envelope with nothing
-           * inside. It passes every check the transport can make.
-           *
-           * So the row is REFUSED, which is what it is. That routes it into
-           * carry-forward: the body keeps its last known sittings, clipped to
-           * the serving window and still carrying their original
-           * `collectedAt`, instead of the whole source going red and every
-           * OTHER town's calendar going with it. A failed fetch never silently
-           * empties a previously-full surface, and it must not empty its
-           * neighbours either.
-           *
-           * THE TRADE, STATED. A calendar that genuinely empties — a town that
-           * really did stop publishing — is marked refused too, and carries
-           * forward for as long as its rows stay inside the window. That is the
-           * correct direction to be wrong in, and it is the same trade the
-           * composite's own guard makes one layer up.
-           */
+          // A calendar with no events in it is a failed retrieval, not an empty calendar: a well-formed
+          // `BEGIN:VCALENDAR` envelope with no VEVENT passes every transport check. The row is refused, so the body
+          // keeps its last known sittings (clipped to the serving window) instead of the whole source going red. A
+          // calendar that genuinely empties is marked refused too, until its carried rows age out.
           if (!/BEGIN:VEVENT/i.test(ics)) {
             const refusedReason = `${url} answered a calendar envelope holding no events`;
             fetched.set(url, { ics: "", refused: true, refusedReason, refusedKind: "WALL" });
@@ -1637,11 +1244,8 @@ export function makeIcalSource(
             sourceUrl: url,
           });
         } catch (error) {
-          // One host's refusal empties this row and no other. `refused`
-          // carries it forward as a refusal rather than as an empty calendar,
-          // now WITH the refusal's own words and kind (2026-09-24): Sutton's
-          // Cloudflare challenge was named by the fetch layer and dropped here,
-          // and the composite then filed the town's wall as our JOB.
+          // One host's refusal empties this row and no other, carried forward as a refusal with its own words and
+          // kind.
           const refusedReason = String((error as Error)?.message ?? error);
           const refusedKind = fetchFailureKind(error);
           const rung = (error as { rung?: unknown } | undefined)?.rung;

@@ -1,42 +1,16 @@
 /**
- * `pnpm verify:readonly` — R36, verified on evidence rather than on a report.
+ * `pnpm verify:readonly` — the connection string named READONLY must be able to
+ * SELECT and must be refused by the database when it tries to write. Each probe
+ * prints what it actually got, inside a catch:
  *
- * The row's claim to close is narrow and checkable: the connection string
- * named READONLY must be able to SELECT and must be REFUSED BY THE DATABASE
- * when it tries to write. Three probes, in that order, and every one of them
- * prints what it actually got:
+ * 0. Which branch — this variable must not point at the same host as
+ *    `DATABASE_URL` (a Neon role exists only on its own branch).
+ * 1. Who am I — `current_user`, and whether it inherits `neon_superuser`.
+ * 2. Privilege as Postgres reports it — `has_table_privilege` per store.
+ * 3. An attempted write — `delete from <table> where false`, which changes
+ *    nothing whether permitted or refused.
  *
- * 1. **Who am I** — `current_user`, and whether that role is a member of
- *    `neon_superuser`. A role that inherits superuser membership can write
- *    whatever its grants say it cannot.
- * 2. **Privilege, as Postgres itself reports it** — `has_table_privilege` for
- *    SELECT / INSERT / UPDATE / DELETE on every store. This is the
- *    authoritative answer and it touches no row.
- * 3. **An attempted write** — `delete from <table> where false`. It changes
- *    nothing whether it is permitted or refused, so it is safe to run against
- *    production, and it is a REAL attempt rather than an inference: a
- *    permission error here is the database itself saying no.
- *
- * A fourth probe was added 2026-08-17 (g10), ahead of the three, after the
- * variable was repaired in the one way none of them could see. **RIGHT ROLE,
- * WRONG BRANCH.** A Neon role exists on the branch it was created on and
- * nowhere else, so a `readonly` string pointed at the LOCAL branch endpoint
- * authenticates nowhere — and, far worse for a row that closes on this
- * script's word, a `readonly` string that DID authenticate against the local
- * branch would pass all nine checks below while reading a database production
- * has never seen. The probe is structural rather than a hostname allowlist,
- * for the reason `lib/db/write-guard.ts` gives for not hardcoding one: this
- * variable must not point at the same host as `DATABASE_URL`, which is the
- * line declared local.
- *
- * The same pass taught the second lesson, which is the transparency mandate
- * applied to our own instrument: a refused CONNECTION used to escape as an
- * unhandled rejection and a Node stack trace. A failed retrieval is reported
- * as a failed retrieval, so every probe below now runs inside a catch and
- * prints FAIL with the database's own words.
- *
- * It writes nothing, creates nothing, and alters no role. R36 explicitly
- * belongs to the author's hands; this only reports.
+ * It writes nothing, creates nothing, and alters no role.
  *
  * Run: `pnpm verify:readonly`
  */
@@ -61,9 +35,7 @@ console.log(`  host = ${url.hostname}`);
 console.log(`  db   = ${url.pathname.slice(1).split("?")[0]}\n`);
 
 const sql = neon(connection);
-// Every collection store, which is four since R40 added `feedback`. The
-// n-stores rule is "same rule for every n", and a store this script forgets
-// is a store nobody has proved is read-only.
+// Every collection store; a store this script forgets is one nobody has proved read-only.
 const STORES = ["search_log", "reactions", "intake_limiter", "feedback"];
 
 let failures = 0;
@@ -125,9 +97,7 @@ try {
   `) as { who: string; superuser_member: boolean }[];
   identity = who[0];
 } catch (error) {
-  // The connection itself was refused. Everything below needs it, so this is
-  // one FAIL and a stated list of what could not run — never a stack trace,
-  // and never silence that reads like the checks passed.
+  // The connection itself was refused: one FAIL and a stated list of what could not run.
   report("the connection authenticates at all", false, errorText(error));
   cannotRun("every check below", "there is no connection to ask");
   finish();
@@ -176,15 +146,9 @@ for (const table of STORES) {
 console.log("\nATTEMPTED OPERATIONS");
 try {
   /*
-   * `limit 1`, and NO COUNT — deliberately.
-   *
-   * What this probe needs to prove is that SELECT reaches a real store table,
-   * because grants are per-table and a `select 1` against nothing would prove
-   * nothing. What it must NOT do is print an unfiltered row total: every
-   * countable number out of search_log goes through the organic filter
-   * (lib/signal/search-log-reads.ts), and a raw total printed by a probe is a
-   * number somebody can quote. So it reports that a row came back, and the
-   * privilege table above carries the actual finding.
+   * `limit 1` and no count: SELECT must reach a real store table (grants are
+   * per-table), but a raw search_log total must never be printed outside the
+   * organic filter (lib/signal/search-log-reads.ts).
    */
   const rows = (await sql`select 1 as ok from search_log limit 1`) as { ok: number }[];
   report(

@@ -63,8 +63,8 @@ test("cheaper-first audit uses auto tool choice and a strict schema compatible w
   let request: ModelRequest | undefined;
   const transport: ModelTransport = async (value) => { request = value; return response({ verdict: "SURVIVED", challenges: [] }); };
   await modelAuditReasoner(createMemoryRepositories(), transport, () => NOW).review(context(), "auditor-attempt");
-  assert.equal(MODEL, "claude-haiku-4-5");
-  assert.equal(request?.output_config, undefined, "Haiku does not accept effort configuration");
+  assert.equal(MODEL, "claude-haiku-5-5");
+  assert.deepEqual(request?.output_config, { effort: "low" }, "the audit states its sub-step effort");
   assert.deepEqual(request?.tool_choice, { type: "auto" }, "a forced {type:'tool'} is HTTP 400 on Claude Opus 5.5");
   const tool = request?.tools[0];
   assert.equal(tool?.name, "record_audit");
@@ -225,11 +225,7 @@ test("adaptive budget keeps five complete events and every exploratory route wit
   }
 });
 
-/*
- * 2026-09-25: the auditor admitted against the static RESEARCH_BOUNDS default
- * ($100), so the owner's dial did not bind it. It now admits against the
- * ceiling in force, and the standing runtime carries that number to it.
- */
+/* The auditor admits against the ceiling in force, which the standing runtime carries to it. */
 async function reposWithAuditSpend(usd: number) {
   const repos = createMemoryRepositories();
   const cost: CostEntry = {

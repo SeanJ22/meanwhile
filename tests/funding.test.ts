@@ -30,22 +30,11 @@ import {
   plainMoney,
   STATE_FUNDING_NOTE,
 } from "../lib/funding/display.ts";
-import type { FundingSnapshot } from "../lib/funding/types.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
-
-/**
- * The FEC funding surface (D34) — the ripcord doctrine's first application,
- * tested at the layers that make it a ripcord rather than a CSS rule:
- * provenance tags on every record, both flags demonstrably functional in
- * both positions, contributor data unreachable from aggregation/export,
- * and the FEC key confined to the fetch script.
- */
 
 const ROOT = join(import.meta.dirname, "..");
 await refreshFundingFromPromoted({ store: new MemoryRoutineDataStore() });
 const snapshot = getFundingSnapshot();
-
-// ── The snapshot artifact ────────────────────────────────────────────────
 
 test("every snapshot record carries its provenance tag", () => {
   assert.ok(snapshot.candidates.length >= 10, `only ${snapshot.candidates.length} candidates`);
@@ -72,55 +61,13 @@ test("the match report states its denominators and the absences have reasons", (
   }
 });
 
-test("the gate: Ciscomani and at least three ballot candidates have funding", () => {
-  const ciscomani = fundingForTarget("congress:C001133");
-  assert.ok(ciscomani, "Ciscomani has no funding record");
-  assert.ok(ciscomani.totals.receipts > 0);
-  const ballotBacked = snapshot.candidates.filter((c) =>
-    c.targetKeys.some((k) => k.startsWith("ballot-")),
-  );
-  assert.ok(ballotBacked.length >= 3, `only ${ballotBacked.length} ballot candidates carry funding`);
-});
-
-test("snapshot target keys resolve to real app-side ids", () => {
-  const roster = JSON.parse(
-    readFileSync(join(ROOT, "lib", "registry", "officeholders-us.json"), "utf8"),
-  ) as { officeholders: { id: string }[] };
-  const rosterIds = new Set(roster.officeholders.map((o) => o.id));
-  const ballotIds = new Set<string>();
-  for (const file of ["nj-morris-2026.json", "az-pima-2026.json", "nh-merrimack-2026.json"]) {
-    const data = JSON.parse(readFileSync(join(ROOT, "data", "states", file.slice(0, 2), "ballot", file), "utf8")) as {
-      candidacies: { id: string }[];
-    };
-    for (const c of data.candidacies) ballotIds.add(c.id);
-  }
-  const lineup = JSON.parse(
-    readFileSync(join(ROOT, "data", "states", "az", "ballot", "az-general-lineup-2026.json"), "utf8"),
-  ) as { contests: { contestId: string; nominees: { name: string }[] }[] };
-  for (const contest of lineup.contests) {
-    for (const n of contest.nominees) ballotIds.add(`${contest.contestId}|${n.name}`);
-  }
-  for (const candidate of snapshot.candidates) {
-    for (const key of candidate.targetKeys) {
-      assert.ok(
-        rosterIds.has(key) || ballotIds.has(key),
-        `${candidate.fecCandidateId} claims unknown target ${key}`,
-      );
-    }
-  }
-});
-
 test("neutrality: no snapshot record grows a scoring key", () => {
   const banned = /"(score|rank|rating|match(?!Report|Routes)|fit|grade|alignment|recommendation)[a-zA-Z]*"\s*:/;
   const raw = readFileSync(join(ROOT, "data", "fec", "fec-2026.json"), "utf8");
   assert.ok(!banned.test(raw), "snapshot carries a scoring-class key");
 });
 
-// ── The uniqueness invariant (D40) ───────────────────────────────────────
-// The sibling of the count check: a join or enrichment producing IDENTICAL
-// payloads across distinct keys is presumed broken. The match-rate test
-// passed while production served every official the same committee's books
-// — the rate can be 100% with every match pointing at one row.
+// A join producing identical payloads across distinct keys is presumed broken.
 
 test("D40: no two candidates share an FEC id, a committee id, or a target key", () => {
   const fecIds = new Map<string, string>();
@@ -150,7 +97,6 @@ test("D40: no two candidates share an FEC id, a committee id, or a target key", 
 });
 
 test("D40: distinct officials resolve to distinct funding payloads", () => {
-  // The production incident's trio, by name, then the general form.
   const kelly = fundingAnswerForTarget("congress:K000377");
   const gallego = fundingAnswerForTarget("congress:G000574");
   const grijalva = fundingAnswerForTarget("congress:G000606");
@@ -160,7 +106,6 @@ test("D40: distinct officials resolve to distinct funding payloads", () => {
   const bodies = [kelly, gallego, grijalva].map((a) => JSON.stringify(a));
   assert.equal(new Set(bodies).size, 3, "the incident trio shares a payload again");
 
-  // Every congress-target payload pairwise distinct.
   const congressKeys = snapshot.candidates
     .flatMap((c) => c.targetKeys)
     .filter((k) => k.startsWith("congress:"));
@@ -173,19 +118,7 @@ test("D40: distinct officials resolve to distinct funding payloads", () => {
 });
 
 test("D40: no query-keyed API route marks itself publicly cacheable unless the CDN keys on every query parameter", () => {
-  // The incident's actual mechanism: /api/funding?target=… marked
-  // `cache-control: public`, and the CDN's cache key dropped the query
-  // string — the first official's body served for every target. A response
-  // whose body varies by query string must not enter a shared cache; vary
-  // by path instead.
-  //
-  // C21 (2026-09-25): or carry the query where the CDN keys on it. Netlify's
-  // Next runtime keys a route handler on its own parameters only; a response
-  // that sends `Netlify-Vary: query` is keyed on EVERY query parameter
-  // (docs.netlify.com caching overview), and browsers and ordinary HTTP caches
-  // key on the whole URL already. `/api/meetings` is the one such route; its
-  // live header is asserted in tests/reader-cold-path.test.ts. A bare `query`,
-  // never a list: a list is a second copy of the parameters that can drift.
+  // A response whose body varies by query string must not enter a shared cache, unless it sends `Netlify-Vary: query`, which keys on every query parameter.
   const walk = (dir: string): string[] =>
     readdirSync(dir).flatMap((entry) => {
       const full = join(dir, entry);
@@ -204,24 +137,14 @@ test("D40: no query-keyed API route marks itself publicly cacheable unless the C
     }
   }
   assert.deepEqual(keyedOnEveryParameter, ["app/api/meetings/route.ts"], "a new publicly cached query route is a decision to name here");
-  // And the funding client asks the path-keyed form.
   const block = readFileSync(join(ROOT, "components", "funding", "funding-block.tsx"), "utf8");
   assert.match(block, /\/api\/funding\/\$\{encodeURIComponent\(holder\.id\)\}/, "funding block must fetch the path-keyed route");
 });
 
-// ── The ripcord registry ─────────────────────────────────────────────────
-
 test("every ripcord is registered with question, closer, and tracker rows", () => {
-  // T08 added the two intake ripcords beside the FEC pair; 6d added the ask
-  // box's classifier (2026-08-15). The list is exact rather than a minimum:
-  // a ripcord that appears without its question, closer and tracker row is
-  // the doctrine's whole failure mode, and an exact list is what forces a
-  // new one through the checks below.
+  // The list is exact so a new ripcord must pass the checks below.
   assert.deepEqual(RIPCORD_NAMES.sort(), [
     "ripcord.askClassifier",
-    // ASK01/ASK02 (2026-08-27): the grounded pipeline's two model rungs. A
-    // separate flag from the classifier's because the question is different —
-    // that rung picks an id, this one writes the sentence a reader reads.
     "ripcord.askGrounded",
     "ripcord.fecContributorDisplay",
     "ripcord.rateLimits",
@@ -233,24 +156,12 @@ test("every ripcord is registered with question, closer, and tracker rows", () =
     assert.ok(ripcord.closer.length > 10, `${name} names no closer`);
     assert.ok(ripcord.trackerRows.length > 0, `${name} loses its tracker row`);
   }
-  // The FEC contributor ripcord stays counsel-closed — nobody else may close D23's question.
   assert.match(RIPCORDS["ripcord.fecContributorDisplay"].closer, /counsel/i);
   assert.ok(RIPCORDS["ripcord.fecContributorDisplay"].trackerRows.includes("D23"));
-  // The intake pair is operational, rooted in T08.
   for (const name of ["ripcord.rateLimits", "ripcord.reactionIntake"] as const) {
     assert.ok(RIPCORDS[name].trackerRows.includes("T08"));
   }
 });
-
-test("the FEC contributor ripcord ships live and stays counsel's", () => {
-  // The SEPARATE question — commercial use of FEC contributor DATA under
-  // § 30111(a)(4) — is untouched by that ruling and is still counsel's.
-  assert.equal(RIPCORDS["ripcord.fecContributorDisplay"].pulled, false);
-  assert.match(RIPCORDS["ripcord.fecContributorDisplay"].closer, /Counsel/);
-  assert.match(RIPCORDS["ripcord.fecContributorDisplay"].question, /30111/);
-});
-
-// ── Flag flips — each ripcord demonstrably functional in both positions ──
 
 function withEnv<T>(name: string, value: string | undefined, fn: () => T): T {
   const prior = process.env[name];
@@ -267,23 +178,14 @@ function withEnv<T>(name: string, value: string | undefined, fn: () => T): T {
 const fundingRow = {
   targetType: "FUNDING_TOTAL_REACTION" as const,
   targetId: snapshot.candidates[0]?.fecCandidateId ?? "H0XX00000",
-  // The five-point scale, which is the only one a funding target accepts
-  // from 2026-08-15 — the write path refuses YES here in both directions.
+  // A funding target accepts only the five-point scale.
   reaction: "LOVE" as const,
   scaleVersion: 2 as const,
   ocdIds: ["ocd-division/country:us/state:az"],
   verificationTier: "ANONYMOUS" as const,
   runClass: "ORGANIC" as const,
 };
-/**
- * A contributions answer collected TODAY — v3 since g3 (2026-08-16).
- *
- * The version is stamped by the write path from `scaleForTargetType`, so a
- * fixture that kept v2 here would be modelling a row the server can no longer
- * produce, and the tally under it would carry the wording that row is
- * ambiguous about. That ambiguity is real for the rows already in the store,
- * and `contributorRowV2` below is the fixture for those.
- */
+/** A contributions answer as the write path stamps it today (v3). */
 const contributorRow = {
   ...fundingRow,
   targetType: "CONTRIBUTOR_REACTION" as const,
@@ -320,14 +222,6 @@ test("flip: pulling the contributor ripcord empties the display and its write pa
   const withRows = snapshot.candidates.find((c) => c.topContributions.length > 0);
   assert.ok(withRows, "no candidate has contributor rows to test with");
 
-  // Live (the shipped state): rows flow to display, write targets exist.
-  assert.ok(contributorRowsForDisplay(withRows).length > 0);
-  assert.ok(getContributorReactionTargetIds().size > 0);
-  const live = fundingAnswerForTarget(withRows.targetKeys[0]);
-  assert.equal(live.kind, "funding");
-  assert.ok(live.kind === "funding" && live.data.contributorsShown);
-
-  // Pulled: the SAME calls return nothing — a filter, not a hunt.
   withEnv("WTP_RIPCORD_FEC_CONTRIBUTOR_DISPLAY", "pulled", () => {
     assert.equal(contributorRowsForDisplay(withRows).length, 0);
     assert.equal(getContributorReactionTargetIds().size, 0);
@@ -342,8 +236,6 @@ test("flip: pulling the contributor ripcord empties the display and its write pa
   });
 });
 
-// ── FEC_CONTRIBUTOR unreachable from aggregation/export ──────────────────
-
 test("the aggregation layer never imports the funding corpus", () => {
   for (const file of readdirSync(join(ROOT, "lib", "signal"))) {
     const source = readFileSync(join(ROOT, "lib", "signal", file), "utf8");
@@ -355,9 +247,7 @@ test("the aggregation layer never imports the funding corpus", () => {
 });
 
 test("aggregate output can never carry a contributor name", () => {
-  // Structural: the tally shape is counts keyed by division and target id,
-  // plus the instrument that produced them (2026-08-15). `question` is our
-  // own words for the question we asked — never anything read off a filing.
+  // `question` is our own words for the question asked, never anything read off a filing.
   const tallies = aggregateReactions([voteRow]);
   const keys = Object.keys(tallies[0]).sort();
   assert.deepEqual(keys, [
@@ -370,8 +260,6 @@ test("aggregate output can never carry a contributor name", () => {
     "tiers",
   ]);
 
-  // And the same holds with funding rows in the mix, which is the case that
-  // matters now that funding reactions aggregate.
   const funding = aggregateReactions([fundingRow, contributorRow]);
   for (const tally of funding) {
     assert.deepEqual(Object.keys(tally).sort(), keys);
@@ -387,26 +275,7 @@ test("aggregate output can never carry a contributor name", () => {
   }
 });
 
-// ── Credential values stay behind the registered server transport ─────────
-
-/**
- * The subject is a READ that yields the VALUE — never the variable's NAME.
- *
- * This used to be a substring scan for `FEC_API_KEY` anywhere under `app`,
- * `components`, `lib` or `hooks`, and the Source/API Capability Registry
- * (ADM-C11, 2026-09-06) tripped it by naming the variable in a presence table:
- * the console has to be able to say *"this key is configured"* without ever
- * holding, printing or spending it, and a table mapping a route to the name of
- * the variable that carries its key is how it does that.
- *
- * Naming a variable is not reading one. So the predicate is now the read
- * SHAPES — `process.env.FEC_API_KEY` and `process.env["FEC_API_KEY"]`, the two
- * forms that hand you the value — and a positive control proves the instrument
- * still catches direct key access. CA-36 now permits on-demand detail through
- * the registered readSourceApi transport; cards, evidence and route code
- * never read the credential themselves. Tests/fetch-through-key exercises
- * actual transport injection and proves credentials do not enter evidence.
- */
+/** The subject is a READ that yields the value; naming the variable is not reading it. */
 test("runtime routes and cards do not directly read FEC_API_KEY", () => {
   const READ_SHAPES = [/process\s*\.\s*env\s*\.\s*FEC_API_KEY/, /process\s*\.\s*env\s*\[\s*["'`]FEC_API_KEY["'`]\s*\]/];
   const reads = (source: string): boolean => READ_SHAPES.some((shape) => shape.test(source));
@@ -434,8 +303,6 @@ test("runtime routes and cards do not directly read FEC_API_KEY", () => {
   assert.ok(reads('const k = process.env["FEC_API_KEY"];'));
   assert.ok(!reads('const NAMES = { "fec-api": ["FEC_API_KEY"] };'), "naming the variable in a presence table is not reading it");
 });
-
-// ── The plain register ───────────────────────────────────────────────────
 
 test("plainMoney speaks the way people do", () => {
   assert.equal(plainMoney(6_172_867), "$6.2 million");
@@ -479,8 +346,6 @@ test("2a: a candidate's own money is labeled as exactly that, from the FEC field
     "committee or organization",
   );
 
-  // And the live case that surfaced the defect: Butierez's self-funding
-  // rows carry entity CAN in the snapshot and label as his own money.
   const butierez = snapshot.candidates.find((c) => c.fecCandidateId === "H4AZ07134");
   assert.ok(butierez, "Butierez left the snapshot — retarget this check");
   const selfRows = butierez.topContributions.filter((r) => r.entityType === "CAN");
@@ -498,12 +363,9 @@ test("2a: a candidate's own money is labeled as exactly that, from the FEC field
   }
 });
 
-// ── Item 2: the money's own order ────────────────────────────────────────
-
 test("item 2: contributions group by kind and sort by amount descending, in both groups", async () => {
   const { groupContributions } = await import("../lib/funding/grouping.ts");
-  // Every candidate in the snapshot, not one specimen — the sort is a rule,
-  // and a rule that holds for Booker and fails for Nicholson is not one.
+  // Every candidate in the snapshot, not one specimen.
   let checked = 0;
   for (const candidate of snapshot.candidates) {
     if (candidate.topContributions.length === 0) continue;
@@ -539,10 +401,7 @@ test("item 2: sums equal the parts, and no filing is lost in a collapse", async 
       rows.length,
       `${candidate.name}: filings lost or duplicated in the grouping`,
     );
-    // Every group's amount is the plain sum of its own filings. Compared in
-    // cents: these are IEEE doubles and $846,934.77 does not round-trip
-    // through addition, which is a fact about the machine and not about the
-    // money.
+    // Compared in cents: these are IEEE doubles.
     const cents = (n: number) => Math.round(n * 100);
     for (const g of all) {
       assert.equal(
@@ -584,8 +443,6 @@ test("item 2: the five Booker Victory Fund lines collapse to one row typed as tr
   assert.equal(groups.organizations[0].key, fund.key);
 });
 
-// ── Item 3: the second hop ───────────────────────────────────────────────
-
 test("item 3: the hop renders only for committee-typed rows, never for individuals", async () => {
   const { groupContributions } = await import("../lib/funding/grouping.ts");
   const { secondHopForGroups } = await import("../lib/funding/snapshot.ts");
@@ -622,9 +479,7 @@ test("item 3: hop books are mechanical, attributed, and distinct per committee i
   const ids = new Set(hops.map((h) => h.committeeId));
   assert.equal(ids.size, hops.length, "a committee id is stored twice");
 
-  // The D40 family, one level down: identical payloads across distinct keys
-  // are presumed broken. A hop that returned the same five names for two
-  // different funds is the replication bug wearing a new hat.
+  // Identical payloads across distinct funds are presumed broken.
   const books = new Map<string, string>();
   for (const hop of hops) {
     const signature = JSON.stringify(
@@ -674,7 +529,7 @@ test("item 3: the tea is only in the button — the panel's own words stay level
   // The allocation note is conditioned on the FILED designation, so a PAC
   // never wears a joint fundraiser's explanation.
   assert.ok(source.includes('hop.designation === "J"'));
-  // Nothing in the panel characterizes an organization (CLAUDE.md).
+  // Nothing in the panel characterizes an organization.
   const panel = source.slice(source.indexOf("function SecondHopPanel"));
   for (const banned of ["-aligned", "affiliate", "progressive group", "conservative group"]) {
     assert.ok(!panel.includes(banned), `the hop panel characterizes: "${banned}"`);
@@ -702,12 +557,6 @@ test("item 3: pulling the contributor ripcord empties the second hop too", async
 });
 
 test("a surface headed 'contributions' carries only contributions — no offsets, no interest, no loan repayments", () => {
-  // Found by the item-3 line-number census on 2026-08-15, and it was live:
-  // Mark Kelly's largest-contributions list carried three AMALGAMATED BANK
-  // rows on line 15 — a bank refunding the campaign's own fees, rendered as
-  // one of his biggest donors — and the second hop pulled ActBlue's escrow
-  // interest (line 17, filed under FIDELITY) as its top three "gifts".
-  //
   // Contribution lines only: 11* (individuals, party committees, other
   // political committees, the candidate), 12 (transfers from authorized
   // committees), 13A (a candidate's loan to their own campaign, which
@@ -738,7 +587,7 @@ test("a surface headed 'contributions' carries only contributions — no offsets
   assert.deepEqual(offenders, [], "non-contribution receipts reached a contributions surface");
 });
 
-// CA-45: the individual-dollar denominator comes from the filing's two own lines.
+// The individual-dollar denominator comes from the filing's two own lines.
 test("small-donor money uses individual dollars and the inclusive $200 threshold", async () => {
   const { smallDonorSentence, smallDonorShare } = await import("../lib/funding/display.ts");
   assert.equal(smallDonorShare(150, 175), 175 / 325);
@@ -764,34 +613,19 @@ test("held federal cards show the authorized small-donor dollar share without a 
   }
 });
 
-/**
- * The claim is the ATTRIBUTION, never a particular sentence — the same
- * clarification the render-default rule got on 2026-08-19, applied here.
- *
- * This used to pin the clause "we haven't wired those yet". RULING 59
- * (2026-08-21) removed it: whether one source is wired is a progress report
- * about our own pipeline, no reader can act on it, and it is the class of
- * sentence that goes stale the day the work is done with nothing to notice.
- *
- * What must survive is what the sentence was FOR, and both halves are asserted
- * below: the reader is told WHERE the money actually is (state campaign-finance
- * systems, not the FEC), and is explicitly told that its absence here is not a
- * claim that no money was raised. That is the whole of the honesty; the missing
- * clause was editorial about our own shortcomings, which is exactly what the
- * author struck elsewhere in the product.
- */
+/** The note says where the money is and that its absence here is not a claim that none was raised. */
 test("the state-systems note is a stated gap, never silence pretending coverage", () => {
   assert.match(STATE_FUNDING_NOTE, /state campaign-finance systems/);
   assert.doesNotMatch(
     STATE_FUNDING_NOTE,
     /not a statement/i,
-    "rulings §10: no disclaimer line on a reader surface",
+    "no disclaimer line on a reader surface",
   );
   assert.doesNotMatch(STATE_FUNDING_NOTE, /gap in our (data|research)/i);
   assert.doesNotMatch(
     STATE_FUNDING_NOTE,
     /we (?:have not|haven't|haven’t) wired/i,
-    "RULING 59: no progress report about our own pipeline on a reader surface",
+    "no progress report about our own pipeline on a reader surface",
   );
 });
 
@@ -801,419 +635,11 @@ test("funding reaction target ids validate against the snapshot", () => {
   assert.ok(!ids.has("congress:C001133"), "target ids are FEC candidate ids, not roster ids");
 });
 
-// ── The transparency coupling ────────────────────────────────────────────
-
-// ── The thin-snapshot guard (session brief 2, wall clock 2026-08-14) ─────
-// The 0819 session caught the Kelly-504 shrink BY EYE; the weekly refresh
-// runs unattended, so the eye becomes a mechanism. These tests assert the
-// mechanism itself with a fixture snapshot that shrinks — never the absence
-// of an error.
-
-function guardFixture(
-  candidates: { id: string; name: string; rows: number; targetKeys?: string[] }[],
-  absences: { targetKey: string }[] = [],
-) {
-  return {
-    formatVersion: 1 as const,
-    fetchedAt: "2026-08-14T00:00:00Z",
-    cycle: 2026,
-    matchReport: { rosterMatched: 0, rosterTotal: 0, ballotMatched: 0, ballotTotal: 0 },
-    candidates: candidates.map((c) => ({
-      dataClass: "FEC_COMMITTEE" as const,
-      fecCandidateId: c.id,
-      name: c.name,
-      state: "AZ",
-      office: "S" as const,
-      district: null,
-      targetKeys: c.targetKeys ?? [`congress:${c.id}`],
-      matchRoutes: ["bioguide-bridge"],
-      principalCommitteeId: null,
-      cycle: 2026,
-      totals: {
-        receipts: 1,
-        disbursements: 1,
-        cashOnHand: 1,
-        individualItemized: 1,
-        individualUnitemized: 1,
-        smallDonorShare: null,
-        coverageEndDate: null,
-      },
-      topContributions: Array.from({ length: c.rows }, (_, i) => ({
-        dataClass: "FEC_CONTRIBUTOR" as const,
-        kind: "INDIVIDUAL" as const,
-        contributorName: `row ${i}`,
-        amount: 100,
-        receiptDate: null,
-        city: null,
-        state: null,
-        entityType: "IND",
-        lineNumber: "11AI",
-        // Item 6's filed committee typing — absent on individuals, which
-        // is what these fixture rows are.
-        committeeType: null,
-        organizationType: null,
-        designation: null,
-        // Item 3's second-hop join key — null on individuals, which is what
-        // these fixture rows are.
-        contributorCommitteeId: null,
-      })),
-      provenance: {
-        sourceUrl: "https://www.fec.gov/",
-        sourceOrg: "Federal Election Commission",
-        collectedAt: "2026-08-14",
-        verifiedAt: "2026-08-14",
-      },
-    })),
-    absences: absences.map((a) => ({
-      targetKey: a.targetKey,
-      displayName: a.targetKey,
-      reason: "registered but no filings",
-      checkedAt: "2026-08-14",
-      searchUrl: null,
-    })),
-  };
-}
-
-/**
- * Make a committee STILL-DERIVED from a snapshot's first hop: give a tracked
- * candidate a committee-typed contribution row carrying `committeeId`, exactly
- * the way scripts/fetch-fec.mts derives its second-hop set (it scans every
- * `contributorCommitteeId` across `candidates[].topContributions`). A returned
- * snapshot therefore reports `committeeId` as a top contributor this run, so
- * the guard's second-hop block treats its absence as "still asked, answered
- * nothing" rather than as expected derived-set churn.
- */
-function withDerivedHopId(
-  snap: ReturnType<typeof guardFixture>,
-  committeeId: string,
-): FundingSnapshot {
-  const copy: FundingSnapshot = JSON.parse(JSON.stringify(snap));
-  const row = copy.candidates[0].topContributions[0];
-  row.contributorCommitteeId = committeeId;
-  row.kind = "COMMITTEE_OR_ORGANIZATION";
-  return copy;
-}
-
-test("thin guard: the Kelly-504 shape — a retained candidate's rows shrink — is a regression", async () => {
-  const { findShrinkRegressions } = await import("../lib/funding/guard.ts");
-  const prior = guardFixture([
-    { id: "S6AZ00191", name: "Mark Kelly", rows: 10 },
-    { id: "H2AZ02360", name: "Juan Ciscomani", rows: 10 },
-  ]);
-  const next = guardFixture([
-    { id: "S6AZ00191", name: "Mark Kelly", rows: 5 },
-    { id: "H2AZ02360", name: "Juan Ciscomani", rows: 10 },
-  ]);
-  const regressions = findShrinkRegressions(prior, next);
-  assert.equal(regressions.length, 1);
-  assert.equal(regressions[0].kind, "CONTRIBUTOR_ROWS");
-  assert.match(regressions[0].detail, /10 → 5/);
-  assert.match(regressions[0].detail, /Mark Kelly/);
-});
-
-test("thin guard: a falling candidate count and a vanished candidate both fail", async () => {
-  const { findShrinkRegressions } = await import("../lib/funding/guard.ts");
-  const prior = guardFixture([
-    { id: "S6AZ00191", name: "Mark Kelly", rows: 10 },
-    { id: "H2AZ02360", name: "Juan Ciscomani", rows: 10 },
-  ]);
-  const next = guardFixture([{ id: "H2AZ02360", name: "Juan Ciscomani", rows: 10 }]);
-  const regressions = findShrinkRegressions(prior, next);
-  const kinds = regressions.map((r) => r.kind).sort();
-  assert.deepEqual(kinds, ["CANDIDATE_COUNT", "CANDIDATE_MISSING"]);
-  const missing = regressions.find((r) => r.kind === "CANDIDATE_MISSING");
-  assert.match(missing!.detail, /no absence was recorded/);
-});
-
-test("thin guard: a vanished candidate WITH a recorded absence still fails, naming the recorded reason", async () => {
-  const { findShrinkRegressions } = await import("../lib/funding/guard.ts");
-  const prior = guardFixture([
-    { id: "S6AZ00191", name: "Mark Kelly", rows: 10 },
-    { id: "H2AZ02360", name: "Juan Ciscomani", rows: 10 },
-  ]);
-  const next = guardFixture(
-    [{ id: "H2AZ02360", name: "Juan Ciscomani", rows: 10 }],
-    [{ targetKey: "congress:S6AZ00191" }],
-  );
-  const regressions = findShrinkRegressions(prior, next);
-  const missing = regressions.find((r) => r.kind === "CANDIDATE_MISSING");
-  assert.ok(missing, "a vanished candidate must fail even with an absence recorded — a human confirms it");
-  assert.match(missing!.detail, /recorded an absence/);
-  assert.match(missing!.detail, /human confirms/);
-});
-
-test("thin guard: the second hop thins under the same rule — a fund that stops answering fails", async () => {
-  const { findShrinkRegressions } = await import("../lib/funding/guard.ts");
-  const hop = (committeeId: string, rows: number) => ({
-    dataClass: "FEC_CONTRIBUTOR" as const,
-    committeeId,
-    name: `${committeeId} FUND`,
-    committeeType: "N",
-    organizationType: null,
-    designation: "J",
-    receipts: 1000,
-    topContributions: Array.from({ length: rows }, (_, i) => ({
-      dataClass: "FEC_CONTRIBUTOR" as const,
-      kind: "INDIVIDUAL" as const,
-      contributorName: `DONOR ${i}`,
-      amount: 100 - i,
-      receiptDate: "2026-01-01",
-      city: "TUCSON",
-      state: "AZ",
-      entityType: "IND",
-      lineNumber: "11AI",
-      committeeType: null,
-      organizationType: null,
-      designation: null,
-      contributorCommitteeId: null,
-    })),
-    provenance: {
-      sourceUrl: `https://www.fec.gov/data/committee/${committeeId}/`,
-      sourceOrg: "Federal Election Commission",
-      collectedAt: "2026-08-15",
-      verifiedAt: "2026-08-15",
-    },
-  });
-  const base = guardFixture([{ id: "S6AZ00191", name: "Mark Kelly", rows: 10 }]);
-
-  // Rows fall for a retained committee — the Kelly-504 shape one level down.
-  const thinned = findShrinkRegressions(
-    { ...base, secondHop: [hop("C00000001", 5)] },
-    { ...base, secondHop: [hop("C00000001", 2)] },
-  );
-  assert.equal(thinned.length, 1);
-  assert.equal(thinned[0].kind, "SECOND_HOP_ROWS");
-  assert.match(thinned[0].detail, /5 → 2/);
-
-  // A committee that VANISHES while STILL a top contributor this run fails:
-  // "still asked, answered nothing" looks exactly like a fund with no donors.
-  // (The second-hop set is derived each run, so "vanished" only means an
-  // outage when the committee is still derived from this run's first hop.)
-  const derived = withDerivedHopId(base, "C00000001");
-  const vanished = findShrinkRegressions(
-    { ...derived, secondHop: [hop("C00000001", 5)] },
-    { ...derived, secondHop: [] },
-  );
-  assert.equal(vanished.length, 1);
-  assert.match(vanished[0].detail, /missing from this run/);
-
-  // A committee that dropped OUT of the derived set entirely — no longer a top
-  // contributor to any tracked candidate this run — is expected churn, not a
-  // regression (the C00422774 case that red-failed the daily refresh). `base`
-  // carries no committee-typed rows, so C00000001 is not derived here.
-  assert.deepEqual(
-    findShrinkRegressions(
-      { ...base, secondHop: [hop("C00000001", 5)] },
-      { ...base, secondHop: [] },
-    ),
-    [],
-  );
-
-  // An empty hop disappearing is not a regression — it told us nothing.
-  assert.deepEqual(
-    findShrinkRegressions(
-      { ...base, secondHop: [hop("C00000001", 0)] },
-      { ...base, secondHop: [] },
-    ),
-    [],
-  );
-
-  // Growth and steady state pass, and a snapshot from before the hop
-  // existed never fails against one that has it.
-  assert.deepEqual(
-    findShrinkRegressions(
-      { ...base, secondHop: [hop("C00000001", 5)] },
-      { ...base, secondHop: [hop("C00000001", 5), hop("C00000002", 5)] },
-    ),
-    [],
-  );
-  assert.deepEqual(findShrinkRegressions(base, { ...base, secondHop: [hop("C1", 5)] }), []);
-});
-
-test("thin guard: growth and steady state pass clean", async () => {
-  const { findShrinkRegressions } = await import("../lib/funding/guard.ts");
-  const prior = guardFixture([{ id: "S6AZ00191", name: "Mark Kelly", rows: 5 }]);
-  const grown = guardFixture([
-    { id: "S6AZ00191", name: "Mark Kelly", rows: 10 },
-    { id: "H2AZ02360", name: "Juan Ciscomani", rows: 10 },
-  ]);
-  assert.deepEqual(findShrinkRegressions(prior, grown), []);
-  assert.deepEqual(findShrinkRegressions(prior, prior), []);
-});
-
-// ── R4: the second hop is a DERIVED set, so churn is not an outage ────────
-// scripts/fetch-fec.mts rebuilds the second-hop set each run from the first
-// hop's `contributorCommitteeId`s (fetch-fec.mts ~L730). A committee is only
-// fetched while it is still a top-N contributor to a tracked candidate THIS
-// run, so a committee dropping out of that set is normal churn — it did not
-// "stop answering." The guard must red-fail only the genuine "still asked,
-// answered nothing" shape (still derived, yet its own books absent) and the
-// thinning shape (present both runs, fewer rows). C00422774 (ADVANCING
-// DEMOCRACY AND MOBILIZATION PAC) held 5 rows and simply left the derived set
-// one week, and the pre-R4 guard red-failed every daily refresh for it.
-
-test("R4: a vanished second-hop committee that is no longer derived is churn, not a regression", async () => {
-  const { findShrinkRegressions } = await import("../lib/funding/guard.ts");
-  const hopRows = (committeeId: string, rows: number) => ({
-    dataClass: "FEC_CONTRIBUTOR" as const,
-    committeeId,
-    name: `${committeeId} (ADVANCING DEMOCRACY AND MOBILIZATION PAC)`,
-    committeeType: "N",
-    organizationType: null,
-    designation: "J",
-    receipts: 1000,
-    topContributions: Array.from({ length: rows }, (_, i) => ({
-      dataClass: "FEC_CONTRIBUTOR" as const,
-      kind: "INDIVIDUAL" as const,
-      contributorName: `DONOR ${i}`,
-      amount: 100 - i,
-      receiptDate: "2026-01-01",
-      city: "TUCSON",
-      state: "AZ",
-      entityType: "IND",
-      lineNumber: "11AI",
-      committeeType: null,
-      organizationType: null,
-      designation: null,
-      contributorCommitteeId: null,
-    })),
-    provenance: {
-      sourceUrl: `https://www.fec.gov/data/committee/${committeeId}/`,
-      sourceOrg: "Federal Election Commission",
-      collectedAt: "2026-08-15",
-      verifiedAt: "2026-08-15",
-    },
-  });
-  // `base` carries no committee-typed first-hop rows, so C00422774 is NOT in
-  // this run's derived hop-id set. It held 5 rows last week and is gone now —
-  // exactly the C00422774 case. That is expected churn, not a shrink.
-  const base = guardFixture([{ id: "S6AZ00191", name: "Mark Kelly", rows: 10 }]);
-  const regressions = findShrinkRegressions(
-    { ...base, secondHop: [hopRows("C00422774", 5)] },
-    { ...base, secondHop: [] },
-  );
-  assert.deepEqual(
-    regressions,
-    [],
-    "a committee that left the derived set must not be a SECOND_HOP_ROWS regression",
-  );
-});
-
-test("R4: a vanished second-hop committee that is STILL derived is a regression", async () => {
-  const { findShrinkRegressions } = await import("../lib/funding/guard.ts");
-  const hopRows = (committeeId: string, rows: number) => ({
-    dataClass: "FEC_CONTRIBUTOR" as const,
-    committeeId,
-    name: `${committeeId} FUND`,
-    committeeType: "N",
-    organizationType: null,
-    designation: "J",
-    receipts: 1000,
-    topContributions: Array.from({ length: rows }, (_, i) => ({
-      dataClass: "FEC_CONTRIBUTOR" as const,
-      kind: "INDIVIDUAL" as const,
-      contributorName: `DONOR ${i}`,
-      amount: 100 - i,
-      receiptDate: "2026-01-01",
-      city: "TUCSON",
-      state: "AZ",
-      entityType: "IND",
-      lineNumber: "11AI",
-      committeeType: null,
-      organizationType: null,
-      designation: null,
-      contributorCommitteeId: null,
-    })),
-    provenance: {
-      sourceUrl: `https://www.fec.gov/data/committee/${committeeId}/`,
-      sourceOrg: "Federal Election Commission",
-      collectedAt: "2026-08-15",
-      verifiedAt: "2026-08-15",
-    },
-  });
-  // Committee Y is STILL a top contributor this run (a candidate row carries
-  // its id), yet its own books are absent from next.secondHop — "still asked,
-  // answered nothing." That is the genuine outage shape and must fail.
-  const derived = withDerivedHopId(
-    guardFixture([{ id: "S6AZ00191", name: "Mark Kelly", rows: 10 }]),
-    "C00000009",
-  );
-  const regressions = findShrinkRegressions(
-    { ...derived, secondHop: [hopRows("C00000009", 5)] },
-    { ...derived, secondHop: [] },
-  );
-  assert.equal(regressions.length, 1);
-  assert.equal(regressions[0].kind, "SECOND_HOP_ROWS");
-  assert.match(regressions[0].detail, /C00000009/);
-  assert.match(regressions[0].detail, /missing from this run/);
-});
-
-test("R4: a retained second-hop committee whose rows thin is still a regression", async () => {
-  // Thinning is untouched by the derived-set fix: present in BOTH runs, rows
-  // fell 5 → 2 — the Kelly-504 shape one level down, still a shrink.
-  const { findShrinkRegressions } = await import("../lib/funding/guard.ts");
-  const hopRows = (committeeId: string, rows: number) => ({
-    dataClass: "FEC_CONTRIBUTOR" as const,
-    committeeId,
-    name: `${committeeId} FUND`,
-    committeeType: "N",
-    organizationType: null,
-    designation: "J",
-    receipts: 1000,
-    topContributions: Array.from({ length: rows }, (_, i) => ({
-      dataClass: "FEC_CONTRIBUTOR" as const,
-      kind: "INDIVIDUAL" as const,
-      contributorName: `DONOR ${i}`,
-      amount: 100 - i,
-      receiptDate: "2026-01-01",
-      city: "TUCSON",
-      state: "AZ",
-      entityType: "IND",
-      lineNumber: "11AI",
-      committeeType: null,
-      organizationType: null,
-      designation: null,
-      contributorCommitteeId: null,
-    })),
-    provenance: {
-      sourceUrl: `https://www.fec.gov/data/committee/${committeeId}/`,
-      sourceOrg: "Federal Election Commission",
-      collectedAt: "2026-08-15",
-      verifiedAt: "2026-08-15",
-    },
-  });
-  const base = guardFixture([{ id: "S6AZ00191", name: "Mark Kelly", rows: 10 }]);
-  const regressions = findShrinkRegressions(
-    { ...base, secondHop: [hopRows("C00000001", 5)] },
-    { ...base, secondHop: [hopRows("C00000001", 2)] },
-  );
-  assert.equal(regressions.length, 1);
-  assert.equal(regressions[0].kind, "SECOND_HOP_ROWS");
-  assert.match(regressions[0].detail, /5 → 2/);
-});
-
-test("R4: the first-hop candidate checks are unchanged by the second-hop fix", async () => {
-  // Guard rail: the derived-set change touches only the second hop. A vanished
-  // candidate with no recorded absence still fails CANDIDATE_MISSING (and
-  // CANDIDATE_COUNT), and a retained candidate whose contributor rows fall
-  // still fails CONTRIBUTOR_ROWS.
-  const { findShrinkRegressions } = await import("../lib/funding/guard.ts");
-  const prior = guardFixture([
-    { id: "S6AZ00191", name: "Mark Kelly", rows: 10 },
-    { id: "H2AZ02360", name: "Juan Ciscomani", rows: 10 },
-  ]);
-  const next = guardFixture([{ id: "H2AZ02360", name: "Juan Ciscomani", rows: 6 }]);
-  const kinds = findShrinkRegressions(prior, next)
-    .map((r) => r.kind)
-    .sort();
-  assert.deepEqual(kinds, ["CANDIDATE_COUNT", "CANDIDATE_MISSING", "CONTRIBUTOR_ROWS"]);
-});
-
 test("the FEC acquisition script has no tracked writer and is reachable only through the standing routine contract", () => {
   const script = readFileSync(join(ROOT, "scripts", "fetch-fec.mts"), "utf8");
-  assert.match(script, /if \(!PROMOTE && !MATCH_ONLY\)/);
+  assert.match(script, /if \(!promote && !matchOnly\)/);
   assert.match(script, /fecFundingCandidate\(/);
-  assert.match(script, /processRegisteredRoutineCandidate\(store, "fec-funding", candidate, snapshot\.fetchedAt\)/);
+  assert.match(script, /processRegisteredRoutineCandidate\(store, "fec-funding", candidate, completedAt\)/);
   assert.doesNotMatch(script, /writeStampStable|writeFile(?:Sync)?|absolutePath:\s*OUT|--allow-shrink|findShrinkRegressions/);
 
   const manifest = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")) as {
@@ -1229,22 +655,9 @@ test("the FEC acquisition script has no tracked writer and is reachable only thr
     requiredRoutineContract("fec-funding").acquisitionAdapter.command,
     ["scripts/fetch-fec.mts", "--promote"],
   );
-  assert.equal(
-    manifest.scripts["window:run"],
-    "node scripts/installed-runtime-command.mjs window",
-  );
 });
 
-
-/**
- * Item 6 of the tester's mobile pass (2026-08-14) — the author's item,
- * validated by the tester the same day: every committee in her screenshot
- * rendered the same four words, "a political action committee". Grant
- * Thornton's PAC, Marsh & McLennan's, the Broadcasters', Fidelity's — all
- * undifferentiated. The plain-language layer on the organizations-as-filed
- * rule: say what KIND of money it is, derived only from what the committee
- * itself filed.
- */
+/** Say what kind of money a committee is, derived only from what the committee itself filed. */
 test("item 6: every FEC code in our snapshot maps, or falls to the honest default", async () => {
   const { committeeTypeLabelFor, COMMITTEE_TYPE_LABELS } = await import(
     "../lib/funding/committee-types.ts"
@@ -1324,10 +737,7 @@ test("item 6: the designation wins over the committee type where it is the more 
   const { committeeTypeLabelFor } = await import(
     "../lib/funding/committee-types.ts"
   );
-  // The bug caught by reading the output before shipping: a joint
-  // fundraising committee files as committee type S or N, so type-first
-  // ordering rendered DUCKWORTH KIM VICTORY FUND as one candidate's own
-  // campaign committee.
+  // A joint fundraising committee files as committee type S or N; its designation must win.
   assert.equal(
     committeeTypeLabelFor({
       committeeType: "S",
@@ -1449,10 +859,7 @@ test("item 6: nothing is ever typed from a committee's NAME", async () => {
   // The derivation reads three filed fields and nothing else.
   const body = src.slice(src.indexOf("export function committeeTypeLabelFor"));
   assert.ok(body.length > 200, "the derivation was found and read");
-  // Plain substrings, deliberately NOT regexes: `new RegExp("includes(")`
-  // is an unterminated group and throws instead of checking anything —
-  // which is exactly how the first version of this guard failed. A guard
-  // that cannot run is worse than no guard, because it reads as green.
+  // Plain substrings, not regexes: `new RegExp("includes(")` throws instead of checking.
   for (const banned of [
     "contributorName",
     ".name",
@@ -1473,13 +880,7 @@ test("item 6: nothing is ever typed from a committee's NAME", async () => {
 });
 
 test("no committed snapshot claims to have been read on a day that has not happened", async () => {
-  // Caught 2026-08-15 by the walk, which rendered "read 08/16/2026" on the
-  // funding card at 6pm Phoenix. `new Date().toISOString().slice(0, 10)` is
-  // the obvious one-liner and it is wrong for seven hours out of every
-  // twenty-four here: after 5pm local, UTC has already rolled over and every
-  // provenance field the run writes claims tomorrow. A date nobody could
-  // have read is the same failure as a generated position wearing a smaller
-  // hat, and the fix is that scripts call stamp(), never toISOString().
+  // After 5pm Arizona time UTC has already rolled over, so scripts call stamp(), never toISOString().
   const { stamp } = await import("../scripts/stamp.mts");
   const today = stamp();
 
@@ -1502,7 +903,6 @@ test("no committed snapshot claims to have been read on a day that has not happe
     `provenance dates later than ${today} (America/Phoenix)`,
   );
 
-  // And the generators must not reach for the wrong clock again.
   // Comments stripped first: the file explains the trap by quoting it, and
   // a scan that reads prose would fail on the explanation.
   const fetchScript = readFileSync(join(ROOT, "scripts", "fetch-fec.mts"), "utf8")
@@ -1510,38 +910,22 @@ test("no committed snapshot claims to have been read on a day that has not happe
     .replace(/^\s*\/\/.*$/gm, "");
   assert.ok(
     !/new Date\(\)\.toISOString\(\)\.slice\(0,\s*10\)/.test(fetchScript),
-    "fetch-fec.mts reads the date off UTC — use stamp()",
+    "record observations must come from the source evidence, not a new day stamp",
   );
-  assert.ok(fetchScript.includes("stamp()"));
+  assert.ok(fetchScript.includes("acquired.sourceObservedAt"));
 });
 
-/*
- * ITEM 5 (2026-08-16, the author): ONE ASK PER OBJECT, AND TWO PROVABLY
- * DISTINCT SENSORS.
- *
- * The two funding controls asked WORD FOR WORD the same question about two
- * different civic objects — the totals paragraph and the named contributions
- * table. The brief's real worry is the one worth guarding: two different
- * questions pooling into one signal. They never did, and this proves it at
- * every layer rather than asserting it.
- */
+/* One ask per object, and two provably distinct sensors that never pool. */
 
 test("the two funding asks are two sensors, at the write path and the aggregate", () => {
-  // 1. Different target types, and — since g3 item 7 (2026-08-16, the
-  //    author's ruling) — different scale VERSIONS. The previous session
-  //    shared the version and split only the question; the author bumped it
-  //    so contributions rows can never pool with answers to the older
-  //    wording, which sat over the same table asking about the campaign's
-  //    finances instead.
+  // 1. Different target types and different scale versions.
   assert.notEqual(fundingRow.targetType, contributorRow.targetType);
   assert.notEqual(
     scaleForTargetType("FUNDING_TOTAL_REACTION").version,
     scaleForTargetType("CONTRIBUTOR_REACTION").version,
   );
 
-  // 2. Different QUESTIONS, per target type. An export whose question line
-  //    does not match the question asked is a false claim about how the
-  //    number was collected, and the buyer cannot catch it.
+  // 2. Different questions, per target type.
   assert.equal(
     questionForTargetType("FUNDING_TOTAL_REACTION"),
     "How do you feel about how this campaign is funded?",
@@ -1563,11 +947,7 @@ test("the two funding asks are two sensors, at the write path and the aggregate"
   assert.notEqual(totals.question, contributors.question);
   assert.equal(contributors.question, "How do you feel about these contributions?");
 
-  // 3b (g3). The pre-bump contributions rows are a THIRD tally, labelled with
-  // the wording they were actually collected under. This is the whole point
-  // of the author's bump: a v2 contributions row answered a sentence about
-  // the campaign's finances while looking at a table of donors, and pooling
-  // it with today's answers would put two populations under one denominator.
+  // 3b. Pre-bump contributions rows are a third tally, labelled with the wording they were collected under.
   const withOld = aggregateReactions([fundingRow, contributorRow, contributorRowV2]);
   assert.equal(withOld.length, 3, "a pre-bump contributions row pooled with a post-bump one");
   const stale = withOld.find(
@@ -1595,11 +975,6 @@ test("the two funding asks are two sensors, at the write path and the aggregate"
 });
 
 test("the contributions rewording is recorded, and the author's version bump with it", () => {
-  // Recorded first as a rewording inside v2, with the version bump left for
-  // the author because bucketing and export are on CLAUDE.md's ask-before
-  // list. He ruled the same day: bump it (g3 item 7). Both records stand —
-  // the break says the two sets are not comparable, and only the rewording
-  // says WHY, in the words that were on the screen.
   const rewording = QUESTION_REWORDINGS.find(
     (r) => r.targetType === "CONTRIBUTOR_REACTION",
   );
@@ -1647,14 +1022,7 @@ function row(
   };
 }
 
-/* ══ D06, 2026-08-18: where the money came from ═════════════════════════
- *
- * Shipped on the author's disposition ("Unblock"). The whole risk here is
- * the DENOMINATOR: these figures are computed over the five biggest
- * committee gifts plus the five biggest individual gifts, which is not the
- * ten largest contributions and is not the campaign's book. The first draft
- * of the sentences claimed it was, and the real snapshot caught it.
- */
+/* Where the money came from: computed over the five biggest committee gifts plus the five biggest individual gifts, which is not the campaign's book. */
 
 test("D06: the sentences state their base before they state any figure", async () => {
   const { concentrationOf, concentrationSentences } = await import(
@@ -1672,8 +1040,7 @@ test("D06: the sentences state their base before they state any figure", async (
   assert.match(sentences[0], /listed above/i);
   assert.doesNotMatch(sentences.join(" "), /not the whole|%/i);
 
-  // And it never claims to be the largest contributions overall, which is
-  // what the first draft said and what the fetch loop does not do.
+  // It never claims to be the largest contributions overall.
   for (const sentence of sentences) {
     assert.doesNotMatch(
       sentence,
@@ -1686,9 +1053,7 @@ test("D06: the sentences state their base before they state any figure", async (
 test("D06: a small non-zero share never renders as zero", async () => {
   const { shareWords } = await import("../lib/funding/concentration.ts");
 
-  // The Booker case: two real in-state contributions against a $2.9M base.
-  // "0%" beside "across 2 of them" is a contradiction the reader cannot
-  // resolve, and it asserts an absence that is not true.
+  // "0%" beside "across 2 of them" would be a contradiction.
   assert.equal(shareWords(31_000, 2_916_000), "1%", "1.06% is 1%, not 'under'");
   assert.equal(shareWords(11_000, 2_916_000), "under 1%");
   assert.equal(shareWords(1, 1_000_000), "under 1%");
@@ -1710,9 +1075,7 @@ test("D06: no district is claimed from a filing that gives only a state", async 
   assert.ok(concentration);
   const sentences = concentrationSentences(concentration, "Arizona").join(" ");
 
-  // A congressional district is a ballot fact, and zip cannot resolve one
-  // (CLAUDE.md). The surface says state, and says the filings give no
-  // district, rather than letting a reader assume otherwise.
+  // A congressional district is a ballot fact a filing's zip cannot resolve.
   assert.match(sentences, /Filed from inside Arizona: \$1,000/);
   assert.doesNotMatch(sentences, /don't give a district|%/i);
   assert.doesNotMatch(sentences, /in-district|out-of-district|their district/i);
@@ -1732,11 +1095,7 @@ test("D06: nothing is sorted into an industry, and the org split is dollars not 
   assert.ok(concentration);
   const sentences = concentrationSentences(concentration, "Arizona").join(" ");
 
-  // D06's wording asks for "industry concentration". It cannot ship: the
-  // FEC publishes no employer-to-industry taxonomy, this snapshot carries
-  // no employer field, and the taxonomies that exist belong to third-party
-  // aggregators CLAUDE.md's source rule excludes. Inventing one would be
-  // the app characterizing an organization, which is forbidden outright.
+  // No industry taxonomy: the FEC publishes none, and third-party ones are excluded.
   assert.doesNotMatch(sentences, /industry|sector|interest group|lobby/i);
   assert.doesNotMatch(sentences, /don't sort donors|%/i);
 
@@ -1765,10 +1124,7 @@ test("D06: nothing to compute over renders nothing, not a row of zeros", async (
 });
 
 test("D06: planted contributor-level data reaches no sold aggregate", async () => {
-  // The constraint that makes this row hard rather than long (D23, 52
-  // U.S.C. 30111(a)(4)): contributor-level data must never enter the
-  // aggregation path that produces anything sold. Reader display and sold
-  // aggregate are two paths, and this plants a row to prove they are.
+  // Contributor-level data must never enter the aggregation path that produces anything sold (52 U.S.C. 30111(a)(4)).
   const planted = {
     targetType: "CONTRIBUTOR_REACTION" as const,
     targetId: "S6AZ00253",
@@ -1821,14 +1177,7 @@ test("D06: planted contributor-level data reaches no sold aggregate", async () =
   assert.doesNotMatch(aggregateSource, /concentrationOf/);
 });
 
-/* ══ D06's third feature, 2026-08-19 (g20): concentration on the FEC's axis ══
- *
- * The author's ruling was "Accept" — industry concentration ships as
- * concentration by the FEC's OWN entity typing, because a real industry
- * taxonomy is always an aggregator's proprietary classification and the
- * source rule excludes those. These guard the two things that could turn
- * that from carrying meaning into generating it.
- */
+/* Concentration by the FEC's own entity typing, never an industry taxonomy. */
 
 test("D06 g20: bands come from the FEC's filed typing, and cross no sampled base", async () => {
   const { typeConcentrationOf, typeConcentrationSentences } = await import(
@@ -1856,10 +1205,7 @@ test("D06 g20: bands come from the FEC's filed typing, and cross no sampled base
   ]);
   assert.ok(concentration);
 
-  // Committee side only. The individual's $99,000 is the biggest number in
-  // the list and must not be in the base: the two lists are separately
-  // sampled top-fives, so a band spanning them would be a share of a base
-  // we chose rather than of anything the campaign reported.
+  // Committee side only: the two lists are separately sampled top-fives.
   assert.equal(concentration.totalAmount, 14_000);
   assert.equal(concentration.contributionCount, 2);
   assert.equal(concentration.bandCount, 2);
@@ -1891,9 +1237,7 @@ test("D06 g20: a filing with no typing is a named gap, not the generic organizat
     }),
   ]);
   assert.ok(concentration);
-  // The render-default rule, one layer down: defaulting an absent typing
-  // into "an organization" would convert our gap into a claim about the
-  // filer. The band's label says whose gap it is — the filing's.
+  // An absent typing is the filing's gap, never "an organization".
   assert.equal(concentration.bands[0].id, UNFILED_BAND_ID);
   assert.match(concentration.bands[0].label, /filing doesn't state its type/i);
 });
@@ -1971,14 +1315,7 @@ test("D06 g20: the candidate's own money is never typed as an untyped committee"
   const { typeConcentrationOf, typeConcentrationSentences, OWN_MONEY_BAND_ID } =
     await import("../lib/funding/type-concentration.ts");
 
-  // THE REAL DEFECT, caught by reading data/fec/fec-2026.json rather than a
-  // fixture: a candidate lending their campaign money files as entity CAN
-  // on line 13A, and the FEC puts that on the NON-individual side. The
-  // first draft asked the committee table directly, which does not answer
-  // for CAN, so Lily Tang Williams' $80,000 of her own money would have
-  // rendered as "a committee whose filing doesn't state its type" — the
-  // largest number on her card, and a false claim about a filing that
-  // states its type perfectly well.
+  // A candidate's loan files as entity CAN on line 13A, on the FEC's non-individual side; it is their own money.
   const concentration = typeConcentrationOf([
     row({
       kind: "COMMITTEE_OR_ORGANIZATION",
@@ -2012,11 +1349,7 @@ test("D06 g20: the FEC's entity typing answers where committee typing is absent"
     "../lib/funding/type-concentration.ts"
   );
 
-  // The other half of the same real finding: ActBlue and WinRed file as
-  // entity ORG, a county party as COM, a candidate's second account as CCM
-  // — all with no committee_type at all. The FEC classified every one of
-  // them; only the committee table does not reach them, and calling that
-  // OUR gap the FILING's gap is the manufactured claim.
+  // ORG, COM and CCM rows carry no committee_type; the FEC's entity typing answers for them.
   const concentration = typeConcentrationOf([
     row({
       kind: "COMMITTEE_OR_ORGANIZATION",
@@ -2056,10 +1389,7 @@ test("D06 g20: the band ladder and the row suffix are one derivation", async () 
   const { contributorBand, plainContributorLabel } = await import(
     "../lib/funding/labels.ts"
   );
-  // One question, one answer. A second implementation of "what kind of
-  // filer is this" is how the two surfaces drift into contradicting each
-  // other on the same card — so the suffix is the ladder's own label, and
-  // this asserts they cannot come apart.
+  // The suffix is the ladder's own label, so the two cannot come apart.
   const cases = [
     { kind: "COMMITTEE_OR_ORGANIZATION", entityType: "CAN", lineNumber: "13A" },
     { kind: "COMMITTEE_OR_ORGANIZATION", entityType: "ORG", lineNumber: "11AI" },

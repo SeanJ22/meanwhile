@@ -8,19 +8,10 @@ import {
 } from "@/lib/state/subscribe-to-storage";
 
 /**
- * The chosen theme.
- *
- * Same shape as hooks/use-stored-zip.ts, deliberately: localStorage is an
- * external store, so it is read through useSyncExternalStore with a frozen
- * pending snapshot on the server and cached snapshots keyed on the raw stored
- * string. Snapshots are compared by identity, so returning a fresh object every
- * call loops forever.
- *
- * The paint-blocking half of this lives in app/layout.tsx: an inline script sets
- * `data-theme` before first paint, because a hook cannot run early enough to
- * stop a light-theme reader seeing a dark flash. This hook exists so the toggle
- * button knows which icon to show, and it reports `restored: false` until
- * hydration so the button never renders the wrong state and then swaps.
+ * The chosen theme, read from localStorage through useSyncExternalStore with
+ * cached, identity-stable snapshots. `data-theme` is set before first paint by
+ * an inline script in app/layout.tsx; this hook reports `restored: false`
+ * until hydration so the toggle never renders the wrong state.
  */
 
 const STORAGE_KEY = "wtp.theme";

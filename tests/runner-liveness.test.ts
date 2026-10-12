@@ -57,7 +57,6 @@ test("a failed cycle advances beatAt and records lastCycleOk=false without erasi
     host: "SeanLenovo",
     intervalMin: 60,
   });
-  // The bug: beatAt froze at 19:16:55 through the failed 20:18 cycle, reading as a hang.
   assert.equal(next.beatAt, "2026-09-18T20:18:37.000Z");
   assert.equal(next.lastCycleFinishedAt, "2026-09-18T20:18:37.000Z");
   assert.equal(next.lastCycleOk, false);

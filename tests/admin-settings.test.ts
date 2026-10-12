@@ -1,6 +1,6 @@
 /**
- * BR-05 (settings with a log and undo) and BR-06 (the Settings view): the gateway action, the log, undo, the
- * runner's acknowledgement, the reader-edge publication, factory attribution, and the view's rows and sends.
+ * Settings with a log and undo, and the Settings view: the gateway action, the log, undo, the runner's
+ * acknowledgement, the reader-edge publication, and the view's rows and sends.
  */
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -11,7 +11,6 @@ import {
   DETECTIVE_SHUT_THRESHOLD_SETTING, meetingCheckInterval, readSetting, registerSetting, runnerSettingsEcho, SETTING_HISTORY_MAX,
   settingUndo, withSetting,
 } from "../lib/control-plane/settings.ts";
-import { setSettingAsFactory } from "../lib/control-plane/settings-write.ts";
 import {
   ensureReaderSettingsPublished, publishReaderSettings, readReaderSetting, READER_SETTINGS_TAG, type ReaderSettingsSnapshot, type SettingsEdgeStore,
 } from "../lib/civic-data/reader-settings-publication.ts";
@@ -103,7 +102,7 @@ test("the runner re-reads each pass and its heartbeat echo shows the new value i
   const nextPass = "2026-10-04T06:15:00Z";
   const after = row(beat(runnerSettingsEcho(config, nextPass)));
   assert.deepEqual(after.inForce, { where: "runner", yes: true, since: nextPass });
-  assert.match(inForceWords(after).words, /^In force since Oct 4, 2:15 AM EDT$/);
+  assert.match(inForceWords(after).words, /^In force since Oct 4, 2:15 AM ET$/);
   assert.equal(after.valueWords, "6 failures in a row");
   assert.equal(after.log[0].beforeWords, "3 failures in a row");
   assert.equal(after.log[0].why, null);
@@ -130,17 +129,6 @@ test("reader settings publish only public values, purge on replay, cannot regres
   assert.equal(await ensureReaderSettingsPublished(config, 4, { store, purge }), "behind", "an older config never overwrites a newer snapshot");
   const view = projectSettings({ config: changed, heartbeat: null, published: store.held!.snapshot.values, observedAt: at }).rows.find((r) => r.key === COPY_KEY)!;
   assert.deepEqual(view.inForce, { where: "readers", yes: true, since: null });
-});
-
-test("a factory change names its maker; Sean's never does", async () => {
-  const repos = createMemoryRepositories();
-  assert.equal(await setSettingAsFactory(repos, { id: "coach-1", key: DETECTIVE_SHUT_THRESHOLD_SETTING, value: 4, factory: "The coach", why: "Fewer repeats", at }), true);
-  assert.equal(await setSettingAsFactory(repos, { id: "coach-1", key: DETECTIVE_SHUT_THRESHOLD_SETTING, value: 4, factory: "The coach", why: "Fewer repeats", at }), true);
-  assert.equal(await setSettingAsFactory(repos, { id: "bad", key: DETECTIVE_SHUT_THRESHOLD_SETTING, value: -1, factory: "The coach", why: "", at }), false);
-  const config = (await repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).value;
-  assert.equal(config.settingHistory?.length, 1, "a retried factory change is logged once");
-  const row = projectSettings({ config, heartbeat: null, published: null, observedAt: at }).rows.find((r) => r.key === DETECTIVE_SHUT_THRESHOLD_SETTING)!;
-  assert.equal(row.log[0].by, "The coach");
 });
 
 test("the log keeps the newest changes only, and the newest can always be undone", () => {

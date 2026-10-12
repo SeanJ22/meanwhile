@@ -1,17 +1,10 @@
-/**
- * A derived routine child's one promotion and its receipt line, shared by the
- * children that opt into the unchanged confirmation (R23): the meeting-source
- * wiring and the verified candidate campaign sites. Through the registered
- * routine door; a re-check whose read model is the pointed one is receipted
- * on that version instead of re-promoted, and the receipt then names it; a
- * pass that promotes nothing exits non-zero so the runner records it.
- */
 import { processRegisteredRoutineCandidate, type PromotionOutcome } from "./promotion.ts";
 import { ZERO_RELEASE_EVENTS } from "./release.ts";
 import { routineReceiptFields } from "./runner-receipt.ts";
 import type { RoutineDataStore } from "./store.ts";
 import type { RoutineCandidate } from "./types.ts";
 
+/** Promotes through the registered routine door. A re-check whose read model is already pointed is receipted on that version instead of re-promoted; a pass that promotes nothing exits non-zero. */
 export async function promoteDerivedCandidate(
   store: RoutineDataStore,
   contractId: string,

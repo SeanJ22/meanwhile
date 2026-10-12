@@ -44,7 +44,6 @@ function ShotImage(props: { readonly image: string; readonly label: string }) {
   return <img src={props.image} alt={`Screenshot: ${props.label}`} loading="lazy" style={{ display: "block", maxWidth: "100%", maxHeight: 420, objectFit: "contain", borderRadius: 8, border: "1px solid var(--panel-border)" }} />;
 }
 
-/** FE-21: the screenshot a look-check red flag points at, opened full size in a new tab. */
 function Shots(props: { readonly shots: readonly FixShot[] | undefined }) {
   if (!props.shots?.length) return null;
   return (
@@ -68,7 +67,6 @@ function Doc(props: { readonly doc: SavedDoc }) {
       <div className={s.spread}><strong className={s.small}>{d.name}</strong><span className={cx(s.small, d.access === "unavailable" ? s.textWarn : s.dim)}>{state}</span></div>
       <span className={s.meta}>{d.meta}</span>
       <a className={s.small} href={d.sourceUrl} target="_blank" rel="noreferrer noopener">Official source ↗</a>
-      {d.access === "private" && <Actions actions={[{kind:"doc-request",target:d.id,label:"Open the saved copy"}]} />}
       {ready && d.preview && <pre className={cx(s.tech)} style={{ whiteSpace: "pre-wrap", padding: 8 }}>{d.preview}</pre>}
     </div>
   );
@@ -82,10 +80,9 @@ export function DetailPanel(props: { readonly detail: Detail }) {
     const r = v.data.results.data?.find((x) => x.id === d.id);
     if (!r) return <Empty>This result isn’t available.</Empty>;
     const stuck = (v.data.stuck.data ?? []).filter((i) => i.resultId === r.id);
-    const containRef = stuck.flatMap((i) => i.actions).find((a) => a.kind === "contain" || a.kind === "uncontain");
     return (
       <Panel eyebrow={`${v.index.get(r.applies[0])?.name}${r.kind === null ? "" : ` · ${r.kind}`} · delivery trail`} title={r.title} summary={r.readerSees} badge={r.kind === null ? undefined : <Pill tone={r.kind === "New" ? "good" : r.kind === "Updated" ? "info" : "neutral"}>{r.kind}</Pill>}
-        actions={[{ kind: "recheck", target: r.id }, ...(containRef ? [containRef] : [])]} targets={[r.id, ...stuck.map((i) => i.id), ...r.trail.flatMap((t) => t.docs?.map((x) => x.id) ?? [])]}>
+        actions={[]} targets={[r.id, ...stuck.map((i) => i.id), ...r.trail.flatMap((t) => t.docs?.map((x) => x.id) ?? [])]}>
         <Card title="From source to reader">
           <Facts rows={[["Applies to", r.applies.map((a) => v.index.get(a)?.name ?? a).join(", ")], ...(r.kind === null ? [] : [["Kind", r.kind] as const])]} />
           <ol className={s.trail}>
@@ -120,7 +117,7 @@ export function DetailPanel(props: { readonly detail: Detail }) {
     const same = (v.data.stuck.data ?? []).filter((x) => x.group && x.group === i.group && x.id !== i.id);
     return (
       <Panel eyebrow={`${v.index.get(i.applies[0])?.name} · stuck item`} title={i.title} summary={i.cause} badge={<Pill tone={LANE_TONE[i.lane]}>{LANE_WORDS[i.lane]}</Pill>}
-        actions={[...i.actions, ...(i.lane === "software" && i.fixId ? [{ kind: "eng-task" as const, target: i.fixId }] : [])]} targets={[i.id, i.resultId ?? "", i.fixId ?? "", i.decision?.id ?? "", ...i.actions.map((a) => a.target)]}>
+        actions={[...i.actions]} targets={[i.id, i.resultId ?? "", i.fixId ?? "", i.decision?.id ?? "", ...i.actions.map((a) => a.target)]}>
         <Card title="What we know">
           <Facts rows={[["Reader result", res ? res.title : "—"], ["Stuck for", i.age], ["What was tried", i.tried], ["Did it help", i.helped], ["Next", i.next], ["Who moves it", i.owner], ...(i.latest ? [["Latest", i.latest] as const] : []), ...(i.readersAffected ? [["Readers", "Affected right now"] as const] : [])]} />
           <div className={s.inline}>
@@ -208,7 +205,7 @@ export function DetailPanel(props: { readonly detail: Detail }) {
     if (!f) return <Empty>This fix isn’t available.</Empty>;
     return (
       <Panel eyebrow={`Fix list · ${f.owner}`} title={f.title} summary={f.problem} badge={<Pill>{({ attention: "Needs attention", fixing: "Being fixed", update: "Waiting for update" })[f.tab]}</Pill>}
-        actions={[{ kind: "fixfirst", target: f.id }, { kind: "focus", target: f.id }]} targets={[f.id]}>
+        actions={[]} targets={[f.id]}>
         <Card title="Where it stands">
           <Facts rows={[["What it helps", f.helps], ["Place in line", f.placeInLine], ["Resources now", f.resourcesNow]]} />
           {f.origin === "engineering" && <TaskStages stage={f.taskStage} />}
@@ -248,7 +245,6 @@ export function DetailPanel(props: { readonly detail: Detail }) {
     return <Panel eyebrow="Work row" title={plainWords(row.title)} summary={row.age} targets={[row.id]}><Card title="Details"><Facts rows={[["Where",v.index.get(row.placeKey)?.name ?? "—"],["Stage",row.stage]]}/></Card></Panel>;
   }
 
-  // search
   const q = d.query.toLowerCase();
   const hits: { type: string; title: string; sub: string; go: () => void }[] = [
     ...(v.data.results.data ?? []).filter((r) => relation(v.index, r.applies, v.scopeKey)).map((r) => ({ type: "Reader result", title: r.title, sub: `${v.index.get(r.applies[0])?.name}${r.kind === null ? "" : ` · ${r.kind}`}`, go: () => v.open({ type: "result", id: r.id }) })),

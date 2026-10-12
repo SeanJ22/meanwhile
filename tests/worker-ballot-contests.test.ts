@@ -52,7 +52,7 @@ test("a saved CSV or PDF text candidate list publishes whole contests into the g
     const store = new MemoryRoutineDataStore(), candidate = manualProjectionCandidate(checked.package);
     const published = await processRegisteredManualCandidate(store, "ballot-contests", candidate, now, null);
     assert.ok(published.promoted, JSON.stringify(published.candidate));
-    assert.equal(published.readerReadback?.status, "PASS");
+    assert.equal(published.readerReadback?.status, "PASS", JSON.stringify(published.readerReadback));
     const read = await readGenericBallotProjection({ store, now, bypassCache: true });
     assert.equal(read.kind, "PROMOTED"); if (read.kind === "PROMOTED") assert.deepEqual(read.value, payload);
   }
@@ -74,7 +74,7 @@ test("district and territory ballots use their registered OCD prefixes through p
   }
 });
 
-test("an omitted or contradicted candidate holds its entire contest while a complete neighboring contest publishes", () => {
+test("an omitted or contradicted candidate leaves independently verified candidates live", () => {
   for (const contradict of [false, true]) {
     const input = fixture();
     assert.equal(input.parser.result.role, "PARSER"); if (input.parser.result.role !== "PARSER") return;
@@ -83,8 +83,9 @@ test("an omitted or contradicted candidate holds its entire contest while a comp
       records: contradict ? records.map((row, at) => at === 1 ? { ...row, fields: { ...row.fields, candidateName: "Invented Person" } } : row) : records.filter((_, at) => at !== 1),
       spans: contradict ? input.parser.result.spans : input.parser.result.spans.filter(span => span.recordId !== records[1].id) } };
     const checked = workerBallotContestsPackage(input), ballot = Object.values((checked.package.payload as GenericBallotProjection).ballots)[0];
-    assert.equal(checked.heldContests.length, 1); assert.equal(ballot.contests.length, 1);
-    assert.equal(ballot.contests[0].title, "Mayor"); assert.deepEqual(ballot.candidacies.map(row => row.familyName), ["Casey Clark"]);
+    assert.equal(checked.heldContests.length, 1); assert.equal(ballot.contests.length, 2);
+    assert.equal(ballot.contests[0].candidateListComplete, false);
+    assert.deepEqual(ballot.candidacies.map(row => row.familyName), ["Alice Adams", "Casey Clark"]);
   }
 });
 
@@ -165,4 +166,19 @@ test("a direct ballot request serves from its proven edge without unrelated sour
   const ballot = await loadBallotForDivisions(["ocd-division/country:us/state:tx/county:alder"], { store, now, bypassCache: true });
   assert.equal(composeBallotOnlyAnswer(ballot, "Who is running for Unknown Office?", "2026-10-04"), null);
   assert.equal(composeBallotOnlyAnswer({ ...ballot, authorityKind: "LEGACY" }, "Who is running for School Board?", "2026-10-04"), null);
+});
+
+test("an incomplete successor keeps independently held candidates from the same contest", () => {
+  const first = workerBallotContestsPackage(fixture()).package;
+  const next = fixture();
+  if (next.parser.result.role !== "PARSER") return;
+  const omitted = next.parser.result.records[1].id;
+  next.parser = { ...next.parser, result: { ...next.parser.result,
+    records: next.parser.result.records.filter(row => row.id !== omitted),
+    spans: next.parser.result.spans.filter(row => row.recordId !== omitted) } };
+  const successor = workerBallotContestsPackage(next).package;
+  const merged = mergeBallotContests(successor, { versionId: "prior", payload: first.payload, sourceReceipt: first.sourceReceipt });
+  const ballot = Object.values((merged.payload as GenericBallotProjection).ballots)[0];
+  assert.deepEqual(ballot.candidacies.map(row => row.familyName).sort(), ["Alice Adams", "Bob Baker", "Casey Clark"]);
+  assert.equal(ballot.contests.find(row => row.title === "School Board")?.candidateListComplete, false);
 });

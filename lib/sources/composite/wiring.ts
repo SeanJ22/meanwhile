@@ -33,19 +33,11 @@ import { feedKindWiringType, installedFeedKinds, makeFeedKindSource } from "../f
 import { CompositeSource } from "./index.ts";
 
 /**
- * Which adapter serves which `AgendaSourceType` — the capability registry
- * (§0b).
+ * Which adapter serves which `AgendaSourceType`: the capability registry. Registering a new adapter is
+ * one entry here; adding a body is a row in `lib/registry/source-wiring.ts`, never code.
  *
- * **Registering a new adapter is one entry here. Adding a body is a row in
- * `lib/registry/source-wiring.ts`, never code.** The two halves are kept
- * apart deliberately: this file knows about software, the wiring rows know
- * about governments, and at 90,000 governments only the second may grow.
- *
- * `DILIGENT` and `CIVICWEB` both dispatch to the Diligent adapter — different
- * products to a clerk, one wire format (`MeetingsService.svc`). They stay
- * distinct types on the body rows because collapsing them would erase which
- * portal a body actually runs, which is precisely the mistake CivicWeb ≠
- * CivicPlus already guards against.
+ * `DILIGENT` and `CIVICWEB` both dispatch to the Diligent adapter (one wire format,
+ * `MeetingsService.svc`) but stay distinct types on the body rows so the portal a body runs is not erased.
  */
 type ChildFactory = (rows: BodySourceWiring[], fetchImpl?: typeof fetch) => ReportingMeetingSource<unknown>;
 
@@ -57,47 +49,13 @@ function legistarReporting(rows: BodySourceWiring[], fetchImpl?: typeof fetch): 
   /**
    * `@accounting-delegated-to lib/sources/legistar/index.ts`
    *
-   * Declared rather than inferred — `tests/zero-row-contract.test.ts` reads this
-   * marker, and checks that the module it names is itself a branding
-   * implementor. See the note inside for what the second branding cost.
+   * Declared rather than inferred: `tests/zero-row-contract.test.ts` reads this marker and checks that the
+   * module it names is itself a branding implementor.
    */
   normalizeWithDrops(raw, now) {
-    /*
-     * RETURNED AS THE ADAPTER BRANDED IT. There is no second branding here,
-     * and REMOVING it is the fix rather than a tidy-up.
-     *
-     * ## What the second branding cost, reproduced before it was removed
-     *
-     * `accountedNormalize` cancels a tally that is counted in `drops` and then
-     * PRODUCED anyway, through its `countedButProduced` option. Legistar has
-     * exactly one such tally: `placeless`. A meeting with no physical place is
-     * counted under `drops.placeless` — a name D18 kept on purpose so the
-     * series stays comparable across every snapshot ever written — and is then
-     * KEPT and produced, so the adapter passes `countedButProduced:
-     * keptButPlaceless` to cancel it.
-     *
-     * This wrapper re-branded the same arrays and **did not pass that option**,
-     * so every placeless-but-kept meeting was counted once as produced and once
-     * as dropped. Against the recorded Pima events fixture — 18 events, 4 of
-     * them online — the adapter reports `CONSERVED, 18 of 18` and this wrapper
-     * threw `4 more disposition(s) than records`. Against the live feed on
-     * 2026-08-25 it was 3, and it took the whole daily refresh red: run
-     * 32833989579, `legistar: JOB FAILURE`, `considered 16, accounted for 19`.
-     *
-     * The comment that used to sit here said the wrapper "judges the same fact
-     * twice and cannot disagree with itself". It disagreed with itself for as
-     * long as it existed, because the second judgement was missing an argument
-     * the first one had — RULING 103's duplicated implementation, living in an
-     * accounting rather than in a function.
-     *
-     * ## Why re-branding is not needed at all any more
-     *
-     * The stated reason for it was that the drop SHAPES differed: legistar
-     * counted three reasons and this contract carries four. A-002 gave the
-     * adapter its own `notConfigured` counter, so the shapes agree and there is
-     * nothing left to translate. Two accountings of one pass is the thing that
-     * can disagree; one cannot.
-     */
+    // Returned as the adapter branded it. A second branding here would judge the same pass twice and could
+    // disagree with the first (it would not pass the adapter's `countedButProduced` for kept placeless
+    // meetings); the drop shapes already agree, so nothing needs translating.
     return legistarNormalizeWithDrops(raw, now ?? new Date(), clients);
   },
   };
@@ -116,27 +74,13 @@ export const CAPABILITIES: Array<{
   },
   {
     /**
-     * **THE SAME PRODUCT, AN INDEPENDENT ROUTE.** (2026-08-28.)
+     * The same product, an independent route: `legistar` reads `webapi.legistar.com`, which returns only
+     * sittings whose InSite detail page is publicly viewable; this child reads the tenant's own
+     * `Calendar.aspx` grid, which returns all of them. The meeting doors select each route's body membership,
+     * and each route/body pair owns its own contract, pointer and clock.
      *
-     * `legistar` above reads `webapi.legistar.com`, which returns only the
-     * sittings whose InSite meeting-detail page is publicly viewable. This
-     * child reads the tenant's own `Calendar.aspx` grid, which returns all of
-     * them. Measured the same day on one "Next Month" filter: Mesa 15 rows / 12
-     * not viewable / exactly the 3 viewable from the API, Phoenix 8 / 8 / 0,
-     * Pima 3 / 3 / 0.
-     *
-     * It is registered on the same `LEGISTAR` product type on purpose, but
-     * SOURCE_WIRING explicitly selects its body membership. Pima currently
-     * declares both independent routes; Mesa declares only InSite. Each
-     * selected route/body pair owns a different contract, pointer, and clock.
-     *
-     * **Registration order is load-bearing.** `collapseDuplicateSittings`
-     * breaks a tie in informativeness by keeping the row it saw first, and
-     * first is source-registration order. `legistar` sits above this entry so
-     * that when an explicitly dual-routed body publishes the same sitting on
-     * both routes, the WebAPI record wins the presentation-only duplicate
-     * collapse. This ordering never changes either route/body authority
-     * partition or its durable receipt.
+     * Registration order is load-bearing: `collapseDuplicateSittings` keeps the first-seen row on a tie, so
+     * `legistar` sits above this entry and the WebAPI record wins the presentation-only collapse.
      */
     name: "legistar-insite",
     types: ["LEGISTAR"],
@@ -196,11 +140,8 @@ export const CAPABILITIES: Array<{
       makeSchedulePageSource(rows) as ReportingMeetingSource<unknown>,
   },
   {
-    // Pima Community College's own pages — the route that replaced its
-    // Diligent tenant (2026-09-23), and carries every sitting the tenant did.
-    // Reads and records each host's robots.txt before every run, which blocks
-    // nothing since the owner decision of 2026-09-25; see
-    // lib/sources/permission-gate.ts.
+    // A college's own pages. Reads and records each host's robots.txt before every run, which blocks nothing;
+    // see lib/sources/permission-gate.ts.
     name: "pima-edu",
     types: ["PIMA_EDU"],
     make: (rows) => makePimaEduSource(rows) as ReportingMeetingSource<unknown>,
@@ -238,8 +179,8 @@ export const CAPABILITIES: Array<{
 ];
 
 /**
- * The built-in adapters, then the feed kinds an engineer built and installed for this pass (DB-50). Built-in names
- * come first and can never be taken; with no feed kind installed this is `CAPABILITIES` exactly.
+ * The built-in adapters, then the feed kinds an engineer built and installed for this pass. Built-in
+ * names come first and can never be taken; with no feed kind installed this is `CAPABILITIES` exactly.
  */
 export function allCapabilities(): typeof CAPABILITIES {
   const feeds = installedFeedKinds();
@@ -273,21 +214,9 @@ export function wiringForSourceName(name: string): BodySourceWiring[] {
  * it does not invent them.
  */
 /**
- * The per-source/body budget a standing-runner child gets (F22, 2026-08-20).
- *
- * `CompositeSource` defaults to 20s, which was written for an interactive
- * diagnostic. A standing acquisition has nobody waiting, and on 2026-08-20
- * that borrowed default walled civicplus while its polite serial requests
- * were still making progress.
- *
- * The historical aggregate writer amplified that timeout across unrelated
- * sources. The permanent runner instead gives each exact route/body child
- * this budget and records only that partition's outcome.
- *
- * This changes no request rate and no politeness: adapters still serialize,
- * still identify themselves, still honour `Retry-After`. It only stops the
- * batch job from abandoning a source the reader's own timeout was written
- * for.
+ * The per-source/body budget a standing-runner child gets. The composite's 20s default was written for
+ * interactive diagnostics; a standing acquisition has nobody waiting. This changes no request rate or
+ * politeness.
  */
 export const STANDING_PARTITION_ACQUISITION_TIMEOUT_MS = 120_000;
 
@@ -323,7 +252,7 @@ export function buildCompositeSource(
     /**
      * A derived meeting family's member rows (C16), read from the promoted meeting-source wiring by the family's
      * own child and authorized at its promotion door. Exclusive of `meetingPartitions`: a family never reads a
-     * SOURCE_WIRING row, and a SOURCE_WIRING partition never reads a derived one.
+     * hand-wired door, and a hand-wired door's partition never reads a derived one.
      */
     derivedRows?: readonly BodySourceWiring[];
     /** Already held official pages establish external calendar-host authority. */

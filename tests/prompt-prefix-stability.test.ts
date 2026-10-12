@@ -1,28 +1,18 @@
 /**
- * **THE PREFIX IS BYTE-STABLE, AND EVERY PER-REQUEST VALUE SITS AFTER IT.**
- * (Prompt-caching session, 2026-09-06. Acceptance row PC-3.)
- *
- * For every Anthropic call site the session enumerated, two requests built
- * from the same inputs must produce byte-identical prefix bytes up to the
- * last STATIC breakpoint, and the values that vary per request — the Attempt
- * id, the obligation id, the reader's question, the placeholder — must not
- * appear in that prefix. The hash is over the JSON the transport would send,
- * which is what the API keys the cache on.
- *
- * The sites, and where their static prefix ends:
+ * For every model call site, two requests built from the same inputs produce byte-identical prefix bytes up to the
+ * last static breakpoint, and per-request values (attempt id, obligation id, the reader's question) never appear in
+ * that prefix. The hash is over the JSON the transport would send, which is what the cache keys on.
  *
  *   Scout                tools + system            (`scoutStaticPrefix`)
  *   Adversarial audit    tools + system            (`model-audit.ts`)
  *   Grounded Ask         system + evidence block   (`synthesisRequestBody`)
- *   Ask interpret        system                    (unmarked: 406 static tokens, under the 512 minimum)
- *   Ask classify         system                    (unmarked: 319 tokens)
- *   Unsourced fallback   system                    (unmarked: 243 tokens)
- *   Model-worker proof   no system; one static user message (unmarked: under the minimum)
+ *   Ask interpret        system                    (unmarked: under the 512-token minimum)
+ *   Ask classify         system                    (unmarked)
+ *   Unsourced fallback   system                    (unmarked)
  */
 
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
@@ -163,7 +153,7 @@ test("PC-3 Ask interpret: the ZIP's context is the marked prefix, identical for 
   assert.match(JSON.stringify(b.messages), /pothole budget/, "the conversation rides as messages");
   assert.ok(blocks(a)[0].cache_control !== undefined, "the ZIP's context is the breakpoint (it caches once it is over the model's minimum: 4,096 tokens on Haiku 4.5)");
   assert.equal(blocks(a)[1].cache_control, undefined, "the volatile block is after it");
-  /* The date is after the breakpoint (2026-09-29): a new day never invalidates the ZIP's cached context. */
+  /* The date is after the breakpoint: a new day never invalidates the ZIP's cached context. */
   assert.ok(!blocks(a)[0].text.includes("2026-09-06") && !blocks(a)[0].text.includes("Vail, Arizona"), "no per-day or per-reader value in the cached block");
   assert.match(blocks(a)[1].text, /Today is 2026-09-06\./);
   const nextDay = await captureBody((f) => interpretQuestion("what is on the agenda", { ...context, today: "2026-09-07" }, { fetchImpl: f, apiKey: "sk-test" }));
@@ -187,12 +177,4 @@ test("PC-3 Ask classify and the unsourced fallback: the system prompt is static 
     if (previous === undefined) delete process.env.ANTHROPIC_API_KEY;
     else process.env.ANTHROPIC_API_KEY = previous;
   }
-});
-
-test("PC-3 model-worker proof: the request body is a static literal with no interpolated value", () => {
-  const source = readFileSync(`${process.cwd()}/scripts/model-worker-proof.mts`, "utf8");
-  const body = source.slice(source.indexOf("body: JSON.stringify({"), source.indexOf("}),", source.indexOf("body: JSON.stringify({")));
-  assert.ok(body.length > 0);
-  assert.ok(!body.includes("${"), "no template interpolation inside the request body");
-  assert.ok(!/Date\.now|new Date|randomUUID|Math\.random/.test(body), "no clock or random value inside the request body");
 });

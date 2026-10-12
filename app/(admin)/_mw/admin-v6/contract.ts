@@ -1,49 +1,24 @@
 /**
- * **THE ADMIN v6 READ/ACTION CONTRACT — HOW A PAGE LEARNS A BACKEND IS READY.**
- * (Proposed to Codex 2026-09-28; see ACCEPTANCE.md "Contract" and the shared
- * handoff note. Codex owns the backend side and may move these types under
- * lib/control-plane; the shapes must stay compatible.)
- *
- * No endpoint is guessed. The deployed live pulse (`GET /api/admin/live`,
- * already polled by every Admin page) gains one optional field, `v6`, that
- * ANNOUNCES what the backend can serve:
+ * The live pulse (`GET /api/admin/live`) carries an optional `v6` field announcing what the backend serves:
  *
  * ```
  *   pulse.v6 = {
  *     version: 1,
- *     sections: { stuck: { contract: "admin-v6/stuck@1", href: "/api/admin/…", revision: "…" }, … },
- *     actions:  { recheck: { contract: "admin-v6/action/recheck@1", type: "<gateway action type>" }, … },
- *     receiptLookup: { contract: "admin-v6/receipt@1", href: "/api/admin/…" } | undefined,
+ *     sections: { <name>: { contract: "admin-v6/<name>@1", href, revision } },
+ *     actions:  { <kind>: { contract: "admin-v6/action/<kind>@1", type: "<gateway action type>" } },
+ *     receiptLookup?: { contract: "admin-v6/receipt@1", href },
  *   }
  * ```
  *
- * A section the pulse does not announce is "waiting for the backend": a real,
- * recoverable state of the connection. The moment a pulse announces it, every
- * open page fetches it for its current scope and replaces the waiting state;
- * whenever its `revision` moves, the page fetches again. Nothing reloads and no
- * one flips a switch. An action becomes usable only when announced, and being
- * announced never sends anything.
+ * An unannounced section is "waiting for the backend". A page fetches a section when it is announced and again
+ * whenever its `revision` moves. Being announced never sends anything.
  *
- * Section response (`GET <href>?scope=<place key>`, JSON, same session guard):
- *
- * ```
- *   { contract: "admin-v6/<section>@1", scope: "<place key>", revision: "…",
- *     asOf: "<ISO>", data: <the section's type in model.ts>, missingParts?: string[] }
- * ```
- *
- * Action send: the existing `POST /api/admin/action` with the announced `type`,
- * `subject` = the control's target, the page's idempotency key, `stateVersion`
- * (the latest pulse revision when the announcement says the action requires
- * one, otherwise null), and that action's exact input keys (`actionInput`).
- *
- * Receipt lookup: `GET <href>?type=<gateway type>&key=<idempotency key>` →
- * `{ contract: "admin-v6/receipt@1", receipt: ActionReceipt | null }`. The
- * durable identity is `<type>:<key>` (Codex); it never resubmits.
- *
- * Paged sections: `GET <href>?scope=…&limit=…[&cursor=…][&q=…][&<filter>=…]`;
- * the envelope adds `page: { total: number | null, nextCursor, prevCursor }`.
- *
- * PURE.
+ * Section: `GET <href>?scope=<place key>` → `{ contract, scope, revision, asOf, data, missingParts? }`.
+ * Action: `POST /api/admin/action` with the announced `type`, `subject` = the control's target, the idempotency
+ * key, `stateVersion` (the latest pulse revision when required, otherwise null) and `actionInput`'s exact keys.
+ * Receipt: `GET <href>?type=<gateway type>&key=<idempotency key>` → `{ contract, receipt | null }`; never resubmits.
+ * Paged: `GET <href>?scope=…&limit=…[&cursor=…][&q=…][&<filter>=…]`; the envelope adds
+ * `page: { total: number | null, nextCursor, prevCursor }`.
  */
 import type { ActionKind, AdminV6Data } from "./model.ts";
 import { settingValueFromInput } from "./actions.ts";
@@ -71,7 +46,6 @@ export interface SectionAnnouncement {
 export interface ActionAnnouncement {
   readonly contract: string;
   readonly type: string;
-  /** The registry action quotes the rendered state; the page sends the latest pulse revision. */
   readonly requiresStateVersion: boolean;
 }
 export interface V6Capabilities {
@@ -98,13 +72,11 @@ export interface SectionPage {
   readonly prevCursor: string | null;
 }
 
-/** Sections read one window at a time; the page never fetches their whole population. */
 export const PAGED_SECTIONS: readonly SectionId[] = ["workRows", "history", "checklist", "fixes"];
 export const PAGE_LIMIT = 50;
 
 const SAME_ORIGIN_PATH = /^\/api\/admin\/[A-Za-z0-9/_\-.]+$/;
 
-/** Read the announcement off a pulse, defensively. Anything malformed is ignored, not trusted. */
 export function capabilitiesOf(pulse: unknown): V6Capabilities | null {
   if (!pulse || typeof pulse !== "object") return null;
   const raw = (pulse as { v6?: unknown }).v6;
@@ -132,13 +104,10 @@ export function capabilitiesOf(pulse: unknown): V6Capabilities | null {
   return { version: v.version, sections, actions, receiptLookup };
 }
 
-/** Is this announced action one this page knows how to send? */
 export function supportedAction(caps: V6Capabilities | null, kind: ActionKind): ActionAnnouncement | null {
   const a = caps?.actions[kind];
   return a && a.contract === actionContract(kind) ? a : null;
 }
-
-/* ------------------------------------------------ exact per-action inputs */
 
 export interface ActionInputSource {
   readonly target: string;
@@ -147,29 +116,27 @@ export interface ActionInputSource {
   readonly words: string;
   readonly amount: string;
   readonly selected: readonly string[];
-  readonly fields?: Readonly<Record<string,string>>;
-  readonly startAt?: string;
   readonly payload?: Readonly<Record<string, string>>;
 }
 
 /**
- * The exact input keys each `admin-v6/action/<kind>@1` contract sends (Codex,
- * 20:18 UTC: "the real gateway validates each registry action's exact input
- * keys"; a generic payload is never sent). The gateway `subject` is always the
- * control's target. A version change here is a new contract version.
+ * The exact input keys each `admin-v6/action/<kind>@1` contract sends; the gateway validates them exactly.
+ * The gateway `subject` is always the control's target. A change here is a new contract version.
  */
 export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Record<string, unknown>> {
   const limit = () => (s.amount.trim() === "" ? null : Number(s.amount));
   switch (kind) {
     case "decide":
-      return { decisionId: s.target, cardVersion:s.payload?.version, option: s.option, words: s.words.trim() || null, fields:s.fields, startAt:s.startAt };
+      return { decisionId: s.target, option: s.option, words: s.words.trim() || null };
     case "hunt-start": {
-      // A single hunt starts from one ZIP place (`geo:az.zcta.85635`). Anything wider starts from the many-hunts panel.
+      // A single hunt starts from one ZIP place. Anything wider starts from the many-hunts panel.
       const zip = /^geo:([a-z]{2})\.zcta\.(\d{5})$/.exec(s.target);
       return { items: zip ? [{ zip: zip[2], stateAbbr: zip[1].toUpperCase(), budgetUsd: limit() }] : [], priority: 1, huntBudget: true };
     }
     case "hunt-start-many":
       return { items: JSON.parse(s.payload?.items ?? "[]") as unknown, priority: Number(s.payload?.priority ?? 1), note: s.payload?.note ?? null, huntBudget: true };
+    case "leads-send":
+      return { rows: JSON.parse(s.payload?.rows ?? "[]") as unknown };
     case "hunt-limit":
       return { placeKey: s.target, change: "set", budgetUsd: limit() };
     case "hunt-pause":

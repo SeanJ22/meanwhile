@@ -28,69 +28,30 @@ import type {
 } from "../types.ts";
 
 /**
- * **A BODY'S OWN AGENDAS-AND-MINUTES PAGE, READ AS ITS LIST OF SITTINGS.**
- * (2026-09-25, first body: the City of Holbrook, AZ, City Council.)
+ * A body's own agendas-and-minutes page, read as its list of sittings. The shape: one page per year, one
+ * link per document, each labelled with its sitting and date ("Regular Meeting 9-9-2026", "Work Session
+ * 03-25-26"), grouped under an "Agendas" heading and a "Minutes" heading. No vendor is in the path.
  *
- * The shape: a government's own site publishes one page per year, and on it
- * one link per document, each labelled with the sitting it belongs to and
- * that sitting's date — "Regular Meeting 9-9-2026", "Work Session 03-25-26",
- * "Special Meeting 4-22-2026" — grouped under an "Agendas" heading and a
- * "Minutes" heading. Holbrook's pages
- * (`holbrookaz.gov/government/council-agenda/<year>-agendas-minutes/`) are the
- * first instance, and a great many small towns publish exactly this way. No
- * vendor is in the path; the documents themselves sit wherever the town keeps
- * them (Holbrook links Google Drive).
+ * What becomes a sitting: a link whose label is `<kind> <M-D-YYYY | M-D-YY>` with a kind the wiring row
+ * names (`sittingKinds`). One sitting per kind per date. Its agenda is the link under the agendas heading
+ * (the sitting's `agendaUrl`); its minutes are the link under the minutes heading. A dated link of
+ * another kind is a document of a sitting, linked when that date holds exactly one sitting and counted
+ * as unattached otherwise.
  *
- * ## What becomes a sitting
+ * What is never invented:
+ * - No time: the page states none, so every sitting ships `startPrecision: "DAY"`. A time printed in the
+ *   label itself would be read.
+ * - No place: the sitting carries no location and no venue gap (our own "place not recorded" line).
+ * - No approval state unless the city's own label or heading says draft or approved.
+ * - No cancellation but the label's own word.
  *
- * A link whose label is `<kind> <M-D-YYYY | M-D-YY>` and whose kind is one the
- * wiring row names as a sitting of the body (`sittingKinds`). One sitting per
- * kind per date — Holbrook held a Special Meeting AND a Work Session on 22
- * April 2026, and they are two sittings. Its agenda is the link under the
- * agendas heading and is cited as the sitting's `agendaUrl`; its minutes are
- * the link under the minutes heading, published beside it as the city posted
- * them.
+ * A sitting appears when the publisher posts its agenda, so "no upcoming sitting" between postings is
+ * the publisher's horizon.
  *
- * A dated link of another kind under either heading ("Statement of Legal
- * Action 9-9-2026") is a document OF a sitting, never a sitting: it is linked
- * on that date's sitting when the date holds exactly one, and counted as
- * unattached otherwise. Nothing is guessed.
- *
- * ## What is never invented
- *
- * - **No time.** The page states none, so every sitting ships
- *   `startPrecision: "DAY"`: its local midnight is an ordering artifact, never
- *   a claim (M59). A time printed in the label itself would be read; Holbrook
- *   prints none. Holbrook states its sittings' hour and room only inside each
- *   agenda PDF, on Google Drive: its viewer page (`/file/…/view`, permitted by
- *   drive.google.com's robots.txt) is a script-only shell with no agenda text,
- *   and the byte route (`/uc`) is disallowed, so neither is read here. The
- *   agenda link is carried for the reader to open.
- * - **No place.** The page names none; the sitting carries no location and no
- *   venue gap, which is our own "place not recorded" line, never "online".
- * - **No approval state.** Minutes are labelled draft or approved only when
- *   the city's own label or heading says so; otherwise they are labelled as
- *   not marked either way.
- * - **No cancellation** but the label's own word.
- *
- * ## The publisher's horizon
- *
- * A sitting appears here when the city posts its agenda (Arizona's open
- * meeting law requires the notice 24 hours ahead). This page never lists
- * sittings further out than that, so "no upcoming sitting" between postings
- * is the publisher's horizon, not an absence of meetings.
- *
- * ## Year pages
- *
- * The row names the page pattern (`pageTemplate`, with `{year}`), and every
- * year the serving window touches is read. The current year's page is
- * required: its failure is the row's failure, reported as such. Another
- * year's page answering 404 is the city not having posted that year yet and
- * is named, not failed; any other failure there is a PARTIAL read — the
- * archive or the upcoming half — and is reported as one.
- *
- * Every page is read behind the robots.txt gate (`lib/sources/permission-gate.ts`),
- * on the row's own official host only.
+ * Year pages: the row names the page pattern (`pageTemplate`, with `{year}`), and every year the serving
+ * window touches is read. The current year's page is required. Another year's 404 is named, not failed;
+ * any other failure there is a PARTIAL read. Every page is read behind the robots.txt gate
+ * (`lib/sources/permission-gate.ts`), on the row's own official host only.
  */
 
 export const SOURCE_NAME = "document-listing";

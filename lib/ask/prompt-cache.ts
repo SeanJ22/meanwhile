@@ -1,109 +1,7 @@
-/**
- * **PROMPT CACHING FOR THE ASK SYNTHESIS RUNG — the breakpoint, the TTL, and
- * the per-caller accounting.** (Session C, lane W6, 2026-08-31.)
- *
- * ## What is cached, and why the boundary is where it is
- *
- * Prompt caching is a PREFIX MATCH. The API keys on the exact bytes of
- * `model` + `system` + every message content block up to and including the one
- * carrying `cache_control`. One byte earlier in that span differs and every
- * breakpoint at or after it misses.
- *
- * The synthesis request has exactly one stable span and one volatile tail:
- *
- * ```
- *   STABLE    the system rules (constitutional prohibitions, the length
- *             contract, today's date) + the ZIP CIVIC CONTEXT — the bound
- *             subject, the retrieved records, the named gaps, the denominators
- *   VOLATILE  the reader's QUESTION, and the intent and timeframe read off it
- * ```
- *
- * The question used to sit at byte 0 of the message payload, ahead of the
- * records. That ordering makes the prefix unstable by construction: two
- * questions about the same government share nothing the API can key on, and
- * every call re-processes the same agenda text at full price. Moving the
- * question to its own trailing block — after the breakpoint — is the entire
- * mechanism. Nothing is added to the prompt and nothing is removed from it;
- * the same fields are partitioned differently.
- *
- * ## Why the breakpoint is NOT on the system block
- *
- * Measured, not assumed, and measured at Anthropic's own `count_tokens`
- * endpoint rather than estimated from characters: `synthesisPrompt()` renders
- * 1,503 characters = **471 tokens** (re-counted 2026-09-01 against
- * `claude-sonnet-5` AND `claude-opus-5`, which returned the SAME count — the
- * two models share a tokenizer for this text. The earlier "≈ 418" was a
- * chars/4 estimate and was 53 tokens low; the earlier "478" was the same
- * string counted without subtracting the empty-request baseline).
- *
- * A breakpoint on a prefix below the model's minimum does not error — it
- * silently never caches, reporting `cache_creation_input_tokens: 0` forever. A
- * marker that can never fire is worse than no marker, because it reads as a
- * guarantee to the next session. So there is ONE breakpoint, at the end of the
- * civic context, and the prefix it covers is system + context.
- *
- * ## THE MINIMUM MOVED WHEN THE MODEL DID, AND IT COSTS US THE SMALL PACKS
- *
- * **(ITEM K, 2026-09-01. Measured by request, not read off a table.)**
- *
- * The minimum cacheable prefix is a property of the MODEL:
- *
- * ```
- *   claude-opus-5     512 tokens
- *   claude-sonnet-5  1024 tokens
- * ```
- *
- * The sentence that used to end this section — *which clears the minimum for
- * any pack carrying real records* — was true of Opus 5 and is **FALSE of
- * Sonnet 5**. Sent twice with the production marker, measured on
- * `cache_creation_input_tokens` and `cache_read_input_tokens`:
- *
- * ```
- *   pack            prefix    opus-5            sonnet-5
- *   1 short record    979t    write 979 / read 979   write 0 / read 0   <- SILENT
- *   1 long record    1029t    write 1029/ read 1029  write 1029/ read 1029
- *   12 records       2734t    write 2734/ read 2734  write 2734/ read 2734
- * ```
- *
- * So on Sonnet 5 the breakpoint fires for ordinary packs and does NOT fire for
- * the smallest ones, with roughly fifty tokens between the two cases. This is
- * a COST fact and not a correctness one — an uncached request returns the same
- * answer — and it is recorded here rather than quietly absorbed because the
- * hit rate this module reports will now legitimately sit below 100% for a
- * reason that is not a defect in prompt assembly. A session reading a
- * collapsed rate without this paragraph would go looking for a bug that is a
- * documented property of the model.
- *
- * (`synthesizeAnswer` refuses an empty pack before it ever reaches the
- * network, so the "pack too small to cache" case is bounded below by a
- * one-record pack rather than by an empty one.)
- *
- * ## The honest limit of the win
- *
- * The records in a pack are RETRIEVED PER QUESTION. So the prefix is stable
- * across questions for one ZIP exactly as far as retrieval returns the same
- * evidence set — which it does for a repeated question, a rephrasing, a retry,
- * and successive questions about one bound subject, and does NOT for two
- * questions that bind different subjects in the same ZIP. This is a real bound
- * and it is stated rather than papered over: the cache is not claimed to make
- * every second question in a ZIP free.
- */
-
-/* ── the TTL ─────────────────────────────────────────────────────────────── */
-
-/**
- * **THE TTL CHOICE, AND THE ARGUMENT FOR IT.**
- *
- * Five minutes — the default `ephemeral` marker, sent bare.
- */
 export const SYNTHESIS_CACHE_TTL = {
   ttl: "5m",
   milliseconds: 5 * 60 * 1000,
-  /**
-   * The wire form. A 5-minute TTL is the DEFAULT and is expressed by omitting
-   * `ttl` entirely; `{"ttl":"5m"}` is not a documented wire value and writing
-   * one would be a guess dressed as precision.
-   */
+  // A 5-minute TTL is the API default and is sent by omitting `ttl`.
   cacheControl: { type: "ephemeral" } as const,
   why:
     "Five minutes, for three reasons that are about THIS traffic rather than about caching in " +
@@ -121,22 +19,7 @@ export const SYNTHESIS_CACHE_TTL = {
     "gaps exceed five minutes — that is the one condition under which the 1-hour TTL wins.",
 } as const;
 
-/* ── the caller key ──────────────────────────────────────────────────────── */
-
-/**
- * **THE CALLER KEY NAMES A DEPLOYMENT, NEVER A READER.**
- *
- * The vocabulary is CLOSED and every member is a plain deployment label. This
- * is the one field in the synthesis path that could carry an identifier out to
- * a third party, and a free-form key is how a session id or a resolved address
- * would eventually get into one. `tests/ask-prompt-cache.test.ts` asserts the
- * closure.
- *
- * The keys are reported SEPARATELY and are never pooled into a single rate: a
- * local development run and production traffic have different prefixes,
- * different arrival rates and different cache behaviour, and one blended
- * number describes neither.
- */
+/** A closed vocabulary: a caller key names a deployment, never a reader, and keys are never pooled. */
 export const ASK_CALLER_KEYS = ["prod-ask", "local-dev", "synthetic-run"] as const;
 
 export type AskCallerKey = (typeof ASK_CALLER_KEYS)[number];
@@ -145,29 +28,7 @@ export function isAskCallerKey(value: unknown): value is AskCallerKey {
   return typeof value === "string" && (ASK_CALLER_KEYS as readonly string[]).includes(value);
 }
 
-/**
- * Which caller this is.
- *
- * **`NODE_ENV` ALONE IS THE WRONG DISCRIMINATOR, AND GETTING THIS WRONG WOULD
- * HAVE DEFEATED THE WHOLE MEASUREMENT.** `pnpm start` sets
- * `NODE_ENV=production`, and RULING 125 says every walk and check runs against
- * a LOCAL PRODUCTION BUILD — so an env-only rule labels the reader suite,
- * `walk:all` and the cache probe `prod-ask` and pools harness traffic with real
- * readers under one key. The harness asks the same questions over and over and
- * would post a spectacular hit rate on top of whatever production was actually
- * doing.
- *
- * So the first question is not "which environment" but "is this a declared
- * automated run", which the product already answers for the sold search log
- * via `lib/db/run-marker.ts`. A synthetic run is its own caller key on every
- * deployment, because a synthetic run against production must not be pooled
- * with production readers either.
- *
- * An unrecognised `WTP_ASK_CALLER` falls back rather than being trusted
- * through: an unknown value is not a new caller key, it is a typo or an
- * injection, and inventing a key for it would put an unvetted string on the
- * wire.
- */
+/** A declared synthetic run keeps its own key on every deployment, so `NODE_ENV` alone never decides it. */
 export function askCallerKey(
   env: NodeJS.ProcessEnv = process.env,
   runClass: "ORGANIC" | "SYNTHETIC" | "UNKNOWN" = "ORGANIC",
@@ -178,16 +39,8 @@ export function askCallerKey(
   return env.NODE_ENV === "production" ? "prod-ask" : "local-dev";
 }
 
-/* ── usage ───────────────────────────────────────────────────────────────── */
-
-/**
- * What the API reported about cache activity on one call.
- *
- * `inputTokens` is the UNCACHED REMAINDER only — the total prompt is the sum of
- * all three. A report that quotes `inputTokens` alone as "the prompt size"
- * after caching is switched on is reading a different number than it thinks.
- */
 export interface CacheUsage {
+  /** The uncached remainder only; the whole prompt is the sum of all three counts. */
   readonly inputTokens: number;
   readonly cacheCreationInputTokens: number;
   readonly cacheReadInputTokens: number;
@@ -199,13 +52,6 @@ export const ZERO_CACHE_USAGE: CacheUsage = {
   cacheReadInputTokens: 0,
 };
 
-/**
- * Read the `usage` block off a Messages API response body.
- *
- * A missing field reads as zero MEASURED, never as an assumed hit. This is the
- * only ground truth that caching is working, so it is parsed defensively and
- * never inferred from the request we sent.
- */
 export function readCacheUsage(body: unknown): CacheUsage {
   const usage = (body as { usage?: Record<string, unknown> } | null)?.usage;
   if (!usage || typeof usage !== "object") return ZERO_CACHE_USAGE;
@@ -217,20 +63,16 @@ export function readCacheUsage(body: unknown): CacheUsage {
   };
 }
 
-/* ── the ledger ──────────────────────────────────────────────────────────── */
-
 export interface CallerCacheStats {
   readonly callerKey: AskCallerKey;
   readonly calls: number;
   readonly callsWithCacheRead: number;
-  /** Calls that read a cached prefix, over calls. Never pooled across keys. */
   readonly hitRate: number;
   readonly cacheReadInputTokens: number;
   readonly cacheCreationInputTokens: number;
   readonly uncachedInputTokens: number;
 }
 
-/** Per-caller-key totals. A plain record so it serialises into a run record. */
 export type CacheLedger = Readonly<Partial<Record<AskCallerKey, CallerCacheStats>>>;
 
 export function emptyCacheLedger(): CacheLedger {
@@ -270,59 +112,24 @@ export function recordCacheUsage(
   };
 }
 
-/**
- * The rates, one row per caller key that actually made a call.
- *
- * There is deliberately no total row. Pooling `prod-ask` with `local-dev`
- * produces a number that is true of no deployment, and a blended cache hit
- * rate is exactly the kind of plausible summary that hides a production
- * regression behind a warm local cache.
- */
 export function cacheHitRates(ledger: CacheLedger): CallerCacheStats[] {
   return ASK_CALLER_KEYS.map((key) => ledger[key]).filter(
     (stats): stats is CallerCacheStats => stats !== undefined,
   );
 }
 
-/* ── what the cache actually saved ───────────────────────────────────────── */
-
-/**
- * The published multipliers, named once. A five-minute cache WRITE bills 1.25x
- * the base input rate and a READ bills 0.1x, so **one later read more than
- * repays the write premium**: 1.25 + 0.1 = 1.35 against 2.0 for two uncached
- * passes. They are constants rather than literals sprinkled through a report,
- * because a saving computed from a remembered multiplier is a saving nobody
- * measured.
- */
 export const CACHE_WRITE_MULTIPLIER = 1.25;
 export const CACHE_READ_MULTIPLIER = 0.1;
 
 export interface CacheSavings {
   readonly callerKey: AskCallerKey;
-  /** What the input side of these calls actually billed. */
   readonly billedUsd: number;
-  /** What the same tokens would have billed with no cache at all. */
   readonly uncachedBaselineUsd: number;
   readonly savedUsd: number;
-  /** Saved over the baseline. Zero when nothing was cached; never negative. */
   readonly savedFraction: number;
-  /** Read + written, over the whole input side. How much of the prompt is reusable. */
   readonly cachedShareOfInput: number;
 }
 
-/**
- * What the cache saved on the INPUT side, for one caller key.
- *
- * **Input only, and that is stated rather than quietly assumed.** Output tokens
- * are unaffected by caching, so folding them in would dilute the figure with a
- * number the cache cannot move and make the saving look smaller than it is on
- * the thing it acts on.
- *
- * The baseline is the same tokens at the base rate — which is what they WOULD
- * have cost, because without a marker a cache-write token is an ordinary input
- * token. It is not a counterfactual about traffic; it is the same traffic
- * priced without the feature.
- */
 export function cacheSavings(
   stats: CallerCacheStats,
   inputUsdPerMillion: number,
@@ -348,19 +155,6 @@ export function cacheSavings(
   };
 }
 
-/**
- * One call, as one server-console line.
- *
- * Carries the caller key and three token counts and NOTHING ELSE — no
- * question, no subject, no division, no reader identifier of any kind. A log
- * line is the easiest place in a request path for a reader fact to escape into
- * a durable store nobody audits, so the fields here are fixed rather than
- * spread from the request.
- *
- * `read=0 write=0` on a call that reached the model is the signature worth
- * watching: it means the prefix broke upstream of the breakpoint, and the only
- * symptom otherwise is a larger bill.
- */
 export function cacheCallLine(callerKey: AskCallerKey, usage: CacheUsage): string {
   return (
     `ask:cache · ${callerKey} · read=${usage.cacheReadInputTokens} ` +
@@ -368,14 +162,6 @@ export function cacheCallLine(callerKey: AskCallerKey, usage: CacheUsage): strin
   );
 }
 
-/**
- * One line per caller key, for the server console.
- *
- * Cache activity is visible in two places and they answer different questions:
- * the Anthropic Console's usage view shows cache-read and cache-write tokens
- * for the workspace as a whole, and THIS shows them split by deployment, which
- * the Console cannot do because a caller key is our concept.
- */
 export function cacheReportLines(ledger: CacheLedger): string[] {
   const rates = cacheHitRates(ledger);
   if (rates.length === 0) return ["ask:cache · no calls recorded"];

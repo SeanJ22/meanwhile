@@ -1,5 +1,5 @@
 /**
- * **THE "IS IT LEARNING" VIEW STATES ONLY WHAT IS MEASURED.** A week with no
+ * The "is it learning" view states only what is measured. A week with no
  * record is a gap, never a zero; a question nothing measures is listed as
  * "not measured yet" with what it needs.
  */
@@ -56,7 +56,7 @@ const readings = (over: Partial<ScoreboardReadings> = {}): ScoreboardReadings =>
 
 test("the Scoreboard has one row for every number in the design, in order, and unread rows say so with no value", () => {
   const view = buildScoreboard(readings());
-  assert.equal(view.rows.length, 22);
+  assert.equal(view.rows.length, 23);
   assert.deepEqual(view.rows.map((r) => r.id).slice(0, 3), ["Orders", "Mission progress", "Checklist completeness"]);
   for (const r of view.rows) {
     assert.equal(r.value, null, `${r.id} shows — with nothing read`);
@@ -77,6 +77,7 @@ test("wired rows show a value with the counts behind it, and shares never round 
     shutDoors: { shut: 2, open: 40, setAside: 1, unreadable: 0 },
     returning: { days: 14, readerDays: 30, returningDays: 10 },
     doors: { walks: 6, given: 12, used: 5, since: "2026-09-25" },
+    factoryLearning: { secondCoverage: { pairs: 1, firstMs: 3600000, secondMs: 900000, ratio: 0.25 }, headStart: { solved: 5, measured: 12, share: 5/12 }, detectiveReuse: 2, factsByWeek: [] },
   }));
   const by = (id: string) => view.rows.find((r) => r.id === id)!;
   assert.equal(by("Orders").value, "5");
@@ -89,6 +90,7 @@ test("wired rows show a value with the counts behind it, and shares never round 
   assert.equal(by("Return visits").value, "33%");
   assert.equal(by("Head-start hit rate").value, "41%");
   assert.match(by("Head-start hit rate").counts!, /5 of 12/);
+  assert.equal(by("Second-time coverage").value, "25%");
 });
 
 test("freshness, delivery and readiness stay separate rows and groups, and a read that failed is not a zero", () => {
@@ -180,4 +182,26 @@ test("the sent places are the saved missions, newest first, each once, read with
   const out = await readScoreboardPlaces(config, CORE, { readOwed: async (key) => (key.endsWith("04003") ? read : await new Promise<never>(() => {})), readHistory: async () => [], budgetMs: 30 });
   assert.equal(out.places.length, 1);
   assert.equal(out.unread, 1, "the place that did not answer in time is counted as unread");
+});
+
+test("using handed doors alone does not claim targets solved from the Bank", () => {
+  const view = buildScoreboard(readings({ doors: { walks: 6, given: 12, used: 5, since: "2026-09-25" } }));
+  assert.equal(view.rows.find(r => r.id === "Head-start hit rate")!.value, null);
+});
+
+test("four direct learning measures replace the old weekly Scout panel when connected", () => {
+  const factory = { secondCoverage: { pairs: 1, firstMs: 3600000, secondMs: 900000, ratio: 0.25 },
+    headStart: { solved: 2, measured: 4, share: 0.5 }, detectiveReuse: 3,
+    factsByWeek: [{ week: "2026-10-05T00:00:00Z", facts: 24, observedHours: 12, perHour: 2 }] };
+  const view = v6LearningView(buildLearningTrends([], "2026-10-06T00:00:00Z"), null, undefined, factory);
+  assert.equal(view.trends.length, 0);
+  assert.deepEqual(view.readings.map(r => r.big), ["3", "50%", "25%", "2.00"]);
+});
+
+test("the replacement learning panel retains failed Bank writes and unknown counts", () => {
+  const factory = { secondCoverage: { pairs: 0, firstMs: 0, secondMs: 0, ratio: null }, headStart: { solved: 0, measured: 0, share: null }, detectiveReuse: null, factsByWeek: [] };
+  for (const count of [null, 0, 3]) {
+    const view = v6LearningView(buildLearningTrends([], "2026-10-06T00:00:00Z"), null, count, factory);
+    assert.equal(view.readings.find(r => r.bigNote === "Bank write errors")!.big, count === null ? "—" : String(count));
+  }
 });

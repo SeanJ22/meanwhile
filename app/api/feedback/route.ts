@@ -14,42 +14,15 @@ import {
 import { intakeWindows } from "@/lib/db/intake-windows";
 
 /**
- * POST /api/feedback — R40, 2026-08-17 (1A: in-app).
+ * POST /api/feedback. A submission never silently succeeds:
  *
- * The address that used to sit on three surfaces is gone; this is where a
- * reader reaches the author now, and nothing leaves the app to get there.
+ * - `204`: stored. The only response the form may thank anyone for.
+ * - `503` with `{ stored: false }`: no store configured.
+ * - `500` with `{ stored: false }`: the write was attempted and failed.
+ * - `400` / `413`: empty, oversized, or not one of our surfaces.
+ * - `403` / `429`: refused by the intake protections.
  *
- * ## The contract, and the one rule it exists to keep
- *
- * **A submission never silently succeeds into a void.** Every outcome is
- * distinguishable by the client:
- *
- * - `204` — stored. The only response the form may thank anyone for.
- * - `503` with `{ stored: false }` — accepted nowhere, because there is no
- *   store configured. Honest, and NOT a success.
- * - `500` with `{ stored: false }` — the write was attempted and failed.
- * - `400` / `413` — the message is empty, oversized, or the surface is not
- *   one of ours. Caller-shaped, told plainly.
- * - `403` / `429` — refused by the intake protections.
- *
- * There is deliberately no fire-and-forget path. A reaction tap may fail
- * quietly because the reader can see their own answer either way; a person
- * who has just typed two hundred words about a wrong meeting time cannot.
- *
- * ## The protections (the abuse policy's intent, proportionate)
- *
- * The adversary model that drives T08 — a campaign faking district signal —
- * does not reach here: feedback enters no aggregate and no export, so faking
- * it buys nothing except the author's reading time. The protections are
- * therefore the cheap ones plus one authoritative counter, and the counter
- * lives in the limiter's own `feedback-limiter:` digest space so this path
- * neither spends nor is spent by the reaction budget.
- *
- * The key the counter is keyed on (`wtp.feedback_key`) is minted by the
- * browser on its first submission, sent as an opaque random string, and
- * NEVER stored: the feedback row carries no key column at all, and the only
- * persisted trace is a limiter digest that expires on the limiter's own
- * 48-hour schedule. Disclosed on /transparency in this same commit.
+ * The counter key (`wtp.feedback_key`) is minted by the browser and never stored; the row has no key column.
  */
 
 export const runtime = "nodejs";
@@ -107,11 +80,8 @@ export async function POST(request: Request) {
     }
   }
   /*
-   * R41 (2026-08-17): the optional reply address. Absent, null and empty are
-   * all the ordinary case — the field is optional and blank submits, so none
-   * of them is an error. A value that IS present must be shaped like an
-   * address and within the cap; anything else is a 400 the reader can act on,
-   * never a silently dropped field. Validity checks are never behind a flag.
+   * The optional reply address: absent, null and empty are all ordinary. A present value must be shaped like
+   * an address and within the cap, or it is a 400.
    */
   if (
     submission.replyTo !== undefined &&
@@ -156,7 +126,7 @@ export async function POST(request: Request) {
   }
 
   // The IP is read for limiting and discarded — never stored, never logged,
-  // never in an error message (CLAUDE.md).
+  // never in an error message.
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
   const { perKey, perIp } = intakeWindows("feedback");
   if (!perKey.allow(`k:${submission.feedbackKey}`) || !perIp.allow(`ip:${ip}`)) {
@@ -205,7 +175,7 @@ export async function POST(request: Request) {
       recordId: submission.recordId as string | null | undefined,
       replyTo,
       suspectReason,
-      // C05: an automated run declares itself, so a walk's test submission is
+      // An automated run declares itself, so a walk's test submission is
       // never mistaken for a reader's report.
       marker: markerFromRequest(request),
     });

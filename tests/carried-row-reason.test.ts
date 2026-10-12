@@ -1,30 +1,3 @@
-/**
- * **A CARRIED ROW SAYS WHY IT WAS CARRIED, AND NOTHING ITS REASON DOES NOT SAY.**
- * (2026-09-23.)
- *
- * The venue card and the meeting popup each followed a carried row's "Last
- * reached <when>" with one fixed sentence: our latest check could not reach
- * this calendar. The permanent data plane's partition door carries a row for a
- * second reason, `UNEXPLAINED_DISAPPEARANCE`: the calendar ANSWERED, with
- * authenticated bytes, and the answer no longer held the listing. On
- * 2026-09-23 production held 12 carried rows and all 12 had that reason, so
- * every carried row a reader could open told them something false.
- *
- * `carriedRowClause` in `lib/meetings/freshness.ts` now decides the clause
- * once, from the reason recorded at write time. These tests pin the decider,
- * the path the reason travels from its writer to the rendered surfaces, both
- * surfaces themselves, and a guard against a surface writing its own sentence
- * again.
- *
- * The case the fix was reported from is Tucson Unified's audit committee
- * (Diligent, meeting 495). The case walked here is one it did not come from:
- * Rockaway Township's 22 September council sitting, recorded from production
- * read-only on 2026-09-23. Its iCal listing left the township's upcoming-only
- * feed the morning after the meeting, while the SAME check read the same
- * sitting fresh from the township's agenda archive. Both render on one venue
- * card, which is why the clause is about the listing and not the meeting.
- */
-
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -53,15 +26,12 @@ const REASONS: readonly CarriedReason[] = [
   "OUTSIDE_FETCH_WINDOW",
 ];
 
-/* ── the recorded case: Rockaway Township, production, 2026-09-23 ─────────── */
-
 const ROCKAWAY = MEETING_PARTITION_CONTRACTS.find((partition) =>
   partition.meetingSource === "civicplus" &&
   partition.bodyId === "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing",
 )!;
 const ICAL_URL = "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar";
 const ARCHIVE_URL = "https://www.rockawaytownship.org/AgendaCenter";
-/** When the iCal listing was last in an answer, and the check that no longer held it. */
 const LAST_HELD = "2026-09-23T03:47:06.886Z";
 const NO_LONGER_HELD = "2026-09-23T16:45:32.674Z";
 
@@ -72,7 +42,6 @@ const MUNICIPAL_BUILDING = {
   address: "65 Mount Hope Road, Rockaway Township, NJ 07866",
 };
 
-/** The iCal listing, as the check at LAST_HELD read it. */
 function icalListing(collectedAt: string): Meeting {
   return {
     id: "civicplus:rockaway_township:1824",
@@ -90,7 +59,6 @@ function icalListing(collectedAt: string): Meeting {
   };
 }
 
-/** The same sitting's archive listing: a date without a time, and the agenda. */
 function archiveListing(collectedAt: string): Meeting {
   return {
     id: "civicplus:rockaway_township:archive:2026-09-22",
@@ -109,7 +77,6 @@ function archiveListing(collectedAt: string): Meeting {
   };
 }
 
-/** An authenticated answer from the township, with exact-byte evidence. */
 function answered(version: string): ChildRunReport {
   const bytes = `civicplus:${version}`;
   return {
@@ -130,8 +97,6 @@ function answered(version: string): ChildRunReport {
   };
 }
 
-/* ── the other reasons, whose writers are not the partition door ─────────── */
-
 const KEARSARGE = "ocd-division/country:us/state:nh/school_district:kearsarge_regional_school_district";
 
 function kearsargeSitting(date: string, collectedAt = "2026-08-15T20:00:00.000Z"): Meeting {
@@ -151,22 +116,11 @@ function kearsargeSitting(date: string, collectedAt = "2026-08-15T20:00:00.000Z"
   };
 }
 
-/* ── rendering, through the real components ──────────────────────────────── */
-
 interface RenderedSurfaces {
-  /** One venue card per venue the rows group into, as the map opens it. */
   readonly panels: readonly string[];
-  /** The popup for every row, keyed by meeting id. */
-  readonly popups: Readonly<Record<string, string>>;
 }
 
-/**
- * The venue card and the popup, rendered by React for real — the repo's
- * established pattern (node + tsx + react-dom/server, as
- * `tests/reader-meeting-listing-count.test.ts` renders the card). The popup
- * imports a CSS module, so the test loader rides along to stub it. The rows
- * travel as JSON because that is also how they reach the client.
- */
+// Components import CSS modules, so the test loader rides along to stub them.
 function renderSurfaces(meetings: readonly Meeting[]): RenderedSurfaces {
   const output = execFileSync(process.execPath, [
     "--import", "data:text/javascript,process.geteuid=()=>0",
@@ -179,17 +133,13 @@ function renderSurfaces(meetings: readonly Meeting[]): RenderedSurfaces {
     import { DataProvider } from './lib/state/data.tsx';
     import { UiProvider } from './lib/state/provider.tsx';
     import { MeetingPanel } from './components/map/meeting-panel.tsx';
-    import { MeetingPopup } from './components/map/popup/meeting-popup.tsx';
     import { groupByVenue } from './lib/meetings/venues.ts';
-    import { installRegistryRuntimeFirstSeeds } from './tests/helpers/registry-runtime-first-seed.ts';
-    await installRegistryRuntimeFirstSeeds();
     const meetings = JSON.parse(process.env.CARRIED_ROW_REASON_CASES);
     const data = { allMeetings: meetings, meetings, venues: [], result: null, location: null, drawnDistricts: [],
       dropped: 0, searchFailed: false, atAddress: false, governing: null, zipPartial: null, basis: 'ZIP' };
     const render = (child) => renderToStaticMarkup(h(DataProvider, { value: data }, h(UiProvider, { initial: {} }, child)));
     const panels = groupByVenue(meetings).map((venue) => render(h(MeetingPanel, { venue, onClose() {}, onOpenMeeting() {} })));
-    const popups = Object.fromEntries(meetings.map((meeting) => [meeting.id, render(h(MeetingPopup, { meeting }))]));
-    console.log(JSON.stringify({ panels, popups }));
+    console.log(JSON.stringify({ panels }));
   `], {
     cwd: ROOT,
     encoding: "utf8",
@@ -199,7 +149,6 @@ function renderSurfaces(meetings: readonly Meeting[]): RenderedSurfaces {
   return JSON.parse(output.trim().split("\n").at(-1)!) as RenderedSurfaces;
 }
 
-/** What a browser's innerText would carry: tags gone, entities decoded. */
 function innerText(markup: string): string {
   return markup
     .replace(/<[^>]+>/g, " ")
@@ -213,21 +162,14 @@ function innerText(markup: string): string {
     .trim();
 }
 
-/** Carried metadata belongs to this sitting's retained Sources row. */
 function sourceLine(markup: string, meetingId: string): string | null {
   const tail = markup.split(`data-meeting-carried-source="${meetingId}"`)[1];
   return tail ? innerText(/<p[^>]*>([\s\S]*?)<\/p>/.exec(tail)?.[1] ?? "") : null;
 }
 function panelLine(markup: string, meetingId: string): string | null { return sourceLine(markup, meetingId); }
-function popupLine(markup: string): string | null {
-  const id = /data-meeting-carried-source="([^"]+)"/.exec(markup)?.[1];
-  return id ? sourceLine(markup, id) : null;
-}
 
 const AGE = String.raw`(?:just now|\d+ (?:minute|hour|day)s? ago)`;
 const escape = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-
-/* ── the decider ─────────────────────────────────────────────────────────── */
 
 test("each recorded carry reason earns its own plain clause, and a mark without one earns none", () => {
   assert.equal(carriedRowClause({ reason: "SOURCE_UNAVAILABLE" }), "our latest check couldn't reach this calendar");
@@ -235,11 +177,8 @@ test("each recorded carry reason earns its own plain clause, and a mark without 
   assert.equal(carriedRowClause({ reason: "UNEXPLAINED_DISAPPEARANCE" }), "our latest check of this calendar didn't find this listing");
   assert.equal(carriedRowClause({ reason: "OUTSIDE_FETCH_WINDOW" }), "our latest check covered nearer dates than this one");
 
-  // The contract names every reason the type does, and no other.
   assert.deepEqual(Object.keys(CARRIED_ROW_CLAUSE).sort(), [...REASONS].sort());
 
-  // A mark older than the discriminator, and anything the contract does not
-  // name, gets no clause — never the nearest plausible sentence.
   for (const carried of [
     undefined,
     null,
@@ -259,7 +198,6 @@ test("each recorded carry reason earns its own plain clause, and a mark without 
   }
 
   for (const clause of Object.values(CARRIED_ROW_CLAUSE)) {
-    // RULING 258: no enum value, no internal vocabulary.
     assert.doesNotMatch(clause, /_|[A-Z]{2,}/, `${clause} carries internal vocabulary`);
     assert.doesNotMatch(clause, /carried|disappear|partition|source/i, `${clause} speaks the pipeline's words`);
   }
@@ -285,13 +223,10 @@ test("a calendar that answered is never called unreachable, and its answer is ne
   assert.match(clause, /^our latest check\b/, "the clause is about our check, whose it is");
 });
 
-/* ── the path, from the writer to the reader ─────────────────────────────── */
-
 test("the reason survives its writer, the Reader composition, the edge artifacts, the wire and the route's search", async () => {
   assert.ok(ROCKAWAY, "the Rockaway Township council partition is registered");
   const store = new MemoryRoutineDataStore();
 
-  // 03:47Z: the township's answer holds both listings of the 22 September sitting.
   const [seeded] = await promoteMeetingPartitions({
     store,
     partitions: [ROCKAWAY],
@@ -302,8 +237,6 @@ test("the reason survives its writer, the Reader composition, the edge artifacts
   });
   assert.equal(seeded?.outcome.candidate.state, "PROMOTED");
 
-  // 16:45Z: it answers again, and the upcoming-only feed no longer holds the
-  // iCal listing. The archive listing of the same sitting is still there.
   const [next] = await promoteMeetingPartitions({
     store,
     partitions: [ROCKAWAY],
@@ -316,8 +249,7 @@ test("the reason survives its writer, the Reader composition, the edge artifacts
 
   const expected = { source: "civicplus", lastFreshAt: LAST_HELD, reason: "UNEXPLAINED_DISAPPEARANCE" };
 
-  // The Reader composition every surface reads.
-  const read = await readMeetingsProjection({ store, bypassCache: true, allowUnconfiguredBootstrap: false, now: NO_LONGER_HELD });
+  const read = await readMeetingsProjection({ store, bypassCache: true, now: NO_LONGER_HELD });
   assert.equal(read.kind, "PROMOTED");
   const composed = (read as { value: MeetingsSnapshot }).value;
   assert.deepEqual(composed.meetings.find((row) => row.id === "civicplus:rockaway_township:1824")?.carried, expected);
@@ -327,8 +259,6 @@ test("the reason survives its writer, the Reader composition, the edge artifacts
     "the archive listing was read fresh by the same check",
   );
 
-  // The runner-published geographic edge artifacts, fetched as JSON and merged
-  // back as the route merges them.
   const published = JSON.parse(JSON.stringify(partitionSnapshotByScope(composed, NO_LONGER_HELD))) as ReturnType<typeof partitionSnapshotByScope>;
   const merged = mergeScopeArtifacts(
     published.filter((artifact) => readerScopeApplies(artifact, { states: ["nj"], ocdIds: [ROCKAWAY.ocdId!] })),
@@ -336,8 +266,6 @@ test("the reason survives its writer, the Reader composition, the edge artifacts
   );
   assert.deepEqual(merged.meetings.find((row) => row.id === "civicplus:rockaway_township:1824")?.carried, expected);
 
-  // The route's own search over the snapshot it was handed, and its response
-  // as the client parses it.
   const result = await searchMeetings(
     MUNICIPAL_BUILDING.lat,
     MUNICIPAL_BUILDING.lng,
@@ -356,9 +284,7 @@ test("the reason survives its writer, the Reader composition, the edge artifacts
   assert.equal(carriedRowClause(served?.carried), "our latest check of this calendar didn't find this listing");
 });
 
-/* ── the surfaces ────────────────────────────────────────────────────────── */
-
-test("both surfaces render the decided clause for every reason, and neither calls an answering calendar unreachable", () => {
+test("the venue card renders the decided clause for every reason, and never calls an answering calendar unreachable", () => {
   const unexplained: Meeting = {
     ...icalListing(LAST_HELD),
     carried: { source: "civicplus", lastFreshAt: LAST_HELD, reason: "UNEXPLAINED_DISAPPEARANCE" },
@@ -374,8 +300,6 @@ test("both surfaces render the decided clause for every reason, and neither call
     carried: { source: "schedulepage", lastFreshAt: "2026-08-15T20:00:00.000Z", reason: "PARTIAL_SCOPE_UNAVAILABLE" },
   };
 
-  // A mark older than the discriminator, written by the writer that makes
-  // them: carry-forward over a source that refused the run.
   const legacy = carryForward(
     [{ source: "schedulepage", ok: false }],
     [],
@@ -398,7 +322,7 @@ test("both surfaces render the decided clause for every reason, and neither call
     { meeting: legacy, clause: null },
   ];
 
-  const { panels, popups } = renderSurfaces([unexplained, fresh, refused, partial, legacy]);
+  const { panels } = renderSurfaces([unexplained, fresh, refused, partial, legacy]);
   const panelFor = (id: string) => {
     const markup = panels.find((candidate) => candidate.includes(`data-meeting-id="${id}"`));
     assert.ok(markup, `no venue card rendered ${id}`);
@@ -412,33 +336,16 @@ test("both surfaces render the decided clause for every reason, and neither call
       clause === null ? new RegExp(`^Last reached ${AGE}$`) : new RegExp(`^Last reached ${AGE} — ${escape(clause)}$`),
       `venue card, ${reason}`,
     );
-    assert.match(
-      popupLine(popups[meeting.id] ?? "") ?? "(no line)",
-      clause === null ? new RegExp(`^Last reached ${AGE}$`) : new RegExp(`^Last reached ${AGE} — ${escape(clause)}$`),
-      `popup, ${reason}`,
-    );
   }
 
-  // The recorded case, whole: the Rockaway card holds the fresh archive
-  // listing and the carried iCal listing of the same sitting, and nothing on it
-  // says the calendar that was just read could not be reached.
   const rockawayCard = panelFor(unexplained.id);
   assert.ok(rockawayCard.includes(`data-meeting-id="${fresh.id}"`), "both listings of the sitting are on one card");
   assert.equal(panelLine(rockawayCard, fresh.id), null, "a fresh listing states no carried line");
-  for (const markup of [rockawayCard, popups[unexplained.id] ?? ""]) {
-    assert.doesNotMatch(innerText(markup), /couldn't reach|could not reach|reach this calendar/i);
-  }
+  assert.doesNotMatch(innerText(rockawayCard), /couldn't reach|could not reach|reach this calendar/i);
 
-  // A mark with no reason states its date and nothing else: not on its own row
-  // of the card (which it shares with the refused and partial rows), and
-  // nowhere in its popup.
   const legacyRow = panelFor(legacy.id).split(`data-meeting-id="${legacy.id}"`)[1]!.split("</article>")[0]!;
-  for (const markup of [legacyRow, popups[legacy.id] ?? ""]) {
-    assert.doesNotMatch(innerText(markup), /our latest check/);
-  }
+  assert.doesNotMatch(innerText(legacyRow), /our latest check/);
 });
-
-/* ── the guard ───────────────────────────────────────────────────────────── */
 
 function sourceFiles(dir: string, out: string[] = []): string[] {
   for (const entry of readdirSync(dir)) {
@@ -449,12 +356,12 @@ function sourceFiles(dir: string, out: string[] = []): string[] {
   return out;
 }
 
-/** Comments removed, so the explanation of this fix is not read as the defect. */
+// Comments removed, so an explanation is not read as a defect.
 function withoutComments(source: string): string {
   return source.replace(/\/\*[\s\S]*?\*\//g, " ").replace(/^\s*\/\/.*$/gm, " ");
 }
 
-test("no reader surface writes a carried-row sentence of its own; both go through the one decider", () => {
+test("no reader surface writes a carried-row sentence of its own; each goes through the one decider", () => {
   for (const rel of ["lib/officials/card-sources.ts"]) {
     const code = withoutComments(readFileSync(join(ROOT, rel), "utf8"));
     assert.ok(

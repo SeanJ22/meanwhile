@@ -9,23 +9,13 @@ export const PROVISION_KIND_LABEL: Readonly<Record<ProvisionKind, string>> = {
   START: "When it starts",
 };
 
+/** `id` is `<contestId>#<slug>` and is never renumbered: a changed id orphans every reaction against it. */
 export interface MeasureProvision {
-  /**
-   * The reaction target key, and the reason this file exists at all.
-   *
-   * Shaped `<contestId>#<slug>` so a reaction row names the measure and the
-   * provision in one column, and so a provision that is later re-worded keeps
-   * its identity. NEVER renumber one: a changed id silently orphans every
-   * reaction already collected against it.
-   */
   id: string;
   contestId: string;
   kind: ProvisionKind;
-  /** A short plain-language name for the provision. The 15-year-old test. */
   label: string;
-  /** What this provision would do. Plain language, from the cited analysis. */
   what: string;
-  /** The official analysis this was written from — the citation. */
   citesUrl: string;
   writtenAt: string;
 }
@@ -37,7 +27,6 @@ function provisions(records: readonly MeasureRecord[]): MeasureProvision[] {
   })));
 }
 
-/** Immutable seed compatibility; runtime consumers read their loaded ballot records. */
 export const MEASURE_PROVISIONS: MeasureProvision[] = provisions(MEASURE_RECORD_FIRST_SEED).map(part => ({
   ...part,
   get citesUrl(): string {

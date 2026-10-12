@@ -2,14 +2,31 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { readFundingSnapshot } from "../lib/funding/snapshot.ts";
-import { readStateMoneyProjections, refreshStateMoneyProjectionFromPromoted, stateMoneyReadState } from "../lib/funding/state-snapshot.ts";
+import { refreshStateMoneyProjectionFromPromoted, stateMoneyReadState } from "../lib/funding/state-snapshot.ts";
 import { readAzBallotProjection } from "../lib/civic-data/manual-read-models.ts";
 import { campaignMoneyEvidenceFor } from "../lib/ask/campaign-money.ts";
 import { lineupForContest } from "../lib/ballot/general-lineup.ts";
 import { analysisForContest } from "../lib/ballot/analyses.ts";
 import { lineupBridgeCovers, lineupRowForCard, reconciledCandidacyIdForCard, resetAzIdentityCache } from "../lib/identity/az-2026.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { installAzBallot, installRegistryAuthority, installStateMoney, stateMoneyFixture, syntheticFiledStateMoneyRecord } from "./helpers/promoted-fixtures.ts";
+import type { StateCampaignFinanceJurisdiction } from "../lib/funding/data-plane.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
+
+/** A state's recorded finance projection plus one synthetic FILED committee for `targetKey`. */
+function stateMoneyWith(state: StateCampaignFinanceJurisdiction, targetKey: string) {
+  const fixture = stateMoneyFixture(state);
+  return { ...fixture, records: [...fixture.records, syntheticFiledStateMoneyRecord(state, targetKey)] };
+}
+
+/** The registry bridge, an Arizona ballot, and each state's finance holding with a filing for the governor or commissioner the cases name. */
+async function installFinanceAuthorities(): Promise<void> {
+  await installRegistryAuthority();
+  await installAzBallot();
+  await installStateMoney("AZ", stateMoneyWith("AZ", "ballot-az-pima:governor:hobbs-katie"));
+  await installStateMoney("NH", stateMoneyWith("NH", "ballot-nh-merrimack:governor:ayotte-kelly"));
+  await installStateMoney("NJ");
+  await readFundingSnapshot({ store: new MemoryRoutineDataStore(), bypassCache: true });
+}
 
 const failedStore = {
   async readPromotion() { throw new Error("planted independent authority failure"); },
@@ -17,11 +34,7 @@ const failedStore = {
 };
 
 test("Ask retains exact state finance records when only the unrelated FEC reader fails", async () => {
-  const store = new MemoryRoutineDataStore();
-  await installRegistryRuntimeFirstSeeds();
-  await readAzBallotProjection({ store, bypassCache: true });
-  await readStateMoneyProjections({ store, bypassCache: true });
-  await readFundingSnapshot({ store, bypassCache: true });
+  await installFinanceAuthorities();
   const cases = [
     ["NH", "ballot-nh-merrimack:governor:ayotte-kelly", "Kelly Ayotte"],
     ["NJ", "ballot-nj-morris:county-commissioner:selen", "Tayfun Selen"],
@@ -53,7 +66,7 @@ test("Ask retains exact state finance records when only the unrelated FEC reader
   }
 });
 
-test("NH and NJ lineup and measure lookups do not open the Arizona authority; AZ still fails explicitly", async () => {
+test("lineup and measure lookups answer null when the ballot projection is unreadable", async () => {
   const env = process.env as Record<string, string | undefined>;
   const previous = env.NODE_ENV;
   env.NODE_ENV = "production";
@@ -63,8 +76,8 @@ test("NH and NJ lineup and measure lookups do not open the Arizona authority; AZ
       assert.equal(lineupForContest(id), null, `${id}: the AZ canvass has no authority over this contest`);
       assert.equal(analysisForContest(id), null, `${id}: AZ measure analyses have no authority over this contest`);
     }
-    assert.throws(() => lineupForContest("ballot-az-pima:governor"), /Arizona ballot projection is STORE_UNREACHABLE/);
-    assert.throws(() => analysisForContest("ballot-az-pima:prop-139"), /Arizona ballot projection is STORE_UNREACHABLE/);
+    assert.equal(lineupForContest("ballot-az-pima:governor"), null);
+    assert.equal(analysisForContest("ballot-az-pima:prop-139"), null);
   } finally {
     if (previous === undefined) delete env.NODE_ENV;
     else env.NODE_ENV = previous;
@@ -92,8 +105,7 @@ test("foreign contest and card keys do not initialize the AZ identity bridge", a
 });
 
 test("an unavailable NH finance holding remains explicit while NJ finance still renders", async () => {
-  const store = new MemoryRoutineDataStore();
-  await readStateMoneyProjections({ store, bypassCache: true });
+  await installFinanceAuthorities();
   await refreshStateMoneyProjectionFromPromoted("NH", { store: failedStore, bypassCache: true });
   const missing = campaignMoneyEvidenceFor({ kind: "PERSON", id: "ballot-nh-merrimack:governor:ayotte-kelly", name: "Kelly Ayotte" }, "ballot-nh-merrimack:governor:ayotte-kelly");
   assert.equal(missing.records.length, 0);
@@ -104,11 +116,7 @@ test("an unavailable NH finance holding remains explicit while NJ finance still 
 });
 
 test("state officeholder finance also survives an unrelated FEC failure through the verified bridge", async () => {
-  const store = new MemoryRoutineDataStore();
-  await installRegistryRuntimeFirstSeeds();
-  await readAzBallotProjection({ store, bypassCache: true });
-  await readStateMoneyProjections({ store, bypassCache: true });
-  await readFundingSnapshot({ store, bypassCache: true });
+  await installFinanceAuthorities();
   const subjects = [
     { kind: "PERSON", id: "statewide:nh/governor", name: "Kelly Ayotte" },
     { kind: "PERSON", id: "statewide:az/governor", name: "Katie Hobbs" },

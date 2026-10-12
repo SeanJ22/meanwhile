@@ -45,8 +45,7 @@ export function specialDistrictBoundaryPackage(input: {
     typeof layer.numberMatched === "number" && typeof layer.numberReturned === "number" && layer.numberMatched > layer.numberReturned ||
     Array.isArray(layer.links) && layer.links.some(link => link && typeof link === "object" && link.rel === "next"))
     throw new Error("The district GIS layer has additional unread features; a complete boundary remains owed.");
-  // RFC 7946 has longitude/latitude coordinates. A legacy explicit CRS must say
-  // the same; no projected metres are mistaken for geographic degrees.
+    // RFC 7946 coordinates are longitude/latitude; a legacy explicit CRS must say the same.
   if (layer.crs !== undefined && !["urn:ogc:def:crs:OGC:1.3:CRS84", "urn:ogc:def:crs:EPSG::4326", "EPSG:4326"].includes(
     String((layer.crs as { properties?: { name?: unknown } })?.properties?.name))) throw new Error("The GIS layer's coordinate reference is not geographic longitude/latitude.");
   const selected = layer.features.filter(feature => feature?.type === "Feature" && feature.properties &&
@@ -76,8 +75,6 @@ export async function publishSpecialDistrictBoundary(store: RoutineDataStore, in
   const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(built, store, input.now);
   return processRegisteredManualCandidate(store, built.contractId, candidate, input.now, expectedBaseVersionId);
 }
-/** The existing admitted source lease invokes this callback on its saved GIS
- * capture. Outcome and retries remain on its work item, with no new clock. */
 export async function runSpecialDistrictBoundaryPublication(input: Parameters<typeof specialDistrictBoundaryPackage>[0] & {
   readonly repos: Pick<ControlPlaneRepositories, "workItems">; readonly store: RoutineDataStore;
   readonly workItemId: string; readonly workerResultId: string;

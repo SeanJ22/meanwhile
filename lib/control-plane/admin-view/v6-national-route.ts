@@ -20,16 +20,11 @@ export const defaultNationalDeps: NationalDeps = {
   districts: (state) => readStateDistricts(state),
   zipCounts: zipCountsByState,
   zipDivisions: (zips) => zipDivisionIds(zips),
-  // What Sean added to or declined from what places are owed counts in every place score below, so it is read first.
+    // The owner's owed overlay counts in every place score below, so it is read first.
   readHeld: async (ids, now) => { await refreshOwedOverlay(); return readHeldPlaceCapture(ids, { now }); },
   scoreBudgetMs: SCORE_BUDGET_MS,
 };
 
-/**
- * `admin-v6/national@1`: states at country scope, congressional districts at a state, ZIPs at a district. Read-only; it never
- * starts an agent, never writes, and never uses the network. Admin-host 404, signed-session 401, bounded query (400), then one
- * projection; a scope that is not a v6 place is refused, not widened.
- */
 export async function v6NationalGet(request: NextRequest, options: { readonly deps?: NationalDeps } = {}): Promise<NextResponse> {
   const guard = await guardAdminRequest({ headers: request.headers, cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
     checkOrigin: false, nowSeconds: Math.floor(Date.now() / 1000) });

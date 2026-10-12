@@ -1,24 +1,7 @@
 /**
- * The admin control-center sign-in. (Session C final, ITEM H, 2026-09-01. Sign in with
- * Google, RULING 245, 2026-09-02. Lumen sign-in shell, 2026-09-14.)
- *
- * One control: **Continue with Google.** A plain `<a>` to the start route — no JavaScript,
- * nothing read, nothing stored client-side. The owner's identity is proven by Google and
- * verified server-side against the one enrolled address (`lib/control-plane/admin-google.ts`);
- * this screen NEVER displays which account is enrolled, and carries no privacy or
- * data-retention copy.
- *
- * The break-glass renders only when `WTP_ADMIN_BREAK_GLASS=enabled` on the deploy — the same
- * flag that makes its route exist — as a subordinate section below the primary card, because
- * every attempt on it is logged as an incident.
- *
- * Configuration is read at render, by name, so a deploy missing a variable says which one — a
- * fact about our configuration, never a 500 and never a door that opens on `undefined`.
- *
- * `why` is a REJECTION CLASS — from middleware, from the Google callback, or from the
- * break-glass — never the secret, never a token, never what was typed. NO_COOKIE and the
- * enrolled-check refusal (WRONG_EMAIL) get their own state cards; the rest fall to a generic
- * "start again" state that still names the class.
+ * This screen never displays which account is enrolled. The break-glass section renders only when
+ * `WTP_ADMIN_BREAK_GLASS=enabled`, the same flag that makes its route exist. `why` is a rejection class,
+ * never a secret, a token or what was typed.
  */
 
 import {
@@ -31,15 +14,12 @@ import {
   isBreakGlassEnabled,
 } from "@/lib/control-plane/admin-auth.ts";
 
-/** The session length the console states, derived from the enforced constant so
- *  the two can never drift (the footer once hard-coded "12 H" while the code
- *  enforced eight). */
+/** Derived from the enforced constant so the two can never drift. */
 const SESSION_HOURS = Math.round(SESSION_LIFETIME_SECONDS / 3600);
 import { OAUTH_START_PATH, googleSignInReadiness } from "@/lib/control-plane/admin-google.ts";
 import { Logo } from "@/components/brand/logo.tsx";
 import { GoogleG } from "@/components/brand/google-g.tsx";
 
-/** The class → sentence map for the generic state (NO_COOKIE and WRONG_EMAIL have dedicated cards). */
 const WHY: Record<string, string> = {
   EXPIRED: "Your session expired. Sign in again.",
   BAD_SIGNATURE: "That session could not be verified. Sign in again.",
@@ -128,7 +108,6 @@ const STYLE = `
 
 type SignInState = { readonly eyebrow: string; readonly tone?: "refused"; readonly title: string; readonly body: string; readonly action: string };
 
-/** The dedicated + generic rejection states. Only NO_COOKIE and WRONG_EMAIL are designed; the rest are generic. */
 function stateFor(why: string | undefined): SignInState | null {
   if (!why) return null;
   if (why === "NO_COOKIE") {

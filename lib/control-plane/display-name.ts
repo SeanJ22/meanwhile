@@ -1,45 +1,21 @@
 /**
- * **A KEY IS FOR THE MACHINE; THE OWNER READS A NAME.** (ADM-12, the 9.4.26
- * evening admin feedback.)
+ * The one projection from a machine key to the name the owner reads:
  *
- * The owner's words, reading `nj:county:county-of-atlantic` on a fleet card:
- * *"I can parse it out slightly but … that's the kind of stuff that needs to
- * be changed for sure."* Every console surface rendered the control plane's
- * subject keys, OCD ids, unit ids and record ids as the thing itself — fleet
- * cards, attempt tables, obligation pills, incidents, deployments. One class,
- * many instances.
- *
- * This module is the ONE projection from a key to what the owner reads:
- *
- *   `nj:county:county-of-atlantic`                          Atlantic County, New Jersey
- *   `az:city:city-of-avondale`                              City of Avondale, Arizona
- *   `ocd-division/country:us/state:nh/county:sullivan/
- *      place:springfield_town#select-board`                 Springfield Town — Select Board, Sullivan County, New Hampshire
- *   `ballot-az-pima:prop-423`                               Pima County Prop 423, Arizona
- *   `ballot-az-pima:us-house-6`                             Pima County U.S. House District 6, Arizona
- *   `az:2026:state-az-sldl-19:state-representative-
- *      district-19:anderson-jackie-o-donnell`               Jackie O'Donnell Anderson — State Representative District 19, Arizona
- *   `curated:az/corona-de-tucson-fire-district#governing`   Corona de Tucson Fire District (governing body), Arizona
+ *   `<st>:county:county-of-<name>`                          <Name> County, <State>
+ *   `ocd-division/country:us/state:<st>/county:<c>/
+ *      place:<p>#select-board`                              <P> — Select Board, <C> County, <State>
+ *   `ballot-<st>-<county>:prop-<n>`                         <County> County Prop <n>, <State>
+ *   `<st>:<year>:<contest>:<office>:<person-slug>`          <Filed name> — <Office>, <State>
+ *   `curated:<st>/<slug>#governing`                         <Slug in words> (governing body), <State>
  *   `at-4da7d91e090a1497b3bff5ff`                           Attempt 4da7d91e
  *
- * ## What it never does
+ * It never invents a person's name: a slug cannot give back an apostrophe or a
+ * capital, so a person is named only from `candidateNames`; otherwise the
+ * office is rendered in words and the slug stays a slug. `DisplayName.raw`
+ * keeps the key for the hover title. The jurisdiction level (school, local,
+ * state, federal, or null) is derived alongside.
  *
- * It never invents a person's name. A candidate key ends in a slug of the
- * filed name in last-first-middle order, and a slug cannot give back an
- * apostrophe or a capital inside a name. So a person is named ONLY from the
- * candidate record the publisher carries (`candidateNames`, keyed by slug);
- * with no record the office is rendered in words and the slug stays a slug.
- * A wrong name on a real candidate is exactly the false claim this product
- * cannot survive (RULING 273), so the fallback is honest rather than pretty.
- *
- * The raw key is never lost: `DisplayName.raw` is what the page puts in the
- * hover title and the disclosure, for debugging.
- *
- * The LEVEL is derived alongside, because the owner wants colour wherever a
- * jurisdiction level shows (ADM-21): the consumer legend's four — school,
- * local, state, federal — and null when the key names no level.
- *
- * PURE. The state catalogue is the only table it reads.
+ * Pure. The state catalogue is the only table it reads.
  */
 import { US_STATES } from "./readiness/catalog.ts";
 
@@ -69,7 +45,7 @@ const UPPER = new Set([
 ]);
 const SMALL = new Set(["of", "de", "the", "and", "for", "at", "in", "on", "la", "del", "da", "di", "y"]);
 
-/** "corona-de-tucson-fire-district" → "Corona de Tucson Fire District". */
+/** "lake-of-the-woods-fire-district" → "Lake of the Woods Fire District". */
 export function words(slug: string): string {
   return slug
     .replace(/(^|[-_])u-s(?=[-_]|$)/g, "$1us")
@@ -85,20 +61,9 @@ export function words(slug: string): string {
 }
 
 /**
- * An unrecognised key as words — with a machine identifier left as an
- * identifier rather than spelled out. (ADM-44, 2026-09-06.)
- *
- * `words()` turns hyphenated slugs into a title, which is right for
- * `city-of-avondale` and wrong for a UUID: the reader-intelligence page rendered
- * `plural:3c965e03-1e51-4f10-a037-4fb2f35292c5` as **"Plural 3c965e03 1e51 4f10
- * A037 4fb2f35292c5"** — a hash, capitalised, spread across five words, in the
- * place a body's name belongs. The owner's rule is a human name on the face and
- * the exact id in the hover, and where there is no name to be had the honest
- * face is a SHORT identifier, not a long one pretending to be prose.
- *
- * So a segment that looks like a machine identifier — a UUID, or eight or more
- * hex characters — is shortened rather than worded. Nothing is invented; the
- * whole key is still on the element's `title`.
+ * An unrecognised key as words, with a machine identifier (a UUID, or eight or
+ * more hex characters) shortened rather than worded. The whole key stays on the
+ * element's `title`.
  */
 export function unrecognisedWords(key: string): string {
   const parts = key
@@ -126,7 +91,7 @@ function officeWords(slug: string): string {
   return words(slug);
 }
 
-/** "prop-423" → "Prop 423"; "us-house-6" → "U.S. House District 6"; "state-house-19" → "State House District 19". */
+/** "prop-123" → "Prop 123"; "us-house-6" → "U.S. House District 6"; "state-house-19" → "State House District 19". */
 function contestWords(slug: string): string {
   if (/^prop(osition)?-\d+/i.test(slug)) return words(slug);
   return officeWords(slug);

@@ -218,10 +218,7 @@ test("Auditor keeps its broker-mediated public-read grant while direct promotion
     },
   };
   const grant: CapabilityGrant = { ...GRANT, role: "ADVERSARIAL_AUDITOR", capabilities: ["VAULT_READ_SANITIZED", "NETWORK_PUBLIC_READ"] };
-  const result = await runIsolatedWorker("ADVERSARIAL_AUDITOR", auditor, grant, 5000);
-  assert.equal(result.role, "ADVERSARIAL_AUDITOR");
-  assert.equal(result.attemptId, auditor.attemptId);
-  // This proves the permission boundary, not an audit verdict or live custody.
+  await assert.rejects(runIsolatedWorker("ADVERSARIAL_AUDITOR", auditor, grant, 5000), /AUDITOR_CONTRACT_UNSUPPORTED/);
   for (const capability of CAPABILITIES.filter((candidate) => !["VAULT_READ_SANITIZED", "NETWORK_PUBLIC_READ"].includes(candidate))) {
     await assert.rejects(runIsolatedWorker("ADVERSARIAL_AUDITOR", auditor, {
       ...grant, capabilities: [...grant.capabilities, capability],

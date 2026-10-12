@@ -2,20 +2,7 @@ import { writeSync } from "node:fs";
 
 import { redactDiagnosticText, sanitizedErrorDiagnostic } from "./error-diagnostic.ts";
 
-/**
- * **A CHILD THAT DIES SAYS WHY, IN A LINE ITS PARENT MAY QUOTE.** (2026-09-24.)
- *
- * The routine civic-data child died at startup three times on 2026-09-24
- * (03:54Z, 06:56Z and 11:34Z): exit 1, no protocol line. The parent never
- * quotes a child's raw stderr, which can carry connection strings, so its
- * digest could say only "terminated=EXITED; exit=1" and nothing about why.
- *
- * An error nothing caught now ends the process through one protocol line,
- * `RCD_FATAL <child>: <step> — <sanitized cause chain>`, written
- * synchronously to stdout before the exit. The step names what the process
- * was doing; the cause chain passes through `sanitizedErrorDiagnostic`, which
- * redacts credentials and hosts.
- */
+/** A child that dies says why, in one redacted `RCD_FATAL` line its parent may quote; raw stderr is never quoted. */
 export const FATAL_LINE_PREFIX = "RCD_FATAL ";
 
 export function fatalLine(child: string, step: string, error: unknown): string {
@@ -65,4 +52,13 @@ export function childFatalLine(output: string, maxChars: number = FATAL_QUOTE_MA
     .filter(Boolean)
     .at(-1);
   return fatal ? redactDiagnosticText(fatal).slice(0, maxChars) : null;
+}
+
+/** The line of a dead child's stderr that says why: the last line naming an error, else the last that is not a stack frame, brace or version banner. Redacted and clipped. */
+export function childStderrCause(stderr: string, maxChars: number = FATAL_QUOTE_MAX_CHARS): string | null {
+  const lines = stderr.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+  const named = lines.filter((line) => /^(?:[A-Za-z]*Error\b|Error\b|\[?[A-Z][A-Z0-9_]{3,}\]?:)/.test(line)).at(-1);
+  const plain = lines.filter((line) => !/^(?:at |Node\.js v\d|[{}\[\]()]+$|\^+$)/.test(line)).at(-1);
+  const pick = named ?? plain;
+  return pick ? redactDiagnosticText(pick).slice(0, maxChars) : null;
 }

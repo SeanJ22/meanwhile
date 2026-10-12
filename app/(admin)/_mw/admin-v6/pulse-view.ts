@@ -1,13 +1,4 @@
-/**
- * **WHAT THE LIVE PULSE CAN HONESTLY SAY ABOUT THE WORKERS.**
- *
- * `LivePulse` is a small freshness read: heartbeat, last round finished, next
- * round due, a few counts and whole-system lane gauges. It is NOT a progress
- * feed, so "last useful progress" and per-worker jobs stay unreported here
- * (DEP-WORKER-EVENTS) rather than being inferred from a heartbeat.
- *
- * PURE.
- */
+/** The pulse is a freshness read, not a progress feed: last useful progress and per-worker jobs stay unreported rather than inferred from a heartbeat. */
 import type { LivePulse } from "@/lib/control-plane/live-pulse.ts";
 
 import type { WorkerStatus } from "./model.ts";
@@ -25,7 +16,6 @@ export function workerStatusFromPulse(pulse: LivePulse | null): WorkerStatus {
   };
 }
 
-/** The runner liveness words the pulse carries, in plain English. */
 export function runnerStateWords(state: string | null): string {
   switch (state) {
     case "ALIVE":

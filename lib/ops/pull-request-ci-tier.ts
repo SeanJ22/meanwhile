@@ -3,9 +3,12 @@
  *
  * Draft pull requests get the deterministic preflight tier. A ready pull
  * request buys the full shipping proof only once it is about to merge: auto-merge
- * is on, or it carries the `run-full-ci` or `engineer-adapter` label. Until then
- * it waits with lint and types, and its final verdict stays red so nothing can
- * merge on that cheap run. Anything unreadable fails closed to the full proof.
+ * is on, or it carries the `run-full-ci` or `engineer-adapter` label. A ready
+ * pull request that changes only documents is certified at once: its proof is
+ * the few tests that read those documents, with no build. Until then a ready
+ * pull request waits with lint and types, and its final verdict stays red so
+ * nothing can merge on that cheap run. Anything unreadable fails closed to the
+ * full proof.
  */
 export type PullRequestCiTier = "draft" | "waiting" | "full";
 
@@ -15,6 +18,8 @@ export interface PullRequestCiEvent {
   readonly draft?: boolean | null;
   readonly autoMerge?: boolean | null;
   readonly labels?: readonly string[] | null;
+  /** Every changed file is a document (`isDocumentPath`); null when the diff could not be read. */
+  readonly documentsOnly?: boolean | null;
 }
 
 export interface PullRequestCiDecision {
@@ -43,6 +48,9 @@ export function classifyPullRequestCiTier(event: PullRequestCiEvent): PullReques
   }
   if (label) {
     return { tier: "full", reason: `the ${label} label asks for the full certification` };
+  }
+  if (event.documentsOnly === true) {
+    return { tier: "full", reason: "the change is documents only, so its certification is the tests that read them" };
   }
   return {
     tier: "waiting",

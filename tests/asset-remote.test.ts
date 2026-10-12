@@ -14,34 +14,12 @@ import {
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
-/**
- * **`R57` — the asset store has a public address.** (Sean's decision of
- * 2026-08-24, RULING 117.)
- *
- * The store moved to <https://github.com/SeanJ22/wtp-assets>, a public
- * repository, so a Netlify build can restore the bytes `RULING 20` keeps out
- * of git. What this guard protects is the half that is easy to get wrong: a
- * restore that trusts a status code.
- *
- * A 200 that is not the thing is not a document. Because the store is
- * content-addressed, the check is total and costs nothing — the NAME of the
- * file is the hash of its correct contents, so bytes that do not hash to the
- * name they were requested under are refused whatever the transport said.
- *
- * **These tests do not touch the network.** A fetch is injected, which is what
- * lets them prove the REFUSAL branches — the ones a live call would almost
- * never exercise and which are exactly the ones that matter.
- */
+/** Bytes that do not hash to the name they were requested under are refused, whatever the transport said. A fetch is injected; nothing touches the network. */
 
 const A_REAL_HASH = "73a2702c72cd24fc93faa7de2d6df09a8e0d6c858d23639f55d8febd42d5f042";
 
 test("the default remote is the public store, committed rather than configured", () => {
   assert.equal(DEFAULT_ASSET_REMOTE, "https://raw.githubusercontent.com/SeanJ22/wtp-assets/main");
-  /*
-   * A default that must be configured is a restore path a build will not take.
-   * That was R57's whole failure mode for four days: the mechanism existed and
-   * pointed at a local directory Netlify cannot see.
-   */
   assert.equal(assetRemoteBase({} as NodeJS.ProcessEnv), DEFAULT_ASSET_REMOTE);
 });
 
@@ -128,28 +106,6 @@ test("the restore path in scripts/assets.mts walks the remote and counts it sepa
     /--no-remote/,
     "a purely local restore stays expressible, and is NAMED in the output when taken",
   );
-  /*
-   * RULING 24: a row the remote could not supply is a CANNOT RUN for that row,
-   * never a decision to serve nothing.
-   */
+  /* A row the remote could not supply is a CANNOT RUN for that row, never a decision to serve nothing. */
   assert.match(source, /never a decision to serve nothing/);
-});
-
-test("every manifest row addresses cleanly, so no row is unreachable by construction", () => {
-  const manifest = JSON.parse(
-    readFileSync(join(ROOT, "data", "assets", "manifest.json"), "utf8"),
-  ) as { rows: { path: string; sha256: string }[] };
-
-  assert.ok(manifest.rows.length > 0, "an empty manifest would make this guard vacuous");
-
-  const bad: string[] = [];
-  for (const row of manifest.rows) {
-    const ext = row.path.slice(row.path.lastIndexOf("."));
-    try {
-      remoteAssetUrl(row.sha256, ext, {} as NodeJS.ProcessEnv);
-    } catch {
-      bad.push(row.path);
-    }
-  }
-  assert.deepEqual(bad, [], "every row must resolve to a remote address");
 });

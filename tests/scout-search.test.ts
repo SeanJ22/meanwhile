@@ -113,10 +113,7 @@ test("an empty query returns an empty result without calling any provider", asyn
   assert.equal(calls.length, 0);
 });
 
-/*
- * 2026-09-25: the Scout `search` tool spent paid Brave/Exa requests outside the
- * owner's switch and its budget. Now every provider request is admitted first.
- */
+/* Every provider request is admitted against the owner's switch and budget first. */
 test("every paid provider request is admitted by the budget first; a refused provider sends nothing and is named", async () => {
   const { fetchImpl, calls } = fakeFetch([
     { match: "api.search.brave.com", body: BRAVE_BODY },

@@ -1,37 +1,3 @@
-/**
- * **ONE MESSAGE IN, ONE TYPED TURN OUT.** (ADM-C7.)
- *
- * The whole surface, in one total function: classify, answer from a read model,
- * propose an action through the Action Gateway, or say plainly that the console
- * does not answer that. Pure with respect to everything except the gateway call
- * it is handed, so the classifier, the read models, the refusals and the
- * proposal shape are all unit-testable without a store, a clock or a network.
- *
- * ## Why this console does not call a model, stated rather than implied
- *
- * The brief permits a model where a deterministic answer does not exist, on one
- * condition: use the existing bounded-worker transport and budget path, and add
- * no new unbudgeted provider call. Measured against this repository, that seam
- * does not reach a web request, and the reasons are structural rather than
- * missing wiring:
- *
- * - the only model transport is `anthropicTransport`, constructed in exactly
- *   three places, all inside the runner's own cycle process;
- * - every construction is wrapped by `FleetSafetyController.guardedModelTransport`,
- *   which reserves and settles spend against the cost ledger for a CYCLE. A web
- *   request has no cycle, no Attempt, no lease and no dispatch, so there is
- *   nothing for a reservation to be charged to;
- * - `assertStepMayInvokeModel` refuses any step not in the closed `SCOUT_STEPS`
- *   registry, and no chat step is in it;
- * - the credential is read by name in the runner's child process only.
- *
- * Wiring a request-path model call would therefore mean a NEW unbudgeted
- * provider call, which the brief forbids in the same paragraph that permits the
- * model. So the chat is fully deterministic, the page says so on its face, and
- * the missing seam is reported rather than papered over. Every answer carries
- * `usedModel: false` for the same reason the brief asked the opposite question:
- * so the owner never has to wonder.
- */
 
 import { parsePlainOrder } from "./orders.ts";
 import { classify } from "./router.ts";
@@ -48,27 +14,12 @@ import {
   type ChatTurn,
 } from "./contract.ts";
 
-/**
- * What one turn needs beyond the records.
- *
- * `gateway` is null when this build has no Action Gateway bound. That is a
- * legitimate state and not a degraded one: with no gateway the console answers
- * questions and offers no controls, which is exactly what it should do rather
- * than offer a control nothing carries out.
- */
+/** `gateway` is null when no Action Gateway is bound; the console then answers questions and offers no controls. */
 export interface ChatDeps {
   readonly gateway: GatewayBinding | null;
-  /** The admin session reference for the audit record. Never a person's name. */
   readonly actorRef: string;
 }
 
-/**
- * The list the console offers when it did not understand.
- *
- * The questions, plus the controls the chat may ACTUALLY ask for — filtered by
- * the gateway's own authority ladder, because offering a control the console
- * would then refuse is worse than not offering it.
- */
 function canAnswer(deps: ChatDeps): readonly string[] {
   const questions = [...everyQuestion()];
   for (const definition of deps.gateway?.registry ?? []) {
@@ -77,19 +28,11 @@ function canAnswer(deps: ChatDeps): readonly string[] {
   return questions;
 }
 
-/**
- * Which records this message needs read, before any of them are read.
- *
- * The route calls this, reads exactly that set, and then calls
- * {@link respondToOperator}, which classifies the same text again. Classifying
- * twice is deliberate: the classifier is pure and costs nothing, and the
- * alternative — passing the routing decision from the route into the turn —
- * would let the two disagree about what was asked.
- */
+/** Classified here and again in `respondToOperator`; the classifier is pure, so the two cannot disagree. */
 export function readsFor(text: string, registry: readonly ActionDefinition[]): readonly ContextRead[] {
   const routed = classify(text, registry);
   if (routed.kind === "TOPIC") return requiredReads(routed.topic);
-  if (routed.kind === "ACTION") return (routed.actionType === "expansion.scope.set" || routed.actionType === "orders.sequence") ? [...ACTION_READS, "config"] : ACTION_READS;
+  if (routed.kind === "ACTION") return (routed.actionType === "expansion.scope.set") ? [...ACTION_READS, "config"] : ACTION_READS;
   return [];
 }
 
@@ -97,14 +40,7 @@ const NOT_UNDERSTOOD =
   "That is not one of the questions this console answers from its records, and it does not guess. " +
   "Ask one of these, or use the control on the page where the thing you mean is shown.";
 
-/**
- * Answer one message.
- *
- * The order is the router's order and the router's reasons: prohibitions first
- * so no phrasing routes around them, then the closed set of deterministic
- * questions, then the gateway's own registry of actions, then an honest
- * "I do not answer that".
- */
+/** Prohibitions first, then deterministic questions, then gateway actions, then "I do not answer that". */
 export async function respondToOperator(
   deps: ChatDeps,
   context: OperatorContext,
@@ -190,13 +126,6 @@ export async function respondToOperator(
       };
     }
 
-    /*
-     * The gateway's answer is returned by reference, unexamined and unedited.
-     * Whatever it decided — done, queued, refused, already done — is what the
-     * owner reads, in the gateway's words, on the gateway's receipt. The only
-     * branch this function takes is the one where the gateway never decided at
-     * all, and that is reported as itself rather than as a refusal.
-     */
     const answer = await gateway.submit(outcome.proposal.request);
     if (!answer.ok) {
       return { kind: "REFUSED", says: answer.says, actionType: definition.type };

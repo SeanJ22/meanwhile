@@ -53,13 +53,6 @@ import {
   type ValidationReceipt,
 } from "../lib/civic-data/types.ts";
 
-/*
- * The routine clock runs for every routine task on every 5-minute pass. It
- * once read whole rows: 52.7 MB of promoted payloads and candidates received
- * per pass against production (2026-09-22), about 15 GB/day of billed
- * transfer, to produce two timestamps. These guards keep it a due-ness check.
- */
-
 const ROOT = resolve(import.meta.dirname, "..");
 const HASH = "a".repeat(64);
 /** Anything that carries a promoted dataset; none of it may cross the wire for the clock. */
@@ -89,7 +82,7 @@ function candidate(id: string, overrides: Partial<RoutineCandidate> = {}): Routi
     },
     normalization: {
       succeeded: true,
-      parserVersion: "fec-funding/2",
+      parserVersion: "fec-funding/3",
       schemaVersion: "2",
       normalizedHash: normalizedHash(readModel),
       normalizedPayloadHash: normalizedHash(normalizedPayload),
@@ -186,16 +179,19 @@ test("the routine clock builds its candidate view in Postgres; the payload and r
   for (const field of ROUTINE_CLOCK_CANDIDATE_FIELDS.retrieval) {
     assert.match(select, new RegExp(`'${field}', "civic_data_candidates"\\."candidate"#>'\\{retrieval,${field}\\}'`));
   }
+  assert.match(select, /'parserVersion', "civic_data_candidates"\."candidate"#>'\{normalization,parserVersion\}'/);
 });
 
 test("the clock view names exactly the fields the clock proves; widening it is a visible cost decision", () => {
   assert.deepEqual(ROUTINE_CLOCK_CANDIDATE_FIELDS, {
     top: ["id", "sourceId", "recordClass", "scope", "bootstrapImport"],
-    retrieval: ["retrievedAt"],
+    retrieval: ["retrievedAt", "sourceCheck"],
+    normalization: ["parserVersion"],
   });
   const view = routineClockCandidateView(candidate("view-shape"));
-  assert.deepEqual(Object.keys(view).sort(), ["id", "recordClass", "retrieval", "scope", "sourceId"]);
+  assert.deepEqual(Object.keys(view).sort(), ["id", "normalization", "recordClass", "retrieval", "scope", "sourceId"]);
   assert.deepEqual(view.retrieval, { retrievedAt: "2026-09-08T12:00:00.000Z" });
+  assert.deepEqual(view.normalization, { parserVersion: "fec-funding/3" });
   assert.doesNotMatch(JSON.stringify(view), /view-shape-\d/, "no dataset row survives the view");
 });
 
@@ -285,7 +281,7 @@ test("a MEETING clock reports its sitting starts, and the pointed success as its
   const receipt = { ...receiptFor(value), validatedAt: observedAt };
   await store.transition(value.id, "VALIDATED", observedAt, "persisted validation", receipt);
   // Before any promotion the store reports no sitting list; the runner reads
-  // that as never published and retries on the base cadence (R20).
+  // that as never published and retries on the base cadence.
   assert.equal("sittingStarts" in await store.clock(value.sourceId, value.recordClass, value.scope), false);
   await store.promote(value.id, receipt, "2026-09-08T12:01:00.000Z");
   assert.deepEqual(await store.clock(value.sourceId, value.recordClass, value.scope), {
@@ -552,6 +548,43 @@ test("an unchanged re-check is a confirmation on the pointed version: readers ke
   assert.equal(clock.lastSucceededObservedAt, "2026-09-08T20:00:01.000Z");
 });
 
+test("a real 304 advances the source clock while held replay preserves both check and original evidence dates", async () => {
+  const base = candidate("held-check");
+  const value = { ...base, retrieval: { ...base.retrieval, sourceCheck: { requestedUrl: base.retrieval.requestedUrl,
+    finalUrl: base.retrieval.finalUrl!, httpStatus: 200 as const, rawHash: base.retrieval.rawHash!, checkedAt: base.retrieval.retrievedAt } } };
+  const store = await promotedStore(value);
+  const checkedAt = "2026-09-09T12:00:00.000Z";
+  const input = { sourceId: value.sourceId, recordClass: value.recordClass, scope: value.scope,
+    parserVersion: value.normalization.parserVersion, pointerVersionId: value.id, readModelHash: value.normalization.normalizedHash!,
+    basis: "READ_MODEL_RECOMPUTED" as const, retrieval: { ...value.retrieval, rawHash: value.retrieval.rawHash!,
+      sourceCheck: { ...value.retrieval.sourceCheck!, httpStatus: 304 as const, checkedAt } } };
+  assert.equal((await store.confirmUnchanged(input, "2026-09-09T12:00:03.000Z")).kind, "CONFIRMED");
+  const checked = await store.clock(value.sourceId, value.recordClass, value.scope);
+  assert.equal(checked.lastSucceededAt, value.retrieval.retrievedAt);
+  assert.equal(checked.lastSucceededObservedAt, checkedAt);
+  assert.equal(checked.lastAttemptedAt, checkedAt);
+  const upgradedParser = await store.clock(value.sourceId, value.recordClass, value.scope, "fec-funding/4");
+  assert.equal(upgradedParser.lastAttemptedAt, undefined, "an older parser's confirmation cannot postpone the upgraded parser's first attempt");
+  assert.equal(upgradedParser.lastSucceededParserVersion, "fec-funding/3");
+  assert.equal(upgradedParser.lastSucceededObservedAt, checkedAt, "the real source check remains true for the prior GOOD");
+  assert.equal((await store.confirmUnchanged(input, "2026-09-09T18:00:00.000Z")).kind, "CONFIRMED");
+  assert.deepEqual(await store.clock(value.sourceId, value.recordClass, value.scope), checked);
+  const read = await readPromotedCivicData(value.recordClass, value.scope, { store, now: "2026-09-09T18:00:00.000Z", maxAgeMs: 86400000, bypassCache: true });
+  assert.equal(read.kind, "PROMOTED");
+  assert.equal(read.metadata.retrievedAt, value.retrieval.retrievedAt);
+  assert.equal(read.metadata.checkedAt, checkedAt);
+  assert.equal(read.metadata.stale, "CURRENT");
+  const beforeDelayedReplay = (await store.events(value.id)).length;
+  assert.deepEqual(await store.confirmUnchanged({ ...input, retrieval: { ...input.retrieval,
+    sourceCheck: value.retrieval.sourceCheck } }, "2026-09-09T19:00:00.000Z"), {
+    kind: "CONFIRMED", versionId: value.id, at: "2026-09-09T18:00:00.000Z",
+  });
+  assert.equal((await store.events(value.id)).length, beforeDelayedReplay, "a delayed older check cannot replace the newest provider receipt");
+  assert.deepEqual(await store.clock(value.sourceId, value.recordClass, value.scope), checked);
+  assert.equal((await store.confirmUnchanged({ ...input, retrieval: { ...input.retrieval,
+    sourceCheck: { ...input.retrieval.sourceCheck, checkedAt: "2026-10-01T00:00:00Z" } } }, "2026-09-09T18:00:01.000Z")).kind, "EVIDENCE_INVALID");
+});
+
 test("a trusted-LKG import is never confirmed: a live read of it promotes instead", async () => {
   const imported = candidate("imported-pointer", {
     bootstrapImport: { kind: "TRUSTED_LKG_IMPORT" } as unknown as RoutineCandidate["bootstrapImport"],
@@ -590,7 +623,7 @@ test("the Postgres confirmation is one guarded insert, and the clock reads one e
   const source = readFileSync(join(ROOT, "lib", "civic-data", "store.ts"), "utf8");
   const postgres = source.slice(source.indexOf("export class PostgresRoutineDataStore"));
   const start = postgres.indexOf("  async confirmUnchanged(");
-  const method = postgres.slice(start, start + 3_000);
+  const method = postgres.slice(start, postgres.indexOf("  async promote(", start));
   for (const guard of [
     /\$\{civicDataCandidates\.normalizedHash\} = \$\{input\.readModelHash\}/,
     /and not \(\$\{civicDataCandidates\.candidate\} \? 'bootstrapImport'\)/,
@@ -598,6 +631,7 @@ test("the Postgres confirmation is one guarded insert, and the clock reads one e
     /\$\{civicDataPromotions\.lastKnownGoodVersionId\} = \$\{id\}/,
     /\$\{civicDataCandidateEvents\.at\} > \$\{at\}::timestamptz/,
     /this\.candidateEventLock\(id\)/,
+    /\$\{priorCheckedAt\} > \$\{checkedAt\}::timestamptz/,
   ]) assert.match(method, guard);
   const select = selectList(routineClockConfirmationRead(drizzle.mock({ schema }), "FEC_FUNDING", "federal-supported"));
   assert.doesNotMatch(select, DATASET);

@@ -1,10 +1,5 @@
 /**
- * **OWN-Q6 — THE DEMAND SIGNAL, AND EVERY BOUND THE OWNER PUT ON IT.**
- * (The owner's amendment on Q6/Q7, authorized 2026-08-31.)
- *
- * The feature is one pill reading *"Want us to get this info sooner?"* and a
- * brief confirmation. What makes it shippable is not the pill, it is the six
- * bounds around it, each of which is asserted here by name:
+ * The demand signal's bounds:
  *
  * ```
  *   fixed enum        one value, and no free text on any path
@@ -15,10 +10,7 @@
  *   never shown       the confirmation reports the ASK, never a total
  * ```
  *
- * The last two are guarded over the SOURCE, because they are claims about what
- * a surface does and a unit test over a pure function cannot see a surface. The
- * lesson is WGH-22's: a test that agrees with the reasoning that produced it
- * measured nothing.
+ * The last two are guarded over the source, because they are claims about what a surface does.
  */
 
 import assert from "node:assert/strict";
@@ -44,10 +36,7 @@ test("the signal enum has exactly one member, and the subject types exactly two"
 });
 
 test("NO FREE TEXT anywhere on the path", () => {
-  /*
-   * The owner's instruction, asserted at the three places text could enter: the
-   * table, the route's accepted body, and the control the reader touches.
-   */
+  /* Asserted at the three places text could enter: the table, the route's accepted body, and the control. */
   const table = SCHEMA.slice(SCHEMA.indexOf('pgTable(\n  "demand_signals"'));
   const definition = table.slice(0, table.indexOf("\n);"));
   assert.ok(!/free_text|freeText|comment|note:/i.test(definition), "the table has no text column");
@@ -60,14 +49,8 @@ test("NO FREE TEXT anywhere on the path", () => {
 
 test("NO IDENTITY COLUMN, and deliberately no continuity hash either", () => {
   /*
-   * Asserted over the COLUMN LIST, not over the source text. The doc block on
-   * this table has to be able to SAY "never an address" to explain itself, and
-   * a guard that greps raw text reads its own explanation as the defect — this
-   * repository's recorded trap, and the reason a comment gets deleted instead
-   * of a column.
-   *
-   * The generated SQL is the schema with no prose in it at all, so it is what
-   * the guard reads.
+   * Asserted over the generated SQL, not the source text: the table's doc block must be able to say "never an
+   * address" without the guard reading its own explanation as the defect.
    */
   const sql = readFileSync("lib/db/migrations/0023_tricky_sister_grimm.sql", "utf8");
   const columns = [...sql.matchAll(/^\t"([a-z_]+)"/gm)].map((m) => m[1]);
@@ -107,9 +90,8 @@ test("NO IDENTITY COLUMN, and deliberately no continuity hash either", () => {
 
 test("THE N-STORES RULE holds by VALUE SPACE: the run digest is its own", () => {
   /*
-   * RULING 132: proven over value spaces, never column names. `reactions` and
-   * this table both have a `run_id` column; the same input must produce
-   * different values, or the column is a join path spelled differently.
+   * Proven over value spaces, never column names: `reactions` and this table both have a `run_id` column, so the same
+   * input must produce different values.
    */
   assert.notEqual(
     hashRunId("walk-all-local-1"),
@@ -120,10 +102,7 @@ test("THE N-STORES RULE holds by VALUE SPACE: the run digest is its own", () => 
 });
 
 test("NO READ PATH: the module exports a write and nothing that reads", () => {
-  /*
-   * A missing function is stronger than a filter — the reason
-   * `lib/signal/aggregate.ts` gives about free text, applied to a whole module.
-   */
+  /* A missing function is stronger than a filter. */
   const exported = [...MODULE.matchAll(/export (?:async )?(?:function|const) (\w+)/g)].map(
     (m) => m[1],
   );
@@ -148,11 +127,7 @@ test("the confirmation reports the ASK and never a total", () => {
 });
 
 test("SYMMETRY: the pill is on the candidate card and the body card, same component", () => {
-  /*
-   * The owner's guard, and it is not decoration: a pill that appeared only
-   * where coverage is good would itself be a coverage claim, which is the
-   * class `CLAUDE.md` forbids under show-everything.
-   */
+  /* A pill that appeared only where coverage is good would itself be a coverage claim. */
   const candidate = readFileSync("components/ballot/candidate-battlecard.tsx", "utf8");
   const body = readFileSync("components/map/popup/entity-modal.tsx", "utf8");
   assert.match(candidate, /<DemandPill\s+subjectType="CANDIDATE"/);

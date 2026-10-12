@@ -213,7 +213,7 @@ Interactive and government-tier accents retain separate token roles; tier identi
 Source: [DESIGN ruling](DESIGN.md), line 483; current rulings §§3, 6 and 10 govern source/copy conflicts.
 
 Good live screenshot: pending River capture and visual review.
-Bad live screenshot: pending matching archived capture inspection.
+Bad live screenshot: [release 3 welcome screen](https://github.com/SeanJ22/meanwhile/blob/83df898007dc3af85bc2fc07771ec4edfbb74ecb/releases/3-live/fe39-home.png), served `6af6f8a`, 1280 × 900, dark. Inspected as an image: the focused ZIP cell is amber and “Use my location” is orange, although these controls are not tier identity. This is an archived bad example; a matching good live capture is still pending.
 
 ## L24: The state EXTRUDES from the map — it does not float above it (2026-08-16)
 
@@ -361,7 +361,7 @@ Bad live screenshot: pending matching archived capture inspection.
 
 ## Feedback sweep 8.30.26
 
-Every recorded correction is retained below from `data/feedback/sweeps/8.30.26.json`. A `FIXED_VERIFIED` code disposition alone does not supply a good live screenshot.
+Every recorded correction is retained below. A `FIXED_VERIFIED` code disposition alone does not supply a good live screenshot.
 
 ### ASK-16: Ask
 
@@ -477,7 +477,7 @@ Good live example: pending River capture and visual review.
 
 ### WGH-22: Address resolution
 
-Before a confirmed address, ZIP-scoped surfaces show every governing entity intersecting the ZIP. After a confirmed address, the scope IS the address: only entities that govern that address are shown, and an entity that is not the reader's is out of scope rather than annotated. (RULING 222.)
+Before a confirmed address, ZIP-scoped surfaces show every governing entity intersecting the ZIP. After a confirmed address, the scope IS the address: only entities that govern that address are shown, and an entity that is not the reader's is out of scope rather than annotated.
 
 Sweep disposition: FIXED_VERIFIED.
 Bad/example candidates: 2026-08-30_17-53-46.PNG (source inventory; capture path not found in checked-in feedback); 2026-08-30_17-53-11.PNG (source inventory; capture path not found in checked-in feedback); 2026-08-30_17-54-02.PNG (source inventory; capture path not found in checked-in feedback).
@@ -645,7 +645,7 @@ Good live example: pending River capture and visual review.
 
 ## Feedback sweep 9.2.26
 
-Every recorded correction is retained below from `data/feedback/sweeps/9.2.26.json`. A `FIXED_VERIFIED` code disposition alone does not supply a good live screenshot.
+Every recorded correction is retained below. A `FIXED_VERIFIED` code disposition alone does not supply a good live screenshot.
 
 ### LAY-12: Map
 
@@ -769,7 +769,7 @@ Good live example: pending River capture and visual review.
 
 ## Feedback sweep 9.4.26.2
 
-Every recorded correction is retained below from `data/feedback/sweeps/9.4.26.2.json`. A `FIXED_VERIFIED` code disposition alone does not supply a good live screenshot.
+Every recorded correction is retained below. A `FIXED_VERIFIED` code disposition alone does not supply a good live screenshot.
 
 ### ADM-10: Research detail
 
@@ -917,7 +917,7 @@ Good live example: pending River capture and visual review.
 
 ## Feedback sweep 9.4.26
 
-Every recorded correction is retained below from `data/feedback/sweeps/9.4.26.json`. A `FIXED_VERIFIED` code disposition alone does not supply a good live screenshot.
+Every recorded correction is retained below. A `FIXED_VERIFIED` code disposition alone does not supply a good live screenshot.
 
 ### ADM-1: State readiness
 

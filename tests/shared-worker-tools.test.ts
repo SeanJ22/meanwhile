@@ -3,7 +3,8 @@ import test from "node:test";
 import { sharedScoutBrowser, browseWithPlaywright } from "../scripts/scout-browse.mts";
 import type { GuardedBrowser } from "../scripts/browser.mts";
 import { startWorkerToolsHost } from "../lib/control-plane/workers/process-pool.ts";
-import { emptyFieldManual, newFieldManualEntry, readFieldManual } from "../lib/control-plane/field-manual.ts";
+import { newFieldManualEntry, readFieldManual, writeFieldManual } from "../lib/control-plane/field-manual.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { availableWorkerMemoryBytes, routineProcessSlots, workerProcessSlots, workerMemoryHost, NATIONAL_PLACE_PEAK_MIB, WORKER_ENTRY_PEAK_MIB } from "../lib/control-plane/workers/worker-slots.ts";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -119,19 +120,19 @@ test("concurrent workers share a browser and close only their own contexts", asy
   await browser.close(); assert.equal(browsersClosed, 1);
 });
 
-test("hosted workers receive state manual pieces and browser observations without reloading the manual", async () => {
+test("hosted workers receive their own manual rows and browser observations without reading the manual themselves", async () => {
   const priorUrl = process.env.WTP_WORKER_TOOLS_URL, priorToken = process.env.WTP_WORKER_TOOLS_TOKEN;
   const entry = (state: string) => newFieldManualEntry("test", state || "portable", { role: "SHARED", kind: "REFERENCE",
-    title: state, summary: state, outcome: "REFERENCE", states: state ? [state] : [] });
-  const entries = [entry("az"), entry("nj"), entry("")];
-  const host = await startWorkerToolsHost({ knowledge: { store: { ...emptyFieldManual(), entries }, revision: 7,
-    projection: { lines: [], entryIds: [], matched: 3, total: 3 } }, browse: async input => ({ finalUrl: input.url,
+    title: state, summary: state, outcome: "REFERENCE", states: state ? [state] : [], portable: state === "" });
+  const shared = createMemoryRepositories();
+  await writeFieldManual(shared, [entry("az"), entry("nj"), entry("")], "2026-10-07T00:00:00.000Z");
+  const host = await startWorkerToolsHost({ repos: shared, browse: async input => ({ finalUrl: input.url,
     status: 200, html: "official", text: "official", requests: [], transportError: null, durationMs: 1 }) });
   try {
-    const repos = { fieldManual: { read: async () => { throw new Error("worker must not reload the manual"); } } };
+    const repos = { fieldManual: { slice: async () => { throw new Error("worker must not read the manual itself"); } } };
     const manual = await readFieldManual(repos as never, { state: "az" });
-    assert.equal(manual.error, undefined); assert.equal(manual.revision, 7);
-    assert.deepEqual(manual.store.entries.map(row => row.states), [["az"], []]);
+    assert.equal(manual.error, undefined);
+    assert.deepEqual(manual.store.entries.map(row => row.states).sort(), [[], ["az"]]);
     assert.equal((await browseWithPlaywright({ url: "https://one.gov", timeoutMs: 1000, holder: "test" })).text, "official");
   } finally {
     await host.close();

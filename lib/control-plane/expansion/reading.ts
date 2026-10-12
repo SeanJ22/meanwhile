@@ -1,34 +1,10 @@
 /**
- * **WHAT THE RUNNER MEASURED ABOUT EACH SELECTED SCOPE, THIS CYCLE.**
- * (Expansion controls, 2026-09-23.)
+ * What the runner measured about each selected scope this cycle, written on
+ * `ResearchState.expansion`. The console renders it and never re-derives it.
+ * Membership is the certain-overlap rule in `membership.ts`. Every count is a
+ * real count or null, and null renders as its named reason, never zero.
  *
- * The standing runner resolves every selected scope at the start of a cycle —
- * its ZCTAs from the published Census geography lookup, the registered work
- * whose territory overlaps them, the spend attributed to that work, and the
- * coverage the scope has — and writes the result here, on the research state
- * (`ResearchState.expansion`). The console renders it; it never re-derives it,
- * because the console has neither the registries nor the territory index, and
- * a second derivation is a second answer.
- *
- * ## Membership, in one sentence
- *
- * A piece of work is IN a scope when the government it is about certainly
- * overlaps the scope inside at least one ZCTA: it touches a ZCTA lying wholly
- * inside the scope, or inside one ZCTA its area share and the scope's sum past
- * the whole (`membership.ts` has the rule and the margin). Merely sharing a
- * border ZCTA is not enough — that is how neighbouring counties would leak in.
- * ZCTAs are the Census Bureau's ZIP-code tabulation areas, compared by AREA
- * share — not USPS ZIP codes, and not a claim about which residents a
- * government serves. A government's territory comes from the Census of
- * Governments unit it was enumerated from (`data/derived/census-unit-zips.json`
- * and the sampled overlap behind it, `data/derived/zip-governments.json`).
- * Statewide work is reused in each scope in its state. Candidate and shared
- * source work uses its provider-declared OCD divisions and Census membership.
- *
- * Every count here is either a real count or null, and null renders as the
- * named reason it is null — never as zero.
- *
- * PURE. Types and small helpers only.
+ * Pure. Types and small helpers only.
  */
 
 export const EXPANSION_READING_FORMAT_VERSION = 1;
@@ -144,10 +120,9 @@ export function isExpansionCycleReading(value: unknown): value is ExpansionCycle
 }
 
 /**
- * The one check every per-cycle reading on the research state passes: an
- * object at the expected format version carrying its list. Anything else reads
- * as no reading at all — never as an empty list (the expansion reading here,
- * and the MW-028 dispatch-work reading).
+ * The check every per-cycle reading on the research state passes: an object at
+ * the expected format version carrying its list. Anything else reads as no
+ * reading, never as an empty list.
  */
 export function isVersionedCycleReading(value: unknown, formatVersion: number, listField: string): boolean {
   return (

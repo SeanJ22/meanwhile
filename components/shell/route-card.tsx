@@ -6,18 +6,14 @@ import { useRouter } from "next/navigation";
 import { ReaderCard } from "./reader-card";
 
 /**
- * The reader's large card for a whole ROUTE — today the Ballot, intercepted
- * over the map (`app/@modal/(.)ballot`). Same frame as every other card:
- * scrim, ✕ Close, Escape, focus trap, inert background. Closing is a browser
- * Back, because opening it was a navigation; the map underneath never left.
+ * The large card for a whole route (the Ballot, intercepted over the map at
+ * `app/@modal/(.)ballot`). Closing is a browser Back; the map never left.
  */
 export function RouteCard({ kicker, zip, children }: { kicker: string; zip?: string; children: ReactNode }) {
   const router = useRouter();
   const close = useCallback(() => router.back(), [router]);
   const openVote = useCallback(() => {
-    // The design: "Where can I vote?" inside the Ballot closes the card and
-    // opens the small popup on the map. The map is mounted under this card
-    // and listens for the request (components/map/map-entry.tsx).
+    // "Where can I vote?" closes the card and asks the map (components/map/map-entry.tsx) for its popup.
     router.back();
     window.setTimeout(() => {
       window.dispatchEvent(new CustomEvent("mw:open-pop", { detail: "vote" }));

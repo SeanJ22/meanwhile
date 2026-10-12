@@ -43,7 +43,7 @@ export async function autonomousHarness(options: {
       extraction: { format: "JSON_RECORDS", rowsPointer: "", fields: { id: { source: "/id", type: "STRING" }, name: { source: "/name", type: "STRING" } } }, verification: { required: false, authorities: [] } };
     const plan: AutonomousWorkPlan = { version: 1, contract, capability: "officials/offices", jurisdiction: "NH", sourceRegistryReferences: ["fixture-only:shared-toolkit-control"], seedUrls: [artifact.canonicalUrl],
       sources: [{ id: "official-roster", subjectId: item.subject, jurisdiction: "NH", recordClass: "OFFICIAL_ROSTER", sourceId: "fixture-clerk.example.gov", publisher: "Fixture county clerk", url: FIXTURE_URL, observedLocator: FIXTURE_URL,
-        observedAt: artifact.retrievedAt, firstObservedAt: artifact.retrievedAt, methodVersion: 56, permission: "ALLOWED", observation: span, publisherSubjectEvidence: [span], applicableBecause: "The held publisher fixture names this exact roster download.", nextRouteIds: [], retrieval: "fetch_public" }], acquisition: [], engineering: [], auditScope: "CAPTURED_ARTIFACT" };
+        observedAt: artifact.retrievedAt, firstObservedAt: artifact.retrievedAt, methodVersion: 56, permission: "ALLOWED", observation: span, publisherSubjectEvidence: [span], applicableBecause: "The held publisher fixture names this exact roster download.", nextRouteIds: [], retrieval: "fetch_public" }], acquisition: [], auditScope: "CAPTURED_ARTIFACT" };
     await registerAutonomousPlan(repos, item.id, options.plan ? options.plan(plan) : plan, now());
   }
   const calls: string[] = []; const readVault = researchVaultResolver(repos, store, FIXTURE_PROJECT);

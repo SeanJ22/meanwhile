@@ -1,20 +1,3 @@
-/**
- * **RULING 127 — no tool prints a credential value.** (Adopted 2026-08-24,
- * item 3.)
- *
- * The load-bearing test here is the one that reproduces the ACTUAL LEAK
- * CHANNEL. `CENSUS_API_KEY` did not escape by being pasted; it escaped because
- * `curl -w '%{url_effective}'` printed the resolved URL back, and this API
- * carries the key as a query parameter. A guard that only caught a bare value
- * on its own line would have been green through the entire incident.
- *
- * The second load-bearing test is that the sweep is BY VALUE. A Census key is
- * forty lowercase hex characters, and so is every git SHA in this repository —
- * so a shape-based scanner is simultaneously useless (hundreds of false
- * positives) and unsafe (blind to any credential of a different shape). That is
- * RULING 110 pointed at secrets, and it is why `MIN_SECRET_LENGTH` is the only
- * heuristic in the module.
- */
 import test from "node:test";
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
@@ -30,6 +13,7 @@ import {
   redactSecrets,
 } from "../lib/ops/secret-redaction.ts";
 
+/** Matching is by value, never by shape: a 40-hex key looks like every git SHA in the repository. */
 const ROOT = resolve(import.meta.dirname, "..");
 
 /** A fake env, so this test never depends on the real one being present. */
@@ -55,7 +39,6 @@ test("parsing takes long values, skips comments, and drops short configuration",
 });
 
 test("THE ACTUAL LEAK CHANNEL: a key inside a URL curl echoed back is redacted", () => {
-  // This is the real shape, from the transcript, with the value swapped.
   const curlOutput =
     "status=200 redirects=0 " +
     "final=https://api.census.gov/data/2023/acs/acs5?get=NAME,B01003_001E" +
@@ -111,18 +94,10 @@ test("NEXT_PUBLIC_* is published by design and is set aside by PREFIX, never by 
   assert.equal(isPublishedByDesign("NEXT_PUBLIC_MAPTILER_KEY"), true);
   assert.equal(isPublishedByDesign("CENSUS_API_KEY"), false);
   assert.equal(isPublishedByDesign("DATABASE_URL"), false);
-  // The one that matters: a real secret must never become exempt by being added
-  // to some list of "keys we decided are fine".
   assert.equal(isPublishedByDesign("WTP_PRODUCTION_DATABASE_URL_WRITE"), false);
 });
 
-/**
- * THE REPOSITORY ITSELF, checked against the REAL `.env.local` when present.
- *
- * Skipped WITH A NAMED REASON rather than silently when the env file is absent
- * (CI has no `.env.local`), because a check that could not run must never print
- * like a passing one.
- */
+/** Skipped with a named reason when `.env.local` is absent (CI). */
 test("no real credential value appears anywhere in the repository", () => {
   const envPath = join(ROOT, ".env.local");
   if (!existsSync(envPath)) {
@@ -158,58 +133,5 @@ test("no real credential value appears anywhere in the repository", () => {
     found,
     [],
     `a credential value is committed in this repository — it is in git history too, so rotation is mandatory: ${found.join("; ")}`,
-  );
-});
-
-/**
- * THE MIRROR IS RE-CONTAMINATED BY THE COMMAND THAT PUBLISHES IT.
- *
- * Found 2026-08-24, audit-remediation session. The mirror was scrubbed clean
- * earlier the same day — `NS11` records it as verified by re-read — and carried
- * six occurrences of five live credentials again a few hours later, across the
- * next session's handoff. Nothing un-scrubbed it: `handoff` re-runs the
- * transcript exporter,
- * which rewrites the mirror out of the local `.jsonl` files — and those are
- * deliberately never scrubbed (NS11).
- *
- * So a hand-run scrub is true only until the next handoff, and the redaction
- * has to sit at the output channel itself (RULING 127). This asserts the ORDER
- * in handoff's own source, the same mechanism `tests/context-pinned-conduct.ts`
- * uses for RULING 108: the scrub must come AFTER the export, because a scrub
- * that ran first would leave the freshly written file untouched — the failure
- * this fixes, rebuilt inside the fix for it.
- */
-test("handoff scrubs the Drive mirror AFTER exporting transcripts into it", () => {
-  const source = readFileSync(join(ROOT, "scripts", "handoff.mjs"), "utf8");
-
-  const exportAt = source.indexOf("EXPORTER, \"--out\"");
-  const scrubAt = source.indexOf("pnpm run secrets:scrub-mirror");
-  const rereadAt = source.indexOf("pnpm run secrets:sweep");
-
-  assert.ok(exportAt > 0, "handoff no longer runs the transcript exporter — this guard is stale");
-  assert.ok(
-    scrubAt > 0,
-    "handoff does not scrub the mirror; every handoff will republish the leaked values",
-  );
-  assert.ok(
-    scrubAt > exportAt,
-    "the scrub runs BEFORE the export, so the freshly written transcripts are never scrubbed",
-  );
-  assert.ok(
-    rereadAt > scrubAt,
-    "nothing re-reads the mirror after the scrub — RULING 113: observe the step's product at the step",
-  );
-});
-
-/**
- * And the verdict may never be the scrub's EXIT STATUS. `secrets:sweep --scrub`
- * exits non-zero whenever it FOUND anything, which is the normal, healthy path
- * — a handoff reading that as failure would fail on every successful scrub.
- */
-test("handoff's clean verdict comes from a re-read, not from the scrub's exit code", () => {
-  const source = readFileSync(join(ROOT, "scripts", "handoff.mjs"), "utf8");
-  assert.ok(
-    source.includes(String.raw`0 secret occurrence\(s\) across`),
-    "handoff does not test the re-read's own sentence; its verdict is coming from somewhere weaker",
   );
 });

@@ -5,7 +5,7 @@ import { COLD_CHECK_MINUTES, HOT_CHECK_MINUTES, STANDING_CHECK_MINUTES, checkEve
 import type { DoorRecord } from "../lib/doors/registry.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 
-/** DB-31: doors whose last success is older than their check are listed, with the live facts behind each. */
+/** Doors whose last success is older than their check are listed, with the live facts behind each. */
 
 const NOW = "2026-10-04T12:00:00.000Z";
 const minutesAgo = (minutes: number) => new Date(Date.parse(NOW) - minutes * 60_000).toISOString();
@@ -43,14 +43,16 @@ describe("DB-31: overdue doors", () => {
     assert.equal(checkEveryFor(door({ doorId: "f", meeting: null }), undefined).minutes, STANDING_CHECK_MINUTES);
   });
 
-  it("lists open doors past their check, most late first, with their facts; leaves out the on-time, the shut and the suspended", () => {
+  it("lists open doors past their check, most late first, with their facts; leaves out the on-time, the shut, the suspended and doors no task reads on a clock", () => {
     const doors = [
       door({ doorId: "on-time-hot", bodyIds: ["body-a"], lastSuccessAt: minutesAgo(50) }),
       door({ doorId: "late-hot", bodyIds: ["body-a"], lastSuccessAt: minutesAgo(130) }),
       door({ doorId: "late-cold", bodyIds: ["body-b"], lastSuccessAt: minutesAgo(900) }),
       door({ doorId: "shut-late", bodyIds: ["body-b"], status: "SHUT", lastSuccessAt: minutesAgo(5000) }),
       door({ doorId: "suspended-late", bodyIds: ["body-b"], status: "SUSPENDED", lastSuccessAt: minutesAgo(5000) }),
-      door({ doorId: "feed-late", meeting: null, kind: "feed", bodyIds: [], lastSuccessAt: minutesAgo(3000) }),
+      door({ doorId: "feed-late", meeting: null, kind: "source-feed", bodyIds: [], lastSuccessAt: minutesAgo(3000) }),
+      door({ doorId: "found-page", meeting: null, kind: "page", bodyIds: [], lastSuccessAt: null, updatedAt: minutesAgo(30_000) }),
+      door({ doorId: "route-hints", meeting: null, kind: "route-hints", bodyIds: [], lastSuccessAt: null, updatedAt: minutesAgo(30_000) }),
     ];
     const listed = overdueDoors(doors, facts, NOW);
     assert.deepEqual(listed.map(({ doorId }) => doorId), ["feed-late", "late-cold", "late-hot"]);

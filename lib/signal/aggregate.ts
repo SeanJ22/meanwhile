@@ -10,28 +10,13 @@ import {
 } from "./reactions.ts";
 
 /**
- * The aggregation contract — the function the data business sells, born
- * tested (tests/reactions.test.ts) even while only test data flows.
- *
- * Reactions in, per-division tier-split tallies out, with n stated at every
- * level. The rules it must never break:
- *
- * - **Tallies are per verification tier, never blended.** CLAUDE.md: every
- *   export reports its confidence mix; a single blended number is the
- *   forbidden shape. Every tier in the enum appears in every tally — a tier
- *   with no rows says 0, it does not disappear — so a buyer can see the mix
- *   is all-ANONYMOUS today rather than inferring it.
- * - **n is stated, always.** An aggregate without its denominator is the
- *   count invariant violated at the exact layer it matters most.
- * - **No identity in, none out.** The input rows carry no identifier
- *   (schema-guaranteed); the output carries division ids and counts only.
- * - **Scales are never mixed.** A tally is per (target, division, SCALE
- *   VERSION). The funding question changed from yes/no/unsure to a
- *   five-point scale on 2026-08-15; rows either side are different
- *   instruments, and one denominator over both would report a trend caused
- *   by the question changing and nothing else. The break is dated in
- *   `SCALE_BREAKS` and every tally carries its version, so a buyer holding
- *   two columns can read why there are two.
+ * The aggregation contract: reactions in, per-division tier-split tallies out, with n stated at every
+ * level.
+ * - Tallies are per verification tier, never blended; every tier appears in every tally, zeros included.
+ * - n is stated, always.
+ * - No identity in, none out: output carries division ids and counts only.
+ * - Scales are never mixed: a tally is per (target, division, scale version), and breaks are dated in
+ *   `SCALE_BREAKS`.
  */
 
 /** The slice of a stored reaction row the aggregator reads. */
@@ -39,28 +24,18 @@ export interface ReactionRowForAggregation {
   targetType: ReactionTargetType;
   targetId: string;
   reaction: ReactionValue;
-  /**
-   * Which instrument produced this row. Absent means 1 — every row written
-   * before the funding scale changed is a v1 row, which is what the column
-   * default says in the database too.
-   */
+  /** Which instrument produced this row. Absent means 1, matching the column default. */
   scaleVersion?: ScaleVersion;
   ocdIds: string[];
   verificationTier: VerificationTier;
   /**
-   * Quarantine mark (T08) — non-null means the row tripped an intake limit
-   * and is excluded from every aggregate unconditionally (no flag governs
-   * this: the clean pool is the only pool the business draws from).
+   * Quarantine mark: non-null means the row tripped an intake limit and is excluded from every aggregate
+   * unconditionally.
    */
   suspectReason?: string | null;
   /**
-   * **Whose traffic this row is** (item 0D, 2026-08-19). `ORGANIC` is the
-   * only class an aggregate may count.
-   *
-   * Optional in the TYPE and treated as `UNKNOWN` when absent, which is the
-   * conservative reading and the only safe one: a caller that has not been
-   * taught to carry the column must not thereby have its rows counted as
-   * readers. Absent means excluded, never included.
+   * Whose traffic this row is. `ORGANIC` is the only class an aggregate may count; absent is treated as
+   * `UNKNOWN` and excluded.
    */
   runClass?: string | null;
 }
@@ -79,15 +54,8 @@ export interface TierTally extends AnswerCounts {
   NO?: number;
   UNSURE?: number;
   /**
-   * The uncontested-race answer (M63). Present on every tally with a zero,
-   * the same way every verification tier is present with zeros: a buyer
-   * reading a tally must be able to tell "nobody chose this" from "this
-   * column did not exist when the data was collected", and a column that
-   * appears only sometimes cannot be told apart from a missing one.
-   *
-   * Structurally zero outside a one-candidate contest — the write path
-   * refuses the value there — so a non-zero count on a contested race is
-   * evidence of a bug, not of reader sentiment.
+   * The uncontested-race answer, present on every tally with a zero. Structurally zero outside a
+   * one-candidate contest (the write path refuses it), so a non-zero count on a contested race is a bug.
    */
   SOMEONE_ELSE?: number;
   /** Rows in this tier — always the sum of the answer counts. */
@@ -127,27 +95,17 @@ export function scaleBreaksFor(targetType: ReactionTargetType) {
 }
 
 /**
- * Rows that count: not quarantined, and organic traffic only. Funding
- * reactions count like every other reaction (Sean, 2026-10-01: the
- * funding-aggregates switch is removed; FEC contributor records themselves
- * are never sold, reactions are).
+ * Rows that count: not quarantined, and organic traffic only. Funding reactions count like every other
+ * reaction; FEC contributor records themselves are never sold.
  */
 export function rowsEligibleForAggregation(
   rows: ReactionRowForAggregation[],
 ): ReactionRowForAggregation[] {
-  // Quarantined rows (T08) are out FIRST and UNCONDITIONALLY — no ripcord
-  // governs this filter. A row that tripped an intake limit is stored (the
-  // author reviews; nothing auto-deletes) but never counted, never
-  // exported, never sold.
+  // Quarantined rows are out first and unconditionally: stored, never counted, exported or sold.
   const clean = rows
     .filter((row) => row.suspectReason == null)
-    // WHOSE TRAFFIC (item 0D, 2026-08-19). An ALLOWLIST, exactly as the
-    // search log's sold read path is: a class that does not exist yet is
-    // excluded the moment it exists rather than the moment someone
-    // remembers to exclude it, and an absent value is UNKNOWN and therefore
-    // out. This filter is unconditional — no ripcord governs it, because a
-    // column nobody reads is not a claim, and the claim a buyer pays for is
-    // that our own traffic is separable from a reader's.
+    // Whose traffic: an allowlist, so a new class is excluded the moment it exists and an absent value is
+    // UNKNOWN and out. Unconditional.
     .filter((row) => (row.runClass ?? "UNKNOWN") === "ORGANIC");
   return clean;
 }
@@ -175,16 +133,8 @@ export function aggregateReactions(
           targetId: row.targetId,
           ocdId,
           scaleVersion: version,
-          // The question as this row's instrument asked it. An older tally
-          // keeps the wording it was collected under rather than being
-          // relabelled with the current one — relabelling is how a scale
-          // break disappears.
-          //
-          // By VERSION since g3 (2026-08-16). This was one hardcoded
-          // "anything that isn't current" string, which was right while
-          // exactly one older version existed and silently became wrong when
-          // the contributions table moved to v3: a v2 row would have been
-          // labelled with the v1 wording, skipping a version.
+          // The question as this row's instrument asked it, by version, so an older tally keeps the wording it
+          // was collected under.
           question: questionForRow(row.targetType, version),
           tiers: emptyTiers(version),
           n: 0,

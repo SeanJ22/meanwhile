@@ -1,7 +1,6 @@
 /**
- * MW-025 — a walk records which handed field-manual doors it actually used.
- * MW-027 — what the Scout results measure is drawn week by week, and a week
- * with no record is a gap, never a zero.
+ * A walk records which handed field-manual doors it actually used, and what the Scout results measure is drawn
+ * week by week; a week with no record is a gap, never a zero.
  */
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -19,8 +18,6 @@ function entry(id: string, url: string | null, routeId: string | null): FieldMan
 }
 
 const STORE: FieldManualStore = {
-  formatVersion: 1,
-  updatedOn: null,
   entries: [
     entry("fm:by-url", "https://Pima.Legistar.com/Calendar.aspx/", null),
     entry("fm:duplicate-url", "https://pima.legistar.com/Calendar.aspx", "another-name-for-same-door"),

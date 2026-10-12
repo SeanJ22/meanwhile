@@ -17,12 +17,9 @@ import type { Division, Body, BodyClass } from "./types.ts";
  */
 
 /**
- * LSAD codes that mean a polygon has an actual government.
- *
- * Read off the Census place and county-subdivision files rather than assumed,
- * because the failure mode is severe in both directions. 376 of Arizona's 467
- * places are census designated places and all 80 of its county subdivisions are
- * statistical CCDs; a rule without this invents 376 councils in one state.
+ * LSAD codes that mean a polygon has an actual government. Read off the Census place and
+ * county-subdivision files rather than assumed: in many states most places are CDPs and the county
+ * subdivisions are statistical CCDs.
  *
  * | Code | Means            | Governs |
  * |------|------------------|---------|
@@ -44,26 +41,17 @@ const NON_GOVERNING_LSAD = new Set(["22", "57", "32", "36", "42"]);
 /**
  * Census `FUNCSTAT` codes that mean this polygon is a government.
  *
- * `A` active with primary general-purpose functions, `B` active and partially
- * consolidated but with its own officials, `G` active but subordinate to
- * another unit. `C` is an active government consolidated with another under a
- * *single* set of officials — Nashville-Davidson, Indianapolis-Marion. It is
- * included here because deleting a real city is worse than the alternative, but
- * one set of officials is one body, so a `C` place plus its county currently
- * derives two bodies where there is one council. None appear in the three clip
- * counties; tracker M18 carries the merge before national ingest.
+ * `A` active with primary general-purpose functions, `B` active and partially consolidated but with its
+ * own officials, `G` active but subordinate to another unit. `C` is consolidated with another unit under
+ * a single set of officials (e.g. Nashville-Davidson); it is included because deleting a real city is
+ * worse, but a `C` place plus its county currently derives two bodies where there is one council.
  */
 const GOVERNING_FUNCSTAT = new Set(["A", "B", "C", "G"]);
 
 /**
- * Codes that mean this polygon is not a government.
- *
- * `F` is the important one and it is what resolves the place/cousub duplicate:
- * Census creates a *fictitious* row to fill its geographic hierarchy when a
- * government is already listed in the other layer. Concord NH is `A` in the
- * place file and `F` in the county-subdivision file — Census has already said
- * which of the two is the city. `N` is a nonfunctioning legal entity, `S` a
- * statistical one, `I` an inactive special-purpose unit.
+ * Codes that mean this polygon is not a government. `F` resolves the place/cousub duplicate: Census
+ * writes a fictitious row into one layer when the government is already listed in the other. `N` is a
+ * nonfunctioning legal entity, `S` a statistical one, `I` an inactive special-purpose unit.
  */
 const NON_GOVERNING_FUNCSTAT = new Set(["F", "N", "S", "I"]);
 
@@ -98,9 +86,7 @@ export interface DerivationOutcome {
 export function slotsFor(division: Division): DerivationOutcome {
   switch (division.divisionType) {
     case "county":
-      // Supervisors in Arizona, commissioners in New Jersey, and New
-      // Hampshire's counties have delegations. One governing body either way;
-      // the name is not knowable from the division type.
+      // One governing body either way; the name is not knowable from the division type.
       return { slots: [{ bodyClass: "GOVERNING", slot: "governing" }], skipped: null };
 
     case "school_district":
@@ -110,12 +96,8 @@ export function slotsFor(division: Division): DerivationOutcome {
       return { slots: [{ bodyClass: "GOVERNING", slot: "board" }], skipped: null };
 
     case "place": {
-      // FUNCSTAT first, because it states functional status directly where LSAD
-      // only names the entity's legal form — and because it is the only field
-      // that distinguishes a real municipality from the fictitious row Census
-      // writes into the other layer for the same ground. Without it, Concord NH
-      // is a city in the place file and a city in the county-subdivision file,
-      // and both look equally real.
+      // FUNCSTAT first: it states functional status directly where LSAD only names the legal form, and it
+      // is the only field that tells a real municipality from the fictitious row in the other layer.
       const funcstat = division.funcstat ?? "";
       if (funcstat) {
         if (NON_GOVERNING_FUNCSTAT.has(funcstat)) {
@@ -145,8 +127,7 @@ export function slotsFor(division: Division): DerivationOutcome {
         return { slots: [{ bodyClass: "GOVERNING", slot: "governing" }], skipped: null };
       }
       if (NON_GOVERNING_LSAD.has(lsad)) {
-        // Vail is a CDP. There is no municipal government to meet, and
-        // generating a council for it would be a fabrication.
+        // A CDP has no municipal government; generating a council for it would be a fabrication.
         return { slots: [], skipped: "statistical-or-unorganized" };
       }
       // An unrecognised code is a gap in this table, not a licence to guess.
@@ -156,10 +137,8 @@ export function slotsFor(division: Division): DerivationOutcome {
     case "sldu":
     case "sldl":
     case "cd":
-      // A legislative district elects a seat in a body that sits elsewhere. The
-      // chamber is not a body *of* this division, and Arizona's legislative
-      // districts elect one senator and two representatives, so the district is
-      // not even one seat.
+      // A legislative district elects a seat in a chamber that sits elsewhere; the chamber is not a body of
+      // this division.
       return { slots: [], skipped: "legislative-seat-not-a-meeting-body" };
     default:
       // An Admin-added kind is admissible geography, not permission to infer

@@ -20,7 +20,7 @@ const request: ActionReceipt = { formatVersion: 1, receiptId: "release.rollback:
   stateVersion: null, codeSha: sha, startedAt: now(), completedAt: now(), outcome: "QUEUED", says: "Queued", refusal: null, openedWork: [], readBackAt: "/admin?view=queue", undo: null,
   change: { before: current.id, after: earlier.sha } };
 
-test("DB-47 offers only code retaining every applied contract, with exact immutable bytes", () => {
+test("offers only code retaining every applied contract, with exact immutable bytes", () => {
   const applied = [{ when: 1, hash: h }, { when: 2, hash: h2 }];
   assert.equal(rollbackCompatibility(applied,[expand,contract],[expand,contract]),null);
   assert.match(rollbackCompatibility(applied,[expand,contract],[expand])!,/predates.*contract/);
@@ -30,7 +30,7 @@ test("DB-47 offers only code retaining every applied contract, with exact immuta
   assert.match(rollbackCompatibility([{when:1,hash:h},{when:1,hash:h}],[expand],[expand])!,/contradictory/);
 });
 
-test("DB-47 normal Send queues an exact compatible request; stale migration or release views refuse", async () => {
+test("normal Send queues an exact compatible request; stale migration or release views refuse", async () => {
   const action = releaseRollbackAction(async () => view());
   const validated = action.validate({deployId:earlier.id,sha:olderSha,expectedVersion:view().version});assert.ok(validated.ok);
   const context = { request: {} as never, receiptId: request.receiptId, at: now() };
@@ -43,7 +43,7 @@ test("DB-47 normal Send queues an exact compatible request; stale migration or r
   const refusal = await unread.execute(deps,context,validated.value);assert.ok(!refusal.ok);assert.equal(refusal.refusal,"DOWNSTREAM_REFUSED");
 });
 
-test("DB-47 concurrent runner calls restore once and read the result from the standard receipt history", async () => {
+test("concurrent runner calls restore once and read the result from the standard receipt history", async () => {
   const repos = createMemoryRepositories();assert.ok((await appendReceipt(repos,request,now())).ok);
   let posts=0, live=current;
   const adapter: RollbackAdapter = {read:async()=>view(),confirm:async()=>true,published:async()=>live,restore:async()=>{posts++;live=earlier;return "accepted";}};
@@ -53,7 +53,7 @@ test("DB-47 concurrent runner calls restore once and read the result from the st
   assert.equal((await findReceipt(repos,`${request.receiptId}:rollback-result`))?.change?.after,olderSha);
 });
 
-test("DB-47 an applied contract arriving after Send or a moving publication pointer makes no restore request", async () => {
+test("an applied contract arriving after Send or a moving publication pointer makes no restore request", async () => {
   for (const changed of ["schema","publication"]) {
     const repos=createMemoryRepositories();await appendReceipt(repos,request,now());let posts=0;
     const changedView=rollbackView({current,applied:[{when:1,hash:h},{when:2,hash:h2}],catalog:[expand,contract],candidates:[{deploy:earlier,catalog:[expand]}]});
@@ -62,7 +62,7 @@ test("DB-47 an applied contract arriving after Send or a moving publication poin
   }
 });
 
-test("DB-47 the final fresh-journal confirmation refuses a contract applied during the history reading", async () => {
+test("the final fresh-journal confirmation refuses a contract applied during the history reading", async () => {
   const repos=createMemoryRepositories();await appendReceipt(repos,request,now());let posts=0,reads=0;
   const record={id:current.id,commit_ref:sha,published_at:current.publishedAt,context:"production",branch:"main",state:"ready"};
   const fetchImpl:typeof fetch=async(input,init)=>{
@@ -75,7 +75,7 @@ test("DB-47 the final fresh-journal confirmation refuses a contract applied duri
   assert.equal((await executeQueuedRollback(repos,request.receiptId,adapter,now)).state,"REFUSED");assert.equal(reads,2);assert.equal(posts,0);
 });
 
-test("DB-47 lost restore response is confirmed from publication when possible, otherwise remains unknown without resubmission", async () => {
+test("lost restore response is confirmed from publication when possible, otherwise remains unknown without resubmission", async () => {
   for (const confirmed of [true,false]) {
     const repos=createMemoryRepositories();await appendReceipt(repos,request,now());let posts=0,live=current;
     const adapter:RollbackAdapter={read:async()=>view(),confirm:async()=>true,published:async()=>live,restore:async()=>{posts++;if(confirmed)live=earlier;return "unknown";}};
@@ -85,18 +85,18 @@ test("DB-47 lost restore response is confirmed from publication when possible, o
   }
 });
 
-test("DB-47 no stored owner receipt, unreadable store or failed execution claim cannot reach the provider", async () => {
+test("no stored owner receipt, unreadable store or failed execution claim cannot reach the provider", async () => {
   const repos=createMemoryRepositories();let posts=0;
   const adapter:RollbackAdapter={read:async()=>view(),confirm:async()=>true,published:async()=>current,restore:async()=>{posts++;return "accepted";}};
   assert.equal((await executeQueuedRollback(repos,request.receiptId,adapter,now)).state,"REFUSED");
   await appendReceipt(repos,request,now());
   const failed={...repos,adminReceipts:{...repos.adminReceipts,append:async()=>{throw new Error("unreachable private credential");}}};
   assert.equal((await executeQueuedRollback(failed,request.receiptId,adapter,now)).state,"CLAIMED");assert.equal(posts,0);
-  const unread={...repos,adminReceipts:{...repos.adminReceipts,readWhere:async()=>{throw new Error("unavailable");}}};
+  const unread={...repos,adminReceipts:{...repos.adminReceipts,read:async()=>{throw new Error("unavailable");}}};
   await assert.rejects(executeQueuedRollback(unread,request.receiptId,adapter,now));assert.equal(posts,0);
 });
 
-test("DB-47 a failed result write preserves the execution claim and never repeats a successful restore", async () => {
+test("a failed result write preserves the execution claim and never repeats a successful restore", async () => {
   const base=createMemoryRepositories();await appendReceipt(base,request,now());let posts=0,live=current;
   const repos={...base,adminReceipts:{...base.adminReceipts,append:async(...args:Parameters<typeof base.adminReceipts.append>)=>{
     if(args[1].endsWith(":rollback-result"))throw new Error("unavailable");
@@ -108,7 +108,7 @@ test("DB-47 a failed result write preserves the execution claim and never repeat
   assert.equal((await executeQueuedRollback(repos,request.receiptId,adapter,now)).state,"CLAIMED");assert.equal(posts,1);
 });
 
-test("DB-47 exact-commit catalog reads derive phases from SQL and preserve the applied byte hashes", async () => {
+test("exact-commit catalog reads derive phases from SQL and preserve the applied byte hashes", async () => {
   const sql="ALTER TABLE example DROP COLUMN old;\n";
   const mocked:typeof fetch=async input=>new Response(String(input).endsWith("_journal.json")?JSON.stringify({entries:[{when:2,tag:"0001_contract"}]}):sql);
   const catalog=await readRollbackCatalog(olderSha,mocked);
@@ -117,7 +117,7 @@ test("DB-47 exact-commit catalog reads derive phases from SQL and preserve the a
   assert.equal(await readRollbackCatalog(olderSha,async()=>new Response(JSON.stringify({entries:[{when:2,tag:"../../wrong"}]}))),null);
 });
 
-test("DB-47 production adapter uses the existing credential, ignores previews/unpublished builds and makes only the documented restore POST", async () => {
+test("production adapter uses the existing credential, ignores previews/unpublished builds and makes only the documented restore POST", async () => {
   let posts=0;
   const record=(row:typeof current)=>({id:row.id,commit_ref:row.sha,published_at:row.publishedAt,context:"production",branch:"main",state:"ready"});
   const mocked:typeof fetch=async(input,init)=>{

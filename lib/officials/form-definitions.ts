@@ -1,86 +1,4 @@
-/**
- * **LAYER TWO — WHAT THIS PARTICULAR FORM OF GOVERNMENT DOES.**
- * (Item 6 of the overnight depth hunt, 2026-08-24.)
- *
- * ## The gap this fills, and why the class layer could not
- *
- * `body-forms.json` stamps 1,034 of 1,037 bodies with the FORM of their
- * government and reports that they collapse to **15 distinct forms**. That is
- * the whole point of the stamp: the charter or statute read happens once per
- * form, not once per body.
- *
- * The class layer already tells a reader that a New Jersey borough and a New
- * Jersey township are both municipalities. **It cannot tell them that those are
- * two different governments under two different statutes**, because that is
- * exactly the specificity a class definition is written to avoid asserting.
- *
- * The difference is not academic. A New Jersey **borough** has a mayor elected
- * separately from a six-member council and the mayor votes only to break ties.
- * A **township** under the Township Act has a committee that picks its own
- * mayor from among itself, so the person called mayor was elected by three or
- * four colleagues rather than by the town. A reader who wants to know who to
- * call, and whether that person was chosen by them, is asking a question only
- * the form can answer.
- *
- * ## Keyed on the FORM, and the form comes from committed data
- *
- * `lib/officials/body-form.ts` derives the form key from TIGER's legal type
- * code and the Census school classification — not from a name. `Morristown` is
- * a TOWN, `Morris Township` is a TOWNSHIP, and they are eleven miles and one
- * statute apart. RULING 114 was adopted over LSAD 43 and 44 being reversed, so
- * the derivation is asserted against a second authority; nothing here re-derives
- * it.
- *
- * ## It ADDS to the class layer and supersedes nothing
- *
- * Layer one always renders. This renders beneath it when the statute for that
- * form has been read, and a form with no entry simply does not add a second
- * paragraph. There is no path here that can blank a class definition.
- *
- * ## Every citation is fetched and control-checked
- *
- * `pnpm definitions:verify` fetches each `basisUrl` and requires a control
- * string from the document's own text. A 200 whose content is not about the
- * thing asked for is not a source, and this project has been caught by both a
- * styled "Page not found" answering 200 and by a chapter index that merely
- * listed a section number.
- *
- * **The New Jersey chapter numbers were read, not assumed.** Title 40A's
- * chapters 60 to 64 are not labelled by form on the section pages, so each was
- * opened and identified from its own first sentence — *"the inhabitants of each
- * of the several boroughs"*, *"…of the several cities"*, *"…of the several
- * towns"*. 40A:64 turned out NOT to be the village chapter at all; its section
- * 1 is about Sunday sales. New Jersey's one village therefore has no entry
- * here rather than a guessed one.
- *
- * ## WHERE THIS STOPS, AND WHY — 8 of the 15 forms, 641 of the 1,037 bodies
- *
- * Stated rather than left to be inferred from what is missing.
- *
- * The eight here are the MUNICIPAL forms, and they are the ones where the form
- * carries information the class cannot. The other seven are:
- *
- * | Form | Bodies | Why no entry |
- * | --- | ---: | --- |
- * | `nj:school_district_independent` | 209 | one statutory form in the state |
- * | `nh:school_district_independent` | 147 | one statutory form in the state |
- * | `nh:county` | 12 | one statutory form in the state |
- * | `nh:school_district_dependent` | 9 | not a government; the national definition covers it |
- * | `nj:county` | 8 | one statutory form in the state |
- * | `nj:school_district_dependent` | 7 | not a government; the national definition covers it |
- * | `nj:village` | 1 | **genuinely unread — the chapter has not been found** |
- *
- * **For six of those seven the FORM and the CLASS coincide**: New Jersey has
- * one statutory form of county, New Hampshire one form of school district, and
- * the class definition for each already cites that same statute. A form entry
- * there would restate the paragraph directly above it, which is worse for a
- * reader than no second paragraph — the layer exists to ADD specificity, not to
- * fill a slot.
- *
- * **The seventh is a real gap and is recorded as one.** New Jersey's village
- * form is not in Title 40A chapters 60–64, and it has not been located. One
- * body is affected. It is a gap, not a decision.
- */
+/** Layer two: what a particular form of government does, read once per form from its charter or statute. */
 import type { BodyBlurb as Definition } from "./body-description.ts";
 
 export interface FormDefinitionRow {
@@ -90,7 +8,6 @@ export interface FormDefinitionRow {
 }
 
 export const FORM_DEFINITIONS: ReadonlyArray<FormDefinitionRow> = [
-  /* ---------------------------------------------------------- New Jersey --- */
   {
     formKey: "nj:borough",
     definition: {
@@ -132,7 +49,6 @@ export const FORM_DEFINITIONS: ReadonlyArray<FormDefinitionRow> = [
     },
   },
 
-  /* ------------------------------------------------------- New Hampshire --- */
   {
     formKey: "nh:town",
     definition: {
@@ -154,7 +70,6 @@ export const FORM_DEFINITIONS: ReadonlyArray<FormDefinitionRow> = [
     },
   },
 
-  /* ------------------------------------------------------------- Arizona --- */
   {
     formKey: "az:city",
     definition: {

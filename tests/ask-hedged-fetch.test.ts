@@ -3,13 +3,7 @@ import test from "node:test";
 
 import { askHedgeMs, hedgedFetch } from "../lib/ask/hedged-fetch.ts";
 
-/**
- * **A STALLED READING IS ASKED AGAIN.** (2026-09-29, S3.) Measured that day, the
- * fast model's reading of a question stalled for 5.1-5.8 s in four of 25 calls
- * and answered in 1.1 s when asked again. These pin the mechanism: the first
- * answer wins, only the loser is stopped, a failure is retried at once, and the
- * hedge can be switched off.
- */
+/** A stalled reading is asked again: the first answer wins, only the loser is stopped, a failure is retried at once, and the hedge can be switched off. */
 
 const ok = (text: string) => new Response(text, { status: 200 });
 

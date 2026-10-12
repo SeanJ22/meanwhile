@@ -2,7 +2,6 @@
  * promoted records retain their keys when Admin later changes that table. */
 export type ProvisionKind = string;
 
-/** Stored inside the ballot's civic-data projection, with stable reaction keys. */
 export interface MeasureRecord {
   readonly contestId: string;
   readonly whatItDoes: string;

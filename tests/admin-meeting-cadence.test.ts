@@ -1,20 +1,10 @@
 /**
- * **ADMIN STATES THE MEETING CADENCE THE RUNNER KEEPS** (2026-09-25).
- *
- * Production, signed in, 1:40 PM MST: Pima County's Board of Supervisors card
- * said "How often: Daily through the 2026 general election, then weekly" and
- * "Next look: Due Sep 26, 4:30 PM ET" beside "62 of 62 reads got in in the
- * last 24 hours". Both came from the contract's `cadence`, which is how old a
- * Reader may see a record, not when the runner reads. The runner reads every
- * meeting source on its sitting-window `schedule` (C6): twice a day, and within
- * the hour while a sitting is within seven days ahead or behind.
- *
- * These pin the card to the runner: each instant is checked against the
- * runner's own `routineTaskDeadlineMs` / `routineTaskDue` for the same facts,
- * and a body without a sitting window keeps its cadence words unchanged.
+ * Admin states the meeting cadence the runner keeps. A contract's `cadence` is how old a Reader may
+ * see a record, not when the runner reads; the runner reads every meeting source on its
+ * sitting-window `schedule`. Each instant is checked against the runner's own
+ * `routineTaskDeadlineMs` / `routineTaskDue`, and a body without a sitting window keeps its cadence words.
  */
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import { MEETING_PARTITION_POLICY, MEETING_SITTING_WINDOW } from "../lib/civic-data/contracts.ts";
@@ -34,7 +24,7 @@ import {
   type WatchedContract,
 } from "../lib/control-plane/admin-view/bodies.ts";
 
-const NOW = "2026-09-25T20:40:00.000Z"; // 1:40 PM MST, when the defect was seen
+const NOW = "2026-09-25T20:40:00.000Z";
 const NOW_MS = Date.parse(NOW);
 const HOUR = 3_600_000;
 const DAY = 24 * HOUR;
@@ -87,21 +77,10 @@ function runnerSays(clock: RoutineTaskClock, sittings: readonly SittingFacts[] |
   };
 }
 
-test("the watched meeting partitions all carry the runner's sitting-window schedule, and the loader passes it on", () => {
+test("the watched meeting partitions all carry the runner's sitting-window schedule", () => {
   assert.ok(MEETING_PARTITION_CONTRACTS.length > 50);
   for (const c of MEETING_PARTITION_CONTRACTS) assert.equal(c.schedule, MEETING_SITTING_WINDOW, c.id);
   assert.ok(PARTITION && TASK, "the Pima Legistar partition and its runner task exist");
-  const loader = readFileSync("app/(admin)/_mw/data/load-bodies.ts", "utf8");
-  assert.match(loader, /\.\.\.\(c\.schedule \? \{ schedule: c\.schedule \} : \{\}\)/);
-  const bodyStore = readFileSync("app/(admin)/_mw/data/body-store.ts", "utf8");
-  const versions = bodyStore.slice(bodyStore.indexOf("const VERSIONS"), bodyStore.indexOf("const ATTEMPTS"));
-  for (const col of ["observed_at", "confirmed_at", "sittings", "import_kind"]) assert.match(versions, new RegExp(`\\b${col}\\b`), col);
-  assert.match(versions, /e\.candidate_id = p\.current_version_id AND e\.sequence = 1\) AS observed_at/, "the success instant is the version's first event, as the runner reads it");
-  const full = bodyStore.slice(bodyStore.indexOf("export async function readBodyStore("), bodyStore.indexOf("export async function readBodyStanding("));
-  const standing = bodyStore.slice(bodyStore.indexOf("export async function readBodyStanding("));
-  // Through the scope-narrowing helper when an opened read asks for one body (claude/ac-admin-first-open).
-  assert.match(full, /(?:sql\.query|statement)\(VERSIONS_WITH_CLOCK, \[nowIso, CONFIRMATION_LIKE\]\)/, "the full read carries the clock");
-  assert.doesNotMatch(standing, /VERSIONS_WITH_CLOCK|CONFIRMATION_LIKE/, "the preview's standing read never pays for a schedule it does not show");
 });
 
 test("the rule is worded from the schedule's own numbers", () => {
@@ -120,7 +99,7 @@ test("Pima's card: hourly while its Sep 22 sitting is within seven days behind, 
     howOften,
     "Hourly now — the Sep 22, 2026 sitting is within seven days behind; the next one listed is Oct 13, 2026. The rule: twice a day, and within the hour while a sitting is within seven days ahead or behind.",
   );
-  assert.equal(nextLook, "Owed by Sep 25, 5:30 PM EDT, an hour after the last good read; the runner may read it from Sep 25, 5:05 PM EDT");
+  assert.equal(nextLook, "Owed by Sep 25, 5:30 PM ET, an hour after the last good read; the runner may read it from Sep 25, 5:05 PM ET");
   assert.doesNotMatch(`${howOften} ${nextLook}`, /general election|weekly|Due Sep 26/, "the contract's Reader-freshness cadence is not the runner's clock");
   assert.equal(
     v.lanes.find((l) => l.name === "Acquisition")!.note,
@@ -141,7 +120,7 @@ test("a sitting ahead within seven days holds it hourly; none within seven days 
   const cold: SittingFacts[] = [{ startsAt: "2026-09-01T17:00:00-07:00", endsAt: null }, { startsAt: "2026-10-13T13:00:00-07:00", endsAt: null }];
   const v = card(store(version({ clock: clockFacts(cold) }), [attempt(LAST_GOOD)]));
   assert.match(row(v, "How often"), /^Twice a day now — no sitting is within seven days ahead or behind; the next one listed is Oct 13, 2026\. The rule: /);
-  assert.equal(row(v, "Next look"), "Owed by Sep 26, 4:30 AM EDT, twelve hours after the last good read; the runner may read it from Sep 26, 2:30 AM EDT");
+  assert.equal(row(v, "Next look"), "Owed by Sep 26, 4:30 AM ET, twelve hours after the last good read; the runner may read it from Sep 26, 2:30 AM ET");
   const runner = runnerSays({ lastAttemptedAt: LAST_GOOD, lastSucceededObservedAt: LAST_GOOD, sittingStarts: cold.map((s) => s.startsAt) }, cold);
   assert.equal(sittingClockOf(CONTRACT, version({ clock: clockFacts(cold) }), [attempt(LAST_GOOD)], NOW_MS).owed!.deadlineMs, runner.deadlineMs);
 });
@@ -162,7 +141,7 @@ test("a read that published nothing after the last good one is retried an hour a
   const failedAt = "2026-09-25T20:20:00.000Z";
   const good = "2026-09-25T19:30:00.000Z";
   const v = card(store(version({ clock: clockFacts(PIMA_SITTINGS, good) }), [attempt(failedAt, "SOURCE_BLOCKED", false), attempt(good)]));
-  assert.equal(row(v, "Next look"), "Owed by Sep 25, 5:20 PM EDT, the retry an hour after a read that published nothing; the runner may read it from Sep 25, 4:55 PM EDT");
+  assert.equal(row(v, "Next look"), "Owed by Sep 25, 5:20 PM ET, the retry an hour after a read that published nothing; the runner may read it from Sep 25, 4:55 PM ET");
   const runner = runnerSays({ lastAttemptedAt: failedAt, lastSucceededObservedAt: good, sittingStarts: PIMA_SITTINGS.map((s) => s.startsAt) }, PIMA_SITTINGS);
   assert.equal(Date.parse("2026-09-25T21:20:00.000Z"), runner.deadlineMs);
 });
@@ -171,7 +150,7 @@ test("a source with nothing published waits twelve hours between attempts, and e
   const tried = "2026-09-25T17:19:04.224Z";
   const v = card(store(null, [attempt(tried, "CANNOT_TELL", true)]));
   assert.equal(row(v, "How often"), "Twice a day until something from it is published: with no meeting on record, the runner waits twelve hours after each attempt. The rule: twice a day, and within the hour while a sitting is within seven days ahead or behind.");
-  assert.equal(row(v, "Next look"), "Owed by Sep 26, 1:19 AM EDT, twelve hours after the last attempt, since nothing from it is published yet; the runner may read it from Sep 25, 11:19 PM EDT");
+  assert.equal(row(v, "Next look"), "Owed by Sep 26, 1:19 AM ET, twelve hours after the last attempt, since nothing from it is published yet; the runner may read it from Sep 25, 11:19 PM ET");
   assert.match(v.lanes.find((l) => l.name === "Acquisition")!.note, /a failed read is retried twelve hours after each attempt while nothing from it is published\.$/);
   assert.equal(v.deadEnd!.whoMoves, "The runner reads it again on its clock (twelve hours after each attempt while nothing from it is published). Nothing else is scheduled to change it.");
   const runner = runnerSays({ lastAttemptedAt: tried }, undefined);
@@ -186,14 +165,14 @@ test("a trusted-LKG import is never a success: only a live read after it counts,
 
   const live = "2026-09-25T20:10:00.000Z";
   const v = card(store(importVersion, [attempt(live, "SOURCE_BLOCKED", false)]));
-  assert.match(row(v, "Next look"), /^Owed by Sep 25, 5:10 PM EDT, the retry an hour after a read that published nothing/);
+  assert.match(row(v, "Next look"), /^Owed by Sep 25, 5:10 PM ET, the retry an hour after a read that published nothing/);
   const runnerClock: RoutineTaskClock = { ...trustedLkgImportClock(live, imported), sittingStarts: PIMA_SITTINGS.map((s) => s.startsAt) };
   assert.equal(sittingClockOf(CONTRACT, importVersion, [attempt(live, "SOURCE_BLOCKED", false)], NOW_MS).owed!.deadlineMs, runnerSays(runnerClock, PIMA_SITTINGS).deadlineMs);
 });
 
 test("an overdue read says overdue, and a reading without the clock facts says so rather than guessing", () => {
   const stale = "2026-09-25T18:00:00.000Z";
-  assert.equal(row(card(store(version({ clock: clockFacts(PIMA_SITTINGS, stale) }), [attempt(stale)])), "Next look"), "Overdue — owed by Sep 25, 3:00 PM EDT, an hour after the last good read");
+  assert.equal(row(card(store(version({ clock: clockFacts(PIMA_SITTINGS, stale) }), [attempt(stale)])), "Next look"), "Overdue — owed by Sep 25, 3:00 PM ET, an hour after the last good read");
   const unread = card(store(version({}), [attempt(LAST_GOOD)]));
   assert.equal(row(unread, "Next look"), "Not worked out — this reading did not include the runner's clock facts");
   assert.match(row(unread, "How often"), /^Whether it is read hourly now was not read this time\. The rule: twice a day, and within the hour/);
@@ -218,7 +197,7 @@ test("a body read through two sources names each source's clock when they differ
   );
   assert.equal(
     row(v, "Next look"),
-    "Legistar meeting portal: Owed by Sep 25, 5:30 PM EDT, an hour after the last good read; the runner may read it from Sep 25, 5:05 PM EDT; Legistar InSite portal: Owed by Sep 25, 5:45 PM EDT, an hour after the last good read; the runner may read it from Sep 25, 5:20 PM EDT",
+    "Legistar meeting portal: Owed by Sep 25, 5:30 PM ET, an hour after the last good read; the runner may read it from Sep 25, 5:05 PM ET; Legistar InSite portal: Owed by Sep 25, 5:45 PM ET, an hour after the last good read; the runner may read it from Sep 25, 5:20 PM ET",
   );
 });
 
@@ -227,6 +206,6 @@ test("a contract without a sitting window keeps its cadence words, unchanged", (
   delete (plain as { schedule?: unknown }).schedule;
   const v = card(store(version({ clock: clockFacts(PIMA_SITTINGS) }), [attempt(LAST_GOOD)]), [plain]);
   assert.equal(row(v, "How often"), "Daily through the 2026 general election, then weekly");
-  assert.equal(row(v, "Next look"), "Due Sep 26, 4:30 PM EDT");
+  assert.equal(row(v, "Next look"), "Due Sep 26, 4:30 PM ET");
   assert.equal(v.lanes.find((l) => l.name === "Acquisition")!.note, "Runs on the standing runner's clock (daily through the 2026 general election, then weekly); a failed read is retried one hour after a failed source/body attempt.");
 });

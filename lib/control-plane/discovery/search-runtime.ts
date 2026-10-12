@@ -1,23 +1,12 @@
 /**
- * **THE DISCOVERY SEARCH SEAM, BUDGETED.** (2026-09-23.)
+ * The discovery search seam over Brave and Exa (`scheduler/scout-search.ts`),
+ * pointers only. Every provider request is admitted first by the cycle's search
+ * cap, a per-day cap across both providers in the durable shared budget ledger
+ * (vendor `discovery-search`), and FleetSafety on its own provider key.
  *
- * Builds the discovery executor's `DiscoverySearch` over Brave and Exa
- * (`braveSearch` / `exaSearch` in `lib/control-plane/scheduler/scout-search.ts`),
- * pointers only. Every provider request is admitted first, by:
- *
- * - the cycle's own search cap;
- * - a per-day cap across both providers, kept in the durable shared budget
- *   ledger under the vendor `discovery-search`, so a restarted runner cannot
- *   spend a second day's allowance;
- * - FleetSafety, on its own provider key, so the Saturday blackout, the wall
- *   or a latch stops search without touching any other lane.
- *
- * A refused request is reported as BUDGET_REFUSED and never sent. A request
- * that failed in transport is reported FAILED, and its cost is UNMEASURED.
- *
- * The seam states its worst case per query (`worstCaseMs`): every provider at
- * its timeout, plus the ledger's calls. The walk starts a query only with that
- * much of the phase's time left, so the time never cuts off a paid request.
+ * A refused request is BUDGET_REFUSED and never sent; a transport failure is
+ * FAILED with UNMEASURED cost. `worstCaseMs` covers every provider at its
+ * timeout plus the ledger's calls; a query starts only with that much time left.
  */
 
 import type { BudgetLedger, HostBudget, VendorBudget } from "../budget.ts";
@@ -29,7 +18,7 @@ import type { DiscoverySearch, SearchRequestRecord } from "./meetings-discovery-
 
 export const DISCOVERY_SEARCH_VENDOR = "discovery-search";
 export const SEARCH_HOSTS = { brave: "api.search.brave.com", exa: "api.exa.ai" } as const;
-/** Conservative starting caps, agreed with the data-plane owner; shown on the dial. */
+/** Conservative starting caps; shown on the dial. */
 export const DEFAULT_SEARCH_BUDGET = { perCycle: 50, perDay: 200 } as const;
 /** Time allowed per query for the budget ledger's admission and release calls, on top of the provider requests. */
 const SEARCH_LEDGER_ALLOWANCE_MS = 2_000;

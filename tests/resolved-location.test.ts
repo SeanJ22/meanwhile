@@ -21,15 +21,9 @@ import type { CoveredBody } from "../lib/registry/coverage.ts";
 import { codeOf } from "./read-code.ts";
 
 /**
- * WGH-12/13/14, BAL-31 — one resolved location, and what may be said about it.
- *
- * The reported geography is 85641 with `10723 South Bear Table Tank Drive`,
- * whose point resolves to `place:tucson_ccd`, `place:vail`,
- * `school_district:vail_unified_district`, `county:pima`, `sldl:17`, `sldu:17`
- * and `cd:6` — measured against the running app, not assumed.
- *
- * The unnamed control is a DIFFERENT seam in a different state, because the
- * rule is about evidence strength and not about Arizona.
+ * One resolved location, and what may be said about it. The fixture address resolves to a set of divisions
+ * measured against the running app; the unnamed control is a different seam in a different state, because
+ * the rule is about evidence strength and not about one state.
  */
 
 const D = "ocd-division/country:us/state:az";
@@ -52,7 +46,7 @@ const body = (ocdId: string | null, couldGovern = false) => ({ ocdId, couldGover
 
 /* ------------------------------------------------------- the zip state --- */
 
-test("WGH: a zip alone settles nothing, and every hedge stands", () => {
+test("a zip alone settles nothing, and every hedge stands", () => {
   const location = zipOnly("85641");
   assert.equal(standingOf(body(`${D}/place:tucson`, true), location), "UNSETTLED");
   assert.equal(keepsCouldGovernPill(body(`${D}/place:tucson`, true), location), true);
@@ -62,7 +56,7 @@ test("WGH: a zip alone settles nothing, and every hedge stands", () => {
 
 /* ------------------------------------------------- the named regression --- */
 
-test("WGH-14: a body the address CONFIRMED stops asking for the address", () => {
+test("a body the address CONFIRMED stops asking for the address", () => {
   const vail = body(`${D}/school_district:vail_unified_district`, true);
   assert.equal(standingOf(vail, VAIL_ADDRESS), "CONFIRMED");
   assert.equal(
@@ -72,21 +66,11 @@ test("WGH-14: a body the address CONFIRMED stops asking for the address", () => 
   );
 });
 
-test("WGH-13/16: Tucson is hedged, and the hedge stops where the evidence does", () => {
+test("Tucson is hedged, and the hedge stops where the evidence does", () => {
   /*
-   * The point's own divisions are `place:tucson_ccd` and `place:vail`. The
-   * City of Tucson arrives only through the zip-area widening, and the address
-   * settles the `place` level against it.
-   *
-   * **WGH-16 CHANGED THIS ASSERTION DELIBERATELY, and the reason is inside this
-   * fixture.** The address confirmed TWO divisions at level `place` —
-   * `place:vail` and `county:pima/place:tucson_ccd` — which is only possible
-   * because `place` is not a partition. Measured over the shipped geometry,
-   * 75 of 113 Arizona interior points and 364 of 477 New Jersey ones sit inside
-   * two `place`-level divisions at once. So confirming Vail cannot exclude
-   * Tucson the way confirming House 17 excludes House 19: the exclusivity that
-   * made THAT inference sound is not present at this level, and the strong
-   * sentence would be a claim about a government resting on a bucket name.
+   * The point's own divisions are `place:tucson_ccd` and `place:vail`; the city arrives only through the
+   * ZIP-area widening. `place` is not a partition (a point can sit in two `place`-level divisions), so
+   * confirming one place cannot exclude another the way confirming one house district excludes another.
    */
   const tucson = body(`${D}/place:tucson`, true);
   assert.equal(standingOf(tucson, VAIL_ADDRESS), "OVERLAP_NOT_RULED_OUT");
@@ -102,7 +86,7 @@ test("WGH-13/16: Tucson is hedged, and the hedge stops where the evidence does",
   );
 });
 
-test("WGH-12: the district the address named is confirmed and its neighbour is not", () => {
+test("the district the address named is confirmed and its neighbour is not", () => {
   assert.equal(standingOf(body(`${D}/sldl:17`), VAIL_ADDRESS), "CONFIRMED");
   assert.equal(standingOf(body(`${D}/sldl:19`), VAIL_ADDRESS), "ELSEWHERE_IN_ZIP");
   assert.equal(standingOf(body(`${D}/sldl:21`), VAIL_ADDRESS), "ELSEWHERE_IN_ZIP");
@@ -110,7 +94,7 @@ test("WGH-12: the district the address named is confirmed and its neighbour is n
 
 /* --------------------------------------- partial ambiguity stays hedged --- */
 
-test("WGH: an address does NOT make every fact certain — a crossed level stays hedged", () => {
+test("an address does NOT make every fact certain — a crossed level stays hedged", () => {
   // The overreach this rule is written against. The street crosses the school
   // district line, so that level is genuinely unsettled and keeps its pill,
   // while the levels the address DID settle retire theirs.
@@ -125,7 +109,7 @@ test("WGH: an address does NOT make every fact certain — a crossed level stays
   assert.equal(standingOf(body(`${D}/sldl:17`, true), partial), "CONFIRMED");
 });
 
-test("WGH: a level the address never spoke to is left alone, not contradicted", () => {
+test("a level the address never spoke to is left alone, not contradicted", () => {
   const onlyState: ResolvedLocation = {
     ...VAIL_ADDRESS,
     confirmedDivisionIds: [`${D}/sldl:17`],
@@ -139,21 +123,16 @@ test("WGH: a level the address never spoke to is left alone, not contradicted", 
   );
 });
 
-test("WGH: a division-less body is never contradicted by an address", () => {
-  // D28 bodies — special districts, regional councils — have no level to be
-  // compared at. Inferring "elsewhere" from an absence asserts an absence.
+test("a division-less body is never contradicted by an address", () => {
+  // Division-less bodies (special districts, regional councils) have no level to be compared at.
   assert.equal(standingOf(body(null, true), VAIL_ADDRESS), "UNSETTLED");
   assert.equal(keepsCouldGovernPill(body(null, true), VAIL_ADDRESS), true);
 });
 
 /* ------------------------------------------------- the unnamed control --- */
 
-test("WGH control: a different state's zip seam behaves the same way", () => {
-  /*
-   * 07866 crosses Rockaway Township and Rockaway Borough — the seam NJ01 was
-   * adopted over, a different state, a different level, the same rule. Nothing
-   * in this module knows about Arizona.
-   */
+test("control: a different state's zip seam behaves the same way", () => {
+  // A ZIP that crosses two municipalities in another state: the same rule at a different level.
   const NJ = "ocd-division/country:us/state:nj";
   const rockaway: ResolvedLocation = {
     certainty: "ADDRESS_RESOLVED",
@@ -163,19 +142,9 @@ test("WGH control: a different state's zip seam behaves the same way", () => {
   };
   assert.equal(standingOf(body(`${NJ}/place:rockaway_township`, true), rockaway), "CONFIRMED");
   /*
-   * **WGH-16.** Rockaway Township and Rockaway Borough do not in fact overlap —
-   * a point inside the township polygon is outside the borough polygon,
-   * measured. But `place` as a CLASS does: 364 of 477 New Jersey interior
-   * points sit in two `place`-level divisions, because the municipal layer is
-   * built from two Census files and the same municipality routinely carries two
-   * identifiers at this level (`place:chester` and
-   * `county:morris/place:chester_borough`).
-   *
-   * The contract is per LEVEL, not per pair, because a pair is exactly what
-   * this module cannot see — it holds two identifiers and no geometry. So the
-   * borough gets the weaker sentence, and that is the class-level rule paying
-   * its own cost honestly rather than special-casing the pair it happens to
-   * know about.
+   * The contract is per level, not per pair: `place` as a class overlaps (the municipal layer is built from
+   * two Census files), and this module holds identifiers, not geometry. So the second municipality gets the
+   * weaker sentence.
    */
   assert.equal(
     standingOf(body(`${NJ}/place:rockaway_borough`, true), rockaway),
@@ -191,7 +160,7 @@ test("WGH control: a different state's zip seam behaves the same way", () => {
 
 /* -------------------------------------------------------- completeness --- */
 
-test("WGH: applying a location never drops a body", () => {
+test("applying a location never drops a body", () => {
   const bodies = [
     body(`${D}/place:vail`, true),
     body(`${D}/place:tucson`, true),
@@ -202,9 +171,8 @@ test("WGH: applying a location never drops a body", () => {
   assert.equal(applied.length, bodies.length, "show everything we find");
   assert.deepEqual(
     applied.map((b) => b.standing),
-    // WGH-16: `place:tucson` sits at an OVERLAPPING level and `sldl:19` at an
-    // exclusive one, so the two rows that used to read alike now read apart.
-    // Both are still HERE, which is what this test is about.
+    // A `place` row sits at an overlapping level and an `sldl` row at an exclusive one, so they read apart.
+    // Both are still here.
     ["CONFIRMED", "OVERLAP_NOT_RULED_OUT", "ELSEWHERE_IN_ZIP", "UNSETTLED"],
   );
   // Only the CONFIRMED row stops asking. The excluded ones keep the mark
@@ -215,7 +183,7 @@ test("WGH: applying a location never drops a body", () => {
   );
 });
 
-test("WGH: browsing elsewhere never rewrites where the reader lives", () => {
+test("browsing elsewhere never rewrites where the reader lives", () => {
   // A display state, not a truth state. Nothing here mutates a location, and
   // BROWSING settles nothing.
   const browsing: ResolvedLocation = { ...VAIL_ADDRESS, certainty: "BROWSING" };
@@ -223,21 +191,14 @@ test("WGH: browsing elsewhere never rewrites where the reader lives", () => {
   assert.equal(standingOf(body(`${D}/sldl:17`, true), browsing), "UNSETTLED");
 });
 
-/* ══════════ WGH-15: home location is not browsing location ══════════════ */
+/* ══════════ home location is not browsing location ═══════════════════════ */
 
 /**
- * The reported screen had two panels open at once — *State House District 17*
- * on the who-governs card, *State House District 19* on the district popup —
- * and both were correct. The two stores were already disjoint and selecting a
- * district has never written where the reader lives.
- *
- * What was missing is that `BROWSING` was DECLARED AND NEVER CONSTRUCTED. The
- * only assignment of it anywhere in the repository was the display-state test
- * above, so no surface could be in the state that models *I am exploring
- * elsewhere*, so no surface could say which question it was answering.
+ * Selecting a district never writes where the reader lives, and `BROWSING` has a producer, so a surface can
+ * say which question it is answering.
  */
 
-test("WGH-15: browsing is CONSTRUCTIBLE — the state has a producer now", () => {
+test("browsing is CONSTRUCTIBLE — the state has a producer now", () => {
   const subject = browsingSubject(VAIL_ADDRESS, `${D}/sldl:21`);
   assert.equal(subject.question, "BROWSING");
   assert.equal(
@@ -247,7 +208,7 @@ test("WGH-15: browsing is CONSTRUCTIBLE — the state has a producer now", () =>
   );
 });
 
-test("WGH-15: the home surface and the browse surface answer DIFFERENT questions", () => {
+test("the home surface and the browse surface answer DIFFERENT questions", () => {
   // The whole product requirement, in one assertion: a reader lives in House 17
   // and inspects House 21, and the two surfaces are distinguishable.
   const home = homeSubject(VAIL_ADDRESS);
@@ -267,7 +228,7 @@ test("WGH-15: the home surface and the browse surface answer DIFFERENT questions
   assert.equal(standingOf(body(`${D}/sldl:17`), browsed.location), "UNSETTLED");
 });
 
-test("WGH-15: the browse surface still knows where HOME stands, and says so", () => {
+test("the browse surface still knows where HOME stands, and says so", () => {
   /*
    * The ORDER inside `browsingSubject` is the design: standing is computed
    * against HOME first, and only then is the location downgraded. Without that
@@ -280,7 +241,7 @@ test("WGH-15: the browse surface still knows where HOME stands, and says so", ()
   assert.equal(browsingSubject(VAIL_ADDRESS, `${D}/county:pima`).standing, "CONFIRMED");
 });
 
-test("WGH-15: inspecting your OWN district is not browsing elsewhere", () => {
+test("inspecting your OWN district is not browsing elsewhere", () => {
   // Use the strongest evidence there is, applied here rather than dropped here.
   const own = browsingSubject(VAIL_ADDRESS, `${D}/sldl:17`);
   assert.equal(own.standing, "CONFIRMED");
@@ -288,7 +249,7 @@ test("WGH-15: inspecting your OWN district is not browsing elsewhere", () => {
   assert.equal(own.location, VAIL_ADDRESS, "the home location passes through");
 });
 
-test("WGH-15: a reader who gave only a zip is never told a district is not theirs", () => {
+test("a reader who gave only a zip is never told a district is not theirs", () => {
   /*
    * `UNSETTLED`, never `ELSEWHERE_IN_ZIP`. Nothing has settled which district
    * is theirs, and saying "this is not yours" on no evidence is an absence
@@ -302,7 +263,7 @@ test("WGH-15: a reader who gave only a zip is never told a district is not their
   assert.equal(browsingSubject(zipOnly(null), `${D}/sldl:19`).standing, "UNSETTLED");
 });
 
-test("WGH-15: a browse surface with no subject claims nothing", () => {
+test("a browse surface with no subject claims nothing", () => {
   const subject = browsingSubject(VAIL_ADDRESS, null);
   assert.equal(subject.standing, "UNSETTLED");
   assert.equal(subject.subjectOcdId, null);
@@ -310,7 +271,7 @@ test("WGH-15: a browse surface with no subject claims nothing", () => {
 
 /* ─────────── the lock: browsing NEVER mutates where the reader lives ────── */
 
-test("WGH-15 LOCK: browsing anywhere never rewrites the home location", () => {
+test("LOCK: browsing anywhere never rewrites the home location", () => {
   /*
    * The two stores are already disjoint and this test exists so they STAY that
    * way. It is written against the OBJECT, not against the reducer, because the
@@ -343,7 +304,7 @@ test("WGH-15 LOCK: browsing anywhere never rewrites the home location", () => {
   assert.equal(standingOf(body(`${D}/sldl:19`), homeSubject(VAIL_ADDRESS).location), "ELSEWHERE_IN_ZIP");
 });
 
-test("WGH-15 LOCK: home and browse never contradict, at any district the reader picks", () => {
+test("LOCK: home and browse never contradict, at any district the reader picks", () => {
   /*
    * The product requirement stated as an invariant rather than as a scenario.
    * For EVERY district in the zip, the home answer about District 17 is stable
@@ -387,13 +348,8 @@ const covered = (
     tier: "local",
   }) as CoveredBody;
 
-test("WGH-15: deriveWhoGoverns READS standing — it used to arrive and be discarded", () => {
-  /*
-   * The annotation reached this function and travelled through unread: the
-   * parameter was typed `readonly CoveredBody[]`, so `standing` was invisible
-   * to the compiler and to every line inside. That is the WGH-12/13/14 defect
-   * — *correct, and had zero consumers* — one level further down.
-   */
+test("deriveWhoGoverns READS standing — it used to arrive and be discarded", () => {
+  // `standing` must be read here, not travel through unread.
   const annotated = applyResolvedLocation(
     [
       covered(`${D}/sldl:17`),
@@ -407,13 +363,8 @@ test("WGH-15: deriveWhoGoverns READS standing — it used to arrive and be disca
   const derived = deriveWhoGoverns(annotated, new Set<string>());
 
   /*
-   * **WGH-16 made this number SMALLER and TRUER.** `elsewhere` counts rows the
-   * reader's address genuinely EXCLUDES, and only `sldl:19` is one: the
-   * `place:tucson` row sits at a level where a point can be in several
-   * divisions, so nothing excluded it and the count may not say it did.
-   *
-   * The row is still rendered and still annotated — see below. What changed is
-   * the CLAIM the card is allowed to make about it in aggregate.
+   * `elsewhere` counts rows the reader's address genuinely excludes; a row at an overlapping level is still
+   * rendered and annotated but is not counted as excluded.
    */
   assert.equal(derived.elsewhere, 1, "only sldl:19 is genuinely excluded");
   // The annotation survives into the rows the card renders, with its type.
@@ -423,12 +374,10 @@ test("WGH-15: deriveWhoGoverns READS standing — it used to arrive and be disca
   );
 });
 
-test("WGH-15: standing ANNOTATES and never filters — the denominator still holds", () => {
+test("standing ANNOTATES and never filters — the denominator still holds", () => {
   /*
-   * RULING 26 and RULING 27. An address is evidence, not a display filter, and
-   * a body that governs somewhere else in the zip is one we hold in full. The
-   * one-denominator identity `governingCount === rows.length` must survive the
-   * new count, or item 1a is reopened.
+   * An address is evidence, not a display filter: the one-denominator identity
+   * `governingCount === rows.length` must survive the new count.
    */
   const bodies = [
     covered(`${D}/sldl:17`),
@@ -453,7 +402,7 @@ test("WGH-15: standing ANNOTATES and never filters — the denominator still hol
   assert.ok(annotated.elsewhere > 0, "and the exclusions are still COUNTED");
 });
 
-test("WGH-15: with no address, nothing is excluded — and that zero says so", () => {
+test("with no address, nothing is excluded — and that zero says so", () => {
   // Zero here is "we have not been told", never "none of these are excluded".
   const bodies = [covered(`${D}/sldl:17`), covered(`${D}/sldl:19`)];
   const zip = deriveWhoGoverns(
@@ -477,46 +426,16 @@ test("WGH-15: with no address, nothing is excluded — and that zero says so", (
 /* ═══════════════ WIRING IS ITS OWN STEP — the surfaces are guarded ═══════ */
 
 /**
- * **The whole of WGH-12/13/14 and of WGH-15 is that correct logic had no
- * consumers.** A test that only exercises the pure functions above would have
- * passed on the day of the bug report, with the store correct, `standingOf`
- * correct, and the STATE section on screen still never asking.
- *
- * So these read the components' own SOURCE, comments stripped — the same
- * instrument `tests/could-govern-pill.test.ts` uses, and for the same reason: a
- * rule about what the code DOES must be measured against the code, never
- * against the prose beside it.
- */
-/*
- * ONE implementation, shared with `could-govern-pill.test.ts` — RULING 103.
- * A second byte-identical copy landed here first and the duplicate sweep
- * caught it, which is the guard doing exactly its job: two copies of "what
- * counts as code" are two places for the stripping rule to drift, and a guard
- * that strips differently from its sibling silently guards something else.
+ * Correct logic needs consumers, so these read the components' own source, comments stripped: a rule about
+ * what the code does is measured against the code, never the prose beside it.
  */
 
-test("WGH-15 WIRING: the who-governs card routes its SEATS through the location", () => {
-  /*
-   * The exact surface in the report. `bodies` was annotated on 2026-08-28 and
-   * `seats` was not, so the STATE section — the rows the reader photographed —
-   * was the one list on the card that never asked.
-   */
+test("WIRING: the who-governs card routes its SEATS through the location", () => {
   const card = codeOf("components", "map", "coverage-notice.tsx");
 
   /*
-   * **WGH-22 (2026-08-31) — the guard asserts the wiring that MEASURED right.**
-   *
-   * The 8/30 version of this guard asserted that `panel-seats.ts` mentioned
-   * `coverage.divisions`, which it did, and which changed nothing: at the seat
-   * levels `coverage.divisions` and `coverage.seats` are one list, so the
-   * derivation the guard was pinning could never add the reader's own district.
-   * The guard passed on a string. The panel rendered EMPTY at the owner's
-   * address.
-   *
-   * These assertions follow the two things the surface actually needs — a
-   * scope filter that DROPS the excluded rows, and a source for the reader's
-   * own districts that is not the ZIP payload — so a repair that satisfies
-   * them has to have changed the rendered answer.
+   * The surface needs a scope filter that drops excluded rows and a source for the reader's own districts that
+   * is not the ZIP payload, so a repair that satisfies these has changed the rendered answer.
    */
   assert.match(
     card,
@@ -553,13 +472,13 @@ test("WGH-15 WIRING: the who-governs card routes its SEATS through the location"
   assert.match(card, /data-seat-sourcing=\{seat\.sourcing\}/);
 });
 
-test("WGH-15 WIRING: the who-governs card NAMES the question it answers", () => {
+test("WIRING: the who-governs card NAMES the question it answers", () => {
   const card = codeOf("components", "map", "coverage-notice.tsx");
   assert.match(card, /homeSubject\(resolvedLocation\)/, "the HOME subject is constructed");
   assert.match(card, /<SubjectLine zip=\{zip\}/, "and it is rendered");
 });
 
-test("WGH-15 WIRING: the browse surfaces name THEIR question, and it is a different one", () => {
+test("WIRING: the browse surfaces name THEIR question, and it is a different one", () => {
   const popup = codeOf("components", "map", "popup", "district-popup.tsx");
   assert.match(popup, /browsingSubject\(home, ocdId\)/, "the popup constructs BROWSING");
   assert.match(popup, /<BrowsingSubjectLine/, "and renders the line");
@@ -572,7 +491,7 @@ test("WGH-15 WIRING: the browse surfaces name THEIR question, and it is a differ
   assert.match(modal, /import \{ BrowsingSubjectLine \} from "\.\/district-popup"/);
 });
 
-test("WGH-15 WIRING: no browse surface WRITES the home store", () => {
+test("WIRING: no browse surface WRITES the home store", () => {
   /*
    * The lock, at the surface layer. `writeSessionAddress` and
    * `clearSessionAddress` are the only two writers of where the reader lives,
@@ -589,12 +508,8 @@ test("WGH-15 WIRING: no browse surface WRITES the home store", () => {
   }
 });
 
-test("WGH-15 WIRING: BROWSING has a producer outside the tests", () => {
-  /*
-   * The defect in one assertion. Before this change the ONLY assignment of
-   * `"BROWSING"` anywhere in the repository was in this file — a declared union
-   * member with no producer, which is a state no surface could ever be in.
-   */
+test("WIRING: BROWSING has a producer outside the tests", () => {
+  // `"BROWSING"` must be assigned somewhere outside the tests.
   const stateModule = codeOf("lib", "state", "resolved-location.ts");
   assert.match(
     stateModule,
@@ -603,26 +518,18 @@ test("WGH-15 WIRING: BROWSING has a producer outside the tests", () => {
   );
 });
 
-test("WGH: the level key is the deepest segment, never a string match on a label", () => {
+test("the level key is the deepest segment, never a string match on a label", () => {
   assert.equal(levelKeyOf(`${D}/sldl:17`), "sldl");
   assert.equal(levelKeyOf(`${D}/county:pima/place:tucson_ccd`), "place");
   assert.equal(levelKeyOf(`${D}/county:pima`), "county");
   assert.equal(levelKeyOf("not-an-ocd-id"), null);
 });
 
-/* ══════ WGH-16: a shared level is not an exclusive level ═════════════════ */
+/* ══════ a shared level is not an exclusive level ═════════════════════════ */
 
 /**
- * **THE STRONG SENTENCE, AND WHAT IT COSTS TO SAY IT.**
- *
- * WGH-15's browse copy reads *"Your address is in a different one — this is
- * here because you tapped it, not because it governs you."* That is a claim
- * about a GOVERNMENT, and `standingOf` earned it from one fact: some other
- * division sharing this one's `levelKeyOf` had been confirmed.
- *
- * `levelKeyOf` is a string split on the deepest OCD segment. It buckets every
- * division type in the product, and two of those buckets are not exclusive at
- * all — measured, not argued:
+ * "Your address is in a different one" is a claim about a government, earned only where a level is a
+ * partition. Measured interior points inside two or more divisions at the same level:
  *
  * ```
  * LEVEL KEY        INTERIOR POINTS INSIDE 2+ DIVISIONS AT THE SAME LEVEL
@@ -634,15 +541,11 @@ test("WGH: the level key is the deepest segment, never a string match on a label
  * place             75 / 113 (AZ)   364 / 477 (NJ)
  * school_district   39 / 104
  * ```
- *
- * So the tests below split into the two halves that matter: the levels where
- * the strong sentence is EARNED, and the levels where saying it would be
- * inventing a fact about a government.
  */
 
 /* ------- the exclusive half: the strong sentence is still available ------- */
 
-test("WGH-16: a STATE LEGISLATIVE district earns the strong sentence", () => {
+test("a STATE LEGISLATIVE district earns the strong sentence", () => {
   /*
    * `sldl` is a measured partition — 0 of 101 sampled interior points sit in
    * two state house districts. A point is in exactly one, so confirming
@@ -658,7 +561,7 @@ test("WGH-16: a STATE LEGISLATIVE district earns the strong sentence", () => {
   assert.equal(browsingSubject(VAIL_ADDRESS, `${D}/sldl:19`).standing, "ELSEWHERE_IN_ZIP");
 });
 
-test("WGH-16: a CONGRESSIONAL district earns it too", () => {
+test("a CONGRESSIONAL district earns it too", () => {
   // 0 of 23 sampled interior points sit in two congressional districts.
   assert.equal(standingOf(body(`${D}/cd:6`), VAIL_ADDRESS), "CONFIRMED");
   assert.equal(standingOf(body(`${D}/cd:7`), VAIL_ADDRESS), "ELSEWHERE_IN_ZIP");
@@ -675,25 +578,11 @@ test("WGH-16: a CONGRESSIONAL district earns it too", () => {
 
 /* ---- the overlapping half: the named class, and why it reaches a reader --- */
 
-test("WGH-16: SCHOOL DISTRICTS overlap, so one of them never excludes another", () => {
+test("SCHOOL DISTRICTS overlap, so one of them never excludes another", () => {
   /*
-   * **THE NAMED CONTROL, and it is not hypothetical.**
-   *
-   * `school_district` is drawn by THREE map layers — `unsd`, `elsd`, `scsd` —
-   * and they are designed to cover the same ground. `districtsAt` in
-   * `lib/map/districts.ts` says so in its own doc comment: *"Rockaway 07866 is
-   * in a K-8 elementary district and a regional high school district
-   * simultaneously — two features from the same layer."* Measured over the
-   * committed geometry, 39 of 104 sampled interior points and 105 of 250
-   * sampled Arizona points sit inside two school districts at once, and
-   * the national ZIP index carries the same shape — 85122 lists Casa Grande
-   * Elementary and Casa Grande Union High School together.
-   *
-   * Every one of those polygons is CLICKABLE. `districtsAt` returns them,
-   * `DistrictHit.ocdId` carries them into `BrowsingSubjectLine`, and the same
-   * id reaches `EntityModal` through `ModalSubject.divisionOcdId`. So this is
-   * the exact surface where "this does not govern you" would have been printed
-   * about a school board the reader genuinely votes for.
+   * `school_district` is drawn by three map layers (`unsd`, `elsd`, `scsd`) that cover the same ground, and
+   * every polygon is clickable, so "this does not govern you" here would be printed about a school board the
+   * reader votes for.
    */
   const AZ = "ocd-division/country:us/state:az";
   const elementaryResolved: ResolvedLocation = {
@@ -724,14 +613,10 @@ test("WGH-16: SCHOOL DISTRICTS overlap, so one of them never excludes another", 
   assert.equal(browsed.question, "BROWSING");
 });
 
-test("WGH-16: MUNICIPAL divisions overlap too — one layer, two Census files", () => {
+test("MUNICIPAL divisions overlap too — one layer, two Census files", () => {
   /*
-   * The second real class, and the one the reported 85641 screen was actually
-   * made of. `DISTRICT_LAYERS.municipal` merges `place` and `cousub`, so a
-   * point in Tucson is inside `place:tucson` AND `county:pima/place:tucson_ccd`
-   * at the same level key — which is why `VAIL_ADDRESS` above confirms two
-   * `place` divisions at once. In New Jersey the same municipality frequently
-   * carries both identifiers.
+   * `DISTRICT_LAYERS.municipal` merges `place` and `cousub`, so a point can be inside two `place`-level
+   * divisions at once, which is why `VAIL_ADDRESS` confirms two.
    */
   assert.equal(relationshipOfLevel("place"), "POTENTIALLY_OVERLAPPING");
   assert.equal(
@@ -748,7 +633,7 @@ test("WGH-16: MUNICIPAL divisions overlap too — one layer, two Census files", 
 
 /* ------------------------- the three neutral cases ----------------------- */
 
-test("WGH-16: an UNSETTLED address claims nothing at any level", () => {
+test("an UNSETTLED address claims nothing at any level", () => {
   /*
    * No address, no comparison. Every level reads the same way, which is the
    * point: the level contract only ever narrows what an address may license,
@@ -767,12 +652,10 @@ test("WGH-16: an UNSETTLED address claims nothing at any level", () => {
   }
 });
 
-test("WGH-16: a SPLIT level stays neutral, at an exclusive level too", () => {
+test("a SPLIT level stays neutral, at an exclusive level too", () => {
   /*
-   * Pre-existing behaviour, asserted here against the NEW code path so the
-   * split check cannot be reordered behind the relationship lookup. A street
-   * that genuinely crosses a state house line has settled nothing there, and
-   * an exclusive level does not rescue an unsettled one.
+   * A street that crosses a state house line has settled nothing there, and an exclusive level does not
+   * rescue an unsettled one.
    */
   const crossesHouse: ResolvedLocation = {
     ...VAIL_ADDRESS,
@@ -790,22 +673,10 @@ test("WGH-16: a SPLIT level stays neutral, at an exclusive level too", () => {
   );
 });
 
-test("WGH-16: an UNCLASSIFIED level FAILS CLOSED to neutral", () => {
+test("an UNCLASSIFIED level FAILS CLOSED to neutral", () => {
   /*
-   * **THE WHOLE POINT OF THE TABLE, AND THE ONE PROPERTY THAT CANNOT BE
-   * MAINTAINED BY REMEMBERING.**
-   *
-   * A source adds a division type — a water district, a fire district, a
-   * transit authority, a community college district. `levelKeyOf` buckets it
-   * happily, because it is a string split and every OCD id has a deepest
-   * segment. Under the old rule that new type INHERITED the strongest sentence
-   * on the surface, silently, the first time two of them appeared in one zip.
-   *
-   * `relationshipOfLevel` answers by MISSING from a lookup, so an unclassified
-   * level reaches the cautious branch by existing rather than by anyone
-   * noticing. It is not even `OVERLAP_NOT_RULED_OUT`: that sentence says
-   * *"these can overlap"*, which is itself a measured claim, and an unmeasured
-   * level has not earned that one either.
+   * A new division type would be bucketed by `levelKeyOf`; `relationshipOfLevel` answers by missing from a
+   * lookup, so an unclassified level reaches the cautious branch, not even `OVERLAP_NOT_RULED_OUT`.
    */
   const AZ = "ocd-division/country:us/state:az";
   const inWaterDistrict: ResolvedLocation = {
@@ -837,7 +708,7 @@ test("WGH-16: an UNCLASSIFIED level FAILS CLOSED to neutral", () => {
 
 /* -------------------- the contract, and its coverage --------------------- */
 
-test("WGH-16: every level an ADDRESS can settle is classified", () => {
+test("every level an ADDRESS can settle is classified", () => {
   /*
    * `LEVEL_ORDER` is the resolver's own enumeration of the levels a reader can
    * be resolved at — the only levels that can ever make `settledHere` true and
@@ -858,7 +729,7 @@ test("WGH-16: every level an ADDRESS can settle is classified", () => {
   }
 });
 
-test("WGH-16: the contract is exactly the measured set, and nothing crept in", () => {
+test("the contract is exactly the measured set, and nothing crept in", () => {
   /*
    * Written as an exact set rather than as spot checks, because the failure
    * this guards against is an ADDITION: a level quietly filed under
@@ -890,12 +761,8 @@ test("WGH-16: the contract is exactly the measured set, and nothing crept in", (
   );
 });
 
-test("WGH-16 WIRING: the browse copy has a branch for the weaker state", () => {
-  /*
-   * The WGH-15 lesson, applied to WGH-16: a standing that no surface reads is
-   * a standing no reader can benefit from. The strong sentence must survive,
-   * the weak one must exist, and neither may be the other.
-   */
+test("WIRING: the browse copy has a branch for the weaker state", () => {
+  // A standing no surface reads benefits no reader: the weak sentence must exist.
   const popup = codeOf("components", "map", "popup", "district-popup.tsx");
   assert.match(popup, /subject\.standing === "OVERLAP_NOT_RULED_OUT"/);
   // JSX wraps prose, so every copy assertion here is whitespace-tolerant: a
@@ -910,17 +777,8 @@ test("WGH-16 WIRING: the browse copy has a branch for the weaker state", () => {
   assert.match(card, /marksOverlap\(body\.standing\)/, "the card marks the weaker rows");
   assert.match(card, /data-standing="OVERLAP_NOT_RULED_OUT"/);
   /*
-   * **RULING 222 (2026-08-31) inverts the last assertion.**
-   *
-   * This used to require the card to carry a branch gated on
-   * `ELSEWHERE_IN_ZIP`, because the strong state earned the strong SENTENCE.
-   * The ruling ends that: after a confirmed address an excluded entity
-   * is out of scope, not annotated, so there is no row on this card for the
-   * strong mark to sit on and a branch for it would be the defect returning.
-   *
-   * The weak mark is untouched and must stay — `OVERLAP_NOT_RULED_OUT` is a row
-   * about which nothing has been determined, and dropping it would be the same
-   * manufactured claim in the other direction.
+   * After a confirmed address an excluded entity is out of scope, not annotated, so there is no branch on this
+   * card for the strong mark. The weak mark (`OVERLAP_NOT_RULED_OUT`) must stay.
    */
   assert.doesNotMatch(card, /marksElsewhere/, "the exclusion mark is deleted, not improved");
 });

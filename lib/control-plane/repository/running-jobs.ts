@@ -1,21 +1,4 @@
-/**
- * **EVERY JOB THAT IS RUNNING NOW, FROM ITS WORK LEASE.** (S12.3, 2026-10-01.)
- *
- * One bounded statement: the unreleased, unexpired work leases (the
- * `cp_leases_expiry` range), each joined to its own open Attempt
- * (`cp_attempts_lease_id`), that Attempt's work item and the standing
- * obligation the work item is an occurrence of. Plain-code collection jobs and
- * Scouts are read the same way; neither is listed anywhere else.
- *
- * The read never lists a table. It takes at most `RUNNING_JOBS_LIMIT` leases
- * (plus one, to learn that there were more). A read that reached the limit
- * says so with `truncated`, and its count is then a lower bound, never a
- * silently short list.
- *
- * The rows are raw: whether a row is running is decided by the caller against
- * its own clock (`runningJobsOf` in v6-workers-read.ts), so a lease that
- * expired after the statement ran is not counted.
- */
+/** One bounded statement: unreleased, unexpired work leases, each joined to its own open Attempt. */
 import { WINDOW_LEASE_ID } from "../promotion/window.ts";
 import { boundedQuery } from "./request-bounds.ts";
 import type { Sql } from "./pg-store.ts";
@@ -40,7 +23,6 @@ export interface RunningJobRow {
     readonly version: string | null;
     readonly workItemId: string;
   } | null;
-  /** The standing obligation the attempt's work item is an occurrence of, when it resolves. */
   readonly obligation: {
     readonly id: string;
     readonly recordClass: string | null;

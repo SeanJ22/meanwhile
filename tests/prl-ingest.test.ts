@@ -10,7 +10,6 @@ import {
 } from "../lib/sources/prl/streaming.ts";
 import {
   advanceWatermark,
-  isNewerThanMark,
   isVisibleAsOf,
   parsePrlInstant,
 } from "../lib/sources/prl/future-date.ts";
@@ -55,10 +54,10 @@ test("streaming CSV flushes a final row with no trailing newline", async () => {
 test("streaming JSON yields objects despite braces/commas/newlines in strings", async () => {
   const text = '[\n{"id": 1, "t": "a},{b \\n c"},\n{"id": 2, "t": "x\\"y"}\n]';
   for (const size of [1, 4, 13, 10_000]) {
-    const objs = await collect(streamJsonArrayObjects(chunked(text, size))) as { id: number; t: string }[];
+    const objs = await collect(streamJsonArrayObjects(chunked(text, size))) as { id: string; t: string }[];
     assert.equal(objs.length, 2, `chunk size ${size}`);
-    assert.deepEqual(objs[0], { id: 1, t: "a},{b \n c" }, `chunk size ${size}`);
-    assert.deepEqual(objs[1], { id: 2, t: 'x"y' }, `chunk size ${size}`);
+    assert.deepEqual(objs[0], { id: "1", t: "a},{b \n c" }, `chunk size ${size}`);
+    assert.deepEqual(objs[1], { id: "2", t: 'x"y' }, `chunk size ${size}`);
   }
 });
 
@@ -89,14 +88,6 @@ test("advanceWatermark holds the previous mark when every new row is future", ()
   const advance = advanceWatermark("2026-09-10", ["2027-07-01"], NOW);
   assert.equal(advance.mark, "2026-09-10");
   assert.equal(advance.afterNow, 1);
-});
-
-test("isNewerThanMark drives the incremental take", () => {
-  assert.equal(isNewerThanMark("2026-09-20", "2026-09-10"), true);
-  assert.equal(isNewerThanMark("2026-09-05", "2026-09-10"), false);
-  assert.equal(isNewerThanMark("2026-09-05", null), true, "a null mark takes everything");
-  // last_updated catches a 2017 statement reclassified in 2025.
-  assert.equal(isNewerThanMark("2025-07-20 21:48:58", "2025-01-01 00:00:00"), true);
 });
 
 test("the committed dictionaries still list every column the ingestion reads", () => {

@@ -1,5 +1,5 @@
 /**
- * DB-09 returned hook (admin side): the command center shows the Door Registry and the door.save receipts in plain
+ * The command center shows the Door Registry and the door.save receipts in plain
  * English: counts, shut doors first with why and since when, and the newest changes, never a door's id.
  */
 import assert from "node:assert/strict";
@@ -27,7 +27,9 @@ test("doors show counts, shut doors first in words, and the newest door changes 
     { subject: true, says: true, outcome: true, startedAt: true, completedAt: true }) as readonly ActionReceipt[];
   const view = projectDoors({ doors, unreadable, saves, observedAt: AT });
   assert.deepEqual(view.counts, { open: 1, shut: 0, setAside: 1, unreadable: 0 });
-  assert.deepEqual(view.rows.map((r) => [r.name, r.status]), [["Votes on votes.example.gov", "Set aside"]]);
+  assert.deepEqual(view.rows.map((r) => [r.name, r.kind, r.status]), [["Votes on votes.example.gov", "Rollcall", "Set aside"], ["Meetings on calendar.example.gov", "Ical", "Open"]]);
+  assert.equal(view.total, 2);
+  assert.deepEqual(view.rows.map((r) => [r.body, r.lastWorked, r.lastFailed]), [["—", null, null], ["—", null, null]]);
   assert.deepEqual(view.changes.map((c) => c.says), ["Door added: Votes on votes.example.gov (set aside)", "Door added: Meetings on calendar.example.gov (open)"]);
   for (const text of [...view.rows.map((r) => r.name), ...view.changes.map((c) => c.says)]) assert.doesNotMatch(text, /body-one|body-two|meetings:|votes:/);
 });

@@ -676,6 +676,59 @@ function splitFixConsequence(consequence) {
  * @param {{ working: TrackerRow[], resolved: TrackerRow[], decisions: {intentId: string, subjectId: string, chosenOption: string, consequenceShown?: string, decidedAt: string, adminSessionRef?: string}[] }} input
  * @returns {{ opens: {subjectId: string, intentId: string, goIntentId: string, row: Record<string,string>}[], waiting: {subjectId: string, intentId: string, reason: string}[], refusals: {intentId: string, id: string, reason: string, line: string}[], go: {intentId: string, decidedAt: string} | null }}
  */
+export function planFixQueue({ working, resolved, decisions }) {
+  const opens = [];
+  const waiting = [];
+  const refusals = [];
+  const fixes = decisions.filter((d) => (d.subjectId ?? "").trim().startsWith(FIX_SUBJECT_PREFIX));
+  const goes = decisions
+    .filter((d) => (d.subjectId ?? "").trim() === FIX_QUEUE_SUBJECT)
+    .sort((a, b) => (a.decidedAt < b.decidedAt ? 1 : -1));
+  const go = goes[0] ? { intentId: goes[0].intentId, decidedAt: goes[0].decidedAt } : null;
+  const applied = (intentId) => [...working, ...resolved].some((r) => (r.Detail ?? "").includes(fixRowMarker(intentId)));
+
+  // The newest queueing of each gap is the one that stands.
+  const bySubject = new Map();
+  for (const intent of fixes) {
+    const subject = intent.subjectId.trim();
+    const held = bySubject.get(subject);
+    if (!held || held.decidedAt < intent.decidedAt) bySubject.set(subject, intent);
+  }
+
+  for (const intent of bySubject.values()) {
+    const subject = intent.subjectId.trim();
+    if (applied(intent.intentId)) continue;
+    if (!(intent.adminSessionRef ?? "").trim()) {
+      refusals.push({ intentId: intent.intentId, id: subject, reason: "no admin session is recorded on the queued gap, so it cannot be shown to be his", line: `${intent.intentId} · ${subject} — no admin session recorded` });
+      continue;
+    }
+    if (go === null || go.decidedAt < intent.decidedAt) {
+      waiting.push({ subjectId: subject, intentId: intent.intentId, reason: go === null ? 'queued; no "Go fix these" has been sent yet' : `queued after the newest "Go fix these" (${go.intentId}); waits for the next one` });
+      continue;
+    }
+    const { where, says } = splitFixConsequence(intent.consequenceShown);
+    const title = `Fix: ${says}`.slice(0, 120);
+    opens.push({
+      subjectId: subject,
+      intentId: intent.intentId,
+      goIntentId: go.intentId,
+      row: {
+        prefix: FIX_PREFIX,
+        Section: DECIDED_SECTION,
+        Priority: "P2",
+        Title: title,
+        "What this is":
+          `${where}: ${says} Sean queued this gap from the control centre at ${intent.decidedAt} ` +
+          `and sent the queue with "Go fix these" at ${go.decidedAt}. Close the gap on the surface that ` +
+          "reported it — measure it, or wire the recording path — then resolve this row.",
+        Detail: `${fixRowMarker(intent.intentId)} ${goRowMarker(go.intentId)} subject ${subject}`,
+        "Opened by": FIX_OPENER,
+      },
+    });
+  }
+  return { opens, waiting, refusals, go };
+}
+
 /** The sentence appended to the row's Notes, so the close is traceable on the row itself. */
 export function dashboardNote({ intentId, decidedAt, option, consequence, ownerAnswer, ownWords }) {
   if (ownWords) {

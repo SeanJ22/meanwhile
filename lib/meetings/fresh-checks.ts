@@ -5,46 +5,11 @@ import type { UnchangedConfirmation } from "../civic-data/unchanged-confirmation
 import type { MeetingsSnapshot, SnapshotSourceReport } from "./snapshot.ts";
 
 /**
- * **"LAST CHECKED" IS THE LAST SUCCESSFUL FRESH CHECK, NEW VERSION OR NOT (2026-09-25).**
- *
- * Since migration 0029 (live 2026-09-25 3:07 PM MST), a re-check that finds
- * nothing new writes an unchanged confirmation on the pointed version instead of
- * promoting a copy of it (lib/civic-data/unchanged-confirmation.ts). The version,
- * its payload and every row stay as they were, so everything a reader is told
- * about freshness from them stopped moving in quiet periods:
- *
- *  - the footer's "Last checked" (the composed snapshot's `generatedAt`, the
- *    newest partition generation) froze at the last partition that changed;
- *  - the prepared serving copy and the edge manifest were never recomposed or
- *    republished, since both key on version ids and data hashes;
- *  - each listing's `provenance.collectedAt` froze, so a quiet body's card would
- *    say its listings were "last read" days ago (`staleDivisionRead`, 36 hours)
- *    while it was being re-read hourly.
- *
- * This module is the one rule for putting the check back. A partition version's
- * newest confirmation is a successful fresh check of that version when:
- *
- *  - it confirms the version the pointer names now (a confirmation of a replaced
- *    version says nothing about the current one);
- *  - the version itself reads at least one source successfully. A derived
- *    family's confirmation fetched nothing of its own (R23); if every member it
- *    holds is carried, its re-derivation read no publisher, and it is no check.
- *
- * A failed read writes a refused candidate, never a confirmation, so it moves
- * nothing here. The instant is the confirming acquisition's own retrieval, the
- * same clock a new version's rows are stamped with. Carried rows keep their
- * `lastFreshAt` and `collectedAt`: a re-check that confirmed them confirmed they
- * are still carried, not that they were read.
- *
- * Nothing here reads a payload. The composing reader applies a partition's check
- * to its own rows. The prepared serving copy and the edge record, per partition
- * version, which ROUTES (`<adapter>|<bodyId>`) its fresh rows came from, so a
- * later check can be applied by route from the pointer identities alone: one
- * narrow read of the newest confirmation detail per pointer
- * (`LATEST_CONFIRMATION_DETAIL`), never a partition or the composed payload.
+ * A partition version's newest confirmation counts as a successful fresh check only when it confirms the version the
+ * pointer names now and that version reads at least one source. Carried rows keep their own `lastFreshAt` and
+ * `collectedAt`: a re-check that confirmed them confirmed only that they are still carried.
  */
 
-/** Which fresh rows a check of one partition version re-observed, and when it last was checked. */
 export interface MeetingPartitionFreshCheck {
   /** The route of every fresh (not carried) row the version holds, sorted. */
   readonly routes: readonly string[];
@@ -62,7 +27,6 @@ export function meetingRouteKey(meeting: Pick<Meeting, "id" | "bodyId">): string
   return `${meeting.id.slice(0, colon)}|${meeting.bodyId ?? ""}`;
 }
 
-/** A version reads a source successfully when any of its source reports does. */
 export function meetingVersionReadsASource(sources: readonly Pick<SnapshotSourceReport, "ok">[]): boolean {
   return sources.some((source) => source.ok === true);
 }
@@ -72,7 +36,6 @@ function instant(value: string | null | undefined): number {
   return Number.isFinite(ms) ? ms : Number.NaN;
 }
 
-/** The later of two instants as ISO strings; an unparseable one never wins. */
 export function laterCheck(left: string | null | undefined, right: string | null | undefined): string | null {
   const l = instant(left);
   const r = instant(right);
@@ -138,7 +101,6 @@ export function applyMeetingFreshChecks(
   return changed ? { ...snapshot, generatedAt, meetings } : snapshot;
 }
 
-/** One partition's check applied to its own rows: every fresh row, whatever its route. */
 export function applyPartitionFreshCheck(snapshot: MeetingsSnapshot, checkedAt: string | null): MeetingsSnapshot {
   if (checkedAt === null) return snapshot;
   const routes: Record<string, string> = {};
@@ -185,7 +147,6 @@ export function meetingFreshChecks(couplings: readonly FreshCheckCoupling[]): {
   return { checkedAt, routes: Object.fromEntries(Object.entries(routes).sort(([left], [right]) => left.localeCompare(right))) };
 }
 
-/** Two route-check maps say the same thing. */
 export function sameMeetingFreshChecks(
   left: Readonly<Record<string, string>> | undefined,
   right: Readonly<Record<string, string>> | undefined,

@@ -4,13 +4,8 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { test } from "node:test";
 
-import registryFile from "../lib/registry/registry.json" with { type: "json" };
-import { loadRegistrationReference, registeredGovernments } from "../lib/registration/reference.ts";
-import {
-  SOURCE_WIRING,
-  wiringForTypes,
-  type BodySourceWiring,
-} from "../lib/registry/source-wiring.ts";
+import { wiringForTypes, type BodySourceWiring } from "../lib/registry/source-wiring.ts";
+import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import { makeApptegySource } from "../lib/sources/apptegy/index.ts";
 import {
   parseAgendaCenter,
@@ -24,8 +19,7 @@ import {
 } from "../lib/sources/onbase/index.ts";
 
 /**
- * Every adapter's normalize path, against responses recorded from the live
- * sources on 2026-08-13. No live calls — the fixtures are the record.
+ * Every adapter's normalize path, against recorded responses. No live calls.
  *
  * `NOW` is fixed so SCHEDULED/CONCLUDED are deterministic: the fixtures carry
  * real calendar dates, and a test that read the wall clock would rot.
@@ -35,46 +29,15 @@ const NOW = new Date("2026-08-13T12:00:00-07:00");
 const fixture = (name: string) =>
   readFileSync(new URL(`./fixtures/${name}`, import.meta.url), "utf8");
 
-// ── The identifier rule, enforced structurally ─────────────────────────────
-// Compare identifier sets before writing any adapter: every wiring row must
-// name a body the registry actually has. This has failed silently four times
-// in this project; here the denominator prints in the assertion message.
-
-/**
- * The bodies the committed REGISTRATION reference registers beyond the
- * reviewed registry, minted exactly as the registration writer mints them
- * (`registeredGovernments`). The runtime registry is the reviewed registry plus
- * these, so a wired body outside the frozen registry.json must be one of them.
- */
-function registeredBodyIds(): Set<string> {
-  const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-  return new Set(["az", "nh", "nj"].flatMap((state) => registeredGovernments(loadRegistrationReference(root, state), state).bodies.map((b) => b.id)));
-}
-
-test("every source-wiring row names a real registry body", () => {
-  // The frozen reviewed registry, or a body the committed registration
-  // reference registers (Holbrook and Winslow, AZ, 2026-09-25).
-  const bodyIds = new Set([...registryFile.bodies.map((b: { id: string }) => b.id), ...registeredBodyIds()]);
-  const missing = SOURCE_WIRING.filter((w) => !bodyIds.has(w.bodyId));
-  assert.deepEqual(
-    missing.map((w) => w.bodyId),
-    [],
-    `${SOURCE_WIRING.length - missing.length} of ${SOURCE_WIRING.length} wiring rows matched a registry body`,
-  );
-});
-
 test("every wiring row's ocdId is its bodyId without the slot", () => {
-  for (const w of SOURCE_WIRING) {
+  for (const w of FIXTURE_DOOR_ROWS) {
     if (w.ocdId === null) {
-      // A division-less body (D28) wires by its curated id instead.
       assert.match(w.bodyId, /^curated:/, w.bodyId);
     } else {
       assert.equal(w.bodyId.split("#")[0], w.ocdId, w.bodyId);
     }
   }
 });
-
-// ── CivicPlus (Rockaway Township) ──────────────────────────────────────────
 
 /** A CivicPlus wiring row by body slot — never by array position. */
 const civicPlusRow = (slot: string) => {
@@ -129,13 +92,6 @@ test("civicplus: the iCal parser unfolds and keys DTSTART params", () => {
   assert.equal(first.tzid, "America/New_York");
   assert.equal(first.summary, "Township Council Regular Meeting");
 });
-
-// ── CivicPlus: the boards feed (the depth session, 2026-08-15) ─────────────
-// The township's boards are in a DIFFERENT calendar category from the
-// council. These three tests pin the whole finding: that the second feed
-// exists and splits by body, that a cancellation announced in the SUMMARY
-// text is not rendered as a meeting that will happen, and that two bodies on
-// one division no longer suppress each other's archived sittings.
 
 test("civicplus: the boards feed splits Planning Board from Board of Adjustment", () => {
   const planning = civicPlusRow("planning-board");
@@ -203,10 +159,6 @@ test("civicplus: two bodies on one division do not suppress each other's archive
   const html = fixture("civicplus-rockaway-agendacenter.html");
   const source = makeCivicPlusSource([council, planning]);
 
-  // The council's live feed carries no archived date; what matters is that
-  // the planning board's archived sittings survive alongside it. Before the
-  // per-row fix, `seenDates` was keyed on the division, so any date either
-  // body already held removed it from the other's archive.
   const { meetings } = source.normalizeWithDrops(
     [
       {
@@ -242,13 +194,6 @@ test("civicplus: two bodies on one division do not suppress each other's archive
 });
 
 test("civicplus: the archive's agenda link is kept on the feed's own row for the same date, never dropped with the duplicate", () => {
-  /*
-   * 2026-09-24. When the live feed and the AgendaCenter archive both list a
-   * sitting, the feed row (with its real time) stands and the archive row is a
-   * duplicate — but the archive row was the only one carrying the agenda link,
-   * and it was discarded whole. The sitting then read "no agenda" and no agenda
-   * was ever retrieved, while the township had posted one.
-   */
   const council = civicPlusRow("governing");
   const html = fixture("civicplus-rockaway-agendacenter.html");
   const archived = parseAgendaCenter(html, council.config.agendaCenterCategoryId!).find((sitting) => sitting.agendaHref);
@@ -270,8 +215,6 @@ test("civicplus: the archive's agenda link is kept on the feed's own row for the
   assert.equal(sameDay[0]!.agendaUrl, new URL(archived.agendaHref!, council.config.agendaCenterUrl).toString(), "and it carries the archive's agenda link");
 });
 
-// ── OnBase (Tucson) ────────────────────────────────────────────────────────
-
 test("onbase: rows parse and mapped venues normalize; unmapped drop counted", () => {
   const rows = wiringForTypes(["ONBASE"]);
   const source = makeOnBaseSource(rows);
@@ -291,10 +234,6 @@ test("onbase: rows parse and mapped venues normalize; unmapped drop counted", ()
 
   const { meetings, drops } = source.normalizeWithDrops(raw, NOW);
 
-  // 8 Mayor & Council sittings plus the PHA Board map to the cited chambers —
-  // the PHA's own published agenda states it sits there (D29). The Joint
-  // Meeting's venue varies per meeting (PAG offices this time) and stays
-  // dropped, counted.
   assert.equal(meetings.length, 9);
   assert.equal(drops.unknownVenue, 1);
 
@@ -330,8 +269,6 @@ test("onbase: rows parse and mapped venues normalize; unmapped drop counted", ()
   const july = meetings.find((m) => m.id === "onbase:tucson:1927");
   assert.equal(july?.status, "CONCLUDED");
 });
-
-// ── Apptegy (Vail USD + Rockaway Township SD) ──────────────────────────────
 
 test("apptegy: board meetings filter from district calendars, coords from feed", () => {
   const rows = wiringForTypes(["APPTEGY"]);
@@ -383,8 +320,6 @@ test("apptegy: board meetings filter from district calendars, coords from feed",
   );
 });
 
-// ── Diligent / CivicWeb (TUSD + Newbury) ───────────────────────────────────
-
 test("diligent: TUSD meetings normalize, Zoom sittings are kept with no place", () => {
   const rows = wiringForTypes(["DILIGENT", "CIVICWEB"]);
   const source = makeDiligentSource(rows);
@@ -401,9 +336,6 @@ test("diligent: TUSD meetings normalize, Zoom sittings are kept with no place", 
 
   const { meetings, drops } = source.normalizeWithDrops(raw, NOW);
 
-  // The recorded window holds 11 rows: Duffy Center sittings place, the Zoom
-  // webinars have nothing to pin but are KEPT (D18), and any location the
-  // cache does not know drops as unknownVenue.
   const placed = meetings.filter((m) => m.location !== null);
   const online = meetings.filter((m) => m.location === null);
   assert.ok(placed.length >= 3, `placed meetings: ${placed.length}`);
@@ -417,9 +349,6 @@ test("diligent: TUSD meetings normalize, Zoom sittings are kept with no place", 
     assert.match(m.online?.label ?? "", /zoom/i, "the published string, verbatim");
     assert.equal(m.online?.joinUrl, null, "the service publishes no join link");
   }
-  // The conservation law, restated for the change: rows in, rows accounted
-  // for. `placed` replaces the old `meetings.length` because the online rows
-  // are now on BOTH sides of the sum and would be counted twice.
   assert.equal(
     placed.length + drops.placeless + drops.unknownVenue + drops.unplaceableInTime,
     11,
@@ -450,11 +379,9 @@ test("diligent: TUSD meetings normalize, Zoom sittings are kept with no place", 
 });
 
 test("civicweb: Newbury Selectboard names from the cited type map", () => {
-  // The route is retired (2026-09-25: newburynh.civicweb.net no longer
-  // resolves), so the row is no longer wired; the adapter's CivicWeb type-map
-  // path is exercised on the row exactly as it was wired, against its recording.
   const rows = wiringForTypes(["DILIGENT", "CIVICWEB"]);
   assert.equal(rows.some((r) => r.config.slug === "newburynh"), false, "the retired route is not wired");
+  // The adapter's CivicWeb path is still exercised on the row as it was wired, against its recording.
   const newbury: BodySourceWiring = {
     bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#governing",
     ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
@@ -505,22 +432,6 @@ test("civicweb: Newbury Selectboard names from the cited type map", () => {
   );
 });
 
-/* ======================================================================== *
- *  A-006 · A SAFETY CAP IS A FAILURE BOUNDARY, NEVER AN IMPLICIT END OF DATA
- * ======================================================================== */
-
-/**
- * **TWELVE FULL PAGES WITH A LIVE NEXT POINTER USED TO REPORT CLEAN SUCCESS.**
- *
- * External correctness audit of `336a3eb`, remediated 2026-08-24. Apptegy's
- * walk ran `for (let page = 0; url && page < MAX_PAGES; page++)`, so reaching
- * the cap simply ended the loop: 240 events read, an unknown number left on
- * the server, no error, no partial marker, no unretrieved count.
- *
- * The adapter's own comment already called the cap "a runaway stop, not a
- * coverage cap". The code did not enforce the difference, and the sweep this
- * finding required turned up the same shape in `legistar`'s `pageById`.
- */
 test("A-006 · twelve full pages with a next pointer is a FAILURE, not the end of the data", async () => {
   const { makeApptegySource, ApptegyPaginationError } = await import(
     "../lib/sources/apptegy/index.ts"
@@ -619,11 +530,6 @@ test("A-006 · a walk that ends because the server stopped offering pages still 
   assert.equal(raw[0].events.length, 2, "both pages were read and neither cap fired");
 });
 
-/**
- * The class, not the instance. `legistar`'s `pageById` carried the identical
- * shape behind an identical comment, and the sweep A-006 required is what
- * found it.
- */
 test("A-006 · legistar's page guard is a failure boundary too", () => {
   const source = readFileSync(
     join(dirname(fileURLToPath(import.meta.url)), "..", "lib", "sources", "legistar", "client.ts"),

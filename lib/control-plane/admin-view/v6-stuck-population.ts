@@ -22,4 +22,3 @@ export async function population(): Promise<StuckPopulation | null> {
   memo = { at: Date.now(), population: read };
   return read;
 }
-

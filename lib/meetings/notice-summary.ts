@@ -1,20 +1,7 @@
 import held from "../../data/states/az/meetings/notice-summaries.json" with { type: "json" };
 /**
- * Hand-curated plain-language summaries of meeting notices (4d) — the
- * sibling of lib/ballot/measure-summary.ts, under the same rules:
- * written ONLY from the official text they cite, what-it-covers never
- * whether-it's-good, rendered ABOVE the official text and clearly labeled,
- * never replacing it.
- *
- * Keyed by meeting id AND the document's content hash: a summary describes
- * one exact version of one notice. When the body revises its page the hash
- * changes and the summary silently stops rendering — an out-of-date
- * summary above a changed notice would be the match-then-deny defect
- * inverted, so absence is the safe failure. tests/notice-summaries.test.ts
- * asserts every row's citation resolves against the committed snapshot.
- *
- * The generated-at-runtime version belongs to the natural-language track
- * and its A07 gates; these are curated rows.
+ * Curated plain-language summaries of meeting notices, written only from the official text they cite. Keyed by meeting
+ * id and the document's content hash, so a revised notice stops rendering its stale summary.
  */
 
 export interface NoticeSummary {

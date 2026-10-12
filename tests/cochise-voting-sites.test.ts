@@ -17,6 +17,19 @@ const VOTER = `<h3>Important Dates for General Election</h3><a href="/DocumentCe
 const T0 = "2026-09-28T10:00:00.000Z";
 const T1 = "2026-09-28T10:30:00.000Z";
 const COCHISE = "ocd-division/country:us/state:az/county:cochise";
+const COUNTY_A = "ocd-division/country:us/state:wa/county:example-a";
+const COUNTY_B = "ocd-division/country:us/state:or/county:example-b";
+
+function priorFile(): VotingSitesFile {
+  const county = (ocdId: string, state: string, name: string, n: number) => ({
+    ocdId, name, state, model: "VOTE_CENTER" as const, election: "2026 General",
+    sites: [{ id: `${state.toLowerCase()}-vc-${n}`, name: `${name} Vote Center`, address: `${n}00 Main Street, Example, ${state} 9900${n}`,
+      room: null, lat: 45 + n / 10, lng: -120 - n / 10, kind: "ELECTION_DAY" as const, election: "2026 General", serves: null }],
+    sourceOrg: `${name} Elections`, sourceUrl: `https://elections.${state.toLowerCase()}-example.gov/vote-centers`,
+    collectedAt: "2026-09-20", refusal: null,
+  });
+  return { generatedAt: "2026-09-20", jurisdictions: [county(COUNTY_A, "WA", "Example A County", 1), county(COUNTY_B, "OR", "Example B County", 2)] };
+}
 
 async function positioned(): Promise<PositionedText[]> {
   const { getDocument } = await import("pdfjs-dist/legacy/build/pdf.mjs");
@@ -58,12 +71,12 @@ test("wrong year, short or duplicate list, malformed address and missing general
   assert.equal(cochiseGeneralElectionLinkIssue(ELECTIONS, VOTER.replace("Vote-Center-Locations-PDF", "older-list.pdf")), "GENERAL_ELECTION_LINK_UNVERIFIED");
 });
 
-test("normal Cochise successor promotes through the existing pointer and leaves Pima/NH/NJ exact", async () => {
+test("a scoped county successor promotes through the existing pointer and leaves every other county exact", async () => {
   resetVotingSitesCache();
   const store = new MemoryRoutineDataStore();
-  const prior = JSON.parse(readFileSync(join(process.cwd(), "data/voting-sites.json"), "utf8")) as VotingSitesFile;
+  const prior = priorFile();
   const base = votingSitesCandidate({ current: prior, prior: null, failures: [], rawBodies: ["original official bytes"],
-    successfulAuthorityReads: 1, requestedUrl: "https://www.pima.gov/3199/Pima-Votes", finalUrl: "https://www.pima.gov/3199/Pima-Votes", retrievedAt: T0 });
+    successfulAuthorityReads: 1, requestedUrl: "https://elections.wa-example.gov/vote-centers", finalUrl: "https://elections.wa-example.gov/vote-centers", retrievedAt: T0 });
   assert.ok((await processRegisteredManualCandidate(store, "voting-sites", base, T0)).promoted);
   const cochise = await cochiseVotingJurisdiction({ pdfBytes: PDF, electionsHtml: ELECTIONS,
     voterHtml: VOTER, collectedAt: "2026-09-28" });
@@ -90,24 +103,23 @@ test("normal Cochise successor promotes through the existing pointer and leaves 
   assert.deepEqual(votingSitesScopedSuccessor(null, cochise, "2026-09-28").jurisdictions, [cochise]);
 });
 
-test("the next standard refresh carries Cochise unchanged while refreshing Pima, Morris and NH", async () => {
-  const prior = JSON.parse(readFileSync(join(process.cwd(), "data/voting-sites.json"), "utf8")) as VotingSitesFile;
+test("the next standard refresh carries a scoped county unchanged while refreshing the others", async () => {
+  const prior = priorFile();
   const cochise = await cochiseVotingJurisdiction({ pdfBytes: PDF, electionsHtml: ELECTIONS,
     voterHtml: VOTER, collectedAt: "2026-09-28" });
   const withCochise = votingSitesScopedSuccessor(prior, cochise, "2026-09-28");
   const next = votingSitesStandardSuccessor(prior, withCochise);
   assert.deepEqual(next.jurisdictions.find(row => row.ocdId === COCHISE), cochise);
   assert.equal(next.jurisdictions.length, withCochise.jurisdictions.length);
-  const pimaId = "ocd-division/country:us/state:az/county:pima";
-  const disappearedPima = { ...prior, jurisdictions: prior.jurisdictions.filter(row => row.ocdId !== pimaId) };
-  assert.equal(votingSitesStandardSuccessor(disappearedPima, withCochise).jurisdictions.some(row => row.ocdId === pimaId), true);
-  assert.equal(votingSitesStandardSuccessor(disappearedPima, withCochise, prior.jurisdictions.map(row => row.ocdId))
-    .jurisdictions.some(row => row.ocdId === pimaId), false);
+  const disappeared = { ...prior, jurisdictions: prior.jurisdictions.filter(row => row.ocdId !== COUNTY_A) };
+  assert.equal(votingSitesStandardSuccessor(disappeared, withCochise).jurisdictions.some(row => row.ocdId === COUNTY_A), true);
+  assert.equal(votingSitesStandardSuccessor(disappeared, withCochise, prior.jurisdictions.map(row => row.ocdId))
+    .jurisdictions.some(row => row.ocdId === COUNTY_A), false);
   assert.deepEqual(votingSitesStandardSuccessor(withCochise, prior), withCochise);
 });
 
 test("scoped refresh accepts any state, county, voting model and sourced site count", () => {
-  const prior = JSON.parse(readFileSync(join(process.cwd(), "data/voting-sites.json"), "utf8")) as VotingSitesFile;
+  const prior = priorFile();
   const original = prior.jurisdictions.find(row => row.sites.length > 0)!;
   for (const state of ["AK", "HI", "DC", "WI"]) {
     const ocdId = `ocd-division/country:us/${state === "DC" ? "district" : "state"}:${state.toLowerCase()}/county:example`;
@@ -119,21 +131,21 @@ test("scoped refresh accepts any state, county, voting model and sourced site co
   }
 });
 
-test("Pima source failure retains Pima only and a Cochise failure retains Cochise only", async () => {
+test("one county's source failure retains that county only", async () => {
   const cochise = await cochiseVotingJurisdiction({ pdfBytes: PDF, electionsHtml: ELECTIONS,
     voterHtml: VOTER, collectedAt: "2026-09-28" });
-  const prior = JSON.parse(readFileSync(join(process.cwd(), "data/voting-sites.json"), "utf8")) as VotingSitesFile;
+  const prior = priorFile();
   const full = votingSitesScopedSuccessor(prior, cochise, "2026-09-28");
   const current = structuredClone(full);
-  const pima = current.jurisdictions.find(row => row.ocdId.endsWith("county:pima"))!;
-  pima.sites = [];
-  pima.refusal = { wall: "HTTP 503", rungs: [{ rung: 2, what: "official route", result: "HTTP 503", attemptedAt: "2026-09-28" }] };
+  const failed = current.jurisdictions.find(row => row.ocdId === COUNTY_A)!;
+  failed.sites = [];
+  failed.refusal = { wall: "HTTP 503", rungs: [{ rung: 2, what: "official route", result: "HTTP 503", attemptedAt: "2026-09-28" }] };
   assert.deepEqual(retainFailedVotingSiteScopes(current, full,
-    [{ jurisdictionId: pima.ocdId, code: "PIMA_UNAVAILABLE", detail: "HTTP 503" }]).jurisdictions.find(row => row.ocdId === COCHISE), cochise);
+    [{ jurisdictionId: COUNTY_A, code: "SOURCE_UNAVAILABLE", detail: "HTTP 503" }]).jurisdictions.find(row => row.ocdId === COCHISE), cochise);
   const changed = structuredClone(full);
   changed.jurisdictions.find(row => row.ocdId === COCHISE)!.sites = [];
   const retained = retainFailedVotingSiteScopes(changed, full,
-    [{ jurisdictionId: COCHISE, code: "COCHISE_UNAVAILABLE", detail: "HTTP 503" }]);
+    [{ jurisdictionId: COCHISE, code: "SOURCE_UNAVAILABLE", detail: "HTTP 503" }]);
   assert.deepEqual(retained.jurisdictions.find(row => row.ocdId === COCHISE), cochise);
-  assert.deepEqual(retained.jurisdictions.find(row => row.ocdId === pima.ocdId), full.jurisdictions.find(row => row.ocdId === pima.ocdId));
+  assert.deepEqual(retained.jurisdictions.find(row => row.ocdId === COUNTY_A), full.jurisdictions.find(row => row.ocdId === COUNTY_A));
 });

@@ -1,7 +1,6 @@
 /**
- * What kind of source a statement came from — a data list, not a union
- * written into the code (CA-09). Each kind has a reader label. The label is
- * shown only in a passage's Sources row, never on the card face.
+ * What kind of source a statement came from, as data. Each kind's reader label
+ * is shown only in a passage's Sources row, never on the card face.
  */
 import { DEFAULT_KINDS, kindLabel, type KindTable } from "../registry/kinds.ts";
 export const SOURCE_KINDS = DEFAULT_KINDS.statement.map(row => ({ kind: row.key, label: row.label }));

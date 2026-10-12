@@ -1,22 +1,4 @@
-/**
- * **THE "CONTROLS CHANGED" WAKE HINT.** After an Admin action has been durably
- * applied, the one writer (`submit()` in `gateway.ts`) overwrites a single small
- * object in the runner's Blobs destination. The runner polls that object's etag
- * (cheap) and re-reads the Postgres controls only when it changes.
- *
- * ```
- *   store   WTP_VAULT_STORE (default "meanwhile-evidence"), the destination the
- *           runner already uses; opened with WTP_BLOBS_SITE_ID + WTP_BLOBS_TOKEN
- *   key     control/wake-hint.json        (one object, overwritten every time)
- *   body    { format: "controls-wake@1", receiptId, actionType, at }
- * ```
- *
- * It is a notification, never a record and never a gate: the receipt in
- * Postgres is the truth. A failed or slow write leaves the action's result
- * exactly as it was and costs the runner nothing it did not already do (it still
- * re-reads on its own slow clock). Replaying an applied action writes the hint
- * again, so a retry is how a missed hint is made up.
- */
+/** A notification only: the receipt in Postgres is the truth, and a failed hint write changes no action's result. */
 import type { ActionReceipt } from "./contract.ts";
 
 export const WAKE_HINT_KEY = "control/wake-hint.json";

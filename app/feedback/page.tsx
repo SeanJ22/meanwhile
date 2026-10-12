@@ -5,24 +5,7 @@ import { Logo } from "@/components/brand/logo";
 import { titleFor } from "@/lib/brand";
 import { feedbackContext } from "@/lib/feedback/shape";
 
-/**
- * `/feedback` — R40, 2026-08-17 (1A: in-app).
- *
- * The two halves of R40 are one subject and shipped together: the personal
- * address left the product in the same commit this page arrived, because
- * removing the address without the form leaves a reader with no way to reach
- * anyone, which is worse than the address being there.
- *
- * HUNT02's missing-body feedback link is this same surface with a second entry
- * point — the `surface` prop is why the store can tell them apart later
- * without the page being duplicated.
- *
- * The page states what happens to what a reader types, at the point of
- * typing, in the register the claim deserves. Nothing here is a promise the
- * code does not keep: `lib/db/feedback.ts` is the only write path, it scrubs
- * before storing, the store carries no key of any kind, and nothing in
- * `lib/signal/` can read it.
- */
+/** `lib/db/feedback.ts` is the only write path; it scrubs before storing and the store carries no key. */
 
 export const metadata = {
   title: titleFor("Feedback"),
@@ -40,16 +23,9 @@ export default async function FeedbackPage({
   return (
     <main className="mw-page min-h-dvh overflow-y-auto bg-[var(--bg)]">
       <div className="mx-auto max-w-2xl px-5 py-10 sm:py-14">
-        {/* ITEM J (2026-09-01): the page eyebrow was the product name typed as
-          display text in a 10px uppercase MONO treatment — the register this
-          system reserves for numerals and identifiers, worn by the one string
-          that is neither. It is the lockup now, at the 18px wordmark floor. */}
         <div>
-          {/* BAL-40 (2026-09-02): logo-first hierarchy — the wordmark leads,
-              the headline below comes down a step. */}
           <Logo variant="wordmark" size={30} />
         </div>
-        {/* Interaction surface, so the ask may be warm. */}
         <h1 className="mt-2 text-xl font-semibold text-paper">
           Tell us what&apos;s wrong
         </h1>
@@ -71,7 +47,6 @@ export default async function FeedbackPage({
           </p>
         )}
 
-        {/* Every word below is a claim, so every word below is level. */}
         <section className="mt-10 border-t border-[var(--panel-border)] pt-6">
           <h2 className="font-mono text-[0.6875rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-signal">
             What happens to this
@@ -89,12 +64,6 @@ export default async function FeedbackPage({
               to leave one. We do not store your name, your postal address,
               or a link to anything else you have done on the site.
             </p>
-            {/*
-              R41 (2026-08-17, option A). This paragraph used to
-              promise flatly that we could not write back. That sentence is now
-              true of exactly one case — the blank field — so it says which,
-              rather than continuing to make a claim the product has outgrown.
-            */}
             <p>
               Before it is stored, the message is stripped of anything shaped
               like a phone number, an email address, or a street address —

@@ -1,4 +1,4 @@
-/** DP-10: a new capability reopens the absences whose stored condition it matches, and only those. */
+/** A new capability reopens the absences whose stored condition it matches, and only those. */
 import assert from "node:assert/strict";
 import test from "node:test";
 

@@ -6,7 +6,7 @@ import { normalizeWithDrops, publicVideoUrl, type LegistarEventWithClient } from
 import type { LegistarEvent } from "../lib/sources/legistar/types.ts";
 import { meetingCardSources } from "../lib/officials/card-sources.ts";
 
-/** BX-10: a concluded meeting links the recording its publisher's own record gives. */
+/** A concluded meeting links the recording its publisher's own record gives. */
 
 const EVENTS = JSON.parse(
   readFileSync(new URL("./fixtures/legistar-pima-events.json", import.meta.url), "utf8"),
@@ -50,4 +50,12 @@ test("BX-10: the map's meeting row shows the recording link only on a concluded 
   const source = readFileSync(new URL("../components/ui/meeting-row.tsx", import.meta.url), "utf8");
   assert.match(source, /meeting\.status === "CONCLUDED" && meeting\.videoUrl[\s\S]{0,200}href=\{meeting\.videoUrl\}/);
   assert.match(source, /Watch the recording/);
+});
+
+test("BX-10: Pima's shape (public, clip id in EventMedia, no path) links the sitting's own Legistar page", () => {
+  const page = "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1823&GID=243";
+  const meeting = normalizeOne({ EventVideoStatus: "Public", EventVideoPath: null, EventMedia: "2027", EventInSiteURL: page });
+  assert.equal(meeting.videoUrl, page);
+  assert.equal("videoUrl" in normalizeOne({ EventVideoStatus: "Not Available", EventVideoPath: null, EventMedia: "2027", EventInSiteURL: page }), false);
+  assert.equal("videoUrl" in normalizeOne({ EventVideoStatus: "Public", EventVideoPath: null, EventMedia: null, EventInSiteURL: page }), false);
 });

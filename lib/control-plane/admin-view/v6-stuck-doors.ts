@@ -4,11 +4,7 @@ import { isDoorRecord, type DoorRecord } from "../../doors/registry.ts";
 import { hoursBetween, shutDoorFixWords } from "../../doors/shut-repair.ts";
 import type { AdminV6StuckItem } from "./v6-stuck-read.ts";
 
-/**
- * DB-34: doors that are shut, for the top of the stuck list. A shut door is
- * already live and readers are affected, so it ranks first in every scope,
- * with how long it has been shut. Read straight from the door registry.
- */
+/** A shut door is already live and readers are affected, so it ranks first in every scope. */
 export const SHUT_DOORS_SQL = `SELECT id, value FROM cp_doors WHERE value->>'status' = 'SHUT'`;
 
 export async function readShutDoorRecords(sql: Sql): Promise<readonly DoorRecord[]> {

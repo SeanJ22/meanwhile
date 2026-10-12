@@ -26,7 +26,7 @@ function commit(dir: string, message: string, files: Readonly<Record<string, str
   return git(dir, ["rev-parse", "HEAD"]);
 }
 
-test("R31: the attestor says identical only when every verifier closure file is the same bytes at both commits", async () => {
+test("the attestor says identical only when every verifier closure file is the same bytes at both commits", async () => {
   const dir = mkdtempSync(join(tmpdir(), "wtp-reader-attestor-"));
   try {
     git(dir, ["init", "--quiet"]);
@@ -101,7 +101,7 @@ test("R31: the attestor says identical only when every verifier closure file is 
   }
 });
 
-test("R31: a closure that cannot be walked is not identical, and the next ask walks again", async () => {
+test("a closure that cannot be walked is not identical, and the next ask walks again", async () => {
   let walks = 0;
   const attestor = readerVerifierClosureAttestor({
     root: ".",

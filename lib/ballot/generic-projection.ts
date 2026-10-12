@@ -4,7 +4,6 @@ import type { BallotSet } from "./types.ts";
 import { measureRecordIssue } from "./measure-record-contract.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 
-/** Each state/election has its own data key; no software source list admits it. */
 export interface GenericBallotProjection {
   readonly kind: "ballot-contests";
   readonly ballots: Readonly<Record<string, BallotSet>>;

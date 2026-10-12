@@ -1,12 +1,4 @@
-/*
- * READER DESIGN (approved 2026-09-28) — the public reader surfaces: sidebar,
- * compound nav, collapsed header, small popups, the one large card, the map
- * chrome and the card content. Tokens live in app/globals.css (the READER
- * DESIGN token block) so every guard that resolves tokens reads one source.
- * Split out because app/globals.css carries a 200 KB mirror cap
- * (tests/mirror-code.test.ts); the style guards read both files.
- */
-/* ── Reader design: controls (Lumen material) ─────────────────────────── */
+/* The public reader surfaces. Tokens live in app/globals.css (the READER DESIGN token block). */
 .mw-reader {
   background: var(--ground);
   color: var(--text);
@@ -111,7 +103,6 @@
   outline-offset: 2px;
 }
 
-/* ── Sidebar ─────────────────────────────────────────────────────────── */
 .mw-reader .sidebar {
   top: var(--space-4);
   left: var(--space-4);
@@ -164,7 +155,6 @@
   display: none;
 }
 
-/* ── Compound nav + Ask ─────────────────────────────────────────────── */
 .mw-nav-wrap {
   display: flex;
   flex-direction: column;
@@ -226,7 +216,6 @@
   min-height: var(--mw-44);
 }
 
-/* ── Local / State / Federal: the neumorphic well ───────────────────── */
 .mw-reader .view-toggle {
   display: flex;
   gap: var(--space-1);
@@ -277,7 +266,6 @@
   background: var(--tier-accent, var(--text-dim));
 }
 
-/* ── Jurisdiction / Body selects ─────────────────────────────────────── */
 .mw-reader .scope-selectors {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -313,7 +301,6 @@
   grid-column: 1 / -1;
 }
 
-/* ── Stat tiles ──────────────────────────────────────────────────────── */
 .mw-reader .stats-bar {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -361,7 +348,6 @@
   color: var(--text-dim);
 }
 
-/* ── Near me, Filters, About: switch rows and wells ─────────────────── */
 .mw-reader .sidebar-scroll > .prox-control {
   padding: 0;
   margin: 0;
@@ -517,7 +503,6 @@
   display: none;
 }
 
-/* ── Collapsed header ────────────────────────────────────────────────── */
 .mw-header {
   position: absolute;
   top: var(--space-4);
@@ -609,7 +594,6 @@
   }
 }
 
-/* ── Map chrome: selection pill, legend, notices ────────────────────── */
 .mw-selection {
   position: absolute;
   top: var(--space-4);
@@ -717,7 +701,6 @@
   display: none;
 }
 
-/* ── Small popups ────────────────────────────────────────────────────── */
 .mw-pop {
   position: absolute;
   z-index: 1090;
@@ -868,7 +851,6 @@
   margin: 0;
 }
 
-/* ── The large card ──────────────────────────────────────────────────── */
 .mw-scrim {
   position: absolute;
   inset: 0;
@@ -1038,7 +1020,6 @@
   margin: 0 0 var(--space-4);
 }
 
-/* ── Phone (< 640): bottom sheet, stacked header, full-height card ──── */
 .mw-sheet-handle {
   position: absolute;
   left: var(--space-3);
@@ -1194,7 +1175,6 @@
   transform: none !important;
 }
 
-/* ── Reader design: card content ─────────────────────────────────────── */
 .mw-card .speak-pill {
   width: 100%;
   min-height: 52px;
@@ -1633,7 +1613,7 @@ details.mw-sources > summary {
   color: var(--link);
 }
 
-/* FE-10: the shared reader frame uses the existing Lumen material. */
+/* The shared reader frame uses the existing Lumen material. */
 .reader-card {
   display: flex;
   flex-direction: column;
@@ -1671,3 +1651,31 @@ details.mw-sources > summary {
 /* Online-only office pins remain distinct from meetings in the same building. */
 .wtp-pin[data-venue-kind="ONLINE_ONLY"] .wtp-pin-count { color: var(--online); background: var(--panel); font-size: var(--text-caption); }
 .wtp-pin[data-venue-kind="ONLINE_ONLY"] .wtp-pin-dot { border-color: var(--online); }
+
+/* Square office symbol beside the building's meeting pin. */
+.wtp-office-pin {
+  display: grid;
+  place-items: center;
+  width: var(--space-12);
+  height: var(--space-12);
+  padding: var(--space-2);
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  color: var(--text);
+}
+.wtp-office-pin span {
+  display: grid;
+  place-items: center;
+  width: var(--space-6);
+  height: var(--space-6);
+  background: var(--panel);
+  border: 2px solid var(--text);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-body);
+  box-shadow: 0 0 0 2px var(--bg);
+}
+.wtp-office-pin:hover span,
+.wtp-office-pin:focus-visible span,
+.wtp-office-pin[data-selected="true"] span { border-color: var(--action); }
+.wtp-office-pin:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }

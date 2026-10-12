@@ -1,12 +1,4 @@
-/**
- * **THE QUEUE: EVERYTHING IN MOTION IN ONE LIST (BR-14).** Orders, scheduled orders, instructions sent to the fleet, hunts and
- * missions, stuck cases, doors shut now and fix-list items, each one once. A row says what it is, where it stands (a status chip
- * and one of five filters), who has it, when it is due, the next step and how far along it is, and carries the one control that
- * stops or pauses that kind of thing. PURE: the loaded sections in, rows out; a section that could not be read is null and adds no
- * rows (the screen says it could not be read, never "nothing in motion").
- */
-import type { DecisionOrderCard } from "../../../../lib/control-plane/decision-cards.ts";
-import { decisionOrderAction } from "./decision-order-action.ts";
+/** A section that could not be read is null and adds no rows. */
 import { plainWords, hasTechnicalText } from "../../../../lib/control-plane/admin-view/plain-words.ts";
 import type { ActionRef, ClosedFix, FixView, Hunt, Lane, LookView, OpenFix, SentInstruction, StuckItem, TestingFix, UiReceipt } from "./model.ts";
 import { orderStepsReached, ORDER_STEPS } from "./receipts.ts";
@@ -23,7 +15,7 @@ export const QUEUE_FILTER_WORDS: Readonly<Record<QueueFilter, string>> = {
   done: "Done",
 };
 
-export type QueueKind = "order" | "scheduled" | "send" | "hunt" | "stuck" | "door" | "fix" | "decision" | "reader-report" | "testing" | "look";
+export type QueueKind = "order" | "scheduled" | "send" | "hunt" | "stuck" | "door" | "fix" | "reader-report" | "testing" | "look";
 
 export interface QueueRow {
   readonly technical?: readonly string[];
@@ -44,9 +36,7 @@ export interface QueueRow {
   readonly open: { readonly type: "stuck" | "fix" | "look"; readonly id: string } | null;
   /** Newest first within a filter. */
   readonly at: string | null;
-  /** The saved order, for an order row: its seven facts and its own follow-up controls sit behind "Show details". */
   readonly receipt: UiReceipt | null;
-  /** For an instruction sent to the fleet that the runner has taken up: what its work reached. */
   readonly sendId: string | null;
 }
 
@@ -55,7 +45,6 @@ export interface QueueScheduled { readonly id: string; readonly label: string; r
 
 export interface QueueInput {
   readonly readerProblems?: readonly QueueRow[] | null;
-  readonly decisions?: readonly DecisionOrderCard[] | null;
   readonly receipts: readonly UiReceipt[] | null;
   readonly sends: readonly SentInstruction[] | null;
   readonly hunts: readonly Hunt[] | null;
@@ -151,7 +140,7 @@ function closedFixRow(c: ClosedFix, returned: boolean): QueueRow {
   };
 }
 
-/** DP-26: a fix proving itself across places. Once proven it leaves the Queue; its one Proven update shows on Now. */
+/** A fix proving itself across places. Once proven it leaves the Queue. */
 function testingRow(t: TestingFix): QueueRow {
   return {
     key: `testing:${t.id}`, kind: "testing", what: `Testing: ${t.title}`, chip: t.brokeSince ? `Proven, broke since ${t.brokeSince}` : "Testing",
@@ -161,7 +150,7 @@ function testingRow(t: TestingFix): QueueRow {
   };
 }
 
-/** FE-21: the latest deploy's look check on the live site. Red needs someone; green is done; not reviewed is still waiting. */
+/** The latest deploy's look check on the live site. Red needs someone; green is done; not reviewed is still waiting. */
 function lookRow(l: LookView): QueueRow {
   return {
     key: `look:${l.sha}`, kind: "look", what: "Look check of the latest deploy", chip: l.verdict === "Green" ? "Looks right" : l.verdict === "Red" ? "Looks wrong" : "Not judged",
@@ -185,15 +174,9 @@ export function buildQueue(input: QueueInput,nowMs=Date.now()): readonly QueueRo
   const sends = input.sends ?? [];
   const scheduledIds=new Set((input.scheduled??[]).map(s=>s.id));
   const childParents=new Set((input.receipts??[]).flatMap(r=>r.scheduledParentId?[r.scheduledParentId]:[]));
-  const decidedParents=new Set((input.decisions??[]).filter(c=>c.resolution&&c.resolution.choice!=="decline").flatMap(c=>c.claimedBy?[c.claimedBy]:[]));
   if(input.readerProblems) rows.push(...input.readerProblems);
-  for(const card of input.decisions??[]) {
-    // An accepted card is represented by its child order, never by a second row.
-    if(card.resolution && card.resolution.choice!=="decline")continue;
-    rows.push({key:`decision:${card.id}`,kind:"decision",what:card.recommends,chip:card.resolution?"Declined":"Needs your decision",tone:card.resolution?"neutral":"warn",filter:card.resolution?"done":"needs-me",owner:"You",due:null,next:card.resolution?.reason??card.happening,progress:null,actions:card.resolution?[]:[decisionOrderAction(card)],open:null,at:card.resolution?.at??card.raisedAt,receipt:null,sendId:null});
-  }
   if (input.sends) rows.push(...input.sends.map(sendRow));
-  if (input.receipts) rows.push(...input.receipts.filter((r) => sendOf(r, sends) === null && !decidedParents.has(r.gatewayReceiptId??"") && !(r.gatewayType==="orders.schedule" && (scheduledIds.has(r.gatewayReceiptId??"")||childParents.has(r.gatewayReceiptId??"")))).map(r=>orderRow(r,nowMs)));
+  if (input.receipts) rows.push(...input.receipts.filter((r) => sendOf(r, sends) === null && !(r.gatewayType==="orders.schedule" && (scheduledIds.has(r.gatewayReceiptId??"")||childParents.has(r.gatewayReceiptId??"")))).map(r=>orderRow(r,nowMs)));
   if (input.scheduled) rows.push(...input.scheduled.map(r=>scheduledRow(r,nowMs)));
   if (input.hunts) rows.push(...input.hunts.map(huntRow));
   if (input.stuck) rows.push(...input.stuck.map(stuckRow));

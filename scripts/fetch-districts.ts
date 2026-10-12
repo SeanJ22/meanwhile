@@ -1,3 +1,4 @@
+import { readZipEntries } from "../lib/sources/archive.ts";
 /** Build one national PMTiles archive from Census boundaries, outside git.
  * node --experimental-strip-types scripts/fetch-districts.ts --output=<file.pmtiles>
  * Requires the official `pmtiles` CLI on PATH (or PMTILES_CLI). No state/county clip.
@@ -9,7 +10,7 @@ import { mkdir, readFile, rename } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { Readable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
-import { inflateRawSync, gzipSync, gunzipSync } from 'node:zlib';
+import { gzipSync, gunzipSync } from 'node:zlib';
 import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 type SqlValue = string | number | Uint8Array | null;
@@ -38,56 +39,7 @@ const layers = [
   ['unsd', 'school-unified'], ['elsd', 'school-elementary'], ['scsd', 'school-secondary'],
 ] as const;
 function extractAll(zip: Buffer): Map<string, Buffer> {
-  const EOCD_SIGNATURE = 0x06054b50;
-  const CENTRAL_SIGNATURE = 0x02014b50;
-  const LOCAL_SIGNATURE = 0x04034b50;
-
-  let eocd = -1;
-  for (let i = zip.length - 22; i >= 0; i--) {
-    if (zip.readUInt32LE(i) === EOCD_SIGNATURE) {
-      eocd = i;
-      break;
-    }
-  }
-  if (eocd === -1) {
-    throw new Error("Not a zip archive: no end-of-central-directory record.");
-  }
-
-  const entryCount = zip.readUInt16LE(eocd + 10);
-  let offset = zip.readUInt32LE(eocd + 16);
-
-  const files = new Map<string, Buffer>();
-
-  for (let i = 0; i < entryCount; i++) {
-    if (zip.readUInt32LE(offset) !== CENTRAL_SIGNATURE) {
-      throw new Error(`Corrupt zip: central directory entry ${i} has a bad signature.`);
-    }
-
-    const compressionMethod = zip.readUInt16LE(offset + 10);
-    const compressedSize = zip.readUInt32LE(offset + 20);
-    const nameLength = zip.readUInt16LE(offset + 28);
-    const extraLength = zip.readUInt16LE(offset + 30);
-    const commentLength = zip.readUInt16LE(offset + 32);
-    const localHeaderOffset = zip.readUInt32LE(offset + 42);
-    const name = zip.subarray(offset + 46, offset + 46 + nameLength).toString("latin1");
-
-    if (zip.readUInt32LE(localHeaderOffset) !== LOCAL_SIGNATURE) {
-      throw new Error(`Corrupt zip: local header signature mismatch for ${name}.`);
-    }
-
-    const localNameLength = zip.readUInt16LE(localHeaderOffset + 26);
-    const localExtraLength = zip.readUInt16LE(localHeaderOffset + 28);
-    const dataStart = localHeaderOffset + 30 + localNameLength + localExtraLength;
-    const data = zip.subarray(dataStart, dataStart + compressedSize);
-
-    if (compressionMethod === 0) files.set(name, Buffer.from(data));
-    else if (compressionMethod === 8) files.set(name, inflateRawSync(data));
-    else throw new Error(`Unsupported compression method ${compressionMethod} for ${name}.`);
-
-    offset += 46 + nameLength + extraLength + commentLength;
-  }
-
-  return files;
+  return new Map(readZipEntries(zip, { maxMemberBytes: 512 * 1024 * 1024, maxTotalBytes: 1024 * 1024 * 1024 }).map(entry => [entry.name, entry.data]));
 }
 
 /* ------------------------------------------------------------------ dbf --- */

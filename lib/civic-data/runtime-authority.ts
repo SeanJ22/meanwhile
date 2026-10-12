@@ -46,7 +46,6 @@ export interface RuntimeCheckoutFacts {
   readonly detached: boolean;
   readonly headOnOriginMain: boolean;
   readonly readable: boolean;
-  /** Which read failed and how, when `readable` is false. Optional so recorded facts still load. */
   readonly unreadable?: string | null;
   /** Reads that failed and then answered on a bounded re-read. The admission stands; the failure is kept. */
   readonly recoveredReads?: readonly string[];
@@ -55,7 +54,6 @@ export interface RuntimeCheckoutFacts {
 export interface RuntimeAuthorityExpectation {
   readonly capabilities: readonly RuntimeAuthorityCapability[];
   readonly contract?: string | null;
-  /** Ordinary child admission proves the OS-observed immediate parent. */
   readonly immediateParentPid: number;
 }
 
@@ -76,26 +74,8 @@ function samePath(left: string, right: string): boolean {
 }
 
 /**
- * **A READ THAT DID NOT ANSWER IS READ AGAIN, BRIEFLY, AND ITS FAILURE IS KEPT** (2026-09-25).
- *
- * The runtime checkout is a Git worktree of the development repository, so
- * every read here also reads that repository's shared `.git/config`, and
- * every branch an agent creates, tracks or pushes rewrites that file. On
- * Windows a read that opens it during the rewrite fails:
- * `warning: unable to access '.git/config': Permission denied` and
- * `fatal: unknown error occurred while reading the configuration files`,
- * exit 128. Reproduced on the runner host with a controlled writer: 4 of 950
- * reads failed. In production it refused 15 admitted children on
- * 2026-09-23..25 as "runtime checkout facts are unreadable", among them the
- * registration-nc, -nd and -oh Reader repairs of the 2026-09-25T23:01Z pass,
- * which passed the pass before and the pass after on the same code.
- *
- * A read that exits with an ANSWER is a fact and is never re-read: a dirty
- * tree, a branch, another HEAD or an ancestry of 1 refuse at once. Only a
- * read that failed to answer (Git's fatal exit, a timeout, a failed spawn) is
- * re-read, at most `GIT_READ_ATTEMPTS` times, and its failure travels with the
- * facts either way: in the refusal when it never answered, and as a recovered
- * read when it did.
+ * Only a read that failed to answer (Git's fatal exit, a timeout, a failed spawn) is re-read, at most
+ * `GIT_READ_ATTEMPTS` times; a read that answered is a fact and never re-read. The failure travels with the facts.
  */
 export const GIT_READ_ATTEMPTS = 3;
 const GIT_READ_PAUSES_MS = [50, 200] as const;
@@ -103,9 +83,7 @@ const GIT_READ_PAUSES_MS = [50, 200] as const;
 type GitReadResult = {
   readonly status: number | null;
   readonly stdout: string;
-  /** The last failure, when the read never answered. */
   readonly failure: string | null;
-  /** Failures before an answer. */
   readonly recovered: readonly string[];
 };
 
@@ -126,7 +104,6 @@ function describeGitFailure(label: string, error: unknown): { readonly status: n
   return { status, text: `git ${label} ${how}${said ? ` (${said})` : ""}` };
 }
 
-/** One read, re-read only while it fails to answer. `answers` are the non-zero exits that ARE facts. */
 export function gitReadWithRetry(
   label: string,
   run: GitRun,
@@ -162,10 +139,7 @@ function gitOptions(root: string): ExecFileSyncOptionsWithStringEncoding {
   };
 }
 
-// Each subprocess call carries a literal read-only verb. The authority gate
-// cannot accept a caller-supplied Git argv: that would be a latent mutation
-// door and would also make the executable firewall unable to prove the call
-// is code-identity inspection only.
+// Each subprocess call carries a literal read-only verb; never accept a caller-supplied Git argv.
 export interface RuntimeCheckoutReads {
   readonly repositoryRoot: GitRun;
   readonly head: GitRun;
@@ -187,7 +161,6 @@ function gitCheckoutReads(root: string): RuntimeCheckoutReads {
 const UNREADABLE = (root: string, why: string): RuntimeCheckoutFacts =>
   ({ repositoryRoot: root, headSha: null, clean: false, detached: false, headOnOriginMain: false, readable: false, unreadable: why });
 
-/** Read-only facts. Unknown/unreadable values all settle in the refusing direction. */
 export function inspectRuntimeCheckout(
   root: string,
   options: { readonly reads?: RuntimeCheckoutReads; readonly pause?: (ms: number) => void } = {},
@@ -242,7 +215,6 @@ export function runtimeAuthorityEnvelope(
   return { repo, sha, capability: capability as RuntimeAuthorityCapability, contract, parentPid, nonce };
 }
 
-/** Pure verdict used by the executable check and mutation/positive-control tests. */
 export function runtimeAuthorityIssue(input: {
   readonly envelope: RuntimeAuthorityEnvelope | null;
   readonly expectation: RuntimeAuthorityExpectation;
@@ -307,10 +279,7 @@ export function assertRuntimeAuthority(
     return { repo, sha, capability: expectation.capabilities[0]!, contract: expectation.contract ?? null,
       parentPid: process.ppid, nonce: randomBytes(32).toString("hex") };
   }
-  // This checkout inspection runs only when a sanctioned non-Next writer asks
-  // for authority. It is deliberately runtime-dynamic; it is not a request for
-  // Turbopack to trace the entire repository (including tests and credentials)
-  // into every Reader bundle.
+    // Deliberately runtime-dynamic, so Turbopack does not trace the repository into Reader bundles.
   const cwd = resolve(/* turbopackIgnore: true */ options.cwd ?? process.cwd());
   const envelope = runtimeAuthorityEnvelope(env);
   const fullExpectation: RuntimeAuthorityExpectation = {
@@ -325,21 +294,18 @@ export function assertRuntimeAuthority(
     cwd,
   });
   if (issue !== null) throw new RuntimeAuthorityRefused(issue);
-  // Admitted on facts that answered; a read that failed first is still said, not swallowed.
   if (checkout.recoveredReads?.length) {
     process.stderr.write(`RUNTIME_AUTHORITY_READ_RECOVERED ${checkout.recoveredReads.join("; ")}\n`);
   }
   return envelope!;
 }
 
-/** Rotate the parent nonce and bind one child to this exact PID and capability. */
 export function admittedRuntimeChildEnvironment(input: {
   readonly parentEnv?: NodeJS.ProcessEnv;
   readonly capability: RuntimeAuthorityCapability;
   readonly contract?: string | null;
   readonly parentPid?: number;
   readonly nonce?: string;
-  /** Only the existing owner-snapshot publisher collects provider reports. */
   readonly billingCollector?: boolean;
 }): NodeJS.ProcessEnv {
   const env = input.parentEnv ?? process.env;
@@ -382,7 +348,6 @@ export function assertRegisteredRuntimeContract(
   }, env);
 }
 
-/** Every named non-Next production sanction converges on this authority check. */
 export function assertSanctionedRuntimeAuthority(
   operation: string,
   env: Readonly<Record<string, string | undefined>> = process.env,

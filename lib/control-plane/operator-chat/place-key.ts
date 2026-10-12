@@ -17,4 +17,3 @@ export function askedPlace(asked: string, from: string): string | null {
   if (!/\b(?:this|selected|my)\s+(?:place|district|state|county)\b/i.test(asked)) return null;
   try { const selected = new URL(from, "https://admin.invalid").searchParams.get("scope"); return selected && parseV6PlaceKey(selected) ? selected : null; } catch { return null; }
 }
-

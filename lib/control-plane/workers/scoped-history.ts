@@ -1,13 +1,8 @@
 /**
- * **EACH TASK READS ONLY ITS OWN HISTORY (CH-26).**
- *
- * The reads a task makes about its own work item, subject and lineage, scoped
- * to them instead of listing whole tables (rulings §5: nothing loads the whole
- * country). Each returns exactly what the whole-table read returned once the
- * caller's own filter is applied; the version-20 indexes make them cheap in
- * Postgres. A runtime opts in with `scopedReads` (the lease worker sets it from
- * the runner switch `WTP_SCOPED_TASK_READS=1`); without it every read is the
- * old whole-table one, until the scoped path is checked live.
+ * A task's reads of its own work item, subject and lineage, scoped instead of
+ * listing whole tables. Each returns exactly what the whole-table read returned
+ * after the caller's filter. Opt in with `scopedReads` (runner switch
+ * WTP_SCOPED_TASK_READS=1); otherwise every read is the whole-table one.
  */
 import type { CostEntry } from "../cost.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";

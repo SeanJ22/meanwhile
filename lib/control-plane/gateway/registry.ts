@@ -1,36 +1,3 @@
-/**
- * **THE CLOSED LIST OF THINGS THE CONSOLE CAN DO.** (Admin Pass C, ADM-C6.)
- *
- * ## Closed is the whole design
- *
- * §3.1–3.4 remove the four generic escape hatches: no unrestricted shell, no
- * arbitrary SQL box, no arbitrary workflow string, no browser-cookie scraping.
- * What is left has to be a NAMED set of typed actions, and a named set is only
- * a safety property if the lookup FAILS CLOSED — an action type that is not in
- * this map is refused rather than passed through to something that might
- * understand it (§3.6). `lookupAction` therefore returns null for anything not
- * declared here, and the gateway turns that into a refusal with a receipt.
- *
- * ## Each entry delegates; none of them implements
- *
- * Every action here is a thin, typed front door onto a path that already
- * exists. `queue.add` and `decision.record` append owner-decision intents
- * through `appendDecisionIntent`. The four runner and fleet controls build
- * research intents through `buildResearchIntent` / `appendResearchIntent`, the
- * same quadruple `/api/admin/research` has used since Level 1 activation.
- * Nothing is reimplemented, so nothing can
- * drift from the path the rest of the console uses (RULING 103).
- *
- * The admin surface still WRITES AND NOTHING ELSE. Every entry below appends a
- * record; not one of them merges, pushes, deploys, promotes, runs git, or edits
- * a generated artifact. That is the constraint all four existing admin routes
- * were built around, and a gateway that executed rather than recorded would
- * have broken it while looking like a tidy-up.
- *
- * SERVER-SIDE. The registry reaches the control plane through the repositories
- * it is handed; it never opens a connection and never reads the environment.
- */
-
 import { appendDecisionIntent, RUNNER_ID, SNAPSHOT_ID } from "../admin-data.ts";
 import { fixConsequence, fixSubjectId, parseFixField, WHERE_SEPARATOR } from "../fix-queue.ts";
 import { addFixItem, completeFixItem, fixItems, fixDispatchNote, recordFixDispatch } from "../fix-list.ts";
@@ -49,8 +16,6 @@ import {
   validateIntentNote,
 } from "../research-view.ts";
 import { RESEARCH_STATE_ID } from "../scheduler/research-policy.ts";
-import { executeSequence } from "./sequence-orders.ts";
-import { executeDecisionOrder } from "../decision-orders.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import type { WakeHintWriter } from "./wake-hint.ts";
 import {
@@ -67,7 +32,6 @@ import {
   withDataSwitch,
   dataSwitchOf,
   PLACE_TARGET_KEY,
-  API_FALLBACK_MISSING_SEAM,
 } from "./admin-config.ts";
 import { RECIPES } from "../data-business/recipes.ts";
 import { defaultOn } from "../data-business/switches.ts";
@@ -101,51 +65,36 @@ import { ORIGINAL_LIFETIME_HUNT } from "../scheduler/hunt-continuation.ts";
 import { WORK_QUESTION_WORDS, validateWorkQuestions, type WorkQuestion } from "../work-question.ts";
 import { huntPlaceKey } from "../admin-view/v6-hunts-read.ts";
 import { BULK_ACTIONS } from "./bulk-actions.ts";
+import { LEAD_ACTIONS } from "../leads/actions.ts";
 import { DOOR_ACTIONS } from "../../doors/actions.ts";
 import { appendFailureSays, writeFailureSays } from "./write-readback.ts";
 import { settingDefinition, settingUndo, settingValueWords, SPEND_CEILING_LOG_KEY, withLoggedChange, withSetting, type SettingValue } from "../settings.ts";
 import { publishReaderSettings } from "../../civic-data/reader-settings-publication.ts";
 import type { ActionDefinition, ActionRequest, ReceiptOutcome, RefusalCode } from "./contract.ts";
 
-/** How much the runner creates for one Send, in the words every receipt below quotes (MW-028). */
+/** How much the runner creates for one Send, in the words every receipt quotes. */
 const CREATION_SCOPE = "all missing work for the requested geography";
 
-/* ------------------------------------------------------------------ deps */
-
-/**
- * What an action is allowed to reach, handed in rather than imported.
- *
- * The whole gateway therefore runs against the in-memory repositories, a fixed
- * clock and a stub recorder in the suite — which is what makes the five ADM-C6
- * acceptance points provable rather than asserted.
- */
 export interface GatewayDeps {
   readonly repos: ControlPlaneRepositories;
-  /** The clock, injected. Nothing under `lib/` reaches for `Date.now()`. */
+  /** Injected; nothing under `lib/` reads `Date.now()`. */
   readonly now: () => string;
-  /** What the world is at now, for the staleness comparison. Null when nothing moves. */
   readonly currentStateVersion: string | null;
-  /** The deploy that is running this, for the receipt. Null when the runtime cannot say. */
   readonly codeSha: string | null;
-  /** Tells the runner its controls changed, after an action is durably applied. Absent when the host has no Blobs destination. Never part of an action's result. */
+  /** Absent when the host has no Blobs destination. Never part of an action's result. */
   readonly wake?: WakeHintWriter | null;
   readonly readPlaceScore?: import("./hunt-score.ts").PlaceScoreReader;
 }
 
-/* --------------------------------------------------------------- results */
-
-/** What an action did, in the words the receipt carries. */
 export interface ActionEffect {
   readonly ok: true;
   /** Never `REFUSED` — a refusal is the other branch. */
   readonly outcome: Exclude<ReceiptOutcome, "REFUSED">;
   readonly says: string;
-  /** The canonical identity acted on, when it was derived rather than submitted. */
   readonly subject?: string;
   readonly openedWork?: readonly { readonly kind: string; readonly id: string; readonly title: string }[];
   readonly readBackAt?: string | null;
   readonly undo?: string | null;
-  /** BR-13: the value before and after, in the words the screen prints ("$50.00" and "$80.00"). */
   readonly change?: { readonly before: string; readonly after: string };
 }
 
@@ -159,17 +108,14 @@ export interface ActionRefusal {
 
 export type ActionResult = ActionEffect | ActionRefusal;
 
-/** What `validate` hands to `execute`: the action's own checked input. */
 export type ValidatedInput = Readonly<Record<string, unknown>>;
 
 export type Validation =
   | { readonly ok: true; readonly value: ValidatedInput }
   | { readonly ok: false; readonly why: string };
 
-/** The context an action gets beyond its input: who asked, and under what receipt. */
 export interface ActionContext {
   readonly request: ActionRequest;
-  /** The receipt id this action will be recorded under, known before it runs. */
   readonly receiptId: string;
   readonly at: string;
 }
@@ -185,24 +131,16 @@ export interface RegisteredAction {
   ) => Promise<ActionResult>;
 }
 
-/* ------------------------------------------------------------- utilities */
-
 const text = (value: unknown): string => (typeof value === "string" ? value.trim() : "");
 const collapse = (value: unknown): string => text(value).replace(/\s+/g, " ");
 const bad = (why: string): Validation => ({ ok: false, why });
 const refuse = (refusal: RefusalCode, says: string): ActionRefusal => ({ ok: false, refusal, says });
 
-/**
- * A store failure, as the one sentence the owner reads.
- *
- * The error NAME and never its message: a driver error's message can contain
- * the connection string, and this text reaches a browser.
- */
+/** The error name, never its message: a driver message can contain the connection string. */
 function storeRefusal(what: string, error: unknown): ActionRefusal {
   return refuse("DOWNSTREAM_REFUSED", writeFailureSays(what, error));
 }
 
-/** The owner-decision intent both decision-shaped actions append. */
 function decisionIntent(input: {
   readonly subjectId: string;
   readonly chosenOption: string;
@@ -213,17 +151,13 @@ function decisionIntent(input: {
 }): OwnerDecisionIntent {
   return {
     formatVersion: OWNER_SURFACE_FORMAT_VERSION,
-    // The same derivation the decision route uses: subject plus the moment, so
-    // a double-click inside one millisecond is one intent and a later identical
-    // click is a new one. The gateway's own idempotency key is the outer guard;
-    // this keeps the store's guarantee unchanged for anything that reaches it
-    // by another path.
+    // Subject plus moment: a double-click inside one millisecond is one intent.
     intentId: `${input.subjectId}:${input.decidedAt}`,
     subjectId: input.subjectId,
     chosenOption: input.chosenOption,
     consequenceShown: input.consequenceShown,
     decidedAt: input.decidedAt,
-    state: "PENDING_CANONICALIZATION",
+    state: "RECORDED",
     canonicalRef: null,
     refusedReason: null,
     adminSessionRef: input.actorRef,
@@ -231,14 +165,13 @@ function decisionIntent(input: {
   };
 }
 
-/** Append a research intent for one of the four runner/fleet controls. */
 async function appendIntent(
   deps: GatewayDeps,
   context: ActionContext,
   action: "PAUSE" | "RESUME" | "PAUSE_RUNNER" | "RESUME_RUNNER" | "RUN_CYCLE_NOW" | "DISPATCH" | "CANCEL_DISPATCH",
   note: string | null,
   said: { readonly says: string; readonly undo: string | null },
-  /** MW-021: a DISPATCH's own rolling 24-hour budget for paid work on what it reaches. */
+  /** A DISPATCH's own rolling 24-hour budget for paid work. */
   budgetUsd: number | null = null,
 ): Promise<ActionResult> {
   const requestedAt = context.at;
@@ -256,17 +189,7 @@ async function appendIntent(
   };
 }
 
-/* --------------------------------------------------------------- actions */
-
-/**
- * The readback subjects, closed.
- *
- * A readback here is a FRESH READ of what the control plane currently holds for
- * a named subject, taken now and recorded with what it said. It is not a
- * re-derivation from source: the deployed console has no repository, no git and
- * no filesystem, so it cannot re-run the standing publisher or a code-identity
- * readback, and it does not claim to.
- */
+/** A readback is a fresh read of what the control plane holds now, not a re-derivation from source. */
 const READBACK_SUBJECTS: Readonly<Record<string, { readonly name: string; readonly readBackAt: string }>> = {
   "control-centre": { name: "the control centre snapshot", readBackAt: "/admin" },
   runner: { name: "the runner's heartbeat", readBackAt: "/admin" },
@@ -322,7 +245,6 @@ const REGISTRY: readonly RegisteredAction[] = [
         readBackAt: "/admin?view=settings", undo: null };
     },
   },
-  /* ---------------------------------------------------------- queue.add */
   {
     definition: {
       type: "queue.add",
@@ -351,7 +273,6 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
     async execute(deps, context, input) {
       const subjectId = String(input.subjectId);
-      // BR-03: the fix list is a control-plane record, not a decision intent that waits on a local script.
       const consequence = String(input.consequenceShown);
       const at = consequence.indexOf(WHERE_SEPARATOR);
       let agentsSent = false;
@@ -391,7 +312,6 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
   },
 
-  /* ---------------------------------------------------------- fix.complete */
   {
     definition: {
       type: "fix.complete",
@@ -432,7 +352,6 @@ const REGISTRY: readonly RegisteredAction[] = [
           undo: input.undo as { type: string; input: Record<string, unknown> } | null,
         }, context.at);
       } catch (error) { return storeRefusal("the fix list", error); }
-      // BR-24: a completed fix is an update on Now, once. It is Testing until it has been proven.
       try {
         await addUpdate(deps.repos, { id: `fix:${id}:${context.at}`, what: `Fixed: ${String(input.whatChanged)}`, at: context.at,
           label: input.label === "PROVEN" ? "PROVEN" : "TESTING", evidenceHref: `/admin?view=queue`,
@@ -443,24 +362,6 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
   },
 
-  /* ------------------------------------------------------ orders.sequence */
-  {
-    definition:{type:"orders.sequence",label:"Send two linked orders",does:"Starts the first order and schedules the second after its work is done.",doesNot:"Does not skip the first order's completion or change any spending limit.",authority:"OWNER_DECISION_REQUIRED",subjectKind:"two linked orders",requiresStateVersion:false,refusals:["INVALID_INPUT","DOWNSTREAM_REFUSED"]},
-    validate(input){
-      for(const name of ["first","second"]){
-        const order=input[name] as {type?:unknown;input?:unknown}|undefined;
-        if(!order||typeof order.type!=="string"||order.type.startsWith("orders.")||order.type.startsWith("decision."))return bad("choose two ordinary registered orders");
-        const entry=lookupAction(order.type);
-        if(!entry||entry.definition.authority==="PROHIBITED"||entry.definition.requiresStateVersion)return bad("this order can only be given from its current page");
-        const inner=(order.input??{}) as Record<string,unknown>;
-        const checked=entry.validate(inner);if(!checked.ok)return bad(checked.why);
-        if(inner.kind!==undefined&&JSON.stringify(checked.value.kind)!==JSON.stringify(inner.kind))return bad("This kind of focus is not connected yet. Nothing was sent; use a place-only order until the focus filter is available.");
-      }
-      return {ok:true,value:{first:input.first,second:input.second}};
-    },execute:executeSequence,
-  },
-
-  /* ------------------------------------------------------ orders.schedule */
   {
     definition: {
       type: "orders.schedule",
@@ -509,7 +410,6 @@ const REGISTRY: readonly RegisteredAction[] = [
         readBackAt: "/admin?view=queue", undo: "Unschedule it and it will not be sent." };
     },
   },
-  /* ---------------------------------------------------- orders.unschedule */
   {
     definition: {
       type: "orders.unschedule",
@@ -540,27 +440,19 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
   },
 
-  /* ----------------------------------------------------- decision.record */
   {
     definition: {
       type: "decision.record",
       label: "Record your decision",
       does: "Records what you decided about this row, with the words you were shown when you decided it.",
-      doesNot: "Does not change a ruling, a tracker row or any generated file — that happens later, under the gates.",
+      doesNot: "Does not change a ruling or any generated file.",
       authority: "OWNER_DECISION_REQUIRED",
       subjectKind: "a row waiting on you",
-      // The card is a rendering of a moving world: it can be closed, superseded
-      // or re-worded between the draw and the click, and a decision recorded
-      // against words that have changed is a decision nobody can audit.
+      // The card can change between draw and click; a decision against changed words cannot be audited.
       requiresStateVersion: true,
       refusals: ["INVALID_INPUT", "STALE_STATE", "DOWNSTREAM_REFUSED"],
     },
     validate(input) {
-      if (typeof input.decisionId === "string") {
-        if (!["approve","decline","change","schedule"].includes(String(input.option))) return bad("choose what to do with the recommendation");
-        if (String(input.words ?? "").length > 1000) return bad("the reason is over 1000 characters");
-        return {ok:true,value:{...input,orderCard:true}};
-      }
       const subjectId = text(input.subjectId);
       const chosenOption = collapse(input.chosenOption);
       const answer = typeof input.ownerAnswer === "string" ? input.ownerAnswer.replace(/\r\n/g, "\n").trim() : "";
@@ -579,9 +471,7 @@ const REGISTRY: readonly RegisteredAction[] = [
       };
     },
     async execute(deps, context, input) {
-      if (input.orderCard) return executeDecisionOrder(deps,context,input);
       // The subject travels on the request; the input may name it instead when
-      // the caller is a chat tool with no rendered control behind it.
       const subjectId = String(input.subjectId) || context.request.subject.trim();
       if (subjectId === "") return refuse("INVALID_INPUT", "The decision did not say which row it was about, so nothing was recorded.");
       const intent = decisionIntent({
@@ -598,7 +488,7 @@ const REGISTRY: readonly RegisteredAction[] = [
         ok: true,
         outcome: "DONE",
         subject: subjectId,
-        says: "Your decision is recorded. It closes the row on the next sync, and the card will say when that has happened.",
+        says: "Your decision is recorded and stands now.",
         openedWork: [],
         readBackAt: "/admin",
         undo: "Record a different decision on the same row; the later one stands and neither is deleted.",
@@ -606,7 +496,6 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
   },
 
-  /* ------------------------------------------------------ research.pause */
   {
     definition: {
       type: "research.pause",
@@ -630,7 +519,6 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
   },
 
-  /* ----------------------------------------------------- research.resume */
   {
     definition: {
       type: "research.resume",
@@ -654,7 +542,6 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
   },
 
-  /* -------------------------------------------------------- runner.pause */
   {
     definition: {
       type: "runner.pause",
@@ -678,7 +565,6 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
   },
 
-  /* ------------------------------------------------------- runner.resume */
   {
     definition: {
       type: "runner.resume",
@@ -702,7 +588,6 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
   },
 
-  /* -------------------------------------------------- runner.runCycleNow */
   {
     definition: {
       type: "runner.runCycleNow",
@@ -726,7 +611,6 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
   },
 
-  /* ----------------------------------------------------- fleet.deployHere */
   {
     definition: {
       type: "fleet.deployHere",
@@ -744,10 +628,9 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
     validate(input) {
       // A DISPATCH with no words is refused by the canonical validator: "deploy
-      // the fleet" to nowhere is not an instruction.
       const note = validateIntentNote("DISPATCH", input.note);
       if (!note.ok || note.note === null) return bad(note.ok ? "say what the fleet should go do" : note.detail);
-      /* MW-021: an optional budget of its own — the same dollar rule, and the same $0-holds-everything meaning, as a geography's. */
+      /* Optional budget: the same dollar rule as a geography's, where $0 holds everything. */
       if (input.budgetUsd === undefined || input.budgetUsd === null || input.budgetUsd === "") return { ok: true, value: { note: note.note } };
       const budget = validateScopeBudget(input.budgetUsd);
       return budget.ok ? { ok: true, value: { note: note.note, budgetUsd: budget.value } } : bad(budget.why);
@@ -774,7 +657,6 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
   },
 
-  /* ------------------------------------------------ fleet.cancelDispatch */
   {
     definition: {
       type: "fleet.cancelDispatch",
@@ -867,10 +749,7 @@ const REGISTRY: readonly RegisteredAction[] = [
         "Does not start a cycle, deploy, restart, or spend anything by itself — it moves the ceiling the next cycle runs under. A lane paused at the old ceiling resumes on that cycle.",
       authority: "OWNER_DECISION_REQUIRED",
       subjectKind: "how much the Fleet may spend in a rolling day",
-      // The record-level compare-and-set on the config row is the version check
-      // this write inherits; there is no rendered card whose words can go stale
-      // between draw and click, so a page-level staleness quote would only add
-      // the quoted-vs-current mismatch that refuses good clicks, not safety.
+      // The config row's compare-and-set is the version check; no page-level staleness quote.
       requiresStateVersion: false,
       refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
     },
@@ -890,17 +769,14 @@ const REGISTRY: readonly RegisteredAction[] = [
     async execute(deps, context, input) {
       const rollingCeilingUsd = Number(input.rollingCeilingUsd);
       const at = context.at;
-      // The ceiling in force the instant before this change — a prior override,
-      // or the fallback — captured before the write so the receipt and undo name
-      // what it WAS, not what it now is.
+      // Captured before the write so the receipt and undo name the previous ceiling.
       let previousUsd: number;
       try {
         const existing = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
         // A stored value that is not a config reads as the default — which
-        // carries no override, so the previous ceiling is the built-in fallback.
         const current = existing !== null && isAdminConfig(existing.value) ? existing.value : defaultAdminConfig(at);
         previousUsd = resolveRollingCeiling(fleetSpendCeilingOverrideUsd(current)).rollingCeilingUsd;
-        // BR-05/BR-06: the change also joins the settings log, so Settings shows when it changed, its value before, and an undo.
+        // The change also joins the settings log, so Settings shows it with an undo.
         const next = withLoggedChange(withFleetSpendCeiling(current, {
           rollingCeilingUsd,
           previousUsd,
@@ -929,7 +805,6 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
   },
 
-  /* ------------------------------------------------------ config.setPlaceTarget */
   {
     definition: {
       type: "config.setPlaceTarget",
@@ -982,7 +857,6 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
   },
 
-  /* ------------------------------------------------------ config.setDataSwitch */
   {
     definition: {
       type: "config.setDataSwitch",
@@ -1038,7 +912,6 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
   },
 
-  /* ------------------------------------------------- config.setDiscoverySearch */
   {
     definition: {
       type: "config.setDiscoverySearch",
@@ -1049,8 +922,6 @@ const REGISTRY: readonly RegisteredAction[] = [
         "Does not raise the runner's per-cycle and per-day search caps, resume paid research, or spend anything by itself. The free site walks run either way.",
       authority: "OWNER_DECISION_REQUIRED",
       subjectKind: "how the system may spend",
-      // As with the ceiling dial, the compare-and-set on the config row is the
-      // version check; no rendered card can go stale between draw and click.
       requiresStateVersion: false,
       refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
     },
@@ -1072,7 +943,6 @@ const REGISTRY: readonly RegisteredAction[] = [
       try {
         const existing = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
         // A stored value that is not a config reads as the default, which has no
-        // decision, which reads OFF: a corrupt row never turns paid search on.
         const current = existing !== null && isAdminConfig(existing.value) ? existing.value : defaultAdminConfig(at);
         const next = withDiscoverySearch(current, {
           enabled,
@@ -1100,7 +970,6 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
   },
 
-  /* ------------------------------------------------------ expansion.scope.set */
   {
     definition: {
       type: "expansion.scope.set",
@@ -1113,9 +982,6 @@ const REGISTRY: readonly RegisteredAction[] = [
         "Its budget can only hold paid work back.",
       authority: "OWNER_DECISION_REQUIRED",
       subjectKind: "a geography you want worked first",
-      // The same reasoning as the spend-ceiling dial: the config row's own
-      // compare-and-set is the version check, and a page-level quote would only
-      // refuse good clicks.
       requiresStateVersion: false,
       refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
     },
@@ -1131,7 +997,7 @@ const REGISTRY: readonly RegisteredAction[] = [
       if (!budget.ok) return bad(budget.why);
       const note = validateScopeNote(input.note);
       if (!note.ok) return bad(note.why);
-      /* MW-002: the owner's questions travel typed, never folded into the note. */
+      /* The owner's questions travel typed, never folded into the note. */
       const questions = validateWorkQuestions(input.questions);
       if (!questions.ok) return bad(questions.why);
       if (input.huntBudget !== undefined && typeof input.huntBudget !== "boolean") return bad("Choose a budget for this hunt or a rolling budget.");
@@ -1209,7 +1075,6 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
   },
 
-  /* --------------------------------------------------- expansion.scope.remove */
   {
     definition: {
       type: "expansion.scope.remove",
@@ -1224,7 +1089,6 @@ const REGISTRY: readonly RegisteredAction[] = [
       refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
     },
     validate(input) {
-      // A hunt is named by its scope key, or by the place key a screen shows it under (S11).
       const placeKey = typeof input.placeKey === "string" ? input.placeKey.trim() : "";
       if (placeKey !== "") {
         return /^geo:[a-z]{2}.[a-z_]+.[0-9A-Za-z]{2,12}$/.test(placeKey) ? { ok: true, value: { key: placeKey } } : bad("say which hunt, by its place");
@@ -1273,13 +1137,11 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
   },
 
-  /* ------------------------------------ expansion.scope.setMany and .budget */
   ...BULK_ACTIONS,
+  ...LEAD_ACTIONS,
 
-  /* ------------------------------------------------------------ door.save */
   ...DOOR_ACTIONS,
 
-  /* ---------------------------------------------------- billing.fact.record */
   {
     definition: {
       type: "billing.fact.record",
@@ -1290,8 +1152,6 @@ const REGISTRY: readonly RegisteredAction[] = [
         "Does not change any ceiling, budget or runner decision, and is never added to the system's own measured ledger for the same money. Entering the same provider, kind and period again corrects the earlier figure rather than adding a second one.",
       authority: "OWNER_DECISION_REQUIRED",
       subjectKind: "a figure from a bill the system cannot read",
-      // The config row's compare-and-set is the version check, exactly as for
-      // the spend dial; a figure the owner read does not go stale on the page.
       requiresStateVersion: false,
       refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
     },
@@ -1346,7 +1206,6 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
   },
 
-  /* ---------------------------------------------------- billing.fact.remove */
   {
     definition: {
       type: "billing.fact.remove",
@@ -1404,34 +1263,19 @@ const REGISTRY: readonly RegisteredAction[] = [
   ...OWED_ACTIONS,
 ];
 
-/**
- * The registry, by type.
- *
- * Built from the list rather than written as a literal so a definition's `type`
- * and its key cannot disagree — a mismatch there would make an action
- * unreachable under its own name while looking present.
- */
+/** Built from the list so a definition's `type` and its key cannot disagree. */
 export const ACTION_REGISTRY: Readonly<Record<string, RegisteredAction>> = Object.freeze(
   Object.fromEntries(REGISTRY.map((entry) => [entry.definition.type, entry])),
 );
 
-/** Every action type the console has, in declaration order. */
 export const ACTION_TYPES: readonly string[] = REGISTRY.map((entry) => entry.definition.type);
 
-/**
- * The action, or null.
- *
- * `Object.prototype.hasOwnProperty` rather than a truthiness check, because
- * `ACTION_REGISTRY["toString"]` is a function on any plain object and a lookup
- * that trusted it would have handed the gateway something that is not an
- * action at all.
- */
+/** `hasOwnProperty`, so inherited keys like `toString` are not actions. */
 export function lookupAction(type: string): RegisteredAction | null {
   if (typeof type !== "string") return null;
   return Object.prototype.hasOwnProperty.call(ACTION_REGISTRY, type) ? ACTION_REGISTRY[type] : null;
 }
 
-/** The definitions alone, for a surface that renders what a control will do before it is pressed. */
 export function actionDefinitions(): readonly ActionDefinition[] {
   return REGISTRY.map((entry) => entry.definition);
 }

@@ -32,15 +32,9 @@ import { PositionsSection } from "@/components/officials/positions-section";
 import { OfficeBlurb, RecentVotes } from "./official-popup";
 
 /**
- * The rep surface's large tier (3): the full record in the strat-map
- * pattern — one large centered surface, reached from the compact card's
- * "More". Identity, contact, the roll-call record with reaction capture,
- * and what the office does.
- *
- * One-at-a-time is enforced by the parent: opening this closes any other
- * large popup and subsumes the compact card that opened it. The close
- * control is visible in the header, Escape closes, and on a touch viewport
- * the back button closes it rather than leaving the app.
+ * The officeholder's large card: identity, contact, the roll-call record with
+ * reaction capture, and what the office does. The parent keeps one large
+ * surface open at a time.
  */
 
 interface OfficialModalProps {
@@ -49,10 +43,7 @@ interface OfficialModalProps {
   tier: Tier;
   reactionContext: ReactionViewContext | null;
   onClose: () => void;
-  /**
-   * Rendered as the body of the reader's one large card (approved design,
-   * 2026-09-28), which owns the frame, Escape, Back and Close.
-   */
+  /** Rendered as the body of the reader's one large card, which owns the frame, Escape, Back and Close. */
   embedded?: boolean;
 }
 
@@ -76,17 +67,12 @@ export function OfficialModal({
   }, [onClose, embedded]);
 
   /*
-   * Item 7's clean render, on the Sources section: the congress-legislators
-   * project is cited ONCE for every directory fact on this card — the
-   * official accounts in the pill row, the committee seats, the district
-   * offices — rather than once per row beside each of them. Money, votes and
-   * PRL keep their per-section citations; a claim surface is a different
-   * register from a directory fact.
+   * Directory facts (accounts, committee seats, offices) cite their project
+   * once on the Sources section; money, votes and PRL keep per-section
+   * citations. A state legislator's offices come from Open States.
    */
-  // A state legislator's offices are read from Open States onto the legislature's own row;
-  // the card names that source once, beside the legislature's.
   const [prlProfile, setPrlProfile] = useState<PrlReaderProfile | null>(null);
-  const { directory } = useMemberDirectory(holder.id);
+  const { directory } = useMemberDirectory(holder.id,holder.state);
   const officeSource = directory?.officeDetails?.[0];
   const sources = personCardSources(
     holder,
@@ -106,20 +92,9 @@ export function OfficialModal({
   );
 
   /*
-   * NO pushed history entry, deliberately (diagnosed 2026-08-14 third
-   * session). The phone back-button-closes-the-modal behavior worked by
-   * pushing {overlay:true} onto window.history — but Next's App Router
-   * owns history, and the push makes it re-render the route, which
-   * REMOUNTS the island holding the modal's open state: the modal dies
-   * in the same tick it opens, at every viewport under 1024px, on the
-   * map AND the ballot. That was the tester-era "official card won't
-   * open on the phone" defect and the prior session's "hydration live,
-   * click dead" mystery — proven by toggling the push alone. Both push
-   * shapes (bare and router-state-preserving) kill it. A modal that
-   * cannot open loses to a back button that leaves the page; × ,
-   * Escape, and backdrop click all close.
+   * No pushed history entry: it makes the App Router remount the island
+   * holding this modal's state. ×, Escape and backdrop click close.
    */
-
   return (
     <div
       ref={cardRef}

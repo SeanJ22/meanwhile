@@ -1,4 +1,4 @@
-import { geometryFiles, geometryPath } from "../lib/holdings/files.ts";
+import { geometryFiles } from "../lib/holdings/discovery.ts";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { basename, dirname, join } from "node:path";
@@ -8,15 +8,9 @@ import { fileURLToPath } from "node:url";
 import { tierForOcdId } from "../lib/ocd/tiers.ts";
 
 /**
- * District disambiguation.
- *
- * A point is not in *a* district, it is in a set of them, and the three cases
- * below are the ones where assuming otherwise breaks. None of them were covered
- * before. They are asserted against the committed boundary files rather than
- * mocked, because the thing that can break is the data as much as the query.
- *
- * These use ZCTA centroids, which is the same orientation-only point the map
- * flies to — not a claim about where anyone lives.
+ * A point is not in *a* district, it is in a set of them. Asserted against the committed boundary files rather than
+ * mocked, because the data can break as much as the query. ZCTA centroids are orientation-only points, not a claim
+ * about where anyone lives.
  */
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -72,17 +66,10 @@ interface Hit {
   label: string;
 }
 
-/**
- * Centroids are read off disk rather than through lib/geo/zcta.ts.
- *
- * That module imports its JSON with a plain specifier, which Next resolves and
- * `node --test` does not without an import attribute. Reading the file here
- * keeps the test honest about the same data without changing a module the port
- * is explicitly not allowed to disturb.
- */
+/** Centroids are read off disk: lib/geo/zcta.ts imports its JSON with a plain specifier `node --test` cannot load. */
 let centroids: Record<string, [number, number]> | null = null;
 
-async function centroidFor(zip: string): Promise<[number, number]> {
+async function loadCentroids(): Promise<Record<string, [number, number]>> {
   if (!centroids) {
     const raw = await readFile(
       join(here, "..", "lib", "geo", "zcta-centroids.json"),
@@ -90,11 +77,20 @@ async function centroidFor(zip: string): Promise<[number, number]> {
     );
     centroids = JSON.parse(raw).centroids as Record<string, [number, number]>;
   }
+  return centroids;
+}
 
-  const point = centroids[zip];
+async function centroidFor(zip: string): Promise<[number, number]> {
+  const point = (await loadCentroids())[zip];
   assert.ok(point, `${zip} should resolve to a ZCTA centroid`);
   // Stored [lat, lng]; GeoJSON wants [lng, lat].
   return [point[1], point[0]];
+}
+
+/** ZIPs spread evenly across the states in the national centroid file (territory ZIPs 006-009 and 969 excluded). */
+async function nationalSample(count: number): Promise<string[]> {
+  const zips = Object.keys(await loadCentroids()).filter((zip) => !/^(00[6-9]|969)/.test(zip)).sort();
+  return Array.from({ length: count }, (_, i) => zips[Math.floor((i * zips.length) / count)]);
 }
 
 let cache: { file: string; features: Feature[] }[] | null = null;
@@ -133,12 +129,8 @@ async function hitsFor(zip: string): Promise<Hit[]> {
 const countByLayer = (hits: Hit[], layer: string) =>
   hits.filter((h) => h.layer === layer).length;
 
-/* ------------------------------------------------ the three hard cases --- */
-
 test("Rockaway 07866 sits in two school districts at once", async () => {
-  // A K-8 elementary district and a regional high school district cover the
-  // same ground. Anything that assumes one school district per point returns
-  // the wrong one here, half the time, with no way to tell which.
+  // A K-8 elementary district and a regional high school district cover the same ground.
   const hits = await hitsFor("07866");
   const schools = hits.filter(
     (h) => h.layer === "unsd" || h.layer === "elsd" || h.layer === "scsd",
@@ -156,21 +148,11 @@ test("Rockaway 07866 sits in two school districts at once", async () => {
     `expected 2+ distinct school OCD-IDs, got ${[...distinct].join(", ")}`,
   );
 
-  /*
-   * M12 (2026-08-17, the author's disposition "Split and be clear"): the two
-   * districts must come from DIFFERENT source layers, and therefore now draw
-   * as different map types with their own dash, weight and checkbox.
-   *
-   * This is the payoff of the split stated as a test. Before it, both hits
-   * mapped to the single `school` type and the map drew them identically —
-   * the picker could tell them apart and the map could not, which is the
-   * defect the row named. If a future change ever merges them back, this
-   * fails here rather than being noticed by a reader in Rockaway.
-   */
+  /* The two districts come from different source layers, so they draw as different map types. */
   const sourceLayers = new Set(schools.map((s) => s.layer));
   assert.ok(
     sourceLayers.size >= 2,
-    `Rockaway's two school districts must come from different source layers ` +
+    `the two school districts must come from different source layers ` +
       `(unsd/elsd/scsd), got only ${[...sourceLayers].join(", ")}`,
   );
 
@@ -187,8 +169,7 @@ test("Rockaway 07866 sits in two school districts at once", async () => {
       `two distinct map types, got ${[...drawnTypes].join(", ") || "none"}`,
   );
 
-  // Distinct types are not enough — they must be VISUALLY distinct, which is
-  // what a reader actually uses to tell them apart.
+  // Distinct types must also be visually distinct.
   const dashes = new Set(
     [...drawnTypes].map((t) =>
       DISTRICT_LAYERS[t as keyof typeof DISTRICT_LAYERS].dash.join(","),
@@ -202,23 +183,9 @@ test("Rockaway 07866 sits in two school districts at once", async () => {
 });
 
 /*
- * Newbury 03255 and New Hampshire's floterial districts.
- *
- * A New Hampshire voter elects representatives from a base House district *and*
- * from a floterial district drawn across several towns, so Newbury genuinely
- * sits in two at once. This port cannot show the second one, and the reason is
- * the source rather than the query:
- *
- * Census state legislative district files are defined as a complete,
- * non-overlapping partition of the state. Overlapping floterials cannot be
- * expressed in that model, and measurably are not — see the partition test
- * below, which finds no point anywhere in the file covered by two districts.
- *
- * So the assertion here is deliberately what is *true today*, paired with a
- * test that pins the reason. Getting floterials means adding a New Hampshire
- * source (the General Court publishes district composition by town), which is
- * an external-source decision, not a bug fix. Until then the layer is honestly
- * incomplete rather than quietly wrong.
+ * A New Hampshire voter elects representatives from a base House district and from a floterial district drawn
+ * across several towns. Census SLDL files are a non-overlapping partition, so floterials cannot appear in them; the
+ * partition test pins that reason. Floterials need a separate New Hampshire source.
  */
 test("Newbury 03255 finds its base House district; floterials are a known gap", async () => {
   const hits = await hitsFor("03255");
@@ -233,10 +200,8 @@ test("Newbury 03255 finds its base House district; floterials are a known gap", 
 });
 
 test("Census SLDL is a partition, which is why floterials are missing", async () => {
-  // The evidence for the note above, kept as a test so the claim cannot rot.
-  // If a future source adds floterials this fails, and the Newbury assertion
-  // above should be tightened to 2 in the same change.
-  const nh = (await allLayers()).find((l) => l.file === geometryPath("sldl-33.geojson"));
+  // If a future source adds floterials this fails, and the base-district assertion above should become 2.
+  const nh = (await allLayers()).find((l) => l.file.endsWith("/sldl-33.geojson"));
   assert.ok(nh, "sldl-33.geojson should exist");
 
   let overlapping = 0;
@@ -276,14 +241,12 @@ test("Census SLDL is a partition, which is why floterials are missing", async ()
     overlapping,
     0,
     `Census SLDL now has overlapping districts — floterials may have arrived. ` +
-      `Revisit the Newbury assertion above.`,
+      `Revisit the base-district assertion above.`,
   );
 });
 
 test("Vail 85641 is unincorporated — no municipal government to find", async () => {
-  // The absence is the point. Vail has no city or town, so a UI that assumes
-  // every point has a municipality shows an empty panel where it should show
-  // "county governs here".
+  // A UI that assumes every point has a municipality would show an empty panel where the county governs.
   const hits = await hitsFor("85641");
 
   assert.equal(
@@ -301,20 +264,19 @@ test("Vail 85641 is unincorporated — no municipal government to find", async (
   );
 });
 
-/* ------------------------------------------------------- general shape --- */
-
-test("every target zip resolves to a set of districts, never exactly one", async () => {
-  for (const zip of ["85701", "85641", "07866", "03255"]) {
+test("any ZIP resolves to its congressional district from national geometry", async () => {
+  for (const zip of await nationalSample(25)) {
     const hits = await hitsFor(zip);
-    assert.ok(
-      hits.length > 1,
-      `${zip} returned ${hits.length} district(s); a point is always in a set`,
+    assert.equal(
+      countByLayer(hits, "cd119"),
+      1,
+      `${zip} returned ${JSON.stringify(hits)}; every point in a state is in exactly one congressional district`,
     );
   }
 });
 
 test("every hit carries a tier, so nothing renders as unknown government", async () => {
-  for (const zip of ["85701", "85641", "07866", "03255"]) {
+  for (const zip of await nationalSample(25)) {
     for (const hit of await hitsFor(zip)) {
       assert.ok(
         tierForOcdId(hit.ocdId) !== null,

@@ -1,54 +1,16 @@
 /**
- * **THE SHIPPING INVARIANT — A DEPLOY MAY NOT CROSS ITS OWN MIGRATIONS.**
- * (2026-08-28, the P0 schema-drift incident. Intake tripwire run 33211710028.)
+ * A deploy may not cross its own migrations. Pure: takes the committed
+ * journal, the phase declarations, the `created_at` values production has
+ * applied and the tags this change introduces, and names every migration on
+ * the wrong side of the deploy.
  *
- * ## What actually happened, stated once, here
+ *   - an EXPAND migration must precede its serving code; still pending after
+ *     the deploy fails;
+ *   - a CONTRACT migration may not precede its code; one introduced by this
+ *     change and already applied fails.
  *
- * `0021_mixed_red_ghost` created `ask_interactions`. `0022_adorable_hemingway`
- * added five evidence columns to it. Both merged — `e937958` and `dcdaac4`,
- * two squash merges on 2026-08-28 — and both DEPLOYED. Production's schema was
- * never advanced: that incident predates the automatic production migration
- * path. The Netlify production main build now applies expand migrations before
- * building; the exact serving and loaded runner applies contract migrations.
- *
- * The then-daily schema gate in `intake-tripwire.yml` caught it the next morning
- * and caught it correctly. **That was discovery after the fact.** PDC V2
- * retired that GitHub runtime clock; the permanent boundary is this software
- * pre-merge/push gate plus the automatic, read-only post-deploy integrity
- * observation. A defect found only the morning after a deploy is a defect that
- * shipped.
- *
- * ## What this module is
- *
- * Pure. No database, no network, no filesystem. It takes the committed journal,
- * the phase declaration, the `created_at` values production says it has
- * applied, and the migration tags this change introduces — and returns a
- * verdict naming every migration on the wrong side of the deploy.
- *
- * `scripts/db-shipping-gate.mts` supplies those four inputs and prints the
- * verdict; `tests/migration-shipping-invariant.test.ts` supplies them from
- * fixtures.
- *
- * ## BOTH ORDERINGS ARE EXPRESSED, and the unsafe one is what fails
- *
- * `lib/db/migration-phases.ts` carries the reasoning. In one line:
- *
- *   - an **EXPAND** migration must precede its serving code. Pre-deploy checks
- *     report it pending for the production build; still pending post-deploy FAILS;
- *   - a **CONTRACT** migration may NOT precede its code — a contract migration
- *     introduced by this change and ALREADY APPLIED FAILS.
- *
- * A gate that assumed migrate-always-first would refuse the `0013`/`0014` pair
- * this repository split on purpose, so it is not assumed.
- *
- * ## AND IT ASKS THE DATABASE ONLY WHEN THE SCHEMA CONTRACT MOVED
- *
- * A docs-only change cannot make the deployed code disagree with the deployed
- * schema, and gating it on a database round trip would put a network call
- * between a typo fix and `main`. `schemaInvolvement` decides that from the
- * changed-path list alone — and an UNREADABLE path list is treated as involved,
- * because a check that cannot reach its subject must never behave like one that
- * did (RULING 24).
+ * Only changes to the schema contract need the database; an unreadable
+ * changed-path list counts as involved.
  */
 
 import { compareSchemaState, type JournalEntry, type SchemaState } from "./schema-state.ts";
@@ -63,13 +25,8 @@ import {
 export type ShipMoment = "pre-deploy" | "post-deploy";
 
 /**
- * Paths whose change means the schema contract itself moved.
- *
- * DELIBERATELY NARROW, and narrow in the direction that costs a round trip
- * rather than the one that skips it: `lib/db/migrations/` covers every
- * generated `.sql` and the journal, and `lib/db/schema.ts` is the declaration
- * they are generated from. A change to either is the only way a committed
- * migration can appear, disappear or change identity.
+ * Paths whose change means the schema contract itself moved: the generated
+ * migrations and journal, and the schema they are generated from.
  */
 export const SCHEMA_CONTRACT_PATHS: readonly { readonly prefix: string; readonly why: string }[] = [
   {
@@ -96,12 +53,8 @@ export interface SchemaInvolvement {
 const normalisePath = (p: string) => p.replace(/\\/g, "/").replace(/^\.\//, "");
 
 /**
- * Whether a change touches the schema contract.
- *
- * `changed` of `null` means the list could not be computed — NOT that nothing
- * changed. The two are kept apart, and `null` returns involved, so an
- * unreadable diff costs one database read rather than silently skipping the
- * only check that would have caught the incident.
+ * Whether a change touches the schema contract. `null` means the list could
+ * not be computed, not that nothing changed, and returns involved.
  */
 export function schemaInvolvement(changed: readonly string[] | null): SchemaInvolvement {
   if (changed === null) {
@@ -184,12 +137,8 @@ export interface ShippingInvariantVerdict {
 }
 
 /**
- * The whole verdict, from the four inputs. No I/O.
- *
- * A migration with no declaration is never given a phase by default. Assuming
- * `expand` is what would order a contract migration ahead of its code, which is
- * the failure the phase declaration exists to prevent — so an undeclared
- * migration fails on its own and is left out of every phase bucket.
+ * The whole verdict, from the four inputs. No I/O. A migration with no
+ * declaration is never given a phase by default; it fails on its own.
  */
 export function evaluateShippingInvariant(
   input: ShippingInvariantInput,

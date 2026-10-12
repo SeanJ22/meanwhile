@@ -4,8 +4,18 @@ import { CivicPayloadParts } from "./payload-parts.ts";
 const division = "x->>'ocdId'=ANY($3::text[]) OR x->>'divisionId'=ANY($3::text[])";
 const serves = `(${division}) OR x->'alsoServesOcdIds' ?| $3::text[] OR x->>'id'=ANY($4::text[])`;
 
-/** Field paths select only collections a place capture consumes. The database
- * follows immutable references and filters records before they cross the wire. */
+/** The manifest may still serve an earlier accepted version after its mutable
+ * pointer advances. Its immutable candidate and payload parts remain the same
+ * promoted evidence; no current pointer or whole-country payload is substituted. */
+export function placeProjectionSourceSql(acceptedVersionsParameter?: number): string {
+  return acceptedVersionsParameter === undefined
+    ? "SELECT record_class,scope,current_version_id,payload FROM civic_data_promotions"
+    : `SELECT c.record_class,c.scope,c.id current_version_id,c.candidate->'readModel' payload
+       FROM jsonb_each_text($${acceptedVersionsParameter}::jsonb) accepted(scope,version_id)
+       JOIN civic_data_candidates c ON c.id=accepted.version_id AND c.scope=accepted.scope
+       WHERE c.state='PROMOTED' AND c.promoted_version_id=c.id`;
+}
+
 function collections(recordClass: string): Record<string, string> {
   if (recordClass === "REGISTRY_RUNTIME_BINDING") return {
     "registry.divisions": division, "registry.bodies": serves,
@@ -35,7 +45,8 @@ function collections(recordClass: string): Record<string, string> {
 }
 
 export async function readPlacePayloadParts(query: ReadOnlyQuery, recordClass: string, scopes: readonly string[],
-  ids: readonly string[], bodies: readonly string[], targets: readonly string[], versions: ReadonlyMap<string, string> = new Map()): Promise<Map<string, unknown>> {
+  ids: readonly string[], bodies: readonly string[], targets: readonly string[], versions: ReadonlyMap<string, string> = new Map(),
+  acceptedVersions?: ReadonlyMap<string, string>): Promise<Map<string, unknown>> {
   const derived = recordClass === "CURATED_READER_RECORD" && scopes.every(scope => scope === "US:candidate-campaign-sites-derived");
   const fields = derived ? { records: "x->>'id'=ANY($5::text[]) OR x->>'candidacyId'=ANY($5::text[])", kind: "TRUE", formatVersion: "TRUE" } : collections(recordClass);
   const maps = recordClass === "CANDIDATE_PROFILE" ? ["cards.cards", "links.links"] : [];
@@ -43,8 +54,9 @@ export async function readPlacePayloadParts(query: ReadOnlyQuery, recordClass: s
   const paths = Object.keys(fields);
   const predicate = Object.entries(fields).map(([field, where]) => `(field='${field}' AND (${where}))`).join(" OR ");
   const [rows] = await query([{ text: `WITH RECURSIVE selected AS (SELECT $3::text[] ids,$4::text[] bodies,$5::text[] targets),
+  projections AS (${placeProjectionSourceSql(acceptedVersions === undefined ? undefined : 8)}),
   walk(scope,path,step,node,member_key) AS (
-    SELECT scope,string_to_array(f.field,'.'),0,payload,NULL::text FROM civic_data_promotions
+    SELECT scope,string_to_array(f.field,'.'),0,payload,NULL::text FROM projections
       CROSS JOIN unnest($6::text[]) f(field) WHERE record_class=$1 AND scope=ANY($2::text[])
     UNION ALL
     SELECT w.scope,w.path,n.step,n.node,n.member_key FROM walk w
@@ -78,14 +90,13 @@ export async function readPlacePayloadParts(query: ReadOnlyQuery, recordClass: s
   SELECT scope,'$missing',jsonb_agg(node) FROM walk WHERE node ? '$civicPayloadPart'
     AND NOT EXISTS (SELECT 1 FROM civic_data_payload_parts p WHERE p.hash=node->>'$civicPayloadPart') GROUP BY scope
   UNION ALL
-  SELECT scope,'$version',to_jsonb(current_version_id) FROM civic_data_promotions WHERE record_class=$1 AND scope=ANY($2::text[])`,
-    params: [recordClass, [...scopes], [...ids], [...bodies], [...targets], paths, maps] }]);
+  SELECT scope,'$version',to_jsonb(current_version_id) FROM projections WHERE record_class=$1 AND scope=ANY($2::text[])`,
+    params: [recordClass, [...scopes], [...ids], [...bodies], [...targets], paths, maps,
+      ...(acceptedVersions === undefined ? [] : [JSON.stringify(Object.fromEntries(acceptedVersions))])] }]);
   if (rows.some(row => row.field === "$missing")) throw new Error("CIVIC_PAYLOAD_PART_MISSING");
   for (const scope of scopes) if (versions.has(scope) && rows.find(row => row.scope === scope && row.field === "$version")?.rows !== versions.get(scope)) {
     throw new Error("CIVIC_POINTER_CHANGED_DURING_READ");
   }
-  // Only selected records can still contain references (for example a long
-  // biography). Their existing decoder preserves their exact field values.
   const parts = new CivicPayloadParts({ existing: async () => [], write: async () => { throw new Error("READ_ONLY"); },
     read: async hashes => {
       const [found] = await query([{ text: "SELECT hash,payload FROM civic_data_payload_parts WHERE hash=ANY($1::text[])", params: [[...hashes]] }]);

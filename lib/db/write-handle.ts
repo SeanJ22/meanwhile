@@ -1,45 +1,10 @@
 /**
- * THE ONE SANCTIONED WRITE PATH TO PRODUCTION (g11, 2026-08-17; the author's
- * ruling A of the same day).
- *
- * ## What this is for
- *
- * Two jobs genuinely need to write to the production database from a
- * developer's machine: applying a migration, and an explicit maintenance pass
- * such as `pnpm searchlog:backmark`. Nothing else does — the application
- * writes through its own runtime, and every audit and census reads.
- *
- * Those two jobs used to reach for whatever connection string was nearest.
- * `searchlog:backmark --target=production` reached for
- * `WTP_PRODUCTION_DATABASE_URL_READONLY`, because until 2026-08-17 that
- * variable connected as `neondb_owner` and could write anything. The name
- * promised a protection that did not exist (R36), and the script's use of it
- * was the proof: a variable called READONLY was the repo's actual write path
- * to production.
- *
- * R36 is now closed — that role really is read-only, and the database refuses
- * its DELETE. So a script pointed at it would now fail at the database rather
- * than quietly succeed. That is a good failure, and it is not the protection
- * this module exists to give. The protection is that a write path must be
- * ASKED FOR BY ITS OWN NAME, so reaching production to write is a deliberate
- * act with a variable behind it that says "write" out loud.
- *
- * ## The two refusals, and why both are needed
- *
- * 1. **By variable name.** `WTP_PRODUCTION_DATABASE_URL_READONLY` is refused
- *    as a source, whatever it happens to contain. A variable whose name says
- *    read is never a write handle, even on the day someone puts an owner
- *    string in it — which is exactly what it held for the whole of the repo's
- *    life until yesterday.
- *
- * 2. **By connection user.** Any string whose user is `readonly` (or begins
- *    `readonly_`) is refused, whatever variable it arrived in. This catches
- *    the mirror of the same mistake: the right variable holding the wrong
- *    string. It fails loudly at the script instead of ten statements into a
- *    migration, where a permission error leaves the schema half-applied.
- *
- * Both are proven by planting in `tests/write-handle.test.ts` — a guard whose
- * refusal has never been demonstrated is a comment.
+ * The one sanctioned write path to production, asked for by its own name.
+ * Two refusals:
+ * 1. By variable name: `WTP_PRODUCTION_DATABASE_URL_READONLY` is never a
+ *    write source, whatever it contains.
+ * 2. By connection user: a `readonly` / `readonly_*` user is refused before
+ *    anything runs, so a migration never fails half-applied.
  */
 
 /** The variable that holds the production owner string. The only source. */
@@ -71,10 +36,7 @@ export interface WriteHandle {
 
 /**
  * Resolve the sanctioned production write handle, or refuse with a reason a
- * reader can act on.
- *
- * `env` is injected so the refusals can be planted in a test without a test
- * mutating the process it runs in.
+ * reader can act on. `env` is injected for tests.
  */
 export function resolveProductionWriteHandle(
   env: Record<string, string | undefined> = process.env,

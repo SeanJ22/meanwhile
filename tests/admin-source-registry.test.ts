@@ -1,29 +1,7 @@
 /**
- * **THE SOURCE / API CAPABILITY REGISTRY'S SEEDED FAILURES.** (ADM-C11, §6 and
- * §7 of the Admin C brief, 2026-09-06.)
- *
- * Each of these is a defect that would be invisible in normal use — the page
- * would look right and be wrong:
- *
- * ```
- *   1  a credential VALUE or a variable NAME reaching a built row, and from
- *      there the browser
- *   2  a key that lives with an off-host acquisition process being reported as "not
- *      configured" because this process cannot see that store — a falsehood
- *      with a tick beside it
- *   3  a routine-data GitHub clock coming back while the page reports the
- *      terminal software-CI-only boundary
- *   4  a disposition vocabulary the owner cannot tell apart, because a member
- *      is unreachable or two members mean the same thing
- *   5  a NOT_APPLICABLE with no justification behind it
- *   6  a "named in the handoff, absent from this repository" claim that is
- *      typed rather than measured, and goes stale the day somebody wires it
- *   7  the page burning an API call to draw itself
- *   8  a stated N over a list of a different length, or a number with no
- *      denominator
- * ```
- *
- * Every detector that could look at nothing has a positive control beside it.
+ * Source and API registry guards, each with a positive control: no credential value or variable
+ * name reaches a built row; GitHub carries no routine data or operations clock; the page makes no
+ * API call to draw itself; every number carries a denominator.
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
@@ -32,7 +10,6 @@ import test from "node:test";
 
 import { auditRenderedNumbers } from "@/lib/control-plane/owner-surface.ts";
 import { isEnvVarName } from "@/lib/control-plane/plain-words.ts";
-import { checkCredentialReport, readCredentialStores } from "@/lib/ops/credential-report.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 const WORKFLOWS = join(ROOT, ".github", "workflows");
@@ -62,13 +39,7 @@ test("§7: every obsolete refresh workflow definition is deleted", () => {
 
 test("§7: GitHub carries no routine data or operations clock", () => {
   const workflows = readdirSync(WORKFLOWS).filter((file) => /\.ya?ml$/.test(file));
-  /*
-   * One exemption, by exact name and exact cron (Sean's October 3, 2026
-   * daily certification request): Build Check's daily run certifies SOFTWARE — the whole test
-   * suite on main's tip, the safety net behind affected-only pull-request
-   * tests. It reads and writes no civic data and runs no operation; it is the
-   * same read-only workflow a push runs.
-   */
+  // One exemption by exact name and cron: Build Check's daily run tests software only, touching no civic data.
   const softwareCertification = (file: string, text: string) =>
     file === "build-check.yml" && /^\s{2}schedule:\s*\n\s{4}- cron: '17 9 \* \* \*'\s*$/m.test(text);
   const scheduled = workflows.filter((file) => {
@@ -97,36 +68,4 @@ function stripComments(source: string): string {
 test("ADM-C11: the audit catches a number with no denominator", () => {
   const verdict = auditRenderedNumbers([{ label: "planted", value: 14, denominator: null, contract: "some contract" }]);
   assert.equal(verdict.ok, false, "the audit accepted a bare number");
-});
-
-test("ADM-C11: a credential event may say which store it landed in, and a store nobody can name is refused", () => {
-  const complete = {
-    kind: "CREATED",
-    reportedAt: "2026-09-06",
-    name: "the standing data runner's state-vote key",
-    provider: "LegiScan",
-    context: "standing production acquisition",
-    scope: "read the published dataset",
-    actor: "the owner",
-    ownerCopyLocation: "the private settings file, under the key's own name",
-  };
-
-  assert.deepEqual(checkCredentialReport(complete), { ok: true }, "the field is optional; an older event is not retroactively incomplete");
-  assert.deepEqual(
-    checkCredentialReport({ ...complete, stores: ["REFRESH_JOB", "WORKSTATION"] }),
-    { ok: true },
-    "a report naming real stores passes",
-  );
-
-  for (const bad of [[], ["EVERYWHERE"], "REFRESH_JOB", [7], null]) {
-    const verdict = checkCredentialReport({ ...complete, stores: bad });
-    assert.equal(verdict.ok, false, `stores ${JSON.stringify(bad)} should be refused`);
-    if (!verdict.ok) {
-      assert.deepEqual(verdict.missing, ["stores"], `stores ${JSON.stringify(bad)} names exactly that field`);
-      assert.deepEqual(verdict.refused, [], "an unusable store list is not a leaked value");
-    }
-  }
-
-  assert.deepEqual(readCredentialStores(["SITE_RUNTIME"]), { ok: true, stores: ["SITE_RUNTIME"] });
-  assert.deepEqual(readCredentialStores(["site_runtime"]), { ok: false }, "the store list is case-exact");
 });

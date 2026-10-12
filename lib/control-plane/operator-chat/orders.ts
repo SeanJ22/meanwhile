@@ -7,7 +7,6 @@ import { scopeKeyOf, expansionScopesOf, type ExpansionScopeGeography } from "../
 import type { OperatorContext } from "./context.ts";
 export interface PlainOrder { readonly type:string; readonly subject:string; readonly input:Readonly<Record<string,unknown>>; readonly willDo:string }
 export function plainOrderType(words:string):string|null {
- if (/\buntil (?:they(?:\'re| are) |it(?:\'s| is) )?done[,. ]+then\b/i.test(words)) return "orders.sequence";
  if (/^send agents (?:to|in)\b/i.test(words)) return "fleet.deployHere";
  if (/^start (?:a )?mission in\b/i.test(words)) return "expansion.scope.set";
  if (/^set (?:the )?(?:daily |spend )?budget to \$?[\d,.]+\s*[.!]?$/i.test(words)) return "config.setFleetSpendCeiling";
@@ -26,17 +25,6 @@ function geographyOf(key:string):ExpansionScopeGeography|null {
 }
 export function parsePlainOrder(words:string,context:OperatorContext):PlainOrder|{why:string}|null {
  const type=plainOrderType(words);if(!type)return null;
- if(type === "orders.sequence"){
-  const split=/\buntil (?:they(?:'re| are) |it(?:'s| is) )?done[,. ]+then\b/i.exec(words)!;
-  let before=words.slice(0,split.index).trim();let after=words.slice(split.index+split[0].length).trim();
-  if(/^put everything on /i.test(before))before=before.replace(/^put everything on /i,"send agents to ");
-  if(/^go back to /i.test(after))after=after.replace(/^go back to /i,"send agents to ")+(/\bthis (?:district|place|state|county)\b/i.test(before)?" in this district":"");
-  let first=parsePlainOrder(before,context);let second=parsePlainOrder(after,context);
-  if(!first||!second||"why" in first||"why" in second)return {why:"Name two sendable orders, with the second after ‘until done, then’."};
-  if(/school boards?/i.test(before)) first={...first,input:{...first.input,kind:{divisionType:"school_district"}}};
-  if(/candidates?/i.test(after)) second={...second,input:{...second.input,kind:{family:"CAN"}}};
-  return {type,subject:first.subject,input:{first:{type:first.type,subject:first.subject,input:first.input},second:{type:second.type,subject:second.subject,input:second.input}},willDo:`First: ${first.willDo} When its work is done: ${second.willDo}`};
- }
  if(type==="fleet.deployHere"){
   let target=words.replace(/^send agents (?:to|in)\s*/i,"").replace(/[.!]$/,"").trim();
   let shown=target;

@@ -1,28 +1,3 @@
-/**
- * **WGH-22 — THE PANEL SHOWS THE READER'S OWN DISTRICTS, AND ONLY THOSE.**
- * (Session B. Reported 8/28, "fixed" 8/28 and 8/30, falsified again
- * 2026-08-31 — third recurrence, with WGH-12 and WGH-15 as the same class.)
- *
- * At a resolved address in 85641 the owner photographed, on one screen: a
- * districts popup correctly reading State House 17 and State Senate 17, and a
- * Who Governs Here panel listing State House 19 and State Senate 19, each
- * labelled as not theirs, with District 17 nowhere on the panel.
- *
- * ## Why the 8/30 fix went green and still shipped broken
- *
- * It added the reader's missing districts from `coverage.divisions`, on the
- * belief that `coverage.divisions` and `coverage.seats` were different answers.
- * They are not: `summarizeCoverage` derives one from the other by filtering to
- * the seat types. The addition could never fire at any ZIP for any reader.
- *
- * **The test fixture is what hid it.** It hand-built a `CoverageSummary` whose
- * `divisions` carried District 17 while its `seats` did not — a shape the
- * production derivation cannot emit — so the test agreed with the reasoning
- * that produced it and neither had met the surface. The first test below now
- * asserts that impossibility DIRECTLY, against the real derivation, so the
- * same fixture can never be written again.
- */
-
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -35,10 +10,9 @@ import type { ResolvedLocation } from "../lib/state/resolved-location.ts";
 import type { CoverageSummary } from "../lib/registry/coverage.ts";
 import { summarizeCoverage } from "../lib/registry/coverage.ts";
 import type { Division } from "../lib/registry/types.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
-await installRegistryRuntimeFirstSeeds();
-
+await installRegistryAuthority();
 const SLDL_17 = "ocd-division/country:us/state:az/sldl:17";
 const SLDL_19 = "ocd-division/country:us/state:az/sldl:19";
 const SLDU_17 = "ocd-division/country:us/state:az/sldu:17";
@@ -96,16 +70,7 @@ function confirmed17(over: Partial<ConfirmedRow> = {}): ConfirmedRow {
 }
 
 test("THE INSTRUMENT DEFECT: coverage.divisions cannot carry a seat coverage.seats lacks", () => {
-  /*
-   * The 8/30 fix, its test and its whole rationale rested on those two lists
-   * being able to disagree at the seat levels. They cannot: `summarizeCoverage`
-   * builds `seats` by filtering `divisions`. Asserted against the REAL
-   * derivation rather than a fixture, because a fixture is exactly what let the
-   * false belief through.
-   *
-   * If this ever fails, the derivation changed and `panelSeatsFor` may have a
-   * cheaper source for the reader's own districts than a lookup by key.
-   */
+  // `summarizeCoverage` builds `seats` by filtering `divisions`, so the two cannot disagree at seat levels.
   const divisions = [
     {
       ocdId: SLDL_19,
@@ -148,7 +113,7 @@ test("THE INSTRUMENT DEFECT: coverage.divisions cannot carry a seat coverage.sea
   assert.ok(!seatIds.has(SLDL_17), "and the ZIP centroid's answer simply does not carry 17");
 });
 
-test("RULING 222: a district the address EXCLUDES leaves the panel entirely", () => {
+test("a district the address EXCLUDES leaves the panel entirely", () => {
   const summary = coverage({ seats: [seat(SLDL_19, "State House District 19", "sldl")] });
   const panel = panelSeatsFor(summary, atAddress(), STATE_SEAT_TYPES, []);
 
@@ -163,11 +128,7 @@ test("RULING 222: a district the address EXCLUDES leaves the panel entirely", ()
 });
 
 test("WGH-22: the district the reader IS in appears, from the confirmed list", () => {
-  /*
-   * The half that never worked. The reader's own divisions are on their device
-   * and nowhere in the ZIP-scoped payload; the name and roster are asked for by
-   * key and arrive here as a row.
-   */
+  // The reader's own divisions are not in the ZIP-scoped payload; they arrive here as rows asked for by key.
   const summary = coverage({ seats: [seat(SLDL_19, "State House District 19", "sldl")] });
   const panel = panelSeatsFor(summary, atAddress(), STATE_SEAT_TYPES, [confirmed17()]);
 
@@ -184,11 +145,7 @@ test("WGH-22: the district the reader IS in appears, from the confirmed list", (
 });
 
 test("WGH-22: an excluded row is NEVER promoted to CONFIRMED by a caller", () => {
-  /*
-   * A caller handing over a division the location does not confirm may not
-   * widen the panel with it. `standingOf` is the only thing that may say what a
-   * row IS; this function only chooses which list it goes in.
-   */
+  // A division the location does not confirm may not widen the panel; `standingOf` alone says what a row is.
   const summary = coverage({ seats: [seat(SLDL_19, "State House District 19", "sldl")] });
   const panel = panelSeatsFor(summary, atAddress(), STATE_SEAT_TYPES, [
     confirmed17({ ocdId: SLDL_19, label: "State House District 19" }),
@@ -223,8 +180,7 @@ test("WGH-22: a row still being looked up carries its sourcing, not an absence",
 });
 
 test("WGH-22: without an address nothing is partitioned and nothing is hidden", () => {
-  /* A reader who gave only a zip sees exactly what they saw before. There is
-     nothing to partition on, and inventing one would be the panel guessing. */
+  /* With only a ZIP there is nothing to partition on. */
   const summary = coverage({
     seats: [
       seat(SLDL_17, "State House District 17", "sldl"),

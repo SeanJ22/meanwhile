@@ -27,13 +27,7 @@ interface VerificationOptions {
   readonly store: RoutineDataStore;
   readonly now: string;
   readonly expectedVersionId: string;
-  /**
-   * The exact promoted scope to verify. Only a fan-out contract needs it: its
-   * per-member candidates each read back their own `<sourceId>:<officeholderId>`
-   * projection during promotion, while the runner's once-per-contract readback
-   * omits it and falls back to the contract's per-state marker scope — so the
-   * readback never iterates every member scope.
-   */
+    /** Only a fan-out contract needs it; omitted, the readback uses the contract's per-state marker scope. */
   readonly scope?: string;
 }
 
@@ -68,11 +62,13 @@ function verifyExactVersion(
 }
 
 function verifierIdFor(contract: ReaderContract): string {
+  if (contract.sourceId === "plural-openstates" && contract.recordClass === "STATE_LEGISLATOR") return "lib/state-rollcalls/legislators.ts#readOpenStatesPeopleProjection";
   switch (contract.id) {
     case "fec-funding": return "lib/funding/snapshot.ts#readFundingSnapshot";
     case "nh-members": return "lib/civic-data/state-members.ts#readNhMembers";
     case "az-state-legislators":
     case "nj-state-legislators": return "lib/state-rollcalls/legislators.ts#readOfficialStateLegislatorsProjection";
+    case "az-openstates-votes": return "lib/sources/plural/votes.ts#readArizonaPluralVotesProjection";
     case "az-state-rollcalls":
     case "nj-state-rollcalls": return "lib/sources/legiscan/snapshot.ts#readOfficialStateVotesProjection";
     case "nh-state-rollcalls": return "lib/civic-data/read-model.ts#readPromotedStateLegislatorVotes";
@@ -101,17 +97,20 @@ function verifierIdFor(contract: ReaderContract): string {
     case "az-pima-local-finance": return "lib/control-plane/campaign-finance/held-records.ts#refreshAzPimaFinanceFromPromoted";
     case "voting-sites": return "lib/ballot/voting-sites-server.ts#readVotingSitesProjection";
     case "prl": return "lib/sources/prl/snapshot.ts#readPrlProjection";
+    case "prl-archives": return "lib/sources/prl/archive-publication.ts#readPrlArchiveProjection";
     case "az-official-actions": return "lib/officials/executive-actions.ts#readExecutiveActionsProjection";
     case "pima-legistar-outcomes": return "lib/outcomes/store.ts#readOutcomeProjection";
     case "mesa-legistar-minutes-outcomes": return "lib/outcomes/store.ts#readMesaOutcomeProjection";
     case "official-filings":
     case "comment-access":
     case "ballot-navigation":
+    case "stances":
     case "campaign-sites":
     case "member-offices":
     case "venue-resolutions":
     case "meeting-body-crosswalk": return "lib/civic-data/curated-reader-read-model.ts#readCuratedReaderProjection";
     case "meeting-source-wiring": return "lib/civic-data/derived-meeting-wiring.ts#readDerivedMeetingWiring";
+    case "meeting-doors": return "lib/doors/meeting-doors.ts#readMeetingDoors";
     case "meeting-body-crosswalk-derived": return "lib/civic-data/derived-crosswalk.ts#readDerivedMeetingBodyCrosswalk";
     case "candidate-campaign-sites-derived": return "lib/civic-data/derived-campaign-sites.ts#readDerivedCampaignSites";
     case "everyday-routing": return "lib/routing/everyday-data-plane.ts#readEverydayRoutingProjection";
@@ -124,17 +123,19 @@ function verifierIdFor(contract: ReaderContract): string {
   }
 }
 
-/**
- * Execute the actual typed read model used by the named Reader surface.
- * This module deliberately has no generic pointer-only fallback: an unknown
- * contract cannot acquire Reader-delivery evidence by declaration.
- */
+/** No generic pointer-only fallback: an unknown contract cannot acquire Reader-delivery evidence by declaration. */
 export async function verifyRoutineReaderProjection(
   contract: ReaderContract,
   options: VerificationOptions,
 ): Promise<RoutineReaderVerification> {
   const verifierId = verifierIdFor(contract);
   try {
+    if (contract.sourceId === "plural-openstates" && contract.recordClass === "STATE_LEGISLATOR") {
+      const { readOpenStatesPeopleProjection } = await import("../state-rollcalls/legislators.ts");
+      const jurisdiction = /^US-[A-Z]{2}/.exec(contract.scope)?.[0] as `US-${string}` | undefined;
+      if (!jurisdiction) return fail(verifierId,"The state people scope has no jurisdiction.");
+      return verifyExactVersion(verifierId,await readOpenStatesPeopleProjection(jurisdiction,{store:options.store,now:options.now,bypassCache:true}),options.expectedVersionId,"state people");
+    }
     switch (contract.id) {
       case "fec-funding": {
         const { readFundingSnapshot } = await import("../funding/snapshot.ts");
@@ -164,6 +165,10 @@ export async function verifyRoutineReaderProjection(
           `${target.state} official-state-legislator`,
         );
       }
+      case "az-openstates-votes": {
+        const { readArizonaPluralVotesProjection } = await import("../sources/plural/votes.ts");
+        return verifyExactVersion(verifierId, await readArizonaPluralVotesProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "native Arizona votes");
+      }
       case "az-state-rollcalls":
       case "nj-state-rollcalls": {
         const [{ readOfficialStateVotesProjection }, { officialStateRollCallTargetByContract }] = await Promise.all([
@@ -185,10 +190,6 @@ export async function verifyRoutineReaderProjection(
         );
       }
       case "nh-state-rollcalls": {
-        // The per-legislator fan-out: verify the exact promoted projection at
-        // the candidate's own scope (a member record or the per-state marker),
-        // never iterating every member. The runner's per-contract readback
-        // omits scope and falls back to the marker at the contract scope.
         const { readPromotedCivicData } = await import("./read-model.ts");
         const scope = options.scope ?? contract.scope;
         const result = await readPromotedCivicData("STATE_LEGISLATOR_VOTES", scope, {
@@ -320,21 +321,26 @@ export async function verifyRoutineReaderProjection(
         const { readPrlProjection } = await import("../sources/prl/snapshot.ts");
         return verifyExactVersion(verifierId, await readPrlProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "PRL");
       }
+      case "prl-archives": {
+        const { readPrlArchiveProjection } = await import("../sources/prl/archive-publication.ts");
+        return verifyExactVersion(verifierId, await readPrlArchiveProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "PRL archives");
+      }
       case "az-official-actions": {
         const { readExecutiveActionsProjection } = await import("../officials/executive-actions.ts");
         return verifyExactVersion(verifierId, await readExecutiveActionsProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "Arizona official-actions");
       }
       case "pima-legistar-outcomes": {
-        const { readOutcomeProjection } = await import("../outcomes/store.ts");
-        return verifyExactVersion(verifierId, await readOutcomeProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "Pima meeting-outcomes");
+        const [{ readDoorOutcomeProjection }, { PIMA_OUTCOME_TENANT }] = await Promise.all([import("../outcomes/store.ts"), import("../outcomes/data-plane.ts")]);
+        return verifyExactVersion(verifierId, await readDoorOutcomeProjection(PIMA_OUTCOME_TENANT.scope, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "Pima meeting-outcomes");
       }
       case "mesa-legistar-minutes-outcomes": {
-        const { readMesaOutcomeProjection } = await import("../outcomes/store.ts");
-        return verifyExactVersion(verifierId, await readMesaOutcomeProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "Mesa meeting-outcomes");
+        const [{ readDoorOutcomeProjection }, { MESA_OUTCOME_TENANT }] = await Promise.all([import("../outcomes/store.ts"), import("../outcomes/data-plane.ts")]);
+        return verifyExactVersion(verifierId, await readDoorOutcomeProjection(MESA_OUTCOME_TENANT.scope, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "Mesa meeting-outcomes");
       }
       case "official-filings":
     case "comment-access":
       case "ballot-navigation":
+      case "stances":
       case "campaign-sites":
       case "member-offices":
       case "venue-resolutions":
@@ -345,6 +351,10 @@ export async function verifyRoutineReaderProjection(
       case "meeting-source-wiring": {
         const { readDerivedMeetingWiring } = await import("./derived-meeting-wiring.ts");
         return verifyExactVersion(verifierId, await readDerivedMeetingWiring({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
+      }
+      case "meeting-doors": {
+        const { readMeetingDoors } = await import("../doors/meeting-doors.ts");
+        return verifyExactVersion(verifierId, await readMeetingDoors({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
       }
       case "meeting-body-crosswalk-derived": {
         const { readDerivedMeetingBodyCrosswalk } = await import("./derived-crosswalk.ts");
@@ -382,7 +392,7 @@ export async function verifyRoutineReaderProjection(
           return pass(verifierId, `The typed meetings Reader composed partition ${contract.id} at canonical version ${options.expectedVersionId}.`);
         }
         if (contract.recordClass === "MEETING_OUTCOME" && contract.sourceId === "door-outcomes") {
-          // DB-22: a door's own scope, read as the Reader reads it (its tenant and meeting-id namespace checked).
+                    // A door's own scope, read as the Reader reads it (its tenant and meeting-id namespace checked).
           const { readDoorOutcomeProjection } = await import("../outcomes/store.ts");
           return verifyExactVersion(verifierId, await readDoorOutcomeProjection(options.scope ?? contract.scope, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, `${contract.id} door outcomes`);
         }
@@ -396,10 +406,6 @@ export async function verifyRoutineReaderProjection(
 
 const POINTER_READBACK_VERIFIER_ID = "lib/civic-data/store.ts#readPromotionIdentity";
 
-/**
- * The canonical pointer, named by identity alone, still names exactly the
- * promoted version. Its payload is not read here: the typed Reader reads it.
- */
 async function promotedPointerReadbackIssue(
   store: RoutineDataStore,
   contract: ReaderContract,
@@ -424,17 +430,7 @@ async function promotedPointerReadbackIssue(
   return null;
 }
 
-/**
- * Persist one typed Reader observation without changing candidate disposition,
- * the canonical pointer, or LKG. A failed delivery remains a delivery fact.
- *
- * The typed Reader is the one read of the dataset: every registered verifier
- * reads its pointer and candidate through the proven read model
- * (`promotionProofIssue`). Around it this door moves identity only: the
- * pointer by `readPromotionIdentity`, the evidence append by its narrow
- * candidate read. A readback therefore transfers what the Reader transfers,
- * never a second or third copy of the dataset.
- */
+/** Persists one typed Reader observation without changing candidate disposition, the pointer, or LKG. */
 export async function recordRoutineReaderProjectionReadback(
   store: RoutineDataStore,
   contract: ReaderContract,
@@ -444,10 +440,6 @@ export async function recordRoutineReaderProjectionReadback(
 ): Promise<ReaderProjectionReadbackReceipt | null> {
   if (contract.readerProjection === null) return null;
   const normalizedVerifierCodeSha = normalizeReaderCodeSha(verifierCodeSha);
-  // Read back exactly the scope just promoted. For a single-scope contract this
-  // is the contract scope; for a fan-out it is the member or marker scope this
-  // promotion wrote, so the readback verifies that write and never assumes the
-  // per-state marker scope for a member.
   const pointerIssue = await promotedPointerReadbackIssue(store, contract, promoted);
   const readerVerification = pointerIssue !== null
     ? fail(POINTER_READBACK_VERIFIER_ID, pointerIssue)
@@ -491,10 +483,7 @@ async function appendReaderProjectionReadback(
     contractId: contract.id,
     sourceId: contract.sourceId,
     recordClass: contract.recordClass,
-    // The exact promoted scope this readback observed. For a single-scope
-    // contract it equals the contract scope; for a fan-out it is the member or
-    // marker scope just promoted, and it must equal the promoted candidate's
-    // scope so the durable evidence binds to the row it actually read.
+        // Must equal the promoted candidate's scope, so the durable evidence binds to the row actually read.
     scope: promoted.scope,
     projectionId: contract.readerProjection.id,
     versionId: promoted.versionId,
@@ -526,45 +515,23 @@ export type ReaderReadbackRepairOutcome =
 interface ReaderReadbackInspection {
   readonly outcome: ReaderReadbackRepairOutcome | null;
   readonly promotion: PromotedPointerIdentity | null;
-  /**
-   * The newest receipt when it is an exact PASS for this contract and version
-   * in every respect except the code commit that produced it: the one receipt
-   * an attestation may carry forward (`ReaderVerifierClosureAttestor`).
-   */
   readonly attestFrom?: ReaderProjectionReadbackReceipt & { readonly status: "PASS"; readonly verifierCodeSha: string };
 }
 
-/** Whether the typed Reader code is byte-identical at two commits, and how that was established. */
 export interface ReaderVerifierClosureAttestation {
   readonly identical: boolean;
   readonly detail: string;
 }
 
 /**
- * **Attest, never re-run, across a runner handoff (R31, 2026-09-25).**
- *
- * A receipt is current only at the executing commit, so every handoff used to
- * re-run every typed Reader with the full proof (195.3 MB per handoff on an
- * isolated copy) although most handoffs change no Reader code. An attestor
- * answers whether every file the typed Reader verifiers execute is
- * byte-identical at the commit of the newest exact PASS and at the executing
- * commit (scripts/lib/reader-verifier-attestation.ts). When it is, the PASS is
- * carried to the executing commit as a new receipt, appended through the same
- * door, which the database admits only while the pointer still names that
- * version (migration 0026). The version is immutable, the code is the same
- * bytes, so the typed Reader would read exactly what it read before; this is
- * the in-process rule of lib/civic-data/read-model.ts (`provenByVersion`)
- * carried across processes by code identity.
- *
- * A new version, a FAIL, any change to the verifier closure, or an attestor
- * that cannot answer still re-reads through the typed Reader.
+ * A PASS is carried to the executing commit only when every file the typed Reader verifiers execute is byte-identical
+ * at both commits; the database admits the new receipt only while the pointer still names that version.
  */
 export type ReaderVerifierClosureAttestor = (
   priorVerifierCodeSha: string,
   currentVerifierCodeSha: string,
 ) => Promise<ReaderVerifierClosureAttestation> | ReaderVerifierClosureAttestation;
 
-/** Carry an exact PASS to the executing commit, or null when it cannot be attested. */
 async function attestReaderProjectionReadback(
   store: RoutineDataStore,
   contract: ReaderContract,
@@ -670,29 +637,21 @@ async function inspectReaderReadback(
   if (contract.readerProjection === null) {
     return { outcome: { kind: "NOT_APPLICABLE", receipt: null }, promotion: null };
   }
-  // Identity only: most passes end CURRENT here, and none needs the payload
-  // to learn which version its durable receipt must name.
   const promotion = await store.readPromotionIdentity(contract.recordClass, contract.scope);
   if (promotion === null) return { outcome: { kind: "NO_PROMOTION", receipt: null }, promotion: null };
   const identityIssue = promotionIdentityIssue(contract, promotion);
   if (identityIssue !== null) throw new Error(identityIssue);
-  // The newest readback alone: a long-pointed version's readbacks and
-  // confirmations never cross the wire to decide it.
   const events = await readLatestReaderReadbacks(store, [promotion.versionId]);
   return inspectReaderReadbackEvents(contract, promotion, events, now, normalizedVerifierCodeSha);
 }
 
-/**
- * Self-heal missing/transient Reader observations against the SAME canonical
- * version. This never reacquires a publisher and never mutates source state.
- */
+/** Never reacquires a publisher and never mutates source state. */
 export async function repairRoutineReaderProjectionReadback(
   store: RoutineDataStore,
   contract: ReaderContract,
   now: string = new Date().toISOString(),
   verifierCodeSha: string | null = headSha(),
   options: {
-    /** Carries an exact PASS across a commit that changed no Reader code; omitted, every new commit re-reads. */
     readonly attestor?: ReaderVerifierClosureAttestor;
   } = {},
 ): Promise<ReaderReadbackRepairOutcome> {
@@ -726,7 +685,6 @@ export async function repairRoutineReaderProjectionReadback(
 export const MEETING_READER_EVENT_READ_CONCURRENCY = 8;
 export const MEETING_READER_EVIDENCE_WRITE_CONCURRENCY = 4;
 
-/** What the typed meetings Reader's aggregate composition returns. */
 type MeetingsAggregateRead = Awaited<ReturnType<typeof import("../meetings/snapshot.ts")["readMeetingsProjection"]>>;
 
 export type MeetingReaderReadbackRepairResult =
@@ -743,30 +701,13 @@ export type MeetingReaderReadbackRepairResult =
       readonly error: string;
     };
 
-/**
- * Repair every meeting-partition receipt through one execution of the actual
- * aggregate Reader. The prior implementation invoked the 124-partition
- * composition once per partition (N² work and one large shared hang surface).
- * Here pointer/event inspection is O(N), aggregate delivery is read once, and
- * each exact partition receipt is still appended to its own promoted version.
- */
 export async function repairMeetingReaderProjectionReadbacks(
   store: RoutineDataStore,
   contracts: readonly RoutineSourceContract[],
   now: string = new Date().toISOString(),
   verifierCodeSha: string | null = headSha(),
   options: {
-    /**
-     * The pass's one composition of every partition: exactly
-     * `readMeetingsProjection({ store, now, bypassCache: true,
-     * allowUnconfiguredBootstrap: false })`, shared with the prepared snapshot
-     * so a pass that records readbacks and republishes composes once.
-     */
     readonly aggregate?: () => Promise<MeetingsAggregateRead>;
-    /**
-     * Carries each partition's exact PASS across a commit that changed no
-     * Reader code; the aggregate is composed only for the partitions left.
-     */
     readonly attestor?: ReaderVerifierClosureAttestor;
   } = {},
 ): Promise<readonly MeetingReaderReadbackRepairResult[]> {
@@ -783,8 +724,6 @@ export async function repairMeetingReaderProjectionReadbacks(
   const results = new Map<string, MeetingReaderReadbackRepairResult>();
   let promotions: readonly PromotedPointerIdentity[];
   try {
-    // Identity only; the aggregate Reader below reads every payload, once,
-    // and only when some partition's receipt is not already current.
     promotions = await store.readPromotionIdentities("MEETING", scopes);
   } catch (error) {
     const detail = sanitizedErrorDiagnostic(error);
@@ -911,7 +850,7 @@ export async function repairMeetingReaderProjectionReadbacks(
         aggregate = await options.aggregate();
       } else {
         const { readMeetingsProjection } = await import("../meetings/snapshot.ts");
-        aggregate = await readMeetingsProjection({ store, now, bypassCache: true, allowUnconfiguredBootstrap: false });
+        aggregate = await readMeetingsProjection({ store, now, bypassCache: true });
       }
     } catch (error) {
       aggregateError = sanitizedErrorDiagnostic(error);

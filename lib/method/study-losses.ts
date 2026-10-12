@@ -1,14 +1,6 @@
 /**
- * DP-27: failures are compared to find what they share.
- *
- * For each method with two or more failures, compare the places where it
- * failed with the places where it works, on traits already held, and say which
- * trait the failing places have in common that no working place has, or say
- * "nothing shared". Nothing is guessed: a trait counts only when every failing
- * place states it, and a trait one working place also has is not what sets the
- * failures apart.
- *
- * PURE: no store, no clock, no place names.
+ * For each method with two or more failures, the trait every failing place states and no working place has, or
+ * "nothing shared". Pure.
  */
 
 import type { FixMapRow } from "./fix-map.ts";

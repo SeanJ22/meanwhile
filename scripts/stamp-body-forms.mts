@@ -1,28 +1,13 @@
 /**
- * **STAMP THE FORM ON EVERY BODY, AND NAME EVERY ONE THAT CANNOT BE.**
- * (The questionnaire-and-corpora brief, item 3, 2026-08-23.)
+ * Reports the form of government for every body and names each one that
+ * cannot be stamped, from committed data alone (no network, no clock).
  *
  * ```
- * corepack pnpm forms:stamp            # report only
- * corepack pnpm forms:stamp --write    # write data/derived/body-forms.json
+ * corepack pnpm forms:stamp
  * ```
- *
- * Reads only committed data — `lib/registry/registry.json` for the bodies and
- * their divisions, TIGER's legal type code for the municipal layer, and the
- * Census independent/dependent classification for school districts. **No
- * network, no clock, no statute read.**
- *
- * The number this exists to move is the 1,037 bodies that carry a class
- * definition and no form-specific one. Stamping the form does not write those
- * definitions — it bounds them, so the statute read that follows is once per
- * distinct FORM rather than once per body.
- *
- * RULING 105: the report is a three-way split. What is stamped, what is out of
- * scope with the reason, and what is in scope and still unstampable — each one
- * named, because a count cannot tell a decision from a failure.
  */
 
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -33,7 +18,6 @@ import type { BodyDivisionType } from "../lib/officials/body-description.ts";
 import { schoolDependency } from "../lib/officials/school-dependency.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const OUT = join(ROOT, "data/derived/body-forms.json");
 
 interface Division {
   ocdId: string;
@@ -48,7 +32,6 @@ interface Body {
 }
 
 function main(): void {
-  const write = process.argv.includes("--write");
   // A body minted on a Census "no district here" placeholder is not a government, so it is never stamped.
   const registry = withoutPlaceholderBodies(JSON.parse(
     readFileSync(join(ROOT, "lib/registry/registry.json"), "utf8"),
@@ -69,10 +52,6 @@ function main(): void {
   for (const body of bodies) {
     const division = byId.get(body.ocdId as string) as Division;
     const definitions = definitionsForBody({
-      // DATA-4 (2026-08-28): the definition is keyed on the BODY, so this
-      // stamp's `hasFormDefinition` column now means what it says — whether a
-      // definition has been read for THIS body, not for whatever government
-      // shares its division.
       bodyId: body.id,
       ocdId: body.ocdId,
       divisionType: division.divisionType as BodyDivisionType,
@@ -143,57 +122,6 @@ function main(): void {
     `\n  forms carrying a reader-facing label   ${byForm.size - new Set(unlabelled.map((r) => r.stamp.formKey)).size} of ${byForm.size}`,
   );
   console.log(`  forms this file can name in total      ${knownForms().length}`);
-
-  if (!write) {
-    console.log("\n(report only — pass --write to write the artifact)");
-    return;
-  }
-
-  mkdirSync(dirname(OUT), { recursive: true });
-  writeFileSync(
-    OUT,
-    `${JSON.stringify(
-      {
-        formatVersion: 1,
-        generatedBy: "scripts/stamp-body-forms.mts",
-        note:
-          "The FORM of each body's government, stamped from committed data alone — TIGER's " +
-          "legal type code for the municipal layer, the Census independent/dependent " +
-          "classification for school districts, the division type for counties. It is NOT a " +
-          "form-specific definition: it names which form a body is, so the charter or statute " +
-          "read that writes those definitions is done once per distinct form rather than once " +
-          "per body. Every unstampable body is named with the input that was missing.",
-        counts: {
-          bodiesWithADivision: rows.length,
-          alreadyCarryingAFormDefinition: rows.length - owed.length,
-          owedAFormDefinition: owed.length,
-          stamped: stamped.length,
-          unstampable: unstampable.length,
-          distinctForms: byForm.size,
-        },
-        distinctForms: Object.fromEntries([...byForm].sort((a, b) => b[1] - a[1])),
-        unstampable: unstampable.map((r) => ({
-          bodyId: r.bodyId,
-          bodyName: r.bodyName,
-          ocdId: r.ocdId,
-          divisionLabel: r.divisionLabel,
-          reason: r.stamp.unstampableReason,
-          basisDetail: r.stamp.basisDetail,
-        })),
-        rows: rows.map((r) => ({
-          bodyId: r.bodyId,
-          ocdId: r.ocdId,
-          hasFormDefinition: r.hasFormDefinition,
-          formKey: r.stamp.formKey,
-          basis: r.stamp.basis,
-          basisDetail: r.stamp.basisDetail,
-        })),
-      },
-      null,
-      2,
-    )}\n`,
-  );
-  console.log(`\nwrote ${OUT}`);
 }
 
 main();

@@ -1,10 +1,7 @@
 import { isOfficialSource, type OfficialLinkingPage } from "../../civic-data/source-authority.ts";
 /**
- * @freshness-reads-here
- *
- * The clock stamps in this file are minted by the code path that performs the
- * read: `collectedAt` is taken at the moment of the fetch, in `fetch()` below,
- * and never reconstructed afterwards.
+ * @freshness-reads-here — `collectedAt` is taken at the moment of the fetch, in
+ * `fetch()` below, and never reconstructed afterwards.
  */
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import {
@@ -30,17 +27,9 @@ import type {
 } from "../types.ts";
 
 /**
- * OFFICIAL-PAGE EVENTS — dated public events a body publishes on its OWN
- * official page, outside any agenda vendor (2026-09-23).
- *
- * The class this closes: Tucson Unified's reconfiguration effort publishes its
- * Joint Committee meetings and its community engagement sessions on
- * `www.tusd1.org/Reconfiguration`, a district CMS page. None of them is on the
- * Governing Board's Diligent portal, so a reader who asked "what is TUSD
- * meeting about next?" was shown nothing while the district was holding
- * sessions that week. Those are public meetings about closing schools. The
- * route is the body's own publication, so it is not a vendor and it is not a
- * schedule page — it is a page that mentions events in several shapes at once.
+ * Dated public events a body publishes on its OWN official page, outside any
+ * agenda vendor (for example a district CMS page announcing committee meetings
+ * and community sessions).
  *
  * ## What is read, in order
  *
@@ -49,8 +38,7 @@ import type {
  * 3. linked `.ics` files (retrieved by `fetch()`, only on an authorized host);
  * 4. structured EVENT CARDS — an element whose class or id names an event,
  *    grown to the smallest wrapper that still holds one event, carrying a
- *    date, a time range and a venue line (Tucson Unified's `EventBox*` cards
- *    and their detail modals are the first instance);
+ *    date, a time range and a venue line;
  * 5. DATED HEADINGS — a heading that names a meeting and dates it, e.g.
  *    `Joint Committee Meeting Sept. 11, 2026`, whose own block may state the
  *    time (`from 9AM to 4PM`);
@@ -64,24 +52,21 @@ import type {
  * - **No venue is invented.** A venue the page does not state is the
  *   publisher's named gap; a stated venue this pipeline cannot place on the
  *   map is carried verbatim as OUR named gap (`MeetingVenueGap`).
- * - **No event type is inflated.** A Joint Committee meeting stays a Joint
- *   Committee meeting; nothing here writes "Governing Board meeting".
+ * - **No event type is inflated.** A committee meeting stays a committee
+ *   meeting; nothing here writes "Governing Board meeting".
  * - **No cancellation is inferred.** Only the page's own word cancels.
  * - **No year is assumed.** `September 21st` with no year is HELD, named.
  *
  * ## Verification — every event must pass all of it or be HELD by name
  *
- * - the page host is the body's registered official domain (the registry
- *   body's `homepageUrl` — its `ownWebAddress` — pinned on the wiring row as
- *   `officialHost` and checked against the registry by test) or a host the
- *   wiring row explicitly authorizes;
+ * - the page host is the body's registered official domain (`officialHost` on
+ *   the wiring row, the registry body's `ownWebAddress`) or a host the wiring
+ *   row explicitly authorizes;
  * - the date parses unambiguously and falls inside the serving window;
  * - the title, or the heading it was read under, names the body or its
  *   committee (`nameTerms` on the wiring row).
  *
- * Verified dates and source links publish independently of agenda
- * extraction: an event with no agenda and no venue is still a public meeting
- * a reader can attend or ask about, and it ships with its gaps named.
+ * An event with no agenda and no venue still publishes, with its gaps named.
  */
 
 export const SOURCE_NAME = "official-page-events";
@@ -536,8 +521,7 @@ const END_KEYS = ["end_at", "endDate", "end_date", "ends_at", "endsAt", "end_tim
 
 /**
  * Events a page carries as DATA in its own inline state rather than as
- * markup: a district CMS (Apptegy/Thrillshare, Santa Fe Public Schools' board
- * page is the first instance) renders its event list client-side from a
+ * markup: a district CMS renders its event list client-side from a
  * `JSON.parse("…")` literal or an `application/json` script. The fields are
  * the publisher's — `title`, an offset-bearing `start_at`, `end_at`, `venue`,
  * `all_day` — so nothing about the event is inferred; a record is read only
@@ -793,8 +777,7 @@ export function extractCards(root: HtmlElement, pageUrl: string): ExtractedEvent
         PLACE_WORD.test(l) &&
         l.length <= 160,
     );
-    // The most specific statement of the place: "Cholla High School South
-    // Gym" over the modal's "Cholla High School", never a merge of the two.
+    // The most specific statement of the place (a named room over the building), never a merge.
     const venue = venues.sort((a, b) => b.length - a.length)[0] ?? null;
 
     out.push({
@@ -1020,8 +1003,7 @@ function mergeKey(e: ExtractedEvent, type: string): string {
 
 /**
  * Hold what fails, publish what passes. Nothing is repaired: a failing event
- * is reported with every reason that applies, so the reader's absence of it
- * is explainable and the next session knows what to look at.
+ * is reported with every reason that applies.
  */
 export function verifyExtractedEvents(
   extraction: PageExtraction,
@@ -1130,7 +1112,7 @@ export interface OfficialPageBody {
   officialDomain: string;
   /** IANA zone the body meets in. Required: a wall clock with no zone is a guess. */
   timeZone: string;
-  /** Other names the page uses for the body or its committees ("TUSD", "Joint Committee"). */
+  /** Other names the page uses for the body or its committees (an acronym, "Joint Committee"). */
   nameTerms?: readonly string[];
   /** Hosts beyond the official domain the route is explicitly authorized to read. */
   linkingPage?: OfficialLinkingPage | null;
@@ -1166,16 +1148,14 @@ export interface OfficialPageVerification {
 
 
 /**
- * **PURE route verification** for the discovery executor (extractor id
+ * Pure route verification for the discovery executor (extractor id
  * `official-page-events`): given a body, a page URL and the page's HTML, is
  * this page a usable route for that body's dated public events?
  *
- * No network and no clock: `now` is the only time read. The rules are exactly
- * the adapter's — this function and `normalizeWithDrops` share
- * `extractOfficialPageEvents` and `verifyExtractedEvents` — so a page this
- * says YIELDED is a page the standing runner will publish from, and the same
- * page for a different body (an Arizona page offered for a New Mexico body)
- * says NOT_CONFIRMED with the reasons named.
+ * No network and no clock: `now` is the only time read. It shares
+ * `extractOfficialPageEvents` and `verifyExtractedEvents` with the adapter, so
+ * a page this says YIELDED is a page the standing runner will publish from,
+ * and the same page offered for a different body says NOT_CONFIRMED.
  *
  * - `YIELDED` — at least one event verified.
  * - `EMPTY` — the page states no dated event in any shape this reads.
@@ -1586,9 +1566,9 @@ export function makeOfficialPageEventsSource(
         continue;
       }
       const { published, held, readings } = verifyRow(row, now);
-      // A-002: every reading the page yielded is a record this pass
-      // considered; readings of one sitting folded together (a card and its
-      // detail modal, a heading and its "next meeting" line) are duplicates.
+      // Every reading is a record considered; readings of one sitting folded
+      // together (a card and its modal, a heading and its "next meeting" line)
+      // are duplicates.
       const heldReadings = held.filter((h) => h.shape !== "prose-date").length;
       considered += readings;
       duplicates += Math.max(0, readings - published.length - heldReadings);

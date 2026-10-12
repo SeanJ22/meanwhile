@@ -69,8 +69,6 @@ function cost(usd: number | null, recordedAt: string): CostEntry {
 
 test("model admission accumulates cycle spend with no per-cycle cap; only the rolling ceiling stops it", () => {
   const cycle = fundedController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
-  // Three requests settle with no per-cycle or operational-night refusal — those
-  // caps are retired, so cycle spend simply accumulates.
   for (const work of ["one", "two", "three"]) {
     const reservation = cycle.reserveModelRequest("anthropic", work, REQUEST);
     cycle.settleModelRequest(reservation, RESPONSE);
@@ -115,7 +113,7 @@ test("rollingCeilingReached is the PRE-admission read of the ceiling — so the 
   assert.equal(boundary.rollingCeilingReached(0.6).reached, true, "a scout that cannot afford its worst case is not admitted");
   assert.equal(boundary.rollingCeilingReached(0).reached, false, "the spent total itself is still under the ceiling");
 
-  // CH-02: an unpriced charge is counted at its worst case, so the ceiling stays in force.
+  // An unpriced charge is counted at its worst case, so the ceiling stays in force.
   const nullRow = cost(null, recent);
   const tokenless: CostEntry = { ...nullRow, role: "SCOUT", cost: { ...nullRow.cost, inputTokens: null, outputTokens: null, usd: null } };
   const unmeasured = fundedController({
@@ -163,11 +161,7 @@ test("the rolling ceiling is the injected owner override when given, the fallbac
   }
 });
 
-/*
- * 2026-09-25: FleetSafety's `paused` flag was display-only — a model request
- * was reserved under the owner's runner pause. Both locks below refuse the PAID
- * request and leave the free fetch seam admitting.
- */
+/* Both locks below refuse the PAID request under a pause and leave the free fetch seam admitting. */
 test("the owner's runner pause refuses every model request, while free fetches and dispatches are still admitted", () => {
   const paused = fundedController({ now: NIGHT, costs: [], paused: true, clock: () => Date.parse(NIGHT) });
   assert.throws(() => paused.reserveModelRequest("anthropic", "scout-under-pause", REQUEST), (error: unknown) =>
@@ -256,14 +250,14 @@ test("mixed-tier shares are recovered once and an incomplete split is counted at
     cacheCreation5mInputTokens: 0, cacheCreation1hInputTokens: 0 });
   const row: CostEntry = { ...base, cost: { ...base.cost, inputTokens: 2, outputTokens: 2, requestCount: 2 },
     byModel: [share("haiku"), share("opus")] };
-  assert.ok(Math.abs(aggregateModelSpend([row], NIGHT, NIGHT).usd! - .00003) < 1e-12);
+  assert.ok(Math.abs(aggregateModelSpend([row], NIGHT, NIGHT).usd! - .0000246) < 1e-12);
   const half = { ...row, byModel: row.byModel!.slice(0, 1) };
   assert.equal(aggregateModelSpend([half], NIGHT, NIGHT).usd, costEntryWorstCaseUsd(half));
   const partialRow = { ...row, byModel: [share("haiku"), share("unknown-served")] };
   const partial = aggregateModelSpend([partialRow], NIGHT, NIGHT);
   assert.equal(partial.usd, costEntryWorstCaseUsd(partialRow));
   assert.equal(partial.worstCaseCharges, 1);
-  assert.ok(Math.abs(partial.knownUsd - .000006) < 1e-12, "an unknown second tier cannot erase the first tier's recorded price");
+  assert.ok(Math.abs(partial.knownUsd - .0000006) < 1e-12, "an unknown second tier cannot erase the first tier's recorded price");
 });
 
 test("unknown ASK, Scout and error bills retain measured dollars and are counted at worst case", () => {
@@ -298,7 +292,7 @@ test("historical Ask provider maxima bound missing usage and unknown served ids 
   const rows = [cost(3, NIGHT), ...missing, ...served];
   const before = JSON.stringify(rows);
   const aggregate = aggregateModelSpend(rows, NIGHT, NIGHT);
-  assert.ok(Math.abs(aggregate.usd! - 14.520336) < 1e-12);
+  assert.ok(Math.abs(aggregate.usd! - 45.240336) < 1e-9);
   assert.equal(aggregate.knownUsd, 3);
   assert.equal(aggregate.measured, 1);
   assert.equal(aggregate.unmeasured, 16);
@@ -319,7 +313,7 @@ test("an actual request maximum bounds an unmetered bill and rejects incomplete 
     modelRequestBound: { model: "haiku", inputTokens: 5000, outputTokens: 1024, usd: 0,
       basis: "REQUEST_UTF8_BYTES", measured: false } };
   const priced = aggregateModelSpend([row], NIGHT, NIGHT);
-  assert.equal(priced.usd, .01512, "counts and central rates determine the maximum, not a supplied dollar value");
+  assert.ok(Math.abs(priced.usd! - .001512) < 1e-15, "counts and central rates determine the maximum, not a supplied dollar value");
   assert.equal(priced.knownUsd, 0);
   assert.equal(priced.unmeasured, 1);
   assert.equal(aggregateModelSpend([{ ...row, role: "PARSER", source: null, model: null }], NIGHT, NIGHT).usd, priced.usd,
@@ -457,18 +451,18 @@ test("a pool admission refused after its memory wait settles the unsent job at z
 test("requests and dispatches keep running across days without a cycle wall", () => {
   const nowMs = Date.parse(NIGHT);
   const requests = fundedController({ now: NIGHT, costs: [], clock: () => nowMs });
-  // No per-cycle request cap: far more than the retired 24 are all admitted.
+  // No per-cycle request cap.
   for (let i = 0; i < 100; i += 1) requests.admitProviderRequest("public-web", `request-${i}`);
   assert.equal(requests.snapshot(NIGHT).cycle.requests, 100);
 
-  // No per-cycle payload total: recording bytes past the retired 16 MiB never refuses.
+  // No per-cycle payload total.
   const bytes = fundedController({ now: NIGHT, costs: [], clock: () => nowMs });
   bytes.recordInboundBytes("large-response", 64 * 1024 * 1024);
   bytes.recordInboundBytes("more", 1);
   assert.equal(bytes.snapshot(NIGHT).cycle.payloadBytes, 64 * 1024 * 1024 + 1);
 
   const dispatch = fundedController({ now: NIGHT, costs: [], clock: () => nowMs });
-  // No per-cycle dispatch cap: far more than the retired 10 are all admitted.
+  // No per-cycle dispatch cap.
   for (let i = 0; i < 100; i += 1) assert.equal(dispatch.admitDispatch(`dispatch-${i}`).admit, true);
   assert.equal(dispatch.snapshot(NIGHT).cycle.dispatches, 100);
 
@@ -585,8 +579,6 @@ test("scheduler aggregate refusal leaves the exact registered obligation durably
     holder: "fixture",
     now: NIGHT,
     leaseTtlMs: 1_000,
-    reader: { contract: "READER", state: "NOT_READY", reason: "fixture" },
-    truth: { contract: "TRUTH", state: "NOT_READY", reason: "fixture" },
     admitDispatch: (row) => ({ admit: false, code: "DISPATCH_CEILING", why: `${row.obligation.id} is beyond the aggregate ceiling` }),
   });
   assert.equal(executorCalls, 0);
@@ -835,18 +827,6 @@ test("402 and quota refusals hard-latch one provider without probing or substitu
 })();
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
 test("public redirects are counted as separate provider requests under one byte ceiling", async () => {
   let calls = 0;
   const controller = fundedController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
@@ -928,9 +908,7 @@ test("a Scout model request is admitted while a public read is in flight (the tu
   });
   const pending = read({ url: "https://example.test/big", method: "GET", headers: {}, timeoutMs: 1_000 });
   await new Promise<void>((resolve) => setImmediate(resolve));
-  // The deterministic read holds its (now bounded) reservation. A concurrent
-  // Scout model request must not be refused for payload bytes before its first
-  // turn — this is the contention that darkened the Scout lane in 2026-09.
+  // The deterministic read holds its bounded reservation; a concurrent Scout model request must not be refused for payload bytes before its first turn.
   const scoutRequest: ModelRequest = {
     model: "claude-opus-5-5",
     max_tokens: 8_192,
@@ -1154,7 +1132,9 @@ test('parent HTTP shares ten held small-publisher requests across text and byte 
   assert.equal(controller.snapshot().providerCircuits.length,0,'a cap is not a provider failure');
   for(let i=0;i<20;i++)assert.equal((await text({url:census,method:'GET',headers:{},timeoutMs:1000})).status,200);
   assert.equal(calls,30);
-  assert.equal((await controller.guardedOpenOne('public-web','different-work',fetcher)({url:small,method:'GET',headers:{},timeoutMs:1000})).status,200);
+  const other=await controller.guardedOpenOne('public-web','different-work',fetcher)({url:`${small}/other`,method:'GET',headers:{},timeoutMs:1000});
+  assert.match(other.transportError??'',/^WEBSITE_REQUEST_CAP: /,'the allowance is the website\'s, shared by every work item');
+  assert.equal(calls,30);
 });
 
 test('redirects apply the destination website size and uncapped HTTP still honors 429 Retry-After', async () => {

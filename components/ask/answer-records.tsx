@@ -26,9 +26,7 @@ export function AskAnswerRecords({ records, initiallyOpen, agendaLead = false, p
   const agenda = agendaLead ? visible.filter(record => ["MEETING", "AGENDA_ITEM", "AGENDA_DOCUMENT", "MEETING_NOTICE_SUMMARY"].includes(record.kind)) : [];
   const remaining = visible.filter(record => !agenda.includes(record));
 
-  // ASK-24: when there is no generated answer, the held plain-language
-  // definition leads. Move its record out of the detail list without copying
-  // or rewriting it; procedure and official text remain one disclosure away.
+  // With no generated answer, the held plain-language definition leads.
   const summaries = initiallyOpen ? remaining.filter((record) => record.kind === "MEASURE_SUMMARY") : [];
   const detailRecords = summaries.length ? remaining.filter((record) => record.kind !== "MEASURE_SUMMARY") : remaining;
   const disclosure = detailRecords.length > 0 ? (

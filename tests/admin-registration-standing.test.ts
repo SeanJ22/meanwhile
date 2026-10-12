@@ -1,14 +1,8 @@
 /**
- * **ADMIN NEVER CALLS A REGISTERED STATE "NOTHING REGISTERED".** (2026-09-25.)
- *
- * Production held a promoted REGISTRATION pointer for fifty states and DC
- * while All states, the state page and the scope select in every header said
- * "nothing registered" for all of them but Arizona, New Hampshire and New
- * Jersey. These tests hold the three places a state's standing is decided —
- * the pointer read, the scope select, and the empty-scope card — to the
- * pointers: a promoted pointer reads as registered with its promoted time, an
- * absent one keeps "nothing registered" and the Census sentence, and a read
- * that did not happen claims neither. The pointer read touches no payload.
+ * Admin never calls a registered state "nothing registered". The three places a state's standing is
+ * decided (the pointer read, the scope select, the empty-scope card) follow the pointers: a promoted
+ * pointer reads as registered with its promoted time, an absent one keeps "nothing registered" and
+ * the Census sentence, and a read that did not happen claims neither. The pointer read touches no payload.
  */
 import assert from "node:assert/strict";
 import test from "node:test";

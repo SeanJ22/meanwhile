@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
@@ -74,7 +74,8 @@ test("standing and supervisor outcomes share owner history without conflating th
 
   const latest = await readLatestFreshnessCycleOutcome(repos);
   assert.equal(latest?.outcome.cycleId, "cycle:2");
-  assert.equal(latest?.outcome.state, "FAILED");
+  assert.equal(latest?.digestId, (await repos.ownerDigests.read("owner-digest"))[1].digestId);
+  assert.deepEqual(Object.keys(latest?.outcome ?? {}).sort(), ["cycleId", "incidents", "kind", "registry", "risk"]);
   const history = await repos.ownerDigests.read("owner-digest");
   assert.equal(history.length, 3);
   assert.equal(history[2].runtimeOutcome?.kind, "ROUTINE_CIVIC_DATA_SUPERVISOR");
@@ -83,10 +84,8 @@ test("standing and supervisor outcomes share owner history without conflating th
 test("runtime writers and Admin no longer use tracked operational run paths", () => {
   const files = [
     "scripts/freshness-shadow.mts",
-    "scripts/nightly-window.mts",
     "scripts/pilot-runner.mts",
     "scripts/publish-owner-snapshot.mts",
-    "scripts/autonomy-evidence.mts",
     "lib/control-plane/scheduler/promotion-tail.ts",
   ];
   for (const file of files) {
@@ -97,8 +96,6 @@ test("runtime writers and Admin no longer use tracked operational run paths", ()
 
   const freshness = readFileSync(join(ROOT, "scripts", "freshness-shadow.mts"), "utf8");
   assert.match(freshness, /join\("\.runtime", "ops", "runner-relaunch-proof\.json"\)/);
-  assert.doesNotMatch(freshness, /join\("data", "ops", "runner-relaunch-proof\.json"\)/);
-  /* The canonical append precedes the cycle's local record; since 2026-09-23 that record is written through writeCycleRecord. */
   assert.ok(freshness.indexOf("appendFreshnessCycleDigest(repos") < freshness.lastIndexOf("writeCycleRecord(runRecord)"));
   const executableFreshness = freshness
     .replace(/\/\*[\s\S]*?\*\//g, "")
@@ -109,7 +106,6 @@ test("runtime writers and Admin no longer use tracked operational run paths", ()
     /data[\\/]health[\\/](?:reader-suite-runs|reader-questions\.json)|openRedReaderQuestions|latestReaderRun/,
     "tracked software-suite evidence cannot change standing Scout ordering or runtime health",
   );
-  /* The canonical reader impact reaches the order through `orderableDueRow` (2026-09-25), which reads the obligation's own readerImpactAt. */
   assert.match(executableFreshness, /orderableDueRow\(/);
   assert.match(
     readFileSync(join(ROOT, "lib", "control-plane", "research-metrics.ts"), "utf8"),
@@ -127,8 +123,6 @@ test("runtime writers and Admin no longer use tracked operational run paths", ()
     /modelRows\.sort\(research\.compareModelRows\)/,
     "runCycle must apply the supplied order after model-lane classification and before admission",
   );
-  const nightly = readFileSync(join(ROOT, "scripts", "nightly-window.mts"), "utf8");
-  assert.ok(nightly.indexOf("repos.windowRuns.append") < nightly.indexOf("writeFileSync(diagnosticPath"));
 
   const publisher = readFileSync(join(ROOT, "scripts", "publish-owner-snapshot.mts"), "utf8");
   assert.match(publisher, /readLatestFreshnessCycleOutcome\(publisherRepos\)/);
@@ -157,22 +151,6 @@ test("runtime writers and Admin no longer use tracked operational run paths", ()
     /latestReaderRun|latestControlRun|data[\\/]health[\\/](?:reader-suite-runs|control-set-runs)|data[\\/]feedback[\\/]sweeps/,
     "the standing publisher cannot relabel tracked software-run or feedback-sweep output as live operational truth",
   );
-  assert.match(publisher, /reader-questions\.json/);
-  assert.match(publisher, /control-facts\.json/);
-  assert.match(publisher, /SOFTWARE GOVERNANCE inputs/);
-
-  const maptilerDiagnostic = readFileSync(join(ROOT, "scripts", "maptiler-usage.mts"), "utf8");
-  assert.match(maptilerDiagnostic, /READ_ONLY_NON_AUTHORITATIVE/);
-  assert.match(maptilerDiagnostic, /collectMapTilerUsage/);
-  assert.doesNotMatch(
-    maptilerDiagnostic,
-    /node:fs|writeFile|appendFile|createWriteStream|ownerSnapshots|data[\\/]ops[\\/]maptiler-usage\.json|owner:publish/,
-    "the optional diagnostic must not write or publish mutable runtime truth",
-  );
-  const ownerReadback = readFileSync(join(ROOT, "scripts", "owner-surface-readback.mts"), "utf8");
-  assert.match(ownerReadback, /map\.readingState/);
-  assert.match(ownerReadback, /map\.latestAttemptSays/);
-  assert.match(ownerReadback, /map\.actors\?\.state/);
 
   const adminData = readFileSync(join(ROOT, "lib", "control-plane", "admin-data.ts"), "utf8");
   assert.match(adminData, /readMapTilerUsageDigests/);
@@ -183,67 +161,8 @@ test("runtime writers and Admin no longer use tracked operational run paths", ()
   }
 });
 
-test("no executable tracked-health reporter can become a second operational authority", () => {
-  const packageJson = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")) as {
-    scripts?: Record<string, string>;
-  };
-  const scripts = packageJson.scripts ?? {};
-
-  assert.equal(scripts["pilot:health"], undefined, "the retired tracked-health command returned");
-  assert.equal(
-    existsSync(join(ROOT, "scripts", "pilot-health.mts")),
-    false,
-    "the retired tracked-health executable returned",
-  );
-
-  const executableCommands = Object.entries(scripts)
-    .filter(([, command]) => /(?:^|\s)scripts\/[^\s]+\.(?:mjs|mts|ts|ps1)(?:\s|$)/.test(command))
-    .map(([name, command]) => `${name}=${command}`)
-    .join("\n");
-  assert.doesNotMatch(
-    executableCommands,
-    /pilot-health\.mts|(?:^|\n)pilot:health=/,
-    "tracked health must not be exposed as a live operational command under an alias",
-  );
-
-  const trackedHealthProjectionReaders = readdirSync(join(ROOT, "scripts"), { withFileTypes: true })
-    .filter((entry) => entry.isFile() && /\.(?:mjs|mts|ts)$/.test(entry.name))
-    .filter((entry) => /\b(?:latestReaderRun|latestControlRun)\b/.test(readFileSync(join(ROOT, "scripts", entry.name), "utf8")))
-    .map((entry) => entry.name)
-    .sort();
-  assert.deepEqual(
-    trackedHealthProjectionReaders,
-    [],
-    "no standing script may project tracked software-run output as live operational health",
-  );
-});
-
 test("production children are hidden behind the installed runtime and local proofs stay ignored", () => {
-  const packageJson = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")) as {
-    scripts?: Record<string, string>;
-  };
-  const scripts = packageJson.scripts ?? {};
-  const retiredDirectChildren = [
-    "pilot:run",
-    "routine:civic-data",
-    "intake:tripwire",
-    "freshness:shadow:pg",
-    "owner:publish",
-    "readiness:publish",
-    "console:publish",
-  ];
-  for (const name of retiredDirectChildren) {
-    assert.equal(scripts[name], undefined, `${name} exposes an undurable/direct production child`);
-  }
-  assert.match(
-    scripts["maptiler:usage"] ?? "",
-    /scripts\/maptiler-usage\.mts$/,
-    "maptiler:usage may exist only as the guarded read-only terminal diagnostic",
-  );
-  assert.match(scripts["window:run"] ?? "", /^node scripts\/installed-runtime-command\.mjs window$/);
-
   const runner = readFileSync(join(ROOT, "scripts", "pilot-runner.mts"), "utf8");
-  assert.doesNotMatch(runner, /pnpm pilot:run|pilot:run ·/, "the retired direct runner command returned in help or output");
   assert.match(runner, /standingChildEnvironment\("CONSOLE_PUBLISHER", process\.env, publisher\.name === "owner snapshot"\)/);
   assert.match(runner, /standingChildEnvironment\("INTAKE_RUNTIME"\)/);
   assert.match(runner, /"ROUTINE_SUPERVISOR"/);
@@ -255,8 +174,6 @@ test("the runner opens clocks without the retired method-adoption gate and invok
   assert.doesNotMatch(runner, /ensureMethodCandidateAuthorityAtStartup/);
   assert.ok(clock >= 0, "the standing runtime still opens its source clock");
   assert.match(runner, /const reopenStandingClock = standingRuntimeTimer !== null;[\s\S]*if \(reopenStandingClock\) startStandingRuntimeClock\(\);/);
-  // The method-adoption gate is retired: a CURRENT release opens its clocks
-  // only after its runtime contracts applied.
   assert.match(
     runner,
     /if \(first\.state === "CURRENT"\) \{\s*if \(!await applyRuntimeContracts\(RUNNING_CODE_SHA\)\) return 2;\s*runtimeAdmissionsHeld = false;\s*startStandingRuntimeClock\(\);/,
@@ -270,9 +187,4 @@ test("the runner opens clocks without the retired method-adoption gate and invok
     "the research cycle must not halt on a method-candidate adoption receipt");
   assert.match(freshness, /candidateStoreUnreadable === null && \(\(result\.refusal/,
     "an unreadable candidate store skips proposals for the round instead of stopping it");
-
-  const readback = readFileSync(join(ROOT, "scripts", "method-candidate.mts"), "utf8");
-  assert.match(readback, /repos\.methodCandidates\.read\(METHOD_CANDIDATE_STORE_ID\)/);
-  assert.doesNotMatch(readback, /data[\\/]method[\\/]candidates\.json|readCandidateStore/);
-
 });

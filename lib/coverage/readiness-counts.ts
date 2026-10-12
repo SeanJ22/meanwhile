@@ -1,13 +1,7 @@
 /**
- * SC-16: operational readiness counted apart from civic completeness.
- *
- * ACQ (finding sources), REC (recovery), PUB (public delivery) and ASK (answers)
- * are about how well the system works, not what a place's residents are owed.
- * They are counted here as their own readiness counts with the evidence behind
- * each witnessed row, and are never added to a place's civic completeness
- * (place-measures.ts reads only the "core" and "extension" rows).
- *
- * A row nothing witnesses is "not measured". It is never a pass.
+ * Operational readiness (ACQ, REC, PUB, ASK) counted apart from civic
+ * completeness and never added to it. A row nothing witnesses is "not
+ * measured", never a pass.
  */
 import { CHECKLIST_ITEMS, CHECKLIST_FAMILIES } from "./checklist-map.ts";
 

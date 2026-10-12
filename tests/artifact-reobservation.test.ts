@@ -7,20 +7,8 @@ import type { Attempt } from "../lib/control-plane/attempt.ts";
 import { AppendOnlyViolation, type ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 
 /**
- * **THE RUNNER'S RECOVERY SEAM.** (Autonomy-recovery session, 2026-09-01.)
- *
- * The freshness runner could not work through its own backlog: a resumed
- * occurrence re-walked a route whose prior observation was already recorded,
- * retrieved byte-identical content, and offered the SAME content-addressed
- * artifact under a NEW Attempt. The append-only log refused the differing
- * record (a new `attemptId`/`recordedAt`) as a history rewrite, the throw was
- * unhandled, and the WHOLE cycle died — so every crash-restart re-resumed the
- * same occurrence into the same death. That is the loop that required manual
- * surgery.
- *
- * A re-observation of one artifact is idempotent, not a rewrite. These tests
- * pin that, and pin that a GENUINE content divergence under one content-derived
- * id is still refused — the append-only invariant is preserved, not weakened.
+ * A re-observation of one artifact (same content, new Attempt) is idempotent, not a history
+ * rewrite; a genuine content divergence under one content-derived id is still refused.
  */
 
 const NOW_A = "2026-09-02T00:00:00.000Z";
@@ -56,8 +44,7 @@ test("SEEDED: a content-identical artifact re-observed by a SECOND Attempt is id
   const first = await recordArtifactMetadata(repos, artifact({ attemptId: "at-A", recordedAt: NOW_A }), NOW_A);
   assert.equal(first.appended, true, "the first observation is appended");
 
-  // The exact production failure: same content, new Attempt, new recordedAt.
-  // Before the fix this threw AppendOnlyViolation and aborted the cycle.
+  // Same content, new Attempt, new recordedAt.
   const second = await recordArtifactMetadata(repos, artifact({ attemptId: "at-B", recordedAt: NOW_B }), NOW_B);
   assert.equal(second.appended, false, "the re-observation is an idempotent no-op, not a throw");
   assert.equal(second.record.attemptId, "at-A", "the FIRST observer's attribution stands, unrewritten");

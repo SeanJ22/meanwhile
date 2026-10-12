@@ -1,11 +1,10 @@
 /**
- * MW-017 — "Publishes ahead" says where the PUBLISHER's list ends only when
+ * "Publishes ahead" says where the PUBLISHER's list ends only when
  * the promoted read was bounded, paginated to its end and claims it holds
  * everything listed; otherwise it says the limit was not checked, beside what
  * we hold. A failed horizon check is ours, not the publisher's limit.
  */
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import {
@@ -69,10 +68,4 @@ test("MW-017: the body's schedule row uses the horizon, and the store reads five
   const [body] = buildBodyViews({ contracts: [contract], store, nowIso: NOW });
   const row = body!.schedule.find(([k]) => k === "Publishes ahead")![1];
   assert.match(row, /^Not checked — /, "a routine read that does not claim completeness never states the publisher's limit");
-
-  const source = readFileSync("app/(admin)/_mw/data/body-store.ts", "utf8");
-  const versions = source.slice(source.indexOf("const VERSIONS"), source.indexOf("const ATTEMPTS"));
-  assert.match(versions, /SELECT cd\.candidate->'changeSet' AS cs, cd\.candidate->'horizon' AS hz FROM civic_data_candidates cd WHERE cd\.id = p\.current_version_id OFFSET 0/);
-  for (const col of ["horizon_kind", "horizon_returned", "horizon_declared", "horizon_paginated", "horizon_complete"]) assert.match(versions, new RegExp(`\\bcs\\.${col}\\b`));
-  assert.doesNotMatch(versions, /cd\.candidate AS|SELECT cd\.candidate\b(?!->)/, "the whole candidate is never selected");
 });

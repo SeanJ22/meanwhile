@@ -7,11 +7,8 @@ import { rosterForBody } from "@/lib/registry/body-rosters";
 /**
  * GET /api/votes/local?personId=roster:<bodyId>#<n>
  *
- * A local official's recorded votes (BX-11): each roll call row in the body's
- * minutes whose voter joins exactly this roster member on the same body, newest
- * first. The position is the publisher's own word and every row carries the
- * sitting page it was read from. A member with no linked vote returns an empty
- * list, which the card words as "We're working on getting this info".
+ * A local official's recorded votes: each roll call row whose voter joins exactly this roster member on the
+ * same body, newest first, with the publisher's own word and the sitting page it was read from.
  */
 
 export const runtime = "nodejs";

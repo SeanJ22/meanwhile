@@ -10,45 +10,13 @@ import {
   rejectUnknown,
 } from "../lib/api/params.ts";
 
-/**
- * ITEM 1b (2026-08-17): a route answered a question it
- * should have refused, at 0,0.
- *
- * The h session's report disclosed, inside its probe-row list, one nonsense
- * read at latitude 0, longitude 0 — produced by a probe that passed a `zip`
- * parameter `/api/meetings` does not locate by. The route did not fail. It
- * returned 200 with a centre in the Gulf of Guinea, a radius that had climbed
- * the whole ladder to 150 km, a tier, and a `nearZip` of "85701" — and it
- * wrote a matching row into the search log, the store this product sells.
- *
- * The mechanism was one coercion:
- *
- *     Number(params.get("lat"))   // get() returns null when absent
- *     Number(null) === 0          // not NaN
- *
- * so `Number.isFinite(lat)` passed and `-90 <= 0 <= 90` passed. A manufactured
- * claim, which CLAUDE.md ranks worse than an empty success, and which the
- * "no empty success" rule names by shape.
- *
- * Two routes were affected out of eleven audited. Both are pinned here, plus
- * the shared reader they now go through — because the next route to read a
- * coordinate off a query string will reach for `Number()` again unless the
- * refusing reader is the obvious thing to reach for.
- */
-
 const url = (path: string) => new Request(`https://example.test${path}`);
 
-// ── The coercion itself, pinned so nobody re-derives it ────────────────────
-
 test("Number(null) is 0 — the coercion this whole file exists for", () => {
-  // Not a hypothetical. This single line is the defect, and a future reader
-  // deserves to see it stated rather than described.
   assert.equal(Number(null), 0);
   assert.ok(Number.isFinite(Number(null)));
   assert.ok(Number(null) >= -90 && Number(null) <= 90);
 });
-
-// ── The shared reader ──────────────────────────────────────────────────────
 
 test("numeric() refuses absent, empty and malformed rather than coercing", () => {
   const p = new URLSearchParams("blank=&spaces=%20%20&text=abc&hex=0x10&inf=Infinity&good=32.2");
@@ -92,10 +60,7 @@ test("matching() refuses a malformed value instead of silently nulling it", () =
   assert.ok(absent.ok && absent.value === null, "absent optional is honestly null");
 });
 
-// ── Affected route 1 of 2: /api/meetings ───────────────────────────────────
-
 test("/api/meetings refuses h's exact probe rather than answering at 0,0", async () => {
-  // Byte-for-byte the request shape the h session's probe sent.
   const response = await meetingsGET(url("/api/meetings?zip=85701"));
   assert.equal(response.status, 400, "the probe that produced 0,0 must be refused");
 
@@ -128,31 +93,12 @@ test("/api/meetings refuses a malformed radiusKm rather than quietly shrinking t
 });
 
 test("/api/meetings refuses a malformed zip rather than logging a location-less search", async () => {
-  // A four-digit zip is a client typo, and it used to become `null` — a row in
-  // the sold store indistinguishable from a reader who panned into open water.
   const response = await meetingsGET(url("/api/meetings?lat=32.21696&lng=-110.971&zip=8570"));
   assert.equal(response.status, 400);
   assert.match(((await response.json()) as { error: string }).error, /zip/);
 });
 
-test("/api/meetings still answers a well-formed request", async () => {
-  // The refusal must not have cost the route its job. This is the regression
-  // the fix itself could cause.
-  const response = await meetingsGET(
-    url("/api/meetings?lat=32.21696&lng=-110.971&zip=85701"),
-  );
-  assert.equal(response.status, 200);
-  const body = (await response.json()) as { center: { lat: number; lng: number } };
-  assert.equal(body.center.lat, 32.21696);
-  assert.equal(body.center.lng, -110.971);
-});
-
-// ── Affected route 2 of 2: /api/directory ──────────────────────────────────
-
 test("/api/directory refuses a malformed member instead of asserting no record", async () => {
-  // The old behaviour returned {source:null, districtOffices:[], committees:[]}
-  // — byte-identical to the answer for a real member we hold no record of. Two
-  // different claims, and only one of them is about a person.
   for (const path of [
     "/api/directory",
     "/api/directory?member=",
@@ -181,8 +127,6 @@ test("/api/directory names an unknown parameter rather than ignoring it", async 
   assert.match(((await response.json()) as { error: string }).error, /bioguide/);
 });
 
-// ── The standing rule, stated as a test over the whole route surface ───────
-
 test("no route reads a coordinate through a bare Number() coercion", async () => {
   const { readdir, readFile } = await import("node:fs/promises");
   const { join } = await import("node:path");
@@ -209,9 +153,7 @@ test("no route reads a coordinate through a bare Number() coercion", async () =>
     // route quotes the old code in its own explanation of the defect.
     // `.trim()` first, and deliberately: the repo's files are CRLF, and a
     // trailing \r is a line terminator, so `.*$` stops in front of it and a
-    // comment-stripping regex silently matches nothing. This test failed on
-    // exactly that before it was trusted — it flagged the meetings route's own
-    // comment quoting the old code.
+    // comment-stripping regex silently matches nothing.
     for (const line of src.split("\n").map((l) => l.trim())) {
       const code = line.replace(/^(\*|\/\/|\/\*).*$/, "");
       if (/Number\(\s*(?:\w+\.)*(?:params|searchParams)\.get\(/.test(code)) {

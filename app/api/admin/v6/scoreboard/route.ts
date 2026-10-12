@@ -26,9 +26,15 @@ import { readSwitchConfig } from "@/lib/control-plane/data-business/switches.ts"
 import { adminGet } from "@/lib/control-plane/gateway/admin-get.ts";
 import { controlPlaneUrlFromEnv } from "@/lib/control-plane/repository/pg-store.ts";
 import { listDoors } from "@/lib/doors/registry.ts";
+import { fixItems } from "@/lib/control-plane/fix-list.ts";
+import { readLatestLookPasses } from "@/lib/control-plane/live-audit-log.ts";
+import { deadLinkReadings, DEAD_LINKS_SURFACE_DEFAULT, DEAD_LINKS_SURFACE_SETTING, SLOW_SURFACE_SHARE_DEFAULT, SLOW_SURFACE_SHARE_SETTING } from "@/lib/health/surface-speed.ts";
 import { readDoorNumbers } from "@/lib/control-plane/admin-view/door-numbers-read.ts";
+import { readVitalNow } from "@/lib/control-plane/admin-view/vital-now.ts";
 import { readFlowWeek } from "@/lib/control-plane/admin-view/flow-read.ts";
 import { provenFixesReading } from "@/lib/control-plane/fix-standing.ts";
+
+const shotUrl = (key: string): string => `/api/admin/v6/resident-tasks/shot/${key.replace(/^resident-tasks\//, "")}`;
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -49,7 +55,7 @@ export async function GET(request: NextRequest) {
     const config = configRow !== null && configRow !== undefined && isAdminConfig(configRow.value) ? configRow.value : null;
     const coreIds = new Set(readSetting(config, CORE_ITEMS_SETTING, CORE_ITEMS_DEFAULT));
     const doorList = opened ? await attempt(async () => (await listDoors(opened.doors)).doors) : null;
-    const [learningRead, history, doors, heartbeat, doorNumbers, pipeline, contracts, capture, sentPlaces, audit, speed, provenFixes, claims, flow] = await Promise.all([
+    const [learningRead, history, doors, heartbeat, doorNumbers, pipeline, contracts, capture, sentPlaces, audit, speed, provenFixes, claims, flow, vital, deadLinks, looks] = await Promise.all([
       attempt(async () => { const r = await loadLearningTrends(observedAt); return r.kind === "UNREAD" ? null : r.facts; }),
       attempt(async () => (opened ? (await readV6History(opened, { scope: "us", asOf: observedAt, limit: 50 })).data : null)),
       attempt(async () => (opened ? projectDoors({ ...(await listDoors(opened.doors)), saves: [], observedAt }).counts : null)),
@@ -69,16 +75,22 @@ export async function GET(request: NextRequest) {
         readHistory: async (placeKey) => (url ? readPlaceHistory(neon(url), placeKey) : []),
         budgetMs: 10_000,
       }))),
-      // DP-18: the week's live audits, read by day key (seven keys), never the whole log.
+      // The week's live audits, read by day key (seven keys), never the whole log.
       attempt(async () => (opened ? weeklyAuditAccuracy({ ...(await readAuditWeek(opened, observedAt)), now: observedAt }) : null)),
-      // FE-02: the latest worst-case speed pass on the live site (today's and yesterday's keys).
+      // The latest worst-case speed pass on the live site (today's and yesterday's keys).
       attempt(async () => (opened ? readLatestSpeedPass(opened, observedAt) : null)),
-      // DP-26: where each reusable fix stands, from the config row.
+      // Where each reusable fix stands, from the config row.
       attempt(async () => (opened ? provenFixesReading(config, observedAt) : null)),
-      // DP-33: the latest weekly claim check, this week's and last week's keys.
+      // The latest weekly claim check, this week's and last week's keys.
       attempt(async () => (opened ? reportAccuracy(await readRecentClaimPasses(opened, [weekOf(observedAt), weekOf(new Date(now.getTime() - 7 * 86_400_000).toISOString())])) : null)),
-      // BR-31: the last seven days of the flow from findings to live, from hourly counts; seven bounded reads.
+      // The last seven days of the flow from findings to live, from hourly counts; seven bounded reads.
       attempt(async () => (url ? readFlowWeek({ control: neon(url), through: observedAt }) : null)),
+      // Now: the last two full hours of the runner's vital signs; one indexed read of at most two small rows.
+      attempt(async () => (url ? readVitalNow(neon(url), observedAt) : null)),
+      // The link sweep's dead links per surface, kept beside door health.
+      attempt(async () => (doorList === null ? null : deadLinkReadings(doorList))),
+      // The last deploys' look passes (a week's worth), for the look row.
+      attempt(async () => (opened ? readLatestLookPasses(opened, 20) : null)),
     ]);
     const learning = learningRead === null ? null : { trends: buildLearningTrends(learningRead.weeks, observedAt), doors: learningRead.doors, bankWriteErrors: learningRead.bankWriteErrors };
     const readings: ScoreboardReadings = {
@@ -92,8 +104,12 @@ export async function GET(request: NextRequest) {
       doors: learning?.doors ?? null,
       doorNumbers,
       flow,
+      vital,
       audit,
       speed,
+      deadLinks,
+      look: looks === null ? null : { now: observedAt, passes: looks, fixStates: new Map((config ? fixItems(config) : []).map((i) => [i.id, i.state] as const)), imageUrl: shotUrl },
+      speedLimits: { share: readSetting(config, SLOW_SURFACE_SHARE_SETTING, SLOW_SURFACE_SHARE_DEFAULT), deadLinks: readSetting(config, DEAD_LINKS_SURFACE_SETTING, DEAD_LINKS_SURFACE_DEFAULT) },
       provenFixes,
       reportAccuracy: claims,
       gates: opened === null ? null : readGateHealth({ nowIso: observedAt, heartbeat, databaseReachable: null, lastDispatch: null, spend: null }),

@@ -5,7 +5,13 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 
-import { MEETING_PARTITION_CONTRACTS, type MeetingPartitionContract } from "../lib/civic-data/meeting-partitions.ts";
+import {
+  MEETING_PARTITION_CONTRACTS,
+  meetingPartitionId,
+  meetingPartitionOfId,
+  refreshMeetingPartitions,
+  type MeetingPartitionContract,
+} from "../lib/civic-data/meeting-partitions.ts";
 import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { VALIDATION_CHECKS, type RoutineCandidate, type ValidationReceipt } from "../lib/civic-data/types.ts";
@@ -30,8 +36,10 @@ import { freshnessDisclosure, lastReadByDivision, staleDivisionRead } from "../l
 import {
   clearPreparedMeetingsProjectionCache,
   preparePublishedMeetingSnapshot,
+  readComposedSourcePlaces,
   readPreparedMeetingsProjection,
 } from "../lib/meetings/prepared-snapshot.ts";
+import { RETIRED_MEETING_ROUTES } from "../lib/registry/source-wiring.ts";
 import {
   readMeetingsProjection,
   snapshotClientMeta,
@@ -40,19 +48,11 @@ import {
 } from "../lib/meetings/snapshot.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { promoteMeetingPartitions } from "../scripts/ingest.ts";
-import { readerEdgeCarriesForward } from "../scripts/lib/edge-current.ts";
 
 /*
- * Coordinator, 2026-09-25: since migration 0029 (live 3:07 PM MST) a fresh
- * check that finds nothing new writes an UNCHANGED_CONFIRMATION receipt instead
- * of a new version, and the Reader's "Last checked" stopped advancing in quiet
- * periods. Readers must see the time of the last SUCCESSFUL fresh check, new
- * version or receipt; a failed request or a stale cache never counts; the
- * failed-refresh disclosure must not fire because only receipts arrived; and
- * changed information publishes as before (lib/meetings/fresh-checks.ts).
- *
- * Every read below goes through the real store, the real composition, the real
- * prepared serving copy and the real edge publish, over a controlled clock.
+ * A fresh check that finds nothing new writes an UNCHANGED_CONFIRMATION receipt instead of a new version. Readers
+ * see the time of the last successful fresh check, new version or receipt; a failed request or a stale cache never
+ * counts; receipts fire no failed-refresh disclosure; changed information publishes as before.
  */
 
 const ACQUIRED_URL = "https://www.pima.edu/about-pima/leadership-policies/governing-board/board-meetings/documents.html";
@@ -138,7 +138,7 @@ async function failedCheck(store: MemoryRoutineDataStore, partition: MeetingPart
 
 async function composed(store: MemoryRoutineDataStore, now: string): Promise<Extract<MeetingsProjectionReadResult, { kind: "PROMOTED" }>> {
   clearPromotedReadModelCache();
-  const read = await readMeetingsProjection({ store, now, bypassCache: true, allowUnconfiguredBootstrap: false });
+  const read = await readMeetingsProjection({ store, now, bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
   return read as Extract<MeetingsProjectionReadResult, { kind: "PROMOTED" }>;
 }
@@ -285,10 +285,7 @@ test("controlled clock, the prepared serving copy and the edge: a receipt republ
   assert.equal(quiet.composition, first.composition);
   assert.deepEqual(Object.values(quiet.freshChecks), [checkedAt]);
 
-  // The edge decision: everything carried but the checks, so the manifest alone republishes.
-  const carry = readerEdgeCarriesForward({ prepared: quiet, servedManifest: manifestBefore, extras: EXTRAS, authority: CARRIED, registrations: REGISTRATIONS_CARRIED });
-  assert.equal(carry.current, false);
-  assert.equal(!carry.current && carry.checksOnly, true, carry.current ? "" : carry.reason);
+  // Everything carried but the checks, so the manifest alone republishes.
   const republished = await publishReaderEdgeChecks(
     { generatedAt: quiet.servedGeneratedAt!, retrievedAt: quiet.checkedAt, checks: { composition: quiet.composition, freshChecks: quiet.freshChecks } },
     { store: edge },
@@ -299,8 +296,6 @@ test("controlled clock, the prepared serving copy and the edge: a receipt republ
   assert.deepEqual(manifestAfter.scopes, manifestBefore.scopes, "the same immutable artifacts: none rewritten");
   assert.equal(manifestAfter.sequence, manifestBefore.sequence + 1);
   assert.deepEqual(manifestAfter.sources, manifestBefore.sources);
-  // The next pass with nothing new is current, and republishes nothing.
-  assert.equal(readerEdgeCarriesForward({ prepared: quiet, servedManifest: manifestAfter, extras: EXTRAS, authority: CARRIED, registrations: REGISTRATIONS_CARRIED }).current, true);
 
   // The reader, from the edge: Last checked, the re-read listings, and no false disclosure.
   const fromEdge = await readReaderEdgeMeetings({ store: edge, fallback: async () => { throw new Error("the edge answers"); } });
@@ -325,7 +320,6 @@ test("controlled clock, the prepared serving copy and the edge: a receipt republ
   assert.equal(afterFailure.status, "CURRENT");
   if (afterFailure.status !== "CURRENT") return;
   assert.equal(afterFailure.servedGeneratedAt, checkedAt, "a failed request is never a check");
-  assert.equal(readerEdgeCarriesForward({ prepared: afterFailure, servedManifest: manifestAfter, extras: EXTRAS, authority: CARRIED, registrations: REGISTRATIONS_CARRIED }).current, true);
 
   // Newbury changed: the composition is new, the prepared row is rewritten, and the edge publishes in full.
   await readPartition(store, NEWBURY, T4, ["x", "y"]);
@@ -334,9 +328,6 @@ test("controlled clock, the prepared serving copy and the edge: a receipt republ
   if (changed.status !== "PUBLISHED") return;
   assert.notEqual(changed.composition, quiet.composition);
   assert.equal(changed.servedGeneratedAt, T4);
-  const carryChanged = readerEdgeCarriesForward({ prepared: changed, servedManifest: manifestAfter, extras: EXTRAS, authority: CARRIED, registrations: REGISTRATIONS_CARRIED });
-  assert.equal(carryChanged.current, false);
-  assert.notEqual(!carryChanged.current && carryChanged.checksOnly, true, "new data is never a checks-only publish");
   assert.equal((await publishReaderEdgeChecks(
     { generatedAt: changed.servedGeneratedAt!, retrievedAt: null, checks: { composition: changed.composition, freshChecks: changed.freshChecks } },
     { store: edge },
@@ -357,4 +348,62 @@ test("controlled clock, the prepared serving copy and the edge: a receipt republ
   if (reread.kind !== "PROMOTED") return;
   assert.equal(reread.value.meetings.filter((m) => m.bodyId === NEWBURY.bodyId).length, 2, "the new sitting reaches readers");
   assert.deepEqual(collectedOf(reread.value, PIMA), [checkedAt]);
+});
+
+test("a published composition is read whatever doors the process holds: its partitions' scopes and places come from their ids", async () => {
+  for (const partition of MEETING_PARTITION_CONTRACTS) {
+    assert.deepEqual(meetingPartitionOfId(partition.id), { source: partition.meetingSource, bodyId: partition.bodyId, scope: partition.scope }, partition.id);
+  }
+  assert.equal(meetingPartitionOfId("meetings-history:ical:x"), null);
+  assert.equal(meetingPartitionOfId("everyday-routing"), null);
+
+  clearPreparedMeetingsProjectionCache();
+  const store = new MemoryRoutineDataStore();
+  await readPartition(store, PIMA, T1, ["a", "b"]);
+  await readPartition(store, NEWBURY, T1, ["x"]);
+  assert.equal((await preparePublishedMeetingSnapshot(store, at(T1, 60_000))).status, "PUBLISHED");
+  await readPartition(store, PIMA, T2, ["a", "b"]);
+
+  // A site that holds no door yet (its runner has published none) serves the same answer, Last checked included.
+  const installed = MEETING_PARTITION_CONTRACTS.length;
+  assert.equal(refreshMeetingPartitions([]).refreshed, true);
+  try {
+    assert.equal(MEETING_PARTITION_CONTRACTS.some((p) => p.id === PIMA.id || p.id === NEWBURY.id), false);
+    const served = await readPreparedMeetingsProjection({ store, now: at(T2, 2 * 60_000) });
+    assert.equal(served.kind, "PROMOTED");
+    if (served.kind !== "PROMOTED") return;
+    assert.equal(served.value.generatedAt, T2);
+    assert.deepEqual(collectedOf(served.value, PIMA), [T2]);
+    assert.deepEqual(collectedOf(served.value, NEWBURY), [T1]);
+    const places = await readComposedSourcePlaces({ store });
+    assert.deepEqual(places?.get(PIMA.meetingSource), [PIMA.ocdId]);
+    assert.deepEqual(places?.get(NEWBURY.meetingSource), [NEWBURY.ocdId]);
+  } finally {
+    refreshMeetingPartitions();
+  }
+  assert.equal(MEETING_PARTITION_CONTRACTS.length, installed);
+});
+
+test("a failed source is attributed to the places its composed partitions serve: a retired route's held partition and a body with no division name none", async () => {
+  const retired = RETIRED_MEETING_ROUTES.find((route) => route.bodyId.startsWith("ocd-division/"))!;
+  const wilmot = "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town";
+  const store = new MemoryRoutineDataStore();
+  await store.writePreparedReaderProjection({
+    recordClass: "MEETING", scope: "composed-reader-snapshot", payload: {}, factSha256: "0".repeat(64),
+    generatedAt: T1, composedAt: T1, sourceThrough: null, retrievedAt: null, promotedThrough: null,
+    composedFrom: [
+      { contractId: PIMA.id, versionId: "v-pima" },
+      { contractId: meetingPartitionId(retired.meetingSource, retired.bodyId), versionId: "v-held" },
+      { contractId: meetingPartitionId("pima-edu", "curated:az/pima-community-college#governing"), versionId: "v-curated" },
+      { contractId: meetingPartitionId(NEWBURY.meetingSource, `${wilmot}#selectboard`), versionId: "v-wilmot" },
+      { contractId: NEWBURY.id, versionId: "v-newbury" },
+    ],
+  }, null);
+  const places = await readComposedSourcePlaces({ store });
+  assert.ok(places !== null);
+  assert.deepEqual(places.get(PIMA.meetingSource), [PIMA.ocdId]);
+  assert.deepEqual(places.get(NEWBURY.meetingSource), [wilmot, NEWBURY.ocdId], "in the composition's order");
+  assert.deepEqual(places.get("pima-edu"), [], "a body with no division names no place");
+  assert.equal((places.get(retired.meetingSource) ?? []).includes(retired.bodyId.split("#")[0]!), false, "a retired route's held partition serves no place");
+  assert.equal(await readComposedSourcePlaces({ store: new MemoryRoutineDataStore() }), null, "no composition, no attribution");
 });

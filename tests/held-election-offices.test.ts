@@ -18,7 +18,7 @@ import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-p
 const NOW = "2026-09-30T21:00:00.000Z";
 const CITY = "ocd-division/country:us/state:az/place:sierra_vista";
 const URL_ = "https://www.sierravistaaz.gov/our-city/departments/city-clerk/elections/voting-and-polls";
-// The shape of Sierra Vista's saved "Voting and Polls" page (captured 2026-09-28).
+// The shape of a city's saved "Voting and Polls" page.
 const PAGE = `<html><head><title>Voting and Polls | City of Sierra Vista, AZ</title></head><body>
 <header><a href="/our-city/departments/city-clerk">City Clerk</a> (520) 458-3315</header><main><h1>Voting and Polls</h1>
 <h2>Register to Vote</h2><p>Voter registration is managed by the Cochise County <a href="https://www.cochise.az.gov/509/Voter-Information">Recorder&#39;s Office</a>, (520) 432-8354.</p>

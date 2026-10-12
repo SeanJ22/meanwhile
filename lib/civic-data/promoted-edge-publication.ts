@@ -38,35 +38,13 @@ import { readExecutiveActionsProjection } from "../officials/executive-actions.t
 import { AZ_OFFICIAL_ACTIONS_CONTRACT } from "../outcomes/data-plane.ts";
 import type { PromotedAuthorityFamily, PromotedFamilyArtifactValue, ReaderManifest } from "../meetings/edge-artifacts.ts";
 import { servedAuthorityVersion, type PublishAuthorityCarried, type PublishAuthorityValue } from "../meetings/edge-serving.ts";
+import { PRL_ARCHIVE_SCOPE, readPrlArchiveProjection } from "../sources/prl/archive-publication.ts";
 
 /**
- * **THE RUNNER PUBLISHES EACH PROVEN POINTER A COLD READER READ FROM THE
- * DATABASE.** (2026-09-25.)
- *
- * On production a cold /ballot?zip=85701 took 5.1–5.8 s on the first request
- * an instance served, and a cold Ask 14.8 s in its source preloads: each read
- * below was a pointer read and a proof read against a cold database (the AZ
- * ballot 0.46 MB of pointer and 1.5 MB of proof; Pima finance 6.4 MB of proof).
- * The standing runner already proves every one of them. Here it publishes the
- * proven pair (`PromotedEdgeEntry`) on the reader edge, one artifact per
- * family, beside the registry and the federal directory.
- *
- * Nothing is published that the Reader would refuse. Each pointer is read and
- * proved exactly as a database Reader proves it (`readPromotedCivicData`), and
- * then handed, as the edge entry itself, to that family's own typed Reader, the
- * one a reader request will call with it: a family whose Reader rejects the
- * entry (a validator throws, a source id mismatches, another version answers)
- * is left out whole, and the reader reads it from the database as before. An
- * answered, absent pointer travels as NOT_RECORDED: every Reader answers it
- * exactly as it answers the database's own NOT_RECORDED.
- *
- * A family is read only when it moved. Its version is its pointers' identities
- * (version and newest unchanged confirmation, which shapes a read's
- * retrieval instant and staleness), so a family whose pointers still name what
- * the served manifest carries is carried by reference and not read at all.
+ * Each pointer is proved exactly as a database Reader proves it, then handed to its family's own Reader; a family
+ * whose Reader rejects an update retains the previous entry. A family is read only when its pointers moved.
  */
 
-/** Anything a family's typed Reader answers: a read result, or the read state a preload left. */
 interface ReaderAnswer {
   readonly kind: string;
   readonly metadata?: { readonly versionId: string | null };
@@ -84,7 +62,6 @@ const manual = (id: Parameters<typeof requiredManualProductionContract>[0], read
   return { recordClass: contract.recordClass, scope: contract.scope, reader };
 };
 
-/** Every pointer each proven-pointer family carries, with the Reader that must accept it. */
 export function promotedEdgePointers(): Readonly<Record<PromotedAuthorityFamily, readonly PromotedEdgePointer[]>> {
   const nhMembers = requiredRoutineContract("nh-members");
   return {
@@ -116,13 +93,13 @@ export function promotedEdgePointers(): Readonly<Record<PromotedAuthorityFamily,
     "federal-votes": [{ recordClass: "FEDERAL_ROLL_CALL", scope: FEDERAL_ROLLCALL_SCOPE, reader: readFederalRollCallsProjection }],
     "federal-key-votes": [{ recordClass: "FEDERAL_KEY_VOTE", scope: FEDERAL_KEY_VOTE_SCOPE, reader: readFederalKeyVotesProjection }],
     "officeholder-statements": [manual("officeholder-statements", readOfficeholderStatementsProjection)],
+    "prl-archives": [{ recordClass: "PRL_ARCHIVE", scope: PRL_ARCHIVE_SCOPE, reader: readPrlArchiveProjection }],
     "executive-actions": [{ recordClass: AZ_OFFICIAL_ACTIONS_CONTRACT.recordClass, scope: AZ_OFFICIAL_ACTIONS_CONTRACT.scope, reader: readExecutiveActionsProjection }],
   };
 }
 
 type PointerState = Pick<PromotedPointerIdentity, "versionId" | "latestConfirmation"> | null;
 
-/** One pointer's served identity: its version and newest unchanged confirmation, or `none`. */
 export function promotedPointerVersion(recordClass: RoutineRecordClass, scope: string, pointer: PointerState): string {
   if (pointer === null) return `${recordClass}:${scope}=none`;
   const confirmation = pointer.latestConfirmation
@@ -131,28 +108,21 @@ export function promotedPointerVersion(recordClass: RoutineRecordClass, scope: s
   return `${recordClass}:${scope}=${pointer.versionId}${confirmation}`;
 }
 
-/** A family's version: its pointers' identities, in a fixed order. */
 export function promotedFamilyVersion(versions: readonly string[]): string {
   return [...versions].sort().join("|");
 }
 
 export interface PromotedEdgeFamiliesRead {
   readonly authority: Partial<Record<PromotedAuthorityFamily, PublishAuthorityValue | PublishAuthorityCarried>>;
-  /** One line per family left out this pass, and why. */
   readonly skipped: readonly string[];
 }
 
-/**
- * Read every proven-pointer family for publication: carried by reference when
- * its pointers still name the served version, otherwise read, proved and
- * accepted by its own Reader, or left out.
- */
 export async function readPromotedEdgeFamilies(input: {
   readonly store: CivicDataReadStore & { readonly readPromotionIdentity: NonNullable<CivicDataReadStore["readPromotionIdentity"]> };
   readonly servedManifest: Pick<ReaderManifest, "authorityArtifacts"> | null;
   readonly now: string;
-  /** The families to read; every proven-pointer family when omitted. */
   readonly families?: Readonly<Partial<Record<PromotedAuthorityFamily, readonly PromotedEdgePointer[]>>>;
+  readonly readServedFamily?: (family: PromotedAuthorityFamily) => Promise<PromotedFamilyArtifactValue | null>;
 }): Promise<PromotedEdgeFamiliesRead> {
   const families = input.families ?? promotedEdgePointers();
   const authority: Partial<Record<PromotedAuthorityFamily, PublishAuthorityValue | PublishAuthorityCarried>> = {};
@@ -170,16 +140,27 @@ export async function readPromotedEdgeFamilies(input: {
       }
       const entries: PromotedEdgeEntry[] = [];
       const versions: string[] = [];
+      let prior: PromotedFamilyArtifactValue | null | undefined;
       for (const { recordClass, scope, reader } of pointers) {
-        const read = await readPromotedCivicData(recordClass, scope, { store: input.store, now: input.now });
-        const entry = promotedEdgeEntryOf(read, recordClass, scope, input.store);
-        if (entry === null) throw new Error(`${recordClass}:${scope} read ${read.kind}, not a proven or answered-absent pointer`);
-        if (entry.kind === "PROMOTED") {
-          // The entry itself, through the Reader a reader request calls with it.
-          const accepted = await reader({ edge: entry, now: input.now });
-          if (accepted.kind !== "PROMOTED" || accepted.metadata?.versionId !== entry.projection.versionId) {
-            throw new Error(`${recordClass}:${scope}: its Reader answered the edge entry ${accepted.kind}`);
+        let entry: PromotedEdgeEntry | null = null;
+        try {
+          const read = await readPromotedCivicData(recordClass, scope, { store: input.store, now: input.now });
+          entry = promotedEdgeEntryOf(read, recordClass, scope, input.store);
+          if (entry === null) throw new Error(`${recordClass}:${scope} read ${read.kind}, not a proven or answered-absent pointer`);
+          if (entry.kind === "PROMOTED") {
+            const accepted = await reader({ edge: entry, now: input.now });
+            if (accepted.kind !== "PROMOTED" || accepted.metadata?.versionId !== entry.projection.versionId) {
+              throw new Error(`${recordClass}:${scope}: its Reader answered the edge entry ${accepted.kind}`);
+            }
           }
+        } catch (error) {
+          if (prior === undefined) prior = await input.readServedFamily?.(family) ?? null;
+          const held = prior?.entries.find(candidate => candidate.kind === "PROMOTED"
+            ? candidate.projection.recordClass === recordClass && candidate.projection.scope === scope
+            : candidate.recordClass === recordClass && candidate.scope === scope);
+          if (!held) throw error;
+          skipped.push(`${family} ${error instanceof Error ? error.message : String(error)}; retaining the accepted prior version`);
+          entry = held;
         }
         entries.push(entry);
         versions.push(promotedPointerVersion(recordClass, scope, entry.kind === "PROMOTED" ? entry.projection : null));

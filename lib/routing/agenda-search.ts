@@ -1,40 +1,11 @@
 import type { Meeting } from "../sources/types.ts";
 
 /**
- * **Searching what governments have actually put on their agendas** —
- * trackers A03 ("Is there a data center coming?") and A05 ("What's on the
- * docket for this?"), built 2026-08-18 (g19).
- *
- * ## Nothing here generates. It quotes.
- *
- * The ask surface's standing rule is that the classifier routes to curated
- * drawers and never generates, and CLAUDE.md's is stricter still: a summary
- * paraphrases a cited source and never fills a gap. So both answers below
- * are EXTRACTIVE. A03 returns the agenda's own line containing the reader's
- * topic, verbatim, with the document it came from. A05 returns the agenda's
- * own numbered items, verbatim, beside the raw link rather than instead of
- * it.
- *
- * A generated summary of a zoning agenda is a claim about what a government
- * is about to do, made by us, with nothing behind it. The line the clerk
- * typed is better evidence and it is already there.
- *
- * ## A03 is a shape, not a data-center feature
- *
- * The tracker names data centers because that is the question the author
- * heard. The same shape answers warehouses, rezonings, road projects, cell
- * towers and school closures, so the topic is a vocabulary entry rather than
- * a branch. Adding "is there a landfill coming" is adding words to
- * `AGENDA_TOPICS`, not writing code.
- *
- * ## The radius, and why it is the meeting's own place
- *
- * A meeting is placed where the BODY meets, which is the honest anchor we
- * have: an agenda item about a rezoning three towns over is still discussed
- * at the town hall that governs it. So the radius filters on the meeting's
- * location, and the answer says so — "meetings within N miles of you", never
- * "projects near you", because the second is a claim about where the project
- * is and we do not know that.
+ * Searching what governments have actually put on their agendas. Nothing here generates; it quotes:
+ * topic search returns the agenda's own line containing the topic, verbatim, with its document; item
+ * extraction returns the agenda's own items beside the raw link. A topic is a vocabulary entry in
+ * `AGENDA_TOPICS`, not a branch. The radius filters on where the body meets, so the answer says
+ * "meetings within N miles of you", never "projects near you".
  */
 
 /** A topic a reader can ask about, and the words agendas actually use. */
@@ -143,11 +114,7 @@ const MAX_QUOTE_CHARS = 400;
  */
 function agendaLines(text: string): string[] {
   return text
-    // The numeric lookahead used to fire mid-sentence: "Cable Channels: Cox
-    // 96. Television viewing…" split at "96." and produced an item that was
-    // half of somebody's sentence about a cable channel. An agenda item
-    // begins after the previous one ends, so the marker has to follow a
-    // sentence end (or a line start, which `\n+` already covers).
+    // An item marker must follow a sentence end (or a line start); a mid-sentence number is not an item.
     .split(/\n+|(?<=[.:;)])(?=\s\d{1,2}\.\s+[A-Z])|(?<=[.:;)])(?=\s[A-Z]\.\s+[A-Z])/)
     .map((line) => line.replace(/\s+/g, " ").trim())
     .filter((line) => line.length >= 12);
@@ -244,32 +211,16 @@ export function meetingsWithin(
 }
 
 /**
- * **A05 — the agenda's own items, extracted.**
- *
- * Returns the numbered or lettered items an agenda lists, verbatim. It does
- * NOT summarise: no sentence here is ours. The caller renders these beside
- * the raw agenda link, never instead of it, because an extraction is a
- * convenience and the document is the record.
- *
- * Returns an empty list when the document has no recognisable item
- * structure, so the caller says "we could not read the item list off this
- * agenda" rather than rendering an agenda with nothing on it.
+ * The agenda's own numbered or lettered items, verbatim; never a summary. Rendered beside the raw
+ * agenda link, never instead of it. Empty when the document has no recognisable item structure.
  */
 export function agendaItems(text: string | null): string[] {
   if (!text) return [];
   const items: string[] = [];
   const seen = new Set<string>();
   for (const line of agendaLines(text)) {
-    // An item marker the clerk typed: "1.", "12.", "A.", "IV." at the start.
-    //
-    // The single-letter form is ambiguous with an abbreviation, and the
-    // corpus proves it: "W. Congress Street, 1st Floor" was extracted as an
-    // agenda item off a Pima County agenda, twice, because "W." is a
-    // perfectly good letter marker. A compass direction at the head of a
-    // line is an address far more often than it is an item, so N/S/E/W are
-    // refused as markers. A real item lettered W. is possible and would be
-    // lost; an address rendered as an item is a wrong answer, and losing a
-    // true row costs less than printing a false one.
+    // An item marker the clerk typed: "1.", "12.", "A.", "IV." at the start. N/S/E/W are refused as
+    // markers: a compass direction at the head of a line is an address far more often than an item.
     if (!/^(\d{1,2}[.)]|[A-Z][.)]|[IVX]{1,4}\.)\s+\S/.test(line)) continue;
     if (/^[NSEW][.)]/.test(line)) continue;
     // An item says something. A marker with four characters after it is a

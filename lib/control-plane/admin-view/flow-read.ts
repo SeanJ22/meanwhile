@@ -1,9 +1,7 @@
 import type { Sql } from "../repository/pg-store.ts";
 import { boundedQuery } from "../repository/request-bounds.ts";
 
-/** Counts are events in this window, not the current queue sizes. Findings and
- * reader records are named separately: several findings can build one record.
- * Live facts means newly added/changed reader records; rechecks earn no credit. */
+/** Counts are events in this window, not current queue sizes. Rechecks earn no credit. */
 export interface FlowHour {
   readonly hour: string;
   readonly findings: number;
@@ -29,7 +27,7 @@ export interface FlowRows {
 const HOUR = 3_600_000;
 export function projectFlow(rows: FlowRows, from: string, through: string): FlowRead {
   const start = Date.parse(from), end = Date.parse(through);
-  if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start || end - start > 7 * 24 * HOUR) throw Error("FLOW_WINDOW_INVALID");
+  if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start || end - start > 25 * HOUR) throw Error("FLOW_WINDOW_INVALID");
   const hours = new Map<string, { hour: string; findings: number; builtFindings: number; checkedRecords: number; liveRecords: number; settledSpendUsd: number | null; unpricedCharges: number }>();
   for (let at = Math.floor(start / HOUR) * HOUR; at < end; at += HOUR) {
     const hour = new Date(at).toISOString();
@@ -51,8 +49,6 @@ export function projectFlow(rows: FlowRows, from: string, through: string): Flow
     costPerFactUsd: facts && settledSpendUsd !== null ? settledSpendUsd / facts : null, unit: "new or updated reader records" };
 }
 
-// Server-side aggregates: no Scout text, candidate payload, or entire cost
-// history travels to Admin. First arrival/build counts once despite replay.
 export const BOX_FLOW_SQL = `WITH events AS (
  SELECT id, 'findings' AS stage, (SELECT min((o->>'recordedAt')::timestamptz) FROM jsonb_array_elements(value->'origins') o) AS at FROM cp_box_findings
  UNION ALL
@@ -66,11 +62,9 @@ export const PUBLICATION_FLOW_SQL = `SELECT date_trunc('hour', recorded_at AT TI
 export const FLOW_SPEND_SQL = `SELECT date_trunc('hour', recorded_at AT TIME ZONE 'UTC') AT TIME ZONE 'UTC' AS hour,
  coalesce(sum((record->'cost'->>'usd')::float8), 0)::float8 AS usd,
  count(*) FILTER (WHERE record->'cost'->>'usd' IS NULL)::int AS unpriced
- FROM cp_log_costs WHERE recorded_at >= $1::timestamptz AND recorded_at < $2::timestamptz
- AND (record->>'role' <> 'ACQUIRER' OR record->'cost'->>'usd' IS NOT NULL) GROUP BY 1`;
+ FROM cp_log_costs WHERE recorded_at >= $1::timestamptz AND recorded_at < $2::timestamptz GROUP BY 1`;
 
-/** Caller supplies the actual deployment time: older uninstrumented hours must
- * not appear as zero. An unavailable store remains unknown on the Admin card. */
+/** Older uninstrumented hours must not appear as zero. */
 export async function readFlow(input: { control: Sql; from: string; through: string; recordingSince: string }): Promise<FlowRead> {
   const from = new Date(Math.max(Date.parse(input.from), Date.parse(input.recordingSince))).toISOString();
   projectFlow({ stages: [], spend: [] }, from, input.through);
@@ -83,12 +77,9 @@ export async function readFlow(input: { control: Sql; from: string; through: str
   return projectFlow({ stages: [...box, ...publication], spend }, from, input.through);
 }
 
-/* ---------------------------------------------------------------- the week (BR-31) */
-
 const DAY = 24 * HOUR;
 export const FLOW_WEEK_DAYS = 7;
 
-/** One trailing 24-hour window of the week; null when nothing was recorded for any of it yet. */
 export interface FlowDay {
   readonly from: string;
   readonly through: string;
@@ -108,7 +99,6 @@ export interface FlowWeek {
 
 const hoursOf = (r: FlowRead): number => (Date.parse(r.through) - Date.parse(r.from)) / HOUR;
 
-/** PURE: the week's totals from its days. Cost per fact is spend over facts across the same recorded hours. */
 export function summarizeFlowWeek(days: readonly FlowDay[]): FlowWeek {
   const reads = days.flatMap((d) => (d.read === null ? [] : [d.read]));
   const hoursRecorded = reads.reduce((n, r) => n + hoursOf(r), 0);
@@ -124,7 +114,6 @@ export function summarizeFlowWeek(days: readonly FlowDay[]): FlowWeek {
 
 export const FLOW_RECORDING_SINCE_SQL = `SELECT min(recorded_at) AS since FROM cp_log_owner_digests WHERE log_key = 'publication-flow'`;
 
-/** When the live-record counts began: the first publication-flow record. Null when none has been written. */
 export async function readFlowRecordingSince(control: Sql): Promise<string | null> {
   const rows = await boundedQuery(control, { operation: "publication.flow_since", callClass: "PAGE" }, FLOW_RECORDING_SINCE_SQL, []) as { since: string | Date | null }[];
   const since = rows[0]?.since;

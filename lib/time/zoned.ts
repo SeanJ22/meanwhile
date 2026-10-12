@@ -48,9 +48,8 @@ function formatOffset(offsetMs: number): string {
 /**
  * Build an ISO 8601 string with offset from a wall-clock time in a zone.
  *
- * `toZonedIso(2026, 8, 18, 17, 30, "America/Phoenix")` — half five on the
- * evening of August 18th, as the agenda prints it — becomes
- * `2026-08-18T17:30:00-07:00`.
+ * `toZonedIso(2026, 8, 18, 17, 30, "America/Phoenix")` — 5:30 pm on August
+ * 18th, as the agenda prints it — becomes `2026-08-18T17:30:00-07:00`.
  *
  * Resolved in two passes: guess that local equals UTC, correct by the offset at
  * that guess, then re-check in case the correction crossed a DST boundary.

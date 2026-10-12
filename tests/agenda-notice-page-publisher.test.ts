@@ -8,22 +8,11 @@ import type { Meeting } from "../lib/sources/types.ts";
 import { documentUrlFor, heldNoticePageIsNotItsAgenda, seedHeldAgendaDocuments } from "../scripts/ingest.ts";
 
 /**
- * **A SITTING IS NEVER LENT ANOTHER PUBLISHER'S NOTICE PAGE.** (2026-09-24.)
- *
- * A scheduled sitting with no agenda link is given its body's notice page, and
- * failing a body match, the division's notice page when every notice URL on
- * the division agrees. One notice URL always agrees with itself, and on two
- * divisions it was another government's:
- * - The Lake Todd Village District row is keyed on Newbury and publishes on
- *   the Town of Bradford's calendar. On 2026-09-24, 26 held documents served
- *   Bradford's calendar as the agenda of Newbury sittings, some since
- *   2026-08-21.
- * - The Central Arizona Water Conservation District is the only notice page on
- *   Pima County's division. The Board of Supervisors' study session of
- *   2026-10-13 was served CAP's board page as its agenda (read 15:43:43Z),
- *   under "Pima County Clerk of the Board".
- * Both were read back from production's /api/agenda on 2026-09-24. The rows
- * below mirror those production sittings and use the real wiring.
+ * A sitting is never lent another publisher's notice page. A scheduled sitting with no agenda link
+ * is given its body's notice page, or the division's when every notice URL on the division agrees;
+ * a single notice URL always agrees with itself, so ownership is checked against the sitting's
+ * body and publisher. The rows below model two such cases: a district keyed on one town that
+ * publishes on another town's calendar, and a lone regional district's page on a county division.
  */
 
 const BRADFORD_CALENDAR = "https://bradfordnh.gov/pages/calendar";
@@ -32,7 +21,7 @@ const NEWBURY = "ocd-division/country:us/state:nh/county:merrimack/place:newbury
 const BRADFORD = "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town";
 const PIMA = "ocd-division/country:us/state:az/county:pima";
 
-/** Production sittings carry their body id (NH-RC4); these carry the ones production's did. */
+/** Sittings carry their body id. */
 function sitting(id: string, ocdId: string, bodyName: string, sourceOrg: string, agendaUrl: string | null = null, slot = bodyName.toLowerCase().replace(/\s+/g, "-")): Meeting {
   return {
     id,
@@ -79,7 +68,7 @@ test("a body's own notice page, and its own publisher's shared page, still reach
   assert.equal(documentUrlFor(linked), linked.agendaUrl, "an agenda link is never replaced");
 });
 
-/** The ownership question the ingest asks, in the one form every reader surface asks it (R14). */
+/** The ownership question the ingest asks, in the one form every reader surface asks it. */
 const anotherBodys = (meeting: Meeting, url: string) =>
   isAnotherBodysNoticePage(url, { bodyId: meeting.bodyId, publisher: meeting.provenance.sourceOrg });
 
@@ -96,12 +85,7 @@ test("a lent page is recognized as another body's; a sitting's own link never is
   assert.doesNotMatch(scriptSource, /function isAnotherPublishersNoticePage/, "one ownership rule, not a second copy in the ingest");
 });
 
-/*
- * R14 (2026-09-25): the ingest's own publisher-only copy called Tucson
- * Unified's board page "another's" — the board's sittings are published as
- * "Tucson Unified School District", its wiring row as "… Governing Board" —
- * so a notice the board posted with agenda items was set aside unread.
- */
+/* A body whose sittings and wiring row name the publisher differently still owns its notice page. */
 const TUSD = "ocd-division/country:us/state:az/school_district:tucson_unified_district";
 const TUSD_BOARD_PAGE = "https://govboard.tusd1.org/";
 const tusdSpecial = sitting("diligent:tusd1:510", TUSD, "Governing Board", "Tucson Unified School District", null, "board");
@@ -181,9 +165,7 @@ test("held notice pages that are not their sitting's agenda are left out of the 
     store,
   );
 
-  // D1 (2026-09-24): the two Bradford-calendar reads lent to Newbury's Planning
-  // Board, and Lake Todd's own calendar page too: it is its publisher's page and
-  // states no agenda item, so it is not Lake Todd's agenda either.
+  // The two lent calendar reads, and the district's own calendar page, which states no agenda item.
   assert.equal(seeded.noticePagesSetAside, 3);
   assert.deepEqual([...seeded.noticePageUrlsSetAside], [BRADFORD_CALENDAR]);
   assert.equal(seeded.carried, 2);

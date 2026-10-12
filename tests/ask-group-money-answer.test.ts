@@ -20,48 +20,69 @@ import {
 import { validateAnswer } from "../lib/ask/validate.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
 import type { CampaignMoney } from "../lib/funding/campaign-money.ts";
-import type { StateMoneySnapshot } from "../lib/funding/state-money.ts";
+import type { StateMoneyRecord } from "../lib/funding/state-money.ts";
 import { stateMoneyRecordsForDisplay } from "../lib/funding/state-money-reader.ts";
 
-/**
- * **A RACE'S CANDIDATES' MONEY, COMPOSED FROM THE FILINGS WE HOLD.**
- * (2026-09-25, the Ask three-second repair, part two.)
- *
- * "Who funded the Vail school board candidates?" was read by a model and written
- * by Opus 5.5 (8.5 s locally, 4.97 s warm on production). These tests pin, on
- * EVERY contest of the three committed ballot sets (AZ Pima, NH Merrimack, NJ
- * Morris) and the committed state money files — not one tuned example:
- *
- * - the race wording is recognised and never collides with a named person's;
- * - every composable contest names every listed candidate, with each filing's
- *   own figures and a count with its denominator, inside the length contract,
- *   and passes the SAME validator a model answer faces;
- * - a candidate with no money record is named as such (our gap);
- * - "who gave" says our records hold totals, not donors — never the state;
- * - "who is raising the most" ranks only like-for-like filings;
- * - a body whose race is not on the ballot (Vail) states the authority's own
- *   words, then the county register's committees, never a total.
- */
+const AZ_BALLOT = JSON.parse(readFileSync(join(process.cwd(), "data", "states", "az", "ballot", "az-pima-2026.json"), "utf8")) as BallotSet;
 
-type State = "az" | "nh" | "nj";
-const BALLOTS: Record<State, string> = { az: "az/ballot/az-pima-2026.json", nh: "nh/ballot/nh-merrimack-2026.json", nj: "nj/ballot/nj-morris-2026.json" };
-const read = <T>(path: string): T => JSON.parse(readFileSync(join(process.cwd(), "data", "states", path), "utf8")) as T;
-const SETS = Object.fromEntries((Object.keys(BALLOTS) as State[]).map((state) => [state, read<BallotSet>(BALLOTS[state])])) as Record<State, BallotSet>;
-const MONEY = Object.fromEntries((["az", "nh", "nj"] as State[]).map((state) => [state, read<StateMoneySnapshot>(`${state}/funding/state-money-${state}-2026.json`)])) as Record<State, StateMoneySnapshot>;
+const GOVERNOR = "ballot-xx:governor";
+const SENATE_7 = "ballot-xx:state-senate-7";
+const CONTESTS = [
+  { id: GOVERNOR, title: "Governor", ocdId: "ocd-division/country:us/state:xx" },
+  { id: SENATE_7, title: "State Senator, District 7", ocdId: "ocd-division/country:us/state:xx/sldu:7" },
+];
+const CANDIDACIES = [
+  { id: `${GOVERNOR}:one-avery`, contestId: GOVERNOR, givenName: "Avery", familyName: "One" },
+  { id: `${GOVERNOR}:two-blair`, contestId: GOVERNOR, givenName: "Blair", familyName: "Two" },
+  { id: `${GOVERNOR}:three-casey`, contestId: GOVERNOR, givenName: "Casey", familyName: "Three" },
+  { id: `${GOVERNOR}:four-drew`, contestId: GOVERNOR, givenName: "Drew", familyName: "Four" },
+  { id: `${SENATE_7}:five-emery`, contestId: SENATE_7, givenName: "Emery", familyName: "Five" },
+  { id: `${SENATE_7}:six-finley`, contestId: SENATE_7, givenName: "Finley", familyName: "Six" },
+  { id: `${SENATE_7}:seven-gray`, contestId: SENATE_7, givenName: "Gray", familyName: "Seven" },
+];
 
-interface Race { state: State; contest: { id: string; title: string; ocdId: string }; candidates: GroupCandidate[]; records: EvidenceRecord[]; gaps: EvidencePack["gaps"] }
+function money(targetKey: string, name: string, office: string, filingState: StateMoneyRecord["filingState"], receipts: number | null): StateMoneyRecord {
+  const agency = "Example Secretary of State — Campaign Finance System";
+  const registeredName = filingState === "FILED" ? `Friends of ${name}` : name;
+  return {
+    dataClass: "STATE_COMMITTEE",
+    jurisdiction: "XX",
+    agency,
+    filingsUrl: "https://cfs.example.gov/",
+    committeeId: filingState === "FILED" ? `c-${targetKey.split(":").pop()}` : null,
+    registeredName,
+    candidateNameAsFiled: name,
+    officeSought: office,
+    electionYear: 2026,
+    filingState,
+    totals: { receipts, expenditures: receipts === null ? null : receipts / 2, cashOnHand: null, reportCount: null, coveringPeriod: "2026 Election Cycle" },
+    targetKeys: [targetKey],
+    match: { registeredName, officeAsFiled: office, officeOnBallot: office, electionYearAsFiled: 2026, electionYearOnBallot: 2026, allThreeAgree: true, note: "name, office and election year all agree" },
+    checkedAt: "2026-09-01",
+    provenance: { sourceUrl: `https://cfs.example.gov/filer/${targetKey.split(":").pop()}`, sourceOrg: agency, collectedAt: "2026-09-01", verifiedAt: "2026-09-01" },
+  } as StateMoneyRecord;
+}
 
-/** A contest's candidates and their held money, through the route's own selector (state records only, as the committed files hold them). */
-function race(state: State, contestId: string): Race {
-  const set = SETS[state];
-  const contest = set.contests.find((row) => row.id === contestId)!;
+const MONEY: StateMoneyRecord[] = [
+  money(`${GOVERNOR}:one-avery`, "Avery One", "Governor", "FILED", 888256.7),
+  money(`${GOVERNOR}:two-blair`, "Blair Two", "Governor", "NO_REPORTS_ON_FILE", null),
+  money(`${GOVERNOR}:three-casey`, "Casey Three", "Governor", "NO_REPORTS_ON_FILE", null),
+  money(`${SENATE_7}:five-emery`, "Emery Five", "State Senator", "FILED", 12500),
+  money(`${SENATE_7}:six-finley`, "Finley Six", "State Senator", "FILED", 7250.25),
+];
+
+interface Race { contest: { id: string; title: string; ocdId: string }; candidates: GroupCandidate[]; records: EvidenceRecord[]; gaps: EvidencePack["gaps"] }
+
+/** A contest's candidates and their held money, through the route's own selector (state records only). */
+function race(contestId: string): Race {
+  const contest = CONTESTS.find((row) => row.id === contestId)!;
   const records: EvidenceRecord[] = [];
   const gaps: EvidencePack["gaps"] = [];
   const candidates: GroupCandidate[] = [];
-  for (const candidacy of set.candidacies.filter((row) => row.contestId === contestId)) {
+  for (const candidacy of CANDIDACIES.filter((row) => row.contestId === contestId)) {
     const name = [candidacy.givenName, candidacy.familyName].filter(Boolean).join(" ");
     const subject: EvidenceSubject = { kind: "PERSON", id: candidacy.id, name };
-    const shown = stateMoneyRecordsForDisplay(MONEY[state].records.filter((record) => record.targetKeys.includes(candidacy.id)));
+    const shown = stateMoneyRecordsForDisplay(MONEY.filter((record) => record.targetKeys.includes(candidacy.id)));
     const select = (): CampaignMoney => ({
       requestedTargetKey: candidacy.id, federal: { kind: "none" }, officialIdentity: "NOT_OFFICIAL",
       state: { records: shown, resolution: "DIRECT_CANDIDACY_KEY", resolvedTargetKey: candidacy.id },
@@ -73,7 +94,7 @@ function race(state: State, contestId: string): Race {
   }
   const contestSubject: EvidenceSubject = { kind: "CONTEST", id: contestId, name: contest.title };
   gaps.push(...financeRegimeNotesFor(contestSubject, { state: records.length > 0, federal: false, county: false }).map((note) => note.gap));
-  return { state, contest: { id: contestId, title: contest.title, ocdId: contest.ocdId }, candidates, records, gaps };
+  return { contest, candidates, records, gaps };
 }
 
 const packFor = (subject: EvidenceSubject, records: EvidenceRecord[], question: string): EvidencePack => ({
@@ -85,15 +106,12 @@ const dollars = (amount: number) => `$${amount.toLocaleString("en-US", { minimum
 function namedWithGap(answer: string, name: string, gap: string): boolean {
   const at = answer.indexOf(name);
   const said = answer.indexOf(`: ${gap}`, at);
-  // A legal ballot name may contain parentheses (Lee (Lusardi) CONNOR).
+  // A legal ballot name may contain parentheses.
   // A semicolon or earlier colon, not a parenthesis, crosses a clause boundary.
   return at >= 0 && said > at && !/[;:]/.test(answer.slice(at, said));
 }
 
-const RACES: Race[] = (Object.keys(SETS) as State[]).flatMap((state) =>
-  SETS[state].contests.filter((contest) => contest.type !== "MEASURE" && SETS[state].candidacies.some((row) => row.contestId === contest.id)).map((contest) => race(state, contest.id)));
-
-/* ── the wording ─────────────────────────────────────────────────────────── */
+const RACES: Race[] = CONTESTS.map((contest) => race(contest.id));
 
 test("race money wording is recognised with its race words, and a named person's money question is not a race question", () => {
   const accepted: [string, GroupMoneyAsk["kind"], string][] = [
@@ -128,10 +146,8 @@ test("race money wording is recognised with its race words, and a named person's
   for (const [question] of accepted) assert.equal(moneyQuestionShape(question), null, question);
 });
 
-/* ── a contest's candidates ──────────────────────────────────────────────── */
-
-test("every held contest in AZ, NH and NJ composes, names every candidate with its own figures and a counted denominator, and passes the validator", () => {
-  const composedByState: Record<State, number> = { az: 0, nh: 0, nj: 0 };
+test("every held contest composes, names every candidate with its own figures and a counted denominator, and passes the validator", () => {
+  let composedCount = 0;
   let withAMissingRecord = 0;
   for (const held of RACES) {
     for (const ask of [{ kind: "HOW_MUCH", measures: ["RAISED", "SPENT"] }, { kind: "WHO_GAVE" }, { kind: "MOST", measure: "RAISED" }] as GroupMoneyAsk[]) {
@@ -140,7 +156,7 @@ test("every held contest in AZ, NH and NJ composes, names every candidate with i
         // Only length may refuse a contest whose candidates each hold at most one state filing.
         continue;
       }
-      composedByState[held.state] += 1;
+      composedCount += 1;
       const where = `${held.contest.id} ${ask.kind}`;
       assert.equal(overLengthBudget(composed.answer), null, where);
       const subject: EvidenceSubject = { kind: "CONTEST", id: held.contest.id, name: held.contest.title };
@@ -181,30 +197,30 @@ test("every held contest in AZ, NH and NJ composes, names every candidate with i
       }
     }
   }
-  for (const state of ["az", "nh", "nj"] as State[]) assert.ok(composedByState[state] > 0, `${state}: at least one contest composes (${JSON.stringify(composedByState)})`);
+  assert.ok(composedCount > 0, "at least one contest composes");
   assert.ok(withAMissingRecord > 0, "at least one composed contest names a candidate we hold no money record for");
 });
 
 test("a contest with a candidate lacking a record names the gap as ours, with the count", () => {
   const ask: GroupMoneyAsk = { kind: "HOW_MUCH", measures: ["RAISED"] };
-  const found = new Set<State>();
+  let found = 0;
   for (const held of RACES) {
     const withRecord = held.candidates.filter((person) => held.records.some((record) => record.subjectId === person.id));
     const lacking = held.candidates.filter((person) => person.matched && !withRecord.includes(person));
     if (withRecord.length === 0 || lacking.length === 0) continue;
     const composed = composeGroupMoneyAnswer({ ask, contest: held.contest, candidates: held.candidates, records: held.records, gaps: held.gaps });
     if (!composed) continue;
-    found.add(held.state);
+    found += 1;
     assert.ok(composed.answer.includes(`(candidates with a state money record we hold: ${withRecord.length} of ${held.candidates.length}): `) && composed.answer.startsWith(`For the ${held.contest.title} race, by each candidate's own committee filing`), composed.answer);
     for (const person of lacking) assert.ok(namedWithGap(composed.answer, person.name, "no state committee filing in our records"), composed.answer);
     // Never "$0" for a candidate we hold nothing for.
     assert.doesNotMatch(composed.answer, /\$0\.00/);
   }
-  assert.ok(found.size >= 1, `a contest with a candidate lacking a record composes (${[...found].join(", ")})`);
+  assert.ok(found >= 1, "a contest with a candidate lacking a record composes");
 });
 
 test("a candidate whose ballot listing is not matched to a filing identity is never said to have no filing", () => {
-  const held = RACES.find((row) => row.contest.id === "ballot-nh-merrimack:state-senate-7")!;
+  const held = RACES.find((row) => row.contest.id === SENATE_7)!;
   const candidates = held.candidates.map((person, index) => index === 0 ? { ...person, matched: false } : person);
   const records = held.records.filter((record) => record.subjectId !== candidates[0].id);
   const composed = composeGroupMoneyAnswer({ ask: { kind: "HOW_MUCH", measures: ["RAISED"] }, contest: held.contest, candidates, records, gaps: held.gaps });
@@ -214,21 +230,21 @@ test("a candidate whose ballot listing is not matched to a filing identity is ne
 });
 
 test("candidates who share a gap are named together, in ballot order, where the first of them stands", () => {
-  const held = RACES.find((row) => row.contest.id === "ballot-nh-merrimack:governor")!;
+  const held = RACES.find((row) => row.contest.id === GOVERNOR)!;
   const noReports = held.candidates.filter((person) => held.records.some((record) => record.subjectId === person.id && record.finance?.filingState === "NO_REPORTS_ON_FILE"));
-  assert.ok(noReports.length >= 2, "the NH Governor race holds two candidates the agency had no reports for");
+  assert.ok(noReports.length >= 2, "the Governor race holds two candidates the agency had no reports for");
   const composed = composeGroupMoneyAnswer({ ask: { kind: "MOST", measure: "RAISED" }, contest: held.contest, candidates: held.candidates, records: held.records, gaps: held.gaps });
-  assert.ok(composed, "the NH Governor race composes once the shared gap is said once");
+  assert.ok(composed, "the Governor race composes once the shared gap is said once");
   assert.ok(composed.answer.includes(`${noReports.map((person) => person.name).join(" and ")}: no reports on file with the `), composed.answer);
   assert.ok(composed.answer.includes("so none is ranked"), "two candidates without reports: no ranking");
 });
 
 test("the race composer steps aside for anything it cannot state plainly", () => {
-  const held = RACES.find((row) => row.contest.id === "ballot-nh-merrimack:state-senate-7")!;
+  const held = RACES.find((row) => row.contest.id === SENATE_7)!;
   const ask: GroupMoneyAsk = { kind: "HOW_MUCH", measures: ["RAISED"] };
   assert.ok(composeGroupMoneyAnswer({ ask, contest: held.contest, candidates: held.candidates, records: held.records, gaps: held.gaps }));
   // A money record for someone the ballot does not list for this race.
-  const stray = { ...held.records[0], subjectId: "ballot-nh-merrimack:governor:ayotte-kelly" };
+  const stray = { ...held.records[0], subjectId: `${GOVERNOR}:one-avery` };
   assert.equal(composeGroupMoneyAnswer({ ask, contest: held.contest, candidates: held.candidates, records: [...held.records, stray], gaps: held.gaps }), null);
   // A county register row is a writer's to read.
   const county = { kind: "FINANCE_COMMITTEE", id: "easyvote:pima:x", text: "x", sourceUrl: null } as EvidenceRecord;
@@ -252,12 +268,10 @@ test("a bound body reaches a contest only through its own office, never another 
   assert.equal(contestFitsBody("Member of the Township Committee", "Mendham Township Planning Board"), false);
 });
 
-/* ── a body whose race is not on the ballot ──────────────────────────────── */
-
 test("Vail: no race on the ballot, in the authority's words, then the county register's committees by their registered names, never a total", () => {
   const bodyId = "ocd-division/country:us/state:az/school_district:vail_unified_district#board";
   const body = { kind: "BODY" as const, id: bodyId, name: "Vail Unified School District Governing Board" };
-  const [absence] = absencesForDivisions([bodyId.split("#")[0]], SETS.az.absences);
+  const [absence] = absencesForDivisions([bodyId.split("#")[0]], AZ_BALLOT.absences);
   assert.ok(absence && /^There is no Vail Unified School District governing board race/.test(absence.text));
   // What the route retrieved for this body from the promoted Pima County holding, recorded read-only (never minted here).
   const finance = JSON.parse(readFileSync(join(process.cwd(), "tests", "fixtures", "ask-vail-body-finance-records.json"), "utf8")) as { records: EvidenceRecord[] };

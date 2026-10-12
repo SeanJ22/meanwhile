@@ -9,30 +9,7 @@ import {
   logSearchEvent,
 } from "../lib/db/search-log.ts";
 
-/**
- * The search log's write-path guarantees, and the coupling rule: logging and
- * the transparency page ship together or not at all. Collecting silently and
- * disclosing later is the failure this product cannot survive, and an
- * unlisted URL does not change it.
- */
-
 test("the transparency page is linked from the welcome overlay and from the map shell", () => {
-  /*
-   * **THE CLAIM IS REACHABILITY, NOT A FILE PATH.** This named
-   * `components/shell/sidebar.tsx` and went red on 2026-08-25 when LAY-8 moved
-   * the footnote block out of the rail to the foot of the page — the link was
-   * never removed, and the guard could not see that because it was asserting
-   * where the link lives rather than that a reader can reach it.
-   *
-   * That is the predicate-too-narrow shape the reconciliation of the same day
-   * named in three separate defects, so the fix is to widen the predicate
-   * rather than to repoint it at the new file and wait for the next move.
-   *
-   * The welcome overlay is asserted on its own because it is a different
-   * moment: the first screen, before any zip. The shell is asserted as a SET —
-   * at least one of the components that make up the persistent map furniture
-   * carries the link, whichever one currently owns the footnote.
-   */
   const overlay = readFileSync(
     join(process.cwd(), "components", "map", "welcome-overlay.tsx"),
     "utf8",
@@ -44,7 +21,6 @@ test("the transparency page is linked from the welcome overlay and from the map 
 
   const shell = [
     join(process.cwd(), "components", "shell", "sidebar.tsx"),
-    join(process.cwd(), "components", "map", "site-footnote.tsx"),
     join(process.cwd(), "components", "map", "map-entry.tsx"),
   ];
   const linking = shell.filter(

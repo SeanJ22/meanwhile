@@ -30,7 +30,7 @@ export function auditGeneralizedExtraction(input: AuditorWorkerInput, contract: 
   const applicableRoutes = context.routes.filter(route => route.applicable && route.status !== "NOT_APPLICABLE");
   for (const route of applicableRoutes) {
     const held = route.artifactIds.length > 0 && route.artifactIds.every(id => allArtifacts.some(e => e.artifactId === id));
-    // Another official source not yet checked is a coverage number, never a reason to hold back a record that checked out (rulings section 3).
+    // Another source not yet checked is a coverage number, never a reason to hold back a record that checked out.
     if (route.status !== "HELD" || !held || !candidate.coveredRouteIds.includes(route.routeId)) routeFindings.push(finding("AUDIT_ROUTE_REMAINS_OWED", `Official route ${route.routeId} remains ${route.status}; held=${held}. Counted in coverage; it holds back nothing.`, "INFO"));
   }
   const routesChecked = applicableRoutes.filter(route => route.status === "HELD" && route.artifactIds.length > 0 && route.artifactIds.every(id => allArtifacts.some(e => e.artifactId === id)) && candidate.coveredRouteIds.includes(route.routeId)).length;

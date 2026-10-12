@@ -1,74 +1,12 @@
 /**
- * **THE FIRST-PARTY CANDIDATE QUESTIONNAIRE — THE INSTRUMENT.**
- * (Built 2026-08-23, the questionnaire-and-corpora brief, item 1.
- * Law: RULING 112, `CLAUDE.md`.)
- *
- * ## Why this exists, and it is not re-litigated here
- *
- * An incumbent always has more public material than a challenger. **Hunting
- * harder makes that gap WIDER, not narrower**, because there is more to find on
- * the incumbent — so the equal-effort rule, which is a discipline about how
- * hard we look, cannot fix an asymmetry that lives in the source material
- * itself. No amount of retrieval closes it.
- *
- * A first-party questionnaire is the only instrument this product can build
- * that is **symmetric by construction**: every candidate in a contest receives
- * the identical questions, the identical word limits, the identical deadline
- * and the identical number of reminders. The thin card and the thick card get
- * the same blank page. It is also original data owned outright, which is the
- * answer to the Ballotpedia licensing question (RULING 70) rather than a
- * workaround for it.
- *
- * ## The rules the instrument itself has to satisfy
- *
- * - **Five to seven questions maximum.** Response rate is the whole ballgame
- *   and long instruments do not get filled in. This one asks FIVE.
- * - **Every question is non-leading and presupposes no position.** No question
- *   that can only be answered from one side; no question that assumes the
- *   candidate wants to change anything, keep anything, spend anything or cut
- *   anything.
- * - **Every question passes the 15-year-old comprehension standard.** Plain
- *   language, no jargon, nothing needing a civics degree to parse. Guarded in
- *   `tests/questionnaire.test.ts` against the same banned-vocabulary shape the
- *   rest of the product's reader copy is held to.
- * - **No question asserts what the office does.** That would be a generated
- *   claim about a body wearing a question mark — the thing `CLAUDE.md` forbids
- *   everywhere else. Every class question ASKS rather than tells, which is why
- *   none of them carries a list of powers as a preamble.
- * - **Word limits are identical for every question and every candidate.** 200
- *   words, five times, for everybody. A per-question or per-class limit would
- *   be a second thing that has to be argued as symmetric; one number is not
- *   arguable.
- *
- * ## Versioning, and why the version travels with the answer
- *
- * Changing the question set mid-cycle across candidates who answered the old
- * version BREAKS SYMMETRY — two candidates in one contest would have answered
- * different instruments and their answers would render side by side as though
- * they had not. So the set is versioned, the version is recorded on every
- * response, and `docs/candidate-questionnaire.md` carries the same text as a
- * document the author can read without opening a source file.
- * `tests/questionnaire.test.ts` fails the build if the two diverge.
+ * The first-party candidate questionnaire. Symmetric by construction: every candidate in a contest gets
+ * the identical questions, word limit, deadline and reminders. Questions are non-leading, presuppose no
+ * position, never assert what the office does, and use plain language.
  */
 
 /**
- * The version every response records. Bumping it is a decision, never a tidy-up.
- *
- * **`v1` -> `v2`, 2026-08-25 — ONE revision carrying FOUR changes**, because a
- * version is what a symmetry claim is anchored to and four bumps would mean
- * four instruments could have been answered in one contest. The four:
- *
- * 1. The word limit goes 150 -> 200, uniformly, on every question.
- * 2. The invitation names the product **Meanwhile** rather than the repo name.
- * 3. A separated closing note offers the insights list — structurally outside
- *    the instrument, so it cannot read as a sixth question.
- * 4. The symmetry tests move with it, because a bump that leaves them behind
- *    breaks the one guarantee this instrument exists to make, silently.
- *
- * **Nothing has been sent under `v1`.** Every invitation row still carries
- * `invitedOn: null`, so no candidate has answered the old instrument and no
- * contest is split across two. Had one been sent, this bump would have been a
- * much larger decision than a constant.
+ * The version every response records. Changing the question set means a new version, so answers to
+ * different instruments never render side by side as though they were the same.
  */
 export const INSTRUMENT_VERSION = "v2";
 
@@ -76,32 +14,14 @@ export const INSTRUMENT_VERSION = "v2";
 export const INSTRUMENT_VERSION_ADOPTED = "2026-08-25";
 
 /**
- * **THE WORD LIMIT, ONE NUMBER, EVERYWHERE.**
- *
- * Identical per question, per candidate, per contest and per office class.
- * Truncation must never quietly favour the terse or the verbose, so nothing is
- * ever cut: an over-limit answer is REFUSED at submit time with its own count
- * shown, and the candidate edits it themselves. See `checkWordLimit` below.
- *
- * **150 -> 200 on 2026-08-25 (`v2`), uniformly.** Uniformly is the whole of
- * it: a limit raised on some questions and not others would be a second thing
- * that has to be argued as symmetric, and one number is not arguable.
+ * One word limit for every question, candidate, contest and office class. Nothing is ever cut: an
+ * over-limit answer is refused with its count shown (see `checkWordLimit`).
  */
 export const WORD_LIMIT = 200;
 
 /**
- * The office classes the class layer is keyed to.
- *
- * Deliberately coarse. A finer taxonomy would mean more class-specific
- * question text to keep symmetric, and the differences that matter to a
- * candidate answering are the ones between a school board, a town council, a
- * county board and a legislature — not between a borough council and a
- * township committee, which is a naming difference rather than a job
- * difference.
- *
- * `other` is a REAL class and not a failure state: an office this list does not
- * name still gets a complete five-question instrument, and the class questions
- * it gets are the ones that are true of any office at all.
+ * The office classes the class layer is keyed to. Deliberately coarse. `other` is a real class: any
+ * office still gets a complete five-question instrument.
  */
 export type OfficeClass =
   | "school_board"
@@ -137,20 +57,7 @@ export interface Question {
   layer: "core" | "class";
 }
 
-/**
- * **THE CORE — asked of every candidate for every office at every level.**
- *
- * Three questions, in the author's own order: why they are running, their top
- * priorities, and what they would work on first.
- *
- * *One deliberate deviation from the brief's phrasing, recorded so it reads as
- * a decision rather than as drift.* The brief said *"what they would change
- * first"*. A question asking what someone would CHANGE first presupposes that
- * they want to change something, which a candidate running to keep a thing
- * going cannot answer from their own position — and that is precisely the
- * non-leading standard this instrument is held to. `q3` therefore asks what
- * they would WORK ON first, which admits both answers and loses nothing.
- */
+/** The core, asked of every candidate for every office. */
 export const CORE_QUESTIONS: readonly Question[] = [
   {
     id: "q1_why_running",
@@ -173,22 +80,8 @@ export const CORE_QUESTIONS: readonly Question[] = [
 ] as const;
 
 /**
- * **THE CLASS LAYER — two questions, keyed to the office class.**
- *
- * Both ASK. Neither tells the candidate what the office does, and neither
- * contains a list of powers: a preamble reading *"county governments decide the
- * budget, the roads and the jail"* would be an unsourced claim about a class of
- * body, and this product does not make those even inside a question.
- *
- * `q4` differs only in the office noun, which is the honest amount of
- * difference there is: *what do you think this job is* is the same question
- * everywhere and the noun is what changes.
- *
- * `q5` is where the class layer earns its place. Every governing body sits
- * somewhere on a scale between the part it serves and the whole it belongs to,
- * and WHICH part and WHICH whole is genuinely different for a school board, a
- * council, a county board and a legislature. The question presupposes only that
- * both scales exist, which is definitionally true of each of them.
+ * The class layer: two questions keyed to the office class. Both ask; neither tells the candidate what
+ * the office does.
  */
 export const CLASS_QUESTIONS: Readonly<Record<OfficeClass, readonly Question[]>> = {
   school_board: [
@@ -320,12 +213,8 @@ export const CLASS_QUESTIONS: Readonly<Record<OfficeClass, readonly Question[]>>
 } as const;
 
 /**
- * The whole instrument one candidate is asked, in reading order.
- *
- * **Every candidate for the same office class gets the identical array.** There
- * is no per-candidate branch here and there never may be: a function that could
- * return a different question for two people in one contest is the asymmetry
- * this instrument exists to remove, wearing a helpful face.
+ * The whole instrument one candidate is asked, in reading order. Every candidate for the same office
+ * class gets the identical array; there is no per-candidate branch.
  */
 export function questionsFor(officeClass: OfficeClass): readonly Question[] {
   return [...CORE_QUESTIONS, ...CLASS_QUESTIONS[officeClass]];
@@ -336,14 +225,7 @@ export function allQuestions(): readonly Question[] {
   return [...CORE_QUESTIONS, ...OFFICE_CLASSES.flatMap((c) => CLASS_QUESTIONS[c])];
 }
 
-/**
- * **THE WORD COUNT, ONE DEFINITION.**
- *
- * Whitespace-separated runs. Deliberately the simplest rule that a candidate
- * can check in their own word processor and get the same answer we do — a
- * cleverer tokenizer would be a limit they cannot verify, which is a limit they
- * cannot be held to fairly.
- */
+/** Whitespace-separated runs, so a candidate can check the count in their own word processor. */
 export function countWords(answer: string): number {
   const trimmed = answer.trim();
   return trimmed === "" ? 0 : trimmed.split(/\s+/u).length;
@@ -357,15 +239,7 @@ export interface WordLimitVerdict {
   message: string | null;
 }
 
-/**
- * **NOTHING IS EVER TRUNCATED.** (RULING 112.)
- *
- * A truncating instrument quietly favours whoever writes short, and it does it
- * invisibly — the reader sees a complete-looking answer that stops. So an
- * over-limit answer is REFUSED with its own count and the limit both stated,
- * and the candidate decides what to cut. The verdict is computed as they type
- * and again at submit; there is no code path that shortens an answer.
- */
+/** Nothing is ever truncated: an over-limit answer is refused with its count and the limit both stated. */
 export function checkWordLimit(answer: string, limit: number = WORD_LIMIT): WordLimitVerdict {
   const words = countWords(answer);
   const withinLimit = words <= limit;
@@ -380,37 +254,9 @@ export function checkWordLimit(answer: string, limit: number = WORD_LIMIT): Word
 }
 
 /**
- * **THE CLOSING NOTE — SEPARATE FROM THE INSTRUMENT, AND STRUCTURALLY SO.**
- * (Added 2026-08-25 with `v2`.)
- *
- * Sean's copy, verbatim and not to be paraphrased: a paraphrase of a commercial
- * offer is a different offer.
- *
- * ## Why it is a constant HERE and not a sixth question
- *
- * It is not part of the instrument and it may never become part of it. Every
- * word in `CORE_QUESTIONS` and `CLASS_QUESTIONS` is asked identically of every
- * candidate BECAUSE symmetry is the whole claim; this is a business
- * solicitation, and a solicitation inside a symmetric instrument would let a
- * candidate read the questions as conditioned on it.
- *
- * So it lives outside both arrays, `questionsFor()` cannot return it,
- * `allQuestions()` does not contain it, and `tests/questionnaire.test.ts`
- * asserts both — because "structurally distinct" is a claim, and the way to
- * make it checkable is that the function producing the instrument literally
- * cannot produce this.
- *
- * ## What is deliberately NOT in the text
- *
- * **No timing promise, anywhere.** Not in this copy, not in the confirmation,
- * not in the ledger. *If you'd like to hear when insights for your race are
- * available* is a conditional on availability, not a commitment to a date, and
- * nothing downstream may add one — a date we then miss is worse than no date,
- * and this is a message to a candidate in a live election.
- *
- * The list is stored BUSINESS-SIDE. It is not reader data, it does not touch
- * the search log or the reactions store, and it shares no joinable column with
- * either (RULING 132).
+ * The closing note. Kept outside the instrument: `questionsFor()` and `allQuestions()` never return it.
+ * The text is verbatim and makes no timing promise. The list it offers is stored business-side and
+ * shares no joinable column with the search log or reactions store.
  */
 export const CLOSING_NOTE =
   "One more thing, separate from the questionnaire: Meanwhile offers campaigns " +

@@ -1,16 +1,5 @@
 "use client";
 
-/**
- * **THE PREVIEW EVERY CHANGE GOES THROUGH.**
- *
- * Shows what the action affects, local or whole system ("Whole system · affects
- * every state" in amber), selected versus all matching, cost and undo.
- * Send is focused on open; Escape closes; focus is kept inside the
- * dialog and returns to the control that opened it. Send is one action: the
- * idempotency key is fixed when the dialog opens, and the button turns off the
- * moment it is pressed, so a double click or a retried request is one send.
- */
-import { easternLocalToIso as parseEasternTime } from "@/lib/control-plane/eastern-time.ts";
 import { useEffect, useId, useRef, useState } from "react";
 
 import type { ActionDef, Preview } from "./actions.ts";
@@ -23,8 +12,6 @@ export interface DialogSend {
   readonly words: string;
   readonly amount: string;
   readonly selected: readonly string[];
-  readonly fields?: Readonly<Record<string,string>>;
-  readonly startAt?: string;
   readonly when?: OrderWhen;
 }
 
@@ -32,7 +19,6 @@ export function ActionDialog(props: {
   readonly def: ActionDef;
   readonly preview: Preview;
   readonly mode: "live" | "sample";
-  /** The eligibility reason, re-checked live while the dialog is open. */
   readonly blocked: string | null;
   readonly afterOrders?: readonly {id:string;label:string}[];
   readonly onSend: (send: DialogSend) => void;
@@ -47,7 +33,6 @@ export function ActionDialog(props: {
   const [words, setWords] = useState("");
   const [amount, setAmount] = useState(preview.amount?.initial ?? "");
   const [unticked, setUnticked] = useState<ReadonlySet<string>>(new Set());
-  const [fields,setFields] = useState<Readonly<Record<string,string>>>(Object.fromEntries((preview.fields ?? []).map(f=>[f.key,f.initial])));
   const [startTime,setStartTime] = useState("");
   const [whenMode,setWhenMode] = useState<WhenMode>("now");
   const [afterOrder,setAfterOrder] = useState("");
@@ -68,7 +53,7 @@ export function ActionDialog(props: {
   const chosen = preview.options?.find((o) => o.id === option) ?? null;
   const needOption = !!preview.options?.length && !chosen;
   const whenInvalid = offersWhen && timing===null ? "Choose when this order should run." : null;
-  const invalid = whenInvalid ?? (option === "schedule" && !parseEasternTime(startTime) ? "Choose a valid Eastern date and time." : preview.invalid?.({ option, words, amount, selected: selected.length }) ?? null);
+  const invalid = whenInvalid ?? preview.invalid?.({ option, words, amount, selected: selected.length }) ?? null;
   const reason = props.blocked ?? (chosen?.blocked ?? null) ?? invalid;
   const off = sent || needOption || !!reason;
   const global = preview.level === "global";
@@ -77,7 +62,7 @@ export function ActionDialog(props: {
   const send = () => {
     if (off) return;
     setSent(true);
-    props.onSend({ option, words, amount, selected, fields, ...(offersWhen && timing ? {when:timing} : {}), ...(option === "schedule" ? {startAt:parseEasternTime(startTime)!} : {}) });
+    props.onSend({ option, words, amount, selected, ...(offersWhen && timing ? {when:timing} : {}) });
   };
 
   const onKeyDown = (e: React.KeyboardEvent) => {
@@ -133,12 +118,6 @@ export function ActionDialog(props: {
           </fieldset>
         )}
 
-        {option === "change" && preview.fields?.map(field => <label key={field.key} className={s.stack}>
-          <span className={s.small}>{field.label}</span>
-          {field.kind === "boolean" ? <select className={s.select} value={fields[field.key]} onChange={e=>setFields(v=>({...v,[field.key]:e.target.value}))}><option value="true">On</option><option value="false">Off</option></select>
-            : <input className={s.input} type={field.kind === "number" ? "number" : "text"} value={fields[field.key]} onChange={e=>setFields(v=>({...v,[field.key]:e.target.value}))}/>}
-        </label>)}
-        {option === "schedule" && preview.schedule && <label className={s.stack}><span className={s.small}>Send at (Eastern time)</span><input className={s.input} type="datetime-local" value={startTime} onChange={e=>setStartTime(e.target.value)}/></label>}
         {offersWhen && <fieldset className={s.stack} style={{border:0,padding:0}}><legend>When</legend>
           <select className={s.select} aria-label="When" value={whenMode} onChange={e=>setWhenMode(e.target.value as WhenMode)}>
             <option value="now">Start now</option><option value="at">At a time</option><option value="after">After another order</option><option value="repeat">Repeat</option><option value="finish-by">Finish by a date</option>
@@ -157,7 +136,7 @@ export function ActionDialog(props: {
 
         {showWords && (
           <label className={s.stack} style={{ gap: 4 }}>
-            <span className={s.small}>{chosen?.ownWords ? chosen.wordsLabel ?? "Note" : "Add a note (optional)"}</span>
+            <span className={s.small}>{chosen?.ownWords ? "Note" : "Add a note (optional)"}</span>
             <textarea className={s.textarea} value={words} maxLength={1000} onChange={(e) => setWords(e.target.value)} />
           </label>
         )}

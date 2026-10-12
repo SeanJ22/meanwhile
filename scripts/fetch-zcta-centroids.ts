@@ -22,7 +22,7 @@ import { dirname, join } from "node:path";
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
 import { fileURLToPath } from "node:url";
-import { inflateRawSync } from "node:zlib";
+import { readZipEntries } from "../lib/sources/archive.ts";
 
 const VINTAGE = "2020";
 const SOURCE_URL = `https://www2.census.gov/geo/docs/maps-data/data/gazetteer/${VINTAGE}_Gazetteer/${VINTAGE}_Gaz_zcta_national.zip`;
@@ -44,44 +44,11 @@ interface CentroidFile {
   centroids: Record<string, [number, number]>;
 }
 
-/**
- * Minimal ZIP reader: locate the end-of-central-directory record, walk the
- * central directory, and inflate the first stored entry. Enough for a Census
- * archive that holds exactly one text file, and it keeps this script
- * dependency-free.
- */
+/** The Gazetteer release must contain exactly one complete text member. */
 function extractSingleFile(zip: Buffer): string {
-  const EOCD_SIGNATURE = 0x06054b50;
-  const LOCAL_SIGNATURE = 0x04034b50;
-
-  let eocd = -1;
-  for (let i = zip.length - 22; i >= 0; i--) {
-    if (zip.readUInt32LE(i) === EOCD_SIGNATURE) {
-      eocd = i;
-      break;
-    }
-  }
-  if (eocd === -1) throw new Error("Not a zip archive: no end-of-central-directory record.");
-
-  const centralDirOffset = zip.readUInt32LE(eocd + 16);
-
-  // First central directory entry describes the file we want.
-  const compressionMethod = zip.readUInt16LE(centralDirOffset + 10);
-  const compressedSize = zip.readUInt32LE(centralDirOffset + 20);
-  const localHeaderOffset = zip.readUInt32LE(centralDirOffset + 42);
-
-  if (zip.readUInt32LE(localHeaderOffset) !== LOCAL_SIGNATURE) {
-    throw new Error("Corrupt zip: local file header signature mismatch.");
-  }
-
-  const nameLength = zip.readUInt16LE(localHeaderOffset + 26);
-  const extraLength = zip.readUInt16LE(localHeaderOffset + 28);
-  const dataStart = localHeaderOffset + 30 + nameLength + extraLength;
-  const data = zip.subarray(dataStart, dataStart + compressedSize);
-
-  if (compressionMethod === 0) return data.toString("latin1");
-  if (compressionMethod === 8) return inflateRawSync(data).toString("latin1");
-  throw new Error(`Unsupported zip compression method: ${compressionMethod}`);
+  const entries = readZipEntries(zip, { maxEntries: 1, maxMemberBytes: 32 * 1024 * 1024, maxTotalBytes: 32 * 1024 * 1024 });
+  if (entries.length !== 1) throw new Error("Gazetteer ZIP must contain exactly one member.");
+  return entries[0].data.toString("latin1");
 }
 
 /**

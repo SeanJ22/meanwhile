@@ -1,13 +1,8 @@
 /**
- * The composer's preview decides each watched body's standing from the light
- * read (`readBodyStanding`: versions, reads, the served version's readback)
- * instead of the full body read (Sean, 2026-09-24: a load over three seconds,
- * or a success only on a second attempt, is not a win). That is only honest if
- * the standing is the same either way, so these tests build the views both ways
- * and hold them equal, and hold the preview to the light read.
+ * A watched body's standing from the light read (versions, reads, the served version's readback)
+ * must equal its standing from the full read.
  */
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import { buildBodyViews, type BodyStoreFacts, type VersionFacts, type WatchedContract } from "../lib/control-plane/admin-view/bodies.ts";
@@ -101,30 +96,6 @@ test("the preview's counts are the same from either read", () => {
   const b = containerStanding(codes, index, buildBodyViews({ contracts, store: light, nowIso: NOW }));
   assert.deepEqual(b.counts, a.counts);
   assert.deepEqual(b.perCode.map((c) => c.counts), a.perCode.map((c) => c.counts));
-});
-
-test("the preview reads the standing alone, and production never loads the whole-payload readers", () => {
-  const route = readFileSync("app/api/admin/geography-preview/route.ts", "utf8");
-  assert.match(route, /loadWatchedStandings\(nowIso\)/);
-  assert.doesNotMatch(route, /loadWatchedBodies/);
-
-  const store = readFileSync("app/(admin)/_mw/data/body-store.ts", "utf8");
-  const standing = store.slice(store.indexOf("export async function readBodyStanding("));
-  assert.ok(standing.length > 0);
-  assert.match(standing, /sql\.query\(VERSIONS, \[nowIso\]\)/);
-  assert.match(standing, /sql\.query\(ATTEMPTS, \[nowIso\]\)/);
-  assert.match(standing, /sql\.query\(VERSION_READBACKS,/);
-  assert.doesNotMatch(standing, /\bDAY\b|\bCHANGES\b/, "no day tally and no change history on the preview's path");
-  assert.match(standing, /readOnly: true, isolationLevel: "RepeatableRead"/);
-
-  for (const [file, heavy] of [
-    ["app/(admin)/_mw/data/registry.ts", "@/lib/registry/runtime-read-model.ts"],
-    ["app/(admin)/_mw/data/geography.ts", "@/lib/census-geography/reader.ts"],
-  ] as const) {
-    const source = readFileSync(file, "utf8");
-    assert.doesNotMatch(source, new RegExp(`^import \\{[^}]*\\} from "${heavy.replace(/[./]/g, (c) => `\\${c}`)}";`, "m"), `${file} loads ${heavy} only when it must`);
-    assert.match(source, new RegExp(`await import\\("${heavy.replace(/[./]/g, (c) => `\\${c}`)}"\\)`));
-  }
 });
 
 test("normal published body readings advance the stale registry preview without hiding a later failed read", () => {

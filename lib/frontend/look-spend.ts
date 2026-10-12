@@ -1,17 +1,13 @@
 /**
- * **THE LOOK REVIEWER'S MODEL CALL, UNDER THE OWNER'S SPEND CONTROLS.** (FE-21.)
+ * The look reviewer's model call and spend reservation, for the runner.
  *
- * The look reviewer (FE-20) runs only when the caller hands it a model call
- * and a spend reservation. These are those two, for the runner:
- *
- *   reserve   refuses when Admin's settings cannot be read, when the owner has
- *             paused research or the runner, when the rolling model spend
- *             cannot be measured, or when this review would cross the rolling
- *             ceiling Admin sets (the same dial and window the research lane
- *             obeys). Nothing here raises or bypasses that dial.
- *   call      one request to the model with the screenshots, metered into the
- *             cost ledger like every other model call, so the review's own
- *             spend counts against the same ceiling.
+ *   reserve   refuses when Admin's settings cannot be read, when research or
+ *             the runner is paused, when rolling model spend cannot be
+ *             measured, or when this review would cross the rolling ceiling
+ *             Admin sets. Nothing here raises or bypasses that dial.
+ *   call      one metered model request with the screenshots, counted against
+ *             the same ceiling; through the Message Batches API when that lane
+ *             is on, else one Messages request.
  */
 import { randomUUID } from "node:crypto";
 
@@ -19,6 +15,7 @@ import { ZERO_COST } from "../control-plane/attempt.ts";
 import { costEntryWithModel, modelRequestBoundFor } from "../control-plane/cost.ts";
 import { resolveRollingCeiling } from "../control-plane/fleet-safety.ts";
 import { ADMIN_CONFIG_ID, adminConfigForPaidWork, fleetSpendCeilingOverrideUsd } from "../control-plane/gateway/admin-config.ts";
+import { batchEnabledForJob, MESSAGE_BATCHES_ENDPOINT, readMessageBatchResults, retrieveMessageBatch, submitMessageBatch, type MessageBatch } from "../control-plane/model-batch.ts";
 import { meteredCostFields, priceMeteredUsage, readMeteredUsage } from "../control-plane/model-cost.ts";
 import { recordCost } from "../control-plane/repository/coordinator.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
@@ -76,8 +73,45 @@ function plainSchema(value: unknown): unknown {
   return Object.fromEntries(Object.entries(value).filter(([k]) => k !== "minLength" && k !== "maxLength").map(([k, v]) => [k, plainSchema(v)]));
 }
 
+export interface LookCallOptions {
+  readonly env?: Readonly<Record<string, string | undefined>>;
+  /** How often to ask whether the batch ended. */
+  readonly pollIntervalMs?: number;
+  /** How long a batched review may wait before it is canceled and the screens stay "not judged". */
+  readonly batchWaitMs?: number;
+  readonly sleep?: (ms: number) => Promise<void>;
+}
+
+export const LOOK_BATCH_WAIT_MS = 60 * 60_000;
+
+type LookMessage = { model?: string; usage?: unknown; content?: { type: string; text?: string }[] };
+
+/** One request through the Batches API. A batch that outlasts its wait is canceled, so an unread review is not left running. */
+async function lookBatchRequest(apiKey: string, customId: string, params: Record<string, unknown>, fetchImpl: typeof fetch,
+  options: LookCallOptions): Promise<LookMessage> {
+  const sleep = options.sleep ?? ((ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms)));
+  const started = Date.now();
+  let batch: MessageBatch = await submitMessageBatch(apiKey, [{ custom_id: customId, params }], fetchImpl);
+  while (batch.processing_status !== "ended") {
+    if (Date.now() - started > (options.batchWaitMs ?? LOOK_BATCH_WAIT_MS)) {
+      await fetchImpl(`${MESSAGE_BATCHES_ENDPOINT}/${encodeURIComponent(batch.id)}/cancel`, {
+        method: "POST", headers: { "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
+      }).catch(() => undefined);
+      throw new Error(`LOOK_REVIEW_BATCH_TIMEOUT ${batch.id}`);
+    }
+    await sleep(options.pollIntervalMs ?? 30_000);
+    batch = await retrieveMessageBatch(apiKey, batch.id, fetchImpl);
+  }
+  if (!batch.results_url) throw new Error(`LOOK_REVIEW_BATCH_NO_RESULTS ${batch.id}`);
+  const mine = (await readMessageBatchResults(apiKey, batch.results_url, fetchImpl)).find((r) => r.custom_id === customId);
+  if (mine?.result.type !== "succeeded") throw new Error(`LOOK_REVIEW_BATCH_${(mine?.result.type ?? "missing").toUpperCase()} ${batch.id}`);
+  return mine.result.message as LookMessage;
+}
+
 /** The model call the reviewer is handed: screenshots and prompt in, the model's JSON text out, the bill in the ledger. */
-export function lookModelCall(repos: ControlPlaneRepositories, apiKey: string, fetchImpl: typeof fetch = fetch): NonNullable<LookReviewDeps["callModel"]> {
+export function lookModelCall(repos: ControlPlaneRepositories, apiKey: string, fetchImpl: typeof fetch = fetch,
+  options: LookCallOptions = {}): NonNullable<LookReviewDeps["callModel"]> {
+  const batched = batchEnabledForJob("background-worker-audit", "AUDIT_SAMPLE", options.env ?? process.env);
   return async ({ prompt, schema, images }) => {
     const attemptId = `look-review-${randomUUID()}`;
     const started = performance.now();
@@ -88,27 +122,33 @@ export function lookModelCall(repos: ControlPlaneRepositories, apiKey: string, f
       ]),
       { type: "text", text: "Judge the screens above, in the order shown, using the label given before each." },
     ];
-    const body = JSON.stringify({
+    const params = {
       model: LOOK_MODEL, max_tokens: LOOK_MAX_TOKENS, system: prompt,
       output_config: { format: { type: "json_schema", schema: plainSchema(schema) } },
       messages: [{ role: "user", content }],
-    });
+    };
     let status: number | null = null;
-    let parsed: { model?: string; usage?: unknown; content?: { type: string; text?: string }[] } | null = null;
+    let resultKind: string | null = null;
+    let parsed: LookMessage | null = null;
     try {
-      const response = await fetchImpl("https://api.anthropic.com/v1/messages", {
-        method: "POST", signal: AbortSignal.timeout(180_000),
-        headers: { "content-type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
-        body,
-      });
-      status = response.status;
-      parsed = await response.json().catch(() => null);
-      if (!response.ok) throw new Error(`LOOK_REVIEW_HTTP_${response.status}`);
+      if (batched) {
+        try { parsed = await lookBatchRequest(apiKey, attemptId, params, fetchImpl, options); resultKind = "BATCH_SUCCEEDED"; }
+        catch (error) { resultKind = "BATCH_FAILED"; throw error; }
+      } else {
+        const response = await fetchImpl("https://api.anthropic.com/v1/messages", {
+          method: "POST", signal: AbortSignal.timeout(180_000),
+          headers: { "content-type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
+          body: JSON.stringify(params),
+        });
+        status = response.status;
+        parsed = await response.json().catch(() => null);
+        if (!response.ok) throw new Error(`LOOK_REVIEW_HTTP_${response.status}`);
+      }
       const text = parsed?.content?.find((b) => b.type === "text")?.text;
       if (typeof text !== "string") throw new Error("LOOK_REVIEW_NO_TEXT");
       return text;
     } finally {
-      const metering = readMeteredUsage(parsed?.usage);
+      const metering = readMeteredUsage(parsed?.usage, batched);
       const served = typeof parsed?.model === "string" ? parsed.model : null;
       const model = served ?? LOOK_MODEL;
       const recordedAt = new Date().toISOString();
@@ -117,7 +157,7 @@ export function lookModelCall(repos: ControlPlaneRepositories, apiKey: string, f
         attemptId, workItemId: "look-review", routeTaskId: null, routeId: "look-review", source: "api.anthropic.com",
         jurisdiction: null, project: "pilot-health", role: "VALIDATOR", requestedModel: LOOK_MODEL, servedModel: served,
         ...(bound ? { modelRequestBound: bound } : {}),
-        resultKind: status === null ? "TRANSPORT_UNMEASURED" : `HTTP_${status}`, recordedAt,
+        resultKind: resultKind ?? (status === null ? "TRANSPORT_UNMEASURED" : `HTTP_${status}`), recordedAt,
         cost: { ...ZERO_COST, ...meteredCostFields(metering),
           inputTokens: metering.uncachedInputTokens === null ? null
             : metering.uncachedInputTokens + (metering.cacheReadInputTokens ?? 0) + (metering.cacheCreationInputTokens ?? 0),

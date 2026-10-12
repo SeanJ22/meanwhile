@@ -1,19 +1,7 @@
 import { activeWiring, type BodySourceWiring } from "../registry/source-wiring.ts";
 import type { CoveredBody } from "../registry/coverage.ts";
 
-/**
- * Which bodies at this point publish no past meetings, and why (M58).
- *
- * The rule this exists to keep: **a Concluded surface is never silently
- * empty.** Either the jurisdiction has concluded meetings and they render,
- * or it does not and the reader is told which body's system is the reason.
- * An empty list with no explanation reads as a claim about a government —
- * "this council does not meet" — when the truth is a fact about a vendor's
- * feed, and CLAUDE.md's honesty-about-coverage-gaps exception is one of the
- * exactly four kinds of friction allowed to survive.
- *
- * Keyed by `bodyId`, never by name (the universal-join-key rule).
- */
+/** Bodies whose route publishes no past meetings, so an empty Concluded surface is never silent. Keyed by `bodyId`. */
 
 export interface HistoryGap {
   bodyId: string;
@@ -23,7 +11,7 @@ export interface HistoryGap {
   reason: string;
 }
 
-/** Built from the doors in use, and rebuilt when a pass installs a different list (DB-15). */
+/** Built from the doors in use, and rebuilt when a pass installs a different list. */
 let gapsFor: { readonly wiring: readonly BodySourceWiring[]; readonly gaps: ReadonlyMap<string, HistoryGap> } | null = null;
 
 function gapsByBodyId(): ReadonlyMap<string, HistoryGap> {
@@ -53,48 +41,18 @@ export function allHistoryGaps(): HistoryGap[] {
   return [...gapsByBodyId().values()];
 }
 
-/**
- * The gaps that apply to the bodies covering the reader's point.
- *
- * Coverage bodies come from the registry and carry the same `bodyId` the
- * wiring rows do, so this is an id join and cannot drift on a renamed board.
- */
+/** The body's history gap, read on the server from the doors installed there and sent with the body. */
+export function historyGapFor(bodyId: string): HistoryGap | null {
+  return gapsByBodyId().get(bodyId) ?? null;
+}
+
 export function historyGapsFor(
   bodies: readonly Pick<CoveredBody, "bodyId">[],
 ): HistoryGap[] {
-  const out: HistoryGap[] = [];
-  for (const body of bodies) {
-    const gap = gapsByBodyId().get(body.bodyId);
-    if (gap) out.push(gap);
-  }
-  return out;
+  return bodies.flatMap((body) => historyGapFor(body.bodyId) ?? []);
 }
 
-/**
- * The sentence the empty Concluded surface renders, or null when there is
- * nothing honest to add.
- *
- * Null in two cases, and they are different facts: the reader is not asking
- * about the past at all, or every body here does publish its history and the
- * emptiness is a real "nothing in the last 90 days" — which the caller's own
- * copy already covers.
- */
-export function concludedGapNote(
-  askingForConcluded: boolean,
-  bodies: readonly Pick<CoveredBody, "bodyId">[],
-): string | null {
-  return concludedGapNoteFor(askingForConcluded, historyGapsFor(bodies));
-}
-
-/**
- * The same sentence, built from gaps the caller already has.
- *
- * Split out on 2026-08-15 because M59 closed the last two gaps and the wiring
- * rows now record none — which left the note's own behaviour untestable
- * through the registry. It is not dead code: it is the machinery that keeps a
- * Concluded surface from being silently empty, and the next unwired vendor
- * will need it. Testing it directly is how it survives the interval.
- */
+/** The sentence the empty Concluded surface renders, or null when there is nothing honest to add. */
 export function concludedGapNoteFor(
   askingForConcluded: boolean,
   gaps: readonly HistoryGap[],

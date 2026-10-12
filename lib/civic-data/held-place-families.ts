@@ -29,7 +29,6 @@ import { composeCampaignLinks, derivedCampaignSitesProjectionIssue, DERIVED_CAMP
   type DerivedCampaignSitesProjection, type DerivedCampaignSiteRecord } from "./derived-campaign-sites.ts";
 import { FRESHNESS_HOURS } from "../coverage/checklist-map.ts";
 
-/** Canonical published families, plus the existing explicitly adopted election calendars. */
 export interface HeldPlaceFamilies {
   readonly rosters?: readonly OfficeholderSet[];
   readonly ballots?: readonly BallotSet[];
@@ -45,7 +44,6 @@ export interface HeldPlaceFamilies {
   readonly derivedCampaignSites?: readonly DerivedCampaignSiteRecord[];
 }
 
-/** The same exact ballot-to-Reader plan the campaign publisher uses. */
 function candidatePlan(divisionIds: readonly string[], ballots: readonly BallotSet[], lineups: readonly LineupContest[]) {
   const groups = new Map<string, BallotSet[]>();
   for (const ballot of ballots) {
@@ -172,7 +170,6 @@ export function projectHeldPlaceFamilies(divisionIds: readonly string[], registr
     if (holder.email || holder.phone || holder.contactFormUrl) add("OFF-09", { email: holder.email, phone: holder.phone, contactFormUrl: holder.contactFormUrl });
     if (holder.partyLabel && row.partySourceUrl) field(holder.id, "OFF-11", holder.partyLabel, row.partySourceUrl, row.collectedAt, FRESHNESS_HOURS.registryRecord);
   }
-  // Exact membership/candidacy bridges also let a finance target reach every served division.
   for (const body of registry?.registry.bodies ?? []) {
     const divisions = [body.ocdId, ...(body.alsoServesOcdIds ?? [])].filter((id): id is string => id !== null);
     if (!divisions.some(id => wanted.has(id))) continue;

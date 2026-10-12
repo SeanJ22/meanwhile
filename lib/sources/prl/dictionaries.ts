@@ -1,14 +1,10 @@
 import { PRL_FORBIDDEN_COLUMN_PATTERN } from "./types.ts";
 
 /**
- * **What each PRL dictionary says its fields mean** — read off the five
- * committed `tests/fixtures/prl/*-meta.csv` files on 2026-09-17.
- *
- * The raw CSVs are the truth; this module encodes only what the ingestion
- * depends on — the identity key, the incremental cursor, the publication date,
- * and the five classification flags — plus a loud column-presence check so a
- * moved schema stops the run instead of shipping a guess. This mirrors the
- * doctrine already in `index.ts`: a missing column fails, never infers.
+ * What each PRL dictionary says its fields mean. Encodes only what ingestion
+ * depends on — the identity key, the incremental cursor, the publication date
+ * and the five classification flags — plus a column-presence check so a moved
+ * schema stops the run instead of shipping a guess.
  */
 
 /**

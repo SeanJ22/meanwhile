@@ -5,15 +5,6 @@ import test from "node:test";
 import { measureNumber, orderMeasures } from "../lib/ballot/measure-order.ts";
 import type { Contest } from "../lib/ballot/types.ts";
 
-/**
- * BAL-29 — measures are presented in a neutral, stated order.
- *
- * The reported example is Proposition 425 above Proposition 423 at 85641. The
- * controls that matter are the ones the reported example does NOT exercise:
- * the three-digit-versus-two-digit case a string sort gets wrong, and an
- * authority-published order, which must beat the number.
- */
-
 const contest = (id: string, title: string, ballotOrder?: number): Contest & { ballotOrder?: number } =>
   ({
     id,
@@ -24,12 +15,9 @@ const contest = (id: string, title: string, ballotOrder?: number): Contest & { b
     divisionVintage: "2020",
     voteFor: 1,
     termYears: null,
-    // Only present when the authority published one, so the absence is the
-    // real absence and not a zero.
+    // Present only when the authority published one, so absence is not a zero.
     ...(ballotOrder === undefined ? {} : { ballotOrder }),
   }) as Contest & { ballotOrder?: number };
-
-/* --------------------------------------------------- the named example --- */
 
 test("BAL-29: Proposition 423 precedes 425, the reported regression", () => {
   const ordered = orderMeasures([
@@ -57,17 +45,12 @@ test("BAL-29: the real Pima measure set comes out ascending", () => {
     "measures must come out in ascending proposition order",
   );
 
-  // And the file itself is still out of order, so this test is measuring the
-  // repair rather than a property the data happened to already have.
+  // The file itself is out of order, so this measures the sort, not the data.
   const asFiled = measures.map((m) => measureNumber(m));
   assert.notDeepEqual(asFiled, numbers, "the curated file order is not sorted");
 });
 
-/* ------------------------------------------------ the unnamed controls --- */
-
 test("BAL-29 control: three digits never sort before two", () => {
-  // The failure a lexicographic sort would introduce, and the reason the
-  // number is parsed rather than the title compared.
   const ordered = orderMeasures([
     contest("x:prop-100", "Proposition 100: Something"),
     contest("x:prop-20", "Proposition 20: Something else"),
@@ -75,7 +58,6 @@ test("BAL-29 control: three digits never sort before two", () => {
   ]);
   assert.deepEqual(ordered.map(measureNumber), [9, 20, 100]);
 
-  // Stated explicitly: this is what the naive repair would have produced.
   const lexicographic = [...ordered]
     .map((m) => m.title)
     .sort();
@@ -91,9 +73,7 @@ test("BAL-29 control: a published ballot order beats the number", () => {
 });
 
 test("BAL-29 control: authority-placed measures stay ahead of unplaced ones", () => {
-  // A partial official order is still official for the part it covers, and
-  // guessing where an unplaced measure belongs inside it would be inventing a
-  // ballot.
+  // Guessing where an unplaced measure belongs inside an official order would invent a ballot.
   const ordered = orderMeasures([
     contest("x:prop-500", "Proposition 500: unplaced"),
     contest("x:prop-9", "Proposition 9: placed second", 2),
@@ -117,8 +97,6 @@ test("BAL-29 control: an unnumbered question keeps a stable place, never a rando
     ],
   );
 });
-
-/* -------------------------------------------------------- completeness --- */
 
 test("BAL-29: ordering never drops or duplicates a measure", () => {
   const input = [

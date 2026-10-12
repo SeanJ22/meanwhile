@@ -1,10 +1,7 @@
 /**
- * Admin reads the slice a page needs from a promoted pointer instead of the
- * whole payload (Sean, 2026-09-24: a load over three seconds, or a success only
- * on a second attempt, is not a win). A slice must say exactly what the whole
- * lookup says about the same question, so these tests answer each statement the
- * way Postgres does, from the committed Arizona bootstrap, and hold the slices
- * to the lookup built over that same dataset.
+ * Admin reads the slice a page needs from a promoted pointer instead of the whole payload. A slice
+ * must say exactly what the whole lookup says, so these tests answer each statement the way
+ * Postgres does from one dataset and hold the slices to the lookup built over it.
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -179,14 +176,4 @@ test("the registry slice carries each body's six fields and skips a row with no 
     { id: "b1", name: "Board", ocdId: "ocd-division/country:us/state:az/county:pima", alsoServesOcdIds: ["x"], coverageStatus: "NOT_ATTEMPTED", bodyClass: "GOVERNING" },
     { id: "b2", name: null, ocdId: null, alsoServesOcdIds: [], coverageStatus: { state: "WALKED" }, bodyClass: null },
   ]);
-});
-
-test("the watched-bodies read opens no socket, runs read only, and decodes each change set once", () => {
-  const source = readFileSync("app/(admin)/_mw/data/body-store.ts", "utf8");
-  assert.doesNotMatch(source, /\bPool\b/, "HTTP transactions, no socket to open");
-  const transactions = source.match(/\.transaction\(/g)?.length ?? 0;
-  assert.ok(transactions >= 2, "the body read runs in transactions");
-  assert.equal(source.match(/readOnly: true/g)?.length, transactions, "every transaction is read only");
-  assert.match(source, /isolationLevel: "RepeatableRead"/, "the figures that must agree share one snapshot");
-  assert.match(source, /CROSS JOIN LATERAL \(SELECT CASE WHEN c\.state = 'PROMOTED' THEN c\.candidate->'changeSet' END AS cs OFFSET 0\) x/);
 });

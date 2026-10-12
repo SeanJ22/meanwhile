@@ -4,17 +4,6 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
-/**
- * **THE NATIONAL ZIP INDEX HOLDS EVERY ZIP, ONCE, AND KEEPS WHAT THE OLD ONE
- * GAVE.** (2026-09-23; `scripts/build-zip-division-shards.mts`.)
- *
- * Sean's direction is to track everywhere without a code change. These pin the
- * index that makes a code's governments known anywhere: every ZCTA the national
- * lattice sampled is in exactly the shard of its two-digit prefix, each shard
- * is what the index says it is, and the three-state index's ZIPs keep every
- * division the committed geometry still carries.
- */
-
 const ROOT = join(import.meta.dirname, "..");
 const DIR = join(ROOT, "data", "derived", "zip-divisions");
 
@@ -74,7 +63,6 @@ test("every ZIP the national lattice sampled is in exactly its prefix's shard, a
 });
 
 test("a code resolves to its governments anywhere, and the three-state index's ZIPs keep what the committed geometry carries", () => {
-  // Outside the three pilot states, where the old index held nothing.
   const columbus = divisionsOf("43215");
   assert.ok(columbus.includes("ocd-division/country:us/state:oh/county:franklin"));
   assert.ok(columbus.includes("ocd-division/country:us/state:oh/place:columbus"));
@@ -82,7 +70,6 @@ test("a code resolves to its governments anywhere, and the three-state index's Z
   assert.deepEqual(index.statesToShards.OH.length > 0, true);
   assert.equal(Object.keys(index.statesToShards).length, 56, "every state, DC and the territories the lattice reached");
 
-  // The pilot ZIPs, as the reader knows them.
   const rockaway = divisionsOf("07866");
   for (const id of [
     "ocd-division/country:us/state:nj/county:morris",
@@ -93,7 +80,6 @@ test("a code resolves to its governments anywhere, and the three-state index's Z
   assert.ok(divisionsOf("03255").includes("ocd-division/country:us/state:nh/county:merrimack/place:newbury_town"));
   assert.ok(divisionsOf("85701").includes("ocd-division/country:us/state:az/place:tucson"));
 
-  // The three-state index this replaced, frozen as the baseline the build also refuses to lose from.
   const old = JSON.parse(readFileSync(join(ROOT, "tests", "fixtures", "zip-division-ids-three-state.json"), "utf8")) as { zips: Record<string, string[]> };
   for (const [zip, ids] of Object.entries(old.zips)) {
     const now = new Set(divisionsOf(zip));

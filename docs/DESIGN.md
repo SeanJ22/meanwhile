@@ -545,8 +545,7 @@ dropped entirely under `prefers-contrast: more`. The border-crossing prompt
 does all the communicating.
 
 **Where the pieces live.** `lib/map/state-focus.ts` (the edge layers and the
-point-in-polygon), `components/map/state-focus-overlay.tsx` (the scrim and
-its even-odd clip), `.state-focus-*` in `app/globals.css`,
+point-in-polygon), `.state-focus-*` in `app/globals.css`,
 `hooks/use-state-focus.ts` (activation and crossing). Geometry is Census
 TIGERweb, generalized — it decides pixels and never answers a question.
 

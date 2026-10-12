@@ -1,33 +1,13 @@
 import { officeIdentity } from "@/lib/officials/office-identity";
 import type { OcdId } from "@/lib/sources/types";
 
-/**
- * Which tier of government an OCD division belongs to.
- *
- * The view toggle filters everything on this axis, which is why it works with
- * one join rather than per-surface logic: a meeting, a district, a body and an
- * officeholder all carry an OCD-ID, and the tier falls out of the identifier.
- *
- * The mapping is an explicit table, the same way lib/ocd/fips.ts holds FIPS
- * codes as a literal. **Never derive a tier by string-matching a label.**
- * "Pima County Board of Supervisors" and "Board of Supervisors" are the same
- * body; "Superior Court of Pima County" is not a county legislative body at
- * all. The identifier knows; the display name does not.
- */
+/** Which tier of government an OCD division belongs to, from an explicit table; never derived from a label. */
 
 export type Tier = "local" | "state" | "national";
 
 export const TIERS: readonly Tier[] = ["local", "state", "national"] as const;
 
-/**
- * OCD segment keys, by tier.
- *
- * A division's tier is decided by its *deepest* recognised segment, because an
- * identifier nests: `country:us/state:az/place:tucson` is local even though it
- * contains `country` and `state`. Ordered widest-first here only for reading.
- *
- * Segment vocabulary follows opencivicdata/ocd-division-ids.
- */
+/** OCD segment keys by tier. The deepest recognised segment decides. */
 export const TIER_SEGMENTS: Readonly<Record<Tier, readonly string[]>> = {
   national: [
     // The union itself, and seats in the US House.
@@ -74,15 +54,7 @@ export interface OcdSegment {
   value: string;
 }
 
-/**
- * Split an OCD-ID into its segments.
- *
- * `ocd-division/country:us/state:az/place:tucson` becomes
- * `[{country, us}, {state, az}, {place, tucson}]`. The leading
- * `ocd-division` marker carries no value and is dropped. Malformed input
- * yields an empty list rather than throwing — a bad identifier upstream should
- * render as "unknown", not take the page down.
- */
+/** Split an OCD-ID into its segments; malformed input yields an empty list. */
 export function ocdSegments(ocdId: OcdId): OcdSegment[] {
   if (typeof ocdId !== "string" || ocdId.length === 0) return [];
 
@@ -103,24 +75,12 @@ export function ocdSegments(ocdId: OcdId): OcdSegment[] {
   return segments;
 }
 
-/**
- * The tier a division belongs to, or null when nothing in it is recognised.
- *
- * Null is a real answer and callers must handle it: an unrecognised segment
- * means a source has introduced a division type this table does not know about
- * yet, and guessing would put a body under the wrong tier silently.
- */
+/** The tier a division belongs to, or null when its deepest segment is not recognised. */
 export function tierForOcdId(ocdId: OcdId): Tier | null {
   const segments = ocdSegments(ocdId);
   if (segments.length === 0) return null;
 
-  // The deepest segment decides, and only it. Walking up to the nearest
-  // recognised ancestor looks tempting and is wrong: an unknown division type
-  // would inherit its parent's tier, so a source introducing
-  // `.../state:az/water_district:avra` would be filed under State government
-  // with nothing to show that it had been guessed at. Null forces the caller
-  // to render it as unknown, which is the honest answer until the table learns
-  // the segment.
+  // Only the deepest segment decides: an unknown division type must not inherit its parent's tier.
   return SEGMENT_TIER.get(segments[segments.length - 1].key) ?? null;
 }
 
@@ -137,17 +97,7 @@ export function matchesTiers(ocdId: OcdId, tiers: readonly Tier[]): boolean {
   return tier !== null && tiers.includes(tier);
 }
 
-/**
- * Display label for a tier.
- *
- * **"Federal", never "National"** (6f2, 2026-08-15 — the last straggler).
- * The rule shipped for the officials surfaces on 2026-08-14 (M48) as words
- * typed into those components, so every surface reading THIS map kept saying
- * "National" — the district battlecards most visibly, and the tier toggle
- * that names the whole mode. The label belongs here, once, or the rule is
- * only true wherever somebody remembered it. The internal key stays
- * `national`: it is an identifier, and identifiers never render (4a).
- */
+/** Display label for a tier: "Federal", never "National". The internal key stays `national`. */
 export const TIER_LABEL: Readonly<Record<Tier, string>> = {
   local: "Local",
   state: "State",

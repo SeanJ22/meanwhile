@@ -1,17 +1,7 @@
 /**
- * **ONE LIVE-AUDIT CYCLE, CONNECTED.** (DP-13, DP-14, DP-16.)
- *
- * The runtime around `runLiveAuditPass`: it reads the week's results so a fact
- * just checked is not checked again, records every result in the live-audit log
- * (`live-audit-log.ts`), answers each red flag at once (`respondToRedFlag`: the
- * pull, the reopened work, the fix-list item, the lesson and the correction),
- * and marks FIXED the pulled facts that now audit green again.
- *
- * A fact that cannot be traced to the work that published it is never pulled
- * blind; it goes on the fix list with the reason. The curated Reader families
- * are published from manual contracts, not from work items, so until a family
- * gives a trace (`originOf`) its red flags reach the fix list and the lesson
- * store, not an automatic pull.
+ * One live-audit cycle around `runLiveAuditPass`: skip facts checked this week, record every result, answer each
+ * red flag, and mark FIXED the pulled facts that audit green again. A fact that cannot be traced to the work
+ * that published it is never pulled blind; it goes on the fix list with the reason.
  */
 import { AUDIT_POLICY_SETTING, LIVE_AUDIT_DEFAULT_POLICY, type LiveAuditPolicy } from "../audit-policy.ts";
 import { addFixItem } from "../fix-list.ts";

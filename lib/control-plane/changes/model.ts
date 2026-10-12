@@ -1,9 +1,5 @@
 /**
- * **ONE PLAIN LINE PER CHANGE, WITH WHERE IT HAS GOT TO.** (S11, rulings §0 test 5.)
- *
- * Every session ships its work as one pull request. The owner's question is not
- * "what is in GitHub" but "what is being built, what is ready to try, and what
- * is live for readers". This file turns a pull request into that answer.
+ * One plain line per pull request, with where it has got to.
  *
  * ```
  *   building    a draft, or one whose checks are still running or failing
@@ -13,7 +9,7 @@
  *               the site serves, so there is nothing to deploy)
  * ```
  *
- * PURE. No fetch, no clock, no environment.
+ * Pure. No fetch, no clock, no environment.
  */
 
 export const CHANGE_STATUSES = ["building", "on-test", "deploying", "live"] as const;
@@ -55,7 +51,7 @@ export type LiveReading = "in-live-site" | "not-yet" | "no-site-change" | "unkno
 
 export interface ChangeRow {
   readonly number: number;
-  /** "S11" and the like, or null when the title and branch name no session. */
+  /** A session id from the title or branch, or null when neither names one. */
   readonly session: string | null;
   readonly line: string;
   readonly status: ChangeStatus;
@@ -71,7 +67,7 @@ const SESSION_TITLE = /^\s*(S\d+)(?:\s+draft)?\s*[:\-–—]\s*/i;
 const SESSION_BRANCH = /(?:^|\/)(s\d+)(?:[-_/]|$)/i;
 const LINE_MAX_CHARS = 150;
 
-/** "S13", from the title when it leads with one, else from the branch name. */
+/** A session id, from the title when it leads with one, else from the branch name. */
 export function sessionOf(pr: Pick<ChangePr, "title" | "headRefName">): string | null {
   const title = SESSION_TITLE.exec(pr.title);
   if (title) return title[1].toUpperCase();

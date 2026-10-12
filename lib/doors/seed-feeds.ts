@@ -1,21 +1,15 @@
 /**
- * DB-11: the non-meeting feeds, as registry records.
- *
- * The daily automatic refresh tasks (voting sites, state money, member offices)
- * and every routine source contract (FEC, state legislators and roll calls,
- * Census, registration, outcomes, filing feeds) each get a door: a kind, a key
+ * The non-meeting feeds as registry records: the daily automatic refresh tasks
+ * and every routine source contract each get a door with a kind, a key
  * reference where the feed needs one, what it holds, and how often it is
- * checked. The registry records these doors; the runner still reads them from
- * their contracts until DB-12 and DB-14 move reading onto the registry.
- *
- * PURE: mapping only, no place names.
+ * checked. Pure mapping.
  */
 
 import { AUTOMATIC_REFRESH_CONTRACT_IDS } from "../civic-data/automatic-refresh.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../civic-data/contracts.ts";
 import { requiredManualProductionContract } from "../civic-data/manual-contracts.ts";
 import { sourceAuthority } from "../civic-data/source-authority.ts";
-import { normalizeHost, upsertDerivedDoor, type DoorDraft, type DoorRepository } from "./registry.ts";
+import { feedDoorId, normalizeHost, upsertDerivedDoor, type DoorDraft, type DoorRepository } from "./registry.ts";
 
 const MINUTE = 60_000;
 
@@ -23,7 +17,6 @@ const MINUTE = 60_000;
 const KEY_REFS: ReadonlyArray<readonly [RegExp, string]> = [
   [/fec/i, "FEC_API_KEY"],
   [/congress|federal-legislative/i, "CONGRESS_API_KEY"],
-  [/member-offices|open-states|plural/i, "PLURAL_API_KEY"],
 ];
 
 export function keyRefFor(...ids: readonly string[]): string | null {
@@ -60,7 +53,7 @@ interface FeedInput {
 function draftFor(feed: FeedInput): DoorDraft {
   const keyRef = keyRefFor(feed.id, feed.sourceId);
   return {
-    doorId: `feed:${feed.id}`,
+    doorId: feedDoorId(feed.id),
     kind: feed.authorityMode === "DERIVED" ? "derived-feed" : "source-feed",
     ocdId: null,
     bodyIds: [],

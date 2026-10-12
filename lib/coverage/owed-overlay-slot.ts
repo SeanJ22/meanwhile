@@ -1,7 +1,7 @@
 /**
- * The one slot that holds what Sean added to, or declined from, what a place is owed (see `owed-overlay.ts`). It is its own tiny
- * module so the checklist loader can read an added item's rule without importing the code that writes the record. Whoever has just
- * read the Admin config row sets it before building an owed list; the default is "nothing added, nothing declined".
+ * The slot holding Admin's additions to and declines from what a place is owed.
+ * Separate so the checklist loader can read it without importing the writer.
+ * Set it before building an owed list; the default is nothing added or declined.
  */
 import type { ChecklistItemRule } from "./checklist-map.ts";
 

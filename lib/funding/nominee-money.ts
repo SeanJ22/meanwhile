@@ -1,40 +1,13 @@
 /**
- * **THE PROJECTION LAYER: A CARD ASKS THE CORPUS ABOUT A CANDIDACY.**
- * (Session C3, 2026-09-01. RULING 229, RULING 224; filings never sold, Sean 2026-10-01.)
+ * A ballot card asks the state money corpus about a candidacy. Certified
+ * lineup nominee cards are keyed by display name; the corpus is keyed by
+ * canonical candidacy id. This resolves the card key through the precomputed
+ * certified-lineup bridge and asks with the reconciled candidacy id. It
+ * performs no name matching.
  *
- * ## The measured defect
- *
- * `app/ballot/page.tsx` keys a certified-lineup nominee's card
- * `${contestId}|${nomineeName}` and called `stateMoneyForTarget` with it. The
- * state campaign-money snapshot keys its records to canonical CANDIDACY ids. So
- * Katie Hobbs' card asked for `ballot-az-pima:governor|Katie Hobbs`, the
- * snapshot held `ballot-az-pima:governor:hobbs-katie` carrying a reconciled
- * FILED $11,109,719.95, and the card rendered *"We don't hold a campaign finance
- * filing for this person"* — a sentence about US that was FALSE about us.
- *
- * Measured on rendered DOM against a local production build of 9703dc9d,
- * 2026-09-01: **85701, 4 money states across 22 non-federal cards; 85641, 4
- * across 25.**
- *
- * ## What this file does, and the one thing it must never do
- *
- * It resolves the card key through the PRECOMPUTED bridge in
- * `data/states/az/identity/az-2026-certified-lineup-reconciliation.json` and asks the
- * corpus with the RECONCILED CANDIDACY ID. **It performs no name matching.**
- * The matching happened once, in `pnpm identity:az`, over the whole lineup
- * population, and its result is committed for a person to read. A runtime name
- * join here is the prohibited thing: this project has already watched one turn
- * five live committees into manufactured absences, and the failure in the other
- * direction puts one candidate's fundraising under their opponent's photograph.
- *
- * ## And nothing silently renders no money state (RULING 224)
- *
- * A certified nominee the bridge could not resolve does NOT fall back to the
- * card's generic *"We don't hold a campaign finance filing for this person"*,
- * which is what a candidate nobody ever looked for renders. It renders the
- * OURS-gap state — one sentence about what WE have not settled, the agency's own
- * next filing deadline, and the reader's route to look for themselves. No
- * figure, no committee name, no hedge over a number.
+ * A certified nominee the bridge could not resolve renders the OURS-gap
+ * state (what we have not settled, the agency's next filing deadline, and the
+ * reader's route to look), never the generic "no filing" line.
  */
 
 import {
@@ -95,11 +68,9 @@ function financeAuthority(): FinanceAuthority {
 }
 
 /**
- * The OURS-gap record a certified nominee renders when identity is unresolved.
- *
- * Constructed here rather than written into the finance snapshot deliberately:
- * it is a fact about the IDENTITY layer, and putting it in the money corpus
- * would make the corpus assert something about a candidacy it never observed.
+ * The OURS-gap record a certified nominee renders when identity is
+ * unresolved. Built here, not stored in the money corpus, because it is a
+ * fact about the identity layer.
  */
 export function unresolvedNomineeGapRecord(
   row: LineupReconciliationRow,
@@ -154,29 +125,22 @@ export function unresolvedNomineeGapRecord(
 }
 
 /**
- * The state-money records ONE ballot card renders.
- *
- * `cardKey` is whatever the ballot page keys that card on. A canonical candidacy
- * id passes straight through, which is what every non-lineup contest and every
- * other state does. A certified-lineup nominee key is resolved through the
- * committed bridge FIRST, and only the resolved candidacy id ever reaches
- * `stateMoneyForTarget`.
+ * The state-money records one ballot card renders. A canonical candidacy id
+ * passes straight through; a certified-lineup nominee key is resolved through
+ * the bridge first, and only the resolved id reaches `stateMoneyForTarget`.
  */
 export function stateMoneyForCard(cardKey: string, contestId: string): CardMoney {
-  // Arizona's certified-lineup bridge has no authority over another state's
-  // candidacy. Select the state/contest before opening that independent
-  // identity holding so an AZ outage cannot erase an NH or NJ finance answer.
-  if (!contestId.startsWith("ballot-az-")) {
+  // The Arizona bridge has no authority over another state's candidacy, so an
+  // Arizona outage cannot erase another state's finance answer.
+  if (!contestId.startsWith("ballot-az-") || !cardKey.includes("|")) {
     return {
       records: stateMoneyForTarget(cardKey),
       resolution: "DIRECT_CANDIDACY_KEY",
       resolvedTargetKey: cardKey,
     };
   }
-  // Certified Arizona card keys require the committed identity projection.
-  // Its absence is a failed holding read, never an invitation to ask the
-  // finance corpus with a display-name key and manufacture a no-record answer.
-  // Direct candidacy keys and other states do not depend on this bridge.
+  // A certified Arizona card key without the identity projection is a failed
+  // read, never a name-keyed corpus lookup.
   if (contestId.startsWith("ballot-az-") && cardKey.includes("|") && !azLineupReconciliation()) {
     throw new Error("Canonical Arizona candidacy identity holding unavailable");
   }
@@ -233,12 +197,8 @@ export function stateMoneyForCard(cardKey: string, contestId: string): CardMoney
   }
 
   /*
-   * RECONCILED, AND THE CORPUS HOLDS NOTHING FOR THAT CANDIDACY.
-   *
-   * The identity is settled and the money is not, which is OUR gap and not the
-   * agency's — so it renders as one rather than as silence. Falling through to
-   * an empty array here would put the card back on the generic line, which is
-   * the exact sentence this file was written to stop.
+   * Reconciled, and the corpus holds nothing for that candidacy: our gap,
+   * rendered as one rather than as the generic line.
    */
   return {
     records: [

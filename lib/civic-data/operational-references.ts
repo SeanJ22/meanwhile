@@ -35,13 +35,11 @@ export const AZ_JURISDICTION_REFERENCE_SOURCE_ID = "jurisdiction-operational-ref
 export const AZ_JURISDICTION_REFERENCE_SCOPE = "US-AZ:covered-jurisdiction-routing:v1" as const;
 export const JURISDICTION_REFERENCE_PARSER_VERSION = "jurisdiction-operational-reference/3" as const;
 export const JURISDICTION_REFERENCE_VERSION = "census-2022+reviewed-routing-v1" as const;
-/* The reviewed states live in their own small module, so Admin's Send preview can read them alone. */
 export { JURISDICTION_REFERENCE_STATES, type JurisdictionReferenceState };
 
 export interface OperationalReferenceBundle {
   readonly formatVersion: 1;
   readonly sourceVersion: typeof JURISDICTION_REFERENCE_VERSION;
-  /** The seed states are required; a state added as data rides beside them (CH-13). */
   readonly registries: Readonly<Record<JurisdictionReferenceState, JurisdictionRegistry>> & Readonly<Record<string, JurisdictionRegistry>>;
 }
 export interface AzOperationalReferenceBundle {
@@ -120,7 +118,6 @@ function sourceReceiptIssues(receipts: readonly JurisdictionReferenceSourceRecei
     if (!Number.isFinite(Date.parse(receipt.retrievedAt))) issues.push(`SOURCE_RETRIEVED_AT_INVALID:${required.id}`);
   }
   for (const receipt of receipts) {
-    /* A page read again to confirm a reviewed website correction (C15): only the pages the reviewed list names. */
     if (receipt.sourceId.startsWith("website-correction:")) {
       const issue = websiteCorrectionReceiptIssue(receipt);
       if (issue !== null) issues.push(issue);
@@ -133,10 +130,6 @@ function sourceReceiptIssues(receipts: readonly JurisdictionReferenceSourceRecei
   return [...new Set(issues)].sort();
 }
 
-/**
- * Every corrected row must carry the reviewed correction exactly (C15), and one this promotion read as verified
- * must have the receipts of the pages it read.
- */
 function websiteCorrectionIssues(
   registries: Readonly<Partial<Record<string, JurisdictionRegistry>>>,
   receipts: readonly JurisdictionReferenceSourceReceipt[],
@@ -172,9 +165,7 @@ export function operationalReferenceBundle(
   };
 }
 
-/** Explicit process initialization; there is no implicit repository-file fallback. */
 export function installOperationalReferenceBundle(bundle: OperationalReferenceBundle): void {
-  /* The seeds must be present; any further state the bundle carries is checked the same way and becomes reviewed. */
   const states = [...new Set([...JURISDICTION_REFERENCE_STATES, ...Object.keys(bundle.registries ?? {}).map((state) => state.toLowerCase())])];
   const issues = registryIssues(bundle.registries, states);
   if (bundle.formatVersion !== 1 || bundle.sourceVersion !== JURISDICTION_REFERENCE_VERSION || issues.length > 0) {
@@ -182,7 +173,7 @@ export function installOperationalReferenceBundle(bundle: OperationalReferenceBu
   }
   installedBundle = structuredClone(bundle);
   installReviewedRegistryStates(states);
-  /* The reviewed registry wins: a state read from registration earlier in this process steps aside. */
+    /* The reviewed registry wins: a state read from registration earlier in this process steps aside. */
   for (const state of states) {
     installedRegistration.delete(state);
     refusedRegistration.delete(state);
@@ -204,8 +195,6 @@ export function installAzOperationalReferenceBundle(bundle: AzOperationalReferen
   installedAzBundle = structuredClone(bundle);
 }
 
-/** Exact installed state set, with a promoted AZ-only pointer preferred over
- * the older multi-state version. Missing states stay missing. */
 export function installedOperationalReferenceRegistries(states?: Iterable<string>): Readonly<Record<string, JurisdictionRegistry>> {
   const held = { ...installedBundle?.registries, ...installedAzBundle?.registries };
   const wanted = states ? new Set([...states].map(state => state.toLowerCase())) : null;
@@ -231,24 +220,9 @@ export function requiredOperationalJurisdictionRegistry(state: string): Jurisdic
   return registry;
 }
 
-/*
- * **EVERY OTHER REGISTERED STATE, READ FROM ITS REGISTRATION.** (2026-09-25.)
- *
- * A state the reviewed bundle above does not carry has no reviewed registry, and every state is registered
- * (REGISTRATION, per state, from the 2022 Census of Governments). The runner reads the registration of each
- * state a Send reaches as a registry (`lib/registration/jurisdictions.ts`) and installs it here, beside the
- * reviewed bundle, with the states it could not read and why. The reviewed registry always wins: a reviewed
- * state is never installed from registration.
- */
 let installedRegistration = new Map<string, JurisdictionRegistry>();
 let refusedRegistration = new Map<string, string>();
 
-/**
- * Install the registries read from registration, keyed by lower-case state, and the states whose registration
- * could not be read with the reason. Merged over what an earlier call installed this process: a state read
- * again replaces its row. Refuses a reviewed state, a registry with no registration origin, or a key that is
- * not the registry's own state.
- */
 export function installRegistrationJurisdictionRegistries(
   registries: ReadonlyMap<string, JurisdictionRegistry>,
   refused: ReadonlyMap<string, string> = new Map(),
@@ -280,7 +254,6 @@ export function clearRegistrationJurisdictionRegistries(): void {
   refusedRegistration = new Map();
 }
 
-/** The registries installed from registration (lower-case state keys), and the states refused with why. */
 export function installedRegistrationJurisdictionRegistries(): {
   readonly registries: ReadonlyMap<string, JurisdictionRegistry>;
   readonly refused: ReadonlyMap<string, string>;
@@ -288,11 +261,7 @@ export function installedRegistrationJurisdictionRegistries(): {
   return { registries: new Map(installedRegistration), refused: new Map(refusedRegistration) };
 }
 
-/**
- * **THE ONE ACCESSOR A PROVIDER AND A SEND READ A STATE'S REGISTRY THROUGH.** The reviewed registry where the
- * promoted bundle carries the state; otherwise the registry installed from its registration; otherwise it
- * throws by name, never an empty registry.
- */
+/** The reviewed registry, else the one installed from registration; otherwise throws by name, never an empty registry. */
 export function requiredJurisdictionRegistry(state: string): JurisdictionRegistry {
   const key = state.toLowerCase();
   if (hasReviewedRegistry(key)) return requiredOperationalJurisdictionRegistry(key);
@@ -306,7 +275,6 @@ export function requiredJurisdictionRegistry(state: string): JurisdictionRegistr
   );
 }
 
-/** Production preload reads only the proof-validated atomic pointer. */
 export async function preloadOperationalReferenceBundle(
   options: PromotedCivicDataReadOptions = {},
 ): Promise<Extract<CivicDataReadResult<OperationalReferenceBundle>, { kind: "PROMOTED" }>> {
@@ -326,8 +294,6 @@ export async function preloadOperationalReferenceBundle(
   return result;
 }
 
-/** Read the independently promoted AZ-only version. The caller can keep the
- * legacy three-state pointer installed where its own scope is authorized. */
 export async function preloadAzOperationalReferenceBundle(
   options: PromotedCivicDataReadOptions = {},
 ): Promise<Extract<CivicDataReadResult<AzOperationalReferenceBundle>, { kind: "PROMOTED" }>> {
@@ -342,7 +308,6 @@ export async function preloadAzOperationalReferenceBundle(
   return result;
 }
 
-/** Build the one durable manual candidate from reviewed source-version inputs. */
 export function jurisdictionOperationalReferenceCandidate(input: {
   readonly registries: Readonly<Record<JurisdictionReferenceState, JurisdictionRegistry>>;
   readonly sourceReceipts: readonly JurisdictionReferenceSourceReceipt[];
@@ -356,8 +321,6 @@ export function jurisdictionOperationalReferenceCandidate(input: {
   return buildOperationalReferenceCandidate(input, JURISDICTION_REFERENCE_STATES, JURISDICTION_REFERENCE_SOURCE_ID, JURISDICTION_REFERENCE_SCOPE);
 }
 
-/** The original Arizona Send owns an AZ-only candidate; the legacy three-state
- * reviewed version remains a separate, unchanged contract and pointer. */
 export function azJurisdictionOperationalReferenceCandidate(input: {
   readonly registries: Readonly<{ az: JurisdictionRegistry }>;
   readonly sourceReceipts: readonly JurisdictionReferenceSourceReceipt[];
@@ -475,10 +438,7 @@ function buildOperationalReferenceCandidate(input: {
   };
 }
 
-/**
- * Persistable failed attempt for a source or workbook failure. It deliberately
- * has no read model, so a failure can never replace the promoted LKG pointer.
- */
+/** Has no read model, so a failure can never replace the promoted LKG pointer. */
 export function jurisdictionOperationalReferenceFailureCandidate(
   failure: JurisdictionReferenceAcquisitionFailure,
   azOnly = false,

@@ -11,12 +11,7 @@ import {
 const ROOT = join(import.meta.dirname, "..");
 const GLOBALS = join(ROOT, "app", "globals.css");
 
-/**
- * **WORK ITEM 3 — focus-visible on every control.**
- * (The visual-polish session, 2026-09-03.)
- */
-
-test("the focus sweep catches a suppressed ring — the instrument works (RULING 110)", () => {
+test("the focus sweep catches a suppressed ring — the instrument works", () => {
   assert.ok(globalFocusRingPresent(":focus-visible { outline: 2px solid var(--link); }"));
   assert.equal(globalFocusRingPresent(".x:focus { outline: none; }"), false, "plain :focus is not the global ring");
 

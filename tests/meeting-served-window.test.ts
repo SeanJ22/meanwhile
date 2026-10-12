@@ -4,7 +4,7 @@ import test from "node:test";
 import { readReaderEdgeMeetings } from "../lib/meetings/edge-serving.ts";
 import type { MeetingsProjectionReadResult } from "../lib/meetings/snapshot.ts";
 
-/** DB-01: partitions hold 120 days of history; each read hands back only the window it asks for. */
+/** Partitions hold 120 days of history; each read hands back only the window it asks for. */
 const NOW = "2026-09-08T13:00:00.000Z";
 const at = (days: number) => new Date(Date.parse(NOW) + days * 86_400_000).toISOString();
 const row = (id: string, days: number) => ({ id, startsAt: at(days), status: "CONCLUDED" });
@@ -43,4 +43,14 @@ test("the window follows its meetings: agenda documents and counts agree", async
   if (shown.kind !== "PROMOTED") return;
   assert.deepEqual(shown.value.agendaDocuments.map(({ id }) => id), ["doc-recent"]);
   assert.equal(shown.value.counts.total, shown.value.meetings.length);
+});
+
+test("published shown window changes and undo are applied to the same held snapshot", async () => {
+  const { meetingSettingsFromValues } = await import("../lib/meetings/settings.ts");
+  const read = heldRead();
+  const wider = await readReaderEdgeMeetings({ now: NOW, fallback: async () => read, settings: meetingSettingsFromValues({ "meetings.shownAheadDays": 110 }) });
+  assert.deepEqual(idsOf(wider), ["recent", "soon", "later"]);
+  const restored = await readReaderEdgeMeetings({ now: NOW, fallback: async () => read, settings: meetingSettingsFromValues() });
+  assert.deepEqual(idsOf(restored), ["recent", "soon"]);
+  assert.equal(read.kind === "PROMOTED" && read.value.meetings.length, 5, "settings never delete held history");
 });

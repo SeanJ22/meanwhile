@@ -1,27 +1,13 @@
 /**
- * **PAID DISCOVERY SEARCH IS THE OWNER'S SWITCH, AND THE RUNNER OBEYS IT.**
- * (NS28, decided 2026-09-24: meetings discovery is always on; paid search stays
- * off until the owner turns it on in Admin.)
+ * Paid discovery search is the owner's switch, and the runner obeys it.
  *
- * What these tests hold:
- *
- * - **Off until he says so.**
- *   - A fresh control plane, a never-decided row, a malformed decision and a
- *     corrupt row all read OFF.
- *   - Only an explicit `true` reads ON.
- * - **An owner decision, said twice to turn on, recorded durably.**
- *   - `config.setDiscoverySearch` is OWNER_DECISION_REQUIRED.
- *   - Turning it on without a confirmation writes nothing.
- *   - The decision carries who and when, and the receipt that made it.
- *   - It leaves the row's other decisions standing.
- * - **The runner obeys it.**
- *   - At cycle start the runner reads the switch from the row it reads the
- *     ceiling from.
- *   - It builds no search step unless the switch is on.
- *   - It names the switch in its record.
- *   - Meetings discovery is on unless the kill switch says off.
- * - **The console posts it.** The switch sits on the search line of the Money
- *   screen, and turning it on posts the confirmation.
+ * - Off until turned on: a fresh control plane, a never-decided row, a malformed decision and a corrupt row all read
+ *   OFF; only an explicit `true` reads ON.
+ * - `config.setDiscoverySearch` is OWNER_DECISION_REQUIRED; turning it on without a confirmation writes nothing; the
+ *   decision carries who, when and the receipt, and leaves the row's other decisions standing.
+ * - At cycle start the runner reads the switch from the row it reads the ceiling from, builds no search step unless
+ *   it is on, and names it in its record. Meetings discovery is on unless the kill switch says off.
+ * - The switch sits on the search line of the Money screen, and turning it on posts the confirmation.
  */
 
 import assert from "node:assert/strict";
@@ -176,7 +162,7 @@ test("NO SILENT RESUME: only the owner's action writes the switch; no env var ca
   );
   const registry = read("lib/control-plane/gateway/registry.ts");
   assert.equal(registry.split("withDiscoverySearch(").length - 1, 1, "one write site");
-  const action = registry.slice(registry.indexOf('type: "config.setDiscoverySearch"'), registry.indexOf("/* ------------------------------------------------------ expansion.scope.set */"));
+  const action = registry.slice(registry.indexOf('type: "config.setDiscoverySearch"'), registry.indexOf('type: "expansion.scope.set"'));
   assert.ok(action.includes("withDiscoverySearch("), "and it is inside config.setDiscoverySearch");
 
   const runner = read("scripts/freshness-shadow.mts");
@@ -189,7 +175,7 @@ test("NO SILENT RESUME: only the owner's action writes the switch; no env var ca
 
   assert.deepEqual(files.filter((f) => read(f).includes("makeDiscoverySearch(") && !f.endsWith("search-runtime.ts")), ["scripts/freshness-shadow.mts"]);
   assert.match(runner, /searchBudget === null \? null : makeDiscoverySearch\(\{/, "discovery search exists only while the switch is on");
-  /* CH-24 part 2: the standing hunter lane builds the Scout tool too, from the same owner's row (armHunterLane reads the switch), only while it is on and paid work is open. */
+  /* The standing hunter lane builds the Scout tool too, from the same owner's row (armHunterLane reads the switch), only while it is on and paid work is open. */
   assert.deepEqual(files.filter((f) => read(f).includes("makeScoutSearch(") && !f.endsWith("scout-search.ts")), ["scripts/freshness-shadow.mts", "scripts/hunter-lane.mts"]);
   assert.match(read("scripts/hunter-lane.mts"), /if \(!paidOpen \|\| !armed\.discoverySearchOn \|\| armed\.fleetSafety === null\) return null;/);
   assert.match(read("lib/control-plane/workers/hunter-lane-arming.ts"), /const discoverySearchOn = configHold === null && discoverySearchEnabled\(config\);/);

@@ -1,29 +1,8 @@
 /**
- * **SEARCH IS A POINTER, PRICED PER REQUEST, BUDGETED PER CYCLE AND PER DAY,
- * AND A METHOD IT PROVES IS SAVED.** (2026-09-23.)
- *
- * The discovery executor's search rung (`lib/hunt/discovery-search.ts`,
- * `lib/control-plane/discovery/search-runtime.ts`). No test reaches the network.
- * What these tests hold:
- *
- * - **Queries.** A saved method's templates come first, then the defaults; a
- *   query with an unfilled slot is never sent, and "own site" is expressed per
- *   provider (Brave's site:, Exa's includeDomains).
- * - **Pointers only.** A result is followed only on the government's own domain
- *   or a known meeting publisher, opened robots-first, and confirmed by content.
- * - **Every request is charged.** One cost row per request sent, role
- *   DISCOVERY_SEARCH, at the published price; a request lost in transport is
- *   UNMEASURED (null), and a refused one is never sent and never charged.
- * - **Budgeted.** The cycle's cap and the day's cap, kept in the durable
- *   shared ledger, refuse by name; FleetSafety's refusal passes through.
- * - **Learned.** A route a search found is saved as a method, and the next
- *   government's walk searches with it first.
- * - **Timed.** A query starts only with time left for the seam's worst case. A
- *   walk the time runs out on while following a result concludes nothing, and
- *   the requests it paid for are still reported with it.
- *
- * Every test that writes runs on the in-memory double AND the durable file
- * store.
+ * The discovery executor's search rung. A result is a pointer, followed only on the government's own domain or a
+ * known meeting publisher, robots-first, and confirmed by content. Every request sent is charged at the published
+ * price (a request lost in transport is unmeasured), the cycle and day caps refuse by name, and a route a search
+ * found is saved as a method the next walk searches with first. Every test that writes runs on both stores.
  */
 
 import assert from "node:assert/strict";
@@ -278,7 +257,7 @@ test("WALK: authorized search checks beyond connected feeds, follows source resu
     );
     assert.equal(walk.search[0].requests[0].priceSource, SEARCH_PRICES.brave.source);
     assert.equal(walk.recipes.learned.length, 1);
-    const learned = knownRecipes((await repos.fieldManual.read("live"))?.value.entries ?? []).find((r) => r.recipeId === walk.recipes.learned[0].recipeId)!;
+    const learned = knownRecipes((await repos.fieldManual.list()).map((row) => row.value)).find((r) => r.recipeId === walk.recipes.learned[0].recipeId)!;
     assert.equal(learned.successes, 1, `${label}: the method is saved with its success`);
     assert.deepEqual(learned.queryTemplates, ["{bodyName} meetings agendas minutes"]);
 
@@ -287,13 +266,13 @@ test("WALK: authorized search checks beyond connected feeds, follows source resu
     const nextSearches = fakeSearch({});
     const nextPass = await runMeetingsDiscovery(repos, {
       needs: [need("az:city:city-of-avondale", "avondale.gov", "CITY OF AVONDALE")],
-      runtime: runtime(next.open, nextSearches.search, [], knownRecipes((await repos.fieldManual.read("live"))?.value.entries ?? [])),
+      runtime: runtime(next.open, nextSearches.search, [], knownRecipes((await repos.fieldManual.list()).map((row) => row.value))),
       cycleIndex: 0,
       maxWalks: 5,
     });
     assert.equal(nextSearches.calls[0].query, "CITY OF AVONDALE meetings agendas minutes", `${label}: the saved template, identity substituted`);
     assert.equal(nextPass.walked[0].search[0].recipeId, learned.recipeId, `${label}: the first query came from the saved method, not the default`);
-    const afterMiss = knownRecipes((await repos.fieldManual.read("live"))?.value.entries ?? []).find((r) => r.recipeId === learned.recipeId)!;
+    const afterMiss = knownRecipes((await repos.fieldManual.list()).map((row) => row.value)).find((r) => r.recipeId === learned.recipeId)!;
     assert.equal(afterMiss.failures, 1, `${label}: a saved method that found nothing here is recorded against it`);
 
     /* A working feed is still compared with a current search when authorized. */

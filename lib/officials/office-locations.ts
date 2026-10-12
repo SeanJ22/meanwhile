@@ -1,14 +1,6 @@
 /**
- * One office-location fact for every kind of owner: a legislator's district or
- * capitol office, a campaign office, a body's office, a place a body meets.
- *
- * It replaces the legislator-only member-office shape as the thing readers and
- * Ask are given; `fromMemberOffice` carries the stored member offices into it.
- * An address is accepted only when a page presents it as an office. A campaign
- * address counts only when the page labels it an office or headquarters, and
- * never when it equals the candidate's filed mailing address, because small
- * campaigns often list a home as the contact address.
- * Pure code; no model, no network.
+ * One office-location fact for every kind of owner. An address counts only when a page presents it as an office; a
+ * campaign address never counts when it equals the candidate's filed mailing address.
  */
 import type { MemberOfficeRecord } from "./member-offices.ts";
 
@@ -20,6 +12,7 @@ export interface OfficeLocation {
   readonly address: string;
   readonly hours: string | null;
   readonly phone: string | null;
+  readonly email?:string | null;
   readonly sourceUrl: string;
   readonly sourceOrg: string | null;
   readonly collectedAt: string | null;
@@ -49,6 +42,7 @@ export function officeLocation(input: {
   readonly address: string | null | undefined;
   readonly hours?: string | null;
   readonly phone?: string | null;
+  readonly email?: string | null;
   readonly sourceUrl: string | null | undefined;
   readonly sourceOrg?: string | null;
   readonly collectedAt?: string | null;
@@ -58,7 +52,8 @@ export function officeLocation(input: {
   if (!looksLikeAddress(address) || !input.sourceUrl?.startsWith("https://")) return null;
   return { ownerId: input.ownerId, kind: input.kind as OfficeLocationKind, address,
     hours: input.hours ? clean(input.hours) || null : null, phone: input.phone ? clean(input.phone) || null : null,
-    sourceUrl: input.sourceUrl, sourceOrg: input.sourceOrg ?? null, collectedAt: input.collectedAt ?? null };
+    sourceUrl: input.sourceUrl, sourceOrg: input.sourceOrg ?? null, collectedAt: input.collectedAt ?? null,
+    ...(input.email?.trim() ? {email:input.email.trim()} : {}) };
 }
 
 const joinAddress = (office: MemberOfficeRecord["office"]) =>
@@ -67,10 +62,10 @@ const joinAddress = (office: MemberOfficeRecord["office"]) =>
 /** The stored member offices, as the one shape. */
 export function fromMemberOffice(record: MemberOfficeRecord): OfficeLocation | null {
   return officeLocation({ ownerId: record.officeholderId, kind: record.officeKind === "CAPITOL" ? "CAPITOL_OFFICE" : "DISTRICT_OFFICE",
-    address: joinAddress(record.office), phone: record.office.phone, sourceUrl: record.sourceUrl, sourceOrg: record.sourceOrg, collectedAt: record.collectedAt });
+    address: joinAddress(record.office), phone: record.office.phone, email:record.office.email, sourceUrl: record.sourceUrl, sourceOrg: record.sourceOrg, collectedAt: record.collectedAt });
 }
 
-/** A body's office, as its own page states it (CA-06). */
+/** A body's office, as its own page states it. */
 export function fromBodyOffice(input: {
   readonly bodyId: string;
   readonly address?: string | null;
@@ -94,12 +89,7 @@ export function officeHoursFrom(text: string): string | null {
 
 const CAMPAIGN_LABEL = /^\s*(?:our\s+|the\s+)?(?:campaign\s+(?:office|headquarters|hq)|headquarters|hq|office|visit\s+our\s+office)\s*[:\-–]\s*(.+)$/i;
 
-/**
- * A campaign office from the campaign's own page text. Only a line the page
- * labels an office or headquarters counts; a bare "contact" or "mailing
- * address" never does, and an address equal to the filed mailing address is
- * refused (likely a home).
- */
+/** A campaign office from the campaign's own page: only a line labelled office or headquarters counts. */
 export function campaignOfficeFrom(input: {
   readonly ownerId: string;
   readonly pageText: string;
@@ -126,7 +116,7 @@ export function campaignOfficeFrom(input: {
 export function officeLocationLine(location: OfficeLocation): string {
   const label = { DISTRICT_OFFICE: "District office", CAPITOL_OFFICE: "Capitol office", CAMPAIGN_OFFICE: "Campaign office",
     BODY_OFFICE: "Office", MEETING_PLACE: "Meets at" }[location.kind];
-  return [`${label}: ${location.address}`, location.hours ? `Hours: ${location.hours}` : null, location.phone ? `Phone: ${location.phone}` : null]
+  return [`${label}: ${location.address}`, location.hours ? `Hours: ${location.hours}` : null, location.phone ? `Phone: ${location.phone}` : null,location.email ? `Email: ${location.email}` : null]
     .filter(Boolean).join(". ") + ".";
 }
 

@@ -1,14 +1,4 @@
-/**
- * **WHAT READERS ARE ASKING FOR, FOR THE NOW VIEW'S DEMAND PANEL.** Aggregate
- * only: counts of events by place, government, meeting, official, question topic
- * and "get this sooner" subject, never a person, session or device (there is none
- * in the store). Organic traffic only, so a walk of ours is never read as demand.
- *
- * Built on `readReaderIntel`, which refuses any record carrying a field that could
- * key back to one reader. The figures are also checked against their own
- * denominators; a count larger than what it was counted from refuses the panel
- * instead of showing a wrong number.
- */
+/** Aggregate counts only, organic traffic only. A count larger than its denominator refuses the panel. */
 import { displayNameOf } from "./display-name.ts";
 import {
   impossibleNumbersIn,
@@ -50,11 +40,7 @@ export type ReaderDemandReading =
 
 const top = (list: TopList): DemandList => ({ rows: list.rows.slice(0, SHOWN), distinct: list.distinct });
 
-/**
- * The same list with each stored key read as the name a person would say, never
- * the id. A key the name projection cannot place is not listed (an id is not a
- * name); how many of the most-opened were left out is counted beside it.
- */
+/** A key the name projection cannot place is not listed, only counted. */
 const named = (list: TopList): DemandList => {
   const read = list.rows.map((row) => ({ row, name: displayNameOf(row.key) }));
   return {

@@ -1,46 +1,3 @@
-/**
- * **THE PROVIDER CONFORMANCE SUITE.** (Session B, W3.1. RULING 220 step 2.)
- *
- * One set of assertions, run against EVERY provider, because the point of a
- * provider-neutral interface is that a caller cannot tell which one it has —
- * and the only way to know that is true is to run the same sequence through
- * each and require identical answers.
- *
- * ```
- *   memory      the in-process double, which pins the semantics
- *   file        the durable filesystem store
- *   postgres    ONLY against an isolated test database (WTP_CONTROL_PLANE_TEST_DATABASE_URL)
- * ```
- *
- * ## The Postgres lane runs against an ISOLATED TEST DATABASE, or NOT AT ALL
- *
- * This lane MUTATES: it puts, appends and compare-and-sets. `createWorkItem`
- * ids are derived, and the store is append-only by design, so those writes
- * persist. Run them against the LIVE control plane and every suite run leaves
- * fixtures in the production append-only store — which is exactly how an
- * overnight Neon transfer quota was burned.
- *
- * So the lane is gated on a SEPARATE variable, `WTP_CONTROL_PLANE_TEST_DATABASE_URL`,
- * that names a database designated for destructive test writes. The production
- * variable `WTP_CONTROL_PLANE_DATABASE_URL` — which a normal `.env.local`
- * carries, and which a local gate or handoff loads — is NEVER interpreted as a
- * test database: its presence alone leaves this lane NOT RUN. And if the test
- * variable is set to the same connection as the production one, the suite
- * REFUSES rather than write test fixtures into production.
- *
- * NOT RUN is not a pass. The requirement that RULING 220's cutover eventually be
- * proved against Postgres is unchanged; what changed is that the proof must use
- * a database that is safe to mutate. The skip is a printed sentence naming the
- * variable, because *we did not run this* and *this passed* are different
- * sentences, and a suite that cannot say the first will eventually say the second.
- *
- * ## What is asserted, and why each one is a defect somebody has paid for
- *
- * The four properties from `types.ts`: idempotent derived-identity puts,
- * append-only history, honest compare-and-set, and a failed read that is not
- * an empty one. Each is checked identically on each provider.
- */
-
 import assert from "node:assert/strict";
 import test from "node:test";
 import { randomUUID } from "node:crypto";
@@ -83,20 +40,6 @@ const providers: Provider[] = [
   },
 ];
 
-/**
- * The Postgres lane, and the honest reason it is or is not here.
- *
- * The lane runs ONLY against an isolated test database. Three states, kept
- * apart:
- *   READY           an isolated test database is named and differs from prod.
- *   NOT_CONFIGURED  no test database is named — the lane is NOT RUN (not a pass).
- *   REFUSED_AS_PROD the test variable points at the production control plane;
- *                   the suite refuses rather than mutate production.
- *
- * The production variable's presence NEVER promotes the lane: a machine with a
- * live control plane and no designated test database still runs only memory and
- * file, and says so.
- */
 const prodControlPlaneUrl = controlPlaneUrlFromEnv();
 const testControlPlaneUrl = controlPlaneTestUrlFromEnv();
 type PgLane =
@@ -118,14 +61,7 @@ if (pgLane.kind === "READY") {
 test("the conformance suite states WHICH providers it ran, and which it did not", () => {
   const names = providers.map((p) => p.name);
   assert.ok(names.includes("memory") && names.includes("file"));
-  /*
-   * The Postgres lane is mutable, so it runs only against a designated test
-   * database. A production connection is not one, and pointing the test
-   * variable at production is refused outright — either way the lane is NOT RUN
-   * and that is recorded here, never mistaken for a pass. RULING 220's cutover
-   * proof must be performed against a safe-to-mutate database; tracker NH300
-   * carries the escalation.
-   */
+  // The mutable Postgres lane runs only against a designated test database; otherwise it is NOT RUN, never a pass.
   if (pgLane.kind === "REFUSED_AS_PROD") {
     assert.fail(
       `${CONTROL_PLANE_TEST_URL_VAR} is set to the SAME connection as ` +
@@ -140,42 +76,12 @@ test("the conformance suite states WHICH providers it ran, and which it did not"
         `${names.length} of 3 provider(s). Set ${CONTROL_PLANE_TEST_URL_VAR} to an ISOLATED ` +
         `test database to run it. ${CONTROL_PLANE_URL_VAR}` +
         `${prodControlPlaneUrl !== null ? " IS set, but it names the LIVE production control plane and is never used as a test database." : " is not set."} ` +
-        "RULING 220's cutover proof has not been performed.",
+        "The control-plane cutover proof has not been performed.",
     );
   }
   assert.ok(names.length >= 2, "at least the double and the durable store always run");
 });
 
-/**
- * **THE POSTGRES LANE SHARES ONE DATABASE WITH EVERY PREVIOUS RUN, AND THESE
- * FIXTURES ARE DERIVED-ID.** (2026-09-01.)
- *
- * `memory` gets a fresh map and `file` gets a fresh `mkdtemp`. Postgres gets the
- * isolated TEST database, and the store is APPEND-ONLY BY DESIGN — `types.ts`
- * says *"nothing is ever removed"* — so there is no teardown to write, and even
- * the safe-to-mutate test database accumulates these rows across runs.
- *
- * With a constant `project`, `workItemId(project, subject, obligation)` is the
- * same id on every run, so the Postgres lane could pass exactly ONCE and failed
- * on every run afterwards: `first.created` came back `false` because the record
- * from the previous run was still there. Three tests went red on the close-out
- * ship for that reason and for no other.
- *
- * **It hid for as long as it did because the lane usually does not run.** The
- * Postgres arm runs only when `WTP_CONTROL_PLANE_TEST_DATABASE_URL` names an
- * isolated test database — which is unset on this machine, and unset in a normal
- * `.env.local` (that file carries the PRODUCTION control-plane variable, which
- * this lane deliberately ignores). So running this file, or `pnpm gates` under
- * `handoff`, SKIPS the lane and prints NOT RUN. A session re-running "isolated"
- * to check would have been told everything was fine by a lane that never
- * executed — and, before the isolation fix, the same load of `.env.local` that
- * a gate performs would have pointed those mutating writes at production.
- *
- * The namespace is per RUN rather than per test, so the ids inside one run still
- * collide exactly the way the assertions require — two `put`s of `item("a")`
- * must still be the same record. It is only the NEXT run that gets out of the
- * way of this one.
- */
 const RUN_NAMESPACE = `conformance-${randomUUID().slice(0, 8)}`;
 
 function item(subject: string, now = NOW) {
@@ -259,9 +165,7 @@ for (const provider of providers) {
 
   test(`${provider.name}: an append-only log refuses a rewrite and accepts a retry`, async () => {
     const repos = await provider.open();
-    /* Namespaced for the same reason `item()` is: this log row persists in the
-       isolated Postgres test database and an identical id next run is not a
-       retry, it is last run's row. */
+    /* Namespaced: this row persists in the isolated Postgres test database across runs. */
     const workItemId = `wi-${RUN_NAMESPACE}`;
     const transitionId = `t-${RUN_NAMESPACE}`;
     const record = {
@@ -337,13 +241,6 @@ for (const provider of providers) {
   });
 
   test(`${provider.name}: listWhere is exactly list() filtered — same rows, same id order`, async () => {
-    /*
-     * 2026-09-22. `attemptsForRouteTask` moved from a full `list()` to this
-     * filtered read for cost, so every provider must return exactly what
-     * `list()` filtered would. Namespaced like `item()`: the Postgres lane keeps
-     * every run's rows, and a run-local value keeps this run's filter from
-     * matching last run's.
-     */
     const repos = await provider.open();
     const wanted = `rt-${RUN_NAMESPACE}-wanted`;
     const placed = [
@@ -389,13 +286,6 @@ for (const provider of providers) {
   });
 
   test(`${provider.name}: readRecentWhere is readWhere's newest matches, newest first, each narrowed`, async () => {
-    /*
-     * 2026-09-24. The routine runner's provider-frontier history moved from a
-     * whole-history `readWhere` (428 MB a pass) to this bounded, narrowed read,
-     * so every provider must return the newest matches exactly as `readWhere`
-     * holds them, minus the fields the projection drops. Namespaced like the
-     * other log tests: the Postgres lane keeps every run's rows.
-     */
     const repos = await provider.open();
     const key = `digest-${RUN_NAMESPACE}`;
     const records = [0, 1, 2, 3, 4].map((index) => ({
@@ -446,12 +336,6 @@ for (const provider of providers) {
   });
 
   test(`${provider.name}: the nightly door's four logs exist and keep history (schema v5)`, async () => {
-    /*
-     * RULING 242. A log that is declared in `APPEND_ONLY_LOGS` but absent from
-     * a provider would let the window write into nothing on that provider and
-     * report a clean night. Every provider is asked to append to each of the
-     * four and to refuse a rewrite, under this run's namespace.
-     */
     const repos = await provider.open();
     const { AppendOnlyViolation } = await import("../lib/control-plane/repository/types.ts");
     const logs = [
@@ -488,18 +372,8 @@ for (const provider of providers) {
   });
 }
 
-/* ==========================================================================
- * THE POSTGRES PROVIDER'S OWN PURE PARTS, TESTABLE WITHOUT A DATABASE
- * ======================================================================= */
-
 test("the advisory lock key is STABLE — two machines computing it must agree", () => {
-  /*
-   * The whole point of the Postgres lock is that two processes on two machines
-   * contend correctly, and that requires them to derive the same key from the
-   * same name. A hash whose value could move under a dependency bump is a lock
-   * that could silently stop being the same lock, which is why FNV-1a is
-   * written out in the provider rather than imported.
-   */
+  // Two processes must derive the same lock key from the same name, so FNV-1a is written out rather than imported.
   const a = advisoryLockKey("budget");
   assert.equal(advisoryLockKey("budget"), a, "same name, same key");
   assert.notEqual(advisoryLockKey("budgets"), a, "different name, different key");
@@ -510,9 +384,6 @@ test("the advisory lock key is STABLE — two machines computing it must agree",
   );
 });
 
-// Keep the recorded v5 guard identity: every nightly-door assertion still runs.
-// Later additive migrations (v6 worker-result log, v7 readiness-snapshots aggregate)
-// only move the exact version this pins; the nightly-door assertions are unchanged.
 test("schema v5 declares the four nightly-door logs, and every provider bundle carries them", async () => {
   const { APPEND_ONLY_LOGS, BOOTSTRAP_VERSION, DECLARED_TABLES } = await import(
     "../lib/control-plane/repository/pg-schema.ts"
@@ -591,16 +462,6 @@ test("schema v10 places live method candidates in every canonical provider", asy
 });
 
 test("schema v9 declares the Action Gateway's three tables, and every provider bundle carries them", async () => {
-  /*
-   * ADM-C6. The failure this catches is the one the map warns about: a log
-   * declared in `APPEND_ONLY_LOGS` but missing from a provider lets the gateway
-   * write into nothing on that provider and report a clean action. The memory
-   * and file doubles would stay green while the deploy lost every receipt.
-   *
-   * `adminConfig` is asserted by a DIFFERENT method (`read`), because it is an
-   * aggregate and a `typeof append === "function"` check would pass on any
-   * object that happened to have one.
-   */
   const { AGGREGATE_KINDS, APPEND_ONLY_LOGS, DECLARED_TABLES } = await import(
     "../lib/control-plane/repository/pg-schema.ts"
   );
@@ -669,8 +530,7 @@ test("the two control-plane variables are DISTINCT names, so one can never stand
 });
 
 test("createPgRepositories refuses an empty connection string", async () => {
-  /* A default here could point at the SERVING database, which RULING 220
-     separates on purpose. */
+  /* A default here could point at the serving database. */
   await assert.rejects(
     () => createPgRepositories(""),
     /requires an explicit connection string/,

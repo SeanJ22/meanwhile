@@ -1,6 +1,5 @@
 import styles from "./admin-v6/v6.module.css";
 
-/** Class aliases preserve kept Admin primitives inside the single stylesheet. */
 export const s = {
   accentBox: styles.legacyAccentBox,
   actions: styles.legacyActions,

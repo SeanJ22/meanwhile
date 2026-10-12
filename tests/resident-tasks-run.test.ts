@@ -1,4 +1,4 @@
-/** FE-18: every resident task has scripted taps that name no place, runs at a newly published place first, passes only within budget with every part shown, and reads in Admin as a pass or fail with its screenshot strip. */
+/** Every resident task has scripted taps that name no place, runs at a newly published place first, passes only within budget with every part shown, and reads in Admin as a pass or fail with its screenshot strip. */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -21,7 +21,7 @@ const input = (over: Partial<TaskRunInput> = {}): TaskRunInput => ({
   taps: 3, deadEnd: null, missing: [], ...over,
 });
 
-test("every task in the FE-17 file has a script, and no script names a place", () => {
+test("every task in the resident-task file has a script, and no script names a place", () => {
   for (const t of file.tasks) assert.ok(TASK_SCRIPTS[t.id], `${t.id} has no script`);
   assert.deepEqual(Object.keys(TASK_SCRIPTS).sort(), file.tasks.map((t) => t.id).sort());
   const words = JSON.stringify(TASK_SCRIPTS);

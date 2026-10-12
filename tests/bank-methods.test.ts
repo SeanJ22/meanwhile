@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { doorMethodEntries, portableProcedure } from '../lib/control-plane/bank-methods.ts';
-import { emptyFieldManual, newFieldManualEntry, upsertEntries } from '../lib/control-plane/field-manual.ts';
+import { foldEntries, newFieldManualEntry } from '../lib/control-plane/field-manual.ts';
 
 const door = (subjectId: string, url: string) => newFieldManualEntry('scout', subjectId, {
   role: 'SCOUT', kind: 'SCOUT_DISCOVERY', title: subjectId, summary: 'events feed', outcome: 'YIELDED',
@@ -13,7 +13,7 @@ test('one host-free platform method retains two place doors', () => {
   const b = door('ocd-division/country:us/state:nv/county:second', 'https://second.legistar.com/events');
   const methods = [...doorMethodEntries(a), ...doorMethodEntries(b)];
   assert.equal(methods[0]!.id, methods[1]!.id);
-  const store = upsertEntries(emptyFieldManual(), [a, b, ...methods], 'now');
+  const store = { entries: foldEntries([a, b, ...methods]) };
   assert.equal(store.entries.filter(e => e.kind === 'METHOD').length, 1);
   const method = store.entries.find(e => e.kind === 'METHOD')!;
   assert.deepEqual(method.states, []);

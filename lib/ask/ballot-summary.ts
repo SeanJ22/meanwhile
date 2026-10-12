@@ -6,27 +6,14 @@ import { candidacyDisplayName, measureDesignations, type AskNominee } from "./ba
 import type { EvidenceRecord } from "./evidence.ts";
 
 /**
- * **"WHAT IS ON MY BALLOT?" AND "WHO IS RUNNING FOR STATE SENATE IN MY
- * DISTRICT?" ARE THE BALLOT WE HOLD FOR THE READER'S DIVISIONS.** (2026-09-29, S3.)
- *
- * Measured on staging that day, at 85635 and 85641, both questions returned no
- * answer: the first names nothing, and the second names an OFFICE ("state senate")
- * where the binder wants a contest's own title ("State Senator, District 19"). §0
- * lists "what is on the ballot to keep or replace them" among the things a
- * resident must see. So the two are read from their words and answered from the
- * contests the reader's own divisions reach — the same contests `/ballot` renders.
- *
- * - **The summary** counts the races and the measures and names them: each race by
- *   its own title, each measure by its designation ("Proposition 141").
- * - **An office's field** names every contest of that office the reader's divisions
- *   reach — two, for a ZIP that reaches two districts — with its candidates and
- *   parties as the certified lineup (or, where none is held, the filing) records
- *   them. The contest's own sentence (its election, its date, how many seats, its
- *   term, the source's scope note) is the record's, verbatim, and so is the
- *   qualification that the nominees come from the certified canvass.
- *
- * The composed prose faces the same validator a model answer does. A contest with
- * no candidate held says so as a gap of ours, never as "no one is running".
+ * "What is on my ballot?" and "Who is running for state senate in my
+ * district?", answered from the contests the reader's divisions reach (the
+ * same contests `/ballot` renders). The summary counts and names races and
+ * measures; an office's field names every reachable contest of that office with
+ * its candidates as the certified lineup (or, without one, the filing) records
+ * them, and the contest's own sentence verbatim. The composed prose faces the
+ * same validator a model answer does. A contest with no candidate held is a
+ * gap of ours.
  */
 
 export type BallotAsk =

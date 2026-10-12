@@ -3,43 +3,9 @@
 import { useId, useState, type ReactNode } from "react";
 
 /**
- * G05 RULE 4h — CANDIDATE-FILING PROVENANCE, BEHIND AN ANNOTATION.
- *
- * *"Candidate-filing provenance moves behind an annotation — a short
- * always-visible pointer attached to the candidate list (footnote marker,
- * info icon or small-type source note) with the full text one tap away,
- * verbatim and complete, opening IN THE APP, reachable by keyboard and at
- * 390px."*
- *
- * ## What is and is not being hidden
- *
- * Nothing is de-sourced. The provenance is the same text, the same link and
- * the same read date it has always been — it just stops occupying two lines
- * above every candidate list on a page that carries a dozen of them. What
- * stays ALWAYS VISIBLE is the pointer: small type, attached to the list it
- * belongs to, naming the source organisation so a reader can tell at a glance
- * whether this contest came from a filing list or a certified canvass. The
- * full record is one tap away and it is verbatim and complete.
- *
- * That distinction is the whole rule. "Where this came from" collapsed to an
- * unlabelled icon would be de-sourcing wearing a tidy face; the org name in
- * the pointer is what keeps the summary honest on its own.
- *
- * ## Why a button and not a link, and not `<details>`
- *
- * *"opening IN THE APP, reachable by keyboard and at 390px."*
- *
- * A link would leave. `<details>` would work and be keyboard-reachable, but
- * its open state is invisible to the rest of the page and its marker styling
- * is inconsistent across engines at small sizes. A real `<button>` with
- * `aria-expanded` says what it is to a screen reader, takes focus in DOM
- * order, responds to Enter and Space for free, and renders identically at
- * 390px and at desktop. The panel is a sibling, full width, so nothing
- * overflows a phone.
- *
- * Reader friction is a defect, and this component spends exactly one tap. It
- * buys back a dozen repeated provenance lines on a scrolling ballot page,
- * which is the trade the rule is making.
+ * Candidate-filing provenance behind a small always-visible pointer that names
+ * the source; the full record opens in place, verbatim, from a real `<button>`
+ * with `aria-expanded`.
  */
 export function FilingNote({
   /** The always-visible pointer. Small type, and it NAMES the source. */

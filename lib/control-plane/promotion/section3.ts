@@ -1,20 +1,14 @@
 /**
- * The §3 standard, in code (docs/rulings.md §3). A fact passes when its value
- * appears on a saved source page from the right place, captured inside that
- * kind of fact's freshness window, and code confirms the value is on the page.
- * Evidence captured by any job counts. A second, independent source is needed
- * only for judgment calls: portraits, summaries of a person's statements or
- * positions, and matching one person across sources.
- *
- * A record goes live when its minimum facts pass; every other fact attaches
- * when it passes, and every blank stays open as work.
+ * A fact passes when its value appears on a saved source page from the right place, captured inside
+ * that kind of fact's freshness window, and code confirms the value is on the page. Evidence captured
+ * by any job counts. A second, independent source is needed only for judgment calls. A record goes
+ * live when its minimum facts pass; every other fact attaches when it passes.
  */
 import { DEFAULT_SOURCE_POLICY, hostSourceKind, type SourceKind, type SourcePolicy } from "./source-kinds.ts";
 export type { SourceKind, SourcePolicy } from "./source-kinds.ts";
 import { personNameField, personRecordBlocks } from "../workers/record-block.ts";
 import { isOfficialSource, type OfficialLinkingPage } from "../../civic-data/source-authority.ts";
 
-/** A saved capture as the check needs it. */
 export interface Section3Page {
   readonly url: string;
   readonly text: string;
@@ -29,10 +23,7 @@ export interface Section3Page {
   readonly citations?: readonly Section3Page[];
 }
 
-/**
- * The minimum facts that put a record live (§3). Every other field attaches
- * on its own. The official page itself is the capture, so it is not a field.
- */
+/** The minimum facts that put a record live; every other field attaches on its own. */
 export const SECTION3_MINIMUMS: Readonly<Record<string, readonly string[]>> = {
   OFFICIAL_ROSTER: ["name", "office"],
   OFFICIAL_BOARD_DIRECTORY: ["bodyName", "bodyClass"],
@@ -55,14 +46,13 @@ export const SECTION3_MINIMUMS: Readonly<Record<string, readonly string[]>> = {
  * a YES/NO/UNKNOWN rule). They describe a verified record rather than quote the
  * page, so they ride with it; each reader door still checks its allowed values.
  */
-export const SECTION3_LABEL_FIELDS: readonly string[] = ["bodyClass", "coverage", "kind", "contactKind", "topicId", "commentPeriod", "state"];
+export const SECTION3_LABEL_FIELDS: readonly string[] = ["bodyClass", "coverage", "kind", "contactKind", "topicId", "commentPeriod", "state", "sourceKind"];
 
 /** Judgment calls: the only fields that need a second, independent source. */
 export const SECOND_SOURCE_FIELDS: readonly string[] = ["photoUrl", "portrait", "statementSummary", "positionSummary"];
 /** Judgment calls as whole records: portraits, statement summaries, one person matched across sources. */
 export const SECOND_SOURCE_RECORD_CLASSES: readonly string[] = ["OFFICIAL_PORTRAIT", "STATEMENT_SUMMARY", "POSITION_SUMMARY", "CROSS_SOURCE_IDENTITY"];
 
-/** Whether a contract's facts are judgment calls that need a second, independent source. */
 export function needsSecondSource(contract: { readonly recordClass: string; readonly requiredFields?: readonly string[]; readonly portraitBasis?: "OWN_PAGE" | "TWO_SOURCES" }): boolean {
   return (SECOND_SOURCE_RECORD_CLASSES.includes(contract.recordClass) && !(contract.recordClass === "OFFICIAL_PORTRAIT" && contract.portraitBasis === "OWN_PAGE")) ||
     (contract.requiredFields ?? []).some(field => SECOND_SOURCE_FIELDS.includes(field) &&
@@ -80,12 +70,7 @@ export function linkingPageFrom(url: string, pages: readonly { readonly canonica
 }
 
 const DAY = 24;
-/**
- * How long a capture stays inside its freshness window, by kind of fact.
- * Engineering choice (S4, 2026-09-29): meetings follow the §4 twice-daily
- * check; rosters, bodies, contacts and rules change on election or policy
- * timescales. Refresh cadence is separate and keeps running.
- */
+/** How long a capture stays inside its freshness window, by kind of fact. Refresh cadence is separate. */
 export const FRESHNESS_WINDOW_HOURS: Readonly<Record<string, number>> = {
   MEETING: 12,
   VOTER_ACCESS_ROUTE: 7 * DAY,
@@ -188,11 +173,7 @@ export interface Section3RecordVerdict {
   readonly reason: string | null;
 }
 
-/**
- * The record half of §3. `derived` names fields whose value is the page itself
- * or a reformatting of a verified value (for example, a display name built from
- * "Last, First"); they pass when their stated `from` field is verified.
- */
+/** `derived` fields pass when their stated `from` field is verified. */
 export function section3Record(input: {
   readonly recordClass: string;
   readonly fields: Readonly<Record<string, unknown>>;
@@ -257,14 +238,7 @@ export function section3Record(input: {
   };
 }
 
-/**
- * §3 for one contest on a saved official ballot or candidate list (for
- * unattended ballot refresh). The contest goes live when its election and
- * office are on the page. Each candidate attaches only when named inside the
- * contest's own section: from each place the page names the office to the next
- * place it names another of the page's offices (`pageOffices`; the rest of the
- * page when none follows). The rest stay open as work.
- */
+/** One contest on a saved official ballot or candidate list: live when its election and office are on the page; each candidate attaches only when named inside the contest's own section. */
 export function section3Contest(input: {
   readonly page: Section3Page;
   readonly now: string;

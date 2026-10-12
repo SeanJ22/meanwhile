@@ -43,16 +43,7 @@ import {
   ownerDigestAttention,
 } from "../lib/control-plane/owner-surface.ts";
 
-/**
- * **THE BILL, READ BACK** (MAPQ-5 through MAPQ-7, 2026-09-07).
- *
- * No live calls: the fixtures are SHAPED from MapTiler's published schema
- * rather than recorded, because this repository holds no service token and a
- * fabricated "recording" would be a lie about provenance. Both fixture files
- * say so in their own first field, and the day a real response is recorded the
- * note goes with it.
- */
-
+/** The fixtures are shaped from MapTiler's published schema, not recorded; each says so in its first field. */
 const FIXTURES = join(process.cwd(), "tests", "fixtures");
 
 async function fixture(name: string): Promise<MapTilerTimeline> {
@@ -95,8 +86,6 @@ async function snapshot(
   };
 }
 
-/* ---------------------------------------------------------------- client */
-
 test("the analytics URL asks by api_keys and by services, and carries no credential", () => {
   const keys = timelineUrl({ period: "current_billing_period", classifier: "api_keys", group: "request" });
   assert.ok(keys.startsWith(`${MAPTILER_ANALYTICS_BASE}/timeline?`), keys);
@@ -125,19 +114,6 @@ test("no service token is NOT CONNECTED, and it is never zero usage", async () =
   assert.match(panel.needsOwner.join(" "), /credential/i, "and what is missing, in plain words");
 });
 
-/**
- * **NOTHING THIS PANEL PUTS ON THE FACE IS A MACHINE CONSTANT.** (ADM-25/ADM-37/ADM-46,
- * caught at integration 2026-09-07.)
- *
- * `scripts/admin-plain-sweep.mts` sweeps `/admin` — the page this panel is on —
- * for four shapes that must never reach the owner's eye without a disclosure
- * between them: an UPPER_SNAKE machine constant, a `pnpm …` shell command, a
- * `lib/…` source path, and a bare long hash. This panel shipped naming two
- * environment variables and a test file in prose that renders on the face.
- *
- * The variable names still exist — they moved one disclosure down, into the
- * component's Technical details, which is exactly where the rule puts them.
- */
 test("the panel's face-rendered prose carries no machine constant, command or code path", async () => {
   for (const snap of [await snapshot(), await snapshot({ connection: "NOT_CONNECTED", days: [] })]) {
     const panel = projectPanel({ snapshot: snap });
@@ -153,17 +129,7 @@ test("the panel's face-rendered prose carries no machine constant, command or co
       panel.burn?.says ?? "",
     ].join("  ");
 
-    /*
-     * The first three patterns are the sweep's own
-     * (`scripts/admin-plain-sweep.mts` OFFENCES), so this test and that guard
-     * cannot drift into disagreeing about what an offence is. The fourth is
-     * the same rule one directory wider: the sweep's source-path pattern
-     * matches only lib, and this panel put a tests path on the face — the
-     * same ADM-46 offence wearing a different prefix.
-     *
-     * Written with [/] and [.] rather than escapes: identical meaning, and
-     * immune to the backslash-eating that mangled an earlier attempt.
-     */
+    // The first three patterns match `scripts/admin-plain-sweep.mts` OFFENCES; the fourth widens the source-path rule to tests.
     assert.doesNotMatch(
       face,
       /[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+/,
@@ -244,8 +210,6 @@ test("a token never survives a message", () => {
   assert.equal(scrubToken("failed with abc123 in it", "abc123"), "failed with <redacted> in it");
   assert.equal(scrubToken("nothing to hide", null), "nothing to hide");
 });
-
-/* ------------------------------------------------------------- normalize */
 
 test("the provider's own vocabulary survives normalization", async () => {
   const days = normalizeTimeline({
@@ -467,8 +431,6 @@ test("a missing actor aggregate is an explicit UNKNOWN beside a valid provider m
   assert.match(panel.actors?.says ?? "", /unknown, not zero/i);
 });
 
-/* -------------------------------------------------------------- classify */
-
 test("a key label is matched exactly, and anything else is UNCLASSIFIED", () => {
   assert.equal(classifyKeyLabel("meanwhile-prod-browser").identity, "meanwhile-prod-browser");
   assert.equal(classifyKeyLabel("  MEANWHILE-PROD-BROWSER ").identity, "meanwhile-prod-browser");
@@ -478,26 +440,17 @@ test("a key label is matched exactly, and anything else is UNCLASSIFIED", () => 
     "BOUNDED_SMOKE",
   );
 
-  /* Deliberately NOT fuzzy: a near-miss is a different key, and folding it into
-   * production's number is how the first bill became unreadable. */
+  /* Deliberately not fuzzy: a near-miss is a different key. */
   assert.equal(classifyKeyLabel("meanwhile-prod-browser-old").identity, "UNCLASSIFIED");
   assert.equal(classifyKeyLabel("old-shared-key").identity, "UNCLASSIFIED");
   assert.equal(classifyKeyLabel("none").identity, "UNCLASSIFIED", "the no-key identity is not a key");
 });
 
-/* ---------------------------------------------------------------- panel */
-
 test("the panel answers each of MAPQ-6's questions with a number or a named gap", async () => {
   const panel = projectPanel({ snapshot: await snapshot() });
 
   assert.equal(panel.connection, "CONNECTED");
-  /*
-   * 9,541 is the api_keys view (9,400 + 58 + 6 + 77) and 9,289 is the services
-   * view. Two views of one population that disagree are two views of one
-   * population that disagree, and the panel takes the LARGER — understating a
-   * bill is the dangerous direction, and the gap between them is itself
-   * something the owner can see in the two tables.
-   */
+  // The api_keys view and the services view disagree; the panel takes the larger, since understating a bill is the dangerous direction.
   assert.equal(panel.used, 9541, "the period total must be the measured request rows");
   assert.equal(panel.allowance, DEFAULT_MAPTILER_ALLOWANCE);
   assert.equal(panel.remaining, DEFAULT_MAPTILER_ALLOWANCE - 9541);
@@ -560,8 +513,6 @@ test("the allowance is stated as assumed until somebody confirms it", () => {
   assert.deepEqual(allowanceFrom("250000"), { allowance: 250_000, assumed: false });
 });
 
-/* ------------------------------------------------------- the boundary */
-
 test("the panel never calls production-key usage a count of people", async () => {
   const panel = projectPanel({
     snapshot: await snapshot({
@@ -594,12 +545,7 @@ test("the panel never calls production-key usage a count of people", async () =>
     );
   }
 
-  /*
-   * "People" is allowed in exactly one construction — the DENIAL. Forbidding
-   * the word outright would forbid the sentence that states the boundary,
-   * which is the sentence the owner actually needs, so every occurrence is
-   * checked to be a denial rather than the word being banned.
-   */
+  // "People" is allowed only in the sentence that denies it.
   const mentions = prose.match(/.{0,24}\bpeople\b/gi) ?? [];
   assert.ok(mentions.length > 0, "the boundary must be stated, not merely obeyed");
   for (const mention of mentions) {
@@ -633,24 +579,11 @@ test("a published snapshot carries no reader-level field", async () => {
   assertAggregateOnly(projectPanel({ snapshot: snap }), "maptiler panel");
 });
 
-/* ------------------------------------------------- the page's own audit */
-
-/**
- * **THE PANEL'S NUMBERS GO THROUGH THE DOOR EVERY OTHER PANEL'S GO THROUGH.**
- * (Caught at integration, 2026-09-07, by two independent review dimensions.)
- *
- * `app/(admin)/admin/page.tsx` collects every section's figures, runs
- * `auditRenderedNumbers` over them, and REFUSES TO RENDER THE WHOLE PAGE if any
- * lacks a denominator or an interpretation contract. This panel shipped feeding
- * that array nothing, which made it the only section on the owner's home page
- * emitting numbers outside the guarantee the page is built on.
- */
 test("every number the panel renders carries a denominator and a contract", async () => {
   const panel = projectPanel({ snapshot: await snapshot() });
   const numbers = maptilerSectionNumbers(panel);
 
-  /* The denominator, stated: an empty array passes auditRenderedNumbers
-   * vacuously, which is exactly what the un-wired panel did. */
+  /* An empty array would pass auditRenderedNumbers vacuously. */
   assert.ok(
     numbers.length >= 8,
     `the panel declared only ${numbers.length} number(s) — the fixture has one total, ` +
@@ -667,8 +600,7 @@ test("every number the panel renders carries a denominator and a contract", asyn
     assert.ok((number.contract ?? "").trim().length > 20, `${number.label} has no real contract`);
   }
 
-  /* Every key row is represented, including the undeclared one — that row is
-   * the finding, and a number the audit never saw is a number nobody checked. */
+  /* Every key row is represented, including the undeclared one. */
   for (const row of panel.byKey) {
     assert.ok(
       numbers.some((num) => num.label.includes(row.label)),

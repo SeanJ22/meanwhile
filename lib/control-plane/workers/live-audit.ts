@@ -1,27 +1,8 @@
 /**
- * **AUDITORS RE-READ LIVE FACTS AFTER THEY PUBLISH.** (DP-13; design §6.9.)
- *
- * Until now an auditor ran only for judgment calls, so most published facts
- * were never looked at again. This is the live-audit pass: each pass it
- * samples published facts a few at a time from each area, re-reads each
- * fact's own source page, and re-runs the §3 value-on-page check and a date
- * check on what the page says today. The answer is green or red, with the fact
- * ID and the page that was read.
- *
- * - **Never loads a whole read model.** The catalog hands over areas and then a
- *   few facts of one area at a time.
- * - **A routine refresh counts.** If the routine refresh already re-read the
- *   same source and found it unchanged since the fact was verified, that is a
- *   green flag with no new fetch. Fetches go only where refreshes don't reach.
- * - **Unchecked is not broken.** A page that cannot be read, or a fact with
- *   nothing on it we can look for, is INCONCLUSIVE, never red.
- * - **Plain pacing.** Re-reads go through the caller's fetch (the acquirer
- *   toolkit, which spaces requests per host); this module adds no request path
- *   of its own and never calls a model.
- *
- * Sampling rules start as the code default below; DP-17 moves them into the
- * audit policy setting. Everything here is pure or takes its reads, clock and
- * store as arguments, so tests prove it without a network or a database.
+ * Live audit: each pass samples published facts a few at a time per area, re-reads each fact's own source page,
+ * and re-runs the value-on-page and date checks. Never loads a whole read model; an unchanged routine refresh
+ * counts as green with no fetch; an unreadable page is INCONCLUSIVE, never red; re-reads go through the caller's
+ * spaced fetch and never call a model. Pure or takes its reads, clock and store as arguments.
  */
 import { createHash } from "node:crypto";
 import { pageWords, valueOnPage, FRESHNESS_WINDOW_HOURS, SECTION3_LABEL_FIELDS } from "../promotion/section3.ts";
@@ -104,7 +85,6 @@ export interface RoutineRefresh {
   readonly contentHash: string;
 }
 
-// --- which values of a record are audited --------------------------------
 
 /** Parts of a record that are bookkeeping, links back to us or categories, not statements the page makes. */
 const NOT_PAGE_STATEMENTS = new Set([
@@ -139,7 +119,6 @@ export function auditableFields(record: Readonly<Record<string, unknown>>, sourc
   return out;
 }
 
-// --- dates ---------------------------------------------------------------
 
 const MONTHS = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
 const ISO_DATE = /^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2}))?/;
@@ -179,7 +158,6 @@ export function dateOnPage(parts: { y: number; m: number; d: number }, words: st
   });
 }
 
-// --- one fact ------------------------------------------------------------
 
 function trimmed(value: string | number): string {
   const text = String(value);
@@ -238,7 +216,6 @@ export function demandRanker(lists: readonly (readonly { readonly key: string }[
   };
 }
 
-// --- the sample ----------------------------------------------------------
 
 /** Stable pseudo-random order: the same pass id gives the same pick, a new pass a new one. */
 function order(passId: string, id: string): string {
@@ -252,7 +229,7 @@ const FAMILY_CLASS: Readonly<Record<string, string>> = {
 };
 const DEFAULT_WINDOW_HOURS = 7 * 24;
 
-/** The three reasons to look harder at a fact (DP-16), as the sampler reads them. */
+/** The three reasons to look harder at a fact, as the sampler reads them. */
 export function boostsOf(fact: LiveFact, input: { readonly now: string; readonly demandRank?: number | null }): SampleBoosts {
   const window = FRESHNESS_WINDOW_HOURS[fact.recordClass ?? FAMILY_CLASS[fact.family] ?? ""] ?? DEFAULT_WINDOW_HOURS;
   const verified = fact.verifiedAt ? Date.parse(fact.verifiedAt) : NaN;
@@ -363,7 +340,6 @@ export async function runLiveAuditPass(deps: LiveAuditPassDeps): Promise<LiveAud
   return summary;
 }
 
-// --- a catalog over a curated reader projection ---------------------------
 
 /**
  * Facts from one curated Reader family's published records (comment rules,

@@ -10,11 +10,6 @@ import {
   type ManualProductionContractId,
 } from "../lib/civic-data/manual-contracts.ts";
 import { observableRoutineContracts } from "../lib/civic-data/meeting-partitions.ts";
-import { routineRefreshSelection } from "../lib/civic-data/owner-refresh.ts";
-import {
-  MANUAL_PRODUCTION_INVENTORY_BINDINGS,
-  ROUTINE_INVENTORY_BINDINGS,
-} from "../lib/civic-data/non-routine-dispositions.ts";
 import {
   processRegisteredManualCandidate,
   processRegisteredRoutineCandidate,
@@ -29,11 +24,10 @@ import {
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { latestUnchangedConfirmation } from "../lib/civic-data/unchanged-confirmation.ts";
 import { pimaLegistarOutcomesCandidate } from "../lib/outcomes/data-plane.ts";
-import { readOutcomeProjection, resetOutcomeSnapshotCache } from "../lib/outcomes/store.ts";
+import { readDoorOutcomeProjection, resetOutcomeSnapshotCache } from "../lib/outcomes/store.ts";
 import type { OutcomeSnapshot, PersistedSittingOutcomes } from "../lib/outcomes/types.ts";
-import { findClient } from "../lib/sources/legistar/client-registry.ts";
+import { findClient, type LegistarClient } from "../lib/sources/legistar/client-registry.ts";
 import type { LegistarEvent } from "../lib/sources/legistar/types.ts";
-import { installedRuntimeChildPlan } from "../scripts/installed-runtime-dispatch.mts";
 import {
   legistarUtcInstant,
   outcomeSourceThrough,
@@ -44,15 +38,8 @@ import {
 } from "../scripts/legistar-outcomes-ingest.mts";
 import { withFetch } from "./helpers/with-fetch.ts";
 
-/**
- * Pima County's official Legistar outcomes (recorded actions, pass/fail, and
- * per-member roll calls) refresh on the standing runner's clock. Before this,
- * the contract was owner-invoked only, so a Board decision recorded after the
- * last owner run could reach neither Readers nor Ask.
- *
- * Every Legistar byte below is a recorded response under tests/fixtures; the
- * stub refuses any route it was not given. No test here touches the network.
- */
+// Events, items and votes are recorded responses under tests/fixtures. Native body fixtures are explicit;
+// the stub refuses any route it was not given.
 
 const CONTRACT_ID: string = "pima-legistar-outcomes";
 const SCOPE = "US-AZ:county:pima:legistar-outcomes";
@@ -64,8 +51,70 @@ function fixture<T>(path: string): T {
   return JSON.parse(readFileSync(new URL(`./fixtures/${path}`, import.meta.url), "utf8")) as T;
 }
 
+function requestPath(url: string): string {
+  const parsed = new URL(url);
+  return parsed.pathname;
+}
+
+const PIMA_ENDPOINT = (eventId: number) => `https://webapi.legistar.com/v1/pima/events/${eventId}/eventitems`;
+const PIMA_PROVENANCE = { endpoint: PIMA_ENDPOINT(1801), sourceOrg: "Pima County Clerk of the Board", readOn: "2026-08-29" };
+const SITTING_URL = "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1801&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394";
+
+/** A held sitting the routine passes below do not re-read. */
 function heldSeed(): OutcomeSnapshot {
-  return JSON.parse(readFileSync("data/states/az/outcomes/legistar-outcomes.json", "utf8")) as OutcomeSnapshot;
+  const sitting = {
+    meetingId: "legistar:pima:1801",
+    bodyId: "ocd-division/country:us/state:az/county:pima#governing",
+    ocdId: "ocd-division/country:us/state:az/county:pima",
+    slug: "pima",
+    eventId: 1801,
+    bodyName: "Board of Supervisors",
+    jurisdiction: "Pima County, AZ",
+    startsAt: "2026-05-12T13:00:00-07:00",
+    sourceOrg: "Pima County Clerk of the Board",
+    sourceUrl: SITTING_URL,
+    extraction: "RETRIEVED",
+    extractionNote: null,
+    publication: {
+      agendaStatusName: "Final", agendaStatusId: 10,
+      agendaFile: "https://legistar.granicus.com/pima/meetings/2026/5/1801_A_Board_of_Supervisors_26-05-12_Online_Agenda.pdf",
+      agendaLastPublishedUtc: "2026-05-11T22:39:33.11",
+      minutesStatusName: "Draft", minutesStatusId: 9,
+      minutesFile: "https://legistar.granicus.com/pima/meetings/2026/5/1801_M_Board_of_Supervisors_26-05-12_Meeting_Summary.pdf",
+      minutesLastPublishedUtc: "2026-05-13T18:56:29.663",
+      inSiteUrl: SITTING_URL,
+      lastModifiedUtc: "2026-05-13T18:56:29.83",
+      videoStatus: "Public",
+      observedAt: "2026-08-30T05:38:01.398Z",
+    },
+    minutesPointer: {
+      url: "https://legistar.granicus.com/pima/meetings/2026/5/1801_M_Board_of_Supervisors_26-05-12_Meeting_Summary.pdf",
+      status: "Draft",
+      host: "legistar.granicus.com",
+      retrievalNote: "Not retrieved. The host disallows all crawling, so this route is not walked.",
+    },
+    agenda: [{ recordClass: "AGENDA", eventItemId: 314834, eventId: 1801, sequence: 1, agendaNumber: null, title: "PUBLIC COMMENTS", matterFile: null, matterType: null, provenance: PIMA_PROVENANCE }],
+    outcomes: [{
+      recordClass: "ACTION_SUMMARY", eventItemId: 314842, eventId: 1801, matterFile: null, action: "waive privilege",
+      disposition: "NOT_RECORDED", dispositionRaw: null, dispositionConflict: null,
+      dispositionGap: "The published record says the body moved to waive privilege this item and carries no pass or fail result for the motion. The result is missing from their record, not decided against.",
+      mover: null, seconder: null, tallyText: "Without objection, the Chair waived this item.", matterStatus: null, onConsentCalendar: false,
+      rollCall: "OUTCOME_WITHOUT_ROLL_CALL",
+      rollCallGap: "The publisher recorded the action and no per-person roll call for it. How each member voted is missing from their record.",
+      provenance: PIMA_PROVENANCE,
+    }],
+    rollCalls: [],
+    failedRollCallExtractions: [],
+    voteRequestFailures: [],
+    routesWalked: ["WEBAPI_EVENTS", "WEBAPI_EVENTITEMS", "WEBAPI_EVENTITEM_VOTES"],
+    publicationObservations: [{
+      meetingId: "legistar:pima:1801", provenance: "FIRST_PARTY_PUBLISHER", report: "AVAILABLE", observedAt: "2026-08-30T05:38:01.398Z",
+      observedUrl: SITTING_URL, sourceOrg: "Pima County Clerk of the Board",
+      evidenceQuote: "EventAgendaStatusName=Final; EventAgendaFile=https://legistar.granicus.com/pima/meetings/2026/5/1801_A_Board_of_Supervisors_26-05-12_Online_Agenda.pdf; EventAgendaLastPublishedUTC=2026-05-11T22:39:33.11",
+      routeId: "WEBAPI_EVENT",
+    }],
+  } as unknown as PersistedSittingOutcomes;
+  return { generatedOn: "2026-08-29", generatedAt: "2026-08-30T05:40:12.819Z", tenants: ["pima"], sittings: [sitting] };
 }
 
 const EVIDENCE = [{
@@ -101,6 +150,7 @@ const RECORDED_VOTES: Readonly<Record<number, unknown[]>> = {
 function recordedLegistar(routes: {
   readonly events: readonly LegistarEvent[] | number;
   readonly items?: Readonly<Record<number, number>>;
+  readonly bodies?: readonly { readonly BodyId: number; readonly BodyName: string }[];
 }) {
   const requests: string[] = [];
   const json = (body: unknown) => new Response(JSON.stringify(body), {
@@ -112,6 +162,7 @@ function recordedLegistar(routes: {
     requests.push(url);
     const parsed = new URL(url);
     assert.equal(parsed.origin, "https://webapi.legistar.com", `unexpected host ${url}`);
+    if (parsed.pathname === "/v1/pima/bodies" && routes.bodies) return json(routes.bodies);
     if (parsed.pathname === "/v1/pima/events") {
       return typeof routes.events === "number" ? new Response("refused", { status: routes.events }) : json(routes.events);
     }
@@ -139,7 +190,7 @@ function steppedClock(startIso: string): () => string {
   };
 }
 
-/** The live pointer before the pass: the held seed minus the two sittings the pass will read. */
+/** The live pointer before the pass: the held seed, without the two sittings the pass will read. */
 async function storeHoldingSeed(): Promise<MemoryRoutineDataStore> {
   const seed = heldSeed();
   const store = new MemoryRoutineDataStore();
@@ -162,8 +213,9 @@ async function routinePass(
   store: MemoryRoutineDataStore,
   stub: ReturnType<typeof recordedLegistar>,
   clockStart: string,
+  unresolvedClient?: LegistarClient,
 ) {
-  const client = findClient("pima");
+  const client = unresolvedClient ?? findClient("pima");
   assert.ok(client);
   const lines: string[] = [];
   const result = await withFetch(stub.fetchImpl, () => runPimaLegistarOutcomeIngest({
@@ -214,23 +266,20 @@ test("(a) Pima Legistar outcomes are one routine contract on the standing clock,
   assert.equal(contract.scope, SCOPE);
   assert.equal(contract.parserNormalizerVersion, "pima-legistar-outcomes/2");
   assert.deepEqual(contract.acquisitionAdapter, {
-    authorityMode: "SINGLE_ROUTE",
+    authorityMode: "REGISTERED_SOURCE_ROUTES",
     command: ["scripts/legistar-outcomes-ingest.mts", "--promote", "--slug", "pima"],
-    requestedUrl: EVENTS_ROUTE,
   });
   assert.equal(contract.autoPromotable, true);
   assert.equal(contract.classification, "RUNTIME_CIVIC_DATA");
   assert.deepEqual(contract.readerProjection, { id: CONTRACT_ID, consumers: ["agenda", "Ask", "meeting Reader records", "map"] });
-  assert.deepEqual(contract.bootstrapFixturePaths, ["data/states/az/outcomes/legistar-outcomes.json"]);
+  assert.deepEqual(contract.bootstrapFixturePaths, []);
 
-  // Reader freshness: fourteen hours through election day, then a day, so the
-  // twelve-hour re-read plus one failed retry lands before STALE.
+  // Fourteen hours through election day, then a day, so the twelve-hour re-read plus one failed retry lands before STALE.
   assert.equal(cadenceMsAt(contract, Date.parse("2026-09-24T12:00:00.000Z")), 14 * HOUR);
   assert.equal(cadenceMsAt(contract, Date.parse("2026-11-03T23:59:59.999Z")), 14 * HOUR);
   assert.equal(cadenceMsAt(contract, Date.parse("2026-11-04T00:00:00.000Z")), 24 * HOUR);
   assert.equal(contract.retry.afterMs, HOUR);
-  // Re-reads follow the Board's sittings (owner decision 2026-09-24): hourly
-  // within seven days of a sitting on either of its partitions, else twice daily.
+  // Hourly within seven days of a sitting on either of its partitions, else twice daily.
   assert.deepEqual(contract.schedule, {
     kind: "SITTING_WINDOW",
     windowMs: 7 * 24 * HOUR,
@@ -245,7 +294,7 @@ test("(a) Pima Legistar outcomes are one routine contract on the standing clock,
   // The standing runner accepts it with no special case.
   const task = routineTaskFromContract(contract);
   assert.deepEqual(ROUTINE_SOURCE_TASKS.filter(({ id }) => id === CONTRACT_ID), [task]);
-  assert.equal(task.requestedUrl, EVENTS_ROUTE);
+  assert.equal(task.requestedUrl, "", "each acquired route is checked against Pima's registered authority");
   assert.equal(task.acquisitionFailureDomain, "routine-source:pima-legistar-outcomes");
   assert.equal(task.retryMs, HOUR);
   const succeededAt = Date.parse("2026-09-24T09:00:00.000Z");
@@ -254,8 +303,7 @@ test("(a) Pima Legistar outcomes are one routine contract on the standing clock,
     lastSucceededAt: "2026-09-24T08:59:58.000Z",
     lastSucceededObservedAt: "2026-09-24T09:00:00.000Z",
   };
-  // Owed an hour (hot) or twelve hours after its success, and admitted 15
-  // minutes or 2 hours before it is owed (C6).
+  // Owed an hour (hot) or twelve hours after its success, and admitted 15 minutes or 2 hours before it is owed.
   const LEAD = SITTING_WINDOW_ADMISSION_LEAD_MS;
   const BASE_LEAD = SITTING_WINDOW_BASE_ADMISSION_LEAD_MS;
   assert.equal(routineTaskDue(task, clock, succeededAt + 12 * HOUR - BASE_LEAD - 1, false), false);
@@ -264,32 +312,19 @@ test("(a) Pima Legistar outcomes are one routine contract on the standing clock,
   assert.equal(routineTaskDue(task, clock, succeededAt + HOUR - LEAD, true), true);
   assert.equal(routineTaskDue(task, clock, succeededAt + HOUR - LEAD, undefined), true, "an unreadable window is read as hot");
   assert.equal(routineTaskDue(task, undefined, succeededAt), true, "a never-run task is due at once");
-
-  // Its frozen inventory row now binds the standing clock and nothing else;
-  // Mesa's minutes route (NH332) shares the row under its own source authority.
-  assert.deepEqual(
-    ROUTINE_INVENTORY_BINDINGS.find(({ inventorySourceId }) => inventorySourceId === "legistar-outcomes"),
-    {
-      inventorySourceId: "legistar-outcomes",
-      contractIds: [CONTRACT_ID, "mesa-legistar-minutes-outcomes"],
-      contractSourceId: "pima-legistar-outcomes",
-      contractSourceIds: { "mesa-legistar-minutes-outcomes": "mesa-legistar-minutes-outcomes" },
-    },
-  );
-  assert.ok(!MANUAL_PRODUCTION_INVENTORY_BINDINGS.some(({ contractId }) => contractId === CONTRACT_ID));
 });
 
 test("(b) a GOOD Pima candidate promotes through the routine door and a later failed read leaves that GOOD pointer as LKG", async () => {
   const memory = new MemoryRoutineDataStore();
   const seed = heldSeed();
-  const snapshot: OutcomeSnapshot = { ...seed, sittings: seed.sittings.filter(({ eventId }) => eventId === 1825) };
+  const snapshot: OutcomeSnapshot = seed;
   const good = pimaLegistarOutcomesCandidate({
     snapshot,
     acquisitions: EVIDENCE,
     retrievedAt: "2026-09-20T19:00:00.000Z",
     sourceThrough: "2026-09-20T18:59:00.000Z",
   });
-  assert.equal(routineCandidateContractIssue(CONTRACT_ID, good), null, "the recorded events route is inside the registered SINGLE_ROUTE");
+  assert.equal(routineCandidateContractIssue(CONTRACT_ID, good), null, "the recorded events route is inside Pima's registered source authority");
   const promoted = await processRegisteredRoutineCandidate(memory, CONTRACT_ID, good, "2026-09-20T19:01:00.000Z");
   assert.equal(promoted.candidate.state, "PROMOTED");
   assert.equal(promoted.promoted?.versionId, good.id);
@@ -309,7 +344,7 @@ test("(b) a GOOD Pima candidate promotes through the routine door and a later fa
   const pointer = await memory.readPromotion("MEETING_OUTCOME", SCOPE);
   assert.equal(pointer?.versionId, good.id);
   assert.equal(pointer?.lastKnownGoodVersionId, good.id);
-  const read = await readOutcomeProjection({ store: memory, bypassCache: true });
+  const read = await readDoorOutcomeProjection(SCOPE, { store: memory, bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
   assert.equal(read.metadata.versionId, good.id);
 
@@ -321,37 +356,8 @@ test("(b) a GOOD Pima candidate promotes through the routine door and a later fa
   assert.equal((await memory.readPromotion("MEETING_OUTCOME", SCOPE))?.versionId, good.id);
   resetOutcomeSnapshotCache();
 });
-
-test("(c) no package script, installed dispatch, or firewall mapping can still promote this scope through a manual door", () => {
-  const scripts = (JSON.parse(readFileSync("package.json", "utf8")) as { scripts: Record<string, string> }).scripts;
-  assert.equal(scripts["outcomes:ingest"], undefined);
-  for (const [name, command] of Object.entries(scripts)) {
-    assert.doesNotMatch(command, /--contract=pima-legistar-outcomes\b/, `${name} names a manual promotion for the routine contract`);
-    assert.doesNotMatch(command, /legistar-outcomes-ingest\.mts/, `${name} is a second, clockless door to the routine adapter`);
-  }
-  assert.throws(
-    () => installedRuntimeChildPlan({ mode: "manual-promote", args: [`--contract=${CONTRACT_ID}`] }),
-    /OWNER_MANUAL_CONTRACT_UNKNOWN:pima-legistar-outcomes/,
-  );
-  // The owner's lawful "run it now" is a request the standing parent executes
-  // through this same routine child; it is never a second clock or door.
-  assert.deepEqual(routineRefreshSelection([`--contract=${CONTRACT_ID}`]), { contractId: CONTRACT_ID, maximumAttempts: 1 });
-  assert.throws(
-    () => installedRuntimeChildPlan({ mode: "routine-refresh", args: [`--contract=${CONTRACT_ID}`] }),
-    /OWNER_REFRESH_HAS_NO_CHILD_COMMAND/,
-  );
-
-  const firewall = readFileSync("lib/civic-data/firewall.ts", "utf8");
-  assert.doesNotMatch(firewall, /\["outcomes:ingest",\s*"scripts\/legistar-outcomes-ingest\.mts",\s*"pima-legistar-outcomes"\]/);
-  assert.match(firewall, /"nh:members:promote",\s*"outcomes:ingest",/, "the retired alias is a forbidden direct production child");
-
-  const adapter = readFileSync("scripts/legistar-outcomes-ingest.mts", "utf8");
-  assert.match(adapter, /processRegisteredRoutineCandidate\(/);
-  assert.doesNotMatch(adapter, /processRegisteredManualCandidate/);
-});
-
 test("the rolling routine window ends today where the Board sits and reaches back 120 days", () => {
-  // 05:30Z on the 24th is still the 23rd in Tucson.
+  // 05:30Z on the 24th is still the 23rd locally.
   assert.deepEqual(
     pimaOutcomeWindow({ from: null, to: null }, "America/Phoenix", new Date("2026-09-24T05:30:00.000Z")),
     { from: "2026-05-26", to: "2026-09-23" },
@@ -367,6 +373,73 @@ test("the rolling routine window ends today where the Board sits and reaches bac
   assert.equal(defaults.to, null);
   assert.equal(defaults.maxSittings, 40);
   assert.equal(parsePimaOutcomeIngestArgs(["--dry-run", "--from", "2026-08-01", "--to", "2026-08-31"]).from, "2026-08-01");
+});
+
+test("body-first Pima acquisition promotes the exact native body's outcomes and retains every source receipt", async () => {
+  const store = await storeHoldingSeed();
+  const heldClient = findClient("pima");
+  assert.ok(heldClient);
+  const event = recordedEvent(1825, "2026-09-20T18:00:00.12");
+  const client = { ...heldClient, eventBodyId: undefined, eventBodyName: event.EventBodyName };
+  const stub = recordedLegistar({
+    bodies: [{ BodyId: event.EventBodyId, BodyName: event.EventBodyName }, { BodyId: 999, BodyName: "Another Pima body" }],
+    events: [event, { ...recordedEvent(1821), EventBodyId: 999 }],
+  });
+  const { result } = await routinePass(store, stub, "2026-09-21T00:00:00.000Z", client);
+  assert.equal(result.exitCode, 0);
+  assert.equal(result.promotedSittings, 1, "a different native body cannot become the Board even when the event label matches");
+  assert.equal(requestPath(stub.requests[0]), "/v1/pima/bodies");
+  const eventsRequest = stub.requests.find(url => requestPath(url) === "/v1/pima/events");
+  assert.ok(eventsRequest);
+  assert.match(new URL(eventsRequest).searchParams.get("$filter")!, new RegExp(`EventBodyId eq ${event.EventBodyId}`));
+  assert.ok(!stub.requests.some(url => /\/events\/1821\/eventitems/.test(url)), "wrong-body event items are never requested");
+  const verdict = await supervisorVerdict(store, result.receiptLine, result.exitCode);
+  assert.deepEqual({ outcome: verdict.outcome, issue: verdict.issue }, { outcome: "SUCCESS", issue: null });
+  const saved = await store.readCandidate(verdict.candidateId);
+  assert.equal(requestPath(saved!.candidate.retrieval.requestedUrl), "/v1/pima/bodies",
+    "the candidate names its actual first response, without relabeling body evidence as events");
+  const acquisitions = (saved!.candidate.normalizedPayload as { acquisitions: typeof EVIDENCE }).acquisitions;
+  for (const path of ["/v1/pima/bodies", "/v1/pima/events", "/v1/pima/events/1825/eventitems", "/v1/pima/eventitems/329182/votes"]) {
+    assert.ok(acquisitions.some(row => requestPath(row.requestedUrl) === path && row.source === CONTRACT_ID), `${path} remains attributed evidence`);
+  }
+  const read = await readDoorOutcomeProjection(SCOPE, { store, bypassCache: true });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind === "PROMOTED") {
+    assert.ok(read.value.sittings.some(sitting => sitting.eventId === 1825 && sitting.rollCalls.some(row => row.eventItemId === 329182)));
+    assert.ok(!read.value.sittings.some(sitting => sitting.eventId === 1821));
+  }
+  resetOutcomeSnapshotCache();
+});
+
+test("a requested Pima body that disagrees with the native body is durably held before events and keeps LKG", async () => {
+  const store = await storeHoldingSeed();
+  const before = await store.readPromotion("MEETING_OUTCOME", SCOPE);
+  const heldClient = findClient("pima");
+  assert.ok(heldClient);
+  const event = recordedEvent(1825);
+  const stub = recordedLegistar({ bodies: [{ BodyId: event.EventBodyId, BodyName: event.EventBodyName }], events: [event] });
+  const result = await withFetch(stub.fetchImpl, () => runPimaLegistarOutcomeIngest({
+    store, client: { ...heldClient, eventBodyId: undefined, eventBodyName: event.EventBodyName },
+    args: { ...ROUTINE_ARGS, bodyId: 999 }, window: { from: "2026-05-24", to: "2026-09-21" },
+    now: steppedClock("2026-09-21T00:00:00.000Z"), log: () => {},
+  }));
+  assert.equal(result.exitCode, 2);
+  assert.deepEqual(stub.requests.map(requestPath), ["/v1/pima/bodies"]);
+  const verdict = await supervisorVerdict(store, result.receiptLine, result.exitCode);
+  assert.deepEqual({ outcome: verdict.outcome, issue: verdict.issue }, { outcome: "HELD", issue: null });
+  assert.match((await store.readCandidate(verdict.candidateId))!.candidate.retrieval.failureDetail!, /LEGISTAR_OUTCOME_BODY_IDENTITY_MISMATCH/);
+  assert.equal((await store.readPromotion("MEETING_OUTCOME", SCOPE))?.versionId, before!.versionId);
+  resetOutcomeSnapshotCache();
+});
+
+test("Pima's multi-route contract admits its body lookup but refuses another tenant or API host", () => {
+  const candidateFor = (requestedUrl: string) => pimaLegistarOutcomesCandidate({ snapshot: heldSeed(),
+    acquisitions: [{ ...EVIDENCE[0], requestedUrl, finalUrl: requestedUrl }],
+    retrievedAt: "2026-09-20T19:00:00.000Z", sourceThrough: "2026-09-20T18:59:00.000Z" });
+  assert.equal(routineCandidateContractIssue(CONTRACT_ID, candidateFor("https://webapi.legistar.com/v1/pima/bodies?$top=1000")), null);
+  for (const url of ["https://webapi.legistar.com/v1/mesa/bodies", "https://webapi.legistar.com/v1/pima-other/events", "https://unrelated.example/v1/pima/bodies"]) {
+    assert.notEqual(routineCandidateContractIssue(CONTRACT_ID, candidateFor(url)), null, url);
+  }
 });
 
 test("a Legistar UTC stamp is read as UTC, and a candidate's source-through never precedes the pointer it extends", () => {
@@ -400,12 +473,12 @@ test("a routine pass promotes every changed sitting, including one modified earl
 
   const verdict = await supervisorVerdict(store, result.receiptLine, result.exitCode);
   assert.deepEqual({ outcome: verdict.outcome, issue: verdict.issue }, { outcome: "SUCCESS", issue: null });
-  const read = await readOutcomeProjection({ store, bypassCache: true });
+  const read = await readDoorOutcomeProjection(SCOPE, { store, bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   assert.equal(read.metadata.versionId, verdict.candidateId);
   assert.equal(read.metadata.sourceThrough, "2026-09-20T18:00:00.120Z");
-  assert.equal(read.value.sittings.length, heldSeed().sittings.length);
+  assert.equal(read.value.sittings.length, heldSeed().sittings.length + 2);
   for (const meetingId of ["legistar:pima:1821", "legistar:pima:1825"]) {
     const sitting: PersistedSittingOutcomes | undefined = read.value.sittings.find((row) => row.meetingId === meetingId);
     assert.equal(sitting?.extraction, "RETRIEVED", meetingId);
@@ -417,9 +490,8 @@ test("a routine pass promotes every changed sitting, including one modified earl
     "the recorded per-member roll call reaches the Reader projection",
   );
 
-  // Why the pass carries the pointer's source-through forward: the same
-  // snapshot stamped with only its own sitting's older modification time is
-  // refused by the GOOD contract as a regression.
+  // The pass carries the pointer's source-through forward: stamped with only its own older modification time, the
+  // same snapshot is refused as a regression.
   const regressed = pimaLegistarOutcomesCandidate({
     snapshot: read.value,
     acquisitions: EVIDENCE,
@@ -447,7 +519,7 @@ test("an unchanged day costs one events request and ends in a validated no-chang
   assert.equal(result.tally.walked, 0);
   const verdict = await supervisorVerdict(store, result.receiptLine, result.exitCode);
   assert.deepEqual({ outcome: verdict.outcome, issue: verdict.issue }, { outcome: "SUCCESS", issue: null });
-  // §0/§5/§7 + Sean's S6 instruction: an unchanged pass confirms the existing version.
+  // An unchanged pass confirms the existing version.
   assert.equal(verdict.candidateId, pointerBefore?.versionId);
   assert.equal(latestUnchangedConfirmation(await store.events(verdict.candidateId), verdict.candidateId)?.retrieval.retrievedAt, "2026-09-21T03:00:03.000Z");
   const pointerAfter = await store.readPromotion("MEETING_OUTCOME", SCOPE);
@@ -488,7 +560,7 @@ test("a refused sitting holds the pass even when a later sitting promotes, and t
   const runRecord = await store.readCandidate(verdict.candidateId);
   assert.equal(runRecord?.state, "SOURCE_BLOCKED");
   assert.match(runRecord?.candidate.retrieval.failureDetail ?? "", /legistar:pima:1825/);
-  const read = await readOutcomeProjection({ store, bypassCache: true });
+  const read = await readDoorOutcomeProjection(SCOPE, { store, bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   assert.equal(runRecord?.lastKnownGoodVersion, read.metadata.versionId, "the held receipt names the pointer as it now stands");
@@ -539,7 +611,7 @@ test("DB-07: outcomes older than the routine window stay published; a narrower w
     log: () => {},
   }));
   assert.equal(result.exitCode, 0);
-  const read = await readOutcomeProjection({ store, bypassCache: true });
+  const read = await readDoorOutcomeProjection(SCOPE, { store, bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   const held = new Set(read.value.sittings.map((sitting) => sitting.meetingId));

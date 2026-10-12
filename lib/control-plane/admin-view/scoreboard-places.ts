@@ -1,9 +1,4 @@
-/**
- * **THE SENT PLACES THE SCOREBOARD COUNTS (BR-30, SC-19).** A mission is a saved scope on the Admin config row. For the most recent
- * ones this reads each place's owed list and history exactly as Admin's place view does, and turns them into the Scorecard's
- * measures: completeness, freshness, delivery, coverage, people coverage, the starting and grown lists, the trend and the time to
- * core information. A place that cannot be read in time is counted as unread, never as zero. Read only; it starts no work.
- */
+/** A place that cannot be read in time is counted as unread, never as zero. Read only. */
 import { GROUP_NAMES } from "../../coverage/group-names.ts";
 import { peopleCoverage } from "../../coverage/people-coverage.ts";
 import { placeCoverage } from "../../coverage/place-coverage.ts";
@@ -17,17 +12,14 @@ import type { PlaceOwedRead, PlaceOwedRefusal } from "./place-owed-read.ts";
 import type { ScoreboardPlace } from "./scoreboard-read.ts";
 import { huntPlaceKey } from "./v6-hunts-read.ts";
 
-/** The most recent missions the Scoreboard reads; each is a Census and held-data read, so the number is bounded. */
 export const SCOREBOARD_PLACES_MOST = 8;
 
 export interface ScoreboardPlaceDeps {
   readonly readOwed: (placeKey: string) => Promise<PlaceOwedRead | PlaceOwedRefusal>;
   readonly readHistory: (placeKey: string) => Promise<readonly PlaceHistoryPoint[]>;
-  /** How long the whole read may take before the places not yet read are counted as unread. */
   readonly budgetMs: number;
 }
 
-/** The sent places, most recently started first, each once. */
 export function sentPlaces(config: AdminConfig | null): readonly { readonly placeKey: string; readonly missionStart: string }[] {
   const keys = new Map<string, string>();
   for (const scope of config?.expansionScopes ?? []) keys.set(huntPlaceKey(scope), "");
@@ -54,7 +46,6 @@ export function scoreboardPlaceOf(read: PlaceOwedRead, history: readonly PlaceHi
   };
 }
 
-/** The places that could be read, and how many sent places could not (a refused read, a failure or the time budget). */
 export async function readScoreboardPlaces(config: AdminConfig | null, coreIds: ReadonlySet<string>, deps: ScoreboardPlaceDeps): Promise<{ readonly places: readonly ScoreboardPlace[]; readonly unread: number }> {
   const sent = sentPlaces(config).slice(0, SCOREBOARD_PLACES_MOST);
   const places: ScoreboardPlace[] = [];

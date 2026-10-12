@@ -8,15 +8,8 @@ import {
 } from "../lib/officials/seat-grouping.ts";
 
 /**
- * ALIGN-2 (2026-08-26, the author's 8/26 walkthrough) — one heading per body,
- * however many seats it holds.
- *
- * The reported instance is the Senate: `U.S. Senator` printed twice on the
- * who-governs card at every Arizona zip, once above Mark Kelly and once above
- * Ruben Gallego. RULING 136 says the instance is an example, so the guard
- * below exercises the class, and RULING 157 says the verification must reach a
- * case the fix was not derived from — the five-member county board and the
- * two-member state house district are those cases, named here.
+ * One heading per body, however many seats it holds. The guard exercises the
+ * class: a five-member county board and a two-member state house district.
  */
 
 test("ALIGN-2: two senators collapse to ONE heading, pluralised", () => {
@@ -32,7 +25,7 @@ test("ALIGN-2: two senators collapse to ONE heading, pluralised", () => {
 });
 
 test("ALIGN-2: the class, not the instance — cases the fix was NOT derived from", () => {
-  // A five-member county board. Sean named the Pima supervisors.
+  // A five-member county board.
   const supervisors = groupBySeatLabel(
     ["Rex Scott", "Matt Heinz", "Jennifer Allen", "Steve Christy", "Andrés Cano"].map(
       (member) => ({ label: "County Supervisor", member }),
@@ -42,7 +35,7 @@ test("ALIGN-2: the class, not the instance — cases the fix was NOT derived fro
   assert.equal(supervisors[0].label, "County Supervisors");
   assert.equal(supervisors[0].members.length, 5);
 
-  // A two-member Arizona state house district. Sean named Griffin and Diaz.
+  // A two-member Arizona state house district.
   const house = groupBySeatLabel([
     { label: "State House District 19", member: "Gail Griffin" },
     { label: "State House District 19", member: "Lupe Diaz" },
@@ -119,12 +112,8 @@ test("ALIGN-2: the who-governs card calls the shared helper and indents the bloc
     source.includes('className="block person-under-heading"'),
     "the holder block lost its subparagraph indent",
   );
-  /* 4 since WGH-22 (2026-08-31), down from 6, and BOTH removals are the point:
-     the excluded-districts disclosure is gone under RULING 222, and the STATE
-     and FEDERAL seat rows became one `SeatRow` component instead of two copies
-     that had already drifted apart. The count is a proxy for "every heading
-     block on this card indents"; a new block that did NOT indent is what it
-     catches, and fewer copies is the direction that makes it harder to break. */
+  /* The count is a proxy for "every heading block on this card indents"; a new
+     block that did NOT indent is what it catches. */
   assert.equal(
     (source.match(/className="block person-under-heading"/g) ?? []).length,
     4,

@@ -1,16 +1,6 @@
 /**
- * Curated plain-language "what happened" summaries for CONCLUDED meetings
- * (6a, 2026-08-17) — the past-meeting card's dropdown.
- *
- * Rules, same as every curated register:
- * - a summary exists ONLY where the body's published minutes were read;
- *   every entry cites the minutes document it paraphrases and the date it
- *   was read;
- * - the summary is ours and labeled ours; it paraphrases, never evaluates;
- * - a concluded meeting with no entry renders the honest state instead
- *   ("minutes not posted yet" / "not yet summarized"), never a guess.
- *
- * Keyed by the source-namespaced meeting id from the snapshot.
+ * Curated summaries of concluded meetings, only where the body's published minutes were read; each cites the minutes
+ * document. Keyed by the source-namespaced meeting id.
  */
 
 export interface MinutesSummary {
@@ -24,14 +14,6 @@ export interface MinutesSummary {
 }
 
 export const MINUTES_SUMMARIES: MinutesSummary[] = [
-  // First entries 2026-08-18 (4c). The seed worklist was walked and the
-  // hunt recorded: of the concluded window, TWO meetings had published
-  // minutes to read — the rest were checked and render the honest not-yet
-  // state (TUSD Id=485 and Sunnyside Id=163 portal minutes exist but are
-  // unpublished/hidden; Newbury's CivicWeb page hosts the agenda only and
-  // the town site 403'd the minutes path this run; OnBase surfaces no
-  // minutes document). Minutes lag sittings by design — they are approved
-  // at the next meeting — so recency alone is never a defect.
   {
     meetingId: "legistar:pima:1822",
     summary:

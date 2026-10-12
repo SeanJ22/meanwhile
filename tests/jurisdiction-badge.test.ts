@@ -19,13 +19,8 @@ import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 const ROOT = join(import.meta.dirname, "..");
 
 /**
- * M81 — the jurisdiction badge.
- *
- * The author's insight is the whole row: impact is jurisdiction MEMBERSHIP,
- * not distance. These guards hold the three things that make the badge honest
- * — it derives from the map's own geometry and never a second source, a failed
- * lookup never becomes a claim, and a body with no published boundary gets its
- * own name rather than being defaulted into either answer.
+ * Impact is jurisdiction membership, not distance. The badge derives from the map's own geometry and never a
+ * second source, a failed lookup never becomes a claim, and a body with no published boundary gets its own name.
  */
 
 const HERE = "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town";
@@ -43,10 +38,7 @@ test("M81: a body whose division contains the reader governs them", () => {
 });
 
 test("M81: a body with no published boundary gets its OWN state", () => {
-  // D28's shape: Pima Community College's district, which the Census
-  // enumerates no boundary for. Defaulting it into either badge would be a
-  // render default manufacturing a claim — "Nearby" asserts the body does not
-  // govern the reader, which we do not know.
+  // A district the Census enumerates no boundary for: defaulting it into either badge would manufacture a claim.
   assert.equal(badgeFor({ ocdId: null }, AT_POINT), "NO_BOUNDARY");
 });
 
@@ -63,9 +55,7 @@ test("M81: a FAILED lookup is not an empty answer", () => {
 });
 
 test("M81: the census states every number, never one", () => {
-  // Four states since JUR-2 (2026-08-23) added COULD_GOVERN. The census
-  // states all of them, including the zeroes — a state that only appears when
-  // it is non-zero is a state a reader of the report cannot tell was measured.
+  // The census states every state, including the zeroes.
   const census = badgeCensus(
     [{ ocdId: HERE }, { ocdId: COUNTY }, { ocdId: ELSEWHERE }, { ocdId: null }],
     AT_POINT,
@@ -112,47 +102,9 @@ test("M81: the badge derives from the map's own geometry, never a second source"
   );
   const imported = [...source.matchAll(/from\s+"([^"]+)"/g)].map((m) => m[1]).sort();
   /*
-   * An allowlist with a reason each, rather than a bare list. Both entries are
-   * TEXT or TYPES, and neither can resolve a point:
-   *
-   * - `../sources/types.ts` — the meeting type. The original entry.
-   * - `../ballot/could-govern.ts` — the RULING 71 wording, added by `JUR-2`
-   *   (2026-08-23). The `COULD_GOVERN` badge says the same thing to the same
-   *   reader as the ballot page's pill, and two wordings for one claim is how
-   *   they drift. It is a pair of string constants, and importing it is
-   *   deliberately cheaper than retyping the sentence.
-   *
-   * - `../officials/division-government.ts` — `isDivisionsOwnGovernment`, added
-   *   by `GOV-1` (2026-08-29). A STRING COMPARISON: `bodyId === ocdId + "#" +
-   *   <the registry's derived suffix>`. It resolves nothing and reads no data.
-   *
-   *   It is imported from that LEAF module and deliberately not from
-   *   `body-definitions.ts`, which re-exports it. The predicate's meaning
-   *   belongs to the definitions module and its WEIGHT does not: that module
-   *   pulls in `body-blurbs`, `body-form` and `form-definitions`, so importing
-   *   the six-line predicate from there dragged the whole definition corpus
-   *   into every consumer. This badge is on `/api/meetings`, and doing so took
-   *   that route's file trace one over its committed ceiling and refused the
-   *   build. The build was right: a badge has no business depending on the
-   *   corpus. Keep this import pointed at the leaf.
-   * - `../registry/body-class-labels.ts` — `governVerbMayAttach`, RULING 118's
-   *   single authority on whether the verb may attach to a class of body. A
-   *   lookup in a hardcoded table.
-   * - `../registry/types.ts` — `BodyClass` and `DivisionType`, types only.
-   * - `../text/reader-names.ts` — `readerGovernmentName` (S2.4, 2026-10-01), a pure
-   *   string formatter: the area a claim names is "Pima County", not the Census's
-   *   "Pima". It holds no data and resolves nothing.
-   *
-   * The last three are the GOV-1 repair and they are the reason it cannot be
-   * undone by a forgetful call site: the govern verb was being handed to 248
-   * bodies that do not govern the division they sit on, because this function
-   * was never told which body it was describing. Asking the two questions HERE
-   * rather than at the call site is the point — a binary reinvented at a call
-   * site is how `door-overlay.tsx` came to call a sovereign nation advisory.
-   *
-   * The rule this guards is unchanged and is asserted directly below: the
-   * module holds no geometry and resolves nothing. None of the three can
-   * resolve a point, and the forbidden-substring sweep below is untouched.
+   * An allowlist of modules that are text, types or string comparisons and cannot resolve a point.
+   * `isDivisionsOwnGovernment` is imported from its leaf module, not `body-definitions.ts`: the latter pulls the
+   * whole definition corpus into `/api/meetings` and breaks its file-trace ceiling.
    */
   assert.deepEqual(
     imported,
@@ -192,32 +144,10 @@ test("M81: the API sends the resolved divisions, and null when it failed", () =>
   );
 });
 
-/* ========================================================================== */
-/* JUR-1 — a body may not both govern you and have no boundary                */
-/* ========================================================================== */
-
 /**
- * (2026-08-22, the author's 8/22 walkthrough, item 12.)
- *
- * Morris County's Board of County Commissioners rendered **"Governs your
- * area"** and **"Boundary not published"** at the same time. Those cannot both
- * be true: if no boundary is published, whether it governs the reader is a
- * question that cannot be asked.
- *
- * `badgeFor` was never the defect — it returns exactly one value. The
- * contradiction came from a SECOND code path: the body card built its
- * `Governs: <division>` row straight off the division label, with no reference
- * to whether a boundary existed. Two paths, one subject, nothing making them
- * agree — which is the class this sweeps, not the instance.
- */
-/*
- * **GOV-1 (2026-08-29): these calls now carry the BODY's identity.** The three
- * added fields are not decoration — `jurisdictionClaim` takes `bodyId`,
- * `divisionType` and `bodyClass` and consults them, because the govern verb is
- * a claim about a BODY and this function was making it from a DIVISION. The
- * JUR-1 assertions below are unchanged in substance: the subject is now spelled
- * as the county's OWN governing body, which is what "a real body with a real
- * division" always meant here.
+ * A body may not both govern you and have no published boundary. The sweep covers every path that builds a
+ * `Governs: <division>` row, not one instance. These calls carry the body's identity, because the govern verb is
+ * a claim about a body.
  */
 const MORRIS = "ocd-division/country:us/state:nj/county:morris";
 
@@ -234,7 +164,7 @@ test("JUR-1: the two claims are mutually exclusive, by construction", () => {
   assert.equal(withBoundary.label, "Governs");
   assert.equal(withBoundary.value, "Morris County");
 
-  // No division id at all — Pima Community College's district is the live case.
+  // No division id at all.
   const noId = jurisdictionClaim({
     bodyId: "curated:az/pima-community-college#governing",
     ocdId: null,
@@ -292,20 +222,7 @@ test("JUR-1: no surface builds a Governs row without going through the one claim
   );
 });
 
-/* ========================================================================== */
-/* JUR-2 — a zip may not assert jurisdiction                                  */
-/* ========================================================================== */
-
-/**
- * The 8/22 capture: the Rockaway Township Municipal Building card at 07866,
- * reading **"Governs your area"** with **"Your address is inside the area this
- * body governs"** underneath it, to a reader who had given nothing but a zip.
- *
- * `CLAUDE.md`'s first geographic rule is that a zip is orientation only and can
- * never resolve a ballot — a ZCTA crosses city, county, school district and
- * legislative lines. 07866 holds Rockaway Township, Rockaway Borough and
- * Denville Township. The card picked one and told the reader it was theirs.
- */
+/** A zip is orientation only and can never resolve a ballot: a ZCTA crosses city, county, school district and legislative lines. */
 
 const JUR2_TOWNSHIP = "ocd-division/country:us/state:nj/place:rockaway_township";
 const JUR2_COUNTY = "ocd-division/country:us/state:nj/county:morris";
@@ -327,11 +244,8 @@ test("JUR-2: NEARBY is the same over-claim pointed the other way, and collapses 
 
 test("JUR-2: a division covering the WHOLE zip still answers normally", () => {
   /*
-   * RULING 71 is explicit: county, school district, state and federal do not
-   * become uncertain because a zip crosses a municipal line. Every reader at
-   * 07866 is in Morris County. A pill on things it obviously does not apply
-   * to is a pill readers learn to skip, which costs the Rockaway Borough case
-   * the attention it exists to get.
+   * County, school district, state and federal do not become uncertain because a zip crosses a municipal line;
+   * a pill on things it obviously does not apply to is a pill readers learn to skip.
    */
   const inZip = new Set([JUR2_TOWNSHIP, JUR2_COUNTY]);
   const partial = new Set([JUR2_TOWNSHIP]);
@@ -350,10 +264,8 @@ test("JUR-2: a resolved ADDRESS answers GOVERNS and NEARBY as before", () => {
 
 test("JUR-2: UNMEASURED partiality is not treated as 'nothing is partial'", () => {
   /*
-   * `null` means the lattice never measured this zip — outside the committed
-   * geometry. An empty SET means it measured and found nothing partial. The
-   * two must not render alike, and the honest fall-back for unmeasured is the
-   * pre-JUR-2 answer rather than a pill on everything.
+   * `null` means the lattice never measured this zip; an empty set means it measured and found nothing partial.
+   * The two must not render alike.
    */
   const inZip = new Set([JUR2_TOWNSHIP]);
   assert.equal(badgeFor({ ocdId: JUR2_TOWNSHIP }, inZip, "ZIP", null), "GOVERNS");
@@ -365,7 +277,7 @@ test("JUR-2: a failed resolution still beats everything — NO_BOUNDARY wins", (
   assert.equal(badgeFor({ ocdId: JUR2_TOWNSHIP }, null, "ZIP", new Set([JUR2_TOWNSHIP])), "NO_BOUNDARY");
 });
 
-test("JUR-2: the COULD_GOVERN wording is the RULING 71 wording, not a second one", () => {
+test("JUR-2: the COULD_GOVERN wording is the one shared wording, not a second one", () => {
   /*
    * Two wordings for one claim about one reader is how they drift. This is
    * the same sentence the ballot page's pill carries, imported rather than
@@ -373,7 +285,7 @@ test("JUR-2: the COULD_GOVERN wording is the RULING 71 wording, not a second one
    */
   assert.equal(BADGE_COPY.COULD_GOVERN.label, COULD_GOVERN_TEXT);
   assert.match(BADGE_COPY.COULD_GOVERN.detail, new RegExp(COULD_GOVERN_ACTION));
-  // And it is about the READER's street, never about our record. RULING 44.
+  // And it is about the reader's street, never about our record.
   assert.doesNotMatch(BADGE_COPY.COULD_GOVERN.detail, /\bwe (?:haven't|don't|couldn't)\b/i);
 });
 
@@ -389,17 +301,7 @@ test("JUR-2: the census counts the fourth state", () => {
 });
 
 test("JUR-2 third era: a centroid MISS on a zip basis does not assert NEARBY", () => {
-  /*
-   * The half that survived two passes. `COULD_GOVERN` replaced the GOVERNS
-   * assertion for a partial division, and the NEARBY beside it went on
-   * asserting "this body governs a different area" from a ZCTA centroid —
-   * which this module's own documentation already called "the same unearned
-   * certainty pointed the other way".
-   *
-   * A centroid is one sample of a zip. A body governing the half of the zip
-   * the reader actually lives in looks exactly like a body governing
-   * somewhere else.
-   */
+  /* A centroid is one sample of a zip: a body governing the half the reader lives in looks like a body governing somewhere else. */
   const somewhereElse = { ocdId: "ocd-division/country:us/state:nj/place:dover" };
   const atPoint = new Set(["ocd-division/country:us/state:nj/place:rockaway"]);
   const partial = new Set(["ocd-division/country:us/state:nj/place:rockaway"]);
@@ -411,7 +313,7 @@ test("JUR-2 third era: a centroid MISS on a zip basis does not assert NEARBY", (
   assert.equal(badgeFor(somewhereElse, atPoint, "ZIP", partial), "COULD_GOVERN");
 });
 
-test("JUR-2 third era: RULING 71 survives — a HIT on a zip basis still GOVERNS", () => {
+test("JUR-2 third era: a HIT on a zip basis still GOVERNS", () => {
   /*
    * A county, a regional district or a state covering the WHOLE zip does not
    * become uncertain because the zip crosses a municipal line, and a pill on
@@ -431,9 +333,7 @@ test("JUR-2 third era: a caller that resolved NO partial set is unchanged", () =
 });
 
 test("S2.4: a body that may not carry the govern verb never reads \"Governs your area\"", () => {
-  // Fort Lowell Historic Zone Advisory Board sat in the reader's city and the
-  // card said it governed them. The geometry answer is unchanged; the class
-  // decides whether the verb may attach (RULING 118).
+  // The geometry answer is unchanged; the class decides whether the verb may attach.
   assert.equal(badgeFor({ ocdId: HERE }, AT_POINT, "ADDRESS", null, "ADVISORY"), "NOT_GOVERNING");
   assert.equal(badgeFor({ ocdId: HERE }, AT_POINT, "ADDRESS", null, "COMMISSION"), "NOT_GOVERNING");
   assert.equal(badgeFor({ ocdId: HERE }, AT_POINT, "ADDRESS", null, "EXECUTIVE_AGENCY"), "NOT_GOVERNING");

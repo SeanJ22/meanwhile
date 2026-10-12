@@ -1,108 +1,21 @@
 /**
- * **ONE READABLE-CONTENT EXTRACTOR, FOR EVERY HTML SOURCE CLASS.**
- * (DATA-1, the 2026-08-28 reader-feedback sweep.)
+ * One readable-content extractor for every HTML source class: reduces a page
+ * to the region a reader would call its content, without site navigation,
+ * menus, footers or interstitials. Three mechanisms, weakest assumption last:
  *
- * ## The defect this exists to end
+ * 1. Landmarks and ARIA roles, where a publisher provides them.
+ * 2. A named platform chrome vocabulary (`elementor-location-header`,
+ *    `nav-menu`, `menu-item`, `site-footer`, ...), never complete.
+ * 3. Link density: a block whose text is mostly its own links is a menu.
  *
- * A reader opened a CAWCD meeting and the field headed "WHAT THIS MEETING IS
- * ABOUT" read:
+ * The vocabulary matches the `class` attribute only, never the whole tag, and
+ * never reaches `<body>` or `<html>` (a body can class itself as chrome).
  *
- * ```
- * CAP Board Meetings Skip to content Know Your Water News En Espanol
- * Facebook-f X-twitter Youtube Instagram Board Board Members Ylenia Aguilar ...
- * ```
+ * A form is a control and removed whole, except an ASP.NET WebForms server
+ * form (it carries `__VIEWSTATE`) holding most of the page's text: that one is
+ * unwrapped and only its controls are removed.
  *
- * 9,007 characters of site navigation, the whole menu tree, the footer and
- * four copies of an external-link interstitial, presented as the substantive
- * description of a public meeting. It is navigation chrome wearing the clothes
- * of civic content, which is a false claim about a government in exactly the
- * way `CLAUDE.md` forbids.
- *
- * ## Why this is a CLASS and not a CAWCD row
- *
- * There were TWO naive extractors in this repository, written months apart,
- * neither aware of the other:
- *
- * - `extractHtmlText` in `lib/meetings/agenda-documents.ts` preferred the
- *   page's own `<main>` and fell back to THE ENTIRE DOCUMENT when there was
- *   none. That fallback is what produced the CAWCD text.
- * - `extractText` in `scripts/fetch-corpus.mts` had no region preference at
- *   all. It is why `data/corpus/statements.json` holds a candidate "statement"
- *   that opens `Juan Ciscomani for Congress DONATE DONATE 635ms 0vh 0 Skip to
- *   Content Meet Juan News Media Kit ...` and another that is the whole of a
- *   campaign site's menu. That corpus feeds candidate positions.
- *
- * Two copies of one job is how the two disagreed, and fixing the meeting one
- * alone would have left the candidate one to be re-found by a later session.
- * Both now call this module and there is one place where the rule lives.
- *
- * ## Why landmarks alone were not enough, measured rather than assumed
- *
- * The obvious repair is "prefer `<main>`, strip `<nav>`/`<header>`/`<footer>`".
- * Measured against the actual page on 2026-08-28, `www.cap-az.com` contains:
- *
- * ```
- * <main> 0   <nav> 0   <header> 0   <footer> 0   <aside> 0
- * role="main" 0        role="navigation" 0
- * ```
- *
- * Zero semantic landmarks. It is Elementor/WordPress div soup, which is what a
- * great many public bodies actually publish. A landmark-only repair would have
- * passed its own test and changed nothing for the reader who reported it.
- *
- * So there are three mechanisms, weakest assumption last:
- *
- * 1. LANDMARKS AND ARIA ROLES, free and exact where a publisher provides them.
- * 2. A NAMED PLATFORM CHROME VOCABULARY: `elementor-location-header`,
- *    `nav-menu`, `menu-item`, `site-footer` and friends. This is a PLATFORM
- *    TAXONOMY in the `CLAUDE.md` sense: it represents what the project knows
- *    now, is never complete, and grows as sources are met.
- * 3. LINK DENSITY, vendor-neutral and the reason this generalises. A block
- *    whose text is mostly the text of its own links is a menu, whatever it is
- *    called. Nothing about it is specific to CAP, to Elementor, or to meetings.
- *
- * ## Two guards learned by getting it wrong first
- *
- * The first draft of the vocabulary pass matched the attribute blob of every
- * element and cut the document to ZERO characters. Both causes are now guards
- * with tests behind them:
- *
- * - MATCH THE `class` ATTRIBUTE, NEVER THE WHOLE TAG. The blob carries hrefs,
- *   titles and stylesheet URLs: `<a title="Skip to content">` and a `<link>`
- *   in the head named `widget-nav-menu-css` both matched, and neither is a
- *   region of the page.
- * - NEVER LET THE VOCABULARY REACH `<body>` OR `<html>`. CAP's body carries
- *   `page-template-elementor_header_footer`, so the page classed itself as
- *   chrome and the extractor believed it.
- *
- * ## A form is a control, until it is the page (2026-09-23)
- *
- * `form` sits in `NON_CONTENT` because a search box, a sign-in panel or a
- * newsletter field is a control, not content. But an ASP.NET WebForms page
- * opens ONE `<form id="aspnetForm">` straight after `<body>` and closes it at
- * the end: the whole page is inside it. Diligent Community's meeting pages are
- * built that way, and removing the form whole left exactly what sat outside
- * it — "Skip Navigation Jump to SideBar Tucson Unified School District", 62
- * characters — stored 2,308 times across 18 sittings as though it were each
- * one's agenda.
- *
- * So the WebForms server form — the one carrying `__VIEWSTATE` — is unwrapped
- * instead of cut when it holds MOST of the page's text: its content goes on to
- * the landmark, vocabulary and region passes like any other markup, and its
- * controls are still removed — every `<input>` (the hidden ones carry
- * `__VIEWSTATE`, `__EVENTVALIDATION` and toolkit tokens, which must never
- * reach text), `<button>`, `<label>` and `<textarea>`. Share is measured with
- * those controls already gone, so field labels cannot make a form look like
- * the page. Every other form is still a control and still removed whole,
- * including one nested inside the page's form. `removeForms` records why the
- * rule needs both conditions. A page with no such form extracts exactly as it
- * did before.
- *
- * ## What this deliberately does NOT do
- *
- * It never invents a description. A page that genuinely says nothing extracts
- * as the empty string, and the caller records that as what it is. Removing
- * chrome is not permission to synthesise content in its place.
+ * It never invents a description: a page that says nothing extracts as "".
  */
 
 /** Elements that never contain readable content. Removed whole. */
@@ -137,11 +50,8 @@ const PAGE_FORM_SHARE = 0.5;
 const CHROME_TAGS = new Set(["nav", "header", "footer", "aside"]);
 
 /**
- * Containers the class vocabulary is allowed to judge.
- *
- * Deliberately excludes `body` and `html` (see the guard note above) and
- * excludes `a`, `link` and `img`, whose attributes routinely mention menus
- * without being one.
+ * Containers the class vocabulary is allowed to judge. Excludes `body` and
+ * `html`, and `a`, `link` and `img`, whose attributes often mention menus.
  */
 const VOCAB_TAGS = new Set([
   "div",
@@ -154,13 +64,7 @@ const VOCAB_TAGS = new Set([
   "aside",
 ]);
 
-/**
- * Class tokens that name page furniture.
- *
- * Matched as whole hyphen/underscore-delimited tokens against the `class`
- * attribute only. `elementor-location-header` is Elementor's own name for the
- * header region and appears on every site built with it.
- */
+/** Class tokens that name page furniture, matched as whole hyphen/underscore-delimited tokens in `class` only. */
 const CHROME_CLASS =
   /(?:^|[\s_-])(?:site-header|site-footer|main-nav|nav-menu|navmenu|navbar|menu-item|sub-menu|submenu|breadcrumb|breadcrumbs|skip-link|screen-reader-text|social-icons|sidebar|location-header|location-footer|site-navigation|main-navigation|footer-widgets|cookie-banner|cookie-notice)(?:[\s_-]|$)/i;
 
@@ -307,23 +211,10 @@ function textLengthWithout(
 
 /**
  * Remove every form that is a control, and unwrap the one that is the page.
- *
- * Runs after the other `NON_CONTENT` elements are gone, so scripts and styles
- * inside a form never count toward its share, and measures that share with
- * every form's controls excluded.
- *
- * **Two conditions, both measured against stored pages before they were
- * adopted (2026-09-23).** Share alone was tried first over the 1,569 HTML
- * bodies in the runtime evidence vault: 40 changed, and 36 of those were a
- * search engine's bot challenge and a parked domain's captcha — walls whose
- * words live inside their own form. Keeping those would turn a wall into
- * content. So the form must ALSO carry `__VIEWSTATE`, the hidden field ASP.NET
- * WebForms renders inside the one server form that wraps its page, and which a
- * challenge or a sign-in widget never has. With both, 4 of those 1,569 bodies
- * change — an IQM2 meeting page, a Legistar meeting-detail page, a candidate
- * profile and a state senate roster, each a WebForms page that had extracted
- * to nothing or to a skip link and now yields its own content — and so do the
- * nine WebForms calendar fixtures under `tests/fixtures`. No other page does.
+ * Runs after the other `NON_CONTENT` elements are gone, and measures share
+ * with every form's controls excluded. Both conditions are needed: share
+ * alone would keep bot challenges and captchas, whose words live inside their
+ * own form; `__VIEWSTATE` marks the WebForms server form that wraps a page.
  */
 function removeForms(doc: string): { doc: string; removed: number; pageForms: number } {
   const els = elementsOf(doc);
@@ -379,30 +270,21 @@ export interface ReadableContent {
     vocabulary: number;
     linkDense: number;
   };
-  /**
-   * Page-wrapping forms whose content was kept, controls removed. Zero on a
-   * page with no such form, which is nearly every page.
-   */
+  /** Page-wrapping forms whose content was kept, controls removed. */
   pageForms: number;
 }
 
 /**
- * A block is a menu when most of its own text is its own links' text.
- *
- * 0.65 rather than 0.5: a genuine paragraph of civic prose can be half links
- * (an agenda listing every item as a document link is exactly that), and
- * losing one of those is a worse failure than keeping a menu. Short blocks are
- * exempt entirely: a two-link footer line is not worth the risk of cutting a
- * one-sentence notice.
+ * A block is a menu when most of its own text is its own links' text. 0.65,
+ * not 0.5: an agenda listing every item as a link can be half links. Short
+ * blocks are exempt.
  */
 const LINK_DENSITY_LIMIT = 0.65;
 const LINK_DENSITY_MIN_CHARS = 120;
 
 /**
  * Reduce an HTML document to the region a reader would call its content.
- *
- * Never throws. A document it cannot make sense of degrades to the whole
- * document, which is what every caller did before this module existed.
+ * Never throws; a document it cannot make sense of degrades to the whole document.
  */
 export function readableContent(html: string): ReadableContent {
   const removed = { nonContent: 0, landmark: 0, vocabulary: 0, linkDense: 0 };
@@ -497,10 +379,7 @@ export function readableContent(html: string): ReadableContent {
     const candidates: [number, number][] = [];
     for (const el of elementsOf(doc)) {
       if (!VOCAB_TAGS.has(el.name) && el.name !== "li") continue;
-      // Never the region root itself. A content region that happens to be
-      // link-heavy is still the content region, and cutting it returns the
-      // empty string — which reads to a caller as "this body published
-      // nothing", the exact false absence this module exists to prevent.
+      // Never the region root itself: cutting it would return "" as a false absence.
       if (el.start === 0 && el.end >= doc.length) continue;
       const block = doc.slice(el.start, el.end);
       const text = stripTags(block);
@@ -515,13 +394,8 @@ export function readableContent(html: string): ReadableContent {
     }
 
     /*
-     * INNERMOST ONLY.
-     *
-     * A menu makes every ancestor that contains it look link-dense too, so
-     * cutting every match takes the article out with the navigation — a `<div
-     * id="content">` holding one menu and one paragraph measured dense and
-     * removed the paragraph. Dropping only blocks that contain no other
-     * qualifying block cuts the menu and leaves what surrounds it.
+     * Innermost only: a menu makes every ancestor look link-dense too, so
+     * cutting every match would remove the surrounding content with it.
      */
     const innermost = candidates.filter(
       ([s, e]) =>

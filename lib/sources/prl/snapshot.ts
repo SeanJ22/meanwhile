@@ -1,10 +1,5 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-
 import {
   civicDataReadNotInitialized,
-  maySeedFixture,
-  mayUseTestFixture,
   promotedVersionOrThrow,
   readPromotedCivicData,
   type CivicDataReadResult,
@@ -97,17 +92,6 @@ function validatePrlSnapshot(value: PrlSnapshot, version: string): void {
   }
 }
 
-function fixture(): PrlSnapshot {
-  if (!mayUseTestFixture()) {
-    throw new Error("The bundled PRL file is deterministic test evidence, not a production authority.");
-  }
-  const value = JSON.parse(
-    readFileSync(join(process.cwd(), "data", "prl", "prl-profiles.json"), "utf8"),
-  ) as PrlSnapshot;
-  validatePrlSnapshot(value, "bundled test fixture");
-  return value;
-}
-
 /** Read only the canonical promoted PRL pointer. Store failures fail closed. */
 export async function readPrlProjection(
   options: PromotedCivicDataReadOptions = {},
@@ -142,12 +126,6 @@ export function prlReadState(): CivicDataReadResult<PrlSnapshot> {
 
 function snapshot(): PrlSnapshot {
   if (cache) return cache;
-  // Central policy permits NOT_RECORDED, STORE_NOT_CONFIGURED, or
-  // READ_NOT_INITIALIZED here; a STORE_READ_FAILED result stays closed.
-  if (maySeedFixture(readState)) {
-    cache = fixture();
-    return cache;
-  }
   throw new Error(
     `PRL holding is ${readState.kind}; call refreshPrlFromPromoted before reading the projection.`,
   );

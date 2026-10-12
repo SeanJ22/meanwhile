@@ -1,11 +1,4 @@
-/**
- * CA-03 · A term date is published only when the page itself writes it.
- *
- * A reader hands the publisher an ISO date (`2028-12-31`, or `2028-12` when the
- * page names only a month). The date is verified when the saved page's visible
- * text carries that same date in one of the forms a government writes it.
- * Nothing is computed from an election cycle or parsed out of prose.
- */
+/** A term date is verified only when the saved page's visible text writes that same date; nothing is computed. */
 
 const LONG = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
 
@@ -22,7 +15,6 @@ export function isoTermDate(value: unknown): string | null {
   return value.trim();
 }
 
-/** The visible, lower-cased page text (see `pageWords`) carries this ISO date in a written form. */
 export function isoTermDateOnPage(iso: string, words: string): boolean {
   const match = /^(\d{4})-(\d{2})(?:-(\d{2}))?$/.exec(iso);
   if (!match) return false;

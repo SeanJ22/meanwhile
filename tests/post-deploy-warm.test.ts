@@ -12,10 +12,7 @@ import {
 } from "../lib/ops/post-deploy-warm.ts";
 import { handleDeploySucceeded } from "../netlify/functions/deploy-succeeded.mts";
 
-/**
- * **A NEW DEPLOY IS WARMED AND ITS PILOT ANSWERS ARE IN THE CDN BEFORE A
- * READER ASKS.** (C21, 2026-09-25.) The plan is pure; no live calls.
- */
+/** A new deploy is warmed and its place answers are in the CDN before a reader asks. The plan is pure. */
 
 const COMMIT = "a".repeat(40);
 const OLD = "b".repeat(40);

@@ -1,4 +1,4 @@
-/** Server-side read of Sean's key votes in force: the published setting, else the empty default. */
+/** Server-side read of the owner's key-vote picks in force: the published setting, else the empty default. */
 import { readReaderSetting } from "../civic-data/reader-settings-publication.ts";
 import type { SettingValue } from "../control-plane/settings.ts";
 import { DEFAULT_KEY_VOTE_PICKS, KEY_VOTE_PICKS_SETTING, validKeyVotePicks, type KeyVotePick } from "./key-vote-picks.ts";

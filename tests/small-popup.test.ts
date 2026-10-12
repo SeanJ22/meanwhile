@@ -4,17 +4,9 @@ import { join } from "node:path";
 import test from "node:test";
 
 /**
- * THE SMALL POPUP (item 4, 2026-08-16).
- *
- * The previous form was scattered and carried too much information. It
- * carried a name, a party pill, outlined chips (state, chamber, incumbent),
- * an office line, an in-seat date and a wrapped grid of up to ten contact
- * pills, inside 300px.
- *
- * Three things and nothing else: the name with its circle, the party as the
- * FILLED PILL, and the contact pills in one vertical column. More at the
- * bottom opens the large card, which is where everything removed still lives
- * — nothing was deleted, it moved one tap down.
+ * The small popup: the name with its circle, the party as the FILLED PILL, and
+ * the contact pills in one vertical column. More at the bottom opens the large
+ * card, which is where everything else lives.
  */
 
 function code(path: string[]): string {
@@ -83,9 +75,8 @@ test("the contact pills stack in one column, primary channels only", () => {
     "the primary scope must keep only the primary platform's pill",
   );
   for (const kept of [
-    // R39 (2026-08-17) collapsed the per-number pills into one; the phone is
-    // still a primary channel and still on the small popup, it just branches
-    // on the COUNT now. tests/contact-phone.test.ts holds that rule.
+    // The phone is a primary channel on the small popup; it branches on the
+    // COUNT. tests/contact-phone.test.ts holds that rule.
     "phoneChoices.length > 1",
     "phoneChoices.length === 1",
     "if (holder.email)",
@@ -114,14 +105,8 @@ test("More is the way down, and it is full width like the column", () => {
   );
 
   /*
-   * F01 1.3 (2026-08-19): More stays locked at the bottom; a reader who just
-   * wants to click More should never find it hidden.
-   *
-   * Full width was necessary and not sufficient: everything scrolled together
-   * inside a `max-height: 55vh` card, so a district with five board members
-   * pushed More off the bottom and the door to the large battlecard sat behind
-   * a scroll. The card is three bands now, and the two that must not move say
-   * so in CSS rather than relying on the flexbox default.
+   * More stays locked at the bottom. The card is three bands, and the two that
+   * must not move say so in CSS rather than relying on the flexbox default.
    */
   const css = readFileSync(join(process.cwd(), "app", "globals.css"), "utf8");
   const shell = css.match(/\.popup-card \{[\s\S]*?\}/)?.[0] ?? "";

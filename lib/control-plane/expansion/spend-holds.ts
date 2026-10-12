@@ -1,53 +1,31 @@
 /**
- * **MW-021 — A SEND'S BUDGET AND AN AREA'S BUDGET ARE HARD CAPS.**
- * (2026-09-25. Sean, 10:00 PM MST: "Fix and verify hard Send budgets,
- * including concurrent work, retries and escalations.")
- *
- * The per-assignment and per-scope gates (`assignment-budget.ts`,
- * `membership.ts`) decide, per cycle and in memory, whether a Send or an area
- * can be checked at all and what it had spent at cycle start. That is not a
- * cap on its own: a flat $0.60 was held for a Scout that can cost $4 and more,
- * follow-up model calls were held only against the Fleet ceiling, and two
- * cycles (or a crash) could each spend against the same remaining dollars.
- *
- * This module is the cap. Every dollar paid work may spend on a budgeted Send
- * or area is HELD first, in one shared store of holds (since schema v24 the
- * `cp_spend_holds` table, one row per hold, admitted by one database call that
- * locks the lines it touches; before it, and behind `WTP_SPEND_HOLDS_TABLE=0`,
- * the shared budget ledger row under its compare-and-set), so concurrent
- * Scouts in one cycle and Scouts in overlapping cycles decide against the same
- * remaining budget, and no two can both pass a check only one can afford.
+ * Send and area budgets as hard caps. Every dollar paid work may spend on a
+ * budgeted Send or area is held first, in one shared store of holds
+ * (`cp_spend_holds`, admitted by one database call that locks the lines it
+ * touches; or, behind `WTP_SPEND_HOLDS_TABLE=0`, the shared budget ledger row
+ * under compare-and-set), so concurrent and overlapping work decides against
+ * the same remaining budget.
  *
  * ```
  *   committed(line) = the line's rolling-window spend at cycle start (the
  *                     canonical cost ledger, read at `historyReadAt`)
- *                   + every hold on it in the window that is not settled
- *                     (the whole worst case: a running job, or a crash)
- *                   + every settled hold whose cost was recorded after that
- *                     read (its measured spend: not yet in the history)
+ *                   + every unsettled hold on it in the window (whole worst case)
+ *                   + every settled hold recorded after that read (measured spend)
  *   left(line)      = budget − committed(line)
  * ```
  *
- * - A job (one Scout dispatch) holds its worst case before it starts
- *   (`scoutJobWorstCaseUsd`). Every model request it makes is checked against
- *   what the job holds (`budgetGuardedTransport`); a request past it — an
- *   escalation, a grace turn — must first win a further hold, or it is refused
- *   before it is sent. A pre-warm holds its own worst case the same way.
- * - Sends: a hold is admitted while ANY budgeted Send the work belongs to has
- *   room (the shared-work rule), and is held against every one of them. Areas:
- *   EVERY binding area must have room.
- * - Settling a job books what it measured and releases the rest. An unmeasured
- *   job or a failed settle leaves the whole hold standing; a round that ends,
- *   or fails where it can still act, releases every job it never settled
- *   (`releaseOpenJobs`). A hold is live only while its job can still run: an
- *   unsettled hold older than `SPEND_HOLD_STALE_MS` belongs to a round that has
- *   ended (a killed round cannot release its own), and whatever its job sent
- *   is in the canonical cost ledger by then, so it stops counting and is
- *   deleted. A settled hold is deleted once its cost is in the history every
- *   reader starts from (`SETTLED_HOLD_RETENTION_MS`). Holds are never
- *   accumulated (the ledger row held 19,719 of them, 38 MB, on 2026-10-06).
- * - The ledger unreadable or a write refused: the hold is refused, by name.
- *   Nothing is ever run unbudgeted.
+ * - A job holds its worst case before it starts (`scoutJobWorstCaseUsd`).
+ *   Every model request is checked against what the job holds
+ *   (`budgetGuardedTransport`); a request past it must win a further hold or is
+ *   refused before it is sent.
+ * - Sends: admitted while any budgeted Send the work belongs to has room, and
+ *   held against all of them. Areas: every binding area must have room.
+ * - Settling books what was measured and releases the rest; an unmeasured job
+ *   or failed settle leaves the whole hold. A round's end releases jobs it
+ *   never settled (`releaseOpenJobs`). An unsettled hold older than
+ *   `SPEND_HOLD_STALE_MS` stops counting and is deleted; a settled hold is
+ *   deleted after `SETTLED_HOLD_RETENTION_MS`. Holds never accumulate.
+ * - An unreadable ledger or refused write refuses the hold, by name.
  */
 
 import { createLedger, type BudgetLedger, type SpendHold } from "../budget.ts";
@@ -59,11 +37,7 @@ export const SPEND_HOLD_CODE_AREA = "SCOPE_BUDGET";
 /** The Send and area budgets are rolling 24-hour windows; a hold counts for as long. */
 export const SPEND_HOLD_WINDOW_MS = 24 * 3_600_000;
 
-/**
- * How long an unsettled hold can belong to a job that is still running. A job
- * never outlives the research round that took it, and no round runs this long
- * (the runner ends a silent one after 10 minutes; the dispatch slice is 15).
- */
+/** How long an unsettled hold can belong to a still-running job: longer than any research round runs. */
 export const SPEND_HOLD_STALE_MS = 2 * 3_600_000;
 /** How long a settled hold is kept after its cost was recorded: longer than any round's history read is old. */
 export const SETTLED_HOLD_RETENTION_MS = 6 * 3_600_000;
@@ -193,10 +167,10 @@ export function newSpendHold(input: { readonly holdId: string; readonly jobId: s
 }
 
 /**
- * The decision, PURE: whether `usd` more fits every line it must, and the
+ * The decision, pure: whether `usd` more fits every line it must, and the
  * ledger with the hold added when it does. Idempotent by `holdId`. The
- * database's `cp_admit_spend_hold` (schema v24) takes the same decision in the
- * same order and its refusals are worded by the same functions above.
+ * database's `cp_admit_spend_hold` takes the same decision in the same order,
+ * with refusals worded by the functions above.
  */
 export function decideHold(
   ledger: BudgetLedger,
@@ -245,20 +219,10 @@ export function releaseHold(ledger: BudgetLedger, holdId: string, now: string): 
 /* ------------------------------------------------------------ where the holds live */
 
 /**
- * **ONE ROW PER HOLD.** (Schema v24, 2026-10-06. Sean: "Split the giant
- * single-row records into real tables, one row per item: the spend ledger
- * (holds) ... Settled holds are cleared or moved out, never accumulated.")
- *
- * The holds lived inside the one shared budget ledger row, so every admission
- * read and compare-and-set the whole row (38 MB at its worst, the largest
- * control-plane transfer). They now live in `cp_spend_holds`, one row each,
- * and an admission is one database call (`cp_admit_spend_hold`) that locks
- * only the lines it touches, reads only their live holds, and deletes the
- * holds on them that no longer count. The rule above is unchanged.
- *
- * `WTP_SPEND_HOLDS_TABLE=0` is the way back: the holds are read and written on
- * the ledger row as before (and the bootstrap leaves the row's holds where
- * they are). Anything else, or unset, is the table.
+ * One row per hold in `cp_spend_holds`; an admission is one database call
+ * (`cp_admit_spend_hold`) that locks only the lines it touches and deletes
+ * holds on them that no longer count. `WTP_SPEND_HOLDS_TABLE=0` keeps the
+ * holds on the ledger row instead.
  */
 export const SPEND_HOLDS_TABLE_VAR = "WTP_SPEND_HOLDS_TABLE";
 
@@ -335,14 +299,10 @@ export function inProcessSpendHoldStore(): InProcessSpendHoldStore {
 }
 
 /**
- * The way back (`WTP_SPEND_HOLDS_TABLE=0`), and the file store's holds: the
- * holds on the shared budget ledger row. Every decision is one
- * `BudgetRepository.mutate`: an exclusive section and a compare-and-set, so a
- * concurrent writer (another Scout, another cycle) cannot slip between the
- * read and the write. Another writer holding the section, or winning the
- * compare-and-set first, is contention, not failure: the decision is taken
- * again on what that writer left, a bounded number of times
- * (`SPEND_HOLD_CONTENTION_TRIES`), and then refused.
+ * Holds on the shared budget ledger row (`WTP_SPEND_HOLDS_TABLE=0`, and the
+ * file store). Every decision is one `BudgetRepository.mutate`. Contention is
+ * retried on what the other writer left, up to `SPEND_HOLD_CONTENTION_TRIES`,
+ * then refused.
  */
 export function ledgerSpendHoldStore(budget: Pick<BudgetRepository, "mutate" | "install" | "read">, sleep: (ms: number) => Promise<void> = defaultSleep): SpendHoldStore {
   const mutate = async <R>(fn: (ledger: BudgetLedger) => { readonly ledger: BudgetLedger; readonly result: R }, now: string): Promise<R> => {
@@ -533,12 +493,10 @@ export async function releaseOpenJobs(holds: DurableSpendHolds, jobs: Iterable<J
 }
 
 /**
- * Every model request a job makes, checked against what the job holds on its
- * Send and area budgets before it is sent (MW-021, 2026-09-25). A request
- * whose worst case would pass the hold must first win a further hold for the
- * difference; refused, it throws `SendBudgetRefusal` and nothing is sent.
- * `job()` null: no Send or area budget applies to this work, and the request
- * passes unchanged.
+ * Every model request a job makes, checked against what the job holds before it
+ * is sent. A request whose worst case would pass the hold must first win a
+ * further hold for the difference; refused, it throws `SendBudgetRefusal` and
+ * nothing is sent. `job()` null: no budget applies and the request passes.
  */
 export function budgetGuardedTransport(input: {
   readonly transport: ModelTransport;
@@ -574,20 +532,12 @@ export interface AutonomousJurisdiction {
 }
 
 /**
- * **AUTONOMOUS WORK: THE AREA IT RESEARCHES, NEVER ANOTHER SEND.** (MW-021,
- * 2026-09-25; an engineering choice, the coordinator's correction.) The
- * autonomous Fleet's Scouts and its auditor belong to no Send, so no Send's
- * budget binds them and an unrelated Send running out never stops them. Each
- * request must fit the Fleet ceiling (the wrapped transport's own guard) and
- * the area budget(s) covering the jurisdiction the job researches — matched
- * by the one rule the Scouts' areas use (`ScopeBudgetGate.bindingScopes`).
- *
- * Each request holds its own worst case on those areas before it is sent,
- * atomically on the shared ledger, and settles to its measured cost; a
- * request that failed after it may have been sent keeps its whole hold (what
- * it was billed is unknown). Fail closed: an area budget that cannot be read,
- * or a ledger that cannot, refuses the request before it is sent. No area
- * covers the jurisdiction: the request passes to the Fleet guard unchanged.
+ * Autonomous work belongs to no Send, so only the Fleet ceiling and the area
+ * budgets covering its jurisdiction (`ScopeBudgetGate.bindingScopes`) bind it.
+ * Each request holds its own worst case before it is sent and settles to its
+ * measured cost; a request that may have been sent and failed keeps its hold.
+ * An unreadable area budget or ledger refuses the request. No covering area:
+ * the request passes to the Fleet guard unchanged.
  */
 export function areaGuardedTransport(input: {
   readonly transport: ModelTransport;

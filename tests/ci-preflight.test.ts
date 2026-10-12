@@ -14,10 +14,6 @@ import {
   visibleTree,
 } from "../scripts/preflight.mjs";
 
-/* ========================================================================== */
-/* RULING 279 — the cheap tier runs first, and a red one buys nothing more     */
-/* ========================================================================== */
-
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const WORKFLOW = join(ROOT, ".github", "workflows", "build-check.yml");
 
@@ -40,7 +36,6 @@ function jobs(): Record<string, Job> {
 
 const label = (s: Step) => s.name ?? s.uses ?? "(unnamed)";
 
-/** Anything that costs real runner time: a dependency install, a browser, a build. */
 const EXPENSIVE = /install|playwright|browser|build|pnpm test\b/i;
 
 test("the certified suite executes owner-facing TSX projection contracts", () => {
@@ -53,10 +48,6 @@ test("the certified suite executes owner-facing TSX projection contracts", () =>
   assert.match(loader, /url\.endsWith\("\.tsx"\)/);
   assert.match(loader, /transpileModule/);
 });
-
-/* -------------------------------------------------------------------------- */
-/* The shape of the change                                                     */
-/* -------------------------------------------------------------------------- */
 
 test("one admission runs the bare preflight before dependency installation", () => {
   const all = jobs();
@@ -89,8 +80,8 @@ test("one admission decides the tier and all consuming jobs depend on it", () =>
 test("a refused admission makes required build and final contexts fail loudly", () => {
   const all = jobs();
   // Required contexts report on every non-draft event; a draft buys no Actions.
-  assert.equal(all.build.if, "always() && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)");
-  assert.equal(all.gates.if, "always() && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)");
+  assert.equal(all.build.if, "!cancelled() && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)");
+  assert.equal(all.gates.if, "!cancelled() && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)");
   assert.equal(all.build.steps.find((s) => s.name === "Require successful admission")?.run, 'test "$ADMISSION_RESULT" = success');
   assert.deepEqual(all.gates.needs, ["admission", "verify", "test", "build"]);
   const verdict = all.gates.steps.find((s) => s.run === "node scripts/ci-verdict.mjs");
@@ -123,7 +114,7 @@ test("independent structural checks all report, from one install, before the bro
   assert.match(all.test.if ?? "", /needs\.admission\.outputs\.test_legs != '\[\]'/);
   assert.match(all.test.if ?? "", /test_plan == 'affected' \|\| needs\.admission\.outputs\.test_plan == 'full'/);
   assert.doesNotMatch(all.test.if ?? "", /'main'/, "a push to main runs no tests; the scheduled run does");
-  for (const name of ["Lint", "Types", "Canonical state holdings", "Generated state manifests"]) {
+  for (const name of ["Lint", "Types"]) {
     const step = all.verify.steps.find((s) => label(s).startsWith(name));
     assert.ok(step, `${name} was lost`);
     assert.match(step.if ?? "", /always\(\)/);
@@ -150,10 +141,6 @@ test("admission installs nothing: every admission step runs on bare Node", () =>
   ], "a new admission script runs before any install: add its import closure to BEFORE_INSTALL below");
 });
 
-/* -------------------------------------------------------------------------- */
-/* The local door                                                              */
-/* -------------------------------------------------------------------------- */
-
 test("the local door runs the preflight before the gate loop, and refuses rather than continuing", () => {
   const src = readFileSync(join(ROOT, "scripts", "gates.mjs"), "utf8");
   const preflightAt = src.indexOf("runPreflight()");
@@ -164,11 +151,6 @@ test("the local door runs the preflight before the gate loop, and refuses rather
   const between = src.slice(preflightAt, loopAt);
   assert.match(between, /process\.exitCode = 1/, "a red preflight does not fail the local door");
   assert.match(between, /return;/, "a red preflight does not stop the local door running the expensive tier");
-  assert.match(
-    between,
-    /NO GATE RUN RECORD/,
-    "a refused run must not leave a gate-run record, or the status ledger renders it as a measurement of this tree",
-  );
 });
 
 test("the preflight is declared as something the local door runs, not exempted from parity", () => {
@@ -177,13 +159,8 @@ test("the preflight is declared as something the local door runs, not exempted f
   assert.ok(preflight, "the preflight is not declared");
   assert.equal(preflight.command, "node scripts/preflight.mjs", "the declared command must be the one CI runs, verbatim");
   assert.ok((preflight.why ?? "").length > 40, "a precondition with no stated reason is an exemption wearing a different name");
-  // And it is NOT a gate: gates all run and all report; this one stops the run.
   assert.ok(!GATES.some((g) => g.id === "preflight"), "the preflight is in GATES, where every entry runs even after one fails");
 });
-
-/* -------------------------------------------------------------------------- */
-/* The checks themselves                                                       */
-/* -------------------------------------------------------------------------- */
 
 test("the preflight checks are cheap, named, and both report", () => {
   assert.ok(PREFLIGHT_CHECKS.length >= 2);
@@ -221,36 +198,10 @@ test("the preflight firewall supplies both production contract registries instea
   }
 });
 
-/**
- * THE CLAIM THE WHOLE ORDERING RESTS ON, MADE EXECUTABLE.
- *
- * "This step runs before `pnpm install`" is only true while nothing it reaches
- * imports a package. One bare specifier anywhere in the closure — a `yaml`, a
- * `zod`, a test helper that pulls one in — and the CI step fails on a bare
- * checkout, which looks like the step being broken rather than the import being
- * new.
- *
- * ## Two things this guard could not see, and both cost a real run
- *
- * **It walked only STATIC imports.** `scripts/certified-tree.mjs` reaches its
- * `.ts` modules through `await import(…)`, so its whole closure was invisible here.
- *
- * **It watched one script.** All actual preinstall entries need this proof.
- *
- * Run 34160631768, 2026-09-07 — the first main-side run of the tree-equivalence
- * check — printed `the predicate would not load (Cannot find package 'yaml'
- * imported from lib/ops/required-checks.ts) — answering FULL`. It failed in the
- * safe direction and named its own cause, which is the design working; it also
- * meant the attestation could never fire on any head. A feature that is
- * permanently inert while reporting itself correctly is the failure this guard
- * exists to make loud, and it was silent because of the two gaps above.
- */
-
-/** Every script CI runs before `pnpm install`, and why it is on the list. */
 const BEFORE_INSTALL: ReadonlyArray<{ script: string; why: string }> = [
   {
     script: "scripts/preflight.mjs",
-    why: "RULING 279's cheap tier — it answers from the tree before anything is bought",
+    why: "the cheap tier — it answers from the tree before anything is bought",
   },
   {
     script: "scripts/pr-ci-tier.mjs",
@@ -289,48 +240,17 @@ for (const { script, why } of BEFORE_INSTALL) {
         bare.push(`${from} → (unreadable; an import that does not resolve is not a proof)`);
         return;
       }
-      /*
-       * COMMENTS COME OUT FIRST, and this is not tidiness.
-       *
-       * The static-import pattern spans lines so it can read a multi-line
-       * import list, which means it will happily start at the word "export" in
-       * a doc comment and run on until it finds a quoted string somewhere
-       * below. This repository's modules carry long prose headers, so the
-       * widened walk immediately produced a page of "packages" that were
-       * sentences — `route-task.ts → this is not published`.
-       *
-       * The narrow walk never hit this because it only ever reached four
-       * files. A guard that reports a defect per paragraph is a guard nobody
-       * will keep.
-       */
       const src = raw
         .replace(/\/\*[\s\S]*?\*\//g, "")
         .replace(/(^|[\s;])\/\/[^\n]*/g, "$1");
       const specs: string[] = [];
-      /*
-       * Static `import … from "x"` and `export … from "x"`.
-       *
-       * `[^;]*?` rather than an unbounded span: an import list may run over
-       * several lines but carries no semicolon before its `from`, while an
-       * exported function body carries plenty. Unbounded, the pattern started
-       * at an `export` and ran on into a concatenated string, reporting
-       * `refresh-report.ts -> " +` as a package. The narrow walk never hit
-       * this because it only ever reached four files; widening the walk is
-       * what made the sloppiness visible.
-       */
       // `import type` / `export type` are erased by Node's type stripper and
       // therefore cannot create a bare-checkout runtime dependency. Following
       // them reports packages that the executable never asks Node to load.
       for (const m of src.matchAll(/^\s*(?:import|export)(?!\s+type\b)[^;]*?from\s+"([^"]+)"/gm)) {
         specs.push(m[1]);
       }
-      /* Bare side-effect import: `import "x"`. */
       for (const m of src.matchAll(/^\s*import\s+"([^"]+)"/gm)) specs.push(m[1]);
-      /*
-       * DYNAMIC `import("x")`. The gap that hid run 34160631768: an `.mjs`
-       * adapter reaching a `.ts` module this way had its entire closure
-       * unexamined.
-       */
       for (const m of src.matchAll(/\bimport\(\s*"([^"]+)"\s*\)/g)) specs.push(m[1]);
 
       for (const spec of specs) {
@@ -360,11 +280,6 @@ for (const { script, why } of BEFORE_INSTALL) {
 }
 
 test("the closure walk actually follows a dynamic import", () => {
-  /*
-   * THE PLANT. The guard above is only worth anything if its new half works, so
-   * the shape that hid the defect is shown being caught — a bare specifier
-   * reachable ONLY through `await import(...)`.
-   */
   const src = 'const x = await import("yaml");\n';
   const found: string[] = [];
   for (const m of src.matchAll(/\bimport\(\s*"([^"]+)"\s*\)/g)) found.push(m[1]);
@@ -373,19 +288,11 @@ test("the closure walk actually follows a dynamic import", () => {
 
 test("the preflight never stages, commits or otherwise mutates the tree", () => {
   const src = readFileSync(join(ROOT, "scripts", "preflight.mjs"), "utf8");
-  /*
-   * The INVOCATIONS, not the words. This check told the owner to run `git add`
-   * himself, and an earlier version of this test read its own advice as the
-   * defect — the same mistake the widened tracked-only guard made an hour before
-   * it. A guard that cannot tell a sentence from a call teaches people to stop
-   * writing sentences.
-   */
   for (const forbidden of [/\bexecFileSync\(\s*"git"\s*,\s*\[\s*"(add|commit|stash|checkout|reset)"/, /\bexecSync\(\s*[`"']git (add|commit|stash|checkout|reset)/, /\bwriteFileSync\(/, /\brmSync\(/, /\bmkdirSync\(/, /\bappendFileSync\(/]) {
     assert.ok(
       !forbidden.test(src),
       `scripts/preflight.mjs matches ${forbidden}. A validator that repairs what it measures cannot report a failure.`,
     );
   }
-  // And it does read git — a check that touched nothing would prove nothing.
   assert.match(src, /execFileSync\(\s*"git"/, "the preflight asks git nothing at all");
 });

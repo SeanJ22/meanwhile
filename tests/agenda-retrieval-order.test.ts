@@ -19,22 +19,11 @@ import {
 } from "../scripts/ingest.ts";
 
 /**
- * **"LATEST" MEANS LATEST, AND A LINK NEVER READ IS READ FIRST.** (2026-09-24.)
- *
- * Two defects in the ingest's agenda pass, both measured in production on
- * 2026-09-24:
- * - Sunnyside 167 and 174 each stored the same words again on every run from
- *   03:25Z, because their held rows were interleaved out of read order and the
- *   store compares a new read with the LAST row by position.
- * - Tucson Unified's Board Actions PDFs for sittings 498, 493, 492, 491, 485
- *   and 484 were never read: those sittings held versions from their old
- *   portal links, so they ranked as held, while seven unlinked sittings spent
- *   seven of the eight reads on the board's notice page, which is refused as a
- *   landing page every time and so never becomes held.
- *
- * The held rows are recorded from production (tests/fixtures/diligent/
- * susd-167-held-rows.json). The Tucson Unified links, starts and held document
- * URLs are production's, recorded the same day. No live call is made.
+ * "Latest" means latest, and a link never read is read first:
+ * - held rows are compared in read order, so re-reading the same words stores nothing new;
+ * - a sitting holding versions only from an old link does not outrank one never read, and a notice
+ *   page shared by several sittings is read once.
+ * Held rows are recorded in tests/fixtures/diligent/susd-167-held-rows.json. No live call is made.
  */
 
 const realFetch = globalThis.fetch;
@@ -184,7 +173,7 @@ test("read order is retrievedAt, then id, whatever order the rows arrive in", ()
   assert.deepEqual(inRetrievalOrder([...rows].reverse()).map(({ id }) => id), ["m@z", "m@b", "m@a", "m@c"]);
 });
 
-// ── Tucson Unified, 2026-09-24 ─────────────────────────────────────────────
+// ── one board, linked and unlinked sittings ───────────────────────────────
 const NOTICE = "https://govboard.tusd1.org/";
 const PORTAL = "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=";
 const ACTIONS = "https://govboard.tusd1.org/_theme/files/GovBoard/Docs/actions/";
@@ -197,8 +186,7 @@ const boardActions: readonly [string, string, string][] = [
   ["diligent:tusd1:485", "2026-07-28T16:30:00-07:00", `${ACTIONS}07-28-2026.pdf`],
   ["diligent:tusd1:484", "2026-07-14T16:30:00-07:00", `${ACTIONS}07-14-2026R(1).pdf`],
 ];
-// Unlinked scheduled sittings. Production reaches the board's notice page
-// through the wiring's `noticeUrl`; the link is stated here directly.
+// Unlinked scheduled sittings, given the board's notice page (the wiring's `noticeUrl`) directly.
 const noticeOnly: readonly [string, string][] = [
   ["diligent:tusd1:503", "2026-09-28T18:15:00-07:00"],
   ["diligent:tusd1:505", "2026-09-30T16:00:00-07:00"],
@@ -237,7 +225,7 @@ test("a link never read goes first, re-reads by nearness to today, and another s
   assert.deepEqual(order.slice(9), noticeOnly.map(([id]) => id), "the shared notice page is not last");
 });
 
-test("one run reads all six Board Actions links and no landing page; the next run reads no link twice", async () => {
+test("one run reads every link once, new links first and the shared notice page last; the next run reads no link twice", async () => {
   const meetings = tucsonUnified("run:", agendaDocumentStore);
   const requested: string[] = [];
   const pdf = readFileSync("tests/fixtures/tusd-govboard/board-actions-2026-09-22.pdf");
@@ -252,10 +240,20 @@ test("one run reads all six Board Actions links and no landing page; the next ru
       });
   }) as typeof fetch;
 
+  // No per-run cap: every distinct link is read, each exactly once. The six
+  // Board Actions links never read go first, then the re-reads, and the notice
+  // page the eight sittings 495 and the unlinked seven share is read once, last.
   await retrieveAgendas(meetings);
-  assert.equal(requested.length, 8);
-  for (const [, , link] of boardActions) assert.ok(requested.includes(link), `${link} was not read`);
-  assert.ok(!requested.includes(NOTICE), "a read was spent on the notice page while new links waited");
+  assert.deepEqual(
+    requested,
+    [
+      ...boardActions.map(([, , link]) => link),
+      `${ACTIONS}09-22-2026S.pdf`,
+      `${PORTAL}502`,
+      NOTICE,
+    ],
+    "one run did not read new links first, re-reads next and the shared notice page once, last",
+  );
   for (const [raw, , link] of boardActions) {
     assert.ok(
       agendaDocumentStore.versionsFor(`run:${raw}`).some(({ documentUrl }) => documentUrl === link),
@@ -263,14 +261,22 @@ test("one run reads all six Board Actions links and no landing page; the next ru
     );
   }
 
-  // Every sitting now holds its own link: the second run re-reads the eight
-  // nearest today. Sitting 495 holds the notice page, so the page is read
-  // once for it and for none of the seven sittings that share it.
+  // Every sitting now holds its own link: the second run re-reads every
+  // distinct link once, nearest today first, and the notice page once for all
+  // eight sittings that share it.
   requested.length = 0;
   await retrieveAgendas(meetings);
-  assert.equal(requested.length, 8);
   assert.equal(new Set(requested).size, requested.length, "one run read a link twice");
-  assert.ok(!requested.includes(`${ACTIONS}07-14-2026R(1).pdf`), "the farthest re-read was preferred to a nearer one");
+  assert.deepEqual(
+    [...requested].sort(),
+    [...boardActions.map(([, , link]) => link), `${ACTIONS}09-22-2026S.pdf`, `${PORTAL}502`, NOTICE].sort(),
+    "the second run did not re-read every held link",
+  );
+  assert.deepEqual(
+    requested.filter((url) => url.endsWith(".pdf")),
+    [`${ACTIONS}09-22-2026S.pdf`, ...boardActions.map(([, , link]) => link)],
+    "re-reads did not go nearest today first",
+  );
 });
 
 test("a vendor-host link read through its portal page ranks as read once the sitting holds the portal's link", () => {
@@ -289,8 +295,7 @@ test("a vendor-host link read through its portal page ranks as read once the sit
   store.append(version(pima.id, PORTAL_AGENDA, "1. Call to order. 2. Minutes.", "2026-09-24T11:14:00.000Z", PIMA));
   assert.deepEqual(agendaRetrievalOrder([pima, unread], Date.parse(NOW), store).map(({ id }) => id),
     ["legistar:pima:1829", "legistar:pima:1828"], "a portal-routed sitting holding its portal agenda does not rank as unread");
-  // Since 2026-09-25 the vendor's own file is read when the portal falls short;
-  // a sitting holding that file has been read too.
+  // A sitting holding the vendor's own file has been read too.
   const vendorHeld = new AgendaDocumentStore();
   vendorHeld.append(version(pima.id, API, "1. Call to order. 2. Minutes.", "2026-09-25T11:14:00.000Z", PIMA));
   assert.deepEqual(agendaRetrievalOrder([pima, unread], Date.parse(NOW), vendorHeld).map(({ id }) => id),

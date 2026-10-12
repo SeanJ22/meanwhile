@@ -1,8 +1,8 @@
-/** DB-44. Gateway callers supply the receipt id and time; no direct production write path. */
+/** Gateway callers supply the receipt id and time; there is no direct production write path. */
 import { createHash } from "node:crypto";
-import { emptyFieldManual, FIELD_MANUAL_ID, newFieldManualEntry, type FieldManualRepos, type FieldManualRole, type FieldManualEntry } from "./field-manual.ts";
+import { fieldManualEntryId, newFieldManualEntry, normalizeEntry, readFieldManual, type FieldManualRepos, type FieldManualRole, type FieldManualEntry } from "./field-manual.ts";
 import { rolePlaybook } from "./playbooks.ts";
-import { ConcurrentModification } from "./repository/types.ts";
+import { ConcurrentModification, IdentityCollision } from "./repository/types.ts";
 
 export const EDITABLE_PLAYBOOK_ROLES = ["SCOUT", "DETECTIVE", "PARSER", "VALIDATOR", "AUDITOR", "ENGINEER"] as const;
 export type EditablePlaybookRole = typeof EDITABLE_PLAYBOOK_ROLES[number];
@@ -36,11 +36,13 @@ export function playbookEditView(entries: readonly FieldManualEntry[], role: Edi
 export async function updateRolePlaybook(repos: FieldManualRepos, edit: PlaybookEdit): Promise<{ version: string; changed: boolean }> {
   if (!isEditablePlaybookRole(edit.role) || !edit.text.trim() || edit.text.length > 100_000 || !edit.id.trim() ||
       !Number.isFinite(Date.parse(edit.at))) throw new Error("Invalid playbook change");
+  const id = fieldManualEntryId("role-playbook", edit.role);
   for (let attempt = 0; attempt < 4; attempt++) {
-    const held = await repos.fieldManual.read(FIELD_MANUAL_ID);
-    const store = held?.value ?? emptyFieldManual();
-    const book = rolePlaybook(store.entries, edit.role);
-    const history = playbookHistory(store.entries, edit.role);
+    const read = await readFieldManual(repos, { role: edit.role, kinds: ["PLAYBOOK"], everywhere: true });
+    if (read.error) throw new Error(read.error);
+    const held = await repos.fieldManual.read(id);
+    const book = rolePlaybook(read.store.entries, edit.role);
+    const history = playbookHistory(read.store.entries, edit.role);
     const replay = history.find(e => e.id === edit.id);
     if (replay) {
       if (replay.after !== edit.text || replay.undoOf !== edit.undoOf) throw new Error("Conflicting playbook change id");
@@ -52,16 +54,15 @@ export async function updateRolePlaybook(repos: FieldManualRepos, edit: Playbook
     if (edit.undoOf && edit.text !== history.at(-1)?.before) throw new Error("Undo must restore the previous instructions");
     const change: PlaybookChange = { id: edit.id, at: edit.at, before: book.text, after: edit.text, why: edit.why,
       ...(edit.factory ? { factory: edit.factory } : {}), ...(edit.undoOf ? { undoOf: edit.undoOf } : {}) };
-    const entry = newFieldManualEntry("role-playbook", edit.role, { role: edit.role, kind: "PLAYBOOK",
+    const entry = normalizeEntry(newFieldManualEntry("role-playbook", edit.role, { role: edit.role, kind: "PLAYBOOK",
       title: `${edit.role.toLowerCase()} playbook`, summary: "Current written instructions for this role", outcome: "REFERENCE",
-      observedAt: edit.at, payload: { text: edit.text, history: [...history, change], edited: true } satisfies EditPayload });
-    const next = { ...store, updatedOn: edit.at, entries: [...store.entries.filter(e => e.id !== entry.id), entry] };
+      observedAt: edit.at, portable: true, payload: { text: edit.text, history: [...history, change], edited: true } satisfies EditPayload }));
     try {
-      if (held) await repos.fieldManual.compareAndSet(FIELD_MANUAL_ID, held.revision, next, edit.at);
-      else await repos.fieldManual.put(FIELD_MANUAL_ID, next, edit.at);
+      if (held) await repos.fieldManual.compareAndSet(id, held.revision, entry, edit.at);
+      else await repos.fieldManual.put(id, entry, edit.at);
       return { version: createHash("sha256").update(edit.text).digest("hex"), changed: true };
     } catch (error) {
-      if (!(error instanceof ConcurrentModification) || attempt === 3) throw error;
+      if (!(error instanceof ConcurrentModification || error instanceof IdentityCollision) || attempt === 3) throw error;
     }
   }
   throw new Error("Instructions could not be saved after concurrent changes");

@@ -1,27 +1,4 @@
-/**
- * **A SEND TO A COUNTY IN A STATE NO ONE HAS WORKED BEFORE REACHES READERS
- * WITH NO PERSON AND NO CODE CHANGE.** (C16 option A and every-state families,
- * 2026-09-25.)
- *
- * Every step is the production path on the in-memory stores; nothing reaches
- * the network, no model is called, and no code names the county, its body, its
- * host or its calendar: they are data.
- *
- * 1. the owner's Send for "Franklin County, Ohio" creates a meetings-discovery
- *    obligation for each government it names (MW-028);
- * 2. the FREE discovery walk walks them first, though the committed gap ledger
- *    holds only Arizona, New Hampshire and New Jersey; the paid lane remains
- *    governed by the owner's separate pause and budgets;
- * 3. the walk finds each government's iCal feed on its own host, robots first,
- *    and vaults every byte;
- * 4. the runner's deterministic reviewer accepts the county's calendar for its
- *    registered governing body, and HOLDS the city's, whose only events name
- *    two bodies at once, with its reason and who moves next;
- * 5. the automatic crosswalk promotes through the routine door (DERIVED), the
- *    wiring derives from it, and Ohio's derived family promotes;
- * 6. the meetings Reader shows the county's sittings under the county's body,
- *    with their source link, and nothing of the held city.
- */
+/** A Send to a county in a state no one has worked before reaches readers with no person and no code change: every step is the production path on in-memory stores, with no network and no model. */
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
@@ -59,6 +36,7 @@ import { autoCrosswalkReviewerId, reviewDiscoveryWalk, type HeldBytes } from "..
 import { deriveWiringDecisions, wiringRowFor } from "../lib/control-plane/discovery/derived-wiring.ts";
 import { readHeldCalendars, type HeldCalendarReading } from "../lib/control-plane/discovery/derived-wiring-reading.ts";
 import { readFreeDiscoveryWalks } from "../lib/control-plane/discovery/free-walks.ts";
+import { reviewedBodyForGovernment } from "../lib/control-plane/discovery/reviewed-body.ts";
 import { discoveryNeedsToWalk, runMeetingsDiscovery, walkableByFreeWalk } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
 import { applyDispatchWork, dispatchWorkTarget, planDispatchWork } from "../lib/control-plane/expansion/dispatch-work.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
@@ -116,9 +94,14 @@ const CITY_FEED = ics([
 ]);
 const CITY_HOME = `<html><body><p>City Council. Planning Commission.</p><a href="/events.ics">Events</a></body></html>`;
 
+/** A registered state's registry, read from the trimmed fixture. */
+function azRegistryFixture(): JurisdictionRegistry {
+  return (JSON.parse(readFileSync(join(ROOT, "tests/fixtures/jurisdiction-registries.json"), "utf8")) as Record<string, JurisdictionRegistry>).az!;
+}
+
 /** The Ohio registry the Send reads: two governments the Census names, each owing meetings discovery on its own site. */
 function ohioRegistry(): JurisdictionRegistry {
-  const az = JSON.parse(readFileSync(join(ROOT, "data/states/az/jurisdictions/az.json"), "utf8")) as JurisdictionRegistry;
+  const az = azRegistryFixture();
   const meetings = "MEETINGS:THIS_JURISDICTION:this-government-itself";
   const row = (id: string, name: string, govClass: Jurisdiction["govClass"], site: string): Jurisdiction => ({
     ...az.jurisdictions[0]!, id, stateCode: "OH", name, govClass, countyName: "FRANKLIN", ownWebAddress: site, sourceIds: [meetings],
@@ -188,8 +171,8 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
   });
   assert.deepEqual(materialized.failures, []);
   const dispatched = materialized.entries.map((e) => ({ ...e.need, addressSource: { source: "OPERATIONAL_REFERENCE" as const, versionId: "ref-oh-1" } }));
-  /* Another Send's mission blanks, in another state, walk after the dispatched needs (CH-21). */
-  const azRegistry = JSON.parse(readFileSync(join(ROOT, "data/states/az/jurisdictions/az.json"), "utf8")) as JurisdictionRegistry;
+  /* Another Send's mission blanks, in another state, walk after the dispatched needs. */
+  const azRegistry = azRegistryFixture();
   const mission = meetingsDiscoveryNeeds([azRegistry]);
   assert.equal(mission.some((n) => n.stateCode.toUpperCase() === "OH"), false, "the other mission holds no Ohio government");
   const needs = discoveryNeedsToWalk(mission, dispatched);
@@ -246,13 +229,23 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
   if (reg.kind !== "PROMOTED") return;
   const regInput: DerivedInputRef = { kind: "PROMOTED_VERSION", recordClass: "REGISTRATION", scope: reg.metadata.scope, versionId: reg.metadata.versionId!, readModelSha256: sha(reg.value), promotedAt: reg.metadata.promotedAt! };
   const model = reg.value as RegistrationReadModel;
-  /* A government's name is its division's label, as the runner's child reads it. */
-  const labels = new Map(model.divisions.map((d) => [d.ocdId, d.label] as const));
+  assert.equal(model.bodies.length, 0, "government inventory does not invent governing bodies");
+  const reference = loadRegistrationReference(ROOT, "OH");
+  const reviewedBodies = [
+    { id: COUNTY_BODY, ocdId: "ocd-division/country:us/state:oh/county:franklin", bodyClass: "GOVERNING",
+      censusId: reference.reference.governments.find(row => row[1] === COUNTY)![0] },
+    { id: "ocd-division/country:us/state:oh/place:franklin#governing", ocdId: "ocd-division/country:us/state:oh/place:franklin", bodyClass: "GOVERNING",
+      censusId: reference.reference.governments.find(row => row[1] === CITY)![0] },
+  ];
+  // Separately reviewed identities are backed by the captured official pages.
+  // A geography or a Census listing alone cannot establish either board.
   const registeredFor = (jurisdictionId: string) => {
-    const body = model.bodies.find((b) => b.jurisdictionId === jurisdictionId);
-    return body === undefined
+    const page = [...vault.values()].find(held => held.text === (jurisdictionId === COUNTY ? COUNTY_HOME : CITY_HOME));
+    assert.ok(page && /Board of Commissioners|City Council/.test(page.text));
+    const body = reviewedBodyForGovernment(reference, jurisdictionId, reviewedBodies);
+    return body === null
       ? { notRegistered: `no body for ${jurisdictionId}` }
-      : { bodyId: body.id, ocdId: body.ocdId, publishingOrg: labels.get(body.ocdId) ?? jurisdictionId, input: regInput };
+      : { ...body, input: page.evidence };
   };
 
   /* 4. The runner's reviewer, one walk at a time. */
@@ -276,7 +269,7 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
   const crosswalkCandidate = derivedCrosswalkCandidate(crosswalkPlan, [], T_CROSSWALK);
   const crosswalkOutcome = await processRegisteredRoutineCandidate(store, "meeting-body-crosswalk-derived", crosswalkCandidate, T_CROSSWALK);
   assert.equal(crosswalkOutcome.candidate.state, "PROMOTED", `${crosswalkOutcome.candidate.failureCode ?? ""} ${crosswalkOutcome.candidate.failureDetail ?? ""}`);
-  assert.equal(crosswalkOutcome.readerReadback?.status, "PASS");
+  assert.equal(crosswalkOutcome.readerReadback?.status, "PASS", JSON.stringify(crosswalkOutcome.readerReadback));
   /* The held city is on the version's durable record, with its dead end: what Admin's held records show. */
   const heldFact = crosswalkOutcome.candidate.receipt?.excludedFacts.find((f) => f.key === cityHold.key);
   assert.equal(heldFact?.code, "AUTO_CROSSWALK_HELD_AMBIGUOUS_TITLE");

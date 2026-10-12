@@ -1,19 +1,7 @@
 /**
- * **WORK AFTER THE DISPATCH CUTOFF ENDS AS A DEFERRAL, NOT A KILL.**
- * (Returned live failure, River 2026-10-06 ~01:10Z.)
- *
- * The runner ends the research child after `RUNTIME_NO_PROGRESS_MS` with no
- * changed output (scripts/pilot-runtime-child.mts). After the dispatch cutoff
- * the round still joins its discovery lanes and reads held bytes for the
- * promotion tail; on the 23:13:58Z production cycle the child printed nothing
- * for ten minutes there and was killed, so every finished task of that round
- * went unrecorded. Each such wait now races a quiet limit measured from the
- * child's own last output line: if nothing has been printed for `quietMs`
- * the wait ends, the caller names what was still running as deferred (its
- * work stays owed), and that line is itself the next output. The limit sits
- * below the runner's, so a slow lane is a named deferral and a genuine hang
- * elsewhere is still ended by the unchanged watchdog. Nothing here prints on
- * a timer: a wait that ends prints once, because it ended.
+ * After the dispatch cutoff, each wait races a quiet limit measured from the child's last progress output; when
+ * it ends, what was still running is named as deferred and stays owed. The limit sits inside the runner's
+ * no-progress limit so a slow lane is a named deferral rather than a kill.
  */
 import { progressLines } from "./round-progress.ts";
 
@@ -27,14 +15,7 @@ export interface OutputClock {
 
 type Writable = { write: (chunk: unknown, ...rest: unknown[]) => boolean };
 
-/**
- * Track the child's last progress output by watching its own stdout and
- * stderr, by the runner's own rule (`progressLines`): a line counts once, the
- * first time it is printed, and stall answers, beats and release notices never
- * count. A line the runner would not count must not hold a bound open either,
- * or the runner's kill comes first (release 6's first round, killed after 43
- * minutes on 2026-10-06).
- */
+/** Track the child's last progress output by the runner's own rule (`progressLines`): a line counts once, and lines the runner ignores never hold a bound open. */
 export function watchOutputClock(options: {
   readonly streams?: readonly Writable[];
   readonly now?: () => number;

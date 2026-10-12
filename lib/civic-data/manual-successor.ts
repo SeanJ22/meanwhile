@@ -20,7 +20,6 @@ function exactMembers(payload: CuratedReaderProjection): Map<string, CuratedRead
   return members;
 }
 
-/** One removal row per pulled member, keyed the way change accounting keys the prior version. */
 function auditPullEvidence(baseModel: CuratedReaderProjection, memberIds: readonly string[]): AuditPullRemovalEvidence[] {
   const wanted = new Set(memberIds);
   return civicRecordsFor("CURATED_READER_RECORD", baseModel)
@@ -28,16 +27,10 @@ function auditPullEvidence(baseModel: CuratedReaderProjection, memberIds: readon
     .map((row) => ({ key: row.key, code: "REMOVED_BY_AUDIT_PULL" as const, memberId: (row.record as { id: string }).id }));
 }
 
-/**
- * Producer-only composition. The existing source builder certifies this review's
- * facts; omitted GOOD facts retain their exact old bytes and explicit authority.
- * Neither Reader code nor the retired bootstrap admission door changes.
- */
 export async function prepareManualProjectionSuccessor(
   input: ManualProjectionPackage,
   store: CivicDataReadStore,
   now: string,
-  /** Members an auditor pulled (BROKE): they leave this version instead of being inherited from the base (DP-15). */
   pulledMemberIds: ReadonlySet<string> = new Set(),
 ): Promise<{ readonly candidate: ManualSuccessorCandidate; readonly expectedBaseVersionId: string | null }> {
   const contract = requiredManualProductionContract(input.contractId);

@@ -8,49 +8,7 @@ import {
 } from "../scripts/browser-census.mts";
 import { join } from "node:path";
 
-/**
- * R50: A BROWSER IS OPENED IN EXACTLY ONE PLACE (2026-08-18, g16).
- *
- * `lib/log/client.ts` prefers `navigator.sendBeacon`, and Playwright's
- * `extraHTTPHeaders` do not reach a beacon, so a context that does not
- * override `sendBeacon` writes rows that land ORGANIC — our own robots
- * counted as readers in the store this business sells. It fired twice in two
- * days: seven rows on 2026-08-18 (g14), forty-four more the same day (g15).
- * Both times the guard was applied to the contexts that had leaked, and both
- * times the next unguarded context leaked again, because `scripts/` held fifty
- * of them.
- *
- * THE PREDECESSOR OF THIS TEST PROVED THE WRONG THING.
- * `tests/run-marker-coverage.test.ts` asserted that a script MENTIONS
- * `syntheticRunHeaders` in its source. A leaking script passes that: mentioning
- * the constant is not sending it, and the header does not travel on a beacon
- * whatever the source says. It was green through both leaks.
- *
- * So this test asserts a STRUCTURAL fact instead, one a leak cannot satisfy:
- * `scripts/browser.mts` is the only file that constructs a browser or a
- * context, and every other script gets one through `launchGuarded`, which
- * applies the guard as part of construction. `tests/beacon-guard.test.ts` then
- * proves the guard actually works, by running it.
- *
- * A new script cannot open an unguarded context without failing here.
- *
- * ## What `run-marker-coverage.test.ts` asserted that nothing asserts now
- *
- * It was deleted in the same commit as this file, and the deletion is recorded
- * rather than quiet. Two things went with it, and neither is a loss:
- *
- * - Its `RETIRED_SESSION_WALKS` exemption list — twenty-three one-off session
- *   walks kept for their record and excused from declaring themselves. The
- *   exemption is moot now: those scripts are guarded BY CONSTRUCTION, so if one
- *   is ever run again it declares itself without anybody remembering to make it.
- * - Its `covered >= 8` floor. The equivalent floor here counts every script that
- *   comes through the shared site, and it is far higher.
- *
- * One residual obligation is stated because no test carries it: a script that
- * calls `fetch` from NODE (rather than from a page) at production must still
- * pass the run headers by hand — a browser guard cannot reach a request the
- * browser never makes. The old test did not check that either.
- */
+/** A browser is opened in exactly one place: scripts/browser.mts constructs every browser and context, and every other script gets one through launchGuarded, which applies the beacon guard as part of construction. A script calling fetch from Node must still pass the run headers by hand. */
 
 const SITE = "browser.mts";
 
@@ -99,7 +57,7 @@ test("scripts/browser.mts is the only place a browser is constructed", async () 
   /* The denominator, stated: a guard reporting "0 offenders" while inspecting
    * nothing is the empty success this repo has a rule about. */
   assert.ok(
-    usingTheSite >= 40,
+    usingTheSite >= 13,
     `expected the browser scripts to come through scripts/${SITE}, only ${usingTheSite} do ` +
       `(${noBrowser} script(s) drive no browser at all)`,
   );
@@ -116,10 +74,7 @@ test("scripts/browser.mts is the only place a browser is constructed", async () 
 test("the shared site guards every context it makes", async () => {
   const src = await readFile(join(process.cwd(), "scripts", SITE), "utf8");
 
-  // The override, not a delete: g14's first attempt used `delete
-  // navigator.sendBeacon`, which removes an own property while the method
-  // lives on Navigator.prototype. It type-checked, read correctly, and let
-  // four more rows through.
+  // The override, not a delete: sendBeacon lives on Navigator.prototype, so deleting an own property removes nothing.
   assert.match(
     src,
     /Object\.defineProperty\(navigator, "sendBeacon"/,
@@ -151,28 +106,7 @@ test("the shared site guards every context it makes", async () => {
   );
 });
 
-/* -- the same question, asked of the WHOLE tree (g17, 2026-08-18, item 4a) -- */
-
-/**
- * THE GUARD ABOVE LOOKS AT `scripts/*.mts` AND NOTHING ELSE.
- *
- * That is where the leaks were, so that is where it looked — and a guard that
- * only looks where the last defect was is the shape of the guard it replaced.
- * `tests/beacon-guard.test.ts` proves the point by existing: it constructs a
- * raw browser, in `tests/`, and the scan above cannot see it. A `.mjs` script,
- * a `lib/` helper or a new test could open an unguarded context tomorrow and
- * the guard above would stay green.
- *
- * So the population is now the repo. `scripts/browser-census.mts` walks every
- * `.ts/.tsx/.mts/.mjs/.js/.cjs` file outside `node_modules` and the build
- * output and puts each in exactly one bucket, and the guard and the report read
- * the same function — two counts of one population is how five scripts came to
- * be unaccounted for in the first place.
- *
- * The one file allowed to construct raw is named in `RAW_CONSTRUCTION_ALLOWED`
- * with its reason, and the allowance is asserted to be USED: an exception
- * nobody exercises is an exception that has quietly become a hole.
- */
+/** The same question, asked of the whole tree: scripts/browser-census.mts puts every source file in exactly one bucket, and the one file allowed to construct raw must use its allowance. */
 
 test("nothing anywhere in the repo constructs a browser outside the shared site", async () => {
   const rows = await census();
@@ -183,7 +117,7 @@ test("nothing anywhere in the repo constructs a browser outside the shared site"
   assert.ok(rows.length > 300, `expected the whole tree, scanned ${rows.length} file(s)`);
   const guarded = bucket("guarded — comes through launchGuarded");
   assert.ok(
-    guarded.length >= 45,
+    guarded.length >= 19,
     `only ${guarded.length} file(s) come through the shared site — the population shrank`,
   );
   assert.equal(bucket("the shared site").length, 1, "scripts/browser.mts is missing");

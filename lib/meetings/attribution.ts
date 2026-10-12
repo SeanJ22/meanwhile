@@ -2,32 +2,13 @@ import type { Body } from "../registry/types.ts";
 import type { OcdId } from "../sources/types.ts";
 
 /**
- * Which body actually acted on each part of an agenda.
+ * Which body actually acted on each part of an agenda. A county board's
+ * agenda can carry a "sitting as other boards" region in which another board
+ * (e.g. a library district) acts; one meeting, more than one acting body.
  *
- * **This is not a hypothetical.** Pima County's Board of Supervisors meeting of
- * 2026-08-11 (EventId 1824, 124 items) carries the headings "BOARD OF
- * SUPERVISORS SITTING AS OTHER BOARDS", then "LIBRARY DISTRICT BOARD", then
- * "SITTING AS THE BOARD OF SUPERVISORS". The contract for library periodicals
- * sitting between the second and third of those is **Library District
- * business**, decided by the Library District's board. One meeting, one host,
- * more than one acting body.
- *
- * Without this, every one of those 124 items records as county-board business,
- * which is the misattribution tracker **D19** exists to prevent. `Meeting.ocdId`
- * is a single field and cannot express it — hence a join, which the Phase 5.1
- * brief already says is not optional.
- *
- * **The rule that shapes the whole file: an unresolved heading attributes to
- * NOTHING.** Never to the host. Falling back to the host is precisely the wrong
- * answer, because the host is the body we can already see is not responsible —
- * the agenda said so in capital letters. A segment we cannot resolve is recorded
- * as unresolved and its items are attributed to no body at all, which is a
- * smaller, truer claim than the one it replaces.
- *
- * It is also the 4.7.6 point in miniature: a large share of the country's
- * ~39,555 special districts are reachable through a county feed already in
- * Legistar, rather than through 39,555 separate source hunts. But only if the
- * items can be told apart once they arrive.
+ * An unresolved heading attributes to nothing, never to the host: the agenda
+ * itself said the host was not acting. Its items are recorded as attributed to
+ * no body.
  */
 
 /** How a segment's acting body relates to the meeting's host. */
@@ -63,14 +44,9 @@ export interface AgendaSegment {
 }
 
 /**
- * One row of the meeting-to-body join.
- *
- * Shaped as the table it will become. `lib/db/schema.ts` is still empty and this
- * lives in memory like the rest of the read path, but the columns are settled
- * here so the migration is a transcription rather than a redesign: a meeting has
- * many bodies, a body has many meetings, and the row carries **why** it thinks
- * so. `evidence` is the published heading, so an attribution can always be
- * checked against the source rather than trusted.
+ * One row of the meeting-to-body join: a meeting has many bodies, a body has
+ * many meetings, and `evidence` is the published heading, so an attribution
+ * can be checked against the source.
  */
 export interface MeetingBody {
   meetingId: string;
@@ -94,37 +70,20 @@ export interface AgendaItem {
 }
 
 /**
- * Headings that hand control to another board, or take it back.
- *
- * Read off Pima's published agenda rather than invented, and deliberately
- * narrow. Over-detection is the dangerous direction here: a false switch moves
- * real county business onto a body that never considered it, which is the same
- * misattribution this file exists to prevent, just pointing the other way.
+ * Headings that hand control to another board, or take it back. Deliberately
+ * narrow: a false switch moves real business onto a body that never
+ * considered it.
  */
 const OPENS_OTHER_BOARDS = /\bsitting\s+as\s+other\s+boards\b/i;
 const RETURNS_TO_HOST = /\b(sitting|acting)\s+as\s+the\s+board\s+of\s+supervisors\b/i;
 const GENERIC_SITTING_AS = /\b(sitting|acting)\s+as\b/i;
 
 /**
- * Typography that is not a body (g10, found by running the live path).
- *
- * Inside the sitting-as region a bare heading names the acting board, and the
- * first live run took Pima's page-break markers at their word: **"PAGE BREAK"
- * opened a segment**, so the item that followed it was cut off the district
- * actually acting and attributed to a board that does not exist. Measured
- * against fifteen live Pima agendas, the region contains eight distinct
- * headings — seven real district boards and this one artifact, five times.
- *
- * The two rules are deliberately different in kind. The first is STRUCTURAL:
- * a heading with no letter in it (`* * *`, a rule of underscores, the
- * signature line) cannot be naming a government. The second is a NAMED list
- * of one, because "PAGE BREAK" is real text and only a clerk's layout habit
- * makes it meaningless — exactly the kind of judgment that has to be written
- * down with its evidence rather than inferred by a cleverer regex.
- *
- * An artifact neither opens a segment nor closes one. The body that was
- * acting keeps acting across the page break, which is what a page break
- * means.
+ * Typography that is not a body. Inside the sitting-as region a bare heading
+ * names the acting board, so these must not open a segment:
+ * - structurally, a heading with no letter (`* * *`, a rule of underscores);
+ * - by name, "PAGE BREAK".
+ * An artifact neither opens nor closes a segment; the acting body keeps acting.
  */
 const LAYOUT_ARTIFACT_HEADINGS = [/^page\s*break$/i];
 
@@ -134,12 +93,8 @@ function isLayoutArtifact(text: string): boolean {
 }
 
 /**
- * Is this item a heading rather than business?
- *
- * A heading has no matter file — Legistar attaches one to anything with a
- * legislative record behind it. That single field does most of the work, and
- * leaning on it rather than on capitalisation keeps the parse from depending on
- * a clerk's house style.
+ * Is this item a heading rather than business? A heading has no matter file;
+ * relying on that field keeps the parse independent of a clerk's house style.
  */
 function isHeading(item: AgendaItem): boolean {
   return !item.matterFile;
@@ -151,17 +106,12 @@ function clean(text: string): string {
 }
 
 /**
- * Split an agenda into the bodies that acted on it.
- *
- * Walks in agenda order. A "sitting as other boards" heading opens a region in
- * which each subsequent bare heading names the acting body; a "sitting as the
- * board of supervisors" heading closes it. Outside that region everything
- * belongs to the host.
- *
- * **The conventions are one client's**, observed on Pima's agendas. Another
- * Legistar client may mark this differently or not at all, and an agenda with no
- * such headings correctly yields a single host segment — which is the common
- * case and must stay cheap.
+ * Split an agenda into the bodies that acted on it. Walks in agenda order: a
+ * "sitting as other boards" heading opens a region in which each subsequent
+ * bare heading names the acting body; a "sitting as the board of
+ * supervisors" heading closes it. Outside that region everything belongs to
+ * the host. These conventions are one Legistar client's; an agenda without
+ * such headings yields a single host segment.
  */
 export function segmentAgenda(
   items: AgendaItem[],
@@ -189,17 +139,12 @@ export function segmentAgenda(
   for (const item of ordered) {
     const text = clean(item.title);
 
-    // An item carrying a matter file is business even with no title, and Pima's
-    // agenda has exactly one of those. Skipping on empty text first dropped it
-    // silently — 49 items with a matter file, 48 attributed, and nothing said
-    // so. Only a *heading* may be discarded for being blank, because a heading
-    // with no text names no body.
+    // An item carrying a matter file is business even with no title. Only a
+    // heading may be discarded for being blank.
     if (!text && isHeading(item)) continue;
 
     if (isHeading(item)) {
-      // Typography first, before anything reads this as a body: a page break
-      // is not a change of government, and treating it as one steals the
-      // items after it from the district that is actually acting.
+      // Typography first: a page break is not a change of government.
       if (isLayoutArtifact(text)) continue;
 
       if (OPENS_OTHER_BOARDS.test(text)) {
@@ -245,20 +190,11 @@ export function segmentAgenda(
 }
 
 /**
- * Try to name the body a "sitting as" heading refers to.
- *
- * **Scoped deliberately hard.** It only ever considers bodies whose division
- * sits inside the host's own division, and it requires the registry to have a
- * body whose division label the heading actually contains. That is not the name
- * matching `CLAUDE.md` forbids — it is not joining two geographic datasets on
- * colloquial names; it is reading one publisher's own heading and asking whether
- * this repo holds a corresponding division, with every failure reported.
- *
- * For the live Pima case it **returns nothing, and that is the correct answer.**
- * The Pima County Public Library District is a special district; Census
- * publishes no boundary for it, so the registry has no division and no body.
- * Recording the segment as unresolved is a true statement. Guessing the county
- * board would be the exact error this exists to stop.
+ * Try to name the body a "sitting as" heading refers to. Only bodies whose
+ * division sits inside the host's own division are considered, and the
+ * registry must hold a body whose division label the heading contains. A
+ * special district with no published boundary stays unresolved, never the
+ * host.
  */
 export function resolveSegment(
   segment: AgendaSegment,
@@ -288,11 +224,8 @@ export function resolveSegment(
 }
 
 /**
- * The one place a heading is compared against the registry.
- *
- * Extracted so the segment path and the row path (`resolveMeetingBodies`,
- * below) cannot drift into two slightly different ideas of what counts as a
- * match — which is how a scoping rule this narrow quietly widens.
+ * The one place a heading is compared against the registry, shared by the
+ * segment path and the row path (`resolveMeetingBodies`).
  */
 function matchHeading(
   heading: string,
@@ -322,19 +255,12 @@ function matchHeading(
 }
 
 /**
- * Resolve join rows that were built without the registry in hand (D19, g10).
- *
- * The adapter runs `segmentAgenda`, which is pure and needs nothing but the
- * agenda; the registry lives on disk and is loaded by the ingest run. So the
- * rows arrive UNRESOLVED with their evidence intact and this upgrades the ones
- * the registry can name, at the layer that actually holds it. An adapter that
- * had to load `registry.json` to normalize would be an adapter that cannot run
- * in a test, and every other adapter would inherit the requirement.
- *
- * HOST rows pass through untouched, and an already-RESOLVED row is never
- * re-decided. A row this cannot name keeps `bodyId: null` and `ocdId: null` —
- * **the host's identifiers are never written onto it**, which is the whole
- * rule, stated once more at the only other place that could break it.
+ * Resolve join rows that were built without the registry in hand: the
+ * adapter's `segmentAgenda` is pure, so rows arrive UNRESOLVED with their
+ * evidence and are upgraded here where the registry is loaded. HOST rows pass
+ * through, an already RESOLVED row is never re-decided, and a row this cannot
+ * name keeps `bodyId: null` and `ocdId: null`: the host's identifiers are
+ * never written onto it.
  */
 export function resolveMeetingBodies(
   rows: MeetingBody[],
@@ -371,14 +297,7 @@ export function meetingBodiesFor(
   }));
 }
 
-/**
- * What an ingest run should report about attribution.
- *
- * Printed rather than swallowed for the same reason every other count in this
- * repo is: an unresolved segment is a work item — a special district reachable
- * through a county feed, waiting for somewhere to be recorded — and a number
- * nobody prints is a number nobody chases.
- */
+/** What an ingest run should report about attribution; an unresolved segment is a work item. */
 export function attributionSummary(rows: MeetingBody[]): {
   host: number;
   resolved: number;

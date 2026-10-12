@@ -1,15 +1,3 @@
-/**
- * **A CONTROL-PLANE STORE CALL IS BOUNDED BY ITS CLASS AND TIMES OUT BY NAME.**
- * (Runner bounded store calls, 2026-09-23.)
- *
- * On 2026-09-23 four research cycles ran into the supervisor's 15-minute wall
- * with nothing on stderr and no record. These tests hold the fix at the
- * repository seam, with no network: the driver's own fetch hook
- * (`neonConfig.fetchFunction`) is replaced by one that never answers, and the
- * real `createPgRepositories` must fail each call by name inside its bound,
- * cancel the request, and hand connect-retry a timeout it can retry — or, when
- * the caller's budget is spent, one it must not.
- */
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -51,8 +39,9 @@ test("dispatch-sized POINT bursts share transport admission across repository cl
         return answer([]);
       } finally { active--; }
     }) as typeof neonConfig.fetchFunction;
-    const first = await createPgRepositories(URL, undefined, { skipBootstrap: true, requestBounds: TINY });
-    const second = await createPgRepositories(URL, undefined, { skipBootstrap: true, requestBounds: TINY });
+    // The measured bounds: this test is about admission, and a 60 ms bound would also be measuring the host's CPU load.
+    const first = await createPgRepositories(URL, undefined, { skipBootstrap: true });
+    const second = await createPgRepositories(URL, undefined, { skipBootstrap: true });
     const result = await Promise.all(Array.from({ length: 3300 }, (_, index) =>
       (index % 2 ? first.occurrences : second.obligations).read(String(index))));
     assert.equal(calls, 3300, "every due row is read exactly once");
@@ -96,9 +85,8 @@ interface HungFetch {
 }
 
 /**
- * Install a driver fetch that never answers. `honorAbort` makes it reject with
- * the signal's reason when aborted, as undici does; without it the promise stays
- * pending forever, so only the call's own timer can settle it.
+ * A driver fetch that never answers. `honorAbort` makes it reject with the
+ * signal's reason when aborted; without it only the call's own timer can settle it.
  */
 async function withHungFetch<T>(honorAbort: boolean, fn: (hung: HungFetch) => Promise<T>): Promise<T> {
   const original = neonConfig.fetchFunction;
@@ -183,9 +171,11 @@ test("each call class takes its own bound: a large document row is DOCUMENT, a p
       [() => repos.budget.compareAndSet(1, createLedger({ hosts: [] }), "2026-09-23T00:00:00.000Z"), "cp_budget.compareAndSet", "DOCUMENT", TINY.DOCUMENT],
       [() => budgetAggregate.readNarrowed("shared-budget-ledger", {}), "cp_budget.readNarrowed", "POINT", TINY.POINT],
       [() => repos.researchState.read("level-1"), "cp_research_state.read", "DOCUMENT", TINY.DOCUMENT],
-      [() => repos.fieldManual.read("live"), "cp_field_manual.read", "DOCUMENT", TINY.DOCUMENT],
-      [() => repos.costs.readAll(), "cp_log_costs.readAll", "PAGE", TINY.PAGE],
-      [() => repos.occurrences.list(), "cp_occurrences.list", "PAGE", TINY.PAGE],
+      [() => repos.fieldManual.read("fm-x"), "cp_field_manual_entries.read", "POINT", TINY.POINT],
+      [() => repos.fieldManual.slice({ role: "SCOUT" }), "cp_field_manual_entries.slice", "PAGE", TINY.PAGE],
+      [() => repos.costs.readAll(), "cp_log_costs.readChangedSince:clock", "POINT", TINY.POINT],
+      [() => repos.costs.readSince("2026-09-22T00:00:00.000Z"), "cp_log_costs.readSince", "PAGE", TINY.PAGE],
+      [() => repos.occurrences.list(), "cp_occurrences.listChangedSince:clock", "POINT", TINY.POINT],
       [() => repos.ownerDigests.readWhere("owner-digest", ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE"), "cp_log_owner_digests.readWhere", "PAGE", TINY.PAGE],
       [() => repos.ownerDigests.readRecentWhere("owner-digest", ["runtimeOutcome", "kind"], "ROUTINE_CIVIC_DATA_SUPERVISOR", 288, { digestId: true }), "cp_log_owner_digests.readRecentWhere", "PAGE", TINY.PAGE],
       [() => repos.ownerDigests.append("owner-digest", "id", { x: 1 } as never, "2026-09-23T00:00:00.000Z"), "cp_log_owner_digests.append:probe", "DOCUMENT", TINY.DOCUMENT],
@@ -271,7 +261,7 @@ test("the measured defaults: POINT < DOCUMENT < PAGE, each inside the 30 s trans
   const { POINT, DOCUMENT, PAGE } = CONTROL_PLANE_REQUEST_BOUNDS_MS;
   assert.ok(POINT > 0 && POINT < DOCUMENT && DOCUMENT < PAGE, JSON.stringify(CONTROL_PLANE_REQUEST_BOUNDS_MS));
   assert.ok(PAGE < STANDING_NEON_REQUEST_DEADLINE_MS, "a page bound at or over the backstop would surface as the driver's unnamed TimeoutError");
-  /* Each is ~30x the slowest request measured in its class on 2026-09-23 (324 ms, 615 ms, 950 ms). */
+  /* At least 20x the slowest request measured in each class (324 ms, 615 ms, 950 ms). */
   assert.ok(POINT >= 324 * 20 && DOCUMENT >= 615 * 20 && PAGE >= 950 * 20);
 });
 
@@ -349,7 +339,7 @@ test("an answered call is returned untouched, and every timeout is told to the o
   await withHungFetch(true, async () => {
     const repos = await createPgRepositories(URL, "2026-09-23T00:00:00.000Z", { skipBootstrap: true, requestBounds: TINY });
     await assert.rejects(repos.debts.list());
-    assert.deepEqual(seen, ["cp_debts.list"]);
+    assert.deepEqual(seen, ["cp_debts.listChangedSince:clock"]);
   });
   stop();
 });
@@ -360,8 +350,6 @@ test("a bound that is not a positive integer is refused, so no call is ever unbo
     /CONTROL_PLANE_REQUEST_BOUND_INVALID: POINT=0/,
   );
 });
-
-/* ------------------------------------------------ the connect-retry seam --- */
 
 function hangThenAnswer(hangs: number): { readonly sql: BoundableSql; readonly calls: () => number } {
   let calls = 0;

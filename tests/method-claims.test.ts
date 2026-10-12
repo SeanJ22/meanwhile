@@ -1,22 +1,7 @@
 /**
- * **THE FIVE CONTROLS ON CLAIM CLASSES.** (2026-08-28.)
- *
- * Canonical method knowledge is inherited by every later session, and none of
- * them re-derives it. That is what made ONE false Pima conclusion dangerous
- * rather than merely wrong: it was going to be read as settled by every worker
- * after it, and it arrived pre-argued.
- *
- * Correcting the prose was necessary and insufficient. These five prove the
- * structural repair, and each one is written so it can FAIL:
- *
- *   a. a VALID ROUTE SURVIVES the correction of a false completeness claim
- *      built on it;
- *   b. a superseded or reopened conclusion FLAGS its dependent assertions, by
- *      name, mechanically;
- *   c. a future consumer reading the store receives the corrected truth and
- *      never the retracted one;
- *   d. provenance is REQUIRED, not optional, for classes C and D — with a
- *      plant proving the refusal actually fires.
+ * Claim classes: a valid route survives the correction of a false completeness claim built on it; a superseded or
+ * reopened conclusion flags its dependent assertions by name; a consumer receives the corrected truth and never the
+ * retracted one; provenance is required for classes C and D.
  */
 
 import assert from "node:assert/strict";
@@ -57,8 +42,7 @@ import { METHOD_FIXTURE_PATH } from "./method-store-fixture.ts";
 
 const ON = "2026-08-28";
 
-// The route factory is shared with `tests/method-projection.test.ts` — RULING
-// 103, and `tests/duplicate-implementations.test.ts` refuses the second copy.
+// The route factory is shared with `tests/method-projection.test.ts`.
 const route = testRoute;
 
 function storeWith(...routes: Array<Omit<MethodRoute, "learnedAtVersion">>): MethodKnowledge {
@@ -79,15 +63,8 @@ function provenance(over: Partial<ClaimProvenance> = {}): ClaimProvenance {
   };
 }
 
-/* ------------------------------------------------------------ the class model itself */
-
 test("the four claim classes are named, not lettered — `tier` already owns A0/A1/B/C", () => {
-  /*
-   * A claim class stored as the bare letter "B" or "C" would be
-   * indistinguishable from `MethodRoute.tier` in every grep, every log line and
-   * every reader's eye. The letters survive as a derived label and never as the
-   * stored value.
-   */
+  // The letters survive as a derived label and never as the stored value, so a class never reads as a route tier.
   assert.deepEqual([...CLAIM_CLASSES], [
     "ROUTE_EXISTENCE",
     "ROUTE_OUTCOME",
@@ -104,16 +81,8 @@ test("the four claim classes are named, not lettered — `tier` already owns A0/
   assert.equal(requiresProvenance("DERIVED_CONCLUSION"), true);
 });
 
-/* ------------------------------------------- (a) A VALID ROUTE SURVIVES A FALSE CLAIM */
-
 test("CONTROL (a): a valid route SURVIVES the correction of a false completeness claim built on it", () => {
-  /*
-   * The exact failure this whole layer exists to make impossible. The route was
-   * real, its outcome was measured correctly, and the COMPLETENESS claim read
-   * off that outcome was false. Before claim classes the only moves were
-   * rewriting the paragraph or deleting the route — and a deleted route is one
-   * a later session rediscovers as new (RULING 63).
-   */
+  // The route and its true claims stay; only the false completeness claim is withdrawn. A deleted route is rediscovered as new.
   let k = storeWith(route("the-route", { fields: ["meeting"] }), route("the-better-route"));
 
   const claims: MethodClaim[] = [
@@ -153,12 +122,12 @@ test("CONTROL (a): a valid route SURVIVES the correction of a false completeness
   assert.equal(res.retracted, true);
   k = { ...k, routes: res.routes };
 
-  // THE ROUTE IS STILL PRESENT...
+  // The route is still present...
   const still = k.routes.find((r) => r.id === "the-route");
   assert.ok(still, "the route must still be in project knowledge after its conclusion is retracted");
-  // ...NOT RETIRED...
+  // ...not retired...
   assert.equal(still!.retiredOn, undefined, "withdrawing a claim may never retire the route under it");
-  // ...AND STILL USABLE: it is still offered to a jurisdiction.
+  // ...and still usable: it is still offered to a jurisdiction.
   assert.equal(
     applicableRoutesUnprojected(k, { state: "az" }).length,
     before,
@@ -166,7 +135,7 @@ test("CONTROL (a): a valid route SURVIVES the correction of a false completeness
   );
   assert.ok(readCurrentMethod(k).find((v) => v.routeId === "the-route")!.routeUsable);
 
-  // And the TRUE claims under it are untouched and still current.
+  // The true claims under it are untouched and still current.
   const current = readCurrentMethod(k).find((v) => v.routeId === "the-route")!;
   assert.deepEqual(
     current.current.map((c) => c.id).sort(),
@@ -175,7 +144,7 @@ test("CONTROL (a): a valid route SURVIVES the correction of a false completeness
   );
   assert.deepEqual(current.retracted.map((r) => r.claim.id), ["the-route#complete"]);
 
-  // The retracted claim is KEPT, never erased — history explains.
+  // The retracted claim is kept, never erased.
   assert.equal(allClaims(k).length, 3, "nothing is deleted; the withdrawn claim stays on the record");
 });
 
@@ -209,8 +178,6 @@ test("CONTROL (a), the other half: retracting every claim on a route still does 
   assert.equal(applicableRoutesUnprojected(k, { state: "az" }).length, 1, "a route with zero current claims still inherits");
 });
 
-/* ------------------------------------- (b) A RETRACTION FLAGS ITS DEPENDENTS, BY NAME */
-
 test("CONTROL (b): a superseded conclusion MECHANICALLY flags its dependent assertions, named", () => {
   let k = storeWith(route("r1"), route("r2"));
   k = {
@@ -238,10 +205,7 @@ test("CONTROL (b): a superseded conclusion MECHANICALLY flags its dependent asse
         validation: { state: "UNVALIDATED", on: ON, by: "the coverage claim above" },
       },
       {
-        // Same subject, same words, and it does NOT declare the dependency.
-        // Dependence is DECLARED, never inferred by text matching — a text
-        // match would miss the dependency phrased differently and invent the
-        // one that merely shares a word.
+        // Same subject, same words, and it does not declare the dependency: dependence is declared, never inferred.
         id: "r2#unrelated",
         class: "ROUTE_OUTCOME",
         statement: "this route is complete for meetings here, September sittings included",
@@ -270,7 +234,7 @@ test("CONTROL (b): a superseded conclusion MECHANICALLY flags its dependent asse
   assert.equal(flags[0].status, "STALE", "it is still teaching, and nothing has dispositioned it");
   assert.match(flags[0].why, /still teaching/);
 
-  // THE MECHANISM IS A GATE, not a report nobody reads: the validator refuses.
+  // The validator refuses.
   const issues = validateKnowledge(k);
   const hit = issues.find((i) => i.rule === "stale-dependent-assertion");
   assert.ok(hit, "a withdrawn assertion whose dependents still teach must FAIL the validator");
@@ -294,11 +258,7 @@ test("CONTROL (b): a superseded conclusion MECHANICALLY flags its dependent asse
 });
 
 test("a revalidation dated BEFORE the retraction does not disposition anything", () => {
-  /*
-   * Otherwise a claim validated last week would silently absorb a withdrawal
-   * that happened today — the revalidation would have revalidated something
-   * else. The date has to be on or after the retraction's own date.
-   */
+  // The revalidation date has to be on or after the retraction's own date.
   const build = (revalidatedOn: string) => {
     let k = storeWith(route("up"), route("down"));
     k = {
@@ -375,8 +335,6 @@ test("a RETIRED ROUTE flags the claims resting on it, for the same reason", () =
   assert.equal(flags[0].status, "STALE");
 });
 
-/* ------------------------------------------ (c) THE CONSUMER RECEIVES CORRECTED TRUTH */
-
 test("CONTROL (c): a consumer asking about a retracted conclusion is handed the CORRECTED one", () => {
   let k = storeWith(route("old"), route("new"));
   k = {
@@ -416,12 +374,12 @@ test("CONTROL (c): a consumer asking about a retracted conclusion is handed the 
     }).routes,
   };
 
-  // Asked by the OLD id, a consumer receives the NEW claim.
+  // Asked by the old id, a consumer receives the new claim.
   const t = currentTruthFor(k, "old#no-september");
   assert.equal(t.status, "SUPERSEDED");
   assert.equal(t.claim?.id, "new#september-published");
   assert.match(t.claim!.statement, /individually published/);
-  // ...and the retracted text is retained beside it, LABELLED, never lost.
+  // ...and the retracted text is retained beside it, labelled.
   assert.equal(t.superseded?.id, "old#no-september");
   assert.match(t.why, /is NOT current/);
 
@@ -453,12 +411,7 @@ test("CONTROL (c): a consumer asking about a retracted conclusion is handed the 
 });
 
 test("an unclassified legacy entry is reported as UNCLASSIFIED, never as a declared class A", () => {
-  /*
-   * The honest reading. 112 entries predate claim classes; nobody declared what
-   * they assert. Their prose may well carry an undeclared coverage claim or
-   * derived conclusion, and a consumer must not read silence as a declaration
-   * that the entry is merely a route.
-   */
+  // Entries that predate claim classes declared nothing; silence is not a declaration that the entry is merely a route.
   const k = storeWith(route("legacy"));
   const view = readCurrentMethod(k)[0];
   assert.equal(view.classification, "UNCLASSIFIED_LEGACY");
@@ -467,20 +420,8 @@ test("an unclassified legacy entry is reported as UNCLASSIFIED, never as a decla
   assert.equal(classificationCoverage(k).classified, 0);
 });
 
-/* ---------------------------------------- (d) PROVENANCE IS REQUIRED FOR C AND D */
-
 test("PLANTED CONTROL (d): a COVERAGE_CLAIM or DERIVED_CONCLUSION with no provenance is REFUSED", () => {
-  /*
-   * **A COVERAGE CLAIM MAY NOT BECOME INHERITED AUTHORITY MERELY BECAUSE THE
-   * WORKER THAT WROTE IT BELIEVED IT.** These are the two classes that
-   * propagate — a later session inherits them as reasons to stop looking — so
-   * each must be auditable back to the artifact, the route disposition, the
-   * jurisdictions and vendors it covers, and the date it was observed on.
-   *
-   * The plant is the whole test. A guard that is never made to fire is a guard
-   * that can quietly stop firing, which is the shape this repository has now
-   * found twice in this same file's neighbours (`effort`, then `outcome`).
-   */
+  // Classes C and D propagate, so each must be auditable back to the artifact, route disposition, coverage and date.
   for (const cls of ["COVERAGE_CLAIM", "DERIVED_CONCLUSION"] as const) {
     let k = storeWith(route("the-route"));
     k = {
@@ -536,10 +477,7 @@ test("PLANTED CONTROL (d): a COVERAGE_CLAIM or DERIVED_CONCLUSION with no proven
 });
 
 test("PLANTED: each individual provenance field is required, one at a time", () => {
-  /*
-   * One field at a time, so a passing run cannot be one required field doing
-   * all the work while another has quietly stopped being checked.
-   */
+  // One field at a time, so a passing run cannot be one required field doing all the work.
   const fields: Array<[keyof ClaimProvenance, unknown]> = [
     ["artifact", ""],
     ["observedVia", ""],
@@ -569,10 +507,7 @@ test("PLANTED: each individual provenance field is required, one at a time", () 
 });
 
 test("PLANTED: a C or D that rests on nothing is refused — the dependency edge is declared", () => {
-  /*
-   * The flagging is DERIVED from a declared edge rather than inferred from text,
-   * so an assertion that declares no edge is an assertion nothing can ever flag.
-   */
+  // Flagging is derived from a declared edge, so an assertion that declares no edge can never be flagged.
   let k = storeWith(route("the-route"));
   k = {
     ...k,
@@ -629,11 +564,7 @@ test("PLANTED: a claim class off the closed set is refused, and a retraction wit
 });
 
 test("a NEW route learned after the floor version must declare a claim class", () => {
-  /*
-   * Backfilling 116 legacy entries would mean re-deriving what each paragraph
-   * asserted, which is the guessing the classes exist to prevent. So the
-   * requirement is forward, and it bites on the next route learned.
-   */
+  // The requirement is forward: legacy entries are not backfilled, and it bites on the next route learned.
   const legacy = { ...storeWith(route("old")), version: 55 };
   legacy.routes[0].learnedAtVersion = 55;
   assert.deepEqual(validateKnowledge(legacy).map((i) => i.rule), [], "the legacy floor is not retroactive");
@@ -665,9 +596,7 @@ test("a route AMENDED after adoption must declare a claim class", () => {
     "an amendment is the moment a reader has to know WHAT changed",
   );
 
-  /* CONTROL: a sub-branch whose `failedOn` is prose rather than a date does not
-     trigger it. Twelve legacy rows carry prose in that slot, and a dated rule
-     cannot read them — it is counted by `method:check`, never guessed at. */
+  /* CONTROL: a sub-branch whose `failedOn` is prose rather than a date does not trigger it. */
   const prose = { ...storeWith(route("legacy-prose", {
     subBranches: [{ jurisdiction: "Morris County, 2026-08-25", failedOn: "It publishes no directory this walk could find.", reason: "inherited route failed here" }],
   })), version: 55 };
@@ -675,22 +604,9 @@ test("a route AMENDED after adoption must declare a claim class", () => {
   assert.deepEqual(validateKnowledge(prose).map((i) => i.rule), []);
 });
 
-/* ------------------------------------------------------------------------ (f) */
-
 /**
- * **AN AUDIT THAT JOINS ON A URL IS A RE-READING OF THE CLAIM.** (2026-08-29.)
- *
- * `provenance.artifact` is a string somebody typed. It does not identify an
- * execution, it does not say whether that execution reached a completion
- * boundary, and two different fetches of the same URL are indistinguishable in
- * it. So before `provenance.attemptId` existed, "auditing" an inherited coverage
- * claim meant reading the sentence that said where it came from — which is what
- * the Pima case already proved insufficient.
- *
- * These controls prove the chain is walkable on IDENTIFIERS, that the real
- * control-plane `Attempt` and `RouteTask` satisfy it, and — the half that keeps
- * it honest — that a claim WITHOUT an Attempt id reports the gap by name instead
- * of falling back to the prose.
+ * An audit walks identifiers, not a typed URL: a claim with `provenance.attemptId` reaches the real control-plane
+ * `Attempt` and `RouteTask`, and a claim without one reports the gap by name instead of falling back to the prose.
  */
 
 test("a claim is auditable claim -> assertion -> Attempt -> RouteTask -> artifacts, on identifiers", () => {
@@ -763,11 +679,7 @@ test("a claim is auditable claim -> assertion -> Attempt -> RouteTask -> artifac
   assert.deepEqual(trail.artifactIds, ["sha256-deadbeef"]);
   assert.match(trail.why, /every hop joined on an identifier and none on the prose reference/);
 
-  /*
-   * THE PROSE IS CARRIED AND IS NOT THE JOIN. Remove the Attempt id and the
-   * chain must STOP — not quietly fall back to the URL that is still sitting
-   * right there in the same record.
-   */
+  // Remove the Attempt id and the chain must stop, not fall back to the URL in the same record.
   const proseOnly = {
     routes: [
       {
@@ -825,8 +737,7 @@ test("a chain that resolves to the WRONG route is a gap, not a pass", () => {
   assert.equal(trail.complete, false);
   assert.ok(trail.gaps.some((g) => /both resolve and disagree/.test(g)));
 
-  // An Attempt nobody holds, and a RouteTask nobody holds, each stop at their
-  // OWN hop. "The chain broke" is not an audit result; "it broke HERE" is.
+  // An Attempt or RouteTask nobody holds stops at its own hop.
   assert.deepEqual(auditTrailFor(store, "audit-mismatch#c", [], [task]).resolved, [
     "CLAIM",
     "METHOD_ASSERTION_ROUTE",
@@ -837,8 +748,7 @@ test("a chain that resolves to the WRONG route is a gap, not a pass", () => {
     "ATTEMPT",
   ]);
 
-  // A claim reaching an Attempt and a RouteTask with NO artifact: the chain
-  // arrives at a report of a fetch rather than at the fetch.
+  // A claim reaching an Attempt and a RouteTask with no artifact arrives at a report of a fetch, not the fetch.
   const noArtifacts = auditTrailFor(
     store,
     "audit-mismatch#c",
@@ -850,11 +760,7 @@ test("a chain that resolves to the WRONG route is a gap, not a pass", () => {
 });
 
 test("attemptId is ADDITIVE — the committed store still validates, and a blank one does not", () => {
-  /*
-   * The 116 committed routes carry no Attempt ids, and back-filling one for an
-   * execution that had no Attempt would be inventing exactly the kind of
-   * provenance record the provenance requirement exists to prevent.
-   */
+  // Committed routes carry no Attempt ids, and back-filling one would invent provenance.
   const k = JSON.parse(readFileSync(METHOD_FIXTURE_PATH, "utf8")) as MethodKnowledge;
   assert.deepEqual(validateClaims(k), []);
 
@@ -869,8 +775,7 @@ test("attemptId is ADDITIVE — the committed store still validates, and a blank
     assert.ok(t.gaps.some((g) => /predates attempt-bound provenance/.test(g)));
   }
 
-  // PLANTED: a PRESENT but blank attemptId reads to a traversal as a real join
-  // key and resolves to nothing. It is refused; OMITTING the field is not.
+  // PLANTED: a present but blank attemptId is refused; omitting the field is not.
   const planted = {
     routes: [
       {

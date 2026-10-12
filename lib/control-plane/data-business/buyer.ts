@@ -1,8 +1,5 @@
 /**
- * **WHAT A BUYER ACCOUNT HOLDS: a place, topics and a time window. Never a side.** (S12, Sean's 2:30 PM MST note, item 5.)
- *
- * The dashboard (it waits) is a new screen over `readRecipe`; a buyer account is just a stored
- * `BuyerSlice`. When the audience is the dashboard or a customer and a slice is held for them, the request is confined to it:
+ * A buyer account holds a place, topics and a time window, never a side: a stored `BuyerSlice`. When the audience is the dashboard or a customer and a slice is held for them, the request is confined to it:
  * the window is clamped into the held window, the held place and topics fill in what the request left out, and a request for a
  * place or topic outside what they hold is refused, never widened. `BuyerSlice` has no field for support, oppose or any sentiment,
  * so an account cannot be built around a side.

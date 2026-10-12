@@ -1,9 +1,31 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import test from "node:test";
+import type { CandidateDocument } from "../lib/candidates/corpus.ts";
+import {
+  installAzBallot,
+  installCandidateCorpus,
+  installFederalVotes,
+  installOfficeholderStatements,
+  installRegistryAuthority,
+  installStateMoney,
+  stateMoneyFixture,
+  syntheticCandidateCorpus,
+  syntheticFiledStateMoneyRecord,
+} from "./helpers/promoted-fixtures.ts";
+import {
+  installMeetings,
+  installNhBallot,
+  installNjMorrisFiling,
+  nhBallot,
+  njMorrisFiling,
+  recordedMeetings85701,
+  servableAzBallot,
+  withAzMeasures,
+} from "./helpers/reader-fixtures.ts";
 
-await installRegistryRuntimeFirstSeeds();
+await installRegistryAuthority();
 
 import { campaignMoneyForTarget } from "../lib/funding/campaign-money.ts";
 import { canonicalOfficialAliases } from "../lib/ask/official-identity.ts";
@@ -15,20 +37,129 @@ import { statementEvidenceFor } from "../lib/ask/statements.ts";
 import { unifiedCorpus } from "../lib/corpus/unified.ts";
 import { positionsFor } from "../lib/corpus/positions.ts";
 import { voteEvidenceFor } from "../lib/ask/votes.ts";
-import { initializeFederalVoteFirstSeed } from "./helpers/federal-vote-first-seed.ts";
-
-await initializeFederalVoteFirstSeed();
 import { bodyIdentityIndex } from "../lib/ask/body-identity.ts";
 import { contactsForBody, contactRecord } from "../lib/ask/contacts.ts";
 import { contactForCandidate } from "../lib/ask/candidate-contact.ts";
 import { candidateContactCensus, candidateContactForCandidacy } from "../lib/ballot/candidate-contacts.ts";
 import { membersOfBody, BODY_COMPOSITIONS } from "../lib/registry/body-membership.ts";
-import { readSnapshot } from "../lib/meetings/snapshot.ts";
 import type { AskAnswerPayload } from "../lib/ask/answer.ts";
 import type { StateMoneyRecord } from "../lib/funding/state-money.ts";
 import { resolveSubjectRef } from "../lib/ask/subject.ts";
 import { readerPersonKeys } from "../lib/identity/reader-person.ts";
-import type { SourceSnapshot, StatementCorpus } from "../lib/corpus/types.ts";
+
+/*
+ * Synthetic ballots for the three pilot counties, each race named by the canonical contest key the reader
+ * uses; synthetic finance holdings for one candidacy per state; the federal votes, statement and publication
+ * holdings; and the recorded 85701 meetings. Names on the ballots are the registry's own officeholders or
+ * labelled test candidates; every total, address and passage is synthetic.
+ */
+const FINANCE = {
+  AZ: { key: "ballot-az-pima:governor:hobbs-katie", receipts: 2_000_000, expenditures: 1_000_000 },
+  NJ: { key: "ballot-nj-morris:county-commissioner:selen", receipts: 30_000, expenditures: 15_000 },
+  NH: { key: "ballot-nh-merrimack:governor:ayotte-kelly", receipts: 400_000, expenditures: 200_000 },
+} as const;
+const PROP_425_NO = "A NO vote shall keep the current law unchanged (synthetic test measure).";
+const azBallot = withAzMeasures(servableAzBallot([
+  {
+    id: "ballot-az-pima:governor",
+    title: "Governor",
+    candidacies: [
+      { id: "ballot-az-pima:governor:hobbs-katie", givenName: "Katie", familyName: "Hobbs" },
+      { id: "ballot-az-pima:governor:biggs-andy", givenName: "Andy", familyName: "Biggs" },
+    ],
+    lineup: [
+      { name: "Katie Hobbs", partyLabel: "Democratic", outcome: "RECONCILED", candidacyId: "ballot-az-pima:governor:hobbs-katie" },
+      { name: "Andy Biggs", partyLabel: "Republican", outcome: "RECONCILED", candidacyId: "ballot-az-pima:governor:biggs-andy" },
+    ],
+  },
+  {
+    id: "ballot-az-pima:us-house-7",
+    title: "U.S. Representative",
+    ocdId: "ocd-division/country:us/state:az/cd:7",
+    candidacies: [{ id: "ballot-az-pima:us-house-7:grijalva-adelita", givenName: "Adelita", familyName: "Grijalva" }],
+    lineup: [{ name: "Adelita Grijalva", partyLabel: "Democratic", outcome: "RECONCILED", candidacyId: "ballot-az-pima:us-house-7:grijalva-adelita" }],
+  },
+]), [
+  { id: "ballot-az-pima:prop-425", title: "Proposition 425", ocdId: "ocd-division/country:us/state:az", measure: { questionText: "Shall the synthetic test measure 425 be adopted?", officialNumber: "425" } },
+  { id: "ballot-az-pima:prop-141", title: "Proposition 141", ocdId: "ocd-division/country:us/state:az", measure: { questionText: "Shall the synthetic test measure 141 be adopted?", officialNumber: "141" } },
+], [
+  { contestId: "ballot-az-pima:prop-425", whatItDoes: "Synthetic test measure 425.", yesMeans: "A YES vote shall adopt the synthetic test measure.", noMeans: PROP_425_NO,
+    parts: [], sourceUrl: "https://example.test/prop-425", sourceHash: "4".repeat(64), writtenAt: "2026-09-20T00:00:00.000Z" },
+  { contestId: "ballot-az-pima:prop-141", whatItDoes: "Synthetic test measure 141.", yesMeans: null, noMeans: null,
+    parts: [], sourceUrl: "https://example.test/prop-141", sourceHash: "1".repeat(64), writtenAt: "2026-09-20T00:00:00.000Z" },
+]);
+await installAzBallot(azBallot);
+const MEJIA = "ballot-nj-morris:us-house-11:mejia";
+const SELEN = "ballot-nj-morris:county-commissioner:selen";
+const morris = njMorrisFiling([
+  { id: "ballot-nj-morris:county-commissioner", title: "Member of the Board of County Commissioners", ocdId: "ocd-division/country:us/state:nj/county:morris",
+    candidacies: [
+      { id: "ballot-nj-morris:county-commissioner:selen", givenName: "Tayfun", familyName: "Selen" },
+      { id: "ballot-nj-morris:county-commissioner:example", givenName: "Jordan", familyName: "Example" },
+    ] },
+  { id: "ballot-nj-morris:us-house-11", title: "Member of the House of Representatives", ocdId: "ocd-division/country:us/state:nj/cd:11",
+    candidacies: [{ id: MEJIA, givenName: "Analilia", familyName: "Mejia" }] },
+  { id: "ballot-nj-morris:us-house-7", title: "Member of the House of Representatives", ocdId: "ocd-division/country:us/state:nj/cd:7",
+    candidacies: [{ id: "ballot-nj-morris:us-house-7:current", givenName: "Riley", familyName: "Current" }] },
+  { id: "ballot-nj-morris:rockaway-township-council", title: "Township Council", ocdId: "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+    candidacies: [
+      { id: "ballot-nj-morris:rockaway-township-council:alpha", givenName: "Avery", familyName: "Alpha" },
+      { id: "ballot-nj-morris:rockaway-township-council:beta", givenName: "Blair", familyName: "Beta" },
+    ] },
+], {
+  removals: [{
+    id: "ballot-nj-morris:us-house-7:withdrawn", contestId: "ballot-nj-morris:us-house-7", givenName: "Quinn", familyName: "Withdrawn",
+    partyLabel: null, slogan: null, status: "REMOVED_FROM_FILING",
+    lastListed: { sourceUrl: "https://example.test/morris-filing-august.pdf", sourceOrg: "Synthetic test clerk", collectedAt: "2026-08-20", verifiedAt: null },
+    absentFrom: { sourceUrl: "https://example.test/morris-filing-september.pdf", sourceOrg: "Synthetic test clerk", collectedAt: "2026-09-10", verifiedAt: null },
+    firstAbsentOn: "2026-09-10",
+    statement: "Quinn Withdrawn was listed on the August filing and is absent from the September filing (synthetic test).",
+  }],
+  contacts: [
+    { candidacyId: MEJIA, email: null, filedAddress: "1 Filed Address Way (test)",
+      sourceUrl: "https://example.test/morris-filing-september.pdf", sourceOrg: "Synthetic test clerk", collectedAt: "2026-09-10" },
+    { candidacyId: SELEN, email: "candidate@example.test", filedAddress: "2 Filed Address Way (test)",
+      sourceUrl: "https://example.test/morris-filing-september.pdf", sourceOrg: "Synthetic test clerk", collectedAt: "2026-09-10" },
+  ],
+});
+await installNjMorrisFiling(morris);
+await installNhBallot(nhBallot([
+  { id: "ballot-nh-merrimack:governor", title: "Governor", ocdId: "ocd-division/country:us/state:nh",
+    candidacies: [{ id: "ballot-nh-merrimack:governor:ayotte-kelly", givenName: "Kelly", familyName: "Ayotte" }] },
+  { id: "ballot-nh-merrimack:us-house-2", title: "Representative in Congress", ocdId: "ocd-division/country:us/state:nh/cd:2",
+    candidacies: [{ id: "ballot-nh-merrimack:us-house-2:goodlander-maggie", givenName: "Maggie", familyName: "Goodlander" }] },
+]));
+for (const state of ["AZ", "NJ", "NH"] as const) {
+  const record = syntheticFiledStateMoneyRecord(state, FINANCE[state].key, FINANCE[state].receipts);
+  const fixture = stateMoneyFixture(state);
+  const others = fixture.records.filter((row) => !row.targetKeys.includes(FINANCE[state].key));
+  await installStateMoney(state, { ...fixture, records: [...others,
+    { ...record, totals: { ...record.totals, expenditures: FINANCE[state].expenditures } }] });
+}
+await installFederalVotes();
+await installOfficeholderStatements();
+// The synthetic publication corpus plus one synthetic campaign page per positions control.
+const page = (candidateKey: string, url: string, text: string): CandidateDocument => {
+  const contentHash = createHash("sha256").update(text).digest("hex");
+  return { id: `${candidateKey}@${contentHash}`, candidateKey, sourceClass: "CAMPAIGN_SITE", basis: "HUNTED_AND_VERIFIED", metaDescription: null,
+    documentUrl: url, contentHash, retrievedAt: "2026-09-20T00:00:00.000Z", contentType: "text/html", text, extraction: "html", extractionNote: null };
+};
+const corpus = syntheticCandidateCorpus();
+const POSITION_CONTROLS = [
+  { state: "AZ" as const, name: "Katie Hobbs", key: "ballot-az-pima:governor|Katie Hobbs", topic: "families" },
+  { state: "NJ" as const, name: "Tayfun Selen", key: SELEN, topic: "minimum wage" },
+  { state: "NH" as const, name: "Kelly Ayotte", key: "ballot-nh-merrimack:governor:ayotte-kelly", topic: "democracy" },
+];
+const controlPages = [
+  page(POSITION_CONTROLS[0].key, "https://example.test/az-governor/",
+    "Working families deserve a fair shot. I will fight for families in every neighborhood of this state, so that families can afford housing, health care and child care. This is a synthetic test page."),
+  page(POSITION_CONTROLS[1].key, "https://example.test/nj-commissioner/",
+    "Raise the minimum wage. Every worker should earn a living wage, and I will vote to raise the minimum wage to keep pace with costs. This is a synthetic test page written for a check."),
+  page(POSITION_CONTROLS[2].key, "https://example.test/nh-governor/",
+    "Protect our democracy. I will defend democracy, protect the right to vote, and keep our elections free and fair for every citizen. This is a synthetic test page written for a check."),
+];
+await installCandidateCorpus({ ...corpus, attempted: corpus.attempted + controlPages.length, documents: [...corpus.documents, ...controlPages] });
+installMeetings(recordedMeetings85701());
 
 delete process.env.ANTHROPIC_API_KEY;
 const { POST } = await import("../app/api/ask/grounded/route.ts");
@@ -45,7 +176,6 @@ const divisions = {
 
 const KAREN_RETIRED_ID = "plural:947e2e2b-04eb-4f92-9f83-aef8760517e0";
 const KAREN_ROLE_ID = "roster:merrimack-delegation#5";
-const KAREN_CANDIDACY_ID = "ballot-nh-merrimack:state-house-merrimack-7:ebel-karen-elizabeth";
 
 test("an unresolved supplied canonical ID never becomes a same-name candidate through surface or prior context", async () => {
   const canonical = { id: "ballot-az-pima:governor:hobbs-katie", name: "Katie Hobbs", nameClass: "person" as const };
@@ -93,10 +223,7 @@ async function ask(question: string, state: keyof typeof divisions = "AZ", extra
   }));
   assert.equal(response.status, 200);
   const body = await response.json() as AskAnswerPayload;
-  /* No general-model knowledge can supply the factual answer. Since 2026-09-25 a
-     named person's campaign-money question is answered in code from the held
-     filings (lib/ask/money-answer.ts), exactly as a sitting is: that prose is
-     the records' own figures, composed with no model, and nothing else may write. */
+  /* A named person's campaign-money question is composed in code from the held filings, never by a model. */
   if (body.answer !== null) {
     assert.equal(body.mode, "GROUNDED_COMPOSED", "no general-model knowledge can supply the factual answer");
     assert.equal(body.trace.synthesis.ran, false, "a composed answer, never a model's");
@@ -138,15 +265,15 @@ test("a held measure without a NO meaning reports the blank instead of asking a 
 });
 
 for (const row of [
-  { state: "AZ" as const, name: "Katie Hobbs", key: "ballot-az-pima:governor:hobbs-katie", contest: "ballot-az-pima:governor", receipts: 11109719.95, expenditures: 14355612.69 },
-  { state: "NJ" as const, name: "Tayfun Selen", key: "ballot-nj-morris:county-commissioner:selen", contest: "ballot-nj-morris:county-commissioner", receipts: 225025.5, expenditures: 229525.5 },
-  { state: "NH" as const, name: "Kelly Ayotte", key: "ballot-nh-merrimack:governor:ayotte-kelly", contest: "ballot-nh-merrimack:governor", receipts: 5995303.26, expenditures: 3276135.21 },
+  { state: "AZ" as const, name: "Katie Hobbs", key: FINANCE.AZ.key, contest: "ballot-az-pima:governor", receipts: FINANCE.AZ.receipts, expenditures: FINANCE.AZ.expenditures },
+  { state: "NJ" as const, name: "Tayfun Selen", key: FINANCE.NJ.key, contest: "ballot-nj-morris:county-commissioner", receipts: FINANCE.NJ.receipts, expenditures: FINANCE.NJ.expenditures },
+  { state: "NH" as const, name: "Kelly Ayotte", key: FINANCE.NH.key, contest: "ballot-nh-merrimack:governor", receipts: FINANCE.NH.receipts, expenditures: FINANCE.NH.expenditures },
 ]) {
   test(`${row.state}: Ask returns exact canonical campaign totals and provenance from the visual selector`, async () => {
     const body = await ask(`How much campaign money has ${row.name} raised and spent?`, row.state);
     const selected = campaignMoneyForTarget(row.key, row.contest).state.records.find((record) => record.filingState === "FILED")!;
     assert.ok(selected);
-    assert.equal(selected.totals.receipts, row.receipts, "independent frozen known-answer anchor");
+    assert.equal(selected.totals.receipts, row.receipts, "the installed holding is the known answer");
     assert.equal(selected.totals.expenditures, row.expenditures);
     const record = body.records.find((record) => record.canonicalSubjectId === row.key && record.finance);
     assert.ok(record, "canonical identity survives into the real route payload");
@@ -171,43 +298,29 @@ test("Hobbs ballot and map Ask answers share canonical candidacy and values; Big
   assert.deepEqual(ballot.records.filter((r) => r.finance), map.records.filter((r) => r.finance));
   const biggs = await ask("How much campaign money has Andy Biggs raised?");
   assert.ok(biggs.records.every((r) => r.canonicalSubjectId !== "ballot-az-pima:governor:hobbs-katie"));
-  assert.ok(!JSON.stringify(biggs.records.filter((r) => r.finance)).includes("11109719.95"));
+  assert.ok(!JSON.stringify(biggs.records.filter((r) => r.finance)).includes(String(FINANCE.AZ.receipts)));
 });
 
 test("a direct held federal official remains answerable without a ballot candidacy", async () => {
   const body = await ask("How much campaign money has Mark Kelly raised?");
   assert.equal(body.subject?.id, "congress:K000377");
   const record = body.records.find((record) => record.id.startsWith("fec:"));
-  assert.ok(record?.sourceUrl);
+  assert.ok(record?.sourceUrl, JSON.stringify({ gaps: body.gaps, denominators: body.denominators, preloads: body.trace.preloadSources }));
   assert.equal(body.denominators.federalFinanceRecordsReturned, 1);
   assert.equal(body.denominators.governorLettersIndexedAtCollection, undefined);
   assert.ok(body.gaps.every((gap) => !/letters about individual bills|bills she signed|executive orders we indexed/.test(gap.statement)), "another office's collection gaps must not attach to this person");
 });
 
-test("Ask retrieves the same verbatim candidate passages as Positions in AZ, NJ, and NH", async () => {
-  const controls = [
-    { state: "AZ" as const, name: "Adelita Grijalva", key: "ballot-az-pima:us-house-7|Adelita Grijalva", topic: "families" },
-    { state: "NJ" as const, name: "Analilia Mejia", key: "ballot-nj-morris:us-house-11:mejia", topic: "minimum wage" },
-    { state: "NH" as const, name: "Maggie Goodlander", key: "ballot-nh-merrimack:us-house-2:goodlander-maggie", topic: "democracy" },
-  ];
-  for (const control of controls) {
+test("Ask retains Positions' exact page passages in AZ, NJ, and NH without inventing speaker attribution", async () => {
+  for (const control of POSITION_CONTROLS) {
     const expected = positionsFor(control.key, control.topic, unifiedCorpus());
     assert.equal(expected.kind, "MATCHED", `${control.name}'s independent Positions surface knows the answer`);
     const body = await ask(`What does ${control.name} say about ${control.topic}?`, control.state);
     const quoted = body.records.filter((r) => r.kind === "SOURCE_PASSAGE" && r.canonicalSubjectId === control.key);
     assert.ok(quoted.length, control.name);
-    if (control.state === "AZ") {
-      assert.ok(body.answer?.includes("own words, exactly as published"));
-      assert.ok(body.gaps.every((gap) => !/have not verified a statement by/.test(gap.statement)));
-      assert.match(body.trace.synthesis?.why ?? "", /composed-from-own-words/);
-      assert.ok(expected.passages.some((passage) => body.answer!.includes(passage.quote)));
-    } else if (body.answer) {
-      assert.ok(expected.passages.some((passage) => body.answer!.includes(passage.quote)));
-    } else {
-      // A pack that also contains a differently structured candidate-page
-      // passage keeps the existing path; CA-12 only composes clean own-page packs.
-      assert.match(body.trace.synthesis?.why ?? "", /unverified-stance/);
-    }
+    assert.ok(quoted.every(record => record.verifiedStatement === undefined), "the fixtures establish captured pages, not verified speakers");
+    assert.equal(body.answer, null);
+    assert.match(body.trace.synthesis?.why ?? "", /unverified-stance/);
     for (const passage of expected.passages) {
       assert.ok(quoted.some((r) => r.text.includes(passage.quote) && r.sourceUrl === passage.url), passage.snapshotId);
     }
@@ -247,23 +360,6 @@ test("multiple verified roles share an Ask subject only through the committed pe
   assert.equal(aliases.get(KAREN_ROLE_ID), KAREN_ROLE_ID);
   assert.equal(aliases.has(KAREN_RETIRED_ID), false, "the retired intermediary identity cannot win the Reader subject");
   assert.equal(aliases.has("unresolved:Karen Ebel"), false);
-  const recorded = JSON.parse(readFileSync("data/corpus/statements.json", "utf8")) as StatementCorpus;
-  const frozenKaren = recorded.snapshots.find(({ subjectId }) => subjectId === KAREN_RETIRED_ID);
-  assert.ok(frozenKaren);
-  const canonicalKaren: SourceSnapshot = {
-    ...frozenKaren,
-    subjectId: KAREN_CANDIDACY_ID,
-    id: `${KAREN_CANDIDACY_ID}|${frozenKaren.url}|${frozenKaren.contentHash}`,
-  };
-  const statement = statementEvidenceFor(
-    { id: KAREN_ROLE_ID, name: "Karen Ebel", kind: "PERSON" },
-    "What does Karen Ebel say about Hampshire?",
-    [KAREN_ROLE_ID, KAREN_CANDIDACY_ID],
-    () => ({ snapshots: [canonicalKaren] }),
-  );
-  assert.ok(statement.records.some((record) =>
-    record.kind === "SOURCE_PASSAGE" && record.canonicalSubjectId === KAREN_CANDIDACY_ID
-  ));
   const body = await ask("What does Karen Ebel say about Hampshire?", "AZ", {
     surface: "MAP",
     activeSubjects: [{ id: KAREN_ROLE_ID, name: "Karen Ebel", kind: "PERSON", focused: true }],
@@ -326,8 +422,7 @@ test("an unreadable applicable ballot is a failed holding, never an empty civic 
 });
 
 test("the canonical body inventory remains available where no meeting has been acquired", async () => {
-  const snapshot = readSnapshot()!;
-  const withMeetings = new Set(snapshot.meetings.map((meeting) => meeting.bodyId));
+  const withMeetings = new Set(recordedMeetings85701().map((meeting) => meeting.bodyId));
   const body = [...bodyIdentityIndex().values()].find((body) => body.ocdId?.startsWith(AZ) && body.nameIsBodysOwn && body.sourceUrl && !withMeetings.has(body.bodyId));
   assert.ok(body);
   const result = await ask("When does it meet?", "AZ", { ocdIds: [body.ocdId], activeSubjects: [{ id: body.bodyId, name: body.name, kind: "BODY", focused: true }] });
@@ -373,7 +468,7 @@ test("a congressional office's everyday name reaches the same canonical contest 
 
 test("filed candidate email and source survive Ask projection while mailing addresses stay out", () => {
   const census = candidateContactCensus();
-  assert.equal(census.contacts.length, 275);
+  assert.equal(census.contacts.length, morris.contacts.contacts.length);
   assert.equal(census.withheld.length, 0);
   for (const row of census.contacts) {
     const contact = contactForCandidate(row.candidacyId, "Filed candidate", "Filed office");
@@ -390,22 +485,16 @@ test("filed candidate email and source survive Ask projection while mailing addr
   assert.equal(candidateContactForCandidacy("ballot-az-pima:governor:hobbs-katie"), null);
 });
 
-test("the real Ask route carries Mejia's published filing contact with its own provenance", async () => {
-  const body = await ask("How can I contact Analilia Mejia?", "NJ");
-  const record = body.records.find((record) => record.id === "candidate-contact:ballot-nj-morris:us-house-11:mejia");
+test("the real Ask route carries a candidate's published filing contact with its own provenance", async () => {
+  const filed = morris.contacts.contacts.find((row) => row.candidacyId === SELEN)!;
+  const body = await ask("How can I contact Tayfun Selen?", "NJ");
+  const record = body.records.find((record) => record.id === `candidate-contact:${SELEN}`);
   assert.ok(record);
-  assert.match(record.text, /info@analiliafornj\.com/);
-  assert.doesNotMatch(record.text, /13 Municipal Plaza/);
-  assert.doesNotMatch(JSON.stringify(body), /13 Municipal Plaza/, "CP-01 keeps filed mailing addresses out of the whole Ask answer");
-  assert.equal(record.sourceOrg, "Morris County Clerk");
-  // The contact's own provenance is the held filing document, whichever edition of the clerk's list the
-  // seed mirrors (the clerk republished it on 2026-09-24), never a pinned filename that goes stale.
-  const held = (JSON.parse(readFileSync("data/states/nj/ballot/nj-morris-2026-contacts.json", "utf8")) as {
-    contacts: { candidacyId: string; sourceUrl: string }[];
-  }).contacts.find((contact) => contact.candidacyId === "ballot-nj-morris:us-house-11:mejia");
-  assert.ok(held);
-  assert.match(held.sourceUrl, /^https:\/\/www\.morriscountyclerk\.org\/.+\.pdf$/);
-  assert.equal(record.sourceUrl, held.sourceUrl);
+  assert.ok(record.text.includes(filed.email!));
+  assert.ok(!record.text.includes(filed.filedAddress!));
+  assert.ok(!JSON.stringify(body).includes(filed.filedAddress!), "filed mailing addresses stay out of the whole Ask answer");
+  assert.equal(record.sourceOrg, filed.sourceOrg);
+  assert.equal(record.sourceUrl, filed.sourceUrl);
 });
 
 test("Ask's local council answer lists the same held candidates as the reader ballot", async () => {

@@ -5,23 +5,10 @@ import { test } from "node:test";
 import { readableContent } from "../lib/extract/html-content.ts";
 import { extractHtmlText } from "../lib/meetings/agenda-documents.ts";
 
-/**
- * DATA-1 — navigation chrome must never masquerade as civic content.
- *
- * The reported example is CAWCD, whose page has NO semantic landmarks at all.
- * The unnamed controls are a landmark page and a role-annotated page, so the
- * rule is shown to be about the CLASS of HTML documents rather than about the
- * one vendor that produced the screenshot.
- *
- * The negative controls matter as much as the positive ones: the repair must
- * not be keyword deletion. Legitimate civic prose containing the very words
- * that appear in the chrome ("News", "Board", "Facebook") has to survive.
- */
+/** Navigation chrome must never masquerade as civic content, and legitimate prose containing chrome words must survive. */
 
 const text = (html: string) =>
   extractHtmlText(html).replace(/\s+/g, " ").trim();
-
-/* ------------------------------------------------ the reported example --- */
 
 test("DATA-1: a div-soup page with no landmarks drops its menu and keeps its notice", () => {
   // The shape of www.cap-az.com: no <main>, no <nav>, no roles. Elementor
@@ -52,8 +39,6 @@ test("DATA-1: a div-soup page with no landmarks drops its menu and keeps its not
   assert.doesNotMatch(out, /En Espanol/i);
   assert.doesNotMatch(out, /Facebook-f/i);
 });
-
-/* ---------------------------------------- unnamed controls: other shapes --- */
 
 test("DATA-1 control: a landmark page uses <main> and drops nav/header/footer", () => {
   const html = `
@@ -105,12 +90,8 @@ test("DATA-1 control: a link-dense list is dropped even with no chrome class", (
   assert.doesNotMatch(out, /Department Page Number 7/);
 });
 
-/* --------------------------------------------------- negative controls --- */
-
 test("DATA-1 negative control: civic prose is not keyword-deleted", () => {
-  // Every one of these sentences contains a word that also appears in the
-  // chrome the CAWCD page shipped. A repair that stripped strings would
-  // destroy them; a repair that reads structure keeps every one.
+  // Each sentence contains a word that also appears in navigation chrome.
   const html = `
     <html><body><main>
       <p>The Board will receive the News and Public Information Officer's
@@ -152,16 +133,7 @@ test("DATA-1: entity decoding and mojibake repair still run after the region pas
   assert.match(out, /Rates & Fees/);
 });
 
-/* ---------------------------- the page-wrapping WebForms form (2026-09-23) --- */
-
-/*
- * Recorded Diligent Community meeting pages, read 2026-09-23 by the session
- * that diagnosed the defect (TUSD sitting 502 and Pima Community College
- * sitting 698). The ASP.NET page-state values, the Telerik combined-script
- * token and the WebResource identifiers are replaced by fixed placeholders;
- * every other byte is as served. Before the fix these extracted to exactly
- * the text production holds 2,308 times across 18 sittings.
- */
+/* Recorded Diligent Community meeting pages: page-state values, script tokens and WebResource ids are fixed placeholders; every other byte is as served. */
 const tusd502 = readFileSync("tests/fixtures/diligent/meeting-information-tusd-502.html", "utf8");
 const pcc698 = readFileSync("tests/fixtures/diligent/meeting-information-pcc-698.html", "utf8");
 

@@ -1,9 +1,6 @@
 /**
- * DB-22: an outcome child reads its own door.
- *
- * The runner builds each door's outcome contract in memory at the start of a pass; the child it starts is a new
- * process, so it reads the registry's doors again, builds the same contracts, and installs the door hosts, which is
- * what lets the promotion door accept the body's host. It never writes a door.
+ * An outcome child reads its own door: it rebuilds the same outcome contracts
+ * from the registry and installs the door hosts. It never writes a door.
  */
 import { refreshOutcomePartitions, outcomePartitionForDoor, type OutcomePartitionContract } from "../civic-data/outcome-partitions.ts";
 import { installDoorHosts } from "../civic-data/source-authority.ts";

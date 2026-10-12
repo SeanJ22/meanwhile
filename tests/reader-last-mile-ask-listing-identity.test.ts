@@ -4,28 +4,35 @@ import { POST } from "../app/api/ask/grounded/route.ts";
 import { resetGroundedState } from "../lib/ask/grounded-state.ts";
 import { POST as agendaPOST } from "../app/api/ask/agenda/route.ts";
 import { GET as agendaGET } from "../app/api/agenda/route.ts";
-import { readSnapshot } from "../lib/meetings/snapshot.ts";
 import { canonicalBodyIdentity } from "../lib/ask/body-identity.ts";
 import { meetingListingIdentity } from "../lib/meetings/listing-identity.ts";
 import { meetingListingKnowledgeFor, minutesSummaryEvidenceFor, noticeSummaryEvidenceFor } from "../lib/ask/meeting-knowledge.ts";
 import { MINUTES_SUMMARIES } from "../lib/meetings/minutes-summaries.ts";
 import { NOTICE_SUMMARIES } from "../lib/meetings/notice-summary.ts";
 import type { AskAnswerPayload } from "../lib/ask/answer.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import { ambiguousListingPairs, dateOnlyListings, installMeetings, recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
+import { localDate } from "../lib/ask/meeting-time.ts";
+import { readMeetingsProjection, requireMeetingsProjection } from "../lib/meetings/snapshot.ts";
 import { isAnotherBodysNoticePage } from "../lib/meetings/notice-pages.ts";
 
 delete process.env.ANTHROPIC_API_KEY;
 process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
-await installRegistryRuntimeFirstSeeds();
+await installRegistryAuthority();
+// The recorded 85701 calendar, three of its Tucson Unified sittings each listed a second time, and three date-only listings.
+const { meetings: listed, pairs } = ambiguousListingPairs(3);
+const installed = recordedMeetingsSnapshot([...listed, ...dateOnlyListings(3)]);
+installMeetings(installed.meetings, installed.agendaDocuments);
+// What the reader composes from those promoted partitions (each row stamped with its door).
+const snapshot = requireMeetingsProjection(await readMeetingsProjection());
 const headers = { "content-type": "application/json", origin: "https://wtp.test", "x-wtp-synthetic-run": "reader-listing-identity-control" };
 
-test("all three measured Newbury dates retain two listings with unresolved distinct-meeting counts in real Ask", async () => {
-  const snapshot = readSnapshot()!;
-  const expectedPairs = [["2026-10-13", "43886", "42306"], ["2026-11-10", "43891", "42311"], ["2026-12-08", "43896", "42316"]];
-  assert.equal(meetingListingIdentity(snapshot.meetings, canonicalBodyIdentity).groups.length, expectedPairs.length);
-  for (const [date, first, second] of expectedPairs) {
-    const ids = [first, second].map(id => `ical:newbury-ical-conservation-commission:calendar.${id}.field_date_and_time.0@www.newbury.nh.gov`);
+test("each date with two equal calendar listings retains both, with an unresolved distinct-meeting count, in real Ask", async () => {
+  assert.equal(meetingListingIdentity(snapshot.meetings, canonicalBodyIdentity).groups.length, pairs.length);
+  for (const pair of pairs) {
+    const ids = pair.map(meeting => meeting.id);
     const held = snapshot.meetings.filter(meeting => ids.includes(meeting.id));
+    const date = localDate(held[0]);
     assert.equal(held.length, 2, date);
     const body = canonicalBodyIdentity(held[0].bodyId)!;
     assert.ok(body);
@@ -71,46 +78,41 @@ test("all three measured Newbury dates retain two listings with unresolved disti
       assert.equal(readerResponse.status, 200);
       assert.equal(reader.meetingId, id);
       assert.deepEqual(reader.listingIdentity.groups, [group]);
-      // D1 (2026-09-24): another body's notice page held for this sitting (the
-      // Town of Bradford's calendar, on a Newbury sitting) is never shown for
-      // it; it is stated in the accounting instead.
+      // Another body's notice page held for this sitting is never shown for it;
+      // it is stated in the accounting instead.
       const sitting = held.find(meeting => meeting.id === id)!;
       const lent = documents.filter(document =>
         isAnotherBodysNoticePage(document.documentUrl, { bodyId: sitting.bodyId, publisher: document.sourceOrg }));
       assert.deepEqual(reader.documents.map((document: { id: string }) => document.id).sort(),
         documents.filter(document => !lent.includes(document)).map(document => document.id).sort());
       assert.equal(reader.documentAccounting.anotherBodysPagesSetAside, lent.length);
-      assert.ok(!reader.documents.some((document: { documentUrl: string }) => document.documentUrl === "https://bradfordnh.gov/pages/calendar"),
-        "a Newbury sitting is never shown the Town of Bradford's calendar");
     }
   }
 });
 
 test("date-only listing identities remain date-only records without an invented shared time or multiplicity claim", () => {
-  const snapshot = readSnapshot()!;
-  const dateOnly = snapshot.meetings.filter(meeting => meeting.startPrecision === "DAY");
-  assert.equal(dateOnly.length, 51);
-  const reading = meetingListingKnowledgeFor(snapshot.meetings, dateOnly.map(meeting => meeting.id)).readback;
+  const dateOnly = installed.meetings.filter(meeting => meeting.startPrecision === "DAY");
+  assert.equal(dateOnly.length, 3);
+  const reading = meetingListingKnowledgeFor(installed.meetings, dateOnly.map(meeting => meeting.id)).readback;
   assert.equal(reading.sourceListingCount, dateOnly.length);
   assert.deepEqual(reading.groups, []);
   assert.deepEqual([...reading.unresolvedTimeSourceIds].sort(), dateOnly.map(meeting => meeting.id).sort());
 });
 
 test("listing knowledge cannot borrow a summary or notice through equal body/time fields", () => {
-  const snapshot = readSnapshot()!;
   for (const [id, question, readEvidence] of [
     [MINUTES_SUMMARIES[0].meetingId, "What happened?", minutesSummaryEvidenceFor],
     [NOTICE_SUMMARIES[0].meetingId, "What is in the notice?", noticeSummaryEvidenceFor],
   ] as const) {
-    const source = snapshot.meetings.find(meeting => meeting.id === id)!;
+    const source = installed.meetings.find(meeting => meeting.id === id)!;
     assert.ok(source);
     const unrelated = { ...source, id: `${source.id}:distinct-publisher-listing` };
-    const planted = { ...snapshot, meetings: [source, unrelated] };
+    const planted = { ...installed, meetings: [source, unrelated] };
     assert.equal(readEvidence(source.bodyId!, unrelated.id, question, () => planted).records.length, 0);
     assert.equal(meetingListingKnowledgeFor(planted.meetings, [unrelated.id]).readback.sourceListingCount, 2);
     const original = readEvidence(source.bodyId!, source.id, question, () => planted);
     assert.equal(original.records.length, 1, "The original exact source summary remains available");
     assert.ok(original.gaps.some(gap => gap.whose === "OURS"));
   }
-  assert.equal(meetingListingKnowledgeFor(snapshot.meetings, ["unheld-listing-id"]).readback.sourceListingCount, 0);
+  assert.equal(meetingListingKnowledgeFor(installed.meetings, ["unheld-listing-id"]).readback.sourceListingCount, 0);
 });

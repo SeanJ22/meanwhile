@@ -7,49 +7,16 @@ import { assertWriteAllowed } from "./write-guard.ts";
 import type { RunMarker } from "./run-marker.ts";
 
 /**
- * **THE DEMAND-SIGNAL WRITE PATH, AND THERE IS NO READ PATH.** (OWN-Q6, the
- * owner's amendment on Q6/Q7, authorized 2026-08-31.)
- *
- * The owner asked for a pill reading *"Want us to get this info sooner?"* that
- * registers the click with a brief confirmation. This module is the whole of
- * what that pill does.
- *
- * ## What this file deliberately does not export
- *
- * **A read.** No `readDemandSignals`, no aggregate, no export shape, no count.
- * `CLAUDE.md`'s no-user-to-user rule says reactions are write-only from the
- * reader's perspective — stored and aggregated, never rendered back to any
- * user, including in aggregate — and the owner's own instruction on this
- * feature was that results are never shown to readers.
- *
- * A missing function is a stronger guarantee than a filter, for the reason
- * `lib/signal/aggregate.ts` gives about free text: a filter can be forgotten,
- * and a function that does not exist cannot be called. `tests/demand-signal.test.ts`
- * asserts the module's export surface, so adding a reader is a test change
- * somebody has to justify.
- *
- * ## No identity, and no continuity either
- *
- * `writeReaction` hashes a browser-invented continuity key so a reader can
- * change their mind. There is nothing equivalent here, because the owner said
- * no identity and that hash is the nearest thing to one this product holds. A
- * reader who taps twice writes two rows and nothing relates them. That is not
- * a de-duplication bug: the signal is a COUNT OF ASKS, which is exactly what
- * the pill records.
- *
- * ## The declaration is required, exactly as it is on reactions
- *
- * A row the store cannot attribute must never be counted as a reader. The
- * check runs BEFORE the database check so it fails identically whether or not
- * a database is reachable — a refusal that only fires in production is a
- * refusal the suite cannot see.
+ * The demand-signal write path. There is deliberately no read export: results
+ * are never shown to readers, and tests assert the export surface. No identity
+ * or continuity key: two taps are two unrelated rows. The declaration check
+ * runs before the database check so it fails the same with or without one.
  */
 
-/** The one value the pill can send. A union of one, on purpose. */
+/** The one value the pill can send. */
 export const DEMAND_SIGNALS = ["WANT_THIS_SOONER"] as const;
 export type DemandSignal = (typeof DEMAND_SIGNALS)[number];
 
-/** The two kinds of card the pill appears on. Symmetric across both. */
 export const DEMAND_SUBJECT_TYPES = ["BODY", "CANDIDATE"] as const;
 export type DemandSubjectType = (typeof DEMAND_SUBJECT_TYPES)[number];
 
@@ -62,15 +29,7 @@ export interface StorableDemandSignal {
   readonly marker: RunMarker;
 }
 
-/**
- * `sha256("demand-run:" + runId)` — its own digest space.
- *
- * The n-stores rule is proven over VALUE SPACES, never column names
- * (RULING 132). The search log holds a raw run id and `reactions` holds
- * `sha256("reaction-run:" + id)`; this holds a third digest, so no query can
- * relate a run's demand signals to its searches or its reactions. Same
- * precedent, same reason.
- */
+/** Its own digest space, so no query can relate a run's demand signals to its searches or reactions. */
 export function hashRunId(runId: string): string {
   return createHash("sha256").update(`demand-run:${runId}`, "utf8").digest("hex");
 }
@@ -91,8 +50,7 @@ export async function writeDemandSignal(row: StorableDemandSignal): Promise<bool
   // No database is a state; the WRONG database is a misconfiguration.
   assertWriteAllowed("a demand signal");
 
-  // Null on ORGANIC by construction, so the id can never relate two readers'
-  // rows to each other.
+  // Null on ORGANIC rows, so the id can never relate two readers' rows.
   const runId =
     row.marker.runClass === "ORGANIC" || !row.marker.runId
       ? null

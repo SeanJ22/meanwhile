@@ -84,3 +84,19 @@ test("BX-08: every new address in a pass is matched, with no per-pass cap", asyn
   assert.equal(calls, 45);
   assert.equal((result.package?.payload as unknown as { records: unknown[] }).records.length, 45);
 });
+
+test("BX-08: spelled-out directions, street types and state names match the Census abbreviations", () => {
+  const warner = { result: { addressMatches: [{ matchedAddress: "55 W JOPPA RD, WARNER, NH, 03278",
+    coordinates: { x: -71.8, y: 43.3 },
+    addressComponents: { city: "WARNER", state: "NH", zip: "03278", streetName: "JOPPA", preDirection: "W", suffixType: "RD" } }] } };
+  assert.ok(verifiedCensusVenuePoint("55 West Joppa Rd. Warner, NH 03278", warner));
+  const tucson = { result: { addressMatches: [{ matchedAddress: "220 W 6TH ST, TUCSON, AZ, 85701",
+    coordinates: { x: -110.97, y: 32.22 },
+    addressComponents: { city: "TUCSON", state: "AZ", zip: "85701", streetName: "6TH", preDirection: "W", suffixType: "ST" } }] } };
+  assert.ok(verifiedCensusVenuePoint("B-1 MPR 220 W. 6th Street Tucson, Arizona 85701", tucson));
+  assert.equal(verifiedCensusVenuePoint("B-1 MPR 220 E. 6th Street Tucson, Arizona 85701", tucson), null);
+  const nh = { result: { addressMatches: [{ matchedAddress: "5 MAIN ST, CONCORD, NH, 03301", coordinates: { x: -71.5, y: 43.2 },
+    addressComponents: { city: "CONCORD", state: "NH", zip: "03301", streetName: "MAIN", suffixType: "ST" } }] } };
+  assert.ok(verifiedCensusVenuePoint("5 Main Street, Concord, New Hampshire 03301", nh));
+  assert.equal(verifiedCensusVenuePoint("5 Main Street, Concord, Maine 03301", nh), null);
+});

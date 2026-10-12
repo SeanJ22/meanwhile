@@ -1,17 +1,12 @@
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 
-// Extension explicit so the file also loads under `node --test`'s
-// strip-types resolver, which the search-log tests run through.
+// Explicit extension so the file also loads under node --test strip-types.
 import * as schema from "./schema.ts";
 import { installDatabaseTransferCounter } from "./transfer.ts";
 import { installConnectAttemptWindow } from "../ops/connect-attempt-window.ts";
 
-/*
-  Lazy on purpose. Nothing in the map entry screen reads Postgres, so a missing
-  DATABASE_URL must not break `pnpm dev`. The first caller that actually needs a
-  connection is the one that gets the error.
-*/
+// Lazy, so a missing DATABASE_URL only fails the first caller that needs a connection.
 let cached: ReturnType<typeof drizzle<typeof schema>> | null = null;
 
 export function getDb() {

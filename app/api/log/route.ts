@@ -14,30 +14,9 @@ import {
 import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
 
 /**
- * POST /api/log — the client-side half of the search log, hardened (T08).
- *
- * Accepts exactly the event shape `lib/db/search-log.ts` defines and nothing
- * more. There is deliberately no identifier to accept: no auth, no cookie
- * read, no IP capture beyond the transient rate-limit window below. A
- * malformed event is a 400 with the reason; a missing database is a 202
- * (accepted, not stored) so the client stays fire-and-forget.
- *
- * T08 adds, in the same shape as /api/reactions:
- * - a body-size cap and a server-enforced length cap on every detail
- *   string (the ask box caps client-side; the server stops trusting it) —
- *   validity, never behind a flag;
- * - same-origin enforcement and a per-IP window (inside
- *   `ripcord.rateLimits`) so text cannot be pumped in from scripts that
- *   never loaded the site. The IP lives only in this instance's memory for
- *   the window's duration — never stored, never logged;
- * - the master ripcord `ripcord.reactionIntake`, which closes this intake
- *   with the reaction store's (one switch closes every write path). The
- *   client is fire-and-forget by design, so a refused log event costs the
- *   reader nothing.
- *
- * Disclosed on /transparency, which ships in the same change as this route
- * and must keep shipping with it — collecting silently is the failure this
- * product cannot survive.
+ * POST /api/log: accepts exactly the event shape `lib/db/search-log.ts` defines. No identifier is accepted;
+ * the IP lives only in this instance's memory for the rate-limit window. A malformed event is a 400; a
+ * missing database is a 202 so the client stays fire-and-forget.
  */
 
 export const runtime = "nodejs";
@@ -54,7 +33,7 @@ function getIpLimiter() {
 }
 
 async function postWithSettings(request: Request) {
-  // The master ripcord (T08): one switch closes every intake write path.
+  // The master ripcord: one switch closes every intake write path.
   if (ripcordPulled("ripcord.reactionIntake")) {
     return Response.json({ error: "intake is closed" }, { status: 503 });
   }
@@ -117,8 +96,8 @@ async function postWithSettings(request: Request) {
     return Response.json({ error: "detail must be an object" }, { status: 400 });
   }
   if (event.detail) {
-    // Server-enforced caps on the detail bag (T08 1c): the client caps the
-    // refusal-question text, and the server no longer takes its word for
+    // Server-enforced caps on the detail bag: the client caps the
+    // refusal-question text, and the server does not take its word for
     // it. Validity, so never behind a flag.
     const entries = Object.entries(event.detail as Record<string, unknown>);
     const maxChars = intakeLimits().logDetailValueMaxChars;
@@ -144,9 +123,8 @@ async function postWithSettings(request: Request) {
       approximateLocation: (event.approximateLocation as string | null | undefined) ?? null,
       ocdIds: event.ocdIds as string[],
       detail: event.detail as Record<string, string | number | boolean> | undefined,
-      // C05: whose traffic this is, declared by the caller at write time.
-      //
-      // Item 4b (g17): the BODY is read here as well as the header, because
+      // Whose traffic this is, declared by the caller at write time.
+      // The body is read here as well as the header, because
       // this is the one route a `sendBeacon` reaches, and an unload-time
       // beacon does not carry Playwright's extraHTTPHeaders. A run that
       // declared itself in either place is not recorded as a reader.
@@ -155,17 +133,8 @@ async function postWithSettings(request: Request) {
     return new Response(null, { status: stored ? 204 : 202 });
   } catch (error) {
     /*
-     * **RULING 25 — THE READER-FACING ANSWER IS UNCHANGED** (Prompt D item 6.3,
-     * D73). The 400 and its body are exactly what shipped before.
-     *
-     * The sweep found this route by asking which call sites write to a SOLD
-     * STORE: three, and this is the third. `logSearchEvent` throws for two
-     * different reasons that arrive at this same catch — a caller sending a
-     * malformed event, which is genuinely a 400, and the DATABASE refusing the
-     * insert, which is not the caller's fault at all and is precisely D73's
-     * shape. The status cannot tell them apart and is deliberately left alone;
-     * the alarm does not need to, because a raised alarm is read by a human who
-     * can see the database's own words.
+     * `logSearchEvent` throws both for a malformed event and for a database refusal; the status cannot tell
+     * them apart and stays 400, and the alarm carries the database's own words.
      */
     await raiseWriteAlarm("search_log", error);
     return Response.json({ error: String((error as Error).message) }, { status: 400 });

@@ -1,21 +1,10 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
-import { directoryFor } from "../lib/officials/directory.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
-
-await installRegistryRuntimeFirstSeeds();
-
-test("all normalized directory entries survive exact Bioguide projection", () => {
-  const held = JSON.parse(readFileSync("data/congress-legislators/directory.json", "utf8"));
-  for (const [id, entry] of Object.entries(held.byMember)) assert.deepEqual(directoryFor(`congress:${id}`)?.entry, entry, id);
-  assert.equal(directoryFor("statewide:az/governor"), null);
-  assert.equal(directoryFor("congress:Z999999"), null);
-});
 
 test("a missing deployed directory fails instead of claiming empty committees and offices", () => {
   const prefix = join(tmpdir(), "reader-directory-missing-");

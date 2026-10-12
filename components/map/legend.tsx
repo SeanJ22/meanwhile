@@ -12,17 +12,9 @@ import { useShellData } from "@/lib/state/data";
 import { useUi } from "@/lib/state/provider";
 
 /**
- * The map legend — fixed (6e).
- *
- * Every category renders always; a category with nothing currently on the
- * map is visually muted, never removed. A legend that mutates with the
- * view is not a legend — the reader can't learn a mapping from a key that
- * keeps changing. (This reverses the earlier present-only port of Edia's
- * `updateLegend`, deliberately.)
- *
- * Entries key on government *level* (2g) — school, local, state, federal —
- * matching the dot colors, so a school-board meeting and a congressional
- * town hall at the same address read apart without a click.
+ * The map legend. Every category always renders; one with nothing on the map
+ * is muted, never removed. Entries key on government level, matching the dot
+ * colours.
  */
 
 const LEVEL_ACCENT: Record<GovernmentLevel, React.CSSProperties> = {

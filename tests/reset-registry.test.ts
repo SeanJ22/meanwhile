@@ -13,14 +13,8 @@ import {
 import type { UiState } from "../lib/state/types.ts";
 
 /**
- * The registry guard behind "Reset all does not work" (M24).
- *
- * The defect's mechanism: controls accreted around a reset handler that
- * only knew about `filters`, and an active-count that treated the default
- * district-type view as an active filter — so the badge read 1 on a fresh
- * page and Reset all visibly did nothing. These tests make both structural:
- * a new UiState field must register a reset or declare why it is not a
- * control, and "no controls active" must be exactly the default state.
+ * A new UiState field must register a reset or declare why it is not a control, and "no controls active"
+ * must be exactly the default state.
  */
 
 test("every UiState field is either a registered control or declared non-control", () => {
@@ -53,8 +47,7 @@ test("every UiState field is either a registered control or declared non-control
 });
 
 test("the default state has zero active controls, and reset returns to it", () => {
-  // The badge must read 0 on a fresh page — the old count read 1 because the
-  // default district-type view was misdefined as active.
+  // The badge must read 0 on a fresh page.
   assert.equal(activeControlCount(INITIAL_STATE), 0);
 
   // Distort every control, then reset; every control must go quiet.
@@ -111,9 +104,7 @@ test("select all and clear set the district types outright, in canonical order",
     type: "filter/districtTypesSet",
     value: [
       "municipal",
-      // M12 (2026-08-17): deliberately shuffled, and deliberately naming all
-      // three school types — canonical order is what this test asserts, and
-      // it has to survive the split rather than be re-derived from it.
+      // Deliberately shuffled, naming all three school types: canonical order is what this asserts.
       "school-elementary",
       "school-secondary",
       "school-unified",
@@ -137,11 +128,7 @@ test("select all and clear set the district types outright, in canonical order",
   const none = reducer(all, { type: "filter/districtTypesSet", value: [] });
   assert.deepEqual(none.filters.districtTypes, []);
 
-  // All-on IS the default now (session item 2, 2026-08-14 second session:
-  // every layer defaults on so a counted body is always reachable), so
-  // all-on must NOT read as an active control — the M24 badge counted the
-  // default view as active once already. Clearing every type is not the
-  // default and does read active.
+  // All-on is the default, so it must not read as an active control; clearing every type does.
   assert.equal(activeControlCount(all), 0);
   assert.ok(activeControlCount(none) > 0);
   const reset = reducer(none, { type: "filter/reset" });

@@ -1,79 +1,8 @@
-/**
- * **WHAT THE PUBLISHER SAID ABOUT ITS OWN AGENDA — kept, not thrown away.**
- * (WS-LEGI, 2026-08-29.)
- *
- * ## The reading that was being discarded
- *
- * `lib/sources/legistar-insite/index.ts` reads the portal grid's agenda column
- * for every sitting. The cell carries a VERBATIM string the body published —
- * "Not Available", "Agenda", "Agenda and Addendum" — and the adapter used it for
- * exactly one thing: deciding whether to emit an `agendaUrl`. When the cell said
- * "Not Available" the URL became null and **the reading itself was dropped on
- * the floor.**
- *
- * Its own comment said what that cost: the null "renders as the NAMED GAP it is
- * — the body has not posted an agenda". That sentence is a claim about a
- * government, and after the drop the only thing left to support it was our own
- * empty field. The government's actual statement — the one that could have
- * supported the claim honestly — had been read, understood, and discarded in the
- * same expression.
- *
- * This module is where it goes instead.
- *
- * ## Two representations of one fact, and NEITHER retires the other
- *
- * The same fact is published twice, in two shapes, by two routes:
- *
- * | route | shape | what it says |
- * |---|---|---|
- * | `INSITE_CALENDAR` | HTML grid cell | the clerk's label, verbatim |
- * | `WEBAPI_EVENT` | `EventAgendaStatusName` + `EventAgendaFile` + `EventAgendaLastPublishedUTC` | the structured record |
- *
- * **RULING 207: one route succeeding never retires another.** So both are
- * recorded and {@link reconcilePublicationObservations} names their relationship
- * rather than picking a winner. They can genuinely disagree — the API returns
- * only sittings whose InSite detail page is publicly viewable, so a sitting the
- * grid lists can be absent from the API entirely, and a document published
- * between two reads shows up in one representation before the other. A
- * disagreement is INFORMATION about how fresh each surface is, and the moment
- * one is allowed to silently win, that information is gone.
- *
- * ## Provenance decides what may ever be SAID, and it is not a formality
- *
- * `lib/ask/agenda-publication.ts` will only let `FIRST_PARTY_PUBLISHER` reach a
- * sentence about a government. That classification is a real judgement and it is
- * made here, explicitly, rather than defaulted:
- *
- * **The tenant-branded Legistar surfaces are first-party.** `pima.legistar.com`
- * and `webapi.legistar.com/v1/pima` serve the Pima County Clerk of the Board's
- * OWN record. Granicus is the software the clerk publishes through, in the way
- * a city's newsroom is the software a city publishes through; the "Not
- * Available" cell is the clerk having attached no agenda document to that event,
- * not a vendor's opinion about the county. The county links readers to this
- * portal from `pima.gov` as its meeting information.
- *
- * **A genuine aggregator would NOT qualify** and must be classed `THIRD_PARTY`:
- * a regional meeting-search site, a news database, anything republishing a
- * body's docket without the body's own record behind it. The line is whether the
- * surface renders the BODY'S OWN RECORD or somebody's copy of it.
- *
- * **Anything derived from our own collection state is `INFERRED`** and can never
- * become a claim about a government whatever else is true of it. Nothing in this
- * module ever mints one; the type exists so that if a later caller is tempted,
- * it has a structurally harmless place to put it.
- */
+/** What a publisher said about its own agenda, each surface's reading kept as an observation and never merged. */
 
 import type { LegistarEvent } from "../sources/legistar/types.ts";
 
-/**
- * How the observation was come by.
- *
- * Structurally identical to `PublisherObservationProvenance` in
- * `lib/ask/agenda-publication.ts` and deliberately declared here rather than
- * imported: this module is a SOURCE-side producer and `lib/ask/` is a
- * reader-side consumer. An import would make the collection layer depend on the
- * rendering layer, and the handoff is a shape, not a package.
- */
+/** How the observation was come by; declared here rather than imported, so the source side never depends on `lib/ask/`. */
 export type ObservationProvenance =
   | "FIRST_PARTY_PUBLISHER"
   | "THIRD_PARTY"
@@ -82,17 +11,9 @@ export type ObservationProvenance =
 /** What the surface said about THIS sitting's agenda. */
 export type AgendaReport = "NOT_AVAILABLE" | "AVAILABLE";
 
-/**
- * One reading of one publisher surface about ONE sitting's agenda.
- *
- * Every field is required because every one is load-bearing for the question
- * *may this become a sentence about a government?* Satisfies
- * `PublisherAgendaObservation` in `lib/ask/agenda-publication.ts` field for
- * field, so the integration owner can hand it straight to
- * `classifyAgendaPublication`.
- */
+/** One reading of one publisher surface about one sitting's agenda; satisfies `PublisherAgendaObservation` field for field. */
 export interface AgendaPublicationObservation {
-  /** `legistar:pima:1825`. Scoping to ONE sitting is the whole rule. */
+  /** Scoped to exactly one sitting. */
   readonly meetingId: string;
   readonly provenance: ObservationProvenance;
   readonly report: AgendaReport;
@@ -100,7 +21,7 @@ export interface AgendaPublicationObservation {
   readonly observedAt: string;
   /** The surface that was read. Observed, never constructed. */
   readonly observedUrl: string;
-  /** The publisher, as they name themselves. Never "Granicus". */
+  /** The publisher, as they name themselves; never the vendor. */
   readonly sourceOrg: string;
   /**
    * **What the surface ACTUALLY SAID**, verbatim and trimmed. A report with no
@@ -114,16 +35,8 @@ export interface AgendaPublicationObservation {
 }
 
 /**
- * The portal grid's agenda cell, as an observation.
- *
- * `status` is the cell's verbatim text and becomes the evidence quote unchanged
- * — including its capitalisation and any trailing punctuation the template
- * emitted. Normalising it would destroy the only thing that makes this a
- * quotation rather than our summary of one.
- *
- * The report is decided by the SAME predicate the adapter uses to decide whether
- * to emit a URL, so the observation and the `agendaUrl` can never disagree with
- * each other about what the cell said.
+ * The portal grid's agenda cell as an observation: `status` is the verbatim quote. Decided by the same predicate the
+ * adapter uses to emit a URL, so the two never disagree.
  */
 export function observationFromGridCell(input: {
   readonly meetingId: string;
@@ -144,12 +57,7 @@ export function observationFromGridCell(input: {
     observedAt: input.observedAt,
     observedUrl: input.calendarUrl,
     sourceOrg: input.sourceOrg,
-    /*
-     * An EMPTY cell is not a quotation. The grid renders no text at all for some
-     * rows, and "" as an evidence quote would be a report with no basis wearing
-     * the shape of one — so the absence is described instead, in words that say
-     * it is a description.
-     */
+    // An empty cell is not a quotation, so the absence is described instead.
     evidenceQuote:
       status.length > 0
         ? status
@@ -158,15 +66,7 @@ export function observationFromGridCell(input: {
   };
 }
 
-/**
- * The Web API's structured publication record, as an observation.
- *
- * `EventAgendaStatusName` alone is NOT the fact. Pima returns "Final" on every
- * sitting including ones with no document, so reading the status string as
- * availability would report 20 of 20 agendas published where the portal grid
- * says otherwise. **The document pointer is what says a document exists**, and
- * the status string is quoted beside it as what the publisher called its state.
- */
+/** The Web API's publication record as an observation. The document pointer says a document exists; the status string is only quoted. */
 export function observationFromEvent(input: {
   readonly meetingId: string;
   readonly event: LegistarEvent;
@@ -183,11 +83,7 @@ export function observationFromEvent(input: {
     provenance: "FIRST_PARTY_PUBLISHER",
     report: file !== null ? "AVAILABLE" : "NOT_AVAILABLE",
     observedAt: input.observedAt,
-    /*
-     * The sitting's own public permalink when the publisher gives one, because
-     * that is the surface a reader can go and check. The API path is the
-     * fallback and it is still a URL this run actually read.
-     */
+    // The sitting's own public permalink when given, else the API path this run read.
     observedUrl:
       event.EventInSiteURL?.trim() ||
       `https://webapi.legistar.com/v1/events/${event.EventId}`,
@@ -208,14 +104,7 @@ export type PublicationAgreement =
   | "AGREE_AVAILABLE"
   /** Every route that reported agrees none is posted. The strongest negative. */
   | "AGREE_NOT_AVAILABLE"
-  /**
-   * The routes DISAGREE. Neither wins here.
-   *
-   * A real and expected state, not a bug: a document published between two reads
-   * appears in one representation first, and the Web API omits sittings whose
-   * detail page is not publicly viewable while the grid still lists them. The
-   * disagreement is information about the surfaces and is reported as such.
-   */
+  /** The routes disagree, and neither wins: a document can appear on one surface first. */
   | "DISAGREE";
 
 export interface ReconciledPublication {
@@ -223,27 +112,13 @@ export interface ReconciledPublication {
   readonly agreement: PublicationAgreement;
   /** Every reading, kept. The input, never a filtered version of it. */
   readonly observations: readonly AgendaPublicationObservation[];
-  /**
-   * The reading a consumer may act on, or NULL on `DISAGREE`.
-   *
-   * Null is the whole point. A disagreement that produced a "best" reading would
-   * be this function picking a winner in a field a caller would then treat as
-   * settled — so on a conflict there is nothing to pick up, and the caller has
-   * to look at `observations` and say that the surfaces disagree.
-   */
+  /** The reading a consumer may act on, or null on `DISAGREE`, so no winner is ever picked. */
   readonly actionable: AgendaPublicationObservation | null;
   /** Always a sentence, including when everything agreed. */
   readonly note: string;
 }
 
-/**
- * Reconcile every reading held for one sitting WITHOUT resolving a conflict.
- *
- * The most recent reading of each route is kept — a route re-read is a newer
- * measurement of the same surface and there is no value in holding both — and
- * then the routes are compared to each other, which is the comparison that
- * cannot be collapsed.
- */
+/** Reconcile every reading for one sitting without resolving a conflict; the most recent reading of each route is kept. */
 export function reconcilePublicationObservations(
   meetingId: string,
   observations: readonly AgendaPublicationObservation[],
@@ -299,7 +174,7 @@ export function reconcilePublicationObservations(
         "is posted: " +
         latest.map((o) => `${o.routeId} says ${o.report}`).join("; ") +
         ". Neither reading is preferred here. One route succeeding never retires " +
-        "another (RULING 207), and a document published between two reads appears " +
+        "another, and a document published between two reads appears " +
         "on one surface before the other — so the disagreement is reported rather " +
         "than resolved.",
     };

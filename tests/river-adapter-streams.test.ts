@@ -1,7 +1,5 @@
 /**
- * RL-06: the runner's adapter engineer publishes `stream/adapter-<kind>` for
- * River instead of opening and merging its own pull requests, behind a switch
- * that keeps exactly one publisher active, and a stream that fails River's
+ * The runner's adapter engineer publishes `stream/adapter-<kind>` for River, and a stream that fails River's
  * checks is returned to its writer with a fix-list entry.
  */
 import assert from "node:assert/strict";
@@ -12,11 +10,6 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import test from "node:test";
 
-import {
-  ADAPTER_PUBLICATION_DEFAULT,
-  ADAPTER_PUBLICATION_ENV,
-  readAdapterPublication,
-} from "../lib/control-plane/workers/adapter-publication.mjs";
 import {
   adapterOwnCheck,
   adapterStatusRecord,
@@ -34,44 +27,11 @@ import { parseStatus, pendingReady } from "../scripts/river.mjs";
 
 const ROOT = join(import.meta.dirname, "..");
 const RIVER_SCRIPT = join(ROOT, "scripts", "river.mjs");
-const MERGE_SCRIPT = join(ROOT, "scripts", "merge-engineer-adapters.mjs");
 const SHA = (c: string) => c.repeat(40);
 const FILES = [
   { path: "lib/sources/platform-adapters/test-calendar-feed.ts", content: "export const extract = () => [];\n" },
   { path: "lib/sources/platform-adapters/test-calendar-feed.test.ts", content: "import test from 'node:test';\ntest('x', () => {});\n" },
 ];
-
-/* -------------------------------------------------------------------------- */
-/* The switch                                                                 */
-/* -------------------------------------------------------------------------- */
-
-test("the publication switch defaults to pr, reads the env override, and an unreadable value turns both routes off", () => {
-  assert.equal(ADAPTER_PUBLICATION_DEFAULT, "pr", "the old route stays default until River's route is checked live");
-  assert.deepEqual(readAdapterPublication({}), { mode: "pr", source: "default", problem: null });
-  assert.deepEqual(readAdapterPublication({ [ADAPTER_PUBLICATION_ENV]: "" }), { mode: "pr", source: "default", problem: null },
-    "an unset repository variable reaches the workflow as an empty string");
-  assert.deepEqual(readAdapterPublication({ [ADAPTER_PUBLICATION_ENV]: " River " }), { mode: "river", source: "env", problem: null });
-  assert.deepEqual(readAdapterPublication({ [ADAPTER_PUBLICATION_ENV]: "pr" }), { mode: "pr", source: "env", problem: null });
-  const typo = readAdapterPublication({ [ADAPTER_PUBLICATION_ENV]: "rivr" });
-  assert.equal(typo.mode, null);
-  assert.match(typo.problem ?? "", /neither pr nor river/);
-});
-
-test("the merge workflow passes the switch and its script merges nothing unless the switch reads pr", () => {
-  const workflow = readFileSync(join(ROOT, ".github/workflows/engineer-adapter-merge.yml"), "utf8");
-  assert.match(workflow, /WTP_ADAPTER_PUBLICATION: \$\{\{ vars\.WTP_ADAPTER_PUBLICATION \}\}/);
-  for (const [value, expected] of [["river", /adapter merges are off: WTP_ADAPTER_PUBLICATION reads river/], ["bogus", /neither pr nor river/]] as const) {
-    // No token and no repository: any GitHub call would fail loudly, so a clean
-    // exit with the message proves the merge path did not run.
-    const run = spawnSync(process.execPath, [MERGE_SCRIPT], {
-      cwd: ROOT, encoding: "utf8",
-      env: { PATH: process.env.PATH ?? "", [ADAPTER_PUBLICATION_ENV]: value, GH_TOKEN: "", GH_REPOSITORY: "" } as unknown as NodeJS.ProcessEnv,
-    });
-    assert.equal(run.status, 0, run.stderr);
-    assert.match(run.stdout, expected);
-    assert.doesNotMatch(`${run.stdout}${run.stderr}`, /api\.github\.com|merged|#\d+/);
-  }
-});
 
 /* -------------------------------------------------------------------------- */
 /* The engineer's river route                                                 */
@@ -179,71 +139,22 @@ const generated = () => async () => ({
   usage: { input_tokens: 100, output_tokens: 10, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 },
 });
 
-test("the engineer's queue publishes to the adapter stream with no PR when the switch reads river", async () => {
-  const before = process.env[ADAPTER_PUBLICATION_ENV];
-  process.env[ADAPTER_PUBLICATION_ENV] = "river";
-  try {
-    const repos = createMemoryRepositories();
-    const gh = fakeGitHub();
-    const opened = await workAdapterQueue({
-      repos, results: [needsAdapter("river-1")], now: "2026-10-04T12:00:00Z", request: gh.request, transportFor: generated,
-      readEvidence: async () => ({ text: "Saved calendar", canonicalUrl: "https://platform.example/tenant/calendar", artifactId: "held" } as never),
-    });
-    assert.equal(opened.length, 1);
-    assert.equal(opened[0].branch, "stream/adapter-test-calendar-feed");
-    assert.ok(!("number" in opened[0]), "no pull request number: none was opened");
-    assert.ok(gh.calls.length > 0 && gh.calls.every((call) => !call.path.includes("/pulls")));
-    const entry = (await readFieldManual(repos, { role: "DETECTIVE" })).store.entries.find((e) => e.kind === "ENGINEER_ADAPTER_PR")!;
-    const payload = entry.payload as { stream?: { branch: string; readySha: string }; pr?: unknown; files: string[] };
-    assert.equal(payload.stream?.branch, "stream/adapter-test-calendar-feed");
-    assert.equal(payload.pr, undefined);
-    assert.deepEqual(payload.files, FILES.map((file) => file.path), "Detective still learns the adapter's files");
-  } finally {
-    if (before === undefined) delete process.env[ADAPTER_PUBLICATION_ENV]; else process.env[ADAPTER_PUBLICATION_ENV] = before;
-  }
-});
-
-test("an unreadable switch publishes nothing and records why", async () => {
-  const before = process.env[ADAPTER_PUBLICATION_ENV];
-  process.env[ADAPTER_PUBLICATION_ENV] = "both";
-  try {
-    const repos = createMemoryRepositories();
-    let calls = 0;
-    const opened = await workAdapterQueue({
-      repos, results: [needsAdapter("off-1")], now: "2026-10-04T12:00:00Z", transportFor: generated,
-      request: async () => { calls++; return {}; },
-      readEvidence: async () => ({ text: "Saved calendar", canonicalUrl: "https://platform.example/tenant/calendar", artifactId: "held" } as never),
-    });
-    assert.deepEqual(opened, []);
-    assert.equal(calls, 0);
-    const blocker = (await readFieldManual(repos, { role: "ENGINEER" })).store.entries.find((e) => e.kind === "ENGINEER_BLOCKER")!;
-    assert.match(blocker.summary, /ENGINEER_ADAPTER_ROUTE_OFF/);
-  } finally {
-    if (before === undefined) delete process.env[ADAPTER_PUBLICATION_ENV]; else process.env[ADAPTER_PUBLICATION_ENV] = before;
-  }
-});
-
-test("pr mode is unchanged: the engineer still opens its labelled pull request", async () => {
+test("the engineer's queue publishes to the adapter stream with no PR", async () => {
   const repos = createMemoryRepositories();
-  const paths: string[] = [];
+  const gh = fakeGitHub();
   const opened = await workAdapterQueue({
-    repos, results: [needsAdapter("pr-1")], now: "2026-10-04T12:00:00Z", mode: "pr", transportFor: generated,
+    repos, results: [needsAdapter("river-1")], now: "2026-10-04T12:00:00Z", request: gh.request, transportFor: generated,
     readEvidence: async () => ({ text: "Saved calendar", canonicalUrl: "https://platform.example/tenant/calendar", artifactId: "held" } as never),
-    request: async (method, path) => {
-      paths.push(`${method} ${path}`);
-      if (path.includes("/pulls?")) return [];
-      if (path.endsWith("/git/ref/heads/main")) return { object: { sha: "base" } };
-      if (path.endsWith("/git/commits/base")) return { tree: { sha: "base-tree" } };
-      if (path.endsWith("/git/trees")) return { sha: "tree" };
-      if (path.endsWith("/git/commits")) return { sha: "commit" };
-      if (path.endsWith("/pulls")) return { html_url: "https://github.com/SeanJ22/meanwhile/pull/7", number: 7 };
-      return {};
-    },
   });
   assert.equal(opened.length, 1);
-  assert.equal((opened[0] as { number: number }).number, 7);
-  assert.ok(paths.includes("POST repos/SeanJ22/meanwhile/pulls"));
-  assert.ok(!paths.some((path) => path.includes("stream/adapter-")));
+  assert.equal(opened[0].branch, "stream/adapter-test-calendar-feed");
+  assert.ok(!("number" in opened[0]), "no pull request number: none was opened");
+  assert.ok(gh.calls.length > 0 && gh.calls.every((call) => !call.path.includes("/pulls")));
+  const entry = (await readFieldManual(repos, { role: "DETECTIVE" })).store.entries.find((e) => e.kind === "ENGINEER_ADAPTER_PR")!;
+  const payload = entry.payload as { stream?: { branch: string; readySha: string }; pr?: unknown; files: string[] };
+  assert.equal(payload.stream?.branch, "stream/adapter-test-calendar-feed");
+  assert.equal(payload.pr, undefined);
+  assert.deepEqual(payload.files, FILES.map((file) => file.path), "Detective still learns the adapter's files");
 });
 
 /* -------------------------------------------------------------------------- */
@@ -378,13 +289,13 @@ test("River takes an adapter stream like any lane, returns a conflicting one to 
   }
 });
 
-test("DB-57 connects saved failure, adapter files and its own tests to a scoped engineer request and checked publication", async () => {
+test("connects saved failure, adapter files and its own tests to a scoped engineer request and checked publication", async () => {
   const repos = createMemoryRepositories();
   const gh = fakeGitHub();
   const changed = [{ path: 'lib/sources/iqm2/index.ts', content: 'export const repaired = true;' }];
   let checked = 0;
   const opened = await workAdapterQueue({
-    repos, results: [needsAdapter('scoped-repair')], now: '2026-10-05T12:00:00Z', mode: 'river', request: gh.request,
+    repos, results: [needsAdapter('scoped-repair')], now: '2026-10-05T12:00:00Z', request: gh.request,
     readEvidence: async () => ({ text: 'Saved failing calendar', canonicalUrl: 'https://calendar.example/meeting', artifactId: 'held' } as never),
     repairScopeFor: (_kind, example) => repairScope({ kind: 'iqm2', example,
       paths: ['lib/sources/iqm2/index.ts', 'tests/iqm2.test.ts', 'tests/composite.test.ts'],

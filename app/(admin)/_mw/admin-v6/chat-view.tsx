@@ -1,34 +1,11 @@
 "use client";
 
 /**
- * **ASK THE CONSOLE, as a view of the command center.** (ADM-C7, the 9.6.26 Operator
- * Control Room brief; moved in from its own page on 2026-10-01 per rulings §0.)
+ * Every control is a `<button type="button">` with a handler, never a `<form>`: a form inside phrasing
+ * content is repaired by the browser into a different tree and hydration fails.
  *
- * The list of controls it can ask for comes first, then the transcript. Every
- * answer comes from a typed query over the records.
- *
- * **THE CHAT, RENDERED IN THE FOUR LAYERS EVERY OTHER STATE ON THIS CONSOLE IS
- * RENDERED IN.** (ADM-C7, §9A.2.)
- *
- * A transcript is still a set of states, so each answer is a `StatusBlock`:
- * what this is, what happened, does it need you, what happens next, and the
- * instruments' own words one disclosure away. Machine constants — an authority
- * class, an outcome, a refusal — go through `Code`, which puts the words on the
- * face and the raw constant in the hover.
- *
- * ## No form, and no history
- *
- * Every control here is a `<button type="button">` with a handler. A `<form>`
- * inside phrasing content is repaired by the browser into a different tree, React
- * fails to hydrate, and the whole page loses its theme — measured on this console
- * on 2026-09-05. Nothing here touches the router or the history stack either.
- *
- * ## Confirming an action sends the QUESTION back, not the action
- *
- * The console re-derives the proposal from the same words and the same instant
- * and compares the key it computes against the token it issued. So a page that
- * had been tampered with cannot submit an action the console did not itself
- * decide to propose.
+ * Confirming an action sends the question back, not the action: the console re-derives the proposal and
+ * compares its key against the token it issued.
  */
 
 import { useV6 } from "./context.tsx";
@@ -46,14 +23,11 @@ import { CHAT_PAGE, CHAT_ROUTE, CHAT_TITLE } from "@/lib/control-plane/operator-
 interface Said {
   readonly id: number;
   readonly asked: string;
-  /** The console's answer, or the sentence that came back instead of one. */
   readonly answered: ChatResponse | null;
   readonly refusedWith: string | null;
 }
 
 const ASKING = "Reading…";
-
-/* ------------------------------------------------------------ one answer */
 
 function Answer({ answer }: { answer: ChatAnswer }) {
   const [lead, ...rest] = answer.says;
@@ -102,8 +76,6 @@ function Answer({ answer }: { answer: ChatAnswer }) {
     </StatusBlock>
   );
 }
-
-/* ---------------------------------------------------------------- a turn */
 
 function Turn({
   turn,
@@ -251,8 +223,6 @@ function Turn({
   );
 }
 
-/* ------------------------------------------------------------- the console */
-
 function ChatConsole({ from, suggestions }: { from: string; suggestions: readonly string[] }) {
   const [said, setSaid] = useState<readonly Said[]>([]);
   const [draft, setDraft] = useState("");
@@ -390,7 +360,6 @@ function ChatConsole({ from, suggestions }: { from: string; suggestions: readonl
   );
 }
 
-/** The whole view: what it can ask for, then the transcript. */
 export function ChatView({ controls }: { readonly controls: readonly string[] }) {
   const { scopeKey } = useV6();
   return (

@@ -1,5 +1,6 @@
+import { PLURAL_STATES, PLURAL_PARSER_VERSION } from "../sources/plural/targets.ts";
 import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ROUTE_PREFIX, REGISTRATION_TARGETS } from "../registration/publication.ts";
-import { FIPS_TO_STATE } from "../ocd/fips.ts";
+import { extractedMemberUrl } from "./manual-source-urls.ts";
 import {
   MANUAL_SOURCE_CLASSES,
   type ManualSourceSetReceipt,
@@ -7,15 +8,6 @@ import {
   type SourceAuthorityContract,
 } from "./types.ts";
 
-/**
- * The one authority/competence registry for routine civic data. An adapter may
- * add parser mechanics, but it may not invent trusted hosts or competent facts.
- */
-
-/**
- * The official-page linking the source, as saved bytes. It may itself be
- * vouched for by a page that links to it.
- */
 export interface OfficialLinkingPage {
   readonly url: string;
   readonly html: string;
@@ -34,13 +26,7 @@ const hostOf = (url: string, base?: string): string | null => {
   return base === undefined ? null : hostOf(base);
 };
 
-/**
- * Whether a page is an official government source (Sean, 2026-09-29). Any
- * `.gov` site is official automatically. Any other site — a vendor-hosted
- * government portal (Legistar, CivicPlus, BoardDocs, Granicus) or a government
- * site on `.us`, `.org` or `.com` — is official once an official government
- * page links to it. There is no host list: the link is the evidence.
- */
+/** Any `.gov` site is official; any other site is official once an official government page links to it. No host list. */
 export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage | null): boolean {
   const host = hostOf(url);
   if (host === null) return false;
@@ -61,10 +47,10 @@ export const SOURCE_AUTHORITIES = {
     routePrefixes: [],
     jurisdictions: ["US", ...REGISTRATION_TARGETS.map(target => target.jurisdiction)],
     recordClasses: ["BALLOT_CANDIDACY"],
-    competentFacts: ["election", "contest", "complete listed candidate set", "filed candidate name", "party", "seat count"],
+    competentFacts: ["election", "contest", "filed candidate name", "party", "seat count"],
     expectedIdentifierKeys: ["contest_id", "candidacy_id"],
     expectedTemporalFields: ["source_through", "collected_at"],
-    horizonSemantics: "Each state/election key contains only source-verified complete contests; no wider coverage or absence is inferred.",
+    horizonSemantics: "Each state/election key carries independently verified contests and candidates. Partial lists establish no absence; authoritative complete successor lists can replace their own candidate set.",
     parserVersion: "ballot-contests/1",
     freshnessExpectation: "Recheck saved election lists inside the BALLOT_CONTEST freshness window; source gaps remain owed.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
@@ -104,15 +90,15 @@ export const SOURCE_AUTHORITIES = {
     publisher: "unitedstates/congress-legislators (community-maintained directory project)",
     trust: "T3_ATTRIBUTED_PRIMARY",
     sourceClass: "INTERMEDIARY",
-    routePrefixes: ["https://raw.githubusercontent.com/unitedstates/congress-legislators/"],
+    routePrefixes: ["https://raw.githubusercontent.com/unitedstates/congress-legislators/", "https://api.github.com/repos/unitedstates/congress-legislators/commits"],
     jurisdictions: ["US"],
     recordClasses: ["FEDERAL_DIRECTORY"],
     competentFacts: ["current federal membership", "term and chamber", "official contact", "district office", "official social account", "committee membership"],
     expectedIdentifierKeys: ["bioguide_id", "division_ocd_id", "committee_id"],
     expectedTemporalFields: ["term_start", "term_end", "source_sha", "source_through"],
-    horizonSemantics: "The five files at one adopted commit SHA form one bounded directory version. Every file must be acquired and pass its declared floor; the project remains attributed as an intermediary rather than an official chamber record.",
-    parserVersion: "congress-directory/2",
-    freshnessExpectation: "Explicit owner invocation after adopting a new project SHA; no standing clock.",
+    horizonSemantics: "Current members are resolved at an explicit as-of date from a pinned commit. Optional contact, office, social and committee files advance independently; unavailable optional files retain their prior source dates. The project is attributed as an intermediary.",
+    parserVersion: "congress-directory/4",
+    freshnessExpectation: "Existing daily acquisition resolves a shared source SHA and reuses immutable captures.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
   },
@@ -152,7 +138,7 @@ export const SOURCE_AUTHORITIES = {
       "official voter-registration lookup route",
       "official polling-place lookup route",
       "verified campaign or personal site binding",
-      "a state legislator's capitol or district office address and phone from the Open States reference file, joined to the official roster and marked unofficial (Sean, 2026-10-01)",
+      "a state legislator's capitol or district office address and phone from the Open States reference file, joined to the official roster and marked unofficial",
       "reviewed exact-source venue address and coordinate resolution",
       "official everyday service contact route for an exact state/topic cell",
       "explicit owner-reviewed CONTACT_OWED obligation where no supported contact is held",
@@ -174,8 +160,6 @@ export const SOURCE_AUTHORITIES = {
     publisher: "The election authority named by each sourced jurisdiction",
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "MULTI_PUBLISHER_PRIMARY",
-    // Transport routes are data. The candidate applies §3 to each site's
-    // publisher URL and saves the official linking page for non-.gov sources.
     routePrefixes: ["https://"],
     jurisdictions: REGISTRATION_TARGETS.map(target => target.jurisdiction),
     recordClasses: ["VOTING_SITE"],
@@ -203,18 +187,19 @@ export const SOURCE_AUTHORITIES = {
       "https://www.americaspoliticalpulse.com/data/elite/",
     ],
     jurisdictions: ["US"],
-    recordClasses: ["PRL_PROFILE"],
+    recordClasses: ["PRL_PROFILE", "PRL_ARCHIVE"],
     competentFacts: [
       "PRL's own congressional rhetoric statement count",
       "PRL's own five allowlisted rhetoric mean shares",
       "PRL measurement source and update date",
       "PRL dataset attribution and licence",
+      "PRL archived statement text, native speaker identity and publication date",
     ],
-    expectedIdentifierKeys: ["bioguide_id"],
+    expectedIdentifierKeys: ["bioguide_id", "dataset_id", "openstates_id", "candidate_id"],
     expectedTemporalFields: ["communication_last_update", "source_through"],
     horizonSemantics: "The national profiles archive is bounded by its exact CSV rows. Only positive-statement rows with exact Bioguide identifiers may promote, and the five attributed mean shares remain PRL measurements rather than government facts.",
     parserVersion: "prl-rhetoric/2",
-    freshnessExpectation: "Explicit owner invocation after PRL publishes a new attributed archive; no standing clock.",
+    freshnessExpectation: "Conditional checks by the standing routine runner; changed releases are streamed once and held bytes are reusable across places.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
   },
@@ -230,7 +215,7 @@ export const SOURCE_AUTHORITIES = {
     expectedIdentifierKeys: ["candidate_id", "committee_id"],
     expectedTemporalFields: ["cycle", "coverage_end_date", "two_year_transaction_period"],
     horizonSemantics: "Each API query has its own filters and pagination. A candidate total or filed receipt is authoritative; the union of returned pages is complete only when pagination metadata proves the bounded query ended.",
-    parserVersion: "fec-funding/2",
+    parserVersion: "fec-funding/3",
     freshnessExpectation: "Weekly; FEC processing itself may lag filings by days.",
     absencePolicy: { kind: "BOUNDED_QUERY_OR_EXPLICIT_STATEMENT", requiredKeys: ["office", "state", "district", "cycle", "pagination"] },
     routineAutoPromotion: true,
@@ -246,9 +231,9 @@ export const SOURCE_AUTHORITIES = {
     competentFacts: ["committee registration", "office and election cycle", "filed receipt and expenditure totals", "reporting period"],
     expectedIdentifierKeys: ["committee_id", "candidacy_id"],
     expectedTemporalFields: ["election_cycle", "checked_at", "source_through"],
-    horizonSemantics: "The union of the official active, less-active, and officeholder filters is the acquisition horizon. Dollar figures promote only after the publisher's itemized ledger reconciles them.",
-    parserVersion: "az-campaign-finance/2",
-    freshnessExpectation: "Explicit owner invocation after a filing deadline or owner-requested review; no standing GitHub or production cadence.",
+    horizonSemantics: "The union of the official active, less-active, and officeholder filters is the acquisition horizon. Native committee totals publish with their explicit period; optional detail and unrelated filters never hold verified amounts.",
+    parserVersion: "az-campaign-finance/4",
+    freshnessExpectation: "Standing source refresh through the existing runner; owner pauses and budgets remain authoritative.",
     absencePolicy: { kind: "BOUNDED_QUERY_OR_EXPLICIT_STATEMENT", requiredKeys: ["candidacy_id", "election_cycle", "filter_union"] },
     routineAutoPromotion: true,
   },
@@ -264,8 +249,8 @@ export const SOURCE_AUTHORITIES = {
     expectedIdentifierKeys: ["committee_id", "candidacy_id"],
     expectedTemporalFields: ["election_cycle", "checked_at", "source_through"],
     horizonSemantics: "The empty-name statewide filer query is complete only when every page reconciles to the publisher's totalItems; Reader narrowing makes no network request.",
-    parserVersion: "nh-campaign-finance/2",
-    freshnessExpectation: "Explicit owner invocation after a filing deadline or owner-requested review; no standing GitHub or production cadence.",
+    parserVersion: "nh-campaign-finance/4",
+    freshnessExpectation: "Standing source refresh through the existing runner; owner pauses and budgets remain authoritative.",
     absencePolicy: { kind: "BOUNDED_QUERY_OR_EXPLICIT_STATEMENT", requiredKeys: ["candidacy_id", "election_cycle", "totalItems"] },
     routineAutoPromotion: true,
   },
@@ -281,8 +266,8 @@ export const SOURCE_AUTHORITIES = {
     expectedIdentifierKeys: ["committee_id", "candidacy_id"],
     expectedTemporalFields: ["election_year", "checked_at", "source_through"],
     horizonSemantics: "Each official dropdown location is acquired with a control and its stated row count; an unacquired or short location remains ROUTE_UNREAD and cannot establish absence.",
-    parserVersion: "nj-campaign-finance/2",
-    freshnessExpectation: "Explicit owner invocation after a filing deadline or owner-requested review; no standing GitHub or production cadence.",
+    parserVersion: "nj-campaign-finance/4",
+    freshnessExpectation: "Standing source refresh through the existing runner; owner pauses and budgets remain authoritative.",
     absencePolicy: { kind: "BOUNDED_QUERY_OR_EXPLICIT_STATEMENT", requiredKeys: ["candidacy_id", "election_year", "location_code"] },
     routineAutoPromotion: true,
   },
@@ -359,22 +344,22 @@ export const SOURCE_AUTHORITIES = {
     publisher: "U.S. Census Bureau",
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "FEDERAL_AGENCY",
-    routePrefixes: [REGISTRATION_SOURCE_ROUTE_PREFIX],
-    // Every state, DC and territory in the FIPS table: registration covers the country, never a chosen list.
+    routePrefixes: [REGISTRATION_SOURCE_ROUTE_PREFIX, "https://nces.ed.gov/ccd/"],
     jurisdictions: REGISTRATION_TARGETS.map((t) => t.jurisdiction),
     recordClasses: ["REGISTRATION"],
     competentFacts: [
       "The governments of each state (2022 Census of Governments)",
+      "NCES education-agency directory listings and explicit F-33 native Census-to-NCES identifiers",
       "The functioning local governments of each territory, which the Census of Governments does not enumerate (TIGER/Line 2023 functional status, committed extract)",
       "Census division identity and GEOID (2023 cartographic boundary files)",
       "OCD division id built from the Census names",
     ],
-    expectedIdentifierKeys: ["ocd_id", "geoid"],
+    expectedIdentifierKeys: ["census_pid6", "nces_leaid", "tiger_geoid", "government_id", "ocd_id", "geoid"],
     expectedTemporalFields: ["version", "source_through"],
     horizonSemantics:
-      "Complete for the pinned Census vintage: every government the 2022 Census of Governments lists in the state, each on the Census division the Census ties it to or named as unpaired, and every Census division in the state. For a territory, every division TIGER/Line 2023 gives a governing functional status (A, B, C, G), and a territory whose divisions all carry a non-governing status is registered with that record stated. It never claims a government the Census does not record, and a different Census file is refused rather than substituted.",
+      "Independent source-native government and education-agency listings in one state, including unpaired and dependent systems. Geographic associations and governing bodies require their own evidence. Each source retains its release and observation date; incomplete refreshes retain held facts.",
     parserVersion: REGISTRATION_PARSER_VERSION,
-    freshnessExpectation: "Every 90 days a conditional request confirms census.gov still serves the pinned Census of Governments bytes (a 304 against the Last-Modified they were served with, or the bytes hashed); a new vintage waits for the reference to be rebuilt from it.",
+    freshnessExpectation: "Held source releases publish first; shared conditional refresh reuses complete bytes and reparses changed releases automatically, with independent state publication and last good evidence retained on failure.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
   },
@@ -436,58 +421,28 @@ export const SOURCE_AUTHORITIES = {
       "https://clerksboards.tucsonaz.gov/", "https://meetings.boardbook.org/", "https://mesa.legistar.com/",
       "https://webapi.legistar.com/v1/",
       "https://morriscountynj.iqm2.com/", "https://newlondon.nh.gov/",
-      // Newbury's CivicWeb portal (newburynh.civicweb.net) is a retired route
-      // since 2026-09-25 — the host no longer resolves — and no longer inherits
-      // meetings authority; the town's own calendar feed carries its Selectboard.
-      // Pima Community College's own pages (2026-09-23); its Diligent tenant
-      // pima.community.highbond.com is a retired route — superseded by these
-      // pages, which carry every sitting it did — and no longer inherits
-      // meetings authority. (It was retired for its robots.txt alone; since the
-      // owner decision of 2026-09-25 robots.txt blocks nothing, and the tenant
-      // is readable for the college's agenda links.)
       "https://www.pima.edu/robots.txt",
       "https://www.pima.edu/about-pima/leadership-policies/governing-board/",
       "https://events.pima.edu/",
-      // Sunnyside USD's own calendar JSON (read 2026-09-23), unioned with its
-      // portal's list for the forward window.
       "https://www.susd12.org/robots.txt",
       "https://www.susd12.org/api/calendars/150042/events",
       "https://susd-12.community.highbond.com/", "https://tucsonaz.hylandcloud.com/",
       "https://pima.legistar.com/",
-      // The Clerk of the Board's schedule: the county's current page, and the
-      // /2559/ address it moved from (2026-09-24, C18), which earlier reads retain.
       "https://www.pima.gov/board-of-supervisors-meeting-schedule",
       "https://www.pima.gov/2559/Board-of-Supervisors-Meeting-Schedule",
       "https://tusd1-schooldesk.community.diligentoneplatform.com/", "https://vailschooldistrictaz.thrillshare.com/",
       "https://warnernh.gov/", "https://www.cap-az.com/", "https://www.kearsarge.org/", "https://www.merrimackcounty.net/",
       "https://www.mesaaz.gov/", "https://www.mhrd.org/", "https://www.newbury.nh.gov/", "https://www.rockawaytownship.org/",
       "https://www.suttonnh.gov/", "https://www.wilmotnh.org/",
-      // Tucson Unified's own reconfiguration page (official-page events,
-      // 2026-09-23): the district host, scoped to the one page wired.
       "https://www.tusd1.org/Reconfiguration",
-      // Chandler's City Clerk page and its rules (C14, 2026-09-24): the schedule
-      // table on the city's own host, scoped to the one page wired.
       "https://www.chandleraz.gov/robots.txt",
       "https://www.chandleraz.gov/government/departments/city-clerks-office/city-council-meetings",
       "https://www.chandleraz.gov/rest/events/day/",
-      // The Council's Destiny Agenda month lists (2026-09-25), scoped to the
-      // tenant and the one meeting type wired; read once robots.txt stopped
-      // blocking public pages (owner decision, 2026-09-25).
       "https://public.destinyhosted.com/agenda_publish.cfm?id=24263&mt=CC",
-      // Two Newbury bodies the town calendar never carries, read from their
-      // own publications (C9, 2026-09-24), each scoped to the one route wired:
-      // the Library Trustees' notices feed on the library's site, and the
-      // Energy Committee's own home page. Wired in #411 without these routes,
-      // every production attempt threw FINAL_HOST_NOT_AUTHORIZED before
-      // writing a candidate or a receipt (measured 23:01Z and 23:06Z).
       "https://newburynhlibrary.net/feed/",
       "https://www.newburyenergynh.org/",
-      // Holbrook, AZ's own agendas-and-minutes year pages and their rules
-      // (document listing, 2026-09-25), scoped to the council-agenda path.
       "https://holbrookaz.gov/robots.txt",
       "https://holbrookaz.gov/government/council-agenda/",
-      // Winslow, AZ's SuiteOne Media portal home page (2026-09-25): the one
-      // page read, and the tenant's rules document.
       "https://winslowaz.suiteonemedia.com/robots.txt",
       "https://winslowaz.suiteonemedia.com/?embed=1",
     ],
@@ -502,12 +457,10 @@ export const SOURCE_AUTHORITIES = {
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
   },
-  /*
-   * Rulings §3 (labelled C16; not an owner decision, Sean 2026-10-01): a reviewed crosswalk row plus a route the
-   * discovery walk validated publishes through the standing runner with no code release. Neither authority below has a
-   * route of its own; each is authentic only as the exact inputs its candidate names (lib/civic-data/derived-door.ts).
-   * The ~authorization~ strings below are stored citation text, kept byte-identical.
-   */
+    /*
+     * Neither authority below has a route of its own; each is authentic only as the exact inputs its candidate names.
+     * The `authorization` strings are stored text, kept byte-identical.
+     */
   "meeting-source-wiring": {
     id: "meeting-source-wiring",
     publisher: "The standing runner, from promoted and vaulted inputs only: the reviewed meeting-body crosswalk, registration, the discovery walk's attempts and its vaulted evidence",
@@ -519,7 +472,6 @@ export const SOURCE_AUTHORITIES = {
     competentFacts: [
       "which reviewed calendar route publishes as which exact body, recomputed from promoted and vaulted inputs",
       "a connection suspended for review, the trigger and its evidence",
-      /* The automatic crosswalk (contract meeting-body-crosswalk-derived, 2026-09-25): C16 option A, the runner's deterministic reviewer. */
       "which calendar on a government's attested own host is its registered body's or a printed sub-body's, accepted by the deterministic reviewer on vaulted bytes",
     ],
     expectedIdentifierKeys: ["record_id", "body_id"],
@@ -534,13 +486,33 @@ export const SOURCE_AUTHORITIES = {
       authorization: "C16: owner decision recorded 2026-09-24T22:43Z",
     },
   },
+  "meeting-doors": {
+    id: "meeting-doors",
+    publisher: "The door registry, through the standing runner: every hand-wired meeting door as the registry holds it",
+    trust: "T2_AUTHORITATIVE_DOCUMENT",
+    sourceClass: "MULTI_PUBLISHER_PRIMARY",
+    routePrefixes: [],
+    jurisdictions: ["US"],
+    recordClasses: ["CURATED_READER_RECORD"],
+    competentFacts: ["which hand-wired meeting doors are in use, with each door's route settings, as the door registry holds them"],
+    expectedIdentifierKeys: ["record_id", "body_id"],
+    expectedTemporalFields: ["verified_at"],
+    horizonSemantics: "Each row is one hand-wired door of one body. The version is the registry's open and shut meeting doors; a suspended door is not in it.",
+    parserVersion: "meeting-doors/1",
+    freshnessExpectation: "Published by the standing runner at the start of every routine pass, before any meeting door is read.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: true,
+    derivedPromotion: {
+      inputKinds: ["DOOR_RECORD"],
+      authorization: "the owner's instruction for release 17 (2026-10-08): the door registry is the only door list",
+    },
+  },
   "meetings-derived-routes": {
     id: "meetings-derived-routes",
     publisher: "The public bodies whose calendars the promoted meeting-source wiring connects, each read on its own attested host",
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "OFFICIAL_PLATFORM",
     routePrefixes: [],
-    /* Every registered state has a family (2026-09-25): a sitting in Ohio is inside this authority as one in Arizona is. */
     jurisdictions: [...REGISTRATION_TARGETS.map((t) => t.jurisdiction), "SUPPORTED-BODY-WITHOUT-CENSUS-DIVISION"],
     recordClasses: ["MEETING"],
     competentFacts: ["meeting time", "meeting status", "public body", "location", "agenda link", "agenda document"],
@@ -556,12 +528,6 @@ export const SOURCE_AUTHORITIES = {
       authorization: "C16: owner decision recorded 2026-09-24T22:43Z",
     },
   },
-  /*
-   * A partition's durable meeting history (DB-06): concluded sittings that carry an agenda, minutes, an outcome or a
-   * vote, moved out of the live partition once they are older than the held window, and kept for good (rulings §4:
-   * "do not delete history"). No route of its own: authentic only as the exact promoted partition version the
-   * sittings were taken from (and the history version it extends), each of which carries its publisher's own evidence.
-   */
   "meetings-history": {
     id: "meetings-history",
     publisher: "The public bodies whose sittings the live meeting partitions hold, kept from the promoted partition version they were read in",
@@ -583,12 +549,6 @@ export const SOURCE_AUTHORITIES = {
       authorization: "Rulings §4 (history is kept, never deleted; Sean, October 3, 2026) and build plan v6 DB-06",
     },
   },
-  /*
-   * The verified campaign sites the standing runner's campaign-site chain approves (2026-09-25): each row is a site
-   * our own robots-first read verified, audited with measured controls and an independent second signal, and
-   * approved; the writer verifies its vaulted bytes again before it cites them. No route of its own: authentic only
-   * as its pipeline approvals, those vaulted bytes, and the promoted candidate-profiles version it was composed against.
-   */
   "candidate-campaign-site-chain": {
     id: "candidate-campaign-site-chain",
     publisher: "The standing runner, from held and vaulted inputs only: the campaign-site chain's pipeline approvals, the vaulted bytes of each verifying robots-first read, and the promoted candidate-profiles version",
@@ -610,7 +570,7 @@ export const SOURCE_AUTHORITIES = {
     routineAutoPromotion: true,
     derivedPromotion: {
       inputKinds: ["PROMOTED_VERSION", "VAULTED_EVIDENCE", "PIPELINE_APPROVAL"],
-      authorization: "Sean, 2026-09-21: \"You may enable automatic promotion for qualifying results. Fix the gap, recover value already paid for.\" (RULING 292)",
+      authorization: "Sean, 2026-09-21: \"You may enable automatic promotion for qualifying results. Fix the gap, recover value already paid for.\"",
     },
   },
   "nj-morris-county-clerk": {
@@ -763,12 +723,6 @@ export const SOURCE_AUTHORITIES = {
     publisher: "City of Mesa City Clerk, on the city's public Legistar portal",
     trust: "T2_AUTHORITATIVE_DOCUMENT",
     sourceClass: "OFFICIAL_PLATFORM",
-    // The portal host, and the vendor's document host scoped to Mesa's own
-    // path. robots.txt answered 404 (NO_ROBOTS) on the portal on 2026-08-28 and
-    // 2026-09-25. legistar.granicus.com publishes `Disallow: /`, which kept it
-    // out until the owner decision of 2026-09-25 (robots.txt alone never blocks
-    // a public page); the minutes reader now follows a minutes link there when
-    // the portal carries none (lib/outcomes/minutes-ingest.ts).
     routePrefixes: ["https://mesa.legistar.com/", "https://legistar.granicus.com/mesa/"],
     jurisdictions: ["US-AZ"],
     recordClasses: ["MEETING_OUTCOME"],
@@ -781,11 +735,6 @@ export const SOURCE_AUTHORITIES = {
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
   },
-  /*
-   * Outcomes of any Legistar door that holds `outcomes` (DB-22): agenda actions, decisions, roll calls and minutes read
-   * from the body's own Legistar tenant. The hosts are the doors' own (installDoorHosts, like the meeting doors), so a
-   * body added as a door is read with no change here; the per-place contracts above stay until a live read matches.
-   */
   "door-outcomes": {
     id: "door-outcomes",
     publisher: "Public bodies on Legistar, each read on the host its own door names",
@@ -872,20 +821,37 @@ export const SOURCE_AUTHORITIES = {
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: false,
   },
+  "plural-openstates-votes": {
+    id: "plural-openstates-votes",
+    publisher: "Plural / Open States",
+    trust: "T4_RESEARCH_SECONDARY",
+    sourceClass: "INTERMEDIARY",
+    routePrefixes: ["https://v3.openstates.org/bills"],
+    jurisdictions: ["US-AZ"],
+    recordClasses: ["STATE_ROLL_CALL"],
+    competentFacts: ["attributed native vote events", "exact native person positions", "literal publisher count labels"],
+    expectedIdentifierKeys: ["rollCallId", "eventId", "billId"],
+    expectedTemporalFields: ["session", "vote_date", "retrieved_at"],
+    horizonSemantics: "Each acquired Arizona bill contributes independently verified native vote facts. Bounded recent-bill requests are an open fact set and never prove an absent vote or a complete session. Person joins require exact OpenStates IDs; no official IDs are invented.",
+    parserVersion: "plural-votes/1",
+    freshnessExpectation: "Daily through the existing routine runner; unchanged captured releases retain their source dates.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: true,
+  },
   "plural-openstates": {
     id: "plural-openstates",
     publisher: "Plural / Open States",
     trust: "T4_RESEARCH_SECONDARY",
     sourceClass: "INTERMEDIARY",
-    routePrefixes: ["https://open.pluralpolicy.com/", "https://github.com/openstates/"],
-    jurisdictions: ["US"],
-        recordClasses: ["STATE_LEGISLATOR"],
+    routePrefixes: ["https://open.pluralpolicy.com/", "https://github.com/openstates/", "https://data.openstates.org/people/current/", "https://api.github.com/repos/openstates/people/", "https://codeload.github.com/openstates/people/zip/", "https://raw.githubusercontent.com/openstates/people/"],
+    jurisdictions: ["US", ...PLURAL_STATES.map(state => `US-${state.toUpperCase()}`)],
+    recordClasses: ["STATE_LEGISLATOR"],
     competentFacts: [],
     expectedIdentifierKeys: ["person_id"],
     expectedTemporalFields: ["term"],
-    horizonSemantics: "Open States state-legislator rows publish on their own for any state, marked unofficial and joined to the official roster when it is held; an official roster row, when present, wins on conflict (rulings §3).",
-    parserVersion: "plural-roster/1",
-    freshnessExpectation: "Unknown intermediary lag; refreshed with the weekly state-legislator pass.",
+    horizonSemantics: "Open States native legislative, executive and municipal people publish with their source attribution, dated memberships and exact source jurisdictions. Unresolved district boundaries remain gaps without suppressing the person. Official source values take precedence for an exact person or office under rulings §3.",
+    parserVersion: PLURAL_PARSER_VERSION,
+    freshnessExpectation: "Daily known-source refresh; held source dates remain unchanged on replay or conditional confirmation.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
   },
@@ -940,6 +906,10 @@ export function manualSourceReceiptStructureIssue(
     if (!source.publisher.trim() || !Number.isInteger(source.httpStatus) || source.httpStatus < 0 || source.httpStatus > 599) {
       return { code: "MANUAL_SOURCE_ATTEMPT_INVALID", detail: `${source.finalUrl} lacks a publisher or truthful HTTP outcome.` };
     }
+    if (source.extractedMembers !== undefined && (!Array.isArray(source.extractedMembers) ||
+      source.extractedMembers.some((member: {readonly path:string;readonly sha256:string}) => !member || typeof member.path !== "string" || typeof member.sha256 !== "string" || !extractedMemberUrl(source, member)))) {
+      return { code: "MANUAL_SOURCE_EXTRACTION_INVALID", detail: `${source.finalUrl} has a member citation that does not belong to its pinned archive.` };
+    }
     const outcome: unknown = source.reviewOutcome ?? "SUPPORTED";
     if (outcome === "BLOCKED") {
       if (typeof source.failureDetail !== "string" || !source.failureDetail.trim()) {
@@ -959,7 +929,6 @@ export function manualSourceReceiptStructureIssue(
   return null;
 }
 
-/** Validate the dynamic publisher boundary used only by explicit manual contracts. */
 export function authorityForManualReceipt(
   sourceId: string,
   recordClass: RoutineRecordClass,
@@ -1014,18 +983,26 @@ export function authorityForManualReceipt(
 }
 
 /**
- * DB-16: hosts the doors in use name for meetings, installed by a pass that
- * reads the registry (lib/doors/install.ts). Null, the default and the way
- * back, means only the contract's own routes are registered. A door's host
- * lets a read land anywhere on that host over HTTPS; the rulings §3 rule that
- * a vendor host counts when an official page links to it is checked elsewhere
- * and is unchanged.
+ * Null means only the contract's own routes are registered. A door's host admits any HTTPS path on that host, unless
+ * the contract already names routes on that host: then only those routes are read there.
  */
 let doorHosts: ReadonlySet<string> | null = null;
 const DOOR_HOST_SOURCES: ReadonlySet<string> = new Set(["meetings-public-bodies", "door-outcomes"]);
 
 export function installDoorHosts(hosts: Iterable<string> | null): void {
   doorHosts = hosts === null ? null : new Set([...hosts].map((host) => host.trim().toLowerCase()).filter((host) => host !== ""));
+}
+
+const ROUTED_HOSTS = new WeakMap<SourceAuthorityContract, ReadonlySet<string>>();
+function routedHosts(contract: SourceAuthorityContract): ReadonlySet<string> {
+  let hosts = ROUTED_HOSTS.get(contract);
+  if (hosts === undefined) {
+    hosts = new Set(contract.routePrefixes.flatMap((prefix) => {
+      try { return [new URL(prefix).hostname.toLowerCase()]; } catch { return []; }
+    }).filter((host) => host !== ""));
+    ROUTED_HOSTS.set(contract, hosts);
+  }
+  return hosts;
 }
 
 export function authorityFor(
@@ -1042,7 +1019,8 @@ export function authorityFor(
   try { url = new URL(finalUrl); }
   catch { return { ok: false, code: "FINAL_URL_INVALID", detail: `Final URL is not parseable: ${JSON.stringify(finalUrl)}.` }; }
   if (url.protocol !== "https:") return { ok: false, code: "FINAL_URL_NOT_HTTPS", detail: `${url.href} is not HTTPS.` };
-  const onDoorHost = DOOR_HOST_SOURCES.has(sourceId) && doorHosts !== null && doorHosts.has(url.hostname.toLowerCase());
+  const host = url.hostname.toLowerCase();
+  const onDoorHost = DOOR_HOST_SOURCES.has(sourceId) && doorHosts !== null && doorHosts.has(host) && !routedHosts(contract).has(host);
   if (!onDoorHost && !contract.routePrefixes.some((prefix) => url.href.startsWith(prefix))) {
     return { ok: false, code: "FINAL_ROUTE_NOT_REGISTERED", detail: `${url.href} is outside ${sourceId}'s registered publication routes.` };
   }

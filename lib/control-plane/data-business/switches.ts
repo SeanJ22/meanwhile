@@ -1,9 +1,7 @@
 /**
- * **A SWITCH PER RECIPE PER AUDIENCE: Admin, the dashboard, one named customer.** (S12, Sean's 2:30 PM MST note, item 3.)
- *
- * "Open that door" means flipping one switch. The switches live on the owner's config row (`dataSwitches`, set through the
+ * A switch per recipe per audience: Admin, the dashboard, one named customer. The switches live on the owner's config row (`dataSwitches`, set through the
  * gateway's `config.setDataSwitch` with the receipt that set each), and `readRecipe` asks `switchOn` before it reads any data.
- * With no entry the default is: **Admin on; the dashboard and every customer off.** Nothing leaves until Sean flips a switch.
+ * With no entry the default is: **Admin on; the dashboard and every customer off.** Nothing leaves until the owner flips a switch.
  * A config that cannot be read is never ON for an audience outside Admin.
  *
  * Read at each read, not at a runner's cycle start, so a flip takes effect on the next read and no runner has to pick it up.

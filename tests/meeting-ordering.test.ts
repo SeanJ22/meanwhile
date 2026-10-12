@@ -3,14 +3,7 @@ import { test } from "node:test";
 
 import { hasConcluded, orderByUpcomingFirst } from "../lib/meetings/ordering.ts";
 
-/**
- * Upcoming first, then past (g4 item 11).
- *
- * The rule reads outward from NOW in both directions, and the two halves run
- * in opposite orders on purpose — which is exactly the sort of thing that
- * gets "simplified" back into a plain ascending sort by someone who has not
- * seen the panel with ninety days of history in it.
- */
+/** Upcoming first, then past: the two halves run in opposite orders on purpose, reading outward from now. */
 
 const NOW = Date.parse("2026-08-16T12:00:00Z");
 
@@ -37,8 +30,7 @@ test("everything upcoming comes before everything past", () => {
 });
 
 test("a meeting starting exactly now is UPCOMING", () => {
-  // A body sitting right now is something a reader can still walk into, and
-  // filing it under history would be telling them they had missed it.
+  // A body sitting right now is still upcoming to a reader.
   const ordered = orderByUpcomingFirst(
     [at("2026-08-16T11:00:00Z"), at("2026-08-16T12:00:00Z")],
     NOW,
@@ -49,12 +41,7 @@ test("a meeting starting exactly now is UPCOMING", () => {
 });
 
 test("an unparseable start time surfaces rather than sinking", () => {
-  /*
-   * A row we cannot date is a row we should be shown, not one to bury at the
-   * end of three months of history where nobody will ever find it. It sorts
-   * with the upcoming block deliberately — the empty-success rule applied to
-   * a single row.
-   */
+  // An undatable row sorts with the upcoming block rather than being buried at the end of history.
   const ordered = orderByUpcomingFirst(
     [at("2026-06-01T12:00:00Z"), at("not a date"), at("2026-08-20T12:00:00Z")],
     NOW,
@@ -68,8 +55,7 @@ test("an unparseable start time surfaces rather than sinking", () => {
 });
 
 test("ordering never drops or duplicates a row", () => {
-  // The panel states a count above the list, so a reordering that loses one
-  // breaks "stated N equals rendered rows" without changing any number.
+  // The panel states a count above the list, so a reordering must not lose a row.
   const input = [
     at("2026-08-20T12:00:00Z"),
     at("2026-08-10T12:00:00Z"),
@@ -85,15 +71,12 @@ test("ordering never drops or duplicates a row", () => {
 });
 
 test("the input array is not mutated", () => {
-  // The caller holds the unsorted list for other views; sorting in place is
-  // how one surface's ordering silently becomes another's.
+  // The caller holds the unsorted list for other views; sorting in place would leak.
   const input = [at("2026-08-20T12:00:00Z"), at("2026-01-01T00:00:00Z")];
   const before = input.map((m) => m.id);
   orderByUpcomingFirst(input, NOW);
   assert.deepEqual(input.map((m) => m.id), before);
 });
-
-/* -------------------------------------------- F01 3.1, the three groups --- */
 
 import { groupMeetingsForReading, SOON_DAYS } from "../lib/meetings/ordering.ts";
 
@@ -124,9 +107,7 @@ test("F01 3.1: three groups, in the author's order, and nothing else", () => {
 });
 
 test("F01 3.1: every meeting lands in exactly one group — the partition holds", () => {
-  // CLAUDE.md: an operation that can return nothing must be asked what it
-  // returned. A grouping that silently drops a row is that defect wearing a
-  // tidy face, so the count is asserted against the denominator.
+  // A grouping that silently drops a row is caught by asserting the count against the denominator.
   const input = [meetingAt(70), meetingAt(-3, "CONCLUDED"), meetingAt(2), meetingAt(31), meetingAt(0), meetingAt(-40, "CONCLUDED"), meetingAt(5, "CANCELED")];
   const groups = groupMeetingsForReading(input, NOW);
   const total = groups.reduce((n, g) => n + g.meetings.length, 0);
@@ -136,8 +117,7 @@ test("F01 3.1: every meeting lands in exactly one group — the partition holds"
 });
 
 test("F01 3.1: a canceled meeting is closed even when its date is still ahead", () => {
-  // "Canceled or concluded meetings, last." A meeting that will not happen is
-  // not something a reader can attend, whatever its date says.
+  // A meeting that will not happen is not something a reader can attend, whatever its date says.
   const groups = groupMeetingsForReading([meetingAt(5, "CANCELED"), meetingAt(5)], NOW);
   assert.deepEqual(groups.map((g) => g.id), ["soon", "closed"]);
   assert.equal(groups[1].meetings[0].status, "CANCELED");

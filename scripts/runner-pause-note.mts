@@ -1,21 +1,11 @@
 /**
- * `scripts/runner-pause-note.mts` — **THE RUNNER'S OWN RECORD THAT IT WAS
- * STOPPED (OR STARTED) ON PURPOSE.** (ADM-5, 9.4.26 admin feedback, 2026-09-04.)
+ * Appends the owner's PAUSE_RUNNER (or RESUME_RUNNER) intent, the reason in
+ * `note`, through the same append path the admin API uses, so a deliberately
+ * stopped runner is not shown as a crash.
  *
- * The dashboard could only show a stopped runner as a red SILENT, and a red
- * SILENT cannot be told from a crash: the owner disabled the Windows task on
- * purpose and the page called it a failure for a day. This script appends the
- * owner's PAUSE_RUNNER (or RESUME_RUNNER) intent, the reason in `note`,
- * through the same append path the admin API uses — so the page can say
- * "paused: pnpm pilot:stop on <host>" and the runner, if it is alive, idles on
- * it and keeps its heartbeat honest.
- *
- * `scripts/pilot-task.ps1` runs it from `stop`, `disable` and `start`. It is
- * BEST EFFORT BY DESIGN: a stop must never be blocked by a note about the
- * stop. A control plane that cannot be opened, or an append that does not
- * land, prints "pause note NOT recorded: <why>" and exits 0. Only a bad
- * `--action` (or an over-long note) exits 2 — a caller defect, not an
- * operational one.
+ * Best effort: a control plane that cannot be opened, or an append that does
+ * not land, prints "pause note NOT recorded: <why>" and exits 0. Only a bad
+ * `--action` (or an over-long note) exits 2.
  *
  * ```
  *   node --env-file=.env.local --experimental-strip-types scripts/runner-pause-note.mts \
@@ -23,10 +13,8 @@
  * ```
  *
  * `--by` names the calling command (default "runner-pause-note"); the intent's
- * actor is "<by> on <host>" and its session ref "host:<host>", so the page can
- * tell a `pnpm pilot:stop` from a dashboard click. `--file-store=<dir>` writes
- * to a local file store — a proof — and never the deployed plane. Env var
- * names only, never values.
+ * actor is "<by> on <host>". `--file-store=<dir>` writes to a local file store,
+ * never the deployed plane.
  */
 
 import { hostname } from "node:os";
@@ -44,6 +32,9 @@ import {
   validateIntentNote,
 } from "../lib/control-plane/research-view.ts";
 import { assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
+import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
+
+readFromHeldCopies();
 
 const flag = (name: string): string | null => {
   const hit = process.argv.slice(2).find((a) => a.startsWith(`--${name}=`));

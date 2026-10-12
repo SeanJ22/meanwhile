@@ -5,13 +5,9 @@ import { runBoundedChildPass } from "../lib/civic-data/bounded-child-pass.ts";
 import { stageLine, traceMethodCalls } from "../lib/ops/stage-trace.ts";
 
 /**
- * **A KILLED CHILD SAYS WHERE IT STOPPED.** (2026-09-24.)
- *
- * 36 readback repairs timed out on 2026-09-24 with the detail "TIMED_OUT:
- * Command failed: <command>" and nothing else. A one-contract Reader-repair
- * child now writes stage lines to stderr through `traceMethodCalls`. The
- * runner already keeps a killed child's last output lines as the failure
- * detail, so the last line names the step it stopped in.
+ * A killed child says where it stopped: a Reader-repair child writes stage
+ * lines to stderr through `traceMethodCalls`, and the runner keeps a killed
+ * child's last output lines as the failure detail.
  */
 
 function clock(...readings: number[]): () => number {

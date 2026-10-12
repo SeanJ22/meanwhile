@@ -12,10 +12,12 @@ export interface BoxOrigin {
   readonly resultKey?: string;
   readonly workItemId: string;
   readonly findingIndex: number;
-  readonly collection?: "findings" | "spans";
+  readonly collection?: "findings" | "spans" | "reported";
   readonly artifactIds: readonly string[];
   readonly missionPart?: string;
   readonly recordedAt: string;
+  /** A mid-walk drop has no Scout result row yet, so its origin carries the fact itself. */
+  readonly reported?: { readonly field: string; readonly value: string | number | boolean; readonly subjectHint: string | null };
 }
 export interface BoxInput {
   readonly subjectId: string;
@@ -134,6 +136,20 @@ export async function indexScoutFindings(repo: AggregateRepository<BoxFinding>, 
   return indexed;
 }
 
+/** A finding a Scout dropped mid-walk (`report_finding`), keyed by its attempt and drop order. */
+export async function indexReportedFinding(repo: AggregateRepository<BoxFinding>, input: {
+  readonly workItemId: string; readonly attemptId: string; readonly obligationId?: string; readonly missionPart: string | null;
+  readonly finding: { readonly subjectId: string; readonly field: string; readonly value: string | number | boolean; readonly exactQuote: string;
+    readonly sourceUrl: string; readonly artifactIds: readonly string[]; readonly subjectHint: string | null; readonly index: number };
+}, now: string): Promise<BoxFinding> {
+  const { finding } = input;
+  return indexBoxFinding(repo, { subjectId: finding.subjectId, exactQuote: finding.exactQuote, sourceUrl: finding.sourceUrl,
+    origin: { kind: "SCOUT", resultId: input.attemptId, ...(input.obligationId ? { resultKey: input.obligationId } : {}), workItemId: input.workItemId,
+      findingIndex: finding.index, collection: "reported", artifactIds: finding.artifactIds, recordedAt: now,
+      ...(input.missionPart ? { missionPart: input.missionPart } : {}),
+      reported: { field: finding.field, value: finding.value, subjectHint: finding.subjectHint } } }, now);
+}
+
 export interface BoxDetectiveRecord {
   readonly id: string;
   readonly workItemId: string;
@@ -184,8 +200,7 @@ export async function boxCounts(repo: AggregateRepository<BoxFinding>): Promise<
   return counts;
 }
 
-/** Rollout switch: the existing runner path remains available until River has
- * applied cp_box_findings and checked the connected index live. Not a fact gate. */
+/** Off unless `WTP_BOX_ENABLED=1`. */
 export function boxIndexEnabled(environment: Readonly<NodeJS.ProcessEnv> = process.env): boolean {
   return environment.WTP_BOX_ENABLED === "1";
 }

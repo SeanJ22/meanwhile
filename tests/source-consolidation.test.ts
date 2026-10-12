@@ -9,26 +9,10 @@ import type { Meeting } from "../lib/sources/types.ts";
 const ROOT = process.cwd();
 
 /**
- * **ITEM 3 (2026-08-24) — THE CONSTITUTIONAL GUARD ON A DISPLAY CHANGE.**
- *
- * SRC-1 through SRC-4 consolidate every inline asterisk and per-item source
- * annotation into one line at the bottom of each card. The brief states the
- * limit of that in as many words, and it is the whole reason this file exists:
- *
- *   > this is a display consolidation. Every fact keeps its provenance in the
- *   > data — footnotes, source URLs, fetch dates are never deleted. The change
- *   > is what renders, not what is held.
- *
- * Those two are one careless edit apart. A session told to "remove the source
- * annotations" can satisfy every visual check by deleting the fields, and
- * nothing else in this repo would go red — the cards would look exactly as
- * intended, and the product would have quietly stopped being able to
- * say where anything came from.
- *
- * So this asserts the pair directly: the populated provenance of a meeting set
- * is IDENTICAL before and after the consolidation runs over it. Not "the
- * function does not mutate" as a claim about its style — the actual field
- * values, compared.
+ * Source consolidation is a display change only: every fact keeps its
+ * provenance in the data. This asserts the populated provenance of a meeting
+ * set is IDENTICAL before and after the consolidation runs over it — the
+ * actual field values, compared.
  */
 
 /** A meeting carrying a full provenance record, as the snapshot ships them. */

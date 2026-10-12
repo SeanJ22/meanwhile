@@ -3,18 +3,7 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
-import { provenanceKind, verificationOf } from "../lib/officials/verification.ts";
-
-/**
- * The sources vocabulary — g3 item 5 (2026-08-16).
- *
- * Katie Hobbs' Sources tab said "Read from azgovernor.gov · Collected
- * 2026-08-14 · **Verified: not yet**". The third row contradicted the first
- * two: the fact came off the Governor of Arizona's own office's site, on a
- * stated date, with the link on screen. **A read from the subject's own
- * official source IS the verification.** "Not yet" is reserved for provenance
- * where a second rung is genuinely owed.
- */
+import { candidateOwnKind, provenanceKind, verificationOf } from "../lib/officials/verification.ts";
 
 const OFFICIAL = [
   "azgovernor.gov",
@@ -45,9 +34,7 @@ test("an official host is recognized, and a third party is not", () => {
 });
 
 test("a body's own page is official even off a .gov, because the wiring types it so", () => {
-  // kearsarge.org is a public school district publishing its own board's
-  // sittings on its own site — a SCHEDULEPAGE row, which the adapter defines
-  // as "no portal in the path". Derived from the wiring, not hand-listed.
+  // A SCHEDULEPAGE row is the body's own site by definition.
   assert.equal(provenanceKind({ sourceUrl: "https://kearsarge.org", kind: "OFFICIAL" }), "OFFICIAL");
   assert.equal(provenanceKind({ sourceUrl: "https://newbury.nh.gov" }), "OFFICIAL");
 });
@@ -101,12 +88,6 @@ test("'not yet' survives where it belongs, and is never filled in with a guess",
   );
 });
 
-/**
- * The audit half of the ruling: "no official-source read may say 'not yet'
- * ANYWHERE". A second surface growing its own copy of the old sentence is
- * exactly how the first one survived unnoticed, so the string is pinned to
- * the one component allowed to render it.
- */
 test("only the sources list renders the not-yet sentence", () => {
   const offenders: string[] = [];
   const walk = (dir: string) => {
@@ -132,9 +113,21 @@ test("only the sources list renders the not-yet sentence", () => {
   );
 });
 
-
 test("CP-04: the saved official kind verifies a government-linked vendor portal", () => {
   assert.deepEqual(verificationOf({ kind: "OFFICIAL", sourceUrl: "https://council.legistar.com/calendar", collectedAt: "2026-10-05", verifiedAt: null }),
     { kind: "official", date: "2026-10-05", by: "council.legistar.com" });
   assert.equal(provenanceKind({ kind: "CAMPAIGN", sourceUrl: "https://candidate.example" }), "CAMPAIGN");
+});
+
+test("CP-04 (failed live Oct 6): a candidate's own words and campaign links read Campaign, not Other", () => {
+  assert.equal(candidateOwnKind("https://www.kellyfornh.com/about"), "CAMPAIGN");
+  assert.equal(candidateOwnKind("https://azleg.gov/members/hernandez"), "OFFICIAL", "an official page keeps Official");
+  assert.equal(candidateOwnKind("https://ballotpedia.org/Kelly_Ayotte"), "REFERENCE", "a known publisher keeps its kind");
+  assert.equal(candidateOwnKind(null), "OTHER", "no page, no claim about it");
+  for (const file of ["components/ballot/candidate-card.tsx", "components/ballot/candidate-contact.tsx"]) {
+    const src = readFileSync(file, "utf8");
+    const rows = [...src.matchAll(/what: "(Biography in the candidate's own words|Campaign contacts and website)", provenance: \{ ([^}]*)\}/g)];
+    assert.ok(rows.length > 0, `${file} renders its candidate rows`);
+    for (const [, what, body] of rows) assert.match(body, /^kind: candidateOwnKind\(/, `${file}: "${what}" states its kind`);
+  }
 });

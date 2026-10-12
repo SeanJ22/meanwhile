@@ -1,26 +1,15 @@
 /**
- * **SEARCH FOR A GOVERNMENT'S MEETINGS: POINTERS ONLY, PRICED PER QUERY.**
- * (2026-09-23.)
+ * Search for a government's meetings beyond registered feeds (Brave and Exa),
+ * priced per query. The pure half of that rung:
  *
- * Owner directive, 2026-09-23: look beyond registered feeds. Search for the
- * body and its meetings, hearings, consultations and agendas, and follow the
- * results to source evidence, using Brave and Exa. Search-API spend is
- * accounted apart from model spend. This is the pure half of that rung in the
- * unpaid discovery executor:
- *
- * - **Queries** come from the saved methods' templates
- *   (`lib/hunt/meetings-recipes.ts`), filled with the government's identity,
- *   then the defaults below. A query with an unfilled slot is never sent.
- * - **A result is a pointer, never evidence.** Only a result on the
- *   official government source, including a portal linked by an official page,
- *   is followed. The executor then opens it robots-first and confirms it
- *   by content like every other candidate.
- * - **Every request has a price.** The published per-request price of each
- *   provider, with the page it was read from and the date, travels into the
- *   cost ledger. A request whose price is not established records null
- *   (UNMEASURED), never zero.
- *
- * PURE: no fetch, no clock, no store.
+ * - Queries come from the saved methods' templates
+ *   (`lib/hunt/meetings-recipes.ts`), then the defaults below. A query with an
+ *   unfilled slot is never sent.
+ * - A result is a pointer, never evidence. Only a result on an official
+ *   government source is followed, then opened robots-first and confirmed by
+ *   content.
+ * - Every request carries its provider's published price into the cost
+ *   ledger; an unestablished price is null (UNMEASURED), never zero.
  */
 
 import type { MeetingsRecipe, RecipeIdentity } from "./meetings-recipes.ts";

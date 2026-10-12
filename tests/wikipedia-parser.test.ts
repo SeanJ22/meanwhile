@@ -1,27 +1,3 @@
-/**
- * **The Wikipedia municipality parser had no guards at all** (NJ Hunt 6).
- *
- * It produced 898 official rows and 261 distinct names — the single largest
- * discovery this product has made — and nothing in the suite asserted anything
- * about it. Three sitting-member defects were sitting in the committed artifact
- * when this file was written, each one a person deleted from a public body:
- *
- * | Municipality | Rendered | Actually seated | Cause |
- * | --- | --- | --- | --- |
- * | Boonton | 6 | 8 | the article separates entries with `) Name (`, no comma |
- * | Mount Olive | 5 | 7 | two members carry no party or term, and the filter kept only entries that did |
- * | Pequannock | 0 | 5 | the roster sentence says `was composed of`, and the copula list only knew `is` |
- *
- * All three are the same shape underneath: **the parser told us about itself
- * and we recorded it as a fact about the government.** A five-member council
- * reporting as a body with no roster is the zero-row-extraction rule's exact
- * case, and the two Mount Olive members are the equal-effort failure in
- * miniature — a filter keyed on how much detail an entry carries deletes the
- * least-documented people first.
- *
- * These are fixture-driven: the sentences below are the articles' own text,
- * recorded on 2026-08-22. No live calls (`tests/fixtures` discipline).
- */
 import test from "node:test";
 import assert from "node:assert/strict";
 
@@ -32,8 +8,6 @@ import {
   parseRoster,
   splitMembers,
 } from "../lib/hunt/wikipedia.ts";
-
-/* ── The three recovered rosters ────────────────────────────────────────── */
 
 const BOONTON =
   "Members of the Town Council are Council President Benjamin Weisman (Ward 4; D, 2026), " +
@@ -61,7 +35,6 @@ test("Boonton — a closing parenthesis separates entries when nothing else does
   assert.ok(names.includes("Kimberly Mazzei"), "Mazzei is seated and must not be absorbed into Lopez");
   assert.ok(names.includes("John P. Meehan"), "Meehan is seated and must not be absorbed into Lopez");
 
-  // Lopez inherited the wrong ward when the three ran together. Her own is 4.
   const lopez = roster.officials.find((o) => o.name === "Luisa F. Lopez");
   assert.equal(lopez?.seat, "Ward 4");
   assert.equal(lopez?.termEnds, 2027);
@@ -79,7 +52,6 @@ test("Mount Olive — a member Wikipedia says nothing else about is still a memb
   assert.ok(names.includes("Mary Lalama"), "a bare name in the list is a member, not prose");
   assert.ok(names.includes("Raffaele Ruggiero"), "a bare name in the list is a member, not prose");
 
-  // And it is only a NAME. RULING 87 governs it from there.
   const lalama = roster.officials.find((o) => o.name === "Mary Lalama");
   assert.equal(lalama?.party, null);
   assert.equal(lalama?.termEnds, null);
@@ -92,12 +64,9 @@ test("Pequannock — the past tense is a copula too", () => {
   assert.ok(names.includes("David G. Kohle"));
   assert.ok(names.includes("Kyle Russell"));
 
-  // The seat's term, not the mayoralty's — the existing judgement, held.
   const kohle = roster.officials.find((o) => o.name === "David G. Kohle");
   assert.equal(kohle?.termEnds, 2024);
 });
-
-/* ── The shapes that must NOT become members ────────────────────────────── */
 
 test("prose is not a roster, however capitalised it is", () => {
   const composition =
@@ -136,8 +105,6 @@ test("looksLikePersonName rejects offices and clauses, accepts real name shapes"
   }
 });
 
-/* ── The seams the earlier defects taught, held so they cannot regress ──── */
-
 test("a generational suffix is part of the name, not a separator", () => {
   const parts = splitMembers("Marcos Tapia-Aguilar, Sr. (Ward 4; D, 2026), Christopher Almada (Ward 3; D, 2027)");
   assert.equal(parts.length, 2, `split into ${parts.length}: ${parts.join(" | ")}`);
@@ -168,11 +135,7 @@ test("the seat, the party and the term year survive every live shape", () => {
 });
 
 test("a spelled-out, hyphenated seat count is still a seat count", () => {
-  /*
-   * Denville's own words. `seats` is the DENOMINATOR the roster completeness
-   * gate checks against, so a null one made the body unwirable — eleven of
-   * thirty-nine Morris municipalities were null for want of this construction.
-   */
+  // `seats` is the denominator the roster completeness gate checks against.
   const denville = parseGoverningBody(
     "Denville Township is governed within the Faulkner Act, formally known as the Optional " +
       "Municipal Charter Law, under Mayor-Council plan F, as implemented as of January 1, 1972. " +
@@ -184,7 +147,6 @@ test("a spelled-out, hyphenated seat count is still a seat count", () => {
   assert.equal(denville.bodyName, "township council");
   assert.equal(denville.form, "Faulkner Act");
 
-  // The explicit form still wins where the article uses it.
   const explicit = parseGoverningBody(
     "The Borough Council is comprised of six members elected to three-year terms on a staggered basis.",
   );

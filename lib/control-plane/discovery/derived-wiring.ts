@@ -1,46 +1,25 @@
 /**
- * **THE DERIVED WIRING ROW WRITER: EACH REVIEWED CALENDAR, DECIDED AGAINST
- * WHAT DISCOVERY LAST SAW OF IT.** (NH330 Stage 2 / C16, 2026-09-24.)
+ * The derived wiring row writer: each reviewed calendar, decided against what
+ * discovery last saw of it. Every decision starts from a reviewed crosswalk
+ * row (`lib/civic-data/meeting-body-crosswalk.ts`), never from a find. A row
+ * the automatic reviewer accepted (`auto-crosswalk.ts`) is decided by the same
+ * checks, and where it and a reviewed row select the same sitting, only it
+ * meets the trigger. For each active crosswalk row, against the latest walk:
  *
- * Under docs/rulings.md §3 ("C16" was a session label, not Sean's decision:
- * Sean, 2026-10-01): agents review and promote
- * the records connecting a calendar to its body (the crosswalk,
- * `lib/civic-data/meeting-body-crosswalk.ts`); a promoted crosswalk row plus a
- * route the discovery walk validated publishes through the standing runner
- * with no code release; and "a page returning 'not found' is not the only
- * reason to suspend or correct a connection. Wrong attribution, conflicting
- * evidence, or a changed calendar must also trigger review. Preserve
- * previously verified records through temporary outages."
- *
- * So every decision starts from a reviewed crosswalk row, never from a find:
- * a body and its filter are never derived from a name or a domain. A row the
- * runner's deterministic reviewer accepted (C16 option A, 2026-09-25:
- * `lib/control-plane/discovery/auto-crosswalk.ts`) is decided by exactly the
- * same checks and triggers; it cites its own version, and where it and a
- * reviewed row select the same sitting, only it meets the trigger. For each
- * active crosswalk row, against the latest walk of its government:
- *
- * - **PROMOTE** only when every check holds: the body is on a registered
- *   division; the walk confirmed the reviewed route on an attested host; no
- *   hand-wired route serves the body; the calendar's bytes and the page naming
- *   the body are both held in the vault; and the reader adapter itself selects
- *   at least one sitting of the body from the vaulted bytes with the reviewed
- *   filter, none of which names another reviewed body. A suspended row is
+ * - PROMOTE only when every check holds: the body is on a registered division;
+ *   the walk confirmed the reviewed route on an attested host; no hand-wired
+ *   route serves the body; the calendar's and naming page's bytes are vaulted;
+ *   and the reader adapter selects at least one of the body's sittings from the
+ *   vaulted bytes, none naming another reviewed body. A suspended row is
  *   restored only by a review later than its suspension.
- * - **SUSPEND** a promoted row on a review trigger, with its evidence: the
- *   route answered 404 or 410 (ROUTE_GONE); the selected sittings name another
- *   reviewed body (WRONG_ATTRIBUTION); two reviewed bodies' filters select the
- *   same sittings (CONFLICTING_EVIDENCE); the filter selects nothing, or the
- *   feed moved or no longer reads as its kind (CALENDAR_CHANGED); or the
- *   crosswalk row was withdrawn (CROSSWALK_WITHDRAWN). A row never promoted
- *   meets the same evidence as a named hold (REVIEW_TRIGGERED).
- * - **HOLD**, by name, anything else, including every outage: an absent walk,
- *   a transport failure, a server error, a robots refusal, a challenge. A held
- *   row that was promoted is carried exactly as it was.
+ * - SUSPEND a promoted row on a review trigger: ROUTE_GONE (404/410),
+ *   WRONG_ATTRIBUTION, CONFLICTING_EVIDENCE, CALENDAR_CHANGED, or
+ *   CROSSWALK_WITHDRAWN. A row never promoted meets the same evidence as a
+ *   named hold (REVIEW_TRIGGERED).
+ * - HOLD, by name, anything else, including every outage. A held row that was
+ *   promoted is carried exactly as it was.
  *
- * Pure: every lookup is handed to it. It never reads the website correction
- * (C15): which site is a government's says nothing about which board a
- * calendar belongs to.
+ * Pure: every lookup is handed to it.
  */
 
 import type {
@@ -213,7 +192,7 @@ export interface DerivedWiringInputs {
   readonly registration: (row: MeetingBodyCrosswalkRow) => { readonly input: DerivedInputRef; readonly identityInput?: DerivedInputRef } | { readonly notRegistered: string };
   /** Saved walks containing each route's newest actual read, with original log identity. */
   readonly attempts: readonly { readonly attempt: MeetingsDiscoveryAttempt; readonly recordId: string; readonly recordedAt: string }[];
-  /** A hand-wired SOURCE_WIRING route already serves the body: shadow-compared, never a second writer. */
+  /** A hand-wired meeting door already serves the body: shadow-compared, never a second writer. */
   readonly handWired: (bodyId: string) => boolean;
   /** The vault's record of an artifact, or null when it is not held. */
   readonly vaulted: (artifactId: string) => (DerivedInputRef & { readonly kind: "VAULTED_EVIDENCE" }) | null;
@@ -372,7 +351,7 @@ export function deriveWiringDecisions(inputs: DerivedWiringInputs): readonly Dec
       } else if (step.status === null && step.permission === "RECORDED_WALL") {
         decide(hold(key, "CHALLENGED", `${reviewed.route}: a recorded access-control wall; ${step.note}`, base));
       } else if (step.status === null && step.permission === "DISALLOWED") {
-        /* Only a walk made before the owner decision of 2026-09-25 skipped a route for robots.txt; the next walk reads it. */
+        /* Only an older walk skipped a route for robots.txt; the next walk reads it. */
         decide(hold(key, "ROBOTS_REFUSED", `${reviewed.route}: skipped for robots.txt by a walk before 2026-09-25; the next walk reads it. ${step.note}`, base));
       } else if (step.status === null) {
         decide(hold(key, step.transportError !== null ? "TRANSPORT_FAILED" : "WALK_ABSENT", `${reviewed.route}: ${step.transportError ?? step.note}`, base));

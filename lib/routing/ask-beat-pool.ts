@@ -1,23 +1,8 @@
 /**
- * The ask box's acknowledgment beat — a curated, approved pool.
- *
- * CLAUDE.md's register rule: the beat is an INTERACTION surface, so it
- * speaks playful. It is also an ACKNOWLEDGMENT and nothing more — "I heard
- * you, it's coming." It never claims deliberation, because nothing a reader
- * sees on this surface is generated: the answer was already resolved
- * (deterministically, from the curated routing map) before the beat began.
- * A "Thinking…" or "Pondering…" label would be a claim about a machine
- * reasoning, and the transparency page would be wrong the moment it shipped.
- *
- * **This list is fixed. Code never adds an entry to it.** An agent
- * that invented a fifth line would be writing product voice nobody approved,
- * on the most-read surface in the app. `tests/ask-box.test.ts` pins the pool
- * exactly — both its contents and its length — so a quiet addition fails the
- * suite rather than shipping.
- *
- * Client-safe by construction: a bare string array, no `node:` imports, no
- * data dependencies. The ask box is a client component and this module sits
- * on its graph.
+ * The ask box's acknowledgment beat: a curated, approved pool. The beat only acknowledges ("I heard you,
+ * it's coming") and never claims deliberation, because the answer was resolved deterministically before
+ * it began. The list is fixed; code never adds an entry, and `tests/ask-box.test.ts` pins it exactly.
+ * Client-safe: a bare string array with no data dependencies.
  */
 
 /**

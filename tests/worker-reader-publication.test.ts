@@ -1,3 +1,4 @@
+import { runWorkerPublicationJob } from "../lib/civic-data/worker-publication-job.ts";
 import {readGenericBallotProjection} from "../lib/ballot/generic-projection.ts";
 import {readerBallotSourcesForDivisions} from "../lib/ballot/reader-sources.ts";
 import {candidateEnrichmentUniversesFromHoldings} from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
@@ -46,6 +47,12 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { createElement } from "react";
 import { OfficialFilings } from "../components/ballot/official-filings.tsx";
 import { collectWorkerRosterReadback } from "../lib/control-plane/worker-reader-readback.ts";
+
+/** The job's repositories with the whole worker-result log made unreadable: a publisher reads only its own job's results. */
+function withoutWholeResultLog<R extends { workerResults: object }>(repos: R): R {
+  const whole = async (): Promise<never> => { throw new Error("the whole worker-result log was read"); };
+  return { ...repos, workerResults: { ...repos.workerResults, readAll: whole, readSince: whole } };
+}
 
 async function workerFixture(contractId: WorkerReaderContract | "registry-runtime-bindings", facts: Record<string, string | number> | Record<string, string | number>[] | ((prior: RegistryRuntimePrior, bodyId: string) => Record<string, string | number>[]), classOverride?: "CAMPAIGN_FINANCE_FILING" | "BUDGET_RESPONSIBILITY" | "BUDGET_AMENDMENT" | "PUBLIC_RECORD") {
   const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
@@ -111,11 +118,12 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
   const authorityEvidence = evidenceProjection(await h.runtime.readEvidence(artifact.id));
   const runtime = { ...h.runtime, independentContext: async (scope: Parameters<typeof h.runtime.independentContext>[0]) => ({
     ...await h.runtime.independentContext(scope), authorityEvidence: [authorityEvidence] }) };
-  // §3: the Validator is the last stage for facts that are not judgment calls.
+  // The Validator is the last stage for facts that are not judgment calls.
   for (const role of ["ACQUIRER", "PARSER", "VALIDATOR"]) {
     const next = await nextAutonomousOperation(runtime, h.item.id);
     assert.equal(next.task?.workerTask?.role, role, JSON.stringify(next));
-    assert.equal((await dispatchWorkerTask(runtime, next.task!)).outcome, "WORKED");
+    const dispatched = await dispatchWorkerTask(runtime, next.task!);
+    assert.equal(dispatched.outcome, "WORKED", JSON.stringify(dispatched));
   }
   const results = await h.repos.workerResults.read(h.item.id);
   assert.deepEqual(results.map(row => row.result.verdict), ["ACQUIRED", "EXTRACTED", "PASS"]);
@@ -264,6 +272,21 @@ test("independent normal workers automatically publish public-comment rules thro
   await readCuratedReaderProjection("comment-access", { store, now: h.now(), bypassCache: true });
   const spoken = commentAccessEvidenceFor(body.id, body.ocdId ?? null, body.name!);
   assert.equal(spoken.records.find(row => row.accessRule?.field === "signup")?.sourceUrl, sources.signup?.sourceUrl);
+});
+
+test("a reader publication reads its own work items' results and its pages' owners', never the whole result log", async () => {
+  const f = await workerFixture("comment-access", { commentPeriod: "YES", commentPeriodDetail: "The board provides a public comment period." });
+  const keysRead: string[] = [];
+  const handed: string[][] = [];
+  const whole = async (): Promise<never> => { throw new Error("the whole worker-result log was read"); };
+  const repos = { ...f.h.repos, workerResults: { ...f.h.repos.workerResults, readAll: whole, readSince: whole,
+    readKeys: async (keys: readonly string[]) => { keysRead.push(...keys); return f.h.repos.workerResults.readKeys!(keys); } } };
+  const published = await publishWorkerReaderResults({ ...f.input, repos,
+    readCapture: async (id, results) => { handed.push(results.map(row => `${row.workItemId}:${row.result.role}`)); return f.input.readCapture(id); } });
+  assert.equal(published[0].outcome.status, "PUBLISHED", JSON.stringify(published));
+  assert.deepEqual([...new Set(keysRead)], [f.h.item.id], "only this item's results, read once");
+  assert.ok(handed.length > 0 && handed.every(rows => rows.includes(`${f.h.item.id}:ACQUIRER`)),
+    "each saved page is read with the results of the item that captured it");
 });
 
 test("an unfamiliar source-worded kind publishes automatically to its exact place and adds one durable Admin update", async () => {
@@ -507,7 +530,7 @@ test("completed polling workers publish every registered site through the existi
   await f.h.repos.doors.put(doorId, door, f.h.now());
   await f.h.repos.workItems.compareAndSet(item.id, item.revision, { ...item.value,
     autonomousPlan: { ...item.value.autonomousPlan!, sourceRegistryReferences: [...item.value.autonomousPlan!.sourceRegistryReferences, doorId] } }, f.h.now());
-  const report = await publishWorkerReaderResults(f.input);
+  const report = await publishWorkerReaderResults({ ...f.input, repos: withoutWholeResultLog(f.h.repos) });
   assert.equal(report.length, 1); assert.equal(report[0].outcome.status, "PUBLISHED", report[0].outcome.detail);
   const read = await readVotingSitesProjection({ store: f.store, now: f.h.now(), bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
@@ -523,7 +546,7 @@ test("completed polling workers publish every registered site through the existi
 test("normal complete candidate workers publish their whole contest into general readers and the candidate work inventory",async()=>{
   const facts=["Avery Example","Jordan Sample"].map(candidateName=>({election:"2026 General election",electionDate:"2026-11-03",office:"County Council",candidateName,givenName:candidateName.split(" ")[0],familyName:candidateName.split(" ")[1]}));
   const f=await workerFixture("ballot-contests",facts);
-  const published=await publishWorkerReaderResults(f.input);
+  const published=await publishWorkerReaderResults({...f.input,repos:withoutWholeResultLog(f.h.repos)});
   assert.equal(published[0].outcome.status,"PUBLISHED",JSON.stringify(published));
   const read=await readGenericBallotProjection({store:f.store,now:f.h.now(),bypassCache:true});
   assert.equal(read.kind,"PROMOTED");if(read.kind!=="PROMOTED")throw new Error("General ballot missing");
@@ -539,4 +562,37 @@ test("normal complete candidate workers publish their whole contest into general
   const universe=inventory.universes[ballot.election.state.toLowerCase()];
   assert.equal(universe?.candidacies.length,2);
   assert.deepEqual(new Set(universe!.candidacies.flatMap(row=>row.pilotIds)),new Set(ballot.candidacies.map(row=>row.id)));
+});
+
+
+test("publication jobs reuse supplied repositories and return independent receipts without changing the parent's exit status", async () => {
+  const f = await workerFixture("comment-access", { commentPeriod: "YES", commentPeriodDetail: "Public comment is welcome.", signup: "Register before the session", writtenComment: "Submit a letter" });
+  const exitCode = process.exitCode;
+  const context = { repos: f.input.repos, readCapture: f.input.readCapture };
+  const job = { ...f.input, context };
+  const published = await runWorkerPublicationJob(job);
+  assert.equal(published.exitCode, 0, JSON.stringify(published.report));
+  assert.ok(published.receipt?.promotedVersion);
+  assert.ok(published.receipt.delivered.records > 0);
+  assert.equal(published.report[0].outcome.status, "PUBLISHED");
+  assert.equal(process.exitCode, exitCode);
+  // An empty concurrent job cannot poison another job's process exit code.
+  const empty = await runWorkerPublicationJob({ ...job, workItemIds: [] });
+  assert.deepEqual([empty.exitCode, empty.receipt], [2, null]);
+  assert.equal(process.exitCode, exitCode);
+  const reused = await runWorkerPublicationJob({ ...job, now: "2026-09-08T12:05:00.000Z" });
+  assert.equal(reused.exitCode, 0);
+  assert.equal(reused.receipt?.delivered.records, 0);
+  await assert.rejects(runWorkerPublicationJob({ ...job, repos: { ...job.repos } }), /REPOSITORY_MISMATCH/);
+});
+
+test("registry publication job uses the same saved directory evidence and typed receipt", async () => {
+  const f = await workerFixture("registry-runtime-bindings", { bodyName: "Fixture Shared Job Commission", bodyClass: "ADVISORY", homepageUrl: "https://directory.example.gov/shared" });
+  const result = await runWorkerPublicationJob({ ...f.input, contractId: "registry-runtime-bindings",
+    context: { repos: f.input.repos, readCapture: f.input.readCapture } });
+  assert.equal(result.exitCode, 0, JSON.stringify(result.report));
+  assert.equal(result.receipt?.source, "registry-runtime-bindings");
+  assert.ok(result.receipt?.delivered.records);
+  const read = await readRegistryRuntimePrior(f.store, f.h.now());
+  assert.ok(read?.payload.registry.bodies.some(body => body.name === "Fixture Shared Job Commission"));
 });

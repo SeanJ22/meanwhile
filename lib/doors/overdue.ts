@@ -1,22 +1,18 @@
 /**
- * **OVERDUE DOORS ARE LISTED** (DB-31).
- *
- * A door is overdue when its last successful read is older than its `checkEvery`: the door's own setting
- * (`checkEveryMinutes`) or, where it has none, the standing check for its kind. A meeting door's standing check is
- * rulings §4's: hourly for a body with a sitting in the next 7 days or one held in the last 7, twice daily for every
- * other. Each overdue door carries how many live facts sit behind it, so the Scoreboard can say what a late door is
- * costing readers. A door that has never succeeded is measured from when its record last changed, so a door added a
- * minute ago is not late. A shut or suspended door is not here: it is listed as shut.
- *
- * PURE: no store and no clock. `meetingFactsByDoor` reads the live meeting snapshot the caller already holds.
+ * A door is overdue when its last successful read is older than its check:
+ * its own `checkEveryMinutes`, or the standing check for its kind (meeting
+ * doors: hourly with a sitting within 7 days either side, else twice daily).
+ * A door that never succeeded is measured from its last record change. Only
+ * doors a routine task reads on a clock can be overdue; shut and suspended
+ * doors are not listed. Pure.
  */
 import type { MeetingsSnapshot } from "../meetings/snapshot.ts";
 import { checkEveryWithObserved } from "./observed-rate.ts";
-import type { DoorRecord } from "./registry.ts";
+import { readOnSchedule, type DoorRecord } from "./registry.ts";
 
 const DAY_MS = 86_400_000;
 const MINUTE_MS = 60_000;
-/** Rulings §4: a body with a sitting inside this many days either side is checked hourly. */
+/** A body with a sitting inside this many days either side is checked hourly. */
 export const HOT_SITTING_DAYS = 7;
 export const HOT_CHECK_MINUTES = 60;
 export const COLD_CHECK_MINUTES = 12 * 60;
@@ -68,8 +64,7 @@ export interface OverdueDoor {
 /** The check a door owes at `now`. */
 export function checkEveryFor(door: DoorRecord, facts: DoorFacts | undefined): { readonly minutes: number; readonly own: boolean } {
   if (door.checkEveryMinutes !== null) return { minutes: door.checkEveryMinutes, own: true };
-  // DB-30: the faster of the standing check and how often the door has been seen to change. A meeting door's
-  // standing check is already the §4 floor, so an observation can only make it faster, never slower.
+  // The faster of the standing check and the observed change rate.
   const standing = door.meeting != null ? (facts?.hot ? HOT_CHECK_MINUTES : COLD_CHECK_MINUTES) : STANDING_CHECK_MINUTES;
   return { minutes: checkEveryWithObserved(door, standing).minutes, own: false };
 }
@@ -83,7 +78,7 @@ export function overdueDoors(
   const nowMs = Date.parse(now);
   const out: OverdueDoor[] = [];
   for (const door of doors) {
-    if (door.status !== "OPEN") continue;
+    if (door.status !== "OPEN" || !readOnSchedule(door)) continue;
     const key = door.meeting != null && door.bodyIds.length === 1 ? doorFactsKey(door.kind, door.bodyIds[0]!) : null;
     const held = key === null ? undefined : facts.get(key);
     const check = checkEveryFor(door, held);

@@ -1,17 +1,8 @@
 /**
- * **SQUADS SIZED TO THEIR PARTS (CH-17).**
- *
- * The coordinator's fairness is round-robin over (Send, mission part). Within
- * a Send, each part's turns are weighted by its count of open blanks and by
- * how hard it has been: its share of the Send's recent detective turns and of
- * its open failure debts. Bigger and harder parts get more hunters; a part
- * whose open blanks reach zero stops getting turns while any other part has
- * work. Read again every wave, so hunters move to the gaps as they open.
- *
- * A Send with no open-blank reading (standing work, or a read that failed) is
- * plain round-robin over its parts: no information never stops a part.
- *
- * PURE. No store, no clock, no environment.
+ * Weights the coordinator's round-robin over (Send, mission part): each part's
+ * turns scale with its open blanks and recent difficulty; a part with no open
+ * blanks gets no turn while another has work. A Send with no open-blank
+ * reading is plain round-robin. Pure.
  */
 import type { WorkItem } from "../work-item.ts";
 import type { RouteTask } from "../route-task.ts";

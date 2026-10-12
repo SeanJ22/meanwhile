@@ -1,18 +1,3 @@
-/**
- * **THE OWNER'S AMENDMENTS ON Q5 AND Q9.** (The 8.30.26 sweep, worked
- * 2026-08-31.)
- *
- * Two rows that were carried out of the owner's workbook as PRODUCT
- * REQUIREMENTS rather than as questions, and each one names a class:
- *
- * ```
- *   OWN-Q5  a campaign-finance answer covers the county and state regimes as
- *           well as the FEC, and an FEC absence never stands in for
- *           "no records exist"
- *   OWN-Q9  every district named in an answer opens its own card
- * ```
- */
-
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
@@ -24,9 +9,14 @@ import {
 } from "../lib/ask/local-finance.ts";
 import type { EvidenceSubject } from "../lib/ask/evidence.ts";
 import type { AskAnswerPayload } from "../lib/ask/answer.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { installAzBallot, installPimaLocalFinance, installRegistryAuthority, installStateMoney, syntheticAzBallot, stateMoneyFixture, syntheticFiledStateMoneyRecord } from "./helpers/promoted-fixtures.ts";
 
-await installRegistryRuntimeFirstSeeds();
+await installRegistryAuthority();
+/* The governor's committed candidacy is on a synthetic ballot and carries one synthetic FILED state record; the county board carries none. */
+await installPimaLocalFinance();
+await installAzBallot(syntheticAzBallot([{ id: "ballot-az-pima:governor", title: "Governor", candidacies: [{ id: "ballot-az-pima:governor:hobbs-katie", givenName: "Katie", familyName: "Hobbs" }] }]));
+const arizonaMoney = stateMoneyFixture("AZ");
+await installStateMoney("AZ", { ...arizonaMoney, records: [...arizonaMoney.records, syntheticFiledStateMoneyRecord("AZ", "ballot-az-pima:governor:hobbs-katie")] });
 
 const ASK_BOX = readFileSync("components/ask/ask-box.tsx", "utf8");
 
@@ -38,8 +28,6 @@ function subject(over: Partial<EvidenceSubject> = {}): EvidenceSubject {
     ...over,
   } as EvidenceSubject;
 }
-
-/* ─────────────────────────────── OWN-Q5 ─────────────────────────────────── */
 
 test("OWN-Q5: a money answer names all three regimes, and each is OURS", () => {
   const notes = financeRegimeNotesFor(subject());
@@ -60,11 +48,7 @@ test("OWN-Q5: a money answer names all three regimes, and each is OURS", () => {
 });
 
 test("OWN-Q5: no regime statement claims a government holds nothing", () => {
-  /*
-   * The operative half of the owner's amendment. Each sentence must be about
-   * our acquisition. A sentence asserting a filing office holds no record
-   * would be exactly the absence-as-fact this product refuses.
-   */
+  // Each sentence is about our acquisition; asserting a filing office holds no record would be absence-as-fact.
   for (const note of financeRegimeNotesFor(subject())) {
     const s = note.gap.statement;
     assert.ok(
@@ -79,11 +63,7 @@ test("OWN-Q5: no regime statement claims a government holds nothing", () => {
 });
 
 test("OWN-Q5: THE SEEDED FAILURE — a subject this pipeline holds nothing for still gets a scope gap", () => {
-  /*
-   * `localFinanceEvidenceFor` returns null for a statewide executive, a
-   * federal candidate, a contest and an office. A null used to push NOTHING,
-   * so one regime's silence became a claim about all money everywhere.
-   */
+  // `localFinanceEvidenceFor` returns null for several subject kinds; one regime's silence is not a claim about all money.
   const statewide = subject();
   assert.equal(
     localFinanceEvidenceFor(statewide),
@@ -127,8 +107,6 @@ test("OWN-Q5 WIRING: real money answers name all regimes with and without applic
   }
 });
 
-/* ─────────────────────────────── OWN-Q9 ─────────────────────────────────── */
-
 test("OWN-Q9: the answer panel renders the governments it named as openers", () => {
   assert.match(ASK_BOX, /function AnswerBodies\(/, "the component exists");
   assert.match(
@@ -140,13 +118,7 @@ test("OWN-Q9: the answer panel renders the governments it named as openers", () 
 });
 
 test("OWN-Q9: the openers are keyed on IDS, never on the prose", () => {
-  /*
-   * The wrong implementation is scanning the sentence for names we recognise.
-   * Nine Morris County governments answer to "Township Council", so a name
-   * match is a door onto the wrong government — `BodyName` in this same file
-   * carries that diagnosis — and highlighting words inside generated prose
-   * would let the synthesis rung decide what is clickable.
-   */
+  // Not a name scan over the sentence: many governments share a body name, so a name match opens the wrong door.
   const start = ASK_BOX.indexOf("function AnswerBodies(");
   const body = ASK_BOX.slice(start, ASK_BOX.indexOf("\n}\n", start));
   assert.match(body, /record\.bodyId/, "the set comes off the records' own body ids");

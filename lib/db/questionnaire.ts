@@ -1,36 +1,10 @@
 /**
- * **THE QUESTIONNAIRE STORE — reads and writes for the page a candidate types
- * into.** (Overnight depth hunt, 2026-08-23, item 7. `NH104`.)
- *
- * ## Which store this is, and why the n-stores rule is untouched
- *
- * `CLAUDE.md`'s collection-stores rule governs the SOLD stores — the search
- * log, the reactions store, and a future subscription store. Those may share no
- * joinable column and no mapping table exists between any pair.
- *
- * **A candidate's questionnaire answer is not reader data.** It is published
- * civic content, submitted by a public person standing for public office, for
- * the express purpose of being published verbatim under their name. RULING 112
- * says so in as many words and puts it in the content store. Nothing here
- * touches `search_log`, `reactions` or `intake_limiter`, and
- * `tests/questionnaire-store.test.ts` asserts that BY NAME rather than leaving
- * it to be noticed.
- *
- * ## What is deliberately absent
- *
- * There is **no summary, excerpt, abstract, preview or truncation** anywhere in
- * this module, and there never may be. RULING 112 enforces that by ABSENCE —
- * the response record has no such column and no summarising call exists under
- * `lib/questionnaire/`. A reader of this file should find nothing here that
- * could shorten a candidate's words.
- *
- * ## Failure is a state, never a silent pass
- *
- * Every function returns a named outcome rather than throwing into a route that
- * would render an empty page. A database that cannot be reached is
- * `STORE_UNAVAILABLE` — reported as itself, never as "this candidate has not
- * responded", because those are different facts about different people and
- * running them together is the render-default rule's exact failure.
+ * Questionnaire store: reads and writes for the page a candidate types into.
+ * A candidate's answer is published civic content, not reader data; nothing
+ * here touches `search_log`, `reactions` or `intake_limiter`. Nothing here may
+ * summarise, excerpt or truncate an answer. Every function returns a named
+ * outcome; an unreachable database is `STORE_UNAVAILABLE`, never "has not
+ * responded".
  */
 import { and, desc, eq } from "drizzle-orm";
 
@@ -46,13 +20,7 @@ export type TokenLookup =
   | { kind: "NOT_FOUND" }
   | { kind: "STORE_UNAVAILABLE"; reason: string };
 
-/**
- * Find one token by its digest.
- *
- * The caller passes the DIGEST, not the token: hashing happens in
- * `lib/questionnaire/auth.ts` and the raw token never reaches this module, so
- * there is no code path here that could log or store one.
- */
+/** Find one token by its digest; the raw token never reaches this module. */
 export async function findToken(tokenDigest: string): Promise<TokenLookup> {
   const db = getDb();
   if (!db) return { kind: "STORE_UNAVAILABLE", reason: "no database handle is configured" };
@@ -114,15 +82,9 @@ export type SubmitResult =
   | { kind: "REFUSED"; reason: string };
 
 /**
- * Store one submitted version, and burn the token in the same transaction.
- *
- * **Append-only.** An edit writes a NEW row at the next version rather than
- * overwriting, for the reason the schema already gives: a record that can be
- * silently rewritten cannot prove what it said. The highest version renders.
- *
- * The token is marked used inside the same transaction as the insert. Doing it
- * outside would allow the two states this must never produce — an answer stored
- * against a token still live, and a burnt token with no answer behind it.
+ * Store one submitted version and burn the token in the same batch.
+ * Append-only: an edit writes a new row at the next version; the highest
+ * version renders.
  */
 export async function storeResponse(input: {
   candidacyId: string;
@@ -135,9 +97,7 @@ export async function storeResponse(input: {
   const db = getDb();
   if (!db) return { kind: "STORE_UNAVAILABLE", reason: "no database handle is configured" };
 
-  // The write guard THROWS on refusal. Catching it here turns it into a named
-  // outcome the route can render, rather than a 500 that tells a candidate
-  // nothing about why their answers did not save.
+  // The write guard throws; return a named outcome the route can render.
   try {
     assertWriteAllowed("questionnaire_responses");
   } catch (e) {
@@ -154,26 +114,11 @@ export async function storeResponse(input: {
     const version = (prior[0]?.version ?? 0) + 1;
 
     /*
-     * `batch`, not `transaction`, and the difference is the driver rather than
-     * a preference.
-     *
-     * This app connects over `drizzle-orm/neon-http`, which has no interactive
-     * transactions at all — `db.transaction()` throws on it. The first version
-     * of this function used one, and every submission came back
-     * `STORE_UNAVAILABLE` with the answers correctly NOT stored. It was caught
-     * by walking the page against a local production build before shipping,
-     * which is the whole of what RULING 77 asks for.
-     *
-     * `batch` sends both statements in ONE request and the server runs them in
-     * a single transaction, so the two states this must never produce still
-     * cannot happen: an answer stored against a token still live, or a burnt
-     * token with no answer behind it.
-     *
-     * The version is read first, outside the batch. The unique index on
-     * `(candidacy_id, version)` is what makes that safe — two submissions
-     * racing to the same version collide at the database rather than
-     * overwriting each other, and the loser surfaces here as a failed write
-     * rather than as a silently lost answer.
+     * `batch`, not `transaction`: neon-http has no interactive transactions.
+     * The server runs the batch as one transaction, so an answer is never
+     * stored against a live token and a token is never burnt without an
+     * answer. The unique index on `(candidacy_id, version)` makes reading the
+     * version outside the batch safe: racing submissions collide and fail.
      */
     await db.batch([
       db.insert(questionnaireResponses).values({
@@ -182,8 +127,7 @@ export async function storeResponse(input: {
         submittedAt: input.submittedAt.toISOString(),
         instrumentVersion: input.instrumentVersion,
         officeClass: input.officeClass,
-        // Verbatim. The route validates the word limit and REFUSES; nothing on
-        // this path shortens anything.
+        // Verbatim. The route enforces the word limit; nothing here shortens.
         answers: input.answers.map((a) => ({ questionId: a.questionId, text: a.text })),
         withdrawnAt: null,
       }),

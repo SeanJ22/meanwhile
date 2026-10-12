@@ -1,4 +1,4 @@
-/** FE-03: the places a deploy warms come from the published manifest, one ZIP per county. */
+/** The places a deploy warms come from the published manifest, one ZIP per county. */
 import assert from "node:assert/strict";
 import test from "node:test";
 

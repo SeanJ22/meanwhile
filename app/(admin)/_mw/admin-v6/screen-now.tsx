@@ -1,10 +1,5 @@
 "use client";
 
-/**
- * **NOW.** What readers can see, what is stuck and why, what is happening, what
- * it cost, and what Sean can do — for the selected place. The national map and
- * state table lead at country scope.
- */
 import { useMemo, useState } from "react";
 
 import { periodLabel } from "@/lib/control-plane/admin-view/periods.ts";
@@ -14,8 +9,7 @@ import { count, mst, usd, type Lane, type ReaderResult, type StateRow, type Stuc
 import { TILE_LAYOUT } from "./national-layout.ts";
 import { COUNTRY_KEY, huntAt, huntsWithin, isWithin, nationalDepth, relation } from "./places.ts";
 import { useQueueRows } from "./use-queue.ts";
-import { ActionButton, Actions, Card, cx, Empty, Loading, Pill, StageDots } from "./ui.tsx";
-import { NowVitalSigns } from "./vital-signs.tsx";
+import { Actions, Card, cx, Empty, Loading, Pill, StageDots } from "./ui.tsx";
 import s from "./v6.module.css";
 
 export const LANE_WORDS: Readonly<Record<Lane, string>> = {
@@ -42,20 +36,16 @@ export function NowScreen() {
         <p className={s.eyebrow}>{v.place.name} · {periodLabel(v.period, new Date())}</p>
         <h1 className={s.h1}>Now</h1>
       </header>
-      <NowVitalSigns />
+      <LastHours />
       <Matters />
-      {/* The control Sean uses most (daily budget, paid search, start a hunt): one click to open. */}
       <DirectWork />
       {nationalDepth(v.scopeKey) !== null && <National />}
     </>
   );
 }
 
-/* ----------------------------------------------------- what matters now */
-
 const MOTION_KINDS = new Set(["order", "scheduled", "send", "hunt"]);
 
-/** The four things that matter, each with one sentence saying what it means. */
 function Matters() {
   const v = useV6();
   const { rows, unread } = useQueueRows();
@@ -74,6 +64,7 @@ function Matters() {
           <p className={s.small}>{completeness ? `${count(completeness.n)} of ${count(completeness.of)} things owed for ${v.place.name} are held. More is better; the rest is still being found.` : `What ${v.place.name} is owed has not been counted yet.`}</p>
         </Card>
       </div>
+      <LastHours />
       <Card title="Orders in motion" aside={<button type="button" className={s.btnLink} onClick={() => v.go("queue")}>Open the queue →</button>}>
         {motion.length === 0 && <Empty>{unread.length > 0 ? "—" : "Nothing in motion."}</Empty>}
         <div className={s.stack}>
@@ -89,7 +80,37 @@ function Matters() {
   );
 }
 
-/* ---------------------------------------------------------------- national */
+const gb = (n: number | null): string => (n === null ? "—" : `${n.toFixed(2)} GB`);
+const orDash = (n: number | null, f: (n: number) => string): string => (n === null ? "—" : f(n));
+
+function LastHours() {
+  const v = useV6();
+  const hours = v.data.scoreboard.data?.vital ?? null;
+  const last = hours?.[0] ?? null, before = hours?.[1] ?? null;
+  const rows: readonly { readonly name: string; readonly says: string; readonly of: (h: NonNullable<typeof last>) => { readonly text: string; readonly bad?: boolean } }[] = [
+    { name: "Facts live", says: "New or changed reader records that went live. Higher is better.", of: (h) => ({ text: orDash(h.factsLive, count) }) },
+    { name: "Cost per fact", says: "Money spent divided by facts live. Lower is better.", of: (h) => ({ text: orDash(h.costPerFactUsd, (n) => (n >= 1 ? usd(n) : `$${n.toFixed(4)}`)) }) },
+    { name: "Data read from the database", says: "Target: under 0.7 GB an hour.", of: (h) => ({ text: gb(h.neonGb), bad: h.overNeonTarget === true }) },
+    { name: "Research rounds", says: "Finished, against killed by the watchdog.", of: (h) => ({ text: h.roundsFinished === null || h.roundsKilled === null ? "—" : `${count(h.roundsFinished)} finished · ${count(h.roundsKilled)} killed` }) },
+    { name: "Paid jobs that ended with nothing", says: "Must be none.", of: (h) => ({ text: orDash(h.paidJobsEndedEmpty, (n) => (h.paidJobsEnded === null ? count(n) : `${count(n)} of ${count(h.paidJobsEnded)}`)), bad: (h.paidJobsEndedEmpty ?? 0) > 0 }) },
+  ];
+  return (
+    <Card title="The last full hour" aside={<button type="button" className={s.btnLink} onClick={() => v.go("scoreboard")}>Open the scoreboard →</button>}>
+      <div className={s.stack}>
+        <p className={s.small}>{last !== null ? `${mst(last.hour)}${before !== null ? ` · the hour before: ${mst(before.hour)}` : ""}` : hours === null ? "Not measured yet." : "The hour has not been recorded yet."}</p>
+        {rows.map((r) => {
+          const now = last === null ? { text: "—" } : r.of(last), earlier = before === null ? null : r.of(before);
+          return (
+            <div key={r.name} className={s.row}>
+              <span className={s.spread}><strong style={{ fontSize: 13 }}>{r.name}</strong><span className={cx(now.bad && s.textWarn)}>{now.text}{earlier !== null ? ` (before: ${earlier.text})` : ""}</span></span>
+              <span className={s.meta}>{r.says}</span>
+            </div>
+          );
+        })}
+      </div>
+    </Card>
+  );
+}
 
 type NatKey = "name" | "hunts" | "zips" | "score" | "stuck";
 interface NatSort { readonly key: NatKey; readonly down: boolean }
@@ -101,7 +122,6 @@ const NAT_COLUMNS: readonly { readonly key: NatKey; readonly label: string; read
   { key: "score", label: "Completeness", num: true },
   { key: "stuck", label: "Stuck", num: true },
 ];
-/** Rows shown before "Show all": a state list opens on the tracked states and hunts, a district or ZIP list on its first rows. */
 const NAT_TOP = 12;
 
 function natNumber(r: StateRow, key: Exclude<NatKey, "name">): number | null {
@@ -242,8 +262,6 @@ export function Readers() {
   );
 }
 
-/* ---------------------------------------------------------------- stuck */
-
 export function StuckRow(props: { readonly item: StuckItem; readonly shared?: boolean; readonly withActions?: boolean }) {
   const v = useV6();
   const i = props.item;
@@ -262,16 +280,12 @@ export function StuckRow(props: { readonly item: StuckItem; readonly shared?: bo
   );
 }
 
-/* ----------------------------------------------------------- direct work */
-
 function DirectWork() {
   const v = useV6();
   const hunt = huntAt(v.index, v.hunts, v.scopeKey);
   const inside = huntsWithin(v.index, v.hunts, v.scopeKey);
   const cards = hunt ? [hunt] : inside;
   const [open, setOpen] = useState(!!hunt);
-  // Start a hunt and the whole-system controls are what gets used most, so a place with many hunts inside it shows them first;
-  // a place that has its own hunt shows that hunt first.
   const huntCards = (
     <>
       {cards.map((h) => (

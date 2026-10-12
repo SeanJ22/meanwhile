@@ -11,7 +11,6 @@ export const NH_ROLL_SUMMARY_URL = "https://gc.nh.gov/dynamicdatadump/RollCallSu
 export const NH_ROLL_HISTORY_URL = "https://gc.nh.gov/dynamicdatadump/RollCallHistory.txt";
 export const NH_LEGISLATORS_URL = "https://gc.nh.gov/dynamicdatadump/legislators.txt";
 export const NH_PUBLISHER_REQUEST_DELAY_MS = 11_000;
-export const NH_SUPPORTED_SESSION_YEAR = "2026";
 const INVALID_PUBLISHER_TEXT = /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f-\u009f\uFFFD]/;
 
 export interface NhOfficialDocument {
@@ -19,6 +18,8 @@ export interface NhOfficialDocument {
   readonly finalUrl: string;
   readonly httpStatus: number;
   readonly body: string;
+  readonly retrievedAt?:string;
+  readonly sourceCheck?:import("../../civic-data/types.ts").SourceCheckEvidence;
 }
 
 /**
@@ -96,7 +97,7 @@ function sourceDate(raw: string, key: string): string {
 }
 
 export interface NhRollSummaryRow {
-  readonly sessionYear: "2026";
+  readonly sessionYear: string;
   readonly legislativeBody: "H" | "S";
   readonly voteSequenceNumber: number;
   readonly voteDate: string;
@@ -115,7 +116,7 @@ export interface NhRollSummaryRow {
 }
 
 export interface NhRollHistoryRow {
-  readonly sessionYear: "2026";
+  readonly sessionYear: string;
   readonly legislativeBody: "H" | "S";
   readonly voteSequenceNumber: number;
   readonly employeeNumber: string;
@@ -158,10 +159,8 @@ function exactBody(raw: string, key: string): "H" | "S" {
   return raw;
 }
 
-function exactSessionYear(raw: string, key: string): "2026" {
-  if (raw !== NH_SUPPORTED_SESSION_YEAR) {
-    fail(`${key} belongs to session year ${JSON.stringify(raw)}; the admitted horizon is exactly 2026.`);
-  }
+function exactSessionYear(raw: string, key: string): string {
+  if (!/^20\d{2}$/.test(raw)) fail(`${key} has an invalid source session year ${JSON.stringify(raw)}.`);
   return raw;
 }
 
@@ -289,6 +288,7 @@ export interface NhCurrentMemberIdentityMatch {
 }
 
 export interface NhCurrentMemberIdentityCrosswalk {
+  readonly unresolved?: readonly string[];
   readonly matches: readonly NhCurrentMemberIdentityMatch[];
   readonly sourceVersion: string;
   readonly observedIdentityRows: number;
@@ -380,12 +380,13 @@ export function joinNhCurrentMemberIdentities(
     const email = member.email ? byEmail.get(normalizeExact(member.email)) : undefined;
     const name = byNameBody.get(memberNameBodyKey(member));
     if (email && name && email.personId !== name.personId) {
-      fail(`${member.givenName} ${member.familyName} has conflicting exact official email and name/body identities.`);
+      unresolved.push(`${member.givenName} ${member.familyName}: conflicting exact official identities`); continue;
     }
     let row = email ?? name;
     let matchBasis: NhCurrentMemberIdentityMatch["matchBasis"] = email ? "EXACT_OFFICIAL_EMAIL" : "EXACT_OFFICIAL_NAME_BODY";
     if (!row) {
-      const exceptionPersonId = reviewedExceptionPersonId(member, byPerson, historyPairs);
+      let exceptionPersonId: string | null = null;
+      try {exceptionPersonId = reviewedExceptionPersonId(member, byPerson, historyPairs);} catch (error) {unresolved.push(error instanceof Error ? error.message : String(error));continue;}
       if (exceptionPersonId) {
         const officialRow = byPerson.get(exceptionPersonId);
         row = officialRow ?? {
@@ -412,7 +413,7 @@ export function joinNhCurrentMemberIdentities(
       unresolved.push(`${member.givenName} ${member.familyName} (${member.chamber}/${member.seatNo}/${member.county} ${member.district})`);
       continue;
     }
-    if (row.legislativeBody !== member.chamber) fail(`PersonID ${row.personId} crosses chambers in the current-member join.`);
+    if (row.legislativeBody !== member.chamber) {unresolved.push(`PersonID ${row.personId}: current chamber mismatch`);continue;}
     matches.push({
       member,
       officialPersonId: row.personId,
@@ -423,8 +424,6 @@ export function joinNhCurrentMemberIdentities(
     else ordinaryMatches += 1;
   }
 
-  if (unresolved.length > 0) fail(`current roster identity join left ${unresolved.length} unresolved row(s): ${unresolved.join("; ")}.`);
-  if (matches.length !== current.length) fail(`current roster identity join produced ${matches.length}/${current.length} rows.`);
   if (new Set(matches.map((match) => match.officialPersonId)).size !== matches.length) {
     fail("current roster identity join assigns one official PersonID to multiple current members.");
   }
@@ -432,7 +431,7 @@ export function joinNhCurrentMemberIdentities(
     legislators: identityText.replace(/^\uFEFF/, ""),
     history: historyText.replace(/^\uFEFF/, ""),
   });
-  return { matches, sourceVersion, observedIdentityRows: identityRows.length, ordinaryMatches, reviewedExceptionMatches };
+  return { matches, unresolved, sourceVersion, observedIdentityRows: identityRows.length, ordinaryMatches, reviewedExceptionMatches };
 }
 
 function rollKey(row: Pick<NhRollSummaryRow | NhRollHistoryRow, "sessionYear" | "legislativeBody" | "voteSequenceNumber">): string {
@@ -498,6 +497,8 @@ export function buildNhOfficialRollCallProjection(input: {
   readonly retrievedAt: string;
   readonly participantSourceVersion: string;
 }): NhOfficialRollCallProjection {
+  const sourceYears = new Set([...input.summaries, ...input.history].map(row => row.sessionYear));
+  if (sourceYears.size !== 1) fail("The official summary and history do not describe one exact source session year.");
   const summaries = new Map(input.summaries.map((row) => [rollKey(row), row]));
   const identities = new Map(input.legislators.map((row) => [row.personId, row]));
   const histories = new Map<string, NhRollHistoryRow[]>();
@@ -561,7 +562,7 @@ export function buildNhOfficialRollCallProjection(input: {
       officialRollCallId,
       eventId: `nh-general-court:event:${key}`,
       chamber,
-      term: NH_SUPPORTED_SESSION_YEAR,
+      term: summary.sessionYear,
       session: "regular",
       actionStage: summary.motion,
       expectedActionStage: summary.motion,

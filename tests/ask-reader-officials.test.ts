@@ -4,17 +4,6 @@ import test from "node:test";
 import { composeBodyRoster, composeReaderOfficials, readerOfficialsQuestion, stateDivisionsOf, type HeldOfficial } from "../lib/ask/reader-officials.ts";
 import type { SeatHolder } from "../lib/officials/lookup.ts";
 
-/**
- * **THE READER'S OWN OFFICIALS, ANSWERED FROM WHAT WE HOLD.** (2026-09-29, S3.)
- *
- * "Who is my state senator?" names no subject; the officeholders held for the
- * reader's divisions and bodies are the answer, and the answer never needs a
- * model. These tests pin the two halves: the words that are recognised (a closed
- * table — anything else is the model's), and what the composed sentence says
- * for a ZIP that reaches one district, a ZIP that reaches two, a body's seats,
- * and an office we hold no one for.
- */
-
 const AZ = "ocd-division/country:us/state:az";
 const seat = (id: string, name: string, officeTitle: string, partyLabel: string | null = "Republican"): SeatHolder => ({
   id, name, officeTitle, partyLabel, termEnd: null, birthDate: null, websiteUrl: null, sourceUrl: `https://example.gov/${id}`, provenance: null, email: null, phone: null,

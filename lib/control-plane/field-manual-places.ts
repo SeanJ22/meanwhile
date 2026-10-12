@@ -1,23 +1,12 @@
 /**
- * DP-22 and DP-21: what a method did in each place, kept apart.
+ * What a method did in each place, kept apart. An entry's `outcome` is the
+ * latest result anywhere; `placeResults` keeps one result per place, and a
+ * newer result replaces only the same place's, recording what it superseded.
  *
- * DP-22. An entry's single `outcome` is "latest anywhere": the display value.
- * Underneath it, `placeResults` keeps one result per place, so a route that
- * worked in one state and failed in another shows both, and a newer result
- * replaces only the older result for the SAME place, recording which
- * observation it superseded.
- *
- * DP-21. When the manual is projected for a place and the caller hands in the
- * fix map's rows for that place, each method line says whether it works here,
- * has not been tried here (try it and record the result) or fails here, and the
- * ones that fail here are left out of the brief, so a Scout's inherited lines
- * never send it down a road already known closed in this place.
- *
- * PURE: no store, no clock.
+ * Pure: no store, no clock.
  */
 
 import type { FieldManualEntry, FieldManualOutcome } from "./field-manual.ts";
-import type { FixMapRow } from "../method/fix-map.ts";
 
 export interface PlaceResult {
   /** `ocd-division/...` exactly, `body:<id>`, `state:<xx>`, or `any` for an entry that names no place. */
@@ -61,25 +50,10 @@ export function mergePlaceResults(prior: readonly PlaceResult[], incoming: reado
 
 const RANK: Readonly<Record<FieldManualOutcome, number>> = { YIELDED: 0, REFERENCE: 1, ZERO: 2, BLOCKED: 3, FAILED: 4 };
 
-export type MethodHere =
-  | { readonly status: "WORKS" }
-  | { readonly status: "UNTRIED" }
-  | { readonly status: "FAILS"; readonly cause: string };
+/** What is known of a method in the place a page is for; a method that fails there is left off the page. */
+export type MethodHere = { readonly status: "WORKS" } | { readonly status: "UNTRIED" };
 
-/** Entries that are reusable methods: the ones the fix map holds results for. */
-export const METHOD_KINDS: ReadonlySet<string> = new Set(["METHOD", "ROUTE", "MANIFEST_BRANCH", "BODY_RUNG"]);
-
-/** What the fix map says of one method in the place a projection is for; null when the entry is not a method. */
-export function methodHere(entry: Pick<FieldManualEntry, "id" | "kind">, placeRows: readonly FixMapRow[]): MethodHere | null {
-  if (!METHOD_KINDS.has(entry.kind)) return null;
-  const row = placeRows.find((r) => r.methodId === entry.id);
-  if (row === undefined || row.state === "UNTRIED") return { status: "UNTRIED" };
-  return row.state === "WORKS" ? { status: "WORKS" } : { status: "FAILS", cause: row.cause ?? "it did not succeed here" };
-}
-
-/** The words a Scout reads after the line. */
+/** The words a worker reads after a method's line. */
 export function hereNote(here: MethodHere): string {
-  if (here.status === "WORKS") return " [works here]";
-  if (here.status === "UNTRIED") return " [untried here: try it and record the result]";
-  return ` [fails here: ${here.cause.replace(/\s+/g, " ").trim().slice(0, 120)}]`;
+  return here.status === "WORKS" ? " [works here]" : " [untried here: try it and record the result]";
 }

@@ -112,8 +112,8 @@ test("Arizona official roster accounts for every active and resigned publisher r
   assert.equal(result.roster.officeholders.filter(({ chamber }) => chamber === "lower").length, 60);
   assert.equal(result.roster.officeholders.filter(({ chamber }) => chamber === "upper").length, 30);
   assert.equal(result.roster.officeholders[0]?.id, "az-legislature:1001");
-  assert.equal(result.roster.officeholders[0]?.termStart, "2025-01-06");
-  assert.equal(result.roster.officeholders[0]?.termEnd, "2027-01-04");
+  assert.equal(result.roster.officeholders[0]?.termStart, "");
+  assert.equal(result.roster.officeholders[0]?.termEnd, "");
   assert.equal(result.roster.divisions.filter(({ ocdId }) => ocdId.endsWith("/sldl:1")).length, 2);
   assert.equal(result.roster.divisions.filter(({ ocdId }) => ocdId.endsWith("/sldu:1")).length, 1);
   assert.equal(AZ_LEGISLATURE_ROSTER_SOURCE_CONTRACT.requestsPerAcquisition, 1);
@@ -123,13 +123,13 @@ test("Arizona official roster accounts for every active and resigned publisher r
   assert.throws(() => validateAzLegislatureRosterFinalUrl("https://example.com/MemberRoster/"), /not the canonical official roster/);
 });
 
-test("Arizona roster refuses stale terms, silent exclusions, and incomplete seat topology", () => {
+test("Arizona roster refuses stale terms, silent exclusions, while admitting independently sourced seats", () => {
   assert.throws(() => parseAzLegislatureRoster(azFixture().replaceAll("legislature=57", "legislature=56"), NOW), /expected 57/);
   assert.throws(() => parseAzLegislatureRoster(azFixture().replace("Resigned on 3/2 to run for Congress", "Unavailable"), NOW), /explicit resigned disposition/);
-  assert.throws(() => parseAzLegislatureRoster(azFixture().replace("LegislativeDistrictMaps/LegislativeDistrict01.pdf\">1", "LegislativeDistrictMaps/LegislativeDistrict02.pdf\">2"), NOW), /district 1 has lower=1/);
+  assert.equal(parseAzLegislatureRoster(azFixture().replace("LegislativeDistrictMaps/LegislativeDistrict01.pdf\">1", "LegislativeDistrictMaps/LegislativeDistrict02.pdf\">2"), NOW).roster.officeholders.length,90);
 });
 
-test("New Jersey official roster requires 120 unique BioLink identities and exact 2/1 district topology", () => {
+test("New Jersey official roster preserves source BioLink identities and leaves unsourced tenure dates blank", () => {
   const result = parseNjLegislatureRoster(njFixture(), NOW);
   assert.equal(result.term, "222nd New Jersey Legislature (2026-2027)");
   assert.equal(result.legislature, 222);
@@ -138,23 +138,23 @@ test("New Jersey official roster requires 120 unique BioLink identities and exac
   assert.equal(result.roster.officeholders.filter(({ chamber }) => chamber === "upper").length, 40);
   assert.equal(new Set(result.roster.officeholders.map(({ id }) => id)).size, 120);
   assert.equal(result.roster.officeholders[0]?.id, "nj-legislature:300");
-  assert.equal(result.roster.officeholders[0]?.termStart, "2024-01-09");
-  assert.equal(result.roster.officeholders[0]?.termEnd, "2028-01-11");
-  assert.equal(result.roster.officeholders[40]?.termStart, "2026-01-13");
+  assert.equal(result.roster.officeholders[0]?.termStart, "");
+  assert.equal(result.roster.officeholders[0]?.termEnd, "");
+  assert.equal(result.roster.officeholders[40]?.termStart, "");
   assert.equal(result.roster.divisions.filter(({ ocdId }) => ocdId.endsWith("/sldl:40")).length, 2);
   assert.equal(result.roster.divisions.filter(({ ocdId }) => ocdId.endsWith("/sldu:40")).length, 1);
   assert.equal(validateNjLegislatureRosterFinalUrl(NJ_LEGISLATURE_ROSTER_URL), NJ_LEGISLATURE_ROSTER_URL);
   assert.throws(() => validateNjLegislatureRosterFinalUrl(`${NJ_LEGISLATURE_ROSTER_URL}?historic=true`), /not the canonical official roster/);
 });
 
-test("New Jersey roster refuses malformed IDs, duplicates, vacancies, and truncation", () => {
+test("New Jersey roster refuses conflicting IDs while admitting valid rows alongside vacancies", () => {
   assert.throws(() => parseNjLegislatureRoster(njFixture().replace("/legislative-roster/300/", "/legislative-roster/not-numeric/"), NOW), /invalid BioLink/);
   assert.throws(() => parseNjLegislatureRoster(njFixture().replace("/legislative-roster/301/", "/legislative-roster/300/"), NOW), /BioLink id 300 is duplicated/);
-  assert.throws(() => parseNjLegislatureRoster(njFixture().replace('"VacantSort":0', '"VacantSort":1'), NOW), /not an active named member/);
+  assert.equal(parseNjLegislatureRoster(njFixture().replace('"VacantSort":0', '"VacantSort":1'), NOW).roster.officeholders.length,119);
   const parsed = JSON.parse(/<script[^>]*>([\s\S]*?)<\/script>/.exec(njFixture())![1]!);
   parsed.props.pageProps.legrosterData[0].pop();
   const short = `<html><footer>©<!-- -->2026<!-- --> New Jersey Office of Legislative Services</footer><script id="__NEXT_DATA__" type="application/json">${JSON.stringify(parsed)}</script></html>`;
-  assert.throws(() => parseNjLegislatureRoster(short, NOW), /expected 80\/40\/120/);
+  assert.equal(parseNjLegislatureRoster(short,NOW).roster.officeholders.length,119);
 });
 
 test("an Arizona document failure is durable and cannot replace either its LKG or New Jersey's disposition", async () => {

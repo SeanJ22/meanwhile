@@ -1,47 +1,8 @@
 /**
- * **THE OPERATOR CHAT'S ONE DOOR.** (ADM-C7, the 9.6.26 Operator Control Room
- * brief.)
- *
- * POST only. The security sequence is the four existing admin routes', in the
- * same order and for the same reasons: host → origin → session → validate →
- * answer. Middleware already refused an unauthenticated request; this
- * re-verifies because a chat message can end in a durable audit record carrying
- * the session reference, and the record must be signed by the session that was
- * actually checked here.
- *
- * ## What this route may do, exhaustively
- *
- * 1. Read from the control plane through the console's single seam.
- * 2. Fetch production's build identity (`operator-chat/environments.ts`) —
- *    memoised, and only when the question is about the environments.
- * 3. Put a confirmed action through `POST /api/admin/action`, the one door
- *    every control goes through, and return what came back, unedited.
- *
- * It does not run commands, open a shell, execute SQL, merge, deploy, promote,
- * or write anything of its own. The refusals for the first four are decided in
- * the classifier BEFORE anything is read, so a refused message costs no
- * connection and touches no store.
- *
- * ## Why a confirmed action is handed to the other route rather than to `submit`
- *
- * §3.5: one action path, not two. `submit()` is exported and this route could
- * call it — with its own copy of the gateway's dependency wiring, its own
- * reading of the current revision, its own idempotency fallback and its own
- * store handling. That is a second caller of one lock, which is still two ways
- * in, and they would drift the first time one of them learned something the
- * other did not. So the chat's confirmation is forwarded to the action route's
- * own handler, in process, carrying this request's own already-verified headers
- * and declaring `caller: OPERATOR_CHAT` so the gateway can lower the authority
- * from the owner's session to the chat's. Same guard, same revision, same
- * idempotency, same receipt, same refusal — because it is the same code.
- *
- * ## Why it answers JSON and not a 303
- *
- * The other admin write routes are targets of plain HTML forms, so they redirect
- * and their failures land the owner on a raw JSON page. This one is fetched by a
- * component that renders the body, so a refusal comes back as a SENTENCE the
- * page prints — which is the same thing the login page does with a rejection
- * class and the opposite of what the form routes do today.
+ * May only read the control plane, fetch production's build identity, and forward a confirmed action to
+ * `POST /api/admin/action`. The forward goes through the action route's own handler in process, with this
+ * request's verified headers and `caller: OPERATOR_CHAT`, so there is one action path, not two.
+ * Refusals are decided before anything is read. Answers are JSON because a component renders the body.
  */
 
 // `NextRequest` is a VALUE here, not only a type: the forwarded request handed
@@ -71,7 +32,6 @@ import { POST as submitThroughTheGateway } from "@/app/api/admin/action/route.ts
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-/** A sentence for the owner, with the HTTP status that carries it. */
 function says(sentence: string, status: number): NextResponse {
   return NextResponse.json({ says: sentence }, { status });
 }

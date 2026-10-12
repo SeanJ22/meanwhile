@@ -10,17 +10,6 @@ import {
 } from "@/lib/db/write-guard";
 import { RuntimeAuthorityRefused } from "@/lib/civic-data/runtime-authority";
 
-/*
-  The P0 of 2026-08-17: `pnpm dev` reads .env.local, .env.local carried the
-  production DATABASE_URL, and opening a browser at localhost:3000 wrote an
-  unmarked ORGANIC row into the store the business sells from.
-
-  These tests pin the DECISION TABLE rather than the implementation, because
-  the property that matters is which of the four (runtime x database) pairings
-  may write. Every case below is a pairing, and the one that caused the defect
-  is asserted by name.
-*/
-
 test("the defect that caused this: a dev server pointed at production is refused", () => {
   const context = describeWriteContext({ NODE_ENV: "development" });
   assert.equal(context.allowed, false);
@@ -44,8 +33,6 @@ test("a local database may be written from a local runtime", () => {
 });
 
 test("an undeclared database is assumed to be production, not local", () => {
-  // The whole design. A new checkout, a forgotten variable, a fresh CI box and
-  // a script nobody thought about all land here, and all are refused.
   const context = describeWriteContext({ NODE_ENV: "development" });
   assert.equal(context.dbRole, "production");
   assert.equal(context.allowed, false);
@@ -100,26 +87,13 @@ test("the refusal explains itself in words a person can act on", () => {
   assert.match(context.reason, /WTP_DB_ROLE/);
 });
 
-/*
-  The coverage half. The guard is only worth anything if EVERY write path calls
-  it — a new table added next month with no assert is the defect returning
-  under a different name. So this reads the source and requires the call,
-  rather than trusting that the three known paths stay the only three.
-*/
 test("every database write path asserts the guard", () => {
   const writePaths = [
     "lib/db/search-log.ts",
     "lib/db/reactions.ts",
     "lib/db/intake-limiter.ts",
     "lib/db/feedback.ts",
-    // Prompt D item 6.2: the alarm is a write like any other, and the rule it
-    // exists to protect does not exempt it from the rule beside it.
     "lib/db/write-alarm.ts",
-    // The questionnaire store (2026-08-23, NH104). A candidate's answer is
-    // published civic content rather than reader data, which changes which
-    // STORE it lands in and changes nothing about the guard: a write to
-    // production from a non-production runtime is refused here exactly as it
-    // is everywhere else.
     "lib/db/questionnaire.ts",
   ];
   for (const path of writePaths) {
@@ -133,9 +107,6 @@ test("every database write path asserts the guard", () => {
 });
 
 test("no write path outside the guarded set has appeared", () => {
-  // Catches the real regression: someone adds lib/db/subscriptions.ts with an
-  // .insert() and no guard. Scanning lib/db keeps the list honest instead of
-  // letting the test above pass against a stale set.
   const guarded = new Set([
     "search-log.ts",
     "reactions.ts",
@@ -161,25 +132,10 @@ test("no write path outside the guarded set has appeared", () => {
   );
 });
 
-/* --------------------------------------------- g13: the named sanction --- */
-
-/*
-  2026-08-18: the intake tripwire's daily run was refused. `NODE_ENV` and
-  `WTP_DB_ROLE` are both unset in GitHub Actions, so the guard read a
-  non-production runtime pointed at the sold store — which is precisely what
-  it was. The guard was correct and stayed unchanged; the JOB was taught to
-  declare itself.
-
-  These plant every way the declaration can be wrong. A sanction whose refusal
-  has never been demonstrated is a comment, and this one has to hold against
-  the obvious abuse: copying the declaration into a script that wants to write
-  something else.
-*/
-
 const PURGE = "an intake limiter purge";
 const CONNECTION = "postgres://neondb_owner:pw@ep-dry-river.example/neondb";
 
-/** The workflow's environment, exactly as intake-tripwire.yml sets it. */
+/** A sanctioned purge job's environment. */
 const sanctionedEnv = () => ({
   DATABASE_URL: CONNECTION,
   WTP_PRODUCTION_DATABASE_URL_WRITE: CONNECTION,
@@ -198,9 +154,6 @@ test("g13/PDC: a correctly scoped purge sanction still requires the admitted sta
 });
 
 test("PLANTED g13: the same script WITHOUT the declaration is still refused", () => {
-  // The regression that matters most: if the guard ever starts inferring the
-  // sanction from the operation, or from CI, this passes silently and the P0
-  // is reopened for every writer.
   const env = { DATABASE_URL: CONNECTION, WTP_PRODUCTION_DATABASE_URL_WRITE: CONNECTION };
   const context = describeWriteContext(env, PURGE);
   assert.equal(context.allowed, false, "an undeclared purge was allowed");
@@ -260,10 +213,6 @@ test("PLANTED g13: the declaration does not stand in for a destination", () => {
 });
 
 test("g13: the refusal names the sanctioned path, not only .env.local", () => {
-  // The message a scheduled job's log shows. Before g13 it offered exactly one
-  // remedy — point DATABASE_URL at a local database — which a CI runner whose
-  // whole job is to touch production cannot take. It read as "you are wrong"
-  // to a reader who was not.
   let message = "";
   try {
     assertWriteAllowed(PURGE, { NODE_ENV: undefined });
@@ -278,8 +227,6 @@ test("g13: the refusal names the sanctioned path, not only .env.local", () => {
 });
 
 test("g13: the sanction table is a closed list, and both narrow operations are on it", () => {
-  // The table is the audit surface: a reader asking "what may write to
-  // production without being production" gets one enumerable answer.
   assert.deepEqual(Object.keys(SANCTIONED_WRITES), [
     "intake-limiter-purge",
     "routine-civic-data-promotion",
@@ -314,11 +261,6 @@ test("g13: the standing intake runtime declares exactly what the guard requires"
 });
 
 test("g13 audit: GitHub workflows have no production write handle or runtime sanction", () => {
-  /*
-    Permanent PDC boundary: runtime intake and civic-data writes belong to the
-    standing production runner. GitHub holds only software certification and
-    post-deploy release verification, both read-only against production.
-  */
   const dir = ".github/workflows";
   const workflows = readdirSync(dir).filter((f) => f.endsWith(".yml")).sort();
   // Both workflows may read production for software-release certification.
@@ -341,17 +283,7 @@ test("g13 audit: GitHub workflows have no production write handle or runtime san
     assert.doesNotMatch(source, /WTP_PRODUCTION_DATABASE_URL_WRITE|WTP_SANCTIONED_WRITE/);
   }
 
-  /*
-   * THE READER IS HELD TO READING (2026-08-28).
-   *
-   * `build-check.yml` runs on every pull request, so a credential in it is
-   * reachable by any change. Its early and final database checks must resolve the read-only
-   * variable by name and nothing else: no bare `DATABASE_URL`, no
-   * `WTP_PRODUCTION_DATABASE_URL_WRITE`, and no sanction — `lib/db/write-handle.ts`
-   * refuses the READONLY string for writing, and `scripts/apply-migrations.mts`
-   * refuses to run without a sanctioned write variable, so both halves have to
-   * stay absent for that refusal to mean anything here.
-   */
+  // build-check.yml runs on every pull request, so it names only the read-only variable and no sanction.
   const buildCheck = readFileSync(`${dir}/build-check.yml`, "utf8");
   const databaseNames = [...buildCheck.matchAll(/[A-Z_]*DATABASE_URL[A-Z_]*/g)].map((m) => m[0]);
   assert.ok(databaseNames.length > 0, "the reader found no database variable to check at all");
@@ -367,15 +299,7 @@ test("g13 audit: GitHub workflows have no production write handle or runtime san
     "build-check.yml must carry no write sanction — its database step exists to ask a question",
   );
 
-  /*
-   * THE OBSERVER MAY WRITE ONLY THE RELEASE-OUTCOME PARTITION.
-   *
-   * `post-deploy-integrity.yml` is the first workflow to hold a database
-   * credential AND run unattended on every push to `main`. Serving production
-   * remains read-only. Its second role is deliberately named for post-deploy
-   * control-plane append/readback and must be provisioned at the database layer
-   * with no DDL and no access to any other table.
-   */
+  // The observer may write only the release-outcome partition; serving production stays read-only.
   const observer = readFileSync(`${dir}/post-deploy-integrity.yml`, "utf8");
   const observerNames = [...observer.matchAll(/[A-Z_]*DATABASE_URL[A-Z_]*/g)].map((m) => m[0]);
   assert.ok(observerNames.length > 0, "the observer found no database variable to check at all");

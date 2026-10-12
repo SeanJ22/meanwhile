@@ -1,21 +1,9 @@
-/**
- * **EVERY CONTROL, WHAT IT PROMISES, AND WHETHER ANYTHING CAN CARRY IT OUT.**
- *
- * Each v6 control has one entry: its label, whether it is local or whole-system,
- * the rows its preview shows (what it affects, what changes, cost, undo), and
- * the short words its final "Done" uses. Admin carries no explanation copy.
- *
- * `gateway` maps the kinds the deployed `/api/admin/action` registry performs.
- * Everything else carries a named `dependency` and, outside the sample preview,
- * is shown as "Not connected yet" instead of a Send button.
- *
- * PURE.
- */
+/** `gateway` maps the kinds the deployed `/api/admin/action` registry performs; any other control carries a named `dependency`. */
 import type { ActionKind, DecisionSpec, Dependency, Hunt } from "./model.ts";
 import { usd } from "./model.ts";
+import { addableFamilies } from "../../../../lib/coverage/owed-overlay.ts";
 import { RECIPES } from "../../../../lib/control-plane/data-business/recipes.ts";
 import { audienceWords } from "../../../../lib/control-plane/data-business/types.ts";
-import { addableFamilies } from "../../../../lib/coverage/owed-overlay.ts";
 
 /** A data switch's target is `<recipe>@<audience>`: the number's label and who it is for, in words. */
 function switchWords(target: string): { readonly label: string; readonly who: string } {
@@ -24,7 +12,6 @@ function switchWords(target: string): { readonly label: string; readonly who: st
   return { label: RECIPES.find((r) => r.id === id)?.label ?? id, who: audienceWords(at < 0 ? "" : target.slice(at + 1)) };
 }
 
-/** A ZIP place key, the only kind of place a single hunt starts from (the rest start from the many-hunts panel). */
 export function isZipPlace(target: string): boolean {
   return /^geo:[a-z]{2}\.zcta\.\d{5}$/.test(target);
 }
@@ -45,12 +32,9 @@ export interface PreviewContext {
   readonly decision?: DecisionSpec;
   readonly fix?: { readonly id: string; readonly title: string; readonly owner: string; readonly resourcesNow: string; readonly helps: string; readonly needsCode: boolean };
   readonly url?: string;
-  /** The words a send-agents instruction carries. */
   readonly words?: string;
-  /** The live count, when the server supplies one. */
   readonly waitingCount?: number | null;
   readonly outreachAuthorized: boolean;
-  /** The control's own values (a setting's current value, an undo's earlier value). */
   readonly payload?: Readonly<Record<string, string>>;
 }
 
@@ -58,10 +42,8 @@ export interface PreviewOption {
   readonly id: string;
   readonly label: string;
   readonly note: string;
-  /** Why this option cannot be chosen, when it cannot. */
   readonly blocked?: string;
   readonly ownWords?: boolean;
-  readonly wordsLabel?: string;
 }
 
 export interface Preview {
@@ -70,17 +52,12 @@ export interface Preview {
   readonly rows: readonly (readonly [string, string])[];
   readonly options?: readonly PreviewOption[];
   readonly items?: readonly PreviewItem[];
-  readonly fields?: readonly {readonly key:string;readonly label:string;readonly kind:"number"|"boolean"|"text";readonly initial:string}[];
-  readonly schedule?: boolean;
   /** A number the owner types (a hunt's lifetime limit). */
   readonly amount?: { readonly label: string; readonly initial: string; readonly text?: boolean };
-  /** Offer the optional note box. */
   readonly note?: boolean;
-  /** A problem with what was entered, or null. */
   readonly invalid?: (input: { readonly option: string | null; readonly words: string; readonly amount: string; readonly selected: number }) => string | null;
 }
 
-/** A deployed registry action that already carries this control out (inputs: contract.ts `actionInput`). */
 export interface GatewayMapping {
   readonly type: string;
   /** The registry action quotes the rendered state; the executor sends the latest pulse revision. */
@@ -90,98 +67,25 @@ export interface GatewayMapping {
 export interface ActionDef {
   readonly kind: ActionKind;
   readonly label: string;
-  /** Which permission beyond "can change things" this needs. */
   readonly needs: "owner" | "spend";
-  /** The short words a final Done shows. */
   readonly doneWords: string;
   readonly preview: (ctx: PreviewContext) => Preview;
   readonly gateway: GatewayMapping | null;
   readonly dependency: Dependency | null;
 }
 
-/* ---------------------------------------------------------- dependencies */
-
 export const DEP = {
-  typedPlans: {
-    id: "DEP-ACTION-PLANS",
-    owner: "Codex (gateway)",
-    need: "A typed action in /api/admin/action.",
-  },
-  resources: {
-    id: "DEP-RESOURCE-EXECUTOR",
-    owner: "Codex (scheduler and engineering intake)",
-    need: "A resource request the scheduler or engineering intake accepts.",
-  },
-  engineering: {
-    id: "DEP-ENGINEERING-TASKS",
-    owner: "Codex (engineering-task adapter)",
-    need: "A connection to the engineering task tracker.",
-  },
-  readerCheck: {
-    id: "DEP-READER-CHECK",
-    owner: "Codex (MW-011 reader proof)",
-    need: "An action that opens the public card and compares it with what was published.",
-  },
-  capture: {
-    id: "DEP-SAVED-COPY",
-    owner: "Codex (exact saved-copy route, default off)",
-    need: "The saved-copy request route.",
-  },
-
-  receiptLookup: {
-    id: "DEP-RECEIPT-LOOKUP",
-    owner: "Codex (gateway)",
-    need: "A read-only receipt lookup by action key.",
-  },
+  receiptLookup: { id: "DEP-RECEIPT-LOOKUP", owner: "Codex (gateway)", need: "A read-only receipt lookup by action key." },
 } as const satisfies Record<string, Dependency>;
-
-/* ----------------------------------------------------------------- words */
 
 
 function localOrGlobal(ctx: PreviewContext): "local" | "global" {
   return ctx.scopeIsCountry ? "global" : "local";
 }
 
-/* --------------------------------------------------------------- catalog */
 
-// Returned screens retain their action references; these legacy controls have no executor.
+
 const defs: ActionDef[] = [
-{kind:"contain",label:"Hide the wrong records from this card",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Hide the wrong records from this card",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.typedPlans},
-{kind:"uncontain",label:"Undo: show those records on the card again",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Undo: show those records on the card again",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.typedPlans},
-{kind:"recheck",label:"Check the public page now",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Check the public page now",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.readerCheck},
-{kind:"workfirst",label:"Put this work first",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Put this work first",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.typedPlans},
-{kind:"fixfirst",label:"Move up the list",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Move up the list",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.typedPlans},
-{kind:"stopmethod",label:"Stop the failing method",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Stop the failing method",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.typedPlans},
-{kind:"scope-stop",label:"Stop failing methods here",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Stop failing methods here",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.typedPlans},
-{kind:"stoprepeats",label:"Stop repeats that can’t succeed",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Stop repeats that can’t succeed",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.typedPlans},
-{kind:"scope-first",label:"Put waiting work here first",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Put waiting work here first",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.typedPlans},
-{kind:"scope-recheck",label:"Recheck every public page here",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Recheck every public page here",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.readerCheck},
-{kind:"doc-request",label:"Open the saved copy",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Open the saved copy",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.capture},
-{kind:"use-url",label:"Use this official address",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Use this official address",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.typedPlans},
-{kind:"reprocess",label:"Reprocess the evidence we already saved",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Reprocess the evidence we already saved",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.typedPlans},
-{kind:"retry-method",label:"Try another permitted method",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Try another permitted method",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.typedPlans},
-{kind:"resume-publish",label:"Resume checks and publishing, then recheck the reader card",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Resume checks and publishing, then recheck the reader card",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.typedPlans},
-{kind:"eng-task",label:"Create an engineering task",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Create an engineering task",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.engineering},
-{kind:"job-stop",label:"Stop this job",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Stop this job",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.typedPlans},
-{kind:"focus",label:"Focus more resources here",needs:"owner",doneWords:"Not available yet.",preview:()=>({title:"Focus more resources here",level:"local",rows:[["Status","Not available yet."]]}),gateway:null,dependency:DEP.resources},
-  {
-    kind: "decide",
-    label: "Decide",
-    needs: "owner",
-    doneWords: "Decision saved.",
-    preview: (ctx) => ({
-      title: ctx.payload?.name ?? ctx.decision?.question ?? "Recommendation",
-      level: ctx.payload?.global === "true" ? "global" : "local",
-      rows: [["What is happening",ctx.payload?.happening ?? "—"],["Recommendation",ctx.payload?.recommends ?? "—"],["Cost",ctx.payload?.cost ?? "—"],["What it gets",ctx.payload?.gets ?? "—"]],
-      options: [{id:"approve",label:"Approve",note:"Send the recommended order"},{id:"decline",label:"Decline",note:"Keep a record of why",ownWords:true,wordsLabel:"Why are you declining?"},
-        ...(ctx.payload?.fields && ctx.payload.fields !== "[]" ? [{id:"change",label:"Change",note:"Edit the order before sending it"}] : []),
-        ...(ctx.payload?.schedulable === "true" ? [{id:"schedule",label:"Schedule",note:"Send this order at an Eastern time"}] : [])],
-      fields: JSON.parse(ctx.payload?.fields ?? "[]"), schedule:true,
-      invalid: ({option,words}) => option === "decline" && !words.trim() ? "Say why you are declining." : null,
-    }),
-    gateway: { type: "decision.record", requiresStateVersion:true },
-    dependency: null,
-  },
   {
     kind: "hunt-start",
     label: "Start a hunt here",
@@ -219,6 +123,22 @@ const defs: ActionDef[] = [
       ],
     }),
     gateway: { type: "expansion.scope.setMany" },
+    dependency: null,
+  },
+  {
+    kind: "leads-send",
+    label: "Send research leads",
+    needs: "owner",
+    doneWords: "Leads received.",
+    preview: () => ({
+      title: "Send research leads",
+      level: "global",
+      rows: [
+        ["Creates", "One order with a row for each link"],
+        ["Spending", "None to test the links"],
+      ],
+    }),
+    gateway: { type: "leads.upload" },
     dependency: null,
   },
   {
@@ -665,12 +585,10 @@ export function actionDef(kind: ActionKind): ActionDef {
   return d;
 }
 
-/** The kinds a real executor can carry out today. */
 export function connectedKinds(): readonly ActionKind[] {
   return defs.filter((d) => d.gateway !== null).map((d) => d.kind);
 }
 
-/** Read legacy receipts through the same gateway map used to send controls. */
 export function gatewayActionKind(type: string, evidence: { subject?: string; says?: string } = {}): ActionKind | null {
   if (type === "decision.record" && evidence.subject !== "fix-queue") return null;
   const candidates = defs.filter(definition => definition.gateway?.type === type);

@@ -43,17 +43,13 @@ function storeOf(n: number): MethodKnowledge {
   return k;
 }
 
-/* ------------------------------------------------------------------ THE COMPOUNDING TEST */
-
 test("THE COMPOUNDING TEST — a 44th state inherits 76 methods and adds a 77th, with no cap to change", () => {
-  // Start from a store the size the brief describes. Nothing in the library
-  // knows or cares what 76 is.
+  // Start from a store of 76 routes; nothing in the library knows what 76 is.
   let k = storeOf(76);
   assert.equal(routeCount(k), 76);
   assert.equal(k.version, 76);
 
-  // The new jurisdiction INHERITS everything applicable. Inheritance is the
-  // starting advantage of a new state, never its constraint (RULING 178).
+  // The new jurisdiction inherits everything applicable.
   const stateForty4 = { state: "la", governmentType: "parish" };
   const inherited = applicableRoutesUnprojected(k, stateForty4);
   assert.equal(inherited.length, 76, "every applicable route is offered to a new jurisdiction");
@@ -62,7 +58,7 @@ test("THE COMPOUNDING TEST — a 44th state inherits 76 methods and adds a 77th,
     "UNKNOWN portability inherits but is MARKED — a report may not claim it was known to fit",
   );
 
-  // ...and it remains able to INVENT. Neither disables the other.
+  // ...and it remains able to invent. Neither disables the other.
   const learned = learnRoute(
     k,
     route("la-police-jury-minutes", {
@@ -86,14 +82,9 @@ test("THE COMPOUNDING TEST — a 44th state inherits 76 methods and adds a 77th,
 });
 
 test("no route-count cap exists anywhere in the method library", () => {
-  // A cap would freeze the manifest, which RULING 178 and the non-final-
-  // manifest test both forbid. This looks for one rather than trusting that
-  // nobody added it.
+  // A cap would freeze the manifest.
   for (const f of ["lib/method/knowledge.ts", "lib/method/portability.ts"]) {
-    // Comments are STRIPPED before the sweep. `knowledge.ts` explains at length
-    // that no cap exists and names the constant it is refusing to define, so a
-    // raw text search finds the explanation and calls it the defect. A guard
-    // that fires on its own documentation is a guard somebody weakens.
+    // Comments are stripped first, because `knowledge.ts` names the cap it refuses to define.
     const src = readFileSync(join(ROOT, f), "utf8")
       .replace(/\/\*[\s\S]*?\*\//g, "")
       .replace(/\/\/[^\n]*/g, "");
@@ -102,8 +93,6 @@ test("no route-count cap exists anywhere in the method library", () => {
   }
 });
 
-/* ------------------------------------------------------- THE NON-FINAL-MANIFEST TEST */
-
 test("THE NON-FINAL-MANIFEST TEST — nothing represents the route list as exhaustive", () => {
   const src = readFileSync(join(ROOT, "lib/method/knowledge.ts"), "utf8");
   assert.match(src, /never a finished list|what the project knows now|no maximum/i);
@@ -111,8 +100,6 @@ test("THE NON-FINAL-MANIFEST TEST — nothing represents the route list as exhau
   const k = storeOf(3) as unknown as Record<string, unknown>;
   assert.ok(!("complete" in k) && !("final" in k) && !("exhaustive" in k));
 });
-
-/* ------------------------------------------------- THE INHERIT-AND-INVENT TEST */
 
 test("THE INHERIT-AND-INVENT TEST — neither inheritance nor invention disables the other", () => {
   let k = storeOf(5);
@@ -125,11 +112,9 @@ test("THE INHERIT-AND-INVENT TEST — neither inheritance nor invention disables
   }), "2026-08-26").knowledge;
 
   assert.equal(applicableRoutesUnprojected(k, j).length, before + 1, "the invented route joins the inherited set");
-  // ...and it does NOT leak to a state it was not proven in.
+  // ...and it does not leak to a state it was not proven in.
   assert.equal(applicableRoutesUnprojected(k, { state: "nh" }).length, before);
 });
-
-/* ------------------------------------------------------ THE VERSIONED-CONVERGENCE TEST */
 
 test("THE VERSIONED-CONVERGENCE TEST — a new applicable route reopens an old absence", () => {
   let k = storeOf(3);
@@ -154,7 +139,7 @@ test("THE VERSIONED-CONVERGENCE TEST — a new applicable route reopens an old a
   assert.equal(reopenings[0].route.id, "nh-gencourt-bulk");
   assert.match(reopenings[0].why, /entered project knowledge at v4, after this ABSENCE was earned at v3/);
 
-  // The old measurement is PRESERVED — reopening adds a fact, never erases one.
+  // The old measurement is preserved: reopening adds a fact, never erases one.
   const applied = applyReopenings(conclusions, reopenings, "2026-08-26");
   assert.equal(applied[0].earnedAtVersion, 3);
   assert.equal(applied[0].earnedOn, "2026-08-20");
@@ -165,9 +150,7 @@ test("THE VERSIONED-CONVERGENCE TEST — a new applicable route reopens an old a
 });
 
 test("a route learned BEFORE a conclusion does not reopen it", () => {
-  // Otherwise every conclusion is permanently unstable: an earlier route was
-  // available when the conclusion was made, so it was either walked or
-  // deliberately not.
+  // An earlier route was available when the conclusion was made, so it was either walked or deliberately not.
   const k = storeOf(5);
   const conclusions: PriorConclusion[] = [
     {
@@ -189,23 +172,7 @@ test("a conclusion with no method version is refused — it could never be reope
 });
 
 test("PLANTED: an OUTCOME value off the closed set FAILS the validator", () => {
-  /*
-   * **THE SAME HOLE, ONE FIELD OVER, FOUND THE SAME WAY.** (2026-08-28.)
-   *
-   * The `effort` repair closed a closed set nothing checked. `outcome.outcome`
-   * had the identical hole: this session wrote three routes carrying
-   * `WORKED` — not a member of the set — every one landed in the canonical
-   * store, and `method:check` reported PASSED. `tsc` caught it afterwards for
-   * an unrelated reason, which is exactly the sequence the `effort` note
-   * already records. Fixing one instance of a class and leaving the class open
-   * is how the same defect gets found twice.
-   *
-   * It is not cosmetic. `YIELDED` is what `provenStates` filters on and what
-   * `overGeneralized` reasons from, so an unrecognised outcome silently removes
-   * a route's evidence from the guard that stops a route claiming a portability
-   * it never earned — and the route then passes that guard by having no
-   * evidence rather than by having good evidence.
-   */
+  // An unrecognised `outcome.outcome` silently removes a route's evidence from the portability guard.
   const store = learnRoute(
     storeOf(1),
     route("bad-outcome", {
@@ -245,27 +212,7 @@ test("PLANTED: an OUTCOME value off the closed set FAILS the validator", () => {
 });
 
 test("PLANTED: an effort value off the closed set FAILS the validator", () => {
-  /*
-   * **THE GUARD THAT WAS GREEN BECAUSE IT NEVER LOOKED.**
-   * (Repaired in PR #212; given a test 2026-08-28.)
-   *
-   * `effort` has had a closed set of values on all three of its fields since it
-   * was declared, and for a while nothing checked them. A session wrote four
-   * routes carrying `PER_SOURCE`, `AUTOMATED` and `KNOWN_METHOD` — none of
-   * which is a member of any of the three sets — and every one of them landed
-   * in the canonical store while `method:check` reported PASSED. `tsc` caught
-   * it, minutes later and for an unrelated reason.
-   *
-   * The repair shipped without a test, which is the same shape one rung up: a
-   * validator nobody proves is a validator that can quietly stop validating.
-   * This asserts the failure DIRECTLY, on a value that is invalid in each of
-   * the three fields, one field at a time — so a set that loses a member is
-   * caught, and so is a check that stops running.
-   *
-   * The forecast is what depends on it: it buckets on `repeats`, and an
-   * unrecognised value drops a route out of whichever bucket a reader is
-   * counting, reporting the project as cheaper than it is.
-   */
+  // Each `effort` field is a closed set; an invalid value in each field, one at a time, must be refused.
   const base = storeOf(1);
 
   for (const field of ["repeats", "execution", "discovery"] as const) {
@@ -275,8 +222,7 @@ test("PLANTED: an effort value off the closed set FAILS the validator", () => {
       discovery: "NEW_METHOD",
       note: "test",
     };
-    /* One field at a time, so a passing run cannot be one set doing all the
-       work while another has quietly stopped being checked. */
+    /* One field at a time, so a passing run cannot be one set doing all the work. */
     const broken = { ...valid, [field]: "NOT_A_REAL_VALUE" } as MethodRoute["effort"];
     const withBad = learnRoute(
       base,
@@ -290,8 +236,7 @@ test("PLANTED: an effort value off the closed set FAILS the validator", () => {
     assert.match(hit!.detail, new RegExp(`effort\\.${field}`));
   }
 
-  /* CONTROL: the same route with every value ON the set passes, so the test
-     above is measuring the enum rather than the presence of `effort` at all. */
+  /* CONTROL: the same route with every value on the set passes. */
   const good = learnRoute(
     base,
     route("good-effort", {
@@ -318,11 +263,9 @@ test("knowledge that has outgrown a still-closed conclusion is a validation fail
   k = learnRoute(k, route("new-one", { fields: ["roster"] }), "2026-08-26").knowledge;
   assert.ok(
     validateKnowledge(k, conclusions).some((i) => i.rule === "unreopened-conclusion"),
-    "silence here is the failure RULING 178 names",
+    "a conclusion knowledge has outgrown must not pass silently",
   );
 });
-
-/* ------------------------------------------------------------------- portability */
 
 test("a route is never generalized farther than its evidence supports", () => {
   const nationwideOnOneState = { ...unknownApplicability(), portability: "NATIONWIDE" as const };
@@ -340,8 +283,7 @@ test("UNKNOWN portability is a VALID state and still inherits", () => {
 });
 
 test("a route proven in one shape does not silently travel to another", () => {
-  // RULING 60: the route that reaches a Newbury board will not reach a borough
-  // in Alaska, an unincorporated county in Arizona, or a parish in Louisiana.
+  // A route proven for one government type does not reach another.
   const newEngland = {
     ...unknownApplicability("New England town meeting"),
     portability: "GOVERNMENT_TYPE" as const,
@@ -372,15 +314,13 @@ test("a failed inherited route grows a sub-branch and is never deleted", () => {
   assert.ok(validateKnowledge(undated).some((i) => i.rule === "subbranch-undated"));
 });
 
-test("a duplicate route is reported as the defect RULING 63 names", () => {
+test("a duplicate route is reported as a defect", () => {
   let k = emptyKnowledge();
   k = learnRoute(k, route("dupe"), "2026-08-26").knowledge;
   const again = learnRoute(k, route("dupe"), "2026-08-26");
   assert.ok(again.duplicate, "building a branch that already exists is a reported defect");
   assert.equal(routeCount(again.knowledge), 1, "and it does not silently double the store");
 });
-
-/* ------------------------------------------------------------ the committed store */
 
 test("the committed method store validates and preserves the legacy manifest", () => {
   const k = JSON.parse(readFileSync(METHOD_FIXTURE_PATH, "utf8")) as MethodKnowledge;

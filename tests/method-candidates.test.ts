@@ -1,26 +1,9 @@
 /**
- * **VALIDATION BEFORE ADMISSION, AND A REFUSAL THAT SURVIVES THE TERMINAL.**
- * (2026-08-29.)
- *
- * A route carrying a value off a closed set must never be admitted: the
- * prospective knowledge is validated first, and a refused batch is recorded as
- * REJECTED candidates with the exact issues. These controls run on the real
- * route data (the frozen store fixture) in memory, and are written so they can
- * fail:
- *
- *   a. a BAD candidate changes nothing and is refused by name;
- *   b. a VALID candidate is admitted and the method version increments;
- *   c. the refusal is DURABLE: a REJECTED candidate keeps its code and the
- *      exact issues through a serialization round trip;
- *   d. the lifecycle is a lifecycle — a terminal candidate cannot be rewritten;
- *   e. candidate ids are derived, so a replayed submission collides instead of
- *      duplicating;
- *   f. the counts by lifecycle add up to the corpus.
+ * A route carrying a value off a closed set is never admitted: the prospective knowledge is validated first, and a
+ * refused batch is recorded as REJECTED candidates with the exact issues, durably and immutably.
  */
 
 import assert from "node:assert/strict";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 import {
@@ -35,7 +18,6 @@ import {
   methodCandidateId,
   methodStoreIssues,
   proposeCandidate,
-  readCandidateStore,
   rejectedCandidates,
   type CandidateStore,
 } from "../lib/method/candidate.ts";
@@ -43,7 +25,6 @@ import { admitLearnedRoutes, UNATTRIBUTED_SCRIPT_ATTEMPT, type LearnedRoute } fr
 import { emptyKnowledge, type MethodKnowledge } from "../lib/method/knowledge.ts";
 import { methodFixture } from "./method-store-fixture.ts";
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const ON = "2026-08-29";
 
 /** A route that VALIDATES: post-v55, so it must declare a claim class, and does. */
@@ -67,11 +48,7 @@ function goodRoute(id: string): LearnedRoute {
   };
 }
 
-/**
- * A route that DOES NOT validate, and the defect is the exact one the store's
- * own history records reaching canonical knowledge twice: a value off a closed
- * set that `tsc` caught afterwards for an unrelated reason.
- */
+/** A route that does not validate: a value off a closed set. */
 function badRoute(id: string): LearnedRoute {
   return {
     ...goodRoute(id),
@@ -85,8 +62,6 @@ function badRoute(id: string): LearnedRoute {
   };
 }
 
-/* ------------------------------------------------------------------------ (a) */
-
 test("PLANTED: a BAD candidate changes nothing and is refused by name", () => {
   const k = methodFixture();
   const before = JSON.stringify(k);
@@ -99,11 +74,11 @@ test("PLANTED: a BAD candidate changes nothing and is refused by name", () => {
     out.introduced.some((i) => i.rule === "outcome-value-off-the-closed-set"),
     `the exact rule must be named; got ${JSON.stringify(out.introduced)}`,
   );
-  // THE ASSERTION THAT MATTERS. A refusal that still changed the knowledge would be worse than no refusal at all.
+  // A refusal that still changed the knowledge would be worse than no refusal at all.
   assert.equal(JSON.stringify(out.knowledge), before, "the knowledge changed during a refusal");
   assert.ok(!out.knowledge.routes.some((r) => r.id === "gate-control-bad"));
 
-  /* (c) AND THE REFUSAL IS DURABLE — through a serialization round trip, not from memory. */
+  /* The refusal is durable: through a serialization round trip, not from memory. */
   const candidates = JSON.parse(JSON.stringify(out.candidates)) as CandidateStore;
   const rejected = rejectedCandidates(candidates);
   assert.equal(rejected.length, 1, "a rejection must be recorded; silence is not a rejection record");
@@ -122,8 +97,6 @@ test("PLANTED: a BAD candidate changes nothing and is refused by name", () => {
   // A first batch into an empty store is validated too: being first is not a reason to skip the gate.
   assert.equal(admitLearnedRoutes(emptyKnowledge(), emptyCandidateStore(), [badRoute("fresh-bad")], { stamp: ON }).admitted, false);
 });
-
-/* ------------------------------------------------------------------------ (b) */
 
 test("a VALID candidate IS admitted, and the method version increments", () => {
   const k = methodFixture();
@@ -154,8 +127,6 @@ test("re-offering an admitted route is ALREADY_KNOWN, not a second learning", ()
   assert.equal(second.candidates.candidates.length, 2, "two Attempts offered it; both are recorded");
   assert.equal(second.candidates.candidates[1].admission?.effect, "ALREADY_KNOWN");
 });
-
-/* ------------------------------------------------------------------- the gate itself */
 
 test("a store that would introduce an issue is refused, and two independent rules both fire", () => {
   const k: MethodKnowledge = methodFixture();
@@ -190,8 +161,6 @@ test("a store that would introduce an issue is refused, and two independent rule
   assert.ok(introduced.some((i) => i.rule === "over-generalized"));
   assert.ok(introduced.some((i) => i.rule === "claim-class-required-for-new-route"));
 });
-
-/* ------------------------------------------------------------------ (d) (e) (f) */
 
 test("a terminal candidate is history and is never rewritten", () => {
   const p = proposeCandidate(emptyCandidateStore(), {
@@ -265,9 +234,7 @@ test("candidate ids are DERIVED, so a replayed submission collides instead of du
   assert.equal(replay.already, true);
   assert.equal(replay.store.candidates.length, 1, "a replay created a second record of one offer");
 
-  // A DIFFERENT Attempt offering the same route is a different record: two
-  // workers proposing the same thing is a real event and is not deduplicated
-  // into one worker's submission.
+  // A different Attempt offering the same route is a different record.
   const other = proposeCandidate(replay.store, {
     attemptId: "at-other",
     proposal,
@@ -278,7 +245,9 @@ test("candidate ids are DERIVED, so a replayed submission collides instead of du
 });
 
 test("the lifecycle counts name every state, including the zeroes, and add up", () => {
-  const store = readCandidateStore(join(ROOT, "data", "method", "candidates.json"));
+  const refused = admitLearnedRoutes(methodFixture(), emptyCandidateStore(), [badRoute("count-bad")], { stamp: ON, attemptId: "at-count-bad" });
+  const store = admitLearnedRoutes(refused.knowledge, refused.candidates, [goodRoute("count-good")], { stamp: ON, attemptId: "at-count-good" }).candidates;
+  assert.equal(store.candidates.length, 2);
   const counts = candidateCounts(store);
   assert.deepEqual(Object.keys(counts).sort(), [...CANDIDATE_LIFECYCLE_STATES].sort());
   assert.equal(

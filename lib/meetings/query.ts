@@ -1,29 +1,18 @@
+import { readReaderMeetingSettings } from "./reader-settings.ts";
 import { haversineKm } from "../geo/distance.ts";
 import type { CoverageSummary } from "../registry/coverage.ts";
 import type { Meeting } from "../sources/types.ts";
 import type { MeetingListingIdentityReadback } from "./listing-identity.ts";
 
 import {
-  CONCLUDED_LOOKBACK_DAYS,
   RADIUS_LADDER_KM,
-  UPCOMING_HORIZON_DAYS,
   type CoverageTier,
 } from "./constants.ts";
 import { getMeetingSource, type ResolvedMeetingSource } from "./registry.ts";
 
-/**
- * The empty-state cascade.
- *
- * An empty map is a dead end: it reads as "your government does nothing" when
- * the truth is "nothing within fifteen miles this fortnight." So the search
- * steps outward, and when it runs out of future it reaches into the recent
- * past — always saying which rung it landed on, because a widened radius the
- * user wasn't told about is just a wrong answer.
- */
+/** The empty-state cascade: widen the radius, then reach into the recent past, always saying which rung it landed on. */
 
-// Moved to ./constants.ts so client code can import the values without
-// pulling this module's server-only graph; re-exported here so server-side
-// callers keep their import path.
+// Re-exported from ./constants.ts so client code can import the values without this module's server-only graph.
 export {
   CONCLUDED_LOOKBACK_DAYS,
   RADIUS_LADDER_KM,
@@ -49,34 +38,11 @@ export interface MeetingSearchResult {
   /** Radius originally asked for — differs from `radiusKm` when widened. */
   requestedRadiusKm: number;
   center: { lat: number; lng: number };
-  /**
-   * Who governs this point and how much of their calendar we hold.
-   *
-   * Attached by the route rather than by `searchMeetings`, which stays pure and
-   * geometry-free. `null` when the registry could not be read — a coverage
-   * statement we cannot stand behind is worse than none, so the UI falls back to
-   * saying only what the cascade knows.
-   */
+  /** Who governs this point and how much of their calendar we hold; null when the registry could not be read. */
   coverage: CoverageSummary | null;
-  /**
-   * The OCD-IDs of every division the reader's point resolved into (M81).
-   *
-   * Attached by the route, like `coverage`, so `searchMeetings` stays pure and
-   * geometry-free. **NULL means the resolution FAILED** and is deliberately
-   * not the same as an empty array: an empty array treated as an answer would
-   * badge every meeting on screen "Nearby, different jurisdiction", which is a
-   * specific false claim produced by our own lookup failing.
-   */
+  /** Divisions the reader's point resolved into. Null means the resolution failed, which is not an empty array. */
   governingOcdIds?: string[] | null;
-  /**
-   * The divisions covering only PART of this zip (`JUR-2`, 2026-08-23).
-   *
-   * Attached by the route from the same lattice measurement the ballot page's
-   * RULING 71 pill reads, so the meeting badge and the ballot pill cannot
-   * disagree about which town is unsettled. **NULL means unmeasured** — the
-   * zip is outside the committed geometry — and is not the same as an empty
-   * array, which means measured and nothing is partial.
-   */
+  /** Divisions covering only part of this ZIP. Null means unmeasured; an empty array means none is partial. */
   partialOcdIds?: string[] | null;
 }
 
@@ -92,16 +58,7 @@ function titleWords(slug: string): string {
     .join(" ");
 }
 
-/**
- * A reader-facing jurisdiction name for a meeting.
- *
- * Some calendars are wired under the internal id of the government they belong
- * to ("az:county:county-of-cochise", or an OCD division id) rather than its
- * name, and every reader surface prints `meeting.jurisdiction` as it finds it.
- * An id-shaped value becomes the name it spells — "Cochise County, AZ" — and
- * anything already a name comes back untouched, so the fix holds for every
- * calendar wired this way and not for one county.
- */
+/** A reader-facing jurisdiction name: an id-shaped value becomes the name it spells; a name comes back untouched. */
 export function readerJurisdictionLabel(jurisdiction: string): string {
   const internal = /^([a-z]{2}):([a-z_]+):([a-z0-9][a-z0-9_-]*)$/.exec(jurisdiction);
   const ocd = /^ocd-division\/country:us(?:\/state:([a-z]{2}))?(?:.*\/)?([a-z_]+):([a-z0-9_~.'-]+)$/.exec(
@@ -136,53 +93,16 @@ function byStartDescending(a: Meeting, b: Meeting) {
 }
 
 /**
- * The key that says "these sittings belong to the same government".
- *
- * `ocdId` where there is one; otherwise the meeting id's source-and-tenant
- * prefix, because every adapter namespaces `<source>:<tenant>:<id>` and the
- * tenant IS the government — `diligent:pcc` is Pima Community College, whose
- * division does not exist.
- *
- * It is deliberately NOT `bodyName`. The first version keyed on it and Pima
- * Community College's three online committee sittings stayed invisible while
- * five of its in-person sittings were on screen: Diligent publishes a
- * per-sitting name ("Regular Governing Board", "Finance and Audit Committee
- * Meeting"), so a name key says every committee is a different government.
- * Caught by asking the live route what it returned rather than by reading the
- * code back.
+ * The key for "these sittings belong to the same government": `ocdId`, else the id's source-and-tenant prefix. Never
+ * `bodyName`, which some publishers set per sitting.
  */
 function bodyKey(m: Meeting): string {
   return m.ocdId ?? m.id.split(":").slice(0, 2).join(":");
 }
 
 /**
- * Which meetings are in view — including the ones held nowhere (D18).
- *
- * A meeting with no physical place has no distance to a map centre, so a
- * radius filter silently excludes every one of them. That is the drop this
- * row exists to end, one layer further along: the adapter now keeps the
- * meeting, and this is where it would have been lost again.
- *
- * An online meeting is in view when EITHER holds:
- *
- * - the division it belongs to contains the centre. The exact answer, and the
- *   only one that reaches a body which meets ONLY online, since nothing about
- *   such a body would otherwise be in radius. `divisionsAtPoint` is the
- *   point-in-polygon set the route already resolves for the coverage summary
- *   — the same committed geometry, never a second source.
- * - one of the same body's PHYSICAL sittings, upcoming or recently concluded,
- *   is in radius — whichever of the two lists that sitting is in. This is
- *   what covers a division-less government, where the first clause has no
- *   identifier to test: Pima Community College's board is in view exactly
- *   when one of its in-person sittings is. `bodiesInView` is that set, built
- *   by the caller ONCE per radius from both lists (`bodiesSittingWithin`) and
- *   handed to the call for each list. Built from the list being filtered, as
- *   it first was, it lost the college's two concluded sittings on 2026-09-24:
- *   both were online, its building appeared only among its upcoming
- *   sittings, and the concluded list, asked about itself, found no building.
- *
- * Neither clause invents a coordinate, and an online meeting that satisfies
- * neither is simply not in view — the same answer a distant building gets.
+ * Which meetings are in view, including online ones with no distance to a centre. An online meeting is in view when
+ * its division contains the centre, or when one of its body's physical sittings (upcoming or concluded) is in radius.
  */
 function within(
   meetings: Meeting[],
@@ -207,12 +127,7 @@ function within(
   return [...inRadius, ...online];
 }
 
-/**
- * The bodies (by `bodyKey`) with a PHYSICAL sitting among `sittings` within
- * `radiusKm` of the centre — the second clause of `within`, answered once for
- * every list served at that radius. Only a sitting's own published place
- * counts; a sitting with no place contributes nothing.
- */
+/** Bodies (by `bodyKey`) with a physical sitting within `radiusKm`, answered once for every list at that radius. */
 function bodiesSittingWithin(
   sittings: readonly Meeting[],
   lat: number,
@@ -241,23 +156,11 @@ export async function searchMeetings(
   lng: number,
   startRadiusKm: number = RADIUS_LADDER_KM[0],
   now: Date = new Date(),
-  /**
-   * Divisions whose boundary contains the centre (D18).
-   *
-   * Supplied by the caller because this module stays geometry-free — the
-   * route already resolves this set for the coverage summary, and resolving
-   * it twice in two places is how two answers to one question appear. Absent
-   * falls back to the body-in-view clause alone, which is what every
-   * non-route caller wants.
-   */
+  /** Divisions whose boundary contains the centre, supplied by the caller so this module stays geometry-free. */
   divisionsAtPoint: ReadonlySet<string> = new Set(),
-  /**
-   * The resolved meeting source. Injected by the API route so the request reads
-   * and composes the canonical projection ONCE and feeds the same snapshot to
-   * both the search and the freshness metadata (D.1). Every other caller omits
-   * it and gets the active source for the environment.
-   */
+  /** The resolved meeting source, injected so one request composes the projection once. */
   injectedSource?: ResolvedMeetingSource,
+  shownSettings?: Pick<import("./settings.ts").MeetingSettings, "shownBackDays" | "shownAheadDays">,
 ): Promise<MeetingSearchResult> {
   const source = injectedSource ?? getMeetingSource();
   const center = { lat, lng };
@@ -270,8 +173,9 @@ export async function searchMeetings(
 
   // One fetch at the widest radius; the rungs are filters over it. Saves the
   // real adapter from three round trips to the same upstream.
-  const horizonMs = UPCOMING_HORIZON_DAYS * 86_400_000;
-  const lookbackMs = CONCLUDED_LOOKBACK_DAYS * 86_400_000;
+  const shown = shownSettings ?? await readReaderMeetingSettings();
+  const horizonMs = shown.shownAheadDays * 86_400_000;
+  const lookbackMs = shown.shownBackDays * 86_400_000;
 
   const all = (
     await source.load(
@@ -296,23 +200,16 @@ export async function searchMeetings(
       return t >= now.getTime() && t <= now.getTime() + horizonMs;
     });
 
-  // The recent past rides along with a successful rung (3g): concluded and
-  // canceled sittings inside the lookback, at the same radius, so the date
-  // slider's backward range has something to reveal. They never decide the
-  // tier — that stays a claim about the future — and the client's default
-  // window (0 days back) keeps them off screen until asked for. CANCELED
-  // stays out of the *fallback* tier below: a canceled meeting is news, but
-  // it must never be what fills an otherwise-empty map.
+  // Recent concluded and canceled sittings ride along with a successful rung but never decide the tier, and canceled
+  // sittings never fill the fallback tier.
   const recentPast = all.filter((m) => {
     if (m.status !== "CONCLUDED" && m.status !== "CANCELED") return false;
     const t = Date.parse(m.startsAt);
     return t >= now.getTime() - lookbackMs && t < now.getTime() + horizonMs;
   });
 
-  // Where each body is, read once per rung from BOTH lists: a building listed
-  // only among a body's upcoming sittings keeps its online concluded ones in
-  // view, and the reverse. The recent past still never earns a rung by
-  // itself — it can place a body, and only an upcoming sitting in view counts.
+  // Bodies placed from both lists: a building listed only among upcoming sittings keeps the body's online concluded
+  // sittings in view, and the reverse.
   const servedAtRung = [...upcoming, ...recentPast];
 
   for (const radiusKm of rungs) {
@@ -333,17 +230,13 @@ export async function searchMeetings(
     }
   }
 
-  // No future anywhere on the ladder. Show what was recently decided rather
-  // than an empty map — a council that met last Tuesday is still the answer to
-  // "who governs here."
+  // No future anywhere on the ladder: show what was recently decided rather than an empty map.
   const recentlyConcluded = all.filter((m) => {
     if (m.status !== "CONCLUDED") return false;
     const t = Date.parse(m.startsAt);
     return t >= now.getTime() - lookbackMs && t < now.getTime();
   });
-  // The same rule over what this tier serves: upcoming or recently concluded,
-  // never canceled. (Reaching here means no upcoming sitting was in view at
-  // the widest rung, so every building in radius is a concluded one.)
+  // Upcoming or recently concluded, never canceled.
   const concluded = within(
     recentlyConcluded,
     lat,
@@ -364,9 +257,7 @@ export async function searchMeetings(
     };
   }
 
-  // Nothing either way. CLAUDE.md calls for one more rung here — district
-  // boundaries with officeholders — which needs TIGER/Line geometry and an
-  // officeholder source. Until those exist, say so plainly.
+  // Nothing either way; say so plainly.
   return {
     meetings: [],
     tier: "none",

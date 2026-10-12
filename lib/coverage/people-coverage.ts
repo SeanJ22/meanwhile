@@ -2,16 +2,9 @@ import { KELLY_FIELDS, type ProfileFieldKey } from "./checklist-map.ts";
 import type { PlaceOwedItem } from "./place-owed.ts";
 
 /**
- * **PEOPLE COVERAGE: WHO HAS A FULL PROFILE.** For the officials and candidates a
- * place knows about, how many have every field that applies to them, and how
- * many people have each field. A field is counted only for the people it applies
- * to: campaign site and money for people with a campaign, votes for voting
- * members. A field that cannot be joined to a person yet is reported as not
- * measured, never as missing, and is left out of "full" rather than failing
- * everyone for it. It is a measure and never a gate, and it only reads the owed
- * list.
- *
- * PURE.
+ * For the people a place knows about, how many have every field that applies
+ * to them, and how many hold each field. A field not yet joinable to a person
+ * is "not measured", never missing, and is left out of "full". Pure.
  */
 export interface FieldCoverage {
   readonly key: ProfileFieldKey;

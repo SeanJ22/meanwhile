@@ -1,4 +1,3 @@
-/** Independent supporting authorities used after an exact ballot is loaded. */
 export type BallotAuxiliaryFamily =
   | "candidate-profiles"
   | "candidate-publications"
@@ -9,11 +8,6 @@ export type BallotAuxiliaryFamily =
   | "nh-members"
   | "ballot-navigation";
 
-/**
- * Settle supporting Reader authorities independently. The canonical ballot
- * must be selected before a caller builds this map; one rejection may withhold
- * only its own family and cannot reject or replace the ballot itself.
- */
 export async function settleBallotAuxiliaryPreloads(
   preloads: ReadonlyMap<BallotAuxiliaryFamily, () => Promise<unknown>>,
 ): Promise<ReadonlyMap<BallotAuxiliaryFamily, PromiseSettledResult<unknown>>> {
@@ -24,7 +18,6 @@ export async function settleBallotAuxiliaryPreloads(
   return new Map(entries.map(([family], index) => [family, outcomes[index]!]));
 }
 
-/** A typed read outcome is usable only when it names an actual projection. */
 export function ballotAuxiliaryPreloadSucceeded(
   outcome: PromiseSettledResult<unknown> | undefined,
 ): boolean {

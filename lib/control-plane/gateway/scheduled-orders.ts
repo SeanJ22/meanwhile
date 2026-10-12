@@ -1,8 +1,3 @@
-/**
- * **SCHEDULED ORDERS (BR-15).** An order Sean sends for later: at a time (`startAt`), after something else (`after`),
- * repeating (`repeat`), and/or by a date (`finishBy`). Records live on the Admin config row beside place targets, with
- * who decided and the receipt, so they survive a reload and a runner restart. Firing them on time is BR-16.
- */
 import type { AdminConfig } from "./admin-config.ts";
 
 export const REPEATS = ["hourly", "daily", "weekly"] as const;
@@ -11,7 +6,6 @@ export type Repeat = (typeof REPEATS)[number];
 export interface ScheduledOrder {
   /** The receipt that scheduled it: stable, and what `orders.unschedule` names. */
   readonly id: string;
-  /** The registered action it will send. */
   readonly orderType: string;
   readonly subject?: string;
   readonly input: Readonly<Record<string, unknown>>;
@@ -23,7 +17,6 @@ export interface ScheduledOrder {
   readonly decidedBy: string;
   readonly decidedAt: string;
   readonly receiptId: string;
-  /** Plain words for the order, shown while it waits. */
   readonly label: string;
   /** For a repeating order: the occurrence last sent. */
   readonly lastFiredAt?: string | null;
@@ -44,7 +37,6 @@ export interface ScheduleInput {
   readonly finishBy: string | null;
 }
 
-/** Read the "when" fields. Needs at least one; a time must be a real time. */
 export function parseWhen(input: Readonly<Record<string, unknown>>): { ok: true; value: ScheduleInput } | { ok: false; why: string } {
   const get = (k: string) => (input[k] === undefined || input[k] === null || input[k] === "" ? null : input[k]);
   const startAt = get("startAt"), after = get("after"), repeat = get("repeat"), finishBy = get("finishBy");
@@ -69,7 +61,6 @@ export function withoutScheduled(config: AdminConfig, id: string, at: string): A
   return { ...config, scheduledOrders: held.filter((o) => o.id !== id), updatedAt: at };
 }
 
-/** When a waiting order is next due, in words the screen prints. Null when it waits on something else. */
 export function nextDue(order: Pick<ScheduledOrder, "startAt" | "after" | "finishBy">): string | null {
   return order.startAt ?? (order.after ? null : order.finishBy);
 }

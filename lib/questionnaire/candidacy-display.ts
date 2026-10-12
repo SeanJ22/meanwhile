@@ -1,28 +1,7 @@
 /**
- * **A CANDIDACY ID IS NOT A NAME, AND A CONTEST ID IS NOT AN OFFICE.**
- * (Overnight depth hunt, 2026-08-23, item 7.)
- *
- * `CLAUDE.md`: *identifiers, enum values and internal keys never render outside
- * a technical-details disclosure.* The first version of the questionnaire page
- * put `ballot-nj-morris:mendham-township-member-of-the-township-committee-place-
- * mendham-township:kapner-gary` in front of the candidate as their own name,
- * which is that rule broken on the one surface where the reader is the person
- * being named.
- *
- * So this resolves an id to what a person is actually called and what the seat
- * is actually called, out of the canonical promoted ballot projections.
- *
- * ## The gap is NAMED, never guessed
- *
- * Where an id resolves to nothing, this returns `null` and the caller renders a
- * neutral sentence. It does NOT fall back to prettifying the id — a slug with
- * its hyphens swapped for spaces reads like a name and is not one, and a
- * candidate shown a mangled version of their own name has been told something
- * false about how carefully this was done.
- *
- * Store failures propagate so a missing authority cannot be rendered as an
- * innocent candidate-id miss. Bundled evidence is reachable only through each
- * canonical read model's explicit first-seed gate.
+ * Resolves a candidacy id to what the person and the seat are called, from the canonical promoted
+ * ballot projections. Ids never render to a reader. Where an id resolves to nothing this returns `null`
+ * and never prettifies the id. Store failures propagate.
  */
 import { surnameDisplayCase } from "../ballot/name-case.ts";
 import { readerBallotSourceForTargetId } from "../ballot/reader-sources.ts";

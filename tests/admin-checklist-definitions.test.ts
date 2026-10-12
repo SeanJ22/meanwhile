@@ -1,10 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { NextRequest } from "next/server";
 
 import { searchChecklistDefinitions, ChecklistDefinitionQueryError } from "../lib/control-plane/admin-view/checklist-definition-search.ts";
 import { CHECKLIST_PROFILE } from "../lib/control-plane/readiness/checklist-score.ts";
-import { ADMIN_HOST, PUBLIC_HOST, adminSessionCookie, withAdminSessionKey } from "./admin-session.ts";
 
 const query = (over: Partial<Parameters<typeof searchChecklistDefinitions>[0]> = {}) =>
   ({ q: "", group: null, id: null, limit: 25, cursor: null, ...over });

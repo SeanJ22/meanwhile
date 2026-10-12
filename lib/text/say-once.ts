@@ -1,18 +1,11 @@
 /**
- * **SAY EACH GAP ONCE.** (S2.4, 2026-10-01.)
- *
- * An Ask answer composed from held records can state a gap in its own sentence
- * ("We have not recorded who your state senator is yet.") and carry the same
- * gap as a named entry beside its records ("We have not recorded who holds the
- * office of state senator for your area yet."). Both rendered, so 10001 said
- * one thing twice. A gap entry the answer already states is the answer's, not a
- * second finding: it stays in the evidence the answer was built from and is not
- * printed again under it.
+ * Say each gap once. An Ask answer can state a gap in its own sentence and also
+ * carry the same gap as a named entry beside its records; the entry stays in
+ * the evidence but is not printed again under the answer.
  *
  * Two statements are "the same" when the answer holds most of the gap's content
- * words. Boilerplate every gap shares ("we have not recorded") is not enough on
- * its own to match a different gap, because the match is over the whole
- * statement, not its opening.
+ * words, matched over the whole statement, so shared boilerplate ("we have not
+ * recorded") alone never matches a different gap.
  */
 
 const FILLER = new Set([

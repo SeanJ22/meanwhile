@@ -5,22 +5,10 @@ import { INITIAL_FILTERS } from "./defaults.ts";
 import type { UiState } from "./types.ts";
 
 /**
- * The registry of resettable controls — the structural fix behind "Reset all
- * does not work" (defect 2026-08-14, tracker M24).
- *
- * The old handler reset `state.filters` and nothing else, because it was
- * written when filters were the only controls. Five control groups grew
- * around it — tiers, scope, radius, near-me, search — and each one it
- * missed made "Reset all" a little more of a lie. Worse, the active-count
- * treated the *default* district-type selection as an active filter, so a
- * fresh page read "Filters 1" and Reset all visibly did nothing.
- *
- * So: every reader-adjustable control registers here with its reset and its
- * is-active test, `resetAll`/`activeControlCount` are derived from the
- * registry, and `tests/reset-registry.test.ts` fails the build when a
- * `UiState` field is added without either registering or being declared a
- * non-control. Adding a filter without deciding its reset is no longer
- * possible silently.
+ * The registry of resettable controls. Every reader-adjustable control
+ * registers its reset and its is-active test; `resetAll` and
+ * `activeControlCount` derive from the registry, and every `UiState` field
+ * must either register or be declared a non-control.
  */
 
 export interface ResettableControl {
@@ -82,9 +70,7 @@ export const RESETTABLE_CONTROLS: ResettableControl[] = [
     name: "district-type checkboxes",
     owns: [],
     // Active means *differs from the default view* — school and municipal
-    // unchecked, per the recorded rendering decision — never "differs from
-    // all six". The old definition counted the default as active, which is
-    // why a fresh page read "Filters 1" and Reset all appeared dead.
+    // unchecked — never "differs from all six".
     isActive: (s) => !sameSet(s.filters.districtTypes, INITIAL_FILTERS.districtTypes),
     reset: (s) => ({
       filters: {
@@ -111,8 +97,7 @@ export const RESETTABLE_CONTROLS: ResettableControl[] = [
     name: "radius limiter",
     owns: ["radiusKm", "radiusOverridden"],
     isActive: (s) => s.radiusOverridden,
-    // The dedicated radius/clear semantics, not filter/reset's old mistake
-    // of clearing everything else and leaving the radius on (§4.2).
+    // The dedicated radius/clear semantics: turns the radius off and nothing else.
     reset: () => ({ radiusKm: RADIUS_LADDER_KM[0], radiusOverridden: false }),
   },
   {
@@ -148,10 +133,8 @@ export const NON_CONTROL_FIELDS: Partial<Record<keyof UiState, string>> = {
   door: "view state — an open sidebar-count door, constrains nothing (8a)",
   filtersPanelOpen: "view state",
   /*
-   * ASK-22: the focus one ANSWER opened the list with. Not a reader-set
-   * constraint — it belongs to a single opening and the reducer clears it when
-   * the overlay closes, so a reset control would be a second owner of a
-   * lifetime that is already decided.
+   * The focus one answer opened the list with. It belongs to a single opening
+   * and the reducer clears it when the overlay closes.
    */
   listFocusBodyId: "an answer-scoped focus, cleared by the reducer when the list closes",
   listFocusBodyName: "an answer-scoped focus, cleared by the reducer when the list closes",

@@ -1,39 +1,4 @@
-/**
- * **EVERY BODY WE WATCH, AS THE DESIGN DRAWS IT.** (Admin redesign,
- * 2026-09-23 — Fleet · Now, the body list and the opened body.)
- *
- * A body we watch is a public body with a registered meeting source (one
- * routine meeting contract per source and body). For each one this projects
- * the facts the production data plane actually records — its current
- * published version, its last reads, the typed Reader readback, the last 24
- * hours — onto the design's six standing questions:
- *
- * ```
- *   Don't have yet     how many meetings exist that we do not hold: nothing
- *                      measures it, so it is the named unknown
- *   Confirmed right    meetings the last successful read re-confirmed
- *   Has gaps           past meetings in the version we hold with no agenda —
- *                      neither a link nor an attached document
- *   Changed            records added, revised or removed in the last 24 hours
- *   Reader can see     meetings in a version the typed Reader read back
- *   Disagrees          no cross-source check exists: the named unknown
- * ```
- *
- * Nothing here is estimated. A body whose last read failed shows what it
- * last held beside the failure; a body never read says so; a count that
- * cannot be taken is `null` and the page prints its reason. Every sentence is
- * generated from the figures beside it.
- *
- * PURE: rows in, views out; the only clock is `nowIso`.
- *
- * **When we look** (C6). A meeting source is not read on its contract's
- * `cadence`: that is how old a Reader may see a record before it reads stale.
- * The runner reads it on the contract's sitting-window `schedule`, so a body
- * whose contract carries one is described by that schedule, and its next read
- * is worked out with the runner's own functions from the facts the runner
- * reads: the last attempt, the current version's first event, and the
- * sittings that version lists.
- */
+/** Nothing here is estimated: a count that cannot be taken is `null` with its reason. Meeting sources are described by their sitting-window `schedule`, not `cadence`. */
 
 import { displayNameOf } from "../display-name.ts";
 import type { SittingWindowSchedule } from "../../civic-data/contracts.ts";
@@ -49,7 +14,6 @@ export type BodyStatus = "WORKING" | "NEEDS ATTENTION" | "STUCK" | "NOT READ YET
 export type ViewTone = "teal" | "gold" | "amber" | "cyan" | "slate" | "stone";
 export type FigureTone = "text" | "muted" | "gold" | "amber" | "teal" | "accent";
 
-/** The contract facts the model needs (a structural subset of a meeting partition contract). */
 export interface WatchedContract {
   readonly id: string;
   readonly scope: string;
@@ -63,32 +27,22 @@ export interface WatchedContract {
   readonly cadence: {
     readonly description: string;
     readonly defaultEveryMs: number;
-    /** Absent when the cadence never changes. */
     readonly phases?: readonly { readonly through: string; readonly everyMs: number }[];
   };
   readonly retry: { readonly afterMs: number; readonly description: string };
-  /** The runner's re-read schedule when it is not `cadence` (every meeting partition: C6). */
   readonly schedule?: SittingWindowSchedule;
 }
 
-/** A sitting as the current version lists it: its start and any publisher-stated end, both as stored. */
 export interface SittingFacts {
   readonly startsAt: string;
   readonly endsAt: string | null;
 }
 
-/**
- * What the runner schedules a meeting source's next read from, read off the
- * current version (`RoutineStoreClock` in lib/civic-data/store.ts).
- */
 export interface VersionClockFacts {
-  /** The version's store-observed first event: the runner's success instant. */
   readonly observedAt: string | null;
-  /** The version's newest unchanged confirmation, which counts as a later success. */
   readonly confirmedAt: string | null;
   /** A trusted-LKG import: never a success, and never an attempt, on the runner's clock. */
   readonly imported: boolean;
-  /** Every sitting the version lists. */
   readonly sittings: readonly SittingFacts[];
 }
 
@@ -100,7 +54,6 @@ export interface VersionFacts {
   readonly fresh: number | null;
   readonly carried: number | null;
   readonly docs: number;
-  /** Meetings already held with neither an agenda link nor an attached agenda document. */
   readonly noAgendaLink: number;
   /** Meetings still ahead with no agenda yet: not a gap, agendas post shortly before a sitting. */
   readonly noAgendaAhead: number;
@@ -113,18 +66,10 @@ export interface VersionFacts {
   readonly changed: number;
   readonly removed: number;
   readonly held: number;
-  /**
-   * MW-017: the promoted candidate's horizon evidence. Null when the candidate
-   * records none; absent on a reading taken before it was read. Only a bounded
-   * read that claims it holds everything the publisher lists lets the page say
-   * where the publisher's own list ends.
-   */
   readonly horizon?: PublisherHorizon | null;
-  /** The runner's clock facts; absent on a reading taken before they were read. */
   readonly clock?: VersionClockFacts;
 }
 
-/** The horizon slice of a civic-data candidate (`HorizonEvidence` in lib/civic-data/types.ts), as Admin reads it. */
 export interface PublisherHorizon {
   readonly kind: "BOUNDED" | "OPEN_FACT_SET";
   readonly returnedRecords: number | null;
@@ -177,7 +122,6 @@ export interface ReadbackFacts {
   readonly passed: boolean;
 }
 
-/** A source's latest version that changed what readers are served, with its own events. */
 export interface ChangeFacts {
   readonly scope: string;
   readonly versionId: string;
@@ -190,7 +134,6 @@ export interface ChangeFacts {
   readonly held: number;
   readonly meetingsAdded: number;
   readonly named: readonly { readonly title: string | null; readonly startsAt: string | null }[];
-  /** Optional: a reading taken before changed meetings were named. */
   readonly meetingsChanged?: number;
   readonly changedNamed?: readonly { readonly title: string | null; readonly startsAt: string | null }[];
 }
@@ -201,7 +144,6 @@ export interface DayFacts {
   readonly gotIn: number;
   readonly versions: number;
   readonly changedVersions: number;
-  /** Reads that got in but found the source listing no meetings. Optional: a reading taken before it was counted. */
   readonly cannotTell?: number;
   readonly added: number;
   readonly changed: number;
@@ -214,7 +156,6 @@ export interface BodyStoreFacts {
   readonly attempts: readonly AttemptFacts[];
   readonly readbacks: readonly ReadbackFacts[];
   readonly day: readonly DayFacts[];
-  /** Each source's latest changing version; null (or absent, in a reading taken before it was read) when it was not read. */
   readonly changes?: readonly ChangeFacts[] | null;
 }
 
@@ -255,7 +196,6 @@ export interface BodyDeadEnd {
   readonly ruledOut: string | null;
   readonly wouldSettle: string | null;
   readonly whoMoves: string | null;
-  /** Why a null field is missing, named (MW-016); absent on a field that has a value. */
   readonly gaps?: DeadEndGaps;
 }
 
@@ -267,7 +207,6 @@ export interface BodyView {
   readonly status: BodyStatus;
   readonly statusTone: ViewTone;
   readonly summary: string;
-  /** At the body's own last read. */
   readonly access: "GOT_IN" | "COULD_NOT" | "NOT_READ";
   readonly cells: readonly BodyCell[];
   readonly questions: readonly BodyQuestion[];
@@ -278,43 +217,25 @@ export interface BodyView {
   readonly activity: readonly BodyActivity[];
   readonly escalationNote: string;
   readonly contractIds: readonly string[];
-  /**
-   * Meetings in the version we hold, or null when nothing was ever published.
-   * Read through more than one source, the largest source's count: a floor,
-   * since the sources may list the same sitting under different keys.
-   */
+    /** Through more than one source, the largest source's count: a floor, since sources may key the same sitting differently. */
   readonly records: number | null;
-  /** How many of the body's sources hold a published version; more than one makes `records` a floor. */
   readonly recordSources: number;
-  /** Meetings in a version the typed Reader read back (the largest such, read through more than one source). */
   readonly readerVisible: number | null;
   readonly held: number | null;
   readonly noAgendaLink: number | null;
-  /** Last 24 hours; null when the body was not read in the window. */
   readonly day: {
     readonly added: number;
     readonly changed: number;
     readonly removed: number;
     readonly reads: number;
     readonly gotIn: number;
-    /** Reads that promoted a version with a changed record. */
     readonly changedReads: number;
-    /** Reads that promoted a version: with changedReads, the rest confirmed nothing changed. */
     readonly versions: number;
-    /** Reads that got in but found the source listing no meetings — they confirm nothing. */
     readonly cannotTell: number;
   } | null;
   readonly lastReadAt: string | null;
-  /** The last read that confirmed the data (published or validated) in the seven days read; null when none did. */
   readonly lastSuccessAt: string | null;
-  /**
-   * Whether a failure to get in cleared by itself, over the reads held (each
-   * source's last five in seven days): RECOVERED when a later read got in after
-   * one that could not, STILL_FAILING when the latest read could not get in,
-   * NO_FAILURE when every read held got in, NOT_READ when none was held.
-   */
   readonly recovery: "RECOVERED" | "STILL_FAILING" | "NO_FAILURE" | "NOT_READ";
-  /** The version readers are served now: its id, when it was promoted, and the change it carried. */
   readonly current: {
     readonly versionId: string;
     readonly promotedAt: string;
@@ -324,18 +245,8 @@ export interface BodyView {
     readonly removed: number;
     readonly held: number;
   } | null;
-  /** The typed Reader's readback of that version, when one is recorded. */
   readonly readback: { readonly at: string; readonly passed: boolean } | null;
-  /** A ZIP whose readers are served this body, for the public destination. */
   readonly publicZip: PublicZip;
-  /**
-   * The latest version that changed what readers are served, with its trail:
-   * the source and when it was read, what changed, when it validated and was
-   * promoted, and when the typed Reader first read it back — plus the version
-   * serving readers now, which re-confirmed it when later reads changed
-   * nothing. Null when no change is on record for any of the body's sources,
-   * or the store was read without its changes.
-   */
   readonly lastChange: {
     readonly versionId: string;
     readonly source: string;
@@ -351,9 +262,7 @@ export interface BodyView {
     readonly named: readonly { readonly title: string; readonly startsAt: string | null }[];
     readonly meetingsChanged: number;
     readonly changedNamed: readonly { readonly title: string; readonly startsAt: string | null }[];
-    /** The first passing readback of that version, else its latest. */
     readonly readback: { readonly at: string; readonly passed: boolean } | null;
-    /** The version of the same source readers are served now, and its latest readback. */
     readonly servedNow: {
       readonly versionId: string;
       readonly promotedAt: string;
@@ -374,10 +283,8 @@ function plural(n: number, one: string, many = `${one}s`): string {
   return `${n.toLocaleString("en-US")} ${n === 1 ? one : many}`;
 }
 
-/** "Newbury, NH — Planning Board". The source's own words, never a name invented from a slug. */
 export function bodyDisplayName(contract: WatchedContract, version: VersionFacts | null): string {
   const raw = version?.jurisdiction ?? contract.jurisdiction ?? contract.publishingOrg ?? null;
-  // A jurisdiction that arrives as a key ("az:county:county-of-cochise") is named the way the rest of Admin names it.
   const where = raw !== null && /^[a-z]{2}:[a-z_]+:/.test(raw) ? displayNameOf(raw).name : raw;
   const what = version?.bodyName ?? suffixWords(contract.bodyId);
   return where ? `${where} — ${what}` : what;
@@ -396,15 +303,10 @@ export function stateCodeOf(bodyId: string, ocdId: string | null): string | null
   return m ? m[1] : null;
 }
 
-/** The cadence in force at `atMs`: the first phase not yet past, else the default. */
 function cadenceMs(c: WatchedContract, atMs: number): number {
   for (const phase of c.cadence.phases ?? []) if (atMs < ms(phase.through)) return phase.everyMs;
   return c.cadence.defaultEveryMs;
 }
-
-/* ==================================================================== *
- * THE SITTING-WINDOW CLOCK (C6), AS THE RUNNER KEEPS IT
- * ==================================================================== */
 
 const HOUR_MS = 3_600_000;
 const COUNT_WORDS = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"];
@@ -413,7 +315,6 @@ function countWords(n: number): string {
   return Number.isInteger(n) && n >= 0 && n < COUNT_WORDS.length ? COUNT_WORDS[n] : n.toLocaleString("en-US");
 }
 
-/** A span in words: "an hour", "twelve hours", "seven days", "25 minutes". */
 function spanWords(span: number): string {
   if (span > 0 && span % DAY_MS === 0) return span === DAY_MS ? "a day" : `${countWords(span / DAY_MS)} days`;
   if (span > 0 && span % HOUR_MS === 0) return span === HOUR_MS ? "an hour" : `${countWords(span / HOUR_MS)} hours`;
@@ -421,7 +322,6 @@ function spanWords(span: number): string {
   return minutes === 1 ? "a minute" : `${countWords(minutes)} minutes`;
 }
 
-/** A period as a rate: "hourly", "twice a day", else "every <span>". */
 function everyWords(period: number): string {
   if (period >= HOUR_MS && DAY_MS % period === 0) {
     const times = DAY_MS / period;
@@ -433,36 +333,21 @@ function everyWords(period: number): string {
   return `every ${spanWords(period)}`;
 }
 
-/**
- * The runner's sitting-window rule in words, from the schedule's own numbers:
- * "twice a day, and within the hour while a sitting is within seven days ahead
- * or behind".
- */
 export function sittingWindowRuleWords(schedule: SittingWindowSchedule): string {
   const within = schedule.hotEveryMs === HOUR_MS ? "the hour" : spanWords(schedule.hotEveryMs);
   return `${everyWords(schedule.baseEveryMs)}, and within ${within} while a sitting is within ${spanWords(schedule.windowMs)} ahead or behind`;
 }
 
-/** One meeting source on the runner's sitting-window clock at `nowMs`. */
 export interface SittingClock {
   readonly source: string;
   readonly schedule: SittingWindowSchedule;
-  /** The facts were not in this reading, so nothing below was worked out. */
   readonly unread: boolean;
   readonly published: boolean;
-  /** How long the runner waits after each attempt while nothing from the source is published (R20). */
   readonly unpublishedWaitMs: number;
   /** Hourly (true), twice a day (false), or not known (undefined, which the runner reads hourly). */
   readonly hot: boolean | undefined;
-  /** The sitting that holds the source hourly: the next one ahead, else the latest behind. */
   readonly holding: { readonly startsAt: string; readonly ahead: boolean } | null;
-  /** The first sitting after now that the version lists. */
   readonly nextSitting: string | null;
-  /**
-   * The next read the runner owes (`sittingWindowObligation`) and what it
-   * counts from; null when no attempt is on record to count from, which the
-   * runner treats as owed at once.
-   */
   readonly owed: {
     readonly deadlineMs: number;
     readonly eligibleAtMs: number;
@@ -471,15 +356,7 @@ export interface SittingClock {
   } | null;
 }
 
-/**
- * A meeting source's clock, from the facts the runner schedules by
- * (`RoutineStoreClock`) and the runner's own functions. The last attempt is
- * the newest read's first event, or the version's own, or its confirmation;
- * the success is the version's first event or its confirmation; a trusted-LKG
- * import is neither, and only a read after it counts as an attempt. Every
- * deadline here is at most twelve hours after its read, so a source with no
- * read in the seven days held is owed at once, as the runner would find it.
- */
+/** Every deadline is at most twelve hours after its read, so a source with no read in the seven days held is owed at once. */
 export function sittingClockOf(
   contract: WatchedContract & { readonly schedule: SittingWindowSchedule },
   version: VersionFacts | null,
@@ -518,14 +395,12 @@ export function sittingClockOf(
   let owed: SittingClock["owed"] = null;
   if (Number.isFinite(attemptedMs)) {
     const { deadlineMs, eligibleAtMs } = sittingWindowObligation(schedule, contract.retry.afterMs, { attemptedMs, succeededMs, published }, hot);
-    // Which reading of `sittingWindowObligation` applied, for the words only; the instants are its own.
     const from = !Number.isFinite(succeededMs) ? (published ? "RETRY" : "UNPUBLISHED") : attemptedMs > succeededMs ? "RETRY" : "SUCCESS";
     owed = { deadlineMs, eligibleAtMs, from, periodMs: deadlineMs - (from === "SUCCESS" ? succeededMs : attemptedMs) };
   }
   return { source, schedule, unread: false, published, unpublishedWaitMs, hot, holding, nextSitting: next?.startsAt ?? null, owed };
 }
 
-/** "Hourly now — the next sitting, Sep 30, 2026, is within seven days." One source's standing on the rule. */
 function sittingStandingWords(c: SittingClock): string {
   if (c.unread) return "Whether it is read hourly now was not read this time";
   const window = spanWords(c.schedule.windowMs);
@@ -542,7 +417,6 @@ function sittingStandingWords(c: SittingClock): string {
     : `${hourly} now — the ${fmtDate(c.holding.startsAt)} sitting is within ${window} behind; ${nextWords}`;
 }
 
-/** When one source's next read is owed, and why. */
 function sittingOwedWords(c: SittingClock, nowMs: number): string {
   if (c.unread) return "Not worked out — this reading did not include the runner's clock facts";
   if (c.owed === null) return "Owed now — no read in the last seven days is on record to count from, so the runner owes one at once";
@@ -557,25 +431,21 @@ function sittingOwedWords(c: SittingClock, nowMs: number): string {
   return `Owed by ${fmt(new Date(c.owed.deadlineMs).toISOString())}, ${why}; the runner may read it from ${fmt(new Date(c.owed.eligibleAtMs).toISOString())}`;
 }
 
-/** Per source when the sources differ, once when they agree. */
 function perSource(clocks: readonly SittingClock[], words: (c: SittingClock) => string, joiner: string): string {
   const said = clocks.map((c) => ({ source: c.source, text: words(c) }));
   if (new Set(said.map((s) => s.text)).size === 1) return said[0].text;
   return said.map((s) => `${cap(s.source)}: ${s.text}`).join(joiner);
 }
 
-/** "How often": each source's standing now, then the rule itself. */
 export function sittingHowOftenWords(clocks: readonly SittingClock[]): string {
   return `${perSource(clocks, sittingStandingWords, ". ")}. The rule: ${sittingWindowRuleWords(clocks[0].schedule)}.`;
 }
 
-/** "Next look": the next read each source owes, soonest first. */
 export function sittingNextLookWords(clocks: readonly SittingClock[], nowMs: number): string {
   const soonest = [...clocks].sort((a, b) => (a.owed?.deadlineMs ?? Number.NEGATIVE_INFINITY) - (b.owed?.deadlineMs ?? Number.NEGATIVE_INFINITY));
   return perSource(soonest, (c) => sittingOwedWords(c, nowMs), "; ");
 }
 
-/** How a failed read is retried: the contract's retry, or the twice-daily wait while a sitting-window source has nothing published (R20). */
 function retryWords(contract: WatchedContract, published: boolean): string {
   if (contract.schedule?.kind !== "SITTING_WINDOW" || published) return contract.retry.description;
   return `${spanWords(sittingWindowRetryMs(contract.schedule, contract.retry.afterMs, false))} after each attempt while nothing from it is published`;
@@ -592,18 +462,9 @@ const FAILED_STATES = new Set([
   "CANNOT_TELL",
 ]);
 
-/** What a candidate state means, in the owner's words. */
 /**
- * What a read's state means, in the owner's words. The state is the FIRST
- * validation check that did not pass (`failureStateFor` in
- * lib/civic-data/validate.ts); the failure code narrows it where the code is
- * one this page knows.
- */
-/**
- * A read our own code or configuration failed before the publisher could answer. The ingest marks it
- * by starting the failure detail with this prefix (lib/sources/composite/failure-kind.ts) while the
- * state and code stay SOURCE_BLOCKED / SOURCE_RETRIEVAL_FAILED, so this page reads the detail, and
- * never shows our own failure as a site that refused us.
+ * Our own code or configuration failed before the publisher answered: the ingest marks it with this detail prefix
+ * (lib/sources/composite/failure-kind.ts) while state and code stay SOURCE_BLOCKED / SOURCE_RETRIEVAL_FAILED.
  */
 const JOB_FAILURE_PREFIX = "JOB_FAILURE:";
 const JOB_FAILURE_SENTENCE_END = "this is not a publisher wall.";
@@ -612,7 +473,6 @@ export function isJobFailure(failureDetail: string | null | undefined): boolean 
   return typeof failureDetail === "string" && failureDetail.startsWith(JOB_FAILURE_PREFIX);
 }
 
-/** A failure detail for display: the ingest's fixed JOB_FAILURE sentence gives way to the words above, leaving the original error. */
 function detailWords(failureDetail: string): string {
   if (!isJobFailure(failureDetail)) return failureDetail;
   const cut = failureDetail.indexOf(JOB_FAILURE_SENTENCE_END);
@@ -641,7 +501,6 @@ export function readStateWords(state: string, failureCode: string | null, failur
     case "SEMANTIC_INVALID":
       return "got in but a record failed its meaning check";
     case "HORIZON_UNRESOLVED":
-      /* A check we could not complete, not a limit the publisher set (MW-017). */
       return "got in, but our check of how far ahead the source publishes could not be completed";
     case "DEPENDENT_CONSUMER_INVALID":
       return "got in but the reader's view of it failed its check";
@@ -655,7 +514,6 @@ export function readStateWords(state: string, failureCode: string | null, failur
   }
 }
 
-/** What would settle a failed read: the rule the failing check states, never a guess. */
 function wouldSettleWords(state: string, failureCode: string | null, source: string, url: string | null, failureDetail: string | null = null): string {
   const where = url ?? `the ${source}`;
   if (isJobFailure(failureDetail)) return `A fix to our adapter or its configuration for ${where}; the site itself was never asked.`;
@@ -723,14 +581,11 @@ export interface BodyModelInput {
   readonly contracts: readonly WatchedContract[];
   readonly store: BodyStoreFacts;
   readonly nowIso: string;
-  /** A ZIP whose readers are served this body's division, for the public destination; unread when not given. */
   readonly zipOf?: (ocdId: string | null) => PublicZip;
 }
 
-/** Where a body's readers are served: a ZIP the index gives its division, none, or an index that was not read. */
 export type PublicZip = { readonly kind: "ZIP"; readonly zip: string } | { readonly kind: "NONE" } | { readonly kind: "UNREAD" };
 
-/** Every watched body, in the order the page lists them: needing attention first, then by name. */
 export function buildBodyViews(input: BodyModelInput): BodyView[] {
   const nowMs = ms(input.nowIso);
   const versionByScope = new Map(input.store.versions.map((v) => [v.scope, v]));
@@ -780,11 +635,6 @@ interface Lookups {
 }
 
 function bodyView(g: BodyGroup, l: Lookups): BodyView {
-  /*
-   * A body read through two sources is one body (MW-003). Its standing is
-   * taken from the contract holding the newest published version, and the
-   * reads and the day are the union of both.
-   */
   const withVersion = g.contracts
     .map((c) => ({ c, v: l.versionByScope.get(c.scope) ?? null }))
     .sort((a, b) => ms(b.v?.promotedAt) - ms(a.v?.promotedAt) || a.c.id.localeCompare(b.c.id));
@@ -812,7 +662,6 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
           { added: 0, changed: 0, removed: 0, reads: 0, gotIn: 0, changedReads: 0, versions: 0, cannotTell: 0 },
         );
   const readback = version ? l.readbackByCandidate.get(version.versionId) ?? null : null;
-  // Across the body's sources, the newest version that changed something readers are served.
   const change =
     g.contracts
       .flatMap((c) => {
@@ -822,11 +671,6 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
       .sort((a, b) => ms(b.f.retrievedAt) - ms(a.f.retrievedAt))[0] ?? null;
   const name = bodyDisplayName(contract, version);
   const stateCode = stateCodeOf(g.bodyId, contract.ocdId);
-  /*
-   * Every meeting partition is read on the sitting-window schedule (C6), not
-   * on its `cadence`: each source keeps its own clock, from its own reads and
-   * the sittings its own version lists.
-   */
   const sittingContracts = g.contracts.filter((c): c is WatchedContract & { readonly schedule: SittingWindowSchedule } => c.schedule?.kind === "SITTING_WINDOW");
   const clocks =
     sittingContracts.length === g.contracts.length
@@ -843,20 +687,13 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
   else status = "WORKING";
   const statusTone: ViewTone = status === "WORKING" ? "teal" : status === "STUCK" ? "amber" : status === "NOT READ YET" ? "slate" : "gold";
 
-  /*
-   * A body read through two sources holds a version from each, and both may
-   * list the same sitting under different keys, so neither the newest one
-   * alone (an undercount: Pima's Board of Supervisors holds 12 through InSite
-   * and 15 through Legistar) nor their sum is right. The larger is shown, and
-   * `recordSources` tells every total over it that it is a floor.
-   */
+    /* Sources may list the same sitting under different keys, so neither one alone nor the sum is right: the larger is a floor. */
   const heldVersions = withVersion.flatMap((x) => (x.v === null ? [] : [x.v]));
   const records = heldVersions.length === 0 ? null : Math.max(...heldVersions.map((v) => v.meetings));
   const readBack = heldVersions.filter((v) => l.readbackByCandidate.get(v.versionId)?.passed === true);
   const readerVisible = readBack.length === 0 ? null : Math.max(...readBack.map((v) => v.meetings));
   const source = sourceWords(contract.meetingSource);
 
-  /* ---------------------------------------------------------------- summary */
   const parts: string[] = [];
   if (last === null) {
     parts.push(`No read of its ${source} is recorded in the last seven days.`);
@@ -878,7 +715,6 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
   }
   const summary = parts.join(" ");
 
-  /* ---------------------------------------------------------------- the six cells */
   const cells: BodyCell[] = [
     { key: "missing", label: "Don't have yet", value: null, tone: "text", unknown: "NOT MEASURED" },
     {
@@ -906,7 +742,6 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
     { key: "disagrees", label: "Disagrees", value: null, tone: "text", unknown: "NOT CHECKED" },
   ];
 
-  /* ---------------------------------------------------------------- the six questions */
   const questions: BodyQuestion[] = [
     {
       pill: "CAN'T TELL",
@@ -961,7 +796,6 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
     { pill: "NOT CHECKED", tone: "slate", text: "Is it consistent with what we hold elsewhere?", detail: "no cross-source check exists for meetings" },
   ];
 
-  /* ---------------------------------------------------------------- lanes */
   const lanes: BodyLane[] = [
     {
       name: "Discovery",
@@ -989,7 +823,6 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
     },
   ];
 
-  /* ---------------------------------------------------------------- when we look */
   const lastLook = last ? `${fmt(last.attemptedAt)} — ${last.acquisitionSucceeded && !lastFailed ? "worked" : readStateWords(last.state, last.failureCode, last.failureDetail)}` : "No read in the last seven days";
   let nextLook: string;
   if (clocks.length > 0) nextLook = sittingNextLookWords(clocks, l.nowMs);
@@ -1022,12 +855,10 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
     },
   ];
 
-  /* ---------------------------------------------------------------- dead end */
   let deadEnd: BodyDeadEnd | null = null;
-  // A sitting-window source with nothing published waits twelve hours between attempts, not its one-hour retry (R20).
+    // A sitting-window source with nothing published waits twelve hours between attempts, not its one-hour retry.
   const retryClause = clocks.length > 0 && version === null ? retryWords(contract, false) : `${contract.retry.description} after a failure`;
   if (last !== null && lastFailed) {
-    /* What the run of reads ruled out, from the reads themselves (MW-016); a gap is named, never left blank. */
     const ruled = routineRuledOut(
       attempts.map((a) => ({
         state: a.state,
@@ -1051,7 +882,6 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
     };
   }
 
-  /* ---------------------------------------------------------------- activity */
   const activity: BodyActivity[] = attempts.slice(0, 5).map((a) => ({
     at: a.attemptedAt,
     what: `Read the ${source} — ${readStateWords(a.state, a.failureCode, a.failureDetail)}`,
@@ -1108,17 +938,7 @@ function cap(s: string): string {
   return s.length === 0 ? s : s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-/**
- * **A PUBLISHING LIMIT, OR A CHECK WE DID NOT MAKE.** (MW-017.)
- *
- * The furthest meeting in the version we hold is a fact about what WE hold.
- * It is the publisher's own limit only when the read that produced it was
- * bounded, paginated to its end, and claims it holds everything the publisher
- * lists — then "the publisher lists through <date>" is true. Otherwise how far
- * ahead the publisher lists was not checked, and the sentence says so beside
- * what we hold, never as the publisher's limit. A read that failed its horizon
- * check is our check failing, not the publisher stopping.
- */
+/** The furthest meeting held is the publisher's own limit only when the read was bounded, paginated to its end, and claims completeness. */
 export function publishesAheadWords(
   version: Pick<VersionFacts, "furthestAhead" | "horizon"> | null,
   last: Pick<AttemptFacts, "state"> | null,
@@ -1154,39 +974,30 @@ const FMT = new Intl.DateTimeFormat("en-US", {
   day: "numeric",
   hour: "numeric",
   minute: "2-digit",
-  timeZoneName: "short",
 });
 const FMT_DATE = new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", month: "short", day: "numeric", year: "numeric" });
 
 function fmt(iso: string | null | undefined): string {
   const t = ms(iso);
-  return Number.isFinite(t) ? FMT.format(new Date(t)) : "at no recorded time";
+  return Number.isFinite(t) ? `${FMT.format(new Date(t))} ET` : "at no recorded time";
 }
 function fmtDate(iso: string | null | undefined): string {
   const t = ms(iso);
   return Number.isFinite(t) ? FMT_DATE.format(new Date(t)) : "no recorded date";
 }
 
-/* ==================================================================== *
- * THE THREE CARDS AT THE TOP OF FLEET · NOW
- * ==================================================================== */
-
 export interface NowFigures {
   readonly bodies: number;
   readonly gotIn: number;
   readonly couldNot: number;
   readonly notRead: number;
-  /** Records added / revised / removed across the scope in 24 hours. Null when no body in scope was read. */
   readonly day: { readonly added: number; readonly changed: number; readonly removed: number; readonly bodiesRead: number } | null;
-  /** The share of revisions carried by the three bodies with the most, so the page can say where they concentrate. */
   readonly revisionsTopThree: { readonly count: number; readonly bodies: readonly string[] } | null;
   readonly records: number;
-  /** Bodies read through more than one source count their largest source, so the records total is a floor. */
   readonly recordsFloor: boolean;
   readonly readerVisible: number;
   readonly held: number;
   readonly noAgendaLink: number;
-  /** Bodies whose last read failed: their counts are what they last held, so every total over them is a floor. */
   readonly floor: boolean;
 }
 

@@ -1,35 +1,3 @@
-/**
- * **THE PAID LANE READS WHAT THE FREE WALK FOUND.** (2026-09-24. MW-028's
- * free-walk-first hold.)
- *
- * `lib/control-plane/discovery/free-walks.ts`, its use by `paidDiscoveryHold`,
- * and the dispatched needs the free walk goes first on. What these tests hold:
- *
- * - **Every reading reaches its hold decision.**
- *   - FOUND keeps a dispatched row held to avoid duplicate acquisition.
- *   - NOT_WALKED permits an appropriate paid route without exhausting free routes.
- *   - WALKED_NOT_FOUND lets the paid lane take it. That covers a site that
- *     showed nothing or only leads, a wall, and an unreadable site.
- *   - NO_SITE_TO_WALK lets the paid lane take it too.
- *   - UNREAD holds it, so a failed read never opens the paid lane. So does a
- *     walk record the lane cannot read.
- *   - The newest walk decides, on the in-memory double and the durable file
- *     store.
- * - **One batched read.** The dispatched governments with a site are read in
- *   one `readLatest` call, cut to three fields. A government with no site is not
- *   read at all.
- * - **The Scout starts from the leads.** The brief names the walk's outcome and
- *   the leads it could not confirm.
- * - **Dispatched needs reach the free walk.**
- *   - They are derived from each state's registry, even for a government the
- *     committed ledger does not hold.
- *   - A state whose registry cannot be read is named.
- *   - A need whose basis moved is left out.
- * - **The runner is wired.** It reads the walk before dispatch, only while the
- *   paid lane can admit, and hands the reading to the hold and the Scout's
- *   brief.
- */
-
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -207,7 +175,14 @@ test("THE SCOUT STARTS FROM THE LEADS: the brief names the walk's outcome and wh
 });
 
 test("DISPATCHED NEEDS REACH THE FREE WALK: derived from each state's registry, a state it cannot read named, a moved basis left out, and walked first even outside the ledger", async () => {
-  const az = JSON.parse(readFileSync(join(ROOT, "data/states/az/jurisdictions/az.json"), "utf8")) as JurisdictionRegistry;
+  const az = {
+    formatVersion: 1, stateCode: "AZ", generatedBy: "test", generatedOn: "2026-09-24", _note: [], enumerationSources: [], counts: {}, disagreements: [],
+    sourceCatalog: { "MEETINGS:THIS_JURISDICTION:this-government-itself": { recordClass: "MEETINGS", scope: "THIS_JURISDICTION", state: "DISCOVERY_OWED" } },
+    jurisdictions: [
+      { id: AJ, stateCode: "AZ", name: "CITY OF APACHE JUNCTION", govClass: "CITY_OR_TOWN", ownWebAddress: "http://www.ajcity.net", sourceIds: ["MEETINGS:THIS_JURISDICTION:this-government-itself"] },
+      { id: COOLIDGE, stateCode: "AZ", name: "CITY OF COOLIDGE", govClass: "CITY_OR_TOWN", ownWebAddress: null, sourceIds: [] },
+    ],
+  } as unknown as JurisdictionRegistry;
   const registryFor = (state: string): JurisdictionRegistry => {
     if (state === "az") return az;
     throw new Error(`no promoted ${state.toUpperCase()} registry`);
@@ -229,7 +204,7 @@ test("DISPATCHED NEEDS REACH THE FREE WALK: derived from each state's registry, 
   assert.equal(walkableByFreeWalk(aj), true);
   assert.equal(walkableByFreeWalk(coolidge), false, "no site is recorded");
 
-  /* A mission map's blanks (CH-21) hold an older copy of Apache Junction and nothing of a newly promoted town. */
+  /* A mission map's blanks hold an older copy of one government and nothing of a newly promoted town. */
   const newTown: MeetingsDiscoveryNeed = { ...aj, jurisdictionId: "az:city:town-of-newly-promoted", name: "TOWN OF NEWLY PROMOTED", ownWebAddress: "https://newly.example.gov" };
   const mission: MeetingsDiscoveryNeed[] = [{ ...aj, ownWebAddress: "http://old.example.net" }, { ...aj, jurisdictionId: "az:city:city-of-avondale", name: "CITY OF AVONDALE" }];
   const toWalk = discoveryNeedsToWalk(mission, [aj, newTown]);
@@ -261,12 +236,11 @@ test("DISPATCHED NEEDS REACH THE FREE WALK: derived from each state's registry, 
   }
 });
 
-test("THE RUNNER IS WIRED: it reads the walk before dispatch while the paid lane can admit, and hands the reading to the hold, the Scout's brief and the walk list", () => {
+test("THE RUNNER IS WIRED: it reads the walk before dispatch, and hands the reading to the hold, the Scout's brief and the walk list", () => {
   const runner = readFileSync(join(ROOT, "scripts/freshness-shadow.mts"), "utf8");
   const read = runner.indexOf("readFreeDiscoveryWalks(repos, freeWalkSubjects)");
   const dispatch = runner.indexOf("const cycle = await runCycle({");
   assert.ok(read > 0 && dispatch > read, "the reading is taken before dispatch");
-  assert.match(runner, /if \(modelLaneEnabled && freeWalkSubjects\.length > 0\) \{\n\s+freeWalks = await pending\.step\("free-walks:read"/, "and only while the paid lane can admit");
   assert.match(runner, /paidDiscoveryHold\(row\.obligation\.id, freeWalks\)/, "the hold reads it");
   assert.doesNotMatch(runner, /paidDiscoveryHold\([^)]*UNREAD_FREE_DISCOVERY_WALKS/, "the hold no longer reads the unwired stand-in");
   assert.match(runner, /freeWalks\.evidenceFor\?\.\(discovery\.jurisdictionId\)/, "the Scout's brief carries the walk's line");

@@ -1,32 +1,21 @@
 import { mapPresentationHeld } from "./flight-presentation.ts";
 import type { Map as MapLibreMap, MapGeoJSONFeature, FilterSpecification, StyleSpecification, LayerSpecification, VectorSourceSpecification } from "maplibre-gl";
 
-// Relative, extension-bearing imports — the style the rest of lib/ uses —
-// because node --test cannot resolve the `@/` alias and this module is now
-// exercised by tests/municipal-layer.test.ts (the §4.2 lesson again).
+// Relative, extension-bearing imports: node --test cannot resolve the `@/` alias.
 import { DISTRICT_TYPE_TIER } from "../ocd/district-tiers.ts";
 import { TIER_ACCENT_VAR, type Tier } from "../ocd/tiers.ts";
 import type { DistrictType } from "../state/types.ts";
 
 /**
- * District overlays.
- *
- * Boundaries and identifiers only. There is no officeholder or candidate data
- * in this repository, and CLAUDE.md forbids rendering a person or a position
- * without a source record — so a district here is a shape, an OCD-ID, and a
- * label, and nothing else.
- *
- * Geometry is one national PMTiles archive. Only visible tiles are fetched.
+ * District overlays: boundaries and identifiers only (a shape, an OCD-ID and
+ * a label). Geometry is one national PMTiles archive; only visible tiles are
+ * fetched.
  */
 
 /**
- * The properties the map reads, out of what `pnpm districts:fetch` writes.
- *
- * Declared here rather than pulled from a GeoJSON typings package: this is the
- * exact contract between the build script and the map, and stating it makes a
- * mismatch a type error instead of an undefined at runtime. The build script
- * also writes `lsad`, `classfp` and `geoid` on the layers that carry them;
- * the map does not read those and they are deliberately not typed here.
+ * The properties the map reads, out of what `pnpm districts:fetch` writes:
+ * the exact contract between the build script and the map. Other written
+ * properties (`lsad`, `classfp`, `geoid`) are not read and not typed.
  */
 export interface DistrictFeature {
   type: "Feature";
@@ -54,48 +43,24 @@ interface LayerSpec {
   /** Census layers represented by this boundary kind, independent of state coverage. */
   censusLayers: readonly string[];
   /**
-   * Draw only features whose FUNCSTAT says a government sits there — M14.
-   *
-   * The municipal type merges the place and county-subdivision layers, and
-   * the same government can appear in both: Census marks the row it created
-   * purely to fill its hierarchy `F` (fictitious), so filtering on FUNCSTAT
-   * dedupes exactly the way the registry already does (`derive.ts`). It is
-   * also what keeps Arizona's CCDs — statistical shapes with no government —
-   * from ever drawing as municipal boundaries. Features without the property
-   * (every other layer) always pass.
+   * Draw only features whose FUNCSTAT says a government sits there. The
+   * municipal type merges place and county-subdivision layers, where Census
+   * marks fill-in rows `F` (fictitious); filtering dedupes them and keeps
+   * statistical county subdivisions off the map. Features without the
+   * property always pass.
    */
   governingOnly?: boolean;
   label: string;
   /**
-   * Dash pattern, in multiples of the line width.
-   *
-   * Hue is the tier signal, but the Local tier holds five types that overlap
-   * heavily around any city — county, municipal and the three school types
-   * all trace the same ground. Drawn in one colour with one dash they were
-   * indistinguishable, so the pattern separates types *within* a tier: long
-   * dashes for the widest containing shape, down to a fine dot for the most
-   * nested one.
-   *
-   * M12 (2026-08-17) widened this from a fixed pair to any even-length
-   * pattern, because splitting the school layer needed a fifth Local pattern
-   * that was not a variation of the four already in use — and a dash/gap
-   * array is exactly where MapLibre expects the extra pair.
+   * Dash pattern, in multiples of the line width (any even-length array).
+   * Hue is the tier signal; the pattern separates overlapping types within a
+   * tier, long dashes for the widest containing shape down to a fine dot for
+   * the most nested.
    */
   dash: number[];
-  /**
-   * Stroke weight relative to the base ramp.
-   *
-   * Same ordering logic as the dash — the shape that contains the others is
-   * drawn heaviest, so a reader can tell nesting depth at a glance without
-   * reading a single label.
-   */
+  /** Stroke weight relative to the base ramp: the containing shape is heaviest. */
   weight: number;
-  /**
-   * Zoom at which this type's labels appear.
-   *
-   * Nested types come in later than their containers. Six label layers all
-   * switching on together at z7 produced a solid mat of text over any metro.
-   */
+  /** Zoom at which this type's labels appear; nested types come in later than their containers. */
   labelMinZoom: number;
   /**
    * Layers with no data yet. The control still renders and the layer is still
@@ -137,11 +102,9 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
   },
   municipal: {
     censusLayers: ["place","cousub"],
-    // Both halves of the municipal picture (M14): places, and the county
-    // subdivisions that ARE the municipalities in New Jersey and New
-    // Hampshire — Rockaway Township and Newbury have no place polygon at
-    // all. FUNCSTAT (governingOnly) is what stops the merge double-drawing
-    // Concord and friends and keeps Arizona's statistical CCDs off the map.
+    // Both halves of the municipal picture: places, and the county
+    // subdivisions that are the municipalities in some states. FUNCSTAT
+    // (governingOnly) stops double-drawing and keeps statistical CCDs off.
     label: "Municipal",
     dash: [3, 2],
     weight: 1.0,
@@ -149,30 +112,17 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
     governingOnly: true,
   },
   /*
-   * THE THREE SCHOOL TYPES (M12, 2026-08-17, the author's disposition
-   * "Split and be clear"). One `school` spec merged all nine files.
-   *
-   * The three read APART, which is the whole point of the split — a reader
-   * looking at Rockaway must be able to see that the two lines over the same
-   * ground are two different governments:
-   *
-   * - **unified** covers everything, so it is the heaviest of the three and
-   *   the one whose label appears first;
-   * - **elementary** is a fine dot, the most nested shape;
-   * - **secondary** is a long-short dash — deliberately the least like the
-   *   other two, because a regional secondary district is the one that
-   *   overlaps an elementary district and being confusable there is the
-   *   defect this row exists to fix.
-   *
-   * All three stay the lightest weights on the Local tier and stay held back
-   * to high zoom: three school layers over a county and a municipality at
-   * z8 is the noise the 4.5.2 pass was fixing.
+   * The three school types read apart, since they overlap the same ground:
+   * - unified covers everything: heaviest of the three, label first;
+   * - elementary is a fine dot, the most nested shape;
+   * - secondary is a long-short dash, least like the other two, since a
+   *   regional secondary district overlaps elementary districts.
+   * All three stay the lightest weights on the Local tier and held to high zoom.
    */
   "school-unified": {
     censusLayers: ["unsd"],
     label: "School (unified)",
-    // ACC-1: paired short dashes distinguish this from State House even when
-    // hue is unavailable. Every sample in the boundary key reads this spec.
+    // Paired short dashes distinguish this from State House even without hue.
     dash: [2, 1, 2, 4],
     weight: 0.9,
     labelMinZoom: 10,
@@ -193,12 +143,7 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
   },
 };
 
-/**
- * The three school types, in one place so a caller that means "the school
- * layers" does not have to spell them out and drift when a fourth appears.
- * Derived from the registry rather than hand-listed — a hand list is how the
- * split would have silently stopped covering one of them.
- */
+/** The school types, derived from the registry so a new one is never missed. */
 export const SCHOOL_DISTRICT_TYPES = (
   Object.keys(DISTRICT_LAYERS) as DistrictType[]
 ).filter((t) => t.startsWith("school-"));
@@ -245,12 +190,9 @@ export const allFillLayerIds = () => DISTRICT_TYPES.map(fillLayerId);
 const LABEL_FONT = ["Noto Sans Regular"];
 
 /**
- * Read a design token off the document.
- *
- * MapLibre paint properties are evaluated outside CSS and cannot take a
- * `var()`. Resolving at layer-build time is enough: a theme change swaps the
- * basemap style, which discards these layers, and re-adding them re-reads the
- * tokens.
+ * Read a design token off the document. MapLibre paint properties cannot take
+ * a `var()`; a theme change swaps the basemap style, which re-adds these
+ * layers and re-reads the tokens.
  */
 function token(name: string, fallback: string): string {
   if (typeof window === "undefined") return fallback;
@@ -264,8 +206,8 @@ function token(name: string, fallback: string): string {
 
 /**
  * Mirrors `GOVERNING_FUNCSTAT` in `lib/registry/derive.ts`: A/B/C/G govern,
- * F/N/S/I do not. Kept as a literal here because the map bundle must not
- * import registry code (§0d), and a test asserts the two stay in agreement.
+ * F/N/S/I do not. A literal here because the map bundle must not import
+ * registry code; a test asserts the two agree.
  */
 export const GOVERNING_FUNCSTAT = new Set(["A", "B", "C", "G"]);
 
@@ -284,17 +226,8 @@ export function keepFeature(
 /* ------------------------------------------------------------ rendering --- */
 
 /**
- * The first symbol layer in the current style.
- *
- * District layers are inserted before it so basemap place names keep drawing on
- * top of the boundaries.
- */
-/**
- * The first symbol layer, so custom layers land UNDER the place labels.
- *
- * Exported since g3: the state-focus edges need the same insertion point,
- * and an ambient effect painting over a town name would be an effect that
- * carries information.
+ * The first symbol layer in the current style, so district and other custom
+ * layers land under the basemap place labels.
  */
 export function firstSymbolLayerId(map: MapLibreMap): string | undefined {
   for (const layer of map.getStyle()?.layers ?? []) {
@@ -339,9 +272,7 @@ function districtStyleLayers(type: DistrictType): LayerSpecification[] {
           "case",
           ["boolean", ["feature-state", "selected"], false],
           0.18,
-          // The reader's narrowed divisions (item 7, design pass): the
-          // street they typed shades the district(s) that contain it —
-          // quieter than a selection, present without one.
+          // The reader's narrowed divisions: shaded, quieter than a selection.
           ["boolean", ["feature-state", "narrowed"], false],
           0.12,
           ["boolean", ["feature-state", "hover"], false],
@@ -471,14 +402,9 @@ export function setSelectedDistrict(
 let narrowedApplied: { type: DistrictType; ocdId: string }[] = [];
 
 /**
- * Shade the reader's narrowed divisions (item 7, design pass 2026-08-15):
- * the street they typed shades the municipality and school district that
- * contain it. Feature-state like selection, quieter than it, and additive
- * — narrowing never clears a selection or vice versa.
- *
- * Entries whose layer is not loaded yet are simply not applied this call;
- * the caller re-applies on the map's own load signals, so the shading
- * appears the moment the boundary does.
+ * Shade the reader's narrowed divisions (the street they typed). Feature-state
+ * like selection, quieter, and additive. Entries whose layer is not loaded yet
+ * are skipped; the caller re-applies on the map's load signals.
  */
 export function setNarrowedDistricts(
   map: MapLibreMap,
@@ -509,7 +435,7 @@ export interface DistrictHit {
   state: string;
 }
 
-/** One district currently drawn on screen — the stats card's unit (3g). */
+/** One district currently drawn on screen: the stats card's unit. */
 export interface DrawnDistrict {
   type: DistrictType;
   tier: Tier;
@@ -519,43 +445,13 @@ export interface DrawnDistrict {
 }
 
 /**
- * Every district currently drawn, deduplicated by ocdId (3g, 2026-08-19).
- *
- * This is the ONE denominator behind both the Districts stat card and the
- * "Districts here" door it opens. The card used to count these features
- * while the door listed legislative seats — two different universes, and
- * the author caught the card saying 3 with two rows listed. The count is
- * now `drawnDistrictsOn(...).length` and the door renders exactly this
- * list, so the stated N and the rendered rows cannot diverge
- * (tests/representation.test.ts holds the coupling).
+ * Every district currently drawn, deduplicated by ocdId: the one denominator
+ * behind both the Districts stat card and the list it opens.
  */
 /**
- * **DOES THE READER SEE DISTRICTS RIGHT NOW?** (MAP-5, 2026-08-30.)
- *
- * One predicate, called by every surface that describes the district layer,
- * because the alternative has now failed twice on the same screen.
- *
- * On 2026-08-19 the author reported the stats tile reading *"Off"* while
- * districts were plainly drawn. The cause is in `deriveStatsView`: the master
- * switch is a persisted preference the map reads directly, and
- * `ui.showDistricts` is a COPY kept in step by an effect — a mirror, which can
- * lag or diverge. The tile was repaired to let the drawn set win. **The door
- * behind the tile was not.**
- *
- * So on 2026-08-30 the owner opened that door over a map drawing State House
- * Districts 16, 18, 21 and 23 by name, beside a tile reading *33 Districts in
- * view*, and read: *"District boundaries are switched off, so none are drawn
- * and there is nothing to count."* Three surfaces, two of them right.
- *
- * That is the owner's standing instruction failing in one file: the class was
- * fixed at the instance it was reported at. The rule lives here now, and both
- * surfaces call it, so the next surface to describe this layer inherits the
- * repair instead of re-earning it.
- *
- * **The drawn set is EVIDENCE and the switch is INTENT.** `drawnDistrictsOn`
- * reads features off the live map after rendering settles. Where the two
- * disagree, what is painted wins — a reader can see the boundaries, and no
- * flag gets to tell them they cannot.
+ * Does the reader see districts right now? One predicate for every surface
+ * that describes the district layer. The drawn set is evidence and the switch
+ * is intent: where they disagree, what is painted wins.
  */
 export function districtsAreVisible(
   drawnCount: number | null,
@@ -566,9 +462,8 @@ export function districtsAreVisible(
 }
 
 /**
- * The reader turned the layer off and nothing is drawn — the only state in
- * which offering the switch is honest, and the only one in which "switched
- * off" is a true sentence about the view.
+ * The reader turned the layer off and nothing is drawn: the only state in
+ * which "switched off" is true.
  */
 export function districtsSwitchedOffAndEmpty(
   drawnCount: number | null,
@@ -615,13 +510,9 @@ export function drawnDistrictsOn(
 }
 
 /**
- * Every district containing a click.
- *
- * **A point returns a set, not one district**, and callers must handle that.
- * Tucson is in a congressional district, a state senate district, a state house
- * district, a county, a place and a school district at once. Rockaway 07866 is
- * in a K-8 elementary district *and* a regional high school district
- * simultaneously — two features from the same layer.
+ * Every district containing a click. A point returns a set, not one district:
+ * a point sits in several layers at once, and can be in two features of the
+ * same layer (an elementary and a regional high school district).
  */
 export function districtsAt(
   map: MapLibreMap,
@@ -668,28 +559,9 @@ export function districtsAt(
 }
 
 /**
- * **MAP-2 (2026-08-25) — THE BOUNDS OF ONE SELECTED DISTRICT.**
- *
- * Sean: *"clicking a shaded area renders it off-center. The map moves to center
- * the selected area — whatever the user clicked becomes front and center."* His
- * `17-25-38` shows the Vail Unified polygon sitting in the bottom-right corner
- * of the viewport with most of it off screen.
- *
- * **Applies to EVERY clickable area type**, which is what makes this a function
- * over `DistrictType` rather than a branch on school districts: the type is the
- * parameter, so a district type added later gets the behaviour by existing
- * rather than by somebody remembering to add it.
- *
- * ## Why `queryRenderedFeatures` and not the source data
- *
- * The rendered features are what the reader is actually looking at. Reading the
- * source would give geometry for polygons that are not drawn — a district
- * clipped away at this zoom, or one from a layer that has not loaded — and
- * flying the camera to a shape nobody can see is worse than not moving.
- *
- * **A district that is not on screen returns `null`** rather than a guessed
- * box, and the caller then leaves the camera alone. That is the honest answer:
- * a fit computed from nothing would be a camera move justified by no geometry.
+ * The bounds of one selected district, of any type, so the camera can center
+ * it. Read from rendered features (what the reader sees). A district not on
+ * screen returns `null` and the camera stays put.
  */
 export function boundsOfDistrict(
   map: MapLibreMap,
@@ -736,9 +608,7 @@ export function boundsOfDistrict(
     walk(geometry.coordinates);
   }
 
-  // The floor (RULING 159): no matching feature is NOT an empty box. A bounds
-  // of `Infinity` would fly the camera somewhere nobody asked for, and a
-  // silently returned zero-size box would read as a district with no extent.
+  // No matching feature is not an empty box: return null rather than Infinity or zero bounds.
   if (found === 0 || !Number.isFinite(west) || !Number.isFinite(north)) return null;
 
   return [
@@ -748,12 +618,10 @@ export function boundsOfDistrict(
 }
 
 /**
- * The WHOLE district's box, from the source's full geometry rather than from
- * what is rendered (approved reader design: "fit the selected boundary in
- * the usable viewport"). `boundsOfDistrict` above can only see the part of a
- * district already on screen, so a boundary mostly off screen never fit.
- * Null when the source is not loaded or holds no such feature — callers fall
- * back to the rendered box.
+ * The whole district's box, from the source's full geometry rather than what
+ * is rendered, so a boundary mostly off screen still fits. Null when the
+ * source is not loaded or holds no such feature; callers fall back to the
+ * rendered box.
  */
 export async function fullBoundsOfDistrict(
   map: MapLibreMap,
@@ -778,11 +646,7 @@ export function onSettledDistrictChange(map: MapLibreMap, run: () => void): () =
   const flush = () => {
     scheduled = false;
     if (disposed || !dirty) return;
-    /*
-     * Still moving: drop this pass rather than pay it into a frame the reader
-     * is watching. Nothing is lost by dropping it — `moveend` schedules
-     * another, and every camera move MapLibre makes ends in exactly one.
-     */
+    /* Still moving: drop this pass; `moveend` schedules another. */
     if (map.isMoving() || mapPresentationHeld(map)) return;
     dirty = false;
     run();

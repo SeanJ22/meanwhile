@@ -5,7 +5,6 @@ import { FIPS_TO_STATE } from "../ocd/fips.ts";
 export const ELECTION_FIELD_KINDS = ["registration_deadline", "early_voting", "polling_lookup", "registration_lookup", "ballot_lookup", "certified_outcome", "election_office"] as const;
 export type ElectionFieldKind = typeof ELECTION_FIELD_KINDS[number];
 
-/** Resolve the jurisdiction class from national geography data, including DC. */
 export function electionFieldState(divisionId: string): string | null {
   const match = /^ocd-division\/country:us\/(state|district|territory):([a-z]{2})(?:\/|$)/.exec(divisionId);
   if (!match) return null;
@@ -19,7 +18,6 @@ export function sourcedElectionDate(value: string): boolean {
   return Number.isFinite(instant) && new Date(instant).toISOString().slice(0, 10) === value;
 }
 
-/** Structural match for S9's ElectionFieldCandidate; the capture is the saved source. */
 export interface ElectionFieldInput {
   readonly divisionId: string;
   readonly kind: ElectionFieldKind;
@@ -27,7 +25,6 @@ export interface ElectionFieldInput {
   readonly value: string;
   readonly quote: string;
   readonly dates: readonly string[];
-  /** An `election_office` field's phone line, as the saved page gives it. */
   readonly phone?: string | null;
   readonly document: { readonly url: string; readonly text: string; readonly collectedAt: string; readonly capture?: WorkerPublicationCapture };
   readonly linkingPage?: OfficialLinkingPage;
@@ -43,10 +40,8 @@ export interface PublishedElectionField {
     readonly text: string;
     readonly quote: string;
     readonly dates: readonly string[];
-    /** Official source, not an assigned polling-place claim. */
     readonly url: string;
     readonly navigationUrl: string | null;
-    /** An election office's phone line, as the saved page gives it. */
     readonly phone?: string | null;
     readonly verifiedAt: string;
     readonly collectedAt: string;

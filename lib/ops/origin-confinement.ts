@@ -1,44 +1,4 @@
-/**
- * **SYNTHETIC-RUN IDENTIFICATION NEVER LEAVES OUR ORIGIN** — RULING 101,
- * 2026-08-23.
- *
- * ## Two findings, one line of code, and only one of them was closed
- *
- * `VF02` (NJ Hunt 6) found that Playwright's `extraHTTPHeaders` applies to
- * EVERY request a context makes, third parties included. MapTiler's CORS
- * preflight does not allow `x-wtp-synthetic-run`, so the basemap style request
- * was refused **in every capture and every walk this repo has ever taken** —
- * which is why NJ Hunt 5's photographs showed *Basemap unavailable* while its
- * 371 checks were green. Both were honest. They were looking at different
- * pages, because the instrument was breaking the thing it was measuring.
- *
- * That finding was fixed. The SECOND one was recorded and not enforced: **our
- * run identifier was crossing our origin to every third-party host the page
- * touched.** Nothing sensitive leaked — a run id names a walk, not a person —
- * but a header identifying our infrastructure arriving at hosts we do not
- * control is the wrong shape for a product whose central claim is that its
- * stores share no joinable column. It is exactly the kind of thing that is
- * true only until somebody adds a host.
- *
- * ## Why this is a module and not four lines inside the harness
- *
- * It was four lines inside the harness, and four lines inside a harness are
- * remembered rather than enforced: nothing failed if they were deleted, and
- * nothing could test them without launching a browser. Here they are a pure
- * function over `(requestUrl, frameUrl, headers)` that a unit test can walk
- * across every third-party host the app actually talks to.
- *
- * `scripts/browser.mts` calls this and `tests/origin-confinement.test.ts`
- * asserts that it does, so removing the call fails the build.
- *
- * ## Failing safe means not leaking, never leaking to be safe
- *
- * An unparseable URL, an opaque frame, `about:blank` — every one of them is
- * treated as CROSS-origin and stripped. The cost of over-stripping is that one
- * of our own rows lands `ORGANIC` and is visible as such in the census. The
- * cost of under-stripping is a header we cannot recall from a host we do not
- * own. Those are not symmetrical.
- */
+/** Synthetic-run identification never leaves our origin: marker headers are stripped from every third-party request. */
 
 /** The headers a walk adds to declare itself. Lower-cased on the way in. */
 export type MarkerHeaders = Readonly<Record<string, string>>;
@@ -48,11 +8,7 @@ export type ConfinementVerdict =
   | "SAME_ORIGIN_KEPT"
   /** A different origin — every marker header is removed. */
   | "CROSS_ORIGIN_STRIPPED"
-  /**
-   * Neither URL could be parsed into an origin. Stripped, and named separately
-   * so a report can tell "we know it was third-party" from "we could not
-   * tell" — the same distinction `CANNOT_RUN` keeps apart from `ZERO_ROWS`.
-   */
+  /** Neither URL parsed into an origin: stripped, and named apart from a known third party. */
   | "UNKNOWN_ORIGIN_STRIPPED";
 
 export interface Confinement {
@@ -75,12 +31,7 @@ function originOf(url: string): string | null {
   }
 }
 
-/**
- * Decide what headers one request may carry.
- *
- * `requestUrl` is where the request is going. `frameUrl` is the page that
- * asked for it — our origin, when the walk is walking our site.
- */
+/** Decide what headers one request may carry; `frameUrl` is the page that asked for it. */
 export function confine(
   requestUrl: string,
   frameUrl: string,
@@ -114,28 +65,14 @@ export function confine(
   };
 }
 
-/**
- * True where this request may carry the marker at all. The cheap form, for a
- * caller that only needs the decision.
- */
+/** Whether this request may carry the marker at all. */
 export function marksTravel(requestUrl: string, frameUrl: string): boolean {
   const target = originOf(requestUrl);
   const page = originOf(frameUrl);
   return target !== null && page !== null && target === page;
 }
 
-/**
- * **The third-party hosts this product's pages actually reach.**
- *
- * Not a decorative list: `tests/origin-confinement.test.ts` walks every one of
- * them and asserts the marker is stripped, so the guard has a stated
- * denominator rather than one example. **Append-only** — a host that stops
- * being used costs nothing to keep asserting about, and removing one is how a
- * later leak goes unnoticed.
- *
- * MapTiler is first because it is the one that broke, and the two font hosts
- * are here because a style document can pull glyphs from either.
- */
+/** The third-party hosts this product's pages reach; append-only, each asserted stripped by a test. */
 export const THIRD_PARTY_HOSTS: ReadonlyArray<string> = [
   "https://api.maptiler.com",
   "https://tiles.maptiler.com",

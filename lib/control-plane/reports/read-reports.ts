@@ -1,16 +1,5 @@
-/**
- * **"REPORT A PROBLEM" SUBMISSIONS, FOR THE COMMAND CENTER'S REPORTS VIEW.**
- *
- * Reads one bounded page per site from S6's feedback store, (the feedback store,
- * `FEEDBACK_DATABASE_URL` when set), labeled by the site each came from. A reader's
- * reply address is contact data and is never selected: the view is told only
- * whether one was left. There is no delete or edit path anywhere in this reading.
- *
- * `about`, `zip` and `recordId` are the card the reader reported (S6, #490); a store
- * that does not carry them yet answers `null` for each and the view says so.
- */
+/** A reader's reply address never leaves this module: the view is told only whether one was left. No delete or edit path. */
 import { feedbackConnection, type FeedbackSite } from "../../db/feedback.ts";
-
 import { neon } from "@neondatabase/serverless";
 import { boundedQuery } from "../repository/request-bounds.ts";
 import type { Sql } from "../repository/pg-store.ts";
@@ -21,7 +10,6 @@ export interface ReportRow {
   readonly site: FeedbackSite;
   readonly message: string;
   readonly surface: string;
-  /** Who wrote it: a reader, or one of our own test runs. */
   readonly origin: "reader" | "owner test" | "automated test" | "unclassified";
   readonly about: string | null;
   readonly zip: string | null;

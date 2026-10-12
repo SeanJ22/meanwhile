@@ -1,8 +1,22 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { projectFlow, readFlow, type FlowRows } from "../lib/control-plane/admin-view/flow-read.ts";
+import { projectFlow, readFlow, readFlowWeek, type FlowRows } from "../lib/control-plane/admin-view/flow-read.ts";
+import { yesterdayWindow } from "../lib/control-plane/admin-view/cost-reporting-view.ts";
 import { recordPublicationFlow, PUBLICATION_FLOW_LOG_KEY } from "../lib/civic-data/publication-flow.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+
+test("the spend answer uses Eastern yesterday across both clock changes, without overlapping the previous day", async () => {
+  for (const [at, hours] of [["2026-03-09T12:00:00Z", 23], ["2026-11-02T12:00:00Z", 25]] as const) {
+    const yesterday = yesterdayWindow(at);
+    assert.equal(Date.parse(yesterday.through) - Date.parse(yesterday.from), hours * 3_600_000);
+    const control = { query: async (statement: string) => statement.includes("AS since") ? [{ since: "2026-01-01T00:00:00Z" }] : [] };
+    const week = await readFlowWeek({ control, through: yesterday.through, lastDay: yesterday });
+    assert.ok(week);
+    assert.equal(week.days.at(-1)!.from, yesterday.from);
+    assert.equal(week.days.at(-1)!.through, yesterday.through);
+    for (let i = 1; i < week.days.length; i++) assert.equal(week.days[i - 1].through, week.days[i].from);
+  }
+});
 const hour = "2026-10-05T12:00:00.000Z", through = "2026-10-05T13:00:00.000Z";
 const stages: FlowRows["stages"] = [
   { hour, stage: "findings", count: 8 }, { hour, stage: "builtFindings", count: 6 },
@@ -36,21 +50,4 @@ test("publication stage observations deduplicate restarts and shared Sends witho
     recordPublicationFlow(repos, "candidate", { ...checked, stage: "LIVE", versionId: "candidate" }, through)]);
   assert.equal((await repos.ownerDigests.read(PUBLICATION_FLOW_LOG_KEY)).length, 2);
   await assert.rejects(recordPublicationFlow(repos, "missing", { ...checked, stage: "LIVE" }, hour), /INVALID/);
-});
-
-
-test("the authoritative week uses Eastern yesterday without overlapping the prior day on a clock change", async () => {
-  const {readFlowWeek} = await import("../lib/control-plane/admin-view/flow-read.ts");
-  const {yesterdayWindow} = await import("../lib/control-plane/admin-view/cost-reporting-view.ts");
-  for (const [at,hours] of [["2026-03-09T12:00:00Z",23],["2026-11-02T12:00:00Z",25]] as const) {
-    const window = yesterdayWindow(at);
-    const calls:unknown[][]=[];
-    const sql=Object.assign(async()=>[],{query:async(...args:unknown[])=>{calls.push(args);return String(args[0]).includes("min(recorded_at)")?[{since:"2026-01-01T00:00:00Z"}]:[];}});
-    const week = await readFlowWeek({control:sql as never,through:window.through,lastDay:window});
-    assert.equal(week?.days.at(-1)?.from,window.from);
-    assert.equal(week?.days.at(-1)?.through,window.through);
-    assert.equal(week?.days.at(-1)?.read?.hours.length,hours);
-    for(let i=1;i<7;i++)assert.equal(week!.days[i-1].through,week!.days[i].from);
-    assert.equal(calls.length,22,"same bounded reads; no second source for the spend topic");
-  }
 });

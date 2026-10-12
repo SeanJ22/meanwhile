@@ -1,10 +1,6 @@
 /**
- * **THE RESEARCH LANE'S NUMBERS, EACH WITH ITS DENOMINATOR.** (Work Item 5
- * and 6, 2026-09-02. RULING 229, RULING 244.)
- *
- * The pure computations in `research-metrics.ts` and the lines/rows in
- * `research-digest.ts`. Each test fixes an input and asserts the number AND
- * the denominator or rule that travels with it.
+ * The pure computations in `research-metrics.ts` and the lines/rows in `research-digest.ts`. Each test fixes
+ * an input and asserts the number and the denominator or rule that travels with it.
  */
 
 import assert from "node:assert/strict";
@@ -93,14 +89,14 @@ test("ordering: band 1 for a reader signal, band 2 for a universe provider, band
     { id: "freshness:meetings:x", subjectId: "ocd-division/country:us/state:az/place:nowhere", readerImpactAt: null, providerId: "meetings", nextDueAt: "2026-09-01T00:00:00.000Z" },
     { id: "freshness:candidate-enrichment:az:2026:x#site", subjectId: "az:2026:x", readerImpactAt: null, providerId: "candidate-enrichment", nextDueAt: "2026-09-02T00:00:00.000Z" },
     { id: "freshness:jurisdiction:az:county:county-of-pima#meetings-1", subjectId: "az:county:county-of-pima", readerImpactAt: null, providerId: "local-jurisdictions", nextDueAt: "2026-09-02T01:00:00.000Z" },
-    { id: "freshness:tracker:t#r", subjectId: "t", readerImpactAt: "2026-09-10T00:00:00.000Z", providerId: "tracker-intake", nextDueAt: "2026-09-01T12:00:00.000Z" },
+    { id: "freshness:meetings:t#r", subjectId: "t", readerImpactAt: "2026-09-10T00:00:00.000Z", providerId: "meetings", nextDueAt: "2026-09-01T12:00:00.000Z" },
     { id: "freshness:candidate-enrichment:az:2026:y#site", subjectId: "az:2026:y", readerImpactAt: null, providerId: "candidate-enrichment", nextDueAt: "2026-08-30T00:00:00.000Z" },
   ];
   const { ordered, ordering } = orderByReaderImpact(rows, inputs);
   assert.deepEqual(
     ordered.map((o) => [o.band, o.row.id]),
     [
-      [1, "freshness:tracker:t#r"],
+      [1, "freshness:meetings:t#r"],
       [2, "freshness:candidate-enrichment:az:2026:y#site"],
       [2, "freshness:candidate-enrichment:az:2026:x#site"],
       [2, "freshness:jurisdiction:az:county:county-of-pima#meetings-1"],
@@ -111,17 +107,12 @@ test("ordering: band 1 for a reader signal, band 2 for a universe provider, band
   assert.equal(ordering.rule, ORDERING_RULE);
   assert.equal(ordering.appliesTo, "BOUNDED_MODEL_WORKER");
   assert.equal(ordering.inputs.readerImpactAt, "FreshnessObligation.readerImpactAt");
-  assert.equal(ordering.inputs.pilotJurisdictions, undefined, "CH-12: no pilot place is ahead of the line");
+  assert.equal(ordering.inputs.pilotJurisdictions, undefined, "no pilot place is ahead of the line");
   assert.deepEqual(ordering.inputs.universeProviders, UNIVERSE_PROVIDERS);
   assert.match(ordered[0].why, /readerImpactAt/);
-  assert.match(ordered[1].why, /RULING 229/);
+  assert.match(ordered[1].why, /source-universe denominator/);
   assert.match(ordered[4].why, /long tail/);
-  /*
-   * Positive control for the deleted Git coupling: even an object carrying the
-   * retired fields (as an old stored record or a mutated tracked suite could)
-   * cannot influence the permanent function. Only canonical readerImpactAt or
-   * release-pinned pilot configuration can move this meeting into band 1.
-   */
+  // Retired ordering fields on the inputs cannot influence the band.
   const legacyMutation = {
     pilotZips: [],
     openRedQuestionZips: ["07866"],
@@ -134,7 +125,7 @@ test("ordering: band 1 for a reader signal, band 2 for a universe provider, band
   );
   assert.equal(unaffected.band, 3);
   assert.match(unaffected.why, /long tail/);
-  /* SEEDED (measured live 2026-09-02): a candidate SURNAMED Vail is not a pilot jurisdiction. */
+  /* A candidate whose surname matches a place name is not that jurisdiction. */
   const surname = bandFor({ id: "freshness:candidate-enrichment:nh:2026:state-nh:united-states-senator:vail-john#candidate-wikipedia-api", subjectId: "nh:2026:state-nh:united-states-senator:vail-john", readerImpactAt: null, providerId: "candidate-enrichment", nextDueAt: NOW }, inputs);
   assert.equal(surname.band, 2, surname.why);
   const newbury = bandFor({ id: "freshness:candidate-enrichment:nh:2026:state-nh-county-merrimack-place-newbury-town:x#site", subjectId: "", readerImpactAt: null, providerId: "candidate-enrichment", nextDueAt: NOW }, inputs);
@@ -172,7 +163,7 @@ test("share: this cycle against the trailing window, with the delta in points an
   assert.equal(empty.delta, null);
 });
 
-/** A ledger row carrying the cache metering (2026-09-06). */
+/** A ledger row carrying the cache metering. */
 function meteredCost(attemptId: string, m: { read: number; write: number; uncached: number; split?: boolean; batch?: boolean; requests?: number }, role: CostEntry["role"] = "SCOUT", recordedAt = NOW): CostEntry {
   return {
     ...cost(attemptId, 1, recordedAt, role),

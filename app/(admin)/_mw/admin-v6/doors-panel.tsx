@@ -1,9 +1,5 @@
 "use client";
 
-/**
- * **DOORS — a panel on Workers (DB-09 hook).** How many doors are open, shut and set aside, the shut ones with why
- * and since when, and the newest door changes. A door is named by what it holds and the website it reads.
- */
 import type { DoorsView } from "@/lib/control-plane/admin-view/v6-doors-read.ts";
 
 import { count, mst } from "./model.ts";
@@ -26,25 +22,29 @@ export function DoorsPanel() {
             <Pill tone="neutral">{count(data.counts.setAside)} set aside</Pill>
             {data.counts.unreadable > 0 && <Pill tone="warn">{count(data.counts.unreadable)} unreadable</Pill>}
           </div>
-          {!data.rows.length && <Empty>No shut doors</Empty>}
+          {!data.rows.length && <Empty>No doors yet</Empty>}
           {!!data.rows.length && (
             <div className={s.tableWrap}>
               <table className={s.table}>
-                <thead><tr><th scope="col">Door</th><th scope="col">State</th><th scope="col">Why</th><th scope="col">Since</th><th scope="col">Last worked</th></tr></thead>
+                <thead><tr><th scope="col">Door</th><th scope="col">Kind</th><th scope="col">Body</th><th scope="col">State</th><th scope="col">Why</th><th scope="col">Since</th><th scope="col">Last worked</th><th scope="col">Last failed</th></tr></thead>
                 <tbody>
                   {data.rows.map((row, n) => (
                     <tr key={`${row.name}-${n}`}>
                       <td>{row.name}</td>
+                      <td>{row.kind}</td>
+                      <td>{row.body}</td>
                       <td>{row.status}</td>
                       <td>{row.why ?? "—"}</td>
                       <td>{row.since ? mst(row.since) : "—"}</td>
                       <td>{row.lastWorked ? mst(row.lastWorked) : "—"}</td>
+                      <td>{row.lastFailed ? mst(row.lastFailed) : "—"}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
           )}
+          {data.total > data.rows.length && <p className={cx(s.p, s.small)}>Showing {count(data.rows.length)} of {count(data.total)} doors</p>}
           {!!data.changes.length && (
             <div className={s.stack} style={{ gap: 4 }}>
               <strong className={s.small}>Latest door changes</strong>

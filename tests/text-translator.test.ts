@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { gunzipSync } from "node:zlib";
 import test from "node:test";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -11,8 +13,13 @@ import { translationHash, type TextTranslation } from "../lib/translate/records.
 import { DEFAULT_SOURCE_POLICY } from "../lib/control-plane/promotion/source-kinds.ts";
 import { translatedMeetingEvidenceFor } from "../lib/ask/meeting-knowledge.ts";
 import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
-await installRegistryRuntimeFirstSeeds();
+import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
+import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
+
+const registry = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
+const registryStore = new MemoryRoutineDataStore();
+Object.assign(registryStore, { candidates: new Map([[registry.record.candidate.id, registry.record]]), promotions: new Map([[registry.projection.key, registry.projection]]) });
+assert.equal((await readRegistryRuntimeProjection({ store: registryStore, bypassCache: true })).kind, "PROMOTED");
 
 const now = "2026-10-05T18:00:00Z", stateDivision = "ocd-division/country:us/state:mi";
 const division = `${stateDivision}/county:birch`, bodyId = `${division}#library`;

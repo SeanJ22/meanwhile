@@ -1,17 +1,12 @@
 /**
- * DB-35: a door is repaired by editing its record.
- *
- * One function does the repair for both callers: Sean from a queue row (the
- * `door.update` gateway action, which replaces the old `use-url` control) and a
- * detective through its tool. It changes only the fields named, sets `readNow`
- * so the next pass reads the door, and never reopens a shut door by itself:
- * a shut door reopens when a read of the new record succeeds (lib/doors/shut.ts),
- * which is what completes its fix item (DB-34). The fix item moves to "being
- * worked on" now. The previous record is returned so Undo can restore it.
+ * A door is repaired by editing its record, for both the `door.update` gateway
+ * action and a detective. Changes only the fields named and sets `readNow`. It
+ * never reopens a shut door by itself: a shut door reopens when a read of the
+ * new record succeeds. The previous record is returned so Undo can restore it.
  */
 
 import { startFixItem } from "../control-plane/fix-list.ts";
-import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
+import { canonicalJson, type ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { applyManualEdit, checkDoorDraft, editableFieldsOf, isDoorRecord, type DoorDraft, type DoorRecord } from "./registry.ts";
 import { shutDoorFixWords } from "./shut-repair.ts";
 import { fixSubjectId } from "../control-plane/fix-queue.ts";
@@ -26,7 +21,7 @@ const FIELDS = ["kind", "ocdId", "bodyIds", "hosts", "config", "holds", "checkEv
 
 /** Which of the draft's fields differ from the record, in plain field names. */
 function changedFields(before: Required<DoorDraft>, after: Required<DoorDraft>): string[] {
-  return FIELDS.filter((f) => JSON.stringify(before[f]) !== JSON.stringify(after[f]));
+  return FIELDS.filter((f) => canonicalJson(before[f]) !== canonicalJson(after[f]));
 }
 
 /** Apply `changes` over the stored door. Only the fields supplied are changed. No such door: nothing is invented. */

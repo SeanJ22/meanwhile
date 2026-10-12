@@ -1,15 +1,4 @@
-/**
- * The versioned Admin read/action surface advertised by the existing live pulse.
- *
- * An older deployment omits this field entirely. A mounted client treats that as
- * unavailable and keeps listening to the one shared pulse. Adding a compatible
- * backend route changes this manifest and therefore the pulse revision, so an
- * already-open page can retry its scoped read without a reload or fixture toggle.
- * This says code is present, not that a store read succeeded or an action is
- * authorized for the current subject.
- *
- * PURE: no I/O, clock, provider or data-plane read.
- */
+/** Says code is present, not that a store read succeeded or an action is authorized. An older deployment omits it: unavailable. */
 
 export const ADMIN_CAPABILITY_NAMES = [
   "engineeringTasks",
@@ -41,7 +30,6 @@ const FEATURES: AdminCapabilityManifest["features"] = Object.freeze({
   workerEvents: { state: "SUPPORTED", contractVersion: 1 },
 });
 
-/** Static and tiny; the Admin route still checks host and session first. */
 export const ADMIN_CAPABILITIES: AdminCapabilityManifest = Object.freeze({
   schemaVersion: 1,
   revision: "admin-capabilities/1:fixHistory/1:workerEvents/1",

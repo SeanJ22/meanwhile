@@ -7,16 +7,10 @@ import { linkingPageFrom, needsSecondSource, SECTION3_MINIMUMS, section3Page, se
 /** Source-wide shortfalls that leave blanks open but make no captured record wrong. */
 const COVERAGE_CODES = new Set(["COMPLETENESS_SOURCE_ROW_OMITTED", "DECLARED_COUNT_MISMATCH"]);
 
-/**
- * The Validator applies §3 (docs/rulings.md): each record's values are on a
- * saved official page from the right place, inside its freshness window, and
- * code confirms them there. A record whose minimum facts pass is validated on
- * its own; one bad row never holds back the others. A second source is
- * required only for judgment calls (`needsSecondSource`).
- */
+/** The Validator confirms each record's values on a saved official page from the right place, inside its freshness window. A record whose minimum facts pass is validated on its own; a second source is required only for judgment calls (`needsSecondSource`). */
 export function validateGeneralizedExtraction(input: ValidatorWorkerInput, contract: GeneralizedCivicExtractionContract): ValidatorResult {
   const findings: WorkerFinding[] = [];
-  // The Validator confirms what the extraction claims; each reader door then requires its class's §3 minimums.
+  // The Validator confirms what the extraction claims; each reader door then requires its class's minimums.
   const mapped = new Set([...Object.keys("fields" in contract.extraction ? contract.extraction.fields : {}), ...contract.requiredFields]);
   const classMinimums = (SECTION3_MINIMUMS[contract.recordClass] ?? []).filter(requirement => requirement.split("|").some(field => mapped.has(field)));
   const minimums = classMinimums.length ? classMinimums : contract.requiredFields;
@@ -26,7 +20,7 @@ export function validateGeneralizedExtraction(input: ValidatorWorkerInput, contr
   findings.push(...input.candidate.warnings);
   try {
     assertGeneralizedScope(contract, input.evidence);
-    // A record type with no parsing rule is checked from the quotes the Parser took (S5); every other from its source rows.
+    // A record type with no parsing rule is checked from the quotes the Parser took; every other from its source rows.
     const replay = isQuotedExtraction(contract, input.candidate) ? quotedSourceFindings(input.candidate, contract, input.evidence)
       : compareCandidateWithSource(input.candidate, contract, input.evidence, inventoryRecordEvidence(input.evidence, contract.extraction));
     for (const finding of replay) {
@@ -43,8 +37,7 @@ export function validateGeneralizedExtraction(input: ValidatorWorkerInput, contr
   // Findings about one record hold that record only; anything else holds the capture.
   const recordScoped = (f: WorkerFinding) => Boolean(f.recordId) && f.severity !== "INFO";
   const extractionVerdict = findingsVerdict(findings.filter(f => !recordScoped(f)));
-  // A second source is required only for judgment calls. A declared source that
-  // contradicts one record still holds that record (§6); anything else it says is coverage.
+  // A second source is required only for judgment calls. A declared source that contradicts one record still holds that record; anything else it says is coverage.
   const secondSource = needsSecondSource(contract);
   const externalVerifications = contract.verification.authorities.length ? verifyExternalAuthorities(input, contract) : [];
   if (secondSource && !externalVerifications.length) findings.push(issue("SECOND_SOURCE_MISSING", "This judgment call needs a second, independent source.", "WARNING"));

@@ -1,5 +1,5 @@
 /**
- * Admin v6 automatic pickup (AUTOMATIC-INTEGRATION.md, required acceptance):
+ * Admin v6 automatic pickup:
  * backend unavailable → backend available → the SAME open page displays real
  * data → later changes appear automatically. Also: disconnect/reconnect,
  * access denied, incompatible version, out-of-order responses, one read in

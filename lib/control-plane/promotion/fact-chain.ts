@@ -1,39 +1,9 @@
-/**
- * **THE COMPLETE CHAIN FOR A FACT: SCOUTED → CONFIRMED → VERIFIED → AUDITED → APPROVED.**
- * (Fleet Promotion Readiness, PRDY-3, 2026-09-06.)
- *
- * Every transition is OFFERED through `appendTransition`, the one gated path,
- * and every burden is decided by `validateTransition`'s existing rules plus
- * the two additive ones this session gave it (a conflicting confirmation, a
- * failed approval burden). Nothing here bypasses a stage, and nothing here
- * writes a record the validator did not accept or refuse.
- *
- * ```
- *   SCOUTED    the fact, from its acquiring Attempt; one item per fact key
- *   CONFIRMED  a second acquisition of the same official representation by another
- *              Attempt whose bytes, through the same adapter, state the same fact;
- *              a second acquisition that states a different fact is offered and
- *              REFUSED (the hold), never skipped
- *   VERIFIED   the five checks, measured by fact-verification over the immutable
- *              bytes, bound to the exact Validator result and its artifact
- *   AUDITED    the exact Auditor result, with controls MEASURED from an independent
- *              parse of the same bytes
- *   APPROVED   a machine RELEASE_ORCHESTRATOR actor, once the chain holds and the
- *              deterministic burdens pass: checks, controls, currency, freshness,
- *              candidate class. Implemented class-specific paths define the gate; no fact is
- *              approved by a person.
- * ```
- *
- * Record ids and `at` values are derived from the evidence, so a re-projection
- * re-offers the same records and the log dedupes them; a refusal whose reasons
- * did not change is the same refusal.
- */
+/** Every transition is offered through `appendTransition`; ids and `at` derive from the evidence, so re-projection dedupes. */
 import { activeWiring, type BodySourceWiring } from "../../registry/source-wiring.ts";
 import { getRegistryRuntimeReadModel } from "../../registry/runtime-read-model.ts";
 import { fingerprint } from "../ids.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
-import { LOW_RISK_CANDIDATE_CLASSES } from "./activation-gate.ts";
 import { controlsClean, measureFactControls, verifyMeetingFact } from "./fact-verification.ts";
 import { factSubjectsFromStates, readFactFreshness, type FactFreshnessReading, type FactSubject } from "./fact-freshness.ts";
 import {
@@ -72,7 +42,6 @@ export function factItemId(recordClass: MeetingFactClass, factKey: string): stri
   return `pp-${fingerprint(["fleet-fact", recordClass, factKey])}`;
 }
 
-/** Body ids the Reader recognises: the canonical registry and SOURCE_WIRING. */
 export function readRegistryBodyIds(root: string, wiring: readonly BodySourceWiring[] = activeWiring()): ReadonlySet<string> {
   const ids = new Set<string>(wiring.map((row) => row.bodyId));
   void root;
@@ -90,7 +59,6 @@ export interface FactChainOptions {
   readonly freshness?: (input: { recordClass: MeetingFactClass; subjectId: string; meetingSource: string; lastSuccessfulAcquisitionAt: string | null }) => Promise<FactFreshnessReading>;
 }
 
-/** One completed extraction chain, bridged. */
 export interface BridgedChain {
   readonly parser: WorkerResultRecord;
   readonly validator: WorkerResultRecord | null;
@@ -150,11 +118,6 @@ function completedAuditorFor(validator: WorkerResultRecord | null, results: read
     .sort((a, b) => (a.endedAt < b.endedAt ? 1 : -1))[0] ?? null;
 }
 
-/**
- * Bridge every completed meeting-fact extraction chain the control plane
- * holds, without offering anything. The promoter and the canary read facts
- * through this; the projection offers through `projectFactChains`.
- */
 export async function collectFactChains(repos: ControlPlaneRepositories, options: FactChainOptions, ctx?: PipelineContext): Promise<FactChainCollection> {
   const context = ctx ?? (await contextFromRepositories(repos));
   const results = await repos.workerResults.readAll();
@@ -194,7 +157,6 @@ export async function collectFactChains(repos: ControlPlaneRepositories, options
     chains.push({ parser, validator, auditor, artifact, text, bridge });
   }
 
-  /* Readings of every artifact at a chain's URL, for currency and confirmation. */
   const sourceByArtifact = new Map<string, NormalizedSource | null>();
   const readingOf = async (chain: BridgedChain, artifact: ArtifactRecord): Promise<NormalizedSource | null> => {
     if (artifact.artifactId === chain.artifact.artifactId) return chain.bridge.source;
@@ -252,12 +214,10 @@ function lane(record: WorkerResultRecord): PipelineActor["lane"] {
   return record.executionMode === "MODEL_ASSISTED" ? "BOUNDED_MODEL_WORKER" : "DETERMINISTIC";
 }
 
-/** Every fact item's derived state, from the log. */
 export async function readFactItemStates(repos: ControlPlaneRepositories): Promise<PipelineItemState[]> {
   return (await readPipelineStates(repos)).filter((s) => s.byStage.SCOUTED?.source.kind === "FLEET_EXTRACTION");
 }
 
-/** The (record class, body) subjects the scheduler owes a freshness obligation, from the pipeline's own records. */
 export async function factSubjectsFromRepositories(repos: ControlPlaneRepositories, nowIso: string): Promise<FactSubject[]> {
   return factSubjectsFromStates(await readFactItemStates(repos), nowIso);
 }
@@ -310,7 +270,6 @@ export async function projectFactChains(repos: ControlPlaneRepositories, options
     const artifact = chain.artifact;
     let state = statesById.get(itemId) ?? null;
 
-    /* SCOUTED */
     if (!state?.byStage.SCOUTED) {
       const role = ctx.attemptRoleById(artifact.attemptId) ?? "ACQUIRER";
       const scouted: ScoutedRecord = {
@@ -326,7 +285,6 @@ export async function projectFactChains(repos: ControlPlaneRepositories, options
     }
     if (!state?.byStage.SCOUTED) continue;
 
-    /* CONFIRMED */
     if (state.stage === "SCOUTED") {
       const candidates = item.confirmations.filter((c) => c.source !== null && c.role !== null && c.role !== "SCOUT");
       const agreements = candidates.map((c) => ({ ...c, agreement: factAgreementIn(fact, c.source!) })).filter((c) => c.agreement.present);
@@ -343,7 +301,6 @@ export async function projectFactChains(repos: ControlPlaneRepositories, options
     }
     if (!state) continue;
 
-    /* VERIFIED */
     if (state.stage === "CONFIRMED" && chain.validator !== null) {
       const validator = chain.validator;
       const verification = verifyMeetingFact({ fact, parser: chain.parser.result as never, artifact, text: chain.text, siblings: chain.bridge.facts,
@@ -357,7 +314,6 @@ export async function projectFactChains(repos: ControlPlaneRepositories, options
     }
     if (!state) continue;
 
-    /* AUDITED */
     const audit = chain.auditor?.result;
     if (state.stage === "VERIFIED" && chain.auditor !== null && audit !== undefined && audit.role === "ADVERSARIAL_AUDITOR") {
       const auditor = chain.auditor;
@@ -385,7 +341,6 @@ export async function projectFactChains(repos: ControlPlaneRepositories, options
     }
     if (!state) continue;
 
-    /* APPROVED_FOR_PROMOTION */
     if (state.stage === "AUDITED") {
       const scouted = state.byStage.SCOUTED!;
       const confirmed = state.byStage.CONFIRMED!;
@@ -409,7 +364,7 @@ export async function projectFactChains(repos: ControlPlaneRepositories, options
         { name: "CONTROLS_MEASURED_CLEAN", result: clean.clean ? "PASS" : "FAIL", detail: clean.detail },
         { name: "FACT_CURRENT", result: currency.present && !currency.sameFact ? "FAIL" : "PASS", detail: currency.detail },
         { name: "FRESHNESS_NOT_STALE", result: reading.hold ? "FAIL" : "PASS", detail: `${reading.state}: ${reading.reason}` },
-        { name: "RECORD_CLASS_CANDIDATE", result: LOW_RISK_CANDIDATE_CLASSES.includes(fact.recordClass) && isMeetingFactClass(fact.recordClass) ? "PASS" : "FAIL", detail: `${fact.recordClass} ${LOW_RISK_CANDIDATE_CLASSES.includes(fact.recordClass) ? "is" : "is not"} in the implemented fact-chain class set` },
+        { name: "RECORD_CLASS_CANDIDATE", result: isMeetingFactClass(fact.recordClass) ? "PASS" : "FAIL", detail: `${fact.recordClass} ${isMeetingFactClass(fact.recordClass) ? "is" : "is not"} in the implemented fact-chain class set` },
       ];
       const approved: ApprovedRecord & { readonly readerMeeting: typeof fact.meeting; readonly publicationDoor: "PERMANENT_MEETING_PARTITION" } = {
         formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION, recordId: `${itemId}:approved:${audited.recordId}`, itemId, at: audited.at,
@@ -438,7 +393,6 @@ export async function projectFactChains(repos: ControlPlaneRepositories, options
   };
 }
 
-/** Lines for a digest: every count with its denominator. */
 export function factChainLines(report: FactChainReport): string[] {
   const out = [
     `  fact chains        ${report.bridged} of ${report.chains} completed meeting-fact extraction(s) bridged into ${report.facts} fact(s); ${report.refusals.length} refusal(s) named`,

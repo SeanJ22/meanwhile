@@ -19,45 +19,15 @@ import {
 } from "@/lib/ballot/voting-sites";
 
 /**
- * **Where can I vote?** — tracker B19, the reader-facing half.
- *
- * ## What the reader gets, and why it is plural
- *
- * They type an address. The sites they may use drop on the map as violet
- * teardrops, unmistakable against the round meeting dots, and this panel lists
- * the same sites with the sentence that says which model their jurisdiction
- * uses. In Pima County that sentence is *"any registered voter may vote at any
- * of these"*; in New London it is *"you are assigned to one of these"*. The
- * author's ruling is that the reader learning their county works differently
- * is the FEATURE, and it is the stranger test in one sentence.
- *
- * ## The address is orientation, not identity, and the copy says so
- *
- * The address goes to `/api/voting-sites`, which resolves it and keeps
- * nothing — no log row, no store, no cache. That promise is written where the
- * reader types, not buried in a policy, because a promise a reader cannot see
- * is not one they can hold us to.
- *
- * ## Friction that is the product working
- *
- * Exactly one link leaves the app: the directions handoff on a site's own
- * card. Turn-by-turn is not something we do, and pretending otherwise would
- * be worse than handing the reader off honestly. Everything else about a
- * location — its name, its address, the room, which wards it serves, who
- * published it and when we read it — is here.
+ * Where can I vote? The address goes to `/api/voting-sites`; the sites drop on
+ * the map as pins and list here with the sentence naming the jurisdiction's
+ * voting model. The only link out is a site's directions handoff.
  */
 
 export interface VotingSitesPanelProps {
   /** Lift the pinnable sites so the map can draw them. */
   onSites: (sites: { id: string; name: string; lat: number; lng: number }[]) => void;
-  /**
-   * **VOT-1: lift the RESOLVED POINT so the map can draw the ten-mile ring.**
-   *
-   * It is the point and never the address — the same line `VotingSitesAnswer`
-   * already draws: *only ever the resolved POINT, never the address that
-   * produced it*. A street address is a reader's home; a point on a map they
-   * are already looking at is the answer they asked for.
-   */
+  /** Lift the resolved point (never the address) so the map can draw the ten-mile ring. */
   onAddressPoint?: (point: { lat: number; lng: number } | null) => void;
   /** Which pin is selected, so the list can scroll it into view. */
   selectedSiteId: string | null;
@@ -115,9 +85,7 @@ export function VotingSitesPanel({
     [address],
   );
 
-  // Lift the pins whenever the answer changes, and clear them on unmount so
-  // closing the panel never leaves violet pins on a map with no card behind
-  // them.
+  // Lift the pins on each answer and clear them on unmount.
   useEffect(() => {
     if (state.kind !== "answered") {
       onSitesRef.current([]);
@@ -131,9 +99,7 @@ export function VotingSitesPanel({
     );
   }, [state]);
 
-  // VOT-1: the ring follows the same lifecycle as the pins — it appears with
-  // an answer and it is cleared when the panel closes, so a ring can never
-  // outlive the address that justified it.
+  // The ring appears with an answer and clears when the panel closes.
   useEffect(() => {
     onAddressPoint?.(state.kind === "answered" ? state.answer.point : null);
   }, [state, onAddressPoint]);
@@ -178,13 +144,7 @@ export function VotingSitesPanel({
           autoComplete="off"
           inputMode="text"
         />
-        {/* F01 1e (2026-08-19, the author, ordered verbatim: "we are going
-            to store and log at some point — don't argue about it, just make
-            sure it's changed"). The never-store/never-log promise is struck.
-            This sentence describes the mechanism as it works today and stops:
-            no forward commitment in either direction, because the honest
-            version of a promise we may not keep is no promise. Level
-            register — a claim surface about a reader's own address. */}
+        {/* Describes the mechanism as it works today, with no forward commitment. */}
         <p className="voting-panel-note">
           Your address is used to find your voting locations. It passes through
           our server to the Census Bureau&rsquo;s geocoder, which turns it into
@@ -216,8 +176,6 @@ export function VotingSitesPanel({
         state.answer.match &&
         state.answer.outsideCoverage && (
           <p className="voting-panel-status">
-            {/* BAL-7 (2026-08-24): what is known, then the non-claim, and
-                nothing about how we feel about the shortfall. */}
             <WorkingOnIt inline />
           </p>
         )}
@@ -237,9 +195,7 @@ export function VotingJurisdictionRecords({ answer, selectedSiteId, onSelectSite
           <article key={j.ocdId} className="voting-jurisdiction" data-voting-jurisdiction={j.ocdId}>
             <h3 className="voting-jurisdiction-name">{j.name}</h3>
             <p className="voting-model">{j.modelSentence}</p>
-            {/* B16 — which of these is yours, or why we will not say. A
-                refusal renders in the gap's own register with its rungs, not
-                as silence and never as a best guess. */}
+            {/* Which site is yours, or the refusal with its rungs; never a best guess. */}
             <p
               className="voting-narrowing"
               data-kind={j.narrowing.kind.toLowerCase()}
@@ -285,20 +241,7 @@ export function VotingJurisdictionRecords({ answer, selectedSiteId, onSelectSite
               </div>
             )}
 
-            {/*
-              **VOT-1 (2026-08-25) — NEAREST FIRST, AND THE WHOLE COUNTY STAYS.**
-
-              Sean: *"Where can I vote? returns everywhere in the county — that
-              is correct and stays. The defect is ordering."* So this is a SORT
-              and never a filter: `sitesNearestFirst` returns every site it was
-              given, and `tests/voting-sites-order.test.ts` asserts that against
-              the input rather than trusting it.
-
-              Distance is a neutral criterion and this is not the never-rank
-              rule's territory: that rule governs ordering PEOPLE by fit, and
-              this is geography — the same order for everyone who types the same
-              address, expressing no judgement about any site.
-            */}
+            {/* Nearest first, a sort and never a filter: every site in the county stays. */}
             {j.sites.length > 0 && (
               <ul className="voting-sites">
                 {sitesNearestFirst(j.sites, answer.point).map(({ site, miles }) => (
@@ -334,7 +277,7 @@ function SiteRow({
   onSelect,
 }: {
   site: VotingSite;
-  /** VOT-1: miles from the address the reader typed, or null if unplaceable. */
+  /** Miles from the address the reader typed, or null if unplaceable. */
   miles: number | null;
   selected: boolean;
   onSelect: () => void;
@@ -346,16 +289,12 @@ function SiteRow({
         <span className="voting-site-name">{site.name}</span>
       </button>
       <p className="voting-site-address">{site.address}</p>
-      {/* VOT-1: the distance, stated. A null renders NOTHING (RULING 28) —
-          an unplaced site already carries its own named gap below, and a dash
-          or an "unknown" here would be a second sentence about the same fact. */}
+      {/* A null distance renders nothing; an unplaced site carries its own gap below. */}
       {miles !== null && <p className="voting-site-distance">{milesLabel(miles)}</p>}
       {site.room && <p className="voting-site-room">{site.room}</p>}
       <p className="voting-site-kind">{KIND_LABEL[site.kind]}</p>
       {site.serves && <p className="voting-site-serves">{site.serves}</p>}
-      {/* A render default may never manufacture a claim: an unlabeled row is
-          not evidence that a location is open for the next election, so it
-          says whose gap it is instead of borrowing a date. */}
+      {/* An unlabeled row is not evidence a location is open for the next election. */}
       {site.election === null && (
         <p className="voting-site-gap">
           The authority did not say which election this location is for.

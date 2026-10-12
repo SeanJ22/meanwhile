@@ -1,16 +1,4 @@
-/**
- * **WHAT PRODUCTION SAYS IT IS RUNNING — for the operator chat.**
- *
- * The chat's "compare environments" question reads production's own build
- * identity from its `/api/build`. Staging no longer has a release manifest to
- * read: the release freezes and the owner review that served it were retired
- * (rulings §0, #451), so staging is reported as not read, never as a build.
- *
- * Reads only; a bad answer is a reading with a reason, never a throw. Reused for
- * a few seconds so two chat turns do not each pay for the fetch.
- *
- * @freshness-reads-here — `observedAt` is the instant of this module's own read of production's build endpoint.
- */
+/** Staging has no release manifest, so it is reported as not read, never as a build. */
 import { SYNTHETIC_RUN_HEADER } from "@/lib/db/run-marker.ts";
 import { PUBLIC_SITE_ORIGIN } from "@/lib/ops/origins.ts";
 import type { EnvironmentIdentities } from "./context.ts";

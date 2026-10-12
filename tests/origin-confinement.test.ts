@@ -12,10 +12,6 @@ import {
 
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 
-/* ========================================================================== */
-/* RULING 101 — synthetic-run identification never leaves our origin          */
-/* ========================================================================== */
-
 const OURS = PUBLIC_SITE_ORIGIN;
 const MARKERS = { [SYNTHETIC_RUN_HEADER]: "walk-all-2026-08-23" } as const;
 const BASE = {
@@ -32,18 +28,13 @@ test("the marker travels to our own origin", () => {
 });
 
 test("a localhost production build is its own origin and keeps the marker", () => {
-  // RULING 77 verification runs against a LOCAL production build, so the same
-  // rule has to hold there or every local walk lands ORGANIC.
+  // Local production builds are verified too, so the same rule has to hold there.
   const d = confine("http://localhost:3000/api/meetings", "http://localhost:3000/", BASE, MARKERS);
   assert.equal(d.verdict, "SAME_ORIGIN_KEPT");
 });
 
 test("EVERY third-party host this product's pages reach is stripped", () => {
-  /*
-   * The denominator is stated rather than exemplified. A guard that proved it
-   * for MapTiler alone would be the guard that only looks where the last
-   * defect was.
-   */
+  // The denominator is stated rather than exemplified.
   assert.ok(THIRD_PARTY_HOSTS.length >= 14, "the host list shrank — it is append-only");
   const confirmed: string[] = [];
   for (const host of THIRD_PARTY_HOSTS) {
@@ -63,11 +54,7 @@ test("EVERY third-party host this product's pages reach is stripped", () => {
 });
 
 test("the MapTiler style request — the exact call that failed — carries no custom header", () => {
-  /*
-   * The literal shape of `VF02`: MapTiler's preflight refuses
-   * `x-wtp-synthetic-run`, so the style document was never fetched and the
-   * basemap failed in every capture this repo has ever taken.
-   */
+  // A third party's CORS preflight can refuse the marker header and fail the whole fetch.
   const d = confine(
     "https://api.maptiler.com/maps/basic-v2-dark/style.json?key=REDACTED",
     `${OURS}/`,
@@ -92,11 +79,7 @@ test("a subdomain is a different origin, and so is a scheme change", () => {
 });
 
 test("an unreadable origin fails SAFE — stripped, and named as its own verdict", () => {
-  /*
-   * Failing safe means not leaking, never leaking to be safe. And "we could
-   * not tell" is kept apart from "we know it was third-party", the same way
-   * CANNOT_RUN is kept apart from ZERO_ROWS.
-   */
+  // Failing safe means not leaking; "could not tell" is kept apart from "known third-party".
   for (const [url, frame] of [
     ["data:text/html,x", `${OURS}/`],
     [`blob:${OURS}/abc`, `${OURS}/`],
@@ -116,10 +99,6 @@ test("marker names are matched case-insensitively", () => {
   assert.equal(Object.keys(d.headers).length, 0);
   assert.deepEqual(d.removed, ["x-wtp-synthetic-run"]);
 });
-
-/* -------------------------------------------------------------------------- */
-/* Enforced in the harness, not remembered                                     */
-/* -------------------------------------------------------------------------- */
 
 test("scripts/browser.mts routes every request through confine()", async () => {
   const src = await readFile(join(process.cwd(), "scripts", "browser.mts"), "utf8");

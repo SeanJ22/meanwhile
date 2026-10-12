@@ -1,6 +1,5 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { NextRequest } from "next/server";
 
 import { RUNNER_ID } from "../lib/control-plane/admin-data.ts";
 import { readAdminRunnerProgress, RUNNER_PROGRESS_HEARTBEAT_FIELDS,
@@ -9,9 +8,7 @@ import { HUNT_SOURCE_PROGRESS_LOG_KEY, type OwnerDigestRecord, type RunnerHeartb
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { RESEARCH_STATE_ID, type ResearchState } from "../lib/control-plane/scheduler/research-policy.ts";
-import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 import { liveCycleHeartbeat } from "../lib/control-plane/runner-standing.ts";
-import { ADMIN_HOST, adminSessionCookie, withAdminSessionKey } from "./admin-session.ts";
 
 const NOW = "2026-09-28T17:00:00.000Z";
 const AT = "2026-09-28T16:59:00.000Z";

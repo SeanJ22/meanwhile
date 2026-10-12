@@ -2,17 +2,7 @@
  * Status does not block software releases.
  */
 
-/** ---------------------------------------------------------- the states */
-
-/**
- * What we currently know about whether the deployed application and the
- * production database agree.
- *
- * The two states that do the real work are the two that are NOT green:
- * `CREDENTIAL_MISSING` exists so an absent secret can never print like a pass
- * (RULING 24), and `STALE_HEALTHY` exists so a green answer about an older
- * commit can never be read as an answer about this one.
- */
+/** Whether the deployed application and production database agree. A missing credential and a check of a different SHA are never green. */
 export const INTEGRITY_STATES = [
   /** Checked against the exact deployed SHA, and it held. */
   "CURRENT",
@@ -40,15 +30,14 @@ export const FAILURE_CLASSES = [
 ] as const;
 export type FailureClass = (typeof FAILURE_CLASSES)[number];
 
-/**
- * The durable record appended to the production control plane's existing
- * software-release outcome log and read by Admin.
- *
- * `deployedSha` is the application-bearing commit the reading was taken
- * against. It is the field that makes staleness detectable: without it, a green
- * record is a green record forever, which is precisely how a stale status
- * blesses a later deploy.
- */
+/** A receipt may name only the clean source tree whose migrations were checked. */
+export function integrityCheckoutIssue(targetSha: string | null, headSha: string | null, dirty: string | null): string | null {
+  if (!targetSha || !/^[0-9a-f]{40}$/i.test(targetSha) || targetSha !== headSha) return "The checked-out commit does not match the requested production commit.";
+  if (dirty === null || dirty !== "") return "The production integrity check requires an unchanged checkout of the requested commit.";
+  return null;
+}
+
+/** The durable integrity record; `deployedSha` is what makes a stale green detectable. */
 export interface IntegrityRecord {
   /** Schema version of this file, so a reader can refuse a shape it predates. */
   readonly formatVersion: 1;
@@ -88,8 +77,6 @@ export function sameCommit(a: string | null, b: string | null): boolean {
   if (a.length < 7 || b.length < 7) return false;
   return a.startsWith(b) || b.startsWith(a);
 }
-
-/** ------------------------------------------------------- the evaluator */
 
 export interface IntegrityAssessment {
   readonly state: IntegrityState;

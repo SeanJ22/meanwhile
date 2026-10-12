@@ -18,19 +18,14 @@ import { stateRollAttribution } from "@/lib/sources/legiscan/types";
 import { summaryForBill, summaryPendingForBill } from "@/lib/votes/bill-summaries";
 import { readHistoricalFederalVotesForMember } from "@/lib/votes/history";
 import { mayUseTestFixture } from "@/lib/civic-data/fixture-policy";
+import { readNativeMemberVotes } from "@/lib/state-rollcalls/reader-votes";
 
 /**
- * GET /api/votes?member=congress:C001133 — a federal member
+ * GET /api/votes?member=congress:<bioguide> — a federal member
  * GET /api/votes?member=<official-source>:<person-id> — a state legislator
  *
- * A member's recent recorded votes, from proof-validated state or federal
- * canonical projections — never a tracked runtime fallback or live fetch
- * against a publisher. Returns newest-first with
- * the member's position attached, plus the snapshot's generatedAt so the
- * surface can say how fresh "recent" is.
- *
- * Legacy state rows carry LegiScan's required CC BY attribution. Official
- * promoted state rows do not inherit that vendor attribution.
+ * A member's recent recorded votes, newest first, from proof-validated canonical projections, never a
+ * runtime fallback or a live fetch. Legacy state rows carry LegiScan's required CC BY attribution.
  */
 
 export const runtime = "nodejs";
@@ -103,9 +98,8 @@ async function readCanonicalStateVoteScope(scope: OfficialStateVoteScope): Promi
 }
 
 /**
- * Read the one state authority encoded in the member's source-namespaced
- * identifier. Identity and scope are fixed before the store opens, so an AZ
- * request cannot wait on, be erased by, or be satisfied from NH/NJ.
+ * Read the one state authority encoded in the member's source-namespaced identifier. Identity and scope are
+ * fixed before the store opens, so one state's request cannot wait on, be erased by, or be satisfied from another's.
  */
 export async function settleStateVoteMemberHolding(
   member: string,
@@ -230,6 +224,17 @@ export async function GET(request: Request) {
   const query = new URL(request.url).searchParams;
   const member = query.get("member");
   const historical = query.get("history") === "1";
+  if (member && /^(?:plural:(?:az|nh):|az-legislature:|nh-general-court:)/.test(member)) {
+    try {
+      const read = await readNativeMemberVotes(member);
+      if (read) {
+        if (historical) return Response.json({ member, historyStatus: "UNAVAILABLE", historicalVotes: [], historicalCount: 0,
+          nextHistoricalVersionId: null, historyIssue: "These acquired state votes already retain their available history." });
+        return Response.json({ ...read, holdingStatus: read.status === "IDENTITY_UNRESOLVED" ? "IDENTITY_UNRESOLVED" : "HELD",
+          count: read.votes.length, attribution: read.authorityScope.includes("openstates") ? { text: "Plural / Open States", url: "https://openstates.org/" } : null });
+      }
+    } catch { return Response.json({ member, holdingStatus: "HOLDING_UNAVAILABLE", generatedAt: null, votes: [] }, { status: 503 }); }
+  }
   const officialStateScope = member ? officialStateVoteScopeForOfficeholderId(member) : null;
   const researchStateScope = member ? researchFixtureScopeForMember(member) : null;
   const stateScope = officialStateScope ?? researchStateScope;
@@ -296,7 +301,7 @@ export async function GET(request: Request) {
       .map((p) => [p.voteId, p.position]),
   );
 
-  // Item 3 (2026-08-14 second session): the party breakdown — pure
+  // The party breakdown: pure
   // arithmetic over the snapshot's positions joined to the roster's
   // party labels, refused (null) unless it sums exactly to the
   // chamber's recorded tally. The surface renders the honest
@@ -317,14 +322,8 @@ export async function GET(request: Request) {
     }));
 
   /*
-   * Item 6b (2026-08-15): the "When it mattered" column's rows, served
-   * beside the recent ones so one card renders two answers from one request.
-   *
-   * The CHAMBER RULE is enforced upstream in `keyVoteRowsFor`, which is
-   * handed a chamber and never reads the other array — so a House member's
-   * card cannot render a Senate roll call even by mistake. A member with no
-   * chamber (nobody outside Congress) gets an empty list and the column does
-   * not render at all, rather than a header over nothing.
+   * The "When it mattered" rows, served beside the recent ones. `keyVoteRowsFor` is handed a chamber and
+   * never reads the other array; a member with no chamber gets an empty list.
    */
   const { chamber, rows: keyVotes } = supporting.curated;
 

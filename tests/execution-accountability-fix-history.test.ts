@@ -1,12 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { NextRequest } from "next/server";
 
-import { GET } from "../app/api/admin/fix-history/route.ts";
 import { projectFixPreventionHistory, readFixPreventionHistory } from "../lib/control-plane/admin-view/fix-prevention-history.ts";
 import type { ControlPlaneRepositories, Persisted } from "../lib/control-plane/repository/types.ts";
 import { createWorkItem } from "../lib/control-plane/work-item.ts";
-import { ADMIN_HOST, PUBLIC_HOST, adminSessionCookie, withAdminSessionKey } from "./admin-session.ts";
 
 const at = "2026-09-28T19:00:00.000Z";
 const later = "2026-09-28T19:01:00.000Z";
@@ -115,18 +112,4 @@ test("scope receipt and lineage links fail closed; legacy missing work tags rema
     scope: { assignmentKey, receiptId }, observedAt });
   assert.equal(legacyRead.kind, "HELD");
   if (legacyRead.kind === "HELD") assert.equal(legacyRead.value.scope?.match, "UNCONFIRMED");
-});
-
-test("the on-demand read is admin-only and refuses incomplete scope coordinates before opening the store", async () => {
-  const publicResponse = await GET(new NextRequest(`https://${PUBLIC_HOST}/api/admin/fix-history?workItemId=root`,
-    { headers: { host: PUBLIC_HOST } }));
-  assert.equal(publicResponse.status, 404);
-  const noSession = await GET(new NextRequest(`https://${ADMIN_HOST}/api/admin/fix-history?workItemId=root`,
-    { headers: { host: ADMIN_HOST } }));
-  assert.equal(noSession.status, 401);
-  await withAdminSessionKey(async () => {
-    const badScope = await GET(new NextRequest(`https://${ADMIN_HOST}/api/admin/fix-history?workItemId=root&scopeKey=${assignmentKey}`,
-      { headers: { host: ADMIN_HOST, cookie: await adminSessionCookie() } }));
-    assert.equal(badScope.status, 400);
-  });
 });

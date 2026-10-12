@@ -1,58 +1,7 @@
 /**
- * **THE PROMOTION TAIL — RULING 224, IMPLEMENTED.**
- * (Session C, PART D4, 2026-08-31.)
- *
- * > Acquisition without promotion is inventory, not product. An acquisition
- * > obligation's completion contract extends to the READER: the WorkItem does
- * > not close when evidence reaches the vault; it closes when the reader-facing
- * > surface reflects the acquired truth or renders the honest gap state. Held
- * > data with no live promotion tail is a defect.
- *
- * Research promotion is ON (docs/rulings.md §3, §9; the activation gate in
- * `promotion/activation-policy.ts`). A staged record publishes as soon as it
- * passes §3, through the typed reader door for its class; a class with no door
- * yet stays staged as the named gap it is.
- *
- * ## The split this file draws
- *
- * ```
- *   HERE, EVERY CYCLE, NO OPERATOR
- *     acquire -> vault -> extract -> normalize -> snapshot -> STAGED
- *
- *   THE PUBLICATION DOORS, EVERY CYCLE, NO OPERATOR
- *     STAGED -> §3 -> reader-visible
- * ```
- *
- * This module does the first line only. **This module writes only under `.runtime/control-plane/staging/`
- * and can write nowhere else** — it never touches `data/funding/`,
- * `data/meetings-snapshot.json`, `data/ballot/` or any other reader-content
- * path, and `tests/obligation-registry.test.ts` asserts that over the module's
- * own output rather than over a promise in this comment.
- *
- * ## THE STAGED STATE IS A FILE, not a status
- *
- * A later session must be able to point at it. So each staged record set is a
- * real JSON file named for its obligation, and
- * `.runtime/control-plane/staging/manifest.json` lists every entry with its state,
- * its date, the obligation it answers, the route it came from, its next due
- * time and its path. An in-memory "staged" would prove nothing tomorrow.
- *
- * ## A WALL STAGES TOO, and that is the second half of RULING 224
- *
- * The contract is satisfied EITHER by the surface reflecting acquired truth OR
- * by it rendering the honest gap state, and the second is not a lesser outcome.
- * So a route that hit `REQUIRES_NEW_ADAPTER` or `BLOCKED_CURRENTLY` produces a
- * `STAGED_GAP` entry carrying the NAMED wall, the obligation that is still
- * live, and the persisted next-due — everything a reader surface needs to say
- * whose gap it is and that it is still being worked. A wall that resolved
- * silently to a generic placeholder would not satisfy anything.
- *
- * ## Normalization is HONEST about what it could not parse
- *
- * A route with no normalizer produces `STAGED_GAP` with state
- * `NORMALIZER_MISSING` and the next move named. It does NOT produce an empty
- * record set: a zero-row normalization of a document that carried 370 rows is a
- * FAILED normalization, and it may never be staged as a snapshot of nothing.
+ * The promotion tail's first half: acquire, vault, extract, normalize, snapshot, STAGED. Writes only under
+ * `.runtime/control-plane/staging/`. A wall or a missing normalizer stages as a STAGED_GAP with its reason;
+ * a zero-row normalization of a non-empty document is a failure, never a snapshot of nothing.
  */
 
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
@@ -78,44 +27,11 @@ export type NormalizedRow = Readonly<Record<string, unknown>>;
 export interface Normalization {
   readonly normalizerId: string;
   readonly rows: readonly NormalizedRow[];
-  /**
-   * **THE DENOMINATOR THE PUBLISHER ITSELF STATED.**
-   *
-   * Null only when the response declares none. A staged snapshot that reported
-   * its own row count and nothing else would present page one of an index as
-   * the index — which is shipping partial data as complete, and is the failure
-   * both of these routes make available for free: Arizona's response carries
-   * `recordsTotal` and New Hampshire's carries `data.totalItems`, so the
-   * publisher hands us the denominator and we only have to state it.
-   */
+  /** The total the publisher stated for this response; null only when it states none. */
   readonly declaredTotal: number | null;
-  /**
-   * What this normalization deliberately did NOT conclude, in full sentences.
-   *
-   * Arizona's row semantics are undetermined at THIS route — several rows share
-   * one EntityID with differing Income/Expense and an identical CashBalance — so
-   * the normalizer carries the fields and states that no per-person cycle total
-   * is derived from them. A staged snapshot that quietly picked one would put a
-   * wrong figure on a named person's card.
-   *
-   * **The 134-of-255 figure this comment used to cite is withdrawn**, because
-   * the test that produced it was invalid rather than merely discouraging.
-   * `CashBalance` repeats identically on every row of an entity and does not
-   * move with the query window: it is a pre-cycle balance. Checking a
-   * within-window SUM against an across-window BALANCE compares incommensurable
-   * quantities, and the 134 that "agreed" were simply the committees that
-   * started from zero. Against a commensurable source — the publisher's own
-   * itemised ledger — income and expense reconcile **255 of 255**. The caution
-   * here stands; the number that justified it does not.
-   */
+  /** What this normalization deliberately did not conclude, in full sentences. */
   readonly unresolved: readonly string[];
-  /**
-   * A LEGITIMATE EMPTY ANSWER, NAMED. (2026-09-25.) Set only by a normalizer
-   * whose publisher answers a query with an empty list as a real result — a
-   * search index with no hit. The tail stages it as a named no-hit, never as a
-   * failed normalization and never as a snapshot of nothing. It is a dated fact
-   * about one query to one index, never a fact about the subject.
-   */
+  /** A legitimate empty answer from a publisher that answers a query with an empty list. Staged as a named no-hit, never a failed normalization. */
   readonly noHit?: string;
   /**
    * The rows are POINTERS (a URL and what the index called it), never records.
@@ -140,16 +56,8 @@ export class FailedNormalization extends Error {
 /** A normalizer, keyed by the route id whose bytes it understands. */
 export type Normalizer = (body: string) => Normalization;
 
-/* ------------------------------------------------------------ normalizers */
 
-/**
- * NEW HAMPSHIRE CFS — `data.items[]`, filer-level.
- *
- * Filer-level TOTALS only, and the record says so: the CFS holds contribution
- * and expenditure detail behind endpoints nobody has derived, and a staged
- * snapshot that presented filer totals as the whole of a committee's money
- * would overstate what we hold.
- */
+/** NH CFS `data.items[]`: filer-level totals only, and the record says so. */
 export const normalizeNhCfs: Normalizer = (body) => {
   const parsed = JSON.parse(body) as {
     data?: { items?: readonly Record<string, unknown>[]; totalItems?: number };
@@ -196,19 +104,7 @@ export const normalizeNhCfs: Normalizer = (body) => {
   };
 };
 
-/**
- * ARIZONA SEETHEMONEY — `data[]`, entity-level, TOTALS DELIBERATELY UNRESOLVED.
- *
- * The endpoint returns several rows per `EntityID` with differing Income and
- * Expense and an identical CashBalance. Summing and taking the largest
- * disagree, and the arithmetic that looked like proof was tested over the
- * population on 2026-08-31 and REFUTED: `sum(Income) - sum(Expense) ==
- * CashBalance` holds for 134 of 255 entities and breaks for 121, including for
- * single-row entities where there is nothing to sum.
- *
- * So this normalizer carries the fields and derives NO cycle total. That is the
- * whole reason it is safe to run unattended.
- */
+/** AZ SeeTheMoney `data[]`: several rows per `EntityID`, so no cycle total is derived. */
 export const normalizeAzSeeTheMoney: Normalizer = (body) => {
   const parsed = JSON.parse(body) as {
     data?: readonly Record<string, unknown>[];
@@ -227,10 +123,7 @@ export const normalizeAzSeeTheMoney: Normalizer = (body) => {
     rows: rows.map((row) => ({
       entityId: row.EntityID ?? null,
       entityFirstName: row.EntityFirstName ?? null,
-      /* Carried VERBATIM. The publisher embeds `<br>(id)` in this field and a
-         normalizer that stripped it would be editing a government's record on a
-         guess about its intent. Cleaning belongs to promotion, where it can be
-         checked. */
+      /* Carried verbatim, including the publisher's `<br>(id)` markup; cleaning belongs to promotion. */
       entityLastNameRaw: row.EntityLastName ?? null,
       entityType: row.EntityTypeName ?? null,
       committeeName: row.CommitteeName ?? null,
@@ -259,22 +152,7 @@ export const normalizeAzSeeTheMoney: Normalizer = (body) => {
   };
 };
 
-/**
- * MARGINALIA — `results[]`, POINTERS ONLY. (2026-09-25.)
- *
- * `api.marginalia.nu/public/search/<query>` answers `{license, page, pages,
- * query, results[]}`, each result `{url, title, description, quality, format,
- * resultsFromDomain, details}` (read from the 563 held responses in the
- * runner's vault; docs/sources.md documented only `license` and `results`).
- * The index is CC-BY-NC-SA and may only POINT: a row carries the URL, the
- * title the index gave it, its format and rank — never the description, which
- * is the index's licensed text — and every row is a lead for
- * `lib/candidates/campaign-site-verifier.ts`, which reads the origin itself.
- *
- * An empty `results` is a NO-HIT: the index answered and had nothing for this
- * query. That is a legitimate answer, named as such; it is not a failed
- * normalization and never an absence about the person searched for.
- */
+/** Marginalia `results[]`: pointers only (the index's licensed description is never kept). An empty `results` is a named no-hit. */
 export const normalizeMarginaliaSearch: Normalizer = (body) => {
   const parsed = JSON.parse(body) as { license?: unknown; query?: unknown; results?: unknown };
   if (typeof parsed.license !== "string" || !Array.isArray(parsed.results)) {
@@ -313,7 +191,6 @@ export const NORMALIZERS: Readonly<Record<string, Normalizer>> = {
   "candidate-marginalia-index": normalizeMarginaliaSearch,
 };
 
-/* ---------------------------------------------------------------- staging */
 
 export interface StagedEntry {
   readonly obligationId: string;
@@ -324,32 +201,17 @@ export interface StagedEntry {
   readonly state: StagedState;
   /** The stamp this entry was staged on. From the caller; no clock is read. */
   readonly stagedOn: string;
-  /** The persisted next-due for the obligation. A gap that is still worked. */
   readonly nextDueAt: string | null;
-  /** The disposition the cycle committed for this route. */
   readonly disposition: string | null;
   /** Rows in the staged snapshot. Zero only for a STAGED_GAP entry. */
   readonly rowCount: number;
   /** What the publisher said the whole index holds. Null when it said nothing. */
   readonly declaredTotal: number | null;
-  /**
-   * True only when the rows staged are the WHOLE of what the publisher declared.
-   *
-   * A partial index is still stageable and still promotion-ready — as a
-   * PARTIAL. What is forbidden is staging page one of 5,738 rows under a name
-   * that reads like the index, and this flag plus `readerSentence`'s "N of M"
-   * is what stops that happening by omission.
-   */
+  /** True only when the rows staged are the whole of what the publisher declared for this request. */
   readonly complete: boolean;
   /** Where the staged snapshot lives, relative to the repo root. Null for a gap. */
   readonly snapshotPath: string | null;
-  /**
-   * THE SENTENCE A READER SURFACE RENDERS.
-   *
-   * Whose gap it is, in plain language, with no enum value and no
-   * `NO_SOURCE_FOUND` in it. Present on every entry — a promotion-ready one
-   * states what was acquired and what is still unresolved about it.
-   */
+  /** The plain sentence a reader surface renders: whose gap it is, or what was acquired and what is unresolved. */
   readonly readerSentence: string;
   readonly unresolved: readonly string[];
 }
@@ -390,7 +252,6 @@ export interface StageInput {
   /** The retrieved bytes, read back from the vault. Null when none were held. */
   readonly body: string | null;
   readonly nextDueAt: string | null;
-  /** Whatever the cycle recorded about this dispatch, for the gap sentence. */
   readonly detail: string;
   readonly stagedOn: string;
 }
@@ -404,14 +265,7 @@ export function stagedFileName(obligationId: string): string {
   return `${obligationId.replace(/[^A-Za-z0-9._-]/g, "_")}.staged.json`;
 }
 
-/**
- * Run the tail for ONE dispatched route, and return what was staged.
- *
- * Never throws for a route-level condition: a missing normalizer, an
- * unparseable body and a wall are all STAGED_GAP entries with their reason
- * named, because each of them is a state a reader surface has to be able to
- * render honestly.
- */
+/** Run the tail for one dispatched route. Never throws for a route-level condition; each is a named STAGED_GAP. */
 export function stageOne(input: StageInput): StagedEntry {
   const base = {
     obligationId: input.obligationId,
@@ -436,12 +290,7 @@ export function stageOne(input: StageInput): StagedEntry {
   });
 
   if (input.disposition !== "INGESTED" || input.body === null) {
-    /*
-     * A WALL, STAGED. RULING 224's second half: the honest gap state is not a
-     * lesser outcome. The sentence names WHOSE gap it is and the next-due says
-     * the obligation is still being worked, which is what stops it resolving to
-     * a generic placeholder.
-     */
+    /* A wall stages as a gap naming whose gap it is, with the next-due showing it is still worked. */
     const what =
       input.disposition === null
         ? "we have not yet reached it"
@@ -507,30 +356,13 @@ export function stageOne(input: StageInput): StagedEntry {
   const declaredTotal = normalized.declaredTotal;
   const complete = declaredTotal === null ? false : rowCount >= declaredTotal;
 
-  /*
-   * COMPLETE AGAINST THIS QUERY, NEVER AGAINST THE SOURCE UNIVERSE.
-   *
-   * `declaredTotal` is what the publisher declared **for the request we sent**.
-   * Retrieving all of it means this RESPONSE is whole. It does not mean the
-   * index is, and RULING 207 is explicit that one route's success never
-   * collapses the source universe.
-   *
-   * Measured, not theorised. Arizona's `GetNEWTableData` declared 370 and
-   * returned 370, so this said `complete: true` — and Kevin Volk, who is on the
-   * 85701 ballot with $173,742 filed, is **not among those 370**. Three filters
-   * over the same endpoint union to 860 rows across 732 entities, 16 of them
-   * reachable from no other filter. The 370 was a complete answer to a narrow
-   * question, and the sentence read as though it were the whole index.
-   *
-   * So the wording names the query. A reader of this file, or of the digest it
-   * feeds, must not be able to mistake a whole response for a whole index.
-   */
+  /* Complete against this query, never against the source universe: the wording names the query. */
   const coverage =
     declaredTotal === null
       ? `${rowCount} row(s) acquired; the publisher declared no total, so what fraction of the ` +
         "index this is CANNOT BE ASSERTED"
       : `${rowCount} of the ${declaredTotal} row(s) this query's own response declares — ` +
-        "whole for THIS request, which is not a claim that the index is whole (RULING 207)";
+        "whole for THIS request, which is not a claim that the index is whole";
 
   const dir = stagingDir(input.root);
   mkdirSync(dir, { recursive: true });
@@ -587,13 +419,7 @@ export function stageOne(input: StageInput): StagedEntry {
   };
 }
 
-/**
- * Write the manifest.
- *
- * MERGED, not replaced. A cycle that only worked two routes must not erase the
- * staged state of everything it did not touch — a manifest that shrank every
- * cycle would report the pipeline as having lost work it never ran.
- */
+/** Write the manifest, merged rather than replaced, so untouched entries keep their staged state. */
 export function writeStagingManifest(
   root: string,
   entries: readonly StagedEntry[],

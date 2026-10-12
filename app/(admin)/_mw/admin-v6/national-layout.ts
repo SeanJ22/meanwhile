@@ -1,10 +1,4 @@
-/**
- * **THE NATIONAL TILE MAP'S GRID.** 56 states and territories on a 12-column,
- * 9-row grid (v6 design). A tile map, not a geographic projection: every place
- * gets an equal, clickable tile that still fits at phone width.
- *
- * PURE: [code, row, column], zero-based.
- */
+/** A tile map, not a projection: [code, row, column], zero-based, on a 12-column, 9-row grid. */
 export const TILE_LAYOUT: readonly (readonly [string, number, number])[] = (
   "AK,0,0 ME,0,11 VT,1,10 NH,1,11 WA,2,1 ID,2,2 MT,2,3 ND,2,4 MN,2,5 IL,2,6 WI,2,7 MI,2,8 NY,2,9 RI,2,10 MA,2,11 " +
   "OR,3,1 NV,3,2 WY,3,3 SD,3,4 IA,3,5 IN,3,6 OH,3,7 PA,3,8 NJ,3,9 CT,3,10 CA,4,1 UT,4,2 CO,4,3 NE,4,4 MO,4,5 KY,4,6 " +

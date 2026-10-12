@@ -1,23 +1,19 @@
 import { workerDoorForRecord } from "../../civic-data/worker-reader-contracts.ts";
 import type { CivicExtractionContract } from "./types.ts";
 import type { AcquirerTaskSpec, ObservedResearchRoute } from "./research-types.ts";
-import type { EngineeringTaskSpec } from "./engineering-types.ts";
 import { scheduleObligation, type FreshnessObligation } from "../scheduler/obligation.ts";
 import type { AcquirerResult } from "./research-types.ts";
 import type { Jurisdiction, JurisdictionSource } from "../../hunt/jurisdiction-universe.ts";
 import type { WorkerReaderContract } from "../../civic-data/worker-reader-contracts.ts";
 import { missionPartOf } from "../expansion/mission-parts.ts";
 
-/** The mission part a plan's record class starts in (CH-15's starting parts). Omitted when no part takes it. */
+/** The mission part a plan's record class starts in; omitted when no part takes it. */
 function partFor(recordClass: string): { readonly missionPart?: string } {
   const part = missionPartOf({ recordClass });
   return part ? { missionPart: part } : {};
 }
 
-/** Initial instructions for an owner-requested family. Registry addresses are
- * leads, never invented observations. An evidence-backed repair supplies the
- * extraction mapping; the Validator then applies §3 to the saved official page.
- * No second source is required: these families are not judgment calls. */
+/** Initial instructions for an owner-requested family. Registry addresses are leads, never invented observations; an evidence-backed repair supplies the extraction mapping. */
 export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: JurisdictionSource, routeId: string, bodyId: string | null = jurisdiction.bodyId ?? null): AutonomousWorkPlan | null {
   if (source.recordClass === "MEETINGS") return null; // Existing meeting discovery/publishing owns this path.
   if (source.recordClass === "PUBLIC_COMMENT") return publicCommentDiscoveryPlan(jurisdiction, bodyId);
@@ -50,7 +46,7 @@ export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: Ju
   }))];
   return {
     version: 1, capability: source.recordClass === "OFFICEHOLDERS" ? "officials/offices" : source.recordClass, jurisdiction: jurisdiction.id.split(":")[0].toUpperCase(),
-    sourceRegistryReferences: [jurisdiction.id, routeId], seedUrls, sources: [], acquisition: [], engineering: [], auditScope: "SOURCE_UNIVERSE",
+    sourceRegistryReferences: [jurisdiction.id, routeId], seedUrls, sources: [], acquisition: [], auditScope: "SOURCE_UNIVERSE",
     ...partFor(spec.recordClass),
     ...(bodyId && workerDoorForRecord(spec.recordClass) ? { publication: { contractId: workerDoorForRecord(spec.recordClass)!, bodyId } } : {}),
     ...(source.recordClass === "OFFICEHOLDERS" && bodyId ? { publication: { contractId: "registry-runtime-bindings" as const, bodyId } } : {}),
@@ -84,14 +80,14 @@ export function publicCommentDiscoveryPlan(jurisdiction: Jurisdiction, bodyId: s
   const routeId = "coverage-discovery:public-comment";
   const base = jurisdictionDiscoveryPlan(jurisdiction, { recordClass: "OFFICEHOLDERS", authority: jurisdiction.name,
     authorityBasis: "Exact registered governing body; its participation rules have not been acquired or verified.", scope: "THIS_JURISDICTION",
-    routeId, url: jurisdiction.ownWebAddress, state: "DISCOVERY_OWED", owed: "Find the body's published public-comment rules, including signup, written comments, attendance and speaking limits. Take each from the body's own official page; do not infer permission to speak from an open meeting.",
+    routeId, url: jurisdiction.ownWebAddress, state: "DISCOVERY_OWED", owed: "Find the body's published public-comment rules, including signup, written comments, attendance and speaking limits. Take each from a source that states it and can be checked; do not infer permission to speak from an open meeting.",
     citation: `Registered government ${jurisdiction.id}, body ${bodyId}.` }, routeId, bodyId)!;
   if (base.contract.schemaVersion !== 2) throw new Error("PUBLIC_COMMENT_TEMPLATE_INVALID");
   return { ...base, capability: "meetings/public-comment", publication: { contractId: "comment-access", bodyId }, ...partFor("PUBLIC_COMMENT_RULE"),
     sourceRegistryReferences: [...base.sourceRegistryReferences, bodyId],
     contract: { ...base.contract, recordClass: "PUBLIC_COMMENT_RULE", requiredFields: ["bodyName", "commentPeriod", "commentPeriodDetail"],
       identity: { namespace: `${jurisdiction.id}:public-comment`, keyFields: ["bodyName"] },
-      completenessScope: `Published participation rules for registered body ${bodyId}. YES, NO or UNKNOWN must describe what the source actually supports. Each instruction must appear on the saved official page; this work does not discharge calendars, agendas, minutes or other bodies.` } };
+      completenessScope: `Published participation rules for registered body ${bodyId}. YES, NO or UNKNOWN must describe what the source actually supports. Each instruction must appear in a saved source that can be checked; this work does not discharge calendars, agendas, minutes or other bodies.` } };
 }
 
 /** A roster cannot establish which other boards exist. Keep directory discovery
@@ -101,7 +97,7 @@ export function bodyDirectoryDiscoveryPlan(jurisdiction: Jurisdiction, bodyId: s
   const base = jurisdictionDiscoveryPlan(jurisdiction, { recordClass: "OFFICEHOLDERS", authority: jurisdiction.name,
     authorityBasis: "Discover governing and subordinate bodies from official directory and independent legal authority.",
     scope: "THIS_JURISDICTION", routeId, url: jurisdiction.ownWebAddress, state: "DISCOVERY_OWED",
-    owed: "Identify every governing and subordinate body, its official name, home page, classification and actual jurisdiction. Take territorial applicability from an official page; association with a county is not countywide authority.",
+    owed: "Identify every governing and subordinate body, its official name, home page, classification and actual jurisdiction. Take territorial applicability from a source that states it and can be checked; association with a county is not countywide authority.",
     citation: `Registered government ${jurisdiction.id}.` }, routeId, bodyId)!;
   if (base.contract.schemaVersion !== 2) throw new Error("DIRECTORY_TEMPLATE_INVALID");
   const { publication: _old, ...plan } = base;
@@ -112,12 +108,12 @@ export function bodyDirectoryDiscoveryPlan(jurisdiction: Jurisdiction, bodyId: s
     contract: { ...base.contract, recordClass: "OFFICIAL_BOARD_DIRECTORY",
       requiredFields: ["bodyName", "bodyClass", "homepageUrl", "jurisdictionName", "coverage", "coverageEvidence"],
       identity: { namespace: `${jurisdiction.id}:body-directory`, keyFields: ["bodyName", "homepageUrl"] },
-      completenessScope: `Every official body of ${jurisdiction.name}, including subordinate bodies. Each record's identity, classification and territory must appear on a saved official page. When legal coverage is the entirety of specific Census divisions rather than the parent jurisdiction, extract territoryNames as the source's semicolon-separated division names, coverage as "entire listed divisions", and coverageEvidence containing the official page's legal coverage statement. Every name must join exactly one registered division in this state. A partial division, ambiguous name or unrecorded boundary remains owed; do not infer territory from a mailing address.` } };
+      completenessScope: `Every official body of ${jurisdiction.name}, including subordinate bodies. Each record's identity, classification and territory must appear in a saved source that can be checked. When legal coverage is the entirety of specific Census divisions rather than the parent jurisdiction, extract territoryNames as the source's semicolon-separated division names, coverage as "entire listed divisions", and coverageEvidence containing the source's legal coverage statement. Every name must join exactly one registered division in this state. A partial division, ambiguous name or unrecorded boundary remains owed; do not infer territory from a mailing address.` } };
 }
 
 /**
  * These legacy worker contracts acquire the same meeting event feeds now
- * owned by permanent SOURCE_WIRING-derived meeting-partition contracts. They
+ * owned by the meeting-partition contracts built from the meeting doors. They
  * remain readable as immutable engineering evidence, but the standing runtime
  * may never schedule or dispatch another acquisition for them.
  */
@@ -135,7 +131,7 @@ export function isRetiredRoutineMeetingAcquisition(
 
 /** Work instructions, never evidence or a readiness label. Stored with the owed WorkItem. */
 export interface AutonomousWorkPlan {
-  /** The mission part this work belongs to (CH-16), set where the plan is built. Read it with `missionPartOfPlan`. */
+  /** The mission part this work belongs to, set where the plan is built. Read it with `missionPartOfPlan`. */
   readonly missionPart?: string;
   readonly directorySubject?: { readonly jurisdiction: Jurisdiction; readonly divisionId: string | null };
   readonly ownerInstructions?: readonly string[];
@@ -151,7 +147,6 @@ export interface AutonomousWorkPlan {
   readonly seedUrls: readonly string[];
   readonly sources: readonly ObservedResearchRoute[];
   readonly acquisition: readonly AcquirerTaskSpec[];
-  readonly engineering: readonly EngineeringTaskSpec[];
   readonly auditScope: "CAPTURED_ARTIFACT" | "SOURCE_UNIVERSE";
 }
 

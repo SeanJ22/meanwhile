@@ -1,6 +1,6 @@
 /**
- * **THE MEETING-SOURCE WIRING, RECOMPUTED BY THE STANDING RUNNER FROM WHAT IS
- * ALREADY PROMOTED OR VAULTED.** (C16, 2026-09-24. RULING 282/283: the one door.)
+ * The meeting-source wiring, recomputed by the standing runner from what is
+ * already promoted or vaulted.
  *
  *   node --experimental-strip-types scripts/derive-meeting-source-wiring.mts --promote
  *
@@ -20,11 +20,14 @@
  * - the venue resolutions the reader adapters resolve each sitting through, read
  *   before any adapter reading (`lib/control-plane/discovery/derived-wiring-reading.ts`).
  *
- * Each row is decided by `deriveWiringDecisions` (the four review triggers, and
+ * Each row is decided by `deriveWiringDecisions` (the review triggers, and
  * every outage held as it is), planned by `planDerivedVersion`, and promoted
  * through `processRegisteredRoutineCandidate`, whose door checks every
  * promoted input against the store. Anything it cannot read refuses the
  * candidate by name and leaves the last known good wiring live.
+ *
+ * Every pass re-checks every calendar, suspended ones included: a suspended
+ * row whose calendar passes every check again is restored.
  */
 import { join } from "node:path";
 
@@ -38,7 +41,7 @@ import {
   composeCrosswalk,
   readDerivedMeetingBodyCrosswalk,
 } from "../lib/civic-data/derived-crosswalk.ts";
-import { planDerivedVersion, promotedInputRef, type DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
+import { planDerivedVersion, promotedInputRef, type DerivedInputRef, type DerivedVersionEntry } from "../lib/civic-data/derived-authority.ts";
 import {
   DERIVED_WIRING_SOURCE_NAMES,
   derivedWiringCandidate,
@@ -60,14 +63,14 @@ import { heldArtifactCaptures, heldManualCrosswalkCapture } from "../lib/civic-d
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import type { MeetingsDiscoveryAttempt } from "../lib/hunt/meetings-site-discovery.ts";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
-import { digestValueClosure } from "../lib/ops/generator-digest.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { ocdStateCode } from "../lib/ocd/state-of.ts";
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
 import { REGISTRY_RUNTIME_SCOPE } from "../lib/registry/runtime-data-plane.ts";
-import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
+import { activeWiring } from "../lib/registry/source-wiring.ts";
+import { ensureMeetingDoors } from "../lib/doors/meeting-doors.ts";
 
 const CONTRACT_ID = "meeting-source-wiring";
 
@@ -79,32 +82,25 @@ prepareProductionCivicDataWrite();
 
 const store = new PostgresRoutineDataStore();
 const now = new Date().toISOString();
+// A body a hand-wired door already serves gets no derived row; without the doors, that cannot be told, so nothing is derived.
+const doors = await ensureMeetingDoors();
+if (!doors.ready) throw new Error(`MEETING_DOORS_UNREADABLE: ${doors.reason}`);
 
 async function finish(candidate: RoutineCandidate): Promise<void> {
   // An unchanged wiring re-check is receipted on the pointed version instead of
-  // re-promoted (R23); the receipt then names that version, never the unwritten
+  // re-promoted; the receipt then names that version, never the unwritten
   // re-check candidate.
   await promoteDerivedCandidate(store, CONTRACT_ID, candidate, now);
 }
 
 /* A state, DC or a territory: every registered one has its registration (lib/ocd/state-of.ts). */
 const stateOf = (ocdId: string): string | null => ocdStateCode(ocdId)?.toUpperCase() ?? null;
-import { DATA_DOOR_KINDS, DOOR_KIND_SPECS, type DataDoorKind } from "../lib/civic-data/derived-door-kinds.ts";
-const ADAPTER_ENTRY: Readonly<Record<DerivedWiringKind, string>> = {
-  ICAL: "lib/sources/ical/index.ts",
-  OFFICIAL_PAGE_EVENTS: "lib/sources/official-page-events/index.ts",
-  DILIGENT: "lib/sources/diligent/index.ts",
-  LEGISTAR: "lib/sources/legistar/index.ts",
-  ...(Object.fromEntries(DATA_DOOR_KINDS.map((kind) => [kind, DOOR_KIND_SPECS[kind].entry])) as Record<DataDoorKind, string>),
-};
-const digests = new Map<DerivedWiringKind, string>();
-const adapterDigest = (kind: DerivedWiringKind): string => {
-  const known = digests.get(kind);
-  if (known) return known;
-  const digest = `${DERIVED_WIRING_SOURCE_NAMES[kind]}@${digestValueClosure(process.cwd(), ADAPTER_ENTRY[kind]).digest.slice(0, 12)}`;
-  digests.set(kind, digest);
-  return digest;
-};
+/** The reader adapters' output version. Change it only when an adapter's output changes. */
+const ADAPTER_OUTPUT_VERSION = 1;
+const adapterDigest = (kind: DerivedWiringKind): string => `${DERIVED_WIRING_SOURCE_NAMES[kind]}@v${ADAPTER_OUTPUT_VERSION}`;
+
+/** A suspension is cleared only for a row whose calendar passes every check again this pass. */
+const unsuspended = <Row,>({ suspension: _suspension, ...entry }: DerivedVersionEntry<Row>): DerivedVersionEntry<Row> => entry;
 
 /** The held bytes as text, or why they could not be read: the adapter reading refuses an unreadable body by name. */
 async function heldText(held: HeldVaultArtifact): Promise<HeldCalendarReading["held"]> {
@@ -127,7 +123,7 @@ async function main(): Promise<void> {
     : null;
 
   /*
-   * Two crosswalks, composed (C16 option A, 2026-09-25): the reviewed manual one and the rows the runner's own
+   * Two crosswalks, composed: the reviewed manual one and the rows the runner's own
    * reviewer accepted (meeting-body-crosswalk-derived). A reviewed row wins over an automatic one for the same body,
    * and either alone connects calendars. An unreadable one refuses the pass; neither promoted is no connection yet.
    */
@@ -300,17 +296,18 @@ async function main(): Promise<void> {
       return { input: reg.input, identityInput: reviewedInput };
     },
     attempts,
-    handWired: (bodyId) => SOURCE_WIRING.some((wiring) => wiring.bodyId === bodyId),
+    handWired: (bodyId) => activeWiring().some((wiring) => wiring.bodyId === bodyId),
     vaulted: (artifactId) => refOf(byId.get(artifactId) ?? null),
     /* A credential-bearing page is held as its sanitized derivative, filed under the raw page's sha256 (vault-crosswalk-evidence). */
     vaultedBytes: (hex) => refOf(byHash.get(hex) ?? null),
     verify: (row, _binding, evidence) =>
       readings.get(`${row.crosswalkRowId}\u0000${evidence.artifactId}`) ?? { refused: `no adapter reading of ${evidence.artifactId} was made this pass` },
     adapterDigest,
-    previous,
+    previous: previous.map(unsuspended),
     now,
   });
-  const plan = planDerivedVersion(previous, decisions);
+  const restored = new Set(decisions.filter((d) => d.disposition === "PROMOTE").map((d) => d.key));
+  const plan = planDerivedVersion(previous.map((entry) => restored.has(entry.key) ? unsuspended(entry) : entry), decisions);
   for (const d of decisions) {
     console.log(`  ${d.key}: ${d.disposition === "HOLD" ? `HOLD ${d.reason}: ${d.detail}` : d.disposition === "SUSPEND" ? `SUSPEND ${d.trigger}: ${d.detail}` : d.disposition}`);
   }

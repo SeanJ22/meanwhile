@@ -1,47 +1,21 @@
 /**
- * **THE MORRIS COUNTY BALLOT, GENERATED FROM THE FILING** (NJ Hunt 2,
- * 2026-08-22 — `NJ01`, and items 4 and 5).
+ * A county ballot generated from the clerk's own filing documents.
  *
  *   corepack pnpm nj:ballot             # acquire and validate without writing
  *   corepack pnpm nj:ballot -- --promote # atomically promote to the production data plane
  *
- * ## Why this replaces a hand transcription
+ * Parses the CURRENT documents discovered from the clerk's own page hrefs and
+ * promotes the result through the canonical candidate/validation/pointer door.
  *
- * `data/states/nj/ballot/nj-morris-2026.json` was transcribed by hand from the clerk's
- * 2026-08-07 revision and carried six contests: two federal, one county, and
- * three Rockaway TOWNSHIP school contests. Rockaway BOROUGH — a separate
- * municipality inside the same zip, running a four-candidate council race —
- * was not in it at all. Neither were the other forty-odd Morris municipalities
- * the same document lists.
+ * - **It never guesses a division.** A jurisdiction whose OCD id cannot be
+ *   resolved from the committed TIGER layers produces NO contest and is named
+ *   in the output: a contest on the wrong division is a false claim.
+ * - **It never invents a field.** Party, slogan, term and seats come from the
+ *   filing; incumbency and websites stay null. Filed email and address go to
+ *   the contact store, never rendered as the candidate's own words.
  *
- * The clerk has since republished (2026-08-21): 328 candidates where the hand
- * transcription's source held 272. A hand-kept copy of a document that is
- * revised on the authority's own schedule goes stale silently, and the only
- * evidence of the staleness is a contest that does not render.
- *
- * The permanent adapter parses the CURRENT documents discovered from the
- * clerk's own page hrefs and promotes the resulting version through the
- * canonical candidate/validation/pointer door. It never rewrites this bundled
- * bootstrap fixture.
- *
- * ## What it refuses to do
- *
- * **It never guesses a division.** A jurisdiction whose OCD id cannot be
- * resolved from the committed TIGER layers produces NO contest, and is named in
- * the run's output. A contest wired to the wrong division shows one town's race
- * to another town's readers, which is worse than a contest that is missing —
- * the first is a false claim and the second is a stated gap.
- *
- * **It never invents a field.** Party, slogan, term and seats come from the
- * filing; incumbency and websites are not in these documents and stay null, as
- * they did before. The filed EMAIL and ADDRESS are contact data and are carried
- * to the contact store, never rendered as a candidate's own words.
- *
- * ## Counts, always
- *
- * Every run states candidates read, contests built, jurisdictions mapped, and
- * jurisdictions REFUSED with their names. A zero-contest build exits non-zero:
- * a generator that produces nothing has told you about itself.
+ * Every run states candidates read, contests built, jurisdictions mapped and
+ * jurisdictions REFUSED by name. A zero-contest build exits non-zero.
  */
 
 import { readFileSync, readdirSync } from "node:fs";
@@ -111,14 +85,10 @@ const norm = (s: string) =>
     .trim();
 
 /**
- * The municipality's own division.
- *
- * The clerk writes `Rockaway Borough`; the county-subdivision layer writes
- * `Rockaway borough`. Where that subdivision row is Census's FICTITIOUS filler
- * (`FUNCSTAT F`) the real government is the coextensive PLACE row, and the
- * place row is what `lib/registry/derive.ts` built this registry's body from —
- * so taking the subdivision id here would mint a key that matches nothing.
- * Joined by GEOID, checked across the whole layer before it was relied on.
+ * The municipality's own division. Where the county-subdivision row is
+ * Census's FICTITIOUS filler (`FUNCSTAT F`), the real government is the
+ * coextensive PLACE row, which is what `lib/registry/derive.ts` built the
+ * registry body from. Joined by GEOID.
  */
 const placeByGeoidTail = new Map<string, Feature>();
 for (const f of layers.get("place") ?? []) {
@@ -140,14 +110,10 @@ function municipalDivision(jurisdiction: string): string | null {
 }
 
 /**
- * The school district serving a municipality, by name.
- *
- * The clerk heads a school row with the MUNICIPALITY, not the district, so
- * `Rockaway Borough` has to reach `Rockaway Borough School District`. The match
- * is on the district layer's own label with the purpose words removed, and it
- * is accepted ONLY when exactly one district answers — Rockaway has two
- * districts whose names differ by one word, and an ambiguous match here would
- * put the Borough's children in front of the Township's board.
+ * The school district serving a municipality, by name: the clerk heads a
+ * school row with the MUNICIPALITY. Matched on the district layer's label with
+ * the purpose words removed, and accepted ONLY when exactly one district
+ * answers (two districts can differ by one word).
  */
 function schoolDivision(jurisdiction: string): { ocdId: string; label: string } | null {
   const all = [...(layers.get("unsd") ?? []), ...(layers.get("elsd") ?? []), ...(layers.get("scsd") ?? [])];
@@ -158,12 +124,9 @@ function schoolDivision(jurisdiction: string): { ocdId: string; label: string } 
     return hits.length === 1 ? hits[0]! : null;
   };
   /*
-   * `Chester Borough/Township` is ONE filing jurisdiction for a district that
-   * two municipalities run together, and TIGER labels that district for one of
-   * them — `Chester Township School District`. So a slashed name is expanded to
-   * the municipalities it joins and each is tried, in the order the clerk wrote
-   * them. Still accepted only on a UNIQUE match: a joint jurisdiction is a
-   * reason to try harder, never a licence to pick.
+   * A slashed name (`<A> Borough/Township`) is one filing jurisdiction for a
+   * district two municipalities run together; each is tried in the clerk's
+   * order, still accepted only on a UNIQUE match.
    */
   const candidates =
     jurisdiction.includes("/")
@@ -182,27 +145,11 @@ function schoolDivision(jurisdiction: string): { ocdId: string; label: string } 
 }
 
 /* -------------------------------------------------------------------------- */
-/* IDS ARE CARRIED FORWARD, BECAUSE AN ID IS A JOIN KEY A READER'S DATA HANGS  */
-/* OFF (NJ Hunt 2, 2026-08-22)                                                */
+/* Ids are carried forward: reactions, cards, links and explainers key on      */
+/* contest and candidacy ids, so re-minting an id orphans readers' answers.   */
+/* The previous promoted ballot is read first; a contest matches on DIVISION   */
+/* plus office, a candidacy on its contest plus the filed name.               */
 /* -------------------------------------------------------------------------- */
-
-/*
- * The first version of this generator minted every id from scratch. Nine guards
- * failed, and what they were guarding was the real problem: candidate cards,
- * candidate links, office explainers, the snapshot's target keys and — worst —
- * the REACTIONS store all key on contest and candidacy ids.
- *
- * A reaction is a reader's answer about a named person. Re-minting that
- * person's id does not lose a formatting detail; it orphans the answer, and the
- * orphan is invisible because the new record simply has no reactions rather
- * than obviously-wrong ones. That is the revenue path quietly losing rows.
- *
- * So the previous committed file is read FIRST and its ids are reused wherever
- * the same contest or the same person is recognisable. A contest matches on
- * DIVISION plus office; a candidacy matches on its contest plus the filed name.
- * Both are properties of the world rather than of the old file's naming
- * convention, which is what makes the carry-forward stable across a rename.
- */
 type PriorCandidacy = {
   id: string;
   contestId: string;
@@ -225,15 +172,6 @@ if (PROMOTE) {
   const promoted = await productionStore.readPromotion<{ ballot: PriorFile }>("BALLOT_FILING", "US-NJ:county:morris:2026-general");
   if (promoted) prior = promoted.payload.ballot;
 }
-if (!PROMOTE || prior.candidacies.length === 0) {
-  try {
-    prior = JSON.parse(
-      readFileSync(join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026.json"), "utf8"),
-    ) as PriorFile;
-  } catch {
-    /* An absent fixture is a first bootstrap, not a store-error fallback. */
-  }
-}
 
 const officeKey = (title: string) =>
   title
@@ -244,33 +182,17 @@ const officeKey = (title: string) =>
     .trim();
 
 /*
- * **THE CARRY KEY HAS TO BE THE MINT KEY, AND IT WAS ONE DIMENSION SHORT.**
- * (NJ Hunt 3 item 2, 2026-08-22.)
+ * The carry key must be the mint key (jurisdiction + office + DIVISION). A
+ * regional board's seats are allocated per constituent municipality, so
+ * several contests share one division and office title. Prior contests are
+ * therefore BUCKETED by division-and-office:
  *
- * The id is minted from jurisdiction + office + DIVISION. The carry map was
- * keyed on division + office alone, so several contests that mint distinct ids
- * all read back the SAME carried id — and a `Map` keeps the last one written.
- *
- * That is not hypothetical. A New Jersey REGIONAL school district's board seats
- * are allocated per constituent municipality: Chester Township, Mendham
- * Township and Washington Township each elect members to the West Morris
- * Regional board, and a Chester voter votes on the Chester seats and not the
- * Washington ones. Three genuinely different contests, one division, one office
- * title. Re-running the generator collapsed all three onto Washington's id —
- * 90 contests became 87, four candidacy ids were orphaned, and every reader in
- * Chester and Mendham would have been shown Washington Township's candidates
- * for a board seat they do not vote on. A false claim about a reader's ballot,
- * which is worse than a missing contest and much harder to see.
- *
- * So prior contests are BUCKETED by division-and-office rather than overwritten:
- *
- * - exactly one prior contest in the bucket → carry it, which keeps every
- *   hand-written id working, including the ones like `ballot-nj-morris:us-senate`
- *   whose ids encode no jurisdiction at all;
+ * - exactly one prior contest in the bucket → carry it (including ids like
+ *   `ballot-nj-morris:us-senate` that encode no jurisdiction);
  * - several → disambiguate on the jurisdiction the id itself encodes;
  * - several and none matches this jurisdiction → carry NOTHING and mint. A
- *   wrong carried id is a reader's reaction attached to the wrong person's
- *   race, and a fresh id is merely a gap.
+ *   wrong carried id attaches a reaction to the wrong race; a fresh id is
+ *   merely a gap.
  */
 const priorContestsByDivisionOffice = new Map<string, { id: string }[]>();
 for (const c of prior.contests ?? []) {
@@ -482,14 +404,9 @@ for (const c of filed) {
 
   if (!ocdId && SCHOOL_OFFICE.test(office)) {
     /*
-     * THE DOCUMENT'S OWN DISTRICT CELL IS TRIED FIRST, and it is not a nicety.
-     * `Rockaway Township MEMBER OF THE REGIONAL BOARD OF EDUCATION` is a MORRIS
-     * HILLS REGIONAL seat. Resolving it from the municipality gave it the
-     * Rockaway Township district — the same division as the township's own
-     * board — so two different boards' contests came out sharing one key, and
-     * one of them would have put the wrong candidates in front of the wrong
-     * district's readers. The clerk prints the right answer in its own column;
-     * the municipality is the fallback, not the source.
+     * The document's own district cell is tried first: a township's "MEMBER OF
+     * THE REGIONAL BOARD OF EDUCATION" row is a regional board seat, not the
+     * township district's. The municipality is the fallback, not the source.
      */
     const bareType = /^(?:Town|Township|Borough|City|Village|Regional|W\d+|At Large)$/i;
     const cell = c.district && !bareType.test(c.district) ? c.district : null;
@@ -515,11 +432,9 @@ for (const c of filed) {
   }
 
     /*
-   * The contest KEY includes the resolved division, so two contests for one
-   * municipality that sit on different boards can never collapse into one id.
-   * Rockaway Township has a township board and a regional board, and keying on
-   * municipality-plus-office alone was already producing one id for both.
-   */
+     * The contest KEY includes the resolved division, so a municipality's own
+     * board and a regional board can never collapse into one id.
+     */
   const mintedContestId = `ballot-nj-morris:${slug(c.jurisdiction)}-${slug(office)}-${slug(ocdId.split("/").pop() ?? "")}`;
   const carried = carriedContestId(ocdId, office, c.jurisdiction);
   const contestId = carried ?? mintedContestId;
@@ -530,12 +445,8 @@ for (const c of filed) {
       contestId,
       ocdId,
       /*
-       * A carried contest keeps the TITLE it already had. The old titles were
-       * written by a person and say things the office string cannot — "Member
-       * of the Regional Board of Education (Rockaway Township seats)" tells a
-       * reader which seats these are, and `office-blurbs` resolves explainers
-       * off these titles. Overwriting them with a mechanical Title Case of the
-       * clerk's capitals would lose the first and break the second.
+       * A carried contest keeps its TITLE: reviewed titles say which seats a
+       * contest is for, and `office-blurbs` resolves explainers off them.
        */
       title:
         prior.contests.find((p) => p.id === contestId)?.title ??
@@ -575,11 +486,9 @@ for (const c of filed) {
   });
 
   /*
-   * The filed email and street address are CONTACT, and they are kept out of
-   * the ballot file on purpose. A candidacy record renders; a home address does
-   * not, and putting one in the file the page reads is how it ends up on a
-   * page. The contact side is written separately and consumed by the contact
-   * store, which already has the rules for what may be shown.
+   * The filed email and street address are CONTACT, kept out of the ballot
+   * payload so a home address can never reach a page; the contact store has
+   * the rules for what may be shown.
    */
   if (c.email || c.address) {
     contacts.push({
@@ -621,25 +530,15 @@ const absences = noElection
   .filter((a): a is NonNullable<typeof a> => a !== null);
 
 /* -------------------------------------------------------------------------- */
-/* WHAT THE CLERK NO LONGER LISTS (2026-09-02)                                 */
+/* What the clerk no longer lists                                             */
 /* -------------------------------------------------------------------------- */
 
 /*
- * The clerk's 1 September revision listed 147 general-election candidates
- * where the 21 August revision listed 148. The previous version of this
- * generator wrote the 147 and said nothing about the 148th — and the gate
- * behind it, correctly, refused a ballot that had silently shrunk. Deleting a
- * person is a claim as much as listing one is.
- *
- * So a candidacy the previous committed file carried and the current documents
- * do not is written as a REMOVAL: the id it had (every reaction, card and link
- * hangs off it), the document that listed it, the document that does not, and
- * the day it was first found absent — carried forward unchanged on later runs,
- * so the record says when the change was first seen rather than when it was
- * last confirmed. The same fact is written once more as an absence on the
- * contest's own division, which is the surface the reader sees it on.
- *
- * It is NOT rendered as a candidate. The clerk's current list is the ballot.
+ * A candidacy the previous ballot carried and the current documents do not is
+ * written as a REMOVAL: its id, the document that listed it, the document that
+ * does not, and the day it was first found absent (carried forward unchanged).
+ * The same fact is written as an absence on the contest's division. It is not
+ * rendered as a candidate: the clerk's current list is the ballot.
  */
 const currentIds = new Set(candidacies.map((c) => c.id as string));
 const docFor = (priorUrl: string | undefined) =>

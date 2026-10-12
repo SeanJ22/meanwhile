@@ -33,8 +33,6 @@ function sourceFor(record: Record<string, unknown>, field: string, receipt: Manu
 }
 const META = new Set(["id", "bodyId", "ocdId", "sourceUrl", "sourceOrg", "collectedAt", "verifiedAt", "fieldSources", "kind"]);
 
-/** Resolve differing scalar facts of one stable member; identity never joins
- * across members. Every retained field keeps the earlier captured source. */
 export function resolveRecordConflicts(current: Record<string, unknown> & { id: string }, prior: Record<string, unknown> & { id: string },
   currentReceipt: ManualSourceSetReceipt, priorReceipt: ManualSourceSetReceipt): { record: typeof current; conflicts: SourceScopedHeldFact[] } {
   const record = { ...current }, fieldSources = { ...row(current.fieldSources) };

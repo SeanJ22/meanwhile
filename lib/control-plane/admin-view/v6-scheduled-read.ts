@@ -1,4 +1,3 @@
-/** **Scheduled orders for Admin (BR-15).** Plain words, Eastern time, no ids. PURE: config in, rows out. */
 import { formatEastern } from "../eastern-time.ts";
 import { nextDue, scheduledOrders, type ScheduledOrder } from "../gateway/scheduled-orders.ts";
 import type { AdminConfig } from "../gateway/admin-config.ts";
@@ -8,7 +7,6 @@ export interface ScheduledRow {
   readonly id: string;
   readonly label: string;
   readonly status: "Scheduled";
-  /** When it is due, or what it waits for. */
   readonly when: string;
   readonly repeats: string | null;
   readonly finishBy: string | null;

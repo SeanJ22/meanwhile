@@ -1,27 +1,19 @@
 /**
- * `pnpm extract` — the extraction toolkit's command line (F11, Prompt C item
- * 12, 2026-08-20).
+ * `pnpm extract` — the extraction toolkit's command line.
  *
  *   pnpm extract text     <file.pdf | url>
  *   pnpm extract tables   <file.pdf | url>
  *   pnpm extract ocr      <file.pdf | url>
- *   pnpm extract payload  <file.html | url>          [--find "John Carruth"]
+ *   pnpm extract payload  <file.html | url>          [--find "<name>"]
  *   pnpm extract roster   <file.html | url>          # who sits on the board
  *   pnpm extract auto     <file | url>               # text, then OCR if scanned
  *
  * Flags: `--json` prints the whole result object. `--find <text>` (payload
  * only) reports every payload string containing it, with its key path.
  *
- * ## What it guarantees
- *
- * **A zero-row extraction exits NON-ZERO.** Every layer returns its outcome,
- * and this turns `ZERO_ROWS` and `CANNOT_RUN` into a failing exit code, so a
- * pipeline cannot record a failed extraction as an empty document. The two are
- * printed differently and mean different things: `ZERO_ROWS` is "the layer ran
- * and produced nothing", `CANNOT_RUN` is "the layer could not look".
- *
- * Every run prints its counts. An operation that can return nothing must be
- * asked what it returned.
+ * A zero-row extraction exits non-zero: `ZERO_ROWS` ("the layer ran and
+ * produced nothing") and `CANNOT_RUN` ("the layer could not look") both fail,
+ * so a failed extraction is never recorded as an empty document.
  */
 
 import { readFileSync } from "node:fs";
@@ -53,11 +45,6 @@ const isUrl = /^https?:\/\//i.test(target);
 
 async function bytesOf(): Promise<Uint8Array> {
   if (!isUrl) return new Uint8Array(readFileSync(target!));
-  /*
-   * The identified, serialized client every adapter uses — with its challenge
-   * detection, which is what stops a bot interstitial served at 200 being
-   * parsed into an empty document (F20).
-   */
   const res = await fetch(target!, {
     headers: {
       "user-agent":
@@ -73,9 +60,7 @@ async function bytesOf(): Promise<Uint8Array> {
 
 async function textOf(): Promise<string> {
   if (!isUrl) return readFileSync(target!, "utf8");
-  // politeGetText is the shared client with the F20 challenge escalation: a bot
-  // interstitial served at 200 THROWS naming the wall rather than coming back
-  // as a page that says nothing.
+  // The shared client throws on a bot interstitial served at 200 rather than returning an empty page.
   const { status, text } = await politeGetText(target!, {});
   if (status !== 200) {
     console.error(`CANNOT RUN: ${target} answered HTTP ${status}`);
@@ -117,12 +102,7 @@ switch (layer) {
     break;
   }
   case "roster": {
-    /*
-     * Layer 5 (NH Hunt, 2026-08-20). Who sits on a board, off the body's own
-     * page. Built because Newbury's Selectboard roster is a Drupal Views table
-     * and nothing here could read one — the record was reachable and
-     * unreadable, which is friction and never refusal.
-     */
+    /* Who sits on a board, off the body's own page. */
     const html = await textOf();
     const roster = extractRosterTables(html, target!, isUrl ? target! : null);
     for (const row of roster.items as {
@@ -145,11 +125,7 @@ switch (layer) {
     break;
   }
   case "auto": {
-    /*
-     * The ladder, in code: text layer first, OCR when the document turns out
-     * to be a scan. `ZERO_ROWS` from the text layer is exactly that signal, and
-     * the whole reason the layer returns a result rather than a string.
-     */
+    /* Text layer first; `ZERO_ROWS` from it means a scan, so OCR. */
     const bytes = await bytesOf();
     const text = await extractTextLayer(bytes, target!);
     if (text.outcome === "EXTRACTED") {

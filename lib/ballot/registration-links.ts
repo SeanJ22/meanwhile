@@ -1,11 +1,3 @@
-/**
- * Official voter-registration-status checkers, per covered state (2c).
- *
- * Every entry is the state election authority's own tool, and every URL was
- * verified this session — either fetched directly, or (where the tool's host
- * challenges plain clients) confirmed as the destination the authority's own
- * fetched page links to. The verification sentence records which.
- */
 import {
   currentCuratedReaderRecords,
   type BallotNavigationProjectionRecord,
@@ -13,7 +5,6 @@ import {
 
 export interface RegistrationLink {
   state: string;
-  /** The reader-facing line — plain words, 15-year-old test. */
   label: string;
   url: string;
   sourceOrg: string;
@@ -21,7 +12,6 @@ export interface RegistrationLink {
   verifiedAt: string;
 }
 
-/** Initial adoption/node:test evidence; production reads `ballot-navigation`. */
 export const REGISTRATION_LINKS: RegistrationLink[] = [
   {
     state: "AZ",

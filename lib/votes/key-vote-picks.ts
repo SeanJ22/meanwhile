@@ -1,15 +1,12 @@
 /**
- * **SEAN'S KEY VOTES (CA-46).**
- *
- * Sean picks the key votes himself and keeps them current. They sit beside the
- * reviewed list of questions (B15) and the person's full voting record on the
- * card; they never replace either. The product never chooses one: the default
- * is an empty list, and a pick exists only because Sean entered it in Admin.
+ * Key votes picked by the owner in Admin. They sit beside the reviewed list of
+ * questions and the person's full voting record; they never replace either.
+ * The product never chooses one: the default is an empty list.
  *
  * A pick names one roll call (`house:119-2:283`, `senate:119-2:231`) and may
- * carry Sean's own one-line reason. The roll call's wording, date, result and
- * the member's recorded position come from the held roll-call record, never
- * from this setting. A member's card shows only their own chamber's picks.
+ * carry the picker's own one-line reason. Wording, date, result and the
+ * member's position come from the held roll-call record, never from this
+ * setting. A member's card shows only their own chamber's picks.
  *
  * Never a score: nothing here is counted, ranked or compared across people.
  */
@@ -21,7 +18,7 @@ export const KEY_VOTE_PICKS_SETTING = "votes.keyVotePicks";
 export interface KeyVotePick {
   /** `house:<congress>-<session>:<roll>` or `senate:...`, the roll-call id the votes store uses. */
   readonly rollId: string;
-  /** Sean's own words for why it matters; shown as his, never as ours. */
+  /** The picker's own words for why it matters; shown as theirs, never as ours. */
   readonly why?: string;
 }
 
@@ -41,7 +38,7 @@ export function validKeyVotePicks(value: unknown): value is readonly KeyVotePick
   return true;
 }
 
-/** Empty on purpose: the product never chooses a key vote for Sean. */
+/** Empty on purpose: the product never chooses a key vote. */
 export const DEFAULT_KEY_VOTE_PICKS: readonly KeyVotePick[] = [];
 
 registerSetting({
@@ -63,7 +60,7 @@ export interface PickedKeyVote {
 }
 
 /**
- * One member's picks: only their own chamber's roll calls, in Sean's order.
+ * One member's picks: only their own chamber's roll calls, in the picked order.
  * A pick whose roll call or position is not held says so rather than guessing.
  */
 export function pickedKeyVotesFor(

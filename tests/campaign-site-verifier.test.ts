@@ -1,9 +1,3 @@
-/**
- * The campaign-site verifier, on real pages: a lead passes only when the page
- * itself names the candidate, the office or district, and the 2026 cycle, on
- * the candidate's own site — and every refusal is typed. Plain code: no model,
- * no network (the robots-first fetch runs over served bytes).
- */
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -103,7 +97,6 @@ test("a current independent profile supplies its own election span without inven
 });
 
 test("a past-cycle campaign site is refused HISTORICAL_CYCLE and labelled historical", () => {
-  /* The 2022 Yates & Chipperson page, served at its own URL (an archive host is refused before its bytes are read). */
   const url = "https://www.yateschipperson.com/home";
   const v = verifyCampaignSitePage(subject(CHIPPERSON), lead(url), read(url, "yateschipperson-home-2022.archived.html"));
   assert.deepEqual(codes(v), ["HISTORICAL_CYCLE"]);
@@ -172,7 +165,6 @@ test("the read is robots-first: a refused host is never asked anything; a disall
   assert.ok(!refused.ok && refused.refusal.code === "SOCIAL_PLATFORM");
   assert.deepEqual(social.requests, [], "no request, robots.txt included, for a refused host");
 
-  /* Owner decision 2026-09-25: robots.txt alone must not block acquisition. It is read first, recorded, and the public page is read. */
   const url = "https://www.duarte4mendham.com/meet-amalia";
   const disallow = servedRuntime({
     "https://www.duarte4mendham.com/robots.txt": { status: 200, body: "User-agent: *\nDisallow: /\n" },
@@ -186,7 +178,6 @@ test("the read is robots-first: a refused host is never asked anything; a disall
   assert.equal(overVerdict.verdict, "VERIFIED", JSON.stringify(codes(overVerdict)));
   assert.equal(overVerdict.measurement!.permissions[0]?.verdict, "DISALLOWED", "recorded on the measurement, never a refusal");
 
-  /* An access control is never bypassed: a bot challenge served in place of the page refuses the lead. */
   const challenge = servedRuntime({
     "https://www.duarte4mendham.com/robots.txt": { status: 200, body: fixture("duarte4mendham.robots.txt") },
     [url]: { status: 200, body: "<html><head><title>Just a moment...</title></head><body>Checking</body></html>" },

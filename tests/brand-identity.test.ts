@@ -3,19 +3,7 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative, sep } from "node:path";
 import test from "node:test";
 
-/**
- * THE BRAND IDENTITY'S OWN GUARDS (ITEM J, 2026-09-01).
- *
- * These do not check that the lockup looks right — a capture does that, and
- * `docs/evidence/brand-2026-09-01/` holds them. What these refuse are the
- * three ways the identity comes apart silently:
- *
- * 1. `--mark` escaping the lockup and becoming a status colour somewhere.
- * 2. A Google font host appearing in the app tree, which would hand every
- *    reader's IP address to a third party on every page view.
- * 3. A `var(--token)` reference whose token is declared nowhere — the class
- *    of defect that had ten border declarations painting nothing at all.
- */
+/** The brand identity's guards: the mark stays inside the lockup, no reader's IP reaches a font host, and every var(--token) resolves. */
 
 const ROOT = join(import.meta.dirname, "..");
 const CSS = join(ROOT, "app", "globals.css");
@@ -38,17 +26,7 @@ function styledSources(): string[] {
     .filter((f) => /\.(css|tsx|ts)$/.test(f));
 }
 
-// ── 1. the mark stays inside the lockup ──────────────────────────────────────
-
-/**
- * `--mark` is `--accent-state`, on purpose. That reuse is only honest while
- * the token cannot appear anywhere a reader could take it for a status: the
- * tier colours are learned from the map legend, and a teal fill on anything
- * BUT the logo is a tier claim as far as a reader is concerned.
- *
- * So there are exactly two legal references — the declaration, and the
- * square's fill.
- */
+/** --mark is --accent-state, so it may appear only in its declaration and the square's fill: anywhere else it reads as a tier claim. */
 test("--mark is referenced only by its declaration and the logo square", () => {
   const css = readFileSync(CSS, "utf8");
 
@@ -111,18 +89,7 @@ test("the brand square is filled, and no brand rule makes it hollow or dashed", 
   );
 });
 
-// ── 2. no reader's IP address reaches a font host ────────────────────────────
-
-/**
- * `next/font` self-hosts the font files at build time. A stylesheet `<link>`
- * or an `@import` to Google's CSS does the opposite: it hands Google the IP,
- * the User-Agent and the Referer of every person who opens the site, on every
- * page view — while `app/transparency/page.tsx` tells them we collect almost
- * nothing. The claim and the network tab have to agree.
- *
- * Comments in `app/layout.tsx` explain exactly this, so the guard reads code
- * with comments stripped: an explanation of the rule is not a breach of it.
- */
+/** next/font self-hosts fonts; a stylesheet link or @import to Google would hand every reader's IP to it. Comments are stripped before reading. */
 test("no Google font host is reachable from the app tree", () => {
   const hosts = ["fonts.googleapis.com", "fonts.gstatic.com"];
   const offenders: string[] = [];
@@ -171,9 +138,7 @@ test("the record face is loaded through next/font and exposed as --font-record",
     "--font-record is the serif token's name; --font-voice would collide with " +
       "the --voice COLOUR and --font-display is DM Sans",
   );
-  /* A DECLARATION, not a mention: the token comment beside --font-record
-     explains why the serif token is NOT called --font-voice, and a guard that
-     greps raw text reads that explanation as the defect it describes. */
+  /* A declaration, not a mention. */
   assert.ok(
     !/(^|[;{\s])--font-voice\s*:/.test(css),
     "--font-voice must not be declared: --voice is already a colour in this " +
@@ -181,24 +146,7 @@ test("the record face is loaded through next/font and exposed as --font-record",
   );
 });
 
-// ── 3. every var(--token) resolves to something ─────────────────────────────
-
-/**
- * A `var(--token)` whose token is declared nowhere is invalid at
- * computed-value time. What that does depends on the declaration:
- *
- * - `border: 1px solid var(--border)` — the whole SHORTHAND is dropped, so
- *   `border-style` falls to `none` and **no border is painted at all**.
- * - `border-color: var(--border)` on an element that sets its style
- *   elsewhere — only the colour resets, to `currentColor`, so the border
- *   paints in the TEXT colour, much heavier than intended.
- *
- * Both shipped. Ten declarations referenced `--border`, which this stylesheet
- * has never declared; four component call sites referenced `--rule`, one
- * referenced `--paper` and two referenced `--destructive`. Same shape as the
- * `--muted` defect fixed under BAL-26, which is why this is a class guard and
- * not nine one-line fixes.
- */
+/** A var(--token) whose token is declared nowhere drops or miscolours the declaration it is in. */
 
 /**
  * Tokens set at RUNTIME by the component that owns them, rather than in a
@@ -224,13 +172,7 @@ const RUNTIME_DECLARED: Record<string, string> = {
 };
 
 test("the Ask popup's placement tokens have values before layout measurement", () => {
-  /*
-   * Approved reader design (2026-09-28): Ask is one of the three small popups
-   * and is placed by `.mw-pop[data-anchor]` in app/reader.css. The collapsed
-   * header's bottom edge (`--hdr-bottom`) and the phone sheet's height
-   * (`--sheet-h`) are measured at runtime, so every read carries a fallback
-   * and the popup is placed on the very first paint.
-   */
+  /* Ask is one of the small popups placed by .mw-pop[data-anchor]; its measured runtime tokens carry fallbacks. */
   const css = readFileSync(join(ROOT, "app", "reader.css"), "utf8");
   for (const token of ["--hdr-bottom", "--sheet-h"]) {
     const reads = [...css.matchAll(new RegExp(`var\\(${token}([,)])`, "g"))];
@@ -261,14 +203,7 @@ test("CSS Module declarations resolve locally without lending tokens to unrelate
 });
 
 test("every var(--token) reference resolves to a declared token", () => {
-  /*
-   * Two theme sources, not one. The reader's tokens live in `app/globals.css`;
-   * the owner control centre carries its OWN dark and light blocks in
-   * `app/(admin)/layout.tsx` (the Lumen Edge pass, ADM-21, 2026-09-05), and
-   * keeps them out of the reader stylesheet on purpose — the console is not
-   * the product. A token declared in either place resolves; one declared in
-   * neither is the defect this guard exists for.
-   */
+  /* Two theme sources: the reader's app/globals.css and the Admin layout's own blocks. A token declared in neither is the defect. */
   const declared = new Set<string>([
     ...declaredCssTokens(readFileSync(CSS, "utf8")),
     ...declaredCssTokens(readFileSync(join(ROOT, "app", "(admin)", "layout.tsx"), "utf8")),
@@ -314,8 +249,6 @@ test("every var(--token) reference resolves to a declared token", () => {
   );
 });
 
-// ── 4. the icon assets track the palette ────────────────────────────────────
-
 /**
  * `app/icon.svg` is served standalone, so it cannot use a custom property:
  * nothing is in scope. The values are therefore literal, and a literal is a
@@ -343,17 +276,7 @@ test("app/icon.svg carries the dark theme's --bg and --mark, and the square is f
   );
 });
 
-/**
- * `app/favicon.ico` was the create-next-app DEFAULT — a black circle with a
- * white triangle — and Next lists it AHEAD of `icon.svg` in `<head>`, so it
- * was what a reader's browser tab actually showed. Shipping `icon.svg` alone
- * would have left the scaffolding icon winning in every browser that prefers
- * `.ico`, which is most of them.
- *
- * The ICO cannot be read for a colour here (its entries are PNG-encoded), so
- * what is asserted is its SHAPE: the three sizes this repo generates, and not
- * the four the scaffolding shipped.
- */
+/** The favicon is this repo's own, in the three generated sizes, not the scaffolding's four. */
 test("app/favicon.ico is the generated mark, not the create-next-app default", () => {
   const ico = readFileSync(join(ROOT, "app", "favicon.ico"));
   assert.equal(ico.readUInt16LE(0), 0, "byte 0-1 of an ICO is a zero reserved field");

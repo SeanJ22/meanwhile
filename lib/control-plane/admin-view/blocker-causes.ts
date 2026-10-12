@@ -1,25 +1,8 @@
 import { UNKNOWN_PROBLEM } from "./plain-words.ts";
 import { stateCodeOf } from "../unit-state.ts";
 
-/**
- * **WHY IS IT STUCK? — ONE PLAIN-ENGLISH CAUSE PER KIND OF BLOCKER.**
- *
- * The published assignment index says, per stuck row, who owns the next move
- * and a sentence from the machine (`blocker`). This module groups those rows by
- * the cause behind the sentence, in words a reader of Admin can act on. It is a
- * class of causes, not a list of examples: a row is placed by the shape of its
- * blocker (a provider that did not answer, a service that timed out, a source
- * that returned too little, a walk that found no route, a missing adapter, a
- * saved page that was missing, work nobody has reached yet), and a row that
- * matches no shape is grouped by its own words with the numbers taken out, so
- * an unknown cause still groups with its twins rather than standing alone.
- *
- * PURE. It counts and labels; it never decides what to do about a blocker.
- */
-
 export type BlockerLane = "decision" | "auto" | "publisher" | "software";
 
-/** The fields of a published assignment-index row this module reads. */
 export interface StuckRowLike {
   readonly id: string;
   readonly state: string;
@@ -38,14 +21,14 @@ export interface StuckRowLike {
   readonly assignmentKeys: readonly string[];
 }
 
-/** BR-09: why a card needs Sean. Every card in the decision lane names exactly one. */
+/** Why a card needs the owner. Every card in the decision lane names exactly one. */
 export const NEEDS = ["money", "platform", "credentials", "contract", "broken"] as const;
 export type Need = (typeof NEEDS)[number];
 export const NEED_WORDS: Readonly<Record<Need, string>> = {
   money: "Needs money", platform: "Needs a platform", credentials: "Needs a login or key", contract: "Needs a contract or terms", broken: "Needs a fix only you can decide",
 };
 
-/** The reason a row needs Sean, from the words of its blocker. Anything not matching a named reason is "broken". */
+/** Anything not matching a named reason is "broken". */
 export function needOf(blocker: string | null): Need {
   const t = blocker ?? "";
   if (/\b(budget|spend|paid|ceiling|cost|pay|fee|purchase)\b|\$\d/i.test(t)) return "money";
@@ -56,16 +39,12 @@ export function needOf(blocker: string | null): Need {
 }
 
 export interface Cause {
-  /** Set exactly when the lane is "decision". */
   readonly needs: Need | null;
   readonly undescribed?: boolean;
   readonly key: string;
-  /** The cause in one plain sentence. */
   readonly words: string;
   readonly lane: BlockerLane;
-  /** What happens next, in words, for the group. */
   readonly next: string;
-  /** Who moves it, in words. */
   readonly owner: string;
 }
 
@@ -156,13 +135,11 @@ export function causeOf(row: Pick<StuckRowLike, "state" | "owner" | "blocker" | 
   return { ...core, needs: core.lane === "decision" ? needOf(row.blocker) : null };
 }
 
-/** The row's state, from its saved state code, else from the structure of its id (never two letters found anywhere in it). */
 export function stateOfRow(row: Pick<StuckRowLike, "stateCode" | "id" | "subjectName">): string | null {
   if (row.stateCode && /^[a-z]{2}$/i.test(row.stateCode)) return row.stateCode.toLowerCase();
   return stateCodeOf(row.id, "");
 }
 
-/** The UI place key an index row belongs to: its saved ZIP hunt, else its state, else the whole country. */
 export function placeKeyOfRow(row: Pick<StuckRowLike, "assignmentKeys" | "stateCode">): string {
   for (const key of row.assignmentKeys) {
     const zip = /^zcta:\d{4}\/(\d{5})$/.exec(key);
@@ -175,7 +152,6 @@ export function placeKeyOfRow(row: Pick<StuckRowLike, "assignmentKeys" | "stateC
 
 const DAY = 86_400_000;
 export interface Ageing { readonly words: string; readonly rank: number }
-/** How long it has been stuck, from the earliest time the row names; never a guess when it names none. */
 export function ageOf(row: Pick<StuckRowLike, "waitingSince" | "eligibleAt" | "lastActivityAt">, nowIso: string): Ageing {
   const times = [row.waitingSince, row.eligibleAt, row.lastActivityAt].filter((t): t is string => t !== null && Number.isFinite(Date.parse(t)));
   if (times.length === 0) return { words: "for an unknown time", rank: 0 };
@@ -184,13 +160,7 @@ export function ageOf(row: Pick<StuckRowLike, "waitingSince" | "eligibleAt" | "l
   return { words: days === 0 ? "since today" : days === 1 ? "for 1 day" : `for ${days} days`, rank: days };
 }
 
-/**
- * The words a "send agents" instruction carries. The runner reads them as a target (scheduler/dispatch-target.ts):
- * every state named, plus terms; a unit matches the state and at least one term, and a target with no state matches
- * nothing. "Deploy" and "fleet" are filler it drops, so the words must not carry any other verb or noun: each extra
- * word is a term a unit has to contain. So: the state name(s), the ZIP when the row belongs to one, and at most one
- * specific word of what is stuck.
- */
+/** The runner reads these words as a target (scheduler/dispatch-target.ts): every extra word is a term a unit must contain, so carry only state names, the ZIP, and at most one specific word. */
 export function sendWordsFor(input: { readonly stateNames: readonly string[]; readonly zip: string | null; readonly subject: string | null; readonly label: string | null }): string | null {
   if (input.stateNames.length === 0) return null;
   const source = `${input.subject ?? ""} ${input.label ?? ""}`;

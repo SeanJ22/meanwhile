@@ -6,44 +6,23 @@ import type { MeetingStatus, OcdId } from "@/lib/sources/types";
 import type { BodyScopeKey } from "./body-scope.ts";
 
 /**
- * The shared UI state.
- *
- * EdiaStratMap keeps one object `S` in state.js, and that single fact is why
- * cross-cutting features there are cheap: the legend, the count badge, the list
- * overlay and the map all read the same filters, so adding a filter means
- * adding a field rather than threading a prop through six components. That
- * property is worth more than the pattern it came in, so it survives the port —
- * as a typed reducer rather than a mutable global.
- *
- * What belongs here: anything two surfaces both need. What does not: anything
- * one component owns alone (a hover state, an input's uncommitted text), and
- * anything the server owns (the meetings themselves).
+ * The shared UI state: one typed store, so the legend, count badge, list
+ * overlay and map all read the same filters. What belongs here: anything two
+ * surfaces both need. Not: anything one component owns alone, or anything the
+ * server owns.
  */
 
-/** Which district overlays can be drawn. Local ones stay defined but empty
- *  until Phase 4 sources them — an empty layer is honest, a missing one is a
- *  gap you cannot see. */
+/** Which district overlays can be drawn. An empty layer is honest; a missing
+ *  one is a gap you cannot see. */
 export type DistrictType =
   | "congressional"
   | "state-senate"
   | "state-house"
   | "county"
   /**
-   * THREE SCHOOL TYPES, NOT ONE (M12, 2026-08-17; the author's disposition,
-   * "Split and be clear").
-   *
-   * Until now `unsd`, `elsd` and `scsd` were merged into a single `school`
-   * type, so a K-8 elementary boundary and the regional high school boundary
-   * drawn over the same ground were indistinguishable — same dash, same
-   * weight, one checkbox. Rockaway 07866 is the case that makes it a defect
-   * rather than a simplification: a point there genuinely sits in an
-   * elementary district AND a secondary district at once, `districtsAt`
-   * already returned both as separate hits with distinct labels, and the map
-   * drew them as if they were the same kind of thing.
-   *
-   * They are three different governments with three different remits, and
-   * the reader who has never been there — the stranger — cannot infer that
-   * from one line style.
+   * Three school types, not one: an elementary and a secondary district can
+   * cover the same point and are different governments, so they draw and
+   * filter separately.
    */
   | "school-unified"
   | "school-elementary"
@@ -83,11 +62,8 @@ export interface FilterState {
   daysAhead: number;
   daysBack: number;
   /**
-   * Hide jurisdictions with no real ingestion behind them yet.
-   *
-   * Default on, and deliberately visible: Edia's `focusStatesOn` does the same
-   * thing. A reader who cannot see that a filter is hiding places will read the
-   * gaps as "no government here".
+   * Hide jurisdictions with no real ingestion behind them yet. Default on and
+   * visible, so the reader does not read the gaps as "no government here".
    */
   hideUncovered: boolean;
 }
@@ -103,11 +79,8 @@ export interface DistrictChoice {
 }
 
 /**
- * A click that landed in more than one district.
- *
- * A point is in a *set* of districts, so this is the normal case and not an
- * error path: Tucson resolves to six at once, and Rockaway lands in two school
- * districts from the same layer. The reader picks which one they meant.
+ * A click that landed in more than one district — the normal case, since a
+ * point is in a set of districts. The reader picks which one they meant.
  */
 export interface DistrictPick {
   choices: DistrictChoice[];
@@ -122,8 +95,7 @@ export interface UiState {
 
   /** Cascading scope. Body is scoped to jurisdiction; changing jurisdiction
    *  clears it. Jurisdiction is an OCD-ID. Body is NOT one: it is the
-   *  `<ocdId>|<bodyName>` key only `bodyScopeKey` can make (2026-09-23 — the
-   *  district card's door dispatched a bare OCD-ID here and emptied the map). */
+   *  `<ocdId>|<bodyName>` key only `bodyScopeKey` can make. */
   jurisdiction: OcdId | null;
   body: BodyScopeKey | null;
 
@@ -133,7 +105,7 @@ export interface UiState {
   /** Venue key from lib/meetings/venues.ts. */
   selectedVenueKey: string | null;
   /** The district the reader picked by clicking the map. Never inferred from
-   *  the stored zip — see CLAUDE.md on zip being orientation, not identity. */
+   *  the stored zip: zip is orientation, not identity. */
   selectedDistrictOcdId: OcdId | null;
   selectedDistrictType: DistrictType | null;
   /** Open disambiguation prompt, when a click hit more than one district. */
@@ -149,38 +121,22 @@ export interface UiState {
 
   showDistricts: boolean;
   listOverlayOpen: boolean;
-  /** 8a (2026-08-17): which sidebar-count door is open, if any. The doors
-   *  are large surfaces and follow the one-large-popup rule. */
+  /** Which sidebar-count door is open, if any. The doors are large surfaces
+   *  and follow the one-large-popup rule. */
   door: "bodies" | "districts" | "officials" | null;
   filtersPanelOpen: boolean;
   /**
-   * **THE SUBJECT AN ANSWER OPENED THE LIST FOR.** (ASK-22, 2026-08-31.)
-   *
-   * The owner: *"Meetings near you sends the user hunting."* The pill
-   * dispatched `list/open` with no subject, so a reader who had just asked
-   * about one body got every meeting in the ZIP and had to find it again.
-   *
-   * It lives HERE and not in `filters`, and that is deliberate. `filters` is
-   * what the reader set; this is what one answer focused. Putting it in
-   * `filters` would make an answer's focus persist into every later view of
-   * the map — a filter the reader never chose, silently narrowing what they
-   * see. It is cleared when the overlay closes.
-   *
-   * It is also NEVER a silent narrowing while it is on: the overlay renders a
-   * dismissible chip naming the body, because this codebase's own rule is that
-   * a reader who cannot see that a filter is hiding places will read the gaps
-   * as "no government here".
+   * The subject an answer opened the list for. Not in `filters`, so it never
+   * persists into later views; cleared when the overlay closes, and named in a
+   * dismissible chip while on.
    */
   listFocusBodyId: string | null;
   listFocusBodyName: string | null;
   /**
-   * **THE DIVISION A COUNT OPENED THE LIST FOR.** (2026-09-23.)
-   *
-   * The district card's "Upcoming N" door. Same lifetime and same visibility as
-   * the ASK-22 focus above — one opening, cleared on close, named in a chip —
-   * and it narrows to exactly the rows the card counted (`divisionUpcoming` in
-   * `lib/state/list-focus.ts`), so the card's number and the list's rows are
-   * one computation.
+   * The division a count opened the list for (the district card's "Upcoming N"
+   * door). Same lifetime and visibility as the answer focus above; narrows to
+   * exactly the rows the card counted (`divisionUpcoming` in
+   * `lib/state/list-focus.ts`).
    */
   listFocusDivision: { ocdId: OcdId; name: string } | null;
 
@@ -188,23 +144,16 @@ export interface UiState {
   listGroupBy: ListGroupBy;
   /** Group keys the reader has collapsed. */
   /**
-   * Which meeting groups the reader has OPENED (g4 item 11).
-   *
-   * It was `collapsedGroups` — the list of groups the reader had shut — and
-   * the default of an empty list therefore meant "everything is open". The
-   * author's comparison screenshots ruled the other way: grouped-and-collapsed
-   * is right, auto-expanded is wrong. Inverting the field rather than adding a
-   * "start collapsed" flag keeps ONE source of truth about a group's state; a
-   * flag beside a list is two, and they disagree the first time a group is
-   * added while the flag is set.
+   * Which meeting groups the reader has OPENED; groups start collapsed, and
+   * this list is the one source of truth about a group's state.
    */
   expandedGroups: string[];
 
-  /** Reported by the last search, shown persistently. docs/state.md §2: a
-   *  silently widened search is a wrong answer. */
+  /** Reported by the last search, shown persistently: a silently widened
+   *  search is a wrong answer. */
   coverage: CoverageTier | null;
   /** Meetings the adapter dropped for unresolvable coordinates. Visible, not
-   *  silent — this is Edia's `.stat-missing`. */
+   *  silent. */
   droppedCount: number;
 }
 
@@ -219,7 +168,7 @@ export type UiAction =
   | { type: "filter/dateWindow"; daysAhead?: number; daysBack?: number }
   | { type: "filter/hideUncovered"; value: boolean }
   | { type: "filter/clear"; group: keyof FilterState }
-  /** Set the district-type selection outright — Select all / Clear (M25). */
+  /** Set the district-type selection outright — Select all / Clear. */
   | { type: "filter/districtTypesSet"; value: DistrictType[] }
   | { type: "filter/reset" }
   | { type: "filter/togglePanel" }
@@ -243,11 +192,7 @@ export type UiAction =
   | {
       type: "list/open";
       open: boolean;
-      /**
-       * The body the reader's question was ABOUT, when the open came from an
-       * answer. (ASK-22.) Absent means an unfocused open, which is what every
-       * open used to be.
-       */
+      /** The body the reader's question was ABOUT, when the open came from an answer. Absent: an unfocused open. */
       focusBodyId?: string | null;
       /** That body's plain-language name, for the chip the reader can see. */
       focusBodyName?: string | null;

@@ -12,17 +12,8 @@ import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 
 /**
- * **AN EDGE-SERVED CURATED PROJECTION ANSWERS ITS SELECTOR IN PRODUCTION.**
- * (2026-09-25.)
- *
- * `currentCuratedReaderRecords` answered only a PROMOTED state and otherwise,
- * outside a test process, threw. The campaign-site URLs and the comment-access
- * rules have been primed from the reader edge as BOOTSTRAP (the edge copy of a
- * promoted version) since C20/C21, so in production every edge-served request
- * withheld every campaign link (`campaignSiteFor` catches and answers none)
- * and every comment rule. Under `node --test` the selector returned the
- * tracked seed instead, so no test saw it. These run as production does:
- * NODE_ENV=production and no NODE_TEST_CONTEXT.
+ * The selector must answer an edge-served BOOTSTRAP projection in production, not only a PROMOTED state. These run as
+ * production does: NODE_ENV=production and no NODE_TEST_CONTEXT.
  */
 
 // A federal id: retired `plural:` roster ids never enter the Reader in production.

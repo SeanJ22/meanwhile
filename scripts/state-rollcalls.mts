@@ -2,12 +2,9 @@
 /**
  * Standing official state-roll-call boundary.
  *
- * One invocation owns exactly one AZ/NH/NJ contract.  It never opens the
- * retired LegiScan snapshot and has no tracked-output mode.  Until a state's
- * complete official roll horizon and exact member-id join are implemented,
- * a successful official probe is durably refused as an unbounded horizon;
- * transport failures become durable source attempts.  Neither case can move
- * or clear that state's LKG.
+ * One invocation owns one ready NH or NJ official-source contract. Arizona
+ * native API votes use az-votes-refresh.mts; a landing page is not a vote source.
+ * Acquired facts retain exact source-native identities and their prior LKG.
  *
  * @freshness-reads-here — retrievedAt is minted only after the official
  * roll-call surface returned a non-empty body for the exact state contract.
@@ -18,7 +15,6 @@ import {
   officialStateLegislatorVotesCandidate,
   officialStateLegislatorVotesSessionMarker,
   officialStateRollCallsCandidate,
-  officialStateRollCallHorizonRefusalCandidate,
   sha256,
 } from "../lib/civic-data/candidate-builders.ts";
 import {
@@ -81,9 +77,6 @@ import {
 
 const UA = "we-the-people/1.0 (civic data; +mailto:seanj22@gmail.com)";
 
-const AZ_HORIZON_GAP =
-  "The permitted official LegText landing surface does not establish one complete member-level House and Senate roll-call horizon. apps.azleg.gov is not used by this automated adapter.";
-
 interface NjTextDocument {
   readonly kind: "MEMBER";
   readonly participant: NjSessionParticipant;
@@ -119,23 +112,14 @@ export function parseStateRollCallArguments(args: readonly string[]): StateRollC
     throw new Error("STATE_ROLL_CALL_EXACT_SCOPE_REQUIRED");
   }
   const target = officialStateRollCallTargetByState(stateArgs[0]!.slice("--state=".length));
-  if (!target) throw new Error("STATE_ROLL_CALL_STATE_UNSUPPORTED");
+  if (!target || target.state === "AZ") throw new Error("STATE_ROLL_CALL_STATE_UNSUPPORTED");
   return { state: target.state };
 }
 
 /**
- * The single durable-write seam shared by every state's roll-call promotion.
- *
- * By the time this runs the source is already acquired; each branch records an
- * acquisition failure inline before reaching here. The only thing left that can
- * fail is OUR durable civic-data write/promotion — and a transport or database
- * error on it (for example a candidate that exceeds the write path; sizing the
- * write for California and Texas is separate capacity work) must never escape as
- * an uncaught exception. An uncaught child crash reaches the supervisor as a
- * bare process/protocol failure with a Node stack and no attribution. Here it is
- * caught and returned as an honest, source-neutral persistence failure: the
- * caller emits no receipt, the prior canonical pointer is untouched, and the
- * child exits 2 cleanly. This holds for every state, at any size.
+ * The single durable-write seam shared by every state's roll-call promotion. A
+ * failure of our own durable write is returned as a source-neutral persistence
+ * failure: no receipt, the prior canonical pointer untouched, exit 2.
  */
 export type StateRollCallPersistResult =
   | { readonly kind: "PERSISTED"; readonly outcome: PromotionOutcome }
@@ -160,9 +144,7 @@ async function persistWithDurableResilience(
   try {
     return { kind: "PERSISTED", outcome: await promote() };
   } catch (error) {
-    // A genuine source-acquisition failure is the caller's to record before it
-    // ever reaches persistence; if one arrives here it is re-thrown rather than
-    // silently reclassified as our persistence failure.
+    // A source-acquisition failure is the caller's to record; re-thrown rather than reclassified here.
     if (isSourceAcquisitionFailure(error)) throw error;
     return { kind: "WRITE_FAILED", diagnostic: durableWriteFailureDiagnostic(contractId, error) };
   }
@@ -179,11 +161,8 @@ export async function persistAcquiredStateRollCall(
 }
 
 /**
- * Persist one candidate of a per-legislator fan-out (a member or the per-state
- * marker) with the identical durable-failure resilience: a genuine source
- * acquisition error still propagates to the caller's recorder, and a durable
- * write failure becomes a diagnostic rather than an uncaught crash that would
- * take down the whole runner cycle mid-fan-out.
+ * Persist one candidate of a per-legislator fan-out with the same resilience: a
+ * source acquisition error propagates; a durable write failure becomes a diagnostic.
  */
 async function persistFanOutStateRollCall(
   store: RoutineDataStore,
@@ -276,13 +255,11 @@ async function main(): Promise<void> {
         pointerPayload.identities.every((row) => typeof row.officeholderId === "string")
       ? pointerPayload.identities.map((row) => row.officeholderId as string)
       : [];
-    // The whole chamber's roster/participant authority, reduced once to its
-    // digest evidence so every member candidate and the marker cite byte-identical
-    // authority rather than each re-hashing the roster.
+    // The chamber's roster authority, reduced once to its digest so every candidate cites identical authority.
     const identityAuthority = officialStateIdentityAuthorityEvidence({
       sourceId: target.sourceId,
       jurisdiction: target.jurisdiction,
-      term: "2026",
+      term: projection.rolls[0]!.term,
       session: "regular",
       identityAuthority: {
         contractId: "nh-members",
@@ -294,12 +271,8 @@ async function main(): Promise<void> {
       },
     });
 
-    // Fan the whole-session position matrix out into one bounded record per
-    // member: the write that crashed the runner was the entire chamber times
-    // every roll in one Neon statement, and each member's own votes are a small,
-    // tenure-bounded fraction of it. Roll date is joined from the roll index so
-    // the member page can order votes without it; every other roll field stays
-    // in the per-state roll index (PR 2), never duplicated onto each member.
+    // One bounded record per member (the whole matrix in one statement is too large); roll date is joined
+    // from the roll index, and every other roll field stays in the per-state roll index.
     const httpStatus = documents.every((document) => document.httpStatus === 200) ? 200 : 0;
     const rollById = new Map(projection.rolls.map((roll) => [roll.id, roll] as const));
     const positionsByMember = new Map<string, StateLegislatorVotePosition[]>();
@@ -307,7 +280,8 @@ async function main(): Promise<void> {
     for (const position of projection.positions) {
       const roll = rollById.get(position.rollCallId);
       const positions = positionsByMember.get(position.officeholderId) ?? [];
-      positions.push({ rollCallId: position.rollCallId, position: position.position, date: roll?.date ?? retrievedAt.slice(0, 10) });
+      if (!roll) throw new Error("NH_MEMBER_POSITION_ROLL_MISSING");
+      positions.push({ rollCallId: position.rollCallId, position: position.position, publisherPosition: position.publisherPosition, date: roll.date });
       positionsByMember.set(position.officeholderId, positions);
       if (!chamberByMember.has(position.officeholderId)) {
         chamberByMember.set(position.officeholderId, roll?.chamber ?? null);
@@ -324,11 +298,8 @@ async function main(): Promise<void> {
         positions: [...positions].sort((left, right) => left.rollCallId.localeCompare(right.rollCallId)),
       }));
 
-    // One batched read of every member's current promotion. An unchanged member
-    // is a content no-op we skip, so the per-cycle write cost is one marker plus
-    // only the members whose votes actually changed — never the whole chamber
-    // every cycle. (candidateId folds in retrievedAt, so re-promoting an
-    // unchanged member would otherwise mint a fresh version each cycle.)
+    // One batched read of every member's current promotion; an unchanged member is skipped
+    // (candidateId folds in retrievedAt, so re-promoting would mint a fresh version each cycle).
     const currentByScope = new Map(
       (await readPromotedCivicDataBatch<StateLegislatorVotes>(
         "STATE_LEGISLATOR_VOTES",
@@ -337,13 +308,13 @@ async function main(): Promise<void> {
       )).map((result, index) => [memberEntries[index]!.officeholderId, result] as const),
     );
     const positionsFingerprint = (positions: readonly StateLegislatorVotePosition[]): string =>
-      positions.map((position) => `${position.rollCallId}\u0000${position.position}\u0000${position.date}`).join("");
+      positions.map((position) => `${position.rollCallId}\u0000${position.position}\u0000${position.publisherPosition ?? ""}\u0000${position.date}`).join("");
 
     const throughRoll = [...projection.rolls].sort((left, right) => left.date.localeCompare(right.date)).at(-1) ?? null;
     const marker = officialStateLegislatorVotesSessionMarker({
       sourceId: target.sourceId,
       jurisdiction: target.jurisdiction,
-      term: "2026",
+      term: projection.rolls[0]!.term,
       session: "regular",
       requestedUrl: NH_ROLL_SUMMARY_URL,
       finalUrl: documents[0]!.finalUrl,
@@ -358,14 +329,17 @@ async function main(): Promise<void> {
       identityAuthority,
     });
 
-    // Promote only changed members, then advance the per-state marker last. A
-    // durable write failure part-way through leaves the clock's watermark
-    // unmoved, so the next cycle re-promotes only what did not land.
+    // Promote only changed members, then advance the per-state marker last, so a part-way failure
+    // leaves the watermark unmoved and the next cycle re-promotes only what did not land.
     let promotedMembers = 0;
     let unchangedMembers = 0;
     for (const { officeholderId, chamber, positions } of memberEntries) {
       const current = currentByScope.get(officeholderId);
-      if (current?.kind === "PROMOTED" && positionsFingerprint(current.value.positions) === positionsFingerprint(positions)) {
+      if (current?.kind === "PROMOTED" && current.value.term === projection.rolls[0]!.term && current.value.session === "regular" &&
+          current.value.rollCalls?.length === positions.length &&
+          positionsFingerprint(current.value.positions) === positionsFingerprint(positions) &&
+          sha256(JSON.stringify(current.value.rollCalls.map(({ retrievedAt: _retrievedAt, ...roll }) => roll))) ===
+          sha256(JSON.stringify(positions.map(position => { const { retrievedAt: _retrievedAt, ...roll } = rollById.get(position.rollCallId)!; return roll; })))) {
         unchangedMembers += 1;
         continue;
       }
@@ -374,9 +348,10 @@ async function main(): Promise<void> {
         jurisdiction: target.jurisdiction,
         officeholderId,
         chamber,
-        term: "2026",
+        term: projection.rolls[0]!.term,
         session: "regular",
         positions,
+        rollCalls: positions.map(position => rollById.get(position.rollCallId)!),
         requestedUrl: NH_ROLL_SUMMARY_URL,
         finalUrl: documents[0]!.finalUrl,
         httpStatus,
@@ -390,7 +365,12 @@ async function main(): Promise<void> {
         return;
       }
       if (persistedMember.outcome.promoted) promotedMembers += 1;
-      else unchangedMembers += 1;
+      else {
+        console.log("RCD_RECEIPT=" + JSON.stringify({ source: target.contractId,
+          ...routineReceiptFields(memberCandidate, persistedMember.outcome), structuralReleaseContract: ZERO_RELEASE_EVENTS }));
+        process.exitCode = 2;
+        return; // Refusal is not an unchanged member and must never advance the session marker.
+      }
     }
 
     const persistedMarker = await persistFanOutStateRollCall(store, target.contractId, marker, retrievedAt);
@@ -481,11 +461,7 @@ async function main(): Promise<void> {
                   () => fetch(request.url, {
                     headers: {
                       "user-agent": UA,
-                      // pub.njleg.gov serves the OLS ZIP archives as
-                      // application/x-zip-compressed and 406s an Accept that names
-                      // only zip/octet-stream; a trailing */* makes that IIS host
-                      // answer 200 with the archive. The member API on
-                      // njleg.state.nj.us is plain JSON and is unaffected.
+                      // pub.njleg.gov 406s an Accept naming only zip/octet-stream; a trailing */* gets the archive.
                       accept: request.kind === "MEMBER" ? "application/json" : "application/zip,application/octet-stream,*/*",
                     },
                     redirect: "follow",
@@ -639,100 +615,12 @@ async function main(): Promise<void> {
     return;
   }
 
-  let response: Response;
-  let body: string;
-  try {
-    const acquired = await withPublisherAcquisitionDeadline(
-      `${target.publisher} roll-call horizon`,
-      ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS,
-      async (signal) => {
-        const requestSignal = AbortSignal.any([signal, AbortSignal.timeout(60_000)]);
-        const result = await requestPublisher(
-          `${target.publisher} roll-call horizon`,
-          () => fetch(target.probeUrl, {
-            headers: { "user-agent": UA, accept: "text/html,text/plain;q=0.9,*/*;q=0.5" },
-            redirect: "follow",
-            signal: requestSignal,
-          }),
-        );
-        if (!result.ok) {
-          throw sourceAcquisitionFailure(
-            "PUBLISHER_RESPONSE_REFUSED",
-            `${target.publisher} roll-call horizon answered HTTP ${result.status}.`,
-          );
-        }
-        const raw = await readPublisherBody(
-          `${target.publisher} roll-call horizon`,
-          () => result.text(),
-        );
-        requestSignal.throwIfAborted();
-        if (raw.trim() === "") {
-          throw sourceAcquisitionFailure(
-            "PUBLISHER_DOCUMENT_INVALID",
-            `${target.publisher} roll-call horizon returned an empty document.`,
-          );
-        }
-        return { response: result, body: raw };
-      },
-    );
-    response = acquired.response;
-    body = acquired.body;
-  } catch (error) {
-    if (!isSourceAcquisitionFailure(error)) throw error;
-    const failed = await recordRegisteredSourceAcquisitionFailure({
-      store,
-      contractId: target.contractId,
-      failure: error,
-      requestedUrl: target.probeUrl,
-    });
-    console.log(failed.line);
-    process.exitCode = 2;
-    return;
-  }
-
-  const retrievedAt = new Date().toISOString();
-  const candidate = officialStateRollCallHorizonRefusalCandidate({
-    sourceId: target.sourceId,
-    jurisdiction: target.jurisdiction,
-    requestedUrl: target.probeUrl,
-    finalUrl: response.url || target.probeUrl,
-    httpStatus: response.status,
-    retrievedAt,
-    rawBody: body,
-    detail: AZ_HORIZON_GAP,
-  });
-  const persisted = await persistAcquiredStateRollCall(store, target.contractId, candidate, retrievedAt);
-  if (persisted.kind === "WRITE_FAILED") {
-    console.error(persisted.diagnostic);
-    process.exitCode = 2;
-    return;
-  }
-  const outcome = persisted.outcome;
-  if (outcome.promoted || outcome.candidate.state !== "HORIZON_UNRESOLVED") {
-    throw new Error(
-      `STATE_ROLL_CALL_HORIZON_REFUSAL_BROKEN:${target.contractId}:${outcome.candidate.state}`,
-    );
-  }
-  console.log("RCD_RECEIPT=" + JSON.stringify({
-    source: target.contractId,
-    candidateId: candidate.id,
-    acquisitionSucceeded: outcome.candidate.acquisitionSucceeded,
-    state: outcome.candidate.state,
-    decision: outcome.candidate.receipt?.decision ?? null,
-    promotedVersion: null,
-    lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion,
-    structuralReleaseContract: ZERO_RELEASE_EVENTS,
-  }));
-  process.exitCode = 2;
+  throw new Error("STATE_ROLL_CALL_STATE_UNSUPPORTED");
 }
 
 const invokedDirectly = (process.argv[1] ?? "").replace(/\\/g, "/").endsWith("scripts/state-rollcalls.mts");
 if (invokedDirectly) {
-  // Last-resort backstop: no unexpected error may escape as an uncaught crash.
-  // The durable-write seam already reports persistence failures as receipts-less
-  // held failures; this catches anything else (bad arguments, a broken
-  // invariant) as a clean exit-2 with an honest line, so the supervisor never
-  // sees a bare Node stack for this child, for any state.
+  // Last-resort backstop: anything unexpected exits 2 with an honest line, never a bare Node stack.
   await main().catch((error) => {
     console.error(
       `state-rollcalls: unexpected error; exiting 2 without an uncaught crash — ` +

@@ -38,12 +38,6 @@ function fail(verifierId: string, detail: string): RoutineReaderVerification {
   return { verifierId, status: "FAIL", detail };
 }
 
-/**
- * A candidate whose own completeness envelope makes promotion impossible does
- * not yet expose a proposed Reader projection.  Running a typed Reader against
- * that deliberately incomplete value could only replace the source-scoped
- * horizon refusal with a secondary delivery failure.
- */
 export function candidateHasIntrinsicHorizonRefusal(candidate: RoutineCandidate): boolean {
   return candidate.horizon.returnedRecords === candidate.normalization.outputRecords &&
     candidate.horizon.claimsComplete &&
@@ -54,11 +48,6 @@ export function candidateHasIntrinsicHorizonRefusal(candidate: RoutineCandidate)
     );
 }
 
-/**
- * A typed Reader expects a fully proved pointer. This receipt exists only in a
- * read-only in-memory view used to exercise the candidate before the real
- * pointer can move. It is never persisted and cannot authorize a store write.
- */
 function preflightReceipt(candidate: RoutineCandidate, observedAt: string): ValidationReceipt {
   return {
     contractVersion: 2,
@@ -82,11 +71,6 @@ function preflightReceipt(candidate: RoutineCandidate, observedAt: string): Vali
   };
 }
 
-/**
- * Expose exactly one proposed source projection to its actual typed Reader.
- * Every mutation method is a hard error. No sibling source or existing
- * pointer is visible, so another source's state cannot decide this candidate.
- */
 function candidateReadOnlyStore(
   candidate: RoutineCandidate,
   observedAt: string,
@@ -195,11 +179,6 @@ function dotGovProjectionVerification(candidate: RoutineCandidate): RoutineReade
   return pass(verifierId, `The source-scoped CISA projection contains ${rows.length} structurally valid election-domain rows.`);
 }
 
-/**
- * Exercise only the candidate's own permanent projection contract before its
- * durable pointer moves. This is application code, not a test suite: it opens
- * no browser, executes no unrelated Reader/UI tests, and cannot see siblings.
- */
 export async function verifySourceScopedCandidateProjection(
   contract: CandidateContract,
   candidate: RoutineCandidate,

@@ -1,6 +1,5 @@
 "use client";
 
-/** How far an engineering task has got, as a row of stage chips; a fix with no linked task shows a dash. */
 import { TASK_STAGES } from "./model.ts";
 import { cx } from "./ui.tsx";
 import s from "./v6.module.css";

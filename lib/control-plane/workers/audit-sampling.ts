@@ -1,24 +1,8 @@
 /**
- * **THE AUDITOR SAMPLES ACROSS EVERYTHING, AFTER PUBLISHING, AND TEACHES THE NEXT AGENT.**
- * (Rulings section 3: samples are re-checked against their sources, and anything wrong is pulled.)
- *
- * The deterministic audit is code and cheap, so every validated record still gets
- * it. What costs money is the model's adversarial review. That is what is
- * sampled, on the cheapest tier (Haiku, then Sonnet on a recorded escalation):
- *
- * - **Every new stratum is reviewed first.** A stratum is a record class from one
- *   publisher. The first few results from any new one always get the model, so
- *   the sample reaches everything, not the loudest publishers.
- * - **A stratum that broke stays under review** until it has survived several
- *   audits in a row since the break.
- * - **Model-parsed results are reviewed more often** than rule-parsed ones: a
- *   model proposed them, and only code confirmed the quotes.
- * - **Everything else is a fixed fraction**, chosen by a stable hash of the
- *   result, so a retry never flips the decision.
- *
- * What an audit finds is written back to the field manual. The next Auditor
- * reads its stratum's history from the results; the next Parser reads it from
- * the manual, so a tier whose records broke is skipped for that publisher.
+ * Which audits get the model's adversarial review (the deterministic audit runs on every validated record):
+ * every new stratum (a record class from one publisher) first, a stratum that broke until it survives several
+ * audits in a row, model-parsed results more often, and a stable-hash fraction of the rest. Outcomes are written
+ * back to the field manual so the next Parser skips a tier that broke for that publisher.
  */
 
 import { createHash } from "node:crypto";
@@ -118,7 +102,7 @@ export function auditHistoryFromManual(store: Pick<FieldManualStore, "entries">)
 
 export type SampleReason = "ESCALATION" | "JUDGMENT_CALL" | "NEW_STRATUM" | "BROKEN_STRATUM" | "PAST_REFRESH" | "DEMAND" | "SINGLE_SOURCE" | "SAMPLED" | "NOT_SAMPLED";
 
-/** Where the sampler should look harder (DP-16): facts readers ask for, facts with one source, facts past their refresh date. */
+/** Where the sampler should look harder: facts readers ask for, facts with one source, facts past their refresh date. */
 export interface SampleBoosts {
   /** 0 is the most-asked-for; null or absent when readers have not asked. */
   readonly demandRank?: number | null;
@@ -155,7 +139,7 @@ export function sampleDecision(
 ): { readonly sample: boolean; readonly reason: SampleReason; readonly stratum: string } {
   const stratum = stratumOf(spec.contract);
   if (spec.auditEscalation) return { sample: true, reason: "ESCALATION", stratum };
-  // A judgment call (portrait, statement or position summary, one person matched across sources) is the one kind of fact a model always re-reads (rulings section 3).
+  // A judgment call (portrait, statement or position summary, one person matched across sources) is always re-read by the model.
   const urls = spec.contract.schemaVersion === 2 ? spec.contract.sourceScope.canonicalUrls : [];
   // The publisher still binds the image to the named person. Own official
   // pages receive the ordinary live sample rather than a blanket second-source audit.
@@ -181,7 +165,7 @@ export function createModelAuditSampler(repos: Pick<ControlPlaneRepositories, "w
   let loaded: Promise<{ history: Map<string, StratumHistory>; parsers: Map<string, WorkerResultRecord> }> | null = null;
   const load = () => (loaded ??= Promise.all([
     repos.workerResults.readAll(),
-    repos.fieldManual ? readFieldManual({ fieldManual: repos.fieldManual }).then((r) => r.store) : Promise.resolve(emptyFieldManual()),
+    repos.fieldManual ? readFieldManual({ fieldManual: repos.fieldManual }, { kinds: ["AUDIT_STRATUM"], everywhere: true }).then((r) => r.store) : Promise.resolve(emptyFieldManual()),
   ]).then(([all, manual]) => ({
     // The results are the more exact record; the manual covers strata they no longer show.
     history: new Map([...auditHistoryFromManual(manual), ...auditHistoryFrom(all)]),
@@ -199,7 +183,6 @@ export function createModelAuditSampler(repos: Pick<ControlPlaneRepositories, "w
   };
 }
 
-/* ------------------------------------------------------------ the number */
 
 export interface AuditCoverageReport {
   /** Extracted-and-validated results the audits could reach. */
@@ -252,7 +235,6 @@ export function auditCoverageReport(results: readonly WorkerResultRecord[]): Aud
   };
 }
 
-/* ------------------------------------------------------------ the learning */
 
 /**
  * What an audit teaches the next agent. One row per stratum (a re-audit refreshes

@@ -53,7 +53,7 @@ export const LIFECYCLE = map.lifecycle;
 export const PRODUCERS = map.producers as unknown as Readonly<Record<string, { readonly file: string; readonly label: string } | string>>;
 export const REPLACED_BY_ADMIN = map.replacedByAdmin as Readonly<Record<string, string>>;
 
-/** The rule for an item: the checklist's own, or the rule of an item Sean added to what is owed. */
+/** The rule for an item: the checklist's own, or the rule of an item added in Admin. */
 export function checklistItem(id: string): ChecklistItemRule | undefined {
   return CHECKLIST_ITEMS[id] ?? activeOwedOverlay().rules[id];
 }

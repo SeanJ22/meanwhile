@@ -3,20 +3,6 @@ import test from "node:test";
 
 import { hostOf, sourceLinks } from "../lib/ask/host.ts";
 
-/**
- * **ONE LINE PER PUBLISHER, NOT ONE PER DOCUMENT.**
- * (Found by reading the panel, 2026-08-28.)
- *
- * The Hobbs answer rests on six executive orders. Each is a separate signed PDF
- * from ONE office, so deduplicating by URL — correct for the URL — produced a
- * source line naming the Office of the Arizona Governor seven times.
- *
- * Nothing about it was false and all of it was unreadable. An attribution
- * nobody can read is an attribution that has stopped working, which is a real
- * cost rather than a cosmetic one on a product whose whole claim is that every
- * sentence is sourced.
- */
-
 test("six documents from one office are ONE source line", () => {
   const records = Array.from({ length: 6 }, (_, i) => ({
     sourceUrl: `https://azgovernor.gov/sites/default/files/executive-order-2026-0${i}.pdf`,

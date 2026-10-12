@@ -1,4 +1,4 @@
-import { freemem, platform, tmpdir } from "node:os";
+import { freemem, platform, tmpdir, totalmem } from "node:os";
 import { existsSync, openSync, closeSync, readFileSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { readFile, readdir } from "node:fs/promises";
 import { execFile } from "node:child_process";
@@ -271,14 +271,8 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
 export const MEMORY_WAIT_REPORT_EVERY_MS = 60_000;
 
 /**
- * A wait for host memory says, once a minute, that it is still waiting.
- * (Returned live failure, 2026-10-05.) The runner ends a research round after
- * ten minutes with no changed output, and a memory wait may run until the
- * round's dispatch deadline, which can be later. A silent wait was ended as a
- * crash, losing the round, before it could end as the deferral the design
- * gives it. Each line names the wait and its minute, so it is new output; the
- * wait itself stays bounded by its own deadline, and quick admissions print
- * nothing.
+ * A wait for host memory reports once a minute that it is still waiting, so the
+ * runner's no-output timeout does not end it as a crash. Quick admissions print nothing.
  */
 export function reportingWorkerSlots(slots: WorkerProcessSlots, options: {
   readonly write?: (line: string) => void;
@@ -304,4 +298,65 @@ export function reportingWorkerSlots(slots: WorkerProcessSlots, options: {
     void settled.then(() => clearInterval(timer), () => clearInterval(timer));
     return settled;
   } };
+}
+
+/**
+ * What the host holds, for the runner's heartbeat. Read-only: the reservation
+ * file is read without its lock (writers replace it whole). `fitLeaseWorkers`
+ * is free memory less the 0.75 GiB margin and reserved growth, over one lease
+ * worker's peak.
+ */
+export interface HostMemoryReading {
+  readonly at: string;
+  readonly totalBytes: number;
+  readonly availableBytes: number;
+  readonly headroomBytes: number;
+  /** The runner and every process under it. */
+  readonly runnerTreeRssBytes: number;
+  readonly runnerTreeProcesses: number;
+  readonly parents: readonly { readonly pid: number; readonly peakBytes: number; readonly rssBytes: number }[];
+  readonly reservations: readonly { readonly entry: string; readonly peakBytes: number; readonly rssBytes: number }[];
+  /** What the parents and reservations may still grow by before their peaks. */
+  readonly reservedGrowthBytes: number;
+  readonly leaseWorkerPeakBytes: number;
+  /** Further lease workers admission would start now. */
+  readonly fitLeaseWorkers: number;
+}
+
+export function memoryReading(input: {
+  readonly at: string; readonly totalBytes: number; readonly availableBytes: number; readonly rootPid: number;
+  readonly rows: readonly WorkerProcessMemory[]; readonly state: { readonly reservations: readonly { pid: number | null; peak: number; entry: string }[];
+    readonly parents: readonly { pid: number; peak: number }[] } | null;
+  readonly headroomBytes?: number; readonly leaseWorkerPeakBytes?: number;
+}): HostMemoryReading {
+  const headroomBytes = input.headroomBytes ?? WORKER_MEMORY_HEADROOM_MIB * MIB;
+  const leaseWorkerPeakBytes = input.leaseWorkerPeakBytes ?? WORKER_ENTRY_PEAK_MIB.lease! * MIB;
+  const treeRss = (pid: number | null): number => {
+    if (pid === null) return 0;
+    const ids = descendants(pid, input.rows);
+    return input.rows.reduce((sum, row) => ids.has(row.pid) ? sum + row.rss : sum, 0);
+  };
+  const runner = descendants(input.rootPid, input.rows);
+  const parents = (input.state?.parents ?? []).map(row => ({ pid: row.pid, peakBytes: row.peak,
+    rssBytes: input.rows.find(r => r.pid === row.pid)?.rss ?? 0 }));
+  const reservations = (input.state?.reservations ?? []).map(row => ({ entry: row.entry.split(/[\\/]/).at(-1) ?? row.entry, peakBytes: row.peak, rssBytes: treeRss(row.pid) }));
+  const reservedGrowthBytes = [...parents, ...reservations].reduce((sum, row) => sum + Math.max(0, row.peakBytes - row.rssBytes), 0);
+  const spare = input.availableBytes - headroomBytes - reservedGrowthBytes;
+  return { at: input.at, totalBytes: input.totalBytes, availableBytes: input.availableBytes, headroomBytes,
+    runnerTreeRssBytes: input.rows.reduce((sum, row) => runner.has(row.pid) ? sum + row.rss : sum, 0),
+    runnerTreeProcesses: input.rows.filter(row => runner.has(row.pid)).length,
+    parents, reservations, reservedGrowthBytes, leaseWorkerPeakBytes,
+    fitLeaseWorkers: Math.max(0, Math.floor(spare / leaseWorkerPeakBytes)) };
+}
+
+/** The reading for this host, rooted at this process (the runner). Never throws; an unreadable file reads as no reservations. */
+export async function hostMemoryReading(at: string = new Date().toISOString()): Promise<HostMemoryReading> {
+  let state: HostState | null = null;
+  try { state = JSON.parse(readFileSync(join(tmpdir(), "meanwhile-worker-memory.json"), "utf8")) as HostState; }
+  catch { state = null; }
+  const hostMiB = Number(process.env.WTP_WORKER_HOST_MEMORY_MIB);
+  return memoryReading({ at, totalBytes: Number.isFinite(hostMiB) && hostMiB > 0 ? hostMiB * MIB : totalmem(),
+    availableBytes: availableWorkerMemoryBytes(), rootPid: process.pid, rows: await hostProcesses(),
+    state: state === null ? null : { reservations: (state.reservations ?? []).filter(row => row.pid === null || alive(row.pid) || alive(row.owner)),
+      parents: (state.parents ?? []).filter(row => alive(row.pid)) } });
 }

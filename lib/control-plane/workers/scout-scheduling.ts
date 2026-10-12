@@ -25,7 +25,7 @@ export function autonomousScoutHistory(root: RouteTask, tasks: readonly RouteTas
     .sort((a, b) => a.startedAt.localeCompare(b.startedAt) || a.id.localeCompare(b.id));
   let debt: FreshnessDebt | null = null;
   for (const attempt of history) {
-    /* CH-29: our own guard refusing a request is not an attempt on the source; it adds no failure and no backoff. */
+    // Our own guard refusing a request is not an attempt on the source: no failure, no backoff.
     if (attempt.outcome === "DENIED_BY_POLICY" && refusedByOurOwnGuard(attempt.abortReason)) continue;
     // Completing one bounded search does not settle an unresolved source obligation.
     if (attempt.endedAt) debt = recordFailure(debt, { obligationId: root.id,
@@ -37,9 +37,9 @@ export function autonomousScoutHistory(root: RouteTask, tasks: readonly RouteTas
 }
 
 /**
- * CH-29: a request our own spending or execution guard refused before anything was sent (the executor words every
- * such refusal `SCOUT_POLICY_DENIED … refused before sending by the spending or execution policy`). It touched no
- * source, so it is not an attempt on the source and not a dead end; it is re-checked on a fixed pace, not backed off.
+ * A request our own spending or execution guard refused before anything was
+ * sent (`SCOUT_POLICY_DENIED … refused before sending by the spending or
+ * execution policy`). Re-checked on a fixed pace, not backed off.
  */
 export function refusedByOurOwnGuard(reason: string | null | undefined): boolean {
   return /SCOUT_POLICY_DENIED|refused before sending by the spending or execution policy/.test(reason ?? "");
@@ -60,9 +60,18 @@ export function guardRecheckAt(attempt: Pick<Attempt, "endedAt">): string | null
   return Number.isFinite(ended) ? new Date(ended + GUARD_RECHECK_MINUTES * 60_000).toISOString() : null;
 }
 
+/**
+ * A walk that finished and found nothing (`SCOUT_NO_PROGRESS`). Not a failed
+ * request: the next walk goes to a detective on the ordinary backoff.
+ */
+export function scoutWalkedToNothing(attempt: Pick<Attempt, "abortReason"> | undefined): boolean {
+  return /\bSCOUT_NO_PROGRESS\b/.test(attempt?.abortReason ?? "");
+}
+
 /** Provider outages may recover; unchanged request/schema failures cannot. */
 export function unchangedScoutFailure(attempt: Attempt | undefined): boolean {
   if (!attempt?.endedAt || ["COMPLETED", "DENIED_BY_POLICY", "CRASHED", "LEASE_EXPIRED"].includes(attempt.outcome ?? "")) return false;
+  if (scoutWalkedToNothing(attempt)) return false;
   return !workerFailureCanRetry(attempt.abortReason ?? "");
 }
 

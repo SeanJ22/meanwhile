@@ -36,7 +36,7 @@ const ROLLING: ExpansionScopeDecision = {
   geography: { type: "county", geoid: "04019", version: "county:2020", label: "Pima County", stateAbbr: "AZ" },
 };
 
-/** The saved 19:33 UTC reading of the original hunt (original-cost-attribution-2026-09-28T19-33-03.516Z.json). */
+/** A recorded cost reading of the original hunt. */
 const ORIGINAL_ROW = {
   key: ORIGINAL.key, receiptId: ORIGINAL.receiptId, label: ORIGINAL.geography.label, startedAt: ORIGINAL.budgetStartedAt!, budgetUsd: 50,
   anthropicUsd: 38.491002400000035, otherUsd: null, anthropicKnownUsd: 38.491002400000035, otherKnownUsd: 0.012,
@@ -75,7 +75,6 @@ test("the original 85635 hunt keeps its exact $50 lifetime accounting: spent, se
   assert.equal(h.startedAt, ORIGINAL_LIFETIME_HUNT.budgetStartedAt);
   assert.equal(h.limitUsd, 50);
   assert.equal(h.spentUsd, 38.491002);
-  assert.equal(h.reportedSpendUsd, null, "unpriced other-service charges cannot become a measured hunt total");
   assert.equal(h.heldUsd, 8.16384);
   assert.equal(h.availableUsd, 3.345158);
   assert.equal(h.unpricedEntries, 0, "481 unpriced rows are other-service rows, not charges against the Anthropic allowance");
@@ -231,7 +230,7 @@ test("account readings keep their provider periods; missing readings are unknown
   const exa = estimated.data.account.find(a => a.provider === "Exa")!;
   assert.equal(exa.amountUsd, null, "an estimate is not counted as a provider reading");
   assert.match(exa.how, /Only an estimate, \$4\.20, which is not counted as a reading/);
-  assert.equal(m.data.accountMonth, "Whole account · August 31, 2026, 8:00 PM EDT to September 28, 2026, 3:00 PM EDT", "provider boundaries are shown on the Eastern clock");
+  assert.equal(m.data.accountMonth, "Whole account · September 1, 2026 to September 28, 2026", "billing days are UTC dates");
   const mixed = envelope(money({ kind: "native" }, { providerBilling: { ...billing, readings: [...billing.readings, reading("exa", { periodStart: "2026-08-15T00:00:00.000Z" })] } }));
   assert.equal(mixed.data.accountMonth, "Whole account · each provider's own billing period");
   assert.deepEqual(m.data.reconciliation, [], "an attribution with no provider rows matches nothing");

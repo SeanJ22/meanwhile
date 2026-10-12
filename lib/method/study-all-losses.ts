@@ -1,26 +1,6 @@
 /**
- * **DP-29 — EVERY KIND OF LOSS IS STUDIED.**
- *
- * DP-27 studies a method's failures against the places it works. Design §17.4
- * asks the same of every other kind of loss:
- *
- * ```
- *   shut doors           what shut: the door's platform, or how it is read
- *   empty hunts          what came back empty: the kind of record hunted
- *   checker failures     why the checker held it: the hold reason
- *   auditors' red flags  what was wrong on the live page: the kind of fact
- *   front-end red flags  what looked wrong: the screen and the element at fault
- * ```
- *
- * Each loss and each success becomes a reading `{kind, subject, place,
- * failed}`; readings of one kind and subject are studied with the same
- * `studyLosses` the methods use. A shared trait is a lesson ("shut doors on
- * <platform> shut where <trait>"), written once per kind, subject and trait
- * set. A front-end red that repeats across places is a lesson on its own: the
- * same element red at two or more places is the page, not the place.
- *
- * PURE: readings in, lessons out. The pass (scripts/loss-study-pass.mts) reads
- * the sources and writes the lessons to the field manual and Admin's updates.
+ * Every kind of loss is studied like method failures: each loss and success becomes a reading, and readings of one kind
+ * and subject are compared with `studyLosses`. A front-end red at two or more places is the page, not the place. Pure.
  */
 import { newFieldManualEntry, type FieldManualEntry } from "../control-plane/field-manual.ts";
 import type { NewUpdate } from "../control-plane/updates.ts";
@@ -90,7 +70,8 @@ function lessonFor(kind: LossKind, subject: string, words: string, study: LossSt
 function entry(kind: LossKind, key: string, title: string, says: string, now: string, platforms: string[] = [], states: string[] = []): FieldManualEntry {
   return newFieldManualEntry(LOSS_LESSON_SOURCE, key, {
     role: "SHARED", kind: "LESSON", title: title.slice(0, 160), summary: says.replace(/\s+/g, " ").slice(0, 280), outcome: "FAILED",
-    observedAt: now, platforms, states: states.filter((s) => /^[a-z]{2}$/.test(s)), payload: { lossKind: kind, key },
+    observedAt: now, platforms, states: states.filter((s) => /^[a-z]{2}$/.test(s)),
+    ...(platforms.length + states.filter((s) => /^[a-z]{2}$/.test(s)).length === 0 ? { portable: true } : {}), payload: { lossKind: kind, key },
   });
 }
 
@@ -127,7 +108,7 @@ export function studyAllLosses(readings: readonly LossReading[], placeTraits: Re
   return [...lessons.filter((l) => !(l.kind === "front-end" && pageWide.has(l.subject))), ...repeats].sort((a, b) => LOSS_KINDS.indexOf(a.kind) - LOSS_KINDS.indexOf(b.kind) || a.key.localeCompare(b.key));
 }
 
-/** The kinds a set of lessons came from: the step is done when live Admin shows three or more. */
+/** The kinds a set of lessons came from. */
 export function lessonKinds(lessons: readonly LossLesson[]): LossKind[] {
   return LOSS_KINDS.filter((k) => lessons.some((l) => l.kind === k));
 }

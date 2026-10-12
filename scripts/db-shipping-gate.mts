@@ -1,114 +1,42 @@
 /**
- * **THE SHIPPING GATE — asked BEFORE the merge, not the morning after.**
- * (2026-08-28, the P0 schema-drift incident. Intake tripwire run 33211710028.)
+ * The schema shipping gate, asked before the merge: `build-check.yml`'s gates
+ * job and `pnpm gates` run it. It uses the same comparator and reader as
+ * `pnpm db:check` (`lib/db/applied-migrations.ts`) but differs in three ways:
  *
- * ## THE DETECTOR WAS NEVER MISSING. ITS PLACEMENT WAS.
+ *   1. It is scoped: a change that does not touch the schema contract is NOT
+ *      APPLICABLE and never opens a connection.
+ *   2. It knows EXPAND and CONTRACT (`lib/db/migration-phases.ts`): expands may
+ *      be pending for the production build to apply; a contract migration is
+ *      supposed to be missing until its code is live.
+ *   3. It reads the change, so it can tell a migration this change introduces
+ *      from one already owed.
  *
- * This repository already asked the question in three places, all of them the
- * same `compareSchemaState`:
+ * It never applies anything: it reads through
+ * `WTP_PRODUCTION_DATABASE_URL_READONLY` only. Applying is `pnpm db:apply`.
  *
- *   - At the time of the incident, `pnpm db:check` ran daily in
- *     `intake-tripwire.yml`. It caught run 33211710028 the morning AFTER the
- *     deploy. PDC V2 later retired that GitHub runtime/operations clock.
- *   - `scripts/walk-all.mts`'s `[promptD]` check, through `/api/schema`. It
- *     also caught it, as a named regression. But RULING 125 points every walk
- *     at a LOCAL production build, so it asks `DATABASE_URL` — the development
- *     branch — and its own detail line says so. It is not a production check,
- *     and it is a standing net a session runs by hand.
- *   - `app/api/schema/route.ts`, which is what that walk reads.
+ * Established migrations are immutable: the applied-join is on the journal's
+ * `when`, never the SQL, so a rewritten applied migration would still read as
+ * applied. That check (`lib/db/migration-immutability.ts`) runs first and needs
+ * no credential or network.
  *
- * **Not one of them sits in the merge or deploy path.** Nothing consults them
- * before a pull request lands, so `0021_mixed_red_ghost` and
- * `0022_adorable_hemingway` merged and deployed with `ask_interactions` absent
- * from production — and because the route catches the insert failure and serves
- * the page anyway, a reader saw a working site while Ask interactions were
- * silently dropped. **A repair that only makes the failure louder afterwards
- * does not address that. The ordering is the defect.**
+ * `--smoke` (or `WTP_SCHEMA_GATE_SMOKE=true`) contacts production on a commit
+ * that changed nothing, proving the read-only credential.
  *
- * So this asks the same question, with the same comparator and the same reader
- * (`lib/db/applied-migrations.ts`), at the point where the answer can still
- * change what happens: `build-check.yml`'s `gates` job, on every pull request
- * and every push to `main`, and `pnpm gates`, the local door. It differs from
- * `db:check` in three ways that matter, and those differences are the reason it
- * is a separate entry point rather than a flag on that one:
+ * `--moment=post-deploy` (or `WTP_SCHEMA_GATE_MOMENT=post-deploy`) is the
+ * reading after a deploy; it is the one that fails on an unapplied CONTRACT
+ * migration, which pre-deploy allows. `post-deploy-integrity.yml` runs it.
  *
- *   1. **It is scoped.** A change that does not touch the schema contract is
- *      NOT APPLICABLE and never opens a connection. A docs-only pull request
- *      must not be gated on a database round trip.
- *   2. **It knows about EXPAND and CONTRACT.** `db:check` fails on any missing
- *      migration, which is right for a daily sweep and wrong for a merge gate:
- *      expands may be pending for the production build to apply before serving;
- *      a contract migration is SUPPOSED to be missing until its code is live.
- *      See `lib/db/migration-phases.ts`.
- *   3. **It reads the change**, so it can tell a migration this change
- *      introduces from one that was already owed.
- *
- * ## THE GITHUB RUNTIME TRIPWIRE IS RETIRED
- *
- * PDC V2 removed `intake-tripwire.yml`: GitHub Actions is software CI/release
- * infrastructure, not a routine operations clock. Defence in depth now sits
- * on the two software lifecycle boundaries that can prevent or expose this
- * class: this fail-closed pre-merge/push gate and the automatic
- * `post-deploy-integrity.yml` reading after a shipping main push. `pnpm
- * db:check` remains an explicit diagnostic; it is not a scheduled Git writer.
- *
- * ## IT NEVER APPLIES ANYTHING
- *
- * Read-only, through `WTP_PRODUCTION_DATABASE_URL_READONLY`, by name. A gate
- * that could fix what it finds would apply an unreviewed migration from a pull
- * request check. Applying is `pnpm db:apply`, which resolves a different
- * variable and refuses this one.
- *
- * ## AND AN ESTABLISHED MIGRATION IS IMMUTABLE (2026-08-28, the audit)
- *
- * The gate above knows a migration file CHANGED and could not tell which way.
- * `lib/db/migration-immutability.ts` carries that reasoning in full; the short
- * version is that the applied-join is on the journal's `when`, never on the
- * SQL, so a migration whose file is rewritten after it was applied still reads
- * as applied on every surface in this repository while the committed SQL is no
- * longer the SQL production executed. That half runs FIRST here, needs no
- * credential and no network, and fails on its own.
- *
- * ## THE SMOKE PATH — proving the credential without inventing a diff
- *
- * `--smoke` (or `WTP_SCHEMA_GATE_SMOKE=true`) forces the gate to contact
- * production on a commit that changed nothing, and prints the role, the host
- * and the row count it got back. The read-only credential is present in the
- * software CI/release environment; an explicit smoke run proves it can READ
- * production without waiting for the next schema change or faking one. It
- * issues the same single SELECT and nothing else, and it never applies
- * anything.
- *
- * ## THE DEPLOY HALF
- *
- * A pre-merge reading is true about the moment it was taken. It does not stay
- * true: a merge is not a deploy in this repository — `netlify.toml` filters
- * deploys by path, previews and branch deploys never build, and the production
- * main build applies pending expands before building. The schema can move
- * between the gate passing and the code serving.
- *
- * `--moment=post-deploy` (or `WTP_SCHEMA_GATE_MOMENT=post-deploy`) is that
- * second reading, and it is the one that fails on an unapplied CONTRACT
- * migration, which pre-deploy deliberately allows. The software-only
- * `post-deploy-integrity.yml` workflow now runs it automatically after a
- * shipping push to main: Netlify does not emit GitHub deployment-status events
- * for this repository, so the workflow observes the served SHA under a bound
- * and then takes this exact read-only post-deploy measurement. It creates no
- * Git commit and is not a routine data or operations clock.
- *
- * ## Exit codes, matching `db:check`
- *
+ * Exit codes, matching `db:check`:
  *   0  the invariant holds, or the change does not touch the schema contract
  *   1  REFUSED — a migration is on the wrong side of the deploy, or an
  *      established migration was rewritten, deleted or renamed. Named.
  *   2  COULD NOT TELL — no credential, an unreadable migrations table, or an
- *      unreachable merge base. Never a pass. An unreadable answer must not
- *      print like a passing one.
+ *      unreachable merge base. Never a pass.
  *
  * Run:
  *   pnpm exec tsx scripts/db-shipping-gate.mts
  *   pnpm exec tsx scripts/db-shipping-gate.mts --moment=post-deploy
- *   pnpm exec tsx scripts/db-shipping-gate.mts --paths=lib/db/migrations/0021_mixed_red_ghost.sql
+ *   pnpm exec tsx scripts/db-shipping-gate.mts --paths=lib/db/migrations/<tag>.sql
  *   pnpm exec tsx scripts/db-shipping-gate.mts --base=origin/main
  *   pnpm exec tsx scripts/db-shipping-gate.mts --smoke
  */
@@ -149,20 +77,9 @@ const arg = (name: string): string | null => {
 };
 
 /**
- * WHICH SIDE OF THE DEPLOY THIS RUN IS ASKING FROM.
- *
- * The flag is the primary; the environment variable exists so a
- * `workflow_dispatch` input can select it WITHOUT changing the `run:` line in
- * `build-check.yml` — that line is compared against `scripts/gates.mjs` by
- * `tests/gate-parity.test.ts`, and a gate whose CI command drifts from its
- * local command is the RO04 hole.
- *
- * **This is also the half of the deploy-time question that can be asked
- * today.** A pre-deploy reading is true about the moment it was taken; it does
- * not stay true after the deploy, and `post-deploy` is where BOTH phases are
- * owed — the contract half of a two-sided change being the half that is easy to
- * forget. The production runner applies contracts only when the exact commit
- * is serving and loaded; this reading still reports any pending migration.
+ * Which side of the deploy this run asks from. The environment variable lets a
+ * `workflow_dispatch` input select it without changing the `run:` line in
+ * `build-check.yml`.
  */
 const MOMENT: ShipMoment =
   arg("moment") === "post-deploy" || process.env.WTP_SCHEMA_GATE_MOMENT === "post-deploy"
@@ -170,14 +87,7 @@ const MOMENT: ShipMoment =
     : "pre-deploy";
 const VARIABLE = "WTP_PRODUCTION_DATABASE_URL_READONLY";
 
-/**
- * SMOKE — deliberately contact production on a commit that changed nothing.
- *
- * Never inferred from anything. It is a flag a person passes, or an input a
- * person supplies to `workflow_dispatch`; nothing about a normal run can turn
- * it on, because a gate that decided for itself when to open a connection
- * would be a gate nobody can predict.
- */
+/** Only ever set explicitly by a person (flag or dispatch input); never inferred. */
 const SMOKE =
   argv.includes("--smoke") ||
   /^(1|true|yes|on)$/i.test(process.env.WTP_SCHEMA_GATE_SMOKE ?? "");
@@ -202,15 +112,8 @@ function git(args: string[]): { ok: boolean; out: string } {
 }
 
 /**
- * The changed paths, or `null` when they genuinely could not be read.
- *
- * **THE METHOD USED IS PRINTED, never inferred from the result** — the same
- * discipline every fail-closed shipping adapter applies to its path guard. Each rung
- * says what it read, so a run that decided NOT APPLICABLE can be checked
- * against the reason it decided that.
- *
- * `null` is not an empty list. An empty list is a real measurement; `null` is
- * the absence of one, and `schemaInvolvement` treats it as involved.
+ * The changed paths, or `null` when they could not be read. The method used is
+ * printed. `null` is not an empty list: `schemaInvolvement` treats it as involved.
  */
 function changedPaths(): string[] | null {
   const explicit = arg("paths");
@@ -242,8 +145,7 @@ function changedPaths(): string[] | null {
       const base = event.pull_request?.base?.sha;
       if (eventName === "pull_request" && base) {
         if (!git(["cat-file", "-e", `${base}^{commit}`]).ok) {
-          // A shallow `actions/checkout` will not have the base commit. Fetch
-          // it rather than guessing — the same move netlify-ignore.mjs makes.
+          // A shallow `actions/checkout` will not have the base commit.
           spawnSync("git", ["fetch", "--depth=100", "origin", base], { stdio: "ignore" });
         }
         const diff = git(["diff", "--name-only", base, "HEAD"]);
@@ -260,12 +162,8 @@ function changedPaths(): string[] | null {
     }
   }
 
-  /*
-   * LOCAL. Two readings, unioned, because a session running `pnpm gates` before
-   * committing has its schema change in the WORKING TREE and a reading that
-   * only looked at commits would report NOT APPLICABLE about a migration
-   * sitting on disk.
-   */
+  // Local: committed changes unioned with the working tree, so an uncommitted
+  // migration is seen.
   const committed = git(["diff", "--name-only", "origin/main...HEAD"]);
   const dirty = git(["status", "--porcelain"]);
   if (!committed.ok && !dirty.ok) {
@@ -291,14 +189,7 @@ function changedPaths(): string[] | null {
 /* WHICH WAY IT CHANGED — the merge base, and how it is reached on CI         */
 /* -------------------------------------------------------------------------- */
 
-/**
- * The reading behind the immutability guard.
- *
- * `changedPaths()` above answers "what moved"; this answers "which way", and
- * it needs a BASE TREE rather than a path list. Both are printed with the rung
- * that produced them, so a verdict can be checked against the reason it was
- * reached rather than inferred from the verdict.
- */
+/** The base tree behind the immutability guard: which way each path changed. */
 interface BaseReading {
   /** The commit-ish everything is compared against, or null when unreachable. */
   readonly base: string | null;
@@ -311,40 +202,18 @@ interface BaseReading {
 }
 
 /**
- * **THE SHALLOW-CLONE PROBLEM, AND WHY THIS IS NOT BUILT ON `git log`.**
+ * `actions/checkout` clones at depth 1, where `git merge-base` fails and a
+ * per-file `git log` returns the tip date. So the base is taken from the
+ * platform wherever it is stated:
  *
- * `actions/checkout` clones at depth 1. Two consequences, both measured in
- * this repository before now:
+ *   PULL REQUEST — `pull_request.base.sha`. The checked-out ref already merges
+ *   the base, so `diff base HEAD` is the pull request's own changes. A missing
+ *   commit is fetched by sha, deepening rather than unshallowing.
+ *   PUSH TO MAIN — the push event's own `added`/`modified`/`removed` lists;
+ *   `event.before` supplies the base journal when it can be fetched.
+ *   LOCAL / DISPATCH — `git merge-base origin/main HEAD` on a complete clone.
  *
- *   - **A per-file `git log` returns the TIP date for every file on CI**, with
- *     no error at all. Anything reasoning about "when was this file last
- *     touched" is therefore reading a constant. Nothing here uses dates.
- *   - `git merge-base` needs shared history and a depth-1 clone has none, so
- *     it fails on CI while working perfectly on a laptop — the worst shape a
- *     guard can have.
- *
- * So the base is TAKEN, never computed, wherever the platform states it:
- *
- *   PULL REQUEST — `pull_request.base.sha` from the event payload. The ref
- *   `actions/checkout` leaves in the tree is `refs/pull/N/merge`, which
- *   ALREADY merges the base, so `diff base HEAD` is exactly the pull request's
- *   own changes; that is the merge-base comparison, without calling
- *   `merge-base`. The commit is fetched by sha when it is absent — the same
- *   move `changedPaths()` already makes — deepening rather than unshallowing,
- *   because this repository's pack is 311 MiB and a full history fetch on
- *   every pull request is a real cost paid for nothing.
- *
- *   PUSH TO MAIN — the push event's own `added`/`modified`/`removed` lists.
- *   GitHub has already computed the direction; no git history is required at
- *   all. `event.before` is used for the base journal when it can be fetched.
- *
- *   LOCAL / DISPATCH — `git merge-base origin/main HEAD`, which is sound here
- *   because a developer clone is complete. A dispatch run on `main` compares
- *   HEAD with itself and reports zero changes, which is TRUE: a dispatch
- *   proposes no change.
- *
- * A base that cannot be reached is `null` and reports COULD NOT TELL. It is
- * never quietly treated as "nothing changed".
+ * An unreachable base is `null` and reports COULD NOT TELL, never "nothing changed".
  */
 function ensureCommit(sha: string): boolean {
   if (git(["cat-file", "-e", `${sha}^{commit}`]).ok) return true;
@@ -419,13 +288,7 @@ function baseReading(): BaseReading {
       }
 
       if (eventName === "push" && Array.isArray(event.commits)) {
-        /*
-         * GITHUB ALREADY DID THE CLASSIFICATION. Every commit in the push
-         * carries `added`, `modified` and `removed` — direction included — so
-         * this rung needs no history whatsoever, which is exactly what a depth-1
-         * clone has. A rename arrives as a removal plus an addition, and the
-         * removal alone is enough to refuse it.
-         */
+        // A rename arrives as a removal plus an addition; the removal alone refuses it.
         const changes: ChangedEntry[] = [];
         const seen = new Set<string>();
         for (const c of event.commits) {
@@ -459,13 +322,9 @@ function baseReading(): BaseReading {
     }
   }
 
-  /*
-   * LOCAL, and a dispatch run falls here too. The clone is complete, so
-   * `merge-base` is sound. The WORKING TREE is unioned in for the same reason
-   * `changedPaths()` does it: a session running `pnpm gates` before committing
-   * has its rewrite on disk, and a guard that only read committed history would
-   * pass a change it is looking straight at.
-   */
+  // Local and dispatch: the clone is complete, so `merge-base` is sound; the
+  // working tree is unioned in, as in `changedPaths()`.
+
   const mergeBase = git(["merge-base", "origin/main", "HEAD"]);
   const base = mergeBase.ok && mergeBase.out ? mergeBase.out : git(["rev-parse", "HEAD"]).out;
   if (!base) {
@@ -530,16 +389,8 @@ const involvement = schemaInvolvement(changed);
 /* IMMUTABILITY — FIRST, and with no credential                               */
 /* -------------------------------------------------------------------------- */
 
-/*
- * THIS RUNS BEFORE THE CREDENTIAL AND BEFORE THE NOT-APPLICABLE EXIT.
- *
- * Deliberately ahead of the exit: a rewrite of
- * `lib/db/migrations/0021_mixed_red_ghost.sql` is itself a change under the
- * schema contract, so scoping could never skip it — but a future widening of
- * that scope test must not be able to turn this guard off as a side effect.
- * It needs no database, so it costs a fork pull request and a laptop with no
- * `.env.local` exactly nothing.
- */
+// Runs before the credential and before the NOT APPLICABLE exit, so no change
+// to the scope test can turn it off.
 const reading = baseReading();
 say(`  base:  ${reading.how}`);
 
@@ -565,21 +416,9 @@ if (immutability.verdict === "fail") {
   process.exit(1);
 }
 if (immutability.verdict === "cannot-tell") {
-  /*
-   * THE ONE NARROWING, AND IT IS A DIFFERENT MEASUREMENT — NOT A CONCESSION.
-   *
-   * An unreachable merge base means the DIRECTION of a migration change is
-   * unknown, and direction is the whole question here. But `changedPaths()` is
-   * a SECOND, independently-taken reading, and when it succeeded and holds no
-   * path under `lib/db/migrations/` at all, there is no migration change whose
-   * direction could matter — a deletion appears in every rung of that reading
-   * (`git diff --name-only` lists removed paths, the push event has `removed`,
-   * `git status --porcelain` has ` D`), so "no migration path" is a real
-   * finding rather than an assumption.
-   *
-   * `changed === null` does NOT reach here: `schemaInvolvement(null)` returns
-   * involved, so an unreadable path list keeps the refusal.
-   */
+  // An unreachable base leaves direction unknown, but a readable changed-path
+  // list with no migration path means no migration changed in any direction.
+  // An unreadable list (`changed === null`) is involved and keeps the refusal.
   if (!involvement.involved) {
     say(`\n  ${immutability.summary}`);
     say(
@@ -601,16 +440,7 @@ if (immutability.verdict === "cannot-tell") {
 }
 
 if (!involvement.involved && SMOKE) {
-  /*
-   * SMOKE, and the ONE thing it may not do is manufacture a change.
-   *
-   * The temptation, when a credential needs proving on a quiet commit, is to
-   * pass a fake `--paths=` naming a migration — which makes the gate lie about
-   * what this change did, in a log somebody will read later. So the scope test
-   * runs honestly, prints its honest NOT APPLICABLE, and the smoke flag
-   * OVERRIDES the exit rather than the finding. `introduced` stays empty below
-   * for exactly the same reason: nothing is being introduced.
-   */
+  // Smoke overrides the exit, never the finding: nothing is reported as introduced.
   say(`\nNOT APPLICABLE — ${involvement.reason}.`);
   say("  SMOKE: contacting production anyway, on purpose, to prove the credential can READ it.");
   say("  Nothing about this change was altered to reach the database.");
@@ -640,7 +470,7 @@ if (introduced.length > 0) {
 const connection = process.env[VARIABLE];
 if (!connection) {
   complain(`\ndb:gate: COULD NOT TELL — ${VARIABLE} is not set in this environment.`);
-  complain("  An unset credential is not a passing schema check (RULING 24).");
+  complain("  An unset credential is not a passing schema check.");
   complain(
     "  In CI this is a repository secret. Add WTP_PRODUCTION_DATABASE_URL_READONLY under " +
       "Settings > Secrets and variables > Actions; the value is the read-only production string " +
@@ -652,15 +482,6 @@ if (!connection) {
 
 say(`  reading ${VARIABLE}  ${describeConnection(connection)}`);
 
-/*
- * THE SAME READER `pnpm db:check` USES — `lib/db/applied-migrations.ts`, one
- * SELECT, one idea of what a failure means. The detector is not duplicated
- * either: the delta below is `compareSchemaState`, the identical function
- * behind `db:check`, `app/api/schema/route.ts` and walk:all's `[promptD]`
- * check. What this file adds is the two things a merge gate needs and a daily
- * sweep must not have — a PHASE, so a contract migration is allowed to be
- * pending, and a SCOPE, so a docs-only change costs nothing.
- */
 const read = await readAppliedMigrationWhen(connection);
 if (!read.ok) {
   complain(`\ndb:gate: COULD NOT TELL — drizzle.__drizzle_migrations was unreadable: ${read.why}`);
@@ -669,36 +490,14 @@ if (!read.ok) {
 }
 
 if (SMOKE) {
-  /*
-   * THE CREDENTIAL PROOF, and what it is careful NOT to print.
-   *
-   * Role, host and database name — the same three fields `pnpm verify:readonly`
-   * prints, and for the same reason: they say WHICH database answered without
-   * carrying the password, the query string or anything the secrets sweep would
-   * have to treat as a leak. `describeConnection` builds the role/host half
-   * from a parsed URL, so a connection string cannot be echoed by accident.
-   *
-   * The row count is the proof itself: rows came back, therefore the role can
-   * SELECT from `drizzle.__drizzle_migrations` on the database it named. No row
-   * CONTENT is printed beyond the count — the migration standing table below is
-   * derived from the committed journal, which is public.
-   */
+  // Role, host and database name only; the row count is the proof the role can read.
   const u = new URL(connection);
   say("\nCREDENTIAL PROOF (smoke)");
   say(`  variable     ${VARIABLE}`);
   say(`  ${describeConnection(connection)}`);
   say(`  db           ${u.pathname.slice(1).split("?")[0]}`);
-  /*
-   * THE TABLE NAME IS BUILT, NOT WRITTEN NEXT TO `FROM`.
-   *
-   * `tests/migration-shipping-invariant.test.ts` sweeps the tree for files that
-   * QUERY `drizzle.__drizzle_migrations` and holds that list closed, so that
-   * `db:check` and this gate keep sharing `lib/db/applied-migrations.ts` rather
-   * than growing second opinions about one database. This file does not query
-   * it — `readAppliedMigrationWhen` does — and a printed line that happened to
-   * read like a query would make the guard refuse the consolidation it exists
-   * to protect.
-   */
+  // Built, not written next to `FROM`: tests/migration-shipping-invariant.test.ts
+  // holds the list of files that query this table closed.
   const MIGRATIONS_TABLE = "drizzle.__drizzle_migrations";
   say(`  statement    SELECT created_at from ${MIGRATIONS_TABLE}   (one, and only this one)`);
   say(`  result       ${read.appliedWhen.length} row(s) returned — the role CAN READ production`);
@@ -707,26 +506,10 @@ if (SMOKE) {
 }
 
 /*
- * THE OTHER ANCHOR — LIVE SINCE 2026-08-28, AND THE REASON IT IS NOT REDUNDANT.
- *
- * `scripts/apply-migrations.mts` writes sha256 of each migration's raw bytes
- * into `drizzle.__drizzle_migrations.hash` on every apply, which is the only
- * record anywhere of what production ACTUALLY EXECUTED.
- * `lib/db/applied-migrations.ts` now selects it and returns `appliedHashes`,
- * so `checksumViolations` compares committed SQL against executed SQL rather
- * than git against git.
- *
- * **THE TWO GUARDS FAIL IN OPPOSITE DIRECTIONS, WHICH IS WHY THERE ARE TWO.**
- * The merge-base guard above sees every rewrite from now on and is structurally
- * blind to one that landed BEFORE it existed. This one sees a disagreement
- * whenever it happened and is blind to a rewrite of a migration production
- * never applied. Neither covers the other's hole.
- *
- * It is printed either way, and the NOT-AVAILABLE branch is kept rather than
- * deleted: this reads a credential, and a session that cannot reach production
- * must be told the cross-check did not run. A check that is not running must
- * never be silent, because silence is indistinguishable from a pass
- * (RULING 24).
+ * The checksum cross-check compares committed SQL against the sha256 that
+ * `scripts/apply-migrations.mts` records on every apply. It catches a rewrite
+ * that predates the merge-base guard; that guard catches a rewrite of a
+ * migration production never applied. When unavailable it says so.
  */
 const appliedHashes = appliedHashesFrom(read);
 if (appliedHashes === null) {

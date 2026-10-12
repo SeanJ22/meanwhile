@@ -1,51 +1,7 @@
 /**
- * WHEN OUR OWN NAME IS THE WALL — AND WHY IT STAYS A WALL.
- * (2026-08-26, the descent-resume session.)
- *
- * ## The measurement
- *
- * Every rung of this project's ladder appends `we-the-people civic meeting
- * index (…)` to the `User-Agent`, on purpose, so an administrator reading a
- * log has somewhere to write. The whole `*.nh.gov` family refuses that string.
- * Isolated one variable at a time against `www.nh.gov`, `www.revenue.nh.gov`
- * and `www.sos.nh.gov` on 2026-08-26 — identical on all three:
- *
- * ```
- * no headers at all                200
- * chrome UA only                   200
- * chrome UA + project suffix       403
- * project UA alone                 403
- * chrome UA + From: header         200
- * chrome UA + From + X-Purpose     200
- * full browser header set + From   200
- * ```
- *
- * Not the TLS fingerprint — `curl` carrying the same suffix is refused too, so
- * rungs 2, 3 AND 4 all failed together while a header-less request succeeded.
- * Thirty-odd New Hampshire state hosts, `sos.nh.gov` and `revenue.nh.gov`
- * among them, were refusing this project **specifically for saying who it
- * was**.
- *
- * ## What is asserted here since 2026-09-25
- *
- * From 2026-08-26 a 403 on the identified client escalated to "rung 3b": a
- * plain Chrome `User-Agent` with the project's name taken out of it. That got
- * past the filter by not saying who we are in the one field it reads, which
- * is getting past an access control. The owner decision of 2026-09-25 rules
- * that out ("This authorization does not extend to bypassing authentication or
- * other access controls"), so rung 3b is gone.
- *
- * What is asserted now — honest identity is allowed, disguise is not: every
- * request carries the project's identified `User-Agent` (some hosts —
- * `morriscountyclerk.org`, `tucsonaz.gov` — admit this project BY name). When
- * a filter refuses Node's own client, the SAME identity is asked once more
- * through `curl`, with purpose and contact beside it (rung 4). Measured
- * 2026-09-25 on the Cloudflare-fronted Sutton, Newbury and Kearsarge hosts:
- * Node's client is challenged whatever it sends, and that honest `curl`
- * request is admitted 30 of 30. A refusal or a challenge there is a WALL naming
- * rung 4; no browser identity is borrowed and no challenge is answered. The
- * `*.nh.gov` routes that refuse our name are pursued by other public routes.
- *
+ * Every request carries the project's identified `User-Agent`. When a filter refuses Node's own client, the
+ * same identity is asked once more through `curl` with purpose and contact beside it (rung 4). A refusal or a
+ * challenge there is a WALL naming rung 4; no browser identity is borrowed and no challenge is answered.
  * No test here touches the network.
  */
 
@@ -125,15 +81,7 @@ test("a host that refuses our name is a WALL named as an access control, and not
   assert.equal(curled[0]["User-Agent"], sourceUserAgent());
 });
 
-/*
- * RUNG 4 — THE OTHER CLIENT, OUR OWN NAME ONLY. (2026-09-25.)
- *
- * Sutton's and Newbury's calendar feeds and Kearsarge's school-board schedule
- * sit behind a Cloudflare filter that challenges Node's client on every header
- * set, while `curl` with our own UA and X-Purpose / X-Contact was admitted 30
- * times in 30 (measured 2026-09-25, 22:05-22:20Z). Rung 4 is that one request.
- * No test here touches the network.
- */
+/* Rung 4: the other client, with our own name only. */
 
 const FEED = "BEGIN:VCALENDAR\nBEGIN:VEVENT\nSUMMARY:Select Board Meeting\nEND:VEVENT\nEND:VCALENDAR";
 const CHALLENGE = "<html><head><title>Just a moment...</title></head><body>…</body></html>";

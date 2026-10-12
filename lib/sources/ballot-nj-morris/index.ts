@@ -1,11 +1,7 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-
 import {
   CivicDataStoreUnavailableError,
   civicDataReadNotInitialized,
-  readPromotedOrBootstrap,
-  type CivicDataBootstrap,
+  readPromotedCivicData,
   type CivicDataReadResult,
   type PromotedCivicDataReadOptions,
 } from "../../civic-data/read-model.ts";
@@ -24,17 +20,10 @@ import type {
 } from "../../ballot/types.ts";
 
 /**
- * The Morris County ballot source — S2, tracker D08's first implementation.
- *
- * `fetch()` reads the one promoted BALLOT_FILING projection. The bundled
- * clerk transcription is an explicit first-seed/test bootstrap only: a store
- * error can never be reported as a current read from that file. A licensed
- * national feed (D08) replaces the registered adapter, not this Reader shape.
+ * The Morris County ballot source. `fetch()` reads the one promoted BALLOT_FILING projection.
  */
 
 const SOURCE_NAME = "ballot-nj-morris";
-const FILE = join("data", "states", "nj", "ballot", "nj-morris-2026.json");
-const CONTACTS_FILE = join("data", "states", "nj", "ballot", "nj-morris-2026-contacts.json");
 const NJ_CONTRACT = requiredRoutineContract("nj-morris-filing");
 const SCOPE = NJ_CONTRACT.scope;
 
@@ -143,35 +132,15 @@ function validateReadModel(value: NjMorrisReadModel, versionId: string): void {
   }
 }
 
-function bootstrap(): CivicDataBootstrap<NjMorrisReadModel> {
-  const ballot = JSON.parse(readFileSync(join(process.cwd(), FILE), "utf8")) as RawFile;
-  const contacts = JSON.parse(readFileSync(join(process.cwd(), CONTACTS_FILE), "utf8")) as NjMorrisContactDocument;
-  validateReadModel({ ballot, contacts }, "bundled bootstrap");
-  const sourceThrough = ballot.curatedAt ?? contacts.generatedAt;
-  return {
-    value: { ballot, contacts },
-    sourceId: NJ_CONTRACT.sourceId,
-    version: ballot.election.date,
-    versionId: `bootstrap:nj-morris-filing:${sourceThrough}`,
-    sourceThrough,
-    retrievedAt: /^\d{4}-\d{2}-\d{2}$/.test(sourceThrough) ? `${sourceThrough}T00:00:00.000Z` : null,
-    detail: "Bundled Morris filing bootstrap selected only because the canonical store answered with no promoted pointer.",
-  };
-}
-
-/** Typed ballot/contact read outcome; a store failure never opens a bundled file. */
+/** Typed ballot/contact read outcome. */
 export async function readNjMorrisFiling(
   options: PromotedCivicDataReadOptions = {},
 ): Promise<CivicDataReadResult<NjMorrisReadModel>> {
   const now = options.now ?? new Date().toISOString();
-  const result = await readPromotedOrBootstrap({
+  const result = await readPromotedCivicData<NjMorrisReadModel>("BALLOT_FILING", SCOPE, {
     ...options,
     now,
-    recordClass: "BALLOT_FILING",
-    scope: SCOPE,
     maxAgeMs: options.maxAgeMs ?? routineFreshnessMs(NJ_CONTRACT.id, now),
-    bootstrap,
-    allowUnconfiguredBootstrap: process.env.NODE_ENV !== "production",
   });
   readState = result;
   if (result.kind === "PROMOTED" || result.kind === "BOOTSTRAP") {

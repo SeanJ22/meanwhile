@@ -1,41 +1,20 @@
-/**
- * Build the ZCTA↔CBSA (metropolitan/micropolitan) overlap scope.
- *
- * The Census publishes no direct ZCTA↔CBSA relationship file. But a CBSA is, by
- * OMB definition, an aggregation of WHOLE counties (county-equivalents) — so the
- * ZCTA↔CBSA relationship is exact, not approximate: it is the union of the
- * ZCTA↔county overlaps over the CBSA's constituent counties. This module reads
- * the OMB delineation (which counties belong to which CBSA, and whether the CBSA
- * is metropolitan or micropolitan) and folds the already-built ZCTA↔county scope
- * up to the CBSA level.
- *
- * Area share is carried through exactly: a ZCTA's share of a CBSA is the sum of
- * its shares of that CBSA's counties (Σ AREALAND_PART over the CBSA's counties /
- * AREALAND_ZCTA5_20). No population weight exists in these inputs, so the basis
- * stays "area" (RULING 275: state the method; never guess a share).
- *
- * metro vs micro is never merged (contract invariant): every CBSA grouping
- * carries `cbsaClass`.
- */
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import { WHOLE_THRESHOLD } from "./build.ts";
 import type { CbsaClass, GeographyVersion } from "./contract.ts";
 import type { BuiltGrouping, BuiltOverlap, BuiltScope } from "./dataset.ts";
 import { readXlsxFirstSheet } from "./xlsx.ts";
 
+/** A CBSA is a union of whole counties, so ZCTA↔CBSA is the exact fold of ZCTA↔county overlaps; metro and micro are never merged. */
 interface CbsaInfo {
   title: string;
   cbsaClass: CbsaClass;
-  /** Two-digit state FIPS of every county in the CBSA. */
   readonly stateFips: Set<string>;
-  /** Five-digit county GEOIDs in the CBSA. */
   readonly counties: string[];
 }
 
 export interface CbsaDelineation {
   /** county GEOID (SSCCC) -> its CBSA code. A county is in at most one CBSA. */
   readonly cbsaByCounty: Map<string, string>;
-  /** CBSA code -> its title, class, and member counties/states. */
   readonly cbsa: Map<string, CbsaInfo>;
 }
 

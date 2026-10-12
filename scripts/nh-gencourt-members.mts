@@ -1,31 +1,14 @@
 /**
- * THE NEW HAMPSHIRE GENERAL COURT'S OWN ROSTER, TAKEN AT RUNG ZERO.
- * (2026-08-26, the sources-and-incumbency session. RULING 166's first
- * application.)
+ * The New Hampshire General Court's own roster. `gc.nh.gov/downloads/Members.txt`
+ * is a tab-delimited file of every member of both chambers with district,
+ * party, phone, work email, committee assignments and `electedStatus`, the
+ * body's own statement of who currently sits.
  *
- * `gc.nh.gov/downloads/Members.txt` is a tab-delimited file the General Court
- * publishes so consumers do not have to scrape its site. It carries every
- * member of both chambers with district, party, phone, work email, committee
- * assignments — and **`electedStatus`**, which is the body's own statement of
- * who currently sits.
- *
- * Nobody in this project had ever opened it. New Hampshire's legislative data
- * reached the product through LegiScan, a third-party aggregator, and the
- * incumbency defect this file exists to fix was rendering **every** New
- * Hampshire candidate as `Challenger` while the answer sat in a text file.
- *
- * **THE LEADING SPACE IS NOT A CURIOSITY.** `electedStatus` reads
- * `" Incumbent"` — with a space — on all 279 sitting members. A parser written
- * against `=== "Incumbent"` matches zero rows and reports an empty roster, which
- * would be RULING 43's zero-row extraction arriving as a clean exit.
- *
- * RULING 100 — the count is asserted. The file states no count of its own, so
- * the outcome is `COULD_NOT_ASSERT` against a stated total and the extraction
- * still reports produced/dropped/total so a partial cannot pass as a whole.
- *
- * RULING 107 — the freshness stamp is a READ STAMP. It is the date this script
- * actually fetched, written by the code path that performed the read, and it is
- * carried forward unchanged when the artifact is regenerated from a cached copy.
+ * `electedStatus` reads `" Incumbent"`, with a leading space; compare trimmed.
+ * The file states no count of its own, so the outcome is `COULD_NOT_ASSERT`
+ * against a stated total, and the extraction reports produced/dropped/total.
+ * The freshness stamp is the date this script fetched, carried forward
+ * unchanged when regenerated from a cached copy.
  *
  * Usage:
  *   pnpm nh:members            # fetch, parse, report; writes nothing
@@ -36,7 +19,8 @@
 
 import { readFileSync } from "node:fs";
 
-import { runStamp } from "../lib/ops/freshness.ts";
+import { acquireKnownRelease, knownReleaseSourceCheck } from "../lib/sources/known-release.ts";
+import { readNhMembers } from "../lib/civic-data/state-members.ts";
 import { nhMembersCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
@@ -45,9 +29,7 @@ import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { routineReceiptFields } from "../lib/civic-data/runner-receipt.ts";
 import {
   isSourceAcquisitionFailure,
-  readPublisherBody,
   recordRegisteredSourceAcquisitionFailure,
-  requestPublisher,
   sourceAcquisitionFailure,
   withPublisherAcquisitionDeadline,
 } from "../lib/civic-data/source-acquisition-failure.ts";
@@ -96,7 +78,7 @@ export interface MembersExtraction {
     readonly logicalInput: number;
     readonly produced: number;
     readonly dropped: number;
-    /** RULING 100's second state: the source states no total of its own. */
+    /** The source states no total of its own. */
     readonly statedTotal: null;
     readonly verdict: "COULD_NOT_ASSERT";
   };
@@ -119,8 +101,7 @@ export function parseMembers(text: string): MembersExtraction {
     throw sourceAcquisitionFailure(
       "PUBLISHER_DOCUMENT_INVALID",
       `nh:members: the file carries ${lines.length} non-empty line(s). A roster of the New Hampshire ` +
-        "General Court is 400-odd rows, so this is a failed retrieval, not an empty legislature " +
-        "(RULING 43).",
+        "General Court is 400-odd rows, so this is a failed retrieval, not an empty legislature.",
     );
   }
 
@@ -177,7 +158,7 @@ export function parseMembers(text: string): MembersExtraction {
     byChamber[m.chamber] = (byChamber[m.chamber] ?? 0) + 1;
   }
 
-  // RULING 128 — every logical record has one disposition, and the sum is exact.
+  // Every logical record has one disposition, and the sum is exact.
   if (members.length + dropped !== body.length) {
     throw sourceAcquisitionFailure(
       "PUBLISHER_DOCUMENT_INVALID",
@@ -239,13 +220,13 @@ async function main(): Promise<void> {
   let identityFinalUrl: string | null = null;
   let identityHttpStatus: number | null = null;
   let identityCrosswalk: NhCurrentMemberIdentityCrosswalk | null = null;
+  let sourceCheck:import("../lib/civic-data/types.ts").SourceCheckEvidence|undefined;
   let extraction: MembersExtraction;
   try {
     if (local) {
       text = readFileSync(local, "utf8");
-      // RULING 107 — a local copy carries no evidence of WHEN it was read, so the
-      // read stamp is UNKNOWN rather than today's date. A clock call here would be
-      // a run stamp wearing a freshness field.
+      // A local copy carries no evidence of when it was read, so the read stamp
+      // is UNKNOWN rather than today's date.
       readOn = "UNKNOWN";
     } else {
       const acquired = await withPublisherAcquisitionDeadline(
@@ -256,26 +237,14 @@ async function main(): Promise<void> {
             promote ? [SOURCE_URL, NH_LEGISLATORS_URL, NH_ROLL_HISTORY_URL] : [SOURCE_URL],
             async (url): Promise<NhOfficialDocument> => {
               const requestSignal = AbortSignal.any([signal, AbortSignal.timeout(60_000)]);
-              const res = await requestPublisher("NH General Court members", () => fetch(url, {
-                headers: { "user-agent": UA, accept: "text/plain,*/*" },
-                redirect: "follow",
-                signal: requestSignal,
-              }));
-              if (!res.ok) {
-                throw sourceAcquisitionFailure(
-                  "PUBLISHER_RESPONSE_REFUSED",
-                  `nh:members: ${url} answered HTTP ${res.status}. That is a WALL with a date, not a ` +
-                    "legislature with no members.",
-                );
+              try {
+                const held=await acquireKnownRelease({sourceId:"nh-general-court",releaseId:url,url,parserVersion:"nh-general-court/3",maxBytes:64*1024*1024,checkAfterMs:86400000,signal:requestSignal,headers:{"user-agent":UA,accept:"text/plain,*/*"},validate:bytes=>{const body=decodeNhPublisherBytes(bytes);if(url===SOURCE_URL)parseMembers(body);else if(url===NH_LEGISLATORS_URL)parseNhLegislators(body);else parseNhRollCallHistory(body);}});
+                return {requestedUrl:held.requestedUrl,finalUrl:held.finalUrl,httpStatus:held.httpStatus,body:decodeNhPublisherBytes(held.bytes),retrievedAt:held.retrievedAt,sourceCheck:knownReleaseSourceCheck(held)};
+              } catch(error) {
+                if(url!==NH_ROLL_HISTORY_URL)throw error;
+                console.error(`NH optional identity-history unavailable: ${error instanceof Error ? error.message : String(error)}`);
+                return {requestedUrl:url,finalUrl:url,httpStatus:0,body:""};
               }
-              const bytes = await readPublisherBody("NH General Court members", () => res.arrayBuffer());
-              requestSignal.throwIfAborted();
-              return {
-                requestedUrl: url,
-                finalUrl: res.url || url,
-                httpStatus: res.status,
-                body: decodeNhPublisherBytes(bytes),
-              };
             },
             { signal },
           );
@@ -283,7 +252,8 @@ async function main(): Promise<void> {
       );
       const memberDocument = acquired[0]!;
       text = memberDocument.body;
-      retrievedAt = new Date().toISOString();
+      retrievedAt = memberDocument.retrievedAt ?? new Date().toISOString();
+      sourceCheck = memberDocument.sourceCheck;
       finalUrl = memberDocument.finalUrl;
       httpStatus = memberDocument.httpStatus;
       const identityDocument = acquired[1];
@@ -294,8 +264,8 @@ async function main(): Promise<void> {
       }
       identityHistoryText = acquired[2]?.body ?? null;
       // @freshness-reads-here — this clock call sits in the reading path, so the
-      // stamp it produces names the day somebody actually looked (RULING 107).
-      readOn = runStamp();
+      // stamp it produces names the day somebody actually looked.
+      readOn = retrievedAt.slice(0,10);
     }
     extraction = parseMembers(text);
     if (promote) {
@@ -306,7 +276,7 @@ async function main(): Promise<void> {
         );
       }
       const identityRows = parseNhLegislators(identityText);
-      const historyRows = parseNhRollCallHistory(identityHistoryText);
+      const historyRows = identityHistoryText ? parseNhRollCallHistory(identityHistoryText) : [];
       identityCrosswalk = joinNhCurrentMemberIdentities(
         extraction,
         identityRows,
@@ -342,7 +312,12 @@ async function main(): Promise<void> {
     if (identityText === null || identityHistoryText === null || identityFinalUrl === null || identityHttpStatus === null || identityCrosswalk === null) {
       throw new Error("NH_OFFICIAL_PERSON_ID_CROSSWALK_NOT_INITIALIZED");
     }
+    const now = new Date().toISOString();
+    const prior = await readNhMembers({store,now,bypassCache:true});
+    if (prior.kind === "STORE_UNREACHABLE") throw Error("NH_PRIOR_UNAVAILABLE");
     const candidate = nhMembersCandidate({
+      prior: prior.kind === "PROMOTED" || prior.kind === "BOOTSTRAP" ? prior.value : null,
+      priorRetrievedAt: prior.metadata.retrievedAt ?? undefined,
       rawText: text,
       rawIdentityText: `${identityText}\n${identityHistoryText}`,
       finalUrl,
@@ -350,12 +325,13 @@ async function main(): Promise<void> {
       httpStatus,
       identityHttpStatus,
       retrievedAt,
+      sourceCheck,
       extraction,
       identityCrosswalk,
     });
-    const outcome = await processRegisteredRoutineCandidate(store, "nh-members", candidate, retrievedAt, undefined, { confirmUnchanged: true });
+    const outcome = await processRegisteredRoutineCandidate(store, "nh-members", candidate, now, undefined, { confirmUnchanged: true });
     console.log("RCD_RECEIPT=" + JSON.stringify({ source: "nh-members", ...routineReceiptFields(candidate, outcome), structuralReleaseContract: ZERO_RELEASE_EVENTS }));
-    if (!outcome.promoted) process.exitCode = 2;
+    if (!outcome.promoted && !outcome.confirmed) process.exitCode = 2;
   }
 }
 

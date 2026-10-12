@@ -101,7 +101,7 @@ test("every member and the per-state marker promote GOOD at their own bounded sc
     assert.equal(outcome.promoted?.recordClass, "STATE_LEGISLATOR_VOTES");
     // A PASS readback proves the per-contract readback read this member's own
     // promoted scope: it reads promoted.scope and FAILs if the version mismatches.
-    assert.equal(outcome.readerReadback?.status, "PASS", id);
+    assert.equal(outcome.readerReadback?.status, "PASS", JSON.stringify(outcome.readerReadback));
   }
 
   const markerOutcome = await processRegisteredFanOutCandidate(store, CONTRACT_ID, marker(T0), T0);
@@ -156,7 +156,7 @@ test("a changed member re-promotes to a new version; unchanged votes confirm tha
   assert.equal(changed.candidate.state, "PROMOTED");
   assert.notEqual(changed.promoted?.versionId, first.promoted?.versionId);
 
-  // §0/§5/§7 and Sean's S6 instruction retire a new version for unchanged facts.
+  // Unchanged facts never mint a new version.
   const recheck = member("nh-general-court:1", [pos(1), pos(2)], "2026-09-15T12:20:00.000Z");
   const again = await processRegisteredFanOutCandidate(store, CONTRACT_ID, recheck, "2026-09-15T12:20:00.000Z");
   assert.equal(again.candidate.state, "PROMOTED");
@@ -173,4 +173,24 @@ test("the fan-out door refuses a candidate scope outside the state's family", as
     () => processRegisteredFanOutCandidate(store, CONTRACT_ID, foreign, T0),
     /FANOUT_CANDIDATE_CONTRACT_MISMATCH/,
   );
+});
+
+test("one acquired member renders exact roll metadata before the session marker exists", async () => {
+  const { readStateMemberVoteSnapshot } = await import("../lib/state-rollcalls/member-votes.ts");
+  const store = new MemoryRoutineDataStore();
+  const position = { ...pos(1), publisherPosition: "Yea" };
+  const candidate = officialStateLegislatorVotesCandidate({ sourceId: SOURCE_ID, jurisdiction: JURISDICTION,
+    officeholderId: MEMBERS[0], chamber: "House", term: "2026", session: "regular", positions: [position],
+    rollCalls: [{ id: position.rollCallId, sourceId: SOURCE_ID, officialRollCallId: "2026:H:1", eventId: "nh-general-court:event:2026:H:1",
+      chamber: "House", term: "2026", session: "regular", actionStage: "Passage", state: "NH", sessionId: 0,
+      billNumber: "HB1", billTitle: "Official bill title", motion: "Passage", date: position.date, yea: 1, nay: 0, absent: 0, nv: 0,
+      result: "Yea 1; Nay 0", billUrl: null, rollCallUrl: "https://gc.nh.gov/dynamicdatadump/RollCallSummary.txt", retrievedAt: T0 }],
+    requestedUrl: "https://gc.nh.gov/dynamicdatadump/RollCallSummary.txt", finalUrl: "https://gc.nh.gov/dynamicdatadump/RollCallSummary.txt",
+    httpStatus: 200, retrievedAt: T0, identityAuthority: identityAuthority("v1") });
+  assert.ok((await processRegisteredFanOutCandidate(store, CONTRACT_ID, candidate, T0)).promoted);
+  assert.equal(await store.readPromotion("STATE_LEGISLATOR_VOTES", "US-NH"), null);
+  const read = await readStateMemberVoteSnapshot(MEMBERS[0], { store, now: T0, bypassCache: true });
+  assert.equal(read?.snapshot.rollCalls[0].billTitle, "Official bill title");
+  assert.equal(read?.snapshot.positions[0].publisherPosition, "Yea");
+  assert.equal(await readStateMemberVoteSnapshot(MEMBERS[1], { store, now: T0, bypassCache: true }), null);
 });

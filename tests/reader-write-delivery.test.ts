@@ -42,6 +42,10 @@ test("Ask, Speak and demand reach their real writers and report storage failure 
 
   const rows = new Map<string, Record<string, unknown>[]>();
   const failed = new Set<string>();
+  const stalled = new Set<string>();
+  const committedBeforeTimeout = new Set<string>();
+  const aborted: string[] = [];
+  let pendingWrites = 0;
   const logs: unknown[][] = [];
   t.mock.method(console, "error", (...values: unknown[]) => { logs.push(values); });
   neonConfig.fetchFunction = async (_url: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) => {
@@ -61,6 +65,18 @@ test("Ask, Speak and demand reach their real writers and report storage failure 
       }
       return { command: insert ? "INSERT" : "SELECT", rowCount: insert ? 1 : 0, rowAsArray: true, fields: [], rows: [] };
     };
+    const table = /insert into "([^"]+)"/i.exec(body.query ?? "")?.[1];
+    if (table && stalled.has(table)) {
+      if (committedBeforeTimeout.has(table)) result({ query: body.query!, params: body.params ?? [] });
+      const signal = init?.signal;
+      assert.ok(signal, "the real Neon request must receive its cancellation signal");
+      pendingWrites++;
+      return new Promise<Response>((_resolve, reject) => {
+        const abort = () => { pendingWrites--; aborted.push(table); reject(signal.reason); };
+        if (signal.aborted) abort();
+        else signal.addEventListener("abort", abort, { once: true });
+      });
+    }
     try {
       return Response.json(body.queries ? { results: body.queries.map(result) }
         : result({ query: body.query ?? "", params: body.params ?? [] }));
@@ -144,6 +160,35 @@ test("Ask, Speak and demand reach their real writers and report storage failure 
   assert.equal(noAlarm.status, 200);
   assert.ok(logs.some(line => JSON.stringify(line).includes("write alarm unavailable")));
   assert.doesNotMatch(JSON.stringify(logs), /fixture-ask-key|Please explain the school budget/);
+
+  for (const scenario of ["save", "alarm", "acknowledgement"] as const) {
+    failed.clear();
+    stalled.clear();
+    committedBeforeTimeout.clear();
+    if (scenario === "alarm") {
+      failed.add("ask_interactions");
+      stalled.add("write_alarm");
+    } else {
+      stalled.add("ask_interactions");
+      if (scenario === "acknowledgement") committedBeforeTimeout.add("ask_interactions");
+    }
+    const before = rows.get("ask_interactions")!.length;
+    let deadline: ReturnType<typeof setTimeout> | undefined;
+    const reply = await Promise.race([
+      ask(request("/api/ask/grounded", askBody)),
+      new Promise<never>((_resolve, reject) => { deadline = setTimeout(() => reject(new Error(`${scenario} stalled the answer`)), 3000); }),
+    ]).finally(() => clearTimeout(deadline));
+    assert.equal(reply.status, 200, scenario);
+    assert.equal((await reply.json()).answer, savedAnswer.answer, scenario);
+    assert.equal(reply.headers.get(ASK_SAVE_STATUS_HEADER), "FAILED", scenario);
+    assert.match(askSaveNotice(reply.headers)!, /couldn't confirm/, scenario);
+    assert.equal(aborted.at(-1), scenario === "alarm" ? "write_alarm" : "ask_interactions", scenario);
+    assert.equal(pendingWrites, 0, "the request is aborted rather than left writing after the answer");
+    assert.equal(rows.get("ask_interactions")!.length, before + (scenario === "acknowledgement" ? 1 : 0),
+      "a lost acknowledgement may follow a committed row and must not trigger a duplicate retry");
+  }
+  stalled.clear();
+  committedBeforeTimeout.clear();
 
   delete process.env.DATABASE_URL;
   assert.equal((await speak(request("/api/speak", speakBody))).status, 202);

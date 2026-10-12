@@ -4,12 +4,15 @@ import { askInteractions } from "./schema.ts";
 import { assertWriteAllowed } from "./write-guard.ts";
 
 /** Receives the existing prepared row; never changes collection or retention. */
-export async function writeAskInteraction(row: AskInteractionRow): Promise<void> {
+export async function writeAskInteraction(row: AskInteractionRow, signal?: AbortSignal): Promise<void> {
   const answerMode = row.answerMode;
   if (answerMode === "OFF" || answerMode === "TRANSPORT_FAILED") {
     throw new Error(`${answerMode} is not a delivered Ask interaction`);
   }
   if (!process.env.DATABASE_URL) throw new Error("Ask question store is unavailable");
   assertWriteAllowed("an Ask interaction");
-  await getDb().insert(askInteractions).values({ ...row, answerMode });
+  signal?.throwIfAborted();
+  const db = getDb();
+  const query = db.insert(askInteractions).values({ ...row, answerMode }).toSQL();
+  await db.$client.query(query.sql, query.params, { fetchOptions: { signal } });
 }

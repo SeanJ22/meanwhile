@@ -107,16 +107,22 @@ export function errorMessageOf(error: unknown): string | null {
   return flat.length <= MESSAGE_CAP ? flat : `${flat.slice(0, MESSAGE_CAP)}… [truncated]`;
 }
 
-export async function raiseWriteAlarm(store: SoldStore, error: unknown): Promise<boolean> {
+export async function raiseWriteAlarm(store: SoldStore, error: unknown, signal?: AbortSignal): Promise<boolean> {
   try {
     // The alarm is a write and passes the guard like any other; a refusal is caught below.
     assertWriteAllowed("a write alarm");
-    await getDb().insert(writeAlarm).values({
+    signal?.throwIfAborted();
+    const db = getDb();
+    const write = db.insert(writeAlarm).values({
       raisedAt: new Date().toISOString(),
       store,
       errorCode: errorCodeOf(error),
       errorMessage: errorMessageOf(error),
     });
+    if (signal) {
+      const query = write.toSQL();
+      await db.$client.query(query.sql, query.params, { fetchOptions: { signal } });
+    } else await write;
     return true;
   } catch (alarmError) {
     // The operational log remains usable even when both writes fail. Never

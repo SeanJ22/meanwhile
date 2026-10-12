@@ -2345,6 +2345,7 @@ async function captureDelivered(input: {
   continuityKey: string;
 }): Promise<AskSaveStatus> {
   if (ripcordPulled("ripcord.reactionIntake")) return "PAUSED";
+  const signal = AbortSignal.timeout(750);
   try {
     const marker = markerFromRequest(input.request);
     const saved = await captureAskInteraction({
@@ -2374,12 +2375,12 @@ async function captureDelivered(input: {
       runClass: marker.runClass,
       runId: marker.runId,
       occurredAt: new Date().toISOString(),
-    });
+    }, undefined, signal);
     if (saved.kind === "WROTE") return "SAVED";
-    await raiseWriteAlarm("ask_interactions", saved.error ?? new Error(saved.why));
+    await raiseWriteAlarm("ask_interactions", saved.error ?? new Error(saved.why), signal);
     return "FAILED";
   } catch (error) {
-    await raiseWriteAlarm("ask_interactions", error);
+    await raiseWriteAlarm("ask_interactions", error, signal);
     return "FAILED";
   }
 }

@@ -27,6 +27,7 @@ export async function placeSourceReader(input: {
   context: Omit<ScoutToolContext, "vault" | "spaceOut" | "inherited">;
   project: string;
   websiteSize?: WebsiteSizeForUrl;
+  geographyFetch?: typeof fetch;
 }) {
   const { tools, context, project } = input;
   const artifacts = new Map<string, WorkArtifact>();
@@ -141,7 +142,7 @@ export async function placeSourceReader(input: {
       const address = url instanceof Request ? url.url : String(url);
       takeRequest(address);
       await tools.spaceOut(new URL(address).hostname);
-      return publicFetch(url, options);
+      return (input.geographyFetch ?? publicFetch)(url, options);
     }) satisfies typeof fetch,
     geographyCaptures,
     readGeography: async (url: string) => {

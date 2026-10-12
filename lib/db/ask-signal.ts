@@ -242,10 +242,11 @@ export type AskCaptureOutcome =
  */
 export async function captureAskInteraction(
   input: AskCaptureInput,
-  write: (row: AskInteractionRow) => Promise<void> = async (row) => {
+  write: (row: AskInteractionRow, signal?: AbortSignal) => Promise<void> = async (row, signal) => {
     const { writeAskInteraction } = await import("./ask-interaction-writer.ts");
-    await writeAskInteraction(row);
+    await writeAskInteraction(row, signal);
   },
+  signal?: AbortSignal,
 ): Promise<AskCaptureOutcome> {
   // An empty key would hash identically for every reader, collapsing distinct readers to one.
   if (!input.continuityKey) {
@@ -256,7 +257,7 @@ export async function captureAskInteraction(
       ...askCoverageStamp(input.ocdIds),
       ...input,
     });
-    await write(row);
+    await write(row, signal);
     return { kind: "WROTE" };
   } catch (error) {
     return { kind: "FAILED", why: error instanceof Error ? error.message : "unknown", error };

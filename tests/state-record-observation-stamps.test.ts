@@ -100,6 +100,6 @@ test("the confirmation door requires the cited authority, and a confirmation tak
   const { readFileSync } = await import("node:fs");
   const source = readFileSync(new URL("../lib/civic-data/promotion.ts", import.meta.url), "utf8");
   const eligibility = source.slice(source.indexOf("options.confirmUnchanged !== false &&"), source.indexOf("const retained ="));
-  assert.match(eligibility, /sameHeldRecords\(candidate, lkg\.candidate\) &&\s+sameCitedAuthority\(candidate, lkg\.candidate\)/);
+  assert.match(eligibility, /sameHeldRecords\(candidate, lkg\.candidate\) &&\s+sameFinanceProgress\(candidate, lkg\.candidate\) &&\s+sameCitedAuthority\(candidate, lkg\.candidate\)/);
   assert.match(source, /if \(outcome\.promoted === null \|\| outcome\.confirmed \|\| contract\.readerProjection === null\) return outcome;/);
 });

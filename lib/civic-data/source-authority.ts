@@ -14,19 +14,21 @@ export interface OfficialLinkingPage {
   readonly linkingPage?: OfficialLinkingPage | null;
 }
 
+export interface OfficialSourceAddress { readonly host: string; readonly path: string; readonly query: string }
+
 // Plain string parsing: this runs inside the isolated Validator realm, which has no URL global.
-function sourceAddress(value: string, base?: string): { host: string; path: string; query: string } | null {
+export function officialSourceAddress(value: string, base?: string): OfficialSourceAddress | null {
   const text = value.trim();
   if (/[\\\s]/.test(text)) return null;
   const absolute = /^(https?):\/\/([^/?#]+)([^?#]*)(\?[^#]*)?(?:#.*)?$/i.exec(text);
   if (!absolute) {
     if (!base || /^[a-z][a-z0-9+.-]*:/i.test(text)) return null;
-    if (text.startsWith("//")) return sourceAddress(`https:${text}`);
-    const parent = sourceAddress(base);
+    if (text.startsWith("//")) return officialSourceAddress(`https:${text}`);
+    const parent = officialSourceAddress(base);
     if (!parent) return null;
     const path = text.startsWith("/") ? text : text.startsWith("?") || text.startsWith("#")
       ? `${parent.path}${text}` : `${parent.path.slice(0, parent.path.lastIndexOf("/") + 1)}${text}`;
-    return sourceAddress(`https://${parent.host}${path}`);
+    return officialSourceAddress(`https://${parent.host}${path}`);
   }
   const authority = absolute[2].toLowerCase().replace(/:(?:80|443)$/, "");
   if (!/^[a-z0-9.-]+$/.test(authority)) return null;
@@ -61,29 +63,37 @@ const ARCHIVE_COPY_HOSTS = ["archive.org", "archive.ph", "archive.today", "archi
   "r.jina.ai", "api.allorigins.win", "corsproxy.io", "api.codetabs.com"];
 const hostWithin = (host: string, roots: readonly string[]) => roots.some(root => host === root || host.endsWith(`.${root}`));
 
-/** Government sites and their linked own sites are official; shared platforms retain the linked account or document boundary. */
-export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage | null): boolean {
-  const target = sourceAddress(url);
-  if (!target || hostWithin(target.host, ARCHIVE_COPY_HOSTS)) return false;
-  if (/(^|\.)gov$/.test(target.host)) return true;
-  if (!linkingPage || !isOfficialSource(linkingPage.url, linkingPage.linkingPage)) return false;
-  const linkedMarkup = linkingPage.html.replace(/<!--[\s\S]*?-->/g, "")
+export function officialSourceLinks(url: string, html: string): readonly OfficialSourceAddress[] {
+  const links: OfficialSourceAddress[] = [];
+  const linkedMarkup = html.replace(/<!--[\s\S]*?-->/g, "")
     .replace(/<(script|style|template)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, "");
   for (const element of linkedMarkup.matchAll(/<(a|iframe|frame)\b([^>]*)>/gi)) {
     const attribute = element[1].toLowerCase() === "a" ? "href" : "src";
     const match = new RegExp(`(?:^|\\s)${attribute}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, "i").exec(element[2]);
     if (!match) continue;
-    const linked = sourceAddress((match[1] ?? match[2] ?? match[3]).replace(/&amp;/g, "&"), linkingPage.url);
-    if (linked?.host !== target.host) continue;
-    if (!hostWithin(target.host, SHARED_PUBLICATION_HOSTS)) return true;
-    const linkedPath = linked.path.replace(/\/+$/, "");
-    const targetPath = target.path.replace(/\/+$/, "");
-    // The platform homepage identifies no account; queries may identify a single document.
-    if (!linkedPath && !linked.query) continue;
-    if (targetPath === linkedPath && target.query === linked.query ||
-      linkedPath && !linked.query && targetPath.startsWith(`${linkedPath}/`)) return true;
+    const linked = officialSourceAddress((match[1] ?? match[2] ?? match[3]).replace(/&amp;/g, "&"), url);
+    if (linked) links.push(linked);
   }
-  return false;
+  return links;
+}
+
+export function officialLinkCovers(target: OfficialSourceAddress, linked: OfficialSourceAddress): boolean {
+  if (linked.host !== target.host || hostWithin(target.host, ARCHIVE_COPY_HOSTS)) return false;
+  if (!hostWithin(target.host, SHARED_PUBLICATION_HOSTS)) return true;
+  const linkedPath = linked.path.replace(/\/+$/, "");
+  const targetPath = target.path.replace(/\/+$/, "");
+  if (!linkedPath && !linked.query) return false;
+  return targetPath === linkedPath && target.query === linked.query ||
+    Boolean(linkedPath && !linked.query && targetPath.startsWith(`${linkedPath}/`));
+}
+
+/** Government sites and their linked own sites are official; shared platforms retain the linked account or document boundary. */
+export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage | null): boolean {
+  const target = officialSourceAddress(url);
+  if (!target || hostWithin(target.host, ARCHIVE_COPY_HOSTS)) return false;
+  if (/(^|\.)gov$/.test(target.host)) return true;
+  if (!linkingPage || !isOfficialSource(linkingPage.url, linkingPage.linkingPage)) return false;
+  return officialSourceLinks(linkingPage.url, linkingPage.html).some(linked => officialLinkCovers(target, linked));
 }
 
 export const SOURCE_AUTHORITIES = {

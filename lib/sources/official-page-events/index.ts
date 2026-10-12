@@ -1,4 +1,5 @@
-import { isOfficialSource, type OfficialLinkingPage } from "../../civic-data/source-authority.ts";
+import { isOfficialSource, officialSourceAddress, officialSourceLinks, officialLinkCovers,
+  type OfficialSourceAddress, type OfficialLinkingPage } from "../../civic-data/source-authority.ts";
 /**
  * @freshness-reads-here — `collectedAt` is taken at the moment of the fetch, in
  * `fetch()` below, and never reconstructed afterwards.
@@ -1226,7 +1227,7 @@ type SavedOfficialPage = { readonly canonicalUrl: string; readonly text: string 
 export type LazyOfficialPage = { readonly canonicalUrl: string; readonly readText: () => Promise<string> };
 type IndexedOfficialPage = {
   readonly canonicalUrl: string;
-  readonly links: ReadonlySet<string>;
+  readonly links: ReadonlyMap<string, readonly OfficialSourceAddress[]>;
   readonly text?: string;
   readonly readText?: () => Promise<string>;
 };
@@ -1235,32 +1236,21 @@ type LinkingNode = {
   source: IndexedOfficialPage;
   readonly position: number;
   readonly host: string | null;
-  readonly links: ReadonlySet<string>;
+  readonly links: ReadonlyMap<string, readonly OfficialSourceAddress[]>;
   pass: number;
   parent?: LinkingNode;
 };
-
-/** The source-authority host rules, including relative links and www aliases. */
-function linkingHost(url: string, base?: string): string | null {
-  const absolute = /^(https?):\/\/([^/?#\s]+)/i.exec(url.trim());
-  if (absolute) {
-    const host = absolute[2].replace(/^[^@]*@/, "").replace(/:\d*$/, "").toLowerCase();
-    return /^[a-z0-9.-]+$/.test(host) ? host.replace(/^www\./, "") : null;
-  }
-  if (/^[a-z][a-z0-9+.-]*:/i.test(url.trim())) return null;
-  if (url.trim().startsWith("//")) return linkingHost(`https:${url.trim()}`);
-  return base === undefined ? null : linkingHost(base);
-}
 
 function linkingBefore(a: LinkingNode, b: LinkingNode): boolean {
   return a.pass < b.pass || (a.pass === b.pass && a.position < b.position);
 }
 
-function savedLinkHosts(page: SavedOfficialPage): ReadonlySet<string> {
-  const links = new Set<string>();
-  for (const match of page.text.matchAll(/\b(?:href|src)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi)) {
-    const host = linkingHost((match[1] ?? match[2] ?? match[3]).replace(/&amp;/g, "&"), page.canonicalUrl);
-    if (host !== null) links.add(host);
+function savedOfficialLinks(page: SavedOfficialPage): IndexedOfficialPage["links"] {
+  const links = new Map<string, OfficialSourceAddress[]>();
+  for (const link of officialSourceLinks(page.canonicalUrl, page.text)) {
+    const sameHost = links.get(link.host) ?? [];
+    sameHost.push(link);
+    links.set(link.host, sameHost);
   }
   return links;
 }
@@ -1269,15 +1259,26 @@ function savedLinkHosts(page: SavedOfficialPage): ReadonlySet<string> {
 class OfficialLinkingIndex {
   private readonly nodes: LinkingNode[] = [];
   private readonly urls = new Set<string>();
-  private readonly parents = new Map<string, LinkingNode>();
+  private readonly parents = new Map<string, Set<LinkingNode>>();
   private readonly waiting = new Map<string, LinkingNode[]>();
   private readonly chosen = new Map<string, LinkingNode>();
   private readonly queue: { node: LinkingNode; pass: number }[] = [];
   private hasRepeatedUrls = false;
 
+  private parentFor(url: string): LinkingNode | undefined {
+    const target = officialSourceAddress(url);
+    if (!target) return undefined;
+    let selected: LinkingNode | undefined;
+    for (const node of this.parents.get(target.host) ?? []) {
+      if (selected && !linkingBefore(node, selected)) continue;
+      if (node.links.get(target.host)?.some(linked => officialLinkCovers(target, linked))) selected = node;
+    }
+    return selected;
+  }
+
   private enqueue(node: LinkingNode): void {
     if (node.host === null || node.pass === -1) return;
-    const parent = this.parents.get(node.host);
+    const parent = this.parentFor(node.page.canonicalUrl);
     if (!parent) return;
     const pass = parent.pass === -1 ? 0 : parent.pass + Number(node.position <= parent.position);
     if (pass > node.pass) return;
@@ -1298,10 +1299,10 @@ class OfficialLinkingIndex {
   }
 
   private endorse(node: LinkingNode): void {
-    for (const host of node.links) {
-      const previous = this.parents.get(host);
-      if (previous && previous !== node && !linkingBefore(node, previous)) continue;
-      this.parents.set(host, node);
+    for (const host of node.links.keys()) {
+      const parents = this.parents.get(host) ?? new Set<LinkingNode>();
+      parents.add(node);
+      this.parents.set(host, parents);
       for (const child of this.waiting.get(host) ?? []) this.enqueue(child);
     }
   }
@@ -1338,7 +1339,7 @@ class OfficialLinkingIndex {
       const page = pages[i];
       this.hasRepeatedUrls ||= this.urls.has(page.canonicalUrl);
       this.urls.add(page.canonicalUrl);
-      const node: LinkingNode = { page, source: page, position: i, host: linkingHost(page.canonicalUrl), links: page.links,
+      const node: LinkingNode = { page, source: page, position: i, host: officialSourceAddress(page.canonicalUrl)?.host ?? null, links: page.links,
         pass: Infinity };
       this.nodes.push(node);
       appended.push(node);
@@ -1349,7 +1350,7 @@ class OfficialLinkingIndex {
     // that case, preserving Map's first position / last root value semantics.
     if (duplicate) {
       this.parents.clear(); this.waiting.clear(); this.chosen.clear(); this.queue.length = 0;
-      for (const node of this.nodes) { node.pass = Infinity; node.parent = undefined; node.source = node.page; (node as { links: ReadonlySet<string> }).links = node.page.links; }
+      for (const node of this.nodes) { node.pass = Infinity; node.parent = undefined; node.source = node.page; (node as { links: IndexedOfficialPage["links"] }).links = node.page.links; }
     }
     const added = duplicate ? this.nodes : appended;
     for (const node of added) {
@@ -1362,7 +1363,7 @@ class OfficialLinkingIndex {
     for (const node of added) if (node.host !== null && /(^|\.)gov$/.test(node.host)) {
       const previous = roots.get(node.page.canonicalUrl);
       // The old root Map overwrites the HTML but keeps the original position.
-      if (previous) { previous.source = node.page; (previous as { links: ReadonlySet<string> }).links = node.links; }
+      if (previous) { previous.source = node.page; (previous as { links: IndexedOfficialPage["links"] }).links = node.links; }
       else roots.set(node.page.canonicalUrl, node);
     }
     for (const root of roots.values()) { root.pass = -1; this.chosen.set(root.page.canonicalUrl, root); }
@@ -1372,9 +1373,8 @@ class OfficialLinkingIndex {
   }
 
   sourcesFor(url: string): IndexedOfficialPage[] {
-    const host = linkingHost(url);
     const sources: IndexedOfficialPage[] = [];
-    let node = host === null || /(^|\.)gov$/.test(host) ? undefined : this.parents.get(host);
+    let node = isOfficialSource(url) ? undefined : this.parentFor(url);
     while (node) { sources.push(node.source); node = node.parent; }
     return sources;
   }
@@ -1400,7 +1400,7 @@ export function officialLinkingPageFrom(url: string, pages: readonly SavedOffici
   if (isOfficialSource(url)) return null;
   let state = officialLinkingIndexes.get(pages);
   if (!state) { state = { index: new OfficialLinkingIndex(), pages: [] }; officialLinkingIndexes.set(pages, state); }
-  for (let i = state.pages.length; i < pages.length; i++) state.pages.push({ ...pages[i], links: savedLinkHosts(pages[i]) });
+  for (let i = state.pages.length; i < pages.length; i++) state.pages.push({ ...pages[i], links: savedOfficialLinks(pages[i]) });
   state.index.extend(state.pages);
   const sources = state.index.sourcesFor(url);
   return chainFromSources(sources, sources.map(page => page.text!));
@@ -1429,7 +1429,7 @@ export async function officialLinkingPageFromAsync(url: string, pages: readonly 
         if (saved.ingested.has(i)) return;
         const page = pages[i];
         const text = await page.readText();
-        saved.ingested.set(i, { canonicalUrl: page.canonicalUrl, readText: page.readText, links: savedLinkHosts({ canonicalUrl: page.canonicalUrl, text }) });
+        saved.ingested.set(i, { canonicalUrl: page.canonicalUrl, readText: page.readText, links: savedOfficialLinks({ canonicalUrl: page.canonicalUrl, text }) });
       }));
       // Keep successful decodes even when a neighboring read failed, without
       // changing the source order or retaining the decoded bodies.

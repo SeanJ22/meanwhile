@@ -8,6 +8,7 @@ import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import { useEffect, useState } from "react";
 
 import { blurbForTitle } from "@/lib/officials/office-blurbs";
+import { tribalSeatForHolder, tribalSeatDescription, tribalSeatCardSources } from "@/lib/officials/tribal-seats";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyColorVar } from "@/lib/officials/party-color";
 import { readerPartyLabel } from "@/lib/text/reader-names";
@@ -569,6 +570,14 @@ export function OfficeBlurb({
   /** The CardSection header names it; drop the duplicate label. */
   bare?: boolean;
 }) {
+  const tribal = tribalSeatForHolder(holder);
+  if (tribal || holder.representation === "tribal" && holder.nation) {
+    return <>
+      {!bare && <PopupSectionLabel>What this office does</PopupSectionLabel>}
+      <p className="mt-1.5 t-detail leading-relaxed text-paper-dim">{tribalSeatDescription(tribal?.nation ?? holder.nation!)}</p>
+      {tribal && <CardSourcesContribution id={`tribal-office:${holder.id}`} sources={tribalSeatCardSources(tribal)} />}
+    </>;
+  }
   // Resolved against the holder's own jurisdiction, never a per-type default.
   const blurb = blurbForTitle(
     holder.officeTitle,

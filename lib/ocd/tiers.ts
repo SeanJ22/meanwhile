@@ -24,6 +24,7 @@ export const TIER_SEGMENTS: Readonly<Record<Tier, readonly string[]>> = {
     // State legislative chambers, upper and lower.
     "sldu",
     "sldl",
+    "aiannh",
   ],
   local: [
     "county",

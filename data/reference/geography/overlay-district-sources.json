@@ -1,0 +1,73 @@
+[
+  {
+    "id": "lower-floterial-2022-2032",
+    "stateFips": "33",
+    "chamber": "lower",
+    "fileUrl": "https://ftp.granit.unh.edu/GRANIT_Data/Vector_Data/Administrative_and_Political_Boundaries/d-nhhousedists/NHHouseDistricts2022_Float.zip",
+    "shapeFile": "NHHouseDists2022_float.shp",
+    "codeField": "FloatHse22",
+    "codePrefixes": {
+      "BE": {
+        "name": "Belknap",
+        "countyFips": "001"
+      },
+      "CA": {
+        "name": "Carroll",
+        "countyFips": "003"
+      },
+      "CH": {
+        "name": "Cheshire",
+        "countyFips": "005"
+      },
+      "CO": {
+        "name": "Coos",
+        "countyFips": "007"
+      },
+      "GR": {
+        "name": "Grafton",
+        "countyFips": "009"
+      },
+      "HI": {
+        "name": "Hillsborough",
+        "countyFips": "011"
+      },
+      "ME": {
+        "name": "Merrimack",
+        "countyFips": "013"
+      },
+      "RO": {
+        "name": "Rockingham",
+        "countyFips": "015"
+      },
+      "ST": {
+        "name": "Strafford",
+        "countyFips": "017"
+      },
+      "SU": {
+        "name": "Sullivan",
+        "countyFips": "019"
+      }
+    },
+    "planStart": "2022",
+    "planEnd": "2032",
+    "producedAt": "2023-02-02",
+    "sourceOrg": "New Hampshire Office of Strategic Initiatives; NH GRANIT",
+    "officialLinkUrl": "https://www.nh.gov/osi/planning/programs/gis/",
+    "townDocumentUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/documents/Voting%20Districts/2022-state-representative-and-delegate-districts.pdf",
+    "townBoundaryUrl": "https://ftp.granit.unh.edu/GRANIT_Data/Vector_Data/Administrative_and_Political_Boundaries/d-nhpolitdists/NHPolitDists.zip",
+    "townRelationshipUrl": "https://www2.census.gov/geo/docs/maps-data/data/rel2020/zcta520/tab20_zcta520_cousub20_natl.txt",
+    "expectedFeatures": 40,
+    "countyHeadingPattern": "^(?<county>[A-Za-z ]+)\\s+COUNTY\\b",
+    "districtRowPattern": "^(?:District\\s*(?:No\\.?\\s*)?)?(?<district>[0-9]+)\\s*(?:\\([^)]*\\))?\\s*(?<marker>FL)?\\s*[:.-]?\\s*(?<towns>.+)$",
+    "townFields": {
+      "name": "NAME",
+      "county": "COUNTY",
+      "geoid": "FIPS",
+      "ward": "WARD"
+    },
+    "partitionBoundaryUrl": "https://www2.census.gov/geo/tiger/TIGER2024/SLDL/tl_2024_33_sldl.zip",
+    "partitionRelationshipUrl": "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldl202420_zcta520_natl.txt",
+    "partitionGeoTag": "SLDL2024_20",
+    "districtLabel": "floterial district"
+  }
+]

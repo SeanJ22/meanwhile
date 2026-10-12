@@ -2,12 +2,15 @@ import { createHash } from "node:crypto";
 
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import type { GeographyType, GeographyVersion } from "./contract.ts";
-import type { BuiltDataset, BuiltScope } from "./dataset.ts";
+import type { BuiltDataset, BuiltScope, GeographySourceFailure } from "./dataset.ts";
 import { ScopeAccumulator, parseTab20Header, resolveTab20Columns, type Tab20Spec } from "./build.ts";
 import { buildCbsaScope, parseCbsaDelineation } from "./cbsa.ts";
 import { acquireGrfScope, GRF_CD120 } from "./grf.ts";
+import { acquireAiannhScope, CENSUS_AIANNH } from "./aiannh.ts";
+import { acquireOverlayScopes } from "../overlay-geography/acquire.ts";
 import { censusGeographyUserAgent } from "./http.ts";
 import { establishedApplicability } from "./selection.ts";
+import { retainFailedSupplementalScopes } from "./supplemental-refresh.ts";
 
 const REL = "https://www2.census.gov/geo/docs/maps-data/data/rel2020";
 
@@ -63,7 +66,7 @@ export const CBSA_DELINEATION = {
   url: "https://www2.census.gov/programs-surveys/metro-micro/geographies/reference-files/2023/delineation-files/list1_2023.xlsx",
 } as const;
 
-export const DEFAULT_SCOPES: readonly string[] = ["cd119", "county", "cbsa", "sldu", "sldl"];
+export const DEFAULT_SCOPES: readonly string[] = ["cd119", "county", "cbsa", "sldu", "sldl", "aiannh", "overlays"];
 
 export interface AcquireOptions {
   readonly only?: readonly string[];
@@ -71,6 +74,8 @@ export interface AcquireOptions {
   /** Overridable for tests so the suite never touches the network. */
   readonly fetchImpl?: typeof fetch;
   readonly signal?: AbortSignal;
+  /** Undefined means the previous pointer could not be read; [] means no supplemental scopes were held. */
+  readonly previousSupplementalScopes?: readonly BuiltScope[];
 }
 
 async function streamLines(
@@ -209,9 +214,9 @@ export async function acquireDataset(options: AcquireOptions = {}): Promise<Buil
   // applied at assembly, so a CBSA can still fold up a whole multi-state metro).
   const builtByKey = new Map<string, BuiltScope>();
   for (const key of keys) {
-    if (key === "cbsa" || key === "cd120") continue;
+    if (key === "cbsa" || key === "cd120" || key === "aiannh" || key === "overlays") continue;
     const src = CENSUS_GEO_SOURCES[key];
-    if (!src) throw new Error(`unknown census-geography source "${key}"; known: ${Object.keys(CENSUS_GEO_SOURCES).join(", ")}, cbsa, cd120`);
+    if (!src) throw new Error(`unknown census-geography source "${key}"; known: ${Object.keys(CENSUS_GEO_SOURCES).join(", ")}, cbsa, cd120, aiannh`);
     builtByKey.set(key, await buildScope(src, fetchImpl, options.signal));
   }
 
@@ -238,28 +243,51 @@ export async function acquireDataset(options: AcquireOptions = {}): Promise<Buil
     cd120Scope = await acquireGrfScope(GRF_CD120, { fetchImpl, states: options.states, signal: options.signal });
   }
 
+  let aiannhScope: BuiltScope | undefined;
+  const sourceFailures: GeographySourceFailure[] = [];
+  if (keys.includes("aiannh")) {
+    try {
+      const built = await acquireAiannhScope({ fetchImpl, states: options.states, signal: options.signal });
+      if (built && built.instanceCount > 0) aiannhScope = built;
+    } catch (error) {
+      if (options.previousSupplementalScopes === undefined || options.signal?.aborted) throw error;
+      sourceFailures.push({ type: "aiannh", sourceId: "census-aiannh", version: CENSUS_AIANNH.version,
+        sourceUrls: [CENSUS_AIANNH.url, CENSUS_AIANNH.zctaBlockUrl, CENSUS_AIANNH.blockAssignmentBase], reason: error instanceof Error ? error.message : String(error) });
+    }
+  }
+
   const scopes: BuiltScope[] = [];
   for (const key of keys) {
-    let scope = key === "cbsa" ? cbsaScope : key === "cd120" ? cd120Scope : builtByKey.get(key);
+    let scope = key === "cbsa" ? cbsaScope : key === "cd120" ? cd120Scope : key === "aiannh" ? aiannhScope : builtByKey.get(key);
     if (scope === undefined) continue;
     // cd:120 is already state-filtered during acquisition; tab20 scopes are built
     // unfiltered and filtered here.
-    if (options.states && key !== "cd120") {
+    if (options.states && key !== "cd120" && key !== "aiannh") {
       scope = key === "cbsa" ? filterCbsaByStates(scope, options.states) : filterScopeByStates(scope, options.states);
     }
     scopes.push(scope);
   }
+  const overlays = keys.includes("overlays") ? await acquireOverlayScopes({ fetchImpl: options.fetchImpl, states: options.states, signal: options.signal }) : undefined;
+  if (overlays) scopes.push(...overlays.scopes);
+  if (overlays?.failures?.length) {
+    if (options.previousSupplementalScopes === undefined) throw new Error(overlays.failures.map(failure => failure.reason).join("; "));
+    sourceFailures.push(...overlays.failures);
+  }
+  const prior = options.previousSupplementalScopes?.map(scope => options.states ? filterScopeByStates(scope, options.states) : scope).filter(scope => scope.instanceCount > 0) ?? [];
+  const refreshedScopes = retainFailedSupplementalScopes(prior, scopes, sourceFailures);
 
   const zctaUniverse = new Set<string>();
-  for (const s of scopes) for (const g of s.groupings) for (const o of g.overlaps) zctaUniverse.add(o.zcta5);
+  for (const s of refreshedScopes) for (const g of s.groupings) for (const o of g.overlaps) zctaUniverse.add(o.zcta5);
   const coverage = options.states
-    ? `priority batch: ${options.states.size} state(s) [${[...options.states].sort().join(",")}]; ${scopes.length} type(s): ${scopes.map((s) => s.version).join(", ")}`
-    : `national; ${scopes.length} geography type(s): ${scopes.map((s) => s.version).join(", ")}`;
+    ? `priority batch: ${options.states.size} state(s) [${[...options.states].sort().join(",")}]; ${refreshedScopes.length} scope(s): ${refreshedScopes.map((s) => s.version).join(", ")}`
+    : `published Census scopes and reference-defined supplemental areas; ${refreshedScopes.length} scope(s): ${refreshedScopes.map((s) => s.version).join(", ")}`;
   return {
     formatVersion: 1,
     builtAt: new Date().toISOString(),
     coverage,
-    scopes,
+    scopes: refreshedScopes,
+    ...(overlays ? { sourceDiscrepancies: overlays.reports } : {}),
+    ...(sourceFailures.length ? { sourceFailures } : {}),
     zctaUniverse: [...zctaUniverse].sort(),
   };
 }

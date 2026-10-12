@@ -3,6 +3,8 @@
 import { useShellData } from "@/lib/state/data";
 import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
+import Link from "next/link";
+import { legislativeRepresentationLabel, tribalSeatDescription } from "@/lib/officials/tribal-seats";
 import { staleDivisionRead, type DivisionRead } from "@/lib/meetings/freshness";
 import type { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
 import { MeetingListingNotice } from "./meeting-listing-notice";
@@ -203,6 +205,7 @@ function SeatRow({
       /* Walks read the standing off the row, not from a class. */
       data-seat-standing={seat.standing}
       data-seat-sourcing={seat.sourcing}
+      data-seat-representation={seat.representation}
       className="t-detail leading-snug"
     >
       <span className={TYPE_LABEL_CLASS}>
@@ -214,6 +217,9 @@ function SeatRow({
           </span>
         )}
       </span>
+      {legislativeRepresentationLabel(seat.divisionType, seat.representation) && (
+        <span className="ml-1.5 t-caption text-muted">{legislativeRepresentationLabel(seat.divisionType, seat.representation)}</span>
+      )}
       {marksOverlap(seat.standing) && <OverlapMark zip={zip} />}
       <span className="block person-under-heading">
         {seat.representatives.length > 0 ? (
@@ -232,6 +238,13 @@ function SeatRow({
           <span className="text-muted">{representationNoteFor(seat.tier, noteState)}</span>
         )}
       </span>
+      {seat.representation === "tribal" && seat.nation && (
+        <p className="mt-1 t-caption leading-relaxed text-paper-dim">{tribalSeatDescription(seat.nation)}</p>
+      )}
+      {!!seat.sourceUrls?.length && <details className="mt-1 t-caption text-muted">
+        <summary className="cursor-pointer">Sources</summary>
+        <ul className="mt-1 space-y-1">{seat.sourceUrls.map(sourceUrl => <li key={sourceUrl}><a href={sourceUrl} target="_blank" rel="noreferrer" className="text-link underline decoration-dotted">{new URL(sourceUrl).hostname}</a></li>)}</ul>
+      </details>}
     </li>
   );
 }
@@ -809,6 +822,9 @@ function CoverageBody({
             <>
               <p className="t-structure mt-4 text-state">
                 State
+                {[...new Set(stateSeats.flatMap(seat => /\/(?:state|district|territory):([a-z]{2})(?:\/|$)/.exec(seat.ocdId)?.[1] ?? []))].map(state => (
+                  <Link key={state} href={`/legislature/${state}`} className="ml-3 t-caption text-link underline decoration-dotted underline-offset-2">Legislature</Link>
+                ))}
               </p>
               <ul className="mt-1 space-y-1">
                 {/* After a confirmed address, only the reader's own districts. */}

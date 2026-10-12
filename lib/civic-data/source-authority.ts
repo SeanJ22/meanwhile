@@ -1,4 +1,5 @@
 import { PLURAL_STATES, PLURAL_PARSER_VERSION } from "../sources/plural/targets.ts";
+import { overlaySourceRows } from "../overlay-geography/reference.ts";
 import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ROUTE_PREFIX, REGISTRATION_TARGETS } from "../registration/publication.ts";
 import { extractedMemberUrl } from "./manual-source-urls.ts";
 import {
@@ -324,16 +325,16 @@ export const SOURCE_AUTHORITIES = {
   },
   "census-geography-relationships": {
     id: "census-geography-relationships",
-    publisher: "U.S. Census Bureau",
+    publisher: "U.S. Census Bureau and the official legislative overlay producers identified in the geography source reference rows",
     trust: "T1_AUTHORITATIVE_STRUCTURED",
-    sourceClass: "FEDERAL_AGENCY",
-    routePrefixes: ["https://www2.census.gov/geo/docs/maps-data/data/rel2020/"],
+    sourceClass: "MULTI_PUBLISHER_PRIMARY",
+    routePrefixes: ["https://www2.census.gov/geo/docs/maps-data/data/rel2020/", "https://www2.census.gov/geo/docs/maps-data/data/grf/", "https://www2.census.gov/geo/docs/maps-data/data/baf2020/", "https://www2.census.gov/geo/tiger/", ...overlaySourceRows.flatMap((source) => [source.fileUrl, source.townDocumentUrl])],
     jurisdictions: ["US"],
     recordClasses: ["CENSUS_GEOGRAPHY"],
-    competentFacts: ["ZCTA-to-geography area overlap (2020 tab20 relationship file)", "Census GEOID"],
+    competentFacts: ["ZCTA-to-geography land-area overlap from exact Census relationship files", "Census GEOID", "official legislative overlay boundary and district code", "election authority district town assignments", "Census tribal-area boundary and identifier"],
     expectedIdentifierKeys: ["type", "geoid", "version"],
     expectedTemporalFields: ["version", "source_through"],
-    horizonSemantics: "Complete for the exact built scopes: each geography's every wholly-or-partly overlapping ZCTA. It never claims a wider geography universe and never substitutes a different Census vintage.",
+    horizonSemantics: "Complete for the exact built scopes: each geography's every wholly-or-partly overlapping ZCTA. Overlay districts publish independently when their polygon town membership agrees with the election authority district document, with both sources attributed; differences remain reported. Every source has exact bytes checksums and an explicit plan. It never claims a wider geography universe or substitutes a different Census vintage.",
     parserVersion: "census-geography-overlaps/1",
     freshnessExpectation: "Owner-invoked version promotion on a new Census relationship-file vintage; never a silent vintage substitution.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },

@@ -41,6 +41,11 @@ function toRef(scope: BuiltScope, g: BuiltGrouping): GeographyRef {
     stateAbbr: g.stateAbbr,
     ...(g.cbsaClass ? { cbsaClass: g.cbsaClass } : {}),
     memberStates: g.memberStates,
+    ...(g.chamber ? { chamber: g.chamber } : {}),
+    ...(g.representation ? { representation: g.representation } : {}),
+    ...(g.geometry ? { geometry: g.geometry } : {}),
+    ...(g.sourceUrls ? { sourceUrls: g.sourceUrls } : {}),
+    ...(g.sourceOrg ? { sourceOrg: g.sourceOrg } : {}),
   };
 }
 

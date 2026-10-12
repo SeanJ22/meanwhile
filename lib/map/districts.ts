@@ -5,6 +5,7 @@ import type { Map as MapLibreMap, MapGeoJSONFeature, FilterSpecification, StyleS
 import { DISTRICT_TYPE_TIER } from "../ocd/district-tiers.ts";
 import { TIER_ACCENT_VAR, type Tier } from "../ocd/tiers.ts";
 import type { DistrictType } from "../state/types.ts";
+import type { GeographyGeometry } from "../census-geography/contract.ts";
 
 /**
  * District overlays: boundaries and identifiers only (a shape, an OCD-ID and
@@ -26,11 +27,14 @@ export interface DistrictFeature {
     label: string;
     /** Census functional status, on place and county-subdivision features. */
     funcstat?: string;
+    representation?: "overlay" | "tribal";
+    nation?: string;
+    sourceUrls?: readonly string[];
+    sourceOrg?: string;
+    collectedAt?: string;
+    boundaryType?: DistrictType;
   };
-  geometry: {
-    type: "Polygon" | "MultiPolygon";
-    coordinates: number[][][] | number[][][][];
-  };
+  geometry: GeographyGeometry;
 }
 
 export interface DistrictCollection {
@@ -154,6 +158,34 @@ export const DISTRICT_TYPES = Object.keys(DISTRICT_LAYERS) as DistrictType[];
 export const DISTRICT_LINE_OPACITY = 0.82;
 
 export const NATIONAL_BOUNDARIES_SOURCE = "national-boundaries";
+export const REPRESENTATION_BOUNDARIES_SOURCE = "representation-boundaries";
+const representationLayerId = (type: DistrictType, part: "fill" | "line" | "label") => `district-${type}-representation-${part}`;
+const representationTypes: readonly DistrictType[] = ["state-house", "state-senate"];
+const representationData = new WeakMap<MapLibreMap, DistrictCollection>();
+
+/** Supplemental districts share the House/Senate controls and remain separate polygons. */
+export function setRepresentationBoundaries(map: MapLibreMap, collection: DistrictCollection, activeTypes: readonly DistrictType[]): void {
+  let source = map.getSource(REPRESENTATION_BOUNDARIES_SOURCE) as { setData(data: DistrictCollection): void } | undefined;
+  if (!source) {
+    map.addSource(REPRESENTATION_BOUNDARIES_SOURCE, { type: "geojson", data: collection, promoteId: "ocdId" });
+    source = map.getSource(REPRESENTATION_BOUNDARIES_SOURCE) as typeof source;
+  } else if (representationData.get(map) !== collection) source.setData(collection);
+  representationData.set(map, collection);
+  for (const type of representationTypes) {
+    for (const part of ["fill", "line", "label"] as const) {
+      const id = representationLayerId(type, part);
+      if (!activeTypes.includes(type)) { if (map.getLayer(id)) map.removeLayer(id); continue; }
+      if (map.getLayer(id) || part === "label" && !map.getStyle()?.glyphs) continue;
+      const layer = districtStyleLayers(type).find(layer => layer.type === (part === "label" ? "symbol" : part))!;
+      const { "source-layer": _sourceLayer, ...geojsonLayer } = layer as LayerSpecification & { "source-layer"?: string };
+      void _sourceLayer;
+      map.addLayer({ ...geojsonLayer, id, source: REPRESENTATION_BOUNDARIES_SOURCE } as LayerSpecification, firstSymbolLayerId(map));
+    }
+  }
+}
+
+const districtTypeForLayer = (id: string) => DISTRICT_TYPES.find(type => lineLayerId(type) === id || fillLayerId(type) === id || representationLayerId(type, "line") === id || representationLayerId(type, "fill") === id);
+const districtPartIds = (type: DistrictType, part: "line" | "fill") => [part === "line" ? lineLayerId(type) : fillLayerId(type), representationLayerId(type, part)];
 /** Keep already drawing boundaries while a remote basemap arrives or changes. */
 export function preserveDistrictStyle(previous: StyleSpecification | undefined, next: StyleSpecification): StyleSpecification {
   const source = previous?.sources[NATIONAL_BOUNDARIES_SOURCE];
@@ -162,7 +194,8 @@ export function preserveDistrictStyle(previous: StyleSpecification | undefined, 
   const layers = next.layers.filter(layer => !layer.id.startsWith("district-"));
   const labels = layers.findIndex(layer => layer.type === "symbol");
   layers.splice(labels < 0 ? layers.length : labels, 0, ...boundaries);
-  return { ...next, sources: { ...next.sources, [NATIONAL_BOUNDARIES_SOURCE]: source }, layers };
+  return { ...next, sources: { ...next.sources, [NATIONAL_BOUNDARIES_SOURCE]: source,
+    ...(previous?.sources[REPRESENTATION_BOUNDARIES_SOURCE] ? { [REPRESENTATION_BOUNDARIES_SOURCE]: previous.sources[REPRESENTATION_BOUNDARIES_SOURCE] } : {}) }, layers };
 }
 const sourceId = (_type: DistrictType) => NATIONAL_BOUNDARIES_SOURCE;
 export const BOUNDARY_ARCHIVE_FALLBACK = "/api/boundaries/census-2025-b24d0345381f69be.pmtiles";
@@ -185,7 +218,7 @@ export const lineLayerId = (type: DistrictType) => `district-${type}-line`;
 export const labelLayerId = (type: DistrictType) => `district-${type}-label`;
 
 /** Every fill layer, for hit-testing a click. */
-export const allFillLayerIds = () => DISTRICT_TYPES.map(fillLayerId);
+export const allFillLayerIds = () => DISTRICT_TYPES.flatMap(type => districtPartIds(type, "fill"));
 
 const LABEL_FONT = ["Noto Sans Regular"];
 
@@ -357,10 +390,11 @@ export function addDistrictLayer(map: MapLibreMap, type: DistrictType): void {
 }
 
 export function removeDistrictLayer(map: MapLibreMap, type: DistrictType): void {
-  for (const id of [labelLayerId(type), lineLayerId(type), fillLayerId(type)]) {
+  for (const id of [labelLayerId(type), lineLayerId(type), fillLayerId(type), ...["label", "line", "fill"].map(part => representationLayerId(type, part as "label" | "line" | "fill"))]) {
     if (map.getLayer(id)) map.removeLayer(id);
   }
   if (!districtLayersPresent(map) && map.getSource(NATIONAL_BOUNDARIES_SOURCE)) map.removeSource(NATIONAL_BOUNDARIES_SOURCE);
+  if (!districtLayersPresent(map) && map.getSource(REPRESENTATION_BOUNDARIES_SOURCE)) map.removeSource(REPRESENTATION_BOUNDARIES_SOURCE);
 }
 
 export function removeDistrictLayers(map: MapLibreMap): void {
@@ -370,6 +404,12 @@ export function removeDistrictLayers(map: MapLibreMap): void {
 /* ------------------------------------------------------------ selection --- */
 
 let selected: { type: DistrictType; ocdId: string } | null = null;
+
+function setBoundaryState(map: MapLibreMap, type: DistrictType, id: string, state: Record<string, boolean>): void {
+  const source = sourceId(type);
+  if (map.getSource(source)) map.setFeatureState({ source, sourceLayer: "districts", id }, state);
+  if (map.getSource(REPRESENTATION_BOUNDARIES_SOURCE)) map.setFeatureState({ source: REPRESENTATION_BOUNDARIES_SOURCE, id }, state);
+}
 
 /**
  * Mark one district selected.
@@ -383,10 +423,7 @@ export function setSelectedDistrict(
   ocdId: string | null,
 ): void {
   if (selected) {
-    const source = sourceId(selected.type);
-    if (map.getSource(source)) {
-      map.setFeatureState({ source, sourceLayer: "districts", id: selected.ocdId }, { selected: false });
-    }
+    setBoundaryState(map, selected.type, selected.ocdId, { selected: false });
     selected = null;
   }
 
@@ -395,7 +432,7 @@ export function setSelectedDistrict(
   const source = sourceId(type);
   if (!map.getSource(source)) return;
 
-  map.setFeatureState({ source, sourceLayer: "districts", id: ocdId }, { selected: true });
+  setBoundaryState(map, type, ocdId, { selected: true });
   selected = { type, ocdId };
 }
 
@@ -411,17 +448,14 @@ export function setNarrowedDistricts(
   entries: { type: DistrictType; ocdId: string }[],
 ): void {
   for (const prev of narrowedApplied) {
-    const source = sourceId(prev.type);
-    if (map.getSource(source)) {
-      map.setFeatureState({ source, sourceLayer: "districts", id: prev.ocdId }, { narrowed: false });
-    }
+    setBoundaryState(map, prev.type, prev.ocdId, { narrowed: false });
   }
   narrowedApplied = [];
 
   for (const entry of entries) {
     const source = sourceId(entry.type);
     if (!map.getSource(source)) continue;
-    map.setFeatureState({ source, sourceLayer: "districts", id: entry.ocdId }, { narrowed: true });
+    setBoundaryState(map, entry.type, entry.ocdId, { narrowed: true });
     narrowedApplied.push(entry);
   }
 }
@@ -433,6 +467,11 @@ export interface DistrictHit {
   ocdId: string;
   label: string;
   state: string;
+  representation?: "overlay" | "tribal";
+  nation?: string;
+  sourceUrls?: readonly string[];
+  sourceOrg?: string;
+  collectedAt?: string;
 }
 
 /** One district currently drawn on screen: the stats card's unit. */
@@ -477,7 +516,7 @@ export function drawnDistrictsOn(
   activeTypes: readonly DistrictType[],
 ): DrawnDistrict[] {
   const layers = activeTypes
-    .map(lineLayerId)
+    .flatMap(type => districtPartIds(type, "line"))
     .filter((id) => Boolean(map.getLayer(id)));
   if (layers.length === 0) return [];
 
@@ -491,9 +530,7 @@ export function drawnDistrictsOn(
   const seen = new Set<string>();
   const drawn: DrawnDistrict[] = [];
   for (const feature of features) {
-    const type = DISTRICT_TYPES.find(
-      (t) => lineLayerId(t) === feature.layer.id,
-    );
+    const type = districtTypeForLayer(feature.layer.id);
     if (!type) continue;
     const ocdId = String(feature.properties?.ocdId ?? "");
     if (!ocdId || seen.has(ocdId)) continue;
@@ -520,7 +557,7 @@ export function districtsAt(
   activeTypes: readonly DistrictType[],
 ): DistrictHit[] {
   const layers = activeTypes
-    .map(fillLayerId)
+    .flatMap(type => districtPartIds(type, "fill"))
     .filter((id) => Boolean(map.getLayer(id)));
 
   if (layers.length === 0) return [];
@@ -536,9 +573,7 @@ export function districtsAt(
   const hits: DistrictHit[] = [];
 
   for (const feature of features as MapGeoJSONFeature[]) {
-    const type = DISTRICT_TYPES.find(
-      (t) => fillLayerId(t) === feature.layer.id,
-    );
+    const type = districtTypeForLayer(feature.layer.id);
     if (!type) continue;
 
     const ocdId = String(feature.properties?.ocdId ?? "");
@@ -548,14 +583,24 @@ export function districtsAt(
     hits.push({
       type,
       tier: DISTRICT_TYPE_TIER[type],
-      typeLabel: DISTRICT_LAYERS[type].label,
+      typeLabel: feature.properties?.representation === "tribal" ? "Tribal representative" : feature.properties?.representation === "overlay" ? "Overlay district" : DISTRICT_LAYERS[type].label,
       ocdId,
       label: String(feature.properties?.label ?? ocdId),
       state: String(feature.properties?.state ?? ""),
+      representation: feature.properties?.representation as DistrictHit["representation"],
+      nation: typeof feature.properties?.nation === "string" ? feature.properties.nation : undefined,
+      sourceUrls: stringArrayProperty(feature.properties?.sourceUrls),
+      sourceOrg: typeof feature.properties?.sourceOrg === "string" ? feature.properties.sourceOrg : undefined,
+      collectedAt: typeof feature.properties?.collectedAt === "string" ? feature.properties.collectedAt : undefined,
     });
   }
 
   return hits;
+}
+
+function stringArrayProperty(value: unknown): readonly string[] | undefined {
+  if (typeof value === "string") { try { value = JSON.parse(value); } catch { return undefined; } }
+  return Array.isArray(value) && value.every(item => typeof item === "string") ? value : undefined;
 }
 
 /**
@@ -568,7 +613,7 @@ export function boundsOfDistrict(
   type: DistrictType,
   ocdId: string,
 ): [[number, number], [number, number]] | null {
-  const layers = [lineLayerId(type), fillLayerId(type)].filter((id) =>
+  const layers = [...districtPartIds(type, "line"), ...districtPartIds(type, "fill")].filter((id) =>
     Boolean(map.getLayer(id)),
   );
   if (layers.length === 0) return null;
@@ -628,6 +673,15 @@ export async function fullBoundsOfDistrict(
   type: DistrictType,
   ocdId: string,
 ): Promise<[[number, number], [number, number]] | null> {
+  const supplemental = representationData.get(map)?.features.find(feature => feature.properties.ocdId === ocdId);
+  if (supplemental) {
+    const polygons = supplemental.geometry.type === "Polygon" ? [supplemental.geometry.coordinates] : supplemental.geometry.coordinates;
+    let west = Infinity, south = Infinity, east = -Infinity, north = -Infinity;
+    for (const polygon of polygons) for (const ring of polygon) for (const [lng, lat] of ring) {
+      west = Math.min(west, lng); south = Math.min(south, lat); east = Math.max(east, lng); north = Math.max(north, lat);
+    }
+    return Number.isFinite(west) ? [[west, south], [east, north]] : null;
+  }
   const layers = [lineLayerId(type), fillLayerId(type)].filter(id => Boolean(map.getLayer(id)));
   if (!layers.length) return null;
   const feature = map.queryRenderedFeatures({layers}).find(f => String(f.properties?.ocdId) === ocdId);
@@ -663,7 +717,7 @@ export function onSettledDistrictChange(map: MapLibreMap, run: () => void): () =
     // Vector tile completions omit sourceDataType; "content" only describes
     // the source metadata/update. Count each rendered boundary batch, including
     // cached tiles becoming visible, while still ignoring all basemap traffic.
-    if (event.sourceId === NATIONAL_BOUNDARIES_SOURCE) schedule();
+    if (event.sourceId === NATIONAL_BOUNDARIES_SOURCE || event.sourceId === REPRESENTATION_BOUNDARIES_SOURCE) schedule();
   };
 
   schedule();

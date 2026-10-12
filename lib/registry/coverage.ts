@@ -187,6 +187,10 @@ export interface Seat {
   ocdId: string;
   label: string;
   divisionType: DivisionType;
+  representation?: "overlay" | "tribal";
+  nation?: string;
+  chamber?: string;
+  sourceUrls?: readonly string[];
   tier: Tier;
   /**
    * Who currently holds this seat, where a sourced record exists. Empty means we have no record, never
@@ -277,6 +281,7 @@ const SEAT_TYPES: ReadonlySet<DivisionType> = new Set<DivisionType>([
   "cd",
   "sldu",
   "sldl",
+  "aiannh",
 ]);
 
 /**
@@ -359,6 +364,10 @@ export function summarizeCoverage(
       ocdId: d.ocdId,
       label: d.label,
       divisionType: d.divisionType,
+      representation: d.representation,
+      nation: d.nation,
+      chamber: d.chamber,
+      sourceUrls: d.sourceUrls,
       tier: d.tier,
       representatives: d.tier === "local"
         ? heldDivisionRepresentatives(d.ocdId, holdersFor(officials, d.ocdId))

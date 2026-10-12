@@ -24,6 +24,7 @@ import {
 import { ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS } from "../lib/sources/acquisition-deadline.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
+import { readPriorSupplementalScopes } from "../lib/census-geography/supplemental-refresh.ts";
 
 installNeonRequestDeadline();
 prepareProductionCivicDataWrite();
@@ -32,12 +33,14 @@ const store = new PostgresRoutineDataStore();
 
 async function main(): Promise<void> {
   let candidate: RoutineCandidate;
+  let sourceFailures: BuiltDataset["sourceFailures"];
   try {
+    const previousSupplementalScopes = await readPriorSupplementalScopes();
     const dataset = await withPublisherAcquisitionDeadline(
       "Census geography relationships",
       ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS,
       async (signal): Promise<BuiltDataset> => {
-        const built = await acquireDataset({ signal });
+        const built = await acquireDataset({ signal, previousSupplementalScopes });
         // A zero-overlap scope is a failed extraction, never an empty publication.
         if (built.scopes.length === 0 || built.scopes.some((s) => s.zctaEdgeCount === 0)) {
           throw sourceAcquisitionFailure(
@@ -49,6 +52,8 @@ async function main(): Promise<void> {
       },
     );
     candidate = censusGeographyCandidate(dataset);
+    sourceFailures = dataset.sourceFailures;
+    for (const discrepancy of dataset.sourceDiscrepancies ?? []) console.log("GEOGRAPHY_SOURCE_DISCREPANCY=" + JSON.stringify(discrepancy));
   } catch (error) {
     if (!isSourceAcquisitionFailure(error)) throw error;
     const failed = await recordRegisteredSourceAcquisitionFailure({
@@ -67,6 +72,12 @@ async function main(): Promise<void> {
     candidate.retrieval.retrievedAt,
   );
   printSourceRunnerReceipt(CENSUS_GEO_CONTRACT_ID, candidate, outcome);
+  if (sourceFailures?.length) {
+    const failure = await recordRegisteredSourceAcquisitionFailure({ store, contractId: CENSUS_GEO_CONTRACT_ID,
+      failure: sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", sourceFailures.map(row => `${row.sourceId}: ${row.reason}`).join("; ")) });
+    console.log(failure.line);
+    process.exitCode = 2;
+  }
   if (!outcome.promoted) process.exitCode = 2;
 }
 

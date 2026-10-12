@@ -1,6 +1,7 @@
 "use client";
 
 import { WorkingOnIt } from "@/components/demand/working-on-it";
+import { legislativeRepresentationLabel, tribalSeatDescription, tribalSeatReferencesFor, tribalSeatCardSources } from "@/lib/officials/tribal-seats";
 
 import { OfficeCard } from "./popup/office-card";
 import { useOfficePins } from "@/hooks/use-office-pins";
@@ -2303,6 +2304,15 @@ function districtSubject(
     resolved?.holders.length
       ? resolved.holders
       : representationForDivision(coverage, district.ocdId);
+  const districtRepresentationLabel = legislativeRepresentationLabel(typeFromOcdId(district.ocdId), district.representation);
+  const tribalReferences = district.representation === "tribal"
+    ? tribalSeatReferencesFor(district.state).filter(reference => reference.nation === district.nation) : [];
+  const boundarySources = district.sourceUrls?.map((sourceUrl, index) => ({
+    sourceUrl,
+    sourceOrg: index === 0 && district.sourceOrg ? district.sourceOrg : new URL(sourceUrl).hostname,
+    collectedAt: district.collectedAt ?? "",
+    verifiedAt: null,
+  }));
   return {
     // The division's own ocd-id.
     subjectId: district.ocdId,
@@ -2317,6 +2327,8 @@ function districtSubject(
       { label: "Type", value: district.typeLabel },
       { label: "Tier", value: TIER_LABEL[district.tier] },
       { label: "State", value: district.state, mono: true },
+      ...(districtRepresentationLabel ? [{label:"District",value:districtRepresentationLabel}] : []),
+      ...(district.representation === "tribal" && district.nation ? [{label:"Tribal seat",value:tribalSeatDescription(district.nation)}] : []),
       /* Every distinct governing body's own site; none is elected to speak for the division. */
       ...bodyHomepageFacts(coverage, district.ocdId),
     ],
@@ -2331,7 +2343,8 @@ function districtSubject(
     ),
     meetings,
     /* Built from the same rows the card renders. */
-    sources: districtCardSources(roster, meetings),
+    sources: [...districtCardSources(roster, meetings, undefined, boundarySources),
+      ...tribalReferences.flatMap(tribalSeatCardSources)],
   };
 }
 

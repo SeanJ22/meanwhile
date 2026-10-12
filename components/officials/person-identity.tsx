@@ -2,6 +2,7 @@
 
 import { personInitials } from "@/lib/officials/person-name";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
+import { legislativeRepresentationLabel, tribalSeatForHolder } from "@/lib/officials/tribal-seats";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyColorVar } from "@/lib/officials/party-color";
 import { readerPartyLabel } from "@/lib/text/reader-names";
@@ -84,6 +85,7 @@ export function PersonIdentity({
   const until = identityOnly ? null : inSeatUntil(holder.termEnd);
   const age = large ? ageFrom(holder.birthDate, new Date()) : null;
   const outlined = identityOnly ? [] : chips;
+  const representation = holder.representation ?? (tribalSeatForHolder(holder) ? "tribal" : undefined);
 
   return (
     <div className={`id-header ${large ? "id-header--lg" : ""}`}>
@@ -114,6 +116,7 @@ export function PersonIdentity({
             {readerOfficeTitle(holder.officeTitle)}
             {/* A seat label identical to the title is not repeated. */}
             {seatLabel && seatLabel !== holder.officeTitle ? ` · ${seatLabel}` : ""}
+            {representation && ` · ${legislativeRepresentationLabel("", representation)}`}
           </p>
         )}
 

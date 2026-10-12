@@ -17,16 +17,20 @@ import {
   CENSUS_GEO_SOURCE_ID,
 } from "../lib/census-geography/publication.ts";
 import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
+import { overlaySourceRows } from "../lib/overlay-geography/reference.ts";
 
 const NOW = "2026-09-21T12:00:00.000Z";
 function azDataset(): BuiltDataset {
   return JSON.parse(readFileSync("lib/census-geography/bootstrap-az.json", "utf8")) as BuiltDataset;
 }
 
-test("census-geography-relationships is an official .gov source that auto-qualifies (owner policy)", () => {
+test("routine geography accepts Census and exact reference-declared official overlay sources", () => {
   const auth = SOURCE_AUTHORITIES["census-geography-relationships"];
   assert.ok(auth, "the census-geography-relationships source authority exists");
-  assert.ok(auth.routePrefixes.length > 0 && auth.routePrefixes.every((prefix) => isOfficialSource(prefix)), "every route is on an official .gov site");
+  const overlayRoutes = new Set(overlaySourceRows.flatMap((source) => [source.fileUrl, source.townDocumentUrl]));
+  assert.ok(auth.routePrefixes.length > 0 && auth.routePrefixes.every((prefix) => isOfficialSource(prefix) || overlayRoutes.has(prefix)), "every route is official government or an exact registered official overlay source");
+  assert.equal(auth.sourceClass, "MULTI_PUBLISHER_PRIMARY");
+  assert.ok(overlaySourceRows.every((source) => source.sourceOrg && isOfficialSource(source.officialLinkUrl)));
   assert.equal(auth.routineAutoPromotion, true);
 });
 

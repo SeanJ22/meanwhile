@@ -81,6 +81,9 @@ export async function GET(
       label: known?.label ?? null,
       divisionType: known?.divisionType ?? null,
       tier: known?.tier ?? null,
+      representation: known?.representation,
+      nation: known?.nation,
+      sourceUrls: known?.sourceUrls,
       holderStatus: holders.length > 0 ? "HELD"
         : !metadata.available || /\/(?:sldu|sldl):/.test(ocdId) ? "HOLDING_UNAVAILABLE" : "NOT_RECORDED",
       holders,

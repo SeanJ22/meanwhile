@@ -51,6 +51,7 @@ export interface SessionAddressScope {
    * those rows and nothing else. Partial ambiguity resolves partially.
    */
   splitLevels: string[];
+  excludedDivisionIds?: string[];
   /** When it was resolved, so a surface can say "you told us this" honestly. */
   resolvedAt: string;
 }
@@ -88,6 +89,8 @@ export function readSessionAddress(): SessionAddressScope | null {
       splitLevels: Array.isArray(parsed.splitLevels)
         ? parsed.splitLevels.filter((id): id is string => typeof id === "string")
         : [],
+      excludedDivisionIds: Array.isArray(parsed.excludedDivisionIds)
+        ? parsed.excludedDivisionIds.filter((id): id is string => typeof id === "string") : [],
       streetLabel: typeof parsed.streetLabel === "string" ? parsed.streetLabel : "",
       resolvedAt: parsed.resolvedAt,
     };

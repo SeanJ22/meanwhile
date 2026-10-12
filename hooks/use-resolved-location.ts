@@ -53,6 +53,7 @@ function snapshotFor(raw: string, zip: string | null): ResolvedLocation {
           zip,
           confirmedDivisionIds: scope.divisionIds,
           splitLevels: scope.splitLevels,
+          excludedDivisionIds: scope.excludedDivisionIds,
         };
   return cached;
 }

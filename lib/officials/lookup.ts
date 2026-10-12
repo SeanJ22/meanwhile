@@ -4,6 +4,7 @@ import type { Provenance } from "../sources/types.ts";
 import { campaignSiteFor } from "./campaign-sites.ts";
 import { socialAccountsOf } from "./social-platforms.ts";
 import { personIdentityKeys } from "./people-identity.ts";
+import { tribalSeatForMembership } from "./tribal-seats.ts";
 import type {
   Officeholder,
   OfficeholderSet,
@@ -14,6 +15,8 @@ import type {
 
 /** What a surface needs to render a person honestly: who they are and where that claim came from. */
 export interface SeatHolder {
+  representation?: "overlay" | "tribal";
+  nation?: string;
   fieldSources?: Record<string, Provenance>;
   id: string;
   personId?: string;
@@ -63,7 +66,10 @@ export type OfficeholderIndex = Map<string, SeatHolder[]>;
 export function seatHolderForMembership(holder: SeatHolder, membershipId?: string): SeatHolder | null {
   const membership = membershipId ? holder.memberships?.find(row=>row.id === membershipId && row.current !== false) : undefined;
   if (!membership) return membershipId ? null : holder;
+  const tribal = tribalSeatForMembership(membership);
   return {...holder,officeTitle:membership.officeTitle ?? holder.officeTitle,
+    representation: membership.representation ?? (tribal ? "tribal" : undefined),
+    nation: membership.nation ?? tribal?.nation,
     officeJurisdictionOcdId:membership.divisionId ?? holder.officeJurisdictionOcdId,
     chamber:membership.chamber,termStart:membership.termStart ?? null,termEnd:membership.termEnd ?? null,
     sourceUrl:membership.sourceUrl};
@@ -124,7 +130,9 @@ export function indexByDivision(
       // A link with no matching person is a broken artifact, not something to
       // paper over. Skipping it is right; rendering an empty name is not.
       if (!person) continue;
-      const holder = seatHolderForMembership(toSeatHolder(person, photos), link.membershipId);
+      const selected = seatHolderForMembership(toSeatHolder(person, photos), link.membershipId);
+      const holder = selected ? {...selected, representation: link.representation ?? selected.representation,
+        nation: link.nation ?? selected.nation} : null;
       if (!holder) continue;
 
       const existing = index.get(link.ocdId);

@@ -1,4 +1,4 @@
-import type { CbsaClass, FractionBasis, GeographyType, GeographyVersion } from "./contract.ts";
+import type { CbsaClass, FractionBasis, GeographyType, GeographyVersion, RepresentationGeography } from "./contract.ts";
 
 export interface BuiltOverlap {
   readonly zcta5: string;
@@ -8,7 +8,7 @@ export interface BuiltOverlap {
   readonly fraction: number | null;
 }
 
-export interface BuiltGrouping {
+export interface BuiltGrouping extends RepresentationGeography {
   readonly geoid: string;
   readonly ocdId: string | null;
   readonly label: string;
@@ -40,6 +40,9 @@ export interface BuiltDataset {
    * states its actual coverage and is never labelled national.
    */
   readonly coverage: string;
+  /** District/source disagreements reported during acquisition; agreeing districts publish independently. */
+  readonly sourceDiscrepancies?: readonly import("../overlay-geography/build.ts").SourceDiscrepancy[];
+  readonly sourceFailures?: readonly GeographySourceFailure[];
   readonly scopes: readonly BuiltScope[];
   /**
    * Every Census ZCTA present in this build (union across scopes; the county
@@ -48,4 +51,12 @@ export interface BuiltDataset {
    * is a ZCTA from one that is outside Census ZCTA coverage.
    */
   readonly zctaUniverse: readonly string[];
+}
+
+export interface GeographySourceFailure {
+  readonly type: GeographyType;
+  readonly sourceId: string;
+  readonly version: string;
+  readonly sourceUrls: readonly string[];
+  readonly reason: string;
 }

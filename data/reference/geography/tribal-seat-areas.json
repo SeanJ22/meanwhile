@@ -1,0 +1,167 @@
+[
+  {
+    "state": "ME",
+    "stateFips": "23",
+    "chamber": "lower",
+    "district": "Penobscot Nation",
+    "nation": "Penobscot Nation",
+    "aiannhAreaIds": [
+      "2760R",
+      "2760T"
+    ],
+    "officialRosterUrl": "https://web.legislature.maine.gov/house/MemberProfiles/List?sort=seat",
+    "sourceOrg": "Maine Legislature",
+    "sourceUrls": [
+      "https://web.legislature.maine.gov/house/MemberProfiles/List?sort=seat",
+      "https://github.com/DOI-DO/census-tribal/blob/286ba0ce7943d5a4092f7cfb3cb3cf94cc9c284d/data/census-tribal_FRNEntityCICD_CensusGeography.csv",
+      "https://www2.census.gov/geo/docs/reference/codes2020/national_aiannh2020.txt",
+      "https://legislature.maine.gov/uploads/visual_edit/132nd-joint-rules-2.pdf",
+      "https://legislature.maine.gov/9261"
+    ],
+    "sourceRecords": [
+      {
+        "url": "https://web.legislature.maine.gov/house/MemberProfiles/List?sort=seat",
+        "org": "Maine Legislature",
+        "checkedAt": "2026-10-12",
+        "what": "The current tribal representative roster"
+      },
+      {
+        "url": "https://github.com/DOI-DO/census-tribal/blob/286ba0ce7943d5a4092f7cfb3cb3cf94cc9c284d/data/census-tribal_FRNEntityCICD_CensusGeography.csv",
+        "org": "U.S. Department of the Interior",
+        "checkedAt": "2026-10-12",
+        "what": "The nation's Census area identifiers"
+      },
+      {
+        "url": "https://www2.census.gov/geo/docs/reference/codes2020/national_aiannh2020.txt",
+        "org": "U.S. Census Bureau",
+        "what": "The national tribal area code reference"
+      },
+      {
+        "url": "https://legislature.maine.gov/uploads/visual_edit/132nd-joint-rules-2.pdf",
+        "org": "Maine Legislature",
+        "checkedAt": "2026-10-12",
+        "what": "The tribal representative's legislative role"
+      },
+      {
+        "url": "https://legislature.maine.gov/9261",
+        "org": "Maine Legislature",
+        "checkedAt": "2026-10-12",
+        "what": "The tribal seats and their history"
+      }
+    ],
+    "aiannhIds": [
+      "2760"
+    ]
+  },
+  {
+    "state": "ME",
+    "stateFips": "23",
+    "chamber": "lower",
+    "district": "Passamaquoddy Tribe",
+    "nation": "Passamaquoddy Tribe",
+    "aiannhAreaIds": [
+      "1575R",
+      "2695T",
+      "2850R"
+    ],
+    "officialRosterUrl": "https://web.legislature.maine.gov/house/MemberProfiles/List?sort=seat",
+    "sourceOrg": "Maine Legislature",
+    "sourceUrls": [
+      "https://web.legislature.maine.gov/house/MemberProfiles/List?sort=seat",
+      "https://github.com/DOI-DO/census-tribal/blob/286ba0ce7943d5a4092f7cfb3cb3cf94cc9c284d/data/census-tribal_FRNEntityCICD_CensusGeography.csv",
+      "https://www2.census.gov/geo/docs/reference/codes2020/national_aiannh2020.txt",
+      "https://legislature.maine.gov/uploads/visual_edit/132nd-joint-rules-2.pdf",
+      "https://legislature.maine.gov/9261"
+    ],
+    "sourceRecords": [
+      {
+        "url": "https://web.legislature.maine.gov/house/MemberProfiles/List?sort=seat",
+        "org": "Maine Legislature",
+        "checkedAt": "2026-10-12",
+        "what": "The current tribal representative roster"
+      },
+      {
+        "url": "https://github.com/DOI-DO/census-tribal/blob/286ba0ce7943d5a4092f7cfb3cb3cf94cc9c284d/data/census-tribal_FRNEntityCICD_CensusGeography.csv",
+        "org": "U.S. Department of the Interior",
+        "checkedAt": "2026-10-12",
+        "what": "The nation's Census area identifiers"
+      },
+      {
+        "url": "https://www2.census.gov/geo/docs/reference/codes2020/national_aiannh2020.txt",
+        "org": "U.S. Census Bureau",
+        "what": "The national tribal area code reference"
+      },
+      {
+        "url": "https://legislature.maine.gov/uploads/visual_edit/132nd-joint-rules-2.pdf",
+        "org": "Maine Legislature",
+        "checkedAt": "2026-10-12",
+        "what": "The tribal representative's legislative role"
+      },
+      {
+        "url": "https://legislature.maine.gov/9261",
+        "org": "Maine Legislature",
+        "checkedAt": "2026-10-12",
+        "what": "The tribal seats and their history"
+      }
+    ],
+    "aiannhIds": [
+      "1575",
+      "2695",
+      "2850"
+    ]
+  },
+  {
+    "state": "ME",
+    "stateFips": "23",
+    "chamber": "lower",
+    "district": "Houlton Band of Maliseet Indians",
+    "nation": "Houlton Band of Maliseet Indians",
+    "aiannhAreaIds": [
+      "1530R",
+      "1530T"
+    ],
+    "officialRosterUrl": "https://web.legislature.maine.gov/house/MemberProfiles/List?sort=seat",
+    "sourceOrg": "Maine Legislature",
+    "sourceUrls": [
+      "https://web.legislature.maine.gov/house/MemberProfiles/List?sort=seat",
+      "https://github.com/DOI-DO/census-tribal/blob/286ba0ce7943d5a4092f7cfb3cb3cf94cc9c284d/data/census-tribal_FRNEntityCICD_CensusGeography.csv",
+      "https://www2.census.gov/geo/docs/reference/codes2020/national_aiannh2020.txt",
+      "https://legislature.maine.gov/uploads/visual_edit/132nd-joint-rules-2.pdf",
+      "https://legislature.maine.gov/9261"
+    ],
+    "sourceRecords": [
+      {
+        "url": "https://web.legislature.maine.gov/house/MemberProfiles/List?sort=seat",
+        "org": "Maine Legislature",
+        "checkedAt": "2026-10-12",
+        "what": "The current tribal representative roster"
+      },
+      {
+        "url": "https://github.com/DOI-DO/census-tribal/blob/286ba0ce7943d5a4092f7cfb3cb3cf94cc9c284d/data/census-tribal_FRNEntityCICD_CensusGeography.csv",
+        "org": "U.S. Department of the Interior",
+        "checkedAt": "2026-10-12",
+        "what": "The nation's Census area identifiers"
+      },
+      {
+        "url": "https://www2.census.gov/geo/docs/reference/codes2020/national_aiannh2020.txt",
+        "org": "U.S. Census Bureau",
+        "what": "The national tribal area code reference"
+      },
+      {
+        "url": "https://legislature.maine.gov/uploads/visual_edit/132nd-joint-rules-2.pdf",
+        "org": "Maine Legislature",
+        "checkedAt": "2026-10-12",
+        "what": "The tribal representative's legislative role"
+      },
+      {
+        "url": "https://legislature.maine.gov/9261",
+        "org": "Maine Legislature",
+        "checkedAt": "2026-10-12",
+        "what": "The tribal seats and their history"
+      }
+    ],
+    "aiannhIds": [
+      "1530"
+    ]
+  }
+]

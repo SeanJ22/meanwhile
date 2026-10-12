@@ -69,7 +69,7 @@ export function notePath(dataset: ReferenceDataset): string {
 
 /** Everything actually in the directory, for the inventory gate. */
 export function referenceFiles(): string[] {
-  return readdirSync(REFERENCE_DIR).sort();
+  return readdirSync(REFERENCE_DIR, { withFileTypes: true }).filter((entry) => entry.isFile()).map((entry) => entry.name).sort();
 }
 
 import { parseCsv } from "./csv.ts";

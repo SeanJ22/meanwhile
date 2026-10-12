@@ -82,6 +82,8 @@ export interface PersonMembership {
   readonly level?: OfficeLevel;
   readonly current?: boolean;
   readonly divisionId?: string;
+  readonly representation?: "overlay" | "tribal";
+  readonly nation?: string;
   readonly termStart?: string | null;
   readonly termEnd?: string | null;
   readonly sourceUrl: string;
@@ -119,6 +121,8 @@ export interface OfficeholderDivision {
   ocdId: OcdId;
   /** The exact current role, when a person serves more than one office. */
   membershipId?: string;
+  representation?: "overlay" | "tribal";
+  nation?: string;
   /** Set where the seat belongs to a specific body rather than a district. */
   bodyId: string | null;
 }

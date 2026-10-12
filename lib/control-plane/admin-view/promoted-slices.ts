@@ -33,19 +33,19 @@ export interface ContainerSlice {
   readonly overlaps: readonly OverlapSlice[] | null;
 }
 
-const GEO_TYPES: readonly GeographyType[] = ["county", "congressional_district", "cbsa", "state_leg_upper", "state_leg_lower"];
+const GEO_TYPES: readonly GeographyType[] = ["county", "congressional_district", "cbsa", "state_leg_upper", "state_leg_lower", "overlay_district", "aiannh"];
 
 /** A `scope` row per published scope, so a type the pointer does not carry is never read as "none there". */
 function groupingsQuery(withOverlaps: boolean, where: string): string {
   const grouping =
     "g->>'geoid', g->>'ocdId', g->>'label', g->>'stateFips', g->>'stateAbbr', g->>'cbsaClass', g->'memberStates'" +
-    (withOverlaps ? ", g->'overlaps'" : ", NULL::jsonb");
+    (withOverlaps ? ", g->'overlaps'" : ", NULL::jsonb") + ", g - 'overlaps'";
   return (
     "WITH scopes AS MATERIALIZED (SELECT x AS scope FROM civic_data_promotions p" +
     " CROSS JOIN LATERAL jsonb_array_elements(p.payload->'scopes') x WHERE p.record_class = $1 AND p.scope = $2)" +
     " SELECT 'scope' AS row_kind, scope->>'type' AS type, scope->>'version' AS version, scope->'versionMeta'->>'plan' AS plan," +
     " NULL::text AS geoid, NULL::text AS ocd_id, NULL::text AS label, NULL::text AS state_fips, NULL::text AS state_abbr," +
-    " NULL::text AS cbsa_class, NULL::jsonb AS member_states, NULL::jsonb AS overlaps, scope->'versionMeta' AS version_meta FROM scopes" +
+    " NULL::text AS cbsa_class, NULL::jsonb AS member_states, NULL::jsonb AS overlaps, NULL::jsonb AS representation_geography, scope->'versionMeta' AS version_meta FROM scopes" +
     " UNION ALL SELECT 'grouping', scope->>'type', scope->>'version', scope->'versionMeta'->>'plan', " +
     grouping + ", scope->'versionMeta'" +
     ` FROM scopes CROSS JOIN LATERAL jsonb_array_elements(scope->'groupings') g WHERE scope->>'type' = ANY($3::text[]) AND ${where}`
@@ -56,6 +56,8 @@ export interface ScopeSlice {
   readonly type: GeographyType;
   readonly version: string;
   readonly plan: string;
+  readonly stateFips?: string;
+  readonly chamber?: "upper" | "lower";
   readonly applicability?: readonly import("../../census-geography/selection.ts").GeographyApplicability[];
   readonly retrievalComplete?: boolean;
   readonly sourceUrls?: readonly string[];
@@ -94,6 +96,7 @@ export function containerOfRow(row: Row, withOverlaps: boolean): ContainerSlice 
   const cbsaClass = text(row.cbsa_class) as CbsaClass | null;
   const members = Array.isArray(row.member_states) ? (row.member_states as unknown[]).filter((s): s is string => typeof s === "string") : [];
   const ref: GeographyRef = {
+    ...(row.representation_geography && typeof row.representation_geography === "object" ? row.representation_geography as Partial<GeographyRef> : {}),
     type,
     geoid,
     version,
@@ -113,8 +116,9 @@ export function geographyOfRows(rows: readonly Row[], withOverlaps: boolean): Ge
   for (const row of rows) {
     if (row.row_kind === "scope") {
       const version = text(row.version);
-      const meta = row.version_meta as { applicability?: ScopeSlice["applicability"]; retrievalComplete?: boolean; provenance?: { sourceUrls?: readonly string[]; computedAt?: string } } | undefined;
+      const meta = row.version_meta as { stateFips?: string; chamber?: ScopeSlice["chamber"]; applicability?: ScopeSlice["applicability"]; retrievalComplete?: boolean; provenance?: { sourceUrls?: readonly string[]; computedAt?: string } } | undefined;
       if (isGeographyType(row.type) && version !== null) scopes.push({ type: row.type, version, plan: text(row.plan) ?? "",
+        stateFips: meta?.stateFips, chamber: meta?.chamber,
         ...(Array.isArray(meta?.applicability) ? { applicability: meta.applicability } : {}),
         ...(typeof meta?.retrievalComplete === "boolean" ? { retrievalComplete: meta.retrievalComplete } : {}),
         ...(meta?.provenance ? { sourceUrls: meta.provenance.sourceUrls, observedAt: meta.provenance.computedAt } : {}) });

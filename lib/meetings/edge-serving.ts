@@ -378,10 +378,11 @@ export async function ensureReaderAuthorityEdge(
   return bundle;
 }
 
-async function readerAuthorityEdge(
+/** Load only requested authority families; callers without meetings do not need meeting doors. */
+export async function readerAuthorityEdge(
   manifest: Pick<ReaderManifest, "authorityArtifacts" | "registrations" | "stateLegislators">,
-  store: ReaderArtifactStore | null,
-  families: readonly AuthorityFamily[],
+  store: ReaderArtifactStore | null = resolveReaderArtifactStore(),
+  families: readonly AuthorityFamily[] = AUTHORITY_FAMILIES,
 ): Promise<ReaderAuthorityEdgeBundle> {
   const refs = manifest.authorityArtifacts;
   const registrationRefs = manifest.registrations;

@@ -2,8 +2,8 @@ import type { BuiltDataset } from "./dataset.ts";
 import type { GeographyType } from "./contract.ts";
 import type { CodeSlice, ContainerSlice, ScopeSlice, Slice } from "../control-plane/admin-view/promoted-slices.ts";
 
-const TYPES: readonly GeographyType[] = ["congressional_district", "state_leg_upper", "state_leg_lower"];
-export const censusDistrictEdgeVersion = (sourceVersion: string): string => `census-districts/v2:${sourceVersion}`;
+export const REPRESENTATION_GEOGRAPHY_TYPES: readonly GeographyType[] = ["congressional_district", "state_leg_upper", "state_leg_lower", "overlay_district", "aiannh"];
+export const censusDistrictEdgeVersion = (sourceVersion: string): string => `census-districts/v3:${sourceVersion}`;
 
 export interface CensusDistrictEdge {
   readonly formatVersion: 1;
@@ -17,9 +17,10 @@ export function buildCensusDistrictEdge(dataset: BuiltDataset, sourceVersion: st
   const containers: Omit<ContainerSlice, "overlaps">[] = [];
   const codes: Record<string, [number, boolean, number | null][]> = {};
   for (const zip of dataset.zctaUniverse) codes[zip] = [];
-  const scopes = dataset.scopes.filter(scope => TYPES.includes(scope.type));
+  const scopes = dataset.scopes.filter(scope => REPRESENTATION_GEOGRAPHY_TYPES.includes(scope.type));
   for (const scope of scopes) {
     for (const group of scope.groupings) {
+      if (scope.type === "aiannh" && group.representation !== "tribal") continue;
       const { overlaps, ...identity } = group;
       const index = containers.length;
       containers.push({ ref: { ...identity, type: scope.type, version: scope.version }, plan: scope.versionMeta.plan });
@@ -28,6 +29,7 @@ export function buildCensusDistrictEdge(dataset: BuiltDataset, sourceVersion: st
   }
   return { formatVersion: 1, versionId: censusDistrictEdgeVersion(sourceVersion),
     scopes: scopes.map(scope => ({ type: scope.type, version: scope.version, plan: scope.versionMeta.plan,
+      stateFips: scope.versionMeta.stateFips, chamber: scope.versionMeta.chamber,
       applicability: scope.versionMeta.applicability, retrievalComplete: scope.versionMeta.retrievalComplete,
       sourceUrls: scope.versionMeta.provenance.sourceUrls, observedAt: scope.versionMeta.provenance.computedAt })), containers, codes };
 }

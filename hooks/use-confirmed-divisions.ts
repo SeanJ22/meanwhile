@@ -16,6 +16,9 @@ import { levelKeyOf, type ResolvedLocation } from "@/lib/state/resolved-location
 export type DivisionStatus = "resolved" | "looking" | "unsourced" | "unavailable";
 
 export interface ConfirmedDivision {
+  readonly representation?: "overlay" | "tribal";
+  readonly nation?: string;
+  readonly sourceUrls?: readonly string[];
   readonly ocdId: string;
   /** The division's own name. Null until known — never an OCD-ID, never a guess. */
   readonly label: string | null;
@@ -26,6 +29,9 @@ export interface ConfirmedDivision {
 }
 
 interface Answer {
+  representation?: "overlay" | "tribal";
+  nation?: string;
+  sourceUrls?: readonly string[];
   label: string | null;
   divisionType: string | null;
   tier: string | null;
@@ -80,6 +86,9 @@ export function useConfirmedDivisions(
               label?: string | null;
               divisionType?: string | null;
               tier?: string | null;
+              representation?: "overlay" | "tribal";
+              nation?: string;
+              sourceUrls?: readonly string[];
               holders?: SeatHolder[];
             } | null,
           ) => {
@@ -104,6 +113,9 @@ export function useConfirmedDivisions(
                 label: body.label ?? null,
                 divisionType: body.divisionType ?? null,
                 tier: body.tier ?? null,
+                representation: body.representation,
+                nation: body.nation,
+                sourceUrls: body.sourceUrls,
                 holders: body.holders ?? [],
                 failed: false,
               },
@@ -156,6 +168,9 @@ export function useConfirmedDivisions(
       label: answer.label,
       divisionType: answer.divisionType ?? levelKeyOf(ocdId),
       tier: answer.tier,
+      representation: answer.representation,
+      nation: answer.nation,
+      sourceUrls: answer.sourceUrls,
       holders,
       status: holders.length > 0 ? ("resolved" as const) : ("unsourced" as const),
     };

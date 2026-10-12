@@ -15,7 +15,7 @@ export function censusGeographyCandidate(dataset: BuiltDataset): RoutineCandidat
   const edges = dataset.scopes.reduce((n, s) => n + s.zctaEdgeCount, 0);
   const groupings = dataset.scopes.reduce((n, s) => n + s.instanceCount, 0);
 
-  // rawHash is derived from the exact Census file checksums the build read, so
+  // rawHash is derived from the exact official source checksums the build read, so
   // an identical acquisition yields an identical candidate id (idempotent).
   const checksums = dataset.scopes.flatMap((s) => s.versionMeta.provenance.sourceChecksums).sort();
   const rawHash = sha256(checksums.length > 0 ? checksums.join("\n") : normalizedHash(dataset));
@@ -29,7 +29,7 @@ export function censusGeographyCandidate(dataset: BuiltDataset): RoutineCandidat
     if (s.zctaEdgeCount === 0) violations.push(`Scope ${s.version} has no ZCTA overlaps.`);
   }
 
-  // One identity per grouping: an official Census GEOID, never invented.
+  // One identity per grouping: an official source district/area code with its plan.
   const identities = dataset.scopes.flatMap((s) =>
     s.groupings.map((g) => ({
       subjectId: `${s.type}:${g.geoid}:${s.version}`,
@@ -49,6 +49,8 @@ export function censusGeographyCandidate(dataset: BuiltDataset): RoutineCandidat
     builtAt: dataset.builtAt,
     readModelHash,
     zctaUniverseCount: dataset.zctaUniverse.length,
+    sourceFailures: dataset.sourceFailures ?? [],
+    sourceDiscrepancies: dataset.sourceDiscrepancies ?? [],
     scopes: dataset.scopes.map((s) => ({
       type: s.type,
       version: s.version,
@@ -89,7 +91,7 @@ export function censusGeographyCandidate(dataset: BuiltDataset): RoutineCandidat
     identities,
     temporal: { version, expectedVersion: version, sourceThrough: "2020", staleAtRetrieval: false },
     semantics: {
-      factKind: "ZCTA-to-geography area overlaps for the exact built scopes (area share; population weight not provided by these Census files)",
+      factKind: "ZCTA-to-geography land-area overlaps and official representation boundaries for the exact built scopes (population weight not provided by the Census relationships)",
       violations,
     },
     horizon: {

@@ -37,7 +37,7 @@ import {
 } from "./resolved-location.ts";
 
 /** The legislative levels this panel splits into State and Federal sections. */
-export const STATE_SEAT_TYPES = ["sldl", "sldu"] as const;
+export const STATE_SEAT_TYPES = ["sldl", "sldu", "aiannh"] as const;
 export const FEDERAL_SEAT_TYPES = ["cd"] as const;
 export const LOCAL_SEAT_TYPES = ["place", "county", "cousub", "county_subdivision", "school_district", "ward", "council_district"] as const;
 
@@ -50,6 +50,9 @@ export type SeatSourcing = "resolved" | "looking" | "unsourced" | "unavailable";
 
 /** A seat row as the panel renders it, whichever list it came from. */
 export interface PanelSeat {
+  readonly representation?: "overlay" | "tribal";
+  readonly nation?: string;
+  readonly sourceUrls?: readonly string[];
   readonly ocdId: string;
   /**
    * The division's own name. **Null is renderable; an OCD-ID is not.** A row
@@ -68,6 +71,9 @@ export interface PanelSeat {
  * resolved it. The shape `hooks/use-confirmed-divisions.ts` returns.
  */
 export interface ConfirmedRow {
+  readonly representation?: "overlay" | "tribal";
+  readonly nation?: string;
+  readonly sourceUrls?: readonly string[];
   readonly ocdId: string;
   readonly label: string | null;
   readonly divisionType: string | null;
@@ -93,9 +99,12 @@ function seatOf(seat: Seat, location: ResolvedLocation): PanelSeat {
     ocdId: seat.ocdId,
     label: seat.label,
     divisionType: seat.divisionType,
+    representation: seat.representation,
+    nation: seat.nation,
+    sourceUrls: seat.sourceUrls,
     tier: seat.tier,
     representatives: seat.representatives,
-    standing: standingOf({ ocdId: seat.ocdId }, location),
+    standing: standingOf(seat, location),
     // A seat off the coverage payload came with its people or genuinely has
     // none we hold. There is no request in flight to be honest about.
     sourcing: seat.representatives.length > 0 ? "resolved" : "unsourced",
@@ -135,7 +144,7 @@ export function panelSeatsFor(
       if (row.divisionType !== null && !divisionTypes.includes(row.divisionType)) {
         return false;
       }
-      return standingOf({ ocdId: row.ocdId }, location) === "CONFIRMED";
+      return standingOf(row, location) === "CONFIRMED";
     })
     .map((row) => ({
       ocdId: row.ocdId,
@@ -143,6 +152,9 @@ export function panelSeatsFor(
       // The level is the honest fallback for a type the route did not name;
       // it is what the id already says, not a guess about the division.
       divisionType: row.divisionType ?? divisionTypes[0] ?? "",
+      representation: row.representation,
+      nation: row.nation,
+      sourceUrls: row.sourceUrls,
       tier: (row.tier ?? "state") as Seat["tier"],
       representatives: row.holders,
       standing: "CONFIRMED" as const,

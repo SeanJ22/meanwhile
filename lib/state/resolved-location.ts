@@ -53,6 +53,8 @@ export interface ResolvedLocation {
    * having settled a different one.
    */
   splitLevels: readonly string[];
+  /** Source polygons explicitly ruled these areas out at the sampled address points. */
+  excludedDivisionIds?: readonly string[];
 }
 
 /** The reader has given a zip and nothing more. */
@@ -80,6 +82,7 @@ export function levelKeyOf(ocdId: string): string | null {
 interface BodyLike {
   ocdId: string | null;
   couldGovern?: boolean;
+  representation?: "overlay" | "tribal";
 }
 
 export type BodyStanding =
@@ -113,6 +116,9 @@ export function standingOf(
   if (!body.ocdId) return "UNSETTLED";
 
   if (location.confirmedDivisionIds.includes(body.ocdId)) return "CONFIRMED";
+  if (location.excludedDivisionIds?.includes(body.ocdId)) return "ELSEWHERE_IN_ZIP";
+  // An overlay is an independent district: confirming the base never excludes it.
+  if (body.representation === "overlay") return "OVERLAP_NOT_RULED_OUT";
 
   const level = levelKeyOf(body.ocdId);
   if (level === null) return "UNSETTLED";

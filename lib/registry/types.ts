@@ -147,6 +147,8 @@ export type AgendaSourceType =
 /** Which dataset a row came from, so a bad one can be retracted without taking everything with it. */
 export type SourceDataset =
   | "CENSUS_RELATIONSHIPS"
+  | "OFFICIAL_OVERLAY_DISTRICTS"
+  | "TIGER_AIANNH"
   | "TIGER_GENZ2025"
   | "COG_2022"
   | "NCES"
@@ -222,6 +224,10 @@ export interface Division {
   /** Internal join key. Unique across the registry. */
   ocdId: OcdId;
   divisionType: DivisionType;
+  representation?: "overlay" | "tribal";
+  nation?: string;
+  chamber?: string;
+  sourceUrls?: readonly string[];
   tier: Tier;
   state: string;
   label: string;

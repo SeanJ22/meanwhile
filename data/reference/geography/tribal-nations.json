@@ -1,0 +1,37 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/aiannh:2430",
+    "censusAiannhCode": "2430",
+    "ansiCode": "00041148",
+    "name": "Navajo Nation",
+    "censusAreaName": "Navajo Nation Reservation",
+    "states": [
+      "AZ",
+      "NM",
+      "UT"
+    ],
+    "provenance": "Census 2020 AIANNH national codes file, read 2026-08-24. Named as a records-holding jurisdiction in the FEC Combined Federal/State Directory (Navajo Nation Ethics and Rules Office, https://nnethicsrules.navajo-nsn.gov)."
+  },
+  {
+    "ocdId": "ocd-division/country:us/aiannh:4200",
+    "censusAiannhCode": "4200",
+    "ansiCode": "00023763",
+    "name": "Tohono O'odham Nation",
+    "censusAreaName": "Tohono O'odham Nation Reservation",
+    "states": [
+      "AZ"
+    ],
+    "provenance": "Census 2020 AIANNH national codes file, read 2026-08-24. Holds territory in Pima County, where 85641 and 85701 are."
+  },
+  {
+    "ocdId": "ocd-division/country:us/aiannh:2680",
+    "censusAiannhCode": "2680",
+    "ansiCode": "02419049",
+    "name": "Pascua Yaqui Tribe",
+    "censusAreaName": "Pascua Pueblo Yaqui Reservation",
+    "states": [
+      "AZ"
+    ],
+    "provenance": "Census 2020 AIANNH national codes file, read 2026-08-24. Holds territory in Pima County, where 85641 and 85701 are."
+  }
+]

@@ -47,7 +47,9 @@ export type GeographyType =
   | "state_leg_upper"
   | "state_leg_lower"
   | "place"
-  | "county_subdivision";
+  | "county_subdivision"
+  | "overlay_district"
+  | "aiannh";
 
 export const GEOGRAPHY_TYPES: readonly GeographyType[] = [
   "congressional_district",
@@ -57,6 +59,8 @@ export const GEOGRAPHY_TYPES: readonly GeographyType[] = [
   "state_leg_lower",
   "place",
   "county_subdivision",
+  "overlay_district",
+  "aiannh",
 ];
 
 /** Admin's five primary groupings, in the order Admin renders them. */
@@ -71,13 +75,26 @@ export const PRIMARY_GROUPING_TYPES: readonly GeographyType[] = [
 /** Metropolitan vs micropolitan — kept distinct, never merged. */
 export type CbsaClass = "metropolitan" | "micropolitan";
 
+/** Source boundaries reprojected to longitude/latitude for exact point lookup. */
+export type GeographyGeometry =
+  | { readonly type: "Polygon"; readonly coordinates: number[][][] }
+  | { readonly type: "MultiPolygon"; readonly coordinates: number[][][][] };
+
+export interface RepresentationGeography {
+  readonly chamber?: "upper" | "lower";
+  readonly representation?: "overlay" | "tribal";
+  readonly geometry?: GeographyGeometry;
+  readonly sourceUrls?: readonly string[];
+  readonly sourceOrg?: string;
+}
+
 export interface GeographyKey {
   readonly type: GeographyType;
   readonly geoid: Geoid;
   readonly version: GeographyVersionKey;
 }
 
-export interface GeographyRef extends GeographyKey {
+export interface GeographyRef extends GeographyKey, RepresentationGeography {
   /** Canonical OCD division id, or null for a CBSA (no OCD division). */
   readonly ocdId: OcdId | null;
   readonly label: string;
@@ -146,6 +163,8 @@ export interface GeographyVersion {
   readonly key: GeographyVersionKey;
   readonly type: GeographyType;
   readonly plan: string;
+  readonly stateFips?: string;
+  readonly chamber?: "upper" | "lower";
   /** The ZCTA tabulation vintage the overlaps were computed against (e.g. "2020"). */
   readonly zctaTabulation: string;
   readonly effectiveFor: string;

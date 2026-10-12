@@ -11,6 +11,8 @@ import {
 import { divisionsAt } from "@/lib/registry/server";
 import { contestsForDivisions } from "@/lib/sources/ballot-nj-morris";
 import { readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
+import { publishedZipDistricts } from "@/lib/geo/zip-census-districts";
+import { excludedRepresentationAtPoints } from "@/lib/geo/representation-geography";
 
 /**
  * Takes a street and a ZIP; returns the jurisdictions the reader is confirmed to be in, level by level, and
@@ -108,6 +110,8 @@ export async function POST(request: Request) {
   }
 
   const resolution = resolveAddress(samples);
+  const geography = await publishedZipDistricts(zip);
+  const excludedDivisionIds = geography.kind === "HELD" ? excludedRepresentationAtPoints(points.map(point => [point.lng, point.lat]), geography.value) : [];
 
   /*
    * Contests come from the CONFIRMED divisions only. A level the street
@@ -131,7 +135,7 @@ export async function POST(request: Request) {
       : null;
 
   return Response.json(
-    { ok: true, resolution, contestIds: await contestIdsFor(confirmed), point },
+    { ok: true, resolution, contestIds: await contestIdsFor(confirmed), point, excludedDivisionIds },
     { headers: NO_STORE },
   );
 }

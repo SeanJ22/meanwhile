@@ -45,6 +45,7 @@ import { bindGovernmentBodies, governmentStateOf, type RegistrationGovernmentLis
 import { readRegistrationProjection } from "../registration/reader.ts";
 import { stateOf } from "./wording.ts";
 import { publishedDivisionsForZip } from "../geo/zip-census-districts.ts";
+import { supplementPointDivisions } from "../geo/representation-geography.ts";
 import type { GeographySelection } from "../census-geography/selection.ts";
 import {
   heldOfficialStateLegislatorsFromRead,
@@ -476,7 +477,7 @@ export async function bodyById(bodyId: string): Promise<Body | null> {
 /** The divisions containing a point, from the committed geometry. */
 export async function divisionsAt(lat: number, lng: number): Promise<Division[]> {
   const { features, divisionsById } = await registryLoaded();
-  return resolveDivisionsAt([lng, lat], features, divisionsById);
+  return supplementPointDivisions(lat, lng, resolveDivisionsAt([lng, lat], features, divisionsById));
 }
 
 /**
@@ -645,7 +646,7 @@ export type CoverageStateLegislatorReader = (
  * reader. BOOTSTRAP kind — the serving copy carries the value + version, not the
  * promotion receipt.
  */
-const settleStateLegislatorsRead: CoverageStateLegislatorReader = async (scope) => {
+export const settleStateLegislatorsRead: CoverageStateLegislatorReader = async (scope) => {
   const edge = currentStateLegislatorsEdge();
   if (edge && !edge.jurisdictions.has(scope)) {
     return { kind: "NOT_RECORDED", value: null, detail: "No state roster is published for this jurisdiction.",
@@ -770,7 +771,7 @@ export async function coverageAt(
   const attemptRead = currentReaderAuthorityEdge()?.edgeOnly
     ? Promise.resolve({ kind: "UNREAD" as const }) : readPublicBodyAttempts();
   const { features, divisionsById, registry, officials, territory, federalAvailable } = await loaded();
-  const exactDivisions = resolvedDivisions ?? resolveDivisionsAt([lng, lat], features, divisionsById);
+  const exactDivisions = resolvedDivisions ?? await supplementPointDivisions(lat, lng, resolveDivisionsAt([lng, lat], features, divisionsById));
   // The governments registered on these divisions' states, beside the reviewed bodies.
   const divisionIds = exactDivisions.map((d) => d.ocdId);
   const [registered, governmentListings] = await Promise.all([

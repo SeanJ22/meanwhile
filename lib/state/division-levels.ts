@@ -70,6 +70,9 @@ const CLASSIFIED_LEVELS: Readonly<
      * elementary board and a regional high school board at once.
      */
     "school_district",
+    // Reservation and trust-land areas need their own polygon answer. A
+    // district address never establishes or rules out a nation's membership.
+    "aiannh",
   ],
 };
 

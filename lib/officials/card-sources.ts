@@ -4,6 +4,7 @@ import type { Meeting, Provenance } from "../sources/types.ts";
 import type { RollCallVote } from "../votes/types.ts";
 import type { ExecutiveAction } from "./executive-actions.ts";
 import type { SeatHolder } from "./lookup.ts";
+import { tribalSeatForHolder, tribalSeatCardSources } from "./tribal-seats.ts";
 
 /** What a battlecard actually drew on, assembled once for every card class. */
 
@@ -82,10 +83,11 @@ export function districtCardSources(
   meetings: Meeting[],
   /** The saved page that states a body's office address and phone, when the card shows them. */
   officeContact?: Provenance | null,
+  /** A supplemental boundary carries its own sources rather than Census attribution. */
+  boundarySources?: readonly Provenance[],
 ): CardSource[] {
-  const entries: CardSource[] = [
-    { what: "This district's boundary, type and label", provenance: BOUNDARY_PROVENANCE },
-  ];
+  const entries: CardSource[] = (boundarySources ?? [BOUNDARY_PROVENANCE]).map(provenance =>
+    ({what:"This district's boundary, type and label", provenance}));
   if (officeContact) entries.push({ what: "The body's office address and phone", provenance: officeContact });
 
   for (const holder of representation) {
@@ -148,6 +150,9 @@ export function personCardSources(
   if (spine) entries.push(spine);
 
   entries.push(...retainedHolderSources(holder));
+
+  const tribal = tribalSeatForHolder(holder);
+  if (tribal) entries.push(...tribalSeatCardSources(tribal));
 
   entries.push(...extra, ...moneyCardSources(sections.money ?? []), ...voteCardSources(sections.votes ?? []),
     ...actionCardSources(sections.actions ?? []));

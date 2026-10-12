@@ -749,6 +749,7 @@ test("the contract is exactly the measured set, and nothing crept in", () => {
     "state",
   ]);
   assert.deepEqual(byRelationship.POTENTIALLY_OVERLAPPING.sort(), [
+    "aiannh",
     "place",
     "school_district",
   ]);

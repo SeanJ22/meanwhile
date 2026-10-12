@@ -111,6 +111,7 @@ export function AddressPrompt({
         ok?: boolean;
         resolution?: AddressResolution;
         contestIds?: unknown;
+        excludedDivisionIds?: unknown;
         point?: { lat?: unknown; lng?: unknown } | null;
       };
       if (body.ok !== true || !body.resolution) {
@@ -161,6 +162,7 @@ export function AddressPrompt({
         contestIds,
         divisionIds,
         splitLevels,
+        excludedDivisionIds: Array.isArray(body.excludedDivisionIds) ? body.excludedDivisionIds.filter((id): id is string => typeof id === "string") : [],
         streetLabel: street.trim(),
       });
       onResolved?.({ divisionIds, contestIds, splitLevels });

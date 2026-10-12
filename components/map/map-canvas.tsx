@@ -52,6 +52,8 @@ import {
   removeDistrictLayer,
   setNarrowedDistricts,
   setSelectedDistrict,
+  setRepresentationBoundaries,
+  type DistrictCollection,
   type DistrictHit,
   type DrawnDistrict,
 } from "@/lib/map/districts";
@@ -315,6 +317,7 @@ export function MapCanvas({
   }, [focusStateOcdId]);
 
   const attachingDistrictsRef = useRef(false);
+  const representationBoundariesRef = useRef<DistrictCollection | null>(null);
   const ensureDistricts = useCallback(() => {
     const map = mapRef.current;
     if (!map || !map.getStyle()?.layers?.length || attachingDistrictsRef.current) return;
@@ -335,6 +338,9 @@ export function MapCanvas({
     for (const type of wanted) {
       try { addDistrictLayer(map, type); }
       catch { onDistrictErrorRef.current(); }
+    }
+    if (representationBoundariesRef.current && wanted.some(type => type === "state-house" || type === "state-senate")) {
+      setRepresentationBoundaries(map, representationBoundariesRef.current, wanted);
     }
     } finally { attachingDistrictsRef.current = false; }
   }, []);
@@ -908,6 +914,39 @@ export function MapCanvas({
   useEffect(() => {
     ensureDistricts();
   }, [districtTypes, ensureDistricts]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !districtTypes.some(type => type === "state-house" || type === "state-senate")) return;
+    let disposed = false;
+    let pending: AbortController | null = null;
+    const refresh = async () => {
+      pending?.abort();
+      const request = new AbortController();
+      pending = request;
+      const center = map.getCenter().wrap(), bounds = map.getBounds();
+      const params = new URLSearchParams({ lat: String(center.lat), lng: String(center.lng),
+        bounds: [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()].map(value => value.toFixed(4)).join(",") });
+      const state = /\/(?:state|district|territory):([a-z]{2})(?:\/|$)/.exec(focusStateOcdId ?? "")?.[1];
+      if (state) params.set("state", state);
+      try {
+        const response = await fetch(`/api/boundaries/representation?${params}`, { signal: request.signal });
+        if (!response.ok) throw new Error("Representation boundaries are unavailable");
+        const collection = await response.json() as DistrictCollection & { ok?: boolean };
+        if (!collection.ok || collection.type !== "FeatureCollection" || !Array.isArray(collection.features)) throw new Error("Representation boundaries are invalid");
+        if (disposed || request.signal.aborted) return;
+        representationBoundariesRef.current = collection;
+        ensureDistricts();
+      } catch {
+        if (!disposed && !request.signal.aborted) onDistrictErrorRef.current();
+      }
+    };
+    const onSettle = () => { void refresh(); };
+    map.on("moveend", onSettle);
+    map.on("load", onSettle);
+    if (map.isStyleLoaded()) onSettle();
+    return () => { disposed = true; pending?.abort(); map.off("moveend", onSettle); map.off("load", onSettle); };
+  }, [districtTypes, focusStateOcdId, ensureDistricts]);
 
   // Selection is feature-state, never a source mutation.
   useEffect(() => {

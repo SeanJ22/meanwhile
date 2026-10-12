@@ -1,0 +1,29 @@
+id: ocd-person/906cd606-c6ff-41e5-87a6-e038b711fa61
+name: Aaron Dana
+given_name: Aaron
+family_name: Dana
+gender: Male
+email: aaron.dana@legislature.maine.gov
+image: https://legislature.maine.gov/house/house/Repository/MemberProfiles/27852f04-e612-46a5-9727-1bbd1d5e48e0_DANA.jpg
+party:
+- name: Independent
+roles:
+- start_date: 2022-10-01
+  type: lower
+  jurisdiction: ocd-jurisdiction/country:us/state:me/government
+  district: Passamaquoddy Tribe
+offices:
+- classification: capitol
+  address: Office of the Clerk of the House 2 State House Station, Augusta, ME 04333
+  voice: 800-423-2900
+links:
+- url: https://legislature.maine.gov/house/house/MemberProfiles/Details/1507
+other_names:
+- name: A. Dana
+- name: A.M. Dana
+- name: Dana, A.
+sources:
+- url: https://ballotpedia.org/Aaron_Dana
+- url: https://en.wikipedia.org/wiki/Aaron_M._Dana
+- url: https://legislature.maine.gov/house/house/MemberProfiles/Details/1507
+- url: https://www.linkedin.com/in/aaron-dana-77810185

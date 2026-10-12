@@ -1,0 +1,22 @@
+{
+  "checkedAt": "2026-10-12",
+  "publishedDistricts": 38,
+  "zctaEdges": 199,
+  "differences": [
+    {
+      "sourceId": "lower-floterial-2022-2032",
+      "code": "CH16",
+      "label": "Cheshire 16",
+      "geometryOnly": [],
+      "documentOnly": [
+        "keene ward 2"
+      ],
+      "partialTowns": [],
+      "sourceUrls": [
+        "https://ftp.granit.unh.edu/GRANIT_Data/Vector_Data/Administrative_and_Political_Boundaries/d-nhhousedists/NHHouseDistricts2022_Float.zip",
+        "https://www.gc.nh.gov/downloads/2022-state-representative-and-delegate-districts.pdf"
+      ],
+      "reason": "District towns differ between the boundary file and election authority document"
+    }
+  ]
+}

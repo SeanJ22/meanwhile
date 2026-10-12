@@ -15,6 +15,7 @@
       "https://web.legislature.maine.gov/house/MemberProfiles/List?sort=seat",
       "https://github.com/DOI-DO/census-tribal/blob/286ba0ce7943d5a4092f7cfb3cb3cf94cc9c284d/data/census-tribal_FRNEntityCICD_CensusGeography.csv",
       "https://www2.census.gov/geo/docs/reference/codes2020/national_aiannh2020.txt",
+      "https://www2.census.gov/geo/tiger/TIGER2020/AIANNH/tl_2020_us_aiannh.zip",
       "https://legislature.maine.gov/uploads/visual_edit/132nd-joint-rules-2.pdf",
       "https://legislature.maine.gov/9261"
     ],
@@ -34,7 +35,14 @@
       {
         "url": "https://www2.census.gov/geo/docs/reference/codes2020/national_aiannh2020.txt",
         "org": "U.S. Census Bureau",
-        "what": "The national tribal area code reference"
+        "what": "The national tribal area code reference",
+        "checkedAt": "2026-10-12"
+      },
+      {
+        "url": "https://www2.census.gov/geo/tiger/TIGER2020/AIANNH/tl_2020_us_aiannh.zip",
+        "org": "U.S. Census Bureau",
+        "checkedAt": "2026-10-12",
+        "what": "The nation's reservation and off-reservation trust-land boundaries and component identifiers"
       },
       {
         "url": "https://legislature.maine.gov/uploads/visual_edit/132nd-joint-rules-2.pdf",
@@ -68,8 +76,10 @@
     "sourceOrg": "Maine Legislature",
     "sourceUrls": [
       "https://web.legislature.maine.gov/house/MemberProfiles/List?sort=seat",
+      "https://web.legislature.maine.gov/house/MemberProfiles/Details/1507",
       "https://github.com/DOI-DO/census-tribal/blob/286ba0ce7943d5a4092f7cfb3cb3cf94cc9c284d/data/census-tribal_FRNEntityCICD_CensusGeography.csv",
       "https://www2.census.gov/geo/docs/reference/codes2020/national_aiannh2020.txt",
+      "https://www2.census.gov/geo/tiger/TIGER2020/AIANNH/tl_2020_us_aiannh.zip",
       "https://legislature.maine.gov/uploads/visual_edit/132nd-joint-rules-2.pdf",
       "https://legislature.maine.gov/9261"
     ],
@@ -81,6 +91,12 @@
         "what": "The current tribal representative roster"
       },
       {
+        "url": "https://web.legislature.maine.gov/house/MemberProfiles/Details/1507",
+        "org": "Maine Legislature",
+        "checkedAt": "2026-10-12",
+        "what": "The current tribal representative, Aaron Dana, and the represented nation"
+      },
+      {
         "url": "https://github.com/DOI-DO/census-tribal/blob/286ba0ce7943d5a4092f7cfb3cb3cf94cc9c284d/data/census-tribal_FRNEntityCICD_CensusGeography.csv",
         "org": "U.S. Department of the Interior",
         "checkedAt": "2026-10-12",
@@ -89,7 +105,14 @@
       {
         "url": "https://www2.census.gov/geo/docs/reference/codes2020/national_aiannh2020.txt",
         "org": "U.S. Census Bureau",
-        "what": "The national tribal area code reference"
+        "what": "The national tribal area code reference",
+        "checkedAt": "2026-10-12"
+      },
+      {
+        "url": "https://www2.census.gov/geo/tiger/TIGER2020/AIANNH/tl_2020_us_aiannh.zip",
+        "org": "U.S. Census Bureau",
+        "checkedAt": "2026-10-12",
+        "what": "The nation's reservation and off-reservation trust-land boundaries and component identifiers"
       },
       {
         "url": "https://legislature.maine.gov/uploads/visual_edit/132nd-joint-rules-2.pdf",
@@ -124,8 +147,10 @@
     "sourceOrg": "Maine Legislature",
     "sourceUrls": [
       "https://web.legislature.maine.gov/house/MemberProfiles/List?sort=seat",
+      "https://web.legislature.maine.gov/house/MemberProfiles/Details/3140",
       "https://github.com/DOI-DO/census-tribal/blob/286ba0ce7943d5a4092f7cfb3cb3cf94cc9c284d/data/census-tribal_FRNEntityCICD_CensusGeography.csv",
       "https://www2.census.gov/geo/docs/reference/codes2020/national_aiannh2020.txt",
+      "https://www2.census.gov/geo/tiger/TIGER2020/AIANNH/tl_2020_us_aiannh.zip",
       "https://legislature.maine.gov/uploads/visual_edit/132nd-joint-rules-2.pdf",
       "https://legislature.maine.gov/9261"
     ],
@@ -137,6 +162,12 @@
         "what": "The current tribal representative roster"
       },
       {
+        "url": "https://web.legislature.maine.gov/house/MemberProfiles/Details/3140",
+        "org": "Maine Legislature",
+        "checkedAt": "2026-10-12",
+        "what": "The current tribal representative, Brian Reynolds, and the represented nation"
+      },
+      {
         "url": "https://github.com/DOI-DO/census-tribal/blob/286ba0ce7943d5a4092f7cfb3cb3cf94cc9c284d/data/census-tribal_FRNEntityCICD_CensusGeography.csv",
         "org": "U.S. Department of the Interior",
         "checkedAt": "2026-10-12",
@@ -145,7 +176,14 @@
       {
         "url": "https://www2.census.gov/geo/docs/reference/codes2020/national_aiannh2020.txt",
         "org": "U.S. Census Bureau",
-        "what": "The national tribal area code reference"
+        "what": "The national tribal area code reference",
+        "checkedAt": "2026-10-12"
+      },
+      {
+        "url": "https://www2.census.gov/geo/tiger/TIGER2020/AIANNH/tl_2020_us_aiannh.zip",
+        "org": "U.S. Census Bureau",
+        "checkedAt": "2026-10-12",
+        "what": "The nation's reservation and off-reservation trust-land boundaries and component identifiers"
       },
       {
         "url": "https://legislature.maine.gov/uploads/visual_edit/132nd-joint-rules-2.pdf",

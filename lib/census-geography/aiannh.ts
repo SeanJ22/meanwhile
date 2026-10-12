@@ -32,7 +32,7 @@ function areaCode(componentId: string): string {
   return componentId.slice(0, 4);
 }
 
-/** Census's documented BAF20 AIANNH member is BLOCKID|AIANNHCE|COMPTYPE.
+/** The actual BAF20 AIANNH member is BLOCKID|AIANNHCE|COMPTYP.
  * Keep only blocks of referenced areas; preserve Census block IDs verbatim. */
 export function aiannhBlockAssignments(text: string, areaCodes: ReadonlySet<string>): Map<string, string> {
   const [header, ...lines] = text.replace(/^\uFEFF/, "").trim().split(/\r?\n/);
@@ -43,7 +43,7 @@ export function aiannhBlockAssignments(text: string, areaCodes: ReadonlySet<stri
     if (index < 0) throw new Error(`Census AIANNH block assignment is missing column ${name}`);
     return index;
   };
-  const columns = { block: at("BLOCKID"), area: at("AIANNHCE"), component: at("COMPTYPE") };
+  const columns = { block: at("BLOCKID"), area: at("AIANNHCE"), component: at("COMPTYP") };
   const assignments = new Map<string, string>();
   for (const line of lines) {
     if (!line.trim()) continue;
@@ -168,8 +168,9 @@ export async function acquireAiannhScope(options: AcquireAiannhOptions = {}): Pr
     if (!response.ok) throw new Error(`HTTP ${response.status} fetching ${url}`);
     return Buffer.from(await response.arrayBuffer());
   };
-  const boundaries = await fetchSource(CENSUS_AIANNH.url);
   const areaCodes = new Set(references.flatMap(row => row.aiannhAreaIds.map(areaCode)));
+  const referencedComponents = new Set(references.flatMap(row => [...row.aiannhAreaIds]));
+  const boundaries = await fetchSource(CENSUS_AIANNH.url);
   const assignments = new Map<string, string>();
   const sourceUrls: string[] = [CENSUS_AIANNH.url];
   const sourceChecksums = [createHash("sha256").update(boundaries).digest("hex")];
@@ -225,9 +226,9 @@ export async function acquireAiannhScope(options: AcquireAiannhOptions = {}): Pr
       sourceDataset: "CENSUS_TIGER_AIANNH2020+CENSUS_BAF2020+CENSUS_TAB20_REL2020",
       sourceFiles: sourceUrls.map(url => url.split("/").pop()!),
       sourceChecksums,
-      method: "Bounded to AIANNH areas named by legislative-seat reference data. TIGER/Line 2020 reservation and off-reservation trust-land polygons are reprojected from NAD83 to WGS84 and combined by the four-digit AIANNHCE. Census BAF20 AIANNH assigns BLOCKID to AIANNHCE and COMPTYPE. Those blocks join the national Census 2020 ZCTA↔tabulation-block relationship: ZIP area share = Σ AREALAND_PART for the area's blocks / AREALAND_ZCTA5_20. The full Census ZCTA denominator includes both sides of cross-state ZCTAs; no population weight is used. A point in that geometry locates the seat; it does not establish tribal membership.",
+      method: "Bounded to AIANNH areas named by legislative-seat reference data. TIGER/Line 2020 reservation and off-reservation trust-land polygons are reprojected from NAD83 to WGS84 and combined by the four-digit AIANNHCE. Census BAF20 AIANNH assigns BLOCKID to AIANNHCE and COMPTYP. Those blocks join the national Census 2020 ZCTA↔tabulation-block relationship: ZIP area share = Σ AREALAND_PART for the area's blocks / AREALAND_ZCTA5_20. The full Census ZCTA denominator includes both sides of cross-state ZCTAs; no population weight is used. A point in that geometry locates the seat; it does not establish tribal membership.",
       computedAt: new Date().toISOString(),
     },
   };
-  return buildAiannhScope(readBoundaryZip(boundaries).features, accumulator.finish(), references, versionMeta);
+  return buildAiannhScope(readBoundaryZip(boundaries, properties => referencedComponents.has(properties.GEOID)).features, accumulator.finish(), references, versionMeta);
 }

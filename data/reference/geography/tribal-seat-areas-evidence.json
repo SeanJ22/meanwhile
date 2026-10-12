@@ -1,0 +1,69 @@
+{
+  "checkedAt": "2026-10-12",
+  "sources": [
+    {
+      "url": "https://web.legislature.maine.gov/house/MemberProfiles/List?sort=seat",
+      "bytes": 441362,
+      "sha256": "631e23529b5f55f7cb8debce7bb496869132dbd1d105698409a98d552eef1450"
+    },
+    {
+      "url": "https://web.legislature.maine.gov/house/MemberProfiles/Details/1507",
+      "bytes": 65707,
+      "sha256": "442194eb5ae819d9434175eee31fd9389acd529f1f37abe0c687becdf39de535"
+    },
+    {
+      "url": "https://web.legislature.maine.gov/house/MemberProfiles/Details/3140",
+      "bytes": 66978,
+      "sha256": "9c6850eeab9ab945233963b17bd60ab4cc270c06239322905fedabfe19546f2f"
+    },
+    {
+      "url": "https://legislature.maine.gov/uploads/visual_edit/132nd-joint-rules-2.pdf",
+      "bytes": 206218,
+      "sha256": "fe58e01ba9b198bf79dcb7abb48a9b1dbdb2fb9a1b2db1a0866823b26bf4fbd3"
+    },
+    {
+      "url": "https://legislature.maine.gov/9261",
+      "bytes": 49753,
+      "sha256": "957ab65301018ec2ec238938d8050d0a535390609bc88b6bd073bfad8f032054"
+    },
+    {
+      "url": "https://www2.census.gov/geo/docs/reference/codes2020/national_aiannh2020.txt",
+      "bytes": 27473,
+      "sha256": "b5041caa87050f392f1d9e8d184fb1c017e8e7c6b1ca1d49573d84bad01de769"
+    },
+    {
+      "url": "https://www.census.gov/programs-surveys/geography/technical-documentation/records-layout/block-assignment-record-layout.html",
+      "bytes": 346661,
+      "sha256": "8ca7025edea346ba4fdb03c3f19b73408b8f08faa863291082c8ef9e7e1b1ad9"
+    }
+  ],
+  "holders": [
+    {
+      "nation": "Passamaquoddy Tribe",
+      "name": "Aaron Dana",
+      "sourceUrl": "https://web.legislature.maine.gov/house/MemberProfiles/Details/1507",
+      "districtText": "Non-Voting Tribal Member - Passamaquoddy Tribe"
+    },
+    {
+      "nation": "Houlton Band of Maliseet Indians",
+      "name": "Brian Reynolds",
+      "sourceUrl": "https://web.legislature.maine.gov/house/MemberProfiles/Details/3140",
+      "districtText": "Non-Voting Tribal Member - Houlton Band of Maliseet Indians"
+    }
+  ],
+  "rosterObservation": "The current roster lists Aaron Dana and Brian Reynolds as Tribal Representatives. It contains no Penobscot Nation row and no affirmative vacancy statement for that seat.",
+  "roleEvidence": [
+    {
+      "sourceUrl": "https://legislature.maine.gov/uploads/visual_edit/132nd-joint-rules-2.pdf",
+      "page": 9,
+      "section": "Rule 206(3)",
+      "quote": "The member of the Penobscot Nation, the member of the Passamaquoddy Tribe and the member of the Houlton Band of Maliseet Indians elected to represent their people at each biennial Legislature may sponsor legislation specifically relating to Indians and Indian land claims, may offer floor amendments to this legislation, may cosponsor any other legislation and may sponsor and cosponsor expressions of legislative sentiment in the same manner as other members of the House."
+    },
+    {
+      "sourceUrl": "https://legislature.maine.gov/uploads/visual_edit/132nd-joint-rules-2.pdf",
+      "page": 23,
+      "section": "Rule 316",
+      "quote": "The member of the Penobscot Nation, the member of the Passamaquoddy Tribe and the member of the Houlton Band of Maliseet Indians elected to represent their people at the biennial session of the Legislature must be granted seats on the floor of the House of Representatives; be granted, by consent of the Speaker, the privilege of speaking on pending legislation; must be appointed to sit with joint standing committees as nonvoting members during the committees' deliberations; and be granted such other rights and privileges as may from time to time be voted by the House of Representatives. In reports from committees on which a tribal member serves, the position of the member must be noted and included."
+    }
+  ]
+}

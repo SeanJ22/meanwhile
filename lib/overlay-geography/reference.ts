@@ -17,12 +17,17 @@ export interface OverlaySource {
   readonly districtLabel?: string;
   readonly officialLinkUrl: string;
   readonly townDocumentUrl: string;
+  readonly townDocumentMirrors?: readonly string[];
+  readonly documentLayout?: { readonly columns: readonly number[]; readonly contentTop: number };
   readonly townBoundaryUrl: string;
   readonly townRelationshipUrl: string;
   readonly townFields?: { readonly name: string; readonly county: string; readonly geoid: string; readonly ward?: string };
+  readonly townBoundaryTolerance?: number;
   readonly partitionBoundaryUrl?: string;
   readonly partitionRelationshipUrl?: string;
   readonly partitionGeoTag?: string;
+  readonly partitionDistrictField?: string;
+  readonly partitionDesignationPattern?: string;
   readonly expectedFeatures: number;
   readonly countyHeadingPattern: string;
   readonly districtRowPattern: string;

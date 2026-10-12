@@ -29,7 +29,7 @@ const NULL_SHAPE = 0;
 const POLYGON = 5;
 const POLYGON_Z = 15;
 
-export function readShp(buf: Buffer): ShapeRecord[] {
+export function readShp(buf: Buffer, retainRecord?: (recordIndex: number) => boolean): ShapeRecord[] {
   if (buf.length < 100 || buf.readInt32BE(24) * 2 !== buf.length) throw new Error("shp: invalid complete file length");
   const records: ShapeRecord[] = [];
   let p = 100; // fixed-length file header
@@ -42,13 +42,16 @@ export function readShp(buf: Buffer): ShapeRecord[] {
     p = body + contentWords * 2;
 
     const type = buf.readInt32LE(body);
-    if (type === NULL_SHAPE) { records.push({ recordNumber, rings: [], bbox: [0, 0, 0, 0] }); continue; }
     if (type !== POLYGON && type !== POLYGON_Z) {
+      if (type === NULL_SHAPE) { records.push({ recordNumber, rings: [], bbox: [0, 0, 0, 0] }); continue; }
       throw new Error(
         `shp: record ${recordNumber} is shape type ${type}; this reader handles ` +
           "polygons (5) and polygonZ (15) only",
       );
     }
+    // Preserve ordinal pairing and complete framing without decoding polygon
+    // coordinates for records outside the caller's reference-data scope.
+    if (retainRecord && !retainRecord(recordNumber - 1)) { records.push({ recordNumber, rings: [], bbox: [0, 0, 0, 0] }); continue; }
 
     if (contentWords * 2 < 44) throw new Error("shp: truncated polygon");
     const bbox: [number, number, number, number] = [
@@ -148,15 +151,15 @@ export type Feature = {
  * Reads one Census boundary zip into features. .shp records pair with .dbf
  * rows by position, so a count mismatch throws rather than mislabeling.
  */
-export function readBoundaryZip(buf: Buffer): { features: Feature[]; counts: string } {
+export function readBoundaryZip(buf: Buffer, retainProperties?: (properties: Record<string, string>) => boolean): { features: Feature[]; counts: string } {
   const entries = readZip(buf);
   const shp = entries.find((e) => e.name.toLowerCase().endsWith(".shp"));
   const dbf = entries.find((e) => e.name.toLowerCase().endsWith(".dbf"));
   if (!shp) throw new Error("boundary zip holds no .shp");
   if (!dbf) throw new Error("boundary zip holds no .dbf");
 
-  const shapes = readShp(shp.data);
   const rows = readDbfRecords(dbf.data, encodingFrom(entries));
+  const shapes = readShp(shp.data, retainProperties ? index => rows[index] !== null && rows[index] !== undefined && retainProperties(rows[index]!) : undefined);
   if (shapes.length !== rows.length) {
     throw new Error(
       `shapefile pairing is broken: ${shapes.length} geometries against ${rows.length} ` +

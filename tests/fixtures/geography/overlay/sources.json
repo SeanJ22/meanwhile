@@ -1,0 +1,37 @@
+{
+  "checkedAt": "2026-10-12",
+  "sources": [
+    {
+      "file": "NHHouseDistricts2022_Float.zip",
+      "sourceUrl": "https://ftp.granit.unh.edu/GRANIT_Data/Vector_Data/Administrative_and_Political_Boundaries/d-nhhousedists/NHHouseDistricts2022_Float.zip",
+      "bytes": 688612,
+      "sha256": "d04c9fd1f221a3286af57fc628eb241a92e80b21a3c264b9df9e2f388ff4719d"
+    },
+    {
+      "file": "NHPolitDists2022.zip",
+      "sourceUrl": "https://ftp.granit.unh.edu/GRANIT_Data/Vector_Data/Administrative_and_Political_Boundaries/d-nhpolitdists/2022/NHPolitDists2022.zip",
+      "bytes": 1305214,
+      "sha256": "7d3e736ea35da4a34bd48415462794b6736bf5274f3e8540352f05c92551677c"
+    },
+    {
+      "file": "tl_2024_33_sldl.zip",
+      "sourceUrl": "https://www2.census.gov/geo/tiger/TIGER2024/SLDL/tl_2024_33_sldl.zip",
+      "bytes": 980779,
+      "sha256": "b0a41e43ef961889078827754384ff7e3572edf332e42394faeb3c98ada630bc"
+    },
+    {
+      "file": "2022-state-representative-and-delegate-districts.pdf",
+      "sourceUrl": "https://www.gc.nh.gov/downloads/2022-state-representative-and-delegate-districts.pdf",
+      "bytes": 82405,
+      "sha256": "039f6a655be9e0dd92f61208b1948afe456daf966e244d14381a72d7d12b7d16"
+    },
+    {
+      "file": "tab20_sldl202420_zcta520_33.txt",
+      "sourceUrl": "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldl202420_zcta520_natl.txt",
+      "sourceBytes": 8661696,
+      "sourceSha256": "ba7458e3582d752b6de0a20f6e6ed5f018fa06f05f6763a17f6960109c598eb9",
+      "fixtureSha256": "3eb5008a1515e2dd03da4a4595de50b27f4900d6d46b0f5bd1d97fd93ca65544",
+      "selection": "Original header plus every original row whose GEOID_SLDL2024_20 starts with 33; BOM normalized away."
+    }
+  ]
+}

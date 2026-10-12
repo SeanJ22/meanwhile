@@ -24,7 +24,8 @@ export interface TribalSeatReference {
 export const TRIBAL_SEAT_REFERENCES: readonly TribalSeatReference[] = REFERENCES as readonly TribalSeatReference[];
 
 export function tribalSeatReferencesFor(state: string, chamber?: string): readonly TribalSeatReference[] {
-  const postal = state.replace(/^US-/i, "").toUpperCase();
+  const postal = (/^ocd-jurisdiction\/country:us\/(?:state|district|territory):([a-z]{2})\/government$/i.exec(state)?.[1]
+    ?? state.replace(/^US-/i, "")).toUpperCase();
   return TRIBAL_SEAT_REFERENCES.filter(row => row.state.toUpperCase() === postal && (!chamber || row.chamber === chamber));
 }
 

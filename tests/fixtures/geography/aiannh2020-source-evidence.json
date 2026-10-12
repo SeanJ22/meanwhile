@@ -1,0 +1,106 @@
+{
+  "capturedAt": "2026-10-12",
+  "boundaries": {
+    "url": "https://www2.census.gov/geo/tiger/TIGER2020/AIANNH/tl_2020_us_aiannh.zip",
+    "bytes": 8890886,
+    "sha256": "f58e00ff9df3c9d5371fd1c9e1e6419c09d69f37a7e2f1b8d2f45c196c692d60",
+    "members": [
+      {
+        "name": "tl_2020_us_aiannh.cpg",
+        "bytes": 5,
+        "sha256": "3ad3031f5503a4404af825262ee8232cc04d4ea6683d42c5dd0a2f2a27ac9824"
+      },
+      {
+        "name": "tl_2020_us_aiannh.dbf",
+        "bytes": 241893,
+        "sha256": "73a079f1e57a56e62e45f2d386f593a2d9560506857466d3f9b81301da0a137e"
+      },
+      {
+        "name": "tl_2020_us_aiannh.prj",
+        "bytes": 165,
+        "sha256": "0b9041e921d9ebb43247d314608fe9e38a0b008ee793067fc1806199ea1fb9dd"
+      },
+      {
+        "name": "tl_2020_us_aiannh.shp",
+        "bytes": 14049260,
+        "sha256": "4903757beed1d759628526a2630394bcef74605ea3ce2c7dd14dbd3622999422"
+      },
+      {
+        "name": "tl_2020_us_aiannh.shp.ea.iso.xml",
+        "bytes": 62842,
+        "sha256": "5f2c8b332206569829505f4a1fd700c17818158eb0844a08209551212d773310"
+      },
+      {
+        "name": "tl_2020_us_aiannh.shp.iso.xml",
+        "bytes": 39413,
+        "sha256": "5d67478d29d4c8a285d35b5228db0231e08449f3a1986b9b623ea7cd83078e6e"
+      },
+      {
+        "name": "tl_2020_us_aiannh.shx",
+        "bytes": 6972,
+        "sha256": "ac789f75089607ba9bd4fb95d1bac766169a1f2e80bcb829793ede327bf23434"
+      }
+    ],
+    "retainedComponents": [
+      "2850R",
+      "1575R",
+      "1530R",
+      "2760R",
+      "2695T",
+      "1530T",
+      "2760T"
+    ]
+  },
+  "blockAssignment": {
+    "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST23_ME.zip",
+    "bytes": 1141205,
+    "sha256": "431631b3352f8bab61258626a824529434e3f51e421e62890f215e47d46cda64",
+    "member": "BlockAssign_ST23_ME_AIANNH.txt",
+    "memberBytes": 850409,
+    "memberSha256": "92098f62aab4f2f1d0c7583450bf383c87fdd6c022375cfcc07c18c8f342567d",
+    "header": "BLOCKID|AIANNHCE|COMPTYP",
+    "retainedBlocks": 366
+  },
+  "zctaBlockRelationship": {
+    "url": "https://www2.census.gov/geo/docs/maps-data/data/rel2020/zcta520/tab20_zcta520_tabblock20_natl.txt",
+    "bytes": 1057697144,
+    "sha256": "7f077624d252fc1cc5a2d1100be07cfe038ffc152bfe193561d068b4def6bbbf",
+    "retainedRows": 366,
+    "counts": {
+      "2695": 112,
+      "2760": 160,
+      "2850": 26,
+      "1575": 45,
+      "1530": 23
+    },
+    "elapsedSeconds": 33.58174871999998
+  },
+  "fixtures": [
+    {
+      "name": "aiannh2020-tribal-components.zip",
+      "bytes": 225451,
+      "sha256": "d75cf003ceb0e76f96b3d156355f4c23b0ff792127fe50a6ab328479859c9368"
+    },
+    {
+      "name": "aiannh2020-blockassign-referenced.zip",
+      "bytes": 1213,
+      "sha256": "5f9aa979903d2e3ef86a74ea443858d50239ab8a18af8a08c9729d6d74929591"
+    },
+    {
+      "name": "aiannh2020-zcta-block-referenced.txt",
+      "bytes": 47158,
+      "sha256": "c25f9ddae7edf4a75da808d8f9e556806b11008297c465d77ad6e2109c6c92aa"
+    }
+  ],
+  "routineAcquisition": {
+    "elapsedSeconds": 103.240941099,
+    "instanceCount": 5,
+    "zctaEdgeCount": 24,
+    "computedAt": "2026-10-12T22:20:41.878Z",
+    "sourceChecksums": [
+      "f58e00ff9df3c9d5371fd1c9e1e6419c09d69f37a7e2f1b8d2f45c196c692d60",
+      "431631b3352f8bab61258626a824529434e3f51e421e62890f215e47d46cda64",
+      "7f077624d252fc1cc5a2d1100be07cfe038ffc152bfe193561d068b4def6bbbf"
+    ]
+  }
+}

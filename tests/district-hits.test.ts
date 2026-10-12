@@ -182,12 +182,16 @@ test("Rockaway 07866 sits in two school districts at once", async () => {
   );
 });
 
-/*
- * A New Hampshire voter elects representatives from a base House district and from a floterial district drawn
- * across several towns. Census SLDL files are a non-overlapping partition, so floterials cannot appear in them; the
- * partition test pins that reason. Floterials need a separate New Hampshire source.
- */
-test("Newbury 03255 finds its base House district; floterials are a known gap", async () => {
+async function sourceOverlayHitsFor(zip: string): Promise<Hit[]> {
+  const source = JSON.parse(await readFile(join(here, "fixtures/geography/overlay/floterials.geojson"), "utf8"));
+  const point = await centroidFor(zip);
+  return (source.features as Feature[]).filter((feature) => contains(point, feature)).map((feature) => ({ layer: "overlay_district", ocdId: feature.properties.ocdId, label: feature.properties.label }));
+}
+
+// The official election document assigns Newbury and New London to a two-seat
+// base district and assigns neither town to a floterial. Exact Census ZIP land
+// relationships also give 03255 no floterial edge (overlay-geography.test.ts).
+test("Newbury 03255 finds its base House district without an invented floterial", async () => {
   const hits = await hitsFor("03255");
   const house = hits.filter((h) => h.layer === "sldl");
 
@@ -197,10 +201,20 @@ test("Newbury 03255 finds its base House district; floterials are a known gap", 
     `expected exactly the base district from Census data, got ${JSON.stringify(house)}`,
   );
   assert.match(house[0].ocdId, /\/sldl:/);
+  assert.deepEqual(await sourceOverlayHitsFor("03255"), []);
 });
 
-test("Census SLDL is a partition, which is why floterials are missing", async () => {
-  // If a future source adds floterials this fails, and the base-district assertion above should become 2.
+test("Candia 03034 finds both its base House district and its source-backed floterial", async () => {
+  const house = (await hitsFor("03034")).filter((hit) => hit.layer === "sldl");
+  const overlays = await sourceOverlayHitsFor("03034");
+  assert.equal(house.length, 1);
+  assert.equal(overlays.length, 1);
+  assert.equal(overlays[0].ocdId, "ocd-division/country:us/state:nh/sldl:ro31");
+  assert.equal(overlays[0].label, "Rockingham 31");
+  assert.notEqual(house[0].ocdId, overlays[0].ocdId);
+});
+
+test("Census base SLDL remains a partition beside the separate floterial layer", async () => {
   const nh = (await allLayers()).find((l) => l.file.endsWith("/sldl-33.geojson"));
   assert.ok(nh, "sldl-33.geojson should exist");
 
@@ -240,8 +254,7 @@ test("Census SLDL is a partition, which is why floterials are missing", async ()
   assert.equal(
     overlapping,
     0,
-    `Census SLDL now has overlapping districts — floterials may have arrived. ` +
-      `Revisit the base-district assertion above.`,
+    "Census base SLDL contains overlapping districts; verify its independent partition source.",
   );
 });
 

@@ -54,20 +54,35 @@
     "sourceOrg": "New Hampshire Office of Strategic Initiatives; NH GRANIT",
     "officialLinkUrl": "https://www.nh.gov/osi/planning/programs/gis/",
     "townDocumentUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/documents/Voting%20Districts/2022-state-representative-and-delegate-districts.pdf",
-    "townBoundaryUrl": "https://ftp.granit.unh.edu/GRANIT_Data/Vector_Data/Administrative_and_Political_Boundaries/d-nhpolitdists/NHPolitDists.zip",
+    "townBoundaryUrl": "https://ftp.granit.unh.edu/GRANIT_Data/Vector_Data/Administrative_and_Political_Boundaries/d-nhpolitdists/2022/NHPolitDists2022.zip",
     "townRelationshipUrl": "https://www2.census.gov/geo/docs/maps-data/data/rel2020/zcta520/tab20_zcta520_cousub20_natl.txt",
     "expectedFeatures": 40,
     "countyHeadingPattern": "^(?<county>[A-Za-z ]+)\\s+COUNTY\\b",
-    "districtRowPattern": "^(?:District\\s*(?:No\\.?\\s*)?)?(?<district>[0-9]+)\\s*(?:\\([^)]*\\))?\\s*(?<marker>FL)?\\s*[:.-]?\\s*(?<towns>.+)$",
+    "districtRowPattern": "^(?:(?:District|Distsrict|Disrict)\\s*(?:No\\.?\\s*)?)?(?<district>[0-9]+)\\s*(?:\\([^)]*\\))?\\s*(?<marker>FL)?\\s*[:.-]?\\s*(?<towns>.*)$",
     "townFields": {
       "name": "NAME",
       "county": "COUNTY",
       "geoid": "FIPS",
-      "ward": "WARD"
+      "ward": "DISTRICT"
     },
     "partitionBoundaryUrl": "https://www2.census.gov/geo/tiger/TIGER2024/SLDL/tl_2024_33_sldl.zip",
     "partitionRelationshipUrl": "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldl202420_zcta520_natl.txt",
     "partitionGeoTag": "SLDL2024_20",
-    "districtLabel": "floterial district"
+    "districtLabel": "floterial district",
+    "townDocumentMirrors": [
+      "https://www.gc.nh.gov/downloads/2022-state-representative-and-delegate-districts.pdf"
+    ],
+    "documentLayout": {
+      "columns": [
+        0,
+        125,
+        265,
+        410
+      ],
+      "contentTop": 745
+    },
+    "partitionDistrictField": "NAMELSAD",
+    "partitionDesignationPattern": "^State House District (?<designation>.+)$",
+    "townBoundaryTolerance": 0.0002
   }
 ]

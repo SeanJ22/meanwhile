@@ -1,0 +1,23 @@
+id: ocd-person/81ab0331-83cd-4551-bf74-b732623c86b8
+name: Brian Reynolds
+given_name: Brian
+family_name: Reynolds
+gender: Male
+email: brian.reynolds@legislature.maine.gov
+party:
+- name: Independent
+roles:
+- start_date: 2025-05-14
+  type: lower
+  jurisdiction: ocd-jurisdiction/country:us/state:me/government
+  district: Houlton Band of Maliseet Indians
+offices:
+- classification: capitol
+  address: Office of the Clerk of the House 2 State House Station, Augusta, ME 04333
+links:
+- url: https://legislature.maine.gov/house/house/MemberProfiles/Details/3140
+other_names:
+- name: B. Reynolds
+- name: Reynolds, B.
+sources:
+- url: https://legislature.maine.gov/house/house/MemberProfiles/Details/3140

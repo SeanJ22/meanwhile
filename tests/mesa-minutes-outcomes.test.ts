@@ -320,11 +320,11 @@ test("the minutes link: the accessible HTML first, the PDF second, on the portal
   assert.deepEqual(parsed.motions[0]?.items, ["5-c"]);
 });
 
-test("which sittings a pass reads again: new, newly published, relabelled or failed — never an unchanged link", async () => {
+test("which sittings a pass reads again: new, newly published, relabelled, failed and scheduled rechecks", async () => {
   const july20 = sittingFrom("1336056", await pdfDocument("1336056"));
   const link = minutesLinkFor(row("1336056"), tenant.host)!;
   assert.deepEqual(minutesRefreshDecision(link, undefined), { walk: true, reason: "NEW" });
-  assert.deepEqual(minutesRefreshDecision(link, july20), { walk: false, reason: "UNCHANGED_SKIP" });
+  assert.deepEqual(minutesRefreshDecision(link, july20), { walk: true, reason: "SCHEDULED_RECHECK" });
   assert.deepEqual(minutesRefreshDecision({ ...link, label: "Results" }, july20), { walk: true, reason: "PUBLISHER_RELABELED" });
   assert.deepEqual(minutesRefreshDecision(null, july20), { walk: false, reason: "LINK_WITHDRAWN_KEPT" });
   const unpublished = notYetPublishedSitting({ tenant, row: row("1336069"), calendarUrl: CALENDAR_URL, observedAt: "2026-09-25T17:34:19.584Z" });
@@ -419,21 +419,21 @@ test("minutes that record no motion and do not say no action was taken stay a fa
   assert.equal(sitting.extraction, "ZERO_ROWS_FAILED", "the fail-closed rule holds for genuinely motion-free text");
 });
 
-test("a held sitting whose note names unread passages is read again once a newer parser is in force, and never again under the same one", () => {
+test("a held sitting uses a new parser immediately and still checks its source on later scheduled passes", () => {
   const printed = printedRow("1343172", "8/13/2026", "Study Session", "DABA0407-10BF-4893-B11D-B037EB724A63");
   const link = minutesLinkFor(printed, tenant.host)!;
   const now = printedSitting("1343172", printed);
   assert.equal(now.extractionNote, null, "this parser leaves no passage unread");
   assert.equal(now.minutesDocument?.parserRevision, MINUTES_PARSER_REVISION, "the reading records the parser that made it");
-  assert.deepEqual(minutesRefreshDecision(link, now), { walk: false, reason: "UNCHANGED_SKIP" });
+  assert.deepEqual(minutesRefreshDecision(link, now), { walk: true, reason: "SCHEDULED_RECHECK" });
   // Three motions, the fourth named unread, held before parser revisions existed.
   const { parserRevision: _revision, ...olderDocument } = now.minutesDocument!;
   const unread =
     ' 1 passage(s) beginning "It was moved" were not in the clerk\'s usual form and were not read: "It was moved by Councilmember Adams, seconded by Councilmember Duff, to direct the City Attorney …"';
   const heldThen = { ...now, extractionNote: unread, minutesDocument: olderDocument };
   assert.deepEqual(minutesRefreshDecision(link, heldThen), { walk: true, reason: "UNREAD_PASSAGES_HELD" });
-  // The same unread passage under the parser in force is not downloaded again every pass.
-  assert.deepEqual(minutesRefreshDecision(link, { ...now, extractionNote: unread }), { walk: false, reason: "UNCHANGED_SKIP" });
+  // A successful partial reading still checks for a correction at the same URL.
+  assert.deepEqual(minutesRefreshDecision(link, { ...now, extractionNote: unread }), { walk: true, reason: "SCHEDULED_RECHECK" });
 });
 
 /*

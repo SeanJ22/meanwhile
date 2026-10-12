@@ -246,6 +246,13 @@
       "when": 1790889600000,
       "tag": "0034_reader_events",
       "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "7",
+      "when": 1790889600001,
+      "tag": "STEP3_write_alarm_stores",
+      "breakpoints": true
     }
   ]
 }

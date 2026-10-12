@@ -64,7 +64,7 @@ import { readClientSource, type ClientTool } from './scout-clients.ts';
 import { accessControlIn } from "../../hunt/access-control.ts";
 import { runOcr } from "../../extract/ocr.ts";
 import { rowsFromItems, cellsFromRow, tablesFromRows, type ExtractedTable } from "../../extract/tables.ts";
-import { assertPublicUrl } from "../../hunt/egress.ts";
+import { assertPublicUrl, publicFetch } from "../../hunt/egress.ts";
 import type { PermissionState, TransportState } from "../../workstate/types.ts";
 import {
   artifactId,
@@ -262,7 +262,7 @@ export const realOpenBytes: OpenBytes = async ({ url, headers, timeoutMs }) => {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const response = await fetch(url, { method: "GET", signal: controller.signal, redirect: "follow", headers });
+    const response = await publicFetch(url, { method: "GET", signal: controller.signal, redirect: "follow", headers });
     const bytes = new Uint8Array(await response.arrayBuffer());
     return {
       status: response.status,

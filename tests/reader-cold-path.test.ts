@@ -38,11 +38,11 @@ import { currentEverydayRoutingProjection } from "../lib/routing/everyday-data-p
 
 import { OFFICIAL_STATE_LEGISLATOR_TARGETS } from "../lib/state-rollcalls/authority.ts";
 
-import { GET as meetingsGET } from "../app/api/meetings/route.ts";
+import { GET as meetingsGET, POST as meetingsPOST } from "../app/api/meetings/route.ts";
 
 import { GET as representationGET } from "../app/api/representation/[...division]/route.ts";
 
-import { primeReaderEdge } from "../app/api/warm/route.ts";
+import { primeReaderEdge } from "../app/api/warm/priming.ts";
 
 import { installRegistryAuthority, registryTransferImport, syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
 
@@ -272,7 +272,7 @@ test("a refusal, and an answer the edge did not serve whole, are never held", as
   // publication the runner's purge replaces.
   delete process.env.WTP_READER_EDGE_DIR;
   const fallback = await meetingsGET(new Request(`https://wtp.test/api/meetings?${TUCSON}`));
-  assert.equal(fallback.headers.get("netlify-cdn-cache-control"), null, `status ${fallback.status} was held`);
+  assert.equal(fallback.headers.get("netlify-cdn-cache-control"), "no-store", `status ${fallback.status} was held`);
   assert.equal(fallback.headers.get("cache-control"), "no-store");
 });
 
@@ -313,4 +313,19 @@ test("a warm call resolves one place per published state from the edge, and refu
   const primed = await primeReaderEdge();
   assert.deepEqual({ places: primed.places, placesRefused: primed.placesRefused }, { places: states.length, placesRefused: 0 });
   assert.equal(registryRuntimeReadState().metadata.versionId, "c21-warm-whole:registry");
+});
+
+
+test("private location POST uses an approximate point and disables browser/CDN caching even for a whole edge answer", async () => {
+  const { dir } = await publishEdge("private-point");
+  process.env.WTP_READER_EDGE_DIR = dir;
+  const response = await meetingsPOST(new Request("https://wtp.test/api/meetings", { method: "POST",
+    headers: { "content-type": "application/json" }, body: JSON.stringify({ lat: 32.22174251, lng: -110.92648531, radiusKm: 25 }) }));
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get("cache-control"), "no-store");
+  assert.equal(response.headers.get("netlify-cdn-cache-control"), "no-store");
+  assert.equal(response.headers.get("netlify-cache-tag"), null);
+  const body = await response.json();
+  assert.deepEqual(body.center, { lat: 32.222, lng: -110.926 });
+  assert.doesNotMatch(JSON.stringify(body.center), /32\.22174251|110\.92648531/);
 });

@@ -12,24 +12,26 @@ export interface SourceAcquisitionEvidence {
 
 type RunForSource = <T>(source: string, operation: () => Promise<T>) => Promise<T>;
 
-const sourceContext = new AsyncLocalStorage<string>();
-let activeEvidence: SourceAcquisitionEvidence[] | null = null;
-
-function urlOf(input: Parameters<typeof fetch>[0]): string {
-  if (typeof input === "string") return input;
-  if (input instanceof URL) return input.href;
-  return input.url;
-}
-
-/** Record the exact acquired bytes while the calling child source is in scope. */
-export function recordAcquiredResponse(input: {
+export interface AcquiredResponse {
   readonly requestedUrl: string;
   readonly finalUrl: string;
   readonly httpStatus: number;
   readonly bytes: Uint8Array;
-}): void {
-  const source = sourceContext.getStore();
-  if (!source || activeEvidence === null) return;
+}
+
+const sourceContext = new AsyncLocalStorage<{ source: string; evidence: SourceAcquisitionEvidence[] }>();
+const observers = new AsyncLocalStorage<readonly ((response: AcquiredResponse) => void)[]>();
+
+export function observeAcquiredResponses<T>(observer: (response: AcquiredResponse) => void, operation: () => Promise<T>): Promise<T> {
+  return observers.run([...(observers.getStore() ?? []), observer], operation);
+}
+
+/** Record the exact acquired bytes while the calling child source is in scope. */
+export function recordAcquiredResponse(input: AcquiredResponse): void {
+  for (const observer of observers.getStore() ?? []) observer(input);
+  const context = sourceContext.getStore();
+  if (!context) return;
+  const { source, evidence: activeEvidence } = context;
   const evidence: SourceAcquisitionEvidence = {
     source,
     requestedUrl: input.requestedUrl,
@@ -46,38 +48,12 @@ export function recordAcquiredResponse(input: {
   )) activeEvidence.push(evidence);
 }
 
-/**
- * Capture every successful fetch performed by a batch composite acquisition.
- * AsyncLocalStorage keeps concurrently fetched children attributed to the
- * child that initiated them. The global fetch replacement exists only for the
- * duration of this explicit batch call and is always restored.
- */
+/** Completed source reads stay attributed to their own batch and child. */
 export async function captureSourceAcquisitions<T>(
   operation: (runForSource: RunForSource) => Promise<T>,
 ): Promise<{ readonly value: T; readonly evidence: readonly SourceAcquisitionEvidence[] }> {
-  if (activeEvidence !== null) throw new Error("SOURCE_ACQUISITION_TRACE_ALREADY_ACTIVE");
-  const originalFetch = globalThis.fetch;
   const evidence: SourceAcquisitionEvidence[] = [];
-  activeEvidence = evidence;
-  globalThis.fetch = (async (input, init) => {
-    const response = await originalFetch(input, init);
-    if (sourceContext.getStore() && response.ok) {
-      const bytes = new Uint8Array(await response.clone().arrayBuffer());
-      recordAcquiredResponse({
-        requestedUrl: urlOf(input),
-        finalUrl: response.url || urlOf(input),
-        httpStatus: response.status,
-        bytes,
-      });
-    }
-    return response;
-  }) as typeof fetch;
-  const runForSource: RunForSource = (source, child) => sourceContext.run(source, child);
-  try {
-    const value = await operation(runForSource);
-    return { value, evidence: [...evidence] };
-  } finally {
-    globalThis.fetch = originalFetch;
-    activeEvidence = null;
-  }
+  const runForSource: RunForSource = (source, child) => sourceContext.run({ source, evidence }, child);
+  const value = await operation(runForSource);
+  return { value, evidence: [...evidence] };
 }

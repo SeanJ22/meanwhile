@@ -128,7 +128,7 @@ export type MinutesRefreshReason =
   | "PUBLISHER_RELABELED"
   /** A failed request or a failure with no document identity held: read again. */
   | "PRIOR_EXTRACTION_FAILED"
-  /** Held with unread "It was moved" passages under an older parser revision: read again. Under the same revision it is not. */
+  /** Held with unread "It was moved" passages under an older parser revision: read again. */
   | "UNREAD_PASSAGES_HELD"
   /** The link serves a document whose extraction failed: the caller checks whether it changed before downloading again. */
   | "FAILED_DOCUMENT_CHECK"
@@ -143,8 +143,8 @@ export type MinutesRefreshReason =
   /** The failed read is `FAILED_MINUTES_REVERIFY_DAYS` old: the bytes are read once more, whatever the check says. */
   | "FAILED_DOCUMENT_REVERIFY"
   | "FORCED"
-  /** Held and unchanged. */
-  | "UNCHANGED_SKIP"
+  /** A successful document is re-read on the next scheduled pass, even at the same URL. */
+  | "SCHEDULED_RECHECK"
   /** Still not published, as last recorded. */
   | "STILL_NOT_PUBLISHED"
   /** Minutes held from a link the portal no longer shows: kept, since a withdrawn link is not a reversed decision. */
@@ -184,7 +184,7 @@ export function minutesRefreshDecision(
   if (UNREAD_PASSAGES_NOTE.test(held.extractionNote ?? "") && document.parserRevision !== MINUTES_PARSER_REVISION) {
     return { walk: true, reason: "UNREAD_PASSAGES_HELD" };
   }
-  return { walk: false, reason: "UNCHANGED_SKIP" };
+  return { walk: true, reason: "SCHEDULED_RECHECK" };
 }
 
 /** What a HEAD of the failed document answered, or null when it could not be asked. */

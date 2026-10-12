@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { getOrCreateBrowserKey, mintBrowserKey } from "@/lib/state/browser-key";
+import { submitDemandSignal } from "@/lib/demand/client";
 
 /**
  * "Want us to get this info sooner?" One tap records one ask; there is no
@@ -31,28 +31,8 @@ export function DemandPill({
 
   const send = async () => {
     setPhase("SENDING");
-    const tapAt = new Date().toISOString();
-    const tapId = mintBrowserKey();
-    try {
-      const response = await fetch("/api/demand-signal", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          subjectType,
-          subjectId,
-          signal: "WANT_THIS_SOONER",
-          // Returning-reader ID, exact time and a per-tap event id, so a retried request is counted once.
-          continuityKey: getOrCreateBrowserKey("wtp.ask_key"),
-          occurredAt: tapAt,
-          eventId: tapId,
-          ...(typeof lat === "number" && typeof lng === "number" ? { lat, lng } : {}),
-        }),
-      });
-      // 204 stored, 202 accepted with no store behind it; both mean the ask reached us.
-      setPhase(response.ok ? "NOTED" : "FAILED");
-    } catch {
-      setPhase("FAILED");
-    }
+    const stored = await submitDemandSignal(subjectType, subjectId, { lat, lng });
+    setPhase(stored ? "NOTED" : "FAILED");
   };
 
   if (phase === "NOTED") {
@@ -82,7 +62,7 @@ export function DemandPill({
       </button>
       {phase === "FAILED" && (
         <span className="ml-1.5 text-[0.625rem] text-muted">
-          We couldn&apos;t note that just now.
+          We couldn&apos;t confirm that was noted.
         </span>
       )}
     </p>

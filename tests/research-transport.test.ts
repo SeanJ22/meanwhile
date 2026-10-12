@@ -17,7 +17,7 @@ const answering = (status: number, body: Uint8Array = new Uint8Array(0), locatio
 
 test("an answered read is returned as it came, and curl is never run", async () => {
   let ran = 0;
-  const get = identifiedResearchGet({ first: answering(200, new TextEncoder().encode("BEGIN:VCALENDAR")), curl: async () => { ran += 1; return Buffer.from(""); } });
+  const get = identifiedResearchGet({ lookup: async () => [{address:"93.184.216.34",family:4}], first: answering(200, new TextEncoder().encode("BEGIN:VCALENDAR")), curl: async () => { ran += 1; return Buffer.from(""); } });
   const got = await get(REQUEST);
   assert.equal(got.status, 200);
   assert.equal(ran, 0);
@@ -25,7 +25,7 @@ test("an answered read is returned as it came, and curl is never run", async () 
 
 test("a 403 is asked once more through curl, with the same User-Agent and our purpose and contact, never following a redirect", async () => {
   const seen: string[][] = [];
-  const get = identifiedResearchGet({
+  const get = identifiedResearchGet({ lookup: async () => [{address:"93.184.216.34",family:4}],
     first: answering(403, CHALLENGE),
     curl: async (args) => {
       seen.push([...args]);
@@ -46,9 +46,9 @@ test("a 403 is asked once more through curl, with the same User-Agent and our pu
 });
 
 test("a host that refuses the second client too is recorded as refusing, and a curl that cannot run leaves the first answer", async () => {
-  const refused = await identifiedResearchGet({ first: answering(403, CHALLENGE), curl: async () => Buffer.from("HTTP/2 403\r\ncf-mitigated: challenge\r\n\r\n<html>Just a moment...</html>") })(REQUEST);
+  const refused = await identifiedResearchGet({ lookup: async () => [{address:"93.184.216.34",family:4}], first: answering(403, CHALLENGE), curl: async () => Buffer.from("HTTP/2 403\r\ncf-mitigated: challenge\r\n\r\n<html>Just a moment...</html>") })(REQUEST);
   assert.equal(refused.status, 403);
-  const broken = await identifiedResearchGet({ first: answering(403, CHALLENGE), curl: async () => { throw new Error("spawn curl ENOENT"); } })(REQUEST);
+  const broken = await identifiedResearchGet({ lookup: async () => [{address:"93.184.216.34",family:4}], first: answering(403, CHALLENGE), curl: async () => { throw new Error("spawn curl ENOENT"); } })(REQUEST);
   assert.equal(broken.status, 403);
   assert.deepEqual(broken.body, CHALLENGE);
 });

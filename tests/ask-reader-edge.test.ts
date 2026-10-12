@@ -226,7 +226,8 @@ test("a marked warm call loads the Ask's code and every Ask source from the edge
     return stubbed(input, init);
   }) as typeof fetch;
   try {
-    const { GET, KEEP_WARM_MARKER, ASK_SOURCE_PRELOADS } = await import("../app/api/warm/route.ts");
+    const { GET } = await import("../app/api/warm/route.ts");
+    const { KEEP_WARM_MARKER, ASK_SOURCE_PRELOADS } = await import("../app/api/warm/priming.ts");
     const response = await GET(new Request("https://wtp.test/api/warm?hold=0", { headers: { "x-wtp-synthetic-run": KEEP_WARM_MARKER } }));
     assert.equal(response.status, 200);
     const { primed } = await response.json() as { primed: { manifest: boolean; ask: { graphMs: number | null; sources: number; sourcesRefused: number; sourcesFailed: number; sourcesMs: number | null } | null } };
@@ -253,13 +254,13 @@ test("an unmarked warm call loads nothing for the Ask, and the warm route never 
   const { GET } = await import("../app/api/warm/route.ts");
   const { primed } = await (await GET(new Request("https://wtp.test/api/warm?hold=0"))).json() as { primed: unknown };
   assert.equal(primed, null);
-  const source = readFileSync("app/api/warm/route.ts", "utf8").replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, "");
+  const source = ["route.ts", "priming.ts"].map((file) => readFileSync(`app/api/warm/${file}`, "utf8")).join("\n").replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, "");
   assert.match(source, /await import\("@\/app\/api\/ask\/grounded\/route"\)\.then\(\(\) => \{ primed\.graphMs/, "the route module is imported for its graph only");
   assert.doesNotMatch(source, /\bPOST\b|captureAskInteraction|recordAskGapObservations|afterResponse|interpretQuestion|synthesize|anthropic|getDb/i);
 });
 
 test("the warm call settles exactly the sources the Ask preloads, by the names its trace times them under", async () => {
-  const { ASK_SOURCE_PRELOADS } = await import("../app/api/warm/route.ts");
+  const { ASK_SOURCE_PRELOADS } = await import("../app/api/warm/priming.ts");
   const ask = readFileSync("app/api/ask/grounded/route.ts", "utf8");
   const start = ask.indexOf("const essentialPreloads = [");
   const end = ask.indexOf("await settleGroundedSourcePreloads(topicRoute");

@@ -304,6 +304,7 @@ test("the curl rung receives both a native deadline and an abortable process sig
           if (signal.aborted) abort();
           else signal.addEventListener("abort", abort, { once: true });
         }),
+        async () => [{address:"93.184.216.34",family:4}],
       ),
     ),
     /acquisition deadline/,

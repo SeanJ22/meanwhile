@@ -155,3 +155,23 @@ test("RCD-9: the current NH parser expires before the next biennial roster", () 
   assert.equal(result.state, "TEMPORAL_INVALID");
   assert.equal(result.receipt.checks.find((check) => check.check === "TEMPORAL_VALIDITY")?.code, "WRONG_PERIOD_OR_VINTAGE");
 });
+
+test("NH publishes exact matched current members while unmatched and former rows remain outside the new fact set", () => {
+  const member: NhMembers[number] = { chamber: "H", familyName: "Matched", givenName: "Member", middleName: null,
+    seatNo: "1", county: "Merrimack", district: "Merrimack 1", electedStatus: "INCUMBENT", party: "U", title: "Representative",
+    phone: null, email: null, town: "Concord", committees: [] };
+  const members: NhMembers = [member, { ...member, seatNo: "2", familyName: "Unresolved" }, { ...member, seatNo: "3", electedStatus: "FORMER" }];
+  const identity = exactNhIdentitySeed([member]);
+  const candidate = nhMembersCandidate({ rawText: "three source rows", finalUrl: "https://gc.nh.gov/downloads/Members.txt",
+    httpStatus: 200, retrievedAt: "2026-09-08T12:00:00.000Z", ...identity,
+    identityCrosswalk: { ...identity.identityCrosswalk, unresolved: ["Member Unresolved lacks an exact official identity"] },
+    extraction: { members, counts: { logicalInput: 3, produced: 3, dropped: 0, statedTotal: null, verdict: "COULD_NOT_ASSERT" },
+      byStatus: { INCUMBENT: 2, NEW: 0, FORMER: 1, UNSTATED: 0 }, byChamber: { H: 3, S: 0 } } });
+  assert.equal(validateRoutineCandidate(candidate, null, "2026-09-08T12:00:00.000Z").state, "VALIDATED");
+  assert.equal(candidate.normalization.outputRecords, 1);
+  assert.equal(candidate.normalization.droppedRecords, 2);
+  assert.equal(candidate.horizon.returnedRecords, 1);
+  assert.equal(candidate.horizon.claimsComplete, false);
+  assert.equal(candidate.absence.claimsAbsence, false);
+  assert.deepEqual((candidate.normalizedPayload as { unresolved: string[] }).unresolved, ["Member Unresolved lacks an exact official identity"]);
+});

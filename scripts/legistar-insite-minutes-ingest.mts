@@ -24,7 +24,7 @@
  *    link → recorded NOT_YET_PUBLISHED (the publisher's state, never "no
  *    decision"); a link we have not read, or whose label moved ("Results" →
  *    "Minutes") → read the document, parse its motions, and write the sitting
- *    as its own candidate; an unchanged link → nothing.
+ *    as its own candidate; a held link → re-read for corrections at the same URL.
  * 3. Recompute which held minutes a later sitting's minutes record approving.
  *
  * Exit 0 only when the last candidate is the GOOD promoted pointer (a changed
@@ -186,6 +186,7 @@ export interface MinutesIngestInput {
   readonly log?: (line: string) => void;
   /** Pacing between portal requests. The vendor's `Crawl-delay: 2` in production. */
   readonly spacingMs?: number;
+  readonly fetchImpl?: typeof fetch;
 }
 
 export interface MinutesIngestResult {
@@ -243,8 +244,7 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
   const log = input.log ?? ((line: string) => console.log(line));
   const writes = args.promote && !args.dryRun;
   const spacingMs = input.spacingMs ?? INSITE_SPACING_MS;
-  // Late-bound, so every read goes through the acquisition trace installed for it.
-  const session = new InSiteSession({ fetchImpl: (url, init) => globalThis.fetch(url, init), spacingMs });
+  const session = new InSiteSession({ spacingMs, fetchImpl: input.fetchImpl });
   const calendarUrl = `https://${tenant.host}/Calendar.aspx`;
   const refusedSittings: string[] = [];
   let promotedSittings = 0;
@@ -323,7 +323,23 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
   let budgetExhausted = false;
   const base = { tenant, calendarUrl };
 
-  for (const row of sittings) {
+  const lastAttempts = new Map(snapshot.sittings.map(sitting => [sitting.meetingId, Date.parse(sitting.publication.observedAt)]));
+  const candidates = await store.recentUnpromotedCandidateIds?.(outcomeTenant.sourceId, outcomeTenant.recordClass, outcomeTenant.scope,
+    sittings.length * 2 + args.maxDocuments + 1) ?? [];
+  for (const id of candidates) {
+    const record = await store.readCandidate(id);
+    if (record?.candidate.sourceId !== outcomeTenant.sourceId || record.candidate.scope !== outcomeTenant.scope) continue;
+    const observed = (record.candidate.normalizedPayload as { snapshot?: OutcomeSnapshot } | null)?.snapshot;
+    for (const sitting of observed?.sittings ?? []) {
+      const at = Date.parse(sitting.publication.observedAt);
+      if (Number.isFinite(at) && at > (lastAttempts.get(sitting.meetingId) ?? 0)) lastAttempts.set(sitting.meetingId, at);
+    }
+  }
+  const lastRead = (row: InSiteCalendarRow): number => {
+    const at = lastAttempts.get(insiteMeetingId(tenant.slug, row.insiteId!)) ?? 0;
+    return Number.isFinite(at) ? at : 0;
+  };
+  for (const row of [...sittings].sort((a, b) => lastRead(a) - lastRead(b))) {
     const meetingId = insiteMeetingId(tenant.slug, row.insiteId!);
     const link = minutesLinkFor(row, tenant.host);
     const heldSitting = held.get(meetingId);

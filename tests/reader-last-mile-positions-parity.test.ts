@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { GET, settlePositionHoldingAnswer } from "../app/api/positions/[subject]/[topic]/route.ts";
+import { GET } from "../app/api/positions/[subject]/[topic]/route.ts";
+import { settlePositionHoldingAnswer } from "../app/api/positions/[subject]/[topic]/holdings.ts";
 import { readerPositionsFor, type ReaderPositionAnswer } from "../lib/corpus/reader-positions.ts";
 import { positionsFor, searchTerms } from "../lib/corpus/positions.ts";
 import { unifiedCorpus, unifiedCorpusFromHoldings } from "../lib/corpus/unified.ts";

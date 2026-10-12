@@ -156,14 +156,10 @@ async function postWithSettings(request: Request) {
       ocdIds,
       marker: markerFromRequest(request),
     });
-    /*
-     * 204 stored, 202 accepted-with-no-store. The client's confirmation says
-     * the same thing either way — it confirms the ASK, which is true in both
-     * cases — and it never reports a total, because there is no read path.
-     */
-    return new Response(null, { status: stored ? 204 : 202 });
+    if (stored) return new Response(null, { status: 204 });
+    await raiseWriteAlarm("demand_signals", new Error("Demand signal store is unavailable"));
+    return Response.json({ error: "could not store the signal" }, { status: 503 });
   } catch (error) {
-    console.error("demand signal write failed", error);
     await raiseWriteAlarm("demand_signals", error);
     return Response.json({ error: "could not store the signal" }, { status: 500 });
   }

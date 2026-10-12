@@ -1,3 +1,4 @@
+import { publicFetch } from "./egress.ts";
 import { savedPageReader, realOpenBytes } from "../control-plane/scheduler/scout-tools.ts";
 import type { ArtifactProvenance, ScoutToolContext } from "../control-plane/scheduler/scout-contract.ts";
 import { durableResearchTools, type ResearchRuntimeTools } from "../control-plane/workers/durable-research-tools.ts";
@@ -140,7 +141,7 @@ export async function placeSourceReader(input: {
       const address = url instanceof Request ? url.url : String(url);
       takeRequest(address);
       await tools.spaceOut(new URL(address).hostname);
-      return fetch(url, options);
+      return publicFetch(url, options);
     }) satisfies typeof fetch,
     geographyCaptures,
     readGeography: async (url: string) => {

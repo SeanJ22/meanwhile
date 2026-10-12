@@ -1,3 +1,4 @@
+import { publicFetch } from "../hunt/egress.ts";
 /**
  * The plain fetch door looks and free method tries use: the identified
  * User-Agent, a human pace per website, a timeout, and at most a megabyte
@@ -36,7 +37,7 @@ export function pacedProbeFetch(input: {
   readonly fetchImpl?: typeof fetch;
   readonly sleep?: (ms: number) => Promise<void>;
 }): ProbeFetch {
-  const fetchImpl = input.fetchImpl ?? globalThis.fetch;
+  const fetchImpl = input.fetchImpl ?? publicFetch;
   const sleep = input.sleep ?? ((ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms)));
   const clock = input.clock ?? Date.now;
   const lastByHost = new Map<string, Promise<void>>();

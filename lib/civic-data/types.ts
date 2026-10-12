@@ -496,6 +496,15 @@ export type TrustedLkgTransferEvidence =
   | TrustedLkgImportEvidence
   | TrustedLkgReattestationEvidence;
 
+/** Exact candidates replayed from one complete official contest list. */
+export interface BallotCandidateListEvidence {
+  readonly contestId: string;
+  readonly sourceUrl: string;
+  readonly rawHash: string;
+  readonly retrievedAt: string;
+  readonly candidateIds: readonly string[];
+}
+
 /** `readModel` is the bounded projection Reader consumes; Reader never queries staging rows. */
 export interface RoutineCandidate {
   readonly id: string;
@@ -516,6 +525,7 @@ export interface RoutineCandidate {
   readonly civicRecords?: readonly CivicRecordMember[];
   readonly changeSet?: RoutineChangeSet;
   readonly removalEvidence?: readonly RoutineRemovalEvidence[];
+  readonly ballotCandidateLists?: readonly BallotCandidateListEvidence[];
   readonly bootstrapImport?: TrustedLkgTransferEvidence;
   readonly excludedFacts?: readonly {
     readonly key?: string | null;

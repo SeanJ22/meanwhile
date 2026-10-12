@@ -7,7 +7,7 @@ import {
   settleStateVoteMemberHolding,
   stateVoteAttributionForHolding,
   type HeldStateVoteScope,
-} from "../app/api/votes/route.ts";
+} from "../app/api/votes/holdings.ts";
 import {
   clearStateVotesProjectionCacheForTest,
   getStateVotesSnapshot,

@@ -120,6 +120,7 @@ export interface RoutineDataStore {
   ) => Promise<CandidateVersionRecord>;
   readonly readCandidate: (candidateId: string) => Promise<CandidateVersionRecord | null>;
   readonly readCandidateSummary: (candidateId: string) => Promise<CandidateVersionSummary | null>;
+  readonly recentUnpromotedCandidateIds?: (sourceId: string, recordClass: RoutineRecordClass, scope: string, limit: number) => Promise<readonly string[]>;
   readonly readPromotion: <T = unknown>(recordClass: RoutineRecordClass, scope: string) => Promise<PromotedProjection<T> | null>;
   readonly readCandidates: (candidateIds: readonly string[]) => Promise<readonly CandidateVersionReadback[]>;
   readonly readCandidateProof?: (candidateId: string) => Promise<CandidateVersionRecord | null>;
@@ -782,6 +783,13 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
   async readCandidateSummary(candidateId: string): Promise<CandidateVersionSummary | null> {
     const row = this.candidates.get(candidateId);
     return row ? candidateVersionSummary(structuredClone(row)) : null;
+  }
+
+  async recentUnpromotedCandidateIds(sourceId: string, recordClass: RoutineRecordClass, scope: string, limit: number): Promise<readonly string[]> {
+    if (!Number.isSafeInteger(limit) || limit < 1) throw new Error("CANDIDATE_HISTORY_LIMIT_INVALID");
+    return [...this.candidates.values()].filter(({ candidate, state }) => state !== "PROMOTED" && candidate.sourceId === sourceId && candidate.recordClass === recordClass && candidate.scope === scope)
+      .sort((a, b) => b.candidate.retrieval.retrievedAt.localeCompare(a.candidate.retrieval.retrievedAt) || b.candidate.id.localeCompare(a.candidate.id))
+      .slice(0, limit).map(row => row.candidate.id);
   }
 
   private pointerRead(recordClass: RoutineRecordClass, scope: string): PromotedProjection | null {
@@ -1695,6 +1703,15 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   async readCandidateSummary(candidateId: string): Promise<CandidateVersionSummary | null> {
     const [row] = await candidateSummaryRead(this.db, candidateId);
     return row ? postgresCandidateSummary(row) : null;
+  }
+
+  async recentUnpromotedCandidateIds(sourceId: string, recordClass: RoutineRecordClass, scope: string, limit: number): Promise<readonly string[]> {
+    if (!Number.isSafeInteger(limit) || limit < 1) throw new Error("CANDIDATE_HISTORY_LIMIT_INVALID");
+    const rows = await this.db.select({ id: civicDataCandidates.id }).from(civicDataCandidates)
+      .where(and(eq(civicDataCandidates.sourceId, sourceId), eq(civicDataCandidates.recordClass, recordClass), eq(civicDataCandidates.scope, scope),
+        sql`${civicDataCandidates.state} <> 'PROMOTED'`))
+      .orderBy(desc(civicDataCandidates.retrievedAt), desc(civicDataCandidates.id)).limit(limit);
+    return rows.map(row => row.id);
   }
 
   async readPromotion<T = unknown>(recordClass: RoutineRecordClass, scope: string): Promise<PromotedProjection<T> | null> {

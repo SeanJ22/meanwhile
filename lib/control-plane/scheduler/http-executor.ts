@@ -6,7 +6,7 @@
 
 import { createHash } from "node:crypto";
 
-import { assertPublicUrl } from "../../hunt/egress.ts";
+import { assertPublicUrl, publicFetch } from "../../hunt/egress.ts";
 import { ZERO_COST, type AttemptCost } from "../attempt.ts";
 
 import type { RunWork, WorkOutcome } from "./dispatch.ts";
@@ -63,7 +63,7 @@ export const realFetch: FetchOne = async (url, timeoutMs) => {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const response = await fetch(url, {
+    const response = await publicFetch(url, {
       signal: controller.signal,
       redirect: "follow",
       headers: {

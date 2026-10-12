@@ -96,8 +96,11 @@ export function workerReaderPackage(input: StancesInput & Parameters<typeof veri
 }
 
 export function workerReaderPackageWithPulls(input: StancesInput & Parameters<typeof verifiedWorkerRecords>[0] & { registry: RegistryRuntimePrior | null }):
-  { readonly package: ManualProjectionPackage; readonly pulledMemberIds: ReadonlySet<string> } {
-  if (input.plan.publication?.contractId === "ballot-contests") return { package: workerBallotContestsPackage(input).package, pulledMemberIds: new Set() };
+  { readonly package: ManualProjectionPackage; readonly pulledMemberIds: ReadonlySet<string>; readonly unresolved: readonly string[] } {
+  if (input.plan.publication?.contractId === "ballot-contests") {
+    const built = workerBallotContestsPackage(input);
+    return { package: built.package, pulledMemberIds: new Set(), unresolved: built.heldContests };
+  }
   const target = input.plan.publication;
   requirePublication(target && isWorkerReaderContract(target.contractId), "READER_CONTRACT_UNRESOLVED");
   requirePublication(target.contractId !== "voting-sites", "POLLING_USES_REGISTERED_DOOR_PUBLICATION");
@@ -221,15 +224,34 @@ export function workerReaderPackageWithPulls(input: StancesInput & Parameters<ty
         signup: f.signup ?? null, writtenComment: f.writtenComment ?? null, attend: f.attend ?? null, timeLimit: f.timeLimit ?? null,
         sourceUrl: checked.primary.evidence.canonicalUrl, collectedAt: checked.primary.observedAt, verifiedAt: input.now };
   };
-  const records = checked.extraction.records.map(record => ({ ...rowFor(record),
-    fieldSources: parserFieldSources(record.id, record.fields, checked.extraction.spans, input.captures, input.now) }));
-  requirePublication(records.length === checked.extraction.records.length && new Set(records.map(r => r.id)).size === records.length, "READER_IDENTITY_COLLISION");
+  const unresolved = checked.heldRecordIds.filter(id => !checked.pulledRecords.some(record => record.id === id));
+  const readerFailures: Error[] = [];
+  const converted = checked.extraction.records.flatMap(record => {
+    try {
+      return [{ sourceId: record.id, row: { ...rowFor(record),
+        fieldSources: parserFieldSources(record.id, record.fields, checked.extraction.spans, input.captures, input.now) } }];
+    } catch (error) {
+      if (!(error instanceof Error) || !error.message.startsWith("WORKER_PUBLICATION_")) throw error;
+      readerFailures.push(error);
+      unresolved.push(`${record.id}: ${error.message}`);
+      return [];
+    }
+  });
+  const readerIdCounts = new Map<string, number>();
+  for (const { row } of converted) readerIdCounts.set(row.id, (readerIdCounts.get(row.id) ?? 0) + 1);
+  const records = converted.flatMap(({ sourceId, row }) => {
+    if (readerIdCounts.get(row.id) === 1) return [row];
+    unresolved.push(`${sourceId}: WORKER_PUBLICATION_READER_IDENTITY_COLLISION`);
+    return [];
+  });
   // A pulled record that cannot be turned into a row never reached the version, so it has nothing to remove.
   const pulledMemberIds = new Set(checked.pulledRecords.flatMap(record => { try { return [String(rowFor(record).id)]; } catch { return []; } }));
+  if (!records.length && !pulledMemberIds.size && readerFailures.length) throw readerFailures[0];
+  requirePublication(records.length > 0 || pulledMemberIds.size > 0, `NO_RECORD_MEETS_READER_REQUIREMENTS:${unresolved.join("; ")}`);
   const documentUrls = new Set(records.flatMap(row => "documentUrl" in row ? [String(row.documentUrl)] : []));
   const budgetCaptures = input.captures.filter(capture => captureIntact(capture) &&
     (documentUrls.has(capture.evidence.canonicalUrl) || checked.sourceReceipt.sources.some(source => source.finalUrl === capture.evidence.canonicalUrl)));
-  return { pulledMemberIds, package: { contractId, version: `worker:${input.parser.id}`, sourceThrough: input.now,
+  return { pulledMemberIds, unresolved, package: { contractId, version: `worker:${input.parser.id}`, sourceThrough: input.now,
     sourceReceipt: contractId === "government-budgets" ? section3SourceReceipt(budgetCaptures, input.now, `section3-validator:${input.parser.id}`,
       "Each government budget or finance fact keeps its independently verified source, category and government; adopted budget and amendment documents have complete saved captures.") : checked.sourceReceipt,
     payload: contractId === "everyday-routing"
@@ -285,14 +307,16 @@ export async function publishWorkerReaderResults(input: {
       const before = (prior?.payload as CuratedReaderProjection | undefined)?.records ?? [];
       const prepared = input.contractId === "comment-access" ? inheritVerifiedCommentDetails(checked, prior) : checked;
       const requested = (prepared.payload as CuratedReaderProjection).records;
-      const delivered = requested.map(record => {
+      const resolved = requested.map(record => {
         const old = before.find(row => row.id === record.id);
         return old && prior ? resolveRecordConflicts(record, old, prepared.sourceReceipt, prior.sourceReceipt).record : record;
       });
       const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(prepared, input.store, input.now, built.pulledMemberIds);
       const composed = candidate.readModel as CuratedReaderProjection;
-      requirePublication(delivered.every(row => composed.records.some(published => canonicalJson(published) === canonicalJson(row))),
-        `READER_FACTS_HELD:${candidate.excludedFacts?.map(row => `${row.code}: ${row.detail}`).join("; ") ?? "typed record was withheld"}`);
+      const delivered = resolved.filter(row => composed.records.some(published => canonicalJson(published) === canonicalJson(row)));
+      const unresolved = [...built.unresolved, ...resolved.filter(row => !delivered.includes(row)).map(row =>
+        `${row.id}: ${candidate.excludedFacts?.map(fact => `${fact.code}: ${fact.detail}`).join("; ") || "typed record was withheld"}`)];
+      requirePublication(delivered.length > 0 || built.pulledMemberIds.size > 0, `READER_FACTS_HELD:${unresolved.join("; ")}`);
       candidateId = candidate.id;
       const changes = publicationRecordChanges({ previousVersionId: prior?.versionId ?? null,
         accepted: delivered.map(row => ({ recordId: row.id, readerId: row.id, value: row, previous: before.find(old => old.id === row.id) })) });
@@ -313,8 +337,11 @@ export async function publishWorkerReaderResults(input: {
       await recordPublicationFlow(input.repos, published.candidate.candidate.id,
         { workerResultId: parser.id, stage: "LIVE", records: changes.recordChanges.length,
           changedRecords: published.confirmed ? 0 : changes.records.added + changes.records.changed, versionId }, input.now);
-      outcome = { at: input.now, workerResultId: parser.id, status: "PUBLISHED", code: published.confirmed ? "VERIFIED_RESULT_REUSED" : "VERIFIED_RESULT_PUBLISHED",
-        detail: `${input.contractId}: ${delivered.length} record(s) passed §3 on the saved official page, promotion completed and the typed Reader readback passed.`, candidateId, versionId,
+      outcome = { at: input.now, workerResultId: parser.id, status: unresolved.length ? "PARTIALLY_PUBLISHED" : "PUBLISHED",
+        code: unresolved.length ? "READER_ROWS_REQUIRE_REPAIR" : published.confirmed ? "VERIFIED_RESULT_REUSED" : "VERIFIED_RESULT_PUBLISHED",
+        detail: `${input.contractId}: ${delivered.length} record(s) passed §3 on the saved official page, promotion completed and the typed Reader readback passed.` +
+          (unresolved.length ? ` ${unresolved.length} row(s) stay open as work: ${unresolved.join("; ")}.` : ""),
+        ...(unresolved.length ? { recovery: "WORKER" as const } : {}), candidateId, versionId,
         ...changes, acceptedRecordIds: delivered.map(row => row.id) };
       wentLive = delivered.length;
       if (input.contractId === "public-records") await recordNewPublicKinds(input.repos, delivered as unknown as readonly PublicRecord[], input.now);

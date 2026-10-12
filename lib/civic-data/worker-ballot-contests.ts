@@ -1,3 +1,5 @@
+import { verifiedBallotListReplacement } from "./ballot-list-replacement.ts";
+import type { BallotCandidateListEvidence } from "./types.ts";
 import { recordPublicationFlow } from "./publication-flow.ts";
 import { publicationRecordChanges } from "./publication-record-changes.ts";
 import { createHash } from "node:crypto";
@@ -35,13 +37,14 @@ export function workerBallotContestsPackage(input: {
   if (input.plan.contract.recordClass === "BALLOT_MEASURE") return workerBallotMeasuresPackage(input);
   requirePublication(input.plan.contract.recordClass === "BALLOT_CONTEST", "BALLOT_CLASS_MISMATCH");
   const checked = verifiedWorkerRecords(input);
-  const inventory = inventoryRecordEvidence(checked.primary.evidence, checked.contract.extraction);
+  const inventory = inventoryRecordEvidence(checked.primary.evidence, checked.contract.extraction, checked.contract);
   const sourceListComplete = inventory.declaredCount === null || inventory.declaredCount === inventory.rows.length;
   const source = inventory.rows.map(row => Object.fromEntries(Object.entries(row).map(([key, cell]) => [key, cell.value])));
   const groups = new Map<string, typeof source>();
   for (const row of source) groups.set(groupKey(row), [...groups.get(groupKey(row)) ?? [], row]);
   const state = checked.contract.jurisdiction.state.toUpperCase();
   const ballots: Record<string, BallotSet> = {}, heldContests: string[] = [];
+  const ballotCandidateLists: BallotCandidateListEvidence[] = [];
     // Structured delimiters are not visible word boundaries in section3Contest, so use the exact replayed source cells.
   const pageText = ["DELIMITED_TEXT", "JSON_RECORDS", "XML_RECORDS"].includes(checked.contract.extraction.format)
     ? source.map(row => Object.values(row).join("\n")).join("\n") : checked.primary.evidence.text;
@@ -82,13 +85,16 @@ export function workerBallotContestsPackage(input: {
         partyLabel: text(value.partyLabel) || null, slogan: text(value.slogan) || null,
         incumbent: typeof value.incumbent === "boolean" ? value.incumbent : null, websiteUrl: text(value.websiteUrl) || null, provenance };
     });
+    if (complete) ballotCandidateLists.push({ contestId, sourceUrl: page.url,
+      rawHash: (checked.primary.evidence.sourceDocument?.contentHash ?? checked.primary.evidence.contentHash).slice(7),
+      retrievedAt: checked.primary.observedAt, candidateIds: candidacies.map(row => row.id) });
     const ballotKey = `${state}:${electionId}`;
     const ballot = ballots[ballotKey] ?? { election, contests: [], candidacies: [], measures: [], absences: [] };
     ballot.contests.push(contest); ballot.candidacies.push(...candidacies); ballots[ballotKey] = ballot;
   }
   requirePublication(Object.keys(ballots).length, "NO_VERIFIED_BALLOT_CANDIDATE");
   return { package: { contractId: "ballot-contests", version: `worker:${input.parser.id}`, sourceThrough: input.now,
-    sourceReceipt: checked.sourceReceipt, payload: { kind: "ballot-contests", ballots } }, heldContests };
+    sourceReceipt: checked.sourceReceipt, payload: { kind: "ballot-contests", ballots }, ballotCandidateLists }, heldContests };
 }
 
 export function mergeBallotContests(input: ManualProjectionPackage, prior: ManualProjectionPrior | null): ManualProjectionPackage {
@@ -98,14 +104,22 @@ export function mergeBallotContests(input: ManualProjectionPackage, prior: Manua
   for (const ballot of Object.values(fresh.ballots)) {
     const key = ballotElectionKey(ballot), before = ballots[key];
     const ids = new Set(ballot.contests.map(row => row.id));
+    const replacedLists = new Set(ballot.contests.filter(contest => verifiedBallotListReplacement({
+      contest, priorContest: before?.contests.find(row => row.id === contest.id),
+      candidates: ballot.candidacies, priorCandidates: before?.candidacies ?? [],
+      evidence: input.ballotCandidateLists ?? [], receipt: input.sourceReceipt,
+    })).map(contest => contest.id));
     const keepsMeasure = (contestId: string, sourceUrl: string | null) => !ids.has(contestId) ||
       !ballot.measures.some(row => row.contestId === contestId) && ballot.contests.some(row => row.id === contestId && row.measureTextUrl === sourceUrl);
     requirePublication(!before?.election.date || !ballot.election.date || before.election.date === ballot.election.date, "BALLOT_ELECTION_DATE_CONFLICT");
+    const carriedCandidates = (before?.candidacies ?? []).filter(row => !ballot.candidacies.some(next => next.id === row.id) &&
+      !replacedLists.has(row.contestId));
+    const contests = ballot.contests.map(contest => carriedCandidates.some(row => row.contestId === contest.id)
+      ? { ...contest, candidateListComplete: false, scopeNote: "We're working on getting the rest of this candidate list" }
+      : contest);
     ballots[key] = before ? { ...before, election: { ...ballot.election, date: ballot.election.date || before.election.date },
-      contests: [...before.contests.filter(row => !ids.has(row.id)), ...ballot.contests],
-      candidacies: [...before.candidacies.filter(row => !ballot.candidacies.some(next => next.id === row.id) &&
-        !ballot.contests.some(contest => contest.id === row.contestId && contest.candidateListComplete === true &&
-          contest.provenance.sourceUrl === before.contests.find(old => old.id === contest.id)?.provenance.sourceUrl)), ...ballot.candidacies],
+      contests: [...before.contests.filter(row => !ids.has(row.id)), ...contests],
+      candidacies: [...carriedCandidates, ...ballot.candidacies],
       measures: [...before.measures.filter(row => keepsMeasure(row.contestId, row.provenance.sourceUrl)), ...ballot.measures],
       ...(before.measureRecords !== undefined || ballot.measureRecords !== undefined ? {
         measureRecords: [...before.measureRecords ?? []].filter(row => keepsMeasure(row.contestId, row.sourceUrl)).concat([...ballot.measureRecords ?? []]) } : {}) } : ballot;
@@ -113,7 +127,8 @@ export function mergeBallotContests(input: ManualProjectionPackage, prior: Manua
   const urls = new Set(Object.values(ballots).flatMap(ballot => [...ballot.contests, ...ballot.candidacies, ...ballot.measures].map(row => row.provenance.sourceUrl)));
   const sources = [...input.sourceReceipt.sources, ...prior?.sourceReceipt.sources ?? []].filter(row => urls.has(row.finalUrl) || urls.has(row.requestedUrl));
   return { ...input, payload: { kind: "ballot-contests", ballots }, sourceReceipt: { ...input.sourceReceipt,
-    sources: sources.filter((source, at) => sources.findIndex(row => canonicalCivicDataJson(row) === canonicalCivicDataJson(source)) === at) } };
+    sources: sources.filter((source, at) => sources.findIndex(row =>
+      new URL(row.finalUrl).href === new URL(source.finalUrl).href && row.rawHash === source.rawHash) === at) } };
 }
 
 export async function publishWorkerBallotContestsResults(input: {

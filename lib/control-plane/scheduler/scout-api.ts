@@ -1,7 +1,7 @@
 /** Credentialed, read-only government APIs shared by Scouts and Detectives.
  * Credentials stay in transport, never in source locators or model output. */
 import { readCompleteResponse } from "../../sources/source-bytes.ts";
-import { assertPublicUrl } from '../../hunt/egress.ts';
+import { assertPublicUrl, publicFetch } from '../../hunt/egress.ts';
 import type { ScoutToolSpec } from './scout-contract.ts';
 
 export const SOURCE_API_TOOLS = ['congress_api', 'census_api', 'fec_api', 'plural_api', 'legiscan_api', 'lda_api', 'data_gov_api', 'socrata_api', 'google_civic_api', 'sam_gov_api', 'legistar_api'] as const;
@@ -47,7 +47,7 @@ export async function readSourceApi(name: SourceApiTool, raw: unknown, options: 
   const env = options.env ?? process.env;
   const input = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;
   const params = input.params && typeof input.params === 'object' ? input.params as Record<string,unknown> : {};
-  const fetcher = options.fetchImpl ?? fetch;
+  const fetcher = options.fetchImpl ?? publicFetch;
   const secrets = Object.entries(env).filter(([key,value]) => /(?:API_KEY|TOKEN)$/.test(key) && value).map(([,value]) => value!);
   const redact = (text:string) => secrets.reduce((s,key) => s.split(key).join('[REDACTED]').split(encodeURIComponent(key)).join('[REDACTED]'), text);
   let requests = 0, bytes = 0;

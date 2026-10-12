@@ -234,29 +234,31 @@ export type AskCaptureInput = Omit<
 
 export type AskCaptureOutcome =
   | { kind: "WROTE" }
-  | { kind: "FAILED"; why: string };
+  | { kind: "FAILED"; why: string; error?: unknown };
 
 /**
- * Write one interaction. A missing continuity key or write path is a normal
- * FAILED return, not an error: the reader's answer is unaffected either way.
+ * Write one interaction through the production writer by default. Tests may
+ * supply a writer without opening a database. Failure never discards an answer.
  */
 export async function captureAskInteraction(
   input: AskCaptureInput,
-  write?: (row: AskInteractionRow) => Promise<void>,
+  write: (row: AskInteractionRow) => Promise<void> = async (row) => {
+    const { writeAskInteraction } = await import("./ask-interaction-writer.ts");
+    await writeAskInteraction(row);
+  },
 ): Promise<AskCaptureOutcome> {
   // An empty key would hash identically for every reader, collapsing distinct readers to one.
   if (!input.continuityKey) {
     return { kind: "FAILED", why: "no continuity key — minting is part of activation" };
   }
-  const row = prepareAskInteraction({
-    ...askCoverageStamp(input.ocdIds),
-    ...input,
-  });
-  if (!write) return { kind: "FAILED", why: "no write path supplied" };
   try {
+    const row = prepareAskInteraction({
+      ...askCoverageStamp(input.ocdIds),
+      ...input,
+    });
     await write(row);
     return { kind: "WROTE" };
   } catch (error) {
-    return { kind: "FAILED", why: error instanceof Error ? error.message : "unknown" };
+    return { kind: "FAILED", why: error instanceof Error ? error.message : "unknown", error };
   }
 }

@@ -1,4 +1,4 @@
-import { acquireKnownRelease, knownReleaseSourceCheck } from "../sources/known-release.ts";
+import { acquireKnownRelease, knownReleaseSourceCheck, type KnownReleaseOptions } from "../sources/known-release.ts";
 import { readCompleteResponse } from "../sources/source-bytes.ts";
 const URL = "https://api.github.com/repos/unitedstates/congress-legislators/commits?per_page=1";
 function sourceSha(bytes: Uint8Array): string {
@@ -17,7 +17,7 @@ export async function currentCongressSourceRevision(request?: typeof fetch):Prom
   return (await acquireCongressSourceRevision()).sha;
 }
 
-export async function acquireCongressSourceRevision() {
-  const held=await acquireKnownRelease({sourceId:"congress-directory-revision",releaseId:"current",url:URL,parserVersion:"congress-revision/1",maxBytes:1024*1024,checkAfterMs:86400000,signal:AbortSignal.timeout(30000),headers:{accept:"application/vnd.github+json"},validate:bytes=>{sourceSha(bytes);}});
-  return {sha:sourceSha(held.bytes),sourceCheck:knownReleaseSourceCheck(held)};
+export async function acquireCongressSourceRevision(options: Pick<KnownReleaseOptions, "store" | "locks" | "fetchImpl" | "now"> & { consumerParserVersion?: string } = {}) {
+  const held=await acquireKnownRelease({...options,sourceId:"congress-directory-revision",releaseId:"current",url:URL,parserVersion:`congress-revision/1:${options.consumerParserVersion ?? "revision-only"}`,reuseOnSourceFailure:true,maxBytes:1024*1024,checkAfterMs:86400000,signal:AbortSignal.timeout(30000),headers:{accept:"application/vnd.github+json"},validate:bytes=>{sourceSha(bytes);}});
+  return {sha:sourceSha(held.bytes),sourceCheck:knownReleaseSourceCheck(held),...(held.failedSourceCheck ? {failedSourceCheck:held.failedSourceCheck} : {})};
 }

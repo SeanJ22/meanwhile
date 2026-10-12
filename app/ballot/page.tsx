@@ -100,7 +100,8 @@ import { settleFundingRead } from "@/lib/funding/snapshot";
 import { settleStateMoneyRead, stateMoneyReadState } from "@/lib/funding/state-snapshot";
 import type { StateCampaignFinanceJurisdiction } from "@/lib/funding/data-plane";
 import { fundingFreshnessNote } from "@/lib/funding/freshness";
-import { directFundingTargetPlan, settleFundingHoldingAnswer } from "@/app/api/funding/[target]/route";
+import { directFundingTargetPlan } from "@/lib/funding/target-authorities";
+import { settleFundingHoldingAnswer } from "@/app/api/funding/[target]/holdings";
 import {
   ensureReaderAuthorityEdge,
   READER_BALLOT_AUTHORITY_FAMILIES,
@@ -1125,6 +1126,7 @@ export default async function BallotPage({
 
       {/* The private election-day list; renders only once something is marked. Device-local. */}
       <MyPicks
+        zip={zip}
         currentJurisdictionKey={currentJurisdictionKey}
         pickable={pickableContests}
       />

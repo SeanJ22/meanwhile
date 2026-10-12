@@ -16,6 +16,7 @@ import {
   readPreviousMeetingPartition,
 } from "../scripts/ingest.ts";
 import { captureSourceAcquisitions } from "../lib/sources/acquisition-trace.ts";
+import { meetingFetchPass } from "../lib/meetings/shared-fetch.ts";
 import { readValidatedResponse } from "../lib/sources/http.ts";
 import { authorityFor } from "../lib/civic-data/source-authority.ts";
 import type { Meeting } from "../lib/sources/types.ts";
@@ -211,7 +212,7 @@ test("meetings acquisition tracing hashes exact response bytes and retains the o
   try {
     const captured = await captureSourceAcquisitions(async (runForSource) =>
       runForSource("ical", async () => {
-        const response = await fetch(requestedUrl);
+        const response = await meetingFetchPass({ fetchImpl: globalThis.fetch })(requestedUrl);
         return response.arrayBuffer();
       }),
     );

@@ -19,11 +19,11 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { readGenericBallotProjection, type GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 
 const now = "2026-10-04T07:00:00.000Z";
-function fixture(names = ["Alice Adams", "Bob Baker", "Casey Clark"], pdf = false, state = "NH") {
+function fixture(names = ["Alice Adams", "Bob Baker", "Casey Clark"], pdf = false, state = "NH", at = now) {
   const text = "election,office,jurisdictionName,candidateName\n" + names.map((name, at) =>
     `2026 General Election,${at < 2 ? "School Board" : "Mayor"},Alder County,${name}`).join("\n");
   const evidence: WorkerEvidence = { artifactId: "list", contentHash: `sha256-${createHash("sha256").update(text).digest("hex")}`,
-    text, acquiredByAttemptId: "acquired", canonicalUrl: "https://elections.example.gov/candidates", retrievedAt: now,
+    text, acquiredByAttemptId: "acquired", canonicalUrl: "https://elections.example.gov/candidates", retrievedAt: at,
     sourceId: "Fixture election authority", methodRouteId: "list", ...(pdf ? { sourceDocument: { artifactId: "pdf", contentHash: `sha256-${"a".repeat(64)}`, kind: "PDF_TEXT" as const } } : {}) };
   const contract: GeneralizedCivicExtractionContract = { schemaVersion: 2, recordClass: "BALLOT_CONTEST", subjectId: "fixture:alder",
     jurisdiction: { country: "US", state, canonicalId: "fixture:alder" }, identity: { namespace: "fixture-ballot", keyFields: ["election", "office", "candidateName"] },
@@ -34,10 +34,10 @@ function fixture(names = ["Alice Adams", "Bob Baker", "Casey Clark"], pdf = fals
   const worker = { role: "PARSER" as const, instance: "fixture", provider: "deterministic", version: "2" };
   const result = parseCivicRecords({ attemptId: "parsed", worker, evidence, contract });
   assert.equal(result.verdict, "EXTRACTED");
-  const parser = { id: "parsed", workItemId: "ballot", endedAt: now, result } as WorkerResultRecord;
+  const parser = { id: "parsed", workItemId: "ballot", endedAt: at, result } as WorkerResultRecord;
   const plan = { contract, publication: { contractId: "ballot-contests", bodyId: "fixture-body" } } as AutonomousWorkPlan;
   const registry = { payload: { registry: { divisions: [{ state, label: "Alder County", ocdId: `ocd-division/country:us/state:${state.toLowerCase()}/county:alder`, sourceDataset: "TIGER_CB2023" }] } } } as RegistryRuntimePrior;
-  return { plan, parser, registry, now, captures: [{ evidence, observedAt: now, transport: "REACHABLE", partial: false, httpStatus: 200 }] };
+  return { plan, parser, registry, now: at, captures: [{ evidence, observedAt: at, transport: "REACHABLE", partial: false, httpStatus: 200 }] };
 }
 
 test("a saved CSV or PDF text candidate list publishes whole contests into the generic typed Reader", async () => {
@@ -55,6 +55,29 @@ test("a saved CSV or PDF text candidate list publishes whole contests into the g
     assert.equal(published.readerReadback?.status, "PASS", JSON.stringify(published.readerReadback));
     const read = await readGenericBallotProjection({ store, now, bypassCache: true });
     assert.equal(read.kind, "PROMOTED"); if (read.kind === "PROMOTED") assert.deepEqual(read.value, payload);
+  }
+});
+
+test("missing optional candidate websites do not hold the verified contest or its reader", async () => {
+  const input = fixture();
+  const contract = input.plan.contract;
+  if (contract.schemaVersion !== 2 || contract.extraction.format !== "DELIMITED_TEXT") throw new Error("fixture contract");
+  const optional = { ...contract, extraction: { ...contract.extraction,
+    fields: { ...contract.extraction.fields, websiteUrl: { source: 4, type: "STRING" as const } } } };
+  input.plan = { ...input.plan, contract: optional };
+  input.parser = { ...input.parser, result: parseCivicRecords({ attemptId: "parsed",
+    worker: { role: "PARSER", instance: "fixture", provider: "deterministic", version: "2" },
+    evidence: input.captures[0].evidence, contract: optional }) };
+  const checked = workerBallotContestsPackage(input).package;
+  const store = new MemoryRoutineDataStore();
+  const result = await processRegisteredManualCandidate(store, "ballot-contests", manualProjectionCandidate(checked), now, null);
+  assert.ok(result.promoted, result.candidate.failureDetail ?? "optional field held the contest");
+  const read = await readGenericBallotProjection({ store, now, bypassCache: true });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind === "PROMOTED") {
+    const ballot = Object.values(read.value.ballots)[0];
+    assert.equal(ballot.candidacies.length, 3);
+    assert.ok(ballot.candidacies.every(row => row.websiteUrl === null));
   }
 });
 
@@ -91,7 +114,7 @@ test("an omitted or contradicted candidate leaves independently verified candida
 
 test("complete successors replace a contest together and retain unrelated contests with their source receipts", () => {
   const first = workerBallotContestsPackage(fixture()).package;
-  const nextInput = fixture(["New Candidate", "Another Candidate", "Casey Clark"]);
+  const nextInput = fixture(["New Candidate", "Another Candidate", "Casey Clark"], false, "NH", "2026-10-05T07:00:00.000Z");
   if (nextInput.parser.result.role !== "PARSER") return;
   const omitted = nextInput.parser.result.records[2].id;
   nextInput.parser = { ...nextInput.parser, result: { ...nextInput.parser.result, records: nextInput.parser.result.records.filter((_, at) => at < 2),
@@ -181,4 +204,67 @@ test("an incomplete successor keeps independently held candidates from the same 
   const ballot = Object.values((merged.payload as GenericBallotProjection).ballots)[0];
   assert.deepEqual(ballot.candidacies.map(row => row.familyName).sort(), ["Alice Adams", "Bob Baker", "Casey Clark"]);
   assert.equal(ballot.contests.find(row => row.title === "School Board")?.candidateListComplete, false);
+});
+
+
+test("a complete newer list publishes A+B to B+C through promotion and the reader while keeping the old version", async () => {
+  const first = workerBallotContestsPackage(fixture(["Alice Adams", "Bob Baker"])).package;
+  const store = new MemoryRoutineDataStore();
+  const initial = await processRegisteredManualCandidate(store, "ballot-contests", manualProjectionCandidate(first), now, null);
+  assert.ok(initial.promoted, initial.candidate.failureDetail ?? "first list did not publish");
+  const nextAt = "2026-10-05T07:00:00.000Z";
+  const fresh = workerBallotContestsPackage(fixture(["Bob Baker", "Casey Clark"], false, "NH", nextAt)).package;
+  const merged = mergeBallotContests(fresh, { versionId: initial.promoted.versionId, payload: first.payload, sourceReceipt: first.sourceReceipt });
+  const next = await processRegisteredManualCandidate(store, "ballot-contests", manualProjectionCandidate(merged), nextAt, initial.promoted.versionId);
+  assert.ok(next.promoted, JSON.stringify(next.candidate.receipt));
+  assert.equal(next.readerReadback?.status, "PASS");
+  assert.ok(next.candidate.receipt?.checks.some(check => check.code === "OFFICIAL_CONTEST_LIST_REPLACED" && check.verdict === "PASS"));
+  const read = await readGenericBallotProjection({ store, now: nextAt, bypassCache: true });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind === "PROMOTED") assert.deepEqual(Object.values(read.value.ballots)[0].candidacies.map(row => row.familyName), ["Bob Baker", "Casey Clark"]);
+  const history = await store.readCandidate(initial.promoted.versionId);
+  assert.ok(JSON.stringify(history?.candidate.readModel).includes("Alice Adams"), "the earlier source-backed version remains held");
+});
+
+test("a partial newer list publishes B but retains A, and a list without bound source evidence cannot remove A", async () => {
+  const first = workerBallotContestsPackage(fixture(["Alice Adams", "Bob Baker"])).package;
+  const store = new MemoryRoutineDataStore();
+  const initial = await processRegisteredManualCandidate(store, "ballot-contests", manualProjectionCandidate(first), now, null);
+  assert.ok(initial.promoted);
+  const nextAt = "2026-10-05T07:00:00.000Z";
+  const input = fixture(["Alice Adams", "Bob Baker"], false, "NH", nextAt);
+  assert.equal(input.parser.result.role, "PARSER");
+  if (input.parser.result.role !== "PARSER") return;
+  const omitted = input.parser.result.records[0].id;
+  input.parser = { ...input.parser, result: { ...input.parser.result,
+    records: input.parser.result.records.filter(row => row.id !== omitted),
+    spans: input.parser.result.spans.filter(row => row.recordId !== omitted) } };
+  const partial = workerBallotContestsPackage(input).package;
+  const merged = mergeBallotContests(partial, { versionId: initial.promoted.versionId, payload: first.payload, sourceReceipt: first.sourceReceipt });
+  const next = await processRegisteredManualCandidate(store, "ballot-contests", manualProjectionCandidate(merged), nextAt, initial.promoted.versionId);
+  assert.ok(next.promoted, JSON.stringify(next.candidate.receipt));
+  const read = await readGenericBallotProjection({ store, now: nextAt, bypassCache: true });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind === "PROMOTED") assert.deepEqual(Object.values(read.value.ballots)[0].candidacies.map(row => row.familyName).sort(), ["Alice Adams", "Bob Baker"]);
+  const unsupported = workerBallotContestsPackage(fixture(["Bob Baker"], false, "NH", "2026-10-06T07:00:00.000Z")).package;
+  const forged = { ...unsupported, ballotCandidateLists: [] };
+  const refusal = await processRegisteredManualCandidate(store, "ballot-contests", manualProjectionCandidate(forged), "2026-10-06T07:00:00.000Z", next.promoted.versionId);
+  assert.equal(refusal.promoted, null);
+  assert.equal(refusal.candidate.failureCode, "BALLOT_LIST_REMOVAL_UNPROVEN");
+});
+
+test("older, equal-date, different-publisher and hash-mismatched lists do not remove held candidates", () => {
+  const first = workerBallotContestsPackage(fixture(["Alice Adams", "Bob Baker"])).package;
+  const newer = workerBallotContestsPackage(fixture(["Bob Baker"], false, "NH", "2026-10-05T07:00:00.000Z")).package;
+  const prior = { versionId: "prior", payload: first.payload, sourceReceipt: first.sourceReceipt };
+  const variants = [
+    workerBallotContestsPackage(fixture(["Bob Baker"], false, "NH", "2026-10-03T07:00:00.000Z")).package,
+    workerBallotContestsPackage(fixture(["Bob Baker"])).package,
+    { ...newer, ballotCandidateLists: newer.ballotCandidateLists!.map(row => ({ ...row, sourceUrl: "https://another.example.gov/candidates" })) },
+    { ...newer, ballotCandidateLists: newer.ballotCandidateLists!.map(row => ({ ...row, rawHash: "f".repeat(64) })) },
+  ];
+  for (const value of variants) {
+    const merged = mergeBallotContests(value, prior).payload as GenericBallotProjection;
+    assert.deepEqual(Object.values(merged.ballots)[0].candidacies.map(row => row.familyName).sort(), ["Alice Adams", "Bob Baker"]);
+  }
 });

@@ -1,3 +1,4 @@
+import { fulfillPublicSourceRoute } from "../lib/hunt/public-browser.ts";
 /**
  * The one place a browser is opened. `launchGuarded` is the only constructor;
  * `tests/browser-construction.test.ts` refuses any other script that calls
@@ -87,6 +88,8 @@ export interface GuardedOptions extends LaunchOptions {
    * `GuardedBrowser.writesBlocked`.
    */
   blockWrites?: boolean;
+  /** Public-source browser: fulfill every HTTP request through pinned source transport. */
+  publicSourcesOnly?: boolean;
 }
 
 /**
@@ -131,7 +134,7 @@ export function runIdFor(label: string, now: () => Date = () => new Date()): str
  * ```
  */
 export async function launchGuarded(options: GuardedOptions): Promise<GuardedBrowser> {
-  const { label, now, spendsProviderQuota, blockWrites, ...launchOptions } = options;
+  const { label, now, spendsProviderQuota, blockWrites, publicSourcesOnly, ...launchOptions } = options;
   const writesBlocked = { count: 0, paths: new Set<string>() };
   const runId = runIdFor(label, now);
 
@@ -169,12 +172,14 @@ export async function launchGuarded(options: GuardedOptions): Promise<GuardedBro
 
   const browser: Browser = await chromium.launch({
     ...launchOptions,
+    ...(publicSourcesOnly ? { args: [...(launchOptions.args ?? []), "--force-webrtc-ip-handling-policy=disable_non_proxied_udp", "--disable-quic"] } : {}),
     ...(resolved.kind === "SUBSTITUTED" ? { executablePath: resolved.executablePath } : {}),
   });
 
   async function guardedContext(contextOptions: BrowserContextOptions = {}): Promise<BrowserContext> {
     const context = await browser.newContext({
       ...contextOptions,
+      ...(publicSourcesOnly ? { serviceWorkers: "block" as const } : {}),
       // The caller's headers are kept, and the marker is not one a caller may
       // overwrite: it goes on last.
       extraHTTPHeaders: { ...contextOptions.extraHTTPHeaders, ...headers },
@@ -226,11 +231,20 @@ export async function launchGuarded(options: GuardedOptions): Promise<GuardedBro
       return true;
     };
 
+    const publicRequests = new AbortController();
+    context.once("close", () => publicRequests.abort());
+    if (publicSourcesOnly) await context.routeWebSocket("**/*", socket => socket.close());
+
     await context.route("**/*", async (route) => {
       const request = route.request();
       // The provider barrier first: a request that is not going to leave needs no headers.
       if (await refusedByBarrier(route)) return;
-      const decision = confine(request.url(), frameUrlOf(request), request.headers(), headers);
+      const requestHeaders = publicSourcesOnly ? await request.allHeaders() : request.headers();
+      const decision = confine(request.url(), frameUrlOf(request), requestHeaders, headers);
+      if (publicSourcesOnly) {
+        await fulfillPublicSourceRoute(route, decision.verdict === "SAME_ORIGIN_KEPT" ? requestHeaders : decision.headers, undefined, publicRequests.signal);
+        return;
+      }
       if (decision.verdict === "SAME_ORIGIN_KEPT") {
         await route.continue();
         return;
@@ -253,6 +267,11 @@ export async function launchGuarded(options: GuardedOptions): Promise<GuardedBro
       });
     }
 
+    if (publicSourcesOnly) await context.addInitScript(`(() => {
+      for (const name of ["RTCPeerConnection", "webkitRTCPeerConnection", "WebTransport"]) {
+        try { Object.defineProperty(globalThis, name, { value: undefined, configurable: false }); } catch {}
+      }
+    })()`);
     await context.addInitScript(KILL_BEACON);
     /*
      * The declaration in the page, so `lib/log/client.ts` can carry it in the

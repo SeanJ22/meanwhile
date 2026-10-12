@@ -33,7 +33,7 @@ export function scoutExtraction(input: {
   // only the contracted source mapping; no inferred names or remote fetches.
   if (contract.extraction.format !== "UNSUPPORTED") {
     try {
-      const inventory = inventoryRecordEvidence(evidence, contract.extraction);
+      const inventory = inventoryRecordEvidence(evidence, contract.extraction, contract);
       for (const [subjectId, findings] of groups) {
         const matches = inventory.rows.filter(row => findings.some(finding => {
           const quote = finding.exactQuote!, at = evidence.text.indexOf(quote);

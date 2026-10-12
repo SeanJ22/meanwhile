@@ -209,13 +209,15 @@ test("roster repair preserves visible office email and the exact phone field con
     ["EXTERNAL_VERIFICATION_MISSING", "UNVERIFIED_ROSTER_MEMBERS:2"],
     "the source's JavaScript Email button is not a visible address to invent or require");
   const mappedButton = repair({ ...baseFields, phone: { source: 2, type: "STRING" }, email: { source: 3, type: "STRING" } });
-  assert.throws(() => evaluate(mappedButton, buttonEvidence), /REPAIR_EXTRACTION_REFUSED:OFFICIAL_EMAIL_NOT_VISIBLE_ADDRESS/,
-    "mapping a JavaScript Email button must not turn its label into a public contact");
+  const withoutButton = evaluate(mappedButton, buttonEvidence);
+  assert.equal(withoutButton.contract.extraction.format, "HTML_TABLE",
+    "an unsupported optional Email button leaves the verified roster fields usable");
   const direct = parseGeneralizedRecords({ attemptId: "at-roster-email-button", worker: {
     role: "PARSER", provider: "deterministic", version: "2", instance: "roster-email-button" },
     evidence: buttonEvidence, contract: complete.contract }, complete.contract);
-  assert.equal(direct.verdict, "FAILED", "an initial contract is held by the same parser rule as a repaired contract");
+  assert.equal(direct.verdict, "EXTRACTED", "an initial contract preserves the same independent facts as a repaired contract");
   assert.equal(direct.warnings[0]?.code, "OFFICIAL_EMAIL_NOT_VISIBLE_ADDRESS");
+  assert.ok(direct.records.every(row => row.fields.email === undefined && row.fields.phone === "(520) 555-0100"));
 });
 
 test("roster repair retains a fully visible source-stated term without inferring tenure dates", async () => {
@@ -507,4 +509,18 @@ test("a source with real bytes but no honest mapping is admitted as a bound cont
   if (born.schemaVersion !== 2) throw new Error("GENERALIZED_FIXTURE_REQUIRED");
   assert.equal(born.extraction.format, "UNSUPPORTED");
   assert.deepEqual(born.sourceScope.canonicalUrls, [f.evidence[0].canonicalUrl]);
+});
+
+test("repair preserves an existing no-second-source requirement and does not invent verification work", async () => {
+  const f = await fixture();
+  const original = f.h.item.autonomousPlan!;
+  if (original.contract.schemaVersion !== 2) throw new Error("GENERALIZED_FIXTURE_REQUIRED");
+  const plan = { ...original, contract: { ...original.contract, verification: { required: false, authorities: [] } } };
+  const candidate = { ...f.candidate, evidenceArtifactIds: [f.evidence[0].artifactId], contractRepair: {
+    schemaVersion: 1, sourceArtifactId: f.evidence[0].artifactId, extraction: f.extraction, authorities: [] } };
+  const result = evaluatePlanRepair({ plan, candidate, evidence: [f.evidence[0]], now: f.h.now() });
+  assert.equal(result.contract.verification.required, false);
+  assert.deepEqual(result.unresolved, []);
+  const protectedPlan = { ...plan, contract: { ...plan.contract, verification: { required: false, authorities: [f.authority] } } };
+  assert.throws(() => evaluatePlanRepair({ plan: protectedPlan, candidate, evidence: [f.evidence[0]], now: f.h.now() }), /REPAIR_VERIFICATION_CANNOT_WEAKEN/);
 });

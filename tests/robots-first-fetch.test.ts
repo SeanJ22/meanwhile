@@ -177,7 +177,7 @@ test("THE COMMAND LINE HAS NO WAY AROUND IT: it fetches only through researchFet
   assert.match(cli, /\n\s+get: identifiedResearchGet\(\),\n/, "it hands researchFetch the module's one transport");
   const lib = readFileSync("lib/hunt/robots-first-fetch.ts", "utf8");
   const transport = lib.slice(lib.indexOf("export const nodeResearchGet"), lib.indexOf("\n};", lib.indexOf("export const nodeResearchGet")));
-  assert.equal((transport.match(/\bfetch\(/g) ?? []).length, 1, "one transport");
+  assert.equal((transport.match(/\bpublicFetch\(/g) ?? []).length, 1, "one checked transport");
   assert.match(transport, /redirect: "manual"/, "the transport never follows a redirect itself");
   const second = readFileSync("lib/hunt/research-transport.ts", "utf8");
   assert.equal((second.match(/\bfetch\(/g) ?? []).length, 0, "the curl rung wraps the Node transport and has no fetch of its own");

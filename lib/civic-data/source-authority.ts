@@ -15,25 +15,73 @@ export interface OfficialLinkingPage {
 }
 
 // Plain string parsing: this runs inside the isolated Validator realm, which has no URL global.
-const hostOf = (url: string, base?: string): string | null => {
-  const absolute = /^(https?):\/\/([^/?#\s]+)/i.exec(url.trim());
-  if (absolute) {
-    const host = absolute[2].replace(/^[^@]*@/, "").replace(/:\d*$/, "").toLowerCase();
-    return /^[a-z0-9.-]+$/.test(host) ? host.replace(/^www\./, "") : null;
+function sourceAddress(value: string, base?: string): { host: string; path: string; query: string } | null {
+  const text = value.trim();
+  if (/[\\\s]/.test(text)) return null;
+  const absolute = /^(https?):\/\/([^/?#]+)([^?#]*)(\?[^#]*)?(?:#.*)?$/i.exec(text);
+  if (!absolute) {
+    if (!base || /^[a-z][a-z0-9+.-]*:/i.test(text)) return null;
+    if (text.startsWith("//")) return sourceAddress(`https:${text}`);
+    const parent = sourceAddress(base);
+    if (!parent) return null;
+    const path = text.startsWith("/") ? text : text.startsWith("?") || text.startsWith("#")
+      ? `${parent.path}${text}` : `${parent.path.slice(0, parent.path.lastIndexOf("/") + 1)}${text}`;
+    return sourceAddress(`https://${parent.host}${path}`);
   }
-  if (/^[a-z][a-z0-9+.-]*:/i.test(url.trim())) return null; // mailto:, tel:, javascript: — not a page
-  if (url.trim().startsWith("//")) return hostOf(`https:${url.trim()}`);
-  return base === undefined ? null : hostOf(base);
-};
+  const authority = absolute[2].toLowerCase().replace(/:(?:80|443)$/, "");
+  if (!/^[a-z0-9.-]+$/.test(authority)) return null;
+  const segments: string[] = [];
+  for (const segment of (absolute[3] || "/").split("/")) {
+    let decoded: string;
+    try { decoded = decodeURIComponent(segment); } catch { return null; }
+    if (/[\\/]/.test(decoded)) return null;
+    if (decoded === "..") segments.pop();
+    else if (decoded && decoded !== ".") segments.push(decoded);
+  }
+  const path = `/${segments.join("/")}${absolute[3]?.endsWith("/") && segments.length ? "/" : ""}`;
+  return { host: authority.replace(/^www\./, ""), path, query: absolute[4] ?? "" };
+}
 
-/** Any `.gov` site is official; any other site is official once an official government page links to it. No host list. */
+// These platforms contain unrelated publishers at different paths. A government's
+// dedicated website or vendor subdomain still establishes its whole own host.
+const SHARED_PUBLICATION_HOSTS = [
+  "facebook.com", "fb.com", "instagram.com", "x.com", "twitter.com", "linkedin.com", "youtube.com", "youtu.be",
+  "tiktok.com", "threads.net", "bsky.app", "reddit.com", "nextdoor.com", "pinterest.com", "flickr.com",
+  "linktr.ee", "linkin.bio", "beacons.ai", "mastodon.social", "truthsocial.com", "rumble.com", "gettr.com",
+  "vimeo.com", "docs.google.com", "drive.google.com", "sites.google.com", "dropbox.com", "box.com", "onedrive.live.com",
+  "1drv.ms", "issuu.com", "scribd.com", "wikipedia.org", "wikidata.org", "wikimedia.org", "ballotpedia.org",
+  "openstates.org", "votesmart.org", "vote411.org", "wixsite.com", "wordpress.com", "blogspot.com", "weebly.com",
+  "godaddysites.com", "squarespace.com", "github.com", "github.io", "medium.com", "substack.com", "eventbrite.com",
+  "patch.com", "tapinto.net", "nytimes.com", "washingtonpost.com", "politico.com", "thehill.com", "apnews.com",
+  "reuters.com", "nj.com", "azcentral.com", "tucson.com", "azmirror.com", "nhpr.org", "nhjournal.com", "nhbr.org",
+  "concordmonitor.com", "newhampshirebulletin.com", "unionleader.com", "wmur.com", "bostonglobe.com", "npr.org",
+  "nbcnews.com", "cnn.com", "foxnews.com", "axios.com", "newsweek.com", "yahoo.com", "msn.com",
+];
+const ARCHIVE_COPY_HOSTS = ["archive.org", "archive.ph", "archive.today", "archive.is", "webcache.googleusercontent.com",
+  "r.jina.ai", "api.allorigins.win", "corsproxy.io", "api.codetabs.com"];
+const hostWithin = (host: string, roots: readonly string[]) => roots.some(root => host === root || host.endsWith(`.${root}`));
+
+/** Government sites and their linked own sites are official; shared platforms retain the linked account or document boundary. */
 export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage | null): boolean {
-  const host = hostOf(url);
-  if (host === null) return false;
-  if (/(^|\.)gov$/.test(host)) return true;
+  const target = sourceAddress(url);
+  if (!target || hostWithin(target.host, ARCHIVE_COPY_HOSTS)) return false;
+  if (/(^|\.)gov$/.test(target.host)) return true;
   if (!linkingPage || !isOfficialSource(linkingPage.url, linkingPage.linkingPage)) return false;
-  for (const match of linkingPage.html.matchAll(/\b(?:href|src)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi)) {
-    if (hostOf((match[1] ?? match[2] ?? match[3]).replace(/&amp;/g, "&"), linkingPage.url) === host) return true;
+  const linkedMarkup = linkingPage.html.replace(/<!--[\s\S]*?-->/g, "")
+    .replace(/<(script|style|template)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, "");
+  for (const element of linkedMarkup.matchAll(/<(a|iframe|frame)\b([^>]*)>/gi)) {
+    const attribute = element[1].toLowerCase() === "a" ? "href" : "src";
+    const match = new RegExp(`(?:^|\\s)${attribute}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, "i").exec(element[2]);
+    if (!match) continue;
+    const linked = sourceAddress((match[1] ?? match[2] ?? match[3]).replace(/&amp;/g, "&"), linkingPage.url);
+    if (linked?.host !== target.host) continue;
+    if (!hostWithin(target.host, SHARED_PUBLICATION_HOSTS)) return true;
+    const linkedPath = linked.path.replace(/\/+$/, "");
+    const targetPath = target.path.replace(/\/+$/, "");
+    // The platform homepage identifies no account; queries may identify a single document.
+    if (!linkedPath && !linked.query) continue;
+    if (targetPath === linkedPath && target.query === linked.query ||
+      linkedPath && !linked.query && targetPath.startsWith(`${linkedPath}/`)) return true;
   }
   return false;
 }

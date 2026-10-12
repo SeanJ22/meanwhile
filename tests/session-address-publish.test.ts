@@ -130,3 +130,23 @@ test("no module keeps a listener set that nothing ever publishes", () => {
     `a listener set that is never iterated can never notify anyone: ${orphans.join("; ")}`,
   );
 });
+
+
+test("legacy or previous-day address scopes cannot narrow an election, and new storage omits address text", async () => {
+  const stub = fakeWindow();
+  const prior = Reflect.get(globalThis, "window");
+  Reflect.set(globalThis, "window", stub.window);
+  try {
+    const { SESSION_ADDRESS_KEY, readSessionAddress, writeSessionAddress } = await import("../lib/geo/session-address.ts");
+    stub.items.set(SESSION_ADDRESS_KEY, JSON.stringify({ zip: "43215", contestIds: ["old"], resolvedAt: new Date().toISOString() }));
+    assert.equal(readSessionAddress(), null);
+    writeSessionAddress({ zip: "43215", streetLabel: "1 Capitol Square", divisionIds: [], splitLevels: [], contestIds: ["inside"], excludedContestIds: ["outside"] });
+    assert.deepEqual(readSessionAddress()?.excludedContestIds, ["outside"]);
+    assert.doesNotMatch(stub.items.get(SESSION_ADDRESS_KEY)!, /Capitol|Square/);
+    const saved = JSON.parse(stub.items.get(SESSION_ADDRESS_KEY)!);
+    stub.items.set(SESSION_ADDRESS_KEY, JSON.stringify({ ...saved, resolvedAt: "2020-01-01T00:00:00Z" }));
+    assert.equal(readSessionAddress(), null);
+  } finally {
+    if (prior === undefined) Reflect.deleteProperty(globalThis, "window"); else Reflect.set(globalThis, "window", prior);
+  }
+});

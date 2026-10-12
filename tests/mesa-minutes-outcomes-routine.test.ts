@@ -147,16 +147,17 @@ function steppedClock(startIso: string): () => string {
   };
 }
 
-async function pass(store: MemoryRoutineDataStore, portal: ReturnType<typeof recordedPortal>, window: { from: string; to: string }, clockStart: string) {
+async function pass(store: MemoryRoutineDataStore, portal: ReturnType<typeof recordedPortal>, window: { from: string; to: string }, clockStart: string, maxDocuments = 25) {
   const lines: string[] = [];
   const result = await withFetch(portal.fetchImpl, () => runInSiteMinutesOutcomeIngest({
     store,
     tenant,
-    args: parseMinutesIngestArgs(["--promote", "--slug", "mesa"]),
+    args: { ...parseMinutesIngestArgs(["--promote", "--slug", "mesa"]), maxDocuments },
     window,
     now: steppedClock(clockStart),
     log: (line) => lines.push(line),
     spacingMs: 0,
+    fetchImpl: portal.fetchImpl,
   }));
   return { result, lines };
 }
@@ -250,19 +251,24 @@ test("a routine pass reads the minutes the portal links, records the rest as not
   assert.equal(council.startsAt, "2026-09-14T17:45:00-07:00");
   assert.ok(read.value.sittings.every((sitting) => sitting.bodyId === MESA && sitting.slug === "mesa"));
 
-  // An unchanged day costs the calendar reads and ends in a validated no-change receipt.
+  // The next scheduled pass checks the same document URL for corrections.
   const pointerBefore = await store.readPromotion("MEETING_OUTCOME", SCOPE);
   const again = recordedPortal();
   const second = await pass(store, again, SEPTEMBER, "2026-09-25T17:45:00.000Z");
   assert.equal(second.result.exitCode, 0, second.lines.join("\n"));
-  assert.equal(second.result.documentsRead, 0);
-  assert.ok(!again.requests.some((request) => request.includes("View.ashx")), "no document is read twice");
+  assert.equal(second.result.documentsRead, 1);
+  assert.ok(again.requests.some((request) => request.includes("View.ashx")), "the held link is revalidated");
   const secondProof = await verdict(store, second.result.receiptLine, second.result.exitCode);
   assert.deepEqual({ outcome: secondProof.outcome, issue: secondProof.issue }, { outcome: "SUCCESS", issue: null });
-  // Unchanged facts confirm the live candidate.
-  assert.equal(secondProof.candidateId, pointerBefore?.versionId);
-  assert.equal(latestUnchangedConfirmation(await store.events(secondProof.candidateId!), secondProof.candidateId!)?.retrieval.retrievedAt, "2026-09-25T17:45:03.000Z");
-  assert.deepEqual((await store.readPromotion("MEETING_OUTCOME", SCOPE))?.payload, pointerBefore?.payload);
+  assert.notEqual(secondProof.candidateId, pointerBefore?.versionId);
+  assert.ok(await store.readCandidate(pointerBefore!.versionId), "the earlier reading remains in history");
+  const rechecked = await readDoorOutcomeProjection(SCOPE, { store, bypassCache: true });
+  assert.equal(rechecked.kind, "PROMOTED");
+  if (rechecked.kind === "PROMOTED") {
+    const sitting = rechecked.value.sittings.find(row => row.meetingId === strategic.meetingId)!;
+    assert.equal(sitting.minutesDocument?.sha256, strategic.minutesDocument?.sha256);
+    assert.ok(sitting.publication.observedAt > strategic.publication.observedAt);
+  }
   resetOutcomeSnapshotCache();
 });
 
@@ -525,4 +531,75 @@ test("Ask's topic timeline joins a Mesa decision to the topic from the minutes a
   assert.match(composed.answer, /^On July 27th, 2026, the Mesa City Council passed agenda item 7-a, 7-b \(Resolution No\. 12560, Ordinance No\. 6023\)/);
   assert.match(composed.answer, /Rezone from Office Commercial/);
   assert.deepEqual(composed.citedUrls, [fixture.url]);
+});
+
+
+test("scheduled minutes rechecks publish changed words at the same URL and keep verified history when the next read fails", async () => {
+  const document = (resolution: string) => textPdf([
+    "OFFICE OF THE CITY CLERK COUNCIL MINUTES July 20, 2026",
+    "The City Council of the City of Mesa met in the Council Chambers on July 20, 2026, at 5:45 p.m.",
+    `It was moved by Councilmember Duff, seconded by Councilmember Taylor, that Resolution No. ${resolution} be adopted.`,
+    "Upon tabulation of votes, it showed: AYES - Freeman-Somers-Adams-Duff-Heredia-Taylor-Goforth NAYS - None",
+    "Mayor Freeman declared the motion carried unanimously.",
+    "Adjournment. Without objection, the Regular Council Meeting adjourned at 7:02 p.m.",
+  ]);
+  const store = new MemoryRoutineDataStore();
+  const first = await pass(store, recordedPortal({ bytes: { "1336056": document("12345") } }), JULY_20, AFTER_READS);
+  assert.equal(first.result.exitCode, 0, first.lines.join("\n"));
+  const firstPointer = await store.readPromotion("MEETING_OUTCOME", SCOPE);
+  assert.ok(firstPointer);
+  const changedPortal = recordedPortal({ bytes: { "1336056": document("12346") } });
+  const next = await pass(store, changedPortal, JULY_20, "2026-09-25T18:00:00.000Z");
+  assert.equal(next.result.exitCode, 0, next.lines.join("\n"));
+  assert.equal(next.result.documentsRead, 1);
+  const current = await readDoorOutcomeProjection(SCOPE, { store, bypassCache: true });
+  assert.equal(current.kind, "PROMOTED");
+  if (current.kind !== "PROMOTED") return;
+  const sitting = current.value.sittings.find(row => row.meetingId === "legistar-insite:mesa:1336056")!;
+  assert.ok(sitting.outcomes.some(row => row.quote?.includes("12346")), JSON.stringify(sitting.outcomes));
+  assert.ok(!sitting.outcomes.some(row => row.quote?.includes("12345")));
+  assert.ok(JSON.stringify((await store.readCandidate(firstPointer.versionId))?.candidate.readModel).includes("12345"));
+  const beforeFailure = await store.readPromotion("MEETING_OUTCOME", SCOPE);
+  const failed = await pass(store, recordedPortal({ documents: { "1336056": 404 } }), JULY_20, "2026-09-25T19:00:00.000Z");
+  assert.equal(failed.result.exitCode, 2);
+  assert.equal((await store.readPromotion("MEETING_OUTCOME", SCOPE))?.versionId, beforeFailure?.versionId);
+  const kept = await readDoorOutcomeProjection(SCOPE, { store, bypassCache: true });
+  assert.equal(kept.kind, "PROMOTED");
+  if (kept.kind === "PROMOTED") assert.ok(JSON.stringify(kept.value).includes("12346"));
+  resetOutcomeSnapshotCache();
+});
+
+
+test("bounded scheduled passes recheck the oldest held document first so one URL cannot occupy every pass", async () => {
+  const store = new MemoryRoutineDataStore();
+  const window = { from: "2026-07-18", to: "2026-07-28" };
+  const bytes = Object.fromEntries([["1336056", "20"], ["1336059", "27"]].map(([id, day]) => [id, textPdf([
+    `OFFICE OF THE CITY CLERK COUNCIL MINUTES July ${day}, 2026`,
+    `The City Council of the City of Mesa met in the Council Chambers on July ${day}, 2026, at 5:45 p.m.`,
+    "It was moved by Councilmember Duff, seconded by Councilmember Taylor, that Resolution No. 12345 be adopted.",
+    "Upon tabulation of votes, it showed: AYES - Freeman-Somers-Adams-Duff-Heredia-Taylor-Goforth NAYS - None",
+    "Mayor Freeman declared the motion carried unanimously.",
+    "Adjournment. Without objection, the Regular Council Meeting adjourned at 7:02 p.m.",
+  ])]));
+  const seed = await pass(store, recordedPortal({ bytes }), window, AFTER_READS);
+  assert.equal(seed.result.exitCode, 0, seed.lines.join("\n"));
+  assert.ok(seed.result.documentsRead >= 2);
+  const one = recordedPortal({ bytes });
+  const first = await pass(store, one, window, "2026-09-25T18:00:00.000Z", 1);
+  assert.equal(first.result.documentsRead, 1);
+  const two = recordedPortal({ bytes });
+  const second = await pass(store, two, window, "2026-09-25T19:00:00.000Z", 1);
+  assert.equal(second.result.documentsRead, 1);
+  const documentRequests = (portal: ReturnType<typeof recordedPortal>) => portal.requests.filter(row => row.startsWith("GET") && row.includes("View.ashx"));
+  assert.notDeepEqual(documentRequests(one), documentRequests(two));
+  const beforeFailure = await store.readPromotion("MEETING_OUTCOME", SCOPE);
+  const failedOne = recordedPortal({ documents: { "1336056": 404, "1336059": 404 } });
+  const failedFirst = await pass(store, failedOne, window, "2026-09-25T20:00:00.000Z", 1);
+  assert.equal(failedFirst.result.exitCode, 2);
+  const failedTwo = recordedPortal({ documents: { "1336056": 404, "1336059": 404 } });
+  const failedSecond = await pass(store, failedTwo, window, "2026-09-25T21:00:00.000Z", 1);
+  assert.equal(failedSecond.result.exitCode, 2);
+  assert.notDeepEqual(documentRequests(failedOne), documentRequests(failedTwo), "durable failed attempts rotate even when no new pointer can publish");
+  assert.equal((await store.readPromotion("MEETING_OUTCOME", SCOPE))?.versionId, beforeFailure?.versionId);
+  resetOutcomeSnapshotCache();
 });

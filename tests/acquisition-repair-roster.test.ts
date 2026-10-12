@@ -87,11 +87,15 @@ test("saved Sierra Vista roster replays from the original hash-verified bytes wh
   assert.equal(new Set(repaired.profileRoutes.map(route => route.url)).size, 7);
   const repair = candidate.contractRepair as { schemaVersion: 1; sourceArtifactId: string; extraction: GeneralizedCivicExtractionContract["extraction"]; authorities: readonly unknown[] };
   const extraction = repair.extraction as Extract<GeneralizedCivicExtractionContract["extraction"], { format: "HTML_TABLE" }>;
-  assert.throws(() => evaluatePlanRepair({ plan, candidate: { ...candidate, contractRepair: {
+  const optionalEmail = evaluatePlanRepair({ plan, candidate: { ...candidate, contractRepair: {
     ...repair, extraction: { ...extraction, fields: { ...extraction.fields, email: { source: 3, type: "STRING" } } },
-  } }, evidence: [evidence], now: "2026-09-28T08:00:00.000Z", registeredPublisherAddress }),
-  /REPAIR_EXTRACTION_REFUSED:OFFICIAL_EMAIL_NOT_VISIBLE_ADDRESS/,
-  "the original retained Email buttons cannot be published as seven addresses");
+  } }, evidence: [evidence], now: "2026-09-28T08:00:00.000Z", registeredPublisherAddress });
+  assert.equal(optionalEmail.unresolved.filter(value => value.includes("OFFICIAL_EMAIL_NOT_VISIBLE_ADDRESS")).length, 7);
+  const withoutButtons = parseGeneralizedRecords({ attemptId: "at-optional-email", worker: {
+    role: "PARSER", instance: "test-parser", provider: "deterministic", version: "2" }, evidence,
+    contract: optionalEmail.contract }, optionalEmail.contract);
+  assert.equal(withoutButtons.verdict, "EXTRACTED");
+  assert.ok(withoutButtons.records.every(row => row.fields.email === undefined));
   assert.throws(() => evaluatePlanRepair({ plan, candidate: { ...candidate, contractRepair: {
     ...repair, extraction: { ...extraction, fields: { name: extraction.fields.name, office: extraction.fields.office } },
   } }, evidence: [evidence], now: "2026-09-28T08:00:00.000Z", registeredPublisherAddress }), /REPAIR_SUPPORTED_FIELDS_OMITTED:phone,websiteUrl/);
@@ -105,8 +109,6 @@ test("unvaulted successful reads are recoverable while actual access controls re
 });
 
 test("href extraction cannot be silently requested from non-HTML source shapes", () => {
-  const result = replay(`<table><tr><th>Name</th><th>Office</th></tr><tr><td>Ada</td><td>Mayor</td></tr></table>`);
-  assert.equal(result.verdict, "FAILED", "the prescribed four-column table is incomplete");
   const text = JSON.stringify({ records: [{ name: "Ada", office: "Mayor" }] });
   const evidence: WorkerEvidence = { artifactId: "ar-json", contentHash: `sha256-${createHash("sha256").update(text).digest("hex")}`,
     text, acquiredByAttemptId: "at-json", canonicalUrl: sourceUrl, retrievedAt: "2026-09-28T06:27:49.882Z",
@@ -120,4 +122,14 @@ test("href extraction cannot be silently requested from non-HTML source shapes",
   const parsed = parseGeneralizedRecords({ attemptId: "at-json-parser", worker: { role: "PARSER", instance: "test", provider: "deterministic", version: "2" }, evidence, contract }, contract);
   assert.equal(parsed.verdict, "FAILED");
   assert.equal(parsed.warnings[0]?.code, "FIELD_MAPPING_INVALID");
+});
+
+test("missing optional roster columns preserve the required person and exact source spans", () => {
+  const text = `<table><tr><th>Name</th><th>Office</th></tr><tr><td>Ada</td><td>Mayor</td></tr></table>`;
+  const result = replay(text);
+  assert.equal(result.verdict, "EXTRACTED");
+  assert.deepEqual(result.records.map(row => ({ ...row.fields })), [{ name: "Ada", office: "Mayor" }]);
+  assert.deepEqual(result.warnings.map(row => [row.field, row.severity]).sort(), [["phone", "INFO"], ["websiteUrl", "INFO"]]);
+  for (const span of result.spans) assert.equal(text.slice(span.start, span.end), span.quote);
+  assert.equal(replay(`<table><tr><th>Name</th></tr><tr><td>Ada</td></tr></table>`).verdict, "FAILED");
 });

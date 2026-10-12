@@ -1,3 +1,5 @@
+import { verifiedBallotListReplacement } from "./ballot-list-replacement.ts";
+import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
 import { createHash } from "node:crypto";
 import { sourceCheckIssue } from "./source-check.ts";
 import { pluralRetirementCheckConsumer } from "../sources/plural/targets.ts";
@@ -205,6 +207,32 @@ function statePeopleRetirementCheck(candidate: RoutineCandidate, prior: Candidat
     `${removed.length} current person record(s) left only after every active native tenure ended; exact identities, original captures and historical memberships remain held.`);
 }
 
+/** Per-contest evidence authorizes candidacy removals without claiming the whole ballot universe is complete. */
+function ballotListRemovalCheck(candidate: RoutineCandidate, prior: CandidateVersionRecord | null): ValidationCheck | null {
+  if (candidate.recordClass !== "BALLOT_CANDIDACY" || object(candidate.readModel)?.kind !== "ballot-contests") return null;
+  const removed = candidate.changeSet?.removed ?? [];
+  const receipt = candidate.retrieval.manualSourceReceipt;
+  if (!prior || prior.candidate.sourceId !== candidate.sourceId || prior.candidate.scope !== candidate.scope ||
+    object(prior.candidate.readModel)?.kind !== "ballot-contests" || !receipt) return null;
+  const current = candidate.readModel as GenericBallotProjection;
+  const previous = prior.candidate.readModel as GenericBallotProjection;
+  for (const delta of removed) {
+    const row = object(delta.before);
+    const ballot = Object.values(current.ballots).find(value => value.contests.some(contest => contest.id === row?.contestId));
+    const contest = ballot?.contests.find(value => value.id === row?.contestId);
+    const oldBallot = Object.values(previous.ballots).find(value => value.contests.some(value => value.id === row?.contestId));
+    if (!row || delta.key !== `candidacy:${row.id}` || !ballot || !contest || !oldBallot ||
+      ballot.candidacies.some(value => value.id === row.id) || !verifiedBallotListReplacement({
+        contest, priorContest: oldBallot.contests.find(value => value.id === contest.id),
+        candidates: ballot.candidacies, priorCandidates: oldBallot.candidacies,
+        evidence: candidate.ballotCandidateLists ?? [], receipt,
+      })) return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "BALLOT_LIST_REMOVAL_UNPROVEN",
+        `${delta.key} lacks a complete newer reading of the same official contest list.`);
+  }
+  return result("COMPLETENESS_HORIZON_VALIDITY", "PASS", "OFFICIAL_CONTEST_LIST_REPLACED",
+    `${removed.length} candidacy record(s) left only after the same official contest list was read completely at a newer date.`);
+}
+
 function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: CandidateVersionRecord | null, validatedAt: string, sourceChecks:readonly DependentCheck[]): ValidationCheck | null {
   const removed = candidate.changeSet?.removed ?? [];
   const evidence = candidate.removalEvidence ?? [];
@@ -233,6 +261,9 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
           "A complete, reconciled bounded universe authorizes its own removals; supplemental removal evidence is not accepted.",
         );
   }
+
+  const ballotReplacement = ballotListRemovalCheck(candidate, prior);
+  if (ballotReplacement !== null) return ballotReplacement;
 
   const financeResolution = stateFinanceGapResolution(candidate);
   if (financeResolution !== null) return financeResolution;

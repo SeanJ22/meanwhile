@@ -2,11 +2,10 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import {
-  directFundingTargetPlan,
   settleFundingHoldingAnswer,
   type FundingHoldingReaders,
-  type FundingTargetPlan,
-} from "../app/api/funding/[target]/route.ts";
+} from "../app/api/funding/[target]/holdings.ts";
+import { directFundingTargetPlan, type FundingTargetPlan } from "../lib/funding/target-authorities.ts";
 import type { CivicDataReadMetadata } from "../lib/civic-data/read-model.ts";
 
 const metadata = (recordClass: "FEC_FUNDING" | "STATE_CAMPAIGN_FINANCE", scope: string): CivicDataReadMetadata => ({

@@ -113,6 +113,9 @@ import {
 } from "@/lib/ask/ballot-inventory";
 import { readLocationOrigin, stampResidency } from "@/lib/ask/residency";
 import { captureAskInteraction } from "@/lib/db/ask-signal";
+import { raiseWriteAlarm } from "@/lib/db/write-alarm";
+import { ASK_SAVE_STATUS_HEADER, type AskSaveStatus } from "@/lib/ask/save-status";
+import { withReaderFeatures } from "@/lib/civic-data/reader-feature-context.ts";
 import { askCallerKey, cacheCallLine } from "@/lib/ask/prompt-cache";
 import { askModelStartupLine, resolveAskRoleModel } from "@/lib/ask/model";
 import { askUnsourced, shouldFallBack } from "@/lib/routing/unsourced-fallback";
@@ -390,10 +393,20 @@ function personEntities(seats: readonly SeatHolder[]): BindableEntity[] {
 }
 
 export async function POST(request: Request) {
+  return withReaderFeatures(async () => {
+    let saveStatus: AskSaveStatus | null = null;
+    const response = await postGrounded(request, (status) => { saveStatus = status; });
+    if (saveStatus !== null) response.headers.set(ASK_SAVE_STATUS_HEADER, saveStatus);
+    return response;
+  });
+}
+
+async function postGrounded(request: Request, setSaveStatus: (status: AskSaveStatus) => void) {
   const started = Date.now();
   const trace: AskTrace = emptyTrace();
 
   if (ripcordPulled("ripcord.askGrounded")) {
+    setSaveStatus("PAUSED");
     /* A switched-off engine answers with the same shape and a gap that says so, never an empty reply. */
     return Response.json(offAnswer("ripcord"), { status: 200 });
   }
@@ -553,13 +566,13 @@ export async function POST(request: Request) {
       trace.preloads = preloadMs;
       trace.answerMode = "STRUCTURED_GROUNDED";
       trace.totalMs = Date.now() - started;
-      await captureDelivered({ request, question, interpretation, resolutionState: "NONE",
+      setSaveStatus(await captureDelivered({ request, question, interpretation, resolutionState: "NONE",
         mode: "STRUCTURED_GROUNDED", subjectIds: [], answer: composed.answer, answerModel: null,
         validationPassed: true, records: [...pack.records], gaps: [...pack.gaps],
         surface: body.surface === "MAP" || body.surface === "BALLOT" ? body.surface : "UNKNOWN",
         approximateLocation: typeof body.approximateLocation === "string" ? body.approximateLocation : null,
         ocdIds, residency: stampResidency(readLocationOrigin(body.locationOrigin)),
-        continuityKey: typeof body.continuityKey === "string" ? body.continuityKey : "" });
+        continuityKey: typeof body.continuityKey === "string" ? body.continuityKey : "" }));
       return Response.json(askAnswer({ mode: "STRUCTURED_GROUNDED", pack, answer: composed.answer, contacts: [], trace }));
     }
     if (edgeManifest?.authorityArtifacts) {
@@ -1052,7 +1065,7 @@ export async function POST(request: Request) {
       ocdIds,
       residency,
       continuityKey: typeof body.continuityKey === "string" ? body.continuityKey : "",
-    });
+    }).then(setSaveStatus);
 
     /* An answer that ends here is RETURNED to the caller as a response to send,
        not sent: the speculative reading above never sends or captures one. */
@@ -2312,7 +2325,7 @@ export async function POST(request: Request) {
   return Response.json(payload);
 }
 
-/** Wrapped so a capture failure never withholds an answer. */
+/** A failure is visible beside the answer and in the existing operational store. */
 async function captureDelivered(input: {
   request: Request;
   question: string;
@@ -2330,10 +2343,11 @@ async function captureDelivered(input: {
   ocdIds: string[];
   residency: ReturnType<typeof stampResidency>;
   continuityKey: string;
-}): Promise<void> {
+}): Promise<AskSaveStatus> {
+  if (ripcordPulled("ripcord.reactionIntake")) return "PAUSED";
   try {
     const marker = markerFromRequest(input.request);
-    await captureAskInteraction({
+    const saved = await captureAskInteraction({
       question: input.question,
       intent: input.interpretation.intent,
       temporalKind: input.interpretation.temporal.kind,
@@ -2361,7 +2375,11 @@ async function captureDelivered(input: {
       runId: marker.runId,
       occurredAt: new Date().toISOString(),
     });
+    if (saved.kind === "WROTE") return "SAVED";
+    await raiseWriteAlarm("ask_interactions", saved.error ?? new Error(saved.why));
+    return "FAILED";
   } catch (error) {
-    console.error("ask signal capture failed", error);
+    await raiseWriteAlarm("ask_interactions", error);
+    return "FAILED";
   }
 }

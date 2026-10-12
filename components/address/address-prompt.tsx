@@ -15,8 +15,8 @@ import {
 } from "@/lib/geo/session-address";
 
 /**
- * The one address prompt. Asks for a street only; a house-number field appears
- * only when the street crosses a boundary or the street alone does not place.
+ * The one address prompt. A street can orient the map; a house number is
+ * needed to confirm districts. Missing source coverage stays unresolved.
  * Resolved division and contest ids are kept in `sessionStorage` only; the
  * house number is held in state for the request and then cleared.
  */
@@ -24,7 +24,7 @@ import {
 export interface AddressPromptProps {
   zip: string;
   /** Fires whenever the jurisdiction picture changes; callers re-read the session scope. */
-  onResolved?: (scope: { divisionIds: string[]; contestIds: string[]; splitLevels: LevelKey[] }) => void;
+  onResolved?: (scope: { divisionIds: string[]; contestIds: string[]; excludedContestIds: string[]; splitLevels: LevelKey[] }) => void;
   /** Fires only on an unambiguous street; an ambiguous one has no single point. */
   onPoint?: (point: { lat: number; lng: number }) => void;
   /** The reader accepted the offer to view the ZIP the address resolves in. */
@@ -80,6 +80,7 @@ export function AddressPrompt({
       onResolved?.({
         divisionIds: held.divisionIds,
         contestIds: held.contestIds,
+        excludedContestIds: held.excludedContestIds ?? [],
         splitLevels: held.splitLevels as LevelKey[],
       });
     }, 0);
@@ -92,9 +93,11 @@ export function AddressPrompt({
   const send = async (withNumber: string) => {
     setPhase("WORKING");
     setError(null);
+    setElsewhere(null);
     try {
       const response = await fetch("/api/address/resolve", {
         method: "POST",
+        cache: "no-store",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           zip,
@@ -111,6 +114,8 @@ export function AddressPrompt({
         ok?: boolean;
         resolution?: AddressResolution;
         contestIds?: unknown;
+        excludedContestIds?: unknown;
+        basis?: "EXACT_ADDRESS" | "STREET_SAMPLE";
         point?: { lat?: unknown; lng?: unknown } | null;
       };
       if (body.ok !== true || !body.resolution) {
@@ -122,23 +127,17 @@ export function AddressPrompt({
       const result = body.resolution;
       setResolution(result);
 
+      if (body.basis === "STREET_SAMPLE") {
+        if (body.point && typeof body.point.lat === "number" && typeof body.point.lng === "number") onPoint?.({ lat: body.point.lat, lng: body.point.lng });
+        setPhase("NEEDS_NUMBER");
+        return;
+      }
       if (result.status === "FAILED") {
-        /*
-         * With no house number the resolver probes a fixed ladder of sample
-         * numbers; a street whose range excludes them all comes back FAILED.
-         * That is a miss on our guesses, so ask for the number. Only a supplied
-         * number that still fails is a real failure.
-         */
-        if (!withNumber && !result.resolvesInZip) {
-          setError(null);
-          setPhase("NEEDS_NUMBER");
-          return;
-        }
         setError(
           result.resolvesInZip
-            ? `${street.trim()} doesn't resolve in ${zip} — it resolves in ` +
+            ? `That address doesn't resolve in ${zip} — it resolves in ` +
               `${result.resolvesInZip}. Everything here stays listed.`
-            : `We couldn't place ${street.trim()} in ${zip}. Everything stays listed.`,
+            : `We couldn't place that address in ${zip}. Everything stays listed.`,
         );
         setElsewhere(result.resolvesInZip ?? null);
         setPhase("FAILED");
@@ -148,37 +147,28 @@ export function AddressPrompt({
       const contestIds = Array.isArray(body.contestIds)
         ? body.contestIds.filter((id): id is string => typeof id === "string")
         : [];
+      const excludedContestIds = Array.isArray(body.excludedContestIds)
+        ? body.excludedContestIds.filter((id): id is string => typeof id === "string") : [];
       const divisionIds = result.levels.filter((l) => l.certain).flatMap((l) => l.divisionIds);
       const splitLevels = result.status === "AMBIGUOUS" ? result.split : [];
 
-      /*
-       * Partial ambiguity resolves partially: whatever IS confirmed is written
-       * and announced now, before the house-number question is asked. The
-       * caller drops the hedge on those rows immediately.
-       */
       writeSessionAddress({
         zip,
         contestIds,
+        excludedContestIds,
         divisionIds,
         splitLevels,
         streetLabel: street.trim(),
       });
-      onResolved?.({ divisionIds, contestIds, splitLevels });
-      if (
-        body.point &&
-        typeof body.point.lat === "number" &&
-        typeof body.point.lng === "number"
-      ) {
-        onPoint?.({ lat: body.point.lat, lng: body.point.lng });
-      }
-
+      onResolved?.({ divisionIds, contestIds, excludedContestIds, splitLevels });
       setPhase(result.status === "AMBIGUOUS" ? "NEEDS_NUMBER" : "SETTLED");
     } catch {
       setError("We couldn't check that just now. Nothing has changed.");
       setPhase(withNumber ? "NEEDS_NUMBER" : "ASKING");
     } finally {
-      // The number is done with the moment the request is. Nothing keeps it.
+      // Also discard a number pasted into the street field.
       setHouseNumber("");
+      setStreet(value => value.replace(/^#?\d+[a-z]?(?:[-/]\d+[a-z]?)?\s+/i, ""));
     }
   };
 
@@ -196,6 +186,7 @@ export function AddressPrompt({
     setHouseNumber("");
     setResolution(null);
     setError(null);
+    setElsewhere(null);
     setPhase("IDLE");
     onCleared?.();
   };
@@ -224,6 +215,12 @@ export function AddressPrompt({
               : "Set to your address."}{" "}
           <span className="address-prompt-kept">Kept on this device for this visit only.</span>
         </p>
+        {resolution && resolution.status !== "FAILED" && resolution.unheld.length > 0 && (
+          <p className="address-prompt-error">
+            We could not check {resolution.unheld.map(level => LEVEL_LABEL[level]).join(", ")}.
+            Those choices remain listed.
+          </p>
+        )}
         <button type="button" className="address-prompt-undo" onClick={reset}>
           Show the whole area again
         </button>
@@ -246,12 +243,9 @@ export function AddressPrompt({
           </p>
         )}
         <label htmlFor={`wtp-house-${zip}`} className="address-prompt-ask">
-          {split.length > 0
+          {resolution?.status === "AMBIGUOUS" && resolution.basis === "EXACT_ADDRESS"
             ? houseNumberReason(split)
-            : resolution?.status === "FAILED"
-              ? `We couldn't place ${street.trim()} from the street name on its own. ` +
-                "A house number will settle it."
-              : "Your street crosses a boundary. A house number settles it."}
+            : "A street name shows the area. Add a house number to check your districts."}
         </label>
         <div className="address-prompt-fields">
           <input
@@ -347,10 +341,8 @@ export function AddressPrompt({
         </button>
       )}
       <p className="address-prompt-promise">
-        We ask for your street, and for a house number when the street crosses a boundary or when
-        we can&apos;t place it from the name on its own. It passes through our server to the U.S.
-        Census Bureau&apos;s free address lookup and is not tied to an account. What comes back
-        stays on this device for this visit.{" "}
+        A street name shows the area. A house number lets us check your districts through the U.S.
+        Census Bureau. Only the district result stays on this device for this visit.{" "}
         <button type="button" className="address-prompt-skip" onClick={() => setPhase("IDLE")}>
           No thanks
         </button>

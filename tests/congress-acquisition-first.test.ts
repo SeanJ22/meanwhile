@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { indexByOfficeholderId } from "../lib/officials/lookup.ts";
+import { personCardSources } from "../lib/officials/card-sources.ts";
 import {normalizeCongressDirectory} from "../lib/officials/congress-normalize.ts";
 import {federalDirectoryCandidate} from "../lib/officials/federal-directory-data-plane.ts";
 import {MemoryRoutineDataStore} from "../lib/civic-data/store.ts";
@@ -41,4 +43,23 @@ test("core-only source promotes through the normal federal pointer without optio
   const store=new MemoryRoutineDataStore(),outcome=await processRegisteredManualCandidate(store,"congress-bulk-roster",candidate,NOW);
   assert.equal(outcome.candidate.state,"PROMOTED",outcome.candidate.failureDetail ?? "");
   const read=await readFederalDirectoryProjection({store,now:NOW,bypassCache:true});assert.equal(read.kind,"PROMOTED");
+});
+
+
+test("present, missing, then changed Congress phone keeps the source for the value readers actually see", () => {
+  const first = normalizeCongressDirectory({ "legislators-current": [person("A000001", "DC")] }, SHA, NOW);
+  const withoutPhone = person("A000001", "DC", [{ type: "rep", start: "2025-01-03", end: "2027-01-03", state: "DC", district: 0 }]);
+  const missing = normalizeCongressDirectory({ "legislators-current": [withoutPhone] }, "b".repeat(40), "2026-10-02T12:00:00.000Z", first);
+  assert.equal(missing.roster.officeholders[0].phone, "202-225-1000");
+  assert.equal(missing.roster.officeholders[0].fieldSources?.phone.collectedAt, NOW);
+  const refreshedAt = "2026-10-03T12:00:00.000Z";
+  const changedPerson = person("A000001", "DC", [{ type: "rep", start: "2025-01-03", end: "2027-01-03", state: "DC", district: 0, phone: "202-225-2000" }]);
+  const changed = normalizeCongressDirectory({ "legislators-current": [changedPerson] }, "c".repeat(40), refreshedAt, missing);
+  const holder = indexByOfficeholderId([changed.roster]).get("congress:A000001")!;
+  assert.equal(holder.phone, "202-225-2000");
+  assert.equal(holder.fieldSources?.phone, undefined, "the fresh core source replaces the carried field citation");
+  assert.equal(holder.provenance?.collectedAt, refreshedAt);
+  const sources = personCardSources(holder);
+  assert.ok(sources.some(row => row.provenance.sourceUrl?.includes("c".repeat(40)) && row.provenance.collectedAt === refreshedAt));
+  assert.ok(sources.every(row => !row.provenance.sourceUrl?.includes(SHA)), "the old phone source no longer appears on the current person card");
 });

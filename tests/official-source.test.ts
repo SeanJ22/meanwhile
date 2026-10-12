@@ -30,3 +30,31 @@ test("the linking page must itself be official, directly or through its own link
   const portal = { url: "https://sierravista.legistar.com/Calendar.aspx", html: `<a href="https://sierravista.granicus.com/player/clip/9">video</a>`, linkingPage: cityPage };
   assert.equal(isOfficialSource("https://sierravista.granicus.com/player/clip/9", portal), true);
 });
+
+test("an official link binds a shared platform account or document, not unrelated tenants or archive copies", () => {
+  const page = { url: "https://town.gov/", html: '<a href="https://www.facebook.com/TownCouncil">Council</a><a href="https://youtube.com/watch?v=meeting-1&amp;list=council">Meeting</a><a href="https://sites.google.com/view/town-council/">Site</a><a href="https://twitter.com/">Social</a><a href="https://web.archive.org/web/2020/https://town.gov/">Archive</a><img src="https://unrelated.example/track.png">' };
+  assert.equal(isOfficialSource("https://facebook.com/TownCouncil/posts/123", page), true);
+  assert.equal(isOfficialSource("https://facebook.com/TownCouncilFans", page), false);
+  assert.equal(isOfficialSource("https://facebook.com/OtherTown", page), false);
+  assert.equal(isOfficialSource("https://facebook.com/TownCouncil/%2e%2e/OtherTown", page), false);
+  assert.equal(isOfficialSource("https://youtube.com/watch?v=meeting-1&list=council", page), true);
+  assert.equal(isOfficialSource("https://youtube.com/watch?v=meeting-2&list=council", page), false);
+  assert.equal(isOfficialSource("https://sites.google.com/view/town-council/agendas", page), true);
+  assert.equal(isOfficialSource("https://sites.google.com/view/someone-else", page), false);
+  assert.equal(isOfficialSource("https://twitter.com/anyone", page), false);
+  assert.equal(isOfficialSource("https://web.archive.org/web/2020/https://town.gov/", page), false);
+  assert.equal(isOfficialSource("https://unrelated.example/anywhere", page), false, "an image embed is not an official website link");
+});
+
+
+test("an embedded civic portal establishes its dedicated host but linked assets do not", () => {
+  const page = { url: "https://town.gov/", html: '<iframe src="https://town.legistar.com/Calendar.aspx"></iframe><script src="https://scripts.example/tracker.js"></script><link href="https://styles.example/main.css"><img src="https://images.example/seal.png">' };
+  assert.equal(isOfficialSource("https://town.legistar.com/View.ashx?ID=1", page), true);
+  for (const host of ["scripts.example", "styles.example", "images.example"]) assert.equal(isOfficialSource(`https://${host}/any`, page), false);
+});
+
+
+test("markup examples and inactive links do not establish an official source", () => {
+  const page = { url: "https://town.gov/", html: '<!-- <a href="https://example.org/">old link</a> --><script>const sample = `<a href="https://example.org/">example</a>`;</script><template><a href="https://example.org/">template</a></template>' };
+  assert.equal(isOfficialSource("https://example.org/records", page), false);
+});

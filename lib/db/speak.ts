@@ -45,7 +45,7 @@ export type SpeakWriteResult =
   /** No database configured — real, honest to say, and NOT a success. */
   | { kind: "NO_STORE" }
   /** The insert was attempted and failed. Told plainly, never swallowed. */
-  | { kind: "FAILED"; reason: string };
+  | { kind: "FAILED"; reason: string; error: unknown };
 
 export interface SpeakSubmission {
   subjectType: SpeakSubjectType;
@@ -80,11 +80,11 @@ export async function writeSpeakYourMind(
   const review = triage(redacted.text);
 
   const marker = submission.marker ?? ORGANIC;
-  const db = getDb();
-  if (!db) return { kind: "NO_STORE" };
+  if (!process.env.DATABASE_URL) return { kind: "NO_STORE" };
 
   try {
     assertWriteAllowed("speak_your_mind");
+    const db = getDb();
     await db.insert(speakYourMind).values({
       occurredAt: new Date().toISOString(),
       subjectType: submission.subjectType,
@@ -110,6 +110,7 @@ export async function writeSpeakYourMind(
     return {
       kind: "FAILED",
       reason: error instanceof Error ? error.message : String(error),
+      error,
     };
   }
 }

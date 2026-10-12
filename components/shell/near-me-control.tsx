@@ -34,13 +34,13 @@ export function NearMeControl({
       (position) => {
         dispatch({
           type: "nearMe/position",
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
+          lat: Math.round(position.coords.latitude * 1000) / 1000,
+          lng: Math.round(position.coords.longitude * 1000) / 1000,
         });
         // Same handler and lifetime as a narrowed street address.
         onPoint?.({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
+          lat: Math.round(position.coords.latitude * 1000) / 1000,
+          lng: Math.round(position.coords.longitude * 1000) / 1000,
         });
       },
       (err) => {

@@ -29,7 +29,9 @@ export async function refreshCongressDirectory(input: {
     const priorRead = await readFederalDirectoryProjection({store,now,bypassCache:true});
     if (priorRead.kind === "STORE_UNREACHABLE") throw Error("CONGRESS_PRIOR_UNAVAILABLE");
     const prior = priorRead.kind === "PROMOTED" || priorRead.kind === "BOOTSTRAP" ? priorRead.value : null;
-    const {sha:sourceSha,sourceCheck} = await (input.revision ?? acquireCongressSourceRevision)();
+    const {sha:sourceSha,sourceCheck,failedSourceCheck} = await (input.revision ?? acquireCongressSourceRevision)({ consumerParserVersion: FEDERAL_DIRECTORY_PARSER_VERSION });
+    const sourceGaps = failedSourceCheck ? [{ key: "congress:source-check", code: "CONGRESS_SOURCE_CHECK_FAILED",
+      detail: `Fresh source check failed at ${failedSourceCheck.at}: ${failedSourceCheck.detail}; saved evidence retained.` }] : [];
     const raw: Record<string,unknown> = {}, dates: Record<string,string> = {}, acquisitions: FederalDirectoryAcquisition[] = [];
     for (const name of FILES) {
       const url = `https://raw.githubusercontent.com/unitedstates/congress-legislators/${sourceSha}/${name}.yaml`;
@@ -53,7 +55,7 @@ export async function refreshCongressDirectory(input: {
       // The core becomes readable immediately; optional files each enrich that same pointer.
       if (!raw["legislators-current"]) continue;
       const projection = normalizeCongressDirectory(raw,sourceSha,dates["legislators-current"]!,prior,dates,now);
-      const candidate = federalDirectoryCandidate({acquisitions,retrievedAt:dates["legislators-current"]!,projection});
+      const candidate = federalDirectoryCandidate({acquisitions,retrievedAt:dates["legislators-current"]!,projection,excludedFacts:sourceGaps});
       const outcome = await processRegisteredManualCandidate(store,"congress-bulk-roster",candidate,clock());
       finalReceipt = {candidate,outcome};
       if (!outcome.promoted && !outcome.confirmed) throw Error(`Federal directory held as ${outcome.candidate.state}: ${outcome.candidate.failureDetail ?? "validation refused"}`);
@@ -64,9 +66,9 @@ export async function refreshCongressDirectory(input: {
         ? (await store.readCandidate(priorRead.metadata.versionId))?.candidate.excludedFacts : undefined;
       const portraits=await (input.portraits ?? congressPortraits)(latest.value,clock(),AbortSignal.timeout(120000),{previousExcludedFacts});
       if(portraits.excludedFacts.length || JSON.stringify(portraits.projection)!==JSON.stringify(latest.value)) {
-        const candidate=federalDirectoryCandidate({acquisitions,retrievedAt:dates["legislators-current"]!,projection:portraits.projection,excludedFacts:portraits.excludedFacts});
+        const candidate=federalDirectoryCandidate({acquisitions,retrievedAt:dates["legislators-current"]!,projection:portraits.projection,excludedFacts:[...sourceGaps,...portraits.excludedFacts]});
         // The field-attempt receipt is new evidence even when the accepted person payload is unchanged.
-        const outcome=await processRegisteredManualCandidate(store,"congress-bulk-roster",candidate,clock(),undefined,{confirmUnchanged:portraits.excludedFacts.length === 0});
+        const outcome=await processRegisteredManualCandidate(store,"congress-bulk-roster",candidate,clock(),undefined,{confirmUnchanged:portraits.excludedFacts.length === 0 && sourceGaps.length === 0});
         finalReceipt = {candidate,outcome};
         console.log(`Congress portraits: ${portraits.attempted} known members attempted; ${portraits.excludedFacts.length} source or field gaps recorded.`);
         if (!outcome.promoted && !outcome.confirmed) throw Error(`Federal portraits held as ${outcome.candidate.state}: ${outcome.candidate.failureDetail ?? "validation refused"}`);

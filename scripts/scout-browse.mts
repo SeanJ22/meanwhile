@@ -1,3 +1,4 @@
+import { assertPublicUrl } from "../lib/hunt/egress.ts";
 /**
  * The scout's real browser: `BrowseFn` for `scout-tools.ts`, opened through
  * `launchGuarded`, the only permitted construction site. Bytes are not vaulted
@@ -24,6 +25,7 @@ type Observed = {
 const NETWORK_IDLE_CAP_MS = 10_000;
 
 async function observe(browser: GuardedBrowser, { url, timeoutMs }: Parameters<BrowseFn>[0]): Promise<BrowseObservation> {
+  assertPublicUrl(url);
   const started = Date.now();
   const requests: Observed[] = [];
   const page = await browser.page({ userAgent: DEFAULT_USER_AGENT });
@@ -89,7 +91,7 @@ async function observe(browser: GuardedBrowser, { url, timeoutMs }: Parameters<B
   }
 }
 /** One lazy browser for the fleet; every observation closes its own guarded context. */
-export function sharedScoutBrowser(launch: () => Promise<GuardedBrowser> = () => launchGuarded({ label: "scout-browse", headless: true })) {
+export function sharedScoutBrowser(launch: () => Promise<GuardedBrowser> = () => launchGuarded({ label: "scout-browse", headless: true, publicSourcesOnly: true })) {
   let browser: Promise<GuardedBrowser> | null = null;
   return {
     browse: (async input => {

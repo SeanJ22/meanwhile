@@ -12,7 +12,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 
 import { fundingFreshnessNote } from "../lib/funding/freshness.ts";
 
-import { directFundingTargetPlan } from "../app/api/funding/[target]/route.ts";
+import { directFundingTargetPlan } from "../lib/funding/target-authorities.ts";
 
 import { telHref } from "../lib/officials/phone-numbers.ts";
 

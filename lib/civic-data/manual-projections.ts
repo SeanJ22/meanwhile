@@ -44,6 +44,7 @@ import {
 import { manualSourceReceiptStructureIssue, sourceAuthority } from "./source-authority.ts";
 import { manualSourceUrls } from "./manual-source-urls.ts";
 import type {
+  BallotCandidateListEvidence,
   CivicRecordMember,
   IdentityEvidence,
   ManualSourceSetReceipt,
@@ -130,6 +131,7 @@ export interface ManualProjectionPackage {
   readonly sourceThrough: string;
   readonly sourceReceipt: ManualSourceSetReceipt;
   readonly payload: ManualProjectionPayload;
+  readonly ballotCandidateLists?: readonly BallotCandidateListEvidence[];
 }
 
 export interface ManualProjectionPrior {
@@ -1097,5 +1099,6 @@ export function manualProjectionCandidate(
     readModel: built.payload,
     civicRecords,
     excludedFacts: isolated?.excludedFacts ?? [],
+    ...(input.ballotCandidateLists ? { ballotCandidateLists: input.ballotCandidateLists } : {}),
   };
 }

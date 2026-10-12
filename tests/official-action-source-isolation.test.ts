@@ -6,7 +6,7 @@ import {
   settleOfficialActionHoldingAnswer,
   type OfficialActionHoldingReaders,
   type OfficialActionTargetPlan,
-} from "../app/api/official-actions/[subject]/route.ts";
+} from "../app/api/official-actions/[subject]/holdings.ts";
 import type { ReaderOfficialActions } from "../lib/officials/reader-actions.ts";
 
 const answer = (subjectId: string): ReaderOfficialActions => ({

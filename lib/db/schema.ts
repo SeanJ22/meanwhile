@@ -394,7 +394,7 @@ export const writeAlarm = pgTable("write_alarm", {
   /** The database's own words, truncated at the call site. Never a value. */
   errorMessage: text("error_message"),
 }, (t) => [
-  check("write_alarm_store_known", sql`${t.store} IN ('search_log', 'reactions')`),
+  check("write_alarm_store_known", sql`${t.store} IN ('search_log', 'reactions', 'speak_your_mind', 'demand_signals', 'ask_interactions')`),
   index("write_alarm_raised_at_idx").on(t.raisedAt),
 ]);
 
@@ -553,7 +553,7 @@ export const speakYourMind = pgTable(
  * One question and its answer, in one row. `askKeyHash` is digested under its
  * own `"ask-interaction:"` prefix. No email, account, address, phone or IP;
  * subjects are public civic ids. `questionScrubbed` is the scrubbed text only.
- * Writes stay off while `ripcord.askSignalCapture` is pulled.
+ * Writes stay off while the existing `ripcord.reactionIntake` is pulled.
  */
 export const askInteractions = pgTable(
   "ask_interactions",

@@ -302,10 +302,13 @@ function MapEntryInner() {
         const zipParam = zip ? `&zip=${zip}` : "";
         // Always stated: without it the server used the first rung at every zoom.
         const radiusParam = radiusKm ? `&radiusKm=${radiusKm}` : "";
+        const privatePoint = key.startsWith("street:");
         const response = await fetch(
-          `/api/meetings?lat=${lat}&lng=${lng}${zipParam}${radiusParam}`,
+          privatePoint ? "/api/meetings" : `/api/meetings?lat=${lat}&lng=${lng}${zipParam}${radiusParam}`,
           {
-            headers: { accept: "application/json" },
+            ...(privatePoint ? { method: "POST", cache: "no-store" as const,
+              body: JSON.stringify({ lat, lng, ...(radiusKm ? { radiusKm } : {}) }) } : {}),
+            headers: { accept: "application/json", ...(privatePoint ? { "content-type": "application/json" } : {}) },
             signal: controller.signal,
           },
         );
@@ -767,16 +770,16 @@ function MapEntryInner() {
       dropped: 0,
       searchFailed: failure !== null,
       // Only the street-point view's key starts with "street:".
-      atAddress: view?.key.startsWith("street:") ?? false,
+      atAddress: false, // A street/device point is approximate; only the saved address divisions are confirmed.
       /* One set for every surface. Missing or null both become null ("cannot say"), never an empty set. */
       governing: answer?.governingOcdIds
         ? new Set(answer.governingOcdIds)
         : null,
       /* Same null discipline as `governing`. */
       zipPartial: answer?.partialOcdIds ? new Set(answer.partialOcdIds) : null,
-      basis: view?.key.startsWith("street:") ? "ADDRESS" : "ZIP",
+      basis: "ZIP", // Approximate orientation never confirms an address.
     };
-  }, [current, shown, meetings, pinned?.listingIdentity, venues, location, drawnDistricts, failure, view]);
+  }, [current, shown, meetings, pinned?.listingIdentity, venues, location, drawnDistricts, failure]);
 
   /*
    * Every autocomplete row opens something. A meeting row with no venue opens

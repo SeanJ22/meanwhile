@@ -5,7 +5,7 @@
  * REQUIRES_NEW_ADAPTER, which keeps the record owed. No credential value is read or recorded.
  */
 
-import { assertPublicUrl } from "../../hunt/egress.ts";
+import { assertPublicUrl, publicFetch } from "../../hunt/egress.ts";
 import { ZERO_COST, type AttemptCost } from "../attempt.ts";
 import { deriveSanitized, recordAcquisition, type Artifact } from "../evidence/artifact.ts";
 import { sanitizedErrorDiagnostic } from "../../ops/error-diagnostic.ts";
@@ -40,7 +40,7 @@ export const realOpen: OpenOne = async ({ url, method, headers, body, timeoutMs 
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const response = await fetch(url, {
+    const response = await publicFetch(url, {
       method,
       signal: controller.signal,
       redirect: "follow",

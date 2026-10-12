@@ -267,7 +267,7 @@ function parserReading(parser: WorkerResultRecord, contract: NonNullable<WorkIte
   if (!capture) return null;
   const replay = isQuotedExtraction(contract, extraction)
     ? quotedSourceFindings(extraction, { ...contract, requiredFields: SECTION3_MINIMUMS[contract.recordClass] ?? contract.requiredFields }, capture.evidence)
-    : compareCandidateWithSource(extraction, contract, capture.evidence, inventoryRecordEvidence(capture.evidence, contract.extraction));
+    : compareCandidateWithSource(extraction, contract, capture.evidence, inventoryRecordEvidence(capture.evidence, contract.extraction, contract));
   if (replay.some(f => !f.recordId && !f.code.startsWith("COMPLETENESS_") && f.code !== "DECLARED_COUNT_MISMATCH")) return null;
   return { id: parser.id, capture, linkingPage: linkingPageFrom(capture.evidence.canonicalUrl, captures.map(c => c.evidence)),
     members: extraction.records.filter(record => !replay.some(f => f.recordId === record.id && (!f.field || ["name", "office"].includes(f.field))))

@@ -25,6 +25,7 @@ import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { logEvent } from "@/lib/log/client";
 import { getOrCreateBrowserKey } from "@/lib/state/browser-key";
+import { askSaveNotice } from "@/lib/ask/save-status";
 import { readLocationOriginFor } from "@/lib/state/location-origin";
 import { subjectKindOf, type AskSubjectRef } from "@/lib/ask/subject";
 import {
@@ -175,6 +176,7 @@ export function AskBox({
   // Presentation only: the beat words come from a fixed pool, never generated.
   const [working, setWorking] = useState(false);
   const [grounded, setGrounded] = useState<AskAnswerPayload | null>(null);
+  const [saveNotice, setSaveNotice] = useState<string | null>(null);
   /* Follow-up context: the last few resolved subjects, in memory for this mount only. */
   const [priorSubjects, setPriorSubjects] = useState<AskSubjectRef[]>([]);
   const [priorTurns, setPriorTurns] = useState<
@@ -317,6 +319,7 @@ export function AskBox({
         }),
       });
       if (!response.ok) return transportFailure();
+      setSaveNotice(askSaveNotice(response.headers));
       /* Parsed through the contract; an unknown mode is a transport failure. */
       return readAskAnswer(await response.json()) ?? transportFailure();
     } catch {
@@ -332,6 +335,7 @@ export function AskBox({
     setAsked(null);
     setDigest(null);
     setGrounded(null);
+    setSaveNotice(null);
     setBeat(drawAskBeat());
     setWorking(true);
     // Submitting an ask releases the map filter and closes the autocomplete.
@@ -661,6 +665,8 @@ export function AskBox({
           )}
         </div>
       )}
+
+      {grounded && saveNotice && <p role="status" data-ask-save-notice className="mt-2 t-detail text-muted">{saveNotice}</p>}
 
       {grounded && showGroundedAnswer(asked, grounded) && (
         <div

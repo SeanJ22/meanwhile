@@ -427,6 +427,17 @@ function sameHeldRecords(candidate: RoutineCandidate, pointed: RoutineCandidate)
   return left.length === right.length && left.every((key, index) => key === right[index]);
 }
 
+/** Collector progress and second-hop finance records must survive an unchanged amount. */
+function sameFinanceProgress(candidate: RoutineCandidate, pointed: RoutineCandidate): boolean {
+  if (candidate.recordClass !== "FEC_FUNDING" && candidate.recordClass !== "STATE_CAMPAIGN_FINANCE") return true;
+  const progress = (value: RoutineCandidate) => {
+    const model = value.readModel as { refreshAttempts?: unknown; acquisitionCursors?: unknown; secondHop?: unknown };
+    return canonicalCivicDataJson({ refreshAttempts: model.refreshAttempts ?? {},
+      acquisitionCursors: model.acquisitionCursors ?? {}, secondHop: model.secondHop ?? [] });
+  };
+  return progress(candidate) === progress(pointed);
+}
+
 /** A re-check whose read model cites a moved outside authority (a roll call's roster version) promotes. */
 export function sameCitedAuthority(candidate: RoutineCandidate, pointed: RoutineCandidate): boolean {
   const cited = (value: RoutineCandidate) => {
@@ -531,6 +542,7 @@ export async function processRoutineCandidate(
     candidate.changeSet?.outcome === "UNCHANGED" &&
     typeof lkg.candidate.normalization.normalizedHash === "string" &&
     sameHeldRecords(candidate, lkg.candidate) &&
+    sameFinanceProgress(candidate, lkg.candidate) &&
     sameCitedAuthority(candidate, lkg.candidate)
   ) {
     const retained = (candidate as { readonly retainedSourceResponses?: readonly unknown[] }).retainedSourceResponses;

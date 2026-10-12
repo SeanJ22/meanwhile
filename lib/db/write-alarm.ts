@@ -13,6 +13,7 @@ export type SoldStore =
   | "search_log"
   | "reactions"
   | "speak_your_mind"
+  | "ask_interactions"
   /* Not sold; here so its failed writes are visible. */
   | "demand_signals";
 
@@ -118,10 +119,12 @@ export async function raiseWriteAlarm(store: SoldStore, error: unknown): Promise
     });
     return true;
   } catch (alarmError) {
-    // Deliberately swallowed; the console line is the last resort.
+    // The operational log remains usable even when both writes fail. Never
+    // log raw driver errors: they can contain the failed insert's values.
     console.error(
-      `write alarm could not be raised for ${store} (the original failure is above)`,
-      alarmError,
+      "reader store write failed; write alarm unavailable",
+      { store, errorCode: errorCodeOf(error), errorMessage: errorMessageOf(error),
+        alarmErrorCode: errorCodeOf(alarmError), alarmErrorMessage: errorMessageOf(alarmError) },
     );
     return false;
   }

@@ -69,9 +69,11 @@ export async function acquireStatePeople(input: SharedOptions & {
   let people: PluralPerson[] = [], acquisitions: StatePeopleAcquisition[] = [], releaseId = "";
   try {
     const current = await acquireKnownRelease({ ...shared, sourceId: PLURAL_SOURCE_ID, releaseId: "people-current-revision",
-      url: PLURAL_REVISION_URL, parserVersion: "openstates-revision/1", signal: input.signal, maxBytes: 1024 * 1024,
+      url: PLURAL_REVISION_URL, parserVersion: `openstates-revision/1:${PLURAL_PARSER_VERSION}`, reuseOnSourceFailure: true, signal: input.signal, maxBytes: 1024 * 1024,
       checkAfterMs: DAY, validate: bytes => { revision(bytes); } });
     const sourceCheck = knownReleaseSourceCheck(current);
+    if (current.failedSourceCheck) gaps.push({ sourceUrl: PLURAL_REVISION_URL,
+      detail: `Fresh source check failed at ${current.failedSourceCheck.at}: ${current.failedSourceCheck.detail}; replaying the saved release.` });
     const sha = revision(current.bytes), url = `https://codeload.github.com/openstates/people/zip/${sha}`;
     const release = await acquireKnownRelease({ ...shared, sourceId: PLURAL_SOURCE_ID, releaseId: `people:${sha}`, url,
       parserVersion: "openstates-archive/2", signal: input.signal, maxBytes: 96 * 1024 * 1024, checkAfterMs: Number.MAX_SAFE_INTEGER,

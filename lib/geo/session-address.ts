@@ -2,10 +2,10 @@
  * An address, once given, is never asked for twice: the resolved outcome
  * persists for the session and answers every surface.
  *
- * - Nothing reaches the server or disk. Storage is `sessionStorage`, cleared
- *   when the tab closes.
+ * - This result is kept in `sessionStorage`, cleared when the tab closes.
+ *   Resolving an address sends it to the server and the Census geocoder.
  * - The street address and coordinates are never written; only the resolved
- *   outcome (contest and division ids) and a short label the reader typed.
+ *   outcome (contest and division ids), with a generic recognition label.
  *   The house number is used for one request and discarded.
  */
 
@@ -42,7 +42,9 @@ export interface SessionAddressScope {
   zip: string;
   /** Contest ids on the ballot at that point. The whole payload's value. */
   contestIds: string[];
-  /** What the reader typed for the street, for their own recognition only. */
+  /** Only these proven exclusions can hide a contest. */
+  excludedContestIds?: string[];
+  /** Generic recognition label; the street text is never stored. */
   streetLabel: string;
   /** The division ids the address confirmed, across every level that resolved. */
   divisionIds: string[];
@@ -73,22 +75,25 @@ export function readSessionAddress(): SessionAddressScope | null {
     if (!raw) return null;
     const parsed = JSON.parse(raw) as Partial<SessionAddressScope>;
     if (
+      (parsed as { scopeVersion?: unknown }).scopeVersion !== 2 ||
       typeof parsed.zip !== "string" ||
       !Array.isArray(parsed.contestIds) ||
-      typeof parsed.resolvedAt !== "string"
+      typeof parsed.resolvedAt !== "string" ||
+      parsed.resolvedAt.slice(0, 10) !== new Date().toISOString().slice(0, 10)
     ) {
       return null;
     }
     return {
       zip: parsed.zip,
       contestIds: parsed.contestIds.filter((id): id is string => typeof id === "string"),
+      excludedContestIds: Array.isArray(parsed.excludedContestIds) ? parsed.excludedContestIds.filter((id): id is string => typeof id === "string") : [],
       divisionIds: Array.isArray(parsed.divisionIds)
         ? parsed.divisionIds.filter((id): id is string => typeof id === "string")
         : [],
       splitLevels: Array.isArray(parsed.splitLevels)
         ? parsed.splitLevels.filter((id): id is string => typeof id === "string")
         : [],
-      streetLabel: typeof parsed.streetLabel === "string" ? parsed.streetLabel : "",
+      streetLabel: "your address",
       resolvedAt: parsed.resolvedAt,
     };
   } catch {
@@ -106,7 +111,9 @@ export function writeSessionAddress(scope: Omit<SessionAddressScope, "resolvedAt
     () =>
       store.setItem(
         SESSION_ADDRESS_KEY,
-        JSON.stringify({ ...scope, resolvedAt: new Date().toISOString() }),
+        JSON.stringify({ scopeVersion: 2, zip: scope.zip, contestIds: scope.contestIds,
+          excludedContestIds: scope.excludedContestIds ?? [], divisionIds: scope.divisionIds, splitLevels: scope.splitLevels,
+          streetLabel: "your address", resolvedAt: new Date().toISOString() }),
       ),
     publish,
   );

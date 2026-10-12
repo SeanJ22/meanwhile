@@ -84,7 +84,7 @@ export function PickControl({
   );
   const yesChoiceIds = JSON.parse(yesKey) as string[];
 
-  const resolution = resolveWithSuppression(parsed, yesChoiceIds, voteFor, cleared);
+  const resolution = resolveWithSuppression(parsed, yesChoiceIds, voteFor, cleared, unsureHere);
   const selected = new Set(resolution.chosen);
   const labelOf = (id: string) =>
     options.find((o) => o.id === id)?.label ?? parsed?.labels?.[id] ?? id;

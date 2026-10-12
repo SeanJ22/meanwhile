@@ -12,7 +12,7 @@ import {
 import { getSingleCandidateTargetIds } from "../lib/ballot/uncontested.ts";
 import { loadBallotForDivisions } from "../lib/ask/server-sources.ts";
 import { displayFor } from "../lib/questionnaire/candidacy-display.ts";
-import { validReactionTargetsFor } from "../app/api/reactions/route.ts";
+import { validReactionTargetsFor } from "../app/api/reactions/targets.ts";
 import {
   ballotAuxiliaryPreloadSucceeded,
   settleBallotAuxiliaryPreloads,
@@ -197,7 +197,7 @@ test("a supporting ballot authority failure cannot suppress the ballot or anothe
 test("all production ballot entry points use state-scoped selection", () => {
   for (const path of [
     "app/ballot/page.tsx",
-    "app/api/address/resolve/route.ts",
+    "lib/geo/address-resolve.ts",
     "app/api/ballot/scope/route.ts",
     "lib/ask/server-sources.ts",
   ]) {
@@ -216,7 +216,7 @@ test("all production ballot entry points use state-scoped selection", () => {
   assert.match(page, /matched\.contests\.some\(nhLegislativeRosterAppliesTo\)/);
   assert.match(page, /auxiliaryPreloads\.set\("nh-members", settleNhSeatHolders\)/);
 
-  const reactions = readFileSync(join(process.cwd(), "app/api/reactions/route.ts"), "utf8");
+  const reactions = ["route.ts", "targets.ts"].map((file) => readFileSync(join(process.cwd(), "app/api/reactions", file), "utf8")).join("\n");
   assert.match(reactions, /candidateTargets:\s*getCandidateTargetIds/);
   assert.match(reactions, /validReactionTargetsFor\(\s*submission\.targetType,\s*submission\.targetId/);
   assert.doesNotMatch(reactions, /Promise\.all\(\[refreshFundingFromPromoted\(\),\s*refreshFederalVotesFromPromoted\(\)\]\)/);

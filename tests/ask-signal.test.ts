@@ -10,6 +10,7 @@ import {
   prepareAskInteraction,
   type AskInteractionInput,
 } from "../lib/db/ask-signal.ts";
+import { writeAskInteraction } from "../lib/db/ask-interaction-writer.ts";
 import {
   cohortLabel,
   countsAsResident,
@@ -64,6 +65,13 @@ test("ASK03: with a continuity key and a write path, one Ask writes one row", as
   });
   assert.equal(outcome.kind, "WROTE");
   assert.equal(wrote, 1);
+});
+
+test("the database writer refuses client transport failures and a disabled engine without relabeling them", async () => {
+  for (const answerMode of ["OFF", "TRANSPORT_FAILED"] as const) {
+    await assert.rejects(writeAskInteraction(prepareAskInteraction(input({ answerMode }))),
+      new RegExp(`${answerMode} is not a delivered Ask interaction`));
+  }
 });
 
 test("ASK03: PII a reader types about themselves never reaches the stored text", () => {

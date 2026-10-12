@@ -1,3 +1,5 @@
+import { readCompleteResponse } from "../../sources/source-bytes.ts";
+import { publicFetch } from "../../hunt/egress.ts";
 import { fetchEvents } from '../../sources/legistar/client.ts';
 import type { SourceApiOptions, SourceApiResult } from './scout-api.ts';
 export type ClientTool = 'legistar_events';
@@ -8,9 +10,13 @@ export async function readClientSource(name: ClientTool, input: Record<string, u
   const fetcher: typeof fetch = async (url, init) => {
     const sourceUrl = String(url);
     await options.spaceOut?.(new URL(sourceUrl).host);
-    const response = await (options.fetchImpl ?? fetch)(url,{...init,signal:AbortSignal.timeout(options.timeoutMs ?? 15000)});
-    captures.push({sourceUrl,status:response.status,text:await response.clone().text()});
-    return response;
+    const signal = AbortSignal.any([AbortSignal.timeout(options.timeoutMs ?? 15000), ...(options.signal ? [options.signal] : []), ...(init?.signal ? [init.signal] : [])]);
+    const response = await (options.fetchImpl ?? publicFetch)(url,{...init,signal});
+    const bytes = await readCompleteResponse(response, 16 * 1024 * 1024);
+    captures.push({sourceUrl,status:response.status,text:new TextDecoder("utf-8", {fatal:true}).decode(bytes)});
+    const replay = new Response(bytes as BodyInit, {status:response.status,headers:response.headers});
+    Object.defineProperty(replay, "url", {value:response.url});
+    return replay;
   };
   if (typeof input.tenant !== 'string' || !/^[a-z0-9-]+$/i.test(input.tenant) || typeof input.from !== 'string' || typeof input.to !== 'string' ||
     !/^\d{4}-\d{2}-\d{2}$/.test(input.from) || !/^\d{4}-\d{2}-\d{2}$/.test(input.to) ||

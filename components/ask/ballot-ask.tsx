@@ -9,6 +9,7 @@ import { useRef, useState } from "react";
 import { AskAnswerRecords } from "@/components/ask/answer-records";
 import { AskAnswerContacts } from "./answer-contacts";
 import { readAskAnswer, unresolvedReadLine, type AskAnswerPayload } from "@/lib/ask/answer";
+import { askSaveNotice } from "@/lib/ask/save-status";
 import { sourceLinks } from "@/lib/ask/host";
 import { getOrCreateBrowserKey } from "@/lib/state/browser-key";
 import { readLocationOriginFor } from "@/lib/state/location-origin";
@@ -41,6 +42,7 @@ export function BallotAsk({
   const [reply, setReply] = useState<GroundedReply | null>(null);
   const [working, setWorking] = useState(false);
   const [failed, setFailed] = useState(false);
+  const [saveNotice, setSaveNotice] = useState<string | null>(null);
   /* The question that produced the reply on screen. */
   const [answered, setAnswered] = useState("");
   /* Follow-up context: the last few resolved subjects, in memory for this mount only. */
@@ -59,6 +61,7 @@ export function BallotAsk({
     inFlight.current = controller;
     setWorking(true);
     setFailed(false);
+    setSaveNotice(null);
     setReply(null);
     setAnswered("");
     try {
@@ -88,6 +91,7 @@ export function BallotAsk({
       }
       const body = readAskAnswer(await res.json());
       if (!body) { setFailed(true); return; }
+      setSaveNotice(askSaveNotice(res.headers));
       setReply(body);
       setAnswered(question);
       /* Only a canonical resolution becomes a referent for later turns. */
@@ -173,6 +177,7 @@ export function BallotAsk({
 
       {reply && (
         <div className="mt-4 t-body" data-ask-mode={reply.mode} data-ask-question={answered}>
+          {saveNotice && <p role="status" data-ask-save-notice className="mb-2 t-detail text-muted">{saveNotice}</p>}
           {/* A named government that fits more than one thing: ASKED, never chosen. */}
           <AskBodyConfirmation answer={reply} working={working} onConfirm={ask} onClarify={() => {
             setReply(null);

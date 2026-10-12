@@ -32,6 +32,7 @@ export const PRL_INGEST_PARSER_VERSION = "prl-ingest/2";
 export const prlSubjectShard = (subject: string) => createHash("sha256").update(subject).digest("hex");
 
 export interface PrlSourceOpen {
+  readonly failedSourceCheck?: import("../known-release.ts").FailedSourceCheck;
   readonly textChunks: TextChunks;
   readonly sourceSha256: string;
   readonly finalUrl: string;
@@ -100,7 +101,7 @@ export async function ingestDataset(options: IngestOptions): Promise<PrlIngestRe
   try {
     if (source.unchanged && options.priorReceipt?.parserVersion === PRL_INGEST_PARSER_VERSION &&
         options.priorReceipt.sourceSha256 === source.sourceSha256) {
-      return { ...options.priorReceipt, rowsWritten: 0, newObjectKeys: [] };
+      return { ...options.priorReceipt, failedSourceCheck: source.failedSourceCheck, rowsWritten: 0, newObjectKeys: [] };
     }
     const opened = { ...options, open: async () => source };
     const receipt = options.dataset.target === "profile" ? await ingestProfile(opened)
@@ -282,6 +283,7 @@ function buildReceipt(input: BuildReceiptInput): PrlIngestReceipt {
     formatVersion: 1,
     parserVersion: PRL_INGEST_PARSER_VERSION,
     sourceBytes: input.source.byteLength,
+    failedSourceCheck: input.source.failedSourceCheck,
     datasetId: dataset.id,
     scope,
     title: dataset.title,

@@ -78,7 +78,7 @@ export function verifiedWorkerRecords(input: {
   const minimums = SECTION3_MINIMUMS[contract.recordClass] ?? contract.requiredFields;
   const replay = isQuotedExtraction(contract, extraction)
     ? quotedSourceFindings(extraction, { ...contract, requiredFields: SECTION3_MINIMUMS[contract.recordClass] ?? contract.requiredFields }, primary.evidence)
-    : compareCandidateWithSource(extraction, contract, primary.evidence, inventoryRecordEvidence(primary.evidence, contract.extraction));
+    : compareCandidateWithSource(extraction, contract, primary.evidence, inventoryRecordEvidence(primary.evidence, contract.extraction, contract));
   const global = replay.filter(f => !f.recordId && !COVERAGE_CODES.has(f.code));
   requirePublication(global.length === 0, `SOURCE_REPLAY_FAILED:${global.map(f => f.code).join(",")}`);
   const heldIds = new Set(replay.filter(f => f.recordId && !(f.field && !minimums.includes(f.field))).map(f => f.recordId!));

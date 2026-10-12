@@ -7,7 +7,8 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-import { GET, KEEP_WARM_MARKER, MAX_HOLD_MS, primeReaderEdge } from "../app/api/warm/route.ts";
+import { GET } from "../app/api/warm/route.ts";
+import { KEEP_WARM_MARKER, MAX_HOLD_MS, primeReaderEdge } from "../app/api/warm/priming.ts";
 import pinger, { HOLD_MS, WARM_INSTANCES, config, pingWarm } from "../netlify/functions/keep-warm.mts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 
@@ -78,7 +79,7 @@ test("KEEP-WARM · C20: a marked call also loads the reader edge a cold Ask read
   const unmarked = await (await call("?hold=0", false)).json();
   assert.equal(unmarked.primed, null);
   assert.deepEqual(await primeReaderEdge(), nothing);
-  const source = readFileSync("app/api/warm/route.ts", "utf8");
+  const source = ["route.ts", "priming.ts"].map((file) => readFileSync(`app/api/warm/${file}`, "utf8")).join("\n");
   assert.match(source, /ensureReaderAuthorityEdge\(manifest\)/);
   assert.match(source, /readReaderEdgeMeetings\(\{\s*manifest,\s*fallback: \(\) => Promise\.reject\(/, "the meetings read's database fallback is refused");
   assert.doesNotMatch(source, /getDb|readPreparedMeetingsProjection|refreshOutcomeSnapshotFromPromoted/);

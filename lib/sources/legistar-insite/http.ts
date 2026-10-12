@@ -14,6 +14,8 @@ import {
   sourceUserAgent,
 } from "../http.ts";
 import { sourceAcquisitionSleep } from "../acquisition-deadline.ts";
+import { recordAcquiredResponse } from "../acquisition-trace.ts";
+import { publicFetch } from "../../hunt/egress.ts";
 
 /** `Crawl-delay: 2`, as published at https://legistar.com/robots.txt, in the directive's own units. */
 export const INSITE_CRAWL_DELAY_SECONDS = 2;
@@ -62,7 +64,7 @@ export class InSiteSession {
      */
     followRedirects?: boolean;
   } = {}) {
-    this.impl = options.fetchImpl ?? fetch;
+    this.impl = options.fetchImpl ?? publicFetch;
     this.signal = options.signal;
     this.followRedirects = options.followRedirects ?? true;
     // An injected fetch is a test's own double: it must not sleep, and the
@@ -143,12 +145,15 @@ export class InSiteSession {
       throw new SourceHttpError(`HTTP ${response.status} for ${url}`, response.status, url, 2);
     }
     this.retrieved.push(url);
-    const text = await response.text();
+    const bytes = new Uint8Array(await response.arrayBuffer());
+    const text = new TextDecoder().decode(bytes);
     this.signal?.throwIfAborted();
     return readValidatedResponse(url, 2, {
       status: response.status,
       contentType: response.headers.get("content-type") ?? "",
       text,
+      bytes,
+      finalUrl: response.url || url,
     });
   }
 
@@ -177,6 +182,7 @@ export class InSiteSession {
     if (bytes.byteLength === 0) {
       throw new SourceHttpError(`HTTP ${response.status} for ${url} carried zero bytes`, response.status, url, 2);
     }
+    recordAcquiredResponse({ requestedUrl: url, finalUrl: response.url || url, httpStatus: response.status, bytes });
     return { status: response.status, contentType: response.headers.get("content-type") ?? "", finalUrl: response.url || url, bytes, ...validatorsOf(response) };
   }
 
@@ -235,12 +241,15 @@ export class InSiteSession {
       throw new SourceHttpError(`HTTP ${response.status} for ${url}`, response.status, url, 2);
     }
     this.retrieved.push(`POST ${url}`);
-    const text = await response.text();
+    const bytes = new Uint8Array(await response.arrayBuffer());
+    const text = new TextDecoder().decode(bytes);
     this.signal?.throwIfAborted();
     return readValidatedResponse(url, 2, {
       status: response.status,
       contentType: response.headers.get("content-type") ?? "",
       text,
+      bytes,
+      finalUrl: response.url || url,
     });
   }
 }

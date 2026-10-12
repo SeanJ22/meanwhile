@@ -5,6 +5,9 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pipeline } from "node:stream/promises";
 import { OUTBOUND_USER_AGENT } from "../../geo/outbound-agent.ts";
+import { publicFetch } from "../../hunt/egress.ts";
+import { requestPublisher, sourceAcquisitionFailure } from "../../civic-data/source-acquisition-error.ts";
+import type { FailedSourceCheck } from "../known-release.ts";
 import { openZipFile } from "../archive.ts";
 import { decodeUtf8 } from "./streaming.ts";
 import type { PrlDataset } from "./inventory.ts";
@@ -16,13 +19,15 @@ const MAX_SOURCE_BYTES = 2 * 1024 * 1024 * 1024;
 interface HeldSource {
   version: 1; url: string; finalUrl: string; sha256: string; bytes: number;
   retrievedAt: string; etag: string | null; lastModified: string | null; chunks: string[];
+  failedSourceCheck?: FailedSourceCheck;
 }
 
 /** The complete compressed source is staged on disk, never held in a worker's heap.
  * Captured source bytes survive parser refusals. Only fully decoded, validated
  * sources may later move the canonical civic-data publication pointer. */
-export async function openPrlSource(dataset: PrlDataset, fetchImpl: typeof fetch = fetch,
-  archive?: PrlArchiveStore, reuseIfSha256?: string): Promise<PrlSourceOpen> {
+export async function openPrlSource(dataset: PrlDataset, fetchImpl: typeof fetch = publicFetch,
+  archive?: PrlArchiveStore, reuseIfSha256?: string,
+  options: { replayHeld?: boolean; now?: () => string } = {}): Promise<PrlSourceOpen> {
   const root = await mkdtemp(join(tmpdir(), "prl-source-"));
   const path = join(root, "source");
   const dispose = () => rm(root, { recursive: true, force: true });
@@ -38,15 +43,36 @@ export async function openPrlSource(dataset: PrlDataset, fetchImpl: typeof fetch
     const headers: Record<string, string> = { "user-agent": OUTBOUND_USER_AGENT };
     if (held?.etag) headers["if-none-match"] = held.etag;
     else if (held?.lastModified) headers["if-modified-since"] = held.lastModified;
-    const response = await fetchImpl(dataset.url, { headers, redirect: "follow", signal: AbortSignal.timeout(180_000) });
-    if (response.status === 206) throw new Error("PRL_SOURCE_TRUNCATED");
-    if (response.status === 304 && held && held.sha256 === reuseIfSha256) {
+    let response: Response | null = null;
+    let failedSourceCheck: FailedSourceCheck | undefined;
+    if (!(options.replayHeld && held)) {
+      try {
+        response = await requestPublisher(dataset.id, () => fetchImpl(dataset.url, { headers, redirect: "follow", signal: AbortSignal.timeout(180_000) }));
+        if (response.status !== 200 && response.status !== 304) {
+          await response.body?.cancel();
+          const retry = response.headers.get("retry-after");
+          throw sourceAcquisitionFailure("PUBLISHER_RESPONSE_REFUSED",
+            `${response.status === 206 ? "PRL_SOURCE_TRUNCATED" : `PRL_SOURCE_HTTP_${response.status}`}${retry ? `:Retry-After=${retry}` : ""}`);
+        }
+      } catch (error) {
+        if (!held || !archive) throw error;
+        failedSourceCheck = { at: options.now?.() ?? new Date().toISOString(), code: "PRL_SOURCE_CHECK_FAILED",
+          detail: error instanceof Error ? error.message : "PRL provider check failed" };
+        held = { ...held, failedSourceCheck };
+        await archive.put(sourceKey, new TextEncoder().encode(JSON.stringify(held)), "application/json");
+        response = null;
+      }
+    }
+    if (options.replayHeld && held) failedSourceCheck = held.failedSourceCheck;
+    if (response?.status === 304 && held && held.sha256 === reuseIfSha256) {
+      if (archive && held.failedSourceCheck) await archive.put(sourceKey,
+        new TextEncoder().encode(JSON.stringify({ ...held, failedSourceCheck: undefined })), "application/json");
       return { textChunks: (async function* () {})(), sourceSha256: held.sha256, finalUrl: held.finalUrl,
-        member: dataset.file, retrievedAt: held.retrievedAt, byteLength: held.bytes, unchanged: true, dispose };
+        member: dataset.file, retrievedAt: held.retrievedAt, byteLength: held.bytes, unchanged: true, failedSourceCheck, dispose };
     }
     const hash = createHash("sha256");
     let size = 0, source: HeldSource;
-    if (response.status === 304 && held && archive) {
+    if ((response === null || response.status === 304) && held && archive) {
       const sourceChunks = held.chunks;
       async function* restoredChunks() {
         for (const key of sourceChunks) {
@@ -58,9 +84,9 @@ export async function openPrlSource(dataset: PrlDataset, fetchImpl: typeof fetch
       }
       await pipeline(restoredChunks(), createWriteStream(path, { flags: "wx" }));
       if (size !== held.bytes || hash.digest("hex") !== held.sha256) throw new Error("PRL_HELD_SOURCE_HASH_MISMATCH");
-      source = held;
+      source = { ...held, failedSourceCheck };
     } else {
-      if (!response.ok || !response.body) throw new Error(`PRL_SOURCE_HTTP_${response.status}${response.headers.get("retry-after") ? `:Retry-After=${response.headers.get("retry-after")}` : ""}`);
+      if (!response?.ok || !response.body) throw new Error(`PRL_SOURCE_HTTP_${response?.status ?? "MISSING"}`);
       const stated = Number(response.headers.get("content-length"));
       if (stated > MAX_SOURCE_BYTES) throw new Error("PRL_SOURCE_TOO_LARGE");
       const reader = response.body.getReader();
@@ -81,9 +107,9 @@ export async function openPrlSource(dataset: PrlDataset, fetchImpl: typeof fetch
       await pipeline(downloadedChunks(), createWriteStream(path, { flags: "wx" }));
       if (!size || (stated > 0 && !response.headers.get("content-encoding") && size !== stated)) throw new Error("PRL_SOURCE_TRUNCATED");
       const digest = hash.digest("hex");
-      source = held?.sha256 === digest ? { ...held, etag: response.headers.get("etag"), lastModified: response.headers.get("last-modified") }
+      source = held?.sha256 === digest ? { ...held, failedSourceCheck: undefined, etag: response.headers.get("etag"), lastModified: response.headers.get("last-modified") }
         : { version: 1, url: dataset.url, finalUrl: response.url || dataset.url, sha256: digest, bytes: size,
-          retrievedAt: new Date().toISOString(), etag: response.headers.get("etag"), lastModified: response.headers.get("last-modified"), chunks: [] };
+          retrievedAt: options.now?.() ?? new Date().toISOString(), etag: response.headers.get("etag"), lastModified: response.headers.get("last-modified"), chunks: [] };
     }
     if (archive && !source.chunks.length) {
       for await (const chunk of createReadStream(path, { highWaterMark: CHUNK_BYTES })) {
@@ -96,7 +122,7 @@ export async function openPrlSource(dataset: PrlDataset, fetchImpl: typeof fetch
     if (source.sha256 === reuseIfSha256) {
       if (archive) await archive.put(sourceKey, new TextEncoder().encode(JSON.stringify(source)), "application/json");
       return { textChunks: (async function* () {})(), sourceSha256: source.sha256, finalUrl: source.finalUrl,
-        member: dataset.file, retrievedAt: source.retrievedAt, byteLength: source.bytes, unchanged: true, dispose };
+        member: dataset.file, retrievedAt: source.retrievedAt, byteLength: source.bytes, unchanged: true, failedSourceCheck, dispose };
     }
     const entries = dataset.format === "csv" ? null : await openZipFile(path, {
       maxEntries: 8, maxMemberBytes: 32 * 1024 ** 3, maxTotalBytes: 32 * 1024 ** 3, maxDirectoryBytes: 1024 * 1024,
@@ -111,7 +137,7 @@ export async function openPrlSource(dataset: PrlDataset, fetchImpl: typeof fetch
       complete = true;
     }
     return { textChunks: textChunks(), sourceSha256: source.sha256, finalUrl: source.finalUrl,
-      member: entries?.[0].name ?? dataset.file, retrievedAt: source.retrievedAt, byteLength: source.bytes, dispose,
+      member: entries?.[0].name ?? dataset.file, retrievedAt: source.retrievedAt, byteLength: source.bytes, failedSourceCheck, dispose,
       accept: async () => {
         if (!complete) throw new Error("PRL_SOURCE_NOT_FULLY_READ");
       } };

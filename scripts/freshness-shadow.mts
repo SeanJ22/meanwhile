@@ -3391,7 +3391,7 @@ const runMeetingsDiscoveryPass = async (discoveryDeadlineMs: number, maxWalks: n
     meetingsDiscoveryState = `not run: no government is owed meetings discovery (${missionMapUnread ?? "no mission place has a calendar blank and no dispatch is open"})`;
   } else {
     /* The caller sets the deadline: 60 s on the serial path, the time left in the round on its own lane. */
-    const openDiscovery = fleetSafety.guardedOpenBytes("discovery-web", "meetings-discovery", fetch, { followRedirects: false });
+    const openDiscovery = fleetSafety.guardedOpenBytes("discovery-web", "meetings-discovery", undefined, { followRedirects: false });
     /* Named to the stall diagnostic while it runs: its waits on government sites are not store calls, so nothing else would name them. */
     const leaveDiscovery = pending.enter("meetings-discovery");
     try {
@@ -3559,7 +3559,7 @@ const runCampaignSitesPass = async (): Promise<void> => {
         }
         const held = await step("the held Marginalia answers", () => heldMarginaliaFromManifest(ROOT, stagingManifest, vaultIndex, nowIso()));
         const methodVersion = await step("the method version", roundMethodVersion);
-        const openCampaignSite = fleetSafety.guardedOpenBytes("discovery-web", "campaign-site-chain", fetch, { followRedirects: false });
+        const openCampaignSite = fleetSafety.guardedOpenBytes("discovery-web", "campaign-site-chain", undefined, { followRedirects: false });
         const report = await step("the campaign-site chain", () => runCampaignSiteCycle({
           startedAtMs: campaignStartedMs,
           repos,
@@ -3626,7 +3626,7 @@ const runCandidatePublicationsPass = async (): Promise<void> => {
         clock: () => Date.now(), sleep: ms => new Promise(done => setTimeout(done, ms)), spaceOut: spacer,
         deadlineMs: dispatchDeadlineMs,
         openFor: candidacyId => {
-          const opened = fleetSafety.guardedOpenBytes("public-web", candidacyId, fetch, { followRedirects: false });
+          const opened = fleetSafety.guardedOpenBytes("public-web", candidacyId, undefined, { followRedirects: false });
           return async ({ url, headers, timeoutMs }) => {
             const got = await opened({ url, headers, timeoutMs });
             return { status: got.status, body: got.bytes, contentType: got.contentType,

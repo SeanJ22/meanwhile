@@ -8,6 +8,7 @@ import {
 import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ID, REGISTRATION_TARGETS } from "../registration/publication.ts";
 
 import { PLURAL_STATES, PLURAL_PARSER_VERSION, PLURAL_SOURCE_ID } from "../sources/plural/targets.ts";
+import { PEOPLE_SOURCE_CONTRACTS } from "./people-source-contracts.ts";
 
 const HOUR = 60 * 60 * 1_000;
 const DAY = 24 * HOUR;
@@ -129,6 +130,8 @@ export interface RoutineSourceContract {
   };
   readonly lkgBehavior: string;
   readonly autoPromotable: boolean;
+  /** Zero keeps finite standing work alive; its individual requests still have transport deadlines. */
+  readonly childTimeoutMs?: number;
   /**
    * A fan-out contract owns a scope family: its per-state marker at `scope`
    * plus one bounded per-member candidate at `<sourceId>:<officeholderId>`. The
@@ -568,6 +571,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
   },
+  ...PEOPLE_SOURCE_CONTRACTS,
 ] as const;
 
 export function cadenceMsAt(contract: Pick<RoutineSourceContract, "cadence">, nowMs: number): number {

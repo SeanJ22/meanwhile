@@ -1,4 +1,5 @@
 import { PLURAL_STATES, PLURAL_PARSER_VERSION } from "../sources/plural/targets.ts";
+import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ROUTE_PREFIX, REGISTRATION_TARGETS } from "../registration/publication.ts";
 import { extractedMemberUrl } from "./manual-source-urls.ts";
 import {
@@ -38,7 +39,46 @@ export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage 
   return false;
 }
 
+function peopleSourceAuthority(input: {
+  readonly id: string; readonly publisher: string; readonly official: boolean;
+  readonly federal?: boolean; readonly routePrefixes: readonly string[];
+}): SourceAuthorityContract {
+  return {
+    id: input.id, publisher: input.publisher,
+    trust: input.official ? "T2_AUTHORITATIVE_DOCUMENT" : "T4_RESEARCH_SECONDARY",
+    sourceClass: input.official ? "MULTI_PUBLISHER_PRIMARY" : "INTERMEDIARY",
+    routePrefixes: input.routePrefixes,
+    jurisdictions: ["US", ...Object.values(FIPS_TO_STATE).map(state => `US-${state.postal}`)],
+    recordClasses: [input.federal ? "FEDERAL_DIRECTORY" : "STATE_LEGISLATOR"],
+    competentFacts: input.official ? ["source-verified current holder", "office", "official contact", "term"] : ["attributed identity and current-office leads"],
+    expectedIdentifierKeys: ["person_id", "people_id", "bioguide_id", "wikidata_id"],
+    expectedTemporalFields: ["term", "source_through"],
+    horizonSemantics: input.official
+      ? "Each person must be named in the office on their captured own official page. Statewide election and appointment labels come from explicit state-page evidence. A failed page preserves prior verified facts."
+      : "Every native fact is attributed to its source. Shared identifiers join complementary evidence; secondary sources never establish an official photo or statewide elected-office label.",
+    parserVersion: "people-sources/1", freshnessExpectation: "Daily standing per-state acquisition with independent source clocks.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" }, routineAutoPromotion: true,
+  };
+}
+
 export const SOURCE_AUTHORITIES = {
+  "legiscan-api": peopleSourceAuthority({ id: "legiscan-api", publisher: "LegiScan current-session people API", official: false, routePrefixes: ["https://api.legiscan.com/", "https://legiscan.com/"] }),
+  "official-state-people": peopleSourceAuthority({ id: "official-state-people", publisher: "Each state legislature's captured official roster and member pages", official: true, routePrefixes: ["https://"] }),
+  "statewide-executive-sources": peopleSourceAuthority({ id: "statewide-executive-sources", publisher: "Each officer's captured official state page; national executive associations and Wikidata supply attributed leads", official: true, routePrefixes: ["https://"] }),
+  "congress-api": peopleSourceAuthority({ id: "congress-api", publisher: "Congress.gov member API", official: true, federal: true, routePrefixes: ["https://api.congress.gov/v3/", "https://www.congress.gov/"] }),
+  govinfo: peopleSourceAuthority({ id: "govinfo", publisher: "U.S. Government Publishing Office Congressional Directory", official: true, federal: true, routePrefixes: ["https://api.govinfo.gov/", "https://www.govinfo.gov/", "https://govinfo.gov/"] }),
+  "wikidata-people": peopleSourceAuthority({ id: "wikidata-people", publisher: "Wikidata; image licenses attributed to Wikimedia Commons", official: false, routePrefixes: ["https://query.wikidata.org/", "https://www.wikidata.org/", "https://www.wikimedia.org/", "https://commons.wikimedia.org/"] }),
+  "people-portraits": {
+    id: "people-portraits", publisher: "Each person's own official page, verified against saved portrait evidence",
+    trust: "T2_AUTHORITATIVE_DOCUMENT", sourceClass: "MULTI_PUBLISHER_PRIMARY", routePrefixes: [],
+    jurisdictions: ["US", ...Object.values(FIPS_TO_STATE).map(state => `US-${state.postal}`)],
+    recordClasses: ["STATE_LEGISLATOR", "FEDERAL_DIRECTORY"], competentFacts: ["own-page verified official portrait", "portrait recheck", "recorded portrait gap"],
+    expectedIdentifierKeys: ["person_id", "bioguide_id"], expectedTemporalFields: ["checked_at", "source_through"],
+    horizonSemantics: "Standing work checks every missing or due photo independently of roster acquisition. A photo publishes only when it appears on the person's own official page; failed reads preserve published photos and record a reason.",
+    parserVersion: "people-portraits/1", freshnessExpectation: "Hourly standing admission; each photo follows its own recheck date.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" }, routineAutoPromotion: true,
+    derivedPromotion: { inputKinds: ["PROMOTED_VERSION", "VAULTED_EVIDENCE"], authorization: "SL-03: Sean's October 12, 2026 instruction for standing own-page portrait verification" },
+  },
   "official-ballot-authorities": {
     id: "official-ballot-authorities",
     publisher: "Exact official election authorities in the saved-source receipt",

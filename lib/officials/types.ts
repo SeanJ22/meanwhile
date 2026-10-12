@@ -24,6 +24,23 @@ export interface PortraitCandidate {
   readonly imageUrl: string;
   readonly sourceUrl: string;
   readonly collectedAt: string;
+  readonly license?: string | null;
+  readonly licenseUrl?: string | null;
+  readonly attribution?: string | null;
+}
+
+export type OfficeSelectionMethod = "ELECTED_STATEWIDE" | "APPOINTED" | "UNKNOWN";
+
+/** A source disagreement remains acquisition work while the preferred fact serves readers. */
+export interface PersonFieldDisagreement {
+  readonly key: string;
+  readonly personId: string;
+  readonly state: string;
+  readonly field: string;
+  readonly selected: { readonly value: unknown; readonly source: Provenance };
+  readonly alternative: { readonly value: unknown; readonly source: Provenance };
+  readonly owner: "BL-01";
+  readonly status: "OPEN";
 }
 
 export interface Officeholder {
@@ -37,6 +54,8 @@ export interface Officeholder {
   offices?: readonly { id?: string; name?: string; address?: string; phone?: string; email?: string; sourceUrl: string; collectedAt: string }[];
   memberships?: readonly PersonMembership[];
   fieldSources?: Readonly<Record<string, Provenance>>;
+  selectionMethod?: OfficeSelectionMethod;
+  selectionMethodSourceUrl?: string;
   /** As the source publishes it. Never reformatted or reconstructed. */
   name: string;
   /** "U.S. Senator", "U.S. Representative". */
@@ -80,6 +99,8 @@ export interface PersonMembership {
   readonly district?: string;
   readonly officeTitle?: string;
   readonly level?: OfficeLevel;
+  readonly selectionMethod?: OfficeSelectionMethod;
+  readonly selectionMethodSourceUrl?: string;
   readonly current?: boolean;
   readonly divisionId?: string;
   readonly termStart?: string | null;
@@ -125,6 +146,7 @@ export interface OfficeholderDivision {
 
 /** What a generated officeholder file holds. */
 export interface OfficeholderSet {
+  readonly disagreements?: readonly PersonFieldDisagreement[];
   /** Complete enumerated current source memberships; permits retiring omitted memberships, never required for adding facts. */
   currentMembershipComplete?: boolean;
   /** Explicitly ended native tenures, retained even when the person has no current office. */

@@ -1119,7 +1119,7 @@ test("all standing routine-source destructive classes are enumerated by the cont
   const covered = new Set<RoutineRecordClass>([
     "FEC_FUNDING", "STATE_LEGISLATOR", "CENSUS_REFERENCE", "CENSUS_GEOGRAPHY",
     "MEETING", "BALLOT_FILING", "DOTGOV_REFERENCE", "STATE_ROLL_CALL",
-    "STATE_LEGISLATOR_VOTES", "REGISTRATION", "MEETING_OUTCOME",
+    "STATE_LEGISLATOR_VOTES", "REGISTRATION", "MEETING_OUTCOME", "FEDERAL_DIRECTORY",
     // The derived meeting-source wiring never removes a row (a trigger suspends it), so any removal is
     // refused by the generic incomplete-horizon rule (tests/derived-meeting-family.test.ts).
     "CURATED_READER_RECORD",

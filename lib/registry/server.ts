@@ -501,10 +501,10 @@ export async function divisionsByOcdIds(ocdIds: readonly string[], context?: { z
  * One officeholder by roster id, in the render shape. The id arrives from an exact-key join (never a
  * name match); an id the roster does not hold returns null.
  */
-export async function seatHolderById(id: string): Promise<SeatHolder | null> {
+export async function seatHolderById(id: string, stateHint?: string): Promise<SeatHolder | null> {
   // The publisher namespace establishes the one permitted state authority before any store is opened. A
   // state identity never causes a federal/registry read or a name join.
-  const officialStateScope = statePeopleScopeForId(id);
+  const officialStateScope = statePeopleScopeForId(id,stateHint);
   if (officialStateScope) {
     const held = await heldStateLegislatorsEdgeFirst(officialStateScope);
     const matches = held?.seats.filter((holder) => personIdentityKeys(holder).has(id)) ?? [];
@@ -546,17 +546,12 @@ export async function allSeatHolders(divisionIds: readonly string[] = []): Promi
       const selected = seatHolderForMembership(holder, holder.memberships?.find(row => row.current === true)?.id);
       return selected ? [selected] : [];
     }))]);
-  const holders = new Map<string, SeatHolder>();
-  const primary = base.status === "fulfilled" ? base.value : [];
+  let holders: SeatHolder[] = [];
   for (const read of [base, ...stateReads]) if (read.status === "fulfilled") {
-    for (const holder of read.value) {
-      const sameDivision = holder.officeJurisdictionOcdId
-        ? primary.filter(row => row.officeJurisdictionOcdId === holder.officeJurisdictionOcdId) : [];
-      if (scopedHolders(sameDivision, [holder]).some(row => row.id === holder.id)) holders.set(holder.id, holder);
-    }
+    holders=scopedHolders(holders,read.value);
   }
   if ([base, ...stateReads].every(read => read.status === "rejected")) throw new Error("Officeholder authorities unavailable");
-  return [...holders.values()];
+  return holders;
 }
 
 /**
@@ -716,12 +711,7 @@ export async function settleCoverageStateLegislators(
       const holder = seatHolderForMembership(person, link.membershipId);
       if (!holder) continue;
       const existing = nextOfficials.get(link.ocdId) ?? [];
-      if (!existing.some((row) => row.id === holder.id && row.officeTitle === holder.officeTitle)) {
-        nextOfficials.set(
-          link.ocdId,
-          [...existing, holder].sort((a, b) => a.name.localeCompare(b.name)),
-        );
-      }
+      nextOfficials.set(link.ocdId,scopedHolders(existing,[holder]).sort((a,b)=>a.name.localeCompare(b.name)));
     }
   }
 

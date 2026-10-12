@@ -1226,7 +1226,7 @@ export async function POST(request: Request) {
       Object.assign(denominators, profile.denominators);
     }
     const candidateSeats = ballotRecord?.kind === "PERSON"
-      ? (await Promise.allSettled((ballotOfficialIds.get(ballotRecord.id) ?? []).map(seatHolderById)))
+      ? (await Promise.allSettled((ballotOfficialIds.get(ballotRecord.id) ?? []).map(id=>seatHolderById(id))))
         .flatMap((result) => result.status === "fulfilled" && result.value ? [result.value] : [])
       : [];
     for (const seat of candidateSeats) canonicalSubjectKeys.add(seat.id);

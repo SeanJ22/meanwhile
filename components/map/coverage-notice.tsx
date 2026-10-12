@@ -11,6 +11,7 @@ import {
   CouldGovernNotice,
 } from "@/components/address/could-govern-notice";
 import { useRef, type ReactNode } from "react";
+import Image from "next/image";
 
 import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
 import { useNarrowing } from "@/hooks/use-narrowing";
@@ -260,6 +261,7 @@ function Holder({
    */
   return (
     <div className="person-row">
+      {holder.photoUrl && <Image src={holder.photoUrl} alt={holder.name} width={36} height={44} unoptimized className="mr-2 h-11 w-9 shrink-0 rounded object-cover" />}
       <span className="person-row-name">
         {onOpen ? (
           <button
@@ -273,6 +275,7 @@ function Holder({
           holder.name
         )}
         {showOfficeTitle && <span className="block t-caption text-muted">{readerOfficeTitle(holder.officeTitle)}</span>}
+        {holder.selectionMethod === "APPOINTED" && <span className="block t-caption text-muted">Appointed</span>}
       </span>
       <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
         {holder.partyLabel && (

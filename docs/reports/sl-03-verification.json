@@ -1,0 +1,236 @@
+{
+  "step": "SL-03",
+  "branch": "stream/statewide-and-portraits",
+  "baseRiverCommit": "8d68f46721de856247c38dd39680db15e5a9f37e",
+  "observedOn": "2026-10-12",
+  "status": "IMPLEMENTED_ACCEPTANCE_PENDING",
+  "ready": false,
+  "merged": false,
+  "deployed": false,
+  "newProductionReaderCoverageVerified": false,
+  "implemented": [
+    "Standing own-page portrait work without an aggregate deadline or person cap; independently scheduled and published per person.",
+    "Bioguide and unitedstates congressional portrait leads retain the same own-page verification.",
+    "All ten national statewide reference publishers; officer names and offices publish from saved own official state pages.",
+    "State-root delivery requires an official statewide election or appointment statement; unresolved classification stays a standing gap.",
+    "Independent national source-state readers for LegiScan, official legislatures, Congress.gov, govinfo and Wikidata alongside held Open States and congress-legislators.",
+    "Shared IDs and unique full name, office and state merge people; field attribution and BL-01 disagreements remain on the existing published evidence.",
+    "State-held legislative geography reaches independent source normalizers; missing boundaries preserve verified people and record a gap.",
+    "Read-only per-state coverage reporting and a comparison that requires a real one-day observation."
+  ],
+  "verification": {
+    "focused": {
+      "suites": [
+        {
+          "file": "tests/people-national-acquisition.test.ts",
+          "exitCode": 0,
+          "tests": 8,
+          "passed": 8,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "file": "tests/people-source-runtime.test.ts",
+          "exitCode": 0,
+          "tests": 5,
+          "passed": 5,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "file": "tests/people-source-publication.test.ts",
+          "exitCode": 0,
+          "tests": 9,
+          "passed": 9,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "file": "tests/statewide-people-sources.test.ts",
+          "exitCode": 0,
+          "tests": 10,
+          "passed": 10,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "file": "tests/state-people-portraits.test.ts",
+          "exitCode": 0,
+          "tests": 9,
+          "passed": 9,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "file": "tests/congress-portraits.test.ts",
+          "exitCode": 0,
+          "tests": 8,
+          "passed": 8,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "file": "tests/people-portrait-runner.test.ts",
+          "exitCode": 0,
+          "tests": 3,
+          "passed": 3,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "file": "tests/portrait-pacing.test.ts",
+          "exitCode": 0,
+          "tests": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "file": "tests/congress-runner-receipt.test.ts",
+          "exitCode": 0,
+          "tests": 3,
+          "passed": 3,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "file": "tests/state-legislator-official-rosters.test.ts",
+          "exitCode": 0,
+          "tests": 7,
+          "passed": 7,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "file": "tests/reader-representation-delivery.test.ts",
+          "exitCode": 0,
+          "tests": 2,
+          "passed": 2,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "file": "tests/ask-representation-parity.test.ts",
+          "exitCode": 0,
+          "tests": 2,
+          "passed": 2,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "file": "tests/representation.test.ts",
+          "exitCode": 0,
+          "tests": 21,
+          "passed": 21,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "file": "tests/division-representation.test.ts",
+          "exitCode": 0,
+          "tests": 3,
+          "passed": 3,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "file": "tests/reader-edge-supervisor.test.ts",
+          "exitCode": 0,
+          "tests": 6,
+          "passed": 6,
+          "failed": 0,
+          "skipped": 0
+        }
+      ],
+      "totalTests": 97,
+      "passed": 97,
+      "failed": 0,
+      "skipped": 0
+    },
+    "typescript": {
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "exitCode": 0
+    },
+    "lint": {
+      "scope": "All changed TypeScript and scripts",
+      "exitCode": 0
+    },
+    "portraitControlledClock": {
+      "duePeople": 70,
+      "attemptedPeople": 70,
+      "elapsedMs": 420000,
+      "finishedEveryDuePerson": true
+    },
+    "broaderFailuresAlsoOnExactRiverBase": [
+      {
+        "file": "tests/routine-civic-data-runner.test.ts",
+        "tests": 53,
+        "passed": 48,
+        "failed": 5,
+        "sameFailuresOnBase": true
+      },
+      {
+        "file": "tests/routine-civic-data-promotion.test.ts",
+        "tests": 47,
+        "passed": 45,
+        "failed": 2,
+        "sameFailuresOnBase": true
+      }
+    ]
+  },
+  "productionBaseline": {
+    "file": "sl-03-production-baseline.json",
+    "method": "Connected Neon read-only SELECT; counts of held photo fields, not a live browser inspection.",
+    "sourceCountsAreUnknownWhenNotRecorded": true,
+    "productionWritesPerformed": false
+  },
+  "runtime": {
+    "standingSourceStateTasks": 336,
+    "independentPortraitTasks": 57,
+    "configuredSourceChildConcurrency": 4,
+    "existingNationalReservationMiB": 1258,
+    "memoryMarginMiB": 768,
+    "actualProductionWorkerCountObserved": null
+  },
+  "environmentBlocker": {
+    "configurationRevision": "4",
+    "observationsCurrent": true,
+    "secretBindings": [],
+    "missingVariables": [
+      "LEGISCAN_API_KEY",
+      "CONGRESS_API_KEY",
+      "DATA_GOV_API_KEY",
+      "WTP_PRODUCTION_DATABASE_URL_READONLY"
+    ],
+    "networkFailure": "Explicitly authorized network command to https://www.nga.org/governors/ receives CONNECT 403 from the enforced environment host policy. GitHub access works.",
+    "nextActionOwner": "Environment administrator",
+    "nextAction": "Bind the saved keys to this running cloud environment and allow national APIs, associations and official government/profile/image hosts. Configuration changes have applied; restarting alone does not add missing bindings."
+  },
+  "remaining": [
+    {
+      "owner": "SL-03 builder",
+      "work": "Capture and test real roster pages from three states in different regions; current new parser fixtures are synthetic.",
+      "dependsOn": "Government host access"
+    },
+    {
+      "owner": "SL-03 builder",
+      "work": "Run live national acquisition and verify publication and per-state source/disagreement coverage.",
+      "dependsOn": "Source credentials, network access and the normal authorized standing runtime"
+    },
+    {
+      "owner": "SL-03 builder",
+      "work": "Save comparable before and after observations from an actual day of standing portrait work, including federal members, governors, attorneys general and legislators by state.",
+      "dependsOn": "Live standing work and a real one-day observation"
+    },
+    {
+      "owner": "SL-03 builder",
+      "work": "Type five ZIPs in different regions in the actual browser and report every statewide officer, photo, phone and website shown; inspect the visible changes and first-use speed.",
+      "dependsOn": "Live publication and browser access"
+    },
+    {
+      "owner": "SL-03 builder",
+      "work": "Mark READY: SL-03 only after the remaining agreed acceptance conditions pass.",
+      "dependsOn": "All remaining checks"
+    }
+  ]
+}

@@ -133,7 +133,10 @@ function withoutProvenanceStamps(record: unknown, stamps: readonly string[]): un
   const provenance = object(row?.provenance);
   if (row === null || provenance === null) return record;
   const factualProvenance = Object.fromEntries(Object.entries(provenance).filter(([key]) => !stamps.includes(key)));
-  return { ...row, provenance: factualProvenance };
+  const fieldSources = object(row.fieldSources);
+  return { ...row, provenance: factualProvenance,
+    ...(fieldSources ? {fieldSources:Object.fromEntries(Object.entries(fieldSources).map(([field,source])=>[field,
+      object(source) ? Object.fromEntries(Object.entries(object(source)!).filter(([key])=>!stamps.includes(key))) : source]))} : {}) };
 }
 
 export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknown): readonly CivicRecordMember[] {

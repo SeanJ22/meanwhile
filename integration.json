@@ -1893,5 +1893,43 @@
       "schema": "not applicable; none of the 55 changed paths touch the schema contract",
       "local_gates": "Restricted Git subprocess and localhost checks covered by full hosted CI under owner authorization."
     }
+  },
+  {
+    "lane": "registry",
+    "steps": [
+      "DB-10",
+      "DB-11",
+      "DB-21"
+    ],
+    "ready_sha": "a1aad625b66776707e91070c356c83433572155e",
+    "merge_sha": "93bec40e833e5e5f75d8a37d334849520efac9a9",
+    "river_sha": "1c60322f563ffdcb7a0eed7e116f89cbbc6633ae",
+    "tested_sha": "1c60322f563ffdcb7a0eed7e116f89cbbc6633ae",
+    "gates": "pass",
+    "at": "2026-10-12T23:14:31Z"
+  },
+  {
+    "lane": "adapter-ash-creek-d53-monthly-agenda-pdf-call-to-public",
+    "steps": [
+      "adapter-ash-creek-d53-monthly-agenda-pdf-call-to-public"
+    ],
+    "ready_sha": "46a02f26a59c8488d451fc28e0af4551e9c826f6",
+    "merge_sha": "a2f7f7d7a68bf32ebad2eba84ee140db794ccd69",
+    "river_sha": "1c60322f563ffdcb7a0eed7e116f89cbbc6633ae",
+    "tested_sha": "1c60322f563ffdcb7a0eed7e116f89cbbc6633ae",
+    "gates": "pass",
+    "at": "2026-10-12T23:14:31Z"
+  },
+  {
+    "lane": "state-legislators",
+    "steps": [
+      "SL-01"
+    ],
+    "ready_sha": "c25ef823e8801095eba80da374d049d852b0f694",
+    "merge_sha": "1c60322f563ffdcb7a0eed7e116f89cbbc6633ae",
+    "river_sha": "1c60322f563ffdcb7a0eed7e116f89cbbc6633ae",
+    "tested_sha": "1c60322f563ffdcb7a0eed7e116f89cbbc6633ae",
+    "gates": "pass",
+    "at": "2026-10-12T23:14:31Z"
   }
 ]

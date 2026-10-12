@@ -1,0 +1,93 @@
+{
+    "member": {
+        "addressInformation": {
+            "city": "Washington",
+            "district": "DC",
+            "officeAddress": "516 Hart Senate Office Building  Washington, DC 20510",
+            "phoneNumber": "(202) 224-2235",
+            "zipCode": 20510
+        },
+        "bioguideId": "K000377",
+        "birthYear": "1964",
+        "cosponsoredLegislation": {
+            "count": 1294,
+            "url": "https://api.congress.gov/v3/member/K000377/cosponsored-legislation"
+        },
+        "currentMember": true,
+        "depiction": {
+            "attribution": "<a href=\"http://www.senate.gov/artandhistory/history/common/generic/Photo_Collection_of_the_Senate_Historical_Office.htm\">Courtesy U.S. Senate Historical Office</a>",
+            "imageUrl": "https://www.congress.gov/img/member/k000377_200.jpg"
+        },
+        "directOrderName": "Mark Kelly",
+        "firstName": "Mark",
+        "honorificName": "Mr.",
+        "invertedOrderName": "Kelly, Mark",
+        "lastName": "Kelly",
+        "officialWebsiteUrl": "https://www.kelly.senate.gov",
+        "partyHistory": [
+            {
+                "partyAbbreviation": "D",
+                "partyName": "Democratic",
+                "startYear": 2020
+            }
+        ],
+        "previousNames": [
+            {
+                "directOrderName": "Mark Kelly",
+                "firstName": "Mark",
+                "honorificName": "Mr.",
+                "invertedOrderName": "Kelly, Mark",
+                "lastName": "Kelly",
+                "startDate": "2020-12-02T17:00:00Z"
+            }
+        ],
+        "sponsoredLegislation": {
+            "count": 297,
+            "url": "https://api.congress.gov/v3/member/K000377/sponsored-legislation"
+        },
+        "state": "Arizona",
+        "terms": [
+            {
+                "chamber": "Senate",
+                "congress": 116,
+                "endYear": 2021,
+                "memberType": "Senator",
+                "startYear": 2020,
+                "stateCode": "AZ",
+                "stateName": "Arizona"
+            },
+            {
+                "chamber": "Senate",
+                "congress": 117,
+                "endYear": 2023,
+                "memberType": "Senator",
+                "startYear": 2021,
+                "stateCode": "AZ",
+                "stateName": "Arizona"
+            },
+            {
+                "chamber": "Senate",
+                "congress": 118,
+                "endYear": 2025,
+                "memberType": "Senator",
+                "startYear": 2023,
+                "stateCode": "AZ",
+                "stateName": "Arizona"
+            },
+            {
+                "chamber": "Senate",
+                "congress": 119,
+                "memberType": "Senator",
+                "startYear": 2025,
+                "stateCode": "AZ",
+                "stateName": "Arizona"
+            }
+        ],
+        "updateDate": "2026-03-08T10:31:39Z"
+    },
+    "request": {
+        "bioguideId": "k000377",
+        "contentType": "application/json",
+        "format": "json"
+    }
+}

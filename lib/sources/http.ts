@@ -454,10 +454,10 @@ export function decodeEntities(value: string): string {
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">")
     .replace(/&quot;/g, '"')
-    .replace(/&#0?39;/g, "'")
-    .replace(/&#x27;/gi, "'")
-    .replace(/&#x2019;/gi, "’")
-    .replace(/&#8217;/g, "’")
+    .replace(/&#(x[0-9a-f]+|\d+);/gi, (entity, digits: string) => {
+      const code = digits[0].toLowerCase() === "x" ? parseInt(digits.slice(1), 16) : parseInt(digits, 10);
+      return code > 0 && code <= 0x10ffff && !(code >= 0xd800 && code <= 0xdfff) ? String.fromCodePoint(code) : entity;
+    })
     .replace(/&nbsp;/g, " ")
     .replace(/&amp;/g, "&");
 }

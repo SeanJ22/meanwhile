@@ -13,6 +13,7 @@ import { mergePeopleSets } from "../officials/merge-people.ts";
 import { derivedRetrieval, type DerivedInputRef } from "./derived-authority.ts";
 import { derivedRequestedUrl } from "./derived-door.ts";
 import { statewidePageText, verifyStatewideOfficialPage } from "../sources/statewide/parse.ts";
+import { legislaturePageNamesPerson } from "../sources/people/legislature.ts";
 
 const hash = (value: unknown) => createHash("sha256").update(typeof value === "string" ? value : canonicalCivicDataJson(value)).digest("hex");
 export interface PeopleSourceReadModel extends Omit<OfficialStateLegislatorReadModel,"jurisdiction"> {
@@ -66,7 +67,8 @@ export function peopleSourceCandidate(input: Omit<PublishPeopleSourceInput,"stor
     const linkingPage = capture && input.acquisitions.map(row=>({url:row.finalUrl,html:row.body})).find(page=>isOfficialSource(capture.finalUrl,page));
     const pageText = capture ? words(statewidePageText(capture.body)) : "";
     if (!capture || !quote || !pageText.includes(words(quote)) || !isOfficialSource(capture.finalUrl,linkingPage) ||
-      !pageText.includes(words(person.name)) || !pageText.includes(words(person.officeTitle).replace(/^state /,""))) violations.push(`PEOPLE_OWN_OFFICIAL_PAGE_UNVERIFIED:${person.id}`);
+      !(input.sourceId === "official-state-people" ? legislaturePageNamesPerson(capture.body,person.name) : pageText.includes(words(person.name)))
+      || !pageText.includes(words(person.officeTitle).replace(/^state /,""))) violations.push(`PEOPLE_OWN_OFFICIAL_PAGE_UNVERIFIED:${person.id}`);
     else if (input.sourceId === "statewide-executive-sources") {
       const bound = verifyStatewideOfficialPage({sourceId:input.sourceId,sourceOrg:person.provenance.sourceOrg,sourceUrl:capture.finalUrl,collectedAt:capture.retrievedAt,
         state:person.state!,name:person.name,officeTitle:person.officeTitle,profileUrls:[capture.finalUrl]},

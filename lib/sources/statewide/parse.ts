@@ -4,6 +4,7 @@ import type { Provenance } from "../types.ts";
 import { isOfficialSource, type OfficialLinkingPage } from "../../civic-data/source-authority.ts";
 import { imagesIn, pickPortraits } from "../../hunt/portrait-pick.ts";
 import { decodeEntities } from "../http.ts";
+import { htmlEvidenceBlocks } from "../html-evidence.ts";
 import { STATEWIDE_JURISDICTIONS, statewideJurisdiction, type StatewideReferenceSource } from "./reference.ts";
 
 export interface StatewideLead {
@@ -36,6 +37,7 @@ export function statewideOfficeTitle(title:string,state:string):string {
 }
 export function statewidePageText(html:string):string {
   return decodeEntities(html.replace(/<(script|style|nav|footer)\b[^>]*>[\s\S]*?<\/\1\s*>/gi," ")
+    .replace(/<img\b[^>]*\balt\s*=\s*(?:"([^"]*)"|'([^']*)')[^>]*>/gi,(_tag,a:string,b:string)=>` ${a??b} `)
     .replace(/<!--[\s\S]*?-->/g," ").replace(/<[^>]*>/g," ")).replace(/\s+/g," ").trim();
 }
 export function statewidePageLinks(html:string,base:string):{url:string;label:string}[] {
@@ -56,32 +58,23 @@ function namedStates(text:string):readonly string[] {
   return found;
 }
 function personName(label:string,officeTitles:readonly string[]):string|null {
-  let name=label.replace(/^(?:The\s+)?(?:Honorable|Hon\.?|Dr\.|Gov\.|Lt\.\s*Gov\.|A\.G\.)\s+/i,"");
+  let name=label.replace(/\s*\((?:D|R|I|Democrat(?:ic)?|Republican|Independent)\)\s*$/i,"")
+    .replace(/^(?:The\s+)?(?:Honorable|Hon\.?|Dr\.|Gov\.|Lt\.\s*Gov\.|A\.G\.)\s+/i,"");
   for(const office of [...officeTitles].sort((a,b)=>b.length-a.length))name=name.replace(new RegExp(`^(?:${escaped(office)})\\s+|[,–—-]?\\s+(?:${escaped(office)})$`,"i"),"").trim();
   if(!/^[\p{L}][\p{L}\p{M}.'’\-]*(?:\s+[\p{L}][\p{L}\p{M}.'’\-]*){1,6}$/u.test(name))return null;
   if(/\b(?:department|state|office|website|contact|about|governor|general|commissioner|secretary|treasurer|auditor|comptroller|insurance|education|agriculture|learn|read|more|member|directory|view|biography|profile|official|party|democrat|republican)\b/i.test(name))return null;
   if(namedStates(name).length)return null;
   return name;
 }
-/** Structural blocks are evidence containers, not an inferred roster total. */
-function rosterBlocks(html:string):string[] {
-  const tokens=/<\/?(tr|article|li|div|section|p|h[1-6])\b[^>]*>/gi;
-  const stack:{tag:string;start:number}[]=[],blocks:string[]=[];
-  for(const token of html.matchAll(tokens)){
-    const tag=token[1].toLowerCase();
-    if(!token[0].startsWith("</")){stack.push({tag,start:token.index!});continue;}
-    const index=stack.findLastIndex(row=>row.tag===tag);if(index<0)continue;
-    const opening=stack[index];stack.splice(index);
-    const length=token.index!+token[0].length-opening.start;
-    if(length<=16_000)blocks.push(html.slice(opening.start,token.index!+token[0].length));
-  }
-  return blocks;
-}
 /** All directories are leads. An ambiguous card stays a reported blank. */
 export function parseStatewideAssociation(html:string,source:StatewideReferenceSource,sourceUrl:string,collectedAt:string,state?:string):{leads:StatewideLead[];gaps:StatewideGap[]} {
   const leads:StatewideLead[]=[],gaps:StatewideGap[]=[];
-  for(const block of rosterBlocks(html)){
-    const text=statewidePageText(block),states=namedStates(text);if(states.length!==1||state&&states[0]!==state.toLowerCase())continue;
+  for(const {html:block} of htmlEvidenceBlocks(html)){
+    const text=statewidePageText(block);
+    const headingStates=[...new Set([...block.matchAll(/<h[1-6]\b[^>]*>([\s\S]*?)<\/h[1-6]\s*>/gi)].flatMap(heading=>namedStates(statewidePageText(heading[1]))))];
+    // Postal addresses can contain another state's name (Washington Street).
+    // A directory's jurisdiction heading owns the card when it is present.
+    const states=headingStates.length?headingStates:namedStates(text);if(states.length!==1||state&&states[0]!==state.toLowerCase())continue;
     const links=statewidePageLinks(block,sourceUrl);
     const office=source.officeTitles.find(title=>words(text).includes(words(title)))??(source.officeTitles.length===1?source.officeTitles[0]:null);
     if(!office)continue;
@@ -159,7 +152,7 @@ export function verifyStatewideOfficialPage(lead:StatewideLead,page:{url:string;
   // This page is the person's page, not a statewide multi-person list or a
   // dated announcement. One named leader in a heading/title gives that link.
   const headings=[...page.html.matchAll(/<(?:title|h[1-3])\b[^>]*>([\s\S]*?)<\/(?:title|h[1-3])\s*>/gi)].map(m=>words(statewidePageText(m[1])));
-  if(!headings.some(heading=>heading.includes(name))&&!/\b(?:is the|serves as|serving as|about|meet)\b/.test(normalized.slice(Math.max(0,normalized.indexOf(name)-25),normalized.indexOf(name)+name.length+110)))return {reason:"STATEWIDE_OWN_PAGE_IDENTITY_MISSING"};
+  if(!headings.some(heading=>heading.includes(name))&&!/\b(?:is the|serves as|serving as|about|meet|was elected as|was appointed as)\b/.test(normalized.slice(Math.max(0,normalized.indexOf(name)-25),normalized.indexOf(name)+name.length+110)))return {reason:"STATEWIDE_OWN_PAGE_IDENTITY_MISSING"};
   const sentences=text.split(/(?<=[.!?])\s+|[\r\n]+/).filter(sentence=>words(sentence).includes(office));
   let selectionMethod:"ELECTED_STATEWIDE"|"APPOINTED"|"UNKNOWN"="UNKNOWN",selectionQuote:string|null=null;
   const stateName=escaped(words(jurisdiction.name));

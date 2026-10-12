@@ -3,8 +3,8 @@
   "branch": "stream/statewide-and-portraits",
   "baseRiverCommit": "8d68f46721de856247c38dd39680db15e5a9f37e",
   "observedOn": "2026-10-12",
-  "status": "IMPLEMENTED_ACCEPTANCE_PENDING",
-  "ready": false,
+  "status": "READY_FOR_RIVER",
+  "ready": true,
   "merged": false,
   "deployed": false,
   "newProductionReaderCoverageVerified": false,
@@ -16,10 +16,24 @@
     "Independent national source-state readers for LegiScan, official legislatures, Congress.gov, govinfo and Wikidata alongside held Open States and congress-legislators.",
     "Shared IDs and unique full name, office and state merge people; field attribution and BL-01 disagreements remain on the existing published evidence.",
     "State-held legislative geography reaches independent source normalizers; missing boundaries preserve verified people and record a gap.",
-    "Read-only per-state coverage reporting and a comparison that requires a real one-day observation."
+    "Read-only per-state coverage reporting and a comparison that requires a real one-day observation.",
+    "Captured source-bound roster fixtures from Arizona, Maine and Wisconsin, plus the live NASS directory and authenticated Congress member/index samples.",
+    "Corrected party-suffix, jurisdiction-heading, nested-card, inverted-name, numeric-entity, mixed-chamber and observed member-redirect parsing; navigation links never become people.",
+    "Seven real federal, governor, attorney general, secretary and legislator portrait samples pass own-page verification, decoding and local storage."
   ],
   "verification": {
     "focused": {
+      "command": [
+        "node",
+        "--test",
+        "--test-isolation=none",
+        "--experimental-strip-types",
+        "--import",
+        "./scripts/register-test-loader.mjs",
+        "--import",
+        "./tests/helpers/install-fixture-doors.ts",
+        "--test-reporter=spec"
+      ],
       "suites": [
         {
           "file": "tests/people-national-acquisition.test.ts",
@@ -27,7 +41,8 @@
           "tests": 8,
           "passed": 8,
           "failed": 0,
-          "skipped": 0
+          "skipped": 0,
+          "cancelled": 0
         },
         {
           "file": "tests/people-source-runtime.test.ts",
@@ -35,7 +50,8 @@
           "tests": 5,
           "passed": 5,
           "failed": 0,
-          "skipped": 0
+          "skipped": 0,
+          "cancelled": 0
         },
         {
           "file": "tests/people-source-publication.test.ts",
@@ -43,7 +59,8 @@
           "tests": 9,
           "passed": 9,
           "failed": 0,
-          "skipped": 0
+          "skipped": 0,
+          "cancelled": 0
         },
         {
           "file": "tests/statewide-people-sources.test.ts",
@@ -51,7 +68,8 @@
           "tests": 10,
           "passed": 10,
           "failed": 0,
-          "skipped": 0
+          "skipped": 0,
+          "cancelled": 0
         },
         {
           "file": "tests/state-people-portraits.test.ts",
@@ -59,7 +77,8 @@
           "tests": 9,
           "passed": 9,
           "failed": 0,
-          "skipped": 0
+          "skipped": 0,
+          "cancelled": 0
         },
         {
           "file": "tests/congress-portraits.test.ts",
@@ -67,7 +86,8 @@
           "tests": 8,
           "passed": 8,
           "failed": 0,
-          "skipped": 0
+          "skipped": 0,
+          "cancelled": 0
         },
         {
           "file": "tests/people-portrait-runner.test.ts",
@@ -75,7 +95,8 @@
           "tests": 3,
           "passed": 3,
           "failed": 0,
-          "skipped": 0
+          "skipped": 0,
+          "cancelled": 0
         },
         {
           "file": "tests/portrait-pacing.test.ts",
@@ -83,7 +104,8 @@
           "tests": 1,
           "passed": 1,
           "failed": 0,
-          "skipped": 0
+          "skipped": 0,
+          "cancelled": 0
         },
         {
           "file": "tests/congress-runner-receipt.test.ts",
@@ -91,7 +113,8 @@
           "tests": 3,
           "passed": 3,
           "failed": 0,
-          "skipped": 0
+          "skipped": 0,
+          "cancelled": 0
         },
         {
           "file": "tests/state-legislator-official-rosters.test.ts",
@@ -99,7 +122,8 @@
           "tests": 7,
           "passed": 7,
           "failed": 0,
-          "skipped": 0
+          "skipped": 0,
+          "cancelled": 0
         },
         {
           "file": "tests/reader-representation-delivery.test.ts",
@@ -107,7 +131,8 @@
           "tests": 2,
           "passed": 2,
           "failed": 0,
-          "skipped": 0
+          "skipped": 0,
+          "cancelled": 0
         },
         {
           "file": "tests/ask-representation-parity.test.ts",
@@ -115,7 +140,8 @@
           "tests": 2,
           "passed": 2,
           "failed": 0,
-          "skipped": 0
+          "skipped": 0,
+          "cancelled": 0
         },
         {
           "file": "tests/representation.test.ts",
@@ -123,7 +149,8 @@
           "tests": 21,
           "passed": 21,
           "failed": 0,
-          "skipped": 0
+          "skipped": 0,
+          "cancelled": 0
         },
         {
           "file": "tests/division-representation.test.ts",
@@ -131,7 +158,8 @@
           "tests": 3,
           "passed": 3,
           "failed": 0,
-          "skipped": 0
+          "skipped": 0,
+          "cancelled": 0
         },
         {
           "file": "tests/reader-edge-supervisor.test.ts",
@@ -139,20 +167,42 @@
           "tests": 6,
           "passed": 6,
           "failed": 0,
-          "skipped": 0
+          "skipped": 0,
+          "cancelled": 0
+        },
+        {
+          "file": "tests/sl-03-real-sources.test.ts",
+          "exitCode": 0,
+          "tests": 10,
+          "passed": 10,
+          "failed": 0,
+          "skipped": 0,
+          "cancelled": 0
+        },
+        {
+          "file": "tests/http-retrieval.test.ts",
+          "exitCode": 0,
+          "tests": 14,
+          "passed": 14,
+          "failed": 0,
+          "skipped": 0,
+          "cancelled": 0
         }
       ],
-      "totalTests": 97,
-      "passed": 97,
+      "totalTests": 121,
+      "passed": 121,
       "failed": 0,
-      "skipped": 0
+      "skipped": 0,
+      "cancelled": 0
     },
     "typescript": {
       "command": "node node_modules/typescript/bin/tsc --noEmit",
-      "exitCode": 0
+      "exitCode": 0,
+      "generatedTypes": "Regenerated current-branch route types with next typegen; removed stale generated dev-route references from another branch."
     },
     "lint": {
-      "scope": "All changed TypeScript and scripts",
+      "command": "node node_modules/eslint/bin/eslint.js lib/sources/html-evidence.ts lib/sources/http.ts lib/sources/people/legislature.ts lib/sources/statewide/parse.ts lib/civic-data/people-source-publication.ts tests/sl-03-real-sources.test.ts tests/http-retrieval.test.ts",
+      "scope": "All files changed in this continuation",
       "exitCode": 0
     },
     "portraitControlledClock": {
@@ -176,7 +226,32 @@
         "failed": 2,
         "sameFailuresOnBase": true
       }
-    ]
+    ],
+    "previousBroaderCheckNote": "The exact-base broader failures below are retained from the prior handoff; those suites were not rerun in this continuation.",
+    "realSourceFixtures": {
+      "manifest": "tests/fixtures/sl-03/manifest.json",
+      "sourceDocuments": 14,
+      "portraitImages": 7,
+      "unalteredResponseBytes": true,
+      "credentialValuesFound": false,
+      "rosterRows": [
+        {
+          "state": "AZ",
+          "capturedSourceRows": 93
+        },
+        {
+          "state": "ME",
+          "capturedSourceRows": 35
+        },
+        {
+          "state": "WI",
+          "capturedSourceRows": 33
+        }
+      ],
+      "nassDirectoryLeads": 52,
+      "publications": "Captured-source publication and readback verified using MemoryRoutineDataStore. Source row counts do not establish complete current reader coverage.",
+      "portraits": "Seven source images verified, decoded and stored with injected local I/O; one standing portrait task also verified using saved-source acquisition."
+    }
   },
   "productionBaseline": {
     "file": "sl-03-production-baseline.json",
@@ -193,44 +268,57 @@
     "actualProductionWorkerCountObserved": null
   },
   "environmentBlocker": {
-    "configurationRevision": "4",
-    "observationsCurrent": true,
-    "secretBindings": [],
-    "missingVariables": [
-      "LEGISCAN_API_KEY",
-      "CONGRESS_API_KEY",
-      "DATA_GOV_API_KEY",
-      "WTP_PRODUCTION_DATABASE_URL_READONLY"
-    ],
-    "networkFailure": "Explicitly authorized network command to https://www.nga.org/governors/ receives CONNECT 403 from the enforced environment host policy. GitHub access works.",
-    "nextActionOwner": "Environment administrator",
-    "nextAction": "Bind the saved keys to this running cloud environment and allow national APIs, associations and official government/profile/image hosts. Configuration changes have applied; restarting alone does not add missing bindings."
+    "resolvedForBuilder": true,
+    "apiVariableNamesSet": 10,
+    "httpHeadStatuses": {
+      "https://api.congress.gov/": 403,
+      "https://www.nass.org/": 200
+    },
+    "authenticatedCongressSampleStatus": 200,
+    "publicSourceFixtureStatuses": 200,
+    "productionAccessRequiredForReady": false,
+    "note": "Initial commands lacked sandbox network access (curl exit 7); retrying through the configured proxy with command network access succeeded. Configured variable presence alone is not API authorization; the authenticated Congress samples establish authorization for those reads."
   },
   "remaining": [
     {
-      "owner": "SL-03 builder",
-      "work": "Capture and test real roster pages from three states in different regions; current new parser fixtures are synthetic.",
-      "dependsOn": "Government host access"
+      "owner": "Sean's oversight session",
+      "work": "After River releases, verify standing national source acquisition, publication and per-state source/disagreement coverage; save comparable before and after observations from an actual day of portrait work, including federal members, governors, attorneys general and legislators by state.",
+      "dependsOn": "River release and an actual day of standing runtime",
+      "status": "POST_RELEASE_PENDING"
     },
     {
-      "owner": "SL-03 builder",
-      "work": "Run live national acquisition and verify publication and per-state source/disagreement coverage.",
-      "dependsOn": "Source credentials, network access and the normal authorized standing runtime"
+      "owner": "Sean's oversight session",
+      "work": "After River releases, type five ZIPs in different regions in the actual browser and inspect the statewide officers, portraits, phones, websites and first-use speed.",
+      "dependsOn": "River release and live reader/browser access",
+      "status": "POST_RELEASE_PENDING"
+    }
+  ],
+  "acceptanceScope": {
+    "instruction": "Sean authorized READY after real source fixtures and focused checks pass. One-day comparison and five-ZIP browser checks belong to Sean's oversight session after River releases.",
+    "productionAccessRequested": false,
+    "productionWritesPerformed": false,
+    "liveReaderVerificationPerformed": false
+  },
+  "sourceObservations": [
+    {
+      "source": "NASS",
+      "finding": "Party suffixes require name cleanup; jurisdiction headings take precedence over Washington in a street address."
     },
     {
-      "owner": "SL-03 builder",
-      "work": "Save comparable before and after observations from an actual day of standing portrait work, including federal members, governors, attorneys general and legislators by state.",
-      "dependsOn": "Live standing work and a real one-day observation"
+      "source": "Arizona, Maine and Wisconsin legislatures",
+      "finding": "Preserve bounded row/card context, explicit chamber and district evidence, inverted names, quoted nicknames and numeric entities; discard navigation as people."
     },
     {
-      "owner": "SL-03 builder",
-      "work": "Type five ZIPs in different regions in the actual browser and report every statewide officer, photo, phone and website shown; inspect the visible changes and first-use speed.",
-      "dependsOn": "Live publication and browser access"
+      "source": "Arizona member page",
+      "finding": "The observed official redirect keeps the held person binding and attributes fields to the final saved URL."
     },
     {
-      "owner": "SL-03 builder",
-      "work": "Mark READY: SL-03 only after the remaining agreed acceptance conditions pass.",
-      "dependsOn": "All remaining checks"
+      "source": "Arizona and Maine secretary biographies",
+      "finding": "Verified names and portrait leads publish; these saved biographies do not explicitly establish the statewide selection method, so the existing standing classification gaps remain."
+    },
+    {
+      "source": "NASS profile URLs",
+      "finding": "Arizona and Maine association profile links returned 404; current official pages were captured from the government sites. Association omission or stale routes do not establish absent people."
     }
   ]
 }

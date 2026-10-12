@@ -230,7 +230,7 @@ export function yamlToPeople(text: string, state: string, sourceUrl: string, asO
 /**
  * Reduces a district designation to something two spellings agree on. Some
  * districts are designated by county and number ("<County> 8") and the two
- * sides zero-pad differently; everything else is a bare number.
+ * sides zero-pad differently. Named districts also vary in spacing and punctuation.
  */
 export function designationKey(value: string): string {
   return value
@@ -238,16 +238,18 @@ export function designationKey(value: string): string {
     .toUpperCase()
     .replace(/\s+/g, " ")
     // Strip leading zeros so "<County> 08" meets "<County> 8".
-    .replace(/\b0+(\d)/g, "$1");
+    .replace(/\b0+(\d)/g, "$1")
+    .replace(/\bAND\b/g, "")
+    .replace(/[^A-Z0-9]/g, "");
 }
 
-const LABEL_PREFIX = /^(?:State (?:Senate|House)|State Legislative Districts?\s*-?\s*(?:Upper|Lower)|Senatorial|Representative) District\s*/i;
-const NJ_LABEL_PREFIX = /^(Assembly|Senate) District\s*/i;
+const LABEL_PREFIX = /^(?:State (?:Senate|House|Representative|Legislative(?: Sub)?) ?District|Assembly District|Senate District|Delegate District|Legislative \((?:House|Senate)\) District|Senatorial District|Representative District)\s*/i;
+const LABEL_SUFFIX = /(?: State House District| Senatorial District| District)$/i;
 
 /** The designation a registry division's Census-sourced label encodes. */
 export function designationFromLabel(label: string): string {
   return designationKey(
-    label.replace(LABEL_PREFIX, "").replace(NJ_LABEL_PREFIX, ""),
+    label.replace(/^[A-Z]{2} /, "").replace(/\s*\(\d{4} plan\)$/, "").replace(LABEL_PREFIX, "").replace(LABEL_SUFFIX, ""),
   );
 }
 
@@ -405,6 +407,8 @@ export function normalize(
   const unmatched: OfficeholderSet["unmatched"] = [];
   const endedMemberships: NonNullable<OfficeholderSet["endedMemberships"]>[number][] = [];
   const chamberFor = (state: string, type: string) => type === "legislature" && ["ne", "dc"].includes(state) ? "upper" : type;
+  const letteredChambers = new Set([...divisionIndex.keys()].filter(key => /\|\d+[A-Z]$/.test(key)).map(key => key.slice(0, key.lastIndexOf("|"))));
+  const heldChambers = new Set([...divisionIndex.keys()].map(key => key.slice(0, key.lastIndexOf("|"))));
 
   for (const person of raw) {
     const uuid = person.id.replace("ocd-person/", "");
@@ -423,7 +427,16 @@ export function normalize(
           if (role.current) unmatched.push({officeholderId:id,reason:`PLURAL_LEGISLATIVE_ROLE_UNRESOLVED:${role.type}`});
           return [];
         }
-        const divisionId = divisionIndex.get(`${person.state}|${chamber}|${designationKey(role.district ?? "")}`);
+        const key = designationKey(role.district ?? "");
+        const chamberKey = `${person.state}|${chamber}`;
+        let divisionId = divisionIndex.get(`${chamberKey}|${key}`);
+        if (!divisionId && /^\d+[A-Z]$/.test(key) && !letteredChambers.has(chamberKey)) {
+          divisionId = divisionIndex.get(`${chamberKey}|${key.slice(0, -1)}`);
+        }
+        if (!divisionId && (key === "ATLARGE" || person.state === "dc" && key === "CHAIRMAN")) {
+          const jurisdiction = /^ocd-jurisdiction\/(country:us\/(?:state|district|territory):[a-z]{2})\/government$/.exec(role.jurisdiction ?? "");
+          if (jurisdiction) divisionId = `ocd-division/${jurisdiction[1]}`;
+        }
         return [{role, title, chamber, level:"STATE" as const, divisionId,
           officeId:`openstates-office:${person.state}:${role.type}:${role.district ?? ""}`,
           membershipId:`${personId}:${person.state}:${role.type}:${role.district ?? ""}:${role.start_date ?? ""}`}];
@@ -511,8 +524,10 @@ export function normalize(
       const district = item.role.district ?? "";
       const ocdId = item.divisionId;
       if (!ocdId) {
+        const areaOutsideCensus = item.chamber === "lower" && (
+          person.state === "nh" && heldChambers.has("nh|lower") || person.state === "me" && /\btribe\b/i.test(district));
         unmatched.push({ officeholderId: id,
-          reason: item.chamber ? `no ${item.chamber} division for ${person.state.toUpperCase()} "${district}" — missing boundary coverage or an unresolved designation`
+          reason: item.chamber ? `no ${item.chamber} division for ${person.state.toUpperCase()} "${district}" — ${areaOutsideCensus ? "area not in the Census district file" : "missing boundary coverage or an unresolved designation"}`
             : `PLURAL_ROLE_DISTRICT_DIVISION_UNRESOLVED:${item.role.type}:${district}:${item.role.jurisdiction}` });
       } else if (!seenDivisions.has(`${ocdId}|${item.membershipId}`)) {
         divisions.push({ officeholderId: id, ocdId, bodyId: null, membershipId:item.membershipId });

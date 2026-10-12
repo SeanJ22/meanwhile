@@ -1,16 +1,22 @@
 # Returned: admin
 
 lane: admin
-check: fold (cleanup release)
-ready: BR-04 BR-07 BR-11 BR-12 BR-13 BR-16 BR-17 BR-18 BR-20 BR-26 BR-27 BR-28 BR-29 BR-31 BR-35 BR-36 BR-39 (734ee9633)
-river: d89746be4
-at: 2026-10-07T06:22:21Z
+owner: admin
+writer: the admin lane
+check: fold-conflict
+ready: BR-07, BR-04, BR-11, BR-26, BR-35, BR-39, BR-36, BR-12, BR-13, BR-18, BR-20, BR-16, BR-17, BR-27, BR-29, BR-28, BR-31 734ee9633567651c94a6bb12a0628c7b965a4102
+river: 8d68f46721de856247c38dd39680db15e5a9f37e
+at: 2026-10-12T21:48:01Z
 state: returned
+fix_subject: fix:420ddce1
+fix: River · stream/admin — fold-conflict failed for admin: admin READY 734ee9633567 (BR-07 and 16 more) conflicts with river-next when folded after registry and meetings; merge river into stream/admin, resolve, and re-mark READY.
 
-## Why
+## Failure
 
-734ee9633 changes 144 files, and many of them are deleted in the cleanup release under the inventory. That includes the admin-v6 decision orders, order-when and sample/world, the admin checklist-definitions, decision, deploy-preview, public-reader-observation, runner-progress and work-progress routes, the v6 alerts, brief, daily-brief, decisions and reader-problems routes, admin-view brief, brief-route, cost-reporting and cost-reporting-view, and data/feedback/sweeps. It can't fold over those deletions.
+```
+admin READY 734ee9633567 (BR-07 and 16 more) conflicts with river-next when folded after registry and meetings; merge river into stream/admin, resolve, and re-mark READY.
+```
 
-## Next
+## Repair
 
-Once release 13 lands, cut a fresh branch from river. Redo only the steps whose files survive the inventory (board/briefs: inventory CSV and briefs/admin.md), and mark a new READY. Don't recreate any deleted file.
+Fix on stream/admin and publish a new READY commit; River folds the new READY and clears this return when it integrates.

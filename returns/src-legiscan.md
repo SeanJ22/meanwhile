@@ -3,18 +3,27 @@
 lane: src-legiscan
 owner: src-legiscan
 writer: the src-legiscan lane
-check: fold-conflict
+check: cleanliness
 ready: no step ids unknown
-river: 6c204dcd865cc99f3e6bb2a4f0270f78b28a7f07
-at: 2026-10-13T07:23:32Z
+river: ac3ccf885d6de2934f43f931a3092f735f05f0e1
+at: 2026-10-13T22:19:14Z
 state: returned
-fix_subject: fix:15987bc4
-fix: River · stream/src-legiscan — fold-conflict failed for src-legiscan: src-legiscan READY 1f6f8edbb832 conflicts with river 985c00c33f7a (releases 25 and 26 plus src-congress and zip-entry) when merged alone. Conflicting files: components/map/popup/official-modal.tsx lib/civic-data/contracts.ts lib/control-pla
+fix_subject: fix:6502f3e6
+fix: River · stream/src-legiscan — cleanliness failed for src-legiscan: ## src-legiscan — cleanup list (River's review at fold; delete in stream/src-legiscan, then mark READY again)
 
 ## Failure
 
 ```
-src-legiscan READY 1f6f8edbb832 conflicts with river 985c00c33f7a (releases 25 and 26 plus src-congress and zip-entry) when merged alone. Conflicting files: components/map/popup/official-modal.tsx lib/civic-data/contracts.ts lib/control-plane/expansion/mission-parts.ts lib/doors/seed-feeds.ts tests/routine-civic-data-runner.test.ts   Merge river into stream/src-legiscan, resolve, and mark READY again.
+## src-legiscan — cleanup list (River's review at fold; delete in stream/src-legiscan, then mark READY again)
+
+Lane src-legiscan (SRC-LS), cut from river 6b207dedc, tip 5f7ec73a4. Added 660 lines, deleted 6 lines. Files: 14 added, 0 deleted, 13 modified. Code and tests alone: +640 / −6 (10 files added, 13 modified). Fixtures: +20 (4 files added).
+
+Delete:
+1. Remove the unused `export` (used only inside its own file): lib/ask/legiscan-bills.ts:7 (billEvidence); lib/sources/legiscan/bills.ts:12 (LEGISCAN_STATES), :18 (BillSponsor) and :78 (normalizeBill).
+
+Checked and clean: no commented-out code; no comment over two lines or telling history; every new code file is imported; every new fixture is referenced.
+
+The READY commit gives no line or file counts; it predates that requirement.
 ```
 
 ## Repair

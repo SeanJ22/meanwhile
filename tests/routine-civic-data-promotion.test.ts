@@ -1104,6 +1104,17 @@ test("zero without absence evidence is CANNOT_TELL and holds LKG", async () => {
   }), "CANNOT_TELL", "ZERO_IS_NOT_ABSENCE");
 });
 
+test("LegiScan bill authority cannot promote state roll calls", async () => {
+  await expectHeld((base) => ({
+    ...base,
+    sourceId: "legiscan-bills",
+    recordClass: "STATE_ROLL_CALL",
+    scope: "US-AZ:2026",
+    retrieval: { ...base.retrieval, finalUrl: "https://api.legiscan.com/?op=getDatasetList" },
+    normalization: { ...base.normalization, parserVersion: "legiscan-bulk/1" },
+  }), "SOURCE_BLOCKED", "SOURCE_NOT_COMPETENT_FOR_RECORD_CLASS");
+});
+
 test("attributed LegiScan projections require exact state-specific source and identity verification", async () => {
   const store = new MemoryRoutineDataStore();
   const base = candidate("unverified-vendor-projection"), scope = "US-AZ:legiscan-votes:v1";
@@ -1120,7 +1131,7 @@ test("all standing routine-source destructive classes are enumerated by the cont
   const covered = new Set<RoutineRecordClass>([
     "FEC_FUNDING", "STATE_LEGISLATOR", "CENSUS_REFERENCE", "CENSUS_GEOGRAPHY",
     "MEETING", "BALLOT_FILING", "DOTGOV_REFERENCE", "STATE_ROLL_CALL",
-    "STATE_LEGISLATOR_VOTES", "REGISTRATION", "MEETING_OUTCOME", "FEDERAL_DIRECTORY",
+    "STATE_LEGISLATOR_VOTES", "STATE_BILL", "REGISTRATION", "MEETING_OUTCOME", "FEDERAL_DIRECTORY",
     "GOOGLE_CIVIC_VOTERINFO",
     // The derived meeting-source wiring never removes a row (a trigger suspends it), so any removal is
     // refused by the generic incomplete-horizon rule (tests/derived-meeting-family.test.ts).

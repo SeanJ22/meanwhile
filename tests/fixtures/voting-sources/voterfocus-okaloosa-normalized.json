@@ -1,0 +1,265 @@
+{
+  "fixtureRepresentation": "Normalized factual rows from browser-rendered official vendor directory, not vendor JSON response.",
+  "sites": [
+    {
+      "precinct": "01",
+      "name": "Baker Area Recreation Bldg",
+      "address": "5503 HWY 4 Baker, FL 32531"
+    },
+    {
+      "precinct": "02",
+      "name": "Blackman Community Center",
+      "address": "7590 HWY 189 N Baker, FL 32531"
+    },
+    {
+      "precinct": "03",
+      "name": "Liberty Culture Church",
+      "address": "5408 Highway 4 Baker, FL 32531-8434"
+    },
+    {
+      "precinct": "04",
+      "name": "First Baptist Church of Holt",
+      "address": "532 HWY 90 W Holt, FL 32564"
+    },
+    {
+      "precinct": "05",
+      "name": "First Baptist Church of Laurel Hill",
+      "address": "3972 2nd Ave Laurel Hill, FL 32567"
+    },
+    {
+      "precinct": "06",
+      "name": "Auburn Pentecostal Church",
+      "address": "6144 HWY 85 N Crestview, FL 32536"
+    },
+    {
+      "precinct": "07",
+      "name": "Dorcas Baptist Church",
+      "address": "5880 McCallum Rd Crestview, FL 32536"
+    },
+    {
+      "precinct": "08",
+      "name": "Emmanuel Baptist Church",
+      "address": "3252 James Lee Blvd E Crestview, FL 32539"
+    },
+    {
+      "precinct": "09",
+      "name": "New Beginnings Church",
+      "address": "412 James Lee Blvd W Crestview, FL 32536"
+    },
+    {
+      "precinct": "10",
+      "name": "Covenant Community Church",
+      "address": "1007 Gospel Rd Fort Walton Beach, FL 32547"
+    },
+    {
+      "precinct": "11",
+      "name": "Lifepoint Church",
+      "address": "400 Ferdon Blvd S Crestview, FL 32536"
+    },
+    {
+      "precinct": "12",
+      "name": "Carver Hill School",
+      "address": "461 School Ave W Crestview, FL 32536"
+    },
+    {
+      "precinct": "13",
+      "name": "Woodlawn Baptist Church",
+      "address": "824 Ferdon Blvd N Crestview, FL 32536"
+    },
+    {
+      "precinct": "14",
+      "name": "St Jude's Episcopal Church",
+      "address": "200 Partin Dr N Niceville, FL 32578"
+    },
+    {
+      "precinct": "15",
+      "name": "New Hope Baptist Church",
+      "address": "108 Aurora St Valparaiso, FL 32580"
+    },
+    {
+      "precinct": "16",
+      "name": "Okaloosa County Administration Bldg",
+      "address": "1250 Eglin Pkwy Shalimar, FL 32579"
+    },
+    {
+      "precinct": "17",
+      "name": "Champion Life Church",
+      "address": "650 Denton Blvd NW Ft Walton Bch, FL 32547"
+    },
+    {
+      "precinct": "18",
+      "name": "Beachside Community Church",
+      "address": "200 Racetrack Rd NW Ft Walton Bch, FL 32547"
+    },
+    {
+      "precinct": "19",
+      "name": "Beulah First Baptist Church",
+      "address": "109 McGriff St NE Ft Walton Bch, FL 32548"
+    },
+    {
+      "precinct": "20",
+      "name": "Destin Community Center",
+      "address": "101 Stahlman Ave Destin, FL 32541"
+    },
+    {
+      "precinct": "21",
+      "name": "Sunrise City Church",
+      "address": "28 North St Mary Esther, FL 32569"
+    },
+    {
+      "precinct": "22",
+      "name": "Ft Walton Bch Recreation Center",
+      "address": "132 Jet Dr NW Fort Walton Beach, FL 32548"
+    },
+    {
+      "precinct": "23",
+      "name": "Eglin West Gate Chapel",
+      "address": "0 Eglin Blvd Eglin Afb, FL 32542"
+    },
+    {
+      "precinct": "24",
+      "name": "RAV Ministries",
+      "address": "205 Carol Ave NW Fort Walton Beach, FL 32547"
+    },
+    {
+      "precinct": "25",
+      "name": "First Baptist Church on Bayshore",
+      "address": "622 Bayshore Dr Niceville, FL 32578"
+    },
+    {
+      "precinct": "26",
+      "name": "Christ Our Redeemer Catholic Church",
+      "address": "1028 White Point Rd Niceville, FL 32578"
+    },
+    {
+      "precinct": "27",
+      "name": "Cinco Bayou Town Hall",
+      "address": "10 Yacht Club Dr Fort Walton Beach, FL 32548"
+    },
+    {
+      "precinct": "28",
+      "name": "Cinco Bayou Town Hall",
+      "address": "10 Yacht Club Dr Fort Walton Beach, FL 32548"
+    },
+    {
+      "precinct": "29",
+      "name": "Trinity United Methodist Church",
+      "address": "403 Racetrack Rd NW Fort Walton Beach, FL 32547"
+    },
+    {
+      "precinct": "30",
+      "name": "Elks Lodge",
+      "address": "1335 Miracle Strip Pky Fort Walton Beach, FL 32548"
+    },
+    {
+      "precinct": "31",
+      "name": "Bob Hope Village Welcome Ctr",
+      "address": "92 Sunset Ln Shalimar, FL 32579"
+    },
+    {
+      "precinct": "32",
+      "name": "The Church of Christ",
+      "address": "232 Hollywood Blvd SE Ft Walton Bch, FL 32548"
+    },
+    {
+      "precinct": "33",
+      "name": "First Presbyterian Church",
+      "address": "1800 John Sims Pky Niceville, FL 32578"
+    },
+    {
+      "precinct": "34",
+      "name": "St. Peter Catholic Church",
+      "address": "100 Francis St Mary Esther, FL 32569"
+    },
+    {
+      "precinct": "35",
+      "name": "Destin Methodist Church",
+      "address": "200 Beach Dr Destin, FL 32541"
+    },
+    {
+      "precinct": "36",
+      "name": "First Baptist Church on Bayshore",
+      "address": "622 Bayshore Dr Niceville, FL 32578"
+    },
+    {
+      "precinct": "37",
+      "name": "Okaloosa County Administration Bldg",
+      "address": "1250 Eglin Pkwy Shalimar, FL 32579"
+    },
+    {
+      "precinct": "38",
+      "name": "The Salvation Army Chapel",
+      "address": "425 Mary Esther CTO Ft Walton Bch, FL 32548-4019"
+    },
+    {
+      "precinct": "39",
+      "name": "Champion Life Church",
+      "address": "650 Denton Blvd NW Ft Walton Bch, FL 32547"
+    },
+    {
+      "precinct": "40",
+      "name": "Christ Our Redeemer Catholic Church",
+      "address": "1028 White Point Rd Niceville, FL 32578"
+    },
+    {
+      "precinct": "41",
+      "name": "Ft Walton Bch Recreation Center",
+      "address": "132 Jet Dr NW Fort Walton Beach, FL 32548"
+    },
+    {
+      "precinct": "42",
+      "name": "NWFSC, Bldg 1 Rm 126",
+      "address": "1170 Martin Luther King Jr Blvd Ft Walton Bch, FL 32547"
+    },
+    {
+      "precinct": "43",
+      "name": "First Baptist Church on Bayshore",
+      "address": "622 Bayshore Dr Niceville, FL 32578"
+    },
+    {
+      "precinct": "44",
+      "name": "Destin Methodist Church",
+      "address": "200 Beach Dr Destin, FL 32541"
+    },
+    {
+      "precinct": "45",
+      "name": "Eagle's Nest at Blackwater",
+      "address": "4927 Antioch Rd Crestview, FL 32536"
+    },
+    {
+      "precinct": "46",
+      "name": "Crosspoint Church, Bluewater",
+      "address": "4400 Highway 20 E Niceville, FL 32578"
+    },
+    {
+      "precinct": "47",
+      "name": "St. Peter Catholic Church",
+      "address": "100 Francis St Mary Esther, FL 32569"
+    },
+    {
+      "precinct": "48",
+      "name": "The Meridian at Westwood",
+      "address": "1001 Mar Walt Dr NW Ft Walton Bch, FL 32547"
+    },
+    {
+      "precinct": "49",
+      "name": "Destin City Hall - Boardroom",
+      "address": "4200 Indian Bayou Trl Destin, FL 32541"
+    },
+    {
+      "precinct": "50",
+      "name": "Destin City Hall - Boardroom",
+      "address": "4200 Indian Bayou Trl Destin, FL 32541"
+    },
+    {
+      "precinct": "51",
+      "name": "Airport Road Church of Christ",
+      "address": "2845 Airport Rd Crestview, FL 32536"
+    },
+    {
+      "precinct": "52",
+      "name": "Live Oak Baptist Church",
+      "address": "4565 Live Oak Church Rd Crestview, FL 32536"
+    }
+  ]
+}

@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- index.php -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="author" content="Design and Development by Firefly, LLC | http://www.firefly.us">
+    <meta name="google-site-verification" content="qn7Bonp3yPh9knr_2Q0Wy4XEqTxrnk37PTbT1d0rF2k" />
+
+<link rel="apple-touch-icon-precomposed" sizes="57x57" href="/images/apple-touch-icon-57x57.png" />
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/apple-touch-icon-114x114.png" />
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/images/apple-touch-icon-72x72.png" />
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-144x144.png" />
+<link rel="apple-touch-icon-precomposed" sizes="60x60" href="/images/apple-touch-icon-60x60.png" />
+<link rel="apple-touch-icon-precomposed" sizes="120x120" href="/images/apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon-precomposed" sizes="76x76" href="/images/apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon-precomposed" sizes="152x152" href="/images/apple-touch-icon-152x152.png" />
+<link rel="icon" type="image/png" href="/images/favicon-196x196.png" sizes="196x196" />
+<link rel="icon" type="image/png" href="/images/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32" />
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16" />
+<link rel="icon" type="image/png" href="/images/favicon-128.png" sizes="128x128" />
+<meta name="application-name" content="&nbsp;"/>
+<meta name="msapplication-TileColor" content="#FFFFFF" />
+<meta name="msapplication-TileImage" content="/images/mstile-144x144.png" />
+<meta name="msapplication-square70x70logo" content="/images/mstile-70x70.png" />
+<meta name="msapplication-square150x150logo" content="/images/mstile-150x150.png" />
+<meta name="msapplication-wide310x150logo" content="/images/mstile-310x150.png" />
+<meta name="msapplication-square310x310logo" content="/images/mstile-310x310.png" />
+
+    <title>Senators | Maine State Legislature</title>
+
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/smoothness/jquery-ui.css"  /> 
+    <link rel="alternate" type="application/atom+xml" href="/rss.php" title="Maine Legislature News" />
+    <link href="https://d1jyl8f6kkyxtz.cloudfront.net/superfish-1.4.8/css/superfish.css" type="text/css" rel="stylesheet"  />
+    <link type="text/css" rel="stylesheet" href="/core.css" />
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,600' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=PT+Sans+Narrow' rel='stylesheet' type='text/css'>
+    <link type="text/css" rel="stylesheet" href="/typography.css" />
+    
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.js"></script> 
+    <!--[if lt IE 9]>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->   
+
+    <script src="https://d1jyl8f6kkyxtz.cloudfront.net/jquery.cycle.all.min.js"></script>
+    <script src="/js/superclick/js/superclick.js"></script>
+    <script src="/js/jquery.jfeed.js"></script>
+    <script src="/js/dateFormat1.2.3.min.js"></script>
+    <script src="https://d1jyl8f6kkyxtz.cloudfront.net/cufon-yui.js"></script> 
+   
+
+    <!--[if IE 8]>
+        <style type="text/css">
+            #nav a { font-size:16px !important; }
+        </style>
+    <![endif]-->
+
+
+    <!--[if IE 6]>
+        <style type="text/css">
+            
+            #left { width:312px; overflow:hidden;  }
+            #main { width:592px;  }
+            #content { width:610px; overflow:hidden;  }
+            #logo { padding-left:10px; }
+            
+            #left, #main, #content  { z-index:1 !important;  }
+            #header, #nav { z-index:99 !important;  }
+        
+            * html #footer { position:absolute; top:expression((0-(footer.offsetHeight)+(document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight)+(ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop))+'px'); }
+    <![endif]-->
+   
+   <style>
+
+        #page { padding: 55px 0 55px 0; } /*was 115px*/
+        #footer { position:fixed; bottom:0; left:0; z-index:1; } 
+
+        h1 { color:#08148C; font-size:36px; font-family:"Source Sans Pro"; }
+
+
+        #logo { width:200px; height:69px; } 
+        #news { margin-top:10px;  }
+        #left { width:222px; background:url(/images/darkly.png);  }
+        #subnav { padding-bottom:50px; }
+        .news-block, .subnav-item {  width:200px; }
+        .subnav-block { width:220px; }
+        .news-item, .news-head { width:170px; }
+   
+        #main { width:752px; overflow:hidden; }
+	#right { width:772px; }
+
+        #content {width:95%; margin-top:2em;  border-top:12px solid #272f46; } /* was width:710px;overflow:hidden;
+   
+        #page { padding-bottom:50px;padding-top:55px}/* was 115px*/ 
+        #footer { position:fixed; bottom:0; left:0; z-index:1; }  
+
+        ul.closed {  }
+
+
+        @media only screen and (max-width: 1023px) {
+
+            #page { padding:0;  }
+            
+            #main, #main-taleo, #content, #left {  width:100vw; }
+            #content { padding:30px; }
+            #footer { position:static; }
+            #left { margin:0; }
+        }
+
+   </style>
+
+
+    <script>
+        
+        $(document).ready(function() {
+            
+            $('ul.sf-menu').superclick();
+        
+
+
+
+             // FIX LONG URLS
+             function mapfix(url) {
+
+                // Normalize slashes (AGAIN)
+                if(url.substr(url.length - 1) == '/') {
+                    url += '/';
+                }
+
+                var pieces = url.split('/');
+
+
+                // Replacement URLs always have at least 3 components
+                if(pieces.length < 4) {
+                    return url;
+                } 
+
+                var map = [{"slug":"null","home":"0"},{"slug":"session","home":"0"},{"slug":"opla","home":"9123"},{"slug":"homepage","home":"0"},{"slug":"general","home":"97"},{"slug":"legislature","home":"0"},{"slug":"lio","home":"67"},{"slug":"execdir","home":"9070"},{"slug":"test","home":"9325"},{"slug":"acf-committee","home":"0"},{"slug":"council","home":"9071"},{"slug":"opega","home":"9165"},{"slug":"apportionment","home":"11480"},{"slug":"ros","home":"9125"},{"slug":"ofpr","home":"9630"},{"slug":"lawlibrary","home":"9127"},{"slug":"senate","home":"9331"},{"slug":"house","home":"0"},{"slug":"house-independents","home":"9277"},{"slug":"green-independent","home":"0"},{"slug":"senate-presidents-office","home":"9338"},{"slug":"house-speakers-office","home":"9636"},{"slug":"hr","home":"9682"},{"slug":"lit","home":"9683"},{"slug":"studies-and-commissions","home":"12574"}];
+
+                // If we have a match on both the department slug and the source page
+                // then we are safe to shorten the URL to just the department.
+                for(var i=0; i<map.length; i++) {
+
+                    if(map[i]['slug'] == pieces[1] && map[i]['home'] == pieces[3]) {
+                        return '/' + map[i]['slug'];
+                    }
+                }
+
+
+
+             }
+             
+
+             $('#departmental-menu a').each(function() {
+
+                $(this).attr('href', mapfix($(this).attr('href')));
+
+             });
+
+
+
+            // Close them all initially, with JS, not CSS.
+            $('ul.closed').hide();
+        
+
+
+            $('ul.closed > li > a').each(function() {
+
+                $(this).removeClass('current');
+
+                var page = window.location.pathname;
+                var curr = $(this).attr('href');
+
+                // Add trailing slash to accommodate State server habit of adding them.
+                if(page.substr(page.length - 1) == '/' && curr.substr(curr.length - 1) != '/') {
+                    curr += '/';
+                }
+
+                if(curr == page) {
+                    $(this).addClass('current');
+                    $(this).parent().parent().removeClass('closed').addClass('open');
+                    $(this).parent().parent().show();
+                    return false;
+                    
+                }
+
+
+            });
+
+
+            // Open on click
+            $('li.toplevel > a').click(function() {
+
+                $(this).parent().children('ul.closed').slideToggle();
+                if($(this).hasClass('open')) {
+                    $(this).removeClass('open');
+                    $(this).addClass('closed');
+                } else {
+                    $(this).removeClass('closed');
+                    $(this).addClass('open');
+                }
+
+                return false;
+      
+                
+             });
+
+
+             $( ".jdpicker" ).datepicker({autoSize:true});
+
+
+        }); // end dom ready
+
+    </script>
+
+</head>
+<body>
+
+<div id="super">
+
+<div id="responder">
+
+    <a id="close" href="#"><img src="/images/menu-close-black.png" alt="Close Menu" /></a>
+    <ul class="sf-menu">
+
+    <li><a href="/">Home</a></li>
+    
+    <li><a href="/senate/">Senate <span>&#711;</span></a>
+        <ul>
+            <li><a href="/senate/">Senate Home</a></li>
+		    <li><a href="/senate/office-of-the-president-of-the-senate/9340">Senate President</a></li>
+                        <li><a href="/Audio/#senate_chamber" title="Live Video from the Senate Chamber">Live Senate Video</a></li>
+
+
+            <li><a href="http://www.mainesenate.org/">Senate Democrats</a></li>
+            <li><a href="https://mesenategop.com/">Senate Republicans</a></li>
+          <!--  <li><a href="/independents/">Senate Unenrolled</a></li> -->
+        </ul>
+    
+    </li><!-- end senate -->
+    
+    <li><a href="/house/">House <span>&#711;</span></a>
+    
+        <ul>
+	    <li><a href="/house/">House Home</a></li>
+	    <li><a href="/house/spk_main.htm">Speaker of the House</a></li>
+        <li><a href="/Audio/#house_chamber" title="Live Video from the House Chamber">Live House Video</a></li>
+ 
+	    <li><a href="/housedems/">House Democrats</a></li>
+	    <li><a href="http://mainehousegop.org/">House Republicans</a></li>
+	    <li><a href="/house-independents/house-independents/9453">House Independents</a></li>
+		  </ul>
+    
+    </li><!-- end House -->
+    
+    <li class="double-line-margin"><a href="/execdir">Legislative<br/>Offices <span>&#711;</span></a>
+        <ul>
+			<li><a href="/execdir/legislative-council/9071">Legislative Council</a></li>
+			<li><a href="/execdir/">Office of the Executive Director</a></li>
+			<li><a href="/ros/">Office of the Revisor of Statutes</a></li>
+			<li><a href="/lio/">Legislative Information Office</a></li>
+			<li><a href="/opla/">Office of Policy and Legal Analysis</a></li>
+			<li><a href="/ofpr/">Office of Fiscal and Program Review</a></li>
+			<li><a href="/lawlibrary/">Law and Legislative Reference Library</a></li>
+			<li><a href="/opega/">Office of Program Evaluation and Government Accountability</a></li>
+        </ul>
+    </li><!-- end legislative offices-->
+    
+    <li><a href="/Calendar/#Weekly">Calendar</a></li>
+
+    <li><a href="/committee/#Committees">Committees <span>&#711;</span></a>
+        <ul>
+                        <li><a href="/committee/#Committees">Legislative Committees</a></li>
+                        <li><a href="https://www.mainelegislature.org/testimony">Testimony Submission</a></li>
+                        <li><a href="/senate/committees/9802/">Senate Committees</a></li>
+                        <li><a href="/house/Committees">House Committees</a></li>
+                        <li><a href="/Calendar/#PHWS">Committee Hearings &amp; Work Sessions</a></li>
+                </ul>
+    </li><!-- end committees -->
+
+
+    
+    
+    <li><a href="/documents/">Documents <span>&#711;</span></a>
+    
+        <ul>
+            <li><a href="//legislature.maine.gov/LawMakerWeb/search.asp">Bill Status Search</a></li>
+			<li><a href="//legislature.maine.gov/bills/default_ps.asp?PID=1456&snum=130">Bill Text &amp; Tracking Search</a></li>
+			<li><a href="//legislature.maine.gov/opla/12541">132nd Legislative Studies</a></li>
+            <li><a href="/documents/">Document Database Search</a></li>          
+            <li style="border-top:1px solid aliceblue"><a href="/general/9122">Additional Books and Documents</a></li>
+            <li><a href="/senate/senators-resource-page/9350">Senate Resources</a></li>
+			<li><a href="/statutes/">Maine Revised Statutes</a></li>
+            <li style="border-bottom:1px solid aliceblue"><a href="/legis/lawlib/lldl/lldlhome.htm">Law and Legislative Digital Library</a></li>
+            <li><a href="/ofpr/9599">Appropriations Cmte. Materials</a></li>
+			<li><a href="/execdir/legislative-council-meeting-schedule/39">Leg. Council Schedule Info</a></li>
+
+          </ul>
+        
+    </li><!-- end publications (documents) -->
+
+    <li class="double-line-margin"><a href="/9686">Member<br/>Resources</a></li>
+
+    <li class="double-line-margin"><a href="/hr-resources">Employee<br/>Resources</a></li>
+
+    <li class="double-line-margin"><a href="/apportionment">Apportionment<br/>Commission</a></li>
+	
+	<li><a href="/contact">Contact Us <span>&#711;</span></a>
+	<ul>
+      <li><a href="https://www.mainelegislature.org/testimony">Testimony Submission</a></li>
+	  <li><a href="/contact">Contact Form</a></li>
+	  <li><a href="/execdir/job-opportunities/9281">Job Opportunities</a></li>
+      <li><a href="/general/">About the Legislature</a></li>
+	  <li style="height:auto; margin:0; padding:0 !important;">
+        <table id="addresses">
+            <tr>
+                <th>General Information</th>
+            </tr>
+            <tr>
+                <td>(800) 301-3178<br />fax (207) 287-1580</td>
+            </tr>
+	</table>
+	</li>
+	<li><a href="mailto:webmaster_legis@legislature.maine.gov">E-mail: webmaster_legis</a></li>
+	<li style="height:auto; margin:0; padding:0 !important;">
+        <table id="addresses">
+			<tr>
+                <th>Senators</th>
+            </tr>
+            <tr>
+                <td>3 State House Station<br /> Augusta, ME 04333-0003</td>
+            </tr>
+            <tr>
+                <td>(800) 423-6900<br /><span>Secretary's Office: (207) 287-1540</span></td>
+            </tr>
+	</table>
+	</li>
+        <li><a href="mailto:webmaster_Senate@legislature.maine.gov">E-mail: webmaster_senate</a>  </li>
+	<li style="height:auto; margin:0; padding:0 !important;">
+        <table id="addresses">
+            <tr>
+                <th>Representatives</th>
+            </tr>
+            <tr>
+                <td>2 State House Station<br />Augusta, ME 04333-0002</td>
+            </tr>
+            <tr>
+                <td>(800) 423-2900<br /><span>Clerk's Office: (207) 287-1400</span></td>
+            </tr>
+        </table>
+	</li>
+        <li><!-- a href="mailto:webmaster_house@legislature.maine.gov">E-mail: webmaster_house</a --> </li> 
+	</ul>
+	</li> <!-- end contact us -->
+</ul>
+
+</div>
+
+
+<div id="wrapper">
+
+
+    <div id="responsive-header">
+        
+        <a id="menu" href="#"><img src="/images/menu-open.png" alt="Open Menu" /></a>
+        <a href="/"><img id="logo" alt="Maine State Legislature" src="/images/logo.png" /></a>
+
+    </div>
+
+
+    <div id="header">
+
+        <!-- amerilert code -->
+        <div id="rss-feed-flexible">
+            <script type="text/javascript" src="/omnilert/21dedb69608886de9f2b32cffa85d4e5-10592"></script>
+        </div>
+        <!-- end amerilert -->
+
+        <div class="liner">
+            <div id="nav">
+               <ul class="sf-menu">
+
+    <li><a href="/">Home</a></li>
+    
+    <li><a href="/senate/">Senate <span>&#711;</span></a>
+        <ul>
+            <li><a href="/senate/">Senate Home</a></li>
+		    <li><a href="/senate/office-of-the-president-of-the-senate/9340">Senate President</a></li>
+                        <li><a href="/Audio/#senate_chamber" title="Live Video from the Senate Chamber">Live Senate Video</a></li>
+
+
+            <li><a href="http://www.mainesenate.org/">Senate Democrats</a></li>
+            <li><a href="https://mesenategop.com/">Senate Republicans</a></li>
+          <!--  <li><a href="/independents/">Senate Unenrolled</a></li> -->
+        </ul>
+    
+    </li><!-- end senate -->
+    
+    <li><a href="/house/">House <span>&#711;</span></a>
+    
+        <ul>
+	    <li><a href="/house/">House Home</a></li>
+	    <li><a href="/house/spk_main.htm">Speaker of the House</a></li>
+        <li><a href="/Audio/#house_chamber" title="Live Video from the House Chamber">Live House Video</a></li>
+ 
+	    <li><a href="/housedems/">House Democrats</a></li>
+	    <li><a href="http://mainehousegop.org/">House Republicans</a></li>
+	    <li><a href="/house-independents/house-independents/9453">House Independents</a></li>
+		  </ul>
+    
+    </li><!-- end House -->
+    
+    <li class="double-line-margin"><a href="/execdir">Legislative<br/>Offices <span>&#711;</span></a>
+        <ul>
+			<li><a href="/execdir/legislative-council/9071">Legislative Council</a></li>
+			<li><a href="/execdir/">Office of the Executive Director</a></li>
+			<li><a href="/ros/">Office of the Revisor of Statutes</a></li>
+			<li><a href="/lio/">Legislative Information Office</a></li>
+			<li><a href="/opla/">Office of Policy and Legal Analysis</a></li>
+			<li><a href="/ofpr/">Office of Fiscal and Program Review</a></li>
+			<li><a href="/lawlibrary/">Law and Legislative Reference Library</a></li>
+			<li><a href="/opega/">Office of Program Evaluation and Government Accountability</a></li>
+        </ul>
+    </li><!-- end legislative offices-->
+    
+    <li><a href="/Calendar/#Weekly">Calendar</a></li>
+
+    <li><a href="/committee/#Committees">Committees <span>&#711;</span></a>
+        <ul>
+                        <li><a href="/committee/#Committees">Legislative Committees</a></li>
+                        <li><a href="https://www.mainelegislature.org/testimony">Testimony Submission</a></li>
+                        <li><a href="/senate/committees/9802/">Senate Committees</a></li>
+                        <li><a href="/house/Committees">House Committees</a></li>
+                        <li><a href="/Calendar/#PHWS">Committee Hearings &amp; Work Sessions</a></li>
+                </ul>
+    </li><!-- end committees -->
+
+
+    
+    
+    <li><a href="/documents/">Documents <span>&#711;</span></a>
+    
+        <ul>
+            <li><a href="//legislature.maine.gov/LawMakerWeb/search.asp">Bill Status Search</a></li>
+			<li><a href="//legislature.maine.gov/bills/default_ps.asp?PID=1456&snum=130">Bill Text &amp; Tracking Search</a></li>
+			<li><a href="//legislature.maine.gov/opla/12541">132nd Legislative Studies</a></li>
+            <li><a href="/documents/">Document Database Search</a></li>          
+            <li style="border-top:1px solid aliceblue"><a href="/general/9122">Additional Books and Documents</a></li>
+            <li><a href="/senate/senators-resource-page/9350">Senate Resources</a></li>
+			<li><a href="/statutes/">Maine Revised Statutes</a></li>
+            <li style="border-bottom:1px solid aliceblue"><a href="/legis/lawlib/lldl/lldlhome.htm">Law and Legislative Digital Library</a></li>
+            <li><a href="/ofpr/9599">Appropriations Cmte. Materials</a></li>
+			<li><a href="/execdir/legislative-council-meeting-schedule/39">Leg. Council Schedule Info</a></li>
+
+          </ul>
+        
+    </li><!-- end publications (documents) -->
+
+    <li class="double-line-margin"><a href="/9686">Member<br/>Resources</a></li>
+
+    <li class="double-line-margin"><a href="/hr-resources">Employee<br/>Resources</a></li>
+
+    <li class="double-line-margin"><a href="/apportionment">Apportionment<br/>Commission</a></li>
+	
+	<li><a href="/contact">Contact Us <span>&#711;</span></a>
+	<ul>
+      <li><a href="https://www.mainelegislature.org/testimony">Testimony Submission</a></li>
+	  <li><a href="/contact">Contact Form</a></li>
+	  <li><a href="/execdir/job-opportunities/9281">Job Opportunities</a></li>
+      <li><a href="/general/">About the Legislature</a></li>
+	  <li style="height:auto; margin:0; padding:0 !important;">
+        <table id="addresses">
+            <tr>
+                <th>General Information</th>
+            </tr>
+            <tr>
+                <td>(800) 301-3178<br />fax (207) 287-1580</td>
+            </tr>
+	</table>
+	</li>
+	<li><a href="mailto:webmaster_legis@legislature.maine.gov">E-mail: webmaster_legis</a></li>
+	<li style="height:auto; margin:0; padding:0 !important;">
+        <table id="addresses">
+			<tr>
+                <th>Senators</th>
+            </tr>
+            <tr>
+                <td>3 State House Station<br /> Augusta, ME 04333-0003</td>
+            </tr>
+            <tr>
+                <td>(800) 423-6900<br /><span>Secretary's Office: (207) 287-1540</span></td>
+            </tr>
+	</table>
+	</li>
+        <li><a href="mailto:webmaster_Senate@legislature.maine.gov">E-mail: webmaster_senate</a>  </li>
+	<li style="height:auto; margin:0; padding:0 !important;">
+        <table id="addresses">
+            <tr>
+                <th>Representatives</th>
+            </tr>
+            <tr>
+                <td>2 State House Station<br />Augusta, ME 04333-0002</td>
+            </tr>
+            <tr>
+                <td>(800) 423-2900<br /><span>Clerk's Office: (207) 287-1400</span></td>
+            </tr>
+        </table>
+	</li>
+        <li><!-- a href="mailto:webmaster_house@legislature.maine.gov">E-mail: webmaster_house</a --> </li> 
+	</ul>
+	</li> <!-- end contact us -->
+</ul>
+            </div><!-- end nav -->
+        </div><!-- end liner -->
+    </div><!-- end header -->
+
+    <div id="page">
+
+
+        <div id="left">
+
+            <a href="/"><img id="logo" alt="Maine State Legislature" src="/images/logo.png" /></a>
+            
+            <div class="responsive-only">
+                
+                             </div>
+
+            <div id="subnav">
+                
+                <ul id="departmental-menu"><li class="toplevel"><a href="/senate/senate-home-page/9331">Maine Senate</a>
+<ul class="closed"><li><a href="/senate/senate-home-page/9331">Maine Senate Home</a>
+<li><a href="/senate/about-the-maine-senate/9810">About the Maine Senate</a></li>
+<li><a href="/senate/committees/9802">Committees</a></li>
+<li><a href="/senate/senate-calendar/9398">Senate Calendar</a></li>
+<li><a href="/senate/senate-offices/9338">Senate Offices and Leadership</a></li>
+<li><a href="/senate/senators-resource-page/9350">Senate Resources and Documents</a></li>
+<li><a href="/senate/senators/9536">Senators</a></li>
+<li><a href="/senate/visitor-information/9343">Visitor Information</a></li>
+</ul></li><li><a href="/documents/senate">Document Search</a></li></ul>
+  
+
+            </div><!-- end subnav -->
+            
+        </div><!-- end left -->
+
+
+
+        <div id="right">
+        <div id="main"> 
+           
+           
+        
+            <div id="content">
+                
+
+                <div class="desktop-only">
+                    
+                                    </div>
+
+                 <h1>Senators</h1>
+                 <p>The Senate is the upper chamber of the Maine Legislature. All members of the 132nd Maine Senate have been elected to serve a two year term.</p>
+<p>A Senator must be a citizen of Maine for at least one year, be a resident of the district for at least 3 months prior to the election and continue to reside within the district during the term of office, and be at least 25 years of age at the time of election.</p>
+<p>Of the 35 members, there are&nbsp;20 Democrats, 14 Republicans, and 1 Independent.&nbsp;</p>
+<p>The Senate elects a President, who presides over all its proceedings; a Secretary, who serves as chief administrative officer; and an Assistant Secretary.</p>
+<p><strong><a href="/senate/find-your-state-senator/9392">Senators Listed by Municipality</a></strong></p>
+<p><strong><a href="/senate/district-listing/9526">Senators Listed by Senate District</a></strong></p>
+<p><a href="/uploads/visual_edit/senator-email-list.xlsx">Senator Email List</a>&nbsp;</p>
+<p><strong>132nd Maine Senators</strong></p>
+<p><a href="/district31">Donna Bailey</a>&nbsp;(D-York)</p>
+<p><a href="/district9">Joseph M. Baldacci</a>&nbsp;(D-Penobscot)</p>
+<p><a href="/district12">Pinny H. Beebe-Center</a> (D-Knox)</p>
+<p><a href="/district18">Richard A. Bennett</a>&nbsp;(I-Oxford)</p>
+<p><a href="/district1">Susan Bernard</a> (R-Aroostook)</p>
+<p><a href="/District20">Bruce Bickford</a> (R-Androscoggin)</p>
+<p><a href="/district5">Russell J. Black</a>&nbsp;(R-Franklin)</p>
+<p><a href="/District15">Richard Bradstreet</a> (R-Kennebec)</p>
+<p><a href="/district30">Stacy F. Brenner</a>&nbsp;(D-Cumberland)</p>
+<p><a href="/district29">Anne M. Carney</a>&nbsp;(D-Cumberland)</p>
+<p><a href="/district11">Chip Curry</a> (D-Waldo)</p>
+<p><a href="/District16">Scott Cyrway</a> (R-Kennebec)</p>
+<p><a href="/district23">Matthea E. L. Daughtry</a>&nbsp;(D-Cumberland)</p>
+<p><a href="/district27">Jill C. Duson</a> (D-Cumberland)</p>
+<p><a href="/district3">Bradlee T. Farrin</a>&nbsp;(R-Somerset)</p>
+<p><a href="/district7">Nicole C. Grohoski</a>&nbsp;(D-Hancock)</p>
+<p><a href="/district4">Stacey K. Guerin</a>&nbsp;(R-Penobscot)</p>
+<p><a href="/District10">David Haggan</a> (R-Penobscot)</p>
+<p><a href="/district33">Matt A. Harrington</a> (R-York)</p>
+<p><a href="/district14">Craig V. Hickman</a> (D-Kennebec)</p>
+<p><a href="/district32">Henry L. Ingwersen</a> (D-York)</p>
+<p><a href="/district35">Mark W. Lawrence</a>&nbsp;(D-York)</p>
+<p><a href="/district22">James D. Libby</a> (R-Cumberland)</p>
+<p><a href="/District19">Joseph Martin</a> (R-Oxford)</p>
+<p><a href="/district6">Marianne Moore</a>&nbsp;(R-Washington)</p>
+<p><a href="/district26">Timothy E. Nangle</a> (D-Cumberland)</p>
+<p><a href="/district25">Teresa S. Pierce</a> (D-Cumberland)</p>
+<p><a href="/district34">Joseph Rafferty</a>&nbsp;(D-York)</p>
+<p><a href="/district13">Cameron D. Reny</a> (D-Lincoln)</p>
+<p><a href="/district21">Peggy R. Rotundo</a> (D-Androscoggin)</p>
+<p><a href="/district2">Trey L. Stewart</a>&nbsp;(R-Aroostook)</p>
+<p><a href="/District28">Rachel Talbot Ross</a> (D-Cumberland)</p>
+<p><a href="/District24">Denise Tepler</a> (D-Sagadahoc)</p>
+<p><a href="/district17">Jeffrey L. Timberlake</a>&nbsp;(R-Androscoggin)</p>
+<p><a href="/district8">Mike Tipping</a> (D-Penobscot)</p>
+            
+
+            </div><!-- end content -->
+
+
+
+        </div><!-- end main -->
+        <div style="clear:both;"></div>
+
+
+
+    </div><!-- end right -->
+    </div><!-- end page -->
+
+    <div id="footer">
+        <div class="liner">
+               <div class="liner">
+        <!--<div id="state-seal"></div>-->
+
+        <div id="footer-nav1">
+            <h1>Maine Government</h1>
+            <a href="https://www.maine.gov">Executive</a> &bull; <a href="https://www.courts.maine.gov">Judicial</a> &bull; <a href="https://www.maine.gov/sos/cec/rules/index.html">Agency Rules</a>
+        </div>
+            
+        <div id="footer-nav2">
+            <h1>Visit the State House</h1>
+            <a href="https://mainestatemuseum.org/visit/blaine-house-and-state-house-tours/">Tour Guide</a> &bull; <a href="/lio/special-accommodations/">Accessibility</a> &bull; <a href="/lio/security-screening/9120">Security Screening</a>  &bull; <a href="/lio/directions-to-the-state-house/9081">Directions &amp; Parking</a>
+        </div><!-- end contact -->
+
+        <div id="footer-nav3">
+            <h1>Email</h1>
+            <a href="mailto:webmaster_Senate@legislature.maine.gov">Senate</a>  
+		&bull;
+            <a href="mailto:webmaster_house@legislature.maine.gov">House</a> 
+		&bull;
+            <a href="mailto:webmaster_legis@legislature.maine.gov">Webmaster </a>
+        </div><!-- end contact -->
+
+    </div><!-- end liner -->
+
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-36616985-1', 'auto');
+    ga('send', 'pageview');
+
+  	ga('create', 'UA-43028257-1', 'auto', 'secondaryTrack');
+	ga('secondaryTrack.send', 'pageview');
+</script>
+<!-- Global site tag (gtag.js) - Google Analytics ADDED by SCM for GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3VCC6FBFLS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-3VCC6FBFLS');
+</script>
+<script type="text/javascript">
+//site24x7 RUM 
+var rumMOKey='65df64899c7c6d7418cac4c5bff46776';
+(function(){
+	if(window.performance && window.performance.timing && window.performance.navigation) {
+			var site24x7_rum_beacon=document.createElement('script');
+				site24x7_rum_beacon.async=true;
+				site24x7_rum_beacon.setAttribute('src','//static.site24x7rum.com/beacon/site24x7rum-min.js?appKey='+rumMOKey);
+					document.getElementsByTagName('head')[0].appendChild(site24x7_rum_beacon);
+	}
+})(window)
+</script>
+        </div>
+    </div>
+
+
+</div><!-- end wrapper -->
+</div><!-- end super -->
+
+
+<script>
+
+    $("#publications .cell, #search, #search2, #go, #triad img").fadeTo(1, 0.7);
+    $("#publications .cell, #search, #search2, #go, #triad img, #triad .leginfo").mouseover(function() {
+        $(this).fadeTo(400, 1);
+    });
+
+    $("#publications .cell, #search, #search2, #go, #triad img, #triad .leginfo").mouseleave(function() {
+        $(this).fadeTo(400, .7);
+    });
+
+    $('#publications .cell').click(function() {
+
+        window.location = $(this).find('a').attr('href');
+    });
+
+</script>
+
+<script src="/core.js"></script>
+
+</body>
+</html>
+
+

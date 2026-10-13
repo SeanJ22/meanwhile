@@ -27,6 +27,7 @@ import { countyTimeZones, governmentTimeZone } from "../../time/county-time-zone
 import { parseOrganizationPage } from "../../sources/boardbook/index.ts";
 import { parseCalendarRows } from "../../sources/iqm2/index.ts";
 import { parseAgendaCenter, parseAgendaCenterCategories } from "../../sources/civicplus/index.ts";
+import { parseEscribeMeetings } from "../../sources/escribe/index.ts";
 import { parseBoardDocsMeetings, parseBoardDocsCommittees } from "../../sources/boarddocs/index.ts";
 import type { CivicClerkEvent } from "../../sources/civicclerk/index.ts";
 import { parseSwagitMeetings, swagitMatchesBody } from "../../sources/swagit/index.ts";
@@ -72,6 +73,7 @@ const KIND_OF_VENDOR: Readonly<Record<string, CrosswalkKind>> = {
   ical: "ICAL", "official-page-events": "OFFICIAL_PAGE_EVENTS", diligent: "DILIGENT", "legistar-api": "LEGISTAR",
   boardbook: "BOARDBOOK", "civicclerk-api": "CIVICCLERK", iqm2: "IQM2", "civicplus-agendacenter": "CIVICPLUS", boarddocs: "BOARDDOCS",
   swagit: "SWAGIT",
+  escribe: "ESCRIBE",
 };
 export const AUTO_CROSSWALK_VENDORS: ReadonlySet<string> = new Set(Object.keys(KIND_OF_VENDOR));
 
@@ -92,10 +94,6 @@ function governmentKind(jurisdictionId: string): GovernmentKind {
   return "municipal";
 }
 
-/**
- * The names a governing body of each kind of government goes by. A name absent here is never taken as the
- * government's own body: a city calendar's "Board of Education" is the school district's.
- */
 const GOVERNING_NAMES: Readonly<Record<Exclude<GovernmentKind, "municipal">, readonly string[]>> = {
   county: [
     "Board of County Commissioners", "Board of Commissioners", "County Commissioners", "County Commission", "Board of Supervisors",
@@ -148,13 +146,6 @@ export type CategoryBody =
   | { readonly role: "GOVERNING"; readonly name: string }
   | { readonly unmatched: string };
 
-/**
- * Which registered body a calendar category names, or why none. A category
- * names a body only when it is exactly one printed name and that name is a
- * governing-body name of this kind of government. Offices, general calendars,
- * longer phrases, other governments' bodies and unregistered sub-bodies are
- * left unmatched, by name.
- */
 export function categoryBodyOf(category: string, jurisdictionId: string): CategoryBody {
   const shown = flat(category);
   const names = printedNames(shown, jurisdictionId);
@@ -311,10 +302,6 @@ function zoneFor(kind: CrosswalkKind, selected: readonly CalendarEvent[], calend
 
 /* ------------------------------------------------------------- the review */
 
-/**
- * The category a CivicPlus site files a feed under, read from the vaulted index page that linked the feed, when it is
- * exactly the name of the government's governing body (`categoryBodyOf`).
- */
 interface CategoryScope {
   /** The category as the site prints it. */
   readonly name: string;
@@ -337,11 +324,6 @@ interface Proposal {
   readonly scope?: CategoryScope;
 }
 
-/**
- * Every event of a category feed is the body's, except one whose title names another body and not this one: it is
- * excluded by that name's exact words (`titleExclude`), as a longer name is. A title naming this body and another
- * holds the row, as it does for a title filter. Nothing else is read out of a title.
- */
 function selectWholeFeed(proposal: Proposal, events: readonly CalendarEvent[], jurisdictionId: string): Selected {
   const exclusions = new Set<string>();
   for (const e of events) {
@@ -367,10 +349,6 @@ type Selected = Selection | { readonly held: AutoCrosswalkHoldReason; readonly d
 
 const titleHas = (title: string, terms: readonly string[]): boolean => terms.some((t) => low(title).includes(low(t)));
 
-/**
- * The filter for one proposal, and the events it selects, or why no exact filter selects this body's events alone.
- * A title's other printed names are read to tell a longer name (excluded by its exact words) from a second body.
- */
 function selectFor(kind: CrosswalkKind, proposal: Proposal, events: readonly CalendarEvent[], jurisdictionId: string, route: string): Selected {
   if (kind === "SWAGIT") {
     const bodyMatch = events.map(event => event.context).find(context => {
@@ -383,7 +361,7 @@ function selectFor(kind: CrosswalkKind, proposal: Proposal, events: readonly Cal
     if (other) return { held: "AMBIGUOUS_TITLE", detail: `"${other.title}" also names another body` };
     return { filter: { bodyMatch }, selected };
   }
-  if (["BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS"].includes(kind)) {
+  if (["BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "ESCRIBE"].includes(kind)) {
     const namesIn = (event: CalendarEvent) => [...printedNames(event.title, jurisdictionId), ...printedNames(event.context, jurisdictionId)]
       .filter(name => tokenize(name.text).length >= 2);
     const matches = (event: CalendarEvent) => namesIn(event).some(name => canonical(name.text, jurisdictionId) === proposal.key) ||
@@ -402,6 +380,11 @@ function selectFor(kind: CrosswalkKind, proposal: Proposal, events: readonly Cal
       const actual = events.filter(event => event.categories.includes(labels[0]!));
       if (actual.some(event => !selected.includes(event))) return { held: "AMBIGUOUS_TITLE", detail: `the ${kind} body label also selects another body` };
       return { filter: kind === "IQM2" ? { boardMatch: labels[0]! } : { bodyMatch: labels[0]!, portalBase: `https://${new URL(route).hostname.replace(/\.api\.civicclerk\.com$/, ".portal.civicclerk.com")}` }, selected };
+    }
+    if (kind === "ESCRIBE") {
+      const labels = [...new Set(selected.flatMap(event => event.categories))];
+      if (!labels.length || labels.some(label => !label || label.includes("|")) || events.some(event => event.categories.some(label => labels.includes(label)) && !selected.includes(event))) return { held: "AMBIGUOUS_TITLE", detail: "the eScribe meeting types also select another body" };
+      return { filter: { meetingTypes: labels.join("|") }, selected };
     }
     const ids = [...new Set(selected.map(event => event.scopeId).filter((id): id is string => typeof id === "string"))];
     if (ids.length !== 1 || events.some(event => event.scopeId === ids[0] && !selected.includes(event))) {
@@ -558,11 +541,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
   const readOk = (s: DiscoveryStep): boolean => s.status !== null && s.status >= 200 && s.status < 300;
   /* Robots.txt read first and recorded for the host, whatever it said: the verdict is evidence, never a hold. */
   const robotsRead = (host: string): boolean => steps.some((s) => s.purpose === "robots" && httpsHost(s.url) === host);
-  /*
-   * The category a CivicPlus site files this feed under, re-read from the index page the walk vaulted and that linked
-   * the feed: on the feed's own host, read 2xx with its host's robots.txt read first, no access control in front of
-   * it, and exactly the governing body's name (`categoryBodyOf`). Anything less is no category evidence at all.
-   */
+
   const categoryScopeOf = (find: DiscoveryFind, route: string, routeHost: string): CategoryScope | null => {
     const via = find.via ?? null;
     if (via === null || via.artifactId === null) return null;
@@ -597,7 +576,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       hold(route, attested.held === "EVIDENCE_NOT_VAULTED" ? "EVIDENCE_NOT_VAULTED" : "HOST_NOT_ATTESTED", attested.detail);
       continue;
     }
-    const linkedPublisher = ["DILIGENT", "LEGISTAR", "BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "SWAGIT"].includes(kind) && attested.attestation.kind === "LINKED_FROM_ATTESTED_PAGE";
+    const linkedPublisher = ["DILIGENT", "LEGISTAR", "BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "ESCRIBE", "SWAGIT"].includes(kind) && attested.attestation.kind === "LINKED_FROM_ATTESTED_PAGE";
     if (homeHost === null || (bare(homeHost) !== bare(routeHost) && !linkedPublisher)) {
       hold(route, "HOST_NOT_OWN", `the calendar is on ${routeHost}; the walk attested ${homeHost ?? "no homepage"} as the government's own`);
       continue;
@@ -665,6 +644,10 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       try { rows = parseSwagitMeetings(calendar.text, route); } catch { rows = []; }
       events = rows.filter(row => row.date).map(row => ({ title: flat(row.title), context: flat(row.category), categories: [],
         identity: `${row.id}|${row.date}`, tzid: stateZone, utc: false, floating: row.hour !== null, url: row.url }));
+    } else if (kind === "ESCRIBE") {
+      let rows: ReturnType<typeof parseEscribeMeetings> = [];
+      try { rows = parseEscribeMeetings(calendar.text); } catch { /* A changed response names no meetings. */ }
+      events = rows.map(row => ({ title: flat(row.MeetingType), context: "", categories: [row.MeetingType], identity: `${row.ID}|${row.StartDate}`, tzid: stateZone, utc: false, floating: true, url: row.Url || route }));
     } else if (kind === "BOARDDOCS") {
       const committeeId = new URL(route).searchParams.get("current_committee_id");
       const via = find.via?.artifactId ? input.held(find.via.artifactId) : null;
@@ -764,7 +747,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
     if (governing.length > 1) {
       hold(route, "GOVERNING_NAME_CONFLICT", `events name the governing body ${governing.map((k) => `"${governingKeys.get(k)}"`).join(" and ")}`, null, registered.bodyId);
     } else if (governing.length === 1) {
-      const listed = governingKeys.get(governing[0]!)!;
+      const listed = [...named.get(governing[0]!)!.spellings][0]!;
       /* The kind's own name is what every title that names the body carries; the printed spellings add nothing. */
       proposals.push({ role, bodyId: registered.bodyId, spellings: [listed], key: governing[0]!, category: null });
     } else if (kind === "ICAL" && (scope = categoryScopeOf(find, route, routeHost)) !== null) {

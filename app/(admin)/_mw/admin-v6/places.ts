@@ -64,6 +64,12 @@ export function huntsWithin(index: PlaceIndex, hunts: readonly Hunt[], key: stri
 
 export const COUNTRY_KEY = "us";
 
+/** The state or territory a place sits in, read from its key: `geo:az.zcta.85701` and `st:az` are both in `st:az`. */
+export function stateKeyOf(key: string): string | null {
+  const m = /^(?:st:([a-z]{2})|geo:([a-z]{2})\.)/.exec(key);
+  return m ? `st:${m[1] ?? m[2]}` : null;
+}
+
 export function placeKeyOf(scope: MwScope): string {
   switch (scope.kind) {
     case "all":
@@ -103,6 +109,26 @@ export function pickerMatches(places: readonly Place[], hunts: readonly Hunt[], 
     })
     .sort((a, b) => KIND_ORDER.indexOf(a.kind) - KIND_ORDER.indexOf(b.kind) || a.name.localeCompare(b.name))
     .slice(0, limit);
+}
+
+export interface StateHunts {
+  readonly stateKey: string;
+  readonly name: string;
+  readonly hunts: readonly Hunt[];
+}
+
+/** Hunts gathered under the state or territory each sits in, states by name; a hunt with no state is its own group. */
+export function huntsByState(index: PlaceIndex, hunts: readonly Hunt[]): readonly StateHunts[] {
+  const groups = new Map<string, Hunt[]>();
+  for (const h of hunts) {
+    const key = stateKeyOf(h.placeKey) ?? h.placeKey;
+    groups.set(key, [...(groups.get(key) ?? []), h]);
+  }
+  return [...groups].map(([stateKey, list]) => ({
+    stateKey,
+    name: index.get(stateKey)?.name ?? (stateKey.startsWith("st:") ? stateKey.slice(3).toUpperCase() : list[0].name),
+    hunts: [...list].sort((a, b) => a.name.localeCompare(b.name, "en", { numeric: true })),
+  })).sort((a, b) => a.name.localeCompare(b.name));
 }
 
 export type NationalDepth = "states" | "districts" | "zips";

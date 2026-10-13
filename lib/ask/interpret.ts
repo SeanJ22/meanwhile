@@ -94,16 +94,15 @@ export function interpretSchema(): Record<string, unknown> {
 }
 
 /**
- * The instruction, about reading, never answering. Two parts: the stable part
- * (instructions and the ZIP's governments and people) is byte-identical per
- * ZIP and is the cached prefix; the date, location and surface follow it.
+ * Shared reading instructions precede the ZIP inventory and changing reader context.
  */
-export function interpretSystem(context: InterpretContext): { stable: string; volatile: string } {
+export function interpretSystem(context: InterpretContext): { stable: string; inventory: string; volatile: string } {
   const inventory = context.inventory
     .slice(0, MAX_INVENTORY)
     .map((e) => (e.divisionType ? `${e.name} (${e.divisionType})` : e.name));
 
-  const stable = [askPlaybook("ASK_READER"), "", "Governments and people this product holds records for, as a reader would name them:",
+  const stable = askPlaybook("ASK_READER");
+  const inventoryText = ["Governments and people this product holds records for, as a reader would name them:",
     ...(inventory.length > 0 ? inventory.map(n => `- ${n}`) : ["(none available)"])].join("\n");
 
   const volatile = [
@@ -117,13 +116,13 @@ export function interpretSystem(context: InterpretContext): { stable: string; vo
         ? "They are looking at the map of governments near them."
         : "",
   ].filter((line) => line !== "").join("\n");
-  return { stable, volatile };
+  return { stable, inventory: inventoryText, volatile };
 }
 
 /** The whole instruction as one string: the stable part, then the volatile one. */
 export function interpretPrompt(context: InterpretContext): string {
-  const { stable, volatile } = interpretSystem(context);
-  return `${stable}\n\n${volatile}`;
+  const { stable, inventory, volatile } = interpretSystem(context);
+  return `${stable}\n\n${inventory}\n\n${volatile}`;
 }
 
 export interface InterpretOptions {
@@ -159,7 +158,12 @@ export async function interpretQuestion(
    * Prior turns ride as real messages: only each question and what it resolved
    * to, never the prior answers.
    */
-  const messages: { role: "user" | "assistant"; content: string }[] = [];
+  const messages: { role: "user" | "assistant"; content: string | readonly { type: "text"; text: string; cache_control?: typeof SYNTHESIS_CACHE_TTL.cacheControl }[] }[] = [
+    { role: "user", content: [
+      { type: "text", text: system.inventory, cache_control: SYNTHESIS_CACHE_TTL.cacheControl },
+      { type: "text", text: system.volatile },
+    ] },
+  ];
   for (const turn of priorTurns) {
     messages.push({ role: "user", content: scrubFreeText(turn.question).slice(0, 200) });
     messages.push({
@@ -200,10 +204,9 @@ export async function interpretQuestion(
           ...(fields.effort ? { effort: fields.effort } : {}),
           format: { type: "json_schema", schema: interpretSchema() },
         },
-        /* The ZIP's context is the cached prefix; the date and the surface follow it (interpretSystem). */
+        /* Shared instructions survive for an hour; the ZIP context and changing packet follow. */
         system: [
-          { type: "text", text: system.stable, cache_control: SYNTHESIS_CACHE_TTL.cacheControl },
-          { type: "text", text: system.volatile },
+          { type: "text", text: system.stable, cache_control: SYNTHESIS_CACHE_TTL.stableCacheControl },
         ],
         messages,
       }),

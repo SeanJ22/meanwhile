@@ -474,7 +474,7 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
       ].sort((a, b) => a.key.localeCompare(b.key));
     }
     case "DOTGOV_REFERENCE":
-      return keyed("domain", array(root.electionDomains), ["domain"]);
+      return keyed("domain", array(root.domains), ["domain"]);
     case "OPERATIONAL_REFERENCE": {
       const registries = object(root.registries) ?? {};
       return Object.values(registries).flatMap((value) => {

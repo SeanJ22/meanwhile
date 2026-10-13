@@ -53,8 +53,8 @@ function candidate(
   const contractId = manual ? MANUAL_CONTRACT_ID : "dotgov";
   const sourceId = manual ? MANUAL_SOURCE_ID : "cisa-dotgov-registry";
   const recordClass = manual ? MANUAL_RECORD_CLASS : "DOTGOV_REFERENCE";
-  const scope = manual ? MANUAL_SCOPE : "US:current-full:election-domains";
-  const parserVersion = manual ? "curated-reader-records/2" : "cisa-dotgov/2";
+  const scope = manual ? MANUAL_SCOPE : "US:current-full:domains";
+  const parserVersion = manual ? "curated-reader-records/2" : "cisa-dotgov/3";
   const payload = manual
     ? {
         kind: MANUAL_CONTRACT_ID,
@@ -556,7 +556,7 @@ test("retired trusted-LKG doors refuse new imports while retained history remain
     /TRUSTED_LKG_ADMISSION_RETIRED/,
     "retained routine-source markers cannot create a new promotion",
   );
-  assert.equal(await ordinaryRoutineStore.readPromotion("DOTGOV_REFERENCE", "US:current-full:election-domains"), null);
+  assert.equal(await ordinaryRoutineStore.readPromotion("DOTGOV_REFERENCE", "US:current-full:domains"), null);
   const retiredManualStore = new MemoryRoutineDataStore();
   await assert.rejects(
     processRoutineCandidate(retiredManualStore, candidate(), FIRST),

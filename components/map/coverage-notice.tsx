@@ -55,6 +55,7 @@ import { partyColorVar } from "@/lib/officials/party-color";
 import { bodyDisplayName, readerPartyLabel } from "@/lib/text/reader-names";
 import { groupBySeatLabel } from "@/lib/officials/seat-grouping";
 import { GovernmentListings } from "./government-listings";
+import { StateOfficeContacts } from "../state-office-contacts";
 
 /**
  * Says which rung of the cascade produced what's on screen, and, when nothing
@@ -925,6 +926,7 @@ export function CoverageNotice({
 
       <div className="coverage-notice-body">
       <MeetingListingNotice groups={listingCount?.groups ?? []} />
+      <StateOfficeContacts offices={coverage?.stateOffices ?? []} />
       {tier === "widened" && (
         <p className="mt-1.5 t-body leading-relaxed text-paper-dim">
           Nearby results: {listingCount?.unresolved ? `${count} ${listingCount.unit}` : count === 1 ? "one meeting" : `${count} meetings`} within {wide} miles of {zip}.

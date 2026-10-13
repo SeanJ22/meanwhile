@@ -1306,59 +1306,35 @@ rung on the wrong ladder.
 
 ## The .gov registry — a rung for "where does this government publish?"
 
-*Added 2026-08-16 (item 9). Verified: fetched at the pinned commit, 16,501
-domains, 693 typed as election offices.*
-
 **`cisagov/dotgov-data`, `current-full.csv`.** Every domain in the .gov TLD
-with the registrant's own organization name, city, state, and CISA's own
-`Domain type`. US Government work, public domain. The standing runner now owns
-the monthly canonical `dotgov` production-data contract: it resolves the
-publisher's current commit, fetches `current-full.csv` at that exact SHA,
-thin-guards at 15,000 domains and 500 election-typed domains, and durably
-receipts and promotes the candidate with LKG retained on refusal. The tracked
-`data/dotgov/snapshot.json` preserves the SHA-pinned 2026-08-16 acquisition
-(`47f9693e…`) as bundled first-bootstrap evidence only. The former
-`pnpm dotgov:fetch` tracked writer and
-`.github/workflows/refresh-dotgov-snapshot.yml` clock are retired and deleted.
+with the registrant's organization name, city, state and CISA's `Domain type`.
+US Government work, public domain. The 2026-10-12 fixture contains 16,876 domains,
+719 with election types, at SHA `e4020449e896b2264d2056e49daeb55920a3d977`.
 
-**What it is a rung for.** The first, cheapest question in any hunt for a
-body's own publications: does this government have a .gov, and what is it?
-It resolves a registrant to a domain in one lookup, without a search engine
-and without guessing at a hostname.
+The standing runner owns the monthly `dotgov` production-data contract. It resolves
+the publisher's current commit, fetches the CSV at that exact SHA, retains every
+row, reconciles domain and classification counts, and promotes through the typed
+`readDotGovProjection` Reader. Refused updates leave the last GOOD projection serving.
+The `government-domains` edge family carries that proven projection to ZIP listings,
+government inventory and Ask without requiring a publisher fetch per reader.
 
-**The named rung list: the 693 election offices.** CISA types them itself —
-`City - Election` (332), `County - Election` (288), `State or territory -
-Election` (36), `Special district - Election` (33), `Tribal - Election` (4).
-That classification is the registry's, not ours, which matters: a name match
-on "vote" or "election" would sweep in a town called Election and miss every
-secretary of state. This is the first rung for a ballot or candidate-filing
-hunt in a county we have not worked before.
+**Government links.** A registrant attaches only to one government whose established
+name matches under the existing government identity rules and whose state matches.
+Ambiguous and unmatched rows stay unattached in the full registry. City is a mailing
+location and never establishes a service boundary. Multiple domains may attach to
+the same government; its Census website remains a separate source field.
 
-**THE BOUNDARY, and it is the important half. DOMAINS ARE NOT A
-DENOMINATOR.** Coverage claims are made against the official universe — the
-Census of Governments, NCES, the state rosters — never against a list like
-this one:
+**Election hunts.** Use CISA's election `Domain type` when narrowing acquisition routes.
+Searching organization names for "vote" or "election" does not replace the source's
+classification.
 
-- A government with **no .gov domain is absent from it entirely**. Small
-  towns, school districts and special districts routinely publish on a
-  `.org`, a `.us`, a vendor subdomain, or a Facebook page. Counting .gov
-  domains would undercount exactly the bodies that are hardest to cover,
-  which is the Sunnyside class of miss.
-- One government may hold **several domains**, and one domain may front
-  several governments.
-- **A domain is not a body.** `chicagoelections.gov` is one domain; the
-  Chicago Board of Election Commissioners is one body; nothing here maps the
-  two.
-
-The snapshot carries that sentence in its own `boundary` field, and
-`tests/dotgov.test.ts` fails if any coverage surface imports it.
-
-**Not built, and named:** the link-ladder WIRING — resolving a registry body
-to its .gov domain automatically, and offering it as a rung when a hunt comes
-back empty. The snapshot is the half that had to land; the wiring is the half
-that can wait for a session with a hunt in front of it.
-
----
+**Domains are not a government coverage denominator.** A government with no .gov
+domain is absent from the registry, one government may hold several domains, and a
+domain is not a body. Coverage continues to use the Census of Governments, NCES and
+official rosters. The projection carries this in its `boundary` field.
+`tests/dotgov.test.ts` verifies complete source retention, unchanged government and
+service-area identities, refusal of ambiguous matches, and promotion through the
+reader edge into geographic government listings.
 
 ## 2026-08-19 (g20) — the Polarization Research Lab, D62
 

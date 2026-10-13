@@ -6,6 +6,7 @@ import { headSha } from "../ops/git-facts.ts";
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { isScopedManualContractScope } from "./scoped-manual-contracts.ts";
+import { isPeopleSource } from "../officials/people-sources.ts";
 import {
   normalizeReaderCodeSha,
   parseReaderProjectionReadback,
@@ -62,6 +63,8 @@ function verifyExactVersion(
 }
 
 function verifierIdFor(contract: ReaderContract): string {
+  // Congress.gov and GovInfo also publish federal civic records under the same source ids; only people records read back as people.
+  if (isPeopleSource(contract.sourceId) && contract.recordClass !== "FEDERAL_CIVIC_RECORD") return "lib/civic-data/people-source-publication.ts#readPeopleSourceProjection";
   if (contract.recordClass === "FEDERAL_CIVIC_RECORD") return "lib/sources/congress/publication.ts#readFederalSourceProjection";
   if (contract.sourceId === "plural-openstates" && contract.recordClass === "STATE_LEGISLATOR") return "lib/state-rollcalls/legislators.ts#readOpenStatesPeopleProjection";
   if (contract.sourceId === "plural-openstates-votes") return "lib/sources/plural/votes.ts#readPluralVotesProjection";
@@ -136,6 +139,12 @@ export async function verifyRoutineReaderProjection(
 ): Promise<RoutineReaderVerification> {
   const verifierId = verifierIdFor(contract);
   try {
+    if (isPeopleSource(contract.sourceId) && contract.recordClass !== "FEDERAL_CIVIC_RECORD") {
+      const { readPeopleSourceProjection } = await import("./people-source-read.ts");
+      const jurisdiction = /^(US(?:-[A-Z]{2})?):/.exec(contract.scope)?.[1] as "US" | `US-${string}` | undefined;
+      if (!jurisdiction) return fail(verifierId,"The people source has no exact jurisdiction.");
+      return verifyExactVersion(verifierId,await readPeopleSourceProjection(jurisdiction,contract.sourceId,{store:options.store,now:options.now,bypassCache:true}),options.expectedVersionId,"people source");
+    }
     if (contract.recordClass === "FEDERAL_CIVIC_RECORD") {
       const { readFederalSourceProjection } = await import("../sources/congress/publication.ts");
       const { isFederalSource } = await import("../sources/congress/targets.ts");

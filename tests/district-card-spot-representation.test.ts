@@ -7,6 +7,7 @@ import { districtSubject, spotDivisionsFor } from "../components/map/district-su
 import type { DivisionRepresentation } from "../hooks/use-division-representation.ts";
 import type { DistrictHit } from "../lib/map/districts.ts";
 import { seatHoldersForDivision } from "../lib/registry/server.ts";
+import { statePeopleSourcePointers } from "../lib/officials/people-identity.ts";
 import { GET } from "../app/api/representation/[...division]/route.ts";
 import { launchGuarded } from "../scripts/browser.mts";
 import { installAbsent, installFederalDirectory, installRegistryRuntime } from "./helpers/promoted-fixtures.ts";
@@ -16,8 +17,8 @@ await installRegistryRuntime();
 await installFederalDirectory(recordedSpotFederalDirectory());
 // These source families are explicitly absent in this federal/local fixture.
 for (const state of ["TX", "IA", "AZ"]) {
-  installAbsent("STATE_LEGISLATOR", `US-${state}`);
-  installAbsent("STATE_LEGISLATOR", `US-${state}:openstates-people:v1`);
+  // Every independent people source for the state, not only the original two: each is absent here.
+  for (const pointer of statePeopleSourcePointers(`US-${state}`)) installAbsent(pointer.recordClass, pointer.scope);
 }
 const houston = recordedPointHits("houston");
 const desMoines = recordedPointHits("des-moines");

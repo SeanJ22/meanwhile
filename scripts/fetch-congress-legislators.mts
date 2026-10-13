@@ -2,7 +2,6 @@
 import { parse } from "yaml";
 import { pathToFileURL } from "node:url";
 import { failedFederalDirectoryCandidate, federalDirectoryCandidate, FEDERAL_DIRECTORY_PARSER_VERSION, type FederalDirectoryAcquisition } from "../lib/officials/federal-directory-data-plane.ts";
-import { congressPortraits } from "../lib/officials/congress-portraits.ts";
 import { normalizeCongressDirectory } from "../lib/officials/congress-normalize.ts";
 import { readFederalDirectoryProjection } from "../lib/officials/federal-directory-read-model.ts";
 import { processRegisteredManualCandidate, type PromotionOutcome } from "../lib/civic-data/promotion.ts";
@@ -18,7 +17,6 @@ export async function refreshCongressDirectory(input: {
   store: RoutineDataStore;
   acquire?: typeof acquireKnownRelease;
   revision?: typeof acquireCongressSourceRevision;
-  portraits?: typeof congressPortraits;
   now?: () => string;
 }): Promise<void> {
   const {store} = input, clock = input.now ?? (() => new Date().toISOString());
@@ -58,20 +56,7 @@ export async function refreshCongressDirectory(input: {
       finalReceipt = {candidate,outcome};
       if (!outcome.promoted && !outcome.confirmed) throw Error(`Federal directory held as ${outcome.candidate.state}: ${outcome.candidate.failureDetail ?? "validation refused"}`);
     }
-    const latest=await readFederalDirectoryProjection({store,now,bypassCache:true});
-    if(latest.kind === "PROMOTED") {
-      const previousExcludedFacts = priorRead.kind === "PROMOTED" && priorRead.metadata.versionId
-        ? (await store.readCandidate(priorRead.metadata.versionId))?.candidate.excludedFacts : undefined;
-      const portraits=await (input.portraits ?? congressPortraits)(latest.value,clock(),AbortSignal.timeout(120000),{previousExcludedFacts});
-      if(portraits.excludedFacts.length || JSON.stringify(portraits.projection)!==JSON.stringify(latest.value)) {
-        const candidate=federalDirectoryCandidate({acquisitions,retrievedAt:dates["legislators-current"]!,projection:portraits.projection,excludedFacts:portraits.excludedFacts});
-        // The field-attempt receipt is new evidence even when the accepted person payload is unchanged.
-        const outcome=await processRegisteredManualCandidate(store,"congress-bulk-roster",candidate,clock(),undefined,{confirmUnchanged:portraits.excludedFacts.length === 0});
-        finalReceipt = {candidate,outcome};
-        console.log(`Congress portraits: ${portraits.attempted} known members attempted; ${portraits.excludedFacts.length} source or field gaps recorded.`);
-        if (!outcome.promoted && !outcome.confirmed) throw Error(`Federal portraits held as ${outcome.candidate.state}: ${outcome.candidate.failureDetail ?? "validation refused"}`);
-      }
-    }
+
   } catch (error) {
     if (!finalReceipt) {
       try {

@@ -1,0 +1,245 @@
+{
+    "members": [
+        {
+            "bioguideId": "G000606",
+            "depiction": {
+                "attribution": "Image courtesy of the Member",
+                "imageUrl": "https://www.congress.gov/img/member/6915fa2585b49de40f52cacb_200.jpg"
+            },
+            "district": 7,
+            "name": "Grijalva, Adelita S.",
+            "partyName": "Democratic",
+            "state": "Arizona",
+            "terms": {
+                "item": [
+                    {
+                        "chamber": "House of Representatives",
+                        "startYear": 2025
+                    }
+                ]
+            },
+            "updateDate": "2026-10-11T07:40:24Z",
+            "url": "https://api.congress.gov/v3/member/G000606?format=json"
+        },
+        {
+            "bioguideId": "C001132",
+            "depiction": {
+                "attribution": "Image courtesy of the Member",
+                "imageUrl": "https://www.congress.gov/img/member/c001132_200.jpg"
+            },
+            "district": 2,
+            "name": "Crane, Elijah",
+            "partyName": "Republican",
+            "state": "Arizona",
+            "terms": {
+                "item": [
+                    {
+                        "chamber": "House of Representatives",
+                        "startYear": 2023
+                    }
+                ]
+            },
+            "updateDate": "2026-10-11T07:40:22Z",
+            "url": "https://api.congress.gov/v3/member/C001132?format=json"
+        },
+        {
+            "bioguideId": "C001133",
+            "depiction": {
+                "attribution": "Image courtesy of the Member",
+                "imageUrl": "https://www.congress.gov/img/member/c001133_200.jpg"
+            },
+            "district": 6,
+            "name": "Ciscomani, Juan",
+            "partyName": "Republican",
+            "state": "Arizona",
+            "terms": {
+                "item": [
+                    {
+                        "chamber": "House of Representatives",
+                        "startYear": 2023
+                    }
+                ]
+            },
+            "updateDate": "2026-10-11T07:40:22Z",
+            "url": "https://api.congress.gov/v3/member/C001133?format=json"
+        },
+        {
+            "bioguideId": "S001211",
+            "depiction": {
+                "attribution": "Image courtesy of the Member",
+                "imageUrl": "https://www.congress.gov/img/member/s001211_200.jpg"
+            },
+            "district": 4,
+            "name": "Stanton, Greg",
+            "partyName": "Democratic",
+            "state": "Arizona",
+            "terms": {
+                "item": [
+                    {
+                        "chamber": "House of Representatives",
+                        "startYear": 2019
+                    }
+                ]
+            },
+            "updateDate": "2026-10-11T07:40:22Z",
+            "url": "https://api.congress.gov/v3/member/S001211?format=json"
+        },
+        {
+            "bioguideId": "S001183",
+            "depiction": {
+                "attribution": "Image courtesy of the Member",
+                "imageUrl": "https://www.congress.gov/img/member/s001183_200.jpg"
+            },
+            "district": 1,
+            "name": "Schweikert, David",
+            "partyName": "Republican",
+            "state": "Arizona",
+            "terms": {
+                "item": [
+                    {
+                        "chamber": "House of Representatives",
+                        "startYear": 2011
+                    }
+                ]
+            },
+            "updateDate": "2026-10-11T07:40:22Z",
+            "url": "https://api.congress.gov/v3/member/S001183?format=json"
+        },
+        {
+            "bioguideId": "G000565",
+            "depiction": {
+                "attribution": "Image courtesy of the Member",
+                "imageUrl": "https://www.congress.gov/img/member/g000565_200.jpg"
+            },
+            "district": 9,
+            "name": "Gosar, Paul A.",
+            "partyName": "Republican",
+            "state": "Arizona",
+            "terms": {
+                "item": [
+                    {
+                        "chamber": "House of Representatives",
+                        "startYear": 2011
+                    }
+                ]
+            },
+            "updateDate": "2026-10-11T07:40:22Z",
+            "url": "https://api.congress.gov/v3/member/G000565?format=json"
+        },
+        {
+            "bioguideId": "B001302",
+            "depiction": {
+                "attribution": "Image courtesy of the Member",
+                "imageUrl": "https://www.congress.gov/img/member/b001302_200.jpg"
+            },
+            "district": 5,
+            "name": "Biggs, Andy",
+            "partyName": "Republican",
+            "state": "Arizona",
+            "terms": {
+                "item": [
+                    {
+                        "chamber": "House of Representatives",
+                        "startYear": 2017
+                    }
+                ]
+            },
+            "updateDate": "2026-10-11T07:40:20Z",
+            "url": "https://api.congress.gov/v3/member/B001302?format=json"
+        },
+        {
+            "bioguideId": "H001098",
+            "depiction": {
+                "attribution": "Image courtesy of the Member",
+                "imageUrl": "https://www.congress.gov/img/member/67742a6f0b34857ecc9090c5_200.jpg"
+            },
+            "district": 8,
+            "name": "Hamadeh, Abraham J.",
+            "partyName": "Republican",
+            "state": "Arizona",
+            "terms": {
+                "item": [
+                    {
+                        "chamber": "House of Representatives",
+                        "startYear": 2025
+                    }
+                ]
+            },
+            "updateDate": "2026-10-11T07:40:18Z",
+            "url": "https://api.congress.gov/v3/member/H001098?format=json"
+        },
+        {
+            "bioguideId": "A000381",
+            "depiction": {
+                "attribution": "Image courtesy of the Member",
+                "imageUrl": "https://www.congress.gov/img/member/67741fc30b34857ecc90902e_200.jpg"
+            },
+            "district": 3,
+            "name": "Ansari, Yassamin",
+            "partyName": "Democratic",
+            "state": "Arizona",
+            "terms": {
+                "item": [
+                    {
+                        "chamber": "House of Representatives",
+                        "startYear": 2025
+                    }
+                ]
+            },
+            "updateDate": "2026-10-11T07:40:18Z",
+            "url": "https://api.congress.gov/v3/member/A000381?format=json"
+        },
+        {
+            "bioguideId": "K000377",
+            "depiction": {
+                "attribution": "<a href=\"http://www.senate.gov/artandhistory/history/common/generic/Photo_Collection_of_the_Senate_Historical_Office.htm\">Courtesy U.S. Senate Historical Office</a>",
+                "imageUrl": "https://www.congress.gov/img/member/k000377_200.jpg"
+            },
+            "name": "Kelly, Mark",
+            "partyName": "Democratic",
+            "state": "Arizona",
+            "terms": {
+                "item": [
+                    {
+                        "chamber": "Senate",
+                        "startYear": 2020
+                    }
+                ]
+            },
+            "updateDate": "2026-03-08T10:31:39Z",
+            "url": "https://api.congress.gov/v3/member/K000377?format=json"
+        },
+        {
+            "bioguideId": "G000574",
+            "depiction": {
+                "attribution": "Image courtesy of the Member",
+                "imageUrl": "https://www.congress.gov/img/member/c6870f487cf4bc9a568d8afbe61d754b_200.jpg"
+            },
+            "name": "Gallego, Ruben",
+            "partyName": "Democratic",
+            "state": "Arizona",
+            "terms": {
+                "item": [
+                    {
+                        "chamber": "House of Representatives",
+                        "endYear": 2025,
+                        "startYear": 2015
+                    },
+                    {
+                        "chamber": "Senate",
+                        "startYear": 2025
+                    }
+                ]
+            },
+            "updateDate": "2026-03-08T10:31:14Z",
+            "url": "https://api.congress.gov/v3/member/G000574?format=json"
+        }
+    ],
+    "pagination": {
+        "count": 11
+    },
+    "request": {
+        "contentType": "application/json",
+        "format": "json"
+    }
+}

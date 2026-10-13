@@ -3,18 +3,18 @@
 lane: src-legiscan
 owner: src-legiscan
 writer: the src-legiscan lane
-check: test
-ready: no step ids d4ff52d959548426ddc551e51fe37fb722dbed1d
-river: 3734a8f9bb3bb234dfe9ca3b241e6d83b339ce97
-at: 2026-10-13T04:08:49Z
+check: fold-conflict
+ready: no step ids unknown
+river: 6c204dcd865cc99f3e6bb2a4f0270f78b28a7f07
+at: 2026-10-13T07:23:32Z
 state: returned
-fix_subject: fix:0a5b9c47
-fix: River · stream/src-legiscan — test failed for src-legiscan: tests/card-footer-ownership.test.ts (in river since release 25 via card-gaps-sources UI-01) fails with src-legiscan READY d4ff52d95954 folded alone on river 3734a8f9bb3b: 'components/officials/legislator-bills.tsx: WorkingOnIt belongs only
+fix_subject: fix:15987bc4
+fix: River · stream/src-legiscan — fold-conflict failed for src-legiscan: src-legiscan READY 1f6f8edbb832 conflicts with river 985c00c33f7a (releases 25 and 26 plus src-congress and zip-entry) when merged alone. Conflicting files: components/map/popup/official-modal.tsx lib/civic-data/contracts.ts lib/control-pla
 
 ## Failure
 
 ```
-tests/card-footer-ownership.test.ts (in river since release 25 via card-gaps-sources UI-01) fails with src-legiscan READY d4ff52d95954 folded alone on river 3734a8f9bb3b: 'components/officials/legislator-bills.tsx: WorkingOnIt belongs only on the standalone Ask surfaces'. Remove WorkingOnIt from legislator-bills.tsx (field components cannot use it), merge river, and mark READY again.
+src-legiscan READY 1f6f8edbb832 conflicts with river 985c00c33f7a (releases 25 and 26 plus src-congress and zip-entry) when merged alone. Conflicting files: components/map/popup/official-modal.tsx lib/civic-data/contracts.ts lib/control-plane/expansion/mission-parts.ts lib/doors/seed-feeds.ts tests/routine-civic-data-runner.test.ts   Merge river into stream/src-legiscan, resolve, and mark READY again.
 ```
 
 ## Repair

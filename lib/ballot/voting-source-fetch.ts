@@ -14,11 +14,15 @@ function publicUrl(value: string): URL {
   if (!["https:", "http:"].includes(url.protocol) || url.username || url.password || /^(?:localhost|127\.|10\.|192\.168\.|169\.254\.|0\.|\[|172\.(?:1[6-9]|2\d|3[01])\.)/i.test(url.hostname)) throw new Error("Only public election source URLs may be read");
   return url;
 }
-/** VS-01 explicitly honors robots, including where older source readers record it only. */
+/**
+ * Rulings §2: robots.txt alone never blocks acquisition. Each read records what the publisher's robots.txt says about the
+ * page as evidence (an attempt line and the saved robots.txt body) and then reads the public page. Logins, CAPTCHAs,
+ * identity-locked lookups and credentials stay off-limits: those are access controls, not robots.txt.
+ */
 export function votingFetchSession(runtime: VotingSourceRuntime): VotingFetchSession {
   const attempts: VotingSourceAttempt[] = [], rawBodies: VotingCapture[] = [];
   const robots = new Map<string, { text: string | null; status: number | null; error: string | null; type: string | null }>();
-  const lastRead = new Map<string, number>();
+  const recorded = new Set<string>();
   const send = async (url: string, init: RequestInit, route: "direct" | "browser-ua") => {
     const fetcher = route === "browser-ua" ? runtime.browserFetch : runtime.fetch;
     if (!fetcher) throw new Error("Browser-UA rung unavailable; follow the next official route");
@@ -46,19 +50,22 @@ export function votingFetchSession(runtime: VotingSourceRuntime): VotingFetchSes
     }
     const read = robots.get(url.origin)!;
     const permission = evaluatePermission({ robotsText: read.text, status: read.status, transportError: read.error, contentType: read.type }, url.href);
-    if (permission.verdict === "DISALLOWED" || permission.verdict === "CANNOT_TELL") throw new Error(`robots.txt ${permission.verdict}: ${permission.detail}`);
-    const remaining = (lastRead.get(url.origin) ?? 0) + (permission.crawlDelayMs ?? 0) - Date.now();
-    if (remaining > 60_000 || runtime.deadlineMs !== undefined && Date.now() + remaining >= runtime.deadlineMs) throw new Error(`Publisher crawl delay requires a later scheduled read (${remaining} ms)`);
-    if (remaining > 0) await new Promise(resolve => setTimeout(resolve, remaining));
+    // Evidence, never a refusal: what robots.txt said about this page is kept with the read, and the read goes on.
+    const noted = `${url.origin}${url.pathname}|${permission.verdict}`;
+    if (permission.verdict !== "ALLOWED" && !recorded.has(noted)) {
+      recorded.add(noted);
+      attempts.push({ url: new URL("/robots.txt", url).href, route: "direct",
+        outcome: `robots.txt ${permission.verdict} for ${url.pathname}${permission.crawlDelayMs ? ` (crawl-delay ${permission.crawlDelayMs} ms)` : ""}: ${permission.detail} — recorded as evidence; the public page is still read` });
+    }
   };
   const get = async (value: string, init: RequestInit = {}): Promise<VotingCapture> => {
     let url = publicUrl(value);
     for (let hops = 0; hops < 8; hops++) {
       if (runtime.deadlineMs !== undefined && Date.now() >= runtime.deadlineMs) throw new Error("Reader lookup deadline reached");
       await readRobots(url);
-      let response = await send(url.href, init, "direct"); lastRead.set(url.origin, Date.now());
+      let response = await send(url.href, init, "direct");
       if ([403, 503].includes(response.status) && runtime.browserFetch) {
-        response = await send(url.href, init, "browser-ua"); lastRead.set(url.origin, Date.now());
+        response = await send(url.href, init, "browser-ua");
       }
       if (response.status >= 300 && response.status < 400) {
         const location = response.headers.get("location"); if (!location) throw new Error("Source redirect has no location");

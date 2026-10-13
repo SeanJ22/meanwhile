@@ -123,7 +123,7 @@ export function planVotingSourceBlanks(input: {
       .map(door => door.url), ...doors.map(door => door.electionPageUrl),
       `Follow the chief election office's directory to ${place.name}'s local election office; read its files, lists and public map data`,
       "Start with the chief election office and follow its official links; never use a search engine or Google Civic for a background hunt",
-      "Honor robots.txt; use the existing browser-UA rung only if it passes without a challenge; never log in, solve a CAPTCHA, or ask for identity details"]);
+      "Record what robots.txt says as evidence and read the public page anyway (rulings §2); use the existing browser-UA rung only if it passes without a challenge; never log in, solve a CAPTCHA, or ask for identity details"]);
     result.push({ id: `voting-sites:${input.electionDate}:${place.ocdId}`, doorId: doors[0]?.id ?? `voting-office:${place.ocdId}`,
       scope: place, owed: unique(owed).join("; "), tried, next, status: "open",
       reason: !sites.length ? "missing-sites" : later.length ? "unpublished" : inherited[0]?.reason ?? (ungeocoded.length ? "geocode" : "missing-sites") });

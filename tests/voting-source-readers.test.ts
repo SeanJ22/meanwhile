@@ -52,11 +52,38 @@ test("identity-locked and unrequested address routes send no request", async () 
   assert.equal(calls, 0);
 });
 
-test("robots-disallowed source stays an open blank without requesting the blocked page", async () => {
+const ncPage = () => new Response(fixture("nc-early-voting-2026-excerpt.tsv"), { headers: { "content-type": "text/tab-separated-values" } });
+const plain = { headers: { "content-type": "text/plain" } };
+
+test("rulings §2: a robots.txt that disallows the page is recorded as evidence and the public page is still read", async () => {
   const requests: string[] = [];
-  const result = await readVotingSource(NC, { fetch: async input => { requests.push(String(input)); return new Response("User-agent: *\nDisallow: /OSSite", { headers: { "content-type": "text/plain" } }); } });
-  assert.deepEqual(requests, ["https://vt.ncsbe.gov/robots.txt"]);
-  assert.equal(result.sites.length, 0); assert.match(result.blanks[0]!.tried.join(" "), /DISALLOWED/);
+  const result = await readVotingSource(NC, { fetch: async input => {
+    requests.push(String(input));
+    return String(input).endsWith("/robots.txt") ? new Response("User-agent: *\nDisallow: /OSSite", plain) : ncPage();
+  } });
+  assert.deepEqual(requests, ["https://vt.ncsbe.gov/robots.txt", NC.url], "robots.txt is read, then the page itself");
+  assert.ok(result.sites.length > 0, "the sites on the disallowed page are published");
+  assert.ok(result.attempts.some(attempt => attempt.url === "https://vt.ncsbe.gov/robots.txt" && /DISALLOWED/.test(attempt.outcome) && /recorded as evidence/.test(attempt.outcome)), "what robots.txt said is kept with the read");
+  assert.ok(result.rawBodies.some(body => body.url.endsWith("/robots.txt") && /Disallow: \/OSSite/.test(new TextDecoder().decode(body.bytes))), "the robots.txt bytes are saved as evidence");
+  assert.ok(!result.blanks.some(blank => blank.reason === "access"), "robots.txt does not open a blank");
+});
+
+test("rulings §2: a robots.txt that cannot be read, and a long crawl delay, change nothing about the read", async () => {
+  const unreadable = await readVotingSource(NC, { fetch: async input => String(input).endsWith("/robots.txt") ? new Response("Invalid URL", { status: 403, ...plain }) : ncPage() });
+  assert.ok(unreadable.sites.length > 0);
+  assert.ok(unreadable.attempts.some(attempt => /robots\.txt/.test(attempt.outcome) && /recorded as evidence/.test(attempt.outcome)));
+  const started = Date.now();
+  const delayed = await readVotingSource(NC, { fetch: async input => String(input).endsWith("/robots.txt") ? new Response("User-agent: *\nCrawl-delay: 3600\nAllow: /", plain) : ncPage() });
+  assert.ok(delayed.sites.length > 0, "a crawl delay is evidence, not a reason to skip the source");
+  assert.ok(Date.now() - started < 5_000, "the read does not wait out the crawl delay");
+});
+
+test("rulings §2 still never logs in, solves a CAPTCHA or sends credentials, whatever robots.txt says", async () => {
+  const wall = votingFetchSession({ fetch: async input => String(input).endsWith("/robots.txt") ? new Response("User-agent: *\nAllow: /", plain)
+    : new Response("<html><title>Just a moment...</title><div class=\"g-recaptcha\"></div></html>", { headers: { "content-type": "text/html" } }) });
+  await assert.rejects(wall.get(NC.url), /CAPTCHA, login, or bot wall/);
+  const sent = votingFetchSession({ fetch: async () => new Response("ok", plain) });
+  await assert.rejects(sent.get(NC.url, { headers: { cookie: "session=1" } }), /Authenticated election source requests are forbidden/);
 });
 
 test("all ArcGIS object-ID batches are acquired without transfer-limit truncation", async () => {

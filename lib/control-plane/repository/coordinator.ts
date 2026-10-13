@@ -759,7 +759,8 @@ export async function recordCost(
   now: string,
 ): Promise<AppendOutcome<CostEntry>> {
   const recordId = `ce-${fingerprint([entry.attemptId, entry.routeTaskId, entry.recordedAt])}`;
-  return repos.costs.append(entry.workItemId, recordId, costEntryWithModel(entry, entry.model ?? null), now);
+  return repos.costs.append(entry.workItemId, recordId, costEntryWithModel({ ...entry,
+    ...(entry.cost.modelRequestCount === undefined ? {} : { costPolicy: "R7" as const }) }, entry.model ?? null), now);
 }
 
 /** `reconcile` runs first. Validations, audits, contradictions and upstream states come from the caller; an absent input refuses. */

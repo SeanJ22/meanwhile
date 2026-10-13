@@ -29,6 +29,7 @@ export function buildCensusDistrictEdge(dataset: BuiltDataset, sourceVersion: st
   return { formatVersion: 1, versionId: censusDistrictEdgeVersion(sourceVersion),
     scopes: scopes.map(scope => ({ type: scope.type, version: scope.version, plan: scope.versionMeta.plan,
       applicability: scope.versionMeta.applicability, retrievalComplete: scope.versionMeta.retrievalComplete,
+      ...(scope.versionMeta.states ? { states: scope.versionMeta.states } : {}),
       sourceUrls: scope.versionMeta.provenance.sourceUrls, observedAt: scope.versionMeta.provenance.computedAt })), containers, codes };
 }
 

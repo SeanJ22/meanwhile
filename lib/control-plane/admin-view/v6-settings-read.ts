@@ -1,3 +1,4 @@
+import "../../ask/model.ts";
 /** The machine key travels as the control's target and is never rendered. */
 import { fleetSpendCeilingOverrideUsd, type AdminConfig } from "../gateway/admin-config.ts";
 import { resolveRollingCeiling } from "../fleet-safety.ts";
@@ -29,6 +30,7 @@ export interface SettingRow {
   readonly changedAt: string | null;
   readonly control: SettingControl | "ceiling";
   readonly unit: string | null;
+  readonly choices?: readonly { readonly value: string; readonly label: string }[];
   readonly inForce: { readonly where: "runner" | "readers" | "next-read"; readonly yes: boolean | null; readonly since: string | null };
   readonly undo: { readonly changeId: string; readonly value: string; readonly valueWords: string } | null;
   readonly log: readonly SettingLogRow[];
@@ -47,7 +49,7 @@ function same(a: SettingValue | undefined, b: SettingValue | undefined): boolean
 function inputOf(value: SettingValue, control: SettingControl): string {
   if (control === "number") return typeof value === "number" ? String(value) : "";
   if (control === "boolean") return value === true ? "on" : "off";
-  if (control === "text") return typeof value === "string" ? value : "";
+  if (control === "text" || control === "choice") return typeof value === "string" ? value : "";
   return JSON.stringify(value);
 }
 
@@ -69,7 +71,7 @@ export function projectSettings(input: {
   const rows: SettingRow[] = settingDefinitions().map((definition) => {
     const value = readSetting(config, definition.key, definition.defaultValue);
     const control = controlOf(definition);
-    const words = (v: SettingValue) => settingValueWords(v, definition.unit);
+    const words = (v: SettingValue) => settingValueWords(v, definition.unit, definition.choices);
     const log = logRows(config, definition.key, words);
     const newest = settingLog(config, definition.key)[0] ?? null;
     const inForce = definition.readerFacing
@@ -79,7 +81,7 @@ export function projectSettings(input: {
     return {
       key: definition.key, label: definition.label, valueWords: words(value), valueInput: inputOf(value, control),
       isDefault: config?.settings?.[definition.key] === undefined || same(value, definition.defaultValue) && !newest,
-      changedAt: newest?.at ?? null, control, unit: definition.unit ?? null, inForce,
+      changedAt: newest?.at ?? null, control, unit: definition.unit ?? null, ...(definition.choices ? { choices: definition.choices } : {}), inForce,
       undo: newest ? { changeId: newest.id, value: JSON.stringify(newest.before), valueWords: words(newest.before) } : null,
       log,
     };

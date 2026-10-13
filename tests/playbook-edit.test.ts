@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { createMemoryRepositories } from "./helpers/playbooks.ts";
 import { newFieldManualEntry, readFieldManual, writeFieldManual } from "../lib/control-plane/field-manual.ts";
 import { readRolePlaybook, workerSystemPrompt, WORKER_SAFETY_FRAME } from "../lib/control-plane/playbooks.ts";
 import { playbookEditView, updateRolePlaybook } from "../lib/control-plane/playbook-edit.ts";

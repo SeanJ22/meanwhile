@@ -17,6 +17,7 @@ import {
 import type { CommitteeTotals, ContributionRow, SecondHopCommittee } from "./types.ts";
 import { smallDonorShare, smallDonorSentence } from "./small-donors.ts";
 import { plainMoney } from "./plain-money.ts";
+import { formatDateLong } from "../text/format-date.ts";
 
 /**
  * The funding display payload for both surfaces (the ballot page and the
@@ -64,6 +65,7 @@ export interface FundingDisplayData {
   sourceUrl: string | null;
   sourceOrg: string;
   collectedAt: string;
+  registrationLabel?: string;
 }
 
 export interface FundingAbsenceData {
@@ -101,6 +103,9 @@ export function fundingAnswerForTarget(targetKey: string): FundingAnswer {
     }
     const smallDonor = smallDonorSentence(totals.individualItemized, totals.individualUnitemized);
     if (smallDonor) sentences.push(smallDonor);
+    if (smallDonor && totals.smallDonorCoverageEndDate && totals.smallDonorCoverageEndDate !== totals.coverageEndDate) {
+      sentences.push(`Individual giving is reported through ${formatDateLong(totals.smallDonorCoverageEndDate) ?? totals.smallDonorCoverageEndDate}.`);
+    }
     const contributors = contributorRowsForDisplay(candidate);
     const contributorGroups = groupContributions(contributors);
     // Computed over the rows the reader is shown; null, not zero, when nothing is shown.
@@ -116,6 +121,7 @@ export function fundingAnswerForTarget(targetKey: string): FundingAnswer {
         fecCandidateId: candidate.fecCandidateId,
         ...(committeeIds.length ? { detailSource: { committeeId: committeeIds[0], committeeIds, cycle: candidate.cycle } } : {}),
         name: candidate.name,
+        ...(candidate.registration ? { registrationLabel: candidate.registration.label } : {}),
         cycleLabel: cycleLabelFor(candidate.cycle),
         sentences,
         totals: {

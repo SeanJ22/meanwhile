@@ -1,3 +1,5 @@
+import { askPlaybook, askPlaybookVersion, askSettings } from "../ask/runtime-settings.ts";
+import { ASK_CLASSIFIER_CAP_SETTING } from "../ask/model.ts";
 import { scrubFreeText } from "../log/scrub.ts";
 import { ASK_MODEL_ROLES, resolveAskRoleModel } from "../ask/model.ts";
 import { modelRequestFields, servedModelOf } from "../models.ts";
@@ -37,17 +39,7 @@ export function classifiableTopicIds(): string[] {
  */
 export function classifierPrompt(): string {
   const lines = TOPIC_ROUTES.map((route) => `${route.id}: ${route.label}`);
-  return [
-    "You are labelling one question with one topic from a fixed list.",
-    "The question comes from a resident of a US town asking who in local, state, or federal government handles a problem.",
-    "",
-    "The topics:",
-    ...lines,
-    "",
-    `Answer with exactly one id from that list, or ${NO_TOPIC} if the question does not clearly belong to any of them.`,
-    `${NO_TOPIC} is a correct and expected answer. Do not stretch a question to fit a topic.`,
-    "Do not explain, do not add anything, and do not answer the question itself.",
-  ].join("\n");
+  return [askPlaybook("ASK_READER"), "Topics:", ...lines].join("\n");
 }
 
 /** The JSON schema the response is constrained to — the enum, on the wire. */
@@ -98,8 +90,8 @@ let spentOn = "";
 let spent = 0;
 
 export function classifierCeiling(): number {
-  const raw = Number(process.env.WTP_ASK_CLASSIFIER_DAILY_MAX);
-  return Number.isFinite(raw) && raw > 0 ? Math.floor(raw) : 500;
+  const raw = askSettings()[ASK_CLASSIFIER_CAP_SETTING];
+  return typeof raw === "number" && Number.isSafeInteger(raw) && raw >= 0 ? raw : 500;
 }
 
 /** Today in UTC — the counter's own day, not the reader's. */
@@ -133,7 +125,7 @@ function noteCall(): boolean {
 const MESSAGES_URL = "https://api.anthropic.com/v1/messages";
 
 /**
- * The model comes from `lib/ask/model.ts`'s role table, resolved per call so a `WTP_ASK_MODEL` override
+ * The model comes from `lib/ask/model.ts`'s role table, resolved per call so the published Admin choice
  * reaches this rung and the resolved value is what gets recorded.
  */
 const askModel = (): string => resolveAskRoleModel("CLASSIFIER");
@@ -154,8 +146,9 @@ export async function classifyQuestion(
   question: string,
   options: ClassifyOptions = {},
 ): Promise<ClassifierOutcome> {
-  const key = cacheKey(question);
-  if (!key) return { kind: "NONE" };
+  const questionKey = cacheKey(question);
+  const key = `${askPlaybookVersion("ASK_READER")}:${askModel()}:${questionKey}`;
+  if (!questionKey) return { kind: "NONE" };
   const hit = cache.get(key);
   if (hit) return hit;
 

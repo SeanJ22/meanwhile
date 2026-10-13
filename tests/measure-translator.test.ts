@@ -1,6 +1,7 @@
+import { fixturePlaybooks } from "./helpers/playbooks.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { createMemoryRepositories } from "./helpers/playbooks.ts";
 import { newFieldManualEntry, writeFieldManual } from "../lib/control-plane/field-manual.ts";
 import type { ModelRequest, ModelResponse } from "../lib/control-plane/scheduler/scout-executor.ts";
 import type { WorkerEvidence } from "../lib/control-plane/workers/types.ts";
@@ -67,10 +68,10 @@ test("both model calls retain the existing budget transport and a refusal preven
 });
 
 test("the next translator start reads the latest Bank playbook and distinct allowed models", async () => {
-  const repos = createMemoryRepositories(), defaults = translationPlaybook([]);
-  const entry = newFieldManualEntry("translator", "measure", { role: "SHARED", kind: "PLAYBOOK", title: "Measure translation",
+  const repos = createMemoryRepositories(), defaults = translationPlaybook(fixturePlaybooks(["MEASURE_WRITER", "MEASURE_CHECKER"]));
+  const entry = newFieldManualEntry("role-playbook", "MEASURE_CHECKER", { role: "MEASURE_CHECKER", kind: "PLAYBOOK", title: "Measure translation",
     summary: "Translate only official text", outcome: "REFERENCE", observedAt: now, recordClasses: ["BALLOT_MEASURE"],
-    payload: { translator: true, text: "Keep every material exception.", writerModel: defaults.writerModel, checkerModel: defaults.checkerModel } });
+    payload: { text: "Keep every material exception.", model: defaults.checkerModel } });
   await writeFieldManual(repos, [entry], now);
   let system = "";
   await translateMeasure({ repos, evidence, subject, now, transportFor: () => async request => {
@@ -79,7 +80,7 @@ test("the next translator start reads the latest Bank playbook and distinct allo
   } });
   assert.match(system, /Keep every material exception/);
   assert.match(system, /Preserve existing spending limits/);
-  assert.throws(() => translationPlaybook([{ ...entry, payload: { ...entry.payload as object, checkerModel: defaults.writerModel } }]), /distinct supported/);
+  assert.throws(() => translationPlaybook([...fixturePlaybooks(["MEASURE_WRITER"]), { ...entry, payload: { ...entry.payload as object, model: defaults.writerModel } }]), /distinct supported/);
 });
 
 test("a changed source is rewritten, an unchanged source costs nothing, and a failed check retains the last GOOD version and metered usage", async () => {

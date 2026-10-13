@@ -42,6 +42,8 @@ import { composeRegistration, type RegistrationLayer } from "../registration/com
 import { REGISTRATION_TARGETS } from "../registration/publication.ts";
 import type { RegistrationReadModel } from "../registration/candidate.ts";
 import { bindGovernmentBodies, governmentStateOf, type RegistrationGovernmentListing } from "../registration/listings.ts";
+import { attachGovernmentDomains, readDotGovProjection } from "../civic-data/dotgov.ts";
+import { stateOfficesForStates } from "../reference/state-offices.ts";
 import { readRegistrationProjection } from "../registration/reader.ts";
 import { stateOf } from "./wording.ts";
 import { publishedDivisionsForZip } from "../geo/zip-census-districts.ts";
@@ -360,6 +362,14 @@ async function registrationModelFor(state: string): Promise<{ value: Registratio
   return { value: read.value, versionId: read.metadata.versionId };
 }
 
+/** Enrich the complete state inventory before narrowing, so duplicate identities remain ambiguous. */
+async function governmentDomainsFor(listings: readonly RegistrationGovernmentListing[]): Promise<RegistrationGovernmentListing[]> {
+  if (listings.length === 0) return [];
+  // An unavailable registry must not hide the independently held Census listing.
+  const read = await readDotGovProjection().catch(() => null);
+  return read?.kind === "PROMOTED" ? attachGovernmentDomains(listings, read.value) : [...listings];
+}
+
 export interface GovernmentListingPage {
   readonly state: string;
   readonly status: "HELD" | "NOT_HELD";
@@ -374,7 +384,7 @@ export async function governmentListingsForState(state: string, offset = 0, limi
   const code = state.replace(/^US-/i, "").toLowerCase();
   if (!REGISTRATION_STATES.has(code)) throw new Error("A US state or territory is required");
   const held = await registrationModelFor(code);
-  const records = held?.value.governments ?? [];
+  const records = await governmentDomainsFor(held?.value.governments ?? []);
   const start = Math.max(0, Math.floor(offset));
   const size = Math.min(100, Math.max(1, Math.floor(limit)));
   return { state: code.toUpperCase(), status: held ? "HELD" : "NOT_HELD", versionId: held?.versionId ?? null,
@@ -387,7 +397,8 @@ export async function governmentListingById(id: string): Promise<RegistrationGov
   const state = governmentStateOf(id);
   if (!state) return null;
   const held = await registrationModelFor(state);
-  return held?.value.governments?.find(row => row.id === id || row.aliases.includes(id)) ?? null;
+  const listings = await governmentDomainsFor(held?.value.governments ?? []);
+  return listings.find(row => row.id === id || row.aliases.includes(id)) ?? null;
 }
 
 export async function governmentListingsForDivisions(divisionIds: readonly string[], scope: "AREA" | "STATE_INVENTORY" = "AREA"): Promise<{
@@ -395,10 +406,13 @@ export async function governmentListingsForDivisions(divisionIds: readonly strin
 }> {
   const states = [...new Set(divisionIds.flatMap(id => statePeopleScopeForDivision(id)?.slice(3).toLowerCase() ?? []))];
   const divisions = new Set(divisionIds);
-  const results = await Promise.allSettled(states.map(state => registrationModelFor(state)));
+  const results = await Promise.allSettled(states.map(async state => {
+    const held = await registrationModelFor(state);
+    return held ? governmentDomainsFor(held.value.governments ?? []) : [];
+  }));
   return {
     records: results.flatMap(result => result.status === "fulfilled"
-      ? (result.value?.value.governments ?? []).filter(row => scope === "STATE_INVENTORY" || row.associations.some(link => divisions.has(link.divisionId))) : []),
+      ? result.value.filter(row => scope === "STATE_INVENTORY" || row.associations.some(link => divisions.has(link.divisionId))) : []),
     states: states.map(state => state.toUpperCase()),
     unavailableStates: states.filter((_, index) => results[index].status === "rejected").map(state => state.toUpperCase()),
   };
@@ -804,6 +818,7 @@ export async function coverageAt(
     ...coverage,
     governments: bindGovernmentBodies(governmentListings.records, registry.bodies),
     governmentInventoryStates: governmentListings.states,
+    stateOffices: stateOfficesForStates(governmentListings.states),
     governmentInventoryUnavailableStates: governmentListings.unavailableStates,
     federalDirectoryUnavailable: !federalAvailable,
     bodies: coverage.bodies.map((body) => {

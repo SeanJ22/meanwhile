@@ -1,6 +1,8 @@
+import { fixtureRolePlaybook } from "./helpers/playbooks.ts";
+import { fixturePlaybooks } from "./helpers/playbooks.ts";
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { defaultPlaybookEntries, readRolePlaybook, workerSystemPrompt, rolePlaybook } from '../lib/control-plane/playbooks.ts';
+import { readRolePlaybook, workerSystemPrompt, rolePlaybook } from '../lib/control-plane/playbooks.ts';
 import { writeFieldManual } from '../lib/control-plane/field-manual.ts';
 import { createMemoryRepositories } from '../lib/control-plane/repository/memory.ts';
 import { scoutExecutor, scoutStaticPrefix, type ModelRequest } from '../lib/control-plane/scheduler/scout-executor.ts';
@@ -9,7 +11,7 @@ import { RESEARCH_BOUNDS } from '../lib/control-plane/scheduler/research-policy.
 
 test('a changed role playbook is read on the next start and changes the cached system block', async () => {
   const repos = createMemoryRepositories();
-  const defaults = defaultPlaybookEntries(['SCOUT', 'DETECTIVE']);
+  const defaults = fixturePlaybooks(['SCOUT', 'DETECTIVE']);
   await writeFieldManual(repos, defaults, '2026-10-04T00:00:00Z');
   const first = await readRolePlaybook(repos, 'SCOUT');
   const edited = { ...defaults[0]!, payload: { text: 'Read the saved listing before fetching another page.' }, observedAt: '2026-10-04T00:01:00Z' };
@@ -24,8 +26,9 @@ test('a changed role playbook is read on the next start and changes the cached s
 });
 
 test('role text is separate from document pointers and the fixed laws survive an empty playbook', () => {
-  assert.match(rolePlaybook([], 'SCOUT').text, /You are a SCOUT/);
-  const frame = workerSystemPrompt('SCOUT', '');
+  assert.match(rolePlaybook([], 'SCOUT').error!, /missing/);
+  assert.throws(() => workerSystemPrompt('SCOUT', ''), /missing/);
+  const frame = workerSystemPrompt('SCOUT', 'Read the saved page.');
   assert.match(frame, /robots\.txt/);
   assert.match(frame, /saved bytes/);
   assert.match(frame, /spending limits/);
@@ -33,12 +36,11 @@ test('role text is separate from document pointers and the fixed laws survive an
 
 test('the next actual Scout transport request reads the current Bank playbook', async () => {
   const repos = createMemoryRepositories();
-  const defaults = defaultPlaybookEntries(['SCOUT']);
+  const defaults = fixturePlaybooks(['SCOUT']);
   await writeFieldManual(repos, defaults, '2026-10-04T00:00:00Z');
   const capture = async (): Promise<ModelRequest> => {
     let sent: ModelRequest | undefined;
-    const executor = scoutExecutor({
-      playbookFor: role => readRolePlaybook(repos, role),
+    const executor = scoutExecutor({ playbookFor: role => readRolePlaybook(repos, role),
       transport: async request => { sent ??= request; throw new Error('Captured mock request; no provider called'); },
       toolkitFor: () => ({ specs: SCOUT_TOOL_SPECS, vaultedArtifactIds: new Set(), requestCount: 0, bytesFetched: 0, toolCalls: 0,
         call: async () => { throw new Error('No acquisition requested'); } }),

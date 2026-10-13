@@ -4,7 +4,7 @@ import { useState } from "react";
 import { getOrCreateBrowserKey, mintBrowserKey } from "@/lib/state/browser-key";
 
 /**
- * "Want us to get this info sooner?" One tap records one ask; there is no
+ * "Ask us to find this" One tap records one ask; there is no
  * undo, since rows carry no identifier to retract. It never shows a count or
  * anything about other readers' taps, and has no read path to do so. A failed
  * write says so.
@@ -62,7 +62,7 @@ export function DemandPill({
         data-demand-state="NOTED"
         className={`text-[0.6875rem] leading-relaxed text-muted ${className ?? ""}`}
       >
-        Thanks — we&apos;ve noted it.
+        Noted.
       </p>
     );
   }
@@ -78,7 +78,7 @@ export function DemandPill({
         onClick={() => void send()}
         className="cursor-pointer text-[0.6875rem] text-link hover:underline disabled:cursor-default disabled:text-muted"
       >
-        {phase === "SENDING" ? "Noting…" : "Want us to get this info sooner?"}
+        {phase === "SENDING" ? "Noting…" : "Ask us to find this"}
       </button>
       {phase === "FAILED" && (
         <span className="ml-1.5 text-[0.625rem] text-muted">

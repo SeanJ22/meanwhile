@@ -1,4 +1,5 @@
 import { PLURAL_STATES, PLURAL_PARSER_VERSION } from "../sources/plural/targets.ts";
+import { FEDERAL_SOURCE_AUTHORITIES } from "../sources/congress/authority.ts";
 import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ROUTE_PREFIX, REGISTRATION_TARGETS } from "../registration/publication.ts";
 import { extractedMemberUrl } from "./manual-source-urls.ts";
 import {
@@ -59,6 +60,7 @@ export const SOURCE_AUTHORITIES = {
     parserVersion: "src-so/1", freshnessExpectation: "Weekly EPA publication; HTTP Last-Modified dates the source release.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" }, routineAutoPromotion: true,
   },
+  ...FEDERAL_SOURCE_AUTHORITIES,
   "official-ballot-authorities": {
     id: "official-ballot-authorities",
     publisher: "Exact official election authorities in the saved-source receipt",
@@ -128,7 +130,7 @@ export const SOURCE_AUTHORITIES = {
     trust: "T3_ATTRIBUTED_PRIMARY",
     sourceClass: "MULTI_PUBLISHER_PRIMARY",
     routePrefixes: [],
-    jurisdictions: ["US", "US-AZ", "US-NH", "US-NJ"],
+    jurisdictions: ["US", ...REGISTRATION_TARGETS.map((target) => target.jurisdiction)],
     recordClasses: ["REGISTRY_RUNTIME_BINDING"],
     competentFacts: ["body-to-division binding", "current body name and contact", "body roster membership and contact", "statewide officeholder and contact", "exact roster identity disposition", "officeholder-to-candidacy binding", "runtime body provenance", "licensed officeholder portrait binding"],
     expectedIdentifierKeys: ["body_id", "division_ocd_id", "officeholder_id", "candidacy_id"],
@@ -228,14 +230,14 @@ export const SOURCE_AUTHORITIES = {
     publisher: "Federal Election Commission",
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "FEDERAL_AGENCY",
-    routePrefixes: ["https://api.open.fec.gov/v1/"],
+    routePrefixes: ["https://api.open.fec.gov/v1/", "https://www.fec.gov/files/bulk-downloads/"],
     jurisdictions: ["US"],
     recordClasses: ["FEC_FUNDING"],
     competentFacts: ["candidate registration", "committee registration", "filed totals", "filed receipts", "report coverage period"],
     expectedIdentifierKeys: ["candidate_id", "committee_id"],
     expectedTemporalFields: ["cycle", "coverage_end_date", "two_year_transaction_period"],
     horizonSemantics: "Each API query has its own filters and pagination. A candidate total or filed receipt is authoritative; the union of returned pages is complete only when pagination metadata proves the bounded query ended.",
-    parserVersion: "fec-funding/3",
+    parserVersion: "fec-funding/4",
     freshnessExpectation: "Weekly; FEC processing itself may lag filings by days.",
     absencePolicy: { kind: "BOUNDED_QUERY_OR_EXPLICIT_STATEMENT", requiredKeys: ["office", "state", "district", "cycle", "pagination"] },
     routineAutoPromotion: true,
@@ -364,7 +366,7 @@ export const SOURCE_AUTHORITIES = {
     publisher: "U.S. Census Bureau",
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "FEDERAL_AGENCY",
-    routePrefixes: [REGISTRATION_SOURCE_ROUTE_PREFIX, "https://nces.ed.gov/ccd/"],
+    routePrefixes: [REGISTRATION_SOURCE_ROUTE_PREFIX, "https://nces.ed.gov/ccd/", "https://ies.ed.gov/sites/default/files/"],
     jurisdictions: REGISTRATION_TARGETS.map((t) => t.jurisdiction),
     recordClasses: ["REGISTRATION"],
     competentFacts: [
@@ -392,7 +394,7 @@ export const SOURCE_AUTHORITIES = {
       "https://www2.census.gov/programs-surveys/gus/",
       "https://apps.azsos.gov/cfs/",
     ],
-    jurisdictions: ["US-AZ", "US-NH", "US-NJ"],
+    jurisdictions: REGISTRATION_TARGETS.map((target) => target.jurisdiction),
     recordClasses: ["OPERATIONAL_REFERENCE"],
     competentFacts: [
       "named covered-state government from the adopted Census source vintage",
@@ -466,7 +468,7 @@ export const SOURCE_AUTHORITIES = {
       "https://winslowaz.suiteonemedia.com/robots.txt",
       "https://winslowaz.suiteonemedia.com/?embed=1",
     ],
-    jurisdictions: ["US-AZ", "US-NH", "US-NJ", "SUPPORTED-BODY-WITHOUT-CENSUS-DIVISION"],
+    jurisdictions: [...REGISTRATION_TARGETS.map((target) => target.jurisdiction), "SUPPORTED-BODY-WITHOUT-CENSUS-DIVISION"],
     recordClasses: ["MEETING"],
     competentFacts: ["meeting time", "meeting status", "public body", "location", "agenda link", "agenda document"],
     expectedIdentifierKeys: ["meeting_id", "body_id", "source_route"],
@@ -575,7 +577,7 @@ export const SOURCE_AUTHORITIES = {
     trust: "T3_ATTRIBUTED_PRIMARY",
     sourceClass: "MULTI_PUBLISHER_PRIMARY",
     routePrefixes: [],
-    jurisdictions: ["US", "US-AZ", "US-NH", "US-NJ"],
+    jurisdictions: ["US", ...REGISTRATION_TARGETS.map((target) => target.jurisdiction)],
     recordClasses: ["CURATED_READER_RECORD"],
     competentFacts: [
       "a 2026 candidate's campaign site, read robots-first by our own deterministic Attempt and verified to name the candidate, the office or district and the 2026 election, on vaulted bytes",
@@ -626,7 +628,7 @@ export const SOURCE_AUTHORITIES = {
     expectedIdentifierKeys: ["domain", "source_sha"],
     expectedTemporalFields: ["source_commit", "source_through"],
     horizonSemantics: "The SHA-pinned current-full.csv is a complete domain registry for that source revision but never a government/body denominator.",
-    parserVersion: "cisa-dotgov/2",
+    parserVersion: "cisa-dotgov/3",
     freshnessExpectation: "Monthly check for a newer CISA source revision.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
@@ -673,7 +675,7 @@ export const SOURCE_AUTHORITIES = {
     trust: "T3_ATTRIBUTED_PRIMARY",
     sourceClass: "MULTI_PUBLISHER_PRIMARY",
     routePrefixes: [],
-    jurisdictions: ["US-AZ", "US-NH", "US-NJ"],
+    jurisdictions: REGISTRATION_TARGETS.map((target) => target.jurisdiction),
     recordClasses: ["CANDIDATE_PROFILE", "CANDIDATE_PUBLICATION"],
     competentFacts: ["candidate-published biography", "candidate-controlled link", "filed contact", "candidate-authored publication", "official officeholder page"],
     expectedIdentifierKeys: ["candidate_key", "document_id"],

@@ -107,19 +107,23 @@ test("A DISALLOW IS RECORDED, NOT OBEYED AS A REFUSAL (owner decision 2026-09-25
   );
 });
 
-test("RECORDED WALLS ARE NEVER ASKED ANYTHING, not even robots.txt, and not by a redirect; destinyhosted.com no longer waits on the owner", async () => {
+test("BoardDocs public routes are read after robots.txt, including a redirect, and a real refusal is recorded", async () => {
   const { runtime, seen } = fakeRuntime({
     "https://city.gov/robots.txt": ALLOW,
     "https://city.gov/agendas": { status: 302, location: "https://go.boarddocs.com/az/x/Board.nsf/Public" },
+    "https://go.boarddocs.com/robots.txt": ALLOW,
+    "https://go.boarddocs.com/az/x/Board.nsf/Public": { status: 403, body: "Forbidden" },
     "https://public.destinyhosted.com/robots.txt": { status: 200, body: "User-agent: * Disallow: /", contentType: "text/plain" },
     "https://public.destinyhosted.com/agenda_publish.cfm?id=1": { status: 200, body: "<title>Agenda</title>" },
   });
   const wall = await researchFetch("https://go.boarddocs.com/az/x/Board.nsf/Public", runtime);
-  assert.equal(wall.outcome, "REFUSED");
-  if (wall.outcome === "REFUSED") assert.match(wall.reason, /a recorded wall: HTTP 403/);
+  assert.equal(wall.outcome, "FETCHED");
+  if (wall.outcome === "FETCHED") assert.equal(wall.accessControl?.kind, "FORBIDDEN");
   const viaRedirect = await researchFetch("https://city.gov/agendas", runtime);
-  assert.equal(viaRedirect.outcome, "REFUSED");
-  assert.ok(!seen.some((u) => /boarddocs\.com/.test(u)), `nothing was sent to the walled host: ${seen.join(", ")}`);
+  assert.equal(viaRedirect.outcome, "FETCHED");
+  if (viaRedirect.outcome === "FETCHED") assert.equal(viaRedirect.accessControl?.kind, "FORBIDDEN");
+  assert.equal(seen.filter(url => url === "https://go.boarddocs.com/robots.txt").length, 1);
+  assert.ok(seen.indexOf("https://go.boarddocs.com/robots.txt") < seen.indexOf("https://go.boarddocs.com/az/x/Board.nsf/Public"));
   const destiny = await researchFetch("https://public.destinyhosted.com/agenda_publish.cfm?id=1", runtime);
   assert.equal(destiny.outcome, "FETCHED", "a disallow-all robots.txt was destinyhosted.com's only hold, and robots.txt alone no longer blocks");
   assert.ok(seen.indexOf("https://public.destinyhosted.com/robots.txt") < seen.indexOf("https://public.destinyhosted.com/agenda_publish.cfm?id=1"), "its rules were still read first");

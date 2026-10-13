@@ -1,3 +1,4 @@
+import { askPlaybook } from "./runtime-settings.ts";
 import { scrubFreeText } from "../log/scrub.ts";
 import { resolveAskRoleModel, ASK_MODEL_ROLES } from "./model.ts";
 import { modelRequestFields, servedModelOf } from "../models.ts";
@@ -102,21 +103,8 @@ export function interpretSystem(context: InterpretContext): { stable: string; vo
     .slice(0, MAX_INVENTORY)
     .map((e) => (e.divisionType ? `${e.name} (${e.divisionType})` : e.name));
 
-  const stable = [
-    "You are reading one question a resident asked about their government, and reporting what it MEANS. You are not answering it and you will not be shown any records.",
-    "",
-    "Governments and people this product holds records for, as a reader would name them:",
-    ...(inventory.length > 0 ? inventory.map((n) => `- ${n}`) : ["(none available)"]),
-    "",
-    "Report:",
-    "- intent: which of the listed kinds of question this is.",
-    "- entityMentions: the exact words in the question that name a government, a person or a ballot measure. Copy them from the question; do not invent one. An empty list is correct and common — most questions name nothing.",
-    "- normalizedMentions: for each mention, in the same order, the full name from the list above that it most likely means. If nothing above plausibly matches, repeat the mention unchanged. Never invent a government that is not listed.",
-    "- temporal: NEXT if they are asking about something upcoming, LAST if about the most recent past occurrence, RANGE with trailingMonths if they named a window such as 'in the last 12 months', NONE otherwise.",
-    "- referent: if the question uses a pronoun that depends on something said earlier, the name it refers to; otherwise null.",
-    "",
-    "Be literal. 'What did they discuss last time' is LAST, not NEXT. 'What's on the agenda' with no other time words is NEXT.",
-  ].join("\n");
+  const stable = [askPlaybook("ASK_READER"), "", "Governments and people this product holds records for, as a reader would name them:",
+    ...(inventory.length > 0 ? inventory.map(n => `- ${n}`) : ["(none available)"])].join("\n");
 
   const volatile = [
     `Today is ${context.today}.`,

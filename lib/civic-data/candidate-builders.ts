@@ -1,3 +1,4 @@
+import { DOTGOV_SCOPE, DOTGOV_PARSER_VERSION, dotGovSnapshotIssues, type DotGovSnapshot } from "./dotgov.ts";
 import { mergeStatePeople } from "../state-rollcalls/legislators.ts";
 import { createHash } from "node:crypto";
 import { isMorrisGeneralCandidatesDocument, isMorrisSchoolCandidatesDocument } from "./morris-filing-documents.ts";
@@ -1235,7 +1236,7 @@ export function fecFundingCandidate(input: {
     if (row.totals.coverageEndDate && !/^\d{4}-\d{2}-\d{2}$/.test(row.totals.coverageEndDate)) violations.push(`${row.fecCandidateId} has an invalid coverage_end_date.`);
   }
   const sourceThrough = snapshot.candidates.map((row) => row.totals.coverageEndDate ?? "").sort().at(-1) || String(snapshot.cycle);
-  const versionHash = input.sourceCheck ? sha256(`${rawHash}\n${normalizedHash(snapshot)}\nfec-funding/3`) : rawHash;
+  const versionHash = input.sourceCheck ? sha256(`${rawHash}\n${normalizedHash(snapshot)}\nfec-funding/4`) : rawHash;
   return {
     id: candidateId("fec-open-api", "federal-supported", versionHash, input.sourceCheck?.checkedAt ?? input.retrievedAt),
     sourceId: "fec-open-api",
@@ -1243,15 +1244,15 @@ export function fecFundingCandidate(input: {
     scope: "federal-supported",
     sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-supported"),
     retrieval: { succeeded: hashes.length > 0, requestedUrl: "https://api.open.fec.gov/v1/", finalUrl: input.finalUrl, httpStatus: hashes.length > 0 ? 200 : null, retrievedAt: input.retrievedAt, rawHash: hashes.length > 0 ? rawHash : null, failureDetail: hashes.length > 0 ? undefined : "No FEC response bytes were acquired.", ...(input.sourceCheck ? { sourceCheck: input.sourceCheck } : {}) },
-    normalization: { succeeded: true, parserVersion: "fec-funding/3", schemaVersion: `FundingSnapshot:1:cycle-${snapshot.cycle}`, normalizedHash: normalizedHash(snapshot), normalizedPayloadHash: normalizedHash(snapshot), inputRecords: snapshot.candidates.length, outputRecords: snapshot.candidates.length, droppedRecords: 0, missingRequiredFields: missing },
+    normalization: { succeeded: true, parserVersion: "fec-funding/4", schemaVersion: `FundingSnapshot:1:cycle-${snapshot.cycle}`, normalizedHash: normalizedHash(snapshot), normalizedPayloadHash: normalizedHash(snapshot), inputRecords: snapshot.candidates.length, outputRecords: snapshot.candidates.length, droppedRecords: 0, missingRequiredFields: missing },
     identities: snapshot.candidates.map((row) => ({ subjectId: row.fecCandidateId, jurisdiction: "US", identifiers: { candidate_id: row.fecCandidateId, ...(row.principalCommitteeId ? { committee_id: row.principalCommitteeId } : {}) }, matchBasis: row.matchRoutes.every((route) => route === "bioguide-bridge" || route === "roster-person-reuse") ? "OFFICIAL_ID_CROSSWALK" as const : "EXACT_SCOPED_ID" as const, ambiguous: false, office: row.office, district: row.district ?? undefined })),
     temporal: { version: String(snapshot.cycle), expectedVersion: String(snapshot.cycle), sourceThrough, staleAtRetrieval: false },
     semantics: { factKind: "FEC-filed candidate/committee totals and itemized receipts", violations },
-    horizon: { kind: "OPEN_FACT_SET", query: "individually matched supported federal candidates; no claim that every filing/report class is held", returnedRecords: snapshot.candidates.length, declaredTotal: null, paginationComplete: false, claimsComplete: false },
+    horizon: { kind: "OPEN_FACT_SET", query: `FEC House and Senate registrations for election ${snapshot.cycle}; optional receipt classes remain standing work`, returnedRecords: snapshot.candidates.length, declaredTotal: null, paginationComplete: false, claimsComplete: false },
     absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
     dependentChecks: [
       { consumer: "lib/funding/snapshot.ts", passed: snapshot.candidates.length > 0 && new Set(snapshot.candidates.map((row) => row.fecCandidateId)).size === snapshot.candidates.length, detail: `${snapshot.candidates.length} unique FEC candidate projections.` },
-      { consumer: "lib/funding/display.ts + grounded Ask", passed: snapshot.candidates.every((row) => row.targetKeys.length > 0 && [row.totals.receipts, row.totals.disbursements, row.totals.cashOnHand].some(value => typeof value === "number" && Number.isFinite(value))), detail: "Every candidate has exact target bindings and at least one filed amount; unknown amounts remain null." },
+      { consumer: "lib/funding/display.ts + grounded Ask", passed: snapshot.candidates.every((row) => row.targetKeys.length > 0 && (Boolean(row.registration) || [row.totals.receipts, row.totals.disbursements, row.totals.cashOnHand].some(value => typeof value === "number" && Number.isFinite(value)))), detail: "Every candidate has exact target bindings and a source registration or filed amount; unknown amounts remain null." },
     ],
     normalizedPayload: snapshot,
     readModel: snapshot,
@@ -1501,38 +1502,32 @@ export function njMorrisFilingCandidate(input: {
   };
 }
 
-type DotGovCandidateSnapshot = {
-  readonly source: { readonly sha: string; readonly url: string; readonly readAt: string };
-  readonly counts: { readonly domains: number; readonly electionDomains: number };
-  readonly electionDomains: readonly { readonly domain: string; readonly type: string }[];
-};
-
 export function dotGovCandidate(input: {
-  readonly snapshot: DotGovCandidateSnapshot;
+  readonly snapshot: DotGovSnapshot;
   readonly rawText: string;
   readonly finalUrl: string;
   readonly retrievedAt: string;
 }): RoutineCandidate {
-  const rows = input.snapshot.electionDomains;
+  const rows = input.snapshot.domains;
   const duplicates = rows.length - new Set(rows.map((row) => row.domain)).size;
   const violations = [
     ...(duplicates ? [`${duplicates} duplicate domain identifiers.`] : []),
-    ...(rows.some((row) => !/\.gov$/i.test(row.domain) || !/election/i.test(row.type)) ? ["An election subset row is not a .gov domain carrying CISA's election type."] : []),
+    ...dotGovSnapshotIssues(input.snapshot),
   ];
   return {
-    id: candidateId("cisa-dotgov-registry", "US:current-full:election-domains", sha256(input.rawText), input.retrievedAt),
+    id: candidateId("cisa-dotgov-registry", DOTGOV_SCOPE, sha256(input.rawText), input.retrievedAt),
     sourceId: "cisa-dotgov-registry",
     recordClass: "DOTGOV_REFERENCE",
-    scope: "US:current-full:election-domains",
-    sourceProjectionEvidence: sourceProjectionEvidence("cisa-dotgov-registry", "DOTGOV_REFERENCE", "US:current-full:election-domains"),
+    scope: DOTGOV_SCOPE,
+    sourceProjectionEvidence: sourceProjectionEvidence("cisa-dotgov-registry", "DOTGOV_REFERENCE", DOTGOV_SCOPE),
     retrieval: { succeeded: input.rawText.length > 0, requestedUrl: "https://api.github.com/repos/cisagov/dotgov-data/commits?path=current-full.csv&per_page=1", finalUrl: input.finalUrl, httpStatus: input.rawText.length > 0 ? 200 : null, retrievedAt: input.retrievedAt, rawHash: input.rawText.length > 0 ? sha256(input.rawText) : null },
-    normalization: { succeeded: true, parserVersion: "cisa-dotgov/2", schemaVersion: `current-full.csv:${input.snapshot.source.sha}`, normalizedHash: normalizedHash(input.snapshot), normalizedPayloadHash: normalizedHash(input.snapshot), inputRecords: input.snapshot.counts.domains, outputRecords: rows.length, droppedRecords: input.snapshot.counts.domains - rows.length, missingRequiredFields: rows.some((row) => !row.domain || !row.type) ? ["domain/type"] : [] },
+    normalization: { succeeded: true, parserVersion: DOTGOV_PARSER_VERSION, schemaVersion: `current-full.csv:${input.snapshot.source.sha}`, normalizedHash: normalizedHash(input.snapshot), normalizedPayloadHash: normalizedHash(input.snapshot), inputRecords: input.snapshot.counts.domains, outputRecords: rows.length, droppedRecords: input.snapshot.counts.domains - rows.length, missingRequiredFields: rows.some((row) => !row.domain || !row.type) ? ["domain/type"] : [] },
     identities: rows.map((row) => ({ subjectId: row.domain, jurisdiction: "US", identifiers: { domain: row.domain, source_sha: input.snapshot.source.sha }, matchBasis: "OFFICIAL_ID" as const, ambiguous: false })),
     temporal: { version: input.snapshot.source.sha, expectedVersion: input.snapshot.source.sha, sourceThrough: input.retrievedAt, staleAtRetrieval: false },
-    semantics: { factKind: "CISA registered .gov domain operational reference; never a government denominator", violations },
-    horizon: { kind: "BOUNDED", query: "the election-typed subset of the SHA-pinned CISA current-full.csv; the full-file disposition is carried by normalization counts", returnedRecords: rows.length, declaredTotal: rows.length, paginationComplete: true, claimsComplete: true },
+    semantics: { factKind: "CISA registered .gov domain and registrant contact reference; never a government denominator", violations },
+    horizon: { kind: "BOUNDED", query: "every domain and registrant in the SHA-pinned CISA current-full.csv", returnedRecords: rows.length, declaredTotal: rows.length, paginationComplete: true, claimsComplete: true },
     absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
-    dependentChecks: [{ consumer: "registered dotgov discovery operation", passed: input.snapshot.counts.domains >= 15_000 && rows.length >= 500, detail: `${input.snapshot.counts.domains} total domains and ${rows.length} election-typed domains.` }],
+    dependentChecks: [{ consumer: "government domain Reader and registered dotgov discovery operation", passed: input.snapshot.counts.domains >= 15_000 && input.snapshot.counts.electionDomains >= 500, detail: `${input.snapshot.counts.domains} total domains and ${input.snapshot.counts.electionDomains} election-typed domains retained in the full registry.` }],
     normalizedPayload: input.snapshot,
     readModel: input.snapshot,
   };

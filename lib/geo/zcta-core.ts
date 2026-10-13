@@ -1,3 +1,5 @@
+import { postalAreaIn, type PostalArea, type PostalTable } from "./postal-core.ts";
+
 /**
  * The zip→coordinate logic, with the table passed in, so the server's
  * synchronous module (`./zcta.ts`) and the client's lazy one
@@ -8,6 +10,7 @@ export interface ZctaCentroid {
   zip: string;
   lat: number;
   lng: number;
+  postal?: PostalArea;
 }
 
 /** The committed file's shape: zip → [lat, lng]. */
@@ -15,7 +18,7 @@ export type CentroidTable = Record<string, [number, number]>;
 
 export type ZipResolution =
   | { ok: true; centroid: ZctaCentroid }
-  | { ok: false; reason: "malformed" | "unknown" | "uncovered" };
+  | { ok: false; reason: "malformed" | "uncovered" };
 
 /**
  * Five digits. Rejects ZIP+4 and anything non-numeric. Synchronous, so the
@@ -25,14 +28,16 @@ export function isWellFormedZip(input: string): boolean {
   return /^\d{5}$/.test(input.trim());
 }
 
-export function lookupIn(centroids: CentroidTable, input: string): ZctaCentroid | null {
+export function lookupIn(centroids: CentroidTable, input: string, postal: PostalTable = {}): ZctaCentroid | null {
   const zip = input.trim();
   if (!isWellFormedZip(zip)) return null;
 
-  const point = centroids[zip];
+  const row = postal[zip];
+  const point = centroids[zip] ?? (row && row[0] !== null && row[1] !== null ? [row[0], row[1]] : null);
   if (!point) return null;
 
-  return { zip, lat: point[0], lng: point[1] };
+  const area = postalAreaIn(postal, zip);
+  return { zip, lat: point[0], lng: point[1], ...(area ? { postal: area } : {}) };
 }
 
 /**
@@ -66,24 +71,20 @@ export function nearestIn(
 }
 
 /**
- * Resolve a zip for the entry screen, distinguishing the three ways it fails so
- * each can get its own message.
- *
- * `malformed` — not five digits.
- * `unknown`   — five digits, no such ZCTA. Only claimable with a complete table.
- * `uncovered` — five digits, absent from the stub. We don't know either way.
+ * A complete ZCTA table is not a complete USPS ZIP directory. An absent
+ * five-digit ZIP is a coverage gap, even when every ZCTA is held.
  */
 export function resolveIn(
   centroids: CentroidTable,
-  coverageIsComplete: boolean,
   input: string,
+  postal: PostalTable = {},
 ): ZipResolution {
   const zip = input.trim();
 
   if (!isWellFormedZip(zip)) return { ok: false, reason: "malformed" };
 
-  const centroid = lookupIn(centroids, zip);
+  const centroid = lookupIn(centroids, zip, postal);
   if (centroid) return { ok: true, centroid };
 
-  return { ok: false, reason: coverageIsComplete ? "unknown" : "uncovered" };
+  return { ok: false, reason: "uncovered" };
 }

@@ -13,10 +13,11 @@ test("a child with no parent seat renders whole rather than vanishing", () => {
   assert.equal(tree[0].label, "Senate Committee on Armed Services — Airland");
 });
 
-test("a row with no jurisdiction renders a NAMED GAP, never silence", () => {
+test("missing committee responsibilities contribute to the card gap without a row placeholder", () => {
   const surface = readFileSync(
     join(process.cwd(), "components", "officials", "member-directory.tsx"),
     "utf8",
   );
-  assert.match(surface, /<WorkingOnIt\s*\/>/);
+  assert.match(surface, /label="committee responsibilities"/);
+  assert.doesNotMatch(surface, /WorkingOnIt/);
 });

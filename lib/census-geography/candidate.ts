@@ -89,7 +89,7 @@ export function censusGeographyCandidate(dataset: BuiltDataset): RoutineCandidat
     identities,
     temporal: { version, expectedVersion: version, sourceThrough: "2020", staleAtRetrieval: false },
     semantics: {
-      factKind: "ZCTA-to-geography area overlaps for the exact built scopes (area share; population weight not provided by these Census files)",
+      factKind: "ZCTA-to-geography overlaps for the exact built scopes (tabulated area shares where supplied; polygon-derived memberships carry unknown shares)",
       violations,
     },
     horizon: {

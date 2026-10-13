@@ -266,7 +266,9 @@ export async function runLeaseWorkerProcesses(input: {
     };
     const reply = (payload: { id: string; body?: unknown; error?: unknown }): void => {
       asked.delete(payload.id);
-      if (child.connected) { child.send(payload); moved(); }
+      /* An answer that cannot reach a worker already exiting (EPIPE) is not the worker's failure: its exit, after the
+         results it sent, decides what it finished. Without the callback the send error ended it and dropped those results. */
+      if (child.connected) { child.send(payload, () => {}); moved(); }
     };
     const reservations = new Map<string, Awaited<ReturnType<NonNullable<ScoutExecutorDeps["reserveEscalation"]>>>>();
     const offset = (launched - 1) % ids.length;
@@ -390,8 +392,11 @@ export async function runLeaseWorkerProcesses(input: {
       clearTimeout(quietTimer);
       /* Standing: workers that keep failing before their first task close admission instead of restarting every second. */
       if (standing !== null) startupFailures = code !== 0 && tasksDone === 0 && !terminationError ? startupFailures + 1 : 0;
-      /* Standing: the task a worker held when it was ended (stuck, its wall) or crashed gets its own deferral; its siblings' tasks are theirs. */
-      if (standing !== null && current !== null && (terminationError || code !== 0) && pending.delete(current)) {
+      /* Standing: the task a worker held when it was ended (stuck, its wall) or crashed gets its own deferral; its siblings' tasks are theirs.
+         `current` is cleared by the task's result, so it names a task with none. A sibling's "finished" list may already have
+         taken it off `pending` (it read the task before this worker announced it), so that membership is not the test. */
+      if (standing !== null && current !== null && (terminationError || code !== 0)) {
+        pending.delete(current);
         const failed = workerDispatchFailure(current, terminationError ?? new Error(`LEASE_WORKER_EXIT:${child.pid}:${code}`));
         results.push(failed);
         void input.onDispatched?.(failed);

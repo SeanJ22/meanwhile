@@ -17,7 +17,6 @@ import {
 import { nhLegislativeHolders, nhSeatKeyFromTitle, refreshNhSeatHolders, sits } from "../lib/ballot/seat-holders.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { claimsInText } from "../lib/text/absence-claims.ts";
-import { votingRecordEmptyLine } from "../lib/ballot/battlecard-sections.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 await refreshNhSeatHolders({ store: new MemoryRoutineDataStore() });
@@ -142,18 +141,6 @@ test("a non-elected office renders no Incumbent/Challenger label at all (BC-26)"
   const d = out.get("Sam Superintendent");
   assert.equal(d?.standing, "UNKNOWN");
   assert.match(d?.basis ?? "", /not filled by election/i);
-});
-
-test("neither voting-record empty state asserts a fact about a person", () => {
-  for (const held of [true, false]) {
-    const line = votingRecordEmptyLine(held);
-    assert.deepEqual(
-      claimsInText(line),
-      [],
-      `"${line}" asserts something about the candidate rather than about our sourcing`,
-    );
-    assert.equal(line, "We’re working on getting this info", "FE-30 uses the shared collection state");
-  }
 });
 
 test("the shape sweep catches the line it was written for", () => {

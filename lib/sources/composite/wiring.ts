@@ -6,6 +6,7 @@ import {
 } from "../../registry/source-wiring.ts";
 import { makeApptegySource } from "../apptegy/index.ts";
 import { makeBoardBookSource } from "../boardbook/index.ts";
+import { makeBoardDocsSource } from "../boarddocs/index.ts";
 import { makeCivicPlusSource } from "../civicplus/index.ts";
 import { makeClerksBoardsSource } from "../clerksboards/index.ts";
 import { makeCivicClerkSource } from "../civicclerk/index.ts";
@@ -89,7 +90,7 @@ export const CAPABILITIES: Array<{
   {
     name: "civicplus",
     types: ["CIVICPLUS"],
-    make: (rows) => makeCivicPlusSource(rows) as ReportingMeetingSource<unknown>,
+    make: (rows, fetchImpl) => makeCivicPlusSource(rows, fetchImpl) as ReportingMeetingSource<unknown>,
   },
   {
     name: "onbase",
@@ -111,6 +112,10 @@ export const CAPABILITIES: Array<{
     types: ["CIVICCLERK"],
     make: (rows) =>
       makeCivicClerkSource(rows) as ReportingMeetingSource<unknown>,
+  },
+  {
+    name: "boarddocs", types: ["BOARDDOCS"],
+    make: (rows, fetchImpl) => makeBoardDocsSource(rows, fetchImpl) as ReportingMeetingSource<unknown>,
   },
   {
     name: "clerksboards",

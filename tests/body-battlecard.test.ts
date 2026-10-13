@@ -6,11 +6,10 @@ import { test } from "node:test";
 import {
   BODY_BLURBS,
   DIVISION_BODY_BLURBS,
-  NO_BODY_BLURB_LINE,
   blurbForBody,
 } from "../lib/officials/body-description.ts";
 
-/* The body battlecard renders every applicable section with either content or an honest line. */
+/* Body sections show sourced records; their card frame collects missing facts. */
 
 const ROOT = process.cwd();
 const PIMA = "ocd-division/country:us/state:az/county:pima";
@@ -49,7 +48,7 @@ test("M136: Tucson's own entry wins over the state-level one", () => {
   );
 });
 
-test("M136: a body with no read statute gets the honest line, never a paraphrase", () => {
+test("M136: a body with no read statute gets no invented paraphrase", () => {
   // Covered bodies whose enabling law has not been read.
   for (const ocdId of [
     "ocd-division/country:us/state:nh/county:merrimack",
@@ -67,13 +66,7 @@ test("M136: a body with no read statute gets the honest line, never a paraphrase
       `${ocdId} grew a blurb from somewhere — every entry must be a read statute`,
     );
   }
-  assert.match(NO_BODY_BLURB_LINE, /we haven't/i);
-  // The line describes OUR research, never the body. "This body has no defined
-  // powers" would be a claim about a government we did not check.
-  assert.ok(
-    !/this body (has|does) not/i.test(NO_BODY_BLURB_LINE),
-    "the absence line makes a claim about the body rather than about us",
-  );
+
 });
 
 test("M136: every blurb carries a checkable basis — no unsourced prose anywhere", () => {
@@ -89,31 +82,22 @@ test("M136: every blurb carries a checkable basis — no unsourced prose anywher
   }
 });
 
-test("M136: the card renders the same SET of sections for every body", () => {
-  /* A section is never hidden for lack of content: an empty section collapses closed with its honest line inside. */
+test("body cards render held sections and collect absent ones at the foot", () => {
   const source = readFileSync(
     join(ROOT, "components/map/popup/entity-modal.tsx"),
     "utf8",
   );
 
-  for (const id of ["what", "representation", "meetings", "contact", "jurisdiction", "sources"]) {
+  for (const id of ["what", "representation", "meetings", "contact", "jurisdiction"]) {
     assert.ok(
       source.includes(`id: "${id}"`),
       `the body card lost its "${id}" section`,
     );
   }
 
-  // The absence line renders INSIDE the section, and the section is never
-  // conditional on having content.
-  assert.match(
-    source,
-    /section\.content \?\? <WorkingOnIt/,
-    "a section stopped using the shared gap state (FE-29)",
-  );
-  assert.ok(
-    !/sections\s*\.filter\(/.test(source),
-    "sections are being filtered — an empty section must still render",
-  );
+  assert.match(source, /sections\.map\(\(section\) => section\.content \?/);
+  assert.match(source, /<CardGapContribution key=\{section\.id\}/);
+  assert.doesNotMatch(source, /WorkingOnIt/);
 
   // Sections and tabs are mutually exclusive: a card carrying both would say
   // everything twice.
@@ -147,9 +131,7 @@ test("M136: a school district's superintendent is asked for and named when missi
     join(ROOT, "components/map/popup/entity-modal.tsx"),
     "utf8",
   );
-  // The gap says whose it is: hired by this board, not elected. A blank row
-  // would read as "this district has no superintendent".
-  assert.match(modal, /hired by this board, not elected/);
+  assert.match(modal, /<CardGapContribution[^>]*label="the superintendent"/);
 });
 
 test("M136: the contact section never invents a route", () => {

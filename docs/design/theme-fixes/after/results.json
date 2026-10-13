@@ -1,0 +1,990 @@
+{
+  "sidebar-368": {
+    "selected": "ocd-division/country:us/state:az/sldl:18",
+    "passes": [
+      {
+        "labels": {
+          "theme": "dark",
+          "bg": "#0f1117",
+          "labels": [
+            {
+              "id": "district-congressional-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-state-senate-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-state-house-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-county-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-school-unified-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-school-elementary-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-school-secondary-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-municipal-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            }
+          ],
+          "selectedStillSelected": true
+        },
+        "header": {
+          "sidebarWidth": 368,
+          "sidebarVar": "368px",
+          "theme": {
+            "left": 270,
+            "right": 314,
+            "top": 36,
+            "width": 44,
+            "height": 44
+          },
+          "collapse": {
+            "left": 322,
+            "right": 366,
+            "top": 36,
+            "width": 44,
+            "height": 44
+          },
+          "controlsOverlapPx": 0,
+          "controlsGapPx": 8,
+          "logo": {
+            "left": 34,
+            "right": 255.1,
+            "top": 32,
+            "width": 221.1,
+            "height": 51.7
+          },
+          "logoFontSize": "38px",
+          "logoGapToControlsPx": 14.9,
+          "logoLines": 1,
+          "sidebarGlyph": {
+            "kind": "sun-moon",
+            "sunOpacity": "1",
+            "moonOpacity": "0",
+            "size": "18x18",
+            "label": "Switch to light mode"
+          }
+        }
+      },
+      {
+        "labels": {
+          "theme": "light",
+          "bg": "#f0f2f5",
+          "labels": [
+            {
+              "id": "district-congressional-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-state-senate-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-state-house-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-county-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-school-unified-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-school-elementary-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-school-secondary-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-municipal-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            }
+          ],
+          "selectedStillSelected": true
+        },
+        "header": {
+          "sidebarWidth": 368,
+          "sidebarVar": "368px",
+          "theme": {
+            "left": 270,
+            "right": 314,
+            "top": 36,
+            "width": 44,
+            "height": 44
+          },
+          "collapse": {
+            "left": 322,
+            "right": 366,
+            "top": 36,
+            "width": 44,
+            "height": 44
+          },
+          "controlsOverlapPx": 0,
+          "controlsGapPx": 8,
+          "logo": {
+            "left": 34,
+            "right": 255.1,
+            "top": 32,
+            "width": 221.1,
+            "height": 51.7
+          },
+          "logoFontSize": "38px",
+          "logoGapToControlsPx": 14.9,
+          "logoLines": 1,
+          "sidebarGlyph": {
+            "kind": "sun-moon",
+            "sunOpacity": "0",
+            "moonOpacity": "1",
+            "size": "11x11",
+            "label": "Switch to dark mode"
+          }
+        }
+      },
+      {
+        "labels": {
+          "theme": "dark",
+          "bg": "#0f1117",
+          "labels": [
+            {
+              "id": "district-congressional-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-state-senate-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-state-house-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-county-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-school-unified-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-school-elementary-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-school-secondary-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-municipal-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            }
+          ],
+          "selectedStillSelected": true
+        },
+        "header": {
+          "sidebarWidth": 368,
+          "sidebarVar": "368px",
+          "theme": {
+            "left": 270,
+            "right": 314,
+            "top": 36,
+            "width": 44,
+            "height": 44
+          },
+          "collapse": {
+            "left": 322,
+            "right": 366,
+            "top": 36,
+            "width": 44,
+            "height": 44
+          },
+          "controlsOverlapPx": 0,
+          "controlsGapPx": 8,
+          "logo": {
+            "left": 34,
+            "right": 255.1,
+            "top": 32,
+            "width": 221.1,
+            "height": 51.7
+          },
+          "logoFontSize": "38px",
+          "logoGapToControlsPx": 14.9,
+          "logoLines": 1,
+          "sidebarGlyph": {
+            "kind": "sun-moon",
+            "sunOpacity": "1",
+            "moonOpacity": "0",
+            "size": "18x18",
+            "label": "Switch to light mode"
+          }
+        }
+      },
+      {
+        "labels": {
+          "theme": "light",
+          "bg": "#f0f2f5",
+          "labels": [
+            {
+              "id": "district-congressional-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-state-senate-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-state-house-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-county-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-school-unified-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-school-elementary-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-school-secondary-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-municipal-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            }
+          ],
+          "selectedStillSelected": true
+        },
+        "header": {
+          "sidebarWidth": 368,
+          "sidebarVar": "368px",
+          "theme": {
+            "left": 270,
+            "right": 314,
+            "top": 36,
+            "width": 44,
+            "height": 44
+          },
+          "collapse": {
+            "left": 322,
+            "right": 366,
+            "top": 36,
+            "width": 44,
+            "height": 44
+          },
+          "controlsOverlapPx": 0,
+          "controlsGapPx": 8,
+          "logo": {
+            "left": 34,
+            "right": 255.1,
+            "top": 32,
+            "width": 221.1,
+            "height": 51.7
+          },
+          "logoFontSize": "38px",
+          "logoGapToControlsPx": 14.9,
+          "logoLines": 1,
+          "sidebarGlyph": {
+            "kind": "sun-moon",
+            "sunOpacity": "0",
+            "moonOpacity": "1",
+            "size": "11x11",
+            "label": "Switch to dark mode"
+          }
+        }
+      },
+      {
+        "labels": {
+          "theme": "dark",
+          "bg": "#0f1117",
+          "labels": [
+            {
+              "id": "district-congressional-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-state-senate-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-state-house-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-county-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-school-unified-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-school-elementary-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-school-secondary-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-municipal-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            }
+          ],
+          "selectedStillSelected": true
+        },
+        "header": {
+          "sidebarWidth": 368,
+          "sidebarVar": "368px",
+          "theme": {
+            "left": 270,
+            "right": 314,
+            "top": 36,
+            "width": 44,
+            "height": 44
+          },
+          "collapse": {
+            "left": 322,
+            "right": 366,
+            "top": 36,
+            "width": 44,
+            "height": 44
+          },
+          "controlsOverlapPx": 0,
+          "controlsGapPx": 8,
+          "logo": {
+            "left": 34,
+            "right": 255.1,
+            "top": 32,
+            "width": 221.1,
+            "height": 51.7
+          },
+          "logoFontSize": "38px",
+          "logoGapToControlsPx": 14.9,
+          "logoLines": 1,
+          "sidebarGlyph": {
+            "kind": "sun-moon",
+            "sunOpacity": "1",
+            "moonOpacity": "0",
+            "size": "18x18",
+            "label": "Switch to light mode"
+          }
+        }
+      }
+    ],
+    "mapHeader": {
+      "logoFontSize": "38px",
+      "logoWidth": 221,
+      "glyph": {
+        "sunOpacity": "1",
+        "moonOpacity": "0"
+      },
+      "theme": "dark"
+    },
+    "errors": []
+  },
+  "sidebar-332": {
+    "selected": "ocd-division/country:us/state:az/sldl:18",
+    "passes": [
+      {
+        "labels": {
+          "theme": "dark",
+          "bg": "#0f1117",
+          "labels": [
+            {
+              "id": "district-congressional-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-state-senate-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-state-house-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-county-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-school-unified-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-school-elementary-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-school-secondary-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-municipal-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            }
+          ],
+          "selectedStillSelected": true
+        },
+        "header": {
+          "sidebarWidth": 332,
+          "sidebarVar": "332px",
+          "theme": {
+            "left": 234,
+            "right": 278,
+            "top": 33,
+            "width": 44,
+            "height": 44
+          },
+          "collapse": {
+            "left": 286,
+            "right": 330,
+            "top": 33,
+            "width": 44,
+            "height": 44
+          },
+          "controlsOverlapPx": 0,
+          "controlsGapPx": 8,
+          "logo": {
+            "left": 34,
+            "right": 220.2,
+            "top": 33,
+            "width": 186.2,
+            "height": 43.5
+          },
+          "logoFontSize": "32px",
+          "logoGapToControlsPx": 13.8,
+          "logoLines": 1,
+          "sidebarGlyph": {
+            "kind": "sun-moon",
+            "sunOpacity": "1",
+            "moonOpacity": "0",
+            "size": "18x18",
+            "label": "Switch to light mode"
+          }
+        }
+      },
+      {
+        "labels": {
+          "theme": "light",
+          "bg": "#f0f2f5",
+          "labels": [
+            {
+              "id": "district-congressional-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-state-senate-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-state-house-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-county-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-school-unified-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-school-elementary-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-school-secondary-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-municipal-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            }
+          ],
+          "selectedStillSelected": true
+        },
+        "header": {
+          "sidebarWidth": 332,
+          "sidebarVar": "332px",
+          "theme": {
+            "left": 234,
+            "right": 278,
+            "top": 33,
+            "width": 44,
+            "height": 44
+          },
+          "collapse": {
+            "left": 286,
+            "right": 330,
+            "top": 33,
+            "width": 44,
+            "height": 44
+          },
+          "controlsOverlapPx": 0,
+          "controlsGapPx": 8,
+          "logo": {
+            "left": 34,
+            "right": 220.2,
+            "top": 33,
+            "width": 186.2,
+            "height": 43.5
+          },
+          "logoFontSize": "32px",
+          "logoGapToControlsPx": 13.8,
+          "logoLines": 1,
+          "sidebarGlyph": {
+            "kind": "sun-moon",
+            "sunOpacity": "0",
+            "moonOpacity": "1",
+            "size": "11x11",
+            "label": "Switch to dark mode"
+          }
+        }
+      },
+      {
+        "labels": {
+          "theme": "dark",
+          "bg": "#0f1117",
+          "labels": [
+            {
+              "id": "district-congressional-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-state-senate-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-state-house-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-county-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-school-unified-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-school-elementary-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-school-secondary-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-municipal-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            }
+          ],
+          "selectedStillSelected": true
+        },
+        "header": {
+          "sidebarWidth": 332,
+          "sidebarVar": "332px",
+          "theme": {
+            "left": 234,
+            "right": 278,
+            "top": 33,
+            "width": 44,
+            "height": 44
+          },
+          "collapse": {
+            "left": 286,
+            "right": 330,
+            "top": 33,
+            "width": 44,
+            "height": 44
+          },
+          "controlsOverlapPx": 0,
+          "controlsGapPx": 8,
+          "logo": {
+            "left": 34,
+            "right": 220.2,
+            "top": 33,
+            "width": 186.2,
+            "height": 43.5
+          },
+          "logoFontSize": "32px",
+          "logoGapToControlsPx": 13.8,
+          "logoLines": 1,
+          "sidebarGlyph": {
+            "kind": "sun-moon",
+            "sunOpacity": "1",
+            "moonOpacity": "0",
+            "size": "18x18",
+            "label": "Switch to light mode"
+          }
+        }
+      },
+      {
+        "labels": {
+          "theme": "light",
+          "bg": "#f0f2f5",
+          "labels": [
+            {
+              "id": "district-congressional-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-state-senate-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-state-house-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-county-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-school-unified-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-school-elementary-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-school-secondary-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-municipal-label",
+              "halo": "#f0f2f5",
+              "width": 1.5,
+              "blur": 0.5
+            }
+          ],
+          "selectedStillSelected": true
+        },
+        "header": {
+          "sidebarWidth": 332,
+          "sidebarVar": "332px",
+          "theme": {
+            "left": 234,
+            "right": 278,
+            "top": 33,
+            "width": 44,
+            "height": 44
+          },
+          "collapse": {
+            "left": 286,
+            "right": 330,
+            "top": 33,
+            "width": 44,
+            "height": 44
+          },
+          "controlsOverlapPx": 0,
+          "controlsGapPx": 8,
+          "logo": {
+            "left": 34,
+            "right": 220.2,
+            "top": 33,
+            "width": 186.2,
+            "height": 43.5
+          },
+          "logoFontSize": "32px",
+          "logoGapToControlsPx": 13.8,
+          "logoLines": 1,
+          "sidebarGlyph": {
+            "kind": "sun-moon",
+            "sunOpacity": "0",
+            "moonOpacity": "1",
+            "size": "11x11",
+            "label": "Switch to dark mode"
+          }
+        }
+      },
+      {
+        "labels": {
+          "theme": "dark",
+          "bg": "#0f1117",
+          "labels": [
+            {
+              "id": "district-congressional-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-state-senate-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-state-house-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-county-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-school-unified-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-school-elementary-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-school-secondary-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            },
+            {
+              "id": "district-municipal-label",
+              "halo": "#0f1117",
+              "width": 1.5,
+              "blur": 0.5
+            }
+          ],
+          "selectedStillSelected": true
+        },
+        "header": {
+          "sidebarWidth": 332,
+          "sidebarVar": "332px",
+          "theme": {
+            "left": 234,
+            "right": 278,
+            "top": 33,
+            "width": 44,
+            "height": 44
+          },
+          "collapse": {
+            "left": 286,
+            "right": 330,
+            "top": 33,
+            "width": 44,
+            "height": 44
+          },
+          "controlsOverlapPx": 0,
+          "controlsGapPx": 8,
+          "logo": {
+            "left": 34,
+            "right": 220.2,
+            "top": 33,
+            "width": 186.2,
+            "height": 43.5
+          },
+          "logoFontSize": "32px",
+          "logoGapToControlsPx": 13.8,
+          "logoLines": 1,
+          "sidebarGlyph": {
+            "kind": "sun-moon",
+            "sunOpacity": "1",
+            "moonOpacity": "0",
+            "size": "18x18",
+            "label": "Switch to light mode"
+          }
+        }
+      }
+    ],
+    "mapHeader": {
+      "logoFontSize": "38px",
+      "logoWidth": 221,
+      "glyph": {
+        "sunOpacity": "1",
+        "moonOpacity": "0"
+      },
+      "theme": "dark"
+    },
+    "errors": []
+  },
+  "phone-390": [
+    {
+      "theme": "dark",
+      "logoWidth": 221,
+      "logoRight": 295,
+      "toggleLeft": 328,
+      "gapPx": 33,
+      "lines": 1
+    },
+    {
+      "theme": "light",
+      "logoWidth": 221,
+      "logoRight": 295,
+      "toggleLeft": 328,
+      "gapPx": 33,
+      "lines": 1
+    }
+  ]
+}

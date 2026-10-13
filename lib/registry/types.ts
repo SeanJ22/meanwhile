@@ -97,6 +97,8 @@ export type AgendaSourceType =
    * per-row venue name and street address, and public agenda/notice links.
    */
   | "BOARDBOOK"
+  /** BoardDocs public committee meeting list and per-meeting agenda page. */
+  | "BOARDDOCS"
   /**
    * Not a vendor; a shape. The body publishes its whole year of meeting dates as a list on its own page,
    * with one sentence naming the time and the room.

@@ -1,3 +1,4 @@
+import { readRolePlaybook } from "../playbooks.ts";
 import { createFileRepositories } from "../repository/file-store.ts";
 import { createPgRepositories, controlPlaneUrlFromEnv } from "../repository/pg-store.ts";
 import { scoutExecutor, type ScoutExecutorDeps, type ModelResponse, type ScoutEscalationAdmission } from "../scheduler/scout-executor.ts";
@@ -26,7 +27,7 @@ const broker = workerBroker<LeaseWorkerConfig>(async config => {
     (...args: readonly unknown[]) => broker.call("scout-tool", { name, args })])),
     timeoutMs: toolTimeoutMs } as unknown as ReturnType<ScoutExecutorDeps["contextFor"]>["tools"] & Pick<ScoutToolContext, "search" | "openBytes">;
   const clock = input.liveClock ? () => new Date().toISOString() : () => input.now;
-  const executor = scoutExecutor({ ...options, now: clock,
+  const executor = scoutExecutor({ ...options, now: clock, playbookFor: role => readRolePlaybook(repos, role),
     contextFor: () => {
       if (!context || contextError) throw new Error(contextError ?? "SCOUT_CONTEXT_UNAVAILABLE");
       return { ...context, tools };

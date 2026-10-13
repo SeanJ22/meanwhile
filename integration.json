@@ -2138,5 +2138,62 @@
     "tested_sha": "ac3ccf885d6de2934f43f931a3092f735f05f0e1",
     "gates": "pass",
     "at": "2026-10-13T18:54:23Z"
+  },
+  {
+    "lane": "office-pins",
+    "steps": [
+      "DS-03"
+    ],
+    "ready_sha": "2dbd472fa0601390d5a4e69cb47fc4c1d775b7b2",
+    "merge_sha": "6d9824f8e0a545d538088af7eca6072d84d1c61c",
+    "river_sha": "691c01dd0ff44041930828ead156c968fc269f8a",
+    "tested_sha": "691c01dd0ff44041930828ead156c968fc269f8a",
+    "gates": "pass",
+    "at": "2026-10-13T21:36:32Z"
+  },
+  {
+    "lane": "platform-escribe",
+    "steps": [],
+    "ready_sha": "c66410128bb7efafeef26da54a349724a7b94aeb",
+    "merge_sha": "92da332027af0359cadb563772084ce6ae7c6202",
+    "river_sha": "691c01dd0ff44041930828ead156c968fc269f8a",
+    "tested_sha": "691c01dd0ff44041930828ead156c968fc269f8a",
+    "gates": "pass",
+    "at": "2026-10-13T21:36:32Z"
+  },
+  {
+    "lane": "src-civic",
+    "steps": [
+      "SL-03",
+      "VS-01"
+    ],
+    "ready_sha": "6b207dedc7580a1f15a6b154280a613f851e98f3",
+    "merge_sha": "46425f6c2e5f621d71fee2843c70c8a28fb5a0f9",
+    "river_sha": "691c01dd0ff44041930828ead156c968fc269f8a",
+    "tested_sha": "691c01dd0ff44041930828ead156c968fc269f8a",
+    "gates": "pass",
+    "at": "2026-10-13T21:36:32Z"
+  },
+  {
+    "lane": "statewide-and-portraits",
+    "steps": [
+      "SL-03"
+    ],
+    "ready_sha": "864a854bd9d58dbeffddbe1cab46197c2fcbcf85",
+    "merge_sha": "46425f6c2e5f621d71fee2843c70c8a28fb5a0f9",
+    "river_sha": "691c01dd0ff44041930828ead156c968fc269f8a",
+    "tested_sha": "691c01dd0ff44041930828ead156c968fc269f8a",
+    "gates": "pass",
+    "at": "2026-10-13T21:36:32Z"
+  },
+  {
+    "lane": "token-cost",
+    "steps": [],
+    "ready_sha": "c4d7ee39c86b150f60b42cc60b828a5252594f5a",
+    "merge_sha": "691c01dd0ff44041930828ead156c968fc269f8a",
+    "river_sha": "691c01dd0ff44041930828ead156c968fc269f8a",
+    "tested_sha": "691c01dd0ff44041930828ead156c968fc269f8a",
+    "gates": "pass",
+    "at": "2026-10-13T21:36:32Z"
   }
 ]

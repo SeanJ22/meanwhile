@@ -208,3 +208,8 @@ One line per batch folded into river.
 - 2026-10-13T12:10:42Z · src-open-data ·  · ready 173b60d56f11 · river 1e72570acb7e · pnpm gates pass on 1e72570acb7e
 - 2026-10-13T14:54:52Z · admin · BR-07, BR-04, BR-11, BR-26, BR-35, BR-39, BR-36, BR-12, BR-13, BR-18, BR-20, BR-16, BR-17, BR-27, BR-29, BR-28, BR-31 · ready 80d9a7ff71e2 · river edd7652c5bb5 · pnpm gates pass on edd7652c5bb5
 - 2026-10-13T18:54:23Z · state-votes · SV-01 · ready a5cf11addca9 · river ac3ccf885d6d · pnpm gates pass on ac3ccf885d6d
+- 2026-10-13T21:36:32Z · office-pins · DS-03 · ready 2dbd472fa060 · river 691c01dd0ff4 · pnpm gates pass on 691c01dd0ff4
+- 2026-10-13T21:36:32Z · platform-escribe ·  · ready c66410128bb7 · river 691c01dd0ff4 · pnpm gates pass on 691c01dd0ff4
+- 2026-10-13T21:36:32Z · src-civic · SL-03, VS-01 · ready 6b207dedc758 · river 691c01dd0ff4 · pnpm gates pass on 691c01dd0ff4
+- 2026-10-13T21:36:32Z · statewide-and-portraits · SL-03 · ready 864a854bd9d5 · river 691c01dd0ff4 · pnpm gates pass on 691c01dd0ff4
+- 2026-10-13T21:36:32Z · token-cost ·  · ready c4d7ee39c86b · river 691c01dd0ff4 · pnpm gates pass on 691c01dd0ff4

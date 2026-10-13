@@ -1,7 +1,8 @@
 "use client";
 
-import { WorkingOnIt } from "@/components/demand/working-on-it";
+import { CardGapContribution } from "@/components/ui/card-gap-context";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
+import type { CardSource } from "@/lib/officials/card-sources";
 
 import { CheckedLink } from "@/components/ui/checked-link";
 import { useEffect, useState } from "react";
@@ -120,44 +121,24 @@ function AgendaForMeeting({
   }, [meetingId]);
 
   if (failed) {
-    // Couldn't check is not none.
-    return (
-      <p className="mt-1.5 t-detail leading-relaxed text-muted">
-        Couldn&apos;t check for the agenda just now.
-        {agendaUrl && (
-          <>
-            {" "}
-            <CheckedLink
-              href={agendaUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="text-signal hover:underline"
-            >
-              Read it at the source
-            </CheckedLink>
-            .
-          </>
-        )}
-      </p>
-    );
+    return <>
+      <CardGapContribution id={`meeting:${meetingId}:agenda-text`} label="agenda contents" />
+      {agendaUrl && <p className="mt-1.5 t-detail"><CheckedLink href={agendaUrl} target="_blank" rel="noreferrer" className="text-signal hover:underline">Read the agenda</CheckedLink></p>}
+    </>;
   }
 
   if (documents === null) {
-    return (
-      <p className="mt-1.5 t-detail leading-relaxed text-muted">
-        Looking for the agenda…
-      </p>
-    );
+    return null;
   }
 
   return <>
-    {unavailableAuthorities.length > 0 && <p className="mb-2 t-caption leading-relaxed text-muted" data-agenda-supporting-holding="PARTIAL">
-      The meeting and agenda remain available, but these supporting records could not be checked: {unavailableAuthorities.join(", ")}.
-    </p>}
+    {unavailableAuthorities.length > 0 && <CardGapContribution id={`meeting:${meetingId}:supporting-records`} label="supporting meeting records" />}
     <MinutesRecord meetingId={meetingId} />
     <MeetingRecords records={records} />
-    {holdingUnavailable ? <p className="mt-1.5 t-detail text-muted">The stored document is unavailable here.{agendaUrl && <> <CheckedLink className="text-signal underline" href={agendaUrl} target="_blank" rel="noreferrer">Read the source document</CheckedLink>.</>}</p>
-      : <AgendaDocuments documents={documents} meetingId={meetingId} agendaUrl={agendaUrl} agendaSentence={agendaState.sentence} publication={publication} />}
+    {holdingUnavailable ? <>
+      <CardGapContribution id={`meeting:${meetingId}:agenda-text`} label="agenda contents" />
+      {agendaUrl && <p className="mt-1.5 t-detail"><CheckedLink className="text-signal underline" href={agendaUrl} target="_blank" rel="noreferrer">Read the source document</CheckedLink></p>}
+    </> : <AgendaDocuments documents={documents} meetingId={meetingId} agendaUrl={agendaUrl} gapKind={agendaState.whose === "THEIRS" ? "not-posted" : "not-held"} publication={publication} />}
   </>;
 }
 
@@ -177,21 +158,24 @@ function MinutesRecord({ meetingId }: { meetingId: string }) {
  * the same address is not linked, since that address now serves the newer one.
  */
 export function AgendaDocuments(props: {
-  documents: AgendaDocumentView[]; meetingId: string; agendaUrl: string | null; agendaSentence: string;
+  documents: AgendaDocumentView[]; meetingId: string; agendaUrl: string | null; gapKind?: "not-posted" | "not-held";
   publication?: AgendaPublicationReading | null;
 }) {
   const { documents, meetingId, publication } = props;
+  return <><CardSourcesContribution id={`agenda-documents:${meetingId}`} sources={agendaDocumentSources(documents, publication)} /><AgendaDocumentContents {...props} /></>;
+}
+
+export function agendaDocumentSources(documents: readonly AgendaDocumentView[], publication?: AgendaPublicationReading | null): CardSource[] {
   const indexPages = publication?.acquisition === "ACQUIRED_IS_PUBLICATION_INDEX";
-  const sourceRows = documents.map((document, index) => ({
+  return documents.map((document, index) => ({
     what: `${indexPages ? index === 0 ? "Current listing page" : "another listing page" : index === 0 ? "Current agenda document" : "earlier version read"}${index === 0 && documents.length > 1 && !indexPages ? ` · ${documents.length} ${publication?.revised !== false ? "versions on file — a revised agenda is itself news" : "documents on file"}` : ""}${document.extractionNote ? ` · ${document.extractionNote}` : ""}`,
     dataAttrs: indexPages ? { "data-agenda-listing-page": document.id ?? document.documentUrl } : { "data-agenda-version": document.id ?? document.contentHash, ...(index === 0 && documents.length > 1 ? { "data-agenda-versions": documents.length } : {}) },
     provenance: { sourceUrl: index > 0 && documents.slice(0,index).some(prior => prior.documentUrl === document.documentUrl) ? "" : document.documentUrl, sourceOrg: document.sourceOrg, collectedAt: document.retrievedAt, verifiedAt: null },
   }));
-  return <><CardSourcesContribution id={`agenda-documents:${meetingId}`} sources={sourceRows} /><AgendaDocumentContents {...props} /></>;
 }
 
-function AgendaDocumentContents({ documents, meetingId, agendaUrl, agendaSentence, publication }: {
-  documents: AgendaDocumentView[]; meetingId: string; agendaUrl: string | null; agendaSentence: string;
+function AgendaDocumentContents({ documents, meetingId, agendaUrl, gapKind, publication }: {
+  documents: AgendaDocumentView[]; meetingId: string; agendaUrl: string | null; gapKind?: "not-posted" | "not-held";
   publication?: AgendaPublicationReading | null;
 }) {
   const latest = documents[0] ?? null;
@@ -199,18 +183,19 @@ function AgendaDocumentContents({ documents, meetingId, agendaUrl, agendaSentenc
   if (latest && publication?.acquisition === "ACQUIRED_IS_PUBLICATION_INDEX") {
     // Only publication-index pages are held: shown as listing pages, never versions.
     return <div data-agenda-publication="ACQUIRED_IS_PUBLICATION_INDEX" className="mt-1.5 t-detail leading-relaxed text-muted">
-      <p>{publication.gap?.statement} <CheckedLink href={latest.documentUrl} target="_blank" rel="noreferrer" className="text-signal underline">{publication.documentSharedAcrossGovernments ? "Inspect the stored link" : "Open the publisher's agenda portal"}</CheckedLink>.</p>
-
+      <CardGapContribution id={`meeting:${meetingId}:agenda`} label="agendas" count={1} unit="meeting" />
+      <CheckedLink href={latest.documentUrl} target="_blank" rel="noreferrer" className="text-signal underline">{publication.documentSharedAcrossGovernments ? "Inspect the stored link" : "Open the publisher's agenda portal"}</CheckedLink>
     </div>;
   }
 
-  if (!latest) return <p className="mt-1.5 t-detail text-muted">
-    <WorkingOnIt inline state={/not posted yet/i.test(agendaSentence) ? { kind: "not-published", item: "Agenda" } : undefined} />
-    {agendaUrl && <> · <CheckedLink href={agendaUrl} target="_blank" rel="noreferrer" className="text-link underline">Read the agenda</CheckedLink></>}
-  </p>;
+  if (!latest) return <>
+    <CardGapContribution id={`meeting:${meetingId}:${agendaUrl ? "agenda-text" : "agenda"}`} label={agendaUrl ? "agenda contents" : "agendas"} count={1} unit="meeting" kind={gapKind} />
+    {agendaUrl && <p className="mt-1.5 t-detail"><CheckedLink href={agendaUrl} target="_blank" rel="noreferrer" className="text-link underline">Read the agenda</CheckedLink></p>}
+  </>;
 
   if (!latest.text || publication?.acquisition === "ACQUIRED_NOT_READABLE") return <p data-agenda-publication="ACQUIRED_NOT_READABLE" className="mt-1.5 t-detail text-muted">
-    <WorkingOnIt inline /> · <CheckedLink href={latest.documentUrl} target="_blank" rel="noreferrer" className="text-link underline">Open the document</CheckedLink>
+    <CardGapContribution id={`meeting:${meetingId}:agenda-text`} label="agenda contents" />
+    <CheckedLink href={latest.documentUrl} target="_blank" rel="noreferrer" className="text-link underline">Open the document</CheckedLink>
   </p>;
 
   const summary = noticeSummaryFor(meetingId, latest.contentHash);

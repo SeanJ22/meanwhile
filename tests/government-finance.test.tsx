@@ -3,6 +3,7 @@ import {governmentFinanceEvidence,composeGovernmentFinanceAnswer} from "../lib/a
 import {createElement} from "react";
 import {renderToStaticMarkup} from "react-dom/server";
 import {GovernmentMoneySection} from "../components/funding/government-money-section.tsx";
+import {Card} from "../components/ui/card.tsx";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createHash } from "node:crypto";
@@ -40,7 +41,7 @@ test("Census, FAC and USAspending saved rows publish to the exact scoped typed r
     const store = new MemoryRoutineDataStore();
     const published = await publishNationalGovernmentFinance(store, input);
     assert.ok(published.promoted, published.candidate.failureDetail ?? "promotion held");
-    assert.equal(published.readerReadback?.status, "PASS");
+    assert.equal(published.readerReadback?.status, "PASS", JSON.stringify(published.readerReadback));
     const read = await readGovernmentBudgets(ocdId, { store, now, bypassCache: true });
     assert.equal(read.kind, "PROMOTED");
     if (read.kind !== "PROMOTED") throw new Error("Finance absent");
@@ -52,7 +53,7 @@ test("Census, FAC and USAspending saved rows publish to the exact scoped typed r
     const view=governmentMoneyView(read.value.records,government.bodyId,ocdId);
     assert.match(view.rows[0].text,/amount: 123.45; units: thousand dollars/);
     assert.equal(view.rows[0].period,"FY2025");
-    const markup=renderToStaticMarkup(createElement(GovernmentMoneySection,{bodyId:government.bodyId,divisionId:ocdId,records:read.value.records}));
+    const markup=renderToStaticMarkup(<Card title={government.name} sources={view.sources}><GovernmentMoneySection bodyId={government.bodyId} divisionId={ocdId} records={read.value.records} /></Card>);
     assert.match(markup,/thousand dollars/);
     assert.match(markup,/Sources/);
     assert.doesNotMatch(markup,/Foreign government|99 Private Lane/);
@@ -106,5 +107,5 @@ test("card and Ask select audit fiscal periods without treating capture order as
   assert.equal(composeGovernmentFinanceAnswer({subject,question:"What is its latest audit?",records:evidence})?.answer,records[1].sourceSentence);
   assert.equal(composeGovernmentFinanceAnswer({subject,question:"What is its FY2024 audit?",records:evidence})?.answer,records[0].sourceSentence);
   assert.equal(composeGovernmentFinanceAnswer({subject,question:"How much is its debt?",records:evidence}),null);
-  assert.match(renderToStaticMarkup(createElement(GovernmentMoneySection,{bodyId,divisionId:ocdId,records:[]})),/We.*working on getting this info/);
+  assert.equal(renderToStaticMarkup(createElement(GovernmentMoneySection,{bodyId,divisionId:ocdId,records:[]})), "", "missing government money contributes only to the card gap");
 });

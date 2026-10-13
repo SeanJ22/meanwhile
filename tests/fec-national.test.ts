@@ -135,7 +135,9 @@ test("an out-of-pilot challenger gets a sourced money profile, funding API respo
   assert.equal(response.status, 200); const json = await response.json(); assert.equal(json.data.fecCandidateId, "H2TX07119");
   const profile = renderToStaticMarkup(await FecCandidateProfile({ params: Promise.resolve({ candidate: "H2TX07119" }) }));
   assert.match(profile, /registered with the FEC for House TX-07/); assert.match(profile, /data-funding-section/); assert.match(profile, /Federal Election Commission/);
-  assert.match(profile, /data-small-donor-share="not-held"/);
+  // A share the weball totals cannot establish is a card gap, never an invented figure or a field placeholder.
+  assert.equal(answer.data.totals?.smallDonorShare, null);
+  assert.doesNotMatch(profile, /small-donor share|working on getting/i);
   assert.doesNotMatch(JSON.stringify(json) + profile, /address_street|address_zip|CAND_ST1|donor_name/);
 });
 

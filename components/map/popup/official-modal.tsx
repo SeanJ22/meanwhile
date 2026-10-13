@@ -77,16 +77,9 @@ export function OfficialModal({
   const sources = personCardSources(
     holder,
     [
-      ...(holder.id.startsWith("congress:") && holder.provenance
-        ? [
-            {
-              what: "Their official accounts, committee seats and district offices",
-              provenance: holder.provenance,
-            },
-          ]
-        : officeSource
-          ? [{ what: "Their capitol and district offices", provenance: { sourceUrl: officeSource.sourceUrl, sourceOrg: officeSource.sourceOrg, collectedAt: officeSource.collectedAt, verifiedAt: null } }]
-          : []),
+      ...(officeSource
+        ? [{ what: "Their capitol and district offices", provenance: { sourceUrl: officeSource.sourceUrl, sourceOrg: officeSource.sourceOrg, collectedAt: officeSource.collectedAt, verifiedAt: null } }]
+        : []),
       ...(prlProfile ? [prlCardSource(prlProfile)] : []),
     ],
   );

@@ -478,13 +478,12 @@ test("WIRING: the who-governs card NAMES the question it answers", () => {
   assert.match(card, /<SubjectLine zip=\{zip\}/, "and it is rendered");
 });
 
-test("WIRING: the browse surfaces name THEIR question, and it is a different one", () => {
+test("WIRING: the browse card names its question, and it is a different one", () => {
   const popup = codeOf("components", "map", "popup", "district-popup.tsx");
-  assert.match(popup, /browsingSubject\(home, ocdId\)/, "the popup constructs BROWSING");
-  assert.match(popup, /<BrowsingSubjectLine/, "and renders the line");
+  assert.match(popup, /browsingSubject\(home, ocdId\)/, "the subject line constructs BROWSING");
 
   const modal = codeOf("components", "map", "popup", "entity-modal.tsx");
-  assert.match(modal, /<BrowsingSubjectLine/, "the large card carries it too");
+  assert.match(modal, /<BrowsingSubjectLine/, "the card renders its browsing subject");
 
   // ONE implementation, shared. Two copies of "which question is this" is how
   // two surfaces come to answer it differently.

@@ -1,0 +1,26 @@
+{
+  "n": 24,
+  "branch": "release/24",
+  "river_sha": "db756190b7a17253216864c38d1ee0937db512ac",
+  "tested_sha": "db756190b7a17253216864c38d1ee0937db512ac",
+  "steps": [
+    "DB-10",
+    "DB-11",
+    "DB-21",
+    "adapter-ash-creek-d53-monthly-agenda-pdf-call-to-public",
+    "SL-01"
+  ],
+  "lanes": [
+    "registry",
+    "adapter-ash-creek-d53-monthly-agenda-pdf-call-to-public",
+    "state-legislators",
+    "main-catch-up"
+  ],
+  "integration_from": 131,
+  "integration_count": 135,
+  "pr": {
+    "number": 732,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/732"
+  },
+  "at": "2026-10-13T01:18:20Z"
+}

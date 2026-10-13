@@ -90,7 +90,8 @@ export function meetingAcquisitionFailureDomain(
       case "diligent": return wiring.config.serviceBase;
       case "clerksboards": return "https://clerksboards.tucsonaz.gov";
       case "boardbook": return "https://meetings.boardbook.org";
-      case "civicplus": return wiring.config.icalUrl;
+      case "boarddocs": return wiring.config.portalUrl;
+      case "civicplus": return wiring.config.agendaCenterUrl ?? wiring.config.icalUrl;
       case "iqm2": return wiring.config.base;
       case "revize": return wiring.config.base;
       case "apptegy": return wiring.config.apiBase;
@@ -118,6 +119,11 @@ export function meetingAcquisitionFailureDomain(
   }
   // Google Calendar serves many publishers from one host, so the calendar, not the hostname, is the lane.
   const host = url.hostname.toLowerCase();
+  if (sourceName === "boarddocs") {
+    const tenant = /^(\/[^/]+\/[^/]+\/Board\.nsf)(?:\/|$)/i.exec(url.pathname)?.[1];
+    if (!tenant) throw new Error(`MEETING_FAILURE_DOMAIN_ENDPOINT_INVALID:${sourceName}:${wiring.bodyId}`);
+    return `meeting-upstream:${host}${tenant.toLowerCase()}`;
+  }
   const googleCalendar = host === "calendar.google.com" ? /^\/calendar\/ical\/([^/]+)\//.exec(url.pathname)?.[1] : undefined;
   if (googleCalendar) return `meeting-upstream:${host}/${decodeURIComponent(googleCalendar).toLowerCase()}`;
   return `meeting-upstream:${host}`;

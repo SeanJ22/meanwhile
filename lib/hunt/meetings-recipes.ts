@@ -395,6 +395,7 @@ const VENDOR_PLATFORM: Readonly<Record<VerifiableVendor, string | null>> = {
   "civicclerk-api": "civicclerk",
   iqm2: "iqm2",
   boardbook: "boardbook",
+  boarddocs: "boarddocs",
   "official-page-events": null,
 };
 
@@ -407,6 +408,7 @@ const VENDOR_VERIFICATION: Readonly<Record<VerifiableVendor, string>> = {
   "civicclerk-api": "a CivicClerk events list whose rows carry id",
   iqm2: "an IQM2 calendar with at least one meeting row",
   boardbook: "a BoardBook organization page with at least one meeting link",
+  boarddocs: "a public BoardDocs committee list whose dated rows carry published meeting identities; the committee is named by the attested portal selector",
   "official-page-events": "a page on the body's own host with at least one dated event verified for the body",
 };
 

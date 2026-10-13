@@ -22,6 +22,11 @@ import { makeIcalSource, parseIcs } from "../../sources/ical/index.ts";
 import { ZeroRowExtractionError } from "../../sources/normalize-account.ts";
 import { makeOfficialPageEventsSource, officialLinkingPageFrom } from "../../sources/official-page-events/index.ts";
 import { makeDiligentSource } from "../../sources/diligent/index.ts";
+import { makeBoardBookSource } from "../../sources/boardbook/index.ts";
+import { makeBoardDocsSource } from "../../sources/boarddocs/index.ts";
+import { makeCivicPlusSource } from "../../sources/civicplus/index.ts";
+import { makeCivicClerkSource } from "../../sources/civicclerk/index.ts";
+import { makeIqm2Source } from "../../sources/iqm2/index.ts";
 import { normalizeWithDrops as normalizeLegistar } from "../../sources/legistar/index.ts";
 import { legistarClientsFromWiring } from "../../sources/legistar/client-registry.ts";
 import type { LegistarEvent } from "../../sources/legistar/types.ts";
@@ -109,6 +114,23 @@ async function readOne(reading: HeldCalendarReading, now: string, adapterDigest:
       const ownEvents = events.filter(event => event.EventBodyId === clients[0]?.eventBodyId);
       meetings = normalizeLegistar(ownEvents.map(event => ({ event, slug: wiring.config.slug,
         collectedAt: reading.evidence.retrievedAt, items: [] })), new Date(now), clients).meetings;
+    } else if (["CIVICPLUS", "CIVICCLERK", "BOARDBOOK", "BOARDDOCS", "IQM2"].includes(row.kind)) {
+      // The exact retained route is the adapter's input. Running its fetch
+      // here would ask for additional URLs whose bytes were never vaulted.
+      const collectedAt = reading.evidence.retrievedAt;
+      if (row.kind === "CIVICPLUS") {
+        meetings = makeCivicPlusSource([wiring]).normalizeWithDrops([{ wiring, ical: "", agendaCenter: text, collectedAt }], new Date(now)).meetings;
+      } else if (row.kind === "CIVICCLERK") {
+        const events = JSON.parse(text)?.value;
+        if (!Array.isArray(events)) return { changed: "The CivicClerk route no longer returns a list of events" };
+        meetings = makeCivicClerkSource([wiring]).normalizeWithDrops([{ wiring, events, collectedAt }], new Date(now)).meetings;
+      } else if (row.kind === "BOARDBOOK") {
+        meetings = makeBoardBookSource([wiring]).normalizeWithDrops([{ wiring, html: text, collectedAt }], new Date(now)).meetings;
+      } else if (row.kind === "IQM2") {
+        meetings = makeIqm2Source([wiring]).normalizeWithDrops([{ wiring, html: text, collectedAt }], new Date(now)).meetings;
+      } else {
+        meetings = makeBoardDocsSource([wiring]).normalizeWithDrops([{ wiring, text, collectedAt }], new Date(now)).meetings;
+      }
     } else {
     const source = row.kind === "ICAL" ? makeIcalSource([wiring], fetchImpl) : row.kind === "DILIGENT" ? makeDiligentSource([wiring], fetchImpl) : makeOfficialPageEventsSource([wiring], fetchImpl,url=>officialLinkingPageFrom(url,reading.linkingPages ?? []));
     const nowMs = Date.parse(now);

@@ -27,6 +27,7 @@ export interface JurisdictionRegistryFile {
     readonly stateCode: string;
     readonly name: string;
     readonly govClass: string;
+    readonly countyFips?: string | null;
     readonly ownWebAddress: string | null;
     readonly sourceIds: readonly string[];
   }[];
@@ -43,6 +44,7 @@ export interface MeetingsDiscoveryNeed {
   readonly stateCode: string;
   readonly name: string;
   readonly govClass: string;
+  readonly countyFips?: string | null;
   readonly ownWebAddress: string | null;
   readonly basis: MeetingsDiscoveryBasis;
   /** The DISCOVERY_OWED MEETINGS sources the need rests on; empty when none was recorded. */
@@ -81,6 +83,7 @@ export function meetingsDiscoveryNeeds(files: readonly JurisdictionRegistryFile[
         stateCode: row.stateCode,
         name: row.name,
         govClass: row.govClass,
+        countyFips: row.countyFips ?? null,
         ownWebAddress: row.ownWebAddress,
         basis: meetings.length === 0 ? "NO_MEETINGS_SOURCE_RECORDED" : "SOURCE_DISCOVERY_OWED",
         sources: meetings,

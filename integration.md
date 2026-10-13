@@ -213,3 +213,4 @@ One line per batch folded into river.
 - 2026-10-13T21:36:32Z · src-civic · SL-03, VS-01 · ready 6b207dedc758 · river 691c01dd0ff4 · pnpm gates pass on 691c01dd0ff4
 - 2026-10-13T21:36:32Z · statewide-and-portraits · SL-03 · ready 864a854bd9d5 · river 691c01dd0ff4 · pnpm gates pass on 691c01dd0ff4
 - 2026-10-13T21:36:32Z · token-cost ·  · ready c4d7ee39c86b · river 691c01dd0ff4 · pnpm gates pass on 691c01dd0ff4
+- 2026-10-13T22:49:19Z · src-legiscan ·  · ready 5f7ec73a4c75 · river 25ef70542f9b · pnpm gates pass on 25ef70542f9b

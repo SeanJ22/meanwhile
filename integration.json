@@ -2195,5 +2195,15 @@
     "tested_sha": "691c01dd0ff44041930828ead156c968fc269f8a",
     "gates": "pass",
     "at": "2026-10-13T21:36:32Z"
+  },
+  {
+    "lane": "src-legiscan",
+    "steps": [],
+    "ready_sha": "5f7ec73a4c7536f5fd749c8fb79cda877d5dcc9e",
+    "merge_sha": "d110c8802dee3bbe1b0a4d054471d1af842ea053",
+    "river_sha": "25ef70542f9bf5cffd93368ce29dcb11576e46cf",
+    "tested_sha": "25ef70542f9bf5cffd93368ce29dcb11576e46cf",
+    "gates": "pass",
+    "at": "2026-10-13T22:49:19Z"
   }
 ]

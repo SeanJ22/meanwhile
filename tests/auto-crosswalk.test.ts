@@ -1,5 +1,5 @@
-/** The automatic calendar-to-body reviewer accepts only what every check proves on saved bytes, and holds everything else by name. No test reaches the network. */
 import assert from "node:assert/strict";
+import { printedNames } from "../lib/meetings/printed-body-names.ts";
 import test from "node:test";
 
 import type { DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
@@ -13,7 +13,6 @@ import {
 import { CROSSWALK_CITATION, crosswalkRowId, crosswalkRowIssue, subBodyId, type MeetingBodyCrosswalkRow } from "../lib/civic-data/meeting-body-crosswalk.ts";
 import {
   autoCrosswalkReviewerId,
-  printedNames,
   reviewDiscoveryWalk,
   textSha256,
   type HeldBytes,
@@ -198,6 +197,18 @@ test("ACCEPTED: the registered governing body and a printed sub-body, each on it
     assert.ok(h.ruledOut && h.wouldSettle && h.whoMovesNext, `${h.key} names its dead end`);
     assert.match(h.key, /^auto-crosswalk:oh:city:city-of-testburg\|https:\/\//);
   }
+});
+
+test("an authority commission binds locally while a bare authority remains another government", async () => {
+  const feed = ics([
+    { uid: "c1", summary: "City Council Meeting", start: "20261005T190000" },
+    { uid: "h1", summary: "Housing Authority Commission Meeting", start: "20261006T190000" },
+    { uid: "a1", summary: "River Water Authority Meeting", start: "20261007T190000" },
+  ]);
+  const { attempt, bodies } = await walk(SITE(feed));
+  const result = review(attempt, bodies);
+  assert.ok(result.accepted.some(entry => entry.row.bodyName === "Housing Authority Commission"), JSON.stringify(result.held));
+  assert.ok(result.held.some(entry => entry.bodyName === "River Water Authority" && entry.reason === "SEPARATE_GOVERNMENT_NAME"));
 });
 
 test("HELD, AMBIGUOUS TITLE: an event naming the body and another body holds the row; nothing is accepted for it", async () => {

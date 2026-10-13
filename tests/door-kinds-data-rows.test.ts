@@ -15,6 +15,8 @@ const SAMPLE_ROWS = [
     ? { ...row, config: { ...row.config, bodyMatch: "Board of Directors" } } : row),
   { ...FIXTURE_DOOR_ROWS[0], agendaSourceType: "BOARDDOCS" as const,
     config: { portalUrl: "https://go.boarddocs.com/mi/grand/Board.nsf/Public", committeeId: "A4EP6J588C05" } },
+  { ...FIXTURE_DOOR_ROWS[0], agendaSourceType: "SWAGIT" as const,
+    config: { portalUrl: "https://chandleraz.new.swagit.com/views/155/", bodyMatch: "City Council" } },
 ];
 
 /** Settings a reviewer would supply, taken from a body the code already wires on the same adapter. */

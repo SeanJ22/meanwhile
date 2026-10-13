@@ -396,6 +396,7 @@ const VENDOR_PLATFORM: Readonly<Record<VerifiableVendor, string | null>> = {
   iqm2: "iqm2",
   boardbook: "boardbook",
   boarddocs: "boarddocs",
+  swagit: "swagit",
   "official-page-events": null,
 };
 
@@ -409,6 +410,7 @@ const VENDOR_VERIFICATION: Readonly<Record<VerifiableVendor, string>> = {
   iqm2: "an IQM2 calendar with at least one meeting row",
   boardbook: "a BoardBook organization page with at least one meeting link",
   boarddocs: "a public BoardDocs committee list whose dated rows carry published meeting identities; the committee is named by the attested portal selector",
+  swagit: "a public Swagit meeting list with dated event or video links and published body titles or category headings",
   "official-page-events": "a page on the body's own host with at least one dated event verified for the body",
 };
 

@@ -1,35 +1,3 @@
-/**
- * The automatic calendar-to-body reviewer: reviews one discovery walk's saved
- * evidence by rule. Its reviewer id names its own code version
- * (`auto-crosswalk-reviewer@<digest>`), never the owner.
- *
- * From each readable platform find it proposes
- * rows for the government's registered body (`<ocdId>#governing`, or `#board`
- * for a school district) and for sub-bodies whose names the government prints
- * in event titles or categories. A proposal is accepted only when every check
- * passes; otherwise it is held by name, with what was ruled out, what would
- * settle it and who moves next:
- *
- * 1. the calendar is on the government's attested own host or a publisher its own page links (`attestationFor`);
- * 2. every read it rests on answered 2xx with no access control, and the host's
- *    robots.txt was read and recorded first (the verdict is evidence, never a
- *    hold; a login, 403, rate limit or bot challenge still holds);
- * 3. the calendar's and naming page's bytes are held in the vault, cited by sha256;
- * 4. the state's registration pairs the government with a body;
- * 5. a saved official document (the attested calendar counts) prints the body's
- *    name; when no title does, a CivicPlus category feed filed under exactly
- *    that body's name names it, and the whole feed is its (`feedScope: "category"`);
- * 6. the filter selects at least one event and none naming a different body; a
- *    longer containing name is excluded by its exact words (`titleExclude`), and
- *    an event naming this body and another holds the row;
- * 7. the calendar's zone is stated or its county has one IANA clock, it is
- *    consistent, and no selected event is stamped in UTC;
- * 8. no two proposals select the same event, and one calendar carries at most
- *    `AUTO_CROSSWALK_ROUTE_CAP` bodies;
- * 9. the row passes `crosswalkRowIssue`.
- *
- * Pure: no fetch, no clock, no store.
- */
 import { createHash } from "node:crypto";
 import { parseDiligentMeetings } from "../../sources/diligent/index.ts";
 
@@ -61,9 +29,8 @@ import { parseCalendarRows } from "../../sources/iqm2/index.ts";
 import { parseAgendaCenter, parseAgendaCenterCategories } from "../../sources/civicplus/index.ts";
 import { parseBoardDocsMeetings, parseBoardDocsCommittees } from "../../sources/boarddocs/index.ts";
 import type { CivicClerkEvent } from "../../sources/civicclerk/index.ts";
-
-/** The most bodies one calendar carries: the family reads each member's calendar on its own each pass. */
-export const AUTO_CROSSWALK_ROUTE_CAP = 10;
+import { parseSwagitMeetings, swagitMatchesBody } from "../../sources/swagit/index.ts";
+import { BODY_NOUNS, LEADING_NOISE, ownNameWords, printedNames, tokenize } from "../../meetings/printed-body-names.ts";
 
 type VaultedEvidence = Extract<DerivedInputRef, { kind: "VAULTED_EVIDENCE" }>;
 
@@ -104,6 +71,7 @@ export interface AutoCrosswalkReviewInput {
 const KIND_OF_VENDOR: Readonly<Record<string, CrosswalkKind>> = {
   ical: "ICAL", "official-page-events": "OFFICIAL_PAGE_EVENTS", diligent: "DILIGENT", "legistar-api": "LEGISTAR",
   boardbook: "BOARDBOOK", "civicclerk-api": "CIVICCLERK", iqm2: "IQM2", "civicplus-agendacenter": "CIVICPLUS", boarddocs: "BOARDDOCS",
+  swagit: "SWAGIT",
 };
 export const AUTO_CROSSWALK_VENDORS: ReadonlySet<string> = new Set(Object.keys(KIND_OF_VENDOR));
 
@@ -161,112 +129,9 @@ const OWN_CLASS_WORD: Readonly<Record<GovernmentKind, readonly string[]>> = {
 /** Words that make a printed name another government's body, not a sub-body of this one. */
 const SEPARATE_GOVERNMENT_WORDS = ["county", "city", "town", "township", "village", "borough", "school", "district", "authority", "state", "regional", "federal", "tribal", "nation", "university", "college"];
 
-/** The government's own name words, from its jurisdiction id: `oh:city:city-of-testville` gives `testville`. */
-function ownNameWords(jurisdictionId: string): ReadonlySet<string> {
-  const slug = jurisdictionId.split(":")[2] ?? "";
-  return new Set(slug.split("-").filter((w) => w !== "" && !/^\d+$/.test(w) && !["city", "town", "village", "township", "borough", "county", "of", "the", "school", "district", "sch", "dist"].includes(w)));
-}
-
-/* -------------------------------------------------------- printed names */
-
-const BODY_NOUNS: ReadonlySet<string> = new Set([
-  "commission", "committee", "subcommittee", "board", "council", "authority", "trustees", "commissioners", "supervisors", "selectmen",
-  "aldermen", "panel", "corporation", "agency", "legislature", "court", "selectboard", "jury", "freeholders", "selectpersons",
-]);
-const CONNECTORS: ReadonlySet<string> = new Set(["of", "and", "&", "for", "on", "the", "to"]);
-/** Words a title puts before a body's name that are not part of it. */
-const LEADING_NOISE: ReadonlySet<string> = new Set([
-  "regular", "special", "joint", "emergency", "adjourned", "rescheduled", "cancelled", "canceled", "annual", "monthly", "organizational",
-  "reorganization", "work", "study", "public", "virtual", "hybrid", "quarterly", "continued", "recessed", "postponed", "amended", "revised",
-  "updated", "tentative", "draft", "the", "notice", "agenda", "meeting", "of", "and", "&", "for", "on", "to",
-]);
-/** Words that end a noun-first name ("Board of Zoning Appeals Meeting", "Board of Commissioners General Session"). */
-const RIGHT_STOPS: ReadonlySet<string> = new Set([
-  "meeting", "meetings", "session", "sessions", "hearing", "hearings", "workshop", "agenda", "minutes", "retreat", "orientation", "training",
-  "tour", "canceled", "cancelled", "postponed", "rescheduled", "regular", "special", "work", "study", "general", "budget", "business",
-  "executive", "closed", "annual", "monthly", "quarterly", "emergency", "organizational", "reorganization", "public", "virtual", "hybrid",
-  "briefing", "joint", "workshops", "forum", "open", "house",
-]);
-/** The most words after "of" a noun-first name carries ("Board of County Commissioners", "Board of Parks and Recreation"). */
-const MAX_OF_WORDS = 4;
-
-interface Token { readonly text: string; readonly start: number; readonly end: number }
-
-function tokenize(s: string): Token[] {
-  return [...s.matchAll(/[A-Za-z0-9][A-Za-z0-9'’]*(?:[.-][A-Za-z0-9'’]+)*|&/g)].map((m) => ({ text: m[0], start: m.index!, end: m.index! + m[0].length }));
-}
-
-/** One body name a title prints, with its span. */
-export interface PrintedName {
-  /** The words as printed, the title's noise, own name and own class word left off the front. */
-  readonly text: string;
-  /** The words as printed, whole: what an exclusion names. */
-  readonly whole: string;
-  readonly start: number;
-  readonly end: number;
-}
-
-/**
- * The body names a title prints: a run of capitalized words ending in a body noun ("Housing Commission"), or a
- * noun-first name ("Board of Zoning Appeals", "Committee of the Whole"). Two bodies joined by "and" are two names.
- * Only the longest name at any place is kept, so "City Council Finance Committee" is one name.
- */
-export function printedNames(title: string, jurisdictionId: string): readonly PrintedName[] {
-  const t = tokenize(title);
-  const cap = (i: number): boolean => /^[A-Z]/.test(t[i]!.text);
-  const lowAt = (i: number): string => t[i]!.text.toLowerCase();
-  /* A separator between two tokens (a dash, a colon, a slash, a comma, parentheses) ends a name. */
-  const joined = (i: number): boolean => i > 0 && /^\s*$/.test(title.slice(t[i - 1]!.end, t[i]!.start));
-  const spans: { a: number; b: number }[] = [];
-  for (let i = 0; i < t.length; i++) {
-    const w = lowAt(i);
-    const noun = BODY_NOUNS.has(w) || (w === "force" && i > 0 && lowAt(i - 1) === "task" && joined(i));
-    if (!noun || !cap(i)) continue;
-    let a = i;
-    while (a > 0 && joined(a)) {
-      const pw = lowAt(a - 1);
-      if (cap(a - 1) && pw !== "and") {
-        a -= 1;
-        continue;
-      }
-      if (CONNECTORS.has(pw) && a - 2 >= 0 && joined(a - 1) && cap(a - 2)) {
-        /* "Council and Planning Commission" is two bodies; "Parks and Recreation Commission" is one. */
-        if ((pw === "and" || pw === "&") && BODY_NOUNS.has(lowAt(a - 2))) break;
-        a -= 2;
-        continue;
-      }
-      break;
-    }
-    let b = i;
-    if (b + 1 < t.length && lowAt(b + 1) === "of" && joined(b + 1)) {
-      let c = b + 2;
-      if (c < t.length && lowAt(c) === "the" && joined(c)) c += 1;
-      let last = -1;
-      let words = 0;
-      while (c < t.length && joined(c) && cap(c) && !RIGHT_STOPS.has(lowAt(c)) && words < MAX_OF_WORDS) {
-        last = c;
-        words += 1;
-        /* A body noun ends the name: "Board of County Commissioners", "Board of Trustees". */
-        if (BODY_NOUNS.has(lowAt(c))) break;
-        c += 1;
-        if (c + 1 < t.length && (lowAt(c) === "and" || lowAt(c) === "&") && joined(c) && joined(c + 1) && cap(c + 1) && !RIGHT_STOPS.has(lowAt(c + 1))) c += 1;
-      }
-      if (last >= 0) b = last;
-    }
-    spans.push({ a, b });
-  }
-  const kept = spans
-    .sort((x, y) => (y.b - y.a) - (x.b - x.a) || x.a - y.a)
-    .filter((s, index, all) => !all.slice(0, index).some((k) => k.a <= s.a && s.b <= k.b))
-    .sort((x, y) => x.a - y.a);
-  const own = ownNameWords(jurisdictionId);
-  return kept.map(({ a, b }): PrintedName => {
-    let from = a;
-    while (from < b && (LEADING_NOISE.has(lowAt(from)) || own.has(lowAt(from)))) from += 1;
-    /* The government's own class word stays printed ("County Commission" of a county); `canonical` sets it aside. */
-    const words = flat(title.slice(t[from]!.start, t[b]!.end));
-    return { text: words, whole: words, start: t[from]!.start, end: t[b]!.end };
-  });
+function namesAnotherGovernment(words: readonly string[], kind: GovernmentKind): boolean {
+  const localBoard = words.some(word => /^(?:board|commission|committee|subcommittee)$/.test(word));
+  return SEPARATE_GOVERNMENT_WORDS.some(word => words.includes(word) && !OWN_CLASS_WORD[kind].includes(word) && (word !== "authority" || !localBoard));
 }
 
 /** How two printed names are compared: case, and the government's own class word in front, aside. */
@@ -303,7 +168,7 @@ export function categoryBodyOf(category: string, jurisdictionId: string): Catego
   if (listed !== undefined) return { role: "GOVERNING", name: listed };
   const words = key.split(" ");
   if (Object.values(GOVERNING_NAMES).flat().some((n) => canonical(n, jurisdictionId) === key) ||
-    SEPARATE_GOVERNMENT_WORDS.some((w) => words.includes(w) && !OWN_CLASS_WORD[kind].includes(w))) {
+    namesAnotherGovernment(words, kind)) {
     return { unmatched: `"${shown}" reads as another government's body` };
   }
   return { unmatched: `"${shown}" names a sub-body; the registration pairs this government with its governing body only, and the reviewer takes sub-bodies from event titles` };
@@ -507,6 +372,17 @@ const titleHas = (title: string, terms: readonly string[]): boolean => terms.som
  * A title's other printed names are read to tell a longer name (excluded by its exact words) from a second body.
  */
 function selectFor(kind: CrosswalkKind, proposal: Proposal, events: readonly CalendarEvent[], jurisdictionId: string, route: string): Selected {
+  if (kind === "SWAGIT") {
+    const bodyMatch = events.map(event => event.context).find(context => {
+      const names = printedNames(context, jurisdictionId).filter(name => tokenize(name.text).length >= 2);
+      return names.length === 1 && canonical(names[0].text, jurisdictionId) === proposal.key;
+    }) ?? proposal.spellings[0];
+    const selected = events.filter(event => swagitMatchesBody({ title: event.title, category: event.context }, bodyMatch, proposal.spellings[0]));
+    if (!selected.length) return { held: "SELECTS_NOTHING", detail: "no Swagit row names the reviewed body" };
+    const other = selected.find(event => printedNames(event.title, jurisdictionId).some(name => tokenize(name.text).length >= 2 && canonical(name.text, jurisdictionId) !== proposal.key));
+    if (other) return { held: "AMBIGUOUS_TITLE", detail: `"${other.title}" also names another body` };
+    return { filter: { bodyMatch }, selected };
+  }
   if (["BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS"].includes(kind)) {
     const namesIn = (event: CalendarEvent) => [...printedNames(event.title, jurisdictionId), ...printedNames(event.context, jurisdictionId)]
       .filter(name => tokenize(name.text).length >= 2);
@@ -655,8 +531,6 @@ function deadEnd(reason: AutoCrosswalkHoldReason, name: string | null, route: st
       return { ruledOut: "guessing the wall clock of the body's sittings", wouldSettle: "a reviewing agent session confirming the sittings' local times against the government's own page, through the manual crosswalk", whoMovesNext: "a reviewing agent session" };
     case "CONFLICTING_SELECTION":
       return { ruledOut: "two bodies claiming the same event", wouldSettle: "a reviewing agent session deciding whose event it is, through the manual crosswalk", whoMovesNext: "a reviewing agent session" };
-    case "ROUTE_CAP":
-      return { ruledOut: `reading ${route} more than ${AUTO_CROSSWALK_ROUTE_CAP} times a pass`, wouldSettle: "the family reading one shared calendar once a pass for all its bodies", whoMovesNext: "engineering" };
     case "ROW_CHECK_FAILED":
       return { ruledOut: "promoting a row that fails a C16 check", wouldSettle: "a fix to the reviewer, or a reviewing agent session's row", whoMovesNext: "engineering" };
   }
@@ -723,7 +597,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       hold(route, attested.held === "EVIDENCE_NOT_VAULTED" ? "EVIDENCE_NOT_VAULTED" : "HOST_NOT_ATTESTED", attested.detail);
       continue;
     }
-    const linkedPublisher = ["DILIGENT", "LEGISTAR", "BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS"].includes(kind) && attested.attestation.kind === "LINKED_FROM_ATTESTED_PAGE";
+    const linkedPublisher = ["DILIGENT", "LEGISTAR", "BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "SWAGIT"].includes(kind) && attested.attestation.kind === "LINKED_FROM_ATTESTED_PAGE";
     if (homeHost === null || (bare(homeHost) !== bare(routeHost) && !linkedPublisher)) {
       hold(route, "HOST_NOT_OWN", `the calendar is on ${routeHost}; the walk attested ${homeHost ?? "no homepage"} as the government's own`);
       continue;
@@ -786,6 +660,11 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
     } else if (kind === "CIVICPLUS") {
       events = parseAgendaCenterCategories(calendar.text).flatMap(category => parseAgendaCenter(calendar.text, category.id).map(row => ({ title: flat(category.name), context: "", categories: [flat(category.name)],
         scopeId: category.id, identity: `${category.id}|${row.date}`, tzid: stateZone, utc: false, floating: false, url: row.agendaHref ? new URL(row.agendaHref, route).toString() : route })));
+    } else if (kind === "SWAGIT") {
+      let rows: ReturnType<typeof parseSwagitMeetings> = [];
+      try { rows = parseSwagitMeetings(calendar.text, route); } catch { rows = []; }
+      events = rows.filter(row => row.date).map(row => ({ title: flat(row.title), context: flat(row.category), categories: [],
+        identity: `${row.id}|${row.date}`, tzid: stateZone, utc: false, floating: row.hour !== null, url: row.url }));
     } else if (kind === "BOARDDOCS") {
       const committeeId = new URL(route).searchParams.get("current_committee_id");
       const via = find.via?.artifactId ? input.held(find.via.artifactId) : null;
@@ -900,7 +779,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       const shown = spellings[0] ?? entry.category ?? key;
       if (tokenize(shown).length < 2 || BODY_NOUNS.has(key)) continue;
       const words = key.split(" ");
-      if (everyGoverningKey.has(key) || SEPARATE_GOVERNMENT_WORDS.some((w) => words.includes(w) && !OWN_CLASS_WORD[kindOfGovernment].includes(w))) {
+      if (everyGoverningKey.has(key) || namesAnotherGovernment(words, kindOfGovernment)) {
         hold(route, "SEPARATE_GOVERNMENT_NAME", `"${shown}" reads as another government's body, not a sub-body of ${registered.publishingOrg}`, shown);
         continue;
       }
@@ -999,11 +878,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
     const standing = routeAccepted
       .filter((a) => !conflicted.has(a.row.id))
       .sort((a, b) => Number(a.row.bodyRole === "SUB_BODY") - Number(b.row.bodyRole === "SUB_BODY") || b.count - a.count || (a.row.id < b.row.id ? -1 : 1));
-    for (const [index, a] of standing.entries()) {
-      if (index >= AUTO_CROSSWALK_ROUTE_CAP) {
-        hold(route, "ROUTE_CAP", `${standing.length} bodies on one calendar; ${AUTO_CROSSWALK_ROUTE_CAP} are read from it each pass`, a.row.bodyName, a.row.bodyId);
-        continue;
-      }
+    for (const a of standing) {
       accepted.push({ row: a.row, inputs: a.inputs });
     }
   }

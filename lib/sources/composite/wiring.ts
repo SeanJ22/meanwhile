@@ -19,6 +19,7 @@ import { makeSchedulePageSource } from "../schedulepage/index.ts";
 import { makeOfficialPageEventsSource, officialLinkingPageFrom } from "../official-page-events/index.ts";
 import { makeDocumentListingSource } from "../document-listing/index.ts";
 import { makeSuiteOneSource } from "../suiteone/index.ts";
+import { makeSwagitSource } from "../swagit/index.ts";
 import {
   makeLegistarSource,
   normalizeWithDrops as legistarNormalizeWithDrops,
@@ -116,6 +117,10 @@ export const CAPABILITIES: Array<{
   {
     name: "boarddocs", types: ["BOARDDOCS"],
     make: (rows, fetchImpl) => makeBoardDocsSource(rows, fetchImpl) as ReportingMeetingSource<unknown>,
+  },
+  {
+    name: "swagit", types: ["SWAGIT"],
+    make: (rows, fetchImpl) => makeSwagitSource(rows, fetchImpl) as ReportingMeetingSource<unknown>,
   },
   {
     name: "clerksboards",

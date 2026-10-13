@@ -186,7 +186,7 @@
   {
     "id": "swagit",
     "label": "Swagit",
-    "haveAdapter": false,
+    "haveAdapter": true,
     "hostPattern": "\\bswagit\\.com\\b",
     "flags": "i",
     "markup": []

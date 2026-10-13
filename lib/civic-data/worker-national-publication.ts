@@ -72,7 +72,6 @@ const SCOPE_DIVISIONS = new Set(["country", "state"]);
 const GOVERNING_FUNCSTAT = new Set(["A", "B", "C", "G"]);
 const LEGISLATIVE = new Set<Division["divisionType"]>(["cd", "sldu", "sldl"]);
 const STATE_DIVISION = /^ocd-division\/country:us\/(?:state|district|territory):[a-z]{2}$/;
-const slug = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 function statewideRow(official: NationalOfficialInput, capture: WorkerPublicationCapture, now: string, stateLabel: string | null): StatewideExecutive | string {
   const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, linkingPage: official.linkingPage ?? null };
@@ -249,7 +248,6 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
         if (official.portrait) {
           try {
             const holder = { id: rosterMemberId(bodyId, personId), personId, name: official.name, nativeIds: undefined };
-            const existing = prior!.payload.officialPhotos.photos.find(row => row.officeholderId === holder.id);
             const photo = await storeVerifiedPortrait(holder.personId ?? holder.id, {...official.portrait,subject:{personId:holder.personId ?? holder.id,name:holder.name,nativeIds:holder.nativeIds,profileUrls:[official.document.url,official.officialUrl]}}, input.now, input.portraitRuntime);
             const receipt = section3SourceReceipt(official.portrait.captures,input.now,"section3:portrait",
               "The same named portrait is supported by two saved sources; its permitted use is attributed and its decoded bytes are stored on our origin.");

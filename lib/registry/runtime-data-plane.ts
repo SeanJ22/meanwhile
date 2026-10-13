@@ -460,7 +460,6 @@ export function registryRuntimeProjectionIssues(value: RegistryRuntimeCarton): s
   const placeholderDivisionIds = new Set(divisions.filter((division) => isCensusPlaceholderDivision(division)).map((division) => division.ocdId));
   const placeholderBodies = bodies.filter((body) => body.ocdId !== null && placeholderDivisionIds.has(body.ocdId)).map((body) => body.id).sort();
   if (placeholderBodies.length > 0) issues.push(`${CENSUS_PLACEHOLDER_BODY_ISSUE}:${placeholderBodies.join(",")}`);
-  const bodyIds = new Set(bodies.map((body) => body.id));
   const executiveIds = statewideExecutives.map((row) => row.holder.id);
   if (!statewideExecutives.length) issues.push("STATEWIDE_EXECUTIVES_EMPTY");
   if (duplicate(executiveIds)) issues.push("STATEWIDE_EXECUTIVE_ID_INVALID_OR_DUPLICATED");

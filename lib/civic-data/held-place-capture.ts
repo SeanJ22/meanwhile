@@ -87,10 +87,10 @@ export function projectHeldPlaceCapture(
       const source = member.membershipSource ?? roster;
       add(member.id, "OFF-04", { name: member.name, office: member.officeTitle }, source.sourceUrl, source.collectedAt, FRESHNESS_HOURS.registryRecord);
       add(member.id, "OFF-08", { name: member.name, office: member.officeTitle }, source.sourceUrl, source.collectedAt, FRESHNESS_HOURS.registryRecord);
-      // Optional facts retained from older reads keep their own source clocks.
+      // Each optional fact keeps its own source clock.
       for (const key of ["termNote", "email", "phone", "websiteUrl"] as const) {
         if (!member[key]) continue;
-        const origin = member.retainedFieldSources?.[key] ?? source;
+        const origin = member.fieldSources?.[key] ?? source;
         add(member.id, key === "termNote" ? "OFF-06" : key === "websiteUrl" ? "OFF-08" : "OFF-09", { [key]: member[key], contactScope: member.contactScope },
           origin.sourceUrl, origin.collectedAt, FRESHNESS_HOURS.registryRecord);
       }

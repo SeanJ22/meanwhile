@@ -4,8 +4,20 @@ import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import { heldCaptureReader } from "../civic-data/worker-publication-context.ts";
 import type { ProbeFetch } from "../doors/probe.ts";
+import { hostSourceKind, type SourceKind } from "../control-plane/promotion/source-kinds.ts";
+import { hostOf, isOfficialHost, type Provenance } from "./check.ts";
 
 export const RECEIPT_WORK_ITEM = "fact-receipts";
+
+const KIND_PROVENANCE: Partial<Record<SourceKind, Provenance>> = { OFFICIAL: "OFFICIAL", FILING: "FILING", CAMPAIGN: "CAMPAIGN", NEWS: "NEWS" };
+
+/** Who stands behind a saved page: the entity's own or a .gov host, a campaign, or the kind Admin gives its host. */
+export function captureProvenance(capture: WorkerPublicationCapture, entityHosts: readonly string[]): Provenance {
+  const url = capture.evidence.canonicalUrl;
+  if (isOfficialHost(hostOf(url), entityHosts)) return "OFFICIAL";
+  if (capture.campaign) return "CAMPAIGN";
+  return KIND_PROVENANCE[hostSourceKind(url, capture.sourcePolicy)] ?? "REFERENCE";
+}
 
 /** The newest saved copy of a page any job already holds, or a fresh one saved now; null when neither can be had. */
 export async function receiptCapture(input: {

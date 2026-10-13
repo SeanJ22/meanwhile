@@ -247,7 +247,8 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
         members.push({ bodyId, versionId: prior.versionId, discoveryIds: [official.discoveryId] });
         if (official.portrait) {
           try {
-            const holder = { id: rosterMemberId(bodyId, personId), personId, name: official.name, nativeIds: undefined };
+            const [legacy] = await input.facts.query("SELECT value FROM entity_external_id WHERE entity_id = $1 AND scheme = 'roster-member'", [personId]);
+            const holder = { id: rosterMemberId(bodyId, personId, legacy?.value as string | undefined), personId, name: official.name, nativeIds: undefined };
             const photo = await storeVerifiedPortrait(holder.personId ?? holder.id, {...official.portrait,subject:{personId:holder.personId ?? holder.id,name:holder.name,nativeIds:holder.nativeIds,profileUrls:[official.document.url,official.officialUrl]}}, input.now, input.portraitRuntime);
             const receipt = section3SourceReceipt(official.portrait.captures,input.now,"section3:portrait",
               "The same named portrait is supported by two saved sources; its permitted use is attributed and its decoded bytes are stored on our origin.");

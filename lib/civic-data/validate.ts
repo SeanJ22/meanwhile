@@ -27,6 +27,7 @@ import type {
   CandidateState,
   CandidateVersionRecord,
   AuditPullRemovalEvidence,
+  MovedToFactStoreRemovalEvidence,
   CensusPlaceholderBodyRemovalEvidence,
   DependentCheck,
   RoutineCandidate,
@@ -276,7 +277,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
   if (candidate.recordClass === "REGISTRY_RUNTIME_BINDING") return registryPlaceholderRemovalCheck(candidate, removed, evidenceByKey);
 
   // A meeting removal is proven only by a meeting's authority; the registry's placeholder code never proves one.
-  const validMeetingEvidence = new Map<string, Exclude<RoutineRemovalEvidence, CensusPlaceholderBodyRemovalEvidence | AuditPullRemovalEvidence>>();
+  const validMeetingEvidence = new Map<string, Exclude<RoutineRemovalEvidence, CensusPlaceholderBodyRemovalEvidence | AuditPullRemovalEvidence | MovedToFactStoreRemovalEvidence>>();
   const registeredWindow = meetingReaderServingWindowAt(candidate.retrieval.retrievedAt);
     // A `V1` row (the old shown window) is still accepted.
   const legacyWindow = meetingLegacyServingWindowAt(candidate.retrieval.retrievedAt);
@@ -292,8 +293,8 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
     if (row.code === "REMOVED_BY_AUDIT_PULL") {
       return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is a meeting; an audit pull removes only curated Reader members.`);
     }
-    if (row.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT") {
-      return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is a meeting; a registry placeholder removal cannot prove it.`);
+    if (row.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT" || row.code === "MOVED_TO_FACT_STORE") {
+      return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is a meeting; a registry removal cannot prove it.`);
     }
     const before = object(delta.before);
     const meetingId = typeof before?.id === "string" ? before.id : null;
@@ -407,7 +408,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
 
   for (const delta of removed.filter(({ key }) => key.startsWith("agenda-document:"))) {
     const row = evidenceByKey.get(delta.key)!;
-    if (row.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT" || row.code === "REMOVED_BY_AUDIT_PULL" || row.code === "OFFICIAL_ROSTER_NO_LONGER_LISTS") {
+    if (row.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT" || row.code === "REMOVED_BY_AUDIT_PULL" || row.code === "OFFICIAL_ROSTER_NO_LONGER_LISTS" || row.code === "MOVED_TO_FACT_STORE") {
       return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} does not inherit authority from its exact removed meeting.`);
     }
     const before = object(delta.before);
@@ -456,6 +457,13 @@ function registryPlaceholderRemovalCheck(
   for (const delta of removed) {
     const row = evidenceByKey.get(delta.key)!;
     const before = object(delta.before);
+    if (row.code === "MOVED_TO_FACT_STORE") {
+      const model = object(candidate.readModel);
+      if (!/^(body-roster|roster-disposition):/.test(delta.key) || [model?.bodyRosters, model?.rosterReaderDispositions].some(rows => Array.isArray(rows) && rows.length)) {
+        return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is not a roster row, or this candidate still carries rosters.`);
+      }
+      continue;
+    }
     if (row.code === "OFFICIAL_ROSTER_NO_LONGER_LISTS") {
       if (row.replacementHolderId) {
         const executives = object(candidate.readModel)?.statewideExecutives;

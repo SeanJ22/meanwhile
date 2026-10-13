@@ -22,7 +22,7 @@ import { publicationRecordChanges } from "./publication-record-changes.ts";
 import { auditPull, capturesForPublication, captureIntact, jobWorkerResults, latestParserResult, validatorObservation } from "./worker-publication-evidence.ts";
 import { readValidatorManual, writeValidatorLessons, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
 import { readHeldRoster } from "./worker-held-roster.ts";
-import { heldBodySchedule } from "./worker-held-meetings.ts";
+import { heldBodySchedule, type HeldBodySchedule } from "./worker-held-meetings.ts";
 import { publicationCaptureReaders } from "./worker-publication-context.ts";
 import { type OfficialLinkingPage } from "./source-authority.ts";
 import { linkingPageFrom, pageWords, section3Page } from "../control-plane/promotion/section3.ts";
@@ -30,8 +30,10 @@ import { inventoryRecordEvidence } from "../control-plane/workers/record-evidenc
 import { compareCandidateWithSource } from "../control-plane/workers/record-verification.ts";
 import { recordPublishedPageDoor, withPageDoor } from "./worker-page-doors.ts";
 import { factClocks } from "../facts/clocks.ts";
-import type { FactDb, Query } from "../facts/publish.ts";
-import { publishBodyScheduleFacts, publishRosterFacts } from "../facts/roster-facts.ts";
+import type { Clocks, FactDb, Query } from "../facts/publish.ts";
+import { publishBodyFacts, publishRosterFacts, type RosterFactsReport } from "../facts/roster-facts.ts";
+import { openBlank } from "../facts/publish.ts";
+import { hostOf, isOfficialHost } from "../facts/check.ts";
 
 export interface WorkerPublicationCapture {
   readonly campaign?: import("../control-plane/promotion/section3.ts").Section3Page["campaign"];
@@ -144,6 +146,34 @@ export async function heldRosterReading(input: {
 
 type PublicationReport = readonly { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[];
 
+/** One body's roster reading as facts: only a page about this body counts, and an unnamed body takes the name its own page gives it. */
+export async function publishBodyRoster(facts: FactDb & { readonly query: Query }, input: {
+  readonly body: { readonly id: string; readonly name: string | null; readonly ocdId: string | null };
+  readonly division: { readonly label: string } | null; readonly state: string | null;
+  readonly reading: RosterReading; readonly schedule?: HeldBodySchedule | null; readonly clocks: Clocks; readonly now: Date;
+}): Promise<RosterFactsReport> {
+  const { body, division, reading } = input;
+  const text = reading.capture.evidence.text;
+  if (!pageIsAboutBody(text, body, division?.label ?? null, reading.id.startsWith("held:"))) {
+    await openBlank(facts.query, { entityId: body.id, field: "members", stage: "CHECK", reason: "ROSTER_PAGE_NOT_THIS_BODY",
+      detail: reading.capture.evidence.canonicalUrl, retryMinutes: input.clocks.retryMinutes("officeholder") });
+    throw new Error("ROSTER_PAGE_NOT_THIS_BODY");
+  }
+  const host = hostOf(reading.capture.evidence.canonicalUrl);
+  if (isOfficialHost(host, [])) await facts.query("INSERT INTO entity_host (entity_id, host) SELECT id, $2 FROM entity WHERE id = $1 ON CONFLICT DO NOTHING", [body.id, host]);
+  const tally = await publishRosterFacts(facts, { body: { id: body.id, name: body.name, state: input.state, parentId: body.ocdId },
+    capture: reading.capture, members: reading.members, complete: reading.complete, producedBy: reading.id }, input.clocks, input.now);
+  const named = body.name === null && division ? bodyNameFromPage(text, division.label) : null;
+  const own = named && division ? named.split(new RegExp(division.label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i")).join(" ").replace(/\s+/g, " ").trim() : "";
+  if (named && own) await publishBodyFacts(facts, { bodyId: body.id, capture: reading.capture, producedBy: reading.id,
+    facts: [{ field: "name", value: named, quote: own }] }, input.clocks, input.now);
+  const schedule = input.schedule;
+  if (schedule) await publishBodyFacts(facts, { bodyId: body.id, capture: schedule.capture, producedBy: `held-schedule:${schedule.capture.evidence.artifactId}`,
+    facts: [["meeting_cadence", schedule.schedule.cadence], ["agenda_url", schedule.schedule.agendaUrl]].flatMap(([field, value]) =>
+      value ? [{ field: field as "meeting_cadence" | "agenda_url", value, quote: value }] : []) }, input.clocks, input.now);
+  return tally;
+}
+
 async function itemsOf(repos: ControlPlaneRepositories, rule: (item: WorkItem) => boolean, paths: readonly (readonly [readonly string[], string])[], ids: readonly string[] = []) {
   const rows = [...(await Promise.all(paths.map(([path, value]) => repos.workItems.listWhere(path, value)))).flat(),
     ...(await Promise.all(ids.map(id => repos.workItems.read(id)))).filter(row => row !== null)];
@@ -196,20 +226,18 @@ export async function publishOwedRosterFacts(input: {
         report.push({ workItemId: id, outcome: item.publicationOutcome });
         continue;
       }
-      const tally = await publishRosterFacts(input.facts, { body: { id: bodyId, name: body.name, state: plan.jurisdiction.toUpperCase().slice(0, 2), parentId: body.ocdId },
-        capture: reading.capture, members: reading.members, complete: reading.complete, producedBy: reading.id }, clocks, new Date(input.now));
-      const division = prior.payload.registry.divisions.find(row => row.ocdId === body.ocdId) ?? null;
+      const division = governmentOf(prior.payload.registry.divisions, body);
       const siblings = await itemsOf(input.repos, other => other.autonomousPlan?.publication?.bodyId === bodyId || other.autonomousPlan?.contract.subjectId === plan.contract.subjectId,
         [[["autonomousPlan", "publication", "bodyId"], bodyId], [["autonomousPlan", "contract", "subjectId"], plan.contract.subjectId]]);
       const schedule = await heldBodySchedule({ body: { id: bodyId, name: body.name }, divisionLabel: division?.label ?? null,
         artifacts: (await Promise.all(siblings.map(other => input.repos.artifacts.read(other.id)))).flat(), readHeld, now: input.now });
-      if (schedule) await publishBodyScheduleFacts(input.facts, { bodyId, capture: schedule.capture, cadence: schedule.schedule.cadence,
-        agendaUrl: schedule.schedule.agendaUrl, producedBy: `held-schedule:${schedule.capture.evidence.artifactId}` }, clocks, new Date(input.now));
+      const tally = await publishBodyRoster(input.facts, { body, division, state: plan.jurisdiction.toUpperCase().slice(0, 2), reading, schedule, clocks, now: new Date(input.now) });
       const live = tally.live + tally.confirmed + tally.held;
       outcome = withPageDoor({ at: input.now, workerResultId: reading.id, status: live === 0 ? "HELD" : tally.blanks ? "PARTIALLY_PUBLISHED" : "PUBLISHED",
         code: live === 0 ? "ROSTER_FACTS_BLANK" : tally.live ? "VERIFIED_RESULT_PUBLISHED" : "VERIFIED_RESULT_REUSED",
         detail: `${tally.live} new and ${tally.confirmed} confirmed facts from ${reading.capture.evidence.canonicalUrl}; ${tally.blanks} stay open as blanks with their reasons` +
           (tally.departed ? `; ${tally.departed} no longer on the official roster.` : "."),
+        records: { added: tally.live, changed: 0, reused: tally.confirmed },
         ...(live === 0 ? { recovery: "WORKER" as const } : {}), candidateId: null, versionId: null }, reading.capture, plan.contract.recordClass);
     } catch (error) {
       const detail = sanitizedErrorDiagnostic(error);

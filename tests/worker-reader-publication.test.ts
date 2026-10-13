@@ -26,21 +26,18 @@ import { dispatchWorkerTask, evidenceProjection, FLEET_POLICY_VERSION } from "..
 import { nextAutonomousOperation } from "../lib/control-plane/workers/coordinator.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { readRegistryRuntimePrior, registryRuntimeCandidate, type RegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
-import { publishWorkerReaderResults, workerReaderPackage, workerReaderPackageWithPulls, inheritVerifiedCommentDetails } from "../lib/civic-data/worker-reader-publication.ts";
-import { readManualProjectionPrior, type CuratedReaderProjection } from "../lib/civic-data/manual-projections.ts";
-import { prepareManualProjectionSuccessor } from "../lib/civic-data/manual-successor.ts";
+import { publishWorkerReaderResults, workerReaderPackageWithPulls } from "../lib/civic-data/worker-reader-publication.ts";
+import type { CuratedReaderProjection } from "../lib/civic-data/manual-projections.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
-import { commentAccessEvidenceFor } from "../lib/ask/meeting-knowledge.ts";
 import { workerPublicationTasks } from "../lib/civic-data/worker-publication-tasks.ts";
 import { verifiedWorkerRecords } from "../lib/civic-data/worker-publication-evidence.ts";
 import { readCuratedReaderProjection } from "../lib/civic-data/curated-reader-read-model.ts";
 import { readPublicRecords } from "../lib/civic-data/public-records.ts";
 import { takeUnshownUpdates } from "../lib/control-plane/updates.ts";
 import { readGovernmentBudgets, currentBudgetFacts, budgetChecklistEvidence } from "../lib/civic-data/government-budgets.ts";
-import { projectedCommentAccessFor, type CommentAccess } from "../lib/registry/comment-access-client.ts";
 import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
 import { readEverydayRoutingProjection } from "../lib/routing/everyday-data-plane.ts";
-import { publishWorkerRosterResults } from "../lib/civic-data/worker-roster-publication.ts";
+import { publishWorkerDirectoryResults } from "../lib/civic-data/worker-roster-publication.ts";
 import { directoryMeetingHints, workerBodyDirectoryPackage } from "../lib/civic-data/worker-body-directory.ts";
 import { filingsForDivisions, officialFilingIssue, type OfficialFiling } from "../lib/civic-data/official-filings.ts";
 import { renderCardWithSources } from "./helpers/render-card.ts";
@@ -63,7 +60,7 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
   const divisions = imported.payload.registry.divisions.filter(row => CENSUS_PLACEHOLDER_LABELS[row.label]).map(row => ({ ...row, label: CENSUS_PLACEHOLDER_LABELS[row.label] }));
   const corrected = registryRuntimeCandidate({ contractId: "registry-runtime-bindings", version: "fixture-census-correction", sourceThrough: "2026-09-08T12:00:02.000Z",
     sourceReceipt: { contractVersion: 1, reviewedAt: "2026-09-08T12:00:02.000Z", reviewedBy: "recorded-fixture-control", sources: [...new Set(divisions.map(row => row.provenance!.sourceUrl!))].map(url => ({ requestedUrl: url, finalUrl: url, publisher: "U.S. Census Bureau", sourceClass: "OFFICIAL_PUBLISHER", retrievedAt: "2026-09-08T12:00:02.000Z", httpStatus: 200, rawHash: createHash("sha256").update(JSON.stringify(divisions)).digest("hex"), reviewedEvidence: "Offline fixture: Census LEA 99997 means no school district; retained transfer correction control." })) },
-    payload: { ...imported.payload, registry: { ...imported.payload.registry, divisions, bodies: [] }, bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialCandidacies: { ...imported.payload.officialCandidacies, rows: [] }, officialPhotos: { photos: [] }, rosterPhotos: {} } }, { prior: imported });
+    payload: { ...imported.payload, registry: { ...imported.payload.registry, divisions, bodies: [] }, statewideExecutives: [], officialCandidacies: { ...imported.payload.officialCandidacies, rows: [] }, officialPhotos: { photos: [] }, rosterPhotos: {} } }, { prior: imported });
   const correction = await processRegisteredManualCandidate(store, "registry-runtime-bindings", corrected, "2026-09-08T12:00:02.000Z", imported.versionId);
   assert.ok(correction.promoted, correction.candidate.failureDetail ?? "fixture correction held");
   }
@@ -142,7 +139,7 @@ test("verified directory bodies publish through the normal registry door and cre
     { bodyName: "Fixture Advisory Commission", bodyClass: "ADVISORY", homepageUrl: "https://directory.example.gov/commission" },
     { bodyName: "Fixture Partial District Board", bodyClass: "GOVERNING", homepageUrl: "https://directory.example.gov/partial", coverage: "part of this jurisdiction" },
   ]);
-  const published = await publishWorkerRosterResults(f.input);
+  const published = await publishWorkerDirectoryResults(f.input);
   assert.equal(published[0].outcome.status, "PARTIALLY_PUBLISHED", JSON.stringify(published));
   assert.equal(published[0].outcome.recovery, "WORKER", "unresolved territory automatically returns to evidence repair without holding independently verified bodies");
   assert.match(published[0].outcome.detail, /DIRECTORY_TERRITORY_REQUIRES_REPAIR/);
@@ -165,7 +162,7 @@ test("verified directory bodies publish through the normal registry door and cre
     assert.equal(child.value.dependencies[0].upstreamId, f.h.item.id);
     assert.equal((await nextAutonomousOperation(f.runtime, child.id)).action, "SCOUT", "the normal coordinator continues unresolved source discovery");
   }
-  assert.deepEqual(await publishWorkerRosterResults(f.input), published, "durable publication prevents duplicate bodies or child work");
+  assert.deepEqual(await publishWorkerDirectoryResults(f.input), published, "durable publication prevents duplicate bodies or child work");
   assert.equal((await f.h.repos.workItems.list()).length, 4);
   const parser = f.results.find(row => row.result.role === "PARSER")!;
   const captures = await Promise.all([parser.result.role === "PARSER" ? parser.result.artifactId : "", f.artifact.id].map(f.input.readCapture));
@@ -190,7 +187,7 @@ test("a verified shared directory body serves its exact listed Census divisions 
       territoryNames: peers.map(row => row.label).join("; "), coverage: "entire listed divisions",
       coverageEvidence: `Legal service territory: all of ${peers.map(row => row.label).join("; ")}.` }];
   });
-  const published = await publishWorkerRosterResults(f.input);
+  const published = await publishWorkerDirectoryResults(f.input);
   assert.equal(published[0].outcome.status, "PUBLISHED", JSON.stringify(published));
   const read = (await readRegistryRuntimePrior(f.store, f.h.now()))!;
   const bodies = read.payload.registry.bodies.filter(row => row.name === "Fixture Joint Services Commission");
@@ -198,7 +195,7 @@ test("a verified shared directory body serves its exact listed Census divisions 
   assert.deepEqual([bodies[0].ocdId, ...(bodies[0].alsoServesOcdIds ?? [])].sort(), expected);
   assert.ok(!expected.includes(f.body.ocdId!), "finding a body under a government does not assign that government's whole territory");
   assert.equal((await f.h.repos.workItems.list()).length, 4, "one body has one set of downstream work, not one copy per division");
-  assert.deepEqual(await publishWorkerRosterResults(f.input), published);
+  assert.deepEqual(await publishWorkerDirectoryResults(f.input), published);
 });
 
 test("independent candidate and committee filings automatically publish source facts through the existing promotion and ballot reader", async () => {
@@ -232,48 +229,9 @@ test("independent candidate and committee filings automatically publish source f
   }
 });
 
-test("independent normal workers automatically publish public-comment rules through the existing reader and retain repair evidence", async () => {
-  const { input, h, store, body, rows, results, artifact, ready, prior } = await workerFixture("comment-access", {
-    commentPeriod: "YES", commentPeriodDetail: "The board provides a public comment period.", signup: "Sign up before the meeting." });
-  const published = await publishWorkerReaderResults(input);
-  assert.equal(published[0].outcome.status, "PUBLISHED", JSON.stringify(published));
-  assert.deepEqual(published[0].outcome.records, { added: 1, changed: 0, reused: 0 });
-  assert.equal(published[0].outcome.recordChanges?.length, 1);
-  assert.deepEqual(published[0].outcome.acceptedRecordIds, published[0].outcome.recordChanges?.map(row => row.readerId), "public readback uses the exact delivered reader IDs");
-  const read = await readCuratedReaderProjection("comment-access", { store, now: h.now(), bypassCache: true });
-  assert.equal(read.kind, "PROMOTED");
-  if (read.kind !== "PROMOTED") throw new Error("reader missing");
-  const rendered = projectedCommentAccessFor(body.ocdId ?? null, body.name ?? undefined, body.id, read.value.records as unknown as CommentAccess[]);
-  assert.equal(rendered?.signup, rows[0]["signup"]);
-  assert.ok(rendered?.fieldSources?.signup?.quote?.includes("Sign up before the meeting."), "CP-05: the parser's saved quote survives publication and the typed reader");
-  assert.deepEqual(await publishWorkerReaderResults(input), published, "restart reuses the publication and spends nothing");
-  assert.equal(workerPublicationTasks([(await h.repos.workItems.mustRead(h.item.id)).value], results, h.now()).length, 0, "a published extraction is not offered again");
-  const parser = results.find(row => row.result.role === "PARSER")!;
-  const captures = await Promise.all([parser.result.role === "PARSER" ? parser.result.artifactId : "", artifact.id].map(input.readCapture));
-  const checked = { plan: ready, parser, captures, registry: prior, now: h.now() };
-  assert.throws(() => workerReaderPackage({ ...checked, captures: captures.map(c => ({ ...c, partial: true })) }), /PRIMARY_CAPTURE_MISSING_OR_INCOMPLETE/);
-  assert.throws(() => workerReaderPackage({ ...checked, captures: captures.map(c => ({ ...c, evidence: { ...c.evidence, canonicalUrl: "https://mirror.example.com/rules" } })) }), /LINKED_SOURCE_UNVERIFIED/);
-  assert.throws(() => workerReaderPackage({ ...checked, plan: { ...ready, publication: { contractId: "comment-access", bodyId: "unknown-body" } } }), /CANONICAL_BODY_MISSING/);
-  // The current evidence can omit a detail without suppressing its verified
-  // neighbours or deleting independently proven last-good instructions.
-  const packageNow = workerReaderPackage(checked);
-  const currentRule = (packageNow.payload as CuratedReaderProjection).records[0];
-  const commentPrior = await readManualProjectionPrior("comment-access", store, h.now());
-  const complementary = inheritVerifiedCommentDetails({ ...packageNow, payload: { kind: "comment-access", records: [{ ...currentRule, signup: null }] } }, commentPrior);
-  const merged = (complementary.payload as CuratedReaderProjection).records[0];
-  assert.equal(merged.signup, rows[0]["signup"]);
-  const sources = merged.fieldSources as NonNullable<CommentAccess["fieldSources"]>;
-  assert.equal(sources.signup?.retainedFromVersion, commentPrior!.versionId);
-  assert.equal(sources.signup?.collectedAt, rendered!.collectedAt, "old proof is not relabeled as a fresh verification");
-  const successor = await prepareManualProjectionSuccessor(complementary, store, h.now());
-  assert.ok((await processRegisteredManualCandidate(store, "comment-access", successor.candidate, h.now(), successor.expectedBaseVersionId)).promoted);
-  await readCuratedReaderProjection("comment-access", { store, now: h.now(), bypassCache: true });
-  const spoken = commentAccessEvidenceFor(body.id, body.ocdId ?? null, body.name!);
-  assert.equal(spoken.records.find(row => row.accessRule?.field === "signup")?.sourceUrl, sources.signup?.sourceUrl);
-});
-
 test("a reader publication reads its own work items' results and its pages' owners', never the whole result log", async () => {
-  const f = await workerFixture("comment-access", { commentPeriod: "YES", commentPeriodDetail: "The board provides a public comment period." });
+  const f = await workerFixture("public-records", { title: "2026 watershed notice", kindLabel: "watershed notice",
+    sourceSentence: "The 2026 watershed notice is a watershed notice." });
   const keysRead: string[] = [];
   const handed: string[][] = [];
   const whole = async (): Promise<never> => { throw new Error("the whole worker-result log was read"); };
@@ -329,7 +287,7 @@ test("an adopted budget publishes from saved official document bytes; a proposal
   const scope = scopedManualContractScope("government-budgets", f.body.ocdId!);
   const edge = promotedEdgeEntryOf(await readGovernmentBudgets(f.body.ocdId!, {store:f.store,now:f.h.now()}), "CURATED_READER_RECORD", scope, f.store);
   assert.ok(edge);
-  await withReaderAuthorityEdge({registryRuntime:{value:f.prior.payload,versionId:f.prior.versionId},promoted:new Map([[`CURATED_READER_RECORD:${scope}`,edge]]),edgeOnly:true},async () => {
+  await withReaderAuthorityEdge({registryRuntime:{value:{...f.prior.payload,bodyRosters:[],rosterReaderDispositions:[]},versionId:f.prior.versionId},promoted:new Map([[`CURATED_READER_RECORD:${scope}`,edge]]),edgeOnly:true},async () => {
     assert.deepEqual(await governmentFinanceEvidence(f.body.id, f.body.ocdId!), evidence);
     const { GET } = await import("@/app/api/government-finance/route");
     const api = await GET(new Request(`https://wtp.test/api/government-finance?division=${encodeURIComponent(f.body.ocdId!)}&body=${encodeURIComponent(f.body.id)}`));
@@ -424,8 +382,8 @@ test("normal voter-access workers publish the independently verified statewide r
 });
 
 test("a BROKE audit names the published reader members it takes out of the next version (DP-15)", async () => {
-  const { input, h, store, results, artifact, ready, prior } = await workerFixture("comment-access", {
-    commentPeriod: "YES", commentPeriodDetail: "The board provides a public comment period.", signup: "Sign up before the meeting." });
+  const { input, h, store, results, artifact, ready, prior } = await workerFixture("ballot-navigation", { state: "NH", kind: "REGISTRATION_LINK", url: FIXTURE_URL,
+    coverage: "STATEWIDE", coverageEvidence: "The election authority identifies this lookup as serving the entire state." });
   const published = await publishWorkerReaderResults(input);
   assert.equal(published[0].outcome.status, "PUBLISHED", JSON.stringify(published));
   const parser = results.find(row => row.result.role === "PARSER")!;
@@ -436,7 +394,7 @@ test("a BROKE audit names the published reader members it takes out of the next 
   const broke = { id: "wr-audit-broke", workItemId: h.item.id, endedAt: "2099-01-01T00:00:00.000Z",
     result: { role: "ADVERSARIAL_AUDITOR", verdict: "BROKE", producerAttemptId: parser.result.attemptId, brokenRecordIds: [parser.result.records[0].id] } } as unknown as typeof parser;
   const built = workerReaderPackageWithPulls({ ...check, results: [...results, broke] });
-  const live = await readCuratedReaderProjection("comment-access", { store, now: h.now(), bypassCache: true });
+  const live = await readCuratedReaderProjection("ballot-navigation", { store, now: h.now(), bypassCache: true });
   if (live.kind !== "PROMOTED") throw new Error("reader missing");
   assert.deepEqual([...built.pulledMemberIds], [live.value.records[0].id as string], "the pull names the exact published member");
   assert.equal((built.package.payload as CuratedReaderProjection).records.length, 0, "the pulled record is not republished");
@@ -456,40 +414,6 @@ test("CP-09: an amountless filing reaches its reader as a document without manuf
   const html = await renderCardWithSources({ modulePath: "./components/ballot/official-filings.tsx", exportName: "OfficialFilings", props: { rows }, sourceUrls: rows.flatMap(row => [row.documentUrl, row.sourceUrl]) });
   assert.ok(html.includes(FIXTURE_URL) && html.includes("Fixture Committee"));
   assert.doesNotMatch(html, /Reported receipts|Reported expenditures|Reported cash/);
-});
-
-test("CP-03: a saved voter-guide fact keeps its kind through the actual reader package", async () => {
-  const fixture = await workerFixture("comment-access", { commentPeriod: "YES", commentPeriodDetail: "Public comment is welcome." });
-  const parser = fixture.results.find(row => row.result.role === "PARSER")!;
-  if (parser.result.role !== "PARSER") throw Error("parser missing");
-  const original = await fixture.input.readCapture(parser.result.artifactId);
-  const capture = { ...original, evidence: { ...original.evidence, canonicalUrl: "https://www.vote411.org/local-guide" } };
-  const built = workerReaderPackage({ plan: fixture.ready, parser, captures: [capture], registry: fixture.prior, now: fixture.h.now() });
-  assert.equal(built.sourceReceipt.sources[0].sourceClass, "VOTER_GUIDE");
-  const prepared = await prepareManualProjectionSuccessor(built, fixture.store, fixture.h.now());
-  const outcome = await processRegisteredManualCandidate(fixture.store, "comment-access", prepared.candidate, fixture.h.now(), prepared.expectedBaseVersionId);
-  assert.ok(outcome.promoted, outcome.candidate.failureDetail ?? "guide fact held");
-});
-
-test("CP-07: a receipt keeps the superseded value while the winning fact reaches the typed reader", async () => {
-  const f = await workerFixture("comment-access", { commentPeriod: "YES", commentPeriodDetail: "Public comment is welcome.", signup: "Sign up with the clerk." });
-  assert.equal((await publishWorkerReaderResults(f.input))[0].outcome.status, "PUBLISHED");
-  const prior = (await readManualProjectionPrior("comment-access", f.store, f.h.now()))!;
-  const original = (prior.payload as CuratedReaderProjection).records[0];
-  const sourceUrl = "https://news.example/comment";
-  const later = "2026-09-08T12:10:00.000Z";
-  const input = { contractId: "comment-access" as const, version: "source-conflict-news", sourceThrough: later,
-    sourceReceipt: { ...prior.sourceReceipt, reviewedAt: later, sources: [{ ...prior.sourceReceipt.sources[0], sourceClass: "NEWS" as const,
-      requestedUrl: sourceUrl, finalUrl: sourceUrl, retrievedAt: later }] },
-    payload: { kind: "comment-access" as const, records: [{ ...original, signup: "No signup needed.", sourceUrl, collectedAt: later,
-      fieldSources: { signup: { sourceUrl, sourceOrg: "News", collectedAt: later, verifiedAt: later, quote: "No signup needed." } } }] } };
-  const prepared = await prepareManualProjectionSuccessor(input, f.store, later);
-  assert.ok(prepared.candidate.excludedFacts?.some(fact => fact.code === "CONFLICT_SUPERSEDED"));
-  const published = await processRegisteredManualCandidate(f.store, "comment-access", prepared.candidate, later, prepared.expectedBaseVersionId);
-  assert.ok(published.promoted, published.candidate.failureDetail ?? "conflict blocked the whole record");
-  const read = await readCuratedReaderProjection("comment-access", { store: f.store, now: later, bypassCache: true });
-  assert.equal(read.kind, "PROMOTED");
-  if (read.kind === "PROMOTED") assert.equal(read.value.records.find(row => row.id === original.id)?.signup, "Sign up with the clerk.");
 });
 
 test("local government finance runs through the existing worker publisher and scoped budget reader", async () => {
@@ -564,7 +488,8 @@ test("normal complete candidate workers publish their whole contest into general
 
 
 test("publication jobs reuse supplied repositories and return independent receipts without changing the parent's exit status", async () => {
-  const f = await workerFixture("comment-access", { commentPeriod: "YES", commentPeriodDetail: "Public comment is welcome.", signup: "Register before the session", writtenComment: "Submit a letter" });
+  const f = await workerFixture("ballot-navigation", { state: "NH", kind: "REGISTRATION_LINK", url: FIXTURE_URL,
+    coverage: "STATEWIDE", coverageEvidence: "The election authority identifies this lookup as serving the entire state." });
   const exitCode = process.exitCode;
   const context = { repos: f.input.repos, readCapture: f.input.readCapture };
   const job = { ...f.input, context };

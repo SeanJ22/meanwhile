@@ -34,7 +34,9 @@ async function seeded() {
 test("a saved official roster page becomes one live fact per member and title, each with its receipt, and readers see the roster", async () => {
   const db = await seeded();
   const report = await publishRosterFacts(db, { body: BODY, capture: capture(html, "ar-roster-1"), members: members(html), complete: true, producedBy: "held-roster" }, clocks, NOW);
-  assert.deepEqual(report, { live: 12, confirmed: 0, held: 0, blanks: 0, departed: 0 });
+  const { people, ...counts } = report;
+  assert.deepEqual(counts, { live: 12, confirmed: 0, held: 0, blanks: 0, departed: 0 });
+  assert.equal(new Set(people.values()).size, 4);
   const { rosters, dispositions } = await readFactRosters(db.query, [TCCC]);
   assert.equal(rosters.length, 1);
   assert.deepEqual(rosters[0]!.members.map(m => [m.name, m.officeTitle]).sort(), [

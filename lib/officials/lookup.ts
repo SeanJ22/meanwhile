@@ -44,8 +44,6 @@ export interface SeatHolder {
   phone: string | null;
   /** Distinguishes a shared public office channel from a direct office line. */
   contactScope?: "SHARED_OFFICE" | "INDIVIDUAL_OFFICE";
-  /** Earlier verified sources for optional facts retained after an incomplete update. */
-  retainedFieldSources?: Partial<Record<"termNote" | "termStart" | "termEnd" | "email" | "phone" | "websiteUrl", { sourceUrl: string; sourceOrg: string; collectedAt: string }>>;
   contactFormUrl: string | null;
   /** Portrait on our origin (3b), from the licensed-photos manifest. */
   photoUrl: string | null;

@@ -1,6 +1,7 @@
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import type { Provenance as FieldSource } from "../sources/types.ts";
-import { hostOf, isOfficialHost, type CheckEntity, type FieldKind, type Provenance } from "./check.ts";
+import { boundedIndexOf, normalizeText, type CheckEntity, type FieldKind } from "./check.ts";
+import { captureProvenance } from "./capture.ts";
 import { ensureEntity, resolvePerson } from "./entities.ts";
 import { readCheckEntity } from "./entity-read.ts";
 import { openBlank, publishClaim, type Clocks, type FactDb, type PublishOutcome } from "./publish.ts";
@@ -50,8 +51,7 @@ export async function publishRosterFacts(db: FactDb & { readonly query: (text: s
   await ensureEntity(db.query, { id: body.id, kind: "body", name: body.name ?? body.id, state: body.state, parentId: body.parentId });
   const bodyEntity = (await readCheckEntity(db.query, body.id))!;
   const copy = await db.transaction(query => saveCaptureCopy(query, capture));
-  const provenance: Provenance = isOfficialHost(hostOf(capture.evidence.canonicalUrl), bodyEntity.hosts) ? "OFFICIAL"
-    : capture.campaign ? "CAMPAIGN" : "REFERENCE";
+  const provenance = captureProvenance(capture, bodyEntity.hosts);
   const tally = { live: 0, confirmed: 0, held: 0, blanks: 0, departed: 0, people: new Map<string, string>() };
   const count = (outcome: PublishOutcome) => {
     if ("blank" in outcome) tally.blanks++;
@@ -69,9 +69,8 @@ export async function publishRosterFacts(db: FactDb & { readonly query: (text: s
       tally.blanks++;
       continue;
     }
-    const native = text(member.fields.id);
     const personId = await resolvePerson(db, { name, state: body.state, placeId: place ?? body.parentId,
-      externalIds: [["roster-name:" + body.id, nameKey(name)], ...(native ? [["roster-native:" + capture.evidence.canonicalUrl, native] as const] : []),
+      externalIds: [["roster-name:" + body.id, nameKey(name)],
         ...(input.legacyMemberIds?.has(nameKey(name)) ? [["roster-member", input.legacyMemberIds.get(nameKey(name))!] as const] : [])] });
     seated.add(personId);
     tally.people.set(member.recordId, personId);
@@ -90,7 +89,14 @@ export async function publishRosterFacts(db: FactDb & { readonly query: (text: s
     for (const [from, field] of TERMS) {
       const value = text(member.fields[from]);
       const quote = member.fieldSources?.[from]?.quote;
-      if (value && (from === "termNote" || quote)) count(await claim(person, `${field}:${body.id}`, "officeholder", value, from === "termNote" ? value : quote!, from));
+      if (!value || (from !== "termNote" && !quote)) continue;
+      if (from !== "termNote" && boundedIndexOf(normalizeText(quote!).toLowerCase(), normalizeText(written).toLowerCase()) === -1) {
+        await openBlank(db.query, { entityId: personId, field: `${field}:${body.id}`, stage: "CHECK", reason: "TERM_QUOTE_NOT_ABOUT_MEMBER",
+          detail: quote!, retryMinutes: clocks.retryMinutes("officeholder") });
+        tally.blanks++;
+        continue;
+      }
+      count(await claim(person, `${field}:${body.id}`, "officeholder", value, from === "termNote" ? value : quote!, from));
     }
   }
   if (input.complete && provenance === "OFFICIAL" && seated.size) {
@@ -104,17 +110,18 @@ export async function publishRosterFacts(db: FactDb & { readonly query: (text: s
   return tally;
 }
 
-/** A body's regular schedule and agenda link, in the page's own words, as body facts. */
-export async function publishBodyScheduleFacts(db: FactDb & { readonly query: (text: string, params?: readonly unknown[]) => Promise<readonly Record<string, unknown>[]> },
-  input: { readonly bodyId: string; readonly capture: WorkerPublicationCapture; readonly cadence: string | null; readonly agendaUrl: string | null; readonly producedBy: string },
+/** Facts about a body itself (its name, regular schedule, agenda link), each with the page's own words. */
+export async function publishBodyFacts(db: FactDb & { readonly query: (text: string, params?: readonly unknown[]) => Promise<readonly Record<string, unknown>[]> },
+  input: { readonly bodyId: string; readonly capture: WorkerPublicationCapture; readonly producedBy: string;
+    readonly facts: readonly { readonly field: "name" | "meeting_cadence" | "agenda_url"; readonly value: string; readonly quote: string }[] },
   clocks: Clocks, now: Date): Promise<readonly PublishOutcome[]> {
   const entity = await readCheckEntity(db.query, input.bodyId);
-  if (!entity) return [];
+  if (!entity || !input.facts.length) return [];
   const copy = await db.transaction(query => saveCaptureCopy(query, input.capture));
-  const provenance: Provenance = isOfficialHost(hostOf(input.capture.evidence.canonicalUrl), entity.hosts) ? "OFFICIAL" : "REFERENCE";
+  const provenance = captureProvenance(input.capture, entity.hosts);
   const out: PublishOutcome[] = [];
-  for (const [field, value] of [["meeting_cadence", input.cadence], ["agenda_url", input.agendaUrl]] as const) {
-    if (value) out.push(await publishClaim(db, { entity, field, fieldKind: "meeting", provenance, value, valueText: value, quote: value, copy,
+  for (const { field, value, quote } of input.facts) {
+    out.push(await publishClaim(db, { entity, field, fieldKind: field === "name" ? "officeholder" : "meeting", provenance, value, valueText: quote, quote, copy,
       producedBy: input.producedBy, costUsd: 0 }, clocks, now));
   }
   return out;

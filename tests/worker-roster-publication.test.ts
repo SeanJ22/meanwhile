@@ -5,7 +5,12 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { gunzipSync } from "node:zlib";
 import { createHash } from "node:crypto";
+import { join } from "node:path";
 import test from "node:test";
+import { ensureFactEntities } from "../lib/facts/entities.ts";
+import { installFactReader } from "../lib/facts/db.ts";
+import { readFactRosters } from "../lib/facts/roster-read.ts";
+import { factDb } from "./helpers/fact-db.ts";
 import { autonomousHarness, FIXTURE_URL } from "./helpers/autonomous-fleet.ts";
 import { recordAcquisition } from "../lib/control-plane/evidence/artifact.ts";
 import { putArtifact } from "../lib/control-plane/evidence/store.ts";
@@ -14,19 +19,17 @@ import { registerRouteTask, claimRouteTask, beginAttemptFor, recordArtifactMetad
 import { dispatchWorkerTask, evidenceProjection, FLEET_POLICY_VERSION } from "../lib/control-plane/workers/runtime.ts";
 import { nextAutonomousOperation } from "../lib/control-plane/workers/coordinator.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { publishWorkerRosterResults, workerRosterPublication, type WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
-import { publicationRecordChanges } from "../lib/civic-data/publication-record-changes.ts";
-import { readRegistryRuntimePrior, registryRuntimeCandidate } from "../lib/registry/runtime-data-plane.ts";
+import { publishOwedRosterFacts } from "../lib/civic-data/worker-roster-publication.ts";
+import { readRegistryRuntimePrior, registryRuntimeCandidate, type RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import { CENSUS_PLACEHOLDER_LABELS } from "../lib/registry/census-placeholders.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
-import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
 import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
-import { manualPriorAuthorityIssue } from "../lib/civic-data/manual-prior-authority.ts";
 import { readAllAssignmentSources } from "../lib/control-plane/assignment-read.ts";
 import { buildAssignments } from "../lib/control-plane/assignment-view.ts";
-import { workerPublicationTasks } from "../lib/civic-data/worker-publication-tasks.ts";
-import { rosterHoldersForBody } from "../lib/registry/body-rosters.ts";
+import { owedFactItems } from "../lib/civic-data/worker-publication-tasks.ts";
 import { collectWorkerRosterReadback, type PublishedWorkerRead } from "../lib/control-plane/worker-reader-readback.ts";
+
+const ROOT = join(import.meta.dirname, "..");
 
 async function proveRosterPublication(partial = false, box = false) {
   const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
@@ -38,11 +41,11 @@ async function proveRosterPublication(partial = false, box = false) {
   const divisions = imported.payload.registry.divisions.filter(row => CENSUS_PLACEHOLDER_LABELS[row.label]).map(row => ({ ...row, label: CENSUS_PLACEHOLDER_LABELS[row.label] }));
   const corrected = registryRuntimeCandidate({ contractId: "registry-runtime-bindings", version: "fixture-census-correction", sourceThrough: "2026-09-08T12:00:02.000Z",
     sourceReceipt: { contractVersion: 1, reviewedAt: "2026-09-08T12:00:02.000Z", reviewedBy: "recorded-fixture-control", sources: [...new Set(divisions.map(row => row.provenance!.sourceUrl!))].map(url => ({ requestedUrl: url, finalUrl: url, publisher: "U.S. Census Bureau", sourceClass: "OFFICIAL_PUBLISHER", retrievedAt: "2026-09-08T12:00:02.000Z", httpStatus: 200, rawHash: createHash("sha256").update(JSON.stringify(divisions)).digest("hex"), reviewedEvidence: "Offline fixture: Census LEA 99997 means no school district; retained transfer correction control." })) },
-    payload: { ...imported.payload, registry: { ...imported.payload.registry, divisions, bodies: [] }, bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialCandidacies: { ...imported.payload.officialCandidacies, rows: [] }, officialPhotos: { photos: [] }, rosterPhotos: {} } }, { prior: imported });
+    payload: { ...imported.payload, registry: { ...imported.payload.registry, divisions, bodies: [] }, statewideExecutives: [], officialCandidacies: { ...imported.payload.officialCandidacies, rows: [] }, officialPhotos: { photos: [] }, rosterPhotos: {} } }, { prior: imported });
   const correction = await processRegisteredManualCandidate(store, "registry-runtime-bindings", corrected, "2026-09-08T12:00:02.000Z", imported.versionId);
   assert.ok(correction.promoted, correction.candidate.failureDetail ?? "fixture correction held");
   const prior = (await readRegistryRuntimePrior(store, "2026-09-08T12:01:00.000Z"))!;
-  const existing = prior.payload.bodyRosters[0]!;
+  const existing = (projection.payload as RegistryRuntimeReadModel).bodyRosters[0]!;
   const body = prior.payload.registry.bodies.find(body => body.id === existing.bodyId)!;
   assert.ok(body.name);
   const rows = existing.members.map(member => ({ id: member.id, name: member.name, office: member.officeTitle }));
@@ -114,7 +117,10 @@ async function proveRosterPublication(partial = false, box = false) {
   }
   const results = await h.repos.workerResults.read(h.item.id);
   assert.deepEqual(results.map(row => row.result.verdict), box ? ["ACQUIRED", "EXTRACTED"] : ["ACQUIRED", "EXTRACTED", "PASS"]);
-  const input = { repos: h.repos, store, workItemIds: [h.item.id], now: h.now(), readCapture: async (id: string) => {
+  const facts = await factDb();
+  await ensureFactEntities(facts, ROOT, ["az"]);
+  installFactReader(facts.query);
+  const input = { repos: h.repos, store, facts, workItemIds: [h.item.id], now: h.now(), readCapture: async (id: string) => {
     const evidence = evidenceProjection(await runtime.readEvidence(id));
     return { evidence, observedAt: evidence.retrievedAt, httpStatus: 200, transport: "REACHABLE", partial: false };
   } };
@@ -124,23 +130,25 @@ async function proveRosterPublication(partial = false, box = false) {
       at: h.now(), workerResultId: results.at(-1)!.id, status: "HELD", code: "ROSTER_READER_IDENTITY_UNRESOLVED",
       detail: "Recorded pre-fix whole-roster identity hold", recovery: "WORKER", candidateId: null, versionId: null,
     } }, h.now());
-    assert.equal(workerPublicationTasks([(await h.repos.workItems.mustRead(h.item.id)).value], results, h.now()).length, 1,
+    assert.equal(owedFactItems([(await h.repos.workItems.mustRead(h.item.id)).value], results, h.now()).rosters.length, 1,
       "the normal runner retries an old whole-roster hold instead of leaving it stranded");
   }
   const whole = async (): Promise<never> => { throw new Error("the whole worker-result log was read"); };
-  const published = await publishWorkerRosterResults({ ...input, repos: { ...h.repos, workerResults: { ...h.repos.workerResults, readAll: whole, readSince: whole } } });
-  assert.equal(published[0].outcome.status, partial ? "PARTIALLY_PUBLISHED" : "PUBLISHED", JSON.stringify(published));
-  assert.deepEqual(published[0].outcome.records, { added: 1, changed: 0, reused: existing.members.length - (partial ? 1 : 0) },
-    "a retained neighbour whose new row is unresolved earns no accepted-result reuse credit");
-  assert.deepEqual(published[0].outcome.recordChanges?.map(row => row.recordId).sort(),
-    [...published[0].outcome.acceptedRecordIds ?? []].sort());
-  assert.ok(published[0].outcome.detail.startsWith(`§3 passed for ${published[0].outcome.acceptedRecordIds!.length} reader members;`),
-    "the publication receipt credits only this capture's accepted people, not retained neighbors");
+  const published = await publishOwedRosterFacts({ ...input, repos: { ...h.repos, workerResults: { ...h.repos.workerResults, readAll: whole, readSince: whole } } });
+  assert.equal(published[0]!.outcome.status, partial ? "PARTIALLY_PUBLISHED" : "PUBLISHED", JSON.stringify(published));
+  const delivered = (await readFactRosters(facts.query, [body.id])).rosters[0]!;
+  assert.equal(delivered.sourceUrl, FIXTURE_URL);
+  assert.deepEqual(delivered.members.map(member => member.name).sort(), rows.filter(row => row.name !== "Contact us").map(row => row.name).sort());
+  for (const member of delivered.members) assert.equal(member.fieldSources?.name?.sourceUrl, FIXTURE_URL, "every seat cites the saved page it was read from");
+  const added = delivered.members.find(member => member.name === "Morgan Example")!;
+  if (box) {
+    assert.equal(added.email, "morgan@example.gov");
+    assert.equal(added.fieldSources?.email?.sourceUrl, FIXTURE_URL, "Sources carries the exact saved page for the email");
+  }
   const deliveredAdmin = buildAssignments(await readAllAssignmentSources(h.repos, { nowIso: h.now(), activation: null, pilotZips: [] }));
-  assert.deepEqual(deliveredAdmin.find(row => row.id === h.item.id)?.delivery.records, published[0].outcome.records);
-  const deliveredItems = [(await h.repos.workItems.mustRead(h.item.id)).value];
+  assert.deepEqual(deliveredAdmin.find(row => row.id === h.item.id)?.delivery.records, published[0]!.outcome.records);
   let observations = 0;
-  const collector = { items: deliveredItems, store, now: h.now(), previous: null,
+  const collector = { items: [(await h.repos.workItems.mustRead(h.item.id)).value], store, now: h.now(), previous: null,
     zipForDivision: async (division: string) => { assert.equal(division, body.ocdId); return "99999"; }, // isolated destination dependency; no geographic proof claimed
     observe: async (input: PublishedWorkerRead) => {
       observations++;
@@ -150,86 +158,26 @@ async function proveRosterPublication(partial = false, box = false) {
       return { confirmed: true, reason: "Isolated public-control observation", responseSha256: "a".repeat(64) };
     } };
   const readback = await collectWorkerRosterReadback(collector);
-  assert.equal(readback.witnesses[0]?.approvalId, published[0].outcome.workerResultId);
+  assert.equal(readback.witnesses[0]?.approvalId, published[0]!.outcome.workerResultId);
   const deliveredSources = await readAllAssignmentSources(h.repos, { nowIso: h.now(), activation: null, pilotZips: [] });
-  const witnessed = buildAssignments({ ...deliveredSources, servedReader: readback }).find(row => row.id === h.item.id)!;
-  assert.equal(witnessed.delivery.publiclyAvailable.held, true, "actual observation joins this exact worker publication in Admin");
-  if (partial) assert.ok(witnessed.delivery.blockers.some(reason => reason.includes("ROSTER_IDENTITIES_REQUIRE_REPAIR")), "a public subset does not hide unfinished identity verification");
+  assert.equal(buildAssignments({ ...deliveredSources, servedReader: readback }).find(row => row.id === h.item.id)!.delivery.publiclyAvailable.held, true,
+    "actual observation joins this exact worker publication in Admin");
   const wrong = { ...readback, witnesses: readback.witnesses.map(w => ({ ...w, versionId: "different-version" })) };
   assert.equal(buildAssignments({ ...deliveredSources, servedReader: wrong }).find(row => row.id === h.item.id)!.delivery.publiclyAvailable.held, false);
   await collectWorkerRosterReadback({ ...collector, now: h.now(), previous: readback });
   assert.equal(observations, 1, "the existing cycle reuses fresh exact public evidence instead of repeating unchanged browser visits");
-  const read = await readRegistryRuntimeProjection({ store, bypassCache: true, now: h.now() });
-  assert.equal(read.kind, "PROMOTED");
-  if (read.kind !== "PROMOTED") throw new Error("reader projection missing");
-  const delivered = read.value.bodyRosters.find(roster => roster.bodyId === body.id)!;
-  assert.equal(delivered.sourceUrl, FIXTURE_URL);
-  for (const previous of existing.members) {
-    const retained = delivered.members.find(member => member.id === previous.id)!;
-    const { membershipSource: _source, retainedFieldSources: _fieldSources, fieldSources: captured, nativeIds: aliases, ...facts } = retained;
-    const { nativeIds: previousAliases, ...previousFacts } = previous;
-    assert.deepEqual(facts, previousFacts, "independent existing fields and stable identities survive");
-    if (rows.some(row => row.id === previous.id)) {
-      assert.ok(captured?.name?.quote?.includes(previous.name), "CP-05: the new parser quote travels with the unchanged name");
-      assert.equal(captured?.name?.sourceUrl, FIXTURE_URL);
-      assert.ok(aliases?.[FIXTURE_URL]?.includes(previous.id), "the verified source native key survives future parser row changes");
-    } else assert.deepEqual(aliases, previousAliases, "an omitted neighbor gains no identity evidence from this capture");
-    const earlierSource = { sourceUrl: existing.sourceUrl, sourceOrg: existing.sourceOrg, collectedAt: existing.collectedAt };
-    if (retained.membershipSource) {
-      assert.deepEqual(retained.membershipSource, earlierSource, "a wholly omitted member retains the earlier roster authority");
-    } else for (const field of ["termNote", "email", "phone", "websiteUrl"] as const) if (previous[field]) {
-      assert.deepEqual(retained.retainedFieldSources?.[field], earlierSource,
-        `the retained ${field} remains attributed to its original read`);
-    }
-  }
-  const added = delivered.members.find(member => member.name === "Morgan Example")!;
-  assert.ok(added, "a newly verified holder reaches the existing reader projection");
-  if (box) {
-    assert.equal(added.email, "morgan@example.gov");
-    assert.equal(added.fieldSources?.email?.sourceUrl, FIXTURE_URL, "Sources carries the exact saved page for the email");
-  }
-  assert.equal(read.value.officialCandidacies.rows.find(row => row.holder.id === added.id)?.status, "NOT_CHECKED", "unknown candidacy does not hold verified officeholding or assert absence");
-  assert.deepEqual(read.value.bodyRosters.filter(roster => roster.bodyId !== body.id), prior.payload.bodyRosters.filter(roster => roster.bodyId !== body.id));
-  assert.deepEqual(await publishWorkerRosterResults(input), published, "restart reuses the durable publication receipt");
-  const flow = await h.repos.ownerDigests.read("publication-flow");
-  assert.deepEqual(flow.map(row => row.publicationFlow?.stage).sort(), ["CHECKED", "LIVE"]);
-  for (const row of flow) assert.ok(await store.readCandidate(row.publicationFlow!.candidateId), "flow counts reference a durable publication candidate");
+  assert.deepEqual(await publishOwedRosterFacts(input), published, "restart reuses the durable publication receipt");
+  installFactReader(undefined);
 
   if (partial) {
-    assert.ok(!delivered.members.some(member => member.name === "Contact us"), "navigation text never becomes a person");
-    assert.match(published[0].outcome.detail, /1 row\(s\) stay open as work/);
-    assert.equal(published[0].outcome.recovery, "WORKER");
-    assert.equal(workerPublicationTasks([(await h.repos.workItems.mustRead(h.item.id)).value], results, h.now()).length, 0,
+    assert.deepEqual(await facts.query("SELECT stage, reason FROM blank"), [{ stage: "READ", reason: "NAME_NOT_A_PERSON" }], "navigation text never becomes a person");
+    assert.match(published[0]!.outcome.detail, /1 stay open as blanks with their reasons/);
+    assert.equal(owedFactItems([(await h.repos.workItems.mustRead(h.item.id)).value], results, h.now()).rosters.length, 0,
       "retained partial results wait for changed worker evidence, not unchanged publication retries");
-    const partialAdmin = deliveredAdmin.find(row => row.id === h.item.id)!;
-    assert.equal(partialAdmin.state, "WAITING");
-    assert.ok(partialAdmin.delivery.blockers.some(reason => reason.includes("ROSTER_IDENTITIES_REQUIRE_REPAIR")));
-    const retained = delivered.members.find(member => member.id === existing.members[0].id)!;
-    assert.deepEqual(retained.membershipSource, { sourceUrl: existing.sourceUrl, sourceOrg: existing.sourceOrg, collectedAt: existing.collectedAt },
-      "an omitted prior member retains its source and age, not this update's date");
-    const readerHolder = rosterHoldersForBody(body.id).find(member => member.id === retained.id)!;
-    assert.equal(readerHolder.sourceUrl, existing.sourceUrl);
-    assert.equal(readerHolder.provenance.collectedAt, existing.collectedAt, "the actual person Reader keeps the prior date");
-    const candidate = (await store.readCandidate(published[0].outcome.versionId!))!;
-    const base = (await store.readCandidate(prior.versionId))!;
-    assert.equal(manualPriorAuthorityIssue(candidate.candidate, base), null);
-    const tampered = structuredClone(candidate.candidate);
-    (tampered.readModel as typeof prior.payload).bodyRosters.find(row => row.bodyId === body.id)!.members.find(member => member.id === retained.id)!.name = "Unverified replacement";
-    assert.ok(manualPriorAuthorityIssue(tampered, base), "retained membership cannot smuggle a changed person under old authority");
-    assert.notEqual((await nextAutonomousOperation(runtime, h.item.id)).action, "STAGED", "partial delivery automatically returns unresolved identities to repair");
     return;
   }
-  const candidate = (await store.readCandidate(published[0].outcome.versionId!))!;
-  const base = (await store.readCandidate(prior.versionId))!;
-  assert.equal(manualPriorAuthorityIssue(candidate.candidate, base), null);
-  const tampered = structuredClone(candidate.candidate);
-  const payload = tampered.readModel as typeof prior.payload;
-  const roster = payload.bodyRosters.find(row => row.bodyId === body.id)!;
-  assert.ok(roster.partisanshipSourceUrl, "the fixture retains independently sourced seat partisanship");
-  roster.partisanship = roster.partisanship === "NONPARTISAN" ? "PARTISAN" : "NONPARTISAN";
-  assert.ok(manualPriorAuthorityIssue(tampered, base), "changing a prior partisanship fact cannot inherit its old source authority");
   const item = await h.repos.workItems.mustRead(h.item.id);
-  await h.repos.workItems.compareAndSet(item.id, item.revision, { ...item.value, publicationOutcome: { ...published[0].outcome,
+  await h.repos.workItems.compareAndSet(item.id, item.revision, { ...item.value, publicationOutcome: { ...published[0]!.outcome,
     status: "HELD", code: "STORE_UNAVAILABLE", detail: "Recorded transient fixture", recovery: "PUBLISHER" } }, h.now());
   const retry = await nextAutonomousOperation(runtime, h.item.id);
   assert.equal(retry.action, "STAGED", "publisher outage does not spend another research call: " + JSON.stringify(retry));
@@ -250,42 +198,6 @@ test("Box findings reach the member card with email Sources in one publication p
 test("ordinary independent workers publish a roster through the existing reader door, preserve prior facts, and reuse the receipt", () => proveRosterPublication());
 test("a stranded mixed roster publishes verified members while unresolved identities enter automatic repair", () => proveRosterPublication(true));
 
-test("a mixed source gives credit only to accepted native rows while omitted and unresolved neighbors keep their evidence", async () => {
-  const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
-  const store = new MemoryRoutineDataStore();
-  Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
-  const now = "2026-09-08T12:01:00.000Z";
-  const prior = (await readRegistryRuntimePrior(store, now))!;
-  const existing = prior.payload.bodyRosters[0];
-  const retained = existing.members[0], reread = existing.members[1];
-  const body = prior.payload.registry.bodies.find(row => row.id === existing.bodyId)!;
-  const members = [
-    { recordId: "parser:reordered", fields: { id: reread.id, name: reread.name, office: reread.officeTitle } },
-    { recordId: "parser:new", fields: { id: "native-new-person", name: "Morgan Example", office: "Board Member" } },
-    { recordId: "parser:unresolved", fields: { id: "native-navigation", name: "Contact us", office: "Contact information" } },
-  ];
-  const text = JSON.stringify({ body: body.name, records: members.map(row => row.fields) });
-  const capture: WorkerPublicationCapture = { evidence: { artifactId: "ar-mixed-credit", acquiredByAttemptId: "at-mixed-credit",
-    canonicalUrl: FIXTURE_URL, sourceId: new URL(FIXTURE_URL).hostname, methodRouteId: "official-roster", retrievedAt: now,
-    text, contentHash: `sha256-${createHash("sha256").update(text).digest("hex")}` }, observedAt: now,
-    httpStatus: 200, transport: "REACHABLE", partial: false };
-  const roster = workerRosterPublication({ bodyId: body.id, prior, now, reading: { id: "parser:mixed-credit", capture,
-    linkingPage: null, members, complete: true, method: "Captured native rows" } });
-  assert.deepEqual(roster.accepted.map(row => row.recordId), ["parser:reordered", "parser:new"]);
-  assert.deepEqual(roster.unresolved, ["parser:unresolved"]);
-  assert.deepEqual(roster.departed, [], "the unresolved source row cannot establish anybody's departure");
-  const delivered = roster.payload.bodyRosters[0].members;
-  assert.deepEqual(delivered.find(row => row.id === retained.id)?.membershipSource,
-    { sourceUrl: existing.sourceUrl, sourceOrg: existing.sourceOrg, collectedAt: existing.collectedAt });
-  assert.ok(!delivered.some(row => row.name === "Contact us"));
-  const changes = publicationRecordChanges({ previousVersionId: prior.versionId, accepted: roster.accepted.map(binding => ({
-    recordId: binding.recordId, readerId: binding.memberId, value: delivered.find(row => row.id === binding.memberId)!,
-    previous: existing.members.find(row => row.id === binding.memberId),
-  })) });
-  assert.deepEqual(changes.records, { added: 1, changed: 0, reused: 1 });
-  assert.ok(!changes.recordChanges.some(row => row.readerId === retained.id || row.recordId === "parser:unresolved"));
-});
-
 test("owed roster work with nothing readable yet is held with its reason", async () => {
   const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
   const store = new MemoryRoutineDataStore();
@@ -295,11 +207,11 @@ test("owed roster work with nothing readable yet is held with its reason", async
   const current = await h.repos.workItems.mustRead(h.item.id);
   const plan = current.value.autonomousPlan!;
   await h.repos.workItems.compareAndSet(current.id, current.revision, { ...current.value,
-    autonomousPlan: { ...plan, publication: { contractId: "registry-runtime-bindings", bodyId: prior.payload.bodyRosters[0]!.bodyId } } }, h.now());
-  const report = await publishWorkerRosterResults({ repos: h.repos, store, workItemIds: [h.item.id], now: h.now(),
+    autonomousPlan: { ...plan, publication: { contractId: "registry-runtime-bindings", bodyId: prior.payload.registry.bodies[0]!.id } } }, h.now());
+  const report = await publishOwedRosterFacts({ repos: h.repos, store, facts: await factDb(), workItemIds: [h.item.id], now: h.now(),
     readCapture: async () => { throw new Error("no extraction"); }, readHeld: async () => null });
   assert.deepEqual(report.map(row => [row.workItemId, row.outcome.status, row.outcome.code, row.outcome.recovery]),
     [[h.item.id, "HELD", "ROSTER_NO_READABLE_SAVED_PAGE", "WORKER"]], "every offered item is reported, never silently skipped");
   assert.equal((await h.repos.workItems.mustRead(h.item.id)).value.publicationOutcome?.code, "ROSTER_NO_READABLE_SAVED_PAGE", "Admin sees why");
-  assert.equal(workerPublicationTasks([(await h.repos.workItems.mustRead(h.item.id)).value], [], h.now()).length, 0, "re-read hourly, not every pass");
+  assert.equal(owedFactItems([(await h.repos.workItems.mustRead(h.item.id)).value], [], h.now()).rosters.length, 0, "re-read hourly, not every pass");
 });

@@ -7,9 +7,11 @@ import type { Query } from "./publish.ts";
 const ARCHIVE_HOSTS = /(^|\.)(web\.archive\.org|archive\.org|archive\.today|archive\.ph|archive\.is)$/i;
 const isArchive = (url: string) => ARCHIVE_HOSTS.test(new URL(url).hostname);
 
-/** Visible text plus the markup, so a portrait or link address is checked where it appears. */
-export function checkText(body: string, contentType: string): string {
-  return /html/i.test(contentType) || /^\s*</.test(body) ? `${visibleText(body)}\n${body}` : body;
+/** Visible text, the markup and every link made absolute, so a portrait or link address is checked where it appears. */
+export function checkText(body: string, contentType: string, base: string): string {
+  if (!(/html/i.test(contentType) || /^\s*</.test(body))) return body;
+  const links = [...body.matchAll(/\b(?:href|src)\s*=\s*["']([^"']+)["']/gi)].flatMap(([, href]) => URL.canParse(href!, base) ? [new URL(href!, base).href] : []);
+  return `${visibleText(body)}\n${body}\n${links.join("\n")}`;
 }
 
 interface CopyRow {
@@ -38,12 +40,12 @@ export async function saveArtifactCopy(query: Query, artifact: Artifact, bytes: 
   const header = (name: string) => Object.entries(artifact.headers ?? {}).find(([key]) => key.toLowerCase() === name)?.[1] ?? null;
   const id = await saveCopy(query, { artifactId: artifact.id, url: artifact.canonicalUrl, finalUrl, fetchedAt: artifact.retrievedAt,
     httpStatus: artifact.httpStatus, contentHash: artifact.contentHash, etag: header("etag"), lastModified: header("last-modified") });
-  return { id, finalUrl, text: checkText(new TextDecoder().decode(bytes), artifact.contentType), fetchedAt: new Date(artifact.retrievedAt), isArchive: isArchive(finalUrl) };
+  return { id, finalUrl, text: checkText(new TextDecoder().decode(bytes), artifact.contentType, finalUrl), fetchedAt: new Date(artifact.retrievedAt), isArchive: isArchive(finalUrl) };
 }
 
 export async function saveCaptureCopy(query: Query, capture: WorkerPublicationCapture): Promise<SavedCopy> {
   const { evidence } = capture;
   const id = await saveCopy(query, { artifactId: evidence.artifactId, url: evidence.canonicalUrl, finalUrl: evidence.canonicalUrl,
     fetchedAt: capture.observedAt, httpStatus: capture.httpStatus, contentHash: evidence.contentHash });
-  return { id, finalUrl: evidence.canonicalUrl, text: checkText(evidence.text, ""), fetchedAt: new Date(capture.observedAt), isArchive: isArchive(evidence.canonicalUrl) };
+  return { id, finalUrl: evidence.canonicalUrl, text: checkText(evidence.text, "", evidence.canonicalUrl), fetchedAt: new Date(capture.observedAt), isArchive: isArchive(evidence.canonicalUrl) };
 }

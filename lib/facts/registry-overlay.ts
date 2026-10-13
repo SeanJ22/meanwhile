@@ -4,9 +4,9 @@ import type { Query } from "./publish.ts";
 import { readFactRosters } from "./roster-read.ts";
 
 const SCHEDULE_SQL = `SELECT f.entity_id, f.field, f.value, f.checked_at, s.url FROM fact f JOIN source_copy s ON s.id = f.source_copy_id
-  WHERE f.status = 'live' AND f.field IN ('meeting_cadence', 'agenda_url') AND f.entity_id = ANY($1::text[])`;
+  WHERE f.status = 'live' AND f.field IN ('name', 'meeting_cadence', 'agenda_url') AND f.entity_id = ANY($1::text[])`;
 
-/** The registry readers see: the promoted partition with each body's members and schedule taken from live facts. */
+/** The registry readers see: the promoted partition with each body's members, sourced name and schedule taken from live facts. */
 export async function withFactRegistry(carton: RegistryRuntimeCarton, query: Query | null): Promise<RegistryRuntimeReadModel> {
   const { bodyRosters: _oldRosters, rosterReaderDispositions: _oldDispositions, ...rest } = carton as RegistryRuntimeCarton & Partial<RegistryRuntimeReadModel>;
   if (query === null) return { ...rest, bodyRosters: [], rosterReaderDispositions: [] };
@@ -15,8 +15,10 @@ export async function withFactRegistry(carton: RegistryRuntimeCarton, query: Que
   const byBody = new Map<string, Partial<Body>>();
   for (const row of schedules) {
     const held = byBody.get(String(row.entity_id)) ?? {};
-    if (row.field === "meeting_cadence") Object.assign(held, { meetingCadence: String(row.value),
-      meetingCadenceSource: { sourceUrl: String(row.url), collectedAt: new Date(row.checked_at as string).toISOString() } });
+    const at = new Date(row.checked_at as string).toISOString();
+    if (row.field === "name") Object.assign(held, { name: String(row.value), bodyOrigin: "SOURCED",
+      provenance: { sourceUrl: String(row.url), sourceOrg: new URL(String(row.url)).hostname, collectedAt: at, verifiedAt: at } });
+    else if (row.field === "meeting_cadence") Object.assign(held, { meetingCadence: String(row.value), meetingCadenceSource: { sourceUrl: String(row.url), collectedAt: at } });
     else held.agendaSourceRef = String(row.value);
     byBody.set(String(row.entity_id), held);
   }

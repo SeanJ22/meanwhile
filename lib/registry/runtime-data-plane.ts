@@ -573,6 +573,16 @@ function departureRemovals(input: RegistryRuntimePackage, payload: RegistryRunti
     .map(key => ({ key, code: "OFFICIAL_ROSTER_NO_LONGER_LISTS" as const, bodyId: departure.bodyId, holderId: departure.holderId, sourceUrl: departure.sourceUrl, ...(departure.replacementHolderId ? {replacementHolderId:departure.replacementHolderId,officeTitle:departure.officeTitle} : {}) })));
 }
 
+const FACT_STORE_KEYS = /^(body-roster|roster-disposition):/;
+
+/** The roster rows the prior partition still carried; rosters are read from facts. */
+function factStoreRemovals(payload: RegistryRuntimeCarton, prior: RegistryRuntimePrior | null): RoutineRemovalEvidence[] {
+  if (!prior) return [];
+  const kept = new Set(civicRecordsFor("REGISTRY_RUNTIME_BINDING", payload).map(member => member.key));
+  return civicRecordsFor("REGISTRY_RUNTIME_BINDING", prior.payload).filter(member => FACT_STORE_KEYS.test(member.key) && !kept.has(member.key))
+    .map(member => ({ key: member.key, code: "MOVED_TO_FACT_STORE" as const }));
+}
+
 /**
  * Exact GOOD registry projection used as the member-scoped merge base.
  * Store/readback failures are never treated as an empty registry: doing so
@@ -673,7 +683,8 @@ export function registryRuntimeCandidate(
     for (const url of urls) if (!receipted.has(url)) unreceipted.add(url);
   }
   for (const url of [...unreceipted].sort()) issues.push(`RUNTIME_SOURCE_NOT_RECEIPTED:${url}`);
-  const removalEvidence = [...placeholderBodyRemovals(payload, options.prior ?? null), ...departureRemovals(input, payload, options.prior ?? null)]
+  const removalEvidence = [...placeholderBodyRemovals(payload, options.prior ?? null), ...departureRemovals(input, payload, options.prior ?? null),
+    ...factStoreRemovals(payload, options.prior ?? null)]
     .sort((left, right) => left.key.localeCompare(right.key));
   if (!isolated.hasProjectionMetadata) {
     issues.push("REGISTRY_PROJECTION_METADATA_UNSUPPORTED");

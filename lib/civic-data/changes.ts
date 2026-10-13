@@ -248,6 +248,8 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
     }
     case "REGISTRY_RUNTIME_BINDING": {
       const registry = object(root.registry) ?? {};
+      const bodyRosters = array(root.bodyRosters);
+      const rosterReaderDispositions = array(root.rosterReaderDispositions);
       const statewideExecutives = array(root.statewideExecutives);
       const officialCandidacies = object(root.officialCandidacies) ?? {};
       const officialPhotos = object(root.officialPhotos) ?? {};
@@ -255,6 +257,8 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
       return [
         ...keyed("division", array(registry.divisions), ["ocdId"]),
         ...keyed("body", array(registry.bodies), ["id"]),
+        ...keyed("body-roster", bodyRosters, ["bodyId"]),
+        ...keyed("roster-disposition", rosterReaderDispositions, ["sourceId"]),
         ...statewideExecutives.map((record, index) => {
           const row = object(record) ?? {};
           const holder = object(row.holder);

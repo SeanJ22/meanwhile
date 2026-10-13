@@ -86,7 +86,7 @@ test("corrupt imported base proof and an ordinary base with no source receipt ar
 });
 
 test("the producer preserves source-isolated omitted members across every independent curated family", async () => {
-  for (const contractId of ["comment-access", "ballot-navigation", "campaign-sites", "venue-resolutions"] as const) {
+  for (const contractId of ["ballot-navigation", "campaign-sites", "venue-resolutions"] as const) {
     const store = new MemoryRoutineDataStore();
     const base = await processRegisteredManualCandidate(store, contractId, manualProjectionCandidate(packageFor(contractId, T0, "old")), T0);
     assert.ok(base.promoted);
@@ -102,7 +102,7 @@ test("the producer preserves source-isolated omitted members across every indepe
   }
 });
 
-type CuratedId = "comment-access" | "ballot-navigation" | "campaign-sites" | "venue-resolutions";
+type CuratedId = "ballot-navigation" | "campaign-sites" | "venue-resolutions";
 
 function urls(id: CuratedId): readonly [string, string] {
   return [
@@ -135,16 +135,6 @@ function receipt(id: CuratedId, at: string, blockedSecond = false): ManualSource
 
 function records(id: CuratedId, at: string, revision: string): CuratedReaderProjection["records"] {
   const [one, two] = urls(id);
-  if (id === "comment-access") {
-    return [one, two].map((sourceUrl, index) => ({
-      id: `comment-access:body:${index + 1}`,
-      bodyId: `body:${index + 1}`,
-      commentPeriod: "YES",
-      commentPeriodDetail: `rule-${revision}-${index + 1}`,
-      sourceUrl,
-      collectedAt: at,
-    }));
-  }
   if (id === "ballot-navigation") {
     return [one, two].map((url, index) => ({
       id: `polling-place:${index === 0 ? "AZ" : "NH"}`,
@@ -210,7 +200,7 @@ function prior(candidate: RoutineCandidate): ManualProjectionPrior {
 }
 
 test("a blocked publisher holds only its exact curated member while unrelated valid members promote", async () => {
-  for (const id of ["comment-access", "ballot-navigation", "campaign-sites", "venue-resolutions"] as const) {
+  for (const id of ["ballot-navigation", "campaign-sites", "venue-resolutions"] as const) {
     const store = new MemoryRoutineDataStore();
     const first = manualProjectionCandidate(packageFor(id, T0, "first"));
     const firstOutcome = await processRegisteredManualCandidate(store, id, first, T0, null);
@@ -239,7 +229,7 @@ test("a blocked publisher holds only its exact curated member while unrelated va
 });
 
 test("an omitted member cannot be deleted without typed positive removal evidence", async () => {
-  for (const id of ["comment-access", "ballot-navigation", "campaign-sites", "venue-resolutions"] as const) {
+  for (const id of ["ballot-navigation", "campaign-sites", "venue-resolutions"] as const) {
     const store = new MemoryRoutineDataStore();
     const first = manualProjectionCandidate(packageFor(id, T0, "first"));
     await processRegisteredManualCandidate(store, id, first, T0, null);
@@ -286,7 +276,7 @@ test("an all-source outage stays SOURCE_BLOCKED and cannot replace the curated L
 });
 
 test("a stale source-scoped merge base is durably refused before it can roll back a newer pointer", async () => {
-  const id = "comment-access" as const;
+  const id = "ballot-navigation" as const;
   const store = new MemoryRoutineDataStore();
   const first = manualProjectionCandidate(packageFor(id, T0, "first"));
   await processRegisteredManualCandidate(store, id, first, T0, null);

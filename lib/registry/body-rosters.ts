@@ -9,10 +9,8 @@ import { getRegistryRuntimeReadModel } from "./runtime-read-model.ts";
 
 export interface RosterMember {
   fieldSources?: Record<string, Provenance>;
-  /** An unresolved update must retain an older member on its actual source/date. */
+  /** The page and day this member's seat was read from. */
   membershipSource?: { sourceUrl: string; sourceOrg: string; collectedAt: string };
-  /** Optional facts kept from an earlier verified read when this update omits them. */
-  retainedFieldSources?: Partial<Record<"termNote" | "termStart" | "termEnd" | "email" | "phone" | "websiteUrl", { sourceUrl: string; sourceOrg: string; collectedAt: string }>>;
   /** A shared public office line is not a person's private contact route. */
   contactKind?: "PUBLIC_OFFICE" | "PERSONAL";
   contactScope?: "SHARED_OFFICE" | "INDIVIDUAL_OFFICE";
@@ -157,7 +155,6 @@ export interface RosterHolder {
   contactKind?: "PUBLIC_OFFICE" | "PERSONAL";
   contactScope?: "SHARED_OFFICE" | "INDIVIDUAL_OFFICE";
   fieldSources?: RosterMember["fieldSources"];
-  retainedFieldSources?: RosterMember["retainedFieldSources"];
   contactFormUrl: null;
   photoUrl: string | null;
   campaignUrl: null;
@@ -200,7 +197,6 @@ export function rosterHoldersForBody(bodyId: string | null): RosterHolder[] {
     contactKind: member.contactKind,
     contactScope: member.contactScope,
     fieldSources: member.fieldSources,
-    retainedFieldSources: member.retainedFieldSources,
     contactFormUrl: null,
     photoUrl: photos[member.id] ?? null,
     campaignUrl: null,

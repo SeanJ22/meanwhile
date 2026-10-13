@@ -1,6 +1,6 @@
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import type { CommentAccess } from "../registry/comment-access-client.ts";
-import { hostOf, isOfficialHost, type Provenance } from "./check.ts";
+import { captureProvenance } from "./capture.ts";
 import { ensureEntity } from "./entities.ts";
 import { readCheckEntity } from "./entity-read.ts";
 import { publishClaim, type Clocks, type FactDb, type PublishOutcome, type Query } from "./publish.ts";
@@ -26,7 +26,7 @@ export async function publishCommentFacts(db: FactDb & { readonly query: Query }
   await ensureEntity(db.query, { id: input.body.id, kind: "body", name: input.body.name ?? input.body.id, state: input.body.state, parentId: input.body.parentId });
   const entity = (await readCheckEntity(db.query, input.body.id))!;
   const copy = await db.transaction(query => saveCaptureCopy(query, input.capture));
-  const provenance: Provenance = isOfficialHost(hostOf(input.capture.evidence.canonicalUrl), entity.hosts) ? "OFFICIAL" : "REFERENCE";
+  const provenance = captureProvenance(input.capture, entity.hosts);
   const out: PublishOutcome[] = [];
   const claim = (field: string, value: unknown, valueText: string, quote: string) =>
     publishClaim(db, { entity, field, fieldKind: "comment_rule", provenance, value, valueText, quote, copy, producedBy: input.producedBy, costUsd: 0 }, clocks, now);

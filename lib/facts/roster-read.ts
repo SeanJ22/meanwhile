@@ -47,6 +47,7 @@ export async function readFactRosters(query: Query, bodyIds: readonly string[] |
       officeTitle: (typeof office?.value === "string" ? office.value : membership.office) ?? "Member",
       termNote: value("term_note"), termStart: value("term_start"), termEnd: value("term_end"),
       email: value("email"), phone: value("phone"), websiteUrl: value("website"), contactKind: "PUBLIC_OFFICE",
+      membershipSource: { sourceUrl: own.url, sourceOrg: new URL(own.url).hostname, collectedAt: day(own.checked) },
       fieldSources: Object.fromEntries(fields.map(field => [{ website: "websiteUrl", term_note: "termNote", term_start: "termStart", term_end: "termEnd" }[field] ?? field,
         source(field, own)])) });
     byBody.set(bodyId, roster);

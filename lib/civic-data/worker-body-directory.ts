@@ -16,10 +16,10 @@ import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import { createHash } from "node:crypto";
 import { subBodyId } from "./meeting-body-crosswalk.ts";
 import type { JurisdictionRouteHints } from "../hunt/meetings-route-hints.ts";
-import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
+import type { RegistryRuntimeCarton } from "../registry/runtime-data-plane.ts";
 import { DEFAULT_KINDS, kindFromSource, type KindTable } from "../registry/kinds.ts";
 
-export function directoryMeetingHints(items: readonly WorkItem[], registry: RegistryRuntimeReadModel,
+export function directoryMeetingHints(items: readonly WorkItem[], registry: RegistryRuntimeCarton,
   baseline: readonly JurisdictionRouteHints[]): readonly JurisdictionRouteHints[] {
   const hints = new Map(baseline.map(hint => [hint.jurisdictionId, hint]));
   for (const item of items) {

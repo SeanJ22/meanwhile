@@ -9,7 +9,7 @@ import {
   isIncompletePersonName,
   nameTokens,
 } from "../lib/officials/person-name.ts";
-import { BODY_ROSTERS } from "../lib/registry/body-rosters.ts";
+import { BODY_ROSTERS } from "./fixtures/held-body-rosters.ts";
 import { STATEWIDE_EXECUTIVES } from "../lib/officials/statewide-executives.ts";
 
 test("THE CONTROL: a bare surname is incomplete", () => {

@@ -6,7 +6,7 @@ import { CardSourcesContribution } from "@/components/ui/card-sources-contributi
 import { fieldSourceLabel, meetingCardSources, type CardSource } from "@/lib/officials/card-sources";
 import { CardGapContribution } from "@/components/ui/card-gap-context";
 
-import { ExternalLink, X } from "lucide-react";
+import { ExternalLink, Landmark, X } from "lucide-react";
 import { useState } from "react";
 
 import { locationLine, venueBodyTitle } from "@/lib/map/format";
@@ -19,6 +19,8 @@ import { MeetingListingNotice } from "./meeting-listing-notice";
 import { tierForMeeting } from "@/lib/state/derive";
 import { LevelTag } from "@/components/ui/level-tag";
 import type { Venue } from "@/lib/meetings/venues";
+import { addressKey } from "@/lib/officials/office-locations";
+import type { OfficePin } from "@/lib/map/office-pins";
 import { projectedCommentAccessFor } from "@/lib/registry/comment-access-client";
 import { venueLink } from "@/lib/registry/links";
 import type { Meeting } from "@/lib/sources/types";
@@ -46,6 +48,10 @@ interface MeetingPanelProps {
   onShowOnMap?: () => void;
   /** Opens the meeting popup. Omitted leaves the rows inert. */
   onOpenMeeting?: (meeting: Meeting) => void;
+  /** The reader's representatives' offices in this building, listed here instead of as their own pins. */
+  offices?: readonly OfficePin[];
+  /** Opens the office owner's battlecard. */
+  onOpenOffice?: (office: OfficePin) => void;
 }
 
 export function MeetingPanel({
@@ -55,6 +61,8 @@ export function MeetingPanel({
   onOpenMeeting,
   embedded = false,
   onShowOnMap,
+  offices = [],
+  onOpenOffice,
 }: MeetingPanelProps) {
   // One `now` per mount, never read during render, so rows don't reshuffle mid-scroll.
   const [now] = useState(() => Date.now());
@@ -165,6 +173,35 @@ export function MeetingPanel({
         )}
       </header>
 
+      {offices.length > 0 && (
+        <section className="mw-venue-offices" aria-label="Representatives’ offices in this building">
+          <p className="t-structure text-label">Offices in this building</p>
+          <ul>
+            {offices.map((office) => (
+              <li key={office.id}>
+                <button
+                  type="button"
+                  className="mw-venue-office"
+                  data-tier={office.tier}
+                  data-office-id={office.id}
+                  disabled={!onOpenOffice}
+                  onClick={() => onOpenOffice?.(office)}
+                >
+                  <span className="mw-venue-office__glyph" aria-hidden="true"><Landmark /></span>
+                  <span className="min-w-0">
+                    <span className="block font-semibold text-paper">{office.name}</span>
+                    <span className="block t-detail text-muted">
+                      {office.role === "State office" ? "State legislator" : office.role} district office
+                      {venue.address && addressKey(office.address) === addressKey(venue.address) ? "" : ` · ${office.address}`}
+                    </span>
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       {/* Three groups, with one credit line at the foot. */}
       <div className={embedded ? "" : "min-h-0 overflow-y-auto"}>
         {/* In the scrolling body: in the pinned header a long notice collapsed the list to zero height. */}
@@ -196,7 +233,8 @@ export function MeetingPanel({
           </section>
         ))}
 
-        <MeetingSourceCredit sources={[...rows.flatMap(meeting => meetingCardSources(meeting, [])), ...(venue.officeAddressSource ? [{ what: "Online-only pin at the body’s published office address", provenance: venue.officeAddressSource }] : [])]} />
+        <MeetingSourceCredit sources={[...rows.flatMap(meeting => meetingCardSources(meeting, [])), ...(venue.officeAddressSource ? [{ what: "Online-only pin at the body’s published office address", provenance: venue.officeAddressSource }] : []),
+          ...offices.map(office => ({ what: `${office.name}: district office address`, provenance: { sourceUrl: office.sourceUrl, sourceOrg: office.sourceOrg ?? "", collectedAt: office.collectedAt ?? "", verifiedAt: null } }))]} />
       </div>
     </aside>
   );

@@ -112,7 +112,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const confirmToken = typeof fields.confirmToken === "string" ? fields.confirmToken : null;
   const proposedAt = typeof fields.proposedAt === "string" ? fields.proposedAt : null;
 
-  const gateway = operatorChatGateway(gatewayDoor(request));
+  const binding = operatorChatGateway(gatewayDoor(request));
+  // A proposal still does nothing. After confirmation, this verified owner session
+  // uses the same authority as the owner pressing the corresponding button.
+  const gateway = binding ? { ...binding, caller: "OWNER_SESSION" as const } : null;
   const nowIso = new Date().toISOString();
   const reads = readsFor(text, gateway?.registry ?? []);
 
@@ -127,7 +130,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   const [reading, environments] = await Promise.all([
     controlPlaneReads.length > 0
-      ? readOperatorContext({ reads: controlPlaneReads, nowIso, from })
+      ? readOperatorContext({ reads: controlPlaneReads, nowIso, from, asked: text })
       : Promise.resolve({ context: { nowIso, from, stateVersion: null } as OperatorContext, storeRefusedBecause: null }),
     /*
      * Both readers report a bad response as a reading rather than a throw, but

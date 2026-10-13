@@ -1107,12 +1107,24 @@ test("zero without absence evidence is CANNOT_TELL and holds LKG", async () => {
 test("LegiScan bill authority cannot promote state roll calls", async () => {
   await expectHeld((base) => ({
     ...base,
-    sourceId: "legiscan",
+    sourceId: "legiscan-bills",
     recordClass: "STATE_ROLL_CALL",
     scope: "US-AZ:2026",
     retrieval: { ...base.retrieval, finalUrl: "https://api.legiscan.com/?op=getDatasetList" },
     normalization: { ...base.normalization, parserVersion: "legiscan-bulk/1" },
   }), "SOURCE_BLOCKED", "SOURCE_NOT_COMPETENT_FOR_RECORD_CLASS");
+});
+
+test("attributed LegiScan projections require exact state-specific source and identity verification", async () => {
+  const store = new MemoryRoutineDataStore();
+  const base = candidate("unverified-vendor-projection"), scope = "US-AZ:legiscan-votes:v1";
+  const outcome = await processRoutineCandidate(store, { ...base, sourceId: "legiscan", recordClass: "STATE_ROLL_CALL", scope,
+    sourceProjectionEvidence: sourceProjectionEvidence("legiscan", "STATE_ROLL_CALL", scope),
+    retrieval: { ...base.retrieval, requestedUrl: "https://api.legiscan.com/?op=getDatasetList&state=AZ", finalUrl: "https://api.legiscan.com/?op=getDatasetList&state=AZ" },
+    normalization: { ...base.normalization, parserVersion: "legiscan-votes/1" },
+  }, NOW);
+  assert.equal(outcome.promoted, null);
+  assert.ok(outcome.candidate.failureCode);
 });
 
 test("all standing routine-source destructive classes are enumerated by the contract", () => {
@@ -1123,6 +1135,8 @@ test("all standing routine-source destructive classes are enumerated by the cont
     // The derived meeting-source wiring never removes a row (a trigger suspends it), so any removal is
     // refused by the generic incomplete-horizon rule (tests/derived-meeting-family.test.ts).
     "CURATED_READER_RECORD",
+    // SRC-CG exercises complete native filing corrections and lossless partial source merges.
+    "FEDERAL_CIVIC_RECORD",
   ]);
   const standingClasses = new Set(ROUTINE_SOURCE_TASKS.map((task) => task.recordClass));
   assert.deepEqual([...covered].sort(), [...standingClasses].sort());

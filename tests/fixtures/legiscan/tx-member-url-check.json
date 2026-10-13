@@ -1,0 +1,20 @@
+{
+  "capturedAt": "2026-10-13T15:20:17.814910+00:00",
+  "checks": [
+    {
+      "requestedUrl": "https://www.house.texas.gov/members/2100",
+      "finalUrl": "https://www.house.texas.gov/members/2100",
+      "httpStatus": 200,
+      "sha256": "dfeae606d7fa63b378da6333e57a4b74606057750fca35b001c9cfd79a07f726",
+      "bodyFile": "tx-member-www.html"
+    },
+    {
+      "requestedUrl": "https://house.texas.gov/members/2100",
+      "finalUrl": "https://house.texas.gov/members/2100",
+      "httpStatus": 200,
+      "sha256": "3fcc9be6f5c5f76ee2074d475bf2f1fb4c425c39c7730820e2eb29763333161b",
+      "bodyFile": "tx-member-apex.html"
+    }
+  ],
+  "identityRule": "The official .gov publisher namespace treats www as an alias. Only the host alias and trailing path slash normalize; the complete member path and query remain exact. Both native URLs are preserved on the vote join."
+}

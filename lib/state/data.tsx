@@ -30,6 +30,8 @@ export interface ShellData {
   listingIdentity?: MeetingListingIdentityReadback;
   /** Venues for the filtered set — one pin per venue, not per meeting. */
   venues: Venue[];
+  /** How many representative-office pins the map draws. */
+  officePins?: number;
   result: MeetingSearchResult | null;
   location: StoredLocation | null;
   /** The districts currently drawn — the stats card counts this list and

@@ -1,0 +1,2 @@
+id,identifier,motion_text,motion_classification,start_date,result,organization_id,bill_id,bill_action_id,jurisdiction,session_identifier
+ocd-vote/e538c0db-6b66-4f7f-a182-ec9e89850fdb,,Final Passage as Amended by the House (#6),[],2026-03-12,pass,ocd-organization/ddae63d3-9f3e-4c46-a00f-703fe21b54d1,ocd-bill/b6bb38ad-6f79-42f0-83d1-bfffa4019cc2,,Washington,2025-2026

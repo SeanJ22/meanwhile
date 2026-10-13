@@ -26,7 +26,7 @@ export async function refreshLegiscan(store:RoutineDataStore,signal:AbortSignal,
         const stamps={session_id:String(dataset.session_id),dataset_hash:dataset.dataset_hash,dataset_date:dataset.dataset_date};
         const priorCandidate=await store.readCandidate(prior.versionId);
         if(!store.confirmUnchanged) throw Error("LegiScan unchanged confirmation store unavailable");
-        const result=await store.confirmUnchanged({sourceId:"legiscan",recordClass:"STATE_BILL",scope:billScope(dataset.session_id),parserVersion:"legiscan-bulk/2",pointerVersionId:prior.versionId,
+        const result=await store.confirmUnchanged({sourceId:"legiscan-bills",recordClass:"STATE_BILL",scope:billScope(dataset.session_id),parserVersion:"legiscan-bulk/2",pointerVersionId:prior.versionId,
           readModelHash:priorCandidate!.candidate.normalization.normalizedHash!,basis:"PUBLISHER_STAMPS_UNCHANGED",retrieval:list.capture,stamps:[{key:String(dataset.session_id),held:stamps,fetched:stamps}]},list.capture.retrievedAt);
         if(result.kind!=="CONFIRMED") throw Error(`LegiScan unchanged check failed: ${result.kind}`);
         for(const key of ["rows","joined","unjoined","sponsorsJoined","sponsorsUnjoined"] as const) row[key]+=prior.payload.counts[key];

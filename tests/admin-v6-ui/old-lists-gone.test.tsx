@@ -33,10 +33,21 @@ test("Work keeps no Lanes or History tab, and Workers no list of instructions", 
   assert.doesNotMatch(page("now"), /Your recent instructions/);
 });
 
-test("the Fix list is not a page of its own: its items and its one send are on the Queue", () => {
+test("the Fix list is not a page of its own: its items are on the Queue and dispatch is automatic", () => {
   assert.equal(VIEWS.some(([id]) => (id as string) === "fix"), false);
   assert.equal(parseView("fix"), "now", "an old link to the Fix list opens Now, not a page that no longer exists");
   const queue = page("queue");
-  assert.match(queue, /Send everything waiting on the fix list/);
+  assert.doesNotMatch(queue, /Send everything waiting on the fix list/);
+  assert.equal(parseView("work"), "work");
+  assert.equal(VIEWS.some(([id]) => id === "work"), true);
+  assert.doesNotMatch(page("work"), /All work rows/);
   assert.match(queue, /Queue/);
+});
+
+
+test("measures supplied work rows keep their view and detail link", () => {
+  const snapshot = {...waiting,workRows:{phase:"live",data:{rows:[{id:"work-one",stage:"waiting",placeKey:"us",title:"A saved work row",age:"One minute",at:"2026-10-06T04:00:00Z"}],totals:[{stage:"waiting",total:1}]},asOf:ref.observedAt,revision:"saved-work",missingParts:[],attempts:0} as SectionState};
+  const html = renderToStaticMarkup(h(CommandCenter,{data:buildLiveBundle(snapshot,ref,workerStatusFromPulse(null)),mode:"live",executor:liveExecutor({capabilities:()=>null}),scopeKey:"us",onScopeChange:()=>{},connection:"live",lastGoodAt:null,recovered:false,access:owner,initialView:"work"}));
+  assert.match(html,/All work rows/);
+  assert.match(html,/A saved work row/);
 });

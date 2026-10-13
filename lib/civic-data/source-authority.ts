@@ -1,4 +1,5 @@
 import { PLURAL_STATES, PLURAL_PARSER_VERSION } from "../sources/plural/targets.ts";
+import { FEDERAL_SOURCE_AUTHORITIES } from "../sources/congress/authority.ts";
 import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ROUTE_PREFIX, REGISTRATION_TARGETS } from "../registration/publication.ts";
 import { extractedMemberUrl } from "./manual-source-urls.ts";
 import {
@@ -39,6 +40,27 @@ export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage 
 }
 
 export const SOURCE_AUTHORITIES = {
+  "socrata-discovery": {
+    id: "socrata-discovery", publisher: "Government publishers through the Socrata Discovery API", trust: "T1_AUTHORITATIVE_STRUCTURED",
+    sourceClass: "MULTI_PUBLISHER_PRIMARY", routePrefixes: ["https://api.us.socrata.com/api/catalog/v1"],
+    jurisdictions: ["US", ...REGISTRATION_TARGETS.map(t=>t.jurisdiction)], recordClasses: ["CURATED_READER_RECORD"],
+    competentFacts: ["Native dataset identity", "publisher title, description, columns and publication/update dates", "explicit publisher jurisdiction identifiers"],
+    expectedIdentifierKeys: ["record_id", "socrata_id"], expectedTemporalFields: ["source_through"],
+    horizonSemantics: "Paged national catalog; each exact domain and resource is retained even when its jurisdiction does not join. A catalog listing proves dataset metadata; dataset contents remain acquisition leads.",
+    parserVersion: "src-so/1", freshnessExpectation: "Daily discovery; source publication dates and advertised dataset update frequencies remain attributed.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" }, routineAutoPromotion: true,
+  },
+  "epa-echo": {
+    id: "epa-echo", publisher: "U.S. Environmental Protection Agency", trust: "T1_AUTHORITATIVE_STRUCTURED", sourceClass: "FEDERAL_AGENCY",
+    routePrefixes: ["https://echo.epa.gov/files/echodownloads/", "https://echodata.epa.gov/echo/"],
+    jurisdictions: ["US", ...REGISTRATION_TARGETS.map(t=>t.jurisdiction)], recordClasses: ["CURATED_READER_RECORD"],
+    competentFacts: ["FRS facility identity", "ZIP and Census FIPS", "reported inspections, dates, compliance and violation histories"],
+    expectedIdentifierKeys: ["record_id", "registry_id"], expectedTemporalFields: ["source_through"],
+    horizonSemantics: "Complete weekly national exporter, including facilities beyond the search API's queryset limit. Each native facility is retained in its ZIP; missing ZIPs and unresolved government joins remain held and counted.",
+    parserVersion: "src-so/1", freshnessExpectation: "Weekly EPA publication; HTTP Last-Modified dates the source release.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" }, routineAutoPromotion: true,
+  },
+  ...FEDERAL_SOURCE_AUTHORITIES,
   "official-ballot-authorities": {
     id: "official-ballot-authorities",
     publisher: "Exact official election authorities in the saved-source receipt",
@@ -344,7 +366,7 @@ export const SOURCE_AUTHORITIES = {
     publisher: "U.S. Census Bureau",
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "FEDERAL_AGENCY",
-    routePrefixes: [REGISTRATION_SOURCE_ROUTE_PREFIX, "https://nces.ed.gov/ccd/"],
+    routePrefixes: [REGISTRATION_SOURCE_ROUTE_PREFIX, "https://nces.ed.gov/ccd/", "https://ies.ed.gov/sites/default/files/"],
     jurisdictions: REGISTRATION_TARGETS.map((t) => t.jurisdiction),
     recordClasses: ["REGISTRATION"],
     competentFacts: [
@@ -606,7 +628,7 @@ export const SOURCE_AUTHORITIES = {
     expectedIdentifierKeys: ["domain", "source_sha"],
     expectedTemporalFields: ["source_commit", "source_through"],
     horizonSemantics: "The SHA-pinned current-full.csv is a complete domain registry for that source revision but never a government/body denominator.",
-    parserVersion: "cisa-dotgov/2",
+    parserVersion: "cisa-dotgov/3",
     freshnessExpectation: "Monthly check for a newer CISA source revision.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
@@ -810,6 +832,23 @@ export const SOURCE_AUTHORITIES = {
     trust: "T4_RESEARCH_SECONDARY",
     sourceClass: "INTERMEDIARY",
     routePrefixes: ["https://api.legiscan.com/", "https://legiscan.com/"],
+    jurisdictions: PLURAL_STATES.map(state => `US-${state.toUpperCase()}`),
+    recordClasses: ["STATE_LEGISLATOR", "STATE_ROLL_CALL", "STATE_LEGISLATOR_VOTES"],
+    competentFacts: ["attributed native roll calls", "exact native member positions", "publisher bill titles, motions, dates and tallies", "source-backed member identity crosswalks"],
+    expectedIdentifierKeys: ["people_id", "roll_call_id", "session_id"],
+    expectedTemporalFields: ["dataset_date", "session_id"],
+    horizonSemantics: "Weekly state-bounded datasets supply attributed intermediary vote facts. Positions attach to exact OpenStates people using unique publisher identifiers or the same exact native member profile URL in saved source records. Ambiguous identities stay held; partial sessions and unchanged hashes never establish absent votes. Official publisher facts retain precedence.",
+    parserVersion: "legiscan-votes/1",
+    freshnessExpectation: "Vendor weekly publication.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: true,
+  },
+  "legiscan-bills": {
+    id: "legiscan-bills",
+    publisher: "LegiScan",
+    trust: "T4_RESEARCH_SECONDARY",
+    sourceClass: "INTERMEDIARY",
+    routePrefixes: ["https://api.legiscan.com/", "https://legiscan.com/"],
     jurisdictions: ["US", ...PLURAL_STATES.map(state => `US-${state.toUpperCase()}`)],
     recordClasses: ["STATE_BILL"],
     competentFacts: ["attributed bill status", "native bill sponsors", "published bill text links"],
@@ -826,14 +865,14 @@ export const SOURCE_AUTHORITIES = {
     publisher: "Plural / Open States",
     trust: "T4_RESEARCH_SECONDARY",
     sourceClass: "INTERMEDIARY",
-    routePrefixes: ["https://v3.openstates.org/bills"],
-    jurisdictions: ["US-AZ"],
+    routePrefixes: ["https://v3.openstates.org/", "https://data.openstates.org/", "https://openstates.org/data/session-csv/"],
+    jurisdictions: PLURAL_STATES.map(state => `US-${state.toUpperCase()}`),
     recordClasses: ["STATE_ROLL_CALL"],
     competentFacts: ["attributed native vote events", "exact native person positions", "literal publisher count labels"],
     expectedIdentifierKeys: ["rollCallId", "eventId", "billId"],
     expectedTemporalFields: ["session", "vote_date", "retrieved_at"],
-    horizonSemantics: "Each acquired Arizona bill contributes independently verified native vote facts. Bounded recent-bill requests are an open fact set and never prove an absent vote or a complete session. Person joins require exact OpenStates IDs; no official IDs are invented.",
-    parserVersion: "plural-votes/1",
+    horizonSemantics: "Each acquired state session or bill contributes independently verified native vote facts. Bulk sessions and API queries are an open fact set and never prove an absent vote or a complete session. Person joins require exact OpenStates IDs; no official IDs are invented.",
+    parserVersion: "plural-votes/2",
     freshnessExpectation: "Daily through the existing routine runner; unchanged captured releases retain their source dates.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,

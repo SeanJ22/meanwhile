@@ -1,9 +1,9 @@
 "use client";
 
-/** The idempotency key is fixed when the dialog opens, so a double click or a retried request is one send. */
 import { useEffect, useId, useRef, useState } from "react";
 
 import type { ActionDef, Preview } from "./actions.ts";
+import { orderWhen, type OrderWhen, type WhenMode } from "./order-when.ts";
 import { cx, Facts } from "./ui.tsx";
 import s from "./v6.module.css";
 
@@ -12,6 +12,7 @@ export interface DialogSend {
   readonly words: string;
   readonly amount: string;
   readonly selected: readonly string[];
+  readonly when?: OrderWhen;
 }
 
 export function ActionDialog(props: {
@@ -19,6 +20,7 @@ export function ActionDialog(props: {
   readonly preview: Preview;
   readonly mode: "live" | "sample";
   readonly blocked: string | null;
+  readonly afterOrders?: readonly {id:string;label:string}[];
   readonly onSend: (send: DialogSend) => void;
   readonly onClose: () => void;
 }) {
@@ -31,6 +33,13 @@ export function ActionDialog(props: {
   const [words, setWords] = useState("");
   const [amount, setAmount] = useState(preview.amount?.initial ?? "");
   const [unticked, setUnticked] = useState<ReadonlySet<string>>(new Set());
+  const [startTime,setStartTime] = useState("");
+  const [whenMode,setWhenMode] = useState<WhenMode>("now");
+  const [afterOrder,setAfterOrder] = useState("");
+  const [repeat,setRepeat] = useState<"hourly"|"daily"|"weekly">("daily");
+  const [finishTime,setFinishTime] = useState("");
+  const offersWhen = !!def.gateway && !def.gateway.requiresStateVersion && !def.gateway.type.startsWith("orders.");
+  const timing = orderWhen(whenMode,startTime,afterOrder,repeat,finishTime);
   const [sent, setSent] = useState(false);
 
   useEffect(() => {
@@ -43,7 +52,8 @@ export function ActionDialog(props: {
   const selected = items.filter((i) => !unticked.has(i.id)).map((i) => i.id);
   const chosen = preview.options?.find((o) => o.id === option) ?? null;
   const needOption = !!preview.options?.length && !chosen;
-  const invalid = preview.invalid?.({ option, words, amount, selected: selected.length }) ?? null;
+  const whenInvalid = offersWhen && timing===null ? "Choose when this order should run." : null;
+  const invalid = whenInvalid ?? preview.invalid?.({ option, words, amount, selected: selected.length }) ?? null;
   const reason = props.blocked ?? (chosen?.blocked ?? null) ?? invalid;
   const off = sent || needOption || !!reason;
   const global = preview.level === "global";
@@ -52,7 +62,7 @@ export function ActionDialog(props: {
   const send = () => {
     if (off) return;
     setSent(true);
-    props.onSend({ option, words, amount, selected });
+    props.onSend({ option, words, amount, selected, ...(offersWhen && timing ? {when:timing} : {}) });
   };
 
   const onKeyDown = (e: React.KeyboardEvent) => {
@@ -108,6 +118,15 @@ export function ActionDialog(props: {
           </fieldset>
         )}
 
+        {offersWhen && <fieldset className={s.stack} style={{border:0,padding:0}}><legend>When</legend>
+          <select className={s.select} aria-label="When" value={whenMode} onChange={e=>setWhenMode(e.target.value as WhenMode)}>
+            <option value="now">Start now</option><option value="at">At a time</option><option value="after">After another order</option><option value="repeat">Repeat</option><option value="finish-by">Finish by a date</option>
+          </select>
+          {(whenMode==="at"||whenMode==="repeat") && <label>Start (Eastern time)<input className={s.input} type="datetime-local" value={startTime} onChange={e=>setStartTime(e.target.value)}/></label>}
+          {whenMode==="after" && <label>After this order is Done<select className={s.select} value={afterOrder} onChange={e=>setAfterOrder(e.target.value)}><option value="">Choose an order</option>{props.afterOrders?.map(o=><option key={o.id} value={o.id}>{o.label}</option>)}</select></label>}
+          {whenMode==="repeat" && <label>Repeat<select className={s.select} value={repeat} onChange={e=>setRepeat(e.target.value as typeof repeat)}><option value="hourly">Every hour</option><option value="daily">Every day</option><option value="weekly">Every week</option></select></label>}
+          {whenMode==="finish-by" && <label>Finish by (Eastern time)<input className={s.input} type="datetime-local" value={finishTime} onChange={e=>setFinishTime(e.target.value)}/></label>}
+        </fieldset>}
         {preview.amount && (
           <label className={s.stack} style={{ gap: 4 }}>
             <span className={s.small}>{preview.amount.label}</span>
@@ -117,7 +136,7 @@ export function ActionDialog(props: {
 
         {showWords && (
           <label className={s.stack} style={{ gap: 4 }}>
-            <span className={s.small}>{chosen?.ownWords ? "Say what you want" : "Add a note (optional)"}</span>
+            <span className={s.small}>{chosen?.ownWords ? "Note" : "Add a note (optional)"}</span>
             <textarea className={s.textarea} value={words} maxLength={1000} onChange={(e) => setWords(e.target.value)} />
           </label>
         )}

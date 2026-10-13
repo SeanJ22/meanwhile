@@ -9,7 +9,7 @@ export async function readBulkProjection(scope:string,options:PromotedCivicDataR
   if(result.kind==="PROMOTED") {
     const store=options.store??new PostgresRoutineDataStore();
     const candidate=await store.readCandidate(result.metadata.versionId!);
-    if(!candidate||candidate.candidate.sourceId!=="legiscan"||bulkProjectionIssue(candidate.candidate,result.value)!==null) throw Error("LEGISCAN_BULK_PROJECTION_INVALID");
+    if(!candidate||candidate.candidate.sourceId!=="legiscan-bills"||bulkProjectionIssue(candidate.candidate,result.value)!==null) throw Error("LEGISCAN_BULK_PROJECTION_INVALID");
   }
   return result;
 }

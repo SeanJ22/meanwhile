@@ -1,0 +1,2 @@
+created_at,updated_at,extras,id,name,parent_id,jurisdiction_id,classification,sources,links,other_names
+2017-07-13 05:16:37.717441+00:00,2020-04-29 05:15:06.786088+00:00,{},ocd-organization/c95932a0-2ac1-4f14-a0c4-ade8568daac6,Senate,ocd-organization/d8dce079-d59d-407c-be93-9d3fce72bd48,ocd-jurisdiction/country:us/state:nh/government,upper,[],[],[]

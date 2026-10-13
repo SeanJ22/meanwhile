@@ -1,0 +1,2 @@
+id,identifier,motion_text,motion_classification,start_date,result,organization_id,bill_id,bill_action_id,jurisdiction,session_identifier
+ocd-vote/415a59a3-00df-43ae-a669-8a025dad1dcd,,Passed,['passage'],2026-06-13,pass,ocd-organization/c3d4c85b-888e-4188-b903-a251b957c162,ocd-bill/f41cf9d1-6f70-4a7f-82a0-9ad192545bb5,,Arizona,57th-2nd-regular

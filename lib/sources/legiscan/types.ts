@@ -1,15 +1,15 @@
 /**
  * The state-legislature voting record, the state-level sibling of `lib/votes/`.
- * - Record-tier evidence only: how a member voted, as the chamber recorded it, mapped onto four states.
+ * - Record-tier evidence only: how a member voted, as recorded by the attributed publisher.
  *   Never merged with the statement corpus.
  * - Never characterized by us: the title is the bill's official title or the chamber's own description.
  *   No record may carry a `score`, `rank`, `rating`, `match`, `fit`, `grade`, `alignment` or
  *   `recommendation` key (`tests/neutrality-guards.test.ts`).
- * - Production serves only proof-validated official-publisher promotions from the data plane.
+ * - Production serves validated, independently attributed source projections from the data plane.
  *
  * LegiScan's data is published under CC BY 4.0; `LEGISCAN_ATTRIBUTION` is the single string every
- * surface renders with it (`tests/legiscan.test.ts`). LegiScan bill datasets publish through their
- * own routine contract; official state vote records keep their independent authority.
+ * surface renders with it (`tests/legiscan.test.ts`). Its weekly state datasets supplement independently attributed official
+ * sources (exact official roll calls retain precedence in Reader); bill datasets publish through their own routine contract.
  */
 
 /**

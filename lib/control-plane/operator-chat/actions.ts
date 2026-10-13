@@ -5,6 +5,7 @@ import {
   type ActionDefinition,
   type ActionOutcome,
   type ActionRequest,
+  type CallerAuthority,
 } from "../gateway/contract.ts";
 import type { OperatorContext } from "./context.ts";
 import { CHAT_CALLER, type ActionProposal } from "./contract.ts";
@@ -16,6 +17,8 @@ export type GatewaySubmission =
 
 export interface GatewayBinding {
   readonly registry: readonly ActionDefinition[];
+  /** Set only by the authenticated owner route; delegated chat keeps its ceiling. */
+  readonly caller?: CallerAuthority;
   readonly submit: (request: ActionRequest) => Promise<GatewaySubmission>;
 }
 
@@ -43,16 +46,19 @@ export function chatActionRequest(input: {
   readonly stateVersion: string | null;
   readonly actorRef: string;
   readonly proposedAt: string;
+  readonly orderInput?: Readonly<Record<string,unknown>>;
+  readonly caller?: CallerAuthority;
+  readonly willDo?: string;
 }): ActionRequest {
   const { definition, subject, words, stateVersion, actorRef, proposedAt } = input;
   return {
     type: definition.type,
     subject,
     /* `note`, not `comment` or `freeText`: the aggregate-only boundary refuses those field names. */
-    input: { note: words },
+    input: input.orderInput ?? { note: words },
     stateVersion: definition.requiresStateVersion ? stateVersion : null,
-    idempotencyKey: fingerprint([definition.type, subject, words, stateVersion, proposedAt]),
-    caller: CHAT_CALLER,
+    idempotencyKey: fingerprint([definition.type, subject, words, stateVersion, proposedAt, JSON.stringify(input.orderInput ?? {note:words}), input.caller ?? CHAT_CALLER]),
+    caller: input.caller ?? CHAT_CALLER,
     actorRef,
   };
 }
@@ -64,10 +70,13 @@ export function proposeAction(input: {
   readonly context: OperatorContext;
   readonly actorRef: string;
   readonly proposedAt: string;
+  readonly orderInput?: Readonly<Record<string,unknown>>;
+  readonly caller?: CallerAuthority;
+  readonly willDo?: string;
 }): ProposalOutcome {
   const { definition, subject, words, context, actorRef, proposedAt } = input;
 
-  if (!authorityPermits(CHAT_CALLER, definition.authority)) {
+  if (!authorityPermits(input.caller ?? CHAT_CALLER, definition.authority)) {
     return {
       ok: false,
       refusal: { says: refusalSays("AUTHORITY_MISMATCH", definition.label), actionType: definition.type },
@@ -99,14 +108,14 @@ export function proposeAction(input: {
     };
   }
 
-  const request = chatActionRequest({ definition, subject: on, words, stateVersion: context.stateVersion, actorRef, proposedAt });
+  const request = chatActionRequest({ definition, subject: on, words, stateVersion: context.stateVersion, actorRef, proposedAt, orderInput:input.orderInput, caller:input.caller });
   return {
     ok: true,
     proposal: {
       definition,
       request,
       confirmToken: request.idempotencyKey,
-      willDo: definition.does,
+      willDo: input.willDo ?? definition.does,
       willNotDo: definition.doesNot,
     },
   };

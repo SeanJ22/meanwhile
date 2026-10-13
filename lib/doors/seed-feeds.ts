@@ -16,6 +16,9 @@ const MINUTE = 60_000;
 /** The environment key name a feed reads, where it needs one. Names only, never values. */
 const KEY_REFS: ReadonlyArray<readonly [RegExp, string]> = [
   [/legiscan/i, "LEGISCAN_API_KEY"],
+  [/socrata-discovery/i, "SOCRATA_APP_TOKEN"],
+  [/govinfo|regulations-gov/i, "DATA_GOV_API_KEY"],
+  [/senate-lda/i, "LDA_API_KEY"],
   [/fec/i, "FEC_API_KEY"],
   [/congress|federal-legislative/i, "CONGRESS_API_KEY"],
 ];

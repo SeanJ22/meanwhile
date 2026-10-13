@@ -1,8 +1,10 @@
 import { withPublishedAskSettings, askPlaybookVersion } from "@/lib/ask/runtime-settings.ts";
 import { governmentFinanceEvidence, governmentFinanceQuestion, composeGovernmentFinanceAnswer } from "@/lib/ask/government-finance";
 import { isBillQuestion,legiscanBillEvidence } from "@/lib/ask/legiscan-bills";
-import { governmentListingEntity, governmentListingEvidence, readerGovernmentListings } from "@/lib/ask/government-listings";
+import { openDataQuestion, openDataEvidenceFor } from "@/lib/ask/open-data";
+import { governmentListingEntity, governmentListingEvidenceRecords, readerGovernmentListings } from "@/lib/ask/government-listings";
 import { prlStatementEvidence, readPrlForSubject } from "@/lib/sources/prl/person";
+import { federalAskEvidence } from "@/lib/sources/congress/reader";
 import { type MeetingsSnapshot } from "@/lib/meetings/snapshot";
 import { ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
 import { enterReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "@/lib/registry/runtime-edge";
@@ -59,8 +61,8 @@ import { formatDateLong } from "@/lib/text/format-date";
 import { unavailableInterpretation, type AskIntent, type AskInterpretation, type AskTemporal } from "@/lib/ask/intent";
 import { asksWhatAnOfficeDoes, officeInQuestion } from "@/lib/ask/office-question";
 import { interpretQuestion, interpretWithoutModel } from "@/lib/ask/interpret";
-import { bodyNameFromQuestion, groupMoneyShapeForBoundSubject, lexicalQuestionShape, lexicalReading, moneyShapeForBoundPerson, otherNamedPerson, personVotesShapeForBoundPerson, shapeForBoundBody, unheldNamedBodyQuestion } from "@/lib/ask/lexical-reading";
-import { composePersonVotes } from "@/lib/ask/person-votes";
+import { bodyNameFromQuestion, groupMoneyShapeForBoundSubject, lexicalQuestionShape, lexicalReading, moneyShapeForBoundPerson, otherNamedPerson, personVotesShapeForBoundPerson, shapeForBoundBody, unheldNamedBodyQuestion, type LexicalReading } from "@/lib/ask/lexical-reading";
+import { composePersonVotes, personVotesQuestionShape, readerPersonVotesQuestion, readerPersonVoteOfficials } from "@/lib/ask/person-votes";
 import { composeBodyRoster, composeReaderOfficials, placeNamesOf, readerOfficialsQuestion } from "@/lib/ask/reader-officials";
 import { areaMeetingsQuestion, composeAreaMeetings, type AreaSitting } from "@/lib/ask/area-meetings";
 import { composeBallotOnlyAnswer } from "@/lib/ask/ballot-only-answer";
@@ -476,7 +478,8 @@ async function answerWithSettings(request: Request) {
    * edge bundle when one exists, with the database as fallback. Each source owns its read state and failure
    * gap: a missing or invalid pointer fails that source closed without failing the request.
    */
-  const topicRoute = topicFocusedQuestion(question);
+  const readerVoteAsk = readerPersonVotesQuestion(question);
+  const topicRoute = readerVoteAsk || personVotesQuestionShape(question) ? null : topicFocusedQuestion(question);
   /* "Who is my state senator?": a lookup in the officeholders held for the reader's divisions (lib/ask/reader-officials.ts). It reads the registry and the federal directory and nothing else. */
   const officialsAsk = !topicRoute && ocdIds.length > 0 ? readerOfficialsQuestion(question, statesOf(ocdIds).map((state) => state.toLowerCase()), placeNamesOf(ocdIds)) : null;
   /* "What meetings are happening this week?": the sittings held for the reader's divisions (lib/ask/area-meetings.ts). It reads the registry and the calendar and nothing else. */
@@ -822,6 +825,16 @@ async function answerWithSettings(request: Request) {
       return { ...entity, id: pair.cardKey };
     }),
   ];
+  let readerVoteChoices: BindableEntity[] = readerVoteAsk ? [...new Map(readerPersonVoteOfficials(readerVoteAsk, officeholders.held)
+    .flatMap(({ seat }) => {
+      const id = officialToBallot.get(seat.id) ?? officialAliases.get(seat.id) ?? seat.id;
+      const entity = inventory.find(row => row.id === id && row.nameClass === "person");
+      return entity ? [[entity.id, entity] as const] : [];
+    })).values()] : [];
+  const focusedVoteIds = new Set(readSubjectRefs(body.activeSubjects).filter(ref => ref.focused).flatMap(ref => ref.id ? [ref.id] : []));
+  const focusedVoteChoices = readerVoteChoices.filter(entity => focusedVoteIds.has(entity.id) ||
+    [...focusedVoteIds].some(id => (officialToBallot.get(id) ?? officialAliases.get(id) ?? id) === entity.id));
+  if (focusedVoteChoices.length === 1) readerVoteChoices = focusedVoteChoices;
   /* The office a held candidate is on the ballot for: a race the reader names ("for her state senate race") must be it. */
   const officeOf = (id: string) => ballotInventory.subjects.get(id)?.contestTitle ?? null;
 
@@ -928,7 +941,10 @@ async function answerWithSettings(request: Request) {
   const unheldBody = !topicRoute && !leanAsk && !ballotAsk ? unheldNamedBodyQuestion(question, namedBodies) : null;
   const modelFreeTopicRoute = deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute || leanAsk || Boolean(ballotAsk) || Boolean(unheldBody);
   /* A question in a canonical shape whose name binds one body identically in every binder is read in code (`lib/ask/lexical-reading.ts`); anything else goes to the model. */
-  const lexical = modelFreeTopicRoute ? null : lexicalReading({
+  const readerVoteReading: LexicalReading | null = readerVoteAsk && readerVoteChoices.length ? { shape: "PERSON_VOTES" as const,
+    interpretation: { ...unavailableInterpretation(), intent: "PERSON_RECORD" as const, temporal: { kind: "NONE" as const } },
+    subjectId: readerVoteChoices.length === 1 ? readerVoteChoices[0]!.id : "" } : null;
+  const lexical = modelFreeTopicRoute ? null : readerVoteReading ?? lexicalReading({
     question, inventory, namedBodies, confirmation: body.confirmation, activeSubjects, priorSubjects, officeOf,
     readerGoverning: scopedBodies.filter((entry) => entry.ocdId && (entry.bodyId === `${entry.ocdId}#governing` || entry.bodyId === `${entry.ocdId}#board`))
       .flatMap((entry) => inventory.filter((entity) => entity.id === entry.bodyId)),
@@ -1060,7 +1076,12 @@ async function answerWithSettings(request: Request) {
       initialResolution.binding.entity.level === "BODY" && initialResolution.basis.startsWith("MODEL_EXPANSION")) bodyDecision = { kind: "CLARIFY" };
     const resolved = applyNamedBodyDecision(bodyDecision, initialResolution, question);
     /* A kind of body was named ("the school board") and the reader's ZIP reaches several: ask which, naming them. */
-    const resolution: ReturnType<typeof resolveInterpretation> = lexical?.areaChoices
+    const resolution: ReturnType<typeof resolveInterpretation> = readerVoteReading && readerVoteAsk
+      ? { binding: readerVoteChoices.length === 1
+          ? { kind: "BOUND", entity: readerVoteChoices[0]!, matchedOn: readerVoteAsk.office.phrase }
+          : { kind: "AMBIGUOUS", mention: `your ${readerVoteAsk.office.phrase}`, candidates: readerVoteChoices },
+        basis: "READER_WORDS", boundOn: question }
+      : lexical?.areaChoices
       ? { binding: { kind: "AMBIGUOUS", mention: lexical.areaChoices.mention, candidates: [...lexical.areaChoices.bodies] }, basis: "WHOLE_QUESTION", boundOn: question }
       : resolved;
     trace.resolution = {
@@ -1229,6 +1250,12 @@ async function answerWithSettings(request: Request) {
     /** A topic question's dated timeline for the bound body, when one was built. */
     let topicTimeline: ReturnType<typeof buildTopicTimeline> | null = null;
     const gaps: EvidenceGap[] = [...holdingLoadGaps];
+    if(openDataQuestion(question)) {
+      const divisionIds=subject?.kind==="BODY" ? [bound?.ocdId ?? subject.id.split("#")[0]].filter(id=>id?.startsWith("ocd-division/")) as string[] : ocdIds;
+      const data=await openDataEvidenceFor({divisionIds,zip:ballotZip,bodyId:subject?.kind==="BODY"?subject.id:null},subject?.id).catch(()=>({records:[],unavailable:["open-data"],notHeld:[]}));
+      records.push(...data.records);
+      if(data.unavailable.length || data.notHeld.length)gaps.push({whose:"OURS",statement:"We're working on getting this info from all open-data and environmental sources for this place."});
+    }
     /* The gaps attached to the chosen sitting(s), by why they were attached, for
        an answer composed from the sitting (`lib/ask/sitting-answer.ts`). Each is
        also in `gaps`; this only remembers which ones are about the sitting. */
@@ -1378,7 +1405,7 @@ async function answerWithSettings(request: Request) {
     } else if (subject?.kind === "BODY") {
       const listing = governmentListings.records.find(row => row.id === subject.id);
       if (listing) {
-        records.push(governmentListingEvidence(listing));
+        records.push(...governmentListingEvidenceRecords(listing));
         denominators.governmentInventoryRecords = 1;
       }
       const identity = canonicalBodyIdentity(subject.id);
@@ -1707,6 +1734,11 @@ async function answerWithSettings(request: Request) {
     }
 
     /* A comparison retrieves both people's money: the one other held person the question names (exact id, never a context default) is stamped as theirs. */
+    const federalMember = subject?.kind === "PERSON" ? [...canonicalSubjectKeys].find(id => /^congress:[A-Z]\d{6}$/.test(id)) ?? subject.id : null;
+    const federal = await federalAskEvidence(federalMember, question);
+    records.push(...federal.records.map(record => subject?.kind === "PERSON" ? { ...record, subjectId: subject.id } : record));
+    gaps.push(...federal.gaps);
+    Object.assign(denominators, federal.denominators);
     const comparedIds = new Set<string>();
     if (subject?.kind === "PERSON" && financeAsked) {
       const other = otherNamedPerson(question, inventory, subject.id);
@@ -2101,7 +2133,9 @@ async function answerWithSettings(request: Request) {
     }
     /* How a named person voted (lib/ask/person-votes.ts): the roll calls we hold, in the chamber's own fields; the same validator decides. */
     const votesShape = !topicComposed && !sittingSettled.composed && !moneySettled.composed && subject?.kind === "PERSON"
-      ? personVotesShapeForBoundPerson(question, inventory, subject.id) : null;
+      ? readerVoteAsk && readerVoteChoices.length === 1 && readerVoteChoices[0]!.id === subject.id
+        ? { slot: readerVoteAsk.office.phrase, topic: readerVoteAsk.topic }
+        : personVotesShapeForBoundPerson(question, inventory, subject.id) : null;
     const votesSettled = settleSittingComposition(
       votesShape && subject ? composePersonVotes({ name: subject.name, topic: votesShape.topic, records: packRecords }) : null,
       (text, urls) => validateAnswer(text, urls, pack, bodies),

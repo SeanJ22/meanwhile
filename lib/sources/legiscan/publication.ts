@@ -10,7 +10,7 @@ export function bulkCandidate(input:{capture:BulkCapture;dataset?:Dataset;bodies
   const {capture}=input;
   const datasets=input.datasets?.map(({access_key:_access,...row})=>row) ?? [];
   const {access_key:_access,...dataset}=input.dataset??{};
-  const payload=JSON.parse(JSON.stringify({...input,...(input.dataset?{dataset}:{}),...(input.datasets?{datasets}:{})})), sourceId="legiscan", recordClass="STATE_BILL";
+  const payload=JSON.parse(JSON.stringify({...input,...(input.dataset?{dataset}:{}),...(input.datasets?{datasets}:{})})), sourceId="legiscan-bills", recordClass="STATE_BILL";
   const readModel=input.dataset?normalizeSession(input.dataset,input.bodies??[],capture.retrievedAt,input.people):{kind:"INDEX",capturedAt:capture.retrievedAt,datasets} satisfies BillIndex;
   const scope=input.dataset?billScope(input.dataset.session_id):LEGISCAN_BULK_SCOPE;
   const rows=readModel.kind==="SESSION"?readModel.bills:datasets;

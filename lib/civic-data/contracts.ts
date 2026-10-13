@@ -1,6 +1,7 @@
 import { VALIDATION_CHECKS, type RoutineDataClassification, type RoutineRecordClass } from "./types.ts";
 import type { SourceAuthorityId } from "./source-authority.ts";
 import { RUNTIME_ROUTINE_CONTRACTS } from "./runtime-routine-contracts.ts";
+import { FEDERAL_SOURCE_IDS, FEDERAL_SOURCES, FEDERAL_PARSER_VERSION, FEDERAL_RECORD_CLASS, federalScope } from "../sources/congress/targets.ts";
 import {
   OFFICIAL_STATE_LEGISLATOR_TARGETS,
   OFFICIAL_STATE_ROLL_CALL_TARGETS,
@@ -8,6 +9,7 @@ import {
 import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ID, REGISTRATION_TARGETS } from "../registration/publication.ts";
 
 import { PLURAL_STATES, PLURAL_PARSER_VERSION, PLURAL_SOURCE_ID } from "../sources/plural/targets.ts";
+import { OPEN_DATA_SOURCES, OPEN_DATA_PARSER, OPEN_DATA_CLOCKS, SOCRATA_CATALOG, ECHO_EXPORT } from "../sources/open-data/model.ts";
 
 const HOUR = 60 * 60 * 1_000;
 const DAY = 24 * HOUR;
@@ -273,25 +275,44 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
   })),
-  {
-    id: "az-openstates-votes",
+  ...PLURAL_STATES.map((state): RoutineSourceContract => ({
+    id: `openstates-votes-${state}`,
     sourceId: "plural-openstates-votes",
     recordClass: "STATE_ROLL_CALL",
-    scope: "US-AZ:openstates-votes:v1",
-    acquisitionFailureDomain: "routine-source:plural-openstates-votes",
-    acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/az-votes-refresh.mts", "--promote"] },
-    parserNormalizerVersion: "plural-votes/1",
-    cadence: { description: "daily native Arizona vote refresh from the existing Open States API", defaultEveryMs: DAY },
-    retry: { afterMs: HOUR, description: "one hour after a failed known bill or vote acquisition" },
+    scope: `US-${state.toUpperCase()}:openstates-votes:v1`,
+    acquisitionFailureDomain: `routine-source:plural-openstates-votes:${state}`,
+    acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/openstates-votes-refresh.mts", "--promote", `--state=${state}`] },
+    parserNormalizerVersion: "plural-votes/2",
+    cadence: { description: "daily public bulk session votes; Open States API v3 fallback", defaultEveryMs: DAY },
+    retry: { afterMs: HOUR, description: "retry failed state sources independently; unchanged votes are successful checks" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "plural-openstates-votes" },
     validationContract: CHECKS,
     canonicalProductionStore: STORE,
-    readerProjection: { id: "az-openstates-native-votes", consumers: ["app/api/votes/route.ts", "lib/ask/votes.ts", "Ask", "map", "ballot", "Admin"] },
-    lkgBehavior: "Each exact native vote merges independently. Partial source coverage makes no absence claim and preserves prior verified votes.",
+    readerProjection: { id: `${state}-openstates-native-votes`, consumers: ["app/api/votes/route.ts", "lib/ask/votes.ts", "Ask", "map", "ballot", "Admin"] },
+    lkgBehavior: "Exact Open States person positions publish independently. Incomplete acquisition preserves earlier votes and sessions; zero added votes makes no absence claim.",
     autoPromotable: true,
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
-  },
+  })),
+  ...PLURAL_STATES.map((state): RoutineSourceContract => ({
+    id: `legiscan-votes-${state}`,
+    sourceId: "legiscan",
+    recordClass: "STATE_ROLL_CALL",
+    scope: `US-${state.toUpperCase()}:legiscan-votes:v1`,
+    acquisitionFailureDomain: `routine-source:legiscan:${state}`,
+    acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/legiscan-votes-refresh.mts", "--promote", `--state=${state}`] },
+    parserNormalizerVersion: "legiscan-votes/1",
+    cadence: { description: "weekly LegiScan session datasets", defaultEveryMs: 7 * DAY },
+    retry: { afterMs: HOUR, description: "retry failed state datasets independently" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "legiscan" },
+    validationContract: CHECKS,
+    canonicalProductionStore: STORE,
+    readerProjection: { id: `${state}-legiscan-votes`, consumers: ["app/api/votes/route.ts", "lib/ask/votes.ts", "Ask", "map", "ballot", "Admin"] },
+    lkgBehavior: "Attributed LegiScan roll calls attach only through exact Open States person crosswalks. Failed datasets preserve previously verified positions.",
+    autoPromotable: true,
+    classification: "RUNTIME_CIVIC_DATA",
+    bootstrapFixturePaths: [],
+  })),
   ...OFFICIAL_STATE_ROLL_CALL_TARGETS.filter(target => target.state !== "AZ").map((target): RoutineSourceContract => {
     const fanOut = target.state === "NH";
     return {
@@ -454,16 +475,16 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     id: "dotgov",
     sourceId: "cisa-dotgov-registry",
     recordClass: "DOTGOV_REFERENCE",
-    scope: "US:current-full:election-domains",
+    scope: "US:current-full:domains",
     acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/fetch-dotgov.mts", "--promote"], requestedUrl: "https://api.github.com/repos/cisagov/dotgov-data/commits?path=current-full.csv&per_page=1" },
-    parserNormalizerVersion: "cisa-dotgov/2",
+    parserNormalizerVersion: "cisa-dotgov/3",
     cadence: { description: "monthly", defaultEveryMs: 30 * DAY },
     retry: { afterMs: 6 * HOUR, description: "six hours after a failed attempt" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "cisa-dotgov-registry" },
     validationContract: CHECKS,
     canonicalProductionStore: STORE,
-    readerProjection: null,
-    lkgBehavior: "The current operational pointer remains on the last GOOD complete CISA registry projection after refusal.",
+    readerProjection: { id: "government-domains", consumers: ["government listings", "government detail", "Ask"] },
+    lkgBehavior: "The current government-domain pointer remains on the last GOOD complete CISA registry projection after refusal.",
     autoPromotable: true,
     classification: "OPERATIONAL_REFERENCE_DATA",
     bootstrapFixturePaths: [],
@@ -569,18 +590,42 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     bootstrapFixturePaths: [],
   },
   {
-    id: "legiscan-bulk", sourceId: "legiscan", recordClass: "STATE_BILL", scope: "US:legiscan-datasets",
+    id: "legiscan-bulk", sourceId: "legiscan-bills", recordClass: "STATE_BILL", scope: "US:legiscan-datasets",
     acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/legiscan-bulk.mts", "--promote"], requestedUrl: "https://api.legiscan.com/?op=getDatasetList" },
     parserNormalizerVersion: "legiscan-bulk/2",
     cadence: { description: "weekly, following LegiScan's weekly dataset publication", defaultEveryMs: 7 * DAY },
     retry: { afterMs: HOUR, description: "one hour after a failed bulk pass; already published sessions remain live" },
-    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "legiscan" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "legiscan-bills" },
     validationContract: CHECKS, canonicalProductionStore: STORE,
     readerProjection: { id: "legiscan-bills", consumers: ["legislator cards", "Ask"] },
     lkgBehavior: "Each complete session publishes independently; failed archives leave prior bills live. Unchanged dataset hashes confirm success. Unjoined bills and sponsors remain in the session with their reason.",
     autoPromotable: true, fanOut: true, classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
   },
+  ...OPEN_DATA_SOURCES.map((sourceId): RoutineSourceContract => ({
+    id: sourceId, sourceId, recordClass: "CURATED_READER_RECORD", scope: `${sourceId}:national`,
+    acquisitionFailureDomain: `routine-source:${sourceId}`,
+    acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/open-data-refresh.mts", "--promote", `--source=${sourceId}`],
+      requestedUrl: sourceId === "socrata-discovery" ? SOCRATA_CATALOG : ECHO_EXPORT },
+    parserNormalizerVersion: OPEN_DATA_PARSER,
+    cadence: { description: sourceId === "socrata-discovery" ? "Daily Discovery catalog refresh; each dataset retains its publisher's own update dates and frequency" : "Weekly EPA ECHO Exporter publication", defaultEveryMs: OPEN_DATA_CLOCKS[sourceId] },
+    retry: { afterMs: HOUR, description: "Retry failed source acquisition in one hour, honoring provider Retry-After" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId }, validationContract: CHECKS, canonicalProductionStore: STORE,
+    readerProjection: { id: sourceId, consumers: ["government cards", "place cards", "Ask", "blanks loop", "Admin"] },
+    lkgBehavior: "Each domain, division and ZIP retains its last verified facts after a failed read. Unjoined rows are retained and counted. An unchanged source confirms a successful check.",
+    autoPromotable: true, classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: [],
+  })),
+  ...FEDERAL_SOURCE_IDS.map((id): RoutineSourceContract => ({
+    id, sourceId: id, recordClass: FEDERAL_RECORD_CLASS, scope: federalScope(id), fanOut: true,
+    acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/src-cg-refresh.mts", "--promote", `--source=${id}`], requestedUrl: FEDERAL_SOURCES[id].url },
+    parserNormalizerVersion: FEDERAL_PARSER_VERSION,
+    cadence: { description: FEDERAL_SOURCES[id].clock, defaultEveryMs: FEDERAL_SOURCES[id].everyMs },
+    retry: { afterMs: HOUR, description: "Retry source outages after an hour, honoring a longer provider Retry-After." },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: id }, validationContract: CHECKS, canonicalProductionStore: STORE,
+    readerProjection: { id: `src-cg-${id}`, consumers: ["member cards", "Make your voice heard", "Ask", "Admin"] },
+    lkgBehavior: "Failed pages retain the last GOOD member, bill and national rule partitions. Every unmatched native row is kept and counted. An unchanged provider check succeeds.",
+    autoPromotable: true, classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: [],
+  })),
 ] as const;
 
 export function cadenceMsAt(contract: Pick<RoutineSourceContract, "cadence">, nowMs: number): number {

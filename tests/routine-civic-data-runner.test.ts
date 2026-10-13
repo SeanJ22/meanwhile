@@ -273,7 +273,8 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "az-state-legislators",
     "nj-state-legislators",
     ...PLURAL_STATES.map(state => `openstates-people-${state}`),
-    "az-openstates-votes",
+    ...PLURAL_STATES.map(state => `openstates-votes-${state}`),
+    ...PLURAL_STATES.map(state => `legiscan-votes-${state}`),
     "nh-state-rollcalls",
     "nj-state-rollcalls",
     "census-acs-population",
@@ -289,6 +290,9 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "meeting-source-wiring",
     "candidate-campaign-sites-derived",
     "legiscan-bulk",
+    "socrata-discovery",
+    "epa-echo",
+    "congress-api", "govinfo", "regulations-gov", "federal-register", "senate-lda",
   ]);
   assert.deepEqual(nonMeetingTasks.map((task) => task.id), ROUTINE_SOURCE_CONTRACTS.map((contract) => contract.id));
   assert.deepEqual(
@@ -341,6 +345,7 @@ test("one canonical registry owns every supported authority and refuses arbitrar
     "az-legislature",
     "nj-legislature",
     "legiscan",
+    "legiscan-bills",
     "plural-openstates",
     "meetings-history",
     "door-outcomes",
@@ -369,8 +374,13 @@ test("one canonical registry owns every supported authority and refuses arbitrar
   assert.equal(arbitrary.ok, false);
   if (!arbitrary.ok) assert.equal(arbitrary.code, "FINAL_ROUTE_NOT_REGISTERED");
   const intermediary = authorityFor("legiscan", "STATE_ROLL_CALL", "https://api.legiscan.com/?op=getRollCall&id=1");
-  assert.equal(intermediary.ok, false);
-  if (!intermediary.ok) assert.equal(intermediary.code, "SOURCE_NOT_COMPETENT_FOR_RECORD_CLASS");
+  // Bill datasets are their own source and are not competent for roll calls.
+  const billIntermediary = authorityFor("legiscan-bills", "STATE_ROLL_CALL", "https://api.legiscan.com/?op=getRollCall&id=1");
+  assert.equal(billIntermediary.ok, false);
+  if (!billIntermediary.ok) assert.equal(billIntermediary.code, "SOURCE_NOT_COMPETENT_FOR_RECORD_CLASS");
+  assert.equal(intermediary.ok, true);
+  assert.equal(SOURCE_AUTHORITIES.legiscan.routineAutoPromotion, true);
+  assert.ok(SOURCE_AUTHORITIES.legiscan.competentFacts.includes("exact native member positions"));
 });
 
 test("routine release output labels the seven-zero constant as structural, never observed", () => {
@@ -1318,13 +1328,13 @@ test("the pilot awaits independently bounded routine and intake children without
   assert.match(pilot, /await standingRuntimeScheduler\.waitForIdle\(\)/);
 });
 
-test("an operational-reference-only contract fabricates no Reader delivery result", async () => {
+test("the CISA government-domain contract has a Reader projection even before its first promotion", async () => {
   const dotgov = ROUTINE_SOURCE_CONTRACTS.find((contract) => contract.id === "dotgov");
   assert.ok(dotgov);
-  assert.equal(dotgov.readerProjection, null);
+  assert.equal(dotgov.readerProjection?.id, "government-domains");
   assert.deepEqual(
     await repairRoutineReaderProjectionReadback(new MemoryRoutineDataStore(), dotgov, T0),
-    { kind: "NOT_APPLICABLE", receipt: null },
+    { kind: "NO_PROMOTION", receipt: null },
   );
 });
 
@@ -1515,7 +1525,7 @@ test("same-cycle isolation requires exact task/candidate receipts, never aggrega
         taskId: "dotgov",
         sourceId: "CISA .gov registry",
         recordClass: "DOTGOV_REFERENCE",
-        scope: "US:current-full:election-domains",
+        scope: "US:current-full:domains",
         classification: "VERIFIED_SOURCE_FAILURE",
         receipt: failedReceipt,
       },

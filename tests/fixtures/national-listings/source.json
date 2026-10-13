@@ -1,0 +1,14 @@
+{
+  "sourceUrl": "https://www2.census.gov/programs-surveys/gus/datasets/2022/govt_units_2022.ZIP",
+  "heldExtract": "data/reference/census_govt_units_2022.csv",
+  "heldExtractSha256": "7739623ff4efd6b5db07c7829cb4b33353b450aed5b4e053d51e1245bbd90097",
+  "sourceObservedAt": "2026-09-23T00:00:00.000Z",
+  "samplePid6": [
+    "160815",
+    "124409",
+    "128108",
+    "166615",
+    "173621"
+  ],
+  "selection": "County or municipality serving ZIPs 85004, 30303, 02108, 48201, 97201 with published address and website; exact source values."
+}

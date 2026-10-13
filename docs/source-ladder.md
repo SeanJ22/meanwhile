@@ -1014,140 +1014,26 @@ built under:
 `VENDOR_API: MISS` is recorded on the audit row on purpose. "No vendor" is a
 finding about this district, not a gap in the hunt.
 
-## 2026-08-15 — LegiScan lands, and the join is the whole problem (D49)
+## LegiScan weekly state votes (SV-01, verified 2026-10-13)
 
-State-legislature roll calls for AZ, NJ and NH. The data was never the hard
-part; **the join was**, and it fails in a way that does not throw.
+Authenticated `getDatasetList` and `getDataset` returned HTTP 200 for Texas.
+The saved 89th Legislature second special session archive contains native
+`bill/`, `vote/` and `people/` JSON members. Original HB1, roll call 1599780
+and person 5848 bytes are in `tests/fixtures/legiscan`, with source hashes and
+capture metadata. They prove one recorded Yea position on 2025-08-21 for
+OpenStates person `ocd-person/2fd6fcd3-9676-42a4-b879-e317576ff18f`.
 
-### The retrieval discipline, as built
+The actual native member link differs only by the official `.gov` publisher's
+`www.` alias: LegiScan holds `https://www.house.texas.gov/members/2100`, and
+OpenStates holds `https://house.texas.gov/members/2100`. Both official routes
+returned HTTP 200; their original pages and URL check metadata are saved in
+the fixture. The complete member path and query identify the same native
+member route. Both original URLs remain in the vote's identity evidence.
 
-Bulk first. LegiScan publishes each session as one ZIP behind
-`getDatasetList` → `getDataset`, refreshed Sunday mornings. `dataset_hash` is
-stored in the committed snapshot and compared before every download; an
-unchanged hash is **never** re-downloaded. The legiscan.com front end is not
-touched at all. Node ships no archive reader, so `lib/sources/legiscan/zip.ts`
-reads the central directory directly rather than adding a dependency — and it
-throws on an unreadable entry rather than skipping it, which is the fourth
-sighting of the returned-nothing shape wearing a fifth hat.
-
-Sessions taken, all `2026-08-09` datasets:
-
-| State | session_id | People | Roll calls published |
-|---|---|---|---|
-| AZ | 2235 (57th Legislature, 2nd Regular) | 92 | 7,283 |
-| NJ | 2250 (2026-2027 Regular) | 120 | 1,539 |
-| NH | 2236 (2026 Regular) | 426 | 360 |
-
-### The district mapping, and the failure it hides — the evidence
-
-**The RECIPE is `docs/zip-playbook.md` §3, "State roll calls: LegiScan, and the join that fails silently (2026-08-15)", and it is not
-restated here.** This section is the EVIDENCE behind it: which body, which
-URL, which date, which numbers came back. Two copies of one rule can drift
-apart, and one pair already had.
-
-
-LegiScan gives a district string; we need an OCD district key.
-
-- **AZ and NJ** number statewide: `HD-040` → `sldl:40`, `SD-025` → `sldu:25`.
-- **New Hampshire** numbers House districts *within a county*: `HD-12-HIL` is
-  Hillsborough 12. The Census SLDL code concatenates the county's
-  **zero-based alphabetical** ordinal with the two-digit district number —
-  Hillsborough is 5, so `sldl:512`.
-
-**Both NH details were got wrong first, and neither threw.** An ordinal table
-indexed from 1 produced 10 matches out of 426 — which reads exactly like a
-thin roster, not like a broken key. And zero-padding Belknap (ordinal 0)
-produced `sldl:007` against a real id of `sldl:7`, silently losing all nine
-Belknap seats. Both are now asserted against **our own committed boundary
-labels**: `data/states/nh/geo/sldl-33.geojson` carries `State House District
-Merrimack 08` beside `sldl:608`, so every NH lower district round-trips
-through the mapping in `tests/legiscan.test.ts`.
-
-**Never by name alone.** The match is district AND surname: the district
-identifies the seat, and the surname is compared only *within* a district
-that already matched. Surnames are folded for accents and generational
-suffixes, because two sources routinely differ on middle names and nicknames
-("Walter"/"Walt", "Mary Jane"/"Mary", "James"/"Jim" all occur in this data).
-
-### The match rate, with its denominator
-
-| State | LegiScan people matched | of people in the session | of roster seats our geometry clips |
-|---|---|---|---|
-| AZ | 24 | 92 | 24 |
-| NJ | 21 | 120 | 21 |
-| NH | 85 | 426 | 85 |
-
-The large denominators are not a gap: our boundary files clip three counties,
-so most of a state's legislature governs nowhere we render. **Every roster
-seat that could match, matched.**
-
-### Spot-verified, ten by name and district against both sources
-
-| # | State | LegiScan | Ours |
-|---|---|---|---|
-| 1 | AZ | 4232 Sylvia Allen, HD-007 | Sylvia Allen, `sldl:7` |
-| 2 | AZ | 10708 Gail Griffin, HD-019 | Gail Griffin, `sldl:19` |
-| 3 | AZ | 20172 Walter Blackman, HD-007 | Walt Blackman, `sldl:7` |
-| 4 | AZ | 20571 Alma Hernandez, HD-020 | Alma Hernández, `sldl:20` |
-| 5 | NJ | 2948 John DiMaio, HD-023 | John DiMaio, `sldl:23` |
-| 6 | NJ | 3086 Jay Webber, HD-026 | Jay Webber, `sldl:26` |
-| 7 | NJ | 3105 Erik Peterson, HD-023 | Erik Peterson, `sldl:23` |
-| 8 | NH | 4910 Timothy Soucy, HD-21-MER | Timothy Soucy, `sldl:621` |
-| 9 | NH | 5091 Mary Wallner, HD-19-MER | Mary Jane Wallner, `sldl:619` |
-| 10 | NH | 10492 James MacKay, HD-18-MER | Jim MacKay, `sldl:618` |
-
-Our side cites each legislature's own roster (azleg.gov, njleg.state.nj.us,
-gc.nh.gov's members.txt via an Internet Archive capture, since gc.nh.gov
-resets the TLS handshake from this pipeline).
-
-**Two people did NOT match and are recorded rather than forced**: AZ
-`HD-007 David Marshall` and NH `HD-29-HIL Sheila Seidel` are in LegiScan's
-current membership and in neither of our roster snapshots for those seats.
-No join, no render — their votes are not stored against a guess at who they
-are.
-
-### The clip, stated — the evidence
-
-**The RECIPE is `docs/zip-playbook.md` §3, "Let the surface drive the clip (2026-08-15)", and it is not
-restated here.** This section is the EVIDENCE behind it: which body, which
-URL, which date, which numbers came back. Two copies of one rule can drift
-apart, and one pair already had.
-
-
-Arizona alone published 7,283 roll calls in one session. The snapshot holds
-**the union of each matched member's twelve most recent** — 72 roll calls and
-1,560 positions across 130 officeholders, every one of whom has exactly
-twelve.
-
-Taking "the 60 most recent per state" was tried first and was wrong in a way
-worth writing down: **Arizona votes in bursts**, so 60 roll calls covered two
-days, and any member absent those two days would have rendered an empty
-record that reads as "never votes". A clip has to be driven by the surface it
-feeds.
-
-### The guard fired during the build, which is the point of it
-
-Changing the clip rule made the refresh produce 24 roll calls per state
-against 60 committed, and the thin-snapshot guard refused the write and kept
-the old file — exactly as it would for a genuine upstream shrink. The
-re-baseline was deliberate: the old snapshot was deleted by hand and the
-fetch re-run.
-
-### What is refused, not estimated
-
-A party-by-party count is **null** on every state vote. We hold positions only
-for members whose district our geometry clips, so any tally would be a
-fraction of the chamber's and could never sum to the recorded result — which
-is the same condition the federal breakdown already refuses on.
-
-### Attribution
-
-LegiScan's data is **CC BY 4.0**, which requires attribution wherever it
-appears. `LEGISCAN_ATTRIBUTION` is one object, sent with the rows by the API
-so it cannot drift from the store it describes, and rendered under the Recent
-votes heading. `tests/legiscan.test.ts` asserts a state member's payload
-carries it and a federal member's does not — the chambers' public-domain XML
-must never be credited to LegiScan.
+The reusable recipe is in `docs/zip-playbook.md` §3, "State roll calls from
+weekly LegiScan datasets". Production uses independent per-state source
+projections. Official AZ, NH and NJ roll calls retain precedence, and each
+LegiScan row carries its publisher and CC BY 4.0 attribution.
 
 ---
 
@@ -1306,59 +1192,35 @@ rung on the wrong ladder.
 
 ## The .gov registry — a rung for "where does this government publish?"
 
-*Added 2026-08-16 (item 9). Verified: fetched at the pinned commit, 16,501
-domains, 693 typed as election offices.*
-
 **`cisagov/dotgov-data`, `current-full.csv`.** Every domain in the .gov TLD
-with the registrant's own organization name, city, state, and CISA's own
-`Domain type`. US Government work, public domain. The standing runner now owns
-the monthly canonical `dotgov` production-data contract: it resolves the
-publisher's current commit, fetches `current-full.csv` at that exact SHA,
-thin-guards at 15,000 domains and 500 election-typed domains, and durably
-receipts and promotes the candidate with LKG retained on refusal. The tracked
-`data/dotgov/snapshot.json` preserves the SHA-pinned 2026-08-16 acquisition
-(`47f9693e…`) as bundled first-bootstrap evidence only. The former
-`pnpm dotgov:fetch` tracked writer and
-`.github/workflows/refresh-dotgov-snapshot.yml` clock are retired and deleted.
+with the registrant's organization name, city, state and CISA's `Domain type`.
+US Government work, public domain. The 2026-10-12 fixture contains 16,876 domains,
+719 with election types, at SHA `e4020449e896b2264d2056e49daeb55920a3d977`.
 
-**What it is a rung for.** The first, cheapest question in any hunt for a
-body's own publications: does this government have a .gov, and what is it?
-It resolves a registrant to a domain in one lookup, without a search engine
-and without guessing at a hostname.
+The standing runner owns the monthly `dotgov` production-data contract. It resolves
+the publisher's current commit, fetches the CSV at that exact SHA, retains every
+row, reconciles domain and classification counts, and promotes through the typed
+`readDotGovProjection` Reader. Refused updates leave the last GOOD projection serving.
+The `government-domains` edge family carries that proven projection to ZIP listings,
+government inventory and Ask without requiring a publisher fetch per reader.
 
-**The named rung list: the 693 election offices.** CISA types them itself —
-`City - Election` (332), `County - Election` (288), `State or territory -
-Election` (36), `Special district - Election` (33), `Tribal - Election` (4).
-That classification is the registry's, not ours, which matters: a name match
-on "vote" or "election" would sweep in a town called Election and miss every
-secretary of state. This is the first rung for a ballot or candidate-filing
-hunt in a county we have not worked before.
+**Government links.** A registrant attaches only to one government whose established
+name matches under the existing government identity rules and whose state matches.
+Ambiguous and unmatched rows stay unattached in the full registry. City is a mailing
+location and never establishes a service boundary. Multiple domains may attach to
+the same government; its Census website remains a separate source field.
 
-**THE BOUNDARY, and it is the important half. DOMAINS ARE NOT A
-DENOMINATOR.** Coverage claims are made against the official universe — the
-Census of Governments, NCES, the state rosters — never against a list like
-this one:
+**Election hunts.** Use CISA's election `Domain type` when narrowing acquisition routes.
+Searching organization names for "vote" or "election" does not replace the source's
+classification.
 
-- A government with **no .gov domain is absent from it entirely**. Small
-  towns, school districts and special districts routinely publish on a
-  `.org`, a `.us`, a vendor subdomain, or a Facebook page. Counting .gov
-  domains would undercount exactly the bodies that are hardest to cover,
-  which is the Sunnyside class of miss.
-- One government may hold **several domains**, and one domain may front
-  several governments.
-- **A domain is not a body.** `chicagoelections.gov` is one domain; the
-  Chicago Board of Election Commissioners is one body; nothing here maps the
-  two.
-
-The snapshot carries that sentence in its own `boundary` field, and
-`tests/dotgov.test.ts` fails if any coverage surface imports it.
-
-**Not built, and named:** the link-ladder WIRING — resolving a registry body
-to its .gov domain automatically, and offering it as a rung when a hunt comes
-back empty. The snapshot is the half that had to land; the wiring is the half
-that can wait for a session with a hunt in front of it.
-
----
+**Domains are not a government coverage denominator.** A government with no .gov
+domain is absent from the registry, one government may hold several domains, and a
+domain is not a body. Coverage continues to use the Census of Governments, NCES and
+official rosters. The projection carries this in its `boundary` field.
+`tests/dotgov.test.ts` verifies complete source retention, unchanged government and
+service-area identities, refusal of ambiguous matches, and promotion through the
+reader edge into geographic government listings.
 
 ## 2026-08-19 (g20) — the Polarization Research Lab, D62
 

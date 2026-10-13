@@ -6,7 +6,7 @@ const sourceObservations = new WeakMap<FecRow, string>();
 export const fecSourceObservedAt = (row: FecRow): string | undefined => sourceObservations.get(row);
 export const fecObject = (value: unknown): FecRow | null => value && typeof value === "object" && !Array.isArray(value) ? value as FecRow : null;
 export const fecText = (value: unknown): string | null => typeof value === "string" && value.trim() ? value.trim() : null;
-export const fecNumber = (value: unknown): number | null => typeof value === "number" && Number.isFinite(value) ? value : null;
+export const fecNumber = (value: unknown): number | null => typeof value === "number" && Number.isFinite(value) ? value : typeof value === "string" && /^-?(?:\d+(?:\.\d*)?|\.\d+)$/.test(value) && Number.isFinite(Number(value)) ? Number(value) : null;
 export const fecId = (value: unknown): string | null => typeof value === "string" && value ? value : typeof value === "number" && Number.isSafeInteger(value) ? String(value) : null;
 
 /** FEC sub_ids exceed JavaScript's safe integer range. Never round a native key. */

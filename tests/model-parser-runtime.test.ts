@@ -8,7 +8,7 @@ import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import {
   beginAttemptFor, claimRouteTask, disposeRouteTask, recordArtifactMetadata, registerRouteTask, registerWorkItem,
 } from "../lib/control-plane/repository/coordinator.ts";
-import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { createMemoryRepositories } from "./helpers/playbooks.ts";
 import { readFieldManual, newFieldManualEntry, writeFieldManual } from "../lib/control-plane/field-manual.ts";
 import { researchSpendInWindow } from "../lib/control-plane/scheduler/research-policy.ts";
 import { MODEL_FOR_CLASS } from "../lib/control-plane/scheduler/model-routing.ts";

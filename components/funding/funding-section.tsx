@@ -1,5 +1,5 @@
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
-import { WorkingOnIt } from "@/components/demand/working-on-it";
+import { CardGapContribution } from "@/components/ui/card-gap-context";
 import type {
   FundingAbsenceData,
   FundingDisplayData,
@@ -47,7 +47,12 @@ export function FundingDisplay({
       }
     >
       {!bare && <p className={SECTION_LABEL_CLASS}>Campaign money</p>}
+      {data.registrationLabel && <p className="mt-1 t-detail text-muted">{data.registrationLabel}</p>}
       <MoneyOverview data={data} />
+      {data.totals?.smallDonorShare === null && (data.totals.individualItemized === null || data.totals.individualUnitemized === null) && (
+        <CardGapContribution id={`money-small-donor-share:${data.fecCandidateId}`} label="small-donor share" />
+      )}
+      {data.concentration && !data.concentration.hasGeography && <CardGapContribution id={`funding-geography:${data.fecCandidateId}`} label="contribution locations" />}
       {data.sentences.map((sentence) => (
         <p key={sentence} className="mt-1.5 t-body leading-relaxed text-paper-dim">
           {sentence}
@@ -171,11 +176,10 @@ function MoneyOverview({ data }: { data: FundingDisplayData }) {
           {totals.cashOnHand !== null && <MoneyTile label="Cash on hand" amount={totals.cashOnHand} />}
         </div>
       )}
-      {!totals && (
-        <p className="mw-share-note" data-money-chart="totals-not-held">
-          <WorkingOnIt inline />
-        </p>
-      )}
+      {!totals && <CardGapContribution id={`money-totals:${data.fecCandidateId}`} label="campaign totals" />}
+      {totals?.receipts === null && <CardGapContribution id={`money-raised:${data.fecCandidateId}`} label="campaign money raised" />}
+      {totals?.disbursements === null && <CardGapContribution id={`money-spent:${data.fecCandidateId}`} label="campaign spending" />}
+      {totals?.cashOnHand === null && <CardGapContribution id={`money-cash:${data.fecCandidateId}`} label="campaign cash on hand" />}
     </div>
   );
 }
@@ -208,11 +212,7 @@ function OriginBars({ data }: { data: FundingDisplayData }) {
   const c = data.concentration;
   if (!c) return null;
   if (c.totalAmount <= 0) {
-    return (
-      <p className="mw-share-note" data-money-chart="origin-not-held">
-        <WorkingOnIt inline />
-      </p>
-    );
+    return null;
   }
   return (
     <div className="mw-share-block">
@@ -259,11 +259,7 @@ function TypeBars({ data }: { data: FundingDisplayData }) {
   const rows = data.contributorGroups.organizations;
   const total = rows.reduce((sum, row) => sum + row.amount, 0);
   if (rows.length === 0 || total <= 0) {
-    return (
-      <p className="mw-share-note" data-money-chart="type-not-held">
-        <WorkingOnIt inline />
-      </p>
-    );
+    return null;
   }
   const byType = new Map<string, { label: string; amount: number; count: number }>();
   for (const row of rows) {
@@ -389,11 +385,7 @@ function ContributorRow({
                 key={`${filing.receiptDate}-${filing.amount}-${i}`}
                 className="flex items-baseline justify-between gap-3 t-caption text-voice"
               >
-                <span>
-                  {filing.receiptDate
-                    ? formatDateMDY(filing.receiptDate)
-                    : "date not filed"}
-                </span>
+                {filing.receiptDate && <span>{formatDateMDY(filing.receiptDate)}</span>}
                 <span className="font-mono tabular-nums">
                   ${Math.round(filing.amount).toLocaleString("en-US")}
                 </span>

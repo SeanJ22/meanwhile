@@ -255,6 +255,11 @@ export interface FieldManualRepository extends AggregateRepository<FieldManualEn
   readMany(ids: readonly string[]): Promise<readonly Persisted<FieldManualEntry>[]>;
   /** The rows one job could use (`entryInSlice`); a store may return more, never fewer. */
   slice(query: FieldManualQuery): Promise<readonly Persisted<FieldManualEntry>[]>;
+  /**
+   * PB-01: remove the retired instruction rows and pointers in one transaction. Aggregates are never deleted
+   * (the table refuses it), so only the Postgres store has this path; a store without it has nothing to retire.
+   */
+  retireInstructions?(): Promise<void>;
 }
 
 /** What `AggregateRepository.listChangedSince` answers. */

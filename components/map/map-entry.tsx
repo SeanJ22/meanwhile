@@ -1,6 +1,5 @@
 "use client";
 
-import { WorkingOnIt } from "@/components/demand/working-on-it";
 
 import { OfficeCard } from "./popup/office-card";
 import { useOfficePins } from "@/hooks/use-office-pins";
@@ -15,10 +14,8 @@ import { CountBadge } from "@/components/map/count-badge";
 import { Legend } from "@/components/map/legend";
 import { Sidebar } from "@/components/shell/sidebar";
 import { useDistrictLayer } from "@/hooks/use-district-layer";
-import {
-  useDivisionRepresentation,
-  type DivisionRepresentation,
-} from "@/hooks/use-division-representation";
+import { useDivisionsRepresentation } from "@/hooks/use-division-representation";
+import { districtSubject, spotDivisionsFor } from "./district-subject";
 import { useNarrowing } from "@/hooks/use-narrowing";
 import { useStoredTheme } from "@/hooks/use-stored-theme";
 import { useStoredZip } from "@/hooks/use-stored-zip";
@@ -55,6 +52,7 @@ import type { MeetingSearchResult } from "@/lib/meetings/query";
 import type { SnapshotStatus } from "@/lib/meetings/freshness";
 import { logEvent } from "@/lib/log/client";
 import { groupByVenue, placelessSittingsOfVenueBodies, type Venue } from "@/lib/meetings/venues";
+import { meetingCardGaps } from "@/lib/meetings/card-gaps";
 import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
 import { lastReadByDivision, snapshotInView } from "@/lib/meetings/freshness";
 import type { MeetingListingIdentityReadback } from "@/lib/meetings/listing-identity";
@@ -64,15 +62,11 @@ import type { SeatHolder } from "@/lib/officials/lookup";
 import {
   districtCardSources,
   meetingCardSources,
+  personCardSources,
 } from "@/lib/officials/card-sources";
-import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
+import type { CoveredBody } from "@/lib/registry/coverage";
 import { bodyClassLong } from "@/lib/registry/body-class-labels";
-import { projectedBodyRoster, projectedRosterGapsForDivision } from "@/lib/registry/body-roster-client";
-import {
-  noteStateFor,
-  representationForDivision,
-  representationNoteFor,
-} from "@/lib/registry/representation";
+import { projectedBodyRoster } from "@/lib/registry/body-roster-client";
 import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
 import { definitionsForBody } from "@/lib/officials/body-definitions";
 import { divisionTypeLabel, tierForMeeting } from "@/lib/state/derive";
@@ -709,12 +703,12 @@ function MapEntryInner() {
   );
 
   /**
-   * The selected division's officeholders, resolved by the division's own key.
-   * Both the popup and the battlecard read it.
+   * Start all point lookups while the picker is open, including the state.
+   * The selected division's own roster stays separate from the spot's seats.
    */
-  const districtRepresentation = useDivisionRepresentation(
+  const districtRepresentations = useDivisionsRepresentation(
     current?.coverage ?? null,
-    districtPopup?.ocdId ?? null,
+    lastHits.flatMap(hit => [hit.ocdId, ...spotDivisionsFor(hit, lastHits).map(division => division.ocdId)]),
   );
 
   /**
@@ -1124,7 +1118,7 @@ function MapEntryInner() {
         ? `venue:${cardView.venue.key}`
         : cardView.kind === "door"
           ? `door:${cardView.door}`
-          : cardView.kind
+          : `${cardView.kind}`
     : null;
   const cardLabel = cardView ? cardViewLabel(cardView) : "";
 
@@ -1372,10 +1366,11 @@ function MapEntryInner() {
         districtPopup,
         current?.meetings ?? [],
         current?.coverage ?? null,
-        districtRepresentation,
+        districtRepresentations,
+        lastHits,
       ),
     });
-  }, [ui.selectedDistrictOcdId, districtPopup, openLarge, current, districtRepresentation]);
+  }, [ui.selectedDistrictOcdId, districtPopup, openLarge, current, districtRepresentations, lastHits]);
 
   /**
    * Fit a drawn district's whole boundary and park its card behind the
@@ -1517,7 +1512,8 @@ function MapEntryInner() {
                   districtPopup,
                   current?.meetings ?? [],
                   current?.coverage ?? null,
-                  districtRepresentation,
+                  districtRepresentations,
+                  lastHits,
                 )
               : surface.subject;
           return (
@@ -1865,6 +1861,14 @@ function MapEntryInner() {
         {cardView && !parked && (
           <ReaderCard
             viewKey={cardKey ?? "card"}
+            sources={cardView.kind === "venue"
+              ? [...cardView.venue.meetings, ...selectedVenuePlaceless].flatMap(meeting => meetingCardSources(meeting, []))
+              : cardView.kind === "large" && cardView.surface.kind === "entity" ? cardView.surface.subject.sources
+                : cardView.kind === "large" && cardView.surface.kind === "official" ? personCardSources(cardView.surface.holder) : []}
+            gaps={cardView.kind === "venue" ? [...cardView.venue.meetings, ...selectedVenuePlaceless].flatMap(meetingCardGaps)
+              : cardView.kind === "large" && cardView.surface.kind === "entity" ? cardView.surface.subject.meetings.flatMap(meetingCardGaps) : []}
+            subject={cardView.kind === "large" && cardView.surface.kind === "official" ? { type: "CANDIDATE", id: cardView.surface.holder.id }
+              : cardView.kind === "large" && cardView.surface.kind === "entity" && cardView.surface.subject.subjectKind === "BODY" ? { type: "BODY", id: cardView.surface.subject.subjectId } : undefined}
             kicker={cardKicker}
             kickerTone={cardTone}
             zip={clusterZip}
@@ -2018,12 +2022,12 @@ function meetingSubject(
         : {
             // The online sentence only where the body published online access.
             label: "Where",
-            value: isPlaceUnrecorded(meeting) ? <WorkingOnIt inline subject={body ? { type: "BODY", id: body.bodyId } : null} /> : placelessWhereLine(meeting),
+            value: isPlaceUnrecorded(meeting) ? null : placelessWhereLine(meeting),
           },
       ...(() => {
         const access = onlineAccessFor(meeting);
-        return access
-          ? [{ label: "How to join", value: access.joinUrl ? <a href={access.joinUrl} target="_blank" rel="noreferrer">Join online</a> : <WorkingOnIt inline subject={body ? { type: "BODY", id: body.bodyId } : null} /> }]
+        return access?.joinUrl
+          ? [{ label: "How to join", value: <a href={access.joinUrl} target="_blank" rel="noreferrer">Join online</a> }]
           : [];
       })(),
       { label: "Status", value: STATUS_LABEL[meeting.status] },
@@ -2279,112 +2283,6 @@ function BODY_TYPE_LABEL(body: CoveredBody): string {
     : CLASS(body.bodyClass);
 }
 
-function districtSubject(
-  district: DistrictHit,
-  allMeetings: Meeting[] = [],
-  coverage: CoverageSummary | null = null,
-  /** The division-keyed answer; omitted, the point-scoped resolver is used. */
-  resolved: DivisionRepresentation | null = null,
-): ModalSubject {
-  // A county card accepts its exact published ID and child jurisdictions
-  // whose OCD path names this county. A same-state match or a missing ID
-  // cannot establish county ownership.
-  const isCounty = /\/county:[^/]+$/.test(district.ocdId);
-  const meetings = allMeetings
-    .filter((m) =>
-      isCounty
-        ? tierForMeeting(m) === "local" && (m.ocdId === district.ocdId || m.ocdId?.startsWith(`${district.ocdId}/`))
-        : m.ocdId === district.ocdId,
-    )
-    .sort((a, b) => a.startsAt.localeCompare(b.startsAt));
-  // The same resolver the small popup and who-governs card read; `resolved`
-  // asks by the division's own key, since `coverage.seats` is point-scoped.
-  const roster =
-    resolved?.holders.length
-      ? resolved.holders
-      : representationForDivision(coverage, district.ocdId);
-  return {
-    // The division's own ocd-id.
-    subjectId: district.ocdId,
-    subjectKind: "BODY" as const,
-    title: district.label,
-    subtitle: `${district.typeLabel} · ${district.state}`,
-    tier: district.tier,
-    // Congressional, state-senate and state-house answer false.
-    divisionKind: district.type,
-    facts: [
-      // No OCD-ID row: internal identifiers never render to readers.
-      { label: "Type", value: district.typeLabel },
-      { label: "Tier", value: TIER_LABEL[district.tier] },
-      { label: "State", value: district.state, mono: true },
-      /* Every distinct governing body's own site; none is elected to speak for the division. */
-      ...bodyHomepageFacts(coverage, district.ocdId),
-    ],
-    /* The office title comes from the division's type, so vacant seats still get the explainer. */
-    divisionOcdId: district.ocdId,
-    representedByOfficeTitle: officeTitleForDivision(district.ocdId),
-    representation: roster,
-    rosterGaps: resolved?.rosterGaps ?? projectedRosterGapsForDivision(coverage, district.ocdId),
-    representationNote: representationNoteFor(
-      district.tier,
-      resolved ? noteStateFor(resolved.status) : "gap",
-    ),
-    meetings,
-    /* Built from the same rows the card renders. */
-    sources: districtCardSources(roster, meetings),
-  };
-}
-
-/**
- * The body's own website as an Overview row, shared by `bodySubject` and
- * `districtSubject`. No `homepageUrl`, no row.
- */
-function bodyHomepageFacts(
-  coverage: CoverageSummary | null,
-  ocdId: string,
-): { label: string; value: React.ReactNode }[] {
-  /* Deduped on the rendered host, since stored URLs differ by `www.`, slash or path. */
-  const seen = new Set<string>();
-  const rows: { label: string; value: React.ReactNode }[] = [];
-  for (const body of coverage?.bodies ?? []) {
-    if (body.ocdId !== ocdId || !body.homepageUrl) continue;
-    let host: string;
-    try {
-      host = new URL(body.homepageUrl).hostname.replace(/^www\./, "");
-    } catch {
-      // A malformed stored URL renders no row rather than a broken link.
-      continue;
-    }
-    if (seen.has(host)) continue;
-    seen.add(host);
-    rows.push({
-      label: "Official site",
-      value: (
-        <a
-          href={body.homepageUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
-        >
-          {host} →
-        </a>
-      ),
-    });
-  }
-  return rows;
-}
-
-/**
- * The office that represents a division, from its OCD-ID segment. Null for
- * segments with no representative (county, place): no explainer renders.
- */
-function officeTitleForDivision(ocdId: string): string | null {
-  if (/\/cd:[^/]+$/.test(ocdId)) return "U.S. Representative";
-  if (/\/sldu:[^/]+$/.test(ocdId)) return "State Senator";
-  if (/\/sldl:[^/]+$/.test(ocdId)) return "State Representative";
-  if (/\/school_district:[^/]+$/.test(ocdId)) return "School Board Member";
-  return null;
-}
 
 const STATUS_LABEL: Record<Meeting["status"], string> = {
   SCHEDULED: "Scheduled",

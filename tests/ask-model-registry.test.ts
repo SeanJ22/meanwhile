@@ -1,7 +1,9 @@
+import { askSnapshot } from "./helpers/playbooks.ts";
+import { withAskSettings } from "../lib/ask/runtime-settings.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import test from "node:test";
+import test from "./helpers/playbooks.ts";
 
 import {
   ASK_MODEL_ROLE_NAMES,
@@ -40,11 +42,11 @@ import { askUnsourced } from "../lib/routing/unsourced-fallback.ts";
 import type { EvidencePack } from "../lib/ask/evidence.ts";
 
 const ROLE_ENV: Record<AskModelRole, string> = {
-  READER: "WTP_ASK_READER_MODEL",
-  FAST_WRITER: "WTP_ASK_FAST_MODEL",
-  ESCALATION_WRITER: "WTP_ASK_ESCALATION_MODEL",
-  CLASSIFIER: "WTP_ASK_CLASSIFIER_MODEL",
-  UNSOURCED: "WTP_ASK_UNSOURCED_MODEL",
+  READER: "ask.readerModel",
+  FAST_WRITER: "ask.fastWriterModel",
+  ESCALATION_WRITER: "ask.escalationWriterModel",
+  CLASSIFIER: "ask.classifierModel",
+  UNSOURCED: "ask.fallbackModel",
 };
 
 function withEnv<T>(vars: Record<string, string | undefined>, run: () => Promise<T>): Promise<T> {
@@ -54,7 +56,7 @@ function withEnv<T>(vars: Record<string, string | undefined>, run: () => Promise
     if (value === undefined) delete process.env[name];
     else process.env[name] = value;
   }
-  return run().finally(() => {
+  return withAskSettings(askSnapshot(Object.fromEntries(Object.entries(vars).filter(([key,value]) => key.startsWith("ask.") && value !== undefined)) as Record<string,string>), run).finally(() => {
     for (const [name, value] of Object.entries(previous)) {
       if (value === undefined) delete process.env[name];
       else process.env[name] = value;
@@ -89,7 +91,7 @@ function pack(): EvidencePack {
 test("no role resolves to claude-opus-5 — not by default, not by override, not through an alias", () => {
   for (const role of ASK_MODEL_ROLE_NAMES) {
     assert.notEqual(resolveAskRole(role, {}).model, "claude-opus-5", `${role} defaults to the retired model`);
-    for (const name of [...ASK_MODEL_ROLES[role].env]) {
+    for (const name of [...ASK_MODEL_ROLES[role].settings]) {
       const resolved = resolveAskRole(role, { [name]: "claude-opus-5" });
       assert.notEqual(resolved.model, "claude-opus-5", `${name}=claude-opus-5 reached ${role}`);
       assert.equal(resolved.model, ASK_MODEL_ROLES[role].defaultModel, "a refused override keeps the role's default");
@@ -122,31 +124,31 @@ test("every role's default is a registry model with a price and a cache minimum"
   assert.equal(priceOf(MODELS.opus.model)!.rate.inputUsdPerMillion, MODELS.opus.inputUsdPerMillion);
 });
 
-test("each role has its own override, and the specific one beats the WTP_ASK_MODEL alias", () => {
+test("each role has its own override, and the specific one beats the ask.escalationWriterModel alias", () => {
   for (const role of ASK_MODEL_ROLE_NAMES) {
     const specific = ROLE_ENV[role];
-    assert.ok(ASK_MODEL_ROLES[role].env.includes(specific), `${role} has no ${specific}`);
+    assert.ok(ASK_MODEL_ROLES[role].settings.includes(specific), `${role} has no ${specific}`);
     const other = ASK_MODEL_ROLES[role].defaultModel === MODELS.sonnet.model ? MODELS.haiku.model : MODELS.sonnet.model;
-    const resolved = resolveAskRole(role, { [specific]: other, WTP_ASK_MODEL: MODELS.opus.model });
+    const resolved = resolveAskRole(role, { [specific]: other });
     assert.equal(resolved.model, other);
     assert.equal(resolved.overriddenBy, specific);
   }
   /* The legacy alias still moves every frontier-default role — and only those. */
-  assert.equal(resolveAskRoleModel("ESCALATION_WRITER", { WTP_ASK_MODEL: MODELS.sonnet.model }), MODELS.sonnet.model);
+  assert.equal(resolveAskRoleModel("ESCALATION_WRITER", { "ask.escalationWriterModel": MODELS.sonnet.model }), MODELS.sonnet.model);
   for (const role of ["READER", "CLASSIFIER", "UNSOURCED"] as const) {
-    assert.equal(resolveAskRoleModel(role, { WTP_ASK_MODEL: MODELS.sonnet.model }), ASK_MODEL_ROLES[role].defaultModel, `${role} is not a frontier role`);
+    assert.equal(resolveAskRoleModel(role, { "ask.escalationWriterModel": MODELS.sonnet.model }), ASK_MODEL_ROLES[role].defaultModel, `${role} is not a frontier role`);
   }
-  assert.equal(resolveAskModel({ WTP_ASK_MODEL: MODELS.sonnet.model }), MODELS.sonnet.model);
+  assert.equal(resolveAskModel({ "ask.escalationWriterModel": MODELS.sonnet.model }), MODELS.sonnet.model);
   /* A saved override naming the retired Sonnet keeps selecting the active Sonnet tier. */
-  assert.equal(resolveAskModel({ WTP_ASK_MODEL: "claude-sonnet-5" }), MODELS.sonnet.model);
+  assert.equal(resolveAskModel({ "ask.escalationWriterModel": "claude-sonnet-5" }), MODELS.sonnet.model);
   /* A tier's own name is an id too. */
-  assert.equal(resolveAskModel({ WTP_ASK_MODEL: "sonnet" }), MODELS.sonnet.model);
+  assert.equal(resolveAskModel({ "ask.escalationWriterModel": "sonnet" }), MODELS.sonnet.model);
   /* The fast writer keeps its own switch, including off. */
-  assert.equal(resolveAskFastWriter({ WTP_ASK_FAST_MODEL: "off" }), null);
-  assert.equal(resolveAskFastWriter({ WTP_ASK_FAST_MODEL: "none" }), null);
-  assert.equal(resolveAskFastWriter({ WTP_ASK_FAST_MODEL: "claude-haiku-5-5-20261001" }), MODELS.haiku.model, "a dated alias resolves to the tier's id");
+  assert.equal(resolveAskFastWriter({ "ask.fastWriterModel": "off" }), null);
+  assert.equal(resolveAskFastWriter({ "ask.fastWriterModel": "none" }), null);
+  assert.equal(resolveAskFastWriter({ "ask.fastWriterModel": "claude-haiku-5-5-20261001" }), MODELS.haiku.model, "a dated alias resolves to the tier's id");
   /* Only the fast writer can be switched off; `off` elsewhere is an unknown model, refused. */
-  const reader = resolveAskRole("READER", { WTP_ASK_READER_MODEL: "off" });
+  const reader = resolveAskRole("READER", { "ask.readerModel": "off" });
   assert.equal(reader.model, ASK_MODEL_ROLES.READER.defaultModel);
   assert.equal(reader.refused.length, 1);
 });
@@ -160,16 +162,16 @@ test("the measured routing: Haiku 5.5 reads, writes first and labels; Opus 5.5 e
 
 test("every question, money and comparison questions included, is written by the fast writer first; the frontier writes only after a failed check", () => {
   assert.deepEqual(synthesisLadder({}).map((rung) => [rung.model, rung.role]), [[MODELS.haiku.model, "FAST"], [MODELS.opus.model, "FRONTIER"]]);
-  assert.deepEqual(synthesisLadder({ WTP_ASK_FAST_MODEL: "off" }).map((rung) => rung.role), ["FRONTIER"], "the fast writer can still be switched off without a deploy");
+  assert.deepEqual(synthesisLadder({ "ask.fastWriterModel": "off" }).map((rung) => rung.role), ["FRONTIER"], "the fast writer can still be switched off without a deploy");
 });
 
 test("an unknown model override is REFUSED by name, the default stands, and the startup line says so", () => {
-  const env = { WTP_ASK_CLASSIFIER_MODEL: "claude-opus-9-typo" };
+  const env = { "ask.classifierModel": "claude-opus-9-typo" };
   const resolved = resolveAskRole("CLASSIFIER", env);
   assert.equal(resolved.model, ASK_MODEL_ROLES.CLASSIFIER.defaultModel);
   assert.equal(resolved.overriddenBy, null);
   assert.match(resolved.refused[0], /not one of the model tiers/);
-  assert.match(askModelStartupLine(env), /WTP_ASK_CLASSIFIER_MODEL="claude-opus-9-typo" REFUSED/);
+  assert.match(askModelStartupLine(env), /ask.classifierModel="claude-opus-9-typo" REFUSED/);
   assert.equal(modelRefusal(MODELS.sonnet.model), null);
   assert.match(modelRefusal("claude-sonnet-5") ?? "", /replaced for active use/, "the predecessor is refused, and an override naming it selects the active tier instead");
   assert.equal(activeModelOverrideId("claude-sonnet-5"), MODELS.sonnet.model);
@@ -199,7 +201,7 @@ function assertAccepted(body: Record<string, unknown>, model: string, want: "ADA
 test("the reading rung sends each registry model only what it accepts, and records the served model", async () => {
   for (const { id } of ACTIVE_MODELS) {
     const { bodies, fetchImpl } = capture({ intent: "UNKNOWN", entityMentions: [], normalizedMentions: [], temporal: { kind: "NONE" }, referent: null }, `${id}-served`);
-    const outcome = await withEnv({ WTP_ASK_READER_MODEL: id, WTP_ASK_MODEL: undefined }, () =>
+    const outcome = await withEnv({ "ask.readerModel": id, "ask.escalationWriterModel": undefined }, () =>
       interpretQuestion("what will the weather be", { inventory: [], today: "2026-09-25" }, { apiKey: "sk-test", fetchImpl }));
     assert.equal(outcome.kind, "READ");
     assertAccepted(bodies[0], id, "OFF", `reader/${id}`);
@@ -226,7 +228,7 @@ test("the topic classifier sends each registry model only what it accepts (no di
   for (const { id } of ACTIVE_MODELS) {
     resetClassifierState();
     const { bodies, fetchImpl } = capture({ topic: "NONE" }, `${id}-served`);
-    const outcome = await withEnv({ WTP_ASK_CLASSIFIER_MODEL: id, WTP_ASK_MODEL: undefined, ANTHROPIC_API_KEY: "sk-test" }, () =>
+    const outcome = await withEnv({ "ask.classifierModel": id, "ask.escalationWriterModel": undefined, ANTHROPIC_API_KEY: "sk-test" }, () =>
       classifyQuestion(`who fixes potholes ${id}`, { fetchImpl }));
     assertAccepted(bodies[0], id, "OFF", `classifier/${id}`);
     assert.equal(outcome.kind, "NONE");
@@ -241,7 +243,7 @@ test("the topic classifier sends each registry model only what it accepts (no di
 test("the unsourced fallback sends each registry model only what it accepts", async () => {
   for (const { id } of ACTIVE_MODELS) {
     const { bodies, fetchImpl } = capture("It rains when warm moist air cools.", `${id}-served`);
-    await withEnv({ WTP_ASK_UNSOURCED_MODEL: id, WTP_ASK_MODEL: undefined, ANTHROPIC_API_KEY: "sk-test" }, () =>
+    await withEnv({ "ask.fallbackModel": id, "ask.escalationWriterModel": undefined, ANTHROPIC_API_KEY: "sk-test" }, () =>
       askUnsourced("why is it raining", { fetchImpl }));
     if (bodies.length === 0) continue; /* the ripcord is pulled in this environment: nothing is sent at all */
     assertAccepted(bodies[0], id, "OFF", `unsourced/${id}`);

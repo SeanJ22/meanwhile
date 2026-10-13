@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import test from "./helpers/playbooks.ts";
 import { POST } from "../app/api/ask/grounded/route.ts";
 import { resetGroundedState } from "../lib/ask/grounded-state.ts";
 import { POST as agendaPOST } from "../app/api/ask/agenda/route.ts";

@@ -7,7 +7,6 @@ import {
   meetingCardSources,
   mergeSources,
   personCardSources,
-  sourceCountLabel,
 } from "../lib/officials/card-sources.ts";
 import { governingRosterHoldersForDivision } from "../lib/registry/body-rosters.ts";
 import { statewideExecutivesFor } from "../lib/officials/statewide-executives.ts";
@@ -75,11 +74,6 @@ test("a district card with a roster and meetings is never sourceless", () => {
     "THE DEFECT: this returned an empty array on production and the tab " +
       "rendered 'Nothing on this card came from an external record'",
   );
-  assert.equal(
-    sourceCountLabel(sources),
-    String(sources.length),
-    "the stated N must be the rendered row count, not a second derivation",
-  );
 });
 
 test("a district card with NO roster and NO meetings still cites its boundary", () => {
@@ -95,7 +89,6 @@ test("a meeting card lists the sitting and the body's roster", () => {
     roster,
   );
   assert.ok(sources.length > 0);
-  assert.equal(sourceCountLabel(sources), String(sources.length));
 });
 
 test("a person card cites the record its identity came from", () => {
@@ -110,7 +103,6 @@ test("a person card cites the record its identity came from", () => {
       sources.length > 0,
       `${holder.name}'s card must name where the record was read from`,
     );
-    assert.equal(sourceCountLabel(sources), String(sources.length));
     assert.ok(
       sources[0].provenance.sourceOrg.length > 0,
       "a publisher, not just a URL",
@@ -118,7 +110,7 @@ test("a person card cites the record its identity came from", () => {
   }
 });
 
-test("same-source rows merge, and the merged row states the count", () => {
+test("same-source rows merge once and name every distinct coverage", () => {
   const provenance = {
     sourceUrl: "https://example.gov/calendar",
     sourceOrg: "Example Town Clerk",
@@ -129,18 +121,15 @@ test("same-source rows merge, and the merged row states the count", () => {
     { what: "One", provenance },
     { what: "Two", provenance },
     { what: "Three", provenance },
+    { what: "Two", provenance },
   ]);
 
   assert.equal(merged.length, 1, "one publisher and page is one source row");
-  assert.match(
-    merged[0].what,
-    /2 more from this source/,
-    "a merged row states how many facts it is behind — a count with its " +
-      "denominator, never a silent collapse",
-  );
+  assert.equal(merged[0].what, "One; Two; Three");
+  assert.deepEqual(mergeSources([...merged, { what: "Two", provenance }]), merged);
 });
 
-test("distinct publishers never merge", () => {
+test("distinct source pages never merge", () => {
   const merged = mergeSources([
     {
       what: "A",
@@ -182,7 +171,6 @@ test("a holder with no record at all contributes no row, and says so by absence"
     campaignUrl: null,
   };
   assert.equal(personCardSources(bare).length, 0);
-  assert.equal(sourceCountLabel([]), null, "no count is stated when there is none");
 });
 
 test("shared meeting card retains agenda, minutes, decisions and comment sources with their exact read dates", () => {
@@ -193,17 +181,16 @@ test("shared meeting card retains agenda, minutes, decisions and comment sources
   const commentAccess = { ...meeting.provenance, sourceUrl: "https://comment.gov/rules", collectedAt: "2026-10-04" };
   const sources = meetingCardSources(meeting, [], { agendas: [agendas], minutes: [minutes], records: [records], commentAccess: [commentAccess] });
   for (const provenance of [agendas, minutes, records, commentAccess]) assert.deepEqual(sources.find(row => row.provenance.sourceUrl === provenance.sourceUrl)?.provenance, provenance);
-  assert.equal(sourceCountLabel(sources), String(sources.length));
 });
 
 test("carried sitting metadata cannot disappear into its calendar's ordinary source row", () => {
   const meeting = meetingFixture("carried:one", "Example Clerk", "https://clerk.example.gov/calendar");
   meeting.carried = { source: "calendar", lastFreshAt: "2026-09-30", reason: "UNEXPLAINED_DISAPPEARANCE" };
   const sources = meetingCardSources(meeting, []);
-  const carried = sources.find(row => row.dataAttrs?.["data-meeting-carried-source"] === meeting.id);
+  assert.equal(sources.length, 1, "one source page appears only once");
+  const carried = sources.flatMap(row => row.details ?? [row]).find(row => row.dataAttrs?.["data-meeting-carried-source"] === meeting.id);
   assert.ok(carried);
   assert.equal(carried.provenance.collectedAt, meeting.carried.lastFreshAt);
   assert.match(carried.what, /latest check of this calendar didn't find this listing/);
   assert.doesNotMatch(carried.what, /couldn't reach/);
-  assert.equal(sourceCountLabel(sources), String(sources.length));
 });

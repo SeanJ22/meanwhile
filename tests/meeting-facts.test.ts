@@ -7,6 +7,7 @@ import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-p
 import { factClocks } from "../lib/facts/clocks.ts";
 import { ensureFactEntities } from "../lib/facts/entities.ts";
 import { meetingEntityId, publishMeetingFacts } from "../lib/facts/meeting-facts.ts";
+import { withMeetingFacts } from "../lib/facts/meeting-read.ts";
 import { normalizeWithDrops } from "../lib/sources/legistar/index.ts";
 import type { LegistarEvent } from "../lib/sources/legistar/types.ts";
 import { factDb } from "./helpers/fact-db.ts";
@@ -69,4 +70,16 @@ test("a promoted partition's fresh sittings become facts on the very bytes its d
   assert.deepEqual(live.map(row => [row.field, row.quote]), [["starts_at", "20261020T190000"], ["title", "Regular Council Meeting"]]);
   assert.ok(live.every(row => row.url === feed && String(row.blob_key).startsWith("artifact:")));
   assert.equal((await vault.list("project/freshness/")).filter(key => !key.endsWith(".meta.json")).length, 1, "the feed's bytes are in the vault");
+});
+
+test("readers see each sitting with its live facts and the saved page every one was found on", async () => {
+  const db = await factDb();
+  const events = JSON.parse(bytes) as LegistarEvent[];
+  const { meetings } = normalizeWithDrops(events.map(event => ({ event, slug: "pima", collectedAt: NOW.toISOString(), items: null })), NOW);
+  const first = meetings[0]!;
+  await publishMeetingFacts(db, { meeting: first, capture: capture(bytes, FEED), producedBy: "door:legistar:pima" }, factClocks(null), NOW);
+  const [seen] = await withMeetingFacts([{ ...first, title: "A stale partition title" }], db.query);
+  assert.equal(seen!.title, "Study Session", "the live fact wins over the partition row");
+  assert.deepEqual([seen!.fieldSources?.title?.sourceUrl, seen!.fieldSources?.startsAt?.quote], [FEED, "2026-05-12T00:00:00 1:00 PM"]);
+  assert.deepEqual(await withMeetingFacts([first], null), [first], "with no fact store the partition row stands");
 });

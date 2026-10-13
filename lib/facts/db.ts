@@ -47,9 +47,10 @@ export function installFactReader(query: Query | null | undefined): void {
 export const statementQuery = (run: (statements: readonly { readonly text: string; readonly params: readonly unknown[] }[]) => Promise<readonly (readonly Record<string, unknown>[])[]>): Query =>
   async (text, params = []) => (await run([{ text, params }]))[0] ?? [];
 
-/** Moves whenever a fact is written or leaves the live set. */
-export async function factsVersion(query: Query | null): Promise<string> {
+/** Moves whenever a fact (on entities under `prefix`, when given) is written or leaves the live set. */
+export async function factsVersion(query: Query | null, prefix = ""): Promise<string> {
   if (query === null) return "facts:none";
-  const [row] = await query("SELECT coalesce(max(id), 0) AS newest, count(*) FILTER (WHERE status = 'live') AS live FROM fact");
+  const [row] = await query(`SELECT coalesce(max(id), 0) AS newest, count(*) FILTER (WHERE status = 'live') AS live FROM fact
+    WHERE $1 = '' OR starts_with(entity_id, $1)`, [prefix]);
   return `facts:${row?.newest ?? 0}.${row?.live ?? 0}`;
 }

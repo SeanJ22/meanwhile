@@ -1,3 +1,4 @@
+import { factReader, factsVersion } from "../facts/db.ts";
 import { createHash } from "node:crypto";
 
 import {
@@ -39,6 +40,9 @@ import { buildMeetingHistorySnapshot, mergeMeetingHistory } from "../civic-data/
 import { meetingCarriesRecords } from "./carries-records.ts";
 
 export const MEETINGS_PREPARED_SCOPE = "composed-reader-snapshot";
+
+/** The live meeting facts a composition read; any change to them recomposes it. */
+const MEETING_FACTS_COUPLING = "meeting-facts";
 
 function couplingFingerprint(coupling: readonly PreparedProjectionCoupling[]): string {
   return [...coupling]
@@ -126,7 +130,8 @@ export async function preparePublishedMeetingSnapshot(
     const versionId = versionByScope.get(contract.scope);
     if (versionId) currentCoupling.push({ contractId: contract.id, versionId });
   }
-  const currentFingerprint = couplingFingerprint(currentCoupling);
+  const facts = { contractId: MEETING_FACTS_COUPLING, versionId: await factsVersion(factReader(), "meeting:") };
+  const currentFingerprint = couplingFingerprint([...currentCoupling, facts]);
 
   const prepared = await store.readPreparedReaderProjectionCoupling(MEETINGS_RECORD_CLASS, MEETINGS_PREPARED_SCOPE);
   if (prepared && couplingFingerprint(prepared.composedFrom) === currentFingerprint) {
@@ -197,7 +202,7 @@ export async function preparePublishedMeetingSnapshot(
     recordClass: MEETINGS_RECORD_CLASS,
     scope: MEETINGS_PREPARED_SCOPE,
     payload: value,
-    composedFrom,
+    composedFrom: [...composedFrom, facts],
     factSha256,
     generatedAt: aggregate.value.generatedAt,
     composedAt: now,

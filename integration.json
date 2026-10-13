@@ -2003,5 +2003,29 @@
     "tested_sha": "3734a8f9bb3bb234dfe9ca3b241e6d83b339ce97",
     "gates": "pass",
     "at": "2026-10-13T02:55:57Z"
+  },
+  {
+    "lane": "fec-national",
+    "steps": [
+      "FEC-01"
+    ],
+    "ready_sha": "8773b6f9fa68d0adf0d639b35bb031e527814f0e",
+    "merge_sha": "5e7ef2341f6f96a97f58d32c9e3c2d0513965d44",
+    "river_sha": "378e9d3625e39832b5d4ea02ca0991eeea1102b8",
+    "tested_sha": "378e9d3625e39832b5d4ea02ca0991eeea1102b8",
+    "gates": "pass",
+    "at": "2026-10-13T04:38:52Z"
+  },
+  {
+    "lane": "map-representation",
+    "steps": [
+      "MR-01"
+    ],
+    "ready_sha": "3c97e8642513eb3bbd7d37e0faa5c2e6e76812e5",
+    "merge_sha": "9c5dc6a0cbd9f46a28bbd3d58f618f8c18bfa925",
+    "river_sha": "378e9d3625e39832b5d4ea02ca0991eeea1102b8",
+    "tested_sha": "378e9d3625e39832b5d4ea02ca0991eeea1102b8",
+    "gates": "pass",
+    "at": "2026-10-13T04:38:52Z"
   }
 ]

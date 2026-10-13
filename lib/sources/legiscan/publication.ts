@@ -15,7 +15,7 @@ export function bulkCandidate(input:{capture:BulkCapture;dataset?:Dataset;bodies
   const scope=input.dataset?billScope(input.dataset.session_id):LEGISCAN_BULK_SCOPE;
   const rows=readModel.kind==="SESSION"?readModel.bills:datasets;
   const identities=readModel.kind==="SESSION"?readModel.bills.map(row=>({subjectId:row.id,jurisdiction:row.state==="US"?"US":`US-${row.state}`,identifiers:{bill_id:String(row.billId),session_id:String(row.sessionId)},matchBasis:"OFFICIAL_ID" as const,ambiguous:false})):
-    datasets.map(row=>({subjectId:`legiscan:session:${row.session_id}`,jurisdiction:"US",identifiers:{session_id:String(row.session_id)},matchBasis:"OFFICIAL_ID" as const,ambiguous:false}));
+    datasets.map(row=>({subjectId:`legiscan-bills:session:${row.session_id}`,jurisdiction:"US",identifiers:{session_id:String(row.session_id)},matchBasis:"OFFICIAL_ID" as const,ambiguous:false}));
   return {id:`cv-${hash(`${scope}|${hash(payload)}`).slice(0,32)}`,sourceId,recordClass,scope,
     retrieval:{succeeded:true,requestedUrl:capture.requestedUrl,finalUrl:capture.finalUrl,httpStatus:capture.httpStatus,retrievedAt:capture.retrievedAt,rawHash:capture.rawHash},
     normalization:{succeeded:true,parserVersion:LEGISCAN_BULK_PARSER,schemaVersion:"legiscan-bills/1",normalizedHash:hash(readModel),normalizedPayloadHash:hash(payload),inputRecords:rows.length,outputRecords:rows.length,droppedRecords:0,missingRequiredFields:[]},

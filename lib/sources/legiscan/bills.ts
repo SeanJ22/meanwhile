@@ -32,7 +32,7 @@ export interface BillSession {
   counts: {rows:number;joined:number;unjoined:number;sponsorsJoined:number;sponsorsUnjoined:number};
 }
 export interface BillIndex { kind:"INDEX"; capturedAt:string; datasets:Dataset[]; }
-export const billScope = (sessionId:number) => `legiscan:session:${sessionId}`;
+export const billScope = (sessionId:number) => `legiscan-bills:session:${sessionId}`;
 export const stateOfDataset = (row:Dataset):string => {
   const state=LEGISCAN_STATES[row.state_id-1];
   if (!state) throw Error(`LEGISCAN_UNKNOWN_STATE_ID:${row.state_id}`);

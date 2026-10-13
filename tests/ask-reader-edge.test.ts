@@ -3,6 +3,7 @@ import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, test } from "node:test";
+import { withResponseLifetime } from "../lib/log/after-response.ts";
 
 import { publishReaderEdgeArtifacts, type PublishAuthority } from "../lib/meetings/edge-serving.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
@@ -113,7 +114,10 @@ const fullEdgeDir = await publishEdge(true);
 
 // Every database request, by record class, answered with no rows.
 const databaseReads: string[] = [];
+const backgroundWrites: string[] = [];
+let responseDelivered = false;
 process.env.DATABASE_URL = "postgresql://edge-test:edge-test@ep-ask-edge-test.ask-edge-test.invalid/none?sslmode=require";
+process.env.WTP_DB_ROLE = "local";
 const realFetch = globalThis.fetch;
 after(() => { globalThis.fetch = realFetch; });
 globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
@@ -124,6 +128,11 @@ globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
   for (const query of queries) {
     // The daily byte counter writes an aggregate, not a civic pointer read.
     if (/^\s*INSERT INTO database_transfer_daily\b/.test(query.query ?? "")) continue;
+    const capture = /^\s*insert into "(ask_interactions|search_log|write_alarm)"/i.exec(query.query ?? "");
+    if (responseDelivered && capture) {
+      backgroundWrites.push(capture[1]);
+      continue;
+    }
     const recordClass = (query.params ?? []).find((p): p is string => typeof p === "string" && /^[A-Z][A-Z_]+$/.test(p) && p !== "UNCHANGED_CONFIRMATION_V1");
     const scope = (query.params ?? []).find((p): p is string => typeof p === "string" && p !== recordClass && /[:+-]/.test(p));
     databaseReads.push(`${recordClass ?? "UNKNOWN"}${scope ? `:${scope}` : ""}`);
@@ -138,16 +147,30 @@ const AZ = "ocd-division/country:us/state:az";
 async function askMesa(question = "When does the Mesa City Council meet next?"): Promise<{ trace: { preloads?: Record<string, number>; preloadSources?: Record<string, string>; sourcesLoaded?: string } }> {
   clearPromotedReadModelCache();
   databaseReads.length = 0;
+  backgroundWrites.length = 0;
+  responseDelivered = false;
   const { POST } = await import("../app/api/ask/grounded/route.ts");
   const { resetGroundedState } = await import("../lib/ask/grounded-state.ts");
   resetGroundedState();
-  const response = await POST(new Request("https://wtp.test/api/ask/grounded", {
-    method: "POST",
-    headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "ask-reader-edge-test" },
-    body: JSON.stringify({ question, approximateLocation: "85201", surface: "MAP", ocdIds: [AZ, `${AZ}/county:maricopa`, `${AZ}/place:mesa`], today: "2026-09-25" }),
-  }));
-  assert.equal(response.status, 200);
-  return await response.json() as { trace: { preloads?: Record<string, number>; preloadSources?: Record<string, string>; sourcesLoaded?: string } };
+  const work: Promise<unknown>[] = [];
+  try {
+    const payload = await withResponseLifetime(promise => { work.push(promise); }, async () => {
+      const response = await POST(new Request("https://wtp.test/api/ask/grounded", {
+        method: "POST",
+        headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "ask-reader-edge-test" },
+        body: JSON.stringify({ question, approximateLocation: "85201", surface: "MAP", continuityKey: "ask-reader-edge-fixture", ocdIds: [AZ, `${AZ}/county:maricopa`, `${AZ}/place:mesa`], today: "2026-09-25" }),
+      }));
+      assert.equal(response.status, 200);
+      const body = await response.json();
+      responseDelivered = true;
+      return body;
+    });
+    await Promise.all(work);
+    assert.deepEqual(backgroundWrites.sort(), ["ask_interactions", "search_log"], "both captures run once, only after delivery");
+    return payload;
+  } finally {
+    responseDelivered = false;
+  }
 }
 
 /** What a cold Ask reads from the database when only identity is on the edge. */

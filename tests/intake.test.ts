@@ -349,11 +349,12 @@ test("log intake: an over-cap detail string is refused — the server no longer 
   assert.match(body.error, /cap/);
 });
 
-test("log intake: an oversized body is refused outright", async () => {
+test("log intake: a long malformed body is refused as invalid JSON", async () => {
   const response = await postLog(
     logRequest({ ip: "203.0.113.31", body: "x".repeat(5000) }),
   );
-  assert.equal(response.status, 413);
+  assert.equal(response.status, 400);
+  assert.deepEqual(await response.json(), { error: "body must be JSON" });
 });
 
 test("log intake: cross-origin submission is refused — text cannot be pumped in from scripts that never loaded the site", async () => {

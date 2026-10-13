@@ -63,7 +63,7 @@ import { gapsNotInAnswer } from "@/lib/text/say-once";
  * The Ask panel: one input, two jobs. An autocomplete pick or an exact name is
  * a search and navigates without writing a question row; anything else goes to
  * `/api/ask/grounded`, awaited on every ask. `askWasAnswered` is the single
- * definition of "answered", shared by the render and the log.
+ * definition of "answered" for the refusal surface. The server captures every question.
  */
 
 const DEBOUNCE_MS = 120;

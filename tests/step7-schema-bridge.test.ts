@@ -6,7 +6,7 @@ import test from "node:test";
 import { askCoverageStamp, askKeyHash, prepareAskInteraction } from "../lib/db/ask-signal.ts";
 import { writeAskInteraction } from "../lib/db/ask-interaction-writer.ts";
 import { getDb } from "../lib/db/index.ts";
-import { logSearchEvent } from "../lib/db/search-log.ts";
+import { logSearchEvent, searchLogKeyHash } from "../lib/db/search-log.ts";
 import { writeSpeakYourMind } from "../lib/db/speak.ts";
 import { raiseWriteAlarm } from "../lib/db/write-alarm.ts";
 
@@ -83,12 +83,13 @@ test("STEP-7 stores full Ask and location rows across the contract, and a refuse
       ALTER TABLE speak_your_mind ADD CONSTRAINT fixture_refuses_speak CHECK (false);
       ${beforeInserts.join(";\n")};
       ${checks("question_scrubbed", "before migration")}
-      DO $checks$ BEGIN IF (SELECT count(*) FROM search_log WHERE detail->>'__step7_continuity_hash' = ${quote(askKeyHash(key))}) <> 2 THEN RAISE EXCEPTION 'Old schema lost continuity hashes'; END IF; END $checks$;
+      DO $checks$ BEGIN IF (SELECT count(*) FROM search_log WHERE detail->>'__step7_continuity_hash' = ${quote(searchLogKeyHash(key))}) <> 2 THEN RAISE EXCEPTION 'Old schema lost continuity hashes'; END IF; END $checks$;
       ${migration}
       ${checks("question", "after migration")}
       ${afterInserts.join(";\n")};
       DO $checks$ BEGIN
-        IF (SELECT count(*) FROM search_log WHERE continuity_hash = ${quote(askKeyHash(key))} AND ocd_ids = ${quote(JSON.stringify(districts))}::jsonb AND approximate_location = '85701') <> 4 THEN RAISE EXCEPTION 'New schema lost district or reader counts'; END IF;
+        IF (SELECT count(*) FROM search_log WHERE continuity_hash = ${quote(searchLogKeyHash(key))} AND ocd_ids = ${quote(JSON.stringify(districts))}::jsonb AND approximate_location = '85701') <> 4 THEN RAISE EXCEPTION 'New schema lost district or reader counts'; END IF;
+        IF EXISTS (SELECT 1 FROM search_log s JOIN ask_interactions a ON s.continuity_hash = a.ask_key_hash) THEN RAISE EXCEPTION 'Search and Ask readers are joinable'; END IF;
         IF EXISTS (SELECT 1 FROM search_log WHERE detail ? '__step7_continuity_hash') THEN RAISE EXCEPTION 'Migration left bridge data'; END IF;
         BEGIN ${speakInsert}; EXCEPTION WHEN check_violation THEN ${alarmInsert}; END;
         IF NOT EXISTS (SELECT 1 FROM write_alarm WHERE store = 'speak_your_mind' AND error_code = '23514') THEN RAISE EXCEPTION 'Refused Speak did not write alarm'; END IF;

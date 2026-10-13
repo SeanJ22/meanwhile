@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
+import { withResponseLifetime } from "../lib/log/after-response.ts";
+import { ASK_SAVE_STATUS_HEADER } from "../lib/ask/save-status.ts";
 import { installAzBallot, installFederalVotes, installRegistryAuthority, installStateLegislators, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
 
 await installRegistryAuthority();
@@ -284,7 +286,7 @@ const AZ = "ocd-division/country:us/state:az";
 const PIMA = "ocd-division/country:us/state:az/county:pima";
 const VAIL = "ocd-division/country:us/state:az/school_district:vail_unified_district";
 
-interface Call { kind: "INTERPRET" | "SYNTHESIZE"; model: string; thinking: boolean; effort: boolean; at: number }
+interface Call { kind: "INTERPRET" | "SYNTHESIZE" | "TOPIC"; model: string; thinking: boolean; effort: boolean; at: number }
 const calls: Call[] = [];
 /** What each writer answers, by model; "default" for any model not named. */
 let writerAnswers: Record<string, { answer: string; citedSources: unknown[] } | "HTTP_529"> = {
@@ -303,9 +305,11 @@ globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
   const url = input instanceof Request ? input.url : String(input);
   if (!url.startsWith("https://api.anthropic.com/")) throw new Error(`latency test refused an outbound request: ${url}`);
   const body = JSON.parse(String(init?.body)) as { system: unknown; model: string; thinking?: unknown; output_config?: { effort?: unknown; format?: { schema?: { properties?: Record<string, unknown> } } } };
-  /* The writer's schema has an answer; the reading's does not (both marks their system prompt now). */
+  /* Topic tagging runs after delivery and is not an answer interpretation. */
+  const topic = body.output_config?.format?.schema?.properties?.topic !== undefined;
   const synthesis = body.output_config?.format?.schema?.properties?.answer !== undefined;
-  calls.push({ kind: synthesis ? "SYNTHESIZE" : "INTERPRET", model: body.model, thinking: body.thinking !== undefined, effort: body.output_config?.effort !== undefined, at: Date.now() });
+  calls.push({ kind: topic ? "TOPIC" : synthesis ? "SYNTHESIZE" : "INTERPRET", model: body.model, thinking: body.thinking !== undefined, effort: body.output_config?.effort !== undefined, at: Date.now() });
+  if (topic) return Response.json({ model: body.model, content: [{ type: "text", text: JSON.stringify({ topic: "free-form" }) }] });
   const planned = writerAnswers[body.model] ?? writerAnswers.default;
   if (synthesis && planned === "HTTP_529") return new Response(JSON.stringify({ error: { type: "overloaded_error" } }), { status: 529 });
   const asked = synthesis ? null : (body as unknown as { messages: { content: string }[] }).messages.at(-1)?.content ?? "";
@@ -336,22 +340,34 @@ interface Payload {
   };
 }
 
-async function ask(question: string, ocdIds: string[], options: { reset?: boolean; today?: string; extra?: Record<string, unknown> } = {}): Promise<{ payload: Payload; calls: Call[] }> {
+async function ask(question: string, ocdIds: string[], options: { reset?: boolean; today?: string; extra?: Record<string, unknown> } = {}): Promise<{ payload: Payload; calls: Call[]; backgroundCalls: Call[] }> {
   if (options.reset !== false) resetGroundedState();
   const before = calls.length;
-  const response = await POST(new Request("https://wtp.test/api/ask/grounded", {
-    method: "POST",
-    headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "ask-latency-shape-test" },
-    body: JSON.stringify({ question, ocdIds, today: options.today ?? "2026-08-28", ...options.extra }),
-  }));
-  const text = await response.text();
-  assert.equal(response.status, 200, text);
-  return { payload: JSON.parse(text) as Payload, calls: calls.slice(before) };
+  const work: Promise<unknown>[] = [];
+  const delivered = await withResponseLifetime(promise => { work.push(promise); }, async () => {
+    const response = await POST(new Request("https://wtp.test/api/ask/grounded", {
+      method: "POST",
+      headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "ask-latency-shape-test" },
+      body: JSON.stringify({ question, ocdIds, today: options.today ?? "2026-08-28", ...options.extra }),
+    }));
+    const text = await response.text();
+    assert.equal(response.status, 200, text);
+    assert.equal(response.headers.get(ASK_SAVE_STATUS_HEADER), "QUEUED");
+    return { payload: JSON.parse(text) as Payload, calls: calls.slice(before) };
+  });
+  // Match the host lifetime: collect answer calls through the complete body,
+  // then finish every deferred save/tag before another request changes the mocks.
+  await Promise.all(work);
+  const backgroundCalls = calls.slice(before + delivered.calls.length);
+  assert.ok(delivered.calls.every(call => call.kind !== "TOPIC"), "topic tagging must wait for the complete answer");
+  assert.ok(backgroundCalls.every(call => call.kind === "TOPIC"), "answer generation must finish before delivery");
+  return { ...delivered, backgroundCalls };
 }
 
 test("ROUTE: who sits on a named body is read in code and composed from its roster — no model call at all", { concurrency: false }, async () => {
-  const { payload, calls: made } = await ask("Who sits on the Vail school board?", [AZ, PIMA, VAIL]);
+  const { payload, calls: made, backgroundCalls } = await ask("Who sits on the Vail school board?", [AZ, PIMA, VAIL]);
   assert.deepEqual(made, [], "neither rung called a model");
+  assert.deepEqual(backgroundCalls.map(call => call.kind), ["TOPIC"], "the saved question is tagged only after delivery");
   assert.equal(payload.trace.interpretation.why, "lexical-reading");
   assert.equal(payload.trace.synthesis.why, "composed-from-roster-records");
   assert.equal(payload.mode, "GROUNDED_COMPOSED");

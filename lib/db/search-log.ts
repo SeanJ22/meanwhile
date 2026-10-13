@@ -1,6 +1,5 @@
 import { scrubFreeText } from "../log/scrub.ts";
-import { askKeyHash } from "./ask-signal.ts";
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { sql, type SQL } from "drizzle-orm";
 
 import { getDb } from "./index.ts";
@@ -21,6 +20,11 @@ import {
 
 /** The dataset every division identifier in the current registry was resolved against. */
 export const DIVISION_VINTAGE = "TIGER_GENZ2025";
+
+/** Counts distinct readers within this store without joining another store's digest. */
+export function searchLogKeyHash(key: string): string {
+  return createHash("sha256").update(`search-log:${key}`).digest("hex");
+}
 
 export type SearchLogEventType =
   | "SEARCH"
@@ -51,7 +55,7 @@ export interface SearchLogEvent {
   approximateLocation?: string | null;
   /** Divisions the event touched. */
   ocdIds: string[];
-  /** Browser-minted random key; only its Ask continuity digest is stored. */
+  /** Browser-minted random key; only its search-log-prefixed digest is stored. */
   continuityKey?: string | null;
   /** Scalar facts only; validated against the forbidden fragments below. */
   detail?: Record<string, string | number | boolean>;
@@ -161,7 +165,7 @@ export function prepareSearchLogEvent(event: SearchLogEvent): typeof searchLog.$
     occurredAt: new Date().toISOString(),
     eventType: event.eventType,
     approximateLocation: zip,
-    continuityHash: event.continuityKey ? askKeyHash(event.continuityKey) : null,
+    continuityHash: event.continuityKey ? searchLogKeyHash(event.continuityKey) : null,
     ocdIds: event.ocdIds,
     divisionVintage: DIVISION_VINTAGE,
     detail,

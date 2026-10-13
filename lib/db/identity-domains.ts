@@ -20,7 +20,7 @@ export type ValueSpace =
   | "DIGEST"
   /** A public-record identifier for a government, a body, or a candidacy. */
   | "CIVIC_IDENTIFIER"
-  /** Free text a person typed. Scrubbed at the write path where it is a reader's. */
+  /** Free text a person typed. Each column declares its write-path handling. */
   | "PROSE"
   /** Anything that identifies nobody: a timestamp, a count, an enum, a URL. */
   | "NON_IDENTIFYING";
@@ -79,6 +79,14 @@ export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
           "CLAUDE.md names it explicitly as the one geographic value permitted here.",
       },
       ocd_ids: { space: "CIVIC_IDENTIFIER", why: "Divisions, not people." },
+      continuity_hash: {
+        space: "DIGEST",
+        digestSpace: "search-log:",
+        why:
+          "sha256('search-log:' + a RANDOM browser-minted key). Counts distinct readers " +
+          "within search_log; its own prefix prevents equality joins to ask_interactions " +
+          "or any other reader store's digest of the same browser key.",
+      },
       run_id: {
         space: "OPAQUE_HANDLE",
         why: "Names a synthetic WALK. Null on every organic row by construction.",
@@ -372,7 +380,7 @@ export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
         "location_confidence",
         "answer_model",
         "answer_effort",
-        // Which kinds of self-identifying content were removed, never the content.
+        // Retained schema field; current Ask writes leave it empty and preserve the words.
         "self_disclosure",
       ),
       approximate_location: {
@@ -394,13 +402,13 @@ export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
           "The PUBLIC governments, officeholders or measures the question resolved to — a " +
           "school district, a governor. Facts about a government, never about the reader.",
       },
-      question_scrubbed: {
+      question: {
         space: "PROSE",
         why:
-          "The reader's own words, passed through the BC-11 self-disclosure redaction FIRST " +
-          "(which strips self-naming and FLAGS what it found) and then the T09 scrub. The " +
-          "order is load-bearing: the scrub replaces the very tokens detection needs, so " +
-          "detecting afterwards reports nothing on every row. One write path, no second door.",
+          "The reader's words exactly as typed, with no redaction and no length cut, per " +
+          "Sean's instruction. Preserved on the one write path: prepareAskInteraction → " +
+          "writeAskInteraction. Reader prose never leaves verbatim through an export or " +
+          "sold-data path; the existing reader-intel readAsk selects COUNT(*) only.",
       },
       answer_text: {
         space: "PROSE",

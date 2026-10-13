@@ -11,12 +11,12 @@ import type { LocationConfidence, ResidencyRelation } from "../ask/residency.ts"
 
 /**
  * The Ask interaction write path. Each store digests the browser key under its
- * prefix. Search events use the Ask digest too, so district counts
- * share the same browser continuity:
+ * own prefix, so each counts distinct readers without joining other stores:
  *   reactions       sha256(rawKey)
  *   speak your mind sha256("speak-your-mind:" + key)
  *   intake limiter  sha256("intake-limiter:" + key)
  *   ask             sha256("ask-interaction:" + key)
+ *   search log      sha256("search-log:" + key)
  */
 
 const ASK_KEY_PREFIX = "ask-interaction:";

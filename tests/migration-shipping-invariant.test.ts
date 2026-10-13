@@ -159,11 +159,13 @@ test("migrationTagsIn reads tags off the changed files and ignores the journal",
   assert.deepEqual(
     migrationTagsIn([
       "lib/db/migrations/0021_mixed_red_ghost.sql",
+      "lib/db/migrations/STEP3_write_alarm_stores.sql",
+      "lib/db/migrations/STEP-7_reader_location_capture.sql",
       "lib/db/migrations/meta/_journal.json",
       "lib/db/migrations/meta/0021_snapshot.json",
       "docs/DESIGN.md",
     ]),
-    ["0021_mixed_red_ghost"],
+    ["0021_mixed_red_ghost", "STEP-7_reader_location_capture", "STEP3_write_alarm_stores"],
   );
 });
 

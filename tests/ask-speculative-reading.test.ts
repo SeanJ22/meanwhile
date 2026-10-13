@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { withResponseLifetime } from "../lib/log/after-response.ts";
 import { installFederalVotes, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
 await installRegistryAuthority();
@@ -89,7 +90,7 @@ const PIMA = "ocd-division/country:us/state:az/county:pima";
 const VAIL = "ocd-division/country:us/state:az/school_district:vail_unified_district";
 const QUESTION = "Who can I talk to at the Vail school board?";
 
-interface Call { kind: "INTERPRET" | "SYNTHESIZE"; model: string; startedAt: number; endedAt?: number; aborted?: boolean }
+interface Call { kind: "INTERPRET" | "SYNTHESIZE" | "TOPIC"; model: string; startedAt: number; endedAt?: number; aborted?: boolean }
 const calls: Call[] = [];
 /** The model's reading of the next question, or a failed call. */
 let reading: Record<string, unknown> | "HTTP_500" = {};
@@ -105,9 +106,14 @@ globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
   const url = input instanceof Request ? input.url : String(input);
   if (!url.startsWith("https://api.anthropic.com/")) throw new Error(`speculation test refused an outbound request: ${url}`);
   const body = JSON.parse(String(init?.body)) as { system: unknown; model: string; output_config?: { format?: { schema?: { properties?: Record<string, unknown> } } } };
+  const topic = body.output_config?.format?.schema?.properties?.topic !== undefined;
   const synthesis = body.output_config?.format?.schema?.properties?.answer !== undefined;
-  const call: Call = { kind: synthesis ? "SYNTHESIZE" : "INTERPRET", model: body.model, startedAt: performance.now() };
+  const call: Call = { kind: topic ? "TOPIC" : synthesis ? "SYNTHESIZE" : "INTERPRET", model: body.model, startedAt: performance.now() };
   calls.push(call);
+  if (topic) {
+    call.endedAt = performance.now();
+    return Response.json({ model: body.model, content: [{ type: "text", text: JSON.stringify({ topic: "free-form" }) }] });
+  }
   const planned = synthesis ? writerQueue.shift() ?? PASSING : reading;
   await new Promise<void>((resolve, reject) => {
     const timer = setTimeout(resolve, synthesis ? WRITING_MS : READING_MS);
@@ -144,17 +150,25 @@ async function timedAsk(question: string, extra: Record<string, unknown> = {}): 
   resetGroundedState();
   const before = calls.length;
   const started = performance.now();
-  const response = await POST(new Request("https://wtp.test/api/ask/grounded", {
-    method: "POST",
-    headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "ask-speculative-reading-test" },
-    body: JSON.stringify({ question, ocdIds: [AZ, PIMA, VAIL], today: "2026-08-28", ...extra }),
-  }));
-  const ms = performance.now() - started;
-  const text = await response.text();
-  assert.equal(response.status, 200, text);
+  const work: Promise<unknown>[] = [];
+  let deliveredAt = 0;
+  const payload = await withResponseLifetime(promise => { work.push(promise); }, async () => {
+    const response = await POST(new Request("https://wtp.test/api/ask/grounded", {
+      method: "POST",
+      headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "ask-speculative-reading-test" },
+      body: JSON.stringify({ question, ocdIds: [AZ, PIMA, VAIL], today: "2026-08-28", ...extra }),
+    }));
+    const text = await response.text();
+    deliveredAt = performance.now();
+    assert.equal(response.status, 200, text);
+    return JSON.parse(text) as Payload;
+  });
+  await Promise.all(work);
   // Anything a discarded writer would still do happens now or never.
   await new Promise((resolve) => setTimeout(resolve, 50));
-  return { payload: JSON.parse(text) as Payload, calls: calls.slice(before), ms };
+  const made = calls.slice(before);
+  assert.ok(made.filter(call => call.kind === "TOPIC").every(call => call.startedAt >= deliveredAt), "topic tagging waits for the complete answer");
+  return { payload, calls: made.filter(call => call.kind !== "TOPIC"), ms: deliveredAt - started };
 }
 
 const CONTACT_READING = { intent: "CONTACT", entityMentions: ["Vail school board"], normalizedMentions: ["Vail Unified School District Governing Board"], temporal: { kind: "NONE" }, referent: null };

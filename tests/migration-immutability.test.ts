@@ -293,6 +293,22 @@ test("an unreachable merge base is COULD NOT TELL, never a pass", () => {
   for (const gap of verdict.cannotTell) assert.match(gap, /UNKNOWN|not a pass/);
 });
 
+test("step-named migrations are found, and an established step cannot be rewritten", () => {
+  for (const tag of ["STEP3_write_alarm_stores", "STEP-7_reader_location_capture"]) {
+    const path = `lib/db/migrations/${tag}.sql`;
+    assert.equal(MIGRATION_SQL_PATH.exec(path)?.[1], tag);
+    const journal = [{ idx: 0, when: 1, tag }];
+    const verdict = evaluateMigrationImmutability({
+      changes: parseNameStatus(`M\t${path}`),
+      baseDescription: "an established step",
+      baseJournal: journal,
+      headJournal: journal,
+      sqlTagsOnDisk: [tag],
+    });
+    assert.deepEqual(verdict.violations.map(v => v.rule), ["migration-modified"]);
+  }
+});
+
 test("the gate exits 2 on COULD NOT TELL and 1 on a violation — they are different answers", () => {
   const source = readFileSync(GATE, "utf8");
   const guardAt = source.indexOf("evaluateMigrationImmutability({");

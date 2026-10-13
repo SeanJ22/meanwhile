@@ -122,7 +122,7 @@ export const agendaDocuments = pgTable(
  *
  * No account, device column, street, house number or coordinates. The ZIP is
  * orientation; district truth is the full resolved set in `ocd_ids`.
- * `continuity_hash` uses the Ask digest to count distinct browsers by district.
+ * `continuity_hash` uses its own search-log digest to count distinct browsers by district.
  */
 export const searchLog = pgTable(
   "search_log",
@@ -145,7 +145,7 @@ export const searchLog = pgTable(
     }).notNull(),
     /** Zip as entered. Orientation only — never resolved to a person. */
     approximateLocation: text("approximate_location"),
-    /** sha256("ask-interaction:" + browser key), or null on earlier events. */
+    /** sha256("search-log:" + browser key), or null on earlier events. */
     continuityHash: text("continuity_hash"),
     /**
      * Divisions the event touched, as OCD-IDs. One event resolves against
@@ -555,8 +555,8 @@ export const speakYourMind = pgTable(
 
 /**
  * One question and its answer, in one row. `askKeyHash` is digested under its
- * `"ask-interaction:"` prefix, shared with location events to count distinct
- * readers. The question and answer retain the words exactly as given.
+ * `"ask-interaction:"` prefix to count distinct readers within this store.
+ * The question and answer retain the words exactly as given.
  * Writes stay off while the existing `ripcord.reactionIntake` is pulled.
  */
 export const askInteractions = pgTable(
@@ -640,7 +640,7 @@ export const askInteractions = pgTable(
       enum: ["TIER_0", "TIER_1", "TIER_2", "TIER_3", "UNKNOWN"],
     }).notNull(),
     coverageTierDistribution: text("coverage_tier_distribution").notNull(),
-    /** sha256("ask-interaction:" + key), also used by location events. */
+    /** sha256("ask-interaction:" + key), distinct from the search log's digest. */
     askKeyHash: text("ask_key_hash").notNull(),
     runClass: text("run_class", { enum: ["ORGANIC", "SYNTHETIC", "UNKNOWN", "AUTHOR"] })
       .notNull()

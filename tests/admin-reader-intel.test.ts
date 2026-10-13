@@ -240,7 +240,6 @@ const NEVER_READ = [
   "reaction_key_hash",
   "ask_key_hash",
   "speak_key_hash",
-  "question_scrubbed",
   "answer_text",
   "coverage_tier_distribution",
   "detail->>'question'",
@@ -253,6 +252,13 @@ test("ADM-C12: the read model never names a column that could key back to one re
   assert.deepEqual(found, [], `the reader read model names: ${found.join(", ")}`);
   // A run_id rollup across stores would be session tracking.
   assert.ok(!/\brun_id\b/.test(src), "the read model selects run_id — there is no session in this product");
+});
+
+test("ADM-C12: Ask's stored prose never enters the read model; only the row count leaves", async () => {
+  const store = recordedStore(() => [{ n: 2, question: "My name is Jane; I live at 412 Elm St.", answer_text: "Private answer" }]);
+  assert.deepEqual(await readAsk(store.sql, WINDOW), { kind: "HELD", value: { rowsInWindow: 2 } });
+  assert.equal(store.asked.length, 1);
+  assert.match(store.asked[0].text, /^\s*SELECT COUNT\(\*\) AS n\s+FROM ask_interactions\s+WHERE /);
 });
 
 test("ADM-C12: PLANT — a reader-level field anywhere in the reading refuses the render", async () => {

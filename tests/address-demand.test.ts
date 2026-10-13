@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import test from "node:test";
 import { logAddressEntered } from "../lib/log/address-events.ts";
 import { logEvent } from "../lib/log/client.ts";
-import { prepareSearchLogEvent } from "../lib/db/search-log.ts";
+import { prepareSearchLogEvent, searchLogKeyHash } from "../lib/db/search-log.ts";
 import { askKeyHash } from "../lib/db/ask-signal.ts";
 
 test("an address entry sends only its ZIP, full district set, page and Ask continuity key", async () => {
@@ -22,7 +23,8 @@ test("an address entry sends only its ZIP, full district set, page and Ask conti
     assert.deepEqual(wire, { eventType: "ADDRESS_ENTERED" as const, ocdIds: address.divisionIds,
       detail: { page: "ASK" }, approximateLocation: "85701", continuityKey: key });
     const row = prepareSearchLogEvent(wire);
-    assert.equal(row.continuityHash, askKeyHash(key));
+    assert.equal(row.continuityHash, createHash("sha256").update(`search-log:${key}`).digest("hex"));
+    assert.notEqual(row.continuityHash, askKeyHash(key), "location and Ask rows cannot join on the browser digest");
     assert.equal(JSON.stringify(row).includes(address.streetLabel), false);
     assert.equal(JSON.stringify(row).includes(String(address.lat)), false);
     assert.equal(JSON.stringify(row).includes(String(address.lng)), false);
@@ -32,6 +34,17 @@ test("an address entry sends only its ZIP, full district set, page and Ask conti
       else Reflect.deleteProperty(globalThis, name);
     }
   }
+});
+
+test("each store counts distinct readers independently across repeated events", () => {
+  const keys = ["reader-one", "reader-two", "reader-one"];
+  const searches = keys.map(continuityKey => prepareSearchLogEvent({ eventType: "BALLOT_VIEWED", ocdIds: [], continuityKey }));
+  const searchHashes = new Set(searches.map(row => row.continuityHash));
+  const askHashes = new Set(keys.map(askKeyHash));
+  assert.equal(searchHashes.size, 2);
+  assert.equal(askHashes.size, 2);
+  assert.ok([...askHashes].every(hash => !searchHashes.has(hash)));
+  assert.equal(searches[0].continuityHash, searchLogKeyHash(keys[0]));
 });
 
 test("a browser that refuses to queue a beacon still sends the event by fetch", () => {

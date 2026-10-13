@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -72,7 +73,7 @@ test("event types are a closed set", () => {
   assert.ok(!isValidEventType(undefined));
 });
 
-test("location entries and ballot views retain every district and count the same browser as Ask", () => {
+test("location entries and ballot views retain every district and count readers independently of Ask", () => {
   const districts = ["cd:7", "sldu:20", "sldl:20", "county:pima", "place:tucson", "school_district:unified:tucson", "special:water"]
     .map(id => `ocd-division/country:us/state:az/${id}`);
   const key = "a-reader-browser-key-128-bits";
@@ -81,7 +82,8 @@ test("location entries and ballot views retain every district and count the same
       continuityKey: key, detail: { page: "BALLOT" } });
     assert.deepEqual(row.ocdIds, districts);
     assert.equal(row.approximateLocation, "85701");
-    assert.equal(row.continuityHash, askKeyHash(key));
+    assert.equal(row.continuityHash, createHash("sha256").update(`search-log:${key}`).digest("hex"));
+    assert.notEqual(row.continuityHash, askKeyHash(key));
     assert.notEqual(row.continuityHash, key);
     assert.equal(row.detail?.page, "BALLOT");
     assert.ok(Number.isFinite(Date.parse(row.occurredAt as string)));

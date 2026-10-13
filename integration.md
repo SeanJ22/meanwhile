@@ -194,3 +194,7 @@ One line per batch folded into river.
 - 2026-10-12T23:14:31Z · adapter-ash-creek-d53-monthly-agenda-pdf-call-to-public · adapter-ash-creek-d53-monthly-agenda-pdf-call-to-public · ready 46a02f26a59c · river 1c60322f563f · pnpm gates pass on 1c60322f563f
 - 2026-10-12T23:14:31Z · state-legislators · SL-01 · ready c25ef823e880 · river 1c60322f563f · pnpm gates pass on 1c60322f563f
 - 2026-10-13T01:18:39Z · hunters · CH-23 · ready 05d2e5c09805 · river 593be2416b30 · pnpm gates pass on 593be2416b30
+- 2026-10-13T02:55:57Z · ballot-districts · BD-01, BD-02 · ready 1e2223124450 · river 3734a8f9bb3b · pnpm gates pass on 3734a8f9bb3b
+- 2026-10-13T02:55:57Z · card-gaps-sources · UI-01 · ready a476726a41b6 · river 3734a8f9bb3b · pnpm gates pass on 3734a8f9bb3b
+- 2026-10-13T02:55:57Z · platform-census · PC-01 · ready 2890dedcdce1 · river 3734a8f9bb3b · pnpm gates pass on 3734a8f9bb3b
+- 2026-10-13T02:55:57Z · playbooks · PB-01 · ready 69b98f96054e · river 3734a8f9bb3b · pnpm gates pass on 3734a8f9bb3b

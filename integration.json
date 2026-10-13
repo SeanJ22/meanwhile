@@ -1954,5 +1954,54 @@
     "tested_sha": "593be2416b30508823ef245e2834b05eaa0a4b6b",
     "gates": "pass",
     "at": "2026-10-13T01:18:39Z"
+  },
+  {
+    "lane": "ballot-districts",
+    "steps": [
+      "BD-01",
+      "BD-02"
+    ],
+    "ready_sha": "1e222312445041a01ec8f6d0dd28061e90a54650",
+    "merge_sha": "392862df057c692c4f1fea8516827ef49b4d5742",
+    "river_sha": "3734a8f9bb3bb234dfe9ca3b241e6d83b339ce97",
+    "tested_sha": "3734a8f9bb3bb234dfe9ca3b241e6d83b339ce97",
+    "gates": "pass",
+    "at": "2026-10-13T02:55:57Z"
+  },
+  {
+    "lane": "card-gaps-sources",
+    "steps": [
+      "UI-01"
+    ],
+    "ready_sha": "a476726a41b6f09e2c92e0ddfdf0b67569ec338f",
+    "merge_sha": "c6b9bb07c5f10df68b81dcb210fcbce7a785bdb3",
+    "river_sha": "3734a8f9bb3bb234dfe9ca3b241e6d83b339ce97",
+    "tested_sha": "3734a8f9bb3bb234dfe9ca3b241e6d83b339ce97",
+    "gates": "pass",
+    "at": "2026-10-13T02:55:57Z"
+  },
+  {
+    "lane": "platform-census",
+    "steps": [
+      "PC-01"
+    ],
+    "ready_sha": "2890dedcdce1933facda1cbfffe2e0638ec8811e",
+    "merge_sha": "e1667c2ff200acf94419448167a58245e5cf2a72",
+    "river_sha": "3734a8f9bb3bb234dfe9ca3b241e6d83b339ce97",
+    "tested_sha": "3734a8f9bb3bb234dfe9ca3b241e6d83b339ce97",
+    "gates": "pass",
+    "at": "2026-10-13T02:55:57Z"
+  },
+  {
+    "lane": "playbooks",
+    "steps": [
+      "PB-01"
+    ],
+    "ready_sha": "69b98f96054ea485e9407004db607ffbbb0e74a2",
+    "merge_sha": "c85621b3edf36f87134b29cd177a6d5be230e491",
+    "river_sha": "3734a8f9bb3bb234dfe9ca3b241e6d83b339ce97",
+    "tested_sha": "3734a8f9bb3bb234dfe9ca3b241e6d83b339ce97",
+    "gates": "pass",
+    "at": "2026-10-13T02:55:57Z"
   }
 ]

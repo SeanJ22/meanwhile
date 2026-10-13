@@ -2039,5 +2039,29 @@
     "tested_sha": "6c204dcd865cc99f3e6bb2a4f0270f78b28a7f07",
     "gates": "pass",
     "at": "2026-10-13T06:49:29Z"
+  },
+  {
+    "lane": "src-congress",
+    "steps": [
+      "CG-2"
+    ],
+    "ready_sha": "410f571e02c30b7d36ea5f033eb58d7bcf1c034c",
+    "merge_sha": "cb14fea39bf433ebc8b28cd59934f32bb75b419b",
+    "river_sha": "985c00c33f7a6ab2035fefc563668bf51a22207f",
+    "tested_sha": "985c00c33f7a6ab2035fefc563668bf51a22207f",
+    "gates": "pass",
+    "at": "2026-10-13T07:23:12Z"
+  },
+  {
+    "lane": "zip-entry",
+    "steps": [
+      "ZIP-01"
+    ],
+    "ready_sha": "00179385646c90776817a92a381dc8a0ee705d43",
+    "merge_sha": "985c00c33f7a6ab2035fefc563668bf51a22207f",
+    "river_sha": "985c00c33f7a6ab2035fefc563668bf51a22207f",
+    "tested_sha": "985c00c33f7a6ab2035fefc563668bf51a22207f",
+    "gates": "pass",
+    "at": "2026-10-13T07:23:12Z"
   }
 ]

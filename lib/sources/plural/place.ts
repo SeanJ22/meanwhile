@@ -1,3 +1,4 @@
+import { stateOfficesForStates, stateOfficeLinkingPage } from "../../reference/state-offices.ts";
 import { cellText, decodeEntities, extractRoster, looksLikeNameCell } from "../../hunt/roster-page.ts";
 import type { PlaceDivision } from "../../control-plane/expansion/national-geography.ts";
 import { isOfficialSource, type OfficialLinkingPage } from "../../civic-data/source-authority.ts";
@@ -63,27 +64,6 @@ function links(page: HeldSourcePage): { url: string; label: string }[] {
 
 const OFFICE = "(?:Lieutenant Governor|Governor|Secretary of State|Attorney General|State Auditor|Auditor|State Treasurer|Treasurer|Comptroller|Mayor)";
 const namedOffice = new RegExp(`^(${OFFICE})\\s+([A-Z][\\p{L}.'’ -]+)$`, "u");
-const ELECTION_DIRECTORY = "https://www.eac.gov/voters/register-and-vote-in-your-state";
-
-/** Read the federal directory's actual public GET form, not a state host list. */
-export function electionDirectorySelection(page: HeldSourcePage, stateName: string): string | null {
-  for (const form of page.text.matchAll(/<form\b([^>]*)>([\s\S]*?)<\/form>/gi)) {
-    if (!/method=["']get["']/i.test(form[1])) continue;
-    for (const select of form[2].matchAll(/<select\b([^>]*)>([\s\S]*?)<\/select>/gi)) {
-      const name = /\bname=["']([^"']+)["']/i.exec(select[1])?.[1];
-      if (!name) continue;
-      for (const option of select[2].matchAll(/<option\b[^>]*value=["']([^"']+)["'][^>]*>([\s\S]*?)<\/option>/gi)) {
-        if (cellText(option[2]).toLowerCase() !== stateName.toLowerCase()) continue;
-        const base = page.baseUrl ?? page.url;
-        const url = new URL(/\baction=["']([^"']+)["']/i.exec(form[1])?.[1] ?? base, base);
-        url.searchParams.set(name, decodeEntities(option[1]));
-        return url.href;
-      }
-    }
-  }
-  return null;
-}
-
 /* National sources are acquisition inputs: the publisher checks the saved
  * official document and the seat before anything reaches the reader. */
 export async function collectNationalPlaceSources(input: {
@@ -140,21 +120,19 @@ export async function collectNationalPlaceSources(input: {
     await input.onSources({ officials: readyOfficials, electionFields: readyFields,
       electionDocuments: [...electionDocuments], documents: [...documents.values()], gaps: [] });
   };
-  // The directory leads to both families; with nothing open in either, nothing is read.
-  const directory = families.officials || families.elections ? await attempt("https://www.usa.gov/state-governments") : null;
-  let electionDirectory: Promise<HeldSourcePage | null> | undefined;
   await Promise.all(states.map(async state => {
-    // Legislative people are acquired once per source state by the standing
-    // OpenStates contract and composed by the ordinary people reader.
-    if (!directory) return;
-    const anchor = [...directory.text.matchAll(/<a\b([^>]+)>[\s\S]*?<\/a>/gi)]
-      .find(m => new RegExp(`\\bid=["']${state}["']`, "i").test(m[1]));
-    const path = anchor && /href=["']([^"']+)["']/i.exec(anchor[1])?.[1];
-    if (!path) { gaps.push({ sourceUrl: directory.url, detail: `The national directory has no ${state.toUpperCase()} link` }); return; }
-    const statePage = await attempt(new URL(path, directory.baseUrl ?? directory.url).href);
-    if (!statePage) return;
+    // Held national directories supply the state routes once; each hunt reads only that state's pages.
+    if (!families.officials && !families.elections) return;
+    const heldOffices = stateOfficesForStates([state]).filter(office => office.kind === "ELECTION_OFFICE");
     const divisionId = input.divisions.find(d => d.divisionType === "state" && d.id.endsWith(`:${state}`))?.id;
     if (!divisionId) return;
+    let primary = heldOffices[0];
+    let statePage: HeldSourcePage | null = null;
+    for (const office of heldOffices) {
+      statePage = await attempt(office.url);
+      if (statePage) { primary = office; break; }
+    }
+    if (!primary || !statePage) return;
     const stateLinks = links(statePage);
     const addOfficials = (page: HeldSourcePage, officeHint?: string, linkingPage?: OfficialLinkingPage) => {
       if (!isOfficialSource(page.url, linkingPage)) return;
@@ -193,10 +171,11 @@ export async function collectNationalPlaceSources(input: {
       }
     };
     if (families.officials) {
-      addOfficials(statePage);
+      addOfficials(statePage, undefined, stateOfficeLinkingPage(primary));
       await flush();
     }
-    const stateProvenance = { url: statePage.url, html: statePage.text };
+    const directoryProvenance = stateOfficeLinkingPage(primary);
+    const stateProvenance = { url: statePage.url, html: statePage.text, linkingPage: directoryProvenance };
     // Office landing pages often name the office but link a separate biography.
     // Read that profile rather than trying to infer a person from a URL slug.
     const officeLinks = stateLinks.flatMap(link => {
@@ -248,24 +227,20 @@ export async function collectNationalPlaceSources(input: {
       }
     }
     if (!families.elections) return;
-    electionDirectory ??= attempt(ELECTION_DIRECTORY);
-    const electionIndex = await electionDirectory;
-    const stateName = cellText(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i.exec(statePage.text)?.[1] ?? "");
-    const selection = electionIndex && electionDirectorySelection(electionIndex, stateName);
-    const federalElectionPage = selection ? await attempt(selection) : null;
-    const elections = new Map([...stateLinks.map(link => ({ ...link, parent: statePage })),
-      ...(federalElectionPage ? links(federalElectionPage).map(link => ({ ...link, parent: federalElectionPage })) : [])]
-      .filter(l => /election|voting|register|registration|polling|ballot/i.test(l.label) && !/\b(?:usa|eac)\.gov$/.test(new URL(l.url).hostname))
-      .map(l => [l.url, { url: l.parent.url, html: l.parent.text }]));
+    const elections = new Map([
+      ...heldOffices.map(office => [office.url, stateOfficeLinkingPage(office)] as const),
+      ...stateLinks.filter(link => /election|voting|register|registration|polling|ballot/i.test(link.label) && !/(?:^|\.)(?:usa|eac)\.gov$/.test(new URL(link.url).hostname))
+        .map(link => [link.url, stateProvenance] as const),
+    ]);
     await Promise.all([...elections].map(async ([url, parent]) => {
       const page = await attempt(url);
       if (!page) return;
       electionDocuments.push(page);
       electionFields.push(...electionPageFields(page, divisionId, parent));
-      if (families.officials) addOfficials(page, undefined, parent);
+      if (families.officials && page.url !== statePage.url) addOfficials(page, undefined, parent);
       await flush();
       const provenance = { url: page.url, html: page.text, linkingPage: parent };
-      if (families.officials) await Promise.all(links(page).flatMap(l => {
+      if (families.officials && page.url !== statePage.url) await Promise.all(links(page).flatMap(l => {
         const office = new RegExp(`^(?:Office of (?:the )?)?(${OFFICE})$`, "i").exec(l.label)?.[1];
         return office ? [followOffice({ url: l.url, office }, provenance)] : [];
       }));

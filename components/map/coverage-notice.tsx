@@ -1,4 +1,5 @@
 "use client";
+import { PlaceOpenData } from "./open-data";
 
 import { useShellData } from "@/lib/state/data";
 import { CardGapContribution } from "@/components/ui/card-gap-context";
@@ -55,6 +56,7 @@ import { partyColorVar } from "@/lib/officials/party-color";
 import { bodyDisplayName, readerPartyLabel } from "@/lib/text/reader-names";
 import { groupBySeatLabel } from "@/lib/officials/seat-grouping";
 import { GovernmentListings } from "./government-listings";
+import { StateOfficeContacts } from "../state-office-contacts";
 
 /**
  * Says which rung of the cascade produced what's on screen, and, when nothing
@@ -453,6 +455,7 @@ function CoverageBody({
       </p>}
 
       <SubjectLine zip={zip} standing={subject.location.certainty} />
+      <PlaceOpenData zip={zip} />
 
       {coverage.federalDirectoryUnavailable && <p className="mt-1 t-detail text-voice">We could not load the federal directory just now.</p>}
       <GovernmentListings records={coverage.governments ?? []} states={coverage.governmentInventoryStates ?? []} unavailableStates={coverage.governmentInventoryUnavailableStates} />
@@ -925,6 +928,7 @@ export function CoverageNotice({
 
       <div className="coverage-notice-body">
       <MeetingListingNotice groups={listingCount?.groups ?? []} />
+      <StateOfficeContacts offices={coverage?.stateOffices ?? []} />
       {tier === "widened" && (
         <p className="mt-1.5 t-body leading-relaxed text-paper-dim">
           Nearby results: {listingCount?.unresolved ? `${count} ${listingCount.unit}` : count === 1 ? "one meeting" : `${count} meetings`} within {wide} miles of {zip}.

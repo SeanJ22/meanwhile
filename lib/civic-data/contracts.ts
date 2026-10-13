@@ -1,6 +1,7 @@
 import { VALIDATION_CHECKS, type RoutineDataClassification, type RoutineRecordClass } from "./types.ts";
 import type { SourceAuthorityId } from "./source-authority.ts";
 import { RUNTIME_ROUTINE_CONTRACTS } from "./runtime-routine-contracts.ts";
+import { FEDERAL_SOURCE_IDS, FEDERAL_SOURCES, FEDERAL_PARSER_VERSION, FEDERAL_RECORD_CLASS, federalScope } from "../sources/congress/targets.ts";
 import {
   OFFICIAL_STATE_LEGISLATOR_TARGETS,
   OFFICIAL_STATE_ROLL_CALL_TARGETS,
@@ -9,6 +10,7 @@ import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ID, REGISTRATION_TARGE
 
 import { PLURAL_STATES, PLURAL_PARSER_VERSION, PLURAL_SOURCE_ID } from "../sources/plural/targets.ts";
 import { GOOGLE_CIVIC_SOURCE_ID, GOOGLE_CIVIC_SCOPE, GOOGLE_CIVIC_PARSER_VERSION } from "../sources/google-civic/targets.ts";
+import { OPEN_DATA_SOURCES, OPEN_DATA_PARSER, OPEN_DATA_CLOCKS, SOCRATA_CATALOG, ECHO_EXPORT } from "../sources/open-data/model.ts";
 
 const HOUR = 60 * 60 * 1_000;
 const DAY = 24 * HOUR;
@@ -455,16 +457,16 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     id: "dotgov",
     sourceId: "cisa-dotgov-registry",
     recordClass: "DOTGOV_REFERENCE",
-    scope: "US:current-full:election-domains",
+    scope: "US:current-full:domains",
     acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/fetch-dotgov.mts", "--promote"], requestedUrl: "https://api.github.com/repos/cisagov/dotgov-data/commits?path=current-full.csv&per_page=1" },
-    parserNormalizerVersion: "cisa-dotgov/2",
+    parserNormalizerVersion: "cisa-dotgov/3",
     cadence: { description: "monthly", defaultEveryMs: 30 * DAY },
     retry: { afterMs: 6 * HOUR, description: "six hours after a failed attempt" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "cisa-dotgov-registry" },
     validationContract: CHECKS,
     canonicalProductionStore: STORE,
-    readerProjection: null,
-    lkgBehavior: "The current operational pointer remains on the last GOOD complete CISA registry projection after refusal.",
+    readerProjection: { id: "government-domains", consumers: ["government listings", "government detail", "Ask"] },
+    lkgBehavior: "The current government-domain pointer remains on the last GOOD complete CISA registry projection after refusal.",
     autoPromotable: true,
     classification: "OPERATIONAL_REFERENCE_DATA",
     bootstrapFixturePaths: [],
@@ -586,6 +588,30 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     autoPromotable: true, fanOut: true, classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: ["tests/fixtures/google-civic/elections.json", "tests/fixtures/google-civic/az-voterinfo.json", "tests/fixtures/google-civic/mi-voterinfo.json", "tests/fixtures/google-civic/va-voterinfo.json"],
   },
+  ...OPEN_DATA_SOURCES.map((sourceId): RoutineSourceContract => ({
+    id: sourceId, sourceId, recordClass: "CURATED_READER_RECORD", scope: `${sourceId}:national`,
+    acquisitionFailureDomain: `routine-source:${sourceId}`,
+    acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/open-data-refresh.mts", "--promote", `--source=${sourceId}`],
+      requestedUrl: sourceId === "socrata-discovery" ? SOCRATA_CATALOG : ECHO_EXPORT },
+    parserNormalizerVersion: OPEN_DATA_PARSER,
+    cadence: { description: sourceId === "socrata-discovery" ? "Daily Discovery catalog refresh; each dataset retains its publisher's own update dates and frequency" : "Weekly EPA ECHO Exporter publication", defaultEveryMs: OPEN_DATA_CLOCKS[sourceId] },
+    retry: { afterMs: HOUR, description: "Retry failed source acquisition in one hour, honoring provider Retry-After" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId }, validationContract: CHECKS, canonicalProductionStore: STORE,
+    readerProjection: { id: sourceId, consumers: ["government cards", "place cards", "Ask", "blanks loop", "Admin"] },
+    lkgBehavior: "Each domain, division and ZIP retains its last verified facts after a failed read. Unjoined rows are retained and counted. An unchanged source confirms a successful check.",
+    autoPromotable: true, classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: [],
+  })),
+  ...FEDERAL_SOURCE_IDS.map((id): RoutineSourceContract => ({
+    id, sourceId: id, recordClass: FEDERAL_RECORD_CLASS, scope: federalScope(id), fanOut: true,
+    acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/src-cg-refresh.mts", "--promote", `--source=${id}`], requestedUrl: FEDERAL_SOURCES[id].url },
+    parserNormalizerVersion: FEDERAL_PARSER_VERSION,
+    cadence: { description: FEDERAL_SOURCES[id].clock, defaultEveryMs: FEDERAL_SOURCES[id].everyMs },
+    retry: { afterMs: HOUR, description: "Retry source outages after an hour, honoring a longer provider Retry-After." },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: id }, validationContract: CHECKS, canonicalProductionStore: STORE,
+    readerProjection: { id: `src-cg-${id}`, consumers: ["member cards", "Make your voice heard", "Ask", "Admin"] },
+    lkgBehavior: "Failed pages retain the last GOOD member, bill and national rule partitions. Every unmatched native row is kept and counted. An unchanged provider check succeeds.",
+    autoPromotable: true, classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: [],
+  })),
 ] as const;
 
 export function cadenceMsAt(contract: Pick<RoutineSourceContract, "cadence">, nowMs: number): number {

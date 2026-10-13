@@ -18,6 +18,7 @@ import {
   checksumViolations,
   CORRECTION_IS_A_NEW_MIGRATION,
   evaluateMigrationImmutability,
+  RETRACTED_MIGRATIONS,
   JOURNAL_PATH,
   MIGRATION_SQL_PATH,
   parseNameStatus,
@@ -520,4 +521,63 @@ test("an unreachable base does NOT refuse a docs-only change — a second readin
   assert.equal(status, 0, `a docs-only change must not go red on a git hiccup:\n${out}`);
   assert.match(out, /SECOND reading rather than a lowered bar/);
   assert.match(out, /no migration changed in any direction/);
+});
+
+/* ---- retracted, never-applied migrations (PB-01) ---------------------- */
+
+const PB_RETIRE = { idx: 35, when: 1_790_889_600_001, tag: "0035_pb01_retire_playbooks" };
+const PB_SEED = { idx: 36, when: 1_790_889_600_002, tag: "0036_pb01_role_playbooks" };
+const withRetracted: JournalEntry[] = [...established, PB_RETIRE, PB_SEED];
+const del = (tag: string): ChangedEntry => ({ status: "deleted", path: `lib/db/migrations/${tag}.sql`, from: null, raw: `D\tlib/db/migrations/${tag}.sql` });
+
+function retractionVerdict(head: JournalEntry[], onDisk: string[], changes: ChangedEntry[], base: JournalEntry[] = withRetracted) {
+  return evaluateMigrationImmutability({ changes, baseDescription: "a fixture merge base", baseJournal: base, headJournal: head, sqlTagsOnDisk: onDisk });
+}
+
+test("the two retracted PB-01 migrations are on the list with their reason, and nothing else is", () => {
+  assert.deepEqual(RETRACTED_MIGRATIONS.map((r) => [r.idx, r.tag, r.when]), [[35, PB_RETIRE.tag, PB_RETIRE.when], [36, PB_SEED.tag, PB_SEED.when]]);
+  for (const row of RETRACTED_MIGRATIONS) {
+    assert.match(row.why, /never applied/i);
+    assert.match(row.why, /ends at 0034 as of 2026-10-13/);
+    assert.match(row.why, /cp_field_manual_entries/);
+  }
+});
+
+test("deleting exactly the two retracted files and dropping exactly their journal entries passes", () => {
+  const verdict = retractionVerdict(established, ["0000_alpha", "0001_beta"], [del(PB_RETIRE.tag), del(PB_SEED.tag)]);
+  assert.equal(verdict.verdict, "pass", verdict.failures.join("\n"));
+  assert.ok(verdict.checked.some((line) => line.includes(PB_RETIRE.tag) && /retracted/.test(line)));
+});
+
+test("a retracted slot may be reused by the next migration", () => {
+  const next: JournalEntry = { idx: 35, when: 1_790_900_000_000, tag: "0035_something_new" };
+  const verdict = retractionVerdict([...established, next], ["0000_alpha", "0001_beta", "0035_something_new"], [del(PB_RETIRE.tag), del(PB_SEED.tag)]);
+  assert.equal(verdict.verdict, "pass", verdict.failures.join("\n"));
+});
+
+test("the retraction excuses nothing else: another established migration is still refused", () => {
+  const verdict = retractionVerdict([established[0], PB_RETIRE, PB_SEED], ["0000_alpha", PB_RETIRE.tag, PB_SEED.tag], [del("0001_beta")]);
+  assert.deepEqual(verdict.violations.map((v) => v.rule).sort(), ["journal-entry-dropped", "migration-deleted"]);
+  assert.ok(verdict.violations.every((v) => v.tag === "0001_beta"));
+});
+
+test("a retracted file that is modified or renamed instead of deleted is still refused", () => {
+  const modified: ChangedEntry = { status: "modified", path: `lib/db/migrations/${PB_SEED.tag}.sql`, from: null, raw: "M" };
+  const renamed: ChangedEntry = { status: "renamed", path: "lib/db/migrations/0036_renamed.sql", from: `lib/db/migrations/${PB_SEED.tag}.sql`, raw: "R100" };
+  assert.deepEqual(retractionVerdict(withRetracted, ["0000_alpha", "0001_beta", PB_RETIRE.tag, PB_SEED.tag], [modified]).violations.map((v) => v.rule), ["migration-modified"]);
+  assert.ok(retractionVerdict(withRetracted, ["0000_alpha", "0001_beta", PB_RETIRE.tag, "0036_renamed"], [renamed]).violations.some((v) => v.rule === "migration-renamed"));
+});
+
+test("a retracted tag with a different `when` is not the retracted migration", () => {
+  const impostor = { ...PB_SEED, when: PB_SEED.when + 5 };
+  const verdict = retractionVerdict(established, ["0000_alpha", "0001_beta"], [], [...established, PB_RETIRE, impostor]);
+  assert.deepEqual(verdict.violations.map((v) => v.rule), ["journal-entry-dropped"]);
+  assert.equal(verdict.violations[0].tag, PB_SEED.tag);
+});
+
+test("if a database reports applying a retracted migration, the retraction is refused", () => {
+  const violations = checksumViolations(established, [{ when: PB_SEED.when, hash: createHash("sha256").update("anything").digest("hex") }], () => null);
+  assert.deepEqual(violations.map((v) => v.rule), ["retracted-migration-applied"]);
+  assert.match(violations[0].what, /premise is false/);
+  assert.deepEqual(checksumViolations(established, [], () => null), [], "an unapplied retracted migration is fine");
 });

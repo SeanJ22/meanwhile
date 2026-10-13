@@ -1,3 +1,4 @@
+import { DOTGOV_SCOPE, DOTGOV_PARSER_VERSION, dotGovSnapshotIssues, type DotGovSnapshot } from "./dotgov.ts";
 import { mergeStatePeople } from "../state-rollcalls/legislators.ts";
 import { createHash } from "node:crypto";
 import { isMorrisGeneralCandidatesDocument, isMorrisSchoolCandidatesDocument } from "./morris-filing-documents.ts";
@@ -1501,38 +1502,32 @@ export function njMorrisFilingCandidate(input: {
   };
 }
 
-type DotGovCandidateSnapshot = {
-  readonly source: { readonly sha: string; readonly url: string; readonly readAt: string };
-  readonly counts: { readonly domains: number; readonly electionDomains: number };
-  readonly electionDomains: readonly { readonly domain: string; readonly type: string }[];
-};
-
 export function dotGovCandidate(input: {
-  readonly snapshot: DotGovCandidateSnapshot;
+  readonly snapshot: DotGovSnapshot;
   readonly rawText: string;
   readonly finalUrl: string;
   readonly retrievedAt: string;
 }): RoutineCandidate {
-  const rows = input.snapshot.electionDomains;
+  const rows = input.snapshot.domains;
   const duplicates = rows.length - new Set(rows.map((row) => row.domain)).size;
   const violations = [
     ...(duplicates ? [`${duplicates} duplicate domain identifiers.`] : []),
-    ...(rows.some((row) => !/\.gov$/i.test(row.domain) || !/election/i.test(row.type)) ? ["An election subset row is not a .gov domain carrying CISA's election type."] : []),
+    ...dotGovSnapshotIssues(input.snapshot),
   ];
   return {
-    id: candidateId("cisa-dotgov-registry", "US:current-full:election-domains", sha256(input.rawText), input.retrievedAt),
+    id: candidateId("cisa-dotgov-registry", DOTGOV_SCOPE, sha256(input.rawText), input.retrievedAt),
     sourceId: "cisa-dotgov-registry",
     recordClass: "DOTGOV_REFERENCE",
-    scope: "US:current-full:election-domains",
-    sourceProjectionEvidence: sourceProjectionEvidence("cisa-dotgov-registry", "DOTGOV_REFERENCE", "US:current-full:election-domains"),
+    scope: DOTGOV_SCOPE,
+    sourceProjectionEvidence: sourceProjectionEvidence("cisa-dotgov-registry", "DOTGOV_REFERENCE", DOTGOV_SCOPE),
     retrieval: { succeeded: input.rawText.length > 0, requestedUrl: "https://api.github.com/repos/cisagov/dotgov-data/commits?path=current-full.csv&per_page=1", finalUrl: input.finalUrl, httpStatus: input.rawText.length > 0 ? 200 : null, retrievedAt: input.retrievedAt, rawHash: input.rawText.length > 0 ? sha256(input.rawText) : null },
-    normalization: { succeeded: true, parserVersion: "cisa-dotgov/2", schemaVersion: `current-full.csv:${input.snapshot.source.sha}`, normalizedHash: normalizedHash(input.snapshot), normalizedPayloadHash: normalizedHash(input.snapshot), inputRecords: input.snapshot.counts.domains, outputRecords: rows.length, droppedRecords: input.snapshot.counts.domains - rows.length, missingRequiredFields: rows.some((row) => !row.domain || !row.type) ? ["domain/type"] : [] },
+    normalization: { succeeded: true, parserVersion: DOTGOV_PARSER_VERSION, schemaVersion: `current-full.csv:${input.snapshot.source.sha}`, normalizedHash: normalizedHash(input.snapshot), normalizedPayloadHash: normalizedHash(input.snapshot), inputRecords: input.snapshot.counts.domains, outputRecords: rows.length, droppedRecords: input.snapshot.counts.domains - rows.length, missingRequiredFields: rows.some((row) => !row.domain || !row.type) ? ["domain/type"] : [] },
     identities: rows.map((row) => ({ subjectId: row.domain, jurisdiction: "US", identifiers: { domain: row.domain, source_sha: input.snapshot.source.sha }, matchBasis: "OFFICIAL_ID" as const, ambiguous: false })),
     temporal: { version: input.snapshot.source.sha, expectedVersion: input.snapshot.source.sha, sourceThrough: input.retrievedAt, staleAtRetrieval: false },
-    semantics: { factKind: "CISA registered .gov domain operational reference; never a government denominator", violations },
-    horizon: { kind: "BOUNDED", query: "the election-typed subset of the SHA-pinned CISA current-full.csv; the full-file disposition is carried by normalization counts", returnedRecords: rows.length, declaredTotal: rows.length, paginationComplete: true, claimsComplete: true },
+    semantics: { factKind: "CISA registered .gov domain and registrant contact reference; never a government denominator", violations },
+    horizon: { kind: "BOUNDED", query: "every domain and registrant in the SHA-pinned CISA current-full.csv", returnedRecords: rows.length, declaredTotal: rows.length, paginationComplete: true, claimsComplete: true },
     absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
-    dependentChecks: [{ consumer: "registered dotgov discovery operation", passed: input.snapshot.counts.domains >= 15_000 && rows.length >= 500, detail: `${input.snapshot.counts.domains} total domains and ${rows.length} election-typed domains.` }],
+    dependentChecks: [{ consumer: "government domain Reader and registered dotgov discovery operation", passed: input.snapshot.counts.domains >= 15_000 && input.snapshot.counts.electionDomains >= 500, detail: `${input.snapshot.counts.domains} total domains and ${input.snapshot.counts.electionDomains} election-typed domains retained in the full registry.` }],
     normalizedPayload: input.snapshot,
     readModel: input.snapshot,
   };

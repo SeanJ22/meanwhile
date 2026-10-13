@@ -198,21 +198,27 @@ function njCandidate(version: string, changed: boolean): RoutineCandidate {
 function dotGovRows(changed: boolean) {
   const initial = Array.from({ length: 500 }, (_, index) => ({
     domain: `election-${String(index).padStart(3, "0")}.gov`,
-    type: "County - Election",
+    type: "County - Election", organization: `Example Election Authority ${index}`, suborganization: null, city: null, state: null,
   }));
   if (!changed) return initial;
   return [
     { ...initial[0]!, type: "State or territory - Election" },
     ...initial.slice(2),
-    { domain: "election-new.gov", type: "County - Election" },
+    { domain: "election-new.gov", type: "County - Election", organization: "New Authority", suborganization: null, city: null, state: null },
   ];
 }
 
 function dotGov(version: string, changed: boolean, sha?: string): RoutineCandidate {
+  const domains = [...dotGovRows(changed), ...Array.from({ length: 14_500 }, (_, index) => ({
+    domain: `government-${String(index).padStart(5, "0")}.gov`, type: "City", organization: `Example City ${index}`,
+    suborganization: null, city: null, state: null,
+  }))];
+  const byType: Record<string, number> = {};
+  for (const row of domains) byType[row.type] = (byType[row.type] ?? 0) + 1;
   const snapshot: DotGovSnapshot = {
     source: { sha: sha ?? (changed ? "b".repeat(40) : "a".repeat(40)), url: "https://github.com/cisagov/dotgov-data/blob/example/current-full.csv", readAt: version },
-    counts: { domains: 15_000, electionDomains: 500 },
-    electionDomains: dotGovRows(changed),
+    counts: { domains: domains.length, electionDomains: 500, byType }, domains,
+    boundary: "The CISA registry enumerates domains, never governments.",
   };
   return dotGovCandidate({
     snapshot,

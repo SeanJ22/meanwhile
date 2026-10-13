@@ -8,6 +8,9 @@ import { resolveZip } from "@/lib/geo/zcta";
 import { divisionsAt } from "@/lib/registry/server";
 import { Logo } from "@/components/brand/logo";
 import { titleFor } from "@/lib/brand";
+import { stateOfficesForStates } from "@/lib/reference/state-offices";
+import { StateOfficeContacts } from "@/components/state-office-contacts";
+import { ocdStateCode } from "@/lib/ocd/state-of";
 
 export const runtime = "nodejs";
 
@@ -32,7 +35,7 @@ export default async function AboutAreaPage({
         resolution.centroid.lng,
       );
       const match = divisions
-        .map((d) => d.ocdId.match(/state:([a-z]{2})/)?.[1])
+        .map((d) => ocdStateCode(d.ocdId))
         .find(Boolean);
       state = match ? match.toUpperCase() : null;
     }
@@ -65,6 +68,7 @@ export default async function AboutAreaPage({
 
       {/* The card markup lives inside ShuffledFacts: a render prop would be a function crossing the server/client boundary. */}
       {facts && <ShuffledFacts facts={facts.facts} />}
+      <StateOfficeContacts offices={state ? stateOfficesForStates([state]) : []} />
 
       {facts && (
         <p className="mt-6 text-[0.8125rem] leading-relaxed text-paper-dim">

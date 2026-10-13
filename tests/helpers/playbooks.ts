@@ -1,17 +1,16 @@
 export type { TestContext, TestOptions } from "node:test";
 export { after, before, afterEach, beforeEach, describe } from "node:test";
-import { readFileSync } from "node:fs";
 import nodeTest from "node:test";
 import { createHash } from "node:crypto";
 import { createMemoryRepositories as emptyRepositories } from "../../lib/control-plane/repository/memory.ts";
 import { rolePlaybook } from "../../lib/control-plane/playbooks.ts";
+import { PLAYBOOK_SEED_ROWS } from "../../lib/control-plane/playbook-seed.ts";
 import type { FieldManualEntry, FieldManualRole } from "../../lib/control-plane/field-manual.ts";
 import { withAskSettings } from "../../lib/ask/runtime-settings.ts";
 import { ASK_PLAYBOOK_ROLES, type ReaderSettingsSnapshot } from "../../lib/civic-data/reader-settings-publication.ts";
 
-/** The actual one-time data seed is the fixture; runtime code never loads this file. */
-const sql = readFileSync(new URL("../../lib/db/migrations/0036_pb01_role_playbooks.sql", import.meta.url), "utf8");
-export const playbookRows = [...sql.matchAll(/jsonb_set\(\$pb01\$(.*?)\$pb01\$::jsonb/g)].map(match => JSON.parse(match[1]) as FieldManualEntry);
+/** The one-time control-plane seed is the fixture; runtime code never loads it from here. */
+export const playbookRows: readonly FieldManualEntry[] = PLAYBOOK_SEED_ROWS;
 export const fixturePlaybooks = (roles: readonly FieldManualRole[]) => playbookRows.filter(row => roles.includes(row.role));
 export const fixtureRolePlaybook = async (role: "SCOUT" | "DETECTIVE") => rolePlaybook(playbookRows, role);
 export function createMemoryRepositories() {

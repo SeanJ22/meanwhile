@@ -24,6 +24,7 @@ import type {
 import { coveringPlaces, entryInSlice, queryState, TRANSFERABLE_METHOD_KINDS, type FieldManualEntry, type FieldManualQuery } from "../field-manual.ts";
 import { createFixMapRepository } from "../../method/fix-map.ts";
 import { copyFieldManualDocument, type SingleDocumentManual } from "../field-manual-copy.ts";
+import { ensureRolePlaybooks, retireInstructionsSql } from "../playbook-seed.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
 import { appendActionReceiptWithHistoryAtomic, readActionHistoryPage } from "./action-history-atomic.ts";
 import type { AgentJobRecord } from "../gateway/agent-job.ts";
@@ -1012,6 +1013,9 @@ export function pgFieldManualRepository(sql: Sql, options: PgRepositoryBounds = 
   return {
     ...base,
     readMany: base.readMany!,
+    async retireInstructions() {
+      await run("retireInstructions", "DOCUMENT", retireInstructionsSql(), []);
+    },
     async slice(query) {
       if (copies !== null) {
         const rows = await copies.aggregateList("cp_field_manual_entries", base.listChangedSince!,
@@ -1332,6 +1336,16 @@ export async function createPgRepositories(
     if (copied !== null) {
       console.log(`  field manual: ${copied.entries} lessons copied into one row each (${copied.retagged.fromRecord + copied.retagged.fromSameAddress} given ` +
         `their place, ${copied.reach.NOWHERE} name no place yet; report ${copied.copiedAt})`);
+    }
+  }
+  if (!options.skipBootstrap) {
+    // PB-01: the role instructions are control-plane rows, so they are seeded here and never by a reader-database migration.
+    const setup = await ensureRolePlaybooks(repositories, nowIso).catch((error: unknown) => {
+      console.error(`  role instructions: not seeded this start; the next start tries again (${error instanceof Error ? error.message : String(error)})`);
+      return null;
+    });
+    if (setup !== null && (setup.created > 0 || setup.retired)) {
+      console.log(`  role instructions: ${setup.created} created, ${setup.present} already held${setup.retired ? ", old instruction rows retired" : ""}`);
     }
   }
   return repositories;

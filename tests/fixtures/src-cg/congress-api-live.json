@@ -1,0 +1,33 @@
+{
+  "members": [
+    {
+      "bioguideId": "W000832",
+      "depiction": {
+        "attribution": "Image courtesy of the Member",
+        "imageUrl": "https://www.congress.gov/img/member/6a986b632a68122e10181e6b_200.jpg"
+      },
+      "district": 14,
+      "name": "Wahab, Aisha",
+      "partyName": "Democratic",
+      "state": "California",
+      "terms": {
+        "item": [
+          {
+            "chamber": "House of Representatives",
+            "startYear": 2026
+          }
+        ]
+      },
+      "updateDate": "2026-10-11T07:40:25Z",
+      "url": "https://api.congress.gov/v3/member/W000832?format=json"
+    }
+  ],
+  "pagination": {
+    "count": 539,
+    "next": "https://api.congress.gov/v3/member?currentMember=true&offset=1&limit=1&format=json"
+  },
+  "request": {
+    "contentType": "application/json",
+    "format": "json"
+  }
+}

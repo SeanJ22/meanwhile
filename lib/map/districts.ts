@@ -158,7 +158,16 @@ export const NATIONAL_BOUNDARIES_SOURCE = "national-boundaries";
 export function preserveDistrictStyle(previous: StyleSpecification | undefined, next: StyleSpecification): StyleSpecification {
   const source = previous?.sources[NATIONAL_BOUNDARIES_SOURCE];
   if (!source) return next;
-  const boundaries = previous.layers.filter(layer => layer.id.startsWith("district-"));
+  // Rebuild, never copy: paint is baked from theme tokens, so a copied layer
+  // keeps the previous theme's halo and accent.
+  const types = new Set<DistrictType>();
+  for (const layer of previous.layers) {
+    const m = /^district-(.+)-(?:fill|line|label)$/.exec(layer.id);
+    if (m && m[1] in DISTRICT_LAYERS) types.add(m[1] as DistrictType);
+  }
+  const boundaries = [...types]
+    .flatMap(districtStyleLayers)
+    .filter(layer => layer.type !== "symbol" || next.glyphs);
   const layers = next.layers.filter(layer => !layer.id.startsWith("district-"));
   const labels = layers.findIndex(layer => layer.type === "symbol");
   layers.splice(labels < 0 ? layers.length : labels, 0, ...boundaries);
@@ -341,7 +350,8 @@ function districtStyleLayers(type: DistrictType): LayerSpecification[] {
       paint: {
         "text-color": accent,
         "text-halo-color": halo,
-        "text-halo-width": 1.2,
+        "text-halo-width": 1.5,
+        "text-halo-blur": 0.5,
       },
     }];
 }

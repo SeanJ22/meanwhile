@@ -184,7 +184,8 @@ export type PromotedAuthorityFamily =
   | "federal-key-votes"
   | "officeholder-statements"
   | "prl-archives"
-  | "executive-actions";
+  | "executive-actions"
+  | "government-domains";
 
 export const PROMOTED_AUTHORITY_FAMILIES: readonly PromotedAuthorityFamily[] = [
   "ballot-contests",
@@ -205,6 +206,7 @@ export const PROMOTED_AUTHORITY_FAMILIES: readonly PromotedAuthorityFamily[] = [
   "officeholder-statements",
   "prl-archives",
   "executive-actions",
+  "government-domains",
 ];
 
 /** A proven-pointer family's artifact value: every pointer the family names, each proven or answered absent. */

@@ -1,4 +1,6 @@
 import { zipDivisionEntry } from "../geo/zip-division-index.ts";
+import { zipNeedsAddress } from "../geo/postal.ts";
+import { isTownOrCountyDivision } from "../geo/postal-core.ts";
 import { districtFamilyKey } from "../census-geography/division-id.ts";
 import { currentRepresentationSelection, selectGeographyVersion, type GeographySelection } from "../census-geography/selection.ts";
 import type { GeographyType } from "../census-geography/contract.ts";
@@ -21,6 +23,9 @@ export async function divisionIdsForZipArea(
   pointPlans?: PointPlans,
 ): Promise<string[]> {
   const entry = zip && /^\d{5}$/.test(zip) ? await zipDivisionEntry(zip, selection) : null;
+  if (zip && zipNeedsAddress(zip)) {
+    return [...new Set([...pointDivisionIds, ...(entry?.ids ?? [])].filter(isTownOrCountyDivision))];
+  }
   const areaIds = new Set(entry?.ids ?? []);
   const qualified = new Set(entry?.qualifiedDistricts ?? []);
   const out = new Set([...pointDivisionIds, ...areaIds]);

@@ -47,7 +47,7 @@ test("a pass for elections only never reads the officials roster", async () => {
   await collectNationalPlaceSources({ divisions: [{ id: "ocd-division/country:us/state:mo", label: "Missouri", divisionType: "state", geoid: "29", sourceUrl: "https://census.gov" }],
     now, families: { officials: false, elections: true }, read: async url => { read.push(url); throw new Error("unavailable"); } });
   assert.ok(read.every(url => !/legislators|plural|\.csv/i.test(url)), read.join(", "));
-  assert.ok(read.includes("https://www.usa.gov/state-governments"));
+  assert.deepEqual(read, ["https://www.sos.mo.gov/elections/"]);
 });
 
 test("a second pass on a place with every blank filled reads nothing and says which families it skipped", async () => {

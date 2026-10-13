@@ -12,7 +12,7 @@ import {hasUntriedAdapter} from './detective.ts';
 import {readFieldManual,writeFieldManual,newFieldManualEntry,type FieldManualQuery,type FieldManualRead} from '../field-manual.ts';
 import { MODELS, MODEL_TIERS } from '../../models.ts';
 import { recordCost } from '../repository/coordinator.ts';
-import { meteredCostFields, priceMeteredUsage, readMeteredUsage } from '../model-cost.ts';
+import { listPriceUsdForUsage, meteredCostFields, priceMeteredUsage, readMeteredUsage } from '../model-cost.ts';
 import type { ModelTransport } from '../scheduler/scout-executor.ts';
 import type { ControlPlaneRepositories } from '../repository/types.ts';
 import type { WorkerEvidence } from './types.ts';
@@ -194,14 +194,15 @@ export async function workAdapterQueue(input:{repos:ControlPlaneRepositories;res
         // The same existing transport admits every request, including each escalation, against live budgets.
         let response:Awaited<ReturnType<ModelTransport>>|undefined,transportError:unknown;
         try {response=await transport({model,max_tokens:8000,
-          system:[{type:'text',text:workerSystemPrompt("ENGINEER", (await readRolePlaybook(input.repos, "ENGINEER")).text)+
-            (scope?'\nThis request repairs an existing adapter. Its supplied repair scope governs allowed paths; playbook instructions about new-adapter paths apply only to new adapters. The composite contract is read-only.':''),cache_control:{type:"ephemeral"}}],
-          messages,tools:[],tool_choice:{type:'auto'}});} catch(error) {
+          system:[{type:'text',text:workerSystemPrompt("ENGINEER", (await readRolePlaybook(input.repos, "ENGINEER")).text),cache_control:{type:"ephemeral",ttl:"1h"}}],
+          batchContext:{job:"BLANK"},
+          messages:scope?[...messages,{role:"user",content:"This request repairs an existing adapter. Its supplied repair scope governs allowed paths; playbook instructions about new-adapter paths apply only to new adapters. The composite contract is read-only."}]:messages,tools:[],tool_choice:{type:'auto'}});} catch(error) {
           if(error instanceof FleetPreSendRefusal || error instanceof SendBudgetRefusal)throw error;
           transportError=error;
         }
-        const usage=readMeteredUsage(response?.usage??{}),usd=priceMeteredUsage(model,usage,'5m').usd;
-        const metered=meteredCostFields(usage);
+        const usage=readMeteredUsage(response?.usage??{},response?.batch===true),usd=priceMeteredUsage(model,usage,'1h').usd;
+        const metered={...meteredCostFields(usage),listPriceUsd:listPriceUsdForUsage(model,usage),modelRequestCount:1,
+          batchRequestCount:response?response.batch===true?1:0:null,batchEligibleRequestCount:response?.batchEligible===undefined?null:response.batchEligible?1:0};
         const inputTokens=usage.uncachedInputTokens===null?null:usage.uncachedInputTokens+(usage.cacheReadInputTokens??0)+(usage.cacheCreationInputTokens??0);
         await recordCost(input.repos,{attemptId:`engineer:${result.attemptId}:${input.now}:${tier}`,workItemId:result.workItemId,
           obligationId:result.obligationId,routeTaskId:null,routeId:platform,source:'api.anthropic.com',jurisdiction:result.subjectId,

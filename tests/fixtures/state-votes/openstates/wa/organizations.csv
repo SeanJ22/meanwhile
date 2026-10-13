@@ -1,0 +1,2 @@
+created_at,updated_at,extras,id,name,parent_id,jurisdiction_id,classification,sources,links,other_names
+2017-07-18 11:09:11.055057+00:00,2020-04-29 05:22:37.269135+00:00,{},ocd-organization/ddae63d3-9f3e-4c46-a00f-703fe21b54d1,Senate,ocd-organization/a7819d04-7b5e-4d2e-b47f-5dca9f09fc81,ocd-jurisdiction/country:us/state:wa/government,upper,[],[],[]

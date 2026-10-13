@@ -154,6 +154,7 @@ export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "
       // Refuse to spend if the worker cannot first retain its running attempt.
       await input.saveAttempt(attempt);
       const result = await runMeasureTranslation({ ...input, primary, captures: pages,
+        batchPriority: { now: input.now, electionAt: [ballot.election?.date ?? ""] },
         subject: { contestId: contest.id, title: contest.title, ocdId: contest.ocdId,
           state: jurisdictionFromOcdId(contest.ocdId)!.usps, prior: measure } });
       const finished: TranslationAttempt = { ...attempt, status: result.status, usage: result.usage,

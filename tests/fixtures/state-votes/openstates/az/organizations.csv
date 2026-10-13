@@ -1,0 +1,2 @@
+created_at,updated_at,extras,id,name,parent_id,jurisdiction_id,classification,sources,links,other_names
+2017-06-27 17:59:17.600208+00:00,2020-04-29 05:03:06.687866+00:00,{},ocd-organization/c3d4c85b-888e-4188-b903-a251b957c162,Senate,ocd-organization/920fc27e-e574-4700-8ada-221fdf683268,ocd-jurisdiction/country:us/state:az/government,upper,[],[],[]

@@ -72,7 +72,8 @@ test("a verified incumbent renders from the person bridge without a funding hold
 test("native Arizona vote positions retain source labels and never read another person's votes", async () => {
   const member = "plural:az:11111111-1111-1111-1111-111111111111";
   const result = await readNativeMemberVotes(member, { holder: async () => { throw new Error("no roster lookup needed"); },
-    nh: async () => { throw new Error("unrelated authority"); }, az: async person => {
+    nh: async () => { throw new Error("unrelated authority"); }, official: async () => null, legiscan: async () => [], plural: async (state, person) => {
+      assert.equal(state, "AZ");
       assert.equal(person, "ocd-person/11111111-1111-1111-1111-111111111111");
       return [{ id: "vote:one", billId: "bill:one", billNumber: "HB 1", billTitle: "Water", session: "2026", organizationId: "org:one",
         chamber: "lower", date: "2026-09-01", motion: "Third reading", result: "unknown", counts: [], positions: [], unresolvedPositions: 1,

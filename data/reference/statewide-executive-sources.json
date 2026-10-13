@@ -1,0 +1,15 @@
+{
+  "note": "National directories provide leads. Holder, office, selection method and contact facts publish from saved official state pages. Each directory is read nationally; its omissions establish no absent office.",
+  "sources": [
+    { "id": "nga", "publisher": "National Governors Association", "url": "https://www.nga.org/governors/", "officeTitles": ["Governor"], "format": "html" },
+    { "id": "nlga", "publisher": "National Lieutenant Governors Association", "url": "https://nlga.us/lt-governors/", "officeTitles": ["Lieutenant Governor"], "format": "html" },
+    { "id": "naag", "publisher": "National Association of Attorneys General", "url": "https://www.naag.org/attorneys-general/whos-my-ag/", "officeTitles": ["Attorney General"], "format": "html" },
+    { "id": "nass", "publisher": "National Association of Secretaries of State", "url": "https://www.nass.org/membership", "officeTitles": ["Secretary of State"], "format": "html" },
+    { "id": "nast", "publisher": "National Association of State Treasurers", "url": "https://nast.org/state-treasurers/", "officeTitles": ["State Treasurer"], "format": "html" },
+    { "id": "nasact", "publisher": "National Association of State Auditors, Comptrollers and Treasurers", "url": "https://www.nasact.org/membership", "officeTitles": ["State Auditor", "State Comptroller", "State Treasurer"], "format": "html" },
+    { "id": "ccsso", "publisher": "Council of Chief State School Officers", "url": "https://ccsso.org/our-members", "officeTitles": ["Superintendent", "Commissioner of Education", "Chief State School Officer"], "format": "html" },
+    { "id": "naic", "publisher": "National Association of Insurance Commissioners", "url": "https://content.naic.org/state-insurance-departments", "officeTitles": ["Insurance Commissioner", "Commissioner of Insurance", "Director of Insurance"], "format": "html" },
+    { "id": "nasda", "publisher": "National Association of State Departments of Agriculture", "url": "https://www.nasda.org/about-nasda/state-agriculture-departments/", "officeTitles": ["Commissioner of Agriculture", "Secretary of Agriculture", "Director of Agriculture"], "format": "html" },
+    { "id": "wikidata", "publisher": "Wikidata (CC0 structured data; image licenses retained separately)", "url": "https://query.wikidata.org/sparql", "officeTitles": [], "format": "wikidata" }
+  ]
+}

@@ -783,10 +783,16 @@ export function civicDataFirewall(tree: CivicDataFirewallTree): readonly CivicDa
   const repositoryWriterPaths = new Set<string>();
   const executableClosureProblems = new Set<string>();
   const dataCommandClosureCache = new Map<string, ExecutableDependencyClosure>();
+  const inspectedDataCommands = new Set<string>();
   const inspectDataCommandClosure = (
     commandPath: string,
     commandKind: "routine" | "manual",
   ): void => {
+    // State contracts vary their arguments, but execute the same saved script.
+    // Its immutable closure needs the same capability checks once per kind.
+    const inspectionKey = `${commandKind}:${commandPath}`;
+    if (inspectedDataCommands.has(inspectionKey)) return;
+    inspectedDataCommands.add(inspectionKey);
     let closure = dataCommandClosureCache.get(commandPath);
     if (closure === undefined) {
       closure = executableDependencyClosure(tree.files, commandPath, expandExecutable);

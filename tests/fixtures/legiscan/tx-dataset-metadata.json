@@ -1,0 +1,18 @@
+{
+  "state_id": 43,
+  "session_id": 2223,
+  "year_start": 2025,
+  "year_end": 2025,
+  "prefile": 0,
+  "sine_die": 1,
+  "prior": 1,
+  "special": 1,
+  "session_tag": "2nd Special Session",
+  "session_title": "2025 2nd Special Session",
+  "session_name": "89th Legislature 2nd Special Session",
+  "dataset_date": "2025-12-14",
+  "dataset_hash": "24b99c05036102b915c9ae7794ad645b",
+  "dataset_size": 2039036,
+  "dataset_size_csv": 187574,
+  "mime_type": "application/zip"
+}

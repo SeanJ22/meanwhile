@@ -215,7 +215,7 @@ test("R9: only scopes whose contract still promotes STATE_ROLL_CALL are read; th
   );
   assert.deepEqual(RETIRED_STATE_ROLL_CALL_SCOPES.map(({ scope }) => scope), ["US-AZ", "US-NH"]);
   assert.equal(ROUTINE_SOURCE_CONTRACTS.some(entry => entry.id === "az-state-rollcalls"), false);
-  assert.equal(ROUTINE_SOURCE_CONTRACTS.find(entry => entry.id === "az-openstates-votes")?.scope, "US-AZ:openstates-votes:v1");
+  assert.equal(ROUTINE_SOURCE_CONTRACTS.find(entry => entry.id === "openstates-votes-az")?.scope, "US-AZ:openstates-votes:v1");
   assert.equal(
     ROUTINE_SOURCE_CONTRACTS.find((entry) => entry.id === "nh-state-rollcalls")?.recordClass,
     "STATE_LEGISLATOR_VOTES",

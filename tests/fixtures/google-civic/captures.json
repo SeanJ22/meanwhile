@@ -1,0 +1,92 @@
+[
+  {
+    "file": "az-voterinfo.json",
+    "capturedAt": "2026-10-12",
+    "requestedUrl": "https://www.googleapis.com/civicinfo/v2/voterinfo",
+    "electionId": "12000",
+    "publicGovernmentAddress": "1700 W Washington St Phoenix AZ 85007",
+    "httpStatus": 200,
+    "sha256": "fea1235ad5ccae448a68bc16ea4bbc1bdbaab2e579f75b3e232f1277ba7c7b20"
+  },
+  {
+    "file": "ca-voterinfo.json",
+    "capturedAt": "2026-10-12",
+    "requestedUrl": "https://www.googleapis.com/civicinfo/v2/voterinfo",
+    "electionId": "12000",
+    "publicGovernmentAddress": "1315 10th St Sacramento CA 95814",
+    "httpStatus": 200,
+    "sha256": "590c0a71218eb386c710103a784507624470233a54229e39eaf2f9e482e720a2"
+  },
+  {
+    "file": "elections.json",
+    "capturedAt": "2026-10-12",
+    "requestedUrl": "https://www.googleapis.com/civicinfo/v2/elections",
+    "electionId": null,
+    "publicGovernmentAddress": null,
+    "httpStatus": 200,
+    "sha256": "0ca056937a0311b1b46fd5833eb584c351875761ee222e0417332d7ffe96926a"
+  },
+  {
+    "file": "mi-voterinfo.json",
+    "capturedAt": "2026-10-12",
+    "requestedUrl": "https://www.googleapis.com/civicinfo/v2/voterinfo",
+    "electionId": "12000",
+    "publicGovernmentAddress": "100 N Capitol Ave Lansing MI 48933",
+    "httpStatus": 200,
+    "sha256": "ba347ed5e0d4a9fdc98fe765eced00713f1f24d1c742d9b9ae5e51012c84d331"
+  },
+  {
+    "file": "nc-voterinfo.json",
+    "capturedAt": "2026-10-12",
+    "requestedUrl": "https://www.googleapis.com/civicinfo/v2/voterinfo",
+    "electionId": "12000",
+    "publicGovernmentAddress": "1 E Edenton St Raleigh NC 27601",
+    "httpStatus": 200,
+    "sha256": "cbadec01551817d4726b3842acec3b97e9a2b2d2f9116673358ef6579fcc51ee"
+  },
+  {
+    "file": "nh-voterinfo.json",
+    "capturedAt": "2026-10-12",
+    "requestedUrl": "https://www.googleapis.com/civicinfo/v2/voterinfo",
+    "electionId": "12000",
+    "publicGovernmentAddress": "107 N Main St Concord NH 03301",
+    "httpStatus": 404,
+    "sha256": "ac9e4d96d16d04b9cf0f3c006379fe9d04d25ec78b2c0431579e46117520d759"
+  },
+  {
+    "file": "nj-voterinfo.json",
+    "capturedAt": "2026-10-12",
+    "requestedUrl": "https://www.googleapis.com/civicinfo/v2/voterinfo",
+    "electionId": "12000",
+    "publicGovernmentAddress": "125 W State St Trenton NJ 08608",
+    "httpStatus": 404,
+    "sha256": "ac9e4d96d16d04b9cf0f3c006379fe9d04d25ec78b2c0431579e46117520d759"
+  },
+  {
+    "file": "ny-voterinfo.json",
+    "capturedAt": "2026-10-12",
+    "requestedUrl": "https://www.googleapis.com/civicinfo/v2/voterinfo",
+    "electionId": "12000",
+    "publicGovernmentAddress": "1 Empire State Plaza Albany NY 12223",
+    "httpStatus": 400,
+    "sha256": "d1647b1096c75334cf3a60191ae5f14332d35526dccab4074f44b142346eb117"
+  },
+  {
+    "file": "tx-voterinfo.json",
+    "capturedAt": "2026-10-12",
+    "requestedUrl": "https://www.googleapis.com/civicinfo/v2/voterinfo",
+    "electionId": "12000",
+    "publicGovernmentAddress": "1100 Congress Ave Austin TX 78701",
+    "httpStatus": 200,
+    "sha256": "95028d1535130379634bb4cdd2087d97ffe3f39933db3437fc2a1f19072bff88"
+  },
+  {
+    "file": "va-voterinfo.json",
+    "capturedAt": "2026-10-12",
+    "requestedUrl": "https://www.googleapis.com/civicinfo/v2/voterinfo",
+    "electionId": "12000",
+    "publicGovernmentAddress": "1000 Bank St Richmond VA 23219",
+    "httpStatus": 200,
+    "sha256": "da588ddbfc5ba30024b502f9059cbdfe879a160f326d21dde98e1b01f9b8c323"
+  }
+]

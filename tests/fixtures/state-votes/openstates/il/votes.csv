@@ -1,0 +1,2 @@
+id,identifier,motion_text,motion_classification,start_date,result,organization_id,bill_id,bill_action_id,jurisdiction,session_identifier
+ocd-vote/019df0d2-e892-49e6-b212-09ef27c05cfd,,Third Reading,[],2026-05-31,pass,ocd-organization/20782ae5-cc22-4470-846b-fd9788ad3db7,ocd-bill/23b57d66-485c-4a74-8848-fae5aeef79bc,,Illinois,104th

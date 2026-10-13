@@ -50,11 +50,6 @@ export function meetingPartitionId(sourceName: string, bodyId: string): string {
   return `meetings:${sourceName}:${encodeURIComponent(bodyId)}`;
 }
 
-/**
- * What a partition id names, read from the id alone: its source, its body and its scope. A reader of a published
- * composition knows every partition in it this way, whatever doors this process has installed. Null for an id that
- * is not a meeting partition's.
- */
 export function meetingPartitionOfId(id: string): { readonly source: string; readonly bodyId: string; readonly scope: string } | null {
   const named = /^meetings:([^:]+):(.+)$/.exec(id);
   if (named === null) return null;
@@ -90,6 +85,7 @@ export function meetingAcquisitionFailureDomain(
       case "diligent": return wiring.config.serviceBase;
       case "clerksboards": return "https://clerksboards.tucsonaz.gov";
       case "boardbook": return "https://meetings.boardbook.org";
+      case "escribe": return wiring.config.portalUrl;
       case "boarddocs": return wiring.config.portalUrl;
       case "civicplus": return wiring.config.agendaCenterUrl ?? wiring.config.icalUrl;
       case "iqm2": return wiring.config.base;
@@ -217,11 +213,6 @@ function buildMeetingPartitions(wirings: readonly BodySourceWiring[], skipped: s
   return partitions;
 }
 
-/**
- * One partition per hand-wired meeting door, and one per derived family. Holds the families alone until the doors
- * are installed (`lib/doors/meeting-doors.ts`), then is replaced in place by `refreshMeetingPartitions()`, so every
- * importer sees the current doors.
- */
 export const MEETING_PARTITION_CONTRACTS: MeetingPartitionContract[] = buildMeetingPartitions([]);
 
 /** A retired partition's last promoted version is held read-only, in its successor's place, until the successor promotes. */

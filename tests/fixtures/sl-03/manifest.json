@@ -1,0 +1,237 @@
+{
+  "capturedOn": "2026-10-12",
+  "note": "Unmodified HTTP response bodies from public publishers. Credentials, request headers and authenticated request query keys are excluded. Counts describe captured source rows, not a claim of complete current reader coverage.",
+  "captures": [
+    {
+      "name": "nass-membership",
+      "requestedUrl": "https://www.nass.org/membership",
+      "finalUrl": "https://www.nass.org/memberships/secretaries-statelieutenant-governors",
+      "contentType": "text/html; charset=utf-8",
+      "retrievedAt": "2026-10-12T22:25:00.581Z",
+      "bytes": 64597,
+      "sha256": "3ae3d405981fb2c5055aefb5f9b0c7ebfe9b0efd24a857bbad202aca5d9ca689",
+      "httpStatus": 200,
+      "file": "nass-membership.html"
+    },
+    {
+      "name": "az-legislators",
+      "requestedUrl": "https://www.azleg.gov/MemberRoster/",
+      "finalUrl": "https://www.azleg.gov/MemberRoster/",
+      "contentType": "text/html; charset=UTF-8",
+      "retrievedAt": "2026-10-12T22:25:00.736Z",
+      "bytes": 156912,
+      "sha256": "eb1d371d5fef95ee0c1d2a9372cad64450a67c267cca1135916eacd0bfd62e69",
+      "httpStatus": 200,
+      "file": "az-legislators.html"
+    },
+    {
+      "name": "me-legislators",
+      "requestedUrl": "https://legislature.maine.gov/senate/senators",
+      "finalUrl": "https://legislature.maine.gov/senate/senators",
+      "contentType": "text/html; charset=UTF-8",
+      "retrievedAt": "2026-10-12T22:24:59.894Z",
+      "bytes": 30293,
+      "sha256": "648875e88fde18f285455dd1a2a309be22f1624b83296d56702f610a9bfef406",
+      "httpStatus": 200,
+      "file": "me-legislators.html"
+    },
+    {
+      "name": "wi-legislators",
+      "requestedUrl": "https://docs.legis.wisconsin.gov/2025/legislators/senate",
+      "finalUrl": "https://docs.legis.wisconsin.gov/2025/legislators/senate",
+      "contentType": "text/html; charset=utf-8",
+      "retrievedAt": "2026-10-12T22:25:00.469Z",
+      "bytes": 95686,
+      "sha256": "b0889c4442f3180c3c67fb6c1852d97f50d8946cabde173e13887417845e132a",
+      "httpStatus": 200,
+      "file": "wi-legislators.html"
+    },
+    {
+      "name": "az-secretary",
+      "requestedUrl": "https://azsos.gov/about/about-secretary",
+      "finalUrl": "https://azsos.gov/about/about-secretary",
+      "contentType": "text/html; charset=UTF-8",
+      "retrievedAt": "2026-10-12T22:26:46.285Z",
+      "bytes": 221126,
+      "sha256": "32ed87f0e6ce6fed33deb0833eec05a63860e0ab776dc770a1fd4239e5fc91f2",
+      "httpStatus": 200,
+      "file": "az-secretary.html"
+    },
+    {
+      "name": "me-secretary",
+      "requestedUrl": "https://www.maine.gov/sos/about-us/about-the-secretary-of-state",
+      "finalUrl": "https://www.maine.gov/sos/about-us/about-the-secretary-of-state",
+      "contentType": "text/html; charset=UTF-8",
+      "retrievedAt": "2026-10-12T22:26:46.715Z",
+      "bytes": 83861,
+      "sha256": "8ebfc218b136a2ee3db474ccdc8669e2cb4544a4074660211f472d72d7d9aea0",
+      "httpStatus": 200,
+      "file": "me-secretary.html"
+    },
+    {
+      "name": "wi-secretary",
+      "requestedUrl": "https://sos.wi.gov",
+      "finalUrl": "https://sos.wi.gov/Pages/Home.aspx",
+      "contentType": "text/html; charset=utf-8",
+      "retrievedAt": "2026-10-12T22:25:52.192Z",
+      "bytes": 72305,
+      "sha256": "40c9163fc4236002686cb65175432d3db1e3762be38744ce9489c1249aaf1582",
+      "httpStatus": 200,
+      "file": "wi-secretary.html"
+    },
+    {
+      "name": "az-senator",
+      "requestedUrl": "https://www.azleg.gov/Senate/Senate-member/?legislature=57&session=130&legislator=2382",
+      "finalUrl": "https://www.azleg.gov/senate-member/?legislature=57&legislator=2382",
+      "contentType": "text/html; charset=UTF-8",
+      "retrievedAt": "2026-10-12T22:31:57.665Z",
+      "bytes": 102481,
+      "sha256": "9db4af4a5b4fa7eaadaa589eb796bd6100092572d19d44ccbe55a4d423c9c17c",
+      "httpStatus": 200,
+      "file": "az-senator.html"
+    },
+    {
+      "name": "me-senator",
+      "requestedUrl": "https://legislature.maine.gov/district31",
+      "finalUrl": "https://legislature.maine.gov/district31",
+      "contentType": "text/html; charset=UTF-8",
+      "retrievedAt": "2026-10-12T22:31:54.676Z",
+      "bytes": 27945,
+      "sha256": "bfd793336654d3f6842dcf927de66a5cb65cd34ab338005f3db06eec4baedf16",
+      "httpStatus": 200,
+      "file": "me-senator.html"
+    },
+    {
+      "name": "wi-senator-details",
+      "requestedUrl": "https://docs.legis.wisconsin.gov/2025/legislators/senate/2805",
+      "finalUrl": "https://docs.legis.wisconsin.gov/2025/legislators/senate/2805",
+      "contentType": "text/html; charset=utf-8",
+      "retrievedAt": "2026-10-12T22:31:55.143Z",
+      "bytes": 130244,
+      "sha256": "b00a7f0280ec422e92c9721ff6da1a80ca0b2ef08dd1278e9f8a7f765657d3af",
+      "httpStatus": 200,
+      "file": "wi-senator-details.html"
+    },
+    {
+      "name": "az-governor-bio",
+      "requestedUrl": "https://azgovernor.gov/governor/meet-governor-katie-hobbs",
+      "finalUrl": "https://azgovernor.gov/governor/meet-governor-katie-hobbs",
+      "contentType": "text/html; charset=utf-8",
+      "retrievedAt": "2026-10-12T22:35:10.192Z",
+      "bytes": 124746,
+      "sha256": "f66cb41e54a2836da9ff0e5b83b5e816d8bb09f15aac32ae005ed3d1fa9f66c2",
+      "httpStatus": 200,
+      "file": "az-governor-bio.html"
+    },
+    {
+      "name": "az-attorney-general",
+      "requestedUrl": "https://www.azag.gov/kris-mayes",
+      "finalUrl": "https://www.azag.gov/kris-mayes",
+      "contentType": "text/html; charset=UTF-8",
+      "retrievedAt": "2026-10-12T22:34:06.375Z",
+      "bytes": 60839,
+      "sha256": "8bb5440712b1ae1f82a8abc949c0b884a5d4de07480cdca19a4b8410a61cc71b",
+      "httpStatus": 200,
+      "file": "az-attorney-general.html"
+    },
+    {
+      "name": "congress-az-members",
+      "requestedUrl": "https://api.congress.gov/v3/member/AZ?format=json&currentMember=true&limit=250",
+      "finalUrl": "https://api.congress.gov/v3/member/AZ?format=json&currentMember=true&limit=250",
+      "contentType": "application/json",
+      "retrievedAt": "2026-10-12T22:26:11.041Z",
+      "bytes": 8606,
+      "sha256": "64e7bfb93ac6aebe2ab274e2ce864e1c4536e0ba67678f92bd3de0dab7d89fa6",
+      "httpStatus": 200,
+      "file": "congress-az-members.json"
+    },
+    {
+      "name": "congress-kelly",
+      "requestedUrl": "https://api.congress.gov/v3/member/K000377?format=json&currentMember=true&limit=250",
+      "finalUrl": "https://api.congress.gov/v3/member/K000377?format=json&currentMember=true&limit=250",
+      "contentType": "application/json",
+      "retrievedAt": "2026-10-12T22:26:11.382Z",
+      "bytes": 3089,
+      "sha256": "482d4325e2d762d73fe9c197ffd54fa2f928c14d88ef4ab56e4804813a2ecb8c",
+      "httpStatus": 200,
+      "file": "congress-kelly.json"
+    },
+    {
+      "name": "az-secretary-portrait",
+      "requestedUrl": "https://azsos.gov/sites/default/files/photo/AZ-SOS-Adrian-Fontes-Official-Photo-2025-sml.jpg",
+      "finalUrl": "https://azsos.gov/sites/default/files/photo/AZ-SOS-Adrian-Fontes-Official-Photo-2025-sml.jpg",
+      "contentType": "image/jpeg",
+      "retrievedAt": "2026-10-12T22:34:11.086Z",
+      "bytes": 45611,
+      "sha256": "686f5fde88e3e721c47908e3e2d6a2d45ac1956f3981428963324a0d8a0a5b00",
+      "httpStatus": 200,
+      "file": "az-secretary-portrait.jpg"
+    },
+    {
+      "name": "me-secretary-portrait",
+      "requestedUrl": "https://www.maine.gov/sos/sites/maine.gov.sos/files/styles/large/public/images/2025-11/SecretaryBellowsHeadshot2026_PNG_ForWeb.png?itok=8zm4I5br",
+      "finalUrl": "https://www.maine.gov/sos/sites/maine.gov.sos/files/styles/large/public/images/2025-11/SecretaryBellowsHeadshot2026_PNG_ForWeb.png?itok=8zm4I5br",
+      "contentType": "image/png",
+      "retrievedAt": "2026-10-12T22:34:11.561Z",
+      "bytes": 266169,
+      "sha256": "d98243fbe7428daf4073340eb51f3b940d819b4e3fb8f547576a5c015b80045b",
+      "httpStatus": 200,
+      "file": "me-secretary-portrait.png"
+    },
+    {
+      "name": "az-senator-portrait",
+      "requestedUrl": "https://www.azleg.gov/alisImages/MemberPhotos/57leg/Senate/GOWAN.jpg",
+      "finalUrl": "https://www.azleg.gov/alisImages/MemberPhotos/57leg/Senate/GOWAN.jpg",
+      "contentType": "image/jpeg",
+      "retrievedAt": "2026-10-12T22:34:11.396Z",
+      "bytes": 573233,
+      "sha256": "aae78f18bcbc6a2e45bb5674c2133c1b9b96cbc8ad02e44009c86d76a6959a9a",
+      "httpStatus": 200,
+      "file": "az-senator-portrait.jpg"
+    },
+    {
+      "name": "wi-senator-details-portrait",
+      "requestedUrl": "https://docs.legis.wisconsin.gov/2025/legislators/senate/2805.jpg",
+      "finalUrl": "https://docs.legis.wisconsin.gov/2025/legislators/senate/2805.jpg",
+      "contentType": "image/jpeg",
+      "retrievedAt": "2026-10-12T22:34:11.536Z",
+      "bytes": 33444,
+      "sha256": "5481f1a124a4aad9c8688b0ae7a5e853ee8b84b54ba14eb99183bb947fa7a1b5",
+      "httpStatus": 200,
+      "file": "wi-senator-details-portrait.jpg"
+    },
+    {
+      "name": "congress-kelly-portrait",
+      "requestedUrl": "https://www.congress.gov/img/member/k000377_200.jpg",
+      "finalUrl": "https://www.congress.gov/img/member/k000377_200.jpg",
+      "contentType": "image/jpeg",
+      "retrievedAt": "2026-10-12T22:34:11.572Z",
+      "bytes": 6033,
+      "sha256": "6c09123e807f50182a0542b42eee086323662b0b5dcb4c9a1f8dc5f68d4ab2bf",
+      "httpStatus": 200,
+      "file": "congress-kelly-portrait.jpg"
+    },
+    {
+      "name": "az-governor-bio-portrait",
+      "requestedUrl": "https://azgovernor.gov/sites/default/files/styles/panopoly_image_original/public/governor-katie-hobbs_0.jpg?itok=r6glxMjv",
+      "finalUrl": "https://azgovernor.gov/sites/default/files/styles/panopoly_image_original/public/governor-katie-hobbs_0.jpg?itok=r6glxMjv",
+      "contentType": "image/jpeg",
+      "retrievedAt": "2026-10-12T22:35:25.268Z",
+      "bytes": 60041,
+      "sha256": "2a8ba0e72ef543a94db3517c0a453fb2db6fdeccc1b2fca65318b2acbad617c7",
+      "httpStatus": 200,
+      "file": "az-governor-bio-portrait.jpg"
+    },
+    {
+      "name": "az-attorney-general-portrait",
+      "requestedUrl": "https://www.azag.gov/sites/default/files/2024-10/KrisMayesHeadshot.png",
+      "finalUrl": "https://www.azag.gov/sites/default/files/2024-10/KrisMayesHeadshot.png",
+      "contentType": "image/png",
+      "retrievedAt": "2026-10-12T22:35:25.261Z",
+      "bytes": 399636,
+      "sha256": "77eb9ba8777c9db9b73e6339f36211e8672b51c55f4f483db44779910c4497d6",
+      "httpStatus": 200,
+      "file": "az-attorney-general-portrait.png"
+    }
+  ]
+}

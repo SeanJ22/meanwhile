@@ -1,0 +1,1287 @@
+{
+  "election": {
+    "id": "12000",
+    "name": "2026 General Midterm Election",
+    "electionDay": "2026-11-03",
+    "ocdDivisionId": "ocd-division/country:us"
+  },
+  "normalizedInput": {
+    "line1": "100 North Capitol Avenue",
+    "addressLine": [
+      "100 North Capitol Avenue"
+    ],
+    "city": "Lansing",
+    "state": "MI",
+    "zip": "48933"
+  },
+  "pollingLocations": [
+    {
+      "address": {
+        "locationName": "FIRST PRESBYTERIAN CHURCH",
+        "line1": "510 W OTTAWA ST",
+        "addressLine": [
+          "510 W OTTAWA ST"
+        ],
+        "city": "LANSING",
+        "state": "MI",
+        "zip": "48933"
+      },
+      "notes": "OTTAWA  AT CHESTNUT. PARKING FROM CHESTNUT.",
+      "pollingHours": "Tue, Nov 3: 7 am - 8 pm",
+      "latitude": 42.7350684981101,
+      "longitude": -84.559030491941883,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    }
+  ],
+  "dropOffLocations": [
+    {
+      "address": {
+        "locationName": "DROP BOX - LANSING CITY",
+        "line1": "CITY HALL -  BY MAIN ENTRANCE",
+        "line2": "124 W. MICHIGAN AVE.",
+        "addressLine": [
+          "CITY HALL -  BY MAIN ENTRANCE",
+          "124 W. MICHIGAN AVE."
+        ],
+        "city": "LANSING",
+        "state": "MI",
+        "zip": "48933"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.734190871112396,
+      "longitude": -84.553655301823568,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - LANSING CITY",
+        "line1": "LANSING FIRE STATION 1",
+        "line2": "120 E. SHIAWASSEE ST.",
+        "addressLine": [
+          "LANSING FIRE STATION 1",
+          "120 E. SHIAWASSEE ST."
+        ],
+        "city": "LANSING",
+        "state": "MI",
+        "zip": "48933"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.73692,
+      "longitude": -84.55121,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - LANSING CITY",
+        "line1": "LANSING FIRE STATION 2",
+        "line2": "2114 N GRAND AVE",
+        "addressLine": [
+          "LANSING FIRE STATION 2",
+          "2114 N GRAND AVE"
+        ],
+        "city": "LANSING",
+        "state": "MI",
+        "zip": "48906"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - LANSING CITY",
+        "line1": "LETTS COMMUNITY CENTER",
+        "line2": "1220 W. KALAMAZOO ST.",
+        "addressLine": [
+          "LETTS COMMUNITY CENTER",
+          "1220 W. KALAMAZOO ST."
+        ],
+        "city": "LANSING",
+        "state": "MI",
+        "zip": "48915"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.730901596828723,
+      "longitude": -84.56987697994326,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - LANSING CITY",
+        "line1": "FOSTER COMMUNITY CENTER",
+        "line2": "200 N. FOSTER AVE.",
+        "addressLine": [
+          "FOSTER COMMUNITY CENTER",
+          "200 N. FOSTER AVE."
+        ],
+        "city": "LANSING",
+        "state": "MI",
+        "zip": "48912"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.734873880655364,
+      "longitude": -84.51739862786394,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - LANSING CITY",
+        "line1": "GIER COMMUNITY CENTER",
+        "line2": "2400 HALL ST.",
+        "addressLine": [
+          "GIER COMMUNITY CENTER",
+          "2400 HALL ST."
+        ],
+        "city": "LANSING",
+        "state": "MI",
+        "zip": "48906"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.759631291270431,
+      "longitude": -84.5448906981824,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - LANSING CITY",
+        "line1": "MT. HOPE CEMETERY OFFICE",
+        "line2": "1709 E. MT HOPE AVE.",
+        "addressLine": [
+          "MT. HOPE CEMETERY OFFICE",
+          "1709 E. MT HOPE AVE."
+        ],
+        "city": "LANSING",
+        "state": "MI",
+        "zip": "48910"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.712203304018026,
+      "longitude": -84.527240336265663,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - LANSING CITY",
+        "line1": "LANSING FIRE STATION 9",
+        "line2": "520 GLENDALE AVE.",
+        "addressLine": [
+          "LANSING FIRE STATION 9",
+          "520 GLENDALE AVE."
+        ],
+        "city": "LANSING",
+        "state": "MI",
+        "zip": "48910"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.695290989206121,
+      "longitude": -84.546956985726553,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - LANSING CITY",
+        "line1": "LANSING ELECTIONS OFFICE",
+        "line2": "701 W. JOLLY RD.",
+        "addressLine": [
+          "LANSING ELECTIONS OFFICE",
+          "701 W. JOLLY RD."
+        ],
+        "city": "LANSING",
+        "state": "MI",
+        "zip": "48910"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.682648405463112,
+      "longitude": -84.561869997584424,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - LANSING CITY",
+        "line1": "CATA HEADQUARTERS",
+        "line2": "4615 TRANTER ST.",
+        "addressLine": [
+          "CATA HEADQUARTERS",
+          "4615 TRANTER ST."
+        ],
+        "city": "LANSING",
+        "state": "MI",
+        "zip": "48910"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.687302809394474,
+      "longitude": -84.533818067670509,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - LANSING CITY",
+        "line1": "LANSING FIRE STATION 6",
+        "line2": "5135 PLEASANT GROVE RD",
+        "addressLine": [
+          "LANSING FIRE STATION 6",
+          "5135 PLEASANT GROVE RD"
+        ],
+        "city": "LANSING",
+        "state": "MI",
+        "zip": "48911"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.682442803370847,
+      "longitude": -84.581745764274231,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - LANSING CITY",
+        "line1": "LANSING FIRE STATION 4",
+        "line2": "1435 E MILLER RD",
+        "addressLine": [
+          "LANSING FIRE STATION 4",
+          "1435 E MILLER RD"
+        ],
+        "city": "LANSING",
+        "state": "MI",
+        "zip": "48911"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.669552026721057,
+      "longitude": -84.531644690133348,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - LANSING CITY",
+        "line1": "ALFREDA SCHMIDT SOUTHSIDE COMMUNITY CENTER",
+        "line2": "5825 WISE ROAD",
+        "addressLine": [
+          "ALFREDA SCHMIDT SOUTHSIDE COMMUNITY CENTER",
+          "5825 WISE ROAD"
+        ],
+        "city": "LANSING",
+        "state": "MI",
+        "zip": "48911"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.6736083173373,
+      "longitude": -84.5906120375462,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    }
+  ],
+  "contests": [
+    {
+      "type": "General",
+      "ballotTitle": "Governor and Lieutenant Governor",
+      "office": "Governor/Lieutenant Governor",
+      "district": {
+        "name": "Michigan",
+        "scope": "statewide"
+      },
+      "numberElected": "1",
+      "ballotPlacement": "1",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Jocelyn Benson/Winnie Brinks",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "John James/Jay DeBoyer",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Anthony Hudson/Beau Parmenter",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "Donna Brandenburg/Robert Donald Cowper II",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "Douglas Campbell/Bobbie Clay",
+          "party": "GREEN"
+        },
+        {
+          "name": "",
+          "party": "GREEN"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Secretary of State",
+      "office": "Secretary of State",
+      "district": {
+        "name": "Michigan",
+        "scope": "statewide"
+      },
+      "numberElected": "1",
+      "ballotPlacement": "2",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Garlin Gilchrist II",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Anthony G. Forlini",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Christine Sloan",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "Scott E. Aughney",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "Eric Borregard",
+          "party": "GREEN"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Attorney General",
+      "office": "Attorney General",
+      "district": {
+        "name": "Michigan",
+        "scope": "statewide"
+      },
+      "numberElected": "1",
+      "ballotPlacement": "3",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Eli Savit",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Doug Lloyd",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Jason Dye",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "John Perry Ludtke Jr",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "Jeff Polonowski",
+          "party": "GREEN"
+        },
+        {
+          "name": "Doug Dern",
+          "party": "NATURAL LAW"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "United States Senator",
+      "office": "United States Senator",
+      "district": {
+        "name": "Michigan",
+        "scope": "statewide"
+      },
+      "numberElected": "1",
+      "ballotPlacement": "4",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Abdul El-Sayed",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Mike Rogers",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Lydia Christensen",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "Tim Long",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "Douglas P. Marsh",
+          "party": "GREEN"
+        },
+        {
+          "name": "Walter P. Kristy",
+          "party": "NATURAL LAW"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Representative in Congress",
+      "office": "Representative in Congress",
+      "district": {
+        "name": "7th District"
+      },
+      "numberElected": "1",
+      "ballotPlacement": "11",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "William Lawrence",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Tom Barrett",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Shane Dedrick",
+          "party": "GREEN"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "St Senator",
+      "office": "State Senator",
+      "district": {
+        "name": "21st District",
+        "scope": "stateUpper"
+      },
+      "numberElected": "1",
+      "ballotPlacement": "38",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Sarah Anthony",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Josh Burns",
+          "party": "REPUBLICAN"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Representative",
+      "office": "Representative in State Legislature",
+      "district": {
+        "name": "77th District",
+        "scope": "stateLower"
+      },
+      "numberElected": "1",
+      "ballotPlacement": "132",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Emily Dievendorf",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Sally Jo Nelton",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Jennifer Long",
+          "party": "LIBERTARIAN"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Member of the State Board of Education",
+      "office": "Member of the State Board of Education",
+      "district": {
+        "name": "Michigan",
+        "scope": "statewide"
+      },
+      "numberElected": "2",
+      "ballotPlacement": "166",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Judith Pritchett",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Tiffany Tilley",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Terence Collins",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Bree Moeggenberg",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Charles Essner",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "William Mohr II",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "Christine C. Schwartz",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "Wissam Charafeddine",
+          "party": "GREEN"
+        },
+        {
+          "name": "Mary Anne Hering",
+          "party": "WORKING CLASS PARTY"
+        },
+        {
+          "name": "Kelli Monroe",
+          "party": "NATURAL LAW"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Regent of the University of Michigan",
+      "office": "Regent of the University of Michigan",
+      "district": {
+        "name": "Michigan",
+        "scope": "statewide"
+      },
+      "numberElected": "2",
+      "ballotPlacement": "167",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Paul Brown",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Amir Makled",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Lena Epstein",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Michael Schostak",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Andrew Chadderdon",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "Kyle Maas",
+          "party": "U.S. TAXPAYERS"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Trustee of Michigan State University",
+      "office": "Trustee of Michigan State University",
+      "district": {
+        "name": "Michigan",
+        "scope": "statewide"
+      },
+      "numberElected": "2",
+      "ballotPlacement": "168",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Brianna Scott",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Kelly Tebay Zemke",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Julie Maday",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Roger Victory",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Daniel R. Patterson",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "Will Tyler White",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "Janet Sanger",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "John Sanger",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "John Anthony La Pietra",
+          "party": "GREEN"
+        },
+        {
+          "name": "Yaz Ozbek",
+          "party": "WORKING CLASS PARTY"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Governor of Wayne State University",
+      "office": "Governor of Wayne State University",
+      "district": {
+        "name": "Michigan",
+        "scope": "statewide"
+      },
+      "numberElected": "2",
+      "ballotPlacement": "169",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Shereef Akeel",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Richard Mack",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Andy Anuzis",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Christa Murphy",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Alex Avery",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "Jami Van Alstine",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "Jeff McDonald",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "Paul M. Ragan",
+          "party": "GREEN"
+        },
+        {
+          "name": "Suzanne Roehrig",
+          "party": "WORKING CLASS PARTY"
+        },
+        {
+          "name": "Kathleen Oakford",
+          "party": "NATURAL LAW"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Justice Supreme Court",
+      "office": "Justice of Supreme Court",
+      "district": {
+        "name": "Supreme Court",
+        "scope": "judicial"
+      },
+      "numberElected": "2",
+      "ballotPlacement": "771",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Megan Kathleen Cavanagh",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Noah P. Hood",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Thomas W. Howe",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Casandra Morse-Bills",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Michael Warren",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Jody White",
+          "party": "NO PARTY AFFILIATION"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Judge Ct Appeals",
+      "office": "Judge of Court of Appeals",
+      "district": {
+        "name": "4th District",
+        "scope": "judicial"
+      },
+      "numberElected": "3",
+      "ballotPlacement": "775",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Michael J. Kelly",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Allie Greenleaf Maldonado",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Michelle M. Rick",
+          "party": "NO PARTY AFFILIATION"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Judge Circuit Crt",
+      "office": "Judge of Circuit Court",
+      "district": {
+        "name": "30th Circuit",
+        "scope": "judicial"
+      },
+      "numberElected": "3",
+      "ballotPlacement": "800",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Rosemarie Elizabeth Aquilina",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Carol N. Koenig",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Wanda M. Stokes",
+          "party": "NO PARTY AFFILIATION"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Judge Circuit Crt",
+      "office": "Judge of Circuit Court",
+      "district": {
+        "name": "30th Circuit",
+        "scope": "judicial"
+      },
+      "numberElected": "1",
+      "ballotPlacement": "818",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Patricia Tremblay",
+          "party": "NO PARTY AFFILIATION"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Judge Probate Ct",
+      "office": "Judge of Probate Court",
+      "district": {
+        "name": "Ingham County Probate Court",
+        "scope": "judicial"
+      },
+      "numberElected": "1",
+      "ballotPlacement": "831",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Richard J. Garcia",
+          "party": "NO PARTY AFFILIATION"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Judge District Ct",
+      "office": "Judge of District Court",
+      "district": {
+        "name": "54A District",
+        "scope": "judicial"
+      },
+      "numberElected": "1",
+      "ballotPlacement": "855",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Stacia Buchanan",
+          "party": "NO PARTY AFFILIATION"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "COMM COLLEGE TRUSTEE",
+      "office": "Community College Board of Trustees Member",
+      "district": {
+        "name": "Lansing Community College"
+      },
+      "numberElected": "2",
+      "ballotPlacement": "952",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Hope M. Lovell",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Dominica Palacio",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "LaShunda Thomas",
+          "party": "NON PARTISAN"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Board Member",
+      "office": "Local School District Board Member",
+      "district": {
+        "name": "LANSING PUBLIC SCHOOLS",
+        "scope": "schoolBoard"
+      },
+      "numberElected": "3",
+      "ballotPlacement": "2311",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Caitlin Cornell",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Heidi Frei",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Ramiro Garcia",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Aurora Lemieux-McKissic",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Ryan Smith",
+          "party": "NON PARTISAN"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Board Member",
+      "office": "Local School District Board Member",
+      "district": {
+        "name": "LANSING PUBLIC SCHOOLS",
+        "scope": "schoolBoard"
+      },
+      "numberElected": "1",
+      "ballotPlacement": "2647",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Guillermo Z. Lopez",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Kyle Richard",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Jody Washington",
+          "party": "NON PARTISAN"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Board Member",
+      "office": "Local School District Board Member",
+      "district": {
+        "name": "LANSING PUBLIC SCHOOLS",
+        "scope": "schoolBoard"
+      },
+      "numberElected": "1",
+      "ballotPlacement": "2648",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Nino Rodriguez",
+          "party": "NON PARTISAN"
+        }
+      ]
+    },
+    {
+      "type": "ballot-measure",
+      "ballotTitle": "Proposal 2026-1\n\nA proposal to convene a constitutional convention for the purpose of drafting a general revision of the state constitution",
+      "district": {
+        "name": "Michigan",
+        "scope": "statewide"
+      },
+      "ballotPlacement": "10001",
+      "referendumTitle": "Proposal 2026-1\n\nA proposal to convene a constitutional convention for the purpose of drafting a general revision of the state constitution",
+      "referendumSubtitle": "PROPOSAL",
+      "referendumText": "Shall a convention of elected delegates be convened in 2027 to draft a general revision of the State Constitution for presentation to the state’s voters for their approval or rejection?",
+      "referendumBallotResponses": [
+        "Yes",
+        "No"
+      ],
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "type": "ballot-measure",
+      "ballotTitle": "Proposal 2026-2\n\nA proposed initiated law to prohibit campaign contributions from certain regulated utilities and government contractors and apply campaign finance laws and regulations to additional types of political communications",
+      "district": {
+        "name": "Michigan",
+        "scope": "statewide"
+      },
+      "ballotPlacement": "10002",
+      "referendumTitle": "Proposal 2026-2\n\nA proposed initiated law to prohibit campaign contributions from certain regulated utilities and government contractors and apply campaign finance laws and regulations to additional types of political communications",
+      "referendumSubtitle": "PROPOSAL",
+      "referendumText": "The proposal would:\n \n• Prohibit regulated electric and gas utilities, contractors with over $250,000 annually in government contracts, and people and organizations with substantial connections to these utilities/contractors from making direct or indirect campaign contributions to those who run for or hold offices that impact them. \n• Expand laws regulating spending on political communications, including those requiring disclosing donor information, to apply to communications clearly identifying candidates or ballot questions, even if they do not expressly advocate voting for/against them. \n• Expressly apply the law requiring disclosure of who paid for political communications to internet political communications. \n\nShould this proposal be adopted?",
+      "referendumBallotResponses": [
+        "Yes",
+        "No"
+      ],
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "type": "ballot-measure",
+      "ballotTitle": "CITY OF LANSING ESSENTIAL SERVICES MILLAGE RESTORATION PROPOSAL",
+      "district": {
+        "name": "LANSING CITY",
+        "scope": "citywide"
+      },
+      "ballotPlacement": "10128",
+      "referendumTitle": "CITY OF LANSING ESSENTIAL SERVICES MILLAGE RESTORATION PROPOSAL",
+      "referendumSubtitle": "CITY OF LANSING PROPOSAL",
+      "referendumText": "For the purpose of funding essential services, including police protection, fire protection, and local road and sidewalk maintenance, shall the authorized charter millage for the City of Lansing, established at 20 mills ($20.00 per $1,000 of taxable value) and reduced to 19.2214 ($19.2214 per $1,000 of taxable value) by the millage rollbacks required under the Michigan Constitution, be restored to 20 mills ($20.00 per $1,000 of taxable value), which is an increase of .7786 mills ($.7786 per $1,000 of taxable value) over the reduced millage, for the next five (5) years (from January 1, 2027 through December 31, 2031 inclusive)?If approved and levied in full, this renewed millage restoration would generate approximately $2,585,101 in its first year.",
+      "referendumBallotResponses": [
+        "Yes",
+        "No"
+      ],
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "type": "ballot-measure",
+      "ballotTitle": "CITY OF LANSING CITIZENS’ ADVISORY HEALTHCARE ACTION BOARD CHARTER AMENDMENT",
+      "district": {
+        "name": "LANSING CITY",
+        "scope": "citywide"
+      },
+      "ballotPlacement": "10129",
+      "referendumTitle": "CITY OF LANSING CITIZENS’ ADVISORY HEALTHCARE ACTION BOARD CHARTER AMENDMENT",
+      "referendumSubtitle": "CITY OF LANSING PROPOSAL",
+      "referendumText": "Shall the Lansing City Charter be amended to mandate the creation of a Citizens' Advisory Healthcare Action Board (\"Citizens' Action Board\") to create a Lansing Healthcare Action Plan and make recommendations to the community to address healthcare costs and healthcare inaccessibility; to prescribe the powers and duties of the Citizens' Action Board; to prescribe the Citizens' Action Board's composition and organization; and to require the publication, a public overview, and recommendations for implementation in the community of the Healthcare Action Plan?",
+      "referendumBallotResponses": [
+        "Yes",
+        "No"
+      ],
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    }
+  ],
+  "state": [
+    {
+      "name": "Michigan",
+      "electionAdministrationBody": {
+        "name": "ALL",
+        "electionInfoUrl": "http://www.michigan.gov/sos/0,1607,7-127-1633---,00.html",
+        "electionRegistrationUrl": "https://mvic.sos.state.mi.us/RegisterVoter/Index",
+        "electionRegistrationConfirmationUrl": "https://mvic.sos.state.mi.us/Voter/Index",
+        "absenteeVotingInfoUrl": "https://mvic.sos.state.mi.us/AVApplication/Index",
+        "votingLocationFinderUrl": "https://mvic.sos.state.mi.us/Voter/Index",
+        "ballotInfoUrl": "https://mvic.sos.state.mi.us/PublicBallot/Index",
+        "physicalAddress": {
+          "line1": "430 W ALLEGAN ST",
+          "line2": "LANSING, MI 48918",
+          "addressLine": [
+            "430 W ALLEGAN ST",
+            "LANSING, MI 48918"
+          ]
+        },
+        "electionOfficials": [
+          {
+            "officePhoneNumber": "5173353234",
+            "faxNumber": "5173353235",
+            "emailAddress": "SOS.ELECTIONS@MICHIGAN.GOV"
+          }
+        ]
+      },
+      "local_jurisdiction": {
+        "name": "LANSING",
+        "electionAdministrationBody": {
+          "name": "LANSING CITY",
+          "electionInfoUrl": "https://neighborhoods.lansingmi.gov/185/CITY-CLERK",
+          "electionRegistrationUrl": "https://mvic.sos.state.mi.us/RegisterVoter/Index",
+          "electionRegistrationConfirmationUrl": "https://mvic.sos.state.mi.us/Voter/Index",
+          "absenteeVotingInfoUrl": "https://mvic.sos.state.mi.us/AVApplication/Index",
+          "votingLocationFinderUrl": "https://mvic.sos.state.mi.us/Voter/Index",
+          "ballotInfoUrl": "https://mvic.sos.state.mi.us/PublicBallot/Index",
+          "physicalAddress": {
+            "line1": "701 W JOLLY RD",
+            "line2": "LANSING, MI 48910",
+            "addressLine": [
+              "701 W JOLLY RD",
+              "LANSING, MI 48910"
+            ]
+          },
+          "electionOfficials": [
+            {
+              "officePhoneNumber": "5174834133",
+              "emailAddress": "ROBIN.STITES@LANSINGMI.GOV"
+            }
+          ]
+        },
+        "sources": [
+          {
+            "name": "Voting Information Project",
+            "official": true
+          }
+        ]
+      },
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    }
+  ],
+  "kind": "civicinfo#voterInfoResponse"
+}

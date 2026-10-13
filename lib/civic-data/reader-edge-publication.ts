@@ -7,10 +7,12 @@ import {
   servedAuthorityVersion,
   readServedPromotedFamily,
   readAuthorityArtifactValue,
+  readFederalMoneyStateArtifact,
   type PublishAuthority,
   type PublishAuthorityCarried,
   type PublishAuthorityValue,
   type PublishRegistrations,
+  type PublishFederalMoney,
 } from "../meetings/edge-serving.ts";
 import { resolveReaderArtifactWriteStore, type ReaderArtifactStore } from "../meetings/edge-store.ts";
 import type { AuthorityFamily } from "../meetings/edge-artifacts.ts";
@@ -25,6 +27,8 @@ import { readCensusGeographyProjection } from "../census-geography/reader.ts";
 import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../census-geography/publication.ts";
 import { REGISTRATION_SCOPES, registrationEdgePlan } from "../registration/edge.ts";
 import { readRegistrationProjection } from "../registration/reader.ts";
+import { FEDERAL_MONEY_EDGE_SCOPES } from "../federal-money/edge.ts";
+import { readFederalMoneyEdgePublication } from "../federal-money/edge-publication.ts";
 import { readFederalDirectoryProjection } from "../officials/federal-directory-read-model.ts";
 import { readStatePeopleProjection } from "../state-rollcalls/legislators.ts";
 import { STATE_PEOPLE_JURISDICTIONS, statePeopleSourceScopes } from "../officials/people-identity.ts";
@@ -100,7 +104,8 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
       const grouped = new Map<RoutineRecordClass, Set<string>>();
       for (const pointer of [...Object.values(specialPointers).flat().filter(pointer => owns(pointer.recordClass, pointer.scope)), ...Object.values(pointerFamilies).flat(),
         ...[manual("comment-access"), manual("everyday-routing")].filter(pointer => owns(pointer.recordClass, pointer.scope)),
-        ...(selected === null || selected.some(pointer => pointer.recordClass === "REGISTRATION") ? REGISTRATION_SCOPES.map(scope => ({ recordClass: "REGISTRATION" as const, scope })) : [])]) {
+        ...(selected === null || selected.some(pointer => pointer.recordClass === "REGISTRATION") ? REGISTRATION_SCOPES.map(scope => ({ recordClass: "REGISTRATION" as const, scope })) : []),
+        ...(selected === null || selected.some(pointer => pointer.recordClass === "FEDERAL_MONEY") ? FEDERAL_MONEY_EDGE_SCOPES.map(scope => ({ recordClass: "FEDERAL_MONEY" as const, scope })) : [])]) {
         const scopes = grouped.get(pointer.recordClass) ?? new Set<string>();
         scopes.add(pointer.scope); grouped.set(pointer.recordClass, scopes);
       }
@@ -333,6 +338,18 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
         failed = true;
         process.stderr.write(`READER_EDGE_REGISTRATIONS_SKIPPED: ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
       }
+      let federalMoney: PublishFederalMoney | undefined = servedManifest?.federalMoney === undefined ? undefined : Object.fromEntries(
+        Object.entries(servedManifest.federalMoney).map(([state, ref]) => [state, { versionId: ref.version, carried: true }]));
+      if (selected === null || selected.some(pointer => pointer.recordClass === "FEDERAL_MONEY")) try {
+        const read = await readFederalMoneyEdgePublication({ store, servedManifest, now: observedAt,
+          readServedState: state => readFederalMoneyStateArtifact(state, servedManifest?.federalMoney?.[state], artifactStore) });
+        federalMoney = read.states;
+        if (read.skipped.length > 0) failed = true;
+        for (const line of read.skipped) process.stderr.write(`READER_EDGE_FEDERAL_MONEY_SKIPPED: ${safeFailure(line)}\n`);
+      } catch (error) {
+        failed = true;
+        process.stderr.write(`READER_EDGE_FEDERAL_MONEY_SKIPPED: ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
+      }
       const meetingRegistryVersion = authority["registry-runtime"]?.versionId ?? null;
       const sameComposition = prepared?.status === "CURRENT" && servedManifest?.meetingLayout === "governing-area" &&
         servedManifest.meetingRegistryVersion !== undefined && servedManifest.meetingRegistryVersion === meetingRegistryVersion &&
@@ -376,7 +393,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
       const edge = await publishReaderEdgeArtifacts(meetingRead?.kind === "PROMOTED" ? meetingRead.value : null,
         meetingRead?.kind === "PROMOTED" ? { sourceThrough: meetingRead.metadata.sourceThrough, retrievedAt: meetingRead.metadata.retrievedAt, promotedThrough: meetingRead.metadata.promotedAt }
           : { sourceThrough: servedManifest?.sourceThrough ?? null, retrievedAt: prepared?.status === "CURRENT" ? prepared.checkedAt : servedManifest?.retrievedAt ?? null, promotedThrough: servedManifest?.promotedThrough ?? null },
-        { store: artifactStore, now: observedAt, extras, authority, registrations, stateLegislators, meetingBodies, meetingRegistryVersion, ...(checks ? { checks } : {}) });
+        { store: artifactStore, now: observedAt, extras, authority, registrations, stateLegislators, federalMoney, meetingBodies, meetingRegistryVersion, ...(checks ? { checks } : {}) });
       status = edge.status;
       if ("sequence" in edge) sequence = edge.sequence;
       if (edge.status === "FAILED") throw new Error(edge.error);

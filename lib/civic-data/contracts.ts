@@ -8,6 +8,8 @@ import {
 import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ID, REGISTRATION_TARGETS } from "../registration/publication.ts";
 
 import { PLURAL_STATES, PLURAL_PARSER_VERSION, PLURAL_SOURCE_ID } from "../sources/plural/targets.ts";
+import { FEDERAL_MONEY_SOURCES, FEDERAL_MONEY_PARSER } from "../federal-money/model.ts";
+import { FEDERAL_MONEY_CONFIG } from "../federal-money/sources.ts";
 
 const HOUR = 60 * 60 * 1_000;
 const DAY = 24 * HOUR;
@@ -568,6 +570,19 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
   },
+  ...FEDERAL_MONEY_SOURCES.map((source): RoutineSourceContract => ({
+    id: source, sourceId: source, recordClass: "FEDERAL_MONEY", scope: `${source}:US`, fanOut: true,
+    acquisitionFailureDomain: `routine-source:${source}`,
+    acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/federal-money-refresh.mts", "--promote", `--source=${source}`], requestedUrl: FEDERAL_MONEY_CONFIG[source].route },
+    parserNormalizerVersion: FEDERAL_MONEY_PARSER,
+    cadence: { description: FEDERAL_MONEY_CONFIG[source].clock, defaultEveryMs: FEDERAL_MONEY_CONFIG[source].everyMs },
+    retry: { afterMs: HOUR, description: "one hour after an outage or an unfinished national backfill; provider Retry-After is honored" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: source }, validationContract: CHECKS,
+    canonicalProductionStore: STORE,
+    readerProjection: { id: `${source}-federal-money`, consumers: ["government cards", "district cards", "/api/federal-money", "Ask", "Admin"] },
+    lkgBehavior: "Each state's verified records and every unmatched native row remain held after a failed read. No unchanged check implies an absence or removes a record.",
+    autoPromotable: true, classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: ["tests/fixtures/federal-money/"],
+  })),
 ] as const;
 
 export function cadenceMsAt(contract: Pick<RoutineSourceContract, "cadence">, nowMs: number): number {

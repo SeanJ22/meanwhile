@@ -88,6 +88,8 @@ export interface DoorRecord {
   readonly status: DoorStatus;
   readonly lastSuccessAt: string | null;
   readonly lastFailureAt: string | null;
+  /** The source's actual failed read reason, including before a door goes shut. */
+  readonly lastFailureReason?: string | null;
   /** When the door last went SHUT. Null unless it is. */
   readonly shutSince: string | null;
   /** System-kept: consecutive reads that could not reach the door. Absent means none. */
@@ -319,6 +321,7 @@ function shutSinceFor(status: DoorStatus, previous: DoorRecord | null, at: strin
 function healthKept(previous: DoorRecord | null, status: DoorStatus): Partial<DoorRecord> {
   if (previous === null) return {};
   return {
+    ...(previous.lastFailureReason !== undefined ? { lastFailureReason: previous.lastFailureReason } : {}),
     ...(previous.transportFailures !== undefined ? { transportFailures: previous.transportFailures } : {}),
     ...(status === "SHUT" && previous.shutReason !== undefined ? { shutReason: previous.shutReason } : {}),
     ...(previous.reopenedAt !== undefined ? { reopenedAt: previous.reopenedAt } : {}),

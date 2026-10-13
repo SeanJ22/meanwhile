@@ -37,6 +37,7 @@ export const ROUTINE_RECORD_CLASSES = [
   "DOTGOV_REFERENCE",
   "OPERATIONAL_REFERENCE",
   "REGISTRATION",
+  "FEDERAL_MONEY",
 ] as const;
 export type RoutineRecordClass = (typeof ROUTINE_RECORD_CLASSES)[number];
 

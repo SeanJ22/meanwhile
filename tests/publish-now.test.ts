@@ -140,7 +140,11 @@ test("BX-12: the executable selects only publication work and never holds the ro
   assert.match(runner, /PUBLISH_NOW \? PUBLISH_NOW_SINGLETON_PORT : ROUTINE_DATA_RUNNER_SINGLETON_PORT/);
   assert.match(runner, /PUBLISH_NOW \? \[\] : await withNationalPlaceTasks/);
   assert.match(runner, /return \[\.\.\.publication, \.\.\.publishNowDoorTasks/);
-  assert.match(runner, /const finalReaderEdge = publishNowEdgeChecks \? await publishNowEdgeChecks\.run\(\)/);
+  assert.match(runner, /const finalReaderEdge = PUBLISH_NOW && publishNowEdgeChecks \? await publishNowEdgeChecks\.run\(\)\s*:\s*await publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\), ONLY === null \? null : selectedTasks\)/,
+    "publish-now finishes its independent sweep; an ordinary pass publishes every selected source");
+  assert.match(runner, /const readerEdge = PUBLISH_NOW && publishNowEdgeChecks \? \(await publishNowEdgeChecks\.stop\(\)\)! : finalReaderEdge/);
+  assert.match(runner, /if \(readerEdgeFailure && !\(PUBLISH_NOW && publishNowEdgeChecks\)\) supervisorFailures\.push\(readerEdgeFailure\)/,
+    "an ordinary final publication failure remains reported when a federal sweep is active");
 });
 
 test("a publish-now minute with nothing owed ends quietly with exit 0, before any outcome or count", () => {

@@ -62,6 +62,7 @@ function verifyExactVersion(
 }
 
 function verifierIdFor(contract: ReaderContract): string {
+  if (contract.recordClass === "FEDERAL_MONEY") return "lib/federal-money/reader.ts#readFederalMoneyProjection";
   if (contract.sourceId === "plural-openstates" && contract.recordClass === "STATE_LEGISLATOR") return "lib/state-rollcalls/legislators.ts#readOpenStatesPeopleProjection";
   switch (contract.id) {
     case "fec-funding": return "lib/funding/snapshot.ts#readFundingSnapshot";
@@ -130,6 +131,20 @@ export async function verifyRoutineReaderProjection(
 ): Promise<RoutineReaderVerification> {
   const verifierId = verifierIdFor(contract);
   try {
+    if (contract.recordClass === "FEDERAL_MONEY") {
+      const { FEDERAL_MONEY_SOURCES, federalMoneyScope } = await import("../federal-money/model.ts");
+      const { readFederalMoneyProjection } = await import("../federal-money/reader.ts");
+      const source = FEDERAL_MONEY_SOURCES.find(source => source === contract.sourceId);
+      if (!source) return fail(verifierId, "The federal source is not registered.");
+      const scope = options.scope ?? contract.scope;
+      if (scope === `${source}:US`) {
+        const { readFederalMoneyNationalProjection } = await import("../federal-money/progress.ts");
+        return verifyExactVersion(verifierId, await readFederalMoneyNationalProjection(source, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "national federal acquisition progress");
+      }
+      const state = scope.slice(source.length + 1);
+      if (scope !== federalMoneyScope(source, state) || !/^[A-Z]{2}$/.test(state)) return fail(verifierId, "The federal state scope is invalid.");
+      return verifyExactVersion(verifierId, await readFederalMoneyProjection(source, state, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "federal government records");
+    }
     if (contract.sourceId === "plural-openstates" && contract.recordClass === "STATE_LEGISLATOR") {
       const { readOpenStatesPeopleProjection } = await import("../state-rollcalls/legislators.ts");
       const jurisdiction = /^US-[A-Z]{2}/.exec(contract.scope)?.[0] as `US-${string}` | undefined;
@@ -571,7 +586,8 @@ async function attestReaderProjectionReadback(
 }
 
 function promotionIdentityIssue(contract: ReaderContract, promotion: PromotedPointerIdentity): string | null {
-  const scope = isScopedManualContractScope(contract.id, promotion.scope) ? promotion.scope : contract.scope;
+  const fanOut = "fanOut" in contract && contract.fanOut === true && promotion.scope.startsWith(`${contract.sourceId}:`);
+  const scope = isScopedManualContractScope(contract.id, promotion.scope) || fanOut ? promotion.scope : contract.scope;
   const expectedKey = `${contract.recordClass}:${scope}`;
   if (
     promotion.key !== expectedKey ||

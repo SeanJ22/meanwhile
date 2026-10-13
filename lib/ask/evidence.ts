@@ -15,12 +15,14 @@ export interface EvidenceRecord {
    * A page search hit alone may never populate this field. */
   verifiedStatement?: { speakerId: string; quote: string; date: string; attribution: string; nativeSourceId: string };
   governmentFinance?: GovernmentBudgetFact;
+  federalMoney?: { readonly fact: import("../federal-money/model.ts").FederalMoneyFact; readonly relationship: "RECIPIENT" | "GEOGRAPHY" | "BOTH"; readonly divisionId: string };
   /** Native meeting/document identity survives the Ask path unchanged. */
   meetingId?: string;
   documentId?: string;
   agendaDocument?: { contentHash: string; title: string | null; publicationIndex: boolean };
   kind:
     | "GOVERNMENT_FINANCE"
+    | "FEDERAL_MONEY"
     | "MEETING"
     | "AGENDA_ITEM"
     | "AGENDA_DOCUMENT"
@@ -155,6 +157,8 @@ export interface EvidenceRecord {
   sourceUrl?: string | null;
   sourceOrg?: string | null;
   retrievedAt?: string | null;
+  publicationDate?: string | null;
+  official?: true;
 }
 
 /**

@@ -246,6 +246,16 @@ export async function verifySourceScopedCandidateProjection(
 
   if (contract.readerProjection === null) return dotGovProjectionVerification(candidate);
 
+  if (candidate.recordClass === "FEDERAL_MONEY") {
+    const { FEDERAL_MONEY_SOURCES } = await import("../federal-money/model.ts");
+    const { federalMoneySavedSourceIssue } = await import("../federal-money/verify.ts");
+    const source = FEDERAL_MONEY_SOURCES.find((source) => source === contract.sourceId);
+    const verifierId = "lib/federal-money/verify.ts#federalMoneySavedSourceIssue";
+    if (!source) return fail(verifierId, "The federal source is not registered.");
+    const sourceIssue = federalMoneySavedSourceIssue(candidate, source, predecessor?.candidate ?? null);
+    if (sourceIssue) return fail(verifierId, sourceIssue);
+  }
+
   const store = candidateReadOnlyStore(candidate, observedAt, predecessor);
   if (candidate.recordClass === "MEETING") {
     const partition = contract as MeetingPartitionContract;

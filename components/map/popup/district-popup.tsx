@@ -15,6 +15,7 @@ import type { DistrictHit } from "@/lib/map/districts";
 import { representationNoteFor } from "@/lib/registry/representation";
 import type { RosterReaderGap } from "@/lib/registry/body-rosters";
 import { RosterCompletenessGaps } from "@/components/officials/roster-completeness-gap";
+import { FederalMoneySection } from "@/components/funding/federal-money-section";
 
 import {
   NoValue,
@@ -233,6 +234,11 @@ export function DistrictPopup({
           {representationNoteFor(district.tier, representationNoteState)}
         </p>
       )}
+
+      {district.ocdId && /\/(?:county|place|school_district|cd):/.test(district.ocdId) && <>
+        <PopupSectionLabel>Federal money and records</PopupSectionLabel>
+        <FederalMoneySection key={district.ocdId} divisionId={district.ocdId} />
+      </>}
 
     </PopupCard>
   );

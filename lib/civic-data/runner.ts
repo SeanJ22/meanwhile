@@ -48,7 +48,7 @@ export interface RoutineSourceTask {
   readonly command: readonly string[];
   readonly cadenceMs: number;
   readonly retryMs: number;
-  readonly contract: Pick<RoutineSourceContract, "cadence" | "schedule" | "readerProjection">;
+  readonly contract: Pick<RoutineSourceContract, "cadence" | "schedule" | "readerProjection" | "fanOut">;
   readonly ownerInvocation?: {
     readonly publicationPending?: true;
     readonly requestedAt: string;
@@ -465,6 +465,8 @@ export interface RoutineTaskClock {
   readonly lastSucceededObservedAt?: string;
   readonly lastSucceededParserVersion?: string;
   readonly sittingStarts?: readonly string[];
+  /** A verified national federal source marker still holds unfinished state pages. */
+  readonly continuationPending?: boolean;
 }
 
 export type RoutineTaskClockRead =
@@ -649,6 +651,8 @@ export function routineTaskDue(
   if (!Number.isFinite(succeeded)) return nowMs - attempted >= task.retryMs;
     // Once a due read fails, the source's retry clock owns the next attempt.
   if (attempted > succeeded) return nowMs - attempted >= task.retryMs;
+  if (task.recordClass === "FEDERAL_MONEY" && task.contract.fanOut === true &&
+      task.scope === `${task.sourceId}:US` && clock.continuationPending === true) return true;
   const policyMs = cadenceMsAt(task.contract, nowMs);
   return nowMs - succeeded >= (observedEveryMs === undefined ? policyMs
     : Math.min(policyMs, Math.max(observedEveryMs, MIN_OBSERVED_CHECK_MS)));

@@ -1,4 +1,6 @@
 import { governmentFinanceEvidence, governmentFinanceQuestion, composeGovernmentFinanceAnswer } from "@/lib/ask/government-finance";
+import { federalMoneyEvidence, federalMoneyQuestion, federalMoneyPlaceQuestion, federalMoneyPlaceDivisions, composeFederalMoneyAnswer } from "@/lib/ask/federal-money";
+import { federalMoneyStateDivision } from "@/lib/federal-money/view";
 import { governmentListingEntity, governmentListingEvidence, readerGovernmentListings } from "@/lib/ask/government-listings";
 import { prlStatementEvidence, readPrlForSubject } from "@/lib/sources/prl/person";
 import { type MeetingsSnapshot } from "@/lib/meetings/snapshot";
@@ -524,7 +526,7 @@ export async function POST(request: Request) {
     ? timed("commentAccess", () => refreshCommentAccessFromPromoted().catch(() => undefined))()
     : null;
   let authorityEdge: ReaderAuthorityEdgeBundle | null = null;
-  if (edgeManifest?.authorityArtifacts) {
+  if (edgeManifest && (edgeManifest.authorityArtifacts || edgeManifest.federalMoney)) {
     authorityEdge = await timed("authorityEdge", () => ensureReaderAuthorityEdge(edgeManifest, undefined,
       ballotOnlyHint ? ["ballot-contests", "ballot-az", "ballot-nh"]
         : leanAsk ? READER_MAP_AUTHORITY_FAMILIES
@@ -881,7 +883,8 @@ export async function POST(request: Request) {
     activeSubjects: activeSubjects.map((s) => s.name).slice(0, 6),
   };
   const unheldBody = !topicRoute && !leanAsk && !ballotAsk ? unheldNamedBodyQuestion(question, namedBodies) : null;
-  const modelFreeTopicRoute = deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute || leanAsk || Boolean(ballotAsk) || Boolean(unheldBody);
+  const federalPlaceAsk = !topicRoute && !leanAsk && !ballotAsk && ocdIds.length > 0 && activeSubjects.every(ref => !ref.focused) && federalMoneyPlaceQuestion(question);
+  const modelFreeTopicRoute = deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute || leanAsk || Boolean(ballotAsk) || Boolean(unheldBody) || federalPlaceAsk;
   /* A question in a canonical shape whose name binds one body identically in every binder is read in code (`lib/ask/lexical-reading.ts`); anything else goes to the model. */
   const lexical = modelFreeTopicRoute ? null : lexicalReading({
     question, inventory, namedBodies, confirmation: body.confirmation, activeSubjects, priorSubjects, officeOf,
@@ -924,10 +927,10 @@ export async function POST(request: Request) {
   if (outcome === null && unheldBody) {
     interpretation = interpretWithoutModel(question);
     trace.interpretation = { ran: false, why: "unheld-body-shape", ms: Date.now() - interpretationStarted, intent: interpretation.intent, temporal: interpretation.temporal, fellBackToDeterministic: true };
-  } else if (outcome === null && (leanAsk || ballotAsk)) {
+  } else if (outcome === null && (leanAsk || ballotAsk || federalPlaceAsk)) {
     /* The reader's own officials, the meetings held for their area, or their ballot: read from the words, answered from what is held. */
-    interpretation = { ...unavailableInterpretation(), intent: officialsAsk ? "PERSON_RECORD" : areaMeetingsAsk ? "MEETING_TIME" : "UNKNOWN", temporal: areaMeetingsAsk ? { kind: "NEXT" } : { kind: "NONE" } };
-    trace.interpretation = { ran: false, why: officialsAsk ? "reader-officials-shape" : areaMeetingsAsk ? "area-meetings-shape" : "ballot-shape", ms: Date.now() - interpretationStarted, intent: interpretation.intent, temporal: interpretation.temporal, fellBackToDeterministic: true };
+    interpretation = { ...unavailableInterpretation(), intent: officialsAsk ? "PERSON_RECORD" : areaMeetingsAsk ? "MEETING_TIME" : federalPlaceAsk ? "CIVICS" : "UNKNOWN", temporal: areaMeetingsAsk ? { kind: "NEXT" } : { kind: "NONE" } };
+    trace.interpretation = { ran: false, why: officialsAsk ? "reader-officials-shape" : areaMeetingsAsk ? "area-meetings-shape" : federalPlaceAsk ? "federal-place-shape" : "ballot-shape", ms: Date.now() - interpretationStarted, intent: interpretation.intent, temporal: interpretation.temporal, fellBackToDeterministic: true };
   } else if (outcome === null && lexical) {
     interpretation = structuredClone(lexical.interpretation);
     trace.interpretation = {
@@ -1337,6 +1340,13 @@ export async function POST(request: Request) {
       }
       const identity = canonicalBodyIdentity(subject.id);
       const financeDivision = bound?.ocdId ?? identity?.ocdId;
+      const federalDivision = financeDivision ?? (listing ? federalMoneyStateDivision(listing.state) : null);
+      if (federalDivision) {
+        const federal = await federalMoneyEvidence([{ divisionId: federalDivision, ...(bound?.level === "BODY" ? { bodyId: subject.id } : {}) }], subject.id);
+        records.push(...federal.records);
+        Object.assign(denominators, federal.denominators);
+        if (federalMoneyQuestion(question)) gaps.push(...federal.gaps);
+      }
       if (financeDivision && governmentFinanceQuestion(question)) {
         const finance = await governmentFinanceEvidence(subject.id, financeDivision).catch(() => []);
         records.push(...finance);
@@ -1794,6 +1804,12 @@ export async function POST(request: Request) {
     }
 
     /* A ballot measure drops the reader-representative fallback (`lib/ask/relevance.ts`); gated before contacts become records so the pack and the panel agree. */
+    if (!subject && federalMoneyQuestion(question)) {
+      const federal = await federalMoneyEvidence(federalMoneyPlaceDivisions(question, ocdIds).map(divisionId => ({ divisionId })));
+      records.push(...federal.records);
+      gaps.push(...federal.gaps);
+      Object.assign(denominators, federal.denominators);
+    }
     const shownContacts = gateContactsToSubject(subject, contacts).contacts;
     const rosterGaps = rosterGapEvidenceFor(subject, shownContacts, canonicalSubjectKeys);
     records.push(...rosterGaps.records);
@@ -2101,8 +2117,10 @@ export async function POST(request: Request) {
       (text, urls) => validateAnswer(text, urls, pack, bodies));
     const governmentFinanceSettled = settleSittingComposition(composeGovernmentFinanceAnswer({ subject, question, records: packRecords }),
       (text, urls) => validateAnswer(text, urls, pack, bodies));
-    const composed = governmentFinanceSettled.composed ?? ownWordsSettled.composed ?? preferredBallot ?? measureSettled.composed ?? topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed ?? officialsSettled.composed ?? rosterSettled.composed ?? votesSettled.composed ?? calendarSettled.composed ?? ballotSettled.composed;
-    const composedWhy = governmentFinanceSettled.composed ? "composed-from-government-finance" : ownWordsSettled.composed ? "composed-from-own-words" : preferredBallot || measureSettled.composed ? "composed-from-ballot-records" : topicComposed ? "composed-from-structured-evidence"
+    const federalMoneySettled = settleSittingComposition(composeFederalMoneyAnswer({ subject, question, records: packRecords }),
+      (text, urls) => validateAnswer(text, urls, pack, bodies));
+    const composed = federalMoneySettled.composed ?? governmentFinanceSettled.composed ?? ownWordsSettled.composed ?? preferredBallot ?? measureSettled.composed ?? topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed ?? officialsSettled.composed ?? rosterSettled.composed ?? votesSettled.composed ?? calendarSettled.composed ?? ballotSettled.composed;
+    const composedWhy = federalMoneySettled.composed ? "composed-from-federal-money" : governmentFinanceSettled.composed ? "composed-from-government-finance" : ownWordsSettled.composed ? "composed-from-own-words" : preferredBallot || measureSettled.composed ? "composed-from-ballot-records" : topicComposed ? "composed-from-structured-evidence"
       : sittingSettled.composed ? "composed-from-sitting-records"
         : moneySettled.composed ?? groupSettled.composed ? "composed-from-money-records"
           : officialsSettled.composed ? "composed-from-officeholder-records"

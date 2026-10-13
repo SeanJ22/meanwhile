@@ -5,6 +5,7 @@ import { CheckedLink } from "@/components/ui/checked-link";
 import { CardSourceContext, useCardSourceRegistry } from "@/components/ui/card-source-context";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import { WorkingOnIt } from "@/components/demand/working-on-it";
+import { FederalMoneySection } from "@/components/funding/federal-money-section";
 import { blurbForTitle } from "@/lib/officials/office-blurbs";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import { X } from "lucide-react";
@@ -280,6 +281,8 @@ function PlaceSections({
         </ul>
       )}
       <PublicRecordSection subject={subject} />
+      <FederalRecordSection subject={subject} />
+      <CardSection title="Sources" meta={sourceCountLabel(subject.sources) ?? undefined} keepMounted><Sources sources={subject.sources} /></CardSection>
     </div>
   );
 }
@@ -289,6 +292,14 @@ function PublicRecordSection({ subject }: { subject: ModalSubject }) {
   if (subject.subjectKind === "MEETING" || !divisionId) return null;
   return <CardSection title="Public records">
     <PlacePublicRecords key={divisionId} divisionId={divisionId} bodyId={subject.bodyCard ? subject.subjectId : undefined} />
+  </CardSection>;
+}
+
+function FederalRecordSection({ subject }: { subject: ModalSubject }) {
+  const divisionId = subject.publicRecordsDivisionId ?? subject.divisionOcdId;
+  if (subject.subjectKind === "MEETING" || !divisionId || !subject.bodyCard && !/\/(?:county|place|school_district|cd):/.test(divisionId)) return null;
+  return <CardSection title="Federal money and records">
+    <FederalMoneySection key={`${divisionId}:${subject.bodyCard ? subject.subjectId : "place"}`} divisionId={divisionId} bodyId={subject.bodyCard ? subject.subjectId : undefined} />
   </CardSection>;
 }
 
@@ -445,7 +456,7 @@ function BodySections({
       <CardSectionGroup>
         {sections.map((section) => (
           <Fragment key={section.id}>
-            {section.id === "sources" && <PublicRecordSection subject={subject} />}
+            {section.id === "sources" && <><PublicRecordSection subject={subject} /><FederalRecordSection subject={subject} /></>}
             <CardSection title={section.title} meta={section.meta} keepMounted={section.id === "sources"}>
               <div data-card-sources={section.id === "sources" ? "" : undefined}>{section.content ?? <WorkingOnIt subject={subject.subjectKind === "BODY" ? { type: "BODY", id: subject.subjectId } : null} />}</div>
             </CardSection>
@@ -649,7 +660,7 @@ export function EntityModal({
         {subject.bodyCard ? (
           <BodySections subject={{ ...subject, sources: allSources }} onOpenHolder={onOpenHolder} />
         ) : subject.placeCard ? (
-          <PlaceSections subject={subject} onOpenPlaceBody={onOpenPlaceBody} />
+          <PlaceSections subject={{ ...subject, sources: allSources }} onOpenPlaceBody={onOpenPlaceBody} />
         ) : (
         <div className="account-modal-body mw-sections">
           <CardSectionGroup independent={embedded}>
@@ -660,6 +671,7 @@ export function EntityModal({
             </CardSection>
             {subject.subjectKind !== "MEETING" && <CardSection title={listingCount.heading}><Meetings meetings={subject.meetings} /></CardSection>}
             <PublicRecordSection subject={subject} />
+            <FederalRecordSection subject={subject} />
             <CardSection title="Sources" meta={sourceCount}><Sources sources={allSources} /></CardSection>
           </CardSectionGroup>
         </div>

@@ -78,6 +78,8 @@ export function synthesisPrompt(pack: EvidencePack): string {
     ...(pack.records.some(record => record.meetingListingIdentity?.uniqueMeetingCount === null)
       ? ["- Calendar listings with uniqueMeetingCount:null have an unresolved distinct-meeting count. State their source-listing count and the identity gap; never call that number a count of meetings or merge their agendas, minutes or votes."] : []),
     "- A gap marked OURS is about us — say we have not recorded it. A gap marked THEIRS is about the government — say what they have not published. Never swap these.",
+    ...(pack.records.some(record => record.kind === "FEDERAL_MONEY")
+      ? ["- FEDERAL RECORDS: geography states where an award reaches; recipient identity states who received it. Never describe an award reaching a place as a payment to its government unless the record says that government received it. State obligations, loan face values, subsidy costs and audited expenditures with their own labels; never add unlike figures or infer a total. Audit findings and registrations belong to their source-identified recipient. Disaster declarations apply to the county named in the record."] : []),
     ...(pack.records.some(record => record.kind === "FINANCE_SUMMARY" || record.kind === "FINANCE_TRANSACTION" || record.kind === "FINANCE_COMMITTEE")
       ? [
         "- CAMPAIGN MONEY: state each figure exactly as its record states it, and whose committee reported it. A total is not a list of donors: when no record names who gave, say the records we hold give totals and do not name donors. That is what WE hold; never say the state, the county or the committee withholds donors or did not file.",

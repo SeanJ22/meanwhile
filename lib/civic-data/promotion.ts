@@ -217,11 +217,13 @@ export async function processRegisteredFanOutCandidate(
   }
   const issue = routineCandidateFanOutContractIssue(contract, boundedCandidate);
   if (issue !== null) throw new Error(`FANOUT_CANDIDATE_CONTRACT_MISMATCH:${contractId}:${issue}`);
+  const federalPrior = boundedCandidate.recordClass === "FEDERAL_MONEY"
+    ? await store.readPromotion(boundedCandidate.recordClass, boundedCandidate.scope) : null;
   const sourceProjectionVerification = await verifySourceScopedCandidateProjection(
     contract,
     boundedCandidate,
     sourceProjectionObservedAt(store, now),
-    null,
+    federalPrior ? await store.readCandidate(federalPrior.versionId) : null,
   );
   return appendTypedReaderProjectionReadback(
     store,

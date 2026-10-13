@@ -10,7 +10,7 @@ import { withAskSettings } from "../../lib/ask/runtime-settings.ts";
 import { ASK_PLAYBOOK_ROLES, type ReaderSettingsSnapshot } from "../../lib/civic-data/reader-settings-publication.ts";
 
 /** The actual one-time data seed is the fixture; runtime code never loads this file. */
-const sql = readFileSync(new URL("../../lib/db/migrations/PB-01_role_playbooks.sql", import.meta.url), "utf8");
+const sql = readFileSync(new URL("../../lib/db/migrations/0036_pb01_role_playbooks.sql", import.meta.url), "utf8");
 export const playbookRows = [...sql.matchAll(/jsonb_set\(\$pb01\$(.*?)\$pb01\$::jsonb/g)].map(match => JSON.parse(match[1]) as FieldManualEntry);
 export const fixturePlaybooks = (roles: readonly FieldManualRole[]) => playbookRows.filter(row => roles.includes(row.role));
 export const fixtureRolePlaybook = async (role: "SCOUT" | "DETECTIVE") => rolePlaybook(playbookRows, role);

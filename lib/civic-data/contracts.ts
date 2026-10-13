@@ -8,6 +8,7 @@ import {
 import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ID, REGISTRATION_TARGETS } from "../registration/publication.ts";
 
 import { PLURAL_STATES, PLURAL_PARSER_VERSION, PLURAL_SOURCE_ID } from "../sources/plural/targets.ts";
+import { GOOGLE_CIVIC_SOURCE_ID, GOOGLE_CIVIC_SCOPE, GOOGLE_CIVIC_PARSER_VERSION } from "../sources/google-civic/targets.ts";
 
 const HOUR = 60 * 60 * 1_000;
 const DAY = 24 * HOUR;
@@ -567,6 +568,23 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     autoPromotable: true,
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
+  },
+  {
+    id: GOOGLE_CIVIC_SOURCE_ID,
+    sourceId: GOOGLE_CIVIC_SOURCE_ID,
+    recordClass: "GOOGLE_CIVIC_VOTERINFO",
+    scope: GOOGLE_CIVIC_SCOPE,
+    acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/google-civic-refresh.mts", "--promote"] },
+    parserNormalizerVersion: GOOGLE_CIVIC_PARSER_VERSION,
+    cadence: { description: "daily election-data checks through November 3; weekly outside the election window; address lookups read the provider at request time", defaultEveryMs: 7 * DAY,
+      phases: [{ through: "2026-11-04T00:00:00.000Z", everyMs: DAY, description: "daily through the November 3 election" }] },
+    retry: { afterMs: HOUR, description: "one hour after source failure; honor provider Retry-After" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: GOOGLE_CIVIC_SOURCE_ID },
+    validationContract: CHECKS, canonicalProductionStore: STORE,
+    readerProjection: { id: "google-civic-voterinfo", consumers: ["ballot", "voting-sites", "Ask", "Admin"] },
+    lkgBehavior: "Failed address probes retain their exact prior observations. Certified state lists remain independent. Unjoined source rows remain held and counted.",
+    autoPromotable: true, fanOut: true, classification: "RUNTIME_CIVIC_DATA",
+    bootstrapFixturePaths: ["tests/fixtures/google-civic/elections.json", "tests/fixtures/google-civic/az-voterinfo.json", "tests/fixtures/google-civic/mi-voterinfo.json", "tests/fixtures/google-civic/va-voterinfo.json"],
   },
 ] as const;
 

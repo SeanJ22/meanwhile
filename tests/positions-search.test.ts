@@ -98,15 +98,15 @@ test("13: every candidate with held text is findable by a term from that text", 
   assert.deepEqual(misses, [], `candidates whose own words cannot be found:\n${misses.join("\n")}`);
 });
 
-/** A failed retrieval and a genuine zero render as different sentences. */
-test("13: a failed search and an empty search are different sentences", () => {
+/** Both unsettled searches contribute to the card gap without asserting silence. */
+test("13: failed and empty searches keep the card gap open", () => {
   const section = readFileSync(
     join(ROOT, "components", "officials", "positions-section.tsx"),
     "utf8",
   );
   assert.match(section, /setFailed\(true\)/, "the failure state is gone");
-  assert.match(section, /failed && <WorkingOnIt/);
-  assert.match(section, /answer.kind === "SEARCHED_NOTHING_MATCHED" && <WorkingOnIt/,
+  assert.match(section, /failed && <CardGapContribution/);
+  assert.match(section, /answer.kind === "SEARCHED_NOTHING_MATCHED" && <CardGapContribution/,
     "a search without an equal-effort record keeps the open hunt state");
 });
 
@@ -128,6 +128,6 @@ test("13: a term we hold but will not quote is not reported as their silence", (
     join(ROOT, "components", "officials", "positions-section.tsx"),
     "utf8",
   );
-  assert.match(section, /answer.kind === "SEARCHED_NOTHING_MATCHED" && <WorkingOnIt/);
+  assert.match(section, /answer.kind === "SEARCHED_NOTHING_MATCHED" && <CardGapContribution/);
   assert.doesNotMatch(section, /none of\s+them mentions/, "an unquotable hit cannot become a claim of silence");
 });

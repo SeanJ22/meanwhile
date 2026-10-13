@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { tsImport } from "tsx/esm/api";
 
 import { normalizeWithDrops, publicVideoUrl, type LegistarEventWithClient } from "../lib/sources/legistar/index.ts";
 import type { LegistarEvent } from "../lib/sources/legistar/types.ts";
@@ -41,15 +44,21 @@ test("BX-10: the meeting card's Sources names the publisher record the recording
   assert.equal(sources.length, 2, "the recording and sitting share one publisher record; the agenda has its own source URL");
   assert.equal(sources[1]!.provenance.sourceUrl, meeting.agendaUrl);
   assert.equal(sources[0]!.provenance.sourceUrl, meeting.provenance.sourceUrl);
-  assert.match(sources[0]!.what, /and 1 more from this source/, "the recording is counted behind that record");
+  assert.match(sources[0]!.what, /The recording of this sitting/, "the recording's coverage is named behind its publisher record");
+  assert.doesNotMatch(sources[0]!.what, /and \d+ more from this source/);
   const without = meetingCardSources(normalizeOne({ EventVideoPath: null }), []);
-  assert.doesNotMatch(without[0]!.what, /more from this source/);
+  assert.doesNotMatch(without[0]!.what, /recording/);
 });
 
-test("BX-10: the map's meeting row shows the recording link only on a concluded sitting that has one", () => {
-  const source = readFileSync(new URL("../components/ui/meeting-row.tsx", import.meta.url), "utf8");
-  assert.match(source, /meeting\.status === "CONCLUDED" && meeting\.videoUrl[\s\S]{0,200}href=\{meeting\.videoUrl\}/);
-  assert.match(source, /Watch the recording/);
+test("BX-10: the map's meeting row shows the recording link only on a concluded sitting that has one", async () => {
+  const { MeetingRow } = await tsImport("../components/ui/meeting-row.tsx", import.meta.url) as typeof import("../components/ui/meeting-row.tsx");
+  const meeting = normalizeOne({ EventVideoStatus: "Public", EventVideoPath: VIDEO });
+  const concluded = renderToStaticMarkup(createElement(MeetingRow, { meeting }));
+  assert.match(concluded, /href="https:\/\/pima\.granicus\.com\/MediaPlayer\.php\?view_id=2&amp;clip_id=1823"[^>]*>Watch the recording/);
+  for (const status of ["SCHEDULED", "CANCELED"] as const) {
+    assert.doesNotMatch(renderToStaticMarkup(createElement(MeetingRow, { meeting: { ...meeting, status } })), /Watch the recording/);
+  }
+  assert.doesNotMatch(renderToStaticMarkup(createElement(MeetingRow, { meeting: normalizeOne({ EventVideoPath: null, EventVideoStatus: null }) })), /Watch the recording/);
 });
 
 test("BX-10: Pima's shape (public, clip id in EventMedia, no path) links the sitting's own Legistar page", () => {

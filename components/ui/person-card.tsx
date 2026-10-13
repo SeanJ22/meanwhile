@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { Card } from "./card";
 import { CardSubjectContext } from "./card-subject-context";
 import { CardSection } from "@/components/officials/card-section";
-import { WorkingOnIt } from "@/components/demand/working-on-it";
+import type { CardGap } from "@/lib/design/card-gaps";
 import type { DemandSubjectType } from "@/components/demand/demand-pill";
 import { PERSON_CARD_SECTIONS, type PersonCardSectionId } from "@/lib/design/card-sections";
 import type { CardSource } from "@/lib/officials/card-sources";
@@ -26,16 +26,19 @@ export function PersonCard({ title, eyebrow, identity, contact, sections, source
   independent?: boolean;
   subject?: { type: DemandSubjectType; id: string };
 }) {
+  const gaps: CardGap[] = PERSON_CARD_SECTIONS.filter(section => section.id !== "sources" && !sections[section.id]).map(section => ({ id: `person:${identityKey ?? title}:${section.id}`, label: section.title.toLowerCase(), subject }));
+  if (!contact) gaps.push({ id: `person:${identityKey ?? title}:contact`, label: "contact details", subject });
   return (
     <CardSubjectContext.Provider value={subject ?? null}><Card key={identityKey ?? subject?.id ?? title} title={title} titleVisible={false} eyebrow={eyebrow} sources={sources}
-      sourcesContent={sections.sources} onClose={onClose} className={className} independent={independent}>
+      gaps={gaps} onClose={onClose} className={className} independent={independent}>
       <div data-person-identity>{identity}</div>
-      <div data-person-contact>{contact ?? <WorkingOnIt subject={subject} />}</div>
-      {PERSON_CARD_SECTIONS.filter(section => section.id !== "sources").map(section => (
+      {contact && <div data-person-contact>{contact}</div>}
+      {PERSON_CARD_SECTIONS.filter(section => section.id !== "sources" && sections[section.id]).map(section => (
         <CardSection key={section.id} title={section.title}>
-          {sections[section.id] ?? <WorkingOnIt subject={subject} />}
+          {sections[section.id]}
         </CardSection>
       ))}
+      {sections.sources}
       {afterSections}
     </Card></CardSubjectContext.Provider>
   );

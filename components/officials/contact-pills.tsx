@@ -1,6 +1,7 @@
 "use client";
 
 import { CheckedLink } from "@/components/ui/checked-link";
+import { CardGapContribution } from "@/components/ui/card-gap-context";
 import { useState } from "react";
 
 import { isFederalMember, useMemberDirectory } from "@/hooks/use-member-directory";
@@ -80,10 +81,6 @@ function PillButton({
 
 export function ContactPills({
   holder,
-  /** The small popup scales the row down; the large card runs it full size. */
-  compact = false,
-  /** `"column"` stacks the pills one per line (the small popup's form). */
-  layout = "row",
   /**
    * `"primary"`: phone, email, contact form, official page, campaign site and
    * X. The rest of the social row is large-card only.
@@ -91,8 +88,6 @@ export function ContactPills({
   scope = "all",
 }: {
   holder: SeatHolder;
-  compact?: boolean;
-  layout?: "row" | "column";
   scope?: "all" | "primary";
 }) {
   const social = holder.social ?? [];
@@ -215,19 +210,13 @@ export function ContactPills({
   }
 
   if (pills.length === 0) {
-    return (
-      <p className="mt-1.5 t-detail leading-relaxed text-muted">
-        No published contact on record yet.
-      </p>
-    );
+    return <CardGapContribution id={`contact:${holder.id}`} label="contact details" subject={{ type: "CANDIDATE", id: holder.id }} />;
   }
 
   return (
     <>
       <div
         className="contact-pill-row"
-        data-compact={compact || undefined}
-        data-layout={layout === "column" ? "column" : undefined}
       >
         {pills}
       </div>

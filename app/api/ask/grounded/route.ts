@@ -1,3 +1,4 @@
+import { withPublishedAskSettings, askPlaybookVersion } from "@/lib/ask/runtime-settings.ts";
 import { governmentFinanceEvidence, governmentFinanceQuestion, composeGovernmentFinanceAnswer } from "@/lib/ask/government-finance";
 import { governmentListingEntity, governmentListingEvidence, readerGovernmentListings } from "@/lib/ask/government-listings";
 import { prlStatementEvidence, readPrlForSubject } from "@/lib/sources/prl/person";
@@ -195,7 +196,6 @@ import { statesOf, voteEvidenceForIncludingHistory, voteEvidenceReadsStateRollCa
 export const runtime = "nodejs";
 
 /** Logs the resolved model and effort once at startup, so an override is visible in the deployment log. Configuration only, never request content. */
-console.log(askModelStartupLine());
 
 const MAX_BODY_BYTES = 16384;
 const MAX_QUESTION_CHARS = 400;
@@ -390,6 +390,13 @@ function personEntities(seats: readonly SeatHolder[]): BindableEntity[] {
 }
 
 export async function POST(request: Request) {
+  return withPublishedAskSettings(() => {
+    console.log(askModelStartupLine());
+    return answerWithSettings(request);
+  });
+}
+
+async function answerWithSettings(request: Request) {
   const started = Date.now();
   const trace: AskTrace = emptyTrace();
 
@@ -827,6 +834,7 @@ export async function POST(request: Request) {
   /* The writing ladder: the fast writer first for every question; the frontier only when its answer fails a check. */
   const ladder = synthesisLadder();
   const ladderKey = ladderIdentity(ladder);
+  const writerCacheModel = `${ladderKey.model}:${askPlaybookVersion("ASK_WRITER")}`;
   const callerKey = askCallerKey(process.env, markerFromRequest(request).runClass);
   const lapAt = (name: string, at: number) => { stageMs[name] = at - stageMark; stageMark = at; };
   type PackPath = Extract<Awaited<ReturnType<typeof answerPath>>, { kind: "PACK" }>;
@@ -837,7 +845,7 @@ export async function POST(request: Request) {
     intent: path.pack.intent,
     temporal: path.pack.temporal,
     selection: path.selection,
-    writerInput: synthesisCacheKey({ ...path.pack, intent: "UNKNOWN" }, ladderKey.model, ladderKey.effort),
+    writerInput: synthesisCacheKey({ ...path.pack, intent: "UNKNOWN" }, writerCacheModel, ladderKey.effort),
   });
   /* Start the answer from the code's own reading while the model reads (`lib/ask/speculative-reading.ts`); the model's reading still decides. `WTP_ASK_SPECULATION=off` turns it off. */
   const speculationEnabled = Boolean(process.env.ANTHROPIC_API_KEY) && process.env.WTP_ASK_SPECULATION !== "off";
@@ -851,7 +859,7 @@ export async function POST(request: Request) {
         path.pack.subject?.kind === "MEASURE" && requestedMeasureVotes(question).length > 0 ||
         stanceAnswerability(path.pack) === "UNVERIFIED_PERSONAL_STANCE") return { started: false, why: "code-reading-needs-no-writer", ...guess };
       const outcome = readingOutcome(path);
-      const cached = synthesisCache.get(synthesisCacheKey(path.pack, ladderKey.model, ladderKey.effort));
+      const cached = synthesisCache.get(synthesisCacheKey(path.pack, writerCacheModel, ladderKey.effort));
       const controller = new AbortController();
       let settled = Boolean(cached);
       const writing = cached ? Promise.resolve(cached) : synthesizeWithLadder(path.pack, {
@@ -913,7 +921,7 @@ export async function POST(request: Request) {
       trace.sourcesLoaded = "ALL";
     }
   }
-  const interpretationKey = modelFreeTopicRoute || lexical ? null : interpretationCacheKey(question, interpretContext, resolveAskRoleModel("READER"));
+  const interpretationKey = modelFreeTopicRoute || lexical ? null : interpretationCacheKey(question, interpretContext, `${resolveAskRoleModel("READER")}:${askPlaybookVersion("ASK_READER")}`);
   const cachedInterpretation = interpretationKey ? interpretationCache.get(interpretationKey) : null;
   // The model's reading is requested first; the code's reading runs while it is in flight.
   const modelReading = modelFreeTopicRoute || lexical || cachedInterpretation ? null : interpretQuestion(question, interpretContext, { allowCall });
@@ -2149,7 +2157,7 @@ export async function POST(request: Request) {
   lapAt("resolutionAndRetrieval", path.retrievedAt);
   const { pack, packRecords, packGaps, subject, composed, topicTimeline, areaTimelines, shownContacts, resolvedSittings, agendaQuestion, capture, composedWhy } = path;
   /* The fast writer answers first; the frontier model writes only when that answer fails the same validator (`synthesizeWithLadder`). */
-  const synthesisKey = composed ? null : synthesisCacheKey(pack, ladderKey.model, ladderKey.effort);
+  const synthesisKey = composed ? null : synthesisCacheKey(pack, writerCacheModel, ladderKey.effort);
   const missingMeasureMeaning = subject?.kind === "MEASURE" && requestedMeasureVotes(question).length > 0 &&
     !composeMeasureMeaningAnswer({ subject, question, records: packRecords });
   const cachedSynthesis = !missingMeasureMeaning && synthesisKey && stanceAnswerability(pack) !== "UNVERIFIED_PERSONAL_STANCE"

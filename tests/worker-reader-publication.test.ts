@@ -13,7 +13,7 @@ import { readVotingSitesProjection } from "../lib/ballot/voting-sites-server.ts"
 import { createHash } from "node:crypto";
 import { CENSUS_PLACEHOLDER_LABELS } from "../lib/registry/census-placeholders.ts";
 import assert from "node:assert/strict";
-import test from "node:test";
+import test from "./helpers/playbooks.ts";
 import { readFileSync } from "node:fs";
 import { gunzipSync } from "node:zlib";
 import { autonomousHarness, FIXTURE_URL } from "./helpers/autonomous-fleet.ts";

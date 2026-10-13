@@ -1,3 +1,6 @@
+import { readRolePlaybook } from "../lib/control-plane/playbooks.ts";
+import { ensureReaderSettingsPublished, publishAskPlaybooks } from "../lib/civic-data/reader-settings-publication.ts";
+import "../lib/ask/model.ts";
 import { backgroundBatchTransport } from "../lib/control-plane/model-batch.ts";
 import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
 import { runLeaseWorkerProcesses, workerDispatchFailure, workerProcessSlots } from "../lib/control-plane/workers/process-pool.ts";
@@ -1624,12 +1627,23 @@ let discoverySearchOn = false;
 let discoverySearchReceiptId: string | null = null;
 let discoverySearchDecision: string = "OFF: the owner has not allowed paid discovery search in Admin";
 let configRead: AdminConfigRead;
+let configRevision = 0;
 try {
-  configRead = { row: await repos.adminConfig.read(ADMIN_CONFIG_ID) };
+  const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  configRead = { row };
+  configRevision = row?.revision ?? 0;
 } catch (error) {
   configRead = { unreadable: error instanceof Error ? error.message : String(error) };
 }
 const { config, holdPaidWork: configHold } = adminConfigForPaidWork(configRead);
+if (!dry && ONLY === null && IDS === null) try {
+  const published = await Promise.all([
+    ensureReaderSettingsPublished(config, configRevision),
+    publishAskPlaybooks(repos),
+  ]);
+  if (published[0] === "behind" || !published[1]) runtimeConditions.push("Ask settings or instructions are waiting for publication.");
+} catch { runtimeConditions.push("Ask settings or instructions could not be published; the next round will try again."); }
+
 let ceilingOverrideUsd = fleetSpendCeilingOverrideUsd(config);
 discoverySearchOn = discoverySearchEnabled(config);
 if (config?.discoverySearch !== undefined && config.discoverySearch !== null) {
@@ -2653,9 +2667,10 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
   const at = nowIso();
   const started = Date.now();
   try {
+    const playbook = await readRolePlaybook(repos, "SCOUT");
     /* Warm the model the loop STARTS on, and only when its prefix can cache — else skip, by name, with no paid call. */
     /* The Attempts' own tool list: with `search` exactly when `scoutFor` hands the toolkit `scoutSearch`, so the entry warmed is the one read. */
-    const plan = scoutPrewarmPlan({ toolkitSpecs: scoutToolSpecsFor(scoutSearch !== null), bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
+    const plan = scoutPrewarmPlan({ playbook: playbook.text, toolkitSpecs: scoutToolSpecsFor(scoutSearch !== null), bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
     if (plan.kind === "SKIP") return { status: "SKIPPED", at, model: plan.model, code: plan.code, detail: plan.detail, durationMs: Date.now() - started };
     const { model, request } = plan;
     /*
@@ -2723,6 +2738,7 @@ const heldScoutFor = (scheduled: ScheduledObligation) => solvedScoutResult([...p
   scheduled.obligation.subjectId,scheduled.obligation.recordClass,scheduled.obligation.routeId);
 const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLaneEnabled || heldScoutFor(scheduled)!==null
   ? failureResponderExecutor({
+      playbookFor: role => readRolePlaybook(repos, role),
       solved:heldScoutFor(scheduled),
       sourceFailure:debtAtCycleStart.get(scheduled.obligation.id),
       sourceRoute:registry.routeFor(scheduled.obligation.id),

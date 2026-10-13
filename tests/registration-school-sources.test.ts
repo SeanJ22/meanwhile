@@ -61,9 +61,10 @@ test("real national catalogs and files acquire once, and every state registratio
     if (String(url).includes("sdf23_1a_txt.zip")) return new Response(Buffer.from(f33.bytes));
     throw new Error(`Unexpected fixture URL: ${url}`);
   }) as typeof fetch;
-  const options = { signal: AbortSignal.timeout(120000), store: evidence, locks, fetchImpl, now: () => "2026-10-12T12:00:00.000Z" };
-  const leaRelease = await acquireSchoolRelease("lea-directory", options);
-  const f33Release = await acquireSchoolRelease("f33", options);
+  // Each acquisition gets its own 120 s budget; the 56-state publication loop below is not an acquisition and must not spend it.
+  const options = () => ({ signal: AbortSignal.timeout(120000), store: evidence, locks, fetchImpl, now: () => "2026-10-12T12:00:00.000Z" });
+  const leaRelease = await acquireSchoolRelease("lea-directory", options());
+  const f33Release = await acquireSchoolRelease("f33", options());
   let associatedStates = 0, mergedStates = 0;
   for (const target of REGISTRATION_TARGETS) {
     const reference = loadRegistrationReference(process.cwd(), target.state);
@@ -85,8 +86,8 @@ test("real national catalogs and files acquire once, and every state registratio
   }
   assert.ok(associatedStates >= 51, "source-code school associations cover every state and DC in the real sample");
   assert.ok(mergedStates >= 40, "real F33 native identities connect Census governments across regions");
-  await acquireSchoolRelease("lea-directory", options);
-  await acquireSchoolRelease("f33", options);
+  await acquireSchoolRelease("lea-directory", options());
+  await acquireSchoolRelease("f33", options());
   assert.equal(calls.length, 4, "56 state projections share the same two catalogs and two national files");
 });
 

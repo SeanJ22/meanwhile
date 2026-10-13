@@ -12,6 +12,7 @@ import { legacyHeldWorkOwed, planHeldWorkerFleet } from "../lib/control-plane/wo
 import { costEntryWithModel } from "../lib/control-plane/cost.ts";
 import { LINEAGE_ARTIFACT_FIELDS, LINEAGE_ATTEMPT_FIELDS, persistVerifiedPublicationAnchors, selectStandingLineages, standingLineageCoversDue, standingLineageKeyFor, type LineageArtifact, type LineageAttempt } from "../lib/control-plane/workers/standing-lineage.ts";
 import { sourceReliabilityKey } from "../lib/control-plane/scheduler/scout-reliability.ts";
+import { HOST_CONCURRENCY_DEFAULT, HOST_CONCURRENCY_SETTING, providerConcurrency } from "../lib/control-plane/scheduler/provider-limits.ts";
 import { browseWithPlaywright } from "./scout-browse.mts";
 import { autonomousCycleAllowed, runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
 import { MODELS } from "../lib/models.ts";
@@ -1811,6 +1812,7 @@ const fleetSafety = new FleetSafetyController({
  * never a higher one.
  */
 const SETTINGS_REFRESH_MIN_MS = 5_000;
+let hostConcurrency = readSetting(config, HOST_CONCURRENCY_SETTING, HOST_CONCURRENCY_DEFAULT);
 let settingsReadAt = 0;
 let settingsRead: Promise<void> | null = null;
 function refreshOwnerSettings(): Promise<void> {
@@ -1819,6 +1821,7 @@ function refreshOwnerSettings(): Promise<void> {
   settingsReadAt = Date.now();
   settingsRead = (async () => {
     const reread = adminConfigForPaidWork({ row: await repos.adminConfig.read(ADMIN_CONFIG_ID) });
+    hostConcurrency = readSetting(reread.config, HOST_CONCURRENCY_SETTING, HOST_CONCURRENCY_DEFAULT);
     if (reread.holdPaidWork !== null) return;
     const next = resolveRollingCeiling(fleetSpendCeilingOverrideUsd(reread.config));
     if (next.rollingCeilingUsd === effectiveCeilingUsd) return;
@@ -2985,7 +2988,12 @@ const cycle = await runCycle({
   onRecoveryComplete: () => finishPhase("lease-and-completion-recovery"),
   skipReclaim: canary,
   admitDispatch: (row) => fleetSafety.admitDispatch(row.obligation.id, routeUrl(row.obligation.id)),
-  providerOf: (row) => { const url = routeUrl(row.obligation.id); return url === null ? null : sourceReliabilityKey(url); },
+  providerLimitOf: (row) => {
+    const url = routeUrl(row.obligation.id);
+    if (url === null) return null;
+    const key = sourceReliabilityKey(url);
+    return { key, limit: providerConcurrency(key, fleetSafety.providerState(url), hostConcurrency) };
+  },
   /* The owner's dispatch goes first in the dispatcher's own due order too. */
   placeFirst: dispatchPriority,
   /* With no DISPATCH pending (the set above is empty), the selected expansion scopes' due work goes first instead. */
@@ -3977,7 +3985,7 @@ leavePromotionTail();
 // Join failures too: neither finalization view retries an unchanged failed read.
 const finalizationReads = canary ? null : Promise.allSettled([
   repos.scoutResults.readAll(),
-  repos.costs.readSince(new Date(Date.parse(nowIso()) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString()),
+  readSpendWindow(repos, nowIso()),
   repos.ownerDigests.readRecentWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE",
     Number.MAX_SAFE_INTEGER, { runtimeOutcome: ["kind", "startedAt", "research"] },
     new Date(Date.parse(nowIso()) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString()),
@@ -3992,10 +4000,9 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
     return null;
   }
   const results = resultsRead.value;
-  const costsNow = costsRead.value;
+  const costsNow = costsRead.value.map(charge => charge.metered);
   const at = nowIso();
-  try { finalSpendWindow = researchSpendInWindow(await readSpendWindow(repos, at), at, RESEARCH_BOUNDS.windowHours); }
-  catch (error) { runtimeConditions.push(`the spend window could not be re-read (${error instanceof Error ? error.message : String(error)}); the start-of-cycle spend stands`); }
+  finalSpendWindow = researchSpendInWindow(costsRead.value, at, RESEARCH_BOUNDS.windowHours);
   finalSpendAsOf = at;
   const windowCycles: { startedAt: string; deterministic: number; model: number }[] = [];
   try {
@@ -4024,11 +4031,7 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
   }
   const candidateCounts = counts === null ? null : { proposed: counts.PROPOSED, validated: counts.VALIDATED, admitted: counts.ADMITTED, rejected: counts.REJECTED };
   const pipeline = await NO_PIPELINE_RECORDED();
-  /*
-   * The cache rows, from the COST LEDGER — the same rows the
-   * rolling ceiling reads — over the ceiling's own trailing window, and
-   * separately over this cycle's rows for the COST section of the digest.
-   */
+  /* The cache rows, from the spend window the ceiling reads, over its trailing window and over this cycle for the COST section. */
   const windowSince = new Date(Date.parse(at) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString();
   cacheThisCycle = cacheHitRateByRole({ costs: costsNow, results, sinceIso: NOW, untilIso: at });
   return {

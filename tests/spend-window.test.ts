@@ -1,9 +1,11 @@
 import test from "node:test";
+import { readFile } from "node:fs/promises";
 import assert from "node:assert/strict";
 import { ZERO_COST } from "../lib/control-plane/attempt.ts";
 import { costEntryWorstCaseUsd, modelRequestBoundFor, type CostEntry } from "../lib/control-plane/cost.ts";
 import { aggregatePricedSpend, pricedModelCharge } from "../lib/control-plane/fleet-safety.ts";
 import { MODELS } from "../lib/models.ts";
+import { cacheHitRateByRole, scoutCapacity } from "../lib/control-plane/research-metrics.ts";
 import { recordCost } from "../lib/control-plane/repository/coordinator.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { researchSpendInWindow } from "../lib/control-plane/scheduler/research-policy.ts";
@@ -65,4 +67,21 @@ test("honest pricing: nothing sent costs zero, a lost request costs its send lim
 
   const unknown = charge("unknown", NOW, { usd: null, requestCount: null });
   assert.equal(pricedModelCharge(unknown, "x")?.usd, costEntryWorstCaseUsd(unknown), "a sent request with no bound stays at its worst case");
+});
+
+test("the cache and capacity readings come from the counter, matching the ledger rows they replace, and the round scans no cost rows", async () => {
+  const repos = createMemoryRepositories();
+  const metering = { uncachedInputTokens: 1200, cacheReadInputTokens: 30_000, cacheCreationInputTokens: 2000, cacheCreation5mInputTokens: 2000, cacheCreation1hInputTokens: 0 };
+  const rows = [charge("s1", at(1), { usd: 0.02, requestCount: 3, inputTokens: 33_200, outputTokens: 900, ...metering }),
+    charge("s2", at(3), { usd: 0.01, requestCount: 2, inputTokens: 33_200, outputTokens: 400, ...metering }),
+    { ...charge("audit", at(2), { usd: 0.004, requestCount: 1, inputTokens: 33_200, outputTokens: 100, ...metering }), role: "ADVERSARIAL_AUDITOR" as const }];
+  for (const row of rows) await recordCost(repos, row, row.recordedAt);
+  const ledger = await repos.costs.readAll();
+  const counted = (await readSpendWindow(repos, NOW)).map(row => row.metered);
+  assert.deepEqual(cacheHitRateByRole({ costs: counted, results: [], sinceIso: at(24), untilIso: NOW }),
+    cacheHitRateByRole({ costs: ledger, results: [], sinceIso: at(24), untilIso: NOW }));
+  const capacity = { nowIso: NOW, windowHours: 24, ceilingUsd: 100 };
+  assert.deepEqual(scoutCapacity({ ...capacity, costs: counted }), scoutCapacity({ ...capacity, costs: ledger }));
+  const round = await readFile(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
+  assert.doesNotMatch(round, /costs\.readSince\(/);
 });

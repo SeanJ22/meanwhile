@@ -6,7 +6,7 @@
  * spend window the ledger's writes keep (`spend-window.ts`). In-cycle reservations close the race between
  * concurrent model requests until their provider-reported cost is persisted.
  */
-import { costEntryModelRequestBound, costEntryWorstCaseUsd, type CostEntry } from "./cost.ts";
+import { costEntryModelRequestBound, costEntryWorstCaseUsd, type CostEntry, type MeteredCharge } from "./cost.ts";
 import type { SpendHold } from "./budget.ts";
 import { canonicalModelId } from "../models.ts";
 import { CACHE_RATE_MULTIPLIERS, rateFor, ratesForPrompt, priceMeteredUsage, readMeteredUsage } from "./model-cost.ts";
@@ -174,6 +174,8 @@ export interface PricedCharge {
   readonly measured: boolean;
   /** Counted at a bound (an unanswered request's send limit or the worst case) rather than a measured bill. */
   readonly bounded: boolean;
+  /** What the cache and capacity readings read, so they never re-read the ledger. */
+  readonly metered: MeteredCharge;
 }
 
 /** The model charge a ledger row carries, or null for plain code and search invoices. */
@@ -198,7 +200,9 @@ export function pricedModelCharge(entry: CostEntry, id: string): PricedCharge | 
     ...(entry.assignmentRefs ? { assignmentRefs: entry.assignmentRefs } : {}),
     usd: priced ? answered.usd! + unanswered! : Math.max(answered.knownUsd, costEntryWorstCaseUsd(entry)),
     knownUsd: answered.knownUsd, measured: priced && answered.measured && unanswered === 0,
-    bounded: !priced || answered.bounded || unanswered !== 0 };
+    bounded: !priced || answered.bounded || unanswered !== 0,
+    metered: { attemptId: entry.attemptId, role: entry.role, routeId: entry.routeId, model: entry.model, tier: entry.tier,
+      ...(entry.byModel ? { byModel: entry.byModel } : {}), cost: entry.cost, recordedAt: entry.recordedAt } };
 }
 
 /** The answered requests' bill. A row whose one request is the unpriced one answered nothing else. */
@@ -401,6 +405,8 @@ export class FleetSafetyController {
   private readonly deferrals: FleetNamedDeferral[] = [];
   private readonly stopReasons = new Set<string>();
   private readonly circuits = new Map<string, ProviderCircuit>();
+  /** Providers whose breaker wait ran out with no answer since: half-open until a response closes it or a failure reopens it. */
+  private readonly probing = new Set<string>();
   private readonly httpPending = new Map<string, Promise<void>>();
   /** Every reader's shared count and holds per website; this process's own when the store cannot answer. */
   private readonly pacing: WebsitePacing;
@@ -511,9 +517,16 @@ export class FleetSafetyController {
     return circuit && Date.parse(circuit.eligibleAt) > this.clock() ? circuit : null;
   }
 
+  /** Open: nothing is sent. Half-open: its wait is over and no answer has closed it yet, so one probe goes at a time. */
+  providerState(url: string): "CLOSED" | "HALF_OPEN" | "OPEN" {
+    if (this.providerHold(url) !== null) return "OPEN";
+    const provider = sourceReliabilityKey(url);
+    return this.circuits.has(provider) || this.probing.has(provider) ? "HALF_OPEN" : "CLOSED";
+  }
+
   private expireProviderCircuits(nowMs: number = this.clock()): void {
     for (const [provider, circuit] of this.circuits) {
-      if (!this.hardCircuit(circuit) && Date.parse(circuit.eligibleAt) <= nowMs) this.circuits.delete(provider);
+      if (!this.hardCircuit(circuit) && Date.parse(circuit.eligibleAt) <= nowMs) { this.circuits.delete(provider); this.probing.add(provider); }
     }
   }
 
@@ -540,6 +553,7 @@ export class FleetSafetyController {
   }
 
   private providerSucceeded(provider: string, observed: ProviderCircuit | undefined): void {
+    this.probing.delete(provider);
     const current = this.circuits.get(provider);
     // A response sent before a newer failure cannot erase that failure. A
     // deferred sibling may extend workDeferred without changing this generation.

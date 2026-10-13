@@ -275,7 +275,10 @@ export function spendByTier(entries: readonly CostEntry[], range: { readonly sin
  * first share. A split that does not sum to the row's dollars is not trusted:
  * the row is read whole under `attemptModel`.
  */
-export function costPortionsByModel(entry: CostEntry, attemptModel: string): readonly { readonly model: string; readonly entry: CostEntry }[] {
+/** The fields of a model charge the cache and capacity readings use; the spend window keeps them with each charge. */
+export type MeteredCharge = Pick<CostEntry, "attemptId" | "role" | "routeId" | "model" | "tier" | "byModel" | "cost" | "recordedAt">;
+
+export function costPortionsByModel<E extends Pick<CostEntry, "byModel" | "cost" | "model">>(entry: E, attemptModel: string): readonly { readonly model: string; readonly entry: E }[] {
   const shares = entry.byModel;
   if (shares === undefined || shares.length === 0 || !splitMatchesCharge(entry.cost, shares)) return [{ model: entry.model ?? attemptModel, entry }];
   const otherRequests = shares.slice(1).reduce((n, s) => n + s.requestCount, 0);

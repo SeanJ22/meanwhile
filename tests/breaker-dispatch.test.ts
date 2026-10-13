@@ -4,45 +4,53 @@ import { FleetSafetyController } from "../lib/control-plane/fleet-safety.ts";
 import { routeExecutor, type OpenOne } from "../lib/control-plane/scheduler/route-executor.ts";
 import type { RouteDescriptor } from "../lib/control-plane/scheduler/registry.ts";
 import { runPool } from "../lib/control-plane/scheduler/shadow-loop.ts";
+import { providerConcurrency } from "../lib/control-plane/scheduler/provider-limits.ts";
+import { sourceReliabilityKey } from "../lib/control-plane/scheduler/scout-reliability.ts";
 import type { FreshnessObligation } from "../lib/control-plane/scheduler/obligation.ts";
 import { scheduledFixture } from "./control-plane-fixtures.ts";
 
 const NOW = "2026-10-13T19:00:00.000Z";
 const NOW_MS = Date.parse(NOW);
 
-test("rows for one provider run one at a time, so the second waits for the first's outcome; other providers keep going", async () => {
-  const rows = ["marginalia-1", "marginalia-2", "wikimedia-1", "marginalia-3", "plain"];
-  const running = new Map<string, number>();
-  const order: string[] = [];
-  let maximum = 0;
-  await runPool(rows, rows.length, async row => {
-    const key = row.split("-")[0]!;
-    running.set(key, (running.get(key) ?? 0) + 1);
-    maximum = Math.max(maximum, running.get("marginalia") ?? 0);
-    order.push(`start ${row}`);
-    await new Promise(resolve => setTimeout(resolve, 5));
-    order.push(`end ${row}`);
-    running.set(key, running.get(key)! - 1);
-  }, undefined, undefined, row => row === "plain" ? null : row.split("-")[0]!);
-  assert.equal(maximum, 1, "never two requests to one provider at once");
-  assert.ok(order.indexOf("end marginalia-1") < order.indexOf("start marginalia-2"));
-  assert.ok(order.indexOf("start wikimedia-1") < order.indexOf("end marginalia-1"), "another provider is not held behind it");
-  assert.equal(order.filter(line => line.startsWith("end")).length, rows.length);
-});
+const LEGISTAR = "https://webapi.legistar.com/v1/tucson";
+const rows = Array.from({ length: 50 }, (_, i) => `${LEGISTAR}/events?page=${i}`);
 
-test("while a provider's breaker is open its work is held by name and never becomes an attempt; once it closes, work goes again", () => {
+/* The deterministic lane as runCycle runs it: each row taken under its provider's limit, then admitted or held by name. */
+async function lane(fleet: FleetSafetyController, hostConcurrency: number) {
+  let inFlight = 0, most = 0;
+  const dispatched: string[] = [], held: string[] = [];
+  await runPool(rows, rows.length, async url => {
+    const admission = fleet.admitDispatch(url, url);
+    if (!admission.admit) { held.push(url); return; }
+    inFlight++; most = Math.max(most, inFlight);
+    await new Promise(resolve => setTimeout(resolve, 2));
+    inFlight--; dispatched.push(url);
+  }, undefined, undefined, url => {
+    const key = sourceReliabilityKey(url);
+    return { key, limit: providerConcurrency(key, fleet.providerState(url), hostConcurrency) };
+  });
+  return { most, dispatched: dispatched.length, held: held.length };
+}
+const circuit = (eligibleAt: string) => ({ provider: sourceReliabilityKey(LEGISTAR), condition: "transport failed: The operation was aborted due to timeout",
+  firstObservedAt: NOW, workDeferred: [], eligibleAt, failureClass: "TRANSIENT" as const });
+
+test("a healthy provider's rows run in parallel up to its limit; half-open, one at a time; open, none are sent", async () => {
+  const healthy = await lane(new FleetSafetyController({ now: NOW, charges: [], clock: () => NOW_MS }), 8);
+  assert.equal(healthy.most, 8, "in parallel up to the Admin setting for a host that publishes no limit");
+  assert.equal(healthy.dispatched, 50);
+
   let clock = NOW_MS;
-  const fleet = new FleetSafetyController({ now: NOW, charges: [], clock: () => clock, circuits: [{
-    provider: "https://api.marginalia.nu", condition: "transport failed: The operation was aborted due to timeout",
-    firstObservedAt: NOW, workDeferred: [], eligibleAt: new Date(NOW_MS + 10 * 60_000).toISOString(), failureClass: "TRANSIENT" }] });
-  const held = fleet.admitDispatch("freshness:az:candidate#candidate-marginalia-index", "https://api.marginalia.nu/public/search/x");
-  assert.equal(held.admit, false);
-  assert.equal(!held.admit && held.code, "PROVIDER_CIRCUIT_BROKEN");
-  assert.deepEqual(fleet.admitDispatch("freshness:az:candidate#candidate-wikipedia-api", "https://api.wikimedia.org/core/v1/wikipedia/en/search/page?q=x"), { admit: true });
-  assert.deepEqual(fleet.admitDispatch("plain-work"), { admit: true });
-  assert.ok(fleet.snapshot(NOW).deferred.some(row => row.code === "PROVIDER_CIRCUIT_BROKEN"));
-  clock = NOW_MS + 11 * 60_000;
-  assert.deepEqual(fleet.admitDispatch("freshness:az:candidate#candidate-marginalia-index", "https://api.marginalia.nu/public/search/x"), { admit: true });
+  const reopened = new FleetSafetyController({ now: NOW, charges: [], clock: () => clock, circuits: [circuit(new Date(NOW_MS + 60_000).toISOString())] });
+  const open = await lane(reopened, 8);
+  assert.deepEqual([open.dispatched, open.held], [0, 50], "while the breaker is open nothing is dispatched; every row is held by name");
+  assert.ok(reopened.snapshot(NOW).deferred.some(row => row.code === "PROVIDER_CIRCUIT_BROKEN"));
+  clock = NOW_MS + 61_000;
+  assert.equal(reopened.providerState(LEGISTAR), "HALF_OPEN");
+  const probing = await lane(reopened, 8);
+  assert.deepEqual([probing.most, probing.dispatched], [1, 50], "half-open: one request at a time");
+
+  assert.equal(providerConcurrency("https://api.congress.gov", "CLOSED", 8), 83, "Congress.gov's published 5,000 an hour");
+  assert.equal(providerConcurrency("https://api.congress.gov", "HALF_OPEN", 8), 1);
 });
 
 const obligation: FreshnessObligation = {

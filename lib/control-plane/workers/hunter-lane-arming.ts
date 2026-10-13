@@ -5,6 +5,7 @@
  * Send marks (an unknown Send waits for the next reading), and the Fleet ceiling, with the lane's own requests
  * counted from its own book so none is lost or counted twice between controllers. Nothing here changes a limit.
  */
+import { ZERO_COST } from "../attempt.ts";
 import { mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
@@ -184,7 +185,8 @@ export class LaneOwnSpend {
   /** The book as spend-window charges, so a new controller counts them the way it counts the ledger. */
   asCharges(): PricedCharge[] {
     return this.requests.map((r, i) => ({ id: `hunter-lane:${r.taskId}:${i}`, at: r.at, jobId: `hunter-lane:${r.taskId}:${i}`,
-      routeTaskId: r.taskId, obligationId: null, jurisdiction: null, usd: r.usd, knownUsd: r.usd, measured: true, bounded: false }));
+      routeTaskId: r.taskId, obligationId: null, jurisdiction: null, usd: r.usd, knownUsd: r.usd, measured: true, bounded: false,
+      metered: { attemptId: `hunter-lane:${r.taskId}:${i}`, role: "SCOUT", routeId: null, recordedAt: r.at, cost: { ...ZERO_COST, usd: r.usd, requestCount: 1 } } }));
   }
   /** Every request the book still counts, in dollars. */
   usd(): number { return this.requests.reduce((n, r) => n + r.usd, 0); }

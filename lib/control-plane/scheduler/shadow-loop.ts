@@ -85,8 +85,8 @@ export interface CycleInput {
   readonly admitDispatch?: (
     row: ScheduledObligation,
   ) => { readonly admit: true } | { readonly admit: false; readonly code: string; readonly why: string };
-  /** The provider a deterministic row's request goes to; rows for one provider dispatch one at a time, so an opened breaker holds the rest. */
-  readonly providerOf?: (row: ScheduledObligation) => string | null;
+  /** The provider a deterministic row's request goes to and how many of its rows may run at once, read as each row is taken. */
+  readonly providerLimitOf?: (row: ScheduledObligation) => PoolLimit | null;
   /** A tightly scoped canary may skip the whole lease sweep; normal cycles never do. */
   readonly skipReclaim?: boolean;
   /** Obligation ids the owner dispatched, placed first in both lanes; a dispatch reorders and nothing else. */
@@ -217,14 +217,18 @@ export function huntRoundComparator<T>(items: readonly T[], huntFor: (item: T) =
   return (left, right) => (rounds.get(left) ?? Number.MAX_SAFE_INTEGER) - (rounds.get(right) ?? Number.MAX_SAFE_INTEGER);
 }
 
+/** A pool key and how many of its items may run at once. */
+export interface PoolLimit { readonly key: string; readonly limit: number }
+
 export async function runPool<T>(items: readonly T[], limit: number, fn: (item: T) => Promise<void>,
   comparator?: () => Promise<(left: T, right: T) => number>,
   huntFor?: (item: T) => string | null | undefined,
-  /** Items sharing a key run one at a time, so each starts after the last one's outcome is known. */
-  keyOf?: (item: T) => string | null): Promise<void> {
+  /** Items sharing a key run at most `limit` at once; the limit is read each time an item is taken. */
+  limitOf?: (item: T) => PoolLimit | null): Promise<void> {
   const pending = [...items];
   const compareRound = huntFor ? huntRoundComparator(items, huntFor) : () => 0;
-  const running = new Set<string>();
+  const running = new Map<string, number>();
+  const keys = new Map<T, string | undefined>();
   let finished: () => void = () => {};
   let selection = Promise.resolve();
   let compare: (left: T, right: T) => number = () => 0;
@@ -241,11 +245,15 @@ export async function runPool<T>(items: readonly T[], limit: number, fn: (item: 
         pending.sort((left, right) => compareRound(left, right) || compare(left, right));
       }
       for (;;) {
-        const at = pending.findIndex(candidate => { const key = keyOf?.(candidate) ?? null; return key === null || !running.has(key); });
+        const at = pending.findIndex(candidate => {
+          const limit = limitOf?.(candidate) ?? null;
+          return limit === null || (running.get(limit.key) ?? 0) < Math.max(1, limit.limit);
+        });
         if (at >= 0) {
           item = pending.splice(at, 1)[0];
-          const key = keyOf?.(item!) ?? null;
-          if (key !== null) running.add(key);
+          const key = limitOf?.(item!)?.key;
+          if (key !== undefined) running.set(key, (running.get(key) ?? 0) + 1);
+          keys.set(item!, key);
           return;
         }
         if (!pending.length) return;
@@ -259,9 +267,10 @@ export async function runPool<T>(items: readonly T[], limit: number, fn: (item: 
     for (;;) {
       const item = await take();
       if (item === undefined) break;
-      const key = keyOf?.(item) ?? null;
+      const key = keys.get(item);
+      keys.delete(item);
       try { await fn(item); }
-      finally { if (key !== null) { running.delete(key); finished(); } }
+      finally { if (key !== undefined) { running.set(key, running.get(key)! - 1); finished(); } }
     }
   });
   await Promise.all(workers);
@@ -577,7 +586,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
         ...(research !== undefined ? { decision: decisions.get(row.obligation.id) } : {}),
       });
       if (research?.onDispatched) await research.onDispatched(result, "DETERMINISTIC");
-    }, input.placeComparator, input.huntFor, input.providerOf);
+    }, input.placeComparator, input.huntFor, input.providerLimitOf);
   };
 
   /* The model lane: a bounded Scout pool, each row admitted or deferred by code; a Scout that could not finish inside the dispatch budget is not started. */

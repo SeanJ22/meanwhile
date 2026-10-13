@@ -18,7 +18,7 @@ import {
   settleBallotAuxiliaryPreloads,
   type BallotAuxiliaryFamily,
 } from "@/lib/ballot/auxiliary-preloads";
-import { divisionIdsForZipArea } from "@/lib/ballot/zip-divisions";
+import { divisionIdsForZipArea, POINT_GEOMETRY_PLANS, unestablishedDistrictOffices } from "@/lib/ballot/zip-divisions";
 import { phoenixToday } from "@/lib/ballot/dated-events";
 import { needsPill, zipCertainty } from "@/lib/geo/zip-certainty";
 import { analysisForContest } from "@/lib/ballot/analyses";
@@ -607,13 +607,13 @@ export default async function BallotPage({
       divisionHoldingUnavailable = true;
     }
     /* A zip is an area: the centroid answer is widened to every division whose territory reaches inside it (`lib/ballot/zip-divisions.ts`). */
-    const ocdIds = await divisionIdsForZipArea(zip, pointDivisionIds);
+    const ocdIds = await divisionIdsForZipArea(zip, pointDivisionIds, undefined, POINT_GEOMETRY_PLANS);
     askOcdIds = ocdIds;
     for (const { state, source } of await readerBallotSourcesForDivisions(ocdIds)) {
       try {
         const candidate = source.normalize(await source.fetch());
         const selection = { purpose: "election" as const, asOf: phoenixToday(), electionDate: candidate.election.date };
-        const electionIds = await divisionIdsForZipArea(zip, pointDivisionIds, selection);
+        const electionIds = await divisionIdsForZipArea(zip, pointDivisionIds, selection, POINT_GEOMETRY_PLANS);
         const hit = contestsForDivisions(candidate, electionIds);
         if (hit.contests.length > 0 || hit.absences.length > 0) {
           set = candidate;
@@ -621,9 +621,8 @@ export default async function BallotPage({
           askOcdIds = electionIds;
           certainty = await zipCertainty(zip, selection);
           coverageNotes = coverageNotesForScope(candidate, zip, electionIds);
-          if (candidate.contests.some(contest => /\/(?:cd|sldu|sldl):/.test(contest.ocdId)) &&
-              !electionIds.some(id => /\/(?:cd|sldu|sldl):/.test(id))) {
-            coverageNotes.push("We have not established the district boundaries that apply to this election. District contests may be missing.");
+          for (const office of unestablishedDistrictOffices(candidate, electionIds)) {
+            coverageNotes.push(`We're working on getting the ${office} district for ZIP ${zip}. ${office} contests aren't shown until we have it.`);
           }
           break;
         }

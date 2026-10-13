@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { GRF_CD120, GrfAccumulator, parseGrfHeader, resolveGrfColumns } from "../lib/census-geography/grf.ts";
+import { GRF_CD120, GRF_SLDL2026, GrfAccumulator, parseGrfHeader, resolveGrfColumns } from "../lib/census-geography/grf.ts";
 import type { GeographyVersion } from "../lib/census-geography/contract.ts";
 
 const HEADER = "TABBLKST|TABBLKCOU|ZCTA5CE|CDDECFP|CDCURFP|SLDUST|SLDLST|AREALAND";
@@ -53,4 +53,11 @@ test("grf: a header missing a needed column fails loudly", () => {
     () => resolveGrfColumns(parseGrfHeader("TABBLKST|ZCTA5CE|AREALAND"), "CDCURFP"),
     /missing column "CDCURFP"/,
   );
+});
+
+test("grf: unassigned legislative codes produce no district grouping", () => {
+  const acc = new GrfAccumulator(GRF_SLDL2026, resolveGrfColumns(parseGrfHeader(HEADER), "SLDLST"));
+  acc.add("31|001|68001|02|02|001|ZZZ|100".split("|"));
+  acc.add("31|001|68002|02|02|001|999|100".split("|"));
+  assert.equal(acc.finish({ ...VER, key: "sldl:2026", type: "state_leg_lower" }).instanceCount, 0);
 });

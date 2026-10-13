@@ -103,3 +103,19 @@ test("missing geography, failed matches, and a fallback in the same ZIP never su
     t.mock.restoreAll();
   }
 });
+
+test("postal entry for a mail-only ZIP asks the Census without that ZIP and uses the ZIP it matched", async t => {
+  const seen: string[] = [];
+  t.mock.method(globalThis, "fetch", async (input: RequestInfo | URL) => {
+    seen.push(new URL(String(input)).searchParams.get("address")!);
+    return Response.json({ result: { addressMatches: [{ coordinates: { x: -83.000739, y: 39.961232 }, addressComponents: { zip: "43215" },
+      geographies: { Counties: [{ GEOID: "39049", STATE: "39", BASENAME: "Franklin", NAME: "Franklin County" }] } }] } });
+  });
+  const response = await POST(new Request("https://meanwhile.test/api/address/resolve", { method: "POST",
+    body: JSON.stringify({ zip: "00000", postalEntry: true, street: "Capitol Sq, Columbus, OH", houseNumber: "1" }) }));
+  const body = await response.json();
+  assert.equal(response.status, 200);
+  assert.equal(body.basis, "EXACT_ADDRESS");
+  assert.equal(body.resolution.status, "RESOLVED", "a ZIP the reader typed that the Census does not match is not a redirect under postal entry");
+  assert.deepEqual(seen, ["1 Capitol Sq, Columbus, OH"]);
+});

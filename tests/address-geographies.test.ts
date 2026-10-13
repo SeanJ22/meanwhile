@@ -32,7 +32,7 @@ test("an exact address uses the qualified current plan and a separate election p
   assert.deepEqual(representation.map(row => row.ocdId), ["ocd-division/country:us/state:oh/cd:3"]);
   const election = addressDivisions(geographies, held, { purpose: "election", asOf: "2026-10-12", electionDate: "2026-11-03" });
   assert.deepEqual(election.map(row => row.ocdId), ["ocd-division/country:us/state:oh/cd:15"]);
-  assert.deepEqual(addressDivisions(geographies, held, { purpose: "election", asOf: "2026-10-12", electionDate: "2028-11-07" }), []);
+  assert.deepEqual(addressDivisions(geographies, held, { purpose: "election", asOf: "2026-10-12", electionDate: "2020-11-03" }), []);
 });
 
 test("a missing election layer, ambiguous applicability or unmapped feature never borrows another plan", () => {
@@ -53,7 +53,7 @@ test("ballot exclusions use the date-qualified address plan; dataset labels neve
     { ...contest("other-state", "cd:3"), ocdId: "ocd-division/country:us/state:in/cd:3" }],
   } as BallotSet;
   assert.deepEqual(ballotScopeAtAddress(geographies, held, [ballot], "2026-10-12"), { contestIds: ["inside"], excludedContestIds: ["outside", "other-dataset"] });
-  assert.deepEqual(ballotScopeAtAddress(geographies, held, [{ ...ballot, election: { ...ballot.election, date: "2028-11-07" } }], "2026-10-12"), { contestIds: [], excludedContestIds: [] });
+  assert.deepEqual(ballotScopeAtAddress(geographies, held, [{ ...ballot, election: { ...ballot.election, date: "2020-11-03" } }], "2026-10-12"), { contestIds: [], excludedContestIds: [] });
 });
 
 test("empty exact-address geography establishes no home district", () => {

@@ -56,7 +56,8 @@ export function addressDivisions(geographies: AddressGeographies, held: Slice<Co
   if (held.kind === "HELD" && stateFips) for (const [type, level, pattern] of DISTRICT_LAYERS) {
     const scopes = held.value.scopes.filter(scope => held.value.containers.some(container => container.ref.type === scope.type &&
       container.ref.version === scope.version && container.ref.stateFips === stateFips));
-    const version = selectGeographyVersion(scopes.map(scope => ({ ...scope, key: scope.version })), type, { ...selection, stateFips });
+    const stateAbbr = held.value.containers.find(container => container.ref.stateFips === stateFips)?.ref.stateAbbr;
+    const version = selectGeographyVersion(scopes.map(scope => ({ ...scope, key: scope.version })), type, { ...selection, stateFips }, stateAbbr);
     if (!version) continue;
     const layers = Object.keys(geographies).filter(name => `${level}:${pattern.exec(name)?.[1]}` === version.key);
     if (layers.length !== 1) continue;

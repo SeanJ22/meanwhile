@@ -1942,5 +1942,17 @@
     "gates": "pass",
     "at": "2026-10-13T01:17:52Z",
     "note": "origin/main (release 23 merge 4f8bc8d5) merged into river-next; no file changes; pnpm gates 8 of 8 on this exact SHA (7882 pass, 0 fail, 6 skipped). Recorded at Sean's direction because promote cannot record a fold with no lane."
+  },
+  {
+    "lane": "hunters",
+    "steps": [
+      "CH-23"
+    ],
+    "ready_sha": "05d2e5c098053c4ac2f3951d2039f54539c6ae39",
+    "merge_sha": "593be2416b30508823ef245e2834b05eaa0a4b6b",
+    "river_sha": "593be2416b30508823ef245e2834b05eaa0a4b6b",
+    "tested_sha": "593be2416b30508823ef245e2834b05eaa0a4b6b",
+    "gates": "pass",
+    "at": "2026-10-13T01:18:39Z"
   }
 ]

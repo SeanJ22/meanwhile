@@ -3,8 +3,14 @@ import { useEffect, useState, type ReactNode } from "react";
 import type { OpenDataFact } from "@/lib/sources/open-data/model";
 import { openDataFactIssue } from "@/lib/sources/open-data/model";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
-import { WorkingOnIt } from "@/components/demand/working-on-it";
+import { CardGapContribution } from "@/components/ui/card-gap-context";
+import type { CardSource } from "@/lib/officials/card-sources";
 
+/** The citations behind open-data records, in the card-source shape the shared footer renders. */
+export function openDataSources(records:readonly OpenDataFact[],checkedAt:Readonly<Record<string,string>>={}):CardSource[] {
+  return records.map(row=>({what:`${row.kind==="SOCRATA_DATASET"?`Dataset: ${row.title}`:`Inspections and compliance: ${row.title}`}${checkedAt[row.sourceId]?` · Last checked ${checkedAt[row.sourceId].slice(0,10)}`:""}`,
+    provenance:{sourceUrl:row.sourceUrl,sourceOrg:row.sourceOrg,collectedAt:row.capturedAt,verifiedAt:null,kind:row.official?"OFFICIAL":"REFERENCE"}}));
+}
 export function OpenDataFacts({records,afterRecords,checkedAt={}}:{records:readonly OpenDataFact[];afterRecords?:ReactNode;checkedAt?:Readonly<Record<string,string>>}) {
   return <><ul className="space-y-3">{records.map(row=><li key={row.id} data-open-data-record={row.id}>
     <a className="text-link" href={row.sourceUrl} target="_blank" rel="noopener noreferrer">{row.title}</a>
@@ -15,8 +21,7 @@ export function OpenDataFacts({records,afterRecords,checkedAt={}}:{records:reado
       {[["Air",row.fields.airCompliance],["Water",row.fields.waterCompliance],["Hazardous waste",row.fields.wasteCompliance],["Drinking water",row.fields.drinkingWaterCompliance]].filter(([,v])=>v).map(([label,value])=><p className="t-detail text-voice" key={String(label)}>{String(label)}: {String(value)}</p>)}
     </>}
     <p className="t-detail text-muted">{row.publishedAt?`Published ${row.publishedAt.slice(0,10)}`:"Publication date not supplied"}{row.updatedAt?` · Updated ${row.updatedAt.slice(0,10)}`:""}</p>
-  </li>)}</ul>{afterRecords}<CardSourcesContribution id="open-data" sources={records.map(row=>({what:`${row.kind==="SOCRATA_DATASET"?`Dataset: ${row.title}`:`Inspections and compliance: ${row.title}`}${checkedAt[row.sourceId]?` · Last checked ${checkedAt[row.sourceId].slice(0,10)}`:""}`,
-    provenance:{sourceUrl:row.sourceUrl,sourceOrg:row.sourceOrg,collectedAt:row.capturedAt,verifiedAt:null,kind:row.official?"OFFICIAL":"REFERENCE"}}))} /></>;
+  </li>)}</ul>{afterRecords}<CardSourcesContribution id="open-data" sources={openDataSources(records,checkedAt)} /></>;
 }
 export function PlaceOpenData({divisionId,bodyId,zip}:{divisionId?:string|null;bodyId?:string|null;zip?:string|null}) {
   const key=JSON.stringify([divisionId,bodyId,zip]);
@@ -50,6 +55,6 @@ export function PlaceOpenData({divisionId,bodyId,zip}:{divisionId?:string|null;b
   return <section aria-label="Open data and regulated facilities" className="mt-3 space-y-2">
     <p className="t-structure text-local">Open data{zip?` and facilities near ZIP ${zip}`:""}</p>
     {state.unavailable&&<p className="t-detail text-muted">Couldn’t load all sources just now.</p>}
-    {state.records.length?<OpenDataFacts records={state.records} checkedAt={state.checkedAt} afterRecords={state.nextOffset!==null&&<button type="button" className="text-link t-detail" disabled={state.loadingMore} onClick={()=>void loadMore()}>{state.loadingMore?"Loading…":"Show more"}</button>} />:<WorkingOnIt />}
+    {state.records.length?<OpenDataFacts records={state.records} checkedAt={state.checkedAt} afterRecords={state.nextOffset!==null&&<button type="button" className="text-link t-detail" disabled={state.loadingMore} onClick={()=>void loadMore()}>{state.loadingMore?"Loading…":"Show more"}</button>} />:<CardGapContribution id="open-data" label="open data for this place" />}
   </section>;
 }

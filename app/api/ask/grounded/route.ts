@@ -1,6 +1,7 @@
 import { governmentFinanceEvidence, governmentFinanceQuestion, composeGovernmentFinanceAnswer } from "@/lib/ask/government-finance";
 import { governmentListingEntity, governmentListingEvidence, readerGovernmentListings } from "@/lib/ask/government-listings";
 import { prlStatementEvidence, readPrlForSubject } from "@/lib/sources/prl/person";
+import { federalAskEvidence } from "@/lib/sources/congress/reader";
 import { type MeetingsSnapshot } from "@/lib/meetings/snapshot";
 import { ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
 import { enterReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "@/lib/registry/runtime-edge";
@@ -1661,6 +1662,11 @@ export async function POST(request: Request) {
     }
 
     /* A comparison retrieves both people's money: the one other held person the question names (exact id, never a context default) is stamped as theirs. */
+    const federalMember = subject?.kind === "PERSON" ? [...canonicalSubjectKeys].find(id => /^congress:[A-Z]\d{6}$/.test(id)) ?? subject.id : null;
+    const federal = await federalAskEvidence(federalMember, question);
+    records.push(...federal.records.map(record => subject?.kind === "PERSON" ? { ...record, subjectId: subject.id } : record));
+    gaps.push(...federal.gaps);
+    Object.assign(denominators, federal.denominators);
     const comparedIds = new Set<string>();
     if (subject?.kind === "PERSON" && financeAsked) {
       const other = otherNamedPerson(question, inventory, subject.id);

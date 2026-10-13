@@ -62,6 +62,7 @@ function verifyExactVersion(
 }
 
 function verifierIdFor(contract: ReaderContract): string {
+  if (contract.recordClass === "FEDERAL_CIVIC_RECORD") return "lib/sources/congress/publication.ts#readFederalSourceProjection";
   if (contract.sourceId === "plural-openstates" && contract.recordClass === "STATE_LEGISLATOR") return "lib/state-rollcalls/legislators.ts#readOpenStatesPeopleProjection";
   switch (contract.id) {
     case "fec-funding": return "lib/funding/snapshot.ts#readFundingSnapshot";
@@ -130,6 +131,14 @@ export async function verifyRoutineReaderProjection(
 ): Promise<RoutineReaderVerification> {
   const verifierId = verifierIdFor(contract);
   try {
+    if (contract.recordClass === "FEDERAL_CIVIC_RECORD") {
+      const { readFederalSourceProjection } = await import("../sources/congress/publication.ts");
+      const { isFederalSource } = await import("../sources/congress/targets.ts");
+      if (!isFederalSource(contract.sourceId)) return fail(verifierId, "Unknown federal publisher.");
+      const scope = options.scope ?? contract.scope;
+      const partition = scope.slice(contract.sourceId.length + 1);
+      return verifyExactVersion(verifierId, await readFederalSourceProjection(contract.sourceId, partition, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "federal source");
+    }
     if (contract.sourceId === "plural-openstates" && contract.recordClass === "STATE_LEGISLATOR") {
       const { readOpenStatesPeopleProjection } = await import("../state-rollcalls/legislators.ts");
       const jurisdiction = /^US-[A-Z]{2}/.exec(contract.scope)?.[0] as `US-${string}` | undefined;

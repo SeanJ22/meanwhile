@@ -1,6 +1,7 @@
 import { VALIDATION_CHECKS, type RoutineDataClassification, type RoutineRecordClass } from "./types.ts";
 import type { SourceAuthorityId } from "./source-authority.ts";
 import { RUNTIME_ROUTINE_CONTRACTS } from "./runtime-routine-contracts.ts";
+import { FEDERAL_SOURCE_IDS, FEDERAL_SOURCES, FEDERAL_PARSER_VERSION, FEDERAL_RECORD_CLASS, federalScope } from "../sources/congress/targets.ts";
 import {
   OFFICIAL_STATE_LEGISLATOR_TARGETS,
   OFFICIAL_STATE_ROLL_CALL_TARGETS,
@@ -568,6 +569,17 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
   },
+  ...FEDERAL_SOURCE_IDS.map((id): RoutineSourceContract => ({
+    id, sourceId: id, recordClass: FEDERAL_RECORD_CLASS, scope: federalScope(id), fanOut: true,
+    acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/src-cg-refresh.mts", "--promote", `--source=${id}`], requestedUrl: FEDERAL_SOURCES[id].url },
+    parserNormalizerVersion: FEDERAL_PARSER_VERSION,
+    cadence: { description: FEDERAL_SOURCES[id].clock, defaultEveryMs: FEDERAL_SOURCES[id].everyMs },
+    retry: { afterMs: HOUR, description: "Retry source outages after an hour, honoring a longer provider Retry-After." },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: id }, validationContract: CHECKS, canonicalProductionStore: STORE,
+    readerProjection: { id: `src-cg-${id}`, consumers: ["member cards", "Make your voice heard", "Ask", "Admin"] },
+    lkgBehavior: "Failed pages retain the last GOOD member, bill and national rule partitions. Every unmatched native row is kept and counted. An unchanged provider check succeeds.",
+    autoPromotable: true, classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: [],
+  })),
 ] as const;
 
 export function cadenceMsAt(contract: Pick<RoutineSourceContract, "cadence">, nowMs: number): number {

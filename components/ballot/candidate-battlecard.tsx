@@ -19,6 +19,8 @@ import type { Tier } from "@/lib/ocd/tiers";
 import { PositionsSection } from "@/components/officials/positions-section";
 import { PublicStatementsProfile } from "@/components/officials/public-statements-profile";
 import { OfficialActions } from "@/components/officials/official-actions";
+import { FederalMemberRecords } from "@/components/officials/federal-records";
+import { FederalCommentRules } from "@/components/officials/federal-comment-rules";
 import { DemandPill } from "@/components/demand/demand-pill";
 import {
   type PositionsEmptyStateInput,
@@ -145,6 +147,8 @@ export function CandidateBattlecard({
             contact={contact ?? (contactHolder ? <div data-ballot-contact-row><ContactPills holder={contactHolder} scope="primary" /><OfficialTermNote holder={contactHolder} /></div> : <WorkingOnIt subject={{ type: "CANDIDATE", id: subjectId }} />)}
             sections={{ ...sections, positions: <>{sections?.positions}<PositionsSection subjectId={subjectId} subjectName={name} contentOnly /></> }}
             afterSections={<>
+              <FederalMemberRecords key={contactHolder?.id ?? subjectId} memberId={contactHolder?.id ?? subjectId} />
+              {(contactHolder?.id ?? subjectId).startsWith("congress:") && <FederalCommentRules />}
               <PublicStatementsProfile subjectId={contactHolder?.id ?? subjectId} />
               <OfficialActions subjectId={subjectId} />
               <div className="mt-5"><SpeakYourMind subjectType="CANDIDATE" subjectId={subjectId} subject={name} context={speakContext ?? undefined} /></div>

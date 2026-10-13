@@ -434,6 +434,12 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
           ...array(sitting.rollCalls).map((record, index) => ({ key: `roll-call:${meetingId}:${textKey(record, ["eventItemId"]) ?? `row-${index}`}`, record })),
         ];
       }).sort((left, right) => left.key.localeCompare(right.key));
+    case "FEDERAL_CIVIC_RECORD":
+      return [
+        { key: "projection:cursor", record: root.cursor ?? null },
+        { key: "projection:counts", record: root.counts ?? null },
+        ...keyed("federal", array(root.records), ["id"]),
+      ].sort((a, b) => a.key.localeCompare(b.key));
     case "CURATED_READER_RECORD":
       return keyed("curated-reader", array(root.records), ["id"])
         .sort((left, right) => left.key.localeCompare(right.key));

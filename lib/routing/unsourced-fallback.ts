@@ -131,7 +131,7 @@ export async function askUnsourced(
         max_tokens: Math.max(300, fields.minMaxTokens),
         ...(fields.thinking ? { thinking: fields.thinking } : {}),
         ...(fields.effort ? { output_config: { effort: fields.effort } } : {}),
-        system: fallbackPrompt(),
+        system: [{ type: "text", text: fallbackPrompt(), cache_control: { type: "ephemeral", ttl: "1h" } }],
         // The same scrub the refusal log and the classifier already run:
         // nothing shaped like a phone number, an email or a street address
         // leaves this origin.

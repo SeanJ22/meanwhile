@@ -55,6 +55,7 @@ export type AgendaSourceType =
   /** BoardDocs public committee meeting list and per-meeting agenda page. */
   | "BOARDDOCS"
   | "MUNICODE"
+  | "ESCRIBE"
 
   | "SCHEDULEPAGE"
 

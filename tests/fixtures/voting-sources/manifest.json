@@ -1,0 +1,756 @@
+{
+  "capturedAt": "2026-10-13",
+  "captureMethod": "Discovery began at the FEC-listed chief election offices and followed official links, without a search engine. Initial browser text extracts are labeled transformations. Native HTTP capture subsequently succeeded through the configured workspace proxy with network-enabled execution. Native fixtures preserve source URLs, SHA-256 and robots observations. Unchanged files retain exact response bytes; three county HTML captures replace credential-class substrings through the repository boundary and explicitly record separate raw and saved hashes. No login, identity lookup or CAPTCHA was used.",
+  "fixtures": [
+    {
+      "file": "nc-early-voting-2026-excerpt.tsv",
+      "publisher": "North Carolina State Board of Elections",
+      "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+      "chain": [
+        "https://www.ncsbe.gov/",
+        "https://vt.ncsbe.gov/EVSite/"
+      ],
+      "representation": "First 136 tab-delimited source rows returned by browser text extraction. Only L<number>: prefixes removed; original headerless tab cells and BOM retained. Source has 6,273 rows; this is an excerpt, not a full statewide download or polling-place CSV.",
+      "rows": 136,
+      "sites": 8,
+      "kind": "EARLY_VOTING"
+    },
+    {
+      "file": "nd-2026-official-tables.html",
+      "publisher": "North Dakota Secretary of State",
+      "url": "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+      "chain": [
+        "http://sos.nd.gov/elections",
+        "https://www.sos.nd.gov/elections/voter/elections-currentpast"
+      ],
+      "representation": "Semantic HTML reconstructed from actual rendered table headings and cells. HTML tags were created locally; these are not original response bytes. First visible page of each site table: 10 polling places, 10 drop boxes, 10 early-voting locations, and 10 precinct assignments. Publisher pagination remains owed.",
+      "rows": 40,
+      "sitesByKind": {
+        "ELECTION_DAY": 10,
+        "DROP_BOX": 10,
+        "EARLY_VOTING": 10
+      },
+      "reportedFullTableRows": {
+        "pollingPlaces": 167,
+        "dropBoxes": 64,
+        "earlyVoting": 16,
+        "precinctAssignments": 1483
+      }
+    },
+    {
+      "file": "voterfocus-okaloosa-official-extract.txt",
+      "publisher": "Okaloosa County Supervisor of Elections",
+      "url": "https://www.voterfocus.com/PrecinctFinder/precinctDirectory?county=FL-OKA",
+      "chain": [
+        "https://dos.myflorida.com/elections/",
+        "https://dos.elections.myflorida.com/supervisors/",
+        "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=OKA",
+        "https://www.voteokaloosa.gov/",
+        "https://www.voteokaloosa.gov/voters/where-to-vote-in-person/",
+        "https://www.voterfocus.com/findmyprecinct/pflookup.html?county=oka"
+      ],
+      "representation": "Browser-extracted page text; L<number>: prefixes removed. All 52 precinct entries. Publisher warns normal polling locations may differ for a specific election; 2026 applicability remains an open blank.",
+      "rows": 52
+    },
+    {
+      "file": "voterfocus-bradford-official-extract.txt",
+      "publisher": "Bradford County Supervisor of Elections",
+      "url": "https://www.voterfocus.com/PrecinctFinder/precinctDirectory?county=FL-BRA",
+      "chain": [
+        "https://dos.myflorida.com/elections/",
+        "https://dos.elections.myflorida.com/supervisors/",
+        "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=BRA",
+        "https://www.votebradfordfl.gov/",
+        "https://www.votebradfordfl.gov/voter/polling_locations.php",
+        "https://www.voterfocus.com/findmyprecinct/pflookup.html?county=BRA"
+      ],
+      "representation": "Browser-extracted page text; L<number>: prefixes removed. All 13 precinct entries. The county's separate list differs for precinct 11: 5784 Navarre Ave versus vendor 10813 SW County Road 18. Preserve conflict for official change-notice review and do not claim a settled 2026 assigned location.",
+      "rows": 13
+    },
+    {
+      "file": "voterfocus-okaloosa-normalized.json",
+      "sourceFixture": "voterfocus-okaloosa-official-extract.txt",
+      "representation": "Precinct number, name, and address normalized directly from the factual extracted source rows; not vendor JSON."
+    },
+    {
+      "file": "voterfocus-bradford-normalized.json",
+      "sourceFixture": "voterfocus-bradford-official-extract.txt",
+      "representation": "Precinct number, name, and address normalized directly from the factual extracted source rows; not vendor JSON."
+    },
+    {
+      "file": "tx-el-paso-vote-centers-official-extract.txt",
+      "publisher": "El Paso County Elections Department",
+      "url": "https://epcountyvotestx.gov/voter-information/election-day-vote-centers",
+      "chain": [
+        "https://www.sos.state.tx.us/elections/index.shtml",
+        "https://www.votetexas.gov/",
+        "https://www.votetexas.gov/voting/where.html",
+        "https://www.sos.state.tx.us/elections/voter/county.shtml",
+        "https://www.sos.state.tx.us/elections/voter/links.shtml",
+        "https://epcountyvotes.com/",
+        "https://epcountyvotestx.gov/"
+      ],
+      "representation": "First 201 lines of actual browser-extracted page text (source has 826 lines). The official page labels November 2026 General & Special Election and November 3; all vote centers 7 a.m.\u20137 p.m. An excerpt, not a complete county import.",
+      "rows": 17,
+      "kind": "VOTE_CENTER"
+    },
+    {
+      "file": "tx-identity-locked-lookup.json",
+      "publisher": "Texas Secretary of State",
+      "url": "https://www.votetexas.gov/voting/where.html",
+      "representation": "Official identity requirements normalized as data. Lookup itself never submitted."
+    },
+    {
+      "file": "al-absentee-return-rule.json",
+      "publisher": "Alabama Secretary of State",
+      "url": "https://www.sos.alabama.gov/alabama-votes/voter/absentee-voting",
+      "chain": [
+        "https://www.sos.alabama.gov/alabama-votes"
+      ],
+      "representation": "Official exhaustive legal return methods and deadlines normalized as rules. Exclusion of unattended drop boxes follows its exhaustive list; the page does not use the words no drop boxes."
+    },
+    {
+      "file": "pr-election-calendar.json",
+      "publisher": "Comisi\u00f3n Estatal de Elecciones de Puerto Rico",
+      "url": "https://ww2.ceepur.org/",
+      "chain": [
+        "https://ceepur.org/"
+      ],
+      "representation": "Observed 2028 general-election guide label, 2026 Cata\u00f1o special-election results link, and office contact normalized as data. No-general-Nov3 scope supplied explicitly by user; applicable special elections remain unverified."
+    },
+    {
+      "file": "fec-official-root-links-extract.txt",
+      "publisher": "Federal Election Commission",
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "representation": "Actual rendered FEC table rows extracted on October 13; labels and link destination text preserved. Captures official authority behind the root URLs including non-.gov offices."
+    },
+    {
+      "file": "mt-2026-polling-satellite.xlsx",
+      "url": "https://sosmt.gov/docs/23/elections/77688/2026-polling-location-satellite-office-general-final",
+      "finalUrl": "https://sosmt.gov/docs/23/elections/77688/2026-polling-location-satellite-office-general-final",
+      "status": 200,
+      "bytes": 94238,
+      "contentType": "application/octet-stream",
+      "sha256": "e869faaa0685b43f400af3562509cf5f23537119d5eb94fa6478fdce5af4a06e",
+      "lastModified": null,
+      "robots": [
+        {
+          "url": "https://sosmt.gov/robots.txt",
+          "status": 200,
+          "sha256": "2d4863199ee7136163a4f5bc86d09156efbbe9eb6277eb1d680894076a4c018e"
+        }
+      ],
+      "checkedAt": "2026-10-13",
+      "publisher": "Montana Secretary of State",
+      "representation": "Original HTTP response bytes, unchanged.",
+      "rowsByKind": {
+        "ELECTION_DAY": 730,
+        "SATELLITE": 30
+      },
+      "fileUpdatedAt": "October, 1, 2026",
+      "chain": [
+        "https://sosmt.gov/elections/",
+        "https://votemt.gov/"
+      ]
+    },
+    {
+      "file": "mt-chief-election-native.html",
+      "url": "https://sosmt.gov/elections/",
+      "finalUrl": "https://sosmt.gov/elections/",
+      "status": 200,
+      "bytes": 296610,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "b25d04c2090d1c7cdce96d7962b8e1f75c6cac0638b336401f799a993cce472e",
+      "lastModified": "Tue, 06 Oct 2026 15:22:33 GMT",
+      "robots": [
+        {
+          "url": "https://sosmt.gov/robots.txt",
+          "status": 200,
+          "sha256": "2d4863199ee7136163a4f5bc86d09156efbbe9eb6277eb1d680894076a4c018e"
+        }
+      ],
+      "checkedAt": "2026-10-13",
+      "publisher": "Montana Secretary of State",
+      "representation": "Original HTTP response bytes, unchanged."
+    },
+    {
+      "file": "mt-general-election-native.html",
+      "url": "https://votemt.gov/",
+      "finalUrl": "https://votemt.gov/",
+      "status": 200,
+      "bytes": 169325,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "8c0ba9397df5d67ca45c153af9d2bb2c5069060798c052867a5c317264a0da8e",
+      "lastModified": null,
+      "robots": [
+        {
+          "url": "https://votemt.gov/robots.txt",
+          "status": 200,
+          "sha256": "078a03774e38ef8af52d8448f55deb9012b43362b37874816d3ddd030ab45996"
+        }
+      ],
+      "checkedAt": "2026-10-13",
+      "publisher": "Montana Secretary of State",
+      "representation": "Original HTTP response bytes, unchanged."
+    },
+    {
+      "file": "nc-chief-election-native.html",
+      "url": "https://www.ncsbe.gov/",
+      "finalUrl": "https://www.ncsbe.gov/",
+      "status": 200,
+      "bytes": 103406,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "01586d30fdb88f125450fe3aee8a99a890d44990e1eef59c8b8b9a0d81a43e48",
+      "lastModified": "Mon, 12 Oct 2026 13:10:16 GMT",
+      "robots": [
+        {
+          "url": "https://www.ncsbe.gov/robots.txt",
+          "status": 200,
+          "sha256": "6c2aa0fd6116dcf8222cf3d00351493c8b0684a742865ea3e4c13ecbe7720d54"
+        }
+      ],
+      "checkedAt": "2026-10-13",
+      "publisher": "North Carolina State Board of Elections",
+      "representation": "Original HTTP response bytes, unchanged."
+    },
+    {
+      "file": "nc-polling-place-data-native.html",
+      "url": "https://www.ncsbe.gov/results-data/polling-place-data",
+      "finalUrl": "https://www.ncsbe.gov/results-data/polling-place-data",
+      "status": 200,
+      "bytes": 88012,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "391e5b0618ce9f5e637b3f1777da335609abb82756cee4cc176da514517523fd",
+      "lastModified": "Mon, 12 Oct 2026 13:08:53 GMT",
+      "robots": [
+        {
+          "url": "https://www.ncsbe.gov/robots.txt",
+          "status": 200,
+          "sha256": "6c2aa0fd6116dcf8222cf3d00351493c8b0684a742865ea3e4c13ecbe7720d54"
+        }
+      ],
+      "checkedAt": "2026-10-13",
+      "publisher": "North Carolina State Board of Elections",
+      "representation": "Original HTTP response bytes, unchanged."
+    },
+    {
+      "file": "nc-polling-place-20260303-native.csv.bin",
+      "url": "https://dl.ncsbe.gov/ENRS/2026_03_03/polling_place_20260303.csv",
+      "finalUrl": "https://dl.ncsbe.gov/ENRS/2026_03_03/polling_place_20260303.csv",
+      "status": 200,
+      "bytes": 520910,
+      "contentType": "binary/octet-stream",
+      "sha256": "134cd31f0da81ffc88f809a8b9945d0b89f9886df3739917e20736949bd63426",
+      "lastModified": "Sun, 01 Mar 2026 10:25:04 GMT",
+      "robots": [
+        {
+          "url": "https://dl.ncsbe.gov/robots.txt",
+          "status": 404,
+          "sha256": "36d3da120e177f193930b745e5c128ce5522337d8556e8e2f5f5ad5a95ad4449"
+        }
+      ],
+      "checkedAt": "2026-10-13",
+      "publisher": "North Carolina State Board of Elections",
+      "representation": "Original HTTP response bytes. The official polling-data page links the S3 object; the official dl.ncsbe.gov public-file directory declares that same bucket in its JavaScript. Downloaded the same object path through the official dl.ncsbe.gov endpoint after the global S3 robots response was unreadable. March 3 primary is the newest polling-place CSV linked on the official page; this is not a November 3 assigned-site answer. The .bin fixture suffix identifies the original UTF-16LE binary encoding to repository text sweeps; the publisher filename and reader format remain .csv.",
+      "rows": 2632,
+      "encoding": "UTF-16LE with BOM",
+      "delimiter": "TAB",
+      "electionDate": "2026-03-03",
+      "officialLinkedUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2026_03_03/polling_place_20260303.csv",
+      "chain": [
+        "https://www.ncsbe.gov/",
+        "https://www.ncsbe.gov/results-data/polling-place-data"
+      ]
+    },
+    {
+      "file": "nc-early-voting-2026-native.tsv",
+      "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+      "finalUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+      "status": 200,
+      "bytes": 719719,
+      "contentType": "text/plain",
+      "sha256": "2329bfd321158af9f0bb0b5470e9ac8d968ede25458b0d07a515a825519c8489",
+      "lastModified": null,
+      "robots": [
+        {
+          "url": "https://vt.ncsbe.gov/robots.txt",
+          "status": 404,
+          "sha256": "3708c0c2dc243d6f7ed43b5ce7e40d6dac8d584d3ce5bf67f4b6aa92b0ec152b"
+        }
+      ],
+      "checkedAt": "2026-10-13",
+      "publisher": "North Carolina State Board of Elections",
+      "representation": "Original HTTP response bytes, unchanged.",
+      "rows": 6273,
+      "sites": 369,
+      "electionDate": "2026-11-03"
+    },
+    {
+      "file": "nd-2026-native.html",
+      "url": "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+      "finalUrl": "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+      "status": 200,
+      "bytes": 190942,
+      "contentType": "text/html; charset=utf-8",
+      "sha256": "91b82ec67c5065ec83d6f578089df9bc5a20758830c748b5c0ba84e0bcb06322",
+      "lastModified": null,
+      "robots": [
+        {
+          "url": "https://vip.sos.nd.gov/robots.txt",
+          "status": 404,
+          "sha256": "dc1d54dab6ec8c00f70137927504e4f222c8395f10760b6beecfcfa94e08249f"
+        }
+      ],
+      "checkedAt": "2026-10-13",
+      "publisher": "North Dakota Secretary of State",
+      "representation": "Original HTTP response bytes, unchanged."
+    },
+    {
+      "file": "voterfocus-okaloosa-native.html",
+      "url": "https://www.voterfocus.com/PrecinctFinder/precinctDirectory?county=FL-OKA",
+      "finalUrl": "https://www.voterfocus.com/PrecinctFinder/precinctDirectory?county=FL-OKA",
+      "status": 200,
+      "bytes": 55201,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "cbddd6e37ce3071d8e0d37a5c23af2217cf728cc5e5f08df54ff38b77ddb5cd0",
+      "lastModified": null,
+      "robots": [
+        {
+          "url": "https://www.voterfocus.com/robots.txt",
+          "status": 404,
+          "sha256": "dc1d54dab6ec8c00f70137927504e4f222c8395f10760b6beecfcfa94e08249f"
+        }
+      ],
+      "checkedAt": "2026-10-13",
+      "publisher": "Okaloosa County Supervisor of Elections",
+      "representation": "Original HTTP response bytes, unchanged."
+    },
+    {
+      "file": "voterfocus-bradford-native.html",
+      "url": "https://www.voterfocus.com/PrecinctFinder/precinctDirectory?county=FL-BRA",
+      "finalUrl": "https://www.voterfocus.com/PrecinctFinder/precinctDirectory?county=FL-BRA",
+      "status": 200,
+      "bytes": 16316,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "42ee170d692d864ebc82e160b343361796834ded270b67b8b006fe69e47e4ecf",
+      "lastModified": null,
+      "robots": [
+        {
+          "url": "https://www.voterfocus.com/robots.txt",
+          "status": 404,
+          "sha256": "dc1d54dab6ec8c00f70137927504e4f222c8395f10760b6beecfcfa94e08249f"
+        }
+      ],
+      "checkedAt": "2026-10-13",
+      "publisher": "Bradford County Supervisor of Elections",
+      "representation": "Original HTTP response bytes, unchanged."
+    },
+    {
+      "file": "tx-el-paso-vote-centers-native.html",
+      "url": "https://epcountyvotestx.gov/voter-information/election-day-vote-centers",
+      "finalUrl": "https://epcountyvotestx.gov/voter-information/election-day-vote-centers",
+      "status": 200,
+      "bytes": 198794,
+      "contentType": "text/html; charset=utf-8",
+      "sha256": "61f6362f0e01da0939f64355f2985dc23cfb14203ee636445044982696392cd2",
+      "lastModified": null,
+      "robots": [
+        {
+          "url": "https://epcountyvotestx.gov/robots.txt",
+          "status": 200,
+          "sha256": "7c8f615d7122a04da2b9af2097a7c865eef52f84dbede1f95874e005d00c32ce"
+        }
+      ],
+      "checkedAt": "2026-10-13",
+      "publisher": "El Paso County Elections Department",
+      "representation": "Native HTTP response with only credential-class substrings replaced through writeCapturedFixture. Saved bytes are sanitized, not byte-identical to the original capture. Election text and location records are retained; rawSha256 and rawBytes identify the original response.",
+      "sitesByKind": {
+        "VOTE_CENTER": 123
+      },
+      "rawSha256": "6c448114f9ac7d2495da4ce7aade7ef92349b4df15884f64737c5028bd8dcc56",
+      "rawBytes": 198803,
+      "sanitization": {
+        "sanitizerVersion": "fx-cred-v1-2026-08-28",
+        "record": "data/fixtures/sanitization.json",
+        "classes": [
+          "google_api_key"
+        ],
+        "substringsReplaced": 1
+      }
+    },
+    {
+      "file": "tx-el-paso-early-native.html",
+      "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+      "finalUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+      "status": 200,
+      "bytes": 80710,
+      "contentType": "text/html; charset=utf-8",
+      "sha256": "82ef5f8530bc0d686fbae6a71c5af26691abaf80ef9267a457970d234a87e857",
+      "lastModified": null,
+      "robots": [
+        {
+          "url": "https://epcountyvotestx.gov/robots.txt",
+          "status": 200,
+          "sha256": "7c8f615d7122a04da2b9af2097a7c865eef52f84dbede1f95874e005d00c32ce"
+        }
+      ],
+      "checkedAt": "2026-10-13",
+      "publisher": "El Paso County Elections Department",
+      "representation": "Native HTTP response with only credential-class substrings replaced through writeCapturedFixture. Saved bytes are sanitized, not byte-identical to the original capture. Election text and location records are retained; rawSha256 and rawBytes identify the original response.",
+      "rawSha256": "9ad477fe23d89417f91d50cb44cb134ab5df0c95ca80d865e413f6dc9014885c",
+      "rawBytes": 80719,
+      "sanitization": {
+        "sanitizerVersion": "fx-cred-v1-2026-08-28",
+        "record": "data/fixtures/sanitization.json",
+        "classes": [
+          "google_api_key"
+        ],
+        "substringsReplaced": 1
+      }
+    },
+    {
+      "file": "al-absentee-return-native.html",
+      "url": "https://www.sos.alabama.gov/alabama-votes/voter/absentee-voting",
+      "finalUrl": "https://www.sos.alabama.gov/alabama-votes/voter/absentee-voting",
+      "status": 200,
+      "bytes": 55422,
+      "contentType": "text/html; charset=utf-8",
+      "sha256": "f0ac8c89f9ec01bcd24dac272e5c7cdef07cfc3906277440259339ece41200c3",
+      "lastModified": null,
+      "robots": [
+        {
+          "url": "https://www.sos.alabama.gov/robots.txt",
+          "status": 200,
+          "sha256": "8e8cb58d810473a52cce903be5ffb73d948eef981bbd101cffbf8dc2c02fcf4e"
+        }
+      ],
+      "checkedAt": "2026-10-13",
+      "publisher": "Alabama Secretary of State",
+      "representation": "Original HTTP response bytes, unchanged."
+    },
+    {
+      "file": "pr-chief-election-native.html",
+      "url": "https://ceepur.org/",
+      "finalUrl": "https://ceepur.org/",
+      "status": 200,
+      "bytes": 6581,
+      "contentType": "text/html",
+      "sha256": "8e30286be5151f56578aa0d2c65254577d4da0cbd0b760b8659d267b536dc41e",
+      "lastModified": "Sun, 27 Sep 2026 19:31:55 GMT",
+      "robots": [
+        {
+          "url": "https://ceepur.org/robots.txt",
+          "status": 404,
+          "sha256": "90b2d35cd5e08370ed20db81197dd9da1a4dbb421f71293fd5733ea49eb7b3e1"
+        }
+      ],
+      "checkedAt": "2026-10-13",
+      "publisher": "Comisi\u00f3n Estatal de Elecciones de Puerto Rico",
+      "representation": "Original HTTP response bytes, unchanged."
+    },
+    {
+      "file": "pr-election-calendar-native.html",
+      "url": "https://ww2.ceepur.org/",
+      "finalUrl": "https://ww2.ceepur.org/",
+      "status": 200,
+      "bytes": 30649,
+      "contentType": "text/html; charset=utf-8",
+      "sha256": "97a7eeefa7901342d7fa60a2d7d7dd0a28d186ff21eac585db7d379552d7bf38",
+      "lastModified": null,
+      "robots": [
+        {
+          "url": "https://ww2.ceepur.org/robots.txt",
+          "status": 404,
+          "sha256": "90b2d35cd5e08370ed20db81197dd9da1a4dbb421f71293fd5733ea49eb7b3e1"
+        }
+      ],
+      "checkedAt": "2026-10-13",
+      "publisher": "Comisi\u00f3n Estatal de Elecciones de Puerto Rico",
+      "representation": "Original HTTP response bytes, unchanged."
+    },
+    {
+      "file": "census-dillon-geographies-native.json",
+      "url": "https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress?address=715%20E%20Bannack%20St%20Dillon%20MT&benchmark=Public_AR_Current&vintage=Current_Current&format=json",
+      "finalUrl": "https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress?address=715%20E%20Bannack%20St%20Dillon%20MT&benchmark=Public_AR_Current&vintage=Current_Current&format=json",
+      "status": 200,
+      "bytes": 4714,
+      "contentType": "application/json",
+      "sha256": "77d4fa6752a762e42d0eb2fe1a5ef8d3bc3e1ac01cf4af9c172da894de9cf3c4",
+      "lastModified": null,
+      "robots": [
+        {
+          "url": "https://geocoding.geo.census.gov/robots.txt",
+          "status": 404,
+          "sha256": "270d2fb55aa801662897590a27ec1c152407fa36be1d6678c27fd8c1859239e4"
+        }
+      ],
+      "checkedAt": "2026-10-13",
+      "publisher": "U.S. Census Bureau",
+      "representation": "Original HTTP response bytes, unchanged."
+    },
+    {
+      "file": "census-dillon-2020-geographies-native.json",
+      "url": "https://geocoding.geo.census.gov/geocoder/geographies/coordinates?x=-112.630779854501&y=45.213603695787&benchmark=Public_AR_Census2020&vintage=Census2020_Census2020&layers=all&format=json",
+      "finalUrl": "https://geocoding.geo.census.gov/geocoder/geographies/coordinates?x=-112.630779854501&y=45.213603695787&benchmark=Public_AR_Census2020&vintage=Census2020_Census2020&layers=all&format=json",
+      "status": 200,
+      "bytes": 8127,
+      "contentType": "application/json",
+      "sha256": "d033cb5c50e1ec8af675d6aaba94f0b84ac510c0c250f5b0443dade25812431d",
+      "lastModified": null,
+      "robots": [
+        {
+          "url": "https://geocoding.geo.census.gov/robots.txt",
+          "status": 404,
+          "sha256": "270d2fb55aa801662897590a27ec1c152407fa36be1d6678c27fd8c1859239e4"
+        }
+      ],
+      "checkedAt": "2026-10-13",
+      "publisher": "U.S. Census Bureau",
+      "representation": "Original HTTP response bytes, unchanged.",
+      "result": "Church street address lies in Census 2020 PRECINCT 12, not precinct 1. Both publisher precinct rows use Lutheran Church; no precinct 1 address assignment is inferred."
+    },
+    {
+      "file": "census-crow-no-match-native.json",
+      "url": "https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress?address=8645%20S%20Weaver%20Dr%20Crow%20Agency%20MT&benchmark=Public_AR_Current&vintage=Current_Current&format=json",
+      "finalUrl": "https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress?address=8645%20S%20Weaver%20Dr%20Crow%20Agency%20MT&benchmark=Public_AR_Current&vintage=Current_Current&format=json",
+      "status": 200,
+      "bytes": 370,
+      "contentType": "application/json",
+      "sha256": "b10a8a9cfddb12777a93d3f40387bad2342c14aac01fed5aeb3a519aa860ac4f",
+      "lastModified": null,
+      "robots": [
+        {
+          "url": "https://geocoding.geo.census.gov/robots.txt",
+          "status": 404,
+          "sha256": "270d2fb55aa801662897590a27ec1c152407fa36be1d6678c27fd8c1859239e4"
+        }
+      ],
+      "checkedAt": "2026-10-13",
+      "publisher": "U.S. Census Bureau",
+      "representation": "Original HTTP response bytes, unchanged.",
+      "result": "HTTP 200; Census returned addressMatches: []; preserve open geocode blank."
+    },
+    {
+      "file": "census-crow-structured-no-match-native.json",
+      "url": "https://geocoding.geo.census.gov/geocoder/geographies/address?street=8645%20S.%20Weaver%20Dr.&city=Crow%20Agency&state=MT&zip=59022&benchmark=Public_AR_Current&vintage=Current_Current&layers=all&format=json",
+      "finalUrl": "https://geocoding.geo.census.gov/geocoder/geographies/address?street=8645%20S.%20Weaver%20Dr.&city=Crow%20Agency&state=MT&zip=59022&benchmark=Public_AR_Current&vintage=Current_Current&layers=all&format=json",
+      "status": 200,
+      "bytes": 404,
+      "contentType": "application/json",
+      "sha256": "c59aacfdce12b5bedaebb124f9ad88a4564e57a97d4508fb94bd53eb1c20dfb7",
+      "lastModified": null,
+      "robots": [
+        {
+          "url": "https://geocoding.geo.census.gov/robots.txt",
+          "status": 404,
+          "sha256": "270d2fb55aa801662897590a27ec1c152407fa36be1d6678c27fd8c1859239e4"
+        }
+      ],
+      "checkedAt": "2026-10-13",
+      "publisher": "U.S. Census Bureau",
+      "representation": "Original HTTP response bytes, unchanged.",
+      "result": "HTTP 200; Census returned addressMatches: []; preserve open geocode blank."
+    },
+    {
+      "file": "pima-official-election-native.html",
+      "url": "https://www.pima.gov/3199/Pima-Votes",
+      "finalUrl": "https://www.pima.gov/pima-votes",
+      "status": 200,
+      "bytes": 1115921,
+      "contentType": "text/html; charset=utf-8",
+      "sha256": "ec1f2c033cdfd0d076a6bd8b2c1d4d758dea3b4fad5fe4cfa29717f4ed65ee92",
+      "lastModified": "Tue, 13 Oct 2026 01:43:04 GMT",
+      "robots": [
+        {
+          "url": "https://www.pima.gov/robots.txt",
+          "status": 200,
+          "sha256": "5b070e93aa21b3328307a100a4e880ccaedbbc5fbd7954d490086c9614860156"
+        },
+        {
+          "url": "https://www.pima.gov/robots.txt",
+          "status": 200,
+          "sha256": "5b070e93aa21b3328307a100a4e880ccaedbbc5fbd7954d490086c9614860156"
+        }
+      ],
+      "checkedAt": "2026-10-13",
+      "publisher": "Pima County",
+      "representation": "Native HTTP response with only credential-class substrings replaced through writeCapturedFixture. Saved bytes are sanitized, not byte-identical to the original capture. Election text and location records are retained; rawSha256 and rawBytes identify the original response.",
+      "rawSha256": "c1d1866fc282e5da005e31fddf5403b22ae306a0f731f5dd606cd018ec15be13",
+      "rawBytes": 1120205,
+      "sanitization": {
+        "sanitizerVersion": "fx-cred-v1-2026-08-28",
+        "record": "data/fixtures/sanitization.json",
+        "classes": [
+          "jwt",
+          "google_api_key"
+        ],
+        "substringsReplaced": 6
+      }
+    },
+    {
+      "file": "pima-experience-config-native.json",
+      "url": "https://www.arcgis.com/sharing/rest/content/items/21445fb10f884caea0aac1ecba764599/data?f=json",
+      "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/21445fb10f884caea0aac1ecba764599/data?f=json",
+      "status": 200,
+      "bytes": 169841,
+      "contentType": "application/json;charset=utf-8",
+      "sha256": "ebf550d6b0362b0a1f17c0fe20c85b75dd673661edda02507419b0474ad06f10",
+      "lastModified": null,
+      "robots": [
+        {
+          "url": "https://www.arcgis.com/robots.txt",
+          "status": 200,
+          "sha256": "d9da31493f06281ceebc4eaff54a0ba0cd4bc00f01217e6dbec7f084b263730d"
+        }
+      ],
+      "checkedAt": "2026-10-13",
+      "publisher": "Pima County",
+      "representation": "Original HTTP response bytes, unchanged."
+    },
+    {
+      "file": "pima-vote-center-map-native.json",
+      "url": "https://www.arcgis.com/sharing/rest/content/items/1ab372663c0c44d4bd6a12cda4a1ad1e/data?f=json",
+      "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/1ab372663c0c44d4bd6a12cda4a1ad1e/data?f=json",
+      "status": 200,
+      "bytes": 68403,
+      "contentType": "application/json;charset=utf-8",
+      "sha256": "faba6bdcb72ad8b6942dc7147442a9f7e2051bf9d9b018695c092c7cff2251c5",
+      "lastModified": null,
+      "robots": [
+        {
+          "url": "https://www.arcgis.com/robots.txt",
+          "status": 200,
+          "sha256": "d9da31493f06281ceebc4eaff54a0ba0cd4bc00f01217e6dbec7f084b263730d"
+        }
+      ],
+      "checkedAt": "2026-10-13",
+      "publisher": "Pima County",
+      "representation": "Original HTTP response bytes, unchanged.",
+      "result": "Official current app configuration points to these layer URLs. Drop-box popup still contains July-primary dates while app overview says October 7\u2013November 3, 2026; retain conflict and earlier-election blank."
+    },
+    {
+      "file": "nd-2026-early-page2-native.html",
+      "publisher": "North Dakota Secretary of State",
+      "url": "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+      "method": "POST",
+      "representation": "Original HTTP 200 response bytes after submitting the public ASP.NET next-page control for the early-voting table. No identity fields or credentials. This page adds the remaining six early sites; other tables still require their own pagination. Response cookies are not committed.",
+      "bytes": 184926,
+      "sha256": "39afe69c88cf09a109e6e2a09fe68205b1bf91f62eba8eea33d32afc2fbd5561",
+      "sitesByKind": {
+        "EARLY_VOTING": 6
+      },
+      "robots": [
+        {
+          "url": "https://vip.sos.nd.gov/robots.txt",
+          "status": 404
+        }
+      ]
+    },
+    {
+      "file": "vt-bennington-nov3-original.html",
+      "url": "https://www.benningtonvt.org/_T8_R868.php",
+      "httpStatus": 200,
+      "sha256": "c4f873df0a2f18a43b478258f09955cd58f0e75f8e677ea51e16a5ad0a9ffb7e",
+      "publisher": "Town of Bennington",
+      "representation": "Original HTTP response bytes; see vt-native-capture.json for source-authority and coverage limits."
+    },
+    {
+      "file": "vt-bennington-elections-original.html",
+      "url": "https://www.benningtonvt.org/services/town_clerk/elections___voter_information/index.php",
+      "httpStatus": 200,
+      "sha256": "eaedd8d1d1c57f7a30aeb0ad1f3e667ce33f3b4a722518e9a2ab261145917378",
+      "publisher": "Town of Bennington",
+      "representation": "Original HTTP response bytes; see vt-native-capture.json for source-authority and coverage limits."
+    },
+    {
+      "file": "vt-bennington-home-original.html",
+      "url": "https://www.benningtonvt.org/",
+      "httpStatus": 200,
+      "sha256": "c80eb3587308f090693dea2d81513fa5edbacfce39e74bec72300a607630169b",
+      "publisher": "Town of Bennington",
+      "representation": "Original HTTP response bytes; see vt-native-capture.json for source-authority and coverage limits."
+    },
+    {
+      "file": "vt-arlington-closure-original.pdf",
+      "url": "https://arlingtonvermont.org/wp-content/uploads/2026/09/Town-Hall-Closure-insulation.pdf",
+      "httpStatus": 200,
+      "sha256": "8b89fc50a066791bc41e5d7a872a5737bbd7d9d0c46cb671946b6447d328a9f5",
+      "publisher": "Town of Arlington",
+      "representation": "Original HTTP response bytes; see vt-native-capture.json for source-authority and coverage limits."
+    },
+    {
+      "file": "vt-arlington-closure-original.html",
+      "url": "https://arlingtonvermont.org/town-hall-closed-oct-20-23-2026/",
+      "httpStatus": 200,
+      "sha256": "360ca02a39364195b776e69b08ad950408409e6e38ad836d5e743a4b7df7634a",
+      "publisher": "Town of Arlington",
+      "representation": "Original HTTP response bytes; see vt-native-capture.json for source-authority and coverage limits."
+    },
+    {
+      "file": "vt-arlington-clerk-original.html",
+      "url": "https://arlingtonvermont.org/town-clerk/",
+      "httpStatus": 200,
+      "sha256": "57a2d19e648e91108cbdace0ae03dc361be7a40d96f23bc7cd2e450b22de6a29",
+      "publisher": "Town of Arlington",
+      "representation": "Original HTTP response bytes; see vt-native-capture.json for source-authority and coverage limits."
+    },
+    {
+      "file": "vt-arlington-home-original.html",
+      "url": "https://arlingtonvermont.org/",
+      "httpStatus": 200,
+      "sha256": "cfc084f17316e344e437f62213bd38e9e7ecf3031c97524e924c2e774d76ea15",
+      "publisher": "Town of Arlington",
+      "representation": "Original HTTP response bytes; see vt-native-capture.json for source-authority and coverage limits."
+    },
+    {
+      "file": "vt-sos-robots-browser-403-original.html",
+      "url": "https://sos.vermont.gov/robots.txt",
+      "httpStatus": 403,
+      "sha256": "ec7b4e17b41ed50ddbc818f24215ccbfb83781e9597a40d8efb17050f3d92836",
+      "publisher": "Vermont Secretary of State",
+      "representation": "Original HTTP response bytes; see vt-native-capture.json for source-authority and coverage limits."
+    }
+  ],
+  "unavailable": [
+    {
+      "sample": "Vermont statewide town PDFs and Albany clerk",
+      "url": "https://sos.vermont.gov/elections/",
+      "attempts": [
+        "FEC-listed statewide elections route and robots returned403, including permitted browser-UA with no challenge solved.",
+        "Native Arlington current closure PDF and clerk page captured. Native Bennington Nov3 notice captured with own-town rule and Nov2 4:30PM close."
+      ],
+      "next": [
+        "Existing browser-UA rung only if no challenge is solved",
+        "Official town-clerk lists and linked statewide PDFs"
+      ],
+      "owed": "Statewide town PDF; Albany clerk phone and sites; Arlington own-town rule and normal hours; government authority-link chain for town .org domains."
+    },
+    {
+      "sample": "North Carolina November 3 polling-place CSV",
+      "url": "https://www.ncsbe.gov/results-data/polling-place-data",
+      "attempts": [
+        "Native official polling-data page captured. Latest linked polling CSV is March 3, 2026; its actual bytes are committed.",
+        "Complete November 3 early-voting TSV captured."
+      ],
+      "next": [
+        "Re-read current polling-data page and county boards for the general-election list."
+      ],
+      "owed": "November 3 precinct assignments and Election Day hours; March primary rows remain visible only with their source election and open newer-election blank."
+    },
+    {
+      "sample": "Pima ArcGIS all-feature layer responses",
+      "url": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/Primary_2024_Vote_Centers/FeatureServer/0",
+      "attempts": [
+        "Official Pima page, ArcGIS Experience configuration and web-map JSON captured natively.",
+        "services2.arcgis.com/robots.txt returned HTTP403 Invalid URL; voting-source permission policy leaves layer requests closed."
+      ],
+      "next": [
+        "Re-check robots using permitted existing browser-UA rung without challenges; use official county lists and files."
+      ],
+      "owed": "Native object IDs and complete feature query responses for vote centers, early sites and drop boxes."
+    }
+  ],
+  "additionalProvenance": [
+    "vt-native-capture.json: native Vermont town captures, exact source URLs/hashes, confirmed facts and open authority/statewide/Albany blanks."
+  ]
+}

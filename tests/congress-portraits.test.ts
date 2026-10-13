@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import sharp from "sharp";
-import { congressPortraits } from "../lib/officials/congress-portraits.ts";
+import { congressPortraits, congressDirectoryPortraitLeads } from "../lib/officials/congress-portraits.ts";
 import { normalizeCongressDirectory } from "../lib/officials/congress-normalize.ts";
 import { federalDirectoryCandidate } from "../lib/officials/federal-directory-data-plane.ts";
 import { readFederalDirectoryProjection } from "../lib/officials/federal-directory-read-model.ts";
@@ -122,7 +122,7 @@ test("a pass with no new portrait still persists its exact field failures withou
         throw sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", "Fixture official page unavailable");
       } });
     assert.deepEqual(result.projection, model);
-    assert.equal(result.excludedFacts.length, 2);
+    assert.equal(result.excludedFacts.length, 3);
     const candidate = federalDirectoryCandidate({ projection: model, excludedFacts: result.excludedFacts, retrievedAt: ORIGINAL,
       acquisitions: [{ requestedUrl: sourceUrl, finalUrl: sourceUrl, httpStatus: 200, body: JSON.stringify(raw()["legislators-current"]), retrievedAt: ORIGINAL }] });
     assert.notEqual(candidate.id, priorId, "a later failed field attempt needs its own durable candidate identity"); priorId = candidate.id;
@@ -182,4 +182,33 @@ test("portrait image transport receives the existing caller cancellation signal"
   assert.equal(observed, true); assert.equal(wrote, false);
   assert.equal(result.projection.roster.officeholders[0].photo, null);
   assert.ok(result.excludedFacts.some(row => row.code === "CONGRESS_PORTRAIT_PROCESSING_FAILED"));
+});
+
+test("directory image leads publish only when the exact person's own official page labels that image",async()=>{
+  const images=await imageStore(),model=directory(),id="A000001",lead=congressDirectoryPortraitLeads(id)[1];
+  const requested:string[]=[];
+  const result=await congressPortraits(model,START,undefined,{apiKeyConfigured:false,now:()=>VERIFIED,storePortrait:images.store,
+    acquire:async options=>{
+      requested.push(options.url);
+      if(options.sourceId === "congress-member")return release(options,JSON.stringify({member:{bioguideId:id}}));
+      if(options.url.includes("house.gov"))return release(options,"<h1>Jane A000001</h1>");
+      return release(options,`<h1>Jane A000001</h1><img src="${lead}" alt="Jane A000001">`);
+    }});
+  const photo=result.projection.roster.officeholders[0].photo!;
+  assert.ok(portraitBindingMatches("congress:A000001",photo));
+  assert.equal(photo.sourceUrl,lead);
+  assert.equal(photo.verification!.ownPageUrl,"https://bioguide.congress.gov/search/bio/A000001");
+  assert.equal(requested.some(url=>congressDirectoryPortraitLeads(id).includes(url)),false,"lead image bytes are requested only after the own-page check");
+  assert.equal(images.writes.length,1);
+});
+
+test("a directory candidate belonging to a different person is never published",async()=>{
+  const images=await imageStore(),model=directory(),id="A000001",lead=congressDirectoryPortraitLeads(id)[0];
+  const result=await congressPortraits(model,START,undefined,{apiKeyConfigured:false,now:()=>VERIFIED,storePortrait:images.store,
+    acquire:async options=>options.sourceId === "congress-member"
+      ? release(options,JSON.stringify({member:{bioguideId:id}}))
+      : release(options,`<h1>Jane A000001</h1><img src="${lead}" alt="Portrait of Other Person">`)});
+  assert.equal(result.projection.roster.officeholders[0].photo,null);
+  assert.equal(images.writes.length,0);
+  assert.ok(result.excludedFacts.some(fact=>fact.code === "CONGRESS_PORTRAIT_IMAGE_NOT_FOUND"));
 });

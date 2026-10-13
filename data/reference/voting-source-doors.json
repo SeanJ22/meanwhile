@@ -1,0 +1,2482 @@
+[
+  {
+    "id": "fec-al-chief",
+    "publisher": "Elections Division, Office of the Secretary of State, Montgomery, AL",
+    "url": "https://www.sos.alabama.gov/alabama-votes",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "AL",
+      "ocdId": "ocd-division/country:us/state:al",
+      "name": "Alabama"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.sos.alabama.gov/alabama-votes",
+    "title": "Alabama chief election office discovery root",
+    "office": {
+      "name": "Elections Division, Office of the Secretary of State, Montgomery, AL",
+      "phone": "800/274-8683 334/242-7210",
+      "url": "https://www.sos.alabama.gov/alabama-votes"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.alabama.gov/alabama-votes\">https://www.sos.alabama.gov/alabama-votes</a>"
+    }
+  },
+  {
+    "id": "fec-ak-chief",
+    "publisher": "Division of Elections, Office of the Lieutenant Governor, Juneau, AK",
+    "url": "https://www.elections.alaska.gov/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "AK",
+      "ocdId": "ocd-division/country:us/state:ak",
+      "name": "Alaska"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.elections.alaska.gov/",
+    "title": "Alaska chief election office discovery root",
+    "office": {
+      "name": "Division of Elections, Office of the Lieutenant Governor, Juneau, AK",
+      "phone": "907/465-4611",
+      "url": "https://www.elections.alaska.gov/"
+    },
+    "access": {
+      "status": "unreachable",
+      "detail": "Failed to fetch https://www.elections.alaska.gov/: (400) Timeout fetching",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.elections.alaska.gov/\">https://www.elections.alaska.gov/</a>"
+    }
+  },
+  {
+    "id": "fec-az-chief",
+    "publisher": "Elections Division, Office of the Secretary of State, Phoenix, AZ",
+    "url": "https://azsos.gov/elections",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "AZ",
+      "ocdId": "ocd-division/country:us/state:az",
+      "name": "Arizona"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://azsos.gov/elections",
+    "title": "Arizona chief election office discovery root",
+    "office": {
+      "name": "Elections Division, Office of the Secretary of State, Phoenix, AZ",
+      "phone": "602/542-8683",
+      "url": "https://azsos.gov/elections"
+    },
+    "access": {
+      "status": "unreachable",
+      "detail": "Failed to fetch https://azsos.gov/elections: (403) Forbidden",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://azsos.gov/elections\">https://azsos.gov/elections</a>"
+    }
+  },
+  {
+    "id": "fec-ar-chief",
+    "publisher": "Elections Division, Office of the Secretary of State, Little Rock, AR",
+    "url": "https://www.sos.arkansas.gov/elections",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "AR",
+      "ocdId": "ocd-division/country:us/state:ar",
+      "name": "Arkansas"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.sos.arkansas.gov/elections",
+    "title": "Arkansas chief election office discovery root",
+    "office": {
+      "name": "Elections Division, Office of the Secretary of State, Little Rock, AR",
+      "phone": "800/482-1127 501/682-5070",
+      "url": "https://www.sos.arkansas.gov/elections"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.arkansas.gov/elections\">https://www.sos.arkansas.gov/elections</a>"
+    }
+  },
+  {
+    "id": "fec-ca-chief",
+    "publisher": "Elections Division, Office of the Secretary of State, Sacramento, CA",
+    "url": "https://www.sos.ca.gov/elections",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "CA",
+      "ocdId": "ocd-division/country:us/state:ca",
+      "name": "California"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.sos.ca.gov/elections",
+    "title": "California chief election office discovery root",
+    "office": {
+      "name": "Elections Division, Office of the Secretary of State, Sacramento, CA",
+      "phone": "800/345-8683 916/657-2166",
+      "url": "https://www.sos.ca.gov/elections"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.ca.gov/elections\">https://www.sos.ca.gov/elections</a>"
+    }
+  },
+  {
+    "id": "fec-co-chief",
+    "publisher": "Elections Division, Office of the Secretary of State, Denver, CO",
+    "url": "https://www.sos.state.co.us/pubs/elections/main.html",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "CO",
+      "ocdId": "ocd-division/country:us/state:co",
+      "name": "Colorado"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.sos.state.co.us/pubs/elections/main.html",
+    "title": "Colorado chief election office discovery root",
+    "office": {
+      "name": "Elections Division, Office of the Secretary of State, Denver, CO",
+      "phone": "303/894-2200",
+      "url": "https://www.sos.state.co.us/pubs/elections/main.html"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.state.co.us/pubs/elections/main.html\">https://www.sos.state.co.us/pubs/elections/main.html</a>"
+    }
+  },
+  {
+    "id": "fec-ct-chief",
+    "publisher": "Legislation and Election Administration Division, Office of the Secretary of the State, Hartford, CT",
+    "url": "https://portal.ct.gov/en/SOTS/Common-Elements/V5-Template---Redesign/Elections--Voting--Home-Page",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "CT",
+      "ocdId": "ocd-division/country:us/state:ct",
+      "name": "Connecticut"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://portal.ct.gov/en/SOTS/Common-Elements/V5-Template---Redesign/Elections--Voting--Home-Page",
+    "title": "Connecticut chief election office discovery root",
+    "office": {
+      "name": "Legislation and Election Administration Division, Office of the Secretary of the State, Hartford, CT",
+      "phone": "800/540-3764 860/509-6100",
+      "url": "https://portal.ct.gov/en/SOTS/Common-Elements/V5-Template---Redesign/Elections--Voting--Home-Page"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://portal.ct.gov/en/SOTS/Common-Elements/V5-Template---Redesign/Elections--Voting--Home-Page\">https://portal.ct.gov/en/SOTS/Common-Elements/V5-Template---Redesign/Elections--Voting--Home-Page</a>"
+    }
+  },
+  {
+    "id": "fec-de-chief",
+    "publisher": "Office of the State Election Commissioner, Dover, DE",
+    "url": "https://elections.delaware.gov/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "DE",
+      "ocdId": "ocd-division/country:us/state:de",
+      "name": "Delaware"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://elections.delaware.gov/",
+    "title": "Delaware chief election office discovery root",
+    "office": {
+      "name": "Office of the State Election Commissioner, Dover, DE",
+      "phone": "302/739-4277",
+      "url": "https://elections.delaware.gov/"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://elections.delaware.gov/\">https://elections.delaware.gov/</a>"
+    }
+  },
+  {
+    "id": "fec-dc-chief",
+    "publisher": "Board of Elections, Washington, DC",
+    "url": "https://www.dcboe.org/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "DC",
+      "ocdId": "ocd-division/country:us/district:dc",
+      "name": "District of Columbia"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.dcboe.org/",
+    "title": "District of Columbia chief election office discovery root",
+    "office": {
+      "name": "Board of Elections, Washington, DC",
+      "phone": "202/727-2525",
+      "url": "https://www.dcboe.org/"
+    },
+    "access": {
+      "status": "unreachable",
+      "detail": "Browser extraction returned Internal Error without a response body.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.dcboe.org/\">https://www.dcboe.org/</a>"
+    }
+  },
+  {
+    "id": "fec-fl-chief",
+    "publisher": "Division of Elections, Office of the Secretary of State, Tallahassee, FL",
+    "url": "https://dos.myflorida.com/elections/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "FL",
+      "ocdId": "ocd-division/country:us/state:fl",
+      "name": "Florida"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://dos.myflorida.com/elections/",
+    "title": "Florida chief election office discovery root",
+    "office": {
+      "name": "Division of Elections, Office of the Secretary of State, Tallahassee, FL",
+      "phone": "850/245-6200",
+      "url": "https://dos.myflorida.com/elections/"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://dos.myflorida.com/elections/\">https://dos.myflorida.com/elections/</a>"
+    }
+  },
+  {
+    "id": "fec-ga-chief",
+    "publisher": "Elections Division, Office of the Secretary of State, Atlanta, GA",
+    "url": "https://sos.ga.gov/index.php/elections",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "GA",
+      "ocdId": "ocd-division/country:us/state:ga",
+      "name": "Georgia"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://sos.ga.gov/index.php/elections",
+    "title": "Georgia chief election office discovery root",
+    "office": {
+      "name": "Elections Division, Office of the Secretary of State, Atlanta, GA",
+      "phone": "404/656-2871",
+      "url": "https://sos.ga.gov/index.php/elections"
+    },
+    "access": {
+      "status": "unreachable",
+      "detail": "Browser extraction returned Internal Error without a response body.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sos.ga.gov/index.php/elections\">https://sos.ga.gov/index.php/elections</a>"
+    }
+  },
+  {
+    "id": "fec-hi-chief",
+    "publisher": "Office of Elections, Honolulu, HI",
+    "url": "https://elections.hawaii.gov/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "HI",
+      "ocdId": "ocd-division/country:us/state:hi",
+      "name": "Hawaii"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://elections.hawaii.gov/",
+    "title": "Hawaii chief election office discovery root",
+    "office": {
+      "name": "Office of Elections, Honolulu, HI",
+      "phone": "800/442-8683 808/453-8683",
+      "url": "https://elections.hawaii.gov/"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://elections.hawaii.gov/\">https://elections.hawaii.gov/</a>"
+    }
+  },
+  {
+    "id": "fec-id-chief",
+    "publisher": "Elections Division, Office of the Secretary of State, Boise, ID",
+    "url": "https://sos.idaho.gov/elections-division/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "ID",
+      "ocdId": "ocd-division/country:us/state:id",
+      "name": "Idaho"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://sos.idaho.gov/elections-division/",
+    "title": "Idaho chief election office discovery root",
+    "office": {
+      "name": "Elections Division, Office of the Secretary of State, Boise, ID",
+      "phone": "208/334-2852",
+      "url": "https://sos.idaho.gov/elections-division/"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sos.idaho.gov/elections-division/\">https://sos.idaho.gov/elections-division/</a>"
+    }
+  },
+  {
+    "id": "fec-il-chief",
+    "publisher": "Illinois State Board of Elections, Springfield, IL",
+    "url": "https://www.elections.il.gov/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "IL",
+      "ocdId": "ocd-division/country:us/state:il",
+      "name": "Illinois"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.elections.il.gov/",
+    "title": "Illinois chief election office discovery root",
+    "office": {
+      "name": "Illinois State Board of Elections, Springfield, IL",
+      "phone": "217/782-4141",
+      "url": "https://www.elections.il.gov/"
+    },
+    "access": {
+      "status": "unreachable",
+      "detail": "Failed to fetch https://www.elections.il.gov/: (403) Forbidden",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.elections.il.gov/\">https://www.elections.il.gov/</a>"
+    }
+  },
+  {
+    "id": "fec-in-chief",
+    "publisher": "Indiana Election Division, Office of the Secretary of State, Indianapolis, IN",
+    "url": "https://www.in.gov/sos/elections/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "IN",
+      "ocdId": "ocd-division/country:us/state:in",
+      "name": "Indiana"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.in.gov/sos/elections/",
+    "title": "Indiana chief election office discovery root",
+    "office": {
+      "name": "Indiana Election Division, Office of the Secretary of State, Indianapolis, IN",
+      "phone": "800/622-4941 317/232-3939",
+      "url": "https://www.in.gov/sos/elections/"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.in.gov/sos/elections/\">https://www.in.gov/sos/elections/</a>"
+    }
+  },
+  {
+    "id": "fec-ia-chief",
+    "publisher": "Office of the Secretary of State, Des Moines, IA",
+    "url": "https://sos.iowa.gov/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "IA",
+      "ocdId": "ocd-division/country:us/state:ia",
+      "name": "Iowa"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://sos.iowa.gov/",
+    "title": "Iowa chief election office discovery root",
+    "office": {
+      "name": "Office of the Secretary of State, Des Moines, IA",
+      "phone": "888/767-8683 515/281-0145",
+      "url": "https://sos.iowa.gov/"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sos.iowa.gov/\">https://sos.iowa.gov/</a>"
+    }
+  },
+  {
+    "id": "fec-ks-chief",
+    "publisher": "Elections Division, Office of the Secretary of State, Topeka, KS",
+    "url": "https://www.sos.ks.gov/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "KS",
+      "ocdId": "ocd-division/country:us/state:ks",
+      "name": "Kansas"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.sos.ks.gov/",
+    "title": "Kansas chief election office discovery root",
+    "office": {
+      "name": "Elections Division, Office of the Secretary of State, Topeka, KS",
+      "phone": "787/296-4561",
+      "url": "https://www.sos.ks.gov/"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.ks.gov/\">https://www.sos.ks.gov/</a>"
+    }
+  },
+  {
+    "id": "fec-ky-chief",
+    "publisher": "Office of the Secretary of State, Frankfort, KY",
+    "url": "https://www.sos.ky.gov/Pages/default.aspx",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "KY",
+      "ocdId": "ocd-division/country:us/state:ky",
+      "name": "Kentucky"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.sos.ky.gov/Pages/default.aspx",
+    "title": "Kentucky chief election office discovery root",
+    "office": {
+      "name": "Office of the Secretary of State, Frankfort, KY",
+      "phone": "502/564-3490",
+      "url": "https://www.sos.ky.gov/Pages/default.aspx"
+    },
+    "access": {
+      "status": "unreachable",
+      "detail": "Browser extraction returned Internal Error without a response body.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.ky.gov/Pages/default.aspx\">https://www.sos.ky.gov/Pages/default.aspx</a>"
+    }
+  },
+  {
+    "id": "fec-ky-board",
+    "publisher": "State Board of Elections, Frankfort, KY",
+    "url": "https://elect.ky.gov/Pages/default.aspx",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "KY",
+      "ocdId": "ocd-division/country:us/state:ky",
+      "name": "Kentucky"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://elect.ky.gov/Pages/default.aspx",
+    "title": "Kentucky chief election office discovery root",
+    "office": {
+      "name": "State Board of Elections, Frankfort, KY",
+      "phone": "502/573-7100",
+      "url": "https://elect.ky.gov/Pages/default.aspx"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://elect.ky.gov/Pages/default.aspx\">https://elect.ky.gov/Pages/default.aspx</a>"
+    }
+  },
+  {
+    "id": "fec-la-chief",
+    "publisher": "Elections Division, Office of the Secretary of State, Baton Rouge, LA",
+    "url": "https://www.sos.la.gov/ElectionsAndVoting/Pages/default.aspx",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "LA",
+      "ocdId": "ocd-division/country:us/state:la",
+      "name": "Louisiana"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.sos.la.gov/ElectionsAndVoting/Pages/default.aspx",
+    "title": "Louisiana chief election office discovery root",
+    "office": {
+      "name": "Elections Division, Office of the Secretary of State, Baton Rouge, LA",
+      "phone": "225/922-0900",
+      "url": "https://www.sos.la.gov/ElectionsAndVoting/Pages/default.aspx"
+    },
+    "access": {
+      "status": "unreachable",
+      "detail": "Failed to fetch https://www.sos.la.gov/ElectionsAndVoting/Pages/default.aspx: (404) Not Found",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.la.gov/ElectionsAndVoting/Pages/default.aspx\">https://www.sos.la.gov/ElectionsAndVoting/Pages/default.aspx</a>"
+    }
+  },
+  {
+    "id": "fec-me-chief",
+    "publisher": "Bureau of Corporations, Elections and Commissions, Office of the Secretary of State, Augusta, ME",
+    "url": "https://www.maine.gov/sos/cec/elec/index.html",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "ME",
+      "ocdId": "ocd-division/country:us/state:me",
+      "name": "Maine"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.maine.gov/sos/cec/elec/index.html",
+    "title": "Maine chief election office discovery root",
+    "office": {
+      "name": "Bureau of Corporations, Elections and Commissions, Office of the Secretary of State, Augusta, ME",
+      "phone": "207/624-7650",
+      "url": "https://www.maine.gov/sos/cec/elec/index.html"
+    },
+    "access": {
+      "status": "unreachable",
+      "detail": "Failed to fetch https://www.maine.gov/sos/cec/elec/index.html: (404) Not Found",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.maine.gov/sos/cec/elec/index.html\">https://www.maine.gov/sos/cec/elec/index.html</a>"
+    }
+  },
+  {
+    "id": "fec-md-chief",
+    "publisher": "State Board of Elections, Annapolis, MD",
+    "url": "https://www.elections.maryland.gov/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "MD",
+      "ocdId": "ocd-division/country:us/state:md",
+      "name": "Maryland"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.elections.maryland.gov/",
+    "title": "Maryland chief election office discovery root",
+    "office": {
+      "name": "State Board of Elections, Annapolis, MD",
+      "phone": "800/222-8683 410/269-2840",
+      "url": "https://www.elections.maryland.gov/"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.elections.maryland.gov/\">https://www.elections.maryland.gov/</a>"
+    }
+  },
+  {
+    "id": "fec-ma-chief",
+    "publisher": "Elections Division, Office of the Secretary of the Commonwealth, Boston, MA",
+    "url": "https://www.sec.state.ma.us/ele/eleidx.htm",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "MA",
+      "ocdId": "ocd-division/country:us/state:ma",
+      "name": "Massachusetts"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.sec.state.ma.us/ele/eleidx.htm",
+    "title": "Massachusetts chief election office discovery root",
+    "office": {
+      "name": "Elections Division, Office of the Secretary of the Commonwealth, Boston, MA",
+      "phone": "800/462-8683 617/727-2828",
+      "url": "https://www.sec.state.ma.us/ele/eleidx.htm"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sec.state.ma.us/ele/eleidx.htm\">https://www.sec.state.ma.us/ele/eleidx.htm</a>"
+    }
+  },
+  {
+    "id": "fec-mi-chief",
+    "publisher": "Elections Bureau, Office of the Secretary of State, Lansing, MI",
+    "url": "https://www.michigan.gov/sos/0,4670,7-127-1633---,00.html",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "MI",
+      "ocdId": "ocd-division/country:us/state:mi",
+      "name": "Michigan"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.michigan.gov/sos/0,4670,7-127-1633---,00.html",
+    "title": "Michigan chief election office discovery root",
+    "office": {
+      "name": "Elections Bureau, Office of the Secretary of State, Lansing, MI",
+      "phone": "517/373-2540",
+      "url": "https://www.michigan.gov/sos/0,4670,7-127-1633---,00.html"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.michigan.gov/sos/0,4670,7-127-1633---,00.html\">https://www.michigan.gov/sos/0,4670,7-127-1633---,00.html</a>"
+    }
+  },
+  {
+    "id": "fec-mn-chief",
+    "publisher": "Elections Division, Office of the Secretary of State, St. Paul, MN",
+    "url": "https://www.sos.state.mn.us/elections-voting/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "MN",
+      "ocdId": "ocd-division/country:us/state:mn",
+      "name": "Minnesota"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.sos.state.mn.us/elections-voting/",
+    "title": "Minnesota chief election office discovery root",
+    "office": {
+      "name": "Elections Division, Office of the Secretary of State, St. Paul, MN",
+      "phone": "877/600-8683 651/215-1440",
+      "url": "https://www.sos.state.mn.us/elections-voting/"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.state.mn.us/elections-voting/\">https://www.sos.state.mn.us/elections-voting/</a>"
+    }
+  },
+  {
+    "id": "fec-ms-chief",
+    "publisher": "Elections Division, Office of the Secretary of State, Jackson, MS",
+    "url": "https://www.sos.ms.gov/index.php/elections-voting",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "MS",
+      "ocdId": "ocd-division/country:us/state:ms",
+      "name": "Mississippi"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.sos.ms.gov/index.php/elections-voting",
+    "title": "Mississippi chief election office discovery root",
+    "office": {
+      "name": "Elections Division, Office of the Secretary of State, Jackson, MS",
+      "phone": "800/829-6786 601/359-6360",
+      "url": "https://www.sos.ms.gov/index.php/elections-voting"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.ms.gov/index.php/elections-voting\">https://www.sos.ms.gov/index.php/elections-voting</a>"
+    }
+  },
+  {
+    "id": "fec-mo-chief",
+    "publisher": "Office of the Secretary of State, Jefferson City, MO",
+    "url": "https://www.sos.mo.gov/elections/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "MO",
+      "ocdId": "ocd-division/country:us/state:mo",
+      "name": "Missouri"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.sos.mo.gov/elections/",
+    "title": "Missouri chief election office discovery root",
+    "office": {
+      "name": "Office of the Secretary of State, Jefferson City, MO",
+      "phone": "800/669-8683 573/751-2301",
+      "url": "https://www.sos.mo.gov/elections/"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.mo.gov/elections/\">https://www.sos.mo.gov/elections/</a>"
+    }
+  },
+  {
+    "id": "fec-mt-chief",
+    "publisher": "Office of the Secretary of State, Helena, MT",
+    "url": "https://sosmt.gov/elections/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "MT",
+      "ocdId": "ocd-division/country:us/state:mt",
+      "name": "Montana"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://sosmt.gov/elections/",
+    "title": "Montana chief election office discovery root",
+    "office": {
+      "name": "Office of the Secretary of State, Helena, MT",
+      "phone": "888/884-8683 406/444-5376",
+      "url": "https://sosmt.gov/elections/"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sosmt.gov/elections/\">https://sosmt.gov/elections/</a>"
+    }
+  },
+  {
+    "id": "fec-ne-chief",
+    "publisher": "Office of the Secretary of State, Lincoln, NE",
+    "url": "https://sos.nebraska.gov/index",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "NE",
+      "ocdId": "ocd-division/country:us/state:ne",
+      "name": "Nebraska"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://sos.nebraska.gov/index",
+    "title": "Nebraska chief election office discovery root",
+    "office": {
+      "name": "Office of the Secretary of State, Lincoln, NE",
+      "phone": "402/471-2555",
+      "url": "https://sos.nebraska.gov/index"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sos.nebraska.gov/index\">https://sos.nebraska.gov/index</a>"
+    }
+  },
+  {
+    "id": "fec-nv-chief",
+    "publisher": "Office of the Secretary of State, Carson City, NV",
+    "url": "https://www.nvsos.gov/sos/elections",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "NV",
+      "ocdId": "ocd-division/country:us/state:nv",
+      "name": "Nevada"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.nvsos.gov/sos/elections",
+    "title": "Nevada chief election office discovery root",
+    "office": {
+      "name": "Office of the Secretary of State, Carson City, NV",
+      "phone": "800/450-8594 775/684-5705",
+      "url": "https://www.nvsos.gov/sos/elections"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.nvsos.gov/sos/elections\">https://www.nvsos.gov/sos/elections</a>"
+    }
+  },
+  {
+    "id": "fec-nh-chief",
+    "publisher": "Office of the Secretary of State, Concord, NH",
+    "url": "https://sos.nh.gov/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "NH",
+      "ocdId": "ocd-division/country:us/state:nh",
+      "name": "New Hampshire"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://sos.nh.gov/",
+    "title": "New Hampshire chief election office discovery root",
+    "office": {
+      "name": "Office of the Secretary of State, Concord, NH",
+      "phone": "603/271-3242",
+      "url": "https://sos.nh.gov/"
+    },
+    "access": {
+      "status": "unreachable",
+      "detail": "Failed to fetch https://sos.nh.gov/: (403) Forbidden",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sos.nh.gov/\">https://sos.nh.gov/</a>"
+    }
+  },
+  {
+    "id": "fec-nj-chief",
+    "publisher": "Division of Elections, Office of the Secretary of State, Trenton, NJ",
+    "url": "https://www.state.nj.us/state/elections/index.shtml",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "NJ",
+      "ocdId": "ocd-division/country:us/state:nj",
+      "name": "New Jersey"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.state.nj.us/state/elections/index.shtml",
+    "title": "New Jersey chief election office discovery root",
+    "office": {
+      "name": "Division of Elections, Office of the Secretary of State, Trenton, NJ",
+      "phone": "609/292-3760",
+      "url": "https://www.state.nj.us/state/elections/index.shtml"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.state.nj.us/state/elections/index.shtml\">https://www.state.nj.us/state/elections/index.shtml</a>"
+    }
+  },
+  {
+    "id": "fec-nm-chief",
+    "publisher": "Office of the Secretary of State, Santa Fe, NM",
+    "url": "https://www.sos.state.nm.us/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "NM",
+      "ocdId": "ocd-division/country:us/state:nm",
+      "name": "New Mexico"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.sos.state.nm.us/",
+    "title": "New Mexico chief election office discovery root",
+    "office": {
+      "name": "Office of the Secretary of State, Santa Fe, NM",
+      "phone": "800/477-3632 505/827-3600",
+      "url": "https://www.sos.state.nm.us/"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.state.nm.us/\">https://www.sos.state.nm.us/</a>"
+    }
+  },
+  {
+    "id": "fec-ny-chief",
+    "publisher": "State Board of Elections, Albany, NY",
+    "url": "https://www.elections.ny.gov/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "NY",
+      "ocdId": "ocd-division/country:us/state:ny",
+      "name": "New York"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.elections.ny.gov/",
+    "title": "New York chief election office discovery root",
+    "office": {
+      "name": "State Board of Elections, Albany, NY",
+      "phone": "518/474-8100",
+      "url": "https://www.elections.ny.gov/"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.elections.ny.gov/\">https://www.elections.ny.gov/</a>"
+    }
+  },
+  {
+    "id": "fec-nc-chief",
+    "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+    "url": "https://www.ncsbe.gov/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "NC",
+      "ocdId": "ocd-division/country:us/state:nc",
+      "name": "North Carolina"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.ncsbe.gov/",
+    "title": "North Carolina chief election office discovery root",
+    "office": {
+      "name": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+      "phone": "866/522-4723 919/733-7173",
+      "url": "https://www.ncsbe.gov/"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.ncsbe.gov/\">https://www.ncsbe.gov/</a>"
+    }
+  },
+  {
+    "id": "fec-nd-chief",
+    "publisher": "Office of the Secretary of State, Bismarck, ND",
+    "url": "http://sos.nd.gov/elections",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "ND",
+      "ocdId": "ocd-division/country:us/state:nd",
+      "name": "North Dakota"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "http://sos.nd.gov/elections",
+    "title": "North Dakota chief election office discovery root",
+    "office": {
+      "name": "Office of the Secretary of State, Bismarck, ND",
+      "phone": "800/352-0867 701/328-4146",
+      "url": "http://sos.nd.gov/elections"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"http://sos.nd.gov/elections\">http://sos.nd.gov/elections</a>"
+    }
+  },
+  {
+    "id": "fec-oh-chief",
+    "publisher": "Elections Division, Office of the Secretary of State, Columbus, OH",
+    "url": "https://www.sos.state.oh.us/elections/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "OH",
+      "ocdId": "ocd-division/country:us/state:oh",
+      "name": "Ohio"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.sos.state.oh.us/elections/",
+    "title": "Ohio chief election office discovery root",
+    "office": {
+      "name": "Elections Division, Office of the Secretary of State, Columbus, OH",
+      "phone": "877/767-6446 614/466-2585",
+      "url": "https://www.sos.state.oh.us/elections/"
+    },
+    "access": {
+      "status": "unreachable",
+      "detail": "Failed to fetch https://www.sos.state.oh.us/elections/: (502) Bad Gateway",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.state.oh.us/elections/\">https://www.sos.state.oh.us/elections/</a>"
+    }
+  },
+  {
+    "id": "fec-ok-chief",
+    "publisher": "State Election Board, Oklahoma City, OK",
+    "url": "https://oklahoma.gov/elections.html",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "OK",
+      "ocdId": "ocd-division/country:us/state:ok",
+      "name": "Oklahoma"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://oklahoma.gov/elections.html",
+    "title": "Oklahoma chief election office discovery root",
+    "office": {
+      "name": "State Election Board, Oklahoma City, OK",
+      "phone": "405/521-2391",
+      "url": "https://oklahoma.gov/elections.html"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://oklahoma.gov/elections.html\">https://oklahoma.gov/elections.html</a>"
+    }
+  },
+  {
+    "id": "fec-or-chief",
+    "publisher": "Elections Division, Office of the Secretary of State, Salem, OR",
+    "url": "https://sos.oregon.gov/voting-elections/Pages/default.aspx",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "OR",
+      "ocdId": "ocd-division/country:us/state:or",
+      "name": "Oregon"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://sos.oregon.gov/voting-elections/Pages/default.aspx",
+    "title": "Oregon chief election office discovery root",
+    "office": {
+      "name": "Elections Division, Office of the Secretary of State, Salem, OR",
+      "phone": "503/986-1518",
+      "url": "https://sos.oregon.gov/voting-elections/Pages/default.aspx"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sos.oregon.gov/voting-elections/Pages/default.aspx\">https://sos.oregon.gov/voting-elections/Pages/default.aspx</a>"
+    }
+  },
+  {
+    "id": "fec-pa-chief",
+    "publisher": "Bureau of Commissions, Elections and Legislation, Department of State, Harrisburg, PA",
+    "url": "https://www.dos.pa.gov/VotingElections/Pages/default.aspx",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "PA",
+      "ocdId": "ocd-division/country:us/state:pa",
+      "name": "Pennsylvania"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.dos.pa.gov/VotingElections/Pages/default.aspx",
+    "title": "Pennsylvania chief election office discovery root",
+    "office": {
+      "name": "Bureau of Commissions, Elections and Legislation, Department of State, Harrisburg, PA",
+      "phone": "717/787-5280",
+      "url": "https://www.dos.pa.gov/VotingElections/Pages/default.aspx"
+    },
+    "access": {
+      "status": "unreachable",
+      "detail": "Browser extraction returned Internal Error without a response body.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.dos.pa.gov/VotingElections/Pages/default.aspx\">https://www.dos.pa.gov/VotingElections/Pages/default.aspx</a>"
+    }
+  },
+  {
+    "id": "fec-pr-chief",
+    "publisher": "State Elections Commission, San Juan, PR",
+    "url": "https://ceepur.org/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "PR",
+      "ocdId": "ocd-division/country:us/territory:pr",
+      "name": "Puerto Rico"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://ceepur.org/",
+    "title": "Puerto Rico chief election office discovery root",
+    "office": {
+      "name": "State Elections Commission, San Juan, PR",
+      "phone": "787/777-8682",
+      "url": "https://ceepur.org/"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://ceepur.org/\">https://ceepur.org/</a>"
+    }
+  },
+  {
+    "id": "fec-ri-chief",
+    "publisher": "Elections Division, Office of the Secretary of State, Providence, RI",
+    "url": "https://vote.sos.ri.gov/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "RI",
+      "ocdId": "ocd-division/country:us/state:ri",
+      "name": "Rhode Island"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://vote.sos.ri.gov/",
+    "title": "Rhode Island chief election office discovery root",
+    "office": {
+      "name": "Elections Division, Office of the Secretary of State, Providence, RI",
+      "phone": "401/222-2340",
+      "url": "https://vote.sos.ri.gov/"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://vote.sos.ri.gov/\">https://vote.sos.ri.gov/</a>"
+    }
+  },
+  {
+    "id": "fec-ri-board",
+    "publisher": "State Board of Elections, Providence, RI",
+    "url": "https://elections.ri.gov/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "RI",
+      "ocdId": "ocd-division/country:us/state:ri",
+      "name": "Rhode Island"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://elections.ri.gov/",
+    "title": "Rhode Island chief election office discovery root",
+    "office": {
+      "name": "State Board of Elections, Providence, RI",
+      "phone": "401/222-2345",
+      "url": "https://elections.ri.gov/"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://elections.ri.gov/\">https://elections.ri.gov/</a>"
+    }
+  },
+  {
+    "id": "fec-sc-chief",
+    "publisher": "State Election Commission, Columbia, SC",
+    "url": "https://www.scvotes.gov/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "SC",
+      "ocdId": "ocd-division/country:us/state:sc",
+      "name": "South Carolina"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.scvotes.gov/",
+    "title": "South Carolina chief election office discovery root",
+    "office": {
+      "name": "State Election Commission, Columbia, SC",
+      "phone": "803/734-9060",
+      "url": "https://www.scvotes.gov/"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.scvotes.gov/\">https://www.scvotes.gov/</a>"
+    }
+  },
+  {
+    "id": "fec-sd-chief",
+    "publisher": "Office of the Secretary of State, Pierre, SD",
+    "url": "https://sdsos.gov/elections-voting/default.aspx",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "SD",
+      "ocdId": "ocd-division/country:us/state:sd",
+      "name": "South Dakota"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://sdsos.gov/elections-voting/default.aspx",
+    "title": "South Dakota chief election office discovery root",
+    "office": {
+      "name": "Office of the Secretary of State, Pierre, SD",
+      "phone": "605/773-3537",
+      "url": "https://sdsos.gov/elections-voting/default.aspx"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sdsos.gov/elections-voting/default.aspx\">https://sdsos.gov/elections-voting/default.aspx</a>"
+    }
+  },
+  {
+    "id": "fec-tn-chief",
+    "publisher": "Elections Division, Office of the Secretary of State, Nashville, TN",
+    "url": "https://sos.tn.gov/elections",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "TN",
+      "ocdId": "ocd-division/country:us/state:tn",
+      "name": "Tennessee"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://sos.tn.gov/elections",
+    "title": "Tennessee chief election office discovery root",
+    "office": {
+      "name": "Elections Division, Office of the Secretary of State, Nashville, TN",
+      "phone": "615/741-7956",
+      "url": "https://sos.tn.gov/elections"
+    },
+    "access": {
+      "status": "unreachable",
+      "detail": "Browser extraction returned Internal Error without a response body.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sos.tn.gov/elections\">https://sos.tn.gov/elections</a>"
+    }
+  },
+  {
+    "id": "fec-tx-chief",
+    "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+    "url": "https://www.sos.state.tx.us/elections/index.shtml",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "TX",
+      "ocdId": "ocd-division/country:us/state:tx",
+      "name": "Texas"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.sos.state.tx.us/elections/index.shtml",
+    "title": "Texas chief election office discovery root",
+    "office": {
+      "name": "Elections Division, Office of the Secretary of State, Austin, TX",
+      "phone": "800/252-8683 512/463-5650",
+      "url": "https://www.sos.state.tx.us/elections/index.shtml"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.state.tx.us/elections/index.shtml\">https://www.sos.state.tx.us/elections/index.shtml</a>"
+    }
+  },
+  {
+    "id": "fec-ut-chief",
+    "publisher": "Elections Office, Office of the Lieutenant Governor, Salt Lake City, UT",
+    "url": "https://vote.utah.gov/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "UT",
+      "ocdId": "ocd-division/country:us/state:ut",
+      "name": "Utah"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://vote.utah.gov/",
+    "title": "Utah chief election office discovery root",
+    "office": {
+      "name": "Elections Office, Office of the Lieutenant Governor, Salt Lake City, UT",
+      "phone": "800/995-8683 801/538-1041",
+      "url": "https://vote.utah.gov/"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://vote.utah.gov/\">https://vote.utah.gov/</a>"
+    }
+  },
+  {
+    "id": "fec-vt-chief",
+    "publisher": "Office of the Secretary of State, Montpelier, VT",
+    "url": "https://sos.vermont.gov/elections/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "VT",
+      "ocdId": "ocd-division/country:us/state:vt",
+      "name": "Vermont"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://sos.vermont.gov/elections/",
+    "title": "Vermont chief election office discovery root",
+    "office": {
+      "name": "Office of the Secretary of State, Montpelier, VT",
+      "phone": "802/828-2363",
+      "url": "https://sos.vermont.gov/elections/"
+    },
+    "access": {
+      "status": "unreachable",
+      "detail": "State elections page and robots.txt return HTTP 403, including the permitted browser-UA rung. Later network-enabled captures resolved the initial workspace proxy limitation.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sos.vermont.gov/elections/\">https://sos.vermont.gov/elections/</a>"
+    }
+  },
+  {
+    "id": "fec-va-chief",
+    "publisher": "State Board of Elections, Richmond, VA",
+    "url": "https://www.elections.virginia.gov/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "VA",
+      "ocdId": "ocd-division/country:us/state:va",
+      "name": "Virginia"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.elections.virginia.gov/",
+    "title": "Virginia chief election office discovery root",
+    "office": {
+      "name": "State Board of Elections, Richmond, VA",
+      "phone": "800/552-9745 804/864-8901",
+      "url": "https://www.elections.virginia.gov/"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.elections.virginia.gov/\">https://www.elections.virginia.gov/</a>"
+    }
+  },
+  {
+    "id": "fec-wa-chief",
+    "publisher": "Elections Division, Office of the Secretary of State, Olympia, WA",
+    "url": "https://www.sos.wa.gov/elections/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "WA",
+      "ocdId": "ocd-division/country:us/state:wa",
+      "name": "Washington"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.sos.wa.gov/elections/",
+    "title": "Washington chief election office discovery root",
+    "office": {
+      "name": "Elections Division, Office of the Secretary of State, Olympia, WA",
+      "phone": "800/448-4881 360/902-4180",
+      "url": "https://www.sos.wa.gov/elections/"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.wa.gov/elections/\">https://www.sos.wa.gov/elections/</a>"
+    }
+  },
+  {
+    "id": "fec-wv-chief",
+    "publisher": "Office of the Secretary of State, Charleston, WV",
+    "url": "https://sos.wv.gov/elections/Pages/default.aspx",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "WV",
+      "ocdId": "ocd-division/country:us/state:wv",
+      "name": "West Virginia"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://sos.wv.gov/elections/Pages/default.aspx",
+    "title": "West Virginia chief election office discovery root",
+    "office": {
+      "name": "Office of the Secretary of State, Charleston, WV",
+      "phone": "866/767-8683 304/558-6000",
+      "url": "https://sos.wv.gov/elections/Pages/default.aspx"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sos.wv.gov/elections/Pages/default.aspx\">https://sos.wv.gov/elections/Pages/default.aspx</a>"
+    }
+  },
+  {
+    "id": "fec-wi-chief",
+    "publisher": "Wisconsin Elections Commission, Madison, WI",
+    "url": "https://elections.wi.gov/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "WI",
+      "ocdId": "ocd-division/country:us/state:wi",
+      "name": "Wisconsin"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://elections.wi.gov/",
+    "title": "Wisconsin chief election office discovery root",
+    "office": {
+      "name": "Wisconsin Elections Commission, Madison, WI",
+      "phone": "608/266-8005",
+      "url": "https://elections.wi.gov/"
+    },
+    "access": {
+      "status": "unreachable",
+      "detail": "Browser extraction returned Internal Error without a response body.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://elections.wi.gov/\">https://elections.wi.gov/</a>"
+    }
+  },
+  {
+    "id": "fec-wy-chief",
+    "publisher": "Office of the Secretary of State, Cheyenne, WY",
+    "url": "https://sos.wyo.gov/Elections/Default.aspx",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "WY",
+      "ocdId": "ocd-division/country:us/state:wy",
+      "name": "Wyoming"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://sos.wyo.gov/Elections/Default.aspx",
+    "title": "Wyoming chief election office discovery root",
+    "office": {
+      "name": "Office of the Secretary of State, Cheyenne, WY",
+      "phone": "307/777-5860",
+      "url": "https://sos.wyo.gov/Elections/Default.aspx"
+    },
+    "access": {
+      "status": "open",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
+      "checkedAt": "2026-10-13"
+    },
+    "discoveredFrom": "data/reference/fec_state_election_offices.csv",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sos.wyo.gov/Elections/Default.aspx\">https://sos.wyo.gov/Elections/Default.aspx</a>"
+    }
+  },
+  {
+    "id": "mt-statewide-polling-2026",
+    "publisher": "Office of the Secretary of State, Helena, MT",
+    "url": "https://sosmt.gov/docs/23/elections/77688/2026-polling-location-satellite-office-general-final",
+    "shape": "file",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "MT",
+      "ocdId": "ocd-division/country:us/state:mt",
+      "name": "Montana"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://votemt.gov/",
+    "discoveredFrom": "https://votemt.gov/",
+    "access": {
+      "status": "open",
+      "detail": "Original statewide XLSX downloaded October 13, 2026, after robots permission; 730 polling precinct rows. Official VoteMT general-election page links this workbook.",
+      "checkedAt": "2026-10-13"
+    },
+    "title": "2026 Polling Location Satellite Office General Final",
+    "extraction": {
+      "format": "xlsx",
+      "sheet": "Polling Places",
+      "headerRow": 3,
+      "kind": "ELECTION_DAY",
+      "columns": {
+        "countyName": "County",
+        "name": "Polling Place Location",
+        "address": [
+          "Polling Place Address",
+          "Polling Place City",
+          "Polling Place Zip"
+        ],
+        "precinct": "Precinct Number",
+        "hours": "Polling Place Hours",
+        "locationNotes": [
+          "Late Registration Location(if different or in addition to county election office)*Election Day Registration location only",
+          "Late Registration Address(if different or in addition to county election office)"
+        ]
+      },
+      "constants": {
+        "election": "2026 General Election"
+      },
+      "templates": {
+        "districtOcdIds": "ocd-division/country:us/state:mt/sldl:{HD}|ocd-division/country:us/state:mt/sldu:{SD}"
+      }
+    },
+    "matchingUnit": "PRECINCT",
+    "fileUpdatedAt": "October, 1, 2026",
+    "electionAssociationVerified": true
+  },
+  {
+    "id": "mt-statewide-satellite-2026",
+    "publisher": "Office of the Secretary of State, Helena, MT",
+    "url": "https://sosmt.gov/docs/23/elections/77688/2026-polling-location-satellite-office-general-final",
+    "shape": "file",
+    "covers": [
+      "SATELLITE"
+    ],
+    "scope": {
+      "state": "MT",
+      "ocdId": "ocd-division/country:us/state:mt",
+      "name": "Montana"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://votemt.gov/",
+    "discoveredFrom": "https://votemt.gov/",
+    "access": {
+      "status": "open",
+      "detail": "Original statewide XLSX downloaded October 13, 2026, after robots permission; 30 satellite location rows after aligned multi-site cells are separated.",
+      "checkedAt": "2026-10-13"
+    },
+    "title": "2026 Polling Location Satellite Office General Final",
+    "extraction": {
+      "format": "xlsx",
+      "sheet": "Satellite",
+      "headerRow": 3,
+      "kind": "SATELLITE",
+      "columns": {
+        "countyName": "County",
+        "name": "Satellite Location/Alternate Election Office",
+        "address": "Satellite Location/Alternate Election Office",
+        "days": "Satellite Days\r\n(Absentee Period)",
+        "hours": "Satellite Hours\r\n(Absentee Period)",
+        "tribalNation": "Tribe",
+        "reservation": "Reservation"
+      },
+      "splitRows": {
+        "column": "Satellite Location/Alternate Election Office",
+        "pattern": "\\r?\\n(?:\\s*\\r?\\n)*(?=[^\\r\\n]*,\\s*#?\\d)",
+        "alignedColumns": [
+          "Satellite Days\r\n(Absentee Period)",
+          "Satellite Hours\r\n(Absentee Period)"
+        ],
+        "alignedPattern": "\\r?\\n(?:\\s*\\r?\\n)+"
+      },
+      "transforms": {
+        "name": {
+          "column": "Satellite Location/Alternate Election Office",
+          "pattern": "^(.*?),\\s*([\\s\\S]+)$",
+          "group": 1
+        },
+        "address": {
+          "column": "Satellite Location/Alternate Election Office",
+          "pattern": "^(.*?),\\s*([\\s\\S]+)$",
+          "group": 2
+        },
+        "countyName": {
+          "column": "County",
+          "pattern": "^(.*?)(?:,\\s*cont\\.)?$",
+          "group": 1
+        }
+      },
+      "constants": {
+        "election": "2026 General Election"
+      }
+    },
+    "matchingUnit": "COUNTY",
+    "fileUpdatedAt": "October, 1, 2026",
+    "electionAssociationVerified": true
+  },
+  {
+    "id": "mt-election-administrators",
+    "publisher": "Office of the Secretary of State, Helena, MT",
+    "url": "https://sosmt.gov/elections/election-administrators-contact-list/",
+    "shape": "county-directory",
+    "covers": [],
+    "scope": {
+      "state": "MT",
+      "ocdId": "ocd-division/country:us/state:mt",
+      "name": "Montana"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://sosmt.gov/elections/",
+    "discoveredFrom": "https://sosmt.gov/elections/",
+    "access": {
+      "status": "open",
+      "detail": "Discovered and read by direct official-page link walking through browser extraction. Native source capture is recorded in the fixture manifest where available.",
+      "checkedAt": "2026-10-13"
+    },
+    "delegation": "county",
+    "extraction": {
+      "format": "html",
+      "columns": {
+        "town": "County",
+        "officeName": "Name",
+        "officeAddress": [
+          "Mailing Address",
+          "City/State/Zip"
+        ],
+        "phone": "Phone",
+        "email": "E-mail"
+      }
+    },
+    "title": "Election Administrators Contact List",
+    "fileUpdatedAt": "2026-04-01"
+  },
+  {
+    "id": "nc-statewide-early-voting-2026",
+    "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+    "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+    "shape": "file",
+    "covers": [
+      "EARLY_VOTING"
+    ],
+    "scope": {
+      "state": "NC",
+      "ocdId": "ocd-division/country:us/state:nc",
+      "name": "North Carolina"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://vt.ncsbe.gov/EVSite/",
+    "discoveredFrom": "https://vt.ncsbe.gov/EVSite/",
+    "access": {
+      "status": "open",
+      "detail": "Original source HTTP response captured October 13, 2026 after robots permission; see fixture manifest for hash and limitations.",
+      "checkedAt": "2026-10-13"
+    },
+    "title": "Statewide early voting sites for November 3, 2026",
+    "extraction": {
+      "format": "tsv",
+      "headers": [
+        "election",
+        "county",
+        "flag",
+        "name",
+        "address",
+        "cityStateZip",
+        "day",
+        "hours"
+      ],
+      "columns": {
+        "name": "name",
+        "address": [
+          "address",
+          "cityStateZip"
+        ],
+        "election": "election",
+        "days": "day",
+        "hours": "hours",
+        "countyName": "county"
+      },
+      "kind": "EARLY_VOTING"
+    },
+    "office": {
+      "name": "North Carolina State Board of Elections",
+      "phone": "919-814-0700",
+      "email": "elections.sboe@ncsbe.gov"
+    },
+    "delegation": "county"
+  },
+  {
+    "id": "nc-public-files",
+    "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+    "url": "https://dl.ncsbe.gov/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "NC",
+      "ocdId": "ocd-division/country:us/state:nc",
+      "name": "North Carolina"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.ncsbe.gov/",
+    "discoveredFrom": "https://www.ncsbe.gov/",
+    "access": {
+      "status": "open",
+      "detail": "Native public directory and its listing script inspected. The chief office also links its polling-place-data archive; the March 3, 2026 polling CSV and complete November 3 early-voting file were captured. November 3 polling CSV remains owed.",
+      "checkedAt": "2026-10-13"
+    },
+    "title": "NCSBE Public Files (FTP)"
+  },
+  {
+    "id": "nd-statewide-general-2026",
+    "publisher": "Office of the Secretary of State, Bismarck, ND",
+    "url": "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+    "shape": "list-page",
+    "covers": [
+      "ELECTION_DAY",
+      "VOTE_CENTER",
+      "EARLY_VOTING",
+      "DROP_BOX"
+    ],
+    "scope": {
+      "state": "ND",
+      "ocdId": "ocd-division/country:us/state:nd",
+      "name": "North Dakota"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.sos.nd.gov/elections/voter/elections-currentpast",
+    "discoveredFrom": "https://www.sos.nd.gov/elections/voter/elections-currentpast",
+    "access": {
+      "status": "open",
+      "detail": "Original source HTTP response captured October 13, 2026 after robots permission; see fixture manifest for hash and limitations.",
+      "checkedAt": "2026-10-13"
+    },
+    "title": "2026 General Election Statewide Polling Places and Precincts",
+    "extraction": {
+      "format": "html"
+    },
+    "delegation": "county",
+    "rules": [
+      {
+        "text": "Absentee ballots must be received by close of polls on Election Day. Return by mail, county drop box, or directly to the county auditor. Polling locations do not accept absentee ballots on Election Day.",
+        "source": {
+          "publisher": "North Dakota Secretary of State",
+          "url": "https://www.sos.nd.gov/elections/voter/voting-north-dakota/how-do-i-vote/absentee-voting",
+          "checkedAt": "2026-10-13"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nd-address-lookup",
+    "publisher": "Office of the Secretary of State, Bismarck, ND",
+    "url": "https://vip.sos.nd.gov/WhereToVote.aspx?ptlPKID=7&ptlhPKID=50&tab=AddressandVotingTimes",
+    "shape": "address-lookup",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "ND",
+      "ocdId": "ocd-division/country:us/state:nd",
+      "name": "North Dakota"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.sos.nd.gov/elections/voter/voting-north-dakota/where-do-i-vote",
+    "discoveredFrom": "https://www.sos.nd.gov/elections/voter/voting-north-dakota/where-do-i-vote",
+    "access": {
+      "status": "open",
+      "detail": "Address branch asks house number and ZIP. Separate identity branch asks state ID and date of birth; never use that branch. Request field names/body remain uncaptured, so leave lookup as an open blank until address-only request capture.",
+      "checkedAt": "2026-10-13"
+    },
+    "platform": "where-to-vote",
+    "title": "Search by Address"
+  },
+  {
+    "id": "tx-identity-locked-voter-portal",
+    "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+    "url": "https://goelect.txelections.civixapps.com/ivis-mvp-ui/",
+    "shape": "identity-locked-lookup",
+    "covers": [
+      "ELECTION_DAY",
+      "EARLY_VOTING"
+    ],
+    "scope": {
+      "state": "TX",
+      "ocdId": "ocd-division/country:us/state:tx",
+      "name": "Texas"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.votetexas.gov/voting/where.html",
+    "discoveredFrom": "https://www.votetexas.gov/voting/where.html",
+    "access": {
+      "status": "identity-locked",
+      "detail": "Official instructions require name, county, date of birth and ZIP. No identity request submitted. County lists are the next route.",
+      "checkedAt": "2026-10-13"
+    },
+    "platform": "civix"
+  },
+  {
+    "id": "tx-county-election-office-directory",
+    "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+    "url": "https://www.sos.state.tx.us/elections/voter/county.shtml",
+    "shape": "county-directory",
+    "covers": [],
+    "scope": {
+      "state": "TX",
+      "ocdId": "ocd-division/country:us/state:tx",
+      "name": "Texas"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.votetexas.gov/voting/where.html",
+    "discoveredFrom": "https://www.votetexas.gov/voting/where.html",
+    "access": {
+      "status": "open",
+      "detail": "Discovered and read by direct official-page link walking through browser extraction. Native source capture is recorded in the fixture manifest where available.",
+      "checkedAt": "2026-10-13"
+    },
+    "delegation": "county",
+    "title": "Election Duties",
+    "officialLinkingPage": {
+      "url": "https://www.votetexas.gov/voting/where.html",
+      "html": "<!-- Normalized observed official link excerpt. -->\n<a href=\"https://www.sos.state.tx.us/elections/voter/county.shtml\">County Elections Office</a>"
+    }
+  },
+  {
+    "id": "tx-el-paso-vote-centers-2026",
+    "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+    "url": "https://epcountyvotestx.gov/voter-information/election-day-vote-centers",
+    "shape": "list-page",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "TX",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "name": "El Paso County",
+      "countyFips": "48141"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://epcountyvotestx.gov/",
+    "discoveredFrom": "https://epcountyvotestx.gov/",
+    "access": {
+      "status": "open",
+      "detail": "Original source HTTP response captured October 13, 2026 after robots permission; see fixture manifest for hash and limitations.",
+      "checkedAt": "2026-10-13"
+    },
+    "model": "VOTE_CENTER",
+    "extraction": {
+      "format": "html",
+      "kind": "VOTE_CENTER",
+      "textAssertions": [
+        "All Vote Centers will be open from 7:00 a.m. to 7:00 p.m."
+      ],
+      "records": {
+        "pattern": "var content = (\"(?:\\\\.|[^\"\\\\])*\")",
+        "group": 1,
+        "jsonString": true,
+        "fields": {
+          "name": {
+            "pattern": "<strong[^>]*>([\\s\\S]*?)</strong>",
+            "group": 1
+          },
+          "address": {
+            "pattern": "<strong[^>]*>[\\s\\S]*?</strong>[\\s\\S]*?<strong[^>]*>([\\s\\S]*?)</strong>",
+            "group": 1
+          },
+          "room": {
+            "pattern": "</strong>[\\s\\S]*?</strong>([\\s\\S]*?)<em",
+            "group": 1
+          }
+        }
+      },
+      "constants": {
+        "hours": "7:00 a.m. to 7:00 p.m."
+      }
+    },
+    "title": "November 2026 General & Special Election"
+  },
+  {
+    "id": "tx-el-paso-early-voting-2026",
+    "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+    "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+    "shape": "list-page",
+    "covers": [
+      "EARLY_VOTING"
+    ],
+    "scope": {
+      "state": "TX",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "name": "El Paso County",
+      "countyFips": "48141"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://epcountyvotestx.gov/",
+    "discoveredFrom": "https://epcountyvotestx.gov/",
+    "access": {
+      "status": "open",
+      "detail": "Original source HTTP response captured October 13, 2026 after robots permission; see fixture manifest for hash and limitations.",
+      "checkedAt": "2026-10-13"
+    },
+    "model": "VOTE_CENTER",
+    "extraction": {
+      "format": "html",
+      "kind": "EARLY_VOTING"
+    },
+    "title": "November 2026 General & Special Election"
+  },
+  {
+    "id": "fl-county-election-office-directory",
+    "publisher": "Division of Elections, Office of the Secretary of State, Tallahassee, FL",
+    "url": "https://dos.elections.myflorida.com/supervisors/",
+    "shape": "county-directory",
+    "covers": [],
+    "scope": {
+      "state": "FL",
+      "ocdId": "ocd-division/country:us/state:fl",
+      "name": "Florida"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://dos.fl.gov/elections/",
+    "discoveredFrom": "https://dos.fl.gov/elections/",
+    "access": {
+      "status": "open",
+      "detail": "Discovered and read by direct official-page link walking through browser extraction. Native source capture is recorded in the fixture manifest where available.",
+      "checkedAt": "2026-10-13"
+    },
+    "delegation": "county",
+    "officialLinkingPage": {
+      "url": "https://dos.fl.gov/elections/",
+      "html": "<!-- Normalized observed official link excerpt. -->\n<a href=\"https://dos.elections.myflorida.com/supervisors/\">Supervisor of Elections Contact Information</a>"
+    }
+  },
+  {
+    "id": "fl-statewide-early-and-ballot-intake",
+    "publisher": "Division of Elections, Office of the Secretary of State, Tallahassee, FL",
+    "url": "https://dos.fl.gov/elections/for-voters/voting/early-voting-and-secure-ballot-intake-stations/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "FL",
+      "ocdId": "ocd-division/country:us/state:fl",
+      "name": "Florida"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://dos.fl.gov/elections/",
+    "discoveredFrom": "https://dos.fl.gov/elections/",
+    "access": {
+      "status": "open",
+      "detail": "Discovered and read by direct official-page link walking through browser extraction. Native source capture is recorded in the fixture manifest where available.",
+      "checkedAt": "2026-10-13"
+    },
+    "title": "Early Voting and Secure Ballot Intake Stations",
+    "fileUpdatedAt": "2026-10-02"
+  },
+  {
+    "id": "fl-okaloosa-voterfocus",
+    "publisher": "Division of Elections, Office of the Secretary of State, Tallahassee, FL",
+    "url": "https://www.voterfocus.com/PrecinctFinder/precinctDirectory?county=FL-OKA",
+    "shape": "vendor-platform",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "FL",
+      "ocdId": "ocd-division/country:us/state:fl/county:okaloosa",
+      "name": "Okaloosa County",
+      "countyFips": "12091"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.voteokaloosa.gov/voters/where-to-vote-in-person/",
+    "discoveredFrom": "https://www.voteokaloosa.gov/voters/where-to-vote-in-person/",
+    "access": {
+      "status": "open",
+      "detail": "Directory reached from official county address finder via its All Precincts link. Publisher says normal locations can differ for specific elections; confirm November 3 applicability before making an assigned-site claim.",
+      "checkedAt": "2026-10-13"
+    },
+    "platform": "voterfocus",
+    "title": "Precincts in Okaloosa County",
+    "extraction": {
+      "format": "html",
+      "kind": "ELECTION_DAY"
+    },
+    "officialLinkingPage": {
+      "url": "https://www.voteokaloosa.gov/voters/where-to-vote-in-person/",
+      "html": "<!-- Link reconstructed from actual browser extraction, not original response bytes. -->\n<a href=\"https://www.voterfocus.com/findmyprecinct/pflookup.html?county=OKA\">Precinct Finder</a>"
+    }
+  },
+  {
+    "id": "fl-bradford-voterfocus",
+    "publisher": "Division of Elections, Office of the Secretary of State, Tallahassee, FL",
+    "url": "https://www.voterfocus.com/PrecinctFinder/precinctDirectory?county=FL-BRA",
+    "shape": "vendor-platform",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "FL",
+      "ocdId": "ocd-division/country:us/state:fl/county:bradford",
+      "name": "Bradford County",
+      "countyFips": "12007"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.votebradfordfl.gov/voter/polling_locations.php",
+    "discoveredFrom": "https://www.votebradfordfl.gov/voter/polling_locations.php",
+    "access": {
+      "status": "open",
+      "detail": "Directory reached from official county address finder via its All Precincts link. Publisher says normal locations can differ for specific elections; confirm November 3 applicability before making an assigned-site claim.",
+      "checkedAt": "2026-10-13"
+    },
+    "platform": "voterfocus",
+    "title": "Precincts in Bradford County",
+    "extraction": {
+      "format": "html",
+      "kind": "ELECTION_DAY"
+    },
+    "officialLinkingPage": {
+      "url": "https://www.votebradfordfl.gov/voter/polling_locations.php",
+      "html": "<!-- Link reconstructed from actual browser extraction, not original response bytes. -->\n<a href=\"https://www.voterfocus.com/findmyprecinct/pflookup.html?county=BRA\">Precinct Finder</a>"
+    }
+  },
+  {
+    "id": "al-absentee-return-rules",
+    "publisher": "Elections Division, Office of the Secretary of State, Montgomery, AL",
+    "url": "https://www.sos.alabama.gov/alabama-votes/voter/absentee-voting",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "AL",
+      "ocdId": "ocd-division/country:us/state:al",
+      "name": "Alabama"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.sos.alabama.gov/alabama-votes",
+    "discoveredFrom": "https://www.sos.alabama.gov/alabama-votes",
+    "access": {
+      "status": "open",
+      "detail": "Original source HTTP response captured October 13, 2026 after robots permission; see fixture manifest for hash and limitations.",
+      "checkedAt": "2026-10-13"
+    },
+    "rules": [
+      {
+        "text": "Alabama's only stated legal absentee-ballot return routes are U.S. mail, commercial carrier, or personal hand delivery to the absentee election manager; unattended drop boxes are not included. Mailed ballots must arrive by noon on Election Day. Hand delivery is due by close of business, no later than 5 p.m., the day before. Emergency absentee voting permits delivery by a designee.",
+        "source": {
+          "publisher": "Alabama Secretary of State",
+          "url": "https://www.sos.alabama.gov/alabama-votes/voter/absentee-voting",
+          "checkedAt": "2026-10-13"
+        }
+      }
+    ],
+    "delegation": "county"
+  },
+  {
+    "id": "nc-statewide-polling-primary-2026",
+    "publisher": "North Carolina State Board of Elections",
+    "url": "https://dl.ncsbe.gov/ENRS/2026_03_03/polling_place_20260303.csv",
+    "shape": "file",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "NC",
+      "ocdId": "ocd-division/country:us/state:nc",
+      "name": "North Carolina"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.ncsbe.gov/results-data/polling-place-data",
+    "electionAssociationVerified": false,
+    "title": "March 3, 2026 polling places",
+    "fileUpdatedAt": "2026-03-01T10:25:04Z",
+    "matchingUnit": "PRECINCT",
+    "discoveredFrom": "https://www.ncsbe.gov/results-data/polling-place-data",
+    "extraction": {
+      "format": "csv",
+      "delimiter": "\t",
+      "kind": "ELECTION_DAY",
+      "columns": {
+        "id": "polling_place_id",
+        "name": "polling_place_name",
+        "address": [
+          "street_address",
+          "city",
+          "state",
+          "zip"
+        ],
+        "countyName": "county_name",
+        "precinct": "precinct_name",
+        "election": "election_dt"
+      }
+    },
+    "access": {
+      "status": "open",
+      "detail": "Native UTF-16LE tab-delimited CSV captured. Latest official archive link is March primary; find general-election replacement without suppressing the current official archive.",
+      "checkedAt": "2026-10-13"
+    }
+  },
+  {
+    "publisher": "Bennington Town Clerk",
+    "url": "https://www.benningtonvt.org/_T8_R868.php",
+    "shape": "list-page",
+    "covers": [
+      "DROP_BOX"
+    ],
+    "scope": {
+      "state": "VT",
+      "ocdId": "ocd-division/country:us/state:vt/county:bennington/place:bennington_town",
+      "name": "Bennington town",
+      "countyFips": "50003",
+      "countySubdivisionGeoid": "5000304825"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.benningtonvt.org/_T8_R868.php",
+    "electionAssociationVerified": true,
+    "model": "ASSIGNED",
+    "matchingUnit": "TOWN",
+    "discoveredFrom": "https://www.benningtonvt.org/",
+    "id": "vt-bennington-drop-box-2026",
+    "extraction": {
+      "format": "html",
+      "textAssertions": [
+        "2026 General Election",
+        "November 3, 2026",
+        "205 South Street",
+        "Monday, November 2nd at 4:30 PM",
+        "Bennington voters ONLY",
+        "it will not be counted",
+        "802-442-1043",
+        "townclerk@benningtonvt.org"
+      ],
+      "constants": {
+        "officeName": "Bennington Town Clerk",
+        "phone": "802-442-1043",
+        "email": "townclerk@benningtonvt.org",
+        "town": "Bennington",
+        "name": "ballot drop box",
+        "address": "205 South Street, Bennington",
+        "kind": "DROP_BOX",
+        "hours": "until Monday, November 2nd at 4:30 PM",
+        "rules": "The ballot drop box located at 205 South Street, Bennington, will be available until Monday, November 2nd at 4:30 PM for Bennington voters ONLY. If your ballot is from a nearby town, reach out to your Town Clerk to find out how to return it. If it is returned to the Bennington drop box, it will not be counted."
+      }
+    },
+    "access": {
+      "status": "open",
+      "detail": "Native town source captured. Government-to-town-domain authority link remains unresolved; acquisition must preserve its authority blank until verified.",
+      "checkedAt": "2026-10-13"
+    }
+  },
+  {
+    "publisher": "Bennington Town Clerk",
+    "url": "https://www.benningtonvt.org/_T8_R868.php",
+    "shape": "list-page",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "VT",
+      "ocdId": "ocd-division/country:us/state:vt/county:bennington/place:bennington_town",
+      "name": "Bennington town",
+      "countyFips": "50003",
+      "countySubdivisionGeoid": "5000304825"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.benningtonvt.org/_T8_R868.php",
+    "electionAssociationVerified": true,
+    "model": "ASSIGNED",
+    "matchingUnit": "PRECINCT",
+    "discoveredFrom": "https://www.benningtonvt.org/",
+    "id": "vt-bennington-polling-2026",
+    "extraction": {
+      "format": "html",
+      "textAssertions": [
+        "November 3rd, 2026",
+        "7am-7pm",
+        "Bennington Firehouse",
+        "130 River Street",
+        "802-442-1043",
+        "townclerk@benningtonvt.org"
+      ],
+      "constants": {
+        "officeName": "Bennington Town Clerk",
+        "phone": "802-442-1043",
+        "email": "townclerk@benningtonvt.org",
+        "town": "Bennington",
+        "name": "Bennington Firehouse",
+        "address": "130 River Street",
+        "kind": "ELECTION_DAY",
+        "days": "November 3rd, 2026",
+        "hours": "7am-7pm",
+        "precinct": "Bennington residents"
+      }
+    },
+    "access": {
+      "status": "open",
+      "detail": "Native town source captured. Government-to-town-domain authority link remains unresolved; acquisition must preserve its authority blank until verified.",
+      "checkedAt": "2026-10-13"
+    }
+  },
+  {
+    "publisher": "Bennington Town Clerk",
+    "url": "https://www.benningtonvt.org/_T8_R868.php",
+    "shape": "list-page",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "VT",
+      "ocdId": "ocd-division/country:us/state:vt/county:bennington/place:bennington_town",
+      "name": "Bennington town",
+      "countyFips": "50003",
+      "countySubdivisionGeoid": "5000304825"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.benningtonvt.org/_T8_R868.php",
+    "electionAssociationVerified": true,
+    "model": "ASSIGNED",
+    "matchingUnit": "PRECINCT",
+    "discoveredFrom": "https://www.benningtonvt.org/",
+    "id": "vt-north-bennington-polling-2026",
+    "extraction": {
+      "format": "html",
+      "textAssertions": [
+        "November 3rd, 2026",
+        "7am-7pm",
+        "Old Train Depot",
+        "#2 Depot Street in North Bennington",
+        "802-442-1043",
+        "townclerk@benningtonvt.org"
+      ],
+      "constants": {
+        "officeName": "Bennington Town Clerk",
+        "phone": "802-442-1043",
+        "email": "townclerk@benningtonvt.org",
+        "town": "Bennington",
+        "name": "Old Train Depot",
+        "address": "#2 Depot Street in North Bennington",
+        "kind": "ELECTION_DAY",
+        "days": "November 3rd, 2026",
+        "hours": "7am-7pm",
+        "precinct": "North Bennington residents"
+      }
+    },
+    "access": {
+      "status": "open",
+      "detail": "Native town source captured. Government-to-town-domain authority link remains unresolved; acquisition must preserve its authority blank until verified.",
+      "checkedAt": "2026-10-13"
+    }
+  },
+  {
+    "id": "vt-arlington-drop-box-closure-2026",
+    "publisher": "Town of Arlington, Vermont",
+    "url": "https://arlingtonvermont.org/wp-content/uploads/2026/09/Town-Hall-Closure-insulation.pdf",
+    "shape": "file",
+    "covers": [
+      "DROP_BOX"
+    ],
+    "scope": {
+      "state": "VT",
+      "ocdId": "ocd-division/country:us/state:vt/county:bennington/place:arlington_town",
+      "name": "Arlington town",
+      "countyFips": "50003",
+      "countySubdivisionGeoid": "5000301450"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://arlingtonvermont.org/wp-content/uploads/2026/09/Town-Hall-Closure-insulation.pdf",
+    "electionAssociationVerified": true,
+    "model": "ASSIGNED",
+    "matchingUnit": "TOWN",
+    "discoveredFrom": "https://arlingtonvermont.org/town-hall-closed-oct-20-23-2026/",
+    "extraction": {
+      "format": "pdf",
+      "textAssertions": [
+        "October 20 \u2013 23, 2026",
+        "The Town Clerk's drop box",
+        "located inside the front door",
+        "will remain accessible during the closure",
+        "The drop box will be checked daily during the closure",
+        "Election Day is November 3rd",
+        "3828 VT Route 7A, Arlington, VT 05250"
+      ],
+      "constants": {
+        "name": "Town Clerk's drop box",
+        "address": "3828 VT Route 7A, Arlington, VT 05250",
+        "kind": "DROP_BOX",
+        "town": "Arlington",
+        "days": "October 20\u201323, 2026",
+        "locationNotes": "The Town Clerk's drop box, located inside the front door, will remain accessible during the closure for submitting ballots and tax payments. The drop box will be checked daily during the closure."
+      }
+    },
+    "access": {
+      "status": "open",
+      "detail": "Native town source captured. Government-to-town-domain authority link remains unresolved; acquisition must preserve its authority blank until verified.",
+      "checkedAt": "2026-10-13"
+    }
+  },
+  {
+    "id": "vt-arlington-clerk-contact",
+    "publisher": "Arlington Town Clerk",
+    "url": "https://arlingtonvermont.org/town-clerk/",
+    "shape": "list-page",
+    "covers": [
+      "DROP_BOX",
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "VT",
+      "ocdId": "ocd-division/country:us/state:vt/county:bennington/place:arlington_town",
+      "name": "Arlington town",
+      "countyFips": "50003",
+      "countySubdivisionGeoid": "5000301450"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://arlingtonvermont.org/town-clerk/",
+    "model": "ASSIGNED",
+    "matchingUnit": "TOWN",
+    "discoveredFrom": "https://arlingtonvermont.org/",
+    "extraction": {
+      "format": "html",
+      "textAssertions": [
+        "Arlington Town Clerk",
+        "3828 VT Route 7A, Arlington, VT",
+        "802-375-2332",
+        "susan.paustian@arlingtonvermont.org"
+      ],
+      "constants": {
+        "officeName": "Arlington Town Clerk",
+        "officeAddress": "3828 VT Route 7A, Arlington, VT",
+        "phone": "802-375-2332",
+        "email": "susan.paustian@arlingtonvermont.org",
+        "town": "Arlington"
+      }
+    },
+    "access": {
+      "status": "open",
+      "detail": "Native town source captured. Government-to-town-domain authority link remains unresolved; acquisition must preserve its authority blank until verified.",
+      "checkedAt": "2026-10-13"
+    }
+  }
+]

@@ -347,6 +347,7 @@ const VENDOR_PLATFORM: Readonly<Record<VerifiableVendor, string | null>> = {
   boardbook: "boardbook",
   boarddocs: "boarddocs",
   "municode-meetings": "municode",
+  escribe: "escribe",
   "official-page-events": null,
 };
 
@@ -360,6 +361,7 @@ const VENDOR_VERIFICATION: Readonly<Record<VerifiableVendor, string>> = {
   iqm2: "an IQM2 calendar with at least one meeting row",
   boardbook: "a BoardBook organization page with at least one meeting link",
   "municode-meetings": "a public Municode meeting table with local dates, published titles and document links",
+  escribe: "a public eScribe calendar list with meeting identities, types, local dates and document links",
   boarddocs: "a public BoardDocs committee list whose dated rows carry published meeting identities; the committee is named by the attested portal selector",
   "official-page-events": "a page on the body's own host with at least one dated event verified for the body",
 };

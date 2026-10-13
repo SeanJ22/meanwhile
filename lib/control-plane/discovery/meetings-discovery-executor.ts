@@ -1,3 +1,4 @@
+import { escribeCalendarRequest } from "../../sources/escribe/index.ts";
 import { officialLinkingPageFromAsync, type LazyOfficialPage } from "../../sources/official-page-events/index.ts";
 import { observePlatformCensus, platformCensusEntry, type PlatformCensusObservation } from "./platform-census.ts";
 
@@ -345,6 +346,7 @@ export async function walkMeetingsDiscoveryNeed(
 
   /* The time is asked before the host's spacing and again after it, and the request's timeout never outlasts it. */
   async function hop(url: URL, accept: string, form?: Readonly<Record<string, string>>) {
+    const json = url.pathname === "/MeetingsCalendarView.aspx/GetCalendarMeetings" && /^pub-[a-z0-9-]+\.escribemeetings\.com$/i.test(url.hostname) ? escribeCalendarRequest({}, new Date(runtime.now())) : null;
     if (timeLeftMs() < MIN_REQUEST_MS) throw new OutOfTime();
     if (hostLimit(url) !== null) await runtime.spaceOut(url.host.toLowerCase());
     const left = timeLeftMs();
@@ -354,9 +356,9 @@ export async function walkMeetingsDiscoveryNeed(
     requests += 1;
     return runtime.open({
       url: url.toString(),
-      headers: { "user-agent": DEFAULT_USER_AGENT, accept, ...(form ? { "content-type": "application/x-www-form-urlencoded" } : {}) },
+      headers: { "user-agent": DEFAULT_USER_AGENT, accept, ...(json ? { "content-type": "application/json; charset=utf-8" } : form ? { "content-type": "application/x-www-form-urlencoded" } : {}) },
       timeoutMs: Math.min(timeoutMs, Math.floor(left)),
-      ...(form ? { method: "POST" as const, body: new URLSearchParams(form).toString() } : {}),
+      ...(json ? { method: "POST" as const, body: JSON.stringify(json) } : form ? { method: "POST" as const, body: new URLSearchParams(form).toString() } : {}),
     });
   }
 

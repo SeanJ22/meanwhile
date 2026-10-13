@@ -11,6 +11,7 @@ import { wiringShapeFor } from "@/lib/control-plane/discovery/derived-wiring.ts"
 
 const SAMPLE_ROWS = [
   { ...FIXTURE_DOOR_ROWS[0], agendaSourceType: "MUNICODE" as const, config: { portalUrl: "https://meetings.municode.com/PublishPage/index?cid=BREM&ppid=d33416d7-25d1-44e6-9d32-55b97fa53824", nameTerms: "City Council" } },
+  { ...FIXTURE_DOOR_ROWS[0], agendaSourceType: "ESCRIBE" as const, config: { portalUrl: "https://pub-lamesa.escribemeetings.com", meetingTypes: "City Council" } },
   ...FIXTURE_DOOR_ROWS.map(row => row.agendaSourceType === "CIVICCLERK"
     ? { ...row, config: { ...row.config, bodyMatch: "Board of Directors" } } : row),
   { ...FIXTURE_DOOR_ROWS[0], agendaSourceType: "BOARDDOCS" as const,

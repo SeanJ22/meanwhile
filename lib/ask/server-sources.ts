@@ -22,10 +22,12 @@ import { canonicalBodyIdentity } from "./body-identity.ts";
 import { stateDivisionsOf, type HeldOfficial } from "./reader-officials.ts";
 
 export async function namedOfficeholders(question: string, explicitIds: readonly string[], divisionIds: readonly string[] = []): Promise<SeatHolder[]> {
+  const states=stateDivisionsOf(divisionIds).map(id=>/\/(?:state|district|territory):([a-z]{2})(?:\/|$)/.exec(id)?.[1]).filter((state):state is string=>Boolean(state));
+  const stateHint=new Set(states).size===1?states[0]:undefined;
   const targetedStateHolders: SeatHolder[] = [];
   for (const id of new Set(explicitIds)) {
-    if (!statePeopleScopeForId(id)) continue;
-    const holder = await seatHolderById(id);
+    if (!statePeopleScopeForId(id,stateHint)) continue;
+    const holder = await seatHolderById(id,stateHint);
     if (holder) targetedStateHolders.push(holder);
   }
   const heldById = new Map((await allSeatHolders(divisionIds)).map((holder) => [holder.id, holder]));

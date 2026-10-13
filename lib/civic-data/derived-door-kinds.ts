@@ -6,6 +6,7 @@ export const DATA_DOOR_KINDS = [
   "BOARDBOOK",
   "BOARDDOCS",
   "MUNICODE",
+  "ESCRIBE",
   "CIVICCLERK",
   "IQM2",
   "REVIZE",
@@ -47,6 +48,11 @@ export const DOOR_KIND_SPECS: Readonly<Record<DataDoorKind, DoorKindSpec>> = {
     sourceName: "municode", agendaSourceType: "MUNICODE", entry: "lib/sources/municode/index.ts",
     route: { key: "portalUrl", as: "url" },
     allowed: ["nameTerms"], required: ["nameTerms"],
+  },
+  ESCRIBE: {
+    sourceName: "escribe", agendaSourceType: "ESCRIBE", entry: "lib/sources/escribe/index.ts",
+    route: { key: "portalUrl", as: "origin" },
+    allowed: ["meetingTypes"], required: ["meetingTypes"],
   },
   BOARDDOCS: {
     sourceName: "boarddocs", agendaSourceType: "BOARDDOCS", entry: "lib/sources/boarddocs/index.ts",

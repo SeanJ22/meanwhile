@@ -86,6 +86,7 @@ export function meetingAcquisitionFailureDomain(
       case "clerksboards": return "https://clerksboards.tucsonaz.gov";
       case "boardbook": return "https://meetings.boardbook.org";
       case "municode": return wiring.config.portalUrl;
+      case "escribe": return wiring.config.portalUrl;
       case "boarddocs": return wiring.config.portalUrl;
       case "civicplus": return wiring.config.agendaCenterUrl ?? wiring.config.icalUrl;
       case "iqm2": return wiring.config.base;

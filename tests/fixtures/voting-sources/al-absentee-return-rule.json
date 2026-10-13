@@ -1,0 +1,12 @@
+{
+  "publisher": "Alabama Secretary of State",
+  "url": "https://www.sos.alabama.gov/alabama-votes/voter/absentee-voting",
+  "discoveredFrom": "https://www.sos.alabama.gov/alabama-votes",
+  "checkedAt": "2026-10-13",
+  "representation": "Rule normalized from the official page; not a source JSON API response.",
+  "evidenceQuote": "The voter has only the following legal ways to return the absentee ballot:",
+  "rule": "Return absentee ballots by U.S. mail, commercial carrier, or personal hand delivery to the absentee election manager. Alabama's stated legal return routes do not include unattended ballot drop boxes.",
+  "returnDeadline": "Mail must reach the absentee election manager by noon on Election Day. Hand delivery is due by close of business, no later than 5 p.m., the day before the election.",
+  "emergencyException": "Emergency absentee voting permits delivery by a designee.",
+  "noDropBoxes": true
+}

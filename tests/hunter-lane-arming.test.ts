@@ -69,6 +69,7 @@ async function lane(options: { arming?: ReturnType<typeof reading> | "missing" |
   await repos.occurrences.put("occ-1", { id: "occ-1", obligationId: "ob-1", sequence: 1, dueAt: NOW, workItemId: "wi-1", routeTaskId: task.id,
     openedAt: NOW, closedAt: null, disposition: null, unresolvedReason: null } as never, NOW);
   await repos.obligations.put("ob-1", { id: "ob-1", subjectId: jurisdiction.subjectId,
+    recordClass: "OFFICIAL_BOARD_DIRECTORY", readerImpactAt: NOW,
     assignments: (options.marks ?? [SEND]).map(key => ({ assignmentKey: key, ref: "receipt-1", relation: "CREATED", at: NOW })) } as never, NOW);
   const sent: ModelRequest[] = [];
   const messages = async (r: ModelRequest): Promise<ModelResponse> => {

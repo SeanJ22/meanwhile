@@ -38,6 +38,7 @@ const MEETING_ROUTE_BY_TYPE: Partial<Record<AgendaSourceType, string>> = {
   BOARDBOOK: "boardbook",
   BOARDDOCS: "boarddocs",
   MUNICODE: "municode",
+  ESCRIBE: "escribe",
   IQM2: "iqm2",
   REVIZE: "revize",
   SCHEDULEPAGE: "schedulepage",

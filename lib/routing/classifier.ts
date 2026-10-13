@@ -178,7 +178,7 @@ export async function classifyQuestion(
           ...(fields.effort ? { effort: fields.effort } : {}),
           format: { type: "json_schema", schema: classifierSchema() },
         },
-        system: classifierPrompt(),
+        system: [{ type: "text", text: classifierPrompt(), cache_control: { type: "ephemeral", ttl: "1h" } }],
         // The scrub the refusal log already runs. Nothing shaped like a
         // phone number, an email address or a street address leaves here.
         messages: [{ role: "user", content: scrubFreeText(question) }],

@@ -30,7 +30,7 @@ export interface ScoutToolSpec {
   readonly description: string;
   readonly input_schema: Record<string, unknown>;
   /** The executor sets this on the LAST definition so the tool list is a cache prefix. */
-  readonly cache_control?: { readonly type: "ephemeral" };
+  readonly cache_control?: { readonly type: "ephemeral"; readonly ttl?: "5m" | "1h" };
   /** Strict tool use: the provider guarantees `input` validates against `input_schema` (a forced `tool_choice` is refused by Opus 5.5). */
   readonly strict?: boolean;
 }

@@ -7,6 +7,7 @@ import {
 import { makeApptegySource } from "../apptegy/index.ts";
 import { makeBoardBookSource } from "../boardbook/index.ts";
 import { makeMunicodeSource } from "../municode/index.ts";
+import { makeEscribeSource } from "../escribe/index.ts";
 import { makeBoardDocsSource } from "../boarddocs/index.ts";
 import { makeCivicPlusSource } from "../civicplus/index.ts";
 import { makeClerksBoardsSource } from "../clerksboards/index.ts";
@@ -97,6 +98,10 @@ export const CAPABILITIES: Array<{
   {
     name: "municode", types: ["MUNICODE"],
     make: (rows, fetchImpl) => makeMunicodeSource(rows, fetchImpl) as ReportingMeetingSource<unknown>,
+  },
+  {
+    name: "escribe", types: ["ESCRIBE"],
+    make: (rows, fetchImpl) => makeEscribeSource(rows, fetchImpl) as ReportingMeetingSource<unknown>,
   },
   {
     name: "boarddocs", types: ["BOARDDOCS"],

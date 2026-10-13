@@ -34,6 +34,7 @@ const CONFIRMING_VENDORS: Readonly<Record<DerivedWiringKind, readonly string[]>>
   BOARDBOOK: ["boardbook"],
   BOARDDOCS: ["boarddocs"],
   MUNICODE: ["municode-meetings"],
+  ESCRIBE: ["escribe"],
   CIVICCLERK: ["civicclerk-api"],
   IQM2: ["iqm2"],
   REVIZE: ["revize"],
@@ -58,6 +59,7 @@ export function wiringShapeFor(find: Pick<DiscoveryFind, "vendor" | "url">): Wir
     return { held: "ADAPTER_CONFIG_INCOMPLETE", detail: `the route ${find.url} is not a URL` };
   }
   if (find.vendor === "municode-meetings") return { kind: "MUNICODE", endpoint: { portalUrl: url.toString() } };
+  if (find.vendor === "escribe" && /^pub-[a-z0-9-]+\.escribemeetings\.com$/i.test(url.hostname)) return { kind: "ESCRIBE", endpoint: { portalUrl: url.origin } };
   if (find.vendor === "ical") return { kind: "ICAL", endpoint: { feedUrl: url.toString() } };
   if (find.vendor === "legistar-api" && url.hostname === "webapi.legistar.com") {
     const slug = /^\/v1\/([a-z0-9_-]+)\/events\/?$/i.exec(url.pathname)?.[1];

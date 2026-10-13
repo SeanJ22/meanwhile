@@ -110,3 +110,9 @@ CREATE TABLE "rebuild_queue" (
   "place_id" text PRIMARY KEY NOT NULL,
   "queued_at" timestamptz NOT NULL DEFAULT now()
 );
+--> statement-breakpoint
+CREATE TABLE "fact_store_load" (
+  "source" text PRIMARY KEY NOT NULL,
+  "sha256" char(64) NOT NULL,
+  "loaded_at" timestamptz NOT NULL DEFAULT now()
+);

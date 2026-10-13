@@ -1,4 +1,6 @@
 import { readMeetingDiscoveryInputs, meetingDiscoveryInputsDue, runMeetingDiscoveryChain, type MeetingDiscoveryInputs } from "../lib/civic-data/meeting-discovery-due.ts";
+import { readerFactDb } from "../lib/facts/db.ts";
+import { ensureFactEntities, registeredStates } from "../lib/facts/entities.ts";
 import { buildBoxFindings } from "../lib/control-plane/workers/scout-extraction.ts";
 import { workerPublicationContext } from "../lib/civic-data/worker-publication-context.ts";
 /**
@@ -651,6 +653,15 @@ const publishNowEdgeChecks = PUBLISH_NOW ? startPublishNowEdgeChecks({
 if (publishNowEdgeChecks) {
   step = "publishing changed source pointers before worker admission";
   await publishNowEdgeChecks.run();
+}
+if (!PUBLISH_NOW) {
+  step = "loading fact store entities";
+  try {
+    const loaded = await ensureFactEntities(readerFactDb(), ROOT, registeredStates(ROOT));
+    if (loaded.length) console.log(`fact store entities: loaded ${loaded.join(", ")}`);
+  } catch (error) {
+    supervisorFailures.push({ taskId: "fact-store-entities", code: "FACT_ENTITIES_LOAD_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
+  }
 }
 
 // Resolve every due scope at one frozen instant before launching. The provider frontier below

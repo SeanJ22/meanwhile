@@ -173,14 +173,26 @@ export async function indexDetectiveFindings(repo: AggregateRepository<BoxFindin
   return indexed;
 }
 
-/** Startup replays are harmless: each old origin is indexed once, including a crash after the source append. */
+/** Indexes only the Scout and Detective results the Box does not already hold; one read of the Box per call. */
 export async function backfillBox(repo: AggregateRepository<BoxFinding>, input: {
   readonly scouts: readonly BoxScoutResult[];
   readonly detectives: readonly BoxDetectiveRecord[];
   readonly artifacts: ReadonlyMap<string, Pick<ArtifactRecord, "canonicalUrl">>;
-}, now: string): Promise<void> {
-  for (const result of input.scouts) await indexScoutFindings(repo, result, now);
-  for (const result of input.detectives) await indexDetectiveFindings(repo, result, input.artifacts, now);
+}, now: string): Promise<number> {
+  const held = new Map<string, number>();
+  for (const row of await repo.list()) for (const origin of row.value.origins) {
+    if (origin.collection === "reported") continue;
+    const key = `${origin.kind}:${origin.resultId}`;
+    held.set(key, (held.get(key) ?? 0) + 1);
+  }
+  let indexed = 0;
+  for (const result of input.scouts) {
+    if ((held.get(`SCOUT:${result.attemptId}`) ?? 0) < result.findings.length) indexed += (await indexScoutFindings(repo, result, now)).length;
+  }
+  for (const result of input.detectives) {
+    if ((held.get(`DETECTIVE:${result.id}`) ?? 0) < result.result.spans.length + result.result.findings.length) indexed += (await indexDetectiveFindings(repo, result, input.artifacts, now)).length;
+  }
+  return indexed;
 }
 
 /** Count once per linked work item, never once per result. Admin joins the canonical Send mapping. */
@@ -198,9 +210,4 @@ export async function boxCounts(repo: AggregateRepository<BoxFinding>): Promise<
   const counts = { waiting: 0, taken: 0, built: 0, refused: 0 };
   for (const row of await repo.list()) counts[row.value.state]++;
   return counts;
-}
-
-/** Off unless `WTP_BOX_ENABLED=1`. */
-export function boxIndexEnabled(environment: Readonly<NodeJS.ProcessEnv> = process.env): boolean {
-  return environment.WTP_BOX_ENABLED === "1";
 }

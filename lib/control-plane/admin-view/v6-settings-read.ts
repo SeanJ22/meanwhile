@@ -1,4 +1,5 @@
 import "../../ask/model.ts";
+import "../../facts/clocks.ts";
 /** The machine key travels as the control's target and is never rendered. */
 import { fleetSpendCeilingOverrideUsd, type AdminConfig } from "../gateway/admin-config.ts";
 import { resolveRollingCeiling } from "../fleet-safety.ts";

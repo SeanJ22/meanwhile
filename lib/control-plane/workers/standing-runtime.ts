@@ -2,7 +2,7 @@ import { readRolePlaybook } from "../playbooks.ts";
 import { buildBoxFindings } from "./scout-extraction.ts";
 import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../scheduler/research-policy.ts";
 import { readPublicationSourcePolicy } from "../promotion/source-settings.ts";
-import { backfillBox, boxIndexEnabled, indexReportedFinding, indexScoutFindings } from "../box.ts";
+import { backfillBox, indexReportedFinding, indexScoutFindings } from "../box.ts";
 import { MISSION_BRIEF_LINE_CAP, missionBriefLines, SCOUT_BRIEF_LINE_BUDGET, type MissionBlank } from "./mission-brief.ts";
 import { missionPartOfPlan } from "../expansion/mission-parts.ts";
 import { workAdapterQueue } from "./engineering-adapter.ts";
@@ -88,7 +88,6 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   const [prior, initialWorkers] = scoped ? [[] as ScoutResult[], [] as Awaited<ReturnType<typeof readCompletedWorkerResults>>] : await Promise.all([
     input.repos.scoutResults.readAll(), readCompletedWorkerResults(input.repos),
   ]);
-  const indexFindings = boxIndexEnabled(input.environment ?? process.env);
   // One worker process builds this runtime once and runs many tasks through it; `beginTask` keeps one task's
   // worker history current without re-reading everyone's.
   let priorWorkers = initialWorkers;
@@ -116,16 +115,14 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
     catch { return null; }
   };
   // The round owns Box replay/build upkeep; scoped lease runtimes skip it.
-  if (!scoped && indexFindings) {
+  if (!scoped) {
     const [allWorkRows, allArtifactRows] = await Promise.all([
       input.repos.workItems.list(), input.repos.artifacts.readAll(),
     ]);
-    if (indexFindings) {
-      await backfillBox(input.repos.boxFindings, { scouts: prior,
-        detectives: initialWorkers.filter(record => record.result.role === "DETECTIVE") as import("../box.ts").BoxDetectiveRecord[],
-        artifacts: new Map(allArtifactRows.map(artifact => [artifact.artifactId, artifact])) }, now());
-    }
-    if (indexFindings && !readIntents([...(await input.repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY))]).runnerPause.paused) {
+    await backfillBox(input.repos.boxFindings, { scouts: prior,
+      detectives: initialWorkers.filter(record => record.result.role === "DETECTIVE") as import("../box.ts").BoxDetectiveRecord[],
+      artifacts: new Map(allArtifactRows.map(artifact => [artifact.artifactId, artifact])) }, now());
+    if (!readIntents([...(await input.repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY))]).runnerPause.paused) {
       const sourcePolicy = await readPublicationSourcePolicy(input.repos);
       const built = await buildBoxFindings({ repos: input.repos, items: allWorkRows.map(row => row.value), now, leaseMs: 120_000,
         readCapture: async id => {
@@ -259,10 +256,10 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
         },
         ...((input.searchFor?.(item.subject) ?? input.search) ? { search: input.searchFor?.(item.subject) ?? input.search } : {}),
         // Drop a finding for this target or any mission subject its brief lists straight into the Box.
-        ...(indexFindings ? { reportFinding: { subjects: new Set([item.subject,...mission.subjects]),
+        reportFinding: { subjects: new Set([item.subject,...mission.subjects]),
           write: async finding => ({ boxId: (await indexReportedFinding(input.repos.boxFindings, { workItemId: item.id, attemptId: ctx.attemptId,
             missionPart: finding.subjectId===item.subject ? ownPart : blanks.find(blank=>blank.subjectId===finding.subjectId)?.missionPart ?? null,
-            finding }, now())).id }) } } : {})}),
+            finding }, now())).id }) } }),
       contextFor:()=>{
         const history=subjectScoutHistory(currentHistory??prior,item.subject,item.autonomousPlan!.contract.recordClass);
         const plan=item.autonomousPlan!;
@@ -356,7 +353,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
           payload:{subjectId:recorded.subjectId,recordClass:recorded.recordClass,facts:recorded.findings,routes:recorded.candidates,tried:recorded.rungs,nextRungs:recorded.nextRungs}})],recorded.recordedAt);
         await input.repos.scoutResults.append(recorded.obligationId,recorded.attemptId,recorded,recorded.recordedAt);
         await recordFoundSources(input.repos.doors,[recorded],recorded.recordedAt);
-        if (indexFindings) await indexScoutFindings(input.repos.boxFindings, recorded, now());
+        await indexScoutFindings(input.repos.boxFindings, recorded, now());
         return recorded;
       }
     }));}}:{})};

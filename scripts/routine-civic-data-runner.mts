@@ -1,4 +1,3 @@
-import { boxIndexEnabled } from "../lib/control-plane/box.ts";
 import { readMeetingDiscoveryInputs, meetingDiscoveryInputsDue, runMeetingDiscoveryChain, type MeetingDiscoveryInputs } from "../lib/civic-data/meeting-discovery-due.ts";
 import { buildBoxFindings } from "../lib/control-plane/workers/scout-extraction.ts";
 import { workerPublicationContext } from "../lib/civic-data/worker-publication-context.ts";
@@ -460,12 +459,10 @@ async function readHuntSourceTasks(): Promise<readonly RoutineSourceTask[]> {
     const sql = neon(connection);
     const selected = ONLY ? WORKER_PUBLICATION_TASK_IDS.filter(id => ONLY.has(id)) : WORKER_PUBLICATION_TASK_IDS;
     const items = await readWorkerPublicationItems((query, params) => sql.query(query, [...params]), selected);
-    if (boxIndexEnabled()) {
-      const pending = await readPublicationBoxItems(repos, items, new Date().toISOString());
-      if (pending.length) {
-        const context = await workerPublicationContext(RUN_STARTED_AT, repos);
-        await buildBoxFindings({ repos, items: pending, now: () => new Date().toISOString(), leaseMs: 120_000, readCapture: context.readCapture });
-      }
+    const pending = await readPublicationBoxItems(repos, items, new Date().toISOString());
+    if (pending.length) {
+      const context = await workerPublicationContext(RUN_STARTED_AT, repos);
+      await buildBoxFindings({ repos, items: pending, now: () => new Date().toISOString(), leaseMs: 120_000, readCapture: context.readCapture });
     }
     const publication = await readPublishNowWorkerTasks(items, ids => readCompletedWorkerResultsOf(repos, ids), RUN_STARTED_AT);
     if (!PUBLISH_NOW) return publication;

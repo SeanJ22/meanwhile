@@ -56,15 +56,15 @@ test("every successful answer settles — held, null and unexpected subject", ()
   );
 });
 
-test("the failed state offers a retry, and retry returns to loading", async () => {
+test("the failed state contributes to the card gap without a field placeholder", async () => {
   const src = (await import("node:fs")).readFileSync(
     "components/officials/public-statements-profile.tsx",
     "utf8",
   );
   const failed = src.slice(src.indexOf('case "failed":'), src.indexOf('case "held":'));
-  assert.match(failed, /Try again/);
-  assert.match(failed, /setLoad\(\{ kind: "loading" \}\)/);
-  assert.match(failed, /setAttempt\(/);
+  assert.match(failed, /CardGapContribution/);
+  assert.match(failed, /label="public statements"/);
+  assert.doesNotMatch(failed, /WorkingOnIt|CardSection/);
 });
 
 test("held numeric shares draw five bars on one 0–100 scale, never counts", () => {
@@ -85,7 +85,7 @@ test("held numeric shares draw five bars on one 0–100 scale, never counts", ()
   }
   assert.ok(markup.includes(PRL_RHETORIC_ATTRIBUTION.citation.replace(/'/g, "&#x27;")), "the dataset citation is present");
   assert.ok(markup.includes(PRL_RHETORIC_ATTRIBUTION.licenceUrl));
-  assert.ok(markup.includes('data-statement-feed="not-held"'), "the missing feed is stated, not faked");
+  assert.doesNotMatch(markup, /data-statement-feed="not-held"|working on getting|aren&#x27;t held here yet/, "the missing feed has no field placeholder");
 });
 
 test("without numeric shares the section falls back to the held sentences", () => {

@@ -62,6 +62,7 @@ test("actual badge, stats, overlay and venue panel render every ambiguous listin
     import { StatsBar } from './components/shell/stats-bar.tsx';
     import { ListOverlay } from './components/map/list-overlay.tsx';
     import { MeetingPanel } from './components/map/meeting-panel.tsx';
+    import { Card } from './components/ui/card.tsx';
     import { MeetingListingNotice } from './components/map/meeting-listing-notice.tsx';
     import { canonicalBodyIdentity } from './lib/ask/body-identity.ts';
     import { installRegistryAuthority } from './tests/helpers/promoted-fixtures.ts';
@@ -74,20 +75,23 @@ test("actual badge, stats, overlay and venue panel render every ambiguous listin
       const meetings=snapshot.meetings.filter(row=>group.sourceIds.includes(row.id)),venues=groupByVenue(meetings,identity);
       const data={allMeetings:meetings,meetings,venues,result:{meetings,listingIdentity:identity,coverage:null,tier:'exact',radiusKm:25,requestedRadiusKm:25,center:{lat:43.3,lng:-72}},location:null,drawnDistricts:[],dropped:0,searchFailed:false,atAddress:false,governing:null,zipPartial:null,basis:'ZIP'};
       const render=child=>renderToStaticMarkup(h(DataProvider,{value:data},h(UiProvider,{initial:{listOverlayOpen:true,listGroupBy:'none'}},child)));
-      const badge=render(h(CountBadge)),stats=render(h(StatsBar)),overlay=render(h(ListOverlay)),panel=render(h(MeetingPanel,{venue:venues[0],onClose:()=>{},onOpenMeeting:()=>{}}));
+      const renderCard=child=>render(h(Card,{title:'Calendar listings',sources:group.sources.map(source=>({what:'Unresolved calendar listing',provenance:source}))},child));
+      const badge=render(h(CountBadge)),stats=render(h(StatsBar)),overlay=renderCard(h(ListOverlay)),panel=renderCard(h(MeetingPanel,{venue:venues[0],onClose:()=>{},onOpenMeeting:()=>{}}));
       data.listingIdentity=identity;data.result=null;
-      const carriedBadge=render(h(CountBadge)),carriedOverlay=render(h(ListOverlay));
+      const carriedBadge=render(h(CountBadge)),carriedOverlay=renderCard(h(ListOverlay));
       data.searchFailed=true;
-      const failedBadge=render(h(CountBadge)),failedOverlay=render(h(ListOverlay));
+      const failedBadge=render(h(CountBadge)),failedOverlay=renderCard(h(ListOverlay));
       results.push({group,badge,stats,overlay,panel,carriedBadge,carriedOverlay,failedBadge,failedOverlay});
     }
-    console.log(JSON.stringify({results,combinedNotice:renderToStaticMarkup(h(MeetingListingNotice,{groups:identity.groups}))}));
+    const sources=identity.groups.flatMap(group=>group.sources.map(source=>({what:'Unresolved calendar listing',provenance:source})));
+    console.log(JSON.stringify({results,combinedNotice:renderToStaticMarkup(h(Card,{title:'Calendar listings',sources},h(MeetingListingNotice,{groups:identity.groups})))}));
   `], { cwd: process.cwd(), encoding: "utf8", maxBuffer: 4 * 1024 * 1024 });
   const proof = JSON.parse(output.trim()) as { results: { group: { reason: string; sourceIds: string[]; sources: { id: string; sourceUrl: string }[] }; badge: string; stats: string; overlay: string; panel: string; carriedBadge:string; carriedOverlay:string; failedBadge:string; failedOverlay:string }[]; combinedNotice: string };
   const { results, combinedNotice } = proof;
   // A URL as rendered markup carries it: an ampersand is escaped.
   const attribute = (url: string) => url.replaceAll("&", "&amp;");
   assert.equal(results.length, 3);
+  assert.equal((combinedNotice.match(/data-card-sources=/g) ?? []).length, 1);
   const sharedReason = results[0].group.reason;
   assert.ok(results.every((result) => result.group.reason === sharedReason));
   assert.equal(combinedNotice.split(sharedReason).length - 1, 1, "The shared explanation renders once per notice, not once per pair");

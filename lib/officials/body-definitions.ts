@@ -505,7 +505,7 @@ export interface BodyDefinitions {
   unreadNote: string | null;
 }
 
-/** The line that replaces `NO_BODY_BLURB_LINE`. Never a refusal. */
+/** Distinguishes a sourced class definition from the unread charter for this body. */
 export const CHARTER_UNREAD_LINE =
   "We haven't read this body's own charter yet, so the description above is what this kind of body does here.";
 

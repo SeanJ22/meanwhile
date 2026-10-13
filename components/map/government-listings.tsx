@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import type { RegistrationGovernmentListing } from "@/lib/registration/listings";
 
 function Listing({ row }: { row: RegistrationGovernmentListing }) {
@@ -16,15 +17,12 @@ function Listing({ row }: { row: RegistrationGovernmentListing }) {
       {row.officePhone && <p>Office phone: <a href={`tel:${row.officePhone}`} className="text-link">{row.officePhone}</a></p>}
       {row.website && <p><a href={row.website} target="_blank" rel="noopener noreferrer" className="text-link">Official website</a></p>}
       {row.govDomains?.map(link => <p key={link.domain}><a href={link.website} target="_blank" rel="noopener noreferrer" className="text-link">{link.domain}</a></p>)}
-      <details>
-        <summary className="cursor-pointer text-link">Sources</summary>
-        <p>{row.provenance.sourceUrl
-          ? <a href={row.provenance.sourceUrl} target="_blank" rel="noopener noreferrer" className="text-link">{row.provenance.sourceOrg}</a>
-          : row.provenance.sourceOrg}{" · "}{row.sourceVintage}</p>
-        {row.provenance.collectedAt && <p>Source retrieved {row.provenance.collectedAt.slice(0, 10)}.</p>}
-        {row.additionalSources?.map(source => <p key={`${source.sourceUrl}:${source.collectedAt}`}><a href={source.sourceUrl ?? undefined} target="_blank" rel="noopener noreferrer" className="text-link">{source.sourceOrg}</a>{" · "}Checked {source.collectedAt?.slice(0, 10)}</p>)}
-        {row.govDomains?.map(link => <p key={link.domain}><a href={link.sourceUrl} target="_blank" rel="noopener noreferrer" className="text-link">CISA .gov registry: {link.domain}</a>{" · "}Checked {link.checkedAt.slice(0, 10)}</p>)}
-      </details>
+      <CardSourcesContribution id={`government-listing:${row.id}`} sources={[
+        { what: `${row.name} · ${row.sourceVintage}`, provenance: row.provenance },
+        ...(row.additionalSources ?? []).map(source => ({ what: `${row.name} · additional listing`, provenance: source })),
+        ...(row.govDomains ?? []).map(link => ({ what: `${link.domain} · CISA .gov registry`,
+          provenance: { sourceUrl: link.sourceUrl, sourceOrg: "CISA .gov registry", collectedAt: link.checkedAt, verifiedAt: null } })),
+      ]} />
     </div>
   </details>;
 }

@@ -1,0 +1,23 @@
+{
+  "n": 26,
+  "branch": "release/26",
+  "river_sha": "6c204dcd865cc99f3e6bb2a4f0270f78b28a7f07",
+  "tested_sha": "6c204dcd865cc99f3e6bb2a4f0270f78b28a7f07",
+  "steps": [
+    "FEC-01",
+    "MR-01",
+    "PB-01"
+  ],
+  "lanes": [
+    "fec-national",
+    "map-representation",
+    "playbooks-fix"
+  ],
+  "integration_from": 140,
+  "integration_count": 143,
+  "pr": {
+    "number": 734,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/734"
+  },
+  "at": "2026-10-13T06:49:40Z"
+}

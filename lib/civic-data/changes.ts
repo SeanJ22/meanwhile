@@ -126,6 +126,10 @@ export function civicRecordFacts(recordClass: RoutineRecordClass, member: CivicR
   }
   if (recordClass === "CURATED_READER_RECORD") {
     const row = object(member.record);
+    if (row?.kind === "SOCRATA_DATASET" || row?.kind === "EPA_FACILITY") {
+      const { capturedAt: _capturedAt, ...facts } = row;
+      return facts;
+    }
     const value = object(row?.value);
     if (row?.kind === "ELECTION_FIELD" && value) {
       const { verifiedAt: _verifiedAt, collectedAt: _collectedAt, ...facts } = value;
@@ -445,8 +449,14 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
           ...array(sitting.rollCalls).map((record, index) => ({ key: `roll-call:${meetingId}:${textKey(record, ["eventItemId"]) ?? `row-${index}`}`, record })),
         ];
       }).sort((left, right) => left.key.localeCompare(right.key));
+    case "FEDERAL_CIVIC_RECORD":
+      return [
+        { key: "projection:cursor", record: root.cursor ?? null },
+        { key: "projection:counts", record: root.counts ?? null },
+        ...keyed("federal", array(root.records), ["id"]),
+      ].sort((a, b) => a.key.localeCompare(b.key));
     case "CURATED_READER_RECORD":
-      return keyed("curated-reader", array(root.records), ["id"])
+      return keyed("curated-reader", [...array(root.records), ...(root.kind === "open-data" ? [...array(root.reports),...array(root.partitions)] : [])], ["id"])
         .sort((left, right) => left.key.localeCompare(right.key));
     case "STATE_CAMPAIGN_FINANCE":
       return array(root.records).map((record, index) => {
@@ -479,7 +489,7 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
       ].sort((a, b) => a.key.localeCompare(b.key));
     }
     case "DOTGOV_REFERENCE":
-      return keyed("domain", array(root.electionDomains), ["domain"]);
+      return keyed("domain", array(root.domains), ["domain"]);
     case "OPERATIONAL_REFERENCE": {
       const registries = object(root.registries) ?? {};
       return Object.values(registries).flatMap((value) => {

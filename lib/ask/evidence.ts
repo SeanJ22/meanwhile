@@ -11,6 +11,7 @@ import type { GovernmentBudgetFact } from "../civic-data/government-budget-contr
  */
 
 export interface EvidenceRecord {
+  openData?: {nativeIds:Readonly<Record<string,string>>;official:boolean;publishedAt:string|null;updatedAt:string|null;zip:string|null};
   /** A native source or separately verified extraction names the speaker and publication date.
    * A page search hit alone may never populate this field. */
   verifiedStatement?: { speakerId: string; quote: string; date: string; attribution: string; nativeSourceId: string };
@@ -22,6 +23,8 @@ export interface EvidenceRecord {
   agendaDocument?: { contentHash: string; title: string | null; publicationIndex: boolean };
   kind:
     | "POPULATION"
+    | "DATASET"
+    | "REGULATED_FACILITY"
     | "GOVERNMENT_FINANCE"
     | "MEETING"
     | "AGENDA_ITEM"

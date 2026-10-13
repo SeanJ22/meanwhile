@@ -16,6 +16,7 @@ import { runPlaceSource } from "../lib/hunt/place-source.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { loadStateDistrictBoundaries } from "../lib/control-plane/expansion/national-geography.ts";
 import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import { stateOfficesForStates } from "../lib/reference/state-offices.ts";
 
 await installRegistryAuthority();
 
@@ -112,9 +113,9 @@ test("the place source reads shared holdings, publishes source data, then uses t
 test("a registry publication failure leaves its fields open while later election fields still reach publication", async () => {
   const now = "2026-09-30T00:00:00Z";
   const division = { id: "ocd-division/country:us/state:mo", label: "Missouri", divisionType: "state", geoid: "29", sourceUrl: "https://census.gov" };
+  const stateOffice = stateOfficesForStates(["MO"]).find(office => office.kind === "ELECTION_OFFICE")!;
   const pages: Record<string, string> = {
-    "https://www.usa.gov/state-governments": '<a id="mo" href="/states/missouri">Missouri</a>',
-    "https://www.usa.gov/states/missouri": '<h1>Missouri</h1><a href="https://governor.example.gov/">Governor Jane Doe</a><a href="https://elections.example.gov/">Voting</a>',
+    [stateOffice.url]: '<h1>Missouri</h1><a href="https://governor.example.gov/">Governor Jane Doe</a><a href="https://elections.example.gov/">Voting</a>',
     "https://elections.example.gov/": '<p>October 5, 2026: Last day to register to vote.</p>',
   };
   let offers = 0;

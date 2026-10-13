@@ -8,6 +8,10 @@ const staticGeographyTrace = [
   "./data/derived/resolver-geometry.json",
   "./public/geo/*.geojson",
 ];
+const stateOfficeTrace = [
+  "./data/reference/fec_state_election_offices.csv",
+  "./data/reference/state-cf-agencies.csv",
+];
 
 const nextConfig: NextConfig = {
   productionBrowserSourceMaps: process.env.WTP_ATTRIBUTION_BUILD === "1",
@@ -56,14 +60,15 @@ const nextConfig: NextConfig = {
     "/{ballot,about-area}": staticGeographyTrace,
     "/api/meetings": [
       ...staticGeographyTrace,
+      ...stateOfficeTrace,
       // The ZIP index shards are read from a literal folder, so the tracer finds them itself.
     ],
     // `lib/coverage/zip-tier.ts` builds this path at runtime, so the tracer cannot see it; untraced, every ZIP would silently read as unworked.
     
     // The warm call reads the ZIP index's state map by path, so it is named here.
-    "/api/warm": ["./data/derived/zip-divisions/index.json"],
-    "/ballot": ["./data/derived/zip-coverage-tiers-runtime.json"],
-    "/about-area": ["./data/derived/zip-coverage-tiers-runtime.json"],
+    "/api/warm": ["./data/derived/zip-divisions/index.json", ...stateOfficeTrace],
+    "/ballot": ["./data/derived/zip-coverage-tiers-runtime.json", ...stateOfficeTrace],
+    "/about-area": ["./data/derived/zip-coverage-tiers-runtime.json", ...stateOfficeTrace],
     "/api/reactions": ["./data/derived/zip-coverage-tiers-runtime.json"],
     "/api/log": ["./data/derived/zip-coverage-tiers-runtime.json"],
     /*

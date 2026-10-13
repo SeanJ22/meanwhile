@@ -228,6 +228,7 @@ export async function readReaderManifest(
 }
 
 export const READER_MAP_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
+  "government-domains",
   "census-districts",
   "registry-runtime",
   "federal-directory",

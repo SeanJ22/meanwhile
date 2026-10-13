@@ -83,7 +83,7 @@ async function main(): Promise<void> {
     } catch (error) {
       const detail = `NCES ${kind}: ${error instanceof Error ? error.message : String(error)}`;
       capabilityGaps.push(detail);
-      if (!sourceFailure) {
+      if (kind === "lea-directory" && !sourceFailure) {
         sourceFailure = isSourceAcquisitionFailure(error) ? error : sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", detail);
         sourceFailedAt = new Date().toISOString();
         sourceFailureUrl = schoolUrl;

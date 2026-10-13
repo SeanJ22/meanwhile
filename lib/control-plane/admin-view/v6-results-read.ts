@@ -40,7 +40,7 @@ export interface AdminV6Result {
 const NONE = "—";
 const STATE_CODES: ReadonlySet<string> = new Set(US_STATES.map((s) => s.code.toLowerCase()));
 
-export const PIPELINE_STAGE_ORDER = ["SCOUTED", "VERIFIED", "APPROVED_FOR_PROMOTION"] as const;
+const PIPELINE_STAGE_ORDER = ["SCOUTED", "VERIFIED", "APPROVED_FOR_PROMOTION"] as const;
 export type PipelineStageName = (typeof PIPELINE_STAGE_ORDER)[number];
 
 const SNAPSHOT_ARRAY = (path: string) => `CASE WHEN jsonb_typeof(${path}) = 'array' THEN ${path} ELSE '[]'::jsonb END`;

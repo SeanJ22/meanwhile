@@ -2,7 +2,7 @@ import type { BodyRoster, RosterReaderDisposition } from "../registry/body-roste
 import type { Query } from "./publish.ts";
 import { rosterMemberId } from "./roster-facts.ts";
 
-export const ROSTER_FACTS_SQL = `WITH members AS (
+const ROSTER_FACTS_SQL = `WITH members AS (
     SELECT f.entity_id AS body_id, substr(f.field, 8) AS person_id, f.value, f.quote, f.checked_at, f.provenance_kind, s.url
     FROM fact f JOIN source_copy s ON s.id = f.source_copy_id
     WHERE f.status = 'live' AND f.field LIKE 'member:%' AND ($1::text[] IS NULL OR f.entity_id = ANY($1::text[])))

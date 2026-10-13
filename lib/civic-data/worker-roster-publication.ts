@@ -101,7 +101,7 @@ export function bodyNameFromPage(html: string, divisionLabel: string): string | 
   return null;
 }
 
-export function parserReading(parser: WorkerResultRecord, contract: NonNullable<WorkItem["autonomousPlan"]>["contract"], captures: readonly WorkerPublicationCapture[]): RosterReading | null {
+function parserReading(parser: WorkerResultRecord, contract: NonNullable<WorkItem["autonomousPlan"]>["contract"], captures: readonly WorkerPublicationCapture[]): RosterReading | null {
   if (parser.result.role !== "PARSER" || contract.schemaVersion !== 2) return null;
   const extraction = parser.result;
   const capture = captures.find(c => c.evidence.artifactId === extraction.artifactId);

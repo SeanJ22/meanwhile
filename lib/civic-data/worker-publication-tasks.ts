@@ -24,7 +24,7 @@ const factClass = (item: WorkerPublicationItem): "rosters" | "comments" | null =
     : item.autonomousPlan?.publication?.contractId === COMMENT_RULE_PUBLICATION ? "comments" : null;
 
 /** Work items whose newest extraction or saved page has not been published yet. */
-export function owedPublications(items: readonly WorkerPublicationItem[], results: readonly WorkerResultRecord[], now: string): { readonly item: WorkerPublicationItem; readonly requestedAt: string }[] {
+function owedPublications(items: readonly WorkerPublicationItem[], results: readonly WorkerResultRecord[], now: string): { readonly item: WorkerPublicationItem; readonly requestedAt: string }[] {
   const byItem = new Map<string, WorkerResultRecord[]>();
   for (const result of results) {
     const own = byItem.get(result.workItemId) ?? [];

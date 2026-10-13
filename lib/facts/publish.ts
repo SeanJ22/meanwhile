@@ -8,7 +8,7 @@ export interface FactDb {
   transaction<T>(work: (query: Query) => Promise<T>): Promise<T>;
 }
 
-export type BlankStage = "ACQUIRE" | "READ" | "CHECK" | "DECIDE" | "PUBLISH";
+type BlankStage = "ACQUIRE" | "READ" | "CHECK" | "DECIDE" | "PUBLISH";
 
 export interface Clocks {
   windowHours(kind: FieldKind): number;

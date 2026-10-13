@@ -4,7 +4,7 @@ import { SOURCE_KINDS } from "../corpus/source-kinds.ts";
 import { requirePublication } from "./worker-publication-evidence.ts";
 import type { FieldValue } from "../control-plane/workers/types.ts";
 
-export const STANCE_FIELDS = ["personId", "personName", "quote", "date", "topicId", "sourceKind", "statementSummary", "positionSummary"] as const;
+const STANCE_FIELDS = ["personId", "personName", "quote", "date", "topicId", "sourceKind", "statementSummary", "positionSummary"] as const;
 export const MAX_STANCE_QUOTE_CHARS = 600;
 
 export type StanceRow = {

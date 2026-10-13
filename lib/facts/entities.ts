@@ -5,10 +5,10 @@ import { parseCsv } from "../reference/csv.ts";
 import { readCensusGovernmentFacts, type CensusGovernmentFacts } from "../registration/jurisdictions.ts";
 import type { FactDb, Query } from "./publish.ts";
 
-export type EntityKind = "place" | "government" | "body" | "seat" | "person" | "meeting" | "agenda_item" | "bill" | "vote_event"
+type EntityKind = "place" | "government" | "body" | "seat" | "person" | "meeting" | "agenda_item" | "bill" | "vote_event"
   | "election" | "contest" | "candidacy" | "measure" | "committee" | "statement" | "law_question" | "news_item";
 
-export interface EntityRow {
+interface EntityRow {
   readonly id: string;
   readonly kind: EntityKind;
   readonly name: string;
@@ -16,7 +16,7 @@ export interface EntityRow {
   readonly parentId: string | null;
 }
 
-export interface EntityBatch {
+interface EntityBatch {
   readonly entities: EntityRow[];
   readonly hosts: [entityId: string, host: string][];
   readonly externalIds: [entityId: string, scheme: string, value: string][];
@@ -39,7 +39,7 @@ export interface RegistryBody {
   readonly censusId?: string | null;
 }
 
-export function hostOfAddress(address: string): string | null {
+function hostOfAddress(address: string): string | null {
   if (!address.trim()) return null;
   try {
     return new URL(/^https?:\/\//i.test(address) ? address : `http://${address}`).hostname.toLowerCase().replace(/^www\./, "") || null;
@@ -51,7 +51,7 @@ const titleCase = (s: string) => s.toLowerCase().replace(/\b\p{L}/gu, c => c.toU
 /** One state's places, governments and registry bodies; special districts sit on their county. */
 export interface Legislator { readonly ocdPersonId: string; readonly name: string }
 
-export function stateEntities(reg: Registration, census: ReadonlyMap<string, CensusGovernmentFacts>, bodies: readonly RegistryBody[],
+function stateEntities(reg: Registration, census: ReadonlyMap<string, CensusGovernmentFacts>, bodies: readonly RegistryBody[],
   legislators: readonly Legislator[] = []): EntityBatch {
   const out = emptyBatch();
   const state = reg.state.toUpperCase();
@@ -98,7 +98,7 @@ export function stateEntities(reg: Registration, census: ReadonlyMap<string, Cen
   return out;
 }
 
-export async function insertEntities(query: Query, batch: EntityBatch): Promise<void> {
+async function insertEntities(query: Query, batch: EntityBatch): Promise<void> {
   const size = 2000;
   for (let i = 0; i < batch.entities.length; i += size) {
     const rows = batch.entities.slice(i, i + size);
@@ -124,7 +124,7 @@ export async function insertEntities(query: Query, batch: EntityBatch): Promise<
   }
 }
 
-export interface PersonIds {
+interface PersonIds {
   readonly name: string;
   readonly state: string | null;
   /** [scheme, value]: bioguide, fec, openstates, legistar-person, ... */

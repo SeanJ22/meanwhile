@@ -10,7 +10,7 @@ import { nameKey, publishRosterFacts } from "./roster-facts.ts";
 import { publishCommentFacts } from "./comment-facts.ts";
 import type { CommentAccess } from "../registry/comment-access-client.ts";
 
-export interface CartonImportReport {
+interface CartonImportReport {
   readonly rosters: number;
   readonly live: number;
   readonly confirmed: number;

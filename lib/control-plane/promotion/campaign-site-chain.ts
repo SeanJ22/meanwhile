@@ -270,7 +270,7 @@ async function independentProfileSignal(subject: CampaignSiteSubject, primary: A
 }
 
 /** One Marginalia result: a URL and what the index called it, never the index's licensed description. */
-export interface MarginaliaPointer {
+interface MarginaliaPointer {
   readonly kind: "POINTER";
   readonly url: string;
   readonly title: string | null;

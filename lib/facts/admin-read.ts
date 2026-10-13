@@ -10,7 +10,7 @@ export interface FactStoreReading {
   readonly blanks: readonly { readonly stage: string; readonly reason: string; readonly n: number }[];
 }
 
-export const FACT_STORE_SQL = [
+const FACT_STORE_SQL = [
   `SELECT date_trunc('hour', live_at) AS hour, count(*)::int AS live FROM fact
      WHERE live_at > now() - interval '24 hours' GROUP BY 1 ORDER BY 1`,
   `SELECT count(*)::int AS n FROM fact WHERE status = 'live'`,
@@ -43,7 +43,7 @@ const REASON_WORDS: Readonly<Record<string, string>> = {
   NO_SAVED_COPY: "no saved copy of the source page is held",
 };
 
-export function blankWords(stage: string, reason: string): string {
+function blankWords(stage: string, reason: string): string {
   const code = reason.replace(/^CHECK_FAILED:/, "").replace(/^SECOND_/, "");
   const why = REASON_WORDS[code] ?? null;
   const prefix = reason.includes("SECOND_") && code !== "SECOND_SOURCE_REQUIRED" ? "the second source: " : "";

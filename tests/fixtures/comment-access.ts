@@ -27,9 +27,7 @@ export const COMMENT_ACCESS: CommentAccess[] = [
     verifiedAt: "2026-08-14",
   },
 
-  // Each body carries its own rule, read from that body's own agenda. Where an agenda publishes no
-  // per-speaker limit, `timeLimit` stays null; a timed agenda's slot for the public-comment item is not a
-  // per-speaker limit.
+  // Each body's own rule, from its own agenda; a timed agenda's slot for public comment is not a per-speaker limit.
   {
     bodyId: "ocd-division/country:us/state:az/place:tucson#planning-commission",
     ocdId: "ocd-division/country:us/state:az/place:tucson",
@@ -78,9 +76,7 @@ export const COMMENT_ACCESS: CommentAccess[] = [
     writtenComment: null,
     attend:
       "Virtually, by the Microsoft Teams link published on each meeting's agenda.",
-    // The agenda allots 2 minutes to the Call to the Audience ITEM. That is
-    // the item's slot on a timed agenda, not a per-speaker limit, so it is
-    // not rendered as one.
+    // The agenda's 2 minutes are the Call to the Audience item's slot, not a per-speaker limit.
     timeLimit: null,
     sourceUrl: "https://assets.tucsonaz.gov/share/bcc/42287.pdf",
     collectedAt: "2026-08-18",
@@ -266,9 +262,7 @@ export const COMMENT_ACCESS: CommentAccess[] = [
     writtenComment:
       "Attach any background material to the appointment request form.",
     attend: null,
-    // The rule states the Chairperson may set limits and publishes no
-    // number, so none is stated here. Never inferred from a neighbouring
-    // town's rule.
+    // The rule lets the Chairperson set limits and publishes no number.
     timeLimit: "No published limit — the Chairperson sets time limits for public comment.",
     sourceUrl:
       "https://www.newbury.nh.gov/sites/g/files/vyhlif4761/f/uploads/pubic_input_rules_of_participation.pdf",

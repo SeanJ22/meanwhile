@@ -1948,8 +1948,5 @@ const READER_ROSTERS = HELD_BODY_ROSTERS.map(projectReaderRoster);
 /** Real roster records read from each body's own page, for tests. */
 export const BODY_ROSTERS: BodyRoster[] = READER_ROSTERS.map(result => result.roster);
 export const ROSTER_READER_DISPOSITIONS = READER_ROSTERS.flatMap(result => result.dispositions);
-const readerRosterIdentities = new Map(ROSTER_READER_DISPOSITIONS.map(row => [row.sourceId, row]));
-export function rosterMemberReaderDisposition(id: string): RosterReaderDisposition | null {
-  return readerRosterIdentities.get(id) ?? null;
-}
+
 

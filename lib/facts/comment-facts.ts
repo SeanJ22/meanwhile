@@ -11,7 +11,7 @@ const FIELDS: readonly (readonly [CommentField, string])[] = [["commentPeriodDet
   ["writtenComment", "comment:written"], ["attend", "comment:attend"], ["timeLimit", "comment:time_limit"]];
 const PERIOD = "comment:period";
 
-export interface CommentReading {
+interface CommentReading {
   readonly fields: Readonly<Record<string, unknown>>;
   readonly fieldSources?: Readonly<Record<string, { readonly quote?: string }>>;
 }

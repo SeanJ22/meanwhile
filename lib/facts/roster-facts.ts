@@ -13,7 +13,7 @@ export interface RosterMember {
   readonly fieldSources?: Readonly<Record<string, FieldSource>>;
 }
 
-export interface RosterFactsInput {
+interface RosterFactsInput {
   readonly body: { readonly id: string; readonly name: string | null; readonly state: string | null; readonly parentId: string | null };
   readonly capture: WorkerPublicationCapture;
   readonly members: readonly RosterMember[];

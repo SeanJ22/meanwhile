@@ -7,7 +7,7 @@ import type { ProbeFetch } from "../doors/probe.ts";
 import { hostSourceKind, type SourceKind } from "../control-plane/promotion/source-kinds.ts";
 import { hostOf, isOfficialHost, type Provenance } from "./check.ts";
 
-export const RECEIPT_WORK_ITEM = "fact-receipts";
+const RECEIPT_WORK_ITEM = "fact-receipts";
 
 const KIND_PROVENANCE: Partial<Record<SourceKind, Provenance>> = { OFFICIAL: "OFFICIAL", FILING: "FILING", CAMPAIGN: "CAMPAIGN", NEWS: "NEWS" };
 

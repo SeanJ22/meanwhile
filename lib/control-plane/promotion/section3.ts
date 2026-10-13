@@ -49,9 +49,9 @@ export const SECTION3_MINIMUMS: Readonly<Record<string, readonly string[]>> = {
 export const SECTION3_LABEL_FIELDS: readonly string[] = ["bodyClass", "coverage", "kind", "contactKind", "topicId", "commentPeriod", "state", "sourceKind"];
 
 /** Judgment calls: the only fields that need a second, independent source. */
-export const SECOND_SOURCE_FIELDS: readonly string[] = ["photoUrl", "portrait"];
+const SECOND_SOURCE_FIELDS: readonly string[] = ["photoUrl", "portrait"];
 /** Judgment calls as whole records: portraits, one person matched across sources. */
-export const SECOND_SOURCE_RECORD_CLASSES: readonly string[] = ["OFFICIAL_PORTRAIT", "CROSS_SOURCE_IDENTITY"];
+const SECOND_SOURCE_RECORD_CLASSES: readonly string[] = ["OFFICIAL_PORTRAIT", "CROSS_SOURCE_IDENTITY"];
 /** An AI summary of a stance passes with the quote it summarizes, whose page Sources links. */
 const STANCE_SUMMARY_FIELDS: readonly string[] = ["statementSummary", "positionSummary"];
 

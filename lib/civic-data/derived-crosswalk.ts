@@ -53,7 +53,6 @@ export const AUTO_CROSSWALK_HOLD_REASONS = [
   // A small-town feed may stamp local wall time as UTC.
   "UTC_STAMPED_TIMES",
   "CONFLICTING_SELECTION",
-  "ROUTE_CAP",
   "ROW_CHECK_FAILED",
 ] as const;
 export type AutoCrosswalkHoldReason = (typeof AUTO_CROSSWALK_HOLD_REASONS)[number];

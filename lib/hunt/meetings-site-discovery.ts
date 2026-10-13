@@ -1,21 +1,3 @@
-/**
- * Find a government's meeting route from its own site, without a model. The
- * pure half of the unpaid discovery executor: given a page the government
- * published, it names the meeting routes that page proves; given a route's
- * response, it says whether the route actually yields meetings.
- *
- * A candidate comes only from the government's own page (LINKED: an href to a
- * vendor host or feed; SERVED_BY: vendor markup on the government's own
- * domain; EMBEDDED: a vendor tenant named in the page's own script), a saved
- * method (RECIPE), a search result (SEARCH) or a route hint (HINT). No tenant
- * slug is derived from a name: some vendor paths answer 200 for any tenant.
- *
- * Verified by content, never by status: an iCal feed must hold a VEVENT, a
- * Legistar events call a JSON array of events, an AgendaCenter page an agenda
- * document link. A feed URL that answers with an HTML shell is NOT_CONFIRMED.
- * A vendor recognised but not yet readable is a LEAD, never a route. Pure.
- */
-
 import { calendarFeedUrl } from "../sources/legistar-insite/calendar.ts";
 import { verifyOfficialPageEvents } from "../sources/official-page-events/index.ts";
 import type { OfficialLinkingPage } from "../civic-data/source-authority.ts";
@@ -23,6 +5,7 @@ import { detectTenancy } from "./platform-tenancy.ts";
 import { MEETING_HELD_HORIZON_DAYS, MEETING_HELD_LOOKBACK_DAYS } from "../meetings/constants.ts";
 import { parseDiligentMeetings } from "../sources/diligent/index.ts";
 import { boardDocsBase, parseBoardDocsMeetings } from "../sources/boarddocs/index.ts";
+import { parsePrimeGovMeetings } from "../sources/primegov/index.ts";
 import { parseOrganizationPage } from "../sources/boardbook/index.ts";
 import { meetingSourceCadenceHours } from "../control-plane/scheduler/obligation.ts";
 import { governmentTimeZone } from "../time/county-time-zones.ts";
@@ -49,6 +32,7 @@ export const VERIFIABLE_VENDORS = [
   "iqm2",
   "boardbook",
   "boarddocs",
+  "primegov",
   "diligent",
   /* A body's own page that dates its public events, verified for that body (`verifyOfficialPage`). */
   "official-page-events",
@@ -59,7 +43,6 @@ export type VerifiableVendor = (typeof VERIFIABLE_VENDORS)[number];
 export const LEAD_ONLY_VENDORS: readonly { readonly vendor: string; readonly host: RegExp }[] = [
   { vendor: "novusagenda", host: /(^|\.)novusagenda\.com$/i },
   { vendor: "escribe", host: /(^|\.)escribemeetings\.com$/i },
-  { vendor: "primegov", host: /(^|\.)primegov\.com$/i },
   { vendor: "granicus", host: /(^|\.)granicus\.com$/i },
   { vendor: "municode-meetings", host: /(^|\.)municodemeetings\.com$/i },
   { vendor: "diligent", host: /(^|\.)(diligentoneplatform\.com|highbond\.com|civicweb\.net)$/i },
@@ -180,6 +163,16 @@ export function meetingEndpointCandidates(html: string, pageUrl: string, now?: s
       continue;
     }
     const clerk = /^([a-z0-9-]+)\.portal\.civicclerk\.com$/.exec(host);
+    if (/^[a-z0-9-]+\.primegov\.com$/i.test(host)) {
+      const publicOrigin = `https://${host}`;
+      add({ vendor: "primegov", url: `${publicOrigin}/api/v2/PublicPortal/ListUpcomingMeetings`, basis: "LINKED", evidence: href, verifiable: true });
+      if (now) {
+        for (let year = Number(new Date(Date.parse(now) - MEETING_HELD_LOOKBACK_DAYS * 86_400_000).toISOString().slice(0, 4)); year <= Number(now.slice(0, 4)); year++) {
+          add({ vendor: "primegov", url: `${publicOrigin}/api/v2/PublicPortal/ListArchivedMeetings?year=${year}`, basis: "LINKED", evidence: href, verifiable: true });
+        }
+      }
+      continue;
+    }
     if (clerk) {
       add({ vendor: "civicclerk-api", url: `https://${clerk[1]}.api.civicclerk.com/v1/Events?$top=5`, basis: "LINKED", evidence: href, verifiable: true });
       continue;
@@ -511,6 +504,14 @@ export function verifyEndpointBody(
       const rows = parseDiligentMeetings(body);
       return rows === null ? { verdict: "NOT_CONFIRMED", count: null, detail: "not a Diligent list with meeting identities and local dates" }
         : { verdict: rows.length ? "YIELDED" : "EMPTY", count: rows.length, detail: `${rows.length} public Diligent meeting record(s)` };
+    }
+    case "primegov": {
+      try {
+        const rows = parsePrimeGovMeetings(body);
+        return { verdict: rows.length ? "YIELDED" : "EMPTY", count: rows.length, detail: `${rows.length} public PrimeGov meeting record(s)` };
+      } catch {
+        return { verdict: "NOT_CONFIRMED", count: null, detail: "not a PrimeGov public meeting list" };
+      }
     }
     case "official-page-events":
       return verifyOfficialPage(response, identity);

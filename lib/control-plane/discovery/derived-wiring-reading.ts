@@ -1,18 +1,3 @@
-/**
- * The derived wiring's own reading of a held calendar through the family's
- * adapter, with the row's reviewed filter. The adapter is served the held bytes
- * for the row's route and a 404 for anything else. The venue-resolutions
- * projection (`lib/meetings/venue-cache.ts`) is read first; a store that cannot
- * answer refuses the whole reading.
- *
- * - `verified`: the filter selects this body's sittings and none names another reviewed body;
- * - `changed`: the held bytes are no longer such a calendar, or the filter selects none of them
- *   (`ZeroRowExtractionError` or no matching sittings): CALENDAR_CHANGED, a review trigger;
- * - `wrongAttribution`: a selected sitting names another reviewed body;
- * - `refused`: no event to read, or any other adapter throw. That is ours, never evidence about
- *   the calendar: ADAPTER_REFUSED, no review triggered.
- */
-
 import { refreshVenueResolutionsFromPromoted } from "../../civic-data/curated-reader-read-model.ts";
 import type { AdapterVerification, DerivedInputRef } from "../../civic-data/derived-authority.ts";
 import { bodySourceWiringFor, DERIVED_WIRING_SOURCE_NAMES, type DerivedWiringKind, type DerivedWiringRow } from "../../civic-data/derived-meeting-wiring.ts";
@@ -24,6 +9,7 @@ import { makeOfficialPageEventsSource, officialLinkingPageFrom } from "../../sou
 import { makeDiligentSource } from "../../sources/diligent/index.ts";
 import { makeBoardBookSource } from "../../sources/boardbook/index.ts";
 import { makeBoardDocsSource } from "../../sources/boarddocs/index.ts";
+import { makePrimeGovSource } from "../../sources/primegov/index.ts";
 import { makeCivicPlusSource } from "../../sources/civicplus/index.ts";
 import { makeCivicClerkSource } from "../../sources/civicclerk/index.ts";
 import { makeIqm2Source } from "../../sources/iqm2/index.ts";
@@ -114,7 +100,7 @@ async function readOne(reading: HeldCalendarReading, now: string, adapterDigest:
       const ownEvents = events.filter(event => event.EventBodyId === clients[0]?.eventBodyId);
       meetings = normalizeLegistar(ownEvents.map(event => ({ event, slug: wiring.config.slug,
         collectedAt: reading.evidence.retrievedAt, items: [] })), new Date(now), clients).meetings;
-    } else if (["CIVICPLUS", "CIVICCLERK", "BOARDBOOK", "BOARDDOCS", "IQM2"].includes(row.kind)) {
+    } else if (["CIVICPLUS", "CIVICCLERK", "BOARDBOOK", "BOARDDOCS", "PRIMEGOV", "IQM2"].includes(row.kind)) {
       // The exact retained route is the adapter's input. Running its fetch
       // here would ask for additional URLs whose bytes were never vaulted.
       const collectedAt = reading.evidence.retrievedAt;
@@ -126,6 +112,8 @@ async function readOne(reading: HeldCalendarReading, now: string, adapterDigest:
         meetings = makeCivicClerkSource([wiring]).normalizeWithDrops([{ wiring, events, collectedAt }], new Date(now)).meetings;
       } else if (row.kind === "BOARDBOOK") {
         meetings = makeBoardBookSource([wiring]).normalizeWithDrops([{ wiring, html: text, collectedAt }], new Date(now)).meetings;
+      } else if (row.kind === "PRIMEGOV") {
+        meetings = makePrimeGovSource([wiring]).normalizeWithDrops([{ wiring, text, sourceUrl: row.route, collectedAt }], new Date(now)).meetings;
       } else if (row.kind === "IQM2") {
         meetings = makeIqm2Source([wiring]).normalizeWithDrops([{ wiring, html: text, collectedAt }], new Date(now)).meetings;
       } else {

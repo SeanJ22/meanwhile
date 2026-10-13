@@ -2,13 +2,6 @@ import type { OcdId } from "../sources/types.ts";
 import type { Tier } from "../ocd/tiers.ts";
 
 /**
- * The division and body registry: which governing bodies exist inside each division. Bodies are derived
- * from the division type (a county has a board, a municipality a council, a school district a governing
- * board). Derivation establishes existence only; a derived body's name, schedule, members and agenda are
- * unknown and never inferred (see `bodyOrigin`).
- */
-
-/**
  * Census layer a division's geometry came from. Accepted builder values come from the freshly loaded
  * kinds setting.
  */
@@ -99,6 +92,7 @@ export type AgendaSourceType =
   | "BOARDBOOK"
   /** BoardDocs public committee meeting list and per-meeting agenda page. */
   | "BOARDDOCS"
+  | "PRIMEGOV"
   /**
    * Not a vendor; a shape. The body publishes its whole year of meeting dates as a list on its own page,
    * with one sentence naming the time and the room.

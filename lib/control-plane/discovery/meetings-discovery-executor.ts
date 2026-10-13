@@ -1,29 +1,5 @@
 import { officialLinkingPageFromAsync, type LazyOfficialPage } from "../../sources/official-page-events/index.ts";
 import { observePlatformCensus, platformCensusEntry, type PlatformCensusObservation } from "./platform-census.ts";
-/**
- * The unpaid meetings-discovery executor: walks a government's own site for
- * meeting routes. It makes no model call. For one need it:
- *
- * 1. reads robots.txt for the origin before any other request (following
- *    redirects per RFC 9309) and records the verdict; no verdict stops the
- *    walk. Only a real access control (a recorded wall, or the site's own 401,
- *    403 or 429) makes it BLOCKED, and it is never pushed past;
- * 2. reads the homepage one redirect hop at a time, reading each new host's
- *    robots.txt first;
- * 3. names the meeting routes the page evidences
- *    (`lib/hunt/meetings-site-discovery.ts`) and confirms each by content;
- * 4. appends the walk to `discoveryAttempts` and writes found routes, leads and
- *    dead doors to the field manual.
- *
- * Each request's timeout is cut to the caller's time left. A walk the time
- * runs out on concludes nothing unless it already confirmed a route, and the
- * need stays due. A find is only a candidate; a walk that finds nothing is a
- * reading with a recheck date, never an absence.
- *
- * Every request goes through the caller's `open`, built on its own FleetSafety
- * provider key. Host spacing is shared with every other lane.
- */
-
 import { createHash } from "node:crypto";
 import { websiteRequestLimit, type WebsiteSizeForUrl } from "../scheduler/host-supervision.ts";
 
@@ -73,6 +49,7 @@ import { DEFAULT_ROBOTS_TOKEN, evaluatePermission } from "../scheduler/robots.ts
 import { DEFAULT_USER_AGENT, type VaultPut } from "../scheduler/route-executor.ts";
 import { categoryBodyOf } from "./auto-crosswalk.ts";
 import { boardDocsListUrl, parseBoardDocsCommittees } from "../../sources/boarddocs/index.ts";
+import { parsePrimeGovCommittees, primeGovBase } from "../../sources/primegov/index.ts";
 import type { OfficialLinkingPage } from "../../civic-data/source-authority.ts";
 
 /** One HTTP hop. It never follows a redirect: the executor asks permission of every new host first. */
@@ -573,6 +550,27 @@ export async function walkMeetingsDiscoveryNeed(
     }
   }
   let proposals: readonly RecipeCandidate[] = [];
+  const primeGovSelectors = new Map<string, NonNullable<Awaited<ReturnType<typeof get>>> | null>();
+  async function readPrimeGov(candidate: EndpointCandidate, got: NonNullable<Awaited<ReturnType<typeof get>>>, via: Via): Promise<void> {
+    const selectorUrl = `${primeGovBase(got.finalUrl)}/api/committee/GetCommitteeesListByShowInPublicPortal`;
+    if (!primeGovSelectors.has(selectorUrl)) {
+      const selector = await get(selectorUrl, "endpoint", "application/json");
+      primeGovSelectors.set(selectorUrl, selector);
+      leads.push({ vendor: "primegov", url: selectorUrl, basis: candidate.basis, evidence: candidate.evidence, detail: "Public committee identities and names", via });
+    }
+    const selector = primeGovSelectors.get(selectorUrl);
+    try {
+      if (!selector) throw new Error("the public committee selector could not be read");
+      parsePrimeGovCommittees(selector.body);
+      const check = verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl });
+      const base = { vendor: "primegov", url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: check.detail,
+        via: { page: selectorUrl, artifactId: selector.artifactId } };
+      if (check.verdict === "YIELDED") found.push({ ...base, count: check.count, artifactId: got.artifactId });
+      else leads.push(base);
+    } catch (error) {
+      leads.push({ vendor: "primegov", url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: String(error), via });
+    }
+  }
   let homeOrigin: string | null = null;
   let homeHtml: string | null = null;
   const recipeSkips: { recipeId: string; why: string }[] = [];
@@ -781,6 +779,10 @@ export async function walkMeetingsDiscoveryNeed(
         await readBoardDocs(candidate, got, via);
         continue;
       }
+      if (candidate.vendor === "primegov" && got !== null) {
+        await readPrimeGov(candidate, got, via);
+        continue;
+      }
       const hint = candidate.basis === "HINT" && !candidate.verifiable ? hints?.routes.find((r) => r.url === candidate.url) : undefined;
       const check = got === null
         ? { verdict: "NOT_CONFIRMED" as const, count: null, detail: "the route could not be read this walk" }
@@ -827,6 +829,10 @@ export async function walkMeetingsDiscoveryNeed(
         checked += 1;
         if (candidate.vendor === "boarddocs" && got !== null) {
           await readBoardDocs(candidate, got, via);
+          continue;
+        }
+        if (candidate.vendor === "primegov" && got !== null) {
+          await readPrimeGov(candidate, got, via);
           continue;
         }
         const check = got === null
@@ -902,6 +908,10 @@ export async function walkMeetingsDiscoveryNeed(
             const via: Via = onPage.includes(c) ? { page: page.finalUrl, artifactId: page.artifactId } : null;
             if (c.vendor === "boarddocs") {
               await readBoardDocs(c, body, via);
+              continue;
+            }
+            if (c.vendor === "primegov") {
+              await readPrimeGov(c, body, via);
               continue;
             }
             const check = verifyEndpointBody(c, { status: body.status, body: body.body, finalUrl: body.finalUrl }, await pageIdentity(null, body.finalUrl));

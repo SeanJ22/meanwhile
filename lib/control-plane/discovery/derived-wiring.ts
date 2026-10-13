@@ -1,27 +1,3 @@
-/**
- * The derived wiring row writer: each reviewed calendar, decided against what
- * discovery last saw of it. Every decision starts from a reviewed crosswalk
- * row (`lib/civic-data/meeting-body-crosswalk.ts`), never from a find. A row
- * the automatic reviewer accepted (`auto-crosswalk.ts`) is decided by the same
- * checks, and where it and a reviewed row select the same sitting, only it
- * meets the trigger. For each active crosswalk row, against the latest walk:
- *
- * - PROMOTE only when every check holds: the body is on a registered division;
- *   the walk confirmed the reviewed route on an attested host; no hand-wired
- *   route serves the body; the calendar's and naming page's bytes are vaulted;
- *   and the reader adapter selects at least one of the body's sittings from the
- *   vaulted bytes, none naming another reviewed body. A suspended row is
- *   restored only by a review later than its suspension.
- * - SUSPEND a promoted row on a review trigger: ROUTE_GONE (404/410),
- *   WRONG_ATTRIBUTION, CONFLICTING_EVIDENCE, CALENDAR_CHANGED, or
- *   CROSSWALK_WITHDRAWN. A row never promoted meets the same evidence as a
- *   named hold (REVIEW_TRIGGERED).
- * - HOLD, by name, anything else, including every outage. A held row that was
- *   promoted is carried exactly as it was.
- *
- * Pure: every lookup is handed to it.
- */
-
 import type {
   AdapterBinding,
   AdapterVerification,
@@ -55,6 +31,7 @@ const CONFIRMING_VENDORS: Readonly<Record<DerivedWiringKind, readonly string[]>>
   CIVICPLUS: ["civicplus-agendacenter"],
   BOARDBOOK: ["boardbook"],
   BOARDDOCS: ["boarddocs"],
+  PRIMEGOV: ["primegov"],
   CIVICCLERK: ["civicclerk-api"],
   IQM2: ["iqm2"],
   REVIZE: ["revize"],
@@ -79,6 +56,9 @@ export function wiringShapeFor(find: Pick<DiscoveryFind, "vendor" | "url">): Wir
     return { held: "ADAPTER_CONFIG_INCOMPLETE", detail: `the route ${find.url} is not a URL` };
   }
   if (find.vendor === "ical") return { kind: "ICAL", endpoint: { feedUrl: url.toString() } };
+  if (find.vendor === "primegov" && /^[a-z0-9-]+\.primegov\.com$/i.test(url.hostname)) {
+    return { kind: "PRIMEGOV", endpoint: { portalUrl: url.origin } };
+  }
   if (find.vendor === "legistar-api" && url.hostname === "webapi.legistar.com") {
     const slug = /^\/v1\/([a-z0-9_-]+)\/events\/?$/i.exec(url.pathname)?.[1];
     if (slug) return { kind: "LEGISTAR", endpoint: { slug } };

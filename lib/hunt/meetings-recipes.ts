@@ -1,17 +1,3 @@
-/**
- * A discovery method that worked is saved so the runner repeats it: what was
- * missing, the query patterns, the navigation, the publisher's traits, the
- * extractor, what verification requires, what it cost and when it last
- * worked. Recipes live in the field manual (`cp_field_manual_entries`, kind
- * `MEETINGS_RECIPE`); failures are kept with their limits so the same
- * unchanged failure is not paid for twice. Seed counts start at zero.
- *
- * A recipe never guesses a vendor tenant: it proposes a path on the
- * government's own origin when the homepage shows its precondition, or
- * follows a link the homepage carries on its own host. Whatever it proposes
- * is opened robots-first and confirmed by content. Pure.
- */
-
 import type { FieldManualEntry } from "../control-plane/field-manual.ts";
 import { fieldManualEntryId } from "../control-plane/field-manual.ts";
 import type { MeetingsDiscoveryNeed } from "./meetings-discovery.ts";
@@ -396,6 +382,7 @@ const VENDOR_PLATFORM: Readonly<Record<VerifiableVendor, string | null>> = {
   iqm2: "iqm2",
   boardbook: "boardbook",
   boarddocs: "boarddocs",
+  primegov: "primegov",
   "official-page-events": null,
 };
 
@@ -409,6 +396,7 @@ const VENDOR_VERIFICATION: Readonly<Record<VerifiableVendor, string>> = {
   iqm2: "an IQM2 calendar with at least one meeting row",
   boardbook: "a BoardBook organization page with at least one meeting link",
   boarddocs: "a public BoardDocs committee list whose dated rows carry published meeting identities; the committee is named by the attested portal selector",
+  primegov: "a public PrimeGov meeting list with committee ids, local dates and published document templates",
   "official-page-events": "a page on the body's own host with at least one dated event verified for the body",
 };
 

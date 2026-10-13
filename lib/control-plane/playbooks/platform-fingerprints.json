@@ -172,7 +172,7 @@
   {
     "id": "primegov",
     "label": "PrimeGov",
-    "haveAdapter": false,
+    "haveAdapter": true,
     "hostPattern": "\\bprimegov\\.com\\b",
     "flags": "i",
     "markup": [

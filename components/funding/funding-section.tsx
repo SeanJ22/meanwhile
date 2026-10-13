@@ -47,7 +47,11 @@ export function FundingDisplay({
       }
     >
       {!bare && <p className={SECTION_LABEL_CLASS}>Campaign money</p>}
+      {data.registrationLabel && <p className="mt-1 t-detail text-muted">{data.registrationLabel}</p>}
       <MoneyOverview data={data} />
+      {data.totals?.smallDonorShare === null && (data.totals.individualItemized === null || data.totals.individualUnitemized === null) && (
+        <p className="mt-1.5 t-body text-voice" data-small-donor-share="not-held">Small-donor share: <WorkingOnIt inline /></p>
+      )}
       {data.sentences.map((sentence) => (
         <p key={sentence} className="mt-1.5 t-body leading-relaxed text-paper-dim">
           {sentence}

@@ -11,10 +11,11 @@ import type { CardSource } from "@/lib/officials/card-sources";
 
 /** One frame and reading order for an officeholder or a candidate. */
 export function PersonCard({ title, eyebrow, identity, contact, sections, sources = [], afterSections,
-  onClose, className, independent = false, subject, identityKey,
+  onClose, className, independent = false, subject, identityKey, defaultOpenSections = [],
 }: {
   title: string;
   identityKey?: string;
+  defaultOpenSections?: readonly PersonCardSectionId[];
   eyebrow?: ReactNode;
   identity: ReactNode;
   contact: ReactNode;
@@ -32,7 +33,7 @@ export function PersonCard({ title, eyebrow, identity, contact, sections, source
       <div data-person-identity>{identity}</div>
       <div data-person-contact>{contact ?? <WorkingOnIt subject={subject} />}</div>
       {PERSON_CARD_SECTIONS.filter(section => section.id !== "sources").map(section => (
-        <CardSection key={section.id} title={section.title}>
+        <CardSection key={section.id} title={section.title} defaultOpen={defaultOpenSections.includes(section.id)}>
           {sections[section.id] ?? <WorkingOnIt subject={subject} />}
         </CardSection>
       ))}

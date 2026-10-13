@@ -46,6 +46,7 @@ import { stanceAnswerability } from "@/lib/ask/stance-answerability";
 import { fetchThroughKey, composeFinanceDetail } from "@/lib/ask/fetch-through-key";
 import { campaignMoneyEvidenceFor } from "@/lib/ask/campaign-money";
 import { candidateProfileEvidenceFor } from "@/lib/ask/candidate-profile";
+import { fecRaceMoneyQuestion, fecRaceMoneyAnswer, requestedFecSubjects } from "@/lib/ask/fec-national";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyConflictCardForFiling, reconciledCandidacyIdForCard, type PartyConflictFiling } from "@/lib/identity/az-2026";
 import { meetingOutcomeEvidenceFor, outcomeSittingsOnDate, meetingRecordQuestionClass, type HeldMeetingAction } from "@/lib/ask/meeting-outcomes";
@@ -531,6 +532,33 @@ export async function POST(request: Request) {
         : deferUnrelatedEvidence ? AUTHORITY_FAMILIES.filter(family => !unrelatedFamilies.has(family)) : AUTHORITY_FAMILIES).catch(() => null))();
     if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
   }
+  if (fecRaceMoneyQuestion(question)) {
+    await timed("funding", settleFundingRead)().catch(() => undefined);
+    let direct: ReturnType<typeof fecRaceMoneyAnswer> = null;
+    try { direct = fecRaceMoneyAnswer(question, typeof body.today === "string" ? body.today : new Date().toISOString().slice(0, 10)); } catch { /* The regular answer path records a failed holding. */ }
+    if (direct) {
+      const verdict = validateAnswer(direct.answer, direct.citedUrls, direct.pack);
+      if (verdict.kind === "PASSED") {
+        const interpretation = { ...unavailableInterpretation(), intent: direct.pack.intent, temporal: direct.pack.temporal };
+        trace.interpretation = { ran: false, why: "fec-registration-money", intent: direct.pack.intent, temporal: direct.pack.temporal, fellBackToDeterministic: true };
+        trace.resolution = { state: "NONE", basis: "FEC_REGISTRATION_SCOPE" };
+        trace.retrieval = { selection: "FEC_REGISTRATION_SCOPE", recordCount: direct.pack.records.length,
+          sourceCount: direct.citedUrls.length, gapCount: direct.pack.gaps.length, denominators: direct.pack.denominators };
+        trace.composition = { kind: "MONEY", shape: "FEC_MOST_RAISED", basis: "FEC_FILED_TOTALS", composed: true, passed: true };
+        trace.validation = { ran: true, passed: true, checked: verdict.checked };
+        trace.synthesis = { ran: false, why: "composed-from-fec-records" };
+        trace.sourcesLoaded = "ESSENTIAL"; trace.preloads = preloadMs; trace.answerMode = "STRUCTURED_GROUNDED"; trace.totalMs = Date.now() - started;
+        await captureDelivered({ request, question, interpretation, resolutionState: "NONE", mode: "STRUCTURED_GROUNDED",
+          subjectIds: [...new Set(direct.pack.records.flatMap(row => row.subjectId ? [row.subjectId] : []))], answer: direct.answer,
+          answerModel: null, validationPassed: true, records: direct.pack.records, gaps: direct.pack.gaps,
+          surface: body.surface === "MAP" || body.surface === "BALLOT" ? body.surface : "UNKNOWN",
+          approximateLocation: typeof body.approximateLocation === "string" ? body.approximateLocation : null,
+          ocdIds, residency: stampResidency(readLocationOrigin(body.locationOrigin)),
+          continuityKey: typeof body.continuityKey === "string" ? body.continuityKey : "" });
+        return Response.json(askAnswer({ mode: "STRUCTURED_GROUNDED", pack: direct.pack, answer: direct.answer, contacts: [], trace }));
+      }
+    }
+  }
   // Confirm the hint from the published ballot before leaving any source
   // unread. Legacy authorities and unmatched titles continue through the full path.
   if (ballotOnlyHint) {
@@ -763,6 +791,13 @@ export async function POST(request: Request) {
     ballotOfficialIds.set(candidate.id, officialIds);
     for (const officialId of officialIds) officialToBallot.set(officialId, candidate.id);
   }
+  let fecSubjects: ReturnType<typeof requestedFecSubjects> = [];
+  if (!deterministicTopicRoute && !areaTopicRoute && !namedBodyTopicRoute && !leanAsk) {
+    try { fecSubjects = requestedFecSubjects(question, preferredOfficialIds).map(row => {
+      const id = officialToBallot.get(row.entity.id) ?? officialAliases.get(row.entity.id) ?? row.entity.id;
+      return { entity: { ...row.entity, id }, record: { ...row.record, subjectId: id } };
+    }); } catch { /* The funding source read already records its failure. */ }
+  }
   /* A candidate held as a certified card and as a filing with a different party binds to the card; the answer carries both records and both parties, never one merged. */
   const partyConflictFilings = new Map<string, PartyConflictFiling>();
   /* A surface that focuses the filing record itself means that record: it keeps its own id. */
@@ -770,6 +805,7 @@ export async function POST(request: Request) {
   const inventory = [
     ...bodies,
     ...heldFilings.map(row => row.entity),
+    ...fecSubjects.map(row => row.entity),
     ...people.map((person) => ({ ...person, id: officialToBallot.get(person.id) ?? officialAliases.get(person.id) ?? person.id })),
     ...ballotInventory.entities.map((entity) => {
       const pair = entity.id.startsWith("ballot-az-") && !surfaceIds.has(entity.id) ? partyConflictCardForFiling(entity.id) : null;
@@ -1178,6 +1214,7 @@ export async function POST(request: Request) {
     const moneyOnly = subject?.kind === "PERSON" && asksOnlyMoney(question, "PERSON");
     const heldFiling = subject ? heldFilings.find(row => row.entity.id === subject.id) : null;
     if (heldFiling) records.push(heldFiling.record);
+    if (subject) records.push(...fecSubjects.filter(row => row.entity.id === subject.id).map(row => row.record));
     /** The sittings this request resolved, for the structured half of the payload. */
     const resolvedSittings: AskSitting[] = [];
     /** A topic question's dated timeline for the bound body, when one was built. */

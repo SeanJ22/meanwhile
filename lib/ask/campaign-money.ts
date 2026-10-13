@@ -68,9 +68,10 @@ export function campaignMoneyEvidenceFor(
   if (money.federal.kind === "funding") {
     const record = money.federal.data;
     records.push({ kind: "FINANCE_SUMMARY", id: `fec:${record.fecCandidateId}`, subjectId: subject.id,
-      canonicalSubjectId: record.fecCandidateId, text: record.sentences.join(" "),
+      canonicalSubjectId: record.fecCandidateId, text: [...record.sentences, ...(record.registrationLabel ? [`${subject.name} is ${record.registrationLabel}.`] : [])].join(" "),
       sourceUrl: record.sourceUrl, sourceOrg: record.sourceOrg, retrievedAt: record.collectedAt,
-      ...(record.detailSource ? { fecDetailSource: record.detailSource } : {}) });
+      ...(record.detailSource ? { fecDetailSource: record.detailSource } : {}),
+      fecProfile: { candidateId: record.fecCandidateId, name: subject.name, personId: subject.id } });
     denominators.federalFinanceRecordsReturned = 1;
   } else if (money.federal.kind === "absence") {
     const absence = money.federal.data;

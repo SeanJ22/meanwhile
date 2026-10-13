@@ -82,6 +82,8 @@ export interface Hunt {
   readonly basis?: "lifetime";
   /** Left to spend as the backend computed it; null when an unpriced charge makes it unknown. Absent: limit − spent − set aside. */
   readonly availableUsd?: number | null;
+  /** Why a paused hunt is paused: all paid work, the runner, or its own $0 budget. Null or absent when not paused. */
+  readonly pause?: { readonly kind: "paid-work" | "runner" | "budget"; readonly since: string | null; readonly note: string | null } | null;
 }
 
 /** Left to spend, or null when unknown (never guessed from a lower-bound spend). */

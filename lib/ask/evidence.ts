@@ -98,6 +98,7 @@ export interface EvidenceRecord {
   bill?: {number:string;state:string;session:string;status:string;publishedAt:string;texts:readonly {id:number;date:string|null;type:string;url:string;governmentUrl:string|null;governmentSourceOfficial:boolean}[]};
   /** Canonical holding subject when the reader's question uses a bridged card identity. */
   canonicalSubjectId?: string;
+  fecProfile?: { candidateId: string; name: string; personId: string };
   officeholder?: { officialId: string; termNote: string | null };
   rosterGap?: import("../registry/body-rosters.ts").RosterReaderGap;
   /** A source-listing group is not a verified count of distinct meetings. */

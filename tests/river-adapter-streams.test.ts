@@ -19,7 +19,7 @@ import {
 } from "../lib/control-plane/workers/engineering-adapter.ts";
 import { parseFixField, ADD_TO_QUEUE_OPTION } from "../lib/control-plane/fix-queue.ts";
 import { riverReturn, riverReturnMarkdown } from "../lib/control-plane/river-returns.ts";
-import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { createMemoryRepositories } from "./helpers/playbooks.ts";
 import { readFieldManual } from "../lib/control-plane/field-manual.ts";
 import { MODELS } from "../lib/models.ts";
 import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";

@@ -42,5 +42,6 @@ test("a reader's source panel distinguishes the current roster from retained con
   assert.equal(sources.length, 2);
   assert.equal(sources[0]?.provenance.sourceUrl, newUrl);
   assert.equal(sources[1]?.provenance.sourceUrl, oldUrl);
-  assert.match(sources[1]?.what ?? "", /previously verified office email.*1 more/i);
+  assert.match(sources[1]?.what ?? "", /previously verified office email.*previously verified term wording/i);
+  assert.doesNotMatch(sources[1]?.what ?? "", /and \d+ more from this source/);
 });

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import test from "./helpers/playbooks.ts";
 
 import type { EvidencePack } from "../lib/ask/evidence.ts";
 import { asksForPersonalStance, stanceAnswerability } from "../lib/ask/stance-answerability.ts";

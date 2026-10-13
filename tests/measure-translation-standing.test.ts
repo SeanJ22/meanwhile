@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { createMemoryRepositories } from "./helpers/playbooks.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
 import type { ModelRequest } from "../lib/control-plane/scheduler/scout-executor.ts";

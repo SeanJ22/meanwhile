@@ -65,6 +65,7 @@ export interface CensusGovernmentFacts {
   readonly web: string;
   /** `county_area_name`. */
   readonly county: string;
+  readonly countyFips?: string | null;
 }
 
 export interface CensusFacts {
@@ -191,6 +192,7 @@ export function registrationJurisdictionRegistry(input: RegistrationRegistryInpu
       name,
       govClass,
       countyName: facts?.county ? facts.county : null,
+      countyFips: listing?.countyFips ?? facts?.countyFips ?? null,
       enumeratedFrom,
       ownWebAddress: site,
       sourceIds: site === null ? [] : [OWN_SITE_MEETINGS_SOURCE],

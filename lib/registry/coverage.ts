@@ -96,11 +96,7 @@ export function stateLegislatorCoverageAuthority(
   };
 }
 
-/** Reader-facing distinction for the two empty-roster failure domains. */
-export {
-  stateLegislatorCoverageGapText,
-  WIRED_STATUSES,
-} from "./coverage-client.ts";
+export { WIRED_STATUSES } from "./coverage-client.ts";
 
 /**
  * A body covering the point. `divisionLabel` is the division's sourced name; the body's own name is

@@ -1,0 +1,3462 @@
+{
+  "api_version": "1.0",
+  "pagination": {
+    "count": 3708,
+    "is_count_exact": true,
+    "page": 1,
+    "pages": 38,
+    "per_page": 100
+  },
+  "results": [
+    {
+      "active_through": 2026,
+      "candidate_id": "H6MI04188",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "04",
+      "district_number": 4,
+      "election_districts": [
+        "04"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-02-20",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-02-20",
+      "last_file_date": "2025-02-20",
+      "load_date": "2025-03-13T20:59:32",
+      "name": "AARON, RICHARD",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "MI"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6MN02289",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "02",
+      "district_number": 2,
+      "election_districts": [
+        "02"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-01-27",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2026-01-29",
+      "last_file_date": "2026-01-29",
+      "load_date": "2026-01-29T21:02:11",
+      "name": "ABDULLE, ABDI",
+      "office": "H",
+      "office_full": "House",
+      "party": "DFL",
+      "party_full": "DEMOCRATIC-FARMER-LABOR",
+      "state": "MN"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6TX31136",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "31",
+      "district_number": 31,
+      "election_districts": [
+        "31"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-09-12",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-09-12",
+      "last_file_date": "2025-09-12",
+      "load_date": "2026-01-12T21:04:11",
+      "name": "ABEL, WILLIAM P",
+      "office": "H",
+      "office_full": "House",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "TX"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6FL03123",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "03",
+      "district_number": 3,
+      "election_districts": [
+        "03"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-10-13",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-10-13",
+      "last_file_date": "2025-10-13",
+      "load_date": "2025-11-13T21:02:32",
+      "name": "ABOUJAOUDE, ROCK ADEL MR. JR.",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "FL"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6IL09186",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "09",
+      "district_number": 9,
+      "election_districts": [
+        "09"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-04-13",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-04-14",
+      "last_file_date": "2025-04-14",
+      "load_date": "2025-05-06T21:00:39",
+      "name": "ABREVAYA, DAVID",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "IL"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6NC07204",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "07",
+      "district_number": 7,
+      "election_districts": [
+        "07"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-10-12",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-10-12",
+      "last_file_date": "2025-10-12",
+      "load_date": "2026-02-20T21:03:04",
+      "name": "ABU-GHAZALAH, MAAD",
+      "office": "H",
+      "office_full": "House",
+      "party": "LIB",
+      "party_full": "LIBERTARIAN PARTY",
+      "state": "NC"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6IL09178",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "09",
+      "district_number": 9,
+      "election_districts": [
+        "09"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-03-24",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-03-24",
+      "last_file_date": "2025-03-24",
+      "load_date": "2025-05-06T21:00:39",
+      "name": "ABUGHAZALEH, KATHERINE M.",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "IL"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H2CA18171",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2022,
+        2024,
+        2026
+      ],
+      "district": "18",
+      "district_number": 18,
+      "election_districts": [
+        "18",
+        "18"
+      ],
+      "election_years": [
+        2022,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2022-02-13",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-04-19",
+      "last_file_date": "2026-04-19",
+      "load_date": "2026-05-01T21:18:54",
+      "name": "ACEVEDO-ARREGUIN, LUIS ANTONIO",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "CA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6CA19170",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "19",
+      "district_number": 19,
+      "election_districts": [
+        "19"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-02-21",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-02-21",
+      "last_file_date": "2026-02-21",
+      "load_date": "2026-03-03T21:23:02",
+      "name": "ACEVEDO-CABRERA, ANA LUZ",
+      "office": "H",
+      "office_full": "House",
+      "party": "IND",
+      "party_full": "INDEPENDENT",
+      "state": "CA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6OR05242",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "05",
+      "district_number": 5,
+      "election_districts": [
+        "05"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-11-18",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-11-18",
+      "last_file_date": "2025-11-18",
+      "load_date": "2026-02-09T20:58:28",
+      "name": "ADAIR, PATTI",
+      "office": "H",
+      "office_full": "House",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "OR"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H4NC12100",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2014,
+        2016,
+        2018,
+        2020,
+        2022,
+        2024,
+        2026
+      ],
+      "district": "12",
+      "district_number": 12,
+      "election_districts": [
+        "12",
+        "12",
+        "12",
+        "12",
+        "12",
+        "12",
+        "12"
+      ],
+      "election_years": [
+        2014,
+        2016,
+        2018,
+        2020,
+        2022,
+        2024,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2013-06-27",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "I",
+      "incumbent_challenge_full": "Incumbent",
+      "last_f2_date": "2024-11-13",
+      "last_file_date": "2024-11-13",
+      "load_date": "2025-01-29T21:03:35",
+      "name": "ADAMS, ALMA SHEALEY",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "NC"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6TX19214",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "19",
+      "district_number": 19,
+      "election_districts": [
+        "19"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-11-14",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-11-14",
+      "last_file_date": "2025-11-14",
+      "load_date": "2025-12-30T21:00:52",
+      "name": "ADAMS, CHRISTOPHER",
+      "office": "H",
+      "office_full": "House",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "TX"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6CA38121",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "38",
+      "district_number": 38,
+      "election_districts": [
+        "38"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-05-20",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-05-20",
+      "last_file_date": "2025-05-20",
+      "load_date": "2025-10-15T21:01:51",
+      "name": "ADAMS-FALCONER, THOMAS MICHAEL JR.",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "CA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6MI10300",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "10",
+      "district_number": 10,
+      "election_districts": [
+        "10"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-06-16",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-06-16",
+      "last_file_date": "2025-06-16",
+      "load_date": "2025-08-04T21:00:03",
+      "name": "ADAMS, GEORGE",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "MI"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6OH01195",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "01",
+      "district_number": 1,
+      "election_districts": [
+        "01"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-02-04",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-02-04",
+      "last_file_date": "2026-02-04",
+      "load_date": "2026-04-18T21:13:41",
+      "name": "ADAMS, HOLLY",
+      "office": "H",
+      "office_full": "House",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "OH"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6TN06254",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "06",
+      "district_number": 6,
+      "election_districts": [
+        "06"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-10-07",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-10-07",
+      "last_file_date": "2025-10-07",
+      "load_date": "2026-03-29T21:12:30",
+      "name": "ADAMS, JACOB ALAN",
+      "office": "H",
+      "office_full": "House",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "TN"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6MN07320",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "07",
+      "district_number": 7,
+      "election_districts": [
+        "07"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-05-09",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-05-09",
+      "last_file_date": "2025-05-09",
+      "load_date": "2025-06-09T20:59:02",
+      "name": "ADAMS, JARED",
+      "office": "H",
+      "office_full": "House",
+      "party": "DFL",
+      "party_full": "DEMOCRATIC-FARMER-LABOR",
+      "state": "MN"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H4FL07137",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2024,
+        2026
+      ],
+      "district": "07",
+      "district_number": 7,
+      "election_districts": [
+        "07",
+        "07"
+      ],
+      "election_years": [
+        2024,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2023-10-02",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2024-11-18",
+      "last_file_date": "2024-11-18",
+      "load_date": "2025-07-21T21:00:50",
+      "name": "ADAMS, JENNIFER",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "FL"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6NJ12367",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "12",
+      "district_number": 12,
+      "election_districts": [
+        "12"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-01-18",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2026-01-18",
+      "last_file_date": "2026-01-18",
+      "load_date": "2026-01-28T21:00:03",
+      "name": "ADAMS, MATTHEW MARK",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "NJ"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6TX35111",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "35",
+      "district_number": 35,
+      "election_districts": [
+        "35"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-12-05",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-12-05",
+      "last_file_date": "2025-12-05",
+      "load_date": "2026-02-09T20:58:28",
+      "name": "ADAMS, RANDAL HASKEL",
+      "office": "H",
+      "office_full": "House",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "TX"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H2FL21132",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2022,
+        2024,
+        2026
+      ],
+      "district": "23",
+      "district_number": 23,
+      "election_districts": [
+        "22",
+        "22",
+        "23"
+      ],
+      "election_years": [
+        2022,
+        2024,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2021-10-14",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-06-04",
+      "last_file_date": "2026-06-04",
+      "load_date": "2026-06-04T20:57:26",
+      "name": "ADEIMY, DEBORAH",
+      "office": "H",
+      "office_full": "House",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "FL"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6AL04098",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        1996,
+        1998,
+        2000,
+        2002,
+        2004,
+        2006,
+        2008,
+        2010,
+        2012,
+        2014,
+        2016,
+        2018,
+        2020,
+        2022,
+        2024,
+        2026
+      ],
+      "district": "04",
+      "district_number": 4,
+      "election_districts": [
+        "04",
+        "04",
+        "04",
+        "04",
+        "04",
+        "04",
+        "04",
+        "04",
+        "04",
+        "04",
+        "04",
+        "04",
+        "04",
+        "04",
+        "04",
+        "04"
+      ],
+      "election_years": [
+        1996,
+        1998,
+        2000,
+        2002,
+        2004,
+        2006,
+        2008,
+        2010,
+        2012,
+        2014,
+        2016,
+        2018,
+        2020,
+        2022,
+        2024,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "1996-02-14",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "I",
+      "incumbent_challenge_full": "Incumbent",
+      "last_f2_date": "2024-11-25",
+      "last_file_date": "2024-11-25",
+      "load_date": "2025-02-04T21:06:02",
+      "name": "ADERHOLT, ROBERT B. REP.",
+      "office": "H",
+      "office_full": "House",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "AL"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6MA03084",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "03",
+      "district_number": 3,
+      "election_districts": [
+        "03"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-02-13",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-02-13",
+      "last_file_date": "2026-02-13",
+      "load_date": "2026-03-03T21:23:02",
+      "name": "ADES, KEVIN",
+      "office": "H",
+      "office_full": "House",
+      "party": "NPA",
+      "party_full": "NO PARTY AFFILIATION",
+      "state": "MA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6GA11181",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "11",
+      "district_number": 11,
+      "election_districts": [
+        "11"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-02-23",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2026-02-23",
+      "last_file_date": "2026-02-23",
+      "load_date": "2026-04-20T21:16:40",
+      "name": "ADKERSON, ROB",
+      "office": "H",
+      "office_full": "House",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "GA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6NJ07243",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "07",
+      "district_number": 7,
+      "election_districts": [
+        "07"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-05-13",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-05-13",
+      "last_file_date": "2025-05-13",
+      "load_date": "2025-10-18T21:00:34",
+      "name": "ADUBATO, BETH ELLEN PH.D.",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "NJ"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6NJ01238",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "01",
+      "district_number": 1,
+      "election_districts": [
+        "01"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-01-12",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-01-12",
+      "last_file_date": "2026-01-12",
+      "load_date": "2026-01-13T21:02:51",
+      "name": "AFFRIME, LONNIE",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "NJ"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6CA17216",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "17",
+      "district_number": 17,
+      "election_districts": [
+        "17"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-03-03",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-03-03",
+      "last_file_date": "2026-03-03",
+      "load_date": "2026-04-20T21:16:40",
+      "name": "AGARWAL, ETHAN",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "CA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6NC11248",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "11",
+      "district_number": 11,
+      "election_districts": [
+        "11"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-07-31",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-07-31",
+      "last_file_date": "2025-07-31",
+      "load_date": "2025-10-18T21:00:34",
+      "name": "AGER, JAMIE",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "NC"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6FL13270",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "13",
+      "district_number": 13,
+      "election_districts": [
+        "13"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-01-22",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-01-22",
+      "last_file_date": "2026-02-19",
+      "load_date": "2026-01-28T21:00:03",
+      "name": "AGUERJOUT, FATIMA EZAHRA",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "FL"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6FL59018",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "59",
+      "district_number": 59,
+      "election_districts": [
+        "59"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-02-12",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-02-12",
+      "last_file_date": "2026-02-17",
+      "load_date": "2026-03-03T21:23:02",
+      "name": "AGUERJOUT, FATIMA EZAHRA",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "FL"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6FL13288",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "13",
+      "district_number": 13,
+      "election_districts": [
+        "13"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-01-22",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-01-22",
+      "last_file_date": "2026-01-22",
+      "load_date": "2026-01-28T21:00:03",
+      "name": "AGUERJOUT, FATIMA EZAHRA",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "FL"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6NC13244",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "13",
+      "district_number": 13,
+      "election_districts": [
+        "13"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-01-05",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-01-05",
+      "last_file_date": "2026-01-05",
+      "load_date": "2026-04-15T21:16:15",
+      "name": "AGUILAR, ANTHONY BAILEY MR.",
+      "office": "H",
+      "office_full": "House",
+      "party": "GRE",
+      "party_full": "GREEN PARTY",
+      "state": "NC"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H2CA31125",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2012,
+        2014,
+        2016,
+        2018,
+        2020,
+        2022,
+        2024,
+        2026
+      ],
+      "district": "33",
+      "district_number": 33,
+      "election_districts": [
+        "31",
+        "31",
+        "31",
+        "31",
+        "31",
+        "33",
+        "33",
+        "33"
+      ],
+      "election_years": [
+        2012,
+        2014,
+        2016,
+        2018,
+        2020,
+        2022,
+        2024,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2012-01-17",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "I",
+      "incumbent_challenge_full": "Incumbent",
+      "last_f2_date": "2024-12-05",
+      "last_file_date": "2024-12-05",
+      "load_date": "2025-02-02T20:58:51",
+      "name": "AGUILAR, PETE",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "CA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6WV01137",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "01",
+      "district_number": 1,
+      "election_districts": [
+        "01"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-06-25",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-06-25",
+      "last_file_date": "2025-06-25",
+      "load_date": "2025-10-18T21:00:34",
+      "name": "AGUIRRE, BRITTA",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "WV"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6NE01150",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "01",
+      "district_number": 1,
+      "election_districts": [
+        "01"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-05-13",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-05-13",
+      "last_file_date": "2026-05-13",
+      "load_date": "2026-07-17T20:59:11",
+      "name": "AHLMAN, AUSTIN LAWRENCE",
+      "office": "H",
+      "office_full": "House",
+      "party": "IND",
+      "party_full": "INDEPENDENT",
+      "state": "NE"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6CA40358",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "40",
+      "district_number": 40,
+      "election_districts": [
+        "40"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-05-02",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-05-02",
+      "last_file_date": "2025-05-02",
+      "load_date": "2025-05-06T21:00:39",
+      "name": "AHMED, CHRISTIAN TYLER",
+      "office": "H",
+      "office_full": "House",
+      "party": "IND",
+      "party_full": "INDEPENDENT",
+      "state": "CA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H2IL08146",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2022,
+        2024,
+        2026
+      ],
+      "district": "08",
+      "district_number": 8,
+      "election_districts": [
+        "08",
+        "08"
+      ],
+      "election_years": [
+        2022,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2021-04-06",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-06-06",
+      "last_file_date": "2025-06-06",
+      "load_date": "2025-12-30T21:00:52",
+      "name": "AHMED, JUNAID",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "IL"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6VA07353",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "07",
+      "district_number": 7,
+      "election_districts": [
+        "07"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-07-13",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-07-13",
+      "last_file_date": "2026-07-13",
+      "load_date": "2026-07-21T20:58:46",
+      "name": "AHRAR, ALAHA MS.",
+      "office": "H",
+      "office_full": "House",
+      "party": "IND",
+      "party_full": "INDEPENDENT",
+      "state": "VA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6GA10217",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "10",
+      "district_number": 10,
+      "election_districts": [
+        "10"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-03-23",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2026-03-23",
+      "last_file_date": "2026-03-23",
+      "load_date": "2026-03-29T21:12:30",
+      "name": "AHSAN, SAHIR",
+      "office": "H",
+      "office_full": "House",
+      "party": "IND",
+      "party_full": "INDEPENDENT",
+      "state": "GA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6NY08170",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "08",
+      "district_number": 8,
+      "election_districts": [
+        "08"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-05-07",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-05-07",
+      "last_file_date": "2026-05-07",
+      "load_date": "2026-06-01T20:57:55",
+      "name": "AHSAN, SAHIR DR.",
+      "office": "H",
+      "office_full": "House",
+      "party": "W",
+      "party_full": "WRITE-IN",
+      "state": "NY"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H4CA32145",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2024,
+        2026
+      ],
+      "district": "32",
+      "district_number": 32,
+      "election_districts": [
+        "32",
+        "32"
+      ],
+      "election_years": [
+        2024,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2023-12-01",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-03-17",
+      "last_file_date": "2025-03-17",
+      "load_date": "2025-07-12T20:58:19",
+      "name": "AHUJA, CHRISTOPHER",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "CA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6AZ01439",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "01",
+      "district_number": 1,
+      "election_districts": [
+        "01"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-11-15",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-11-15",
+      "last_file_date": "2025-11-15",
+      "load_date": "2026-07-20T20:58:25",
+      "name": "AJLUNI, CHRISTOPHER",
+      "office": "H",
+      "office_full": "House",
+      "party": "IND",
+      "party_full": "INDEPENDENT",
+      "state": "AZ"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6IL08337",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "08",
+      "district_number": 8,
+      "election_districts": [
+        "08"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-09-15",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-09-15",
+      "last_file_date": "2025-09-15",
+      "load_date": "2025-12-30T21:00:52",
+      "name": "AKE, KEVIN ALLEN",
+      "office": "H",
+      "office_full": "House",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "IL"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6AL07208",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "07",
+      "district_number": 7,
+      "election_districts": [
+        "07"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-06-11",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-06-11",
+      "last_file_date": "2026-06-11",
+      "load_date": "2026-07-21T20:58:46",
+      "name": "AKIN, AMMIE",
+      "office": "H",
+      "office_full": "House",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "AL"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H0MN05251",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2020,
+        2022,
+        2024,
+        2026
+      ],
+      "district": "05",
+      "district_number": 5,
+      "election_districts": [
+        "05",
+        "05",
+        "05"
+      ],
+      "election_years": [
+        2020,
+        2024,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2020-01-14",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-02-03",
+      "last_file_date": "2025-02-03",
+      "load_date": "2025-04-15T21:01:25",
+      "name": "AL-AQIDI, DALIA",
+      "office": "H",
+      "office_full": "House",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "MN"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6FL03115",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "03",
+      "district_number": 3,
+      "election_districts": [
+        "03"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-10-09",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-10-09",
+      "last_file_date": "2025-10-09",
+      "load_date": "2026-04-20T21:16:40",
+      "name": "ALBERS, TROY",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "FL"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6IL16090",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "16",
+      "district_number": 16,
+      "election_districts": [
+        "16"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-03-13",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-03-13",
+      "last_file_date": "2025-03-13",
+      "load_date": "2025-07-17T21:01:06",
+      "name": "ALBRIGHT, JOE",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "IL"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6VA02230",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "02",
+      "district_number": 2,
+      "election_districts": [
+        "02"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-01-19",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-01-19",
+      "last_file_date": "2026-01-19",
+      "load_date": "2026-01-28T21:00:03",
+      "name": "ALBRITTON, DEVINCHE JAVON",
+      "office": "H",
+      "office_full": "House",
+      "party": "IND",
+      "party_full": "INDEPENDENT",
+      "state": "VA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H2FL11166",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2022,
+        2024,
+        2026
+      ],
+      "district": "06",
+      "district_number": 6,
+      "election_districts": [
+        "11",
+        "11",
+        "06"
+      ],
+      "election_years": [
+        2022,
+        2024,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2022-03-17",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2024-12-11",
+      "last_file_date": "2024-12-11",
+      "load_date": "2026-01-13T21:02:51",
+      "name": "ALCANTARA, CHRISTOPHER MANUEL",
+      "office": "H",
+      "office_full": "House",
+      "party": "NPA",
+      "party_full": "NO PARTY AFFILIATION",
+      "state": "FL"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6NY12248",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "12",
+      "district_number": 12,
+      "election_districts": [
+        "12"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-11-10",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-11-10",
+      "last_file_date": "2025-11-10",
+      "load_date": "2025-11-13T21:02:32",
+      "name": "ALDRICH, KALEY MARIE MS",
+      "office": "H",
+      "office_full": "House",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "NY"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6CA41315",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "41",
+      "district_number": 41,
+      "election_districts": [
+        "41"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-07-21",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-07-21",
+      "last_file_date": "2025-07-21",
+      "load_date": "2025-10-16T21:01:04",
+      "name": "ALEMAN, KATHERINE",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "CA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6TX01337",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "01",
+      "district_number": 1,
+      "election_districts": [
+        "01"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-06-04",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-06-18",
+      "last_file_date": "2025-06-18",
+      "load_date": "2026-02-09T20:58:28",
+      "name": "ALEXANDER, DAX CORNELL",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "TX"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H2WI02199",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2022,
+        2026
+      ],
+      "district": "02",
+      "district_number": 2,
+      "election_districts": [
+        "02",
+        "02"
+      ],
+      "election_years": [
+        2022,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": null,
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": null,
+      "last_file_date": null,
+      "load_date": "2026-07-21T20:58:46",
+      "name": "ALEXANDER, DOUGLAS",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "WI"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6NJ02244",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "02",
+      "district_number": 2,
+      "election_districts": [
+        "02"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-07-25",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-08-12",
+      "last_file_date": "2025-08-12",
+      "load_date": "2025-10-18T21:00:34",
+      "name": "ALEXANDER, TIMOTHY C",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "NJ"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6GA09268",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "09",
+      "district_number": 9,
+      "election_districts": [
+        "09"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-05-01",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-05-01",
+      "last_file_date": "2025-05-01",
+      "load_date": "2025-07-15T21:00:48",
+      "name": "ALEX, NICHOLAS FRANCIS MR.",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "GA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6WI07223",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "07",
+      "district_number": 7,
+      "election_districts": [
+        "07"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-10-28",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-10-28",
+      "last_file_date": "2025-10-28",
+      "load_date": "2026-02-09T20:58:28",
+      "name": "ALFONSO, MICHAEL",
+      "office": "H",
+      "office_full": "House",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "WI"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H2MO04207",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2022,
+        2024,
+        2026
+      ],
+      "district": "04",
+      "district_number": 4,
+      "election_districts": [
+        "04",
+        "04",
+        "04"
+      ],
+      "election_years": [
+        2022,
+        2024,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2021-10-27",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "I",
+      "incumbent_challenge_full": "Incumbent",
+      "last_f2_date": "2024-11-13",
+      "last_file_date": "2024-11-13",
+      "load_date": "2025-02-03T21:02:03",
+      "name": "ALFORD, MARK",
+      "office": "H",
+      "office_full": "House",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "MO"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6NC12105",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "12",
+      "district_number": 12,
+      "election_districts": [
+        "12"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-11-24",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-11-24",
+      "last_file_date": "2025-11-24",
+      "load_date": "2026-01-23T21:01:19",
+      "name": "ALI, ADDUL RAHMAN ELI",
+      "office": "H",
+      "office_full": "House",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "NC"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6NJ08209",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "08",
+      "district_number": 8,
+      "election_districts": [
+        "08"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-01-27",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-01-27",
+      "last_file_date": "2026-01-27",
+      "load_date": "2026-04-20T21:16:40",
+      "name": "ALI, MUSSAB",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "NJ"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H2NC06098",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2022,
+        2024,
+        2026
+      ],
+      "district": "04",
+      "district_number": 4,
+      "election_districts": [
+        "04",
+        "04"
+      ],
+      "election_years": [
+        2022,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2021-11-09",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-01-21",
+      "last_file_date": "2026-01-21",
+      "load_date": "2026-02-04T21:00:47",
+      "name": "ALLAM, NIDA",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "NC"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6TX34049",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "34",
+      "district_number": 34,
+      "election_districts": [
+        "34"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-05-15",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-05-15",
+      "last_file_date": "2025-05-15",
+      "load_date": "2025-07-15T21:00:48",
+      "name": "ALLEN, KEITH",
+      "office": "H",
+      "office_full": "House",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "TX"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6IN08293",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "08",
+      "district_number": 8,
+      "election_districts": [
+        "08"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-08-03",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-08-03",
+      "last_file_date": "2025-08-03",
+      "load_date": "2025-10-12T21:00:19",
+      "name": "ALLEN, MARY THERESA",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "IN"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H2GA12121",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2012,
+        2014,
+        2016,
+        2018,
+        2020,
+        2022,
+        2024,
+        2026
+      ],
+      "district": "12",
+      "district_number": 12,
+      "election_districts": [
+        "12",
+        "12",
+        "12",
+        "12",
+        "12",
+        "12",
+        "12",
+        "12"
+      ],
+      "election_years": [
+        2012,
+        2014,
+        2016,
+        2018,
+        2020,
+        2022,
+        2024,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2011-10-12",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "I",
+      "incumbent_challenge_full": "Incumbent",
+      "last_f2_date": "2024-11-19",
+      "last_file_date": "2024-11-19",
+      "load_date": "2025-04-18T20:59:48",
+      "name": "ALLEN, RICHARD W",
+      "office": "H",
+      "office_full": "House",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "GA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H8TX32098",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2018,
+        2020,
+        2022,
+        2024,
+        2026
+      ],
+      "district": "33",
+      "district_number": 33,
+      "election_districts": [
+        "32",
+        "32",
+        "32",
+        "32",
+        "33"
+      ],
+      "election_years": [
+        2018,
+        2020,
+        2022,
+        2024,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2017-04-18",
+      "has_raised_funds": true,
+      "inactive_election_years": [
+        2024
+      ],
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2026-08-14",
+      "last_file_date": "2026-08-14",
+      "load_date": "2026-08-14T20:58:49",
+      "name": "ALLRED, COLIN",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "TX"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6CA23271",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "23",
+      "district_number": 23,
+      "election_districts": [
+        "23"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-04-28",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-04-28",
+      "last_file_date": "2025-04-28",
+      "load_date": "2025-04-29T21:01:40",
+      "name": "ALONZO, EDWIN",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "CA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6AZ01488",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "01",
+      "district_number": 1,
+      "election_districts": [
+        "01"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-03-26",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2026-03-26",
+      "last_file_date": "2026-03-26",
+      "load_date": "2026-04-13T21:14:20",
+      "name": "ALPONTE, MONICA MARIA",
+      "office": "H",
+      "office_full": "House",
+      "party": "LIB",
+      "party_full": "LIBERTARIAN PARTY",
+      "state": "AZ"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6TX10288",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "10",
+      "district_number": 10,
+      "election_districts": [
+        "10"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-11-24",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-11-24",
+      "last_file_date": "2025-11-24",
+      "load_date": "2026-02-09T20:58:28",
+      "name": "ALTMAN, ROB",
+      "office": "H",
+      "office_full": "House",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "TX"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6NJ12433",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "12",
+      "district_number": 12,
+      "election_districts": [
+        "12"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-02-05",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2026-02-05",
+      "last_file_date": "2026-02-05",
+      "load_date": "2026-04-20T21:16:40",
+      "name": "ALTMAN, SUSAN COPIUS",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "NJ"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6IN06248",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "06",
+      "district_number": 6,
+      "election_districts": [
+        "06"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-08-25",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-08-25",
+      "last_file_date": "2025-08-25",
+      "load_date": "2025-09-02T21:03:03",
+      "name": "ALT, RAYMOND EDWARD",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "IN"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6KY06192",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "06",
+      "district_number": 6,
+      "election_districts": [
+        "06"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-07-17",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2026-07-06",
+      "last_file_date": "2026-07-06",
+      "load_date": "2026-07-06T20:56:50",
+      "name": "ALVARADO, RALPH A",
+      "office": "H",
+      "office_full": "House",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "KY"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6NY13238",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "13",
+      "district_number": 13,
+      "election_districts": [
+        "13"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-08-21",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-08-21",
+      "last_file_date": "2025-08-21",
+      "load_date": "2026-02-09T20:58:28",
+      "name": "AMADOR, JALIEL",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "NY"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H4AS00036",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        1994,
+        1996,
+        1998,
+        2000,
+        2002,
+        2004,
+        2006,
+        2008,
+        2010,
+        2012,
+        2014,
+        2016,
+        2018,
+        2020,
+        2022,
+        2024,
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00"
+      ],
+      "election_years": [
+        1994,
+        1996,
+        2000,
+        2002,
+        2004,
+        2006,
+        2008,
+        2010,
+        2012,
+        2014,
+        2016,
+        2018,
+        2020,
+        2022,
+        2024,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "1996-06-27",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "I",
+      "incumbent_challenge_full": "Incumbent",
+      "last_f2_date": "2026-01-26",
+      "last_file_date": "2026-01-26",
+      "load_date": "2026-01-26T21:02:45",
+      "name": "AMATA, AUMUA",
+      "office": "H",
+      "office_full": "House",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "AS"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6MN06231",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "06",
+      "district_number": 6,
+      "election_districts": [
+        "06"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-02-06",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-02-06",
+      "last_file_date": "2026-02-06",
+      "load_date": "2026-03-03T21:23:02",
+      "name": "AMBERSON, ANSON",
+      "office": "H",
+      "office_full": "House",
+      "party": "DFL",
+      "party_full": "DEMOCRATIC-FARMER-LABOR",
+      "state": "MN"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6MI02216",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "02",
+      "district_number": 2,
+      "election_districts": [
+        "02"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-06-12",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-06-12",
+      "last_file_date": "2025-06-12",
+      "load_date": "2025-07-10T20:59:58",
+      "name": "AMBROSE, BENJAMIN",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "MI"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H2AK00556",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2022,
+        2024,
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00",
+        "00",
+        "00"
+      ],
+      "election_years": [
+        2022,
+        2024,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": null,
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": null,
+      "last_file_date": null,
+      "load_date": "2026-07-21T20:58:46",
+      "name": "AMBROSE, DAVID",
+      "office": "H",
+      "office_full": "House",
+      "party": "N",
+      "party_full": "NONPARTISAN",
+      "state": "AK"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6AK01134",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-08-07",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-08-07",
+      "last_file_date": "2026-08-07",
+      "load_date": "2026-08-28T20:56:23",
+      "name": "AMBROSE, DAVID II",
+      "office": "H",
+      "office_full": "House",
+      "party": "UN",
+      "party_full": "UNAFFILIATED",
+      "state": "AK"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6NY20225",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "20",
+      "district_number": 20,
+      "election_districts": [
+        "20"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-03-02",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-03-02",
+      "last_file_date": "2026-03-02",
+      "load_date": "2026-04-13T21:14:20",
+      "name": "AMBROSIO, RALPH",
+      "office": "H",
+      "office_full": "House",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "NY"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6IL09236",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "09",
+      "district_number": 9,
+      "election_districts": [
+        "09"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-06-01",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-06-01",
+      "last_file_date": "2025-06-01",
+      "load_date": "2025-07-17T21:01:06",
+      "name": "AMIWALA, BUSHRA",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "IL"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H2NV02395",
+      "candidate_inactive": true,
+      "candidate_status": "C",
+      "cycles": [
+        2012,
+        2014,
+        2016,
+        2018,
+        2020,
+        2022,
+        2024,
+        2026
+      ],
+      "district": "02",
+      "district_number": 2,
+      "election_districts": [
+        "02",
+        "02",
+        "02",
+        "02",
+        "02",
+        "02",
+        "02",
+        "02"
+      ],
+      "election_years": [
+        2012,
+        2014,
+        2016,
+        2018,
+        2020,
+        2022,
+        2024,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2011-05-19",
+      "has_raised_funds": true,
+      "inactive_election_years": [
+        2026
+      ],
+      "incumbent_challenge": "I",
+      "incumbent_challenge_full": "Incumbent",
+      "last_f2_date": "2025-02-13",
+      "last_file_date": "2025-02-13",
+      "load_date": "2025-02-14T21:05:30",
+      "name": "AMODEI, MARK EUGENE",
+      "office": "H",
+      "office_full": "House",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "NV"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H4RI01265",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2024,
+        2026
+      ],
+      "district": "01",
+      "district_number": 1,
+      "election_districts": [
+        "01",
+        "01"
+      ],
+      "election_years": [
+        2024,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2023-04-18",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "I",
+      "incumbent_challenge_full": "Incumbent",
+      "last_f2_date": "2024-11-11",
+      "last_file_date": "2024-11-11",
+      "load_date": "2025-02-04T21:06:02",
+      "name": "AMO, GABRIEL F",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "RI"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6NY21223",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "21",
+      "district_number": 21,
+      "election_districts": [
+        "21"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-11-26",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-11-26",
+      "last_file_date": "2025-11-26",
+      "load_date": "2026-04-20T21:16:40",
+      "name": "AMORIELL, STUART JAMESON",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "NY"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6IN05281",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "06",
+      "district_number": 6,
+      "election_districts": [
+        "06"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-04-28",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-08-14",
+      "last_file_date": "2025-08-14",
+      "load_date": "2025-08-14T21:01:13",
+      "name": "AMYX, WILLIAM KORY",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "IN"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6NY09145",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2024,
+        2026
+      ],
+      "district": "09",
+      "district_number": 9,
+      "election_districts": [
+        "09"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2024-12-12",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2024-12-12",
+      "last_file_date": "2024-12-12",
+      "load_date": "2025-01-10T21:01:11",
+      "name": "ANABILAH-AZUMAH, JOEL",
+      "office": "H",
+      "office_full": "House",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "NY"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6MN08120",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "08",
+      "district_number": 8,
+      "election_districts": [
+        "08"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-06-04",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-01-30",
+      "last_file_date": "2026-01-30",
+      "load_date": "2026-04-10T21:13:55",
+      "name": "ANASTOS, EMANUEL",
+      "office": "H",
+      "office_full": "House",
+      "party": "DFL",
+      "party_full": "DEMOCRATIC-FARMER-LABOR",
+      "state": "MN"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6FL20143",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "20",
+      "district_number": 20,
+      "election_districts": [
+        "20"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-05-14",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-05-14",
+      "last_file_date": "2026-05-14",
+      "load_date": "2026-07-16T20:57:38",
+      "name": "ANDERSEN, BRENT",
+      "office": "H",
+      "office_full": "House",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "FL"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6TN04242",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "04",
+      "district_number": 4,
+      "election_districts": [
+        "04"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-03-06",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-07-27",
+      "last_file_date": "2026-07-27",
+      "load_date": "2026-08-03T20:59:17",
+      "name": "ANDERS, JACOB KRISTOPHER",
+      "office": "H",
+      "office_full": "House",
+      "party": "IND",
+      "party_full": "INDEPENDENT",
+      "state": "TN"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H4AL06189",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2024,
+        2026
+      ],
+      "district": "06",
+      "district_number": 6,
+      "election_districts": [
+        "06",
+        "06"
+      ],
+      "election_years": [
+        2024,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2023-11-20",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-12-24",
+      "last_file_date": "2025-12-24",
+      "load_date": "2025-12-30T21:00:52",
+      "name": "ANDERSON, ELIZABETH",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "AL"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6FL22263",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "22",
+      "district_number": 22,
+      "election_districts": [
+        "22"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-06-09",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-06-09",
+      "last_file_date": "2026-06-09",
+      "load_date": "2026-07-21T20:58:46",
+      "name": "ANDERSON, JILLIAN",
+      "office": "H",
+      "office_full": "House",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "FL"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6NH01438",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "01",
+      "district_number": 1,
+      "election_districts": [
+        "01"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-07-15",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2026-07-15",
+      "last_file_date": "2026-07-15",
+      "load_date": "2026-08-22T20:56:39",
+      "name": "ANDERSON, LINDSEY",
+      "office": "H",
+      "office_full": "House",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "NH"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6NJ12409",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "12",
+      "district_number": 12,
+      "election_districts": [
+        "12"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-01-26",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2026-01-26",
+      "last_file_date": "2026-01-26",
+      "load_date": "2026-01-28T21:00:03",
+      "name": "ANDERSON, MICHAEL",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "NJ"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6NV03220",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "03",
+      "district_number": 3,
+      "election_districts": [
+        "03"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-04-24",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-04-24",
+      "last_file_date": "2025-04-24",
+      "load_date": "2025-07-16T21:02:06",
+      "name": "ANDERSON, TERA",
+      "office": "H",
+      "office_full": "House",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "NV"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6TX10197",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "21",
+      "district_number": 21,
+      "election_districts": [
+        "21"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-07-14",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-10-20",
+      "last_file_date": "2025-10-20",
+      "load_date": "2025-12-30T21:00:52",
+      "name": "ANDRADE, JAVI",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "TX"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6MA06145",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "06",
+      "district_number": 6,
+      "election_districts": [
+        "06"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-07-03",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-07-03",
+      "last_file_date": "2025-07-03",
+      "load_date": "2025-12-30T21:00:52",
+      "name": "ANDRES-BECK, BETH",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "MA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6IL09301",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "09",
+      "district_number": 9,
+      "election_districts": [
+        "09"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-07-08",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-07-08",
+      "last_file_date": "2025-07-08",
+      "load_date": "2025-10-18T21:00:34",
+      "name": "ANDREW, PHILIP JEROME",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "IL"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6TX01311",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "01",
+      "district_number": 1,
+      "election_districts": [
+        "01"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-05-09",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-05-09",
+      "last_file_date": "2025-05-09",
+      "load_date": "2025-06-09T20:59:02",
+      "name": "ANDRUS, TRACY DR.",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "TX"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6CA44210",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "44",
+      "district_number": 44,
+      "election_districts": [
+        "44"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-01-27",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-03-12",
+      "last_file_date": "2026-03-12",
+      "load_date": "2026-04-11T21:13:50",
+      "name": "ANGEL, GENEVIEVE",
+      "office": "H",
+      "office_full": "House",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "CA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H4AZ03109",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2024,
+        2026
+      ],
+      "district": "03",
+      "district_number": 3,
+      "election_districts": [
+        "03",
+        "03"
+      ],
+      "election_years": [
+        2024,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2023-04-04",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "I",
+      "incumbent_challenge_full": "Incumbent",
+      "last_f2_date": "2024-11-26",
+      "last_file_date": "2024-11-26",
+      "load_date": "2025-02-03T21:02:03",
+      "name": "ANSARI, YASSAMIN",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "AZ"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6MD07517",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "07",
+      "district_number": 7,
+      "election_districts": [
+        "07"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-11-21",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-11-21",
+      "last_file_date": "2025-11-21",
+      "load_date": "2025-12-30T21:00:52",
+      "name": "ANTHONY, HADLEY OPHELIA MS.",
+      "office": "H",
+      "office_full": "House",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "MD"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6RI02292",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "02",
+      "district_number": 2,
+      "election_districts": [
+        "02"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-01-26",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-01-26",
+      "last_file_date": "2025-01-26",
+      "load_date": "2025-02-07T21:00:11",
+      "name": "ANZOLI, ARMANDO LUCIANO",
+      "office": "H",
+      "office_full": "House",
+      "party": "IND",
+      "party_full": "INDEPENDENT",
+      "state": "RI"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "H6LA06158",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "06",
+      "district_number": 6,
+      "election_districts": [
+        "06"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-02-05",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-02-05",
+      "last_file_date": "2026-02-05",
+      "load_date": "2026-04-18T21:13:41",
+      "name": "APPEANING, ANJANITA MONIQUE",
+      "office": "H",
+      "office_full": "House",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "LA"
+    }
+  ]
+}

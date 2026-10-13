@@ -1,0 +1,6 @@
+{
+  "sourceUrl": "https://mandannd.api.civicclerk.com/v1/Events?$filter=categoryId+in+(26)+and+startDateTime+ge+2024-02-12T10:00:00Z+and+startDateTime+le+2024-09-12T10:00:00Z&$orderby=startDateTime",
+  "recordedSource": "https://github.com/City-Bureau/city-scrapers-bismarck/blob/176c46047f71971724fa26f9a0c504fc15098d02/tests/files/bisnd_mc_cc.json",
+  "sourceBlob": "City-Bureau city-scrapers-bismarck at 176c46047f71971724fa26f9a0c504fc15098d02",
+  "note": "Exact public API response bytes from the recorded source fixture. Only the homepage and linking transport in platform-census-crosswalk.test.ts are synthetic."
+}

@@ -169,7 +169,7 @@ test("THE SHAPE: a confirmed route maps to a kind the reviewed filter is defined
   assert.deepEqual(wiringShapeFor({ vendor: "ical", url: "https://t.gov/c.ics" }), { kind: "ICAL", endpoint: { feedUrl: "https://t.gov/c.ics" } });
   assert.deepEqual(wiringShapeFor({ vendor: "official-page-events", url: "https://t.gov/Calendar.aspx?EID=1" }), { kind: "OFFICIAL_PAGE_EVENTS", endpoint: { pageUrl: "https://t.gov/Calendar.aspx?EID=1", officialHost: "t.gov" } });
   const agenda = wiringShapeFor({ vendor: "civicplus-agendacenter", url: "https://t.gov/AgendaCenter" });
-  assert.ok("held" in agenda && agenda.held === "ADAPTER_CONFIG_INCOMPLETE" && /icalUrl/.test(agenda.detail));
+  assert.deepEqual(agenda, { kind: "CIVICPLUS", endpoint: { agendaCenterUrl: "https://t.gov/AgendaCenter" } });
   assert.deepEqual(wiringShapeFor({ vendor: "legistar-api", url: "https://webapi.legistar.com/v1/x/events" }), { kind: "LEGISTAR", endpoint: { slug: "x" } });
 });
 

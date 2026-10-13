@@ -41,16 +41,6 @@ export interface TopOffice {
 }
 
 /**
- * The honest line for a body whose top offices are not sourced yet.
- *
- * Describes OUR research, never the body — a body always has someone presiding,
- * and saying otherwise would be a claim about a government we have no record
- * for.
- */
-export const TOP_OFFICES_GAP =
-  "We haven’t sourced who leads this body yet.";
-
-/**
  * Up to two holders: whoever presides, then whoever runs it day to day; never padded. A single-seat division returns its
  * one officeholder.
  */

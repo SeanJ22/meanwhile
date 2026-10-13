@@ -1,4 +1,5 @@
 "use client";
+import { PlaceOpenData } from "./open-data";
 
 import { useShellData } from "@/lib/state/data";
 import { CardGapContribution } from "@/components/ui/card-gap-context";
@@ -454,6 +455,7 @@ function CoverageBody({
       </p>}
 
       <SubjectLine zip={zip} standing={subject.location.certainty} />
+      <PlaceOpenData zip={zip} />
 
       {coverage.federalDirectoryUnavailable && <p className="mt-1 t-detail text-voice">We could not load the federal directory just now.</p>}
       <GovernmentListings records={coverage.governments ?? []} states={coverage.governmentInventoryStates ?? []} unavailableStates={coverage.governmentInventoryUnavailableStates} />

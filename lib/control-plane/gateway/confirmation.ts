@@ -1,3 +1,38 @@
+import { findScheduledChild } from "./receipts.ts";
+import { ownerDispatchWorkOf, type DispatchWorkReading, type OwnerDispatchWork } from "../expansion/dispatch-work.ts";
+import { confirmHuntScores, type PlaceScoreReader } from "./hunt-score.ts";
+/**
+ * **"DONE" MEANS THE RUNNER SAYS SO.** (S11, rulings §0 test 5 and §6.)
+ *
+ * A click saves a receipt. A saved receipt proves the console recorded the
+ * request; it does not prove anything has acted on it. This module asks the one
+ * question the owner cares about — *has the runner picked this up?* — by
+ * reading what the runner already writes, for each kind of action. It writes
+ * nothing, and it adds no ledger: the receipts stay immutable and the runner's
+ * own records are the proof.
+ *
+ * ```
+ *   runner.pause / runner.resume / runner.runCycleNow / research.pause /
+ *   fleet.deployHere        the runner's HONORED record beside the intent. The
+ *                           receipt's subject IS the intent id, and the record's
+ *                           `honors` names it: one point read, found by content
+ *   expansion.scope.set     the runner's assignment reading names this receipt
+ *                           (written when a round starts), else a round that
+ *                           started after the save has read the new list
+ *   config.setDiscoverySearch
+ *                           the runner's own heartbeat names this receipt
+ *   config.setFleetSpendCeiling / config.setPlaceTarget / expansion.scope.remove
+ *                           a round started after the save: the runner reads
+ *                           these when a round starts
+ *   everything else         finished inside the console; nothing for the runner
+ *                           (config.setDataSwitch is read at each read of a number, so it is in force when saved)
+ * ```
+ *
+ * A round that has not started since the save is "waiting", and a paused runner
+ * starts none: the words say so rather than pretend.
+ *
+ * PURE apart from the reads it is handed.
+ */
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { RESEARCH_INTENT_LOG_KEY, RESEARCH_STATE_ID, type ResearchIntent } from "../scheduler/research-policy.ts";
 import { RUNNER_ID } from "../admin-data.ts";
@@ -8,6 +43,8 @@ import { isLeadOrder, leadCounts, leadCountsWords, leadItems, LEADS_ACTION, rowO
 
 export type ConfirmationState =
   | "applied"
+  | "in-progress"
+  /** Saved, and the runner has not picked it up yet. */
   | "waiting"
   | "not-needed"
   | "unread"
@@ -21,6 +58,8 @@ export interface OrderPlan {
   readonly change: string;
   /** How many items it creates, or null when the order creates none or it is not counted. */
   readonly creates: number | null;
+  readonly affects: string;
+  /** When the first results are due: the heartbeat's next round time, or null when unknown. */
   readonly resultsBy: string | null;
 }
 
@@ -41,6 +80,8 @@ export interface Confirmation {
   readonly state: ConfirmationState;
   readonly plan?: OrderPlan;
   readonly progress?: OrderProgress;
+  readonly change?: ActionReceipt["change"];
+  /** When the runner picked it up, when it has. */
   /** Each part's own status, for an order made of many. */
   readonly items?: readonly OrderItem[];
   readonly at: string | null;
@@ -54,6 +95,7 @@ export const INTENT_ACTIONS: ReadonlySet<string> = new Set([
   "research.pause",
   "research.resume",
   "fleet.deployHere",
+  "fleet.cancelDispatch",
 ]);
 
 const ROUND_ACTIONS: ReadonlySet<string> = new Set([
@@ -73,6 +115,7 @@ const APPLIED_WORDS: Readonly<Record<string, string>> = {
   "research.pause": "Paid research paused.",
   "research.resume": "Paid research resumed.",
   "fleet.deployHere": "Sent.",
+  "fleet.cancelDispatch": "Taken back.",
   "expansion.scope.set": "Runner has it.",
   "expansion.scope.setMany": "Runner has the list.",
   "expansion.scope.budget": "Budget in use.",
@@ -89,6 +132,7 @@ const WAITING_WORDS: Readonly<Record<string, string>> = {
   "research.pause": "Saved. Waiting for the next round.",
   "research.resume": "Saved. Waiting for the next round.",
   "fleet.deployHere": "Saved. Waiting for the runner.",
+  "fleet.cancelDispatch": "Saved. Waiting for the runner to take it back.",
   "expansion.scope.set": "Saved. Waiting for the runner.",
   "expansion.scope.setMany": "Saved. Waiting for the runner.",
   "expansion.scope.budget": "Saved. Waiting for the next round.",
@@ -110,17 +154,20 @@ interface AssignmentReading {
 }
 
 /** Has the runner picked this receipt's action up? Never throws: an unreadable record is "unread". */
-export async function confirmReceipt(repos: ControlPlaneRepositories, receipt: ActionReceipt, nowMs: number = Date.now()): Promise<Confirmation> {
+export async function confirmReceipt(repos: ControlPlaneRepositories, receipt: ActionReceipt, nowMs: number = Date.now(), readPlaceScore?: PlaceScoreReader): Promise<Confirmation> {
   if (receipt.type === LEADS_ACTION && receipt.outcome !== "REFUSED") return confirmLeads(repos, receipt, nowMs);
-  let core = await confirmCore(repos, receipt);
+  let core = await confirmCore(repos, receipt, nowMs, readPlaceScore);
+
   if (receipt.outcome === "REFUSED") return core;
+  core = await confirmHuntScores(repos, receipt, core, readPlaceScore);
   let nextRound: string | null = null;
   try {
     const beat = (await repos.runnerHeartbeat.read(RUNNER_ID))?.value ?? null;
     nextRound = beat?.nextCycleDueAt ?? null;
-    if (core.state === "waiting") core = notPickedUp(core, beat, receipt, nowMs);
-  } catch { }
-  return { ...core, plan: orderPlan(receipt, nextRound), progress: orderProgress(receipt, core) };
+    if (core.state === "waiting" && !(receipt.type === "orders.schedule" && core.words.startsWith("Scheduled."))) core = notPickedUp(core, beat, receipt, nowMs);
+  } catch { /* the plan says — */ }
+  const result = { ...core, plan: core.plan ?? orderPlan(receipt, nextRound), progress: core.progress ?? orderProgress(receipt, core) };
+  return confirmDispatch(repos, receipt, result);
 }
 
 /** A leads order, from its own rows: each row's status, how many are finished, and whether the runner has started. */
@@ -141,8 +188,8 @@ async function confirmLeads(repos: ControlPlaneRepositories, receipt: ActionRece
   return { ...base, ...notPickedUp(waiting, beat, receipt, nowMs) };
 }
 
-function leadsPlan(receipt: Pick<ActionReceipt, "label">, toTest: number | null, beat: Pick<RunnerHeartbeat, "nextCycleDueAt"> | null): OrderPlan {
-  return { who: "Runner", change: receipt.label, creates: toTest !== null && toTest > 0 ? toTest : null, resultsBy: beat?.nextCycleDueAt ?? null };
+function leadsPlan(receipt: Pick<ActionReceipt, "label" | "requestedSubject" | "subject">, toTest: number | null, beat: Pick<RunnerHeartbeat, "nextCycleDueAt"> | null): OrderPlan {
+  return { who: "Runner", affects: receipt.requestedSubject ?? receipt.subject ?? "the selected place", change: receipt.label, creates: toTest !== null && toTest > 0 ? toTest : null, resultsBy: beat?.nextCycleDueAt ?? null };
 }
 
 /** A runner that has not beaten for this long is silent. Rounds beat far more often than this. */
@@ -167,11 +214,12 @@ export function notPickedUp(
 const SETTING_ACTIONS: ReadonlySet<string> = new Set(["config.setSetting", "config.setFleetSpendCeiling", "config.setPlaceTarget", "config.setDiscoverySearch", "config.setDataSwitch"]);
 
 export function orderPlan(receipt: Pick<ActionReceipt, "type" | "openedWork" | "label">, nextRoundAt: string | null): OrderPlan {
-  const runner = INTENT_ACTIONS.has(receipt.type) || ROUND_ACTIONS.has(receipt.type);
+  const runner = INTENT_ACTIONS.has(receipt.type) || ROUND_ACTIONS.has(receipt.type) || receipt.type.startsWith("orders.");
   const created = receipt.openedWork.length;
   return {
     who: runner ? "Runner" : "Admin",
     change: receipt.label,
+    affects: receipt.label,
     creates: created > 0 ? created : null,
     resultsBy: runner ? nextRoundAt : null,
   };
@@ -184,9 +232,25 @@ export function orderProgress(receipt: Pick<ActionReceipt, "type" | "openedWork"
   return { done: null, of: null };
 }
 
-async function confirmCore(repos: ControlPlaneRepositories, receipt: ActionReceipt): Promise<Confirmation> {
+async function confirmCore(repos: ControlPlaneRepositories, receipt: ActionReceipt, nowMs: number = Date.now(), readPlaceScore?: PlaceScoreReader): Promise<Confirmation> {
   if (receipt.outcome === "REFUSED") return { state: "not-needed", at: null, words: receipt.says };
   const type = receipt.type;
+  if (type === "orders.schedule") {
+    try {
+      const child=await findScheduledChild(repos,receipt.subject);
+      if(child)return confirmReceipt(repos,child,nowMs,readPlaceScore);
+      const config=(await repos.adminConfig.read("current"))?.value;
+      const scheduled=config?.scheduledOrders?.find(o=>o.id===receipt.subject);
+      if(scheduled && !scheduled.after && nowMs - Date.parse(scheduled.startAt ?? scheduled.decidedAt) > RUNNER_SILENT_MS) return {state:"not-picked-up",at:null,words:"The scheduled time passed, and the timer has not sent this order."};
+      return scheduled?{state:"waiting",at:null,words:"Scheduled. Waiting for its time or the first order to finish.",plan:orderPlan(receipt,scheduled.startAt)}:{state:"not-needed",at:null,words:"Unscheduled; it will not be sent."};
+    }catch{return {state:"unread",at:null,words:"The scheduled order could not be read just now."};}
+  }
+  if (type === "queue.add") {
+    try {
+      const item = (await repos.adminConfig.read("current"))?.value.fixList?.find(i=>i.id === receipt.subject);
+      if (item?.dispatch) return confirmCore(repos, { ...receipt, type: "fleet.deployHere", subject: item.dispatch.intentId },nowMs,readPlaceScore);
+    } catch { return { state: "unread", at: null, words: "Saved. Runner status —" }; }
+  }
   const inIntent = INTENT_ACTIONS.has(type);
   const inRound = ROUND_ACTIONS.has(type);
   if (!inIntent && !inRound) return { state: "not-needed", at: receipt.completedAt, words: receipt.says };
@@ -217,3 +281,22 @@ async function confirmCore(repos: ControlPlaneRepositories, receipt: ActionRecei
     return { state: "unread", at: null, words: "Saved. Runner status —" };
   }
 }
+
+/** Use only this send's runner record. An older send cannot measure a newer one. */
+async function confirmDispatch(repos: ControlPlaneRepositories, receipt: ActionReceipt, core: Confirmation): Promise<Confirmation> {
+  if (receipt.type !== "fleet.deployHere" || receipt.outcome === "REFUSED") return core;
+  try {
+    const held = await repos.researchState.readNarrowed(RESEARCH_STATE_ID, { ownerDispatch: true, dispatchWork: true });
+    const state = held?.value as { ownerDispatch?: { intentId: string; work?: OwnerDispatchWork | null }; dispatchWork?: DispatchWorkReading | null } | undefined;
+    const work = ownerDispatchWorkOf(state?.dispatchWork ?? null, receipt.subject)
+      ?? (state?.ownerDispatch?.intentId === receipt.subject ? state.ownerDispatch.work ?? null : null);
+    if (!work || work.key !== `dispatch:${receipt.subject}`) return core;
+    const of = work.created + work.deferred;
+    return { ...core, progress: { done: work.created, of: of || null },
+      plan: core.plan ? { ...core.plan, creates: of } : undefined,
+      state: core.state === "applied" && work.deferred > 0 ? "in-progress" : core.state,
+      words: core.state === "applied" && work.deferred > 0 ? `${work.created} created; ${work.deferred} waiting for the next round.` : core.words };
+  } catch { return { ...core, progress: { done: null, of: null } }; }
+}
+
+/** An explicit “until done” waits for the runner's existing assignment completion; pickup alone is insufficient. */

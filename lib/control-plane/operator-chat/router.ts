@@ -1,3 +1,5 @@
+
+import { plainOrderType } from "./orders.ts";
 import type { ActionDefinition } from "../gateway/contract.ts";
 import { CHAT_TOPICS, type ChatProhibition, type ChatTopic } from "./contract.ts";
 
@@ -147,6 +149,7 @@ interface TopicRule {
 }
 
 const TOPIC_RULES: readonly TopicRule[] = [
+  { topic: "PLACE_STUCK", phrasings: [["why", "stuck"], ["place", "stuck"], ["district", "stuck"]] },
   {
     topic: "FLEET_BLOCKERS",
     phrasings: [
@@ -316,6 +319,8 @@ export function classify(text: string, registry: readonly ActionDefinition[]): R
   const topic = topicOf(text);
   if (topic !== null) return { kind: "TOPIC", topic, subject, normalized };
 
+  const plainType = plainOrderType(text);
+  if (plainType && registry.some(d => d.type === plainType)) return { kind: "ACTION", actionType: plainType, subject, normalized };
   const action = actionMatch(text, registry);
   if (action !== null) return { kind: "ACTION", actionType: action.actionType, subject, normalized };
 

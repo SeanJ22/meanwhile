@@ -288,6 +288,8 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "meeting-doors",
     "meeting-source-wiring",
     "candidate-campaign-sites-derived",
+    "socrata-discovery",
+    "epa-echo",
     "congress-api", "govinfo", "regulations-gov", "federal-register", "senate-lda",
   ]);
   assert.deepEqual(nonMeetingTasks.map((task) => task.id), ROUTINE_SOURCE_CONTRACTS.map((contract) => contract.id));

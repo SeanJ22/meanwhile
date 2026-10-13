@@ -10,6 +10,7 @@ import { blurbForTitle } from "@/lib/officials/office-blurbs";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import { X } from "lucide-react";
 import { PlacePublicRecords } from "../public-records";
+import { PlaceOpenData } from "../open-data";
 import { MeetingCard } from "@/components/ui/meeting-card";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
@@ -229,9 +230,11 @@ interface EntityModalProps {
 function PlaceSections({
   subject,
   onOpenPlaceBody,
+  homeZip,
 }: {
   subject: ModalSubject;
   onOpenPlaceBody?: (key: string) => void;
+  homeZip?: string | null;
 }) {
   const card = subject.placeCard!;
   return (
@@ -274,25 +277,28 @@ function PlaceSections({
           ))}
         </ul>
       )}
-      <PublicRecordSection subject={subject} />
+      <PublicRecordSection subject={subject} zip={homeZip} />
     </div>
   );
 }
 
-function PublicRecordSection({ subject }: { subject: ModalSubject }) {
+function PublicRecordSection({ subject, zip }: { subject: ModalSubject; zip?: string | null }) {
   const divisionId = subject.publicRecordsDivisionId ?? subject.divisionOcdId;
   if (subject.subjectKind === "MEETING" || !divisionId) return null;
   return <CardSection title="Public records">
     <PlacePublicRecords key={divisionId} divisionId={divisionId} bodyId={subject.bodyCard ? subject.subjectId : undefined} />
+    <PlaceOpenData divisionId={divisionId} bodyId={subject.bodyCard ? subject.subjectId : undefined} zip={zip} />
   </CardSection>;
 }
 
 function BodySections({
   subject,
   onOpenHolder,
+  homeZip,
 }: {
   subject: ModalSubject;
   onOpenHolder?: (holder: SeatHolder) => void;
+  homeZip?: string | null;
 }) {
   const card = subject.bodyCard!;
   const listingCount = readerMeetingCount(subject.meetings, useMeetingListingIdentity());
@@ -425,7 +431,7 @@ function BodySections({
         {sections.map((section) => section.content ? (
           <CardSection key={section.id} title={section.title} meta={section.meta}>{section.content}</CardSection>
         ) : <CardGapContribution key={section.id} id={`body:${subject.subjectId}:${section.id}`} label={section.title.toLowerCase()} />)}
-        <PublicRecordSection subject={subject} />
+        <PublicRecordSection subject={subject} zip={homeZip} />
       </CardSectionGroup>
     </div>
   );
@@ -622,9 +628,9 @@ export function EntityModal({
         )}
 
         {subject.bodyCard ? (
-          <BodySections subject={{ ...subject, sources: allSources }} onOpenHolder={onOpenHolder} />
+          <BodySections subject={{ ...subject, sources: allSources }} onOpenHolder={onOpenHolder} homeZip={homeZip} />
         ) : subject.placeCard ? (
-          <PlaceSections subject={subject} onOpenPlaceBody={onOpenPlaceBody} />
+          <PlaceSections subject={subject} onOpenPlaceBody={onOpenPlaceBody} homeZip={homeZip} />
         ) : (
         <div className="account-modal-body mw-sections">
           <CardSectionGroup independent={embedded}>
@@ -645,7 +651,7 @@ export function EntityModal({
               </CardSection>
             )}
             {subject.subjectKind !== "MEETING" && <CardSection title={listingCount.heading}><Meetings meetings={subject.meetings} /></CardSection>}
-            <PublicRecordSection subject={subject} />
+            <PublicRecordSection subject={subject} zip={homeZip} />
           </CardSectionGroup>
         </div>
         )}

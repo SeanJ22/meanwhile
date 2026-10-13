@@ -34,7 +34,8 @@ test("a hunt, a ceiling change and a send-agents order are listed after a reload
   assert.deepEqual(country.data.map((r) => r.kind), ["send-agents", "global-ceiling", "hunt-start"]);
   assert.deepEqual(country.missingParts, [], "no history MISSING strings");
   const ceiling = country.data.find((r) => r.kind === "global-ceiling")!;
-  assert.equal(ceiling.status, "done");
+  assert.equal(ceiling.status, "queued", "a saved ceiling awaits the runner, rather than claiming its round has used it");
+  assert.equal(ceiling.notPickedUp,true,"a silent runner is named after a reload");
   assert.equal(ceiling.scopeKey, "us");
   assert.equal(ceiling.targetName, "the daily budget");
   const sendRow = country.data.find((r) => r.kind === "send-agents")!;

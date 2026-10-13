@@ -1,3 +1,4 @@
+import { plainWords } from "./plain-words.ts";
 import type { Sql } from "../repository/pg-store.ts";
 import { boundedQuery } from "../repository/request-bounds.ts";
 import { US_STATES } from "../readiness/catalog.ts";
@@ -43,6 +44,7 @@ export interface StuckActionRef { readonly kind: "send-agents"; readonly target:
 export interface AdminV6StuckItem {
   readonly id: string; readonly title: string; readonly applies: readonly string[]; readonly lane: BlockerLane; readonly cause: string;
   readonly age: string; readonly ageRank: number; readonly tried: string; readonly helped: string; readonly next: string; readonly owner: string;
+  readonly technical?: readonly string[];
   readonly readersAffected?: boolean; readonly group: string; readonly actions: readonly StuckActionRef[];
 }
 /** Structurally `SameCause` in model.ts. */
@@ -81,11 +83,12 @@ export function stuckViews(rows: readonly StuckRowLike[], scopeKey: string, nowI
   const place = (row: StuckRowLike) => placeKeyOfRow(row);
   const items = [...shutDoors, ...scored.slice(0, STUCK_ITEM_LIMIT - shutDoors.length).map(({ row, cause, age }): AdminV6StuckItem => {
     const at = place(row);
-    const title = [row.label, row.subjectName && row.label && !row.label.includes(row.subjectName) ? row.subjectName : null].filter(Boolean).join(" — ") || row.id;
+    const title = plainWords([row.label, row.subjectName && row.label && !row.label.includes(row.subjectName) ? row.subjectName : null].filter(Boolean).join(" — ") || "Work waiting for repair", "Work waiting for repair");
     const state = stateNameOf(stateOfRow(row));
     const words = sendWordsFor({ stateNames: state ? [state] : [], subject: row.subjectName, label: row.label, zip: /^geo:[a-z]{2}.zcta.(\d{5})$/.exec(at)?.[1] ?? null });
     return { id: row.id, title, applies: [at], lane: cause.lane, cause: cause.needs ? `${NEED_WORDS[cause.needs]}: ${cause.words}` : cause.words, ...(cause.needs ? { needs: cause.needs } : {}), age: age.words, ageRank: age.rank,
-      tried: row.blocker === null ? "—" : row.blocker, helped: "—", next: row.nextAction ?? cause.next,
+      tried: row.blocker === null ? "—" : cause.words, helped: "—", next: row.nextAction ? plainWords(row.nextAction, cause.next) : cause.next,
+      technical: [row.id, ...(row.blocker ? [row.blocker] : []), ...(row.nextAction ? [row.nextAction] : [])],
       owner: cause.owner, readersAffected: row.band === 1 ? true : undefined, group: cause.key,
       actions: words === null ? [] : [sendAction(at, "Send agents", words)] };
   })];

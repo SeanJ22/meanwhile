@@ -6,16 +6,19 @@
  */
 import { switchOn } from "../data-business/switches.ts";
 import { readRecipe, type ReadDeps, type ReadResult } from "../data-business/read.ts";
-import { daysBefore, periodOf, stateOfDivision, todayUtc } from "../data-business/slice.ts";
+import { daysBefore, periodOf, stateOfDivision } from "../data-business/slice.ts";
 import type { AdminConfig } from "../gateway/admin-config.ts";
 import type { CaptureFailures } from "../data-business/live.ts";
 import type { TotalsEntry } from "../data-business/types.ts";
 
 export const CAPTURE_DAYS = 14;
 
-export const captureWindow = (now: Date = new Date()): { readonly from: string; readonly to: string } => ({ from: daysBefore(todayUtc(now), CAPTURE_DAYS - 1), to: todayUtc(now) });
+/** The fourteen Eastern calendar days ending today, including daylight saving time. */
+export const todayEastern = (now: Date) => new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit" }).format(now);
+export const captureWindow = (now: Date = new Date()): { readonly from: string; readonly to: string } => ({ from: daysBefore(todayEastern(now), CAPTURE_DAYS - 1), to: todayEastern(now) });
 
 export interface CaptureHeadline {
+  /** `recording`: events in the last two Eastern days. `quiet`: some, but not lately. `none`: nothing recorded in the window. `unknown`: the counts could not be read. */
   readonly state: "recording" | "quiet" | "none" | "unknown";
   readonly says: string;
   readonly latestDay: string | null;
@@ -71,7 +74,7 @@ export function headlineOf(days: readonly string[], totalsByDay: ReadonlyMap<str
   const latest = [...totalsByDay].filter(([, n]) => n > 0).map(([d]) => d).sort().pop() ?? null;
   if (latest === null) return { state: "none", says: `No events were recorded from ${days[0]} to ${days[days.length - 1]}.`, latestDay: null };
   const n = totalsByDay.get(latest) ?? 0;
-  if (latest >= daysBefore(today, 1)) return { state: "recording", says: `Capture is recording: ${n.toLocaleString("en-US")} events on ${latest}${latest === today ? " so far today (UTC)" : ""}.`, latestDay: latest };
+  if (latest >= daysBefore(today, 1)) return { state: "recording", says: `Capture is recording: ${n.toLocaleString("en-US")} events on ${latest}${latest === today ? " so far today (Eastern time)" : ""}.`, latestDay: latest };
   return { state: "quiet", says: `The latest events were on ${latest}, ${Math.round((Date.parse(`${today}T00:00:00Z`) - Date.parse(`${latest}T00:00:00Z`)) / 86_400_000)} days ago.`, latestDay: latest };
 }
 

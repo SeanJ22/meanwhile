@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * Detail panels. Every panel ends with "Instructions about this item, and what
+ * happened". Technical identifiers live only under "Technical details".
+ */
+import { plainWords } from "@/lib/control-plane/admin-view/plain-words.ts";
 import type { ReactNode } from "react";
 
 import { STATUS_COLOR, STATUS_LABEL, Swatch } from "./charts.tsx";
@@ -54,17 +59,14 @@ function Shots(props: { readonly shots: readonly FixShot[] | undefined }) {
 }
 
 function Doc(props: { readonly doc: SavedDoc }) {
-  const v = useV6();
   const d = props.doc;
-  const last = v.receipts.find((r) => r.kind === "doc-request" && r.target === d.id);
-  const ready = d.access === "public" || (last?.status === "done");
-  const state = d.access === "public" ? "Public copy" : d.access === "unavailable" ? "Unavailable" : last ? last.statusWords : "Private · not opened";
+  const ready = d.access === "public";
+  const state = d.access === "public" ? "Public copy" : d.access === "unavailable" ? "Unavailable" : "Private";
   return (
     <div className={s.row}>
-      <div className={s.spread}><strong className={s.small}>{d.name}</strong><span className={cx(s.small, d.access === "unavailable" || last?.status === "failed" ? s.textWarn : s.dim)}>{state}</span></div>
+      <div className={s.spread}><strong className={s.small}>{d.name}</strong><span className={cx(s.small, d.access === "unavailable" ? s.textWarn : s.dim)}>{state}</span></div>
       <span className={s.meta}>{d.meta}</span>
       <a className={s.small} href={d.sourceUrl} target="_blank" rel="noreferrer noopener">Official source ↗</a>
-      {d.access === "private" && !ready && <Actions actions={[{ kind: "doc-request", target: d.id, label: last?.status === "failed" ? "Try again" : "Open the saved copy" }]} />}
       {ready && d.preview && <pre className={cx(s.tech)} style={{ whiteSpace: "pre-wrap", padding: 8 }}>{d.preview}</pre>}
     </div>
   );
@@ -78,10 +80,9 @@ export function DetailPanel(props: { readonly detail: Detail }) {
     const r = v.data.results.data?.find((x) => x.id === d.id);
     if (!r) return <Empty>This result isn’t available.</Empty>;
     const stuck = (v.data.stuck.data ?? []).filter((i) => i.resultId === r.id);
-    const containRef = stuck.flatMap((i) => i.actions).find((a) => a.kind === "contain" || a.kind === "uncontain");
     return (
       <Panel eyebrow={`${v.index.get(r.applies[0])?.name}${r.kind === null ? "" : ` · ${r.kind}`} · delivery trail`} title={r.title} summary={r.readerSees} badge={r.kind === null ? undefined : <Pill tone={r.kind === "New" ? "good" : r.kind === "Updated" ? "info" : "neutral"}>{r.kind}</Pill>}
-        actions={[{ kind: "recheck", target: r.id }, ...(containRef ? [containRef] : [])]} targets={[r.id, ...stuck.map((i) => i.id), ...r.trail.flatMap((t) => t.docs?.map((x) => x.id) ?? [])]}>
+        actions={[]} targets={[r.id, ...stuck.map((i) => i.id), ...r.trail.flatMap((t) => t.docs?.map((x) => x.id) ?? [])]}>
         <Card title="From source to reader">
           <Facts rows={[["Applies to", r.applies.map((a) => v.index.get(a)?.name ?? a).join(", ")], ...(r.kind === null ? [] : [["Kind", r.kind] as const])]} />
           <ol className={s.trail}>
@@ -116,14 +117,14 @@ export function DetailPanel(props: { readonly detail: Detail }) {
     const same = (v.data.stuck.data ?? []).filter((x) => x.group && x.group === i.group && x.id !== i.id);
     return (
       <Panel eyebrow={`${v.index.get(i.applies[0])?.name} · stuck item`} title={i.title} summary={i.cause} badge={<Pill tone={LANE_TONE[i.lane]}>{LANE_WORDS[i.lane]}</Pill>}
-        actions={[...i.actions, ...(i.lane === "software" && i.fixId ? [{ kind: "eng-task" as const, target: i.fixId }] : [])]} targets={[i.id, i.resultId ?? "", i.fixId ?? "", i.decision?.id ?? "", ...i.actions.map((a) => a.target)]}>
+        actions={[...i.actions]} targets={[i.id, i.resultId ?? "", i.fixId ?? "", i.decision?.id ?? "", ...i.actions.map((a) => a.target)]}>
         <Card title="What we know">
           <Facts rows={[["Reader result", res ? res.title : "—"], ["Stuck for", i.age], ["What was tried", i.tried], ["Did it help", i.helped], ["Next", i.next], ["Who moves it", i.owner], ...(i.latest ? [["Latest", i.latest] as const] : []), ...(i.readersAffected ? [["Readers", "Affected right now"] as const] : [])]} />
           <div className={s.inline}>
             {res && <button type="button" className={s.btnLink} onClick={() => v.open({ type: "result", id: res.id })}>Delivery trail: {res.title} →</button>}
             {i.fixId && <button type="button" className={s.btnLink} onClick={() => v.open({ type: "fix", id: i.fixId! })}>The fix: {v.nameOf(i.fixId)} →</button>}
           </div>
-          <Technical lines={[`stuck ${i.id}`, ...(i.fixId ? [`fix ${i.fixId}`] : [])]} />
+          <Technical lines={[...(i.technical ?? []), `stuck ${i.id}`, ...(i.fixId ? [`fix ${i.fixId}`] : [])]} />
         </Card>
         <Card title="What was saved for this work"><EvidenceTrail id={i.id} /></Card>
         {!!same.length && <Card title="Same cause"><div className={s.stack}>{same.map((x) => <StuckRow key={x.id} item={x} />)}</div></Card>}
@@ -204,7 +205,7 @@ export function DetailPanel(props: { readonly detail: Detail }) {
     if (!f) return <Empty>This fix isn’t available.</Empty>;
     return (
       <Panel eyebrow={`Fix list · ${f.owner}`} title={f.title} summary={f.problem} badge={<Pill>{({ attention: "Needs attention", fixing: "Being fixed", update: "Waiting for update" })[f.tab]}</Pill>}
-        actions={[{ kind: "fixfirst", target: f.id }, { kind: "focus", target: f.id }]} targets={[f.id]}>
+        actions={[]} targets={[f.id]}>
         <Card title="Where it stands">
           <Facts rows={[["What it helps", f.helps], ["Place in line", f.placeInLine], ["Resources now", f.resourcesNow]]} />
           {f.origin === "engineering" && <TaskStages stage={f.taskStage} />}
@@ -239,13 +240,9 @@ export function DetailPanel(props: { readonly detail: Detail }) {
   }
 
   if (d.type === "work") {
-    const r = v.data.workRows.data?.rows.find((x) => x.id === d.id);
-    if (!r) return <Empty>This work row isn’t available.</Empty>;
-    return (
-      <Panel eyebrow={`${v.index.get(r.placeKey)?.name} · work row`} title={r.title} summary={`Stage: ${r.stage} · ${r.age}`} targets={[r.id]}>
-        <Card title="Details"><Facts rows={[["Where", v.index.get(r.placeKey)?.name ?? r.placeKey], ["Attempts, evidence and costs", "—"]]} /></Card>
-      </Panel>
-    );
+    const row = v.data.workRows?.data?.rows.find(r => r.id === d.id);
+    if (!row) return <Empty>This work row is not available.</Empty>;
+    return <Panel eyebrow="Work row" title={plainWords(row.title)} summary={row.age} targets={[row.id]}><Card title="Details"><Facts rows={[["Where",v.index.get(row.placeKey)?.name ?? "—"],["Stage",row.stage]]}/></Card></Panel>;
   }
 
   const q = d.query.toLowerCase();
@@ -255,7 +252,6 @@ export function DetailPanel(props: { readonly detail: Detail }) {
     ...(v.data.fixes.data?.open ?? []).map((f) => ({ type: "Fix", title: f.title, sub: f.owner, go: () => v.open({ type: "fix", id: f.id }) })),
     ...(v.data.checklist.data?.definitions ?? []).map((x) => ({ type: "Definition", title: `${x.id} ${x.requirement.split(" — ")[0]}`, sub: v.data.checklist.data?.groupNames[x.group] ?? x.group, go: () => v.go("checklist") })),
     ...v.places.map((p) => ({ type: "Place", title: p.name, sub: p.kind, go: () => v.setScope(p.key) })),
-    ...(v.data.workRows.data?.rows ?? []).filter((r) => relation(v.index, [r.placeKey], v.scopeKey)).map((r) => ({ type: `Work row · ${r.stage}`, title: r.title, sub: v.index.get(r.placeKey)?.name ?? "", go: () => v.open({ type: "work", id: r.id }) })),
   ].filter((h) => `${h.type} ${h.title} ${h.sub}`.toLowerCase().includes(q)).slice(0, 40);
   return (
     <>

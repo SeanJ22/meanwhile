@@ -1,0 +1,72 @@
+{
+  "capturedAt": "2026-10-12T23:24:00.000Z",
+  "samples": [
+    {
+      "file": "socrata-ny.json",
+      "url": "https://api.us.socrata.com/api/catalog/v1?domains=data.ny.gov&limit=2",
+      "sha256": "332861ecd28f08fa95f639b9be08ff7784fb5acb95fc01079b0f1a27764b21ca",
+      "complete": false,
+      "selection": "Unmodified first catalog page, limit=2; resultSetSize retained."
+    },
+    {
+      "file": "socrata-tx.json",
+      "url": "https://api.us.socrata.com/api/catalog/v1?domains=data.texas.gov&limit=2",
+      "sha256": "acea8f1a9bf54a31cede05ececec75f079cc4d6590d52fb68d53471e87c83f92",
+      "complete": false,
+      "selection": "Unmodified first catalog page, limit=2; resultSetSize retained."
+    },
+    {
+      "file": "socrata-wa.json",
+      "url": "https://api.us.socrata.com/api/catalog/v1?domains=data.wa.gov&limit=2",
+      "sha256": "c7ba0b463dc78be4bb29e88610c24a77b70c3351a7f2930b64419fc49b8a2fc2",
+      "complete": false,
+      "selection": "Unmodified first catalog page, limit=2; resultSetSize retained."
+    },
+    {
+      "file": "echo-exporter-sample.csv",
+      "url": "https://echo.epa.gov/files/echodownloads/echo_exporter.zip",
+      "archiveSha256": "e8b5bf953bc7b63a746a238f9d9ac4cc0dc701d6b74aeb05993b73b4ec35226e",
+      "archiveMember": "ECHO_EXPORTER.csv",
+      "archiveMemberBytes": 2148970348,
+      "publishedAt": "2026-10-11T02:25:45.000Z",
+      "sha256": "053f7beb246269b2391e04237e4be8c70036003ec84d086d067e1890943d3b16",
+      "complete": false,
+      "selection": "First three inspected facilities encountered in each of AZ, NY, TX; all columns preserved, CSV reserialized with LF line endings."
+    },
+    {
+      "file": "usa-state-ids.html",
+      "url": "https://www.usa.gov/state-governments",
+      "sha256": "8b41b2c227c694538f85054c10c8c64ef9f841b62a6b7f3ea13243b03a3546de",
+      "complete": false,
+      "selection": "Exact HTML excerpt containing published native state IDs or the State government website section."
+    },
+    {
+      "file": "usa-ny-government.html",
+      "url": "https://www.usa.gov/states/new-york",
+      "sha256": "c91174b5740479b827aa5d09b8c66a805f96c2c38007e640517ada6d6b64491e",
+      "complete": false,
+      "selection": "Captured State government website HTML section; trailing whitespace removed."
+    },
+    {
+      "file": "usa-tx-government.html",
+      "url": "https://www.usa.gov/states/texas",
+      "sha256": "6dbb34c18b8dc55df1bd27fd4d6feadc97cb138c11470c58ebf65d6279eac772",
+      "complete": false,
+      "selection": "Captured State government website HTML section; trailing whitespace removed."
+    },
+    {
+      "file": "socrata-scroll-first.json",
+      "url": "https://api.us.socrata.com/api/catalog/v1?limit=2&scroll_id=",
+      "sha256": "f8b4381216f42fd3b6401dd632b74009f420e8305516b07cce3e7fa74b6938b2",
+      "complete": false,
+      "selection": "Unmodified native deep-scroll response, limit=2; provider resultSetSize retained."
+    },
+    {
+      "file": "socrata-scroll-next.json",
+      "url": "https://api.us.socrata.com/api/catalog/v1?limit=2&scroll_id=222h-gz6m",
+      "sha256": "b6d3370ec6e8c1dbcd4517ddb0a9d699164dca8bb3b7534f95097f5e7cb4f4d4",
+      "complete": false,
+      "selection": "Unmodified native deep-scroll response, limit=2; provider resultSetSize retained."
+    }
+  ]
+}

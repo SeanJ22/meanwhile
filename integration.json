@@ -2027,5 +2027,17 @@
     "tested_sha": "378e9d3625e39832b5d4ea02ca0991eeea1102b8",
     "gates": "pass",
     "at": "2026-10-13T04:38:52Z"
+  },
+  {
+    "lane": "playbooks-fix",
+    "steps": [
+      "PB-01"
+    ],
+    "ready_sha": "1311f8ddb7a2678eea76aa5c1313dcafc6d6cc35",
+    "merge_sha": "6c204dcd865cc99f3e6bb2a4f0270f78b28a7f07",
+    "river_sha": "6c204dcd865cc99f3e6bb2a4f0270f78b28a7f07",
+    "tested_sha": "6c204dcd865cc99f3e6bb2a4f0270f78b28a7f07",
+    "gates": "pass",
+    "at": "2026-10-13T06:49:29Z"
   }
 ]

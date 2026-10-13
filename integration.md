@@ -200,3 +200,4 @@ One line per batch folded into river.
 - 2026-10-13T02:55:57Z · playbooks · PB-01 · ready 69b98f96054e · river 3734a8f9bb3b · pnpm gates pass on 3734a8f9bb3b
 - 2026-10-13T04:38:52Z · fec-national · FEC-01 · ready 8773b6f9fa68 · river 378e9d3625e3 · pnpm gates pass on 378e9d3625e3
 - 2026-10-13T04:38:52Z · map-representation · MR-01 · ready 3c97e8642513 · river 378e9d3625e3 · pnpm gates pass on 378e9d3625e3
+- 2026-10-13T06:49:29Z · playbooks-fix · PB-01 · ready 1311f8ddb7a2 · river 6c204dcd865c · pnpm gates pass on 6c204dcd865c

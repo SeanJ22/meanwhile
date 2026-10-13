@@ -5,7 +5,8 @@ import { expansionScopesOf } from "../expansion/scopes.ts";
 import { guardAdminRequest } from "../gateway/admin-guard.ts";
 import type { OwnerSnapshot } from "../owner-surface.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
-import type { AdminV6SectionEnvelope, V6MoneySources, V6Period, V6PlaceScope, V6Refusal } from "./v6-hunts-read.ts";
+import { RESEARCH_INTENT_LOG_KEY } from "../scheduler/research-policy.ts";
+import type { AdminV6SectionEnvelope, OwnerPauseRecord, OwnerPauseRecords, V6MoneySources, V6Period, V6PlaceScope, V6Refusal } from "./v6-hunts-read.ts";
 import { validateV6Query } from "./v6-hunts-read.ts";
 import { readAreaZips } from "./v6-national-geography.ts";
 
@@ -21,13 +22,32 @@ export interface V6ReadSources extends V6MoneySources {
   readonly adminConfig: Parameters<typeof expansionScopesOf>[0] & { readonly fleetSpendCeiling?: unknown } | null;
 }
 
+const PAUSE_ACTIONS = ["PAUSE", "RESUME", "PAUSE_RUNNER", "RESUME_RUNNER"] as const;
+
+/** The latest owner intent for each pause action: four one-row reads, never the whole log. Null when unreadable. */
+export async function readOwnerPauses(repos: Pick<ControlPlaneRepositories, "researchIntents">): Promise<OwnerPauseRecords | null> {
+  try {
+    const latest = await Promise.all(PAUSE_ACTIONS.map(async (action) => {
+      // The runner's HONORED record repeats the action; only the owner's INTENT says when and why.
+      const rows = await repos.researchIntents.readRecentWhere(RESEARCH_INTENT_LOG_KEY, ["action"], action, 4, { kind: true, requestedAt: true, note: true });
+      const intent = rows.find((row): row is { kind: "INTENT"; requestedAt: string; note?: unknown } =>
+        typeof row === "object" && row !== null && (row as { kind?: unknown }).kind === "INTENT" && typeof (row as { requestedAt?: unknown }).requestedAt === "string");
+      return intent ? { requestedAt: intent.requestedAt, note: typeof intent.note === "string" && intent.note.trim() ? intent.note.trim() : null } satisfies OwnerPauseRecord : null;
+    }));
+    return { PAUSE: latest[0], RESUME: latest[1], PAUSE_RUNNER: latest[2], RESUME_RUNNER: latest[3] };
+  } catch {
+    return null;
+  }
+}
+
 export async function readV6Sources(repos: ControlPlaneRepositories, readAt: string, withSafety: boolean, scope: V6PlaceScope | null = null): Promise<V6ReadSources> {
-  const [config, snapshot, safety, scopeZips] = await Promise.all([
+  const [config, snapshot, safety, scopeZips, pauses] = await Promise.all([
     readAdminConfig(repos),
     repos.ownerSnapshots.readNarrowed("current", { publishedAt: true, billingAttribution: true, providerBilling: true })
       .then(row => ({ ok: true as const, value: (row?.value ?? null) as V6MoneySnapshotFields | null }), () => ({ ok: false as const, value: null })),
     withSafety ? readFleetSafety(repos) : Promise.resolve(null),
     readAreaZips(scope),
+    readOwnerPauses(repos),
   ]);
   const parsed = config.kind === "STORE_UNREACHABLE" ? null : expansionScopesOf(config.kind === "HELD" ? config.value : null);
   const fleet = safety?.kind === "HELD" ? safety.value.fleetSafety ?? null : null;
@@ -46,6 +66,7 @@ export async function readV6Sources(repos: ControlPlaneRepositories, readAt: str
     fleetSafetyGap: !withSafety ? null : safety?.kind === "HELD" ? (fleet ? null : "The fleet safety state carries no rolling spend reading.")
       : safety?.detail ?? "The fleet safety state was not read.",
     readAt,
+    pauses,
   };
 }
 

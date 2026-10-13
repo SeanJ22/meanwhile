@@ -1,0 +1,195 @@
+Skip to the page
+meanwhile …
+Now
+Queue
+Workers
+Checklist
+Money
+Scoreboard
+Data business
+Settings
+Brief
+Changes
+Ask the console
+Start hunts or send leads
+United States
+Change place
+Country · 79 hunts inside
+Period
+Today
+Last 7 days
+Last 30 days
+This month (October 2026)
+Live · updated 10:00 AM ET
+
+UNITED STATES
+
+Workers
+
+Read Oct 13, 10:00 AM ET
+
+Production migrations
+Checked Oct 13, 8:10 AM ET
+
+expand: failed. ERROR: relation "door_reads" already exists (SQLSTATE 42P07) at migrate.mts:88 [private] contract: succeeded. 0035_doors_reason applied.
+
+Why it matters
+Expand runs before a deploy; contract runs after the matching code is serving.
+Who handles it
+Deployment and runner
+What happens next
+Engineering repairs the expand migration failure; that release step remains held.
+Do you need to act?
+No action needed.
+Technical details
+LIVE UPDATES
+Live
+WORKERS LAST CHECKED IN
+Oct 13, 9:56 AM ET
+less than 5 minutes ago
+LAST USEFUL PROGRESS
+Oct 13, 9:28 AM ET
+about 30 minutes ago. Published 14 meetings for Tucson Unified.
+ROUND OF WORK
+Finished 9:31 AM ET
+Last finished 9:31 AM ET
+Started Oct 13, 9:20 AM ET; finished Oct 13, 9:31 AM ET; exit 1.
+Last round error: Error: SOURCE_READ_FAILED: legistar.granicus.com answered 503 at readFamily (scripts/ingest.ts:702:13) at async runCycle (scripts/pilot-runner.mts:1188:5) at async main (scripts/pilot-runner.mts:1240:3)
+REFUSED BEFORE THE AI
+12 paid jobs
+Not sent to the AI because paid research is paused.
+WORK
+3 running · 49 waiting
+What the agents did
+—
+How reliable our sources are · whole country
+—
+Published versus reader-visible
+—
+Working now, by stage
+Research
+0 running · 41 waiting
+Paid research is paused.
+Plain code
+3 running · 8 waiting
+Waiting, and why
+
+—
+
+What changed
+
+—
+
+What happens next
+Paid research is paused.
+Pause all workers
+Doors
+60 open
+37 shut
+2 set aside
+DOOR	KIND	BODY	STATE	WHY	SINCE	LAST WORKED	LAST FAILED
+Meetings on city0.legistar.com	Legistar events	—	Shut	3 reads in a row could not reach it	Oct 1, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on city1.legistar.com	Legistar events	—	Shut	3 reads in a row could not reach it	Oct 2, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on city2.legistar.com	Legistar events	—	Shut	3 reads in a row could not reach it	Oct 3, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on city3.legistar.com	Legistar events	—	Shut	3 reads in a row could not reach it	Oct 4, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on city4.legistar.com	Legistar events	—	Shut	3 reads in a row could not reach it	Oct 5, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on city5.legistar.com	Legistar events	—	Shut	3 reads in a row could not reach it	Oct 6, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on city6.legistar.com	Legistar events	—	Shut	3 reads in a row could not reach it	Oct 7, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on city7.legistar.com	Legistar events	—	Shut	3 reads in a row could not reach it	Oct 8, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on city8.legistar.com	Legistar events	—	Shut	3 reads in a row could not reach it	Oct 9, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on city9.legistar.com	Legistar events	—	Shut	3 reads in a row could not reach it	Oct 10, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on city10.legistar.com	Legistar events	—	Shut	3 reads in a row could not reach it	Oct 11, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on city11.legistar.com	Legistar events	—	Shut	3 reads in a row could not reach it	Oct 12, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on city12.legistar.com	Legistar events	—	Shut	3 reads in a row could not reach it	Oct 1, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on city13.legistar.com	Legistar events	—	Shut	3 reads in a row could not reach it	Oct 2, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on city14.legistar.com	Legistar events	—	Shut	3 reads in a row could not reach it	Oct 3, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on city15.legistar.com	Legistar events	—	Shut	3 reads in a row could not reach it	Oct 4, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on city16.legistar.com	Legistar events	—	Shut	3 reads in a row could not reach it	Oct 5, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on city17.legistar.com	Legistar events	—	Shut	3 reads in a row could not reach it	Oct 6, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on city18.legistar.com	Legistar events	—	Shut	3 reads in a row could not reach it	Oct 7, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on city19.legistar.com	Legistar events	—	Shut	3 reads in a row could not reach it	Oct 8, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on city20.legistar.com	Legistar events	—	Shut	3 reads in a row could not reach it	Oct 9, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on city21.legistar.com	Legistar events	—	Shut	3 reads in a row could not reach it	Oct 10, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on city22.legistar.com	Legistar events	—	Shut	3 reads in a row could not reach it	Oct 11, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on www.town0.gov	Official page events	—	Shut	the address answers 404	Oct 12, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on www.town1.gov	Official page events	—	Shut	the address answers 404	Oct 1, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on www.town2.gov	Official page events	—	Shut	the address answers 404	Oct 2, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on www.town3.gov	Official page events	—	Shut	the address answers 404	Oct 3, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on www.town4.gov	Official page events	—	Shut	the address answers 404	Oct 4, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on www.town5.gov	Official page events	—	Shut	the address answers 404	Oct 5, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on www.town6.gov	Official page events	—	Shut	the address answers 404	Oct 6, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on www.town7.gov	Official page events	—	Shut	the address answers 404	Oct 7, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on www.town8.gov	Official page events	—	Shut	the address answers 404	Oct 8, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on county0.legistar.com	Legistar events	—	Shut	the page no longer reads the way this door says	Oct 9, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on county1.legistar.com	Legistar events	—	Shut	the page no longer reads the way this door says	Oct 10, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on county2.legistar.com	Legistar events	—	Shut	the page no longer reads the way this door says	Oct 11, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on county3.legistar.com	Legistar events	—	Shut	the page no longer reads the way this door says	Oct 12, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on go.boarddocs.com	Board docs	—	Shut	—	Oct 1, 6:00 AM ET	Sep 28, 6:00 AM ET	Oct 12, 6:00 AM ET
+Meetings on open0.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open1.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open2.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open3.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open4.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open5.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open6.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open7.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open8.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open9.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open10.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open11.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open12.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open13.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open14.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open15.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open16.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open17.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open18.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open19.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open20.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open21.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open22.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open23.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open24.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open25.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open26.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open27.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open28.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open29.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open30.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open31.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open32.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open33.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open34.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open35.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open36.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open37.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open38.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open39.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open40.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open41.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open42.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open43.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open44.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open45.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open46.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open47.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open48.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open49.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open50.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open51.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open52.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open53.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open54.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open55.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open56.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open57.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open58.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+Meetings on open59.gov	Official page events	—	Open	—	—	Oct 13, 5:00 AM ET	—
+
+Showing 97 of 99 doors
+
+Latest door changes
+
+Oct 12, 6:00 AM ET · Meetings on city3.legistar.com was shut: 3 reads in a row could not reach it.
+
+Read Oct 13, 10:00 AM ET

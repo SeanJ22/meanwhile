@@ -2,6 +2,7 @@ import type { Sql } from "../repository/pg-store.ts";
 import { boundedQuery } from "../repository/request-bounds.ts";
 import { MODELS, canonicalModelId, modelTierFor } from "../../models.ts";
 import type { DailyDatabaseTransferRead } from "../../db/transfer.ts";
+import { MODEL_SPEND_SQL, MODEL_LIVE_FACTS_SQL, modelSpendView, type ModelSpendRaw, type ModelSpendView } from "./model-spend.ts";
 
 /** A row naming no model falls back to its attempt's model, else "model not recorded". A day with no rows is absent; unpriced charges are counted apart. */
 export const ADMIN_V6_SPEND_CONTRACT = "admin-v6/spend@1" as const;
@@ -31,6 +32,7 @@ export interface NeonTransfer {
 }
 /** Structurally `SpendView` in app/(admin)/_mw/admin-v6/model.ts. */
 export interface AdminV6SpendView {
+  readonly modelSpend?: ModelSpendView | null;
   readonly windowDays: number;
   readonly byTier: readonly TierSpend[];
   readonly byDay: readonly DaySpend[];
@@ -212,11 +214,13 @@ export function workCosts(rows: readonly WorkRowRaw[]): readonly WorkCost[] {
 const strings = (value: unknown): string[] => Array.isArray(value) ? value.filter((x): x is string => typeof x === "string") : [];
 
 export async function readSpend(sql: Sql, transfer: DailyDatabaseTransferRead | null): Promise<AdminV6SpendView> {
-  const [raw, workRaw, rolling, outcomes] = await Promise.all([
+  const [raw, workRaw, rolling, outcomes, modelRaw, factsRaw] = await Promise.all([
     boundedQuery(sql, { operation: "cp_log_costs.spend_by_month_day_and_model", callClass: "PAGE" }, SPEND_SQL, [SPEND_DAYS, SPEND_MONTHS]) as Promise<readonly Record<string, unknown>[]>,
     boundedQuery(sql, { operation: "cp_log_costs.costliest_work", callClass: "PAGE" }, WORK_SQL, [WORK_DAYS, WORK_LIMIT]) as Promise<readonly Record<string, unknown>[]>,
     (boundedQuery(sql, { operation: "cp_log_costs.rolling_24h_model_spend", callClass: "PAGE" }, ROLLING_SQL, []) as Promise<readonly Record<string, unknown>[]>).catch(() => null),
     (boundedQuery(sql, { operation: "cp_log_scout_results.outcomes_24h", callClass: "PAGE" }, OUTCOMES_SQL, []) as Promise<readonly Record<string, unknown>[]>).catch(() => null),
+    (boundedQuery(sql, { operation: "cp_log_costs.model_spend_by_day_role", callClass: "PAGE" }, MODEL_SPEND_SQL, [SPEND_DAYS]) as Promise<readonly Record<string, unknown>[]>).catch(() => null),
+    (boundedQuery(sql, { operation: "cp_log_owner_digests.live_facts_by_day", callClass: "PAGE" }, MODEL_LIVE_FACTS_SQL, [SPEND_DAYS]) as Promise<readonly Record<string, unknown>[]>).catch(() => null),
   ]);
   const work = workCosts(workRaw.map((r): WorkRowRaw => ({ work: String(r.work), jurisdiction: typeof r.jur === "string" ? r.jur : null,
     usd: r.usd === null || r.usd === undefined ? null : Number(r.usd), unpriced: r.unpriced === true, tries: Number(r.tries) || 0,
@@ -224,7 +228,15 @@ export async function readSpend(sql: Sql, transfer: DailyDatabaseTransferRead | 
   const view = spendView(raw.map((r) => ({ month: String(r.month), day: typeof r.day === "string" ? r.day : null, role: String(r.role ?? ""), model: typeof r.model === "string" ? r.model : null,
     usd: r.usd === null || r.usd === undefined ? null : Number(r.usd), n: Number(r.n) || 0 })), neonTransferOf(transfer), work);
   const last = rolling?.[0];
+  const number = (value: unknown) => value == null ? null : Number(value);
+  const modelRows: ModelSpendRaw[] = (modelRaw ?? []).map(r => ({ day: String(r.day), role: String(r.role), model: typeof r.model === "string" ? r.model : null,
+    listPrice: number(r.list_price),
+    window: r.window as ModelSpendRaw["window"], jobs: Number(r.jobs), calls: number(r.calls), usd: number(r.usd), uncached: number(r.uncached),
+    reads: number(r.reads), writes: number(r.writes), writes1h: number(r.writes1h), output: number(r.output), eligible: number(r.eligible),
+    batched: number(r.batched), promptBand: Number(r.prompt_band) }));
   return { ...view, readAt: new Date().toISOString(),
+    modelSpend: modelRaw === null ? null : modelSpendView(modelRows, (factsRaw ?? []).map(r => ({ day: String(r.day), facts: Number(r.facts) })),
+      modelRaw.find(r => r.changed_at != null)?.changed_at as string | null ?? null, new Date().toISOString()),
     last24h: last === undefined ? null : { modelUsd: Math.round(Number(last.model_usd) * 10_000) / 10_000, unpricedRows: Number(last.unpriced) || 0 },
     scoutOutcomes: outcomes === null ? null : scoutOutcomeLines(outcomes.map((r) => ({ recordClass: typeof r.record_class === "string" ? r.record_class : null, outcome: typeof r.outcome === "string" ? r.outcome : null, n: Number(r.n) || 0 }))) };
 }

@@ -1,7 +1,7 @@
 /** The paid-work guards in one place, so the round and the standing lane build the same guards from the same objects: Send and area budgets, the Fleet ceiling and provider circuits, provider rate limits, and paid worker capacity. Nothing here changes a limit or reads a setting. */
 import { randomUUID } from "node:crypto";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
-import { attemptBatchJournal, batchEnabledFor, batchEnabledForJob, batchRequestHash, type BatchJob, type BatchLane,
+import { attemptBatchJournal, batchEligibleForJob, batchEnabledForJob, batchRequestHash, type BatchJob, type BatchLane, type BatchPriority,
   type backgroundBatchTransport } from "../model-batch.ts";
 import type { RouteTask } from "../route-task.ts";
 import { FleetPreSendRefusal, modelRequestWorstCaseUsd, modelResponseUsd, type FleetSafetyController } from "../fleet-safety.ts";
@@ -23,6 +23,7 @@ import type { ModelTransport } from "../scheduler/scout-executor.ts";
 import { MODELS } from "../../models.ts";
 
 export interface PaidWorkGuardDeps {
+  readonly batchEnv?: Readonly<Record<string, string | undefined>>;
   readonly repos: ControlPlaneRepositories;
   /** The clock, as an ISO string. */
   readonly now: () => string;
@@ -50,6 +51,15 @@ export interface PaidWorkGuardDeps {
 
 export function paidWorkGuards(deps: PaidWorkGuardDeps) {
   const { repos, fleetSafety, providerQueue, spendHolds, assignmentBudget, expansionBudget } = deps;
+  const priorityFor = async (subjectId: string, obligationId?: string): Promise<BatchPriority> => {
+    const related = await repos.obligations.listWhere(["subjectId"], subjectId);
+    const owner = obligationId ? await repos.obligations.read(obligationId) : null;
+    const obligations = [...related.map(row => row.value), ...(owner ? [owner.value] : [])];
+    return { now: deps.now(),
+      meetingStartsAt: obligations.flatMap(row => [...(row.meetingStartsAt ?? []),
+        ...(!/ballot|election|contest|measure/i.test(row.recordClass) && row.readerImpactAt ? [row.readerImpactAt] : [])]),
+      electionAt: obligations.flatMap(row => /ballot|election|contest|measure/i.test(row.recordClass) && row.readerImpactAt ? [row.readerImpactAt] : []) };
+  };
   /** The Send and area lines one obligation's paid work is held against, or why it cannot be checked. */
   const budgetLinesFor = (obligationId: string, subjectId: string): { readonly lines: BudgetLines } | { readonly code: string; readonly why: string } => {
     const sends = assignmentBudget.linesFor(obligationId);
@@ -70,9 +80,26 @@ export function paidWorkGuards(deps: PaidWorkGuardDeps) {
   let autonomousHoldSeq = 0;
   const guardedMessagesFor = (work: string, transport: ModelTransport = deps.messages): ModelTransport =>
     providerQueue.transport(fleetSafety.guardedModelTransport("anthropic", work, transport));
-  const autonomousTransportFor = (transport: ModelTransport) => (jurisdiction: AutonomousJurisdiction): ModelTransport =>
+  const guardedJobTransportFor = (work: string, job: BatchJob, priority: BatchPriority, taskId?: string): ModelTransport => async request => {
+    const context = request.batchContext;
+    const live = priority.subjectId ? await priorityFor(priority.subjectId, work) : null;
+    const priorities = [priority, context?.priority, live].filter((p): p is BatchPriority => p != null);
+    const effectivePriority = { now: deps.now(),
+      meetingStartsAt: priorities.flatMap(p => [...(p.meetingStartsAt ?? []), ...(p.readerImpactAt ? [p.readerImpactAt] : [])]),
+      electionAt: priorities.flatMap(p => p.electionAt ?? []) };
+    const eligible = batchEligibleForJob(context?.job ?? job, effectivePriority);
+    const batching = batchEnabledForJob("background-worker-research", context?.job ?? job, deps.batchEnv ?? process.env, effectivePriority);
+    const journal = taskId ? attemptBatchJournal(repos, taskId, deps.now) : undefined;
+    const batch = journal ? deps.batch.withJournal(journal) : deps.batch;
+    if (journal && await journal.read(batchRequestHash(request))) return { ...await batch(request), batchEligible: true };
+    const transport = batching ? fleetSafety.guardedModelTransport("anthropic", work, batch) : guardedMessagesFor(work);
+    return { ...await transport(request), batchEligible: eligible };
+  };
+  const autonomousTransportFor = (transport: ModelTransport) => (jurisdiction: AutonomousJurisdiction, taskId?: string): ModelTransport =>
     areaGuardedTransport({
-      transport: guardedMessagesFor(jurisdiction.subjectId, transport),
+      transport: async request => taskId || request.batchContext
+        ? guardedJobTransportFor(jurisdiction.subjectId, request.batchContext?.job ?? "BLANK", await priorityFor(jurisdiction.subjectId), taskId)(request)
+        : guardedMessagesFor(jurisdiction.subjectId, transport)(request),
       holds: spendHolds,
       jurisdiction,
       areasFor: (j) => {
@@ -117,21 +144,28 @@ export function paidWorkGuards(deps: PaidWorkGuardDeps) {
   const workerTransportFor = (jurisdiction: AutonomousJurisdiction, taskId: string): ModelTransport => async request => {
     const task = (await repos.routeTasks.mustRead(taskId)).value;
     const routing = workerBatchRouting(task);
-    const batching = routing.lane !== null && batchEnabledForJob(routing.lane, routing.job);
+    const occurrences = await repos.occurrences.listWhere(["workItemId"], task.workItemId);
+    const owner = occurrences.find(row => row.value.routeTaskId === task.id) ?? (occurrences.length === 1 ? occurrences[0] : null);
+    const priority = await priorityFor(jurisdiction.subjectId, owner?.value.obligationId);
+    const jobType = request.batchContext?.job ?? routing.job;
+    const extra = request.batchContext?.priority;
+    const effectivePriority = { ...priority,
+      meetingStartsAt: [...(priority.meetingStartsAt ?? []), ...(extra?.meetingStartsAt ?? [])],
+      electionAt: [...(priority.electionAt ?? []), ...(extra?.electionAt ?? [])],
+      readerImpactAt: extra?.readerImpactAt };
+    const eligible = routing.lane !== null && batchEligibleForJob(jobType, effectivePriority);
+    const batching = routing.lane !== null && batchEnabledForJob(routing.lane, jobType, deps.batchEnv ?? process.env, effectivePriority);
     const journal = attemptBatchJournal(repos, taskId, deps.now);
     // A request already sent to the batch service is collected, never sent twice, whatever its job now says.
-    const recoverable = routing.lane !== null && batchEnabledFor(routing.lane);
-    if (recoverable && await journal.read(batchRequestHash(request))) {
+    if (routing.lane !== null && await journal.read(batchRequestHash(request))) {
       // Recovery reads an already submitted request, so it neither reserves
       // nor spends a second request allowance. Settle its original hold.
       const response = await deps.batch.withJournal(journal)(request);
       const measured = modelResponseUsd(response);
       if (measured !== null) await spendHolds.settle(`worker-request:${taskId}:${batchRequestHash(request)}`, measured, deps.now());
-      return response;
+      return { ...response, batchEligible: true };
     }
     const requestJobId = `worker-request:${taskId}:${batching ? batchRequestHash(request) : randomUUID()}`;
-    const occurrences = await repos.occurrences.listWhere(["workItemId"], task.workItemId);
-    const owner = occurrences.find(row => row.value.routeTaskId === task.id) ?? (occurrences.length === 1 ? occurrences[0] : null);
     await deps.beforeObligation?.(owner?.value.obligationId ?? task.id);
     const found = budgetLinesFor(owner?.value.obligationId ?? task.id, jurisdiction.subjectId);
     if ("code" in found) throw new SendBudgetRefusal(found.code, found.why);
@@ -156,18 +190,18 @@ export function paidWorkGuards(deps: PaidWorkGuardDeps) {
       openJobs.delete(job);
       await spendHolds.settle(job.jobId, measured, deps.now());
     }
-    return response;
+    return { ...response, batchEligible: eligible };
   };
   /** A changed ceiling may close capacity for a new reason; say it again. */
   const capacityNoticeReset = (): void => { paidCapacityHoldSaid = false; };
-  return { budgetLinesFor, guardedMessagesFor, autonomousTransportFor, paidWorkerCapacity, workerTransportFor, capacityNoticeReset,
+  return { budgetLinesFor, guardedMessagesFor, guardedJobTransportFor, autonomousTransportFor, paidWorkerCapacity, workerTransportFor, capacityNoticeReset,
     openJobs: (): readonly JobSpend[] => [...openJobs] };
 }
 
-/** Which batch lane a lease worker's request belongs to. Only work no reader waits on (an audit sample after publishing, a diagnostic replay) takes the slow discount service; roles outside the two lanes never batch. */
+/** The task's purpose selects a lane; live deadlines are checked before every new send. */
 export function workerBatchRouting(task: Pick<RouteTask, "workerTask">): { readonly lane: BatchLane | null; readonly job: BatchJob | undefined } {
   const spec = task.workerTask;
   if (spec?.role === "ADVERSARIAL_AUDITOR") return { lane: "background-worker-audit", job: spec.purpose === "DIAGNOSTIC_REPLAY" ? "BACKFILL" : "AUDIT_SAMPLE" };
-  if (spec?.role === "PARSER") return { lane: "background-worker-parse", job: spec.purpose === "DIAGNOSTIC_REPLAY" ? "BACKFILL" : undefined };
-  return { lane: null, job: undefined };
+  if (spec?.role === "PARSER") return { lane: "background-worker-parse", job: spec.purpose === "DIAGNOSTIC_REPLAY" ? "BACKFILL" : "PAGE_READER" };
+  return { lane: "background-worker-research", job: spec?.purpose === "DIAGNOSTIC_REPLAY" ? "BACKFILL" : "BLANK" };
 }

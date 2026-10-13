@@ -5,6 +5,7 @@ export const DATA_DOOR_KINDS = [
   "CIVICPLUS",
   "BOARDBOOK",
   "BOARDDOCS",
+  "NOVUSAGENDA",
   "CIVICCLERK",
   "IQM2",
   "REVIZE",
@@ -46,6 +47,11 @@ export const DOOR_KIND_SPECS: Readonly<Record<DataDoorKind, DoorKindSpec>> = {
     sourceName: "boarddocs", agendaSourceType: "BOARDDOCS", entry: "lib/sources/boarddocs/index.ts",
     route: { key: "portalUrl", as: "url" },
     allowed: ["committeeId"], required: ["committeeId"],
+  },
+  NOVUSAGENDA: {
+    sourceName: "novusagenda", agendaSourceType: "NOVUSAGENDA", entry: "lib/sources/novusagenda/index.ts",
+    route: { key: "portalUrl", as: "url" },
+    allowed: ["bodyMatch"], required: ["bodyMatch"],
   },
   CIVICCLERK: {
     sourceName: "civicclerk", agendaSourceType: "CIVICCLERK", entry: "lib/sources/civicclerk/index.ts",

@@ -1,27 +1,10 @@
-/**
- * Find a government's meeting route from its own site, without a model. The
- * pure half of the unpaid discovery executor: given a page the government
- * published, it names the meeting routes that page proves; given a route's
- * response, it says whether the route actually yields meetings.
- *
- * A candidate comes only from the government's own page (LINKED: an href to a
- * vendor host or feed; SERVED_BY: vendor markup on the government's own
- * domain; EMBEDDED: a vendor tenant named in the page's own script), a saved
- * method (RECIPE), a search result (SEARCH) or a route hint (HINT). No tenant
- * slug is derived from a name: some vendor paths answer 200 for any tenant.
- *
- * Verified by content, never by status: an iCal feed must hold a VEVENT, a
- * Legistar events call a JSON array of events, an AgendaCenter page an agenda
- * document link. A feed URL that answers with an HTML shell is NOT_CONFIRMED.
- * A vendor recognised but not yet readable is a LEAD, never a route. Pure.
- */
-
 import { calendarFeedUrl } from "../sources/legistar-insite/calendar.ts";
 import { verifyOfficialPageEvents } from "../sources/official-page-events/index.ts";
 import type { OfficialLinkingPage } from "../civic-data/source-authority.ts";
 import { detectTenancy } from "./platform-tenancy.ts";
 import { MEETING_HELD_HORIZON_DAYS, MEETING_HELD_LOOKBACK_DAYS } from "../meetings/constants.ts";
 import { parseDiligentMeetings } from "../sources/diligent/index.ts";
+import { novusPortalUrl, parseNovusMeetings } from "../sources/novusagenda/index.ts";
 import { boardDocsBase, parseBoardDocsMeetings } from "../sources/boarddocs/index.ts";
 import { parseOrganizationPage } from "../sources/boardbook/index.ts";
 import { meetingSourceCadenceHours } from "../control-plane/scheduler/obligation.ts";
@@ -49,6 +32,7 @@ export const VERIFIABLE_VENDORS = [
   "iqm2",
   "boardbook",
   "boarddocs",
+  "novusagenda",
   "diligent",
   /* A body's own page that dates its public events, verified for that body (`verifyOfficialPage`). */
   "official-page-events",
@@ -57,7 +41,6 @@ export type VerifiableVendor = (typeof VERIFIABLE_VENDORS)[number];
 
 /** Vendors recognised by host or markup that no content check covers yet: always a LEAD. */
 export const LEAD_ONLY_VENDORS: readonly { readonly vendor: string; readonly host: RegExp }[] = [
-  { vendor: "novusagenda", host: /(^|\.)novusagenda\.com$/i },
   { vendor: "escribe", host: /(^|\.)escribemeetings\.com$/i },
   { vendor: "primegov", host: /(^|\.)primegov\.com$/i },
   { vendor: "granicus", host: /(^|\.)granicus\.com$/i },
@@ -150,6 +133,10 @@ export function meetingEndpointCandidates(html: string, pageUrl: string, now?: s
     add({ vendor: "diligent", url: `${origin}/Services/MeetingsService.svc/meetings?from=${day(-MEETING_HELD_LOOKBACK_DAYS)}&to=${day(MEETING_HELD_HORIZON_DAYS)}`, basis: "SERVED_BY", evidence: "Diligent public portal links MeetingSchedule.aspx; existing MeetingsService adapter", verifiable: true });
   }
 
+  if (/(^|\.)novusagenda\.com$/i.test(page.hostname) && /(?:rptMeetings|radGridMeetings)/i.test(html)) {
+    add({ vendor: "novusagenda", url: novusPortalUrl(pageUrl), basis: "SERVED_BY", evidence: "NovusAgenda public meeting grid", verifiable: true });
+  }
+
   for (const href of pageLinks(html, pageUrl)) {
     const url = new URL(href);
     const host = url.hostname.toLowerCase();
@@ -177,6 +164,10 @@ export function meetingEndpointCandidates(html: string, pageUrl: string, now?: s
       try {
         add({ vendor: "boarddocs", url: `${boardDocsBase(href)}/Public`, basis: "LINKED", evidence: href, verifiable: true });
       } catch { /* An unrelated vendor page is not a tenant. */ }
+      continue;
+    }
+    if (/(^|\.)novusagenda\.com$/i.test(host) && /\/agendapublic(?:\/|$)/i.test(url.pathname)) {
+      add({ vendor: "novusagenda", url: novusPortalUrl(href), basis: "LINKED", evidence: href, verifiable: true });
       continue;
     }
     const clerk = /^([a-z0-9-]+)\.portal\.civicclerk\.com$/.exec(host);
@@ -505,6 +496,14 @@ export function verifyEndpointBody(
         return { verdict: rows.length ? "YIELDED" : "EMPTY", count: rows.length, detail: `${rows.length} public BoardDocs meeting record(s)` };
       } catch {
         return { verdict: "NOT_CONFIRMED", count: null, detail: "not a BoardDocs public committee meeting list" };
+      }
+    }
+    case "novusagenda": {
+      try {
+        const rows = parseNovusMeetings(body, response.finalUrl);
+        return { verdict: rows.length ? "YIELDED" : "EMPTY", count: rows.length, detail: `${rows.length} public NovusAgenda meeting record(s)` };
+      } catch {
+        return { verdict: "NOT_CONFIRMED", count: null, detail: "not a NovusAgenda public meeting list" };
       }
     }
     case "diligent": {

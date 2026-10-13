@@ -99,6 +99,7 @@ export type AgendaSourceType =
   | "BOARDBOOK"
   /** BoardDocs public committee meeting list and per-meeting agenda page. */
   | "BOARDDOCS"
+  | "NOVUSAGENDA"
   /**
    * Not a vendor; a shape. The body publishes its whole year of meeting dates as a list on its own page,
    * with one sentence naming the time and the room.

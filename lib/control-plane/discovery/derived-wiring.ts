@@ -1,27 +1,3 @@
-/**
- * The derived wiring row writer: each reviewed calendar, decided against what
- * discovery last saw of it. Every decision starts from a reviewed crosswalk
- * row (`lib/civic-data/meeting-body-crosswalk.ts`), never from a find. A row
- * the automatic reviewer accepted (`auto-crosswalk.ts`) is decided by the same
- * checks, and where it and a reviewed row select the same sitting, only it
- * meets the trigger. For each active crosswalk row, against the latest walk:
- *
- * - PROMOTE only when every check holds: the body is on a registered division;
- *   the walk confirmed the reviewed route on an attested host; no hand-wired
- *   route serves the body; the calendar's and naming page's bytes are vaulted;
- *   and the reader adapter selects at least one of the body's sittings from the
- *   vaulted bytes, none naming another reviewed body. A suspended row is
- *   restored only by a review later than its suspension.
- * - SUSPEND a promoted row on a review trigger: ROUTE_GONE (404/410),
- *   WRONG_ATTRIBUTION, CONFLICTING_EVIDENCE, CALENDAR_CHANGED, or
- *   CROSSWALK_WITHDRAWN. A row never promoted meets the same evidence as a
- *   named hold (REVIEW_TRIGGERED).
- * - HOLD, by name, anything else, including every outage. A held row that was
- *   promoted is carried exactly as it was.
- *
- * Pure: every lookup is handed to it.
- */
-
 import type {
   AdapterBinding,
   AdapterVerification,
@@ -55,6 +31,7 @@ const CONFIRMING_VENDORS: Readonly<Record<DerivedWiringKind, readonly string[]>>
   CIVICPLUS: ["civicplus-agendacenter"],
   BOARDBOOK: ["boardbook"],
   BOARDDOCS: ["boarddocs"],
+  NOVUSAGENDA: ["novusagenda"],
   CIVICCLERK: ["civicclerk-api"],
   IQM2: ["iqm2"],
   REVIZE: ["revize"],
@@ -95,6 +72,7 @@ export function wiringShapeFor(find: Pick<DiscoveryFind, "vendor" | "url">): Wir
   if (find.vendor === "civicplus-agendacenter") {
     return { kind: "CIVICPLUS", endpoint: { agendaCenterUrl: url.toString() } };
   }
+  if (find.vendor === "novusagenda" && /(^|\.)novusagenda\.com$/i.test(url.hostname)) return { kind: "NOVUSAGENDA", endpoint: { portalUrl: url.toString() } };
   if (find.vendor === "boarddocs" && /(^|\.)boarddocs\.com$/i.test(url.hostname)) {
     const path = /^(\/[^/]+\/[^/]+\/Board\.nsf)(?:\/|$)/i.exec(url.pathname)?.[1];
     if (path) return { kind: "BOARDDOCS", endpoint: { portalUrl: `${url.origin}${path}/Public` } };

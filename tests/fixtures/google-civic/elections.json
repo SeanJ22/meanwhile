@@ -1,0 +1,17 @@
+{
+  "elections": [
+    {
+      "id": "2000",
+      "name": "VIP Test Election",
+      "electionDay": "2031-12-06",
+      "ocdDivisionId": "ocd-division/country:us"
+    },
+    {
+      "id": "12000",
+      "name": "2026 General Midterm Election",
+      "electionDay": "2026-11-03",
+      "ocdDivisionId": "ocd-division/country:us"
+    }
+  ],
+  "kind": "civicinfo#electionsQueryResponse"
+}

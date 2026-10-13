@@ -24,7 +24,7 @@ function validateVotingSites(value: VotingSitesFile, version: string): void {
       !jurisdiction.ocdId ||
       !jurisdiction.sourceUrl ||
       !Array.isArray(jurisdiction.sites) ||
-      (jurisdiction.sites.length === 0 && jurisdiction.refusal === null)
+      (jurisdiction.sites.length === 0 && jurisdiction.refusal === null && !jurisdiction.publication && !jurisdiction.office && !jurisdiction.rules?.length && !jurisdiction.addressLookups?.length)
     )
   ) {
     throw new Error(`Voting-sites projection ${version} does not satisfy VotingSitesFile.`);

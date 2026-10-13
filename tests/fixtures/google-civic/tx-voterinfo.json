@@ -1,0 +1,29 @@
+{
+  "election": {
+    "id": "12000",
+    "name": "2026 General Midterm Election",
+    "electionDay": "2026-11-03",
+    "ocdDivisionId": "ocd-division/country:us"
+  },
+  "normalizedInput": {
+    "line1": "1100 Congress Avenue",
+    "addressLine": [
+      "1100 Congress Avenue"
+    ],
+    "city": "Austin",
+    "state": "TX",
+    "zip": "78701"
+  },
+  "state": [
+    {
+      "name": "Texas",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    }
+  ],
+  "kind": "civicinfo#voterInfoResponse"
+}

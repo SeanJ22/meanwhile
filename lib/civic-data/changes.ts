@@ -93,6 +93,18 @@ function agendaDocumentMembers(values: readonly unknown[]): CivicRecordMember[] 
 
 /** Facts decide a change; observation stamps such as `collectedAt` stay on the record but never decide it. */
 export function civicRecordFacts(recordClass: RoutineRecordClass, member: CivicRecordMember): unknown {
+  if (recordClass === "GOOGLE_CIVIC_VOTERINFO") {
+    const row = object(member.record);
+    if (row === null) return member.record;
+    const { checkedAt: _checkedAt, rows, ...facts } = row;
+    return { ...facts, rows: array(rows).map(value => {
+      const fact = object(value) ?? {};
+      return { ...fact, sources: array(fact.sources).map(source => {
+        const { collectedAt: _collectedAt, ...attribution } = object(source) ?? {};
+        return attribution;
+      }) };
+    }) };
+  }
   if (recordClass === "MEETING" && member.key.startsWith("meeting:")) {
     return withoutProvenanceStamps(member.record, ["collectedAt"]);
   }
@@ -137,7 +149,10 @@ function withoutProvenanceStamps(record: unknown, stamps: readonly string[]): un
   const provenance = object(row?.provenance);
   if (row === null || provenance === null) return record;
   const factualProvenance = Object.fromEntries(Object.entries(provenance).filter(([key]) => !stamps.includes(key)));
-  return { ...row, provenance: factualProvenance };
+  const fieldSources = object(row.fieldSources);
+  return { ...row, provenance: factualProvenance,
+    ...(fieldSources ? {fieldSources:Object.fromEntries(Object.entries(fieldSources).map(([field,source])=>[field,
+      object(source) ? Object.fromEntries(Object.entries(object(source)!).filter(([key])=>!stamps.includes(key))) : source]))} : {}) };
 }
 
 export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknown): readonly CivicRecordMember[] {
@@ -272,6 +287,12 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
         }),
         ...Object.entries(rosterPhotos).map(([key, record]) => ({ key: `roster-photo:${key}`, record })),
       ].sort((left, right) => left.key.localeCompare(right.key));
+    }
+    case "GOOGLE_CIVIC_VOTERINFO": {
+      // The source has no native contest/site ids. One scoped query snapshot preserves every
+      // observation and can advance without treating omitted rows as an absence or a deletion.
+      // Previous snapshots remain in the existing candidate history.
+      return [{ key: "google-civic:query-snapshot", record: root }];
     }
     case "VOTING_SITE":
       return array(root.jurisdictions).flatMap((record, index) => {

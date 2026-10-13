@@ -1,0 +1,167 @@
+Skip to the page
+meanwhile …
+Now
+Queue
+Workers
+Checklist
+Money
+Scoreboard
+Data business
+Settings
+Brief
+Changes
+Ask the console
+Start hunts or send leads
+United States
+Change place
+Country · 79 hunts inside
+Period
+Today
+Last 7 days
+Last 30 days
+This month (October 2026)
+Live · updated 10:00 AM ET
+
+— Try again
+
+UNITED STATES · THIS MONTH (OCTOBER 2026)
+
+Now
+The last full hour
+Open the scoreboard →
+
+Oct 13, 9:00 AM ET · the hour before: Oct 13, 8:00 AM ET
+
+Facts live
+212 (before: 188)
+New or changed reader records that went live. Higher is better.
+Cost per fact
+$0.0041 (before: $0.0052)
+Money spent divided by facts live. Lower is better.
+Data read from the database
+0.42 GB (before: 0.51 GB)
+Target: under 0.7 GB an hour.
+Research rounds
+3 finished · 0 killed (before: 2 finished · 1 killed)
+Finished, against killed by the watchdog.
+Paid jobs that ended with nothing
+0 of 0 (before: 1 of 9)
+Must be none.
+Needs me
+Open the queue →
+1
+
+Not good until they are cleared: one thing is waiting on you.
+
+Mission progress
+Open the checklist →
+—
+
+What United States is owed has not been counted yet.
+
+The last full hour
+Open the scoreboard →
+
+Oct 13, 9:00 AM ET · the hour before: Oct 13, 8:00 AM ET
+
+Facts live
+212 (before: 188)
+New or changed reader records that went live. Higher is better.
+Cost per fact
+$0.0041 (before: $0.0052)
+Money spent divided by facts live. Lower is better.
+Data read from the database
+0.42 GB (before: 0.51 GB)
+Target: under 0.7 GB an hour.
+Research rounds
+3 finished · 0 killed (before: 2 finished · 1 killed)
+Finished, against killed by the watchdog.
+Paid jobs that ended with nothing
+0 of 0 (before: 1 of 9)
+Must be none.
+Orders in motion
+Open the queue →
+Hunt: ZIP 85716 hunt
+Saved, not reported running
+$15.72 of $25.00 budget used
+Hunt: ZIP 85748 hunt
+Saved, not reported running
+$16.67 of $25.00 budget used
+Hunt: ZIP 85007 hunt
+Saved, not reported running
+$3.88 of $25.00 budget used
+Hunt: ZIP 85021 hunt
+Saved, not reported running
+$4.44 of $25.00 budget used
+Hunt: ZIP 08629 hunt
+Saved, not reported running
+$20.86 of $25.00 budget used
+Direct work
+The country
+56 states and territories · 79 hunts running · 3 tracked
+AK
+ME
+VT
+NH
+WA
+ID
+MT
+ND
+MN
+IL
+WI
+MI
+NY
+RI
+MA
+OR
+NV
+WY
+SD
+IA
+IN
+OH
+PA
+NJ
+CT
+CA
+UT
+CO
+NE
+MO
+KY
+WV
+VA
+MD
+DE
+AZ
+NM
+KS
+AR
+TN
+NC
+SC
+DC
+OK
+LA
+MS
+AL
+GA
+HI
+TX
+FL
+AS
+GU
+MP
+PR
+VI
+Has a hunt
+Tracked, no hunt
+No hunt
+Has stuck items
+States and territories
+Place	Hunts	ZIPs worked / total	Completeness	Stuck ↓
+New Jersey	25	22 / 139	46.4%	5
+New Hampshire	14	11 / 137	46.2%	3
+Arizona	40	37 / 652	52.7%	2
+Show all 56

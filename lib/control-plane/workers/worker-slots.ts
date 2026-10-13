@@ -26,6 +26,8 @@ const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "legistar-outcomes-ingest.mts": 355,
   "acs-population-promote.mts": 465,
   "fetch-congress-legislators.mts": 384,
+  "national-people-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
+  "people-portraits-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "campaign-finance-az-pima-transactions.mts": 368,
   "build-nj-morris-ballot.mts": 345,
 };

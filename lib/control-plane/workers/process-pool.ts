@@ -235,10 +235,18 @@ export async function runLeaseWorkerProcesses(input: {
       terminating = endOwnedProcessTree(child);
       void terminating.catch(reject);
     };
-    const killTimer = setTimeout(() => terminate(new Error(`WORKER_CHILD_TIMEOUT:${child.pid}: work remains owed`)),
-      Math.max(1, Math.min(timeoutMs, (input.deadlineMs ?? Infinity) - Date.now())));
-    /* Standing: this worker's own clock. Any message either way renews it; quiet past the limit ends this worker alone. */
     const startedAt = Date.now();
+    let batchWaiting = 0;
+    let batchWaitStarted = 0;
+    let batchWaitedMs = 0;
+    let killTimer: ReturnType<typeof setTimeout>;
+    const armKill = (ms: number): void => {
+      clearTimeout(killTimer);
+      killTimer = setTimeout(() => terminate(new Error(`WORKER_CHILD_TIMEOUT:${child.pid}: work remains owed`)), Math.max(1, ms));
+    };
+    const remainingWorkMs = () => Math.min(timeoutMs - (Date.now() - startedAt - batchWaitedMs), (input.deadlineMs ?? Infinity) - Date.now() + batchWaitedMs);
+    armKill(remainingWorkMs());
+    /* Standing: this worker's own clock. Any message either way renews it; quiet past the limit ends this worker alone. */
     let lastMovedAt = startedAt;
     let current: string | null = null;
     let tasksDone = 0;
@@ -247,6 +255,7 @@ export async function runLeaseWorkerProcesses(input: {
     let quietTimer: ReturnType<typeof setTimeout> | undefined;
     const stuck = (): void => {
       if (standing === null || terminating) return;
+      if (batchWaiting > 0) return;
       const pid = child.pid ?? 0;
       const question = [...asked.values()].sort((a, b) => a.at - b.at)[0];
       const waitingOn = question !== undefined
@@ -368,7 +377,25 @@ export async function runLeaseWorkerProcesses(input: {
           if (!input.national) throw new Error("NATIONAL_PUBLICATION_BROKER_UNAVAILABLE");
           await input.national.onResult(message.body as NationalPlaceReport);
           body = null;
-        } else if (message.kind === "model") body = await input.transportFor(message.jurisdiction, message.taskId)(message.body as ModelRequest);
+        } else if (message.kind === "model") {
+          const request = message.body as ModelRequest;
+          let waiting = false;
+          const onBatchWait = (active: boolean): void => {
+            if (active === waiting) return;
+            waiting = active;
+            if (active) {
+              if (batchWaiting++ === 0) { batchWaitStarted = Date.now(); armKill(24 * 3_600_000 + timeoutMs); }
+            } else if (--batchWaiting === 0) {
+              batchWaitedMs += Math.max(0, Date.now() - batchWaitStarted);
+              armKill(remainingWorkMs());
+            }
+          };
+          try {
+            body = await input.transportFor(message.jurisdiction, message.taskId)({ ...request, onBatchWait });
+          } finally {
+            onBatchWait(false);
+          }
+        }
         else if (message.kind === "search") {
           const search = input.searchFor?.(message.jurisdiction.subjectId);
           if (!search) throw new Error("PAID_SEARCH_DISABLED");

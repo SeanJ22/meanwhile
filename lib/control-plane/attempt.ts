@@ -81,6 +81,10 @@ export interface WorkerRef {
  * means UNMEASURED (`cacheMeteringOf`), never zero.
  */
 export interface AttemptCost {
+  readonly listPriceUsd?: number | null;
+  readonly modelRequestCount?: number | null;
+  readonly batchEligibleRequestCount?: number | null;
+  readonly batchRequestCount?: number | null;
   readonly inputTokens: number | null;
   readonly outputTokens: number | null;
   readonly usd: number | null;

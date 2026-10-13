@@ -250,7 +250,6 @@ function StageJobs(props: { readonly stage: WorkerStage; readonly list: readonly
             <dt>AI</dt><dd>{j.model}</dd>
             {([["Cost", j.cost], ["Latest", j.latest], ["Next", j.next]] as const).map(([label, value]) => (props.sample || value !== "—") && <Fragment key={label}><dt>{label}</dt><dd>{value}</dd></Fragment>)}
           </dl>
-          {props.sample && <Actions actions={[{ kind: "job-stop", target: j.id }]} />}
         </div>
       ))}
       {pager}
@@ -298,7 +297,6 @@ export function WorkersScreen() {
           </dl>
           {w.update.fixId && <div className={s.inline}>
             <button type="button" className={cx(s.btn, s.btnPrimary)} onClick={() => v.open({ type: "fix", id: w.update!.fixId! })}>See the update and what’s blocking it</button>
-            <Actions actions={[{ kind: "focus", target: w.update.fixId }]} />
           </div>}
           <Technical lines={w.update.technical} />
         </Card>
@@ -372,7 +370,7 @@ export function WorkersScreen() {
         </Card>
         <Card title="What happens next">
           {w?.next ? <ul className={s.stack} style={{ margin: 0, paddingLeft: 18 }}>{w.next.map((n) => <li key={n} className={s.small}>{n}</li>)}</ul> : <p className={cx(s.p, s.small)}>{st?.nextRoundDueAt ? `Next round ${round.overdue ? "was due" : "due"} ${when(st.nextRoundDueAt, false)}` : "—"}</p>}
-          <Actions actions={[{ kind: "scope-first", target: v.scopeKey }, { kind: "global-runner-pause", target: "runner" }]} />
+          <Actions actions={[{ kind: "global-runner-pause", target: "runner" }]} />
         </Card>
       </div>
 

@@ -37,7 +37,6 @@ export function ReceiptCard(props: { readonly receipt: UiReceipt; readonly compa
   }
   if ((r.status === "failed" || r.status === "refused") && r.kind !== "decide") follow.push(<ActionButton key="again" action={{ kind: r.kind, target: r.target }} label="Try again" />);
   if (r.kind === "decide" && r.status === "refused") follow.push(<ActionButton key="other" action={{ kind: "decide", target: r.target }} label="Choose another option" />);
-  if (r.kind === "contain" && r.status === "done") follow.push(<ActionButton key="undo" action={{ kind: "uncontain", target: r.target }} label="Undo" />);
   if (r.notPickedUp) {
     const back = TAKE_BACK[r.kind];
     if (back) follow.push(<ActionButton key="back" action={{ kind: back, target: r.target }} label="Take it back" />);
@@ -55,7 +54,7 @@ export function ReceiptCard(props: { readonly receipt: UiReceipt; readonly compa
       <p className={cx(s.p, s.small)} role={r.status === "unknown" || r.status === "failed" || r.notPickedUp ? "alert" : undefined}>{oneSentence(r.says)}</p>
       {(oneSentence(r.says) !== r.says.trim() || r.words) && (
         <details className={s.small}>
-          <summary style={{ cursor: "pointer" }}>Show details</summary>
+          <summary style={{ cursor: "pointer" }}>Technical details</summary>
           <p className={cx(s.p, s.small)}>{r.says}{r.words ? ` Your words: “${r.words}”` : ""}</p>
         </details>
       )}

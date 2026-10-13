@@ -80,6 +80,10 @@ registerSetting({
  * and log into the same history so the Settings view shows their changes and undo.
  */
 export const SPEND_CEILING_LOG_KEY = "fleet.spendCeilingUsd";
+export const ALERTS_ON_SETTING = "alerts.on";
+export const BRIEF_TIME_SETTING = "brief.time";
+registerSetting({key:ALERTS_ON_SETTING,label:"Show alerts",defaultValue:false,readerFacing:false,control:"boolean",validate:(v):v is boolean=>typeof v==="boolean"});
+registerSetting({key:BRIEF_TIME_SETTING,label:"Daily brief time (Eastern, HH:mm; blank for off)",defaultValue:"",readerFacing:false,control:"text",validate:(v):v is string=>typeof v==="string"&&(v===""||/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(v))});
 
 
 export function settingDefinition(key: string): SettingDefinition | null { return definitions.get(key) ?? null; }

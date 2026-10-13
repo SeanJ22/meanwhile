@@ -2,7 +2,7 @@ import "../../ask/model.ts";
 import { playbookUpdateAction } from "./playbook-action.ts";
 import { appendDecisionIntent, RUNNER_ID, SNAPSHOT_ID } from "../admin-data.ts";
 import { fixConsequence, fixSubjectId, parseFixField, WHERE_SEPARATOR } from "../fix-queue.ts";
-import { addFixItem, completeFixItem, fixItems } from "../fix-list.ts";
+import { addFixItem, completeFixItem, fixItems, fixDispatchNote, recordFixDispatch } from "../fix-list.ts";
 import { addUpdate } from "../updates.ts";
 import { OWED_ACTIONS } from "./owed-actions.ts";
 import { parseWhen, scheduledOrders, withScheduled, withoutScheduled, type ScheduledOrder } from "./scheduled-orders.ts";
@@ -25,7 +25,6 @@ import {
   defaultAdminConfig,
   fleetSpendCeilingOverrideUsd,
   isAdminConfig,
-  withApiFallback,
   withBillingFacts,
   withDiscoverySearch,
   withExpansionScopes,
@@ -35,7 +34,6 @@ import {
   withDataSwitch,
   dataSwitchOf,
   PLACE_TARGET_KEY,
-  API_FALLBACK_MISSING_SEAM,
 } from "./admin-config.ts";
 import { RECIPES } from "../data-business/recipes.ts";
 import { defaultOn } from "../data-business/switches.ts";
@@ -87,6 +85,7 @@ export interface GatewayDeps {
   readonly codeSha: string | null;
   /** Absent when the host has no Blobs destination. Never part of an action's result. */
   readonly wake?: WakeHintWriter | null;
+  readonly readPlaceScore?: import("./hunt-score.ts").PlaceScoreReader;
 }
 
 export interface ActionEffect {
@@ -253,8 +252,8 @@ const REGISTRY: readonly RegisteredAction[] = [
     definition: {
       type: "queue.add",
       label: "Add this to the queue",
-      does: "Puts this gap on the fix queue as a decision you have recorded.",
-      doesNot: "Does not fix it, open a tracker row, or start any work by itself.",
+      does: "Adds a repair for the team and sends agents to a missing fact in a named place.",
+      doesNot: "Keeps existing spending limits in force.",
       authority: "REVERSIBLE_NONPRODUCTION",
       subjectKind: "a gap you saw on a page",
       requiresStateVersion: false,
@@ -265,35 +264,53 @@ const REGISTRY: readonly RegisteredAction[] = [
       if (combined !== "") {
         const parsed = parseFixField(combined);
         if (parsed === null) return bad("the gap needs some words describing what the page said");
-        return { ok: true, value: { subjectId: parsed.subjectId, consequenceShown: parsed.consequenceShown } };
+        return { ok: true, value: { subjectId: parsed.subjectId, consequenceShown: parsed.consequenceShown, kind: input.kind, place: input.place } };
       }
       const says = collapse(input.says);
       if (says === "") return bad("the gap needs some words describing what the page said");
       const where = collapse(input.where) || "the control centre";
       return {
         ok: true,
-        value: { subjectId: fixSubjectId(where, says), consequenceShown: fixConsequence(where, says) },
+        value: { subjectId: fixSubjectId(where, says), consequenceShown: fixConsequence(where, says), kind: input.kind, place: input.place },
       };
     },
     async execute(deps, context, input) {
       const subjectId = String(input.subjectId);
       const consequence = String(input.consequenceShown);
       const at = consequence.indexOf(WHERE_SEPARATOR);
+      let agentsSent = false;
       try {
         await addFixItem(deps.repos, {
           where: at < 0 ? "the control centre" : consequence.slice(0, at),
           says: at < 0 ? consequence : consequence.slice(at + WHERE_SEPARATOR.length),
           by: "owner", at: context.at,
         });
+        const held = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
+        const item = held && isAdminConfig(held.value) ? fixItems(held.value).find(i => i.id === subjectId) : undefined;
+        const where = at < 0 ? "the control centre" : consequence.slice(0, at);
+        const says = at < 0 ? consequence : consequence.slice(at + WHERE_SEPARATOR.length);
+        const note = fixDispatchNote(where, says, input.kind, input.place);
+        if (note && item && item.state !== "FIXED") {
+          if (!item.dispatch) {
+            const action = lookupAction("fleet.deployHere")!;
+            const checked = action.validate({ note });
+            if (!checked.ok) return refuse("INVALID_INPUT", checked.why);
+            const dispatchedAt = item.cameBackAt ?? item.addedAt;
+            const sent = await action.execute(deps, { ...context, at: dispatchedAt }, checked.value);
+            if (!sent.ok) return sent;
+            await recordFixDispatch(deps.repos, subjectId, { intentId: sent.subject!, note, at: dispatchedAt });
+          }
+          agentsSent = true;
+        }
       } catch (error) { return storeRefusal("the fix list", error); }
       return {
         ok: true,
         outcome: "QUEUED",
         subject: subjectId,
-        says: "It is on the fix list as Open.",
+        says: agentsSent ? "Agents sent to the missing information." : "It is on the team’s fix list as Open.",
         openedWork: [],
         readBackAt: "/admin",
-        undo: "Nothing has happened yet, so there is nothing to undo. Decide it differently and the later decision stands.",
+        undo: agentsSent ? "Take back the send from the queue." : null,
       };
     },
   },
@@ -369,12 +386,12 @@ const REGISTRY: readonly RegisteredAction[] = [
       const inner = (typeof input.input === "object" && input.input !== null ? input.input : {}) as Record<string, unknown>;
       const checked = target.validate(inner);
       if (!checked.ok) return bad(checked.why);
-      return { ok: true, value: { orderType, orderInput: inner, ...when.value } };
+      return { ok: true, value: { orderType, orderSubject:text(input.subject), orderInput: inner, ...when.value } };
     },
     async execute(deps, context, input) {
       const target = lookupAction(String(input.orderType))!;
       const order: ScheduledOrder = {
-        id: context.receiptId, orderType: String(input.orderType), input: input.orderInput as Record<string, unknown>,
+        id: context.receiptId, orderType: String(input.orderType), subject:String(input.orderSubject), input: input.orderInput as Record<string, unknown>,
         startAt: input.startAt as string | null, after: input.after as string | null, repeat: input.repeat as ScheduledOrder["repeat"],
         finishBy: input.finishBy as string | null, decidedBy: context.request.actorRef, decidedAt: context.at, receiptId: context.receiptId,
         label: target.definition.label,
@@ -666,34 +683,7 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
   },
 
-  {
-    definition: {
-      type: "fleet.retryWorkItem",
-      label: "Try this work again",
-      does: "Nothing yet — the console refuses this and says why.",
-      doesNot: "Does not re-open the work, because nothing in the system can be asked to.",
-      authority: "REVERSIBLE_NONPRODUCTION",
-      subjectKind: "a piece of work that failed or is being held",
-      requiresStateVersion: true,
-      refusals: ["INVALID_INPUT", "STALE_STATE", "NOT_SUPPORTED_YET"],
-    },
-    validate(input) {
-      const workItemId = text(input.workItemId);
-      if (workItemId === "") return bad("name the piece of work to try again");
-      return { ok: true, value: { workItemId } };
-    },
-    async execute(_deps, _context, input) {
-      /* The scheduler's owner-intent list has no "re-open this work item" member. */
-      return refuse(
-        "NOT_SUPPORTED_YET",
-        `Nothing in the system can be asked to try ${String(input.workItemId)} again yet. ` +
-          "The missing piece is an owner intent meaning 're-open this work' in the scheduler's " +
-          "closed intent list, and a branch in the standing runner that honors it. Until both " +
-          "exist, this button would be a light with no wire behind it.",
-      );
-    },
-  },
-
+  /* ------------------------------------------------ fleet.requestReadback */
   {
     definition: {
       type: "fleet.requestReadback",
@@ -751,63 +741,7 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
   },
 
-  {
-    definition: {
-      type: "config.setApiFallback",
-      label: "Allow paid API fallback",
-      does: "Records your decision about whether paid API fallback may be used, durably, so a restart cannot lose it.",
-      doesNot:
-        "Does not itself permit a single paid call: nothing in the running system reads this policy yet, and the refusal names the exact piece that is missing.",
-      authority: "OWNER_DECISION_REQUIRED",
-      subjectKind: "how the system may spend",
-      requiresStateVersion: false,
-      refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
-    },
-    validate(input) {
-      const enabled = input.enabled;
-      const on = enabled === true || enabled === "true" || enabled === "on" || enabled === 1;
-      const off = enabled === false || enabled === "false" || enabled === "off" || enabled === 0;
-      if (!on && !off) return bad("say whether paid API fallback is allowed or not allowed");
-      const confirmed = input.confirmed;
-      // Turning it ON is the expensive direction, so that one requires confirmation.
-      if (on && !(confirmed === true || confirmed === "true" || confirmed === "on" || confirmed === 1)) {
-        return bad("turning paid API fallback on needs an explicit confirmation");
-      }
-      return { ok: true, value: { enabled: on } };
-    },
-    async execute(deps, context, input) {
-      const enabled = input.enabled === true;
-      const at = context.at;
-      try {
-        const existing = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
-        // A stored value that is not a config reads as the default, which is OFF.
-        const current = existing !== null && isAdminConfig(existing.value) ? existing.value : defaultAdminConfig(at);
-        const next = withApiFallback(current, {
-          enabled,
-          decidedAt: at,
-          decidedBy: context.request.actorRef,
-          receiptId: context.receiptId,
-        });
-        if (existing === null) await deps.repos.adminConfig.put(ADMIN_CONFIG_ID, next, at);
-        else await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, existing.revision, next, at);
-      } catch (error) {
-        return storeRefusal("your decision about paid API fallback", error);
-      }
-      return {
-        ok: true,
-        outcome: "DONE",
-        subject: "paid API fallback",
-        says: enabled
-          ? "Recorded: you have allowed paid API fallback, and that survives a restart. It does not switch anything on by itself — " +
-            API_FALLBACK_MISSING_SEAM
-          : "Recorded: paid API fallback is not allowed. That is also the default, and it is what a fresh deploy reads.",
-        openedWork: [],
-        readBackAt: "/admin",
-        undo: enabled ? "Set it back to not allowed." : "Allow it again, with an explicit confirmation.",
-      };
-    },
-  },
-
+  /* ---------------------------------------------- config.setFleetSpendCeiling */
   {
     definition: {
       type: "config.setFleetSpendCeiling",

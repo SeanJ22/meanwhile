@@ -27,15 +27,22 @@ const page = (view: View): string => renderToStaticMarkup(h(CommandCenter, {
 
 test("Now has the four things that matter, each with a sentence, and none of the old status stack", () => {
   const html = page("now");
-  for (const title of ["Needs me", "Mission progress", "The last full hour", "Facts live", "Cost per fact", "Orders in motion"]) assert.match(html, new RegExp(title), title);
-  // Before the first hour is recorded each number shows "—" and still keeps its one sentence.
-  assert.match(html, /Not measured yet\./);
-  assert.match(html, /went live\. Higher is better\./);
-  assert.match(html, /divided by facts live\. Lower is better\./);
+  for (const title of ["Needs me", "Mission progress", "Facts live", "Cost per fact", "Orders in motion"]) assert.match(html, new RegExp(title), title);
+  assert.doesNotMatch(html, /Not measured yet\. Higher means the factory is producing|Not measured yet\. Lower is better/);
+  assert.match(html, /Facts live<.*?—/);
+  assert.match(html, /Cost per fact<.*?—/);
   for (const gone of ["What’s stuck", "What it has cost", "What’s happening now", "What’s still missing", "Your recent instructions", "Suggested next steps", "Reader demand"]) assert.doesNotMatch(html, new RegExp(gone), gone);
 });
 
 test("the data cards live in Data business, not on Now", () => {
   assert.match(page("data"), /Data business/);
   assert.doesNotMatch(page("now"), /Is capture working/);
+});
+
+
+test("Now reads recorded full hours without substituting Scoreboard aggregate values", () => {
+  const live = { ...waiting, scoreboard: {phase:"live",asOf:ref.observedAt,revision:"flow",missingParts:[],attempts:0,data:{rows:[{name:"Facts live per hour",value:"4.25",counts:"102 new or updated reader records",notMeasured:null}]}} as SectionState };
+  const html = renderToStaticMarkup(h(CommandCenter,{data:buildLiveBundle(live,ref,workerStatusFromPulse(null)),mode:"live",executor:liveExecutor({capabilities:()=>null}),scopeKey:"us",onScopeChange:()=>{},connection:"live",lastGoodAt:null,recovered:false,access:owner,initialView:"now"}));
+  assert.match(html,/The last full hour/);
+  assert.doesNotMatch(html,/102 new or updated reader records|4\.25/);
 });

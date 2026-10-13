@@ -1,7 +1,7 @@
-import { EASTERN_ZONE } from "@/lib/control-plane/eastern-time.ts";
-import type { LookView } from "@/lib/frontend/look-pass.ts";
+import { EASTERN_ZONE } from "../../../../lib/control-plane/eastern-time.ts";
+import type { LookView } from "../../../../lib/frontend/look-pass.ts";
 
-export type { LookScreenView, LookView } from "@/lib/frontend/look-pass.ts";
+export type { LookScreenView, LookView } from "../../../../lib/frontend/look-pass.ts";
 
 export type SourceState = "live" | "sample" | "not-connected";
 export type LoadState = "loading" | "ready" | "partial" | "failed";
@@ -61,6 +61,8 @@ export interface Place {
 }
 
 export interface Hunt {
+  /** Actual allocated charges, rather than the allowance consumed by overlapping hunts. */
+  readonly reportedSpendUsd?: number | null;
   readonly id: string;
   readonly placeKey: string;
   readonly name: string;
@@ -162,6 +164,7 @@ export interface ReaderResult {
 export type Lane = "decision" | "auto" | "publisher" | "software";
 
 export interface StuckItem {
+  readonly technical?: readonly string[];
   readonly id: string;
   readonly title: string;
   readonly applies: readonly string[];
@@ -752,13 +755,8 @@ export interface FixView {
 }
 
 export type ActionKind =
-  | "contain" | "uncontain" | "recheck" | "workfirst" | "fixfirst" | "stopmethod" | "scope-stop" | "stoprepeats"
-  | "decide" | "hunt-start" | "hunt-start-many" | "leads-send" | "hunt-pause" | "hunt-resume" | "hunt-limit" | "hunt-stop"
-  | "global-paid" | "global-paid-resume" | "global-runner-pause" | "global-runner-resume"
-  | "global-ceiling" | "global-search-on" | "global-search-off" | "fix-go"
-  | "scope-first" | "scope-recheck" | "doc-request" | "use-url" | "reprocess" | "retry-method" | "resume-publish"
-  | "eng-task" | "job-stop" | "focus" | "send-agents" | "cancel-send" | "order-unschedule" | "owed-add" | "owed-decline" | "owed-undo" | "target-set" | "target-clear"
-  | "data-switch-on" | "data-switch-off" | "setting-set" | "setting-undo";
+  "focus" |
+  "decide" | "leads-send" | "hunt-start" | "hunt-start-many" | "hunt-pause" | "hunt-resume" | "hunt-limit" | "hunt-stop" | "global-paid" | "global-paid-resume" | "global-runner-pause" | "global-runner-resume" | "global-ceiling" | "global-search-on" | "global-search-off" | "send-agents" | "cancel-send" | "order-schedule" | "order-unschedule" | "target-set" | "target-clear" | "data-switch-on" | "data-switch-off" | "setting-set" | "setting-undo" | "owed-add" | "owed-decline" | "owed-undo";
 
 export type ReceiptStatus = "queued" | "read" | "running" | "done" | "partial" | "refused" | "failed" | "unknown";
 export const PENDING_STATUSES: readonly ReceiptStatus[] = ["queued", "read", "running", "unknown"];
@@ -815,9 +813,12 @@ export interface UiReceipt {
   readonly gatewayReceiptId: string | null;
   readonly readBackAt: string | null;
   readonly notPickedUp?: boolean;
+  readonly finishBy?: string | null;
+  readonly scheduledParentId?: string;
+  /** BR-13: before and after, shown beside Done. */
   readonly change?: { readonly before: string; readonly after: string };
-  readonly plan?: import("@/lib/control-plane/gateway/confirmation.ts").OrderPlan;
-  readonly progress?: import("@/lib/control-plane/gateway/confirmation.ts").OrderProgress;
+  readonly plan?: import("../../../../lib/control-plane/gateway/confirmation.ts").OrderPlan;
+  readonly progress?: import("../../../../lib/control-plane/gateway/confirmation.ts").OrderProgress;
   readonly replayed: boolean;
   readonly sentAt: string;
   readonly words?: string;
@@ -844,7 +845,6 @@ export interface AdminV6Data {
   readonly money: Sourced<MoneyView>;
   readonly scoreboard: Sourced<ScoreboardView>;
   readonly fixes: Sourced<FixView>;
-  readonly decided: Sourced<readonly { readonly title: string; readonly state: string }[]>;
 }
 
 export function usd(n: number): string {

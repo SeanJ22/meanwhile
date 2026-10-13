@@ -14,7 +14,6 @@ import { CommandCenter } from "../../app/(admin)/_mw/admin-v6/command-center.tsx
 import { capabilitiesOf, SECTION_IDS, supportedAction } from "../../app/(admin)/_mw/admin-v6/contract.ts";
 import { CONNECTION_REASON, whyNot, type Access } from "../../app/(admin)/_mw/admin-v6/eligibility.ts";
 import { liveExecutor } from "../../app/(admin)/_mw/admin-v6/executor.ts";
-import { parseInstruction } from "../../app/(admin)/_mw/admin-v6/instruction.ts";
 import { connectionOf, RECONNECTING_AFTER_MS } from "../../app/(admin)/_mw/admin-v6/live-connection.ts";
 import { buildLiveBundle, type LiveReference } from "../../app/(admin)/_mw/admin-v6/live-data.ts";
 import type { SectionState } from "../../app/(admin)/_mw/admin-v6/live-sync.ts";
@@ -35,11 +34,11 @@ function receipt(over: Partial<UiReceipt> = {}): UiReceipt {
 /* -------------------------------------------------------------- the rule */
 
 test("eligibility checks connection, then role, then duplicates, then support, then item state", () => {
-  const def = actionDef("recheck");
+  const def = actionDef("send-agents");
   const base = { def, target: "r1", receipts: [] as UiReceipt[], mode: "live" as const, supported: true };
   assert.equal(whyNot({ ...base, connection: "offline", access: { ...owner, role: "viewer" } }), CONNECTION_REASON.offline, "connection first");
   assert.equal(whyNot({ ...base, connection: "live", access: { ...owner, role: "viewer" } }), "View only.");
-  const pending = { ...receipt(), kind: "recheck" as const, target: "r1" };
+  const pending = { ...receipt(), kind: "send-agents" as const, target: "r1" };
   assert.match(whyNot({ ...base, connection: "live", access: owner, receipts: [pending], supported: false }) ?? "", /Sent at/, "a duplicate is caught before support");
   assert.match(whyNot({ ...base, connection: "live", access: owner, receipts: [{ ...pending, status: "unknown" }] }) ?? "", /Check History/);
   assert.match(whyNot({ ...base, connection: "live", access: owner, supported: false, itemState: "Already hidden." }) ?? "", /Not connected yet/);
@@ -50,15 +49,15 @@ test("eligibility checks connection, then role, then duplicates, then support, t
 });
 
 test("a finished receipt no longer blocks a new send of the same action", () => {
-  const def = actionDef("recheck");
+  const def = actionDef("send-agents");
   for (const status of ["done", "partial", "refused", "failed"] as const) {
-    assert.equal(whyNot({ def, target: "r1", receipts: [{ ...receipt(), kind: "recheck", target: "r1", status }], mode: "live", supported: true, connection: "live", access: owner }), null);
+    assert.equal(whyNot({ def, target: "r1", receipts: [{ ...receipt(), kind: "send-agents", target: "r1", status }], mode: "live", supported: true, connection: "live", access: owner }), null);
   }
 });
 
 test("only the kinds a real registry action carries out are wired, each to its own gateway type", () => {
   assert.deepEqual([...connectedKinds()].sort(), [
-    "cancel-send", "data-switch-off", "data-switch-on", "fix-go", "global-ceiling", "global-paid", "global-paid-resume", "global-runner-pause", "global-runner-resume", "global-search-off", "global-search-on", "hunt-limit", "hunt-pause", "hunt-resume", "hunt-start", "hunt-start-many", "hunt-stop", "leads-send", "order-unschedule", "owed-add", "owed-decline", "owed-undo", "send-agents", "setting-set", "setting-undo", "target-clear", "target-set",
+    "cancel-send", "data-switch-off", "data-switch-on", "global-ceiling", "global-paid", "global-paid-resume", "global-runner-pause", "global-runner-resume", "global-search-off", "global-search-on", "hunt-limit", "hunt-pause", "hunt-resume", "hunt-start", "hunt-start-many", "hunt-stop", "leads-send", "order-schedule", "order-unschedule", "owed-add", "owed-decline", "owed-undo", "send-agents", "setting-set", "setting-undo", "target-clear", "target-set",
   ]);
   assert.equal(actionDef("cancel-send").gateway?.type, "fleet.cancelDispatch");
   assert.equal(actionDef("send-agents").gateway?.type, "fleet.deployHere");
@@ -66,7 +65,6 @@ test("only the kinds a real registry action carries out are wired, each to its o
   assert.equal(actionDef("global-runner-resume").gateway?.type, "runner.resume");
   assert.equal(actionDef("global-paid").gateway?.type, "research.pause");
   assert.equal(actionDef("global-paid-resume").gateway?.type, "research.resume");
-  assert.equal(actionDef("fix-go").gateway?.type, "decision.record");
   assert.equal(actionDef("global-ceiling").gateway?.type, "config.setFleetSpendCeiling");
   assert.equal(actionDef("global-search-on").gateway?.type, "config.setDiscoverySearch");
   assert.equal(actionDef("global-search-off").gateway?.type, "config.setDiscoverySearch");
@@ -77,20 +75,12 @@ test("only the kinds a real registry action carries out are wired, each to its o
   assert.equal(actionDef("hunt-stop").gateway?.type, "expansion.scope.remove");
   assert.equal(actionDef("setting-set").gateway?.type, "config.setSetting");
   assert.equal(actionDef("setting-undo").gateway?.type, "config.setSetting");
-  for (const d of ACTIONS.values()) if (!d.gateway) assert.ok(d.dependency, `${d.kind} names what it is waiting for`);
+  for (const d of ACTIONS.values()) assert.ok(d.gateway, `${d.kind} has an executor`);
 });
 
 test("previews never promise more than the action does", () => {
   const ctx = { target: "x", targetName: "X", scopeName: "Arizona", scopeIsCountry: false, outreachAuthorized: false };
-  const focus = actionDef("focus").preview(ctx);
-  assert.ok(!focus.rows.some(([k]) => k === "Won’t"), "no what-it-won't-do row");
-  assert.ok(focus.options?.some((o) => /Haiku 5\.5, then Sonnet 5\.5, then Opus 5\.5/.test(o.note)), "the model option names the order");
-  assert.match(actionDef("decide").doneWords, /Decision saved/);
-  assert.equal(actionDef("stoprepeats").preview(ctx).level, "global");
-  assert.equal(actionDef("scope-first").preview({ ...ctx, scopeIsCountry: true }).level, "global");
-  const decide = actionDef("decide").preview({ ...ctx, decision: { id: "d", question: "Q?", options: [{ id: "o", label: "Contact them", note: "", outreach: true }, { id: "other", label: "Something else", note: "", ownWords: true }] } });
-  assert.match(decide.options?.[0].blocked ?? "", /outreach permission/);
-  assert.equal(decide.invalid?.({ option: "other", words: " ", amount: "", selected: 0 }), "Say what you want in the box.");
+  assert.equal(ACTIONS.has("decide"), false, "the unproduced recommendation control is removed");
   const limit = actionDef("hunt-limit").preview({ ...ctx, hunt: { id: "h", placeKey: "p", name: "H", startedAt: "", limitUsd: 50, limitSource: "", spentUsd: 15, heldUsd: 6, unpricedEntries: 0, status: "running", researchWorkers: 1 } });
   assert.equal(limit.invalid?.({ option: null, words: "", amount: "20", selected: 0 }), "That’s below what’s already spent or set aside.");
 });
@@ -136,37 +126,39 @@ test("the live executor posts one gateway request with the page’s idempotency 
 
 test("an unannounced action is not sent; an announced one sends its exact contract inputs", async () => {
   const calls: string[] = [];
+  const def = { ...actionDef("send-agents"), gateway: null };
   const fetchStub = async (_: string, init: { body?: string }) => { calls.push(init.body ?? ""); return { status: 200, json: async () => ({ ok: true, replayed: false, receipt: { receiptId: "r", outcome: "QUEUED", says: "Queued.", startedAt: "s", completedAt: null, readBackAt: null } }) }; };
   let caps = capabilitiesOf(null);
   const ex = liveExecutor({ capabilities: () => caps, fetch: fetchStub });
-  assert.equal(ex.supports(actionDef("recheck")), false);
+  assert.equal(ex.supports(def), false);
   const out: UiReceipt[] = [];
-  await ex.send(receipt({ kind: "recheck", target: "r1" }), { def: actionDef("recheck"), target: "r1", scopeKey: "st:az", option: null, words: "", amount: "", selectedItems: [] }, (r) => out.push(r));
+  await ex.send(receipt({ kind: "send-agents", target: "r1" }), { def: def, target: "r1", scopeKey: "st:az", option: null, words: "", amount: "", selectedItems: [] }, (r) => out.push(r));
   assert.equal(calls.length, 0, "nothing sent");
   assert.equal(out.at(-1)?.status, "refused");
-  caps = capabilitiesOf({ v6: { version: 1, sections: {}, actions: { recheck: { contract: "admin-v6/action/recheck@1", type: "reader.recheck", requiresStateVersion: false } } } });
-  assert.equal(ex.supports(actionDef("recheck")), true);
-  await ex.send(receipt({ kind: "recheck", target: "r1", key: "k2" }), { def: actionDef("recheck"), target: "r1", scopeKey: "st:az", option: null, words: "", amount: "", selectedItems: [] }, (r) => out.push(r));
+  caps = capabilitiesOf({ v6: { version: 1, sections: {}, actions: { "send-agents": { contract: "admin-v6/action/send-agents@1", type: "fleet.deployHere", requiresStateVersion: false } } } });
+  assert.equal(ex.supports(def), true);
+  await ex.send(receipt({ kind: "send-agents", target: "r1", key: "k2" }), { def: def, target: "r1", scopeKey: "st:az", option: null, words: "", amount: "", selectedItems: [] }, (r) => out.push(r));
   const body = JSON.parse(calls[0]);
-  assert.deepEqual(body, { type: "reader.recheck", subject: "r1", stateVersion: null, idempotencyKey: "k2", resultId: "r1" }, "exact keys only; no generic payload");
-  assert.equal(out.at(-1)?.gatewayType, "reader.recheck");
+  assert.deepEqual(body, { type: "fleet.deployHere", subject: "r1", stateVersion: null, idempotencyKey: "k2", note: "" }, "exact keys only; no generic payload");
+  assert.equal(out.at(-1)?.gatewayType, "fleet.deployHere");
   assert.equal(out.at(-1)?.status, "queued");
-  assert.equal(supportedAction(capabilitiesOf({ v6: { version: 1, sections: {}, actions: { recheck: { contract: "admin-v6/action/recheck@9", type: "t" } } } }), "recheck"), null, "a different version is not supported");
+  assert.equal(supportedAction(capabilitiesOf({ v6: { version: 1, sections: {}, actions: { "send-agents": { contract: "admin-v6/action/send-agents@9", type: "t" } } } }), "send-agents"), null, "a different version is not supported");
 });
 
 test("a moving-world action quotes the latest pulse revision, and is not sent without one", async () => {
   const bodies: Record<string, unknown>[] = [];
-  const caps = capabilitiesOf({ v6: { version: 1, sections: {}, actions: { decide: { contract: "admin-v6/action/decide@1", type: "decision.record", requiresStateVersion: true } } } });
+  const caps = capabilitiesOf({ v6: { version: 1, sections: {}, actions: { "send-agents": { contract: "admin-v6/action/send-agents@1", type: "fleet.deployHere", requiresStateVersion: true } } } });
   let rev: string | null = null;
   const ex = liveExecutor({ capabilities: () => caps, stateVersion: () => rev, fetch: async (_u, init) => { bodies.push(JSON.parse(init.body ?? "{}")); return { status: 200, json: async () => null }; } });
-  const req = { def: actionDef("decide"), target: "morris", scopeKey: "us", option: "clerk", words: "", amount: "", selectedItems: [] as string[] };
+  const def = { ...actionDef("send-agents"), gateway: { type: "fleet.deployHere", requiresStateVersion: true } };
+  const req = { def, target: "morris", scopeKey: "us", option: null, words: "", amount: "", selectedItems: [] as string[] };
   const out: UiReceipt[] = [];
-  await ex.send(receipt({ kind: "decide", target: "morris" }), req, (r) => out.push(r));
+  await ex.send(receipt({ kind: "send-agents", target: "morris" }), req, (r) => out.push(r));
   assert.equal(bodies.length, 0, "no rendered state yet, so nothing is sent");
   assert.equal(out.at(-1)?.status, "refused");
   rev = "beat|3|9";
-  await ex.send(receipt({ kind: "decide", target: "morris", key: "k3" }), req, () => {});
-  assert.deepEqual(bodies[0], { type: "decision.record", subject: "morris", stateVersion: "beat|3|9", idempotencyKey: "k3", decisionId: "morris", option: "clerk", words: null });
+  await ex.send(receipt({ kind: "send-agents", target: "morris", key: "k3" }), req, () => {});
+  assert.deepEqual(bodies[0], { type: "fleet.deployHere", subject: "morris", stateVersion: "beat|3|9", idempotencyKey: "k3", note: "" });
 });
 
 test("“Check what happened” asks the receipt lookup and never resends", async () => {
@@ -234,26 +226,6 @@ test("percentages round down", () => {
   assert.equal(pctDown(0, 0), "—");
 });
 
-/* ------------------------------------------------------------ instruction */
-
-test("the instruction read-back matches supported actions only and asks which body a URL is for", () => {
-  const places: Place[] = [
-    { key: "us", name: "United States", kind: "Country", navParent: null, within: [] },
-    { key: "st:az", name: "Arizona", kind: "State", navParent: "us", within: ["us"] },
-    { key: "body:a", name: "Body A", kind: "Body", navParent: "st:az", within: ["st:az"] },
-  ];
-  const index = indexPlaces(places);
-  const stuck: StuckItem[] = [];
-  const p = (text: string, scope = "st:az", chosenBody: string | null = null) => parseInstruction({ text, scope, places, index, stuck, chosenBody });
-  assert.deepEqual(p("Put this place first").actions, [{ kind: "scope-first", target: "st:az" }]);
-  assert.deepEqual(p("Stop repeating what keeps failing, everywhere").actions, [{ kind: "scope-stop", target: "us" }]);
-  assert.equal(p("make me a sandwich").unsupported, true);
-  assert.equal(p("make me a sandwich").actions.length, 0);
-  const url = p("Use https://example.gov/agenda as the official source");
-  assert.equal(url.clarify?.question, "Which body is this address for?");
-  assert.equal(url.actions.length, 0, "nothing until the body is chosen");
-  assert.deepEqual(p("Use https://example.gov/agenda as the official source", "st:az", "body:a").actions, [{ kind: "use-url", target: "body:a", payload: { url: "https://example.gov/agenda" } }]);
-});
 
 /* ------------------------------------------------------- production path */
 
@@ -320,4 +292,30 @@ test("a place target is wired to its own gateway action, and its input carries t
   assert.equal(actionDef("target-clear").gateway?.type, "config.setPlaceTarget");
   assert.equal(actionDef("data-switch-on").gateway?.type, "config.setDataSwitch");
   assert.equal(actionDef("data-switch-off").gateway?.type, "config.setDataSwitch");
+});
+
+test("retired screen controls and the old instruction box are deleted", () => {
+  for (const kind of ["contain", "uncontain", "recheck", "workfirst", "fixfirst", "stopmethod", "scope-stop", "stoprepeats", "scope-recheck", "doc-request", "reprocess", "retry-method", "resume-publish", "eng-task", "job-stop", "focus", "scope-first", "use-url"]) {
+    const def = ACTIONS.get(kind as never);
+    assert.equal(def, undefined, kind);
+  }
+  assert.doesNotMatch(readFileSync(join(V6, "screen-now.tsx"), "utf8"), /Tell it what to do|<Instruction/);
+  assert.ok(!readdirSync(V6).includes("instruction.ts"));
+  assert.ok(!readdirSync(V6).includes("instruction-draft.ts"));
+});
+
+test("BR-39: every Admin view keeps planted code names and raw errors behind Technical details", async()=>{
+  const { stuckViews }=await import("../../lib/control-plane/admin-view/v6-stuck-read.ts");
+  const { hasTechnicalText }=await import("../../lib/control-plane/admin-view/plain-words.ts");
+  const { VIEWS }=await import("../../app/(admin)/_mw/admin-v6/context.tsx");
+  const view=stuckViews([{id:"wi-aabbccdd",state:"BLOCKED",lane:"data",owner:"RUNNER",blocker:"DIRECTORY_NO_READABLE_SAVED_PAGE",label:"Directory",subjectName:null,stateCode:"az",overdue:false,band:null,waitingSince:null,eligibleAt:null,lastActivityAt:null,nextAction:"SCOUT_POLICY_DENIED",assignmentKeys:[]}],"us","2026-10-05T00:00:00Z");
+  const source=(data:unknown):SectionState=>({phase:"live",data,asOf:"2026-10-05T00:00:00Z",revision:"v1",missingParts:[],attempts:0});
+  const snapshot={...waiting,stuck:source(view.items),sameCause:source(view.sameCause),history:source([receipt({status:"failed",says:"SCOUT_POLICY_DENIED: TypeError: unavailable"})])};
+  const visible=(html:string)=>html.replace(/<details\b[^>]*>[\s\S]*?<\/details>/g, block=>/<summary[^>]*>Technical details<\/summary>/.test(block) ? "" : block).replace(/<[^>]*>/g," ");
+  const check=(html:string)=>assert.equal(hasTechnicalText(visible(html)),false);
+  for (const [initialView] of VIEWS) {
+    const html=renderToStaticMarkup(h(CommandCenter,{data:buildLiveBundle(snapshot,ref,workerStatusFromPulse(null)),mode:"live",executor:liveExecutor({capabilities:()=>null}),scopeKey:"us",onScopeChange:()=>{},connection:"live",lastGoodAt:null,recovered:false,access:owner,initialView}));
+    check(html);
+  }
+  assert.throws(()=>check("<p>SCOUT_POLICY_DENIED</p>"),"positive control: leaking an error onto the face fails the check");
 });

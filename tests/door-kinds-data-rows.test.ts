@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { readFileSync } from "node:fs";
 
-import { meetingSourceNamesForWiring } from "@/lib/registry/source-wiring.ts";
+import { meetingSourceNamesForWiring, type BodySourceWiring } from "@/lib/registry/source-wiring.ts";
 import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import { CAPABILITIES, buildCompositeSource } from "@/lib/sources/composite/wiring.ts";
 import { DATA_DOOR_KINDS, DOOR_KIND_SPECS, dataDoorConfig } from "@/lib/civic-data/derived-door-kinds.ts";
@@ -9,8 +10,10 @@ import { CROSSWALK_KINDS } from "@/lib/civic-data/meeting-body-crosswalk.ts";
 import { DERIVED_WIRING_SOURCE_NAMES, bodySourceWiringFor, derivedAdapterConfig, type DerivedWiringRow } from "@/lib/civic-data/derived-meeting-wiring.ts";
 import { wiringShapeFor } from "@/lib/control-plane/discovery/derived-wiring.ts";
 
-// Reviewed filters may carry settings added since the hand-wired import.
-const SAMPLE_ROWS = [
+const pimaBody = JSON.parse(readFileSync(new URL("./fixtures/legistar-members/pima/bodies.json", import.meta.url), "utf8"))[0];
+const SAMPLE_ROWS: BodySourceWiring[] = [
+  { ...FIXTURE_DOOR_ROWS.find(row => row.config.slug === "pima")!, agendaSourceType: "LEGISTAR" as const,
+    config: { slug: "pima", eventBodyId: String(pimaBody.BodyId) } },
   ...FIXTURE_DOOR_ROWS.map(row => row.agendaSourceType === "CIVICCLERK"
     ? { ...row, config: { ...row.config, bodyMatch: "Board of Directors" } } : row),
   { ...FIXTURE_DOOR_ROWS[0], agendaSourceType: "BOARDDOCS" as const,
@@ -38,7 +41,7 @@ for (const kind of DATA_DOOR_KINDS) {
     for (const key of [spec.route.key, ...spec.allowed]) {
       assert.ok(same.some((r) => r.config[key] !== undefined), `${kind}: no body carries ${key}`);
     }
-    const route = kind === "BOARDBOOK" ? "https://meetings.boardbook.org/Public/Organization/1234" : `https://records.example.gov/${kind.toLowerCase()}/calendar`;
+    const route = kind === "LEGISTAR" ? "https://webapi.legistar.com/v1/pima/events" : kind === "BOARDBOOK" ? "https://meetings.boardbook.org/Public/Organization/1234" : `https://records.example.gov/${kind.toLowerCase()}/calendar`;
     const config = derivedAdapterConfig({ kind, route, officialHost: "records.example.gov", bodyId: "ocd-division/country:us/state:zz/place:example", bodyName: "Example Board", filter: sampleFilter(kind) });
     assert.equal(typeof config[spec.route.key], "string");
     const row: DerivedWiringRow = {

@@ -2,6 +2,7 @@ import type { AgendaSourceType } from "../registry/types.ts";
 
 /** Each adapter kind a reviewed calendar can be wired to as data: a new kind is one entry here, never a branch in code. */
 export const DATA_DOOR_KINDS = [
+  "LEGISTAR",
   "CIVICPLUS",
   "BOARDBOOK",
   "BOARDDOCS",
@@ -30,6 +31,10 @@ export interface DoorKindSpec {
 }
 
 export const DOOR_KIND_SPECS: Readonly<Record<DataDoorKind, DoorKindSpec>> = {
+  LEGISTAR: {
+    sourceName: "legistar", agendaSourceType: "LEGISTAR", entry: "lib/sources/legistar/index.ts",
+    route: { key: "slug", as: "lastPathSegment" }, allowed: ["eventBodyId"], required: ["eventBodyId"], fixed: { sourceRoutes: "legistar" },
+  },
   CIVICPLUS: {
     sourceName: "civicplus", agendaSourceType: "CIVICPLUS", entry: "lib/sources/civicplus/index.ts",
     route: { key: "agendaCenterUrl", as: "url" },
@@ -101,11 +106,6 @@ export function isDataDoorKind(kind: string): kind is DataDoorKind {
   return (DATA_DOOR_KINDS as readonly string[]).includes(kind);
 }
 
-/**
- * The adapter settings a reviewed route and filter give a data-door row, or
- * the reason they cannot: a missing required setting, or one the kind does not
- * declare, is refused by name rather than guessed.
- */
 export function dataDoorConfig(input: {
   readonly kind: DataDoorKind;
   readonly route: string;
@@ -119,6 +119,7 @@ export function dataDoorConfig(input: {
   const url = new URL(input.route);
   const route = spec.route.as === "origin"
     ? (input.kind === "LEGISTAR_INSITE" ? url.host : url.origin)
+    : input.kind === "LEGISTAR" ? /^\/v1\/([a-z0-9_-]+)\/events\/?$/i.exec(url.pathname)?.[1] ?? ""
     : spec.route.as === "lastPathSegment" ? url.pathname.split("/").filter(Boolean).at(-1) ?? ""
     : input.kind === "BOARDDOCS" ? `${url.origin}${url.pathname.replace(/(\/Board\.nsf)(?:\/.*)?$/i, "$1/Public")}` : url.toString();
   if (route === "") throw new Error(`DOOR_KIND_SETTING_MISSING:${input.kind}:${spec.route.key}`);

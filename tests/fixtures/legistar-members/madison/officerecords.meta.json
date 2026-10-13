@@ -1,0 +1,7 @@
+{
+  "sourceUrl": "https://webapi.legistar.com/v1/madison/officerecords?$filter=OfficeRecordBodyId%20eq%201%20and%20OfficeRecordEndDate%20ge%20datetime'2026-10-13'&$top=1000",
+  "state": "WI",
+  "retrievedAt": "2026-10-13T20:03:35.851396+00:00",
+  "sha256": "5a2534dadfd148bf3468b8b67c90cec0b70e48f410fc27285173ce917d027eff",
+  "records": 21
+}

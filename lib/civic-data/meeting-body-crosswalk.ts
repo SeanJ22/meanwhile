@@ -7,7 +7,7 @@ import { DATA_DOOR_KINDS, DOOR_KIND_SPECS, isDataDoorKind, type DataDoorKind } f
 export const CROSSWALK_CITATION =
   "C16: owner decision recorded 2026-09-24T22:43Z (agents may review and promote the records connecting a calendar to its governing body, on saved official evidence)" as const;
 
-export const CROSSWALK_KINDS = ["ICAL", "OFFICIAL_PAGE_EVENTS", "DILIGENT", "LEGISTAR", ...DATA_DOOR_KINDS] as const;
+export const CROSSWALK_KINDS = ["ICAL", "OFFICIAL_PAGE_EVENTS", "DILIGENT", ...DATA_DOOR_KINDS] as const;
 export type CrosswalkKind = (typeof CROSSWALK_KINDS)[number];
 
 /** Filter keys each kind reads, and the selecting ones (at least one is required). */
@@ -15,7 +15,6 @@ const FILTER_KEYS: Readonly<Record<CrosswalkKind, { readonly allowed: readonly s
   ICAL: { allowed: ["titleMatch", "categoryMatch", "titleExclude", "feedScope"], selecting: ["titleMatch", "categoryMatch", "feedScope"] },
   OFFICIAL_PAGE_EVENTS: { allowed: ["nameTerms"], selecting: ["nameTerms"] },
   DILIGENT: { allowed: ["titleMatch", "titleExclude"], selecting: ["titleMatch"] },
-  LEGISTAR: { allowed: ["eventBodyId"], selecting: ["eventBodyId"] },
   ...(Object.fromEntries(DATA_DOOR_KINDS.map((kind) => {
     const spec = DOOR_KIND_SPECS[kind];
     return [kind, { allowed: spec.allowed, selecting: spec.required }];

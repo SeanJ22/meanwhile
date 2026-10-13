@@ -1,11 +1,3 @@
-/**
- * The HTTP half of the Legistar adapter: paging, pacing and backoff. Kept apart from normalize() so the
- * transform stays pure, and so the retrieval discipline lives in one place: identify yourself, go at a
- * human pace, never parallelize against a single tenant, and honour what the server tells you.
- */
-
-// The User-Agent is the shared `sourceUserAgent`. The pacing is deliberately not shared: Legistar's
-// spacing and retry budget were measured against Legistar.
 import { sourceUserAgent } from "../http.ts";
 import { sourceAcquisitionSleep } from "../acquisition-deadline.ts";
 
@@ -36,10 +28,6 @@ export class LegistarError extends Error {
   }
 }
 
-/**
- * What a status code from this API actually means: a bare 500 from this live API is the answer for a slug
- * that is not a client, not an outage.
- */
 export function describeStatus(status: number): string {
   if (status === 403) {
     return "client requires an API token — many are issued free on request";
@@ -55,6 +43,8 @@ interface RequestOptions {
   /** Overridden in tests so the suite never sleeps or touches the network. */
   fetchImpl?: typeof fetch;
   signal?: AbortSignal;
+  select?: readonly string[];
+  onRead?: (reading: { url: string; text: string; retrievedAt: string }) => void;
 }
 
 // Tenants share a vendor hostname, not a connection slot. Keep paging,
@@ -99,13 +89,6 @@ async function requestOnce(
   });
 }
 
-/**
- * One GET, with backoff on the codes worth retrying.
- *
- * 429 and 5xx back off; everything else fails immediately, because retrying a
- * 500 from a wrong slug just asks the same wrong question four more times.
- * `Retry-After` wins over our own schedule when the server sends one.
- */
 async function getJson<T>(path: string, options: RequestOptions): Promise<T> {
   return inClientSlot(path.split("/")[0], options, () => getJsonInSlot<T>(path, options));
 }
@@ -119,7 +102,9 @@ async function getJsonInSlot<T>(path: string, options: RequestOptions): Promise<
     lastStatus = response.status;
 
     if (response.ok) {
-      const body = (await response.json()) as T;
+      const text = await response.text();
+      const body = JSON.parse(text) as T;
+      options.onRead?.({ url, text, retrievedAt: new Date().toISOString() });
       options.signal?.throwIfAborted();
       return body;
     }
@@ -151,14 +136,6 @@ async function getJsonInSlot<T>(path: string, options: RequestOptions): Promise<
   );
 }
 
-/**
- * Page through a collection by ascending id.
- *
- * **Not `$skip`.** Offset paging drops rows when the underlying set changes
- * between requests, which on a busy client during a long query it does. Filtering
- * on `id gt <highest seen>` is stable under insertion, which is the documented
- * advice for exactly this reason.
- */
 async function pageById<T>(
   path: string,
   idField: string,
@@ -180,6 +157,7 @@ async function pageById<T>(
       `$filter=${encodeURIComponent(clauses.join(" and "))}`,
       `$orderby=${idField}`,
       `$top=${PAGE_SIZE}`,
+      ...(options.select?.length ? [`$select=${encodeURIComponent(options.select.join(","))}`] : []),
     ].join("&");
 
     const page = await getJson<T[]>(`${path}?${query}`, options);
@@ -211,13 +189,6 @@ async function pageById<T>(
   return collected;
 }
 
-/**
- * Upcoming and recently concluded events for one client.
- *
- * The date window is applied upstream rather than locally: an unfiltered
- * `/events` call on a long-running client returns every meeting it has ever
- * held, which is rude and slow for no benefit.
- */
 export async function fetchEvents<T>(
   slug: string,
   window: { from: string; to: string; bodyId?: number },
@@ -242,12 +213,14 @@ export async function fetchBodies<T extends { BodyId: number }>(slug: string, op
   return pageById<T>(`${slug}/bodies`, "BodyId", row => row.BodyId, undefined, options);
 }
 
-/**
- * Agenda items for one meeting.
- *
- * The response carries BOTH record classes — what was noticed and what the
- * body did about it. `outcomes.ts` splits them; see `types.ts`.
- */
+export async function fetchPersons<T extends { PersonId: number }>(slug: string, options: RequestOptions = {}): Promise<T[]> {
+  return pageById<T>(`${slug}/persons`, "PersonId", row => row.PersonId, undefined, options);
+}
+
+export async function fetchOfficeRecords<T extends { OfficeRecordId: number }>(slug: string, options: RequestOptions = {}): Promise<T[]> {
+  return pageById<T>(`${slug}/officerecords`, "OfficeRecordId", row => row.OfficeRecordId, undefined, options);
+}
+
 export async function fetchEventItems<T>(
   slug: string,
   eventId: number,
@@ -266,13 +239,6 @@ export async function fetchEvent<T>(
   return getJson<T>(`${slug}/events/${eventId}`, options);
 }
 
-/**
- * The per-person roll call for one agenda item (`/v1/{slug}/eventitems/{EventItemId}/votes`). It returns
- * 200 even for items with no votes, so a 200 proves nothing about the item. This returns the rows, never
- * a verdict: whether a zero-row reply is a legitimate empty or a failed extraction is decided by
- * `classifyRollCall` in `outcomes.ts`, where the item is in scope. Not paged: one body's membership fits
- * in one request.
- */
 export async function fetchEventItemVotes<T>(
   slug: string,
   eventItemId: number,

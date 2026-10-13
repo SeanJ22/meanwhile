@@ -2,17 +2,9 @@ import { boxIndexEnabled } from "../lib/control-plane/box.ts";
 import { readMeetingDiscoveryInputs, meetingDiscoveryInputsDue, runMeetingDiscoveryChain, type MeetingDiscoveryInputs } from "../lib/civic-data/meeting-discovery-due.ts";
 import { buildBoxFindings } from "../lib/control-plane/workers/scout-extraction.ts";
 import { workerPublicationContext } from "../lib/civic-data/worker-publication-context.ts";
-/**
- * @freshness-reads-here
- *
- * One source-isolated pass of the permanent routine civic-data data plane.
- * The standing local pilot calls this after its own cycle; this process owns
- * only data cadence and can neither commit nor invoke a software release.
- * `lastAttemptedAt` and `lastSucceededAt` come only from durable source-aware
- * candidate/promotion history; a child-process failure is operational evidence
- * and never replaces a candidate's own source-through or retrieved-at facts.
- */
+/** @freshness-reads-here */
 import { hostname } from "node:os";
+import { heldLegistarMemberTasks, legistarMemberClocks } from "../lib/sources/legistar/members-tasks.ts";
 import { AUTOMATIC_REFRESH_TASKS, automaticRefreshContract } from "../lib/civic-data/automatic-refresh.ts";
 import { neon } from "@neondatabase/serverless";
 import { campaignPublicationInputsDue, readCampaignPublicationInputs, CAMPAIGN_PUBLICATION_TASK, type CampaignPublicationInputs } from "../lib/civic-data/campaign-publication-due.ts";
@@ -177,9 +169,7 @@ const FORCE = process.argv.includes("--force");
 const PUBLISH_NOW = process.argv.includes("--publish-now");
 if (PUBLISH_NOW && FORCE) throw new Error("Publish-now cannot force unrelated source work.");
 const ADMITTED_CODE_SHA = assertRuntimeAuthority({ capabilities: ["ROUTINE_SUPERVISOR"] }).sha;
-// The door registry is the only door list. Every routine pass first brings the doors the system holds into the
-// registry, publishes its meeting doors for every child to read, then builds its meeting work from the registry.
-// A registry that cannot be read leaves the pass without hand-wired meeting work, and the pass says so.
+// Publish held meeting doors before deriving work so every child reads the same registry.
 if (controlPlaneUrlFromEnv() === null) {
   console.warn("RCD_TASK routine-civic-data-runner: no door registry is configured, so this pass has no hand-wired meeting work");
 } else {
@@ -203,6 +193,7 @@ const STANDING_SOURCE_TASKS: readonly RoutineSourceTask[] = PUBLISH_NOW ? [] : a
   ...ROUTINE_SOURCE_TASKS.filter((task) => task.id !== MEETING_DOORS_CONTRACT_ID),
   ...OUTCOME_PARTITION_CONTRACTS.map(routineTaskFromContract),
   ...AUTOMATIC_REFRESH_TASKS,
+  ...await heldLegistarMemberTasks().catch(error => { console.warn(`RCD_TASK legistar-members: ${sanitizedErrorDiagnostic(error)}`); return []; }),
 ], process.argv.slice(2));
 const TASK_SELECTION = routineTaskSelection(process.argv.slice(2), [...STANDING_SOURCE_TASKS, ...WORKER_PUBLICATION_TASK_IDS.map(id => ({ id }))]);
 const ONLY = TASK_SELECTION.ok ? TASK_SELECTION.only : null;
@@ -233,9 +224,7 @@ const RUNNING_CODE_SHA = TASK_SELECTION.ok
   ? ADMITTED_CODE_SHA
   : null;
 
-// Manual invocation and the standing pilot share this same atomic host-local
-// door. A second runner fails before opening the store or reading due clocks;
-// the kernel releases the lease if this process dies.
+// Both entry points take the same host-local lease; the kernel releases it if the runner dies.
 step = "taking the host-local singleton";
 const ROUTINE_DATA_PROCESS_LEASE = TASK_SELECTION.ok ? await (async () => {
   try {
@@ -296,10 +285,6 @@ function releaseChildMemory(id: string): void {
   startedSourceChildren.delete(id);
 }
 
-/**
- * How often each open door has been seen to change, by door id, so a door that changes faster than its
- * policy is checked as often as it changes. An unreadable registry leaves every task on its policy.
- */
 async function readObservedChangeRates(): Promise<ReadonlyMap<string, number>> {
   const connection = controlPlaneUrlFromEnv();
   if (connection === null) return new Map();
@@ -313,11 +298,6 @@ async function readObservedChangeRates(): Promise<ReadonlyMap<string, number>> {
   }
 }
 
-/**
- * The task's door's last success or failure (a hand-wired meeting door, or a
- * feed's door), from its promotion outcome. A registry that cannot be written
- * never changes the pass.
- */
 let doorOutcomeRepos: Promise<Awaited<ReturnType<typeof createPgRepositories>>> | null = null;
 async function recordTaskDoorOutcome(taskId: string, outcome: DoorOutcome, changed = false, evidence: DoorEvidence | null = null,
   sourceClock?: () => Promise<RoutineTaskClock>): Promise<void> {
@@ -389,13 +369,6 @@ function safeFailure(value: string): string {
     .slice(0, 4_000) || "The source process exited without a diagnostic.";
 }
 
-/**
- * A child that died before producing a source receipt has no source clock to
- * apply retry backoff or rotate behind same-provider siblings. Its existing supervisor
- * fault is the operational attempt clock. Reading that clock from the same
- * owner log Admin consumes prevents one broken partition from monopolizing a
- * shared publisher frontier without fabricating a source attempt.
- */
 async function latestUnreceiptedSupervisorAttempts(selectedTasks: readonly RoutineSourceTask[], codeChangeRetryIds: ReadonlySet<string>): Promise<RoutineSupervisorAttemptHistory & { readonly protocolFailures: readonly unknown[] }> {
   const connection = controlPlaneUrlFromEnv();
   if (connection === null) {
@@ -431,11 +404,6 @@ async function latestUnreceiptedSupervisorAttempts(selectedTasks: readonly Routi
     { taskIds: codeChangeRetryIds, codeSha: RUNNING_CODE_SHA }), protocolFailures };
 }
 
-/**
- * The owner's open due requests (lib/civic-data/routine-due-request.ts): one
- * small aggregate read. A request only brings a partition's read forward, so a
- * failed read leaves every task on its normal schedule, and says so.
- */
 async function readRoutineDueRequests(): Promise<{ readonly requests: readonly RoutineDueRequest[]; readonly issues: readonly string[] }> {
   const connection = controlPlaneUrlFromEnv();
   if (connection === null) throw new Error(`${CONTROL_PLANE_URL_VAR} is not configured`);
@@ -656,9 +624,7 @@ if (publishNowEdgeChecks) {
   await publishNowEdgeChecks.run();
 }
 
-// Resolve every due scope at one frozen instant before launching. The provider frontier below
-// admits one least-recently-considered partition per upstream, so a host with many partitions
-// cannot stretch one pass and keep a newly due unrelated source out of the next.
+// Freeze due scopes before launching; one partition per upstream prevents a large source from starving others.
 const admissionNowMs = Date.now();
 let huntTasks: readonly RoutineSourceTask[] = [];
 try {
@@ -701,15 +667,15 @@ if (PUBLISH_NOW && selectedTasks.length === 0) {
   process.exit(supervisorFailures.length === 0 ? 0 : 2);
 }
 step = "reading the routine task clocks";
+const memberClocks = !FORCE && selectedTasks.some(task => task.id.startsWith("legistar-members:"))
+  ? await legistarMemberClocks(store, new Date().toISOString()) : new Map();
 const clockReads = FORCE
   ? selectedTasks.map((task) => ({ task, ok: true as const, clock: undefined, error: null }))
   : await readRoutineTaskClocks(
       selectedTasks,
-      (task) => store.clock(task.sourceId, task.recordClass, task.scope, task.parserVersion),
+      (task) => task.id.startsWith("legistar-members:") ? Promise.resolve(memberClocks.get(task.id)) : store.clock(task.sourceId, task.recordClass, task.scope, task.parserVersion),
     );
-// Meeting sources follow their bodies' sittings; the window is decided once, at the same frozen
-// instant. A sitting's publisher-stated end decides when it concluded; an unreadable end set falls
-// back to the day bound and is reported.
+// Use publisher-stated sitting ends at the frozen instant; report unreadable ends and use the day bound.
 let statedEndsByTask: ReadonlyMap<string, ReadonlyMap<string, number>> = new Map();
 if (!FORCE && selectedTasks.some(task => task.recordClass === "MEETING")) {
   try {
@@ -894,9 +860,7 @@ const dueRequestLines = [...honouredDueRequests].map(([taskId, request]) => admi
   : `Owner due request ${request.id}: ${taskId} was due but deferred by the provider frontier; the next pass offers it again.`).concat(publicationInputLines);
 attempted = pendingRuns.length;
 
-// Every meeting child proves the registry-runtime pointer before it acquires anything. With two or
-// more in a pass, prove it once here and hand each child the attestation; a child whose pointer no
-// longer matches runs its own full proof.
+// Share the registry-pointer attestation across children; a changed pointer requires the child's own check.
 const meetingPartitionRuns = pendingRuns.filter((pending) => pending.kind === "MEETING_PARTITION").length;
 let meetingChildAttestations: Readonly<Record<string, string>> = {};
 if (meetingPartitionRuns >= 2) {

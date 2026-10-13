@@ -22,5 +22,6 @@ export const AUTOMATIC_REFRESH_TASKS: readonly RoutineSourceTask[] = AUTOMATIC_R
 });
 
 export function automaticRefreshContract(taskId: string): ManualProductionContractId | null {
+  if (/^legistar-members:[a-z0-9_-]+$/i.test(taskId)) return "registry-runtime-bindings";
   return AUTOMATIC_REFRESH_CONTRACT_IDS.find(id => id === taskId) ?? null;
 }

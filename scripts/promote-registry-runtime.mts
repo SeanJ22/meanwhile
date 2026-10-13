@@ -1,9 +1,3 @@
-/**
- * Promote one owner-reviewed registry runtime package to the permanent plane.
- * This command never writes tracked files. Static registry identities remain
- * reviewed software inputs; mutable body/contact/photo bindings arrive only
- * through the exact-byte source receipt embedded in the package.
- */
 import { printWorkerPublicationReceipt } from "../lib/civic-data/worker-publication-tasks.ts";
 import { runWorkerPublicationJob } from "../lib/civic-data/worker-publication-job.ts";
 import { publicationVaultReaders } from "../lib/civic-data/publication-vault.ts";
@@ -34,6 +28,18 @@ import { nationalDelivery, publishNationalPlaceSources, type NationalPlacePublic
 async function main(): Promise<void> {
   if (!process.argv.includes("--promote")) {
     throw new Error("Refusing a non-promoting registry operation. Pass --promote; tracked registry runtime files are first-seed/test evidence only.");
+  }
+  if (process.argv.includes("--legistar-members")) {
+    const { refreshLegistarMembers } = await import("../lib/sources/legistar/members-refresh.ts");
+    prepareProductionCivicDataWrite();
+    const store = new PostgresRoutineDataStore();
+    const now = new Date().toISOString();
+    const slug = assignment(process.argv, "legistar-client");
+    if (!slug || !/^[a-z0-9_-]+$/i.test(slug)) throw new Error("LEGISTAR_MEMBERS_CLIENT_MISSING");
+    const result = await refreshLegistarMembers(store, now, slug);
+    console.log(JSON.stringify(result));
+    await printWorkerPublicationReceipt(store, "registry-runtime-bindings", [], result, now);
+    return;
   }
   const workerRosters = assignment(process.argv, "worker-rosters");
   const nationalZips = assignment(process.argv, "national-zips");
@@ -101,9 +107,7 @@ async function main(): Promise<void> {
       workerPublications: report, nationalPlaces, nationalPublications, failures }, null, 2));
     const delivery = nationalDelivery(nationalPublications);
     delivery.gaps.push(...nationalPlaces.flatMap(place => "deferred" in place ? [{ key: `zip:${place.zip}`, detail: place.deferred }] : []));
-    // The worker also completes when its lease's due check finds that another
-    // pass already worked the place. Name the current door with zero delivery;
-    // otherwise this ordinary queue race exits without a receipt forever.
+    // A lease race can finish without delivery; name the current door so the pass still emits its receipt.
     if (!delivery.versionId && delivery.records === 0 && delivery.gaps.length === 0 && failures.length === 0 &&
       (nationalPlaces.some(place => !("deferred" in place)) || Boolean(nationalZips?.split(",").some(Boolean)))) {
       const pointer = await store.readPromotionIdentity("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE);

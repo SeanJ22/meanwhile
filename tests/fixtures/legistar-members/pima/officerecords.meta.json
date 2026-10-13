@@ -1,0 +1,7 @@
+{
+  "sourceUrl": "https://webapi.legistar.com/v1/pima/officerecords?$top=1000",
+  "state": "AZ",
+  "retrievedAt": "2026-10-13T19:21:39.832867+00:00",
+  "sha256": "1353a97595a71612c0a38a265e16aa623d2cf0db42bbfbbd587b9500a211725a",
+  "records": 53
+}

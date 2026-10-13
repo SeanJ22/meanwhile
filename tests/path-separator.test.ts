@@ -9,13 +9,6 @@ import { posixRelative, toPosix } from "../scripts/repo-path.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
-/**
- * A repo-relative path is POSIX, normalized once where it is produced (`scripts/repo-path.mjs`) and compared as
- * POSIX everywhere. This guard catches turning a POSIX literal into platform separators and a backslash used as a
- * separator in a repo-path literal. It cannot catch a comparison that forgot to normalize; allowlists should
- * assert that every entry binds to a file the sweep walks.
- */
-
 const SWEPT_ROOTS = ["app", "components", "hooks", "lib", "scripts", "tests"];
 const SOURCE = /\.(ts|tsx|mts|mjs|js)$/;
 
@@ -123,10 +116,6 @@ test("a state holding path compares the same on both platforms", () => {
   assert.equal(toPosix("data\\states\\wi\\ballot\\wi-dane-2028.json"), "data/states/wi/ballot/wi-dane-2028.json");
 });
 
-/**
- * A URL pathname is not a filesystem path: on Windows `new URL(import.meta.url).pathname` is `/C:/...`, which
- * `join()` resolves against the working directory. Invisible on Linux. `fileURLToPath` is the decoder.
- */
 test("no file URL is used as a path without fileURLToPath", () => {
   // Assembled from pieces so this guard does not match itself.
   const BANNED = new RegExp(String.raw`new URL\([^)]*\)\.` + "pathname");
@@ -134,7 +123,6 @@ test("no file URL is used as a path without fileURLToPath", () => {
   // These parse acquired HTTPS routes, never file URLs; each exception is expression-exact.
   const URL_COMPONENT_ONLY = new Map<string, string>([
     ["lib/officials/federal-directory-data-plane.ts", ["new URL(row.finalUrl)", "pathname"].join(".")],
-    ["lib/civic-data/derived-meeting-wiring.ts", ["new URL(input.route)", "pathname"].join(".")],
     // The Census downloader takes only the final HTTPS path segment for its cache filename.
     ["scripts/fetch-districts.ts", ["new URL(url)", "pathname"].join(".")],
     // The live-write guard compares a browser request's HTTPS path against the write routes.

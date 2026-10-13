@@ -77,7 +77,7 @@ function candidate(id: string, over: Partial<RoutineCandidate> = {}): RoutineCan
     },
     normalization: {
       succeeded: true,
-      parserVersion: "fec-funding/3",
+      parserVersion: "fec-funding/4",
       schemaVersion: "2",
       normalizedHash: HASH,
       inputRecords: 1,
@@ -302,7 +302,7 @@ test("the standing promotion door binds adapter output to its exact registered c
   assert.match(routineCandidateContractIssue("fec-funding", { ...exact, sourceId: "census-data-api" }) ?? "", /source/);
   assert.match(routineCandidateContractIssue("fec-funding", { ...exact, recordClass: "CENSUS_REFERENCE" }) ?? "", /record class/);
   assert.match(routineCandidateContractIssue("fec-funding", { ...exact, normalization: { ...exact.normalization, parserVersion: "fec-funding\/1" } }) ?? "", /parser/);
-  assert.match(routineCandidateContractIssue("fec-funding", { ...exact, retrieval: { ...exact.retrieval, requestedUrl: "https://example.gov/" } }) ?? "", /requested route/);
+  assert.match(routineCandidateContractIssue("fec-funding", { ...exact, retrieval: { ...exact.retrieval, requestedUrl: "https://example.gov/" } }) ?? "", /FINAL_ROUTE_NOT_REGISTERED/);
 });
 
 test("registered promotion durably reads back the exact Reader projection instead of inferring delivery", async () => {
@@ -1043,7 +1043,7 @@ test("a pre-parser source failure is one durable terminal event with a validatio
     requestedUrl: "https://api.open.fec.gov/v1/",
     attemptedAt: NOW,
     failureDetail: "HTTP 403 from the official route",
-    parserVersion: "fec-funding/3",
+    parserVersion: "fec-funding/4",
   });
   const outcome = await processRoutineCandidate(store, blocked, NOW);
   assert.equal(outcome.candidate.state, "SOURCE_BLOCKED");
@@ -1066,7 +1066,7 @@ test("explicit bounded authoritative absence can promote", async () => {
     sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-candidate:H6AZ00000:2026"),
     normalization: {
       succeeded: true,
-      parserVersion: "fec-funding/3",
+      parserVersion: "fec-funding/4",
       schemaVersion: "2",
       normalizedHash: HASH,
       inputRecords: 0,

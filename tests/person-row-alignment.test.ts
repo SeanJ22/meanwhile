@@ -42,13 +42,23 @@ test("ALIGN-1: the row is still a wrapping baseline row (NH-1 is not undone)", (
   assert.match(block, /align-items:\s*baseline/);
 });
 
-test("ALIGN-1: Who Governs Here uses the wrapping person row", () => {
-  const source = readFileSync("components/map/coverage-notice.tsx", "utf8");
-  assert.match(
-    source,
-    /className="person-row"/,
-    "Who Governs Here must retain the shared left-aligned person row",
-  );
+test("ALIGN-1: the coverage notice uses the shared row", () => {
+  // The fix is class-wide only while the class is shared, so the consumers are asserted by name.
+  const consumers = [
+    "components/map/coverage-notice.tsx",
+  ];
+  for (const file of consumers) {
+    const src = readFileSync(file, "utf8");
+    assert.match(
+      src,
+      /className="person-row"/,
+      `${file} no longer renders \`.person-row\`. ALIGN-1's fix is one declaration ` +
+        `on a SHARED row; a surface that leaves the class takes its own alignment ` +
+        `with it and this guard stops covering it.`,
+    );
+  }
+
+
 });
 
 test("ALIGN-1: no OTHER rule right-justifies a person row", () => {

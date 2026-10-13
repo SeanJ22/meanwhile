@@ -637,9 +637,9 @@ test("funding reaction target ids validate against the snapshot", () => {
 
 test("the FEC acquisition script has no tracked writer and is reachable only through the standing routine contract", () => {
   const script = readFileSync(join(ROOT, "scripts", "fetch-fec.mts"), "utf8");
-  assert.match(script, /if \(!promote && !matchOnly\)/);
+  assert.match(script, /if \(!promote\)/);
   assert.match(script, /fecFundingCandidate\(/);
-  assert.match(script, /processRegisteredRoutineCandidate\(store, "fec-funding", candidate, completedAt\)/);
+  assert.match(script, /processRegisteredRoutineCandidate\(store, "fec-funding", candidate, new Date\(\)\.toISOString\(\)\)/);
   assert.doesNotMatch(script, /writeStampStable|writeFile(?:Sync)?|absolutePath:\s*OUT|--allow-shrink|findShrinkRegressions/);
 
   const manifest = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")) as {

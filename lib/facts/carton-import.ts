@@ -9,6 +9,8 @@ import { openBlank, type Clocks, type FactDb, type Query } from "./publish.ts";
 import { nameKey, publishRosterFacts } from "./roster-facts.ts";
 import { publishCommentFacts } from "./comment-facts.ts";
 import type { CommentAccess } from "../registry/comment-access-client.ts";
+import type { Body } from "../registry/types.ts";
+import { publishBodyOffice } from "../civic-data/worker-body-directory.ts";
 
 interface CartonImportReport {
   readonly rosters: number;
@@ -122,5 +124,41 @@ export async function importCartonComments(input: {
   }
   await input.facts.query(`INSERT INTO fact_store_load (source, sha256) VALUES ($1, $2)
     ON CONFLICT (source) DO UPDATE SET sha256 = EXCLUDED.sha256, loaded_at = now()`, [CARTON_COMMENTS, createHash("sha256").update(input.versionId).digest("hex")]);
+  return report;
+}
+
+const CARTON_OFFICES = "carton:office-contacts";
+
+/** The bodies whose office address or phone readers saw before facts, until they have been carried onto facts once. */
+export async function cartonOffices(query: Query, registry: { readonly versionId: string; readonly payload: { readonly registry: { readonly bodies: readonly Body[] } } } | null):
+  Promise<{ readonly versionId: string; readonly bodies: readonly Body[] } | null> {
+  if (!registry || (await query("SELECT 1 FROM fact_store_load WHERE source = $1", [CARTON_OFFICES])).length) return null;
+  return { versionId: registry.versionId, bodies: registry.payload.registry.bodies.filter(row => (row.officeAddress || row.officePhone) && row.provenance.sourceUrl) };
+}
+
+/** The office addresses and phones readers saw on bodies before facts, each re-proved on a saved copy of the body's page. */
+export async function importCartonOffices(input: {
+  readonly bodies: readonly Body[]; readonly versionId: string;
+  readonly facts: FactDb & { readonly query: Query }; readonly clocks: Clocks;
+  readonly repos: Pick<ControlPlaneRepositories, "artifacts" | "artifactsByCanonicalUrl">;
+  readonly vault: EvidenceStore; readonly fetch: ProbeFetch; readonly now: string;
+}): Promise<CartonImportReport> {
+  const report = { rosters: 0, live: 0, confirmed: 0, blanks: 0, unreadable: [] as { url: string; reason: string }[] };
+  for (const body of input.bodies) {
+    const url = body.provenance.sourceUrl!;
+    const read = await receiptCapture({ url, repos: input.repos, vault: input.vault, fetch: input.fetch, now: input.now });
+    if ("error" in read) {
+      report.unreadable.push({ url, reason: read.error });
+      continue;
+    }
+    await publishBodyOffice(input.facts, body, { bodyId: body.id, capture: read.capture, address: body.officeAddress ?? null, phone: body.officePhone ?? null },
+      `carton:${input.versionId}`, input.clocks, new Date(input.now));
+    report.rosters++;
+  }
+  const tally = await input.facts.query(`SELECT count(*) FILTER (WHERE status = 'live')::int AS live FROM fact WHERE produced_by = $1 AND field LIKE 'office_%'`, [`carton:${input.versionId}`]);
+  report.live = Number(tally[0]?.live ?? 0);
+  report.blanks = Number((await input.facts.query(`SELECT count(*)::int AS n FROM blank WHERE field LIKE 'office_%'`))[0]?.n ?? 0);
+  await input.facts.query(`INSERT INTO fact_store_load (source, sha256) VALUES ($1, $2)
+    ON CONFLICT (source) DO UPDATE SET sha256 = EXCLUDED.sha256, loaded_at = now()`, [CARTON_OFFICES, createHash("sha256").update(input.versionId).digest("hex")]);
   return report;
 }

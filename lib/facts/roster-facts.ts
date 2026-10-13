@@ -110,10 +110,10 @@ export async function publishRosterFacts(db: FactDb & { readonly query: (text: s
   return tally;
 }
 
-/** Facts about a body itself (its name, regular schedule, agenda link), each with the page's own words. */
+/** Facts about a body itself (its name, schedule, agenda link, office address and phone), each in the page's own words. */
 export async function publishBodyFacts(db: FactDb & { readonly query: (text: string, params?: readonly unknown[]) => Promise<readonly Record<string, unknown>[]> },
   input: { readonly bodyId: string; readonly capture: WorkerPublicationCapture; readonly producedBy: string;
-    readonly facts: readonly { readonly field: "name" | "meeting_cadence" | "agenda_url"; readonly value: string; readonly quote: string }[] },
+    readonly facts: readonly { readonly field: "name" | "meeting_cadence" | "agenda_url" | "office_address" | "office_phone"; readonly value: string; readonly quote: string }[] },
   clocks: Clocks, now: Date): Promise<readonly PublishOutcome[]> {
   const entity = await readCheckEntity(db.query, input.bodyId);
   if (!entity || !input.facts.length) return [];
@@ -121,7 +121,7 @@ export async function publishBodyFacts(db: FactDb & { readonly query: (text: str
   const provenance = captureProvenance(input.capture, entity.hosts);
   const out: PublishOutcome[] = [];
   for (const { field, value, quote } of input.facts) {
-    out.push(await publishClaim(db, { entity, field, fieldKind: field === "name" ? "officeholder" : "meeting", provenance, value, valueText: quote, quote, copy,
+    out.push(await publishClaim(db, { entity, field, fieldKind: field === "name" ? "officeholder" : field.startsWith("office_") ? "contact" : "meeting", provenance, value, valueText: quote, quote, copy,
       producedBy: input.producedBy, costUsd: 0 }, clocks, now));
   }
   return out;

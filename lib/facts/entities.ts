@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { parseCsv } from "../reference/csv.ts";
 import { readCensusGovernmentFacts, type CensusGovernmentFacts } from "../registration/jurisdictions.ts";
 import type { FactDb, Query } from "./publish.ts";
+import { hostOf, isOfficialHost } from "./check.ts";
 
 type EntityKind = "place" | "government" | "body" | "seat" | "person" | "meeting" | "agenda_item" | "bill" | "vote_event"
   | "election" | "contest" | "candidacy" | "measure" | "committee" | "statement" | "law_question" | "news_item";
@@ -188,4 +189,10 @@ export async function ensureEntity(query: Query, row: EntityRow): Promise<void> 
   await query(`INSERT INTO entity (id, kind, name, state, parent_id)
     SELECT $1, $2, $3, $4, (SELECT id FROM entity WHERE id = $5) ON CONFLICT (id) DO NOTHING`,
   [row.id, row.kind, row.name, row.state, row.parentId]);
+}
+
+/** A .gov page code has already matched to this entity is one of its own sites. */
+export async function learnOfficialHost(query: Query, entityId: string, url: string): Promise<void> {
+  const host = hostOf(url);
+  if (isOfficialHost(host, [])) await query("INSERT INTO entity_host (entity_id, host) SELECT id, $2 FROM entity WHERE id = $1 ON CONFLICT DO NOTHING", [entityId, host]);
 }

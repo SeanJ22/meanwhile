@@ -1,7 +1,7 @@
 import { readMeetingDiscoveryInputs, meetingDiscoveryInputsDue, runMeetingDiscoveryChain, type MeetingDiscoveryInputs } from "../lib/civic-data/meeting-discovery-due.ts";
 import { readerFactDb } from "../lib/facts/db.ts";
 import { ensureFactEntities, registeredStates } from "../lib/facts/entities.ts";
-import { cartonComments, cartonRosters, importCartonComments, importCartonRosters } from "../lib/facts/carton-import.ts";
+import { cartonComments, cartonOffices, cartonRosters, importCartonComments, importCartonOffices, importCartonRosters } from "../lib/facts/carton-import.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { buildBoxFindings } from "../lib/control-plane/workers/scout-extraction.ts";
 import { workerPublicationContext } from "../lib/civic-data/worker-publication-context.ts";
@@ -78,7 +78,7 @@ import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { attestPromotedVersion } from "../lib/civic-data/read-model.ts";
 import { ATTESTED_PROMOTIONS_ENV, serializeAttestedPromotions } from "../lib/civic-data/attested-promotion.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
-import { REGISTRY_RUNTIME_SCOPE } from "../lib/registry/runtime-data-plane.ts";
+import { readRegistryRuntimePrior, REGISTRY_RUNTIME_SCOPE } from "../lib/registry/runtime-data-plane.ts";
 import {
   ROUTINE_CHILD_MAX_BUFFER_BYTES,
   ROUTINE_CHILD_TIMEOUT_MS,
@@ -681,18 +681,20 @@ if (!PUBLISH_NOW) {
   } catch (error) {
     supervisorFailures.push({ taskId: "fact-store-entities", code: "FACT_ENTITIES_LOAD_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
   }
-  step = "carrying the rosters and comment rules readers already see onto facts";
+  step = "carrying the rosters, office contacts and comment rules readers already see onto facts";
   try {
     const facts = readerFactDb();
     const rosters = await cartonRosters(facts.query, id => store.readCandidate(id), REGISTRY_RUNTIME_SCOPE);
     const comments = await cartonComments(facts.query, id => store.readCandidate(id));
+    const offices = await cartonOffices(facts.query, await readRegistryRuntimePrior(store, RUN_STARTED_AT));
     const connection = controlPlaneUrlFromEnv();
-    if ((rosters || comments) && connection) {
+    if ((rosters || comments || offices) && connection) {
       const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
       const common = { facts, clocks: factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null), repos,
         vault: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), fetch: pacedProbeFetch({ pacing: repos.websitePacing }), now: RUN_STARTED_AT };
       for (const [label, report] of [["rosters", rosters && await importCartonRosters({ ...rosters, ...common })],
-        ["comment rules", comments && await importCartonComments({ ...comments, ...common })]] as const) {
+        ["comment rules", comments && await importCartonComments({ ...comments, ...common })],
+        ["office contacts", offices && await importCartonOffices({ ...offices, ...common })]] as const) {
         if (report) console.log(`fact store ${label}: ${report.live} facts live, ${report.confirmed} confirmed, ${report.blanks} blanks, ${report.unreadable.length} pages unreadable`);
       }
     }

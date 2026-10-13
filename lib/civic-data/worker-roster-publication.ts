@@ -16,7 +16,7 @@ import { processRegisteredManualCandidate } from "./promotion.ts";
 import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
-import { heldDirectoryReading, materializeBodyDirectoryWork, workerBodyDirectoryPackage, type DirectoryReading } from "./worker-body-directory.ts";
+import { heldDirectoryReading, materializeBodyDirectoryWork, publishBodyOffice, workerBodyDirectoryPackage, type DirectoryReading } from "./worker-body-directory.ts";
 import { runtimeKinds } from "../registry/kinds-runtime.ts";
 import { publicationRecordChanges } from "./publication-record-changes.ts";
 import { auditPull, capturesForPublication, captureIntact, jobWorkerResults, latestParserResult, validatorObservation } from "./worker-publication-evidence.ts";
@@ -33,7 +33,7 @@ import { factClocks } from "../facts/clocks.ts";
 import type { Clocks, FactDb, Query } from "../facts/publish.ts";
 import { publishBodyFacts, publishRosterFacts, type RosterFactsReport } from "../facts/roster-facts.ts";
 import { openBlank } from "../facts/publish.ts";
-import { hostOf, isOfficialHost } from "../facts/check.ts";
+import { learnOfficialHost } from "../facts/entities.ts";
 
 export interface WorkerPublicationCapture {
   readonly campaign?: import("../control-plane/promotion/section3.ts").Section3Page["campaign"];
@@ -159,8 +159,7 @@ export async function publishBodyRoster(facts: FactDb & { readonly query: Query 
       detail: reading.capture.evidence.canonicalUrl, retryMinutes: input.clocks.retryMinutes("officeholder") });
     throw new Error("ROSTER_PAGE_NOT_THIS_BODY");
   }
-  const host = hostOf(reading.capture.evidence.canonicalUrl);
-  if (isOfficialHost(host, [])) await facts.query("INSERT INTO entity_host (entity_id, host) SELECT id, $2 FROM entity WHERE id = $1 ON CONFLICT DO NOTHING", [body.id, host]);
+  await learnOfficialHost(facts.query, body.id, reading.capture.evidence.canonicalUrl);
   const tally = await publishRosterFacts(facts, { body: { id: body.id, name: body.name, state: input.state, parentId: body.ocdId },
     capture: reading.capture, members: reading.members, complete: reading.complete, producedBy: reading.id }, input.clocks, input.now);
   const named = body.name === null && division ? bodyNameFromPage(text, division.label) : null;
@@ -253,13 +252,14 @@ export async function publishOwedRosterFacts(input: {
 
 /** A government's saved directory page publishes its boards and commissions and opens each one's own work. */
 export async function publishWorkerDirectoryResults(input: {
-  readonly repos: ControlPlaneRepositories; readonly store: RoutineDataStore;
+  readonly repos: ControlPlaneRepositories; readonly store: RoutineDataStore; readonly facts: FactDb & { readonly query: Query };
   readonly workItemIds: readonly string[]; readonly now: string;
   readonly readCapture: (id: string, results: readonly WorkerResultRecord[]) => Promise<WorkerPublicationCapture>;
   readonly readHeld?: (record: ArtifactRecord) => Promise<WorkerPublicationCapture | null>;
 }): Promise<PublicationReport> {
   if (!input.workItemIds.length) return [];
-  const kinds = runtimeKinds((await input.repos.adminConfig.read("current"))?.value ?? null);
+  const config = (await input.repos.adminConfig.read("current"))?.value ?? null;
+  const kinds = runtimeKinds(config), clocks = factClocks(config);
   const captureReaders = await publicationCaptureReaders(input.repos, input.readCapture, input.readHeld);
   const { readHeld } = captureReaders;
   const { results: records, readCapture } = await jobWorkerResults(input.repos, input.workItemIds, captureReaders.readCapture);
@@ -326,6 +326,9 @@ export async function publishWorkerDirectoryResults(input: {
         { workerResultId: readingId, stage: "LIVE", records: changes.recordChanges.length,
           changedRecords: published.confirmed ? 0 : changes.records.added + changes.records.changed, versionId }, input.now);
       registry = acceptedRegistryPrior(published);
+      for (const contact of directoryPackage.contacts) {
+        await publishBodyOffice(input.facts, prepared.payload.registry.bodies.find(row => row.id === contact.bodyId)!, contact, readingId, clocks, new Date(input.now));
+      }
       const count = prepared.payload.registry.bodies.length;
       const unresolved = directoryPackage.unresolved;
       outcome = { at: input.now, workerResultId: readingId, status: unresolved.length ? "PARTIALLY_PUBLISHED" : "PUBLISHED",

@@ -47,17 +47,20 @@ export async function publishOwedCommentFacts(input: {
       if (!capture) throw new Error("COMMENT_PAGE_NOT_SAVED");
       const bodyId = plan.publication.bodyId;
       const body = registry?.payload.registry.bodies.find(row => row.id === bodyId) ?? null;
-      let live = 0, blanks = 0;
+      let live = 0, added = 0, reused = 0, blanks = 0;
       for (const record of extraction.records.filter(record => !pull?.recordIds.has(record.id) && !pull?.all)) {
         const outcomes = await publishCommentFacts(input.facts, { body: { id: bodyId, name: body?.name ?? null,
           state: plan.jurisdiction.toUpperCase().slice(0, 2), parentId: body?.ocdId ?? null }, capture, producedBy: parser.id,
         reading: { fields: record.fields, fieldSources: parserFieldSources(record.id, record.fields, extraction.spans, captures, input.now) } }, clocks, new Date(input.now));
         live += outcomes.filter(row => !("blank" in row)).length;
+        added += outcomes.filter(row => "decision" in row && row.decision === "PUBLISH").length;
+        reused += outcomes.filter(row => "decision" in row && row.decision === "CONFIRM").length;
         blanks += outcomes.filter(row => "blank" in row).length;
       }
       outcome = withPageDoor({ at: input.now, workerResultId: parser.id, status: live === 0 ? "HELD" : blanks ? "PARTIALLY_PUBLISHED" : "PUBLISHED",
         code: live === 0 ? "COMMENT_FACTS_BLANK" : "VERIFIED_RESULT_PUBLISHED",
         detail: `${live} comment rule facts checked against ${capture.evidence.canonicalUrl}; ${blanks} stay open as blanks with their reasons.`,
+        records: { added, changed: 0, reused },
         ...(live === 0 ? { recovery: "WORKER" as const } : {}), candidateId: null, versionId: null }, capture, plan.contract.recordClass);
     } catch (error) {
       const detail = sanitizedErrorDiagnostic(error);

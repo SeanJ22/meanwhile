@@ -5,9 +5,12 @@ import { createHash } from "node:crypto";
 import test from "node:test";
 import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { readRegistryRuntimePrior, registryRuntimeCandidate, type RegistryRuntimePrior, type RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
+import { readRegistryRuntimePrior, registryRuntimeCandidate, type RegistryRuntimeCarton, type RegistryRuntimePrior, type RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import { readHeldDirectory } from "../lib/civic-data/worker-held-directory.ts";
-import { heldDirectoryReading, workerBodyDirectoryPackage } from "../lib/civic-data/worker-body-directory.ts";
+import { heldDirectoryReading, publishBodyOffice, workerBodyDirectoryPackage } from "../lib/civic-data/worker-body-directory.ts";
+import { factClocks } from "../lib/facts/clocks.ts";
+import { withFactRegistry } from "../lib/facts/registry-overlay.ts";
+import { factDb } from "./helpers/fact-db.ts";
 import { bodyDirectoryDiscoveryPlan } from "../lib/control-plane/workers/autonomous-plan.ts";
 import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
@@ -133,7 +136,7 @@ test("a board's schedule publishes through the registry door itself, not only in
     "The commission meets on the second Monday of each month at 4:30 p.m. in City Hall.");
 });
 
-test("a board's office address and phone attach from its own section, with the page as source; another board's never crosses over", async () => {
+test("a board's office address and phone become facts from its own section, with the page as source; another board's never crosses over", async () => {
   const contact = (name: string, text: string) => section(name).replace("<p>Members are appointed", `<p>${text}</p><p>Members are appointed`);
   const html = page("Commissions", contact("Neighborhoods Commission", "Office: 120 W Main Street, Benson, AZ 85602. Phone: (520) 555-0142.") +
     section("Tourism Commission"));
@@ -142,9 +145,15 @@ test("a board's office address and phone attach from its own section, with the p
   const base = await prior();
   const saved = capture(html, URL_);
   const reading = await heldDirectoryReading({ plan, prior: base, now: NOW, artifacts: [artifact(saved)], readHeld: async () => saved });
-  const model = registryRuntimeCandidate(workerBodyDirectoryPackage({ plan, held: reading!, prior: base, now: NOW }).prepared, { prior: base }).readModel as RegistryRuntimeReadModel;
+  const directory = workerBodyDirectoryPackage({ plan, held: reading!, prior: base, now: NOW });
+  const facts = await factDb();
+  for (const contact of directory.contacts) {
+    await publishBodyOffice(facts, directory.prepared.payload.registry.bodies.find(body => body.id === contact.bodyId)!, contact, reading!.id, factClocks(null), new Date(NOW));
+  }
+  const model = await withFactRegistry(registryRuntimeCandidate(directory.prepared, { prior: base }).readModel as RegistryRuntimeCarton, facts.query);
   const neighborhoods = model.registry.bodies.find(body => body.name === "Neighborhoods Commission")!;
-  assert.deepEqual([neighborhoods.officeAddress, neighborhoods.officePhone, neighborhoods.provenance.sourceUrl], ["120 W Main Street, Benson, AZ 85602", "(520) 555-0142", URL_]);
+  assert.deepEqual([neighborhoods.officeAddress, neighborhoods.officePhone, neighborhoods.fieldSources?.officeAddress?.sourceUrl, neighborhoods.fieldSources?.officePhone?.sourceUrl],
+    ["120 W Main Street, Benson, AZ 85602", "(520) 555-0142", URL_, URL_]);
   const tourism = model.registry.bodies.find(body => body.name === "Tourism Commission")!;
   assert.equal(tourism.officeAddress, undefined);
   assert.equal(tourism.officePhone, undefined);

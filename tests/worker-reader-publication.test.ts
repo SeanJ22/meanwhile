@@ -1,4 +1,5 @@
 import { runWorkerPublicationJob } from "../lib/civic-data/worker-publication-job.ts";
+import { factDb } from "./helpers/fact-db.ts";
 import {readGenericBallotProjection} from "../lib/ballot/generic-projection.ts";
 import {readerBallotSourcesForDivisions} from "../lib/ballot/reader-sources.ts";
 import {candidateEnrichmentUniversesFromHoldings} from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
@@ -128,7 +129,7 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
   if (contractId === "voting-sites") assert.deepEqual(queued[0].command.slice(0, 2), ["scripts/fetch-voting-sites.mts", "--promote"], "the existing voting command handles worker results before legacy acquisition");
   else if (!directory) assert.ok(queued[0].command.includes(`--contract=${contractId}`));
   assert.ok(queued[0].command.some(arg => arg === `--${directory ? "worker-directories" : "worker-results"}=${h.item.id}`));
-  const input = { repos: h.repos, store, contractId: contractId as WorkerReaderContract, workItemIds: [h.item.id], now: h.now(),
+  const input = { repos: h.repos, store, facts: await factDb(), contractId: contractId as WorkerReaderContract, workItemIds: [h.item.id], now: h.now(),
     readCapture: async (id: string) => { const evidence = evidenceProjection(await runtime.readEvidence(id));
       return { evidence, observedAt: evidence.retrievedAt, httpStatus: 200, transport: "REACHABLE", partial: false }; } };
   return { input, h, store, body, rows, results, artifact, ready, prior, runtime };

@@ -2,8 +2,8 @@
 /**
  * Standing official state-roll-call boundary.
  *
- * One invocation owns one ready NH or NJ official-source contract. Arizona
- * native API votes use az-votes-refresh.mts; a landing page is not a vote source.
+ * One invocation owns one ready NH or NJ official-source contract. National
+ * native votes use openstates-votes-refresh.mts; a landing page is not a vote source.
  * Acquired facts retain exact source-native identities and their prior LKG.
  *
  * @freshness-reads-here — retrievedAt is minted only after the official

@@ -1104,15 +1104,16 @@ test("zero without absence evidence is CANNOT_TELL and holds LKG", async () => {
   }), "CANNOT_TELL", "ZERO_IS_NOT_ABSENCE");
 });
 
-test("T4 intermediary bytes remain research-only and cannot auto-promote", async () => {
-  await expectHeld((base) => ({
-    ...base,
-    sourceId: "legiscan",
-    recordClass: "STATE_ROLL_CALL",
-    scope: "US-AZ:2026",
-    retrieval: { ...base.retrieval, finalUrl: "https://api.legiscan.com/?op=getDatasetList" },
-    normalization: { ...base.normalization, parserVersion: "legiscan-bulk/1" },
-  }), "SOURCE_BLOCKED", "SOURCE_NOT_AUTO_PROMOTABLE");
+test("attributed LegiScan projections require exact state-specific source and identity verification", async () => {
+  const store = new MemoryRoutineDataStore();
+  const base = candidate("unverified-vendor-projection"), scope = "US-AZ:legiscan-votes:v1";
+  const outcome = await processRoutineCandidate(store, { ...base, sourceId: "legiscan", recordClass: "STATE_ROLL_CALL", scope,
+    sourceProjectionEvidence: sourceProjectionEvidence("legiscan", "STATE_ROLL_CALL", scope),
+    retrieval: { ...base.retrieval, requestedUrl: "https://api.legiscan.com/?op=getDatasetList&state=AZ", finalUrl: "https://api.legiscan.com/?op=getDatasetList&state=AZ" },
+    normalization: { ...base.normalization, parserVersion: "legiscan-votes/1" },
+  }, NOW);
+  assert.equal(outcome.promoted, null);
+  assert.ok(outcome.candidate.failureCode);
 });
 
 test("all standing routine-source destructive classes are enumerated by the contract", () => {

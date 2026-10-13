@@ -397,7 +397,6 @@
     box-shadow: var(--shadow-panel);
   }
 
-  /* Theme toggle and reset sit absolutely in the sidebar header: reset at right: 0, theme at right: 36px. */
   .icon-btn {
     background: transparent;
     border: 1px solid var(--panel-border);
@@ -673,17 +672,6 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 .brand-change:hover {
   color: var(--link);
   border-color: var(--link);
-}
-
-.brand .reset-view-btn {
-  position: absolute;
-  top: 0;
-  right: 0;
-}
-.brand .theme-toggle-btn {
-  position: absolute;
-  top: 0;
-  right: 36px;
 }
 
 .view-toggle {
@@ -5455,6 +5443,8 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
 }
 @media (min-width: 640px) and (max-width: 1023px) {
   :root { --sidebar-w: 332px; }
+  /* 38px measures 221px; beside the 96px of controls only 190px is left here. `Logo` writes its size inline. */
+  .mw-reader .brand .wtp-logo { --wtp-logo-size: 32px !important; font-size: 32px !important; }
 }
 [data-theme="light"] {
   --ground: #eceef1;

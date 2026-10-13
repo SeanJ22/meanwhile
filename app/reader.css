@@ -31,16 +31,26 @@
   font-size: var(--text-mw-15);
 }
 .mw-theme-glyph {
-  width: 16px;
-  height: 16px;
-  border-radius: var(--radius-circle);
-  box-sizing: border-box;
-  border: 1.5px solid currentColor;
-  background: linear-gradient(90deg, currentColor 50%, transparent 50%);
-  transition: transform var(--dur-lumen) var(--ease-lumen);
+  display: inline-grid;
+  width: 18px;
+  height: 18px;
 }
-[data-theme="light"] .mw-theme-glyph {
-  transform: rotate(180deg);
+.mw-theme-glyph svg {
+  grid-area: 1 / 1;
+  width: 18px;
+  height: 18px;
+  transition:
+    opacity var(--dur-lumen) var(--ease-lumen),
+    transform var(--dur-lumen) var(--ease-lumen);
+}
+.mw-theme-moon,
+[data-theme="light"] .mw-theme-sun {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.6);
+}
+[data-theme="light"] .mw-theme-moon {
+  opacity: 1;
+  transform: none;
 }
 .mw-pill-btn {
   min-height: var(--mw-44);
@@ -149,6 +159,7 @@
   gap: var(--space-2);
 }
 .mw-reader .brand .theme-toggle-btn {
+  position: static;
   margin: 0;
 }
 .mw-sheet-close {

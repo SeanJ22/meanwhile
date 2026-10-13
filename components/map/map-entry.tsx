@@ -1804,7 +1804,7 @@ function MapEntryInner() {
                 <span aria-hidden="true">☰</span>
               </button>
               <span className="mw-header-logo">
-                <Logo variant="wordmark" size={30} />
+                <Logo variant="wordmark" size={38} />
               </span>
               <span className="mw-header-spacer" />
               <ThemeToggle className="mw-header-theme" />

@@ -25,17 +25,24 @@ function rosterOfficeholderIds(payload: unknown): readonly string[] | null {
  * scope. No tracked or vendor roster is inspected.
  */
 export async function officialStateRollIdentityAuthorityIssue(
-  store: Pick<RoutineDataStore, "readPromotion">,
+  store: Pick<RoutineDataStore, "readPromotion" | "readCandidate">,
   candidate: RoutineCandidate,
 ): Promise<string | null> {
   if (candidate.recordClass !== "STATE_ROLL_CALL") return null;
   if (candidate.sourceId === "plural-openstates-votes") {
     // This separately attributed source retains native IDs. Its typed reader
     // validates every fact; it never claims an official-roster crosswalk.
-    const { AZ_PLURAL_VOTES_SCOPE, pluralVotesProjectionIssue } = await import("../sources/plural/votes.ts");
-    return candidate.scope === AZ_PLURAL_VOTES_SCOPE
-      ? pluralVotesProjectionIssue(candidate.readModel as import("../sources/plural/votes.ts").PluralVotesProjection)
-      : "The native Arizona vote source has an unregistered scope.";
+    const { pluralVotesScope, pluralVotesProjectionIssue } = await import("../sources/plural/votes.ts");
+    const projection = candidate.readModel as import("../sources/plural/votes.ts").PluralVotesProjection;
+    return !pluralVotesProjectionIssue(projection) && candidate.scope === pluralVotesScope(projection.state)
+      ? null
+      : "The native vote source has an invalid state projection or scope.";
+  }
+  if (candidate.sourceId === "legiscan") {
+    const { legiscanVotesScope, legiscanVotesProjectionIssue, legiscanVoteIdentityAuthorityIssue } = await import("../sources/legiscan/votes.ts");
+    const projection = candidate.readModel as import("../sources/legiscan/votes.ts").LegiscanVotesProjection;
+    return !legiscanVotesProjectionIssue(projection) && candidate.scope === legiscanVotesScope(projection.state)
+      ? await legiscanVoteIdentityAuthorityIssue(store, candidate) : "The LegiScan vote source has an invalid state projection or scope.";
   }
   // A candidate already refused by its own completeness contract keeps that disposition.
   if (candidateHasIntrinsicHorizonRefusal(candidate)) return null;

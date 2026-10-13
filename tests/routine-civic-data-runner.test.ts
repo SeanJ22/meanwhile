@@ -273,7 +273,8 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "az-state-legislators",
     "nj-state-legislators",
     ...PLURAL_STATES.map(state => `openstates-people-${state}`),
-    "az-openstates-votes",
+    ...PLURAL_STATES.map(state => `openstates-votes-${state}`),
+    ...PLURAL_STATES.map(state => `legiscan-votes-${state}`),
     "nh-state-rollcalls",
     "nj-state-rollcalls",
     "census-acs-population",
@@ -371,8 +372,9 @@ test("one canonical registry owns every supported authority and refuses arbitrar
   assert.equal(arbitrary.ok, false);
   if (!arbitrary.ok) assert.equal(arbitrary.code, "FINAL_ROUTE_NOT_REGISTERED");
   const intermediary = authorityFor("legiscan", "STATE_ROLL_CALL", "https://api.legiscan.com/?op=getRollCall&id=1");
-  assert.equal(intermediary.ok, false);
-  if (!intermediary.ok) assert.equal(intermediary.code, "SOURCE_NOT_AUTO_PROMOTABLE");
+  assert.equal(intermediary.ok, true);
+  assert.equal(SOURCE_AUTHORITIES.legiscan.routineAutoPromotion, true);
+  assert.ok(SOURCE_AUTHORITIES.legiscan.competentFacts.includes("exact native member positions"));
 });
 
 test("routine release output labels the seven-zero constant as structural, never observed", () => {

@@ -1,0 +1,28 @@
+{
+  "capturedAt": "2026-10-13T15:11:46.878248+00:00",
+  "requests": [
+    "https://api.legiscan.com/?op=getDatasetList&state=TX",
+    "https://api.legiscan.com/?op=getDataset&id=2223",
+    "https://api.github.com/repos/openstates/people/contents/data/tx/legislature"
+  ],
+  "sourceResponseSha256": "353a579dc1699093baf2aaced4ef04ed91b5b899906140ebda69ecee4238f7e8",
+  "sourceArchiveSha256": "6ba9a2894dd19ca53be0c7e3503f3b74fef813442499391bd037867eb65a3d3b",
+  "selectedArchiveMembers": [
+    "TX/2025-2025_89th_Legislature_2nd_Special_Session/bill/HB1.json",
+    "TX/2025-2025_89th_Legislature_2nd_Special_Session/vote/1599780.json",
+    "TX/2025-2025_89th_Legislature_2nd_Special_Session/people/5848.json"
+  ],
+  "selection": "Original source bytes for one bill, one roll call, and one person. Tests package these unchanged members in a small archive; this fixture claims no complete session. Dataset access keys are removed from the dataset list.",
+  "licence": "LegiScan CC BY 4.0",
+  "files": {
+    "tx-1599780.json": "9dc211f2f282d8782fe42a7d940360715295be40bdd6ec61153c5e8e566a7e56",
+    "tx-member-www.html": "dfeae606d7fa63b378da6333e57a4b74606057750fca35b001c9cfd79a07f726",
+    "tx-dataset-metadata.json": "ed3aa227fcf7e7929d6d3fce0e1d6065ea3768c78f3b06f624482ede14581614",
+    "openstates-alma-allen.yml": "6ed5c6a86f0616db2a1a5e67ca11b51a8f1a0c6cd0728465e5f02cc484bfc128",
+    "tx-5848.json": "57d4b88d45173ac69d8561b71bfd94496e67ce8687cc278f29bdaae34311dc8b",
+    "tx-member-url-check.json": "904be965110ce6dc2eb47965cabe06bc678d17b0bf994ae33a88c64610fccc62",
+    "tx-member-apex.html": "3fcc9be6f5c5f76ee2074d475bf2f1fb4c425c39c7730820e2eb29763333161b",
+    "tx-dataset-list.json": "612c6d7375b6a6fcc5e4b200eaa2a5ca373963df8fdf63f70cb09c197fe5e9e9",
+    "tx-HB1.json": "3323bdacd221ed7acbf711356b28efe8f809a468cfcd74630d9955b3b8abd1eb"
+  }
+}

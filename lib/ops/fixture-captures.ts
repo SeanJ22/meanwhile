@@ -21,6 +21,32 @@ export interface FixtureCapture {
 /** The sanitized captures. A fixture absent from this list never needed redaction; it is not a fixture claimed clean. */
 export const SANITIZED_CAPTURES: readonly FixtureCapture[] = [
   {
+    path: "tests/fixtures/voting-sources/pima-official-election-native.html",
+    sourceUrl: "https://www.pima.gov/3199/Pima-Votes",
+    capturedOn: "2026-10-13",
+    capturedBy: "the VS-01 official election source capture session, public HTTP GET after robots permission",
+    provesWhat:
+      "Pima County's current election page links the public ArcGIS application whose data sources " +
+      "identify vote-center, early-voting and ballot-drop-box routes",
+  },
+  {
+    path: "tests/fixtures/voting-sources/tx-el-paso-early-native.html",
+    sourceUrl: "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+    capturedOn: "2026-10-13",
+    capturedBy: "the VS-01 official election source capture session, public HTTP GET after robots permission",
+    provesWhat:
+      "El Paso County publishes its November 2026 early-voting locations without requiring a voter's identity",
+  },
+  {
+    path: "tests/fixtures/voting-sources/tx-el-paso-vote-centers-native.html",
+    sourceUrl: "https://epcountyvotestx.gov/voter-information/election-day-vote-centers",
+    capturedOn: "2026-10-13",
+    capturedBy: "the VS-01 official election source capture session, public HTTP GET after robots permission",
+    provesWhat:
+      "El Paso County's own page publishes 123 November 3, 2026 vote centers and 7 a.m. to 7 p.m. hours; " +
+      "the embedded location records are read without using the unrelated map-service credential",
+  },
+  {
     path: "tests/fixtures/legistar-insite-pima-clerk-schedule.html",
     sourceUrl: "https://www.pima.gov/board-of-supervisors-meeting-schedule",
     capturedOn: "2026-08-28",

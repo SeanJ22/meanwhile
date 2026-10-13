@@ -1,37 +1,20 @@
 # Returned: platform-municode
 
-## platform-municode — cleanup list (River's review at fold; delete in stream/platform-municode, then mark READY again)
-
-Lane platform-municode (R3-MUNICODE), cut from river ac3ccf885, tip 5c89ee84a. Added 9,756 lines, deleted 726 lines. Files: 10 added, 0 deleted, 12 modified. Code and tests alone: +381 / −726 (2 files added, 12 modified). Fixtures: +9,375 (8 files added). The READY commit states these counts.
-
-Delete:
-1. Remove the unused `export` (used only inside its own file): lib/sources/municode/index.ts:10 (MunicodeMeeting) and lib/sources/municode/index.ts:21 (MunicodeRaw).
-
-Checked and clean: no commented-out code; no comment over two lines; no leftover of what it replaced (726 lines deleted); the new fixtures are loaded by tests/municode.test.ts through its fixture(name) helper.
-
-
 lane: platform-municode
 owner: platform-municode
 writer: the platform-municode lane
-check: cleanliness
+check: fold-conflict
 ready: no step ids unknown
-river: edd7652c5bb585c8d6bdc5b01f31c77b556e6207
-at: 2026-10-13T21:04:38Z
+river: ac3ccf885d6de2934f43f931a3092f735f05f0e1
+at: 2026-10-13T22:18:16Z
 state: returned
-fix_subject: fix:dfb31c70
-fix: River · stream/platform-municode — cleanliness failed for platform-municode: ## platform-municode — cleanup list (River's review at fold; delete in stream/platform-municode, then mark READY again)
+fix_subject: fix:f15eb6d1
+fix: River · stream/platform-municode — fold-conflict failed for platform-municode: platform-municode READY 5c89ee84a2a7 conflicts with river 691c01dd0ff4 (releases 25 to 29) when merged alone. Conflicting files: lib/civic-data/derived-door-kinds.ts lib/civic-data/meeting-partitions.ts lib/control-plane/discovery/auto-cros
 
 ## Failure
 
 ```
-## platform-municode — cleanup list (River's review at fold; delete in stream/platform-municode, then mark READY again)
-
-Lane platform-municode (R3-MUNICODE), cut from river ac3ccf885, tip 5c89ee84a. Added 9,756 lines, deleted 726 lines. Files: 10 added, 0 deleted, 12 modified. Code and tests alone: +381 / −726 (2 files added, 12 modified). Fixtures: +9,375 (8 files added). The READY commit states these counts.
-
-Delete:
-1. Remove the unused `export` (used only inside its own file): lib/sources/municode/index.ts:10 (MunicodeMeeting) and lib/sources/municode/index.ts:21 (MunicodeRaw).
-
-Checked and clean: no commented-out code; no comment over two lines; no leftover of what it replaced (726 lines deleted); the new fixtures are loaded by tests/municode.test.ts through its fixture(name) helper.
+platform-municode READY 5c89ee84a2a7 conflicts with river 691c01dd0ff4 (releases 25 to 29) when merged alone. Conflicting files: lib/civic-data/derived-door-kinds.ts lib/civic-data/meeting-partitions.ts lib/control-plane/discovery/auto-crosswalk.ts lib/control-plane/discovery/derived-wiring-reading.ts lib/control-plane/discovery/derived-wiring.ts lib/control-plane/discovery/meetings-discovery-executor.ts lib/hunt/meetings-recipes.ts lib/hunt/meetings-site-discovery.ts lib/registry/source-wiring.ts lib/registry/types.ts lib/sources/composite/wiring.ts tests/door-kinds-data-rows.test.ts   Merge river into stream/platform-municode, resolve, and mark READY again.
 ```
 
 ## Repair

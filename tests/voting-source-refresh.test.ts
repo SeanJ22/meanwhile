@@ -60,9 +60,9 @@ test("the complete registry denominator leaves one open blank per delegated coun
   const blanks = planVotingSourceBlanks({ electionDate: ELECTION, places, doors: [door], reads: [read] });
   assert.equal(blanks.length, 2);
   assert.equal(new Set(blanks.map(blank => blank.scope.ocdId)).size, 2);
-  assert.match(blanks.find(blank => blank.scope.ocdId === bradford.ocdId)!.owed, /Load the official polling places/);
+  assert.match(blanks.find(blank => blank.scope.ocdId === bradford.ocdId)!.owed, /Find Election Day polling places/);
   const loaded = blanks.find(blank => blank.scope.ocdId === okaloosa.ocdId)!;
-  assert.doesNotMatch(loaded.owed, /Load the official polling places/);
+  assert.doesNotMatch(loaded.owed, /Find Election Day polling places/);
   assert.match(loaded.owed, /Published hours/);
   assert.match(loaded.owed, /Census geocodes/);
   assert.ok(loaded.tried.some(line => line.includes(door.url)));
@@ -75,9 +75,29 @@ test("a statewide response never fills a different county, and earlier-election 
   read.blanks = [{ id: "earlier", doorId: door.id, scope: root, status: "open", reason: "earlier-election",
     owed: "Find the current election's version; keep the older file the election page currently links", tried: [door.url], next: [door.electionPageUrl] }];
   const blanks = planVotingSourceBlanks({ electionDate: ELECTION, places: [okaloosa, bradford], doors: [statewide], reads: [read] });
-  assert.match(blanks.find(blank => blank.scope.ocdId === bradford.ocdId)!.owed, /Load the official polling places/);
+  assert.match(blanks.find(blank => blank.scope.ocdId === bradford.ocdId)!.owed, /Find Election Day polling places/);
   assert.ok(blanks.every(blank => blank.owed.includes(statewide.publicationMessage) && blank.owed.includes("current election's version")));
   assert.ok(read.sites.length > 0, "the older official answer is kept while the newer version is sought");
+});
+
+test("an ancestor OCD cannot spread a site's explicitly scoped blank to another county or town", () => {
+  const read = capturedRead();
+  const statewide = { ...door, scope: root };
+  const site = read.sites.find(site => site.name === "Baker Area Recreation Bldg")!;
+  read.blanks = [{ id: "specific-geocode", doorId: door.id, scope: { ...root, countyFips: okaloosa.countyFips },
+    status: "open", reason: "geocode", owed: `Resolve the published address for ${site.name}`, tried: [site.address], next: [door.url] }];
+  const countyBlanks = planVotingSourceBlanks({ electionDate: ELECTION, places: [okaloosa, bradford], doors: [statewide], reads: [read] });
+  assert.match(countyBlanks.find(blank => blank.scope.ocdId === okaloosa.ocdId)!.owed, /Resolve the published address for Baker Area Recreation Bldg/);
+  assert.doesNotMatch(countyBlanks.find(blank => blank.scope.ocdId === bradford.ocdId)!.owed, /Resolve the published address for Baker Area Recreation Bldg/);
+  // Protocol scope inputs exercise conflicting units without asserting invented place geography.
+  const town = { ...okaloosa, ocdId: `${okaloosa.ocdId}/place:test`, countySubdivisionGeoid: "1209100001" };
+  read.blanks[0]!.scope = { ...root, countyFips: okaloosa.countyFips, countySubdivisionGeoid: "1209100002" };
+  const townBlank = planVotingSourceBlanks({ electionDate: ELECTION, places: [town], doors: [statewide], reads: [read] })[0]!;
+  assert.doesNotMatch(townBlank.owed, /Resolve the published address for Baker Area Recreation Bldg/);
+  const wrongCountyDoor = { ...statewide, scope: { ...root, countyFips: bradford.countyFips } };
+  const rejectedDoor = planVotingSourceBlanks({ electionDate: ELECTION, places: [okaloosa], doors: [wrongCountyDoor], reads: [read] })[0]!;
+  assert.match(rejectedDoor.owed, /Find Election Day polling places/);
+  assert.deepEqual(rejectedDoor.tried, []);
 });
 
 test("open blanks persist in the existing hunter queue idempotently, most populous first, with owed/tried/next instructions", async () => {
@@ -126,4 +146,22 @@ test("discovery and place blanks share one standing obligation without erasing e
   assert.match(item.why, /Published hours/);
   assert.match(item.why, /Find the current county list/);
   assert.equal((await repos.obligations.mustRead(ids.obligationIds[0])).value.nextDueAt, NOW);
+});
+
+
+test("missing coverage comes from the reader goal; only explicit sourced absence fills a kind", () => {
+  const read = capturedRead();
+  const input = { electionDate: ELECTION, places: [okaloosa], doors: [door], reads: [read] };
+  const missing = planVotingSourceBlanks(input)[0]!;
+  assert.match(missing.owed, /early voting sites/);
+  assert.match(missing.owed, /satellite offices/);
+  assert.match(missing.owed, /ballot drop boxes/);
+  // Protocol-only annotation tests semantics; this asserts no new real-world absence fact.
+  read.rules = [{ text: "An office return rule without an absence classification", source: read.sources[0]! }];
+  assert.match(planVotingSourceBlanks(input)[0]!.owed, /ballot drop boxes/);
+  read.rules[0]!.absenceOf = ["DROP_BOX"];
+  assert.doesNotMatch(planVotingSourceBlanks(input)[0]!.owed, /ballot drop boxes/);
+  assert.match(planVotingSourceBlanks(input)[0]!.tried.join(" "), /Published rule:/);
+  read.rules[0]!.source = { ...read.sources[0]!, url: "" };
+  assert.match(planVotingSourceBlanks(input)[0]!.owed, /ballot drop boxes/);
 });

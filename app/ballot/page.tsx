@@ -1,6 +1,5 @@
 import { Card } from "@/components/ui/card";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
-import { GoogleCivicAddressLookup } from "@/components/ballot/google-civic-results";
 import { ContactPills } from "@/components/officials/contact-pills";
 import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { measureRecordsForBallot } from "@/lib/ballot/measure-records";
@@ -920,8 +919,8 @@ export default async function BallotPage({
         </div>
       )}
 
+      <div className="my-4"><WhereToVote /></div>
       <OfficialFilings rows={filingRows} />
-      <GoogleCivicAddressLookup />
       {/* Who runs this reader's elections and how to reach them, from their own city's or county's saved page. */}
       {electionOffices.length > 0 && (
         <section aria-label="Your election offices" className="my-6 space-y-2 lg:max-w-3xl" data-ballot-election-offices>
@@ -1051,7 +1050,6 @@ export default async function BallotPage({
 
               {(
                 <div className="mt-3 flex flex-col gap-3">
-                  <WhereToVote />
               {/* Registration status is the state's to answer, so this pill leaves the app and says so. */}
                   {reg && (
                     <div>

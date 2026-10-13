@@ -22,11 +22,15 @@ const precinctKey = (value: string) => normalized(value).replace(/^(?:voting dis
 const countyKey = (value: string) => normalized(value).replace(/\s+(?:county|parish|borough|municipio|municipality|census area)$/, "");
 const matches = (values: readonly string[], value: string) => values.some(candidate => normalized(candidate) === normalized(value));
 
-export function votingJurisdictionCovers(j: VotingJurisdiction, place: VotingReaderPlace): boolean {
+function votingScopeCovers(j: Pick<VotingJurisdiction, "state" | "ocdId" | "countyFips" | "countySubdivisionGeoid">, place: VotingReaderPlace): boolean {
   if (!place.states.includes(j.state.toUpperCase())) return false;
   if (j.countySubdivisionGeoid) return place.countySubdivisionGeoids.includes(j.countySubdivisionGeoid);
   if (j.countyFips) return place.countyFips.includes(j.countyFips);
   return place.divisionIds.includes(j.ocdId) || /^ocd-division\/country:us\/(?:state|district|territory):[a-z]{2}$/.test(j.ocdId);
+}
+
+export function votingJurisdictionCovers(j: VotingJurisdiction, place: VotingReaderPlace): boolean {
+  return votingScopeCovers(j, place);
 }
 
 function siteInPlace(site: VotingSite, place: VotingReaderPlace, jurisdiction: VotingJurisdiction): boolean {
@@ -67,7 +71,8 @@ export function projectVotingJurisdiction(j: VotingJurisdiction, place: VotingRe
   const sites = matchingAssigned.length ? scoped.filter(site => site.kind !== "ELECTION_DAY" || !site.precinct || matchingAssigned.includes(site)) : scoped;
   const localOffices = sites.flatMap(site => site.office ? [site.office] : []);
   const distinctOffices = [...new Map(localOffices.map(office => [JSON.stringify(office), office])).values()];
-  const projected = { ...j, sites, office: distinctOffices.length === 1 ? distinctOffices[0] : j.office };
+  const projected = { ...j, sites, office: distinctOffices.length === 1 ? distinctOffices[0] : j.office,
+    blanks: j.blanks?.filter(blank => votingScopeCovers(blank.scope, place)) };
   let narrowing: Narrowing = narrowingFor(projected);
   if (matchingAssigned.length === 1) {
     narrowing = { kind: "EXACT", siteId: matchingAssigned[0].id,

@@ -31,6 +31,7 @@ export function votingFetchSession(runtime: VotingSourceRuntime): VotingFetchSes
     if (!robots.has(url.origin)) {
       try {
         let at = new URL("/robots.txt", url); let response = await send(at.href, {}, "direct");
+        if ([403, 503].includes(response.status) && runtime.browserFetch) response = await send(at.href, {}, "browser-ua");
         for (let hops = 0; response.status >= 300 && response.status < 400 && hops < 5; hops++) {
           const location = response.headers.get("location"); if (!location) break;
           const next = publicUrl(new URL(location, at).href);

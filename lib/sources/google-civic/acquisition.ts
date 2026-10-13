@@ -60,23 +60,6 @@ export async function lookupCivicAddress(address: string, knownIds: ReadonlySet<
     return unavailableCivicLookup(reason, checkedAt, options.electionId);
   }
 }
-/** A reader address stays transient. Only a sanitized national-source outage enters the existing civic plane. */
-export async function recordCivicReaderOutcome(lookup: CivicLookup): Promise<void> {
-  const { controlPlaneUrlFromEnv, createPgRepositories } = await import("../../control-plane/repository/pg-store.ts");
-  const connection = controlPlaneUrlFromEnv();
-  if (connection === null) return;
-  const repos = await createPgRepositories(connection, lookup.checkedAt, { skipBootstrap: true });
-  const { recordDoorEvidence } = await import("../../doors/shut.ts");
-  // A 404/400 is specific to the transient reader address, so it does not shut the national feed.
-  const { upsertDerivedDoor } = await import("../../doors/registry.ts");
-  const doorId = "google-civic:reader-lookup";
-  await upsertDerivedDoor(repos.doors, { doorId, kind: "google-civic-lookup", hosts: ["www.googleapis.com"],
-    config: { keyRef: "GOOGLE_CIVIC_API_KEY" }, holds: ["google-civic-voterinfo"],
-    notes: "Address lookup availability; reader addresses are never retained." }, lookup.checkedAt, lookup.checkedAt);
-  await recordDoorEvidence(repos.doors, doorId, lookup.status === "OUTAGE"
-    ? { kind: "PARSE_FAILURE", detail: lookup.reason ?? "Google Civic unavailable." }
-    : { kind: "GOOD", rows: lookup.rows.length }, lookup.checkedAt, repos);
-}
 export async function recordCivicCatalogFailure(store: import("../../civic-data/store.ts").RoutineDataStore, reason: string, at: string) {
   return recordRegisteredSourceAcquisitionFailure({ store, contractId: GOOGLE_CIVIC_CONTRACT_ID, attemptedAt: at,
     requestedUrl: `${GOOGLE_CIVIC_API}elections`, failure: sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", reason) });

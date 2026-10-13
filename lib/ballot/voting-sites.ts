@@ -14,7 +14,12 @@ export interface VotingSource {
   checkedAt?: string;
 }
 
-export interface VotingRule { text: string; source: VotingSource }
+export interface VotingRule {
+  text: string;
+  source: VotingSource;
+  /** Kinds explicitly stated not to be offered; never inferred from missing rows. */
+  absenceOf?: SiteKind[];
+}
 export interface VotingOfficeContact {
   name: string;
   phone?: string;
@@ -66,6 +71,8 @@ export interface VotingSite {
   ward?: string;
   districtOcdIds?: string[];
   aiannhGeoid?: string;
+  tribalNation?: string;
+  reservation?: string;
   locationNotes?: string;
   accessibilityNotes?: string;
   rules?: VotingRule[];
@@ -167,8 +174,6 @@ export function censusOf(file: VotingSitesFile): VotingSitesCensus {
 }
 
 export interface VotingSitesAnswer {
-  /** Independent address-query supplement; certified jurisdiction rows retain their own sources. */
-  googleCivic?: import("../sources/google-civic/model").CivicLookup;
   match: boolean;
   /** Only ever the resolved POINT, never the address that produced it. */
   point: { lat: number; lng: number } | null;

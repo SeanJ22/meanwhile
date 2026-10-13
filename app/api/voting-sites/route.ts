@@ -4,8 +4,8 @@ import { readReaderManifest, ensureReaderAuthorityEdge } from "@/lib/meetings/ed
 import { loadVotingSites, readVotingSitesProjection } from "@/lib/ballot/voting-sites-server";
 import { zipDivisionEntry } from "@/lib/geo/zip-division-index";
 import { answerVotingSites, votingJurisdictionCovers, type VotingReaderPlace } from "@/lib/ballot/voting-answer";
-import { addCensusVotingGeographies, census2020VotingDistricts, censusVotingAddress, censusVotingAddressFields, votingPlaceFromDivisions } from "@/lib/ballot/voting-answer-geography";
-import { readGoogleVotingAnswer } from "@/lib/ballot/voting-answer-google";
+import { addCensusVotingGeographies, census2020VotingDistricts, censusVotingAddress, censusVotingAddressFields, votingPlaceFromDivisions, votingInputZip } from "@/lib/ballot/voting-answer-geography";
+import { readGoogleVotingAnswer } from "@/lib/sources/google-civic/reader-lookup";
 import { readVotingSource } from "@/lib/ballot/voting-source-readers";
 import type { VotingAddressInput } from "@/lib/ballot/voting-source-types";
 
@@ -39,15 +39,16 @@ export async function POST(request: Request) {
     const projection = readVotingSitesProjection().then(() => true, () => false);
     let place: VotingReaderPlace;
     let readerAddress: VotingAddressInput = { address };
-    if (isZip) {
-      const zip = await zipDivisionEntry(address);
+    const located = await geocoded;
+    const zipInput = isZip ? address : !located ? votingInputZip(address) : null;
+    if (zipInput) {
+      const zip = await zipDivisionEntry(zipInput);
       if (!zip) return empty();
-      const divisions = await divisionsByOcdIds(zip.ids, { zip: address });
+      const divisions = await divisionsByOcdIds(zip.ids, { zip: zipInput });
       place = votingPlaceFromDivisions(divisions, "ZIP", null);
       place.divisionIds = [...new Set([...place.divisionIds, ...zip.ids])];
       place.states = [...new Set([...place.states, ...zip.ids.flatMap(id => /\/(?:state|district|territory):([a-z]{2})/.exec(id)?.[1]?.toUpperCase() ?? [])])];
     } else {
-      const located = await geocoded;
       if (!located) return empty();
       readerAddress = censusVotingAddressFields(address, located.payload);
       const divisions = await divisionsAt(located.point.lat, located.point.lng);

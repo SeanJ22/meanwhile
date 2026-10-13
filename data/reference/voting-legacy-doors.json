@@ -28,7 +28,12 @@
         "lng": "longitude"
       }
     },
-    "model": "VOTE_CENTER"
+    "model": "VOTE_CENTER",
+    "access": {
+      "status": "robots",
+      "detail": "services2.arcgis.com/robots.txt returned HTTP 403 Invalid URL on October 13, 2026. Official current app/map configuration captured, but layer requests remain closed under voting-source permission policy.",
+      "checkedAt": "2026-10-13"
+    }
   },
   {
     "id": "legacy:pima:Primary_2024_EVS_Locations",
@@ -61,7 +66,12 @@
         "Election": "2026 General"
       }
     },
-    "model": "VOTE_CENTER"
+    "model": "VOTE_CENTER",
+    "access": {
+      "status": "robots",
+      "detail": "services2.arcgis.com/robots.txt returned HTTP 403 Invalid URL on October 13, 2026. Official current app/map configuration captured, but layer requests remain closed under voting-source permission policy.",
+      "checkedAt": "2026-10-13"
+    }
   },
   {
     "id": "legacy:pima:mobileVotingSites",
@@ -94,7 +104,12 @@
         "Election": "2026 General"
       }
     },
-    "model": "VOTE_CENTER"
+    "model": "VOTE_CENTER",
+    "access": {
+      "status": "robots",
+      "detail": "services2.arcgis.com/robots.txt returned HTTP 403 Invalid URL on October 13, 2026. Official current app/map configuration captured, but layer requests remain closed under voting-source permission policy.",
+      "checkedAt": "2026-10-13"
+    }
   },
   {
     "id": "legacy:morris:municipal-polling-directory",
@@ -379,5 +394,48 @@
         }
       }
     ]
+  },
+  {
+    "id": "pima:ballot-drop-boxes",
+    "publisher": "Pima County Recorder and Pima County Elections Department",
+    "url": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/Ballot_Drop_Boxes/FeatureServer/0",
+    "shape": "map-service",
+    "covers": [
+      "DROP_BOX"
+    ],
+    "scope": {
+      "state": "AZ",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "name": "Pima County",
+      "countyFips": "04019"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.pima.gov/3199/Pima-Votes",
+    "discoveredFrom": "https://experience.arcgis.com/experience/21445fb10f884caea0aac1ecba764599/",
+    "extraction": {
+      "kind": "DROP_BOX",
+      "columns": {
+        "id": "OBJECTID",
+        "name": "name",
+        "address": [
+          "address",
+          "area"
+        ],
+        "days": "dropOffDays",
+        "election": "ELECTION",
+        "lat": "latitude",
+        "lng": "longitude"
+      }
+    },
+    "model": "VOTE_CENTER",
+    "access": {
+      "status": "robots",
+      "detail": "services2.arcgis.com/robots.txt returned HTTP 403 Invalid URL on October 13, 2026. Official current app/map configuration captured, but layer requests remain closed under voting-source permission policy.",
+      "checkedAt": "2026-10-13"
+    },
+    "title": "24-hour Ballot Drop Boxes",
+    "matchingUnit": "COUNTY",
+    "electionAssociationVerified": false,
+    "publicationMessage": "Current app overview names October 7\u2013November 3, 2026, but the web-map drop-box popup still names June 24\u2013July 21. Verify current layer rules and posted change notices."
   }
 ]

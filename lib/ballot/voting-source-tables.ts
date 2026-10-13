@@ -2,6 +2,9 @@ import { inflateRawSync } from "node:zlib";
 import type { VotingExtraction } from "./voting-source-types.ts";
 
 export type VotingTable = { headers: string[]; rows: string[][]; title?: string; documentTitle?: string; lastUpdated?: string };
+export function decodeVotingBytes(bytes: Uint8Array): string {
+  return new TextDecoder(bytes[0] === 0xff && bytes[1] === 0xfe ? "utf-16le" : bytes[0] === 0xfe && bytes[1] === 0xff ? "utf-16be" : "utf-8").decode(bytes);
+}
 export function sourceText(value: string): string {
   return value.replace(/<br\s*\/?\s*>/gi, "\n").replace(/<[^>]+>/g, " ")
     .replace(/&#x([a-f0-9]+);/gi, (_, n: string) => String.fromCodePoint(parseInt(n, 16)))
@@ -28,10 +31,26 @@ export function tableFromRows(rows: string[][], config: VotingExtraction = {}): 
   const header = config.headerRow ?? 0;
   return { headers: rows[header] ?? [], rows: rows.slice(header + 1) };
 }
+export function htmlTableFragments(html: string): { body: string; originalBody: string; at: number; attributes: string }[] {
+  const tables: { body: string; originalBody: string; at: number; attributes: string }[] = [];
+  const stack: { at: number; start: number; attributes: string; children: [number, number][] }[] = [];
+  for (const tag of html.matchAll(/<\/?table\b[^>]*>/gi)) {
+    if (!/^<\//.test(tag[0])) stack.push({ at: tag.index, start: tag.index + tag[0].length, attributes: tag[0], children: [] });
+    else {
+      const open = stack.pop(); if (!open) continue;
+      const originalBody = html.slice(open.start, tag.index);
+      let body = originalBody;
+      for (const [from, to] of open.children.reverse()) body = body.slice(0, from - open.start) + body.slice(to - open.start);
+      tables.push({ body, originalBody, at: open.at, attributes: open.attributes });
+      stack.at(-1)?.children.push([open.at, tag.index + tag[0].length]);
+    }
+  }
+  return tables.sort((a, b) => a.at - b.at);
+}
 export function htmlVotingTables(html: string): VotingTable[] {
-  return [...html.matchAll(/<table\b[^>]*>([\s\S]*?)<\/table>/gi)].flatMap(match => {
+  return htmlTableFragments(html).flatMap(tableMarkup => {
     const spans = new Map<number, { remaining: number; value: string }>();
-    const rows = [...match[1]!.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi)].map(tr => {
+    const rows = [...tableMarkup.body.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi)].map(tr => {
       const row: string[] = [];
       for (const [index, span] of spans) { row[index] = span.value; span.remaining--; if (!span.remaining) spans.delete(index); }
       let at = 0;
@@ -44,8 +63,9 @@ export function htmlVotingTables(html: string): VotingTable[] {
       return Array.from({ length: row.length }, (_, i) => row[i] ?? "");
     }).filter(r => r.some(Boolean));
     const table = tableFromRows(rows);
-    const preceding = html.slice(0, match.index), headings = [...preceding.matchAll(/<h[1-6]\b[^>]*>([\s\S]*?)<\/h[1-6]>/gi)];
-    const title = sourceText(match[1]!.match(/<caption\b[^>]*>([\s\S]*?)<\/caption>/i)?.[1] ?? headings.at(-1)?.[1] ?? "");
+    const preceding = html.slice(0, tableMarkup.at), headings = [...preceding.matchAll(/<h[1-6]\b[^>]*>([\s\S]*?)<\/h[1-6]>/gi)];
+    const sectionLabels = [...preceding.matchAll(/<div\b[^>]*\balt=["']([^"']+)["'][^>]*>/gi)];
+    const title = sourceText(tableMarkup.body.match(/<caption\b[^>]*>([\s\S]*?)<\/caption>/i)?.[1] ?? sectionLabels.at(-1)?.[1] ?? headings.at(-1)?.[1] ?? tableMarkup.attributes);
     return table.headers.length ? [{ ...table, title }] : [];
   });
 }
@@ -92,7 +112,10 @@ export function xlsxVotingTables(bytes: Uint8Array, config: VotingExtraction = {
       }
       return Array.from({ length: row.length }, (_, i) => row[i] ?? "");
     });
-    return [{ ...tableFromRows(rows, config), title: sheet.name }];
+    const titleRows = rows.slice(0, config.headerRow ?? 0).flat().filter(Boolean);
+    const documentTitle = titleRows.join(" ") || sheet.name;
+    const lastUpdated = rows.flat().find(value => /^(?:last\s+)?updated\b/i.test(value))?.replace(/^(?:last\s+)?updated\s*/i, "");
+    return [{ ...tableFromRows(rows, config), title: sheet.name, documentTitle, lastUpdated }];
   });
 }
 

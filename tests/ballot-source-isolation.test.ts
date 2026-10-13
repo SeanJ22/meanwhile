@@ -20,10 +20,14 @@ import {
 } from "../lib/ballot/auxiliary-preloads.ts";
 import { readNhBallotProjection } from "../lib/civic-data/manual-read-models.ts";
 import type { NhBallotProjection } from "../lib/civic-data/manual-projections.ts";
-import { installAzBallot, installManualValue, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
+import { GENERIC_BALLOT_SCOPE } from "../lib/ballot/generic-projection.ts";
+import { installAbsent, installAzBallot, installManualValue, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
 
 // The AZ and NH ballots' promoted pointers, each a small synthetic ballot
 // holding one statewide governor contest with one candidacy.
+// Make the separate generic source explicitly absent: a configured workspace
+// database must not add an unrelated store failure to this isolation test.
+installAbsent("BALLOT_CANDIDACY", GENERIC_BALLOT_SCOPE);
 const azBallot = syntheticAzBallot([{
   id: "ballot-az-pima:governor",
   title: "Governor",

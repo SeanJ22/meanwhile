@@ -47,7 +47,7 @@ export const SOURCE_AUTHORITIES = {
     competentFacts: ["election", "contests and candidates", "polling locations", "early vote sites", "drop off locations"],
     expectedIdentifierKeys: ["observation_id"], expectedTemporalFields: ["checked_at", "election_day"],
     horizonSemantics: "Address-query observations; no bulk endpoint and no nationwide completeness claim. Native district OCD IDs join only when held; every unjoined row survives. Reader addresses are transient.",
-    parserVersion: "google-civic-voterinfo/1", freshnessExpectation: "Daily through the election; live address lookup. Publication date unknown when omitted by the API.",
+    parserVersion: "google-civic-voterinfo/1", freshnessExpectation: "Daily elections-catalog checks through the election. Address lookup only on an explicit reader fallback where official voting sources are absent. Publication date unknown when omitted by the API.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" }, routineAutoPromotion: true,
   },
   "official-ballot-authorities": {

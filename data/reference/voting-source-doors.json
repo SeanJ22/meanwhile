@@ -20,7 +20,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -110,7 +110,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -140,7 +140,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -170,7 +170,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -200,7 +200,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -230,7 +230,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -290,7 +290,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -350,7 +350,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -380,7 +380,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -440,7 +440,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -470,7 +470,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -500,7 +500,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -560,7 +560,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -650,7 +650,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -680,7 +680,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -710,7 +710,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -740,7 +740,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -770,7 +770,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -800,7 +800,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -830,7 +830,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -860,7 +860,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -890,7 +890,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -950,7 +950,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -980,7 +980,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -1010,7 +1010,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -1040,7 +1040,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -1070,7 +1070,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -1130,7 +1130,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -1160,7 +1160,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -1220,7 +1220,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -1250,7 +1250,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -1280,7 +1280,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -1310,7 +1310,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -1340,7 +1340,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -1400,7 +1400,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -1430,7 +1430,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -1460,7 +1460,7 @@
     },
     "access": {
       "status": "unreachable",
-      "detail": "HTTP 403 Forbidden through browser extraction; workspace HTTP proxy also unavailable.",
+      "detail": "State elections page and robots.txt return HTTP 403, including the permitted browser-UA rung. Later network-enabled captures resolved the initial workspace proxy limitation.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -1490,7 +1490,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -1520,7 +1520,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -1550,7 +1550,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -1610,7 +1610,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. Original HTTP response unavailable in workspace.",
+      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
       "checkedAt": "2026-10-13"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -1620,12 +1620,64 @@
     }
   },
   {
-    "id": "mt-statewide-polling-satellite-2026",
+    "id": "mt-statewide-polling-2026",
     "publisher": "Office of the Secretary of State, Helena, MT",
     "url": "https://sosmt.gov/docs/23/elections/77688/2026-polling-location-satellite-office-general-final",
     "shape": "file",
     "covers": [
-      "ELECTION_DAY",
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "MT",
+      "ocdId": "ocd-division/country:us/state:mt",
+      "name": "Montana"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://votemt.gov/",
+    "discoveredFrom": "https://votemt.gov/",
+    "access": {
+      "status": "open",
+      "detail": "Original statewide XLSX downloaded October 13, 2026, after robots permission; 730 polling precinct rows. Official VoteMT general-election page links this workbook.",
+      "checkedAt": "2026-10-13"
+    },
+    "title": "2026 Polling Location Satellite Office General Final",
+    "extraction": {
+      "format": "xlsx",
+      "sheet": "Polling Places",
+      "headerRow": 3,
+      "kind": "ELECTION_DAY",
+      "columns": {
+        "countyName": "County",
+        "name": "Polling Place Location",
+        "address": [
+          "Polling Place Address",
+          "Polling Place City",
+          "Polling Place Zip"
+        ],
+        "precinct": "Precinct Number",
+        "hours": "Polling Place Hours",
+        "locationNotes": [
+          "Late Registration Location(if different or in addition to county election office)*Election Day Registration location only",
+          "Late Registration Address(if different or in addition to county election office)"
+        ]
+      },
+      "constants": {
+        "election": "2026 General Election"
+      },
+      "templates": {
+        "districtOcdIds": "ocd-division/country:us/state:mt/sldl:{HD}|ocd-division/country:us/state:mt/sldu:{SD}"
+      }
+    },
+    "matchingUnit": "PRECINCT",
+    "fileUpdatedAt": "October, 1, 2026",
+    "electionAssociationVerified": true
+  },
+  {
+    "id": "mt-statewide-satellite-2026",
+    "publisher": "Office of the Secretary of State, Helena, MT",
+    "url": "https://sosmt.gov/docs/23/elections/77688/2026-polling-location-satellite-office-general-final",
+    "shape": "file",
+    "covers": [
       "SATELLITE"
     ],
     "scope": {
@@ -1637,14 +1689,58 @@
     "electionPageUrl": "https://votemt.gov/",
     "discoveredFrom": "https://votemt.gov/",
     "access": {
-      "status": "unreachable",
-      "detail": "Official download linked by VoteMT, itself linked by the FEC-listed SOS elections page. Browser extraction rejects application/octet-stream; workspace proxy could not connect, so workbook contents and update date remain unverified.",
+      "status": "open",
+      "detail": "Original statewide XLSX downloaded October 13, 2026, after robots permission; 30 satellite location rows after aligned multi-site cells are separated.",
       "checkedAt": "2026-10-13"
     },
     "title": "2026 Polling Location Satellite Office General Final",
     "extraction": {
-      "format": "xlsx"
-    }
+      "format": "xlsx",
+      "sheet": "Satellite",
+      "headerRow": 3,
+      "kind": "SATELLITE",
+      "columns": {
+        "countyName": "County",
+        "name": "Satellite Location/Alternate Election Office",
+        "address": "Satellite Location/Alternate Election Office",
+        "days": "Satellite Days\r\n(Absentee Period)",
+        "hours": "Satellite Hours\r\n(Absentee Period)",
+        "tribalNation": "Tribe",
+        "reservation": "Reservation"
+      },
+      "splitRows": {
+        "column": "Satellite Location/Alternate Election Office",
+        "pattern": "\\r?\\n(?:\\s*\\r?\\n)*(?=[^\\r\\n]*,\\s*#?\\d)",
+        "alignedColumns": [
+          "Satellite Days\r\n(Absentee Period)",
+          "Satellite Hours\r\n(Absentee Period)"
+        ],
+        "alignedPattern": "\\r?\\n(?:\\s*\\r?\\n)+"
+      },
+      "transforms": {
+        "name": {
+          "column": "Satellite Location/Alternate Election Office",
+          "pattern": "^(.*?),\\s*([\\s\\S]+)$",
+          "group": 1
+        },
+        "address": {
+          "column": "Satellite Location/Alternate Election Office",
+          "pattern": "^(.*?),\\s*([\\s\\S]+)$",
+          "group": 2
+        },
+        "countyName": {
+          "column": "County",
+          "pattern": "^(.*?)(?:,\\s*cont\\.)?$",
+          "group": 1
+        }
+      },
+      "constants": {
+        "election": "2026 General Election"
+      }
+    },
+    "matchingUnit": "COUNTY",
+    "fileUpdatedAt": "October, 1, 2026",
+    "electionAssociationVerified": true
   },
   {
     "id": "mt-election-administrators",
@@ -1662,7 +1758,7 @@
     "discoveredFrom": "https://sosmt.gov/elections/",
     "access": {
       "status": "open",
-      "detail": "Discovered and read by direct official-page link walking through browser extraction. Raw response unavailable in this workspace.",
+      "detail": "Discovered and read by direct official-page link walking through browser extraction. Native source capture is recorded in the fixture manifest where available.",
       "checkedAt": "2026-10-13"
     },
     "delegation": "county",
@@ -1700,7 +1796,7 @@
     "discoveredFrom": "https://vt.ncsbe.gov/EVSite/",
     "access": {
       "status": "open",
-      "detail": "Discovered and read by direct official-page link walking through browser extraction. Raw response unavailable in this workspace.",
+      "detail": "Original source HTTP response captured October 13, 2026 after robots permission; see fixture manifest for hash and limitations.",
       "checkedAt": "2026-10-13"
     },
     "title": "Statewide early voting sites for November 3, 2026",
@@ -1724,7 +1820,8 @@
         ],
         "election": "election",
         "days": "day",
-        "hours": "hours"
+        "hours": "hours",
+        "countyName": "county"
       },
       "kind": "EARLY_VOTING"
     },
@@ -1751,7 +1848,7 @@
     "discoveredFrom": "https://www.ncsbe.gov/",
     "access": {
       "status": "open",
-      "detail": "Official root links this public-files directory; browser extractor returns no visible file listing. Polling-place CSV still owed.",
+      "detail": "Native public directory and its listing script inspected. The chief office also links its polling-place-data archive; the March 3, 2026 polling CSV and complete November 3 early-voting file were captured. November 3 polling CSV remains owed.",
       "checkedAt": "2026-10-13"
     },
     "title": "NCSBE Public Files (FTP)"
@@ -1777,7 +1874,7 @@
     "discoveredFrom": "https://www.sos.nd.gov/elections/voter/elections-currentpast",
     "access": {
       "status": "open",
-      "detail": "Discovered and read by direct official-page link walking through browser extraction. Raw response unavailable in this workspace.",
+      "detail": "Original source HTTP response captured October 13, 2026 after robots permission; see fixture manifest for hash and limitations.",
       "checkedAt": "2026-10-13"
     },
     "title": "2026 General Election Statewide Polling Places and Precincts",
@@ -1860,7 +1957,7 @@
     "discoveredFrom": "https://www.votetexas.gov/voting/where.html",
     "access": {
       "status": "open",
-      "detail": "Discovered and read by direct official-page link walking through browser extraction. Raw response unavailable in this workspace.",
+      "detail": "Discovered and read by direct official-page link walking through browser extraction. Native source capture is recorded in the fixture manifest where available.",
       "checkedAt": "2026-10-13"
     },
     "delegation": "county",
@@ -1889,16 +1986,37 @@
     "discoveredFrom": "https://epcountyvotestx.gov/",
     "access": {
       "status": "open",
-      "detail": "Discovered and read by direct official-page link walking through browser extraction. Raw response unavailable in this workspace.",
+      "detail": "Original source HTTP response captured October 13, 2026 after robots permission; see fixture manifest for hash and limitations.",
       "checkedAt": "2026-10-13"
     },
     "model": "VOTE_CENTER",
     "extraction": {
       "format": "html",
       "kind": "VOTE_CENTER",
+      "textAssertions": [
+        "All Vote Centers will be open from 7:00 a.m. to 7:00 p.m."
+      ],
+      "records": {
+        "pattern": "var content = (\"(?:\\\\.|[^\"\\\\])*\")",
+        "group": 1,
+        "jsonString": true,
+        "fields": {
+          "name": {
+            "pattern": "<strong[^>]*>([\\s\\S]*?)</strong>",
+            "group": 1
+          },
+          "address": {
+            "pattern": "<strong[^>]*>[\\s\\S]*?</strong>[\\s\\S]*?<strong[^>]*>([\\s\\S]*?)</strong>",
+            "group": 1
+          },
+          "room": {
+            "pattern": "</strong>[\\s\\S]*?</strong>([\\s\\S]*?)<em",
+            "group": 1
+          }
+        }
+      },
       "constants": {
-        "hours": "7:00 a.m. to 7:00 p.m.",
-        "days": "Tuesday, November 3, 2026"
+        "hours": "7:00 a.m. to 7:00 p.m."
       }
     },
     "title": "November 2026 General & Special Election"
@@ -1922,7 +2040,7 @@
     "discoveredFrom": "https://epcountyvotestx.gov/",
     "access": {
       "status": "open",
-      "detail": "Discovered and read by direct official-page link walking through browser extraction. Raw response unavailable in this workspace.",
+      "detail": "Original source HTTP response captured October 13, 2026 after robots permission; see fixture manifest for hash and limitations.",
       "checkedAt": "2026-10-13"
     },
     "model": "VOTE_CENTER",
@@ -1948,7 +2066,7 @@
     "discoveredFrom": "https://dos.fl.gov/elections/",
     "access": {
       "status": "open",
-      "detail": "Discovered and read by direct official-page link walking through browser extraction. Raw response unavailable in this workspace.",
+      "detail": "Discovered and read by direct official-page link walking through browser extraction. Native source capture is recorded in the fixture manifest where available.",
       "checkedAt": "2026-10-13"
     },
     "delegation": "county",
@@ -1973,7 +2091,7 @@
     "discoveredFrom": "https://dos.fl.gov/elections/",
     "access": {
       "status": "open",
-      "detail": "Discovered and read by direct official-page link walking through browser extraction. Raw response unavailable in this workspace.",
+      "detail": "Discovered and read by direct official-page link walking through browser extraction. Native source capture is recorded in the fixture manifest where available.",
       "checkedAt": "2026-10-13"
     },
     "title": "Early Voting and Secure Ballot Intake Stations",
@@ -2061,7 +2179,7 @@
     "discoveredFrom": "https://www.sos.alabama.gov/alabama-votes",
     "access": {
       "status": "open",
-      "detail": "Discovered and read by direct official-page link walking through browser extraction. Raw response unavailable in this workspace.",
+      "detail": "Original source HTTP response captured October 13, 2026 after robots permission; see fixture manifest for hash and limitations.",
       "checkedAt": "2026-10-13"
     },
     "rules": [
@@ -2075,5 +2193,290 @@
       }
     ],
     "delegation": "county"
+  },
+  {
+    "id": "nc-statewide-polling-primary-2026",
+    "publisher": "North Carolina State Board of Elections",
+    "url": "https://dl.ncsbe.gov/ENRS/2026_03_03/polling_place_20260303.csv",
+    "shape": "file",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "NC",
+      "ocdId": "ocd-division/country:us/state:nc",
+      "name": "North Carolina"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.ncsbe.gov/results-data/polling-place-data",
+    "electionAssociationVerified": false,
+    "title": "March 3, 2026 polling places",
+    "fileUpdatedAt": "2026-03-01T10:25:04Z",
+    "matchingUnit": "PRECINCT",
+    "discoveredFrom": "https://www.ncsbe.gov/results-data/polling-place-data",
+    "extraction": {
+      "format": "csv",
+      "delimiter": "\t",
+      "kind": "ELECTION_DAY",
+      "columns": {
+        "id": "polling_place_id",
+        "name": "polling_place_name",
+        "address": [
+          "street_address",
+          "city",
+          "state",
+          "zip"
+        ],
+        "countyName": "county_name",
+        "precinct": "precinct_name",
+        "election": "election_dt"
+      }
+    },
+    "access": {
+      "status": "open",
+      "detail": "Native UTF-16LE tab-delimited CSV captured. Latest official archive link is March primary; find general-election replacement without suppressing the current official archive.",
+      "checkedAt": "2026-10-13"
+    }
+  },
+  {
+    "publisher": "Bennington Town Clerk",
+    "url": "https://www.benningtonvt.org/_T8_R868.php",
+    "shape": "list-page",
+    "covers": [
+      "DROP_BOX"
+    ],
+    "scope": {
+      "state": "VT",
+      "ocdId": "ocd-division/country:us/state:vt/county:bennington/place:bennington_town",
+      "name": "Bennington town",
+      "countyFips": "50003",
+      "countySubdivisionGeoid": "5000304825"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.benningtonvt.org/_T8_R868.php",
+    "electionAssociationVerified": true,
+    "model": "ASSIGNED",
+    "matchingUnit": "TOWN",
+    "discoveredFrom": "https://www.benningtonvt.org/",
+    "id": "vt-bennington-drop-box-2026",
+    "extraction": {
+      "format": "html",
+      "textAssertions": [
+        "2026 General Election",
+        "November 3, 2026",
+        "205 South Street",
+        "Monday, November 2nd at 4:30 PM",
+        "Bennington voters ONLY",
+        "it will not be counted",
+        "802-442-1043",
+        "townclerk@benningtonvt.org"
+      ],
+      "constants": {
+        "officeName": "Bennington Town Clerk",
+        "phone": "802-442-1043",
+        "email": "townclerk@benningtonvt.org",
+        "town": "Bennington",
+        "name": "ballot drop box",
+        "address": "205 South Street, Bennington",
+        "kind": "DROP_BOX",
+        "hours": "until Monday, November 2nd at 4:30 PM",
+        "rules": "The ballot drop box located at 205 South Street, Bennington, will be available until Monday, November 2nd at 4:30 PM for Bennington voters ONLY. If your ballot is from a nearby town, reach out to your Town Clerk to find out how to return it. If it is returned to the Bennington drop box, it will not be counted."
+      }
+    },
+    "access": {
+      "status": "open",
+      "detail": "Native town source captured. Government-to-town-domain authority link remains unresolved; acquisition must preserve its authority blank until verified.",
+      "checkedAt": "2026-10-13"
+    }
+  },
+  {
+    "publisher": "Bennington Town Clerk",
+    "url": "https://www.benningtonvt.org/_T8_R868.php",
+    "shape": "list-page",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "VT",
+      "ocdId": "ocd-division/country:us/state:vt/county:bennington/place:bennington_town",
+      "name": "Bennington town",
+      "countyFips": "50003",
+      "countySubdivisionGeoid": "5000304825"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.benningtonvt.org/_T8_R868.php",
+    "electionAssociationVerified": true,
+    "model": "ASSIGNED",
+    "matchingUnit": "PRECINCT",
+    "discoveredFrom": "https://www.benningtonvt.org/",
+    "id": "vt-bennington-polling-2026",
+    "extraction": {
+      "format": "html",
+      "textAssertions": [
+        "November 3rd, 2026",
+        "7am-7pm",
+        "Bennington Firehouse",
+        "130 River Street",
+        "802-442-1043",
+        "townclerk@benningtonvt.org"
+      ],
+      "constants": {
+        "officeName": "Bennington Town Clerk",
+        "phone": "802-442-1043",
+        "email": "townclerk@benningtonvt.org",
+        "town": "Bennington",
+        "name": "Bennington Firehouse",
+        "address": "130 River Street",
+        "kind": "ELECTION_DAY",
+        "days": "November 3rd, 2026",
+        "hours": "7am-7pm",
+        "precinct": "Bennington residents"
+      }
+    },
+    "access": {
+      "status": "open",
+      "detail": "Native town source captured. Government-to-town-domain authority link remains unresolved; acquisition must preserve its authority blank until verified.",
+      "checkedAt": "2026-10-13"
+    }
+  },
+  {
+    "publisher": "Bennington Town Clerk",
+    "url": "https://www.benningtonvt.org/_T8_R868.php",
+    "shape": "list-page",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "VT",
+      "ocdId": "ocd-division/country:us/state:vt/county:bennington/place:bennington_town",
+      "name": "Bennington town",
+      "countyFips": "50003",
+      "countySubdivisionGeoid": "5000304825"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.benningtonvt.org/_T8_R868.php",
+    "electionAssociationVerified": true,
+    "model": "ASSIGNED",
+    "matchingUnit": "PRECINCT",
+    "discoveredFrom": "https://www.benningtonvt.org/",
+    "id": "vt-north-bennington-polling-2026",
+    "extraction": {
+      "format": "html",
+      "textAssertions": [
+        "November 3rd, 2026",
+        "7am-7pm",
+        "Old Train Depot",
+        "#2 Depot Street in North Bennington",
+        "802-442-1043",
+        "townclerk@benningtonvt.org"
+      ],
+      "constants": {
+        "officeName": "Bennington Town Clerk",
+        "phone": "802-442-1043",
+        "email": "townclerk@benningtonvt.org",
+        "town": "Bennington",
+        "name": "Old Train Depot",
+        "address": "#2 Depot Street in North Bennington",
+        "kind": "ELECTION_DAY",
+        "days": "November 3rd, 2026",
+        "hours": "7am-7pm",
+        "precinct": "North Bennington residents"
+      }
+    },
+    "access": {
+      "status": "open",
+      "detail": "Native town source captured. Government-to-town-domain authority link remains unresolved; acquisition must preserve its authority blank until verified.",
+      "checkedAt": "2026-10-13"
+    }
+  },
+  {
+    "id": "vt-arlington-drop-box-closure-2026",
+    "publisher": "Town of Arlington, Vermont",
+    "url": "https://arlingtonvermont.org/wp-content/uploads/2026/09/Town-Hall-Closure-insulation.pdf",
+    "shape": "file",
+    "covers": [
+      "DROP_BOX"
+    ],
+    "scope": {
+      "state": "VT",
+      "ocdId": "ocd-division/country:us/state:vt/county:bennington/place:arlington_town",
+      "name": "Arlington town",
+      "countyFips": "50003",
+      "countySubdivisionGeoid": "5000301450"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://arlingtonvermont.org/wp-content/uploads/2026/09/Town-Hall-Closure-insulation.pdf",
+    "electionAssociationVerified": true,
+    "model": "ASSIGNED",
+    "matchingUnit": "TOWN",
+    "discoveredFrom": "https://arlingtonvermont.org/town-hall-closed-oct-20-23-2026/",
+    "extraction": {
+      "format": "pdf",
+      "textAssertions": [
+        "October 20 \u2013 23, 2026",
+        "The Town Clerk's drop box",
+        "located inside the front door",
+        "will remain accessible during the closure",
+        "The drop box will be checked daily during the closure",
+        "Election Day is November 3rd",
+        "3828 VT Route 7A, Arlington, VT 05250"
+      ],
+      "constants": {
+        "name": "Town Clerk's drop box",
+        "address": "3828 VT Route 7A, Arlington, VT 05250",
+        "kind": "DROP_BOX",
+        "town": "Arlington",
+        "days": "October 20\u201323, 2026",
+        "locationNotes": "The Town Clerk's drop box, located inside the front door, will remain accessible during the closure for submitting ballots and tax payments. The drop box will be checked daily during the closure."
+      }
+    },
+    "access": {
+      "status": "open",
+      "detail": "Native town source captured. Government-to-town-domain authority link remains unresolved; acquisition must preserve its authority blank until verified.",
+      "checkedAt": "2026-10-13"
+    }
+  },
+  {
+    "id": "vt-arlington-clerk-contact",
+    "publisher": "Arlington Town Clerk",
+    "url": "https://arlingtonvermont.org/town-clerk/",
+    "shape": "list-page",
+    "covers": [
+      "DROP_BOX",
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "VT",
+      "ocdId": "ocd-division/country:us/state:vt/county:bennington/place:arlington_town",
+      "name": "Arlington town",
+      "countyFips": "50003",
+      "countySubdivisionGeoid": "5000301450"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://arlingtonvermont.org/town-clerk/",
+    "model": "ASSIGNED",
+    "matchingUnit": "TOWN",
+    "discoveredFrom": "https://arlingtonvermont.org/",
+    "extraction": {
+      "format": "html",
+      "textAssertions": [
+        "Arlington Town Clerk",
+        "3828 VT Route 7A, Arlington, VT",
+        "802-375-2332",
+        "susan.paustian@arlingtonvermont.org"
+      ],
+      "constants": {
+        "officeName": "Arlington Town Clerk",
+        "officeAddress": "3828 VT Route 7A, Arlington, VT",
+        "phone": "802-375-2332",
+        "email": "susan.paustian@arlingtonvermont.org",
+        "town": "Arlington"
+      }
+    },
+    "access": {
+      "status": "open",
+      "detail": "Native town source captured. Government-to-town-domain authority link remains unresolved; acquisition must preserve its authority blank until verified.",
+      "checkedAt": "2026-10-13"
+    }
   }
 ]

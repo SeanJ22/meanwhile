@@ -348,11 +348,12 @@ function code(text: string): string {
 
 /**
  * Every production module that reads robots.txt through the shared evaluator, the sweep, the gate or the
- * research fetch, and the test that holds it to "recorded, not blocking". A new consumer fails this guard until
- * it is named here with its test.
+ * research fetch, and the test that holds it to its applicable acquisition rule. VS-01 explicitly requires
+ * voting sources to honor robots.txt. A new consumer fails this guard until it is named here with its test.
  */
 const ROBOTS_CONSUMERS: Readonly<Record<string, string>> = {
   "lib/control-plane/scheduler/robots.ts": "the evaluator itself (tests/scout-tools.test.ts evaluator cases)",
+  "lib/ballot/voting-source-fetch.ts": "VS-01 honors robots.txt: tests/voting-source-readers.test.ts blocks disallowed pages and keeps their hunter blanks open",
   "lib/hunt/robots-first-fetch.ts": "tests/robots-first-fetch.test.ts, this file",
   "lib/sources/permission-gate.ts": "this file, tests/pima-edu-source.test.ts",
   "lib/sources/pima-edu/index.ts": "via the gate: tests/pima-edu-source.test.ts",
@@ -381,7 +382,7 @@ test("EVERY ROBOTS CONSUMER IS NAMED with the test that holds it to the rule, an
     .map((f) => f.replace(/\\/g, "/"))
     .filter((f) => CONSUMES.test(code(readFileSync(join(ROOT, f), "utf8"))));
   const unnamed = found.filter((f) => !(f in ROBOTS_CONSUMERS));
-  assert.deepEqual(unnamed, [], `name each new robots consumer in ROBOTS_CONSUMERS with the test that holds it to "recorded, not blocking": ${unnamed.join(", ")}`);
+  assert.deepEqual(unnamed, [], `name each new robots consumer in ROBOTS_CONSUMERS with the test that holds it to its applicable acquisition rule: ${unnamed.join(", ")}`);
   const stale = Object.keys(ROBOTS_CONSUMERS).filter((f) => !found.includes(f));
   assert.deepEqual(stale, [], `these no longer consume the evaluator; drop them from the list: ${stale.join(", ")}`);
 });

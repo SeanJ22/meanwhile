@@ -4,15 +4,12 @@ import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-wr
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { GOOGLE_CIVIC_CONTRACT_ID } from "../lib/sources/google-civic/targets.ts";
-import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 
 async function main() {
   if (process.argv.slice(2).join(" ") !== "--promote") throw new Error("Google Civic refresh requires --promote.");
   installNeonRequestDeadline(); prepareProductionCivicDataWrite();
-  const connection = controlPlaneUrlFromEnv();
-  const repos = connection ? await createPgRepositories(connection, new Date().toISOString(), { skipBootstrap: true }) : null;
-  const result = await refreshGoogleCivic({ store: new PostgresRoutineDataStore(), doors: repos?.doors, readOptions: { signal: AbortSignal.timeout(20 * 60_000) } });
+  const result = await refreshGoogleCivic({ store: new PostgresRoutineDataStore(), readOptions: { signal: AbortSignal.timeout(20 * 60_000) } });
   console.log(`GOOGLE_CIVIC_STATE_ROWS=${JSON.stringify(result.coverage)}`);
   printSourceRunnerReceipt(GOOGLE_CIVIC_CONTRACT_ID, result.candidate, result.outcome);
   if (!result.outcome.promoted && !result.outcome.confirmed) process.exitCode = 2;

@@ -1,8 +1,9 @@
 import { createHash } from "node:crypto";
 import { isOfficialSource } from "../civic-data/source-authority.ts";
 import type { SiteKind, VotingOfficeContact, VotingSite, VotingSource } from "./voting-sites.ts";
-import type { VotingChangeNotice, VotingColumn, VotingExtraction, VotingPlatform, VotingSourceDoor, VotingSourceRead, VotingSourceRuntime } from "./voting-source-types.ts";
-import { delimitedVotingRows, htmlVotingTables, pdfVotingTables, sourceText, tableFromRows, xlsxVotingTables, type VotingTable } from "./voting-source-tables.ts";
+import type { VotingChangeNotice, VotingDoorScope, VotingColumn, VotingExtraction, VotingPlatform, VotingSourceDoor, VotingSourceRead, VotingSourceRuntime } from "./voting-source-types.ts";
+import { decodeVotingBytes, delimitedVotingRows, htmlVotingTables, pdfVotingTables, sourceText, tableFromRows, xlsxVotingTables, type VotingTable } from "./voting-source-tables.ts";
+import { readVotingPages } from "./voting-source-pages.ts";
 import { votingFetchSession, type VotingCapture, type VotingFetchSession } from "./voting-source-fetch.ts";
 
 const normalized = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
@@ -14,7 +15,7 @@ const ALIASES: Partial<Record<VotingColumn, string[]>> = {
   countySubdivisionGeoid: ["countysubdivisiongeoid", "cousubgeoid"], ward: ["ward"], phone: ["phone", "clerkphone", "countyauditorphone", "telephone"],
   email: ["email"], officeName: ["officename", "clerk"], officeAddress: ["officeaddress"],
   locationNotes: ["locationnotes", "notes", "locationdescription", "comments"], accessibilityNotes: ["accessibility", "accessibilitynotes", "accessible"],
-  rules: ["rules", "returnrules", "restrictions"], election: ["election", "electionname", "electiondate"],
+  rules: ["rules", "returnrules", "restrictions"], tribalNation: ["tribe", "tribalnation"], reservation: ["reservation"], election: ["election", "electionname", "electiondate"],
   lastUpdated: ["lastupdated", "updated", "updatedat"], kind: ["kind", "sitetype", "locationtype"], lat: ["latitude", "lat"], lng: ["longitude", "lng", "lon"],
 };
 export function fingerprintVotingPlatform(url: string, html = ""): VotingPlatform | undefined {
@@ -31,6 +32,18 @@ function electionDateNamed(text: string, date: string): boolean {
   const monthName = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][Number(month) - 1]!;
   return text.includes(date) || new RegExp(`(?:${monthName}|${monthName.slice(0, 3)}\\.?)\\s+0?${Number(day)}(?:st|nd|rd|th)?(?:,|\\s)*${year}|0?${Number(month)}[/-]0?${Number(day)}[/-]${year}`, "i").test(text);
 }
+function publishedElectionDatesIn(text: string): string[] {
+  const dates: string[] = [];
+  const add = (year: string, month: number, day: number) => {
+    const parsed = new Date(Date.UTC(Number(year), month - 1, day));
+    if (parsed.getUTCFullYear() === Number(year) && parsed.getUTCMonth() === month - 1 && parsed.getUTCDate() === day) dates.push(parsed.toISOString().slice(0, 10));
+  };
+  for (const match of text.matchAll(/\b(20\d{2})-(\d{1,2})-(\d{1,2})\b/g)) add(match[1]!, Number(match[2]), Number(match[3]));
+  for (const match of text.matchAll(/\b(\d{1,2})[/-](\d{1,2})[/-](20\d{2})\b/g)) add(match[3]!, Number(match[1]), Number(match[2]));
+  const months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+  for (const match of text.matchAll(/\b(January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sept?|Oct|Nov|Dec)\.?\s+(\d{1,2})(?:st|nd|rd|th)?(?:,\s*|\s+)(20\d{2})\b/gi)) add(match[3]!, months.indexOf(match[1]!.slice(0, 3).toLowerCase()) + 1, Number(match[2]));
+  return [...new Set(dates)];
+}
 export function officialElectionLinkMatches(html: string, pageUrl: string, door: VotingSourceDoor): boolean {
   if (!electionDateNamed(sourceText(html), door.electionDate)) return false;
   if (pageUrl === door.url) return true;
@@ -43,6 +56,7 @@ function tableRecords(table: VotingTable): Record<string, unknown>[] {
   return table.rows.map(row => Object.fromEntries([...row.flatMap((value, index) => [[table.headers[index] ?? String(index), value], [String(index), value]]), ["__tableTitle", table.title ?? ""], ["__fileTitle", table.documentTitle ?? ""], ["__fileUpdatedAt", table.lastUpdated ?? ""]]));
 }
 function readValue(row: Record<string, unknown>, field: VotingColumn, config: VotingExtraction): string {
+  if (config.templates?.[field]) return config.templates[field]!.replace(/\{([^}]+)\}/g, (_, column: string) => String(row[column] ?? "").trim());
   const transform = config.transforms?.[field];
   if (transform) return String(row[transform.column] ?? "").match(new RegExp(transform.pattern, "is"))?.[transform.group]?.trim() ?? "";
   if (config.constants?.[field] !== undefined) return config.constants[field]!;
@@ -52,20 +66,22 @@ function readValue(row: Record<string, unknown>, field: VotingColumn, config: Vo
   const match = Object.keys(row).find(k => alias.includes(normalized(k)));
   return match ? String(row[match] ?? "").trim() : "";
 }
-export function votingRowsToSites(rows: Record<string, unknown>[], door: VotingSourceDoor, source: VotingSource): { sites: VotingSite[]; office?: VotingOfficeContact; missingRows: string[]; officeRows: { label: string; countyName: string; office: VotingOfficeContact }[] } {
-  const config = door.extraction ?? {}, sites: VotingSite[] = [], missingRows: string[] = [], officeRows: { label: string; countyName: string; office: VotingOfficeContact }[] = []; const office = door.office;
+export function votingRowsToSites(rows: Record<string, unknown>[], door: VotingSourceDoor, source: VotingSource): { sites: VotingSite[]; office?: VotingOfficeContact; missingRows: string[]; missingRowPlaces: { countyName: string; town: string }[]; officeRows: { label: string; countyName: string; office: VotingOfficeContact }[] } {
+  const config = door.extraction ?? {}, sites: VotingSite[] = [], missingRows: string[] = [], missingRowPlaces: { countyName: string; town: string }[] = [], officeRows: { label: string; countyName: string; office: VotingOfficeContact }[] = []; const office = door.office;
   for (const row of rows) {
     if (Object.entries(config.filters ?? {}).some(([key, value]) => String(row[key] ?? "") !== value)) continue;
     const get = (field: VotingColumn) => readValue(row, field, config);
+    const recordMissing = (detail: string) => { missingRows.push(detail); missingRowPlaces.push({ countyName: get("countyName"), town: get("town") }); };
+    if (row.__extractionWarning) recordMissing(String(row.__extractionWarning));
     const phone = get("phone"), email = get("email");
     const rowOffice = phone || email ? { name: get("officeName") || get("town") || get("countyName") || door.publisher, ...(phone ? { phone } : {}), ...(email ? { email } : {}), ...(get("officeAddress") ? { address: get("officeAddress") } : {}), url: source.url } : undefined;
     if (rowOffice) officeRows.push({ label: get("town") || get("countyName") || door.scope.name, countyName: get("countyName"), office: rowOffice });
     const name = get("name"), address = get("address");
-    if (!name || !address) { if (name || address || phone || email) missingRows.push(`${get("town") || get("countyName") || name || address || door.scope.name}: ${!name ? "site name" : ""}${!name && !address ? " and " : ""}${!address ? "site address" : ""}`); continue; }
+    if (!name || !address) { if (name || address || phone || email) recordMissing(`${get("town") || get("countyName") || name || address || door.scope.name}: ${!name ? "site name" : ""}${!name && !address ? " and " : ""}${!address ? "site address" : ""}`); continue; }
     const kind = kindFrom(get("kind") || String(row.__tableTitle ?? ""), config.kind ?? door.covers[0] ?? "ELECTION_DAY");
     const id = `${door.id}-${createHash("sha256").update([kind, get("id"), name, address, get("precinct")].join("\0")).digest("hex").slice(0, 16)}`;
     const site: VotingSite = { id, name, address, room: get("room") || null, lat: null, lng: null, kind, election: get("election") || door.title || null, electionDate: door.electionAssociationVerified === true || (electionDateNamed(get("election"), door.electionDate) || /general/i.test(get("election")) && get("election").includes(door.electionDate.slice(0, 4))) ? door.electionDate : undefined, serves: get("precinct") || get("ward") || null, sources: [source] };
-    const stringFields = ["days", "hours", "precinct", "town", "countyName", "countyFips", "countySubdivisionGeoid", "ward", "aiannhGeoid", "locationNotes", "accessibilityNotes", "lastUpdated"] as const;
+    const stringFields = ["days", "hours", "precinct", "town", "countyName", "countyFips", "countySubdivisionGeoid", "ward", "tribalNation", "reservation", "aiannhGeoid", "locationNotes", "accessibilityNotes", "lastUpdated"] as const;
     for (const field of stringFields) { const value = get(field); if (value) site[field] = value; }
     site.countyFips ??= door.scope.countyFips; site.countySubdivisionGeoid ??= door.scope.countySubdivisionGeoid;
     if (get("districtOcdIds")) site.districtOcdIds = get("districtOcdIds").split(/[;|]/).map(s => s.trim()).filter(Boolean);
@@ -80,7 +96,7 @@ export function votingRowsToSites(rows: Record<string, unknown>[], door: VotingS
       else if (site.hours && !prior.hours?.includes(site.hours)) prior.hours = [prior.hours, site.hours].filter(Boolean).join("\n");
     }
   }
-  return { sites, office, missingRows, officeRows };
+  return { sites, office, missingRows, missingRowPlaces, officeRows };
 }
 /** Decode the public querydata response used by embedded Power BI maps. */
 export function powerBiVotingRows(value: unknown): Record<string, unknown>[] {
@@ -163,7 +179,8 @@ function voterfocusRows(html: string): Record<string, unknown>[] {
   const rows: Record<string, unknown>[] = [];
   for (let at = 1; at + 1 < blocks.length; at += 2) {
     const lines = blocks[at + 1]!.split("\n").map(line => line.replace(/【\d+†([^†】]+)(?:†[^】]*)?】/g, "$1").trim()).filter(Boolean);
-    const address = lines.find(line => /^\d+\s+/.test(line) && /\b[A-Z]{2}\s+\d{5}/.test(line));
+    const addressIndex = lines.findIndex(line => /^\d+\s+/.test(line));
+    const address = addressIndex < 0 ? undefined : /\b[A-Z]{2}\s+\d{5}/.test(lines[addressIndex]!) ? lines[addressIndex] : /\b[A-Z]{2}\s+\d{5}/.test(lines[addressIndex + 1] ?? "") ? `${lines[addressIndex]}, ${lines[addressIndex + 1]}` : undefined;
     const name = lines.find(line => !/^(?:Image:|Summary of|\d+\s)/i.test(line));
     if (name && address) rows.push({ precinct: blocks[at], name, address });
   }
@@ -177,13 +194,47 @@ const platformReaders: Record<VotingPlatform, (html: string, config: VotingExtra
   civix: (html, config) => embeddedJson(html).flatMap(value => jsonRecords(value, config.jsonPath)).concat(htmlVotingTables(html).flatMap(tableRecords)),
   "power-bi": (html, config) => embeddedJson(html).flatMap(value => jsonRecords(value, config.jsonPath)),
 };
+function splitVotingRows(rows: Record<string, unknown>[], config: VotingExtraction): Record<string, unknown>[] {
+  const split = config.splitRows; if (!split) return rows;
+  return rows.flatMap(row => {
+    const values = String(row[split.column] ?? "").split(new RegExp(split.pattern)).map(s => s.trim()).filter(Boolean);
+    if (values.length <= 1) return [row];
+    const aligned = new Map((split.alignedColumns ?? []).map(column => [column, String(row[column] ?? "").split(new RegExp(split.alignedPattern ?? split.pattern)).map(s => s.trim()).filter(Boolean)]));
+    return values.map((value, index) => {
+      const out = { ...row, [split.column]: value };
+      for (const [column, pieces] of aligned) {
+        if (pieces.length === values.length) out[column] = pieces[index];
+        else { out[column] = ""; out.__extractionWarning = `Published ${column} could not be aligned with the individual locations`; }
+      }
+      return out;
+    });
+  });
+}
 export async function parseVotingCapture(capture: VotingCapture, door: VotingSourceDoor): Promise<Record<string, unknown>[]> {
-  const text = new TextDecoder().decode(capture.bytes), config = door.extraction ?? {};
+  const text = decodeVotingBytes(capture.bytes), config = door.extraction ?? {};
   const format = config.format ?? (/\.xlsx(?:\?|$)/i.test(capture.url) || capture.bytes[0] === 80 && capture.bytes[1] === 75 ? "xlsx" : /\.pdf(?:\?|$)/i.test(capture.url) || text.startsWith("%PDF") ? "pdf" : /json/.test(capture.contentType) || /^[\s]*[\[{]/.test(text) ? "json" : /\.tsv(?:\?|$)|tab-separated/i.test(`${capture.url} ${capture.contentType}`) ? "tsv" : /\.csv(?:\?|$)|text\/csv/i.test(`${capture.url} ${capture.contentType}`) ? "csv" : "html");
   if (format === "json") return jsonRecords(JSON.parse(text), config.jsonPath);
-  if (format === "csv" || format === "tsv") return tableRecords(tableFromRows(delimitedVotingRows(text.replace(/^\uFEFF/, ""), config.delimiter ?? (format === "tsv" ? "\t" : ",")), config));
-  if (format === "xlsx") return xlsxVotingTables(capture.bytes, config).flatMap(tableRecords);
-  if (format === "pdf") return (await pdfVotingTables(capture.bytes, config)).flatMap(tableRecords);
+  if (format === "csv" || format === "tsv") return tableRecords(tableFromRows(delimitedVotingRows(text.replace(/^\uFEFF/, ""), config.delimiter ?? (format === "tsv" || text.split(/\r?\n/, 1)[0]!.includes("\t") ? "\t" : ",")), config));
+  if (format === "xlsx") return splitVotingRows(xlsxVotingTables(capture.bytes, config).flatMap(tableRecords), config);
+  if (format === "pdf") {
+    if (config.textAssertions?.length) {
+      const { extractTextLayer } = await import("../extract/text-layer.ts");
+      const extracted = await extractTextLayer(new Uint8Array(capture.bytes), capture.url);
+      const text = extracted.items.map(page => page.text).join(" ").replace(/\s+/g, " ").toLowerCase();
+      if (config.textAssertions.every(assertion => text.includes(assertion.replace(/\s+/g, " ").toLowerCase()))) return [{}];
+      throw new Error("The PDF's published location assertions no longer match; retain prior facts and re-extract this notice");
+    }
+    return (await pdfVotingTables(capture.bytes, config)).flatMap(tableRecords);
+  }
+  if (config.records) {
+    if (config.textAssertions?.some(assertion => !sourceText(text).replace(/\s+/g, " ").toLowerCase().includes(assertion.replace(/\s+/g, " ").toLowerCase()))) throw new Error("The list's published assertions no longer match");
+    const recordConfig = config.records;
+    return [...text.matchAll(new RegExp(recordConfig.pattern, "gis"))].map(match => {
+      let block = match[recordConfig.group ?? 0] ?? "";
+      if (recordConfig.jsonString) block = JSON.parse(block) as string;
+      return Object.fromEntries(Object.entries(recordConfig.fields).map(([field, extraction]) => [field, sourceText(block.match(new RegExp(extraction.pattern, "is"))?.[extraction.group] ?? "")]));
+    });
+  }
   if (config.textAssertions?.length && config.textAssertions.every(assertion => sourceText(text).toLowerCase().includes(assertion.toLowerCase()))) return [{}];
   const platform = door.platform ?? fingerprintVotingPlatform(capture.url, text);
   return platform ? platformReaders[platform](text, config) : htmlVotingTables(text).flatMap(tableRecords).concat(embeddedJson(text).flatMap(value => jsonRecords(value, config.jsonPath)));
@@ -200,7 +251,13 @@ export async function readVotingSource(door: VotingSourceDoor, runtime: VotingSo
   const session = votingFetchSession(runtime), now = runtime.now?.() ?? new Date().toISOString();
   const source: VotingSource = { publisher: door.publisher, url: door.url, title: door.title, lastUpdated: door.fileUpdatedAt, checkedAt: now };
   const result: VotingSourceRead = { doorId: door.id, sites: [], office: door.office, rules: [], sources: [], blanks: [], attempts: session.attempts, rawBodies: session.rawBodies, fileTitle: door.title, fileUpdatedAt: door.fileUpdatedAt, publicationMessage: door.publicationMessage };
-  const blank = (reason: VotingSourceRead["blanks"][number]["reason"], owed: string, tried: string[]) => result.blanks.push({ id: `${door.id}:${reason}:${createHash("sha256").update(owed).digest("hex").slice(0, 12)}`, doorId: door.id, scope: door.scope, status: "open", reason, owed, tried, next: ["Follow the chief election office's current election files and map services", "Read the delegated county or town election office's public lists and files"] });
+  const blank = (reason: VotingSourceRead["blanks"][number]["reason"], owed: string, tried: string[], scope: VotingDoorScope = door.scope) => result.blanks.push({ id: `${door.id}:${reason}:${createHash("sha256").update(`${scope.ocdId}\n${owed}`).digest("hex").slice(0, 12)}`, doorId: door.id, scope, status: "open", reason, owed, tried, next: ["Follow the chief election office's current election files and map services", "Read the delegated county or town election office's public lists and files"] });
+  const siteScope = (site: Pick<VotingSite, "countyName" | "town" | "matchingUnit">): VotingDoorScope => {
+    // A site's physical city is not its election jurisdiction unless the publisher matches by town.
+    const town = site.matchingUnit === "TOWN" && site.town ? runtime.resolveScope?.(site.town, door.url, door.scope) : null;
+    const county = site.countyName ? runtime.resolveScope?.(site.countyName, door.url, door.scope) : null;
+    return town ?? county ?? door.scope;
+  };
   if (door.shape === "identity-locked-lookup" || door.access?.status === "identity-locked") { blank("access", "Public voting sites from county lists; the voter identity lookup is closed", ["Identity-locked route recorded without requesting it"]); return result; }
   if (door.shape === "address-lookup" && !runtime.readerAddress) return result;
   if (door.scopeUnresolved || door.covers.length === 0 && !door.rules?.length && !door.publication) return result;
@@ -238,6 +295,13 @@ export async function readVotingSource(door: VotingSourceDoor, runtime: VotingSo
       }
       const capture = await session.get(target.href, init); readStage = "extraction"; rows = await parseVotingCapture(capture, door);
       const text = new TextDecoder().decode(capture.bytes);
+      if (/html/.test(capture.contentType) && door.electionPageUrl === door.url) effectiveDoor = { ...door, electionAssociationVerified: officialElectionLinkMatches(text, capture.url, door) };
+      if (/html/.test(capture.contentType) && door.shape !== "address-lookup") {
+        const pages = await readVotingPages(capture, session);
+        for (const page of pages.captures) rows.push(...await parseVotingCapture(page, door));
+        rows = [...new Map(rows.map(row => [JSON.stringify(row), row])).values()];
+        for (const failure of pages.failures) blank("missing-sites", "Remaining pages of the published location list", [failure]);
+      }
       if (/html/.test(capture.contentType)) result.fileTitle = sourceText(text.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1] ?? "") || result.fileTitle;
     }
     if (typeof rows[0]?.__fileTitle === "string" && rows[0].__fileTitle) result.fileTitle = rows[0].__fileTitle;
@@ -245,7 +309,7 @@ export async function readVotingSource(door: VotingSourceDoor, runtime: VotingSo
     source.title = result.fileTitle; source.lastUpdated = result.fileUpdatedAt;
     result.sources.push(source); result.rules = door.rules ?? [];
     const parsed = votingRowsToSites(rows, effectiveDoor, source);
-    for (const missing of parsed.missingRows) blank("missing-sites", `Published ${missing}`, [door.url]);
+    parsed.missingRows.forEach((missing, index) => blank("missing-sites", `Published ${missing}`, [door.url], siteScope({ ...parsed.missingRowPlaces[index], matchingUnit: door.matchingUnit })));
     result.contacts = [];
     for (const row of parsed.officeRows) {
       const scope = runtime.resolveScope?.(row.label, door.url, door.scope) ?? (row.countyName ? runtime.resolveScope?.(row.countyName, door.url, door.scope) : null) ?? (door.scope.countyFips || door.scope.countySubdivisionGeoid ? door.scope : null);
@@ -256,14 +320,22 @@ export async function readVotingSource(door: VotingSourceDoor, runtime: VotingSo
     }
     for (const site of parsed.sites) if (site.countyName && !site.countyFips) {
       site.countyFips = runtime.resolveCountyFips?.(site.countyName, door.scope.state) ?? undefined;
-      if (!site.countyFips) blank("missing-sites", `Registered county match for ${site.countyName}`, [door.url, site.name]);
+      if (!site.countyFips) blank("missing-sites", `Registered county match for ${site.countyName}`, [door.url, site.name], siteScope(site));
+    }
+    for (const site of parsed.sites) if (site.tribalNation && !/^(?:na|n\/a)$/i.test(site.tribalNation) && !site.aiannhGeoid) {
+      site.aiannhGeoid = runtime.resolveAiannhGeoid?.(site.tribalNation, site.reservation ?? "", door.scope.state) ?? undefined;
+      if (!site.aiannhGeoid) blank("missing-sites", `Census tribal area for ${site.tribalNation} satellite office`, [site.reservation ?? "", door.url], siteScope(site));
     }
     result.sites = applyVotingChangeNotices(parsed.sites, door.changeNotices ?? []); result.office = parsed.office;
     if (runtime.geocode) for (const site of result.sites) {
-      try { const point = await runtime.geocode(site.address); if (point) { site.lat = point.lat; site.lng = point.lng; site.geocodeSource = "CENSUS"; } else blank("geocode", `Census coordinates for ${site.name}`, [site.address]); }
-      catch (error) { blank("geocode", `Census coordinates for ${site.name}`, [String(error)]); }
+      try { const point = await runtime.geocode(site.address); if (point) { site.lat = point.lat; site.lng = point.lng; site.geocodeSource = "CENSUS"; } else blank("geocode", `Census coordinates for ${site.name}`, [site.address], siteScope(site)); }
+      catch (error) { blank("geocode", `Census coordinates for ${site.name}`, [String(error)], siteScope(site)); }
     }
     if (!result.sites.length && !result.rules.length && door.publication?.status !== "NO_GENERAL_ELECTION") blank(door.publicationMessage ? "unpublished" : "missing-sites", door.publicationMessage ?? `Published ${door.covers.join(", ")} sites and hours`, result.attempts.map(a => `${a.url}: ${a.outcome}`));
+    const publishedElectionDates = [...new Set(rows.flatMap(row => publishedElectionDatesIn(readValue(row, "election", door.extraction ?? {}))))];
+    if (publishedElectionDates.length && publishedElectionDates.every(date => date < door.electionDate)) blank("earlier-election", "A newer election list; retain the official archive's currently published list", publishedElectionDates);
+    const titleDates = publishedElectionDatesIn(result.fileTitle ?? "");
+    if (titleDates.length && titleDates.every(date => date < door.electionDate)) blank("earlier-election", "A newer election list; continue showing the file linked by the current official election page", [result.fileTitle ?? "", ...titleDates]);
     const years = [...(result.fileTitle ?? "").matchAll(/\b(20\d{2})\b/g)].map(m => Number(m[1]));
     if (years.length && Math.max(...years) < Number(door.electionDate.slice(0, 4))) blank("earlier-election", "A newer election list; continue showing the file linked by the current official election page", [result.fileTitle ?? ""]);
   } catch (error) { blank(readStage, `Published ${door.covers.join(", ")} sites and hours`, [...result.attempts.map(a => `${a.url}: ${a.outcome}`), String(error)]); }

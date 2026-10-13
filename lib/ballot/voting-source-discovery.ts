@@ -69,13 +69,15 @@ export async function discoverVotingDoors(root: VotingSourceDoor, runtime: Votin
         const resolvedScope = isDirectoryEntry || parent.scopeUnresolved ? runtime.resolveScope?.(link.label, url.href, parent.scope) : undefined;
         if (isDirectoryEntry && !resolvedScope) blanks.push({ id: `${parent.id}:scope:${createHash("sha256").update(url.href).digest("hex").slice(0, 12)}`, doorId: parent.id, scope: parent.scope, status: "open", reason: "missing-sites", owed: `Match the delegated office ${link.label || url.hostname} to its registered county or town`, tried: [capture.url, url.href], next: ["Match this official directory entry against the jurisdiction registry, then acquire its public voting lists"] });
         const door: VotingSourceDoor = {
-          ...parent, id: `voting-${createHash("sha256").update(`${root.scope.ocdId}\0${url.href}`).digest("hex").slice(0, 20)}`,
+          // Only route context crosses a link. A parent's contact, rules, publication
+          // status, timestamps, or layout describe that source, not this new one.
+          id: `voting-${createHash("sha256").update(`${root.scope.ocdId}\0${url.href}`).digest("hex").slice(0, 20)}`,
+          publisher: resolvedScope && resolvedScope.ocdId !== parent.scope.ocdId ? link.label || resolvedScope.name : parent.publisher,
           url: url.href, shape, title: link.label || undefined, scope: resolvedScope ?? parent.scope, scopeUnresolved: !resolvedScope && (isDirectoryEntry || parent.scopeUnresolved), covers: !resolvedScope && (isDirectoryEntry || parent.scopeUnresolved) ? [] : covers.length ? covers : parent.covers,
           platform: fingerprintVotingPlatform(url.href), officialLinkingPage: linkingPage, discoveredFrom: capture.url,
+          electionDate: root.electionDate,
           electionPageUrl: currentElection ? capture.url : parent.electionPageUrl,
           electionAssociationVerified: currentElection,
-          // A newly found layout has its own extraction mapping; never inherit columns from another file.
-          extraction: undefined, changeNotices: undefined,
         };
         doors.set(url.href, door);
         if (runtime.onDiscoveredDoor) await runtime.onDiscoveredDoor(door, [capture]);

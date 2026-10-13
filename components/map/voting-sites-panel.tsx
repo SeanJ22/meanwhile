@@ -53,6 +53,7 @@ export function VotingSitesPanel({
 }: VotingSitesPanelProps) {
   const [address, setAddress] = useState("");
   const [state, setState] = useState<State>({ kind: "idle" });
+  const pendingRequest = useRef<AbortController | null>(null);
   const inputId = useId();
   const onSitesRef = useRef(onSites);
   useEffect(() => {
@@ -64,6 +65,9 @@ export function VotingSitesPanel({
       event.preventDefault();
       const value = address.trim();
       if (value.length < 3) return;
+      pendingRequest.current?.abort();
+      const controller = new AbortController();
+      pendingRequest.current = controller;
       setState({ kind: "asking" });
       try {
         const res = await fetch("/api/voting-sites", {
@@ -71,15 +75,18 @@ export function VotingSitesPanel({
           headers: { "content-type": "application/json" },
           body: JSON.stringify({ address: value, googleFallback }),
           cache: "no-store",
+          signal: controller.signal,
         });
+        if (controller.signal.aborted) return;
         if (!res.ok) {
           setState({ kind: "failed" });
           return;
         }
         const answer = (await res.json()) as VotingSitesAnswer;
+        if (controller.signal.aborted) return;
         setState({ kind: "answered", answer });
       } catch {
-        setState({ kind: "failed" });
+        if (!controller.signal.aborted) setState({ kind: "failed" });
       }
     },
     [address],
@@ -107,6 +114,7 @@ export function VotingSitesPanel({
   useEffect(() => () => onAddressPoint?.(null), [onAddressPoint]);
 
   useEffect(() => () => onSitesRef.current([]), []);
+  useEffect(() => () => pendingRequest.current?.abort(), []);
 
   return (
     <section
@@ -137,7 +145,8 @@ export function VotingSitesPanel({
           id={inputId}
           className="voting-panel-input"
           value={address}
-          onChange={(e) => setAddress(e.target.value)}
+          onChange={(e) => { pendingRequest.current?.abort(); setAddress(e.target.value); setState({ kind: "idle" }); }}
+          maxLength={200}
           placeholder={PLACEHOLDER_ADDRESS}
           // The design popup opens with the cursor in the address field.
           autoFocus={embedded}
@@ -265,6 +274,7 @@ export function VotingJurisdictionRecords({ answer, selectedSiteId, onSelectSite
                   <SiteRow
                     key={site.id}
                     site={site}
+                    electionDate={j.electionDate}
                     miles={miles}
                     selected={site.id === selectedSiteId}
                     onSelect={() =>
@@ -282,7 +292,7 @@ export function VotingJurisdictionRecords({ answer, selectedSiteId, onSelectSite
 }
 
 const KIND_LABEL: Record<VotingSite["kind"], string> = {
-  ELECTION_DAY: "Open on election day",
+  ELECTION_DAY: "Election-day polling place",
   EARLY_VOTING: "Early voting",
   MOBILE: "Mobile voting site",
   DROP_BOX: "Ballot drop box",
@@ -292,16 +302,22 @@ const KIND_LABEL: Record<VotingSite["kind"], string> = {
 
 function SiteRow({
   site,
+  electionDate,
   miles,
   selected,
   onSelect,
 }: {
   site: VotingSite;
+  electionDate?: string;
   /** Miles from the address the reader typed, or null if unplaceable. */
   miles: number | null;
   selected: boolean;
   onSelect: () => void;
 }) {
+  const confirmed = !!site.electionDate && (!electionDate || site.electionDate === electionDate);
+  const requestedElection = electionDate && /^\d{4}-\d{2}-\d{2}$/.test(electionDate)
+    ? new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" }).format(new Date(`${electionDate}T12:00:00Z`))
+    : null;
   return (
     <li className="voting-site" data-selected={selected} data-voting-site={site.id} data-aiannh={site.aiannhGeoid}>
       <button type="button" className="voting-site-head" onClick={onSelect}>
@@ -313,6 +329,8 @@ function SiteRow({
       {miles !== null && <p className="voting-site-distance">{milesLabel(miles)}</p>}
       {site.room && <p className="voting-site-room">{site.room}</p>}
       <p className="voting-site-kind">{KIND_LABEL[site.kind]}</p>
+      {site.election && <p className="voting-site-election">Publisher&rsquo;s election label: {site.election}</p>}
+      {site.electionDate && <p className="voting-site-election">Election date: {site.electionDate}</p>}
       {site.precinct && <p className="voting-site-serves">Precinct: {site.precinct}</p>}
       {site.serves && <p className="voting-site-serves">{site.serves}</p>}
       {site.days && <p className="voting-site-days">Days: {site.days}</p>}
@@ -327,6 +345,7 @@ function SiteRow({
           The authority did not say which election this location is for.
         </p>
       )}
+      {!confirmed && <p className="voting-site-gap">This location has not yet been confirmed for {requestedElection ? `the ${requestedElection} election` : "the upcoming election"}. We are still showing the publisher&rsquo;s list while we check for an update.</p>}
       {!isPinnable(site) && (
         <p className="voting-site-gap">{UNPLACED_SITE_LINE}</p>
       )}

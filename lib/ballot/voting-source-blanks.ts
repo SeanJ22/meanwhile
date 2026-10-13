@@ -38,6 +38,8 @@ export function votingSourcePlaces(input: {
 }
 
 function applies(scope: VotingDoorScope, place: VotingDoorScope): boolean {
+  if (scope.countyFips && place.countyFips && scope.countyFips !== place.countyFips) return false;
+  if (scope.countySubdivisionGeoid && place.countySubdivisionGeoid && scope.countySubdivisionGeoid !== place.countySubdivisionGeoid) return false;
   return scope.state.toUpperCase() === place.state.toUpperCase() && (scope.ocdId === place.ocdId ||
     place.ocdId.startsWith(`${scope.ocdId}/`) || (!!scope.countyFips && scope.countyFips === place.countyFips && !scope.countySubdivisionGeoid));
 }
@@ -88,9 +90,14 @@ export function planVotingSourceBlanks(input: {
     const sites = [...reads.flatMap(({ door, read }) => read.sites.filter(site => siteAt(site, door.scope, place))),
       ...held.flatMap(jurisdiction => jurisdiction.sites.filter(site => siteAt(site, jurisdiction, place)))];
     const owed: string[] = [];
-    if (!sites.length) owed.push(`Load the official polling places or vote centers, early and satellite sites, and drop boxes or the state's no-drop-box return rule for ${input.electionDate}`);
-    for (const kind of unique(doors.flatMap(door => door.covers))) {
-      if (!sites.some(site => site.kind === kind)) owed.push(`Find ${KIND_LABEL[kind]} for ${place.name}, or the office's published rule explaining their absence`);
+    const rules = [...reads.flatMap(({ read }) => read.rules), ...held.flatMap(jurisdiction => jurisdiction.rules ?? [])];
+    const absent = new Set(rules.filter(rule => rule.source.url).flatMap(rule => rule.absenceOf ?? []));
+    const fulfilled = (kind: SiteKind) => sites.some(site => site.kind === kind) || absent.has(kind);
+    // The goal supplies the owed categories even when discovery has found only a polling-place door.
+    // Absence is explicit source data; a return rule alone cannot establish that a kind is not offered.
+    if (!sites.some(site => site.kind === "ELECTION_DAY" || site.kind === "VOTE_CENTER") && !(absent.has("ELECTION_DAY") && absent.has("VOTE_CENTER"))) owed.push(`Find Election Day polling places or vote centers for ${place.name}, or the office's published rule explaining how to vote without them`);
+    for (const kind of unique<SiteKind>(["EARLY_VOTING", "SATELLITE", "DROP_BOX", ...doors.flatMap(door => door.covers).filter(kind => kind === "MOBILE")])) {
+      if (!fulfilled(kind)) owed.push(`Find ${KIND_LABEL[kind]} for ${place.name}, or the office's published rule explaining their absence`);
     }
     const missingHours = sites.filter(site => !site.hours);
     const missingDays = sites.filter(site => ["EARLY_VOTING", "SATELLITE", "MOBILE"].includes(site.kind) && !site.days);
@@ -99,6 +106,7 @@ export function planVotingSourceBlanks(input: {
     const ungeocoded = sites.filter(site => site.lat === null || site.lng === null);
     if (ungeocoded.length) owed.push(`Census geocodes for ${unique(ungeocoded.map(site => site.name)).join(", ")}`);
     const office = doors.filter(door => door.scope.ocdId === place.ocdId).some(door => !!(readsByDoor.get(door.id)?.office ?? door.office)?.phone) ||
+      reads.some(({ read }) => read.contacts?.some(contact => contact.scope.ocdId === place.ocdId && !!(contact.office.phone || contact.office.email))) ||
       held.some(jurisdiction => jurisdiction.ocdId === place.ocdId && !!(jurisdiction.office?.phone || jurisdiction.office?.email));
     if (!office) owed.push(`Local election office contact for ${place.name}`);
     const inherited = reads.flatMap(({ read }) => read.blanks.filter(blank => applies(blank.scope, place)));
@@ -108,6 +116,7 @@ export function planVotingSourceBlanks(input: {
     if (later.length) owed.push(...later.map(text => `Recheck the office's posting: “${text}”`));
     if (!owed.length) continue;
     const tried = unique([...reads.flatMap(({ read }) => read.attempts.map(attempt => `${attempt.url} (${attempt.route}): ${attempt.outcome}`)),
+      ...rules.map(rule => `${rule.source.url}: Published rule: ${rule.text}`),
       ...inherited.flatMap(blank => blank.tried)]);
     const next = unique([...inherited.flatMap(blank => blank.next), ...doors
       .filter(door => door.shape !== "identity-locked-lookup" && door.access?.status !== "identity-locked")

@@ -14,7 +14,7 @@ export function civicCandidate(scope: string, projection: CivicProjection, rawBo
     : civicElectionRows(rawBodies[0], checkedAt, joined);
   if (normalizedHash(sourceRows) !== normalizedHash(projection.rows)) throw new Error("Google Civic facts differ from the saved source response.");
   const records = civicRecordsFor(GOOGLE_CIVIC_RECORD_CLASS, projection);
-  // The raw envelope comes only from public government-address probes, never reader lookups.
+  // Saved public-source evidence only; transient reader lookups never enter publication.
   const normalizedPayload = { projection, rawBodies };
   const rawHash = sha256(rawBodies.map(sha256).join("\n"));
   return {
@@ -31,7 +31,7 @@ export function civicCandidate(scope: string, projection: CivicProjection, rawBo
     semantics: { factKind: "Google Civic voterinfo observations beside certified election lists; native OCD joins only", violations: [] },
     horizon: { kind: "OPEN_FACT_SET", query: "November 3 voter information by queried address; no national completeness or voter assignment claim", returnedRecords: records.length, declaredTotal: null, paginationComplete: true, claimsComplete: false },
     absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
-    dependentChecks: [{ consumer: "ballot, voting-sites and Ask", passed: true, detail: "Separate attributed observations; unknown joins and publication dates remain explicit." }],
+    dependentChecks: [{ consumer: "elections catalog and Admin", passed: true, detail: "Separate attributed observations; unknown joins and publication dates remain explicit." }],
     normalizedPayload, readModel: projection, civicRecords: records,
   };
 }

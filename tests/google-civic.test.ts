@@ -9,7 +9,6 @@ import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredFanOutCandidate, processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { readCivicProjection } from "../lib/sources/google-civic/reader.ts";
-import { googleCivicEvidence, googleCivicQuestion, googleCivicSitesQuestion } from "../lib/ask/google-civic.ts";
 import { refreshGoogleCivic } from "../lib/sources/google-civic/refresh.ts";
 import type { readRegistrationProjection } from "../lib/registration/reader.ts";
 
@@ -52,7 +51,7 @@ test("one national contract schedules every state and keeps its source distinct 
   const contracts = ROUTINE_SOURCE_CONTRACTS.filter(row => row.sourceId === GOOGLE_CIVIC_CONTRACT_ID);
   assert.equal(contracts.length, 1);
   assert.equal(contracts[0].fanOut, true);
-  assert.deepEqual(contracts[0].readerProjection?.consumers, ["ballot", "voting-sites", "Ask", "Admin"]);
+  assert.deepEqual(contracts[0].readerProjection?.consumers, ["ballot", "voting-sites", "Admin"]);
   for (const state of ["AZ", "MI", "VA", "CA", "TX", "NY", "NJ", "NH", "DC"]) assert.ok(GOOGLE_CIVIC_STATES.includes(state));
   assert.equal(contracts[0].cadence.phases?.[0].everyMs, 24 * 60 * 60_000);
 });
@@ -107,19 +106,6 @@ test("provider Retry-After is honored on 429 and 5xx without small-government pa
   assert.equal(result.checkedAt, AT);
 });
 
-test("Ask receives the exact contests, candidate names, sites, hours and source dates from the same lookup", () => {
-  for (const question of ["Where can I vote?", "When can I vote?", "Where are early-vote sites?", "Where can I drop off my ballot?"]) {
-    assert.ok(googleCivicQuestion(question));
-    assert.ok(googleCivicSitesQuestion(question));
-  }
-  const lookup = civicLookupFromRaw(rawMi, "12000", AT, districtIds);
-  const records = googleCivicEvidence(lookup);
-  assert.equal(records.length, lookup.rows.length);
-  assert.ok(records.some(row => row.kind === "CONTEST" && row.text.includes("Candidates:")));
-  assert.ok(records.some(row => row.text.includes("FIRST PRESBYTERIAN CHURCH") && row.text.includes("7 am - 8 pm")));
-  assert.ok(records.every(row => row.sourceOrg?.includes("via Google Civic Information") && row.retrievedAt === AT && row.googleCivic?.publishedAt === null));
-});
-
 test("national refresh visits every state, records missing inventories and publishes a catalog without dropping covered rows", async () => {
   const store = new MemoryRoutineDataStore(), visited: string[] = [];
   const registration = (async (state: string) => { visited.push(state); return { kind: "NOT_RECORDED" }; }) as unknown as typeof readRegistrationProjection;
@@ -134,26 +120,17 @@ test("national refresh visits every state, records missing inventories and publi
   assert.ok(next.confirmed);
 });
 
-test("public government targets publish real covered rows and keep separate per-state outage/empty counts", async () => {
-  const store = new MemoryRoutineDataStore();
-  const registration = (async (state: string) => ["MI", "VA", "AZ", "CA", "NH"].includes(state) ? { kind: "PROMOTED", value: {
-    divisions: [], governments: [{ id: `government:US-${state}:cog:public-office-fixture`, officeAddress: `${state} public office fixture`,
-      associations: [], bodyIds: [] }, { id: `government:US-${state}:cog:missing-address-fixture`, officeAddress: null, associations: [], bodyIds: [] }],
-  } } : { kind: "NOT_RECORDED" }) as unknown as typeof readRegistrationProjection;
+test("VS-01 background refresh sends no public or private addresses to Google", async () => {
+  const store = new MemoryRoutineDataStore(), requests: URL[] = [];
+  const registration = (async (state: string) => ({ kind: "PROMOTED", value: { divisions: [], governments: [
+    { id: `government:US-${state}:cog:public-office-fixture`, officeAddress: `${state} public office fixture`, associations: [], bodyIds: [] },
+  ] } })) as unknown as typeof readRegistrationProjection;
   const result = await refreshGoogleCivic({ store, registration, readOptions: { apiKey: "private-test-key", now: () => AT,
-    fetchImpl: (async (url: URL) => {
-      if (url.pathname.endsWith("elections")) return new Response(fixture("elections"));
-      const state = url.searchParams.get("address")!.slice(0, 2).toLowerCase();
-      return new Response(fixture(`${state}-voterinfo`), { status: state === "nh" ? 404 : 200 });
-    }) as unknown as typeof fetch } });
-  assert.ok(result.outcome.promoted, JSON.stringify(result.outcome.candidate.receipt));
-  assert.equal(result.coverage.find(row => row.state === "MI")?.loaded, 39);
-  assert.equal(result.coverage.find(row => row.state === "VA")?.loaded, 15);
-  assert.equal(result.coverage.find(row => row.state === "AZ")?.loaded, 679);
-  assert.equal(result.coverage.find(row => row.state === "CA")?.checked, 1);
-  assert.equal(result.coverage.find(row => row.state === "CA")?.loaded, 0);
-  assert.equal(result.coverage.find(row => row.state === "NH")?.unavailable, 1);
-  assert.ok(result.coverage.filter(row => ["MI", "VA", "AZ"].includes(row.state)).every(row => row.loaded === row.unjoined && row.withoutAddress === 1));
+    fetchImpl: (async (url: URL) => { requests.push(url); return new Response(fixture("elections")); }) as unknown as typeof fetch } });
+  assert.ok(result.outcome.promoted);
+  assert.equal(requests.length, 1);
+  assert.ok(requests.every(url => url.pathname.endsWith("elections") && !url.searchParams.has("address")));
+  assert.ok(result.coverage.every(row => row.checked === 0 && row.loaded === 0 && row.reason?.includes("explicit reader fallback")));
 });
 
 test("a changed query response advances its snapshot without turning omitted observations into an absence", async () => {

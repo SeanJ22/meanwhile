@@ -12,7 +12,7 @@ import type { VotingSourceDoor } from "../lib/ballot/voting-source-types.ts";
 const at = "2026-10-13T00:00:00.000Z";
 const doors = JSON.parse(readFileSync("data/reference/voting-source-doors.json", "utf8")) as VotingSourceDoor[];
 const door = doors.find(row => row.url === "https://vip.sos.nd.gov/Precincts.aspx?eid=348")!;
-const bytes = readFileSync("tests/fixtures/voting-sources/nd-2026-official-tables.html");
+const bytes = readFileSync("tests/fixtures/voting-sources/nd-2026-native.html");
 const fetchSource: typeof fetch = async input => new Response(String(input).endsWith("/robots.txt") ? "User-agent: *\nAllow: /" : bytes,
   { headers: { "content-type": String(input).endsWith("/robots.txt") ? "text/plain" : "text/html" } });
 

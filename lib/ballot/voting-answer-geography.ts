@@ -7,6 +7,11 @@ import type { VotingAddressInput } from "./voting-source-types.ts";
 const strings = (values: (string | undefined | null)[]) => [...new Set(values.filter((v): v is string => !!v))];
 const stateId = (id: string) => /\/(?:state|district|territory):([a-z]{2})(?:\/|$)/.exec(id)?.[1]?.toUpperCase();
 
+/** A failed street match can still show the published sites for a supplied ZIP. */
+export function votingInputZip(address: string): string | null {
+  return /(?:^|[,\s])(\d{5})(?:-\d{4})?\s*$/.exec(address)?.[1] ?? null;
+}
+
 /** Exact address fields for government forms; kept only in the active request. */
 export function censusVotingAddressFields(address: string, payload: unknown): VotingAddressInput {
   const matches = (payload as { result?: { addressMatches?: { addressComponents?: Record<string, unknown> }[] } })?.result?.addressMatches;

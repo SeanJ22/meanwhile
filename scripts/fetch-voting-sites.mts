@@ -25,6 +25,7 @@ import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-wr
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredManualCandidate, type PromotionOutcome } from "../lib/civic-data/promotion.ts";
 import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
+import { isOfficialSource } from "../lib/civic-data/source-authority.ts";
 import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { workerPublicationContext } from "../lib/civic-data/worker-publication-context.ts";
 import { publishWorkerReaderResults } from "../lib/civic-data/worker-reader-publication.ts";
@@ -45,7 +46,7 @@ export function votingChiefRoots(doors: readonly VotingSourceDoor[]): VotingSour
 
 function divisionScope(division: Division, divisions: readonly Division[]): VotingDoorScope {
   let countyFips = division.divisionType === "county" && division.geoid?.length === 5 ? division.geoid
-    : division.divisionType === "cousub" && division.geoid?.length === 10 ? division.geoid.slice(0, 5) : undefined;
+    : localTypes.has(division.divisionType) && division.geoid?.length === 10 ? division.geoid.slice(0, 5) : undefined;
   let parentId = division.parentOcdId;
   const visited = new Set<string>();
   while (!countyFips && parentId && !visited.has(parentId)) {
@@ -56,12 +57,21 @@ function divisionScope(division: Division, divisions: readonly Division[]): Voti
   }
   return { state: division.state, ocdId: division.ocdId, name: division.label,
     ...(countyFips ? { countyFips } : {}),
-    ...(division.divisionType === "cousub" && division.geoid?.length === 10 ? { countySubdivisionGeoid: division.geoid } : {}) };
+    ...(localTypes.has(division.divisionType) && division.geoid?.length === 10 ? { countySubdivisionGeoid: division.geoid } : {}) };
 }
 
 /** Exact registered identity, constrained by the directory's containing county; no fuzzy place guessing. */
-export function votingScopeResolvers(registry: Pick<Registry, "divisions" | "bodies">): Pick<VotingSourceRuntime, "resolveScope" | "resolveCountyFips"> {
+export function votingScopeResolvers(registry: Pick<Registry, "divisions" | "bodies">): Pick<VotingSourceRuntime, "resolveScope" | "resolveCountyFips" | "resolveAiannhGeoid"> {
   return {
+    resolveAiannhGeoid: (nation, reservation, state) => {
+      const areaName = (value: string) => value.toLowerCase().replace(/\b(?:american indian|indian|reservation|off[ -]reservation|trust lands?|tribes?|tribal|nation)\b/g, "").replace(/[^a-z0-9]/g, "");
+      const names = new Set([nation, reservation].map(areaName).filter(Boolean));
+      const areas = registry.divisions.filter(division => division.state === state &&
+        (division.divisionType === "aiannh" || /\/aiannh:\d+$/.test(division.ocdId)) && division.geoid &&
+        (names.has(areaName(division.label)) || registry.bodies.some(body => body.ocdId === division.ocdId && body.name && names.has(areaName(body.name)))));
+      const codes = new Set(areas.map(area => area.geoid!));
+      return codes.size === 1 ? [...codes][0]! : null;
+    },
     resolveCountyFips: (name, state) => {
       const candidates = registry.divisions.filter(division => division.state === state && division.divisionType === "county" &&
         (division.geoid === name || localName(division.label) === localName(name)) && division.geoid?.length === 5);
@@ -70,16 +80,23 @@ export function votingScopeResolvers(registry: Pick<Registry, "divisions" | "bod
     resolveScope: (label, url, parent) => {
       const divisions = registry.divisions.filter(division => division.state === parent.state && localTypes.has(division.divisionType) &&
         (!parent.countyFips || divisionScope(division, registry.divisions).countyFips === parent.countyFips));
-      const direct = registry.bodies.filter(body => body.homepageUrl && normalizeUrl(body.homepageUrl) === normalizeUrl(url) && body.ocdId);
+      const direct = registry.bodies.filter(body => body.homepageUrl && normalizeUrl(body.homepageUrl) === normalizeUrl(url) && body.ocdId &&
+        (!localName(label) || /^(?:official\s+)?(?:web\s*site|visit website|view|elections?)$/i.test(label.trim()) ||
+          (body.name && localName(body.name) === localName(label)) || divisions.some(division => division.ocdId === body.ocdId && localName(division.label) === localName(label))));
       const directIds = new Set(direct.map(body => body.ocdId));
       let candidates = divisions.filter(division => directIds.has(division.ocdId));
       if (!candidates.length) {
         candidates = divisions.filter(division => localName(division.label) === localName(label) &&
           (!/\bcounty\b/i.test(label) || division.divisionType === "county") &&
           (!/\b(?:township|town|city|borough|village)\b/i.test(label) || division.divisionType !== "county"));
+        const unit = /\b(township|town|city|borough|village)\b/i.exec(label)?.[1];
+        if (unit && candidates.length > 1) {
+          const qualified = candidates.filter(division => new RegExp(`\\b${unit}\\b`, "i").test(division.label));
+          if (qualified.length) candidates = qualified;
+        }
         // The Census county subdivision is the publisher's town unit. A same-named place is its map alias only
         // when the state/containing county admits a single subdivision with that exact normalized name.
-        const subdivisions = candidates.filter(division => division.divisionType === "cousub");
+        const subdivisions = candidates.filter(division => division.geoid?.length === 10);
         if (subdivisions.length === 1 && candidates.every(division => division.divisionType === "cousub" || division.divisionType === "place")) candidates = subdivisions;
       }
       return candidates.length === 1 ? divisionScope(candidates[0]!, registry.divisions) : null;
@@ -112,6 +129,30 @@ export function votingSourceEvidence(door: VotingSourceDoor, read: VotingSourceR
   }
   for (const capture of captures) if (links.has(capture.url) || capture.url === door.url) bodies.set(capture.url, capture);
   return votingRawEvidence({ rawBodies: [...bodies.values()] });
+}
+
+/** Register an address-only route from its fresh official link without querying it for a voter. */
+export function votingLookupDiscoveryRead(door: VotingSourceDoor, read: VotingSourceRead, captures: VotingSourceRead["rawBodies"], at: string): VotingSourceRead {
+  if (door.shape !== "address-lookup" || door.scopeUnresolved || door.access?.status === "identity-locked" ||
+      !door.officialLinkingPage || !isOfficialSource(door.url, door.officialLinkingPage)) return read;
+  const linking = captures.filter(capture => capture.url === door.officialLinkingPage!.url);
+  if (!linking.length) return read;
+  return { ...read, rawBodies: [...read.rawBodies, ...linking],
+    sources: [{ publisher: door.publisher, url: door.officialLinkingPage.url, checkedAt: at }],
+    attempts: [...read.attempts, { url: door.officialLinkingPage.url, route: "direct",
+      outcome: "Official page linked the address-only lookup; no voter address was submitted" }] };
+}
+
+function isVotingSourceContent(body: { url: string }): boolean {
+  const sourceUrl = new URL(body.url);
+  return !sourceUrl.pathname.endsWith("/robots.txt");
+}
+
+export function votingReadHasFacts(door: VotingSourceDoor, read: VotingSourceRead): boolean {
+  if (!read.rawBodies.some(isVotingSourceContent)) return false;
+  if (read.sites.length || read.contacts?.length) return true;
+  if (!read.sources.length || read.blanks.some(blank => blank.reason === "access" || blank.reason === "extraction")) return false;
+  return Boolean(read.office || read.rules.length || read.publicationMessage || door.publication || door.shape === "address-lookup");
 }
 
 async function main() {
@@ -168,10 +209,12 @@ async function main() {
       };
       const acquire = async (door: VotingSourceDoor, captures: VotingSourceRead["rawBodies"] = []) => {
         if (reads.has(door.id)) return;
-        const read = await readVotingSource(door, runtime), at = now();
-        reads.set(door.id, read); await recordVotingSourceRead(context.repos.doors, door, read, at);
-        const observed = read.rawBodies.filter(body => !new URL(body.url).pathname.endsWith("/robots.txt"));
-        if (!observed.length) return;
+        const result = await readVotingSource(door, runtime), at = now();
+        const read = votingLookupDiscoveryRead(door, result, captures, at);
+        reads.set(door.id, read);
+        if (read.rawBodies.length || read.blanks.length) await recordVotingSourceRead(context.repos.doors, door, read, at);
+        const observed = read.rawBodies.filter(isVotingSourceContent);
+        if (!votingReadHasFacts(door, read)) return;
         const before = held;
         const jurisdiction = mergeVotingSourceRead(held?.jurisdictions.find(row => row.ocdId === door.scope.ocdId), door, read, at);
         let current = replaceVotingJurisdiction(held, jurisdiction, at);

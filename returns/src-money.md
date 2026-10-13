@@ -5,16 +5,16 @@ owner: src-money
 writer: the src-money lane
 check: fold-conflict
 ready: no step ids unknown
-river: 593be2416b30508823ef245e2834b05eaa0a4b6b
-at: 2026-10-13T03:38:20Z
+river: cc9589c05915a48d50a3af1b9247f59067c6d35e
+at: 2026-10-13T13:13:06Z
 state: returned
-fix_subject: fix:aaa978ac
-fix: River · stream/src-money — fold-conflict failed for src-money: src-money READY 74bcddd8cc0b conflicts with river 3734a8f9bb3b (release 25) when merged alone. Conflicting files: components/map/government-listings.tsx components/map/popup/district-popup.tsx components/map/popup/entity-modal.tsx lib/ask/s
+fix_subject: fix:fafdc024
+fix: River · stream/src-money — fold-conflict failed for src-money: src-money READY d2562653de30 (SRC-MN) conflicts with river 1e72570acb7e (releases 25 to 27 plus src-open-data) when merged alone. Conflicting files: app/api/ask/grounded/route.ts components/map/popup/entity-modal.tsx lib/civic-data/contract
 
 ## Failure
 
 ```
-src-money READY 74bcddd8cc0b conflicts with river 3734a8f9bb3b (release 25) when merged alone. Conflicting files: components/map/government-listings.tsx components/map/popup/district-popup.tsx components/map/popup/entity-modal.tsx lib/ask/synthesize.ts   Merge river into stream/src-money, resolve, and mark READY again.
+src-money READY d2562653de30 (SRC-MN) conflicts with river 1e72570acb7e (releases 25 to 27 plus src-open-data) when merged alone. Conflicting files: app/api/ask/grounded/route.ts components/map/popup/entity-modal.tsx lib/civic-data/contracts.ts lib/civic-data/source-authority.ts lib/doors/seed-feeds.ts tests/routine-civic-data-runner.test.ts. Merge river into stream/src-money, resolve, and mark READY again.
 ```
 
 ## Repair

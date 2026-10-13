@@ -46,6 +46,7 @@ import { Logo } from "@/components/brand/logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useReaderLayout } from "@/hooks/use-reader-layout";
 import { ZipSwitcher } from "./zip-switcher";
+import { PostalZipNotice } from "./postal-zip-notice";
 import { useSidebarVisible } from "@/hooks/use-sidebar-visible";
 import { UiProvider, useUi, useUiDispatch } from "@/lib/state/provider";
 import type { MeetingSearchResult } from "@/lib/meetings/query";
@@ -372,6 +373,14 @@ function MapEntryInner() {
     },
     [remember, dispatch, dismissSidebar, setLarge],
   );
+
+  const addressLocated = useCallback((zip: string, lat: number, lng: number) => {
+    search(zip, lat, lng);
+    setSettled({ forZip: zip, target: {
+      key: `street:${lat.toFixed(4)},${lng.toFixed(4)}`, kind: "settled", zip: null, lat, lng,
+    } });
+    setFocus({ lat, lng, zoom: 14, key: `address:${lat.toFixed(4)},${lng.toFixed(4)}` });
+  }, [search]);
 
   /* Declared before both readers below. */
   const focusState = useStateFocus();
@@ -1818,6 +1827,7 @@ function MapEntryInner() {
                 embedded
                 current={clusterZip}
                 onPick={search}
+                onAddressLocated={addressLocated}
                 onClose={closePop}
               />
             )}
@@ -1903,11 +1913,13 @@ function MapEntryInner() {
           <WelcomeOverlay
             open={!location || welcomeRequested}
             onResolved={search}
+            onAddressLocated={addressLocated}
             onDismiss={
               location ? () => setWelcomeRequested(false) : null
             }
           />
         )}
+        {location && <PostalZipNotice location={location} onLocated={addressLocated} hidden={welcomeRequested || pop !== null || cardView !== null} />}
         {restored && (
           <TutorialOverlay active={Boolean(location) && !welcomeRequested && mapPresentationReady} />
         )}

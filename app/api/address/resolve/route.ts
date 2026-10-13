@@ -11,6 +11,8 @@ import {
 import { divisionsAt } from "@/lib/registry/server";
 import { contestsForDivisions } from "@/lib/sources/ballot-nj-morris";
 import { readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
+import { postalArea, zipNeedsAddress } from "@/lib/geo/postal";
+import { lookupZcta } from "@/lib/geo/zcta";
 
 /**
  * Takes a street and a ZIP; returns the jurisdictions the reader is confirmed to be in, level by level, and
@@ -50,15 +52,18 @@ export async function POST(request: Request) {
   let zip = "";
   let street = "";
   let houseNumber = "";
+  let postalEntry = false;
   try {
     const body = (await request.json()) as {
       zip?: unknown;
       street?: unknown;
       houseNumber?: unknown;
+      postalEntry?: unknown;
     };
     zip = typeof body.zip === "string" ? body.zip.trim() : "";
     street = typeof body.street === "string" ? body.street.trim() : "";
     houseNumber = typeof body.houseNumber === "string" ? body.houseNumber.trim() : "";
+    postalEntry = body.postalEntry === true;
   } catch {
     return bad();
   }
@@ -68,6 +73,10 @@ export async function POST(request: Request) {
   if (!/^\d{5}$/.test(zip)) return bad();
   if (street.length < 3 || street.length > 120) return bad();
   if (houseNumber.length > 12) return bad();
+  const omitZip = postalEntry && (zipNeedsAddress(zip) || !lookupZcta(zip));
+  const area = postalArea(zip);
+  const queryStreet = omitZip && !street.includes(",") && area?.place && area.state
+    ? `${street}, ${area.place}, ${area.state}` : street;
 
   /*
    * With a house number there is ONE point and nothing to average, so every
@@ -76,10 +85,10 @@ export async function POST(request: Request) {
    */
   const points: { lat: number; lng: number }[] = [];
   if (houseNumber.length > 0) {
-    const point = await locateAddressInZip(houseNumber, street, zip);
+    const point = await locateAddressInZip(houseNumber, queryStreet, zip, { omitZip });
     if (point) points.push({ lat: point.lat, lng: point.lng });
   } else {
-    points.push(...(await sampleStreetPoints(street, zip)));
+    points.push(...(await sampleStreetPoints(queryStreet, zip, { omitZip })));
   }
 
   if (points.length === 0) {

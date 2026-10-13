@@ -50,7 +50,7 @@ export const DOOR_KIND_SPECS: Readonly<Record<DataDoorKind, DoorKindSpec>> = {
   CIVICCLERK: {
     sourceName: "civicclerk", agendaSourceType: "CIVICCLERK", entry: "lib/sources/civicclerk/index.ts",
     route: { key: "apiBase", as: "origin" },
-    allowed: ["portalBase", "bodyMatch"], required: ["portalBase", "bodyMatch"],
+    allowed: ["portalBase", "bodyMatch", "categoryId", "titleMatch"], required: ["portalBase", "categoryId"],
   },
   IQM2: {
     sourceName: "iqm2", agendaSourceType: "IQM2", entry: "lib/sources/iqm2/index.ts",
@@ -101,11 +101,6 @@ export function isDataDoorKind(kind: string): kind is DataDoorKind {
   return (DATA_DOOR_KINDS as readonly string[]).includes(kind);
 }
 
-/**
- * The adapter settings a reviewed route and filter give a data-door row, or
- * the reason they cannot: a missing required setting, or one the kind does not
- * declare, is refused by name rather than guessed.
- */
 export function dataDoorConfig(input: {
   readonly kind: DataDoorKind;
   readonly route: string;

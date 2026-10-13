@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { readFileSync } from "node:fs";
 
-import { meetingSourceNamesForWiring } from "@/lib/registry/source-wiring.ts";
+import { meetingSourceNamesForWiring, type BodySourceWiring } from "@/lib/registry/source-wiring.ts";
 import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import { CAPABILITIES, buildCompositeSource } from "@/lib/sources/composite/wiring.ts";
 import { DATA_DOOR_KINDS, DOOR_KIND_SPECS, dataDoorConfig } from "@/lib/civic-data/derived-door-kinds.ts";
@@ -9,8 +10,14 @@ import { CROSSWALK_KINDS } from "@/lib/civic-data/meeting-body-crosswalk.ts";
 import { DERIVED_WIRING_SOURCE_NAMES, bodySourceWiringFor, derivedAdapterConfig, type DerivedWiringRow } from "@/lib/civic-data/derived-meeting-wiring.ts";
 import { wiringShapeFor } from "@/lib/control-plane/discovery/derived-wiring.ts";
 
-// Reviewed filters may carry settings added since the hand-wired import.
-const SAMPLE_ROWS = [
+const mandan = JSON.parse(readFileSync(new URL("./fixtures/civicclerk-mandan-events.json", import.meta.url), "utf8")).value[0];
+const sharedCategory = JSON.parse(readFileSync(new URL("./fixtures/civicclerk/mandannd/Events.json", import.meta.url), "utf8")).value[0];
+const SAMPLE_ROWS: BodySourceWiring[] = [
+  { bodyId: "ocd-division/country:us/state:nd/place:mandan#body:safety-and-wellness-committee", ocdId: "ocd-division/country:us/state:nd/place:mandan",
+    jurisdiction: "Mandan, ND", publishingOrg: "City of Mandan", timeZone: "America/Chicago", verifiedAt: "2026-10-13T19:21:00Z", agendaSourceType: "CIVICCLERK" as const,
+    config: { apiBase: "https://mandannd.api.civicclerk.com", portalBase: "https://mandannd.portal.civicclerk.com", titleMatch: sharedCategory.eventName, categoryId: String(sharedCategory.categoryId) } },
+  { bodyId: "ocd-division/country:us/state:nd/place:mandan#governing", ocdId: "ocd-division/country:us/state:nd/place:mandan", jurisdiction: "Mandan, ND", publishingOrg: "City of Mandan", timeZone: "America/Chicago", verifiedAt: "2026-10-13T19:21:00Z", agendaSourceType: "CIVICCLERK" as const,
+    config: { apiBase: "https://mandannd.api.civicclerk.com", portalBase: "https://mandannd.portal.civicclerk.com", bodyMatch: mandan.categoryName, categoryId: String(mandan.categoryId) } },
   ...FIXTURE_DOOR_ROWS.map(row => row.agendaSourceType === "CIVICCLERK"
     ? { ...row, config: { ...row.config, bodyMatch: "Board of Directors" } } : row),
   { ...FIXTURE_DOOR_ROWS[0], agendaSourceType: "BOARDDOCS" as const,

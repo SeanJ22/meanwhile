@@ -131,10 +131,10 @@ test("BoardDocs public form POST uses the shared same-identity alternate client 
 });
 
 test("CivicClerk assigns only the exact reviewed category's meetings to a body", () => {
-  const wiring = { ...BOARD, agendaSourceType: "CIVICCLERK" as const, config: { slug: "grand", portalBase: "https://grand.portal.civicclerk.com", bodyMatch: "Board of Education" } };
+  const wiring = { ...BOARD, agendaSourceType: "CIVICCLERK" as const, config: { slug: "grand", portalBase: "https://grand.portal.civicclerk.com", categoryId: "26" } };
   const output = makeCivicClerkSource([wiring]).normalizeWithDrops([{ wiring, collectedAt: "2024-05-20T00:00:00Z", events: [
-    { id: 1, eventName: "Regular meeting", categoryName: "Board of Education", eventDate: "2024-05-22T18:30:00", startDateTime: "2024-05-22T18:30:00" },
-    { id: 2, eventName: "Regular meeting", categoryName: "Planning Commission", eventDate: "2024-05-22T18:30:00", startDateTime: "2024-05-22T18:30:00" },
+    { id: 1, categoryId: 26, eventName: "Regular meeting", categoryName: "Board of Education", eventDate: "2024-05-22T18:30:00", startDateTime: "2024-05-22T18:30:00" },
+    { id: 2, categoryId: 27, eventName: "Regular meeting", categoryName: "Planning Commission", eventDate: "2024-05-22T18:30:00", startDateTime: "2024-05-22T18:30:00" },
   ] }], new Date("2024-05-20T00:00:00Z"));
   assert.equal(output.meetings.length, 1);
   assert.equal(output.drops.notConfigured, 1);

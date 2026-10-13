@@ -1,4 +1,3 @@
-/** Recorded publisher bytes cross the same discovery, review and Reader-config seams as a standing pass. */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -55,11 +54,11 @@ test("CivicClerk's recorded Mandan commission API uses Morton County's Central c
     html: `<h1>Mandan City Commission</h1><a href="${portal}">City Commission meetings</a>`, replies: { "https://mandannd.portal.civicclerk.com/robots.txt": ALLOW, [portal]: { status: 200, body: '<h1>City Commission</h1>' }, "https://mandannd.api.civicclerk.com/robots.txt": ALLOW, [route]: { status: 200, body: fixture("civicclerk-mandan-events.json"), contentType: "application/json" } } });
   const row = result.review.accepted.find(entry => entry.row.kind === "CIVICCLERK" && entry.row.bodyId === result.bodyId)?.row;
   assert.ok(row, JSON.stringify({held:result.review.held,attempt:result.attempt}));
-  assert.deepEqual(row.filter, { bodyMatch: "City Commission", portalBase: "https://mandannd.portal.civicclerk.com" });
+  assert.deepEqual(row.filter, { categoryId: "26", bodyMatch: "City Commission", portalBase: "https://mandannd.portal.civicclerk.com" });
   assert.equal(row.timeZone, "America/Chicago");
   assert.equal(row.evidence.calendar.selected, 15);
   assert.equal(crosswalkRowIssue(row), null);
-  assert.equal(derivedAdapterConfig(row).bodyMatch, "City Commission");
+  assert.equal(derivedAdapterConfig(row).categoryId, "26");
 });
 
 test("IQM2's recorded Morris calendar reviews the complete printed county-board label", async () => {

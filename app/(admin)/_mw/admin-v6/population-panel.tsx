@@ -11,6 +11,6 @@ export function PopulationPanel() {
     {reading.kind === "loading" ? <Loading what="population coverage" /> : counts === null ? <Empty>—</Empty> :
       <div className={s.tableWrap}><table className={s.table}><thead><tr><th>State</th><th>Rows loaded</th><th>Joined</th><th>Unjoined</th></tr></thead>
         <tbody>{counts.map(row => <tr key={row.state}><th scope="row">{row.state}</th><td className={s.num}>{row.loaded.toLocaleString("en-US")}</td><td className={s.num}>{row.joined.toLocaleString("en-US")}</td><td className={s.num}>{row.unjoined.toLocaleString("en-US")}</td></tr>)}</tbody></table></div>}
-    <details><summary>Sources</summary><ul><li><a href="https://api.census.gov/data.json">U.S. Census Bureau · American Community Survey</a> · Official</li></ul></details>
+    <div><p className={s.meta}>Population data from</p><ul><li><a href="https://api.census.gov/data.json">U.S. Census Bureau · American Community Survey</a> · Official</li></ul></div>
   </Card>;
 }

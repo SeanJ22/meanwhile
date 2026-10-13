@@ -9,7 +9,7 @@ import { readFileSync } from "node:fs";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { DurableSpendHolds, SendBudgetRefusal, committedUsd, type BudgetLine } from "../lib/control-plane/expansion/spend-holds.ts";
-import { FleetPreSendRefusal, FleetSafetyController } from "../lib/control-plane/fleet-safety.ts";
+import { FleetPreSendRefusal, FleetSafetyController, pricedModelCharge } from "../lib/control-plane/fleet-safety.ts";
 import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
 import { backgroundBatchTransport, batchRequestHash } from "../lib/control-plane/model-batch.ts";
 import { paidWorkGuards, workerBatchRouting, type PaidWorkGuardDeps } from "../lib/control-plane/workers/paid-work-guards.ts";
@@ -45,7 +45,7 @@ async function harness(options: {
   };
   const conditions: string[] = [];
   const spendHolds = new DurableSpendHolds({ budget: repos.budget, table: repos.spendHolds, now: () => NOW, sleep: async () => undefined });
-  const fleetSafety = new FleetSafetyController({ now: NOW, costs: options.costs ?? [], modelHold: options.modelHold ?? null,
+  const fleetSafety = new FleetSafetyController({ now: NOW, charges: (options.costs ?? []).flatMap(row => pricedModelCharge(row, row.attemptId) ?? []), modelHold: options.modelHold ?? null,
     rollingCeilingUsd: options.ceilingUsd ?? 50, clock: () => Date.parse(NOW) });
   const deps: PaidWorkGuardDeps = { repos, now: () => NOW, armedAt: NOW, fleetSafety, providerQueue: new ModelProviderQueue(), spendHolds,
     assignmentBudget: { linesFor: () => options.sends ?? { lines: [] } } as unknown as AssignmentBudgetGate,

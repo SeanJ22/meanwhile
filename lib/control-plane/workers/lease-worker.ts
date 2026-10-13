@@ -27,7 +27,7 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
   const observer = observeCyclePhases(stores);
   const repos = observer.repos;
   let websiteSize: WebsiteSizeForUrl = () => null;
-  const safety = new FleetSafetyController({ now: new Date().toISOString(), costs: [], rollingCeilingUsd: config.ceilingUsd,
+  const safety = new FleetSafetyController({ now: new Date().toISOString(), charges: [], rollingCeilingUsd: config.ceilingUsd,
     websiteSize: url => websiteSize(url), websitePacing: repos.websitePacing });
   // The per-task guards read `current`, so one runtime built once per process serves every task it runs
   // (a process runs one lease at a time). `subject` is only set on the old per-task path.

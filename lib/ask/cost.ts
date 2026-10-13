@@ -36,14 +36,15 @@ export function meteredAskFetch(impl: typeof fetch, lane: string, write: AskCost
     } finally {
       const metering = readMeteredUsage(body?.usage);
       const model = typeof body?.model === "string" ? body.model : params.model ?? null;
+      const usd = model === null ? null : priceMeteredUsage(canonicalModelId(model), metering, ttl).usd;
       const entry = costEntryWithModel({ attemptId: id, workItemId: "ask", routeTaskId: null,
         requestedModel: params.model ?? null, servedModel: typeof body?.model === "string" ? body.model : null,
-        ...(requestBound ? { modelRequestBound: requestBound } : {}),
+        ...(requestBound && usd === null ? { modelRequestBound: requestBound } : {}),
         routeId: `ask:${lane}`, source: "api.anthropic.com", jurisdiction: null, project: "ask", role: "ASK",
         resultKind: status === null ? "TRANSPORT_UNMEASURED" : `HTTP_${status}`, recordedAt: new Date().toISOString(),
         cost: { ...ZERO_COST, ...meteredCostFields(metering), inputTokens: metering.uncachedInputTokens === null ? null
           : metering.uncachedInputTokens + (metering.cacheReadInputTokens ?? 0) + (metering.cacheCreationInputTokens ?? 0),
-          outputTokens: metering.outputTokens, usd: model === null ? null : priceMeteredUsage(canonicalModelId(model), metering, ttl).usd,
+          outputTokens: metering.outputTokens, usd,
           durationMs: Math.round(performance.now() - started), requestCount: 1 } }, model);
       try { await write(entry); }
       catch (error) { repositories = undefined; console.error(`Ask cost recording unavailable: ${id}; ${error instanceof Error ? error.name : "Error"}`); }

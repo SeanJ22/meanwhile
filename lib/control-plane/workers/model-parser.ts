@@ -256,7 +256,7 @@ export function modelParseReasoner(
     const started = performance.now();
     const contract = input.contract;
     if (contract.schemaVersion !== 2 || contract.extraction.format !== "UNSUPPORTED") throw new Error("PARSE_MODEL_LANE_NOT_APPLICABLE");
-    const spend = researchSpendInWindow(await readSpendWindowCosts(repos, now(), options.scopedReads === true), now());
+    const spend = researchSpendInWindow(await readSpendWindow(repos, now()), now());
     const admission = ceilingPermits(spend.windowUsd, ceilingUsd);
     if (!admission.permits) throw new Error(`DENIED_BY_POLICY:PARSE_ROLLING_COST_CEILING; ${admission.why}`);
     const host = (() => { try { return new URL(input.evidence.canonicalUrl).host.toLowerCase(); } catch { return input.evidence.canonicalUrl; } })();
@@ -381,4 +381,4 @@ export function modelParseReasoner(
 }
 import type { CostModelShare } from "../cost.ts";
 import { activeModelTierFor } from "../../models.ts";
-import { readSpendWindowCosts } from "./scoped-history.ts";
+import { readSpendWindow } from "../spend-window.ts";

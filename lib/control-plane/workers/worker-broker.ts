@@ -1,4 +1,4 @@
-import { ModelTransportError } from "../scheduler/scout-executor.ts";
+import { ModelRequestNotSent, ModelTransportError } from "../scheduler/scout-executor.ts";
 import { FleetSafetyRefusal, FleetPreSendRefusal, type FleetStopCode } from "../fleet-safety.ts";
 import { SendBudgetRefusal, type AutonomousJurisdiction } from "../expansion/spend-holds.ts";
 
@@ -18,7 +18,8 @@ export function workerBroker<T>(work: (config: T) => Promise<void>) {
     const id = `${process.pid}:${++sequence}`;
     return new Promise<R>((resolve, reject) => {
       replies.set(id, { resolve: value => resolve(value as R), reject });
-      try { send(kind, id, body); } catch (error) { replies.delete(id); reject(error); }
+      try { send(kind, id, body); }
+      catch (error) { replies.delete(id); reject(kind === "model" ? new ModelRequestNotSent(error instanceof Error ? error.message : String(error)) : error); }
     });
   };
   process.on("disconnect", () => {
@@ -41,6 +42,7 @@ export function workerBroker<T>(work: (config: T) => Promise<void>) {
     if (!message.error) { reply.resolve(message.body); return; }
     const e = message.error;
     reply.reject(e.name === "ModelTransportError" ? new ModelTransportError(e.message, e.status ?? null, e.retryAfterMs ?? null)
+      : e.name === "ModelRequestNotSent" ? new ModelRequestNotSent(e.message)
       : e.name === "SendBudgetRefusal" ? new SendBudgetRefusal(e.code ?? "ASSIGNMENT_BUDGET", e.why ?? e.message)
       : e.name === "FleetPreSendRefusal" ? new FleetPreSendRefusal(new FleetSafetyRefusal(e.code as FleetStopCode, e.message))
       : e.name === "FleetSafetyRefusal" ? new FleetSafetyRefusal(e.code as FleetStopCode, e.message) : new Error(e.message));

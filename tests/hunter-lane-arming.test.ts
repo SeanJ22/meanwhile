@@ -12,6 +12,7 @@ import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { recordCost } from "../lib/control-plane/repository/coordinator.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { buildResearchIntent } from "../lib/control-plane/research-view.ts";
 import { ADMIN_CONFIG_ID, defaultAdminConfig, withFleetSpendCeiling } from "../lib/control-plane/gateway/admin-config.ts";
@@ -152,7 +153,7 @@ test("CH-24 lane: the lane's own spend is counted once across refreshes, the led
   const own = h.ownSpend.usd();
   assert.ok(own > 0);
   /* The worker writes its cost row for the same task: the next controller must not count it twice. */
-  await h.repos.costs.append("wi-1", "lane-row", { ...spent(own, h.task.id), attemptId: "lane-row", recordedAt: NOW }, NOW);
+  await recordCost(h.repos, { ...spent(own, h.task.id), attemptId: "lane-row", recordedAt: NOW }, NOW);
   const armed = await h.rearm();
   assert.equal(armed.closed, null);
   assert.equal(Math.round(armed.fleetSafety!.admissionSpendUsd() * 1e9), Math.round((40 + own) * 1e9));
@@ -160,10 +161,10 @@ test("CH-24 lane: the lane's own spend is counted once across refreshes, the led
 
 test("CH-24 lane: a ledger row from earlier work on the same task keeps counting; only this lane's own rows are replaced by its book", async () => {
   const h = await lane({ ceilingUsd: 50, costs: [{ ...spent(7, "TASK"), recordedAt: "2026-10-06T01:00:00.000Z" }] });
-  await h.repos.costs.append("wi-1", "earlier", { ...spent(7, h.task.id), attemptId: "earlier", recordedAt: "2026-10-06T01:00:00.000Z" }, NOW);
+  await recordCost(h.repos, { ...spent(7, h.task.id), attemptId: "earlier", recordedAt: "2026-10-06T01:00:00.000Z" }, NOW);
   await h.send(request);
   const own = h.ownSpend.usd();
-  await h.repos.costs.append("wi-1", "lane-row", { ...spent(own, h.task.id), attemptId: "lane-row", recordedAt: NOW }, NOW);
+  await recordCost(h.repos, { ...spent(own, h.task.id), attemptId: "lane-row", recordedAt: NOW }, NOW);
   const armed = await h.rearm();
   assert.equal(Math.round(armed.fleetSafety!.admissionSpendUsd() * 1e9), Math.round((7 + 7 + own) * 1e9), "the earlier $7 on this task still counts");
 });

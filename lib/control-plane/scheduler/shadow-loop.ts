@@ -85,6 +85,8 @@ export interface CycleInput {
   readonly admitDispatch?: (
     row: ScheduledObligation,
   ) => { readonly admit: true } | { readonly admit: false; readonly code: string; readonly why: string };
+  /** The provider a deterministic row's request goes to; rows for one provider dispatch one at a time, so an opened breaker holds the rest. */
+  readonly providerOf?: (row: ScheduledObligation) => string | null;
   /** A tightly scoped canary may skip the whole lease sweep; normal cycles never do. */
   readonly skipReclaim?: boolean;
   /** Obligation ids the owner dispatched, placed first in both lanes; a dispatch reorders and nothing else. */
@@ -217,9 +219,13 @@ export function huntRoundComparator<T>(items: readonly T[], huntFor: (item: T) =
 
 export async function runPool<T>(items: readonly T[], limit: number, fn: (item: T) => Promise<void>,
   comparator?: () => Promise<(left: T, right: T) => number>,
-  huntFor?: (item: T) => string | null | undefined): Promise<void> {
+  huntFor?: (item: T) => string | null | undefined,
+  /** Items sharing a key run one at a time, so each starts after the last one's outcome is known. */
+  keyOf?: (item: T) => string | null): Promise<void> {
   const pending = [...items];
   const compareRound = huntFor ? huntRoundComparator(items, huntFor) : () => 0;
+  const running = new Set<string>();
+  let finished: () => void = () => {};
   let selection = Promise.resolve();
   let compare: (left: T, right: T) => number = () => 0;
   const take = (): Promise<T | undefined> => {
@@ -234,7 +240,17 @@ export async function runPool<T>(items: readonly T[], limit: number, fn: (item: 
         }
         pending.sort((left, right) => compareRound(left, right) || compare(left, right));
       }
-      item = pending.shift();
+      for (;;) {
+        const at = pending.findIndex(candidate => { const key = keyOf?.(candidate) ?? null; return key === null || !running.has(key); });
+        if (at >= 0) {
+          item = pending.splice(at, 1)[0];
+          const key = keyOf?.(item!) ?? null;
+          if (key !== null) running.add(key);
+          return;
+        }
+        if (!pending.length) return;
+        await new Promise<void>(resolve => { finished = resolve; });
+      }
     });
     selection = next.catch(() => undefined);
     return next.then(() => item);
@@ -243,7 +259,9 @@ export async function runPool<T>(items: readonly T[], limit: number, fn: (item: 
     for (;;) {
       const item = await take();
       if (item === undefined) break;
-      await fn(item);
+      const key = keyOf?.(item) ?? null;
+      try { await fn(item); }
+      finally { if (key !== null) { running.delete(key); finished(); } }
     }
   });
   await Promise.all(workers);
@@ -559,7 +577,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
         ...(research !== undefined ? { decision: decisions.get(row.obligation.id) } : {}),
       });
       if (research?.onDispatched) await research.onDispatched(result, "DETERMINISTIC");
-    }, input.placeComparator, input.huntFor);
+    }, input.placeComparator, input.huntFor, input.providerOf);
   };
 
   /* The model lane: a bounded Scout pool, each row admitted or deferred by code; a Scout that could not finish inside the dispatch budget is not started. */

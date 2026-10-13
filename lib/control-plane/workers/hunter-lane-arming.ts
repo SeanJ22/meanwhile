@@ -7,10 +7,9 @@
  */
 import { mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
-import type { CostEntry } from "../cost.ts";
-import type { SpendHold } from "../budget.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
-import { FleetSafetyController, FleetPreSendRefusal, modelRequestWorstCaseUsd, modelResponseUsd, resolveRollingCeiling, type ProviderCircuit } from "../fleet-safety.ts";
+import { FleetSafetyController, FleetPreSendRefusal, modelRequestWorstCaseUsd, modelResponseUsd, resolveRollingCeiling, type PricedCharge, type ProviderCircuit } from "../fleet-safety.ts";
+import { readSpendWindow } from "../spend-window.ts";
 import { ADMIN_CONFIG_ID, adminConfigForPaidWork, discoverySearchEnabled, fleetSpendCeilingOverrideUsd, type AdminConfigRead } from "../gateway/admin-config.ts";
 import {
   ASSIGNMENT_BUDGET_CODE,
@@ -23,7 +22,7 @@ import {
   type AssignmentSpend,
 } from "../expansion/assignment-budget.ts";
 import { ScopeBudgetGate, type BudgetScope } from "../expansion/membership.ts";
-import { DurableSpendHolds, SendBudgetRefusal, liveSpendHolds, SETTLED_HOLD_RETENTION_MS, type BudgetLine } from "../expansion/spend-holds.ts";
+import { DurableSpendHolds, SendBudgetRefusal, SETTLED_HOLD_RETENTION_MS, type BudgetLine } from "../expansion/spend-holds.ts";
 import { modelLaneClosure, type ModelProviderQueue } from "../scheduler/model-lane.ts";
 import { RESEARCH_BOUNDS, RESEARCH_INTENT_LOG_KEY, ceilingPermits, readIntents, researchSpendInWindow } from "../scheduler/research-policy.ts";
 import type { ModelTransport } from "../scheduler/scout-executor.ts";
@@ -182,14 +181,10 @@ export class LaneOwnSpend {
     for (const r of this.requests) first.set(r.taskId, Math.min(first.get(r.taskId) ?? Infinity, Date.parse(r.at)));
     return first;
   }
-  /** The book as ledger rows, so a new controller counts them the way it counts the ledger. */
-  asCostEntries(): CostEntry[] {
-    return this.requests.map((r, i) => ({
-      attemptId: `hunter-lane:${r.taskId}:${i}`, workItemId: "hunter-lane", routeTaskId: r.taskId, routeId: null,
-      source: "api.anthropic.com", jurisdiction: null, project: "hunter-lane", role: "SCOUT", recordedAt: r.at,
-      cost: { inputTokens: null, outputTokens: null, usd: r.usd, durationMs: null, bytesFetched: null, requestCount: 1,
-        cacheReadInputTokens: null, cacheCreationInputTokens: null, cacheCreation5mInputTokens: null, cacheCreation1hInputTokens: null },
-    }) as CostEntry);
+  /** The book as spend-window charges, so a new controller counts them the way it counts the ledger. */
+  asCharges(): PricedCharge[] {
+    return this.requests.map((r, i) => ({ id: `hunter-lane:${r.taskId}:${i}`, at: r.at, jobId: `hunter-lane:${r.taskId}:${i}`,
+      routeTaskId: r.taskId, obligationId: null, jurisdiction: null, usd: r.usd, knownUsd: r.usd, measured: true, bounded: false }));
   }
   /** Every request the book still counts, in dollars. */
   usd(): number { return this.requests.reduce((n, r) => n + r.usd, 0); }
@@ -250,30 +245,23 @@ export async function armHunterLane(deps: HunterLaneDeps): Promise<ArmedHunterLa
   const ceilingUsd = resolveRollingCeiling(ceilingOverride).rollingCeilingUsd;
   const discoverySearchOn = configHold === null && discoverySearchEnabled(config);
 
-  /* As the round does: the ledger first; the durable holds stand in for an unpriced charge only when the window cannot be priced without them. */
+  /* As the round does: the spend window the ledger's writes keep. */
   const ownTasks = deps.ownSpend.tasks(now);
-  let counted: CostEntry[] | null = null;
-  let holdsCounted: SpendHold[] = [];
-  let window: ReturnType<typeof researchSpendInWindow> | null = null;
+  let counted: PricedCharge[] | null = null;
   let ledgerUnreadable: string | null = null;
   try {
-    const costs = await deps.repos.costs.readSince(new Date(Date.parse(now) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString());
+    const charges = await readSpendWindow(deps.repos, now);
     /* The lane's own requests count from its book, never twice. */
-    counted = [...costs.filter(row => row.routeTaskId === null || !(Date.parse(row.recordedAt) >= (ownTasks.get(row.routeTaskId) ?? Infinity))),
-      ...deps.ownSpend.asCostEntries()];
-    window = researchSpendInWindow(counted, now, RESEARCH_BOUNDS.windowHours);
-    if (window.windowUsd === null) {
-      holdsCounted = Object.values(liveSpendHolds((await deps.repos.budget.read()).value.spendHolds, now));
-      window = researchSpendInWindow(counted, now, RESEARCH_BOUNDS.windowHours, holdsCounted);
-    }
+    counted = [...charges.filter(row => row.routeTaskId === null || !(Date.parse(row.at) >= (ownTasks.get(row.routeTaskId) ?? Infinity))),
+      ...deps.ownSpend.asCharges()];
   } catch (error) {
     counted = null;
     ledgerUnreadable = message(error);
     deps.onCondition(`the cost ledger could not be read (${ledgerUnreadable}); paid model work waits`);
   }
-  const spendHold = counted === null || window === null ? `the cost ledger could not be read (${ledgerUnreadable})`
-    : window.windowUsd === null ? `model spend includes ${window.unmeasured} unmeasured row(s); known model spend is $${window.knownUsd.toFixed(6)}`
-      : !ceilingPermits(window.windowUsd, ceilingUsd).permits ? `the owner's $${ceilingUsd.toFixed(2)} model ceiling is reached` : null;
+  const spendHold = counted === null ? `the cost ledger could not be read (${ledgerUnreadable})`
+    : !ceilingPermits(researchSpendInWindow(counted, now, RESEARCH_BOUNDS.windowHours).windowUsd, ceilingUsd).permits
+      ? `the owner's $${ceilingUsd.toFixed(2)} model ceiling is reached` : null;
 
   const read = readLaneArming(deps.armingPath, now);
   const armingHold = "held" in read ? read.held : null;
@@ -286,7 +274,7 @@ export async function armHunterLane(deps: HunterLaneDeps): Promise<ArmedHunterLa
   const arming = "arming" in read ? read.arming : null;
   const lifetime = new Set(arming?.lifetimeHuntSubjects ?? []);
   const fleetSafety = counted === null ? null : new FleetSafetyController({
-    now, costs: counted, spendHolds: holdsCounted,
+    now, charges: counted,
     costLedgerReadable: true, paused: intents.runnerPause.paused, modelHold: closure?.reason ?? null,
     circuits: deps.circuits ?? arming?.circuits ?? [], rollingCeilingUsd: ceilingOverride,
     lifetimeHuntWork: work => lifetime.has(work),

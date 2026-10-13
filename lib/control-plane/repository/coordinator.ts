@@ -31,6 +31,7 @@ import {
 } from "../budget.ts";
 import type { CompletionSnapshot } from "../completion.ts";
 import { costEntryWithModel, type CostEntry } from "../cost.ts";
+import { costRecordId, countCharge } from "../spend-window.ts";
 import { fingerprint } from "../ids.ts";
 import {
   disposeRoute,
@@ -752,14 +753,16 @@ export async function releaseHostBudget(
   return outcome.persisted.value;
 }
 
-/** Append a cost record. Scheduling evidence, never truth evidence. */
+/** Append a cost record and count its model charge in the spend window. Scheduling evidence, never truth evidence. */
 export async function recordCost(
   repos: ControlPlaneRepositories,
   entry: CostEntry,
   now: string,
 ): Promise<AppendOutcome<CostEntry>> {
-  const recordId = `ce-${fingerprint([entry.attemptId, entry.routeTaskId, entry.recordedAt])}`;
-  return repos.costs.append(entry.workItemId, recordId, costEntryWithModel(entry, entry.model ?? null), now);
+  const recorded = costEntryWithModel(entry, entry.model ?? null);
+  const appended = await repos.costs.append(entry.workItemId, costRecordId(entry), recorded, now);
+  await countCharge(repos, recorded, now);
+  return appended;
 }
 
 /** `reconcile` runs first. Validations, audits, contradictions and upstream states come from the caller; an absent input refuses. */

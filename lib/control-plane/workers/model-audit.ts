@@ -13,7 +13,7 @@ import type { FleetRuntime } from "./runtime.ts";
 import type { IndependentAuditContext, WorkerEvidence, WorkerResultRecord, RecordExtractionShape } from "./types.ts";
 import { SendBudgetRefusal } from "../expansion/spend-holds.ts";
 import { inventoryRecordEvidence } from "./record-evidence.ts";
-import { readSpendWindowCosts } from "./scoped-history.ts";
+import { readSpendWindow } from "../spend-window.ts";
 
 export const AUDIT_RESPONSE_MAX_BYTES = 16_384;
 export const AUDIT_CONTEXT_MAX_BYTES = 32_000;
@@ -225,7 +225,7 @@ export function modelAuditReasoner(repos: ControlPlaneRepositories, transport: M
   if (!Number.isFinite(ceilingUsd) || ceilingUsd <= 0) throw new Error("AUDIT_CEILING_INVALID");
   return { workerProvider: "anthropic", workerVersion: initial.model, review: async (context, attemptId, escalation) => {
     const started = performance.now();
-    const spend = researchSpendInWindow(await readSpendWindowCosts(repos, now(), options.scopedReads === true), now());
+    const spend = researchSpendInWindow(await readSpendWindow(repos, now()), now());
     if (!options.lifetimeHuntSubject?.(context.subjectId)) {
       const admission = ceilingPermits(spend.windowUsd, ceilingUsd);
       if (!admission.permits) throw new Error(`DENIED_BY_POLICY:AUDIT_ROLLING_COST_CEILING; ${admission.why}`);

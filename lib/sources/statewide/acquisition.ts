@@ -118,7 +118,7 @@ export async function acquireNationalStatewideLeads(options:SharedOptions&{reado
             if(target.protocol!=="https:"||target.hostname.replace(/^www\./,"")!==host||seen.has(link.url))continue;
             // Follow actual directory subsections and individual profiles, never
             // arbitrary article archives, login, or a source's whole website.
-            const path=target.pathname,sourcePath=new URL(source.url).pathname;
+            const sourceRoute=new URL(source.url),path=target.pathname,sourcePath=sourceRoute.pathname;
             const subsection=/\b(?:auditors?|comptrollers?|treasurers?|members?|governors?|commissioners?|departments?)\b/i.test(link.label)&&
               /(?:membership|member|governor|auditor|comptroller|treasurer|department|state)/i.test(path);
             const profile=parsed.leads.some(lead=>lead.profileUrls.includes(link.url));

@@ -22,7 +22,7 @@ import {
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 // The existing table loader reads CSV. County clocks are a static JSON import with the same required provenance pairing.
-const JSON_REFERENCE_DATASETS = ["national_county_time_zones"] as const;
+const JSON_REFERENCE_DATASETS = ["national_county_time_zones", "statewide-executive-sources", "us-jurisdiction-labels"] as const;
 const REFERENCE_DATA_FILES = [
   ...REFERENCE_DATASETS.map(dataset => `${dataset}.csv`),
   ...JSON_REFERENCE_DATASETS.map(dataset => `${dataset}.json`),

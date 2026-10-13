@@ -106,11 +106,12 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
       if(!holder) {
         if(!/^[\p{L}][\p{L}\p{M}.,'’\-]*(?:\s+["“]?[\p{L}][\p{L}\p{M}.,'’"“”\-]*){1,6}$/u.test(name)
           ||/\b(?:view|read|contact|learn|current|all|former|member|state|house|senate|senators|representatives|assembly|live|video|text|proposal|listed|of|the|for|and|to)\b/i.test(name))continue;
-        const memberRoute=/\/(?:members?\/[^/?#]+|[^/?#]*-member\/|district\d+|(?:senate|house|assembly)\/(?:\d+\/)?[^/?#]+)/i.test(new URL(profile).pathname);
-        const districtEvidence=/\bDistrict\s*(?:No\.?\s*)?[:#-]?\s*\d+/i.test(text)||/\/(?:district)\d+\b/i.test(new URL(profile).pathname)
+        const profileUrl=new URL(profile);
+        const memberRoute=/\/(?:members?\/[^/?#]+|[^/?#]*-member\/|district\d+|(?:senate|house|assembly)\/(?:\d+\/)?[^/?#]+)/i.test(profileUrl.pathname);
+        const districtEvidence=/\bDistrict\s*(?:No\.?\s*)?[:#-]?\s*\d+/i.test(text)||/\/(?:district)\d+\b/i.test(profileUrl.pathname)
           ||/\b(?:title|aria-label)=["']District\s+\d+/i.test(card);
         if(!(memberRoute&&(districtEvidence||upperPattern.test(text)||lowerPattern.test(text)))&&!pickPortraits(name,imagesIn(card,pageUrl)).length)continue;
-        const tableContext=block.ancestors.join(" ").replace(/([a-z])([A-Z])/g,"$1 $2"),route=new URL(profile).pathname;
+        const tableContext=block.ancestors.join(" ").replace(/([a-z])([A-Z])/g,"$1 $2"),route=profileUrl.pathname;
         let upper=upperPattern.exec(text),lower=lowerPattern.exec(text);
         if(!upper&&!lower){
           const tableUpper=/\bsenate\b/i.test(tableContext)||/\/senate\//i.test(route),tableLower=/\b(?:house|assembly)\b/i.test(tableContext)||/\/(?:house|assembly)\//i.test(route);

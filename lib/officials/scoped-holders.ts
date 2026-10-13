@@ -1,6 +1,6 @@
 import type { SeatHolder } from "./lookup.ts";
 import { officeIdentity } from "./office-identity.ts";
-import { sameNativePerson } from "./people-identity.ts";
+import { personIdentityKeys } from "./people-identity.ts";
 import { isOfficialSource } from "../civic-data/source-authority.ts";
 
 const SINGLE_OFFICES = new Set([
@@ -15,10 +15,28 @@ export function scopedHolders(primary: readonly SeatHolder[], additional: readon
   const words = (value:string)=>value.normalize("NFKD").replace(/\p{M}/gu,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
   const state = (holder:SeatHolder)=>holder.state ?? /\/(?:state|district|territory):([a-z]{2})/.exec(holder.officeJurisdictionOcdId ?? "")?.[1];
   const office = (holder:SeatHolder)=>officeIdentity(holder.officeTitle) ?? words(holder.officeTitle);
+  // Two holders of one office title are one seat only where the office is the same place's: every city has a mayor.
+  const samePlace = (left:SeatHolder,right:SeatHolder)=>!left.officeJurisdictionOcdId || !right.officeJurisdictionOcdId || left.officeJurisdictionOcdId === right.officeJurisdictionOcdId;
+  // Each holder is normalized once, and only holders of the same office are ever compared.
+  const info = new WeakMap<SeatHolder,{office:string;name:string;state:string|undefined;keys:ReadonlySet<string>}>();
+  const infoOf = (holder:SeatHolder)=>{
+    let held = info.get(holder);
+    if (!held) { held = {office:office(holder),name:words(holder.name),state:state(holder)?.toUpperCase(),keys:personIdentityKeys(holder)}; info.set(holder,held); }
+    return held;
+  };
+  const byOffice = new Map<string,number[]>();
+  const index = (holder:SeatHolder,at:number)=>{ const key=infoOf(holder).office; const rows=byOffice.get(key); if (rows) rows.push(at); else byOffice.set(key,[at]); };
+  holders.forEach((holder,at)=>index(holder,at));
   for (const holder of additional) {
-    const matching = holders.findIndex(row=>office(row) === office(holder) &&
-      (sameNativePerson(row,holder) || words(row.name) === words(holder.name) &&
-        Boolean(state(row) && state(holder) && state(row)!.toUpperCase() === state(holder)!.toUpperCase())));
+    const mine = infoOf(holder);
+    // Only a single-seat office is a person's identity: two councilmembers with one name are two seats, never one person.
+    const singleSeat = SINGLE_OFFICES.has(officeIdentity(holder.officeTitle) ?? "");
+    const sameOffice = byOffice.get(mine.office) ?? [];
+    const matching = sameOffice.find(at=>{
+      const row = holders[at], theirs = infoOf(row);
+      return samePlace(row,holder) && ([...mine.keys].some(key=>theirs.keys.has(key)) || singleSeat && theirs.name === mine.name &&
+        Boolean(theirs.state && mine.state && theirs.state === mine.state));
+    }) ?? -1;
     if (matching >= 0) {
       const prior = holders[matching];
       const newer = (holder.provenance?.collectedAt ?? "") >= (prior.provenance?.collectedAt ?? "");
@@ -42,13 +60,14 @@ export function scopedHolders(primary: readonly SeatHolder[], additional: readon
     }
     // A complete newer official single-seat source replaces the older holder.
     const key = officeIdentity(holder.officeTitle);
-    const sameSeat = key && SINGLE_OFFICES.has(key) ? holders.findIndex(row=>officeIdentity(row.officeTitle) === key && state(row)?.toUpperCase() === state(holder)?.toUpperCase()) : -1;
+    const sameSeat = key && SINGLE_OFFICES.has(key) ? sameOffice.find(at=>samePlace(holders[at],holder) && infoOf(holders[at]).state === mine.state) ?? -1 : -1;
     if (sameSeat >= 0) {
       const prior = holders[sameSeat];
-      if (holder.provenance?.sourceUrl && (holder.provenance.kind === "OFFICIAL" || isOfficialSource(holder.provenance.sourceUrl)) && (holder.provenance.collectedAt >= (prior.provenance?.collectedAt ?? ""))) holders[sameSeat]=holder;
+      if (holder.provenance?.sourceUrl && (holder.provenance.kind === "OFFICIAL" || isOfficialSource(holder.provenance.sourceUrl)) && (holder.provenance.collectedAt > (prior.provenance?.collectedAt ?? ""))) holders[sameSeat]=holder;
       continue;
     }
     holders.push(holder);
+    index(holder,holders.length - 1);
   }
   return holders;
 }

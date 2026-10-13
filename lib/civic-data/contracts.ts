@@ -606,6 +606,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     autoPromotable: true, fanOut: true, classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
   },
+  {
     id: GOOGLE_CIVIC_SOURCE_ID,
     sourceId: GOOGLE_CIVIC_SOURCE_ID,
     recordClass: "GOOGLE_CIVIC_VOTERINFO",

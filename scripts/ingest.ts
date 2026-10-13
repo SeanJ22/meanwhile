@@ -122,7 +122,7 @@ import {
   derivedFamilyFailedCandidate,
   type FamilyMemberRead,
 } from "../lib/civic-data/derived-meeting-family.ts";
-import { retainMeetingFetchBytes, retainMeetingCandidateEvidence, tracedResponses, type RetainedSourceResponse } from "../lib/civic-data/retained-meeting-bytes.ts";
+import { retainingFetch, retainMeetingFetchBytes, retainMeetingCandidateEvidence, tracedResponses, type RetainedSourceResponse } from "../lib/civic-data/retained-meeting-bytes.ts";
 import { publishReadMeetingFacts } from "../lib/civic-data/meeting-fact-publication.ts";
 import { readerFactDb } from "../lib/facts/db.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
@@ -740,6 +740,7 @@ export async function promoteDerivedMeetingFamily(
   partition: MeetingPartitionContract,
   /* The registry and venue preload, run only once the family has a member: a family with none reads nothing else. */
   prepare: () => Promise<void> = async () => {},
+  facts?: Omit<MeetingFactsTarget, "responses">,
 ): Promise<void> {
   const generatedAt = new Date().toISOString();
   const refuse = async (detail: string, kind: "WALL" | "JOB"): Promise<void> => {
@@ -765,7 +766,8 @@ export async function promoteDerivedMeetingFamily(
   await prepare();
   const previous = await readPreviousMeetingPartition(store, partition);
   const reads: FamilyMemberRead[] = [];
-  const fetchImpl = meetingFetchPass();
+  const retaining = retainingFetch(meetingFetchPass());
+  const fetchImpl = retaining.fetch;
   for (const member of members) {
     if (member.status !== "ACTIVE") continue;
     const read = await readDerivedFamilyMember(member, fetchImpl);
@@ -832,7 +834,13 @@ export async function promoteDerivedMeetingFamily(
   // An unchanged family pass is receipted on the pointed version.
   const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, new Date().toISOString(), undefined, { confirmUnchanged: true });
   printMeetingPartitionReceipt(partition, candidate, outcome, outcome.promoted ? null : outcome.candidate.failureDetail);
-  if (outcome.promoted || outcome.confirmed) await publishVenuePins(store, partition.id, census.package);
+  if (outcome.promoted || outcome.confirmed) {
+    await publishVenuePins(store, partition.id, census.package);
+    for (const read of facts ? reads.filter(row => row.ok) : []) {
+      await publishPartitionFacts({ ...facts!, responses: retaining.responses }, read.member.id, DERIVED_WIRING_SOURCE_NAMES[read.member.row.kind],
+        read.freshMeetings, read.acquisitions, candidate.id, generatedAt);
+    }
+  }
   console.log(`AUTOMATIC_VENUE_MEETING_RECEIPT=${JSON.stringify({ candidateId: candidate.id,
     placedFromReviewed: fromReviewed.placedCount, placedFromCensus: placed.placedCount,
     retainedFromPrior: retained.filter((meeting, index) => meeting !== cited[index]).length,
@@ -889,7 +897,7 @@ async function main() {
     await promoteDerivedMeetingFamily(new PostgresRoutineDataStore(), partitions[0]!, async () => {
       await preloadCanonicalMeetingDependencies({ sourceName: name });
       REGISTRY = getRegistryRuntimeReadModel().registry;
-    });
+    }, { db: readerFactDb(), vault: new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR)) });
     return;
   }
   await preloadCanonicalMeetingDependencies({ sourceName: name });
@@ -1603,16 +1611,19 @@ export function printMeetingPartitionReceipt(
 }
 
 /** The fresh sittings a promoted partition read become facts; a failure here never holds the partition. */
-async function publishPartitionFacts(facts: NonNullable<Parameters<typeof promoteMeetingPartitions>[0]["facts"]>, partition: MeetingPartitionContract,
-  meetings: readonly Meeting[], acquisitions: NonNullable<MeetingsSnapshot["sources"][number]["acquisitions"]>, producedBy: string, at: string): Promise<void> {
+async function publishPartitionFacts(facts: MeetingFactsTarget, label: string, source: string,
+  meetings: readonly Meeting[], acquisitions: Parameters<typeof tracedResponses>[0][number]["acquisitions"], producedBy: string, at: string): Promise<void> {
   try {
-    const responses = tracedResponses({ sources: [{ source: partition.meetingSource, acquisitions } as MeetingsSnapshot["sources"][number]] }, facts.responses);
+    const responses = tracedResponses([{ source, acquisitions }], facts.responses);
     const report = await publishReadMeetingFacts({ facts: facts.db, vault: facts.vault, meetings, responses, producedBy, clocks: factClocks(null), now: new Date(at) });
-    console.log(`  ${partition.id}: facts ${report.live} new, ${report.confirmed} confirmed, ${report.blanks} blank${report.unsaved.length ? `; unsaved ${report.unsaved.join("; ")}` : ""}`);
+    console.log(`  ${label}: facts ${report.live} new, ${report.confirmed} confirmed, ${report.blanks} blank${report.unsaved.length ? `; unsaved ${report.unsaved.join("; ")}` : ""}`);
   } catch (error) {
-    console.error(`MEETING_FACTS_FAILED ${partition.id}: ${error instanceof Error ? error.message : String(error)}`);
+    console.error(`MEETING_FACTS_FAILED ${label}: ${error instanceof Error ? error.message : String(error)}`);
   }
 }
+
+/** Where the sittings each door read become facts, on every response the read made. */
+interface MeetingFactsTarget { readonly db: FactDb & { readonly query: Query }; readonly vault: EvidenceStore; readonly responses: readonly RetainedSourceResponse[] }
 
 export interface MeetingPartitionPromotionResult {
   readonly partition: MeetingPartitionContract;
@@ -1629,8 +1640,7 @@ export async function promoteMeetingPartitions(input: {
   readonly generatedAt: string;
   readonly previousByContract?: ReadonlyMap<string, MeetingsSnapshot | null>;
   readonly retainedResponses?: readonly RetainedSourceResponse[];
-  /** Where the sittings each door read become facts, on every response the read made. */
-  readonly facts?: { readonly db: FactDb & { readonly query: Query }; readonly vault: EvidenceStore; readonly responses: readonly RetainedSourceResponse[] };
+  readonly facts?: MeetingFactsTarget;
   /** Test seam for the Census geocoder; production uses the global fetch. */
   readonly venueFetch?: typeof fetch;
 }): Promise<readonly MeetingPartitionPromotionResult[]> {
@@ -1761,7 +1771,7 @@ export async function promoteMeetingPartitions(input: {
     );
     if (outcome.promoted || outcome.confirmed) {
       await publishVenuePins(input.store, partition.id, attempted.census?.package ?? null);
-      if (input.facts) await publishPartitionFacts(input.facts, partition, freshRows, report.acquisitions ?? [], candidate.id, input.generatedAt);
+      if (input.facts) await publishPartitionFacts(input.facts, partition.id, partition.meetingSource, freshRows, report.acquisitions ?? [], candidate.id, input.generatedAt);
     }
     results.push({ partition, candidate, outcome });
   }

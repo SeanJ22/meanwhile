@@ -77,7 +77,7 @@ export function CaptureHealthPanel() {
               {v.failures.lines.map((l) => <p key={l.says} className={s.p}><Pill tone={l.ok ? "good" : "warn"}>{l.ok ? "Fine" : "Check"}</Pill> {l.says}</p>)}
             </div>
           )}
-          <p className={cx(s.p, s.meta)}>Read {mst(v.observedAt)}, UTC days {v.from} to {v.to}</p>
+          <p className={cx(s.p, s.meta)}>Read {mst(v.observedAt)}, Eastern days {v.from} to {v.to}</p>
           <div><p className={s.meta}>Population data from</p><ul>{v.districts.kind === "READ" && [...new Map(v.districts.rows.rows.flatMap(row => row.population ? [[row.population.attribution.citationUrl ?? row.population.attribution.sourceUrl, { ...row.population.attribution, label: row.population.name }] as const] : [])).values()].map(source => <li key={source.citationUrl ?? source.sourceUrl}><a href={source.citationUrl ?? source.sourceUrl}>{source.sourceOrg} · {source.label}</a> · Official · ACS {source.period} · Publication date {source.publishedAt?.slice(0, 10) ?? "—"} · Checked {source.retrievedAt.slice(0, 10)}</li>)}</ul></div>
         </div>
       )}

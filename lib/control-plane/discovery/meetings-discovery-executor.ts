@@ -1,28 +1,6 @@
+import { escribeCalendarRequest } from "../../sources/escribe/index.ts";
 import { officialLinkingPageFromAsync, type LazyOfficialPage } from "../../sources/official-page-events/index.ts";
 import { observePlatformCensus, platformCensusEntry, type PlatformCensusObservation } from "./platform-census.ts";
-/**
- * The unpaid meetings-discovery executor: walks a government's own site for
- * meeting routes. It makes no model call. For one need it:
- *
- * 1. reads robots.txt for the origin before any other request (following
- *    redirects per RFC 9309) and records the verdict; no verdict stops the
- *    walk. Only a real access control (a recorded wall, or the site's own 401,
- *    403 or 429) makes it BLOCKED, and it is never pushed past;
- * 2. reads the homepage one redirect hop at a time, reading each new host's
- *    robots.txt first;
- * 3. names the meeting routes the page evidences
- *    (`lib/hunt/meetings-site-discovery.ts`) and confirms each by content;
- * 4. appends the walk to `discoveryAttempts` and writes found routes, leads and
- *    dead doors to the field manual.
- *
- * Each request's timeout is cut to the caller's time left. A walk the time
- * runs out on concludes nothing unless it already confirmed a route, and the
- * need stays due. A find is only a candidate; a walk that finds nothing is a
- * reading with a recheck date, never an absence.
- *
- * Every request goes through the caller's `open`, built on its own FleetSafety
- * provider key. Host spacing is shared with every other lane.
- */
 
 import { createHash } from "node:crypto";
 import { websiteRequestLimit, type WebsiteSizeForUrl } from "../scheduler/host-supervision.ts";
@@ -105,33 +83,17 @@ export interface DiscoveryRuntime {
   readonly websiteSize?: WebsiteSizeForUrl;
   readonly vault: VaultPut;
   readonly now: () => string;
-  /**
-   * Asked before each walk. Once spent, the remaining needs are deferred
-   * untouched. `remainingMs`, when given, also bounds the walk in progress:
-   * each request's timeout is cut to the time left, and no request is sent
-   * with less than MIN_REQUEST_MS of it.
-   */
+
   readonly budget: { readonly spent: () => boolean; readonly remainingMs?: () => number };
   readonly maxRequestsPerWalk?: number;
   /** Actual prior source reads; unvisited routes precede previously read ones. */
   readonly priorAttempts?: readonly MeetingsDiscoveryAttempt[];
   readonly timeoutMs?: number;
-  /**
-   * The saved methods the runner knows (`knownRecipes` over the field manual).
-   * Consulted on every walk; each application's outcome is written back.
-   */
+
   readonly recipes?: readonly MeetingsRecipe[];
-  /**
-   * The committed route hints (`lib/hunt/meetings-route-hints.ts`): a
-   * government's current official site when the recorded one is stale, and
-   * routes found on its own publications. They are tried first; absent, a
-   * walk starts from the recorded address alone.
-   */
+
   readonly routeHints?: readonly JurisdictionRouteHints[];
-  /**
-   * The search seam (Brave and Exa, pointers only). Absent, the walk never
-   * searches. Every provider request it reports is charged to the cost ledger.
-   */
+
   readonly search?: DiscoverySearch;
   /** Exact scope membership from the runner; no dollar admission or token reservation. */
   readonly searchScopeFor?: (jurisdictionId: string) => { readonly assignmentKeys: readonly string[]; readonly assignmentRefs?: readonly { readonly key: string; readonly ref: string }[]; readonly hold: string | null };
@@ -204,10 +166,6 @@ export function searchCostEntry(input: {
   };
 }
 
-/**
- * Hosts that wall this client by an access control (a 403 to an identified
- * client), so no request is sent, robots.txt included. Never a robots.txt line.
- */
 export { RECORDED_WALLS } from "../../hunt/recorded-walls.ts";
 import { RECORDED_WALLS } from "../../hunt/recorded-walls.ts";
 
@@ -223,12 +181,6 @@ const ACCEPT_PAGE = "text/html,application/xhtml+xml,application/json,text/calen
 const ACCEPT_ROBOTS = "text/plain,*/*;q=0.5";
 const SOURCE_ID = "meetings-discovery";
 
-/**
- * The work identity every artifact of a walk carries: the need, not a WorkItem.
- * Written as a directory name, so every character outside `[A-Za-z0-9._-]`
- * becomes `_` (`:` is illegal on Windows) and a short fingerprint keeps ids that
- * differ only there apart.
- */
 export function discoveryWorkId(jurisdictionId: string): string {
   return `discovery-meetings-${jurisdictionId.replace(/[^A-Za-z0-9._-]/g, "_")}-${fingerprint([jurisdictionId]).slice(0, 8)}`;
 }
@@ -240,12 +192,6 @@ export function discoveryAttemptId(jurisdictionId: string, startedAt: string): s
 /** Raised by a request the caller's time no longer covers. It never leaves the walk. */
 class OutOfTime extends Error {}
 
-/**
- * Thrown by a walk the caller's time ran out on before it confirmed anything.
- * Nothing about the site was concluded, so nothing is recorded as a reading:
- * the need stays due, and the requests already made keep their evidence in the
- * vault under the walk's attempt id.
- */
 export class DiscoveryTimeSpent extends Error {
   /* Explicit field declarations: a parameter property does not parse under --experimental-strip-types. */
   readonly jurisdictionId: string;
@@ -335,12 +281,6 @@ export async function walkMeetingsDiscoveryNeed(
     steps.push({ purpose, url, permission, status: null, transportError: null, bytes: 0, artifactId: null, rung: null, note });
   };
 
-  /**
-   * Vault a body the walk read, and say what of it the walk may read. A body carrying a confirmed third-party
-   * credential (`classifyAcquisition`) is RESTRICTED_RAW: its bytes go only to an encrypted, access-controlled
-   * substrate and the walk reads the sanitized derivative (`evidence/artifact.ts`). A vault refusal is recorded
-   * on the step and never ends the walk.
-   */
   async function vaultBody(
     url: string,
     status: number,
@@ -406,6 +346,7 @@ export async function walkMeetingsDiscoveryNeed(
 
   /* The time is asked before the host's spacing and again after it, and the request's timeout never outlasts it. */
   async function hop(url: URL, accept: string, form?: Readonly<Record<string, string>>) {
+    const json = url.pathname === "/MeetingsCalendarView.aspx/GetCalendarMeetings" && /^pub-[a-z0-9-]+\.escribemeetings\.com$/i.test(url.hostname) ? escribeCalendarRequest({}, new Date(runtime.now())) : null;
     if (timeLeftMs() < MIN_REQUEST_MS) throw new OutOfTime();
     if (hostLimit(url) !== null) await runtime.spaceOut(url.host.toLowerCase());
     const left = timeLeftMs();
@@ -415,9 +356,9 @@ export async function walkMeetingsDiscoveryNeed(
     requests += 1;
     return runtime.open({
       url: url.toString(),
-      headers: { "user-agent": DEFAULT_USER_AGENT, accept, ...(form ? { "content-type": "application/x-www-form-urlencoded" } : {}) },
+      headers: { "user-agent": DEFAULT_USER_AGENT, accept, ...(json ? { "content-type": "application/json; charset=utf-8" } : form ? { "content-type": "application/x-www-form-urlencoded" } : {}) },
       timeoutMs: Math.min(timeoutMs, Math.floor(left)),
-      ...(form ? { method: "POST" as const, body: new URLSearchParams(form).toString() } : {}),
+      ...(json ? { method: "POST" as const, body: JSON.stringify(json) } : form ? { method: "POST" as const, body: new URLSearchParams(form).toString() } : {}),
     });
   }
 
@@ -434,13 +375,7 @@ export async function walkMeetingsDiscoveryNeed(
       skipped("robots", robotsUrl.toString(), "CANNOT_TELL", capped.detail);
       return capped;
     }
-    /*
-     * RFC 9309 §2.3.1.2: robots.txt is followed through at least five consecutive
-     * redirects, across hosts too, and the document found governs the host asked
-     * about. Each hop is a request inside the walk's time and request bounds; a hop
-     * to a non-public address is never taken. A chain that does not end on a robots
-     * document leaves the verdict CANNOT_TELL.
-     */
+
     let got = await hop(robotsUrl, ACCEPT_ROBOTS);
     let at = robotsUrl;
     const via: string[] = [];
@@ -516,10 +451,7 @@ export async function walkMeetingsDiscoveryNeed(
         current = to;
         continue;
       }
-      /*
-       * A bot challenge answered in place of the page (at 2xx or any status) is an access control: the step
-       * records it, the body is vaulted as its evidence, and the walk never reads it as the page.
-       */
+
       const challenge = got.transportError === null && got.status !== null && textualType(got.contentType)
         ? accessControlIn({ status: got.status, text: got.body })
         : null;
@@ -576,11 +508,7 @@ export async function walkMeetingsDiscoveryNeed(
   let homeOrigin: string | null = null;
   let homeHtml: string | null = null;
   const recipeSkips: { recipeId: string; why: string }[] = [];
-  /*
-   * The government's committed hints (lib/hunt/meetings-route-hints.ts). A current official site the hint
-   * records, with its evidence, is walked before the recorded address; the recorded address stays behind it, so
-   * a hint gone stale costs the walk nothing it would otherwise have read.
-   */
+
   const hints = routeHintsFor(need.jurisdictionId, runtime.routeHints ?? []);
   const hintedSite = hints?.officialSite ?? null;
   const hintedOrigins = new Set(hintedSite === null ? [] : siteOrigins(hintedSite.origin));
@@ -589,11 +517,7 @@ export async function walkMeetingsDiscoveryNeed(
   let hintedSiteRefused: string | null = null;
   /* Whether the homepage the walk read came from the hinted site (directly or by its own redirect). */
   let homeFromHint = false;
-  /*
-   * The body an official page is verified for. Its official host is the homepage's final host, which the walk
-   * attested: the recorded address, the current official site a route hint records with its evidence, or a host
-   * one of those named by its own redirect. Before any homepage is read, the first origin tried.
-   */
+
   const pageIdentity = async (pageLabel: string | null, pageUrl: string): Promise<OfficialPageIdentity> => {
     let linkingPage;
     try {
@@ -632,11 +556,7 @@ export async function walkMeetingsDiscoveryNeed(
     /* 1–2. The homepage, on each origin in turn (a hinted current site first), until one is read. */
     for (const origin of origins) {
       const home = await get(`${origin}/`, "homepage", ACCEPT_PAGE);
-      /*
-       * A hinted site is the government's own only while it still says so: a lapsed domain can be anyone's. Its
-       * homepage must name the government as the hint observed it did; otherwise it is not walked as the
-       * government's, and the walk moves on to the recorded address.
-       */
+
       if (home !== null && hintedSite !== null && hintedOrigins.has(origin) && !namesItself(home.body, hintedSite.selfName)) {
         hintedSiteRefused = `its homepage no longer names ${hintedSite.selfName}`;
         skipped("homepage", home.finalUrl, "ALLOWED", `read, but not walked as ${need.name}'s own site: ${hintedSiteRefused}`);
@@ -671,9 +591,6 @@ export async function walkMeetingsDiscoveryNeed(
       }
     }
 
-    /* Read every category the official index links. A department or general
-     * calendar can carry meetings of several bodies. Category names may help
-     * attribution, but never decide whether to acquire the feed. */
     const civicPlusFeeds: { candidate: EndpointCandidate; via: Via }[] = [];
     // Retain the linked public portal itself before using its API: the exact
     // body name and the official site's link are required for automatic review.
@@ -729,13 +646,6 @@ export async function walkMeetingsDiscoveryNeed(
       }
     }
 
-    /*
-     * 3. The routes, confirmed by content: the government's committed hints
-     * first, then the page's own evidence, then the saved methods. A hint no
-     * content check covers is still requested, robots-first, so the walk records
-     * whether it answers; it is a lead, never a find. A saved method that proposes
-     * a route already planned is credited with that route's outcome.
-     */
     for (const h of hints?.routes ?? []) {
       planned.push({
         candidate: { vendor: h.verifyAs ?? h.platform, url: h.url, basis: "HINT", evidence: `route hint (${h.kind.toLowerCase()}, observed ${h.observed.at} by ${h.observed.by}): ${h.evidence}`, verifiable: h.verifyAs !== null },
@@ -802,13 +712,6 @@ export async function walkMeetingsDiscoveryNeed(
       }
     }
 
-    /*
-     * 3b. When nothing is confirmed yet, the pages already read are read once
-     * more for the routes they link (meetings are often one link past the page
-     * naming them). A readable route is confirmed by content within the
-     * endpoint bound; an unreadable publisher is a lead. Every candidate is a
-     * link a read page carries.
-     */
     if (found.length === 0) {
       const tried = new Set([...planned.map((p) => p.candidate.url), ...candidates.map((c) => c.url), ...(civicPlusIndex === null ? [] : [civicPlusIndex])]);
       const nextHop: { candidate: EndpointCandidate; via: Via }[] = [];
@@ -838,13 +741,6 @@ export async function walkMeetingsDiscoveryNeed(
       }
     }
 
-    /*
-     * 4. Search whenever the owner's paid-search seam is enabled, including a
-     * healthy connected feed: current information can exist elsewhere. Use the
-     * saved methods' queries first, then the defaults. A result is a pointer: it
-     * is followed only on the government's own domain or a known publisher host,
-     * opened robots-first, and confirmed by content. Every request is charged.
-     */
     if (runtime.search !== undefined && !searchScope?.hold && origins.length > 0) {
       const search = runtime.search;
       const identity = identityFor(need, homeOrigin ?? origins[0], new Date(startedAt).getUTCFullYear());
@@ -926,11 +822,7 @@ export async function walkMeetingsDiscoveryNeed(
     if (!(error instanceof OutOfTime)) throw error;
     /* A route already confirmed by content stands. Anything less concludes nothing about the site. */
     if (found.length === 0) throw new DiscoveryTimeSpent(need.jurisdictionId, requests, queryTrail);
-    /*
-     * The routes the page evidenced but the walk did not reach are leads that say
-     * so. A saved method not reached is neither credited nor charged: the time ran
-     * out, not the method.
-     */
+
     for (const { candidate, via } of planned.slice(checked)) {
       if (candidate.basis === "RECIPE") continue;
       leads.push({ vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: "not checked: the cycle's discovery time ran out first", via });
@@ -1017,10 +909,7 @@ export interface MeetingsDiscoveryPass {
   readonly notDue: readonly string[];
   /** Needs selected but not walked because the budget was spent. Walked in a later cycle. */
   readonly deferred: readonly string[];
-  /**
-   * Walks the time ran out on before they confirmed anything. Nothing was
-   * recorded as a reading; each is also in `deferred`, and its need stays due.
-   */
+
   readonly cutShort: readonly {
     readonly jurisdictionId: string;
     readonly requests: number;
@@ -1036,13 +925,6 @@ export interface MeetingsDiscoveryPass {
   readonly fieldManual: { readonly written: number; readonly error?: string };
 }
 
-/**
- * Which needs this cycle looks at: a stateless rotation over the needs sorted
- * by id, starting at an offset the cycle's hour fixes, so every need comes
- * round in turn without any stored cursor. A need whose latest walk is not yet
- * due is passed over, and the rotation looks further, up to three times the
- * cycle's allowance.
- */
 export function rotationWindow<T extends { readonly jurisdictionId: string }>(
   needs: readonly T[],
   cycleIndex: number,
@@ -1107,11 +989,6 @@ export function walkableByFreeWalk(need: Pick<MeetingsDiscoveryNeed, "basis" | "
   return need.basis === "SOURCE_DISCOVERY_OWED" && siteOrigins(need.ownWebAddress).length > 0;
 }
 
-/**
- * The needs a pass may walk: every need the owner's dispatch materialized, then
- * the mission map's calendar blanks. A government both name is walked once, as
- * dispatched.
- */
 export function discoveryNeedsToWalk(
   mission: readonly MeetingsDiscoveryNeed[],
   dispatched: readonly MeetingsDiscoveryNeed[],
@@ -1121,11 +998,6 @@ export function discoveryNeedsToWalk(
   return [...dispatched, ...mission.filter((n) => !ids.has(n.jurisdictionId))].filter(accepts);
 }
 
-/**
- * Walk the cycle's window of needs within the budget, append every walk, and
- * write what they taught to the field manual. Never throws for a site; an
- * append that fails is named, and the walk's evidence stays in the vault.
- */
 export async function runMeetingsDiscovery(
   repos: Pick<ControlPlaneRepositories, "discoveryAttempts" | "fieldManual">,
   input: {
@@ -1147,11 +1019,7 @@ export async function runMeetingsDiscovery(
 ): Promise<MeetingsDiscoveryPass> {
   const skip = input.skipIds ?? new Set<string>();
   const walkable = input.needs.filter((n) => walkableByFreeWalk(n) && !skip.has(n.jurisdictionId));
-  /*
-   * The owner's explicit work stays first. Then walk sites not yet read, with evidenced hints first,
-   * before recurring site checks. Read only finish times, in one state-scoped batch; old site histories
-   * must not consume a national census pass before any new government is reached.
-   */
+
   const hinted = new Map((input.runtime.routeHints ?? []).map((h) => [h.jurisdictionId, routeHintsFingerprint(h)] as const));
   const dispatchedFirst = walkable.filter((n) => input.firstIds?.has(n.jurisdictionId) === true);
   const standing = walkable.filter((n) => input.firstIds?.has(n.jurisdictionId) !== true);
@@ -1222,10 +1090,7 @@ export async function runMeetingsDiscovery(
         stalledInARow++;
         continue;
       }
-      /*
-       * A walk that failed on something of ours is named, and the pass goes on: one government's page must not
-       * cost every other walk of the cycle its record. Nothing is recorded as a reading, so the need stays due.
-       */
+
       walkFailures.push({ jurisdictionId: need.jurisdictionId, why: (error instanceof Error ? error.message : String(error)).slice(0, 400) });
       stalledInARow++;
       continue;
@@ -1240,11 +1105,6 @@ export async function runMeetingsDiscovery(
     }
   }
 
-  /*
-   * Write back every saved method's outcome, success and failure alike, so the
-   * next cycle ranks by what worked and does not pay again for a failure that
-   * still stands (lib/hunt/meetings-recipes.ts).
-   */
   const recipesById = new Map((input.runtime.recipes ?? []).map((r) => [r.recipeId, r] as const));
   const touched = new Set<string>();
   let recipeApplications = 0;

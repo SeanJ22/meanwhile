@@ -1,0 +1,2 @@
+created_at,updated_at,extras,id,name,parent_id,jurisdiction_id,classification,sources,links,other_names
+2018-06-19 20:04:16.333559+00:00,2020-04-29 05:07:05.486006+00:00,{},ocd-organization/20782ae5-cc22-4470-846b-fd9788ad3db7,Senate,ocd-organization/52332da7-9146-412e-bf64-a291e2757b63,ocd-jurisdiction/country:us/state:il/government,upper,[],[],[]

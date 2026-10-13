@@ -1,0 +1,38 @@
+{
+  "election": {
+    "id": "12000",
+    "name": "2026 General Midterm Election",
+    "electionDay": "2026-11-03",
+    "ocdDivisionId": "ocd-division/country:us"
+  },
+  "normalizedInput": {
+    "line1": "1 East Edenton Street",
+    "addressLine": [
+      "1 East Edenton Street"
+    ],
+    "city": "Raleigh",
+    "state": "NC",
+    "zip": "27601"
+  },
+  "state": [
+    {
+      "name": "North Carolina",
+      "electionAdministrationBody": {
+        "electionInfoUrl": "https://www.ncsbe.gov/about-elections",
+        "electionRegistrationUrl": "https://www.ncsbe.gov/about-elections",
+        "electionRegistrationConfirmationUrl": "https://vt.ncsbe.gov/RegLkup/",
+        "absenteeVotingInfoUrl": "https://www.ncsbe.gov/voting/vote-mail",
+        "votingLocationFinderUrl": "https://www.ncsbe.gov/voting",
+        "ballotInfoUrl": "https://vt.ncsbe.gov/RegLkup/",
+        "electionRulesUrl": "http://www.ncsbe.gov"
+      },
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    }
+  ],
+  "kind": "civicinfo#voterInfoResponse"
+}

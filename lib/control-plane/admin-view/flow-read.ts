@@ -27,7 +27,7 @@ export interface FlowRows {
 const HOUR = 3_600_000;
 export function projectFlow(rows: FlowRows, from: string, through: string): FlowRead {
   const start = Date.parse(from), end = Date.parse(through);
-  if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start || end - start > 24 * HOUR) throw Error("FLOW_WINDOW_INVALID");
+  if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start || end - start > 25 * HOUR) throw Error("FLOW_WINDOW_INVALID");
   const hours = new Map<string, { hour: string; findings: number; builtFindings: number; checkedRecords: number; liveRecords: number; settledSpendUsd: number | null; unpricedCharges: number }>();
   for (let at = Math.floor(start / HOUR) * HOUR; at < end; at += HOUR) {
     const hour = new Date(at).toISOString();
@@ -121,12 +121,17 @@ export async function readFlowRecordingSince(control: Sql): Promise<string | nul
 }
 
 /** The last seven 24-hour windows ending at `through`. A window wholly before recording began is null, never zeros. */
-export async function readFlowWeek(input: { control: Sql; through: string }): Promise<FlowWeek | null> {
+export async function readFlowWeek(input: { control: Sql; through: string; lastDay?: {readonly from:string;readonly through:string} }): Promise<FlowWeek | null> {
+  if (input.lastDay && (Date.parse(input.lastDay.through) !== Date.parse(input.through) || Date.parse(input.lastDay.from) >= Date.parse(input.through))) throw new Error("Invalid last-day window");
   const since = await readFlowRecordingSince(input.control);
   if (since === null) return null;
   const end = Date.parse(input.through);
   const days = await Promise.all(Array.from({ length: FLOW_WEEK_DAYS }, async (_, i): Promise<FlowDay> => {
-    const through = new Date(end - (FLOW_WEEK_DAYS - 1 - i) * DAY).toISOString(), from = new Date(end - (FLOW_WEEK_DAYS - i) * DAY).toISOString();
+    // A 23/25-hour Eastern yesterday must not overlap or leave a gap beside the earlier windows.
+    const earlierEnd = input.lastDay ? Date.parse(input.lastDay.from) : end;
+    const last = input.lastDay && i === FLOW_WEEK_DAYS - 1;
+    const through = last ? input.lastDay!.through : new Date(earlierEnd - (FLOW_WEEK_DAYS - (input.lastDay ? 2 : 1) - i) * DAY).toISOString();
+    const from = last ? input.lastDay!.from : new Date(earlierEnd - (FLOW_WEEK_DAYS - (input.lastDay ? 1 : 0) - i) * DAY).toISOString();
     if (Date.parse(through) <= Date.parse(since)) return { from, through, read: null };
     return { from, through, read: await readFlow({ control: input.control, from, through, recordingSince: since }) };
   }));

@@ -36,6 +36,8 @@ export interface FleetInputs {
 }
 
 export const CONTEXT_READS = [
+  "config",
+  "placeStuck",
   "snapshot",
   "heartbeat",
   "digests",
@@ -53,6 +55,8 @@ export interface OperatorContext {
   readonly nowIso: string;
   readonly from: string;
   readonly stateVersion: string | null;
+  readonly adminConfig?: import("../gateway/admin-config.ts").AdminConfig | null;
+  readonly placeStuck?: ReadOutcome<import("./place-stuck.ts").PlaceStuckReading>;
   readonly snapshot?: ReadOutcome<OwnerSnapshot>;
   readonly heartbeat?: ReadOutcome<RunnerHeartbeat>;
   readonly digests?: ReadOutcome<readonly OwnerDigestRecord[]>;
@@ -66,6 +70,7 @@ export interface OperatorContext {
 
 export function requiredReads(topic: ChatTopic): readonly ContextRead[] {
   switch (topic) {
+    case "PLACE_STUCK": return ["placeStuck"];
     case "FLEET_BLOCKERS":
       return ["heartbeat", "intents", "research", "fleet", "snapshot"];
     case "SINCE_LAST_CYCLE":

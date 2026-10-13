@@ -1,0 +1,2 @@
+id,identifier,motion_text,motion_classification,start_date,result,organization_id,bill_id,bill_action_id,jurisdiction,session_identifier
+ocd-vote/edcc5446-ada6-4d3c-8834-a0e464776eda,,Senate Vote #987 - 2025-2026 Regular Session,['passage'],2026-04-03,pass,ocd-organization/3b9777f2-c2fb-48e1-83bf-66fc7a17492e,ocd-bill/6ab827d0-0d65-46f5-9a0e-5fb31b399f47,,Georgia,2025_26

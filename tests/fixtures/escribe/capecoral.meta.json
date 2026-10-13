@@ -1,0 +1,12 @@
+{
+  "sourceUrl": "https://pub-capecoral.escribemeetings.com/MeetingsCalendarView.aspx/GetCalendarMeetings",
+  "method": "POST",
+  "request": {
+    "calendarStartDate": "2026-07-15",
+    "calendarEndDate": "2027-01-15"
+  },
+  "state": "FL",
+  "timeZone": "America/New_York",
+  "capturedAt": "2026-10-13T19:26:35.751814+00:00",
+  "sha256": "08e1c2e87f6e4253ae16296d6eba5616bc7b7ae7c974fe8480148555565a67c7"
+}

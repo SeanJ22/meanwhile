@@ -3,7 +3,8 @@ import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
 import { openControlPlane } from "@/lib/control-plane/admin-data.ts";
 import { guardAdminRequest } from "@/lib/control-plane/gateway/admin-guard.ts";
 import { captureWindow, readCaptureHealth } from "@/lib/control-plane/admin-view/v6-capture-health.ts";
-import { liveSources, netlifyHistoryStore, readCaptureFailures } from "@/lib/control-plane/data-business/live.ts";
+import { netlifyHistoryStore, readCaptureFailures } from "@/lib/control-plane/data-business/live.ts";
+import { easternSources } from "@/lib/control-plane/data-business/eastern-sources.ts";
 import { readSwitchConfig } from "@/lib/control-plane/data-business/switches.ts";
 
 export const dynamic = "force-dynamic";
@@ -25,7 +26,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const opened = await openControlPlane();
     const config = opened.ok ? await readSwitchConfig(opened.repos) : null;
     const failures = await readCaptureFailures({ ...captureWindow(now), history: netlifyHistoryStore() }).catch(() => null);
-    return NextResponse.json(await readCaptureHealth({ sources: liveSources(), switchOn: () => true }, config, failures, now), { headers: NO_STORE });
+    return NextResponse.json(await readCaptureHealth({ sources: easternSources(), switchOn: () => true }, config, failures, now), { headers: NO_STORE });
   } catch {
     return NextResponse.json({ says: "Whether capture is working could not be read just now, so it is unknown, not stopped." }, { status: 503, headers: NO_STORE });
   }

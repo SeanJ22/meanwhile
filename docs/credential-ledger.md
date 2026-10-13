@@ -46,7 +46,7 @@ The bar is not paranoia. `api.census.gov` answers a rejected key with **HTTP 200
 | `LDA_API_KEY` | **nothing** — tracker `SRC02` | 5 lobbying filings, each carrying a filing id. Federal lobbying only — it has no county, municipal or school-district layer |
 | `FEC_API_KEY` | `scripts/fetch-fec.mts` through the standing production civic-data runner | 5 New Jersey federal candidates, each with an FEC candidate id |
 | `PLURAL_API_KEY` | `lib/sources/plural/index.ts` | 5 state jurisdictions. The bulk file `data/reference/openstates_legislators.csv` (CC-0) is what the hunts read, so this quota is not spent per person |
-| `LEGISCAN_API_KEY` | `scripts/api-keys-walk.mts` research credential probe only; no production promotion door | status OK with 9 New Jersey legislative sessions. **CC BY 4.0 — the attribution ships with the data wherever it appears** |
+| `LEGISCAN_API_KEY` | `scripts/legiscan-votes-refresh.mts` through registered per-state vote contracts | Authenticated weekly dataset list and archive acquisition returned HTTP 200 for Texas on 2026-10-13. API and dataset access credentials remain outside saved URLs and fixture bytes. **CC BY 4.0 — the attribution ships with the data wherever it appears** |
 | `DATA_GOV_API_KEY` | **nothing** — tracker `SRC03` | 42 govinfo collections including CDIR, the Congressional Directory — member offices, phones and staff |
 | `ANTHROPIC_API_KEY` | `lib/routing/classifier.ts` | 5 models listed, at least one of them a Claude model |
 | `DATABASE_URL` | the whole app, via `lib/db/index.ts` | the database answered as `neondb_owner` on `neondb` — the role the string names. No write was attempted |

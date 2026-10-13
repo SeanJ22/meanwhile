@@ -246,7 +246,7 @@ test("cache hit rate by role reads the COST LEDGER: a row predating the cache fi
   ];
   const wrongBatch = { ...shares[0], batch: false };
   const malformedBatch = { ...shares[0], batch: "true" };
-  unknownRows.push({ ...splitRow, byModel: [wrongBatch, shares[1]] }, { ...splitRow, byModel: [malformedBatch, shares[1]] });
+  unknownRows.push({ ...splitRow, byModel: [wrongBatch, shares[1]] }, { ...splitRow, byModel: [malformedBatch as never, shares[1]] });
   unknownRows.push(JSON.parse(JSON.stringify({ ...tierOnly, tier: "unpriced-tier" })), JSON.parse(JSON.stringify({ ...tierOnly, model: 42 })));
   for (const row of unknownRows) assert.equal(cacheHitRateByRole({ costs: [row], results: [] })[0].savedUsd, null, "unknown or contradictory portions cannot be assigned a neighboring model's price");
   assert.equal(cacheHitRateByRole({ costs: [meteredCost("known", { read: 100, write: 0, uncached: 0 }), unknownRows[0]], results: [] })[0].savedUsd, null, "a partial known subtotal never reads as complete savings");

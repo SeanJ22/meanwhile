@@ -53,12 +53,12 @@ const card = (html: string) => {
 };
 const text = (html: string) => html.replace(/<[^>]+>/g, " ").replace(/&#x27;|&#39;/g, "'").replace(/&amp;/g, "&").replace(/\s+/g, " ");
 
-test("at the country, the states carry the six columns, a figure we lack is a dash, and each row opens its state", () => {
+test("at the country, the states carry the six columns, what readers have after the population estimate, a figure we lack is a dash, and each row opens its state", () => {
   const html = card(page("us", live(STATES)));
   const t = text(html);
-  for (const head of ["Place", "Population estimate", "Hunts", "ZIPs worked / total", "Completeness", "Stuck"]) assert.ok(t.includes(head), head);
-  assert.match(t, /Arizona — 2 1 \/ 420 12\.3% 4/);
-  assert.match(t, /New Jersey — 0 0 \/ 600 — 0/, "a state with no score yet shows a dash, not 0%");
+  for (const head of ["Place", "Population estimate", "Readers have", "ZIPs worked", "Hunts", "Stuck"]) assert.ok(t.includes(head), head);
+  assert.match(t, /Arizona — 12\.3% 1 \/ 420 2 4/);
+  assert.match(t, /New Jersey — — 0 \/ 600 0 0/, "a state with no score yet shows a dash, not 0%");
   assert.match(html, /<button[^>]*>Arizona<\/button>/, "the state name is a button that opens it");
   assert.match(html, /Map of states and territories/, "the tile map stays at the country");
   assert.equal((html.match(/Population data from/g) ?? []).length, 1, "one source list sits at the bottom of the card");
@@ -71,13 +71,16 @@ test("with nothing read, every state is listed with every figure a dash and noth
   assert.doesNotMatch(t, /Not connected|DEP-NATIONAL|waiting for/i);
   const rows = referenceNational(liveReference({ scope: { kind: "all" }, observedAt: AT }));
   assert.ok(rows.every((r) => r.hunts === null && r.zipsWorked === null && r.zipsTotal === null && r.score === null && r.stuck === null));
+  assert.equal(rows.length, 56);
+  for (const state of rows) assert.ok(t.includes(state.name), `${state.name} is listed without asking`);
+  assert.doesNotMatch(t, /Show all|Show only tracked/, "every state and territory is listed from the start");
 });
 
 test("at a state, its congressional districts are listed as AZ-06 with ZIPs worked of total, the score and stuck, and no other state", () => {
   const html = card(page("st:az", live(DISTRICTS)));
   const t = text(html);
-  assert.match(t, /AZ-06 — 3 1 \/ 79 41\.6% 2/);
-  assert.match(t, /AZ-05 — 0 0 \/ 22 — 0/);
+  assert.match(t, /AZ-06 — 41\.6% 1 \/ 79 3 2/);
+  assert.match(t, /AZ-05 — — 0 \/ 22 0 0/);
   assert.doesNotMatch(t, /New Jersey|Alabama/, "the state list is not shown under a state");
   assert.doesNotMatch(html, /Map of states and territories/);
   assert.match(html, /<button[^>]*>AZ-06<\/button>/);
@@ -92,8 +95,8 @@ test("while a state's districts are still loading, the state list is not shown u
 test("at a district its ZIPs are listed with the same columns", () => {
   const html = card(page("geo:az.congressional_district.0406", live(ZIPS)));
   const t = text(html);
-  assert.match(t, /ZIP 85635 — 1 1 \/ 1 7\.4% 1/);
-  assert.match(t, /ZIP 85122 — 0 0 \/ 1 — 0/);
+  assert.match(t, /ZIP 85635 — 7\.4% 1 \/ 1 1 1/);
+  assert.match(t, /ZIP 85122 — — 0 \/ 1 0 0/);
   assert.match(t, /2 ZIPs/);
 });
 

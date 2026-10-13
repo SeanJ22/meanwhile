@@ -49,8 +49,9 @@ export function VotePill({
   return <span className={`vote-pill vote-pill--${tone}`}>{children}</span>;
 }
 
-export type MemberRollCall = RollCallVote & {
-  position: VotePosition;
+export type MemberRollCall = Pick<RollCallVote, "id" | "date" | "title" | "titleSource" | "question" | "legisNum" | "result" | "billUrl" | "rollCallUrl" | "retrievedAt"> & {
+  position: string;
+  sourceOrg?: string;
   /** Per-party for/against, or null when it would not sum to the chamber's recorded tally. */
   partyBreakdown: { party: string; yes: number; no: number }[] | null;
   /** Canonical server projection; the client never imports tracked civic data. */
@@ -76,18 +77,18 @@ const VOTE_LIMIT = 20;
 export type VoteAttribution = {
   text: string;
   url: string;
-  licence: string;
-  licenceUrl: string;
+  licence?: string;
+  licenceUrl?: string;
 };
 
 /**
  * Whether this holder has a roll-call store we render. `congress:` is the
- * chambers' XML; `plural:` is the LegiScan test fixture; official state
+ * chambers' XML; `plural:` binds an Open States person; official state
  * legislators render through `/api/votes` where
  * `officialStateVotesRenderToReader` allows. Anything else renders nothing.
  */
-function hasVoteRecord(id: string): boolean {
-  return id.startsWith("congress:") || id.startsWith("plural:") || officialStateVotesRenderToReader(id);
+function hasVoteRecord(id: string, state?: string): boolean {
+  return id.startsWith("congress:") || officialStateVotesRenderToReader(id, state);
 }
 
 export function RecentVotes(props: {
@@ -124,17 +125,15 @@ function RecentVotesInner({
   const [historyAnchor, setHistoryAnchor] = useState<string | null>(null);
   const [historyLoadingMore, setHistoryLoadingMore] = useState(false);
   const [failed, setFailed] = useState(false);
-  // An official state record that is not live yet renders no section (set in
-  // the fetch's catch), distinct from `failed`.
-  const [absent, setAbsent] = useState(false);
   const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
-    if (!hasVoteRecord(holder.id)) return;
+    if (!hasVoteRecord(holder.id, holder.state)) return;
     const controller = new AbortController();
     void (async () => {
       try {
-        const response = await fetch(`/api/votes?member=${holder.id}`, {
+        const voteQuery = new URLSearchParams({ member: holder.id, ...(holder.state ? { state: holder.state } : {}) });
+        const response = await fetch(`/api/votes?${voteQuery}`, {
           signal: controller.signal,
         });
         if (!response.ok) throw new Error(String(response.status));
@@ -152,13 +151,11 @@ function RecentVotesInner({
         setPickedKeyVotes(payload.pickedKeyVotes ?? []);
       } catch {
         if (controller.signal.aborted) return;
-        // An official state record not live yet renders nothing, never "couldn't load".
-        if (officialStateVotesRenderToReader(holder.id)) setAbsent(true);
-        else setFailed(true);
+        setFailed(true);
       }
     })();
     return () => controller.abort();
-  }, [holder.id]);
+  }, [holder.id, holder.state]);
 
   const recentLoaded = votes !== null;
   useEffect(() => {
@@ -213,7 +210,7 @@ function RecentVotesInner({
   const recordGap = <CardGapContribution id={`votes:${holder.id}`} label="voting record" subject={{ type: "CANDIDATE", id: holder.id }} />;
 
   if (!hasRecent && !hasKeyVotes && !hasHistory) {
-    if (!hasVoteRecord(holder.id) || failed || absent) return recordGap;
+    if (!hasVoteRecord(holder.id, holder.state) || failed) return recordGap;
     if (!recentLoaded || (canLoadHistory && historyStatus === "LOADING")) {
       return <p className="mw-loading-inline" role="status">Loading voting records…</p>;
     }
@@ -305,12 +302,17 @@ export function RecentVoteRecords({ votes, attribution, failed, reactionContext 
             ...(vote.billUrl && !vote.billSummary ? [{ id: `vote-summary:${vote.id}`, label: "bill summaries", unit: "vote" }] : []),
           ])} />
           <CardSourcesContribution id="recent-votes" sources={[
-            ...(attribution ? [{ what: `Vote data attribution and ${attribution.licence} licence`, provenance: { sourceUrl: attribution.url, sourceOrg: attribution.text, collectedAt: "", verifiedAt: null } }, { what: "Vote data licence", provenance: { sourceUrl: attribution.licenceUrl, sourceOrg: attribution.text, collectedAt: "", verifiedAt: null } }] : []),
-            ...votes.map(vote => ({ what: `Roll call: ${vote.title}`, provenance: { sourceUrl: vote.rollCallUrl, sourceOrg: attribution?.text ?? "", collectedAt: "", verifiedAt: null } })),
-            ...votes.flatMap(vote => vote.billUrl ? [{ what: "Official bill summary; plain-language summary is ours", provenance: { sourceUrl: vote.billUrl, sourceOrg: "", collectedAt: "", verifiedAt: null } }] : []),
+            ...(attribution ? [{ what: "Vote data attribution", provenance: { sourceUrl: attribution.url, sourceOrg: attribution.text, collectedAt: "", verifiedAt: null } }] : []),
+            ...(attribution?.licenceUrl ? [{ what: `Vote data licence: ${attribution.licence}`, provenance: { sourceUrl: attribution.licenceUrl, sourceOrg: attribution.text, collectedAt: "", verifiedAt: null } }] : []),
+            ...votes.map(vote => ({ what: `Roll call: ${vote.title}`, provenance: { sourceUrl: vote.rollCallUrl, sourceOrg: vote.sourceOrg ?? attribution?.text ?? "", collectedAt: vote.retrievedAt ?? "", verifiedAt: null } })),
+            ...votes.flatMap(vote => vote.billUrl ? [{ what: "Bill information", provenance: { sourceUrl: vote.billUrl, sourceOrg: vote.sourceOrg ?? "", collectedAt: vote.retrievedAt ?? "", verifiedAt: null } }] : []),
           ]} />
           {votes.map((vote) => {
             const explainer = explainVoteQuestion(vote.question);
+            const position = POSITION_STYLE[vote.position.toUpperCase() as VotePosition] ?? {
+              label: vote.position ? `Recorded ${vote.position}` : "Publisher position unclassified",
+              tone: /^(?:YEA|AYE)$/i.test(vote.position) ? "yes" : /^NAY$/i.test(vote.position) ? "no" : "neutral",
+            };
             return (
               <div
                 key={vote.id}
@@ -321,8 +323,8 @@ export function RecentVoteRecords({ votes, attribution, failed, reactionContext 
                 <p className="t-detail leading-snug">{vote.title}</p>
 
                 <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 t-caption">
-                  <VotePill tone={POSITION_STYLE[vote.position].tone as "yes" | "no" | "neutral"}>
-                    {POSITION_STYLE[vote.position].label}
+                  <VotePill tone={position.tone as "yes" | "no" | "neutral"}>
+                    {position.label}
                   </VotePill>
                   <span className="text-muted">
                     {vote.question} · {vote.result}

@@ -28,10 +28,6 @@ export function QueueScreen() {
           <span className={s.small}>Pause or restart all scheduled work</span>
           <Actions actions={[{ kind: "global-runner-pause", target: "us" }, { kind: "global-runner-resume", target: "us" }]} />
         </div>
-        <div className={s.spread}>
-          <span className={s.small}>Send everything waiting on the fix list</span>
-          <Actions actions={[{ kind: "fix-go", target: "fix-queue" }]} primaryFirst />
-        </div>
       </div>
       {unread.length > 0 && <p className={s.why}>Not read yet, so not shown here: {unread.join(", ")}.</p>}
       <Tabs label="Queue" value={filter} onChange={setFilter} tabs={QUEUE_FILTERS.map((f) => ({ id: f, label: QUEUE_FILTER_WORDS[f], count: counts[f] }))} />
@@ -71,7 +67,7 @@ function QueueCard(props: { readonly row: QueueRow }) {
           <ReceiptCard receipt={r.receipt} />
         </details>
       )}
-      <Technical lines={[r.key]} />
+      <Technical lines={[r.key,...(r.technical ?? [])]} />
     </article>
   );
 }

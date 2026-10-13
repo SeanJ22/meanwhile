@@ -35,6 +35,7 @@ import { PersonIdentity } from "@/components/officials/person-identity";
 import { PositionsSection } from "@/components/officials/positions-section";
 
 import { OfficeBlurb, RecentVotes } from "./official-popup";
+import { LegislatorBills } from "@/components/officials/legislator-bills";
 
 /**
  * The officeholder's large card: identity, contact, the roll-call record with
@@ -128,6 +129,7 @@ export function OfficialModal({
         }}
         afterSections={<>
           <FederalMemberRecords key={holder.id} memberId={holder.id} />
+          {!holder.id.startsWith("congress:") && <LegislatorBills key={holder.id} holder={holder} />}
           {holder.id.startsWith("congress:") && <FederalCommentRules />}
           <PublicStatementsProfile subjectId={holder.id} onProfile={setPrlProfile} />
           <OfficialActions subjectId={holder.id} />

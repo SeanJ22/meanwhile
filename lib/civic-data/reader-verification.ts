@@ -64,6 +64,8 @@ function verifyExactVersion(
 function verifierIdFor(contract: ReaderContract): string {
   if (contract.recordClass === "FEDERAL_CIVIC_RECORD") return "lib/sources/congress/publication.ts#readFederalSourceProjection";
   if (contract.sourceId === "plural-openstates" && contract.recordClass === "STATE_LEGISLATOR") return "lib/state-rollcalls/legislators.ts#readOpenStatesPeopleProjection";
+  if (contract.sourceId === "plural-openstates-votes") return "lib/sources/plural/votes.ts#readPluralVotesProjection";
+  if (contract.sourceId === "legiscan" && contract.recordClass === "STATE_ROLL_CALL") return "lib/sources/legiscan/votes.ts#readLegiscanVotesProjection";
   switch (contract.id) {
     case "google-civic-voterinfo": return "lib/sources/google-civic/reader.ts#readCivicProjection";
     case "socrata-discovery":
@@ -73,7 +75,6 @@ function verifierIdFor(contract: ReaderContract): string {
     case "nh-members": return "lib/civic-data/state-members.ts#readNhMembers";
     case "az-state-legislators":
     case "nj-state-legislators": return "lib/state-rollcalls/legislators.ts#readOfficialStateLegislatorsProjection";
-    case "az-openstates-votes": return "lib/sources/plural/votes.ts#readArizonaPluralVotesProjection";
     case "az-state-rollcalls":
     case "nj-state-rollcalls": return "lib/sources/legiscan/snapshot.ts#readOfficialStateVotesProjection";
     case "nh-state-rollcalls": return "lib/civic-data/read-model.ts#readPromotedStateLegislatorVotes";
@@ -149,6 +150,14 @@ export async function verifyRoutineReaderProjection(
       if (!jurisdiction) return fail(verifierId,"The state people scope has no jurisdiction.");
       return verifyExactVersion(verifierId,await readOpenStatesPeopleProjection(jurisdiction,{store:options.store,now:options.now,bypassCache:true}),options.expectedVersionId,"state people");
     }
+    if (contract.recordClass === "STATE_ROLL_CALL" && (contract.sourceId === "plural-openstates-votes" || contract.sourceId === "legiscan")) {
+      const state = /^US-([A-Z]{2}):/.exec(contract.scope)?.[1];
+      if (!state) return fail(verifierId, "The vote source has no state scope.");
+      const read = contract.sourceId === "plural-openstates-votes"
+        ? await (await import("../sources/plural/votes.ts")).readPluralVotesProjection(state, {store: options.store, now: options.now, bypassCache: true})
+        : await (await import("../sources/legiscan/votes.ts")).readLegiscanVotesProjection(state, {store: options.store, now: options.now, bypassCache: true});
+      return verifyExactVersion(verifierId, read, options.expectedVersionId, `${state} attributed votes`);
+    }
     switch (contract.id) {
       case "google-civic-voterinfo": {
         const { readCivicProjection } = await import("../sources/google-civic/reader.ts");
@@ -196,10 +205,6 @@ export async function verifyRoutineReaderProjection(
           options.expectedVersionId,
           `${target.state} official-state-legislator`,
         );
-      }
-      case "az-openstates-votes": {
-        const { readArizonaPluralVotesProjection } = await import("../sources/plural/votes.ts");
-        return verifyExactVersion(verifierId, await readArizonaPluralVotesProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "native Arizona votes");
       }
       case "az-state-rollcalls":
       case "nj-state-rollcalls": {

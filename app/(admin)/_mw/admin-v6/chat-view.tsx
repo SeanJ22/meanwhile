@@ -8,6 +8,7 @@
  * compares its key against the token it issued.
  */
 
+import { useV6 } from "./context.tsx";
 import { useCallback, useRef, useState } from "react";
 
 import { Code, NeedsYouLine, StatusBlock } from "@/app/(admin)/status-ui.tsx";
@@ -360,6 +361,7 @@ function ChatConsole({ from, suggestions }: { from: string; suggestions: readonl
 }
 
 export function ChatView({ controls }: { readonly controls: readonly string[] }) {
+  const { scopeKey } = useV6();
   return (
     <div className="chat-page">
       <h1>{CHAT_TITLE}</h1>
@@ -372,7 +374,7 @@ export function ChatView({ controls }: { readonly controls: readonly string[] })
         </ul>
       </section>
 
-      <ChatConsole from={CHAT_PAGE} suggestions={everyQuestion()} />
+      <ChatConsole from={`${CHAT_PAGE}?scope=${encodeURIComponent(scopeKey)}`} suggestions={everyQuestion()} />
     </div>
   );
 }

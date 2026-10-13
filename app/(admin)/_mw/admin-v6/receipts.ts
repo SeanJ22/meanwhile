@@ -1,3 +1,4 @@
+import { plainWords } from "../../../../lib/control-plane/admin-view/plain-words.ts";
 /**
  * The gateway's saved receipt, not an HTTP 200 or a click, decides the state:
  *
@@ -7,8 +8,8 @@
  *   401 / 403 / 400       Failed: the gateway never decided, so nothing was saved
  *   anything else         Result unknown: it may have been saved
  */
-import type { Confirmation } from "@/lib/control-plane/gateway/confirmation.ts";
-import type { ActionOutcome } from "@/lib/control-plane/gateway/contract.ts";
+import type { Confirmation } from "../../../../lib/control-plane/gateway/confirmation.ts";
+import type { ActionOutcome } from "../../../../lib/control-plane/gateway/contract.ts";
 import type { ActionDef } from "./actions.ts";
 import type { Lifecycle, ReceiptStatus, UiReceipt } from "./model.ts";
 
@@ -102,8 +103,9 @@ export function confirmationOf(body: unknown): Confirmation | null {
   const c = body && typeof body === "object" ? (body as { confirmation?: unknown }).confirmation : null;
   if (!c || typeof c !== "object") return null;
   const x = c as Partial<Confirmation>;
-  const okState = x.state === "applied" || x.state === "waiting" || x.state === "not-needed" || x.state === "unread" || x.state === "not-picked-up" || x.state === "working";
+  const okState = x.state === "applied" || x.state === "waiting" || x.state === "not-needed" || x.state === "unread" || x.state === "not-picked-up" || x.state === "working" || x.state === "in-progress";
   return okState && typeof x.words === "string" ? { state: x.state as Confirmation["state"], at: typeof x.at === "string" ? x.at : null, words: x.words,
+    ...(x.change && typeof x.change === "object" ? { change: x.change } : {}),
     ...(x.plan && typeof x.plan === "object" ? { plan: x.plan } : {}), ...(x.progress && typeof x.progress === "object" ? { progress: x.progress } : {}),
     ...(Array.isArray(x.items) ? { items: x.items } : {}) } : null;
 }
@@ -121,6 +123,9 @@ function itemsOf(c: Pick<Confirmation, "items">): Pick<UiReceipt, "items"> | Rec
  */
 export function applyConfirmation(prev: UiReceipt, c: Confirmation, at: string): UiReceipt {
   if (prev.status !== "queued" && prev.status !== "read" && prev.status !== "running") return prev;
+  if (c.state === "in-progress") return { ...prev, status: "running", statusWords: "In progress", says: c.words, notPickedUp: false,
+    ...(c.plan ? { plan: c.plan } : {}), ...(c.progress ? { progress: c.progress } : {}), ...(c.change ? { change: c.change } : {}),
+    lifecycle: { ...prev.lifecycle, workersReceived: c.at ?? at, workStarted: c.at ?? at } };
   if (c.state === "applied") {
     return {
       ...prev,
@@ -129,7 +134,8 @@ export function applyConfirmation(prev: UiReceipt, c: Confirmation, at: string):
       steps: [...prev.steps, { label: "Runner confirmed", at: c.at ?? at }],
       says: c.words,
       lifecycle: { ...prev.lifecycle, workersReceived: c.at ?? at },
-      ...(c.plan ? { plan: c.plan } : {}), ...(c.progress ? { progress: c.progress } : {}), ...itemsOf(c), notPickedUp: false,
+      ...(c.plan ? { plan: c.plan } : {}), ...(c.progress ? { progress: c.progress } : {}), ...(c.change ? { change: c.change } : {}), notPickedUp: false,
+      ...itemsOf(c),
     };
   }
   if (c.state === "working") return { ...prev, status: "running", statusWords: STATUS_WORDS.running, says: c.words, notPickedUp: false,
@@ -159,7 +165,7 @@ export function applyGatewayReply(prev: UiReceipt, def: ActionDef, httpStatus: n
   }
   if (httpStatus !== null && httpStatus >= 200 && httpStatus < 300 && isOutcome(body)) {
     const r = body.receipt;
-    const base = { ...prev, gatewayReceiptId: r.receiptId, readBackAt: r.readBackAt, replayed: body.replayed === true, ...(r.change ? { change: r.change } : {}) };
+    const base = { ...prev, finishBy:r.scheduleOrigin?.finishBy??prev.finishBy,scheduledParentId:r.scheduleOrigin?.id??prev.scheduledParentId, gatewayReceiptId: r.receiptId, readBackAt: r.readBackAt, replayed: body.replayed === true, ...(r.change ? { change: r.change } : {}) };
     if (r.outcome === "REFUSED") {
       return { ...base, status: "refused", statusWords: STATUS_WORDS.refused, steps: step("Refused"), says: r.says };
     }
@@ -167,7 +173,7 @@ export function applyGatewayReply(prev: UiReceipt, def: ActionDef, httpStatus: n
       return { ...base, status: "unknown", statusWords: STATUS_WORDS.unknown, steps: step("No clear answer"), says: UNKNOWN_SAYS };
     }
     const confirmation = confirmationOf(body);
-    if (r.outcome === "DONE" && confirmation !== null && (confirmation.state === "waiting" || confirmation.state === "unread" || confirmation.state === "not-picked-up")) {
+    if (r.outcome === "DONE" && confirmation !== null && (confirmation.state === "in-progress" || confirmation.state === "waiting" || confirmation.state === "unread" || confirmation.state === "not-picked-up")) {
       return applyConfirmation(
         { ...base, status: "queued", statusWords: STATUS_WORDS.queued, steps: step("Saved"), says: confirmation.words, lifecycle: { ...prev.lifecycle, saved: r.completedAt ?? r.startedAt ?? at } },
         confirmation,
@@ -244,6 +250,7 @@ export function doneWithChange(r: Pick<UiReceipt, "status" | "change">): string 
 const SENTENCE_MAX = 140;
 
 export function oneSentence(text: string): string {
+  text = plainWords(text, "The order could not be completed; the team is checking it.");
   const flat = text.replace(/\s+/g, " ").trim();
   const end = /[.!?](?=\s|$)/.exec(flat);
   const first = end ? flat.slice(0, end.index + 1) : flat;

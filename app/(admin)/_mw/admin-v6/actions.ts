@@ -1,10 +1,9 @@
 /** `gateway` maps the kinds the deployed `/api/admin/action` registry performs; any other control carries a named `dependency`. */
 import type { ActionKind, DecisionSpec, Dependency, Hunt } from "./model.ts";
 import { usd } from "./model.ts";
-import { addableFamilies } from "@/lib/coverage/owed-overlay.ts";
-import { RECIPES } from "@/lib/control-plane/data-business/recipes.ts";
-import { audienceWords } from "@/lib/control-plane/data-business/types.ts";
-import { MODEL_TIERS, tierShortName } from "@/lib/models.ts";
+import { addableFamilies } from "../../../../lib/coverage/owed-overlay.ts";
+import { RECIPES } from "../../../../lib/control-plane/data-business/recipes.ts";
+import { audienceWords } from "../../../../lib/control-plane/data-business/types.ts";
 
 /** A data switch's target is `<recipe>@<audience>`: the number's label and who it is for, in words. */
 function switchWords(target: string): { readonly label: string; readonly who: string } {
@@ -53,6 +52,7 @@ export interface Preview {
   readonly rows: readonly (readonly [string, string])[];
   readonly options?: readonly PreviewOption[];
   readonly items?: readonly PreviewItem[];
+  /** A number the owner types (a hunt's lifetime limit). */
   readonly amount?: { readonly label: string; readonly initial: string; readonly text?: boolean };
   readonly note?: boolean;
   readonly invalid?: (input: { readonly option: string | null; readonly words: string; readonly amount: string; readonly selected: number }) => string | null;
@@ -75,218 +75,17 @@ export interface ActionDef {
 }
 
 export const DEP = {
-  typedPlans: {
-    id: "DEP-ACTION-PLANS",
-    owner: "Codex (gateway)",
-    need: "A typed action in /api/admin/action.",
-  },
-  resources: {
-    id: "DEP-RESOURCE-EXECUTOR",
-    owner: "Codex (scheduler and engineering intake)",
-    need: "A resource request the scheduler or engineering intake accepts.",
-  },
-  engineering: {
-    id: "DEP-ENGINEERING-TASKS",
-    owner: "Codex (engineering-task adapter)",
-    need: "A connection to the engineering task tracker.",
-  },
-  readerCheck: {
-    id: "DEP-READER-CHECK",
-    owner: "Codex (MW-011 reader proof)",
-    need: "An action that opens the public card and compares it with what was published.",
-  },
-  capture: {
-    id: "DEP-SAVED-COPY",
-    owner: "Codex (exact saved-copy route, default off)",
-    need: "The saved-copy request route.",
-  },
-  receiptLookup: {
-    id: "DEP-RECEIPT-LOOKUP",
-    owner: "Codex (gateway)",
-    need: "A read-only receipt lookup by action key.",
-  },
+  receiptLookup: { id: "DEP-RECEIPT-LOOKUP", owner: "Codex (gateway)", need: "A read-only receipt lookup by action key." },
 } as const satisfies Record<string, Dependency>;
 
-const COST_NONE = "None";
-const MODEL_ORDER = MODEL_TIERS.map(tierShortName).join(", then ");
 
 function localOrGlobal(ctx: PreviewContext): "local" | "global" {
   return ctx.scopeIsCountry ? "global" : "local";
 }
 
-function waitingWords(ctx: PreviewContext): string {
-  return ctx.waitingCount === undefined || ctx.waitingCount === null
-    ? `Waiting work in ${ctx.scopeName}`
-    : `${ctx.waitingCount.toLocaleString("en-US")} waiting items in ${ctx.scopeName}`;
-}
 
-function huntLeft(h: Hunt | null | undefined): string {
-  return h ? `${usd(Math.max(0, h.limitUsd - h.spentUsd - h.heldUsd))} left in the limit` : "—";
-}
 
 const defs: ActionDef[] = [
-  {
-    kind: "contain",
-    label: "Hide the wrong records from this card",
-    needs: "owner",
-    doneWords: "Hidden from the card.",
-    preview: (ctx) => ({
-      title: `Hide the wrong records from ${ctx.targetName}`,
-      level: "local",
-      rows: [
-        ["Affects", `The link that attaches records from another place to ${ctx.targetName}`],
-        ["What changes", "Those records stop showing on this card"],
-        ["Undo", "From History"],
-        ["Cost", COST_NONE],
-      ],
-    }),
-    gateway: null,
-    dependency: DEP.typedPlans,
-  },
-  {
-    kind: "uncontain",
-    label: "Undo: show those records on the card again",
-    needs: "owner",
-    doneWords: "Shown again.",
-    preview: (ctx) => ({
-      title: "Undo hiding the wrong records",
-      level: "local",
-      rows: [["What changes", `Reattaches the records to ${ctx.targetName}`], ["Cost", COST_NONE]],
-    }),
-    gateway: null,
-    dependency: DEP.typedPlans,
-  },
-  {
-    kind: "recheck",
-    label: "Check the public page now",
-    needs: "owner",
-    doneWords: "Checked.",
-    preview: (ctx) => ({
-      title: `Check the public page for ${ctx.targetName}`,
-      level: "local",
-      rows: [
-        ["Affects", "The public card for this result"],
-        ["What changes", "Nothing"],
-        ["Cost", "Free"],
-        ["Result", "Match, mismatch or no answer"],
-      ],
-    }),
-    gateway: null,
-    dependency: DEP.readerCheck,
-  },
-  {
-    kind: "workfirst",
-    label: "Put this work first",
-    needs: "owner",
-    doneWords: "Moved to the front.",
-    preview: (ctx) => ({
-      title: "Put this work first",
-      level: "local",
-      rows: [
-        ["Affects", `1 queued item: ${ctx.targetName}`],
-        ["What changes", "Moves it to the front"],
-        ["Cost", "Nothing by itself"],
-      ],
-    }),
-    gateway: null,
-    dependency: DEP.typedPlans,
-  },
-  {
-    kind: "fixfirst",
-    label: "Move up the list",
-    needs: "owner",
-    doneWords: "Moved up.",
-    preview: (ctx) => ({
-      title: `Move “${ctx.fix?.title ?? ctx.targetName}” up the engineering list`,
-      level: "local",
-      rows: [
-        ["Affects", `${ctx.fix?.title ?? ctx.targetName}${ctx.fix ? ` (${ctx.fix.owner})` : ""}`],
-        ["What changes", "Changes the order engineers work in"],
-        ["What it helps", ctx.fix?.helps ?? "—"],
-      ],
-    }),
-    gateway: null,
-    dependency: DEP.typedPlans,
-  },
-  {
-    kind: "stopmethod",
-    label: "Stop the failing method",
-    needs: "owner",
-    doneWords: "Stopped.",
-    preview: (ctx) => ({
-      title: `Stop the failing method for ${ctx.targetName}`,
-      level: "local",
-      rows: [
-        ["Affects", "1 method on this item"],
-        ["What changes", "Stops that method. The item moves to Needs a software fix."],
-        ["Cost", "Saves further retries"],
-      ],
-    }),
-    gateway: null,
-    dependency: DEP.typedPlans,
-  },
-  {
-    kind: "scope-stop",
-    label: "Stop failing methods here",
-    needs: "owner",
-    doneWords: "Stopped.",
-    preview: (ctx) => ({
-      title: `Stop the failing methods on matching items in ${ctx.scopeName}`,
-      level: localOrGlobal(ctx),
-      rows: [
-        ["Affects", `Every item in ${ctx.scopeName} whose method keeps failing on a page format we can’t read`],
-        ["What changes", "Stops each failing method. Each item gets a repair."],
-        ["Cost", "Saves further retries"],
-      ],
-      items: ctx.matching ?? [],
-      invalid: ({ selected }) => (selected === 0 ? "Select at least one item." : null),
-    }),
-    gateway: null,
-    dependency: DEP.typedPlans,
-  },
-  {
-    kind: "stoprepeats",
-    label: "Stop repeats that can’t succeed",
-    needs: "owner",
-    doneWords: "Stopped.",
-    preview: () => ({
-      title: "Stop retries that repeat the same failing method",
-      level: "global",
-      rows: [
-        ["Affects", "Every matching row in every state"],
-        ["What changes", "Stops each repeating method. Each one gets a repair or goes to engineers."],
-        ["Cost", "Saves further retries"],
-      ],
-    }),
-    gateway: null,
-    dependency: DEP.typedPlans,
-  },
-  {
-    kind: "decide",
-    label: "Decide",
-    needs: "owner",
-    doneWords: "Decision saved.",
-    preview: (ctx) => ({
-      title: ctx.decision?.question ?? `Decide about ${ctx.targetName}`,
-      level: "local",
-      rows: [
-        ["Scope", "This item only"],
-      ],
-      options: (ctx.decision?.options ?? []).map((o) => ({
-        id: o.id,
-        label: o.label,
-        note: o.note,
-        ownWords: o.ownWords,
-        blocked: o.outreach && !ctx.outreachAuthorized ? "Needs outreach permission." : undefined,
-      })),
-      invalid: ({ option, words }) => {
-        const chosen = ctx.decision?.options.find((o) => o.id === option);
-        return chosen?.ownWords && !words.trim() ? "Say what you want in the box." : null;
-      },
-    }),
-    gateway: null,
-    dependency: DEP.typedPlans,
-  },
   {
     kind: "hunt-start",
     label: "Start a hunt here",
@@ -480,21 +279,6 @@ const defs: ActionDef[] = [
     dependency: null,
   },
   {
-    kind: "fix-go",
-    label: "Go fix these",
-    needs: "owner",
-    doneWords: "Sent.",
-    preview: () => ({
-      title: "Send everything on the fix queue for engineering",
-      level: "global",
-      rows: [
-        ["What changes", "Every item waiting on the fix queue is sent"],
-      ],
-    }),
-    gateway: { type: "decision.record", requiresStateVersion: true },
-    dependency: null,
-  },
-  {
     kind: "global-ceiling",
     label: "Set the daily budget",
     needs: "spend",
@@ -548,108 +332,6 @@ const defs: ActionDef[] = [
     }),
     gateway: { type: "config.setDiscoverySearch" },
     dependency: null,
-  },
-  {
-    kind: "scope-first",
-    label: "Put waiting work here first",
-    needs: "owner",
-    doneWords: "Moved to the front.",
-    preview: (ctx) => ({
-      title: `Put waiting work in ${ctx.scopeName} first`,
-      level: localOrGlobal(ctx),
-      rows: [
-        ["Affects", waitingWords(ctx)],
-        ["What changes", "Moves it to the front"],
-        ["Cost", "Nothing by itself"],
-      ],
-    }),
-    gateway: null,
-    dependency: DEP.typedPlans,
-  },
-  {
-    kind: "scope-recheck",
-    label: "Recheck every public page here",
-    needs: "owner",
-    doneWords: "Rechecked.",
-    preview: (ctx) => ({
-      title: `Recheck every published card in ${ctx.scopeName}`,
-      level: localOrGlobal(ctx),
-      rows: [
-        ["Affects", `Every card with published records in ${ctx.scopeName}`],
-        ["What changes", "Nothing on the site"],
-        ["Cost", "Free"],
-      ],
-    }),
-    gateway: null,
-    dependency: DEP.readerCheck,
-  },
-  {
-    kind: "doc-request",
-    label: "Open the saved copy",
-    needs: "owner",
-    doneWords: "Ready.",
-    preview: (ctx) => ({
-      title: `Open the saved copy of ${ctx.targetName}`,
-      level: "local",
-      rows: [
-        ["What it is", "The saved copy"],
-        ["Access", "Private"],
-      ],
-    }),
-    gateway: null,
-    dependency: DEP.capture,
-  },
-  {
-    kind: "use-url",
-    label: "Use this official address",
-    needs: "owner",
-    doneWords: "Added.",
-    preview: (ctx) => ({
-      title: `Use this address as an official source for ${ctx.targetName}`,
-      level: "local",
-      rows: [
-        ["Affects", `The source list for ${ctx.targetName}`],
-        ["What changes", `Adds ${ctx.url ? ctx.url : "the address you gave"} as an official source`],
-        ["Cost", "Free"],
-      ],
-    }),
-    gateway: null,
-    dependency: DEP.typedPlans,
-  },
-  {
-    kind: "reprocess",
-    label: "Reprocess the evidence we already saved",
-    needs: "owner",
-    doneWords: "Reprocessed.",
-    preview: (ctx) => ({
-      title: `Reprocess saved evidence in ${ctx.scopeName}`,
-      level: localOrGlobal(ctx),
-      rows: [
-        ["Affects", `Saved files already held for ${ctx.scopeName}`],
-        ["What changes", "Pulls out facts, checks and publishes again"],
-        ["Cost", "Plain code first"],
-      ],
-    }),
-    gateway: null,
-    dependency: DEP.typedPlans,
-  },
-  {
-    kind: "retry-method",
-    label: "Try another permitted method",
-    needs: "owner",
-    doneWords: "Switched.",
-    preview: (ctx) => ({
-      title: `Try another method for failing items in ${ctx.scopeName}`,
-      level: localOrGlobal(ctx),
-      rows: [
-        ["Affects", `Every item in ${ctx.scopeName} stuck on a method that keeps failing`],
-        ["What changes", "Pauses the failing method and tries the next permitted one"],
-      ],
-      items: ctx.matching ?? [],
-      invalid: ({ selected }) => ((ctx.matching?.length ?? 0) > 0 && selected === 0 ? "Select at least one item." : null),
-    }),
-    gateway: null,
-    dependency: DEP.typedPlans,
   },
   {
     kind: "send-agents",
@@ -770,6 +452,11 @@ const defs: ActionDef[] = [
     dependency: null,
   },
   {
+    kind:"order-schedule",label:"Schedule an order",needs:"owner",doneWords:"Scheduled.",
+    preview:ctx=>({title:"Schedule an order",level:"global",rows:[["Order",ctx.payload?.name??ctx.targetName]],note:true,invalid:()=>ctx.payload?.scheduledInput?null:"Choose When on the order you want to schedule."}),
+    gateway:{type:"orders.schedule"},dependency:null,
+  },
+  {
     kind: "order-unschedule",
     label: "Cancel this scheduled order",
     needs: "owner",
@@ -866,7 +553,7 @@ const defs: ActionDef[] = [
           ? { options: [{ id: "on", label: "On", note: "" }, { id: "off", label: "Off", note: "" }] }
           : { amount: { label: control === "number" ? "New value" : control === "json" ? "New value (as data)" : "New wording", initial: ctx.payload?.current ?? "", text: control !== "number" } }),
         note: true,
-        invalid: ({ amount, option }) => settingValueFromInput(control, amount, option) === undefined
+        invalid: ({ amount, option }) => ctx.target==="brief.time" && amount.trim()==="" ? null : settingValueFromInput(control, amount, option) === undefined
           ? control === "choice" ? "Choose a value." : control === "number" ? "Enter a number." : control === "json" ? "Enter valid data." : control === "boolean" ? null : "Enter the new wording." : null,
       };
     },
@@ -889,91 +576,7 @@ const defs: ActionDef[] = [
     }),
     gateway: { type: "config.setSetting" },
     dependency: null,
-  },
-  {
-    kind: "resume-publish",
-    label: "Resume checks and publishing, then recheck the reader card",
-    needs: "owner",
-    doneWords: "Resumed.",
-    preview: (ctx) => ({
-      title: `Resume fact checks and publishing in ${ctx.scopeName}`,
-      level: localOrGlobal(ctx),
-      rows: [
-        ["Affects", `Records in ${ctx.scopeName} that were collected but not yet checked or published`],
-        ["What changes", "Resumes fact checks and publishing, then checks each exact reader card."],
-        ["Cost", "Free: plain code"],
-      ],
-    }),
-    gateway: null,
-    dependency: DEP.typedPlans,
-  },
-  {
-    kind: "eng-task",
-    label: "Create an engineering task",
-    needs: "owner",
-    doneWords: "Task created.",
-    preview: (ctx) => ({
-      title: `Create an engineering task for “${ctx.fix?.title ?? ctx.targetName}”`,
-      level: "local",
-      rows: [
-        ["Task", ctx.fix?.title ?? ctx.targetName],
-        ["Evidence", "The linked stuck items, the saved evidence and the reader observation"],
-        ["Owner", ctx.fix?.owner ?? "Engineering"],
-      ],
-    }),
-    gateway: null,
-    dependency: DEP.engineering,
-  },
-  {
-    kind: "job-stop",
-    label: "Stop this job",
-    needs: "owner",
-    doneWords: "Stopped.",
-    preview: (ctx) => ({
-      title: `Stop “${ctx.targetName}” after its current step`,
-      level: "local",
-      rows: [
-        ["What changes", "The job stops after its current step"],
-      ],
-    }),
-    gateway: null,
-    dependency: DEP.typedPlans,
-  },
-  {
-    kind: "focus",
-    label: "Focus more resources here",
-    needs: "owner",
-    doneWords: "Request accepted.",
-    preview: (ctx) => {
-      const opts: PreviewOption[] = [
-        {
-          id: "eng",
-          label: "Assign more engineering time",
-          note: "Cost: engineering time, no AI spending",
-        },
-        {
-          id: "research",
-          label: "Give its waiting research more worker slots",
-          note: `Cost: ${huntLeft(ctx.hunt)}`,
-        },
-        {
-          id: "model",
-          label: "Allow a stronger AI model for this work",
-          note: `Moves up one step: ${MODEL_ORDER}`,
-        },
-      ];
-      return {
-        title: `Put more resources on: ${ctx.fix?.title ?? ctx.targetName}`,
-        level: "local",
-        rows: [
-          ["Resources now", ctx.fix ? ctx.fix.resourcesNow : "—"],
-        ],
-        options: opts,
-      };
-    },
-    gateway: null,
-    dependency: DEP.resources,
-  },
+  }
 ];
 
 export const ACTIONS: ReadonlyMap<ActionKind, ActionDef> = new Map(defs.map((d) => [d.kind, d]));

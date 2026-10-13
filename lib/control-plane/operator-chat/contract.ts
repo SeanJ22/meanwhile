@@ -2,6 +2,8 @@ import type { Gap, Held, Measured } from "../owner-surface.ts";
 import type { ActionDefinition, ActionOutcome, ActionRequest, CallerAuthority } from "../gateway/contract.ts";
 
 export const CHAT_TOPICS = [
+  "PLACE_STUCK",
+  /** "What is blocking the Fleet?" */
   "FLEET_BLOCKERS",
   "SINCE_LAST_CYCLE",
   "OVERDUE_SOURCES",
@@ -21,6 +23,7 @@ export interface TopicDefinition {
 }
 
 export const TOPIC_DEFINITIONS: readonly TopicDefinition[] = [
+  { topic: "PLACE_STUCK", asks: "Why is this place stuck?", reads: "the place’s stuck work and capture score", readBackAt: "/admin?view=work" },
   {
     topic: "FLEET_BLOCKERS",
     asks: "What is blocking the Fleet?",

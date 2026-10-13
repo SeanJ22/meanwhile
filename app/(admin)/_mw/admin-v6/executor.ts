@@ -2,6 +2,7 @@
  * A saved request is not a done request: after a send the live executor keeps asking the receipt lookup,
  * without sending again, until the runner's record confirms the action or a final state arrives.
  */
+import { scheduledWhen, type OrderWhen } from "./order-when.ts";
 import type { ActionDef } from "./actions.ts";
 import { actionInput, RECEIPT_LOOKUP_CONTRACT, supportedAction, type V6Capabilities } from "./contract.ts";
 import type { UiReceipt } from "./model.ts";
@@ -15,6 +16,7 @@ export interface SendRequest {
   readonly words: string;
   readonly amount: string;
   readonly selectedItems: readonly string[];
+  readonly when?: OrderWhen;
   readonly payload?: Readonly<Record<string, string>>;
 }
 
@@ -112,8 +114,10 @@ export function liveExecutor(opts: {
         return;
       }
       const input = actionInput(request.def.kind, { target: request.target, scopeKey: request.scopeKey, option: request.option, words: request.words, amount: request.amount, selected: request.selectedItems, payload: request.payload });
-      const body = { type: gw.type, subject: request.target, stateVersion, idempotencyKey: receipt.key, ...input };
-      receipt = { ...receipt, gatewayType: gw.type };
+      const timing = request.when ? scheduledWhen(request.when,now()) : null;
+      const effectiveType = timing ? "orders.schedule" : gw.type;
+      const body = timing ? {type:effectiveType,subject:request.target,stateVersion:null,idempotencyKey:receipt.key,input:{orderType:gw.type,subject:request.target,input,...timing}} : { type: gw.type, subject: request.target, stateVersion, idempotencyKey: receipt.key, ...input };
+      receipt = { ...receipt, gatewayType: effectiveType,finishBy:timing?.finishBy??null };
       let status: number | null = null;
       let parsed: unknown = null;
       try {
@@ -125,6 +129,10 @@ export function liveExecutor(opts: {
       }
       const settled = applyGatewayReply(receipt, request.def, status, parsed, now());
       update(settled);
+      if(request.when?.mode==="now" && status===200 && (parsed as {ok?:boolean}|null)?.ok===true && gw.type!=="runner.runCycleNow") {
+        // A separate idempotent wake order preserves pauses and spending controls.
+        await doFetch(ACTION_ROUTE,{method:"POST",headers:{"content-type":"application/json",accept:"application/json"},body:JSON.stringify({type:"runner.runCycleNow",subject:"us",note:null,idempotencyKey:`${receipt.key.slice(0,110)}-start-now`})}).catch(()=>undefined);
+      }
       follow(settled, request.def, update);
     },
     dispose() {

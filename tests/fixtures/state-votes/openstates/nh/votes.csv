@@ -1,0 +1,2 @@
+id,identifier,motion_text,motion_classification,start_date,result,organization_id,bill_id,bill_action_id,jurisdiction,session_identifier
+ocd-vote/31af17a0-3be8-4251-8890-f83dce1580f2,,VETO MESSAGE - Roll Call Required,['passage'],2026-08-19T00:00:00-04:00,fail,ocd-organization/c95932a0-2ac1-4f14-a0c4-ade8568daac6,ocd-bill/308e8ea2-2d0d-4cc7-97c5-d6bc16f86f4b,,New Hampshire,2026

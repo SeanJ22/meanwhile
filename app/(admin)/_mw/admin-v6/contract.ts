@@ -20,7 +20,6 @@
  * Paged: `GET <href>?scope=…&limit=…[&cursor=…][&q=…][&<filter>=…]`; the envelope adds
  * `page: { total: number | null, nextCursor, prevCursor }`.
  */
-import { FIX_QUEUE_SUBJECT, GO_FIX_OPTION } from "@/lib/control-plane/fix-queue.ts";
 import type { ActionKind, AdminV6Data } from "./model.ts";
 import { settingValueFromInput } from "./actions.ts";
 
@@ -28,7 +27,7 @@ export const V6_CAPABILITY_VERSION = 1;
 
 export type SectionId = keyof AdminV6Data;
 export const SECTION_IDS: readonly SectionId[] = [
-  "places", "hunts", "national", "results", "stuck", "sameCause", "workRows", "history", "workers", "checklist", "agents", "spend", "sends", "reliability", "publication", "money", "scoreboard", "fixes", "decided",
+  "places", "hunts", "national", "results", "stuck", "sameCause", "workRows", "history", "workers", "checklist", "agents", "spend", "sends", "reliability", "publication", "money", "scoreboard", "fixes",
 ];
 
 export function sectionContract(id: SectionId): string {
@@ -127,21 +126,6 @@ export interface ActionInputSource {
 export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Record<string, unknown>> {
   const limit = () => (s.amount.trim() === "" ? null : Number(s.amount));
   switch (kind) {
-    case "contain":
-    case "uncontain":
-    case "stopmethod":
-      return { itemId: s.target };
-    case "recheck":
-      return { resultId: s.target };
-    case "workfirst":
-      return { workItemId: s.target };
-    case "fixfirst":
-      return { fixId: s.target };
-    case "scope-stop":
-    case "retry-method":
-      return { scope: s.target || s.scopeKey, itemIds: [...s.selected] };
-    case "stoprepeats":
-      return { scope: "us" };
     case "decide":
       return { decisionId: s.target, option: s.option, words: s.words.trim() || null };
     case "hunt-start": {
@@ -167,8 +151,6 @@ export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Re
     case "global-runner-pause":
     case "global-runner-resume":
       return { note: s.words.trim() || null };
-    case "fix-go":
-      return { subjectId: FIX_QUEUE_SUBJECT, chosenOption: GO_FIX_OPTION, consequenceShown: "The queued gaps were sent for a session to fix", ownerAnswer: null };
     case "global-ceiling":
       return { rollingCeilingUsd: s.amount.trim() === "" ? null : Number(s.amount) };
     case "target-set":
@@ -185,23 +167,10 @@ export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Re
       return { enabled: true, confirmed: true };
     case "global-search-off":
       return { enabled: false };
-    case "scope-first":
-    case "scope-recheck":
-    case "reprocess":
-    case "resume-publish":
-      return { scope: s.target };
-    case "doc-request":
-      return { artifactId: s.target };
-    case "use-url":
-      return { body: s.target, url: s.payload?.url ?? null };
-    case "eng-task":
-      return { fixId: s.target, itemId: s.payload?.item ?? null };
-    case "job-stop":
-      return { jobId: s.target };
-    case "focus":
-      return { fixId: s.target, resource: s.option };
     case "cancel-send":
       return { intentId: s.target };
+    case "order-schedule":
+      return JSON.parse(s.payload?.scheduledInput??"{}") as Readonly<Record<string,unknown>>;
     case "order-unschedule":
       return { id: s.target };
     case "owed-add":
@@ -212,12 +181,14 @@ export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Re
       return { undoChangeId: s.target };
     case "setting-set":
       // config.setSetting: the target is the setting's key; the payload says how its value is typed.
-      return { key: s.target, value: settingValueFromInput(s.payload?.control ?? "text", s.amount, s.option) ?? null, why: s.words.trim() };
+      return { key: s.target, value: s.target==="brief.time" && s.amount.trim()==="" ? "" : settingValueFromInput(s.payload?.control ?? "text", s.amount, s.option) ?? null, why: s.words.trim() };
     case "setting-undo":
       // The same action with the logged previous value, quoting the change it undoes so a later change is never jumped over.
       return { key: s.target, value: JSON.parse(s.payload?.value ?? "null") as unknown, why: s.words.trim() || "Undo", undoOf: s.payload?.undoOf ?? "" };
     case "send-agents":
       // fleet.deployHere: where the fleet goes next, in words. A typed dollar amount is that Send's own rolling budget.
       return { note: (s.payload?.words ?? s.words).trim(), ...(s.amount.trim() === "" ? {} : { budgetUsd: Number(s.amount) }) };
+    default:
+      throw new Error("This control is not available yet.");
   }
 }

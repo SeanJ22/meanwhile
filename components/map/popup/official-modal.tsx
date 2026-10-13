@@ -26,6 +26,8 @@ import { ContactPills } from "@/components/officials/contact-pills";
 import { OfficialTermNote } from "@/components/officials/official-term-note";
 import { MemberCommitteesContent, MemberOfficesContent } from "@/components/officials/member-directory";
 import { useMemberDirectory } from "@/hooks/use-member-directory";
+import { FederalMemberRecords } from "@/components/officials/federal-records";
+import { FederalCommentRules } from "@/components/officials/federal-comment-rules";
 import { PersonIdentity } from "@/components/officials/person-identity";
 import { PositionsSection } from "@/components/officials/positions-section";
 
@@ -119,6 +121,8 @@ export function OfficialModal({
           record: <RecentVotes holder={holder} reactionContext={reactionContext} columns contentOnly />,
         }}
         afterSections={<>
+          <FederalMemberRecords key={holder.id} memberId={holder.id} />
+          {holder.id.startsWith("congress:") && <FederalCommentRules />}
           <PublicStatementsProfile subjectId={holder.id} onProfile={setPrlProfile} />
           <OfficialActions subjectId={holder.id} />
           <SpeakYourMind key={holder.id} context={reactionContext ?? undefined} subjectType="OFFICIAL" subjectId={holder.id} subject={holder.name} />

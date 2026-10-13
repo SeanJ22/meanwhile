@@ -1,4 +1,5 @@
 import { PLURAL_STATES, PLURAL_PARSER_VERSION } from "../sources/plural/targets.ts";
+import { FEDERAL_SOURCE_AUTHORITIES } from "../sources/congress/authority.ts";
 import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ROUTE_PREFIX, REGISTRATION_TARGETS } from "../registration/publication.ts";
 import { extractedMemberUrl } from "./manual-source-urls.ts";
 import {
@@ -39,6 +40,7 @@ export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage 
 }
 
 export const SOURCE_AUTHORITIES = {
+  ...FEDERAL_SOURCE_AUTHORITIES,
   "official-ballot-authorities": {
     id: "official-ballot-authorities",
     publisher: "Exact official election authorities in the saved-source receipt",

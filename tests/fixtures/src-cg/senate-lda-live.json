@@ -1,0 +1,69 @@
+{
+  "count": 676617,
+  "next": "https://lda.gov/api/v1/contributions/?page=2&page_size=1",
+  "previous": null,
+  "results": [
+    {
+      "url": "https://lda.gov/api/v1/contributions/86260004-84e7-46e3-9cfa-76edae508768/",
+      "filing_uuid": "86260004-84e7-46e3-9cfa-76edae508768",
+      "filing_type": "MM",
+      "filing_type_display": "Mid-Year Report",
+      "filing_year": 2008,
+      "filing_period": "mid_year",
+      "filing_period_display": "Mid-Year (Jan 1 - Jun 30)",
+      "filing_document_url": "https://lda.gov/filings/public/contribution/86260004-84e7-46e3-9cfa-76edae508768/print/",
+      "filing_document_content_type": "text/html",
+      "filer_type": "lobbyist",
+      "filer_type_display": "Lobbyist",
+      "dt_posted": "2008-06-30T11:42:06-04:00",
+      "contact_name": null,
+      "comments": null,
+      "address_1": "1625 Prince Street",
+      "address_2": null,
+      "city": "Alexandria",
+      "state": "VA",
+      "state_display": "Virginia",
+      "zip": "22305",
+      "country": "US",
+      "country_display": "United States of America",
+      "registrant": {
+        "id": 71930,
+        "url": "https://lda.gov/api/v1/registrants/71930/",
+        "house_registrant_id": 35860,
+        "name": "ASIS INTERNATIONAL",
+        "description": null,
+        "address_1": "1625 PRINCE STREET",
+        "address_2": null,
+        "address_3": null,
+        "address_4": null,
+        "city": "ALEXANDRIA",
+        "state": "VA",
+        "state_display": "Virginia",
+        "zip": "22314",
+        "country": "US",
+        "country_display": "United States of America",
+        "ppb_country": "US",
+        "ppb_country_display": "United States of America",
+        "contact_name": "SUSAN MOSEDALE",
+        "contact_telephone": "+1 703-518-1418",
+        "dt_updated": "2024-05-18T13:00:32.420471-04:00"
+      },
+      "lobbyist": {
+        "id": 43217,
+        "prefix": "ms",
+        "prefix_display": "MS.",
+        "first_name": "KRISTIN",
+        "nickname": null,
+        "middle_name": "ELIZABETH",
+        "last_name": "RUBIN",
+        "suffix": null,
+        "suffix_display": null
+      },
+      "no_contributions": true,
+      "pacs": [
+        "ASISPAC"
+      ],
+      "contribution_items": []
+    }
+  ]
+}

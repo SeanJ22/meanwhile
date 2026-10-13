@@ -61,7 +61,8 @@ test("at the country, the states carry the six columns, a figure we lack is a da
   assert.match(t, /New Jersey — 0 0 \/ 600 — 0/, "a state with no score yet shows a dash, not 0%");
   assert.match(html, /<button[^>]*>Arizona<\/button>/, "the state name is a button that opens it");
   assert.match(html, /Map of states and territories/, "the tile map stays at the country");
-  assert.equal((html.match(/<summary>Sources<\/summary>/g) ?? []).length, 1, "one Sources list sits at the bottom of the card");
+  assert.equal((html.match(/Population data from/g) ?? []).length, 1, "one source list sits at the bottom of the card");
+  assert.doesNotMatch(html, /<summary>Sources<\/summary>/, "the list is visible attribution; only the shared card footer renders a Sources disclosure");
 });
 
 test("with nothing read, every state is listed with every figure a dash and nothing is said about a missing connection", () => {

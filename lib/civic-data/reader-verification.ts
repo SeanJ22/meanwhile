@@ -64,6 +64,8 @@ function verifyExactVersion(
 function verifierIdFor(contract: ReaderContract): string {
   if (contract.sourceId === "plural-openstates" && contract.recordClass === "STATE_LEGISLATOR") return "lib/state-rollcalls/legislators.ts#readOpenStatesPeopleProjection";
   switch (contract.id) {
+    case "socrata-discovery":
+    case "epa-echo": return "lib/sources/open-data/publication.ts#readOpenDataProjection";
     case "fec-funding": return "lib/funding/snapshot.ts#readFundingSnapshot";
     case "nh-members": return "lib/civic-data/state-members.ts#readNhMembers";
     case "az-state-legislators":
@@ -137,6 +139,16 @@ export async function verifyRoutineReaderProjection(
       return verifyExactVersion(verifierId,await readOpenStatesPeopleProjection(jurisdiction,{store:options.store,now:options.now,bypassCache:true}),options.expectedVersionId,"state people");
     }
     switch (contract.id) {
+      case "socrata-discovery":
+      case "epa-echo": {
+        const { readOpenDataProjection } = await import("../sources/open-data/publication.ts");
+        const prefix = `${contract.id}:`;
+        const scope = options.scope ?? contract.scope;
+        if (!scope.startsWith(prefix)) return fail(verifierId, "Open-data readback requires its native source partition.");
+        return verifyExactVersion(verifierId, await readOpenDataProjection(contract.id,scope.slice(prefix.length), {
+          store:options.store,now:options.now,bypassCache:true,
+        }), options.expectedVersionId, contract.id);
+      }
       case "fec-funding": {
         const { readFundingSnapshot } = await import("../funding/snapshot.ts");
         const result = await readFundingSnapshot({ store: options.store, now: options.now, bypassCache: true });

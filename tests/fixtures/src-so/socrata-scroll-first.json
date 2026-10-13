@@ -1,0 +1,189 @@
+{
+  "results" :
+    [
+      {
+        "resource" :
+          {
+            "name" : "Illegal Dumping Service Request Rates by Majority Race/Ethnicity of Census Tracts",
+            "id" : "2228-kp2v",
+            "resource_name" : null,
+            "parent_fxf" : [ "jzhi-aiz2" ],
+            "description" : "",
+            "attribution" : "Service requests received by the Oakland Call Center, 2017; American Community Survey, 5-year estimates, 2012-2016",
+            "attribution_link" : "https://data.oaklandnet.com/Infrastructure/Service-requests-received-by-the-Oakland-Call-Cent/quthgb8e/data",
+            "contact_email" : null,
+            "type" : "chart",
+            "updatedAt" : "2020-11-07T00:39:28.000Z",
+            "createdAt" : "2018-07-20T17:04:21.000Z",
+            "metadata_updated_at" : "2020-11-07T00:39:28.000Z",
+            "data_updated_at" : "2018-07-14T02:00:38.000Z",
+            "page_views" :
+              {
+                "page_views_last_week" : 2,
+                "page_views_last_month" : 11,
+                "page_views_total" : 245,
+                "page_views_last_week_log" : 1.5849625007211563,
+                "page_views_last_month_log" : 3.5849625007211565,
+                "page_views_total_log" : 7.94251450533924
+              },
+            "columns_name" : [],
+            "columns_field_name" : [],
+            "columns_datatype" : [],
+            "columns_description" : [],
+            "columns_format" : [],
+            "download_count" : 20,
+            "provenance" : "official",
+            "lens_view_type" : "tabular",
+            "lens_display_type" : "visualization_canvas_chart",
+            "locked" : false,
+            "backend" : "nbe",
+            "blob_mime_type" : null,
+            "hide_from_data_json" : false,
+            "publication_date" : "2018-07-20T17:04:21.000Z"
+          },
+        "classification" :
+          {
+            "categories" : [],
+            "tags" : [],
+            "domain_category" : "Equity Indicators",
+            "domain_tags" : [],
+            "domain_metadata" : []
+          },
+        "metadata" : { "domain" : "data.oaklandca.gov" },
+        "permalink" : "https://data.oaklandca.gov/d/2228-kp2v",
+        "link" : "https://data.oaklandca.gov/Equity-Indicators/Illegal-Dumping-Service-Request-Rates-by-Majority-/2228-kp2v",
+        "owner" :
+          {
+            "id" : "5kuu-fdze",
+            "user_type" : "interactive",
+            "display_name" : "Richard J. Luna"
+          },
+        "creator" :
+          {
+            "id" : "5kuu-fdze",
+            "user_type" : "interactive",
+            "display_name" : "Richard J. Luna"
+          }
+      },
+      {
+        "resource" :
+          {
+            "name" : "MODIST_L3m_SCWI_CDOM_4km",
+            "id" : "222h-gz6m",
+            "resource_name" : null,
+            "parent_fxf" : [],
+            "description" : "MODIS (or Moderate Resolution Imaging Spectroradiometer) is a key instrument aboard the\nTerra (EOS AM) and Aqua (EOS PM) satellites. Terra's orbit around the Earth is timed so\nthat it passes from north to south across the equator in the morning, while Aqua passes\nsouth to north over the equator in the afternoon. Terra MODIS and Aqua MODIS are viewing\nthe entire Earth's surface every 1 to 2 days, acquiring data in 36 spectral bands, or\ngroups of wavelengths (see MODIS Technical Specifications). These data will improve our\nunderstanding of global dynamics and processes occurring on the land, in the oceans,\nand in the lower atmosphere. MODIS is playing a vital role in the development of\nvalidated, global, interactive Earth system models able to predict global change\naccurately enough to assist policy makers in making sound decisions concerning the\nprotection of our environment.",
+            "attribution" : null,
+            "attribution_link" : null,
+            "contact_email" : "mailto:sdps@oceancolor.gsfc.nasa.gov",
+            "type" : "href",
+            "updatedAt" : "2015-07-20T04:17:58.000Z",
+            "createdAt" : "2015-07-19T06:59:07.000Z",
+            "metadata_updated_at" : "2015-07-20T04:17:58.000Z",
+            "data_updated_at" : "2015-07-19T06:59:07.000Z",
+            "page_views" :
+              {
+                "page_views_last_week" : 1,
+                "page_views_last_month" : 2,
+                "page_views_total" : 10,
+                "page_views_last_week_log" : 1.0,
+                "page_views_last_month_log" : 1.5849625007211563,
+                "page_views_total_log" : 3.4594316186372978
+              },
+            "columns_name" : [],
+            "columns_field_name" : [],
+            "columns_datatype" : [],
+            "columns_description" : [],
+            "columns_format" : [],
+            "download_count" : 0,
+            "provenance" : "community",
+            "lens_view_type" : "href",
+            "lens_display_type" : "href",
+            "locked" : false,
+            "backend" : "not_a_dataset",
+            "blob_mime_type" : null,
+            "hide_from_data_json" : false,
+            "publication_date" : "2015-07-20T04:17:58.000Z"
+          },
+        "classification" :
+          {
+            "categories" : [],
+            "tags" : [],
+            "domain_category" : "Earth Science",
+            "domain_tags" :
+              [
+                "ocean color",
+                "ngda",
+                "national geospatial data asset",
+                "oceans",
+                "ocean optics"
+              ],
+            "domain_metadata" :
+              [
+                {
+                  "key" : "Common-Core_Contact-Email",
+                  "value" : "mailto:sdps@oceancolor.gsfc.nasa.gov"
+                },
+                { "key" : "Common-Core_Program-Code", "value" : "026:001" },
+                {
+                  "key" : "Common-Core_Public-Access-Level",
+                  "value" : "public"
+                },
+                {
+                  "key" : "Common-Core_Temporal-Applicability",
+                  "value" : "R/2000-02-24T00:00:00Z/P1Y"
+                },
+                {
+                  "key" : "Common-Core_Geographic-Coverage",
+                  "value" : "-180.0 -90.0 180.0 90.0"
+                },
+                {
+                  "key" : "Common-Core_Identifier",
+                  "value" : "C1000000969-OBPG__1"
+                },
+                { "key" : "Common-Core_Publisher", "value" : "OB.DAAC" },
+                {
+                  "key" : "Common-Core_Homepage",
+                  "value" : "http://oceancolor.gsfc.nasa.gov/cms/data/terra"
+                },
+                { "key" : "Common-Core_Theme", "value" : "geospatial" },
+                { "key" : "Common-Core_Bureau-Code", "value" : "026:00" },
+                {
+                  "key" : "Common-Core_Issued",
+                  "value" : "2015-06-08T22:00:00.000Z"
+                },
+                { "key" : "Common-Core_Contact-Name", "value" : "undefined" },
+                {
+                  "key" : "NASA-Custom-Metadata_Dataset-Identifier",
+                  "value" : "C1000000969-OBPG__1"
+                }
+              ]
+          },
+        "metadata" :
+          {
+            "domain" : "nasa-test-0.demo.socrata.com",
+            "access_points" :
+              {
+                "application/octet-stream" : "http://oceancolor.gsfc.nasa.gov/"
+              }
+          },
+        "permalink" : "https://nasa-test-0.demo.socrata.com/d/222h-gz6m",
+        "link" : "https://nasa-test-0.demo.socrata.com/Earth-Science/MODIST_L3m_SCWI_CDOM_4km/222h-gz6m",
+        "owner" :
+          {
+            "id" : "g9i9-z6y7",
+            "user_type" : "interactive",
+            "display_name" : "Louis Fettet"
+          },
+        "creator" :
+          {
+            "id" : "g9i9-z6y7",
+            "user_type" : "interactive",
+            "display_name" : "Louis Fettet"
+          }
+      }
+    ],
+  "resultSetSize" : 10000,
+  "timings" : { "serviceMillis" : 38, "searchMillis" : [ 5, 13 ] },
+  "warnings" : []
+}

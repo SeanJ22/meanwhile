@@ -119,6 +119,10 @@ export function civicRecordFacts(recordClass: RoutineRecordClass, member: CivicR
   }
   if (recordClass === "CURATED_READER_RECORD") {
     const row = object(member.record);
+    if (row?.kind === "SOCRATA_DATASET" || row?.kind === "EPA_FACILITY") {
+      const { capturedAt: _capturedAt, ...facts } = row;
+      return facts;
+    }
     const value = object(row?.value);
     if (row?.kind === "ELECTION_FIELD" && value) {
       const { verifiedAt: _verifiedAt, collectedAt: _collectedAt, ...facts } = value;
@@ -435,7 +439,7 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
         ];
       }).sort((left, right) => left.key.localeCompare(right.key));
     case "CURATED_READER_RECORD":
-      return keyed("curated-reader", array(root.records), ["id"])
+      return keyed("curated-reader", [...array(root.records), ...(root.kind === "open-data" ? [...array(root.reports),...array(root.partitions)] : [])], ["id"])
         .sort((left, right) => left.key.localeCompare(right.key));
     case "STATE_CAMPAIGN_FINANCE":
       return array(root.records).map((record, index) => {

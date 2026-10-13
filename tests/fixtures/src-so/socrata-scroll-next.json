@@ -1,0 +1,289 @@
+{
+  "results" :
+    [
+      {
+        "resource" :
+          {
+            "name" : "Retiro Hidrológico Pensilvania",
+            "id" : "222r-ymf3",
+            "resource_name" : null,
+            "parent_fxf" : [],
+            "description" : "<p>Estructura Ecológica Principal de Caldas - CORPOCALDAS.&nbsp;</p>",
+            "attribution" : null,
+            "attribution_link" : null,
+            "contact_email" : "http://www.corpocaldas.gov.co/",
+            "type" : "federated_href",
+            "updatedAt" : "2026-10-12T19:19:04.000Z",
+            "createdAt" : "2026-09-10T19:24:17.000Z",
+            "metadata_updated_at" : "2026-10-12T19:19:04.000Z",
+            "data_updated_at" : "2026-09-10T19:24:17.000Z",
+            "page_views" :
+              {
+                "page_views_last_week" : 1,
+                "page_views_last_month" : 15,
+                "page_views_total" : 15,
+                "page_views_last_week_log" : 1.0,
+                "page_views_last_month_log" : 4.0,
+                "page_views_total_log" : 4.0
+              },
+            "columns_name" : [],
+            "columns_field_name" : [],
+            "columns_datatype" : [],
+            "columns_description" : [],
+            "columns_format" : [],
+            "download_count" : 0,
+            "provenance" : "official",
+            "lens_view_type" : "href",
+            "lens_display_type" : "federated",
+            "locked" : false,
+            "backend" : "not_a_dataset",
+            "blob_mime_type" : null,
+            "hide_from_data_json" : false,
+            "publication_date" : "2026-09-10T19:24:17.000Z"
+          },
+        "classification" :
+          {
+            "categories" : [],
+            "tags" : [],
+            "domain_tags" : [],
+            "domain_metadata" :
+              [
+                {
+                  "key" : "Common-Core_Contact-Email",
+                  "value" : "http://www.corpocaldas.gov.co/"
+                },
+                {
+                  "key" : "Common-Core_Last-Update",
+                  "value" : "2026-09-10T16:19:30.104Z"
+                },
+                { "key" : "Common-Core_License", "value" : "" },
+                {
+                  "key" : "Common-Core_Public-Access-Level",
+                  "value" : "public"
+                },
+                {
+                  "key" : "Common-Core_Geographic-Coverage",
+                  "value" : "-75.1695,5.3761,-75.1493,5.3871"
+                },
+                {
+                  "key" : "Common-Core_Unique-Identifier",
+                  "value" : "https://www.arcgis.com/home/item.html?id=77520e1e40e84ee2a00c8d1a78b91b4c&sublayer=98"
+                },
+                {
+                  "key" : "Common-Core_Publisher",
+                  "value" : "CORPORACION AUTONOMA REGIONAL DE CALDAS"
+                },
+                {
+                  "key" : "Common-Core_Homepage",
+                  "value" : "https://datosabiertos-corpocaldas.hub.arcgis.com/datasets/CORPOCALDAS::retiro-hidrológico-pensilvania"
+                },
+                { "key" : "Common-Core_Theme", "value" : "geospatial" },
+                {
+                  "key" : "Common-Core_Issued",
+                  "value" : "2026-09-10T16:17:05.000Z"
+                },
+                {
+                  "key" : "Common-Core_Contact-Name",
+                  "value" : "lianegamboa_CORPOCALDAS"
+                }
+              ]
+          },
+        "metadata" :
+          {
+            "domain" : "www.datos.gov.co",
+            "additional_access_points" :
+              [
+                {
+                  "urls" :
+                    {
+                      "text/html" : "https://datosabiertos-corpocaldas.hub.arcgis.com/datasets/CORPOCALDAS::retiro-hidrológico-pensilvania"
+                    },
+                  "title" : "ArcGIS Hub Dataset"
+                },
+                {
+                  "urls" :
+                    {
+                      "application/json" : "https://services3.arcgis.com/htwAyZVXxOjjk33K/arcgis/rest/services/EEP2026/FeatureServer/98"
+                    },
+                  "title" : "ArcGIS GeoService"
+                },
+                {
+                  "urls" :
+                    {
+                      "text/csv" : "https://datosabiertos-corpocaldas.hub.arcgis.com/api/download/v1/items/77520e1e40e84ee2a00c8d1a78b91b4c/csv?layers=98"
+                    },
+                  "title" : "CSV"
+                },
+                {
+                  "urls" :
+                    {
+                      "application/zip" : "https://datosabiertos-corpocaldas.hub.arcgis.com/api/download/v1/items/77520e1e40e84ee2a00c8d1a78b91b4c/shapefile?layers=98"
+                    },
+                  "title" : "Shapefile"
+                },
+                {
+                  "urls" :
+                    {
+                      "application/vnd.geo+json" : "https://datosabiertos-corpocaldas.hub.arcgis.com/api/download/v1/items/77520e1e40e84ee2a00c8d1a78b91b4c/geojson?layers=98"
+                    },
+                  "title" : "GeoJSON"
+                },
+                {
+                  "urls" :
+                    {
+                      "application/vnd.google-earth.kml+xml" : "https://datosabiertos-corpocaldas.hub.arcgis.com/api/download/v1/items/77520e1e40e84ee2a00c8d1a78b91b4c/kml?layers=98"
+                    },
+                  "title" : "KML"
+                }
+              ],
+            "access_points" :
+              {
+                "text/html" : "https://datosabiertos-corpocaldas.hub.arcgis.com/datasets/CORPOCALDAS::retiro-hidrológico-pensilvania"
+              }
+          },
+        "permalink" : "https://www.datos.gov.co/d/222r-ymf3",
+        "link" : "https://www.datos.gov.co/dataset/Retiro-Hidrológico-Pensilvania/222r-ymf3",
+        "owner" :
+          {
+            "id" : "r4qn-dwdd",
+            "user_type" : "interactive",
+            "display_name" : "Ministerio de Tecnologías de la Información y las Comunicaciones - Datos Abiertos"
+          },
+        "creator" :
+          {
+            "id" : "r4qn-dwdd",
+            "user_type" : "interactive",
+            "display_name" : "Ministerio de Tecnologías de la Información y las Comunicaciones - Datos Abiertos"
+          }
+      },
+      {
+        "resource" :
+          {
+            "name" : "Compound 526563: 11,17-Dimethyltritriacontane",
+            "id" : "222u-53d2",
+            "resource_name" : null,
+            "parent_fxf" : [],
+            "description" : "Chemical compound data from PubChem database. IUPAC Name: 11,17-dimethyltritriacontane. Molecular Formula: C35H72. Molecular Weight: 492.9. This dataset contains comprehensive chemical information including structural data, physical properties, and biological activities. Useful for drug discovery, chemical research, and educational purposes.",
+            "attribution" : null,
+            "attribution_link" : null,
+            "contact_email" : "info@ncbi.nlm.nih.gov",
+            "type" : "href",
+            "updatedAt" : "2025-09-06T00:39:13.000Z",
+            "createdAt" : "2025-09-05T03:07:29.000Z",
+            "metadata_updated_at" : "2025-09-06T00:39:13.000Z",
+            "data_updated_at" : "2025-09-05T03:07:29.000Z",
+            "page_views" :
+              {
+                "page_views_last_week" : 1,
+                "page_views_last_month" : 1,
+                "page_views_total" : 12,
+                "page_views_last_week_log" : 1.0,
+                "page_views_last_month_log" : 1.0,
+                "page_views_total_log" : 3.700439718141092
+              },
+            "columns_name" : [],
+            "columns_field_name" : [],
+            "columns_datatype" : [],
+            "columns_description" : [],
+            "columns_format" : [],
+            "download_count" : 0,
+            "provenance" : "official",
+            "lens_view_type" : "href",
+            "lens_display_type" : "href",
+            "locked" : false,
+            "backend" : "not_a_dataset",
+            "blob_mime_type" : null,
+            "hide_from_data_json" : false,
+            "publication_date" : "2025-09-05T03:07:29.000Z"
+          },
+        "classification" :
+          {
+            "categories" : [],
+            "tags" : [],
+            "domain_category" : "NIH",
+            "domain_tags" :
+              [ "compound", "pubchem", "research", "science", "chemistry" ],
+            "domain_metadata" :
+              [
+                {
+                  "key" : "Archive_Archive-Repository",
+                  "value" : "https://healthdata.gov/d/sykd-jkuu"
+                },
+                { "key" : "DCAT-2.0_Type", "value" : "Other" },
+                { "key" : "DCAT-2.0_Owner", "value" : "PubChem" },
+                {
+                  "key" : "Common-Core_Asset-Type",
+                  "value" : "External Dataset Reference"
+                },
+                {
+                  "key" : "Common-Core_Contact-Email",
+                  "value" : "info@ncbi.nlm.nih.gov"
+                },
+                { "key" : "Common-Core_Program-Code", "value" : "009:066" },
+                {
+                  "key" : "Common-Core_Public-Access-Level",
+                  "value" : "public"
+                },
+                { "key" : "Common-Core_Source-System", "value" : "PubChem" },
+                {
+                  "key" : "Common-Core_Publisher",
+                  "value" : "National Center for Biotechnology Information (NCBI)"
+                },
+                { "key" : "Common-Core_Bureau-Code", "value" : "009:25" },
+                {
+                  "key" : "Common-Core_Contact-Name",
+                  "value" : "NIH/NCBI Data Team"
+                },
+                {
+                  "key" : "Harvest-Source_Harvest-Source-URI",
+                  "value" : "https://pubchem.ncbi.nlm.nih.gov/compound/526563"
+                },
+                {
+                  "key" : "Harvest-Source_Harvest-Source-Title",
+                  "value" : "pubchem.ncbi.nlm.nih.gov"
+                },
+                {
+                  "key" : "Harvest-Source_Last-Harvest-Performed",
+                  "value" : "2025-09-04T18:40:27.837578Z"
+                }
+              ]
+          },
+        "metadata" :
+          {
+            "domain" : "datahub.hhs.gov",
+            "additional_access_points" :
+              [
+                {
+                  "urls" :
+                    {
+                      "View Data Source" : "https://pubchem.ncbi.nlm.nih.gov/compound/526563"
+                    },
+                  "description" : "Access the complete Compound 526563: 11,17-Dimethyltritriacontane on the official website.",
+                  "title" : "Official Data Source"
+                }
+              ],
+            "access_points" :
+              {
+                "View Data Source" : "https://pubchem.ncbi.nlm.nih.gov/compound/526563"
+              }
+          },
+        "permalink" : "https://datahub.hhs.gov/d/222u-53d2",
+        "link" : "https://datahub.hhs.gov/NIH/Compound-526563-11-17-Dimethyltritriacontane/222u-53d2",
+        "owner" :
+          {
+            "id" : "7hn8-z2at",
+            "user_type" : "team",
+            "display_name" : "National Institute of Health (NIH)"
+          },
+        "creator" :
+          {
+            "id" : "7hn8-z2at",
+            "user_type" : "team",
+            "display_name" : "National Institute of Health (NIH)"
+          }
+      }
+    ],
+  "resultSetSize" : 10000,
+  "timings" : { "serviceMillis" : 38, "searchMillis" : [ 5, 15 ] },
+  "warnings" : []
+}

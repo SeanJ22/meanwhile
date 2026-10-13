@@ -8,6 +8,7 @@ import {
 import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ID, REGISTRATION_TARGETS } from "../registration/publication.ts";
 
 import { PLURAL_STATES, PLURAL_PARSER_VERSION, PLURAL_SOURCE_ID } from "../sources/plural/targets.ts";
+import { OPEN_DATA_SOURCES, OPEN_DATA_PARSER, OPEN_DATA_CLOCKS, SOCRATA_CATALOG, ECHO_EXPORT } from "../sources/open-data/model.ts";
 
 const HOUR = 60 * 60 * 1_000;
 const DAY = 24 * HOUR;
@@ -568,6 +569,19 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
   },
+  ...OPEN_DATA_SOURCES.map((sourceId): RoutineSourceContract => ({
+    id: sourceId, sourceId, recordClass: "CURATED_READER_RECORD", scope: `${sourceId}:national`,
+    acquisitionFailureDomain: `routine-source:${sourceId}`,
+    acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/open-data-refresh.mts", "--promote", `--source=${sourceId}`],
+      requestedUrl: sourceId === "socrata-discovery" ? SOCRATA_CATALOG : ECHO_EXPORT },
+    parserNormalizerVersion: OPEN_DATA_PARSER,
+    cadence: { description: sourceId === "socrata-discovery" ? "Daily Discovery catalog refresh; each dataset retains its publisher's own update dates and frequency" : "Weekly EPA ECHO Exporter publication", defaultEveryMs: OPEN_DATA_CLOCKS[sourceId] },
+    retry: { afterMs: HOUR, description: "Retry failed source acquisition in one hour, honoring provider Retry-After" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId }, validationContract: CHECKS, canonicalProductionStore: STORE,
+    readerProjection: { id: sourceId, consumers: ["government cards", "place cards", "Ask", "blanks loop", "Admin"] },
+    lkgBehavior: "Each domain, division and ZIP retains its last verified facts after a failed read. Unjoined rows are retained and counted. An unchanged source confirms a successful check.",
+    autoPromotable: true, classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: [],
+  })),
 ] as const;
 
 export function cadenceMsAt(contract: Pick<RoutineSourceContract, "cadence">, nowMs: number): number {

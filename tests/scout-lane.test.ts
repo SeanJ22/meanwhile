@@ -1375,9 +1375,9 @@ test("14. SEEDED (i): a repeated-prefix turn with zero cache-read tokens is reco
   assert.match(results3[0].cacheDefect?.detail ?? "", /STATIONARY-BREAKPOINT/);
 
   const third = requests[2];
-  assert.deepEqual(third.tools.at(-1)?.cache_control, { type: "ephemeral" }, "the last tool definition is a breakpoint");
+  assert.deepEqual(third.tools.at(-1)?.cache_control, { type: "ephemeral", ttl: "1h" }, "the last tool definition is a breakpoint");
   assert.equal(third.tools[0].cache_control, undefined, "only the last tool carries the marker");
-  assert.deepEqual(third.system[0].cache_control, { type: "ephemeral" });
+  assert.deepEqual(third.system[0].cache_control, { type: "ephemeral", ttl: "1h" });
   const markers = third.messages.flatMap((m) => (Array.isArray(m.content) ? (m.content as { cache_control?: unknown }[]).filter((b) => b.cache_control !== undefined) : []));
   assert.equal(markers.length, 0, "no message-level marker: the API places and moves the breakpoint from the top-level field");
   assert.deepEqual(third.cache_control, { type: "ephemeral" }, "the top-level moving breakpoint is on every turn's request");

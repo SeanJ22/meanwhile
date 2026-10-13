@@ -233,7 +233,7 @@ async function runLadder(input: {
   return { outcome, result: results[0] };
 }
 
-const turnUsd = (model: string, usage: Usage): number => priceMeteredUsage(model, readMeteredUsage(usage), "5m").usd ?? Number.NaN;
+const turnUsd = (model: string, usage: Usage): number => priceMeteredUsage(model, readMeteredUsage(usage), "1h").usd ?? Number.NaN;
 const close = (a: number | null | undefined, b: number): boolean => a !== null && a !== undefined && Math.abs(a - b) < 1e-12;
 
 test('a long Scout walks beyond the former turn, tool, token and wall limits until finished or the real budget refuses',async()=>{
@@ -266,8 +266,8 @@ test("L1: acquisition starts with Haiku, with adaptive thinking and the Scout's 
     assert.equal(request.model, HAIKU);
     assert.deepEqual(request.output_config, { effort: "medium" });
     assert.deepEqual(request.thinking, SCOUT_THINKING);
-    assert.deepEqual(request.tools.at(-1)?.cache_control, { type: "ephemeral" });
-    assert.deepEqual(request.system[0].cache_control, { type: "ephemeral" });
+    assert.deepEqual(request.tools.at(-1)?.cache_control, { type: "ephemeral", ttl: "1h" });
+    assert.deepEqual(request.system[0].cache_control, { type: "ephemeral", ttl: "1h" });
     assert.deepEqual(request.cache_control, { type: "ephemeral" });
     assert.deepEqual(cacheTtlOrderProblems(request), []);
   }
@@ -399,7 +399,7 @@ for (const c of REASON_CASES) {
     assert.match(lastUser, /ESCALATED: this investigation moves from claude-sonnet-5-5 to claude-opus-5-5 because/);
     for (const r of transport.requests.slice(firstOpus)) {
       assert.equal(r.model, OPUS);
-      assert.deepEqual(r.tools.at(-1)?.cache_control, { type: "ephemeral" }, "the frontier's requests keep the same breakpoints");
+      assert.deepEqual(r.tools.at(-1)?.cache_control, { type: "ephemeral", ttl: "1h" }, "the frontier's requests keep the same breakpoints");
       assert.deepEqual(r.cache_control, { type: "ephemeral" });
     }
     if (c.carried !== null) {

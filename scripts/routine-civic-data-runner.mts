@@ -948,6 +948,7 @@ function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
       ...(pending.kind === "MEETING_PARTITION" ? meetingChildAttestations : {}),
     },
     // Behind WTP_MEETING_LANES: a host that goes quiet pauses its own read early.
+    ...(pending.task.childTimeoutMs === undefined ? {} : { timeoutMs: pending.task.childTimeoutMs }),
     ...(pending.kind === "MEETING_PARTITION" && meetingReadQuietMs() !== undefined ? { timeoutMs: meetingReadQuietMs()! } : {}),
   };
 }

@@ -759,7 +759,8 @@ export async function recordCost(
   entry: CostEntry,
   now: string,
 ): Promise<AppendOutcome<CostEntry>> {
-  const recorded = costEntryWithModel(entry, entry.model ?? null);
+  const recorded = costEntryWithModel({ ...entry,
+    ...(entry.cost.modelRequestCount === undefined ? {} : { costPolicy: "R7" as const }) }, entry.model ?? null);
   const appended = await repos.costs.append(entry.workItemId, costRecordId(entry), recorded, now);
   await countCharge(repos, recorded, now);
   return appended;

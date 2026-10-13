@@ -62,8 +62,8 @@ test("PC-7: the pre-warm request is the Attempts' static prefix with max_tokens 
   assert.deepEqual(request.thinking, SCOUT_THINKING, "the same thinking setting the Attempts send; it is rendered into the prompt too");
   assert.equal(JSON.stringify(request.tools), JSON.stringify(prefix.tools), "byte-identical tools");
   assert.equal(JSON.stringify(request.system), JSON.stringify(prefix.system), "byte-identical system");
-  assert.deepEqual(request.system.at(-1)?.cache_control, { type: "ephemeral" }, "the breakpoint is on the system block");
-  assert.deepEqual(request.tools.at(-1)?.cache_control, { type: "ephemeral" });
+  assert.deepEqual(request.system.at(-1)?.cache_control, { type: "ephemeral", ttl: "1h" }, "the breakpoint is on the system block");
+  assert.deepEqual(request.tools.at(-1)?.cache_control, { type: "ephemeral", ttl: "1h" });
   const placeholder = request.messages[0].content as { type: string; text: string; cache_control?: unknown }[];
   assert.equal(placeholder.length, 1);
   assert.equal(placeholder[0].text, SCOUT_PREWARM_PLACEHOLDER);
@@ -84,7 +84,7 @@ test("PC-7 search on (2026-09-25): the pre-warm warms the prefix the Attempts ac
     now: () => NOW, inherited: { artifactIds: [], summary: "" }, openOne: async () => { throw new Error("no network in this test"); },
   } as unknown as ScoutToolContext;
   const kit = buildScoutToolkit({ ...ctx, search: searchSeam as never });
-  assert.deepEqual(kit.specs.map((s) => s.name), [...SCOUT_TOOL_SPECS, ...SOURCE_API_SPECS, SEARCH_TOOL_SPEC].map((s) => s.name), "search on: the Attempts offer the search tool");
+  assert.deepEqual(kit.specs.map((s) => s.name), scoutToolSpecsFor(true).map((s) => s.name), "search on: the Attempts offer the search tool");
   assert.equal(JSON.stringify(kit.specs), JSON.stringify(scoutToolSpecsFor(true)), "the toolkit and the pre-warm read one answer");
   assert.equal(JSON.stringify(buildScoutToolkit(ctx).specs), JSON.stringify(scoutToolSpecsFor(false)));
 
@@ -139,7 +139,7 @@ test("PC-6: the TTL decision is the measured 5 minutes, and a 1h marker after a 
   const input = { playbook: rolePlaybook(playbookRows, "SCOUT").text, model: MODELS.opus.model, effort: "medium" as const, toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS };
   const good = scoutPrewarmRequest(input);
   /* A 1h system marker with a 5m tool marker before it: exactly the planted request the API refused. */
-  const planted: ModelRequest = { ...good, system: good.system.map((s) => ({ ...s, cache_control: { type: "ephemeral", ttl: "1h" } })) };
+  const planted: ModelRequest = { ...good, tools: good.tools.map(t => t.cache_control ? { ...t, cache_control: { type: "ephemeral" } } : t), system: good.system.map((s) => ({ ...s, cache_control: { type: "ephemeral", ttl: "1h" } })) };
   const problems = cacheTtlOrderProblems(planted);
   assert.equal(problems.length, 1);
   assert.match(problems[0], /system\[0\]: a ttl='1h' cache_control block must not come after the ttl='5m' block at tools\[\d+\]/);
@@ -153,7 +153,7 @@ test("PC-6: the TTL decision is the measured 5 minutes, and a 1h marker after a 
   };
   assert.deepEqual(cacheTtlOrderProblems(lawful), []);
   /* A 1h marker in the messages after a 5m system marker is refused too. */
-  const late: ModelRequest = { ...good, messages: [{ role: "user", content: [{ type: "text", text: "warmup", cache_control: { type: "ephemeral", ttl: "1h" } }] }] };
+  const late: ModelRequest = { ...good, system: good.system.map(s => ({ ...s, cache_control: { type: "ephemeral" } })), messages: [{ role: "user", content: [{ type: "text", text: "warmup", cache_control: { type: "ephemeral", ttl: "1h" } }] }] };
   assert.match(cacheTtlOrderProblems(late)[0], /messages\[0\]\.content\[0\]/);
   /* The provider's limit of four markers is refused by name. */
   const five: ModelRequest = { ...lawful, cache_control: { type: "ephemeral" }, messages: [{ role: "user", content: [{ type: "text", text: "a", cache_control: { type: "ephemeral" } }, { type: "text", text: "b", cache_control: { type: "ephemeral" } }] }] };

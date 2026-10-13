@@ -440,7 +440,7 @@ const fakeSearch = (hits: { url: string; title: string; provider: "brave" | "exa
 test("search is offered ONLY when a search seam is configured (inert without a key)", () => {
   const open = fakeTransport({}).open;
   const without = buildScoutToolkit(context({ openOne: open }));
-  assert.ok(!without.specs.some((s) => s.name === "search"), "no key -> the search tool is not in the specs at all");
+  assert.ok(without.specs.some((s) => s.name === "search"), "the stable prefix retains search; its existing unavailable seam refuses calls");
   const withSearch = buildScoutToolkit(context({ openOne: open, search: fakeSearch([]) }));
   assert.ok(withSearch.specs.some((s) => s.name === "search"), "a seam -> search is offered");
 });

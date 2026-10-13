@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 
 import { periodDays } from "@/lib/control-plane/admin-view/periods.ts";
 import { dailyRows, moneySummary } from "@/lib/control-plane/admin-view/spend-period.ts";
+import type { ModelSpendView } from "@/lib/control-plane/admin-view/model-spend.ts";
 
 import { useV6 } from "./context.tsx";
 import { mst, usd, type Hunt } from "./model.ts";
@@ -18,6 +19,38 @@ const zipOf = (placeKey: string) => /\.zcta\.(\d{5})$/.exec(placeKey)?.[1] ?? DA
 const TOP = 10;
 const gigabytes = (bytes: number | null) => (bytes === null ? DASH : `${(bytes / 1e9).toFixed(2)} GB`);
 const dayWords = (day: string) => new Date(`${day}T12:00:00Z`).toLocaleDateString("en-US", { timeZone: "UTC", month: "short", day: "numeric" });
+const percent = (n: number | null) => n === null ? DASH : `${(n * 100).toFixed(1)}%`;
+const roleWords = (role: string) => ({ ADVERSARIAL_AUDITOR: "Auditor", PARSER: "Page reader", MEASURE_WRITER: "Translator", MEASURE_CHECKER: "Translation checker", ASK: "Ask" }[role]
+  ?? role.toLowerCase().replaceAll("_", " ").replace(/^./, char => char.toUpperCase()));
+
+export function ModelSpendPanel({ view, days }: { view: ModelSpendView | null; days: readonly string[] }) {
+  const [comparison, setComparison] = useState(false);
+  const [all, setAll] = useState(false);
+  const rows = view === null ? [] : comparison
+    ? [...view.before.map(row => ({ ...row, label: "Before" })), ...view.after.map(row => ({ ...row, label: "After" }))]
+    : view.days.filter(row => days.includes(row.day)).map(row => ({ ...row, label: dayWords(row.day) }));
+  const shown = all ? rows : rows.slice(0, TOP);
+  return <Card title="Model spend" aside={<button type="button" className={s.btn} aria-pressed={comparison}
+    onClick={() => { setComparison(!comparison); setAll(false); }}>{comparison ? "By day" : "Before and after"}</button>}>
+    <p className={cx(s.p, s.small)}>{comparison
+      ? view?.changedAt ? `24 hours before and after ${mst(view.changedAt)} · ${view.comparison === "complete" ? "Both windows complete" : `Collecting through ${mst(view.afterThrough!)}`}` : "Waiting for the first production charge with the new savings settings."
+      : "Daily totals in Eastern time. Cost per live fact uses new or updated reader records that day."}</p>
+    {view === null || rows.length === 0 ? <p className={cx(s.p, s.small)}>{DASH}</p> : <>
+      <div className={s.tableWrap}><table className={s.table}>
+        <thead><tr>{[comparison ? "Window" : "Day", "Role", "Dollars", "Calls", "Cache hits", "Cache writes", "1-hour cache tokens", "Cache writes / job", "Batch / eligible", "Saved vs list price", "Cost / live fact"].map(label => <th key={label} scope="col">{label}</th>)}</tr></thead>
+        <tbody>{shown.map((row, i) => <tr key={`${row.label}:${row.role}:${i}`}>
+          <th scope="row">{row.label}</th><td>{roleWords(row.role)}</td><td className={s.num}>{money(row.dollars)}</td>
+          <td className={s.num}>{row.calls?.toLocaleString() ?? DASH}</td><td className={s.num}>{percent(row.cacheHitShare)}</td>
+          <td className={s.num}>{percent(row.cacheWriteShare)}</td><td className={s.num}>{row.hourCacheTokens?.toLocaleString() ?? DASH}</td>
+          <td className={s.num}>{row.cacheWritesPerJob === null ? DASH : Math.round(row.cacheWritesPerJob).toLocaleString()}</td>
+          <td className={s.num} title={row.eligibleCalls === null || row.batchedCalls === null ? undefined : `${row.batchedCalls} of ${row.eligibleCalls} eligible calls`}>{percent(row.batchShare)}</td>
+          <td className={s.num}>{money(row.savedDollars)}</td><td className={s.num}>{row.costPerLiveFact === null ? DASH : `$${row.costPerLiveFact.toFixed(4)}`}</td>
+        </tr>)}</tbody>
+      </table></div>
+      {rows.length > TOP && <button type="button" className={s.btn} aria-expanded={all} onClick={() => setAll(!all)}>{all ? `Show the latest ${TOP}` : `Show all ${rows.length}`}</button>}
+    </>}
+  </Card>;
+}
 
 type SortKey = "zip" | "place" | "spent" | "held" | "limit" | "status";
 const COLUMNS: readonly { readonly key: SortKey; readonly label: string; readonly num: boolean }[] = [
@@ -136,6 +169,8 @@ export function MoneyScreen() {
           </>
         )}
       </Card>
+
+      <ModelSpendPanel view={spendData?.modelSpend ?? null} days={days.map(day => day.day)} />
 
       <Card title={by === "hunt" ? "Hunts" : "Days"} aside={switcher}>
         {by === "day" ? (days.length === 0 ? <p className={cx(s.p, s.small)}>{DASH}</p> : (

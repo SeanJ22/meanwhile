@@ -11,6 +11,7 @@ import { linkingPageFrom, section3Page } from "../control-plane/promotion/sectio
 
 /** Called inside an admitted worker with that worker's Fleet/area transport. */
 export async function runMeasureTranslation(input: {
+  readonly batchPriority?: import("../control-plane/model-batch.ts").BatchPriority;
   readonly repos: MeasureTranslationRepos;
   readonly store: RoutineDataStore;
   readonly subject: Parameters<typeof translateMeasure>[0]["subject"];
@@ -38,8 +39,8 @@ export async function runMeasureTranslation(input: {
         const send = input.transportFor(subject);
         return async request => {
           const response = await send(request);
-          const metered = readMeteredUsage(response.usage);
-          usage.push({ model: response.model, usage: metered, usd: priceMeteredUsage(response.model, metered, "5m").usd });
+          const metered = readMeteredUsage(response.usage, response.batch === true);
+          usage.push({ model: response.model, usage: metered, usd: priceMeteredUsage(response.model, metered, "1h").usd });
           return response;
         };
       } });

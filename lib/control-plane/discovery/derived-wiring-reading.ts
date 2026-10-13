@@ -1,17 +1,4 @@
-/**
- * The derived wiring's own reading of a held calendar through the family's
- * adapter, with the row's reviewed filter. The adapter is served the held bytes
- * for the row's route and a 404 for anything else. The venue-resolutions
- * projection (`lib/meetings/venue-cache.ts`) is read first; a store that cannot
- * answer refuses the whole reading.
- *
- * - `verified`: the filter selects this body's sittings and none names another reviewed body;
- * - `changed`: the held bytes are no longer such a calendar, or the filter selects none of them
- *   (`ZeroRowExtractionError` or no matching sittings): CALENDAR_CHANGED, a review trigger;
- * - `wrongAttribution`: a selected sitting names another reviewed body;
- * - `refused`: no event to read, or any other adapter throw. That is ours, never evidence about
- *   the calendar: ADAPTER_REFUSED, no review triggered.
- */
+
 
 import { refreshVenueResolutionsFromPromoted } from "../../civic-data/curated-reader-read-model.ts";
 import type { AdapterVerification, DerivedInputRef } from "../../civic-data/derived-authority.ts";
@@ -25,6 +12,7 @@ import { makeDiligentSource } from "../../sources/diligent/index.ts";
 import { makeBoardBookSource } from "../../sources/boardbook/index.ts";
 import { makeBoardDocsSource } from "../../sources/boarddocs/index.ts";
 import { makeCivicPlusSource } from "../../sources/civicplus/index.ts";
+import { makeEscribeSource } from "../../sources/escribe/index.ts";
 import { makeCivicClerkSource } from "../../sources/civicclerk/index.ts";
 import { makeIqm2Source } from "../../sources/iqm2/index.ts";
 import { normalizeWithDrops as normalizeLegistar } from "../../sources/legistar/index.ts";
@@ -55,20 +43,12 @@ export type HeldCalendarReadings =
 
 const message = (error: unknown): string => (error instanceof Error ? error.message : String(error));
 
-/**
- * What an adapter's throw says about a held calendar. Its zero-row extraction is the publisher's calendar selecting
- * nothing for the reviewed filter: CALENDAR_CHANGED. Anything else is ours: ADAPTER_REFUSED, no review triggered.
- */
 export function adapterThrowVerification(error: unknown, route: string): WiringVerification {
   return error instanceof ZeroRowExtractionError
     ? { changed: `the reviewed filter selects none of ${route}'s events: ${error.message}` }
     : { refused: `the adapter could not read ${route}: ${message(error)}` };
 }
 
-/**
- * Read every held calendar. The Reader projections the adapters resolve through are read first, so no adapter
- * reading ever runs against an unread projection.
- */
 export async function readHeldCalendars(input: {
   readonly options: PromotedCivicDataReadOptions;
   readonly now: string;
@@ -114,11 +94,13 @@ async function readOne(reading: HeldCalendarReading, now: string, adapterDigest:
       const ownEvents = events.filter(event => event.EventBodyId === clients[0]?.eventBodyId);
       meetings = normalizeLegistar(ownEvents.map(event => ({ event, slug: wiring.config.slug,
         collectedAt: reading.evidence.retrievedAt, items: [] })), new Date(now), clients).meetings;
-    } else if (["CIVICPLUS", "CIVICCLERK", "BOARDBOOK", "BOARDDOCS", "IQM2"].includes(row.kind)) {
+    } else if (["CIVICPLUS", "CIVICCLERK", "BOARDBOOK", "BOARDDOCS", "IQM2", "ESCRIBE"].includes(row.kind)) {
       // The exact retained route is the adapter's input. Running its fetch
       // here would ask for additional URLs whose bytes were never vaulted.
       const collectedAt = reading.evidence.retrievedAt;
-      if (row.kind === "CIVICPLUS") {
+      if (row.kind === "ESCRIBE") {
+        meetings = makeEscribeSource([wiring]).normalizeWithDrops([{ wiring, text, collectedAt }], new Date(now)).meetings;
+      } else if (row.kind === "CIVICPLUS") {
         meetings = makeCivicPlusSource([wiring]).normalizeWithDrops([{ wiring, ical: "", agendaCenter: text, collectedAt }], new Date(now)).meetings;
       } else if (row.kind === "CIVICCLERK") {
         const events = JSON.parse(text)?.value;

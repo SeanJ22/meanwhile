@@ -9,6 +9,8 @@ import {
 import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ID, REGISTRATION_TARGETS } from "../registration/publication.ts";
 
 import { PLURAL_STATES, PLURAL_PARSER_VERSION, PLURAL_SOURCE_ID } from "../sources/plural/targets.ts";
+import { GOOGLE_CIVIC_SOURCE_ID, GOOGLE_CIVIC_SCOPE, GOOGLE_CIVIC_PARSER_VERSION } from "../sources/google-civic/targets.ts";
+import { PEOPLE_SOURCE_CONTRACTS } from "./people-source-contracts.ts";
 import { OPEN_DATA_SOURCES, OPEN_DATA_PARSER, OPEN_DATA_CLOCKS, SOCRATA_CATALOG, ECHO_EXPORT } from "../sources/open-data/model.ts";
 
 const HOUR = 60 * 60 * 1_000;
@@ -131,6 +133,8 @@ export interface RoutineSourceContract {
   };
   readonly lkgBehavior: string;
   readonly autoPromotable: boolean;
+  /** Zero keeps finite standing work alive; its individual requests still have transport deadlines. */
+  readonly childTimeoutMs?: number;
   /**
    * A fan-out contract owns a scope family: its per-state marker at `scope`
    * plus one bounded per-member candidate at `<sourceId>:<officeholderId>`. The
@@ -589,6 +593,24 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
   },
+  {
+    id: GOOGLE_CIVIC_SOURCE_ID,
+    sourceId: GOOGLE_CIVIC_SOURCE_ID,
+    recordClass: "GOOGLE_CIVIC_VOTERINFO",
+    scope: GOOGLE_CIVIC_SCOPE,
+    acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/google-civic-refresh.mts", "--promote"] },
+    parserNormalizerVersion: GOOGLE_CIVIC_PARSER_VERSION,
+    cadence: { description: "daily elections-catalog checks through November 3; weekly outside the election window; voterinfo only on an explicit reader fallback where official sources are absent", defaultEveryMs: 7 * DAY,
+      phases: [{ through: "2026-11-04T00:00:00.000Z", everyMs: DAY, description: "daily through the November 3 election" }] },
+    retry: { afterMs: HOUR, description: "one hour after source failure; honor provider Retry-After" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: GOOGLE_CIVIC_SOURCE_ID },
+    validationContract: CHECKS, canonicalProductionStore: STORE,
+    readerProjection: { id: "google-civic-voterinfo", consumers: ["ballot", "voting-sites", "Admin"] },
+    lkgBehavior: "Failed catalog reads retain the prior catalog. Reader voterinfo is transient, explicitly requested only where official voting sources are absent; held source observations remain separate from official lists.",
+    autoPromotable: true, fanOut: true, classification: "RUNTIME_CIVIC_DATA",
+    bootstrapFixturePaths: ["tests/fixtures/google-civic/elections.json", "tests/fixtures/google-civic/az-voterinfo.json", "tests/fixtures/google-civic/mi-voterinfo.json", "tests/fixtures/google-civic/va-voterinfo.json"],
+  },
+  ...PEOPLE_SOURCE_CONTRACTS,
   ...OPEN_DATA_SOURCES.map((sourceId): RoutineSourceContract => ({
     id: sourceId, sourceId, recordClass: "CURATED_READER_RECORD", scope: `${sourceId}:national`,
     acquisitionFailureDomain: `routine-source:${sourceId}`,

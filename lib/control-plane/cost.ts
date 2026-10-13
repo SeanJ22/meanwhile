@@ -92,6 +92,7 @@ export function cacheMeteringOf(cost: AttemptCost): CacheMetering {
 }
 
 export interface CostEntry {
+  readonly costPolicy?: "R7";
   /** Absent only on older rows. Null is plain code or an unreported model. */
   readonly model?: string | null;
   readonly tier?: ModelTier | "none" | null;
@@ -113,7 +114,7 @@ export interface CostEntry {
   /** OCD id or equivalent. Null when the work spans jurisdictions. */
   readonly jurisdiction: string | null;
   readonly project: string;
-  readonly role: WorkerRole | "ASK";
+  readonly role: WorkerRole | "ASK" | "TRANSLATOR" | "TRANSLATION_CHECKER";
   readonly cost: AttemptCost;
   /** Caller-supplied ISO stamp. This module never reads a clock. */
   readonly recordedAt: string;
@@ -222,6 +223,10 @@ export function costEntryWorstCaseUsd(entry: CostEntry): number {
 
 /** One model's part of a charge (`CostEntry.byModel`): the billed quantities of the requests sent to it. */
 export interface CostModelShare {
+  readonly listPriceUsd?: number | null;
+  readonly batch?: boolean;
+  readonly batchEligibleRequestCount?: number | null;
+  readonly batchRequestCount?: number | null;
   readonly model: string;
   readonly tier?: ModelTier | null;
   /** Model requests (provider turns) sent to this model. */
@@ -288,6 +293,11 @@ export function costPortionsByModel<E extends Pick<CostEntry, "byModel" | "cost"
       ...entry,
       cost: {
         ...entry.cost,
+        ...(s.batch === undefined ? {} : { batch: s.batch }),
+        modelRequestCount: s.requestCount,
+        listPriceUsd: s.listPriceUsd ?? null,
+        batchEligibleRequestCount: s.batchEligibleRequestCount ?? null,
+        batchRequestCount: s.batchRequestCount ?? (s.batch === undefined ? null : s.batch ? s.requestCount : 0),
         usd: s.usd,
         inputTokens: s.inputTokens,
         outputTokens: s.outputTokens,

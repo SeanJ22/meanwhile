@@ -8,7 +8,7 @@ import { assertStepMayInvokeModel, MODEL_FOR_CLASS } from "../scheduler/model-ro
 import { readCompletedWorkerResult } from "../repository/worker-completion.ts";
 import { nextAuditEscalation } from "./audit-escalation.ts";
 import { ceilingPermits, RESEARCH_BOUNDS, researchSpendInWindow } from "../scheduler/research-policy.ts";
-import { anthropicTransport, type ModelRequest, type ModelResponse, type ModelTransport } from "../scheduler/scout-executor.ts";
+import { anthropicTransport, modelRequestAccounting, type ModelRequest, type ModelResponse, type ModelTransport } from "../scheduler/scout-executor.ts";
 import type { FleetRuntime } from "./runtime.ts";
 import type { IndependentAuditContext, WorkerEvidence, WorkerResultRecord, RecordExtractionShape } from "./types.ts";
 import { SendBudgetRefusal } from "../expansion/spend-holds.ts";
@@ -39,7 +39,7 @@ const RECORD_AUDIT = {
       } },
     },
   },
-  cache_control: { type: "ephemeral" as const },
+  cache_control: { type: "ephemeral" as const, ttl: "1h" as const },
 };
 
 /** The provider call ends on its response or failure, without an attempt clock. */
@@ -242,7 +242,7 @@ export function modelAuditReasoner(repos: ControlPlaneRepositories, transport: M
     }
     const request: ModelRequest = { model: route.model, max_tokens: 2_048,
       output_config: { effort: route.effort },
-      system: [{ type: "text", text: workerSystemPrompt("AUDITOR", (await readRolePlaybook(repos, "AUDITOR")).text), cache_control: { type: "ephemeral" } }], tools: [RECORD_AUDIT],
+      system: [{ type: "text", text: workerSystemPrompt("AUDITOR", (await readRolePlaybook(repos, "AUDITOR")).text), cache_control: { type: "ephemeral", ttl: "1h" } }], tools: [RECORD_AUDIT],
       tool_choice: { type: "auto" },
       messages: [{ role: "user", content: body }] };
     const send = options.transportFor === undefined ? transport
@@ -274,6 +274,6 @@ export function modelAuditReasoner(repos: ControlPlaneRepositories, transport: M
     return { review: { step: "adversarial-audit", model: response.model, effort: route.effort, contextHash: contentHash(body),
       ...(escalation ? { escalation: { ...escalation, at: now() } } : {}),
       verdict, challenges, validationError, responseText, elapsedMs: Math.round(performance.now() - started) },
-      usage, usd: priceMeteredUsage(response.model, metered, "5m").usd, metering: meteredCostFields(metered) };
+      usage, usd: priceMeteredUsage(response.model, metered, "1h").usd, metering: { ...meteredCostFields(metered), ...modelRequestAccounting(response) } };
   } };
 }

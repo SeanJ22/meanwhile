@@ -84,6 +84,21 @@ test("the original 85635 hunt keeps its exact $50 lifetime accounting: spent, se
   assert.ok(section.missingParts.some(p => /running .* not published/.test(p)));
 });
 
+test("DS-03: a paid-work or runner pause the owner set marks every hunt Paused, with when and the owner's words", () => {
+  const at = (requestedAt: string, note: string | null = null) => ({ requestedAt, note });
+  const paused = envelope(hunts("geo:az.zcta.85635", { pauses: { PAUSE: at("2026-10-12T21:40:00.000Z", "Holding spend"), RESUME: at("2026-10-10T12:00:00.000Z"), PAUSE_RUNNER: null, RESUME_RUNNER: null } }));
+  assert.equal(paused.data[0].status, "paused");
+  assert.deepEqual(paused.data[0].pause, { kind: "paid-work", since: "2026-10-12T21:40:00.000Z", note: "Holding spend" });
+  assert.ok(!paused.missingParts.some(p => /running .* not published/.test(p)), "a pause in force is known, not unreported");
+  const runner = envelope(hunts("geo:az.zcta.85635", { pauses: { PAUSE: at("2026-10-12T21:40:00.000Z"), RESUME: null, PAUSE_RUNNER: at("2026-10-13T01:00:00.000Z", "Deploy"), RESUME_RUNNER: null } }));
+  assert.equal(runner.data[0].pause?.kind, "runner", "a runner pause stops everything, so it is the one said");
+  const resumed = envelope(hunts("geo:az.zcta.85635", { pauses: { PAUSE: at("2026-10-10T12:00:00.000Z"), RESUME: at("2026-10-12T21:40:00.000Z"), PAUSE_RUNNER: null, RESUME_RUNNER: null } }));
+  assert.equal(resumed.data[0].status, "unreported");
+  assert.equal(resumed.data[0].pause, null);
+  const unread = envelope(hunts("geo:az.zcta.85635", { pauses: null }));
+  assert.ok(unread.missingParts.some(p => /paused paid work or the runner could not be read/.test(p)), "an unread pause log is said, never read as running");
+});
+
 test("a limit edit carries the same hunt forward; a new receipt or a key-only legacy row is not this hunt's accounting", () => {
   const edited = { ...ORIGINAL, budgetUsd: 60, latestDecisionReceiptId: "expansion.scope.set:scope:85635:limit-edit", decidedAt: NOW };
   const h = envelope(hunts("us", { scopes: [edited] })).data[0];

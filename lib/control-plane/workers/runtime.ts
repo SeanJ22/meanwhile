@@ -72,7 +72,7 @@ export interface FleetRuntime {
     readonly review: (context: IndependentAuditContext, attemptId: string, escalation?: WorkerTaskSpec["auditEscalation"]) => Promise<{
       review: NonNullable<WorkerResultRecord["modelReview"]>; usage: WorkerUsage; usd: number | null;
       /** The provider's usage-block metering fields. Absent from an older reasoner: the row reads UNREPORTED. */
-      metering?: Pick<AttemptCost, "cacheReadInputTokens" | "cacheCreationInputTokens" | "cacheCreation5mInputTokens" | "cacheCreation1hInputTokens" | "uncachedInputTokens" | "batch">;
+      metering?: Pick<AttemptCost, "cacheReadInputTokens" | "cacheCreationInputTokens" | "cacheCreation5mInputTokens" | "cacheCreation1hInputTokens" | "uncachedInputTokens" | "batch" | "modelRequestCount" | "batchRequestCount" | "batchEligibleRequestCount" | "listPriceUsd">;
     }>;
   };
 }
@@ -200,7 +200,14 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
     const usage = model?.usage ?? parsed?.usage ?? NULL_USAGE;
     // `inputTokens` on the cost row is the whole prompt (uncached remainder plus cache
     // reads and writes); the worker usage's `inputTokens` is the uncached remainder only.
-    const cost = { ...ZERO_COST, durationMs, inputTokens: wholePrompt(usage), outputTokens: usage.outputTokens, usd: model?.usd ?? parsed?.usd ?? null, requestCount: parsed?.review.byModel?.reduce((n,s)=>n+s.requestCount,0) ?? (model || parsed ? 1 : 0), ...(model?.metering ?? parsed?.metering ?? {}) };
+    const shares = parsed?.review.byModel;
+    const batchAccounting = shares ? {
+      listPriceUsd: shares.some(s => s.listPriceUsd == null) ? null : shares.reduce((n, s) => n + s.listPriceUsd!, 0),
+      modelRequestCount: shares.reduce((n, s) => n + s.requestCount, 0),
+      batchRequestCount: shares.some(s => s.batchRequestCount == null) ? null : shares.reduce((n, s) => n + s.batchRequestCount!, 0),
+      batchEligibleRequestCount: shares.some(s => s.batchEligibleRequestCount == null) ? null : shares.reduce((n, s) => n + s.batchEligibleRequestCount!, 0),
+    } : {};
+    const cost = { ...ZERO_COST, durationMs, inputTokens: wholePrompt(usage), outputTokens: usage.outputTokens, usd: model?.usd ?? parsed?.usd ?? null, requestCount: shares?.reduce((n,s)=>n+s.requestCount,0) ?? (model || parsed ? 1 : 0), ...(model?.metering ?? parsed?.metering ?? {}), ...batchAccounting };
     const workerResult: UncommittedWorkerResult = { id: `wr-${fingerprint([attemptId])}`, schemaVersion: 1,
       workItemId, routeTaskId, attemptId, worker, grant, methodVersion: attempt.methodVersion, policyVersion: attempt.policyVersion,
       startedAt: attempt.startedAt, endedAt: now(), executionMode: assisted ? "MODEL_ASSISTED" : "DETERMINISTIC", cost, usage,

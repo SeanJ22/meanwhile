@@ -1,0 +1,180 @@
+{
+  "capturedAt": "2026-10-13",
+  "captureMethod": "Direct browser opens and clicks from the FEC-listed official chief election pages; no search engine. Original HTTP response bytes could not be downloaded because the workspace proxy was unreachable. These are explicitly labeled factual extracts and transformations, never claimed as original network bytes.",
+  "fixtures": [
+    {
+      "file": "nc-early-voting-2026-excerpt.tsv",
+      "publisher": "North Carolina State Board of Elections",
+      "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+      "chain": [
+        "https://www.ncsbe.gov/",
+        "https://vt.ncsbe.gov/EVSite/"
+      ],
+      "representation": "First 136 tab-delimited source rows returned by browser text extraction. Only L<number>: prefixes removed; original headerless tab cells and BOM retained. Source has 6,273 rows; this is an excerpt, not a full statewide download or polling-place CSV.",
+      "rows": 136,
+      "sites": 8,
+      "kind": "EARLY_VOTING"
+    },
+    {
+      "file": "nd-2026-official-tables.html",
+      "publisher": "North Dakota Secretary of State",
+      "url": "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+      "chain": [
+        "http://sos.nd.gov/elections",
+        "https://www.sos.nd.gov/elections/voter/elections-currentpast"
+      ],
+      "representation": "Semantic HTML reconstructed from actual rendered table headings and cells. HTML tags were created locally; these are not original response bytes. First visible page of each site table: 10 polling places, 10 drop boxes, 10 early-voting locations, and 10 precinct assignments. Publisher pagination remains owed.",
+      "rows": 40,
+      "sitesByKind": {
+        "ELECTION_DAY": 10,
+        "DROP_BOX": 10,
+        "EARLY_VOTING": 10
+      },
+      "reportedFullTableRows": {
+        "pollingPlaces": 167,
+        "dropBoxes": 64,
+        "earlyVoting": 16,
+        "precinctAssignments": 1483
+      }
+    },
+    {
+      "file": "voterfocus-okaloosa-official-extract.txt",
+      "publisher": "Okaloosa County Supervisor of Elections",
+      "url": "https://www.voterfocus.com/PrecinctFinder/precinctDirectory?county=FL-OKA",
+      "chain": [
+        "https://dos.myflorida.com/elections/",
+        "https://dos.elections.myflorida.com/supervisors/",
+        "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=OKA",
+        "https://www.voteokaloosa.gov/",
+        "https://www.voteokaloosa.gov/voters/where-to-vote-in-person/",
+        "https://www.voterfocus.com/findmyprecinct/pflookup.html?county=oka"
+      ],
+      "representation": "Browser-extracted page text; L<number>: prefixes removed. All 52 precinct entries. Publisher warns normal polling locations may differ for a specific election; 2026 applicability remains an open blank.",
+      "rows": 52
+    },
+    {
+      "file": "voterfocus-bradford-official-extract.txt",
+      "publisher": "Bradford County Supervisor of Elections",
+      "url": "https://www.voterfocus.com/PrecinctFinder/precinctDirectory?county=FL-BRA",
+      "chain": [
+        "https://dos.myflorida.com/elections/",
+        "https://dos.elections.myflorida.com/supervisors/",
+        "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=BRA",
+        "https://www.votebradfordfl.gov/",
+        "https://www.votebradfordfl.gov/voter/polling_locations.php",
+        "https://www.voterfocus.com/findmyprecinct/pflookup.html?county=BRA"
+      ],
+      "representation": "Browser-extracted page text; L<number>: prefixes removed. All 13 precinct entries. The county's separate list differs for precinct 11: 5784 Navarre Ave versus vendor 10813 SW County Road 18. Preserve conflict for official change-notice review and do not claim a settled 2026 assigned location.",
+      "rows": 13
+    },
+    {
+      "file": "voterfocus-okaloosa-normalized.json",
+      "sourceFixture": "voterfocus-okaloosa-official-extract.txt",
+      "representation": "Precinct number, name, and address normalized directly from the factual extracted source rows; not vendor JSON."
+    },
+    {
+      "file": "voterfocus-bradford-normalized.json",
+      "sourceFixture": "voterfocus-bradford-official-extract.txt",
+      "representation": "Precinct number, name, and address normalized directly from the factual extracted source rows; not vendor JSON."
+    },
+    {
+      "file": "tx-el-paso-vote-centers-official-extract.txt",
+      "publisher": "El Paso County Elections Department",
+      "url": "https://epcountyvotestx.gov/voter-information/election-day-vote-centers",
+      "chain": [
+        "https://www.sos.state.tx.us/elections/index.shtml",
+        "https://www.votetexas.gov/",
+        "https://www.votetexas.gov/voting/where.html",
+        "https://www.sos.state.tx.us/elections/voter/county.shtml",
+        "https://www.sos.state.tx.us/elections/voter/links.shtml",
+        "https://epcountyvotes.com/",
+        "https://epcountyvotestx.gov/"
+      ],
+      "representation": "First 201 lines of actual browser-extracted page text (source has 826 lines). The official page labels November 2026 General & Special Election and November 3; all vote centers 7 a.m.–7 p.m. An excerpt, not a complete county import.",
+      "rows": 17,
+      "kind": "VOTE_CENTER"
+    },
+    {
+      "file": "tx-identity-locked-lookup.json",
+      "publisher": "Texas Secretary of State",
+      "url": "https://www.votetexas.gov/voting/where.html",
+      "representation": "Official identity requirements normalized as data. Lookup itself never submitted."
+    },
+    {
+      "file": "al-absentee-return-rule.json",
+      "publisher": "Alabama Secretary of State",
+      "url": "https://www.sos.alabama.gov/alabama-votes/voter/absentee-voting",
+      "chain": [
+        "https://www.sos.alabama.gov/alabama-votes"
+      ],
+      "representation": "Official exhaustive legal return methods and deadlines normalized as rules. Exclusion of unattended drop boxes follows its exhaustive list; the page does not use the words no drop boxes."
+    },
+    {
+      "file": "pr-election-calendar.json",
+      "publisher": "Comisión Estatal de Elecciones de Puerto Rico",
+      "url": "https://ww2.ceepur.org/",
+      "chain": [
+        "https://ceepur.org/"
+      ],
+      "representation": "Observed 2028 general-election guide label, 2026 Cataño special-election results link, and office contact normalized as data. No-general-Nov3 scope supplied explicitly by user; applicable special elections remain unverified."
+    },
+    {
+      "file": "fec-official-root-links-extract.txt",
+      "publisher": "Federal Election Commission",
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "representation": "Actual rendered FEC table rows extracted on October 13; labels and link destination text preserved. Captures official authority behind the root URLs including non-.gov offices."
+    }
+  ],
+  "unavailable": [
+    {
+      "sample": "Montana statewide spreadsheet: Dillon precinct 1 and Crow Agency satellite",
+      "url": "https://sosmt.gov/docs/23/elections/77688/2026-polling-location-satellite-office-general-final",
+      "attempts": [
+        "https://sosmt.gov/elections/ -> https://votemt.gov/ -> official polling-place download",
+        "Browser extraction rejected application/octet-stream",
+        "curl failed to connect to workspace proxy port 8080"
+      ],
+      "next": [
+        "Download original workbook through the normal official fetch/browser-UA rung when reachable",
+        "Walk county lists from the official administrator directory"
+      ],
+      "owed": "Original XLSX bytes and its real Dillon/Crow rows, posted dates and hours; not fabricated from acceptance criteria."
+    },
+    {
+      "sample": "Vermont statewide town PDFs: Arlington, Bennington, Albany",
+      "url": "https://sos.vermont.gov/elections/",
+      "attempts": [
+        "FEC-listed elections root returned 403 Forbidden",
+        "Official domain root also returned 403 Forbidden"
+      ],
+      "next": [
+        "Existing browser-UA rung only if no challenge is solved",
+        "Official town-clerk lists and linked statewide PDFs"
+      ],
+      "owed": "Original town PDF bytes, drop-box rules and clerk phone."
+    },
+    {
+      "sample": "North Carolina polling-place CSV",
+      "url": "https://dl.ncsbe.gov/",
+      "attempts": [
+        "FEC root links public-files directory; directory returned no text listing"
+      ],
+      "next": [
+        "Read the public directory's actual JSON or file list on its normal official route"
+      ],
+      "owed": "Polling-place CSV original format; early-voting TSV is separately captured and is not a substitute."
+    },
+    {
+      "sample": "Census geocoder Dillon response",
+      "url": "https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress?address=715%20E%20Bannack%20St%20Dillon%20MT&benchmark=Public_AR_Current&vintage=Current_Current&format=json",
+      "attempts": [
+        "Browser tool reported URL inaccessible",
+        "Workspace proxy unavailable"
+      ],
+      "next": [
+        "Use normal Census batch or single-address geocoder"
+      ],
+      "owed": "Real Census coordinates and county-subdivision/VTD matches; none invented."
+    }
+  ]
+}

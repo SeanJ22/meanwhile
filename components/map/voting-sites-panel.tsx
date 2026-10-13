@@ -6,8 +6,6 @@ import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { MapPin, X } from "lucide-react";
 
 import { PLACEHOLDER_ADDRESS } from "@/lib/ballot/placeholder-address";
-import { pollingLookupFallbacks } from "@/lib/ballot/polling-lookup-fallback";
-import { PollingLookupFallback } from "@/components/ballot/polling-lookup-fallback";
 import {
   directionsUrl,
   isPinnable,
@@ -15,7 +13,9 @@ import {
   type VotingSite,
   type VotingSitesAnswer,
   milesLabel,
-  sitesNearestFirst,
+  votingSitesForDisplay,
+  type VotingJurisdiction,
+  type VotingSource,
 } from "@/lib/ballot/voting-sites";
 
 /**
@@ -60,7 +60,7 @@ export function VotingSitesPanel({
   }, [onSites]);
 
   const submit = useCallback(
-    async (event: React.FormEvent) => {
+    async (event: React.FormEvent, googleFallback = false) => {
       event.preventDefault();
       const value = address.trim();
       if (value.length < 3) return;
@@ -69,7 +69,7 @@ export function VotingSitesPanel({
         const res = await fetch("/api/voting-sites", {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ address: value }),
+          body: JSON.stringify({ address: value, googleFallback }),
           cache: "no-store",
         });
         if (!res.ok) {
@@ -131,7 +131,7 @@ export function VotingSitesPanel({
 
       <form onSubmit={submit} className="voting-panel-form">
         <label htmlFor={inputId} className="voting-panel-label">
-          Your street address
+          Your street address or ZIP
         </label>
         <input
           id={inputId}
@@ -147,8 +147,9 @@ export function VotingSitesPanel({
         {/* Describes the mechanism as it works today, with no forward commitment. */}
         <p className="voting-panel-note">
           Your address is used to find your voting locations. It passes through
-          our server to the Census Bureau&rsquo;s geocoder, which turns it into
-          a point on the map.
+          our server to the Census Bureau&rsquo;s geocoder and, where available,
+          the election office&rsquo;s address-only lookup. A ZIP shows all of its
+          covered places. No name or date of birth is needed.
         </p>
         <button type="submit" className="voting-panel-submit">
           Show me
@@ -180,7 +181,14 @@ export function VotingSitesPanel({
           </p>
         )}
 
-      <PollingLookupFallback links={pollingLookupFallbacks(state.kind, state.kind === "answered" ? state.answer : undefined)} />
+      {state.kind === "answered" && state.answer.googleFallback?.available && !state.answer.googleFallback.requested && (
+        <div className="voting-panel-note">
+          <p>We have not loaded an official source for this place yet. You can ask Google’s election data; only this button sends your address to Google.</p>
+          <button type="button" className="voting-panel-submit" onClick={event => void submit(event, true)}>Ask Google’s election data</button>
+        </div>
+      )}
+      {state.kind === "answered" && state.answer.googleFallback?.requested && <p className="voting-panel-note">{state.answer.googleFallback.label}</p>}
+      {state.kind === "answered" && state.answer.googleFallback?.message && <p className="voting-panel-note">{state.answer.googleFallback.message}</p>}
 
       {state.kind === "answered" && <VotingJurisdictionRecords answer={state.answer} selectedSiteId={selectedSiteId} onSelectSite={onSelectSite} />}
     </section>
@@ -216,7 +224,16 @@ export function VotingJurisdictionRecords({ answer, selectedSiteId, onSelectSite
                 </ol>
               </details>
             )}
-            {j.election && (
+            {j.publication?.status === "POSTED_LATER" && <p className="voting-panel-status">{j.publication.text}</p>}
+            {j.rules?.map((rule, index) => <p className="voting-rule" key={`${rule.source.url}-${index}`}>{rule.text}</p>)}
+            {j.office && <div className="voting-office">
+              <h4>Local election office: {j.office.name}</h4>
+              {j.office.phone && <p>Phone: <a href={`tel:${j.office.phone.replace(/[^+\d]/g, "")}`}>{j.office.phone}</a></p>}
+              {j.office.email && <p>Email: <a href={`mailto:${j.office.email}`}>{j.office.email}</a></p>}
+              {j.office.address && <p>{j.office.address}</p>}
+            </div>}
+            {j.blanks?.length ? <p className="voting-site-gap">Still being gathered: {[...new Set(j.blanks.map(blank => blank.owed))].join("; ")}</p> : null}
+            {j.election && j.publication?.status !== "NO_GENERAL_ELECTION" && (
               <p className="voting-election">
                 Published for the {j.election}.
               </p>
@@ -244,7 +261,7 @@ export function VotingJurisdictionRecords({ answer, selectedSiteId, onSelectSite
             {/* Nearest first, a sort and never a filter: every site in the county stays. */}
             {j.sites.length > 0 && (
               <ul className="voting-sites">
-                {sitesNearestFirst(j.sites, answer.point).map(({ site, miles }) => (
+                {votingSitesForDisplay(j, answer.point).map(({ site, miles }) => (
                   <SiteRow
                     key={site.id}
                     site={site}
@@ -258,7 +275,7 @@ export function VotingJurisdictionRecords({ answer, selectedSiteId, onSelectSite
               </ul>
             )}
 
-            <CardSourcesContribution id={`voting-sites:${j.name}`} sources={[{ what: "Published voting locations", provenance: { sourceUrl: j.sourceUrl, sourceOrg: j.sourceOrg, collectedAt: j.collectedAt, verifiedAt: null } }]} />
+            <CardSourcesContribution id={`voting-sites:${j.name}`} sources={votingSources(j)} />
           </article>
         ))}
   </>;
@@ -268,6 +285,9 @@ const KIND_LABEL: Record<VotingSite["kind"], string> = {
   ELECTION_DAY: "Open on election day",
   EARLY_VOTING: "Early voting",
   MOBILE: "Mobile voting site",
+  DROP_BOX: "Ballot drop box",
+  VOTE_CENTER: "Vote center",
+  SATELLITE: "Satellite election office",
 };
 
 function SiteRow({
@@ -283,7 +303,7 @@ function SiteRow({
   onSelect: () => void;
 }) {
   return (
-    <li className="voting-site" data-selected={selected} data-voting-site={site.id}>
+    <li className="voting-site" data-selected={selected} data-voting-site={site.id} data-aiannh={site.aiannhGeoid}>
       <button type="button" className="voting-site-head" onClick={onSelect}>
         <MapPin aria-hidden size={14} className="voting-site-icon" />
         <span className="voting-site-name">{site.name}</span>
@@ -293,9 +313,16 @@ function SiteRow({
       {miles !== null && <p className="voting-site-distance">{milesLabel(miles)}</p>}
       {site.room && <p className="voting-site-room">{site.room}</p>}
       <p className="voting-site-kind">{KIND_LABEL[site.kind]}</p>
+      {site.precinct && <p className="voting-site-serves">Precinct: {site.precinct}</p>}
       {site.serves && <p className="voting-site-serves">{site.serves}</p>}
+      {site.days && <p className="voting-site-days">Days: {site.days}</p>}
+      {site.hours ? <p className="voting-site-hours whitespace-pre-line">Hours: {site.hours}</p> : <p className="voting-site-gap">Hours are still being gathered.</p>}
+      {site.locationNotes && <p className="voting-site-notes">{site.locationNotes}</p>}
+      {site.accessibilityNotes && <p className="voting-site-accessibility">Accessibility: {site.accessibilityNotes}</p>}
+      {site.rules?.map((rule, index) => <p className="voting-rule" key={`${rule.source.url}-${index}`}>{rule.text}</p>)}
+      {site.office && <p className="voting-site-office">{site.office.name}{site.office.phone ? ` — ${site.office.phone}` : ""}{site.office.email ? ` — ${site.office.email}` : ""}</p>}
       {/* An unlabeled row is not evidence a location is open for the next election. */}
-      {site.election === null && (
+      {site.election === null && !site.electionDate && (
         <p className="voting-site-gap">
           The authority did not say which election this location is for.
         </p>
@@ -313,4 +340,19 @@ function SiteRow({
       </a>
     </li>
   );
+}
+
+/** Every displayed rule and change notice contributes its own source, including file dates. */
+export function votingSources(j: VotingJurisdiction) {
+  const sources: VotingSource[] = [
+    { publisher: j.sourceOrg, url: j.sourceUrl, checkedAt: j.collectedAt }, ...(j.sources ?? []),
+    ...(j.publication ? [j.publication.source] : []), ...(j.rules ?? []).map(rule => rule.source),
+    ...j.sites.flatMap(site => [...(site.sources ?? []).map(source => ({ ...source, lastUpdated: source.lastUpdated ?? site.lastUpdated })), ...(site.rules ?? []).map(rule => rule.source)]),
+  ];
+  const unique = new Map<string, VotingSource>();
+  for (const source of sources) unique.set(`${source.url}|${source.title ?? ""}`, source);
+  return [...unique.values()].map(source => ({
+    what: `${source.title ?? "Voting locations, hours and rules"}${source.lastUpdated ? ` — file last updated ${source.lastUpdated}` : ""}`,
+    provenance: { sourceUrl: source.url, sourceOrg: source.publisher, collectedAt: source.checkedAt ?? j.collectedAt, verifiedAt: null },
+  }));
 }

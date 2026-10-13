@@ -1,0 +1,573 @@
+{
+  "checkedAt": "2026-10-13",
+  "method": "Direct opens of FEC-listed official chief election URLs; no search engine. Browser extraction, not raw HTTP. Workspace HTTP proxy unavailable. Link labels are discovery leads; no election applicability is inferred from a root page.",
+  "roots": [
+    {
+      "url": "https://www.sos.alabama.gov/alabama-votes",
+      "status": "open",
+      "detail": "【0†Alabama Secretary of State】",
+      "title": "Alabama Votes | Alabama Secretary of State (https://www.sos.alabama.gov/alabama-votes)",
+      "links": [
+        "【5†My VotingInformation†myinfo.alabamavotes.gov】",
+        "【6†AbsenteeVoting】"
+      ]
+    },
+    {
+      "url": "https://www.elections.alaska.gov/",
+      "status": "unreachable",
+      "detail": "Failed to fetch https://www.elections.alaska.gov/: (400) Timeout fetching",
+      "title": "Internal Error ()",
+      "links": []
+    },
+    {
+      "url": "https://azsos.gov/elections",
+      "status": "unreachable",
+      "detail": "Failed to fetch https://azsos.gov/elections: (403) Forbidden",
+      "title": "Internal Error ()",
+      "links": []
+    },
+    {
+      "url": "https://www.sos.arkansas.gov/elections",
+      "status": "open",
+      "detail": "【0†iframe†www.googletagmanager.com】",
+      "title": "Arkansas Secretary of State (https://www.sos.arkansas.gov/elections)",
+      "links": [
+        "  * 【44†Check Registration Status, Polling Sites, and Sample Ballots†www.voterview.ar-nova.org】",
+        "  * 【45†Absentee Voting】",
+        "  * 【46†Military and Overseas Voting】",
+        "  * 【66†How can I get help if I have questions about the voting process?】"
+      ]
+    },
+    {
+      "url": "https://www.sos.ca.gov/elections",
+      "status": "open",
+      "detail": "Close Alert",
+      "title": "Elections and Voter Information :: California Secretary of State (https://www.sos.ca.gov/elections)",
+      "links": [
+        "  * 【5†Voting Options】",
+        "【8†Image: Vote Early, California! I Voted sticker next to the text†elections.cdn.sos.ca.gov】",
+        "  * ## 【15†Voting Rights Restored】",
+        "  * ## 【16†Voting Rights: Persons Subject to Conservatorship】",
+        "  * ## 【33†Voting in California】",
+        "  * ## 【34†Voting Technology】",
+        "  * ## 【39†Poll Worker Information】",
+        "  * ## 【41†Be a Student Poll Worker】",
+        "  * ## 【47†Advisories to County Elections Officials】",
+        "  * 【47†Advisories to County Elections Officials】",
+        "  * 【57†County Elections Officials Contact Information】",
+        "  * 【58†County Elections Map】",
+        "  * 【47†Advisories to County Elections Officials】",
+        "  * 【34†Voting Technology】"
+      ]
+    },
+    {
+      "url": "https://www.sos.state.co.us/pubs/elections/main.html",
+      "status": "open",
+      "detail": "【0†Skip to content】 | 【1†Secretary Griswold†www.coloradosos.gov】",
+      "title": "Elections & Voting (https://www.sos.state.co.us/pubs/elections/main.html)",
+      "links": []
+    },
+    {
+      "url": "https://portal.ct.gov/en/SOTS/Common-Elements/V5-Template---Redesign/Elections--Voting--Home-Page",
+      "status": "open",
+      "detail": "【0†iframe†www.googletagmanager.com】",
+      "title": "Elections & Voting - Home Page (https://portal.ct.gov/en/SOTS/Common-Elements/V5-Template---Redesign/Elections--Voting--Home-Page)",
+      "links": [
+        "  * 【4†Elections and Voting】",
+        "【12†Find Your Polling Location†portaldir.ct.gov】",
+        "【14†Early Voting Information】 and 【15†Find Your Early Voting Location】",
+        "【18†Absentee Voting Information】 and 【19†Request an Absentee Ballot Online†oabr-sots.ct.gov】",
+        "【21†Poll Worker Information and Interest Form】",
+        "#### 【22†How to use Connecticut's new voting tabulators】",
+        "  * 【24†Ballot Drop Box Locations】",
+        "  * 【14†Early Voting Information and Your Early Voting Location】",
+        "  * 【27†Voting Rights Act】",
+        "  * 【27†Voting Rights Act】"
+      ]
+    },
+    {
+      "url": "https://elections.delaware.gov/",
+      "status": "open",
+      "detail": "【0†30-Day Primary Campaign Finance Deadline, August 18th†cfrs.elections.delaware.gov】",
+      "title": "Department of Elections - State of Delaware (https://elections.delaware.gov/)",
+      "links": [
+        "    * 【7†Absentee Voting】",
+        "    * 【18†Voting Machines】",
+        "    * 【19†Working at the Polls】",
+        "    * 【7†Absentee Voting】",
+        "    * 【18†Voting Machines】",
+        "    * 【19†Working at the Polls】",
+        "【20†General Election November 3, 2026】 【21†Voter Portal Register to vote, Request an Absentee Ballot, and more†ivote.de.gov】 【22†Polling Places & Early Voting Site Lookup Tool Find your Polling Place and Early Voting Sites†gis.elections.delaware.gov】"
+      ]
+    },
+    {
+      "url": "https://www.dcboe.org/",
+      "status": "unreachable",
+      "title": "Internal Error ()",
+      "links": [],
+      "detail": "Browser extraction returned Internal Error without response body."
+    },
+    {
+      "url": "https://sos.ga.gov/index.php/elections",
+      "status": "unreachable",
+      "title": "Internal Error ()",
+      "links": [],
+      "detail": "Browser extraction returned Internal Error without response body."
+    },
+    {
+      "url": "https://elections.hawaii.gov/",
+      "status": "open",
+      "title": "Office of Elections (https://elections.hawaii.gov/)",
+      "links": []
+    },
+    {
+      "url": "https://sos.idaho.gov/elections-division/",
+      "status": "open",
+      "title": "Home Page | VoteIdaho.Gov (https://sos.idaho.gov/elections-division/)",
+      "links": []
+    },
+    {
+      "url": "https://www.elections.il.gov/",
+      "status": "unreachable",
+      "detail": "Failed to fetch https://www.elections.il.gov/: (403) Forbidden",
+      "title": "Internal Error ()",
+      "links": []
+    },
+    {
+      "url": "https://www.in.gov/sos/elections/",
+      "status": "open",
+      "detail": "【0†Skip to main content】",
+      "title": "Election Division: Home (https://www.in.gov/sos/elections/)",
+      "links": [
+        "  * 【7†Poll Worker Training Materials】",
+        "  * 【7†Poll Worker Training Materials】",
+        "To cancel your Indiana voter registration record, complete the form found at the following 【38†link†forms.in.gov】, and then mail or deliver the signed original to your county voter registration office. For address information for your county office, see the second page of the following 【39†form†forms.in.gov】."
+      ]
+    },
+    {
+      "url": "https://sos.iowa.gov/",
+      "status": "open",
+      "detail": "【0†Skip to main content】",
+      "title": "Home | Iowa Secretary of State - Paul D. Pate (https://sos.iowa.gov/)",
+      "links": [
+        "    * 【21†Become a Precinct Election Official Want to help serve Iowans? Find out how to become a Precinct Election Official here!†pollworker.iowa.gov】",
+        "    * 【22†Elections and Voting Main Page】",
+        "    * 【27†Absentee Voting】",
+        "    * 【29†Find My Polling Place†apps.sos.iowa.gov】",
+        "    * 【30†Find My County Auditor】",
+        "    * 【32†Voter Education†votingprocess.iowa.gov】",
+        "    * 【48†Iowa Youth Straw Poll†apps.sos.iowa.gov】",
+        "    * 【53†State Fair Straw Poll Results†apps.sos.iowa.gov】",
+        "【86†11,671 Iowa Students Participate in Secretary of State’s Iowa Youth Straw Poll】",
+        "【90†Secretary Pate’s 2026 State Fair Straw Poll Shows Iowans’ 2026 Election Preferences】"
+      ]
+    },
+    {
+      "url": "https://www.sos.ks.gov/",
+      "status": "open",
+      "detail": "An official State of Kansas government website. 【0†Here's how you know.】",
+      "title": "Kansas Secretary of State | Home (https://www.sos.ks.gov/)",
+      "links": [
+        "    * 【3†Advance Voting】",
+        "      * 【21†Advance Voting Information】",
+        "      * 【22†Advance Voting Data】",
+        "    * 【3†County Election Offices】",
+        "      * 【30†County Election Offices】",
+        "    * 【41†Poll Workers】",
+        "      * 【46†Early Public Input Notices】",
+        "【30†County Election Offices】",
+        "【101†Secretary Schwab Announces Appointment of Johnson County Election Commissioner】"
+      ]
+    },
+    {
+      "url": "https://www.sos.ky.gov/Pages/default.aspx",
+      "status": "unreachable",
+      "title": "Internal Error ()",
+      "links": [],
+      "detail": "Browser extraction returned Internal Error without response body."
+    },
+    {
+      "url": "https://elect.ky.gov/Pages/default.aspx",
+      "status": "open",
+      "title": "Welcome to the State Board of Elections - State Board of Elections (https://elect.ky.gov/Pages/default.aspx)",
+      "links": []
+    },
+    {
+      "url": "https://www.sos.la.gov/ElectionsAndVoting/Pages/default.aspx",
+      "status": "unreachable",
+      "detail": "Failed to fetch https://www.sos.la.gov/ElectionsAndVoting/Pages/default.aspx: (404) Not Found",
+      "title": "Internal Error ()",
+      "links": []
+    },
+    {
+      "url": "https://www.maine.gov/sos/cec/elec/index.html",
+      "status": "unreachable",
+      "detail": "Failed to fetch https://www.maine.gov/sos/cec/elec/index.html: (404) Not Found",
+      "title": "Internal Error ()",
+      "links": []
+    },
+    {
+      "url": "https://www.elections.maryland.gov/",
+      "status": "open",
+      "detail": "【0†Skip to Content】",
+      "title": "Maryland State Board of Elections (https://www.elections.maryland.gov/)",
+      "links": [
+        "  * 【3†Early Voting】",
+        "  * 【5†Mail-In Voting】",
+        "  * 【7†Voting System】",
+        "  * 【37†County Public Funding Program】",
+        "  * 【41†County Boards】"
+      ]
+    },
+    {
+      "url": "https://www.sec.state.ma.us/ele/eleidx.htm",
+      "status": "open",
+      "detail": "【0†Skip to main content】",
+      "title": "Elections Division (https://www.sec.state.ma.us/ele/eleidx.htm)",
+      "links": [
+        "    * 【68†Vote Early】",
+        "    * 【67†Find a Ballot Drop Box】",
+        "    * 【71†Find Your Polling Place】",
+        "    * 【72†Find Polling Hours】"
+      ]
+    },
+    {
+      "url": "https://www.michigan.gov/sos/0,4670,7-127-1633---,00.html",
+      "status": "open",
+      "detail": "【0†Google Tag Manager†www.googletagmanager.com】",
+      "title": "Elections (https://www.michigan.gov/sos/0%2C4670%2C7-127-1633---%2C00.html)",
+      "links": [
+        "【13†Go to Be a poll worker】",
+        "【75†Back】 【13†Be a poll worker】"
+      ]
+    },
+    {
+      "url": "https://www.sos.state.mn.us/elections-voting/",
+      "status": "open",
+      "title": "www.sos.mn.gov (https://www.sos.state.mn.us/elections-voting/)",
+      "links": []
+    },
+    {
+      "url": "https://www.sos.ms.gov/index.php/elections-voting",
+      "status": "open",
+      "detail": "【0† Skip to main content 】",
+      "title": "Elections & Voting | MS SOS (https://www.sos.ms.gov/index.php/elections-voting)",
+      "links": [
+        "  * 【12† Elections & Voting】",
+        "    * 【12† Elections & Voting Section】",
+        "      * 【15†Voting as a College Student】",
+        "    * 【28†County Election Information】",
+        "    * 【30†Poll Worker Portal】",
+        "      * 【43†Counties & County Codes】",
+        "    * 【46†Search for Municipal and County Documents】",
+        "    * 【12†Elections & Voting】",
+        "【140† Absentee Voting Information 】",
+        "  * 【144†County Election Handbook】",
+        "【30† Poll Worker Portal 】"
+      ]
+    },
+    {
+      "url": "https://www.sos.mo.gov/elections/",
+      "status": "open",
+      "detail": "[Input]",
+      "title": "Elections & Voting Division (https://www.sos.mo.gov/elections/)",
+      "links": [
+        "【12†Elections& Voting】",
+        "【15†Voting Information】",
+        "【20†Be a Poll Worker】",
+        "  * 【20†Be a Poll Worker!】",
+        "  * 【59†Military and Overseas Voting Access Portal†movotesportal.sos.mo.gov】"
+      ]
+    },
+    {
+      "url": "https://sos.nebraska.gov/index",
+      "status": "open",
+      "detail": "Search",
+      "title": "Welcome | Nebraska Secretary of State (https://sos.nebraska.gov/index)",
+      "links": [
+        "      * 【16†County Election Office Directory】",
+        "      * 【16†County Election Office Directory】",
+        "      * 【29†Nonpartisan Voting in Primaries】"
+      ]
+    },
+    {
+      "url": "https://www.nvsos.gov/sos/elections",
+      "status": "open",
+      "detail": "【0†iframe】",
+      "title": "www.nvsos.gov (https://www.nvsos.gov/sos/elections)",
+      "links": []
+    },
+    {
+      "url": "https://sos.nh.gov/",
+      "status": "unreachable",
+      "detail": "Failed to fetch https://sos.nh.gov/: (403) Forbidden",
+      "title": "Internal Error ()",
+      "links": []
+    },
+    {
+      "url": "https://www.state.nj.us/state/elections/index.shtml",
+      "status": "open",
+      "title": "www.nj.gov (https://www.state.nj.us/state/elections/index.shtml)",
+      "links": []
+    },
+    {
+      "url": "https://www.sos.state.nm.us/",
+      "status": "open",
+      "detail": "  * 【0†Contact Us】",
+      "title": "Maggie Toulouse Oliver - New Mexico Secretary of State | New Mexico Secretary of State (https://www.sos.state.nm.us/)",
+      "links": [
+        "  * 【3†Voting & Elections】",
+        "  * 【22†Find a polling location†voterportal.servis.sos.state.nm.us】",
+        "#### 【33†Search Voting Location Data†voterportal.servis.sos.state.nm.us】",
+        "【36†NMVote†www.nmvote.org】 is your one-stop shop for information and resources about voting and elections in New Mexico. Register to vote online or update your current voter registration. Request an absentee ballot. Find a voting location. View important upcoming election dates. Request a military or overseas ballot. Look up third-party voter registration agents. It’s all here for your convenience."
+      ]
+    },
+    {
+      "url": "https://www.elections.ny.gov/",
+      "status": "open",
+      "detail": "【0†Image: nygov-logo】",
+      "title": "New York State Board of Elections | New York State Board of Elections (https://www.elections.ny.gov/)",
+      "links": [
+        "    * 【9†Poll Site & Voter Lookup†voterlookup.elections.ny.gov】",
+        "    * 【11†Early Voting】",
+        "    * 【12†Military & Overseas Voting】",
+        "    * 【13†Accessible Voting】",
+        "    * 【14†Voting Technology】",
+        "    * 【27†County Boards†publicreporting.elections.ny.gov】",
+        "    * 【31†Become a Poll Worker】",
+        "    * 【33†Dr. John L. Flateau Voting & Elections Database】",
+        "    * 【44†John R. Lewis Voting Rights Act of New York】",
+        "    * 【13†Accessible Voting】",
+        "    * 【45†Voting After Incarceration】",
+        "  * 【9†Voter Lookup Application, Poll Site Search, & Mail Ballot Tracker†voterlookup.elections.ny.gov】",
+        "【27†Contact Your County Board of Elections†publicreporting.elections.ny.gov】"
+      ]
+    },
+    {
+      "url": "https://www.sos.state.oh.us/elections/",
+      "status": "unreachable",
+      "detail": "Failed to fetch https://www.sos.state.oh.us/elections/: (502) Bad Gateway",
+      "title": "Internal Error ()",
+      "links": []
+    },
+    {
+      "url": "https://oklahoma.gov/elections.html",
+      "status": "open",
+      "detail": "【0†Skip to main content】",
+      "title": "Oklahoma State Election Board (0270) (https://oklahoma.gov/elections.html)",
+      "links": [
+        "【8†Voter Quick Links Find voter information all in one place! OK Voter Portal Early Voting Absentee Voting First-Time Voter Information Election Dates and Deadlines Voter ID Cards Update or Cancel Your Voter Registration And More!】",
+        "## 【9†Become a Poll Worker】",
+        "Established under the Constitution of the State of Oklahoma in 1907, the Oklahoma State Election Board is the administrative agency for the conduct of state elections and the oversight of the state's 77 county election boards. Learn more about the 【11†State Election Board】.",
+        "【12†Image: Wave2-LandingPages-Installment2_Oklahoma-Election-Board _img-votingbadges】"
+      ]
+    },
+    {
+      "url": "https://sos.oregon.gov/voting-elections/Pages/default.aspx",
+      "status": "open",
+      "detail": "[Input] [Input] [Input] [Input] [Input] [Input] [Input] [Input] [Input] [Input] [Input] [Input] [Input] [Input] [Input] [Input] [Input] [Input] [Input] [Input] [Input] [Input] [Input]",
+      "title": "Oregon Secretary of State : Voting & Elections : State of Oregon (https://sos.oregon.gov/voting-elections/Pages/default.aspx)",
+      "links": [
+        "  * 【3†Voting & Elections 】",
+        "    * 【8†County Elections Officials】",
+        "    * 【11†Special Voting Circumstances】",
+        "  * 【8†County Elections Officials】"
+      ]
+    },
+    {
+      "url": "https://www.dos.pa.gov/VotingElections/Pages/default.aspx",
+      "status": "unreachable",
+      "title": "Internal Error ()",
+      "links": [],
+      "detail": "Browser extraction returned Internal Error without response body."
+    },
+    {
+      "url": "https://vote.sos.ri.gov/",
+      "status": "open",
+      "detail": "【0†Skip to main content】",
+      "title": "Welcome to your Voter Information Center (https://vote.sos.ri.gov/)",
+      "links": [
+        "  * 【3†Find a Polling Place View Sample Ballot】",
+        "  * 【3†Find a Polling Place View Sample Ballot】",
+        "  * 【8†Early Voting Information】",
+        "  * 【8†Early Voting Information】",
+        "  * 【14†Vote Early Before Election Day】",
+        "  * 【16†Accessibility and Voting Assistance】",
+        "  * 【31†Find a Mail Ballot Drop Box】",
+        "  * 【33†Be a Poll Worker】"
+      ]
+    },
+    {
+      "url": "https://elections.ri.gov/",
+      "status": "open",
+      "detail": "【0†iframe†www.googletagmanager.com】",
+      "title": "Rhode Island Board of Elections | Board of Elections (https://elections.ri.gov/)",
+      "links": [
+        "    * 【3†Mail Ballot Drop Boxes】",
+        "    * 【4†In-Person Early Voting & Emergency Mail Ballots】",
+        "    * 【5†Voting at the Polls】",
+        "    * 【11†Accessible Voting System】",
+        "    * 【18†Poll Worker Information】"
+      ]
+    },
+    {
+      "url": "https://www.scvotes.gov/",
+      "status": "open",
+      "detail": "【0†iframe†www.googletagmanager.com】",
+      "title": "Home - SC Votes - South Carolina Election Commission (https://www.scvotes.gov/)",
+      "links": [
+        "【11†Early Voting†scvotes.gov】",
+        "【14†Absentee Voting†scvotes.gov】",
+        "【18†Check My Registration†vrems.scvotes.sc.gov】 【19†Get My Sample Ballot†vrems.scvotes.sc.gov】 【20†Find My Polling Place†vrems.scvotes.sc.gov】 【21†View My Voting History†vrems.scvotes.sc.gov】"
+      ]
+    },
+    {
+      "url": "https://sdsos.gov/elections-voting/default.aspx",
+      "status": "open",
+      "detail": "MENU",
+      "title": "Elections & Voting: South Dakota Secretary of State (https://sdsos.gov/elections-voting/default.aspx)",
+      "links": [
+        "  * 【2†Elections & Voting】 South Dakota Legislative District Map",
+        "          * 【9†Circulate a Nominating Petition for Statewide, Legislative & County Candidates】",
+        "          * 【11†How to be a County Candidate】",
+        "          * 【15†2026 Election Precincts & Polling Places】",
+        "          * 【17†Election Equipment, Electronic Pollbooks, and Vote Center Information】",
+        "      * 【29†County Auditor Contact Information†vip.sdsos.gov】",
+        "        * 【53†County Auditors - Primary & General Election Resources】",
+        "      * 【56†Absentee Voting】",
+        "      * 【58†Voting Information】",
+        "        * 【70†Polling Place Accessibility】",
+        "        * 【56†Absentee Voting】",
+        "        * 【73†Kids Voting South Dakota】",
+        "        * 【29†County Auditors†vip.sdsos.gov】",
+        "        * 【189†County Registers of Deeds】",
+        "  * 【2†Elections & Voting】",
+        "      * 【9†Circulate a Nominating Petition for Statewide, Legislative & County Candidates】",
+        "      * 【11†How to be a County Candidate】",
+        "      * 【15†2026 Election Precincts & Polling Places】",
+        "      * 【17†Election Equipment, Electronic Pollbooks, and Vote Center Information】",
+        "  * 【29†County Auditor Contact Information†vip.sdsos.gov】"
+      ]
+    },
+    {
+      "url": "https://sos.tn.gov/elections",
+      "status": "unreachable",
+      "title": "Internal Error ()",
+      "links": [],
+      "detail": "Browser extraction returned Internal Error without response body."
+    },
+    {
+      "url": "https://vote.utah.gov/",
+      "status": "open",
+      "title": "Regular General Election: November 3, 2026 - Utah Voter Information (https://vote.utah.gov/)",
+      "links": []
+    },
+    {
+      "url": "https://www.elections.virginia.gov/",
+      "status": "open",
+      "detail": "【0†Skip to main content】",
+      "title": "Virginia Dept. of Elections: Home (https://www.elections.virginia.gov/)",
+      "links": [
+        "    * 【14†Polling Place and Ballot Information Lookup】",
+        "    * 【18†Voting on Election Day】",
+        "    * 【19†Absentee and Early Voting】",
+        "    * 【21†Accessible Voting】",
+        "    * 【22†Early Voting Office Locations】",
+        "    * 【26†Ranked Choice Voting】",
+        "    * 【29†Registration Statistics & Polling Places】",
+        "    * 【56†Officer of Elections/Poll Worker】",
+        "【59†Image: Picture of polling place with no people】"
+      ]
+    },
+    {
+      "url": "https://www.sos.wa.gov/elections/",
+      "status": "open",
+      "detail": "",
+      "title": "Elections | WA Secretary of State (https://www.sos.wa.gov/elections/)",
+      "links": [
+        "View a map of 【5†ballot drop boxes and voting centers†www.google.com】 or sign in to 【3†VoteWA.gov†voter.votewa.gov】 for a personalized list of locations.",
+        "  * 【12†Voting in Assisted Living Facilities】",
+        "  * 【13†Felony Convictions and Voting Rights】",
+        "  * 【21†Find your County Elections Office】",
+        "  * 【22†Drop Box and Voting Center Locations】",
+        "  * 【29†Frequently Asked Questions on Voting By Mail】",
+        "  * 【34†Natural Disasters and Voting】",
+        "  * 【71†ADA Ballot Drop Box Accessibility】 (PDF)",
+        "  * 【72†ADA Checklist for Voting Centers†archive.ada.gov】",
+        "  * 【74†Introduction to County Canvassing Boards】 (PDF)",
+        "  * 【76†Elections Retention】 (【76†County】 | 【77†State】)",
+        "  * 【21†County Elections Offices】",
+        "  * 【85†County Elections Offices】",
+        "          * 【156†Want to Renew Your Commercial Fundraiser Registration Early?】",
+        "        * 【12†Voting in Assisted Living Facilities】",
+        "        * 【13†Felony Convictions and Voting Rights】",
+        "        * 【21†County Elections Offices】",
+        "        * 【22†Drop Box and Voting Center Locations】",
+        "        * 【29†Frequently Asked Questions on Voting by Mail】",
+        "        * 【34†Wildfires and voting】",
+        "        * 【29†Frequently Asked Questions on Voting By Mail】",
+        "        * 【259†Washington Campus Voting Challenge】",
+        "          * 【278†Ballot Drop Box Usage by Year】",
+        "        * 【293†Voting Systems by County】",
+        "        * 【294†Voting System Testing and Certification】",
+        "        * 【71†ADA Ballot Drop Box Accessibility】",
+        "        * 【72†ADA Checklist for Voting Centers†archive.ada.gov】",
+        "        * 【74†Introduction to County Canvassing Boards】"
+      ]
+    },
+    {
+      "url": "https://sos.wv.gov/elections/Pages/default.aspx",
+      "status": "open",
+      "title": "Elections | WV Secretary of State (https://sos.wv.gov/elections/Pages/default.aspx)",
+      "links": []
+    },
+    {
+      "url": "https://elections.wi.gov/",
+      "status": "unreachable",
+      "title": "Internal Error ()",
+      "links": [],
+      "detail": "Browser extraction returned Internal Error without response body."
+    },
+    {
+      "url": "https://sos.wyo.gov/Elections/Default.aspx",
+      "status": "open",
+      "title": "Wyoming Secretary of State (https://sos.wyo.gov/Elections/Default.aspx)",
+      "links": []
+    },
+    {
+      "url": "https://sosmt.gov/elections/",
+      "status": "open",
+      "detail": "Official statewide spreadsheet and county contact directory linked."
+    },
+    {
+      "url": "https://sos.vermont.gov/elections/",
+      "status": "unreachable",
+      "detail": "HTTP 403 Forbidden through browser extraction; workspace HTTP proxy also unavailable."
+    },
+    {
+      "url": "https://www.ncsbe.gov/",
+      "status": "open",
+      "detail": "Current November 3 general election; early-vote statewide TSV linked."
+    },
+    {
+      "url": "http://sos.nd.gov/elections",
+      "status": "open",
+      "detail": "Redirects to https://www.sos.nd.gov/elections; current election links statewide tables."
+    },
+    {
+      "url": "https://www.sos.state.tx.us/elections/index.shtml",
+      "status": "open",
+      "detail": "Official VoteTexas pages and county-office directory linked."
+    },
+    {
+      "url": "https://dos.myflorida.com/elections/",
+      "status": "open",
+      "detail": "Redirects to https://dos.fl.gov/elections/; county directory and general election early/drop files."
+    },
+    {
+      "url": "https://ceepur.org/",
+      "status": "open",
+      "detail": "Official commission root points to Cataño 2026 special election and CEE site whose general election guide is 2028."
+    }
+  ]
+}

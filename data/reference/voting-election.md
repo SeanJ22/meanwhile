@@ -1,0 +1,3 @@
+# voting-election.json — source note
+
+This reference records the election date and reader label requested for VS-01: November 3, 2026. It is task scope, not evidence that every jurisdiction holds a general election that day. Puerto Rico's no-general-election status and any special-election applicability require separate sourced publication facts; neither follows automatically from this date. The acquisition scheduler reads this file on demand through the reference-data loader. Operational doors and their freshness records are stored as data in the standing door registry. Changing this reference does not rewrite historical source titles, file update dates, site hours, or prior evidence. Live-site verification remains with Sean's oversight session after River releases.

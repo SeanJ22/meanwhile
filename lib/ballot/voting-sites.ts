@@ -1,8 +1,46 @@
 export type VotingModel =
   | "VOTE_CENTER"
-  | "ASSIGNED";
+  | "ASSIGNED"
+  | "UNKNOWN"
+  | "ALL_MAIL";
 
-export type SiteKind = "ELECTION_DAY" | "EARLY_VOTING" | "MOBILE";
+export type SiteKind = "ELECTION_DAY" | "EARLY_VOTING" | "MOBILE" | "DROP_BOX" | "VOTE_CENTER" | "SATELLITE";
+
+export interface VotingSource {
+  publisher: string;
+  url: string;
+  title?: string;
+  lastUpdated?: string;
+  checkedAt?: string;
+}
+
+export interface VotingRule { text: string; source: VotingSource }
+export interface VotingOfficeContact {
+  name: string;
+  phone?: string;
+  email?: string;
+  address?: string;
+  url?: string;
+}
+
+/** Geometry is supplied by a published boundary source, never by a site coordinate. */
+export interface VotingBoundary {
+  precinct: string;
+  countyFips?: string;
+  ward?: string;
+  kind: "OFFICIAL_PRECINCT" | "CENSUS_2020_VTD";
+  geometry: { type: string; coordinates: unknown };
+  source: VotingSource;
+}
+
+export interface VotingPublication {
+  status: "PUBLISHED" | "POSTED_LATER" | "NO_GENERAL_ELECTION";
+  /** The publisher's own words; no invented publication date. */
+  text: string;
+  source: VotingSource;
+  specialElections?: string[];
+}
+
 
 export interface VotingSite {
   id: string;
@@ -17,6 +55,26 @@ export interface VotingSite {
   election: string | null;
   /** Assigned wards or districts in the authority's own words; null where it does not say, never inferred. */
   serves: string | null;
+  days?: string;
+  hours?: string;
+  precinct?: string;
+  town?: string;
+  countyFips?: string;
+  countyName?: string;
+  countySubdivisionGeoid?: string;
+  matchingUnit?: "COUNTY" | "TOWN" | "WARD" | "PRECINCT";
+  ward?: string;
+  districtOcdIds?: string[];
+  aiannhGeoid?: string;
+  locationNotes?: string;
+  accessibilityNotes?: string;
+  rules?: VotingRule[];
+  sources?: VotingSource[];
+  lastUpdated?: string;
+  electionDate?: string;
+  office?: VotingOfficeContact;
+  geocodeSource?: "CENSUS";
+
 }
 
 export interface SiteRung {
@@ -40,6 +98,20 @@ export interface VotingJurisdiction {
   sourceLinkingPage?: import("../civic-data/source-authority.ts").OfficialLinkingPage;
   sourceRawSha256?: string;
   collectedAt: string;
+  electionDate?: string;
+  countyFips?: string;
+  countySubdivisionGeoid?: string;
+  matchingUnit?: "COUNTY" | "TOWN" | "WARD" | "PRECINCT";
+  office?: VotingOfficeContact;
+  rules?: VotingRule[];
+  sources?: VotingSource[];
+  allMail?: boolean;
+  publication?: VotingPublication;
+  boundaries?: VotingBoundary[];
+  addressLookups?: import("./voting-source-types.ts").VotingSourceDoor[];
+  blanks?: import("./voting-source-types.ts").VotingSourceBlank[];
+  /** Official lookup results can explicitly assign a site for this one request. Never persisted. */
+  assignedSiteIds?: string[];
   refusal: {
     wall: string;
     rungs: SiteRung[];
@@ -105,6 +177,9 @@ export interface VotingSitesAnswer {
     narrowing: Narrowing;
   })[];
   outsideCoverage: boolean;
+  precision?: "ADDRESS" | "ZIP";
+  googleFallback?: { available: boolean; requested: boolean; label?: string; message?: string };
+
   pollingPlaceLinks: readonly import("./polling-place-links.ts").PollingPlaceLink[];
   ballotNavigationDataState?: "PROMOTED" | "FIRST_SEED" | "STORE_UNREACHABLE";
 }
@@ -113,14 +188,15 @@ export const UNPLACED_SITE_LINE =
   "We could not place this address on the map, so it has no pin. The address above is what the county published.";
 
 export function modelSentence(j: VotingJurisdiction): string {
-  if (j.sites.length === 0) {
-    return j.model === "VOTE_CENTER"
-      ? `${j.name} runs vote centers: any registered voter may use any site the county opens.`
-      : `${j.name} assigns each voter to one location, decided by where they live.`;
-  }
-  return j.model === "VOTE_CENTER"
-    ? `${j.name} lets any registered voter vote at any of these locations. There is no one place you are assigned to.`
-    : `${j.name} assigns you to one of these locations. Which one depends on where you live, so check the location that names your ward or district.`;
+  if (j.publication?.status === "NO_GENERAL_ELECTION") return j.publication.text;
+  if (j.model === "UNKNOWN") return "Published voting locations and their eligibility rules are listed below as the election office provides them.";
+  if (j.model === "ALL_MAIL" || j.allMail) return "Voting is by mail here. Ballot drop boxes and vote centers are listed first, with the publisher’s return rules.";
+  if (j.model === "VOTE_CENTER") return j.sites.length
+    ? `${j.name} lets eligible registered voters vote at any of these locations within the published service area.`
+    : `${j.name} runs vote centers. Follow each center’s published service area and hours.`;
+  return j.sites.length
+    ? `${j.name} assigns you an election-day polling place by precinct. Early-voting and ballot-return rules are listed separately.`
+    : `${j.name} assigns each voter a polling place by precinct.`;
 }
 
 export function refusalLine(j: VotingJurisdiction): string {
@@ -132,64 +208,29 @@ export type Narrowing =
   | { kind: "EXACT"; sentence: string; siteId: string }
   | { kind: "REFUSED"; sentence: string; rungs: SiteRung[] };
 
-export const NJ_DISTRICT_RUNGS: SiteRung[] = [
-  {
-    rung: 12,
-    what: "The state's own GIS organisation (NJOGIS) on ArcGIS Online",
-    result:
-      "HIT — 'Election Districts for New Jersey' and 'Ward Boundaries for New Jersey', statewide polygons with county, municipality, ward and district codes",
-    attemptedAt: "2026-08-19",
-  },
-  {
-    rung: 7,
-    what: "The layer's own metadata: when was this data last edited",
-    result:
-      "2021-11-24, and the publisher labels it MATURE SUPPORT. Five years older than the election these polling places are for",
-    attemptedAt: "2026-08-19",
-  },
-  {
-    rung: 12,
-    what: "Morris County's own GIS for current voting-district geometry",
-    result: "No published election-district layer found under the county",
-    attemptedAt: "2026-08-19",
-  },
-  {
-    rung: 13,
-    what: "The county Board of Elections' public-records request path",
-    result:
-      "NOT YET WALKED — named so the next session starts here rather than at rung 2",
-    attemptedAt: "2026-08-19",
-  },
-];
-
 export function narrowingFor(j: VotingJurisdiction): Narrowing {
-  if (j.model === "VOTE_CENTER") {
-    return {
-      kind: "NOT_NEEDED",
-      sentence:
-        "There is no one location assigned to you here, so there is nothing to narrow down. Any of these will do.",
-    };
-  }
-  if (j.sites.length === 0) {
-    return {
-      kind: "REFUSED",
-      sentence: `We have not retrieved any voting location for ${j.name} yet, so there is nothing here to narrow down. What we tried is below.`,
-      rungs: [],
-    };
-  }
-  if (j.sites.length === 1) {
-    return {
-      kind: "EXACT",
-      sentence: `${j.name} has one voting location, so this is yours.`,
-      siteId: j.sites[0].id,
-    };
-  }
+  if (j.publication?.status === "NO_GENERAL_ELECTION") return {
+    kind: "NOT_NEEDED", sentence: (j.publication.specialElections ?? []).join(" "),
+  };
+  if (j.model === "VOTE_CENTER" || j.model === "ALL_MAIL" || j.allMail) return {
+    kind: "NOT_NEEDED", sentence: "Use the published dates, hours and eligibility rules for each location.",
+  };
+  const assigned = j.sites.filter(site => j.assignedSiteIds?.includes(site.id));
+  if (assigned.length === 1) return { kind: "EXACT", siteId: assigned[0].id,
+    sentence: `The official address lookup assigns you to ${assigned[0].name}.` };
   return {
     kind: "REFUSED",
-    sentence:
-      "We cannot yet tell you which of these is yours. The boundaries we would need are older than this election, and a polling place that is wrong by one street is worse than none — so we are showing you all of them instead of guessing. Your sample ballot names your ward and district.",
-    rungs: j.state === "NJ" ? NJ_DISTRICT_RUNGS : [],
+    sentence: "We have not fixed your precinct. These are the published locations for your county and legislative districts, with each precinct named where published. Your precinct is on your voter card.",
+    rungs: j.refusal?.rungs ?? [],
   };
+}
+
+/** All-mail jurisdictions lead with ballot returns; distance never changes eligibility. */
+export function votingSitesForDisplay(j: VotingJurisdiction, point: { lat: number; lng: number } | null): SiteWithDistance[] {
+  const measured = sitesNearestFirst(j.sites, point);
+  if (!(j.allMail || j.model === "ALL_MAIL")) return measured;
+  const rank = (site: VotingSite) => site.kind === "DROP_BOX" ? 0 : site.kind === "VOTE_CENTER" ? 1 : 2;
+  return measured.sort((a, b) => rank(a.site) - rank(b.site));
 }
 
 export function directionsUrl(site: VotingSite): string {

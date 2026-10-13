@@ -13,6 +13,7 @@ import {
   CENSUS_INACTIVE_UNITS,
   LEGISTAR_IS_FIXTURE_NOT_ENUMERATION,
   REFERENCE_DATASETS,
+  REFERENCE_JSON_DATASETS,
   REFERENCE_ROW_COUNTS,
   parseCsv,
   readTable,
@@ -28,19 +29,21 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 /* ---- the inventory and its pairings ---------------------------------------- */
 
-test("data/reference holds 22 files: 11 data files and 11 provenance notes", () => {
+test("data/reference holds 30 files: 11 CSV and 4 JSON datasets with 15 provenance notes", () => {
   const files = referenceFiles();
   const data = files.filter((f) => f.endsWith(".csv"));
+  const structured = files.filter((f) => f.endsWith(".json"));
   const notes = files.filter((f) => f.endsWith(".md"));
 
   assert.equal(
     files.length,
-    22,
-    `expected 22 files, found ${files.length}: ${files.join(", ")} — a file going ` +
+    30,
+    `expected 30 files, found ${files.length}: ${files.join(", ")} — a file going ` +
       "missing narrows a denominator, and a narrowed denominator flatters our coverage",
   );
   assert.equal(data.length, 11, `expected 11 data files, found ${data.length}`);
-  assert.equal(notes.length, 11, `expected 11 provenance notes, found ${notes.length}`);
+  assert.equal(structured.length, 4, `expected 4 JSON data files, found ${structured.length}`);
+  assert.equal(notes.length, 15, `expected 15 provenance notes, found ${notes.length}`);
 });
 
 test("every reference data file is paired with its provenance note, both ways", () => {
@@ -51,21 +54,25 @@ test("every reference data file is paired with its provenance note, both ways", 
     if (!files.has(`${dataset}.csv`)) unpaired.push(`${dataset}.csv is missing`);
     if (!files.has(`${dataset}.md`)) unpaired.push(`${dataset}.md is missing`);
   }
+  for (const dataset of REFERENCE_JSON_DATASETS) {
+    if (!files.has(`${dataset}.json`)) unpaired.push(`${dataset}.json is missing`);
+    if (!files.has(`${dataset}.md`)) unpaired.push(`${dataset}.md is missing`);
+  }
   // The other direction: a note describing a file nobody committed is a
   // claim about data this product does not have.
   for (const file of files) {
     const stem = file.replace(/\.(csv|json|md)$/, "");
-    if (!(REFERENCE_DATASETS as readonly string[]).includes(stem)) {
+    if (!([...REFERENCE_DATASETS, ...REFERENCE_JSON_DATASETS] as readonly string[]).includes(stem)) {
       unpaired.push(`${file} is not a declared dataset`);
     }
   }
 
-  assert.deepEqual(unpaired, [], "the reference set is not a clean 10 pairs");
+  assert.deepEqual(unpaired, [], "the reference set is not 15 declared data/note pairs");
 });
 
 test("every provenance note says something about its data file", () => {
   const thin: string[] = [];
-  for (const dataset of REFERENCE_DATASETS) {
+  for (const dataset of [...REFERENCE_DATASETS, ...REFERENCE_JSON_DATASETS]) {
     const note = readFileSync(join(ROOT, "data", "reference", `${dataset}.md`), "utf8");
     // A note is provenance or it is decoration. 400 bytes is not a quality
     // bar, it is a floor under "this file was created and left empty".
@@ -225,7 +232,7 @@ test("the BoardDocs file is deliberately empty, and zero is the correct state", 
 /** A module reading reference data from outside the repo works on one machine and narrows the denominator elsewhere. */
 test("no module reads reference data from any path outside data/reference", () => {
   const ALLOWED = new Set(["lib/reference/index.ts"]);
-  const DATASET_NAMES = REFERENCE_DATASETS.join("|");
+  const DATASET_NAMES = [...REFERENCE_DATASETS, ...REFERENCE_JSON_DATASETS].join("|");
   // A dataset named alongside a path that is not the sanctioned one.
   const OUTSIDE = new RegExp(
     `(?:cowork|/mnt/(?:user-)?data|["'\`][a-z]:[\\\\/]|~/|/home/|Desktop|OneDrive|\\boutputs/)[^"'\`\\n]*(?:${DATASET_NAMES})`,
@@ -257,8 +264,12 @@ test("no module reads reference data from any path outside data/reference", () =
 });
 
 test("the loader resolves every dataset inside data/reference", () => {
-  for (const dataset of REFERENCE_DATASETS) {
-    for (const ext of ["csv", "md"]) {
+  const datasets = [
+    ...REFERENCE_DATASETS.map((name) => ({ name, format: "csv" })),
+    ...REFERENCE_JSON_DATASETS.map((name) => ({ name, format: "json" })),
+  ];
+  for (const { name: dataset, format } of datasets) {
+    for (const ext of [format, "md"]) {
       const p = posixRelative(ROOT, join(ROOT, "data", "reference", `${dataset}.${ext}`));
       assert.equal(p, `data/reference/${dataset}.${ext}`);
       assert.ok(statSync(join(ROOT, p)).size >= 0, `${p} is readable`);

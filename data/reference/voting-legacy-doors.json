@@ -1,0 +1,383 @@
+[
+  {
+    "id": "legacy:pima:Primary_2024_Vote_Centers",
+    "publisher": "Pima County Recorder and Pima County Elections Department",
+    "url": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/Primary_2024_Vote_Centers/FeatureServer/0",
+    "shape": "map-service",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "AZ",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "name": "Pima County",
+      "countyFips": "04019"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.pima.gov/3199/Pima-Votes",
+    "discoveredFrom": "https://www.pima.gov/3199/Pima-Votes",
+    "extraction": {
+      "kind": "VOTE_CENTER",
+      "columns": {
+        "id": "OBJECTID",
+        "name": "CENTER_NAME",
+        "address": "CENTER_ADDRESS",
+        "room": "ROOM_LOCATION",
+        "election": "ELECTION",
+        "lat": "latitude",
+        "lng": "longitude"
+      }
+    },
+    "model": "VOTE_CENTER"
+  },
+  {
+    "id": "legacy:pima:Primary_2024_EVS_Locations",
+    "publisher": "Pima County Recorder and Pima County Elections Department",
+    "url": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/Primary_2024_EVS_Locations/FeatureServer/0",
+    "shape": "map-service",
+    "covers": [
+      "EARLY_VOTING"
+    ],
+    "scope": {
+      "state": "AZ",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "name": "Pima County",
+      "countyFips": "04019"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.pima.gov/3199/Pima-Votes",
+    "discoveredFrom": "https://www.pima.gov/3199/Pima-Votes",
+    "extraction": {
+      "kind": "EARLY_VOTING",
+      "columns": {
+        "id": "OBJECTID",
+        "name": "name",
+        "address": "address",
+        "election": "Election",
+        "lat": "latitude",
+        "lng": "longitude"
+      },
+      "filters": {
+        "Election": "2026 General"
+      }
+    },
+    "model": "VOTE_CENTER"
+  },
+  {
+    "id": "legacy:pima:mobileVotingSites",
+    "publisher": "Pima County Recorder and Pima County Elections Department",
+    "url": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/mobileVotingSites/FeatureServer/0",
+    "shape": "map-service",
+    "covers": [
+      "MOBILE"
+    ],
+    "scope": {
+      "state": "AZ",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "name": "Pima County",
+      "countyFips": "04019"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.pima.gov/3199/Pima-Votes",
+    "discoveredFrom": "https://www.pima.gov/3199/Pima-Votes",
+    "extraction": {
+      "kind": "MOBILE",
+      "columns": {
+        "id": "OBJECTID",
+        "name": "name",
+        "address": "address",
+        "election": "Election",
+        "lat": "latitude",
+        "lng": "longitude"
+      },
+      "filters": {
+        "Election": "2026 General"
+      }
+    },
+    "model": "VOTE_CENTER"
+  },
+  {
+    "id": "legacy:morris:municipal-polling-directory",
+    "publisher": "Morris County Board of Elections",
+    "url": "https://www.morriscountynj.gov/Government/Voting-and-Elections/Election-Day-Polling-Places",
+    "shape": "county-directory",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "NJ",
+      "ocdId": "ocd-division/country:us/state:nj/county:morris",
+      "name": "Morris County",
+      "countyFips": "34027"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.morriscountynj.gov/Government/Voting-and-Elections/Election-Day-Polling-Places",
+    "extraction": {
+      "format": "html",
+      "kind": "ELECTION_DAY",
+      "columns": {
+        "name": "Location",
+        "address": "Location",
+        "ward": "Ward",
+        "precinct": "District"
+      },
+      "transforms": {
+        "name": {
+          "column": "Location",
+          "pattern": "^(.*?)[,\\n]\\s*(\\d.*)$",
+          "group": 1
+        },
+        "address": {
+          "column": "Location",
+          "pattern": "^(.*?)[,\\n]\\s*(\\d.*)$",
+          "group": 2
+        }
+      }
+    },
+    "model": "ASSIGNED",
+    "delegation": "town"
+  },
+  {
+    "id": "legacy:cochise:vote-center-pdf",
+    "publisher": "Cochise County Elections Department",
+    "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+    "shape": "file",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "AZ",
+      "ocdId": "ocd-division/country:us/state:az/county:cochise",
+      "name": "Cochise County",
+      "countyFips": "04003"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.cochise.az.gov/292/Elections",
+    "discoveredFrom": "https://www.cochise.az.gov/509/Voter-Information",
+    "title": "COCHISE COUNTY ELECTIONS \u2013 2026 \u00b7 18 VOTE CENTER LOCATIONS COUNTYWIDE",
+    "extraction": {
+      "format": "pdf",
+      "kind": "VOTE_CENTER",
+      "pdfColumns": [
+        {
+          "name": "id",
+          "x": 0
+        },
+        {
+          "name": "area",
+          "x": 150
+        },
+        {
+          "name": "location",
+          "x": 320
+        }
+      ],
+      "pdfRecordStart": {
+        "column": "id",
+        "pattern": "^VC\\s*\\d+$"
+      },
+      "pdfTop": 605,
+      "pdfBottom": 100,
+      "columns": {
+        "id": "id",
+        "name": "location",
+        "address": "location",
+        "locationNotes": "area"
+      },
+      "constants": {
+        "hours": "6:00 a.m. to 7:00 p.m.",
+        "days": "Election Day"
+      },
+      "pdfCenteredRecords": true,
+      "transforms": {
+        "name": {
+          "column": "location",
+          "pattern": "^(.*?)\\s+(\\d+\\s+.*)$",
+          "group": 1
+        },
+        "address": {
+          "column": "location",
+          "pattern": "^(.*?)\\s+(\\d+\\s+.*)$",
+          "group": 2
+        }
+      }
+    },
+    "rules": [
+      {
+        "text": "Voters may vote at any of the Vote Centers listed below.",
+        "source": {
+          "publisher": "Cochise County Elections Department",
+          "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+        }
+      }
+    ],
+    "office": {
+      "name": "Cochise County Elections Department",
+      "phone": "520-432-8970",
+      "url": "https://cochise.az.gov/Elections"
+    },
+    "model": "VOTE_CENTER",
+    "electionAssociationVerified": true
+  },
+  {
+    "id": "legacy:nh:clerk-and-polling-list",
+    "publisher": "New Hampshire Department of State",
+    "url": "https://app.sos.nh.gov/statelistclerkandpolling",
+    "shape": "county-directory",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "NH",
+      "ocdId": "ocd-division/country:us/state:nh",
+      "name": "New Hampshire"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.sos.nh.gov/elections/voters",
+    "discoveredFrom": "https://www.sos.nh.gov/elections/voters",
+    "access": {
+      "status": "bot-wall",
+      "detail": "The public list was protected by reCAPTCHA. The gated ClerkandPolling/GetClerkandPollingList endpoint was identified but deliberately not called. Continue through town election offices and official files.",
+      "checkedAt": "2026-08-19"
+    },
+    "model": "ASSIGNED",
+    "electionAssociationVerified": false
+  },
+  {
+    "id": "legacy:nh:new-london:town-clerk",
+    "publisher": "Town of New London",
+    "url": "https://newlondon.nh.gov/?SEC=78EB571E-6FA5-46AB-B16D-CFF45739DF7E&Type=B_BASIC",
+    "shape": "list-page",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "NH",
+      "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
+      "name": "New London",
+      "countyFips": "33013"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://newlondon.nh.gov/?SEC=78EB571E-6FA5-46AB-B16D-CFF45739DF7E&Type=B_BASIC",
+    "extraction": {
+      "format": "html",
+      "kind": "ELECTION_DAY",
+      "textAssertions": [
+        "Whipple Memorial Town Hall",
+        "25 Seamans"
+      ],
+      "constants": {
+        "name": "Whipple Memorial Town Hall",
+        "address": "25 Seamans Road, New London, NH 03257",
+        "town": "New London"
+      }
+    },
+    "model": "ASSIGNED",
+    "electionAssociationVerified": false
+  },
+  {
+    "id": "legacy:nh:newbury:town-clerk",
+    "publisher": "Town of Newbury",
+    "url": "https://www.newbury.nh.gov/town-clerk",
+    "shape": "list-page",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "NH",
+      "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+      "name": "Newbury",
+      "countyFips": "33013"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.newbury.nh.gov/town-clerk",
+    "extraction": {
+      "format": "html",
+      "kind": "ELECTION_DAY"
+    },
+    "model": "ASSIGNED",
+    "electionAssociationVerified": false
+  },
+  {
+    "id": "legacy:nh:wilmot:town-clerk",
+    "publisher": "Town of Wilmot",
+    "url": "https://www.wilmotnh.org/town-clerk",
+    "shape": "list-page",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "NH",
+      "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town",
+      "name": "Wilmot",
+      "countyFips": "33013"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.wilmotnh.org/town-clerk",
+    "extraction": {
+      "format": "html",
+      "kind": "ELECTION_DAY"
+    },
+    "model": "ASSIGNED",
+    "electionAssociationVerified": false
+  },
+  {
+    "id": "cochise:ballot-box-table",
+    "publisher": "Cochise County Recorder",
+    "url": "https://www.cochise.az.gov/509/Voter-Information",
+    "shape": "list-page",
+    "covers": [
+      "DROP_BOX"
+    ],
+    "scope": {
+      "state": "AZ",
+      "ocdId": "ocd-division/country:us/state:az/county:cochise",
+      "name": "Cochise County",
+      "countyFips": "04003"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.cochise.az.gov/292/Elections",
+    "electionAssociationVerified": true,
+    "model": "VOTE_CENTER",
+    "extraction": {
+      "format": "html",
+      "kind": "DROP_BOX",
+      "columns": {
+        "hours": "Times"
+      },
+      "transforms": {
+        "name": {
+          "column": "Ballot Box Locations",
+          "pattern": "^([^:]+):\\s*(.*?),\\s*(\\d.*)$",
+          "group": 2
+        },
+        "address": {
+          "column": "Ballot Box Locations",
+          "pattern": "^([^:]+):\\s*(.*?),\\s*(\\d.*)$",
+          "group": 3
+        },
+        "town": {
+          "column": "Ballot Box Locations",
+          "pattern": "^([^:]+):",
+          "group": 1
+        }
+      }
+    },
+    "office": {
+      "name": "Cochise County Recorder",
+      "address": "1415 Melody Lane, Building B, Bisbee, AZ 85603",
+      "phone": "520-432-8350",
+      "url": "https://www.cochise.az.gov/509/Voter-Information"
+    },
+    "rules": [
+      {
+        "text": "Ballot drop boxes will remain open through November 2nd at 5:00 pm. On Election day, you may drop off your early ballot at any Vote Center or the Recorder's Office in Bisbee from 6:00 am to 7:00 pm.",
+        "source": {
+          "publisher": "Cochise County Recorder",
+          "url": "https://www.cochise.az.gov/509/Voter-Information",
+          "checkedAt": "2026-10-13"
+        }
+      }
+    ]
+  }
+]

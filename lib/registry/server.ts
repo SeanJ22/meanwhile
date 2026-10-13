@@ -85,9 +85,7 @@ export class RegistryHoldingReadError extends Error {
 let cache: { readonly authorityKey: string; readonly value: Promise<Loaded> } | null = null;
 let registryCache: { readonly authorityKey: string; readonly value: Promise<RegistryLoaded> } | null = null;
 
-// The committed geography is read once per process, and a route can start it first
-// (`prefetchReaderGeography`) beside the edge fetch. A new registry version reuses it. A failed read is
-// never held: the next caller reads again.
+// Cache committed geography across registry versions; a failed read must remain retryable.
 let geometryRead: Promise<GeoFeature[]> | null = null;
 let territoryRead: Promise<BodyTerritoryFile> | null = null;
 
@@ -128,9 +126,7 @@ async function readResolverGeometry(): Promise<GeoFeature[]> {
   const root = process.cwd();
   const stateCodes = new Set(Object.values(FIPS_TO_STATE).map((state) => state.postal.toLowerCase()));
 
-  // The resolver reads a generated manifest, not a directory: `public/geo` mixes client downloads with
-  // build inputs, and per-state derivatives supersede the national files. `tests/resolver-manifest.test.ts`
-  // fails on a canonical `.geojson` that is on neither list.
+  // The manifest separates resolver geometry from downloads and superseded derivatives.
   const manifest = JSON.parse(
     await readFile(join(root, "data", "derived", "resolver-geometry.json"), "utf8"),
   ) as { files: string[] };
@@ -163,9 +159,7 @@ async function readResolverGeometry(): Promise<GeoFeature[]> {
 
 async function readBodyTerritories(): Promise<BodyTerritoryFile> {
   const root = process.cwd();
-  // Literal path segments, not the imported constant: Next traces this route to decide what ships and
-  // cannot resolve `join(root, SOME_CONST)` statically. BODY_TERRITORY_FILE stays the one spelling for
-  // everything else.
+  // Literal path segments let Next include this file in the deployment trace.
   return JSON.parse(
     await readFile(join(root, "data", "states", "az", "geo", "body-territories.geojson"), "utf8"),
   ) as BodyTerritoryFile;
@@ -427,9 +421,7 @@ async function loaded(): Promise<Loaded> {
   const registryKey = registryCache!.authorityKey;
   const { key: authorityKey, federalAvailable } = await currentAuthorityKey(registryKey);
   if (cache?.authorityKey === authorityKey) return cache.value;
-  // Cache the materialization only for the exact promoted versions. Pointer
-  // refresh uses the shared 30-second civic-data TTL; a new GOOD version gets
-  // a new key and reaches a warm Reader without a process restart.
+  // Cache by promoted versions so a new GOOD pointer reaches warm Readers after their shared TTL.
   const value = load(base, federalAvailable).catch((error) => {
     if (cache?.value === value) cache = null;
     throw error;
@@ -496,10 +488,10 @@ export async function divisionsByOcdIds(ocdIds: readonly string[], context?: { z
   return out;
 }
 
-export async function seatHolderById(id: string): Promise<SeatHolder | null> {
+export async function seatHolderById(id: string, stateHint?: string): Promise<SeatHolder | null> {
   // The publisher namespace establishes the one permitted state authority before any store is opened. A
   // state identity never causes a federal/registry read or a name join.
-  const officialStateScope = statePeopleScopeForId(id);
+  const officialStateScope = statePeopleScopeForId(id,stateHint);
   if (officialStateScope) {
     const held = await heldStateLegislatorsEdgeFirst(officialStateScope);
     const matches = held?.seats.filter((holder) => personIdentityKeys(holder).has(id)) ?? [];
@@ -541,17 +533,12 @@ export async function allSeatHolders(divisionIds: readonly string[] = []): Promi
       const selected = seatHolderForMembership(holder, holder.memberships?.find(row => row.current === true)?.id);
       return selected ? [selected] : [];
     }))]);
-  const holders = new Map<string, SeatHolder>();
-  const primary = base.status === "fulfilled" ? base.value : [];
+  let holders: SeatHolder[] = [];
   for (const read of [base, ...stateReads]) if (read.status === "fulfilled") {
-    for (const holder of read.value) {
-      const sameDivision = holder.officeJurisdictionOcdId
-        ? primary.filter(row => row.officeJurisdictionOcdId === holder.officeJurisdictionOcdId) : [];
-      if (scopedHolders(sameDivision, [holder]).some(row => row.id === holder.id)) holders.set(holder.id, holder);
-    }
+    holders=scopedHolders(holders,read.value);
   }
   if ([base, ...stateReads].every(read => read.status === "rejected")) throw new Error("Officeholder authorities unavailable");
-  return [...holders.values()];
+  return holders;
 }
 
 export async function partyByOfficeholderId(): Promise<
@@ -667,12 +654,7 @@ export async function settleCoverageStateLegislators(
       const holder = seatHolderForMembership(person, link.membershipId);
       if (!holder) continue;
       const existing = nextOfficials.get(link.ocdId) ?? [];
-      if (!existing.some((row) => row.id === holder.id && row.officeTitle === holder.officeTitle)) {
-        nextOfficials.set(
-          link.ocdId,
-          [...existing, holder].sort((a, b) => a.name.localeCompare(b.name)),
-        );
-      }
+      nextOfficials.set(link.ocdId,scopedHolders(existing,[holder]).sort((a,b)=>a.name.localeCompare(b.name)));
     }
   }
 

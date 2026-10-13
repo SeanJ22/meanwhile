@@ -79,7 +79,6 @@ import { jurisdictionKeyForContestId } from "@/lib/ballot/pick-jurisdiction";
 import { PickControl } from "@/components/ballot/pick-control";
 import { currentRegistrationLinks, registrationLinkFor } from "@/lib/ballot/registration-links";
 import { currentElectionOffices } from "@/lib/ballot/election-offices";
-import { currentPollingPlaceLinks, pollingPlaceLinkFor } from "@/lib/ballot/polling-place-links";
 import { WhereToVote } from "@/components/ballot/where-to-vote";
 import { incumbentHolderFor } from "@/lib/ballot/incumbent-record";
 import { contestIncumbency } from "@/lib/ballot/incumbency-resolve";
@@ -665,12 +664,10 @@ export default async function BallotPage({
   };
 
   let registrationLinks: ReturnType<typeof currentRegistrationLinks> = [];
-  let pollingPlaceLinks: ReturnType<typeof currentPollingPlaceLinks> = [];
   let electionOffices: ReturnType<typeof currentElectionOffices> = [];
   if (auxiliaryPreloads.has("ballot-navigation") && !auxiliaryFailed.has("ballot-navigation")) {
     try {
       registrationLinks = currentRegistrationLinks();
-      pollingPlaceLinks = currentPollingPlaceLinks();
       electionOffices = currentElectionOffices(askOcdIds);
     } catch {
       auxiliaryFailures.push("ballot-navigation");
@@ -892,6 +889,7 @@ export default async function BallotPage({
         </div>
       )}
 
+      <div className="my-4"><WhereToVote /></div>
       <OfficialFilings rows={filingRows} />
       <StateOfficeContacts offices={stateOfficesForDivisions(askOcdIds)} />
       {/* Who runs this reader's elections and how to reach them, from their own city's or county's saved page. */}
@@ -918,12 +916,10 @@ export default async function BallotPage({
       {[...new Set(askOcdIds.flatMap(id => /\/state:([a-z]{2})(?:\/|$)/.exec(id)?.[1]?.toUpperCase() ?? []))]
         .filter(state => !(dates && set?.election.state === state)).map(state => {
           const registration = registrationLinkFor(state, registrationLinks);
-          const polling = pollingPlaceLinkFor(state, pollingPlaceLinks);
-          if (!registration && !polling) return null;
+          if (!registration) return null;
           return <section key={state} aria-label={`${state} voting information`} className="my-6 space-y-2">
             <h2 className="text-lg font-semibold">{state} voting information</h2>
             {registration && <p><a href={registration.url}>{registration.label}</a></p>}
-            {polling && <p><a href={polling.url}>{polling.label}</a></p>}
           </section>;
         })}
       {set && (divisionHoldingUnavailable || auxiliaryFailures.length > 0) && (
@@ -947,7 +943,6 @@ export default async function BallotPage({
         set &&
         (() => {
           const reg = registrationLinkFor(set.election.state, registrationLinks);
-          const polls = pollingPlaceLinkFor(set.election.state, pollingPlaceLinks);
           const regStep = dates.steps.find((s) =>
             /registration deadline/i.test(s.label),
           );
@@ -1024,9 +1019,8 @@ export default async function BallotPage({
                 )}
               </ul>
 
-              {(polls || reg) && (
+              {(
                 <div className="mt-3 flex flex-col gap-3">
-                  {polls && <WhereToVote />}
               {/* Registration status is the state's to answer, so this pill leaves the app and says so. */}
                   {reg && (
                     <div>

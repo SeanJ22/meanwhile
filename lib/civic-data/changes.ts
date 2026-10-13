@@ -33,10 +33,7 @@ function textKey(value: unknown, keys: readonly string[]): string | null {
 function keyed(prefix: string, values: readonly unknown[], keys: readonly string[]): CivicRecordMember[] {
   return values.map((record) => {
     const key = textKey(record, keys);
-    // A row position is not a durable civic identity: inserting an unrelated
-    // sibling would silently rename every later member. Leave the key invalid
-    // so the promotion validator refuses the candidate before computing a
-    // delta or moving the pointer.
+    // Row positions change when siblings are inserted; an empty identity makes validation refuse the candidate.
     return { key: key === null ? "" : `${prefix}:${key}`, record };
   });
 }
@@ -100,6 +97,18 @@ export function civicRecordFacts(recordClass: RoutineRecordClass, member: CivicR
       return { ...row, minutesDocument: facts };
     }
   }
+  if (recordClass === "GOOGLE_CIVIC_VOTERINFO") {
+    const row = object(member.record);
+    if (row === null) return member.record;
+    const { checkedAt: _checkedAt, rows, ...facts } = row;
+    return { ...facts, rows: array(rows).map(value => {
+      const fact = object(value) ?? {};
+      return { ...fact, sources: array(fact.sources).map(source => {
+        const { collectedAt: _collectedAt, ...attribution } = object(source) ?? {};
+        return attribution;
+      }) };
+    }) };
+  }
   if (recordClass === "MEETING" && member.key.startsWith("meeting:")) {
     return withoutProvenanceStamps(member.record, ["collectedAt"]);
   }
@@ -144,7 +153,10 @@ function withoutProvenanceStamps(record: unknown, stamps: readonly string[]): un
   const provenance = object(row?.provenance);
   if (row === null || provenance === null) return record;
   const factualProvenance = Object.fromEntries(Object.entries(provenance).filter(([key]) => !stamps.includes(key)));
-  return { ...row, provenance: factualProvenance };
+  const fieldSources = object(row.fieldSources);
+  return { ...row, provenance: factualProvenance,
+    ...(fieldSources ? {fieldSources:Object.fromEntries(Object.entries(fieldSources).map(([field,source])=>[field,
+      object(source) ? Object.fromEntries(Object.entries(object(source)!).filter(([key])=>!stamps.includes(key))) : source]))} : {}) };
 }
 
 export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknown): readonly CivicRecordMember[] {
@@ -177,11 +189,7 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
         }),
       ];
     case "STATE_LEGISLATOR_VOTES":
-      // One record class, one per-state fan-out contract, two payload shapes:
-      // a per-legislator record keys each of that member's positions (bounded
-      // by the member's tenure, never the chamber), and the per-state session
-      // marker the runner's clock reads keys its own watermark. Only the
-      // per-legislator record carries positions.
+      // A session marker holds the runner watermark; per-legislator payloads hold tenure-bounded positions.
       return typeof root.officeholderId === "string" && root.officeholderId
         ? array(root.positions).map((record, index) => {
             const row = object(record) ?? {};
@@ -283,6 +291,10 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
         ...Object.entries(rosterPhotos).map(([key, record]) => ({ key: `roster-photo:${key}`, record })),
       ].sort((left, right) => left.key.localeCompare(right.key));
     }
+    case "GOOGLE_CIVIC_VOTERINFO": {
+      // Scoped snapshots preserve sources without claiming omitted contests or sites were deleted.
+      return [{ key: "google-civic:query-snapshot", record: root }];
+    }
     case "VOTING_SITE":
       return array(root.jurisdictions).flatMap((record, index) => {
         const jurisdiction = object(record) ?? {};
@@ -325,11 +337,7 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
       return members.sort((left, right) => left.key.localeCompare(right.key));
     }
     case "REGISTRATION": {
-      // One civic record per Census division and per registered body. A
-      // division is keyed by its OCD id and Census GEOID together, because the
-      // committed geometry already gives one id to two school districts; a body
-      // by its id. The records carry the reference's build date, never the
-      // run's clock, so an unchanged month compares equal.
+      // OCD ids can collide for school districts, so a division's identity also includes its Census GEOID.
       const divisions = array(root.divisions).map((record) => {
         const row = object(record);
         const ocdId = row && typeof row.ocdId === "string" ? row.ocdId : "";
@@ -527,7 +535,6 @@ export function rowKeyedCivicRecordsFor(recordClass: RoutineRecordClass, payload
   ];
 }
 
-/** The earlier projection: one member per stored row, compared whole. Pointers written under it are re-proved against it, never against a later contract. */
 export const ROW_KEYED_CIVIC_CHANGE_CONTRACT: CivicChangeContract = {
   members: rowKeyedCivicRecordsFor,
   facts: (_recordClass, member) => member.record,
@@ -538,9 +545,7 @@ export function candidateChangeSet(
   previousPayload: unknown | null,
   contract: CivicChangeContract = CIVIC_CHANGE_CONTRACT,
 ): RoutineChangeSet {
-  // A caller-supplied member list is evidence to validate, never authority for
-  // the durable delta. Derive Admin's exact changed/removed records from the
-  // same Reader projection that the canonical pointer will serve.
+  // Derive deltas from the Reader projection; caller-supplied members remain evidence to validate.
   const next = contract.members(candidate.recordClass, candidate.readModel);
   const prior = previousPayload === null ? [] : contract.members(candidate.recordClass, previousPayload);
   const priorByKey = new Map(prior.map((member) => [member.key, member]));

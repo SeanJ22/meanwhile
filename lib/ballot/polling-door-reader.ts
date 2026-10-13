@@ -7,7 +7,7 @@ import type { GeneralizedCivicExtractionContract, RecordExtractionShape } from "
 import { captureIntact } from "../civic-data/worker-publication-evidence.ts";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import { isOfficialSource, type OfficialLinkingPage } from "../civic-data/source-authority.ts";
-import type { VotingJurisdiction, VotingSite, VotingModel, SiteKind } from "./voting-sites.ts";
+import type { VotingJurisdiction, VotingSite, VotingModel, SiteKind, VotingSource } from "./voting-sites.ts";
 
 export const POLLING_DOOR_KINDS = ["polling-places-csv", "polling-places-json", "polling-places-html", "polling-places-pdf-text"] as const;
 const string = (value: unknown) => typeof value === "string" ? value.trim() : "";
@@ -17,6 +17,7 @@ function model(value: unknown): VotingModel {
   const text = words(string(value)).replaceAll("_", " ");
   if (["vote center", "vote centers"].includes(text)) return "VOTE_CENTER";
   if (["assigned", "assigned site", "assigned sites"].includes(text)) return "ASSIGNED";
+  if (["all mail", "all-mail"].includes(text)) return "ALL_MAIL";
   throw new Error("The source does not state a readable voting model.");
 }
 function kind(value: unknown): SiteKind {
@@ -24,6 +25,9 @@ function kind(value: unknown): SiteKind {
   if (text === "election day") return "ELECTION_DAY";
   if (text === "early voting") return "EARLY_VOTING";
   if (text === "mobile") return "MOBILE";
+  if (["drop box", "drop boxes"].includes(text)) return "DROP_BOX";
+  if (["vote center", "vote centers"].includes(text)) return "VOTE_CENTER";
+  if (["satellite", "satellite office"].includes(text)) return "SATELLITE";
   throw new Error("The source does not state a readable site kind.");
 }
 function coordinate(value: unknown, limit: number): number | null {
@@ -69,21 +73,45 @@ export function readPollingDoor(input: {
     worker: { role: "PARSER", instance: door.doorId, provider: "deterministic", version: "1" } }, contract);
   if (parsed.verdict !== "EXTRACTED" || parsed.actualRowCount !== parsed.sourceRowCount) throw new Error("The polling source rows are empty, incomplete or ambiguous.");
   const models = new Set<VotingModel>();
+  const source: VotingSource = { publisher: evidence.sourceId, url: evidence.canonicalUrl, checkedAt: capture.observedAt };
+  const optionalSiteFields = ["days", "hours", "precinct", "town", "countyFips", "countySubdivisionGeoid", "ward",
+    "aiannhGeoid", "locationNotes", "accessibilityNotes", "lastUpdated", "electionDate"] as const;
   const sites: VotingSite[] = parsed.records.map(row => {
     const value = row.fields;
     if (words(string(value.jurisdictionName)) !== words(input.jurisdictionName)) throw new Error("A polling source row belongs to another jurisdiction.");
     models.add(model(value.model));
     const sourceLat = coordinate(value.lat, 90), sourceLng = coordinate(value.lng, 180);
     const lat = sourceLng === null ? null : sourceLat, lng = sourceLat === null ? null : sourceLng;
+    const siteSource: VotingSource = { ...source,
+      ...(string(value.lastUpdated) ? { lastUpdated: string(value.lastUpdated) } : {}),
+      ...(string(value.sourceTitle) ? { title: string(value.sourceTitle) } : {}) };
+    const districtOcdIds = string(value.districtOcdIds).split(/[;\n]/).map(id => id.trim()).filter(Boolean);
     return { id: `voting-site:${digest(`${door.doorId}\n${row.id}`)}`, name: string(value.name), address: string(value.address),
       room: string(value.room) || null, lat, lng, kind: kind(value.kind),
-      election: string(value.election) || null, serves: string(value.serves) || null };
+      election: string(value.election) || null, serves: string(value.serves) || null,
+      ...Object.fromEntries(optionalSiteFields.flatMap(field => string(value[field]) ? [[field, string(value[field])]] : [])),
+      ...(districtOcdIds.length ? { districtOcdIds } : {}),
+      ...(string(value.rules) ? { rules: [{ text: string(value.rules), source: siteSource }] } : {}),
+      sources: [siteSource] };
   });
   if (models.size !== 1 || new Set(sites.map(site => site.id)).size !== sites.length) throw new Error("The source repeats a site or contradicts its voting model.");
   const elections = new Set(sites.map(site => site.election));
+  const shared = (field: string): string | undefined => {
+    const values = new Set(parsed.records.map(row => string(row.fields[field])).filter(Boolean));
+    return values.size === 1 ? [...values][0] : undefined;
+  };
+  const officeName = shared("officeName"), phone = shared("officePhone") ?? shared("phone"), email = shared("officeEmail") ?? shared("email");
+  const officeAddress = shared("officeAddress"), officeUrl = shared("officeUrl");
+  const electionDate = shared("electionDate"), countyFips = shared("countyFips"), countySubdivisionGeoid = shared("countySubdivisionGeoid");
   return { ocdId: door.ocdId, name: input.jurisdictionName, state: identity.usps, model: [...models][0],
     election: elections.size === 1 ? [...elections][0] : null, sites,
     sourceOrg: evidence.sourceId, sourceUrl: evidence.canonicalUrl, collectedAt: capture.observedAt.slice(0, 10), refusal: null,
+    sources: [source],
+    ...(electionDate ? { electionDate } : {}), ...(countyFips ? { countyFips } : {}),
+    ...(countySubdivisionGeoid ? { countySubdivisionGeoid } : {}),
+    ...(officeName || phone || email || officeAddress || officeUrl ? { office: { name: officeName ?? evidence.sourceId,
+      ...(phone ? { phone } : {}), ...(email ? { email } : {}), ...(officeAddress ? { address: officeAddress } : {}),
+      ...(officeUrl ? { url: officeUrl } : {}) } } : {}),
     ...(input.linkingPage ? { sourceLinkingPage: input.linkingPage } : {}),
     ...(evidence.sourceDocument ? { sourceRawSha256: evidence.sourceDocument.contentHash.slice(7) } : {}) };
 }

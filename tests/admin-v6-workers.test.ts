@@ -347,7 +347,8 @@ test("automatic migration outcomes use the existing deploy card and do not becom
   assert.equal(result.data.update?.status, "REFUSED");
   assert.equal(result.data.update?.fixId, null);
   assert.equal(result.data.status.lastUsefulProgress, null);
-  assert.match(result.data.update?.what ?? "", /Committed journal mismatch/);
+  assert.equal(result.data.update?.what, "The latest database update did not finish: the step that runs before new code goes live was refused.", "the face says what happened in words");
+  assert.match(result.data.update?.technical.join("\n") ?? "", /Committed journal mismatch/, "the migration's own output is kept for the details");
   for (let i = 0; i < 3; i++) {
     const writtenAt = new Date(Date.parse(NOW) + (i + 1) * 1000).toISOString();
     await repos.ownerDigests.append("owner-digest", `contract-${i}`, { formatVersion: 1, digestId: `contract-${i}`,
@@ -357,16 +358,16 @@ test("automatic migration outcomes use the existing deploy card and do not becom
   }
   const later = ok(await section("us", repos));
   assert.equal(later.data.update?.status, "REFUSED", "repeated contract success cannot hide an expand refusal");
-  assert.match(later.data.update?.what ?? "", /Committed journal mismatch/);
-  assert.match(later.data.update?.what ?? "", /Contract reading 2/);
-  assert.doesNotMatch(later.data.update?.what ?? "", /Contract reading [01]/);
+  assert.match(later.data.update?.technical.join("\n") ?? "", /Committed journal mismatch/);
+  assert.match(later.data.update?.technical.join("\n") ?? "", /Contract reading 2/);
+  assert.doesNotMatch(later.data.update?.technical.join("\n") ?? "", /Contract reading [01]/);
   await repos.ownerDigests.append("owner-digest", "invalid-phase", { formatVersion: 1, digestId: "invalid-phase",
     writtenAt: new Date(Date.parse(NOW) + 4000).toISOString(), headline: "Production migrations", lines: [], cycleOk: false,
     testedSha: "c".repeat(40), migration: { phase: "all", state: "REFUSED", summary: "Production needs an explicit phase.",
       targetHost: "ep-dry-river-axwtolzc" } } as never, new Date(Date.parse(NOW) + 4000).toISOString());
   const invalid = ok(await section("us", repos));
-  assert.match(invalid.data.update?.what ?? "", /Production needs an explicit phase/);
-  assert.match(invalid.data.update?.what ?? "", /Committed journal mismatch/);
+  assert.match(invalid.data.update?.technical.join("\n") ?? "", /Production needs an explicit phase/);
+  assert.match(invalid.data.update?.technical.join("\n") ?? "", /Committed journal mismatch/);
 });
 
 test("the revision follows saved sources, not the clock or a lease renewal", async () => {

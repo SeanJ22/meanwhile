@@ -469,6 +469,8 @@ export function fairAutonomousWorkIds(items: readonly WorkItem[], lastServed: Re
   const sequences = ordered.map(([send, group]) => {
     group.items.sort((a, b) =>
       (lastServed.get(a.id) ?? "").localeCompare(lastServed.get(b.id) ?? "") ||
+      (a.autonomousPlan?.capability === "voting-source-blanks" && b.autonomousPlan?.capability === "voting-source-blanks"
+        ? (b.autonomousPlan.subjectPopulation ?? -1) - (a.autonomousPlan.subjectPopulation ?? -1) : 0) ||
       a.createdAt.localeCompare(b.createdAt) || a.id.localeCompare(b.id));
     const byPart = new Map<string, WorkItem[]>();
     for (const item of group.items) {

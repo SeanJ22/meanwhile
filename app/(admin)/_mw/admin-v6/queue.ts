@@ -93,14 +93,31 @@ function sendRow(x: SentInstruction): QueueRow {
   };
 }
 
+/** A hunt's state in a word, and in a sentence: a paused hunt always says who paused it, when, and how to go on. */
+export function huntStatus(h: Hunt): { readonly chip: string; readonly next: string } {
+  if (h.status === "running") return { chip: "Hunting", next: "Works on its next round." };
+  if (h.status === "stopped") return { chip: "Stopped", next: "Nothing more will be started." };
+  if (h.status === "paused") {
+    const p = h.pause ?? null;
+    const when = p?.since ? ` ${mst(p.since)}` : "";
+    const note = p?.note ? ` You said: “${p.note}”` : "";
+    const why = p?.kind === "runner" ? `You paused the runner${when}, so no work runs.${note} Resume the runner to go on.`
+      : p?.kind === "paid-work" ? `You paused all paid work${when}.${note} Resume paid work to go on.`
+        : p?.kind === "budget" ? `Its budget is set to $0${when}.${note} Resume it to keep going.`
+          : "Resume it to keep going.";
+    return { chip: "Paused", next: why };
+  }
+  return { chip: "Active", next: "The runner works on it each round. Whether a worker is on it at this moment is not reported." };
+}
+
 function huntRow(h: Hunt): QueueRow {
   const filter: QueueFilter = h.status === "running" ? "in-progress" : h.status === "stopped" ? "done" : "waiting";
-  const chip = h.status === "running" ? "Hunting" : h.status === "paused" ? "Paused" : h.status === "stopped" ? "Stopped" : "Saved, not reported running";
+  const { chip, next } = huntStatus(h);
   const spent = Math.max(0, h.spentUsd);
   return {
-    key: `hunt:${h.id}`, kind: "hunt", what: `Hunt: ${h.name}`, chip, tone: filter === "in-progress" ? "good" : "neutral", filter,
+    key: `hunt:${h.id}`, kind: "hunt", what: `Hunt: ${h.name}`, chip, tone: h.status === "paused" ? "warn" : filter === "in-progress" ? "good" : "neutral", filter,
     owner: "The runner", due: null,
-    next: h.status === "running" ? "Works on its next round." : h.status === "paused" ? "Resume it to keep going." : h.status === "stopped" ? "Nothing more will be started." : "Whether paid work is running is not reported.",
+    next,
     progress: h.limitUsd > 0 ? { done: Math.min(spent, h.limitUsd), of: h.limitUsd, words: `$${spent.toFixed(2)} of $${h.limitUsd.toFixed(2)} budget used` } : null,
     actions: h.status === "stopped" ? [] : [{ kind: h.status === "paused" ? "hunt-resume" : "hunt-pause", target: h.placeKey }, { kind: "hunt-stop", target: h.placeKey }],
     open: null, at: h.startedAt, receipt: null, sendId: null,

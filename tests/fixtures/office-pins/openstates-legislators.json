@@ -1,0 +1,83 @@
+{
+ "source": "https://data.openstates.org/people/current/",
+ "retrievedAt": "2026-10-13T04:08:59.333279+00:00",
+ "selection": "Open States current-people CSV rows for NJ LD 15 (08628) and AZ LD 20 (85701), office and identity columns kept verbatim.",
+ "rows": {
+  "nj": [
+   {
+    "id": "ocd-person/c6d61a12-eeb5-4400-943d-68a81b0728f0",
+    "name": "Anthony Verrelli",
+    "current_party": "Democratic",
+    "current_district": "15",
+    "current_chamber": "lower",
+    "email": "asmverrelli@njleg.org",
+    "district_address": "150 W. State St. Suite 100B, Trenton, NJ 08608",
+    "district_voice": "609-292-0500",
+    "capitol_address": "",
+    "capitol_voice": ""
+   },
+   {
+    "id": "ocd-person/26eb8b3c-59a5-49ca-841c-13a569444994",
+    "name": "Shirley Turner",
+    "current_party": "Democratic",
+    "current_district": "15",
+    "current_chamber": "upper",
+    "email": "senturner@njleg.org",
+    "district_address": "850 Bear Tavern Road Suite 101, Ewing Township, NJ 08628",
+    "district_voice": "609-323-7239",
+    "capitol_address": "",
+    "capitol_voice": ""
+   },
+   {
+    "id": "ocd-person/b432ec8c-f914-47dc-addd-740dfc95daaf",
+    "name": "Verlina Reynolds-Jackson",
+    "current_party": "Democratic",
+    "current_district": "15",
+    "current_chamber": "lower",
+    "email": "aswreynoldsjackson@njleg.org",
+    "district_address": "144 W. State St., Trenton, NJ 08608",
+    "district_voice": "609-571-9638",
+    "capitol_address": "",
+    "capitol_voice": ""
+   }
+  ],
+  "az": [
+   {
+    "id": "ocd-person/6dba6afa-b274-4273-b8c6-270d27214eee",
+    "name": "Alma Hernández",
+    "current_party": "Democratic",
+    "current_district": "20",
+    "current_chamber": "lower",
+    "email": "ahernandez@azleg.gov",
+    "district_address": "",
+    "district_voice": "",
+    "capitol_address": "",
+    "capitol_voice": ""
+   },
+   {
+    "id": "ocd-person/81d12f3a-b635-4111-be8d-a71d2f7565f2",
+    "name": "Betty Villegas",
+    "current_party": "Democratic",
+    "current_district": "20",
+    "current_chamber": "lower",
+    "email": "bvillegas@azleg.gov",
+    "district_address": "",
+    "district_voice": "",
+    "capitol_address": "",
+    "capitol_voice": ""
+   },
+   {
+    "id": "ocd-person/3c965e03-1e51-4f10-a037-4fb2f35292c5",
+    "name": "Sally Gonzales",
+    "current_party": "Democratic",
+    "current_district": "20",
+    "current_chamber": "upper",
+    "email": "sgonzales@azleg.gov",
+    "district_address": "",
+    "district_voice": "",
+    "capitol_address": "",
+    "capitol_voice": ""
+   }
+  ]
+ }
+}

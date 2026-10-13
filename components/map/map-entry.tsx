@@ -1,9 +1,8 @@
 "use client";
 
 
-import { OfficeCard } from "./popup/office-card";
 import { useOfficePins } from "@/hooks/use-office-pins";
-import { groupOfficePins, type OfficeSite } from "@/lib/map/office-pins";
+import { groupOfficePins, officeOwners, type MapBounds, type OfficePin } from "@/lib/map/office-pins";
 import { useBodyOfficeLocations } from "@/hooks/use-body-office-locations";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { forgetCamera } from "@/lib/map/camera-memory";
@@ -235,13 +234,14 @@ function MapEntryInner() {
    * pops back. The depth cap guards cycles by dropping the oldest frame.
    */
   type LargeSurface =
-    | { kind: "office"; site: OfficeSite }
     | { kind: "entity"; subject: ModalSubject }
     | {
         kind: "official";
         holder: SeatHolder;
         seatLabel: string | null;
         tier: "local" | "state" | "national";
+        /** The district office the card was opened from, shown near its top. */
+        office?: OfficePin;
       };
   const LARGE_STACK_LIMIT = 8;
   const [largeStack, setLargeStack] = useState<LargeSurface[]>([]);
@@ -453,10 +453,17 @@ function MapEntryInner() {
     [pinned, ui, view],
   );
 
-  const officePins = useOfficePins(pinned?.coverage ?? null);
-  const officeSites = useMemo(() => groupOfficePins(officePins), [officePins]);
   const officeLocations = useBodyOfficeLocations(pinned?.coverage?.bodies ?? EMPTY_COVERED_BODIES, pinned?.meetings ?? EMPTY_MEETINGS);
   const venues = useMemo<Venue[]>(() => groupByVenue(meetings, pinned?.listingIdentity, officeLocations), [meetings, pinned?.listingIdentity, officeLocations]);
+
+  /* The reader's representatives' district offices: a pin each, or a line on the venue card in the same building. */
+  const [mapBounds, setMapBounds] = useState<MapBounds | null>(null);
+  const officePins = useOfficePins(pinned?.coverage ?? null, { bounds: mapBounds, venues });
+  const officeSites = useMemo(() => groupOfficePins(officePins.pins), [officePins.pins]);
+  const officeOwnerById = useMemo(
+    () => new Map(officeOwners(pinned?.coverage ?? null).map((owner) => [owner.holder.id, owner])),
+    [pinned?.coverage],
+  );
 
   /*
    * The map gets every venue in the held result plus the visible keys, so a
@@ -508,9 +515,7 @@ function MapEntryInner() {
   const openLarge = useCallback(
     (next: LargeSurface) => {
       captureEvent(
-        next.kind === "office"
-          ? { type: "CARD_OPEN", cardId: `BODY:${next.site.offices[0].ownerId}`, cardKind: "BODY" }
-          : next.kind === "official"
+        next.kind === "official"
           ? { type: "CARD_OPEN", cardId: `OFFICIAL:${next.holder.id}`, cardKind: "OFFICIAL" }
           : { type: "CARD_OPEN", cardId: `${next.subject.subjectKind}:${next.subject.subjectId}`, cardKind: next.subject.subjectKind },
       );
@@ -532,9 +537,10 @@ function MapEntryInner() {
       seatLabel: string | null,
       tier: "local" | "state" | "national",
       ocdId: string | null,
+      office?: OfficePin,
     ) => {
       // A person opens their full card in the one large card.
-      openLarge({ kind: "official", holder, seatLabel, tier });
+      openLarge({ kind: "official", holder, seatLabel, tier, ...(office ? { office } : {}) });
       // The holder id names the official opened, never the reader.
       logEvent("OFFICIAL_OPENED", ocdId ? [ocdId] : [], {
         officialId: holder.id,
@@ -542,6 +548,23 @@ function MapEntryInner() {
     },
     [openLarge],
   );
+
+  /** An office opens its owner's battlecard, with that office near the top. */
+  const openOffice = useCallback(
+    (office: OfficePin) => {
+      const owner = officeOwnerById.get(office.ownerId);
+      if (owner) openOfficial(owner.holder, owner.seatLabel, owner.tier, null, office);
+    },
+    [officeOwnerById, openOfficial],
+  );
+  /* Bounds arrive after every settled move; an unchanged view keeps its identity so nothing recomputes. */
+  const onMapBounds = useCallback((next: MapBounds) => {
+    setMapBounds((current) =>
+      current && current.west === next.west && current.south === next.south && current.east === next.east && current.north === next.north
+        ? current
+        : next,
+    );
+  }, []);
 
   // Opening the list overlay closes any large popup. Adjust-during-render.
   const [seenListOpen, setSeenListOpen] = useState(ui.listOverlayOpen);
@@ -762,6 +785,7 @@ function MapEntryInner() {
       meetings,
       listingIdentity: pinned?.listingIdentity,
       venues,
+      officePins: officePins.pins.length,
       result: answer,
       location,
       drawnDistricts,
@@ -777,7 +801,7 @@ function MapEntryInner() {
       zipPartial: answer?.partialOcdIds ? new Set(answer.partialOcdIds) : null,
       basis: view?.key.startsWith("street:") ? "ADDRESS" : "ZIP",
     };
-  }, [current, shown, meetings, pinned?.listingIdentity, venues, location, drawnDistricts, failure, view]);
+  }, [current, shown, meetings, pinned?.listingIdentity, venues, officePins.pins.length, location, drawnDistricts, failure, view]);
 
   /*
    * Every autocomplete row opens something. A meeting row with no venue opens
@@ -1115,9 +1139,7 @@ function MapEntryInner() {
   const cardKey = cardView
     ? cardView.kind === "large"
       ? `large:${largeStack.length}:${
-          cardView.surface.kind === "office"
-            ? cardView.surface.site.id
-            : cardView.surface.kind === "entity"
+          cardView.surface.kind === "entity"
             ? cardView.surface.subject.subjectId
             : cardView.surface.holder.id
         }`
@@ -1503,12 +1525,13 @@ function MapEntryInner() {
             placeless={selectedVenuePlaceless}
             onOpenMeeting={openMeeting}
             onShowOnMap={parkCard}
+            offices={officePins.atVenue.get(cardView.venue.key)}
+            onOpenOffice={openOffice}
             onClose={closeCard}
           />
         );
       case "large": {
         const surface = cardView.surface;
-        if (surface.kind === "office") return <OfficeCard site={officeSites.find(site => site.id === surface.site.id) ?? surface.site} />;
         if (surface.kind === "entity") {
           const subject =
             surface.subject.divisionOcdId &&
@@ -1586,6 +1609,7 @@ function MapEntryInner() {
             holder={surface.holder}
             seatLabel={surface.seatLabel}
             tier={surface.tier}
+            office={surface.office}
             reactionContext={
               view
                 ? {
@@ -1607,17 +1631,13 @@ function MapEntryInner() {
 
   const cardTone =
     cardView?.kind === "large"
-      ? cardView.surface.kind === "office"
-        ? "var(--accent-local)"
-        : cardView.surface.kind === "entity"
+      ? cardView.surface.kind === "entity"
         ? `var(--accent-${cardView.surface.subject.tier})`
         : `var(--accent-${cardView.surface.tier})`
       : undefined;
   const cardKicker =
     cardView?.kind === "large"
-      ? cardView.surface.kind === "office"
-        ? "Office"
-        : cardView.surface.kind === "official"
+      ? cardView.surface.kind === "official"
         ? "Battlecard"
         : cardView.surface.subject.subjectKind === "MEETING"
           ? "Meeting"
@@ -1677,14 +1697,15 @@ function MapEntryInner() {
             allowAutoFrame={view?.kind !== "settled"}
             focusStateOcdId={focusState.activeOcdId}
             officeSites={officeSites}
-            selectedOfficeId={large?.kind === "office" ? large.site.id : null}
+            selectedOfficeId={large?.kind === "official" ? (large.office?.id ?? null) : null}
             onSelectOffice={id => {
-              const site = officeSites.find(value => value.id === id);
-              if (!site) return;
+              const office = officePins.pins.find(value => value.id === id);
+              if (!office) return;
               dispatch({ type: "select/venue", key: null });
               dispatch({ type: "select/district", ocdId: null, districtType: null });
-              openLarge({ kind: "office", site });
+              openOffice(office);
             }}
+            onBoundsChange={onMapBounds}
             votingSites={votingPins}
             votingAddressPoint={votingAddressPoint}
             onSelectVotingSite={setSelectedVotingSiteId}
@@ -1876,11 +1897,10 @@ function MapEntryInner() {
               : cardView.kind === "large" && cardView.surface.kind === "entity" && cardView.surface.subject.subjectKind === "BODY" ? { type: "BODY", id: cardView.surface.subject.subjectId } : undefined}
             kicker={cardKicker}
             kickerTone={cardTone}
+            enter={cardView.kind === "large" && cardView.surface.kind === "official" && cardView.surface.office ? "rise" : undefined}
             zip={clusterZip}
             recordId={cardView.kind === "large"
-              ? cardView.surface.kind === "office"
-                ? cardView.surface.site.id
-                : cardView.surface.kind === "entity"
+              ? cardView.surface.kind === "entity"
                 ? cardView.surface.subject.subjectId
                 : cardView.surface.holder.id
               : cardView.kind === "venue" ? cardView.venue.key : null}
@@ -1925,7 +1945,7 @@ function MapEntryInner() {
 /** The card's name for a view; also the "← Back to …" label. */
 function cardViewLabel(
   view:
-    | { kind: "large"; surface: { kind: "office"; site: OfficeSite } | { kind: "entity"; subject: ModalSubject } | { kind: "official"; holder: SeatHolder } }
+    | { kind: "large"; surface: { kind: "entity"; subject: ModalSubject } | { kind: "official"; holder: SeatHolder } }
     | { kind: "venue"; venue: Venue }
     | { kind: "door"; door: "bodies" | "districts" | "officials" }
     | { kind: "list" }
@@ -1933,9 +1953,7 @@ function cardViewLabel(
 ): string {
   switch (view.kind) {
     case "large":
-      return view.surface.kind === "office"
-        ? view.surface.site.name
-        : view.surface.kind === "entity"
+      return view.surface.kind === "entity"
         ? view.surface.subject.title
         : view.surface.holder.name;
     case "venue":

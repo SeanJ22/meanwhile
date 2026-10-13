@@ -1147,6 +1147,13 @@
   .mw-card-body {
     padding: var(--mw-18) var(--space-4) var(--mw-44);
   }
+  .mw-card[data-enter="rise"] {
+    animation: mw-card-rise var(--dur-press) var(--ease-lumen) both;
+  }
+}
+@keyframes mw-card-rise {
+  from { transform: translateY(110%); }
+  to { transform: none; }
 }
 @media (min-width: 640px) {
   .mw-sheet-handle {
@@ -1652,30 +1659,283 @@ details.mw-sources > summary {
 .wtp-pin[data-venue-kind="ONLINE_ONLY"] .wtp-pin-count { color: var(--online); background: var(--panel); font-size: var(--text-caption); }
 .wtp-pin[data-venue-kind="ONLINE_ONLY"] .wtp-pin-dot { border-color: var(--online); }
 
-/* Square office symbol beside the building's meeting pin. */
-.wtp-office-pin {
-  display: grid;
-  place-items: center;
-  width: var(--space-12);
-  height: var(--space-12);
-  padding: var(--space-2);
+/*
+ * Representative office pins: Lumen capsules ringed in the owner's tier colour. The marker element is a point;
+ * a single pin's glyph centre sits on it and the label grows rightward. Meetings are circles; offices are capsules.
+ */
+.mw-office-marker {
+  width: 0;
+  height: 0;
+  z-index: 2;
+}
+.mw-office-marker:hover,
+.mw-office-marker:focus-within,
+.mw-office-marker:has(.mw-office-hub[aria-expanded="true"]) {
+  z-index: 5;
+}
+.mw-office-pin {
+  --tier: var(--accent-state);
+  --pin-h: 18px;
+  --glyph: 10px;
+  --pad-l: 7px;
+  --pad-r: 7px;
+  --ring-w: 1.5px;
+  position: absolute;
+  left: calc(-1 * (var(--pad-l, 7px) + var(--glyph, 10px) / 2));
+  top: 0;
+  transform: translateY(-50%);
+  height: var(--pin-h, 18px);
+  min-width: var(--pin-h, 18px);
+  padding: 0 var(--pad-r, 7px) 0 var(--pad-l, 7px);
+  display: flex;
+  align-items: center;
   border: 0;
-  background: transparent;
-  cursor: pointer;
+  border-radius: 999px;
   color: var(--text);
+  font: 600 10.5px/1 var(--font-sans);
+  white-space: nowrap;
+  background-color: var(--lumen-floor);
+  background-image: radial-gradient(ellipse 130% 100% at 50% 100%, var(--lumen-peak) 0%, var(--lumen-floor) 66%);
+  box-shadow: inset 0 0 0 1px var(--lumen-rim), 0 0 0 var(--ring-w, 1.5px) var(--tier, var(--accent-state)), 0 2px 6px rgba(0, 0, 0, 0.55);
+  cursor: pointer;
+  transition: box-shadow var(--dur-lumen) var(--ease-lumen);
+  -webkit-tap-highlight-color: transparent;
 }
-.wtp-office-pin span {
+.mw-office-pin[data-tier="national"] { --tier: var(--accent-national); }
+.mw-office-glyph {
+  flex: none;
+  width: var(--glyph, 10px);
+  height: var(--glyph, 10px);
+  stroke-width: 2.25;
+}
+.mw-office-reveal {
+  max-width: 0;
+  overflow: hidden;
+  transition: max-width var(--dur-press) var(--ease-lumen);
+}
+.mw-office-reveal > span { display: block; }
+.mw-office-pin .mw-office-reveal > span { padding: 0 3px 0 4px; }
+.mw-office-pin:hover,
+.mw-office-pin:focus-visible,
+.mw-office-pin[data-selected="true"] {
+  box-shadow: inset 0 0 0 1px var(--lumen-rim-strong), 0 0 0 var(--ring-w, 1.5px) var(--tier, var(--accent-state)), 0 0 12px color-mix(in srgb, var(--tier, var(--accent-state)) 55%, transparent);
+}
+.mw-office-pin:hover .mw-office-reveal,
+.mw-office-pin:focus-visible .mw-office-reveal { max-width: 80px; }
+.mw-office-fan-item .mw-office-reveal { max-width: 240px; }
+.mw-office-pin:focus-visible,
+.mw-office-hub:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+
+/* Offices whose pins would overlap: one count pin, its ring split between the tiers it holds. */
+.mw-office-hub {
+  --pin-h: 15px;
+  --glyph: 10px;
+  --pad-l: 4px;
+  --ring-w: 1.5px;
+  position: absolute;
+  left: calc(-1 * (var(--ring-w, 1.5px) + var(--pad-l, 7px) + var(--glyph, 10px) / 2));
+  top: 0;
+  transform: translateY(-50%);
+  padding: var(--ring-w, 1.5px);
+  border: 0;
+  border-radius: 999px;
+  background: var(--ring-fill, var(--accent-state));
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.55);
+  cursor: pointer;
+  transition: opacity var(--dur-press) var(--ease-lumen);
+  -webkit-tap-highlight-color: transparent;
+}
+.mw-office-hub__body {
+  height: var(--pin-h, 18px);
+  padding: 0 5px 0 var(--pad-l, 7px);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  border-radius: 999px;
+  color: var(--text);
+  font: 500 9px/1 var(--font-mono);
+  white-space: nowrap;
+  background-color: var(--lumen-floor);
+  background-image: radial-gradient(ellipse 130% 100% at 50% 100%, var(--lumen-peak) 0%, var(--lumen-floor) 66%);
+  box-shadow: inset 0 0 0 1px var(--lumen-rim);
+}
+.mw-office-hub .mw-office-reveal > span {
+  padding-left: 2px;
+  font: 600 10px/1 var(--font-sans);
+}
+.mw-office-hub:hover .mw-office-reveal,
+.mw-office-hub:focus-visible .mw-office-reveal { max-width: 44px; }
+.mw-office-hub[aria-expanded="true"] { opacity: 0.35; }
+.mw-office-hub[aria-expanded="true"] .mw-office-reveal { max-width: 0; }
+
+/* The fan: each office as an open capsule to the right of the hub, joined by a leader in its tier colour. */
+.mw-office-fan-item {
+  --pad-l: 5px;
+  left: var(--dx, 16px);
+  top: var(--dy, 0px);
+  transform: translate(calc(-1 * var(--dx, 16px)), calc(-50% - var(--dy, 0px))) scale(0.5);
+  transform-origin: left center;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: transform var(--dur-press) var(--ease-lumen), opacity var(--dur-press) var(--ease-lumen), box-shadow var(--dur-press) var(--ease-lumen), visibility var(--dur-instant) linear var(--dur-press);
+}
+.mw-office-hub[aria-expanded="true"] ~ .mw-office-fan-item {
+  transform: translateY(-50%);
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition-delay: 0s;
+}
+.mw-office-leaders {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: visible;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--dur-press) var(--ease-lumen);
+}
+.mw-office-leaders line { stroke-width: 1; }
+.mw-office-hub[aria-expanded="true"] ~ .mw-office-leaders { opacity: 0.9; }
+
+/* No hover: pins draw open and larger, and every target reaches 44px through a transparent hit area. */
+@media (hover: none) {
+  .mw-reader .mw-office-pin,
+  .mw-reader .mw-office-hub { min-height: 0; }
+  .mw-office-pin {
+    --pin-h: 24px;
+    --glyph: 14px;
+    --pad-l: 7px;
+    --pad-r: 9px;
+    --ring-w: 2px;
+    font-size: 13px;
+  }
+  .mw-office-pin .mw-office-reveal { max-width: 120px; }
+  .mw-office-pin .mw-office-reveal > span { padding: 0 0 0 5px; }
+  .mw-office-glyph { stroke-width: 2; }
+  .mw-office-fan-item {
+    --pin-h: 36px;
+    --glyph: 16px;
+    --pad-l: 11px;
+    --pad-r: 14px;
+    font-size: 14px;
+    box-shadow: inset 0 0 0 1px var(--lumen-rim), 0 0 0 var(--ring-w, 1.5px) var(--tier, var(--accent-state)), 0 4px 12px rgba(0, 0, 0, 0.6);
+  }
+  .mw-office-fan-item .mw-office-reveal { max-width: 260px; }
+  .mw-office-fan-item .mw-office-reveal > span { padding-left: 7px; }
+  .mw-office-hub {
+    --pin-h: 24px;
+    --glyph: 14px;
+    --pad-l: 7px;
+    --ring-w: 2px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  }
+  .mw-office-hub__body {
+    padding: 0 9px 0 var(--pad-l, 7px);
+    gap: 5px;
+    font-size: 13px;
+  }
+  .mw-office-hub .mw-office-reveal { display: none; }
+  .mw-office-leaders line { stroke-width: 1.5; }
+  .mw-office-pin::before,
+  .mw-office-hub::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mw-office-marker,
+  .mw-office-marker * {
+    transition-duration: var(--dur-instant) !important;
+    transition-delay: 0s !important;
+  }
+}
+
+/* A representative's office in a meeting venue's building, on that venue's card. */
+.mw-venue-offices {
+  padding: var(--space-3) var(--mw-20);
+  border-bottom: 1px solid var(--hair);
+}
+.mw-venue-offices ul {
+  margin-top: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.mw-venue-office {
+  --tier: var(--accent-state);
+  width: 100%;
+  min-height: var(--mw-44);
+  display: flex;
+  align-items: center;
+  gap: var(--mw-10);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-ctl);
+  text-align: left;
+  line-height: 1.35;
+  cursor: pointer;
+}
+.mw-venue-office[data-tier="national"] { --tier: var(--accent-national); }
+.mw-venue-office:hover { background: var(--lumen-rim); }
+.mw-venue-office:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+.mw-venue-office__glyph {
+  flex: none;
   display: grid;
   place-items: center;
-  width: var(--space-6);
-  height: var(--space-6);
-  background: var(--panel);
-  border: 2px solid var(--text);
-  border-radius: var(--radius-sm);
-  font-size: var(--text-body);
-  box-shadow: 0 0 0 2px var(--bg);
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  color: var(--text);
+  background-color: var(--lumen-floor);
+  background-image: radial-gradient(ellipse 130% 100% at 50% 100%, var(--lumen-peak) 0%, var(--lumen-floor) 66%);
+  box-shadow: inset 0 0 0 1px var(--lumen-rim), 0 0 0 1.5px var(--tier, var(--accent-state));
 }
-.wtp-office-pin:hover span,
-.wtp-office-pin:focus-visible span,
-.wtp-office-pin[data-selected="true"] span { border-color: var(--action); }
-.wtp-office-pin:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+.mw-venue-office__glyph svg {
+  width: 14px;
+  height: 14px;
+  stroke-width: 2;
+}
+
+/* The district office a battlecard was opened from, leading its contact block. */
+.mw-district-office {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: var(--space-4) 0 var(--space-3);
+}
+.mw-district-office__label {
+  font-size: var(--text-mw-12);
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  margin-inline-end: -0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.mw-district-office__address {
+  color: var(--text);
+  line-height: 1.45;
+}
+.mw-district-office__hours {
+  font-size: var(--text-mw-13);
+  color: var(--text-dim);
+}
+.mw-district-office .mw-directions {
+  align-self: flex-start;
+  margin-top: var(--space-1);
+}
+
+/* The legend's office key: a neutral capsule, since the tier swatches already teach the ring colours. */
+.legend-office {
+  flex: none;
+  width: 11px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--lumen-peak);
+  box-shadow: inset 0 0 0 1px var(--text-muted);
+}

@@ -16,7 +16,7 @@ import { costEntryWithModel, modelRequestBoundFor } from "../control-plane/cost.
 import { resolveRollingCeiling } from "../control-plane/fleet-safety.ts";
 import { ADMIN_CONFIG_ID, adminConfigForPaidWork, fleetSpendCeilingOverrideUsd } from "../control-plane/gateway/admin-config.ts";
 import { batchEnabledForJob, MESSAGE_BATCHES_ENDPOINT, readMessageBatchResults, retrieveMessageBatch, submitMessageBatch, type MessageBatch } from "../control-plane/model-batch.ts";
-import { meteredCostFields, priceMeteredUsage, readMeteredUsage } from "../control-plane/model-cost.ts";
+import { listPriceUsdForUsage, meteredCostFields, priceMeteredUsage, readMeteredUsage } from "../control-plane/model-cost.ts";
 import { recordCost } from "../control-plane/repository/coordinator.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { ceilingPermits, readIntents, RESEARCH_INTENT_LOG_KEY, researchSpendInWindow } from "../control-plane/scheduler/research-policy.ts";
@@ -123,7 +123,7 @@ export function lookModelCall(repos: ControlPlaneRepositories, apiKey: string, f
       { type: "text", text: "Judge the screens above, in the order shown, using the label given before each." },
     ];
     const params = {
-      model: LOOK_MODEL, max_tokens: LOOK_MAX_TOKENS, system: prompt,
+      model: LOOK_MODEL, max_tokens: LOOK_MAX_TOKENS, system: [{ type: "text", text: prompt, cache_control: { type: "ephemeral", ttl: "1h" } }],
       output_config: { format: { type: "json_schema", schema: plainSchema(schema) } },
       messages: [{ role: "user", content }],
     };
@@ -161,8 +161,10 @@ export function lookModelCall(repos: ControlPlaneRepositories, apiKey: string, f
         cost: { ...ZERO_COST, ...meteredCostFields(metering),
           inputTokens: metering.uncachedInputTokens === null ? null
             : metering.uncachedInputTokens + (metering.cacheReadInputTokens ?? 0) + (metering.cacheCreationInputTokens ?? 0),
-          outputTokens: metering.outputTokens, usd: priceMeteredUsage(canonicalModelId(model), metering, "5m").usd,
-          durationMs: Math.round(performance.now() - started), requestCount: 1 },
+          outputTokens: metering.outputTokens, usd: priceMeteredUsage(canonicalModelId(model), metering, "1h").usd,
+          durationMs: Math.round(performance.now() - started), requestCount: 1,
+          listPriceUsd: listPriceUsdForUsage(model, metering),
+          modelRequestCount: 1, batchEligibleRequestCount: 1, batchRequestCount: batched ? 1 : 0 },
       }, model);
       try { await recordCost(repos, entry, recordedAt); }
       catch (error) { console.error(`look review: the cost could not be recorded (${error instanceof Error ? error.name : "error"}); attempt ${attemptId}`); }

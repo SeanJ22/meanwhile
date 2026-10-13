@@ -91,6 +91,76 @@
           "occurrences": 1
         }
       ]
+    },
+    "tests/fixtures/voting-sources/pima-official-election-native.html": {
+      "sourceUrl": "https://www.pima.gov/3199/Pima-Votes",
+      "capturedOn": "2026-10-13",
+      "capturedBy": "the VS-01 official election source capture session, public HTTP GET after robots permission",
+      "rawSha256": "c1d1866fc282e5da005e31fddf5403b22ae306a0f731f5dd606cd018ec15be13",
+      "sanitizedSha256": "ec1f2c033cdfd0d076a6bd8b2c1d4d758dea3b4fad5fe4cfa29717f4ed65ee92",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "redactionsByClass": {
+        "jwt": 5,
+        "google_api_key": 1
+      },
+      "distinctValuesRedacted": 2,
+      "substringsReplaced": 6,
+      "fingerprints": [
+        {
+          "classId": "jwt",
+          "fingerprint": "da6705b7308e",
+          "length": 885,
+          "occurrences": 5
+        },
+        {
+          "classId": "google_api_key",
+          "fingerprint": "0475203d7298",
+          "length": 39,
+          "occurrences": 1
+        }
+      ]
+    },
+    "tests/fixtures/voting-sources/tx-el-paso-early-native.html": {
+      "sourceUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+      "capturedOn": "2026-10-13",
+      "capturedBy": "the VS-01 official election source capture session, public HTTP GET after robots permission",
+      "rawSha256": "9ad477fe23d89417f91d50cb44cb134ab5df0c95ca80d865e413f6dc9014885c",
+      "sanitizedSha256": "82ef5f8530bc0d686fbae6a71c5af26691abaf80ef9267a457970d234a87e857",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "redactionsByClass": {
+        "google_api_key": 1
+      },
+      "distinctValuesRedacted": 1,
+      "substringsReplaced": 1,
+      "fingerprints": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "a8aaa647e4a9",
+          "length": 39,
+          "occurrences": 1
+        }
+      ]
+    },
+    "tests/fixtures/voting-sources/tx-el-paso-vote-centers-native.html": {
+      "sourceUrl": "https://epcountyvotestx.gov/voter-information/election-day-vote-centers",
+      "capturedOn": "2026-10-13",
+      "capturedBy": "the VS-01 official election source capture session, public HTTP GET after robots permission",
+      "rawSha256": "6c448114f9ac7d2495da4ce7aade7ef92349b4df15884f64737c5028bd8dcc56",
+      "sanitizedSha256": "61f6362f0e01da0939f64355f2985dc23cfb14203ee636445044982696392cd2",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "redactionsByClass": {
+        "google_api_key": 1
+      },
+      "distinctValuesRedacted": 1,
+      "substringsReplaced": 1,
+      "fingerprints": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "a8aaa647e4a9",
+          "length": 39,
+          "occurrences": 1
+        }
+      ]
     }
   }
 }

@@ -2088,5 +2088,15 @@
     "tested_sha": "cc9589c05915a48d50a3af1b9247f59067c6d35e",
     "gates": "pass",
     "at": "2026-10-13T07:57:14Z"
+  },
+  {
+    "lane": "src-open-data",
+    "steps": [],
+    "ready_sha": "173b60d56f1150fae38ca8d711638390d0128e03",
+    "merge_sha": "499fb0fa311ffe1479ccfcaf64a9b7f40187365c",
+    "river_sha": "1e72570acb7e4dff84ed9a95b3c2882ed4080931",
+    "tested_sha": "1e72570acb7e4dff84ed9a95b3c2882ed4080931",
+    "gates": "pass",
+    "at": "2026-10-13T12:10:42Z"
   }
 ]

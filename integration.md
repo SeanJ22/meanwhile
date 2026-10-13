@@ -205,3 +205,4 @@ One line per batch folded into river.
 - 2026-10-13T07:23:12Z · zip-entry · ZIP-01 · ready 00179385646c · river 985c00c33f7a · pnpm gates pass on 985c00c33f7a
 - 2026-10-13T07:57:14Z · national-listings · NL-01 · ready 8a4b4d85902a · river cc9589c05915 · pnpm gates pass on cc9589c05915
 - 2026-10-13T07:57:14Z · office-pins · DS-01, DS-02 · ready f6cd323d7fa8 · river cc9589c05915 · pnpm gates pass on cc9589c05915
+- 2026-10-13T12:10:42Z · src-open-data ·  · ready 173b60d56f11 · river 1e72570acb7e · pnpm gates pass on 1e72570acb7e

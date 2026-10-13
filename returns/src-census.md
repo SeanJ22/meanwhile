@@ -4,17 +4,17 @@ lane: src-census
 owner: src-census
 writer: the src-census lane
 check: fold-conflict
-ready: no step ids e546c6c3ee6fc296ee7845af47b071d077db1952
+ready: no step ids unknown
 river: 593be2416b30508823ef245e2834b05eaa0a4b6b
-at: 2026-10-13T01:56:00Z
+at: 2026-10-13T03:38:13Z
 state: returned
-fix_subject: fix:b4678e62
-fix: River · stream/src-census — fold-conflict failed for src-census: src-census READY e546c6c3ee6f conflicts with river-next (river 593be2416b30 plus other release-25 lanes) when folded in dependency order; merge river and the lanes it overlaps into stream/src-census, resolve, and mark READY again.
+fix_subject: fix:fac4e627
+fix: River · stream/src-census — fold-conflict failed for src-census: src-census READY e546c6c3ee6f conflicts with river 3734a8f9bb3b (release 25) when merged alone. Conflicting files: app/api/ask/grounded/route.ts   Merge river into stream/src-census, resolve, and mark READY again.
 
 ## Failure
 
 ```
-src-census READY e546c6c3ee6f conflicts with river-next (river 593be2416b30 plus other release-25 lanes) when folded in dependency order; merge river and the lanes it overlaps into stream/src-census, resolve, and mark READY again.
+src-census READY e546c6c3ee6f conflicts with river 3734a8f9bb3b (release 25) when merged alone. Conflicting files: app/api/ask/grounded/route.ts   Merge river into stream/src-census, resolve, and mark READY again.
 ```
 
 ## Repair

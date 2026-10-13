@@ -1,3 +1,4 @@
+import { readRolePlaybook } from "../playbooks.ts";
 import { buildBoxFindings } from "./scout-extraction.ts";
 import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../scheduler/research-policy.ts";
 import { readPublicationSourcePolicy } from "../promotion/source-settings.ts";
@@ -40,7 +41,7 @@ import {
 import { recordFoundSources } from "../../doors/page-doors.ts";
 import { durableResearchTools, researchRoleExecutor, type ResearchRuntimeTools } from "./research-runtime.ts";
 import type { AutonomousCoordinatorRuntime } from "./coordinator.ts";
-import { refreshRegistryRuntimeFromPromoted } from "../../registry/runtime-read-model.ts";
+import { refreshRegistryRuntimeFromPromoted, getRegistryRuntimeReadModel } from "../../registry/runtime-read-model.ts";
 import { refreshVenueResolutionsFromPromoted } from "../../civic-data/curated-reader-read-model.ts";
 import { mayUseTestFixture } from "../../civic-data/fixture-policy.ts";
 import { consumePlanRepairs, planRepairBrief, planRepairFailureBrief, type PlanRepairLink } from "./plan-repair.ts";
@@ -72,7 +73,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   /** The rolling-ceiling hold a Scout escalation must win before its frontier attempt; absent, every escalation is refused NOT_RESERVED. */
   reserveScoutEscalation?:ScoutExecutorDeps["reserveEscalation"];
   /** The transport for one jurisdiction's work, held on the area budget covering it; absent, `transport` serves all. */
-  transportFor?:(jurisdiction:{readonly subjectId:string;readonly state:string|null})=>ModelTransport}):Promise<AutonomousCoordinatorRuntime> {
+  transportFor?:(jurisdiction:{readonly subjectId:string;readonly state:string|null},taskId?:string)=>ModelTransport}):Promise<AutonomousCoordinatorRuntime> {
   await refreshRegistryRuntimeFromPromoted();
   if (!mayUseTestFixture()) await refreshVenueResolutionsFromPromoted();
   const now=input.now??(()=>new Date().toISOString());
@@ -235,7 +236,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
       const blanks=blanksFor(item.subject);
       const mission=missionBriefLines(item.subject,blanks,MISSION_BRIEF_LINE_CAP);
       const ownPart=item.autonomousPlan?missionPartOfPlan(item.autonomousPlan):null;
-      return withScoutManual(item,(investigationRole(subjectScoutHistory(currentHistory??prior,item.subject,item.autonomousPlan!.contract.recordClass),task.routeLabel.includes('UNRESOLVED_INVESTIGATION') || heldRecoveryBrief(item.publicationOutcome)!==null || outsideBlockLines(item.id).length>0 || priorWorkers.some(w=>w.workItemId===item.id && (!["ACQUIRED","EXTRACTED","PASS","SUPPORTED","SURVIVED"].includes(w.result.verdict) || ("warnings" in w.result ? w.result.warnings : w.result.findings).some(f=>f.severity==="BLOCKING")))) === "DETECTIVE" ? detectiveExecutor : scoutExecutor)({transport:input.transportFor?input.transportFor({subjectId:item.subject,state:item.autonomousPlan?.jurisdiction??null}):input.transport!,now,
+      return withScoutManual(item,(investigationRole(subjectScoutHistory(currentHistory??prior,item.subject,item.autonomousPlan!.contract.recordClass),task.routeLabel.includes('UNRESOLVED_INVESTIGATION') || heldRecoveryBrief(item.publicationOutcome)!==null || outsideBlockLines(item.id).length>0 || priorWorkers.some(w=>w.workItemId===item.id && (!["ACQUIRED","EXTRACTED","PASS","SUPPORTED","SURVIVED"].includes(w.result.verdict) || ("warnings" in w.result ? w.result.warnings : w.result.findings).some(f=>f.severity==="BLOCKING")))) === "DETECTIVE" ? detectiveExecutor : scoutExecutor)({transport:input.transportFor?input.transportFor({subjectId:item.subject,state:item.autonomousPlan?.jurisdiction??null},task.id):input.transport!,now,playbookFor:role=>readRolePlaybook(input.repos,role),
       ...(input.reserveScoutEscalation?{reserveEscalation:input.reserveScoutEscalation}:{}),
       toolkitFor:ctx=>buildScoutToolkit({...ctx,root:input.root,
         obligation:{...ctx.obligation,obligation:{...ctx.obligation.obligation,autonomousPlan:item.autonomousPlan}},
@@ -286,8 +287,23 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
         const manualLines=fieldManualBriefLines(manualProjection);
         inheritedFieldManualDoors.set(item.id,{entryIds:manualProjection.entryIds,availableIds:manualEntries.map(entry=>entry.id),lines:manualLines});
         return {route:null,providerId:null,sourceRecordClass:plan.contract.recordClass,
-          reason:`${task.routeLabel}. Resolve ${item.obligation}. Canonical registry references: ${plan.sourceRegistryReferences.join(", ")}. Seed URLs are leads until observed: ${plan.seedUrls.join(", ")}. ${planRepairBrief(plan)}`,
-          inherited:{artifactIds:[...new Set([...history.flatMap(p=>p.artifactIds),...walks.flatMap(w=>w.artifactIds),
+          reason:`${item.obligation}. ${planRepairBrief(plan)}`,
+          inherited:{placeName: (() => {
+            const named = blanks.find(blank => blank.subjectId === item.subject)?.subjectLabel;
+            if (named) return named;
+            try {
+              const registry = getRegistryRuntimeReadModel().registry;
+              return registry.bodies.find(body => body.id === item.subject)?.name ?? registry.divisions.find(division => division.ocdId === item.subject)?.label ?? item.obligation;
+            } catch { return item.obligation; }
+          })(), blanks: blanks.filter(blank => blank.subjectId === item.subject).map(blank => blank.label),
+          officialWebsite: (() => {
+            try { return getRegistryRuntimeReadModel().registry.bodies.find(body => body.id === item.subject)?.homepageUrl ?? plan.sources[0]?.url; }
+            catch { return plan.sources[0]?.url; }
+          })(),
+          savedPages: workers.flatMap(worker => worker.result.role === "ACQUIRER"
+            ? worker.result.artifacts.map(artifact => ({ id: artifact.artifactId, url: artifact.canonicalUrl })) : []),
+          similarPlaces: manualEntries.filter(entry => entry.outcome === "YIELDED" && entry.states.includes(plan.jurisdiction.toLowerCase())).map(entry => entry.summary),
+          artifactIds:[...new Set([...history.flatMap(p=>p.artifactIds),...walks.flatMap(w=>w.artifactIds),
             ...(repair?.retainedEvidenceIds??[]),...(repair?.sourceArtifactId?[repair.sourceArtifactId]:[]),
             ...(sharedHeldByRoot.get(item.id)??[])])],manualEntries,summary:[
             ...manualLines,
@@ -295,12 +311,12 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
             ...planRepairFailureBrief(item),
             ...(heldRecoveryBrief(item.publicationOutcome) ? [heldRecoveryBrief(item.publicationOutcome)!] : item.publicationOutcome && item.publicationOutcome.status !== "PUBLISHED" ? [`Publication repair remains owed: ${item.publicationOutcome.code}. ${item.publicationOutcome.detail}`] : []),
             ...outsideBlockLines(item.id),
-            `Inherited method version ${knowledge.version}. Walk applicable known methods before novelty; the fourteen retrieval rungs are a floor, never a completion ceiling.`,
-            ...floor.routes.map(r=>`${r.routeId}: ${r.obligation}; ${r.proof}; ${r.label}; target ${r.target}; applicability ${r.grade}`),
+            `Use the successful saved methods before trying a new route.`,
+            ...floor.routes.map(r=>`${r.speculative ? "Method to try" : "Saved route"}: ${r.label}; ${r.target}`),
             ...workers.map(w=>{
               const result=w.result;
               const issues="warnings" in result?result.warnings:result.findings;
-              return `${w.id}: ${result.role} ${result.verdict}; recorded at ${w.endedAt}; issues ${issues.map(i=>i.code).join(", ") || "none recorded"}; unresolved results do not establish absence.`;
+              return `${result.role} worked at ${w.endedAt}; ${issues.map(i=>i.detail).join("; ") || "no problems recorded"}.`;
             }),
             ...history.map(p=>`${p.attemptId}: ${p.outcome}; next ${Array.isArray(p.nextRungs) ? p.nextRungs.filter((value): value is string => typeof value === "string").join(", ") : "stored list unreadable"}`)].join("\n"),
             priorRungs:[...history.flatMap(p=>p.rungs.map(r=>({rung:r.rung,tool:r.tool,target:r.target,observed:r.observed,ok:r.ok??null,at:r.at,attemptId:p.attemptId}))),

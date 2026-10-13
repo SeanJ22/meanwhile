@@ -16,22 +16,21 @@ import { V6Context, VIEWS, type Detail, type V6, type View } from "./context.tsx
 import { DetailPanel } from "./details.tsx";
 import { whyNot, type Access, type Connection } from "./eligibility.ts";
 import type { Executor } from "./executor.ts";
-import { instructionDraftFor, withInstructionDraft, type InstructionDrafts } from "./instruction-draft.ts";
 import { mst, type ActionKind, type ActionRef, type AdminV6Data, type Place, type UiReceipt } from "./model.ts";
-import { breadcrumbs, COUNTRY_KEY, huntAt, huntsWithin, indexPlaces, pickerMatches, relation } from "./places.ts";
+import { breadcrumbs, COUNTRY_KEY, huntAt, huntsWithin, indexPlaces, pickerMatches } from "./places.ts";
 import { newActionKey, startReceipt } from "./receipts.ts";
 import { ChecklistScreen } from "./screen-checklist.tsx";
+import { WorkScreen } from "./screen-work.tsx";
 import { QueueScreen } from "./screen-queue.tsx";
 import { ScoreboardScreen } from "./screen-scoreboard.tsx";
 import { MoneyScreen } from "./screen-money.tsx";
 import { DataBusinessScreen } from "./screen-data.tsx";
 import { NowScreen, Readers } from "./screen-now.tsx";
-import { ReportsView } from "./reports-view.tsx";
+import { ReportsView, DailyBrief, AlertStrip } from "./reports-view.tsx";
 import { OwedPanel } from "./owed-panel.tsx";
 import { RunnerSettingsPanel, SettingsScreen } from "./screen-settings.tsx";
 import { DoorsPanel } from "./doors-panel.tsx";
 import { UpdatesPanel } from "./updates-panel.tsx";
-import { WorkScreen } from "./screen-work.tsx";
 import { WorkersScreen } from "./screen-workers.tsx";
 import { cx } from "./ui.tsx";
 import s from "./v6.module.css";
@@ -64,7 +63,7 @@ const CONN_WORDS: Readonly<Record<Connection, string>> = {
 
 export function CommandCenter(props: CommandCenterProps) {
   const { data } = props;
-  const [view, setView] = useState<View>(props.initialView ?? "now");
+  const [view, setView] = useState<View>(props.initialView === "work" && !props.data.workRows?.data ? "queue" : props.initialView ?? "now");
   const [stack, setStack] = useState<readonly { readonly view: View; readonly detail: Detail | null }[]>([]);
   const [detail, setDetail] = useState<Detail | null>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -74,7 +73,7 @@ export function CommandCenter(props: CommandCenterProps) {
   const [sent, setSent] = useState<readonly UiReceipt[]>([]);
   const [dialog, setDialog] = useState<{ readonly ref: ActionRef; readonly key: string } | null>(null);
   const [announce, setAnnounce] = useState("");
-  const [instructionDrafts, setInstructionDrafts] = useState<InstructionDrafts>({});
+  /** The many-hunts panel: closed (null), or open with the place it was opened from, if any. */
   const [bulk, setBulk] = useState<{ readonly pick: BulkPick | null } | null>(null);
   const sendingKeys = useRef(new Set<string>());
   const pickerInput = useRef<HTMLInputElement>(null);
@@ -98,7 +97,6 @@ export function CommandCenter(props: CommandCenterProps) {
   const hunts = useMemo(() => data.hunts.data ?? [], [data.hunts.data]);
   const place: Place = index.get(props.scopeKey) ?? index.get(COUNTRY_KEY) ?? { key: COUNTRY_KEY, name: "United States", kind: "Country", navParent: null, within: [] };
   const scopeKey = place.key;
-  const instructionDraft = instructionDraftFor(instructionDrafts, scopeKey);
   const hunt = huntAt(index, hunts, scopeKey);
   const inHunts = huntsWithin(index, hunts, scopeKey);
   const clock = new Date();
@@ -123,20 +121,12 @@ export function CommandCenter(props: CommandCenterProps) {
     for (const r of data.results.data ?? []) for (const st of r.trail) for (const d of st.docs ?? []) if (d.id === id) return d.name;
     const job = data.workers.data?.jobs?.find((j) => j.id === id);
     if (job) return job.title;
-    const row = data.workRows.data?.rows.find((w) => w.id === id);
-    if (row) return row.title;
     const dec = data.stuck.data?.find((i) => i.decision?.id === id);
     if (dec) return dec.title;
-    const wf = data.stuck.data?.find((i) => i.actions.some((a) => a.kind === "workfirst" && a.target === id));
-    if (wf) return wf.title.replace(/ (are|is) saved but never read$/, " meeting extraction");
     return id;
   };
 
   const previewCtx = (ref: ActionRef): PreviewContext => {
-    const matching = (ref.kind === "scope-stop" || ref.kind === "retry-method")
-      ? (data.stuck.data ?? []).filter((i) => i.actions.some((a) => a.kind === "stopmethod") && !i.latest?.startsWith("Method stopped") && relation(index, i.applies, ref.target || scopeKey) === "local")
-        .map((i) => ({ id: i.id, name: i.title, where: index.get(i.applies[0])?.name ?? "" }))
-      : undefined;
     const openFix = data.fixes.data?.open.find((f) => f.id === ref.target);
     const stuckForFix = data.stuck.data?.find((i) => i.fixId === ref.target);
     return {
@@ -144,7 +134,6 @@ export function CommandCenter(props: CommandCenterProps) {
       targetName: ref.payload?.name ?? nameOf(ref.target || scopeKey),
       scopeName: index.get(ref.target)?.name ?? place.name,
       scopeIsCountry: (index.get(ref.target)?.kind ?? place.kind) === "Country",
-      matching,
       hunt: hunts.find((h) => h.placeKey === ref.target) ?? null,
       decision: data.stuck.data?.find((i) => i.decision?.id === ref.target)?.decision,
       fix: openFix ? { id: openFix.id, title: openFix.title, owner: openFix.owner, resourcesNow: openFix.resourcesNow, helps: openFix.helps, needsCode: openFix.origin === "engineering" && openFix.tab !== "update" }
@@ -152,14 +141,13 @@ export function CommandCenter(props: CommandCenterProps) {
       url: ref.payload?.url,
       words: ref.payload?.words,
       payload: ref.payload,
-      waitingCount: scopeKey === COUNTRY_KEY ? data.workRows.data?.totals.find((t) => t.stage === "waiting")?.total ?? null : null,
       outreachAuthorized: props.access.outreachAuthorized,
     };
   };
 
   const whyNotRef = (ref: ActionRef): string | null => {
     const def = actionDef(ref.kind);
-    const target = ref.kind === "scope-stop" && !ref.target ? scopeKey : ref.target;
+    const target = ref.target;
     return whyNot({ connection: props.connection, access: props.access, def, target, receipts, mode: props.mode, supported: props.executor.supports(def), itemState: props.itemState?.(ref.kind, target) ?? null });
   };
 
@@ -172,7 +160,7 @@ export function CommandCenter(props: CommandCenterProps) {
     if (sendingKeys.current.has(key)) return; // one send per preview, however many clicks
     sendingKeys.current.add(key);
     const def = actionDef(ref.kind);
-    const target = ref.kind === "scope-stop" && !ref.target ? scopeKey : ref.target;
+    const target = ref.target;
     const ctx = previewCtx({ ...ref, target });
     const pv = def.preview(ctx);
     const optionLabel = pv.options?.find((o) => o.id === send.option)?.label;
@@ -182,7 +170,7 @@ export function CommandCenter(props: CommandCenterProps) {
     });
     update(receipt);
     setDialog(null);
-    void props.executor.send(receipt, { def, target, scopeKey, option: send.option, words: send.words, amount: send.amount, selectedItems: send.selected, payload: ref.payload }, update);
+    void props.executor.send(receipt, { def, target, scopeKey, option: send.option, words: send.words, amount: send.amount, selectedItems: send.selected, when:send.when, payload: ref.payload }, update);
   };
 
   const doSendBulk = (send: { readonly items: readonly BulkItem[]; readonly missions: readonly BulkMission[]; readonly priority: number }) => {
@@ -220,7 +208,8 @@ export function CommandCenter(props: CommandCenterProps) {
     requestAnimationFrame(() => { window.scrollTo(0, 0); mainRef.current?.focus(); });
   };
 
-  const goView = (v: View) => {
+  const goView = (requested: View) => {
+    const v = requested === "work" ? "queue" : requested;
     setStack((st) => (v === view && !detail ? st : [...st, { view, detail }].slice(-20)));
     setView(v);
     setDetail(null);
@@ -264,8 +253,6 @@ export function CommandCenter(props: CommandCenterProps) {
 
   const v6: V6 = {
     data, mode: props.mode, scopeKey, place, places, index, hunts, connection: props.connection, access: props.access, receipts, period: effectivePeriod,
-    instructionDraft,
-    setInstructionDraft: (draft) => setInstructionDrafts((current) => withInstructionDraft(current, scopeKey, draft)),
     go: goView,
     open: openDetail,
     setScope,
@@ -284,7 +271,6 @@ export function CommandCenter(props: CommandCenterProps) {
     defOf: (ref) => actionDef(ref.kind),
     nameOf,
     query: (section, params) => props.onQuery?.(section, params),
-    focusInstruction: () => { goView("now"); setTimeout(() => document.getElementById("v6-instruct-input")?.focus(), 60); },
   };
 
   const crumbs = breadcrumbs(index, scopeKey);
@@ -294,7 +280,7 @@ export function CommandCenter(props: CommandCenterProps) {
   const lastGood = props.lastGoodAt ? mst(props.lastGoodAt, false) : null;
   const connLabel = props.connection === "live" ? (lastGood ? `Live · updated ${lastGood}` : "Live") : `${CONN_WORDS[props.connection]}${lastGood ? ` · last update ${lastGood}` : ""}`;
   const dialogDef = dialog ? actionDef(dialog.ref.kind) : null;
-  const dialogTarget = dialog ? (dialog.ref.kind === "scope-stop" && !dialog.ref.target ? scopeKey : dialog.ref.target) : "";
+  const dialogTarget = dialog ? dialog.ref.target : "";
 
   return (
     <V6Context.Provider value={v6}>
@@ -304,7 +290,7 @@ export function CommandCenter(props: CommandCenterProps) {
           <div className={s.headerTop}>
             <span className={s.brand}>meanwhile<span style={{ color: "var(--pill-teal-text)" }}> …</span></span>
             <nav className={s.nav} aria-label="Admin">
-              {VIEWS.map(([id, label]) => (
+              {VIEWS.filter(([id]) => id !== "work" || data.workRows?.data != null).map(([id, label]) => (
                 <button key={id} type="button" className={s.navBtn} aria-current={view === id && !detail ? "page" : undefined} onClick={() => goView(id)}>{label}</button>
               ))}
             </nav>
@@ -363,6 +349,7 @@ export function CommandCenter(props: CommandCenterProps) {
 
         <main id="v6-main" ref={mainRef} tabIndex={-1} className={s.main} style={{ outline: "none" }}>
           {props.reviewPanel}
+          {props.mode==="live"&&<AlertStrip/>}
           {connWarn && props.connection !== "connecting" && (
             <div className={cx(s.banner, props.connection === "reconnecting" && s.bannerCalm)} role="status">
               <strong>{props.connection === "stale" ? "These figures are out of date." : props.connection === "reconnecting" ? "Reconnecting." : "Disconnected."}</strong>
@@ -379,13 +366,13 @@ export function CommandCenter(props: CommandCenterProps) {
           )}
           {detail ? <DetailPanel detail={detail} /> : (
             <>
-              {view === "now" && <><NowScreen key={scopeKey} /><UpdatesPanel /></>}
+              {view === "now" && <>{props.mode==="live"&&<DailyBrief/>}<NowScreen key={scopeKey} /><UpdatesPanel /></>}
               {view === "data" && <DataBusinessScreen />}
               {view === "workers" && <><WorkersScreen /><RunnerSettingsPanel /><DoorsPanel /></>}
-              {view === "work" && <WorkScreen />}
               {view === "checklist" && <><ChecklistScreen /><Readers /></>}
               {view === "money" && <MoneyScreen />}
               {view === "queue" && <QueueScreen />}
+              {view === "work" && <WorkScreen />}
               {view === "scoreboard" && <ScoreboardScreen />}
               {view === "settings" && <><SettingsScreen /><OwedPanel /></>}
               {view === "reports" && <ReportsView />}
@@ -414,6 +401,7 @@ export function CommandCenter(props: CommandCenterProps) {
             mode={props.mode}
             blocked={whyNotRef({ ...dialog.ref, target: dialogTarget })}
             onClose={() => setDialog(null)}
+            afterOrders={receipts.filter(r=>r.gatewayReceiptId).map(r=>({id:r.gatewayReceiptId!,label:r.label}))}
             onSend={(send) => doSend(dialog.ref, dialog.key, send)}
           />
         )}

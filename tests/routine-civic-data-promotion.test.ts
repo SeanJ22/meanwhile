@@ -77,7 +77,7 @@ function candidate(id: string, over: Partial<RoutineCandidate> = {}): RoutineCan
     },
     normalization: {
       succeeded: true,
-      parserVersion: "fec-funding/3",
+      parserVersion: "fec-funding/4",
       schemaVersion: "2",
       normalizedHash: HASH,
       inputRecords: 1,
@@ -302,7 +302,7 @@ test("the standing promotion door binds adapter output to its exact registered c
   assert.match(routineCandidateContractIssue("fec-funding", { ...exact, sourceId: "census-data-api" }) ?? "", /source/);
   assert.match(routineCandidateContractIssue("fec-funding", { ...exact, recordClass: "CENSUS_REFERENCE" }) ?? "", /record class/);
   assert.match(routineCandidateContractIssue("fec-funding", { ...exact, normalization: { ...exact.normalization, parserVersion: "fec-funding\/1" } }) ?? "", /parser/);
-  assert.match(routineCandidateContractIssue("fec-funding", { ...exact, retrieval: { ...exact.retrieval, requestedUrl: "https://example.gov/" } }) ?? "", /requested route/);
+  assert.match(routineCandidateContractIssue("fec-funding", { ...exact, retrieval: { ...exact.retrieval, requestedUrl: "https://example.gov/" } }) ?? "", /FINAL_ROUTE_NOT_REGISTERED/);
 });
 
 test("registered promotion durably reads back the exact Reader projection instead of inferring delivery", async () => {
@@ -1043,7 +1043,7 @@ test("a pre-parser source failure is one durable terminal event with a validatio
     requestedUrl: "https://api.open.fec.gov/v1/",
     attemptedAt: NOW,
     failureDetail: "HTTP 403 from the official route",
-    parserVersion: "fec-funding/3",
+    parserVersion: "fec-funding/4",
   });
   const outcome = await processRoutineCandidate(store, blocked, NOW);
   assert.equal(outcome.candidate.state, "SOURCE_BLOCKED");
@@ -1066,7 +1066,7 @@ test("explicit bounded authoritative absence can promote", async () => {
     sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-candidate:H6AZ00000:2026"),
     normalization: {
       succeeded: true,
-      parserVersion: "fec-funding/3",
+      parserVersion: "fec-funding/4",
       schemaVersion: "2",
       normalizedHash: HASH,
       inputRecords: 0,
@@ -1104,25 +1104,29 @@ test("zero without absence evidence is CANNOT_TELL and holds LKG", async () => {
   }), "CANNOT_TELL", "ZERO_IS_NOT_ABSENCE");
 });
 
-test("T4 intermediary bytes remain research-only and cannot auto-promote", async () => {
-  await expectHeld((base) => ({
-    ...base,
-    sourceId: "legiscan",
-    recordClass: "STATE_ROLL_CALL",
-    scope: "US-AZ:2026",
-    retrieval: { ...base.retrieval, finalUrl: "https://api.legiscan.com/?op=getDatasetList" },
-    normalization: { ...base.normalization, parserVersion: "legiscan-bulk/1" },
-  }), "SOURCE_BLOCKED", "SOURCE_NOT_AUTO_PROMOTABLE");
+test("attributed LegiScan projections require exact state-specific source and identity verification", async () => {
+  const store = new MemoryRoutineDataStore();
+  const base = candidate("unverified-vendor-projection"), scope = "US-AZ:legiscan-votes:v1";
+  const outcome = await processRoutineCandidate(store, { ...base, sourceId: "legiscan", recordClass: "STATE_ROLL_CALL", scope,
+    sourceProjectionEvidence: sourceProjectionEvidence("legiscan", "STATE_ROLL_CALL", scope),
+    retrieval: { ...base.retrieval, requestedUrl: "https://api.legiscan.com/?op=getDatasetList&state=AZ", finalUrl: "https://api.legiscan.com/?op=getDatasetList&state=AZ" },
+    normalization: { ...base.normalization, parserVersion: "legiscan-votes/1" },
+  }, NOW);
+  assert.equal(outcome.promoted, null);
+  assert.ok(outcome.candidate.failureCode);
 });
 
 test("all standing routine-source destructive classes are enumerated by the contract", () => {
   const covered = new Set<RoutineRecordClass>([
     "FEC_FUNDING", "STATE_LEGISLATOR", "CENSUS_REFERENCE", "CENSUS_GEOGRAPHY",
     "MEETING", "BALLOT_FILING", "DOTGOV_REFERENCE", "STATE_ROLL_CALL",
-    "STATE_LEGISLATOR_VOTES", "REGISTRATION", "MEETING_OUTCOME",
+    "STATE_LEGISLATOR_VOTES", "REGISTRATION", "MEETING_OUTCOME", "FEDERAL_DIRECTORY",
+    "GOOGLE_CIVIC_VOTERINFO",
     // The derived meeting-source wiring never removes a row (a trigger suspends it), so any removal is
     // refused by the generic incomplete-horizon rule (tests/derived-meeting-family.test.ts).
     "CURATED_READER_RECORD",
+    // SRC-CG exercises complete native filing corrections and lossless partial source merges.
+    "FEDERAL_CIVIC_RECORD",
   ]);
   const standingClasses = new Set(ROUTINE_SOURCE_TASKS.map((task) => task.recordClass));
   assert.deepEqual([...covered].sort(), [...standingClasses].sort());

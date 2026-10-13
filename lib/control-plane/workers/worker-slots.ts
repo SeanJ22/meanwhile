@@ -14,6 +14,11 @@ export const RESEARCH_PARENT_PEAK_MIB = 2928;
 export const NATIONAL_PLACE_PEAK_MIB = 1923 + WORKER_ENTRY_PEAK_MIB.national!;
 /** Bulk data families use the retained data-worker bound, covering their staging entry peaks. */
 const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
+  // A complete 113 MiB Illinois session parsed and promoted in the fixture
+  // store peaked at 3,013 MiB. Round up for these state-scoped bulk writers;
+  // the existing host observer still accounts for their whole process trees.
+  "openstates-votes-refresh.mts": 3072,
+  "legiscan-votes-refresh.mts": 3072,
   "census-geography-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "promote-manual-civic-projection.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "ingest.ts": WORKER_ENTRY_PEAK_MIB.national!,
@@ -21,6 +26,8 @@ const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "legistar-outcomes-ingest.mts": 355,
   "acs-population-promote.mts": 465,
   "fetch-congress-legislators.mts": 384,
+  "national-people-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
+  "people-portraits-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "campaign-finance-az-pima-transactions.mts": 368,
   "build-nj-morris-ballot.mts": 345,
 };

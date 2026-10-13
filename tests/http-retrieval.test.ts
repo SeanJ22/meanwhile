@@ -196,6 +196,9 @@ test("http: entity decoding covers decimal AND hex, which is how ’ reached a r
   assert.equal(decodeEntities("Parks &amp; Rec"), "Parks & Rec");
   assert.equal(decodeEntities("a&nbsp;b"), "a b");
   assert.equal(decodeEntities("&lt;tag&gt;"), "<tag>");
+  assert.equal(decodeEntities("Andr&#233; Jacque"), "André Jacque");
+  assert.equal(decodeEntities("Andr&#xe9; Jacque"), "André Jacque");
+  assert.equal(decodeEntities("&#1114112; &#xD800;"), "&#1114112; &#xD800;");
 });
 
 test("text and binary reads preserve exact acquired bytes and redirect evidence", async () => {

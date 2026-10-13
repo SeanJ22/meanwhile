@@ -7,7 +7,7 @@ import { readerBallotSourceForTargetId, genericSourcesForDivisions } from "../li
 import { ballotQuestionShape, composeOfficeField } from "../lib/ask/ballot-summary.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import test from "node:test";
+import test from "./helpers/playbooks.ts";
 import { parseCivicRecords } from "../lib/control-plane/workers/parser.ts";
 import type { GeneralizedCivicExtractionContract, WorkerEvidence, WorkerResultRecord } from "../lib/control-plane/workers/types.ts";
 import type { AutonomousWorkPlan } from "../lib/control-plane/workers/autonomous-plan.ts";

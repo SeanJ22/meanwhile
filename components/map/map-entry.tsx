@@ -1,10 +1,8 @@
 "use client";
 
-import { WorkingOnIt } from "@/components/demand/working-on-it";
 
-import { OfficeCard } from "./popup/office-card";
 import { useOfficePins } from "@/hooks/use-office-pins";
-import { groupOfficePins, type OfficeSite } from "@/lib/map/office-pins";
+import { groupOfficePins, officeOwners, type MapBounds, type OfficePin } from "@/lib/map/office-pins";
 import { useBodyOfficeLocations } from "@/hooks/use-body-office-locations";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { forgetCamera } from "@/lib/map/camera-memory";
@@ -15,10 +13,8 @@ import { CountBadge } from "@/components/map/count-badge";
 import { Legend } from "@/components/map/legend";
 import { Sidebar } from "@/components/shell/sidebar";
 import { useDistrictLayer } from "@/hooks/use-district-layer";
-import {
-  useDivisionRepresentation,
-  type DivisionRepresentation,
-} from "@/hooks/use-division-representation";
+import { useDivisionsRepresentation } from "@/hooks/use-division-representation";
+import { districtSubject, spotDivisionsFor } from "./district-subject";
 import { useStoredTheme } from "@/hooks/use-stored-theme";
 import { useStoredZip } from "@/hooks/use-stored-zip";
 import type { SearchItem } from "@/lib/search";
@@ -50,12 +46,14 @@ import { Logo } from "@/components/brand/logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useReaderLayout } from "@/hooks/use-reader-layout";
 import { ZipSwitcher } from "./zip-switcher";
+import { PostalZipNotice } from "./postal-zip-notice";
 import { useSidebarVisible } from "@/hooks/use-sidebar-visible";
 import { UiProvider, useUi, useUiDispatch } from "@/lib/state/provider";
 import type { MeetingSearchResult } from "@/lib/meetings/query";
 import type { SnapshotStatus } from "@/lib/meetings/freshness";
 import { logEvent } from "@/lib/log/client";
 import { groupByVenue, placelessSittingsOfVenueBodies, type Venue } from "@/lib/meetings/venues";
+import { meetingCardGaps } from "@/lib/meetings/card-gaps";
 import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
 import { lastReadByDivision, snapshotInView } from "@/lib/meetings/freshness";
 import type { MeetingListingIdentityReadback } from "@/lib/meetings/listing-identity";
@@ -65,15 +63,11 @@ import type { SeatHolder } from "@/lib/officials/lookup";
 import {
   districtCardSources,
   meetingCardSources,
+  personCardSources,
 } from "@/lib/officials/card-sources";
-import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
+import type { CoveredBody } from "@/lib/registry/coverage";
 import { bodyClassLong } from "@/lib/registry/body-class-labels";
-import { projectedBodyRoster, projectedRosterGapsForDivision } from "@/lib/registry/body-roster-client";
-import {
-  noteStateFor,
-  representationForDivision,
-  representationNoteFor,
-} from "@/lib/registry/representation";
+import { projectedBodyRoster } from "@/lib/registry/body-roster-client";
 import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
 import { definitionsForBody } from "@/lib/officials/body-definitions";
 import { divisionTypeLabel, tierForMeeting } from "@/lib/state/derive";
@@ -235,13 +229,14 @@ function MapEntryInner() {
    * pops back. The depth cap guards cycles by dropping the oldest frame.
    */
   type LargeSurface =
-    | { kind: "office"; site: OfficeSite }
     | { kind: "entity"; subject: ModalSubject }
     | {
         kind: "official";
         holder: SeatHolder;
         seatLabel: string | null;
         tier: "local" | "state" | "national";
+        /** The district office the card was opened from, shown near its top. */
+        office?: OfficePin;
       };
   const LARGE_STACK_LIMIT = 8;
   const [largeStack, setLargeStack] = useState<LargeSurface[]>([]);
@@ -383,6 +378,14 @@ function MapEntryInner() {
     [remember, dispatch, dismissSidebar, setLarge],
   );
 
+  const addressLocated = useCallback((zip: string, lat: number, lng: number) => {
+    search(zip, lat, lng);
+    setSettled({ forZip: zip, target: {
+      key: `street:${lat.toFixed(4)},${lng.toFixed(4)}`, kind: "settled", zip: null, lat, lng,
+    } });
+    setFocus({ lat, lng, zoom: 14, key: `address:${lat.toFixed(4)},${lng.toFixed(4)}` });
+  }, [search]);
+
   /* Declared before both readers below. */
   const focusState = useStateFocus();
 
@@ -456,10 +459,17 @@ function MapEntryInner() {
     [pinned, ui, view],
   );
 
-  const officePins = useOfficePins(pinned?.coverage ?? null);
-  const officeSites = useMemo(() => groupOfficePins(officePins), [officePins]);
   const officeLocations = useBodyOfficeLocations(pinned?.coverage?.bodies ?? EMPTY_COVERED_BODIES, pinned?.meetings ?? EMPTY_MEETINGS);
   const venues = useMemo<Venue[]>(() => groupByVenue(meetings, pinned?.listingIdentity, officeLocations), [meetings, pinned?.listingIdentity, officeLocations]);
+
+  /* The reader's representatives' district offices: a pin each, or a line on the venue card in the same building. */
+  const [mapBounds, setMapBounds] = useState<MapBounds | null>(null);
+  const officePins = useOfficePins(pinned?.coverage ?? null, { bounds: mapBounds, venues });
+  const officeSites = useMemo(() => groupOfficePins(officePins.pins), [officePins.pins]);
+  const officeOwnerById = useMemo(
+    () => new Map(officeOwners(pinned?.coverage ?? null).map((owner) => [owner.holder.id, owner])),
+    [pinned?.coverage],
+  );
 
   /*
    * The map gets every venue in the held result plus the visible keys, so a
@@ -511,9 +521,7 @@ function MapEntryInner() {
   const openLarge = useCallback(
     (next: LargeSurface) => {
       captureEvent(
-        next.kind === "office"
-          ? { type: "CARD_OPEN", cardId: `BODY:${next.site.offices[0].ownerId}`, cardKind: "BODY" }
-          : next.kind === "official"
+        next.kind === "official"
           ? { type: "CARD_OPEN", cardId: `OFFICIAL:${next.holder.id}`, cardKind: "OFFICIAL" }
           : { type: "CARD_OPEN", cardId: `${next.subject.subjectKind}:${next.subject.subjectId}`, cardKind: next.subject.subjectKind },
       );
@@ -535,9 +543,10 @@ function MapEntryInner() {
       seatLabel: string | null,
       tier: "local" | "state" | "national",
       ocdId: string | null,
+      office?: OfficePin,
     ) => {
       // A person opens their full card in the one large card.
-      openLarge({ kind: "official", holder, seatLabel, tier });
+      openLarge({ kind: "official", holder, seatLabel, tier, ...(office ? { office } : {}) });
       // The holder id names the official opened, never the reader.
       logEvent("OFFICIAL_OPENED", ocdId ? [ocdId] : [], {
         officialId: holder.id,
@@ -545,6 +554,23 @@ function MapEntryInner() {
     },
     [openLarge],
   );
+
+  /** An office opens its owner's battlecard, with that office near the top. */
+  const openOffice = useCallback(
+    (office: OfficePin) => {
+      const owner = officeOwnerById.get(office.ownerId);
+      if (owner) openOfficial(owner.holder, owner.seatLabel, owner.tier, null, office);
+    },
+    [officeOwnerById, openOfficial],
+  );
+  /* Bounds arrive after every settled move; an unchanged view keeps its identity so nothing recomputes. */
+  const onMapBounds = useCallback((next: MapBounds) => {
+    setMapBounds((current) =>
+      current && current.west === next.west && current.south === next.south && current.east === next.east && current.north === next.north
+        ? current
+        : next,
+    );
+  }, []);
 
   // Opening the list overlay closes any large popup. Adjust-during-render.
   const [seenListOpen, setSeenListOpen] = useState(ui.listOverlayOpen);
@@ -713,12 +739,12 @@ function MapEntryInner() {
   );
 
   /**
-   * The selected division's officeholders, resolved by the division's own key.
-   * Both the popup and the battlecard read it.
+   * Start all point lookups while the picker is open, including the state.
+   * The selected division's own roster stays separate from the spot's seats.
    */
-  const districtRepresentation = useDivisionRepresentation(
+  const districtRepresentations = useDivisionsRepresentation(
     current?.coverage ?? null,
-    districtPopup?.ocdId ?? null,
+    lastHits.flatMap(hit => [hit.ocdId, ...spotDivisionsFor(hit, lastHits).map(division => division.ocdId)]),
   );
 
   /**
@@ -771,6 +797,7 @@ function MapEntryInner() {
       meetings,
       listingIdentity: pinned?.listingIdentity,
       venues,
+      officePins: officePins.pins.length,
       result: answer,
       location,
       drawnDistricts,
@@ -784,7 +811,7 @@ function MapEntryInner() {
       zipPartial: answer?.partialOcdIds ? new Set(answer.partialOcdIds) : null,
       basis: savedAddress ? "ADDRESS" : "ZIP",
     };
-  }, [current, shown, meetings, pinned?.listingIdentity, venues, location, drawnDistricts, failure, savedAddress]);
+  }, [current, shown, meetings, pinned?.listingIdentity, venues, officePins.pins.length, location, drawnDistricts, failure, savedAddress]);
 
   /*
    * Every autocomplete row opens something. A meeting row with no venue opens
@@ -1119,9 +1146,7 @@ function MapEntryInner() {
   const cardKey = cardView
     ? cardView.kind === "large"
       ? `large:${largeStack.length}:${
-          cardView.surface.kind === "office"
-            ? cardView.surface.site.id
-            : cardView.surface.kind === "entity"
+          cardView.surface.kind === "entity"
             ? cardView.surface.subject.subjectId
             : cardView.surface.holder.id
         }`
@@ -1129,7 +1154,7 @@ function MapEntryInner() {
         ? `venue:${cardView.venue.key}`
         : cardView.kind === "door"
           ? `door:${cardView.door}`
-          : cardView.kind
+          : `${cardView.kind}`
     : null;
   const cardLabel = cardView ? cardViewLabel(cardView) : "";
 
@@ -1377,10 +1402,11 @@ function MapEntryInner() {
         districtPopup,
         current?.meetings ?? [],
         current?.coverage ?? null,
-        districtRepresentation,
+        districtRepresentations,
+        lastHits,
       ),
     });
-  }, [ui.selectedDistrictOcdId, districtPopup, openLarge, current, districtRepresentation]);
+  }, [ui.selectedDistrictOcdId, districtPopup, openLarge, current, districtRepresentations, lastHits]);
 
   /**
    * Fit a drawn district's whole boundary and park its card behind the
@@ -1507,12 +1533,13 @@ function MapEntryInner() {
             placeless={selectedVenuePlaceless}
             onOpenMeeting={openMeeting}
             onShowOnMap={parkCard}
+            offices={officePins.atVenue.get(cardView.venue.key)}
+            onOpenOffice={openOffice}
             onClose={closeCard}
           />
         );
       case "large": {
         const surface = cardView.surface;
-        if (surface.kind === "office") return <OfficeCard site={officeSites.find(site => site.id === surface.site.id) ?? surface.site} />;
         if (surface.kind === "entity") {
           const subject =
             surface.subject.divisionOcdId &&
@@ -1522,7 +1549,8 @@ function MapEntryInner() {
                   districtPopup,
                   current?.meetings ?? [],
                   current?.coverage ?? null,
-                  districtRepresentation,
+                  districtRepresentations,
+                  lastHits,
                 )
               : surface.subject;
           return (
@@ -1590,6 +1618,7 @@ function MapEntryInner() {
             holder={surface.holder}
             seatLabel={surface.seatLabel}
             tier={surface.tier}
+            office={surface.office}
             reactionContext={
               view
                 ? {
@@ -1611,17 +1640,13 @@ function MapEntryInner() {
 
   const cardTone =
     cardView?.kind === "large"
-      ? cardView.surface.kind === "office"
-        ? "var(--accent-local)"
-        : cardView.surface.kind === "entity"
+      ? cardView.surface.kind === "entity"
         ? `var(--accent-${cardView.surface.subject.tier})`
         : `var(--accent-${cardView.surface.tier})`
       : undefined;
   const cardKicker =
     cardView?.kind === "large"
-      ? cardView.surface.kind === "office"
-        ? "Office"
-        : cardView.surface.kind === "official"
+      ? cardView.surface.kind === "official"
         ? "Battlecard"
         : cardView.surface.subject.subjectKind === "MEETING"
           ? "Meeting"
@@ -1681,14 +1706,15 @@ function MapEntryInner() {
             allowAutoFrame={view?.kind !== "settled"}
             focusStateOcdId={focusState.activeOcdId}
             officeSites={officeSites}
-            selectedOfficeId={large?.kind === "office" ? large.site.id : null}
+            selectedOfficeId={large?.kind === "official" ? (large.office?.id ?? null) : null}
             onSelectOffice={id => {
-              const site = officeSites.find(value => value.id === id);
-              if (!site) return;
+              const office = officePins.pins.find(value => value.id === id);
+              if (!office) return;
               dispatch({ type: "select/venue", key: null });
               dispatch({ type: "select/district", ocdId: null, districtType: null });
-              openLarge({ kind: "office", site });
+              openOffice(office);
             }}
+            onBoundsChange={onMapBounds}
             votingSites={votingPins}
             votingAddressPoint={votingAddressPoint}
             onSelectVotingSite={setSelectedVotingSiteId}
@@ -1791,7 +1817,7 @@ function MapEntryInner() {
                 <span aria-hidden="true">☰</span>
               </button>
               <span className="mw-header-logo">
-                <Logo variant="wordmark" size={30} />
+                <Logo variant="wordmark" size={38} />
               </span>
               <span className="mw-header-spacer" />
               <ThemeToggle className="mw-header-theme" />
@@ -1831,6 +1857,7 @@ function MapEntryInner() {
                 embedded
                 current={clusterZip}
                 onPick={search}
+                onAddressLocated={addressLocated}
                 onClose={closePop}
               />
             )}
@@ -1874,13 +1901,20 @@ function MapEntryInner() {
         {cardView && !parked && (
           <ReaderCard
             viewKey={cardKey ?? "card"}
+            sources={cardView.kind === "venue"
+              ? [...cardView.venue.meetings, ...selectedVenuePlaceless].flatMap(meeting => meetingCardSources(meeting, []))
+              : cardView.kind === "large" && cardView.surface.kind === "entity" ? cardView.surface.subject.sources
+                : cardView.kind === "large" && cardView.surface.kind === "official" ? personCardSources(cardView.surface.holder) : []}
+            gaps={cardView.kind === "venue" ? [...cardView.venue.meetings, ...selectedVenuePlaceless].flatMap(meetingCardGaps)
+              : cardView.kind === "large" && cardView.surface.kind === "entity" ? cardView.surface.subject.meetings.flatMap(meetingCardGaps) : []}
+            subject={cardView.kind === "large" && cardView.surface.kind === "official" ? { type: "CANDIDATE", id: cardView.surface.holder.id }
+              : cardView.kind === "large" && cardView.surface.kind === "entity" && cardView.surface.subject.subjectKind === "BODY" ? { type: "BODY", id: cardView.surface.subject.subjectId } : undefined}
             kicker={cardKicker}
             kickerTone={cardTone}
+            enter={cardView.kind === "large" && cardView.surface.kind === "official" && cardView.surface.office ? "rise" : undefined}
             zip={clusterZip}
             recordId={cardView.kind === "large"
-              ? cardView.surface.kind === "office"
-                ? cardView.surface.site.id
-                : cardView.surface.kind === "entity"
+              ? cardView.surface.kind === "entity"
                 ? cardView.surface.subject.subjectId
                 : cardView.surface.holder.id
               : cardView.kind === "venue" ? cardView.venue.key : null}
@@ -1908,11 +1942,13 @@ function MapEntryInner() {
           <WelcomeOverlay
             open={!location || welcomeRequested}
             onResolved={search}
+            onAddressLocated={addressLocated}
             onDismiss={
               location ? () => setWelcomeRequested(false) : null
             }
           />
         )}
+        {location && <PostalZipNotice location={location} onLocated={addressLocated} hidden={welcomeRequested || pop !== null || cardView !== null} />}
         {restored && (
           <TutorialOverlay active={Boolean(location) && !welcomeRequested && mapPresentationReady} />
         )}
@@ -1925,7 +1961,7 @@ function MapEntryInner() {
 /** The card's name for a view; also the "← Back to …" label. */
 function cardViewLabel(
   view:
-    | { kind: "large"; surface: { kind: "office"; site: OfficeSite } | { kind: "entity"; subject: ModalSubject } | { kind: "official"; holder: SeatHolder } }
+    | { kind: "large"; surface: { kind: "entity"; subject: ModalSubject } | { kind: "official"; holder: SeatHolder } }
     | { kind: "venue"; venue: Venue }
     | { kind: "door"; door: "bodies" | "districts" | "officials" }
     | { kind: "list" }
@@ -1933,9 +1969,7 @@ function cardViewLabel(
 ): string {
   switch (view.kind) {
     case "large":
-      return view.surface.kind === "office"
-        ? view.surface.site.name
-        : view.surface.kind === "entity"
+      return view.surface.kind === "entity"
         ? view.surface.subject.title
         : view.surface.holder.name;
     case "venue":
@@ -2027,12 +2061,12 @@ function meetingSubject(
         : {
             // The online sentence only where the body published online access.
             label: "Where",
-            value: isPlaceUnrecorded(meeting) ? <WorkingOnIt inline subject={body ? { type: "BODY", id: body.bodyId } : null} /> : placelessWhereLine(meeting),
+            value: isPlaceUnrecorded(meeting) ? null : placelessWhereLine(meeting),
           },
       ...(() => {
         const access = onlineAccessFor(meeting);
-        return access
-          ? [{ label: "How to join", value: access.joinUrl ? <a href={access.joinUrl} target="_blank" rel="noreferrer">Join online</a> : <WorkingOnIt inline subject={body ? { type: "BODY", id: body.bodyId } : null} /> }]
+        return access?.joinUrl
+          ? [{ label: "How to join", value: <a href={access.joinUrl} target="_blank" rel="noreferrer">Join online</a> }]
           : [];
       })(),
       { label: "Status", value: STATUS_LABEL[meeting.status] },
@@ -2288,112 +2322,6 @@ function BODY_TYPE_LABEL(body: CoveredBody): string {
     : CLASS(body.bodyClass);
 }
 
-function districtSubject(
-  district: DistrictHit,
-  allMeetings: Meeting[] = [],
-  coverage: CoverageSummary | null = null,
-  /** The division-keyed answer; omitted, the point-scoped resolver is used. */
-  resolved: DivisionRepresentation | null = null,
-): ModalSubject {
-  // A county card accepts its exact published ID and child jurisdictions
-  // whose OCD path names this county. A same-state match or a missing ID
-  // cannot establish county ownership.
-  const isCounty = /\/county:[^/]+$/.test(district.ocdId);
-  const meetings = allMeetings
-    .filter((m) =>
-      isCounty
-        ? tierForMeeting(m) === "local" && (m.ocdId === district.ocdId || m.ocdId?.startsWith(`${district.ocdId}/`))
-        : m.ocdId === district.ocdId,
-    )
-    .sort((a, b) => a.startsAt.localeCompare(b.startsAt));
-  // The same resolver the small popup and who-governs card read; `resolved`
-  // asks by the division's own key, since `coverage.seats` is point-scoped.
-  const roster =
-    resolved?.holders.length
-      ? resolved.holders
-      : representationForDivision(coverage, district.ocdId);
-  return {
-    // The division's own ocd-id.
-    subjectId: district.ocdId,
-    subjectKind: "BODY" as const,
-    title: district.label,
-    subtitle: `${district.typeLabel} · ${district.state}`,
-    tier: district.tier,
-    // Congressional, state-senate and state-house answer false.
-    divisionKind: district.type,
-    facts: [
-      // No OCD-ID row: internal identifiers never render to readers.
-      { label: "Type", value: district.typeLabel },
-      { label: "Tier", value: TIER_LABEL[district.tier] },
-      { label: "State", value: district.state, mono: true },
-      /* Every distinct governing body's own site; none is elected to speak for the division. */
-      ...bodyHomepageFacts(coverage, district.ocdId),
-    ],
-    /* The office title comes from the division's type, so vacant seats still get the explainer. */
-    divisionOcdId: district.ocdId,
-    representedByOfficeTitle: officeTitleForDivision(district.ocdId),
-    representation: roster,
-    rosterGaps: resolved?.rosterGaps ?? projectedRosterGapsForDivision(coverage, district.ocdId),
-    representationNote: representationNoteFor(
-      district.tier,
-      resolved ? noteStateFor(resolved.status) : "gap",
-    ),
-    meetings,
-    /* Built from the same rows the card renders. */
-    sources: districtCardSources(roster, meetings),
-  };
-}
-
-/**
- * The body's own website as an Overview row, shared by `bodySubject` and
- * `districtSubject`. No `homepageUrl`, no row.
- */
-function bodyHomepageFacts(
-  coverage: CoverageSummary | null,
-  ocdId: string,
-): { label: string; value: React.ReactNode }[] {
-  /* Deduped on the rendered host, since stored URLs differ by `www.`, slash or path. */
-  const seen = new Set<string>();
-  const rows: { label: string; value: React.ReactNode }[] = [];
-  for (const body of coverage?.bodies ?? []) {
-    if (body.ocdId !== ocdId || !body.homepageUrl) continue;
-    let host: string;
-    try {
-      host = new URL(body.homepageUrl).hostname.replace(/^www\./, "");
-    } catch {
-      // A malformed stored URL renders no row rather than a broken link.
-      continue;
-    }
-    if (seen.has(host)) continue;
-    seen.add(host);
-    rows.push({
-      label: "Official site",
-      value: (
-        <a
-          href={body.homepageUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
-        >
-          {host} →
-        </a>
-      ),
-    });
-  }
-  return rows;
-}
-
-/**
- * The office that represents a division, from its OCD-ID segment. Null for
- * segments with no representative (county, place): no explainer renders.
- */
-function officeTitleForDivision(ocdId: string): string | null {
-  if (/\/cd:[^/]+$/.test(ocdId)) return "U.S. Representative";
-  if (/\/sldu:[^/]+$/.test(ocdId)) return "State Senator";
-  if (/\/sldl:[^/]+$/.test(ocdId)) return "State Representative";
-  if (/\/school_district:[^/]+$/.test(ocdId)) return "School Board Member";
-  return null;
-}
 
 const STATUS_LABEL: Record<Meeting["status"], string> = {
   SCHEDULED: "Scheduled",

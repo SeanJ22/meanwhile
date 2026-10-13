@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { collectFecCandidate, fecOrganizationRows, fecTotalsForPeriod } from "../lib/funding/fec-collector.ts";
 import { fecCycle, parseFecPage, readFecPages, type FecPage, type FecReadPage } from "../lib/funding/fec-api.ts";
-import type { FecTarget } from "../lib/funding/fec-targets.ts";
+import type { FecTarget } from "../lib/funding/fec-discovery.ts";
 import { isSourceAcquisitionFailure, sourceAcquisitionFailure } from "../lib/civic-data/source-acquisition-error.ts";
 const id = "H6OR02001", committee = "C00000001";
 const target: FecTarget = { targetKey: "congress:A000001", displayName: "Alice Adams", state: "OR", office: "H", district: "02",

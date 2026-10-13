@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
-import test from "node:test";
+import test from "./helpers/playbooks.ts";
 
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";

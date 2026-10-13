@@ -3,6 +3,7 @@ import { getFederalOfficeholderSet } from "../officials/federal-directory-read-m
 import { formatDateLong } from "../text/format-date.ts";
 import {
   getStateVotesSnapshot,
+  OFFICIAL_STATE_VOTE_SCOPES,
   type OfficialStateVoteScope,
 } from "../sources/legiscan/snapshot.ts";
 import { stateRollPublisher } from "../sources/legiscan/types.ts";
@@ -15,7 +16,8 @@ import { readHistoricalFederalVotesForMember } from "../votes/history.ts";
 import type { RollCallVote, VotesSnapshot } from "../votes/types.ts";
 
 import type { EvidenceGap, EvidenceRecord } from "./evidence.ts";
-import { readNativeMemberVotes } from "../state-rollcalls/reader-votes.ts";
+import { readNativeMemberVotes, type NativeMemberVoteReaders } from "../state-rollcalls/reader-votes.ts";
+import { stateVoteStateForMember } from "../state-rollcalls/reader-vote-visibility.ts";
 
 interface RosterRow {
   id: string;
@@ -107,7 +109,7 @@ export type VoteIdentity =
   | { kind: "NO_ROSTER_ROW" }
   | { kind: "NAME_FORM_UNCONFIRMED"; sharedSurnames: number }
   | { kind: "AMBIGUOUS_NAME"; count: number }
-  | { kind: "HOLDING_UNAVAILABLE"; scope: OfficialStateVoteScope };
+  | { kind: "HOLDING_UNAVAILABLE"; scope: string };
 
 function officialStateVoteSeat(
   personName: string,
@@ -185,7 +187,7 @@ function federalSnapshot(): VotesSnapshot | null {
 
 function stateSnapshot(state: string | null): StateVotesSnapshot | null {
   const scope = state ? `US-${state}` : null;
-  if (scope !== "US-AZ" && scope !== "US-NH" && scope !== "US-NJ") return null;
+  if (!scope || !OFFICIAL_STATE_VOTE_SCOPES.includes(scope as OfficialStateVoteScope)) return null;
   try {
     return getStateVotesSnapshot(scope as OfficialStateVoteScope);
   } catch {
@@ -252,8 +254,7 @@ export function voteEvidenceReadsStateRollCalls(
   options: { withinStates?: readonly string[]; officeholderId?: string } = {},
 ): boolean {
   if (options.officeholderId) {
-    if (/^(?:plural:(?:az|nh):|az-legislature:|nh-general-court:)/.test(options.officeholderId)) return false;
-    if (officialStateVoteScopeForOfficeholderId(options.officeholderId)) return true;
+    if (stateVoteStateForMember(options.officeholderId, options.withinStates?.length === 1 ? options.withinStates[0] : undefined)) return false;
     const seat = loadRoster().find((row) => row.officeholderId === options.officeholderId);
     return Boolean(seat && seat.rosterScope !== "us");
   }
@@ -399,22 +400,27 @@ export function voteEvidenceFor(
 export async function voteEvidenceForIncludingHistory(
   personName: string,
   options: { withinStates?: readonly string[]; officeholderId?: string } = {},
+  readers?: NativeMemberVoteReaders,
 ): Promise<VoteEvidence> {
-  if (options.officeholderId && /^(?:plural:(?:az|nh):|az-legislature:|nh-general-court:)/.test(options.officeholderId)) {
+  const stateHint = options.withinStates?.length === 1 ? options.withinStates[0] : undefined;
+  const state = options.officeholderId ? stateVoteStateForMember(options.officeholderId, stateHint) : null;
+  if (options.officeholderId && state) {
     const member = options.officeholderId;
-    const state = member.includes("az") ? "AZ" : "NH";
     try {
-      const native = await readNativeMemberVotes(member);
+      const native = await readNativeMemberVotes(member, readers, { state });
       if (native) {
         const records: EvidenceRecord[] = native.votes.map(vote => ({ kind: "ROLL_CALL_VOTE", id: `${member}#${vote.id}`,
           subjectId: member, text: `${personName}: recorded ${vote.position} on ${vote.legisNum} — ${vote.title} (${vote.question}), ${readableDate(vote.date)}. ${vote.result}.`,
           rollCall: { position: vote.position, what: `${vote.legisNum} — ${vote.title}`, when: readableDate(vote.date), result: vote.result },
           occurredAt: vote.date, sourceUrl: vote.rollCallUrl, sourceOrg: vote.sourceOrg, retrievedAt: vote.retrievedAt }));
-        return { identity: native.status === "IDENTITY_UNRESOLVED" ? { kind: "NO_ROSTER_ROW" } : { kind: "JOINED", seat: {
+        const gaps: EvidenceGap[] = records.length ? [] : [{ whose: "OURS", statement: `We have not acquired an exact voting record for ${personName} from this source yet.` }];
+        if (native.unavailableScopes.length) gaps.push({ whose: "OURS", statement: `Some sources for ${personName}'s voting record could not be checked just now. Any recorded votes above remain available.` });
+        return { identity: native.status === "IDENTITY_UNRESOLVED" ? { kind: "NO_ROSTER_ROW" }
+          : native.status === "HOLDING_UNAVAILABLE" ? { kind: "HOLDING_UNAVAILABLE", scope: `US-${state}` } : { kind: "JOINED", seat: {
           officeholderId: member, name: personName, officeTitle: "State legislator", rosterScope: native.authorityScope, state,
           chamber: null, ocdIds: [], sourceUrl: records[0]?.sourceUrl ?? null, sourceOrg: records[0]?.sourceOrg ?? null,
           retrievedAt: native.generatedAt } }, records,
-          gaps: records.length ? [] : [{ whose: "OURS", statement: `We have not acquired an exact voting record for ${personName} from this source yet.` }],
+          gaps,
           denominators: { rollCallVotesRecorded: records.length, rollCallVotesShown: records.length } };
       }
     } catch {

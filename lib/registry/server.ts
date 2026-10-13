@@ -42,6 +42,8 @@ import { composeRegistration, type RegistrationLayer } from "../registration/com
 import { REGISTRATION_TARGETS } from "../registration/publication.ts";
 import type { RegistrationReadModel } from "../registration/candidate.ts";
 import { bindGovernmentBodies, governmentStateOf, type RegistrationGovernmentListing } from "../registration/listings.ts";
+import { attachGovernmentDomains, readDotGovProjection } from "../civic-data/dotgov.ts";
+import { stateOfficesForStates } from "../reference/state-offices.ts";
 import { readRegistrationProjection } from "../registration/reader.ts";
 import { stateOf } from "./wording.ts";
 import { publishedDivisionsForZip } from "../geo/zip-census-districts.ts";
@@ -360,6 +362,14 @@ async function registrationModelFor(state: string): Promise<{ value: Registratio
   return { value: read.value, versionId: read.metadata.versionId };
 }
 
+/** Enrich the complete state inventory before narrowing, so duplicate identities remain ambiguous. */
+async function governmentDomainsFor(listings: readonly RegistrationGovernmentListing[]): Promise<RegistrationGovernmentListing[]> {
+  if (listings.length === 0) return [];
+  // An unavailable registry must not hide the independently held Census listing.
+  const read = await readDotGovProjection().catch(() => null);
+  return read?.kind === "PROMOTED" ? attachGovernmentDomains(listings, read.value) : [...listings];
+}
+
 export interface GovernmentListingPage {
   readonly state: string;
   readonly status: "HELD" | "NOT_HELD";
@@ -374,7 +384,7 @@ export async function governmentListingsForState(state: string, offset = 0, limi
   const code = state.replace(/^US-/i, "").toLowerCase();
   if (!REGISTRATION_STATES.has(code)) throw new Error("A US state or territory is required");
   const held = await registrationModelFor(code);
-  const records = held?.value.governments ?? [];
+  const records = await governmentDomainsFor(held?.value.governments ?? []);
   const start = Math.max(0, Math.floor(offset));
   const size = Math.min(100, Math.max(1, Math.floor(limit)));
   return { state: code.toUpperCase(), status: held ? "HELD" : "NOT_HELD", versionId: held?.versionId ?? null,
@@ -387,7 +397,8 @@ export async function governmentListingById(id: string): Promise<RegistrationGov
   const state = governmentStateOf(id);
   if (!state) return null;
   const held = await registrationModelFor(state);
-  return held?.value.governments?.find(row => row.id === id || row.aliases.includes(id)) ?? null;
+  const listings = await governmentDomainsFor(held?.value.governments ?? []);
+  return listings.find(row => row.id === id || row.aliases.includes(id)) ?? null;
 }
 
 export async function governmentListingsForDivisions(divisionIds: readonly string[], scope: "AREA" | "STATE_INVENTORY" = "AREA"): Promise<{
@@ -395,10 +406,13 @@ export async function governmentListingsForDivisions(divisionIds: readonly strin
 }> {
   const states = [...new Set(divisionIds.flatMap(id => statePeopleScopeForDivision(id)?.slice(3).toLowerCase() ?? []))];
   const divisions = new Set(divisionIds);
-  const results = await Promise.allSettled(states.map(state => registrationModelFor(state)));
+  const results = await Promise.allSettled(states.map(async state => {
+    const held = await registrationModelFor(state);
+    return held ? governmentDomainsFor(held.value.governments ?? []) : [];
+  }));
   return {
     records: results.flatMap(result => result.status === "fulfilled"
-      ? (result.value?.value.governments ?? []).filter(row => scope === "STATE_INVENTORY" || row.associations.some(link => divisions.has(link.divisionId))) : []),
+      ? result.value.filter(row => scope === "STATE_INVENTORY" || row.associations.some(link => divisions.has(link.divisionId))) : []),
     states: states.map(state => state.toUpperCase()),
     unavailableStates: states.filter((_, index) => results[index].status === "rejected").map(state => state.toUpperCase()),
   };
@@ -501,10 +515,10 @@ export async function divisionsByOcdIds(ocdIds: readonly string[], context?: { z
  * One officeholder by roster id, in the render shape. The id arrives from an exact-key join (never a
  * name match); an id the roster does not hold returns null.
  */
-export async function seatHolderById(id: string): Promise<SeatHolder | null> {
+export async function seatHolderById(id: string, stateHint?: string): Promise<SeatHolder | null> {
   // The publisher namespace establishes the one permitted state authority before any store is opened. A
   // state identity never causes a federal/registry read or a name join.
-  const officialStateScope = statePeopleScopeForId(id);
+  const officialStateScope = statePeopleScopeForId(id,stateHint);
   if (officialStateScope) {
     const held = await heldStateLegislatorsEdgeFirst(officialStateScope);
     const matches = held?.seats.filter((holder) => personIdentityKeys(holder).has(id)) ?? [];
@@ -546,17 +560,12 @@ export async function allSeatHolders(divisionIds: readonly string[] = []): Promi
       const selected = seatHolderForMembership(holder, holder.memberships?.find(row => row.current === true)?.id);
       return selected ? [selected] : [];
     }))]);
-  const holders = new Map<string, SeatHolder>();
-  const primary = base.status === "fulfilled" ? base.value : [];
+  let holders: SeatHolder[] = [];
   for (const read of [base, ...stateReads]) if (read.status === "fulfilled") {
-    for (const holder of read.value) {
-      const sameDivision = holder.officeJurisdictionOcdId
-        ? primary.filter(row => row.officeJurisdictionOcdId === holder.officeJurisdictionOcdId) : [];
-      if (scopedHolders(sameDivision, [holder]).some(row => row.id === holder.id)) holders.set(holder.id, holder);
-    }
+    holders=scopedHolders(holders,read.value);
   }
   if ([base, ...stateReads].every(read => read.status === "rejected")) throw new Error("Officeholder authorities unavailable");
-  return [...holders.values()];
+  return holders;
 }
 
 /**
@@ -716,12 +725,7 @@ export async function settleCoverageStateLegislators(
       const holder = seatHolderForMembership(person, link.membershipId);
       if (!holder) continue;
       const existing = nextOfficials.get(link.ocdId) ?? [];
-      if (!existing.some((row) => row.id === holder.id && row.officeTitle === holder.officeTitle)) {
-        nextOfficials.set(
-          link.ocdId,
-          [...existing, holder].sort((a, b) => a.name.localeCompare(b.name)),
-        );
-      }
+      nextOfficials.set(link.ocdId,scopedHolders(existing,[holder]).sort((a,b)=>a.name.localeCompare(b.name)));
     }
   }
 
@@ -804,6 +808,7 @@ export async function coverageAt(
     ...coverage,
     governments: bindGovernmentBodies(governmentListings.records, registry.bodies),
     governmentInventoryStates: governmentListings.states,
+    stateOffices: stateOfficesForStates(governmentListings.states),
     governmentInventoryUnavailableStates: governmentListings.unavailableStates,
     federalDirectoryUnavailable: !federalAvailable,
     bodies: coverage.bodies.map((body) => {

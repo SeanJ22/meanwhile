@@ -1,5 +1,6 @@
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import type { Officeholder } from "./types.ts";
+import { PEOPLE_SOURCE_IDS, peopleSourceScope, peopleSourceRecordClass } from "./people-sources.ts";
 
 export type StatePeopleJurisdiction = `US-${string}`;
 export const STATE_PEOPLE_JURISDICTIONS: readonly StatePeopleJurisdiction[] = Object.values(FIPS_TO_STATE)
@@ -12,12 +13,17 @@ export function statePeopleScopeForDivision(divisionId: string): StatePeopleJuri
 }
 
 export function statePeopleSourceScopes(jurisdiction: string): readonly string[] {
-  return [jurisdiction, `${jurisdiction}:openstates-people:v1`];
+  return statePeopleSourcePointers(jurisdiction).filter(row=>row.recordClass === "STATE_LEGISLATOR").map(row=>row.scope);
+}
+
+export function statePeopleSourcePointers(jurisdiction: string) {
+  return [{recordClass:"STATE_LEGISLATOR" as const,scope:jurisdiction}, {recordClass:"STATE_LEGISLATOR" as const,scope:`${jurisdiction}:openstates-people:v1`},
+    ...PEOPLE_SOURCE_IDS.map(sourceId=>({recordClass:peopleSourceRecordClass(jurisdiction,sourceId),scope:peopleSourceScope(jurisdiction,sourceId)}))];
 }
 
 export function statePeopleScopeForId(id: string, stateHint?: string): StatePeopleJurisdiction | null {
-  const nativeGlobal = /^(?:plural:|ocd-person\/)[a-f0-9]{8}-[a-f0-9-]{27}$/i.test(id);
-  const state = /^plural:([a-z]{2}):/.exec(id)?.[1] ?? /^([a-z]{2})-(?:legislature|general-court):/.exec(id)?.[1] ??
+  const nativeGlobal = /^(?:plural:|ocd-person\/)[a-f0-9]{8}-[a-f0-9-]{27}$/i.test(id) || /^(?:legiscan|official-legislature|wikidata|congress-api|govinfo):[^:]+$/.test(id);
+  const state = /^(?:plural|statewide|legiscan|official-legislature|wikidata|congress-api|govinfo):([a-z]{2}):/.exec(id)?.[1] ?? /^([a-z]{2})-(?:legislature|general-court):/.exec(id)?.[1] ??
     (nativeGlobal ? /^(?:US-)?([A-Z]{2})$/i.exec(stateHint ?? "")?.[1] : undefined);
   const scope = state ? `US-${state.toUpperCase()}` as StatePeopleJurisdiction : null;
   return scope && STATE_PEOPLE_JURISDICTIONS.includes(scope) ? scope : null;
@@ -29,6 +35,10 @@ export function personIdentityKeys(person: Pick<Officeholder, "id" | "personId" 
   for (const [source, ids] of Object.entries(person.nativeIds ?? {})) {
     for (const id of ids) if (id) {
       keys.add(source === "reader" ? id : `${source}:${id}`);
+      const namespace = source.toLowerCase().replace(/[^a-z0-9]/g, "");
+      const aliases: Readonly<Record<string,string>> = {bioguide:"congress",congress:"congress",legiscan:"legiscan",legiscanapi:"legiscan",votesmart:"votesmart",followthemoney:"followthemoney",opensecrets:"opensecrets",ballotpedia:"ballotpedia",wikidata:"wikidata",openstates:"ocd-person",ocdperson:"ocd-person",plural:"ocd-person"};
+      const canonical = aliases[namespace];
+      if (canonical) keys.add(`${canonical}:${canonical === "ocd-person" ? id.replace(/^ocd-person\//, "") : id}`);
       if (source === "ocd-person" && id.startsWith("ocd-person/")) keys.add(id);
     }
   }

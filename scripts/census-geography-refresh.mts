@@ -9,7 +9,7 @@
  */
 import { acquireDataset } from "../lib/census-geography/acquire.ts";
 import { censusGeographyCandidate } from "../lib/census-geography/candidate.ts";
-import { CENSUS_GEO_CONTRACT_ID } from "../lib/census-geography/publication.ts";
+import { CENSUS_GEO_CONTRACT_ID, CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../lib/census-geography/publication.ts";
 import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -37,9 +37,10 @@ async function main(): Promise<void> {
       "Census geography relationships",
       ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS,
       async (signal): Promise<BuiltDataset> => {
-        const built = await acquireDataset({ signal });
+        const held = await store.readPromotion<BuiltDataset>(CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE);
+        const built = await acquireDataset({ signal, previousDataset: held?.payload, discoverPlans: true });
         // A zero-overlap scope is a failed extraction, never an empty publication.
-        if (built.scopes.length === 0 || built.scopes.some((s) => s.zctaEdgeCount === 0)) {
+        if (built.scopes.length === 0 || built.scopes.some((s) => s.zctaEdgeCount === 0 || s.versionMeta.retrievalComplete === false)) {
           throw sourceAcquisitionFailure(
             "PUBLISHER_DOCUMENT_INVALID",
             "A census-geography scope returned zero overlaps.",

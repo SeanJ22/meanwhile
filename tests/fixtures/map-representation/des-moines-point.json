@@ -1,0 +1,117 @@
+{
+  "point": {
+    "lng": -93.625,
+    "lat": 41.5868
+  },
+  "samples": [
+    {
+      "sourceUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Legislative/MapServer/identify?f=json&geometry=-93.625%2C41.5868&geometryType=esriGeometryPoint&sr=4326&layers=all%3A4&tolerance=0&mapExtent=-93.635%2C41.5768%2C-93.615%2C41.5968&imageDisplay=1000%2C1000%2C96&returnGeometry=false",
+      "response": {
+        "results": [
+          {
+            "layerId": 4,
+            "layerName": "119th Congressional Districts",
+            "displayFieldName": "BASENAME",
+            "value": "3",
+            "attributes": {
+              "OBJECTID": "159",
+              "STGEOMETRY": "Polygon",
+              "AREALAND": "27643870876",
+              "AREAWATER": "195186858",
+              "CD119": "03",
+              "CDSESSN": "119",
+              "CDTYP": "O",
+              "FUNCSTAT": "N",
+              "GEOID": "1903",
+              "LSADC": "C2",
+              "MTFCC": "G5200",
+              "BASENAME": "3",
+              "NAME": "Congressional District 3",
+              "OID": "2116635951834838",
+              "STATE": "19",
+              "CENTLON": "-093.9694613",
+              "CENTLAT": "+41.1421835",
+              "INTPTLON": "-093.9713985",
+              "INTPTLAT": "+41.1394008",
+              "HU100": "Null",
+              "POP100": "Null"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "sourceUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/identify?f=json&geometry=-93.625%2C41.5868&geometryType=esriGeometryPoint&sr=4326&layers=all&tolerance=0&mapExtent=-93.635%2C41.5768%2C-93.615%2C41.5968&imageDisplay=1000%2C1000%2C96&returnGeometry=false",
+      "response": {
+        "results": [
+          {
+            "layerId": 1,
+            "layerName": "Counties",
+            "displayFieldName": "NAME",
+            "value": "Polk County",
+            "attributes": {
+              "MTFCC": "G4020",
+              "OID": "27590369222758",
+              "GEOID": "19153",
+              "STATE": "19",
+              "COUNTY": "153",
+              "COUNTYNS": "00465265",
+              "BASENAME": "Polk",
+              "NAME": "Polk County",
+              "LSADC": "06",
+              "FUNCSTAT": "A",
+              "COUNTYCC": "H1",
+              "AREALAND": "1483337984",
+              "AREAWATER": "49645905",
+              "OBJECTID": "1795",
+              "STGEOMETRY": "Polygon",
+              "CENTLAT": "+41.6853128",
+              "CENTLON": "-093.5733953",
+              "INTPTLAT": "+41.6842756",
+              "INTPTLON": "-093.5682448"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "sourceUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/identify?f=json&geometry=-93.625%2C41.5868&geometryType=esriGeometryPoint&sr=4326&layers=all&tolerance=0&mapExtent=-93.635%2C41.5768%2C-93.615%2C41.5968&imageDisplay=1000%2C1000%2C96&returnGeometry=false",
+      "response": {
+        "results": [
+          {
+            "layerId": 4,
+            "layerName": "Incorporated Places",
+            "displayFieldName": "BASENAME",
+            "value": "Des Moines",
+            "attributes": {
+              "AREALAND": "228332320",
+              "AREAWATER": "6608904",
+              "BASENAME": "Des Moines",
+              "CBSAPCI": "Y",
+              "CENTLAT": "+41.5725014",
+              "CENTLON": "-093.6104328",
+              "FUNCSTAT": "A",
+              "GEOID": "1921000",
+              "INTPTLAT": "+41.5725898",
+              "INTPTLON": "-093.6102428",
+              "LSADC": "25",
+              "MTFCC": "G4110",
+              "NAME": "Des Moines city",
+              "NECTAPCI": "N",
+              "OBJECTID": "32106",
+              "OID": "27890369256859",
+              "PLACE": "21000",
+              "PLACECC": "C1",
+              "PLACENS": "02394522",
+              "STATE": "19",
+              "STGEOMETRY": "Polygon",
+              "DISP_CLR": "5"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "retrievedAt": "2026-10-12T23:09:17.260188+00:00",
+  "selection": "First current-layer result per county and incorporated place; source attributes retained unchanged."
+}

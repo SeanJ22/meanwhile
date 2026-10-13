@@ -556,52 +556,38 @@ against a 90-day served window, under a comment asserting they matched. No
 count check catches this: the adapter honestly reports what it asked for.
 Adapter windows now derive from `lib/meetings/constants.ts`.
 
-### State roll calls: LegiScan, and the join that fails silently (2026-08-15)
+### State roll calls from weekly LegiScan datasets (SV-01, 2026-10-13)
 
-*Evidence: `docs/source-ladder.md`, "The district mapping, and the failure it hides — the evidence".*
+Read `getDatasetList` for the requested state, then `getDataset` for each
+session in the newest two legislative years, including special sessions.
+The standing state contract checks the list weekly. Each native
+`session_id` plus `dataset_hash` identifies an immutable saved release;
+unchanged releases reuse their original bytes and capture date. A successful
+unchanged check confirms the held projection and never records an outage.
 
-Bulk first — `getDatasetList` → `getDataset`, one ZIP per state session,
-refreshed Sunday mornings. Store `dataset_hash`, compare it, **never
-re-download an unchanged dataset**. Never touch the legiscan.com front end.
-The data is CC BY 4.0 and the attribution renders wherever it appears.
+Keep API keys and dataset access keys in private transport only. The saved
+source list removes access keys, and recorded source URLs carry only public
+operation, state, session and hash fields. The normal evidence vault retains
+the source archive. Decode one state-sized archive member at a time with the
+shared complete ZIP reader; reject a member outside the state's directory.
 
-**The district mapping is the whole risk, and getting it wrong does not
-throw — it produces a low match rate, which looks exactly like a thin
-roster.** Two shapes so far:
+Bind positions to the same OpenStates person IDs used by linked legislators.
+A unique held native LegiScan identifier is an exact join. Otherwise require
+the same unique native member profile URL in the independently saved
+OpenStates and LegiScan person records. Preserve each original URL; only an
+official `.gov` publisher's `www.` alias and a trailing path slash normalize.
+Keep the complete path and query. Record the exact promoted roster version
+on each join, so verified votes survive a member's departure. Ambiguous joins
+stay held, while independently verified member positions still publish.
 
-- **Statewide numbering** (AZ, NJ, and every state's upper chamber seen so
-  far): `HD-040` → `sldl:40`.
-- **County numbering** (NH's House): `HD-12-HIL` is Hillsborough 12, and the
-  Census SLDL code is the county's **zero-based alphabetical** ordinal
-  concatenated with the two-digit district number → `sldl:512`. Belknap is
-  ordinal 0, so its codes lose the leading zero: Belknap 7 is `sldl:7`, not
-  `sldl:007`. Both details were wrong on the first pass and both were silent.
+Keep all acquired votes and literal publisher position labels. Reader may
+limit its current view while Ask retains the recorded history. Report roll
+calls and member positions per state. Render LegiScan and CC BY 4.0
+attribution wherever its rows appear, and keep official publisher rows ahead
+of intermediary duplicates.
 
-**Assert the mapping against your own boundary labels.** Our geojson carries
-`State House District Merrimack 08` beside `sldl:608`, which turns the
-mapping from a remembered fact into a checked one. Do this for every new
-state before trusting a match rate.
-
-**Match on district AND surname, never name alone** — the district identifies
-the seat and the surname is compared only within a district that already
-matched. Fold accents and generational suffixes: "Walter"/"Walt", "Mary
-Jane"/"Mary", "James"/"Jim" all occur between a legislature's own roster and
-LegiScan's.
-
-**Report the match rate WITH its denominator, per state.** A large unmatched
-count is usually not a gap: most of a legislature governs outside our clipped
-boundaries. What matters is that every roster seat that COULD match did.
-
-### Let the surface drive the clip (2026-08-15)
-
-*Evidence: `docs/source-ladder.md`, "The clip, stated — the evidence".*
-
-A snapshot that holds "the N most recent" of anything must ask what the
-surface renders. Arizona published 7,283 roll calls in one session and
-**votes in bursts** — the 60 most recent covered two days, so any member
-absent those two days would have rendered an empty record that reads as
-"never votes". The clip is now the union of each member's own twelve most
-recent, which guarantees every member with a record has one to show.
+*Evidence: `docs/source-ladder.md`, "LegiScan weekly state votes"; real source
+fixtures and integration checks: `tests/legiscan-votes.test.ts`.*
 
 ### Prose said no; ask the markup (2026-08-15)
 
@@ -882,7 +868,7 @@ people-on-the-ledger against people-read-this-run.
 | `pnpm signal:snapshot` | Freeze aggregates for calibration. |
 | `pnpm stamp` | Today, `America/Phoenix`. Every written date comes from here. |
 | `pnpm verify-stamps` | Audits `CLAUDE.md`'s Adopted dates against git history. |
-| `pnpm legiscan:fetch` | State-legislature roll calls for AZ/NJ/NH, hash-gated. `--force` re-downloads. |
+| `node --experimental-strip-types scripts/legiscan-votes-refresh.mts --promote --state=<postal>` | Weekly state vote datasets, published through the registered per-state contract. |
 
 ### The tiered-discovery toolkit (NJ Hunt 5, added 2026-08-22 — items 2, 3, 10 and 11)
 
@@ -1430,28 +1416,25 @@ title, a body name, a jurisdiction:** stack it. Do not tune the width.
 Measure it with `lab.scrollWidth > lab.clientWidth`, which is what "overflows
 its box" looks like as a number.
 
-### The .gov registry is a rung, never a denominator (2026-08-16)
+### The .gov registry supplies official links and acquisition routes
 
-`cisagov/dotgov-data`'s `current-full.csv` is the cheapest first rung in any
-hunt for a body's own publications: 16,501 domains with the registrant's own
-organization name and CISA's own `Domain type`. **693 of them are typed as
-election offices** — City 332, County 288, State or territory 36, Special
-district 33, Tribal 4 — and that is the named rung for a ballot or
-candidate-filing hunt in a county nobody has worked before. Committed at
-`data/dotgov/snapshot.json`, SHA-pinned, `pnpm dotgov:fetch`.
+`cisagov/dotgov-data` publishes `current-full.csv` with every domain's registrant
+organization, state and CISA `Domain type`. The monthly `dotgov` contract resolves
+a commit and retains every row at that SHA. The 2026-10-12 source fixture has
+16,876 domains, including 719 election-typed domains.
 
-**Use CISA's `Domain type`, never a name match.** A name match on "vote" or
-"election" would sweep in a town called Election and miss every secretary of
-state; the registry already classified these and reading its answer is both
-cheaper and right.
+The typed `readDotGovProjection` Reader and `government-domains` edge family serve
+this registry to government listings. A registrant attaches only to a unique
+established government name and state under the existing identity rules. Ambiguous
+and unmatched domains remain unattached. Census websites stay separately sourced.
 
-**It is a list of DOMAINS and it is never a coverage denominator.** A
-government with no .gov domain is absent from it entirely — small towns,
-school districts and special districts routinely publish on a `.org`, a
-`.us`, a vendor subdomain, or a Facebook page — so counting .gov domains
-would undercount exactly the bodies hardest to cover, which is the Sunnyside
-class of miss. One government may hold several domains; a domain is not a
-body. M still comes from the Census of Governments and the official rosters.
+Use CISA's election type for ballot and candidate-filing acquisition routes.
+Searching names for "vote" or "election" does not replace that classification.
+
+The registry is a list of domains, never a government coverage denominator. A
+government with no .gov domain is absent, one government may hold several domains,
+and a domain is not a body. The denominator continues to come from the Census of
+Governments, NCES and official rosters.
 
 ### A CSS state class must BEAT the base class, not merely differ from it
 
@@ -4130,7 +4113,7 @@ rather than by trusting the register. One run:
 | `DATA_GOV_API_KEY` | never called | 42 govinfo collections; `CDIR` carries member offices and phones | 0 |
 | `CENSUS_API_KEY` | never called | **INVALID — the host refuses it** with `X-DataWebAPI-KeyError: 1`; a keyless call is refused too | 0 |
 | `LDA_API_KEY` | never called | the API answers, and closes **nothing** at either zip — it is federal lobbying only, with no county or municipal layer | 0 |
-| `LEGISCAN_API_KEY` | WIRED, daily | bills and roll calls; closes no Kelly field about a person | 0 |
+| `LEGISCAN_API_KEY` | Per-state standing contracts, weekly | attributed bill roll calls and exact OpenStates person positions | 1 source-fixture position verified |
 
 **119 owed fields closed from credentials alone**, all of it available while the
 previous session was measuring how fast a free search engine would rate-limit it.

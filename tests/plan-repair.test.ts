@@ -1,3 +1,4 @@
+import { planRepairToolDescription } from "../lib/control-plane/workers/plan-repair-grammar.ts";
 import { parseGeneralizedRecords } from "../lib/control-plane/workers/generalized-parser.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -444,10 +445,11 @@ test("successor creation is atomic and an interrupted older registration is reco
 });
 
 test("Scout contract-repair context contains executable typed grammar rather than unspecified objects", async () => {
-  const f = await fixture(); const context = planRepairBrief(f.h.item.autonomousPlan!);
-  for (const required of ['"rowsPointer"', '"source":"/id"', '"type":"STRING"', '"rowTag"', '"tableIndex":0', '"headerRows":1',
+  const f = await fixture(); const context = planRepairToolDescription();
+  assert.doesNotMatch(planRepairBrief(f.h.item.autonomousPlan!), /rowsPointer/);
+  for (const required of ['"rowsPointer"', '"source":"/fieldName"', '"type":"STRING"', '"rowTag"', '"tableIndex":0', '"headerRows":1',
     '"delimiter":","', '"id":"replace-with-register-id"', '"type":"GOVERNMENT_REGISTER"', '"publisher"',
-    '"comparison":{"kind":"RECORD_VALUES","keyFields":["id"],"fields":["id","name"]}', '"authorityEvidenceArtifactIds"']) {
+    '"comparison":{"kind":"RECORD_VALUES","keyFields":["fieldName"],"fields":["fieldName"]}', '"authorityEvidenceArtifactIds"']) {
     assert.ok(context.includes(required), `Missing model-visible grammar: ${required}`);
   }
 });
@@ -455,7 +457,7 @@ test("Scout contract-repair context contains executable typed grammar rather tha
 test("service and voter-access discovery can admit independently replayed repair instructions", async () => {
   for (const recordClass of ["SERVICE_CONTACT", "VOTER_ACCESS_ROUTE"]) {
     const f = await fixture(recordClass);
-    assert.match(planRepairBrief(f.h.item.autonomousPlan!), /CONTRACT REPAIR remains owed/);
+    assert.match(planRepairBrief(f.h.item.autonomousPlan!), /saved pages still need/);
     const admitted = await f.consume();
     assert.equal(admitted[0].code, "REPAIR_SUCCESSOR_REGISTERED", JSON.stringify(admitted));
     const child = (await f.h.repos.workItems.mustRead(admitted[0].successorWorkItemId!)).value;

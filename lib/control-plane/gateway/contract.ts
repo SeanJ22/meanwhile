@@ -70,7 +70,12 @@ export interface ActionDefinition {
   readonly refusals: readonly RefusalCode[];
 }
 
+/** A submitted action, before the gateway has looked at it. */
+export interface ScheduleOrigin { readonly id: string; readonly occurrence: string; readonly finishBy: string | null }
+
 export interface ActionRequest {
+  /** Added by the scheduler; HTTP callers do not supply it. */
+  readonly scheduleOrigin?: ScheduleOrigin;
   readonly type: string;
   readonly subject: string;
   readonly input: Readonly<Record<string, unknown>>;
@@ -86,6 +91,7 @@ export interface ActionRequest {
 export type ReceiptOutcome = "DONE" | "REFUSED" | "QUEUED" | "IN_PROGRESS";
 
 export interface ActionReceipt {
+  readonly scheduleOrigin?: ScheduleOrigin;
   readonly formatVersion: 1;
   readonly receiptId: string;
   readonly idempotencyKey: string;
@@ -110,6 +116,7 @@ export interface ActionReceipt {
   readonly readBackAt: string | null;
   readonly undo: string | null;
   readonly change?: { readonly before: string; readonly after: string };
+  readonly huntScores?: readonly import("./hunt-score.ts").HuntAcceptanceScore[];
 }
 
 export interface ActionOutcome {

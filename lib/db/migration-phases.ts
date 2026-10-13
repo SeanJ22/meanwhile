@@ -80,6 +80,11 @@ const CONTRACT_RULES: readonly {
   test: (statement: string) => boolean;
 }[] = [
   {
+    rule: "delete-rows",
+    why: "Stored rows used by the previous code are retired after its readers are replaced.",
+    test: (s) => /^DELETE\s+FROM\b/i.test(s),
+  },
+  {
     rule: "drop-column",
     why: "A column the live build still writes stops existing.",
     test: (s) => /\bDROP\s+COLUMN\b/i.test(s),

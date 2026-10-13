@@ -76,6 +76,7 @@
     "next": "16.3.0",
     "pdfjs-dist": "^6.2.108",
     "pmtiles": "^4.5.0",
+    "polygon-clipping": "0.15.7",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "sharp": "0.35.3",

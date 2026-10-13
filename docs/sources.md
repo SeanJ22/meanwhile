@@ -110,7 +110,7 @@ was accurate. What it could not tell anyone is whether the credentials work.
 | `CONGRESS_API_KEY` | `scripts/fetch-votes.mts` — **WIRED** | HTTP 200 | Official bill titles for the bounded recent-roll projection; the durable receipt redacts the credential-bearing query | **bounded roll window** | 2026-09-08 |
 | `FEC_API_KEY` | `scripts/fetch-fec.mts` through the standing runner's canonical `fec-funding` contract — **WIRED** | HTTP 200 | **77 federal candidates**; their committee records carry treasurer name, street, city, zip and designated-agent phone | **22** | 2026-08-22 |
 | `PLURAL_API_KEY` | `lib/sources/plural/index.ts` — **WIRED** | not needed | The **committed BULK file** `data/reference/openstates_legislators.csv` holds 7,976 state legislators with official emails; **61** of them serve these two zips. No API call, no quota spent. | **61** | 2026-08-22 |
-| `LEGISCAN_API_KEY` | no production caller — **INTENTIONALLY NOT SPENT**; official legislative publishers replaced the former licensed refresh path | not re-walked | Historical bills-and-roll-calls research only. Closes no Kelly field about a person; it is not a production freshness authority. | 0 | 2026-08-22 |
+| `LEGISCAN_API_KEY` | `scripts/legiscan-votes-refresh.mts` through per-state standing contracts | Authenticated `getDatasetList` and `getDataset` returned HTTP 200 for Texas | Weekly datasets supply attributed roll calls and exact OpenStates person positions, with CC BY 4.0 attribution. Unique native identifiers or an exact shared member profile URL establish identity; official roll calls retain precedence. Original source members are committed as fixtures. | 1 member position verified in source fixture | 2026-10-13 |
 | `DATA_GOV_API_KEY` | **nothing** — `SRC03` | HTTP 200 | **42 govinfo collections.** The `CDIR` collection is the Congressional Directory and carries member offices, phones and staff — a real contact route, and the reason this key is worth keeping. | 0 | 2026-08-22 |
 | `CENSUS_API_KEY` | `lib/sources/census-acs-population/index.ts` — **WIRED** 2026-09-05 | **HTTP 200 with real data** (2026-09-05) | **THE KEY WORKS NOW.** On 2026-08-22 the host redirected to `invalid_key.html` (`X-DataWebAPI-KeyError: 1`); re-measured 2026-09-05 the same key answers `["ZCTA5 85701","5169","85701"]`, and one keyed call each returned every ZCTA (33,772) and every state (52) for ACS 5-Year B01003. RE-ACQUIRED 2026-09-06 at the **2024** release (ADM-41 / §9A.19): `/data/2024/acs/acs5` answers 200 and `/data/2025/acs/acs5` answers **404**, so 2024 is the newest 5-Year vintage published for the ZCTA geography, and the request now also carries `B01003_001M`, the Bureau’s own 90% margin of error, so a small-area estimate is never rendered as a count. A keyless call is still a 302 to `missing_key.html`. `api.census.gov/robots.txt` answers a WAF "Request Rejected" page (HTTP 200, HTML), so the robots read is CANNOT_TELL and the API's own terms of service (a key, and a citation) govern the route. Closes no Kelly field about a person; it is the readiness panel’s population source (ADM-23). | 0 | 2026-09-06 |
 | `LDA_API_KEY` | **nothing** — `SRC02` | HTTP 200 | The API answers, and it closes **nothing** at either zip. Stated plainly rather than softened: the LDA database is FEDERAL lobbying only — registrants, clients, and the House and Senate offices they lobby. It has no county, municipal or school-district layer. Where it would earn its place is a later who-is-lobbying-my-delegation surface, which is not a hunt question. | 0 | 2026-08-22 |
@@ -362,18 +362,20 @@ parse as data*, never *did the call succeed*.
 - **Licence:** US federal government work. Public domain.
 
 ### CISA `.gov` registry (cisagov/dotgov-data)
-- **Last walked:** 2026-08-23 — the historical walk of
-  `raw.githubusercontent.com/cisagov/dotgov-data/main/current-full.csv`
-  answered HTTP 200 at 1.41 MB with the `Domain name` header present as a
-  control string.
-- **Status:** WIRED through the standing runner's monthly canonical `dotgov`
-  contract. `scripts/fetch-dotgov.mts --promote` first resolves the publisher's
-  current commit and then reads the CSV at that exact SHA; durable data-plane
-  receipts, the GOOD pointer and LKG own live state. The tracked
-  `data/dotgov/snapshot.json` is bundled first-bootstrap evidence only.
+- **Last read:** 2026-10-12 — SHA `e4020449e896b2264d2056e49daeb55920a3d977`,
+  16,876 domains, including 719 with CISA election types. Exact source bytes and retrieval
+  metadata are in `tests/fixtures/dotgov/`.
+- **Status:** The standing runner's monthly `dotgov` contract resolves the publisher's
+  current commit and reads every CSV row at that exact SHA. Durable data-plane receipts,
+  the GOOD pointer and LKG own live state. `readDotGovProjection` verifies and serves the
+  full registry through the `government-domains` reader edge family.
+- **Reader association:** Registrants attach only to a uniquely matching government's
+  established name and state. Unmatched and ambiguous domains remain in the registry;
+  they add no government or service boundary. Census websites remain separately sourced.
 - **Auth:** none.
 - **Licence:** US federal government work.
-- It is **a rung, never a denominator** — see `docs/zip-playbook.md`.
+- The registry supplies official domain links and acquisition routes. Government coverage
+  continues to use the Census of Governments, NCES and official rosters as its denominator.
 
 ### Anthropic API — the ask-box classifier
 - **Last walked:** 2026-08-20

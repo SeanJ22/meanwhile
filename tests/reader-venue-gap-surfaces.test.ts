@@ -1,7 +1,7 @@
 /**
  * A meeting whose place the publisher stated in words shows those words on every reader surface, never
- * "we haven't recorded a place" and never "online"; a page that names no place is the publisher's gap and
- * says whose it is. Meetings come from the real official-page events source over the committed page
+ * "we haven't recorded a place" and never "online"; a page that names no place contributes a publisher's
+ * gap to the card and renders no place row. Meetings come from the real official-page events source over the committed page
  * (tests/fixtures/official-page-events/), rendered beside a saved production response. No live calls.
  */
 import assert from "node:assert/strict";
@@ -22,6 +22,7 @@ import {
   venueGapOf,
 } from "../lib/meetings/online.ts";
 import { wiringForMeetingSource } from "../lib/registry/source-wiring.ts";
+import { meetingCardGaps } from "../lib/meetings/card-gaps.ts";
 import { makeOfficialPageEventsSource, type OfficialPageRaw } from "../lib/sources/official-page-events/index.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { readerText as text, rowIds, rowMarkup } from "./helpers/reader-markup.ts";
@@ -62,6 +63,8 @@ test("a named venue gap is its own state: never online, never 'place not recorde
     assert.notEqual(where, PLACE_UNRECORDED_LINE, `${m.id}: the Where line says we have not recorded a place`);
     assert.notEqual(where, ONLINE_ONLY_LINE, `${m.id}: the Where line says online`);
     assert.equal(where, m.venueGap?.kind === "STATED_NOT_PLACED" ? m.venueGap.publishedText : NOT_STATED);
+    const placeGap = meetingCardGaps(m).find(gap => gap.label === "meeting places");
+    assert.equal(placeGap?.kind, m.venueGap?.kind === "NOT_STATED_BY_PUBLISHER" ? "not-posted" : undefined);
   }
   // The two earlier states are unchanged by the venue gap.
   const base = { location: null } as const;
@@ -90,7 +93,7 @@ test("the card's calendar entry carries the stated place as its LOCATION, and in
   assert.equal(online.location, "Via Zoom — https://example.org/j/1");
 });
 
-test("the list, the body's pin panel and the meeting card show the stated place as text and name the publisher's gap", () => {
+test("the list and pin panel show stated places and omit absent place rows", () => {
   const script = `
     import { createElement as h } from 'react';
     import { renderToStaticMarkup } from 'react-dom/server';
@@ -164,13 +167,13 @@ test("the list, the body's pin panel and the meeting card show the stated place 
   for (const e of [cholla, joint]) {
     const row = rowMarkup(r.list, e.id);
     check(row.length > 0, `list: ${e.id} is not rendered`);
-    check(!/data-status="online"/.test(row), `list: ${e.id} is marked online`);
+    check(!/data-meeting-where="online"/.test(row), `list: ${e.id} is marked online`);
     check(!/data-meeting-where="unrecorded"/.test(row), `list: ${e.id} says the place is not recorded`);
   }
   const chollaRow = text(rowMarkup(r.list, cholla.id));
   check(/data-meeting-where="stated"/.test(chollaRow) && chollaRow.includes(CHOLLA), `list: the Cholla row does not show "${CHOLLA}"`);
   const jointRow = text(rowMarkup(r.list, joint.id));
-  check(/data-meeting-where="not-stated"/.test(jointRow) && jointRow.includes('data-working-on-it="not-published"'), "list: the Joint Committee row does not name the publisher's gap");
+  check(!/data-meeting-where|data-working-on-it/.test(jointRow), "list: the Joint Committee row renders an absent place");
 
   // ── The body's pin panel: listed, the place as text, stated N = rows. ──
   check(!r.duffyPins?.includes(cholla.id), "Duffy pin: a venue-gap sitting was given the building's pin");
@@ -180,16 +183,15 @@ test("the list, the body's pin panel and the meeting card show the stated place 
   const chollaPanel = text(rowMarkup(r.duffy, cholla.id));
   check(/data-meeting-where="stated"/.test(chollaPanel) && chollaPanel.includes(CHOLLA), `Duffy panel: the Cholla row does not show "${CHOLLA}"`);
   check(!/data-meeting-where="unrecorded"/.test(chollaPanel), "Duffy panel: the Cholla row says we have not recorded a place");
-  check(!/data-status="online"/.test(chollaPanel), "Duffy panel: the Cholla row is marked online");
+  check(!/data-meeting-where="online"/.test(chollaPanel), "Duffy panel: the Cholla row is marked online");
   const jointPanel = text(rowMarkup(r.duffy, joint.id));
-  check(/data-meeting-where="not-stated"/.test(jointPanel) && jointPanel.includes('data-working-on-it="not-published"'), "Duffy panel: the Joint Committee row does not name the publisher's gap");
+  check(!/data-meeting-where|data-working-on-it/.test(jointPanel), "Duffy panel: the Joint Committee row renders an absent place");
   const eyebrow = /class="notice-eyebrow[^"]*"[^>]*>([^<]*)</.exec(r.duffy)?.[1] ?? "";
   const eyebrowText = text(eyebrow);
   const stated = Number(/^(\d+) public meetings/.exec(eyebrowText)?.[1]);
   check(stated === duffyIds.length, `Duffy panel: states ${stated}, renders ${duffyIds.length} rows`);
-  const parts = [...eyebrowText.matchAll(/ · (\d+) /g)].map((m) => Number(m[1]));
-  check(parts.reduce((a, b) => a + b, 0) === duffyIds.length, `Duffy panel: the split "${eyebrowText}" does not sum to ${duffyIds.length} rows`);
-  check(/places? named below/.test(eyebrowText) && /with no place stated by the publisher/.test(eyebrowText), `Duffy panel: the split "${eyebrowText}" does not name the venue-gap rows`);
+  check(/places? named below/.test(eyebrowText), `Duffy panel: the split "${eyebrowText}" omits the held place names`);
+  check(!/with no place|not recorded|not stated/.test(eyebrowText), `Duffy panel: the heading repeats missing-place copy outside the card foot`);
 
   assert.deepEqual(fails, [], `\n  ${fails.join("\n  ")}`);
 });

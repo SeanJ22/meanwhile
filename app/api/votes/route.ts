@@ -9,6 +9,7 @@ import { summaryForBill, summaryPendingForBill } from "@/lib/votes/bill-summarie
 import { readHistoricalFederalVotesForMember } from "@/lib/votes/history";
 import { readNativeMemberVotes } from "@/lib/state-rollcalls/reader-votes";
 import { researchFixtureScopeForMember, settleFederalVoteSupportingHoldings, settleStateVoteMemberHolding, stateVotes } from "./holdings";
+import { stateVoteStateForMember } from "@/lib/state-rollcalls/reader-vote-visibility";
 
 /**
  * GET /api/votes?member=congress:<bioguide> — a federal member
@@ -26,14 +27,15 @@ export async function GET(request: Request) {
   const query = new URL(request.url).searchParams;
   const member = query.get("member");
   const historical = query.get("history") === "1";
-  if (member && /^(?:plural:(?:az|nh):|az-legislature:|nh-general-court:)/.test(member)) {
+  if (member && stateVoteStateForMember(member, query.get("state") ?? undefined)) {
     try {
-      const read = await readNativeMemberVotes(member);
+      const read = await readNativeMemberVotes(member, undefined, { state: query.get("state") ?? undefined });
       if (read) {
         if (historical) return Response.json({ member, historyStatus: "UNAVAILABLE", historicalVotes: [], historicalCount: 0,
           nextHistoricalVersionId: null, historyIssue: "These acquired state votes already retain their available history." });
-        return Response.json({ ...read, holdingStatus: read.status === "IDENTITY_UNRESOLVED" ? "IDENTITY_UNRESOLVED" : "HELD",
-          count: read.votes.length, attribution: read.authorityScope.includes("openstates") ? { text: "Plural / Open States", url: "https://openstates.org/" } : null });
+        return Response.json({ ...read, holdingStatus: read.status === "HOLDING_UNAVAILABLE" ? "HOLDING_UNAVAILABLE"
+          : read.status === "IDENTITY_UNRESOLVED" ? "IDENTITY_UNRESOLVED" : "HELD",
+          count: read.votes.length }, { status: read.status === "HOLDING_UNAVAILABLE" ? 503 : 200 });
       }
     } catch { return Response.json({ member, holdingStatus: "HOLDING_UNAVAILABLE", generatedAt: null, votes: [] }, { status: 503 }); }
   }

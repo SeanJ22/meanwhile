@@ -1,0 +1,14 @@
+{
+  "source": "https://github.com/unitedstates/congress-legislators",
+  "revision": "d5af3d2d2490f8c6532c9490b1f47a76cacca699",
+  "retrievedAt": "2026-10-12T23:14:14.295877+00:00",
+  "selection": "Complete native YAML rows for Ashley Hinson (H001091), selected without changing their values. Read through GitHub API blob/content endpoints.",
+  "blobs": {
+    "legislators-current": "54325e0e373bcaa647037d731e46405d6e371f89",
+    "legislators-district-offices": "22e5f103d7afdfe607003a778acc475c970b53c4"
+  },
+  "yaml": {
+    "legislators-current": "- id:\n    bioguide: H001091\n    fec:\n    - H0IA01174\n    opensecrets: N00044521\n    govtrack: 456816\n    wikidata: Q60713905\n    wikipedia: Ashley Hinson\n    google_entity_id: kg:/g/11fjq_fl2t\n    votesmart: 168783\n    ballotpedia: Ashley Hinson\n    pictorial: 13028\n  name:\n    first: Ashley\n    last: Hinson\n    official_full: Ashley Hinson\n  bio:\n    gender: F\n    birthday: '1983-06-27'\n  terms:\n  - type: rep\n    start: '2021-01-03'\n    end: '2023-01-03'\n    state: IA\n    district: 1\n    party: Republican\n    address: 1429 Longworth House Office Building Washington DC 20515-1501\n    office: 1429 Longworth House Office Building\n    phone: 202-225-2911\n    url: https://hinson.house.gov\n  - type: rep\n    start: '2023-01-03'\n    end: '2025-01-03'\n    state: IA\n    district: 2\n    party: Republican\n    url: https://hinson.house.gov\n    address: 1717 Longworth House Office Building Washington DC 20515-1502\n    office: 1717 Longworth House Office Building\n    phone: 202-225-2911\n  - type: rep\n    start: '2025-01-03'\n    end: '2027-01-03'\n    state: IA\n    district: 2\n    party: Republican\n    url: https://hinson.house.gov\n    address: 2458 Rayburn House Office Building Washington DC 20515-1502\n    office: 2458 Rayburn House Office Building\n    phone: 202-225-2911\n",
+    "legislators-district-offices": "- id:\n    bioguide: H001091\n    govtrack: 456816\n  offices:\n  - id: H001091-waterloo\n    address: 531 Commercial St.\n    suite: Suite 302\n    city: Waterloo\n    state: IA\n    zip: '50701'\n    latitude: 42.4953157\n    longitude: -92.33964970000001\n    phone: 319-266-6925\n  - id: H001091-dubuque\n    address: 1050 Main St.\n    city: Dubuque\n    state: IA\n    zip: '52001'\n    latitude: 42.502919\n    longitude: -90.6681282\n    phone: 563-557-7789\n  - id: H001091-cedar_rapids\n    address: 111 7th Avenue SE\n    suite: Suite 580\n    city: Cedar Rapids\n    state: IA\n    zip: '52401'\n    latitude: 41.9726414\n    longitude: -91.66403749999999\n    phone: 319-364-2288\n"
+  }
+}

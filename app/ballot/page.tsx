@@ -1,7 +1,9 @@
+import { stateOfficesForDivisions } from "../../lib/reference/state-offices.ts";
+import { StateOfficeContacts } from "../../components/state-office-contacts.tsx";
 import { Card } from "@/components/ui/card";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import { ContactPills } from "@/components/officials/contact-pills";
-import { WorkingOnIt } from "@/components/demand/working-on-it";
+import { CardGapContribution } from "@/components/ui/card-gap-context";
 import { measureRecordsForBallot } from "@/lib/ballot/measure-records";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -18,7 +20,7 @@ import {
   settleBallotAuxiliaryPreloads,
   type BallotAuxiliaryFamily,
 } from "@/lib/ballot/auxiliary-preloads";
-import { divisionIdsForZipArea } from "@/lib/ballot/zip-divisions";
+import { divisionIdsForZipArea, POINT_GEOMETRY_PLANS, unestablishedDistrictOffices } from "@/lib/ballot/zip-divisions";
 import { phoenixToday } from "@/lib/ballot/dated-events";
 import { needsPill, zipCertainty } from "@/lib/geo/zip-certainty";
 import { analysisForContest } from "@/lib/ballot/analyses";
@@ -57,7 +59,6 @@ import {
   MemberCommitteesContent,
   MemberOfficesContent,
 } from "@/components/officials/member-directory";
-import { CardSourcesList } from "@/components/officials/card-sources-list";
 import { RecentVotes } from "@/components/map/popup/official-popup";
 import { personCardSources } from "@/lib/officials/card-sources";
 import { memberDirectoryReaches } from "@/lib/officials/member-directory-scope";
@@ -78,7 +79,6 @@ import { jurisdictionKeyForContestId } from "@/lib/ballot/pick-jurisdiction";
 import { PickControl } from "@/components/ballot/pick-control";
 import { currentRegistrationLinks, registrationLinkFor } from "@/lib/ballot/registration-links";
 import { currentElectionOffices } from "@/lib/ballot/election-offices";
-import { currentPollingPlaceLinks, pollingPlaceLinkFor } from "@/lib/ballot/polling-place-links";
 import { WhereToVote } from "@/components/ballot/where-to-vote";
 import { incumbentHolderFor } from "@/lib/ballot/incumbent-record";
 import { contestIncumbency } from "@/lib/ballot/incumbency-resolve";
@@ -97,10 +97,8 @@ import {
   type FundingAnswer,
 } from "@/lib/funding/display";
 import { settleFundingRead } from "@/lib/funding/snapshot";
-import { settleStateMoneyRead, stateMoneyReadState } from "@/lib/funding/state-snapshot";
+import { settleStateMoneyRead } from "@/lib/funding/state-snapshot";
 import type { StateCampaignFinanceJurisdiction } from "@/lib/funding/data-plane";
-import { fundingFreshnessNote } from "@/lib/funding/freshness";
-import { directFundingTargetPlan } from "@/lib/funding/target-authorities";
 import { settleFundingHoldingAnswer } from "@/app/api/funding/[target]/holdings";
 import {
   ensureReaderAuthorityEdge,
@@ -279,19 +277,20 @@ async function CandidateFunding({
   } catch {
     return unavailableHolding("federal campaign-finance");
   }
-  /* The staleness note comes from the same settlement and shared helper the map uses, so the two surfaces cannot drift. A settlement failure drops only the note. */
-  let freshness: string | null = null;
+  let partial = false;
   try {
     const settled = await withReaderAuthorityEdge(readerEdge, () => settleFundingHoldingAnswer(targetKey));
-    if (settled.kind === "ANSWER") freshness = fundingFreshnessNote(settled);
+    partial = settled.kind === "ANSWER" && settled.holdingStatus === "PARTIAL";
   } catch {
-    freshness = null;
+    partial = true;
   }
-  if (answer.kind === "none" && !freshness) return null;
+  if (answer.kind === "none") return partial
+    ? <CardGapContribution id={`funding-holdings:${targetKey}`} label="campaign money records" />
+    : null;
   // The wrapper carries the marker `pnpm measure:ballot` counts.
   return (
     <div data-candidate-funding>
-      {freshness && <p className="funding-data-freshness">{freshness}</p>}
+      {partial && <CardGapContribution id={`funding-holdings:${targetKey}`} label="campaign money records" />}
       {answer.kind === "absence" ? (
         <FundingAbsence data={answer.data} />
       ) : answer.kind === "funding" ? (
@@ -304,23 +303,11 @@ async function CandidateFunding({
 
 /** State records and their disclosure use the same already-loaded authority. */
 function stateCandidateFunding(
-  targetKey: string,
   records: ReturnType<typeof stateMoneyForCard>["records"],
   context: ReactionViewContext | null,
 ) {
-  const state = directFundingTargetPlan(targetKey).state;
-  const read = state === null ? null : stateMoneyReadState(state);
-  const freshness = read?.kind === "PROMOTED"
-    ? fundingFreshnessNote({ holdingStatus: "HELD", dataState: "PROMOTED", dataMetadata: read.metadata })
-    : null;
-  // Return the slot itself synchronously: an empty component element would
-  // prevent the battlecard's named gap from rendering. No new per-card read
-  // is needed; the page has already checked this state's preload outcome.
-  if (records.length === 0 && !freshness) return null;
-  return <>
-    {freshness && <p className="funding-data-freshness">{freshness}</p>}
-    <StateMoneySection records={records} bare context={context} />
-  </>;
+  if (records.length === 0) return null;
+  return <StateMoneySection records={records} bare context={context} />;
 }
 
 /** One battlecard builder for every person on the ballot: both contest branches call it, and every person gets the same sections (`lib/ballot/battlecard-sections.ts`) whatever we hold. */
@@ -454,7 +441,7 @@ async function BallotBattlecard({
       holdsOrHeldTheOffice={recordHolder !== null}
       /* The same record the map battlecard renders contact routes from. */
       contactHolder={recordHolder}
-      contact={<><CandidateContact card={card ?? null} links={links} filing={filingContact} />{recordHolder && <ContactPills holder={recordHolder} scope="primary" />}{!card?.email && !links?.campaign && !filingContact?.email && !recordHolder && <WorkingOnIt subject={{ type: "CANDIDATE", id: targetKey }} />}</>}
+      contact={<><CandidateContact card={card ?? null} links={links} filing={filingContact} />{recordHolder && <ContactPills holder={recordHolder} scope="primary" />}{!card?.email && !links?.campaign && !filingContact?.email && !recordHolder && <CardGapContribution id={`candidate-contact:${targetKey}`} label="contact details" subject={{ type: "CANDIDATE", id: targetKey }} />}</>}
       sections={{
         /* Mandatory for every candidate and every elected official. */
         office: officeBlurb ? (
@@ -489,7 +476,7 @@ async function BallotBattlecard({
           <CandidateFunding targetKey={targetKey} context={context} available={authorityAvailability.funding} readerEdge={readerEdge} />
         ) : stateMoneyUnavailable ? (
           unavailableHolding("state campaign-finance")
-        ) : stateCandidateFunding(targetKey, stateMoney, context),
+        ) : stateCandidateFunding(stateMoney, context),
         /* The record, in the card. Not `columns`: the two-column form builds its own top-level sections. */
         /* Gated on whether records exist (`recordHolder`), not on the federal join. */
         record: !officeholdersAvailable ? (
@@ -519,7 +506,7 @@ function CandidateSources({ holder }: { holder: SeatHolder }) {
     ? [{ what: "Their capitol and district offices", provenance: { sourceUrl: office.sourceUrl, sourceOrg: office.sourceOrg, collectedAt: office.collectedAt, verifiedAt: null } }]
     : []);
   if (sources.length === 0) return null;
-  return <CardSourcesList sources={sources} />;
+  return <CardSourcesContribution id={`candidate:${holder.id}`} sources={sources} />;
 }
 
 interface BallotAuthorityAvailability {
@@ -531,8 +518,16 @@ interface BallotAuthorityAvailability {
   readonly federalOfficeholders: boolean;
 }
 
+const HOLDING_LABEL: Record<string, string> = {
+  "candidate-publication": "public positions",
+  "officeholder-directory": "officeholder information",
+  "candidate-profile": "candidate background",
+  "federal campaign-finance": "campaign money",
+  "state campaign-finance": "campaign money",
+};
+
 function unavailableHolding(family: string) {
-  return <WorkingOnIt attrs={{ "data-ballot-authority-unavailable": family }} />;
+  return <CardGapContribution id={`ballot-holding:${family}`} label={HOLDING_LABEL[family]} />;
 }
 
 
@@ -609,13 +604,13 @@ export default async function BallotPage({
       divisionHoldingUnavailable = true;
     }
     /* A zip is an area: the centroid answer is widened to every division whose territory reaches inside it (`lib/ballot/zip-divisions.ts`). */
-    const ocdIds = await divisionIdsForZipArea(zip, pointDivisionIds);
+    const ocdIds = await divisionIdsForZipArea(zip, pointDivisionIds, undefined, POINT_GEOMETRY_PLANS);
     askOcdIds = ocdIds;
     for (const { state, source } of await readerBallotSourcesForDivisions(ocdIds)) {
       try {
         const candidate = source.normalize(await source.fetch());
         const selection = { purpose: "election" as const, asOf: phoenixToday(), electionDate: candidate.election.date };
-        const electionIds = await divisionIdsForZipArea(zip, pointDivisionIds, selection);
+        const electionIds = await divisionIdsForZipArea(zip, pointDivisionIds, selection, POINT_GEOMETRY_PLANS);
         const hit = contestsForDivisions(candidate, electionIds);
         if (hit.contests.length > 0 || hit.absences.length > 0) {
           set = candidate;
@@ -623,9 +618,8 @@ export default async function BallotPage({
           askOcdIds = electionIds;
           certainty = await zipCertainty(zip, selection);
           coverageNotes = coverageNotesForScope(candidate, zip, electionIds);
-          if (candidate.contests.some(contest => /\/(?:cd|sldu|sldl):/.test(contest.ocdId)) &&
-              !electionIds.some(id => /\/(?:cd|sldu|sldl):/.test(id))) {
-            coverageNotes.push("We have not established the district boundaries that apply to this election. District contests may be missing.");
+          for (const office of unestablishedDistrictOffices(candidate, electionIds)) {
+            coverageNotes.push(`We're working on getting the ${office} district for ZIP ${zip}. ${office} contests aren't shown until we have it.`);
           }
           break;
         }
@@ -695,12 +689,10 @@ export default async function BallotPage({
   };
 
   let registrationLinks: ReturnType<typeof currentRegistrationLinks> = [];
-  let pollingPlaceLinks: ReturnType<typeof currentPollingPlaceLinks> = [];
   let electionOffices: ReturnType<typeof currentElectionOffices> = [];
   if (auxiliaryPreloads.has("ballot-navigation") && !auxiliaryFailed.has("ballot-navigation")) {
     try {
       registrationLinks = currentRegistrationLinks();
-      pollingPlaceLinks = currentPollingPlaceLinks();
       electionOffices = currentElectionOffices(askOcdIds);
     } catch {
       auxiliaryFailures.push("ballot-navigation");
@@ -925,7 +917,9 @@ export default async function BallotPage({
         </div>
       )}
 
+      <div className="my-4"><WhereToVote /></div>
       <OfficialFilings rows={filingRows} />
+      <StateOfficeContacts offices={stateOfficesForDivisions(askOcdIds)} />
       {/* Who runs this reader's elections and how to reach them, from their own city's or county's saved page. */}
       {electionOffices.length > 0 && (
         <section aria-label="Your election offices" className="my-6 space-y-2 lg:max-w-3xl" data-ballot-election-offices>
@@ -950,12 +944,10 @@ export default async function BallotPage({
       {[...new Set(askOcdIds.flatMap(id => /\/state:([a-z]{2})(?:\/|$)/.exec(id)?.[1]?.toUpperCase() ?? []))]
         .filter(state => !(dates && set?.election.state === state)).map(state => {
           const registration = registrationLinkFor(state, registrationLinks);
-          const polling = pollingPlaceLinkFor(state, pollingPlaceLinks);
-          if (!registration && !polling) return null;
+          if (!registration) return null;
           return <section key={state} aria-label={`${state} voting information`} className="my-6 space-y-2">
             <h2 className="text-lg font-semibold">{state} voting information</h2>
             {registration && <p><a href={registration.url}>{registration.label}</a></p>}
-            {polling && <p><a href={polling.url}>{polling.label}</a></p>}
           </section>;
         })}
       {set && (divisionHoldingUnavailable || auxiliaryFailures.length > 0) && (
@@ -979,7 +971,6 @@ export default async function BallotPage({
         set &&
         (() => {
           const reg = registrationLinkFor(set.election.state, registrationLinks);
-          const polls = pollingPlaceLinkFor(set.election.state, pollingPlaceLinks);
           const regStep = dates.steps.find((s) =>
             /registration deadline/i.test(s.label),
           );
@@ -1056,9 +1047,8 @@ export default async function BallotPage({
                 )}
               </ul>
 
-              {(polls || reg) && (
+              {(
                 <div className="mt-3 flex flex-col gap-3">
-                  {polls && <WhereToVote />}
               {/* Registration status is the state's to answer, so this pill leaves the app and says so. */}
                   {reg && (
                     <div>
@@ -1115,15 +1105,15 @@ export default async function BallotPage({
       )}
 
       {attempted && !matched && ballotLoaderFailures.length > 0 && (
-        <WorkingOnIt className="mt-6 lg:max-w-2xl" />
+        <p className="mt-6 lg:max-w-2xl">We could not load this ballot just now.</p>
       )}
 
       {attempted && !matched && ballotLoaderFailures.length === 0 && divisionHoldingUnavailable && (
-        <WorkingOnIt className="mt-6 lg:max-w-2xl" />
+        <p className="mt-6 lg:max-w-2xl">We could not load the districts for this location just now.</p>
       )}
 
       {attempted && !matched && ballotLoaderFailures.length === 0 && !divisionHoldingUnavailable && (
-        <WorkingOnIt className="mt-6 lg:max-w-2xl" />
+        <p className="mt-6 lg:max-w-2xl">We do not have a ballot for this location yet.</p>
       )}
 
       {/* The private election-day list; renders only once something is marked. Device-local. */}
@@ -1230,27 +1220,19 @@ export default async function BallotPage({
                   `filing|${contest.provenance.sourceUrl ?? ""}|${contest.provenance.sourceOrg}|${contest.provenance.collectedAt}`,
                 );
           return (
-            <section
+            <Card
               key={contest.id}
-              // What the address narrowing hides and un-hides. The
-              // page always RENDERS every contest the zip produced — the
-              // narrowing is presentation, so "show the whole zip again" is
-              // instant and can never fail.
-              data-contest-id={contest.id}
-              /* The division this contest sits on, so the pill's client half can clear exactly the ones a session address resolves. */
-              data-ocd-id={contest.ocdId}
-              data-office-tier-start={
-                contestIndex > 0 &&
-                tierForOffice(contest.title, contest.ocdId) !== tierForOffice(candidacyContests[contestIndex - 1].title, candidacyContests[contestIndex - 1].ocdId)
-                  ? "true"
-                  : undefined
-              }
-              data-could-govern={
-                certainty && needsPill(certainty.certaintyOf(contest.ocdId))
-                  ? "true"
-                  : undefined
-              }
-              className="ballot-office-card rounded-[10px] border border-[var(--panel-border)] bg-[var(--panel-bg)] p-5 shadow-[var(--shadow-panel)]"
+              title={contest.title}
+              titleVisible={false}
+              attrs={{
+                "data-contest-id": contest.id,
+                "data-ocd-id": contest.ocdId,
+                ...(contestIndex > 0 && tierForOffice(contest.title, contest.ocdId) !== tierForOffice(candidacyContests[contestIndex - 1].title, candidacyContests[contestIndex - 1].ocdId) ? { "data-office-tier-start": "true" } : {}),
+                ...(certainty && needsPill(certainty.certaintyOf(contest.ocdId)) ? { "data-could-govern": "true" } : {}),
+              }}
+              sources={[{ what: "Candidates and voting instructions", provenance: contest.provenance }, ...(lineup && canvass ? [{ what: "Certified primary nominees", provenance: { sourceUrl: canvass.url, sourceOrg: canvass.issuedBy, collectedAt: canvass.readAt, verifiedAt: null } }] : [])]}
+              gaps={contest.voteFor === null ? [{ id: `contest-voting:${contest.id}`, label: "voting instructions" }] : []}
+              className="ballot-office-card rounded-[10px] border border-[var(--panel-border)] bg-[var(--panel-bg)] p-5 shadow-[var(--shadow-panel)] [&>.reader-card-header]:sr-only [&>.reader-card-body]:p-0"
             >
               <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
                 <h2 className="text-[1.0625rem] font-semibold tracking-tight">
@@ -1277,10 +1259,9 @@ export default async function BallotPage({
                     </sup>
                   )}
                 </h2>
-                <p className="t-eyebrow text-muted">
-                  {contest.voteFor !== null ? `Vote for ${contest.voteFor}` : <WorkingOnIt inline />}
-                  {contest.termYears ? ` · ${contest.termYears}-year term` : ""}
-                </p>
+                {(contest.voteFor !== null || contest.termYears) && <p className="t-eyebrow text-muted">
+                  {[contest.voteFor !== null ? `Vote for ${contest.voteFor}` : null, contest.termYears ? `${contest.termYears}-year term` : null].filter(Boolean).join(" · ")}
+                </p>}
               </div>
 
               {/* What this office does; describes the office, never the people running for it. */}
@@ -1569,7 +1550,7 @@ export default async function BallotPage({
                   />
                 </>
               )}
-            </section>
+            </Card>
           );
         })}
       </div>
@@ -1672,18 +1653,7 @@ export default async function BallotPage({
                   </div>
                 ) : (
                   measure && (
-                    /* The honest gap: a local measure whose plain-language layer
-                       has not been written yet says so, in our register, above
-                       the verbatim official text below — never a guessed
-                       summary. */
-                    <p
-                      className="mt-2.5 text-[0.75rem] leading-relaxed text-muted"
-                      data-measure-summary="GAP_OURS"
-                    >
-                      We haven&apos;t written a plain-language summary for this
-                      measure yet — the official ballot text is below, word for
-                      word.
-                    </p>
+                    <CardGapContribution id={`measure-summary:${contest.id}`} label="a plain-language summary" />
                   )
                 )}
 
@@ -1761,7 +1731,7 @@ export default async function BallotPage({
                           </p>
                         </div>
                       ) : (
-                        <WorkingOnIt className="mt-3" attrs={{ "data-measure-statement": "GAP_OURS" }} />
+                        <CardGapContribution id={`measure-statement:${contest.id}`} label="the official statement" />
                       )}
                     </div>
                   </details>
@@ -1835,7 +1805,7 @@ export default async function BallotPage({
           data-ballot-no-local-races
         >
           <h2 className="t-structure text-paper-dim">County, city and school-board races</h2>
-          <WorkingOnIt className="mt-6 lg:max-w-2xl" />
+          <p className="mt-2 t-body text-muted">We do not have county, city or school-board races for this ballot yet.</p>
         </section>
       )}
 

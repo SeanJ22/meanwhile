@@ -8,6 +8,8 @@ import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
 import { useRecentZips } from "@/hooks/use-recent-zips";
 import { lookupZctaAsync, warmZctaTable } from "@/lib/geo/zcta-table";
 import { logAddressEntered, readerPageForPath } from "@/lib/log/address-events";
+import { ZIP_AREA_MISSING } from "@/lib/geo/postal-core";
+import { ZipAddressPrompt } from "./zip-address-prompt";
 
 /**
  * Changing zip from the floater: five digits of input with the device's recent
@@ -17,17 +19,20 @@ import { logAddressEntered, readerPageForPath } from "@/lib/log/address-events";
 export function ZipSwitcher({
   current,
   onPick,
+  onAddressLocated,
   onClose,
   embedded = false,
 }: {
   current: string | null;
   onPick: (zip: string, lat: number, lng: number) => void;
+  onAddressLocated: (zip: string, lat: number, lng: number) => void;
   onClose: () => void;
   /** Inside the design ZIP popup, which owns dismissal and the title. */
   embedded?: boolean;
 }) {
   const [text, setText] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [addressZip, setAddressZip] = useState<string | null>(null);
   const rootRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const recents = useRecentZips();
@@ -56,10 +61,11 @@ export function ZipSwitcher({
 
   const take = async (zip: string, origin: LocationOrigin = "TYPED_ZIP") => {
     logAddressEntered({ zip, divisionIds: [] }, readerPageForPath(window.location.pathname));
-    const found = await lookupZctaAsync(zip);
+    const found = await lookupZctaAsync(zip).catch(() => null);
     if (!found) {
       // A fact about our data, not about the zip.
-      setError(`We don't have a location on file for ${zip}.`);
+      setError(ZIP_AREA_MISSING);
+      setAddressZip(zip);
       return;
     }
     /* Records what the reader did; the server's `stampResidency` decides what it is worth. */
@@ -101,6 +107,7 @@ export function ZipSwitcher({
           onChange={(e) => {
             setText(e.target.value.replace(/\D/g, "").slice(0, 5));
             setError(null);
+            setAddressZip(null);
           }}
           onKeyDown={(e) => {
             if (e.key === "Enter") void submit();
@@ -112,6 +119,7 @@ export function ZipSwitcher({
       </div>
 
       {error && <p className="zip-switcher-error">{error}</p>}
+      {addressZip && <ZipAddressPrompt zip={addressZip} onLocated={onAddressLocated} />}
 
       {others.length > 0 && (
         <>

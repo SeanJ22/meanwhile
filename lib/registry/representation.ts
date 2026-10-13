@@ -59,6 +59,7 @@ export function hasRepresentation(coverage: CoverageSummary | null): boolean {
     coverage.bodies.length > 0 ||
     (coverage.governments?.length ?? 0) > 0 ||
     (coverage.governmentInventoryStates?.length ?? 0) > 0 ||
+    (coverage.stateOffices?.length ?? 0) > 0 ||
     coverage.seats.length > 0 ||
     coverage.senators.length > 0 ||
     coverage.statewideExecutives.length > 0

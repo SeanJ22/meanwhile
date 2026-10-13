@@ -4,8 +4,8 @@ import { FIPS_TO_STATE } from "../ocd/fips.ts";
 
 export const REGISTRATION_RECORD_CLASS = "REGISTRATION" as const;
 export const REGISTRATION_SOURCE_ID = "census-governments-registration" as const;
-export const REGISTRATION_PARSER_VERSION = "registration/5" as const;
-export const REGISTRATION_SCHEMA_VERSION = "registration:3" as const;
+export const REGISTRATION_PARSER_VERSION = "registration/6" as const;
+export const REGISTRATION_SCHEMA_VERSION = "registration:4" as const;
 export const REGISTRATION_SOURCE_ROUTE_PREFIX = "https://www2.census.gov/programs-surveys/gus/datasets/2022/" as const;
 export const REGISTRATION_SOURCE_URL = "https://www2.census.gov/programs-surveys/gus/datasets/2022/govt_units_2022.ZIP" as const;
 export const REGISTRATION_SOURCE_SHA256 = "3ef3d93c91697b00d4d53384176dc584db9dacbd0f0a23e45657f0a3a1058c28" as const;

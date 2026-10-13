@@ -9,10 +9,17 @@ import { CROSSWALK_KINDS } from "@/lib/civic-data/meeting-body-crosswalk.ts";
 import { DERIVED_WIRING_SOURCE_NAMES, bodySourceWiringFor, derivedAdapterConfig, type DerivedWiringRow } from "@/lib/civic-data/derived-meeting-wiring.ts";
 import { wiringShapeFor } from "@/lib/control-plane/discovery/derived-wiring.ts";
 
-/** Settings a reviewer would supply, taken from a body the code already wires on the same adapter. */
+const SAMPLE_ROWS = [
+  { ...FIXTURE_DOOR_ROWS[0], agendaSourceType: "ESCRIBE" as const, config: { portalUrl: "https://pub-lamesa.escribemeetings.com", meetingTypes: "City Council" } },
+  ...FIXTURE_DOOR_ROWS.map(row => row.agendaSourceType === "CIVICCLERK"
+    ? { ...row, config: { ...row.config, bodyMatch: "Board of Directors" } } : row),
+  { ...FIXTURE_DOOR_ROWS[0], agendaSourceType: "BOARDDOCS" as const,
+    config: { portalUrl: "https://go.boarddocs.com/mi/grand/Board.nsf/Public", committeeId: "A4EP6J588C05" } },
+];
+
 function sampleFilter(kind: (typeof DATA_DOOR_KINDS)[number]): Record<string, string> {
   const spec = DOOR_KIND_SPECS[kind];
-  const row = FIXTURE_DOOR_ROWS.find((r) => r.agendaSourceType === spec.agendaSourceType && (kind !== "LEGISTAR_INSITE" || r.config.insiteHost) && spec.required.every((key) => r.config[key] !== undefined));
+  const row = SAMPLE_ROWS.find((r) => r.agendaSourceType === spec.agendaSourceType && (kind !== "LEGISTAR_INSITE" || r.config.insiteHost) && spec.required.every((key) => r.config[key] !== undefined));
   assert.ok(row, `${kind}: no existing row carries every required setting`);
   return Object.fromEntries(spec.allowed.filter((key) => row.config[key] !== undefined).map((key) => [key, row.config[key]!]));
 }
@@ -26,7 +33,7 @@ for (const kind of DATA_DOOR_KINDS) {
     assert.ok(capability, "the adapter is registered");
     assert.ok(capability.types.includes(spec.agendaSourceType));
     // Every setting the kind declares is one an existing body of that adapter carries.
-    const same = FIXTURE_DOOR_ROWS.filter((r) => r.agendaSourceType === spec.agendaSourceType);
+    const same = SAMPLE_ROWS.filter((r) => r.agendaSourceType === spec.agendaSourceType);
     for (const key of [spec.route.key, ...spec.allowed]) {
       assert.ok(same.some((r) => r.config[key] !== undefined), `${kind}: no body carries ${key}`);
     }

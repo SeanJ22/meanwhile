@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import test from "./helpers/playbooks.ts";
 import { readFileSync } from "node:fs";
 import { withResponseLifetime } from "../lib/log/after-response.ts";
 import { ASK_SAVE_STATUS_HEADER } from "../lib/ask/save-status.ts";
@@ -300,7 +300,6 @@ const READINGS: Record<string, unknown> = {
 
 process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
 process.env.ANTHROPIC_API_KEY = "test-stub-not-a-real-key";
-delete process.env.WTP_ASK_FAST_MODEL;
 globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
   const url = input instanceof Request ? input.url : String(input);
   if (!url.startsWith("https://api.anthropic.com/")) throw new Error(`latency test refused an outbound request: ${url}`);
@@ -559,7 +558,7 @@ test("the writer is sent every record but member-vote rows past the bound, cut b
 test("the declared ladder: the fast writer first (adaptive thinking, low effort), then the frontier; one switch turns the fast writer off", () => {
   const ladder = synthesisLadder({});
   assert.deepEqual(ladder.map((rung) => [rung.model, rung.role, rung.effort]), [[ASK_FAST_WRITER_MODEL, "FAST", "low"], [ASK_SYNTHESIS_MODEL, "FRONTIER", "medium"]]);
-  assert.deepEqual(synthesisLadder({ WTP_ASK_FAST_MODEL: "off" }).map((rung) => rung.role), ["FRONTIER"]);
+  assert.deepEqual(synthesisLadder({ "ask.fastWriterModel": "off" }).map((rung) => rung.role), ["FRONTIER"]);
   const pack: EvidencePack = { question: "q", intent: "UNKNOWN", temporal: { kind: "NONE" }, subject: null, records: [RECORDS[0]], gaps: [], denominators: {}, today: "2026-09-25" };
   const fast = synthesisRequestBody(pack, { model: ASK_FAST_WRITER_MODEL, cached: true, effort: "low" }) as { thinking?: unknown; output_config: { effort?: unknown } };
   assert.deepEqual(fast.thinking, { type: "adaptive" });

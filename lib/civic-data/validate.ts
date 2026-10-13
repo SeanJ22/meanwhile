@@ -828,7 +828,13 @@ export function validateRoutineCandidate(
   }
 
   const absencePolicy = registered?.absencePolicy;
-  if (!candidate.absence.claimsAbsence && candidate.normalization.outputRecords === 0) {
+  if (!candidate.absence.claimsAbsence && candidate.normalization.outputRecords === 0 &&
+      candidate.recordClass === "STATE_ROLL_CALL" && candidate.horizon.kind === "OPEN_FACT_SET" &&
+      candidate.retrieval.succeeded && candidate.normalization.succeeded &&
+      ((candidate.sourceId === "plural-openstates-votes" && candidate.normalization.parserVersion === "plural-votes/2") ||
+       (candidate.sourceId === "legiscan" && candidate.normalization.parserVersion === "legiscan-votes/1"))) {
+    checks.push(result("ABSENCE_VALIDITY", "PASS", "NO_NEW_VOTES", "The source was checked successfully and added no votes. No absence is inferred."));
+  } else if (!candidate.absence.claimsAbsence && candidate.normalization.outputRecords === 0) {
     checks.push(result("ABSENCE_VALIDITY", "CANNOT_TELL", "ZERO_IS_NOT_ABSENCE", "The query returned zero records but carries no competent bounded absence evidence."));
   } else if (!candidate.absence.claimsAbsence) {
     checks.push(result("ABSENCE_VALIDITY", "PASS", "NO_ABSENCE_CLAIM", "The projection makes no absence claim."));

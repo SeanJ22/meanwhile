@@ -10,9 +10,8 @@ import * as React from "react";
 
 import { renderToStaticMarkup } from "react-dom/server";
 
-import { fundingFreshnessNote } from "../lib/funding/freshness.ts";
+import { CardGapContribution } from "../components/ui/card-gap-context.tsx";
 
-import { directFundingTargetPlan } from "../lib/funding/target-authorities.ts";
 
 import { telHref } from "../lib/officials/phone-numbers.ts";
 
@@ -54,58 +53,36 @@ test("contactless grounded bodies retain the routed topic and correctly attribut
   assert.ok(!otherMarkup.includes(contact.body));
 });
 
-test("ballot keeps freshness for a federal none answer and leaves a current none answer empty", async () => {
+test("ballot leaves empty funding fields out and contributes partial holdings to the card", async () => {
   const fn = nodes("app/ballot/page.tsx").find((node) => ts.isFunctionDeclaration(node) && node.name?.text === "CandidateFunding")!;
   const envelope = { kind: "ANSWER", holdingStatus: "HELD", dataState: "PROMOTED", dataMetadata: { stale: "STALE", sourceThrough: "2026-08-19" } };
-  const make = new Function("React", "fundingAnswerForTarget", "settleFundingHoldingAnswer", "fundingFreshnessNote", "unavailableHolding", "FundingAbsence", "FundingDisplay", "withReaderAuthorityEdge", compile(`${fn.getText()}; return CandidateFunding;`));
+  const make = new Function("React", "fundingAnswerForTarget", "settleFundingHoldingAnswer", "unavailableHolding", "FundingAbsence", "FundingDisplay", "withReaderAuthorityEdge", "CardGapContribution", compile(`${fn.getText()}; return CandidateFunding;`));
   const unexpected = () => { throw new Error("none must not fabricate funding records"); };
-  // The settlement runs inside the page's reader edge (R30); with no edge it runs as it always did.
-  const component = make(React, () => ({ kind: "none" }), async () => envelope, fundingFreshnessNote, unexpected, unexpected, unexpected, withReaderAuthorityEdge);
+  const component = make(React, () => ({ kind: "none" }), async () => envelope, unexpected, unexpected, unexpected, withReaderAuthorityEdge, CardGapContribution);
   const props = { targetKey: "congress:test", context: null, available: true, readerEdge: null };
-  const markup = renderToStaticMarkup(await component(props));
-  assert.match(markup, /funding-data-freshness/);
-  assert.match(markup, /source through 2026-08-19/);
-  envelope.dataMetadata.stale = "CURRENT";
-  assert.equal(await component(props), null);
+  assert.equal(await component(props), null, "held empty answers do not render a funding field or a freshness placeholder");
   envelope.dataMetadata.stale = "UNKNOWN";
-  assert.match(renderToStaticMarkup(await component(props)), /freshness could not be established/);
+  assert.equal(await component(props), null);
+  envelope.holdingStatus = "PARTIAL";
+  const gap = await component(props);
+  assert.equal(gap.type, CardGapContribution);
+  assert.equal(gap.props.label, "campaign money records");
+  assert.equal(gap.props.id, "funding-holdings:congress:test");
+  assert.equal(renderToStaticMarkup(gap), "", "the card frame displays the gap once");
 });
 
-test("state ballot funding discloses the exact held state's freshness and preserves its records", () => {
+test("state ballot funding preserves held records and leaves empty fields out", () => {
   const fn = nodes("app/ballot/page.tsx").find((node) => ts.isFunctionDeclaration(node) && node.name?.text === "stateCandidateFunding");
   assert.ok(fn);
-  const make = new Function("React", "directFundingTargetPlan", "stateMoneyReadState", "fundingFreshnessNote", "StateMoneySection", compile(`${fn.getText()}; return stateCandidateFunding;`));
-  const reads: string[] = [];
-  const states = new Map([
-    ["AZ", { kind: "PROMOTED", metadata: { stale: "STALE", sourceThrough: "2026-09-08" } }],
-    ["NJ", { kind: "PROMOTED", metadata: { stale: "STALE", sourceThrough: "2026-09-07" } }],
-    ["NH", { kind: "PROMOTED", metadata: { stale: "UNKNOWN", sourceThrough: null } }],
-  ]);
+  const make = new Function("React", "StateMoneySection", compile(`${fn.getText()}; return stateCandidateFunding;`));
   const records = [{ held: "exact candidate filing" }];
-  const render = make(React, directFundingTargetPlan, (state: string) => { reads.push(state); return states.get(state); }, fundingFreshnessNote, (props: { records: typeof records }) => {
-    assert.equal(props.records, records, "disclosure must not replace or rematch held records");
+  const context = { zip: "85701", lat: 32.22, lng: -110.97 };
+  const render = make(React, (props: { records: typeof records; context: typeof context }) => {
+    assert.equal(props.records, records, "the display never rematches held records");
+    assert.equal(props.context, context);
     return React.createElement("span", null, props.records[0].held);
   });
-  for (const [target, state, expected] of [
-    ["ballot-az-pima:governor|Katie Hobbs", "AZ", "source through 2026-09-08"],
-    ["ballot-nj-morris:commissioner:person", "NJ", "source through 2026-09-07"],
-    ["ballot-nh-merrimack:representative:person", "NH", "freshness could not be established"],
-  ]) {
-    const markup = renderToStaticMarkup(render(target, records));
-    assert.equal(reads.at(-1), state);
-    assert.ok(markup.includes(expected));
-    assert.equal((markup.match(/funding-data-freshness/g) ?? []).length, 1);
-    assert.ok(markup.includes(records[0].held));
-  }
-  assert.ok(nodes("app/ballot/page.tsx").some((node) => ts.isCallExpression(node) && node.expression.getText() === "stateCandidateFunding" && node.arguments[0]?.getText() === "targetKey" && node.arguments[1]?.getText() === "stateMoney"), "the actual battlecard money slot must use the disclosure");
-});
-
-test("an empty state funding selection retains stale disclosure but leaves current empty slots empty", () => {
-  const fn = nodes("app/ballot/page.tsx").find((node) => ts.isFunctionDeclaration(node) && node.name?.text === "stateCandidateFunding")!;
-  const read = { kind: "PROMOTED", metadata: { stale: "STALE", sourceThrough: "2026-09-08" } };
-  const make = new Function("React", "directFundingTargetPlan", "stateMoneyReadState", "fundingFreshnessNote", "StateMoneySection", compile(`${fn.getText()}; return stateCandidateFunding;`));
-  const render = make(React, directFundingTargetPlan, () => read, fundingFreshnessNote, (props: { records: unknown[] }) => { assert.equal(props.records.length, 0); return null; });
-  assert.match(renderToStaticMarkup(render("ballot-az-pima:governor:person", [])), /source through 2026-09-08/);
-  read.metadata.stale = "CURRENT";
-  assert.equal(render("ballot-az-pima:governor:person", []), null);
+  assert.equal(renderToStaticMarkup(render(records, context)), "<span>exact candidate filing</span>");
+  assert.equal(render([], context), null);
+  assert.ok(nodes("app/ballot/page.tsx").some((node) => ts.isCallExpression(node) && node.expression.getText() === "stateCandidateFunding" && node.arguments[0]?.getText() === "stateMoney"), "the actual battlecard money slot uses the held records");
 });

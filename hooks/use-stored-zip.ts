@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useSyncExternalStore } from "react";
 
 import { recordRecentZip } from "@/hooks/use-recent-zips";
-import { lookupIn, type CentroidTable } from "@/lib/geo/zcta-core";
+import { lookupIn, type CentroidTable, type ZctaCentroid } from "@/lib/geo/zcta-core";
+import { postalAreaIn, type PostalTable } from "@/lib/geo/postal-core";
 import { loadZctaTable } from "@/lib/geo/zcta-table";
 import { readSessionAddress, subscribeToSessionAddress } from "@/lib/geo/session-address";
 import {
@@ -22,11 +23,7 @@ import {
 
 const STORAGE_KEY = "wtp.approximate_location";
 
-export interface StoredLocation {
-  zip: string;
-  lat: number;
-  lng: number;
-}
+export type StoredLocation = ZctaCentroid;
 
 interface StoredPayload {
   zip: string;
@@ -79,6 +76,7 @@ export function readZipChoice(): string | null {
  * same state as before hydration. The stored payload holds only the zip.
  */
 let centroids: CentroidTable | null = null;
+let postal: PostalTable = {};
 let tableRequested = false;
 
 function ensureTable(): void {
@@ -86,6 +84,7 @@ function ensureTable(): void {
   tableRequested = true;
   void loadZctaTable().then((table) => {
     centroids = table.centroids;
+    postal = table.postal;
     // Invalidate the identity cache and republish so subscribers move from PENDING.
     cachedRaw = undefined;
     cachedSnapshot = PENDING;
@@ -93,14 +92,14 @@ function ensureTable(): void {
   });
 }
 
-export function resolveStoredZip(table: CentroidTable, raw: string | null): StoredLocation | null {
+export function resolveStoredZip(table: CentroidTable, raw: string | null, postal: PostalTable = {}): StoredLocation | null {
   if (!raw) return null;
 
   try {
     const parsed = JSON.parse(raw) as Partial<StoredPayload>;
     // Re-resolve rather than trusting stored coordinates: a Census vintage
     // update moves centroids, and the zip is the only durable part.
-    return typeof parsed.zip === "string" && /^\d{5}$/.test(parsed.zip) ? lookupIn(table, parsed.zip) : null;
+    return typeof parsed.zip === "string" && /^\d{5}$/.test(parsed.zip) ? lookupIn(table, parsed.zip, postal) : null;
   } catch {
     return null;
   }
@@ -128,7 +127,7 @@ function getSnapshot(): LocationSnapshot {
 
   if (raw !== cachedRaw || cachedSnapshot === PENDING) {
     cachedRaw = raw;
-    cachedSnapshot = { restored: true, location: resolveStoredZip(centroids, raw) };
+    cachedSnapshot = { restored: true, location: resolveStoredZip(centroids, raw, postal) };
   }
 
   return cachedSnapshot;
@@ -175,7 +174,8 @@ export function useStoredZip() {
         // Not being able to remember is survivable; failing the search is not.
         // Keep the choice for this page's life; the publish still runs.
         cachedRaw = JSON.stringify(payload);
-        cachedSnapshot = { restored: true, location: next };
+        const area = postalAreaIn(postal, next.zip);
+        cachedSnapshot = { restored: true, location: { ...next, ...(area ? { postal: area } : {}) } };
       },
     );
   }, []);

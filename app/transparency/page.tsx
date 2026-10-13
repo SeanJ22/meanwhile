@@ -28,6 +28,15 @@ export default function TransparencyPage() {
           browser hash for counting distinct readers.
         </p>
 
+        <h2 className="mt-8 text-lg font-semibold text-paper">ZIP locations</h2>
+        <p className="mt-3 text-[0.9375rem] leading-relaxed text-paper-dim">
+          ZIP locations use U.S. Census Bureau ZCTAs and{" "}
+          <a href="https://www.geonames.org/" className="underline">GeoNames postal codes</a>
+          {" "}under <a href="https://creativecommons.org/licenses/by/4.0/" className="underline">CC BY 4.0</a>,
+          with postal types from <a href="https://github.com/seanpianka/Zipcodes" className="underline">Zipcodes</a>.
+          Census boundaries connect postal coordinates to places. Your residential address finds your districts.
+        </p>
+
         <p className="mt-10 text-[0.8125rem]">
           <Link href="/" className="mw-back-pill">
             ← Back to the map

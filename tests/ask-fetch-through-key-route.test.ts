@@ -1,4 +1,4 @@
-import test from "node:test";
+import test from "./helpers/playbooks.ts";
 import assert from "node:assert/strict";
 import dns from "node:dns/promises";
 import http from "node:http";

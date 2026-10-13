@@ -66,7 +66,7 @@ function goodFecCandidate(): RoutineCandidate {
     },
     normalization: {
       succeeded: true,
-      parserVersion: "fec-funding/3",
+      parserVersion: "fec-funding/4",
       schemaVersion: "2",
       normalizedHash: normalizedHash(readModel),
       normalizedPayloadHash: normalizedHash(normalizedPayload),
@@ -113,6 +113,7 @@ test("a registered source failure is one durable attempt with retry clock and un
   const recorded = await recordRegisteredSourceAcquisitionFailure({
     store,
     contractId: "fec-funding",
+      requestedUrl: "https://api.open.fec.gov/v1/candidates/",
     attemptedAt: FAILED_AT,
     failure: sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", "FEC API request timed out."),
   });
@@ -138,7 +139,7 @@ test("a registered source failure is one durable attempt with retry clock and un
   assert.equal(routineTaskDue(task, await store.clock(task.sourceId, task.recordClass, task.scope), Date.parse(FAILED_AT) + task.retryMs), true);
 });
 
-test("all five single-route adapters can persist a well-formed source-scoped failure receipt", async () => {
+test("all five registered adapters can persist a well-formed source-scoped failure receipt", async () => {
   for (const [contractId, sourceLabel] of [
     ["fec-funding", "FEC OpenFEC"],
     ["nh-members", "NH General Court members"],
@@ -150,6 +151,7 @@ test("all five single-route adapters can persist a well-formed source-scoped fai
     const recorded = await recordRegisteredSourceAcquisitionFailure({
       store,
       contractId,
+      ...(contractId === "fec-funding" ? { requestedUrl: "https://api.open.fec.gov/v1/candidates/" } : {}),
       attemptedAt: FAILED_AT,
       failure: sourceAcquisitionFailure("PUBLISHER_RESPONSE_REFUSED", `${sourceLabel} answered HTTP 503.`),
     });
@@ -207,6 +209,7 @@ test("program/store/protocol exceptions cannot be relabelled as a source attempt
     recordRegisteredSourceAcquisitionFailure({
       store,
       contractId: "fec-funding",
+      requestedUrl: "https://api.open.fec.gov/v1/candidates/",
       attemptedAt: FAILED_AT,
       failure: new Error("program defect") as never,
     }),
@@ -223,6 +226,7 @@ test("an unavailable canonical store remains an operational failure and emits no
     recordRegisteredSourceAcquisitionFailure({
       store: unavailableStore,
       contractId: "fec-funding",
+      requestedUrl: "https://api.open.fec.gov/v1/candidates/",
       attemptedAt: FAILED_AT,
       failure: sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", "The publisher timed out."),
     }),
@@ -407,6 +411,7 @@ test("a real acquisition deadline persists one exact source failure while retain
   const recorded = await recordRegisteredSourceAcquisitionFailure({
     store,
     contractId: "fec-funding",
+      requestedUrl: "https://api.open.fec.gov/v1/candidates/",
     attemptedAt: FAILED_AT,
     failure,
   });
@@ -477,7 +482,7 @@ test("dotgov refuses a registry CSV cut short of its declared length", async () 
   }
 });
 
-test("each standing single-route entrypoint uses the source-aware durable failure door", () => {
+test("each standing source entrypoint uses the source-aware durable failure door", () => {
   for (const path of [
     "scripts/fetch-fec.mts",
     "scripts/nh-gencourt-members.mts",

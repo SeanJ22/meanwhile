@@ -5,7 +5,6 @@ import { createContext, useContext } from "react";
 import type { ActionDef } from "./actions.ts";
 import type { SectionId } from "./contract.ts";
 import type { Access, Connection } from "./eligibility.ts";
-import type { InstructionDraft } from "./instruction-draft.ts";
 import type { ActionRef, AdminV6Data, Hunt, Place, UiReceipt } from "./model.ts";
 import type { PlaceIndex } from "./places.ts";
 
@@ -22,7 +21,7 @@ export const VIEWS: readonly (readonly [View, string])[] = [
   ["scoreboard", "Scoreboard"],
   ["data", "Data business"],
   ["settings", "Settings"],
-  ["reports", "Reports"],
+  ["reports", "Brief"],
   ["changes", "Changes"],
   ["chat", "Ask the console"],
 ];
@@ -49,9 +48,6 @@ export interface V6 {
   readonly access: Access;
   readonly receipts: readonly UiReceipt[];
   readonly period: string;
-  /** Only the unsent draft for the exact selected place. */
-  readonly instructionDraft: InstructionDraft;
-  setInstructionDraft(draft: InstructionDraft): void;
   go(view: View): void;
   open(detail: Detail): void;
   setScope(key: string): void;
@@ -61,7 +57,7 @@ export interface V6 {
   canCheck(receipt: UiReceipt): string | null;
   defOf(ref: ActionRef): ActionDef;
   nameOf(id: string): string;
-  focusInstruction(): void;
+  /** Live paged sections: send search, filters or a cursor to the server. A no-op for local data. */
   query(section: SectionId, params: Readonly<Record<string, string>>): void;
 }
 

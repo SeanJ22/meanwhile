@@ -13,7 +13,7 @@ import { readVotingSitesProjection } from "../lib/ballot/voting-sites-server.ts"
 import { createHash } from "node:crypto";
 import { CENSUS_PLACEHOLDER_LABELS } from "../lib/registry/census-placeholders.ts";
 import assert from "node:assert/strict";
-import test from "node:test";
+import test from "./helpers/playbooks.ts";
 import { readFileSync } from "node:fs";
 import { gunzipSync } from "node:zlib";
 import { autonomousHarness, FIXTURE_URL } from "./helpers/autonomous-fleet.ts";
@@ -43,9 +43,7 @@ import { readEverydayRoutingProjection } from "../lib/routing/everyday-data-plan
 import { publishWorkerRosterResults } from "../lib/civic-data/worker-roster-publication.ts";
 import { directoryMeetingHints, workerBodyDirectoryPackage } from "../lib/civic-data/worker-body-directory.ts";
 import { filingsForDivisions, officialFilingIssue, type OfficialFiling } from "../lib/civic-data/official-filings.ts";
-import { renderToStaticMarkup } from "react-dom/server";
-import { createElement } from "react";
-import { OfficialFilings } from "../components/ballot/official-filings.tsx";
+import { renderCardWithSources } from "./helpers/render-card.ts";
 import { collectWorkerRosterReadback } from "../lib/control-plane/worker-reader-readback.ts";
 
 /** The job's repositories with the whole worker-result log made unreadable: a publisher reads only its own job's results. */
@@ -216,7 +214,7 @@ test("independent candidate and committee filings automatically publish source f
     const rows = filingsForDivisions(projection.value.records as unknown as OfficialFiling[], [f.body.ocdId!]);
     assert.equal(rows.length, 1);
     assert.deepEqual(filingsForDivisions(rows, ["ocd-division/country:us/state:zz"]), []);
-    const html = renderToStaticMarkup(createElement(OfficialFilings, { rows }));
+    const html = await renderCardWithSources({ modulePath: "./components/ballot/official-filings.tsx", exportName: "OfficialFilings", props: { rows }, sourceUrls: rows.flatMap(row => [row.documentUrl, row.sourceUrl]) });
     assert.ok(html.includes(String(f.rows[0].documentUrl)) && html.includes(finance ? "Fixture Committee" : "Fixture Candidate"));
     assert.ok(html.includes("does not establish a current ballot position"));
     if (finance) {
@@ -475,7 +473,7 @@ test("CP-09: an amountless filing reaches its reader as a document without manuf
   assert.equal(rows.length, 1);
   assert.equal(rows[0].kind, "CAMPAIGN_FINANCE_DOCUMENT");
   assert.equal(officialFilingIssue(rows[0]), null);
-  const html = renderToStaticMarkup(createElement(OfficialFilings, { rows }));
+  const html = await renderCardWithSources({ modulePath: "./components/ballot/official-filings.tsx", exportName: "OfficialFilings", props: { rows }, sourceUrls: rows.flatMap(row => [row.documentUrl, row.sourceUrl]) });
   assert.ok(html.includes(FIXTURE_URL) && html.includes("Fixture Committee"));
   assert.doesNotMatch(html, /Reported receipts|Reported expenditures|Reported cash/);
 });

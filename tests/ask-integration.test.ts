@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import test from "node:test";
+import test from "./helpers/playbooks.ts";
 
 import { ballotAskInventory, ballotRecordsFor, measureDesignations } from "../lib/ask/ballot-inventory.ts";
 import { contactRecord, contactsForBody, contactsForRepresentatives } from "../lib/ask/contacts.ts";

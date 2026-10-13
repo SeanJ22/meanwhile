@@ -1,0 +1,33 @@
+{
+  "civicplus-alameda-water-agendacenter.html": {
+    "sourceUrl": "https://www.acwd.org/AgendaCenter",
+    "recordedSource": "https://github.com/biglocalnews/civic-scraper/blob/master/tests/fixtures/civplus_alameda_water.html",
+    "sourceBlob": "6eba7bdf0ed9f8bfe79c4efe3aa27aa1158079bd",
+    "note": "Excerpt of the recorded public HTML, original lines 1154-1344, retrieved through connected GitHub, with line endings normalized to LF. It retains both complete grouped CivicEngage category panels and their meeting links; unrelated page scripts and layout, including an embedded browser Maps key, are omitted. sourceBlob and rawCaptureSha256 identify the full original capture; fixtureSha256 identifies this trimmed excerpt.",
+    "originalLineRange": [
+      1154,
+      1344
+    ],
+    "rawCaptureSha256": "9e5f68681d27fdfb36769af4ebf76382a4d34fa9629b0b202c757f37677401cf",
+    "fixtureSha256": "fa95f02ac4bb1433296d440d782a954f0bd0892c65d85272a56e23a001a6a877"
+  },
+  "boarddocs-grand-rapids-meetings.json": {
+    "sourceUrl": "https://go.boarddocs.com/mi/grand/Board.nsf/BD-GetMeetingsList?open",
+    "recordedSource": "https://github.com/City-Bureau/city-scrapers-grand-rapids/blob/675db28dec75b26b705dd51e8d278c9b22b351ff/tests/files/gra_public_school_board.json",
+    "sourceBlob": "d6a68d866956e60d46a6117566f3a36fe868e87d",
+    "form": {
+      "current_committee_id": "A4EP6J588C05"
+    },
+    "note": "Exact recorded public list. Committee ID is documented by the companion published spider; discovery's selector-shaped HTML is a synthetic transport fixture."
+  },
+  "boarddocs-grand-rapids-meeting.html": {
+    "sourceUrl": "https://go.boarddocs.com/mi/grand/Board.nsf/BD-GetMeeting?open&id=D5CSV7744EBE",
+    "recordedSource": "https://github.com/City-Bureau/city-scrapers-grand-rapids/blob/675db28dec75b26b705dd51e8d278c9b22b351ff/tests/files/gra_public_school_board_detail.html",
+    "sourceBlob": "f3b866edb8ceecda4d7752d50a8932e61a494c3c",
+    "form": {
+      "current_committee_id": "A4EP6J588C05",
+      "id": "D5CSV7744EBE"
+    },
+    "note": "Exact recorded public detail, including publisher agenda button and share permalink."
+  }
+}

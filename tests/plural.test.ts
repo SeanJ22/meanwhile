@@ -17,7 +17,7 @@ import {
 } from "../lib/sources/plural/index.ts";
 import { coverageAt } from "../lib/registry/server.ts";
 import registry from "../lib/registry/registry.json" with { type: "json" };
-import { collectNationalPlaceSources, electionDirectorySelection } from "../lib/sources/plural/place.ts";
+import { collectNationalPlaceSources } from "../lib/sources/plural/place.ts";
 import { electionPageFields } from "../lib/hunt/election-page.ts";
 import { placeSourceReader, PlaceSourceDeferred } from "../lib/hunt/place-source-reader.ts";
 import { nationalPlaceJobs, placeSourceLaunchOrder } from "../lib/hunt/place-source-admission.ts";
@@ -416,8 +416,7 @@ test("a national walk reuses another role's working source route after a directo
   const store = { ...emptyFieldManual(), entries };
   const opened: string[] = [];
   const pages: Record<string, string> = {
-    "https://www.usa.gov/state-governments": '<a id="mo" href="/states/missouri">Missouri</a>',
-    "https://www.usa.gov/states/missouri": '<h1>Missouri</h1><div class="field--name-field-website"><a href="https://state.example.gov/old">State</a></div>',
+    "https://www.sos.mo.gov/elections/": '<h1>Missouri</h1><div class="field--name-field-website"><a href="https://state.example.gov/old">State</a></div>',
     "https://state.example.gov/leaders": '<a href="/governor">Governor Jane Doe</a>',
   };
   const result = await collectNationalPlaceSources({ now, knowledge: { store, projection: projectFieldManual(store) },
@@ -498,28 +497,20 @@ test("national collector binds saved CSV to its real Attempt and reuses another 
     "a small publisher's bound does not stop another national source");
 });
 
-test("the national election directory follows its published form for any state", () => {
-  const page = { url: "https://www.eac.gov/voters/register-and-vote-in-your-state", collectedAt: "2026-09-30T00:00:00Z",
-    text: '<form action="/voters/state" method="get"><select name="state_id"><option value="12">Missouri</option><option value="13">Utah</option></select></form>' };
-  assert.equal(electionDirectorySelection(page, "Utah"), "https://www.eac.gov/voters/state?state_id=13");
-  assert.equal(electionDirectorySelection(page, "Unknown"), null);
-});
-
 test("official profile headings produce officeholders; news headlines do not", async () => {
   const stages: string[] = [];
   const pages: Record<string, string> = {
-    "https://www.usa.gov/state-governments": '<a id="mo" href="/states/missouri">Missouri</a>',
-    "https://www.usa.gov/states/missouri": '<h1>Missouri</h1><a href="https://ag.example.gov/">Office of the Attorney General</a>',
+    "https://www.sos.mo.gov/elections/": '<h1>Missouri</h1><a href="https://ag.example.gov/">Office of the Attorney General</a>',
     "https://ag.example.gov/": '<h1>TRUE TRANSPARENCY</h1><h1>POLICE TRAINING PROVIDED REGIONALLY</h1><h1>True Transparency</h1><a href="/about">Attorney General</a>',
     "https://ag.example.gov/about": '<h1>Attorney General Jane Doe</h1>',
   };
   const result = await collectNationalPlaceSources({ now: "2026-09-30T00:00:00Z",
     divisions: [{ id: "ocd-division/country:us/state:mo", label: "Missouri", divisionType: "state", geoid: "29", sourceUrl: "https://census.gov" }],
     onSources: async sources => { stages.push("ready"); assert.equal(sources.officials[0].name, "Jane Doe"); },
-    read: async url => { if (url.includes("eac.gov")) stages.push("elections"); if (!(url in pages)) throw Error("No page"); return { url, text: pages[url], collectedAt: "2026-09-30T00:00:00Z" }; } });
+    read: async url => { if (url === "https://www.sos.mo.gov/elections/" && !stages.includes("ready")) stages.push("state"); if (!(url in pages)) throw Error("No page"); return { url, text: pages[url], collectedAt: "2026-09-30T00:00:00Z" }; } });
   assert.deepEqual(result.officials.map(o => [o.name, o.officeTitle]), [["Jane Doe", "Attorney General"]]);
   assert.equal(result.officials[0].document.url, "https://ag.example.gov/about");
-  assert.deepEqual(stages, ["ready", "elections"], "a ready officeholder reaches the publisher before unrelated election collection");
+  assert.deepEqual(stages, ["state", "ready"], "the held national reference leads directly to the state page and its official profile");
 });
 
 test("election dates use explicit source year and official lookup links remain navigation", () => {
@@ -545,8 +536,6 @@ test("redirected election pages keep their saved source identity and resolve lin
   const [field] = electionPageFields(page, "ocd-division/country:us/state:mo");
   assert.equal(field.sourceUrl, page.url);
   assert.equal(field.value, "https://elections.example.gov/voters/current/polling");
-  const directory = { ...page, text: '<form method="get" action="states"><select name="state"><option value="MO">Missouri</option></select></form>' };
-  assert.equal(electionDirectorySelection(directory, "Missouri"), "https://elections.example.gov/voters/current/states?state=MO");
 });
 
 /**
@@ -561,12 +550,12 @@ const DIVISIONS = (
 
 test("designation normalization survives zero-padding", () => {
   assert.equal(designationKey("Merrimack 08"), designationKey("Merrimack 8"));
-  assert.equal(designationKey("  merrimack   8 "), "MERRIMACK 8");
+  assert.equal(designationKey("  merrimack   8 "), "MERRIMACK8");
   assert.equal(designationKey("19"), "19");
 });
 
 test("the registry label yields the designation Plural publishes", () => {
-  assert.equal(designationFromLabel("State House District Merrimack 08"), "MERRIMACK 8");
+  assert.equal(designationFromLabel("State House District Merrimack 08"), "MERRIMACK8");
   assert.equal(designationFromLabel("State Senate District 19"), "19");
   assert.equal(designationFromLabel("Assembly District 25"), "25");
 });
@@ -576,7 +565,7 @@ test("New Hampshire House districts index by designation, not by number", () => 
 
   // sldl:608 is labelled "State House District Merrimack 08". A join on the
   // identifier's digits would look for 608 and find nothing.
-  const ocdId = index.get("nh|lower|MERRIMACK 8");
+  const ocdId = index.get("nh|lower|MERRIMACK8");
   assert.ok(ocdId, "NH Merrimack 8 must resolve");
   assert.match(ocdId, /state:nh\/sldl:/);
 });

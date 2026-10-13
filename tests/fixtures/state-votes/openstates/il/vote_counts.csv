@@ -1,0 +1,7 @@
+id,vote_event_id,option,value
+f91d6405-4c55-4f61-a0ed-4a8eee49f5f4,ocd-vote/019df0d2-e892-49e6-b212-09ef27c05cfd,yes,42
+b1d032fd-77fc-45c2-a484-6744368dbba6,ocd-vote/019df0d2-e892-49e6-b212-09ef27c05cfd,no,12
+f1c97464-781e-416a-afc0-f98ddc837899,ocd-vote/019df0d2-e892-49e6-b212-09ef27c05cfd,other,1
+225181eb-9d97-400a-8497-d84b6ec81634,ocd-vote/019df0d2-e892-49e6-b212-09ef27c05cfd,excused,0
+aa2241e5-9c62-427d-9d8b-25cfd06c60c5,ocd-vote/019df0d2-e892-49e6-b212-09ef27c05cfd,absent,0
+bbd247ac-d9a8-43bd-be15-150e1b8f0dc6,ocd-vote/019df0d2-e892-49e6-b212-09ef27c05cfd,not voting,4

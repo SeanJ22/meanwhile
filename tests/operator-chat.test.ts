@@ -266,15 +266,15 @@ function fullContext(overrides: Partial<OperatorContext> = {}): OperatorContext 
 /* THE ROUTER                                                                 */
 /* ========================================================================== */
 
-test("the eight questions (the brief's seven and BR-31's spend question) each route to their own topic, and the set is closed", () => {
+test("the status, spend and place questions each route to their own topic", () => {
   assert.ok(topicRulesAreComplete(), "every declared topic has a matching rule and no rule names an undeclared topic");
   assert.equal(TOPIC_DEFINITIONS.length, CHAT_TOPICS.length, "every topic carries a definition");
 
-  // The denominator, stated: eight questions, each routed to its own topic.
+  // Every canonical question routes to its own topic, including the place-stuck query.
   const routed = TOPIC_DEFINITIONS.map((t) => ({ asks: t.asks, got: topicOf(t.asks), want: t.topic }));
   const wrong = routed.filter((r) => r.got !== r.want);
   assert.deepEqual(wrong, [], "each canonical question must route to its own topic");
-  assert.equal(new Set(routed.map((r) => r.got)).size, 8, "eight distinct topics");
+  assert.equal(new Set(routed.map((r) => r.got)).size, 9, "nine distinct topics");
 });
 
 test("the owner's own phrasings route, not only the canonical ones", () => {
@@ -820,8 +820,6 @@ test("the chat's controls ARE the gateway's registry, matched by the words the g
 
   // The gateway's own labels and types, matched by ordinary words: a control added there becomes askable here.
   const cases: readonly [string, string][] = [
-    ["try this work again wi-4f2a9c1b3d5e", "fleet.retryWorkItem"],
-    ["retry this eligible work item wi-4f2a9c1b3d5e", "fleet.retryWorkItem"],
     ["pause the runner", "runner.pause"],
     ["resume the runner", "runner.resume"],
     ["run a cycle now", "runner.runCycleNow"],
@@ -867,7 +865,7 @@ test("only the records a question needs are read", () => {
   assert.ok(!requiredReads("WAITING_ON_YOU").includes("environments"), "answering the owner queue never reaches another origin");
   assert.deepEqual(readsFor("what is the weather in Tucson", []), []);
   // A proposal quotes the console's pulse revision, the same value the gateway compares against.
-  assert.deepEqual([...readsFor("try this work again wi-4f2a9c1b3d5e", actionDefinitions())], ["pulse"]);
+  assert.deepEqual([...readsFor("deploy the fleet here", actionDefinitions())], ["pulse"]);
 });
 
 /* ========================================================================== */

@@ -1,0 +1,1271 @@
+{
+  "recordedFrom": "https://meanwhileusa.com/api/meetings?lat=32.2217&lng=-110.9695&zip=85701",
+  "recordedAt": "2026-10-12T23:14:14.289595+00:00",
+  "responseSha256": "e852a855691965ed5460a2c9003b003370483643783631c01b65f1a4576fd14e",
+  "generatedAt": "2026-10-12T23:11:03.931Z",
+  "selection": "Every Tucson Unified meeting and comment-access row, verbatim from the public production response. The captured response has 41 district rows and 21 null agendaUrl fields; this differs from the 42/19 sample described in UI-01. The Duffy venue grouping has 36 rows, 18 null agendas, 19 missing online join links, and 2 missing meeting places (one further row holds a place in words without a map point).",
+  "meetings": [
+    {
+      "id": "diligent:tusd1:484",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "GOVERNING BOARD AGENDA REGULAR MEETING - Jul 14 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "status": "CONCLUDED",
+      "bodyName": "GOVERNING BOARD AGENDA REGULAR MEETING",
+      "location": {
+        "lat": 32.228998,
+        "lng": -110.883029,
+        "name": "Duffy Community Center, Multipurpose Room",
+        "address": "5145 E. 5th Street, Tucson, AZ 85711"
+      },
+      "startsAt": "2026-07-14T16:30:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://govboard.tusd1.org/_theme/files/GovBoard/Docs/actions/07-14-2026R(1).pdf",
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=484",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:489",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "AGENDA FOR AUDIT COMMITTEE MEETING - Jul 15 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "status": "CONCLUDED",
+      "bodyName": "Audit Committee Meeting Agenda",
+      "location": {
+        "lat": 32.222464,
+        "lng": -110.956126,
+        "name": "Morrow Education Center, Board Conference Room",
+        "address": "1010 E. Tenth Street, Tucson, AZ 85719"
+      },
+      "startsAt": "2026-07-15T14:30:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=489",
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=489",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:490",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "GOVERNING BOARD AGENDA SPECIAL EXECUTIVE SESSION MEETING - Jul 21 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "online": {
+        "label": "Via Zoom",
+        "joinUrl": null
+      },
+      "status": "CONCLUDED",
+      "bodyName": "GOVERNING BOARD AGENDA SPECIAL EXECUTIVE SESSION MEETING",
+      "location": null,
+      "startsAt": "2026-07-21T17:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=490",
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=490",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:485",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "GOVERNING BOARD AGENDA SPECIAL MEETING  - Jul 28 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "status": "CONCLUDED",
+      "bodyName": "GOVERNING BOARD AGENDA SPECIAL MEETING",
+      "location": {
+        "lat": 32.228998,
+        "lng": -110.883029,
+        "name": "Duffy Community Center, Multipurpose Room",
+        "address": "5145 E. 5th Street, Tucson, AZ 85711"
+      },
+      "startsAt": "2026-07-28T16:30:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://govboard.tusd1.org/_theme/files/GovBoard/Docs/actions/07-28-2026.pdf",
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=485",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:491",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "GOVERNING BOARD AGENDA SPECIAL MEETING  - Aug 04 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "online": {
+        "label": "via Zoom",
+        "joinUrl": null
+      },
+      "status": "CONCLUDED",
+      "bodyName": "GOVERNING BOARD AGENDA SPECIAL MEETING",
+      "location": null,
+      "startsAt": "2026-08-04T17:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://govboard.tusd1.org/_theme/files/GovBoard/Docs/actions/08-04-2026S(2).pdf",
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=491",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:492",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "GOVERNING BOARD AGENDA REGULAR MEETING - Aug 11 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "status": "CONCLUDED",
+      "bodyName": "GOVERNING BOARD AGENDA REGULAR MEETING",
+      "location": {
+        "lat": 32.228998,
+        "lng": -110.883029,
+        "name": "Duffy Community Center, Multipurpose Room",
+        "address": "5145 E. 5th Street, Tucson, AZ 85711"
+      },
+      "startsAt": "2026-08-11T16:30:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://govboard.tusd1.org/_theme/files/GovBoard/Docs/actions/08-11-2026R.pdf",
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=492",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:494",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Alternative Education Advisory Committee Meeting Agenda - Aug 17 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "online": {
+        "label": "Via Zoom Webinar",
+        "joinUrl": null
+      },
+      "status": "CONCLUDED",
+      "bodyName": "Alternative Education Advisory Committee Meeting Agenda",
+      "location": null,
+      "startsAt": "2026-08-17T18:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=494",
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=494",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:496",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Bond Oversight Committee Meeting Agenda - Aug 20 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "status": "CONCLUDED",
+      "bodyName": "Bond Oversight Committee Meeting Agenda",
+      "location": {
+        "lat": 32.228998,
+        "lng": -110.883029,
+        "name": "Duffy Community Center, Multipurpose Room",
+        "address": "5145 E. 5th Street, Tucson, AZ 85711"
+      },
+      "startsAt": "2026-08-20T13:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=496",
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=496",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:493",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "GOVERNING BOARD AGENDA SPECIAL MEETING  - Aug 25 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "status": "CONCLUDED",
+      "bodyName": "GOVERNING BOARD AGENDA SPECIAL MEETING",
+      "location": {
+        "lat": 32.228998,
+        "lng": -110.883029,
+        "name": "Duffy Community Center, Multipurpose Room",
+        "address": "5145 E. 5th Street, Tucson, AZ 85711"
+      },
+      "startsAt": "2026-08-25T16:30:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://govboard.tusd1.org/_theme/files/GovBoard/Docs/actions/08-25-2026S.pdf",
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=493",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "official-page-events:tusd1-reconfiguration:2026-08-29T0900:joint-committee-meeting",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Joint Committee Meeting",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "endsAt": "2026-08-29T16:00:00-07:00",
+      "status": "CONCLUDED",
+      "carried": {
+        "reason": "UNEXPLAINED_DISAPPEARANCE",
+        "source": "official-page-events",
+        "lastFreshAt": "2026-09-27T07:12:32.592Z"
+      },
+      "bodyName": "Tucson Unified School District",
+      "location": null,
+      "startsAt": "2026-08-29T09:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "venueGap": {
+        "kind": "NOT_STATED_BY_PUBLISHER",
+        "publisher": "Tucson Unified School District",
+        "publishedText": null
+      },
+      "agendaUrl": null,
+      "eventType": "Joint Committee meeting",
+      "provenance": {
+        "doorId": "meetings:official-page-events:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District",
+        "sourceUrl": "https://www.tusd1.org/Reconfiguration",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-27T07:12:32.592Z",
+        "evidenceExcerpt": "Joint Committee Meeting Aug 29, 2026 | The committee met on Saturday 8-29 from 9AM to 4PM to review crucial data around enrollment trends for TUSD and Pima County, school by school enrollment and budget data, and school by school space utilization and facilities data. The committee worked to develop possible scenarios for school re-configuration, consolidation, and school closure models."
+      },
+      "jurisdiction": "Tucson Unified School District, AZ",
+      "startPrecision": "MINUTE"
+    },
+    {
+      "id": "diligent:tusd1:498",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "GOVERNING BOARD AGENDA REGULAR MEETING - Sep 08 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "status": "CONCLUDED",
+      "bodyName": "GOVERNING BOARD AGENDA REGULAR MEETING",
+      "location": {
+        "lat": 32.228998,
+        "lng": -110.883029,
+        "name": "Duffy Community Center, Multipurpose Room",
+        "address": "5145 E. 5th Street, Tucson, AZ 85711"
+      },
+      "startsAt": "2026-09-08T16:30:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://govboard.tusd1.org/_theme/files/GovBoard/Docs/actions/09-08-2026R.pdf",
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=498",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:500",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "CANCELLED DUE TO LACK OF QUORUM Budget Advisory Committee Meeting Agenda - Sep 11 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "online": {
+        "label": "Via Zoom",
+        "joinUrl": null
+      },
+      "status": "CANCELED",
+      "bodyName": "Budget Advisory Committee Meeting Agenda",
+      "location": null,
+      "startsAt": "2026-09-11T16:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=500",
+      "eventType": "Joint Committee meeting",
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=500",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "fieldSources": {
+        "title": {
+          "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+          "sourceOrg": "Tucson Unified School District Governing Board",
+          "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=500",
+          "verifiedAt": null,
+          "collectedAt": "2026-10-12T22:53:52.442Z"
+        },
+        "online": {
+          "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+          "sourceOrg": "Tucson Unified School District Governing Board",
+          "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=500",
+          "verifiedAt": null,
+          "collectedAt": "2026-10-12T22:53:52.442Z"
+        },
+        "status": {
+          "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+          "sourceOrg": "Tucson Unified School District Governing Board",
+          "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=500",
+          "verifiedAt": null,
+          "collectedAt": "2026-10-12T22:53:52.442Z"
+        },
+        "bodyName": {
+          "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+          "sourceOrg": "Tucson Unified School District Governing Board",
+          "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=500",
+          "verifiedAt": null,
+          "collectedAt": "2026-10-12T22:53:52.442Z"
+        },
+        "location": {
+          "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+          "sourceOrg": "Tucson Unified School District Governing Board",
+          "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=500",
+          "verifiedAt": null,
+          "collectedAt": "2026-10-12T22:53:52.442Z"
+        },
+        "startsAt": {
+          "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+          "sourceOrg": "Tucson Unified School District Governing Board",
+          "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=500",
+          "verifiedAt": null,
+          "collectedAt": "2026-10-12T22:53:52.442Z"
+        },
+        "timeZone": {
+          "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+          "sourceOrg": "Tucson Unified School District Governing Board",
+          "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=500",
+          "verifiedAt": null,
+          "collectedAt": "2026-10-12T22:53:52.442Z"
+        },
+        "venueGap": {
+          "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+          "sourceOrg": "Tucson Unified School District Governing Board",
+          "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=500",
+          "verifiedAt": null,
+          "collectedAt": "2026-10-12T22:53:52.442Z"
+        },
+        "agendaUrl": {
+          "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+          "sourceOrg": "Tucson Unified School District Governing Board",
+          "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=500",
+          "verifiedAt": null,
+          "collectedAt": "2026-10-12T22:53:52.442Z"
+        },
+        "eventType": {
+          "doorId": "meetings:official-page-events:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+          "sourceOrg": "Tucson Unified School District",
+          "sourceUrl": "https://www.tusd1.org/Reconfiguration",
+          "verifiedAt": null,
+          "collectedAt": "2026-09-27T07:12:32.592Z",
+          "evidenceExcerpt": "Joint Committee Meeting Sept. 11, 2026"
+        },
+        "startPrecision": {
+          "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+          "sourceOrg": "Tucson Unified School District Governing Board",
+          "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=500",
+          "verifiedAt": null,
+          "collectedAt": "2026-10-12T22:53:52.442Z"
+        }
+      },
+      "jurisdiction": "Tucson Unified School District, AZ",
+      "mergedMeetingIds": [
+        "diligent:tusd1:500",
+        "official-page-events:tusd1-reconfiguration:2026-09-11:joint-committee-meeting"
+      ],
+      "publicationConflicts": [
+        {
+          "key": "diligent:tusd1:500:startsAt:official-page-events:tusd1-reconfiguration:2026-09-11:joint-committee-meeting",
+          "code": "CONFLICT_SUPERSEDED",
+          "detail": "Kept the higher source kind, then the newer read for startsAt.",
+          "record": {
+            "field": "startsAt",
+            "value": {
+              "startsAt": "2026-09-11T00:00:00-07:00",
+              "timeZone": "America/Phoenix",
+              "startPrecision": "DAY"
+            },
+            "source": {
+              "doorId": "meetings:official-page-events:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+              "sourceOrg": "Tucson Unified School District",
+              "sourceUrl": "https://www.tusd1.org/Reconfiguration",
+              "verifiedAt": null,
+              "collectedAt": "2026-09-27T07:12:32.592Z",
+              "evidenceExcerpt": "Joint Committee Meeting Sept. 11, 2026"
+            },
+            "memberId": "diligent:tusd1:500"
+          }
+        },
+        {
+          "key": "diligent:tusd1:500:location:official-page-events:tusd1-reconfiguration:2026-09-11:joint-committee-meeting",
+          "code": "CONFLICT_SUPERSEDED",
+          "detail": "Kept the higher source kind, then the newer read for location.",
+          "record": {
+            "field": "location",
+            "value": {
+              "online": null,
+              "location": null,
+              "venueGap": {
+                "kind": "NOT_STATED_BY_PUBLISHER",
+                "publisher": "Tucson Unified School District",
+                "publishedText": null
+              }
+            },
+            "source": {
+              "doorId": "meetings:official-page-events:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+              "sourceOrg": "Tucson Unified School District",
+              "sourceUrl": "https://www.tusd1.org/Reconfiguration",
+              "verifiedAt": null,
+              "collectedAt": "2026-09-27T07:12:32.592Z",
+              "evidenceExcerpt": "Joint Committee Meeting Sept. 11, 2026"
+            },
+            "memberId": "diligent:tusd1:500"
+          }
+        },
+        {
+          "key": "diligent:tusd1:500:title:official-page-events:tusd1-reconfiguration:2026-09-11:joint-committee-meeting",
+          "code": "CONFLICT_SUPERSEDED",
+          "detail": "Kept the higher source kind, then the newer read for title.",
+          "record": {
+            "field": "title",
+            "value": "Joint Committee Meeting",
+            "source": {
+              "doorId": "meetings:official-page-events:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+              "sourceOrg": "Tucson Unified School District",
+              "sourceUrl": "https://www.tusd1.org/Reconfiguration",
+              "verifiedAt": null,
+              "collectedAt": "2026-09-27T07:12:32.592Z",
+              "evidenceExcerpt": "Joint Committee Meeting Sept. 11, 2026"
+            },
+            "memberId": "diligent:tusd1:500"
+          }
+        },
+        {
+          "key": "diligent:tusd1:500:status:official-page-events:tusd1-reconfiguration:2026-09-11:joint-committee-meeting",
+          "code": "CONFLICT_SUPERSEDED",
+          "detail": "Kept the higher source kind, then the newer read for status.",
+          "record": {
+            "field": "status",
+            "value": "CONCLUDED",
+            "source": {
+              "doorId": "meetings:official-page-events:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+              "sourceOrg": "Tucson Unified School District",
+              "sourceUrl": "https://www.tusd1.org/Reconfiguration",
+              "verifiedAt": null,
+              "collectedAt": "2026-09-27T07:12:32.592Z",
+              "evidenceExcerpt": "Joint Committee Meeting Sept. 11, 2026"
+            },
+            "memberId": "diligent:tusd1:500"
+          }
+        },
+        {
+          "key": "diligent:tusd1:500:bodyName:official-page-events:tusd1-reconfiguration:2026-09-11:joint-committee-meeting",
+          "code": "CONFLICT_SUPERSEDED",
+          "detail": "Kept the higher source kind, then the newer read for bodyName.",
+          "record": {
+            "field": "bodyName",
+            "value": "Tucson Unified School District",
+            "source": {
+              "doorId": "meetings:official-page-events:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+              "sourceOrg": "Tucson Unified School District",
+              "sourceUrl": "https://www.tusd1.org/Reconfiguration",
+              "verifiedAt": null,
+              "collectedAt": "2026-09-27T07:12:32.592Z",
+              "evidenceExcerpt": "Joint Committee Meeting Sept. 11, 2026"
+            },
+            "memberId": "diligent:tusd1:500"
+          }
+        }
+      ]
+    },
+    {
+      "id": "diligent:tusd1:497",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Employee Benefit Trust Committee - Sep 14 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "online": {
+        "label": "Via Zoom Webinar",
+        "joinUrl": null
+      },
+      "status": "CONCLUDED",
+      "bodyName": "Employee Benefit Trust Committee",
+      "location": null,
+      "startsAt": "2026-09-14T17:30:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=497",
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=497",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:501",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Audit Committee Meeting Agenda - Sep 16 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "status": "CONCLUDED",
+      "bodyName": "Audit Committee Meeting Agenda",
+      "location": {
+        "lat": 32.227718949643,
+        "lng": -110.975886883124,
+        "name": "B-1 MPR 220 W. 6th Street Tucson, Arizona 85701",
+        "address": "B-1 MPR 220 W. 6th Street Tucson, Arizona 85701"
+      },
+      "startsAt": "2026-09-16T14:30:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=501",
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=501",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:502",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Bond Oversight Committee Meeting Agenda - Sep 17 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "status": "CONCLUDED",
+      "bodyName": "Bond Oversight Committee Meeting Agenda",
+      "location": {
+        "lat": 32.228998,
+        "lng": -110.883029,
+        "name": "Duffy Community Center, Multipurpose Room",
+        "address": "5145 E. 5th Street, Tucson, AZ 85711"
+      },
+      "startsAt": "2026-09-17T13:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=502",
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=502",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:499",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "GOVERNING BOARD AGENDA SPECIAL MEETING  - Sep 22 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "status": "CONCLUDED",
+      "bodyName": "GOVERNING BOARD AGENDA SPECIAL MEETING",
+      "location": {
+        "lat": 32.228998,
+        "lng": -110.883029,
+        "name": "Duffy Community Center, Multipurpose Room",
+        "address": "5145 E. 5th Street, Tucson, AZ 85711"
+      },
+      "startsAt": "2026-09-22T16:30:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://govboard.tusd1.org/_theme/files/GovBoard/Docs/actions/09-22-2026S.pdf",
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=499",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "official-page-events:tusd1-reconfiguration:2026-09-23T1600:community-engagement-session",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Tucson Unified Facility Plans Community Engagement",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "endsAt": "2026-09-23T18:30:00-07:00",
+      "status": "CONCLUDED",
+      "carried": {
+        "reason": "UNEXPLAINED_DISAPPEARANCE",
+        "source": "official-page-events",
+        "lastFreshAt": "2026-09-24T05:55:08.378Z"
+      },
+      "bodyName": "Tucson Unified School District",
+      "location": {
+        "lat": 32.20685,
+        "lng": -111.009039,
+        "name": "Cholla High School, South Gym",
+        "address": "2001 W. Starr Pass Blvd., Tucson, AZ 85713"
+      },
+      "startsAt": "2026-09-23T16:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "eventType": "Community engagement session",
+      "provenance": {
+        "doorId": "meetings:official-page-events:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District",
+        "sourceUrl": "https://www.tusd1.org/Reconfiguration",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-24T05:55:08.378Z",
+        "evidenceExcerpt": "Tucson Unified Facility Plans Community Engagement | 9/23/2026 | Cholla High School South Gym | 4:00pm - 6:30pm | Consolidation | Cholla High School | RSVP for Community Engagement"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ",
+      "publishedLinks": [
+        {
+          "href": "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=4FBwvMxLCUiSReqLZQhIZa4kKLedfjFIgzfv0x9F3ChUNjIwT0w3SDdDNTIySEdUTDQxN1BZMU02NSQlQCN0PWcu",
+          "label": "RSVP for Community Engagement"
+        }
+      ],
+      "startPrecision": "MINUTE"
+    },
+    {
+      "id": "official-page-events:tusd1-reconfiguration:2026-09-26T0900:community-engagement-session",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Tucson Unified Facility Plans Community Engagement",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "endsAt": "2026-09-26T11:30:00-07:00",
+      "status": "CONCLUDED",
+      "carried": {
+        "reason": "UNEXPLAINED_DISAPPEARANCE",
+        "source": "official-page-events",
+        "lastFreshAt": "2026-09-26T18:40:16.105Z"
+      },
+      "bodyName": "Tucson Unified School District",
+      "location": {
+        "lat": 32.227621,
+        "lng": -110.962451,
+        "name": "Tucson High Magnet School, East Gym",
+        "address": "400 N. 2nd Ave., Tucson, AZ 85705"
+      },
+      "startsAt": "2026-09-26T09:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "eventType": "Community engagement session",
+      "provenance": {
+        "doorId": "meetings:official-page-events:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District",
+        "sourceUrl": "https://www.tusd1.org/Reconfiguration",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-26T18:40:16.105Z",
+        "evidenceExcerpt": "Tucson Unified Facility Plans Community Engagement | 9/26/2026 | Tucson High Magnet School East Gym | 9:00am - 11:30am | Consolidation | Tucson High Magnet | RSVP for Community Engagement"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ",
+      "publishedLinks": [
+        {
+          "href": "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=4FBwvMxLCUiSReqLZQhIZa4kKLedfjFIgzfv0x9F3ChUNjIwT0w3SDdDNTIySEdUTDQxN1BZMU02NSQlQCN0PWcu",
+          "label": "RSVP for Community Engagement"
+        }
+      ],
+      "startPrecision": "MINUTE"
+    },
+    {
+      "id": "diligent:tusd1:503",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Alternative Education Advisory Committee Meeting Agenda - Sep 28 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "online": {
+        "label": "Via Zoom Webinar",
+        "joinUrl": null
+      },
+      "status": "CONCLUDED",
+      "bodyName": "Alternative Education Advisory Committee Meeting Agenda",
+      "location": null,
+      "startsAt": "2026-09-28T18:15:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=503",
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=503",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:505",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Budget Advisory Committee Meeting Agenda - Sep 30 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "online": {
+        "label": "Via Zoom",
+        "joinUrl": null
+      },
+      "status": "CONCLUDED",
+      "bodyName": "Budget Advisory Committee Meeting Agenda",
+      "location": null,
+      "startsAt": "2026-09-30T16:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=505",
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=505",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "official-page-events:tusd1-reconfiguration:2026-10-01:joint-committee-meeting",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Joint Committee Meeting",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "status": "CONCLUDED",
+      "carried": {
+        "reason": "UNEXPLAINED_DISAPPEARANCE",
+        "source": "official-page-events",
+        "lastFreshAt": "2026-09-27T07:12:32.592Z"
+      },
+      "bodyName": "Tucson Unified School District",
+      "location": null,
+      "startsAt": "2026-10-01T00:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "venueGap": {
+        "kind": "NOT_STATED_BY_PUBLISHER",
+        "publisher": "Tucson Unified School District",
+        "publishedText": null
+      },
+      "agendaUrl": null,
+      "eventType": "Joint Committee meeting",
+      "provenance": {
+        "doorId": "meetings:official-page-events:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District",
+        "sourceUrl": "https://www.tusd1.org/Reconfiguration",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-27T07:12:32.592Z",
+        "evidenceExcerpt": "Joint Committee Meeting Sept. 11, 2026 | Next Meeting October 1, 2026"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ",
+      "startPrecision": "DAY"
+    },
+    {
+      "id": "diligent:tusd1:504",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Employee Benefit Trust Committee - Oct 05 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "online": {
+        "label": "Via Zoom Webinar",
+        "joinUrl": null
+      },
+      "status": "CONCLUDED",
+      "bodyName": "Employee Benefit Trust Committee",
+      "location": null,
+      "startsAt": "2026-10-05T17:30:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=504",
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=504",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:2026-10-06T1630-governing-board",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "GOVERNING BOARD AGENDA REGULAR MEETING - Oct 06 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "status": "CONCLUDED",
+      "bodyName": "GOVERNING BOARD AGENDA REGULAR MEETING",
+      "location": {
+        "lat": 32.228998,
+        "lng": -110.883029,
+        "name": "Duffy Community Center, Multipurpose Room",
+        "address": "5145 E. 5th Street, Tucson, AZ 85711"
+      },
+      "startsAt": "2026-10-06T16:30:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://govboard.tusd1.org/_theme/files/GovBoard/Docs/actions/10-06-2026R.pdf",
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=506",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:2026-10-07T1600-budget-advisory",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Budget Advisory Committee Meeting Agenda - Oct 07 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "online": {
+        "label": "Via Zoom",
+        "joinUrl": null
+      },
+      "status": "CONCLUDED",
+      "bodyName": "Budget Advisory Committee Meeting Agenda",
+      "location": null,
+      "startsAt": "2026-10-07T16:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=509",
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=509",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:2026-10-19T1800-alternative-education-advisory",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Alternative Education Advisory Committee Meeting Agenda - Oct 19 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "online": {
+        "label": "Via Zoom Webinar",
+        "joinUrl": null
+      },
+      "status": "SCHEDULED",
+      "bodyName": "Alternative Education Advisory Committee Meeting Agenda",
+      "location": null,
+      "startsAt": "2026-10-19T18:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=512",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:2026-10-20T1700-governing-board",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "GOVERNING BOARD AGENDA SPECIAL EXECUTIVE SESSION MEETING - Oct 20 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "online": {
+        "label": "via Zoom",
+        "joinUrl": null
+      },
+      "status": "SCHEDULED",
+      "bodyName": "GOVERNING BOARD AGENDA SPECIAL EXECUTIVE SESSION MEETING",
+      "location": null,
+      "startsAt": "2026-10-20T17:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=510",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:2026-10-20T1700-governing-board-10-20-2026",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Governing Board Meeting 10/20/2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "online": {
+        "label": "Via Zoom",
+        "joinUrl": null
+      },
+      "status": "SCHEDULED",
+      "bodyName": "Governing Board Meeting 10/20/2026",
+      "location": null,
+      "startsAt": "2026-10-20T17:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://govboard.tusd1.org/inflow/xti/inCal.aspx?PID=36871&C=0&D=2026-10-01&V=12",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:2026-10-21T1430-audit",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Audit Committee Meeting Agenda - Oct 21 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "status": "SCHEDULED",
+      "bodyName": "Audit Committee Meeting Agenda",
+      "location": {
+        "lat": 32.227718949643,
+        "lng": -110.975886883124,
+        "name": "Morrow Education Center 220 W. 6th Street Tucson, Arizona 85701",
+        "address": "Morrow Education Center 220 W. 6th Street Tucson, Arizona 85701"
+      },
+      "startsAt": "2026-10-21T14:30:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=513",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:2026-10-21T1600-budget-advisory",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Budget Advisory Committee Meeting Agenda - Oct 21 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "online": {
+        "label": "Via Zoom",
+        "joinUrl": null
+      },
+      "status": "SCHEDULED",
+      "bodyName": "Budget Advisory Committee Meeting Agenda",
+      "location": null,
+      "startsAt": "2026-10-21T16:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=514",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:2026-10-22T1300-bond-oversight",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Bond Oversight Committee Meeting",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "status": "SCHEDULED",
+      "carried": {
+        "reason": "UNEXPLAINED_DISAPPEARANCE",
+        "source": "diligent",
+        "lastFreshAt": "2026-10-04T14:02:12.468Z"
+      },
+      "bodyName": "Bond Oversight Committee",
+      "location": {
+        "lat": 32.228998,
+        "lng": -110.883029,
+        "name": "Duffy Community Center, Multipurpose Room",
+        "address": "5145 E. 5th Street, Tucson, AZ 85711"
+      },
+      "startsAt": "2026-10-22T13:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://govboard.tusd1.org/inflow/xti/inCal.aspx?PID=36871&C=0&D=2026-10-01&V=12",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-04T14:02:12.468Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:2026-10-22T1730-bond-oversight",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Bond Oversight Committee Meeting Agenda - Oct 22 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "status": "SCHEDULED",
+      "bodyName": "Bond Oversight Committee Meeting Agenda",
+      "location": {
+        "lat": 32.228998,
+        "lng": -110.883029,
+        "name": "Duffy Community Center, Multipurpose Room",
+        "address": "5145 E. 5th Street, Tucson, AZ 85711"
+      },
+      "startsAt": "2026-10-22T17:30:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=517",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:2026-10-27T1630-governing-board",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "GOVERNING BOARD AGENDA SPECIAL MEETING  - Oct 27 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "status": "SCHEDULED",
+      "bodyName": "GOVERNING BOARD AGENDA SPECIAL MEETING",
+      "location": null,
+      "startsAt": "2026-10-27T16:30:00-07:00",
+      "timeZone": "America/Phoenix",
+      "venueGap": {
+        "kind": "STATED_NOT_PLACED",
+        "publisher": "Tucson Unified School District Governing Board",
+        "publishedText": "Palo Verde High School Auditorium, 1302 S. Avenida Vega, Tucson, AZ 85710"
+      },
+      "agendaUrl": null,
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=511",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:2026-11-04T1600-budget-advisory",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Budget Advisory Committee Meeting Agenda - Nov 04 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "online": {
+        "label": "Via Zoom",
+        "joinUrl": null
+      },
+      "status": "SCHEDULED",
+      "bodyName": "Budget Advisory Committee Meeting Agenda",
+      "location": null,
+      "startsAt": "2026-11-04T16:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=516",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:2026-11-17T1630-governing-board",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Governing Board Meeting",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "status": "SCHEDULED",
+      "bodyName": "Governing Board",
+      "location": {
+        "lat": 32.228998,
+        "lng": -110.883029,
+        "name": "Duffy Community Center, Multipurpose Room",
+        "address": "5145 E. 5th Street, Tucson, AZ 85711"
+      },
+      "startsAt": "2026-11-17T16:30:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://govboard.tusd1.org/inflow/xti/inCal.aspx?PID=36871&C=0&D=2026-11-01&V=12",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:2026-11-18T1600-budget-advisory",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Budget Advisory Committee Meeting",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "online": {
+        "label": "Via Zoom",
+        "joinUrl": null
+      },
+      "status": "SCHEDULED",
+      "bodyName": "Budget Advisory Committee",
+      "location": null,
+      "startsAt": "2026-11-18T16:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://govboard.tusd1.org/inflow/xti/inCal.aspx?PID=36871&C=0&D=2026-11-01&V=12",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:2026-11-19T1300-bond-oversight",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Bond Oversight Committee Meeting",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "status": "SCHEDULED",
+      "bodyName": "Bond Oversight Committee",
+      "location": {
+        "lat": 32.228998,
+        "lng": -110.883029,
+        "name": "Duffy Community Center, Multipurpose Room",
+        "address": "5145 E. 5th Street, Tucson, AZ 85711"
+      },
+      "startsAt": "2026-11-19T13:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://govboard.tusd1.org/inflow/xti/inCal.aspx?PID=36871&C=0&D=2026-11-01&V=12",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:2026-12-02T1600-budget-advisory",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Budget Advisory Committee Meeting",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "online": {
+        "label": "Via Zoom",
+        "joinUrl": null
+      },
+      "status": "SCHEDULED",
+      "bodyName": "Budget Advisory Committee",
+      "location": null,
+      "startsAt": "2026-12-02T16:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://govboard.tusd1.org/inflow/xti/inCal.aspx?PID=36871&C=0&D=2026-12-01&V=12",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:2026-12-08T1630-governing-board",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Governing Board Meeting",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "status": "SCHEDULED",
+      "bodyName": "Governing Board",
+      "location": {
+        "lat": 32.228998,
+        "lng": -110.883029,
+        "name": "Duffy Community Center, Multipurpose Room",
+        "address": "5145 E. 5th Street, Tucson, AZ 85711"
+      },
+      "startsAt": "2026-12-08T16:30:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://govboard.tusd1.org/inflow/xti/inCal.aspx?PID=36871&C=0&D=2026-12-01&V=12",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:2026-12-09T1600-budget-advisory",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Budget Advisory Committee Meeting",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "online": {
+        "label": "Via Zoom",
+        "joinUrl": null
+      },
+      "status": "SCHEDULED",
+      "bodyName": "Budget Advisory Committee",
+      "location": null,
+      "startsAt": "2026-12-09T16:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://govboard.tusd1.org/inflow/xti/inCal.aspx?PID=36871&C=0&D=2026-12-01&V=12",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:2026-12-16T1600-budget-advisory",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Budget Advisory Committee Meeting",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "online": {
+        "label": "Via Zoom",
+        "joinUrl": null
+      },
+      "status": "SCHEDULED",
+      "bodyName": "Budget Advisory Committee",
+      "location": null,
+      "startsAt": "2026-12-16T16:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://govboard.tusd1.org/inflow/xti/inCal.aspx?PID=36871&C=0&D=2026-12-01&V=12",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:2027-01-06T1600-budget-advisory",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Budget Advisory Committee Meeting",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "online": {
+        "label": "Via Zoom",
+        "joinUrl": null
+      },
+      "status": "SCHEDULED",
+      "bodyName": "Budget Advisory Committee",
+      "location": null,
+      "startsAt": "2027-01-06T16:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "doorId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://govboard.tusd1.org/inflow/xti/inCal.aspx?PID=36871&C=0&D=2027-01-01&V=12",
+        "verifiedAt": null,
+        "collectedAt": "2026-10-12T22:53:52.442Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    }
+  ],
+  "commentAccess": [
+    {
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "attend": null,
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "signup": "Complete a Request to Address Board form and give it to Board staff \u2014 electronically to the Board office by noon on the day of the meeting, or in person at the meeting any time before Call to the Audience closes. The form must name the speaker and the topic, and say whether the comments relate to an agenda item.",
+      "sourceUrl": "https://govboard.tusd1.org/Policy-Code-BEDH",
+      "timeLimit": "Up to three minutes per speaker, or per written comment read aloud. The presiding officer may shorten it when many people have signed up, and speakers may not give their time to someone else.",
+      "verifiedAt": "2026-08-18",
+      "collectedAt": "2026-08-18",
+      "commentPeriod": "YES",
+      "writtenComment": "The same form asks whether you want to speak in person or have your comments read into the record by the Governing Board Clerk. All written comments go to Board members whether or not they are read aloud.",
+      "commentPeriodDetail": "Call to the Audience. The comment period is 45 minutes at regular meetings and 20 minutes at special meetings, and is extended only by the Board's approval. Speakers whose comments relate to an item on the agenda are taken first; the rest are taken in the order their forms arrived."
+    }
+  ]
+}

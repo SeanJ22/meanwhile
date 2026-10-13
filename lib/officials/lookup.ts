@@ -1,4 +1,5 @@
-import { isJurisdictionSegment } from "../ocd/fips.ts";
+import { stateOcdIdFrom } from "../ocd/state-division.ts";
+export { stateOcdIdFrom } from "../ocd/state-division.ts";
 import type { Provenance } from "../sources/types.ts";
 
 import { campaignSiteFor } from "./campaign-sites.ts";
@@ -19,6 +20,8 @@ export interface SeatHolder {
   personId?: string;
   nativeIds?: Officeholder["nativeIds"];
   memberships?: Officeholder["memberships"];
+  selectionMethod?: Officeholder["selectionMethod"];
+  selectionMethodSourceUrl?: string;
   name: string;
   officeTitle: string;
   /** The jurisdiction owning this office when the holder came from a body-scoped roster; presentation context only. */
@@ -64,6 +67,8 @@ export function seatHolderForMembership(holder: SeatHolder, membershipId?: strin
   const membership = membershipId ? holder.memberships?.find(row=>row.id === membershipId && row.current !== false) : undefined;
   if (!membership) return membershipId ? null : holder;
   return {...holder,officeTitle:membership.officeTitle ?? holder.officeTitle,
+    selectionMethod:membership.selectionMethod ?? holder.selectionMethod,
+    selectionMethodSourceUrl:membership.selectionMethodSourceUrl ?? holder.selectionMethodSourceUrl,
     officeJurisdictionOcdId:membership.divisionId ?? holder.officeJurisdictionOcdId,
     chamber:membership.chamber,termStart:membership.termStart ?? null,termEnd:membership.termEnd ?? null,
     sourceUrl:membership.sourceUrl};
@@ -88,6 +93,8 @@ function toSeatHolder(person: Officeholder, photos?: PhotoIndex): SeatHolder {
     personId: person.personId ?? person.id,
     nativeIds: person.nativeIds,
     memberships: person.memberships,
+    selectionMethod: person.selectionMethod,
+    selectionMethodSourceUrl: person.selectionMethodSourceUrl,
     fieldSources: person.fieldSources ? { ...person.fieldSources } : undefined,
     name: person.name,
     officeTitle: person.officeTitle,
@@ -139,12 +146,6 @@ export function indexByDivision(
   }
 
   return index;
-}
-
-/** The state division identifier implied by any division identifier, as its OCD prefix. */
-export function stateOcdIdFrom(ocdId: string): string | null {
-  const match = /^(ocd-division\/country:us\/(state|district|territory):([a-z]{2}))(\/|$)/.exec(ocdId);
-  return match && isJurisdictionSegment(match[2], match[3]) ? match[1] : null;
 }
 
 /** Everyone holding a seat for this division. Empty is a real answer. */

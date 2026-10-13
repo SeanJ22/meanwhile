@@ -3,6 +3,8 @@ export const SYNTHESIS_CACHE_TTL = {
   milliseconds: 5 * 60 * 1000,
   // A 5-minute TTL is the API default and is sent by omitting `ttl`.
   cacheControl: { type: "ephemeral" } as const,
+  // Shared role instructions have no ZIP, evidence, date or question and survive between jobs.
+  stableCacheControl: { type: "ephemeral", ttl: "1h" } as const,
   why:
     "Five minutes, for three reasons that are about THIS traffic rather than about caching in " +
     "general. First, a cache read refreshes the entry's timer at no additional cost, and the " +

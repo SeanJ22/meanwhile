@@ -199,7 +199,37 @@ export function coherentMidpoint(
   };
 }
 
+export interface StreetPoint {
+  lat: number;
+  lng: number;
+  /** The street as the reader typed it, for the line the card renders. */
+  street: string;
+  /** How many sampled numbers matched. Rendered nowhere; carried for tests. */
+  samples: number;
+  /** The widest gap between samples, km. Always <= MAX_SPREAD_KM. */
+  spreadKm: number;
+}
+
+/**
+ * What a street lookup can honestly conclude: not found, a single point, or
+ * a street that crosses jurisdictions (`CROSSES`), which a house number can
+ * resolve. The house number is used for the geocode and never logged or
+ * stored.
+ */
+export type StreetLookup =
+  | { kind: "POINT"; point: StreetPoint }
+  | {
+      kind: "CROSSES";
+      /** The street as typed, cleaned — what the question is about. */
+      street: string;
+      /** How far the samples spread, km. Carried for tests, rendered nowhere. */
+      spreadKm: number;
+    }
+  | { kind: "NOT_FOUND" };
+
 export interface GeocodeOptions {
+  /** Postal entry supplies city/state instead of treating a mail-only ZIP as a residential boundary. */
+  omitZip?: boolean;
   fetchImpl?: typeof fetch;
   signal?: AbortSignal;
   /** The reader is waiting on this; a slow answer is a no answer. */
@@ -248,7 +278,7 @@ async function sampleStreet(
     options.signal?.addEventListener("abort", onOuterAbort);
     try {
       const point = await geocodeOnce(
-        `${number} ${cleaned}, ${zip}`,
+        `${number} ${cleaned}${options.omitZip ? "" : `, ${zip}`}`,
         impl,
         controller.signal,
       );
@@ -261,4 +291,169 @@ async function sampleStreet(
     }
   }
   return points;
+}
+
+export async function locateStreetInZip(
+  street: string,
+  zip: string,
+  options: GeocodeOptions = {},
+): Promise<StreetPoint | null> {
+  const cleaned = streetOnly(street);
+  if (cleaned.length < 3 || !/^\d{5}$/.test(zip)) return null;
+
+  const points = await sampleStreet(
+    cleaned,
+    zip,
+    options,
+    sampleNumbersFor(houseNumberIn(street)),
+  );
+  const midpoint = coherentMidpoint(points);
+  if (!midpoint) return null;
+
+  return {
+    lat: midpoint.lat,
+    lng: midpoint.lng,
+    street: cleaned,
+    samples: points.length,
+    spreadKm: midpoint.spreadKm,
+  };
+}
+
+/** The widest gap between a set of points, km. */
+function spreadOf(points: readonly { lat: number; lng: number }[]): number {
+  let spreadKm = 0;
+  for (const a of points) {
+    for (const b of points) {
+      spreadKm = Math.max(spreadKm, haversineKm(a.lat, a.lng, b.lat, b.lng));
+    }
+  }
+  return spreadKm;
+}
+
+/**
+ * The same lookup, able to say which kind of no it is: the street we cannot
+ * find, or the street that crosses district lines.
+ */
+export async function lookupStreetInZip(
+  street: string,
+  zip: string,
+  options: GeocodeOptions = {},
+): Promise<StreetLookup> {
+  const cleaned = streetOnly(street);
+  if (cleaned.length < 3 || !/^\d{5}$/.test(zip)) return { kind: "NOT_FOUND" };
+
+  const points = await sampleStreet(
+    cleaned,
+    zip,
+    options,
+    sampleNumbersFor(houseNumberIn(street)),
+  );
+  if (points.length === 0) return { kind: "NOT_FOUND" };
+
+  const midpoint = coherentMidpoint(points);
+  if (midpoint) {
+    return {
+      kind: "POINT",
+      point: {
+        lat: midpoint.lat,
+        lng: midpoint.lng,
+        street: cleaned,
+        samples: points.length,
+        spreadKm: midpoint.spreadKm,
+      },
+    };
+  }
+
+  // Matches that disagree: the street is real; which point is the reader's is a question.
+  return { kind: "CROSSES", street: cleaned, spreadKm: spreadOf(points) };
+}
+
+/**
+ * One exact address, on the device: the answer to the crossing question. The
+ * house number is used here only; not returned, logged or stored.
+ */
+export async function locateAddressInZip(
+  houseNumber: string,
+  street: string,
+  zip: string,
+  options: GeocodeOptions = {},
+): Promise<StreetPoint | null> {
+  const number = houseNumber.trim().replace(/[^0-9a-z-]/gi, "");
+  const cleaned = streetOnly(street);
+  if (!number || cleaned.length < 3 || !/^\d{5}$/.test(zip)) return null;
+
+  const impl = options.fetchImpl ?? fetch;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), options.timeoutMs ?? 8000);
+  const onOuterAbort = () => controller.abort();
+  options.signal?.addEventListener("abort", onOuterAbort);
+  try {
+    const point = await geocodeOnce(
+      `${number} ${cleaned}${options.omitZip ? "" : `, ${zip}`}`,
+      impl,
+      controller.signal,
+    );
+    if (!point) return null;
+    return {
+      lat: point.lat,
+      lng: point.lng,
+      // The street, never the full address.
+      street: cleaned,
+      samples: 1,
+      spreadKm: 0,
+    };
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+    options.signal?.removeEventListener("abort", onOuterAbort);
+  }
+}
+
+/**
+ * Where does this address actually resolve? Asks the geocoder without the
+ * ZIP constraint and reads back the ZIP it matched. Runs only after an in-ZIP
+ * attempt has failed. Null on anything but a clean, different, five-digit answer.
+ */
+export async function zipThisAddressResolvesTo(
+  houseNumber: string,
+  street: string,
+  statedZip: string,
+  options: GeocodeOptions = {},
+): Promise<string | null> {
+  const number = houseNumber.trim().replace(/[^0-9a-z-]/gi, "");
+  const cleaned = streetOnly(street);
+  if (!number || cleaned.length < 3 || !/^\d{5}$/.test(statedZip)) return null;
+
+  const impl = options.fetchImpl ?? fetch;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), options.timeoutMs ?? 8000);
+  const onOuterAbort = () => controller.abort();
+  options.signal?.addEventListener("abort", onOuterAbort);
+  try {
+    /* No ZIP in the query. */
+    const address = `${number} ${cleaned}`;
+    const response =
+      typeof window === "undefined"
+        ? await impl(censusGeocodeUrl(address), {
+            headers: { accept: "application/json" },
+            signal: controller.signal,
+          })
+        : await impl(GEOCODE_PROXY_PATH, {
+            method: "POST",
+            headers: { "content-type": "application/json", accept: "application/json" },
+            body: JSON.stringify({ address }),
+            signal: controller.signal,
+          });
+    if (!response.ok) return null;
+    const payload = await response.json();
+    const matched = typeof window === "undefined" ? parseCensusZip(payload) : typeof payload.zip === "string" && /^\d{5}$/.test(payload.zip) ? payload.zip : null;
+    /* The same ZIP is not a redirect; there is nothing to offer. */
+    return matched !== null && matched !== statedZip ? matched : null;
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+    options.signal?.removeEventListener("abort", onOuterAbort);
+  }
 }

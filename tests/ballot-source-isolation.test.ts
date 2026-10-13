@@ -2,6 +2,11 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
+import * as React from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import ts from "typescript";
+import { CardGapContribution } from "../components/ui/card-gap-context.tsx";
+import { GENERIC_BALLOT_SCOPE } from "../lib/ballot/generic-projection.ts";
 
 import { getCandidateTargetIds } from "../lib/ballot/candidate-targets.ts";
 import {
@@ -20,10 +25,13 @@ import {
 } from "../lib/ballot/auxiliary-preloads.ts";
 import { readNhBallotProjection } from "../lib/civic-data/manual-read-models.ts";
 import type { NhBallotProjection } from "../lib/civic-data/manual-projections.ts";
-import { installAzBallot, installManualValue, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
+import { installAbsent, installAzBallot, installManualValue, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
 
 // The AZ and NH ballots' promoted pointers, each a small synthetic ballot
 // holding one statewide governor contest with one candidacy.
+// Make the separate generic source explicitly absent: a configured workspace
+// database must not add an unrelated store failure to this isolation test.
+installAbsent("BALLOT_CANDIDACY", GENERIC_BALLOT_SCOPE);
 const azBallot = syntheticAzBallot([{
   id: "ballot-az-pima:governor",
   title: "Governor",
@@ -212,7 +220,8 @@ test("all production ballot entry points use state-scoped selection", () => {
     "supporting authorities were opened before the requested ballot authority was selected",
   );
   assert.match(page, /data-ballot-canonical-holding-gaps/);
-  assert.match(page, /data-ballot-authority-unavailable/);
+  assert.match(page, /<CardGapContribution id=\{`ballot-holding:\$\{family\}`\} label=\{HOLDING_LABEL\[family\]\}/,
+    "supporting authority failures contribute to the card footer");
   assert.match(page, /matched\.contests\.some\(nhLegislativeRosterAppliesTo\)/);
   assert.match(page, /auxiliaryPreloads\.set\("nh-members", settleNhSeatHolders\)/);
 
@@ -223,4 +232,32 @@ test("all production ballot entry points use state-scoped selection", () => {
 
   const demand = readFileSync(join(process.cwd(), "app/api/demand-signal/route.ts"), "utf8");
   assert.match(demand, /getCandidateTargetIds\(submission\.subjectId\)/);
+});
+
+
+test("supporting authority failures contribute reader labels without field placeholders", () => {
+  const page = ts.createSourceFile("ballot.tsx", readFileSync("app/ballot/page.tsx", "utf8"), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  const all: ts.Node[] = [];
+  const visit = (node: ts.Node) => { all.push(node); ts.forEachChild(node, visit); };
+  visit(page);
+  const labels = all.find(node => ts.isVariableDeclaration(node) && node.name.getText(page) === "HOLDING_LABEL");
+  const unavailable = all.find(node => ts.isFunctionDeclaration(node) && node.name?.text === "unavailableHolding");
+  assert.ok(labels && unavailable);
+  const executable = ts.transpileModule(`const ${labels.getText(page)}; ${unavailable.getText(page)}; return unavailableHolding;`, {
+    compilerOptions: { jsx: ts.JsxEmit.React, target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None },
+  }).outputText;
+  const render = new Function("React", "CardGapContribution", executable)(React, CardGapContribution);
+  for (const [family, label] of [
+    ["candidate-publication", "public positions"],
+    ["officeholder-directory", "officeholder information"],
+    ["candidate-profile", "candidate background"],
+    ["federal campaign-finance", "campaign money"],
+    ["state campaign-finance", "campaign money"],
+  ]) {
+    const gap = render(family);
+    assert.equal(gap.type, CardGapContribution);
+    assert.equal(gap.props.id, `ballot-holding:${family}`);
+    assert.equal(gap.props.label, label);
+    assert.equal(renderToStaticMarkup(gap), "", "only the card footer displays the missing information");
+  }
 });

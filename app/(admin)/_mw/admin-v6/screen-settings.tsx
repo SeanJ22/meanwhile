@@ -1,5 +1,8 @@
 "use client";
 
+import type { playbookEditView } from "@/lib/control-plane/playbook-edit.ts";
+import { PlaybookEditor, type PlaybookSend } from "./playbook-editor.tsx";
+import { savePlaybook } from "./playbook-send.ts";
 import type { SettingRow, SettingsView } from "@/lib/control-plane/admin-view/v6-settings-read.ts";
 
 import type { ActionRef } from "./model.ts";
@@ -7,6 +10,9 @@ import { mst } from "./model.ts";
 import { Actions, Card, cx, Empty, Loading, Pill } from "./ui.tsx";
 import { useReading } from "./use-reading.ts";
 import s from "./v6.module.css";
+
+export const PLAYBOOKS_ROUTE = "/api/admin/v6/playbooks";
+type PlaybooksView = { observedAt: string; safetyFrame: string; rows: ReturnType<typeof playbookEditView>[] };
 
 export const SETTINGS_ROUTE = "/api/admin/v6/settings";
 
@@ -19,7 +25,7 @@ export function settingActions(row: SettingRow): readonly ActionRef[] {
     ];
   }
   return [
-    { kind: "setting-set", target: row.key, label: "Change", payload: { name: row.label, control: row.control, current: row.valueInput, now: row.valueWords } },
+    { kind: "setting-set", target: row.key, label: "Change", payload: { name: row.label, control: row.control, current: row.valueInput, now: row.valueWords, ...(row.choices ? { choices: JSON.stringify(row.choices) } : {}) } },
     ...(row.undo ? [{ kind: "setting-undo" as const, target: row.key, label: `Undo (back to ${row.undo.valueWords})`,
       payload: { name: row.label, now: row.valueWords, value: row.undo.value, valueWords: row.undo.valueWords, undoOf: row.undo.changeId } }] : []),
   ];
@@ -70,11 +76,29 @@ function SettingCard(props: { readonly row: SettingRow }) {
 
 export function SettingsScreen() {
   const { reading, reload } = useReading<SettingsView>(SETTINGS_ROUTE, 20_000);
+  const books = useReading<PlaybooksView>(PLAYBOOKS_ROUTE, 20_000);
+  async function sendPlaybook(send: PlaybookSend, key: string) {
+    const says = await savePlaybook(send, key);
+    books.reload();
+    return says;
+  }
   const data = reading.kind === "ready" ? reading.data : null;
   return (
     <Card title="Settings" id="settings">
       {reading.kind === "loading" && <Loading what="the settings" />}
       {reading.kind === "failed" && <p className={s.p}>— <button type="button" className={s.btn} onClick={reload}>Try again</button></p>}
+      <div className={s.stack}>
+        <h3 className={s.h3}>Worker instructions</h3>
+        {books.reading.kind === "loading" && <Loading what="the worker instructions" />}
+        {books.reading.kind === "failed" && <p role="status">Worker instructions could not be read. <button className={s.btn} onClick={books.reload}>Try again</button></p>}
+        {books.reading.kind === "ready" && <>
+          {books.reading.stale && <p role="status">These instructions could not be refreshed. <button className={s.btn} onClick={books.reload}>Try again</button></p>}
+          <details><summary>Required safety rules (read only)</summary><p>{books.reading.data.safetyFrame}</p></details>
+          {books.reading.data.rows.map(row => <details key={row.role}><summary>{row.label}{row.stuck ? " · Stuck" : ""}</summary>
+            <PlaybookEditor key={`${row.role}:${row.version}`} row={row} onSend={sendPlaybook} />
+          </details>)}
+        </>}
+      </div>
       {data && (
         <div className={s.stack}>
           {!data.rows.length && <Empty>No settings</Empty>}

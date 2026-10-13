@@ -5,7 +5,7 @@
  * Next writes for each server bundle and fails if any traced file sits under a non-shipping prefix. It is skipped
  * with a named reason when `.next` has not been built, rather than silently passing.
  */
-import test from "node:test";
+import test from "./helpers/playbooks.ts";
 import assert from "node:assert/strict";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join, resolve, dirname, sep } from "node:path";

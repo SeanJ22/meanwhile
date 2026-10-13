@@ -197,9 +197,7 @@ export const SCOUT_TOOL_SPECS: readonly ScoutToolSpec[] = [
 ];
 
 /**
- * The `search` spec, APPENDED to the toolkit's specs only when a search seam is
- * configured (a provider key is present). A runtime with no key never offers it,
- * so the tool is fully inert without configuration.
+ * Stable search definition. The call still requires its configured seam and the owner's live spending controls.
  */
 export const SEARCH_TOOL_SPEC: ScoutToolSpec = {
   name: "search",
@@ -250,9 +248,9 @@ export const REPORT_FINDING_TOOL_SPEC: ScoutToolSpec = {
   },
 };
 
-/** The research tool list for one setting of the search switch, the one answer the toolkit and the pre-warm both read (it is the cached prefix). */
-export function scoutToolSpecsFor(search: boolean, reportFinding = false): readonly ScoutToolSpec[] {
-  return [...SCOUT_TOOL_SPECS, ...SOURCE_API_SPECS, ...(search ? [SEARCH_TOOL_SPEC] : []), ...(reportFinding ? [REPORT_FINDING_TOOL_SPEC] : [])];
+/** One byte-identical tool list across jobs; unavailable tools return their existing refusal without calling a service. */
+export function scoutToolSpecsFor(_search: boolean, _reportFinding = false): readonly ScoutToolSpec[] {
+  return [...SCOUT_TOOL_SPECS, ...SOURCE_API_SPECS, SEARCH_TOOL_SPEC, REPORT_FINDING_TOOL_SPEC];
 }
 
 

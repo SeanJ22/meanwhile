@@ -35,10 +35,10 @@ test("dispatch-sized POINT bursts share transport admission across repository cl
   try {
     neonConfig.fetchFunction = (async (_input: unknown, init?: { body?: string }) => {
       const request = JSON.parse(init?.body ?? "{}") as { query: string; params: unknown[]; queries?: { query: string }[] };
+      // The supplied reader database enables the byte counter's background transaction.
+      // Answer that fixture write separately; it is not one of the civic POINT reads.
+      if (Array.isArray(request.queries)) return Response.json(request.queries.map(() => ({ fields: [], rows: [], rowCount: 0, command: "INSERT" })));
       // Operational transfer accounting is a separate store write, not one of the due-row reads.
-      if (request.queries?.every(query => /INSERT INTO database_transfer_daily/.test(query.query))) {
-        return new Response(JSON.stringify(request.queries.map(() => ({ command: "INSERT", fields: [], rows: [], rowCount: 1, rowAsArray: false }))));
-      }
       if (/INSERT INTO database_transfer_daily/.test(request.query)) return answer([]);
       active++; peak = Math.max(peak, active); calls++;
       starts.push(Number(request.params[0]));

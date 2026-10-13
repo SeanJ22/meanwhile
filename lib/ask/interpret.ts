@@ -1,3 +1,4 @@
+import { askPlaybook } from "./runtime-settings.ts";
 import { scrubFreeText } from "../log/scrub.ts";
 import { resolveAskRoleModel, ASK_MODEL_ROLES } from "./model.ts";
 import { modelRequestFields, servedModelOf } from "../models.ts";
@@ -91,30 +92,16 @@ export function interpretSchema(): Record<string, unknown> {
 }
 
 /**
- * The instruction, about reading, never answering. Two parts: the stable part
- * (instructions and the ZIP's governments and people) is byte-identical per
- * ZIP and is the cached prefix; the date, location and surface follow it.
+ * Shared reading instructions precede the ZIP inventory and changing reader context.
  */
-export function interpretSystem(context: InterpretContext): { stable: string; volatile: string } {
+export function interpretSystem(context: InterpretContext): { stable: string; inventory: string; volatile: string } {
   const inventory = context.inventory
     .slice(0, MAX_INVENTORY)
     .map((e) => (e.divisionType ? `${e.name} (${e.divisionType})` : e.name));
 
-  const stable = [
-    "You are reading one question a resident asked about their government, and reporting what it MEANS. You are not answering it and you will not be shown any records.",
-    "",
-    "Governments and people this product holds records for, as a reader would name them:",
-    ...(inventory.length > 0 ? inventory.map((n) => `- ${n}`) : ["(none available)"]),
-    "",
-    "Report:",
-    "- intent: which of the listed kinds of question this is.",
-    "- entityMentions: the exact words in the question that name a government, a person or a ballot measure. Copy them from the question; do not invent one. An empty list is correct and common — most questions name nothing.",
-    "- normalizedMentions: for each mention, in the same order, the full name from the list above that it most likely means. If nothing above plausibly matches, repeat the mention unchanged. Never invent a government that is not listed.",
-    "- temporal: NEXT if they are asking about something upcoming, LAST if about the most recent past occurrence, RANGE with trailingMonths if they named a window such as 'in the last 12 months', NONE otherwise.",
-    "- referent: if the question uses a pronoun that depends on something said earlier, the name it refers to; otherwise null.",
-    "",
-    "Be literal. 'What did they discuss last time' is LAST, not NEXT. 'What's on the agenda' with no other time words is NEXT.",
-  ].join("\n");
+  const stable = askPlaybook("ASK_READER");
+  const inventoryText = ["Governments and people this product holds records for, as a reader would name them:",
+    ...(inventory.length > 0 ? inventory.map(n => `- ${n}`) : ["(none available)"])].join("\n");
 
   const volatile = [
     `Today is ${context.today}.`,
@@ -127,13 +114,13 @@ export function interpretSystem(context: InterpretContext): { stable: string; vo
         ? "They are looking at the map of governments near them."
         : "",
   ].filter((line) => line !== "").join("\n");
-  return { stable, volatile };
+  return { stable, inventory: inventoryText, volatile };
 }
 
 /** The whole instruction as one string: the stable part, then the volatile one. */
 export function interpretPrompt(context: InterpretContext): string {
-  const { stable, volatile } = interpretSystem(context);
-  return `${stable}\n\n${volatile}`;
+  const { stable, inventory, volatile } = interpretSystem(context);
+  return `${stable}\n\n${inventory}\n\n${volatile}`;
 }
 
 export interface InterpretOptions {
@@ -169,7 +156,12 @@ export async function interpretQuestion(
    * Prior turns ride as real messages: only each question and what it resolved
    * to, never the prior answers.
    */
-  const messages: { role: "user" | "assistant"; content: string }[] = [];
+  const messages: { role: "user" | "assistant"; content: string | readonly { type: "text"; text: string; cache_control?: typeof SYNTHESIS_CACHE_TTL.cacheControl }[] }[] = [
+    { role: "user", content: [
+      { type: "text", text: system.inventory, cache_control: SYNTHESIS_CACHE_TTL.cacheControl },
+      { type: "text", text: system.volatile },
+    ] },
+  ];
   for (const turn of priorTurns) {
     messages.push({ role: "user", content: scrubFreeText(turn.question) });
     messages.push({
@@ -210,10 +202,9 @@ export async function interpretQuestion(
           ...(fields.effort ? { effort: fields.effort } : {}),
           format: { type: "json_schema", schema: interpretSchema() },
         },
-        /* The ZIP's context is the cached prefix; the date and the surface follow it (interpretSystem). */
+        /* Shared instructions survive for an hour; the ZIP context and changing packet follow. */
         system: [
-          { type: "text", text: system.stable, cache_control: SYNTHESIS_CACHE_TTL.cacheControl },
-          { type: "text", text: system.volatile },
+          { type: "text", text: system.stable, cache_control: SYNTHESIS_CACHE_TTL.stableCacheControl },
         ],
         messages,
       }),

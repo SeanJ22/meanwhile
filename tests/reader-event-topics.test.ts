@@ -29,7 +29,7 @@ test("a question plain code cannot place goes to the cheapest tier as a quick jo
     assert.deepEqual(body.thinking, { type: "disabled" });
     assert.equal(body.output_config.effort, "low");
     assert.ok(body.max_tokens >= 1024, "room to answer");
-    assert.deepEqual(body.system[0].cache_control, { type: "ephemeral" }, "the topic list is read from cache after the first question");
+    assert.deepEqual(body.system[0].cache_control, { type: "ephemeral", ttl: "1h" }, "the stable topic list is cached for an hour");
     assert.ok(Math.abs(costs[0].cost.usd! - (4 * 0.1 + 840 * 0.1 * 0.1 + 12 * 0.5) / 1e6) < 1e-15, "priced at Haiku 5.5's rates");
   } finally {
     if (previous === undefined) delete process.env.ANTHROPIC_API_KEY;

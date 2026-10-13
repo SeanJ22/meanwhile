@@ -1,3 +1,6 @@
+import { rolePlaybook } from "../lib/control-plane/playbooks.ts";
+import { playbookRows } from "./helpers/playbooks.ts";
+import { fixtureRolePlaybook } from "./helpers/playbooks.ts";
 /**
  * The pre-warm request carries the Attempts' exact static prefix with
  * `max_tokens: 0`, the breakpoint on the system block and none on the
@@ -50,7 +53,7 @@ const API_MESSAGE =
   "Note that blocks are processed in the following order: `tools`, `system`, `messages`.";
 
 test("PC-7: the pre-warm request is the Attempts' static prefix with max_tokens 0, tool_choice auto, the breakpoint on the system block and none on the placeholder", () => {
-  const input = { model: MODELS.opus.model, effort: "medium" as const, toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS };
+  const input = { playbook: rolePlaybook(playbookRows, "SCOUT").text, model: MODELS.opus.model, effort: "medium" as const, toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS };
   const request = scoutPrewarmRequest(input);
   const prefix = scoutStaticPrefix(input);
   assert.equal(request.max_tokens, 0);
@@ -59,8 +62,8 @@ test("PC-7: the pre-warm request is the Attempts' static prefix with max_tokens 
   assert.deepEqual(request.thinking, SCOUT_THINKING, "the same thinking setting the Attempts send; it is rendered into the prompt too");
   assert.equal(JSON.stringify(request.tools), JSON.stringify(prefix.tools), "byte-identical tools");
   assert.equal(JSON.stringify(request.system), JSON.stringify(prefix.system), "byte-identical system");
-  assert.deepEqual(request.system.at(-1)?.cache_control, { type: "ephemeral" }, "the breakpoint is on the system block");
-  assert.deepEqual(request.tools.at(-1)?.cache_control, { type: "ephemeral" });
+  assert.deepEqual(request.system.at(-1)?.cache_control, { type: "ephemeral", ttl: "1h" }, "the breakpoint is on the system block");
+  assert.deepEqual(request.tools.at(-1)?.cache_control, { type: "ephemeral", ttl: "1h" });
   const placeholder = request.messages[0].content as { type: string; text: string; cache_control?: unknown }[];
   assert.equal(placeholder.length, 1);
   assert.equal(placeholder[0].text, SCOUT_PREWARM_PLACEHOLDER);
@@ -81,7 +84,7 @@ test("PC-7 search on (2026-09-25): the pre-warm warms the prefix the Attempts ac
     now: () => NOW, inherited: { artifactIds: [], summary: "" }, openOne: async () => { throw new Error("no network in this test"); },
   } as unknown as ScoutToolContext;
   const kit = buildScoutToolkit({ ...ctx, search: searchSeam as never });
-  assert.deepEqual(kit.specs.map((s) => s.name), [...SCOUT_TOOL_SPECS, ...SOURCE_API_SPECS, SEARCH_TOOL_SPEC].map((s) => s.name), "search on: the Attempts offer the search tool");
+  assert.deepEqual(kit.specs.map((s) => s.name), scoutToolSpecsFor(true).map((s) => s.name), "search on: the Attempts offer the search tool");
   assert.equal(JSON.stringify(kit.specs), JSON.stringify(scoutToolSpecsFor(true)), "the toolkit and the pre-warm read one answer");
   assert.equal(JSON.stringify(buildScoutToolkit(ctx).specs), JSON.stringify(scoutToolSpecsFor(false)));
 
@@ -91,7 +94,7 @@ test("PC-7 search on (2026-09-25): the pre-warm warms the prefix the Attempts ac
     captured.push(request);
     throw new ModelTransportError("captured", null);
   };
-  await scoutExecutor({
+  await scoutExecutor({ playbookFor: fixtureRolePlaybook,
     transport: capture,
     toolkitFor: () => kit,
     contextFor: () => ({ route: null, providerId: "p", reason: "r", inherited: { artifactIds: [], summary: "s" }, tools: { vault: async () => ({ stored: true, where: "x", why: "w" }), spaceOut: async () => undefined } }),
@@ -100,7 +103,7 @@ test("PC-7 search on (2026-09-25): the pre-warm warms the prefix the Attempts ac
   assert.equal(captured.length, 1);
   const first = captured[0];
 
-  const actualPlan = scoutPrewarmPlan({ toolkitSpecs: scoutToolSpecsFor(true), bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
+  const actualPlan = scoutPrewarmPlan({ playbook: rolePlaybook(playbookRows, "SCOUT").text, toolkitSpecs: scoutToolSpecsFor(true), bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
   assert.equal(actualPlan.kind, "SEND", "the expanded held-evidence and manual tools now clear Haiku's cache minimum");
   assert.ok(actualPlan.kind === "SEND");
   assert.ok(actualPlan.prefixTokensAtLeast >= actualPlan.minimumCacheablePrefixTokens);
@@ -117,12 +120,12 @@ test("PC-7 search on (2026-09-25): the pre-warm warms the prefix the Attempts ac
   assert.equal(minimumCacheablePrefixTokensFor("claude-sonnet-5-5"), 512);
   assert.equal(minimumCacheablePrefixTokensFor(MODELS.opus.model), 512);
   /* Negative control: the list without search is a different prefix. */
-  const without = scoutPrewarmPlan({ toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
+  const without = scoutPrewarmPlan({ playbook: rolePlaybook(playbookRows, "SCOUT").text, toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
   assert.notEqual(without.kind === "SEND" ? JSON.stringify(without.request.tools) : "", JSON.stringify(first.tools));
 
   /* The runner: the pre-warm's list and the Scout's toolkit follow the same `scoutSearch` switch. */
   const runner = readFileSync(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
-  assert.match(runner, /scoutPrewarmPlan\(\{ toolkitSpecs: scoutToolSpecsFor\(scoutSearch !== null\),/, "the pre-warm warms the list the switch gives the Attempts");
+  assert.match(runner, /scoutPrewarmPlan\(\{ playbook: playbook.text, toolkitSpecs: scoutToolSpecsFor\(scoutSearch !== null\),/, "the pre-warm warms the list the switch gives the Attempts");
   assert.match(runner, /search: \(lifetimeHuntWork\(scheduled\.obligation\.id\) \? scoutSearchLifetime : scoutSearch\) \?\? undefined/, "funded hunts use their matching search budget");
   assert.match(runner, /const scoutSearchLifetime = searchBudget === null \|\| !hasLifetimeHunt \? null : makeScoutSearch\(/, "the lifetime route preserves the same owner-controlled search switch");
   const child = readFileSync(new URL("../lib/control-plane/workers/scout-worker.ts", import.meta.url), "utf8");
@@ -133,10 +136,10 @@ test("PC-7 search on (2026-09-25): the pre-warm warms the prefix the Attempts ac
 test("PC-6: the TTL decision is the measured 5 minutes, and a 1h marker after a 5m one is refused before sending with the API's own rule", () => {
   assert.equal(SCOUT_CACHE_POLICY.ttl, "5m");
   assert.match(SCOUT_CACHE_POLICY.ttl === "5m" ? String((SCOUT_CACHE_POLICY as { movingBreakpoint: string }).movingBreakpoint) : "", /TOP_LEVEL|LAST_BLOCK/);
-  const input = { model: MODELS.opus.model, effort: "medium" as const, toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS };
+  const input = { playbook: rolePlaybook(playbookRows, "SCOUT").text, model: MODELS.opus.model, effort: "medium" as const, toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS };
   const good = scoutPrewarmRequest(input);
   /* A 1h system marker with a 5m tool marker before it: exactly the planted request the API refused. */
-  const planted: ModelRequest = { ...good, system: good.system.map((s) => ({ ...s, cache_control: { type: "ephemeral", ttl: "1h" } })) };
+  const planted: ModelRequest = { ...good, tools: good.tools.map(t => t.cache_control ? { ...t, cache_control: { type: "ephemeral" } } : t), system: good.system.map((s) => ({ ...s, cache_control: { type: "ephemeral", ttl: "1h" } })) };
   const problems = cacheTtlOrderProblems(planted);
   assert.equal(problems.length, 1);
   assert.match(problems[0], /system\[0\]: a ttl='1h' cache_control block must not come after the ttl='5m' block at tools\[\d+\]/);
@@ -150,7 +153,7 @@ test("PC-6: the TTL decision is the measured 5 minutes, and a 1h marker after a 
   };
   assert.deepEqual(cacheTtlOrderProblems(lawful), []);
   /* A 1h marker in the messages after a 5m system marker is refused too. */
-  const late: ModelRequest = { ...good, messages: [{ role: "user", content: [{ type: "text", text: "warmup", cache_control: { type: "ephemeral", ttl: "1h" } }] }] };
+  const late: ModelRequest = { ...good, system: good.system.map(s => ({ ...s, cache_control: { type: "ephemeral" } })), messages: [{ role: "user", content: [{ type: "text", text: "warmup", cache_control: { type: "ephemeral", ttl: "1h" } }] }] };
   assert.match(cacheTtlOrderProblems(late)[0], /messages\[0\]\.content\[0\]/);
   /* The provider's limit of four markers is refused by name. */
   const five: ModelRequest = { ...lawful, cache_control: { type: "ephemeral" }, messages: [{ role: "user", content: [{ type: "text", text: "a", cache_control: { type: "ephemeral" } }, { type: "text", text: "b", cache_control: { type: "ephemeral" } }] }] };

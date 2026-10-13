@@ -9,7 +9,10 @@ export const ADMIN_CONFIG_ID = "current";
 export const ADMIN_CONFIG_NEVER_WRITTEN = "1970-01-01T00:00:00.000Z";
 
 export interface AdminConfig {
+  readonly latestBrief?: import("../admin-view/brief.ts").BriefSnapshot;
   readonly settings?: Readonly<Record<string, import("../settings.ts").SettingValue>>;
+  /** The fix list (BR-03): broken things and their repairs. */
+  readonly legacyFixQueueImportedAt?: string;
   readonly fixList?: readonly import("../fix-list.ts").FixItem[];
   readonly updates?: readonly import("../updates.ts").UpdateRecord[];
   readonly methodStandings?: readonly import("../../method/fix-status.ts").MethodStanding[];

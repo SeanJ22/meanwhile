@@ -120,7 +120,7 @@ test("THE RUNNER OBEYS IT: the switch is read at cycle start, no search step is 
   const runner = readFileSync(join(ROOT, "scripts/freshness-shadow.mts"), "utf8");
   assert.match(runner, /discoverySearchOn = discoverySearchEnabled\(config\);/, "read from the config row");
   const read = runner.indexOf("discoverySearchOn = discoverySearchEnabled(config);");
-  const phase = runner.indexOf("meetingsDiscovery = await runMeetingsDiscovery(repos, {");
+  const phase = runner.indexOf("runMeetingsDiscovery(repos, {");
   assert.ok(read > 0 && phase > read, "the switch is read before the discovery phase");
   assert.match(runner, /const searchBudget = !discoverySearchOn \? null : durableSearchBudget\(\{/, "no budget, and no ledger write, while off");
   assert.match(runner, /const discoverySearch = searchBudget === null \? null : makeDiscoverySearch\(\{/, "no search step while off");

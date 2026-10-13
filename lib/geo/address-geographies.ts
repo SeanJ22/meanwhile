@@ -8,7 +8,7 @@ import type { Sample } from "./address-resolution.ts";
 
 export type AddressGeographies = Readonly<Record<string, readonly Readonly<Record<string, unknown>>[]>>;
 export type AddressGeographyLookup =
-  | { kind: "MATCHED"; geographies: AddressGeographies | null }
+  | { kind: "MATCHED"; geographies: AddressGeographies | null; zip?: string }
   | { kind: "OTHER_ZIP"; zip: string };
 const ENDPOINT = "https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress";
 const text = (value: unknown) => typeof value === "string" ? value.trim() : typeof value === "number" ? String(value) : "";
@@ -28,6 +28,8 @@ export function addressStateFips(geographies: AddressGeographies): string | null
 /** One Census match. Exact coordinates are validated and discarded in this function. */
 export async function lookupAddressGeographies(address: string, zip: string, options: {
   fetchImpl?: typeof fetch; signal?: AbortSignal;
+  /** Postal entry: the typed ZIP is mail-only or unknown, so the ZIP the Census matched is the answer, not a redirect. */
+  anyZip?: boolean;
 } = {}): Promise<AddressGeographyLookup | null> {
   const query = new URLSearchParams({ address, benchmark: CENSUS_BENCHMARK, vintage: "Current_Current", layers: "all", format: "json" });
   try {
@@ -39,10 +41,10 @@ export async function lookupAddressGeographies(address: string, zip: string, opt
     const payload = await response.json();
     const matchedZip = parseCensusZip(payload);
     if (!parseCensusPoint(payload) || !matchedZip) return null;
-    if (matchedZip !== zip) return { kind: "OTHER_ZIP", zip: matchedZip };
+    if (matchedZip !== zip && !options.anyZip) return { kind: "OTHER_ZIP", zip: matchedZip };
     const value: unknown = payload?.result?.addressMatches?.[0]?.geographies;
-    if (!value || typeof value !== "object" || Array.isArray(value)) return { kind: "MATCHED", geographies: null };
-    return { kind: "MATCHED", geographies: Object.fromEntries(Object.entries(value).filter((row): row is [string, Record<string, unknown>[]] =>
+    if (!value || typeof value !== "object" || Array.isArray(value)) return { kind: "MATCHED", geographies: null, ...(options.anyZip ? { zip: matchedZip } : {}) };
+    return { kind: "MATCHED", ...(options.anyZip ? { zip: matchedZip } : {}), geographies: Object.fromEntries(Object.entries(value).filter((row): row is [string, Record<string, unknown>[]] =>
       Array.isArray(row[1]) && row[1].every(item => item && typeof item === "object" && !Array.isArray(item)))) };
   } catch { return null; }
 }

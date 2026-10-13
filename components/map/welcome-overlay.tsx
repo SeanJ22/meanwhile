@@ -1,8 +1,9 @@
 "use client";
 import { logAddressEntered, readerPageForPath } from "@/lib/log/address-events";
 
-import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { useEffect, useState } from "react";
+import { ZIP_AREA_MISSING } from "@/lib/geo/postal-core";
+import { ZipAddressPrompt } from "./zip-address-prompt";
 
 import {
   isWellFormedZip,
@@ -22,16 +23,16 @@ import { Logo } from "@/components/brand/logo";
  * and a location action.
  */
 
-/** The three ways lib/geo/zcta.ts can fail, each with its own message. */
+/** An unplaced ZIP is our coverage gap, with street-address entry ready. */
 const MESSAGES = {
   malformed: "A zip code is five digits.",
-  unknown: "No such zip code. Check the digits.",
-  uncovered: "__coverage_gap__",
+  uncovered: ZIP_AREA_MISSING,
 } as const;
 
 interface WelcomeOverlayProps {
   open: boolean;
   onResolved: (zip: string, lat: number, lng: number) => void;
+  onAddressLocated: (zip: string, lat: number, lng: number) => void;
   /** Null while no zip is stored: there is nothing behind the card to dismiss into. */
   onDismiss: (() => void) | null;
 }
@@ -39,12 +40,14 @@ interface WelcomeOverlayProps {
 export function WelcomeOverlay({
   open,
   onResolved,
+  onAddressLocated,
   onDismiss,
 }: WelcomeOverlayProps) {
   const [zip, setZip] = useState("");
   const recents = useRecentZips();
   const [error, setError] = useState<string | null>(null);
   const [locating, setLocating] = useState(false);
+  const [addressZip, setAddressZip] = useState<string | null>(null);
 
   /* The centroid table is fetched on arrival; the await below waits if it has not landed. */
   useEffect(() => {
@@ -59,14 +62,16 @@ export function WelcomeOverlay({
     if (/^\d{5}$/.test(value.trim())) {
       logAddressEntered({ zip: value.trim(), divisionIds: [] }, readerPageForPath(window.location.pathname));
     }
-    const result = await resolveZipAsync(value);
+    const result = await resolveZipAsync(value).catch(() => ({ ok: false, reason: "uncovered" } as const));
 
     if (!result.ok) {
       setError(MESSAGES[result.reason]);
+      setAddressZip(result.reason === "uncovered" ? value.trim() : null);
       return;
     }
 
     setError(null);
+    setAddressZip(null);
     setZip("");
     recordLocationOrigin(result.centroid.zip, origin);
     onResolved(result.centroid.zip, result.centroid.lat, result.centroid.lng);
@@ -157,6 +162,7 @@ export function WelcomeOverlay({
             value={zip}
             onChange={(next) => {
               setZip(next);
+              setAddressZip(null);
               if (error) setError(null);
             }}
             onSubmit={() => void submit()}
@@ -165,9 +171,11 @@ export function WelcomeOverlay({
             autoFocus={open}
           />
           <p id="welcome-error" role="alert" className="welcome-error">
-            {error === MESSAGES.uncovered ? <WorkingOnIt inline /> : error ?? ""}
+            {error ?? ""}
           </p>
         </div>
+
+        {addressZip && <ZipAddressPrompt zip={addressZip} onLocated={onAddressLocated} />}
 
         <button
           type="button"

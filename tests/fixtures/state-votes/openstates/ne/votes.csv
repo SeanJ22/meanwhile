@@ -1,0 +1,2 @@
+id,identifier,motion_text,motion_classification,start_date,result,organization_id,bill_id,bill_action_id,jurisdiction,session_identifier
+ocd-vote/2897d899-f51e-4bc5-9797-ff2959645b8f,,Guereca MO587 failed,['passage'],2026-04-17T05:00:00+00:00,fail,ocd-organization/a0563aa3-1ab5-4e1e-afd1-643aca03b3b8,ocd-bill/d98d8f2f-1cd0-431a-b6aa-68efdfd8f843,,Nebraska,109

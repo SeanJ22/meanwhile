@@ -1,7 +1,7 @@
 import { acquireKnownRelease, type KnownRelease } from "../sources/known-release.ts";
 import { readSourceApi } from "../control-plane/scheduler/scout-api.ts";
 import { portraitHash, type PortraitCapture, type PortraitSources } from "../photos/evidence.ts";
-import { storeVerifiedPortrait } from "../photos/store.ts";
+import { pacedPortraitAcquire, storeStandingPortrait } from "../photos/portrait-work.ts";
 import { portraitBindingMatches } from "../photos/binding.ts";
 import { imagesIn, pickPortraits } from "../hunt/portrait-pick.ts";
 import { isOfficialSource } from "../civic-data/source-authority.ts";
@@ -25,6 +25,7 @@ interface CongressPortraitOptions {
   readonly readApi?: typeof readSourceApi;
   readonly storePortrait?: (personId: string, sources: PortraitSources, at: string, signal: AbortSignal) => Promise<OfficeholderPhoto>;
   readonly previousExcludedFacts?: readonly PortraitGap[];
+  readonly onPerson?: (person:Officeholder,facts:readonly PortraitGap[]) => Promise<void>;
 }
 
 function captureFor(page: KnownRelease): PortraitCapture {
@@ -44,14 +45,25 @@ function officialPage(person: Officeholder): string | null {
   } catch { return null; }
 }
 
-/** Finite known members share the existing deadline; a failed portrait never holds a person's other facts. */
+/** Directory images are leads, bound to the exact native Bioguide identity.
+ * A URL alone never establishes that a photograph belongs on a reader card. */
+export function congressDirectoryPortraitLeads(bioguide:string):readonly string[] {
+  if (!/^[A-Z]\d{6}$/.test(bioguide)) return [];
+  return [
+    `https://bioguide.congress.gov/bioguide/photo/${bioguide[0]}/${bioguide}.jpg`,
+    `https://unitedstates.github.io/images/congress/225x275/${bioguide}.jpg`,
+    `https://unitedstates.github.io/images/congress/original/${bioguide}.jpg`,
+  ];
+}
+
+/** Drain every due native member; caller cancellation leaves durable reasons. */
 export async function congressPortraits(value: FederalDirectoryReadModel, asOf: string, signal?: AbortSignal,
   options: CongressPortraitOptions = {}): Promise<CongressPortraitResult> {
   const now = options.now ?? (() => new Date().toISOString());
-  const acquire = options.acquire ?? acquireKnownRelease;
+  const acquire = options.acquire ?? pacedPortraitAcquire;
   const readApi = options.readApi ?? readSourceApi;
-  const storePortrait = options.storePortrait ?? ((id, sources, at, abort) => storeVerifiedPortrait(id, sources, at, undefined, "officials", abort));
-  const sourceSignal = signal ?? AbortSignal.timeout(120_000);
+  const storePortrait = options.storePortrait ?? storeStandingPortrait;
+  const sourceSignal = signal ?? new AbortController().signal;
   const apiConfigured = options.apiKeyConfigured ?? Boolean(process.env.CONGRESS_API_KEY?.trim());
   const holders = value.roster.officeholders.map(row => ({ ...row }));
   const lastAttempt = new Map<string, string>();
@@ -88,10 +100,14 @@ export async function congressPortraits(value: FederalDirectoryReadModel, asOf: 
     // Read the verification clock after the asynchronous capture. The source's own vintage stays unchanged.
     person.photo = await storePortrait(personId, { subject: { personId, name: person.name,
       nativeIds: person.nativeIds, profileUrls: [page.finalUrl] }, imageUrl, captures: [captureFor(page)] }, now(), sourceSignal);
+    person.profileUrls=[...new Set([...(person.profileUrls ?? []),page.finalUrl])];
+    person.fieldSources = {...person.fieldSources,photo:{sourceUrl:page.finalUrl,sourceOrg:new URL(page.finalUrl).hostname,collectedAt:page.retrievedAt,verifiedAt:now()}};
     refreshed.add(personId);
   };
+  const publicationErrors:unknown[]=[];
   const results = await runBoundedWorkPool(due, 3, async person => {
     if (sourceSignal.aborted) return;
+    try {
     attempted++;
     for (let i = excludedFacts.length - 1; i >= 0; i--) if (excludedFacts[i].key === `${person.personId ?? person.id}:portrait`) excludedFacts.splice(i, 1);
     const bioguide = /^congress:([A-Z]\d{6})$/.exec(person.id)?.[1];
@@ -122,24 +138,36 @@ export async function congressPortraits(value: FederalDirectoryReadModel, asOf: 
       }
     }
     if (sourceSignal.aborted) return;
-    const url = officialPage(person);
-    if (!url) { gap(person, null, "CONGRESS_PORTRAIT_OFFICIAL_PAGE_UNRESOLVED", "No usable official member URL is held; no new source route was invented."); return; }
-    try {
-      const host = new URL(url).hostname.replace(/^www\./, "");
-      const page = await acquire({ sourceId: "congress-member-page", releaseId: bioguide, url,
-        parserVersion: "congress-member-page-portrait/1", maxBytes: 2 * 1024 * 1024, checkAfterMs: 7 * 86_400_000,
-        signal: sourceSignal, allowedHosts: [host, `www.${host}`], headers: { accept: "text/html" } });
-      const images = pickPortraits(person.name, imagesIn(new TextDecoder("utf-8", { fatal: true }).decode(page.bytes), page.finalUrl));
-      if (!images.length) { gap(person, page.finalUrl, "CONGRESS_PORTRAIT_IMAGE_NOT_FOUND", "The captured official page has no image explicitly labelled with this member's full name; the portrait refresh remains owed.", undefined, page); return; }
-      for (const image of images) {
-        if (sourceSignal.aborted) return;
-        try { await publish(person, page, image.src); return; }
-        catch (error) { gap(person, page.finalUrl, "CONGRESS_PORTRAIT_PROCESSING_FAILED", "The official page's named image did not verify or store; prior verified portrait and person facts are retained.", error, page); }
+    const urls=[...new Set([officialPage(person),`https://bioguide.congress.gov/search/bio/${bioguide}`])].filter((url):url is string=>Boolean(url));
+    const leads=congressDirectoryPortraitLeads(bioguide);
+    for (const url of urls) {
+      if (sourceSignal.aborted) return;
+      try {
+        const host = new URL(url).hostname.replace(/^www\./, "");
+        const page = await acquire({ sourceId: "congress-member-page", releaseId: bioguide, url,
+          parserVersion: "congress-member-page-portrait/2", maxBytes: 2 * 1024 * 1024, checkAfterMs: 7 * 86_400_000,
+          signal: AbortSignal.any([sourceSignal,AbortSignal.timeout(20_000)]), allowedHosts: [host, `www.${host}`], headers: { accept: "text/html" } });
+        if (!isOfficialSource(page.finalUrl)) throw Error("CONGRESS_PORTRAIT_PROFILE_REDIRECT_UNVERIFIED");
+        const images = pickPortraits(person.name, imagesIn(new TextDecoder("utf-8", { fatal: true }).decode(page.bytes), page.finalUrl));
+        images.sort((a,b)=>Number(leads.includes(b.src))-Number(leads.includes(a.src)));
+        if (!images.length) { gap(person, page.finalUrl, "CONGRESS_PORTRAIT_IMAGE_NOT_FOUND", "The captured official member page does not identify this person's portrait. Directory image URLs remain unverified leads.", undefined, page); continue; }
+        for (const image of images) {
+          if (sourceSignal.aborted) return;
+          try { await publish(person, page, image.src); return; }
+          catch (error) { gap(person, page.finalUrl, "CONGRESS_PORTRAIT_PROCESSING_FAILED", "The official page's named image did not verify or store; prior verified portrait and person facts are retained.", error, page); }
+        }
+      } catch (error) {
+        gap(person, url, isSourceAcquisitionFailure(error) ? "CONGRESS_PORTRAIT_SOURCE_FAILED" : "CONGRESS_PORTRAIT_PROCESSING_FAILED",
+          "The official member page did not complete; prior verified portrait and person facts are retained.", error);
       }
-    } catch (error) {
-      gap(person, url, isSourceAcquisitionFailure(error) ? "CONGRESS_PORTRAIT_SOURCE_FAILED" : "CONGRESS_PORTRAIT_PROCESSING_FAILED",
-        "The held official member page did not complete; prior verified portrait and person facts are retained.", error);
     }
+    } finally {
+      const personId=person.personId ?? person.id;
+      const facts=excludedFacts.filter(fact=>(fact.record as {personId?:string}|undefined)?.personId === personId)
+        .map(fact=>refreshed.has(personId) ? {...fact,record:{...(fact.record as object),portraitStatus:"VERIFIED_FROM_ALTERNATIVE_SOURCE"}} : fact);
+      try { await options.onPerson?.(person,facts); } catch (error) { publicationErrors.push(error); }
+    }
+
   });
   for (const result of results) if (!result.ok) gap(due[result.index]!, null, "CONGRESS_PORTRAIT_PROCESSING_FAILED",
     "The portrait work item did not complete; the member's accepted facts remain available.", result.error);
@@ -149,6 +177,7 @@ export async function congressPortraits(value: FederalDirectoryReadModel, asOf: 
       record: { ...(excludedFacts[i].record as object), portraitStatus: "VERIFIED_FROM_ALTERNATIVE_SOURCE" } };
   }
   if (sourceSignal.aborted && refreshed.size < due.length) excludedFacts.push({ code: "CONGRESS_PORTRAIT_WORK_REMAINS",
-    detail: `${due.length - refreshed.size} known portrait refreshes remain after the existing acquisition deadline (${due.length - attempted} not started, ${attempted - refreshed.size} attempted without a newly verified portrait). Verified portraits publish now; the next standing pass prioritizes unattempted native IDs from the retained field receipts.` });
+    detail: `${due.length - refreshed.size} known portrait refreshes remain after caller cancellation (${due.length - attempted} not started, ${attempted - refreshed.size} attempted without a newly verified portrait). Verified portraits publish now; the next standing pass prioritizes unattempted native IDs from the retained field receipts.` });
+  if (publicationErrors.length) throw new AggregateError(publicationErrors,"CONGRESS_PORTRAIT_PUBLICATION_FAILED");
   return { projection: { ...value, roster: { ...value.roster, officeholders: holders } }, excludedFacts, attempted };
 }

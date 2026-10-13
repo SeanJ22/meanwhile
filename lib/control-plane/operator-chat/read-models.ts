@@ -635,6 +635,25 @@ export function integrationStatus(ctx: OperatorContext, subject: string | null):
   });
 }
 
+export function placeStuck(ctx: OperatorContext): ChatAnswer {
+  const read = holding(ctx.placeStuck, "this place’s live score and stuck work");
+  if (!read.held) return assemble("PLACE_STUCK", { says: [read.gap.says], denominator: noNumber(read.gap), sources: [], needsYou: NOTHING_NEEDED, gaps: [read.gap], detail: [] });
+  const r = read.value;
+  const answer = assemble("PLACE_STUCK", {
+    says: [`${r.label}: ${r.captured} of ${r.owed} facts captured${r.percent === null ? "" : ` (${r.percent}%)`}; ${r.stuck} stuck items${r.causes.length ? ` — ${r.causes.join("; ")}` : "."}`],
+    denominator: denominator(`${r.captured} of ${r.owed} owed facts captured`, r.captured, r.owed, "The place’s core capture score", "the live owed list"),
+    sources: [source("the place’s capture score and published stuck work", r.observedAt, r.key)], needsYou: NOTHING_NEEDED, gaps: [], detail: [],
+  });
+  return { ...answer, readBackAt: `/admin?view=work&scope=${encodeURIComponent(r.key)}` };
+}
+
+/* --------------------------------------------------------------- the switch */
+
+/**
+ * The one place a topic becomes an answer. Exhaustive over {@link ChatTopic},
+ * so adding a topic without a query is a compile error rather than a blank
+ * panel.
+ */
 export function spendAndFacts(ctx: OperatorContext): ChatAnswer {
   const ours = (says: string): Gap => ({ whose: "OURS", says });
   const flow = holding(ctx.flow, "the hourly flow of facts and settled spend");
@@ -684,6 +703,8 @@ export function spendAndFacts(ctx: OperatorContext): ChatAnswer {
 
 export function answerFor(topic: ChatTopic, ctx: OperatorContext, asked: string, subject: string | null): ChatAnswer {
   switch (topic) {
+    case "SPEND_AND_FACTS": return spendAndFacts(ctx);
+    case "PLACE_STUCK": return placeStuck(ctx);
     case "FLEET_BLOCKERS":
       return fleetBlockers(ctx);
     case "SINCE_LAST_CYCLE":
@@ -698,7 +719,5 @@ export function answerFor(topic: ChatTopic, ctx: OperatorContext, asked: string,
       return compareEnvironments(ctx);
     case "INTEGRATION_STATUS":
       return integrationStatus(ctx, subject);
-    case "SPEND_AND_FACTS":
-      return spendAndFacts(ctx);
   }
 }

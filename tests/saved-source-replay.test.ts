@@ -76,8 +76,7 @@ test("the Congress runner publishes saved files with a failed fresh discovery ch
   };
   const run = () => refreshCongressDirectory({ store, now: () => now,
     revision: () => acquireCongressSourceRevision({ store: reopened(evidence), locks, now: () => now, fetchImpl }),
-    acquire: options => acquireKnownRelease({ ...options, store: reopened(evidence), locks, now: () => now, fetchImpl }),
-    portraits: async projection => ({ projection, attempted: 0, excludedFacts: [] }) });
+    acquire: options => acquireKnownRelease({ ...options, store: reopened(evidence), locks, now: () => now, fetchImpl }) });
   await run(); assert.equal(requests, 6);
   await oldRevisionParser(evidence); now = T1; offline = true;
   await run(); assert.equal(requests, 6, "changed parser replays without discovery");

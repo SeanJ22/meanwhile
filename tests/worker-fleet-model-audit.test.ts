@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { contentHash } from "../lib/control-plane/ids.ts";
-import { usdForModelUsage } from "../lib/control-plane/model-cost.ts";
-import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { priceMeteredUsage, readMeteredUsage } from "../lib/control-plane/model-cost.ts";
+import { createMemoryRepositories } from "./helpers/playbooks.ts";
 import { assertStepMayInvokeModel } from "../lib/control-plane/scheduler/model-routing.ts";
 import { ModelTransportError, type ModelRequest, type ModelResponse, type ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { AUDIT_CONTEXT_MAX_BYTES, AUDIT_RESPONSE_MAX_BYTES, auditReasoningContext, modelAuditReasoner as createAuditReasoner } from "../lib/control-plane/workers/model-audit.ts";
@@ -48,7 +48,7 @@ test("typed record_audit output preserves grounded challenge, actual model usage
   assert.equal(result.usage.inputTokens, 100);
   assert.equal(result.usage.cacheReadInputTokens, 200);
   assert.equal(result.usage.cacheCreationInputTokens, 300);
-  assert.equal(result.usd, usdForModelUsage(MODEL, result.usage));
+  assert.equal(result.usd, priceMeteredUsage(MODEL, readMeteredUsage({ input_tokens: result.usage.inputTokens, output_tokens: result.usage.outputTokens, cache_read_input_tokens: result.usage.cacheReadInputTokens, cache_creation_input_tokens: result.usage.cacheCreationInputTokens }), "1h").usd);
   assert.ok(result.review.elapsedMs >= 0);
   assert.equal(result.review.contextHash, contentHash(String(request?.messages[0].content)));
 });
@@ -114,7 +114,7 @@ test("malformed, truncated, mismatched and unsupported responses retain exact na
     assert.ok(result.review.validationError?.includes(expected), result.review.validationError ?? "failure was swallowed");
     assert.ok(result.review.responseText);
     assert.equal(result.usage.outputTokens, 50);
-    assert.equal(result.usd, usdForModelUsage(supplied.model, result.usage));
+    assert.equal(result.usd, priceMeteredUsage(supplied.model, readMeteredUsage(supplied.usage), "1h").usd);
   }
 });
 

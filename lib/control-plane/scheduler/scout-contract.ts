@@ -30,7 +30,7 @@ export interface ScoutToolSpec {
   readonly description: string;
   readonly input_schema: Record<string, unknown>;
   /** The executor sets this on the LAST definition so the tool list is a cache prefix. */
-  readonly cache_control?: { readonly type: "ephemeral" };
+  readonly cache_control?: { readonly type: "ephemeral"; readonly ttl?: "5m" | "1h" };
   /** Strict tool use: the provider guarantees `input` validates against `input_schema` (a forced `tool_choice` is refused by Opus 5.5). */
   readonly strict?: boolean;
 }
@@ -92,6 +92,11 @@ export interface PriorRung {
 export interface InheritedEvidence {
   /** Artifact ids the model may cite as inherited evidence. */
   readonly artifactIds: readonly string[];
+  readonly placeName?: string;
+  readonly blanks?: readonly string[];
+  readonly officialWebsite?: string;
+  readonly savedPages?: readonly { readonly id: string; readonly url: string }[];
+  readonly similarPlaces?: readonly string[];
   /** Prior route outcomes, prior Scout results, known routes for the hosts — as text. */
   readonly summary: string;
   /** Machine provenance for the inherited ids, where the control plane holds it. */

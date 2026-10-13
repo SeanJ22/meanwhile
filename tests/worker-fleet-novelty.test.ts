@@ -1,3 +1,4 @@
+import { playbookRows } from "./helpers/playbooks.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { mkdtemp, rm } from "node:fs/promises";
@@ -37,6 +38,7 @@ async function exhaustPlainRetries(h: Awaited<ReturnType<typeof autonomousHarnes
 
 test("the actual Scout request inherits a learned method and the failed Hunter route before novelty",async t=>{
   const h=await autonomousHarness({response:{transportError:"socket timeout"}});
+  await writeFieldManual(h.repos, playbookRows, h.now());
   await exhaustPlainRetries(h);
   const before=await h.repos.workerResults.readAll();
   const root=await mkdtemp(join(tmpdir(),"fleet-novelty-fixture-"));
@@ -70,10 +72,10 @@ test("the actual Scout request inherits a learned method and the failed Hunter r
   assert.equal(requests.length,2,"the transport is an offline recorder, never a provider call");
   assert.deepEqual(searches, ["fixture clerk alternate official roster"], "an autonomous repair can invoke the same injected guarded search capability");
   const request=JSON.stringify(requests[0]);
-  assert.match(request,/fixture-learned-roster-route/);
-  assert.match(request,/EXPLORATORY/);
-  assert.match(request,/UNRESOLVED_INVESTIGATION/);
-  assert.match(request,/fourteen retrieval rungs are a floor/);
+  assert.match(request,/Walk the separately published fixture office register/);
+  assert.match(request,/Method to try/);
+  assert.match(request,/Saved work and remaining leads/);
+  assert.doesNotMatch(request,/fourteen retrieval rungs are a floor/);
   assert.ok(request.includes(FIXTURE_URL));
   assert.match(request,/timeout/);
   assert.match(request,/seeded\.example\/door/,"the seeded field-manual door reaches the scout's request brief");
@@ -91,6 +93,7 @@ test("the actual Scout request inherits a learned method and the failed Hunter r
 
 test("one running worker runtime saves a new observed route and hands it to its next Scout", async t => {
   const h = await autonomousHarness({ response: { transportError: "socket timeout" } });
+  await writeFieldManual(h.repos, playbookRows, h.now());
   await exhaustPlainRetries(h);
   const root = await mkdtemp(join(tmpdir(), "fleet-new-method-"));
   t.after(() => rm(root, { recursive: true, force: true }));

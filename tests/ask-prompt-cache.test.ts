@@ -1,5 +1,7 @@
+import { fixturePlaybooks } from "./helpers/playbooks.ts";
+import { WORKER_SAFETY_FRAME } from "../lib/control-plane/playbooks.ts";
 import assert from "node:assert/strict";
-import test from "node:test";
+import test from "./helpers/playbooks.ts";
 
 import type { EvidencePack } from "../lib/ask/evidence.ts";
 import {
@@ -115,8 +117,9 @@ function renderedPrefix(body: Record<string, unknown>): string | null {
 }
 
 function ttlMsOf(body: Record<string, unknown>): number {
-  const raw = JSON.stringify(body);
-  return raw.includes('"ttl":"1h"') ? 60 * 60 * 1000 : 5 * 60 * 1000;
+  const messages = body.messages as { content: { cache_control?: { ttl?: string } }[] }[];
+  const marker = messages.flatMap(message => Array.isArray(message.content) ? message.content : []).find(block => block.cache_control)?.cache_control;
+  return marker?.ttl === "1h" ? 60 * 60 * 1000 : 5 * 60 * 1000;
 }
 
 /**
@@ -342,15 +345,14 @@ test("H1: the two payloads are a PARTITION of the pre-caching payload", () => {
   assert.deepEqual(questionKeys.sort(), [...SYNTHESIS_QUESTION_FIELDS].sort());
 });
 
-test("H1: the system prompt is one string with every rule, and its size is pinned", () => {
-  // Agenda questions have their own lead; the definition-first branch stays byte-identical.
+test("H1: the system prompt contains the current row and the fixed safety frame", () => {
   const prompt = synthesisPrompt(zipPack({ intent: "CIVICS" }));
   assert.equal(typeof prompt, "string");
   assert.match(prompt, /ONLY the records supplied/);
   assert.match(prompt, /Never tell the reader how to vote/);
   assert.doesNotMatch(prompt, /Today is/, "the date is no longer in the system prompt");
   assert.match(prompt, /LEAD WITH THE PLAIN DEFINITION/, "the definition-first contract is in the prompt");
-  assert.equal(prompt.length, 2543, "the system prompt changed size — re-measure the cache floor");
+  assert.equal(prompt, `${WORKER_SAFETY_FRAME}\n\nASK_WRITER PLAYBOOK\n${(fixturePlaybooks(["ASK_WRITER"])[0].payload as {text:string}).text}`);
 });
 
 test("PC-5 (2026-09-06): the request carries TWO breakpoints — the system block and the civic context — and the date and the question sit after both", async () => {
@@ -359,7 +361,7 @@ test("PC-5 (2026-09-06): the request carries TWO breakpoints — the system bloc
   await synthesizeAnswer(zipPack(), { apiKey: "k", fetchImpl: anthropicWithCache(clock, seen), callerKey: "synthetic-run" });
   const body = seen[0].body as { system: { type: string; text: string; cache_control?: unknown }[]; messages: { content: { type: string; text: string; cache_control?: unknown }[] }[] };
   assert.ok(Array.isArray(body.system) && body.system.length === 1, "the system prefix is one text block");
-  assert.deepEqual(body.system[0].cache_control, { type: "ephemeral" }, "the first breakpoint is on the system block");
+  assert.deepEqual(body.system[0].cache_control, { type: "ephemeral", ttl: "1h" }, "the first breakpoint is on the stable hour-long system block");
   assert.equal(body.system[0].text, synthesisPrompt(zipPack()));
   const blocks = body.messages[0].content;
   assert.equal(blocks.length, 3, "context, date, question");

@@ -8,7 +8,7 @@ import type { AdminConfig } from "./gateway/admin-config.ts";
 export type SettingValue = null | boolean | number | string | readonly SettingValue[] | { readonly [key: string]: SettingValue };
 
 /** How Admin offers a new value: a number box, On/Off, a line of text, or structured data. */
-export type SettingControl = "number" | "boolean" | "text" | "json";
+export type SettingControl = "number" | "boolean" | "text" | "json" | "choice";
 
 export interface SettingDefinition<T extends SettingValue = SettingValue> {
   /** Stable machine key, e.g. `detective.shutThreshold`. Never shown in Admin. */
@@ -23,6 +23,7 @@ export interface SettingDefinition<T extends SettingValue = SettingValue> {
   readonly unit?: string;
   /** How Admin offers a new value. Defaults from the code default's type. */
   readonly control?: SettingControl;
+  readonly choices?: readonly { readonly value: string; readonly label: string }[];
 }
 
 export interface SettingChange {
@@ -79,6 +80,10 @@ registerSetting({
  * and log into the same history so the Settings view shows their changes and undo.
  */
 export const SPEND_CEILING_LOG_KEY = "fleet.spendCeilingUsd";
+export const ALERTS_ON_SETTING = "alerts.on";
+export const BRIEF_TIME_SETTING = "brief.time";
+registerSetting({key:ALERTS_ON_SETTING,label:"Show alerts",defaultValue:false,readerFacing:false,control:"boolean",validate:(v):v is boolean=>typeof v==="boolean"});
+registerSetting({key:BRIEF_TIME_SETTING,label:"Daily brief time (Eastern, HH:mm; blank for off)",defaultValue:"",readerFacing:false,control:"text",validate:(v):v is string=>typeof v==="string"&&(v===""||/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(v))});
 
 
 export function settingDefinition(key: string): SettingDefinition | null { return definitions.get(key) ?? null; }
@@ -161,7 +166,9 @@ export function runnerSettingsEcho(config: AdminConfig | null, appliedAt: string
 
 
 /** A value in plain words for Admin. */
-export function settingValueWords(value: SettingValue, unit?: string): string {
+export function settingValueWords(value: SettingValue, unit?: string, choices?: SettingDefinition["choices"]): string {
+  const choice = choices?.find(choice => choice.value === value);
+  if (choice) return choice.label;
   if (value === null) return "—";
   if (typeof value === "boolean") return value ? "On" : "Off";
   if (typeof value === "number") return `${value.toLocaleString("en-US")}${unit ? ` ${unit}` : ""}`;

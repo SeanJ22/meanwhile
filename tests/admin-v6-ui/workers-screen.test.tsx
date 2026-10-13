@@ -152,13 +152,17 @@ test("parent cycle metadata reaches the existing Workers round through bounded r
       b.set(() => ({ status: 200, body: reading }));
       sync.onPulse(pulse(ended ? "cycle-finished" : "cycle-live"));
       await settle(sync);
-      const rendered = text(page(sync, { kind: "all" }, "us", "workers"));
+      const html = page(sync, { kind: "all" }, "us", "workers");
+      const rendered = text(html);
+      const face = text(html.replace(/<details\b[^>]*>[\s\S]*?<\/details>/g, ""));
       if (!ended) {
         assert.match(rendered, /Running since 6:05 PM ET/);
-        assert.doesNotMatch(rendered, /signal SIGTERM|Last round error/);
+        assert.doesNotMatch(rendered, /stopped from outside|ended with an error|SOURCE_READ_FAILED/);
       } else {
-        assert.match(rendered, /Started Sep 28, 6:05 PM ET; finished Sep 28, 6:12 PM ET; signal SIGTERM/);
-        assert.match(rendered, /Last round error: SOURCE_READ_FAILED/);
+        assert.match(face, /Started Sep 28, 6:05 PM ET; finished Sep 28, 6:12 PM ET; it was stopped from outside\./);
+        assert.match(face, /The last round ended with an error\./);
+        assert.doesNotMatch(face, /SOURCE_READ_FAILED|SIGTERM/, "the error text is not on the face");
+        assert.match(rendered, /SOURCE_READ_FAILED/, "it is kept behind Technical details");
         assert.doesNotMatch(rendered, /Running since/);
       }
     }
@@ -184,10 +188,14 @@ test("a migration failure reaches the existing Workers card through saved histor
   const b = backend(); b.set(() => ({ status: 200, body: reading }));
   const sync = new LiveSync({ scope: "us", fetch: b.fetch, schedule: () => () => {} });
   sync.onPulse(pulse("migration-failed")); await settle(sync);
-  const rendered = text(page(sync, { kind: "all" }, "us", "workers"));
-  assert.match(rendered, /Production migrations/);
-  assert.match(rendered, /expand: failed/);
-  assert.match(rendered, /Engineering repairs the expand migration failure/);
+  const html = page(sync, { kind: "all" }, "us", "workers");
+  const rendered = text(html);
+  const face = text(html.replace(/<details\b[^>]*>[\s\S]*?<\/details>/g, ""));
+  assert.match(face, /The latest database update/);
+  assert.match(face, /The latest database update did not finish: the step that runs before new code goes live failed\./);
+  assert.match(face, /Engineering repairs the step that runs before new code goes live/);
+  assert.doesNotMatch(face, /expand: failed|\[private\]/, "the migration's own output is not on the face");
+  assert.match(rendered, /expand: failed/, "the migration output is kept behind Technical details");
   assert.match(rendered, /\[private\]/);
   assert.doesNotMatch(rendered, /s13-private-token|password|postgresql:\/\//);
   assert.doesNotMatch(rendered, /Fix this/);

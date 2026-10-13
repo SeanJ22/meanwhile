@@ -1,5 +1,6 @@
 import { readRegistrationProjection } from "../registration/reader.ts";
 import { stateContainers, type ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
+import { censusWorkDivision } from "../census-geography/division-id.ts";
 import type { RoutineDataStore } from "../civic-data/store.ts";
 import type { FederalMoneyJoinInput } from "./join.ts";
 import { federalMoneyScope, type FederalMoneyProjection } from "./model.ts";
@@ -24,7 +25,8 @@ export async function readFederalMoneyJoinInput(state: string, store: RoutineDat
     if (Array.isArray(row?.bodies)) bodies.push(...row.bodies as typeof bodies);
     const geography = await stateContainers(state, ["county", "congressional_district"], false, query);
     if (geography.kind === "HELD") for (const { ref } of geography.value.containers) {
-      if (ref.ocdId) divisions.push({ ocdId: ref.ocdId, geoid: ref.geoid, divisionType: ref.type });
+      const ocdId = censusWorkDivision(ref);
+      if (ocdId) divisions.push({ ocdId, geoid: ref.geoid, divisionType: ref.type });
     }
   }
   const entities = await store.readPromotion<FederalMoneyProjection>("FEDERAL_MONEY", federalMoneyScope("sam-gov-entities", state));

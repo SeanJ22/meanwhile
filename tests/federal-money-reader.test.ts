@@ -50,8 +50,8 @@ test("real OpenFEMA declaration reaches the county card and Ask with the same da
     assert.equal(rows[0].relationship, "GEOGRAPHY");
     assert.equal(federalMoneySources(rows)[0].provenance.kind, "OFFICIAL");
     assert.match(federalMoneySources(rows)[0].what, /published 2026-09-15/);
-    const markup = renderToStaticMarkup(createElement(Card, { title: "Ouachita County", sources: federalMoneySources(rows),
-      children: createElement(FederalMoneySection, { divisionId: COUNTY, bodyId: BODY, data: read }) }));
+    const markup = renderToStaticMarkup(createElement(Card, { title: "Ouachita County", sources: federalMoneySources(rows) } as Parameters<typeof Card>[0],
+      createElement(FederalMoneySection, { divisionId: COUNTY, bodyId: BODY, data: read })));
     assert.match(markup, /BUNKER FIRE/);
     assert.match(markup, /Public assistance: Yes/i);
     assert.match(markup, /published.*2026-09-15/i);

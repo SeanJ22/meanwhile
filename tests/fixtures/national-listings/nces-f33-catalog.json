@@ -1,0 +1,587 @@
+{
+  "selectionGroupModels": [
+    {
+      "fiscal": true,
+      "level": "District",
+      "schoolYear": "2023 - 2024",
+      "titleGroups": [
+        {
+          "fiscal": true,
+          "level": "District",
+          "schoolYear": "2023 - 2024",
+          "title": "Local Education Agency (School District) Finance Survey (F-33) Data, (v.1a)",
+          "versionOrder": 0,
+          "archiveURL": "",
+          "elementGroups": [
+            {
+              "fiscal": true,
+              "level": "District",
+              "schoolYear": "2023 - 2024",
+              "title": "Local Education Agency (School District) Finance Survey (F-33) Data, (v.1a)",
+              "versionId": 10,
+              "elementType": "Data File",
+              "versionOrder": 0,
+              "componentOrder": 0,
+              "componentGroups": [
+                {
+                  "fiscal": true,
+                  "level": "District",
+                  "schoolYear": "2023 - 2024",
+                  "component": null,
+                  "title": "Local Education Agency (School District) Finance Survey (F-33) Data, (v.1a)",
+                  "versionId": 10,
+                  "elementType": "Data File",
+                  "componentOrder": 0,
+                  "versionOrder": 0,
+                  "files": [
+                    {
+                      "fileId": 6468,
+                      "level": "District",
+                      "elementType": "Data File",
+                      "fileURL": "https://nces.ed.gov/ccd/Data/txt/sdf24_1a.txt",
+                      "archiveURL": null,
+                      "description": "Flat File (22 MB)",
+                      "order": 0,
+                      "fiscal": true,
+                      "schoolYear": "2023 - 2024",
+                      "title": "Local Education Agency (School District) Finance Survey (F-33) Data",
+                      "version": "(v.1a)",
+                      "versionId": 10,
+                      "versionOrder": 0,
+                      "component": null,
+                      "componentOrder": 0,
+                      "size": "22 MB"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "fiscal": true,
+              "level": "District",
+              "schoolYear": "2023 - 2024",
+              "title": "Local Education Agency (School District) Finance Survey (F-33) Data, (v.1a)",
+              "versionId": 10,
+              "elementType": "Documentation",
+              "versionOrder": 0,
+              "componentOrder": 0,
+              "componentGroups": [
+                {
+                  "fiscal": true,
+                  "level": "District",
+                  "schoolYear": "2023 - 2024",
+                  "component": null,
+                  "title": "Local Education Agency (School District) Finance Survey (F-33) Data, (v.1a)",
+                  "versionId": 10,
+                  "elementType": "Documentation",
+                  "componentOrder": 0,
+                  "versionOrder": 0,
+                  "files": [
+                    {
+                      "fileId": 6469,
+                      "level": "District",
+                      "elementType": "Documentation",
+                      "fileURL": "https://nces.ed.gov/ccd/xls/2026011_F33_FY24_Version1a_CompanionFile.xlsx",
+                      "archiveURL": null,
+                      "description": "Companion File\r\n (63 KB)",
+                      "order": 0,
+                      "fiscal": true,
+                      "schoolYear": "2023 - 2024",
+                      "title": "Local Education Agency (School District) Finance Survey (F-33) Data",
+                      "version": "(v.1a)",
+                      "versionId": 10,
+                      "versionOrder": 0,
+                      "component": null,
+                      "componentOrder": 0,
+                      "size": "63 KB"
+                    },
+                    {
+                      "fileId": 6473,
+                      "level": "District",
+                      "elementType": "Documentation",
+                      "fileURL": "https://nces.ed.gov/ccd/xls/\r\n2026011_F33_FY24_sdf1a_Tables.xlsx",
+                      "archiveURL": null,
+                      "description": "Data Tables (103 KB)",
+                      "order": 0,
+                      "fiscal": true,
+                      "schoolYear": "2023 - 2024",
+                      "title": "Local Education Agency (School District) Finance Survey (F-33) Data",
+                      "version": "(v.1a)",
+                      "versionId": 10,
+                      "versionOrder": 0,
+                      "component": null,
+                      "componentOrder": 0,
+                      "size": "103 KB"
+                    },
+                    {
+                      "fileId": 6470,
+                      "level": "District",
+                      "elementType": "Documentation",
+                      "fileURL": "https://nces.ed.gov/ccd/pdf/2026011_F33_FY24_Version1a_ReleaseNotes.pdf",
+                      "archiveURL": null,
+                      "description": "Release Notes\r\n (205 KB)",
+                      "order": 0,
+                      "fiscal": true,
+                      "schoolYear": "2023 - 2024",
+                      "title": "Local Education Agency (School District) Finance Survey (F-33) Data",
+                      "version": "(v.1a)",
+                      "versionId": 10,
+                      "versionOrder": 0,
+                      "component": null,
+                      "componentOrder": 0,
+                      "size": "205 KB"
+                    },
+                    {
+                      "fileId": 6471,
+                      "level": "District",
+                      "elementType": "Documentation",
+                      "fileURL": "https://nces.ed.gov/ccd/xls/\n\r\n2026011_F33_FY24_Version1a_StateNotes.xlsx",
+                      "archiveURL": null,
+                      "description": "State Data Notes (41 KB)",
+                      "order": 0,
+                      "fiscal": true,
+                      "schoolYear": "2023 - 2024",
+                      "title": "Local Education Agency (School District) Finance Survey (F-33) Data",
+                      "version": "(v.1a)",
+                      "versionId": 10,
+                      "versionOrder": 0,
+                      "component": null,
+                      "componentOrder": 0,
+                      "size": "41 KB"
+                    },
+                    {
+                      "fileId": 6472,
+                      "level": "District",
+                      "elementType": "Documentation",
+                      "fileURL": "https://nces.ed.gov/ccd/pdf/f33_2024_508.pdf",
+                      "archiveURL": null,
+                      "description": "Survey Form\r\n (385 KB)",
+                      "order": 0,
+                      "fiscal": true,
+                      "schoolYear": "2023 - 2024",
+                      "title": "Local Education Agency (School District) Finance Survey (F-33) Data",
+                      "version": "(v.1a)",
+                      "versionId": 10,
+                      "versionOrder": 0,
+                      "component": null,
+                      "componentOrder": 0,
+                      "size": "385 KB"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "fiscal": true,
+      "level": "District",
+      "schoolYear": "2022 - 2023",
+      "titleGroups": [
+        {
+          "fiscal": true,
+          "level": "District",
+          "schoolYear": "2022 - 2023",
+          "title": "Local Education Agency (School District) Finance Survey (F-33) Data, (v.1a)",
+          "versionOrder": 0,
+          "archiveURL": "",
+          "elementGroups": [
+            {
+              "fiscal": true,
+              "level": "District",
+              "schoolYear": "2022 - 2023",
+              "title": "Local Education Agency (School District) Finance Survey (F-33) Data, (v.1a)",
+              "versionId": 10,
+              "elementType": "Data File",
+              "versionOrder": 0,
+              "componentOrder": 0,
+              "componentGroups": [
+                {
+                  "fiscal": true,
+                  "level": "District",
+                  "schoolYear": "2022 - 2023",
+                  "component": null,
+                  "title": "Local Education Agency (School District) Finance Survey (F-33) Data, (v.1a)",
+                  "versionId": 10,
+                  "elementType": "Data File",
+                  "componentOrder": 0,
+                  "versionOrder": 0,
+                  "files": [
+                    {
+                      "fileId": 6150,
+                      "level": "District",
+                      "elementType": "Data File",
+                      "fileURL": "https://nces.ed.gov/ccd/Data/zip/sdf23_1a_xlsx.zip",
+                      "archiveURL": null,
+                      "description": "Excel File (25 MB)",
+                      "order": 0,
+                      "fiscal": true,
+                      "schoolYear": "2022 - 2023",
+                      "title": "Local Education Agency (School District) Finance Survey (F-33) Data",
+                      "version": "(v.1a)",
+                      "versionId": 10,
+                      "versionOrder": 0,
+                      "component": null,
+                      "componentOrder": 0,
+                      "size": "25 MB"
+                    },
+                    {
+                      "fileId": 6151,
+                      "level": "District",
+                      "elementType": "Data File",
+                      "fileURL": "https://nces.ed.gov/ccd/Data/zip/sdf23_1a_txt.zip",
+                      "archiveURL": null,
+                      "description": "Flat File (4.4 MB)",
+                      "order": 0,
+                      "fiscal": true,
+                      "schoolYear": "2022 - 2023",
+                      "title": "Local Education Agency (School District) Finance Survey (F-33) Data",
+                      "version": "(v.1a)",
+                      "versionId": 10,
+                      "versionOrder": 0,
+                      "component": null,
+                      "componentOrder": 0,
+                      "size": "4.4 MB"
+                    },
+                    {
+                      "fileId": 6152,
+                      "level": "District",
+                      "elementType": "Data File",
+                      "fileURL": "https://nces.ed.gov/ccd/Data/zip/sdf23_1a_sas7bdat.zip",
+                      "archiveURL": null,
+                      "description": "SAS File (6.2 MB)",
+                      "order": 0,
+                      "fiscal": true,
+                      "schoolYear": "2022 - 2023",
+                      "title": "Local Education Agency (School District) Finance Survey (F-33) Data",
+                      "version": "(v.1a)",
+                      "versionId": 10,
+                      "versionOrder": 0,
+                      "component": null,
+                      "componentOrder": 0,
+                      "size": "6.2 MB"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "fiscal": true,
+              "level": "District",
+              "schoolYear": "2022 - 2023",
+              "title": "Local Education Agency (School District) Finance Survey (F-33) Data, (v.1a)",
+              "versionId": 10,
+              "elementType": "Documentation",
+              "versionOrder": 0,
+              "componentOrder": 0,
+              "componentGroups": [
+                {
+                  "fiscal": true,
+                  "level": "District",
+                  "schoolYear": "2022 - 2023",
+                  "component": null,
+                  "title": "Local Education Agency (School District) Finance Survey (F-33) Data, (v.1a)",
+                  "versionId": 10,
+                  "elementType": "Documentation",
+                  "componentOrder": 0,
+                  "versionOrder": 0,
+                  "files": [
+                    {
+                      "fileId": 6153,
+                      "level": "District",
+                      "elementType": "Documentation",
+                      "fileURL": "https://nces.ed.gov/ccd/pdf/2025306.pdf",
+                      "archiveURL": null,
+                      "description": "General Documentation (3.9 KB)",
+                      "order": 0,
+                      "fiscal": true,
+                      "schoolYear": "2022 - 2023",
+                      "title": "Local Education Agency (School District) Finance Survey (F-33) Data",
+                      "version": "(v.1a)",
+                      "versionId": 10,
+                      "versionOrder": 0,
+                      "component": null,
+                      "componentOrder": 0,
+                      "size": "3.9 KB"
+                    },
+                    {
+                      "fileId": 6154,
+                      "level": "District",
+                      "elementType": "Documentation",
+                      "fileURL": "https://nces.ed.gov/ccd/Data/txt/sdf23_1a_layout.txt",
+                      "archiveURL": null,
+                      "description": "Record Layout (50 KB)",
+                      "order": 0,
+                      "fiscal": true,
+                      "schoolYear": "2022 - 2023",
+                      "title": "Local Education Agency (School District) Finance Survey (F-33) Data",
+                      "version": "(v.1a)",
+                      "versionId": 10,
+                      "versionOrder": 0,
+                      "component": null,
+                      "componentOrder": 0,
+                      "size": "50 KB"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "lookupLists": {
+    "schoolYears": [
+      {
+        "schoolYearShort": null,
+        "id": 0,
+        "name": "Select a Year",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "2025",
+        "id": 40,
+        "name": "2025 - 2026",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "2024",
+        "id": 39,
+        "name": "2024 - 2025",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "2023",
+        "id": 38,
+        "name": "2023 - 2024",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "2022",
+        "id": 37,
+        "name": "2022 - 2023",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "2021",
+        "id": 36,
+        "name": "2021 - 2022",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "2020",
+        "id": 35,
+        "name": "2020 - 2021",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "2019",
+        "id": 34,
+        "name": "2019 - 2020",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "2018",
+        "id": 33,
+        "name": "2018 - 2019",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "2017",
+        "id": 32,
+        "name": "2017 - 2018",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "2016",
+        "id": 31,
+        "name": "2016 - 2017",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "2015",
+        "id": 30,
+        "name": "2015 - 2016",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "2014",
+        "id": 29,
+        "name": "2014 - 2015",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "2013",
+        "id": 28,
+        "name": "2013 - 2014",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "2012",
+        "id": 27,
+        "name": "2012 - 2013",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "2011",
+        "id": 26,
+        "name": "2011 - 2012",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "2010",
+        "id": 25,
+        "name": "2010 - 2011",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "2009",
+        "id": 24,
+        "name": "2009 - 2010",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "2008",
+        "id": 23,
+        "name": "2008 - 2009",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "2007",
+        "id": 22,
+        "name": "2007 - 2008",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "2006",
+        "id": 21,
+        "name": "2006 - 2007",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "2005",
+        "id": 20,
+        "name": "2005 - 2006",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "2004",
+        "id": 19,
+        "name": "2004 - 2005",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "2003",
+        "id": 18,
+        "name": "2003 - 2004",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "2002",
+        "id": 17,
+        "name": "2002 - 2003",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "2001",
+        "id": 16,
+        "name": "2001 - 2002",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "2000",
+        "id": 15,
+        "name": "2000 - 2001",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "1999",
+        "id": 14,
+        "name": "1999 - 2000",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "1998",
+        "id": 13,
+        "name": "1998 - 1999",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "1997",
+        "id": 12,
+        "name": "1997 - 1998",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "1996",
+        "id": 11,
+        "name": "1996 - 1997",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "1995",
+        "id": 10,
+        "name": "1995 - 1996",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "1994",
+        "id": 9,
+        "name": "1994 - 1995",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "1993",
+        "id": 8,
+        "name": "1993 - 1994",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "1992",
+        "id": 7,
+        "name": "1992 - 1993",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "1991",
+        "id": 6,
+        "name": "1991 - 1992",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "1990",
+        "id": 5,
+        "name": "1990 - 1991",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "1989",
+        "id": 4,
+        "name": "1989 - 1990",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "1988",
+        "id": 3,
+        "name": "1988 - 1989",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "1987",
+        "id": 2,
+        "name": "1987 - 1988",
+        "sortOrder": 0
+      },
+      {
+        "schoolYearShort": "1986",
+        "id": 1,
+        "name": "1986 - 1987",
+        "sortOrder": 0
+      }
+    ],
+    "levels": null
+  }
+}

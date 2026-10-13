@@ -1,5 +1,7 @@
 // The import attribute lets this module load under `node --test` as well as the bundler.
 import centroidFile from "./zcta-centroids.json" with { type: "json" };
+import postalFile from "./postal-zips.json" with { type: "json" };
+import type { PostalTable } from "./postal-core.ts";
 import {
   isWellFormedZip,
   lookupIn,
@@ -24,10 +26,10 @@ export { isWellFormedZip };
 
 // JSON arrays widen to number[]; the file's contract is a pair per zip.
 const CENTROIDS = centroidFile.centroids as unknown as CentroidTable;
+const POSTAL = postalFile.zips as unknown as PostalTable;
 
 /**
- * Whether the centroid table covers the whole country. With a partial table
- * an unrecognized zip is "we don't have it yet", not "it doesn't exist".
+ * Whether every Census ZCTA is held. This does not establish USPS completeness.
  */
 export const COVERAGE_IS_COMPLETE: boolean = centroidFile.complete === true;
 
@@ -38,7 +40,7 @@ export const CENTROID_SOURCE = {
 };
 
 export function lookupZcta(input: string): ZctaCentroid | null {
-  return lookupIn(CENTROIDS, input);
+  return lookupIn(CENTROIDS, input, POSTAL);
 }
 
 export function nearestZcta(lat: number, lng: number): ZctaCentroid | null {
@@ -46,5 +48,5 @@ export function nearestZcta(lat: number, lng: number): ZctaCentroid | null {
 }
 
 export function resolveZip(input: string): ZipResolution {
-  return resolveIn(CENTROIDS, COVERAGE_IS_COMPLETE, input);
+  return resolveIn(CENTROIDS, input, POSTAL);
 }

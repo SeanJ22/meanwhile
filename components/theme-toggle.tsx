@@ -1,10 +1,11 @@
 "use client";
 
+import { Moon, Sun } from "lucide-react";
 import { useStoredTheme } from "@/hooks/use-stored-theme";
 
 /**
- * The theme switch: a half-black, half-white circle that turns as the theme
- * cross-fades. The label names the destination.
+ * The theme switch: sun in dark, moon in light — the glyph and the label both
+ * name the destination. The two glyphs cross-fade and turn on the switch.
  */
 export function ThemeToggle({ className = "" }: { className?: string }) {
   const { theme, toggle } = useStoredTheme();
@@ -19,7 +20,10 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
       aria-label={`Switch to ${next} mode`}
       data-theme-now={theme}
     >
-      <span className="mw-theme-glyph" aria-hidden="true" />
+      <span className="mw-theme-glyph" aria-hidden="true">
+        <Sun className="mw-theme-sun" strokeWidth={1.5} />
+        <Moon className="mw-theme-moon" strokeWidth={1.5} />
+      </span>
     </button>
   );
 }

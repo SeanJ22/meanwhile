@@ -88,6 +88,8 @@ export interface DoorRecord {
   readonly status: DoorStatus;
   readonly lastSuccessAt: string | null;
   readonly lastFailureAt: string | null;
+  /** The source's actual outage reason, preserved on its existing operational record. */
+  readonly lastFailureReason?: string | null;
   /** When the door last went SHUT. Null unless it is. */
   readonly shutSince: string | null;
   /** System-kept: consecutive reads that could not reach the door. Absent means none. */

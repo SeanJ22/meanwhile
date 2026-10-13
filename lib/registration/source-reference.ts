@@ -7,6 +7,7 @@ import type { KnownRelease } from "../sources/known-release.ts";
 import type { LoadedReference, ReferenceGovernment } from "./reference.ts";
 import { governmentNativeId, type RegistrationGovernmentListing } from "./listings.ts";
 import type { RegistrationReadModel } from "./candidate.ts";
+import { censusGovernmentContacts } from "./census-contacts.ts";
 
 /** Reacquisition starts from the latest published evidence as well as the
  * installed extract, so an outage cannot roll a newer source back to 2022. */
@@ -95,12 +96,10 @@ export function registrationReferenceFromRelease(prior: LoadedReference, release
       const old = existing.get(pid);
       const jurisdictionId = old?.[1] ?? id;
       governments.push([pid, jurisdictionId, name, type, division, how, -1]);
-      const website = value("WEB_ADDRESS", "WEBSITE");
       listings.push({ id, aliases: [jurisdictionId], jurisdictionId, state, name,
         kind: type === "DEPENDENT SCHOOL SYSTEM" ? "DEPENDENT_SCHOOL_SYSTEM" : "GOVERNMENT", governmentClass: type,
         nativeIds: { census_pid6: pid }, status: value("IS_ACTIVE") || null, sourceVintage: release.releaseId,
-        website: website ? (/^https?:\/\//i.test(website) ? website : `http://${website}`) : null,
-        // COG mailing/title fields can name a private addressee; they are not office contacts.
+        ...censusGovernmentContacts(value),
         officePhone: null, officeAddress: null, countyFips: /^\d{2}$/.test(fips) && /^\d{3}$/.test(county) && county !== "000" ? fips + county : null,
         associations: [], bodyIds: [], provenance: { sourceUrl: release.requestedUrl, sourceOrg: "U.S. Census Bureau", collectedAt: release.sourceObservedAt, verifiedAt: null } });
       found++;

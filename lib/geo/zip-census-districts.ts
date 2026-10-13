@@ -1,4 +1,5 @@
 import type { GeographyType } from "../census-geography/contract.ts";
+import { zipNeedsAddress } from "./postal.ts";
 import { censusWorkDivision, districtFamilyKey } from "../census-geography/division-id.ts";
 import { readerQuery } from "../civic-data/promoted-reader-query.ts";
 import { containersOfCode, type CodeSlice, type Slice } from "../control-plane/admin-view/promoted-slices.ts";
@@ -13,6 +14,7 @@ const cached = new Map<string, { at: number; read: Promise<Slice<CodeSlice>>; go
 /** Qualified district descriptions travel with the same ZIP membership read.
  * A registration boundary file need not contain a newly published district. */
 export async function publishedDivisionsForZip(zip: string, selection: GeographySelection = currentRepresentationSelection()): Promise<import("../registry/types.ts").Division[]> {
+  if (zipNeedsAddress(zip)) return [];
   const slice = await publishedZipDistricts(zip);
   if (slice.kind !== "HELD" || !slice.value.known) return [];
   const out: import("../registry/types.ts").Division[] = [];

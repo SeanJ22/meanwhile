@@ -62,8 +62,10 @@ function verifyExactVersion(
 }
 
 function verifierIdFor(contract: ReaderContract): string {
+  if (contract.recordClass === "FEDERAL_CIVIC_RECORD") return "lib/sources/congress/publication.ts#readFederalSourceProjection";
   if (contract.sourceId === "plural-openstates" && contract.recordClass === "STATE_LEGISLATOR") return "lib/state-rollcalls/legislators.ts#readOpenStatesPeopleProjection";
   switch (contract.id) {
+    case "dotgov": return "lib/civic-data/dotgov.ts#readDotGovProjection";
     case "fec-funding": return "lib/funding/snapshot.ts#readFundingSnapshot";
     case "nh-members": return "lib/civic-data/state-members.ts#readNhMembers";
     case "az-state-legislators":
@@ -130,6 +132,14 @@ export async function verifyRoutineReaderProjection(
 ): Promise<RoutineReaderVerification> {
   const verifierId = verifierIdFor(contract);
   try {
+    if (contract.recordClass === "FEDERAL_CIVIC_RECORD") {
+      const { readFederalSourceProjection } = await import("../sources/congress/publication.ts");
+      const { isFederalSource } = await import("../sources/congress/targets.ts");
+      if (!isFederalSource(contract.sourceId)) return fail(verifierId, "Unknown federal publisher.");
+      const scope = options.scope ?? contract.scope;
+      const partition = scope.slice(contract.sourceId.length + 1);
+      return verifyExactVersion(verifierId, await readFederalSourceProjection(contract.sourceId, partition, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "federal source");
+    }
     if (contract.sourceId === "plural-openstates" && contract.recordClass === "STATE_LEGISLATOR") {
       const { readOpenStatesPeopleProjection } = await import("../state-rollcalls/legislators.ts");
       const jurisdiction = /^US-[A-Z]{2}/.exec(contract.scope)?.[0] as `US-${string}` | undefined;
@@ -137,6 +147,10 @@ export async function verifyRoutineReaderProjection(
       return verifyExactVersion(verifierId,await readOpenStatesPeopleProjection(jurisdiction,{store:options.store,now:options.now,bypassCache:true}),options.expectedVersionId,"state people");
     }
     switch (contract.id) {
+      case "dotgov": {
+        const { readDotGovProjection } = await import("./dotgov.ts");
+        return verifyExactVersion(verifierId, await readDotGovProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "government domains");
+      }
       case "fec-funding": {
         const { readFundingSnapshot } = await import("../funding/snapshot.ts");
         const result = await readFundingSnapshot({ store: options.store, now: options.now, bypassCache: true });

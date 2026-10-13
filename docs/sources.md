@@ -362,18 +362,20 @@ parse as data*, never *did the call succeed*.
 - **Licence:** US federal government work. Public domain.
 
 ### CISA `.gov` registry (cisagov/dotgov-data)
-- **Last walked:** 2026-08-23 — the historical walk of
-  `raw.githubusercontent.com/cisagov/dotgov-data/main/current-full.csv`
-  answered HTTP 200 at 1.41 MB with the `Domain name` header present as a
-  control string.
-- **Status:** WIRED through the standing runner's monthly canonical `dotgov`
-  contract. `scripts/fetch-dotgov.mts --promote` first resolves the publisher's
-  current commit and then reads the CSV at that exact SHA; durable data-plane
-  receipts, the GOOD pointer and LKG own live state. The tracked
-  `data/dotgov/snapshot.json` is bundled first-bootstrap evidence only.
+- **Last read:** 2026-10-12 — SHA `e4020449e896b2264d2056e49daeb55920a3d977`,
+  16,876 domains, including 719 with CISA election types. Exact source bytes and retrieval
+  metadata are in `tests/fixtures/dotgov/`.
+- **Status:** The standing runner's monthly `dotgov` contract resolves the publisher's
+  current commit and reads every CSV row at that exact SHA. Durable data-plane receipts,
+  the GOOD pointer and LKG own live state. `readDotGovProjection` verifies and serves the
+  full registry through the `government-domains` reader edge family.
+- **Reader association:** Registrants attach only to a uniquely matching government's
+  established name and state. Unmatched and ambiguous domains remain in the registry;
+  they add no government or service boundary. Census websites remain separately sourced.
 - **Auth:** none.
 - **Licence:** US federal government work.
-- It is **a rung, never a denominator** — see `docs/zip-playbook.md`.
+- The registry supplies official domain links and acquisition routes. Government coverage
+  continues to use the Census of Governments, NCES and official rosters as its denominator.
 
 ### Anthropic API — the ask-box classifier
 - **Last walked:** 2026-08-20

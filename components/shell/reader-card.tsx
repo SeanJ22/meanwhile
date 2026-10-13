@@ -36,6 +36,7 @@ export function ReaderCard({
   restoreScroll,
   onScroll,
   fixed = false,
+  enter,
   children,
   sources = [],
   gaps = [],
@@ -59,6 +60,8 @@ export function ReaderCard({
   onScroll?: (top: number) => void;
   /** A route-level card (the Ballot) sits over the whole viewport. */
   fixed?: boolean;
+  /** "rise": on a phone the card slides up from below (a battlecard opened from a map office). */
+  enter?: "rise";
   children: ReactNode;
   sources?: readonly CardSource[];
   gaps?: readonly CardGap[];
@@ -122,6 +125,7 @@ export function ReaderCard({
         aria-modal="true"
         aria-label={kicker}
         data-reader-card={viewKey}
+        data-enter={enter}
       >
         <header className="mw-card-head">
           {backLabel && (

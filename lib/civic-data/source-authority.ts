@@ -1,4 +1,5 @@
 import { PLURAL_STATES, PLURAL_PARSER_VERSION } from "../sources/plural/targets.ts";
+import { FEDERAL_SOURCE_AUTHORITIES } from "../sources/congress/authority.ts";
 import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ROUTE_PREFIX, REGISTRATION_TARGETS } from "../registration/publication.ts";
 import { extractedMemberUrl } from "./manual-source-urls.ts";
 import {
@@ -39,6 +40,7 @@ export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage 
 }
 
 export const SOURCE_AUTHORITIES = {
+  ...FEDERAL_SOURCE_AUTHORITIES,
   "official-ballot-authorities": {
     id: "official-ballot-authorities",
     publisher: "Exact official election authorities in the saved-source receipt",
@@ -344,7 +346,7 @@ export const SOURCE_AUTHORITIES = {
     publisher: "U.S. Census Bureau",
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "FEDERAL_AGENCY",
-    routePrefixes: [REGISTRATION_SOURCE_ROUTE_PREFIX, "https://nces.ed.gov/ccd/"],
+    routePrefixes: [REGISTRATION_SOURCE_ROUTE_PREFIX, "https://nces.ed.gov/ccd/", "https://ies.ed.gov/sites/default/files/"],
     jurisdictions: REGISTRATION_TARGETS.map((t) => t.jurisdiction),
     recordClasses: ["REGISTRATION"],
     competentFacts: [
@@ -606,7 +608,7 @@ export const SOURCE_AUTHORITIES = {
     expectedIdentifierKeys: ["domain", "source_sha"],
     expectedTemporalFields: ["source_commit", "source_through"],
     horizonSemantics: "The SHA-pinned current-full.csv is a complete domain registry for that source revision but never a government/body denominator.",
-    parserVersion: "cisa-dotgov/2",
+    parserVersion: "cisa-dotgov/3",
     freshnessExpectation: "Monthly check for a newer CISA source revision.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,

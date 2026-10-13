@@ -1123,6 +1123,8 @@ test("all standing routine-source destructive classes are enumerated by the cont
     // The derived meeting-source wiring never removes a row (a trigger suspends it), so any removal is
     // refused by the generic incomplete-horizon rule (tests/derived-meeting-family.test.ts).
     "CURATED_READER_RECORD",
+    // SRC-CG exercises complete native filing corrections and lossless partial source merges.
+    "FEDERAL_CIVIC_RECORD",
   ]);
   const standingClasses = new Set(ROUTINE_SOURCE_TASKS.map((task) => task.recordClass));
   assert.deepEqual([...covered].sort(), [...standingClasses].sort());

@@ -288,6 +288,7 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "meeting-doors",
     "meeting-source-wiring",
     "candidate-campaign-sites-derived",
+    "congress-api", "govinfo", "regulations-gov", "federal-register", "senate-lda",
   ]);
   assert.deepEqual(nonMeetingTasks.map((task) => task.id), ROUTINE_SOURCE_CONTRACTS.map((contract) => contract.id));
   assert.deepEqual(
@@ -1317,13 +1318,13 @@ test("the pilot awaits independently bounded routine and intake children without
   assert.match(pilot, /await standingRuntimeScheduler\.waitForIdle\(\)/);
 });
 
-test("an operational-reference-only contract fabricates no Reader delivery result", async () => {
+test("the CISA government-domain contract has a Reader projection even before its first promotion", async () => {
   const dotgov = ROUTINE_SOURCE_CONTRACTS.find((contract) => contract.id === "dotgov");
   assert.ok(dotgov);
-  assert.equal(dotgov.readerProjection, null);
+  assert.equal(dotgov.readerProjection?.id, "government-domains");
   assert.deepEqual(
     await repairRoutineReaderProjectionReadback(new MemoryRoutineDataStore(), dotgov, T0),
-    { kind: "NOT_APPLICABLE", receipt: null },
+    { kind: "NO_PROMOTION", receipt: null },
   );
 });
 
@@ -1514,7 +1515,7 @@ test("same-cycle isolation requires exact task/candidate receipts, never aggrega
         taskId: "dotgov",
         sourceId: "CISA .gov registry",
         recordClass: "DOTGOV_REFERENCE",
-        scope: "US:current-full:election-domains",
+        scope: "US:current-full:domains",
         classification: "VERIFIED_SOURCE_FAILURE",
         receipt: failedReceipt,
       },

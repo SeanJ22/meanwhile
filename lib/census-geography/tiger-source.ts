@@ -3,7 +3,7 @@
  * the source index advances, so a broken update cannot replace held evidence. */
 import { createHash } from "node:crypto";
 import { createReadStream } from "node:fs";
-import { mkdtemp, open, rm } from "node:fs/promises";
+import { mkdtemp, open, rm, type FileHandle } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
@@ -59,7 +59,7 @@ function validIndex(value: unknown, url: string): value is TigerIndex {
     v.chunks.every((chunk, i) => /^[a-f0-9]{64}$/.test(chunk.sha256) && chunk.bytes === Math.min(TIGER_SOURCE_CHUNK_BYTES, v.bytes - i * TIGER_SOURCE_CHUNK_BYTES)) &&
     (v.etag === null || typeof v.etag === "string") && (v.lastModified === null || typeof v.lastModified === "string");
 }
-async function writeAll(file: Awaited<ReturnType<typeof open>>, bytes: Uint8Array) {
+async function writeAll(file: FileHandle, bytes: Uint8Array) {
   let at = 0;
   while (at < bytes.byteLength) {
     const written = await file.write(bytes, at, bytes.byteLength - at);
@@ -67,20 +67,18 @@ async function writeAll(file: Awaited<ReturnType<typeof open>>, bytes: Uint8Arra
     at += written.bytesWritten;
   }
 }
-async function restore(path: string, index: TigerIndex, store: EvidenceStore, prefix: string, signal: AbortSignal): Promise<boolean> {
-  const file = await open(path, "w"), digest = createHash("sha256");
-  try {
-    for (const chunk of index.chunks) {
-      signal.throwIfAborted();
-      const held = await store.get(`${prefix}/chunks/${chunk.sha256}.bin`);
-      if (!held || held.bytes.byteLength !== chunk.bytes || hash(held.bytes) !== chunk.sha256) return false;
-      digest.update(held.bytes);
-      await writeAll(file, held.bytes);
-    }
-    return digest.digest("hex") === index.sha256;
-  } finally { await file.close(); }
+async function restore(file: FileHandle, index: TigerIndex, store: EvidenceStore, prefix: string, signal: AbortSignal): Promise<boolean> {
+  const digest = createHash("sha256");
+  for (const chunk of index.chunks) {
+    signal.throwIfAborted();
+    const held = await store.get(`${prefix}/chunks/${chunk.sha256}.bin`);
+    if (!held || held.bytes.byteLength !== chunk.bytes || hash(held.bytes) !== chunk.sha256) return false;
+    digest.update(held.bytes);
+    await writeAll(file, held.bytes);
+  }
+  return digest.digest("hex") === index.sha256;
 }
-async function stageResponse(response: Response, path: string, signal: AbortSignal): Promise<{ sha256: string; bytes: number }> {
+async function stageResponse(response: Response, file: FileHandle, signal: AbortSignal): Promise<{ sha256: string; bytes: number }> {
   const declaredText = response.headers.get("content-length"), encoded = response.headers.get("content-encoding");
   const declared = declaredText !== null && /^\d+$/.test(declaredText) ? Number(declaredText) : null;
   if (declared !== null && (!Number.isSafeInteger(declared) || declared > MAX_ARCHIVE_BYTES)) {
@@ -89,7 +87,7 @@ async function stageResponse(response: Response, path: string, signal: AbortSign
   }
   const reader = response.body?.getReader();
   if (!reader) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Census TIGER archive response is empty");
-  const file = await open(path, "w"), digest = createHash("sha256");
+  const digest = createHash("sha256");
   let bytes = 0;
   const cancel = () => { void reader.cancel(signal.reason).catch(() => {}); };
   signal.addEventListener("abort", cancel, { once: true });
@@ -113,26 +111,25 @@ async function stageResponse(response: Response, path: string, signal: AbortSign
     signal.removeEventListener("abort", cancel);
     await reader.cancel().catch(() => {});
     reader.releaseLock();
-    await file.close();
   }
 }
-async function validateArchive(path: string, signal: AbortSignal, validate: (path: string) => Promise<void>) {
+async function validateArchive(archive: string, signal: AbortSignal, validate: (path: string) => Promise<void>) {
   try {
     // Finish every member stream: ZIP framing alone does not validate CRCs.
-    for (const entry of await openZipFile(path, TIGER_ARCHIVE_LIMITS)) {
+    for (const entry of await openZipFile(archive, TIGER_ARCHIVE_LIMITS)) {
       for await (const chunk of entry.stream()) { signal.throwIfAborted(); void chunk; }
     }
     signal.throwIfAborted();
-    await validate(path);
+    await validate(archive);
   } catch (error) {
     signal.throwIfAborted();
     if (isSourceAcquisitionFailure(error)) throw error;
     throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `Census TIGER archive could not be parsed: ${error instanceof Error ? error.message : String(error)}`);
   }
 }
-async function saveChunks(path: string, store: EvidenceStore, prefix: string, url: string, finalUrl: string, retrievedAt: string, signal: AbortSignal): Promise<Chunk[]> {
+async function saveChunks(archive: string, store: EvidenceStore, prefix: string, url: string, finalUrl: string, retrievedAt: string, signal: AbortSignal): Promise<Chunk[]> {
   const chunks: Chunk[] = [];
-  for await (const chunk of createReadStream(path, { highWaterMark: TIGER_SOURCE_CHUNK_BYTES })) {
+  for await (const chunk of createReadStream(archive, { highWaterMark: TIGER_SOURCE_CHUNK_BYTES })) {
     signal.throwIfAborted();
     const bytes = chunk as Buffer, sha256 = hash(bytes);
     await store.put(`${prefix}/chunks/${sha256}.bin`, bytes, {
@@ -151,8 +148,15 @@ export async function censusTigerArchive(url: string, options: CensusSourceOptio
   signal.throwIfAborted();
   const { store, locks } = await resolveKnownReleaseCache(options.cache);
   const identity = hash(`${SOURCE_ID}\n${url}`), prefix = `project/freshness/source/${SOURCE_ID}/tiger/${identity}`;
-  const indexKey = `${prefix}/manifest.json`, directory = await mkdtemp(join(tmpdir(), "meanwhile-census-tiger-")), path = join(directory, "source.zip");
+  const indexKey = `${prefix}/manifest.json`;
+  const directory = await mkdtemp(join(tmpdir(), "meanwhile-census-tiger-"));
+  const path = join(directory, "source.zip");
   const dispose = () => rm(directory, { recursive: true, force: true });
+  /** The staging file exists only inside this call's own temporary directory. */
+  const stage = async <T>(use: (file: FileHandle) => Promise<T>): Promise<T> => {
+    const file = await open(path, "w");
+    try { return await use(file); } finally { await file.close(); }
+  };
   try {
     const result = await withKnownReleaseLock(locks, `source-release:tiger:${identity}`, signal, async () => {
       const object = await store.get(indexKey);
@@ -163,7 +167,7 @@ export async function censusTigerArchive(url: string, options: CensusSourceOptio
         prior = parsed;
       }
       await checkKnownSourceRetry(store, SOURCE_ID, url, new Date().toISOString());
-      const held = prior !== null && await restore(path, prior, store, prefix, signal);
+      const held = prior !== null && await stage(file => restore(file, prior, store, prefix, signal));
       const headers = new Headers({ "user-agent": censusGeographyUserAgent() });
       if (held && prior?.etag) headers.set("if-none-match", prior.etag);
       else if (held && prior?.lastModified) headers.set("if-modified-since", prior.lastModified);
@@ -193,7 +197,7 @@ export async function censusTigerArchive(url: string, options: CensusSourceOptio
           await recordKnownSourceRetry(store, SOURCE_ID, url, response, checkedAt);
           throw sourceAcquisitionFailure("PUBLISHER_RESPONSE_REFUSED", `Census TIGER archive returned HTTP ${response.status}`);
         }
-        const downloaded = await stageResponse(response, path, signal);
+        const downloaded = await stage(file => stageResponse(response, file, signal));
         await validateArchive(path, signal, validate);
         reused = !!held && prior?.sha256 === downloaded.sha256;
         const retrievedAt = reused && prior ? prior.retrievedAt : checkedAt;

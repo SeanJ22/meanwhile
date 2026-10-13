@@ -5,6 +5,7 @@ import type { FieldManualEntry } from "../control-plane/field-manual.ts";
 import { detectTenancy } from "./platform-tenancy.ts";
 import { MEETING_HELD_HORIZON_DAYS, MEETING_HELD_LOOKBACK_DAYS } from "../meetings/constants.ts";
 import { parseDiligentMeetings } from "../sources/diligent/index.ts";
+import { escribeCalendarUrl, parseEscribeMeetings } from "../sources/escribe/index.ts";
 import { boardDocsBase, parseBoardDocsMeetings } from "../sources/boarddocs/index.ts";
 import { parseOrganizationPage } from "../sources/boardbook/index.ts";
 import { meetingSourceCadenceHours } from "../control-plane/scheduler/obligation.ts";
@@ -22,6 +23,7 @@ export const VERIFIABLE_VENDORS = [
   "iqm2",
   "boardbook",
   "boarddocs",
+  "escribe",
   "diligent",
   /* A body's own page that dates its public events, verified for that body (`verifyOfficialPage`). */
   "official-page-events",
@@ -31,7 +33,6 @@ export type VerifiableVendor = (typeof VERIFIABLE_VENDORS)[number];
 /** Vendors recognised by host or markup that no content check covers yet: always a LEAD. */
 export const LEAD_ONLY_VENDORS: readonly { readonly vendor: string; readonly host: RegExp }[] = [
   { vendor: "novusagenda", host: /(^|\.)novusagenda\.com$/i },
-  { vendor: "escribe", host: /(^|\.)escribemeetings\.com$/i },
   { vendor: "primegov", host: /(^|\.)primegov\.com$/i },
   { vendor: "granicus", host: /(^|\.)granicus\.com$/i },
   { vendor: "municode-meetings", host: /(^|\.)municodemeetings\.com$/i },
@@ -117,6 +118,10 @@ export function meetingEndpointCandidates(html: string, pageUrl: string, now?: s
     const host = url.hostname.toLowerCase();
     if (isIcalLink(url)) {
       add({ vendor: "ical", url: href, basis: "LINKED", evidence: href, verifiable: true });
+      continue;
+    }
+    if (/^pub-[a-z0-9-]+\.escribemeetings\.com$/i.test(host)) {
+      add({ vendor: "escribe", url: escribeCalendarUrl(href), basis: "LINKED", evidence: href, verifiable: true });
       continue;
     }
     const legistar = /^([a-z0-9-]+)\.legistar\.com$/.exec(host);
@@ -417,6 +422,14 @@ export function verifyEndpointBody(
       return rows > 0
         ? { verdict: "YIELDED", count: rows, detail: `${rows} BoardBook meeting link(s)` }
         : { verdict: "NOT_CONFIRMED", count: null, detail: "no BoardBook meeting links" };
+    }
+    case "escribe": {
+      try {
+        const rows = parseEscribeMeetings(body);
+        return { verdict: rows.length ? "YIELDED" : "EMPTY", count: rows.length, detail: `${rows.length} public eScribe meeting record(s)` };
+      } catch {
+        return { verdict: "NOT_CONFIRMED", count: null, detail: "not a public eScribe calendar list" };
+      }
     }
     case "boarddocs": {
       try {

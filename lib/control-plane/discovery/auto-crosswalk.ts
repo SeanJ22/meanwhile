@@ -27,6 +27,7 @@ import { countyTimeZones, governmentTimeZone } from "../../time/county-time-zone
 import { parseOrganizationPage } from "../../sources/boardbook/index.ts";
 import { parseCalendarRows } from "../../sources/iqm2/index.ts";
 import { parseAgendaCenter, parseAgendaCenterCategories } from "../../sources/civicplus/index.ts";
+import { parseEscribeMeetings } from "../../sources/escribe/index.ts";
 import { parseBoardDocsMeetings, parseBoardDocsCommittees } from "../../sources/boarddocs/index.ts";
 import type { CivicClerkEvent } from "../../sources/civicclerk/index.ts";
 
@@ -68,7 +69,7 @@ export interface AutoCrosswalkReviewInput {
 
 const KIND_OF_VENDOR: Readonly<Record<string, CrosswalkKind>> = {
   ical: "ICAL", "official-page-events": "OFFICIAL_PAGE_EVENTS", diligent: "DILIGENT", "legistar-api": "LEGISTAR",
-  boardbook: "BOARDBOOK", "civicclerk-api": "CIVICCLERK", iqm2: "IQM2", "civicplus-agendacenter": "CIVICPLUS", boarddocs: "BOARDDOCS",
+  boardbook: "BOARDBOOK", "civicclerk-api": "CIVICCLERK", iqm2: "IQM2", "civicplus-agendacenter": "CIVICPLUS", boarddocs: "BOARDDOCS", escribe: "ESCRIBE",
 };
 export const AUTO_CROSSWALK_VENDORS: ReadonlySet<string> = new Set(Object.keys(KIND_OF_VENDOR));
 
@@ -443,7 +444,7 @@ type Selected = Selection | { readonly held: AutoCrosswalkHoldReason; readonly d
 const titleHas = (title: string, terms: readonly string[]): boolean => terms.some((t) => low(title).includes(low(t)));
 
 function selectFor(kind: CrosswalkKind, proposal: Proposal, events: readonly CalendarEvent[], jurisdictionId: string, route: string): Selected {
-  if (["BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS"].includes(kind)) {
+  if (["BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "ESCRIBE"].includes(kind)) {
     const namesIn = (event: CalendarEvent) => [...printedNames(event.title, jurisdictionId), ...printedNames(event.context, jurisdictionId)]
       .filter(name => tokenize(name.text).length >= 2);
     const matches = (event: CalendarEvent) => namesIn(event).some(name => canonical(name.text, jurisdictionId) === proposal.key) ||
@@ -462,6 +463,11 @@ function selectFor(kind: CrosswalkKind, proposal: Proposal, events: readonly Cal
       const actual = events.filter(event => event.categories.includes(labels[0]!));
       if (actual.some(event => !selected.includes(event))) return { held: "AMBIGUOUS_TITLE", detail: `the ${kind} body label also selects another body` };
       return { filter: kind === "IQM2" ? { boardMatch: labels[0]! } : { bodyMatch: labels[0]!, portalBase: `https://${new URL(route).hostname.replace(/\.api\.civicclerk\.com$/, ".portal.civicclerk.com")}` }, selected };
+    }
+    if (kind === "ESCRIBE") {
+      const labels = [...new Set(selected.flatMap(event => event.categories))];
+      if (!labels.length || labels.some(label => !label || label.includes("|")) || events.some(event => event.categories.some(label => labels.includes(label)) && !selected.includes(event))) return { held: "AMBIGUOUS_TITLE", detail: "the eScribe meeting types also select another body" };
+      return { filter: { meetingTypes: labels.join("|") }, selected };
     }
     const ids = [...new Set(selected.map(event => event.scopeId).filter((id): id is string => typeof id === "string"))];
     if (ids.length !== 1 || events.some(event => event.scopeId === ids[0] && !selected.includes(event))) {
@@ -653,7 +659,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       hold(route, attested.held === "EVIDENCE_NOT_VAULTED" ? "EVIDENCE_NOT_VAULTED" : "HOST_NOT_ATTESTED", attested.detail);
       continue;
     }
-    const linkedPublisher = ["DILIGENT", "LEGISTAR", "BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS"].includes(kind) && attested.attestation.kind === "LINKED_FROM_ATTESTED_PAGE";
+    const linkedPublisher = ["DILIGENT", "LEGISTAR", "BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "ESCRIBE"].includes(kind) && attested.attestation.kind === "LINKED_FROM_ATTESTED_PAGE";
     if (homeHost === null || (bare(homeHost) !== bare(routeHost) && !linkedPublisher)) {
       hold(route, "HOST_NOT_OWN", `the calendar is on ${routeHost}; the walk attested ${homeHost ?? "no homepage"} as the government's own`);
       continue;
@@ -716,6 +722,10 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
     } else if (kind === "CIVICPLUS") {
       events = parseAgendaCenterCategories(calendar.text).flatMap(category => parseAgendaCenter(calendar.text, category.id).map(row => ({ title: flat(category.name), context: "", categories: [flat(category.name)],
         scopeId: category.id, identity: `${category.id}|${row.date}`, tzid: stateZone, utc: false, floating: false, url: row.agendaHref ? new URL(row.agendaHref, route).toString() : route })));
+    } else if (kind === "ESCRIBE") {
+      let rows: ReturnType<typeof parseEscribeMeetings> = [];
+      try { rows = parseEscribeMeetings(calendar.text); } catch { /* A changed response names no meetings. */ }
+      events = rows.map(row => ({ title: flat(row.MeetingType), context: "", categories: [row.MeetingType], identity: `${row.ID}|${row.StartDate}`, tzid: stateZone, utc: false, floating: true, url: row.Url || route }));
     } else if (kind === "BOARDDOCS") {
       const committeeId = new URL(route).searchParams.get("current_committee_id");
       const via = find.via?.artifactId ? input.held(find.via.artifactId) : null;
@@ -866,7 +876,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
     if (governing.length > 1) {
       hold(route, "GOVERNING_NAME_CONFLICT", `events name the governing body ${governing.map((k) => `"${governingKeys.get(k)}"`).join(" and ")}`, null, registered.bodyId);
     } else if (governing.length === 1) {
-      const listed = governingKeys.get(governing[0]!)!;
+      const listed = [...named.get(governing[0]!)!.spellings][0]!;
       /* The kind's own name is what every title that names the body carries; the printed spellings add nothing. */
       proposals.push({ role, bodyId: registered.bodyId, spellings: [listed], key: governing[0]!, category: null });
     } else if (kind === "ICAL" && (scope = categoryScopeOf(find, route, routeHost)) !== null) {

@@ -75,7 +75,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   /** The rolling-ceiling hold a Scout escalation must win before its frontier attempt; absent, every escalation is refused NOT_RESERVED. */
   reserveScoutEscalation?:ScoutExecutorDeps["reserveEscalation"];
   /** The transport for one jurisdiction's work, held on the area budget covering it; absent, `transport` serves all. */
-  transportFor?:(jurisdiction:{readonly subjectId:string;readonly state:string|null})=>ModelTransport}):Promise<AutonomousCoordinatorRuntime> {
+  transportFor?:(jurisdiction:{readonly subjectId:string;readonly state:string|null},taskId?:string)=>ModelTransport}):Promise<AutonomousCoordinatorRuntime> {
   await refreshRegistryRuntimeFromPromoted();
   if (!mayUseTestFixture()) await refreshVenueResolutionsFromPromoted();
   const now=input.now??(()=>new Date().toISOString());
@@ -238,7 +238,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
       const blanks=blanksFor(item.subject);
       const mission=missionBriefLines(item.subject,blanks,MISSION_BRIEF_LINE_CAP);
       const ownPart=item.autonomousPlan?missionPartOfPlan(item.autonomousPlan):null;
-      return withScoutManual(item,(investigationRole(subjectScoutHistory(currentHistory??prior,item.subject,item.autonomousPlan!.contract.recordClass),Boolean(shutDoorForWork(item)) || task.routeLabel.includes('UNRESOLVED_INVESTIGATION') || heldRecoveryBrief(item.publicationOutcome)!==null || outsideBlockLines(item.id).length>0 || priorWorkers.some(w=>w.workItemId===item.id && (!["ACQUIRED","EXTRACTED","PASS","SUPPORTED","SURVIVED"].includes(w.result.verdict) || ("warnings" in w.result ? w.result.warnings : w.result.findings).some(f=>f.severity==="BLOCKING")))) === "DETECTIVE" ? detectiveExecutor : scoutExecutor)({transport:input.transportFor?input.transportFor({subjectId:item.subject,state:item.autonomousPlan?.jurisdiction??null}):input.transport!,now,playbookFor:role=>readRolePlaybook(input.repos,role),
+      return withScoutManual(item,(investigationRole(subjectScoutHistory(currentHistory??prior,item.subject,item.autonomousPlan!.contract.recordClass),Boolean(shutDoorForWork(item)) || task.routeLabel.includes('UNRESOLVED_INVESTIGATION') || heldRecoveryBrief(item.publicationOutcome)!==null || outsideBlockLines(item.id).length>0 || priorWorkers.some(w=>w.workItemId===item.id && (!["ACQUIRED","EXTRACTED","PASS","SUPPORTED","SURVIVED"].includes(w.result.verdict) || ("warnings" in w.result ? w.result.warnings : w.result.findings).some(f=>f.severity==="BLOCKING")))) === "DETECTIVE" ? detectiveExecutor : scoutExecutor)({transport:input.transportFor?input.transportFor({subjectId:item.subject,state:item.autonomousPlan?.jurisdiction??null},task.id):input.transport!,now,playbookFor:role=>readRolePlaybook(input.repos,role),
       ...(input.reserveScoutEscalation?{reserveEscalation:input.reserveScoutEscalation}:{}),
       toolkitFor:ctx=>buildScoutToolkit({...ctx,root:input.root,
         obligation:{...ctx.obligation,obligation:{...ctx.obligation.obligation,autonomousPlan:item.autonomousPlan}},

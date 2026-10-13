@@ -9,9 +9,9 @@ import { fixtureRolePlaybook } from "./helpers/playbooks.ts";
  *   Scout                tools + system            (`scoutStaticPrefix`)
  *   Adversarial audit    tools + system            (`model-audit.ts`)
  *   Grounded Ask         system + evidence block   (`synthesisRequestBody`)
- *   Ask interpret        system                    (unmarked: under the 512-token minimum)
- *   Ask classify         system                    (unmarked)
- *   Unsourced fallback   system                    (unmarked)
+ *   Ask interpret        system                    (one-hour instructions; inventory follows)
+ *   Ask classify         system                    (one-hour instructions)
+ *   Unsourced fallback   system                    (one-hour instructions)
  */
 
 import assert from "node:assert/strict";
@@ -150,32 +150,40 @@ test("PC-3 Ask interpret: the ZIP's context is the marked prefix, identical for 
   const b = await captureBody((f) => interpretQuestion("who is on the board", { ...context, priorTurns: [{ question: "did the council vote on the pothole budget", resolvedSubject: null }] }, { fetchImpl: f, apiKey: "sk-test" }));
   const blocks = (body: Record<string, unknown>) => body.system as { type: string; text: string; cache_control?: unknown }[];
   assert.equal(sha(a.system), sha(b.system));
-  assert.deepEqual(blocks(a).map((block) => block.text), [interpretSystem(context).stable, interpretSystem(context).volatile]);
+  assert.deepEqual(blocks(a).map((block) => block.text), [interpretSystem(context).stable]);
   assert.ok(!JSON.stringify(a.system).includes("what is on the agenda"), "the question is not in the system prompt");
   assert.ok(!JSON.stringify(b.system).includes("pothole budget"), "the prior turn is not in the system prompt");
   assert.match(JSON.stringify(b.messages), /pothole budget/, "the conversation rides as messages");
-  assert.ok(blocks(a)[0].cache_control !== undefined, "the ZIP's context is the breakpoint (it caches once it is over the model's minimum: 4,096 tokens on Haiku 4.5)");
-  assert.equal(blocks(a)[1].cache_control, undefined, "the volatile block is after it");
+  assert.deepEqual(blocks(a)[0].cache_control, { type: "ephemeral", ttl: "1h" }, "the shared reading instructions are cached for an hour");
+  const packet = (a.messages as { content: { text: string; cache_control?: unknown }[] }[])[0].content;
+  assert.deepEqual(packet.map(block => block.text), [interpretSystem(context).inventory, interpretSystem(context).volatile]);
+  assert.deepEqual(packet[0].cache_control, { type: "ephemeral" });
+  assert.equal(packet[1].cache_control, undefined, "the volatile block follows the inventory breakpoint");
   /* The date is after the breakpoint: a new day never invalidates the ZIP's cached context. */
   assert.ok(!blocks(a)[0].text.includes("2026-09-06") && !blocks(a)[0].text.includes("Vail, Arizona"), "no per-day or per-reader value in the cached block");
-  assert.match(blocks(a)[1].text, /Today is 2026-09-06\./);
+  assert.match(packet[1].text, /Today is 2026-09-06\./);
+  assert.ok(!JSON.stringify(a.system).includes("Vail Unified District"), "the place inventory follows the shared prefix");
   const nextDay = await captureBody((f) => interpretQuestion("what is on the agenda", { ...context, today: "2026-09-07" }, { fetchImpl: f, apiKey: "sk-test" }));
   assert.equal(sha(blocks(a)[0]), sha(blocks(nextDay)[0]), "a new day changes only the volatile block");
+  const otherPlace = await captureBody(f => interpretQuestion("when does the board meet", { ...context, inventory: [{ name: "Newbury Planning Board" }] }, { fetchImpl: f, apiKey: "sk-test" }));
+  assert.equal(sha(a.system), sha(otherPlace.system), "different place packets reuse the same one-hour role prefix");
+  assert.deepEqual(a.cache_control, { type: "ephemeral" }, "the moving breakpoint retains the five-minute TTL");
 });
 
-test("PC-3 Ask classify and the unsourced fallback: the system prompt is static and the question is the message (both unmarked, under the minimum)", async () => {
+test("PC-3 Ask classify and the unsourced fallback: static instructions have an hour-long breakpoint and the question follows", async () => {
   const previous = process.env.ANTHROPIC_API_KEY;
   process.env.ANTHROPIC_API_KEY = "sk-test";
   try {
     const a = await captureBody((f) => classifyQuestion(`who fixes potholes ${Date.now()}`, { fetchImpl: f }));
     const b = await captureBody((f) => classifyQuestion(`who plows my street ${Date.now()}`, { fetchImpl: f }));
-    assert.equal(a.system, classifierPrompt());
+    assert.deepEqual(a.system, [{ type: "text", text: classifierPrompt(), cache_control: { type: "ephemeral", ttl: "1h" } }]);
     assert.equal(sha(a.system), sha(b.system));
-    assert.ok(!String(a.system).includes("potholes"));
+    assert.ok(!JSON.stringify(a.system).includes("who fixes potholes"));
     const c = await captureBody((f) => askUnsourced("how does a bill become law", { fetchImpl: f }));
     const d = await captureBody((f) => askUnsourced("what is a mill levy", { fetchImpl: f }));
     assert.equal(sha(c.system), sha(d.system));
-    assert.ok(!String(c.system).includes("mill levy"));
+    assert.ok(!JSON.stringify(c.system).includes("mill levy"));
+    assert.deepEqual((c.system as { cache_control: unknown }[])[0].cache_control, { type: "ephemeral", ttl: "1h" });
   } finally {
     if (previous === undefined) delete process.env.ANTHROPIC_API_KEY;
     else process.env.ANTHROPIC_API_KEY = previous;

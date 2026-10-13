@@ -1,16 +1,4 @@
-/**
- * A discovery method that worked is saved so the runner repeats it: what was
- * missing, the query patterns, the navigation, the publisher's traits, the
- * extractor, what verification requires, what it cost and when it last
- * worked. Recipes live in the field manual (`cp_field_manual_entries`, kind
- * `MEETINGS_RECIPE`); failures are kept with their limits so the same
- * unchanged failure is not paid for twice. Seed counts start at zero.
- *
- * A recipe never guesses a vendor tenant: it proposes a path on the
- * government's own origin when the homepage shows its precondition, or
- * follows a link the homepage carries on its own host. Whatever it proposes
- * is opened robots-first and confirmed by content. Pure.
- */
+
 
 import type { FieldManualEntry } from "../control-plane/field-manual.ts";
 import { fieldManualEntryId } from "../control-plane/field-manual.ts";
@@ -21,24 +9,12 @@ export const RECIPE_KIND = "MEETINGS_RECIPE";
 export const RECIPE_SOURCE = "meetings-recipes";
 
 /** How long a failure for one jurisdiction stands before the recipe is tried there again. */
-/**
- * How long a method is held off one government after it failed there: the
- * first failure holds RECIPE_FAILURE_FIRST_HOLD_DAYS, each consecutive failure
- * doubles it up to RECIPE_FAILURE_HOLD_DAYS, and a success clears it.
- */
+
 export const RECIPE_FAILURE_FIRST_HOLD_DAYS = 3;
 export const RECIPE_FAILURE_HOLD_DAYS = 30;
 /** Failures remembered per recipe, newest kept. The counts are exact; the list is bounded. */
 const FAILED_FOR_BOUND = 200;
 
-/**
- * One navigation step.
- * - `path`: a path resolved against the government's own origin, after
- *   substitution.
- * - `link`: follow up to `max` links on the government's homepage that stay on
- *   its own host and whose visible text matches `anchorPattern`
- *   (case-insensitive). The page evidences the route; nothing is guessed.
- */
 export type RecipeStep =
   | { readonly kind: "path"; readonly template: string }
   | { readonly kind: "link"; readonly anchorPattern: string; readonly max: number };
@@ -156,11 +132,7 @@ export const SEED_RECIPES: readonly MeetingsRecipe[] = [
     cost: { requests: 1, searchQueries: 0, usd: null },
     provenance: "lib/sources/civicplus/index.ts header: /common/modules/iCalendar/iCalendar.aspx?catID=<n>&feed=calendar",
   }),
-  /*
-   * A district's own page that its homepage links (e.g. a committee page) and
-   * that dates its sessions, found without a vendor portal. Portable: nothing
-   * names a place; the body's identity is substituted at verification.
-   */
+
   seed({
     recipeId: "official-page-events-linked-committee-page",
     title: "The body's own page that dates its committee meetings and public sessions",
@@ -239,12 +211,6 @@ function isRecipe(value: unknown): value is MeetingsRecipe {
   );
 }
 
-/**
- * The recipes the runner knows: every MEETINGS_RECIPE in the field manual,
- * then any seed the manual does not hold yet. For a seed the manual holds,
- * the method comes from the code and only counts and failure memory from the
- * store, so a corrected seed reaches the runner.
- */
 export function knownRecipes(entries: readonly FieldManualEntry[]): readonly MeetingsRecipe[] {
   const stored = new Map<string, MeetingsRecipe>();
   for (const e of entries) {
@@ -262,12 +228,6 @@ export function knownRecipes(entries: readonly FieldManualEntry[]): readonly Mee
   return [...stored.values()];
 }
 
-/**
- * The recipes that apply to one government, best first: a state-specific
- * recipe for this state before a portable one, then by successes, then by the
- * latest success. A recipe proven in another state does not apply here until it
- * is portable or proven here too.
- */
 export function recipesFor(
   recipes: readonly MeetingsRecipe[],
   query: { readonly bodyClass: string; readonly state: string },
@@ -291,11 +251,6 @@ export function failureStands(recipe: MeetingsRecipe, jurisdictionId: string, no
   return standing ?? null;
 }
 
-/**
- * A link step follows navigation, not news: a headline naming the council is
- * a story, not where the body keeps its meetings. A followed link carries a
- * short label and does not sit under a news, press, blog or article section.
- */
 export const LINK_STEP_MAX_WORDS = 6;
 const LINK_STEP_STORY_PATH = /\/(news|news-center|newsroom|press|press-releases?|blogs?|stories|articles?|posts?)(\/|$)/i;
 
@@ -314,11 +269,6 @@ export interface RecipeCandidate {
   readonly label: string | null;
 }
 
-/**
- * The URLs the applicable recipes propose for one government, given its
- * homepage. A recipe proposes only when its precondition shows on the page and
- * no failure of it stands here.
- */
 export function recipeCandidates(input: {
   readonly recipes: readonly MeetingsRecipe[];
   readonly need: MeetingsDiscoveryNeed;
@@ -396,6 +346,7 @@ const VENDOR_PLATFORM: Readonly<Record<VerifiableVendor, string | null>> = {
   iqm2: "iqm2",
   boardbook: "boardbook",
   boarddocs: "boarddocs",
+  escribe: "escribe",
   "official-page-events": null,
 };
 
@@ -408,16 +359,11 @@ const VENDOR_VERIFICATION: Readonly<Record<VerifiableVendor, string>> = {
   "civicclerk-api": "a CivicClerk events list whose rows carry id",
   iqm2: "an IQM2 calendar with at least one meeting row",
   boardbook: "a BoardBook organization page with at least one meeting link",
+  escribe: "a public eScribe calendar list with meeting identities, types, local dates and document links",
   boarddocs: "a public BoardDocs committee list whose dated rows carry published meeting identities; the committee is named by the attested portal selector",
   "official-page-events": "a page on the body's own host with at least one dated event verified for the body",
 };
 
-/**
- * A saved method from a route a SEARCH found and content confirmed: the query
- * template that found it, with its identity slots, and the check that confirmed
- * it. It is scoped to the state and government class it was proven in; the
- * field manual widens it as it succeeds elsewhere.
- */
 export function recipeFromSearchFind(input: {
   readonly templateId: string;
   readonly template: string;

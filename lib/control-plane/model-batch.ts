@@ -19,6 +19,12 @@ export const BATCH_LANES = {
     readerFacing: false as const,
     why: "independent saved-document extraction windows in unattended workers; no reader waits on the response",
   },
+  "background-worker-research": {
+    flag: "WTP_BACKGROUND_WORKER_BATCH",
+    defaultEnabled: true,
+    readerFacing: false as const,
+    why: "unattended blanks outside the meeting and election windows, translations, summaries and rechecks",
+  },
   "ask-model-comparison": {
     flag: "WTP_ASK_COMPARE_BATCH",
     readerFacing: false as const,
@@ -39,10 +45,33 @@ export function batchEnabledFor(lane: BatchLane, env: Readonly<Record<string, st
 }
 
 /** Only work without a reader deadline can wait for the discount service. */
-export type BatchJob = "LIVE_REFRESH" | "PUBLISH_NOW" | "MISSION_CORE" | "BACKFILL" | "HISTORY" | "AUDIT_SAMPLE";
+export type BatchJob = "LIVE_REFRESH" | "PUBLISH_NOW" | "MISSION_CORE" | "BACKFILL" | "HISTORY" | "AUDIT_SAMPLE"
+  | "PAGE_READER" | "TRANSLATOR" | "STANCE_SUMMARY" | "RECHECKER" | "LOSS_STUDY" | "BLANK" | "ASK";
+export interface BatchPriority {
+  readonly subjectId?: string;
+  readonly now: string;
+  readonly meetingStartsAt?: readonly string[];
+  readonly electionAt?: readonly string[];
+  readonly readerImpactAt?: string | null;
+}
+
+/** Eligibility is kept even when batching is switched off, so Admin has the real denominator. */
+export function batchEligibleForJob(job: BatchJob | undefined, priority?: BatchPriority): boolean {
+  if (job === undefined || ["ASK", "LIVE_REFRESH", "PUBLISH_NOW", "MISSION_CORE"].includes(job)) return false;
+  if (!priority) return job !== "BLANK";
+  const now = Date.parse(priority.now);
+  if (!Number.isFinite(now)) return false;
+  const near = (at: string, days: number, pastDays = 0) => {
+    const date = Date.parse(at);
+    return !Number.isFinite(date) || (date >= now - pastDays * 86_400_000 && date <= now + days * 86_400_000);
+  };
+  return !(priority.meetingStartsAt ?? []).some(at => near(at, 7, 7))
+    && !(priority.electionAt ?? []).some(at => near(at, 60))
+    && !(priority.readerImpactAt && near(priority.readerImpactAt, 7, 7));
+}
 export function batchEnabledForJob(lane: BatchLane, job: BatchJob | undefined,
-  env: Readonly<Record<string, string | undefined>> = process.env): boolean {
-  return job !== undefined && ["BACKFILL", "HISTORY", "AUDIT_SAMPLE"].includes(job) && batchEnabledFor(lane, env);
+  env: Readonly<Record<string, string | undefined>> = process.env, priority?: BatchPriority): boolean {
+  return batchEligibleForJob(job, priority) && batchEnabledFor(lane, env);
 }
 
 /** One request inside a batch: the Messages API body, keyed by a caller-chosen id. Results come back in ANY order; key by `custom_id`, never position. */
@@ -190,7 +219,7 @@ export function attemptBatchJournal(repos: ControlPlaneRepositories, taskId: str
 export function backgroundBatchTransport(options: Omit<SingleRequestBatchOptions, "customId" | "deadlineMs"> & {
   readonly journal?: BatchJournal;
 }): ModelTransport & { readonly withJournal: (journal: BatchJournal) => ModelTransport } {
-  type Pending = { id: string; request: ModelRequest; record: AttemptProviderBatch | null;
+  type Pending = { id: string; request: ModelRequest; record: AttemptProviderBatch | null; startedMs: number;
     journal?: BatchJournal;
     resolve: (response: ModelResponse) => void; reject: (error: unknown) => void };
   let pending: Pending[] = [];
@@ -230,7 +259,7 @@ export function backgroundBatchTransport(options: Omit<SingleRequestBatchOptions
     const results = new Map((await readMessageBatchResults(options.apiKey, batch.results_url, fetchImpl)).map(result => [result.custom_id, result.result]));
     for (const entry of entries) {
       const result = results.get(entry.id);
-      if (result?.type === "succeeded") entry.resolve({ ...result.message, batch: true } as unknown as ModelResponse);
+      if (result?.type === "succeeded") entry.resolve({ ...result.message, batch: true, batchWaitedMs: Math.max(0, Date.now() - entry.startedMs) } as unknown as ModelResponse);
       else {
         const error = result?.type === "errored" ? result.error as { type?: string } : undefined;
         // A completed batch request is not submitted again, even for a provider error.
@@ -260,14 +289,19 @@ export function backgroundBatchTransport(options: Omit<SingleRequestBatchOptions
     if (existing) {
       const batch = existing.batchId ? await retrieveMessageBatch(options.apiKey, existing.batchId, fetchImpl, options.endpoint) : await recoverUncertain(existing);
       await journal!.write({ ...existing, batchId: batch.id });
-      return new Promise<ModelResponse>((resolve, reject) => { void finish([{ id: existing.customId, request, record: existing, resolve, reject }], batch).catch(reject); });
+      return new Promise<ModelResponse>((resolve, reject) => { void finish([{ id: existing.customId, request, record: existing, startedMs: Date.now(), resolve, reject }], batch).catch(reject); });
     }
     const record = journal ? { requestHash: hash, customId: randomUUID(), batchId: null, submittedAt: new Date().toISOString() } : null;
     if (record) await journal!.write(record);
     return new Promise<ModelResponse>((resolve, reject) => {
-    pending.push({ id: record?.customId ?? randomUUID(), request, record, journal, resolve, reject });
+    pending.push({ id: record?.customId ?? randomUUID(), request, record, startedMs: Date.now(), journal, resolve, reject });
     if (!scheduled) { scheduled = true; setImmediate(() => { void flush(); }); }
     });
   };
-  return Object.assign((request: ModelRequest) => send(request), { withJournal: (journal: BatchJournal): ModelTransport => request => send(request, journal) });
+  const waitingSend = async (request: ModelRequest, journal = options.journal): Promise<ModelResponse> => {
+    request.onBatchWait?.(true);
+    try { return await send(request, journal); }
+    finally { request.onBatchWait?.(false); }
+  };
+  return Object.assign((request: ModelRequest) => waitingSend(request), { withJournal: (journal: BatchJournal): ModelTransport => request => waitingSend(request, journal) });
 }

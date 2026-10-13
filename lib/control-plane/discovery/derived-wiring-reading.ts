@@ -10,6 +10,7 @@ import { makeDiligentSource } from "../../sources/diligent/index.ts";
 import { makeBoardBookSource } from "../../sources/boardbook/index.ts";
 import { makeBoardDocsSource } from "../../sources/boarddocs/index.ts";
 import { makeCivicPlusSource } from "../../sources/civicplus/index.ts";
+import { makeEscribeSource } from "../../sources/escribe/index.ts";
 import { makeCivicClerkSource } from "../../sources/civicclerk/index.ts";
 import { makeIqm2Source } from "../../sources/iqm2/index.ts";
 import { normalizeWithDrops as normalizeLegistar } from "../../sources/legistar/index.ts";
@@ -91,11 +92,13 @@ async function readOne(reading: HeldCalendarReading, now: string, adapterDigest:
       const ownEvents = events.filter(event => event.EventBodyId === clients[0]?.eventBodyId);
       meetings = normalizeLegistar(ownEvents.map(event => ({ event, slug: wiring.config.slug,
         collectedAt: reading.evidence.retrievedAt, items: [] })), new Date(now), clients).meetings;
-    } else if (["CIVICPLUS", "CIVICCLERK", "BOARDBOOK", "BOARDDOCS", "IQM2"].includes(row.kind)) {
+    } else if (["CIVICPLUS", "CIVICCLERK", "BOARDBOOK", "BOARDDOCS", "IQM2", "ESCRIBE"].includes(row.kind)) {
       // The exact retained route is the adapter's input. Running its fetch
       // here would ask for additional URLs whose bytes were never vaulted.
       const collectedAt = reading.evidence.retrievedAt;
-      if (row.kind === "CIVICPLUS") {
+      if (row.kind === "ESCRIBE") {
+        meetings = makeEscribeSource([wiring]).normalizeWithDrops([{ wiring, text, collectedAt }], new Date(now)).meetings;
+      } else if (row.kind === "CIVICPLUS") {
         meetings = makeCivicPlusSource([wiring]).normalizeWithDrops([{ wiring, ical: "", agendaCenter: text, collectedAt }], new Date(now)).meetings;
       } else if (row.kind === "CIVICCLERK") {
         const events = JSON.parse(text)?.value;

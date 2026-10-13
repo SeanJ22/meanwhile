@@ -240,7 +240,7 @@ import { researchDigestLines } from "../lib/control-plane/research-digest.ts";
 import { modelRequestBoundFor, type CostEntry } from "../lib/control-plane/cost.ts";
 import type { SpendHold } from "../lib/control-plane/budget.ts";
 import type { AttemptCost } from "../lib/control-plane/attempt.ts";
-import { meteredCostFields, priceMeteredUsage, readMeteredUsage } from "../lib/control-plane/model-cost.ts";
+import { listPriceUsdForUsage, meteredCostFields, priceMeteredUsage, readMeteredUsage } from "../lib/control-plane/model-cost.ts";
 import { recordCost } from "../lib/control-plane/repository/coordinator.ts";
 import type { PrewarmOutcome } from "../lib/control-plane/scheduler/shadow-loop.ts";
 import { coordinatorLane, lanesAtCycleEnd, lanesInFlight, type QueueLanes } from "../lib/control-plane/scheduler/lane-reading.ts";
@@ -2205,7 +2205,7 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
     /* A failed pre-warm leaves its hold standing: what it was billed is unknown. */
     const response = await transport(request);
     const metered = readMeteredUsage(response.usage ?? {});
-    const priced = priceMeteredUsage(model, metered, "5m");
+    const priced = priceMeteredUsage(model, metered, "1h");
     const durationMs = Date.now() - started;
     const cost: AttemptCost = {
       inputTokens: metered.uncachedInputTokens === null ? null : metered.uncachedInputTokens + (metered.cacheReadInputTokens ?? 0) + (metered.cacheCreationInputTokens ?? 0),
@@ -2215,6 +2215,8 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
       bytesFetched: null,
       requestCount: 1,
       ...meteredCostFields(metered),
+      modelRequestCount: 1, batchRequestCount: 0, batchEligibleRequestCount: 0,
+      listPriceUsd: listPriceUsdForUsage(response.model, metered),
     };
     await recordCost(
       repos,
@@ -2242,6 +2244,18 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
 
 const heldScoutFor = (scheduled: ScheduledObligation) => solvedScoutResult([...priorScoutResults.values()].flat(),
   scheduled.obligation.subjectId,scheduled.obligation.recordClass,scheduled.obligation.routeId);
+const scoutTransportFor = (scheduled: ScheduledObligation, taskId?: string) => {
+  const obligation = scheduled.obligation;
+  const election = /ballot|election|contest|measure/i.test(obligation.recordClass);
+  return budgetGuardedTransport({
+    transport: guards.guardedJobTransportFor(obligation.id, "BLANK", { now: NOW, subjectId: obligation.subjectId,
+      meetingStartsAt: obligation.meetingStartsAt,
+      electionAt: election && obligation.readerImpactAt ? [obligation.readerImpactAt] : [],
+      readerImpactAt: election ? null : obligation.readerImpactAt }, taskId),
+    job: () => jobSpend.get(obligation.id) ?? null,
+    worstCaseOf: modelRequestWorstCaseUsd, priceOf: modelResponseUsd,
+  });
+};
 const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLaneEnabled || heldScoutFor(scheduled)!==null
   ? failureResponderExecutor({
       playbookFor: role => readRolePlaybook(repos, role),
@@ -2255,12 +2269,8 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
         search: (lifetimeHuntWork(scheduled.obligation.id) ? scoutSearchLifetime : scoutSearch) ?? undefined,
         onStarted: pid => console.log(`  Scout lease worker process: pid ${pid}; ${scheduled.obligation.id}`), deps: parseShutDoorId(scheduled.obligation.id) ? { ...deps, role: "DETECTIVE" } : deps }),
       /* Every request is checked against what the job holds on its Send and area budgets before the Fleet guard reserves it. */
-      transport: budgetGuardedTransport({
-        transport: guardedMessagesFor(scheduled.obligation.id),
-        job: () => jobSpend.get(scheduled.obligation.id) ?? null,
-        worstCaseOf: modelRequestWorstCaseUsd,
-        priceOf: modelResponseUsd,
-      }),
+      transport: scoutTransportFor(scheduled),
+      transportFor: taskId => scoutTransportFor(scheduled, taskId),
       refusedBeforeSending: (error) => error instanceof FleetPreSendRefusal || error instanceof SendBudgetRefusal,
       /* A Sonnet attempt that shows a recorded reason escalates only after its worst case is held against the rolling ceiling —
          and (MW-021) against the Send and area budgets the job runs under, before its first frontier request. */

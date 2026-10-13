@@ -1,12 +1,6 @@
 import type { CommentAccess } from "../../lib/registry/comment-access-client.ts";
 
-/**
- * How to be heard, per body: usually a standing rule of the body rather than a per-meeting field. Every
- * claim cites the page it was read from. `UNKNOWN` is a real value and the honest one for most bodies: a
- * comment period is never inferred from a meeting being public.
- *
- * Initial adoption/node:test evidence; production reads `comment-access`.
- */
+/** Comment rules per body, each citing its page; a comment period is never inferred from a meeting being public. */
 export const COMMENT_ACCESS: CommentAccess[] = [
   // All this board's meeting types follow the same published procedure.
   {

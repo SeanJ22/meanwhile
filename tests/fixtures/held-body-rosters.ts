@@ -4,12 +4,7 @@ import { NJ_MORRIS_ROSTERS } from "./rosters-nj-morris.ts";
 
 const COLLECTED = "2026-08-13";
 
-/**
- * The date party records were read. A party is read only from the certified
- * result of the election that seated the person — never an endorsement, news
- * report, or party site. General-election canvasses often omit party; the
- * partisan primary canvass or the clerk's certified winners list states it.
- */
+/** The date party records were read, only from the certified result of the election that seated the person. */
 const PARTY_READ = "2026-08-15";
 
 /** Certified primary canvass; races are headed by party. */
@@ -109,11 +104,7 @@ export const HELD_BODY_ROSTERS: BodyRoster[] = [
         websiteUrl: "https://govboard.tusd1.org/",
       },
       {
-        /*
-         * Not elected and not a board member. Stored in `members` because the
-         * body card's `superintendent` slot resolves from this array;
-         * `bodySubject` removes him from the seated-member list.
-         */
+        // Not a board member: kept for the body card's superintendent slot; `bodySubject` removes him from seated members.
         id: "roster:tusd#supt",
         name: "Dr. Gabriel Trujillo",
         officeTitle: "Superintendent",
@@ -424,11 +415,7 @@ export const HELD_BODY_ROSTERS: BodyRoster[] = [
       },
     ],
   },
-  /*
-   * The delegation's officers only. Its members are state representatives
-   * already held in state-legislature data; listing them here too would create
-   * two records of one person.
-   */
+  // The delegation's officers only; its members are state representatives already held in state-legislature data.
   {
     bodyId: "ocd-division/country:us/state:nh/county:merrimack#delegation",
     bodyName: "Merrimack County Delegation",
@@ -497,12 +484,7 @@ export const HELD_BODY_ROSTERS: BodyRoster[] = [
       },
     ],
   },
-  /*
-   * Members whose Title cell is empty are written `Member` (the town lists
-   * them under "Board Members"); stated titles are verbatim. Expired terms are
-   * kept as the town publishes them — correcting or dropping them would assert
-   * a fact the town has not.
-   */
+  // An empty Title cell is written `Member`; expired terms stay as the town publishes them.
   {
     bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#planning-board",
     bodyName: "Newbury Planning Board",
@@ -1179,11 +1161,7 @@ export const HELD_BODY_ROSTERS: BodyRoster[] = [
     ],
   },
   {
-    /*
-     * Member emails are in the `href` of each name's mailto link, not in the
-     * cell text. Only district-issued addresses are recorded; a personal
-     * address the page exposes is deliberately omitted.
-     */
+    // Emails come from each name's mailto link; only district-issued addresses are recorded.
     bodyId:
       "ocd-division/country:us/state:nh/school_district:kearsarge_regional_school_district#board",
     bodyName: "Kearsarge Regional School Board",
@@ -1285,11 +1263,7 @@ export const HELD_BODY_ROSTERS: BodyRoster[] = [
           "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-members",
       },
       {
-        /*
-         * Not elected and not a board member; stored here for the body card's
-         * `superintendent` slot, and `bodySubject` removes him from the
-         * seated-member list. "Interim" is the district's own word.
-         */
+        // Not a board member: kept for the superintendent slot. "Interim" is the district's own word.
         id: "roster:kearsarge#supt",
         name: "Michael Bessette",
         officeTitle: "Interim Superintendent of Schools",
@@ -1831,11 +1805,7 @@ export const HELD_BODY_ROSTERS: BodyRoster[] = [
 
   ...AZ_CAWCD_ROSTERS,
 
-  /**
-   * Names read from the meeting agenda with `pdftotext -layout`: the agenda
-   * sets the board and the Executive Secretary in two columns, and a
-   * reading-order extract assigns the secretary to the board.
-   */
+  // Read with `pdftotext -layout`: a reading-order extract assigns the two-column Executive Secretary to the board.
   {
     bodyId:
       "ocd-division/country:us/state:az/county:pima#board-of-adjustment-district-4",

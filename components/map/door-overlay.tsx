@@ -1,4 +1,5 @@
 "use client";
+import { VacantSeat } from "@/components/officials/vacant-seat";
 
 import { MeetingRow } from "@/components/ui/meeting-row";
 import { X } from "lucide-react";
@@ -368,7 +369,7 @@ function DistrictRows({
             </button>
           )}
           {row.holders.map((holder) => (
-            <button
+            holder.vacancy ? <span key={holder.id} className="mt-0.5 mr-3 t-detail"><VacantSeat holder={holder} /></span> : <button
               key={holder.id}
               type="button"
               onClick={() =>
@@ -430,13 +431,13 @@ function OfficialsDoor({
                   key={holder.id}
                   className="flex items-baseline justify-between gap-3"
                 >
-                  <button
+                  {holder.vacancy ? <VacantSeat holder={holder} /> : <button
                     type="button"
                     onClick={() => onOpenOfficial(holder, seatLabel, tier)}
                     className="cursor-pointer t-body text-signal underline decoration-dotted"
                   >
                     {holder.name} →
-                  </button>
+                  </button>}
                   <span className="shrink-0 text-right t-caption text-muted">
                     {seatLabel}
                   </span>

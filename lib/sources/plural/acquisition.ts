@@ -3,7 +3,7 @@
 import { mkdtemp, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { acquireKnownRelease, knownReleaseSourceCheck, type KnownRelease, type KnownReleaseOptions } from "../known-release.ts";
+import { acquireKnownRelease, knownReleaseSourceCheck, requestedSourceCheckAfter, type KnownRelease, type KnownReleaseOptions } from "../known-release.ts";
 import { openZipFile, type FileArchiveMember } from "../archive.ts";
 import { bulkUrl, indexDivisions, normalize, pluralRosterIssue, rowsToPeople, yamlToPeople, type PluralPerson, type RegistryDivisionLite } from "./index.ts";
 import { PLURAL_PARSER_VERSION, PLURAL_REVISION_URL, PLURAL_SOURCE_ID, PLURAL_STATES } from "./targets.ts";
@@ -75,7 +75,7 @@ export async function acquireStatePeople(input: SharedOptions & {
   try {
     const current = await acquireKnownRelease({ ...shared, sourceId: PLURAL_SOURCE_ID, releaseId: "people-current-revision",
       url: PLURAL_REVISION_URL, parserVersion: "openstates-revision/1", signal: input.signal, maxBytes: 1024 * 1024,
-      checkAfterMs: DAY, validate: bytes => { revision(bytes); } });
+      checkAfterMs: DAY, checkedAfter: requestedSourceCheckAfter(), validate: bytes => { revision(bytes); } });
     const sourceCheck = knownReleaseSourceCheck(current);
     const sha = revision(current.bytes), url = `https://codeload.github.com/openstates/people/zip/${sha}`;
     const release = await acquireKnownRelease({ ...shared, sourceId: PLURAL_SOURCE_ID, releaseId: `people:${sha}`, url,
@@ -150,7 +150,7 @@ export async function acquireStatePeople(input: SharedOptions & {
     // missing fields never masquerade as fields from the richer YAML source.
     const release = await acquireKnownRelease({ ...shared, sourceId: PLURAL_SOURCE_ID, releaseId: `people-current-csv:${state}`,
       url: bulkUrl(state), parserVersion: PLURAL_PARSER_VERSION, signal: input.signal, maxBytes: 8 * 1024 * 1024,
-      checkAfterMs: DAY, readHeld: input.readHeldCsv,
+      checkAfterMs: DAY, checkedAfter: requestedSourceCheckAfter(), readHeld: input.readHeldCsv,
       validate: bytes => { const issue = pluralRosterIssue(new TextDecoder("utf-8", { fatal: true }).decode(bytes)); if (issue) throw new Error(issue); } });
     const body = new TextDecoder("utf-8", { fatal: true }).decode(release.bytes);
     people = rowsToPeople(body, state); releaseId = `csv:${release.sha256}`;

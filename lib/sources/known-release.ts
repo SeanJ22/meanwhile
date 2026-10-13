@@ -50,6 +50,8 @@ interface ReleaseIndex extends Omit<KnownRelease, "bytes" | "reused"> {
   readonly parsers: readonly string[];
 }
 export interface KnownReleaseOptions {
+  /** A requested source check must observe the publisher after this mark, even inside the normal cache interval. */
+  readonly checkedAfter?: string;
   readonly sourceId: string;
   readonly releaseId: string;
   readonly url: string;
@@ -68,6 +70,11 @@ export interface KnownReleaseOptions {
   readonly readHeld?: () => Promise<KnownRelease | null>;
   /** Full source shape/archive validation must finish before advancing the index. */
   readonly validate?: (bytes: Uint8Array, release: KnownRelease) => void | Promise<void>;
+}
+export const SOURCE_CHECK_AFTER_ENV = "WTP_SOURCE_CHECK_AFTER";
+export function requestedSourceCheckAfter(): string | undefined {
+  const value = process.env[SOURCE_CHECK_AFTER_ENV];
+  return value && Number.isFinite(Date.parse(value)) ? value : undefined;
 }
 const hash = (bytes: Uint8Array | string) => createHash("sha256").update(bytes).digest("hex");
 const pending = new WeakMap<EvidenceStore, Map<string, Promise<KnownRelease>>>();
@@ -228,13 +235,16 @@ export async function acquireKnownRelease(options: KnownReleaseOptions): Promise
         await options.validate?.(inherited.bytes, inherited);
         // Deliver already held evidence first. Its old source check remains
         // due; the next invocation can perform the conditional refresh.
-        return await save({ ...inherited, reused: true }, [options.parserVersion]);
+        const saved = await save({ ...inherited, reused: true }, [options.parserVersion]);
+        if (!options.refresh && (options.checkedAfter === undefined || Date.parse(saved.checkedAt) >= Date.parse(options.checkedAfter))) return saved;
+        heldBytes = saved.bytes;
       }
     }
     if (prior && heldBytes) {
       const replay = { ...prior, bytes: heldBytes, reused: true };
       const parserChanged = !prior.parsers.includes(options.parserVersion);
-      if (parserChanged || !options.refresh && Date.parse(now) - Date.parse(prior.checkedAt) < options.checkAfterMs) {
+      const requested = options.checkedAfter !== undefined && Date.parse(prior.checkedAt) < Date.parse(options.checkedAfter);
+      if (!requested && !options.refresh && (parserChanged || Date.parse(now) - Date.parse(prior.checkedAt) < options.checkAfterMs)) {
         if (parserChanged) await options.validate?.(heldBytes, replay);
         if (parserChanged) await writeIndex({ ...prior, parsers: [...prior.parsers, options.parserVersion] });
         return replay;

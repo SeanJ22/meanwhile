@@ -1,0 +1,21 @@
+{
+  "formatVersion": 1,
+  "sources": [
+    {
+      "file": "senate-fl-service.html",
+      "url": "https://www.senate.gov/states/FL/senators.htm",
+      "httpStatus": 200,
+      "retrievedAt": "2026-10-13T04:55:44.584Z",
+      "sha256": "cf4c4e2373fa408c9c2f2975a8b8cd8e6892828cfc698ba9c3c0eb4148392eca",
+      "bytes": 33351
+    },
+    {
+      "file": "senate-oh-service.html",
+      "url": "https://www.senate.gov/states/OH/senators.htm",
+      "httpStatus": 200,
+      "retrievedAt": "2026-10-13T04:55:44.586Z",
+      "sha256": "9b1e198205d8724e330418ed8bed0663aa2b5ecb4da113f3a0dadc2b596d5ab9",
+      "bytes": 42611
+    }
+  ]
+}

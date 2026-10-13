@@ -1,0 +1,76 @@
+[
+  {
+    "id": "wy-swagger2-marker",
+    "url": "https://wyoleg.gov/LsoService/swagger/v1/swagger.json",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "id": "wy-years-marker",
+    "url": "https://wyoleg.gov/LsoService/api/Years",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "id": "wi-current-marker",
+    "url": "https://docs.legis.wisconsin.gov/",
+    "resolvedUrl": "https://docs.legis.wisconsin.gov/",
+    "retrievedAt": "2026-10-13T05:00:00.078050+00:00",
+    "sha256": "c3efc4f09b5fd38cce276479184d714c59c77de0c229c440aa681e834011a6e7",
+    "status": 200,
+    "bytes": 14545,
+    "contentType": "text/html; charset=utf-8",
+    "fixture": "wi-current-marker.html.gz"
+  },
+  {
+    "id": "wy-sessions-marker",
+    "url": "https://wyoleg.gov/LsoService/api/Sessions",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "id": "wy-swagger-marker",
+    "url": "https://wyoleg.gov/LsoService/swagger/docs/v1",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "id": "sd-current-marker",
+    "url": "https://sdlegislature.gov/api/Sessions",
+    "resolvedUrl": "https://sdlegislature.gov/api/Sessions",
+    "retrievedAt": "2026-10-13T05:00:00.092100+00:00",
+    "sha256": "58358cf801009040e62d6d483823ef8f0ad78644321fd6400e9bc6582c2d4954",
+    "status": 200,
+    "bytes": 14197,
+    "contentType": "application/json; charset=utf-8",
+    "fixture": "sd-sessions-json.json.gz"
+  },
+  {
+    "id": "ks-current-marker",
+    "url": "https://www.kslegislature.gov/",
+    "error": "HTTP Error 403: Forbidden"
+  },
+  {
+    "id": "nd-current-marker",
+    "url": "https://ndlegis.gov/",
+    "resolvedUrl": "https://ndlegis.gov/",
+    "retrievedAt": "2026-10-13T05:00:00.231728+00:00",
+    "sha256": "8d07a67680668ea98b88737040d320d59e59d561f665a7f3ebb7250e0f1629bd",
+    "status": 200,
+    "bytes": 85809,
+    "contentType": "text/html; charset=utf-8",
+    "fixture": "nd-current-marker.html.gz"
+  },
+  {
+    "id": "vt-current-marker",
+    "url": "https://legislature.vermont.gov/people",
+    "resolvedUrl": "https://legislature.vermont.gov/people",
+    "retrievedAt": "2026-10-13T05:00:00.947266+00:00",
+    "sha256": "601193c31855f5b910bb47c26feec3f0083a4f21b4e9b3982490b7e1d98ea868",
+    "status": 200,
+    "bytes": 88754,
+    "contentType": "text/html; charset=utf-8",
+    "fixture": "vt-current-marker.html.gz"
+  },
+  {
+    "id": "wy-session-marker",
+    "url": "https://wyoleg.gov/LsoService/api/Session",
+    "error": "The read operation timed out"
+  }
+]

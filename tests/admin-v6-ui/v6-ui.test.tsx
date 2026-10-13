@@ -58,7 +58,7 @@ test("a finished receipt no longer blocks a new send of the same action", () => 
 
 test("only the kinds a real registry action carries out are wired, each to its own gateway type", () => {
   assert.deepEqual([...connectedKinds()].sort(), [
-    "cancel-send", "data-switch-off", "data-switch-on", "fix-go", "global-ceiling", "global-paid", "global-paid-resume", "global-runner-pause", "global-runner-resume", "global-search-off", "global-search-on", "hunt-limit", "hunt-pause", "hunt-resume", "hunt-start", "hunt-start-many", "hunt-stop", "leads-send", "order-unschedule", "owed-add", "owed-decline", "owed-undo", "send-agents", "setting-set", "setting-undo", "target-clear", "target-set",
+    "cancel-send", "data-switch-off", "data-switch-on", "fix-go", "global-ceiling", "global-paid", "global-paid-resume", "global-runner-pause", "global-runner-resume", "global-search-off", "global-search-on", "hunt-limit", "hunt-pause", "hunt-resume", "hunt-start", "hunt-start-many", "hunt-stop", "leads-send", "officials-check", "order-unschedule", "owed-add", "owed-decline", "owed-undo", "send-agents", "setting-set", "setting-undo", "target-clear", "target-set",
   ]);
   assert.equal(actionDef("cancel-send").gateway?.type, "fleet.cancelDispatch");
   assert.equal(actionDef("send-agents").gateway?.type, "fleet.deployHere");
@@ -73,6 +73,7 @@ test("only the kinds a real registry action carries out are wired, each to its o
   assert.equal(actionDef("hunt-start").gateway?.type, "expansion.scope.setMany");
   assert.equal(actionDef("hunt-start-many").gateway?.type, "expansion.scope.setMany");
   assert.equal(actionDef("leads-send").gateway?.type, "leads.upload");
+  assert.equal(actionDef("officials-check").gateway?.type, "officials.checkNow");
   for (const k of ["hunt-limit", "hunt-pause", "hunt-resume"] as const) assert.equal(actionDef(k).gateway?.type, "expansion.scope.budget");
   assert.equal(actionDef("hunt-stop").gateway?.type, "expansion.scope.remove");
   assert.equal(actionDef("setting-set").gateway?.type, "config.setSetting");

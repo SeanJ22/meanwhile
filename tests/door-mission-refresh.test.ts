@@ -5,11 +5,14 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import { recordDoorOutcome } from "../lib/doors/outcome.ts";
 import { listDoors } from "../lib/doors/registry.ts";
 import { seedMeetingDoors } from "../lib/doors/seed-meetings.ts";
+import { seedFeedDoors } from "../lib/doors/seed-feeds.ts";
 import {
   doorInDivisions,
   doorPartitionIds,
   markDoorsReadNow,
+  markPeopleDoorsReadNow,
   ocdInside,
+  peopleDoorCovers,
   readNowDueRequests,
   settleReadNow,
 } from "../lib/doors/mission-refresh.ts";
@@ -27,6 +30,7 @@ const LATER = "2026-10-04T13:20:00.000Z";
 async function seeded() {
   const repos = createMemoryRepositories();
   await seedMeetingDoors({ repo: repos.doors, wiring: FIXTURE_DOOR_ROWS, derived: [], deriveInputAt: SEEDED, at: SEEDED });
+  await seedFeedDoors({repo: repos.doors, deriveInputAt: SEEDED, at: SEEDED});
   return repos;
 }
 
@@ -45,7 +49,7 @@ describe("DB-56: mission start refreshes the doors already known in the place", 
     const before = (await listDoors(repos.doors)).doors;
     const target = before.find((door) => door.ocdId !== null)!;
     const division = target.ocdId!;
-    const inside = before.filter((door) => doorInDivisions(door, [division]));
+    const inside = before.filter((door) => doorInDivisions(door, [division]) || peopleDoorCovers(door, [division]));
     assert.ok(inside.length >= 1);
     const counts = await markDoorsReadNow(repos.doors, [division], MISSION);
     assert.equal(counts.inPlace, inside.length);
@@ -53,7 +57,7 @@ describe("DB-56: mission start refreshes the doors already known in the place", 
     const after = (await listDoors(repos.doors)).doors;
     for (const door of after) {
       const was = before.find(({ doorId }) => doorId === door.doorId)!;
-      if (doorInDivisions(door, [division]) && door.status === "OPEN") {
+      if ((doorInDivisions(door, [division]) || peopleDoorCovers(door, [division])) && door.status === "OPEN") {
         assert.equal(door.readNow, true, door.doorId);
         assert.equal(door.updatedAt, MISSION);
         assert.deepEqual({ ...door, readNow: false, updatedAt: was.updatedAt }, was, "nothing else on the record changed");
@@ -72,6 +76,19 @@ describe("DB-56: mission start refreshes the doors already known in the place", 
     assert.deepEqual(await markDoorsReadNow(repos.doors, [], MISSION), { inPlace: 0, marked: 0, alreadyMarked: 0, notRead: 0, raced: 0 });
     assert.deepEqual(await markDoorsReadNow(repos.doors, ["not a division"], MISSION), { inPlace: 0, marked: 0, alreadyMarked: 0, notRead: 0, raced: 0 });
     assert.ok((await listDoors(repos.doors)).doors.every((door) => !door.readNow));
+  });
+
+  it("the first mission prepares its covering people feeds before the runner's door derivation", async () => {
+    const repos = createMemoryRepositories();
+    await seedMeetingDoors({repo: repos.doors, wiring: FIXTURE_DOOR_ROWS, derived: [], deriveInputAt: SEEDED, at: SEEDED});
+    const county = "ocd-division/country:us/state:az/county:pima";
+    await markDoorsReadNow(repos.doors, [county], MISSION);
+    for (const id of ["feed:openstates-people-az", "feed:congress-bulk-roster", "feed:official-senate-roster", "feed:official-house-roster", "feed:official-legislature-az"]) {
+      const door = (await repos.doors.mustRead(id)).value;
+      assert.equal(door.readNow, true, id);
+      assert.ok(peopleDoorCovers(door, [county]), id);
+    }
+    assert.equal(await repos.doors.read("feed:openstates-people-ca"), null, "another state's feed is not prepared by this mission");
   });
 
   it("a marked door becomes the ordinary due request of its partition, and an unknown partition asks for nothing", async () => {
@@ -119,6 +136,30 @@ describe("DB-56: mission start refreshes the doors already known in the place", 
     assert.deepEqual(doorPartitionIds(hand), [hand.doorId]);
     assert.deepEqual(doorPartitionIds({ ...hand, meeting: { ...hand.meeting!, family: "meetings:derived:US-OH" } }), ["meetings:derived:US-OH"]);
     assert.deepEqual(doorPartitionIds({ ...hand, meeting: null }), []);
+  });
+
+  it("settling an older check preserves an Admin officials request renewed during settlement", async () => {
+    const repos = createMemoryRepositories();
+    await seedFeedDoors({repo: repos.doors, deriveInputAt: SEEDED, at: SEEDED});
+    const country = "ocd-division/country:us";
+    const id = "feed:official-senate-roster";
+    const renewedAt = "2026-10-04T13:21:00.000Z";
+    await markPeopleDoorsReadNow(repos.doors, [country], MISSION);
+    await recordDoorOutcome(repos.doors, id, "SUCCESS", LATER);
+    let renewed = false;
+    const racing = {...repos.doors, read: async (doorId: string) => {
+      if (doorId === id && !renewed) {
+        renewed = true;
+        await markPeopleDoorsReadNow(repos.doors, [country], renewedAt);
+      }
+      return repos.doors.read(doorId);
+    }};
+    assert.equal(await settleReadNow(racing, "2026-10-04T13:22:00.000Z"), 0);
+    const door = (await repos.doors.mustRead(id)).value;
+    assert.equal(door.readNow, true);
+    assert.equal(door.updatedAt, renewedAt);
+    const requests = readNowDueRequests([door], new Set(["official-senate-roster"]), "2026-10-04T13:22:00.000Z");
+    assert.equal(requests[0]?.requestedAt, renewedAt, "the newer check is still owed on the next pass");
   });
 
   it("the ordinary pass treats a marked door as due, and the partition's own next attempt spends it", async () => {

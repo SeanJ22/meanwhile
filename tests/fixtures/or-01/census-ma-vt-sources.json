@@ -1,0 +1,22 @@
+{
+  "sources": [
+    {
+      "fixture": "census-ma-vt-lower.json",
+      "sourceUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Legislative/MapServer/6/query?where=STATE+IN+%28%2725%27%2C%2750%27%29&outFields=STATE%2CSLDL%2CNAME%2CBASENAME%2CGEOID&returnGeometry=false&f=json",
+      "capturedAt": "2026-10-13T04:57:38.895166+00:00",
+      "httpStatus": 200,
+      "bytes": 33268,
+      "sha256": "cdad965d8d86b0e8b75d676d620c043e13c4ddc165a5dc4d31547a9c52055fb0",
+      "sourceLayer": "2024 State Legislative Districts - Lower"
+    },
+    {
+      "fixture": "census-ma-vt-upper.json",
+      "sourceUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Legislative/MapServer/5/query?where=STATE+IN+%28%2725%27%2C%2750%27%29&outFields=STATE%2CSLDU%2CNAME%2CBASENAME%2CGEOID&returnGeometry=false&f=json",
+      "capturedAt": "2026-10-13T04:57:38.895251+00:00",
+      "httpStatus": 200,
+      "bytes": 7777,
+      "sha256": "82b867df835ec8fb6ae76034cc42e468f00c0c03e19490e54e9624c4f637359f",
+      "sourceLayer": "2024 State Legislative Districts - Upper"
+    }
+  ]
+}

@@ -4,17 +4,19 @@
  *
  * 1. `markDoorsReadNow`: at mission start, sets only `readNow` and `updatedAt`
  *    on matching OPEN doors; never touches `editedAt`.
- * 2. `readNowDueRequests`: each marked meeting door becomes an ordinary due
- *    request, spent by the partition's first attempt after the mark and
+ * 2. `readNowDueRequests`: each marked meeting or feed door becomes an ordinary due
+ *    request, spent by the source's first attempt after the mark and
  *    expiring after the request lifetime.
  * 3. `settleReadNow`: clears a mark once the door has recorded an outcome
  *    since it, or it has expired.
  *
  * A door is inside the place when its division, or any body it feeds, is one
- * of the caller's divisions or a child of one.
+ * of the caller's divisions or a child of one. People feeds also cover places
+ * within their country or state division.
  */
 import { ROUTINE_DUE_REQUEST_MAX_LIFETIME_MS, type RoutineDueRequest } from "../civic-data/routine-due-request.ts";
 import { isDoorRecord, listDoors, type DoorRecord, type DoorRepository } from "./registry.ts";
+import { ensurePeopleFeedDoors } from "./seed-feeds.ts";
 
 /** An OCD id is inside a division when it is that division or a child of it (`/` for a child, `#` for a body). */
 export function ocdInside(ocdId: string, division: string): boolean {
@@ -25,6 +27,16 @@ export function ocdInside(ocdId: string, division: string): boolean {
 export function doorInDivisions(door: Pick<DoorRecord, "ocdId" | "bodyIds">, divisions: readonly string[]): boolean {
   const named = [...(door.ocdId === null ? [] : [door.ocdId]), ...door.bodyIds];
   return named.some((ocdId) => divisions.some((division) => ocdInside(ocdId, division)));
+}
+
+export function isPeopleDoor(door: Pick<DoorRecord, "holds">): boolean {
+  return door.holds.some(holding => holding === "state-legislator" || holding === "federal-directory" || holding === "statewide-official");
+}
+
+/** A jurisdiction's people feed applies to each of its counties, districts and ZIP divisions. */
+export function peopleDoorCovers(door: Pick<DoorRecord, "ocdId" | "holds">, divisions: readonly string[]): boolean {
+  return isPeopleDoor(door) && door.ocdId !== null && divisions.some(division =>
+    ocdInside(division, door.ocdId!) || ocdInside(door.ocdId!, division));
 }
 
 export interface MissionRefreshCount {
@@ -49,9 +61,10 @@ export async function markDoorsReadNow(
   const wanted = divisions.filter((division) => division.startsWith("ocd-division/"));
   const counts = { inPlace: 0, marked: 0, alreadyMarked: 0, notRead: 0, raced: 0 };
   if (wanted.length === 0) return counts;
+  await ensurePeopleFeedDoors({repo, divisions: wanted, at});
   for (const row of await repo.list()) {
     const door = row.value;
-    if (!isDoorRecord(door) || !doorInDivisions(door, wanted)) continue;
+    if (!isDoorRecord(door) || !(doorInDivisions(door, wanted) || peopleDoorCovers(door, wanted))) continue;
     counts.inPlace += 1;
     if (door.status !== "OPEN") { counts.notRead += 1; continue; }
     if (door.readNow) { counts.alreadyMarked += 1; continue; }
@@ -65,12 +78,31 @@ export async function markDoorsReadNow(
   return counts;
 }
 
+/** Admin's officials check marks only the people sources covering the resolved place. */
+export async function markPeopleDoorsReadNow(repo: DoorRepository, divisions: readonly string[], at: string): Promise<MissionRefreshCount> {
+  const wanted = divisions.filter(division => division.startsWith("ocd-division/"));
+  const counts = { inPlace: 0, marked: 0, alreadyMarked: 0, notRead: 0, raced: 0 };
+  for (const row of await repo.list()) {
+    const door = row.value;
+    if (!isDoorRecord(door) || !peopleDoorCovers(door, wanted)) continue;
+    counts.inPlace++;
+    if (door.status !== "OPEN") { counts.notRead++; continue; }
+    // A new deliberate check renews the mark; an older completed read cannot spend it.
+    if (door.readNow && door.updatedAt >= at) { counts.alreadyMarked++; continue; }
+    try {
+      await repo.compareAndSet(door.doorId, row.revision, { ...door, readNow: true, updatedAt: at }, at);
+      counts.marked++;
+    } catch { counts.raced++; }
+  }
+  return counts;
+}
+
 /**
  * The partition a meeting door is read through: a hand-wired door's id is its partition's id, and a derived member is
- * read by its family's partition (`meeting.family`). A door that is not a meeting door is read by no partition.
+ * read by its family's partition (`meeting.family`). A feed names its registered source contract.
  */
 export function doorPartitionIds(door: DoorRecord): readonly string[] {
-  if (door.meeting == null) return [];
+  if (door.meeting == null) return door.doorId.startsWith("feed:") && typeof door.config.contractId === "string" ? [door.config.contractId] : [];
   return [door.meeting.family ?? door.doorId];
 }
 
@@ -120,7 +152,7 @@ export async function settleReadNow(repo: DoorRepository, now: string): Promise<
     const outcomeSince = [door.lastSuccessAt, door.lastFailureAt].some((at) => at !== null && Date.parse(at) >= markedMs);
     if (!expired && !outcomeSince) continue;
     const row = await repo.read(door.doorId);
-    if (row === null || !isDoorRecord(row.value) || !row.value.readNow) continue;
+    if (row === null || !isDoorRecord(row.value) || !row.value.readNow || row.value.updatedAt !== door.updatedAt) continue;
     try {
       await repo.compareAndSet(door.doorId, row.revision, { ...row.value, readNow: false, updatedAt: row.value.updatedAt }, now);
       cleared += 1;

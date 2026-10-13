@@ -5,6 +5,9 @@ import type { ActionReceipt } from "./contract.ts";
 import type { RunnerHeartbeat } from "../owner-surface.ts";
 import { formatEastern } from "../eastern-time.ts";
 import { isLeadOrder, leadCounts, leadCountsWords, leadItems, LEADS_ACTION, rowOpen, type LeadOrder } from "../leads/order.ts";
+import { OFFICIALS_CHECK_ACTION } from "./officials-action.ts";
+import { officialsReceiptFeeds } from "../admin-view/officials-results.ts";
+import { officialsLeadStatus } from "../officials-leads.ts";
 
 export type ConfirmationState =
   | "applied"
@@ -112,6 +115,7 @@ interface AssignmentReading {
 /** Has the runner picked this receipt's action up? Never throws: an unreadable record is "unread". */
 export async function confirmReceipt(repos: ControlPlaneRepositories, receipt: ActionReceipt, nowMs: number = Date.now()): Promise<Confirmation> {
   if (receipt.type === LEADS_ACTION && receipt.outcome !== "REFUSED") return confirmLeads(repos, receipt, nowMs);
+  if (receipt.type === OFFICIALS_CHECK_ACTION && receipt.outcome !== "REFUSED") return confirmOfficials(repos, receipt, nowMs);
   let core = await confirmCore(repos, receipt);
   if (receipt.outcome === "REFUSED") return core;
   let nextRound: string | null = null;
@@ -121,6 +125,27 @@ export async function confirmReceipt(repos: ControlPlaneRepositories, receipt: A
     if (core.state === "waiting") core = notPickedUp(core, beat, receipt, nowMs);
   } catch { }
   return { ...core, plan: orderPlan(receipt, nextRound), progress: orderProgress(receipt, core) };
+}
+
+async function confirmOfficials(repos: ControlPlaneRepositories, receipt: ActionReceipt, nowMs: number): Promise<Confirmation> {
+  try {
+    const [feeds, beat] = await Promise.all([officialsReceiptFeeds(repos, receipt), repos.runnerHeartbeat.read(RUNNER_ID)]);
+    const leadRef = receipt.openedWork.find(work => work.kind === "officials-lead");
+    const lead = leadRef ? await officialsLeadStatus(repos, leadRef.id) : null;
+    const total = feeds.length + (lead === null ? 0 : 1);
+    const done = feeds.filter(feed => feed.state !== "waiting").length + (lead?.state === "checked" ? 1 : 0);
+    const failed = feeds.filter(feed => feed.state === "failed" || feed.state === "paused").length;
+    const base = { plan: { who: "Runner", change: "Check officials now", creates: null, resultsBy: beat?.value.nextCycleDueAt ?? null },
+      progress: { done, of: total }, items: [...feeds.map(feed => ({ name: feed.name,
+        status: feed.state === "waiting" ? "queued" as const : feed.state === "failed" || feed.state === "paused" ? "failed" as const : "done" as const,
+        label: feed.state === "changed" ? "Changes found" : feed.state === "checked" ? "Checked" : feed.state === "paused" ? "Paused or closed" : feed.state === "failed" ? "Could not read source" : "Waiting for the runner",
+        note: feed.sourceUrl ?? "" })), ...(lead ? [{ name: "What I heard", status: lead.state === "checked" ? "done" as const : lead.state === "working" ? "running" as const : "queued" as const,
+          label: lead.state === "checked" ? "Verified against official sources" : lead.state === "working" ? "Scout is checking" : "Waiting for a Scout", note: "Within the current paid-work controls" }] : [])] };
+    if (done === total) return { ...base, state: "applied", at: [...feeds.map(feed => feed.checkedAt), lead?.checkedAt].filter((at): at is string => !!at).sort().at(-1) ?? receipt.completedAt,
+      words: failed ? `Finished with ${failed} source${failed === 1 ? " needing" : "s needing"} attention.` : `Checked ${done} people source${done === 1 ? "" : "s"}.` };
+    if (done > 0 || lead?.state === "working") return { ...base, state: "working", at: null, words: lead && feeds.every(feed => feed.state !== "waiting") ? "Sources checked. The reported change is still with a Scout." : `Finished ${done} of ${total} checks.` };
+    return { ...base, ...notPickedUp({ state: "waiting", at: null, words: "Saved. Waiting for the runner to check officials." }, beat?.value ?? null, receipt, nowMs) };
+  } catch { return { state: "unread", at: null, words: "Saved. Officials check results —" }; }
 }
 
 /** A leads order, from its own rows: each row's status, how many are finished, and whether the runner has started. */

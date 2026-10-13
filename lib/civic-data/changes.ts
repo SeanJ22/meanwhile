@@ -142,7 +142,7 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
     case "FEC_FUNDING":
       return keyed("candidate", array(root.candidates), ["fecCandidateId", "id"]);
     case "STATE_LEGISLATOR":
-      return (array(root.members).length > 0
+      return [...(array(root.members).length > 0
         ? array(root.members)
         : array(object(root.roster)?.officeholders)
       ).map((record, index) => {
@@ -151,7 +151,7 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
           ? row.id
           : [row.chamber, row.seatNo, row.district].filter((part) => typeof part === "string" && part).join(":");
         return { key: `member:${identity || `row-${index}`}`, record };
-      });
+      }), ...keyed("vacancy", array(object(root.roster)?.vacancies), ["id"])];
     case "STATE_ROLL_CALL":
       return [
         ...keyed("roll", array(root.rollCalls), ["id", "officialRollCallId", "rollCallId"]),

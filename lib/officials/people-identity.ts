@@ -1,4 +1,5 @@
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
+import { OFFICIAL_ROSTER_TARGETS } from "../sources/official-rosters/targets.ts";
 import type { Officeholder } from "./types.ts";
 
 export type StatePeopleJurisdiction = `US-${string}`;
@@ -12,12 +13,13 @@ export function statePeopleScopeForDivision(divisionId: string): StatePeopleJuri
 }
 
 export function statePeopleSourceScopes(jurisdiction: string): readonly string[] {
-  return [jurisdiction, `${jurisdiction}:openstates-people:v1`];
+  return [jurisdiction, `${jurisdiction}:openstates-people:v1`, ...OFFICIAL_ROSTER_TARGETS.filter(target => target.jurisdiction === jurisdiction).map(target => target.scope)];
 }
 
 export function statePeopleScopeForId(id: string, stateHint?: string): StatePeopleJurisdiction | null {
   const nativeGlobal = /^(?:plural:|ocd-person\/)[a-f0-9]{8}-[a-f0-9-]{27}$/i.test(id);
   const state = /^plural:([a-z]{2}):/.exec(id)?.[1] ?? /^([a-z]{2})-(?:legislature|general-court):/.exec(id)?.[1] ??
+    /^official-legislature-([a-z]{2}):/.exec(id)?.[1] ?? /^official-roster-record:([a-z]{2}):[a-f0-9]{64}$/.exec(id)?.[1] ??
     (nativeGlobal ? /^(?:US-)?([A-Z]{2})$/i.exec(stateHint ?? "")?.[1] : undefined);
   const scope = state ? `US-${state.toUpperCase()}` as StatePeopleJurisdiction : null;
   return scope && STATE_PEOPLE_JURISDICTIONS.includes(scope) ? scope : null;

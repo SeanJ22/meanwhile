@@ -25,7 +25,8 @@ import { readCensusGeographyProjection } from "../census-geography/reader.ts";
 import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../census-geography/publication.ts";
 import { REGISTRATION_SCOPES, registrationEdgePlan } from "../registration/edge.ts";
 import { readRegistrationProjection } from "../registration/reader.ts";
-import { readFederalDirectoryProjection } from "../officials/federal-directory-read-model.ts";
+import { readFederalPeopleProjection } from "../officials/federal-people-read.ts";
+import { OFFICIAL_FEDERAL_TARGETS } from "../sources/official-rosters/targets.ts";
 import { readStatePeopleProjection } from "../state-rollcalls/legislators.ts";
 import { STATE_PEOPLE_JURISDICTIONS, statePeopleSourceScopes } from "../officials/people-identity.ts";
 import { statePeopleVersion } from "../officials/people-version.ts";
@@ -71,7 +72,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
   const specialPointers = {
     "census-districts": [{ recordClass: CENSUS_GEO_RECORD_CLASS, scope: CENSUS_GEO_SCOPE }],
     "registry-runtime": [manual("registry-runtime-bindings")],
-    "federal-directory": [manual("congress-bulk-roster")],
+    "federal-directory": [manual("congress-bulk-roster"), ...OFFICIAL_FEDERAL_TARGETS.map(target => ({recordClass: "STATE_LEGISLATOR" as const, scope: target.scope}))],
     "campaign-sites": [manual("campaign-sites")],
     "state-legislators": STATE_PEOPLE_JURISDICTIONS.flatMap(jurisdiction => statePeopleSourceScopes(jurisdiction).map(scope => ({ recordClass: "STATE_LEGISLATOR" as const, scope }))),
     "meeting-outcomes": [PIMA_LEGISTAR_OUTCOMES_CONTRACT, MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT, ...DOOR_OUTCOME_POINTERS],
@@ -196,12 +197,21 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
         process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: registry-runtime ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
       }
       if (refreshes("federal-directory")) try {
-        const carried = await servedIfCurrent("federal-directory", manualPointer("congress-bulk-roster"));
-        if (carried !== null) authority["federal-directory"] = { versionId: carried, carried: true };
-        else {
-          const fd = await readFederalDirectoryProjection({ store, now: observedAt, bypassCache: true });
-          if (fd.kind === "PROMOTED" && fd.metadata.versionId) authority["federal-directory"] = { value: fd.value, versionId: fd.metadata.versionId };
-          else if (fd.kind !== "NOT_RECORDED") throw new Error(`federal-directory read ${fd.kind}`);
+        const identities = await Promise.all(specialPointers["federal-directory"].map(pointer =>
+          store.readPromotionIdentity(pointer.recordClass, pointer.scope)));
+        const pointers = identities.filter(pointer => pointer !== null);
+        if (pointers.length > 0) {
+          const versionId = statePeopleVersion("US", pointers.map(pointer => ({ scope: pointer.scope, versionId: pointer.versionId })));
+          const carried = await servedIfCurrent("federal-directory", async () => versionId);
+          if (carried !== null) {
+            authority["federal-directory"] = { versionId: carried, carried: true };
+          } else {
+            const fd = await readFederalPeopleProjection({ store, now: observedAt, bypassCache: true });
+            if (fd.kind === "PROMOTED" && fd.metadata.versionId) {
+              if (fd.metadata.versionId !== versionId) throw new Error("federal people did not read every accepted source version");
+              authority["federal-directory"] = { value: fd.value, versionId: fd.metadata.versionId };
+            } else if (fd.kind !== "NOT_RECORDED") throw new Error(`federal-directory read ${fd.kind}`);
+          }
         }
       } catch (error) {
         failed = true;

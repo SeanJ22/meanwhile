@@ -1,0 +1,25 @@
+{
+  "sources": [
+    {
+      "fixture": "nh-current-house.html",
+      "sourceUrl": "https://gc.nh.gov/house/members/",
+      "capturedAt": "2026-10-13T04:17:04.564229+00:00",
+      "bytes": 122154,
+      "sha256": "504e8a54a37b94a3b302745ffedd7f64f4aa19f5ece6170534f484ad5e10506d"
+    },
+    {
+      "fixture": "nh-current-senate.html",
+      "sourceUrl": "https://gc.nh.gov/senate/members/senate_roster.aspx",
+      "capturedAt": "2026-10-13T04:17:05.360231+00:00",
+      "bytes": 98847,
+      "sha256": "d53e8869559b013f43c085845469165bbeb30f95d1b941d5649d826193472669"
+    },
+    {
+      "fixture": "nh-house-profile-806.html",
+      "sourceUrl": "https://gc.nh.gov/house/members/member.aspx?pid=806",
+      "capturedAt": "2026-10-13T04:20:03.352852+00:00",
+      "bytes": 31492,
+      "sha256": "56e00cfb3dbf3bc6ca05df0ea180fb1ffff7794d42ab5ef3598e4df77f8e1fac"
+    }
+  ]
+}

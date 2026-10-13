@@ -1,5 +1,6 @@
 import "../../ask/model.ts";
 import { playbookUpdateAction } from "./playbook-action.ts";
+import { officialsCheckAction } from "./officials-action.ts";
 import { appendDecisionIntent, RUNNER_ID, SNAPSHOT_ID } from "../admin-data.ts";
 import { fixConsequence, fixSubjectId, parseFixField, WHERE_SEPARATOR } from "../fix-queue.ts";
 import { addFixItem, completeFixItem, fixItems } from "../fix-list.ts";
@@ -1330,6 +1331,7 @@ const REGISTRY: readonly RegisteredAction[] = [
   },
 
   ...OWED_ACTIONS,
+  officialsCheckAction(),
 ];
 
 /** Built from the list so a definition's `type` and its key cannot disagree. */

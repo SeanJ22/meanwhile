@@ -43,6 +43,7 @@ import {
   CardSectionGroup,
 } from "@/components/officials/card-section";
 import { IdentityPortrait } from "@/components/officials/person-identity";
+import { VacantSeat } from "@/components/officials/vacant-seat";
 import { SpeakYourMind } from "@/components/speak/speak-your-mind";
 import { RosterCompletenessGaps } from "@/components/officials/roster-completeness-gap";
 import type { RosterReaderGap } from "@/lib/registry/body-rosters";
@@ -706,12 +707,12 @@ export function Representation({
       {ordered.map((holder) => (
         <div key={holder.id} data-roster-holder={holder.id} className="account-modal-person flex items-start gap-3">
           {/* `IdentityPortrait` renders initials where no portrait exists. */}
-          <IdentityPortrait name={holder.name} photoUrl={holder.photoUrl} />
+          {!holder.vacancy && <IdentityPortrait name={holder.name} photoUrl={holder.photoUrl} />}
 
           <div className="min-w-0 flex-1">
           <div className="flex items-baseline justify-between gap-3">
             <span className="t-body font-medium text-paper">
-              {onOpenHolder ? (
+              {holder.vacancy ? <VacantSeat holder={holder} /> : onOpenHolder ? (
                 // The name opens the full card.
                 <button
                   type="button"

@@ -125,6 +125,10 @@ export interface OfficeholderDivision {
 
 /** What a generated officeholder file holds. */
 export interface OfficeholderSet {
+  /** Explicit empty seats published by the office's own source; absence from a failed read is never a vacancy. */
+  vacancies?: readonly SeatVacancy[];
+  /** Chambers whose entire current roster was enumerated by this source. */
+  coveredChambers?: readonly string[];
   /** Complete enumerated current source memberships; permits retiring omitted memberships, never required for adding facts. */
   currentMembershipComplete?: boolean;
   /** Explicitly ended native tenures, retained even when the person has no current office. */
@@ -136,6 +140,19 @@ export interface OfficeholderSet {
   divisions: OfficeholderDivision[];
   /** Seats the source described that could not be attached to a division, with the reason; reported, never dropped. */
   unmatched: { officeholderId: string; reason: string }[];
+}
+
+export interface SeatVacancy {
+  readonly id: string;
+  readonly divisionId: string;
+  readonly officeTitle: string;
+  readonly state?: string;
+  readonly chamber?: string;
+  /** Statutory district label, retained when its Census code still needs to be joined. */
+  readonly district?: string;
+  /** The departure date stated by the publisher, left null when it is unpublished. */
+  readonly since: string | null;
+  readonly provenance: Provenance;
 }
 
 /** The contract an officials adapter implements. */

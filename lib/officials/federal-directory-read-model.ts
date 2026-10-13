@@ -42,9 +42,12 @@ export async function readFederalDirectoryProjection(
 }
 
 export async function refreshFederalDirectoryFromPromoted(options: PromotedCivicDataReadOptions = {}): Promise<string | null> {
-  const result = await readFederalDirectoryProjection(options);
+  const {readFederalPeopleProjection} = await import("./federal-people-read.ts");
+  const result = await readFederalPeopleProjection(options);
   if (result.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(result);
   if (result.kind === "NOT_RECORDED") throw new Error(result.detail);
+  readState = result;
+  cache = result.kind === "PROMOTED" || result.kind === "BOOTSTRAP" ? result.value : null;
   return result.kind === "PROMOTED" ? result.metadata.versionId : null;
 }
 

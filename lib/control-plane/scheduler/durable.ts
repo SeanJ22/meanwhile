@@ -94,6 +94,7 @@ const RUNTIME_OWNED = [
   /* Which registry the dispatch materialized it from, kept with the mark. */
   "materializedFrom",
   "autonomousPlan",
+  "officialsLead",
 ] as const;
 
 /** Register what is new and refresh provider-derived signals on what is not, without touching runtime state. `refreshed` names every row whose signals moved. */
@@ -155,6 +156,7 @@ export async function syncObligations(
       ...(held.materializedBy !== undefined ? { materializedBy: held.materializedBy } : {}),
       ...(held.assignments !== undefined ? { assignments: held.assignments } : {}),
       ...(held.materializedFrom !== undefined ? { materializedFrom: held.materializedFrom } : {}),
+      ...(held.officialsLead !== undefined ? { officialsLead: held.officialsLead } : {}),
       ...(plan !== undefined ? { autonomousPlan: plan } : {}),
       updatedAt: now,
     };

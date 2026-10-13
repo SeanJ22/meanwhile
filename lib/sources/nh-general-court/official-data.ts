@@ -284,7 +284,7 @@ export interface NhCurrentMemberIdentityMatch {
   readonly member: GencourtMember;
   readonly officialPersonId: string;
   readonly officeholderId: string;
-  readonly matchBasis: "EXACT_OFFICIAL_EMAIL" | "EXACT_OFFICIAL_NAME_BODY" | "REVIEWED_EXACT_OFFICIAL_EXCEPTION";
+  readonly matchBasis: "EXACT_OFFICIAL_EMAIL" | "EXACT_OFFICIAL_NAME_BODY" | "REVIEWED_EXACT_OFFICIAL_EXCEPTION" | "EXACT_OFFICIAL_ROSTER_ID";
 }
 
 export interface NhCurrentMemberIdentityCrosswalk {

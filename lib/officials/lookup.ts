@@ -8,12 +8,14 @@ import type {
   Officeholder,
   OfficeholderSet,
   SocialAccount,
+  SeatVacancy,
 } from "./types.ts";
 
 /** Turning the officeholder roster into an answer for a point; pure, separate from loading. */
 
 /** What a surface needs to render a person honestly: who they are and where that claim came from. */
 export interface SeatHolder {
+  vacancy?: { readonly since: string | null };
   fieldSources?: Record<string, Provenance>;
   id: string;
   personId?: string;
@@ -82,6 +84,15 @@ export function indexByOfficeholderId(sets: readonly OfficeholderSet[], photos?:
 /** officeholderId → path on our origin, from the licensed-photos manifest. */
 export type PhotoIndex = Map<string, string>;
 
+/** An explicitly vacant office is a sourced row, distinct from a person and from an uncovered seat. */
+export function vacancySeatHolder(vacancy: SeatVacancy): SeatHolder {
+  return { id: vacancy.id, name: vacancy.since ? `Vacant since ${vacancy.since}` : "Vacant",
+    officeTitle: vacancy.officeTitle, officeJurisdictionOcdId: vacancy.divisionId,
+    vacancy: { since: vacancy.since }, state: vacancy.state, chamber: vacancy.chamber,
+    partyLabel: null, termEnd: null, birthDate: null, websiteUrl: null, sourceUrl: vacancy.provenance.sourceUrl,
+    provenance: vacancy.provenance, email: null, phone: null, contactFormUrl: null, photoUrl: null, campaignUrl: null };
+}
+
 function toSeatHolder(person: Officeholder, photos?: PhotoIndex): SeatHolder {
   return {
     id: person.id,
@@ -130,6 +141,11 @@ export function indexByDivision(
       const existing = index.get(link.ocdId);
       if (existing) existing.push(holder);
       else index.set(link.ocdId, [holder]);
+    }
+    for (const vacancy of set.vacancies ?? []) {
+      const holders = index.get(vacancy.divisionId) ?? [];
+      holders.push(vacancySeatHolder(vacancy));
+      index.set(vacancy.divisionId, holders);
     }
   }
 

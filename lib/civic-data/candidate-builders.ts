@@ -1,4 +1,6 @@
 import { mergeStatePeople } from "../state-rollcalls/legislators.ts";
+import { nhReadModel } from "../officials/nh-roster.ts";
+import { officialRosterChanges } from "../officials/roster-reconciliation.ts";
 import { createHash } from "node:crypto";
 import { isMorrisGeneralCandidatesDocument, isMorrisSchoolCandidatesDocument } from "./morris-filing-documents.ts";
 
@@ -178,6 +180,8 @@ export function censusAcsCandidate(zctaFetch: AcsFetch, stateFetch: AcsFetch): R
 }
 
 export interface NhMemberReadModel {
+  readonly currentMembershipComplete?: boolean;
+  readonly memberSourceUrls?: Readonly<Record<string,readonly string[]>>;
   readonly memberSourceDates?: Readonly<Record<string,string>>;
   readonly formatVersion: 1;
   readonly jurisdiction: "US-NH";
@@ -202,7 +206,7 @@ export interface NhMemberReadModel {
 export interface OfficialStateLegislatorReadModel {
   readonly formatVersion: 1;
   readonly sourceId: string;
-  readonly jurisdiction: `US-${string}`;
+  readonly jurisdiction: "US" | `US-${string}`;
   readonly term: string;
   readonly generatedAt: string;
   readonly roster: OfficeholderSet;
@@ -1109,6 +1113,8 @@ export function officialStateRollCallHorizonRefusalCandidate(input: {
 }
 
 export function nhMembersCandidate(input: {
+  readonly currentRosterComplete?: boolean;
+  readonly memberSourceUrls?: Readonly<Record<string,readonly string[]>>;
   readonly rawText: string;
   readonly rawIdentityText: string;
   readonly finalUrl: string;
@@ -1133,7 +1139,7 @@ export function nhMembersCandidate(input: {
     seatNo: match.member.seatNo,
   }));
   const currentIds = new Set(rosterIdentities.map(row=>row.officeholderId));
-  const retainedIdentities = (input.prior?.identities ?? []).filter(row=>!currentIds.has(row.officeholderId));
+  const retainedIdentities = input.currentRosterComplete ? [] : (input.prior?.identities ?? []).filter(row=>!currentIds.has(row.officeholderId));
   const key = (row:{chamber:string;seatNo:string;district:string})=>`${row.chamber}|${row.seatNo}|${row.district}`;
   const retainedKeys = new Set(retainedIdentities.map(key));
   const retainedMembers = (input.prior?.members ?? []).filter(row=>retainedKeys.has(key(row)));
@@ -1143,6 +1149,8 @@ export function nhMembersCandidate(input: {
     jurisdiction: "US-NH",
     term: NH_MEMBERS_SUPPORTED_TERM,
     members: [...retainedMembers,...current],
+    currentMembershipComplete: input.currentRosterComplete === true,
+    ...(input.memberSourceUrls ? {memberSourceUrls: {...input.prior?.memberSourceUrls, ...input.memberSourceUrls}} : {}),
     memberSourceDates: {...Object.fromEntries(retainedIdentities.map(row=>[row.officeholderId,input.prior?.memberSourceDates?.[row.officeholderId] ?? input.priorRetrievedAt ?? input.retrievedAt])),...Object.fromEntries(input.identityCrosswalk.matches.map(row=>[row.officeholderId,input.retrievedAt]))},
     identities: rosterIdentities,
     officialIdentityAuthority: {
@@ -1176,10 +1184,19 @@ export function nhMembersCandidate(input: {
     ...(duplicateKeys > 0 ? [`${duplicateKeys} official PersonID identities are duplicated.`] : []),
 
   ];
+  const nextRoster = nhReadModel({ value: readModel, metadata: { retrievedAt: input.retrievedAt } }).roster;
+  const priorRoster = input.prior ? nhReadModel({ value: input.prior,
+    metadata: { retrievedAt: input.priorRetrievedAt } }).roster : null;
+  const changes = officialRosterChanges(priorRoster, nextRoster).map(change => change.kind === "departed"
+    ? { ...change, sourceUrl: nextRoster.officeholders.find(person => person.officeTitle === change.officeTitle)?.provenance.sourceUrl ?? change.sourceUrl }
+    : change);
   const normalizedPayload = {
+    rawText: input.rawText,
+    rawIdentityText: input.rawIdentityText,
     extraction: input.extraction,
     unresolved: input.identityCrosswalk.unresolved ?? [],
     officialIdentityAuthority: readModel.officialIdentityAuthority,
+    changes,
   };
   return {
     id: candidateId("nh-general-court", "US-NH", rawHash, input.sourceCheck?.checkedAt ?? input.retrievedAt),
@@ -1192,7 +1209,8 @@ export function nhMembersCandidate(input: {
     identities,
     temporal: { version: NH_MEMBERS_SUPPORTED_TERM, expectedVersion: expectedTerm, sourceThrough: input.retrievedAt, staleAtRetrieval: expectedTerm !== NH_MEMBERS_SUPPORTED_TERM },
     semantics: { factKind: "current legislative membership as stated by electedStatus", violations },
-    horizon: { kind: "OPEN_FACT_SET", query: "exact matched current member identities; unresolved rows remain work", returnedRecords: current.length, declaredTotal: null, paginationComplete: false, claimsComplete: false },
+    horizon: { kind: input.currentRosterComplete ? "BOUNDED" : "OPEN_FACT_SET", query: "current official member roster, each named PersonID accounted for; unresolved rows remain work", returnedRecords: input.extraction.counts.produced,
+      declaredTotal: input.currentRosterComplete ? input.extraction.counts.produced : null, paginationComplete: input.currentRosterComplete === true, claimsComplete: input.currentRosterComplete === true },
     absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
     dependentChecks: [
       { consumer: "lib/civic-data/state-members.ts", passed: current.length > 0, detail: `${current.length} rows marked INCUMBENT or NEW.` },

@@ -1,4 +1,5 @@
 import { PLURAL_STATES } from "../lib/sources/plural/targets.ts";
+import { OFFICIAL_ROSTER_TARGETS } from "../lib/sources/official-rosters/targets.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -288,6 +289,7 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "meeting-doors",
     "meeting-source-wiring",
     "candidate-campaign-sites-derived",
+    ...OFFICIAL_ROSTER_TARGETS.map(target => target.id),
   ]);
   assert.deepEqual(nonMeetingTasks.map((task) => task.id), ROUTINE_SOURCE_CONTRACTS.map((contract) => contract.id));
   assert.deepEqual(

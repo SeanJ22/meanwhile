@@ -1,0 +1,595 @@
+[
+  {
+    "id": "nc-0",
+    "state": "NC",
+    "url": "https://www.ncleg.gov/Members/MemberList/H",
+    "retrievedAt": "2026-10-13T04:16:21.207260+00:00",
+    "sha256": "8f15d2890977243cca527ad15865e130f718a3425737224131191d3176885835",
+    "bytes": 228786,
+    "fixture": "observed-nc-0.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": 120,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": [
+      "lower"
+    ]
+  },
+  {
+    "id": "nc-1",
+    "state": "NC",
+    "url": "https://www.ncleg.gov/Members/MemberList/S",
+    "retrievedAt": "2026-10-13T04:16:20.416670+00:00",
+    "sha256": "ee41007a822e0aca83fa7b4c77672714a771c646fe02a1cc96a3217f5c6ef214",
+    "bytes": 125676,
+    "fixture": "observed-nc-1.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": 50,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": [
+      "upper"
+    ]
+  },
+  {
+    "id": "pa-0",
+    "state": "PA",
+    "url": "https://www.palegis.us/house/members",
+    "retrievedAt": "2026-10-13T04:16:24.818214+00:00",
+    "sha256": "7f51eeea786f4a9119da05aefe5a67d0f2bb2b9d86e9524a78d8542b45514521",
+    "bytes": 595047,
+    "fixture": "observed-pa-0.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": 203,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": [
+      "lower"
+    ]
+  },
+  {
+    "id": "pa-1",
+    "state": "PA",
+    "url": "https://www.palegis.us/senate/members",
+    "retrievedAt": "2026-10-13T04:16:24.922251+00:00",
+    "sha256": "7137548d21ac52f31d6712b078dd00033358d06ea7121cd58cb02b38654c8c0b",
+    "bytes": 208296,
+    "fixture": "observed-pa-1.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": 50,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": [
+      "upper"
+    ]
+  },
+  {
+    "id": "sc-0",
+    "state": "SC",
+    "url": "https://www.scstatehouse.gov/member.php?chamber=H",
+    "retrievedAt": "2026-10-13T04:16:23.704090+00:00",
+    "sha256": "b72595837f6a4a70eb67dc8fa20786de84c0c3984d9f3481b06dcfc27370f160",
+    "bytes": 91148,
+    "fixture": "observed-sc-0.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": 124,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": [
+      "lower"
+    ]
+  },
+  {
+    "id": "sc-1",
+    "state": "SC",
+    "url": "https://www.scstatehouse.gov/member.php?chamber=S",
+    "retrievedAt": "2026-10-13T04:16:23.647813+00:00",
+    "sha256": "15f1d8f85ad7bbd269faa82805469820e26e93b30af2b5ced4bbe140fff20474",
+    "bytes": 48253,
+    "fixture": "observed-sc-1.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": 46,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": [
+      "upper"
+    ]
+  },
+  {
+    "id": "wa-current",
+    "state": "WA",
+    "url": "https://leg.wa.gov/legislators/",
+    "retrievedAt": "2026-10-13T04:43:09.896000+00:00",
+    "sha256": "395359d7295021da6b18b24e05d37d7639667b73b27fa6868c87036996ddb876",
+    "bytes": 272768,
+    "fixture": "observed-wa-current.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": 147,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": [
+      "lower",
+      "upper"
+    ]
+  },
+  {
+    "id": "wi-0",
+    "state": "WI",
+    "url": "https://docs.legis.wisconsin.gov/2025/legislators/assembly",
+    "retrievedAt": "2026-10-13T04:16:27.060211+00:00",
+    "sha256": "f909e6f3324f8a3e2c2593e245bd2b999f4e8a6b3abec16f18bf13a7f16cc24d",
+    "bytes": 228293,
+    "fixture": "observed-wi-0.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": 99,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": [
+      "lower"
+    ]
+  },
+  {
+    "id": "wi-1",
+    "state": "WI",
+    "url": "https://docs.legis.wisconsin.gov/2025/legislators/senate",
+    "retrievedAt": "2026-10-13T04:16:27.823945+00:00",
+    "sha256": "b0889c4442f3180c3c67fb6c1852d97f50d8946cabde173e13887417845e132a",
+    "bytes": 95686,
+    "fixture": "observed-wi-1.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": 33,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": [
+      "upper"
+    ]
+  },
+  {
+    "id": "wv-0",
+    "state": "WV",
+    "url": "https://www.wvlegislature.gov/House/roster.cfm",
+    "retrievedAt": "2026-10-13T04:16:26.653757+00:00",
+    "sha256": "91afc496bf3b7757630ef691b66db4fd2d501bdeeacddf17377d6cddab01fc3f",
+    "bytes": 79474,
+    "fixture": "observed-wv-0.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": 100,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": [
+      "lower"
+    ]
+  },
+  {
+    "id": "wv-1",
+    "state": "WV",
+    "url": "https://www.wvlegislature.gov/Senate1/roster.cfm",
+    "retrievedAt": "2026-10-13T04:16:26.597701+00:00",
+    "sha256": "2ca9e6d73e3f2c2f8e4851b6968c117b97441bff6bab77d5b6bf427f1ba1e942",
+    "bytes": 40048,
+    "fixture": "observed-wv-1.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": 34,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": [
+      "upper"
+    ]
+  },
+  {
+    "id": "ny-0",
+    "state": "NY",
+    "url": "https://nyassembly.gov/mem/",
+    "retrievedAt": "2026-10-13T04:16:20.077841+00:00",
+    "sha256": "5e8a75436501d4330276667cebbfa275f849812589d59d05bb91a8f755d057ff",
+    "bytes": 215944,
+    "fixture": "observed-ny-0.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": 150,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": [
+      "lower"
+    ]
+  },
+  {
+    "id": "ny-1",
+    "state": "NY",
+    "url": "https://www.nysenate.gov/senators-committees",
+    "retrievedAt": "2026-10-13T04:16:19.918135+00:00",
+    "sha256": "baa67fb25b8a2ded0ac4d9090a8bf95f70293d989fb6b633831e6571604300c7",
+    "bytes": 105872,
+    "fixture": "observed-ny-1.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": 62,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": [
+      "upper"
+    ]
+  },
+  {
+    "id": "ne-0",
+    "state": "NE",
+    "url": "https://nebraskalegislature.gov/senators/senator_list.php",
+    "retrievedAt": "2026-10-13T04:16:18.706367+00:00",
+    "sha256": "16fabe15408d5b92248dbc4f818f44c78b793e23422469a22792beeeceb49467",
+    "bytes": 64317,
+    "fixture": "observed-ne-0.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": 49,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": [
+      "upper"
+    ]
+  },
+  {
+    "id": "nv-0",
+    "state": "NV",
+    "url": "https://www.leg.state.nv.us/App/Legislator/A/Assembly/Current",
+    "retrievedAt": "2026-10-13T04:16:18.963292+00:00",
+    "sha256": "dd3ec0937bf2b6544fd34a74c42e46764a809ab7c7c85efaf68d72bdaa1aef8e",
+    "bytes": 202282,
+    "fixture": "observed-nv-0.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": 42,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": [
+      "lower"
+    ]
+  },
+  {
+    "id": "nv-1",
+    "state": "NV",
+    "url": "https://www.leg.state.nv.us/App/Legislator/A/Senate/Current",
+    "retrievedAt": "2026-10-13T04:16:18.740309+00:00",
+    "sha256": "caa97938709eeba0d89728fddebb3ad52964c52e0d0a4465cf991737517d3946",
+    "bytes": 104495,
+    "fixture": "observed-nv-1.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": 21,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": [
+      "upper"
+    ]
+  },
+  {
+    "id": "tx-0",
+    "state": "TX",
+    "url": "https://house.texas.gov/members",
+    "retrievedAt": "2026-10-13T04:16:25.124085+00:00",
+    "sha256": "315b0bdbcbfbd831de5c99bd3435dc07ab0992ea22baf22a165afeafcbc3f636",
+    "bytes": 131415,
+    "fixture": "observed-tx-0.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": 148,
+    "expectedVacancies": 2,
+    "expectedCoveredChambers": [
+      "lower"
+    ]
+  },
+  {
+    "id": "tx-1",
+    "state": "TX",
+    "url": "https://senate.texas.gov/members.php",
+    "retrievedAt": "2026-10-13T04:16:24.885746+00:00",
+    "sha256": "a2c0619c65692861877960546ec15c831e25662c3aae79e6ec431beaf84024a4",
+    "bytes": 22311,
+    "fixture": "observed-tx-1.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": 31,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": [
+      "upper"
+    ]
+  },
+  {
+    "id": "ok-0",
+    "state": "OK",
+    "url": "https://www.okhouse.gov/representatives",
+    "retrievedAt": "2026-10-13T04:16:23.275578+00:00",
+    "sha256": "98cc5626c35f93cc67085d6e6bfa5b789ee0bea5f36d231277eaca8e44f5de5d",
+    "bytes": 320283,
+    "fixture": "observed-ok-0.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": 101,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": [
+      "lower"
+    ]
+  },
+  {
+    "id": "va-0",
+    "state": "VA",
+    "url": "https://house.vga.virginia.gov/members",
+    "retrievedAt": "2026-10-13T04:16:28.476268+00:00",
+    "sha256": "adc6cf0d8f756994ffd44a4a21333c1fe21c10daf66e3a0454082bcd325a7bfe",
+    "bytes": 275176,
+    "fixture": "observed-va-0.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": 99,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": [
+      "lower"
+    ],
+    "requestedUrl": "https://virginiageneralassembly.gov/house/members/members.php"
+  },
+  {
+    "id": "va-senate",
+    "state": "VA",
+    "url": "https://apps.senate.virginia.gov/Senator/index.php",
+    "retrievedAt": "2026-10-13T04:24:31.998211+00:00",
+    "sha256": "e69efbdc845786bfcfccbb688d4b8572eb253dd675de94f8511d1ba5a5cccaef",
+    "bytes": 173892,
+    "fixture": "observed-va-senate.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": 40,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": [
+      "upper"
+    ]
+  },
+  {
+    "id": "ar-all",
+    "state": "AR",
+    "url": "https://www.arkleg.state.ar.us/Legislators/List",
+    "retrievedAt": "2026-10-13T04:24:31.837817+00:00",
+    "sha256": "2472fd3faa4a7e9dbb8b0a274cb61bb567eabe90504d258ac35e3578527f5111",
+    "bytes": 320754,
+    "fixture": "observed-ar-all.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": 132,
+    "expectedVacancies": 3,
+    "expectedCoveredChambers": [
+      "lower",
+      "upper"
+    ]
+  },
+  {
+    "id": "nm-lower",
+    "state": "NM",
+    "url": "https://www.nmlegis.gov/Members/Legislator_List?T=R",
+    "retrievedAt": "2026-10-13T04:26:26.900027+00:00",
+    "sha256": "b671055b763e5f987da07b25617c97b2008842a63d34d54c58a730d42b586a3c",
+    "bytes": 131081,
+    "fixture": "observed-nm-lower.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": 68,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": [
+      "lower"
+    ]
+  },
+  {
+    "id": "nm-upper",
+    "state": "NM",
+    "url": "https://www.nmlegis.gov/Members/Legislator_List?T=S",
+    "retrievedAt": "2026-10-13T04:26:26.785500+00:00",
+    "sha256": "9b4d4c5d901628d4953520852e32ba9928ebb2273ca2f8454ced77ec168cf369",
+    "bytes": 95252,
+    "fixture": "observed-nm-upper.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": 42,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": [
+      "upper"
+    ]
+  },
+  {
+    "id": "oh-house",
+    "state": "OH",
+    "url": "https://ohiohouse.gov/members/directory",
+    "retrievedAt": "2026-10-13T04:24:34.658265+00:00",
+    "sha256": "1d2243ce4a75db9a16eaca903ae3dfd4bcdb387f352c30f7ff3e1452d1fe4a3b",
+    "bytes": 111120,
+    "fixture": "observed-oh-house.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": 98,
+    "expectedVacancies": 1,
+    "expectedCoveredChambers": [
+      "lower"
+    ]
+  },
+  {
+    "id": "oh-senate",
+    "state": "OH",
+    "url": "https://ohiosenate.gov/members/directory",
+    "retrievedAt": "2026-10-13T04:24:33.611415+00:00",
+    "sha256": "41393138d243164cbbf7955bbf92ca39bcf8eb9416c4f2783d587fc6bdde1991",
+    "bytes": 64153,
+    "fixture": "observed-oh-senate.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": 32,
+    "expectedVacancies": 1,
+    "expectedCoveredChambers": [
+      "upper"
+    ]
+  },
+  {
+    "id": "az",
+    "state": "AZ",
+    "url": "https://www.azleg.gov/MemberRoster/",
+    "retrievedAt": "2026-10-13T04:24:34.282665+00:00",
+    "sha256": "eb1d371d5fef95ee0c1d2a9372cad64450a67c267cca1135916eacd0bfd62e69",
+    "bytes": 156912,
+    "fixture": "observed-az.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": 90,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": [
+      "lower",
+      "upper"
+    ]
+  },
+  {
+    "id": "nj",
+    "state": "NJ",
+    "url": "https://www.njleg.state.nj.us/legislative-roster",
+    "retrievedAt": "2026-10-13T04:24:33.435708+00:00",
+    "sha256": "9a41bb61e773678af46f94e1530c738a5e167ca6d48a15d9d7acdbb1c16dc9b6",
+    "bytes": 137305,
+    "fixture": "observed-nj.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": 120,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": [
+      "lower",
+      "upper"
+    ]
+  },
+  {
+    "id": "nd-current",
+    "state": "ND",
+    "url": "https://ndlegis.gov/assembly/69-2025/regular/members",
+    "retrievedAt": "2026-10-13T04:24:31.743361+00:00",
+    "sha256": "a57cd29eed939be719a1d7a7a331174959dd1fc5dd6782154c9383185e3e1e6d",
+    "bytes": 99019,
+    "fixture": "observed-nd-current.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": 15,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": []
+  },
+  {
+    "id": "nd-page-1",
+    "state": "ND",
+    "url": "https://ndlegis.gov/assembly/69-2025/regular/members?page=1",
+    "retrievedAt": "2026-10-13T04:43:09.561134+00:00",
+    "sha256": "12f3064e9e92af80b99d3761e925b975daddd564caa90b7b815a16627e7babc3",
+    "bytes": 98491,
+    "fixture": "observed-nd-page-1.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": null,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": []
+  },
+  {
+    "id": "nd-page-2",
+    "state": "ND",
+    "url": "https://ndlegis.gov/assembly/69-2025/regular/members?page=2",
+    "retrievedAt": "2026-10-13T04:43:09.653097+00:00",
+    "sha256": "da74db59c98fcdec506cdb5553d44c0ab506407efef8b0cd1bb54129565aff08",
+    "bytes": 97302,
+    "fixture": "observed-nd-page-2.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": null,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": []
+  },
+  {
+    "id": "nd-page-3",
+    "state": "ND",
+    "url": "https://ndlegis.gov/assembly/69-2025/regular/members?page=3",
+    "retrievedAt": "2026-10-13T04:43:09.651578+00:00",
+    "sha256": "a8974756c6b36bf902c27f163da410652bd839f1e2ed6849cb32bfe19bb1c453",
+    "bytes": 98252,
+    "fixture": "observed-nd-page-3.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": null,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": []
+  },
+  {
+    "id": "nd-page-4",
+    "state": "ND",
+    "url": "https://ndlegis.gov/assembly/69-2025/regular/members?page=4",
+    "retrievedAt": "2026-10-13T04:43:09.580503+00:00",
+    "sha256": "864692d5c4e2c5d44fa8a3dcce0c93268a7c74326b16af153167a89e13938aa5",
+    "bytes": 97541,
+    "fixture": "observed-nd-page-4.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": null,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": []
+  },
+  {
+    "id": "nd-page-5",
+    "state": "ND",
+    "url": "https://ndlegis.gov/assembly/69-2025/regular/members?page=5",
+    "retrievedAt": "2026-10-13T04:43:09.903283+00:00",
+    "sha256": "5697a3c5419647b777c3a20dbfe6d6e768d47a1415404e05cce8cd4fd97ae9c3",
+    "bytes": 96762,
+    "fixture": "observed-nd-page-5.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": null,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": []
+  },
+  {
+    "id": "nd-page-6",
+    "state": "ND",
+    "url": "https://ndlegis.gov/assembly/69-2025/regular/members?page=6",
+    "retrievedAt": "2026-10-13T04:43:09.744565+00:00",
+    "sha256": "e9c9a0b687541f92ef8f48d90dc64bc2cba223b477fb02848005485c0ccc3717",
+    "bytes": 97770,
+    "fixture": "observed-nd-page-6.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": null,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": []
+  },
+  {
+    "id": "nd-page-7",
+    "state": "ND",
+    "url": "https://ndlegis.gov/assembly/69-2025/regular/members?page=7",
+    "retrievedAt": "2026-10-13T04:43:09.872294+00:00",
+    "sha256": "8cb12ecd8b25c887541d022c7f26518062962b7d75c2634fda4d819ee2d10e91",
+    "bytes": 96720,
+    "fixture": "observed-nd-page-7.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": null,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": []
+  },
+  {
+    "id": "nd-page-8",
+    "state": "ND",
+    "url": "https://ndlegis.gov/assembly/69-2025/regular/members?page=8",
+    "retrievedAt": "2026-10-13T04:43:09.824358+00:00",
+    "sha256": "8de20702be77110f7a8cb092f3b5bf9e50fb50d8ce4d4d40acb82e54f389af5c",
+    "bytes": 96649,
+    "fixture": "observed-nd-page-8.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": null,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": []
+  },
+  {
+    "id": "nd-page-9",
+    "state": "ND",
+    "url": "https://ndlegis.gov/assembly/69-2025/regular/members?page=9",
+    "retrievedAt": "2026-10-13T04:43:09.920541+00:00",
+    "sha256": "d27126667a8ac55e7dc2a3f91bf6dd341f54336888bba25d3aa239edf58c4095",
+    "bytes": 86676,
+    "fixture": "observed-nd-page-9.html.gz",
+    "encoding": "gzip",
+    "format": "html",
+    "expectedHolders": null,
+    "expectedVacancies": 0,
+    "expectedCoveredChambers": []
+  }
+]

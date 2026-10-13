@@ -55,6 +55,7 @@ export interface Preview {
   readonly items?: readonly PreviewItem[];
   readonly amount?: { readonly label: string; readonly initial: string; readonly text?: boolean };
   readonly note?: boolean;
+  readonly noteLabel?: string;
   readonly invalid?: (input: { readonly option: string | null; readonly words: string; readonly amount: string; readonly selected: number }) => string | null;
 }
 
@@ -565,6 +566,18 @@ const defs: ActionDef[] = [
     }),
     gateway: null,
     dependency: DEP.typedPlans,
+  },
+  {
+    kind: "officials-check",
+    label: "Check officials now",
+    needs: "owner",
+    doneWords: "Officials check saved.",
+    preview: (ctx) => ({ title: `Check officials in ${ctx.scopeName}`, level: "local",
+      rows: [["Sources", "People mirrors and official government rosters covering this place"], ["When", "The next runner pass"], ["Results", "Changes and source links appear here"]],
+      note: true, noteLabel: "What I heard (optional)",
+      invalid: ({ words }) => ctx.scopeIsCountry ? "Choose a state, county, district or ZIP." : words.length > 1000 ? "Keep the note within 1,000 characters." : null }),
+    gateway: { type: "officials.checkNow" },
+    dependency: null,
   },
   {
     kind: "scope-recheck",

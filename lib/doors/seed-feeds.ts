@@ -9,7 +9,9 @@ import { AUTOMATIC_REFRESH_CONTRACT_IDS } from "../civic-data/automatic-refresh.
 import { ROUTINE_SOURCE_CONTRACTS } from "../civic-data/contracts.ts";
 import { requiredManualProductionContract } from "../civic-data/manual-contracts.ts";
 import { sourceAuthority } from "../civic-data/source-authority.ts";
-import { feedDoorId, normalizeHost, upsertDerivedDoor, type DoorDraft, type DoorRepository } from "./registry.ts";
+import { FIPS_TO_STATE } from "../ocd/fips.ts";
+import { OFFICIAL_ROSTER_TARGETS } from "../sources/official-rosters/targets.ts";
+import { applyDerivedRow, checkDoorDraft, feedDoorId, isDoorRecord, normalizeHost, upsertDerivedDoor, type DoorDraft, type DoorRepository } from "./registry.ts";
 
 const MINUTE = 60_000;
 
@@ -51,19 +53,21 @@ interface FeedInput {
 }
 
 function draftFor(feed: FeedInput): DoorDraft {
-  const keyRef = keyRefFor(feed.id, feed.sourceId);
+  const keyRef = feed.id === "congress-bulk-roster" ? null : keyRefFor(feed.id, feed.sourceId);
+  const official = OFFICIAL_ROSTER_TARGETS.find(target => target.id === feed.id);
   return {
     doorId: feedDoorId(feed.id),
     kind: feed.authorityMode === "DERIVED" ? "derived-feed" : "source-feed",
-    ocdId: null,
+    ocdId: peopleFeedDivision(feed.recordClass, feed.scope),
     bodyIds: [],
-    hosts: hostsFor(feed.sourceId, feed.requestedUrl),
+    hosts: official ? [...new Set(official.routes.flatMap(url => normalizeHost(url) ?? []))].sort() : hostsFor(feed.sourceId, feed.requestedUrl),
     config: {
       contractId: feed.id,
       sourceId: feed.sourceId,
       scope: feed.scope,
       refresh: feed.refresh,
       command: feed.command.join(" "),
+      ...(feed.requestedUrl ? {sourceUrl: feed.requestedUrl} : {}),
       ...(keyRef === null ? {} : { keyRef }),
     },
     holds: [holdsOf(feed.recordClass)],
@@ -72,6 +76,15 @@ function draftFor(feed: FeedInput): DoorDraft {
     status: "OPEN",
     readNow: false,
   };
+}
+
+/** A people source covers a jurisdiction, including places within it. */
+export function peopleFeedDivision(recordClass: string, scope: string): string | null {
+  if (recordClass !== "STATE_LEGISLATOR" && recordClass !== "FEDERAL_DIRECTORY") return null;
+  if (recordClass === "FEDERAL_DIRECTORY" || scope === "US" || scope.startsWith("US:")) return "ocd-division/country:us";
+  const postal = /^US-([A-Z]{2})(?:$|:)/.exec(scope)?.[1];
+  const entry = Object.values(FIPS_TO_STATE).find(row => row.postal === postal);
+  return entry ? `ocd-division/country:us/${entry.prefix}:${entry.postal.toLowerCase()}` : null;
 }
 
 /** Every non-meeting feed the system runs on a clock today, one draft each, in contract order. */
@@ -84,7 +97,7 @@ export function feedDoorDrafts(): DoorDraft[] {
       sourceId: contract.sourceId,
       recordClass: contract.recordClass,
       scope: contract.scope,
-      requestedUrl: adapter.authorityMode === "SINGLE_ROUTE" ? adapter.requestedUrl : null,
+      requestedUrl: adapter.authorityMode === "SINGLE_ROUTE" ? adapter.requestedUrl : OFFICIAL_ROSTER_TARGETS.find(target => target.id === contract.id)?.routes[0] ?? null,
       command: adapter.command,
       everyMs: contract.cadence.defaultEveryMs,
       refresh: "routine",
@@ -106,6 +119,42 @@ export function feedDoorDrafts(): DoorDraft[] {
     });
   }
   return [...feeds.values()].map(draftFor);
+}
+
+/** Known people contracts must be usable on the first check, before the next general door derivation. */
+export async function ensurePeopleFeedDoors(input: {
+  readonly repo: DoorRepository;
+  readonly divisions: readonly string[];
+  readonly at: string;
+}): Promise<{ created: number; updated: number; unchanged: number }> {
+  const counts = { created: 0, updated: 0, unchanged: 0 };
+  const drafts = feedDoorDrafts().filter(draft => draft.ocdId &&
+    draft.holds?.some(hold => hold === "state-legislator" || hold === "federal-directory" || hold === "statewide-official") &&
+    input.divisions.some(division => division === draft.ocdId || division.startsWith(`${draft.ocdId}/`) || division.startsWith(`${draft.ocdId}#`) || draft.ocdId!.startsWith(`${division}/`) || draft.ocdId!.startsWith(`${division}#`)));
+  for (const draft of drafts) {
+    const checked = checkDoorDraft(draft);
+    if (!checked.ok) throw new Error(`DOOR_DRAFT_INVALID: ${checked.why}`);
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        let row = await input.repo.read(draft.doorId);
+        if (row === null) {
+          const created = await input.repo.put(draft.doorId, applyDerivedRow(null, checked.value, input.at, input.at)!, input.at);
+          if (created.created) { counts.created++; break; }
+          row = created.persisted;
+        }
+        if (!isDoorRecord(row.value)) throw new Error(`DOOR_RECORD_INVALID: ${draft.doorId}`);
+        if (row.value.ocdId === checked.value.ocdId) { counts.unchanged++; break; }
+        // Coverage is intrinsic to the registered contract, not an edit or a new read-now request.
+        // Keep both clocks: updating them here could spend or renew an older deliberate check.
+        await input.repo.compareAndSet(draft.doorId, row.revision, { ...row.value, ocdId: checked.value.ocdId }, row.updatedAt);
+        counts.updated++;
+        break;
+      } catch (error) {
+        if (attempt === 1) throw error;
+      }
+    }
+  }
+  return counts;
 }
 
 export async function seedFeedDoors(input: {

@@ -68,6 +68,7 @@ import { refreshDoorsForPass } from "../lib/doors/install.ts";
 import { MEETING_DOORS_CONTRACT_ID } from "../lib/doors/meeting-doors.ts";
 import { doorSyncLine, syncHeldDoors } from "../lib/doors/seed-all.ts";
 import { readNowDueRequests, settleReadNow } from "../lib/doors/mission-refresh.ts";
+import { SOURCE_CHECK_AFTER_ENV } from "../lib/sources/known-release.ts";
 import { editDeriveDueRequests } from "../lib/doors/edit-derive.ts";
 import { meetingReadQuietMs } from "../lib/civic-data/meeting-lanes.ts";
 import { listDoors } from "../lib/doors/registry.ts";
@@ -742,7 +743,7 @@ if (!FORCE && controlPlaneUrlFromEnv() !== null) {
     const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, RUN_STARTED_AT, { skipBootstrap: true });
     const settledAt = new Date().toISOString();
     const cleared = await settleReadNow(doorRepos.doors, settledAt);
-    const marked = readNowDueRequests((await listDoors(doorRepos.doors)).doors, new Set(MEETING_PARTITION_CONTRACTS.map((contract) => contract.id)), settledAt);
+    const marked = readNowDueRequests((await listDoors(doorRepos.doors)).doors, new Set(STANDING_SOURCE_TASKS.map((task) => task.id)), settledAt);
     // A door edited in Admin asks for the two derive steps now, not on their six-hour clock.
     const derive = editDeriveDueRequests((await listDoors(doorRepos.doors)).doors, new Set(DOOR_DERIVE_CONTRACT_IDS), settledAt);
     dueRequests = [...dueRequests, ...[...marked, ...derive].filter((request) => !dueRequests.some((held) => held.id === request.id))];
@@ -946,6 +947,8 @@ function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
         parentPid: process.pid,
       })),
       ...(pending.kind === "MEETING_PARTITION" ? meetingChildAttestations : {}),
+      ...(pending.task.recordClass === "STATE_LEGISLATOR" || pending.task.recordClass === "FEDERAL_DIRECTORY"
+        ? { [SOURCE_CHECK_AFTER_ENV]: honouredDueRequests.get(pending.task.id)?.requestedAt ?? RUN_STARTED_AT } : {}),
     },
     // Behind WTP_MEETING_LANES: a host that goes quiet pauses its own read early.
     ...(pending.kind === "MEETING_PARTITION" && meetingReadQuietMs() !== undefined ? { timeoutMs: meetingReadQuietMs()! } : {}),

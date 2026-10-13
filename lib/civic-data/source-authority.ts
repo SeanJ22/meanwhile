@@ -1,4 +1,5 @@
 import { PLURAL_STATES, PLURAL_PARSER_VERSION } from "../sources/plural/targets.ts";
+import { OFFICIAL_ROSTER_TARGETS } from "../sources/official-rosters/targets.ts";
 import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ROUTE_PREFIX, REGISTRATION_TARGETS } from "../registration/publication.ts";
 import { extractedMemberUrl } from "./manual-source-urls.ts";
 import {
@@ -39,6 +40,17 @@ export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage 
 }
 
 export const SOURCE_AUTHORITIES = {
+  "official-rosters": {
+    id: "official-rosters", publisher: "The U.S. Senate, House Clerk and each legislature's own current roster",
+    trust: "T1_AUTHORITATIVE_STRUCTURED", sourceClass: "MULTI_PUBLISHER_PRIMARY",
+    routePrefixes: [...new Set(OFFICIAL_ROSTER_TARGETS.flatMap(target => target.routes))],
+    jurisdictions: ["US", ...PLURAL_STATES.map(state => `US-${state.toUpperCase()}`)], recordClasses: ["STATE_LEGISLATOR"],
+    competentFacts: ["current official membership", "exact office and division", "explicit vacancy and departure date", "official contact"],
+    expectedIdentifierKeys: ["person_id", "office_id"], expectedTemporalFields: ["source_through", "collected_at"],
+    horizonSemantics: "Each enumerated official chamber replaces the mirror's office claims. Incomplete routes preserve unrelated verified facts; explicit vacancies retire only the named native seat.",
+    parserVersion: "official-rosters/1", freshnessExpectation: "Daily conditional reads, also on the next runner pass after an Admin check.",
+    absencePolicy: {kind: "BOUNDED_QUERY_OR_EXPLICIT_STATEMENT", requiredKeys: ["office_id", "source_through"]}, routineAutoPromotion: true,
+  },
   "official-ballot-authorities": {
     id: "official-ballot-authorities",
     publisher: "Exact official election authorities in the saved-source receipt",
@@ -781,7 +793,7 @@ export const SOURCE_AUTHORITIES = {
     competentFacts: ["legislative membership", "elected status", "chamber", "district", "committee assignment", "official roll call"],
     expectedIdentifierKeys: ["PersonID", "EmployeeNumber", "seatNo", "chamber", "district", "rollCallId", "eventId", "officeholderId", "jurisdiction"],
     expectedTemporalFields: ["term", "session", "vote_date"],
-    horizonSemantics: "Members.txt is the whole published current-roster file and legislators.txt supplies its exact official PersonID crosswalk; row disposition must reconcile to logical input. For 2026, RollCallSummary.txt, RollCallHistory.txt and legislators.txt form one bounded horizon only when every summary, member position, published tally and one-to-one EmployeeNumber/PersonID join reconciles.",
+    horizonSemantics: "Current House name/seat selectors and Senate district cards supply exact PersonIDs and sitting status; Members.txt enriches exact matched people. A complete current roster retires departed people; failed pages retain independent facts. For roll calls, the publisher dumps form a bounded horizon only when every summary, position, tally and exact identity join reconciles.",
     parserVersion: "nh-general-court/3",
     freshnessExpectation: "Roster daily while membership changes; roll calls after each sitting.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },

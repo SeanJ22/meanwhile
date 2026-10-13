@@ -1,0 +1,30 @@
+{
+  "formatVersion": 1,
+  "description": "Unmodified official federal source responses saved for OR-01. Current House XML includes explicit vacancies and predecessor departure dates; Senate appointment table joins current senators by Bioguide ID.",
+  "sources": [
+    {
+      "file": "senate-current.xml",
+      "url": "https://www.senate.gov/general/contact_information/senators_cfm.xml",
+      "httpStatus": 200,
+      "retrievedAt": "2026-10-13T04:14:55.743Z",
+      "sha256": "01459d6977e9b5590e7d27cb333ff062cf9cf0783c934373393512fe2542b5e2",
+      "bytes": 52533
+    },
+    {
+      "file": "house-current.xml",
+      "url": "https://clerk.house.gov/xml/lists/MemberData.xml",
+      "httpStatus": 200,
+      "retrievedAt": "2026-10-13T04:14:57.175Z",
+      "sha256": "01833c6c646873b2247950e8ab9c7ecc2c57fd2bf019d1014bd64a58b496ed3d",
+      "bytes": 557203
+    },
+    {
+      "file": "senate-appointed.html",
+      "url": "https://www.senate.gov/senators/AppointedSenators.htm",
+      "httpStatus": 200,
+      "retrievedAt": "2026-10-13T04:15:32.259Z",
+      "sha256": "1b54d35a6476842302c11dc1c2c571e0f48d638661150726374e551c0a1ed46d",
+      "bytes": 109209
+    }
+  ]
+}

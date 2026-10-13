@@ -139,6 +139,9 @@ test("no file URL is used as a path without fileURLToPath", () => {
     ["scripts/fetch-districts.ts", ["new URL(url)", "pathname"].join(".")],
     // The live-write guard compares a browser request's HTTPS path against the write routes.
     ["lib/ops/live-write-guard.ts", ["new URL(requestUrl)", "pathname"].join(".")],
+    // Official roster parsers inspect acquired HTTPS routes, never local filenames.
+    ["lib/sources/official-rosters/alaska.ts", ["new URL(document.url)", "pathname"].join(".")],
+    ["lib/sources/official-rosters/current-markers.ts", ["new URL(url)", "pathname"].join(".")],
   ]);
 
   const offenders: string[] = [];

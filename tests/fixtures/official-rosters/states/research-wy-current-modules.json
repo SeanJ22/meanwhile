@@ -1,0 +1,57 @@
+[
+  {
+    "id": "wy-current-root",
+    "url": "https://wyoleg.gov/",
+    "resolvedUrl": "https://wyoleg.gov/",
+    "retrievedAt": "2026-10-13T05:11:21.597048+00:00",
+    "sha256": "472c65b85ae1dd0c65db10f6625f1aae1efb423ca713166a86b448cd200dd86a",
+    "status": 200,
+    "bytes": 11411,
+    "contentType": "text/html",
+    "fixture": "wy-current-root.html.gz"
+  },
+  {
+    "id": "wy-current-module-2",
+    "url": "https://wyoleg.gov/chunk-Bt44u0H7.js",
+    "resolvedUrl": "https://wyoleg.gov/chunk-Bt44u0H7.js",
+    "retrievedAt": "2026-10-13T05:11:21.950290+00:00",
+    "sha256": "d33f4d4bb5b26754cdeda6c2f77ca693399f12221340d8c553339043439994cd",
+    "status": 200,
+    "bytes": 558,
+    "contentType": "application/javascript",
+    "fixture": "wy-current-module-2.js.gz"
+  },
+  {
+    "id": "wy-current-module-1",
+    "url": "https://wyoleg.gov/chunk-lzXuaNU_.js",
+    "resolvedUrl": "https://wyoleg.gov/chunk-lzXuaNU_.js",
+    "retrievedAt": "2026-10-13T05:11:21.950876+00:00",
+    "sha256": "376b7419af0b7822ad66f9db6f436c040d17e142a1f9b505d4171b22d9a98ddd",
+    "status": 200,
+    "bytes": 24127,
+    "contentType": "application/javascript",
+    "fixture": "wy-current-module-1.js.gz"
+  },
+  {
+    "id": "wy-current-module-3",
+    "url": "https://wyoleg.gov/chunk-CzMj_mii.js",
+    "resolvedUrl": "https://wyoleg.gov/chunk-CzMj_mii.js",
+    "retrievedAt": "2026-10-13T05:11:22.053780+00:00",
+    "sha256": "ec1233662f5814083bdacd5fdbcc5d73e19a65c3c2d54db5e2bf27195aae5f92",
+    "status": 200,
+    "bytes": 471105,
+    "contentType": "application/javascript",
+    "fixture": "wy-current-module-3.js.gz"
+  },
+  {
+    "id": "wy-current-module-0",
+    "url": "https://wyoleg.gov/chunk-B5L-zN4B.js",
+    "resolvedUrl": "https://wyoleg.gov/chunk-B5L-zN4B.js",
+    "retrievedAt": "2026-10-13T05:11:22.080482+00:00",
+    "sha256": "edd58cbc3c969f61023acd9c944ac1e5456321ae44ff2173be120a5318ab343a",
+    "status": 200,
+    "bytes": 556585,
+    "contentType": "application/javascript",
+    "fixture": "wy-current-module-0.js.gz"
+  }
+]

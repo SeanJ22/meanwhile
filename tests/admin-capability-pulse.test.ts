@@ -52,7 +52,7 @@ test("v6 keeps the guarded exact receipt read when section sources are unproved"
 
 test("v6 Money and Hunts announcements follow saved policy, snapshot and fleet revisions", () => {
   const absent = adminV6ReadCapabilities({ configRevision: null, snapshotRevision: 7, researchRevision: 9 });
-  assert.deepEqual(Object.keys(absent.sections).sort(), ["agents", "checklist", "publication", "reliability", "results", "sameCause", "scoreboard", "sends", "spend", "stuck"], "the weekly learning series, the place score, blockers, results, agents and spend need only the published snapshot, not the saved policy");
+  assert.deepEqual(Object.keys(absent.sections).sort(), ["agents", "checklist", "officials", "publication", "reliability", "results", "sameCause", "scoreboard", "sends", "spend", "stuck"], "the weekly learning series, the place score, blockers, results, agents and spend need only the published snapshot, not the saved policy; officials checks read their own receipts and source outcomes");
   assert.equal(absent.sections.hunts, undefined);
   assert.equal(absent.sections.national, undefined, "The country joins the saved hunts to the published work index, so it needs both");
   assert.deepEqual(adminV6ReadCapabilities({ configRevision: 3, snapshotRevision: null, researchRevision: 9 }).sections.checklist, undefined);
@@ -89,4 +89,17 @@ test("v6 Workers announces the bounded read when policy and research are readabl
   assert.notEqual(adminV6ReadCapabilities({ ...base, workerAgeBucket: 2 }).sections.workers.revision,
     ready.sections.workers.revision);
   assert.equal(adminV6ReadCapabilities({ ...base, researchRevision: null }).sections.workers, undefined);
+});
+
+test("v6 Officials announces its receipt and runner outcomes without policy or snapshot", () => {
+  const base = { configRevision: null, snapshotRevision: null, researchRevision: null,
+    historyRevision: "receipt-1", heartbeatRevision: 4, sourceProgressId: "source-7" };
+  const ready = adminV6ReadCapabilities(base);
+  assert.deepEqual(ready.sections.officials, { contract: "admin-v6/officials@1",
+    href: "/api/admin/v6/officials", revision: "officials:receipt-1:4:source-7" });
+  for (const input of [{ ...base, historyRevision: "receipt-2" },
+    { ...base, heartbeatRevision: 5 }, { ...base, sourceProgressId: "source-8" }]) {
+    assert.notEqual(adminV6ReadCapabilities(input).sections.officials.revision, ready.sections.officials.revision,
+      "a saved check or runner result prompts a new officials result read");
+  }
 });

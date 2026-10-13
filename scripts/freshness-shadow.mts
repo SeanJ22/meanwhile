@@ -1,4 +1,5 @@
 import { readRolePlaybook } from "../lib/control-plane/playbooks.ts";
+import { refreshOfficialsLeads, officialsLeadProvider } from "../lib/control-plane/officials-leads.ts";
 import { ensureReaderSettingsPublished, publishAskPlaybooks } from "../lib/civic-data/reader-settings-publication.ts";
 import "../lib/ask/model.ts";
 import { backgroundBatchTransport } from "../lib/control-plane/model-batch.ts";
@@ -746,7 +747,9 @@ await meetingPartitions.readStates([
   ...("ids" in materialized ? [...materialized.ids].flatMap(id => stateOfJurisdictionId(id) ?? []) : []),
 ]);
 /* The providers and context are kept so the registry can be built again in the same round when the owner's dispatch has just written new work. */
+const officialsLeads = await pending.step("officials-leads:refresh", () => refreshOfficialsLeads(repos, NOW, {apply: !filteredCycle}));
 const registryProviders = [
+  officialsLeadProvider(officialsLeads),
   campaignFinanceProvider(),
   localJurisdictionsProvider({ trackedStates, materialized: () => materialized, meetingPartitions }),
   candidateEnrichmentProvider({ trackedStates }),

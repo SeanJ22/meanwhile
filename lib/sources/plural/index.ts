@@ -233,9 +233,11 @@ export function yamlToPeople(text: string, state: string, sourceUrl: string, asO
  * sides zero-pad differently. Named districts also vary in spacing and punctuation.
  */
 export function designationKey(value: string): string {
+  const ordinals: Readonly<Record<string, string>> = {FIRST: "1ST", SECOND: "2ND", THIRD: "3RD", FOURTH: "4TH", FIFTH: "5TH", SIXTH: "6TH", SEVENTH: "7TH", EIGHTH: "8TH", NINTH: "9TH", TENTH: "10TH"};
   return value
     .trim()
     .toUpperCase()
+    .replace(/\b(?:FIRST|SECOND|THIRD|FOURTH|FIFTH|SIXTH|SEVENTH|EIGHTH|NINTH|TENTH)\b/g, word => ordinals[word])
     .replace(/\s+/g, " ")
     // Strip leading zeros so "<County> 08" meets "<County> 8".
     .replace(/\b0+(\d)/g, "$1")

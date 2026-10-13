@@ -62,6 +62,7 @@ function verifyExactVersion(
 }
 
 function verifierIdFor(contract: ReaderContract): string {
+  if (contract.sourceId === "official-rosters") return "lib/civic-data/official-roster-publication.ts#readOfficialRosterProjection";
   if (contract.sourceId === "plural-openstates" && contract.recordClass === "STATE_LEGISLATOR") return "lib/state-rollcalls/legislators.ts#readOpenStatesPeopleProjection";
   switch (contract.id) {
     case "fec-funding": return "lib/funding/snapshot.ts#readFundingSnapshot";
@@ -130,6 +131,10 @@ export async function verifyRoutineReaderProjection(
 ): Promise<RoutineReaderVerification> {
   const verifierId = verifierIdFor(contract);
   try {
+    if (contract.sourceId === "official-rosters") {
+      const {readOfficialRosterProjection} = await import("./official-roster-publication.ts");
+      return verifyExactVersion(verifierId, await readOfficialRosterProjection(contract.scope, {store: options.store, now: options.now, bypassCache: true}), options.expectedVersionId, "official roster");
+    }
     if (contract.sourceId === "plural-openstates" && contract.recordClass === "STATE_LEGISLATOR") {
       const { readOpenStatesPeopleProjection } = await import("../state-rollcalls/legislators.ts");
       const jurisdiction = /^US-[A-Z]{2}/.exec(contract.scope)?.[0] as `US-${string}` | undefined;

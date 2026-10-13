@@ -1,6 +1,7 @@
 "use client";
 
 import { AskBodyConfirmation } from "./body-confirmation";
+import { VacantSeat } from "@/components/officials/vacant-seat";
 import type { BodyConfirmation } from "@/lib/ask/body-confirmation";
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
@@ -1189,7 +1190,7 @@ function DigestAnswer({
       >
         {digest.representation.rows.map(({ seatLabel, holder }) => (
           <li key={`${seatLabel}|${holder.id}`} className="t-detail leading-relaxed">
-            {onOpenPerson ? (
+            {holder.vacancy ? <VacantSeat holder={holder} /> : onOpenPerson ? (
               <button
                 type="button"
                 onClick={() => onOpenPerson(holder)}

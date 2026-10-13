@@ -111,6 +111,16 @@ test("new parser consumes held bytes before an overdue source request and does n
   assert.equal(h.requests(), 1); assert.equal(checked, 1); assert.equal(replay.checkedAt, T0);
   await acquireKnownRelease({ ...h.options, parserVersion: "csv/2" }); assert.equal(h.requests(), 2);
 });
+test("a requested refresh with a new parser checks the publisher immediately and validates the confirmed bytes", async () => {
+  const h = harness(); const first = await acquireKnownRelease(h.options); h.time(T1);
+  let validated = 0;
+  h.response(headers => { assert.equal(headers.get("if-none-match"), '"one"'); return new Response(null, {status: 304}); });
+  const checked = await acquireKnownRelease({...h.options, refresh: true, parserVersion: "csv/2", validate: bytes => {
+    validated++; assert.deepEqual(bytes, first.bytes);
+  }});
+  assert.equal(h.requests(), 2); assert.equal(validated, 1);
+  assert.equal(checked.checkedAt, T1); assert.equal(checked.lastCheckStatus, 304); assert.equal(checked.retrievedAt, T0);
+});
 test("a partial transfer or failed parser cannot replace the last complete release", async () => {
   const h = harness(), first = await acquireKnownRelease(h.options); h.time(T1);
   h.response(() => new Response("broken", { headers: { "content-length": "20" } }));

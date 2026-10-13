@@ -1,0 +1,146 @@
+[
+  {
+    "id": "sd-sessions-json",
+    "url": "https://sdlegislature.gov/api/Sessions",
+    "resolvedUrl": "https://sdlegislature.gov/api/Sessions",
+    "retrievedAt": "2026-10-13T04:30:21.234651+00:00",
+    "sha256": "58358cf801009040e62d6d483823ef8f0ad78644321fd6400e9bc6582c2d4954",
+    "status": 200,
+    "bytes": 14197,
+    "contentType": "application/json; charset=utf-8",
+    "fixture": "sd-sessions-json.json.gz"
+  },
+  {
+    "id": "sd-roster-json",
+    "url": "https://sdlegislature.gov/api/SessionMembers/Session/71",
+    "resolvedUrl": "https://sdlegislature.gov/api/SessionMembers/Session/71",
+    "retrievedAt": "2026-10-13T04:30:56.433429+00:00",
+    "sha256": "492b0cdf0b992f26f91e668d3db0d1526484097c52a759d5ad4fedb8906c8be1",
+    "status": 200,
+    "bytes": 95540,
+    "contentType": "application/json; charset=utf-8",
+    "fixture": "sd-roster-json.json.gz"
+  },
+  {
+    "id": "vt-roster-json",
+    "url": "https://legislature.vermont.gov/people/loadAll/2026/",
+    "resolvedUrl": "https://legislature.vermont.gov/people/loadAll/2026/",
+    "retrievedAt": "2026-10-13T04:31:29.525842+00:00",
+    "sha256": "071a484e92ec5038f543b725a663d049df0da11a97b16367ba4b6424db950619",
+    "status": 200,
+    "bytes": 129289,
+    "contentType": "application/json",
+    "discoveredFrom": "https://legislature.vermont.gov/people/all/2026 native DataTables ajax.url",
+    "fixture": "vt-roster-json.json.gz"
+  },
+  {
+    "id": "mt-session2-json",
+    "url": "https://bearbeta.legmt.gov/legislators/v1/legislators/search?limit=2000",
+    "resolvedUrl": "https://bearbeta.legmt.gov/legislators/v1/legislators/search?limit=2000",
+    "retrievedAt": "2026-10-13T04:32:26.628823+00:00",
+    "sha256": "efd43638a21b759e9b4be8bea14a9b51d03c19184797373bbf204bff570abf72",
+    "status": 200,
+    "bytes": 169876,
+    "contentType": "application/json",
+    "method": "POST",
+    "requestBody": {
+      "sessionIds": [
+        2
+      ]
+    },
+    "fixture": "mt-session2-json.json.gz",
+    "note": "POST public roster search with the 2025-2026 session ID2 from the official sessions list and published application default20251. Payload includes futurelegislature3, inactive district999, and overlapping current holder records. Do not treat as complete."
+  },
+  {
+    "id": "al-elected-json",
+    "url": "https://alison.legislature.state.al.us/graphql",
+    "resolvedUrl": "https://alison.legislature.state.al.us/graphql",
+    "retrievedAt": "2026-10-13T04:33:19.859030+00:00",
+    "sha256": "b34456a7b1a65bde0d272d5589ca2ba5a19e148e706a49ae85e28f598feddcf8",
+    "status": 200,
+    "bytes": 15128,
+    "contentType": "application/json; charset=utf-8",
+    "method": "POST",
+    "requestBody": {
+      "query": "query { legislativeMembers(where: { active: { eq: true }, elected: { eq: true } }) { data { id body fullName affiliation district } count } }"
+    },
+    "fixture": "al-elected-json.json.gz",
+    "discoveredFrom": "https://alison.legislature.state.al.us/house-leaders-members publishes GraphQL URL and official application query legislativeMembers; active elected filter excludes legislative staff and lieutenant governor."
+  },
+  {
+    "id": "mi-senate-all",
+    "url": "https://senate.michigan.gov/senators/all-senators/",
+    "resolvedUrl": "https://senate.michigan.gov/senators/all-senators/",
+    "retrievedAt": "2026-10-13T04:35:01.597862+00:00",
+    "sha256": "f8b7c5e8bf5b73dc59a34b369753156f290bc2493906decd207e0df68303f738",
+    "status": 200,
+    "bytes": 57055,
+    "contentType": "text/html; charset=utf-8",
+    "fixture": "mi-senate-all.html.gz"
+  },
+  {
+    "id": "wy-senate-proxy",
+    "url": "https://wyoleg.gov/LsoService/api/Legislator/2026/S",
+    "resolvedUrl": "https://wyoleg.gov/LsoService/api/Legislator/2026/S",
+    "retrievedAt": "2026-10-13T04:35:04.619601+00:00",
+    "sha256": "b8f6f1fdb7d6bc9f4f755ba7b637321f4a60e54698df73bdaa9ad2d9b9f1facc",
+    "status": 200,
+    "bytes": 43231,
+    "contentType": "application/json; charset=utf-8",
+    "fixture": "wy-senate-proxy.json.gz",
+    "discoveredFrom": "https://wyoleg.gov/chunk-BA-EPY4U.js (getMembers year/chamber current roster) and https://wyoleg.gov/assets/config/config.jsonc (official service host). api.wyoleg.gov/v1 timedout; the publisher same-site LsoService alias returns the current roster."
+  },
+  {
+    "id": "wy-house-proxy",
+    "url": "https://wyoleg.gov/LsoService/api/Legislator/2026/H",
+    "resolvedUrl": "https://wyoleg.gov/LsoService/api/Legislator/2026/H",
+    "retrievedAt": "2026-10-13T04:35:08.038613+00:00",
+    "sha256": "2fbdc4d117f2bcc23645ccfa151d9e2f571441cb07a76ff048f487749178da2f",
+    "status": 200,
+    "bytes": 86337,
+    "contentType": "application/json; charset=utf-8",
+    "fixture": "wy-house-proxy.json.gz",
+    "discoveredFrom": "https://wyoleg.gov/chunk-BA-EPY4U.js (getMembers year/chamber current roster) and https://wyoleg.gov/assets/config/config.jsonc (official service host). api.wyoleg.gov/v1 timedout; the publisher same-site LsoService alias returns the current roster."
+  },
+  {
+    "id": "ct-nonwww-house",
+    "url": "https://cga.ct.gov/asp/menu/hlist.asp",
+    "error": "HTTP Error 503: Service Unavailable"
+  },
+  {
+    "id": "hi-no-www",
+    "url": "https://capitol.hawaii.gov/legislature/members.aspx",
+    "error": "HTTP Error 403: Forbidden"
+  },
+  {
+    "id": "il-nonwww-house",
+    "url": "https://ilga.gov/House/Members",
+    "error": "HTTP Error 503: Service Unavailable"
+  },
+  {
+    "id": "in-api2026",
+    "url": "https://api.iga.in.gov/2026/legislators",
+    "error": "HTTP Error 403: Forbidden"
+  },
+  {
+    "id": "ms-nonwww-house",
+    "url": "https://legislature.ms.gov/legislators/representatives/",
+    "error": "HTTP Error 503: Service Unavailable"
+  },
+  {
+    "id": "ri-soap-both",
+    "url": "https://www.rilegislature.gov/_vti_bin/Lists.asmx",
+    "resolvedUrl": "https://www.rilegislature.gov/_vti_bin/Lists.asmx",
+    "retrievedAt": "2026-10-13T04:40:45.161870+00:00",
+    "sha256": "2917bf27dd26f42c4b93f0f1cc1514f924c6cbfdb3d88dbe2e2796bd1332bbe1",
+    "status": 200,
+    "bytes": 118836,
+    "contentType": "text/xml; charset=utf-8",
+    "method": "POST",
+    "requestBody": "<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:xsd='http://www.w3.org/2001/XMLSchema' xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><GetListItems xmlns='http://schemas.microsoft.com/sharepoint/soap/'><listName>legislationInformation</listName><rowLimit>300</rowLimit></GetListItems></soap:Body></soap:Envelope>",
+    "headers": {
+      "Content-Type": "text/xml; charset=\"utf-8\""
+    },
+    "fixture": "ri-soap-both.xml.gz"
+  }
+]

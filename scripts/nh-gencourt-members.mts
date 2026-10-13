@@ -1,25 +1,10 @@
-/**
- * The New Hampshire General Court's own roster. `gc.nh.gov/downloads/Members.txt`
- * is a tab-delimited file of every member of both chambers with district,
- * party, phone, work email, committee assignments and `electedStatus`, the
- * body's own statement of who currently sits.
- *
- * `electedStatus` reads `" Incumbent"`, with a leading space; compare trimmed.
- * The file states no count of its own, so the outcome is `COULD_NOT_ASSERT`
- * against a stated total, and the extraction reports produced/dropped/total.
- * The freshness stamp is the date this script fetched, carried forward
- * unchanged when regenerated from a cached copy.
- *
- * Usage:
- *   pnpm nh:members            # fetch, parse, report; writes nothing
- *   pnpm nh:members --from <path>   # parse a local copy instead of fetching
- * Production cadence and owner-initiated promotion enter through the installed
- * runtime dispatcher; this file is the internal `nh-members` adapter.
- */
+/** The NH House and Senate current roster pages supply exact PersonIDs and sitting status.
+ * Members.txt enriches those exact current seats. Every read reuses saved source bytes after a conditional check.
+ * The installed runtime dispatcher runs this adapter daily and after an Admin officials check. */
 
 import { readFileSync } from "node:fs";
 
-import { acquireKnownRelease, knownReleaseSourceCheck } from "../lib/sources/known-release.ts";
+import { acquireKnownRelease, knownReleaseSourceCheck, requestedSourceCheckAfter } from "../lib/sources/known-release.ts";
 import { readNhMembers } from "../lib/civic-data/state-members.ts";
 import { nhMembersCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -37,19 +22,46 @@ import { ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS } from "../lib/sources/acquisitio
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import {
   decodeNhPublisherBytes,
-  joinNhCurrentMemberIdentities,
-  NH_LEGISLATORS_URL,
   NH_MEMBERS_URL,
-  NH_ROLL_HISTORY_URL,
-  parseNhLegislators,
-  parseNhRollCallHistory,
-  readNhOfficialDocumentsSerially,
   type NhCurrentMemberIdentityCrosswalk,
   type NhOfficialDocument,
 } from "../lib/sources/nh-general-court/official-data.ts";
+import { readNhCurrentMemberIdentities, NH_CURRENT_HOUSE_URL, NH_CURRENT_SENATE_URL, parseNhCurrentHouseRoster, parseNhCurrentSenateRoster } from "../lib/sources/nh-general-court/current-identities.ts";
 
 const SOURCE_URL = NH_MEMBERS_URL;
 const UA = "we-the-people/1.0 (civic data; +mailto:seanj22@gmail.com)";
+
+/** The current official roster supplies identity and sitting status; the bulk file enriches exact matched seats. */
+export async function acquireNhMembersSource(input: {
+  signal: AbortSignal;
+  read?: (url: string) => Promise<NhOfficialDocument>;
+}) {
+  const read = input.read ?? (async (url: string): Promise<NhOfficialDocument> => {
+    const decode = (bytes: Uint8Array) => url === SOURCE_URL ? decodeNhPublisherBytes(bytes) : new TextDecoder("utf-8", {fatal: true}).decode(bytes);
+    const held = await acquireKnownRelease({sourceId: "nh-general-court", releaseId: url, url, parserVersion: "nh-current-members/1",
+      maxBytes: 16 * 1024 * 1024, checkAfterMs: 86_400_000, checkedAfter: requestedSourceCheckAfter(), signal: input.signal,
+      headers: {"user-agent": UA, accept: "text/html,text/plain,*/*"}, validate: bytes => {
+        const body = decode(bytes);
+        if (url === SOURCE_URL) parseMembers(body);
+        else if (url === NH_CURRENT_HOUSE_URL) parseNhCurrentHouseRoster(body);
+        else if (url === NH_CURRENT_SENATE_URL) parseNhCurrentSenateRoster(body);
+      }});
+    return {requestedUrl: held.requestedUrl, finalUrl: held.finalUrl, httpStatus: held.httpStatus, body: decode(held.bytes),
+      retrievedAt: held.retrievedAt, sourceCheck: knownReleaseSourceCheck(held)};
+  });
+  // A failed enrichment file cannot withhold independently verified current roster rows.
+  let memberDocument: NhOfficialDocument;
+  try { memberDocument = await read(SOURCE_URL); }
+  catch (error) {
+    input.signal.throwIfAborted();
+    memberDocument = {requestedUrl: SOURCE_URL, finalUrl: SOURCE_URL, httpStatus: 0, body: ""};
+    console.warn(`NH bulk enrichment unavailable: ${error instanceof Error ? error.message : String(error)}`);
+  }
+  const extraction = memberDocument.body ? parseMembers(memberDocument.body) : {members: [], counts: {logicalInput: 0, produced: 0, dropped: 0, statedTotal: null, verdict: "COULD_NOT_ASSERT" as const}, byStatus: {INCUMBENT: 0, NEW: 0, FORMER: 0, UNSTATED: 0}, byChamber: {}};
+  const current = await readNhCurrentMemberIdentities({extraction, read, signal: input.signal});
+  const sourceCheck = current.documents.flatMap(row => row.sourceCheck ? [row.sourceCheck] : []).sort((a, b) => b.checkedAt.localeCompare(a.checkedAt))[0];
+  return {...current, memberDocument, sourceCheck};
+}
 
 export type ElectedStatus = "INCUMBENT" | "NEW" | "FORMER" | "UNSTATED";
 
@@ -220,8 +232,10 @@ async function main(): Promise<void> {
   let identityFinalUrl: string | null = null;
   let identityHttpStatus: number | null = null;
   let identityCrosswalk: NhCurrentMemberIdentityCrosswalk | null = null;
+  let currentRosterComplete = false;
+  let memberSourceUrls: Readonly<Record<string,readonly string[]>> | undefined;
   let sourceCheck:import("../lib/civic-data/types.ts").SourceCheckEvidence|undefined;
-  let extraction: MembersExtraction;
+  let extraction!: MembersExtraction;
   try {
     if (local) {
       text = readFileSync(local, "utf8");
@@ -232,58 +246,34 @@ async function main(): Promise<void> {
       const acquired = await withPublisherAcquisitionDeadline(
         "NH General Court members",
         ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS,
-        async (signal) => {
-          return readNhOfficialDocumentsSerially(
-            promote ? [SOURCE_URL, NH_LEGISLATORS_URL, NH_ROLL_HISTORY_URL] : [SOURCE_URL],
-            async (url): Promise<NhOfficialDocument> => {
-              const requestSignal = AbortSignal.any([signal, AbortSignal.timeout(60_000)]);
-              try {
-                const held=await acquireKnownRelease({sourceId:"nh-general-court",releaseId:url,url,parserVersion:"nh-general-court/3",maxBytes:64*1024*1024,checkAfterMs:86400000,signal:requestSignal,headers:{"user-agent":UA,accept:"text/plain,*/*"},validate:bytes=>{const body=decodeNhPublisherBytes(bytes);if(url===SOURCE_URL)parseMembers(body);else if(url===NH_LEGISLATORS_URL)parseNhLegislators(body);else parseNhRollCallHistory(body);}});
-                return {requestedUrl:held.requestedUrl,finalUrl:held.finalUrl,httpStatus:held.httpStatus,body:decodeNhPublisherBytes(held.bytes),retrievedAt:held.retrievedAt,sourceCheck:knownReleaseSourceCheck(held)};
-              } catch(error) {
-                if(url!==NH_ROLL_HISTORY_URL)throw error;
-                console.error(`NH optional identity-history unavailable: ${error instanceof Error ? error.message : String(error)}`);
-                return {requestedUrl:url,finalUrl:url,httpStatus:0,body:""};
-              }
-            },
-            { signal },
-          );
-        },
+        signal => acquireNhMembersSource({signal}),
       );
-      const memberDocument = acquired[0]!;
+      const memberDocument = acquired.memberDocument;
       text = memberDocument.body;
-      retrievedAt = memberDocument.retrievedAt ?? new Date().toISOString();
-      sourceCheck = memberDocument.sourceCheck;
-      finalUrl = memberDocument.finalUrl;
-      httpStatus = memberDocument.httpStatus;
-      const identityDocument = acquired[1];
-      if (identityDocument) {
-        identityText = identityDocument.body;
-        identityFinalUrl = identityDocument.finalUrl;
-        identityHttpStatus = identityDocument.httpStatus;
-      }
-      identityHistoryText = acquired[2]?.body ?? null;
+      retrievedAt = acquired.documents.map(row => row.retrievedAt ?? "").sort().at(-1) || new Date().toISOString();
+      sourceCheck = acquired.sourceCheck;
+      finalUrl = acquired.identityFinalUrl;
+      httpStatus = acquired.identityHttpStatus;
+      identityText = acquired.rawIdentityText;
+      identityFinalUrl = acquired.identityFinalUrl;
+      identityHttpStatus = acquired.identityHttpStatus;
+      identityHistoryText = "";
+      identityCrosswalk = acquired.crosswalk;
+      extraction = acquired.extraction;
+      currentRosterComplete = acquired.currentRosterComplete;
+      memberSourceUrls = acquired.memberSourceUrls;
       // @freshness-reads-here — this clock call sits in the reading path, so the
       // stamp it produces names the day somebody actually looked.
       readOn = retrievedAt.slice(0,10);
     }
-    extraction = parseMembers(text);
+    if (local) extraction = parseMembers(text);
     if (promote) {
       if (identityText === null || identityHistoryText === null || identityFinalUrl === null || identityHttpStatus === null) {
         throw sourceAcquisitionFailure(
           "PUBLISHER_DOCUMENT_INVALID",
-          "nh:members: the canonical promotion did not acquire legislators.txt for official PersonID identity.",
+          "nh:members: the current official roster did not supply exact PersonID identity.",
         );
       }
-      const identityRows = parseNhLegislators(identityText);
-      const historyRows = identityHistoryText ? parseNhRollCallHistory(identityHistoryText) : [];
-      identityCrosswalk = joinNhCurrentMemberIdentities(
-        extraction,
-        identityRows,
-        identityText,
-        historyRows,
-        identityHistoryText,
-      );
     }
   } catch (error) {
     if (!promote || store === null || !isSourceAcquisitionFailure(error)) throw error;
@@ -316,6 +306,8 @@ async function main(): Promise<void> {
     const prior = await readNhMembers({store,now,bypassCache:true});
     if (prior.kind === "STORE_UNREACHABLE") throw Error("NH_PRIOR_UNAVAILABLE");
     const candidate = nhMembersCandidate({
+      currentRosterComplete,
+      memberSourceUrls,
       prior: prior.kind === "PROMOTED" || prior.kind === "BOOTSTRAP" ? prior.value : null,
       priorRetrievedAt: prior.metadata.retrievedAt ?? undefined,
       rawText: text,

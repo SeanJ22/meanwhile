@@ -83,7 +83,7 @@ export function PersonIdentity({
 
   return (
     <div className={`id-header ${large ? "id-header--lg" : ""}`}>
-      <IdentityPortrait name={holder.name} photoUrl={holder.photoUrl} large={large} />
+      {!holder.vacancy && <IdentityPortrait name={holder.name} photoUrl={holder.photoUrl} large={large} />}
 
       <div className="min-w-0 flex-1">
         {/* The dialog's h2 on the large card; an h3 inside a popup card. */}

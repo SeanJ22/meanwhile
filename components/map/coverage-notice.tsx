@@ -1,6 +1,7 @@
 "use client";
 
 import { useShellData } from "@/lib/state/data";
+import { VacantSeat } from "@/components/officials/vacant-seat";
 import { CardGapContribution } from "@/components/ui/card-gap-context";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import { staleDivisionRead, type DivisionRead } from "@/lib/meetings/freshness";
@@ -224,7 +225,7 @@ function Holder({
   return (
     <div className="person-row">
       <span className="person-row-name">
-        {onOpen ? (
+        {holder.vacancy ? <VacantSeat holder={holder} /> : onOpen ? (
           <button
             type="button"
             onClick={onOpen}

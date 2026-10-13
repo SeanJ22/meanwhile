@@ -8,6 +8,7 @@ import {
 import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ID, REGISTRATION_TARGETS } from "../registration/publication.ts";
 
 import { PLURAL_STATES, PLURAL_PARSER_VERSION, PLURAL_SOURCE_ID } from "../sources/plural/targets.ts";
+import { OFFICIAL_ROSTER_TARGETS } from "../sources/official-rosters/targets.ts";
 
 const HOUR = 60 * 60 * 1_000;
 const DAY = 24 * HOUR;
@@ -568,6 +569,17 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
   },
+  ...OFFICIAL_ROSTER_TARGETS.map((target): RoutineSourceContract => ({
+    id: target.id, sourceId: "official-rosters", recordClass: "STATE_LEGISLATOR", scope: target.scope,
+    acquisitionFailureDomain: `routine-source:${target.id}`,
+    acquisitionAdapter: {authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/official-rosters.mts", `--target=${target.id}`, "--promote"]},
+    parserNormalizerVersion: "official-rosters/1", cadence: {description: "daily official roster check", defaultEveryMs: DAY},
+    retry: {afterMs: HOUR, description: "one hour after a failed attempt"},
+    authorityConstraint: {registry: "SOURCE_AUTHORITIES", sourceId: "official-rosters"}, validationContract: CHECKS,
+    canonicalProductionStore: STORE, readerProjection: {id: "official-roster", consumers: ["map", "ballot", "Ask", "Admin"]},
+    lkgBehavior: "Retain the last verified source on failure; independently verified official changes publish with the mirror disagreement saved for BL-01.",
+    autoPromotable: true, classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: [],
+  })),
 ] as const;
 
 export function cadenceMsAt(contract: Pick<RoutineSourceContract, "cadence">, nowMs: number): number {

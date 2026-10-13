@@ -310,7 +310,9 @@ test("BR-39: every Admin view keeps planted code names and raw errors behind Tec
   const { VIEWS }=await import("../../app/(admin)/_mw/admin-v6/context.tsx");
   const view=stuckViews([{id:"wi-aabbccdd",state:"BLOCKED",lane:"data",owner:"RUNNER",blocker:"DIRECTORY_NO_READABLE_SAVED_PAGE",label:"Directory",subjectName:null,stateCode:"az",overdue:false,band:null,waitingSince:null,eligibleAt:null,lastActivityAt:null,nextAction:"SCOUT_POLICY_DENIED",assignmentKeys:[]}],"us","2026-10-05T00:00:00Z");
   const source=(data:unknown):SectionState=>({phase:"live",data,asOf:"2026-10-05T00:00:00Z",revision:"v1",missingParts:[],attempts:0});
-  const snapshot={...waiting,stuck:source(view.items),sameCause:source(view.sameCause),history:source([receipt({status:"failed",says:"SCOUT_POLICY_DENIED: TypeError: unavailable"})])};
+  // The Workers section carries a raw migration log and a stack trace; both stay behind "Technical details".
+  const { adminNowFixture }=await import("../fixtures/admin-now/fixture.ts");
+  const snapshot={...waiting,stuck:source(view.items),sameCause:source(view.sameCause),history:source([receipt({status:"failed",says:"SCOUT_POLICY_DENIED: TypeError: unavailable"})]),workers:adminNowFixture("after").snapshot.workers};
   const visible=(html:string)=>html.replace(/<details\b[^>]*>[\s\S]*?<\/details>/g, block=>/<summary[^>]*>Technical details<\/summary>/.test(block) ? "" : block).replace(/<[^>]*>/g," ");
   const check=(html:string)=>assert.equal(hasTechnicalText(visible(html)),false);
   for (const [initialView] of VIEWS) {

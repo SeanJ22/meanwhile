@@ -7,15 +7,15 @@ import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { MapPin } from "lucide-react";
 
 import { PLACEHOLDER_ADDRESS } from "@/lib/ballot/placeholder-address";
-import { pollingLookupFallbacks } from "@/lib/ballot/polling-lookup-fallback";
-import { PollingLookupFallback } from "@/components/ballot/polling-lookup-fallback";
 import {
   directionsUrl,
   isPinnable,
   type VotingSite,
   type VotingSitesAnswer,
   milesLabel,
-  sitesNearestFirst,
+  votingSitesForDisplay,
+  type VotingJurisdiction,
+  type VotingSource,
 } from "@/lib/ballot/voting-sites";
 
 /**
@@ -53,6 +53,7 @@ export function VotingSitesPanel({
 }: VotingSitesPanelProps) {
   const [address, setAddress] = useState("");
   const [state, setState] = useState<State>({ kind: "idle" });
+  const pendingRequest = useRef<AbortController | null>(null);
   const inputId = useId();
   const onSitesRef = useRef(onSites);
   useEffect(() => {
@@ -60,26 +61,32 @@ export function VotingSitesPanel({
   }, [onSites]);
 
   const submit = useCallback(
-    async (event: React.FormEvent) => {
+    async (event: React.FormEvent, googleFallback = false) => {
       event.preventDefault();
       const value = address.trim();
       if (value.length < 3) return;
+      pendingRequest.current?.abort();
+      const controller = new AbortController();
+      pendingRequest.current = controller;
       setState({ kind: "asking" });
       try {
         const res = await fetch("/api/voting-sites", {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ address: value }),
+          body: JSON.stringify({ address: value, googleFallback }),
           cache: "no-store",
+          signal: controller.signal,
         });
+        if (controller.signal.aborted) return;
         if (!res.ok) {
           setState({ kind: "failed" });
           return;
         }
         const answer = (await res.json()) as VotingSitesAnswer;
+        if (controller.signal.aborted) return;
         setState({ kind: "answered", answer });
       } catch {
-        setState({ kind: "failed" });
+        if (!controller.signal.aborted) setState({ kind: "failed" });
       }
     },
     [address],
@@ -107,6 +114,7 @@ export function VotingSitesPanel({
   useEffect(() => () => onAddressPoint?.(null), [onAddressPoint]);
 
   useEffect(() => () => onSitesRef.current([]), []);
+  useEffect(() => () => pendingRequest.current?.abort(), []);
 
   return (
     <section
@@ -119,13 +127,14 @@ export function VotingSitesPanel({
 
       <form onSubmit={submit} className="voting-panel-form">
         <label htmlFor={inputId} className="voting-panel-label">
-          Your street address
+          Your street address or ZIP
         </label>
         <input
           id={inputId}
           className="voting-panel-input"
           value={address}
-          onChange={(e) => setAddress(e.target.value)}
+          onChange={(e) => { pendingRequest.current?.abort(); setAddress(e.target.value); setState({ kind: "idle" }); }}
+          maxLength={200}
           placeholder={PLACEHOLDER_ADDRESS}
           // The design popup opens with the cursor in the address field.
           autoFocus={embedded}
@@ -135,8 +144,9 @@ export function VotingSitesPanel({
         {/* Describes the mechanism as it works today, with no forward commitment. */}
         <p className="voting-panel-note">
           Your address is used to find your voting locations. It passes through
-          our server to the Census Bureau&rsquo;s geocoder, which turns it into
-          a point on the map.
+          our server to the Census Bureau&rsquo;s geocoder and, where available,
+          the election office&rsquo;s address-only lookup. A ZIP shows all of its
+          covered places. No name or date of birth is needed.
         </p>
         <button type="submit" className="voting-panel-submit">
           Show me
@@ -166,7 +176,14 @@ export function VotingSitesPanel({
           <CardGapContribution id="voting-locations" label="voting locations for this address" />
         )}
 
-      <PollingLookupFallback links={pollingLookupFallbacks(state.kind, state.kind === "answered" ? state.answer : undefined)} />
+      {state.kind === "answered" && state.answer.googleFallback?.available && !state.answer.googleFallback.requested && (
+        <div className="voting-panel-note">
+          <p>We have not loaded an official source for this place yet. You can ask Google’s election data; only this button sends your address to Google.</p>
+          <button type="button" className="voting-panel-submit" onClick={event => void submit(event, true)}>Ask Google’s election data</button>
+        </div>
+      )}
+      {state.kind === "answered" && state.answer.googleFallback?.requested && <p className="voting-panel-note">{state.answer.googleFallback.label}</p>}
+      {state.kind === "answered" && state.answer.googleFallback?.message && <p className="voting-panel-note">{state.answer.googleFallback.message}</p>}
 
       {state.kind === "answered" && <VotingJurisdictionRecords answer={state.answer} selectedSiteId={selectedSiteId} onSelectSite={onSelectSite} />}
       </Card>
@@ -203,7 +220,16 @@ export function VotingJurisdictionRecords({ answer, selectedSiteId, onSelectSite
                 </ol>
               </details>
             )}
-            {j.election && (
+            {j.publication?.status === "POSTED_LATER" && <p className="voting-panel-status">{j.publication.text}</p>}
+            {j.rules?.map((rule, index) => <p className="voting-rule" key={`${rule.source.url}-${index}`}>{rule.text}</p>)}
+            {j.office && <div className="voting-office">
+              <h4>Local election office: {j.office.name}</h4>
+              {j.office.phone && <p>Phone: <a href={`tel:${j.office.phone.replace(/[^+\d]/g, "")}`}>{j.office.phone}</a></p>}
+              {j.office.email && <p>Email: <a href={`mailto:${j.office.email}`}>{j.office.email}</a></p>}
+              {j.office.address && <p>{j.office.address}</p>}
+            </div>}
+            {j.blanks?.map(blank => <CardGapContribution key={blank.id} id={`voting-owed:${blank.id}`} label={blank.owed} />)}
+            {j.election && j.publication?.status !== "NO_GENERAL_ELECTION" && (
               <p className="voting-election">
                 Published for the {j.election}.
               </p>
@@ -231,10 +257,11 @@ export function VotingJurisdictionRecords({ answer, selectedSiteId, onSelectSite
             {/* Nearest first, a sort and never a filter: every site in the county stays. */}
             {j.sites.length > 0 && (
               <ul className="voting-sites">
-                {sitesNearestFirst(j.sites, answer.point).map(({ site, miles }) => (
+                {votingSitesForDisplay(j, answer.point).map(({ site, miles }) => (
                   <SiteRow
                     key={site.id}
                     site={site}
+                    electionDate={j.electionDate}
                     miles={miles}
                     selected={site.id === selectedSiteId}
                     onSelect={() =>
@@ -245,43 +272,62 @@ export function VotingJurisdictionRecords({ answer, selectedSiteId, onSelectSite
               </ul>
             )}
 
-            <CardSourcesContribution id={`voting-sites:${j.name}`} sources={[{ what: "Published voting locations", provenance: { sourceUrl: j.sourceUrl, sourceOrg: j.sourceOrg, collectedAt: j.collectedAt, verifiedAt: null } }]} />
+            <CardSourcesContribution id={`voting-sites:${j.name}`} sources={votingSources(j)} />
           </article>
         ))}
   </>;
 }
 
 const KIND_LABEL: Record<VotingSite["kind"], string> = {
-  ELECTION_DAY: "Open on election day",
+  ELECTION_DAY: "Election-day polling place",
   EARLY_VOTING: "Early voting",
   MOBILE: "Mobile voting site",
+  DROP_BOX: "Ballot drop box",
+  VOTE_CENTER: "Vote center",
+  SATELLITE: "Satellite election office",
 };
 
 function SiteRow({
   site,
+  electionDate,
   miles,
   selected,
   onSelect,
 }: {
   site: VotingSite;
+  electionDate?: string;
   /** Miles from the address the reader typed, or null if unplaceable. */
   miles: number | null;
   selected: boolean;
   onSelect: () => void;
 }) {
+  const confirmed = !!site.electionDate && (!electionDate || site.electionDate === electionDate);
+  const requestedElection = electionDate && /^\d{4}-\d{2}-\d{2}$/.test(electionDate)
+    ? new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" }).format(new Date(`${electionDate}T12:00:00Z`))
+    : null;
   return (
-    <li className="voting-site" data-selected={selected} data-voting-site={site.id}>
+    <li className="voting-site" data-selected={selected} data-voting-site={site.id} data-aiannh={site.aiannhGeoid}>
       <button type="button" className="voting-site-head" onClick={onSelect}>
         <MapPin aria-hidden size={14} className="voting-site-icon" />
         <span className="voting-site-name">{site.name}</span>
       </button>
       {site.address && <p className="voting-site-address">{site.address}</p>}
-      {/* A null distance renders nothing; an unplaced site carries its own gap below. */}
+      {/* A null distance renders nothing; map gaps join the card footer. */}
       {miles !== null && <p className="voting-site-distance">{milesLabel(miles)}</p>}
       {site.room && <p className="voting-site-room">{site.room}</p>}
       <p className="voting-site-kind">{KIND_LABEL[site.kind]}</p>
+      {site.election && <p className="voting-site-election">Publisher&rsquo;s election label: {site.election}</p>}
+      {site.electionDate && <p className="voting-site-election">Election date: {site.electionDate}</p>}
+      {site.precinct && <p className="voting-site-serves">Precinct: {site.precinct}</p>}
       {site.serves && <p className="voting-site-serves">{site.serves}</p>}
-      {site.election === null && <CardGapContribution id={`voting-election:${site.id}`} label="election dates" unit="voting location" kind="not-posted" />}
+      {site.days && <p className="voting-site-days">Days: {site.days}</p>}
+      {site.hours ? <p className="voting-site-hours whitespace-pre-line">Hours: {site.hours}</p> : <CardGapContribution id={`voting-hours:${site.id}`} label="hours" unit="voting location" />}
+      {site.locationNotes && <p className="voting-site-notes">{site.locationNotes}</p>}
+      {site.accessibilityNotes && <p className="voting-site-accessibility">Accessibility: {site.accessibilityNotes}</p>}
+      {site.rules?.map((rule, index) => <p className="voting-rule" key={`${rule.source.url}-${index}`}>{rule.text}</p>)}
+      {site.office && <p className="voting-site-office">{site.office.name}{site.office.phone ? ` — ${site.office.phone}` : ""}{site.office.email ? ` — ${site.office.email}` : ""}</p>}
+      {site.election === null && !site.electionDate && <CardGapContribution id={`voting-election:${site.id}`} label="election dates" unit="voting location" kind="not-posted" />}
+      {!confirmed && <CardGapContribution id={`voting-confirmation:${site.id}`} label={`${requestedElection ?? "Upcoming"} election confirmation`} unit="voting location" />}
       {!isPinnable(site) && <CardGapContribution id={`voting-map:${site.id}`} label="map locations" unit="voting location" />}
       {site.address && <a
         className="voting-site-directions"
@@ -293,4 +339,19 @@ function SiteRow({
       </a>}
     </li>
   );
+}
+
+/** Every displayed rule and change notice contributes its own source, including file dates. */
+export function votingSources(j: VotingJurisdiction) {
+  const sources: VotingSource[] = [
+    { publisher: j.sourceOrg, url: j.sourceUrl, checkedAt: j.collectedAt }, ...(j.sources ?? []),
+    ...(j.publication ? [j.publication.source] : []), ...(j.rules ?? []).map(rule => rule.source),
+    ...j.sites.flatMap(site => [...(site.sources ?? []).map(source => ({ ...source, lastUpdated: source.lastUpdated ?? site.lastUpdated })), ...(site.rules ?? []).map(rule => rule.source)]),
+  ];
+  const unique = new Map<string, VotingSource>();
+  for (const source of sources) unique.set(`${source.url}|${source.title ?? ""}`, source);
+  return [...unique.values()].map(source => ({
+    what: `${source.title ?? "Voting locations, hours and rules"}${source.lastUpdated ? ` — file last updated ${source.lastUpdated}` : ""}`,
+    provenance: { sourceUrl: source.url, sourceOrg: source.publisher, collectedAt: source.checkedAt ?? j.collectedAt, verifiedAt: null },
+  }));
 }

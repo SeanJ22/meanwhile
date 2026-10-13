@@ -361,7 +361,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     recordClass: "VOTING_SITE",
     scope: "US-AZ+US-NH+US-NJ:2026-general:supported-jurisdictions",
     command: ["scripts/fetch-voting-sites.mts", "--promote"],
-    parserNormalizerVersion: "official-voting-sites/3",
+    parserNormalizerVersion: "official-voting-sites/4",
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "voting-sites" },
     validationContract: VALIDATION_CHECKS,
     canonicalProductionStore: STORE,

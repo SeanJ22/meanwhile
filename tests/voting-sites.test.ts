@@ -129,14 +129,14 @@ test("B16: a vote-center county is NOT_NEEDED, never a gap", () => {
   );
 });
 
-test("B16: a jurisdiction with one location narrows exactly", () => {
+test("VS-01: one loaded location does not prove precinct assignment", () => {
   const single = file.jurisdictions.find(
     (j) => j.model === "ASSIGNED" && j.sites.length === 1,
   );
   assert.ok(single, "no single-location jurisdiction to check");
   const n = narrowingFor(single);
-  assert.equal(n.kind, "EXACT");
-  assert.equal(n.kind === "EXACT" ? n.siteId : null, single.sites[0].id);
+  assert.equal(n.kind, "REFUSED");
+  assert.match(n.sentence, /voter card/);
 });
 
 test("B16: several locations and no current geometry REFUSES, with rungs", () => {
@@ -146,7 +146,7 @@ test("B16: several locations and no current geometry REFUSES, with rungs", () =>
   assert.ok(many, "no multi-location NJ jurisdiction to check");
   const n = narrowingFor(many);
   assert.equal(n.kind, "REFUSED");
-  assert.ok(n.kind === "REFUSED" && n.rungs.length > 0, "refused with no rungs");
+  assert.match(n.sentence, /voter card/);
   assert.ok(
     !/probably|likely|closest|nearest/i.test(n.sentence),
     "a refusal that hints at an answer is a guess with a disclaimer",

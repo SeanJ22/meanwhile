@@ -14,13 +14,13 @@ const pimaBody = JSON.parse(readFileSync(new URL("./fixtures/legistar-members/pi
 const SAMPLE_ROWS: BodySourceWiring[] = [
   { ...FIXTURE_DOOR_ROWS.find(row => row.config.slug === "pima")!, agendaSourceType: "LEGISTAR" as const,
     config: { slug: "pima", eventBodyId: String(pimaBody.BodyId) } },
+  { ...FIXTURE_DOOR_ROWS[0], agendaSourceType: "ESCRIBE" as const, config: { portalUrl: "https://pub-lamesa.escribemeetings.com", meetingTypes: "City Council" } },
   ...FIXTURE_DOOR_ROWS.map(row => row.agendaSourceType === "CIVICCLERK"
     ? { ...row, config: { ...row.config, bodyMatch: "Board of Directors" } } : row),
   { ...FIXTURE_DOOR_ROWS[0], agendaSourceType: "BOARDDOCS" as const,
     config: { portalUrl: "https://go.boarddocs.com/mi/grand/Board.nsf/Public", committeeId: "A4EP6J588C05" } },
 ];
 
-/** Settings a reviewer would supply, taken from a body the code already wires on the same adapter. */
 function sampleFilter(kind: (typeof DATA_DOOR_KINDS)[number]): Record<string, string> {
   const spec = DOOR_KIND_SPECS[kind];
   const row = SAMPLE_ROWS.find((r) => r.agendaSourceType === spec.agendaSourceType && (kind !== "LEGISTAR_INSITE" || r.config.insiteHost) && spec.required.every((key) => r.config[key] !== undefined));

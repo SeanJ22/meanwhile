@@ -158,6 +158,8 @@ function withoutProvenanceStamps(record: unknown, stamps: readonly string[]): un
 export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknown): readonly CivicRecordMember[] {
   const root = object(payload) ?? {};
   switch (recordClass) {
+    case "STATE_BILL":
+      return [...keyed("bill", array(root.bills), ["id"]), ...keyed("dataset", array(root.datasets), ["session_id"])];
     case "FEC_FUNDING":
       return keyed("candidate", array(root.candidates), ["fecCandidateId", "id"]);
     case "STATE_LEGISLATOR":

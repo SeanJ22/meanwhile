@@ -6,11 +6,9 @@ import { statePeoplePortraits } from "../lib/civic-data/state-people-publication
 import { readPeopleSourceProjection, publishPeopleSource } from "../lib/civic-data/people-source-publication.ts";
 import { readFederalDirectoryProjection } from "../lib/officials/federal-directory-read-model.ts";
 import { congressPortraits } from "../lib/officials/congress-portraits.ts";
-import { federalDirectoryCandidate, type FederalDirectoryAcquisition } from "../lib/officials/federal-directory-data-plane.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import { promotedInputRef, type DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
-import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { PostgresRoutineDataStore, type RoutineDataStore } from "../lib/civic-data/store.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
@@ -110,30 +108,8 @@ export async function refreshPeoplePortraits(input:{store:RoutineDataStore;state
     const read=await readFederalDirectoryProjection({store,now:clock(),bypassCache:true});
     if(read.kind !== "PROMOTED")throw Error("PEOPLE_PORTRAIT_FEDERAL_ROSTER_UNAVAILABLE");
     baseRoster=read.value.roster;
-    const result=await congressPortraits(read.value,clock(),options.signal,{...portraitOptions,previousExcludedFacts:priorFacts,onPerson:async(person,facts)=>{
-      // The native directory remains the established reader photo holding.
-      const operation=queue.then(async()=>{
-        for(;;){
-          const latest=await readFederalDirectoryProjection({store,now:clock(),bypassCache:true});
-          if(latest.kind !== "PROMOTED")throw Error("PEOPLE_PORTRAIT_FEDERAL_ROSTER_UNAVAILABLE");
-          const candidateRecord=await store.readCandidate(latest.metadata.versionId!);
-          const acquisitions=(candidateRecord?.candidate.normalizedPayload as {acquisitions?:FederalDirectoryAcquisition[]}|undefined)?.acquisitions;
-          if(!acquisitions?.length)throw Error("PEOPLE_PORTRAIT_FEDERAL_SOURCE_UNAVAILABLE");
-          const personId=person.personId ?? person.id;
-          const projection={...latest.value,roster:{...latest.value.roster,officeholders:latest.value.roster.officeholders.map(row=>(row.personId ?? row.id) === personId
-            ? {...row,photo:person.photo,profileUrls:[...new Set([...(row.profileUrls ?? []),...(person.profileUrls ?? [])])],
-              fieldSources:{...row.fieldSources,...(person.fieldSources?.photo ? {photo:person.fieldSources.photo} : {})}} : row)}};
-          const excludedFacts=[...(candidateRecord?.candidate.excludedFacts ?? []).filter(row=>(row.record as {personId?:string}|undefined)?.personId !== personId),...facts];
-          const candidate=federalDirectoryCandidate({projection,acquisitions,retrievedAt:candidateRecord!.candidate.retrieval.retrievedAt,excludedFacts});
-          const outcome=await processRegisteredManualCandidate(store,"congress-bulk-roster",candidate,clock(),latest.metadata.versionId,{confirmUnchanged:false});
-          if(outcome.candidate.failureCode === "PROMOTION_BASE_CHANGED")continue;
-          if(!outcome.promoted && !outcome.confirmed)throw Error(`PEOPLE_PORTRAIT_FEDERAL_PUBLICATION_REFUSED:${outcome.candidate.failureDetail}`);
-          return;
-        }
-      });
-      queue=operation.catch(()=>{});await operation;
-      await marker(person,facts);
-    }});
+    // Each photo is published to this job's own routine scope; readers lay it on the directory (withFederalPortraits).
+    const result=await congressPortraits(read.value,clock(),options.signal,{...portraitOptions,previousExcludedFacts:priorFacts,onPerson:marker});
     continuationFacts=result.excludedFacts.filter(fact=>fact.code === "CONGRESS_PORTRAIT_WORK_REMAINS");
   }else{
     const read=await readStatePeopleProjection(jurisdiction as `US-${string}`,{store,now:clock(),bypassCache:true});

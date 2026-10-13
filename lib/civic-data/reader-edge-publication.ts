@@ -25,10 +25,10 @@ import { readCensusGeographyProjection } from "../census-geography/reader.ts";
 import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../census-geography/publication.ts";
 import { REGISTRATION_SCOPES, registrationEdgePlan } from "../registration/edge.ts";
 import { readRegistrationProjection } from "../registration/reader.ts";
-import { readFederalDirectoryProjection } from "../officials/federal-directory-read-model.ts";
+import { FEDERAL_PORTRAITS_SCOPE, readFederalDirectoryProjection } from "../officials/federal-directory-read-model.ts";
 import { readStatePeopleProjection } from "../state-rollcalls/legislators.ts";
 import { STATE_PEOPLE_JURISDICTIONS, statePeopleSourcePointers } from "../officials/people-identity.ts";
-import { statePeopleVersion } from "../officials/people-version.ts";
+import { federalDirectoryVersion, statePeopleVersion } from "../officials/people-version.ts";
 import type { OfficialStateLegislatorReadModel } from "./candidate-builders.ts";
 import { combinedOutcomeVersionId, combineOutcomeProjections, doorOutcomeParts, doorOutcomesUnreadable, outcomePointers, readDoorOutcomeProjections } from "../outcomes/store.ts";
 import { DOOR_OUTCOME_POINTERS } from "../outcomes/door-outcome-pointers.ts";
@@ -71,7 +71,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
   const specialPointers = {
     "census-districts": [{ recordClass: CENSUS_GEO_RECORD_CLASS, scope: CENSUS_GEO_SCOPE }],
     "registry-runtime": [manual("registry-runtime-bindings")],
-    "federal-directory": [manual("congress-bulk-roster")],
+    "federal-directory": [manual("congress-bulk-roster"), { recordClass: "FEDERAL_DIRECTORY" as const, scope: FEDERAL_PORTRAITS_SCOPE }],
     "campaign-sites": [manual("campaign-sites")],
     "state-legislators": STATE_PEOPLE_JURISDICTIONS.flatMap(jurisdiction => statePeopleSourcePointers(jurisdiction)),
     "meeting-outcomes": [PIMA_LEGISTAR_OUTCOMES_CONTRACT, MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT, ...DOOR_OUTCOME_POINTERS],
@@ -196,7 +196,11 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
         process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: registry-runtime ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
       }
       if (refreshes("federal-directory")) try {
-        const carried = await servedIfCurrent("federal-directory", manualPointer("congress-bulk-roster"));
+        // The served version names the directory and the portraits laid on it, exactly as the reader composes it.
+        const carried = await servedIfCurrent("federal-directory", async () => {
+          const directory = await manualPointer("congress-bulk-roster")();
+          return directory === null ? null : federalDirectoryVersion(directory, await pointerVersion("FEDERAL_DIRECTORY", FEDERAL_PORTRAITS_SCOPE)());
+        });
         if (carried !== null) authority["federal-directory"] = { versionId: carried, carried: true };
         else {
           const fd = await readFederalDirectoryProjection({ store, now: observedAt, bypassCache: true });

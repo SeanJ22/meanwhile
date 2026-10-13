@@ -2,6 +2,7 @@ import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import { PEOPLE_SOURCE_IDS, peopleSourceRecordClass, peopleSourceScope, type PeopleSourceId } from "../officials/people-sources.ts";
 import { VALIDATION_CHECKS } from "./types.ts";
 import type { RoutineSourceContract } from "./contracts.ts";
+import { sourceAuthority } from "./source-authority.ts";
 
 const HOUR = 60 * 60_000;
 const DAY = 24 * HOUR;
@@ -24,7 +25,8 @@ export const PEOPLE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: [
       "scripts/national-people-refresh.mts", "--promote", `--state=${state}`, `--source=${sourceId}`,
     ] },
-    parserNormalizerVersion: "people-sources/1",
+    // The authority is the one place a source's parser version lives; Congress.gov and GovInfo share theirs with the federal civic records.
+    parserNormalizerVersion: sourceAuthority(sourceId)?.parserVersion ?? "people-sources/1",
     cadence: { description: "daily source refresh for every state, independent of paid work and roster providers", defaultEveryMs: DAY },
     retry: { afterMs: HOUR, description: "retry this source in this state; failures preserve every verified person" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId },

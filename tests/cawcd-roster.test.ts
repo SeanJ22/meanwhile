@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { AZ_CAWCD_ROSTERS } from "../lib/registry/cawcd-rosters.ts";
-import { BODY_ROSTERS } from "../lib/registry/body-rosters.ts";
+import { AZ_CAWCD_ROSTERS } from "./fixtures/cawcd-rosters.ts";
+import { BODY_ROSTERS } from "./fixtures/held-body-rosters.ts";
 
 const CAWCD =
   "ocd-division/country:us/state:az/county:pima#central-arizona-water-conservation-district";

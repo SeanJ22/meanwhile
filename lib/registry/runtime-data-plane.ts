@@ -11,7 +11,7 @@ import { readPromotedCivicData, type CivicDataReadStore } from "../civic-data/re
 import type { ManualSuccessorCandidate } from "../civic-data/manual-prior-authority.ts";
 import { manualSourceReceiptStructureIssue, sourceAuthority } from "../civic-data/source-authority.ts";
 import { sourceProjectionEvidence, type ManualSourceReview, type ManualSourceSetReceipt, type RoutineCandidate, type RoutineRemovalEvidence } from "../civic-data/types.ts";
-import { registryMemberCitedUrls, inheritedRosterSourceFacts } from "./cited-urls.ts";
+import { registryMemberCitedUrls } from "./cited-urls.ts";
 import type { Body, Division, Registry } from "./types.ts";
 import type { BodyRoster, RosterReaderDisposition } from "./body-rosters.ts";
 import { CENSUS_PLACEHOLDER_BODY_ISSUE, CENSUS_PLACEHOLDER_LABELS, isCensusPlaceholderDivision } from "./census-placeholders.ts";
@@ -64,13 +64,10 @@ export interface OfficialCandidacyBridge {
   readonly rows: readonly OfficialCandidacyBridgeRow[];
 }
 
-export interface RegistryRuntimeReadModel {
+/** The promoted partition. Body rosters are facts, composed for readers in `RegistryRuntimeReadModel`. */
+export interface RegistryRuntimeCarton {
   readonly formatVersion: 1;
   readonly registry: Registry;
-  /** Current body-to-person membership/contact facts; never the tracked seed at runtime. */
-  readonly bodyRosters: readonly BodyRoster[];
-  /** Exact eligible/duplicate/unresolved source-row identities from the reviewed roster package. */
-  readonly rosterReaderDispositions: readonly RosterReaderDisposition[];
   /** Current statewide officeholder/contact/party facts. */
   readonly statewideExecutives: readonly StatewideExecutive[];
   /** Exact current-officeholder to ballot-candidacy bindings; no runtime name matching. */
@@ -79,13 +76,19 @@ export interface RegistryRuntimeReadModel {
   readonly rosterPhotos: Readonly<Record<string, string>>;
 }
 
+export interface RegistryRuntimeReadModel extends RegistryRuntimeCarton {
+  /** Who sits on each body, composed from live facts. */
+  readonly bodyRosters: readonly BodyRoster[];
+  readonly rosterReaderDispositions: readonly RosterReaderDisposition[];
+}
+
 export interface RegistryRuntimePackage {
   readonly excludedFacts?: readonly SourceScopedHeldFact[];
   readonly contractId: "registry-runtime-bindings";
   readonly version: string;
   readonly sourceThrough: string;
   readonly sourceReceipt: ManualSourceSetReceipt;
-  readonly payload: RegistryRuntimeReadModel;
+  readonly payload: RegistryRuntimeCarton;
   /**
    * "MEMBERS": the package speaks only for the members it lists (a publication
    * door: one roster, a directory, a place). A prior member it omits is
@@ -93,25 +96,23 @@ export interface RegistryRuntimePackage {
    * excluded fact. Omitted, a package speaks for the whole registry.
    */
   readonly scope?: "MEMBERS";
-  /** Holders a complete official roster in this package no longer lists; complete rosters record departures. */
+  /** Statewide holders an official page replaced. */
   readonly departures?: readonly { readonly bodyId: string; readonly holderId: string; readonly sourceUrl: string; readonly replacementHolderId?: string; readonly officeTitle?: string }[];
 }
 
 /** The rows that leave with a departed holder, by change-set key. */
-const departureKeys = (holderId: string, executive = false) => [...(executive ? ["statewide-executive"] : []),"roster-disposition", "official-candidacy", "official-photo", "roster-photo"].map(kind => `${kind}:${holderId}`);
+const departureKeys = (holderId: string) => ["statewide-executive", "official-candidacy", "official-photo", "roster-photo"].map(kind => `${kind}:${holderId}`);
 
-/** A departure stands only when this package's roster for the body, from that page, no longer lists the holder. */
+/** A departure stands only when this package's official page names the replacement holder. */
 function provenDepartures(input: Pick<RegistryRuntimePackage, "departures" | "payload">) {
-  return (input.departures ?? []).filter(departure => {
-    if (departure.replacementHolderId) return input.payload.statewideExecutives.some(row => row.stateOcdId === departure.bodyId && row.sourceUrl === departure.sourceUrl && row.holder.id === departure.replacementHolderId && row.holder.id !== departure.holderId && row.holder.officeTitle === departure.officeTitle);
-    const roster = input.payload.bodyRosters.find(row => row.bodyId === departure.bodyId);
-    return roster !== undefined && roster.sourceUrl === departure.sourceUrl && !roster.members.some(member => member.id === departure.holderId);
-  });
+  return (input.departures ?? []).filter(departure => departure.replacementHolderId !== undefined && input.payload.statewideExecutives.some(row =>
+    row.stateOcdId === departure.bodyId && row.sourceUrl === departure.sourceUrl && row.holder.id === departure.replacementHolderId &&
+    row.holder.id !== departure.holderId && row.holder.officeTitle === departure.officeTitle));
 }
 
 export interface RegistryRuntimePrior {
   readonly versionId: string;
-  readonly payload: RegistryRuntimeReadModel;
+  readonly payload: RegistryRuntimeCarton;
   /** Empty for the transfer-time trusted import, whose members carry its own authority instead. */
   readonly sourceReceipt: ManualSourceSetReceipt;
   /** The exact GOOD base's read model, bound so inherited members name the version they came from. */
@@ -126,7 +127,7 @@ type RegistryIsolationRecord =
   | {
       readonly kind: "PROJECTION_METADATA";
       readonly value: {
-        readonly formatVersion: RegistryRuntimeReadModel["formatVersion"];
+        readonly formatVersion: RegistryRuntimeCarton["formatVersion"];
         readonly generatedAt: string;
         readonly candidacyFormatVersion: OfficialCandidacyBridge["formatVersion"];
         readonly candidacyRule: OfficialCandidacyBridge["rule"];
@@ -138,17 +139,6 @@ type RegistryIsolationRecord =
       readonly kind: "BODY";
       readonly value: {
         readonly row: Body;
-        readonly evidenceUrls: readonly string[];
-      };
-    }
-  | {
-      readonly kind: "BODY_ROSTER";
-      readonly value: BodyRoster;
-    }
-  | {
-      readonly kind: "ROSTER_DISPOSITION";
-      readonly value: {
-        readonly disposition: RosterReaderDisposition;
         readonly evidenceUrls: readonly string[];
       };
     }
@@ -169,7 +159,7 @@ type RegistryIsolationRecord =
     };
 
 interface RegistryIsolationResult {
-  readonly payload: RegistryRuntimeReadModel;
+  readonly payload: RegistryRuntimeCarton;
   readonly sourceReceipt: ManualSourceSetReceipt;
   readonly excludedFacts: readonly SourceScopedHeldFact[];
   readonly supportedCurrentSources: number;
@@ -202,36 +192,12 @@ function reviewedSourceUrls(sources: readonly ManualSourceReview[]): string[] {
   return httpsUrls(sources.flatMap((source) => [source.requestedUrl, source.finalUrl]));
 }
 
-function bodyRosterUrls(roster: BodyRoster): string[] {
-  return httpsUrls([
-    roster.sourceUrl,
-    roster.partisanshipSourceUrl,
-    ...roster.members.flatMap((member) => [member.partySourceUrl, member.membershipSource?.sourceUrl,
-      ...Object.values(member.retainedFieldSources ?? {}).map(source => source?.sourceUrl)]),
-  ]);
-}
-
 function statewideExecutiveUrls(row: StatewideExecutive): string[] {
   return httpsUrls([row.sourceUrl, row.partySourceUrl]);
 }
 
-function dispositionRoster(
-  payload: RegistryRuntimeReadModel,
-  disposition: RosterReaderDisposition,
-): BodyRoster | null {
-  const exact = payload.bodyRosters.filter((roster) => roster.members.some((member) =>
-    member.id === disposition.sourceId || member.id === disposition.canonicalId
-  ));
-  if (exact.length === 1) return exact[0]!;
-  const sourcePrefix = disposition.sourceId.split("#")[0];
-  const byStableSourcePrefix = payload.bodyRosters.filter((roster) => roster.members.some((member) =>
-    member.id.split("#")[0] === sourcePrefix
-  ));
-  return byStableSourcePrefix.length === 1 ? byStableSourcePrefix[0]! : null;
-}
-
 function candidacyEvidenceUrls(
-  payload: RegistryRuntimeReadModel,
+  payload: RegistryRuntimeCarton,
   row: OfficialCandidacyBridgeRow,
   fallback: readonly string[],
 ): string[] {
@@ -241,10 +207,7 @@ function candidacyEvidenceUrls(
     const source = payload.statewideExecutives.find((entry) => entry.holder.id === row.holder.id);
     if (source) return statewideExecutiveUrls(source);
   }
-  if (row.holder.authority === "REGISTRY_BODY_ROSTER") {
-    const source = payload.bodyRosters.find((roster) => roster.members.some((member) => member.id === row.holder.id));
-    if (source) return bodyRosterUrls(source);
-  }
+  if (row.holder.authority === "REGISTRY_BODY_ROSTER") return httpsUrls([row.holder.sourceUrl]);
   // A null federal candidacy is a bounded reconciliation disposition, not a
   // fact one holder URL can prove. Conservatively bind it to the whole exact
   // reviewed package so a partial source outage retains its prior disposition.
@@ -252,7 +215,7 @@ function candidacyEvidenceUrls(
 }
 
 function registryIsolationMembers(
-  payload: RegistryRuntimeReadModel,
+  payload: RegistryRuntimeCarton,
   receipt: ManualSourceSetReceipt,
 ): readonly SourceScopedMember<RegistryIsolationRecord>[] {
   const allEvidenceUrls = reviewedSourceUrls(receipt.sources);
@@ -290,23 +253,6 @@ function registryIsolationMembers(
         },
       };
     }),
-    ...payload.bodyRosters.map((roster) => ({
-      key: `body-roster:${roster.bodyId}`,
-      record: { kind: "BODY_ROSTER" as const, value: roster },
-    })),
-    ...payload.rosterReaderDispositions.map((disposition) => {
-      const owner = dispositionRoster(payload, disposition);
-      return {
-        key: `roster-disposition:${disposition.sourceId}`,
-        record: {
-          kind: "ROSTER_DISPOSITION" as const,
-          value: {
-            disposition,
-            evidenceUrls: owner ? [owner.sourceUrl] : allEvidenceUrls,
-          },
-        },
-      };
-    }),
     ...payload.statewideExecutives.map((row) => ({
       key: `statewide-executive:${row.holder.id}`,
       record: { kind: "STATEWIDE_EXECUTIVE" as const, value: row },
@@ -336,8 +282,6 @@ function registryIsolationUrls(member: SourceScopedMember<RegistryIsolationRecor
   if (record.kind === "PROJECTION_METADATA") return record.value.evidenceUrls;
   if (record.kind === "DIVISION") return httpsUrls([record.value.provenance.sourceUrl]);
   if (record.kind === "BODY") return record.value.evidenceUrls;
-  if (record.kind === "BODY_ROSTER") return bodyRosterUrls(record.value);
-  if (record.kind === "ROSTER_DISPOSITION") return record.value.evidenceUrls;
   if (record.kind === "STATEWIDE_EXECUTIVE") return statewideExecutiveUrls(record.value);
   if (record.kind === "OFFICIAL_CANDIDACY") return record.value.evidenceUrls;
   return httpsUrls([record.value.photo?.sourceUrl, ...(record.value.photo?.verification?.sources.map(s=>s.url) ?? [])]);
@@ -360,26 +304,6 @@ function registryIsolationIssue(member: SourceScopedMember<RegistryIsolationReco
   if (record.kind === "BODY") {
     return !record.value.row.id || !record.value.row.bodyClass || !record.value.row.bodyOrigin || registryIsolationUrls(member).length === 0
       ? `${member.key} lacks its exact identity, body classification, or body/division-source evidence.`
-      : null;
-  }
-  if (record.kind === "BODY_ROSTER") {
-    const roster = record.value;
-    return !roster.bodyId || !roster.bodyName || !roster.sourceOrg || !roster.collectedAt ||
-        registryIsolationUrls(member).length === 0 || duplicate(roster.members.map((row) => row.id)) ||
-        roster.members.some((row) => !row.name || !row.officeTitle || (row.membershipSource &&
-          (!/^https:\/\//.test(row.membershipSource.sourceUrl) || !row.membershipSource.sourceOrg || !Number.isFinite(Date.parse(row.membershipSource.collectedAt)))) ||
-          Object.entries(row.retainedFieldSources ?? {}).some(([field, source]) => !source || !["termNote", "termStart", "termEnd", "email", "phone", "websiteUrl"].includes(field) ||
-            !row[field as "termNote" | "termStart" | "termEnd" | "email" | "phone" | "websiteUrl"] || !/^https:\/\//.test(source.sourceUrl) || !source.sourceOrg || !Number.isFinite(Date.parse(source.collectedAt))))
-      ? `${member.key} lacks exact roster identity, provenance, or unique person rows.`
-      : null;
-  }
-  if (record.kind === "ROSTER_DISPOSITION") {
-    const row = record.value.disposition;
-    return !row.sourceId || !row.reason ||
-        !["READER_ELIGIBLE", "EXACT_DUPLICATE", "IDENTITY_UNRESOLVED"].includes(row.state) ||
-        (row.state === "IDENTITY_UNRESOLVED" ? row.canonicalId !== null : !row.canonicalId) ||
-        registryIsolationUrls(member).length === 0
-      ? `${member.key} lacks an exact source-row disposition or source boundary.`
       : null;
   }
   if (record.kind === "STATEWIDE_EXECUTIVE") {
@@ -409,10 +333,10 @@ function registryIsolationIssue(member: SourceScopedMember<RegistryIsolationReco
 }
 
 function rebuildRegistryRuntime(
-  input: RegistryRuntimeReadModel,
-  prior: RegistryRuntimeReadModel | null,
+  input: RegistryRuntimeCarton,
+  prior: RegistryRuntimeCarton | null,
   members: readonly SourceScopedMember<RegistryIsolationRecord>[],
-): RegistryRuntimeReadModel {
+): RegistryRuntimeCarton {
   const metadata = members.find((member) => member.record.kind === "PROJECTION_METADATA")?.record;
   const fallbackMetadata = {
     formatVersion: prior?.formatVersion ?? input.formatVersion,
@@ -423,8 +347,6 @@ function rebuildRegistryRuntime(
   const meta = metadata?.kind === "PROJECTION_METADATA" ? metadata.value : fallbackMetadata;
   const divisions = members.flatMap((member) => member.record.kind === "DIVISION" ? [member.record.value] : []);
   const bodies = members.flatMap((member) => member.record.kind === "BODY" ? [member.record.value.row] : []);
-  const bodyRosters = members.flatMap((member) => member.record.kind === "BODY_ROSTER" ? [member.record.value] : []);
-  const rosterDispositions = members.flatMap((member) => member.record.kind === "ROSTER_DISPOSITION" ? [member.record.value.disposition] : []);
   const statewideExecutives = members.flatMap((member) => member.record.kind === "STATEWIDE_EXECUTIVE" ? [member.record.value] : []);
   const candidacies = members.flatMap((member) => member.record.kind === "OFFICIAL_CANDIDACY" ? [member.record.value.row] : []);
   const photoBindings = members.flatMap((member) => member.record.kind === "OFFICIAL_PHOTO" ? [member.record.value] : []);
@@ -435,8 +357,6 @@ function rebuildRegistryRuntime(
       divisions: divisions.sort((left, right) => left.ocdId.localeCompare(right.ocdId)),
       bodies: bodies.sort((left, right) => left.id.localeCompare(right.id)),
     },
-    bodyRosters: bodyRosters.sort((left, right) => left.bodyId.localeCompare(right.bodyId)),
-    rosterReaderDispositions: rosterDispositions.sort((left, right) => left.sourceId.localeCompare(right.sourceId)),
     statewideExecutives: statewideExecutives.sort((left, right) => left.holder.id.localeCompare(right.holder.id)),
     officialCandidacies: {
       formatVersion: meta.candidacyFormatVersion,
@@ -458,7 +378,6 @@ function sourceScopedRegistryProjection(
   prior: RegistryRuntimePrior | null,
 ): RegistryIsolationResult {
   const currentMembers = registryIsolationMembers(input.payload, input.sourceReceipt);
-  const priorRosters = new Map(prior?.payload.bodyRosters.map(roster => [roster.bodyId, roster]) ?? []);
   const priorPhotos = new Map(prior?.payload.officialPhotos.photos.map(photo => [photo.officeholderId, photo]) ?? []);
   const reconciled = reconcileSourceScopedMembers({
     current: currentMembers,
@@ -475,12 +394,7 @@ function sourceScopedRegistryProjection(
       if (published && canonicalCivicDataJson(published) === canonicalCivicDataJson(photo)) return null;
       return portraitBindingMatches(photo.personId ?? photo.officeholderId, photo) ? null : `${member.key} needs its §3 portrait source binding.`;
     },
-    sourceUrls: member => {
-      const urls = registryIsolationUrls(member);
-      if (member.record.kind !== "BODY_ROSTER") return urls;
-      const inherited = inheritedRosterSourceFacts(priorRosters.get(member.record.value.bodyId), member.record.value);
-      return urls.filter(url => !inherited.has(url));
-    },
+    sourceUrls: registryIsolationUrls,
   });
   const metadataAccepted = input.sourceReceipt.sources.every((source) => (source.reviewOutcome ?? "SUPPORTED") === "SUPPORTED") &&
     registryIsolationIssue(currentMembers[0]!) === null;
@@ -492,7 +406,7 @@ function sourceScopedRegistryProjection(
     member.record.kind === "DIVISION" && isCensusPlaceholderDivision(member.record.value) ? [member.record.value.ocdId] : []));
   const removedKeys = new Set(reconciled.members.flatMap((member) =>
     member.record.kind === "BODY" && member.record.value.row.ocdId !== null && placeholderDivisionIds.has(member.record.value.row.ocdId) ? [member.key] : []));
-  const departedKeys = new Set(provenDepartures(input).flatMap(departure => departureKeys(departure.holderId,Boolean(departure.replacementHolderId))));
+  const departedKeys = new Set(provenDepartures(input).flatMap(departure => departureKeys(departure.holderId)));
   const members = reconciled.members
     .filter((member) => !removedKeys.has(member.key) && !departedKeys.has(member.key))
     .map((member) => {
@@ -529,12 +443,10 @@ function sourceScopedRegistryProjection(
   };
 }
 
-export function registryRuntimeProjectionIssues(value: RegistryRuntimeReadModel): string[] {
+export function registryRuntimeProjectionIssues(value: RegistryRuntimeCarton): string[] {
   const issues: string[] = [];
   const divisions = value.registry?.divisions ?? [];
   const bodies = value.registry?.bodies ?? [];
-  const bodyRosters = value.bodyRosters ?? [];
-  const rosterReaderDispositions = value.rosterReaderDispositions ?? [];
   const statewideExecutives = value.statewideExecutives ?? [];
   const officialCandidacies = value.officialCandidacies;
   const photos = value.officialPhotos?.photos ?? [];
@@ -548,26 +460,6 @@ export function registryRuntimeProjectionIssues(value: RegistryRuntimeReadModel)
   const placeholderDivisionIds = new Set(divisions.filter((division) => isCensusPlaceholderDivision(division)).map((division) => division.ocdId));
   const placeholderBodies = bodies.filter((body) => body.ocdId !== null && placeholderDivisionIds.has(body.ocdId)).map((body) => body.id).sort();
   if (placeholderBodies.length > 0) issues.push(`${CENSUS_PLACEHOLDER_BODY_ISSUE}:${placeholderBodies.join(",")}`);
-  const bodyIds = new Set(bodies.map((body) => body.id));
-  if (!bodyRosters.length) issues.push("BODY_ROSTERS_EMPTY");
-  if (duplicate(bodyRosters.map((roster) => roster.bodyId))) issues.push("BODY_ROSTER_ID_INVALID_OR_DUPLICATED");
-  if (bodyRosters.some((roster) => !bodyIds.has(roster.bodyId))) issues.push("BODY_ROSTER_BINDING_UNRESOLVED");
-  const memberIds = bodyRosters.flatMap((roster) => roster.members.map((member) => member.id));
-  if (duplicate(memberIds)) issues.push("BODY_ROSTER_MEMBER_ID_INVALID_OR_DUPLICATED");
-  if (bodyRosters.some((roster) => !roster.sourceUrl || !roster.sourceOrg || !roster.collectedAt || roster.members.some((member) => !member.name || !member.officeTitle))) {
-    issues.push("BODY_ROSTER_REQUIRED_FACT_MISSING");
-  }
-  const dispositionIds = rosterReaderDispositions.map((row) => row.sourceId);
-  if (!rosterReaderDispositions.length) issues.push("ROSTER_DISPOSITIONS_EMPTY");
-  if (duplicate(dispositionIds)) issues.push("ROSTER_DISPOSITION_ID_INVALID_OR_DUPLICATED");
-  const eligibleDispositions = rosterReaderDispositions.filter((row) => row.state === "READER_ELIGIBLE");
-  // Membership is asked of Sets, not arrays.
-  const memberIdSet = new Set(memberIds);
-  const eligibleSourceIds = new Set(eligibleDispositions.map((row) => row.sourceId));
-  if (eligibleDispositions.some((row) => row.canonicalId !== row.sourceId || !memberIdSet.has(row.sourceId))) issues.push("ROSTER_ELIGIBLE_DISPOSITION_UNRESOLVED");
-  if (memberIds.some((id) => !eligibleSourceIds.has(id))) issues.push("ROSTER_MEMBER_DISPOSITION_MISSING");
-  if (rosterReaderDispositions.some((row) => row.state === "EXACT_DUPLICATE" && (!row.canonicalId || !memberIdSet.has(row.canonicalId)))) issues.push("ROSTER_DUPLICATE_CANONICAL_ID_UNRESOLVED");
-  if (rosterReaderDispositions.some((row) => row.state === "IDENTITY_UNRESOLVED" && row.canonicalId !== null)) issues.push("ROSTER_UNRESOLVED_DISPOSITION_HAS_CANONICAL_ID");
   const executiveIds = statewideExecutives.map((row) => row.holder.id);
   if (!statewideExecutives.length) issues.push("STATEWIDE_EXECUTIVES_EMPTY");
   if (duplicate(executiveIds)) issues.push("STATEWIDE_EXECUTIVE_ID_INVALID_OR_DUPLICATED");
@@ -577,16 +469,13 @@ export function registryRuntimeProjectionIssues(value: RegistryRuntimeReadModel)
   if (statewideExecutives.some((row) => row.holder.partyLabel && !row.partySourceUrl)) issues.push("STATEWIDE_EXECUTIVE_PARTY_SOURCE_MISSING");
   const bridgeRows = officialCandidacies?.rows ?? [];
   const reservedOfficialStateRosterIds = [
-    ...memberIds,
     ...executiveIds,
-    ...rosterReaderDispositions.flatMap((row) => [row.sourceId, row.canonicalId ?? ""]),
     ...bridgeRows.map((row) => row.holder.id),
   ].filter((id) => officialStateVoteScopeForOfficeholderId(id) !== null);
   if (reservedOfficialStateRosterIds.length > 0) {
     issues.push(`OFFICIAL_STATE_LEGISLATOR_SUBJECT_AUTHORITY_OVERLAP:${[...new Set(reservedOfficialStateRosterIds)].sort().join(",")}`);
   }
   const bridgeHolderIds = new Set(bridgeRows.map((row) => row.holder.id));
-  const bodyHolderById = new Map(bodyRosters.flatMap((roster) => roster.members.map((holder) => [holder.id, { holder, division: roster.bodyId.split("#")[0] }] as const)));
   const statewideHolderById = new Map(statewideExecutives.map((row) => [row.holder.id, row] as const));
   if (!bridgeRows.length) issues.push("OFFICIAL_CANDIDACY_BRIDGE_EMPTY");
   if (officialCandidacies?.formatVersion !== 1 || officialCandidacies?.rule !== "EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE") issues.push("OFFICIAL_CANDIDACY_BRIDGE_FORMAT_INVALID");
@@ -600,15 +489,9 @@ export function registryRuntimeProjectionIssues(value: RegistryRuntimeReadModel)
   if (duplicate(bridgeRows.filter((row) => row.status === "RESOLVED").map((row) => row.candidacy?.candidacyId ?? ""))) issues.push("OFFICIAL_CANDIDACY_ID_INVALID_OR_DUPLICATED");
   if (bridgeRows.some((row) => row.status === "IDENTITY_UNRESOLVED" ? !row.unresolvedCandidacyIds.length : row.unresolvedCandidacyIds.length > 0)) issues.push("OFFICIAL_CANDIDACY_UNRESOLVED_SET_INVALID");
   const executiveIdSet = new Set(executiveIds);
-  if (bridgeRows.some((row) => row.holder.authority === "REGISTRY_BODY_ROSTER" && !memberIdSet.has(row.holder.id))) issues.push("OFFICIAL_CANDIDACY_BODY_HOLDER_UNRESOLVED");
   if (bridgeRows.some((row) => row.holder.authority === "REGISTRY_STATEWIDE_EXECUTIVE" && !executiveIdSet.has(row.holder.id))) issues.push("OFFICIAL_CANDIDACY_STATEWIDE_HOLDER_UNRESOLVED");
-  if (memberIds.some((id) => !bridgeHolderIds.has(id))) issues.push("OFFICIAL_CANDIDACY_BODY_HOLDER_MISSING");
   if (executiveIds.some((id) => !bridgeHolderIds.has(id))) issues.push("OFFICIAL_CANDIDACY_STATEWIDE_HOLDER_MISSING");
   if (bridgeRows.some((row) => {
-    if (row.holder.authority === "REGISTRY_BODY_ROSTER") {
-      const current = bodyHolderById.get(row.holder.id);
-      return Boolean(current) && (row.holder.name !== current!.holder.name || row.holder.officeTitle !== current!.holder.officeTitle || !sameStrings(row.holder.divisions, [current!.division]));
-    }
     if (row.holder.authority === "REGISTRY_STATEWIDE_EXECUTIVE") {
       const current = statewideHolderById.get(row.holder.id);
       return Boolean(current) && (row.holder.name !== current!.holder.name || row.holder.officeTitle !== current!.holder.officeTitle || !sameStrings(row.holder.divisions, [current!.stateOcdId]));
@@ -628,7 +511,7 @@ export function registryRuntimeProjectionIssues(value: RegistryRuntimeReadModel)
  * promoted federal/body/statewide authority, so a candidacy receipts only its
  * mutable ballot-side fact rather than claiming the holder publisher.
  */
-function citedRuntimeUrlsByMember(value: RegistryRuntimeReadModel): Map<string, string[]> {
+function citedRuntimeUrlsByMember(value: RegistryRuntimeCarton): Map<string, string[]> {
   return new Map(civicRecordsFor("REGISTRY_RUNTIME_BINDING", value)
     .map((member) => [member.key, registryMemberCitedUrls(member.key, member.record)] as const)
     .filter(([, urls]) => urls.length > 0));
@@ -640,7 +523,7 @@ function citedRuntimeUrlsByMember(value: RegistryRuntimeReadModel): Map<string, 
  * re-proves each one against the exact GOOD base (lib/civic-data/manual-prior-authority.ts).
  */
 function inheritedRegistryMembers(
-  payload: RegistryRuntimeReadModel,
+  payload: RegistryRuntimeCarton,
   prior: RegistryRuntimePrior | null,
   receipted: ReadonlySet<string>,
 ): Map<string, string> {
@@ -663,7 +546,7 @@ function inheritedRegistryMembers(
  * dropped rather than shown to a reader. Named only against the
  * prior, because the promotion counts removals against the pointer it replaces.
  */
-function placeholderBodyRemovals(payload: RegistryRuntimeReadModel, prior: RegistryRuntimePrior | null): RoutineRemovalEvidence[] {
+function placeholderBodyRemovals(payload: RegistryRuntimeCarton, prior: RegistryRuntimePrior | null): RoutineRemovalEvidence[] {
   if (!prior) return [];
   const heldDivisions = new Map(payload.registry.divisions.map((division) => [division.ocdId, division]));
   const kept = new Set(payload.registry.bodies.map((body) => body.id));
@@ -676,19 +559,28 @@ function placeholderBodyRemovals(payload: RegistryRuntimeReadModel, prior: Regis
 }
 
 /** Removal evidence for each row a proven departure took out of the prior projection. */
-function departureRemovals(input: RegistryRuntimePackage, payload: RegistryRuntimeReadModel, prior: RegistryRuntimePrior | null): RoutineRemovalEvidence[] {
+function departureRemovals(input: RegistryRuntimePackage, payload: RegistryRuntimeCarton, prior: RegistryRuntimePrior | null): RoutineRemovalEvidence[] {
   if (!prior) return [];
-  const present = (model: RegistryRuntimeReadModel) => new Set([
+  const present = (model: RegistryRuntimeCarton) => new Set([
     ...model.statewideExecutives.map(row=>`statewide-executive:${row.holder.id}`),
-    ...model.rosterReaderDispositions.map(row => `roster-disposition:${row.sourceId}`),
     ...model.officialCandidacies.rows.map(row => `official-candidacy:${row.holder.id}`),
     ...model.officialPhotos.photos.map(photo => `official-photo:${photo.officeholderId}`),
     ...Object.keys(model.rosterPhotos).map(key => `roster-photo:${key}`),
   ]);
   const before = present(prior.payload), after = present(payload);
-  return provenDepartures(input).flatMap(departure => departureKeys(departure.holderId,Boolean(departure.replacementHolderId))
+  return provenDepartures(input).flatMap(departure => departureKeys(departure.holderId)
     .filter(key => before.has(key) && !after.has(key))
     .map(key => ({ key, code: "OFFICIAL_ROSTER_NO_LONGER_LISTS" as const, bodyId: departure.bodyId, holderId: departure.holderId, sourceUrl: departure.sourceUrl, ...(departure.replacementHolderId ? {replacementHolderId:departure.replacementHolderId,officeTitle:departure.officeTitle} : {}) })));
+}
+
+const FACT_STORE_KEYS = /^(body-roster|roster-disposition):/;
+
+/** The roster rows the prior partition still carried; rosters are read from facts. */
+function factStoreRemovals(payload: RegistryRuntimeCarton, prior: RegistryRuntimePrior | null): RoutineRemovalEvidence[] {
+  if (!prior) return [];
+  const kept = new Set(civicRecordsFor("REGISTRY_RUNTIME_BINDING", payload).map(member => member.key));
+  return civicRecordsFor("REGISTRY_RUNTIME_BINDING", prior.payload).filter(member => FACT_STORE_KEYS.test(member.key) && !kept.has(member.key))
+    .map(member => ({ key: member.key, code: "MOVED_TO_FACT_STORE" as const }));
 }
 
 /**
@@ -713,7 +605,7 @@ export async function readRegistryRuntimePrior(
       return captured.candidate;
     },
   };
-  const read = await readPromotedCivicData<RegistryRuntimeReadModel>(contract.recordClass, contract.scope, {
+  const read = await readPromotedCivicData<RegistryRuntimeCarton>(contract.recordClass, contract.scope, {
     store: observedStore,
     now,
     bypassCache: true,
@@ -785,18 +677,14 @@ export function registryRuntimeCandidate(
   const receipted = new Set(promotionReceipt.sources.flatMap((source) => [source.requestedUrl, source.finalUrl]));
   // A member carried on its base's authority cites nothing this review must cover; every other member's sources must be receipted.
   const inherited = inheritedRegistryMembers(payload, options.prior ?? null, receipted);
-  const priorRosters = new Map(options.prior?.payload.bodyRosters.map(roster => [roster.bodyId, roster]) ?? []);
-  const retainedRosterSources = payload.bodyRosters.flatMap(roster => [...inheritedRosterSourceFacts(priorRosters.get(roster.bodyId), roster)]
-    .filter(([url]) => !receipted.has(url)).map(([url, facts]) => ({ key: `body-roster:${roster.bodyId}`, url, sha256: sha256(canonicalCivicDataJson(facts)) }))
-    .filter(source => !inherited.has(source.key)));
-  const inheritedSourceKeys = new Set(retainedRosterSources.map(source => `${source.key}\n${source.url}`));
   const unreceipted = new Set<string>();
   for (const [key, urls] of citedRuntimeUrlsByMember(payload)) {
     if (inherited.has(key)) continue;
-    for (const url of urls) if (!receipted.has(url) && !inheritedSourceKeys.has(`${key}\n${url}`)) unreceipted.add(url);
+    for (const url of urls) if (!receipted.has(url)) unreceipted.add(url);
   }
   for (const url of [...unreceipted].sort()) issues.push(`RUNTIME_SOURCE_NOT_RECEIPTED:${url}`);
-  const removalEvidence = [...placeholderBodyRemovals(payload, options.prior ?? null), ...departureRemovals(input, payload, options.prior ?? null)]
+  const removalEvidence = [...placeholderBodyRemovals(payload, options.prior ?? null), ...departureRemovals(input, payload, options.prior ?? null),
+    ...factStoreRemovals(payload, options.prior ?? null)]
     .sort((left, right) => left.key.localeCompare(right.key));
   if (!isolated.hasProjectionMetadata) {
     issues.push("REGISTRY_PROJECTION_METADATA_UNSUPPORTED");
@@ -853,14 +741,6 @@ export function registryRuntimeCandidate(
         matchBasis: "EXACT_SCOPED_ID" as const,
         ambiguous: false,
       })),
-      ...payload.bodyRosters.flatMap((roster) => roster.members.map((member) => ({
-        subjectId: member.id,
-        jurisdiction: "US",
-        identifiers: { body_id: roster.bodyId, roster_member_id: member.id },
-        matchBasis: "EXACT_SCOPED_ID" as const,
-        ambiguous: false,
-        office: member.officeTitle,
-      }))),
       ...payload.statewideExecutives.map((row) => ({
         subjectId: row.holder.id,
         jurisdiction: "US",
@@ -884,7 +764,7 @@ export function registryRuntimeCandidate(
       sourceThrough: input.sourceThrough,
       staleAtRetrieval: false,
     },
-    semantics: { factKind: "reviewed runtime body/division, body-person/contact, and licensed portrait bindings", violations: issues },
+    semantics: { factKind: "reviewed runtime body/division, statewide officeholder and licensed portrait bindings", violations: issues },
     horizon: {
       kind: "OPEN_FACT_SET",
       query: "exact body, division, and portrait bindings represented by the owner-reviewed source package",
@@ -897,8 +777,7 @@ export function registryRuntimeCandidate(
     sourceProjectionEvidence: sourceProjectionEvidence(contract.sourceId, contract.recordClass, contract.scope),
     dependentChecks: [
       { consumer: "registry/representation/map/ballot", passed: payload.registry.divisions.length > 0 && payload.registry.bodies.length > 0, detail: `${payload.registry.divisions.length} divisions and ${payload.registry.bodies.length} bodies.` },
-      { consumer: "body-person/contact readers", passed: !issues.some((issue) => issue.startsWith("BODY_ROSTER_")), detail: `${payload.bodyRosters.length} sourced body rosters are bound to exact body and member IDs.` },
-      { consumer: "person identity readers", passed: !issues.some((issue) => issue.startsWith("ROSTER_") || issue.startsWith("OFFICIAL_CANDIDACY_")), detail: `${payload.rosterReaderDispositions.length} roster identity dispositions and ${payload.officialCandidacies.rows.length} exact officeholder/candidacy outcomes.` },
+      { consumer: "person identity readers", passed: !issues.some((issue) => issue.startsWith("OFFICIAL_CANDIDACY_")), detail: `${payload.officialCandidacies.rows.length} exact officeholder/candidacy outcomes.` },
       { consumer: "statewide officeholder readers", passed: !issues.some((issue) => issue.startsWith("STATEWIDE_EXECUTIVE_")), detail: `${payload.statewideExecutives.length} sourced statewide officeholder bindings.` },
       { consumer: "Ask body identity", passed: !duplicate(payload.registry.bodies.map((body) => body.id)), detail: "Every body has one exact runtime identity." },
       { consumer: "licensed portrait readers", passed: !issues.includes("ROSTER_PHOTO_NOT_LICENSED_IN_MANIFEST"), detail: "Every client roster portrait resolves to a licensed manifest row." },
@@ -908,14 +787,13 @@ export function registryRuntimeCandidate(
     civicRecords: records,
     excludedFacts: [...isolated.excludedFacts, ...(input.excludedFacts ?? [])],
     ...(removalEvidence.length > 0 ? { removalEvidence } : {}),
-    ...(options.prior && (inherited.size > 0 || retainedRosterSources.length > 0)
+    ...(options.prior && inherited.size > 0
       ? {
         manualPriorAuthority: {
           kind: "VALIDATED_PRIOR_PROJECTION" as const,
           versionId: options.prior.versionId,
           readModelSha256: options.prior.readModelSha256,
           retainedMembers: [...inherited].map(([key, digest]) => ({ key, sha256: digest })),
-          ...(retainedRosterSources.length ? { retainedRosterSources } : {}),
         },
       }
       : {}),

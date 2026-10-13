@@ -2,7 +2,7 @@ import { requiredManualProductionContract } from "./manual-contracts.ts";
 import type { RoutineSourceTask } from "./runner.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
 import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
-import { isWorkerReaderContract } from "./worker-reader-contracts.ts";
+import { COMMENT_RULE_PUBLICATION, isWorkerReaderContract } from "./worker-reader-contracts.ts";
 import { auditPull, latestParserResult } from "./worker-publication-evidence.ts";
 import type { RoutineDataStore } from "./store.ts";
 import { ZERO_RELEASE_EVENTS } from "./release.ts";
@@ -18,7 +18,13 @@ export type WorkerPublicationItem = Pick<WorkItem, "id"> & {
   };
 };
 
-export function workerPublicationTasks(items: readonly WorkerPublicationItem[], results: readonly WorkerResultRecord[], now: string): RoutineSourceTask[] {
+/** The classes that publish as facts in the runner's own pass rather than through a contract's command. */
+const factClass = (item: WorkerPublicationItem): "rosters" | "comments" | null =>
+  item.autonomousPlan?.publication?.contractId === "registry-runtime-bindings" && item.autonomousPlan.contract.recordClass === "OFFICIAL_ROSTER" ? "rosters"
+    : item.autonomousPlan?.publication?.contractId === COMMENT_RULE_PUBLICATION ? "comments" : null;
+
+/** Work items whose newest extraction or saved page has not been published yet. */
+export function owedPublications(items: readonly WorkerPublicationItem[], results: readonly WorkerResultRecord[], now: string): { readonly item: WorkerPublicationItem; readonly requestedAt: string }[] {
   const byItem = new Map<string, WorkerResultRecord[]>();
   for (const result of results) {
     const own = byItem.get(result.workItemId) ?? [];
@@ -27,7 +33,7 @@ export function workerPublicationTasks(items: readonly WorkerPublicationItem[], 
   }
   const nowMs = Date.parse(now);
   const hour = new Date(Math.floor(nowMs / HOUR) * HOUR).toISOString();
-  const owed = items.flatMap(item => {
+  return items.flatMap(item => {
     const plan = item.autonomousPlan;
     const target = plan?.publication?.contractId;
     if (!plan || !target || (target !== "registry-runtime-bindings" && !isWorkerReaderContract(target))) return [];
@@ -51,14 +57,23 @@ export function workerPublicationTasks(items: readonly WorkerPublicationItem[], 
     if (outcome && nowMs - Date.parse(outcome.at) < HOUR) return [];
     return [{ item, requestedAt: hour }];
   });
-  return owed.map(({ item, requestedAt }) => {
-    const id = item.autonomousPlan!.publication!.contractId;
+}
+
+export function owedFactItems(items: readonly WorkerPublicationItem[], results: readonly WorkerResultRecord[], now: string): { rosters: string[]; comments: string[] } {
+  const owed = { rosters: [] as string[], comments: [] as string[] };
+  for (const { item } of owedPublications(items.filter(item => factClass(item) !== null), results, now)) owed[factClass(item)!].push(item.id);
+  return owed;
+}
+
+export function workerPublicationTasks(items: readonly WorkerPublicationItem[], results: readonly WorkerResultRecord[], now: string): RoutineSourceTask[] {
+  return owedPublications(items.filter(item => factClass(item) === null), results, now).map(({ item, requestedAt }) => {
+    const id = item.autonomousPlan!.publication!.contractId as Exclude<NonNullable<NonNullable<WorkerPublicationItem["autonomousPlan"]>["publication"]>["contractId"], typeof COMMENT_RULE_PUBLICATION>;
     const contract = requiredManualProductionContract(id);
     const taskId = `worker-publication:${contract.id}:${item.id}`;
     return { id: taskId, registeredContractId: contract.id, sourceId: contract.sourceId, recordClass: contract.recordClass, scope: contract.scope,
       acquisitionFailureDomain: taskId, requestedUrl: "", authorityMode: "REGISTERED_SOURCE_ROUTES",
       parserVersion: contract.parserNormalizerVersion,
-      command: [...contract.command, `--${id === "registry-runtime-bindings" ? "worker-rosters" : "worker-results"}=${item.id}`],
+      command: [...contract.command, `--${id === "registry-runtime-bindings" ? "worker-directories" : "worker-results"}=${item.id}`],
       cadenceMs: Number.POSITIVE_INFINITY, retryMs: 15 * 60_000,
       contract: { readerProjection: contract.readerProjection, cadence: { description: "Publish owed work that now meets §3", defaultEveryMs: Number.POSITIVE_INFINITY } },
       ownerInvocation: { publicationPending: true, requestedAt, instructions: ["section3-publication"] } };

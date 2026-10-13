@@ -19,7 +19,6 @@ export function placeProjectionSourceSql(acceptedVersionsParameter?: number): st
 function collections(recordClass: string): Record<string, string> {
   if (recordClass === "REGISTRY_RUNTIME_BINDING") return {
     "registry.divisions": division, "registry.bodies": serves,
-    bodyRosters: `x->>'bodyId' IN (SELECT b.x->>'id' FROM records b WHERE b.scope=records.scope AND b.field='registry.bodies' AND (${serves.replaceAll("x->", "b.x->")}))`,
     statewideExecutives: "x->>'stateOcdId'=ANY($3::text[])",
     "officialCandidacies.rows": "x->'holder'->'divisions' ?| $3::text[]",
   };

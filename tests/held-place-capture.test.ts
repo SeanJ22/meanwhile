@@ -511,14 +511,14 @@ test("published outcomes retain document status and every linked action and roll
   assert.ok(!unknown.held.some(field => ["DOC-06", "DOC-08", "DOC-09"].includes(field.checklistId)), "an unclassified pointer or empty extraction cannot fill these facts");
 });
 
-test("retained roster contacts keep separate values and their earlier source dates", () => {
+test("each roster contact keeps its own source and date", () => {
   const older = "2026-08-01T00:00:00.000Z";
   const sourceUrl = "https://cochise.az.gov/old-roster";
   const contacts = published({ ...registry.value!, bodyRosters: [{ ...registry.value!.bodyRosters[0], members: [{
     ...registry.value!.bodyRosters[0].members[0], email: "office@cochise.az.gov", phone: "520-555-0100",
     websiteUrl: "https://cochise.az.gov/member", termNote: "Term ends in 2028",
-    retainedFieldSources: { email: { sourceUrl, sourceOrg: "County", collectedAt: older },
-      websiteUrl: { sourceUrl, sourceOrg: "County", collectedAt: older } },
+    fieldSources: { email: { sourceUrl, sourceOrg: "County", collectedAt: older, verifiedAt: older },
+      websiteUrl: { sourceUrl, sourceOrg: "County", collectedAt: older, verifiedAt: older } },
   }] }] });
   const result = projectHeldPlaceCapture([county], contacts, [], at);
   const email = result.held.find(field => field.checklistId === "OFF-09" && (field.value as { email?: string }).email);

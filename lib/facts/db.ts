@@ -1,4 +1,4 @@
-import { neonConfig, Pool } from "@neondatabase/serverless";
+import { neon, neonConfig, Pool } from "@neondatabase/serverless";
 import type { FactDb, Query } from "./publish.ts";
 
 let pool: Pool | null = null;
@@ -26,4 +26,30 @@ export function readerFactDb(url: string | undefined = process.env.DATABASE_URL)
       }
     },
   };
+}
+
+let installed: Query | null | undefined;
+
+/** Reads of the reader database's facts over HTTP; null when no reader database is configured. */
+export function factReader(): Query | null {
+  if (installed !== undefined) return installed;
+  const url = process.env.DATABASE_URL?.trim();
+  if (!url) return null;
+  const sql = neon(url);
+  return async (text, params = []) => (await sql.query(text, [...params])) as Record<string, unknown>[];
+}
+
+/** A process that already holds a fact connection (a test's database, a script's pool) reads through it. */
+export function installFactReader(query: Query | null | undefined): void {
+  installed = query;
+}
+
+export const statementQuery = (run: (statements: readonly { readonly text: string; readonly params: readonly unknown[] }[]) => Promise<readonly (readonly Record<string, unknown>[])[]>): Query =>
+  async (text, params = []) => (await run([{ text, params }]))[0] ?? [];
+
+/** Moves whenever a fact is written or leaves the live set. */
+export async function factsVersion(query: Query | null): Promise<string> {
+  if (query === null) return "facts:none";
+  const [row] = await query("SELECT coalesce(max(id), 0) AS newest, count(*) FILTER (WHERE status = 'live') AS live FROM fact");
+  return `facts:${row?.newest ?? 0}.${row?.live ?? 0}`;
 }

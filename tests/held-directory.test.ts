@@ -85,11 +85,11 @@ test("the runner offers a directory with no extraction yet, hourly, so its saved
   const [task] = workerPublicationTasks([item], [], NOW);
   assert.equal(task?.id, "worker-publication:registry-runtime-bindings:wi-directory");
   assert.equal(task?.registeredContractId, "registry-runtime-bindings");
-  assert.match(task.command.at(-1)!, /--worker-rosters=wi-directory$/);
+  assert.match(task.command.at(-1)!, /--worker-directories=wi-directory$/);
   const siblings = workerPublicationTasks([item, { ...item, id: "wi-other-body" }], [], NOW);
   assert.equal(siblings.length, 2, "independent body work cannot share one publisher command");
   assert.equal(new Set(siblings.map(job => job.acquisitionFailureDomain)).size, 2);
-  assert.deepEqual(siblings.map(job => job.command.at(-1)), ["--worker-rosters=wi-directory", "--worker-rosters=wi-other-body"]);
+  assert.deepEqual(siblings.map(job => job.command.at(-1)), ["--worker-directories=wi-directory", "--worker-directories=wi-other-body"]);
   assert.deepEqual(workerPublicationTasks([{ ...item, publicationOutcome: { at: "2026-09-29T19:30:00.000Z" } } as unknown as WorkItem], [], NOW), [], "not again within the hour");
 });
 
@@ -118,7 +118,7 @@ test("a board's schedule publishes through the registry door itself, not only in
   const divisions = imported.payload.registry.divisions.filter(row => CENSUS_PLACEHOLDER_LABELS[row.label]).map(row => ({ ...row, label: CENSUS_PLACEHOLDER_LABELS[row.label] }));
   const corrected = registryRuntimeCandidate({ contractId: "registry-runtime-bindings", version: "fixture-census-correction", sourceThrough: NOW,
     sourceReceipt: { contractVersion: 1, reviewedAt: NOW, reviewedBy: "recorded-fixture-control", sources: [...new Set(divisions.map(row => row.provenance!.sourceUrl!))].map(url => ({ requestedUrl: url, finalUrl: url, publisher: "U.S. Census Bureau", sourceClass: "OFFICIAL_PUBLISHER" as const, retrievedAt: NOW, httpStatus: 200, rawHash: createHash("sha256").update(JSON.stringify(divisions)).digest("hex"), reviewedEvidence: "Offline fixture: Census LEA 99997 means no school district." })) },
-    payload: { ...imported.payload, registry: { ...imported.payload.registry, divisions, bodies: [] }, bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialCandidacies: { ...imported.payload.officialCandidacies, rows: [] }, officialPhotos: { photos: [] }, rosterPhotos: {} } }, { prior: imported });
+    payload: { ...imported.payload, registry: { ...imported.payload.registry, divisions, bodies: [] }, statewideExecutives: [], officialCandidacies: { ...imported.payload.officialCandidacies, rows: [] }, officialPhotos: { photos: [] }, rosterPhotos: {} } }, { prior: imported });
   assert.ok((await processRegisteredManualCandidate(store, "registry-runtime-bindings", corrected, NOW, imported.versionId)).promoted);
   const base = (await readRegistryRuntimePrior(store, NOW))!;
   const html = page("Commissions", section("Neighborhoods Commission").replace("<p>Members are appointed",

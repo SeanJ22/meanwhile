@@ -1595,7 +1595,7 @@ function deliveryOf(g: Gathered, src: AssignmentSources): AssignmentDelivery {
     const publication = item.publicationOutcome;
     if (!publication || publication.status === "HELD") return [];
     const witness = servedWitness(src.servedReader, item.id, publication.workerResultId, src.nowIso);
-    return witness?.versionId === publication.versionId ? [witness] : [];
+    return witness?.versionId === (publication.versionId ?? publication.workerResultId) ? [witness] : [];
   })];
   const witness = witnesses[0];
   const workerPublication = g.workItems.flatMap(item => item.publicationOutcome ? [item.publicationOutcome] : [])

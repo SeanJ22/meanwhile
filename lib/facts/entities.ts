@@ -79,10 +79,11 @@ export function stateEntities(reg: Registration, census: ReadonlyMap<string, Cen
     if (host) out.hosts.push([jurisdictionId, host]);
   }
   const governmentByPid = new Map(reg.governments.map(g => [g[0], g[1]]));
+  const governmentOnDivision = new Map(reg.governments.filter(g => g[4] >= 0).map(g => [reg.divisions[g[4]]?.[0], g[1]]));
   const divisionName = new Map(reg.divisions.map(d => [d[0], d[3]]));
   for (const body of bodies) {
-    const government = body.censusId ? governmentByPid.get(body.censusId) : undefined;
     const place = body.ocdId && known.has(body.ocdId) ? body.ocdId : null;
+    const government = (body.censusId ? governmentByPid.get(body.censusId) : undefined) ?? (place ? governmentOnDivision.get(place) : undefined);
     const name = body.name ?? `${(place && divisionName.get(place)) ?? body.id} ${body.bodyClass.toLowerCase().replace(/_/g, " ")}`;
     out.entities.push({ id: body.id, kind: "body", name, state, parentId: government ?? place ?? stateDivision });
     if (place) out.places.push([body.id, place]);
@@ -180,4 +181,11 @@ export async function ensureFactEntities(db: FactDb & { readonly query: Query },
 
 export function registeredStates(root: string): readonly string[] {
   return readdirSync(join(root, "data", "derived", "registration")).filter(name => /^[a-z]{2}\.json$/.test(name)).map(name => name.slice(0, 2)).sort();
+}
+
+/** Mints an entity found after the backfill; its parent is kept only when already held. */
+export async function ensureEntity(query: Query, row: EntityRow): Promise<void> {
+  await query(`INSERT INTO entity (id, kind, name, state, parent_id)
+    SELECT $1, $2, $3, $4, (SELECT id FROM entity WHERE id = $5) ON CONFLICT (id) DO NOTHING`,
+  [row.id, row.kind, row.name, row.state, row.parentId]);
 }

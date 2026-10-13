@@ -26,7 +26,7 @@ import { stateOfOcdId } from "@/lib/meetings/edge-artifacts";
 import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { CivicDataStoreUnavailableError } from "@/lib/civic-data/read-model";
 import { readComposedSourcePlaces } from "@/lib/meetings/prepared-snapshot";
-import { divisionIdsForZipArea } from "@/lib/ballot/zip-divisions";
+import { divisionIdsForZipArea, POINT_GEOMETRY_PLANS } from "@/lib/ballot/zip-divisions";
 import { needsPill, zipCertainty } from "@/lib/geo/zip-certainty";
 import { WIRED_STATUSES } from "@/lib/registry/coverage";
 import { coverageAt, divisionsAt, divisionsByOcdIds, prefetchReaderGeography, prepareCoverage } from "@/lib/registry/server";
@@ -229,6 +229,7 @@ export async function GET(request: Request) {
     const areaIds = await divisionIdsForZipArea(
       zipRead.value,
       resolvedDivisions.map((d) => d.ocdId),
+      undefined, POINT_GEOMETRY_PLANS,
     );
     const widened = await divisionsByOcdIds(areaIds, { zip: zipRead.value });
     widening();

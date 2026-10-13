@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { WorkingOnIt } from "@/components/demand/working-on-it";
+import { CardGapsContribution } from "@/components/ui/card-gap-context";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
+import type { CardGap } from "@/lib/design/card-gaps";
 import { FEDERAL_MONEY_SOURCES } from "@/lib/federal-money/model";
 import { federalMoneyRows, federalMoneySources, FEDERAL_MONEY_SOURCE_LABELS } from "@/lib/federal-money/view";
 import type { FederalMoneyPlaceRead } from "@/lib/federal-money/reader";
@@ -23,6 +24,20 @@ function load(divisionId: string, bodyId?: string) {
   return pending;
 }
 
+const GAP_LABELS: Readonly<Record<string, string>> = {
+  usaspending: "federal grants, contracts and loans", "federal-audit-clearinghouse": "federal audit findings", "sam-gov-entities": "federal registration",
+};
+
+/** What this place still lacks from each federal source, as card gaps rather than field placeholders. */
+export function federalMoneyGaps(value: FederalMoneyPlaceRead, scope: { divisionId: string; bodyId?: string }): CardGap[] {
+  const base = `federal-money:${scope.divisionId}:${scope.bodyId ?? "place"}`;
+  return value.sources.flatMap((source): CardGap[] => {
+    const held = federalMoneyRows(source.records, scope).length > 0;
+    if (!held) return [{ id: `${base}:${source.source}`, label: GAP_LABELS[source.source] ?? "disaster declarations" }];
+    return source.coverageComplete === false ? [{ id: `${base}:${source.source}:more`, label: "more federal records for this place" }] : [];
+  });
+}
+
 /** The exact selected place survives late fetches; every source keeps its own
  * coverage line, even when the other three already hold facts. */
 export function FederalMoneySection({ divisionId, bodyId, data }: { divisionId: string; bodyId?: string; data?: FederalMoneyPlaceRead }) {
@@ -34,19 +49,20 @@ export function FederalMoneySection({ divisionId, bodyId, data }: { divisionId: 
     return () => { active = false; };
   }, [divisionId, bodyId, data]);
   const value = data ?? read;
-  if (!value || value.division !== divisionId || value.bodyId !== (bodyId ?? null)) return <WorkingOnIt />;
+  if (!value || value.division !== divisionId || value.bodyId !== (bodyId ?? null)) return null;
   const visible = value.sources.map(source => ({ ...source, rows: federalMoneyRows(source.records, { divisionId, bodyId }) }));
   const sources = federalMoneySources(visible.flatMap(source => source.rows));
+  const base = `federal-money:${divisionId}:${bodyId ?? "place"}`;
   return <section aria-label="Federal money and records" className="space-y-5">
-    {visible.map(source => <div key={source.source} data-federal-source={source.source}>
+    {visible.filter(source => source.rows.length > 0).map(source => <div key={source.source} data-federal-source={source.source}>
       <h4 className="t-detail font-medium text-paper">{FEDERAL_MONEY_SOURCE_LABELS[source.source]}</h4>
-      {source.rows.length ? <dl className="mt-2 space-y-3">{source.rows.map(row => <div key={row.fact.id} data-federal-record={row.fact.id}>
+      <dl className="mt-2 space-y-3">{source.rows.map(row => <div key={row.fact.id} data-federal-record={row.fact.id}>
         <dt className="t-body font-medium text-paper">{row.label}</dt>
         <dd className="mt-1 t-body leading-relaxed text-paper-dim">{row.text}</dd>
-      </div>)}</dl> : <WorkingOnIt about={source.source === "usaspending" ? "federal grants, contracts and loans" : source.source === "federal-audit-clearinghouse" ? "federal audit findings" : source.source === "sam-gov-entities" ? "federal registration" : "disaster declarations"} />}
-      {source.rows.length > 0 && source.coverageComplete === false && <WorkingOnIt about="more records for this place" />}
+      </div>)}</dl>
       {source.checkedAt && <p className="mt-1 t-caption text-muted">Last checked {source.checkedAt.slice(0, 10)}</p>}
     </div>)}
-    <CardSourcesContribution id={`federal-money:${divisionId}:${bodyId ?? "place"}`} sources={sources} />
+    <CardGapsContribution id={base} gaps={federalMoneyGaps(value, { divisionId, bodyId })} />
+    <CardSourcesContribution id={base} sources={sources} />
   </section>;
 }

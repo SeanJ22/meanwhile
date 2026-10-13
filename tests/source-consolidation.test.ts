@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 
-import { sourceCreditFor } from "../lib/meetings/list-attribution.ts";
+import { mergeSources } from "../lib/officials/card-sources.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 
 const ROOT = process.cwd();
@@ -63,7 +63,7 @@ test("SRC: consolidating the DISPLAY leaves every provenance field exactly as it
   ];
 
   const before = JSON.parse(JSON.stringify(provenanceOf(meetings)));
-  const credit = sourceCreditFor(meetings);
+  const sources = mergeSources(meetings.map(meeting => ({ what: "Meeting", provenance: meeting.provenance })));
   const after = provenanceOf(meetings);
 
   assert.deepEqual(
@@ -74,11 +74,10 @@ test("SRC: consolidating the DISPLAY leaves every provenance field exactly as it
 
   // And it is genuinely doing the display job, so this is not a test that
   // passes because nothing happened.
-  assert.equal(credit.kind, "multi");
-  assert.equal(credit.sources.length, 2);
+  assert.equal(sources.length, 2);
 
   // Every source org that was in the data is still nameable from the credit.
-  const credited = new Set(credit.sources.map((s) => s.sourceOrg));
+  const credited = new Set(sources.map((source) => source.provenance.sourceOrg));
   for (const m of meetings) {
     assert.ok(
       credited.has(m.provenance.sourceOrg),
@@ -92,13 +91,9 @@ test("SRC: the single-source form still names its source in full, verbatim", () 
   // name would be characterising it — which the organizations-render-as-filed
   // rule forbids just as firmly as dropping it would be.
   const org = "Rockaway Township Board of Adjustment";
-  const credit = sourceCreditFor([
-    { jurisdiction: "Rockaway Township, NJ", provenance: { sourceOrg: org } },
-  ]);
-  assert.ok(
-    credit.lead.includes(org),
-    `the credit line does not name the publisher verbatim: ${credit.lead}`,
-  );
+  const meeting = row();
+  const sources = mergeSources([{ what: "Meeting", provenance: { ...meeting.provenance, sourceOrg: org } }]);
+  assert.equal(sources[0].provenance.sourceOrg, org);
 });
 
 test("SRC: no source-carrying field was deleted from the meeting type", () => {

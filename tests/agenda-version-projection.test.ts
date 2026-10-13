@@ -10,7 +10,8 @@ import type { AgendaDocument } from "../lib/meetings/agenda-documents.ts";
 
 // The native runner strips TypeScript but does not compile TSX; the one reader
 // leaf that states the version count is compiled through the existing tsx runtime.
-const { AgendaDocuments } = await tsImport("../components/map/popup/agenda-section.tsx", import.meta.url) as typeof import("../components/map/popup/agenda-section.tsx");
+const { AgendaDocuments, agendaDocumentSources } = await tsImport("../components/map/popup/agenda-section.tsx", import.meta.url) as typeof import("../components/map/popup/agenda-section.tsx");
+const { Card } = await tsImport("../components/ui/card.tsx", import.meta.url) as typeof import("../components/ui/card.tsx");
 
 const TUSD = "ocd-division/country:us/state:az/school_district:tucson_unified_district";
 const SITE_ROOT = "https://govboard.tusd1.org/";
@@ -69,13 +70,12 @@ function tusd499Corpus(): AgendaDocument[] {
 }
 
 function render(documents: readonly AgendaDocument[], publication: ReturnType<typeof classifyAgendaPublication>) {
-  return renderToStaticMarkup(createElement(AgendaDocuments, {
+  return renderToStaticMarkup(createElement(Card, { title: "Meeting", sources: agendaDocumentSources(documents.map(view), publication) } as Parameters<typeof Card>[0], createElement(AgendaDocuments, {
     documents: documents.map(view),
     meetingId: documents[0]!.meetingId,
     agendaUrl: documents[0]!.documentUrl,
-    agendaSentence: "",
     publication,
-  }));
+  })));
 }
 
 test("Tucson Unified 499: 88 identical re-reads of its portal page plus the site root are two index pages, never a version", () => {

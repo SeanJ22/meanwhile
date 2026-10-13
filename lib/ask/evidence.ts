@@ -97,6 +97,7 @@ export interface EvidenceRecord {
   id: string;
   /** Canonical holding subject when the reader's question uses a bridged card identity. */
   canonicalSubjectId?: string;
+  fecProfile?: { candidateId: string; name: string; personId: string };
   officeholder?: { officialId: string; termNote: string | null };
   rosterGap?: import("../registry/body-rosters.ts").RosterReaderGap;
   /** A source-listing group is not a verified count of distinct meetings. */

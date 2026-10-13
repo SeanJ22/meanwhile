@@ -637,9 +637,9 @@ test("funding reaction target ids validate against the snapshot", () => {
 
 test("the FEC acquisition script has no tracked writer and is reachable only through the standing routine contract", () => {
   const script = readFileSync(join(ROOT, "scripts", "fetch-fec.mts"), "utf8");
-  assert.match(script, /if \(!promote && !matchOnly\)/);
+  assert.match(script, /if \(!promote\)/);
   assert.match(script, /fecFundingCandidate\(/);
-  assert.match(script, /processRegisteredRoutineCandidate\(store, "fec-funding", candidate, completedAt\)/);
+  assert.match(script, /processRegisteredRoutineCandidate\(store, "fec-funding", candidate, new Date\(\)\.toISOString\(\)\)/);
   assert.doesNotMatch(script, /writeStampStable|writeFile(?:Sync)?|absolutePath:\s*OUT|--allow-shrink|findShrinkRegressions/);
 
   const manifest = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")) as {
@@ -1105,7 +1105,7 @@ test("D06: nothing is sorted into an industry, and the org split is dollars not 
   assert.match(sentences, /\$2,000 came from individual people/);
 });
 
-test("D06: an unknown state is a named gap, never a zero that reads as 'none from home'", async () => {
+test("D06: an unknown state has no geography sentence or invented zero", async () => {
   const { concentrationOf, concentrationSentences } = await import(
     "../lib/funding/concentration.ts"
   );
@@ -1113,7 +1113,7 @@ test("D06: an unknown state is a named gap, never a zero that reads as 'none fro
   assert.ok(concentration);
   assert.equal(concentration.hasGeography, false);
   const sentences = concentrationSentences(concentration, null).join(" ");
-  assert.match(sentences, /We're working on getting this info/);
+  assert.doesNotMatch(sentences, /working on getting|Filed from inside|Filed from outside/);
   assert.doesNotMatch(sentences, /\b0% of/);
 });
 

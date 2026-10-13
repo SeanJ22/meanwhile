@@ -1,5 +1,6 @@
 import type { RegistryProvenance } from "../registry/types.ts";
-import type { LoadedReference } from "./reference.ts";
+import type { LoadedReference, RegistrationReference } from "./reference.ts";
+import { FIPS_TO_STATE } from "../ocd/fips.ts";
 
 export interface RegistrationGovernmentListing {
   readonly id: string;
@@ -16,6 +17,10 @@ export interface RegistrationGovernmentListing {
   readonly website: string | null;
   readonly officePhone: string | null;
   readonly officeAddress: string | null;
+  /** Census government contact title and mailing address, as published. */
+  readonly contactTitle?: string | null;
+  readonly mailingAddress?: string | null;
+  readonly govDomains?: readonly { readonly domain: string; readonly website: string; readonly sourceUrl: string; readonly checkedAt: string }[];
   /** Administrative/source location, never a service boundary. */
   readonly countyFips: string | null;
   readonly associations: readonly {
@@ -26,6 +31,9 @@ export interface RegistrationGovernmentListing {
   }[];
   readonly bodyIds: readonly string[];
   readonly provenance: RegistryProvenance;
+  /** Independent directory and native-crosswalk evidence retained after an identity merge. */
+  readonly additionalSources?: readonly RegistryProvenance[];
+  readonly contactProvenance?: Readonly<Partial<Record<"website" | "mailingAddress" | "officePhone" | "officeAddress", RegistryProvenance>>>;
 }
 
 export function governmentNativeId(state: string, namespace: "cog" | "nces" | "tiger", id: string): string {
@@ -38,6 +46,75 @@ export function governmentStateOf(id: string): string | null {
     ?? /^([a-z]{2}):[a-z]+:/i.exec(id)?.[1]
     ?? /^ocd-division\/country:us\/(?:state|district|territory):([a-z]{2})(?:\/|#|$)/i.exec(id)?.[1];
   return state?.toLowerCase() ?? null;
+}
+
+/** Census school district GEOIDs use the NCES LEAID, including its state prefix.
+ * A directory code establishes territory only when exactly one held school
+ * district carries it. Charter and closed agencies remain directory listings. */
+export function schoolDistrictSourceAssociations(
+  listing: Pick<RegistrationGovernmentListing, "state" | "kind" | "governmentClass" | "nativeIds" | "status">,
+  reference: RegistrationReference,
+): RegistrationGovernmentListing["associations"] {
+  if (listing.kind === "GOVERNMENT" && !/SCHOOL/i.test(listing.governmentClass)) return [];
+  const leaid = listing.nativeIds.nces_leaid;
+  if (!/^\d{7}$/.test(leaid ?? "") || reference.state.toUpperCase() !== listing.state.toUpperCase() ||
+      FIPS_TO_STATE[leaid.slice(0, 2)]?.postal !== listing.state.toUpperCase()) return [];
+  const type = listing.nativeIds.nces_lea_type ?? listing.governmentClass;
+  const charter = listing.nativeIds.nces_charter_lea;
+  if (type === "7" || /^independent charter/i.test(type) || /^CHRT/i.test(charter ?? "") ||
+      /^(?:2|6|7|closed|inactive|future)$/i.test(listing.nativeIds.nces_lea_status ?? listing.status ?? "")) return [];
+  const districts = reference.divisions.filter(([, layer, geoid, name]) =>
+    ["unsd", "elsd", "scsd"].includes(layer) && geoid === leaid && !/not defined/i.test(name));
+  if (districts.length !== 1) return [];
+  const [divisionId, layer, geoid] = districts[0];
+  return [{ divisionId, layer, geoid, basis: "SOURCE_CODE" }];
+}
+
+/** Only a reversible F-33 native identity joins Census and NCES directories.
+ * The Census identity remains durable; NCES supplies its independently sourced
+ * contacts and the source-code service association. Ambiguous identities stay
+ * separate, even if their names or district divisions happen to agree. */
+export function mergeSchoolGovernmentListings(listings: readonly RegistrationGovernmentListing[]): RegistrationGovernmentListing[] {
+  const pairs = new Map<string, { census: RegistrationGovernmentListing[]; nces: RegistrationGovernmentListing[] }>();
+  for (const listing of listings) {
+    const leaid = listing.nativeIds.nces_leaid;
+    if (!leaid) continue;
+    const key = `${listing.state.toUpperCase()}:${leaid}`;
+    const pair = pairs.get(key) ?? { census: [], nces: [] };
+    if (listing.nativeIds.census_pid6 && /SCHOOL/i.test(listing.governmentClass) && /^[a-f0-9]{64}$/.test(listing.nativeIds.f33_sha256 ?? "")) pair.census.push(listing);
+    else if (listing.kind === "EDUCATION_AGENCY" && !listing.nativeIds.census_pid6) pair.nces.push(listing);
+    pairs.set(key, pair);
+  }
+  const replacement = new Map<string, RegistrationGovernmentListing>(), joined = new Set<string>();
+  for (const { census, nces } of pairs.values()) {
+    if (census.length !== 1 || nces.length !== 1) continue;
+    const government = census[0], agency = nces[0];
+    const f33 = government.nativeIds;
+    const crosswalk: RegistryProvenance[] = f33.f33_source_url && f33.f33_observed_at ? [{
+      sourceUrl: f33.f33_source_url, sourceOrg: "National Center for Education Statistics / U.S. Census Bureau",
+      collectedAt: f33.f33_observed_at, verifiedAt: null,
+    }] : [];
+    const sources = [...(government.additionalSources ?? []), agency.provenance, ...(agency.additionalSources ?? []), ...crosswalk];
+    const contactProvenance: Partial<Record<"website" | "mailingAddress" | "officePhone" | "officeAddress", RegistryProvenance>> = {};
+    for (const field of ["website", "mailingAddress", "officePhone", "officeAddress"] as const) {
+      const source = government[field] ? government : agency[field] ? agency : null;
+      if (source) contactProvenance[field] = source.contactProvenance?.[field] ?? source.provenance;
+    }
+    replacement.set(government.id, { ...government,
+      aliases: [...new Set([...government.aliases, agency.id, ...agency.aliases])],
+      nativeIds: { ...government.nativeIds, ...agency.nativeIds },
+      website: government.website || agency.website,
+      officePhone: government.officePhone || agency.officePhone,
+      officeAddress: government.officeAddress || agency.officeAddress,
+      mailingAddress: government.mailingAddress || agency.mailingAddress || null,
+      contactProvenance,
+      associations: agency.associations,
+      bodyIds: [...new Set([...government.bodyIds, ...agency.bodyIds])],
+      additionalSources: sources.filter((source, index) => sources.findIndex(other => other.sourceUrl === source.sourceUrl && other.collectedAt === source.collectedAt) === index),
+    });
+    joined.add(agency.id);
+  }
+  return listings.filter(listing => !joined.has(listing.id)).map(listing => replacement.get(listing.id) ?? listing);
 }
 
 /** An inventory establishes its own named entity. A name-only geometry join
@@ -73,7 +150,9 @@ export function referenceGovernmentListings(loaded: LoadedReference): Registrati
     enrich.delete(id);
   }
   rows.push(...enrich.values());
-  return rows.sort((a, b) => a.id.localeCompare(b.id));
+  return mergeSchoolGovernmentListings(rows.map(row => row.nativeIds.nces_leaid && (row.kind !== "GOVERNMENT" || /SCHOOL/i.test(row.governmentClass))
+    ? { ...row, associations: schoolDistrictSourceAssociations(row, reference) }
+    : row)).sort((a, b) => a.id.localeCompare(b.id));
 }
 
 /** Match a real held body by the source's identity, never by its division. */

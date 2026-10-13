@@ -1,6 +1,6 @@
 "use client";
 
-import { WorkingOnIt } from "@/components/demand/working-on-it";
+import { CardGapContribution } from "@/components/ui/card-gap-context";
 import { useEffect, useState } from "react";
 import type { PrlReaderProfile } from "@/lib/sources/prl/snapshot";
 import { PRL_CATEGORIES } from "@/lib/sources/prl/types";
@@ -40,7 +40,6 @@ export function settleStatementsAnswer(
 function ProfileForIdentity({ subjectId, onProfile }: { subjectId: string; onProfile?: (profile: PrlReaderProfile | null) => void }) {
   const [load, setLoad] = useState<StatementsLoad>(() => statementsLoadFor(subjectId));
   const [archive, setArchive] = useState<PrlPersonRead | null>(null);
-  const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     if (!PRL_SUBJECT.test(subjectId)) return;
     const controller = new AbortController();
@@ -49,7 +48,7 @@ function ProfileForIdentity({ subjectId, onProfile }: { subjectId: string; onPro
       .then(answer => { if (!controller.signal.aborted) { setLoad(settleStatementsAnswer(subjectId, answer)); setArchive(answer.archive ?? null); } })
       .catch(() => { if (!controller.signal.aborted) setLoad({ kind: "failed" }); });
     return () => controller.abort();
-  }, [subjectId, attempt]);
+  }, [subjectId]);
   const heldProfile = load.kind === "held" ? load.profile : null;
   useEffect(() => { onProfile?.(heldProfile); }, [heldProfile, onProfile]);
   if (archive && (archive.statements.length > 0 || archive.summaries.length > 0)) {
@@ -61,14 +60,7 @@ function ProfileForIdentity({ subjectId, onProfile }: { subjectId: string; onPro
   switch (load.kind) {
     case "not-applicable":
     case "none":
-      // A blank never reads as "nothing here".
-      return (
-        <CardSection title="Public statements">
-          <p className="mw-feed-gap" data-statement-feed="not-held">
-            <WorkingOnIt inline />
-          </p>
-        </CardSection>
-      );
+      return <CardGapContribution id={`statements:${subjectId}`} label="public statements" subject={{ type: "CANDIDATE", id: subjectId }} />;
     case "loading":
       return (
         <CardSection title="Public statements" defaultOpen>
@@ -76,21 +68,7 @@ function ProfileForIdentity({ subjectId, onProfile }: { subjectId: string; onPro
         </CardSection>
       );
     case "failed":
-      return (
-        <CardSection title="Public statements" defaultOpen>
-          <p className="t-body">We couldn’t check for a public-statements profile just now.</p>
-          <button
-            type="button"
-            className="mw-pill-btn mt-2"
-            onClick={() => {
-              setLoad({ kind: "loading" });
-              setAttempt((n) => n + 1);
-            }}
-          >
-            Try again
-          </button>
-        </CardSection>
-      );
+      return <CardGapContribution id={`statements:${subjectId}`} label="public statements" subject={{ type: "CANDIDATE", id: subjectId }} />;
     case "held":
       return <CardSection title="Public statements" defaultOpen><PublicStatementsProfileContent profile={load.profile} /></CardSection>;
   }
@@ -197,20 +175,11 @@ export function PublicStatementsProfileContent({ profile, statementsHeld = false
           </>
         ) : (
           <>
-            <p className="mw-feed-gap" data-statement-chart="not-held">
-              The chart of each category&apos;s share isn&apos;t available for this member yet. The Polarization Research Lab&apos;s own sentences follow.
-            </p>
+            <CardGapContribution id={`statement-shares:${profile.subjectId}`} label="public statement category shares" />
             {categories.map(category => <p key={category.id}>{category.sentence}</p>)}
           </>
         )}
-        {/* No verified per-statement rows are held, so the feed is stated as unavailable. */}
-        {!statementsHeld && <p className="mw-feed-gap" data-statement-feed="not-held">
-          Individual statements aren&apos;t held here yet — only PRL&apos;s category
-          shares.{" "}
-          <a className="underline underline-offset-2" href={profile.attribution.url} target="_blank" rel="noreferrer">
-            See PRL&apos;s data ↗
-          </a>
-        </p>}
+        {!statementsHeld && <CardGapContribution id={`individual-statements:${profile.subjectId}`} label="individual public statements" />}
         <p className="t-detail text-muted-foreground">
           {profile.statementCount.toLocaleString("en-US")} statements tracked. Measured {formatDateLong(profile.measuredAt)}. Read {formatDateLong(profile.readAt.slice(0, 10))}.
         </p>
@@ -240,7 +209,7 @@ export function ArchivedStatementsContent({ archive }: { archive: PrlPersonRead 
       <blockquote className="mt-2 whitespace-pre-wrap">{statement.text}</blockquote>
       <p className="mt-1 t-detail">Attributed by {statement.attribution.text}. <a href={statement.sourceUrl} target="_blank" rel="noreferrer" className="text-link">Original source</a>{" · "}Retrieved {statement.retrievedAt.slice(0, 10)}.</p>
     </details>)}
-    {archive.gaps.map(gap => <p key={gap} className="mw-feed-gap">{gap}</p>)}
+    {archive.gaps.length > 0 && <CardGapContribution id="statement-archive-gaps" label="public statement records" />}
     <p className="t-detail"><a href="https://americaspoliticalpulse.com/elites/data" target="_blank" rel="noreferrer" className="text-link">America’s Political Pulse — Congressional Rhetoric Dataset</a>{" · "}<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer" className="text-link">CC BY</a></p>
   </div>;
 }

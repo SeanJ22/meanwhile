@@ -134,6 +134,12 @@ export function fundingForTarget(targetKey: string): FundingCandidate | null {
   );
 }
 
+/** Native FEC aliases are optional when the money holding was not loaded. */
+export function fecPersonKeys(targetKey: string): string[] {
+  const rows = cache?.candidates.filter(candidate => candidate.targetKeys.includes(targetKey) || targetKey === `fec:${candidate.fecCandidateId}`) ?? [];
+  return [...new Set(rows.flatMap(row => [`fec:${row.fecCandidateId}`, ...row.targetKeys]))];
+}
+
 /** The earned absence for a target — a search that ran and came back empty. */
 export function fundingAbsenceForTarget(targetKey: string): FundingAbsence | null {
   return (

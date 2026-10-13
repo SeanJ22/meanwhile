@@ -1,3 +1,4 @@
+import { CardGapsContribution } from "@/components/ui/card-gap-context";
 import type { PickedKeyVote } from "@/lib/votes/key-vote-picks";
 import type { VotePosition } from "@/lib/votes/types";
 import { formatDateMDY } from "@/lib/map/format";
@@ -22,6 +23,7 @@ export function PickedKeyVotesSection({ picks }: { picks: readonly PickedKeyVote
   if (picks.length === 0) return null;
   return (
     <div data-picked-key-votes="">
+      <CardGapsContribution id="picked-vote-gaps" gaps={picks.filter(pick => !pick.roll || !pick.position).map(pick => ({ id: `picked-vote:${pick.rollId}`, label: pick.roll ? "voting positions" : "roll call records", unit: "vote" }))} />
       <p className="t-caption leading-relaxed text-voice">Votes Sean picked.</p>
       {picks.map((pick) => (
         <div key={pick.rollId} data-picked-vote-id={pick.rollId} className="mt-2 border-b border-[var(--panel-border)] pb-2 last:border-0">
@@ -31,9 +33,7 @@ export function PickedKeyVotesSection({ picks }: { picks: readonly PickedKeyVote
               <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 t-caption">
                 {pick.position ? (
                   <VotePill tone={POSITION[pick.position].tone}>{POSITION[pick.position].label}</VotePill>
-                ) : (
-                  <VotePill tone="gap">We&rsquo;re working on getting this info</VotePill>
-                )}
+                ) : null}
                 <span className="text-muted">
                   {formatDateMDY(pick.roll.date)} · {pick.roll.question} · {pick.roll.result}
                   {pick.roll.legisNum ? ` · ${pick.roll.legisNum}` : ""}
@@ -43,9 +43,7 @@ export function PickedKeyVotesSection({ picks }: { picks: readonly PickedKeyVote
                 <a className="underline underline-offset-2" href={pick.roll.rollCallUrl} target="_blank" rel="noreferrer">The chamber&rsquo;s roll call ↗</a>
               </p>
             </>
-          ) : (
-            <p className="t-detail leading-snug">We&rsquo;re working on getting this info.</p>
-          )}
+          ) : null}
           {pick.why && <p className="mt-1 t-caption text-paper-dim">Sean&rsquo;s note: {pick.why}</p>}
         </div>
       ))}

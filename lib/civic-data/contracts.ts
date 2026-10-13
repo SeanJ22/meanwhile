@@ -1,6 +1,7 @@
 import { VALIDATION_CHECKS, type RoutineDataClassification, type RoutineRecordClass } from "./types.ts";
 import type { SourceAuthorityId } from "./source-authority.ts";
 import { RUNTIME_ROUTINE_CONTRACTS } from "./runtime-routine-contracts.ts";
+import { FEDERAL_SOURCE_IDS, FEDERAL_SOURCES, FEDERAL_PARSER_VERSION, FEDERAL_RECORD_CLASS, federalScope } from "../sources/congress/targets.ts";
 import {
   OFFICIAL_STATE_LEGISLATOR_TARGETS,
   OFFICIAL_STATE_ROLL_CALL_TARGETS,
@@ -197,8 +198,8 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     sourceId: "fec-open-api",
     recordClass: "FEC_FUNDING",
     scope: "federal-supported",
-    acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/fetch-fec.mts", "--promote"], requestedUrl: "https://api.open.fec.gov/v1/" },
-    parserNormalizerVersion: "fec-funding/3",
+    acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/fetch-fec.mts", "--promote"] },
+    parserNormalizerVersion: "fec-funding/4",
     cadence: { description: "weekly", defaultEveryMs: 7 * DAY },
     retry: { afterMs: 6 * HOUR, description: "six hours after a failed attempt" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "fec-open-api" },
@@ -456,16 +457,16 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     id: "dotgov",
     sourceId: "cisa-dotgov-registry",
     recordClass: "DOTGOV_REFERENCE",
-    scope: "US:current-full:election-domains",
+    scope: "US:current-full:domains",
     acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/fetch-dotgov.mts", "--promote"], requestedUrl: "https://api.github.com/repos/cisagov/dotgov-data/commits?path=current-full.csv&per_page=1" },
-    parserNormalizerVersion: "cisa-dotgov/2",
+    parserNormalizerVersion: "cisa-dotgov/3",
     cadence: { description: "monthly", defaultEveryMs: 30 * DAY },
     retry: { afterMs: 6 * HOUR, description: "six hours after a failed attempt" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "cisa-dotgov-registry" },
     validationContract: CHECKS,
     canonicalProductionStore: STORE,
-    readerProjection: null,
-    lkgBehavior: "The current operational pointer remains on the last GOOD complete CISA registry projection after refusal.",
+    readerProjection: { id: "government-domains", consumers: ["government listings", "government detail", "Ask"] },
+    lkgBehavior: "The current government-domain pointer remains on the last GOOD complete CISA registry projection after refusal.",
     autoPromotable: true,
     classification: "OPERATIONAL_REFERENCE_DATA",
     bootstrapFixturePaths: [],
@@ -582,6 +583,17 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     readerProjection: { id: `${source}-federal-money`, consumers: ["government cards", "district cards", "/api/federal-money", "Ask", "Admin"] },
     lkgBehavior: "Each state's verified records and every unmatched native row remain held after a failed read. No unchanged check implies an absence or removes a record.",
     autoPromotable: true, classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: ["tests/fixtures/federal-money/"],
+  })),
+  ...FEDERAL_SOURCE_IDS.map((id): RoutineSourceContract => ({
+    id, sourceId: id, recordClass: FEDERAL_RECORD_CLASS, scope: federalScope(id), fanOut: true,
+    acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/src-cg-refresh.mts", "--promote", `--source=${id}`], requestedUrl: FEDERAL_SOURCES[id].url },
+    parserNormalizerVersion: FEDERAL_PARSER_VERSION,
+    cadence: { description: FEDERAL_SOURCES[id].clock, defaultEveryMs: FEDERAL_SOURCES[id].everyMs },
+    retry: { afterMs: HOUR, description: "Retry source outages after an hour, honoring a longer provider Retry-After." },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: id }, validationContract: CHECKS, canonicalProductionStore: STORE,
+    readerProjection: { id: `src-cg-${id}`, consumers: ["member cards", "Make your voice heard", "Ask", "Admin"] },
+    lkgBehavior: "Failed pages retain the last GOOD member, bill and national rule partitions. Every unmatched native row is kept and counted. An unchanged provider check succeeds.",
+    autoPromotable: true, classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: [],
   })),
 ] as const;
 

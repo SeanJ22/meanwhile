@@ -222,14 +222,14 @@ test("6.1: the committed journal head matches the newest migration file", () => 
   ) as { entries: { tag: string }[] };
   const files = filesThatWouldBeCommitted({ cwd: ROOT, paths: ["lib/db/migrations"] })
     .map((f) => f.trim())
-    .filter((f) => f.endsWith(".sql"))
+    .filter((f) => /\/\d{4}_[^/]+\.sql$/.test(f))
     .map((f) => f.replace(/^lib\/db\/migrations\//, "").replace(/\.sql$/, ""))
     .sort();
   const tags = journal.entries.map((e) => e.tag).sort();
   assert.deepEqual(
     tags,
     files,
-    "every journalled migration has a file and every file is journalled",
+    "every numbered migration is journalled; River numbers step-named lane migrations",
   );
 });
 

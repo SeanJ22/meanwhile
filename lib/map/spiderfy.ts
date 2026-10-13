@@ -126,3 +126,20 @@ export function fanOffsets(
 function round(n: number): number {
   return Math.round(n * 100) / 100;
 }
+
+/**
+ * Office fans open to the right of their hub, one labelled capsule per office at a fixed horizontal step, spread
+ * evenly above and below the hub. `dx`/`dy` place each capsule's left-centre.
+ */
+export const OFFICE_FAN = {
+  desktop: { dx: 16, step: 38 },
+  mobile: { dx: 30, step: 68 },
+} as const;
+
+export function fanRightOffsets(
+  keys: string[],
+  { dx, step }: { dx: number; step: number },
+): FanOffset[] {
+  const middle = (keys.length - 1) / 2;
+  return keys.map((key, i) => ({ key, dx, dy: round((i - middle) * step) }));
+}

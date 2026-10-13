@@ -1,3 +1,5 @@
+import { playbookRows } from "./helpers/playbooks.ts";
+import { fixtureRolePlaybook } from "./helpers/playbooks.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -32,7 +34,7 @@ import {
   type ModelTransport,
 } from "../lib/control-plane/scheduler/scout-executor.ts";
 import type { ArtifactProvenance, InheritedEvidence, ScoutToolkit, ScoutToolContext } from "../lib/control-plane/scheduler/scout-contract.ts";
-import { MIN_DISTINCT_RUNGS, classifyPriorRung, consecutiveTransportFailures, validateScoutFinish, type ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
+import { classifyPriorRung, consecutiveTransportFailures, validateScoutFinish, type ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import {
   RESEARCH_BOUNDS,
   researchWorkerCapacity,
@@ -196,6 +198,7 @@ async function ordinaryWorkerProcesses() {
     const root = await mkdtemp(join(tmpdir(), "s7-ordinary-scout-"));
     try {
       const repos = await createFileRepositories(root);
+      for (const row of playbookRows) await repos.fieldManual.put(row.id, row, NOW);
       const { task } = await registered(repos);
       const job = new JobSpend(new DurableSpendHolds({ budget: repos.budget, table: repos.spendHolds, now: () => NOW }),
         `ordinary-held:${scenario}`, OBLIGATION.id, { sends: [], areas: [{ key: "area:ordinary", label: "ordinary budget",
@@ -253,6 +256,7 @@ async function ordinaryWorkerProcesses() {
   assert.equal(dirname(resolve(root)), resolve(tmpdir()));
   try {
     const repos = await createFileRepositories(root);
+      for (const row of playbookRows) await repos.fieldManual.put(row.id, row, NOW);
     const { task } = await registered(repos);
     const pids: number[] = [];
     let opened = 0, vaulted = 0;
@@ -407,7 +411,7 @@ function executorWith(
   } = {},
 ) {
   const results: ScoutResult[] = [];
-  const exec = scoutExecutor({
+  const exec = scoutExecutor({ playbookFor: fixtureRolePlaybook,
     transport,
     refusedBeforeSending: opts.refusedBeforeSending,
     ...(opts.minRungs !== undefined ? { minRungs: opts.minRungs } : {}),
@@ -475,7 +479,7 @@ test("the runner's exact Scout hold reaches disposed and aborted cost rows witho
 test("context assembly failure records a durable zero before any toolkit or provider request", async () => {
   const { repos, task } = await registered();
   let toolkitCalls = 0, providerCalls = 0, startCalls = 0;
-  const exec = scoutExecutor({
+  const exec = scoutExecutor({ playbookFor: fixtureRolePlaybook,
     now: () => NOW,
     contextFor: () => { throw new TypeError("r.nextRungs.join is not a function"); },
     toolkitFor: () => { toolkitCalls++; return fakeToolkit(); },
@@ -504,7 +508,7 @@ test("context assembly failure records a durable zero before any toolkit or prov
 
 test("a later toolkit construction failure remains unpriced and cannot release an unknown hold", async () => {
   const { repos, task } = await registered();
-  const exec = scoutExecutor({ now: () => NOW,
+  const exec = scoutExecutor({ playbookFor: fixtureRolePlaybook, now: () => NOW,
     contextFor: () => ({ route: null, providerId: "test", reason: "test", inherited: { artifactIds: [], summary: "" },
       tools: { vault: async () => ({ stored: true, where: "x", why: "test" }), spaceOut: async () => undefined } }),
     toolkitFor: () => { throw new Error("unknown toolkit construction failure"); },
@@ -527,9 +531,9 @@ test("a recorded Admin Send carries its selected questions into the actual Scout
   const { repos, task } = await registered(createMemoryRepositories(), obligation);
   await dispatchOne(repos, { obligation: scheduledFixture(obligation, NOW_MS), routeTaskId: task.id, holder: "test", now: NOW, leaseTtlMs: 60_000, maturity: () => "UNGRADUATED", executor: exec, decision: { kind: "BOUNDED_MODEL_WORKER", why: "source investigation", disagreement: null } });
   const sent = JSON.stringify(transport.requests[0]?.messages);
-  assert.match(sent, /OWNER'S QUESTION ANYTHING_MISSING/);
-  assert.match(sent, /OWNER'S QUESTION READER_CAN_SEE/);
-  assert.match(sent, /real reader link and public readback/);
+  assert.match(sent, /Is anything missing from it/);
+  assert.match(sent, /Can a reader actually see it/);
+  assert.doesNotMatch(sent, /READER_CAN_SEE/);
   assert.doesNotMatch(sent, /OWNER'S QUESTION CONSISTENT/);
 });
 
@@ -656,7 +660,7 @@ test("3. SEEDED: a candidate citing an artifact nobody vaulted is refused; a vau
   assert.ok(missingList.some((i) => i.code === "SCOUT_RUNG_LIST_MISSING"), "a walked rung not accounted for is refused");
 });
 
-test("4. SEEDED: an early NO_PROGRESS below the rung minimum is refused, ABORTS, and its cost reaches the ledger", async () => {
+test("4. SEEDED: NO_PROGRESS can finish after one evidence-backed route and its cost reaches the ledger", async () => {
   const { repos, task } = await registered();
   const toolkit = fakeToolkit();
   const transport = scriptedTransport([
@@ -675,9 +679,9 @@ test("4. SEEDED: an early NO_PROGRESS below the rung minimum is refused, ABORTS,
     executor: exec,
   });
   assert.equal(result.outcome, "FAILED");
-  assert.match(result.detail, /SCOUT_EARLY_ABSENCE|SCOUT_NO_FINISH/);
+  assert.match(result.detail, /SCOUT_NO_PROGRESS/);
+  assert.equal(results[0].refusal, null, "a valid finish is accepted without a rung minimum");
   assert.equal(results[0].distinctEvidenceRungs, 1);
-  assert.ok(MIN_DISTINCT_RUNGS > 1);
   const attempt = (await attemptsForRouteTask(repos, task.id)).at(-1)!.value;
   assert.equal(attempt.outcome, "ABORTED");
   assert.equal(attempt.worker.role, "SCOUT");
@@ -1457,7 +1461,7 @@ test("17. SEEDED (iv): a rung a prior Attempt recorded as durably FAILED is not 
   assert.match(brief, /^RUNGS ALREADY WALKED/, "a resumed Attempt lists the recorded rungs FIRST");
   assert.match(brief, /FAILED, durable/);
   assert.match(brief, /NEXT RUNGS THE PRIOR INVESTIGATION NAMED[\s\S]*open-data-portal/);
-  assert.match(brief, /Continue the ladder/);
+  assert.match(brief, /Continue from the useful leads/);
 });
 
 test("17b. a rung a prior Attempt refused for robots.txt alone (before 2026-09-25) is re-walkable: never durable, labelled walkable in the brief, and it reaches the toolkit; an access-control wall stays durable", async () => {

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { contentHash } from "../lib/control-plane/ids.ts";
 import { usdForModelUsage } from "../lib/control-plane/model-cost.ts";
-import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { createMemoryRepositories } from "./helpers/playbooks.ts";
 import { assertStepMayInvokeModel } from "../lib/control-plane/scheduler/model-routing.ts";
 import { ModelTransportError, type ModelRequest, type ModelResponse, type ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { AUDIT_CONTEXT_MAX_BYTES, AUDIT_RESPONSE_MAX_BYTES, auditReasoningContext, modelAuditReasoner as createAuditReasoner } from "../lib/control-plane/workers/model-audit.ts";

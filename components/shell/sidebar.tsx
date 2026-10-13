@@ -72,7 +72,7 @@ export function Sidebar({
       <div className="sidebar-header">
         <div className="brand">
           <span className="brand-name">
-            <Logo variant="wordmark" size={34} />
+            <Logo variant="wordmark" size={38} />
           </span>
           <span className="mw-brand-actions">
             <ThemeToggle className="theme-toggle-btn" />

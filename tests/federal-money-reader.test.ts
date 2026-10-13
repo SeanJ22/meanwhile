@@ -5,7 +5,8 @@ import { join } from "node:path";
 import test from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { FederalMoneySection } from "../components/funding/federal-money-section.tsx";
+import { FederalMoneySection, federalMoneyGaps } from "../components/funding/federal-money-section.tsx";
+import { Card } from "../components/ui/card.tsx";
 import { parseFederalMoney } from "../lib/federal-money/parse.ts";
 import { joinFederalMoneyFacts } from "../lib/federal-money/join.ts";
 import { federalMoneyCounts } from "../lib/federal-money/candidate.ts";
@@ -49,12 +50,15 @@ test("real OpenFEMA declaration reaches the county card and Ask with the same da
     assert.equal(rows[0].relationship, "GEOGRAPHY");
     assert.equal(federalMoneySources(rows)[0].provenance.kind, "OFFICIAL");
     assert.match(federalMoneySources(rows)[0].what, /published 2026-09-15/);
-    const markup = renderToStaticMarkup(createElement(FederalMoneySection, { divisionId: COUNTY, bodyId: BODY, data: read }));
+    const markup = renderToStaticMarkup(createElement(Card, { title: "Ouachita County", sources: federalMoneySources(rows),
+      children: createElement(FederalMoneySection, { divisionId: COUNTY, bodyId: BODY, data: read }) }));
     assert.match(markup, /BUNKER FIRE/);
     assert.match(markup, /Public assistance: Yes/i);
     assert.match(markup, /published.*2026-09-15/i);
     assert.match(markup, /Sources/);
-    assert.match(markup, /working on getting this info/i, "three unrecorded sources retain their coverage gap");
+    assert.deepEqual(federalMoneyGaps(read, { divisionId: COUNTY, bodyId: BODY }).map(gap => gap.label).sort(),
+      ["federal audit findings", "federal grants, contracts and loans", "federal registration"], "three unrecorded sources retain their coverage gap");
+    assert.doesNotMatch(markup, /working on getting this info/i, "a missing source is a card gap, never a field placeholder");
     const evidence = await federalMoneyEvidence([{ divisionId: COUNTY, bodyId: BODY }], BODY, { now: NOW });
     const subject = { kind: "BODY" as const, id: BODY, name: "Ouachita County" };
     assert.equal(evidence.records.length, 1);

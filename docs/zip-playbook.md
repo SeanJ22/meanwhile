@@ -1430,28 +1430,25 @@ title, a body name, a jurisdiction:** stack it. Do not tune the width.
 Measure it with `lab.scrollWidth > lab.clientWidth`, which is what "overflows
 its box" looks like as a number.
 
-### The .gov registry is a rung, never a denominator (2026-08-16)
+### The .gov registry supplies official links and acquisition routes
 
-`cisagov/dotgov-data`'s `current-full.csv` is the cheapest first rung in any
-hunt for a body's own publications: 16,501 domains with the registrant's own
-organization name and CISA's own `Domain type`. **693 of them are typed as
-election offices** — City 332, County 288, State or territory 36, Special
-district 33, Tribal 4 — and that is the named rung for a ballot or
-candidate-filing hunt in a county nobody has worked before. Committed at
-`data/dotgov/snapshot.json`, SHA-pinned, `pnpm dotgov:fetch`.
+`cisagov/dotgov-data` publishes `current-full.csv` with every domain's registrant
+organization, state and CISA `Domain type`. The monthly `dotgov` contract resolves
+a commit and retains every row at that SHA. The 2026-10-12 source fixture has
+16,876 domains, including 719 election-typed domains.
 
-**Use CISA's `Domain type`, never a name match.** A name match on "vote" or
-"election" would sweep in a town called Election and miss every secretary of
-state; the registry already classified these and reading its answer is both
-cheaper and right.
+The typed `readDotGovProjection` Reader and `government-domains` edge family serve
+this registry to government listings. A registrant attaches only to a unique
+established government name and state under the existing identity rules. Ambiguous
+and unmatched domains remain unattached. Census websites stay separately sourced.
 
-**It is a list of DOMAINS and it is never a coverage denominator.** A
-government with no .gov domain is absent from it entirely — small towns,
-school districts and special districts routinely publish on a `.org`, a
-`.us`, a vendor subdomain, or a Facebook page — so counting .gov domains
-would undercount exactly the bodies hardest to cover, which is the Sunnyside
-class of miss. One government may hold several domains; a domain is not a
-body. M still comes from the Census of Governments and the official rosters.
+Use CISA's election type for ballot and candidate-filing acquisition routes.
+Searching names for "vote" or "election" does not replace that classification.
+
+The registry is a list of domains, never a government coverage denominator. A
+government with no .gov domain is absent, one government may hold several domains,
+and a domain is not a body. The denominator continues to come from the Census of
+Governments, NCES and official rosters.
 
 ### A CSS state class must BEAT the base class, not merely differ from it
 

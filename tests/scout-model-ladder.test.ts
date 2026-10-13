@@ -1,3 +1,6 @@
+import { rolePlaybook } from "../lib/control-plane/playbooks.ts";
+import { playbookRows } from "./helpers/playbooks.ts";
+import { fixtureRolePlaybook } from "./helpers/playbooks.ts";
 /**
  * The Scout's model ladder: cheapest suitable class first, the frontier only
  * for a recorded reason.
@@ -199,7 +202,7 @@ async function runLadder(input: {
   const bound: ScoutBound = { ...RESEARCH_BOUNDS.perDispatch, ...(input.bound ?? {}) };
   const toolkit = fakeToolkit();
   const results: ScoutResult[] = [];
-  const exec = scoutExecutor({
+  const exec = scoutExecutor({ playbookFor: fixtureRolePlaybook,
     transport: input.transport, refusedBeforeSending:error=>error instanceof FleetPreSendRefusal,
     ...(input.model !== undefined ? { model: input.model } : { model: SONNET }),
     ...(input.reserveEscalation !== undefined ? { reserveEscalation: input.reserveEscalation } : {}),
@@ -269,7 +272,7 @@ test("L1: acquisition starts with Haiku, with adaptive thinking and the Scout's 
     assert.deepEqual(cacheTtlOrderProblems(request), []);
   }
   assert.equal(minimumCacheablePrefixTokensFor(HAIKU), 512);
-  const prewarm = scoutPrewarmPlan({ toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
+  const prewarm = scoutPrewarmPlan({ playbook: rolePlaybook(playbookRows, "SCOUT").text, toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
   assert.equal(prewarm.kind, "SEND", "the full direct-API toolkit now clears Haiku's cache minimum");
   if (prewarm.kind === "SEND") assert.ok(prewarm.prefixTokensAtLeast >= minimumCacheablePrefixTokensFor(HAIKU)!);
   assert.equal(result.modelClass, "haiku");
@@ -518,7 +521,7 @@ test("L5 UNMEASURED_SPEND / NOT_RESERVED: each refusal is named, recorded, and s
 
 
 test("L6: the pre-warm warms the model the loop STARTS on — byte-identical to the loop's first request — and is skipped by name when the prefix cannot be shown to cache", async () => {
-  const plan = scoutPrewarmPlan({ model: SONNET, toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
+  const plan = scoutPrewarmPlan({ playbook: rolePlaybook(playbookRows, "SCOUT").text, model: SONNET, toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
   assert.equal(plan.kind, "SEND");
   if (plan.kind !== "SEND") return;
   assert.equal(plan.model, SONNET);
@@ -533,7 +536,7 @@ test("L6: the pre-warm warms the model the loop STARTS on — byte-identical to 
     captured.push(request);
     throw new ModelTransportError("captured", null);
   };
-  const exec = scoutExecutor({
+  const exec = scoutExecutor({ playbookFor: fixtureRolePlaybook,
     transport: capture,
     model: SONNET,
     toolkitFor: () => ({ specs: SCOUT_TOOL_SPECS, vaultedArtifactIds: new Set(), requestCount: 0, bytesFetched: 0, toolCalls: 0, call: async () => { throw new Error("no tools"); } }),
@@ -548,16 +551,16 @@ test("L6: the pre-warm warms the model the loop STARTS on — byte-identical to 
   assert.deepEqual(captured[0].output_config, plan.request.output_config, "the same effort, so the warmed entry is the one read");
 
   /* A small toolkit does not clear a 4,096-token minimum (the historical Haiku 4.5 row), so no paid call is made. */
-  const older = scoutPrewarmPlan({ toolkitSpecs: [], bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS, model: "claude-haiku-4-5" });
+  const older = scoutPrewarmPlan({ playbook: rolePlaybook(playbookRows, "SCOUT").text, toolkitSpecs: [], bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS, model: "claude-haiku-4-5" });
   assert.equal(older.kind, "SKIP");
   assert.equal(older.kind === "SKIP" ? older.code : null, "BELOW_CACHE_MINIMUM");
   assert.match(older.kind === "SKIP" ? older.detail : "", /4096-token cacheable minimum/);
   /* Haiku 5.5's 512-token minimum is cleared even with no research tools. */
-  assert.equal(scoutPrewarmPlan({ toolkitSpecs: [], bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS, model: HAIKU }).kind, "SEND");
+  assert.equal(scoutPrewarmPlan({ playbook: rolePlaybook(playbookRows, "SCOUT").text, toolkitSpecs: [], bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS, model: HAIKU }).kind, "SEND");
   /* Opus 5.5's 512-token minimum is cleared even with no research tools: the executor's own tools and system suffice. */
-  const bareOpus = scoutPrewarmPlan({ toolkitSpecs: [], bound: RESEARCH_BOUNDS.perDispatch, minRungs: 1, model: OPUS });
+  const bareOpus = scoutPrewarmPlan({ playbook: rolePlaybook(playbookRows, "SCOUT").text, toolkitSpecs: [], bound: RESEARCH_BOUNDS.perDispatch, minRungs: 1, model: OPUS });
   assert.equal(bareOpus.kind, "SEND");
-  const unknown = scoutPrewarmPlan({ toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS, model: "claude-unrated-9" });
+  const unknown = scoutPrewarmPlan({ playbook: rolePlaybook(playbookRows, "SCOUT").text, toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS, model: "claude-unrated-9" });
   assert.equal(unknown.kind === "SKIP" ? unknown.code : null, "CACHE_MINIMUM_UNKNOWN");
 
   /* A skipped pre-warm is named on the cycle's cost digest, never shown as a warm one. */

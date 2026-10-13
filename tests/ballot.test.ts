@@ -43,46 +43,15 @@ test("the NJ date strip is complete and cited", () => {
   assert.match(dates.sourceUrl, /^https:\/\/www\.nj\.gov\//);
 });
 
-test("item 6: every covered state points at its own official polling-place lookup", async () => {
+test("polling lookup routes come from the held projection, without a literal state list", async () => {
   const { POLLING_PLACE_LINKS, pollingPlaceLinkFor } = await import(
     "../lib/ballot/polling-place-links.ts"
   );
-  const { REGISTRATION_LINKS } = await import(
-    "../lib/ballot/registration-links.ts"
-  );
+  assert.deepEqual(POLLING_PLACE_LINKS, []);
+  assert.equal(pollingPlaceLinkFor("OH", []), null);
 
-  // Every state we can render a ballot for gets the pointer.
-  for (const reg of REGISTRATION_LINKS) {
-    const link = pollingPlaceLinkFor(reg.state);
-    assert.ok(link, `${reg.state} has a registration link but no polling-place link`);
-  }
+  for (const state of ["AZ", "NJ", "NH", "OH"]) assert.equal(pollingPlaceLinkFor(state), null);
 
-  const hosts = new Set<string>();
-  for (const link of POLLING_PLACE_LINKS) {
-    const url = new URL(link.url);
-    assert.equal(url.protocol, "https:", `${link.state} link is not https`);
-    // The authority's own host — never an aggregator, never a third party.
-    assert.match(
-      url.hostname,
-      /(\.gov|\.arizona\.vote)$/,
-      `${link.state} points at ${url.hostname}, which is not an election authority's host`,
-    );
-    // A cited URL must have been fetched and verified, and the sentence must say which rung answered.
-    assert.ok(link.verification.length > 40, `${link.state} verification is too thin`);
-    assert.match(link.verifiedAt, /^\d{4}-\d{2}-\d{2}$/);
-    assert.ok(link.sourceOrg.length > 0);
-    // Plain words on the reader-facing line — no identifiers, no jargon.
-    assert.match(link.label, /^Find your polling place$/);
-    assert.ok(link.note.length > 0, `${link.state} must say what the tool asks for`);
-    hosts.add(`${link.state}|${url.href}`);
-  }
-  // Distinct states resolve to distinct URLs — the uniqueness invariant.
-  assert.equal(hosts.size, POLLING_PLACE_LINKS.length);
-  assert.equal(
-    new Set(POLLING_PLACE_LINKS.map((l) => l.url)).size,
-    POLLING_PLACE_LINKS.length,
-    "two states share one polling-place URL",
-  );
 });
 
 /** The pointer is required once per page, in the dates header: a reader must always find it, and a repeated identical control reads worse. */

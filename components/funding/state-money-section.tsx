@@ -6,7 +6,7 @@ import { CardSourcesContribution } from "@/components/ui/card-sources-contributi
  * (filtered in `stateMoneyForTarget`); never characterises.
  */
 
-import { WorkingOnIt } from "@/components/demand/working-on-it";
+import { CardGapContribution } from "@/components/ui/card-gap-context";
 import type { StateMoneyRecord } from "@/lib/funding/state-money";
 import { stateMoneyRecordsForDisplay } from "@/lib/funding/state-money-reader";
 import { ReactionControl } from "@/components/reactions/reaction-control";
@@ -138,40 +138,12 @@ function AbsentRecord({ record }: { record: StateMoneyRecord }) {
   );
 }
 
-/**
- * A candidate we investigated but could not safely attribute. No money and no
- * committee name may appear here: only what is unsettled, the agency's next
- * filing deadline, and the reader's route to look.
- */
+/** Unresolved attribution contributes to the card's single gap line. */
 function OurGapRecord({ record }: { record: StateMoneyRecord }) {
-  const gap = record.ourGap;
-  return (
-    <div className="mt-3 first:mt-0">
-      <AgencyLine record={record} />
-      <WorkingOnIt />
-      <p className="mt-1 t-detail text-muted-foreground">
-        {gap?.whatIsMissing ??
-          "The agency holds a record we could not confirm belongs to this candidacy."}{" "}
-       
-        {/* The apostrophe is a literal character: an entity in a template string renders as text. */}
-        {gap?.nextDue
-          ? ` We check again after the agency’s next filing deadline, ${readableDate(gap.nextDue)}.`
-          : ""}{" "}
-      </p>
-      {record.filingsUrl ? (
-        <p className="mt-2 t-detail text-muted-foreground">
-          <a
-            href={record.filingsUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="underline underline-offset-2"
-          >
-            Search the {record.agency}&rsquo;s public filings
-          </a>
-        </p>
-      ) : null}
-    </div>
-  );
+  return <>
+    <AgencyLine record={record} />
+    <CardGapContribution id={`state-money:${record.targetKeys.join("|")}`} label="campaign money" />
+  </>;
 }
 
 export function StateMoneySection({

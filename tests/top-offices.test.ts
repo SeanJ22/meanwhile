@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { TOP_OFFICES_GAP, topOfficesFor } from "../lib/officials/top-offices.ts";
+import { topOfficesFor } from "../lib/officials/top-offices.ts";
 import { BODY_ROSTERS } from "../lib/registry/body-rosters.ts";
 
 const h = (id: string, name: string, officeTitle: string) =>
@@ -95,15 +95,8 @@ test("F01 1.2: a body with a Mayor AND a Council President shows both", () => {
   assert.deepEqual(top.map((t) => t.holder.name), ["The Mayor", "The President"]);
 });
 
-test("F01 1.2: nothing sourced returns nothing, and the gap line is OURS", () => {
+test("F01 1.2: nothing sourced returns no officeholders", () => {
   assert.deepEqual(topOfficesFor([]), []);
-  // A body always has someone presiding; the absence is a fact about our
-  // research, and the sentence says so.
-  assert.match(TOP_OFFICES_GAP, /We haven’t sourced/);
-  assert.ok(
-    !/no leader|has none|does not have/i.test(TOP_OFFICES_GAP),
-    "the gap line must never make a claim about the body",
-  );
 });
 
 test("F01 1.2: every curated roster resolves at least a presiding officer", () => {

@@ -230,6 +230,8 @@ export type StreetLookup =
   | { kind: "NOT_FOUND" };
 
 export interface GeocodeOptions {
+  /** Postal entry supplies city/state instead of treating a mail-only ZIP as a residential boundary. */
+  omitZip?: boolean;
   fetchImpl?: typeof fetch;
   signal?: AbortSignal;
   /** The reader is waiting on this; a slow answer is a no answer. */
@@ -278,7 +280,7 @@ async function sampleStreet(
     options.signal?.addEventListener("abort", onOuterAbort);
     try {
       const point = await geocodeOnce(
-        `${number} ${cleaned}, ${zip}`,
+        `${number} ${cleaned}${options.omitZip ? "" : `, ${zip}`}`,
         impl,
         controller.signal,
       );
@@ -389,7 +391,7 @@ export async function locateAddressInZip(
   options.signal?.addEventListener("abort", onOuterAbort);
   try {
     const point = await geocodeOnce(
-      `${number} ${cleaned}, ${zip}`,
+      `${number} ${cleaned}${options.omitZip ? "" : `, ${zip}`}`,
       impl,
       controller.signal,
     );

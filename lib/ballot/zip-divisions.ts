@@ -1,4 +1,6 @@
 import { zipDivisionEntry } from "../geo/zip-division-index.ts";
+import { zipNeedsAddress } from "../geo/postal.ts";
+import { isTownOrCountyDivision } from "../geo/postal-core.ts";
 import type { GeographySelection } from "../census-geography/selection.ts";
 
 /**
@@ -16,6 +18,9 @@ export async function divisionIdsForZipArea(
   const out = new Set(pointDivisionIds);
   if (!zip || !/^\d{5}$/.test(zip)) return [...out];
   const entry = await zipDivisionEntry(zip, selection);
+  if (zipNeedsAddress(zip)) {
+    return [...new Set([...pointDivisionIds, ...(entry?.ids ?? [])].filter(isTownOrCountyDivision))];
+  }
   // A qualified area family supersedes stale centroid assignments for that
   // family. The centroid remains orientation data for unrelated local layers.
   for (const family of ["cd", "sldu", "sldl"]) {

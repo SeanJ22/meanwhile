@@ -12,6 +12,8 @@ import { readFileSync, readdirSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { GeographySelection } from "../census-geography/selection.ts";
+import { postalArea, zipNeedsAddress } from "./postal.ts";
+import { isTownOrCountyDivision } from "./postal-core.ts";
 
 export interface ZipDivisionEntry {
   /** Every division whose territory reaches inside this ZIP. */
@@ -72,11 +74,21 @@ function entryOf(shard: Shard, zip: string): ZipDivisionEntry | null {
 /** A ZIP's divisions, or null when it is not indexed or its shard could not be read — our gap, never a claim about the place. */
 export async function zipDivisionEntry(zip: string | null, selection?: GeographySelection): Promise<ZipDivisionEntry | null> {
   if (zip === null || !/^\d{5}$/.test(zip)) return null;
+  // A mail-only ZIP opens its place, with no residential district membership.
+  const area = postalArea(zip);
+  const lookupZip = area?.zcta ?? zip;
+  if (zipNeedsAddress(zip)) {
+    const shard = await shardFor(zipShardOf(lookupZip));
+    const entry = shard === null ? null : entryOf(shard, lookupZip);
+    if (!entry) return null;
+    const ids = entry.ids.filter(isTownOrCountyDivision);
+    return { ids, partial: ids.filter(id => id.split("/").length > 3), samples: 0 };
+  }
   const { publishedZipDistricts, withCensusDistricts } = await import("./zip-census-districts.ts");
-  const [shard, districts] = await Promise.all([shardFor(zipShardOf(zip)), publishedZipDistricts(zip)]);
-  const entry = shard === null ? null : entryOf(shard, zip);
+  const [shard, districts] = await Promise.all([shardFor(zipShardOf(lookupZip)), publishedZipDistricts(lookupZip)]);
+  const entry = shard === null ? null : entryOf(shard, lookupZip);
   const base = entry ?? { ids: [], partial: [], samples: 0 };
-  const qualified = withCensusDistricts(base, districts, zip, selection);
+  const qualified = withCensusDistricts(base, districts, lookupZip, selection);
   return entry === null && qualified.ids.length === 0 ? null : qualified;
 }
 

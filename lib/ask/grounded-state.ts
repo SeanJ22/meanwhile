@@ -1,3 +1,5 @@
+import { askSettings } from "./runtime-settings.ts";
+import { ASK_GROUNDED_CAP_SETTING } from "./model.ts";
 import type { interpretQuestion } from "./interpret.ts";
 import { BoundedTtlCache } from "./model-result-cache.ts";
 import type { LadderResult } from "./synthesize.ts";
@@ -8,8 +10,8 @@ let spentOn = "";
 let spent = 0;
 
 function ceiling(): number {
-  const raw = Number(process.env.WTP_ASK_GROUNDED_DAILY_MAX);
-  return Number.isFinite(raw) && raw > 0 ? Math.floor(raw) : DAILY_MAX;
+  const raw = askSettings()[ASK_GROUNDED_CAP_SETTING];
+  return typeof raw === "number" && Number.isSafeInteger(raw) && raw >= 0 ? raw : DAILY_MAX;
 }
 
 export function allowCall(): boolean {

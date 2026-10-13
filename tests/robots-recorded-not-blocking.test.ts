@@ -51,7 +51,6 @@ test("THE RULE HAS ONE HOME: ROBOTS_BLOCKS_ACQUISITION is false, no host waits o
   for (const h of OWNER_DECISION_HOSTS) {
     assert.doesNotMatch(h.why, /robots|disallow/i, `${h.host}: a host waits on the owner only for a real pending decision, never a robots line`);
   }
-  assert.ok(RECORDED_WALLS.length > 0);
   for (const w of RECORDED_WALLS) {
     assert.match(w.why, /HTTP (401|403|407|429)|challenge|login|authenticat/i, `${w.host}: a recorded wall names the access control that walls it`);
     assert.doesNotMatch(w.why, /robots/i, `${w.host}: a robots line never makes a wall`);

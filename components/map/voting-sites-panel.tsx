@@ -1,15 +1,15 @@
 "use client";
 
+import { Card } from "@/components/ui/card";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
-import { WorkingOnIt } from "@/components/demand/working-on-it";
+import { CardGapContribution } from "@/components/ui/card-gap-context";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
-import { MapPin, X } from "lucide-react";
+import { MapPin } from "lucide-react";
 
 import { PLACEHOLDER_ADDRESS } from "@/lib/ballot/placeholder-address";
 import {
   directionsUrl,
   isPinnable,
-  UNPLACED_SITE_LINE,
   type VotingSite,
   type VotingSitesAnswer,
   milesLabel,
@@ -123,19 +123,7 @@ export function VotingSitesPanel({
       aria-label={embedded ? undefined : "Where can I vote"}
       aria-modal={embedded ? undefined : "false"}
     >
-      {!embedded && (
-      <header className="voting-panel-head">
-        <h2 className="voting-panel-title">Where can I vote?</h2>
-        <button
-          type="button"
-          className="voting-panel-close"
-          onClick={onClose}
-          aria-label="Close"
-        >
-          <X aria-hidden size={16} />
-        </button>
-      </header>
-      )}
+      <Card title="Where can I vote?" titleVisible={!embedded} onClose={embedded ? undefined : onClose} sources={[]} className={embedded ? "[&>.reader-card-header]:sr-only [&>.reader-card-body]:p-0" : undefined}>
 
       <form onSubmit={submit} className="voting-panel-form">
         <label htmlFor={inputId} className="voting-panel-label">
@@ -185,9 +173,7 @@ export function VotingSitesPanel({
       {state.kind === "answered" &&
         state.answer.match &&
         state.answer.outsideCoverage && (
-          <p className="voting-panel-status">
-            <WorkingOnIt inline />
-          </p>
+          <CardGapContribution id="voting-locations" label="voting locations for this address" />
         )}
 
       {state.kind === "answered" && state.answer.googleFallback?.available && !state.answer.googleFallback.requested && (
@@ -200,6 +186,7 @@ export function VotingSitesPanel({
       {state.kind === "answered" && state.answer.googleFallback?.message && <p className="voting-panel-note">{state.answer.googleFallback.message}</p>}
 
       {state.kind === "answered" && <VotingJurisdictionRecords answer={state.answer} selectedSiteId={selectedSiteId} onSelectSite={onSelectSite} />}
+      </Card>
     </section>
   );
 }
@@ -241,7 +228,7 @@ export function VotingJurisdictionRecords({ answer, selectedSiteId, onSelectSite
               {j.office.email && <p>Email: <a href={`mailto:${j.office.email}`}>{j.office.email}</a></p>}
               {j.office.address && <p>{j.office.address}</p>}
             </div>}
-            {j.blanks?.length ? <p className="voting-site-gap">Still being gathered: {[...new Set(j.blanks.map(blank => blank.owed))].join("; ")}</p> : null}
+            {j.blanks?.map(blank => <CardGapContribution key={blank.id} id={`voting-owed:${blank.id}`} label={blank.owed} />)}
             {j.election && j.publication?.status !== "NO_GENERAL_ELECTION" && (
               <p className="voting-election">
                 Published for the {j.election}.
@@ -324,8 +311,8 @@ function SiteRow({
         <MapPin aria-hidden size={14} className="voting-site-icon" />
         <span className="voting-site-name">{site.name}</span>
       </button>
-      <p className="voting-site-address">{site.address}</p>
-      {/* A null distance renders nothing; an unplaced site carries its own gap below. */}
+      {site.address && <p className="voting-site-address">{site.address}</p>}
+      {/* A null distance renders nothing; map gaps join the card footer. */}
       {miles !== null && <p className="voting-site-distance">{milesLabel(miles)}</p>}
       {site.room && <p className="voting-site-room">{site.room}</p>}
       <p className="voting-site-kind">{KIND_LABEL[site.kind]}</p>
@@ -334,29 +321,22 @@ function SiteRow({
       {site.precinct && <p className="voting-site-serves">Precinct: {site.precinct}</p>}
       {site.serves && <p className="voting-site-serves">{site.serves}</p>}
       {site.days && <p className="voting-site-days">Days: {site.days}</p>}
-      {site.hours ? <p className="voting-site-hours whitespace-pre-line">Hours: {site.hours}</p> : <p className="voting-site-gap">Hours are still being gathered.</p>}
+      {site.hours ? <p className="voting-site-hours whitespace-pre-line">Hours: {site.hours}</p> : <CardGapContribution id={`voting-hours:${site.id}`} label="hours" unit="voting location" />}
       {site.locationNotes && <p className="voting-site-notes">{site.locationNotes}</p>}
       {site.accessibilityNotes && <p className="voting-site-accessibility">Accessibility: {site.accessibilityNotes}</p>}
       {site.rules?.map((rule, index) => <p className="voting-rule" key={`${rule.source.url}-${index}`}>{rule.text}</p>)}
       {site.office && <p className="voting-site-office">{site.office.name}{site.office.phone ? ` — ${site.office.phone}` : ""}{site.office.email ? ` — ${site.office.email}` : ""}</p>}
-      {/* An unlabeled row is not evidence a location is open for the next election. */}
-      {site.election === null && !site.electionDate && (
-        <p className="voting-site-gap">
-          The authority did not say which election this location is for.
-        </p>
-      )}
-      {!confirmed && <p className="voting-site-gap">This location has not yet been confirmed for {requestedElection ? `the ${requestedElection} election` : "the upcoming election"}. We are still showing the publisher&rsquo;s list while we check for an update.</p>}
-      {!isPinnable(site) && (
-        <p className="voting-site-gap">{UNPLACED_SITE_LINE}</p>
-      )}
-      <a
+      {site.election === null && !site.electionDate && <CardGapContribution id={`voting-election:${site.id}`} label="election dates" unit="voting location" kind="not-posted" />}
+      {!confirmed && <CardGapContribution id={`voting-confirmation:${site.id}`} label={`${requestedElection ?? "Upcoming"} election confirmation`} unit="voting location" />}
+      {!isPinnable(site) && <CardGapContribution id={`voting-map:${site.id}`} label="map locations" unit="voting location" />}
+      {site.address && <a
         className="voting-site-directions"
         href={directionsUrl(site)}
         target="_blank"
         rel="noreferrer noopener"
       >
         Directions
-      </a>
+      </a>}
     </li>
   );
 }

@@ -20,6 +20,8 @@ export interface ZipDivisionEntry {
   readonly partial: readonly string[];
   /** Lattice sample points inside this ZCTA. Zero means unmeasured. */
   readonly samples: number;
+  /** State/families replaced by qualified Census ZIP rows, such as az/sldu. */
+  readonly qualifiedDistricts?: readonly string[];
 }
 
 interface Shard {

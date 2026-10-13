@@ -246,6 +246,20 @@
       "when": 1790889600000,
       "tag": "0034_reader_events",
       "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "7",
+      "when": 1790889600001,
+      "tag": "0035_pb01_retire_playbooks",
+      "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1790889600002,
+      "tag": "0036_pb01_role_playbooks",
+      "breakpoints": true
     }
   ]
 }

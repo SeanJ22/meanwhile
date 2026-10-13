@@ -96,11 +96,7 @@ export function stateLegislatorCoverageAuthority(
   };
 }
 
-/** Reader-facing distinction for the two empty-roster failure domains. */
-export {
-  stateLegislatorCoverageGapText,
-  WIRED_STATUSES,
-} from "./coverage-client.ts";
+export { WIRED_STATUSES } from "./coverage-client.ts";
 
 /**
  * A body covering the point. `divisionLabel` is the division's sourced name; the body's own name is
@@ -353,14 +349,16 @@ export function summarizeCoverage(
     };
   });
 
+  const rootLegislators = (d: Division) => stateOcdIdFrom(d.ocdId) === d.ocdId
+    ? holdersFor(officials, d.ocdId).filter(holder => holder.chamber === "upper" || holder.chamber === "lower") : [];
   const seats: Seat[] = divisions
-    .filter((d) => SEAT_TYPES.has(d.divisionType) || d.tier === "local" && holdersFor(officials, d.ocdId).length > 0)
+    .filter((d) => SEAT_TYPES.has(d.divisionType) || rootLegislators(d).length > 0 || d.tier === "local" && holdersFor(officials, d.ocdId).length > 0)
     .map((d) => ({
       ocdId: d.ocdId,
       label: d.label,
       divisionType: d.divisionType,
       tier: d.tier,
-      representatives: d.tier === "local"
+      representatives: stateOcdIdFrom(d.ocdId) === d.ocdId ? rootLegislators(d) : d.tier === "local"
         ? heldDivisionRepresentatives(d.ocdId, holdersFor(officials, d.ocdId))
         : holdersFor(officials, d.ocdId),
     }));

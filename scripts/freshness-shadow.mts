@@ -1,3 +1,6 @@
+import { readRolePlaybook } from "../lib/control-plane/playbooks.ts";
+import { ensureReaderSettingsPublished, publishAskPlaybooks } from "../lib/civic-data/reader-settings-publication.ts";
+import "../lib/ask/model.ts";
 import { backgroundBatchTransport } from "../lib/control-plane/model-batch.ts";
 import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
 import { runLeaseWorkerProcesses, workerDispatchFailure, workerProcessSlots } from "../lib/control-plane/workers/process-pool.ts";
@@ -159,7 +162,11 @@ import {
   paidDiscoveryHold,
   parseMeetingsDiscoveryId,
 } from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
-import { preloadRegistrationJurisdictions, stateOfJurisdictionId } from "../lib/registration/jurisdictions.ts";
+import { loadRegistrationJurisdictions, preloadRegistrationJurisdictions, stateOfJurisdictionId } from "../lib/registration/jurisdictions.ts";
+import { REGISTRATION_TARGETS } from "../lib/registration/publication.ts";
+import { readRegistrationProjection } from "../lib/registration/reader.ts";
+import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { readPlatformCensusNeeds, refreshDotgovCensusLeads } from "../lib/control-plane/discovery/platform-census.ts";
 import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
 import {
   UNREAD_FREE_DISCOVERY_WALKS,
@@ -208,6 +215,7 @@ import {
   runMeetingsDiscovery,
   walkableByFreeWalk,
   type MeetingsDiscoveryPass,
+  type DiscoveryRuntime,
 } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
 import { knownRecipes, RECIPE_KIND } from "../lib/hunt/meetings-recipes.ts";
 import { runSpreadPass, sentMoneyPlaces, spreadLine } from "../lib/method/spread-pass.ts";
@@ -928,7 +936,7 @@ const corpusUnits = allUnits.map((u) => ({ providerId: u.providerId, obligationI
  * read before dispatch); a need that cannot be derived reads UNREAD, which
  * holds.
  */
-const dispatchedDiscoveryIds = sync.all.map((o) => o.id).filter((id) => id.startsWith(MEETINGS_DISCOVERY_NAMESPACE));
+const dispatchedDiscoveryIds = sync.all.filter(row => row.materializedBy === OWNER_DISPATCH).map((o) => o.id).filter((id) => id.startsWith(MEETINGS_DISCOVERY_NAMESPACE));
 const dispatchedDiscovery = materializedDiscoveryNeeds(dispatchedDiscoveryIds);
 /* A dispatched or mission need's address comes from the promoted jurisdiction reference, or its state's registration; it carries that version (NH330). */
 const withAddressSource = (e: { readonly need: MeetingsDiscoveryNeed; readonly reg: Parameters<typeof dispatchedAddressSource>[0] }): MeetingsDiscoveryNeed =>
@@ -1619,12 +1627,23 @@ let discoverySearchOn = false;
 let discoverySearchReceiptId: string | null = null;
 let discoverySearchDecision: string = "OFF: the owner has not allowed paid discovery search in Admin";
 let configRead: AdminConfigRead;
+let configRevision = 0;
 try {
-  configRead = { row: await repos.adminConfig.read(ADMIN_CONFIG_ID) };
+  const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  configRead = { row };
+  configRevision = row?.revision ?? 0;
 } catch (error) {
   configRead = { unreadable: error instanceof Error ? error.message : String(error) };
 }
 const { config, holdPaidWork: configHold } = adminConfigForPaidWork(configRead);
+if (!dry && ONLY === null && IDS === null) try {
+  const published = await Promise.all([
+    ensureReaderSettingsPublished(config, configRevision),
+    publishAskPlaybooks(repos),
+  ]);
+  if (published[0] === "behind" || !published[1]) runtimeConditions.push("Ask settings or instructions are waiting for publication.");
+} catch { runtimeConditions.push("Ask settings or instructions could not be published; the next round will try again."); }
+
 let ceilingOverrideUsd = fleetSpendCeilingOverrideUsd(config);
 discoverySearchOn = discoverySearchEnabled(config);
 if (config?.discoverySearch !== undefined && config.discoverySearch !== null) {
@@ -1776,8 +1795,10 @@ try {
 /* The ceiling in force and the paid-search switch were read above the lane closure. */
 
 const websiteSize = websiteSizeFromHoldings(trackedStateCodes, ROOT);
+let standingDiscoveryWebsiteSize: ReturnType<typeof websiteSizeFromHoldings> | null = null;
+const sizeForDiscovery = (url: string) => standingDiscoveryWebsiteSize?.(url) ?? websiteSize(url);
 const fleetSafety = new FleetSafetyController({
-  websiteSize,
+  websiteSize: sizeForDiscovery,
   now: NOW,
   costs: costLedger,
   spendHolds: historicalSpendHolds,
@@ -2646,9 +2667,10 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
   const at = nowIso();
   const started = Date.now();
   try {
+    const playbook = await readRolePlaybook(repos, "SCOUT");
     /* Warm the model the loop STARTS on, and only when its prefix can cache — else skip, by name, with no paid call. */
     /* The Attempts' own tool list: with `search` exactly when `scoutFor` hands the toolkit `scoutSearch`, so the entry warmed is the one read. */
-    const plan = scoutPrewarmPlan({ toolkitSpecs: scoutToolSpecsFor(scoutSearch !== null), bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
+    const plan = scoutPrewarmPlan({ playbook: playbook.text, toolkitSpecs: scoutToolSpecsFor(scoutSearch !== null), bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
     if (plan.kind === "SKIP") return { status: "SKIPPED", at, model: plan.model, code: plan.code, detail: plan.detail, durationMs: Date.now() - started };
     const { model, request } = plan;
     /*
@@ -2716,6 +2738,7 @@ const heldScoutFor = (scheduled: ScheduledObligation) => solvedScoutResult([...p
   scheduled.obligation.subjectId,scheduled.obligation.recordClass,scheduled.obligation.routeId);
 const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLaneEnabled || heldScoutFor(scheduled)!==null
   ? failureResponderExecutor({
+      playbookFor: role => readRolePlaybook(repos, role),
       solved:heldScoutFor(scheduled),
       sourceFailure:debtAtCycleStart.get(scheduled.obligation.id),
       sourceRoute:registry.routeFor(scheduled.obligation.id),
@@ -3350,11 +3373,10 @@ try {
 /*
  * **THE UNPAID MEETINGS-DISCOVERY EXECUTOR.**
  *
- * Walks the dispatched and mission-map meetings-discovery needs: robots first on every host,
+ * Walks every registered government's website, plus .gov domains, and dispatched or mission-map needs: robots first on every host,
  * no model, a find confirmed by content and recorded as a candidate
- * (`lib/control-plane/discovery/meetings-discovery-executor.ts`). OFF unless
- * WTP_MEETINGS_DISCOVERY is "on": it is a new production writer and new
- * outbound traffic, so it is inert until the owner's go.
+ * (`lib/control-plane/discovery/meetings-discovery-executor.ts`). It runs while paid search or model work is off.
+ * WTP_MEETINGS_DISCOVERY=off is the existing kill switch.
  *
  * It spends at most MEETINGS_DISCOVERY_BUDGET_MS, walks at most
  * MEETINGS_DISCOVERY_MAX_WALKS needs, and runs only in a full standing cycle.
@@ -3379,7 +3401,7 @@ const DISCOVERY_NO_PROGRESS_LIMIT = 5;
  */
 const runMeetingsDiscoveryPass = async (discoveryDeadlineMs: number, maxWalks: number): Promise<void> => {
   /* The owner's dispatch first, then every Send's mission map's calendar blanks, as read this wave. */
-  const discoveryToWalk = discoveryNeedsToWalk([...missionDiscoveryNeeds.values()], [...dispatchedNeeds.values()], need => {
+  let discoveryToWalk = discoveryNeedsToWalk([...missionDiscoveryNeeds.values()], [...dispatchedNeeds.values()], need => {
     const id = meetingsDiscoveryObligationId(need);
     return (ONLY === null || id.startsWith(ONLY)) && (IDS === null || IDS.has(id));
   });
@@ -3387,17 +3409,13 @@ const runMeetingsDiscoveryPass = async (discoveryDeadlineMs: number, maxWalks: n
     meetingsDiscoveryState = "OFF: WTP_MEETINGS_DISCOVERY=off, the kill switch";
   } else if (dry || canary) {
     meetingsDiscoveryState = "not run: a dry or canary cycle walks nothing";
-  } else if (discoveryToWalk.length === 0) {
-    meetingsDiscoveryState = `not run: no government is owed meetings discovery (${missionMapUnread ?? "no mission place has a calendar blank and no dispatch is open"})`;
+  } else if (intents.runnerPause.paused) {
+    meetingsDiscoveryState = "not run: the owner has paused the runner";
   } else {
     /* The caller sets the deadline: 60 s on the serial path, the time left in the round on its own lane. */
-    const openDiscovery = fleetSafety.guardedOpenBytes("discovery-web", "meetings-discovery", fetch, { followRedirects: false });
     /* Named to the stall diagnostic while it runs: its waits on government sites are not store calls, so nothing else would name them. */
     const leaveDiscovery = pending.enter("meetings-discovery");
     try {
-      /* The saved methods live in the field manual; the runner consults them on every walk. */
-      const manual = await readFieldManual(repos, { kinds: [RECIPE_KIND], everywhere: true });
-      if (manual.error) throw new Error(manual.error);
       /*
        * Search: pointers only, and PAID, so it exists only while the owner's switch in Admin allows it
        * (`AdminConfig.discoverySearch`, read at cycle start). Otherwise no search step is built at all: no request,
@@ -3433,63 +3451,116 @@ const runMeetingsDiscoveryPass = async (discoveryDeadlineMs: number, maxWalks: n
         }
         return pages;
       })();
-      meetingsDiscovery = await runMeetingsDiscovery(repos, {
-        needs: discoveryToWalk,
-        cycleIndex: Math.floor(Date.parse(NOW) / 3_600_000),
-        maxWalks, rotationStep: MEETINGS_DISCOVERY_MAX_WALKS, noProgressLimit: DISCOVERY_NO_PROGRESS_LIMIT,
-        /* An owner-dispatched meetings-discovery obligation goes first; one with an open occurrence is another executor's. */
-        firstIds: new Set(sync.all.filter((o) => o.id.startsWith("freshness:meetings-discovery:")).map((o) => o.subjectId)),
-        onWalk: () => roundProgress.note("meetings walks"),
-        skipIds: new Set(
-          sync.all.filter((o) => o.id.startsWith("freshness:meetings-discovery:") && o.openOccurrenceId !== null).map((o) => o.subjectId),
-        ),
-        runtime: {
-          websiteSize,
-          open: async ({ url, headers, timeoutMs }) => {
-            const got = await openDiscovery({ url, headers, timeoutMs });
-            return {
-              status: got.status,
-              body: new TextDecoder().decode(got.bytes),
-              bytes: got.bytes.byteLength,
-              contentType: got.contentType,
-              location: got.location ?? null,
-              transportError: got.transportError,
-            };
-          },
-          spaceOut: spacer,
-          vault: async (artifact, bytes) => {
-            const stored=await vault.put(artifact,bytes);
-            if(stored.stored && roundVaultIndex) includeVaultCapture(roundVaultIndex,artifact,stored.where,join(ROOT,...VAULT_DIR));
-            return stored;
-          },
-          readOfficialPages,
-          readOfficialPageTextFor: async artifact => {
-            const held = (await readRoundVault()).byHash.get(artifact.contentHash.slice("sha256-".length));
-            if (!held) throw new Error(`Official-source linking capture is not held: ${artifact.id}`);
-            return readOfficialText(held);
-          },
-          now: nowIso,
-          budget: {
-            spent: () => Date.now() >= discoveryDeadlineMs,
-            remainingMs: () => Math.max(0, discoveryDeadlineMs - Date.now()),
-          },
-          recipes: knownRecipes(manual.store.entries),
-          /* Committed route hints: the current official site where the recorded address is stale, and routes found on a government's own publications. */
-          routeHints: meetingHints,
-          ...(discoverySearch === null ? {} : { search: discoverySearch }),
-          searchScopeFor: (subjectId) => huntSearchScope({ selected: config?.expansionScopes ?? [], plan: expansionPlan, subjectId }),
-          recordCost: async (entry) => {
-            costSeq += 1;
-            await repos.costs.append(entry.workItemId, `ce-ds-${fingerprint([entry.attemptId, entry.source, entry.recordedAt, costSeq])}`,
-              costEntryWithModel(entry, null), nowIso());
-          },
+      const discoveryRuntime: DiscoveryRuntime = {
+        websiteSize: sizeForDiscovery,
+        open: async ({ url, headers, timeoutMs, method, body }) => {
+          const openDiscovery = fleetSafety.guardedOpenBytes("discovery-web", "meetings-discovery",
+            (target, init) => fetch(target, { ...init, method: method ?? "GET", ...(body === undefined ? {} : { body }), signal: AbortSignal.timeout(timeoutMs) }),
+            { followRedirects: false });
+          const got = await openDiscovery({ url, headers, timeoutMs });
+          return {
+            status: got.status,
+            body: new TextDecoder().decode(got.bytes),
+            bytes: got.bytes.byteLength,
+            contentType: got.contentType,
+            location: got.location ?? null,
+            transportError: got.transportError,
+          };
         },
-      });
+        spaceOut: spacer,
+        vault: async (artifact, bytes) => {
+          const stored=await vault.put(artifact,bytes);
+          if(stored.stored && roundVaultIndex) includeVaultCapture(roundVaultIndex,artifact,stored.where,join(ROOT,...VAULT_DIR));
+          return stored;
+        },
+        readOfficialPages,
+        readOfficialPageTextFor: async artifact => {
+          const held = (await readRoundVault()).byHash.get(artifact.contentHash.slice("sha256-".length));
+          if (!held) throw new Error(`Official-source linking capture is not held: ${artifact.id}`);
+          return readOfficialText(held);
+        },
+        now: nowIso,
+        budget: {
+          spent: () => Date.now() >= discoveryDeadlineMs,
+          remainingMs: () => Math.max(0, discoveryDeadlineMs - Date.now()),
+        },
+        /* Committed route hints: the current official site where the recorded address is stale, and routes found on a government's own publications. */
+        routeHints: meetingHints,
+        ...(discoverySearch === null ? {} : { search: discoverySearch }),
+        searchScopeFor: (subjectId) => huntSearchScope({ selected: config?.expansionScopes ?? [], plan: expansionPlan, subjectId }),
+        recordCost: async (entry) => {
+          costSeq += 1;
+          await repos.costs.append(entry.workItemId, `ce-ds-${fingerprint([entry.attemptId, entry.source, entry.recordedAt, costSeq])}`,
+            costEntryWithModel(entry, null), nowIso());
+        },
+      };
+      let remainingWalks = maxWalks;
+      const mergePass = (pass: MeetingsDiscoveryPass) => {
+        remainingWalks -= pass.walked.length + pass.walkFailures.length + pass.cutShort.length;
+        if (meetingsDiscovery === null) { meetingsDiscovery = pass; return; }
+        const previous = meetingsDiscovery;
+        meetingsDiscovery = {
+          walked: [...previous.walked, ...pass.walked], notDue: [...previous.notDue, ...pass.notDue],
+          deferred: [...previous.deferred, ...pass.deferred], cutShort: [...previous.cutShort, ...pass.cutShort],
+          appendFailures: [...previous.appendFailures, ...pass.appendFailures], walkFailures: [...previous.walkFailures, ...pass.walkFailures],
+          recipesUpdated: [...new Set([...previous.recipesUpdated, ...pass.recipesUpdated])],
+          recipeApplications: previous.recipeApplications + pass.recipeApplications,
+          fieldManual: { written: previous.fieldManual.written + pass.fieldManual.written,
+            ...((previous.fieldManual.error || pass.fieldManual.error) ? { error: [previous.fieldManual.error, pass.fieldManual.error].filter(Boolean).join("; ") } : {}) },
+        };
+      };
+      const runNeeds = async (needs: readonly MeetingsDiscoveryNeed[], runtime: DiscoveryRuntime) => {
+        if (!needs.length || remainingWalks <= 0 || runtime.budget.spent()) return;
+        mergePass(await runMeetingsDiscovery(repos, {
+          needs, runtime, cycleIndex: Math.floor(Date.parse(NOW) / 3_600_000),
+          maxWalks: remainingWalks, rotationStep: MEETINGS_DISCOVERY_MAX_WALKS, noProgressLimit: DISCOVERY_NO_PROGRESS_LIMIT,
+          firstIds: new Set(dispatchedNeeds.keys()),
+          onWalk: () => roundProgress.note("meetings walks"),
+          skipIds: new Set(sync.all.filter(row => row.materializedBy === OWNER_DISPATCH &&
+            row.id.startsWith(MEETINGS_DISCOVERY_NAMESPACE) && row.openOccurrenceId !== null).map(row => row.subjectId)),
+        }));
+      };
+      // Explicit work keeps its priority; every other registered site remains free standing work.
+      await runNeeds(discoveryToWalk, discoveryRuntime);
+      const freeRuntime: DiscoveryRuntime = { ...discoveryRuntime, search: undefined, searchScopeFor: undefined, recordCost: undefined };
+      const states = ONLY !== null || IDS !== null ? [] : [...REGISTRATION_TARGETS.map(target => target.state.toLowerCase()), "us"];
+      const firstState = states.length ? Math.floor(Date.parse(NOW) / 3_600_000) % states.length : 0;
+      const visited = new Set(discoveryToWalk.map(need => need.jurisdictionId));
+      for (let index = 0; index < states.length && remainingWalks > 0 && !discoveryRuntime.budget.spent(); index++) {
+        const state = states[(firstState + index) % states.length];
+        // Read one state, work it, and release it; no whole-country registration is installed.
+        let registry: JurisdictionRegistry | null = null;
+        if (state !== "us") {
+          try { registry = requiredJurisdictionRegistry(state); }
+          catch {
+            const loaded = await loadRegistrationJurisdictions({ root: ROOT, states: [state],
+              read: code => readRegistrationProjection(code, { store: new PostgresRoutineDataStore(), bypassCache: true }) });
+            registry = loaded.registries.get(state) ?? null;
+            for (const [code, why] of loaded.refused) runtimeConditions.push(`${code.toUpperCase()} standing meetings discovery: ${why}`);
+          }
+        }
+        standingDiscoveryWebsiteSize = websiteSizeFromHoldings(state === "us" ? [] : [state], ROOT);
+        const manual = await readFieldManual(repos, { kinds: [RECIPE_KIND], state });
+        if (manual.error) runtimeConditions.push(`${state.toUpperCase()} meeting methods: ${manual.error}`);
+        const runtime = { ...freeRuntime, recipes: knownRecipes(manual.store.entries) };
+        try { await refreshDotgovCensusLeads(repos, runtime, state); }
+        catch (error) { runtimeConditions.push(`${state.toUpperCase()} platform census reference: ${error instanceof Error ? error.message : String(error)}`); }
+        const standing = await readPlatformCensusNeeds(state, registry, { repos, root: ROOT,
+          reviewedVersionId: (state === "az" ? azOperationalReference ?? legacyOperationalReference : legacyOperationalReference)?.metadata.versionId ?? null });
+        for (const why of standing.failures) runtimeConditions.push(`${state.toUpperCase()} platform census: ${why}`);
+        discoveryToWalk = discoveryNeedsToWalk(standing.needs.filter(need => !visited.has(need.jurisdictionId)), [], need => {
+          const id = meetingsDiscoveryObligationId(need);
+          return (ONLY === null || id.startsWith(ONLY)) && (IDS === null || IDS.has(id));
+        });
+        await runNeeds(discoveryToWalk, runtime);
+      }
+      standingDiscoveryWebsiteSize = null;
       meetingsDiscoveryState = "ran";
     } catch (error) {
       meetingsDiscoveryState = `could not run: ${error instanceof Error ? error.message : String(error)}`;
       runtimeConditions.push(`meetings discovery ${meetingsDiscoveryState}`);
     } finally {
+      standingDiscoveryWebsiteSize = null;
       leaveDiscovery();
     }
   }

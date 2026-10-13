@@ -80,6 +80,11 @@ const CONTRACT_RULES: readonly {
   test: (statement: string) => boolean;
 }[] = [
   {
+    rule: "delete-rows",
+    why: "Stored rows used by the previous code are retired after its readers are replaced.",
+    test: (s) => /^DELETE\s+FROM\b/i.test(s),
+  },
+  {
     rule: "drop-column",
     why: "A column the live build still writes stops existing.",
     test: (s) => /\bDROP\s+COLUMN\b/i.test(s),
@@ -174,6 +179,8 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 export const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
+  "0036_pb01_role_playbooks": { phase: "expand", why: "Seeds canonical instructions once without replacing existing edits." },
+  "0035_pb01_retire_playbooks": { phase: "contract", why: "Removes retired instruction rows and pointers after canonical-row workers are live." },
   "0000_square_stryfe": {
     phase: "expand",
     why: "Creates meetings, agenda_documents and search_log with their indexes. Nothing existed before it.",

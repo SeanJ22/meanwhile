@@ -142,8 +142,6 @@ export function concentrationSentences(
     sentences.push(`Filed from inside ${where}: ${dollars(concentration.inStateAmount)}.`);
     sentences.push(`Filed from outside ${where}: ${dollars(concentration.outStateAmount)}.`);
     if (concentration.unlocatedAmount > 0) sentences.push(`State not stated on the filing: ${dollars(concentration.unlocatedAmount)}.`);
-  } else {
-    sentences.push("We're working on getting this info");
   }
   if (concentration.organizationCount > 0) sentences.push(`${dollars(concentration.organizationAmount)} came from committees and organizations.`);
   if (concentration.individualCount > 0) sentences.push(`${dollars(concentration.individualAmount)} came from individual people.`);

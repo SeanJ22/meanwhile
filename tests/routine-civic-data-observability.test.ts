@@ -1870,7 +1870,7 @@ test("a confirmed re-check keeps Admin current: the newest confirmation is the l
     sourceId: contract.sourceId,
     recordClass: contract.recordClass,
     scope: contract.scope,
-    parserVersion: "fec-funding/3",
+    parserVersion: "fec-funding/4",
     pointerVersionId: row.id,
     readModelHash: (row.candidate as { normalization: { normalizedHash: string } }).normalization.normalizedHash,
     basis: "READ_MODEL_RECOMPUTED",

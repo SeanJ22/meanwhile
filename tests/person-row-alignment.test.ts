@@ -42,11 +42,10 @@ test("ALIGN-1: the row is still a wrapping baseline row (NH-1 is not undone)", (
   assert.match(block, /align-items:\s*baseline/);
 });
 
-test("ALIGN-1: both consumers of the shared row still use it", () => {
+test("ALIGN-1: the coverage notice uses the shared row", () => {
   // The fix is class-wide only while the class is shared, so the consumers are asserted by name.
   const consumers = [
     "components/map/coverage-notice.tsx",
-    "components/map/popup/district-popup.tsx",
   ];
   for (const file of consumers) {
     const src = readFileSync(file, "utf8");
@@ -59,14 +58,7 @@ test("ALIGN-1: both consumers of the shared row still use it", () => {
     );
   }
 
-  /* The district popup uses it for both blocks. */
-  const popup = readFileSync("components/map/popup/district-popup.tsx", "utf8");
-  const uses = popup.match(/className="person-row"/g) ?? [];
-  assert.ok(
-    uses.length >= 2,
-    `the small battlecard renders \`.person-row\` ${uses.length} time(s); the ` +
-      `who-runs-it block and the representation list are both in ALIGN-1's scope`,
-  );
+
 });
 
 test("ALIGN-1: no OTHER rule right-justifies a person row", () => {

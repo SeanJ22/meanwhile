@@ -36,7 +36,8 @@ for (const file of ["census_govt_units_2022.csv", "census_govt_units_2022_depend
     const postal = row[state]?.toUpperCase() || FIPS_TO_STATE[value(row, "fips_state")]?.postal;
     if (!row[pid] || !postal || !shards.has(postal)) continue;
     const shard = shardFor(postal);
-    shard.facts[row[pid]] = { web: (row[web] ?? "").trim(), county: (row[county] ?? "").trim() };
+    shard.facts[row[pid]] = { web: (row[web] ?? "").trim(), county: (row[county] ?? "").trim(),
+      countyFips: /^\d{2}$/.test(value(row, "fips_state")) && /^\d{3}$/.test(value(row, "fips_county")) ? value(row, "fips_state") + value(row, "fips_county") : null };
     const type = value(row, "gov_type");
     const st = value(row, "fips_state"), countyCode = value(row, "fips_county"), placeCode = value(row, "fips_place");
     const key = type === "COUNTY" && /^\d{3}$/.test(countyCode) ? `county GEOID ${st}${countyCode}`

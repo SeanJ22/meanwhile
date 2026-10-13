@@ -559,12 +559,12 @@ const DIVISIONS = (
 
 test("designation normalization survives zero-padding", () => {
   assert.equal(designationKey("Merrimack 08"), designationKey("Merrimack 8"));
-  assert.equal(designationKey("  merrimack   8 "), "MERRIMACK 8");
+  assert.equal(designationKey("  merrimack   8 "), "MERRIMACK8");
   assert.equal(designationKey("19"), "19");
 });
 
 test("the registry label yields the designation Plural publishes", () => {
-  assert.equal(designationFromLabel("State House District Merrimack 08"), "MERRIMACK 8");
+  assert.equal(designationFromLabel("State House District Merrimack 08"), "MERRIMACK8");
   assert.equal(designationFromLabel("State Senate District 19"), "19");
   assert.equal(designationFromLabel("Assembly District 25"), "25");
 });
@@ -574,7 +574,7 @@ test("New Hampshire House districts index by designation, not by number", () => 
 
   // sldl:608 is labelled "State House District Merrimack 08". A join on the
   // identifier's digits would look for 608 and find nothing.
-  const ocdId = index.get("nh|lower|MERRIMACK 8");
+  const ocdId = index.get("nh|lower|MERRIMACK8");
   assert.ok(ocdId, "NH Merrimack 8 must resolve");
   assert.match(ocdId, /state:nh\/sldl:/);
 });

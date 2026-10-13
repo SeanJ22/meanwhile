@@ -1,4 +1,5 @@
 import { officialLinkingPageFromAsync, type LazyOfficialPage } from "../../sources/official-page-events/index.ts";
+import { observePlatformCensus, platformCensusEntry, type PlatformCensusObservation } from "./platform-census.ts";
 /**
  * The unpaid meetings-discovery executor: walks a government's own site for
  * meeting routes. It makes no model call. For one need it:
@@ -71,6 +72,7 @@ import { writeFieldManualDiscoveries } from "../scheduler/field-manual-scout.ts"
 import { DEFAULT_ROBOTS_TOKEN, evaluatePermission } from "../scheduler/robots.ts";
 import { DEFAULT_USER_AGENT, type VaultPut } from "../scheduler/route-executor.ts";
 import { categoryBodyOf } from "./auto-crosswalk.ts";
+import { boardDocsListUrl, parseBoardDocsCommittees } from "../../sources/boarddocs/index.ts";
 import type { OfficialLinkingPage } from "../../civic-data/source-authority.ts";
 
 /** One HTTP hop. It never follows a redirect: the executor asks permission of every new host first. */
@@ -78,6 +80,8 @@ export type DiscoveryOpen = (input: {
   readonly url: string;
   readonly headers: Readonly<Record<string, string>>;
   readonly timeoutMs: number;
+  readonly method?: "GET" | "POST";
+  readonly body?: string;
 }) => Promise<{
   readonly status: number | null;
   readonly body: string;
@@ -401,7 +405,7 @@ export async function walkMeetingsDiscoveryNeed(
   const timeLeftMs = (): number => runtime.budget.remainingMs?.() ?? Number.POSITIVE_INFINITY;
 
   /* The time is asked before the host's spacing and again after it, and the request's timeout never outlasts it. */
-  async function hop(url: URL, accept: string) {
+  async function hop(url: URL, accept: string, form?: Readonly<Record<string, string>>) {
     if (timeLeftMs() < MIN_REQUEST_MS) throw new OutOfTime();
     if (hostLimit(url) !== null) await runtime.spaceOut(url.host.toLowerCase());
     const left = timeLeftMs();
@@ -411,8 +415,9 @@ export async function walkMeetingsDiscoveryNeed(
     requests += 1;
     return runtime.open({
       url: url.toString(),
-      headers: { "user-agent": DEFAULT_USER_AGENT, accept },
+      headers: { "user-agent": DEFAULT_USER_AGENT, accept, ...(form ? { "content-type": "application/x-www-form-urlencoded" } : {}) },
       timeoutMs: Math.min(timeoutMs, Math.floor(left)),
+      ...(form ? { method: "POST" as const, body: new URLSearchParams(form).toString() } : {}),
     });
   }
 
@@ -472,7 +477,7 @@ export async function walkMeetingsDiscoveryNeed(
   }
 
   /** GET one URL, one hop at a time, reading and recording every host's robots.txt first. Null when nothing usable came back. */
-  async function get(start: string, purpose: DiscoveryStep["purpose"], accept: string) {
+  async function get(start: string, purpose: DiscoveryStep["purpose"], accept: string, form?: Readonly<Record<string, string>>) {
     let current = start;
     /* Each redirect this request followed: the chain a derived wiring row's attestation cites. */
     const redirects: { from: string; to: string; status: number }[] = [];
@@ -500,7 +505,7 @@ export async function walkMeetingsDiscoveryNeed(
           : `not requested: the walk reached its ${maxRequests}-request bound`);
         return null;
       }
-      const got = await hop(url, accept);
+      const got = await hop(url, accept, form);
       if (got.status !== null && got.status >= 300 && got.status < 400 && got.location !== null) {
         steps.push({
           purpose, url: url.toString(), permission: permission.verdict, status: got.status, transportError: null, bytes: got.bytes,
@@ -546,6 +551,27 @@ export async function walkMeetingsDiscoveryNeed(
   }
 
   let candidates: readonly EndpointCandidate[] = [];
+  /** A tenant page names its committees; each public form lookup keeps that naming page in its attestation. */
+  async function readBoardDocs(candidate: EndpointCandidate, got: NonNullable<Awaited<ReturnType<typeof get>>>, via: Via): Promise<void> {
+    const committees = parseBoardDocsCommittees(got.body);
+    const lastRead = new Map<string, string>();
+    for (const prior of runtime.priorAttempts ?? []) for (const step of prior.steps) {
+      if (step.purpose === "endpoint" && step.status !== null && (lastRead.get(step.url) ?? "") < prior.finishedAt) lastRead.set(step.url, prior.finishedAt);
+    }
+    committees.sort((a, b) => (lastRead.get(boardDocsListUrl(got.finalUrl, a.id)) ?? "").localeCompare(lastRead.get(boardDocsListUrl(got.finalUrl, b.id)) ?? ""));
+    leads.push({ vendor: "boarddocs", url: candidate.url, basis: candidate.basis, evidence: candidate.evidence,
+      detail: committees.length ? `${committees.length} published BoardDocs committee selector(s)` : "the portal publishes no readable committee selector in this response", via });
+    for (const committee of committees) {
+      const route = boardDocsListUrl(got.finalUrl, committee.id);
+      const list = await get(route, "endpoint", "application/json", { current_committee_id: committee.id });
+      const check = list === null ? { verdict: "NOT_CONFIRMED", count: null, detail: "the committee list could not be read this walk" }
+        : verifyEndpointBody({ vendor: "boarddocs", url: route }, { status: list.status, body: list.body, finalUrl: list.finalUrl });
+      const base = { vendor: "boarddocs", url: route, basis: "LINKED" as const, evidence: `BoardDocs committee "${committee.name}" (${committee.id}) on ${got.finalUrl}`,
+        detail: check.detail, via: { page: candidate.url, artifactId: got.artifactId } };
+      if (check.verdict === "YIELDED") found.push({ ...base, count: check.count, artifactId: list?.artifactId ?? null });
+      else leads.push(base);
+    }
+  }
   let proposals: readonly RecipeCandidate[] = [];
   let homeOrigin: string | null = null;
   let homeHtml: string | null = null;
@@ -583,6 +609,7 @@ export async function walkMeetingsDiscoveryNeed(
     linkingPage,
     officialHost: new URL(homeOrigin ?? origins[0] ?? "https://invalid.invalid").host,
     stateCode: need.stateCode,
+    countyFips: need.countyFips,
     now: runtime.now(),
     };
   };
@@ -597,6 +624,7 @@ export async function walkMeetingsDiscoveryNeed(
   /* The homepage read as the government's own, and how the walk got there. */
   let homePage: Via = null;
   let homeProvenance: NonNullable<MeetingsDiscoveryAttempt["site"]>["homepage"] = null;
+  let platformCensus: PlatformCensusObservation | undefined;
   const queryTrail: MeetingsDiscoveryAttempt["search"][number][] = [];
   const learned: MeetingsRecipe[] = [];
   let checked = 0;
@@ -627,6 +655,7 @@ export async function walkMeetingsDiscoveryNeed(
           redirects: home.redirects,
         };
         homeHtml = home.body;
+        platformCensus = observePlatformCensus(home.body, home.finalUrl, home.artifactId, runtime.now());
         candidates = meetingEndpointCandidates(home.body, home.finalUrl, runtime.now());
         /* The saved methods whose precondition this homepage shows (lib/hunt/meetings-recipes.ts). */
         const proposed = recipeCandidates({
@@ -721,7 +750,7 @@ export async function walkMeetingsDiscoveryNeed(
     }
     /* A homepage link to the CivicPlus index itself is not a feed, and the index was already read. */
     const isIndex = (url: string): boolean => civicPlusIndex !== null && url.toLowerCase() === civicPlusIndex.toLowerCase();
-    for (const candidate of candidates.filter((c) => c.verifiable && !isIndex(c.url) && !planned.some((p) => p.candidate.url === c.url))) {
+    for (const candidate of candidates.filter((c) => (c.verifiable || c.vendor === "own-site-meetings-page") && !isIndex(c.url) && !planned.some((p) => p.candidate.url === c.url))) {
       planned.push({ candidate, recipeIds: [], label: null, via: homePage });
     }
     for (const p of proposals) {
@@ -748,6 +777,10 @@ export async function walkMeetingsDiscoveryNeed(
       const got = await get(candidate.url, "endpoint", ACCEPT_PAGE);
       checked += 1;
       if (got !== null) readPages.push({ url: candidate.url, body: got.body, finalUrl: got.finalUrl, artifactId: got.artifactId });
+      if (candidate.vendor === "boarddocs" && got !== null) {
+        await readBoardDocs(candidate, got, via);
+        continue;
+      }
       const hint = candidate.basis === "HINT" && !candidate.verifiable ? hints?.routes.find((r) => r.url === candidate.url) : undefined;
       const check = got === null
         ? { verdict: "NOT_CONFIRMED" as const, count: null, detail: "the route could not be read this walk" }
@@ -792,6 +825,10 @@ export async function walkMeetingsDiscoveryNeed(
       for (const { candidate, via } of nextHop) {
         const got = await get(candidate.url, "endpoint", ACCEPT_PAGE);
         checked += 1;
+        if (candidate.vendor === "boarddocs" && got !== null) {
+          await readBoardDocs(candidate, got, via);
+          continue;
+        }
         const check = got === null
           ? { verdict: "NOT_CONFIRMED" as const, count: null, detail: "the route could not be read this walk" }
           : verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl }, await pageIdentity(null, got.finalUrl));
@@ -862,8 +899,12 @@ export async function walkMeetingsDiscoveryNeed(
           for (const c of [...direct, ...selfPage, ...onPage].slice(0, 3)) {
             const body = c.url === hit.url ? page : (tried.add(c.url), await get(c.url, "endpoint", ACCEPT_PAGE));
             if (body === null) continue;
-            const check = verifyEndpointBody(c, { status: body.status, body: body.body, finalUrl: body.finalUrl }, await pageIdentity(null, body.finalUrl));
             const via: Via = onPage.includes(c) ? { page: page.finalUrl, artifactId: page.artifactId } : null;
+            if (c.vendor === "boarddocs") {
+              await readBoardDocs(c, body, via);
+              continue;
+            }
+            const check = verifyEndpointBody(c, { status: body.status, body: body.body, finalUrl: body.finalUrl }, await pageIdentity(null, body.finalUrl));
             const base = { vendor: c.vendor, url: c.url, basis: "SEARCH" as const, evidence: `search "${q.query}" found ${hit.url}`, detail: check.detail, via };
             if (check.verdict !== "YIELDED") {
               leads.push(base);
@@ -919,6 +960,7 @@ export async function walkMeetingsDiscoveryNeed(
     requestCount: requests,
     recheckAfter: steps.some(step => step.status === null && /request bound/.test(step.note)) ? finishedAt : recheckAfter(finishedAt),
     site: { address: need.addressSource ?? null, homepage: homeProvenance },
+    ...(platformCensus ? { platformCensus } : {}),
     note: noteFor(need, outcome, found, leads, origins.length) + siteNote(hintedSite, homeFromHint, hintedSiteRefused) + (searchScope?.hold ? ` ${searchScope.hold}` : ""),
     ...(hints === null
       ? {}
@@ -1035,6 +1077,7 @@ export function discoveryFieldManualEntries(attempt: MeetingsDiscoveryAttempt): 
     payload,
   });
   const entries: FieldManualEntry[] = [];
+  if (attempt.platformCensus) entries.push(platformCensusEntry(attempt, attempt.platformCensus));
   for (const f of attempt.found) {
     entries.push(entry("MEETINGS_ROUTE", "YIELDED", f.vendor, f.url,
       `${attempt.jurisdictionId}: ${f.vendor} route ${f.url} confirmed by content (${f.detail}); evidenced ${f.basis}.`,
@@ -1105,19 +1148,29 @@ export async function runMeetingsDiscovery(
   const skip = input.skipIds ?? new Set<string>();
   const walkable = input.needs.filter((n) => walkableByFreeWalk(n) && !skip.has(n.jurisdictionId));
   /*
-   * First the owner's dispatch, then the governments with committed route hints: a hint is evidence someone
-   * already found, so it is walked when due rather than when the rotation comes round. The rest rotate.
+   * The owner's explicit work stays first. Then walk sites not yet read, with evidenced hints first,
+   * before recurring site checks. Read only finish times, in one state-scoped batch; old site histories
+   * must not consume a national census pass before any new government is reached.
    */
   const hinted = new Map((input.runtime.routeHints ?? []).map((h) => [h.jurisdictionId, routeHintsFingerprint(h)] as const));
   const dispatchedFirst = walkable.filter((n) => input.firstIds?.has(n.jurisdictionId) === true);
-  const hintedFirst = walkable.filter((n) => input.firstIds?.has(n.jurisdictionId) !== true && hinted.has(n.jurisdictionId));
-  const rotation = rotationWindow(
-    walkable.filter((n) => input.firstIds?.has(n.jurisdictionId) !== true && !hinted.has(n.jurisdictionId)),
-    input.cycleIndex,
-    input.maxWalks,
-    input.rotationStep,
-  );
-  const window = [...dispatchedFirst, ...hintedFirst, ...rotation];
+  const standing = walkable.filter((n) => input.firstIds?.has(n.jurisdictionId) !== true);
+  const spentAtStart = input.runtime.budget.spent();
+  const latestChecks = spentAtStart || standing.length === 0 ? new Map<string, unknown>()
+    : await repos.discoveryAttempts.readLatest(standing.map(need => need.jurisdictionId), { finishedAt: true, routeHints: ["fingerprint"] });
+  const changedHints = new Set(standing.filter(need => {
+    if (!hinted.has(need.jurisdictionId)) return false;
+    const previous = latestChecks.get(need.jurisdictionId) as { routeHints?: { fingerprint?: string } } | undefined;
+    return previous?.routeHints?.fingerprint !== hinted.get(need.jurisdictionId);
+  }).map(need => need.jurisdictionId));
+  const ordered = (seen: boolean) => {
+    const needs = standing.filter(need => !changedHints.has(need.jurisdictionId) && latestChecks.has(need.jurisdictionId) === seen);
+    return [
+      ...needs.filter(need => hinted.has(need.jurisdictionId)),
+      ...rotationWindow(needs.filter(need => !hinted.has(need.jurisdictionId)), input.cycleIndex, input.maxWalks, input.rotationStep),
+    ];
+  };
+  const window = [...dispatchedFirst, ...standing.filter(need => changedHints.has(need.jurisdictionId)), ...ordered(false), ...ordered(true)];
   const walked: MeetingsDiscoveryAttempt[] = [];
   const notDue: string[] = [];
   const deferred: string[] = [];
@@ -1129,7 +1182,7 @@ export async function runMeetingsDiscovery(
   let stalledInARow = 0;
 
   for (const need of window) {
-    if (walksStarted >= input.maxWalks || input.runtime.budget.spent() || stalledInARow >= (input.noProgressLimit ?? Infinity)) {
+    if (spentAtStart || walksStarted >= input.maxWalks || input.runtime.budget.spent() || stalledInARow >= (input.noProgressLimit ?? Infinity)) {
       deferred.push(need.jurisdictionId);
       continue;
     }
@@ -1139,10 +1192,17 @@ export async function runMeetingsDiscovery(
     const hintsChanged = hinted.has(need.jurisdictionId) && latest?.routeHints?.fingerprint !== hinted.get(need.jurisdictionId);
     /* A find recorded before walks carried their provenance cannot be attested for wiring: walk it again. */
     const findWithoutProvenance = latest?.outcome === "FOUND" && latest.site === undefined;
-    // Older walks used multi-day holds. They cannot silence a calendar index
-    // beyond the current source cadence, even before a new walk is recorded.
-    const nextCheck = latest === undefined ? 0 : Math.min(Date.parse(latest.recheckAfter), Date.parse(recheckAfter(latest.finishedAt)));
-    if (latest !== undefined && !hintsChanged && !findWithoutProvenance && nextCheck > nowMs) {
+    const addressChanged = need.addressSource?.versionId != null && latest?.site?.address?.versionId !== need.addressSource.versionId;
+    // A confirmed, attested platform's homepage follows its slow census clock;
+    // its wired meeting source keeps the ordinary hourly/twice-daily clock.
+    // Unresolved and legacy walks continue discovery at the source cadence.
+    const unfinishedReading = latest?.steps.some(step => step.status === null && /request bound|website reached/.test(step.note))
+      || latest?.leads.some(lead => /not checked:|could not be read/.test(lead.detail));
+    const censusCheck = latest?.outcome === "FOUND" && !findWithoutProvenance && !unfinishedReading && latest.platformCensus
+      ? Date.parse(latest.platformCensus.recheckAfter) : Number.NaN;
+    const nextCheck = Number.isFinite(censusCheck) ? censusCheck : latest === undefined ? 0
+      : Math.min(Date.parse(latest.recheckAfter), Date.parse(recheckAfter(latest.finishedAt)));
+    if (latest !== undefined && !hintsChanged && !findWithoutProvenance && !addressChanged && nextCheck > nowMs) {
       notDue.push(need.jurisdictionId);
       continue;
     }

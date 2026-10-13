@@ -1,8 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { existsSync, readFileSync } from "node:fs";
-import { renderToStaticMarkup } from "react-dom/server";
-import { VotingJurisdictionRecords } from "../components/map/voting-sites-panel.tsx";
+import { renderCardWithSources } from "./helpers/render-card.ts";
 import { answerVotingSites, type VotingReaderPlace } from "../lib/ballot/voting-answer.ts";
 import { readGoogleVotingAnswer } from "../lib/sources/google-civic/reader-lookup.ts";
 
@@ -20,7 +19,8 @@ test("VS-01 explicit Google fallback uses the shared real-response parser and re
   assert.equal(requests.length, 2);
   assert.equal(requests[1].searchParams.get("electionId"), "12000");
   assert.equal(answer.googleFallback?.label, "from Google's election data (Voting Information Project)");
-  const html = renderToStaticMarkup(<VotingJurisdictionRecords answer={answer} selectedSiteId={null} onSelectSite={() => {}} />);
+  const html = await renderCardWithSources({ modulePath: "./components/map/voting-sites-panel.tsx", exportName: "VotingJurisdictionRecords",
+    props: { answer, selectedSiteId: null }, sourceUrls: [answer.jurisdictions[0].sourceUrl] });
   assert.match(html, /FIRST PRESBYTERIAN CHURCH/);
   assert.match(html, /510 W OTTAWA ST/);
   assert.match(html, /7 am - 8 pm/);

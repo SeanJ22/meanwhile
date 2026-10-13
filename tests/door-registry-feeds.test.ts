@@ -28,7 +28,7 @@ test("every routine contract and every daily automatic refresh task has a door",
 test("feed doors name their key and never hold one", () => {
   const fec = feedDoorDrafts().find((d) => d.doorId === "feed:fec-funding")!;
   assert.equal(fec.config?.keyRef, "FEC_API_KEY");
-  assert.deepEqual(fec.hosts, ["api.open.fec.gov"]);
+  assert.deepEqual(fec.hosts, ["api.open.fec.gov", "www.fec.gov"]);
   assert.equal(keyRefFor("dotgov", "cisa-dotgov-registry"), null);
   for (const draft of feedDoorDrafts()) {
     for (const [key, value] of Object.entries(draft.config ?? {})) {

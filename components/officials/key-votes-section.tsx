@@ -1,4 +1,4 @@
-import { WorkingOnIt } from "@/components/demand/working-on-it";
+import { CardGapContribution } from "@/components/ui/card-gap-context";
 import {
   APRIL_2024_SENATE_NOTE,
   KEY_VOTES_CRITERIA,
@@ -144,8 +144,10 @@ export function KeyVoteGroupBlock({
   chamber: "house" | "senate";
   rows: KeyVoteRow[];
 }) {
+  const missingPositions = rows.reduce((total, row) => total + row.refs.filter((_, index) => !row.positions[index] && !row.held?.[index]).length, 0);
   return (
     <div>
+      {missingPositions > 0 && <CardGapContribution id={`key-vote-positions:${chamber}:${rows.map(row => row.entry.id).join(",")}`} label="voting positions" count={missingPositions} unit="vote" />}
       <CardSourcesContribution id={`key-votes:${chamber}:${rows.map(row => row.entry.id).join(",")}`} sources={rows.flatMap(row => row.refs.map(ref => ({ what: row.entry.title, provenance: { sourceUrl: ref.url, sourceOrg: chamber === "house" ? "U.S. House of Representatives" : "U.S. Senate", collectedAt: ref.verifiedAt ?? "", verifiedAt: ref.verifiedAt } })))} />
       <ul>
         {rows.map((row) => (
@@ -169,7 +171,7 @@ export function KeyVoteGroupBlock({
 
             {row.refs.length > 0 ? (
               <>
-                {row.refs.map((ref, i) => (
+                {row.refs.map((ref, i) => (row.positions[i] || row.held?.[i] || ref.tally || row.breakdowns[i]) ? (
                   <p
                     key={`${ref.congress}-${ref.session}-${ref.rollNumber}`}
                     className="mt-1 t-detail"
@@ -185,18 +187,18 @@ export function KeyVoteGroupBlock({
                           <VotePill tone="neutral">Position recorded</VotePill>
                         );
                       }
-                      // Both are gaps and wear the outline: tenure, or our research.
-                      return row.held?.[i] ? <VotePill tone="gap">Not in this chamber for this vote</VotePill> : <WorkingOnIt inline />;
+                      // An independently held tenure fact remains visible.
+                      return row.held?.[i] ? <VotePill tone="gap">Not in this chamber for this vote</VotePill> : null;
                     })()}
                     {ref.tally && (
-                      <span className="text-muted"> · the vote was {ref.tally}</span>
+                      <span className="text-muted">{row.positions[i] || row.held?.[i] ? " · " : ""}The vote was {ref.tally}</span>
                     )}
                     {row.breakdowns[i] && (
-                      <span className="text-muted"> · {row.breakdowns[i]}</span>
+                      <span className="text-muted">{row.positions[i] || row.held?.[i] || ref.tally ? " · " : ""}{row.breakdowns[i]}</span>
                     )}
 
                   </p>
-                ))}
+                ) : null)}
                 {/* The Senate voted the four April 2024 bills as one. */}
                 {chamber === "senate" && row.entry.siblingGroup === "april-2024" && (
                   <p className="mt-0.5 t-caption leading-relaxed text-muted">
@@ -204,12 +206,9 @@ export function KeyVoteGroupBlock({
                   </p>
                 )}
               </>
-            ) : (
-              <p className="mt-1 t-detail leading-relaxed text-muted">
-                {/* A stated note is a fact about the legislature; its absence is ours. */}
-                {row.note ?? <WorkingOnIt inline />}
-              </p>
-            )}
+            ) : row.note ? (
+              <p className="mt-1 t-detail leading-relaxed text-muted">{row.note}</p>
+            ) : null}
           </li>
         ))}
       </ul>

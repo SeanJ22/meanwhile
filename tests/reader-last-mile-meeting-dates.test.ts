@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import test from "./helpers/playbooks.ts";
 import { localDate } from "../lib/ask/meeting-time.ts";
 import { canonicalBodyIdentity } from "../lib/ask/body-identity.ts";
 import type { AskAnswerPayload } from "../lib/ask/answer.ts";

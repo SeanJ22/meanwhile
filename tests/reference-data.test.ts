@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -21,6 +22,14 @@ import {
 } from "../lib/reference/index.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+// Voting routes and election scope use the JSON reference loader; county clocks are a static JSON import.
+// Both retain the same required provenance pairing as the CSV tables.
+const JSON_REFERENCE_DATASETS = [...REFERENCE_JSON_DATASETS, "national_county_time_zones"] as const;
+const REFERENCE_DATA_FILES = [
+  ...REFERENCE_DATASETS.map(dataset => `${dataset}.csv`),
+  ...JSON_REFERENCE_DATASETS.map(dataset => `${dataset}.json`),
+];
+const ALL_REFERENCE_DATASETS = [...REFERENCE_DATASETS, ...JSON_REFERENCE_DATASETS];
 
 /**
  * `data/reference/` is where every coverage denominator comes from. A file going missing, a row count
@@ -29,50 +38,36 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 /* ---- the inventory and its pairings ---------------------------------------- */
 
-test("data/reference holds 30 files: 11 CSV and 4 JSON datasets with 15 provenance notes", () => {
+test("data/reference contains every declared CSV and JSON dataset with its provenance note", () => {
   const files = referenceFiles();
-  const data = files.filter((f) => f.endsWith(".csv"));
-  const structured = files.filter((f) => f.endsWith(".json"));
-  const notes = files.filter((f) => f.endsWith(".md"));
-
-  assert.equal(
-    files.length,
-    30,
-    `expected 30 files, found ${files.length}: ${files.join(", ")} — a file going ` +
-      "missing narrows a denominator, and a narrowed denominator flatters our coverage",
-  );
-  assert.equal(data.length, 11, `expected 11 data files, found ${data.length}`);
-  assert.equal(structured.length, 4, `expected 4 JSON data files, found ${structured.length}`);
-  assert.equal(notes.length, 15, `expected 15 provenance notes, found ${notes.length}`);
+  const expected = [...REFERENCE_DATA_FILES, ...ALL_REFERENCE_DATASETS.map(dataset => `${dataset}.md`)];
+  assert.deepEqual(files.toSorted(), expected.toSorted(), "a missing data file narrows a denominator, and an undeclared file needs its source identified");
 });
 
 test("every reference data file is paired with its provenance note, both ways", () => {
   const files = new Set(referenceFiles());
   const unpaired: string[] = [];
 
-  for (const dataset of REFERENCE_DATASETS) {
-    if (!files.has(`${dataset}.csv`)) unpaired.push(`${dataset}.csv is missing`);
-    if (!files.has(`${dataset}.md`)) unpaired.push(`${dataset}.md is missing`);
-  }
-  for (const dataset of REFERENCE_JSON_DATASETS) {
-    if (!files.has(`${dataset}.json`)) unpaired.push(`${dataset}.json is missing`);
+  for (const file of REFERENCE_DATA_FILES) {
+    const dataset = file.replace(/\.(csv|json)$/, "");
+    if (!files.has(file)) unpaired.push(`${file} is missing`);
     if (!files.has(`${dataset}.md`)) unpaired.push(`${dataset}.md is missing`);
   }
   // The other direction: a note describing a file nobody committed is a
   // claim about data this product does not have.
   for (const file of files) {
     const stem = file.replace(/\.(csv|json|md)$/, "");
-    if (!([...REFERENCE_DATASETS, ...REFERENCE_JSON_DATASETS] as readonly string[]).includes(stem)) {
+    if (!(ALL_REFERENCE_DATASETS as readonly string[]).includes(stem)) {
       unpaired.push(`${file} is not a declared dataset`);
     }
   }
 
-  assert.deepEqual(unpaired, [], "the reference set is not 15 declared data/note pairs");
+  assert.deepEqual(unpaired, [], "every reference dataset needs its data and source note");
 });
 
 test("every provenance note says something about its data file", () => {
   const thin: string[] = [];
-  for (const dataset of [...REFERENCE_DATASETS, ...REFERENCE_JSON_DATASETS]) {
+  for (const dataset of ALL_REFERENCE_DATASETS) {
     const note = readFileSync(join(ROOT, "data", "reference", `${dataset}.md`), "utf8");
     // A note is provenance or it is decoration. 400 bytes is not a quality
     // bar, it is a floor under "this file was created and left empty".
@@ -232,7 +227,7 @@ test("the BoardDocs file is deliberately empty, and zero is the correct state", 
 /** A module reading reference data from outside the repo works on one machine and narrows the denominator elsewhere. */
 test("no module reads reference data from any path outside data/reference", () => {
   const ALLOWED = new Set(["lib/reference/index.ts"]);
-  const DATASET_NAMES = [...REFERENCE_DATASETS, ...REFERENCE_JSON_DATASETS].join("|");
+  const DATASET_NAMES = ALL_REFERENCE_DATASETS.join("|");
   // A dataset named alongside a path that is not the sanctioned one.
   const OUTSIDE = new RegExp(
     `(?:cowork|/mnt/(?:user-)?data|["'\`][a-z]:[\\\\/]|~/|/home/|Desktop|OneDrive|\\boutputs/)[^"'\`\\n]*(?:${DATASET_NAMES})`,
@@ -264,17 +259,26 @@ test("no module reads reference data from any path outside data/reference", () =
 });
 
 test("the loader resolves every dataset inside data/reference", () => {
-  const datasets = [
-    ...REFERENCE_DATASETS.map((name) => ({ name, format: "csv" })),
-    ...REFERENCE_JSON_DATASETS.map((name) => ({ name, format: "json" })),
-  ];
-  for (const { name: dataset, format } of datasets) {
-    for (const ext of [format, "md"]) {
-      const p = posixRelative(ROOT, join(ROOT, "data", "reference", `${dataset}.${ext}`));
-      assert.equal(p, `data/reference/${dataset}.${ext}`);
+  for (const file of REFERENCE_DATA_FILES) {
+    const dataset = file.replace(/\.(csv|json)$/, "");
+    for (const name of [file, `${dataset}.md`]) {
+      const p = posixRelative(ROOT, join(ROOT, "data", "reference", name));
+      assert.equal(p, `data/reference/${name}`);
       assert.ok(statSync(join(ROOT, p)).size >= 0, `${p} is readable`);
     }
   }
+});
+
+test("the national county-clock JSON identifies its held NOAA bytes and preserves county identities", () => {
+  const reference = JSON.parse(readFileSync(join(ROOT, "data", "reference", "national_county_time_zones.json"), "utf8"));
+  assert.equal(reference.formatVersion, 1);
+  assert.deepEqual(reference.columns, ["countyFips", "stateCode", "countyName", "ianaTimeZones"]);
+  assert.equal(reference.source.url, "https://www.weather.gov/source/gis/Shapefiles/County/bp03mr20.dbx");
+  assert.equal(reference.source.sha256, createHash("sha256").update(readFileSync(join(ROOT, reference.source.heldPath))).digest("hex"));
+  const ids = reference.counties.map((row: unknown[]) => row[0]);
+  assert.equal(new Set(ids).size, ids.length, "one county identity cannot silently replace another county's clock");
+  assert.ok(ids.every((id: unknown) => typeof id === "string" && /^\d{5}$/.test(id)), "county FIPS keeps its leading zero");
+  assert.ok(reference.counties.some((row: unknown[]) => Array.isArray(row[3]) && row[3].length > 1), "split counties retain multiple clocks");
 });
 
 /* ---- the parser the counts depend on ------------------------------------- */

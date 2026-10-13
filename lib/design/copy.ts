@@ -1,8 +1,6 @@
 /** Default reader labels; published reader settings override them without a build. */
 export const READER_COPY = {
   "copy.working": "We’re working on getting this info",
-  "copy.notFound": "Not found in the sources checked",
-  "copy.notPublished": "{item} not posted yet",
   "copy.askMap": "Ask: a meeting?",
   "copy.askSidebar": "Ask about a meeting, a school…",
   "copy.askWgh": "Ask about a meeting, a school…",

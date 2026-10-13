@@ -75,9 +75,17 @@
   },
   {
     "id": "diligent",
-    "label": "Diligent / BoardDocs",
+    "label": "Diligent",
     "haveAdapter": true,
-    "hostPattern": "\\b(boarddocs|diligent)\\.com\\b",
+    "hostPattern": "\\b(diligent\\.com|diligentoneplatform\\.com|highbond\\.com|civicweb\\.net)\\b",
+    "flags": "i",
+    "markup": []
+  },
+  {
+    "id": "boarddocs",
+    "label": "BoardDocs",
+    "haveAdapter": true,
+    "hostPattern": "\\bboarddocs\\.com\\b",
     "flags": "i",
     "markup": []
   },
@@ -120,7 +128,7 @@
   {
     "id": "civicclerk",
     "label": "CivicClerk",
-    "haveAdapter": false,
+    "haveAdapter": true,
     "hostPattern": "\\bcivicclerk\\.com\\b",
     "flags": "i",
     "markup": [

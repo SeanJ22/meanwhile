@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import test from "./helpers/playbooks.ts";
 import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 import { rosterGapForBody, rosterForBody } from "../lib/registry/body-rosters.ts";
 import type { AskAnswerPayload } from "../lib/ask/answer.ts";

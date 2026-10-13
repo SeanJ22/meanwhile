@@ -1,0 +1,27 @@
+{
+  "n": 29,
+  "branch": "release/29",
+  "river_sha": "691c01dd0ff44041930828ead156c968fc269f8a",
+  "tested_sha": "691c01dd0ff44041930828ead156c968fc269f8a",
+  "steps": [
+    "SV-01",
+    "DS-03",
+    "SL-03",
+    "VS-01"
+  ],
+  "lanes": [
+    "state-votes",
+    "office-pins",
+    "platform-escribe",
+    "src-civic",
+    "statewide-and-portraits",
+    "token-cost"
+  ],
+  "integration_from": 149,
+  "integration_count": 155,
+  "pr": {
+    "number": 737,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/737"
+  },
+  "at": "2026-10-13T21:36:45Z"
+}

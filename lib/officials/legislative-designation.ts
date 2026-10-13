@@ -23,4 +23,3 @@ export function designationFromLabel(label: string): string {
     label.replace(/^[A-Z]{2} /, "").replace(/\s*\(\d{4} plan\)$/, "").replace(LABEL_PREFIX, "").replace(LABEL_SUFFIX, ""),
   );
 }
-

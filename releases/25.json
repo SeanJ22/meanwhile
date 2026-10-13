@@ -1,0 +1,28 @@
+{
+  "n": 25,
+  "branch": "release/25",
+  "river_sha": "3734a8f9bb3bb234dfe9ca3b241e6d83b339ce97",
+  "tested_sha": "3734a8f9bb3bb234dfe9ca3b241e6d83b339ce97",
+  "steps": [
+    "CH-23",
+    "BD-01",
+    "BD-02",
+    "UI-01",
+    "PC-01",
+    "PB-01"
+  ],
+  "lanes": [
+    "hunters",
+    "ballot-districts",
+    "card-gaps-sources",
+    "platform-census",
+    "playbooks"
+  ],
+  "integration_from": 135,
+  "integration_count": 140,
+  "pr": {
+    "number": 733,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/733"
+  },
+  "at": "2026-10-13T02:56:09Z"
+}

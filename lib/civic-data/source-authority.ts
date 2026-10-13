@@ -40,6 +40,26 @@ export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage 
 }
 
 export const SOURCE_AUTHORITIES = {
+  "socrata-discovery": {
+    id: "socrata-discovery", publisher: "Government publishers through the Socrata Discovery API", trust: "T1_AUTHORITATIVE_STRUCTURED",
+    sourceClass: "MULTI_PUBLISHER_PRIMARY", routePrefixes: ["https://api.us.socrata.com/api/catalog/v1"],
+    jurisdictions: ["US", ...REGISTRATION_TARGETS.map(t=>t.jurisdiction)], recordClasses: ["CURATED_READER_RECORD"],
+    competentFacts: ["Native dataset identity", "publisher title, description, columns and publication/update dates", "explicit publisher jurisdiction identifiers"],
+    expectedIdentifierKeys: ["record_id", "socrata_id"], expectedTemporalFields: ["source_through"],
+    horizonSemantics: "Paged national catalog; each exact domain and resource is retained even when its jurisdiction does not join. A catalog listing proves dataset metadata; dataset contents remain acquisition leads.",
+    parserVersion: "src-so/1", freshnessExpectation: "Daily discovery; source publication dates and advertised dataset update frequencies remain attributed.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" }, routineAutoPromotion: true,
+  },
+  "epa-echo": {
+    id: "epa-echo", publisher: "U.S. Environmental Protection Agency", trust: "T1_AUTHORITATIVE_STRUCTURED", sourceClass: "FEDERAL_AGENCY",
+    routePrefixes: ["https://echo.epa.gov/files/echodownloads/", "https://echodata.epa.gov/echo/"],
+    jurisdictions: ["US", ...REGISTRATION_TARGETS.map(t=>t.jurisdiction)], recordClasses: ["CURATED_READER_RECORD"],
+    competentFacts: ["FRS facility identity", "ZIP and Census FIPS", "reported inspections, dates, compliance and violation histories"],
+    expectedIdentifierKeys: ["record_id", "registry_id"], expectedTemporalFields: ["source_through"],
+    horizonSemantics: "Complete weekly national exporter, including facilities beyond the search API's queryset limit. Each native facility is retained in its ZIP; missing ZIPs and unresolved government joins remain held and counted.",
+    parserVersion: "src-so/1", freshnessExpectation: "Weekly EPA publication; HTTP Last-Modified dates the source release.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" }, routineAutoPromotion: true,
+  },
   ...FEDERAL_SOURCE_AUTHORITIES,
   "official-ballot-authorities": {
     id: "official-ballot-authorities",

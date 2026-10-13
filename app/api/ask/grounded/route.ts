@@ -1,5 +1,6 @@
 import { withPublishedAskSettings, askPlaybookVersion } from "@/lib/ask/runtime-settings.ts";
 import { governmentFinanceEvidence, governmentFinanceQuestion, composeGovernmentFinanceAnswer } from "@/lib/ask/government-finance";
+import { openDataQuestion, openDataEvidenceFor } from "@/lib/ask/open-data";
 import { governmentListingEntity, governmentListingEvidenceRecords, readerGovernmentListings } from "@/lib/ask/government-listings";
 import { prlStatementEvidence, readPrlForSubject } from "@/lib/sources/prl/person";
 import { federalAskEvidence } from "@/lib/sources/congress/reader";
@@ -1229,6 +1230,12 @@ async function answerWithSettings(request: Request) {
     /** A topic question's dated timeline for the bound body, when one was built. */
     let topicTimeline: ReturnType<typeof buildTopicTimeline> | null = null;
     const gaps: EvidenceGap[] = [...holdingLoadGaps];
+    if(openDataQuestion(question)) {
+      const divisionIds=subject?.kind==="BODY" ? [bound?.ocdId ?? subject.id.split("#")[0]].filter(id=>id?.startsWith("ocd-division/")) as string[] : ocdIds;
+      const data=await openDataEvidenceFor({divisionIds,zip:ballotZip,bodyId:subject?.kind==="BODY"?subject.id:null},subject?.id).catch(()=>({records:[],unavailable:["open-data"],notHeld:[]}));
+      records.push(...data.records);
+      if(data.unavailable.length || data.notHeld.length)gaps.push({whose:"OURS",statement:"We're working on getting this info from all open-data and environmental sources for this place."});
+    }
     /* The gaps attached to the chosen sitting(s), by why they were attached, for
        an answer composed from the sitting (`lib/ask/sitting-answer.ts`). Each is
        also in `gaps`; this only remembers which ones are about the sitting. */

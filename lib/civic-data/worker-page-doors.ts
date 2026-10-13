@@ -8,6 +8,8 @@ export async function recordPublishedPageDoor(input: {
   readonly page: WorkerPublicationCapture | null | undefined;
   readonly recordClass: string;
   readonly bodyId?: string | null;
+  readonly ocdId?: string | null;
+  readonly workItemId?: string | null;
   readonly published: number;
   readonly now: string;
 }): Promise<void> {
@@ -25,6 +27,8 @@ export async function recordPublishedPageDoor(input: {
       retrievedAt: input.page.observedAt,
       recordClass: input.recordClass,
       bodyId: input.bodyId ?? null,
+      ocdId: input.ocdId ?? null,
+      workItemId: input.workItemId ?? null,
       foundBy,
     }], input.now);
   } catch {

@@ -1,18 +1,3 @@
-/**
- * The derived wiring's own reading of a held calendar through the family's
- * adapter, with the row's reviewed filter. The adapter is served the held bytes
- * for the row's route and a 404 for anything else. The venue-resolutions
- * projection (`lib/meetings/venue-cache.ts`) is read first; a store that cannot
- * answer refuses the whole reading.
- *
- * - `verified`: the filter selects this body's sittings and none names another reviewed body;
- * - `changed`: the held bytes are no longer such a calendar, or the filter selects none of them
- *   (`ZeroRowExtractionError` or no matching sittings): CALENDAR_CHANGED, a review trigger;
- * - `wrongAttribution`: a selected sitting names another reviewed body;
- * - `refused`: no event to read, or any other adapter throw. That is ours, never evidence about
- *   the calendar: ADAPTER_REFUSED, no review triggered.
- */
-
 import { refreshVenueResolutionsFromPromoted } from "../../civic-data/curated-reader-read-model.ts";
 import type { AdapterVerification, DerivedInputRef } from "../../civic-data/derived-authority.ts";
 import { bodySourceWiringFor, DERIVED_WIRING_SOURCE_NAMES, type DerivedWiringKind, type DerivedWiringRow } from "../../civic-data/derived-meeting-wiring.ts";
@@ -55,20 +40,12 @@ export type HeldCalendarReadings =
 
 const message = (error: unknown): string => (error instanceof Error ? error.message : String(error));
 
-/**
- * What an adapter's throw says about a held calendar. Its zero-row extraction is the publisher's calendar selecting
- * nothing for the reviewed filter: CALENDAR_CHANGED. Anything else is ours: ADAPTER_REFUSED, no review triggered.
- */
 export function adapterThrowVerification(error: unknown, route: string): WiringVerification {
   return error instanceof ZeroRowExtractionError
     ? { changed: `the reviewed filter selects none of ${route}'s events: ${error.message}` }
     : { refused: `the adapter could not read ${route}: ${message(error)}` };
 }
 
-/**
- * Read every held calendar. The Reader projections the adapters resolve through are read first, so no adapter
- * reading ever runs against an unread projection.
- */
 export async function readHeldCalendars(input: {
   readonly options: PromotedCivicDataReadOptions;
   readonly now: string;
@@ -145,7 +122,8 @@ async function readOne(reading: HeldCalendarReading, now: string, adapterDigest:
     return adapterThrowVerification(error, row.route);
   }
   const own = meetings.filter((m) => m.bodyId === row.bodyId);
-  if (own.length === 0) return { changed: `the reviewed filter selects none of ${row.route}'s ${total > 0 ? `${total} ` : ""}event(s)` };
+  const emptyBody = total === 0 && ((row.kind === "LEGISTAR" && /^\d+$/.test(row.config.eventBodyId)) || (row.kind === "BOARDDOCS" && row.config.committeeId) || (row.kind === "CIVICCLERK" && row.config.bodyMatch && /eventCategoryId eq \d+/.test(new URL(row.route).searchParams.get("$filter") ?? "")));
+  if (own.length === 0 && !emptyBody) return { changed: `the reviewed filter selects none of ${row.route}'s ${total > 0 ? `${total} ` : ""}event(s)` };
   const name = row.bodyName.toLowerCase();
   const foreign = own.find((m) => !m.title.toLowerCase().includes(name) && reading.others.some((o) => m.title.toLowerCase().includes(o.toLowerCase())));
   if (foreign !== undefined) {

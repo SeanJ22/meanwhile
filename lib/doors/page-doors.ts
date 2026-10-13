@@ -1,11 +1,3 @@
-/**
- * Pages that feed live facts, and sources a Scout or detective found, become
- * doors. Each page gets a door record: its host, what it holds, how often it
- * is due (the fact class's freshness window), and who found it. A page that
- * fed a live fact is also marked as having just worked. A page that is not a
- * plain web address adds none.
- */
-
 import { createHash } from "node:crypto";
 import { FRESHNESS_WINDOW_HOURS } from "../control-plane/promotion/section3.ts";
 import type { ScoutResult } from "../control-plane/scheduler/scout-result.ts";
@@ -24,6 +16,8 @@ export interface PublishedPage {
   readonly recordClass: string;
   /** The body the page serves, when the publication names one. */
   readonly bodyId?: string | null;
+  readonly ocdId?: string | null;
+  readonly workItemId?: string | null;
   readonly foundBy: PageFinder | null;
 }
 
@@ -65,6 +59,10 @@ export function doorIdOfPage(recordClass: string, url: string): string | null {
   return address === null || address.url.length > 1900 || recordClass.trim() === "" ? null : pageDoorId(recordClass, address);
 }
 
+export function divisionOfPage(id: string | null | undefined): string | null {
+  return id?.startsWith("ocd-division/") ? id.split("#")[0] : null;
+}
+
 const FOUND_BY_NOTE: Record<PageFinder, string> = { SCOUT: "Found by a Scout.", DETECTIVE: "Found by a detective." };
 
 /** The record a published page becomes, or null when it cannot be one. `foundBy` is kept from an earlier record when this pass does not know it. */
@@ -75,10 +73,10 @@ export function pageDoorDraft(page: PublishedPage, earlierFoundBy: PageFinder | 
   return {
     doorId: pageDoorId(page.recordClass, address),
     kind: PAGE_DOOR_KIND,
-    ocdId: null,
+    ocdId: divisionOfPage(page.ocdId ?? page.bodyId),
     bodyIds: page.bodyId ? [page.bodyId] : [],
     hosts: [address.host],
-    config: { url: address.url, recordClass: page.recordClass, ...(foundBy ? { foundBy } : {}) },
+    config: { url: address.url, recordClass: page.recordClass, ...(page.workItemId ? { workItemId: page.workItemId } : {}), ...(foundBy ? { foundBy } : {}) },
     holds: [holdsOf(page.recordClass)],
     checkEveryMinutes: checkEveryFor(page.recordClass),
     notes: foundBy ? FOUND_BY_NOTE[foundBy] : "",
@@ -94,12 +92,6 @@ export interface PageDoorsResult {
   readonly skipped: number;
 }
 
-/**
- * Upsert a page door for each published page and mark it as having just worked.
- * A hand edit newer than the page's reading stands. Never throws on a store
- * failure: a published fact stays published whether or not its door record
- * could be written, and the next publication writes it again.
- */
 export async function recordPublishedPages(repo: DoorRepository, pages: readonly PublishedPage[], now: string): Promise<PageDoorsResult> {
   return recordPages(repo, pages, now, true);
 }
@@ -109,7 +101,7 @@ export function foundPages(result: ScoutResult): PublishedPage[] {
   if (result.refusal !== null || !Array.isArray(result.candidates)) return [];
   const foundBy = finderOfRole(result.researchRole);
   return result.candidates.flatMap((candidate) => typeof candidate?.url === "string"
-    ? [{ url: candidate.url, retrievedAt: result.recordedAt, recordClass: candidate.recordClass || result.recordClass, bodyId: null, foundBy }]
+    ? [{ url: candidate.url, retrievedAt: result.recordedAt, recordClass: candidate.recordClass || result.recordClass, bodyId: null, ocdId: divisionOfPage(result.subjectId), workItemId: result.workItemId, foundBy }]
     : []);
 }
 
@@ -126,7 +118,11 @@ async function recordPages(repo: DoorRepository, pages: readonly PublishedPage[]
       if (probe === null) { skipped += 1; continue; }
       const existing = await repo.read(probe.doorId);
       const earlier = existing !== null && isDoorRecord(existing.value) ? (existing.value.config.foundBy as PageFinder | undefined) ?? null : null;
-      const draft = earlier === null ? probe : pageDoorDraft(page, earlier)!;
+      const proposed = earlier === null ? probe : pageDoorDraft(page, earlier)!;
+      const prior = existing !== null && isDoorRecord(existing.value) ? existing.value : null;
+      const draft = { ...proposed, ocdId: proposed.ocdId ?? prior?.ocdId ?? null,
+        bodyIds: page.bodyId ? proposed.bodyIds : prior?.bodyIds ?? [],
+        config: { ...prior?.config, ...proposed.config } };
       const verdict = await upsertDerivedDoor(repo, draft, page.retrievedAt, now);
       if (verdict === "created") created += 1;
       else if (verdict === "updated") updated += 1;

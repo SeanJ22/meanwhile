@@ -328,7 +328,7 @@ export async function publishWorkerReaderResults(input: {
     const latest = await input.repos.workItems.mustRead(id);
     await input.repos.workItems.compareAndSet(id, latest.revision, { ...latest.value, publicationOutcome: outcome }, input.now);
     report.push({ workItemId: id, outcome });
-    if (plan) await recordPublishedPageDoor({ repos: input.repos, page: captures[0], recordClass: plan.contract.recordClass, published: wentLive, now: input.now });
+    if (plan) await recordPublishedPageDoor({ repos: input.repos, page: captures[0], recordClass: plan.contract.recordClass, ocdId: plan.contract.schemaVersion === 2 ? plan.contract.jurisdiction.canonicalId : null, bodyId: plan.publication?.bodyId, workItemId: id, published: wentLive, now: input.now });
     if (plan) learned.push(validatorObservation({ plan, workItemId: id, page: captures[0], captures, published: wentLive, outcome }));
   }
   await writeValidatorLessons(input.repos, learned, input.now);

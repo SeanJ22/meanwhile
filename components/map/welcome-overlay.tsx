@@ -1,6 +1,5 @@
 "use client";
 
-import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { useEffect, useState } from "react";
 
 import {
@@ -25,7 +24,7 @@ import { Logo } from "@/components/brand/logo";
 const MESSAGES = {
   malformed: "A zip code is five digits.",
   unknown: "No such zip code. Check the digits.",
-  uncovered: "__coverage_gap__",
+  uncovered: "We do not have a location for that ZIP yet.",
 } as const;
 
 interface WelcomeOverlayProps {
@@ -161,7 +160,7 @@ export function WelcomeOverlay({
             autoFocus={open}
           />
           <p id="welcome-error" role="alert" className="welcome-error">
-            {error === MESSAGES.uncovered ? <WorkingOnIt inline /> : error ?? ""}
+            {error ?? ""}
           </p>
         </div>
 

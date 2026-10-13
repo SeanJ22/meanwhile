@@ -2,7 +2,8 @@ import { createHash } from "node:crypto";
 import { FEDERAL_SOURCES } from "./targets.ts";
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 import { US_STATES } from "../../control-plane/readiness/catalog.ts";
-import type { FederalCapture, FederalFact } from "./types.ts";
+import type { FederalCapture, FederalFact, LdaRoster } from "./types.ts";
+import { joinLdaHonoree } from "./lda-honoree.ts";
 
 type Row = Record<string, unknown>;
 export const object = (value: unknown): Row => value && typeof value === "object" && !Array.isArray(value) ? value as Row : {};
@@ -26,6 +27,9 @@ export function packageBillId(id: string): string {
 
 /** Every input row survives, including malformed and unmatched source-native rows. */
 export function normalizeFederalCapture(capture: FederalCapture): FederalFact[] {
+  return normalizeFederalCaptureWithRoster(capture);
+}
+export function normalizeFederalCaptureWithRoster(capture: FederalCapture, honoreeRoster?: LdaRoster): FederalFact[] {
   const base = (nativeId: string, kind: FederalFact["kind"], title: string, publishedAt: unknown, sourceUrl = capture.url): FederalFact => ({
     id: `${capture.source}:${kind}:${nativeId}`, nativeId, kind, title, source: capture.source,
     sourceUrl, publisher: FEDERAL_SOURCES[capture.source].publisher, official: true, publishedAt: date(publishedAt), checkedAt: capture.retrievedAt,
@@ -89,13 +93,17 @@ export function normalizeFederalCapture(capture: FederalCapture): FederalFact[] 
     const items = rows(filing.contribution_items);
     if (!filingId) return [unknown(filing, "LD-203 filing has no filing_uuid.")];
     // Filings attesting no contributions are retained, without inventing a member's zero.
-    if (!items.length) return [{ ...base(filingId, "LOBBYING_CONTRIBUTION", "LD-203 contribution report", filing.dt_posted, url), filingId }];
+    if (!items.length) return [{ ...base(filingId, "LOBBYING_CONTRIBUTION", "LD-203 contribution report", filing.dt_posted, url), filingId,
+      honoreeJoin: { status: "UNJOINED", reason: "NO_CONTRIBUTIONS", detail: "The report contains no contribution items; it does not establish a member's zero." } }];
     return items.map((item, index) => {
       const id = string(item.id) || String(index);
-      const bioguideId = string(item.bioguide_id);
+      const honoreeName = string(item.honoree_name);
+      const joined = joinLdaHonoree(honoreeName,
+        capture.context?.honoreeRosterVersionId === honoreeRoster?.versionId ? honoreeRoster : undefined, capture.context?.honoreeRosterFailure);
       return { ...base(`${filingId}:${id}`, "LOBBYING_CONTRIBUTION", string(item.contribution_type), filing.dt_posted, url), filingId,
         amount: string(item.amount), contributionDate: string(item.date), recipientId: string(item.recipient_id ?? item.fec_committee_id),
-        recipientName: string(item.payee_name), ...(/^[A-Z]\d{6}$/.test(bioguideId) ? { bioguideId } : {}),
+        recipientName: string(item.payee_name), honoreeName, honoreeJoin: joined.join,
+        ...(joined.bioguideId ? { bioguideId: joined.bioguideId } : {}), ...(joined.state ? { state: joined.state } : {}),
         organization: item.contributor_type === "organization" ? string(item.contributor_name) || null : null };
     });
   });

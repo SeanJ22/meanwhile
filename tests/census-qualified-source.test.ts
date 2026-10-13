@@ -3,8 +3,8 @@ import test from "node:test";
 import { zip, buildWorkbook } from "../scripts/xlsx.mjs";
 import { readBoundaryZip } from "../lib/geo/shapefile.ts";
 import { readXlsxSheets } from "../lib/census-geography/xlsx.ts";
-import { censusWorkDivision } from "../lib/census-geography/division-id.ts";
-import { selectGeographyVersion } from "../lib/census-geography/selection.ts";
+import { censusWorkDivision, districtFamilyKey } from "../lib/census-geography/division-id.ts";
+import { applicabilityOf, selectGeographyVersion } from "../lib/census-geography/selection.ts";
 import type { GeographyRef } from "../lib/census-geography/contract.ts";
 
 function boundary(deleted = false): Buffer {
@@ -48,6 +48,43 @@ test("a serving term, a documented general election and an incomplete release st
   const versions = [{ key: "cd:119", type: "congressional_district" as const }, { key: "cd:120", type: "congressional_district" as const }];
   assert.equal(selectGeographyVersion(versions, "congressional_district", { purpose: "representation", asOf: "2026-10-09" })?.key, "cd:119");
   assert.equal(selectGeographyVersion(versions, "congressional_district", { purpose: "election", asOf: "2026-10-09", electionDate: "2026-11-03" })?.key, "cd:120");
-  assert.equal(selectGeographyVersion(versions, "congressional_district", { purpose: "election", asOf: "2026-10-09", electionDate: "2026-06-01" }), null);
+  assert.equal(selectGeographyVersion(versions, "congressional_district", { purpose: "election", asOf: "2026-10-09", electionDate: "2026-06-01" }, "AZ")?.key, "cd:119");
   assert.equal(selectGeographyVersion(versions.map(row => ({ ...row, retrievalComplete: false })), "congressional_district", { purpose: "representation", asOf: "2026-10-09" }), null);
+});
+
+test("open plans hold until a complete successor's same-purpose interval begins; equal starts stay ambiguous", () => {
+  const old = { key: "sldu:future-a", type: "state_leg_upper" as const, applicability: [{ purpose: "election" as const, from: "2028-11-07" }] };
+  const newer = { ...old, key: "sldu:future-b", applicability: [{ purpose: "election" as const, from: "2030-11-05" }] };
+  const election = { purpose: "election" as const, asOf: "2030-10-01", electionDate: "2030-11-05" };
+  assert.equal(selectGeographyVersion([old, newer], old.type, { ...election, electionDate: "2030-11-04" }, "AZ")?.key, old.key);
+  assert.equal(selectGeographyVersion([old, newer], old.type, election, "AZ")?.key, newer.key);
+  assert.equal(selectGeographyVersion([old, { ...newer, retrievalComplete: false }], old.type, election, "AZ")?.key, old.key);
+  assert.equal(selectGeographyVersion([old, { ...newer, applicability: old.applicability }], old.type, election, "AZ"), null);
+  const representation = { ...newer, applicability: [{ purpose: "representation" as const, from: "2029-01-01" }] };
+  assert.equal(selectGeographyVersion([old, representation], old.type, election, "AZ")?.key, old.key);
+});
+
+test("known plan applicability corrects stale metadata, with exclusions only when a state is supplied", () => {
+  const stale = { key: "sldu:2024", type: "state_leg_upper" as const, applicability: [{ purpose: "representation" as const, from: "2025-01-01", through: "2027-01-01" }] };
+  const election = { purpose: "election" as const, asOf: "2026-10-12", electionDate: "2026-11-03" };
+  assert.ok(applicabilityOf(stale).some(interval => interval.purpose === "election"));
+  assert.equal(selectGeographyVersion([stale], stale.type, election, "az")?.key, stale.key);
+  assert.equal(selectGeographyVersion([stale], stale.type, election, "mi"), null);
+  assert.equal(selectGeographyVersion([stale], stale.type, election)?.key, stale.key);
+  assert.equal(districtFamilyKey("ocd-division/country:us/state:az/sldu:20"), "az/sldu");
+  assert.equal(districtFamilyKey("ocd-division/country:us/state:az/place:tucson"), null);
+});
+
+test("a held 2026 successor replaces the prior plan's continuation when the new representation term starts", () => {
+  for (const [type, prior, next] of [
+    ["congressional_district", "cd:119", "cd:120"],
+    ["state_leg_upper", "sldu:2024", "sldu:2026"],
+    ["state_leg_lower", "sldl:2024", "sldl:2026"],
+  ] as const) {
+    const versions = [{ key: prior, type }, { key: next, type }];
+    const serving = { purpose: "representation" as const, asOf: "2027-03-01" };
+    assert.equal(selectGeographyVersion(versions, type, serving, "AZ")?.key, next);
+    assert.equal(selectGeographyVersion([{ key: prior, type }], type, serving, "AZ")?.key, prior);
+    assert.equal(selectGeographyVersion([versions[0], { ...versions[1], retrievalComplete: false }], type, serving, "AZ")?.key, prior);
+  }
 });

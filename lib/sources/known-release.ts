@@ -80,6 +80,37 @@ function runtimeContext() {
     return { store: new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR)), locks: repos.locks, repos };
   })().catch(error => { runtime = undefined; throw error; });
 }
+/** Large file sources share the same vault and repository locks as byte releases. */
+export async function resolveKnownReleaseCache(options: Pick<KnownReleaseOptions, "store" | "locks"> = {}): Promise<{ store: EvidenceStore; locks: LockManager }> {
+  const defaults = options.store && options.locks ? null : await runtimeContext();
+  return { store: options.store ?? defaults!.store, locks: options.locks ?? defaults!.locks };
+}
+function sourceRetryKey(sourceId: string, url: string) {
+  const identity = hash(new URL(url).origin);
+  return { identity, key: `project/freshness/source/${sourceId}/retry/${identity}.json` };
+}
+/** HEAD checks and large archives honor the same publisher cooldown as byte releases. */
+export async function checkKnownSourceRetry(store: EvidenceStore, sourceId: string, url: string, now: string): Promise<void> {
+  const object = await store.get(sourceRetryKey(sourceId, url).key);
+  if (object) {
+    const retry = JSON.parse(new TextDecoder().decode(object.bytes)) as { until?: string };
+    if (typeof retry.until === "string" && Date.parse(retry.until) > Date.parse(now)) {
+      throw sourceAcquisitionFailure("PUBLISHER_RESPONSE_REFUSED", `KNOWN_SOURCE_RETRY_AFTER:${retry.until}`);
+    }
+  }
+}
+export async function recordKnownSourceRetry(store: EvidenceStore, sourceId: string, url: string, response: Pick<Response, "status" | "headers">, checkedAt: string): Promise<void> {
+  const retry = response.headers.get("retry-after");
+  if (retry && (response.status === 429 || response.status >= 500 && response.status <= 599)) {
+    const untilMs = /^\d+$/.test(retry) ? Date.parse(checkedAt) + Number(retry) * 1000 : Date.parse(retry);
+    if (Number.isFinite(untilMs) && untilMs > Date.parse(checkedAt)) {
+      const { identity, key } = sourceRetryKey(sourceId, url);
+      const body = new TextEncoder().encode(JSON.stringify({ until: new Date(untilMs).toISOString(), status: response.status, checkedAt }));
+      await store.put(key, body, { contentType: "application/json", contentHash: `manifest:source-retry:${identity}`,
+        byteLength: body.byteLength, objectClass: "MUTABLE_INDEX" });
+    }
+  }
+}
 async function priorCapturedRelease(options: KnownReleaseOptions, repos: ControlPlaneRepositories, store: EvidenceStore): Promise<KnownRelease | null> {
   const now = options.now?.() ?? new Date().toISOString();
   const rows = (await readPlaceArtifacts(repos, options.url, "1970-01-01T00:00:00.000Z", now))
@@ -120,7 +151,7 @@ function validIndex(value: unknown, options: KnownReleaseOptions): value is Rele
 }
 /** Other source children may be filling this same release. Reuse their result
  * within the caller's acquisition deadline, including a slow first download. */
-async function withReleaseLock<T>(locks: LockManager, name: string, signal: AbortSignal, work: () => Promise<T>): Promise<T> {
+export async function withKnownReleaseLock<T>(locks: LockManager, name: string, signal: AbortSignal, work: () => Promise<T>): Promise<T> {
   let waitMs = 250;
   for (;;) {
     signal.throwIfAborted();
@@ -143,14 +174,12 @@ export async function acquireKnownRelease(options: KnownReleaseOptions): Promise
   const store = options.store ?? defaults!.store, locks = options.locks ?? defaults!.locks;
   const identity = hash(`${options.sourceId}\n${options.releaseId}\n${options.url}`);
   const key = `project/freshness/source/${options.sourceId}/releases/${identity}/manifest.json`;
-  const retryIdentity = hash(new URL(options.url).origin);
-  const retryKey = `project/freshness/source/${options.sourceId}/retry/${retryIdentity}.json`;
   let inflight = pending.get(store); if (!inflight) { inflight = new Map(); pending.set(store, inflight); }
   const waiting = inflight.get(identity);
   // The first caller shares transport; each caller still checks its own
   // parser revision and limits against the resulting held release.
   if (waiting) { await waiting; return acquireKnownRelease(options); }
-  const work = withReleaseLock(locks, `source-release:${identity}`, options.signal, async () => {
+  const work = withKnownReleaseLock(locks, `source-release:${identity}`, options.signal, async () => {
     options.signal.throwIfAborted();
     const now = options.now?.() ?? new Date().toISOString();
     const object = await store.get(key);
@@ -215,13 +244,7 @@ export async function acquireKnownRelease(options: KnownReleaseOptions): Promise
     headers.set("user-agent", sourceUserAgent());
     if (heldBytes && prior?.etag) headers.set("if-none-match", prior.etag);
     else if (heldBytes && prior?.lastModified) headers.set("if-modified-since", prior.lastModified);
-    const retryObject = await store.get(retryKey);
-    if (retryObject) {
-      const retry = JSON.parse(new TextDecoder().decode(retryObject.bytes)) as { until?: string };
-      if (typeof retry.until === "string" && Date.parse(retry.until) > Date.parse(now)) {
-        throw sourceAcquisitionFailure("PUBLISHER_RESPONSE_REFUSED", `KNOWN_SOURCE_RETRY_AFTER:${retry.until}`);
-      }
-    }
+    await checkKnownSourceRetry(store, options.sourceId, options.url, now);
     const response = await requestPublisher(options.sourceId, () =>
       (options.fetchImpl ?? fetch)(options.url, { headers, signal: options.signal, redirect: "follow" }));
     const finalUrl = response.url || options.url;
@@ -247,14 +270,7 @@ export async function acquireKnownRelease(options: KnownReleaseOptions): Promise
     if (response.status !== 200) {
       await response.body?.cancel().catch(() => {});
       const retry = response.headers.get("retry-after");
-      if (retry && (response.status === 429 || response.status >= 500 && response.status <= 599)) {
-        const untilMs = /^\d+$/.test(retry) ? Date.parse(checkedAt) + Number(retry) * 1000 : Date.parse(retry);
-        if (Number.isFinite(untilMs) && untilMs > Date.parse(checkedAt)) {
-          const body = new TextEncoder().encode(JSON.stringify({ until: new Date(untilMs).toISOString(), status: response.status, checkedAt }));
-          await store.put(retryKey, body, { contentType: "application/json", contentHash: `manifest:source-retry:${retryIdentity}`,
-            byteLength: body.byteLength, objectClass: "MUTABLE_INDEX" });
-        }
-      }
+      await recordKnownSourceRetry(store, options.sourceId, options.url, response, checkedAt);
       throw sourceAcquisitionFailure("PUBLISHER_RESPONSE_REFUSED", `KNOWN_SOURCE_HTTP_${response.status}${retry ? `:Retry-After=${retry}` : ""}`);
     }
     const bytes = await readPublisherBody(options.sourceId, async () => {

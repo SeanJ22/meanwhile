@@ -95,7 +95,7 @@ test("the saved official LDA page retains all reports and contributions without 
   const records = normalizeFederalCapture(source);
   assert.equal(records.length, root.results.reduce((sum: number, row: { contribution_items: unknown[] }) => sum + Math.max(1, row.contribution_items.length), 0));
   assert.ok(records.some(row => row.amount === "1000.00"));
-  assert.ok(records.every(row => !row.bioguideId), "The real source publishes no Bioguide recipient IDs; a name never invents one.");
+  assert.ok(records.every(row => !row.bioguideId), "The LDA source publishes no Bioguide IDs; a join also needs the promoted federal roster.");
   assert.ok(!JSON.stringify(records).includes("HANCOCK, SHAY MICHAEL"));
   const counts = countFederalFacts(records, new Set());
   assert.equal(counts.unjoined, counts.loaded);

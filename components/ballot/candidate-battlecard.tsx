@@ -1,7 +1,7 @@
 "use client";
 
 import { PersonCard } from "@/components/ui/person-card";
-import { WorkingOnIt } from "@/components/demand/working-on-it";
+import { CardGapContribution } from "@/components/ui/card-gap-context";
 import { useEffect, useState } from "react";
 
 import { captureEvent } from "@/lib/events/client";
@@ -21,7 +21,6 @@ import { PublicStatementsProfile } from "@/components/officials/public-statement
 import { OfficialActions } from "@/components/officials/official-actions";
 import { FederalMemberRecords } from "@/components/officials/federal-records";
 import { FederalCommentRules } from "@/components/officials/federal-comment-rules";
-import { DemandPill } from "@/components/demand/demand-pill";
 import {
   type PositionsEmptyStateInput,
 } from "@/lib/questionnaire/positions-state";
@@ -144,7 +143,7 @@ export function CandidateBattlecard({
               </div>
 
             )}
-            contact={contact ?? (contactHolder ? <div data-ballot-contact-row><ContactPills holder={contactHolder} scope="primary" /><OfficialTermNote holder={contactHolder} /></div> : <WorkingOnIt subject={{ type: "CANDIDATE", id: subjectId }} />)}
+            contact={contact ?? (contactHolder ? <div data-ballot-contact-row><ContactPills holder={contactHolder} scope="primary" /><OfficialTermNote holder={contactHolder} /></div> : <CardGapContribution id={`contact:${subjectId}`} label="contact details" subject={{ type: "CANDIDATE", id: subjectId }} />)}
             sections={{ ...sections, positions: <>{sections?.positions}<PositionsSection subjectId={subjectId} subjectName={name} contentOnly /></> }}
             afterSections={<>
               <FederalMemberRecords key={contactHolder?.id ?? subjectId} memberId={contactHolder?.id ?? subjectId} />
@@ -152,7 +151,6 @@ export function CandidateBattlecard({
               <PublicStatementsProfile subjectId={contactHolder?.id ?? subjectId} />
               <OfficialActions subjectId={subjectId} />
               <div className="mt-5"><SpeakYourMind subjectType="CANDIDATE" subjectId={subjectId} subject={name} context={speakContext ?? undefined} /></div>
-              <DemandPill subjectType="CANDIDATE" subjectId={subjectId} className="mt-3" />
             </>}
           />
         </div>

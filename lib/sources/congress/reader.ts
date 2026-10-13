@@ -99,6 +99,13 @@ export async function federalAskEvidence(memberId: string | null, question: stri
   if (memberId?.startsWith("congress:") && memberQuestion) {
     const member = await readFederalMember(memberId, { ...options, limit: Number.MAX_SAFE_INTEGER, includeLinks: false });
     records.push(...[...member.bills, ...member.referrals, ...member.contributions].map(row => federalEvidence(row, memberId)));
+    const identitySources = new Map(member.contributions.flatMap(row => row.honoreeJoin?.status === "JOINED"
+      ? [[`${row.honoreeJoin.rosterVersionId}:${row.bioguideId}`, { row, join: row.honoreeJoin }] as const] : []));
+    records.push(...[...identitySources.entries()].map(([id, { row, join }]): EvidenceRecord => ({
+      kind: "SOURCE_PASSAGE", id: `lda-honoree:${id}`, subjectId: memberId, canonicalSubjectId: memberId,
+      text: `The filed honoree ${JSON.stringify(row.honoreeName)} uniquely matches ${join.matchedName}, ${join.chamber}, ${join.state}, Bioguide ${row.bioguideId} in the held federal roster.`,
+      occurredAt: null, sourceUrl: join.sourceUrl, sourceOrg: join.sourceOrg, retrievedAt: join.checkedAt,
+    })));
     denominators.sponsoredBillsHeld = member.totalBills;
     if (/\b(lobby|lobbying|lobbyist|lobbyists|contributions)\b/i.test(question) && member.coverage.lda !== "PROMOTED") {
       gaps.push({ whose: "OURS", statement: "We have not verified a recipient identity link between the Senate lobbying contribution filings and this member." });

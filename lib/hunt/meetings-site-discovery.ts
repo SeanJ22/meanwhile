@@ -22,7 +22,10 @@ import type { OfficialLinkingPage } from "../civic-data/source-authority.ts";
 import { detectTenancy } from "./platform-tenancy.ts";
 import { MEETING_HELD_HORIZON_DAYS, MEETING_HELD_LOOKBACK_DAYS } from "../meetings/constants.ts";
 import { parseDiligentMeetings } from "../sources/diligent/index.ts";
+import { boardDocsBase, parseBoardDocsMeetings } from "../sources/boarddocs/index.ts";
+import { parseOrganizationPage } from "../sources/boardbook/index.ts";
 import { meetingSourceCadenceHours } from "../control-plane/scheduler/obligation.ts";
+import { governmentTimeZone } from "../time/county-time-zones.ts";
 
 /**
  * How a candidate was evidenced. The first three come from the government's
@@ -45,6 +48,7 @@ export const VERIFIABLE_VENDORS = [
   "civicclerk-api",
   "iqm2",
   "boardbook",
+  "boarddocs",
   "diligent",
   /* A body's own page that dates its public events, verified for that body (`verifyOfficialPage`). */
   "official-page-events",
@@ -58,7 +62,6 @@ export const LEAD_ONLY_VENDORS: readonly { readonly vendor: string; readonly hos
   { vendor: "primegov", host: /(^|\.)primegov\.com$/i },
   { vendor: "granicus", host: /(^|\.)granicus\.com$/i },
   { vendor: "municode-meetings", host: /(^|\.)municodemeetings\.com$/i },
-  { vendor: "boarddocs", host: /(^|\.)boarddocs\.com$/i },
   { vendor: "diligent", host: /(^|\.)(diligentoneplatform\.com|highbond\.com|civicweb\.net)$/i },
   { vendor: "swagit", host: /(^|\.)swagit\.com$/i },
   /* Destiny Agenda (public.destinyhosted.com/agenda_publish.cfm?id=…). */
@@ -170,9 +173,19 @@ export function meetingEndpointCandidates(html: string, pageUrl: string, now?: s
       add({ vendor: "boardbook", url: `https://meetings.boardbook.org/Public/Organization/${boardbook[1]}`, basis: "LINKED", evidence: href, verifiable: true });
       continue;
     }
+    if (/(^|\.)boarddocs\.com$/i.test(host) && /\/Board\.nsf(?:\/|$)/i.test(url.pathname)) {
+      try {
+        add({ vendor: "boarddocs", url: `${boardDocsBase(href)}/Public`, basis: "LINKED", evidence: href, verifiable: true });
+      } catch { /* An unrelated vendor page is not a tenant. */ }
+      continue;
+    }
     const clerk = /^([a-z0-9-]+)\.portal\.civicclerk\.com$/.exec(host);
     if (clerk) {
       add({ vendor: "civicclerk-api", url: `https://${clerk[1]}.api.civicclerk.com/v1/Events?$top=5`, basis: "LINKED", evidence: href, verifiable: true });
+      continue;
+    }
+    if (`${url.protocol}//${url.host}` === origin && /^\/AgendaCenter(?:\/|$)/i.test(url.pathname)) {
+      add({ vendor: "civicplus-agendacenter", url: href, basis: "LINKED", evidence: href, verifiable: true });
       continue;
     }
     const lead = LEAD_ONLY_VENDORS.find((v) => v.host.test(host));
@@ -266,31 +279,6 @@ export interface EndpointVerification {
  * keyed on it (a saved method, a wiring row) then re-keys cleanly.
  */
 export const OFFICIAL_PAGE_EVENTS_VERSION = "official-page-events@3d7cbd75f850";
-
-/**
- * The zone a state's bodies meet in, for every state and territory wholly in
- * one zone. States a zone line crosses (AK, FL, ID, IN, KS, KY, MI, ND, NE,
- * OR, SD, TN, TX) and two whose towns keep a neighbour's time by local
- * practice (AL, NV) are absent, so their wall clocks are never guessed and a
- * page for one of their bodies is not confirmed.
- */
-export const STATE_TIME_ZONES: Readonly<Record<string, string>> = {
-  AZ: "America/Phoenix",
-  NH: "America/New_York",
-  NJ: "America/New_York",
-  NM: "America/Denver",
-  ...Object.fromEntries(["CT", "DC", "DE", "GA", "MA", "MD", "ME", "NC", "NY", "OH", "PA", "RI", "SC", "VA", "VT", "WV"].map((s) => [s, "America/New_York"])),
-  ...Object.fromEntries(["AR", "IA", "IL", "LA", "MN", "MO", "MS", "OK", "WI"].map((s) => [s, "America/Chicago"])),
-  ...Object.fromEntries(["CO", "MT", "UT", "WY"].map((s) => [s, "America/Denver"])),
-  CA: "America/Los_Angeles",
-  WA: "America/Los_Angeles",
-  HI: "Pacific/Honolulu",
-  PR: "America/Puerto_Rico",
-  VI: "America/St_Thomas",
-  GU: "Pacific/Guam",
-  MP: "Pacific/Saipan",
-  AS: "Pacific/Pago_Pago",
-};
 
 /** Words that name a government's class, not the government itself. */
 /*
@@ -390,6 +378,8 @@ export interface OfficialPageIdentity {
   readonly officialHost: string;
   readonly linkingPage?: OfficialLinkingPage | null;
   readonly stateCode: string;
+  /** Census state+county FIPS for the government's meeting location; split counties require a stated clock. */
+  readonly countyFips?: string | null;
   readonly now: string;
 }
 
@@ -398,7 +388,7 @@ export interface OfficialPageIdentity {
  * adapter's own `verifyOfficialPageEvents`, so a page this confirms is a page
  * the standing runner would publish from: an event verifies only on the body's
  * official host, named for the body in its title, and dated in the body's
- * state's zone. A page for a body in an untabled state is never confirmed.
+ * county's zone. A county with more than one clock is never guessed.
  */
 function verifyOfficialPage(
   response: { readonly body: string; readonly finalUrl: string },
@@ -407,12 +397,12 @@ function verifyOfficialPage(
   if (identity === undefined) {
     return { verdict: "NOT_CONFIRMED", count: null, detail: "an official page is verified only for a named body, and none was given" };
   }
-  const timeZone = STATE_TIME_ZONES[identity.stateCode.toUpperCase()];
-  if (timeZone === undefined) {
+  const timeZone = governmentTimeZone(identity.stateCode, identity.countyFips);
+  if (timeZone === null) {
     return {
       verdict: "NOT_CONFIRMED",
       count: null,
-      detail: `TIME_ZONE_UNKNOWN: ${identity.stateCode} is not a one-zone state this module tables, and a wall clock is never guessed`,
+      detail: `TIME_ZONE_UNKNOWN: no single county clock for ${identity.countyFips ?? identity.stateCode}; a wall clock is never guessed`,
     };
   }
   const [name, ...nameForms] = identityNameTerms(identity.name);
@@ -504,10 +494,18 @@ export function verifyEndpointBody(
         : { verdict: "NOT_CONFIRMED", count: null, detail: "no IQM2 meeting rows" };
     }
     case "boardbook": {
-      const rows = new Set(body.match(/\/Public\/Meeting\/\d+/gi) ?? []).size;
+      const rows = parseOrganizationPage(body).rows.length;
       return rows > 0
         ? { verdict: "YIELDED", count: rows, detail: `${rows} BoardBook meeting link(s)` }
         : { verdict: "NOT_CONFIRMED", count: null, detail: "no BoardBook meeting links" };
+    }
+    case "boarddocs": {
+      try {
+        const rows = parseBoardDocsMeetings(body);
+        return { verdict: rows.length ? "YIELDED" : "EMPTY", count: rows.length, detail: `${rows.length} public BoardDocs meeting record(s)` };
+      } catch {
+        return { verdict: "NOT_CONFIRMED", count: null, detail: "not a BoardDocs public committee meeting list" };
+      }
     }
     case "diligent": {
       const rows = parseDiligentMeetings(body);
@@ -602,6 +600,8 @@ export interface MeetingsDiscoveryAttempt {
   readonly found: readonly DiscoveryFind[];
   readonly leads: readonly Omit<DiscoveryFind, "count" | "artifactId">[];
   readonly steps: readonly DiscoveryStep[];
+  /** Platform and tenant observed on the saved homepage, on a slow refresh clock. */
+  readonly platformCensus?: import("../control-plane/discovery/platform-census.ts").PlatformCensusObservation;
   /** Saved methods this walk applied, and those it passed over and why (`lib/hunt/meetings-recipes.ts`). */
   readonly recipes: {
     readonly applied: readonly {

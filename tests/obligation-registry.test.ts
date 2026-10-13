@@ -100,7 +100,7 @@ test("the standing research registry is not a parallel tracked-meetings authorit
   );
 
   const discovery = buildRegistry(
-    [meetingsDiscoveryProvider({ materialized: () => ({ ids: new Set(["freshness:meetings-discovery:az:county:county-of-pima#own-site-meetings"]) }) })],
+    [meetingsDiscoveryProvider({ registered: () => ({ registries: new Map(), refused: new Map() }), materialized: () => ({ ids: new Set(["freshness:meetings-discovery:az:county:county-of-pima#own-site-meetings"]) }) })],
     { root: ROOT, nowIso: NOW },
   );
   assert.equal(discovery.units.length, 1, "a materialized meetings-discovery need is scheduled");

@@ -244,6 +244,11 @@ test("THE RUNNER IS WIRED: it reads the walk before dispatch, and hands the read
   assert.match(runner, /paidDiscoveryHold\(row\.obligation\.id, freeWalks\)/, "the hold reads it");
   assert.doesNotMatch(runner, /paidDiscoveryHold\([^)]*UNREAD_FREE_DISCOVERY_WALKS/, "the hold no longer reads the unwired stand-in");
   assert.match(runner, /freeWalks\.evidenceFor\?\.\(discovery\.jurisdictionId\)/, "the Scout's brief carries the walk's line");
-  assert.match(runner, /const discoveryToWalk = discoveryNeedsToWalk\(\[\.\.\.missionDiscoveryNeeds\.values\(\)\], \[\.\.\.dispatchedNeeds\.values\(\)\], need =>/, "the walk list carries the dispatched needs, then the mission's blanks, with exact selection");
-  assert.match(runner, /needs: discoveryToWalk,/, "and the walk takes that list");
+  assert.match(runner, /let discoveryToWalk = discoveryNeedsToWalk\(\[\.\.\.missionDiscoveryNeeds\.values\(\)\], \[\.\.\.dispatchedNeeds\.values\(\)\], need =>/, "the explicit walk list carries dispatched needs and mission blanks with exact selection");
+  assert.match(runner, /await runNeeds\(discoveryToWalk, discoveryRuntime\)/, "the executor receives explicit work before the standing census");
+  assert.match(runner, /mergePass\(await runMeetingsDiscovery\(repos, \{\s*needs, runtime,/, "both lists reach the same free discovery executor");
+  assert.match(runner, /readPlatformCensusNeeds\(state, registry, \{ repos, root: ROOT,/, "the standing list comes from one state's registered websites and census leads");
+  assert.match(runner, /discoveryToWalk = discoveryNeedsToWalk\(standing\.needs\.filter\(/, "standing work continues beyond the explicit list");
+  assert.match(runner, /await runNeeds\(discoveryToWalk, runtime\)/, "the state-scoped standing list reaches the executor");
+  assert.match(runner, /const dispatchedDiscoveryIds = sync\.all\.filter\(row => row\.materializedBy === OWNER_DISPATCH\)/, "free standing inventory is never mistaken for an explicit paid dispatch");
 });

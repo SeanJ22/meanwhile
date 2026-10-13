@@ -1,14 +1,16 @@
 import type { RoutineDataStore } from "../../civic-data/store.ts";
-import { failedAcquisitionCandidate } from "../../civic-data/candidate-builders.ts";
+import { failedAcquisitionCandidate, normalizedHash } from "../../civic-data/candidate-builders.ts";
 import { processRegisteredRoutineCandidate } from "../../civic-data/promotion.ts";
 import { printSourceRunnerReceipt } from "../../civic-data/runner-receipt.ts";
 import { seatHolderById } from "../../registry/server.ts";
 import { federalClient, federalPages, regulationPages, type FederalClientOptions, type FederalPage } from "./acquire.ts";
-import { billIdentity, object, string, normalizeFederalCapture } from "./normalize.ts";
+import { billIdentity, object, string, normalizeFederalCapture, normalizeFederalCaptureWithRoster } from "./normalize.ts";
 import { countFederalFacts, publishFederalPartition, readFederalSourceProjection } from "./publication.ts";
 import { FEDERAL_PARSER_VERSION, FEDERAL_RECORD_CLASS, FEDERAL_SOURCES, federalScope } from "./targets.ts";
 import type { FederalCapture, FederalCounts, FederalFact } from "./types.ts";
 import { federalCalendarDate } from "./presentation.ts";
+import { readFederalDirectoryProjection } from "../../officials/federal-directory-read-model.ts";
+import { readLdaRosterVersion } from "./lda-roster.ts";
 
 export interface FederalRefreshOptions extends FederalClientOptions {
   store: RoutineDataStore;
@@ -24,6 +26,11 @@ function replaceCounts(total: FederalCounts, before: FederalCounts | undefined, 
   for (const state of new Set([...Object.keys(before?.byState ?? {}), ...Object.keys(after.byState)])) {
     const row = total.byState[state] ??= { loaded: 0, joined: 0, unjoined: 0 };
     for (const key of ["loaded", "joined", "unjoined"] as const) row[key] += (after.byState[state]?.[key] ?? 0) - (before?.byState[state]?.[key] ?? 0);
+  }
+  for (const reason of new Set([...Object.keys(before?.unjoinedReasons ?? {}), ...Object.keys(after.unjoinedReasons ?? {})])) {
+    const reasons = total.unjoinedReasons ??= {};
+    reasons[reason] = (reasons[reason] ?? 0) + (after.unjoinedReasons?.[reason] ?? 0) - (before?.unjoinedReasons?.[reason] ?? 0);
+    if (!reasons[reason]) delete reasons[reason];
   }
 }
 
@@ -50,15 +57,19 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
     }
     return memberStates.get(id)!;
   };
-  async function publish(partition: string, captures: FederalCapture[], facts: FederalFact[], primary = true, completePartition = false) {
+  async function publish(partition: string, captures: FederalCapture[], facts: FederalFact[], primary = true, completePartition = false,
+    replacement: { replaceFilingId?: string; cursor?: string } = {}) {
     const held = await readFederalSourceProjection(source, partition, { store, bypassCache: true, now: now() });
     if (held.kind === "STORE_UNREACHABLE") throw new Error(held.detail);
-    const retained = new Map((!completePartition && held.kind === "PROMOTED" ? held.value.records : []).map(row => [row.id, row]));
+    const retained = new Map((!completePartition && held.kind === "PROMOTED" ? held.value.records.filter(row => !replacement.replaceFilingId || row.filingId !== replacement.replaceFilingId) : []).map(row => [row.id, row]));
     for (const row of facts) retained.set(row.id, row);
     const joined = new Set<string>();
     const states = new Map<string, string>();
     for (const row of retained.values()) {
-      if (row.bioguideId) {
+      if (source === "senate-lda" && row.honoreeJoin?.status === "JOINED" && row.bioguideId) {
+        joined.add(row.id); states.set(row.id, row.honoreeJoin.state);
+      }
+      else if (row.bioguideId) {
         const state = await memberState(row.bioguideId);
         if (state) { joined.add(row.id); states.set(row.id, state); }
       }
@@ -73,7 +84,7 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
       }
     }
     const nextCounts = countFederalFacts([...retained.values()].map(row => states.has(row.id) ? { ...row, state: states.get(row.id) } : row), joined);
-    const result = await publishFederalPartition({ source, partition, captures, records: facts, store, now: now(), counts: nextCounts, completePartition });
+    const result = await publishFederalPartition({ source, partition, captures, records: facts, store, now: now(), counts: nextCounts, completePartition, ...replacement });
     const delta = result.outcome.candidate.candidate.changeSet;
     const changed = [...(delta?.added ?? []), ...(delta?.changed ?? [])].filter(row => row.key.startsWith("federal:")).length;
     if (changed > 0) console.log("RCD_PROGRESS=" + JSON.stringify({ key: result.candidate.id, records: changed }));
@@ -208,25 +219,48 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
       }
     } else {
       // Posting-date ranges include amended reports; the provider's next links page the full national LD-203 query.
-      const resume = cursor?.startsWith("ldaPage:") ? JSON.parse(cursor.slice(8)) as { url: string; index: number } : null;
-      const start = resume?.url ?? (cursor?.startsWith("https:") ? cursor : `${config.url}contributions/?page_size=1000&ordering=dt_posted${cursor ? `&filing_dt_posted_after=${encodeURIComponent(cursor)}` : ""}`);
+      let roster, rosterFailure;
+      try {
+        const held = await readFederalDirectoryProjection({ store, now: startedAt, bypassCache: true });
+        roster = held.kind === "PROMOTED" ? await readLdaRosterVersion(store, held.metadata.versionId!) : undefined;
+        if (!roster) rosterFailure = `Federal roster is ${held.kind}; no honoree identity link can be verified.`;
+      } catch (error) {
+        rosterFailure = error instanceof Error ? error.message : String(error);
+        counts.joinReadFailures = (counts.joinReadFailures ?? 0) + 1;
+      }
+      // Changing people/aliases reopens historical joins; an unchanged directory refresh does not.
+      const rosterHash = roster ? normalizedHash(roster.members.map(({ bioguideId, names, chamber, state }) => ({ bioguideId, names, chamber, state }))) : null;
+      const saved = cursor?.startsWith("lda2:") ? JSON.parse(cursor.slice(5)) as { rosterHash: string | null; url?: string; index?: number; after?: string; through?: string } : null;
+      const resume = saved?.rosterHash === rosterHash ? saved : null;
+      const through = resume?.through ?? startedAt;
+      // The published maximum is 25. A date filter is required to paginate beyond page one.
+      const start = resume?.url ?? `${config.url}contributions/?page_size=25&ordering=dt_posted&filing_dt_posted_after=${encodeURIComponent(resume?.after ?? "2008-01-01T00:00:00Z")}`;
       for await (const page of federalPages(client, source, start, "contributions")) {
-        for (let index = page.capture.url === resume?.url ? resume.index : 0; index < page.items.length; index++) {
+        for (let index = page.capture.url === resume?.url ? resume.index ?? 0 : 0; index < page.items.length; index++) {
           const filing = page.items[index];
           const filingId = string(filing.filing_uuid);
-          // Disaggregate the acquired page into its unchanged filing objects. Keeping a thousand-
-          // filing page in every filing and every checkpoint would multiply its storage a thousandfold.
+          // Disaggregate the acquired page into its unchanged filing objects. Keeping the entire
+          // page in every filing and every checkpoint would multiply its storage by its page size.
           // The complete page is still saved at the page boundary; each filing keeps every source field.
-          const capture = { ...page.capture, body: JSON.stringify({ results: [filing] }) };
-          const facts = normalizeFederalCapture(capture);
+          const capture: FederalCapture = { ...page.capture, body: JSON.stringify({ results: [filing] }), context: roster
+            ? { honoreeRosterVersionId: roster.versionId } : { honoreeRosterFailure: rosterFailure } };
+          const facts = normalizeFederalCaptureWithRoster(capture, roster);
+          const previous = filingId ? await readFederalSourceProjection(source, `filing:${filingId}`, { store, now: now(), bypassCache: true }) : null;
+          if (previous?.kind === "STORE_UNREACHABLE") throw new Error(previous.detail);
+          // Keep cleanup targets in the filing itself so a failed member write can resume safely.
+          const priorMembers: string[] = previous?.kind === "PROMOTED" && previous.value.cursor?.startsWith("honorees:") ? JSON.parse(previous.value.cursor.slice(9)) : [];
+          const members = [...new Set([...priorMembers, ...(previous?.kind === "PROMOTED" ? previous.value.records : []), ...facts]
+            .flatMap(row => typeof row === "string" ? [row] : row.bioguideId ? [row.bioguideId] : []))].sort();
           // Retain every filing under its own source-native UUID, even if no recipient ID is published.
-          await publish(filingId ? `filing:${filingId}` : `unjoined:${facts[0]?.nativeId}`, [capture], facts, true, Boolean(filingId));
-          for (const bioguide of new Set(facts.flatMap(row => row.bioguideId ? [row.bioguideId] : []))) {
-            await publish(`congress:${bioguide}`, [capture], facts.filter(row => row.bioguideId === bioguide), false);
+          await publish(filingId ? `filing:${filingId}` : `unjoined:${facts[0]?.nativeId}`, [capture], facts, true, Boolean(filingId),
+            { cursor: `honorees:${JSON.stringify(members)}` });
+          for (const bioguide of members) {
+            await publish(`congress:${bioguide}`, [capture], facts.filter(row => row.bioguideId === bioguide), false, false, { replaceFilingId: filingId });
           }
-          await checkpoint(`ldaPage:${JSON.stringify({ url: page.capture.url, index: index + 1 })}`, capture);
+          await checkpoint(`lda2:${JSON.stringify({ rosterHash, url: page.capture.url, index: index + 1, through })}`, capture);
         }
-        await checkpoint(page.next ?? new Date(Date.parse(startedAt) - 1000).toISOString(), page.capture);
+        await checkpoint(`lda2:${JSON.stringify(page.next ? { rosterHash, url: page.next, index: 0, through }
+          : { rosterHash, after: new Date(Date.parse(through) - 1000).toISOString() })}`, page.capture);
       }
     }
     if (!last) throw new Error("Source produced no complete page; prior records remain held.");

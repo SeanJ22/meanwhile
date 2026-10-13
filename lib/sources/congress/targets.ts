@@ -1,7 +1,7 @@
 /** Native federal publishers; each owns one independent standing clock. */
 export const FEDERAL_SOURCE_IDS = ["congress-api", "govinfo", "regulations-gov", "federal-register", "senate-lda"] as const;
 export type FederalSourceId = typeof FEDERAL_SOURCE_IDS[number];
-export const FEDERAL_PARSER_VERSION = "src-cg/1";
+export const FEDERAL_PARSER_VERSION = "src-cg/2";
 export const FEDERAL_RECORD_CLASS = "FEDERAL_CIVIC_RECORD" as const;
 export const FEDERAL_SOURCES = {
   "congress-api": { publisher: "Library of Congress — Congress.gov", url: "https://api.congress.gov/v3/", key: "CONGRESS_API_KEY", everyMs: 60 * 60_000,

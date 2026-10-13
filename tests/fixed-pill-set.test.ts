@@ -12,38 +12,17 @@ import { memberDirectoryReaches } from "../lib/officials/member-directory-scope.
 const DIRECTORY = readFileSync("components/officials/member-directory.tsx", "utf8");
 const BALLOT_CARD = readFileSync("components/ballot/candidate-battlecard.tsx", "utf8");
 
-test("BAL-34: the map battlecard's sections do not depend on the person's office class", () => {
+test("directory sections use held records and contribute missing records to the card gap", () => {
   const inner = DIRECTORY.slice(DIRECTORY.indexOf("function MemberDirectoryInner"));
-  const body = inner.slice(0, inner.indexOf("\n}\n"));
-  assert.ok(
-    !/if\s*\(!holder\.id\.startsWith\("congress:"\)\)\s*return null/.test(body),
-    "MemberDirectoryInner returns null for a non-federal officeholder again — the pill row " +
-      "disappears for every local official, which is BAL-34 exactly",
-  );
-  assert.match(
-    body,
-    /const inScope = memberDirectoryReaches\(holder\.id\)/,
-    "the scope fact is still known — it moved INSIDE the sections rather than being dropped, " +
-      "and it is asked through the shared predicate rather than a fourth copy of the string",
-  );
-  assert.equal(
-    (body.match(/<CardSection/g) ?? []).length,
-    2,
-    "both sections are rendered, always",
-  );
+  assert.match(inner, /memberDirectoryReaches\(holder\.id, only, holder\.state\)/);
+  assert.match(inner, /failed \|\| records\?\.length === 0/);
+  assert.match(inner, /return <CardGapContribution/);
+  assert.doesNotMatch(inner, /WorkingOnIt/);
 });
 
-test("BAL-34: the scope fact renders as a sentence, not as a missing header", () => {
-  const inner = DIRECTORY.slice(DIRECTORY.indexOf("function MemberDirectoryInner"));
-  const body = inner.slice(0, inner.indexOf("\n}\n"));
-  assert.match(body, /sectionEmptyLine\("committees"\)/);
-  assert.match(body, /sectionEmptyLine\("offices"\)/);
-});
-
-test("BAL-34: both surfaces word the same absence from the SAME table", () => {
-  assert.match(DIRECTORY, /from "@\/lib\/ballot\/battlecard-sections"/);
-  assert.match(BALLOT_CARD, /from "@\/lib\/ballot\/battlecard-sections"/);
+test("map and ballot cards share their reader section titles", () => {
   assert.match(DIRECTORY, /battlecardSectionTitle/);
+  assert.match(BALLOT_CARD, /<PersonCard/);
 });
 
 test("BAL-34: the two shared sections still exist in the fixed set, by id", () => {
@@ -51,7 +30,6 @@ test("BAL-34: the two shared sections still exist in the fixed set, by id", () =
     const spec = BATTLECARD_SECTIONS.find((s) => s.id === id);
     assert.ok(spec, `BC-1 no longer carries a "${id}" section`);
     assert.ok(battlecardSectionTitle(id).length > 0, `"${id}" has no reader-facing title`);
-    assert.ok(spec.emptyLine.length > 0, `"${id}" has no empty line for the map card to render`);
   }
   assert.equal(battlecardSectionTitle("offices"), "Offices near you");
 });
@@ -99,8 +77,7 @@ test("BAL-34: every surface deciding these sections asks the ONE scope predicate
       before,
       slot === "MemberOfficesContent" ? /memberDirectoryReaches\(recordHolder\.id, "offices",\s*recordHolder\.state\)/ : /memberDirectoryReaches\(recordHolder\.id\)/,
       `${slot}'s slot must be null where the source does not reach the person, or the ` +
-        "battlecard's `content ?? emptyLine` fallback tests a slot that renders nothing and " +
-        "the reader gets an empty box instead of the named gap",
+        "reader sees an empty box instead of a held section or the card gap",
     );
   }
 
@@ -130,7 +107,7 @@ test("state people offices use the exact native person scope while committees ke
   assert.equal(memberDirectoryReaches("roster:unverified-person", "offices", "OH"), false);
 });
 
-test("BAL-34: the ballot card still renders the whole fixed set, unconditionally", () => {
+test("the ballot card uses the shared person frame and its section order", () => {
   assert.match(BALLOT_CARD, /<PersonCard/);
   assert.match(readFileSync("components/ui/person-card.tsx", "utf8"), /PERSON_CARD_SECTIONS\.filter[\s\S]*?\.map/);
 });

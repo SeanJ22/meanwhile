@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { WorkingOnIt } from "@/components/demand/working-on-it";
+import { CardGapContribution } from "@/components/ui/card-gap-context";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import { CheckedLink } from "@/components/ui/checked-link";
 import { CardSection } from "./card-section";
@@ -24,7 +24,7 @@ export function FederalMemberRecords({ memberId }: { memberId: string }) {
   const record = page?.memberId === memberId ? page.value : null;
   return <>
     <CardSection title="Sponsored bills" meta={record ? String(record.totalBills) : null}>
-      {!record?.bills.length ? <WorkingOnIt /> : <>
+      {!record?.bills.length ? <CardGapContribution id={`federal-bills:${memberId}`} label="sponsored bills" /> : <>
         <ul className="space-y-3">{record.bills.map(bill => <li key={bill.id}>
           <CheckedLink href={bill.sourceUrl} target="_blank" rel="noreferrer" className="text-link hover:underline">{bill.title}</CheckedLink>
           <p className="t-caption text-muted">Introduced {bill.publishedAt?.slice(0, 10) ?? "date not supplied"}</p>
@@ -39,7 +39,7 @@ export function FederalMemberRecords({ memberId }: { memberId: string }) {
       </>}
     </CardSection>
     <CardSection title="Lobbying contributions">
-      {!record?.contributions.length ? <WorkingOnIt /> : <ul className="space-y-2">{record.contributions.map(row => <li key={row.id} className="t-detail">
+      {!record?.contributions.length ? <CardGapContribution id={`federal-contributions:${memberId}`} label="lobbying contributions" /> : <ul className="space-y-2">{record.contributions.map(row => <li key={row.id} className="t-detail">
         {row.organization ?? "Lobbying contributions"}: ${row.amount} · {row.contributionDate}
       </li>)}</ul>}
     </CardSection>

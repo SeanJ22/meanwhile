@@ -1,3 +1,6 @@
+import { rolePlaybook } from "../lib/control-plane/playbooks.ts";
+import { playbookRows } from "./helpers/playbooks.ts";
+import { fixtureRolePlaybook } from "./helpers/playbooks.ts";
 /**
  * The pre-warm request carries the Attempts' exact static prefix with
  * `max_tokens: 0`, the breakpoint on the system block and none on the
@@ -50,7 +53,7 @@ const API_MESSAGE =
   "Note that blocks are processed in the following order: `tools`, `system`, `messages`.";
 
 test("PC-7: the pre-warm request is the Attempts' static prefix with max_tokens 0, tool_choice auto, the breakpoint on the system block and none on the placeholder", () => {
-  const input = { model: MODELS.opus.model, effort: "medium" as const, toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS };
+  const input = { playbook: rolePlaybook(playbookRows, "SCOUT").text, model: MODELS.opus.model, effort: "medium" as const, toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS };
   const request = scoutPrewarmRequest(input);
   const prefix = scoutStaticPrefix(input);
   assert.equal(request.max_tokens, 0);
@@ -91,7 +94,7 @@ test("PC-7 search on (2026-09-25): the pre-warm warms the prefix the Attempts ac
     captured.push(request);
     throw new ModelTransportError("captured", null);
   };
-  await scoutExecutor({
+  await scoutExecutor({ playbookFor: fixtureRolePlaybook,
     transport: capture,
     toolkitFor: () => kit,
     contextFor: () => ({ route: null, providerId: "p", reason: "r", inherited: { artifactIds: [], summary: "s" }, tools: { vault: async () => ({ stored: true, where: "x", why: "w" }), spaceOut: async () => undefined } }),
@@ -100,7 +103,7 @@ test("PC-7 search on (2026-09-25): the pre-warm warms the prefix the Attempts ac
   assert.equal(captured.length, 1);
   const first = captured[0];
 
-  const actualPlan = scoutPrewarmPlan({ toolkitSpecs: scoutToolSpecsFor(true), bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
+  const actualPlan = scoutPrewarmPlan({ playbook: rolePlaybook(playbookRows, "SCOUT").text, toolkitSpecs: scoutToolSpecsFor(true), bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
   assert.equal(actualPlan.kind, "SEND", "the expanded held-evidence and manual tools now clear Haiku's cache minimum");
   assert.ok(actualPlan.kind === "SEND");
   assert.ok(actualPlan.prefixTokensAtLeast >= actualPlan.minimumCacheablePrefixTokens);
@@ -117,12 +120,12 @@ test("PC-7 search on (2026-09-25): the pre-warm warms the prefix the Attempts ac
   assert.equal(minimumCacheablePrefixTokensFor("claude-sonnet-5-5"), 512);
   assert.equal(minimumCacheablePrefixTokensFor(MODELS.opus.model), 512);
   /* Negative control: the list without search is a different prefix. */
-  const without = scoutPrewarmPlan({ toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
+  const without = scoutPrewarmPlan({ playbook: rolePlaybook(playbookRows, "SCOUT").text, toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
   assert.notEqual(without.kind === "SEND" ? JSON.stringify(without.request.tools) : "", JSON.stringify(first.tools));
 
   /* The runner: the pre-warm's list and the Scout's toolkit follow the same `scoutSearch` switch. */
   const runner = readFileSync(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
-  assert.match(runner, /scoutPrewarmPlan\(\{ toolkitSpecs: scoutToolSpecsFor\(scoutSearch !== null\),/, "the pre-warm warms the list the switch gives the Attempts");
+  assert.match(runner, /scoutPrewarmPlan\(\{ playbook: playbook.text, toolkitSpecs: scoutToolSpecsFor\(scoutSearch !== null\),/, "the pre-warm warms the list the switch gives the Attempts");
   assert.match(runner, /search: \(lifetimeHuntWork\(scheduled\.obligation\.id\) \? scoutSearchLifetime : scoutSearch\) \?\? undefined/, "funded hunts use their matching search budget");
   assert.match(runner, /const scoutSearchLifetime = searchBudget === null \|\| !hasLifetimeHunt \? null : makeScoutSearch\(/, "the lifetime route preserves the same owner-controlled search switch");
   const child = readFileSync(new URL("../lib/control-plane/workers/scout-worker.ts", import.meta.url), "utf8");
@@ -133,7 +136,7 @@ test("PC-7 search on (2026-09-25): the pre-warm warms the prefix the Attempts ac
 test("PC-6: the TTL decision is the measured 5 minutes, and a 1h marker after a 5m one is refused before sending with the API's own rule", () => {
   assert.equal(SCOUT_CACHE_POLICY.ttl, "5m");
   assert.match(SCOUT_CACHE_POLICY.ttl === "5m" ? String((SCOUT_CACHE_POLICY as { movingBreakpoint: string }).movingBreakpoint) : "", /TOP_LEVEL|LAST_BLOCK/);
-  const input = { model: MODELS.opus.model, effort: "medium" as const, toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS };
+  const input = { playbook: rolePlaybook(playbookRows, "SCOUT").text, model: MODELS.opus.model, effort: "medium" as const, toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS };
   const good = scoutPrewarmRequest(input);
   /* A 1h system marker with a 5m tool marker before it: exactly the planted request the API refused. */
   const planted: ModelRequest = { ...good, system: good.system.map((s) => ({ ...s, cache_control: { type: "ephemeral", ttl: "1h" } })) };

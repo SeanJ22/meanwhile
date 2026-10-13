@@ -50,6 +50,10 @@ test("source fixtures reach the hydrated member card with bills, text, comment d
     await page.getByText("Comments close 2026-10-14", { exact: true }).waitFor({ state: "visible" });
     assert.equal(await page.getByRole("link", { name: "Submit a comment", exact: true }).getAttribute("href"), "https://www.regulations.gov/commenton/FIXTURE-2026-0001");
     assert.equal(await page.getByText("Sources", { exact: true }).count(), 1);
+    assert.equal(await page.locator("[data-card-gap]").count(), 1);
+    assert.match(await page.locator("[data-card-gap]").innerText(), /lobbying contributions/);
+    assert.equal(await page.locator("[data-card-sources]").evaluate(source => source === source.parentElement?.lastElementChild), true);
+    assert.doesNotMatch(await page.locator("body").innerText(), /working on getting this info|Want us to get this/i);
     await page.getByText("Sources", { exact: true }).click();
     await page.getByText("Library of Congress — Congress.gov", { exact: true }).first().waitFor({ state: "visible" });
     assert.match(await page.locator("body").innerText(), /Published 2021-01-04/);

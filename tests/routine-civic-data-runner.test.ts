@@ -1988,10 +1988,12 @@ test("the supervisor proves the registry once for two or more meeting children a
   const admitted = source.indexOf("attempted = pendingRuns.length;");
   const proof = source.indexOf("await readRegistryRuntimeProjection({ store })");
   const attest = source.indexOf("attestPromotedVersion(\"REGISTRY_RUNTIME_BINDING\", REGISTRY_RUNTIME_SCOPE, store)");
-  const launch = source.indexOf("const sourcePass = runBoundedChildPass(");
+  const launch = source.indexOf("const sourcePass = runMeetingDiscoveryChain(");
   assert.ok(admitted > 0 && admitted < proof && proof < attest && attest < launch, "proved after admission, before any child starts");
   assert.match(source, /if \(meetingPartitionRuns >= 2\) \{/);
+  assert.match(source, /const sourcePass = runMeetingDiscoveryChain\(pendingRuns, runs => runBoundedChildPass\(\s*runs\.map\(sourceChildCommand\),/, "every ordered discovery subpass builds children through the attestation-aware command factory");
   assert.match(source, /\.\.\.\(pending\.kind === "MEETING_PARTITION" \? meetingChildAttestations : \{\}\)/);
+  assert.match(source, /onSettled: async \(run, index\) => settlePendingRun\(runs\[index\]!/, "settlement must match the command's subpass rather than the complete pending list");
   assert.match(source, /catch \(error\) \{\s*console\.log\(`RCD_PASS registry not attested; each meeting child proves it/);
 });
 

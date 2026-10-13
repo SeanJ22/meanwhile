@@ -12,7 +12,9 @@ export const federalDeadlineDate = (row: FederalFact): string | null => row.clos
 
 /** Browser-safe presentation of facts already read through the promoted source store. */
 export function federalCardSources(records: readonly FederalFact[]): CardSource[] {
-  return records.map(row => ({ what: `${row.title}${row.publishedAt ? ` · Published ${row.publishedAt.slice(0, 10)}` : " · Publication date not supplied"}`,
+  return records.flatMap(row => [{ what: `${row.title}${row.publishedAt ? ` · Published ${row.publishedAt.slice(0, 10)}` : " · Publication date not supplied"}`,
     provenance: { sourceUrl: row.sourceUrl, sourceOrg: row.publisher, collectedAt: row.checkedAt, verifiedAt: row.checkedAt,
-      ...(row.source === "senate-lda" ? { quote: "Senate Office of Public Records cannot vouch for the data or analyses derived from these data after the data have been retrieved from LDA.gov." } : {}) } }));
+      ...(row.source === "senate-lda" ? { quote: "Senate Office of Public Records cannot vouch for the data or analyses derived from these data after the data have been retrieved from LDA.gov." } : {}) } },
+    ...(row.honoreeJoin?.status === "JOINED" ? [{ what: `Honoree identity: ${row.honoreeName} → ${row.honoreeJoin.matchedName}, ${row.honoreeJoin.chamber}, ${row.honoreeJoin.state}`,
+      provenance: { sourceUrl: row.honoreeJoin.sourceUrl, sourceOrg: row.honoreeJoin.sourceOrg, collectedAt: row.honoreeJoin.checkedAt, verifiedAt: row.honoreeJoin.checkedAt } }] : [])]);
 }

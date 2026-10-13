@@ -1,3 +1,6 @@
+import { after } from "next/server";
+import { readerCivicLookup, recordCivicReaderOutcome } from "@/lib/sources/google-civic/reader-lookup";
+import { googleCivicQuestion, googleCivicSitesQuestion, googleCivicEvidence, civicVotingSitesPack } from "@/lib/ask/google-civic";
 import { governmentFinanceEvidence, governmentFinanceQuestion, composeGovernmentFinanceAnswer } from "@/lib/ask/government-finance";
 import { governmentListingEntity, governmentListingEvidence, readerGovernmentListings } from "@/lib/ask/government-listings";
 import { prlStatementEvidence, readPrlForSubject } from "@/lib/sources/prl/person";
@@ -415,6 +418,7 @@ export async function POST(request: Request) {
 
   let body: {
     question?: unknown;
+    voterAddress?: unknown;
     ocdIds?: unknown;
     approximateLocation?: unknown;
     surface?: unknown;
@@ -439,6 +443,21 @@ export async function POST(request: Request) {
   const ocdIds = Array.isArray(body.ocdIds)
     ? body.ocdIds.filter((v): v is string => typeof v === "string").slice(0, 40)
     : [];
+
+  const voterAddress = typeof body.voterAddress === "string" && body.voterAddress.trim().length >= 3 && body.voterAddress.length <= 200 ? body.voterAddress.trim() : null;
+  const civicLookup = voterAddress && googleCivicQuestion(question) ? await readerCivicLookup(voterAddress) : null;
+  if (civicLookup) after(() => recordCivicReaderOutcome(civicLookup).catch(() => console.warn("Google Civic lookup door could not be recorded.")));
+  if (civicLookup && googleCivicSitesQuestion(question) && civicLookup.rows.some(row => row.kind !== "CONTEST")) {
+    const pack = civicVotingSitesPack(question, civicLookup);
+    const interpretation = { ...unavailableInterpretation(), intent: pack.intent, temporal: pack.temporal };
+    const answer = pack.records.length ? "Google Civic's voting locations for the address you checked are below." : null;
+    await captureDelivered({ request, question, interpretation, resolutionState: "NONE", mode: "STRUCTURED_GROUNDED",
+      subjectIds: [], answer, answerModel: null, validationPassed: true, records: pack.records, gaps: pack.gaps,
+      surface: body.surface === "MAP" || body.surface === "BALLOT" ? body.surface : "UNKNOWN",
+      approximateLocation: typeof body.approximateLocation === "string" ? body.approximateLocation : null,
+      ocdIds, residency: stampResidency(readLocationOrigin(body.locationOrigin)), continuityKey: typeof body.continuityKey === "string" ? body.continuityKey : "" });
+    return Response.json(askAnswer({ mode: "STRUCTURED_GROUNDED", pack, answer, contacts: [], trace }));
+  }
 
   // State-roll identity is established before any state pointer opens. Only
   // the state(s) named by the reader's divisions or exact source-namespaced
@@ -477,7 +496,7 @@ export async function POST(request: Request) {
     ? areaMeetingsQuestion(question) : null;
   /* Both answer from the registry and what is already held for the reader's divisions: no ballot, no money, no votes, no recorded outcomes. */
   const leanAsk = Boolean(officialsAsk || areaMeetingsAsk);
-  const ballotOnlyHint = !topicRoute && !leanAsk && ocdIds.length > 0 && ballotQuestionHint(question) &&
+  const ballotOnlyHint = !civicLookup && !topicRoute && !leanAsk && ocdIds.length > 0 && ballotQuestionHint(question) &&
     readSubjectRefs(body.activeSubjects).every(ref => !ref.focused) &&
     readSubjectRefs(body.priorSubjects, 8).length === 0 &&
     (!Array.isArray(body.priorTurns) || body.priorTurns.length === 0);
@@ -1172,6 +1191,7 @@ export async function POST(request: Request) {
       : null;
 
     const records: EvidenceRecord[] = [];
+    if (civicLookup && !subject) records.push(...googleCivicEvidence({ ...civicLookup, rows: civicLookup.rows.filter(row => row.kind === "CONTEST") }));
     /* A person asked about for their campaign money and nothing they did in office: their votes, key votes, statements and
        recorded actions are not retrieved. */
     const financeAsked = financeQuestionAskedFor(question, subject?.kind ?? null);
@@ -1183,6 +1203,7 @@ export async function POST(request: Request) {
     /** A topic question's dated timeline for the bound body, when one was built. */
     let topicTimeline: ReturnType<typeof buildTopicTimeline> | null = null;
     const gaps: EvidenceGap[] = [...holdingLoadGaps];
+    if (civicLookup && civicLookup.status !== "AVAILABLE" && !subject) gaps.push({ whose: "OURS", statement: "We're working on getting the Google Civic information for the address you checked." });
     /* The gaps attached to the chosen sitting(s), by why they were attached, for
        an answer composed from the sitting (`lib/ask/sitting-answer.ts`). Each is
        also in `gaps`; this only remembers which ones are about the sitting. */

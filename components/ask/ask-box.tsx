@@ -1,5 +1,7 @@
 "use client";
 
+import { civicVoterAddress } from "@/lib/sources/google-civic/session";
+
 import { AskBodyConfirmation } from "./body-confirmation";
 import type { BodyConfirmation } from "@/lib/ask/body-confirmation";
 
@@ -305,6 +307,7 @@ export function AskBox({
         body: JSON.stringify({
           question,
           confirmation,
+          voterAddress: civicVoterAddress(),
           ocdIds,
           approximateLocation: zip,
           surface: "MAP",

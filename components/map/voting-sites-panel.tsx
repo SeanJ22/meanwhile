@@ -1,6 +1,9 @@
 "use client";
 
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
+import type { CivicLookup } from "@/lib/sources/google-civic/model";
+import { GoogleCivicResults } from "@/components/ballot/google-civic-results";
+import { setCivicVoterAddress } from "@/lib/sources/google-civic/session";
 import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { MapPin, X } from "lucide-react";
@@ -52,6 +55,8 @@ export function VotingSitesPanel({
   embedded = false,
 }: VotingSitesPanelProps) {
   const [address, setAddress] = useState("");
+  const [googleCivic, setGoogleCivic] = useState<CivicLookup | null>(null);
+  const lookupRequest = useRef<AbortController | null>(null);
   const [state, setState] = useState<State>({ kind: "idle" });
   const inputId = useId();
   const onSitesRef = useRef(onSites);
@@ -64,22 +69,42 @@ export function VotingSitesPanel({
       event.preventDefault();
       const value = address.trim();
       if (value.length < 3) return;
+      lookupRequest.current?.abort();
+      const controller = new AbortController();
+      lookupRequest.current = controller;
       setState({ kind: "asking" });
+      setGoogleCivic(null);
+      setCivicVoterAddress(undefined);
+      // Both publishers answer independently; source data is usable as soon as it arrives.
+      const civicRead = fetch("/api/civic-voterinfo", {
+        method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ address: value }), cache: "no-store", signal: controller.signal,
+      }).then(async response => {
+        if (!response.ok) return;
+        const lookup = await response.json() as CivicLookup;
+        if (controller.signal.aborted) return;
+        setGoogleCivic(lookup);
+        if (lookup.status !== "OUTAGE") setCivicVoterAddress(value);
+      }).catch(() => undefined);
       try {
         const res = await fetch("/api/voting-sites", {
           method: "POST",
           headers: { "content-type": "application/json" },
           body: JSON.stringify({ address: value }),
           cache: "no-store",
+          signal: controller.signal,
         });
+        if (controller.signal.aborted) return;
         if (!res.ok) {
           setState({ kind: "failed" });
           return;
         }
         const answer = (await res.json()) as VotingSitesAnswer;
-        setState({ kind: "answered", answer });
+        if (!controller.signal.aborted) setState({ kind: "answered", answer });
       } catch {
-        setState({ kind: "failed" });
+        if (!controller.signal.aborted) setState({ kind: "failed" });
+      } finally {
+        await civicRead;
       }
     },
     [address],
@@ -87,17 +112,19 @@ export function VotingSitesPanel({
 
   // Lift the pins on each answer and clear them on unmount.
   useEffect(() => {
+    const civicPins = civicVotingPins(googleCivic);
     if (state.kind !== "answered") {
-      onSitesRef.current([]);
+      onSitesRef.current(civicPins);
       return;
     }
-    onSitesRef.current(
-      state.answer.jurisdictions
+    onSitesRef.current([
+      ...civicPins,
+      ...state.answer.jurisdictions
         .flatMap((j) => j.sites)
         .filter(isPinnable)
         .map((s) => ({ id: s.id, name: s.name, lat: s.lat, lng: s.lng })),
-    );
-  }, [state]);
+    ]);
+  }, [state, googleCivic]);
 
   // The ring appears with an answer and clears when the panel closes.
   useEffect(() => {
@@ -106,7 +133,7 @@ export function VotingSitesPanel({
 
   useEffect(() => () => onAddressPoint?.(null), [onAddressPoint]);
 
-  useEffect(() => () => onSitesRef.current([]), []);
+  useEffect(() => () => { lookupRequest.current?.abort(); onSitesRef.current([]); }, []);
 
   return (
     <section
@@ -137,7 +164,7 @@ export function VotingSitesPanel({
           id={inputId}
           className="voting-panel-input"
           value={address}
-          onChange={(e) => setAddress(e.target.value)}
+          onChange={(e) => { setAddress(e.target.value); setCivicVoterAddress(undefined); }}
           placeholder={PLACEHOLDER_ADDRESS}
           // The design popup opens with the cursor in the address field.
           autoFocus={embedded}
@@ -147,8 +174,8 @@ export function VotingSitesPanel({
         {/* Describes the mechanism as it works today, with no forward commitment. */}
         <p className="voting-panel-note">
           Your address is used to find your voting locations. It passes through
-          our server to the Census Bureau&rsquo;s geocoder, which turns it into
-          a point on the map.
+          our server to Google Civic Information for election data and to the
+          Census Bureau to place it on the map.
         </p>
         <button type="submit" className="voting-panel-submit">
           Show me
@@ -182,15 +209,28 @@ export function VotingSitesPanel({
 
       <PollingLookupFallback links={pollingLookupFallbacks(state.kind, state.kind === "answered" ? state.answer : undefined)} />
 
-      {state.kind === "answered" && <VotingJurisdictionRecords answer={state.answer} selectedSiteId={selectedSiteId} onSelectSite={onSelectSite} />}
+      {googleCivic && state.kind !== "answered" && <GoogleCivicResults lookup={googleCivic} selectedSiteId={selectedSiteId} onSelectSite={onSelectSite} />}
+      {state.kind === "answered" && <VotingJurisdictionRecords answer={{ ...state.answer, googleCivic: googleCivic ?? undefined }} selectedSiteId={selectedSiteId} onSelectSite={onSelectSite} />}
     </section>
   );
 }
 
 
+/** Source coordinates identify published public sites; they do not infer a precinct or an address assignment. */
+export function civicVotingPins(lookup: CivicLookup | null) {
+  return (lookup?.rows ?? []).flatMap(row => {
+    if (row.kind === "CONTEST" || row.kind === "ELECTION") return [];
+    const lat = row.value.latitude, lng = row.value.longitude;
+    if (typeof lat !== "number" || typeof lng !== "number" || !Number.isFinite(lat) || !Number.isFinite(lng) || Math.abs(lat) > 90 || Math.abs(lng) > 180) return [];
+    const address = row.value.address as { locationName?: unknown } | undefined;
+    return [{ id: row.id, name: typeof address?.locationName === "string" ? address.locationName : "Voting location", lat, lng }];
+  });
+}
+
 /** The actual answered jurisdiction/site body shared by both panel entry paths. */
 export function VotingJurisdictionRecords({ answer, selectedSiteId, onSelectSite }: { answer: VotingSitesAnswer; selectedSiteId: string | null; onSelectSite: (id: string | null) => void }) {
   return <>
+      {answer.googleCivic && <GoogleCivicResults lookup={answer.googleCivic} selectedSiteId={selectedSiteId} onSelectSite={onSelectSite} />}
       {answer.jurisdictions.map((j) => (
           <article key={j.ocdId} className="voting-jurisdiction" data-voting-jurisdiction={j.ocdId}>
             <h3 className="voting-jurisdiction-name">{j.name}</h3>

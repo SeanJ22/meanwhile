@@ -11,6 +11,8 @@ import type { GovernmentBudgetFact } from "../civic-data/government-budget-contr
  */
 
 export interface EvidenceRecord {
+  /** Google is the intermediary; an upstream official flag and an omitted publication date remain explicit. */
+  googleCivic?: { official: boolean; publishedAt: string | null; electionId: string; ocdId: string | null };
   /** A native source or separately verified extraction names the speaker and publication date.
    * A page search hit alone may never populate this field. */
   verifiedStatement?: { speakerId: string; quote: string; date: string; attribution: string; nativeSourceId: string };

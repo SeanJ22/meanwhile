@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
+import { GoogleCivicAddressLookup } from "@/components/ballot/google-civic-results";
 import { ContactPills } from "@/components/officials/contact-pills";
 import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { measureRecordsForBallot } from "@/lib/ballot/measure-records";
@@ -923,6 +924,7 @@ export default async function BallotPage({
       )}
 
       <OfficialFilings rows={filingRows} />
+      <GoogleCivicAddressLookup />
       {/* Who runs this reader's elections and how to reach them, from their own city's or county's saved page. */}
       {electionOffices.length > 0 && (
         <section aria-label="Your election offices" className="my-6 space-y-2 lg:max-w-3xl" data-ballot-election-offices>

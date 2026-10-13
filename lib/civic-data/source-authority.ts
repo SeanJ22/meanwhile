@@ -39,6 +39,17 @@ export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage 
 }
 
 export const SOURCE_AUTHORITIES = {
+  "google-civic-voterinfo": {
+    id: "google-civic-voterinfo", publisher: "Google Civic Information; upstream publishers and official flags retained per fact",
+    trust: "T3_ATTRIBUTED_PRIMARY", sourceClass: "INTERMEDIARY",
+    routePrefixes: ["https://www.googleapis.com/civicinfo/v2/elections", "https://www.googleapis.com/civicinfo/v2/voterinfo"],
+    jurisdictions: ["US"], recordClasses: ["GOOGLE_CIVIC_VOTERINFO"],
+    competentFacts: ["election", "contests and candidates", "polling locations", "early vote sites", "drop off locations"],
+    expectedIdentifierKeys: ["observation_id"], expectedTemporalFields: ["checked_at", "election_day"],
+    horizonSemantics: "Address-query observations; no bulk endpoint and no nationwide completeness claim. Native district OCD IDs join only when held; every unjoined row survives. Reader addresses are transient.",
+    parserVersion: "google-civic-voterinfo/1", freshnessExpectation: "Daily through the election; live address lookup. Publication date unknown when omitted by the API.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" }, routineAutoPromotion: true,
+  },
   "official-ballot-authorities": {
     id: "official-ballot-authorities",
     publisher: "Exact official election authorities in the saved-source receipt",

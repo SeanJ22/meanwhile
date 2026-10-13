@@ -95,6 +95,8 @@ export function censusOf(file: VotingSitesFile): VotingSitesCensus {
 }
 
 export interface VotingSitesAnswer {
+  /** Independent address-query supplement; certified jurisdiction rows retain their own sources. */
+  googleCivic?: import("../sources/google-civic/model").CivicLookup;
   match: boolean;
   /** Only ever the resolved POINT, never the address that produced it. */
   point: { lat: number; lng: number } | null;

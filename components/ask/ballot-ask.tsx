@@ -1,5 +1,7 @@
 "use client";
 
+import { civicVoterAddress } from "@/lib/sources/google-civic/session";
+
 import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { AskBodyConfirmation } from "./body-confirmation";
 import type { BodyConfirmation } from "@/lib/ask/body-confirmation";
@@ -68,6 +70,7 @@ export function BallotAsk({
         body: JSON.stringify({
           question,
           confirmation,
+          voterAddress: civicVoterAddress(),
           ocdIds,
           approximateLocation: zip,
           surface: "BALLOT",

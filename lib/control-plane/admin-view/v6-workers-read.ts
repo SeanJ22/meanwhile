@@ -581,7 +581,7 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
     .find(outcome => outcome && outcome.state !== "SUCCEEDED");
   const migrationAt = clock(migrationRecord?.writtenAt) ? migrationRecord.writtenAt : null;
   if (sources.migration && !Array.isArray(sources.migration)) missing.push("The production migration outcome could not be read.");
-  // The face says what happened in words; the migration's own output lines are kept behind "Show details".
+  // The face says what happened in words; the migration's own output lines are kept behind "Technical details".
   const stepWords = (phase: string) => phase === "expand" ? "the step that runs before new code goes live" : phase === "contract" ? "the step that runs after new code is serving" : `the ${phase} step`;
   const update: UpdateCard | null = migration && migrationAt ? {
     title: "The latest database update", checkedAt: migrationAt,

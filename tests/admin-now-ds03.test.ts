@@ -86,3 +86,12 @@ test("Workers leads with plain sentences, and never puts an update's raw output 
   ]);
   assert.ok(lines.every((line) => !/at y \(|Error: X/.test(line)));
 });
+
+test("hidden technical text on Workers and the doors panel opens only from 'Technical details'", async () => {
+  const { readFileSync } = await import("node:fs");
+  for (const file of ["app/(admin)/_mw/admin-v6/screen-workers.tsx", "app/(admin)/_mw/admin-v6/doors-panel.tsx"]) {
+    const src = readFileSync(file, "utf8");
+    assert.doesNotMatch(src, /<Technical\b[^>]*\blabel=/, `${file} keeps the one label`);
+    for (const [, summary] of src.matchAll(/<summary>([^<]*)<\/summary>/g)) assert.equal(summary, "Technical details", file);
+  }
+});

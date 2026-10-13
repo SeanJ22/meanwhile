@@ -162,7 +162,7 @@ test("parent cycle metadata reaches the existing Workers round through bounded r
         assert.match(face, /Started Sep 28, 6:05 PM ET; finished Sep 28, 6:12 PM ET; it was stopped from outside\./);
         assert.match(face, /The last round ended with an error\./);
         assert.doesNotMatch(face, /SOURCE_READ_FAILED|SIGTERM/, "the error text is not on the face");
-        assert.match(rendered, /SOURCE_READ_FAILED/, "it is kept behind Show details");
+        assert.match(rendered, /SOURCE_READ_FAILED/, "it is kept behind Technical details");
         assert.doesNotMatch(rendered, /Running since/);
       }
     }
@@ -195,7 +195,7 @@ test("a migration failure reaches the existing Workers card through saved histor
   assert.match(face, /The latest database update did not finish: the step that runs before new code goes live failed\./);
   assert.match(face, /Engineering repairs the step that runs before new code goes live/);
   assert.doesNotMatch(face, /expand: failed|\[private\]/, "the migration's own output is not on the face");
-  assert.match(rendered, /expand: failed/, "the migration output is kept behind Show details");
+  assert.match(rendered, /expand: failed/, "the migration output is kept behind Technical details");
   assert.match(rendered, /\[private\]/);
   assert.doesNotMatch(rendered, /s13-private-token|password|postgresql:\/\//);
   assert.doesNotMatch(rendered, /Fix this/);

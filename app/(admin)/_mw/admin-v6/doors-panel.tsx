@@ -64,7 +64,7 @@ export function DoorsPanel() {
           )}
           {!!data.rows.length && (
             <details className={s.details}>
-              <summary>Show details</summary>
+              <summary>Technical details</summary>
               <div className={s.stack} style={{ marginTop: 8 }}>
                 <div className={s.inline}>
                   <Pill tone="good">{count(data.counts.open)} open</Pill>

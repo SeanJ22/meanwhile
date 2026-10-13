@@ -55,7 +55,7 @@ What happens next
 Engineering repairs the step that runs before new code goes live; that part of the release stays on hold until then.
 Do you need to act?
 No action needed.
-Show details
+Technical details
 LIVE UPDATES
 Live
 WORKERS LAST CHECKED IN
@@ -69,7 +69,7 @@ Finished 9:31 AM ET
 Last finished 9:31 AM ET
 Started Oct 13, 9:20 AM ET; finished Oct 13, 9:31 AM ET; it ended with an error (code 1).
 The last round ended with an error.
-Show details
+Technical details
 REFUSED BEFORE THE AI
 12 paid jobs
 Not sent to the AI because paid research is paused.
@@ -118,6 +118,6 @@ The first shut Oct 9, 6:00 AM ET
 Shut
 No reason is recorded.
 Shut Oct 1, 6:00 AM ET
-Show details
+Technical details
 
 Read Oct 13, 10:00 AM ET

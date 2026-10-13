@@ -343,7 +343,7 @@ export function WorkersScreen() {
           {w.update.fixId && <div className={s.inline}>
             <button type="button" className={cx(s.btn, s.btnPrimary)} onClick={() => v.open({ type: "fix", id: w.update!.fixId! })}>See the update and what’s blocking it</button>
           </div>}
-          <Technical lines={w.update.technical} label="Show details" />
+          <Technical lines={w.update.technical} />
         </Card>
       ) : (
         <Card title="Are the workers on the latest update?">
@@ -359,7 +359,7 @@ export function WorkersScreen() {
           <strong>{when(st?.lastUsefulProgress?.at)}</strong>
           {st?.lastUsefulProgress && <span className={s.meta}>{progressAge ? `${progressAge}. ` : ""}{st.lastUsefulProgress.what}</span>}
         </div>
-        <div className={cx(s.row, round.overdue && s.cardWarn)}><span className={s.eyebrow}>Round of work</span><strong className={round.overdue ? s.textWarn : undefined}>{roundMissing ? "—" : round.headline}</strong>{st?.lastRoundFinishedAt && !round.headline.startsWith("Last finished") && <span className={s.meta}>Last finished {when(st.lastRoundFinishedAt, false)}</span>}{st?.cycle && <><span className={s.meta}>{round.detail}</span>{st.cycle.lastError && <><span className={cx(s.meta, s.textWarn)}>The last round ended with an error.</span><Technical lines={[st.cycle.lastError]} label="Show details" /></>}</>}</div>
+        <div className={cx(s.row, round.overdue && s.cardWarn)}><span className={s.eyebrow}>Round of work</span><strong className={round.overdue ? s.textWarn : undefined}>{roundMissing ? "—" : round.headline}</strong>{st?.lastRoundFinishedAt && !round.headline.startsWith("Last finished") && <span className={s.meta}>Last finished {when(st.lastRoundFinishedAt, false)}</span>}{st?.cycle && <><span className={s.meta}>{round.detail}</span>{st.cycle.lastError && <><span className={cx(s.meta, s.textWarn)}>The last round ended with an error.</span><Technical lines={[st.cycle.lastError]} /></>}</>}</div>
         {st?.refused && <div className={cx(s.row, s.cardWarn)}><span className={s.eyebrow}>Refused before the AI</span><strong className={s.textWarn}>{count(st.refused.count)} paid jobs</strong><span className={s.meta}>Not sent to the AI because {st.refused.why}.</span></div>}
         <div className={s.row}>
           <span className={s.eyebrow}>{jobs ? `Work in ${v.place.name}` : isCountry ? "Work" : "Work, all places"}</span>

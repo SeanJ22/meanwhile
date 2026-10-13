@@ -70,6 +70,7 @@ function verifierIdFor(contract: ReaderContract): string {
   if (contract.sourceId === "plural-openstates-votes") return "lib/sources/plural/votes.ts#readPluralVotesProjection";
   if (contract.sourceId === "legiscan" && contract.recordClass === "STATE_ROLL_CALL") return "lib/sources/legiscan/votes.ts#readLegiscanVotesProjection";
   switch (contract.id) {
+    case "legiscan-bulk": return "lib/sources/legiscan/reader.ts#readBulkProjection";
     case "google-civic-voterinfo": return "lib/sources/google-civic/reader.ts#readCivicProjection";
     case "socrata-discovery":
     case "epa-echo": return "lib/sources/open-data/publication.ts#readOpenDataProjection";
@@ -168,6 +169,10 @@ export async function verifyRoutineReaderProjection(
       return verifyExactVersion(verifierId, read, options.expectedVersionId, `${state} attributed votes`);
     }
     switch (contract.id) {
+      case "legiscan-bulk": {
+        const { readBulkProjection } = await import("../sources/legiscan/reader.ts");
+        return verifyExactVersion(verifierId, await readBulkProjection(options.scope ?? contract.scope, {store:options.store,now:options.now,bypassCache:true}),options.expectedVersionId,"LegiScan bills");
+      }
       case "google-civic-voterinfo": {
         const { readCivicProjection } = await import("../sources/google-civic/reader.ts");
         const result = await readCivicProjection(options.scope ?? contract.scope, { store: options.store, now: options.now, bypassCache: true });

@@ -136,6 +136,7 @@ export type AgendaSourceType =
    * upcoming and past meetings with agenda, packet, minutes and video. See `lib/sources/suiteone`.
    */
   | "SUITEONE"
+  | "GRANICUS"
   | "PRIMEGOV"
   | "NOVUSAGENDA"
   | "SIMBLI"

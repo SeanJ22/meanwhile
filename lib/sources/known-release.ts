@@ -1,6 +1,3 @@
-/** Known releases reuse the existing evidence vault and repository lock.
- * Source bytes are immutable; only the small source/release index changes.
- * No parser or reader owns a second download for the same release. */
 import { createHash } from "node:crypto";
 import { join } from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
@@ -10,7 +7,6 @@ import type { ControlPlaneRepositories, LockManager } from "../control-plane/rep
 import { RepositoryLockHeld } from "../control-plane/repository/types.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories, readPlaceArtifacts } from "../control-plane/repository/pg-store.ts";
 import { researchVaultResolver } from "../control-plane/workers/vault-object.ts";
-import { VAULT_DIR } from "../control-plane/scheduler/vault.ts";
 import { readPublisherBody, requestPublisher, sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
 import { readCompleteResponse } from "./source-bytes.ts";
 import { sourceUserAgent } from "./http.ts";
@@ -77,7 +73,8 @@ function runtimeContext() {
     const connection = controlPlaneUrlFromEnv();
     if (!connection) throw new Error("KNOWN_SOURCE_CONTROL_PLANE_UNAVAILABLE");
     const repos = await createPgRepositories(connection, new Date().toISOString(), { skipBootstrap: true });
-    return { store: new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR)), locks: repos.locks, repos };
+    // A literal vault path prevents filesystem tracing from bundling the repository.
+    return { store: new DurableEvidenceStore(join(process.cwd(), "data/control-plane/vault")), locks: repos.locks, repos };
   })().catch(error => { runtime = undefined; throw error; });
 }
 /** Large file sources share the same vault and repository locks as byte releases. */

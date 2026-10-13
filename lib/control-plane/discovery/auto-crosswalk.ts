@@ -1,36 +1,5 @@
-/**
- * The automatic calendar-to-body reviewer: reviews one discovery walk's saved
- * evidence by rule. Its reviewer id names its own code version
- * (`auto-crosswalk-reviewer@<digest>`), never the owner.
- *
- * From each readable platform find it proposes
- * rows for the government's registered body (`<ocdId>#governing`, or `#board`
- * for a school district) and for sub-bodies whose names the government prints
- * in event titles or categories. A proposal is accepted only when every check
- * passes; otherwise it is held by name, with what was ruled out, what would
- * settle it and who moves next:
- *
- * 1. the calendar is on the government's attested own host or a publisher its own page links (`attestationFor`);
- * 2. every read it rests on answered 2xx with no access control, and the host's
- *    robots.txt was read and recorded first (the verdict is evidence, never a
- *    hold; a login, 403, rate limit or bot challenge still holds);
- * 3. the calendar's and naming page's bytes are held in the vault, cited by sha256;
- * 4. the state's registration pairs the government with a body;
- * 5. a saved official document (the attested calendar counts) prints the body's
- *    name; when no title does, a CivicPlus category feed filed under exactly
- *    that body's name names it, and the whole feed is its (`feedScope: "category"`);
- * 6. the filter selects at least one event and none naming a different body; a
- *    longer containing name is excluded by its exact words (`titleExclude`), and
- *    an event naming this body and another holds the row;
- * 7. the calendar's zone is stated or its county has one IANA clock, it is
- *    consistent, and no selected event is stamped in UTC;
- * 8. no two proposals select the same event, and one calendar carries at most
- *    `AUTO_CROSSWALK_ROUTE_CAP` bodies;
- * 9. the row passes `crosswalkRowIssue`.
- *
- * Pure: no fetch, no clock, no store.
- */
 import { createHash } from "node:crypto";
+import { granicusBodyLabel, parseGranicusPublisher } from "../../sources/granicus/index.ts";
 import { parseDiligentMeetings } from "../../sources/diligent/index.ts";
 
 import type { DerivedInputRef } from "../../civic-data/derived-authority.ts";
@@ -61,9 +30,6 @@ import { parseCalendarRows } from "../../sources/iqm2/index.ts";
 import { parseAgendaCenter, parseAgendaCenterCategories } from "../../sources/civicplus/index.ts";
 import { parseBoardDocsMeetings, parseBoardDocsCommittees } from "../../sources/boarddocs/index.ts";
 import type { CivicClerkEvent } from "../../sources/civicclerk/index.ts";
-
-/** The most bodies one calendar carries: the family reads each member's calendar on its own each pass. */
-export const AUTO_CROSSWALK_ROUTE_CAP = 10;
 
 type VaultedEvidence = Extract<DerivedInputRef, { kind: "VAULTED_EVIDENCE" }>;
 
@@ -103,7 +69,7 @@ export interface AutoCrosswalkReviewInput {
 
 const KIND_OF_VENDOR: Readonly<Record<string, CrosswalkKind>> = {
   ical: "ICAL", "official-page-events": "OFFICIAL_PAGE_EVENTS", diligent: "DILIGENT", "legistar-api": "LEGISTAR",
-  boardbook: "BOARDBOOK", "civicclerk-api": "CIVICCLERK", iqm2: "IQM2", "civicplus-agendacenter": "CIVICPLUS", boarddocs: "BOARDDOCS",
+  boardbook: "BOARDBOOK", "civicclerk-api": "CIVICCLERK", iqm2: "IQM2", "civicplus-agendacenter": "CIVICPLUS", boarddocs: "BOARDDOCS", granicus: "GRANICUS",
 };
 export const AUTO_CROSSWALK_VENDORS: ReadonlySet<string> = new Set(Object.keys(KIND_OF_VENDOR));
 
@@ -507,15 +473,16 @@ const titleHas = (title: string, terms: readonly string[]): boolean => terms.som
  * A title's other printed names are read to tell a longer name (excluded by its exact words) from a second body.
  */
 function selectFor(kind: CrosswalkKind, proposal: Proposal, events: readonly CalendarEvent[], jurisdictionId: string, route: string): Selected {
-  if (["BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS"].includes(kind)) {
+  if (["BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "GRANICUS"].includes(kind)) {
     const namesIn = (event: CalendarEvent) => [...printedNames(event.title, jurisdictionId), ...printedNames(event.context, jurisdictionId)]
       .filter(name => tokenize(name.text).length >= 2);
     const matches = (event: CalendarEvent) => namesIn(event).some(name => canonical(name.text, jurisdictionId) === proposal.key) ||
       event.categories.some(name => canonical(name, jurisdictionId) === proposal.key);
-    const selected = events.filter(matches);
+    const selected = events.filter(event => matches(event) && (kind !== "GRANICUS" || namesIn(event).every(name => canonical(name.text, jurisdictionId) === proposal.key)));
     if (selected.length === 0) return { held: "SELECTS_NOTHING", detail: `no ${kind} event names the reviewed body` };
     const other = selected.find(event => namesIn(event).some(name => canonical(name.text, jurisdictionId) !== proposal.key));
     if (other) return { held: "AMBIGUOUS_TITLE", detail: `"${other.title}" also names another body` };
+    if (kind === "GRANICUS") return { filter: { bodyMatch: [...new Set(selected.map(event => granicusBodyLabel(event.title)))].join("|") }, selected };
     if (kind === "BOARDBOOK") {
       if (selected.length !== events.length) return { held: "AMBIGUOUS_TITLE", detail: "the BoardBook organization feed also carries another body's events; a whole-organization reader cannot select this body alone" };
       return { filter: {}, selected };
@@ -655,8 +622,6 @@ function deadEnd(reason: AutoCrosswalkHoldReason, name: string | null, route: st
       return { ruledOut: "guessing the wall clock of the body's sittings", wouldSettle: "a reviewing agent session confirming the sittings' local times against the government's own page, through the manual crosswalk", whoMovesNext: "a reviewing agent session" };
     case "CONFLICTING_SELECTION":
       return { ruledOut: "two bodies claiming the same event", wouldSettle: "a reviewing agent session deciding whose event it is, through the manual crosswalk", whoMovesNext: "a reviewing agent session" };
-    case "ROUTE_CAP":
-      return { ruledOut: `reading ${route} more than ${AUTO_CROSSWALK_ROUTE_CAP} times a pass`, wouldSettle: "the family reading one shared calendar once a pass for all its bodies", whoMovesNext: "engineering" };
     case "ROW_CHECK_FAILED":
       return { ruledOut: "promoting a row that fails a C16 check", wouldSettle: "a fix to the reviewer, or a reviewing agent session's row", whoMovesNext: "engineering" };
   }
@@ -723,7 +688,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       hold(route, attested.held === "EVIDENCE_NOT_VAULTED" ? "EVIDENCE_NOT_VAULTED" : "HOST_NOT_ATTESTED", attested.detail);
       continue;
     }
-    const linkedPublisher = ["DILIGENT", "LEGISTAR", "BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS"].includes(kind) && attested.attestation.kind === "LINKED_FROM_ATTESTED_PAGE";
+    const linkedPublisher = ["DILIGENT", "LEGISTAR", "BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "GRANICUS"].includes(kind) && attested.attestation.kind === "LINKED_FROM_ATTESTED_PAGE";
     if (homeHost === null || (bare(homeHost) !== bare(routeHost) && !linkedPublisher)) {
       hold(route, "HOST_NOT_OWN", `the calendar is on ${routeHost}; the walk attested ${homeHost ?? "no homepage"} as the government's own`);
       continue;
@@ -769,6 +734,11 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       const rows = parseDiligentMeetings(calendar.text);
       if (!rows?.length) { hold(route, "CALENDAR_UNREADABLE", "the held public Diligent response has no dated meetings"); continue; }
       events = rows.map(m => ({ title: flat(m.Name ?? ""), context: "", categories: [flat(m.MeetingTypeName ?? "")], identity: `${m.Id}|${m.MeetingDateTime}`, tzid: stateZone, utc: false, floating: true, url: `${new URL(route).origin}/Portal/MeetingInformation.aspx?Id=${m.Id}` }));
+    } else if (kind === "GRANICUS") {
+      let rows: ReturnType<typeof parseGranicusPublisher> = [];
+      try { rows = parseGranicusPublisher(calendar.text, route); } catch { /* An invalid public list names no meeting. */ }
+      events = rows.map(row => ({ title: flat(granicusBodyLabel(row.title)), context: "", categories: [flat(granicusBodyLabel(row.title))],
+        identity: `${row.id}|${row.date}`, tzid: stateZone, utc: false, floating: row.hour !== null, url: row.agendaUrl ?? row.videoUrl ?? route }));
     } else if (kind === "BOARDBOOK") {
       events = parseOrganizationPage(calendar.text).rows.map(row => ({ title: flat(row.title), context: "", categories: [],
         identity: `${row.meetingId ?? ""}|${row.y}-${row.mo}-${row.d}|${row.h}:${row.mi}`, tzid: stateZone, utc: false, floating: true, url: route }));
@@ -885,9 +855,9 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
     if (governing.length > 1) {
       hold(route, "GOVERNING_NAME_CONFLICT", `events name the governing body ${governing.map((k) => `"${governingKeys.get(k)}"`).join(" and ")}`, null, registered.bodyId);
     } else if (governing.length === 1) {
-      const listed = governingKeys.get(governing[0]!)!;
-      /* The kind's own name is what every title that names the body carries; the printed spellings add nothing. */
-      proposals.push({ role, bodyId: registered.bodyId, spellings: [listed], key: governing[0]!, category: null });
+      const observedSpellings = [...named.get(governing[0]!)!.spellings].sort();
+      const spellings = observedSpellings.filter(name => !observedSpellings.some(other => other !== name && wordAt(name, other) >= 0));
+      proposals.push({ role, bodyId: registered.bodyId, spellings, key: governing[0]!, category: null });
     } else if (kind === "ICAL" && (scope = categoryScopeOf(find, route, routeHost)) !== null) {
       /* No title names the body, and the site's own category for this feed is exactly its name: the whole feed is its. */
       proposals.push({ role, bodyId: registered.bodyId, spellings: [scope.name], key: canonical(scope.name, jurisdictionId), category: null, scope });
@@ -999,11 +969,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
     const standing = routeAccepted
       .filter((a) => !conflicted.has(a.row.id))
       .sort((a, b) => Number(a.row.bodyRole === "SUB_BODY") - Number(b.row.bodyRole === "SUB_BODY") || b.count - a.count || (a.row.id < b.row.id ? -1 : 1));
-    for (const [index, a] of standing.entries()) {
-      if (index >= AUTO_CROSSWALK_ROUTE_CAP) {
-        hold(route, "ROUTE_CAP", `${standing.length} bodies on one calendar; ${AUTO_CROSSWALK_ROUTE_CAP} are read from it each pass`, a.row.bodyName, a.row.bodyId);
-        continue;
-      }
+    for (const a of standing) {
       accepted.push({ row: a.row, inputs: a.inputs });
     }
   }

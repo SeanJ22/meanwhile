@@ -50,7 +50,6 @@ import {
 import { parseClerkSchedule } from "./clerk-schedule.ts";
 import {
   MEETING_PRODUCING_ROUTES,
-  granicusRouteObservation,
   openObligations,
   richerRouteLink,
   summarizeRoute,
@@ -92,11 +91,6 @@ import {
  */
 const SOURCE_NAME = "legistar-insite";
 
-/**
- * The Granicus Live Proceedings route lives with the route model in `./horizon.ts` (enumeration state
- * `NOT_BUILT`, no claim about its content); re-exported as part of this adapter's public surface.
- */
-export { GRANICUS_LIVE_PROCEEDINGS_ROUTE } from "./horizon.ts";
 
 const WINDOW_BACK_DAYS = MEETING_HELD_LOOKBACK_DAYS;
 
@@ -662,7 +656,6 @@ export function normalizeWithDrops(
       ),
       feedObservation(reading, tenant, tenantToday),
       clerkObservation(reading, tenant, tenantToday),
-      granicusRouteObservation(),
     ];
     routes.push(...observations);
 

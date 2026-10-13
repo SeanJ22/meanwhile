@@ -127,7 +127,7 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
   assert.equal(queued.length, 1);
   if (contractId === "voting-sites") assert.deepEqual(queued[0].command.slice(0, 2), ["scripts/fetch-voting-sites.mts", "--promote"], "the existing voting command handles worker results before legacy acquisition");
   else if (!directory) assert.ok(queued[0].command.includes(`--contract=${contractId}`));
-  assert.ok(queued[0].command.some(arg => arg === `--${directory ? "worker-rosters" : "worker-results"}=${h.item.id}`));
+  assert.ok(queued[0].command.some(arg => arg === `--${directory ? "worker-directories" : "worker-results"}=${h.item.id}`));
   const input = { repos: h.repos, store, contractId: contractId as WorkerReaderContract, workItemIds: [h.item.id], now: h.now(),
     readCapture: async (id: string) => { const evidence = evidenceProjection(await runtime.readEvidence(id));
       return { evidence, observedAt: evidence.retrievedAt, httpStatus: 200, transport: "REACHABLE", partial: false }; } };

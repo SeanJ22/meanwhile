@@ -10,7 +10,7 @@ import { PLURAL_PARSER_VERSION, PLURAL_REVISION_URL, PLURAL_SOURCE_ID, PLURAL_ST
 import { stateContainers, type ReadOnlyQuery, type Slice } from "../../control-plane/admin-view/promoted-slices.ts";
 import { censusWorkDivision } from "../../census-geography/division-id.ts";
 import { readerQuery } from "../../civic-data/promoted-reader-query.ts";
-import { selectGeographyVersion } from "../../census-geography/selection.ts";
+import { selectedRepresentationContainers } from "../../geo/representation-geography.ts";
 import type { StatePeopleAcquisition } from "../../civic-data/state-people-publication.ts";
 import type { OfficeholderSet } from "../../officials/types.ts";
 import { RepositoryLockHeld } from "../../control-plane/repository/types.ts";
@@ -46,15 +46,12 @@ function revision(bytes: Uint8Array): string {
 }
 /** No ZIP or Send needed to read an independently held state people source. */
 export async function statePeopleDivisions(state: string, asOf: string, query: ReadOnlyQuery | null = readerQuery()): Promise<Slice<RegistryDivisionLite[]>> {
-  const slice = await stateContainers(state, ["state_leg_upper", "state_leg_lower"], false, query);
+  const slice = await stateContainers(state, ["state_leg_upper", "state_leg_lower", "overlay_district", "aiannh"], false, query);
   if (slice.kind !== "HELD") return slice;
-  const versions = slice.value.scopes.map(scope => ({ ...scope, key: scope.version }));
-  const upper = selectGeographyVersion(versions, "state_leg_upper", { purpose: "representation", asOf });
-  const lower = selectGeographyVersion(versions, "state_leg_lower", { purpose: "representation", asOf });
-  const divisions = slice.value.containers.flatMap(({ ref }) => {
-    if (!(ref.type === "state_leg_upper" && ref.version === upper?.key || ref.type === "state_leg_lower" && ref.version === lower?.key)) return [];
+  const divisions = selectedRepresentationContainers(slice.value, { purpose: "representation", asOf }).flatMap(({ ref }) => {
     const ocdId = censusWorkDivision(ref);
-    return ocdId ? [{ ocdId, label: ref.label, divisionType: ref.type === "state_leg_upper" ? "sldu" : "sldl" }] : [];
+    return ocdId ? [{ ocdId, label: ref.label, ...(ref.representation ? { representation: ref.representation } : {}),
+      divisionType: ref.type === "aiannh" ? "aiannh" : ref.type === "state_leg_upper" || ref.type === "overlay_district" && ref.chamber === "upper" ? "sldu" : "sldl" }] : [];
   });
   return { kind: "HELD", versionId: slice.versionId, value: divisions };
 }

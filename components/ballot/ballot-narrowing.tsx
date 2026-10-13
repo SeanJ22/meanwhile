@@ -3,6 +3,7 @@
 import { useCallback, useState } from "react";
 
 import { AddressPrompt } from "@/components/address/address-prompt";
+import { applyBallotContestScope } from "@/lib/ballot/contest-visibility";
 
 /**
  * Marks ballot contests outside the reader's confirmed divisions as
@@ -20,36 +21,16 @@ export function BallotNarrowing({
 }) {
   /** How many contests the address set aside. Null means no narrowing applied. */
   const [setAside, setSetAside] = useState<number | null>(null);
+  const [ballotUnavailable, setBallotUnavailable] = useState(false);
 
   /** Mark the sections. The page renders every contest; this hides some. */
   const applyScope = useCallback((contestIds: string[] | null): number => {
-    const sections = document.querySelectorAll<HTMLElement>("[data-contest-id]");
-    let hidden = 0;
-    for (const section of sections) {
-      const id = section.dataset.contestId ?? "";
-      const out = contestIds !== null && !contestIds.includes(id);
-      if (out) {
-        section.dataset.scopedOut = "true";
-        hidden += 1;
-      } else {
-        delete section.dataset.scopedOut;
-      }
-      /* A confirmed contest drops its "could govern" mark; undo restores it. */
-      if (contestIds === null) {
-        if (section.dataset.couldGovernParked === "true") {
-          section.dataset.couldGovern = "true";
-          delete section.dataset.couldGovernParked;
-        }
-      } else if (!out && section.dataset.couldGovern === "true") {
-        delete section.dataset.couldGovern;
-        section.dataset.couldGovernParked = "true";
-      }
-    }
-    return hidden;
+    return applyBallotContestScope(document.querySelectorAll<HTMLElement>("[data-contest-id]"), contestIds);
   }, []);
 
   return (
     <>
+      {ballotUnavailable && <p>We couldn&apos;t check the ballot for that address. Everything below stays listed.</p>}
       {setAside !== null && (
         <div className="ballot-narrowed">
           <p>
@@ -69,13 +50,16 @@ export function BallotNarrowing({
         onSwitchZip={(other) => {
           window.location.href = `/ballot?zip=${other}`;
         }}
-        onResolved={({ contestIds }) => {
-          // An empty confirmed list keeps the whole zip visible.
-          setSetAside(contestIds.length > 0 ? applyScope(contestIds) : null);
+        onResolved={({ contestIds, ballotStatus }) => {
+          const held = ballotStatus === "HELD" && contestIds.length > 0;
+          const count = applyScope(held ? contestIds : null);
+          setSetAside(held ? count : null);
+          setBallotUnavailable(ballotStatus !== "HELD");
         }}
         onCleared={() => {
           applyScope(null);
           setSetAside(null);
+          setBallotUnavailable(false);
         }}
       />
     </>

@@ -7,6 +7,7 @@ import {
 } from "../../civic-data/read-model.ts";
 import { requiredRoutineContract, routineFreshnessMs } from "../../civic-data/contracts.ts";
 import { ballotFreshnessNote } from "../ballot-curated/freshness-note.ts";
+import { MissingBallotProjectionError } from "../../ballot/holding.ts";
 
 import type {
   BallotAbsence,
@@ -166,7 +167,7 @@ export const ballotNjMorrisSource: BallotSource = {
     const result = await readNjMorrisFiling();
     if (result.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(result);
     if (result.kind === "NOT_RECORDED") {
-      throw new Error("The Morris filing store answered without a canonical projection or bootstrap.");
+      throw new MissingBallotProjectionError(SOURCE_NAME);
     }
     return [result.value.ballot];
   },

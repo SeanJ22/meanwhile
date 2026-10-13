@@ -51,6 +51,7 @@ test("a same-tab write notifies the session-address subscribers", async () => {
     writeSessionAddress({
       zip: "85641",
       contestIds: [],
+      ballotStatus: "HOLDING_UNAVAILABLE",
       divisionIds: ["ocd-division/country:us/state:az/sldl:17"],
       splitLevels: [],
       streetLabel: "South Bear Table Tank Drive",
@@ -66,6 +67,7 @@ test("a same-tab write notifies the session-address subscribers", async () => {
       "ocd-division/country:us/state:az/sldl:17",
       "and the value it published is the value it stored",
     );
+    assert.equal(readSessionAddress()?.ballotStatus, "HOLDING_UNAVAILABLE", "an unavailable ballot remains distinct from a confirmed empty ballot after a session read");
 
     clearSessionAddress();
     assert.equal(

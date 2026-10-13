@@ -13,6 +13,7 @@ import {
   sessionAddressFor,
   writeSessionAddress,
 } from "@/lib/geo/session-address";
+import type { AddressBallotStatus } from "@/lib/ballot/holding";
 
 /**
  * The one address prompt. Asks for a street only; a house-number field appears
@@ -24,7 +25,7 @@ import {
 export interface AddressPromptProps {
   zip: string;
   /** Fires whenever the jurisdiction picture changes; callers re-read the session scope. */
-  onResolved?: (scope: { divisionIds: string[]; contestIds: string[]; splitLevels: LevelKey[] }) => void;
+  onResolved?: (scope: { divisionIds: string[]; contestIds: string[]; splitLevels: LevelKey[]; ballotStatus?: AddressBallotStatus }) => void;
   /** Fires only on an unambiguous street; an ambiguous one has no single point. */
   onPoint?: (point: { lat: number; lng: number }) => void;
   /** The reader accepted the offer to view the ZIP the address resolves in. */
@@ -80,6 +81,7 @@ export function AddressPrompt({
       onResolved?.({
         divisionIds: held.divisionIds,
         contestIds: held.contestIds,
+        ballotStatus: held.ballotStatus,
         splitLevels: held.splitLevels as LevelKey[],
       });
     }, 0);
@@ -111,6 +113,7 @@ export function AddressPrompt({
         ok?: boolean;
         resolution?: AddressResolution;
         contestIds?: unknown;
+        ballotStatus?: unknown;
         excludedDivisionIds?: unknown;
         point?: { lat?: unknown; lng?: unknown } | null;
       };
@@ -146,7 +149,8 @@ export function AddressPrompt({
         return;
       }
 
-      const contestIds = Array.isArray(body.contestIds)
+      const ballotStatus = body.ballotStatus === "HELD" || body.ballotStatus === "NOT_RECORDED" ? body.ballotStatus : "HOLDING_UNAVAILABLE";
+      const contestIds = ballotStatus === "HELD" && Array.isArray(body.contestIds)
         ? body.contestIds.filter((id): id is string => typeof id === "string")
         : [];
       const divisionIds = result.levels.filter((l) => l.certain).flatMap((l) => l.divisionIds);
@@ -160,12 +164,13 @@ export function AddressPrompt({
       writeSessionAddress({
         zip,
         contestIds,
+        ballotStatus,
         divisionIds,
         splitLevels,
         excludedDivisionIds: Array.isArray(body.excludedDivisionIds) ? body.excludedDivisionIds.filter((id): id is string => typeof id === "string") : [],
         streetLabel: street.trim(),
       });
-      onResolved?.({ divisionIds, contestIds, splitLevels });
+      onResolved?.({ divisionIds, contestIds, splitLevels, ballotStatus });
       if (
         body.point &&
         typeof body.point.lat === "number" &&

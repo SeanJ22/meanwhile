@@ -94,7 +94,7 @@ test("the real reference seats all render on the legislature page with the exact
 });
 
 test("one address retains its base and overlay district, with independent labels", () => {
-  const base = "ocd-division/country:us/state:nh/sldl:602";
+  const base = "ocd-division/country:us/state:nh/sldl:702";
   const overlay = "ocd-division/country:us/state:nh/sldl:ro31";
   const coverage = {seats:[{ocdId:base,label:"Rockingham 2",divisionType:"sldl",tier:"state",representatives:[]},
     {ocdId:overlay,label:"Rockingham 31",divisionType:"sldl",tier:"state",representation:"overlay",representatives:[]}]} as unknown as CoverageSummary;
@@ -106,7 +106,7 @@ test("one address retains its base and overlay district, with independent labels
 });
 
 test("a confirmed base district does not discard an overlay whose point hit is still unknown", () => {
-  const base = "ocd-division/country:us/state:nh/sldl:602";
+  const base = "ocd-division/country:us/state:nh/sldl:702";
   const overlay = "ocd-division/country:us/state:nh/sldl:ro31";
   const coverage = {seats:[{ocdId:base,label:"Rockingham 2",divisionType:"sldl",tier:"state",representatives:[]},
     {ocdId:overlay,label:"Rockingham 31",divisionType:"sldl",tier:"state",representation:"overlay",representatives:[]}]} as unknown as CoverageSummary;

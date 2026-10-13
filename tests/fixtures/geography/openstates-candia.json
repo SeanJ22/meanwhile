@@ -1,0 +1,52 @@
+{
+  "sourceUrl": "https://data.openstates.org/people/current/nh.csv",
+  "acquiredAt": "2026-10-12",
+  "originalSha256": "6aa79ba1c3adb3f5de963409c8530c0dbd5cf2d2cecf2079a05e392ea4f87f8c",
+  "originalBytes": 348910,
+  "originalPeople": 406,
+  "selection": "Unmodified identity, designation, chamber and party fields for the Candia base/floterial seats and the reported source disagreement. CSV contains no role dates.",
+  "people": [
+    {
+      "id": "ocd-person/2520dc46-648c-44d0-ba1f-fe09b17a9d8b",
+      "name": "Jim Spillane",
+      "current_district": "Rockingham 2",
+      "current_chamber": "lower",
+      "current_party": "Republican"
+    },
+    {
+      "id": "ocd-person/6e2bc564-5cd1-4f96-a265-4753b7f12ee1",
+      "name": "Jason Osborne",
+      "current_district": "Rockingham 2",
+      "current_chamber": "lower",
+      "current_party": "Republican"
+    },
+    {
+      "id": "ocd-person/3787c84d-f615-4e9d-bac8-42f86ea308db",
+      "name": "Jess Edwards",
+      "current_district": "Rockingham 31",
+      "current_chamber": "lower",
+      "current_party": "Republican"
+    },
+    {
+      "id": "ocd-person/c46f0617-3009-41d2-97e3-a51004d83430",
+      "name": "Jim Gruber",
+      "current_district": "Cheshire 16",
+      "current_chamber": "lower",
+      "current_party": "Democratic"
+    },
+    {
+      "id": "ocd-person/9d10ccec-b571-4eea-b025-9ed7634b6516",
+      "name": "Kevin Verville",
+      "current_district": "Rockingham 2",
+      "current_chamber": "lower",
+      "current_party": "Republican"
+    },
+    {
+      "id": "ocd-person/6d43b165-fda9-4918-a2b7-ad66940062a0",
+      "name": "Terry Roy",
+      "current_district": "Rockingham 31",
+      "current_chamber": "lower",
+      "current_party": "Republican"
+    }
+  ]
+}

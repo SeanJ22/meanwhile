@@ -14,6 +14,7 @@ import {
   publishToListeners,
   subscribeToStorage,
 } from "@/lib/state/subscribe-to-storage";
+import type { AddressBallotStatus } from "../ballot/holding.ts";
 
 /** The one key. Named so it is greppable and so nothing else claims it. */
 export const SESSION_ADDRESS_KEY = "wtp.session_address_scope";
@@ -42,6 +43,8 @@ export interface SessionAddressScope {
   zip: string;
   /** Contest ids on the ballot at that point. The whole payload's value. */
   contestIds: string[];
+  /** Missing ballot holdings cannot turn an empty list into a confirmed absence. */
+  ballotStatus?: AddressBallotStatus;
   /** What the reader typed for the street, for their own recognition only. */
   streetLabel: string;
   /** The division ids the address confirmed, across every level that resolved. */
@@ -83,6 +86,7 @@ export function readSessionAddress(): SessionAddressScope | null {
     return {
       zip: parsed.zip,
       contestIds: parsed.contestIds.filter((id): id is string => typeof id === "string"),
+      ballotStatus: parsed.ballotStatus === "HELD" || parsed.ballotStatus === "NOT_RECORDED" ? parsed.ballotStatus : "HOLDING_UNAVAILABLE",
       divisionIds: Array.isArray(parsed.divisionIds)
         ? parsed.divisionIds.filter((id): id is string => typeof id === "string")
         : [],

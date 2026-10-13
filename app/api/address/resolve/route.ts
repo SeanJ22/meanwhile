@@ -9,8 +9,7 @@ import {
   type Sample,
 } from "@/lib/geo/address-resolution";
 import { divisionsAt } from "@/lib/registry/server";
-import { contestsForDivisions } from "@/lib/sources/ballot-nj-morris";
-import { readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
+import { addressContestScopeFor } from "@/lib/ballot/address-scope";
 import { publishedZipDistricts } from "@/lib/geo/zip-census-districts";
 import { excludedRepresentationAtPoints, requestRepresentationGeographyReader } from "@/lib/geo/representation-geography";
 import { readReaderManifest, readerAuthorityEdge } from "@/lib/meetings/edge-serving";
@@ -35,19 +34,6 @@ const NO_STORE = {
 
 function bad(): Response {
   return Response.json({ ok: false }, { status: 400, headers: NO_STORE });
-}
-
-/** Contest ids for a confirmed division set — the ballot page's narrowing. */
-async function contestIdsFor(ocdIds: readonly string[]): Promise<string[]> {
-  if (ocdIds.length === 0) return [];
-  for (const { source } of await readerBallotSourcesForDivisions(ocdIds)) {
-    const candidate = source.normalize(await source.fetch());
-    const hit = contestsForDivisions(candidate, [...ocdIds]);
-    if (hit.contests.length > 0 || hit.absences.length > 0) {
-      return hit.contests.map((c) => c.id);
-    }
-  }
-  return [];
 }
 
 export async function POST(request: Request) {
@@ -146,7 +132,7 @@ export async function POST(request: Request) {
         : null;
 
     return Response.json(
-      { ok: true, resolution, contestIds: await contestIdsFor(confirmed), point, excludedDivisionIds },
+      { ok: true, resolution, ...await addressContestScopeFor(confirmed), point, excludedDivisionIds },
       { headers: NO_STORE },
     );
   });

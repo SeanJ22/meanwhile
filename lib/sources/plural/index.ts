@@ -1,3 +1,6 @@
+import { designationKey, designationFromLabel } from "../../officials/legislative-designation.ts";
+export { designationKey, designationFromLabel } from "../../officials/legislative-designation.ts";
+import { indexOverlayDesignation, representationSeatLinks, type RepresentationLinks } from "./representation-links.ts";
 import type {
   OfficeholderDivision,
   Officeholder,
@@ -227,36 +230,11 @@ export function yamlToPeople(text: string, state: string, sourceUrl: string, asO
     capitol_address: capitol?.address ?? "", capitol_voice: capitol?.voice ?? "", district_address: district?.address ?? "", district_voice: district?.voice ?? "" }];
 }
 
-/**
- * Reduces a district designation to something two spellings agree on. Some
- * districts are designated by county and number ("<County> 8") and the two
- * sides zero-pad differently. Named districts also vary in spacing and punctuation.
- */
-export function designationKey(value: string): string {
-  return value
-    .trim()
-    .toUpperCase()
-    .replace(/\s+/g, " ")
-    // Strip leading zeros so "<County> 08" meets "<County> 8".
-    .replace(/\b0+(\d)/g, "$1")
-    .replace(/\bAND\b/g, "")
-    .replace(/[^A-Z0-9]/g, "");
-}
-
-const LABEL_PREFIX = /^(?:State (?:Senate|House|Representative|Legislative(?: Sub)?) ?District|Assembly District|Senate District|Delegate District|Legislative \((?:House|Senate)\) District|Senatorial District|Representative District)\s*/i;
-const LABEL_SUFFIX = /(?: State House District| Senatorial District| District)$/i;
-
-/** The designation a registry division's Census-sourced label encodes. */
-export function designationFromLabel(label: string): string {
-  return designationKey(
-    label.replace(/^[A-Z]{2} /, "").replace(/\s*\(\d{4} plan\)$/, "").replace(LABEL_PREFIX, "").replace(LABEL_SUFFIX, ""),
-  );
-}
-
 export interface RegistryDivisionLite {
   ocdId: string;
   label: string;
   divisionType: string;
+  representation?: RepresentationLinks["representation"];
 }
 
 /**
@@ -271,17 +249,23 @@ export function indexDivisions(
   const index = new Map<string, string>();
 
   for (const division of divisions) {
+    const state = /(?:state|district|territory):([a-z]{2})\//.exec(division.ocdId)?.[1];
+    if (!state) continue;
+    if (division.divisionType === "aiannh") {
+      const area = /\/aiannh:([a-z0-9-]+)$/i.exec(division.ocdId)?.[1];
+      if (area) index.set(`${state}|aiannh|${area.toLowerCase()}`, division.ocdId);
+      continue;
+    }
     if (division.divisionType !== "sldu" && division.divisionType !== "sldl") {
       continue;
     }
-    const state = /(?:state|district|territory):([a-z]{2})\//.exec(division.ocdId)?.[1];
-    if (!state) continue;
 
     const chamber = division.divisionType === "sldu" ? "upper" : "lower";
     index.set(
       `${state}|${chamber}|${designationFromLabel(division.label)}`,
       division.ocdId,
     );
+    indexOverlayDesignation(state, chamber, division.ocdId, index);
   }
 
   return index;
@@ -408,7 +392,6 @@ export function normalize(
   const endedMemberships: NonNullable<OfficeholderSet["endedMemberships"]>[number][] = [];
   const chamberFor = (state: string, type: string) => type === "legislature" && ["ne", "dc"].includes(state) ? "upper" : type;
   const letteredChambers = new Set([...divisionIndex.keys()].filter(key => /\|\d+[A-Z]$/.test(key)).map(key => key.slice(0, key.lastIndexOf("|"))));
-  const heldChambers = new Set([...divisionIndex.keys()].map(key => key.slice(0, key.lastIndexOf("|"))));
 
   for (const person of raw) {
     const uuid = person.id.replace("ocd-person/", "");
@@ -416,7 +399,7 @@ export function normalize(
     const personId = `${SOURCE_NAME}:${uuid}`;
     const sourceRoles: readonly PluralRole[] = person.roles ?? [{ type: person.current_chamber, district: person.current_district, current: true }];
     const mapped = sourceRoles.flatMap<{
-      role:PluralRole;title:string;chamber:string|undefined;level:"STATE"|"LOCAL";divisionId:string|undefined;officeId:string;membershipId:string;
+      role:PluralRole;title:string;chamber:string|undefined;level:"STATE"|"LOCAL";divisionId:string|undefined;officeId:string;membershipId:string;links:RepresentationLinks;
     }>(role => {
       const chamber = chamberFor(person.state, role.type);
       const legislative = ["upper", "lower", "legislature"].includes(role.type);
@@ -437,7 +420,8 @@ export function normalize(
           const jurisdiction = /^ocd-jurisdiction\/(country:us\/(?:state|district|territory):[a-z]{2})\/government$/.exec(role.jurisdiction ?? "");
           if (jurisdiction) divisionId = `ocd-division/${jurisdiction[1]}`;
         }
-        return [{role, title, chamber, level:"STATE" as const, divisionId,
+        const links = representationSeatLinks(person.state, chamber, role.district ?? "", divisionIndex, divisionId);
+        return [{role, title, chamber, level:"STATE" as const, divisionId: links.divisionIds.length === 1 ? links.divisionIds[0] : undefined, links,
           officeId:`openstates-office:${person.state}:${role.type}:${role.district ?? ""}`,
           membershipId:`${personId}:${person.state}:${role.type}:${role.district ?? ""}:${role.start_date ?? ""}`}];
       }
@@ -446,7 +430,7 @@ export function normalize(
         if (role.current) unmatched.push({officeholderId:id,reason:binding.issue});
         return [];
       }
-      return [{role,title:binding.officeTitle,chamber:undefined,level:binding.level,divisionId:binding.divisionId,
+      return [{role,title:binding.officeTitle,chamber:undefined,level:binding.level,divisionId:binding.divisionId, links: {divisionIds: binding.divisionId ? [binding.divisionId] : []},
         officeId:`openstates-office:${role.jurisdiction}:${binding.officeKey}:${role.district ?? ""}`,
         membershipId:`${personId}:${role.jurisdiction}:${binding.officeKey}:${role.district ?? ""}:${role.start_date ?? ""}`}];
     });
@@ -455,6 +439,7 @@ export function normalize(
       jurisdiction:item.role.jurisdiction ?? `US-${person.state.toUpperCase()}`,
       chamber:item.chamber,district:item.role.district,officeTitle:item.title,level:item.level,
       current:item.role.current !== false,divisionId:item.divisionId,
+      representation:item.links.representation,nation:item.links.nation,
       termStart:item.role.start_date ?? null,termEnd:item.role.end_date ?? null,
       sourceUrl:item.role.sourceUrl ?? person.sourceUrl ?? bulkUrl(person.state),
     }));
@@ -522,14 +507,12 @@ export function normalize(
     const seenDivisions = new Set<string>();
     for (const item of current) {
       const district = item.role.district ?? "";
-      const ocdId = item.divisionId;
-      if (!ocdId) {
-        const areaOutsideCensus = item.chamber === "lower" && (
-          person.state === "nh" && heldChambers.has("nh|lower") || person.state === "me" && /\btribe\b/i.test(district));
+      if (!item.links.divisionIds.length || item.links.gap) {
         unmatched.push({ officeholderId: id,
-          reason: item.chamber ? `no ${item.chamber} division for ${person.state.toUpperCase()} "${district}" — ${areaOutsideCensus ? "area not in the Census district file" : "missing boundary coverage or an unresolved designation"}`
+          reason: item.chamber ? `${item.links.divisionIds.length ? "unlinked areas" : `no ${item.chamber} division`} for ${person.state.toUpperCase()} "${district}" — ${item.links.gap ?? "missing boundary coverage or an unresolved designation"}`
             : `PLURAL_ROLE_DISTRICT_DIVISION_UNRESOLVED:${item.role.type}:${district}:${item.role.jurisdiction}` });
-      } else if (!seenDivisions.has(`${ocdId}|${item.membershipId}`)) {
+      }
+      for (const ocdId of item.links.divisionIds) if (!seenDivisions.has(`${ocdId}|${item.membershipId}`)) {
         divisions.push({ officeholderId: id, ocdId, bodyId: null, membershipId:item.membershipId });
         seenDivisions.add(`${ocdId}|${item.membershipId}`);
       }

@@ -138,7 +138,7 @@ test("unread and unpublished Census slices remain explicit acquisition results",
   assert.equal(failed.kind, "UNREAD");
 });
 
-test("real district members link, while floterial and tribal seats retain distinct open work", async () => {
+test("real district members link, while unpublished supplemental areas retain distinct open work", async () => {
   const registry = await divisionsForAllSamples();
   const roster = normalize(sourcePeople.map(person), indexDivisions(registry), NOW, "US");
   assert.equal(roster.officeholders.length, sourcePeople.length);
@@ -161,7 +161,7 @@ test("real district members link, while floterial and tribal seats retain distin
   const reasons = fixture.extras.filter(member => member.match === "not-census-area").map(member => {
     const holder = roster.officeholders.find(holder => holder.personId === `plural:${member.id.slice("ocd-person/".length)}`)!;
     const reason = roster.unmatched.find(row => row.officeholderId === holder.id)!.reason;
-    assert.match(reason, /area not in the Census district file/);
+    assert.match(reason, /missing boundary coverage|Referenced Census tribal areas have not been published/);
     assert.ok(reason.includes(member.district), reason);
     return reason;
   });

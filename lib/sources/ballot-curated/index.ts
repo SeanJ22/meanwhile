@@ -1,4 +1,5 @@
 import { seedMeasureRecords } from "../../ballot/measure-records.ts";
+import { MissingBallotProjectionError } from "../../ballot/holding.ts";
 import type { BallotSet, BallotSource } from "../../ballot/types.ts";
 import { curatedCoverageNotes } from "../../ballot/coverage-notes.ts";
 import { validateBallotFile } from "../ballot-nj-morris/index.ts";
@@ -55,7 +56,7 @@ export function curatedBallotSource(name: string): BallotSource {
     async fetch(): Promise<unknown[]> {
       const result = await entry.read();
       if (result.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(result);
-      if (result.kind === "NOT_RECORDED") throw new Error(`${name} has no canonical projection or bootstrap seed.`);
+      if (result.kind === "NOT_RECORDED") throw new MissingBallotProjectionError(name);
       return [result.value.ballot];
     },
 

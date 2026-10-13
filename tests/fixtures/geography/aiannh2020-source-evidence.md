@@ -43,5 +43,5 @@ The actual acquisition function also ran against all three original live
 sources, with the existing proxy and a 120-second caller deadline. It finished
 in 103.24 seconds and produced the same five areas and 24 edges. Its three
 source hashes matched the independent acquisition. This verifies the source
-path and bounded result, not the still-dependent shared seat linker or live
-reader publication.
+path and bounded result. Separate reader tests verify the shared seat linker.
+Sean's oversight session verifies live reader publication after River releases.

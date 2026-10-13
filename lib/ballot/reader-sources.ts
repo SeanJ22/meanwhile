@@ -2,7 +2,7 @@ import { readGenericBallotProjection, type GenericBallotProjection } from "./gen
 import { ballotSourcesForDivisions, ballotSourceForTargetId, type RegisteredBallotSource } from "./registry.ts";
 import { contestsForDivisions } from "../sources/ballot-nj-morris/index.ts";
 import type { BallotSet } from "./types.ts";
-import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
+import { CivicDataStoreUnavailableError, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { readTranslations, withMeasureTranslations } from "../translate/projection-reader.ts";
 
 export function genericSourcesForDivisions(value: GenericBallotProjection, divisions: readonly string[]): RegisteredBallotSource[] {
@@ -39,7 +39,7 @@ export async function readerBallotSourcesForDivisions(divisions: readonly string
     const read = await generalRead;
     if (read.kind === "PROMOTED") return attach([...genericSourcesForDivisions(read.value, divisions), ...legacy]);
     if (read.kind !== "STORE_UNREACHABLE" || read.code === "STORE_NOT_CONFIGURED") return attach(legacy);
-    throw new Error(read.code);
+    throw new CivicDataStoreUnavailableError(read);
   } catch (error) {
     // Expose the failed general authority through each entry point's existing
     // holding-gap handling; the legacy authority keeps its own failure domain.

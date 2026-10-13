@@ -20,7 +20,8 @@ import {
 } from "../lib/ballot/auxiliary-preloads.ts";
 import { readNhBallotProjection } from "../lib/civic-data/manual-read-models.ts";
 import type { NhBallotProjection } from "../lib/civic-data/manual-projections.ts";
-import { installAzBallot, installManualValue, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
+import { installAbsent, installAzBallot, installManualValue, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
+import { GENERIC_BALLOT_SCOPE } from "../lib/ballot/generic-projection.ts";
 
 // The AZ and NH ballots' promoted pointers, each a small synthetic ballot
 // holding one statewide governor contest with one candidacy.
@@ -48,6 +49,9 @@ installManualValue<NhBallotProjection>("nh-curated-ballot", {
   },
 });
 await readNhBallotProjection();
+// This fixture exercises the registered ballots; establish that the parallel
+// general ballot authority was read and has no published projection.
+installAbsent("BALLOT_CANDIDACY", GENERIC_BALLOT_SCOPE);
 
 const DIVISIONS = {
   az: ["ocd-division/country:us/state:az"],
@@ -197,7 +201,6 @@ test("a supporting ballot authority failure cannot suppress the ballot or anothe
 test("all production ballot entry points use state-scoped selection", () => {
   for (const path of [
     "app/ballot/page.tsx",
-    "app/api/address/resolve/route.ts",
     "app/api/ballot/scope/route.ts",
     "lib/ask/server-sources.ts",
   ]) {
@@ -205,6 +208,13 @@ test("all production ballot entry points use state-scoped selection", () => {
     assert.match(source, /readerBallotSourcesForDivisions\(/, `${path} did not scope its ballot authority`);
     assert.doesNotMatch(source, /for\s*\([^)]*\bBALLOT_SOURCES\b/, `${path} reopened every state authority`);
   }
+
+  const addressRoute = readFileSync(join(process.cwd(), "app/api/address/resolve/route.ts"), "utf8");
+  assert.match(addressRoute, /addressContestScopeFor\(confirmed\)/, "the address route must use only its confirmed division set");
+  const addressBallot = readFileSync(join(process.cwd(), "lib/ballot/address-scope.ts"), "utf8");
+  assert.match(addressBallot, /readSources[^=]*= readerBallotSourcesForDivisions/, "the address ballot helper must retain the scoped authority reader");
+  assert.match(addressBallot, /await readSources\(divisions\)/, "the address ballot helper must scope each authority read to the resolved divisions");
+  assert.doesNotMatch(addressBallot, /for\s*\([^)]*\bBALLOT_SOURCES\b/, "the address helper reopened every state authority");
 
   const page = readFileSync(join(process.cwd(), "app/ballot/page.tsx"), "utf8");
   assert.ok(

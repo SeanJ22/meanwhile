@@ -65,8 +65,8 @@ export function CaptureHealthPanel() {
           {v.districts.kind !== "READ" ? <Unread /> : !v.districts.rows.rows.length ? <Empty>No district was recorded this week.</Empty> : (
             <div className={s.tableWrap}>
               <table className={s.table}>
-                <thead><tr><th scope="col">District</th><th scope="col">State</th><th scope="col" className={s.num}>Events</th><th scope="col" className={s.num}>Readers</th><th scope="col" className={s.num}>Share of events</th></tr></thead>
-                <tbody>{v.districts.rows.rows.map((r) => <tr key={`${r.state}|${r.label}`}><th scope="row" style={ROW_HEAD}>{r.label}</th><td>{r.state}</td><td className={s.num}>{n(r.events)}</td><td className={s.num}>{r.readers === null ? "—" : n(r.readers)}</td><td className={s.num}>{percentWords(r.percent)}</td></tr>)}</tbody>
+                <thead><tr><th scope="col">District</th><th scope="col">State</th><th scope="col" className={s.num}>Events</th><th scope="col" className={s.num}>Readers</th><th scope="col" className={s.num}>Share of events</th><th scope="col" className={s.num}>Population estimate</th></tr></thead>
+                <tbody>{v.districts.rows.rows.map((r) => <tr key={`${r.state}|${r.label}`}><th scope="row" style={ROW_HEAD}>{r.label}</th><td>{r.state}</td><td className={s.num}>{n(r.events)}</td><td className={s.num}>{r.readers === null ? "—" : n(r.readers)}</td><td className={s.num}>{percentWords(r.percent)}</td><td className={s.num}>{r.population ? `${n(r.population.population)}${r.population.marginOfError === null ? "" : ` ± ${n(r.population.marginOfError)}`}` : "—"}</td></tr>)}</tbody>
               </table>
             </div>
           )}
@@ -78,6 +78,7 @@ export function CaptureHealthPanel() {
             </div>
           )}
           <p className={cx(s.p, s.meta)}>Read {mst(v.observedAt)}, UTC days {v.from} to {v.to}</p>
+          <details><summary>Sources</summary><ul>{v.districts.kind === "READ" && [...new Map(v.districts.rows.rows.flatMap(row => row.population ? [[row.population.attribution.citationUrl ?? row.population.attribution.sourceUrl, { ...row.population.attribution, label: row.population.name }] as const] : [])).values()].map(source => <li key={source.citationUrl ?? source.sourceUrl}><a href={source.citationUrl ?? source.sourceUrl}>{source.sourceOrg} · {source.label}</a> · Official · ACS {source.period} · Publication date {source.publishedAt?.slice(0, 10) ?? "—"} · Checked {source.retrievedAt.slice(0, 10)}</li>)}</ul></details>
         </div>
       )}
       {reading.kind === "ready" && !v && <Empty>—</Empty>}

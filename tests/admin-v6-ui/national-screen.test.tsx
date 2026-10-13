@@ -1,6 +1,6 @@
 /**
  * The country screen: states at the country, congressional districts at a state, ZIPs at a district, each row with hunts,
- * ZIPs worked of total, place score and stuck; a figure we lack is a dash; no explanation text.
+ * population, ZIPs worked of total, place score and stuck; a figure we lack is a dash; no explanation text.
  */
 import assert from "node:assert/strict";
 import { test } from "node:test";
@@ -53,14 +53,15 @@ const card = (html: string) => {
 };
 const text = (html: string) => html.replace(/<[^>]+>/g, " ").replace(/&#x27;|&#39;/g, "'").replace(/&amp;/g, "&").replace(/\s+/g, " ");
 
-test("at the country, the states carry the five columns, a figure we lack is a dash, and each row opens its state", () => {
+test("at the country, the states carry the six columns, a figure we lack is a dash, and each row opens its state", () => {
   const html = card(page("us", live(STATES)));
   const t = text(html);
-  for (const head of ["Place", "Hunts", "ZIPs worked / total", "Completeness", "Stuck"]) assert.ok(t.includes(head), head);
-  assert.match(t, /Arizona 2 1 \/ 420 12\.3% 4/);
-  assert.match(t, /New Jersey 0 0 \/ 600 — 0/, "a state with no score yet shows a dash, not 0%");
+  for (const head of ["Place", "Population estimate", "Hunts", "ZIPs worked / total", "Completeness", "Stuck"]) assert.ok(t.includes(head), head);
+  assert.match(t, /Arizona — 2 1 \/ 420 12\.3% 4/);
+  assert.match(t, /New Jersey — 0 0 \/ 600 — 0/, "a state with no score yet shows a dash, not 0%");
   assert.match(html, /<button[^>]*>Arizona<\/button>/, "the state name is a button that opens it");
   assert.match(html, /Map of states and territories/, "the tile map stays at the country");
+  assert.equal((html.match(/<summary>Sources<\/summary>/g) ?? []).length, 1, "one Sources list sits at the bottom of the card");
 });
 
 test("with nothing read, every state is listed with every figure a dash and nothing is said about a missing connection", () => {
@@ -74,8 +75,8 @@ test("with nothing read, every state is listed with every figure a dash and noth
 test("at a state, its congressional districts are listed as AZ-06 with ZIPs worked of total, the score and stuck, and no other state", () => {
   const html = card(page("st:az", live(DISTRICTS)));
   const t = text(html);
-  assert.match(t, /AZ-06 3 1 \/ 79 41\.6% 2/);
-  assert.match(t, /AZ-05 0 0 \/ 22 — 0/);
+  assert.match(t, /AZ-06 — 3 1 \/ 79 41\.6% 2/);
+  assert.match(t, /AZ-05 — 0 0 \/ 22 — 0/);
   assert.doesNotMatch(t, /New Jersey|Alabama/, "the state list is not shown under a state");
   assert.doesNotMatch(html, /Map of states and territories/);
   assert.match(html, /<button[^>]*>AZ-06<\/button>/);
@@ -90,8 +91,8 @@ test("while a state's districts are still loading, the state list is not shown u
 test("at a district its ZIPs are listed with the same columns", () => {
   const html = card(page("geo:az.congressional_district.0406", live(ZIPS)));
   const t = text(html);
-  assert.match(t, /ZIP 85635 1 1 \/ 1 7\.4% 1/);
-  assert.match(t, /ZIP 85122 0 0 \/ 1 — 0/);
+  assert.match(t, /ZIP 85635 — 1 1 \/ 1 7\.4% 1/);
+  assert.match(t, /ZIP 85122 — 0 0 \/ 1 — 0/);
   assert.match(t, /2 ZIPs/);
 });
 

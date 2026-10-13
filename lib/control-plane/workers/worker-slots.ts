@@ -19,7 +19,7 @@ const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "ingest.ts": WORKER_ENTRY_PEAK_MIB.national!,
   "state-rollcalls.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "legistar-outcomes-ingest.mts": 355,
-  "acs-population-promote.mts": 465,
+  "acs-population-promote.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "fetch-congress-legislators.mts": 384,
   "campaign-finance-az-pima-transactions.mts": 368,
   "build-nj-morris-ballot.mts": 345,

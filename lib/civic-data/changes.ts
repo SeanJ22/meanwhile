@@ -93,6 +93,13 @@ function agendaDocumentMembers(values: readonly unknown[]): CivicRecordMember[] 
 
 /** Facts decide a change; observation stamps such as `collectedAt` stay on the record but never decide it. */
 export function civicRecordFacts(recordClass: RoutineRecordClass, member: CivicRecordMember): unknown {
+  if (recordClass === "CENSUS_REFERENCE") {
+    const row = object(member.record), attribution = object(row?.attribution);
+    if (row && attribution) {
+      const { retrievedAt: _retrievedAt, ...sourceFacts } = attribution;
+      return { ...row, attribution: sourceFacts };
+    }
+  }
   if (recordClass === "MEETING" && member.key.startsWith("meeting:")) {
     return withoutProvenanceStamps(member.record, ["collectedAt"]);
   }
@@ -289,6 +296,10 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
       return [
         ...keyed("zcta", array(root.zcta), ["code"]),
         ...keyed("state", array(root.state), ["code"]),
+        ...array(root.geographies).map(record => {
+          const row = object(record);
+          return { key: `${row?.geography}:${row?.code}`, record };
+        }),
       ];
     case "CENSUS_GEOGRAPHY": {
       // One civic record per geography instance (a grouping), carrying its ZCTA

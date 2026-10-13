@@ -170,7 +170,7 @@ function censusReferenceCandidate(id: string): RoutineCandidate {
     scope: "acs-population",
     sourceProjectionEvidence: sourceProjectionEvidence("census-data-api", "CENSUS_REFERENCE", "acs-population"),
     retrieval: { succeeded: true, requestedUrl: "https://api.census.gov/data/2024/acs/acs5", finalUrl: "https://api.census.gov/data/2024/acs/acs5?get=NAME,B01003_001E", httpStatus: 200, retrievedAt: NOW, rawHash: HASH },
-    normalization: { succeeded: true, parserVersion: "census-data-api/2", schemaVersion: "ACSDT5Y2024:B01003", normalizedHash: HASH, inputRecords: 1, outputRecords: 1, droppedRecords: 0, missingRequiredFields: [] },
+    normalization: { succeeded: true, parserVersion: "census-data-api/3", schemaVersion: "ACSDT5Y2024:B01003", normalizedHash: HASH, inputRecords: 1, outputRecords: 1, droppedRecords: 0, missingRequiredFields: [] },
     identities: [{ subjectId: "04000US04", jurisdiction: "US", identifiers: { product: "acs5", vintage: "2024", geography: "state:04" }, matchBasis: "OFFICIAL_ID", ambiguous: false }],
     temporal: { version: "2024", expectedVersion: "2024", sourceThrough: "2024", staleAtRetrieval: false },
     semantics: { factKind: "ACS 5-year population estimate", violations: [] },

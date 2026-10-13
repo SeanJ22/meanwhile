@@ -113,11 +113,12 @@ function LastHours() {
   );
 }
 
-type NatKey = "name" | "hunts" | "zips" | "score" | "stuck";
+type NatKey = "population" | "name" | "hunts" | "zips" | "score" | "stuck";
 interface NatSort { readonly key: NatKey; readonly down: boolean }
 
 const NAT_COLUMNS: readonly { readonly key: NatKey; readonly label: string; readonly num: boolean }[] = [
   { key: "name", label: "Place", num: false },
+  { key: "population", label: "Population estimate", num: true },
   { key: "hunts", label: "Hunts", num: true },
   { key: "zips", label: "ZIPs worked / total", num: true },
   { key: "score", label: "Completeness", num: true },
@@ -126,7 +127,7 @@ const NAT_COLUMNS: readonly { readonly key: NatKey; readonly label: string; read
 const NAT_TOP = 12;
 
 function natNumber(r: StateRow, key: Exclude<NatKey, "name">): number | null {
-  return (key === "hunts" ? r.hunts : key === "zips" ? r.zipsWorked : key === "score" ? r.score : r.stuck) ?? null;
+  return (key === "population" ? r.population?.population : key === "hunts" ? r.hunts : key === "zips" ? r.zipsWorked : key === "score" ? r.score : r.stuck) ?? null;
 }
 
 /** A row with no figure for the sorted column goes last, whichever way it sorts. */
@@ -174,6 +175,7 @@ function National() {
             {shown.map((r) => (
               <tr key={r.placeKey}>
                 <td><button type="button" className={s.btnLink} onClick={() => v.setScope(r.placeKey)}>{r.name}</button></td>
+                <td className={s.num} title={r.population ? `ACS ${r.population.attribution.period}, 90% margin of error` : undefined}>{r.population ? `${count(r.population.population)}${r.population.marginOfError === null ? "" : ` ± ${count(r.population.marginOfError)}`}` : "—"}</td>
                 <td className={s.num}>{dash(r.hunts)}</td>
                 <td className={s.num}>{r.zipsWorked == null && r.zipsTotal == null ? "—" : `${dash(r.zipsWorked)} / ${dash(r.zipsTotal)}`}</td>
                 <td className={cx(s.num, r.score == null && s.dim)}>{dash(r.score, (n) => `${n.toFixed(1)}%`)}</td>
@@ -191,6 +193,7 @@ function National() {
           </button>
         </div>
       )}
+      <details><summary>Sources</summary><ul>{[...new Map(rows.flatMap(row => row.population ? [[row.population.attribution.citationUrl ?? row.population.attribution.sourceUrl, { ...row.population.attribution, label: row.population.name }] as const] : [])).values()].map(source => <li key={source.citationUrl ?? source.sourceUrl}><a href={source.citationUrl ?? source.sourceUrl}>{source.sourceOrg} · {source.label}</a> · Official · ACS {source.period} · Publication date {source.publishedAt?.slice(0, 10) ?? "—"} · Checked {source.retrievedAt.slice(0, 10)}</li>)}</ul></details>
     </div>
   );
   return (

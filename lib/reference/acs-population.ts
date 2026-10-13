@@ -22,8 +22,6 @@ import {
 import { requiredRoutineContract, routineFreshnessMs } from "../civic-data/contracts.ts";
 import type { AcsPopulationRow } from "../sources/census-acs-population/index.ts";
 
-export const ACS_VINTAGE = "ACS 5-Year 2024 (B01003_001E, total population)";
-
 export interface PopulationRow {
   readonly name: string;
   readonly population: number;
@@ -62,7 +60,7 @@ function populationTable(rows: readonly AcsPopulationRow[]): PopulationTable {
 }
 
 function validatePopulation(payload: PromotedAcsPopulation, versionId: string): void {
-  if (payload.formatVersion !== 1 || payload.vintage !== 2024 || !Array.isArray(payload.zcta) || !Array.isArray(payload.state)) {
+  if (payload.formatVersion !== 1 || !Number.isInteger(payload.vintage) || !Array.isArray(payload.zcta) || !Array.isArray(payload.state)) {
     throw new Error(`ACS projection ${versionId} does not satisfy the supported Reader contract.`);
   }
 }

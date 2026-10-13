@@ -1,3 +1,4 @@
+import { composePopulationAnswer, populationQuestion, populationEvidenceIds, readPopulationEvidence } from "@/lib/ask/population";
 import { governmentFinanceEvidence, governmentFinanceQuestion, composeGovernmentFinanceAnswer } from "@/lib/ask/government-finance";
 import { governmentListingEntity, governmentListingEvidence, readerGovernmentListings } from "@/lib/ask/government-listings";
 import { prlStatementEvidence, readPrlForSubject } from "@/lib/sources/prl/person";
@@ -1172,6 +1173,11 @@ export async function POST(request: Request) {
       : null;
 
     const records: EvidenceRecord[] = [];
+    if (populationQuestion(question)) {
+      const division = bound?.ocdId ?? (subject?.kind === "BODY" ? canonicalBodyIdentity(subject.id)?.ocdId : null);
+      const ids = populationEvidenceIds(subject?.kind ?? null, division, ballotZip, ocdIds);
+      records.push(...await readPopulationEvidence(ids, subject?.kind === "BODY" ? subject.id : undefined));
+    }
     /* A person asked about for their campaign money and nothing they did in office: their votes, key votes, statements and
        recorded actions are not retrieved. */
     const financeAsked = financeQuestionAskedFor(question, subject?.kind ?? null);
@@ -2101,8 +2107,10 @@ export async function POST(request: Request) {
       (text, urls) => validateAnswer(text, urls, pack, bodies));
     const governmentFinanceSettled = settleSittingComposition(composeGovernmentFinanceAnswer({ subject, question, records: packRecords }),
       (text, urls) => validateAnswer(text, urls, pack, bodies));
-    const composed = governmentFinanceSettled.composed ?? ownWordsSettled.composed ?? preferredBallot ?? measureSettled.composed ?? topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed ?? officialsSettled.composed ?? rosterSettled.composed ?? votesSettled.composed ?? calendarSettled.composed ?? ballotSettled.composed;
-    const composedWhy = governmentFinanceSettled.composed ? "composed-from-government-finance" : ownWordsSettled.composed ? "composed-from-own-words" : preferredBallot || measureSettled.composed ? "composed-from-ballot-records" : topicComposed ? "composed-from-structured-evidence"
+    const populationSettled = settleSittingComposition(composePopulationAnswer(question, packRecords),
+      (text, urls) => validateAnswer(text, urls, pack, bodies));
+    const composed = populationSettled.composed ?? governmentFinanceSettled.composed ?? ownWordsSettled.composed ?? preferredBallot ?? measureSettled.composed ?? topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed ?? officialsSettled.composed ?? rosterSettled.composed ?? votesSettled.composed ?? calendarSettled.composed ?? ballotSettled.composed;
+    const composedWhy = populationSettled.composed ? "composed-from-census-population" : governmentFinanceSettled.composed ? "composed-from-government-finance" : ownWordsSettled.composed ? "composed-from-own-words" : preferredBallot || measureSettled.composed ? "composed-from-ballot-records" : topicComposed ? "composed-from-structured-evidence"
       : sittingSettled.composed ? "composed-from-sitting-records"
         : moneySettled.composed ?? groupSettled.composed ? "composed-from-money-records"
           : officialsSettled.composed ? "composed-from-officeholder-records"

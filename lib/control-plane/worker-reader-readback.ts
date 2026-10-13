@@ -1,8 +1,9 @@
 import { createHash } from "node:crypto";
+import { factReader } from "../facts/db.ts";
+import { readFactRosters } from "../facts/roster-read.ts";
 import type { Page } from "playwright";
 import type { WorkItem } from "./work-item.ts";
 import type { RoutineDataStore } from "../civic-data/store.ts";
-import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 import type { BodyRoster } from "../registry/body-rosters.ts";
 import type { ServedReaderReadback, ServedReaderWitness } from "./served-reader.ts";
 import { SERVED_READER_MAX_AGE_MS } from "./served-reader.ts";
@@ -199,11 +200,12 @@ export async function collectWorkerRosterReadback(input: {
   observe: (input: PublishedWorkerRead) => Promise<Awaited<ReturnType<typeof observePublishedRoster>>>;
 }): Promise<ServedReaderReadback> {
   const prior = input.previous?.witnesses ?? [];
-  const items = input.items.filter(item => (item.autonomousPlan?.publication?.contractId === "official-filings" ||
-    item.autonomousPlan?.publication?.contractId === "registry-runtime-bindings" && item.autonomousPlan.contract.recordClass === "OFFICIAL_ROSTER") &&
-    item.publicationOutcome?.status !== "HELD" && item.publicationOutcome?.versionId);
+  const roster = (item: WorkItem) => item.autonomousPlan?.publication?.contractId === "registry-runtime-bindings" && item.autonomousPlan.contract.recordClass === "OFFICIAL_ROSTER";
+  const versionOf = (item: WorkItem) => item.publicationOutcome?.versionId ?? (roster(item) ? item.publicationOutcome?.workerResultId ?? null : null);
+  const items = input.items.filter(item => (item.autonomousPlan?.publication?.contractId === "official-filings" || roster(item)) &&
+    item.publicationOutcome?.status !== "HELD" && versionOf(item));
   const observations = new Map(prior.filter(w => items.some(item => item.id === w.itemId && item.publicationOutcome?.workerResultId === w.approvalId &&
-    item.publicationOutcome.versionId === w.versionId)).map(w => [w.itemId, w]));
+    versionOf(item) === w.versionId)).map(w => [w.itemId, w]));
   const due = items.filter(item => {
     const prior = observations.get(item.id);
     const age = Date.parse(input.now) - Date.parse(prior?.checkedAt ?? "");
@@ -212,12 +214,12 @@ export async function collectWorkerRosterReadback(input: {
     .sort((a, b) => (observations.get(a.id)?.checkedAt ?? "").localeCompare(observations.get(b.id)?.checkedAt ?? ""));
   for (const item of due.slice(0, 6)) {
     const outcome = item.publicationOutcome!;
-    const base = { itemId: item.id, approvalId: outcome.workerResultId, versionId: outcome.versionId!, readerKey: item.autonomousPlan!.publication!.bodyId,
+    const base = { itemId: item.id, approvalId: outcome.workerResultId, versionId: versionOf(item)!, readerKey: item.autonomousPlan!.publication!.bodyId,
       url: PUBLIC_SITE_ORIGIN, checkedAt: input.now, responseSha256: null };
     let witness: ServedReaderWitness = { ...base, state: "NOT_OBSERVED", reason: "Exact published roster or Census-backed public destination unavailable." };
     try {
-      const candidate = await input.store.readCandidate(outcome.versionId!);
       if (item.autonomousPlan?.publication?.contractId === "official-filings") {
+        const candidate = await input.store.readCandidate(outcome.versionId!);
         const payload = candidate?.candidate.readModel as CuratedReaderProjection | undefined;
         const filings = payload?.kind === "official-filings" ? payload.records.filter(row => row.bodyId === base.readerKey) as unknown as OfficialFiling[] : [];
         if (filings.length && filings.every(row => officialFilingIssue(row) === null)) {
@@ -236,12 +238,12 @@ export async function collectWorkerRosterReadback(input: {
         observations.set(item.id, witness);
         continue;
       }
-      const payload = candidate?.candidate.readModel as RegistryRuntimeReadModel | undefined;
-      const body = payload?.registry.bodies.find(body => body.id === base.readerKey);
-      const roster = payload?.bodyRosters.find(row => row.bodyId === base.readerKey);
-      const zip = body?.ocdId ? await input.zipForDivision(body.ocdId) : null;
-      if (roster?.members.length && zip && /^\d{5}$/.test(zip)) {
-        const seen = await input.observe({ roster, zip });
+      const facts = factReader();
+      const held = facts ? (await readFactRosters(facts, [base.readerKey])).rosters[0] : undefined;
+      const ocdId = /^(ocd-division\/[^#]+)#/.exec(base.readerKey)?.[1] ?? null;
+      const zip = ocdId ? await input.zipForDivision(ocdId) : null;
+      if (held?.members.length && zip && /^\d{5}$/.test(zip)) {
+        const seen = await input.observe({ roster: held, zip });
         witness = { ...base, state: seen.confirmed ? "CONFIRMED" : "NOT_OBSERVED", reason: seen.reason, responseSha256: seen.responseSha256 };
       }
     } catch { witness = { ...witness, reason: "Published roster readback could not complete; the next publisher cycle retains the unresolved observation." }; }

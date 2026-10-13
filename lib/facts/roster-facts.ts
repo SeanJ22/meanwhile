@@ -29,6 +29,8 @@ export interface RosterFactsReport {
   readonly held: number;
   readonly blanks: number;
   readonly departed: number;
+  /** The permanent person id each read member row resolved to. */
+  readonly people: ReadonlyMap<string, string>;
 }
 
 const text = (value: unknown): string | null => (typeof value === "string" && value.trim() ? value.trim() : null);
@@ -50,7 +52,7 @@ export async function publishRosterFacts(db: FactDb & { readonly query: (text: s
   const copy = await db.transaction(query => saveCaptureCopy(query, capture));
   const provenance: Provenance = isOfficialHost(hostOf(capture.evidence.canonicalUrl), bodyEntity.hosts) ? "OFFICIAL"
     : capture.campaign ? "CAMPAIGN" : "REFERENCE";
-  const tally = { live: 0, confirmed: 0, held: 0, blanks: 0, departed: 0 };
+  const tally = { live: 0, confirmed: 0, held: 0, blanks: 0, departed: 0, people: new Map<string, string>() };
   const count = (outcome: PublishOutcome) => {
     if ("blank" in outcome) tally.blanks++;
     else if (outcome.decision === "PUBLISH") tally.live++;
@@ -72,6 +74,7 @@ export async function publishRosterFacts(db: FactDb & { readonly query: (text: s
       externalIds: [["roster-name:" + body.id, nameKey(name)], ...(native ? [["roster-native:" + capture.evidence.canonicalUrl, native] as const] : []),
         ...(input.legacyMemberIds?.has(nameKey(name)) ? [["roster-member", input.legacyMemberIds.get(nameKey(name))!] as const] : [])] });
     seated.add(personId);
+    tally.people.set(member.recordId, personId);
     const person: CheckEntity = { id: personId, fullName: written, stateName: null, hosts: bodyEntity.hosts, externalIds: [] };
     const claim = (entity: CheckEntity, field: string, fieldKind: FieldKind, value: unknown, valueText: string, sourceField: string) => {
       const quote = member.fieldSources?.[sourceField]?.quote ?? valueText;
@@ -100,3 +103,22 @@ export async function publishRosterFacts(db: FactDb & { readonly query: (text: s
   }
   return tally;
 }
+
+/** A body's regular schedule and agenda link, in the page's own words, as body facts. */
+export async function publishBodyScheduleFacts(db: FactDb & { readonly query: (text: string, params?: readonly unknown[]) => Promise<readonly Record<string, unknown>[]> },
+  input: { readonly bodyId: string; readonly capture: WorkerPublicationCapture; readonly cadence: string | null; readonly agendaUrl: string | null; readonly producedBy: string },
+  clocks: Clocks, now: Date): Promise<readonly PublishOutcome[]> {
+  const entity = await readCheckEntity(db.query, input.bodyId);
+  if (!entity) return [];
+  const copy = await db.transaction(query => saveCaptureCopy(query, input.capture));
+  const provenance: Provenance = isOfficialHost(hostOf(input.capture.evidence.canonicalUrl), entity.hosts) ? "OFFICIAL" : "REFERENCE";
+  const out: PublishOutcome[] = [];
+  for (const [field, value] of [["meeting_cadence", input.cadence], ["agenda_url", input.agendaUrl]] as const) {
+    if (value) out.push(await publishClaim(db, { entity, field, fieldKind: "meeting", provenance, value, valueText: value, quote: value, copy,
+      producedBy: input.producedBy, costUsd: 0 }, clocks, now));
+  }
+  return out;
+}
+
+/** The id readers see for a seated person: the id already shown to readers, or one minted from the body and person. */
+export const rosterMemberId = (bodyId: string, personId: string, legacyId?: string | null) => legacyId || `roster:${bodyId}#${personId}`;

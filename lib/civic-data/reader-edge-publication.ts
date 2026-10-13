@@ -1,4 +1,5 @@
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "./manual-contracts.ts";
+import { factReader, factsVersion } from "../facts/db.ts";
 import { preparePublishedMeetingSnapshot, readPreparedMeetingsProjection } from "../meetings/prepared-snapshot.ts";
 import {
   publishReaderEdgeArtifacts,
@@ -184,11 +185,14 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
         },
       });
       if (refreshes("registry-runtime")) try {
-        const carried = await servedIfCurrent("registry-runtime", manualPointer("registry-runtime-bindings"));
+        // Members are facts, so the family changes when the partition or any fact does.
+        const facts = await factsVersion(factReader());
+        const pointer = manualPointer("registry-runtime-bindings");
+        const carried = await servedIfCurrent("registry-runtime", async () => { const at = await pointer(); return at && `${at}+${facts}`; });
         if (carried !== null) authority["registry-runtime"] = { versionId: carried, carried: true };
         else {
           const rt = await readRegistryRuntimeProjection({ store, now: observedAt, bypassCache: true });
-          if (rt.kind === "PROMOTED" && rt.metadata.versionId) authority["registry-runtime"] = { value: rt.value, versionId: rt.metadata.versionId };
+          if (rt.kind === "PROMOTED" && rt.metadata.versionId) authority["registry-runtime"] = { value: rt.value, versionId: `${rt.metadata.versionId}+${facts}` };
           else if (rt.kind !== "NOT_RECORDED") throw new Error(`registry-runtime read ${rt.kind}`);
         }
       } catch (error) {

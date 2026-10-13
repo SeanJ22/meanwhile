@@ -1,6 +1,8 @@
 import { readMeetingDiscoveryInputs, meetingDiscoveryInputsDue, runMeetingDiscoveryChain, type MeetingDiscoveryInputs } from "../lib/civic-data/meeting-discovery-due.ts";
 import { readerFactDb } from "../lib/facts/db.ts";
 import { ensureFactEntities, registeredStates } from "../lib/facts/entities.ts";
+import { cartonRosters, importCartonRosters } from "../lib/facts/carton-import.ts";
+import { factClocks } from "../lib/facts/clocks.ts";
 import { buildBoxFindings } from "../lib/control-plane/workers/scout-extraction.ts";
 import { workerPublicationContext } from "../lib/civic-data/worker-publication-context.ts";
 /**
@@ -107,12 +109,16 @@ import { resolveScopes } from "../lib/control-plane/expansion/runner-load.ts";
 import { loadPublishedScopeLookupState } from "../lib/census-geography/scope-lookup.ts";
 import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../lib/control-plane/scheduler/research-policy.ts";
 import { admittedHuntSourceScopes, huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
-import { PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowHasNothingOwed, readPublicationBoxItems, readPublishNowWorkerTasks, readWorkerPublicationItems, startPublishNowEdgeChecks } from "../lib/civic-data/publish-now.ts";
+import { PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowHasNothingOwed, readOwedRosterItems, readPublicationBoxItems, readPublishNowWorkerTasks, readWorkerPublicationItems, startPublishNowEdgeChecks } from "../lib/civic-data/publish-now.ts";
+import { publishOwedRosterFacts } from "../lib/civic-data/worker-roster-publication.ts";
 import { runHourlyProbes } from "../lib/doors/hourly-check.ts";
 import { stateOfPlace } from "../lib/method/fix-map.ts";
 import { websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
 import { hotMeetingPartitions } from "../lib/doors/hot-partitions.ts";
 import { pacedProbeFetch } from "../lib/doors/probe-fetch.ts";
+import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
+import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
+import { join } from "node:path";
 import { WORKER_PUBLICATION_TASK_IDS } from "../lib/civic-data/worker-reader-contracts.ts";
 import { readCompletedWorkerResultsOf } from "../lib/control-plane/repository/worker-completion.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
@@ -447,7 +453,7 @@ async function readRoutineDueRequests(): Promise<{ readonly requests: readonly R
 
 /** Resolve the actual Admin Send for hunt work. Publication of already-verified work needs no Send;
  * a paused runner or an unreadable control still admits nothing. */
-async function readHuntSourceTasks(): Promise<readonly RoutineSourceTask[]> {
+async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: SupervisorFailure[]): Promise<readonly RoutineSourceTask[]> {
   // An explicit selection of a publication door (`--only=registry-runtime-bindings`) still reads its owed work.
   if (FORCE || (ONLY && !WORKER_PUBLICATION_TASK_IDS.some(id => ONLY.has(id)))) return [];
   const connection = controlPlaneUrlFromEnv();
@@ -465,6 +471,14 @@ async function readHuntSourceTasks(): Promise<readonly RoutineSourceTask[]> {
     if (pending.length) {
       const context = await workerPublicationContext(RUN_STARTED_AT, repos);
       await buildBoxFindings({ repos, items: pending, now: () => new Date().toISOString(), leaseMs: 120_000, readCapture: context.readCapture });
+    }
+    const rosters = await readOwedRosterItems(items, ids => readCompletedWorkerResultsOf(repos, ids), RUN_STARTED_AT);
+    if (rosters.length) try {
+      const context = await workerPublicationContext(RUN_STARTED_AT, repos);
+      const report = await publishOwedRosterFacts({ repos, store, facts: readerFactDb(), workItemIds: rosters, now: RUN_STARTED_AT, readCapture: context.readCapture });
+      console.log(`RCD_FACTS rosters: ${report.filter(row => row.outcome.status !== "HELD").length} of ${report.length} published as facts`);
+    } catch (error) {
+      failures.push({ taskId: "roster-facts", code: "ROSTER_FACTS_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
     }
     const publication = await readPublishNowWorkerTasks(items, ids => readCompletedWorkerResultsOf(repos, ids), RUN_STARTED_AT);
     if (!PUBLISH_NOW) return publication;
@@ -662,6 +676,20 @@ if (!PUBLISH_NOW) {
   } catch (error) {
     supervisorFailures.push({ taskId: "fact-store-entities", code: "FACT_ENTITIES_LOAD_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
   }
+  step = "carrying the rosters readers already see onto facts";
+  try {
+    const facts = readerFactDb();
+    const held = await cartonRosters(facts.query, id => store.readCandidate(id), REGISTRY_RUNTIME_SCOPE);
+    const connection = controlPlaneUrlFromEnv();
+    if (held && connection) {
+      const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
+      const imported = await importCartonRosters({ ...held, facts, clocks: factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null), repos,
+        vault: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), fetch: pacedProbeFetch({ pacing: repos.websitePacing }), now: RUN_STARTED_AT });
+      console.log(`fact store rosters: ${imported.rosters} rosters, ${imported.live} facts live, ${imported.confirmed} confirmed, ${imported.blanks} blanks, ${imported.unreadable.length} pages unreadable`);
+    }
+  } catch (error) {
+    supervisorFailures.push({ taskId: "fact-store-rosters", code: "FACT_ROSTER_IMPORT_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
+  }
 }
 
 // Resolve every due scope at one frozen instant before launching. The provider frontier below
@@ -670,7 +698,7 @@ if (!PUBLISH_NOW) {
 const admissionNowMs = Date.now();
 let huntTasks: readonly RoutineSourceTask[] = [];
 try {
-  huntTasks = await readHuntSourceTasks();
+  huntTasks = await readHuntSourceTasks(store, supervisorFailures);
 } catch (error) {
   const detail = safeFailure(sanitizedErrorDiagnostic(error));
   supervisorFailures.push({ taskId: "hunt-source-admission", code: "HUNT_SCOPE_UNREAD", detail });

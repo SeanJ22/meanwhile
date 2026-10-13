@@ -10,8 +10,11 @@ import {
   REGISTRY_RUNTIME_SCOPE,
   REGISTRY_RUNTIME_SOURCE_ID,
   registryRuntimeProjectionIssues,
+  type RegistryRuntimeCarton,
   type RegistryRuntimeReadModel,
 } from "./runtime-data-plane.ts";
+import { factReader } from "../facts/db.ts";
+import { withFactRegistry } from "../facts/registry-overlay.ts";
 import type { BodyRoster } from "./body-rosters.ts";
 import { CENSUS_PLACEHOLDER_BODY_ISSUE } from "./census-placeholders.ts";
 
@@ -27,16 +30,18 @@ let readState: CivicDataReadResult<RegistryRuntimeReadModel> = civicDataReadNotI
  * division is refused at promotion (`registryRuntimeProjectionIssues` via `registryRuntimeCandidate`)
  * but does not fail a read, so a counting defect never becomes a reader outage.
  */
-function validate(value: RegistryRuntimeReadModel, versionId: string): void {
+function validate(value: RegistryRuntimeCarton, versionId: string): void {
   const issues = registryRuntimeProjectionIssues(value).filter((issue) => !issue.startsWith(`${CENSUS_PLACEHOLDER_BODY_ISSUE}:`));
   if (issues.length) throw new Error(`Registry runtime projection ${versionId} is invalid: ${issues.join(", ")}.`);
 }
 
-/** Store failures remain failures. */
+/** Store failures remain failures. Members and schedules come from live facts. */
 export async function readRegistryRuntimeProjection(
   options: PromotedCivicDataReadOptions = {},
 ): Promise<CivicDataReadResult<RegistryRuntimeReadModel>> {
-  const result = await readPromotedCivicData<RegistryRuntimeReadModel>("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE, options);
+  const read = await readPromotedCivicData<RegistryRuntimeCarton>("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE, options);
+  const result = (read.kind === "PROMOTED" || read.kind === "BOOTSTRAP"
+    ? { ...read, value: await withFactRegistry(read.value, factReader()) } : read) as CivicDataReadResult<RegistryRuntimeReadModel>;
   readState = result;
   if (result.kind === "PROMOTED" || result.kind === "BOOTSTRAP") {
     validate(result.value, result.metadata.versionId ?? result.kind);

@@ -3,7 +3,7 @@ import type { RoutineSourceTask } from "./runner.ts";
 import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
 import type { DoorRecord } from "../doors/registry.ts";
 import { doorPartitionIds } from "../doors/mission-refresh.ts";
-import { workerPublicationTasks, type WorkerPublicationItem } from "./worker-publication-tasks.ts";
+import { owedRosterItems, workerPublicationTasks, type WorkerPublicationItem } from "./worker-publication-tasks.ts";
 import { AGGREGATE_LIST_READ_PAGE } from "../control-plane/repository/pg-store.ts";
 import { WORKER_PUBLICATION_TASK_IDS } from "./worker-reader-contracts.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
@@ -135,6 +135,20 @@ export async function readPublishNowWorkerTasks(
     tasks.push(...publishNowWorkerTasks(page, await readCompleted(page.map(item => item.id)), now));
   }
   return tasks;
+}
+
+/** Rosters owed publication, read a page of completion evidence at a time. */
+export async function readOwedRosterItems(
+  items: readonly WorkerPublicationItem[],
+  readCompleted: (workItemIds: readonly string[]) => Promise<readonly WorkerResultRecord[]>,
+  now: string,
+): Promise<string[]> {
+  const ids: string[] = [];
+  for (let at = 0; at < items.length; at += AGGREGATE_LIST_READ_PAGE) {
+    const page = items.slice(at, at + AGGREGATE_LIST_READ_PAGE);
+    ids.push(...owedRosterItems(page, await readCompleted(page.map(item => item.id)), now));
+  }
+  return ids;
 }
 
 export function publishNowDoorTasks(doors: readonly DoorRecord[], tasks: readonly RoutineSourceTask[], now: string): RoutineSourceTask[] {

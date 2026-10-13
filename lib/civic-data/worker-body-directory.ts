@@ -109,7 +109,7 @@ export function workerBodyDirectoryPackage(input: (Parameters<typeof verifiedWor
   return { unresolved, prepared: { contractId: "registry-runtime-bindings", scope: "MEMBERS", version: registryEdition(`worker-directory:${readingId}`),
     sourceThrough: input.now, sourceReceipt: checked.sourceReceipt,
     payload: { ...input.prior.payload, registry: { ...input.prior.payload.registry, divisions: [], bodies },
-      bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialPhotos: { photos: [] }, rosterPhotos: {},
+      statewideExecutives: [], officialPhotos: { photos: [] }, rosterPhotos: {},
       officialCandidacies: { ...input.prior.payload.officialCandidacies, rows: [] } } } };
 }
 

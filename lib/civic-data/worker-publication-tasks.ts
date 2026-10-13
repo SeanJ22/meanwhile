@@ -18,7 +18,11 @@ export type WorkerPublicationItem = Pick<WorkItem, "id"> & {
   };
 };
 
-export function workerPublicationTasks(items: readonly WorkerPublicationItem[], results: readonly WorkerResultRecord[], now: string): RoutineSourceTask[] {
+const isRoster = (item: WorkerPublicationItem) => item.autonomousPlan?.publication?.contractId === "registry-runtime-bindings" &&
+  item.autonomousPlan.contract.recordClass === "OFFICIAL_ROSTER";
+
+/** Work items whose newest extraction or saved page has not been published yet. */
+export function owedPublications(items: readonly WorkerPublicationItem[], results: readonly WorkerResultRecord[], now: string): { readonly item: WorkerPublicationItem; readonly requestedAt: string }[] {
   const byItem = new Map<string, WorkerResultRecord[]>();
   for (const result of results) {
     const own = byItem.get(result.workItemId) ?? [];
@@ -27,7 +31,7 @@ export function workerPublicationTasks(items: readonly WorkerPublicationItem[], 
   }
   const nowMs = Date.parse(now);
   const hour = new Date(Math.floor(nowMs / HOUR) * HOUR).toISOString();
-  const owed = items.flatMap(item => {
+  return items.flatMap(item => {
     const plan = item.autonomousPlan;
     const target = plan?.publication?.contractId;
     if (!plan || !target || (target !== "registry-runtime-bindings" && !isWorkerReaderContract(target))) return [];
@@ -51,14 +55,22 @@ export function workerPublicationTasks(items: readonly WorkerPublicationItem[], 
     if (outcome && nowMs - Date.parse(outcome.at) < HOUR) return [];
     return [{ item, requestedAt: hour }];
   });
-  return owed.map(({ item, requestedAt }) => {
+}
+
+/** Rosters publish as facts in the runner's own pass; every other owed publication runs as its contract's command. */
+export function owedRosterItems(items: readonly WorkerPublicationItem[], results: readonly WorkerResultRecord[], now: string): readonly string[] {
+  return owedPublications(items.filter(isRoster), results, now).map(({ item }) => item.id);
+}
+
+export function workerPublicationTasks(items: readonly WorkerPublicationItem[], results: readonly WorkerResultRecord[], now: string): RoutineSourceTask[] {
+  return owedPublications(items.filter(item => !isRoster(item)), results, now).map(({ item, requestedAt }) => {
     const id = item.autonomousPlan!.publication!.contractId;
     const contract = requiredManualProductionContract(id);
     const taskId = `worker-publication:${contract.id}:${item.id}`;
     return { id: taskId, registeredContractId: contract.id, sourceId: contract.sourceId, recordClass: contract.recordClass, scope: contract.scope,
       acquisitionFailureDomain: taskId, requestedUrl: "", authorityMode: "REGISTERED_SOURCE_ROUTES",
       parserVersion: contract.parserNormalizerVersion,
-      command: [...contract.command, `--${id === "registry-runtime-bindings" ? "worker-rosters" : "worker-results"}=${item.id}`],
+      command: [...contract.command, `--${id === "registry-runtime-bindings" ? "worker-directories" : "worker-results"}=${item.id}`],
       cadenceMs: Number.POSITIVE_INFINITY, retryMs: 15 * 60_000,
       contract: { readerProjection: contract.readerProjection, cadence: { description: "Publish owed work that now meets §3", defaultEveryMs: Number.POSITIVE_INFINITY } },
       ownerInvocation: { publicationPending: true, requestedAt, instructions: ["section3-publication"] } };

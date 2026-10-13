@@ -1,5 +1,6 @@
 import type { BodyRoster, RosterReaderDisposition } from "../registry/body-rosters.ts";
 import type { Query } from "./publish.ts";
+import { rosterMemberId } from "./roster-facts.ts";
 
 export const ROSTER_FACTS_SQL = `WITH members AS (
     SELECT f.entity_id AS body_id, substr(f.field, 8) AS person_id, f.value, f.quote, f.checked_at, f.provenance_kind, s.url
@@ -37,7 +38,7 @@ export async function readFactRosters(query: Query, bodyIds: readonly string[] |
         ...(row.provenance_kind === "OFFICIAL" ? { kind: "OFFICIAL" as const } : {}) };
     };
     const own = { quote: String(row.quote), url: String(row.url), checked: String(row.checked_at) };
-    const id = String(row.legacy_id) || `roster:${bodyId}#${row.person_id}`;
+    const id = rosterMemberId(bodyId, String(row.person_id), String(row.legacy_id));
     const fields = ["name", "office", "email", "phone", "website", "term_note", "term_start", "term_end"].filter(field => at(field));
     const roster = byBody.get(bodyId) ?? { bodyId, bodyName: String(row.body_name), members: [], sourceUrl: own.url,
       sourceOrg: new URL(own.url).hostname, collectedAt: day(own.checked), partisanship: "UNDETERMINED" as const };

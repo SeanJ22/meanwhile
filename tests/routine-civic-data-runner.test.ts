@@ -28,6 +28,7 @@ import {
   routinePreSpawnMemoryDeferral,
 } from "../lib/civic-data/runner.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
+import { PEOPLE_SOURCE_CONTRACTS } from "../lib/civic-data/people-source-contracts.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import { REGISTRATION_TARGETS } from "../lib/registration/publication.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -289,6 +290,8 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "meeting-doors",
     "meeting-source-wiring",
     "candidate-campaign-sites-derived",
+    "google-civic-voterinfo",
+    ...PEOPLE_SOURCE_CONTRACTS.map(contract => contract.id),
     "socrata-discovery",
     "epa-echo",
     "congress-api", "govinfo", "regulations-gov", "federal-register", "senate-lda",
@@ -923,6 +926,9 @@ test("national and publication source commands retain the progress-renewed timeo
   const snippet = transpileModule(source.slice(start, end), { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
   const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", `
     ${snippet} return sourceChildCommand;`)(() => process.env, () => null);
+  const portraits = ROUTINE_SOURCE_TASKS.find(task => task.id === "people-portraits-federal")!;
+  assert.equal(commandFor({ id: portraits.id, kind: "SOURCE", task: portraits, command: portraits.command }).timeoutMs, 0,
+    "standing portrait work overrides the parent's quiet interval so every due person finishes");
   const commands = ["national-place:85635", "worker-publication:registry-runtime-bindings:fixture"].map(id => ({
     ...commandFor({ id, kind: "SOURCE", task: { id, ownerInvocation: true, registeredContractId: id }, command: [] }),
     executable: process.execPath, args: ["-e", "setTimeout(()=>{},400)"],

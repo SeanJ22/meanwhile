@@ -1,0 +1,16 @@
+{
+  "publisher": "Texas Secretary of State",
+  "url": "https://www.votetexas.gov/voting/where.html",
+  "lookupUrl": "https://goelect.txelections.civixapps.com/ivis-mvp-ui/",
+  "representation": "Normalized statement from the official source, not lookup response.",
+  "checkedAt": "2026-10-13",
+  "identityFields": [
+    "Name",
+    "County",
+    "Date of Birth",
+    "ZIP code"
+  ],
+  "submitted": false,
+  "officialNextRoute": "https://www.sos.state.tx.us/elections/voter/county.shtml",
+  "evidenceQuote": "Here, you can enter your Name, County, Date of Birth and ZIP code"
+}

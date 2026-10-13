@@ -831,8 +831,10 @@
 }
 .mw-voting-panel.voting-panel {
   position: static;
+  flex-shrink: 0;
   width: auto;
   max-height: none;
+  overflow: visible;
   padding: 0;
   border: 0;
   background: transparent;

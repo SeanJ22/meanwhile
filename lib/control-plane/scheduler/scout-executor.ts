@@ -1,4 +1,5 @@
 import { planRepairToolDescription } from "../workers/plan-repair-grammar.ts";
+import { createHash } from "node:crypto";
 /**
  * The Scout: the model lane's `DeclaredExecutor`, a bounded model worker that acts only through research tools.
  * Every tool vaults before it returns a sanitized representation; robots.txt is recorded, never a refusal; an
@@ -18,6 +19,7 @@ import { describeCacheDefects, detectCacheDefects, type CacheDefectReading } fro
 import {
   CACHE_RATE_MULTIPLIERS,
   highestRates,
+  listPriceUsdForUsage,
   meteredCostFields,
   minimumCacheablePrefixTokensFor,
   priceMeteredUsage,
@@ -103,6 +105,9 @@ export interface InputTransformation {
 
 export interface ModelResponse {
   readonly batch?: boolean;
+  readonly batchWaitedMs?: number;
+  /** The deadline decision made before sending; independent of the batch switch. */
+  readonly batchEligible?: boolean;
   readonly model: string;
   readonly stop_reason: string | null;
   readonly content: readonly ContentBlock[];
@@ -128,6 +133,10 @@ export function scoutThinkingOptions(effort: ModelEffort): Pick<ModelRequest, "t
 export const THINKING_BINDING_BETA = "thinking-binding-controls-2026-08-01";
 
 export interface ModelRequest {
+  /** Parent-process hook for an actual Batch API wait; never part of the provider body. */
+  readonly onBatchWait?: (waiting: boolean) => void;
+  /** Scheduling metadata is removed before constructing the provider's Messages body. */
+  readonly batchContext?: { readonly job: import("../model-batch.ts").BatchJob; readonly priority?: import("../model-batch.ts").BatchPriority };
   readonly model: string;
   readonly max_tokens: number;
   readonly system: readonly { readonly type: "text"; readonly text: string; readonly cache_control?: CacheControl }[];
@@ -147,6 +156,12 @@ export interface ModelRequest {
 }
 
 export type ModelTransport = (request: ModelRequest) => Promise<ModelResponse>;
+
+export function modelRequestAccounting(response: ModelResponse) {
+  return { modelRequestCount: 1, batchRequestCount: response.batch === true ? 1 : 0,
+    listPriceUsd: listPriceUsdForUsage(response.model, readMeteredUsage(response.usage, response.batch === true)),
+    batchEligibleRequestCount: response.batchEligible === undefined ? null : response.batchEligible ? 1 : 0 };
+}
 
 export class ModelTransportError extends Error {
   readonly status: number | null;
@@ -210,6 +225,8 @@ export function anthropicBetasFor(request: ModelRequest): string[] {
 }
 
 export function cachedModelRequest(request: ModelRequest): ModelRequest {
+  const { batchContext: _context, onBatchWait: _waiting, ...body } = request;
+  request = body;
   return request.cache_control || request.system.some(block => block.cache_control) ||
     request.tools.some(tool => tool.cache_control) || request.messages.some(message => Array.isArray(message.content) &&
       message.content.some(block => block && typeof block === "object" && "cache_control" in block))
@@ -420,6 +437,7 @@ export interface ScoutExecutorDeps {
   /** A current Bank read at agent start. Shared fleet callers can supply their existing repository read. */
   readonly playbookFor?: (role: "SCOUT" | "DETECTIVE") => Promise<WorkerPlaybook>;
   readonly transport: ModelTransport;
+  readonly transportFor?: (routeTaskId: string) => ModelTransport;
   /** Trusted transport wrapper provenance only; message text never proves that
    * a provider request was refused before sending. Unknown errors stay held. */
   readonly refusedBeforeSending?: (error: unknown) => boolean;
@@ -652,7 +670,7 @@ export function scoutCarriedForward(input: {
 export function withToolBreakpoint(specs: readonly ScoutToolSpec[]): ScoutToolSpec[] {
   return specs.map((s, i) => {
     const { cache_control: _dropped, ...bare } = s;
-    return i === specs.length - 1 ? { ...bare, cache_control: SCOUT_CACHE_POLICY.cacheControl } : bare;
+    return i === specs.length - 1 ? { ...bare, cache_control: SCOUT_CACHE_POLICY.stableCacheControl } : bare;
   });
 }
 
@@ -666,7 +684,7 @@ export function scoutStaticPrefix(input: {
 }): { readonly tools: readonly ScoutToolSpec[]; readonly system: ModelRequest["system"] } {
   return {
     tools: withToolBreakpoint([...input.toolkitSpecs, RECORD_RUNG_SPEC, FINISH_SPEC]),
-    system: [{ type: "text", text: scoutSystemPrompt(input.bound, input.minRungs, input.playbook, input.role), cache_control: SCOUT_CACHE_POLICY.cacheControl }],
+    system: [{ type: "text", text: scoutSystemPrompt(input.bound, input.minRungs, input.playbook, input.role), cache_control: SCOUT_CACHE_POLICY.stableCacheControl }],
   };
 }
 
@@ -912,6 +930,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
     run: async ({ obligation: row, routeTaskId, workItemId, attemptId, holder, executor: decidedKind, bound: workerBound }): Promise<WorkOutcome> => {
       const startedMs = Date.now();
       const startedAt = clock();
+      const send = deps.transportFor?.(routeTaskId) ?? deps.transport;
       /* The hunter's wall clock. 0 means no limit stated (tests). */
       const wallLimitMs = workerBound?.maxWallMs ?? 0;
       let ctx: ReturnType<ScoutExecutorDeps["contextFor"]>;
@@ -976,11 +995,15 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         { role: "user", content: [{ type: "text", text: brief }] satisfies UserContent },
       ];
       let contextRestarts = 0;
+      let batchWaitedMs = 0;
       /** Every thinking block the provider reported dropping, with the turn and model. */
       const inputTransformations: ScoutInputTransformation[] = [];
       const usage = { input: 0, output: 0, cacheRead: 0, cacheCreate: 0, reported: false };
       /** Every turn's metered usage, in order; the ledger fields are their sum. */
       const meteredTurns: MeteredUsage[] = [];
+      const requestAccounting: { batch: boolean; eligible: boolean | undefined; listPriceUsd: number | null }[] = [];
+      const shownRepresentations = new Map<string, number>();
+      const shownPages = new Map<string, number>();
       const steps: ScoutStep[] = [];
       const deterministic = new Map<string, { count: number; bytes: number }>();
       const runDeterministic = (step: string, bytes: number): void => {
@@ -995,7 +1018,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       /** tool_use id -> artifact ids it vaulted, so the context bound's stubs can point at the evidence. */
       const artifactIdsByToolUse = new Map<string, string[]>();
       /** The API's cache TTL for the writes this lane asks for; the aggregate fallback prices at it. */
-      const requestedTtl = SCOUT_CACHE_POLICY.ttl;
+      const requestedTtl = "1h";
       let turns = 0;
       let transportInvocations = 0;
       const transportInvocationsByModel = new Map<string, number>();
@@ -1089,7 +1112,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       const runModelAttempt = async (current: ModelAttemptRun): Promise<void> => {
         while (finish === null && lastRefusal?.[0]?.code !== "SCOUT_GRADUATED_ROUTE") {
           /* Out of time: nothing more is sent; the steps walked become the case file. */
-          if (wallLimitMs > 0 && Date.now() - startedMs >= wallLimitMs) {
+          if (wallLimitMs > 0 && Date.now() - startedMs - batchWaitedMs >= wallLimitMs) {
             stoppedBy = "TIMEOUT";
             break;
           }
@@ -1102,6 +1125,9 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
           let enteredTransport = false;
           try {
             const request: ModelRequest = {
+              batchContext: { job: "BLANK", priority: { now: clock(), meetingStartsAt: row.obligation.meetingStartsAt,
+                electionAt: /ballot|election|contest|measure/i.test(row.obligation.recordClass) && row.obligation.readerImpactAt ? [row.obligation.readerImpactAt] : [],
+                readerImpactAt: /ballot|election|contest|measure/i.test(row.obligation.recordClass) ? null : row.obligation.readerImpactAt } },
               model: current.model,
               max_tokens: bound.maxOutputTokensPerTurn,
               system: prefix.system,
@@ -1118,7 +1144,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
             enteredTransport = true;
             transportInvocations += 1;
             transportInvocationsByModel.set(current.model, (transportInvocationsByModel.get(current.model) ?? 0) + 1);
-            response = await deps.transport(request);
+            response = await send(request);
           } catch (error) {
             transportFailure = error instanceof Error ? error.message : String(error);
             transportStatus = error instanceof ModelTransportError ? error.status : null;
@@ -1137,6 +1163,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
             break;
           }
           turns += 1;
+          batchWaitedMs += Math.max(0, response.batchWaitedMs ?? 0);
           attemptTurns += 1;
           modelReported = response.model ?? modelReported;
           lastStopReason = response.stop_reason ?? lastStopReason;
@@ -1153,6 +1180,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
           const metered = readMeteredUsage(response.usage ?? {}, response.batch === true);
           if (metered.uncachedInputTokens !== null || metered.outputTokens !== null) usage.reported = true;
           meteredTurns.push(metered);
+          requestAccounting.push({ batch: response.batch === true, eligible: response.batchEligible, listPriceUsd: modelRequestAccounting(response).listPriceUsd });
           const turnTokens = {
             uncachedInput: metered.uncachedInputTokens ?? 0,
             output: metered.outputTokens ?? 0,
@@ -1285,7 +1313,21 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
               /* The representation is sized to the step, never a raw document. */
               const ids = call.artifacts.map((a) => a.artifactId);
               artifactIdsByToolUse.set(use.id, ids);
-              const fit = fitRepresentation(use.name, `${header}${call.forModel}`, ids);
+              const digest = createHash("sha256").update(JSON.stringify([use.name, rawUrl,
+                [...ids, ...(call.provenance ?? []).map(p => p.artifactId)], call.forModel])).digest("hex");
+              const pageId = typeof input.artifactId === "string" ? input.artifactId : null;
+              const repeatedPage = use.name === "read_held" && pageId !== null && (input.offset === undefined || input.offset === 0)
+                && !(typeof input.query === "string" && input.query.trim()) ? shownPages.get(pageId) : undefined;
+              const shownAt = repeatedPage ?? shownRepresentations.get(digest);
+              const representation = shownAt === undefined ? call.forModel
+                : `This saved passage was supplied on turn ${shownAt}. Reuse it from the conversation. Use read_held with a different offset or query for another excerpt. Saved artifacts: ${[...new Set([...ids, ...(call.provenance ?? []).map(p => p.artifactId)])].join(", ")}.`;
+              if (shownAt === undefined && call.ok) shownRepresentations.set(digest, turns);
+              if (call.ok && ["fetch_public", "browse", "read_held"].includes(use.name)) {
+                for (const id of [...ids, ...(call.provenance ?? []).map(p => p.artifactId), ...(pageId ? [pageId] : [])]) {
+                  if (!shownPages.has(id)) shownPages.set(id, turns);
+                }
+              }
+              const fit = fitRepresentation(use.name, `${header}${representation}`, ids);
               if (fit.truncated) overruns.push({ tool: use.name, target: rawUrl || use.name, bytes: fit.bytes, budget: fit.budget, artifactIds: ids });
               const shownBytes = Math.min(fit.bytes, fit.budget);
               representationBytesThisTurn += shownBytes;
@@ -1539,6 +1581,10 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
           ? { cacheReadInputTokens: 0, cacheCreationInputTokens: 0, cacheCreation5mInputTokens: 0, cacheCreation1hInputTokens: 0, uncachedInputTokens: 0, batch: false }
           : { cacheReadInputTokens: null, cacheCreationInputTokens: null, cacheCreation5mInputTokens: null, cacheCreation1hInputTokens: null, uncachedInputTokens: null, batch: false };
       const cost: AttemptCost = {
+        listPriceUsd: unpricedTransport || requestAccounting.some(row => row.listPriceUsd === null) ? null : requestAccounting.reduce((n, row) => n + row.listPriceUsd!, 0),
+        modelRequestCount: transportInvocations,
+        batchEligibleRequestCount: requestAccounting.some(row => row.eligible === undefined) || unpricedTransport ? null : requestAccounting.filter(row => row.eligible).length,
+        batchRequestCount: unpricedTransport ? null : requestAccounting.filter(row => row.batch).length,
         inputTokens,
         outputTokens,
         usd,
@@ -1560,8 +1606,12 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
                 own.uncachedInputTokens === null || own.cacheReadInputTokens === null || own.cacheCreationInputTokens === null
                   ? null
                   : own.uncachedInputTokens + own.cacheReadInputTokens + own.cacheCreationInputTokens;
-              const { batch: _batch, ...fields } = meteredCostFields(own);
-              return { model: a.model, requestCount: transportInvocationsByModel.get(a.model) ?? 0, usd: a.usd, inputTokens: whole, outputTokens: own.outputTokens, ...fields };
+              const accounting = requestAccounting.slice(first - 1, first - 1 + a.turns);
+              const fields = meteredCostFields(own);
+              return { model: a.model, requestCount: transportInvocationsByModel.get(a.model) ?? 0, usd: a.usd, inputTokens: whole, outputTokens: own.outputTokens, ...fields,
+                listPriceUsd: accounting.some(row => row.listPriceUsd === null) ? null : accounting.reduce((n, row) => n + row.listPriceUsd!, 0),
+                batchRequestCount: accounting.filter(row => row.batch).length,
+                batchEligibleRequestCount: accounting.some(row => row.eligible === undefined) ? null : accounting.filter(row => row.eligible).length };
             })
           : null;
       /* The two cache-defect signatures, read over the recorded turns (`cache-defects.ts`). */

@@ -5,6 +5,7 @@ export const DATA_DOOR_KINDS = [
   "CIVICPLUS",
   "BOARDBOOK",
   "BOARDDOCS",
+  "ESCRIBE",
   "CIVICCLERK",
   "IQM2",
   "REVIZE",
@@ -41,6 +42,11 @@ export const DOOR_KIND_SPECS: Readonly<Record<DataDoorKind, DoorKindSpec>> = {
     // The organization's own page ends in its id; one organization is one body, so the route alone selects.
     route: { key: "orgId", as: "lastPathSegment" },
     allowed: [], required: [],
+  },
+  ESCRIBE: {
+    sourceName: "escribe", agendaSourceType: "ESCRIBE", entry: "lib/sources/escribe/index.ts",
+    route: { key: "portalUrl", as: "origin" },
+    allowed: ["meetingTypes"], required: ["meetingTypes"],
   },
   BOARDDOCS: {
     sourceName: "boarddocs", agendaSourceType: "BOARDDOCS", entry: "lib/sources/boarddocs/index.ts",

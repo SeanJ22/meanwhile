@@ -1,0 +1,66 @@
+{
+  "capturedAt": "2026-10-13",
+  "method": "Original public HTTP response bytes, no transcription or synthetic source rows. Start at FEC-listed Vermont Secretary of State; after robots.txt returned CloudFront403 with ordinary and existing browser-UA requests, use publicly accessible municipal election routes. No login, identity inputs, CAPTCHA or search engine.",
+  "files": [
+    {
+      "file": "vt-bennington-nov3-original.html",
+      "url": "https://www.benningtonvt.org/_T8_R868.php",
+      "httpStatus": 200,
+      "sha256": "c4f873df0a2f18a43b478258f09955cd58f0e75f8e677ea51e16a5ad0a9ffb7e"
+    },
+    {
+      "file": "vt-bennington-elections-original.html",
+      "url": "https://www.benningtonvt.org/services/town_clerk/elections___voter_information/index.php",
+      "httpStatus": 200,
+      "sha256": "eaedd8d1d1c57f7a30aeb0ad1f3e667ce33f3b4a722518e9a2ab261145917378"
+    },
+    {
+      "file": "vt-bennington-home-original.html",
+      "url": "https://www.benningtonvt.org/",
+      "httpStatus": 200,
+      "sha256": "c80eb3587308f090693dea2d81513fa5edbacfce39e74bec72300a607630169b"
+    },
+    {
+      "file": "vt-arlington-closure-original.pdf",
+      "url": "https://arlingtonvermont.org/wp-content/uploads/2026/09/Town-Hall-Closure-insulation.pdf",
+      "httpStatus": 200,
+      "sha256": "8b89fc50a066791bc41e5d7a872a5737bbd7d9d0c46cb671946b6447d328a9f5"
+    },
+    {
+      "file": "vt-arlington-closure-original.html",
+      "url": "https://arlingtonvermont.org/town-hall-closed-oct-20-23-2026/",
+      "httpStatus": 200,
+      "sha256": "360ca02a39364195b776e69b08ad950408409e6e38ad836d5e743a4b7df7634a"
+    },
+    {
+      "file": "vt-arlington-clerk-original.html",
+      "url": "https://arlingtonvermont.org/town-clerk/",
+      "httpStatus": 200,
+      "sha256": "57a2d19e648e91108cbdace0ae03dc361be7a40d96f23bc7cd2e450b22de6a29"
+    },
+    {
+      "file": "vt-arlington-home-original.html",
+      "url": "https://arlingtonvermont.org/",
+      "httpStatus": 200,
+      "sha256": "cfc084f17316e344e437f62213bd38e9e7ecf3031c97524e924c2e774d76ea15"
+    },
+    {
+      "file": "vt-sos-robots-browser-403-original.html",
+      "url": "https://sos.vermont.gov/robots.txt",
+      "httpStatus": 403,
+      "sha256": "ec7b4e17b41ed50ddbc818f24215ccbfb83781e9597a40d8efb17050f3d92836"
+    }
+  ],
+  "confirmed": [
+    "Bennington current November3,2026 notice: drop box205SouthStreet available untilNovember2 at4:30PM; Bennington-voters-only rule; wrong-town ballots will not be counted; two election-day polling places7am\u20137pm; clerk8024421043.",
+    "Arlington original linked PDF: drop box inside front door, accessible duringOctober20\u201323,2026 closure and checked daily; address3828VT Route7A; ElectionDayNovember3. Exact foyer wording and own-town rule are not in this notice.",
+    "Arlington official clerk page: phone8023752332 and email susan.paustian@arlingtonvermont.org. PDF footer phone8023799916 is a separate town notice contact, not relabeled clerk."
+  ],
+  "openBlanks": [
+    "Vermont SOS statewide town PDF: robots route403 even with browser-UA; did not bypass the closed route. Recheck SOS elections/town-clerks directory and official local election pages.",
+    "Arlington own-town return rule and normal drop-box days/hours beyond the posted closure are still owed; do not infer24-hour access.",
+    "Albany official clerk phone and sites are still owed. Census registry town website blank; candidate town hosts not reachable. Follow official town-clerk or regional government directory next.",
+    "Municipal .org publication authority linking chain: current town identity/address matches local government, but an accessible .gov government-directory linking capture has not been obtained. Do not invent officialLinkingPage.",
+    "The Bennington combined elections page retains old2024 content below the current2026 section. Extraction uses the specific current2026 notice to avoid old deadlines."
+  ]
+}

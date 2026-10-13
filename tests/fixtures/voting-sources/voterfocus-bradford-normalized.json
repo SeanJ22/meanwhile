@@ -1,0 +1,70 @@
+{
+  "fixtureRepresentation": "Normalized factual rows from browser-rendered official vendor directory, not vendor JSON response.",
+  "sites": [
+    {
+      "precinct": "1",
+      "name": "Lawtey Community Center",
+      "address": "22598 Park St Lawtey, FL 320580000"
+    },
+    {
+      "precinct": "2",
+      "name": "Lawtey Community Center",
+      "address": "22598 Park St Lawtey, FL 320580000"
+    },
+    {
+      "precinct": "3",
+      "name": "Heilbron Springs Baptist Church",
+      "address": "21354 NW State Road 16 Starke, FL 32091"
+    },
+    {
+      "precinct": "4",
+      "name": "Church of God By Faith",
+      "address": "730 Old Lawtey Rd Starke, FL 32091"
+    },
+    {
+      "precinct": "5",
+      "name": "Bayless Highway Baptist Church",
+      "address": "11798 NW County Road 225 Starke, FL 32091"
+    },
+    {
+      "precinct": "6",
+      "name": "Bradford County Senior Center",
+      "address": "1805 N Temple Ave Starke, FL 32091"
+    },
+    {
+      "precinct": "7",
+      "name": "Madison Street Baptist Church",
+      "address": "900 W Madison St Starke, FL 320910000"
+    },
+    {
+      "precinct": "8",
+      "name": "Madison Street Baptist Church",
+      "address": "900 W Madison St Starke, FL 320910000"
+    },
+    {
+      "precinct": "9",
+      "name": "Sampson City Church of God",
+      "address": "8042 SW County Road 225 Starke, FL 32091"
+    },
+    {
+      "precinct": "10",
+      "name": "Theressa Community Center",
+      "address": "1748 SE 81st Ave Starke, FL 32091"
+    },
+    {
+      "precinct": "11",
+      "name": "Hampton City Hall",
+      "address": "10813 SW County Road 18 Hampton, FL 32044"
+    },
+    {
+      "precinct": "12",
+      "name": "Keystone Heights Methodist Church",
+      "address": "4004 SE State Road 21 Keystone Heights, FL 32656"
+    },
+    {
+      "precinct": "13",
+      "name": "Brooker Community Center",
+      "address": "17435 Tetstone Ave Brooker, FL 32622"
+    }
+  ]
+}

@@ -18,13 +18,13 @@ const SAMPLE_ROWS: BodySourceWiring[] = [
     config: { apiBase: "https://mandannd.api.civicclerk.com", portalBase: "https://mandannd.portal.civicclerk.com", titleMatch: sharedCategory.eventName, categoryId: String(sharedCategory.categoryId) } },
   { bodyId: "ocd-division/country:us/state:nd/place:mandan#governing", ocdId: "ocd-division/country:us/state:nd/place:mandan", jurisdiction: "Mandan, ND", publishingOrg: "City of Mandan", timeZone: "America/Chicago", verifiedAt: "2026-10-13T19:21:00Z", agendaSourceType: "CIVICCLERK" as const,
     config: { apiBase: "https://mandannd.api.civicclerk.com", portalBase: "https://mandannd.portal.civicclerk.com", bodyMatch: mandan.categoryName, categoryId: String(mandan.categoryId) } },
+  { ...FIXTURE_DOOR_ROWS[0], agendaSourceType: "ESCRIBE" as const, config: { portalUrl: "https://pub-lamesa.escribemeetings.com", meetingTypes: "City Council" } },
   ...FIXTURE_DOOR_ROWS.map(row => row.agendaSourceType === "CIVICCLERK"
     ? { ...row, config: { ...row.config, bodyMatch: "Board of Directors" } } : row),
   { ...FIXTURE_DOOR_ROWS[0], agendaSourceType: "BOARDDOCS" as const,
     config: { portalUrl: "https://go.boarddocs.com/mi/grand/Board.nsf/Public", committeeId: "A4EP6J588C05" } },
 ];
 
-/** Settings a reviewer would supply, taken from a body the code already wires on the same adapter. */
 function sampleFilter(kind: (typeof DATA_DOOR_KINDS)[number]): Record<string, string> {
   const spec = DOOR_KIND_SPECS[kind];
   const row = SAMPLE_ROWS.find((r) => r.agendaSourceType === spec.agendaSourceType && (kind !== "LEGISTAR_INSITE" || r.config.insiteHost) && spec.required.every((key) => r.config[key] !== undefined));

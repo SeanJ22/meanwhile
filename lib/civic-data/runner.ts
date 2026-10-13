@@ -48,6 +48,7 @@ export interface RoutineSourceTask {
   readonly command: readonly string[];
   readonly cadenceMs: number;
   readonly retryMs: number;
+  readonly childTimeoutMs?: number;
   readonly contract: Pick<RoutineSourceContract, "cadence" | "schedule" | "readerProjection">;
   readonly ownerInvocation?: {
     readonly publicationPending?: true;
@@ -107,6 +108,7 @@ export function routineTaskFromContract(contract: RoutineSourceContract): Routin
     command: contract.acquisitionAdapter.command,
     cadenceMs: contract.cadence.defaultEveryMs,
     retryMs: contract.retry.afterMs,
+    ...(contract.childTimeoutMs === undefined ? {} : { childTimeoutMs: contract.childTimeoutMs }),
     contract,
   };
 }

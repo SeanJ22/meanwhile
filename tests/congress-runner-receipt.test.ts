@@ -34,7 +34,7 @@ function fixtureRelease(options: KnownReleaseOptions): KnownRelease {
 const expected = { id: "congress-bulk-roster", sourceId: "congress-directory-project", recordClass: "FEDERAL_DIRECTORY" as const,
   scope: "US:current-congress-directory", contract: requiredManualProductionContract("congress-bulk-roster") };
 
-for (const portraitGap of [false, true]) test(`the Congress runner keeps each publication and emits one supervisor receipt${portraitGap ? " after portrait gaps" : " after all five source files"}`, async t => {
+test("the Congress roster runner keeps each publication and emits one supervisor receipt after all five source files", async t => {
   const store = new MemoryRoutineDataStore(), lines: string[] = [], stages: string[] = [];
   t.mock.method(console, "log", (line: string) => { lines.push(line); });
   const create = store.create.bind(store);
@@ -49,12 +49,10 @@ for (const portraitGap of [false, true]) test(`the Congress runner keeps each pu
         assert.equal(held.kind, "PROMOTED", "accepted people publish before the next optional acquisition starts");
       }
       const held = fixtureRelease(options); await options.validate?.(held.bytes, held); return held;
-    }, portraits: async projection => ({ projection, attempted: portraitGap ? 1 : 0,
-      excludedFacts: portraitGap ? [{ key: "congress:A000001:portrait", code: "CONGRESS_PORTRAIT_SOURCE_FAILED",
-        detail: "Fixture official portrait route unavailable; accepted person facts remain available." }] : [] }),
+    },
   });
   assert.equal(acquired, 5);
-  assert.equal(stages.length, portraitGap ? 6 : 5);
+  assert.equal(stages.length, 5);
   for (const id of stages) {
     const held = await store.readCandidate(id);
     assert.equal(held?.state, "PROMOTED");
@@ -80,7 +78,7 @@ test("an unavailable optional Congress file keeps accepted people and a single d
     acquire: async options => {
       if (options.releaseId.endsWith("legislators-social-media")) throw sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", "Fixture optional file unavailable");
       const held = fixtureRelease(options); await options.validate?.(held.bytes, held); return held;
-    }, portraits: async projection => ({ projection, attempted: 0, excludedFacts: [] }),
+    },
   });
   const parsed = parseRoutineRunnerReceipt(lines.join("\n"));
   assert.equal(parsed.ok, true, JSON.stringify(parsed));
@@ -94,7 +92,6 @@ test("a Congress core-source failure emits one durable held receipt and never in
   t.mock.method(console, "log", (line: string) => { lines.push(line); });
   await assert.rejects(refreshCongressDirectory({ store, now: () => NOW, revision,
     acquire: async () => { throw sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", "Fixture core file unavailable"); },
-    portraits: async () => { throw Error("Portrait work must not run without core facts"); },
   }), /Fixture core file unavailable/);
   const parsed = parseRoutineRunnerReceipt(lines.join("\n"));
   assert.equal(parsed.ok, true, JSON.stringify(parsed));

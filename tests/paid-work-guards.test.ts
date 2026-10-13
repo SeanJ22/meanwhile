@@ -47,7 +47,7 @@ async function harness(options: {
   const spendHolds = new DurableSpendHolds({ budget: repos.budget, table: repos.spendHolds, now: () => NOW, sleep: async () => undefined });
   const fleetSafety = new FleetSafetyController({ now: NOW, costs: options.costs ?? [], modelHold: options.modelHold ?? null,
     rollingCeilingUsd: options.ceilingUsd ?? 50, clock: () => Date.parse(NOW) });
-  const deps: PaidWorkGuardDeps = { repos, now: () => NOW, armedAt: NOW, fleetSafety, providerQueue: new ModelProviderQueue(), spendHolds,
+  const deps: PaidWorkGuardDeps = { batchEnv: { WTP_BACKGROUND_WORKER_BATCH: options.batch ? "1" : "0" }, repos, now: () => NOW, armedAt: NOW, fleetSafety, providerQueue: new ModelProviderQueue(), spendHolds,
     assignmentBudget: { linesFor: () => options.sends ?? { lines: [] } } as unknown as AssignmentBudgetGate,
     expansionBudget: { gate: { linesFor: () => options.areas ?? { lines: [] } } } as never,
     messages, batch: options.batch ?? backgroundBatchTransport({ apiKey: "" }), modelLaneEnabled: options.modelLaneEnabled ?? true,
@@ -132,17 +132,18 @@ function fakeBatch() {
   return { batched, batch: Object.assign(send, { withJournal: () => send }) as unknown as PaidWorkGuardDeps["batch"] };
 }
 
-test("BX-13: work routes by job: audits and replays may batch, every other parse and every other role goes straight to the model", () => {
+test("BX-13: work routes by job: unattended extraction, audits, replays and blanks have batch lanes", () => {
   assert.deepEqual(workerBatchRouting({ workerTask: { role: "ADVERSARIAL_AUDITOR" } as never }), { lane: "background-worker-audit", job: "AUDIT_SAMPLE" });
-  assert.deepEqual(workerBatchRouting({ workerTask: { role: "PARSER" } as never }), { lane: "background-worker-parse", job: undefined });
+  assert.deepEqual(workerBatchRouting({ workerTask: { role: "PARSER" } as never }), { lane: "background-worker-parse", job: "PAGE_READER" });
   assert.deepEqual(workerBatchRouting({ workerTask: { role: "PARSER", purpose: "DIAGNOSTIC_REPLAY" } as never }), { lane: "background-worker-parse", job: "BACKFILL" });
-  assert.deepEqual(workerBatchRouting({ workerTask: { role: "PARSER", purpose: "OBLIGATION" } as never }), { lane: "background-worker-parse", job: undefined });
-  assert.deepEqual(workerBatchRouting({}), { lane: null, job: undefined });
+  assert.deepEqual(workerBatchRouting({ workerTask: { role: "PARSER", purpose: "OBLIGATION" } as never }), { lane: "background-worker-parse", job: "PAGE_READER" });
+  assert.deepEqual(workerBatchRouting({}), { lane: "background-worker-research", job: "BLANK" });
 });
 
 test("BX-13: with the batch lane on, a parse a reader waits on is sent at once, and an audit sample takes the batch", async () => {
   const parse = fakeBatch();
   const p = await harness({ sends: { lines: [line("send:a", 5)] }, workerTask: { role: "PARSER", purpose: "OBLIGATION" }, batch: parse.batch });
+  await p.repos.obligations.put("ob-1", { id: "ob-1", subjectId: p.jurisdiction.subjectId, recordClass: "MEETINGS", readerImpactAt: NOW, active: true } as never, NOW);
   await p.guards.workerTransportFor(p.jurisdiction, p.task.id)(request);
   assert.equal(p.sent.length, 1, "the parse went straight to the model");
   assert.equal(parse.batched.length, 0, "nothing waited on the batch service");
@@ -162,4 +163,23 @@ test("BX-13: a parse already submitted to the batch service under the old routin
   await h.guards.workerTransportFor(h.jurisdiction, h.task.id)(request);
   assert.equal(h.sent.length, 0, "no second paid request");
   assert.equal(recovery.batched.length, 1, "the outstanding batch answer was collected");
+});
+
+test("R7: a Scout rereads its place's meeting priority, and the request packet cannot erase a live deadline", async () => {
+  const queued = fakeBatch();
+  const h = await harness({ batch: queued.batch });
+  await h.repos.obligations.put("meeting", { id: "meeting", subjectId: h.jurisdiction.subjectId,
+    recordClass: "MEETINGS", readerImpactAt: NOW, active: true } as never, NOW);
+  const send = h.guards.guardedJobTransportFor("scout-job", "BLANK", { now: NOW, subjectId: h.jurisdiction.subjectId });
+  const packet = { ...request, batchContext: { job: "BLANK" as const, priority: { now: NOW } } };
+  const urgent = await send(packet);
+  assert.equal(urgent.batchEligible, false);
+  assert.equal(h.sent.length, 1);
+  assert.equal(queued.batched.length, 0);
+  const meeting = await h.repos.obligations.mustRead("meeting");
+  await h.repos.obligations.compareAndSet(meeting.id, meeting.revision, { ...meeting.value, readerImpactAt: null }, NOW);
+  const background = await send(packet);
+  assert.equal(background.batchEligible, true);
+  assert.equal(background.batch, true);
+  assert.equal(queued.batched.length, 1);
 });

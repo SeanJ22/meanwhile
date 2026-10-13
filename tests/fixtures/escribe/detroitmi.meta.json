@@ -1,0 +1,12 @@
+{
+  "sourceUrl": "https://pub-detroitmi.escribemeetings.com/MeetingsCalendarView.aspx/GetCalendarMeetings",
+  "method": "POST",
+  "request": {
+    "calendarStartDate": "2026-07-15",
+    "calendarEndDate": "2027-01-15"
+  },
+  "state": "MI",
+  "timeZone": "America/Detroit",
+  "capturedAt": "2026-10-13T19:26:35.752075+00:00",
+  "sha256": "9d1333882e10ba6ab76fd698a49e3619fdfcaef0f1e206f5e807ad41dbca4a63"
+}

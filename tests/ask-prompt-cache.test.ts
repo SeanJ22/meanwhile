@@ -117,8 +117,9 @@ function renderedPrefix(body: Record<string, unknown>): string | null {
 }
 
 function ttlMsOf(body: Record<string, unknown>): number {
-  const raw = JSON.stringify(body);
-  return raw.includes('"ttl":"1h"') ? 60 * 60 * 1000 : 5 * 60 * 1000;
+  const messages = body.messages as { content: { cache_control?: { ttl?: string } }[] }[];
+  const marker = messages.flatMap(message => Array.isArray(message.content) ? message.content : []).find(block => block.cache_control)?.cache_control;
+  return marker?.ttl === "1h" ? 60 * 60 * 1000 : 5 * 60 * 1000;
 }
 
 /**
@@ -360,7 +361,7 @@ test("PC-5 (2026-09-06): the request carries TWO breakpoints — the system bloc
   await synthesizeAnswer(zipPack(), { apiKey: "k", fetchImpl: anthropicWithCache(clock, seen), callerKey: "synthetic-run" });
   const body = seen[0].body as { system: { type: string; text: string; cache_control?: unknown }[]; messages: { content: { type: string; text: string; cache_control?: unknown }[] }[] };
   assert.ok(Array.isArray(body.system) && body.system.length === 1, "the system prefix is one text block");
-  assert.deepEqual(body.system[0].cache_control, { type: "ephemeral" }, "the first breakpoint is on the system block");
+  assert.deepEqual(body.system[0].cache_control, { type: "ephemeral", ttl: "1h" }, "the first breakpoint is on the stable hour-long system block");
   assert.equal(body.system[0].text, synthesisPrompt(zipPack()));
   const blocks = body.messages[0].content;
   assert.equal(blocks.length, 3, "context, date, question");

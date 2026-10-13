@@ -1,0 +1,12 @@
+{
+  "sourceUrl": "https://pub-lamesa.escribemeetings.com/MeetingsCalendarView.aspx/GetCalendarMeetings",
+  "method": "POST",
+  "request": {
+    "calendarStartDate": "2026-07-15",
+    "calendarEndDate": "2027-01-15"
+  },
+  "state": "CA",
+  "timeZone": "America/Los_Angeles",
+  "capturedAt": "2026-10-13T19:26:35.751522+00:00",
+  "sha256": "8d7bf999ca90c312f308e96b149a3f92fbd43fbb41f446153521d0479e47bd4d"
+}

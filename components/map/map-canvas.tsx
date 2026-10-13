@@ -104,13 +104,17 @@ interface CameraProbe {
   (): { zoom: number; lat: number; lng: number };
 }
 
-import { syncOfficeMarkers } from "@/lib/map/office-markers";
-import type { OfficeSite } from "@/lib/map/office-pins";
+import { OfficePinsLayer, isOfficePress } from "./office-pins-layer";
+import type { MapBounds, OfficeSite } from "@/lib/map/office-pins";
+
+const NO_OFFICE_SITES: readonly OfficeSite[] = [];
 
 interface MapCanvasProps {
   officeSites?: readonly OfficeSite[];
   onSelectOffice?: (id: string) => void;
   selectedOfficeId?: string | null;
+  /** The settled view's edges, after every camera move. */
+  onBoundsChange?: (bounds: MapBounds) => void;
   onPresentationReadyChange?: (ready: boolean) => void;
   /**
    * Every venue the data contains, not the filtered list: this drives the
@@ -241,6 +245,7 @@ export function MapCanvas({
   officeSites,
   onSelectOffice,
   selectedOfficeId = null,
+  onBoundsChange,
   votingSites,
   votingAddressPoint = null,
   onSelectVotingSite,
@@ -259,9 +264,10 @@ export function MapCanvas({
   const poolRef = useRef(createMarkerPool());
   const hereRef = useRef<Marker | null>(null);
   /** Voting-site markers, keyed by site id. Their own set, never the pool. */
-  const officePinsRef = useRef(new Map<string, Marker>());
-  const onSelectOfficeRef = useRef(onSelectOffice);
-  useEffect(() => { onSelectOfficeRef.current = onSelectOffice; }, [onSelectOffice]);
+  /** The office layer mounts once the map has loaded. */
+  const [officeMap, setOfficeMap] = useState<MapLibreMap | null>(null);
+  const onBoundsChangeRef = useRef(onBoundsChange);
+  useEffect(() => { onBoundsChangeRef.current = onBoundsChange; }, [onBoundsChange]);
   const votePinsRef = useRef(new Map<string, Marker>());
   /**
    * Whether the reader has taken the camera by hand. A ref so pans do not
@@ -433,7 +439,6 @@ export function MapCanvas({
 
     mapRef.current = map;
     const pool = poolRef.current;
-    const officePins = officePinsRef.current;
 
     // Put the district overlay back on every style change; see ensureDistricts.
     map.on("styledata", ensureDistricts);
@@ -444,6 +449,8 @@ export function MapCanvas({
 
     /* Click to select a district: one hit selects, several open a picker, none keeps the selection. */
     const onClick = (event: MapMouseEvent) => {
+      /* An office pin press is the office layer's own. */
+      if (isOfficePress(event.originalEvent)) return;
       /* A press on the map puts a fanned pin group back; pin presses never reach here. */
       clearSpiderfy(pool);
 
@@ -536,6 +543,15 @@ export function MapCanvas({
     };
     map.on("movestart", onMoveStart);
     map.on("moveend", onMoveEnd);
+    const reportBounds = () => {
+      const bounds = map.getBounds();
+      onBoundsChangeRef.current?.({ west: bounds.getWest(), south: bounds.getSouth(), east: bounds.getEast(), north: bounds.getNorth() });
+    };
+    map.on("moveend", reportBounds);
+    map.once("load", () => {
+      reportBounds();
+      setOfficeMap(map);
+    });
 
     /* Read-only zoom probe for walk checks; nothing in the app consults it. */
     (window as unknown as { __wtpZoom?: () => number }).__wtpZoom = () =>
@@ -625,8 +641,8 @@ export function MapCanvas({
       map.off("click", onClick);
       window.removeEventListener("keydown", onKeyDown);
       map.off("styledata", ensureDistricts);
-      for (const marker of officePins.values()) marker.remove();
-      officePins.clear();
+      map.off("moveend", reportBounds);
+      setOfficeMap(null);
       map.remove();
       // A disposed map must not stay readable on `window`.
       delete (window as unknown as { __wtpMap?: MapLibreMap }).__wtpMap;
@@ -638,13 +654,6 @@ export function MapCanvas({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map || !presentationReady || mapPresentationHeld(map)) return;
-    syncOfficeMarkers(officePinsRef.current, officeSites ?? [],
-      (button, site) => new Marker({ element: button, anchor: "center", offset: [24, 0] }).setLngLat([site.lng, site.lat]).addTo(map),
-      id => onSelectOfficeRef.current?.(id), selectedOfficeId);
-  }, [officeSites, selectedOfficeId, presentationReady]);
 
   // Mark the zip's centroid.
   useEffect(() => {
@@ -1085,6 +1094,15 @@ export function MapCanvas({
     // Marker visibility changes once at motion start and once at idle.
     <div ref={shellRef} className={`absolute inset-0 ${flightStyles.shell}`}>
       <div ref={containerRef} className="size-full" />
+      {officeMap && (
+        <OfficePinsLayer
+          map={officeMap}
+          sites={officeSites ?? NO_OFFICE_SITES}
+          meetingPoints={framed}
+          selectedOfficeId={selectedOfficeId}
+          onSelect={id => onSelectOffice?.(id)}
+        />
+      )}
       {graphicsUnavailable && (
         <p role="status" className="absolute inset-x-0 bottom-0 p-4 t-body text-voice bg-panel">
           The map can’t show on this device. You can still browse the meeting list.

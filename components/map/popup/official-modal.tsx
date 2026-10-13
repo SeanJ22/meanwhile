@@ -17,6 +17,9 @@ import {
 
 import { FundingBlock } from "@/components/funding/funding-block";
 import type { PrlReaderProfile } from "@/lib/sources/prl/snapshot";
+import type { OfficePin } from "@/lib/map/office-pins";
+import { venueLink } from "@/lib/registry/links";
+import { CheckedLink } from "@/components/ui/checked-link";
 import { PublicStatementsProfile } from "@/components/officials/public-statements-profile";
 import { OfficialActions } from "@/components/officials/official-actions";
 import { SpeakYourMind } from "@/components/speak/speak-your-mind";
@@ -47,6 +50,8 @@ interface OfficialModalProps {
   onClose: () => void;
   /** Rendered as the body of the reader's one large card, which owns the frame, Escape, Back and Close. */
   embedded?: boolean;
+  /** The district office the card was opened from: its address leads the contact block. */
+  office?: OfficePin;
 }
 
 export function OfficialModal({
@@ -56,6 +61,7 @@ export function OfficialModal({
   reactionContext,
   onClose,
   embedded = false,
+  office,
 }: OfficialModalProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   useCardVisibility(cardRef, `OFFICIAL:${holder.id}`, "OFFICIAL");
@@ -111,7 +117,7 @@ export function OfficialModal({
         independent={embedded}
         sources={sources}
         identity={<PersonIdentity holder={holder} seatLabel={seatLabel} large chips={identityChipsFor(holder, tier, "INCUMBENT")} />}
-        contact={<><ContactPills holder={holder} /><OfficialTermNote holder={holder} /></>}
+        contact={<>{office && <DistrictOffice office={office} />}<ContactPills holder={holder} /><OfficialTermNote holder={holder} /></>}
         sections={{
           office: <OfficeBlurb holder={holder} bare />,
           positions: <PositionsSection subjectId={holder.id} subjectName={holder.name} contentOnly />,
@@ -128,6 +134,23 @@ export function OfficialModal({
           <SpeakYourMind key={holder.id} context={reactionContext ?? undefined} subjectType="OFFICIAL" subjectId={holder.id} subject={holder.name} />
         </>}
       />
+    </div>
+  );
+}
+
+/** The office the reader picked on the map: where it is, as published, and how to get there. */
+function DistrictOffice({ office }: { office: OfficePin }) {
+  const directions = venueLink({ name: office.name, address: office.address, lat: office.lat, lng: office.lng });
+  return (
+    <div className="mw-district-office" data-office-id={office.id}>
+      <p className="mw-district-office__label">District office</p>
+      <p className="mw-district-office__address">{office.address}</p>
+      {office.hours && <p className="mw-district-office__hours">Hours: {office.hours}</p>}
+      {directions && (
+        <CheckedLink className="mw-directions" href={directions.url} target="_blank" rel="noreferrer" title={directions.hint}>
+          <span aria-hidden="true">➚</span> Directions
+        </CheckedLink>
+      )}
     </div>
   );
 }

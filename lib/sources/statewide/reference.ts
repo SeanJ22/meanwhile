@@ -1,4 +1,5 @@
-import { readFileSync } from "node:fs";
+import referenceFile from "../../../data/reference/statewide-executive-sources.json" with { type: "json" };
+import labelsFile from "../../../data/reference/us-jurisdiction-labels.json" with { type: "json" };
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 
 export const STATEWIDE_SOURCE_ID = "statewide-executive-sources";
@@ -10,9 +11,10 @@ export interface StatewideReferenceSource {
   readonly officeTitles: readonly string[];
   readonly format: "html" | "wikidata";
 }
-const reference = JSON.parse(readFileSync(new URL("../../../data/reference/statewide-executive-sources.json", import.meta.url), "utf8")) as {sources:StatewideReferenceSource[]};
+// Static JSON imports, so the bundler carries the datasets and no file URL is read at run time.
+const reference = referenceFile as {sources:StatewideReferenceSource[]};
 export const STATEWIDE_REFERENCE_SOURCES: readonly StatewideReferenceSource[] = reference.sources;
-const labels = JSON.parse(readFileSync(new URL("../../../data/reference/us-jurisdiction-labels.json", import.meta.url), "utf8")) as {jurisdictions:{postal:string;name:string;fips:string}[]};
+const labels = labelsFile as {jurisdictions:{postal:string;name:string;fips:string}[]};
 /** Labels are held national reference data; office selection rules never name states. */
 export const STATEWIDE_JURISDICTIONS = labels.jurisdictions.flatMap(row => {
   const entry = FIPS_TO_STATE[row.fips];

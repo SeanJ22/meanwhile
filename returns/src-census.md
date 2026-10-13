@@ -5,16 +5,16 @@ owner: src-census
 writer: the src-census lane
 check: fold-conflict
 ready: no step ids unknown
-river: 1e72570acb7e4dff84ed9a95b3c2882ed4080931
-at: 2026-10-13T14:55:02Z
+river: 691c01dd0ff44041930828ead156c968fc269f8a
+at: 2026-10-13T22:49:43Z
 state: returned
-fix_subject: fix:aebf3963
-fix: River · stream/src-census — fold-conflict failed for src-census: src-census READY 989a28db38b1 (SRC-AC) conflicts with river edd7652c5bb5 (now containing admin BR-07..BR-31 and src-open-data) when merged alone. Conflicting file: app/(admin)/_mw/admin-v6/capture-health.tsx. Merge river into stream/src-cen
+fix_subject: fix:35436b2e
+fix: River · stream/src-census — fold-conflict failed for src-census: src-census READY 943ef42c5869 (SRC-AC) conflicts with river 25ef70542f9b (releases 25 to 29 plus src-legiscan) when merged alone. Conflicting file: lib/doors/seed-feeds.ts. Merge river into stream/src-census, resolve, and mark READY again.
 
 ## Failure
 
 ```
-src-census READY 989a28db38b1 (SRC-AC) conflicts with river edd7652c5bb5 (now containing admin BR-07..BR-31 and src-open-data) when merged alone. Conflicting file: app/(admin)/_mw/admin-v6/capture-health.tsx. Merge river into stream/src-census, resolve, and mark READY again.
+src-census READY 943ef42c5869 (SRC-AC) conflicts with river 25ef70542f9b (releases 25 to 29 plus src-legiscan) when merged alone. Conflicting file: lib/doors/seed-feeds.ts. Merge river into stream/src-census, resolve, and mark READY again.
 ```
 
 ## Repair

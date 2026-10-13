@@ -9,7 +9,7 @@ import type { RosterReaderGap } from "@/lib/registry/body-rosters";
 import { projectedRosterGapsForDivision } from "@/lib/registry/body-roster-client";
 
 /**
- * Who represents a division the reader is not standing in. When the local
+ * Who represents each requested division. When the local
  * resolver has nobody, `/api/representation/<ocd-id>` is asked by the
  * division's own key. `status`: `resolved`, `looking` (not an absence),
  * `unsourced` (asked and hold nobody) or `unavailable` (the lookup failed).
@@ -36,53 +36,60 @@ interface Answer {
   rosterGaps?: RosterReaderGap[];
 }
 
-export function useDivisionRepresentation(
+export function useDivisionsRepresentation(
   coverage: CoverageSummary | null | undefined,
-  ocdId: string | null,
-): DivisionRepresentation {
-  // What the client can answer without asking anyone.
-  const local = representationForDivision(coverage, ocdId);
-  const localCount = local.length;
-  const [answer, setAnswer] = useState<Answer | null>(null);
+  ocdIds: readonly string[],
+): Record<string, DivisionRepresentation> {
+  const ids = [...new Set(ocdIds)];
+  const local = new Map(ids.map(id => [id, representationForDivision(coverage, id)]));
+  const remoteIdsKey = JSON.stringify(ids.filter(id => !local.get(id)?.length).sort());
+  const [answers, setAnswers] = useState<Record<string, Answer>>({});
 
   useEffect(() => {
-    // Nothing to ask: no division, or the client already holds the answer.
-    if (!ocdId || localCount > 0) return;
+    const remoteIds = JSON.parse(remoteIdsKey) as string[];
+    if (!remoteIds.length) return;
     const controller = new AbortController();
-    // The OCD-ID in the path, so every cache keys on the division.
-    const path = ocdId
-      .split("/")
-      .map((segment) => encodeURIComponent(segment))
-      .join("/");
-    fetch(`/api/representation/${path}`, { signal: controller.signal })
-      .then((response) => (response.ok ? response.json() : null))
-      .then((body: { ocdId?: string; holders?: SeatHolder[]; rosterGaps?: RosterReaderGap[] } | null) => {
-        if (controller.signal.aborted) return;
-        // A response naming a different division is not this one's answer.
-        if (!body || body.ocdId !== ocdId) {
-          setAnswer({ ocdId, holders: [], failed: true });
-          return;
-        }
-        setAnswer({ ocdId, holders: body.holders ?? [], rosterGaps: body.rosterGaps ?? [], failed: false });
-      })
-      .catch(() => {
-        if (!controller.signal.aborted) {
-          setAnswer({ ocdId, holders: [], failed: true });
-        }
-      });
+    const record = (answer: Answer) => {
+      if (!controller.signal.aborted) {
+        setAnswers(previous => ({ ...previous, [answer.ocdId]: answer }));
+      }
+    };
+    for (const ocdId of remoteIds) {
+      // The OCD-ID in the path, so every cache keys on the division.
+      const path = ocdId
+        .split("/")
+        .map((segment) => encodeURIComponent(segment))
+        .join("/");
+      fetch(`/api/representation/${path}`, { signal: controller.signal })
+        .then((response) => (response.ok ? response.json() : null))
+        .then((body: { ocdId?: string; holders?: SeatHolder[]; rosterGaps?: RosterReaderGap[] } | null) => {
+          if (controller.signal.aborted) return;
+          // A response naming a different division is not this one's answer.
+          if (!body || body.ocdId !== ocdId) {
+            record({ ocdId, holders: [], failed: true });
+            return;
+          }
+          record({ ocdId, holders: body.holders ?? [], rosterGaps: body.rosterGaps ?? [], failed: false });
+        })
+        .catch(() => {
+          if (!controller.signal.aborted) {
+            record({ ocdId, holders: [], failed: true });
+          }
+        });
+    }
     return () => controller.abort();
-    // `localCount`, not `local`: the resolver returns a fresh array every render.
-  }, [ocdId, localCount]);
+  }, [remoteIdsKey]);
 
-  if (localCount > 0) return { holders: local, status: "resolved", rosterGaps: projectedRosterGapsForDivision(coverage, ocdId) };
-  // No division to ask about is an empty answer, not a pending question.
-  if (!ocdId) return { holders: [], status: "unsourced" };
-  // Anything the previous division answered belongs to the previous division.
-  if (answer?.ocdId !== ocdId) return { holders: [], status: "looking" };
-  if (answer.failed) return { holders: [], status: "unavailable" };
-  return {
-    holders: answer.holders,
-    rosterGaps: answer.rosterGaps ?? [],
-    status: answer.holders.length > 0 ? "resolved" : "unsourced",
-  };
+  return Object.fromEntries(ids.map(ocdId => {
+    const holders = local.get(ocdId)!;
+    if (holders.length) return [ocdId, { holders, status: "resolved", rosterGaps: projectedRosterGapsForDivision(coverage, ocdId) }];
+    const answer = answers[ocdId];
+    if (!answer) return [ocdId, { holders: [], status: "looking" }];
+    if (answer.failed) return [ocdId, { holders: [], status: "unavailable" }];
+    return [ocdId, {
+      holders: answer.holders,
+      rosterGaps: answer.rosterGaps ?? [],
+      status: answer.holders.length ? "resolved" : "unsourced",
+    }];
+  }));
 }

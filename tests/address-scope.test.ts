@@ -113,8 +113,8 @@ test("no reader surface renders a 'not yours' exclusion label", () => {
 });
 
 test("no reader surface renders a row it knows is ELSEWHERE_IN_ZIP", () => {
-  // `district-popup.tsx` is a browse surface: standing relative to a tapped district is its answer.
-  const allowed = new Set([join("components", "map", "popup", "district-popup.tsx")]);
+  // `browsing-subject-line.tsx` is a browse surface: standing relative to a tapped district is its answer.
+  const allowed = new Set([join("components", "map", "popup", "browsing-subject-line.tsx")]);
   const offenders: string[] = [];
   for (const { path, source } of readerComponents()) {
     if (allowed.has(path)) continue;

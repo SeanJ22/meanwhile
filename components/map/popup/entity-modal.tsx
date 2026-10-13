@@ -54,7 +54,7 @@ import type { RosterReaderGap } from "@/lib/registry/body-rosters";
 import { HowToBeHeard, MeetingSourceCredit } from "../meeting-panel";
 import { venueLink } from "@/lib/registry/links";
 
-import { BrowsingSubjectLine } from "./district-popup";
+import { BrowsingSubjectLine } from "./browsing-subject-line";
 import { CalendarLinks } from "./calendar-links";
 import { AgendaSection } from "./agenda-section";
 import { PopupRow, PopupSectionLabel } from "./popup-card";
@@ -190,6 +190,14 @@ export interface ModalSubject {
   /** The office title of whoever represents the district, for that office's explainer. */
   representedByOfficeTitle?: string | null;
   representation: SeatHolder[];
+  /** Each legislative district at the clicked point and its statewide offices. */
+  spotRepresentation?: {
+    ocdId: string;
+    label: string;
+    holders: SeatHolder[];
+    rosterGaps?: RosterReaderGap[];
+    note: string;
+  }[];
   rosterGaps?: RosterReaderGap[];
   /** Why representation is empty, when it is. */
   representationNote: string;
@@ -658,6 +666,17 @@ export function EntityModal({
               <Representation holders={subject.representation} gaps={subject.rosterGaps} note={subject.representationNote}
                 onOpenHolder={onOpenHolder} showTopOffices={runsSomething(subject.divisionKind)} />
             </CardSection>
+            {subject.spotRepresentation && subject.spotRepresentation.length > 0 && (
+              <CardSection title="Who represents this spot" defaultOpen>
+                {subject.spotRepresentation.map(division => (
+                  <div key={division.ocdId} data-spot-division={division.ocdId} className="mb-4 last:mb-0">
+                    <PopupSectionLabel>{division.label}</PopupSectionLabel>
+                    <Representation holders={division.holders} gaps={division.rosterGaps} note={division.note}
+                      onOpenHolder={onOpenHolder} showTopOffices={false} />
+                  </div>
+                ))}
+              </CardSection>
+            )}
             {subject.subjectKind !== "MEETING" && <CardSection title={listingCount.heading}><Meetings meetings={subject.meetings} /></CardSection>}
             <PublicRecordSection subject={subject} />
             <CardSection title="Sources" meta={sourceCount}><Sources sources={allSources} /></CardSection>
@@ -793,7 +812,7 @@ export function Representation({
 }
 
 /** Every meetings list on a battlecard, in three groups with one credit line. */
-function Meetings({ meetings }: { meetings: Meeting[] }) {
+export function Meetings({ meetings }: { meetings: Meeting[] }) {
   const listingCount = readerMeetingCount(meetings, useMeetingListingIdentity());
   // Pinned at mount; never a clock read in a render body.
   const [now] = useState(() => Date.now());
@@ -822,7 +841,7 @@ function Meetings({ meetings }: { meetings: Meeting[] }) {
             {group.label}
           </p>
           {group.meetings.map((meeting) => (
-            <div key={meeting.id} className="account-modal-person">
+            <div key={meeting.id} data-meeting-id={meeting.id} className="account-modal-person">
               <div className="flex items-baseline justify-between gap-3">
                 <span className="t-body text-paper">
                   {meeting.title}

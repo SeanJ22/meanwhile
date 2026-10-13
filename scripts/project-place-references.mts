@@ -7,6 +7,7 @@ import type { StateReference, StateReferenceIndex } from "../lib/control-plane/e
 import { unitShareKey } from "../lib/control-plane/expansion/membership.ts";
 import { ruledDistrictTerritory, DISTRICT_TERRITORIES } from "../lib/control-plane/expansion/district-territory.ts";
 import { governmentNativeId, type RegistrationGovernmentListing } from "../lib/registration/listings.ts";
+import { censusGovernmentContacts } from "../lib/registration/census-contacts.ts";
 
 const root = process.cwd();
 const out = join(root, "data", "derived", "place-reference");
@@ -43,12 +44,11 @@ for (const file of ["census_govt_units_2022.csv", "census_govt_units_2022_depend
       : type === "MUNICIPAL" && /^\d{5}$/.test(placeCode) ? `place GEOID ${st}${placeCode}`
       : type === "TOWNSHIP" && /^\d{3}$/.test(countyCode) && /^\d{5}$/.test(placeCode) ? `cousub GEOID ${st}${countyCode}${placeCode}` : "No source-established service geography";
     shard.units.push({ pid6: row[pid], name: value(row, "unit_name"), type, state: postal, zips: [], method: key });
-    const website = value(row, "web_address");
     shard.listings!.push({
       id: governmentNativeId(postal, "cog", row[pid]), aliases: [], jurisdictionId: null, state: postal,
       name: value(row, "unit_name"), kind: type === "DEPENDENT SCHOOL SYSTEM" ? "DEPENDENT_SCHOOL_SYSTEM" : "GOVERNMENT",
       governmentClass: type, nativeIds: { census_pid6: row[pid] }, status: value(row, "is_active") || null, sourceVintage: "2022 Census of Governments",
-      website: website ? (/^https?:\/\//i.test(website) ? website : `http://${website}`) : null,
+      ...censusGovernmentContacts((...fields) => fields.map(field => value(row, field.toLowerCase())).find(Boolean) ?? ""),
       officePhone: null, officeAddress: null,
       countyFips: /^\d{2}$/.test(value(row, "fips_state")) && /^\d{3}$/.test(value(row, "fips_county")) ? value(row, "fips_state") + value(row, "fips_county") : null,
       associations: [], bodyIds: [], provenance: { sourceUrl: "https://www2.census.gov/programs-surveys/gus/datasets/2022/govt_units_2022.ZIP", sourceOrg: "U.S. Census Bureau", collectedAt: "2026-09-23", verifiedAt: null },
@@ -67,11 +67,14 @@ for (const file of ["census_govt_units_2022.csv", "census_govt_units_2022_depend
     const listing: RegistrationGovernmentListing = {
       id: governmentNativeId(state, "nces", leaid), aliases: [], jurisdictionId: null, state,
       name: value(row, "lea_name"), kind: "EDUCATION_AGENCY", governmentClass: value(row, "lea_type"),
-      nativeIds: { nces_leaid: leaid, state_leaid: value(row, "state_leaid"), source_state: sourceState },
+      nativeIds: { nces_leaid: leaid, state_leaid: value(row, "state_leaid"), source_state: sourceState,
+        nces_lea_type: value(row, "lea_type_code"), nces_charter_lea: value(row, "charter_lea_code"),
+        nces_lea_status: value(row, "updated_status") || value(row, "sy_status") },
       status: value(row, "updated_status") || value(row, "sy_status") || null, sourceVintage: "NCES CCD 2025–26 preliminary, 2026-05-06",
       website: website ? (/^https?:\/\//i.test(website) ? website : `http://${website}`) : null,
       officePhone: value(row, "phone") || null,
       officeAddress: ["location_street1", "location_street2", "location_street3", "location_city", "location_state", "location_zip"].map(field => value(row, field)).filter(Boolean).join(", ") || null,
+      mailingAddress: ["mailing_street1", "mailing_street2", "mailing_street3", "mailing_city", "mailing_state", "mailing_zip"].map(field => value(row, field)).filter(Boolean).join(", ") || null,
       countyFips: null, associations: [], bodyIds: [],
       provenance: { sourceUrl: "https://nces.ed.gov/ccd/files.asp", sourceOrg: "National Center for Education Statistics", collectedAt: "2026-08-19", verifiedAt: null },
     };

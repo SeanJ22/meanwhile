@@ -1,5 +1,5 @@
 import { governmentFinanceEvidence, governmentFinanceQuestion, composeGovernmentFinanceAnswer } from "@/lib/ask/government-finance";
-import { governmentListingEntity, governmentListingEvidence, readerGovernmentListings } from "@/lib/ask/government-listings";
+import { governmentListingEntity, governmentListingEvidenceRecords, readerGovernmentListings } from "@/lib/ask/government-listings";
 import { prlStatementEvidence, readPrlForSubject } from "@/lib/sources/prl/person";
 import { type MeetingsSnapshot } from "@/lib/meetings/snapshot";
 import { ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
@@ -1332,7 +1332,7 @@ export async function POST(request: Request) {
     } else if (subject?.kind === "BODY") {
       const listing = governmentListings.records.find(row => row.id === subject.id);
       if (listing) {
-        records.push(governmentListingEvidence(listing));
+        records.push(...governmentListingEvidenceRecords(listing));
         denominators.governmentInventoryRecords = 1;
       }
       const identity = canonicalBodyIdentity(subject.id);

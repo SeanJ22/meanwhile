@@ -10,15 +10,20 @@ function Listing({ row }: { row: RegistrationGovernmentListing }) {
       <p>{row.governmentClass}{row.status ? ` · ${row.status}` : ""}</p>
       {row.kind === "DEPENDENT_SCHOOL_SYSTEM" && <p>A dependent school system; this listing does not establish an independent government.</p>}
       {row.associations.length === 0 && <p>We have not connected this listing to a verified service area.</p>}
+      {row.contactTitle && <p>Contact: {row.contactTitle}</p>}
+      {row.mailingAddress && <p>Mailing address: {row.mailingAddress}</p>}
       {row.officeAddress && <p>Office: {row.officeAddress}</p>}
       {row.officePhone && <p>Office phone: <a href={`tel:${row.officePhone}`} className="text-link">{row.officePhone}</a></p>}
+      {row.website && <p><a href={row.website} target="_blank" rel="noopener noreferrer" className="text-link">Official website</a></p>}
+      {row.govDomains?.map(link => <p key={link.domain}><a href={link.website} target="_blank" rel="noopener noreferrer" className="text-link">{link.domain}</a></p>)}
       <details>
         <summary className="cursor-pointer text-link">Sources</summary>
         <p>{row.provenance.sourceUrl
           ? <a href={row.provenance.sourceUrl} target="_blank" rel="noopener noreferrer" className="text-link">{row.provenance.sourceOrg}</a>
           : row.provenance.sourceOrg}{" · "}{row.sourceVintage}</p>
         {row.provenance.collectedAt && <p>Source retrieved {row.provenance.collectedAt.slice(0, 10)}.</p>}
-        {row.website && <p><a href={row.website} target="_blank" rel="noopener noreferrer" className="text-link">Website listed by the source</a></p>}
+        {row.additionalSources?.map(source => <p key={`${source.sourceUrl}:${source.collectedAt}`}><a href={source.sourceUrl ?? undefined} target="_blank" rel="noopener noreferrer" className="text-link">{source.sourceOrg}</a>{" · "}Checked {source.collectedAt?.slice(0, 10)}</p>)}
+        {row.govDomains?.map(link => <p key={link.domain}><a href={link.sourceUrl} target="_blank" rel="noopener noreferrer" className="text-link">CISA .gov registry: {link.domain}</a>{" · "}Checked {link.checkedAt.slice(0, 10)}</p>)}
       </details>
     </div>
   </details>;

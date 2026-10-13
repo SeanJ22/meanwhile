@@ -36,7 +36,8 @@ import { divisionsAt as resolveDivisionsAt, type GeoFeature } from "./resolve.ts
 import type { Body, Division, Registry } from "./types.ts";
 import { getRegistryRuntimeReadModel, primeRegistryRuntimeFromValue, refreshRegistryRuntimeFromPromoted, registryRuntimeReadState } from "./runtime-read-model.ts";
 import { currentCampaignSitesEdge, currentCommentAccessEdge, currentFederalDirectoryEdge, currentReaderAuthorityEdge, currentRegistrationsEdge, currentRegistryRuntimeEdge, currentStateLegislatorsEdge, ReaderEdgeOnlyRefusal, refuseDatabaseInEdgeOnlyContext, settleEdgeFirst } from "./runtime-edge.ts";
-import { curatedReaderReadState, primeCuratedReaderProjection, refreshCampaignSitesFromPromoted, refreshCommentAccessFromPromoted } from "../civic-data/curated-reader-read-model.ts";
+import { curatedReaderReadState, primeCuratedReaderProjection, refreshCampaignSitesFromPromoted } from "../civic-data/curated-reader-read-model.ts";
+import { primeCommentAccess, readCommentAccessFacts } from "./comment-access.ts";
 import { CivicDataStoreUnavailableError } from "../civic-data/read-model.ts";
 import { composeRegistration, type RegistrationLayer } from "../registration/compose.ts";
 import { REGISTRATION_TARGETS } from "../registration/publication.ts";
@@ -262,7 +263,7 @@ export async function settleRegistryAuthorityReads(
 
 /** The comment-access rules, edge first. */
 export const settleCommentAccessRead = (): Promise<void> =>
-  settleEdgeFirst(currentCommentAccessEdge, (value, versionId) => primeCuratedReaderProjection("comment-access", value, versionId), refreshCommentAccessFromPromoted, "The comment-access rules");
+  settleEdgeFirst(currentCommentAccessEdge, primeCommentAccess, () => readCommentAccessFacts(), "The comment-access rules");
 
 /** The campaign-site URLs, edge first. */
 const settleCampaignSitesRead = (): Promise<void> =>

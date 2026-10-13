@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { factReader } from "../facts/db.ts";
 import { readFactRosters } from "../facts/roster-read.ts";
+import { readFactCommentAccess } from "../facts/comment-facts.ts";
 import type { Page } from "playwright";
 import type { WorkItem } from "./work-item.ts";
 import type { RoutineDataStore } from "../civic-data/store.ts";
@@ -260,13 +261,16 @@ export async function collectWorkerManualReadback(input: {
   previous: ServedReaderReadback | null;
   zipForDivision: (division: string) => Promise<string | null>;
   observe: (input: PublishedManualRead) => Promise<Awaited<ReturnType<typeof observePublishedManual>>>;
-  currentVersion?: (contractId: "comment-access" | "everyday-routing" | "ballot-navigation") => Promise<string | null>;
+  currentVersion?: (contractId: "everyday-routing" | "ballot-navigation") => Promise<string | null>;
 }): Promise<ServedReaderReadback> {
   const contracts = new Set(["comment-access", "everyday-routing", "ballot-navigation"]);
+  // Comment rules are facts: their published reading names them, with no partition version.
+  const versionOf = (item: WorkItem) => item.autonomousPlan?.publication?.contractId === "comment-access"
+    ? item.publicationOutcome?.workerResultId ?? null : item.publicationOutcome?.acceptedRecordIds?.length ? item.publicationOutcome.versionId ?? null : null;
   const items = input.items.filter(item => item.autonomousPlan?.publication && contracts.has(item.autonomousPlan.publication.contractId) &&
-    item.publicationOutcome?.status !== "HELD" && item.publicationOutcome?.versionId && item.publicationOutcome?.acceptedRecordIds?.length);
+    item.publicationOutcome?.status !== "HELD" && versionOf(item));
   const prior = new Map((input.previous?.witnesses ?? []).filter(w => items.some(item => item.id === w.itemId &&
-    item.publicationOutcome?.workerResultId === w.approvalId && item.publicationOutcome.versionId === w.versionId)).map(w => [w.itemId, w]));
+    item.publicationOutcome?.workerResultId === w.approvalId && versionOf(item) === w.versionId)).map(w => [w.itemId, w]));
   const due = items.filter(item => {
     const old = prior.get(item.id);
     const age = Date.parse(input.now) - Date.parse(old?.checkedAt ?? "");
@@ -275,9 +279,21 @@ export async function collectWorkerManualReadback(input: {
   for (const item of due.slice(0, 6)) {
     const outcome = item.publicationOutcome!;
     const contractId = item.autonomousPlan!.publication!.contractId as "comment-access" | "everyday-routing" | "ballot-navigation";
-    const base = { itemId: item.id, approvalId: outcome.workerResultId, versionId: outcome.versionId!, readerKey: item.autonomousPlan!.publication!.bodyId,
+    const base = { itemId: item.id, approvalId: outcome.workerResultId, versionId: versionOf(item)!, readerKey: item.autonomousPlan!.publication!.bodyId,
       url: PUBLIC_SITE_ORIGIN, checkedAt: input.now, responseSha256: null };
     let witness: ServedReaderWitness = { ...base, state: "NOT_OBSERVED", reason: "Exact accepted records have no current public control readback." };
+    if (contractId === "comment-access") {
+      try {
+        const facts = factReader();
+        const [rule] = facts ? await readFactCommentAccess(facts, [base.readerKey]) : [];
+        const zip = rule?.ocdId ? await input.zipForDivision(rule.ocdId) : null;
+        if (!rule || !zip) throw Error("PUBLIC_DESTINATION_UNRESOLVED");
+        const seen = await input.observe({ kind: "comment-access", record: rule, zip });
+        witness = { ...base, state: seen.confirmed ? "CONFIRMED" : "NOT_OBSERVED", reason: seen.reason, responseSha256: seen.responseSha256 };
+      } catch { witness = { ...witness, reason: "The body's live comment rules or their public destination could not be established." }; }
+      prior.set(item.id, witness);
+      continue;
+    }
     try {
       const currentVersion = input.currentVersion ? await input.currentVersion(contractId) : await (async () => {
         const contract = requiredManualProductionContract(contractId);
@@ -293,11 +309,7 @@ export async function collectWorkerManualReadback(input: {
       const seen: { confirmed: boolean; reason: string; responseSha256: string | null }[] = [];
       for (const row of rows) {
         let visit: PublishedManualRead | null = null;
-        if (contractId === "comment-access") {
-          const rule = row as unknown as CommentAccess;
-          const zip = rule.ocdId ? await input.zipForDivision(rule.ocdId) : null;
-          if (rule.bodyId === base.readerKey && zip) visit = { kind: "comment-access", record: rule, zip };
-        } else if (contractId === "everyday-routing") {
+        if (contractId === "everyday-routing") {
           const contact = row as unknown as EverydayRoutingContactRecord;
           if (contact.kind === "CONTACT" && contact.contact?.verification === "PAGE_FETCHED" && /^\d{5}$/.test(contact.zip))
             visit = { kind: "everyday-routing", record: contact, zip: contact.zip };

@@ -4,7 +4,7 @@ import type { AcquirerTaskSpec, ObservedResearchRoute } from "./research-types.t
 import { scheduleObligation, type FreshnessObligation } from "../scheduler/obligation.ts";
 import type { AcquirerResult } from "./research-types.ts";
 import type { Jurisdiction, JurisdictionSource } from "../../hunt/jurisdiction-universe.ts";
-import type { WorkerReaderContract } from "../../civic-data/worker-reader-contracts.ts";
+import type { COMMENT_RULE_PUBLICATION, WorkerReaderContract } from "../../civic-data/worker-reader-contracts.ts";
 import { missionPartOf } from "../expansion/mission-parts.ts";
 
 /** The mission part a plan's record class starts in; omitted when no part takes it. */
@@ -137,7 +137,7 @@ export interface AutonomousWorkPlan {
   readonly ownerInstructions?: readonly string[];
   /** Existing reader door selected by the system's exact body join, never by a model. */
   readonly publication?:
-    { readonly contractId: "registry-runtime-bindings" | WorkerReaderContract | "campaign-finance" | "special-district-boundaries"; readonly bodyId: string };
+    { readonly contractId: "registry-runtime-bindings" | typeof COMMENT_RULE_PUBLICATION | WorkerReaderContract | "campaign-finance" | "special-district-boundaries"; readonly bodyId: string };
   readonly freshness?: Pick<FreshnessObligation,"readerImpactAt"|"observedChangeRateHours"|"declaredCycleHours">;
   readonly version: 1;
   readonly contract: CivicExtractionContract;

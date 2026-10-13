@@ -16,8 +16,8 @@ import {
 import { resolveReaderArtifactWriteStore, type ReaderArtifactStore } from "../meetings/edge-store.ts";
 import type { AuthorityFamily } from "../meetings/edge-artifacts.ts";
 import type { RoutineRecordClass, PromotedPointerIdentity } from "./types.ts";
-import { refreshCommentAccessFromPromoted, readCuratedReaderProjection } from "./curated-reader-read-model.ts";
-import { currentCommentAccess } from "../registry/comment-access.ts";
+import { readCuratedReaderProjection } from "./curated-reader-read-model.ts";
+import { currentCommentAccess, readCommentAccessFacts } from "../registry/comment-access.ts";
 import { readEverydayRoutingProjection } from "../routing/everyday-data-plane.ts";
 import { readRegistryRuntimeProjection } from "../registry/runtime-read-model.ts";
 import { REGISTRY_RUNTIME_SCOPE, type RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
@@ -76,7 +76,6 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
     "campaign-sites": [manual("campaign-sites")],
     "state-legislators": STATE_PEOPLE_JURISDICTIONS.flatMap(jurisdiction => statePeopleSourceScopes(jurisdiction).map(scope => ({ recordClass: "STATE_LEGISLATOR" as const, scope }))),
     "meeting-outcomes": [PIMA_LEGISTAR_OUTCOMES_CONTRACT, MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT, ...DOOR_OUTCOME_POINTERS],
-    "comment-access": [manual("comment-access")],
   };
   const refreshes = (family: keyof typeof specialPointers) => specialPointers[family].some(pointer => owns(pointer.recordClass, pointer.scope));
   const pointerFamilies = Object.fromEntries(Object.entries(promotedEdgePointers()).filter(([, pointers]) => pointers.some(pointer => owns(pointer.recordClass, pointer.scope)))) as ReturnType<typeof promotedEdgePointers>;
@@ -100,7 +99,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
       }
       const grouped = new Map<RoutineRecordClass, Set<string>>();
       for (const pointer of [...Object.values(specialPointers).flat().filter(pointer => owns(pointer.recordClass, pointer.scope)), ...Object.values(pointerFamilies).flat(),
-        ...[manual("comment-access"), manual("everyday-routing")].filter(pointer => owns(pointer.recordClass, pointer.scope)),
+        ...[manual("everyday-routing")].filter(pointer => owns(pointer.recordClass, pointer.scope)),
         ...(selected === null || selected.some(pointer => pointer.recordClass === "REGISTRATION") ? REGISTRATION_SCOPES.map(scope => ({ recordClass: "REGISTRATION" as const, scope })) : [])]) {
         const scopes = grouped.get(pointer.recordClass) ?? new Set<string>();
         scopes.add(pointer.scope); grouped.set(pointer.recordClass, scopes);
@@ -138,25 +137,30 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
       const extras: { commentAccess?: readonly unknown[]; everydayRouting?: unknown; versionIds: Partial<Record<"comment-access" | "everyday-routing", string | null>> } = {
         commentAccess: servedManifest?.commentAccess, everydayRouting: servedManifest?.everydayRouting, versionIds: { ...servedManifest?.extrasVersionIds },
       };
-      for (const id of ["comment-access", "everyday-routing"] as const) {
-        const contract = manual(id);
-        if (!owns(contract.recordClass, contract.scope)) continue;
-        try {
-          const versionId = (await store.readPromotionIdentity(contract.recordClass, contract.scope))?.versionId ?? null;
-          if (servedManifest?.extrasVersionIds?.[id] === versionId) continue;
-          if (id === "comment-access") {
-            await refreshCommentAccessFromPromoted({ store, now: observedAt, bypassCache: true });
-            extras.commentAccess = currentCommentAccess();
-          } else {
-            const routing = await readEverydayRoutingProjection({ store, now: observedAt, bypassCache: true });
-            if (routing.kind !== "PROMOTED" && routing.kind !== "NOT_RECORDED") throw new Error("everyday routing read " + routing.kind);
-            extras.everydayRouting = routing.kind === "PROMOTED" ? routing.value : null;
-          }
-          extras.versionIds[id] = versionId;
-        } catch (error) {
-          failed = true;
-          console.error("READER_EDGE_EXTRAS_SKIPPED: " + safeFailure(sanitizedErrorDiagnostic(error)));
+      const facts = await factsVersion(factReader()).catch(() => null);
+      let comments: Awaited<ReturnType<typeof readCommentAccessFacts>> | null = null;
+      try {
+        if (facts !== null && servedManifest?.extrasVersionIds?.["comment-access"] !== facts) {
+          comments = await readCommentAccessFacts();
+          extras.commentAccess = currentCommentAccess();
+          extras.versionIds["comment-access"] = comments.versionId;
         }
+      } catch (error) {
+        failed = true;
+        console.error("READER_EDGE_EXTRAS_SKIPPED: " + safeFailure(sanitizedErrorDiagnostic(error)));
+      }
+      const routingContract = manual("everyday-routing");
+      if (owns(routingContract.recordClass, routingContract.scope)) try {
+        const versionId = (await store.readPromotionIdentity(routingContract.recordClass, routingContract.scope))?.versionId ?? null;
+        if (servedManifest?.extrasVersionIds?.["everyday-routing"] !== versionId) {
+          const routing = await readEverydayRoutingProjection({ store, now: observedAt, bypassCache: true });
+          if (routing.kind !== "PROMOTED" && routing.kind !== "NOT_RECORDED") throw new Error("everyday routing read " + routing.kind);
+          extras.everydayRouting = routing.kind === "PROMOTED" ? routing.value : null;
+          extras.versionIds["everyday-routing"] = versionId;
+        }
+      } catch (error) {
+        failed = true;
+        console.error("READER_EDGE_EXTRAS_SKIPPED: " + safeFailure(sanitizedErrorDiagnostic(error)));
       }
             // A family whose pointer is still the version the edge serves carries its artifact forward unread.
       const servedIfCurrent = async (family: AuthorityFamily, currentVersion: () => Promise<string | null>): Promise<string | null> => {
@@ -186,7 +190,6 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
       });
       if (refreshes("registry-runtime")) try {
         // Members are facts, so the family changes when the partition or any fact does.
-        const facts = await factsVersion(factReader());
         const pointer = manualPointer("registry-runtime-bindings");
         const carried = await servedIfCurrent("registry-runtime", async () => { const at = await pointer(); return at && `${at}+${facts}`; });
         if (carried !== null) authority["registry-runtime"] = { versionId: carried, carried: true };
@@ -295,13 +298,11 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
         failed = true;
         process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: meeting-outcomes ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
       }
-      if (refreshes("comment-access")) try {
-        const carried = await servedIfCurrent("comment-access", manualPointer("comment-access"));
-        if (carried !== null) authority["comment-access"] = { versionId: carried, carried: true };
+      if (facts !== null) try {
+        if (servedAuthorityVersion(servedManifest, "comment-access") === facts) authority["comment-access"] = { versionId: facts, carried: true };
         else {
-          const ca = await readCuratedReaderProjection("comment-access", { store, now: observedAt, bypassCache: true });
-          if (ca.kind === "PROMOTED" && ca.metadata.versionId) authority["comment-access"] = { value: ca.value, versionId: ca.metadata.versionId };
-          else if (ca.kind !== "NOT_RECORDED") throw new Error(`comment-access read ${ca.kind}`);
+          const read = comments ?? await readCommentAccessFacts();
+          authority["comment-access"] = { value: read.value, versionId: read.versionId };
         }
       } catch (error) {
         failed = true;

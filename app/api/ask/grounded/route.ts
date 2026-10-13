@@ -13,6 +13,7 @@ import type { Meeting } from "@/lib/sources/types";
 import type { AskSitting } from "@/lib/ask/answer";
 import { type AgendaDocumentLike } from "@/lib/routing/agenda-search";
 import { seatHolderById, settleCommentAccessRead, settleFederalDirectoryRead, settleRegistryAuthorityReads } from "@/lib/registry/server";
+import { readCommentAccessFacts } from "@/lib/registry/comment-access";
 import { officialIdsForCandidacy } from "@/lib/funding/campaign-money";
 import { canonicalOfficialAliases } from "@/lib/ask/official-identity";
 import {
@@ -102,9 +103,6 @@ import {
   settleCandidateProfilesRead,
 } from "@/lib/civic-data/manual-read-models";
 import { promotedVersionOrThrow } from "@/lib/civic-data/read-model";
-import {
-  refreshCommentAccessFromPromoted,
-} from "@/lib/civic-data/curated-reader-read-model";
 import { settleOfficeholderStatementsRead } from "@/lib/corpus/data-plane";
 import {
   absencesForDivisions,
@@ -532,7 +530,7 @@ async function answerWithSettings(request: Request) {
     // Public-comment rules are an independent optional family. Initialize its
     // pointer, but do not let a store outage suppress meetings, ballots,
     // officials, or any other source's answer.
-    ? timed("commentAccess", () => refreshCommentAccessFromPromoted().catch(() => undefined))()
+    ? timed("commentAccess", () => readCommentAccessFacts().catch(() => undefined))()
     : null;
   let authorityEdge: ReaderAuthorityEdgeBundle | null = null;
   if (edgeManifest?.authorityArtifacts) {

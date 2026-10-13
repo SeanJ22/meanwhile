@@ -2,7 +2,7 @@ import { requiredManualProductionContract } from "./manual-contracts.ts";
 import type { RoutineSourceTask } from "./runner.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
 import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
-import { isWorkerReaderContract } from "./worker-reader-contracts.ts";
+import { COMMENT_RULE_PUBLICATION, isWorkerReaderContract } from "./worker-reader-contracts.ts";
 import { auditPull, latestParserResult } from "./worker-publication-evidence.ts";
 import type { RoutineDataStore } from "./store.ts";
 import { ZERO_RELEASE_EVENTS } from "./release.ts";
@@ -18,8 +18,10 @@ export type WorkerPublicationItem = Pick<WorkItem, "id"> & {
   };
 };
 
-const isRoster = (item: WorkerPublicationItem) => item.autonomousPlan?.publication?.contractId === "registry-runtime-bindings" &&
-  item.autonomousPlan.contract.recordClass === "OFFICIAL_ROSTER";
+/** The classes that publish as facts in the runner's own pass rather than through a contract's command. */
+const factClass = (item: WorkerPublicationItem): "rosters" | "comments" | null =>
+  item.autonomousPlan?.publication?.contractId === "registry-runtime-bindings" && item.autonomousPlan.contract.recordClass === "OFFICIAL_ROSTER" ? "rosters"
+    : item.autonomousPlan?.publication?.contractId === COMMENT_RULE_PUBLICATION ? "comments" : null;
 
 /** Work items whose newest extraction or saved page has not been published yet. */
 export function owedPublications(items: readonly WorkerPublicationItem[], results: readonly WorkerResultRecord[], now: string): { readonly item: WorkerPublicationItem; readonly requestedAt: string }[] {
@@ -57,14 +59,15 @@ export function owedPublications(items: readonly WorkerPublicationItem[], result
   });
 }
 
-/** Rosters publish as facts in the runner's own pass; every other owed publication runs as its contract's command. */
-export function owedRosterItems(items: readonly WorkerPublicationItem[], results: readonly WorkerResultRecord[], now: string): readonly string[] {
-  return owedPublications(items.filter(isRoster), results, now).map(({ item }) => item.id);
+export function owedFactItems(items: readonly WorkerPublicationItem[], results: readonly WorkerResultRecord[], now: string): { rosters: string[]; comments: string[] } {
+  const owed = { rosters: [] as string[], comments: [] as string[] };
+  for (const { item } of owedPublications(items.filter(item => factClass(item) !== null), results, now)) owed[factClass(item)!].push(item.id);
+  return owed;
 }
 
 export function workerPublicationTasks(items: readonly WorkerPublicationItem[], results: readonly WorkerResultRecord[], now: string): RoutineSourceTask[] {
-  return owedPublications(items.filter(item => !isRoster(item)), results, now).map(({ item, requestedAt }) => {
-    const id = item.autonomousPlan!.publication!.contractId;
+  return owedPublications(items.filter(item => factClass(item) === null), results, now).map(({ item, requestedAt }) => {
+    const id = item.autonomousPlan!.publication!.contractId as Exclude<NonNullable<NonNullable<WorkerPublicationItem["autonomousPlan"]>["publication"]>["contractId"], typeof COMMENT_RULE_PUBLICATION>;
     const contract = requiredManualProductionContract(id);
     const taskId = `worker-publication:${contract.id}:${item.id}`;
     return { id: taskId, registeredContractId: contract.id, sourceId: contract.sourceId, recordClass: contract.recordClass, scope: contract.scope,

@@ -33,7 +33,6 @@ const RULES = {
   "prl-archives": { mode: "DIRECT_SOURCE", reason: "The known licensed PRL datasets refresh through the shared service; completed native-person partitions serve every place." },
   "az-official-actions": { mode: "REVIEWED_INPUT", state: "AZ", reason: "Promotion requires a reviewed action projection, exact source-set receipt and source-through argument." },
   "official-filings": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker output publishes once it meets the section 3 standard; audits run afterward and repair what they find." },
-  "comment-access": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker output publishes once it meets the section 3 standard; audits run afterward and repair what they find." },
   stances: { mode: "VERIFIED_WORKER_RESULT", reason: "A quote the saved page holds, with its date and topic, publishes once it meets the section 3 standard; audits run afterward and repair what they find." },
   "ballot-navigation": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker output publishes once it meets the section 3 standard; audits run afterward and repair what they find." },
   "campaign-sites": { mode: "EXISTING_DERIVED", reason: "The separate derived campaign-site routine verifies current publications and promotes its reader projection." },

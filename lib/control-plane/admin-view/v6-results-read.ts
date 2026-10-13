@@ -40,7 +40,7 @@ export interface AdminV6Result {
 const NONE = "—";
 const STATE_CODES: ReadonlySet<string> = new Set(US_STATES.map((s) => s.code.toLowerCase()));
 
-export const PIPELINE_STAGE_ORDER = ["SCOUTED", "CONFIRMED", "VERIFIED", "AUDITED", "APPROVED_FOR_PROMOTION"] as const;
+export const PIPELINE_STAGE_ORDER = ["SCOUTED", "VERIFIED", "APPROVED_FOR_PROMOTION"] as const;
 export type PipelineStageName = (typeof PIPELINE_STAGE_ORDER)[number];
 
 const SNAPSHOT_ARRAY = (path: string) => `CASE WHEN jsonb_typeof(${path}) = 'array' THEN ${path} ELSE '[]'::jsonb END`;
@@ -133,11 +133,11 @@ const num = (k: number) => k.toLocaleString("en-US");
 const of = (k: number, n: number) => `${num(k)} of ${num(n)}`;
 
 interface ClassTally {
-  n: number; atScouted: number; atConfirmed: number; atVerified: number; atAudited: number; approved: number;
+  n: number; atScouted: number; atVerified: number; approved: number;
   fresh: number; stale: number; notObserved: number; unread: number;
   approvedAt: string | null; checkedAt: string | null; url: string | null;
 }
-const emptyTally = (): ClassTally => ({ n: 0, atScouted: 0, atConfirmed: 0, atVerified: 0, atAudited: 0, approved: 0, fresh: 0, stale: 0, notObserved: 0, unread: 0, approvedAt: null, checkedAt: null, url: null });
+const emptyTally = (): ClassTally => ({ n: 0, atScouted: 0, atVerified: 0, approved: 0, fresh: 0, stale: 0, notObserved: 0, unread: 0, approvedAt: null, checkedAt: null, url: null });
 const later = (a: string | null, b: string | null) => (a === null ? b : b === null ? a : a >= b ? a : b);
 
 export function pipelineResults(read: PipelineRead, scopeKey: string, scope: V6PlaceScope): readonly AdminV6Result[] {
@@ -149,9 +149,7 @@ export function pipelineResults(read: PipelineRead, scopeKey: string, scope: V6P
     const t = tally(r.recordClass);
     t.n += r.n;
     if (r.stage === "SCOUTED") t.atScouted += r.n;
-    else if (r.stage === "CONFIRMED") t.atConfirmed += r.n;
     else if (r.stage === "VERIFIED") t.atVerified += r.n;
-    else if (r.stage === "AUDITED") t.atAudited += r.n;
     else t.approved += r.n;
   }
   for (const r of read.approved) {
@@ -168,13 +166,12 @@ export function pipelineResults(read: PipelineRead, scopeKey: string, scope: V6P
     t.url = t.url === null && r.witness === "CONFIRMED_FRESH" ? r.url : t.url;
   }
   const out = [...by.entries()].map(([rc, t]): AdminV6Result => {
-    const saved = t.atConfirmed + t.atVerified + t.atAudited + t.approved;
-    const checked = t.atVerified + t.atAudited + t.approved;
+    const checked = t.atVerified + t.approved;
     const seen = t.fresh;
     const stage6: ResultMark = t.approved === 0 ? "waiting" : seen >= t.approved ? "done" : seen > 0 ? "partial" : t.notObserved > 0 ? "wrong" : "reported";
     const stages: readonly ResultMark[] = [
       "done",
-      share(saved, t.n, "unreported"),
+      share(checked, t.n, "unreported"),
       share(checked, t.n, "unreported"),
       share(checked, t.n, "not-yet"),
       share(t.approved, t.n, "not-yet"),
@@ -183,7 +180,7 @@ export function pipelineResults(read: PipelineRead, scopeKey: string, scope: V6P
     const url = t.url !== null && t.url.startsWith(`${PUBLIC_SITE_ORIGIN}/`) ? t.url : null;
     const trail: readonly AdminV6ResultStage[] = [
       { name: RESULT_STAGE_NAMES[0], mark: stages[0], when: NONE, what: `${num(t.n)} items` },
-      { name: RESULT_STAGE_NAMES[1], mark: stages[1], when: NONE, what: saved > 0 ? `${of(saved, t.n)} with a saved copy` : NONE },
+      { name: RESULT_STAGE_NAMES[1], mark: stages[1], when: NONE, what: checked > 0 ? `${of(checked, t.n)} with a saved copy` : NONE },
       { name: RESULT_STAGE_NAMES[2], mark: stages[2], when: NONE, what: checked > 0 ? `${of(checked, t.n)}` : NONE },
       { name: RESULT_STAGE_NAMES[3], mark: stages[3], when: NONE, what: of(checked, t.n) },
       { name: RESULT_STAGE_NAMES[4], mark: stages[4], when: t.approvedAt ?? NONE, what: of(t.approved, t.n) },

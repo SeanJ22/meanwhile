@@ -1,5 +1,4 @@
 import { formatDateLong } from "../text/format-date.ts";
-import { asksForPersonalStance } from "./stance-answerability.ts";
 import type { EvidenceRecord, EvidenceSubject } from "./evidence.ts";
 
 const MAX_PASSAGES = 3;
@@ -7,6 +6,13 @@ const MAX_PASSAGES = 3;
 const PAGE_FURNITURE = /\b(?:read more|press releases?|skip to|menu|subscribe|sign up|share this|all rights reserved|privacy policy|view all|learn more|click here|back to top)\b/i;
 const MONTH_DATE = /\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\.? \d{1,2},? \d{4}\b/i;
 const TITLE_ABBREVIATION_END = /\b(?:rep|sen|dr|mr|mrs|ms|gov|hon|st|jr|sr|no)\.$/i;
+
+function asksForPersonalStance(question: string): boolean {
+  const pageQuestion = /\b(?:page|site|website|document|article)\s+(?:say|says|said|read|reads|contain|contains)\b/i.test(question);
+  const personalClaim = /\b(?:believ(?:e|es|ed)|think|thinks|thought|support(?:s|ed|ing)?|oppos(?:e|es|ed|ing)|stance|positions?|views?)\b/i.test(question);
+  if (pageQuestion && !personalClaim) return false;
+  return /\b(?:say|says|said|stated|believ(?:e|es|ed)|think|thinks|thought|support(?:s|ed|ing)?|oppos(?:e|es|ed|ing)|stance|positions?|views?)\b/i.test(question);
+}
 
 export function readsAsSpokenSentence(quote: string): boolean {
   const text = quote.trim();

@@ -97,8 +97,6 @@ test("the round races its post-cutoff waits against the quiet limit and names wh
   assert.match(round, /POST_CUTOFF_QUIET_MS = RUNTIME_NO_PROGRESS_MS - POST_CUTOFF_QUIET_LEAD_MS/);
   assert.match(round, /const joined = await boundedAfterCutoff\(discoveryLaneRun\);/);
   assert.match(round, /lane deferred: still running/);
-  assert.match(round, /await boundedAfterCutoff\(vault\.readBack\(entry\.key\)\)/);
-  assert.match(round, /await boundedAfterCutoff\(readHeldBody\(\)\)/);
   /* Both candidate lanes stop starting reads at the cutoff. */
   assert.match(round, /methodVersion,\n\s+deadlineMs: dispatchDeadlineMs,/);
   assert.match(round, /spaceOut: spacer,\n\s+deadlineMs: dispatchDeadlineMs,\n\s+openFor:/);

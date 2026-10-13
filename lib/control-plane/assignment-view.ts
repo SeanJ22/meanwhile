@@ -1483,7 +1483,7 @@ function parsingOf(g: Gathered, clips: Clips): AssignmentParsing {
 }
 
 function verificationOf(g: Gathered, src: AssignmentSources, clips: Clips): AssignmentVerification {
-  const furthest: Record<PipelineStage, number> = { SCOUTED: 0, CONFIRMED: 0, VERIFIED: 0, AUDITED: 0, APPROVED_FOR_PROMOTION: 0 };
+  const furthest: Record<PipelineStage, number> = { SCOUTED: 0, VERIFIED: 0, APPROVED_FOR_PROMOTION: 0 };
   const rejections: AssignmentRejection[] = [];
   let passed = 0;
   let rejected = 0;

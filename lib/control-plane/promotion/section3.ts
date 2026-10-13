@@ -49,9 +49,11 @@ export const SECTION3_MINIMUMS: Readonly<Record<string, readonly string[]>> = {
 export const SECTION3_LABEL_FIELDS: readonly string[] = ["bodyClass", "coverage", "kind", "contactKind", "topicId", "commentPeriod", "state", "sourceKind"];
 
 /** Judgment calls: the only fields that need a second, independent source. */
-export const SECOND_SOURCE_FIELDS: readonly string[] = ["photoUrl", "portrait", "statementSummary", "positionSummary"];
-/** Judgment calls as whole records: portraits, statement summaries, one person matched across sources. */
-export const SECOND_SOURCE_RECORD_CLASSES: readonly string[] = ["OFFICIAL_PORTRAIT", "STATEMENT_SUMMARY", "POSITION_SUMMARY", "CROSS_SOURCE_IDENTITY"];
+export const SECOND_SOURCE_FIELDS: readonly string[] = ["photoUrl", "portrait"];
+/** Judgment calls as whole records: portraits, one person matched across sources. */
+export const SECOND_SOURCE_RECORD_CLASSES: readonly string[] = ["OFFICIAL_PORTRAIT", "CROSS_SOURCE_IDENTITY"];
+/** An AI summary of a stance passes with the quote it summarizes, whose page Sources links. */
+const STANCE_SUMMARY_FIELDS: readonly string[] = ["statementSummary", "positionSummary"];
 
 export function needsSecondSource(contract: { readonly recordClass: string; readonly requiredFields?: readonly string[]; readonly portraitBasis?: "OWN_PAGE" | "TWO_SOURCES" }): boolean {
   return (SECOND_SOURCE_RECORD_CLASSES.includes(contract.recordClass) && !(contract.recordClass === "OFFICIAL_PORTRAIT" && contract.portraitBasis === "OWN_PAGE")) ||
@@ -215,11 +217,12 @@ export function section3Record(input: {
   const words = pageWords(recordText);
   const verified = new Set<string>();
   for (const field of present) {
-    if (SECOND_SOURCE_FIELDS.includes(field) || input.derived?.[field]) continue;
+    if (SECOND_SOURCE_FIELDS.includes(field) || STANCE_SUMMARY_FIELDS.includes(field) || input.derived?.[field]) continue;
     if (SECTION3_LABEL_FIELDS.includes(field)) { verified.add(field); continue; }
     if (valueOnPage(input.fields[field], recordText, words)) verified.add(field);
   }
   for (const [field, from] of Object.entries(input.derived ?? {})) if (present.includes(field) && verified.has(from)) verified.add(field);
+  for (const field of STANCE_SUMMARY_FIELDS) if (present.includes(field) && verified.has("quote")) verified.add(field);
   if (page.kind === "OTHER") {
     const citations = (input.page.citations ?? []).filter(citation => citation.url !== input.page.url && pageLinksTo(input.page, citation.url) &&
       section3Page({ ...citation, sourcePolicy: input.page.sourcePolicy, citations: [] }, input.recordClass, input.now).ok);

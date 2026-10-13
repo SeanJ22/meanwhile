@@ -768,7 +768,7 @@ the wall across four rungs.
 2026-09-25.** Beside `license` and `results` sit `page`, `pages` and `query`;
 each result carries `url`, `title`, `description`, `quality`, `format`,
 `resultsFromDomain` and `details`. `normalizeMarginaliaSearch`
-(`lib/control-plane/scheduler/promotion-tail.ts`) keeps only `url`, `title`,
+(`lib/control-plane/promotion/campaign-site-chain.ts`) keeps only `url`, `title`,
 `format` and rank, as POINTER leads — never the licensed `description` — and
 names an empty `results` a NO_HIT rather than a failed normalization. Of the
 326 held candidate answers (4,647 results, none empty), 12 carry a lead whose

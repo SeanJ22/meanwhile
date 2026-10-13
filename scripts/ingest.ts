@@ -122,8 +122,7 @@ import {
   derivedFamilyFailedCandidate,
   type FamilyMemberRead,
 } from "../lib/civic-data/derived-meeting-family.ts";
-import { retainMeetingFetchBytes, retainMeetingCandidateEvidence, readMeetingResearchWitness,
-  type RetainedSourceResponse, type ApprovedResearchMeetingPartition } from "../lib/civic-data/meeting-research-evidence.ts";
+import { retainMeetingFetchBytes, retainMeetingCandidateEvidence, type RetainedSourceResponse } from "../lib/civic-data/retained-meeting-bytes.ts";
 
 /*
  * The committed registry, read the same way lib/registry/server.ts reads it:
@@ -1599,13 +1598,6 @@ export interface MeetingPartitionPromotionResult {
   readonly outcome: PromotionOutcome;
 }
 
-/** The routine partition child reads research; only its existing production door writes. */
-async function standingResearchMeetingIntake(partition: MeetingPartitionContract, previous: MeetingsSnapshot | null, now: string, observed: MeetingsSnapshot) {
-  if (!previous || Date.parse(now) - Date.parse(previous.generatedAt) > 24 * 3_600_000) return null;
-  const activationReceipt = await readMeetingResearchWitness(partition, observed);
-  return activationReceipt ? { snapshot: previous, activationReceipt } : null;
-}
-
 export async function promoteMeetingPartitions(input: {
   readonly store: RoutineDataStore;
   readonly partitions: readonly MeetingPartitionContract[];
@@ -1614,39 +1606,11 @@ export async function promoteMeetingPartitions(input: {
   readonly reports: NonNullable<CompositeSource["lastReport"]>["children"];
   readonly generatedAt: string;
   readonly previousByContract?: ReadonlyMap<string, MeetingsSnapshot | null>;
-  readonly researchIntake?: (partition: MeetingPartitionContract, current: MeetingsSnapshot | null, now: string, observed: MeetingsSnapshot) => Promise<ApprovedResearchMeetingPartition | null>;
   readonly retainedResponses?: readonly RetainedSourceResponse[];
   /** Test seam for the Census geocoder; production uses the global fetch. */
   readonly venueFetch?: typeof fetch;
 }): Promise<readonly MeetingPartitionPromotionResult[]> {
   const results: MeetingPartitionPromotionResult[] = [];
-  const intake = input.researchIntake ?? (input.store instanceof PostgresRoutineDataStore ? standingResearchMeetingIntake : undefined);
-  const offerResearch = async (partition: MeetingPartitionContract, current: MeetingsSnapshot, observed: MeetingsSnapshot): Promise<MeetingPartitionPromotionResult | null> => {
-    if (!intake) return null;
-    try {
-      const research = await intake(partition, current, input.generatedAt, observed);
-      if (!research) return null;
-      const covered = new Set(research.activationReceipt.coveredMeetingIds);
-      if (research.activationReceipt.evidenceScope !== "CURRENT_CAPTURE_MEETING_FACTS" ||
-          research.activationReceipt.partitionId !== partition.id || covered.size !== observed.meetings.length ||
-          observed.meetings.some(meeting => !covered.has(meeting.id)) ||
-          research.activationReceipt.approvedFactCount !== observed.meetings.reduce((count, meeting) => count + 1 + Number(Boolean(meeting.agendaUrl)), 0)) {
-        throw new Error("RESEARCH_MEETING_CAPTURE_SCOPE_MISMATCH");
-      }
-      // Approval covers current acquired facts. Carried rows and richer routine
-      // fields keep the authority of the just-validated complete partition.
-      const base = candidateForMeetingPartition(partition, current);
-      const receipt = JSON.stringify(research.activationReceipt);
-      const candidate: RoutineCandidate = { ...base, id: `${base.id}-research-${sha256(receipt).slice(0, 16)}`,
-        dependentChecks: [...base.dependentChecks, { consumer: research.activationReceipt.kind, passed: true, detail: receipt }] };
-      const outcome = await processRegisteredMeetingPartitionCandidate(input.store, partition.id, candidate, input.generatedAt);
-      printMeetingPartitionReceipt(partition, candidate, outcome, outcome.candidate.failureDetail);
-      return { partition, candidate, outcome };
-    } catch (error) {
-      console.error(`Research meeting intake refused for ${partition.id}: ${error instanceof Error ? error.message : String(error)}`);
-      return null;
-    }
-  };
   for (const partition of input.partitions) {
     const report = input.reports.find((candidate) => candidate.source === partition.meetingSource);
     if (!report || !report.ok) {
@@ -1754,7 +1718,7 @@ export async function promoteMeetingPartitions(input: {
         recurrence.held,
         idSuffix,
       );
-      return { reconciled, snapshot, candidate, outcome, census };
+      return { reconciled, candidate, outcome, census };
     };
     let attempted = await attempt(history.moved);
     // DB-06's safety net: a partition that is refused while sittings are moving to history must not stop its fresh
@@ -1764,20 +1728,15 @@ export async function promoteMeetingPartitions(input: {
       console.warn(`  ${partition.id}: refused while sittings were moving to history (${attempted.outcome.candidate.failureDetail ?? attempted.outcome.candidate.state}); promoting again with every sitting kept`);
       attempted = await attempt(new Map(), "-kept");
     }
-    const { snapshot, candidate, outcome } = attempted;
+    const { candidate, outcome } = attempted;
     printMeetingPartitionReceipt(
       partition,
       candidate,
       outcome,
       outcome.promoted ? null : outcome.candidate.failureDetail,
     );
-    // The exact-byte re-observation supplies current freshness to retained
-    // independent reviews. Its separate durable witness may certify no change.
-    const observed: MeetingsSnapshot = { ...snapshot, meetings: [...freshRows], agendaDocuments: [...freshDocuments],
-      counts: snapshotCounts(freshRows, 0) };
     if (outcome.promoted || outcome.confirmed) await publishVenuePins(input.store, partition.id, attempted.census?.package ?? null);
-    const research = outcome.promoted ? await offerResearch(partition, snapshot, observed) : null;
-    results.push(research ?? { partition, candidate, outcome });
+    results.push({ partition, candidate, outcome });
   }
   return results;
 }

@@ -122,7 +122,15 @@ import {
   derivedFamilyFailedCandidate,
   type FamilyMemberRead,
 } from "../lib/civic-data/derived-meeting-family.ts";
-import { retainMeetingFetchBytes, retainMeetingCandidateEvidence, type RetainedSourceResponse } from "../lib/civic-data/retained-meeting-bytes.ts";
+import { retainMeetingFetchBytes, retainMeetingCandidateEvidence, tracedResponses, type RetainedSourceResponse } from "../lib/civic-data/retained-meeting-bytes.ts";
+import { publishReadMeetingFacts } from "../lib/civic-data/meeting-fact-publication.ts";
+import { readerFactDb } from "../lib/facts/db.ts";
+import { factClocks } from "../lib/facts/clocks.ts";
+import type { FactDb, Query } from "../lib/facts/publish.ts";
+import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
+import type { EvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
+import { join } from "node:path";
 
 /*
  * The committed registry, read the same way lib/registry/server.ts reads it:
@@ -916,9 +924,10 @@ async function main() {
     startsBefore: new Date(
       now + MEETING_HELD_HORIZON_DAYS * 86_400_000,
     ).toISOString(),
-  }), "legistar", value => {
-    const url = new URL(value);
-    return url.protocol === "https:" && url.hostname === "webapi.legistar.com" && partitions.some(partition =>
+  }));
+  const workerResponses = retained.responses.filter(response => {
+    const url = new URL(response.finalUrl);
+    return url.hostname === "webapi.legistar.com" && partitions.some(partition =>
       partition.meetingSource === "legistar" && url.pathname.toLowerCase() === `/v1/${partition.wiring?.config.slug}/events`);
   });
   const raw = retained.value;
@@ -1017,6 +1026,7 @@ async function main() {
       previous,
       promotionStore,
       partitions,
+      workerResponses,
       retained.responses,
     );
     for (const refusal of retained.refusals) console.error(refusal);
@@ -1592,6 +1602,18 @@ export function printMeetingPartitionReceipt(
   }));
 }
 
+/** The fresh sittings a promoted partition read become facts; a failure here never holds the partition. */
+async function publishPartitionFacts(facts: NonNullable<Parameters<typeof promoteMeetingPartitions>[0]["facts"]>, partition: MeetingPartitionContract,
+  meetings: readonly Meeting[], acquisitions: NonNullable<MeetingsSnapshot["sources"][number]["acquisitions"]>, producedBy: string, at: string): Promise<void> {
+  try {
+    const responses = tracedResponses({ sources: [{ source: partition.meetingSource, acquisitions } as MeetingsSnapshot["sources"][number]] }, facts.responses);
+    const report = await publishReadMeetingFacts({ facts: facts.db, vault: facts.vault, meetings, responses, producedBy, clocks: factClocks(null), now: new Date(at) });
+    console.log(`  ${partition.id}: facts ${report.live} new, ${report.confirmed} confirmed, ${report.blanks} blank${report.unsaved.length ? `; unsaved ${report.unsaved.join("; ")}` : ""}`);
+  } catch (error) {
+    console.error(`MEETING_FACTS_FAILED ${partition.id}: ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+
 export interface MeetingPartitionPromotionResult {
   readonly partition: MeetingPartitionContract;
   readonly candidate: RoutineCandidate;
@@ -1607,6 +1629,8 @@ export async function promoteMeetingPartitions(input: {
   readonly generatedAt: string;
   readonly previousByContract?: ReadonlyMap<string, MeetingsSnapshot | null>;
   readonly retainedResponses?: readonly RetainedSourceResponse[];
+  /** Where the sittings each door read become facts, on every response the read made. */
+  readonly facts?: { readonly db: FactDb & { readonly query: Query }; readonly vault: EvidenceStore; readonly responses: readonly RetainedSourceResponse[] };
   /** Test seam for the Census geocoder; production uses the global fetch. */
   readonly venueFetch?: typeof fetch;
 }): Promise<readonly MeetingPartitionPromotionResult[]> {
@@ -1735,7 +1759,10 @@ export async function promoteMeetingPartitions(input: {
       outcome,
       outcome.promoted ? null : outcome.candidate.failureDetail,
     );
-    if (outcome.promoted || outcome.confirmed) await publishVenuePins(input.store, partition.id, attempted.census?.package ?? null);
+    if (outcome.promoted || outcome.confirmed) {
+      await publishVenuePins(input.store, partition.id, attempted.census?.package ?? null);
+      if (input.facts) await publishPartitionFacts(input.facts, partition, freshRows, report.acquisitions ?? [], candidate.id, input.generatedAt);
+    }
     results.push({ partition, candidate, outcome });
   }
   return results;
@@ -1754,7 +1781,8 @@ async function promoteSelectedMeetingPartitions(
   previous: MeetingsSnapshot | null,
   promotionStore: RoutineDataStore,
   partitions: readonly MeetingPartitionContract[],
-  retainedResponses: readonly RetainedSourceResponse[] = [],
+  retainedResponses: readonly RetainedSourceResponse[],
+  readResponses: readonly RetainedSourceResponse[],
 ): Promise<void> {
   const report = source.lastReport;
   if (!report) {
@@ -1817,6 +1845,7 @@ async function promoteSelectedMeetingPartitions(
     generatedAt: snapshot.generatedAt,
     previousByContract: new Map(partitions.map((partition) => [partition.id, previous])),
     retainedResponses,
+    facts: { db: readerFactDb(), vault: new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR)), responses: readResponses },
   });
   const promotedCount = partitionResults.filter((result) => result.outcome.promoted !== null).length;
   const heldCount = partitionResults.length - promotedCount;

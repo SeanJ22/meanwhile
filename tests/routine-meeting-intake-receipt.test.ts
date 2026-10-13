@@ -24,7 +24,7 @@ const windowUrl = (from: string, to: string) =>
 const DAY_ONE = windowUrl("2026-06-26", "2027-01-22");
 const DAY_TWO = windowUrl("2026-06-27", "2027-01-23");
 const response = (url: string, retrievedAt: string): RetainedSourceResponse => ({
-  source: "legistar", requestedUrl: url, finalUrl: url, httpStatus: 200, rawHash, byteCount: bytes.byteLength, bytes, retrievedAt,
+  source: "legistar", requestedUrl: url, finalUrl: url, httpStatus: 200, rawHash, byteCount: bytes.byteLength, bytes, retrievedAt, contentType: "application/json",
 });
 const methodVersion = methodFixture().version;
 const subjectId = meetingPartitionForRow("legistar", PIMA_LEGISTAR_CONTRACT.subjectId).bodyId;

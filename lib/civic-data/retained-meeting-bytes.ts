@@ -6,25 +6,26 @@ import type { MeetingsSnapshot } from "../meetings/snapshot.ts";
 export interface RetainedSourceResponse {
   readonly source: string; readonly requestedUrl: string; readonly finalUrl: string;
   readonly httpStatus: number; readonly rawHash: string; readonly byteCount: number;
-  readonly bytes: Uint8Array; readonly retrievedAt: string;
+  readonly bytes: Uint8Array; readonly retrievedAt: string; readonly contentType: string;
 }
 export type RetainedMeetingCandidate = RoutineCandidate & {
   readonly retainedSourceResponses?: readonly (Omit<RetainedSourceResponse, "bytes"> & { readonly base64: string })[];
 };
 
-export async function retainMeetingFetchBytes<T>(operation: () => Promise<T>, source: string, acceptUrl: (url: string) => boolean) {
+/** Every successful HTTPS response a read made, kept so the facts it yields cite the exact bytes. */
+export async function retainMeetingFetchBytes<T>(operation: () => Promise<T>) {
   const originalFetch = globalThis.fetch; const responses: RetainedSourceResponse[] = []; const refusals: string[] = [];
   let retainedBytes = 0;
   const observingFetch = (async (input, init) => {
     const requestedUrl = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
     const response = await originalFetch(input, init);
     const finalUrl = response.url || requestedUrl;
-    if (response.ok && acceptUrl(finalUrl)) {
+    if (response.ok && finalUrl.startsWith("https://")) {
       const bytes = new Uint8Array(await response.clone().arrayBuffer());
       if (retainedBytes + bytes.length <= 16 * 1024 * 1024) {
-        responses.push({ source, requestedUrl, finalUrl, httpStatus: response.status,
+        responses.push({ source: "", requestedUrl, finalUrl, httpStatus: response.status,
           rawHash: createHash("sha256").update(bytes).digest("hex"), byteCount: bytes.length,
-          bytes, retrievedAt: new Date().toISOString() });
+          bytes, retrievedAt: new Date().toISOString(), contentType: response.headers.get("content-type") ?? "" });
         retainedBytes += bytes.length;
       } else refusals.push(`RESEARCH_CAPTURE_BOUND_EXCEEDED:${finalUrl}`);
     }
@@ -35,12 +36,17 @@ export async function retainMeetingFetchBytes<T>(operation: () => Promise<T>, so
   finally { globalThis.fetch = originalFetch; }
 }
 
-export function retainMeetingCandidateEvidence(candidate: RoutineCandidate, snapshot: MeetingsSnapshot, responses: readonly RetainedSourceResponse[]): RetainedMeetingCandidate {
-  const traced = snapshot.sources.flatMap(report => report.acquisitions ?? []);
-  const retainedSourceResponses = responses.filter(response => traced.some(evidence => evidence.source === response.source &&
-    evidence.requestedUrl === response.requestedUrl && evidence.finalUrl === response.finalUrl && evidence.rawHash === response.rawHash &&
-    evidence.byteCount === response.byteCount && evidence.httpStatus === response.httpStatus)).map(({ bytes, ...metadata }) =>
-      ({ ...metadata, base64: Buffer.from(bytes).toString("base64") }));
-  return retainedSourceResponses.length ? { ...candidate, retainedSourceResponses } : candidate;
+/** The retained responses one source's read traced, named for that source. */
+export function tracedResponses(snapshot: Pick<MeetingsSnapshot, "sources">, responses: readonly RetainedSourceResponse[]): RetainedSourceResponse[] {
+  const traced = snapshot.sources.flatMap(report => (report.acquisitions ?? []).map(evidence => ({ ...evidence, source: report.source })));
+  return responses.flatMap(response => {
+    const evidence = traced.find(row => row.requestedUrl === response.requestedUrl && row.finalUrl === response.finalUrl &&
+      row.rawHash === response.rawHash && row.byteCount === response.byteCount && row.httpStatus === response.httpStatus);
+    return evidence ? [{ ...response, source: evidence.source }] : [];
+  });
 }
 
+export function retainMeetingCandidateEvidence(candidate: RoutineCandidate, snapshot: MeetingsSnapshot, responses: readonly RetainedSourceResponse[]): RetainedMeetingCandidate {
+  const retainedSourceResponses = tracedResponses(snapshot, responses).map(({ bytes, ...metadata }) => ({ ...metadata, base64: Buffer.from(bytes).toString("base64") }));
+  return retainedSourceResponses.length ? { ...candidate, retainedSourceResponses } : candidate;
+}

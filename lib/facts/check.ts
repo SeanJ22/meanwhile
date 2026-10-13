@@ -57,9 +57,18 @@ export function hostOf(url: string): string {
   return new URL(url).hostname.toLowerCase().replace(/^www\./, "");
 }
 
-/** Any .gov site is official; so is a host an official page registered for this entity or a parent. */
-export function isOfficialHost(host: string, entityHosts: readonly string[]): boolean {
-  return host === "gov" || host.endsWith(".gov") || entityHosts.some(h => host === h || host.endsWith(`.${h}`));
+/** An entity's own site is a host, or a host and path for a channel its door reads on a shared platform. */
+function ownSite(url: string, site: string): boolean {
+  const host = hostOf(url);
+  if (!site.includes("/")) return host === site || host.endsWith(`.${site}`);
+  const at = `${host}${new URL(url).pathname}`.toLowerCase(), own = site.toLowerCase();
+  return at === own || at.startsWith(`${own}/`);
+}
+
+/** Any .gov site is official; so is a site an official page or door registered for this entity or a parent. */
+export function isOfficialUrl(url: string, entitySites: readonly string[]): boolean {
+  const host = hostOf(url);
+  return host === "gov" || host.endsWith(".gov") || entitySites.some(site => ownSite(url, site));
 }
 
 /** Judgment calls: matching one person across sources, an unofficial portrait, and anything a third party says about someone else. */
@@ -80,8 +89,7 @@ function quoteHolds(copy: SavedCopy, quote: string, valueText: string): "ARCHIVE
 
 /** The page is the entity's own site, carries one of its ids, or names it in its state. */
 function aboutEntity(entity: CheckEntity, copy: SavedCopy): boolean {
-  const host = hostOf(copy.finalUrl);
-  if (entity.hosts.some(h => host === h || host.endsWith(`.${h}`))) return true;
+  if (entity.hosts.some(site => ownSite(copy.finalUrl, site))) return true;
   const text = normalizeText(copy.text);
   if (entity.externalIds.some(id => boundedIndexOf(text, id) !== -1)) return true;
   const lower = text.toLowerCase();

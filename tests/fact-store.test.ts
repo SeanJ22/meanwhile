@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 import { visibleText } from "../lib/control-plane/scheduler/scout-tools.ts";
-import { boundedIndexOf, checkFact, isOfficialHost, type CheckEntity, type Claim, type SavedCopy } from "../lib/facts/check.ts";
+import { boundedIndexOf, checkFact, isOfficialUrl, type CheckEntity, type Claim, type SavedCopy } from "../lib/facts/check.ts";
 import { factClocks, FRESHNESS_HOURS_DEFAULT } from "../lib/facts/clocks.ts";
 import { decide } from "../lib/facts/decide.ts";
 import { publishClaim, type PublishInput } from "../lib/facts/publish.ts";
@@ -61,9 +61,12 @@ test("a second source only for judgment calls: unofficial portraits, a person ma
 });
 
 test("any .gov site is official", () => {
-  assert.equal(isOfficialHost("clerksboards.tucsonaz.gov", []), true);
-  assert.equal(isOfficialHost("vailschooldistrict.org", ["vailschooldistrict.org"]), true);
-  assert.equal(isOfficialHost("news.example.com", ["vailschooldistrict.org"]), false);
+  assert.equal(isOfficialUrl("https://clerksboards.tucsonaz.gov/boards/15", []), true);
+  assert.equal(isOfficialUrl("https://www.vailschooldistrict.org/board", ["vailschooldistrict.org"]), true);
+  assert.equal(isOfficialUrl("https://news.example.com/vail", ["vailschooldistrict.org"]), false);
+  assert.equal(isOfficialUrl("https://webapi.legistar.com/v1/pima/events?x=1", ["webapi.legistar.com/v1/pima"]), true);
+  assert.equal(isOfficialUrl("https://webapi.legistar.com/v1/mesa/events", ["webapi.legistar.com/v1/pima"]), false);
+  assert.equal(isOfficialUrl("https://webapi.legistar.com/v1/pimacounty/events", ["webapi.legistar.com/v1/pima"]), false);
 });
 
 test("newer and more official wins; Sean's value changes only through him", () => {

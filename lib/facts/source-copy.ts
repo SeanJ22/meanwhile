@@ -6,12 +6,21 @@ import type { Query } from "./publish.ts";
 const ARCHIVE_HOSTS = /(^|\.)(web\.archive\.org|archive\.org|archive\.today|archive\.ph|archive\.is)$/i;
 const isArchive = (url: string) => ARCHIVE_HOSTS.test(new URL(url).hostname);
 
-/** Visible text, the markup and every link made absolute, so a portrait or link address is checked where it appears. */
+/** The saved bytes as a reader would read them: HTML's visible text and absolute links, JSON's values, a calendar's unfolded lines. */
 function checkText(body: string, contentType: string, base: string): string {
-  if (!(/html/i.test(contentType) || /^\s*</.test(body))) return body;
-  const links = [...body.matchAll(/\b(?:href|src)\s*=\s*["']([^"']+)["']/gi)].flatMap(([, href]) => URL.canParse(href!, base) ? [new URL(href!, base).href] : []);
-  return `${visibleText(body)}\n${body}\n${links.join("\n")}`;
+  if (/html/i.test(contentType) || /^\s*</.test(body)) {
+    const links = [...body.matchAll(/\b(?:href|src)\s*=\s*["']([^"']+)["']/gi)].flatMap(([, href]) => URL.canParse(href!, base) ? [new URL(href!, base).href] : []);
+    return `${visibleText(body)}\n${body}\n${links.join("\n")}`;
+  }
+  if (/^\s*BEGIN:VCALENDAR/.test(body)) return `${body}\n${body.replace(/\r?\n[ \t]/g, "").replace(/\\([,;\\])/g, "$1").replace(/\\n/gi, " ")}`;
+  if (/^\s*[[{]/.test(body)) {
+    try { return `${body}\n${jsonValues(JSON.parse(body)).join("\n")}`; } catch { return body; }
+  }
+  return body;
 }
+
+const jsonValues = (value: unknown): string[] => typeof value === "string" ? [value] : typeof value === "number" ? [String(value)]
+  : value && typeof value === "object" ? Object.values(value).flatMap(jsonValues) : [];
 
 interface CopyRow {
   readonly artifactId: string;

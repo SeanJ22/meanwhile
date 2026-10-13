@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { parseCsv } from "../reference/csv.ts";
 import { readCensusGovernmentFacts, type CensusGovernmentFacts } from "../registration/jurisdictions.ts";
 import type { FactDb, Query } from "./publish.ts";
-import { hostOf, isOfficialHost } from "./check.ts";
+import { hostOf, isOfficialUrl } from "./check.ts";
 
 type EntityKind = "place" | "government" | "body" | "seat" | "person" | "meeting" | "agenda_item" | "bill" | "vote_event"
   | "election" | "contest" | "candidacy" | "measure" | "committee" | "statement" | "law_question" | "news_item";
@@ -193,6 +193,14 @@ export async function ensureEntity(query: Query, row: EntityRow): Promise<void> 
 
 /** A .gov page code has already matched to this entity is one of its own sites. */
 export async function learnOfficialHost(query: Query, entityId: string, url: string): Promise<void> {
-  const host = hostOf(url);
-  if (isOfficialHost(host, [])) await query("INSERT INTO entity_host (entity_id, host) SELECT id, $2 FROM entity WHERE id = $1 ON CONFLICT DO NOTHING", [entityId, host]);
+  if (isOfficialUrl(url, [])) await learnSite(query, entityId, hostOf(url));
 }
+
+/** The channel a reviewed door reads for this entity: the feed's host and the path above it. */
+export async function learnDoorChannel(query: Query, entityId: string, url: string): Promise<void> {
+  const { pathname } = new URL(url);
+  await learnSite(query, entityId, `${hostOf(url)}${pathname.slice(0, pathname.lastIndexOf("/")) || ""}`);
+}
+
+const learnSite = (query: Query, entityId: string, site: string) =>
+  query("INSERT INTO entity_host (entity_id, host) SELECT id, $2 FROM entity WHERE id = $1 ON CONFLICT DO NOTHING", [entityId, site]);

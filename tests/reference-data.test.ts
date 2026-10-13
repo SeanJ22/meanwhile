@@ -14,6 +14,7 @@ import {
   CENSUS_INACTIVE_UNITS,
   LEGISTAR_IS_FIXTURE_NOT_ENUMERATION,
   REFERENCE_DATASETS,
+  REFERENCE_JSON_DATASETS,
   REFERENCE_ROW_COUNTS,
   parseCsv,
   readTable,
@@ -21,8 +22,9 @@ import {
 } from "../lib/reference/index.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-// The existing table loader reads CSV. County clocks are a static JSON import with the same required provenance pairing.
-const JSON_REFERENCE_DATASETS = ["national_county_time_zones"] as const;
+// Voting routes and election scope use the JSON reference loader; county clocks are a static JSON import.
+// Both retain the same required provenance pairing as the CSV tables.
+const JSON_REFERENCE_DATASETS = [...REFERENCE_JSON_DATASETS, "national_county_time_zones", "statewide-executive-sources", "us-jurisdiction-labels"] as const;
 const REFERENCE_DATA_FILES = [
   ...REFERENCE_DATASETS.map(dataset => `${dataset}.csv`),
   ...JSON_REFERENCE_DATASETS.map(dataset => `${dataset}.json`),

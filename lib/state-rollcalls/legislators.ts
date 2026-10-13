@@ -3,7 +3,7 @@ import type { OfficeholderSet } from "../officials/types.ts";
 import { type StatePeopleJurisdiction } from "../officials/people-identity.ts";
 import { mergePeopleSets } from "../officials/merge-people.ts";
 import { PEOPLE_SOURCE_IDS } from "../officials/people-sources.ts";
-import { readPeopleSourceProjection } from "../civic-data/people-source-publication.ts";
+import { readPeopleSourceProjection } from "../civic-data/people-source-read.ts";
 import type { SeatHolder } from "../officials/lookup.ts";
 import {
   CivicDataStoreUnavailableError,

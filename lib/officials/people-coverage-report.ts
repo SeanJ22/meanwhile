@@ -2,7 +2,7 @@ import { STATE_PEOPLE_JURISDICTIONS } from "./people-identity.ts";
 import { PEOPLE_SOURCE_IDS } from "./people-sources.ts";
 import { officeIdentity } from "./office-identity.ts";
 import { portraitBindingMatches } from "../photos/binding.ts";
-import { readPeopleSourceProjection } from "../civic-data/people-source-publication.ts";
+import { readPeopleSourceProjection } from "../civic-data/people-source-read.ts";
 import { readOpenStatesPeopleProjection, readOfficialStateLegislatorsProjection, readStatePeopleProjection } from "../state-rollcalls/legislators.ts";
 import { officialStateLegislatorTargetByScope } from "../state-rollcalls/authority.ts";
 import { readFederalDirectoryProjection } from "./federal-directory-read-model.ts";

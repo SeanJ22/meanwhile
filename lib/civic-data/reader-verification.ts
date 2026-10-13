@@ -138,7 +138,7 @@ export async function verifyRoutineReaderProjection(
   const verifierId = verifierIdFor(contract);
   try {
     if (isPeopleSource(contract.sourceId) && contract.recordClass !== "FEDERAL_CIVIC_RECORD") {
-      const { readPeopleSourceProjection } = await import("./people-source-publication.ts");
+      const { readPeopleSourceProjection } = await import("./people-source-read.ts");
       const jurisdiction = /^(US(?:-[A-Z]{2})?):/.exec(contract.scope)?.[1] as "US" | `US-${string}` | undefined;
       if (!jurisdiction) return fail(verifierId,"The people source has no exact jurisdiction.");
       return verifyExactVersion(verifierId,await readPeopleSourceProjection(jurisdiction,contract.sourceId,{store:options.store,now:options.now,bypassCache:true}),options.expectedVersionId,"people source");

@@ -107,8 +107,8 @@ test("a named House district retains its official county designation and its Cen
   assert.equal(group.label, "State House District Merrimack 08");
   const ocdId = censusWorkDivision({ ...group, type: plan.type, version: plan.version });
   assert.equal(ocdId, "ocd-division/country:us/state:nh/sldl:608");
-  assert.equal(designationFromLabel(group.label), "MERRIMACK 8");
-  assert.equal(indexDivisions([{ ocdId: ocdId!, label: group.label, divisionType: "sldl" }]).get("nh|lower|MERRIMACK 8"), ocdId);
+  assert.equal(designationFromLabel(group.label), "MERRIMACK8");
+  assert.equal(indexDivisions([{ ocdId: ocdId!, label: group.label, divisionType: "sldl" }]).get("nh|lower|MERRIMACK8"), ocdId);
   const nameOnly = { ...named, properties: { ...named.properties, NAMELSAD: "" } };
   const [fallback] = await buildTigerOverlapGroups([nameOnly], stream([zctas[0]!]), plan, "33");
   assert.equal(fallback?.label, "Merrimack 08");

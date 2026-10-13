@@ -153,9 +153,9 @@ export async function censusTigerArchive(url: string, options: CensusSourceOptio
   const path = join(directory, "source.zip");
   const dispose = () => rm(directory, { recursive: true, force: true });
   /** The staging file exists only inside this call's own temporary directory. */
-  const stage = async <T>(use: (file: FileHandle) => Promise<T>): Promise<T> => {
+  const stage = async <T>(work: (file: FileHandle) => Promise<T>): Promise<T> => {
     const file = await open(path, "w");
-    try { return await use(file); } finally { await file.close(); }
+    try { return await work(file); } finally { await file.close(); }
   };
   try {
     const result = await withKnownReleaseLock(locks, `source-release:tiger:${identity}`, signal, async () => {

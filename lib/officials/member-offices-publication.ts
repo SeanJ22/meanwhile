@@ -1,5 +1,5 @@
 /**
- * The daily member-office refresh: each state's promoted legislative roster joined with Open States' current file,
+ * The daily member-office refresh: each state's promoted Open States offices,
  * published in one package through the curated `member-offices` pointer with a receipt for each file's exact bytes.
  */
 import { createHash } from "node:crypto";
@@ -16,7 +16,8 @@ import type { StatePeopleAcquisition } from "../civic-data/state-people-publicat
 import { mergeManualSourceCopies } from "../civic-data/manual-source-urls.ts";
 
 import { STATE_PEOPLE_JURISDICTIONS } from "./people-identity.ts";
-import { readOpenStatesPeopleProjection, readStatePeopleProjection } from "../state-rollcalls/legislators.ts";
+import { readOpenStatesPeopleProjection, readOfficialStateLegislatorsProjection } from "../state-rollcalls/legislators.ts";
+import { officialStateLegislatorTargetByScope } from "../state-rollcalls/authority.ts";
 import { sameNativePerson } from "./people-identity.ts";
 import { officeRecordsForHolder, OPEN_STATES_ORG, type MemberOfficeRecord } from "./member-offices.ts";
 
@@ -68,15 +69,16 @@ export async function publishMemberOffices(input: {
   const gaps: MemberOfficeGap[] = [];
   for (const jurisdiction of input.jurisdictions ?? STATE_PEOPLE_JURISDICTIONS) {
     try {
-      const read = await readStatePeopleProjection(jurisdiction,{store:input.store,now:input.now,bypassCache:true});
-      if (read.kind !== "PROMOTED") { if (read.kind === "STORE_UNREACHABLE") gaps.push({key:jurisdiction,detail:"ROSTER_UNAVAILABLE: prior offices retained"}); continue; }
       const reference = await readOpenStatesPeopleProjection(jurisdiction,{store:input.store,now:input.now,bypassCache:true});
-      if (reference.kind !== "PROMOTED") continue;
+      if (reference.kind !== "PROMOTED") { if (reference.kind === "STORE_UNREACHABLE") gaps.push({key:jurisdiction,detail:"ROSTER_UNAVAILABLE: prior offices retained"}); continue; }
+      const target = officialStateLegislatorTargetByScope(jurisdiction);
+      const read = target ? await readOfficialStateLegislatorsProjection(target.jurisdiction,{store:input.store,now:input.now,bypassCache:true})
+        .catch(error => { gaps.push({key:jurisdiction,detail:`OFFICIAL_ALIASES_UNREADABLE: ${message(error)}`}); return null; }) : null;
       // The reference receipt supports its own office facts. Official contact overrides are applied
       // by the scoped people reader from that separately promoted source, never claimed by this archive.
       const rows = reference.value.roster.officeholders.flatMap(holder => {
-        const matches = read.value.roster.officeholders.filter(row => sameNativePerson(holder,row));
-        return matches.length === 1 ? officeRecordsForHolder({...holder,id:matches[0].id}) : [];
+        const matches = read?.kind === "PROMOTED" || read?.kind === "BOOTSTRAP" ? read.value.roster.officeholders.filter(row => sameNativePerson(holder,row)) : [];
+        return officeRecordsForHolder(matches.length === 1 ? {...holder,id:matches[0].id} : holder);
       }).map(row=>{
         const held = prior.get(row.id);
         return held && withoutCollectedAt(held) === withoutCollectedAt(row) ? {...row,collectedAt:held.collectedAt} : row;

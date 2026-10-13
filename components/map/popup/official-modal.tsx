@@ -30,6 +30,7 @@ import { PersonIdentity } from "@/components/officials/person-identity";
 import { PositionsSection } from "@/components/officials/positions-section";
 
 import { OfficeBlurb, RecentVotes } from "./official-popup";
+import { LegislatorBills } from "@/components/officials/legislator-bills";
 
 /**
  * The officeholder's large card: identity, contact, the roll-call record with
@@ -126,6 +127,7 @@ export function OfficialModal({
           record: <RecentVotes holder={holder} reactionContext={reactionContext} columns contentOnly />,
         }}
         afterSections={<>
+          <LegislatorBills key={holder.id} holder={holder} />
           <PublicStatementsProfile subjectId={holder.id} onProfile={setPrlProfile} />
           <OfficialActions subjectId={holder.id} />
           <SpeakYourMind key={holder.id} context={reactionContext ?? undefined} subjectType="OFFICIAL" subjectId={holder.id} subject={holder.name} />

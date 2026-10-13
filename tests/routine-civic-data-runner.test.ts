@@ -288,6 +288,7 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "meeting-doors",
     "meeting-source-wiring",
     "candidate-campaign-sites-derived",
+    "legiscan-bulk",
   ]);
   assert.deepEqual(nonMeetingTasks.map((task) => task.id), ROUTINE_SOURCE_CONTRACTS.map((contract) => contract.id));
   assert.deepEqual(
@@ -369,7 +370,7 @@ test("one canonical registry owns every supported authority and refuses arbitrar
   if (!arbitrary.ok) assert.equal(arbitrary.code, "FINAL_ROUTE_NOT_REGISTERED");
   const intermediary = authorityFor("legiscan", "STATE_ROLL_CALL", "https://api.legiscan.com/?op=getRollCall&id=1");
   assert.equal(intermediary.ok, false);
-  if (!intermediary.ok) assert.equal(intermediary.code, "SOURCE_NOT_AUTO_PROMOTABLE");
+  if (!intermediary.ok) assert.equal(intermediary.code, "SOURCE_NOT_COMPETENT_FOR_RECORD_CLASS");
 });
 
 test("routine release output labels the seven-zero constant as structural, never observed", () => {

@@ -60,6 +60,8 @@ export interface EvidenceRecord {
     | "KEY_VOTE_CONTEXT"
     | "KEY_VOTE_POSITION"
     | "BILL_SUMMARY"
+    | "STATE_BILL"
+    | "BILL_TEXT_LINK"
     /*
      * What a body did to one agenda item: verb, disposition, mover, seconder
      * and tally prose verbatim. Classed `ACTION_SUMMARY`: it answers
@@ -93,6 +95,7 @@ export interface EvidenceRecord {
     | "FINANCE_SUMMARY";
   /** Stable id where one exists — the validation rung matches on it. */
   id: string;
+  bill?: {number:string;state:string;session:string;status:string;publishedAt:string;texts:readonly {id:number;date:string|null;type:string;url:string;governmentUrl:string|null;governmentSourceOfficial:boolean}[]};
   /** Canonical holding subject when the reader's question uses a bridged card identity. */
   canonicalSubjectId?: string;
   officeholder?: { officialId: string; termNote: string | null };

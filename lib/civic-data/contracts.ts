@@ -130,8 +130,8 @@ export interface RoutineSourceContract {
   readonly lkgBehavior: string;
   readonly autoPromotable: boolean;
   /**
-   * A fan-out contract owns a scope family: its per-state marker at `scope`
-   * plus one bounded per-member candidate at `<sourceId>:<officeholderId>`. The
+   * A fan-out contract owns a scope family: its clock marker at `scope`
+   * plus bounded member or session candidates under `<sourceId>:`. The
    * runner still enumerates and clocks exactly this one contract; the family
    * lives inside the acquisition child. Verification stays per-contract.
    */
@@ -566,6 +566,19 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     lkgBehavior: "A pass that cannot read the pipeline's approvals, the promoted candidate-profiles version or an approval's vaulted bytes records its refusal and leaves the prior GOOD sites live; an approval whose vaulted bytes no longer verify is held by name and not published.",
     autoPromotable: true,
     classification: "RUNTIME_CIVIC_DATA",
+    bootstrapFixturePaths: [],
+  },
+  {
+    id: "legiscan-bulk", sourceId: "legiscan", recordClass: "STATE_BILL", scope: "US:legiscan-datasets",
+    acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/legiscan-bulk.mts", "--promote"], requestedUrl: "https://api.legiscan.com/?op=getDatasetList" },
+    parserNormalizerVersion: "legiscan-bulk/2",
+    cadence: { description: "weekly, following LegiScan's weekly dataset publication", defaultEveryMs: 7 * DAY },
+    retry: { afterMs: HOUR, description: "one hour after a failed bulk pass; already published sessions remain live" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "legiscan" },
+    validationContract: CHECKS, canonicalProductionStore: STORE,
+    readerProjection: { id: "legiscan-bills", consumers: ["legislator cards", "Ask"] },
+    lkgBehavior: "Each complete session publishes independently; failed archives leave prior bills live. Unchanged dataset hashes confirm success. Unjoined bills and sponsors remain in the session with their reason.",
+    autoPromotable: true, fanOut: true, classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
   },
 ] as const;

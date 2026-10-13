@@ -8,8 +8,8 @@
  * - Production serves only proof-validated official-publisher promotions from the data plane.
  *
  * LegiScan's data is published under CC BY 4.0; `LEGISCAN_ATTRIBUTION` is the single string every
- * surface renders with it (`tests/legiscan.test.ts`). The retained LegiScan corpus is research/test
- * evidence, never a production authority or Reader fallback.
+ * surface renders with it (`tests/legiscan.test.ts`). LegiScan bill datasets publish through their
+ * own routine contract; official state vote records keep their independent authority.
  */
 
 /**

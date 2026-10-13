@@ -1,4 +1,5 @@
 import { governmentFinanceEvidence, governmentFinanceQuestion, composeGovernmentFinanceAnswer } from "@/lib/ask/government-finance";
+import { isBillQuestion,legiscanBillEvidence } from "@/lib/ask/legiscan-bills";
 import { governmentListingEntity, governmentListingEvidence, readerGovernmentListings } from "@/lib/ask/government-listings";
 import { prlStatementEvidence, readPrlForSubject } from "@/lib/sources/prl/person";
 import { type MeetingsSnapshot } from "@/lib/meetings/snapshot";
@@ -1894,6 +1895,13 @@ export async function POST(request: Request) {
       records.push(...financeDetail.records);
       denominators.financeDetailRowsReturned = financeDetail.records.length;
       denominators.financeDetailComplete = financeDetail.complete ? 1 : 0;
+    }
+    if (isBillQuestion(question)) {
+      const person = subject?.kind === "PERSON" ? await seatHolderById(subject.id).catch(() => null) : null;
+      const billStates = person?.id.startsWith("congress:") ? ["US"] : person?.state ? [person.state] :
+        [...new Set([...statesOf(ocdIds), ...statesOf(subject ? [subject.id] : [])])];
+      const bills = await legiscanBillEvidence({question,subject,person,states:billStates});
+      records.push(...bills.records); gaps.push(...bills.gaps); Object.assign(denominators,bills.denominators);
     }
     const relevant = gateRecordsToSubject(subject, records, comparedIds);
     denominators.recordsExcludedOffSubject = relevant.excluded.length;

@@ -64,6 +64,7 @@ function verifyExactVersion(
 function verifierIdFor(contract: ReaderContract): string {
   if (contract.sourceId === "plural-openstates" && contract.recordClass === "STATE_LEGISLATOR") return "lib/state-rollcalls/legislators.ts#readOpenStatesPeopleProjection";
   switch (contract.id) {
+    case "legiscan-bulk": return "lib/sources/legiscan/reader.ts#readBulkProjection";
     case "fec-funding": return "lib/funding/snapshot.ts#readFundingSnapshot";
     case "nh-members": return "lib/civic-data/state-members.ts#readNhMembers";
     case "az-state-legislators":
@@ -137,6 +138,10 @@ export async function verifyRoutineReaderProjection(
       return verifyExactVersion(verifierId,await readOpenStatesPeopleProjection(jurisdiction,{store:options.store,now:options.now,bypassCache:true}),options.expectedVersionId,"state people");
     }
     switch (contract.id) {
+      case "legiscan-bulk": {
+        const { readBulkProjection } = await import("../sources/legiscan/reader.ts");
+        return verifyExactVersion(verifierId, await readBulkProjection(options.scope ?? contract.scope, {store:options.store,now:options.now,bypassCache:true}),options.expectedVersionId,"LegiScan bills");
+      }
       case "fec-funding": {
         const { readFundingSnapshot } = await import("../funding/snapshot.ts");
         const result = await readFundingSnapshot({ store: options.store, now: options.now, bypassCache: true });

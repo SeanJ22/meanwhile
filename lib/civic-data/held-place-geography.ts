@@ -1,6 +1,7 @@
 import type { Division } from "../registry/types.ts";
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import type { BuiltGrouping, BuiltScope } from "../census-geography/dataset.ts";
+import { censusWorkDivision } from "../census-geography/division-id.ts";
 import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../census-geography/publication.ts";
 import type { HeldPlaceCapture } from "./held-place-capture.ts";
 import { readerQuery } from "./promoted-reader-query.ts";
@@ -40,7 +41,8 @@ export function projectHeldGeography(ids: readonly string[], divisions: readonly
     const checkedAt = version?.provenance?.computedAt;
     const checked = Date.parse(checkedAt ?? "");
     if (!sourceUrl || !version.key?.trim() || !version.effectiveFor?.trim() || !Number.isFinite(checked)) continue;
-    const matches = new Set([...(grouping.ocdId && wanted.has(grouping.ocdId) ? [grouping.ocdId] : []),
+    const divisionId = censusWorkDivision({ ...grouping, type: meta.type, version: meta.version });
+    const matches = new Set([...(divisionId && wanted.has(divisionId) ? [divisionId] : []),
       ...(keys.get(`${meta.type}:${grouping.geoid}`) ?? [])]);
     for (const id of matches) {
       subjects.set(id, { id, kind: "division", divisionIds: [id], label: grouping.label });

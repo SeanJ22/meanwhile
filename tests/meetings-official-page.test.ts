@@ -19,13 +19,13 @@ import {
 import type { MeetingsDiscoveryNeed } from "../lib/hunt/meetings-discovery.ts";
 import {
   OFFICIAL_PAGE_EVENTS_VERSION,
-  STATE_TIME_ZONES,
   anchorLinks,
   identityNameTerms,
   verifyEndpointBody,
 } from "../lib/hunt/meetings-site-discovery.ts";
 import { SEED_RECIPES, knownRecipes, recipeCandidates } from "../lib/hunt/meetings-recipes.ts";
 import { eachStore } from "./control-plane-fixtures.ts";
+import { COUNTY_TIME_ZONES, governmentTimeZone } from "../lib/time/county-time-zones.ts";
 
 const FIXTURES = new URL("./fixtures/official-page-events/", import.meta.url);
 const TUSD_HOME = readFileSync(new URL("tusd-home.html", FIXTURES), "utf8");
@@ -44,6 +44,7 @@ const ALLOW = { status: 200, body: "User-agent: *\nAllow: /\n", contentType: "te
 const TUSD: MeetingsDiscoveryNeed = {
   jurisdictionId: "az:school:tucson-unified-school-district-1",
   stateCode: "AZ",
+  countyFips: "04019",
   name: "TUCSON UNIFIED SCHOOL DISTRICT 1",
   govClass: "SCHOOL_DISTRICT",
   ownWebAddress: "https://www.tusd1.org/",
@@ -107,13 +108,9 @@ test("TERMS AND ZONES: a body's name forms come from its recorded name alone; a 
   assert.deepEqual(identityNameTerms("CITY OF CHANDLER"), ["City of Chandler", "Chandler"], "two letters of initials name nothing");
   assert.deepEqual(identityNameTerms("CITY OF TUCSON"), ["City of Tucson", "Tucson"]);
   assert.notDeepEqual(identityNameTerms("TUCSON UNIFIED SCHOOL DISTRICT 1")[1], "Tucson", "a district's core name keeps Unified, so the city's events never verify for it");
-  /* Every one-zone state and territory, never a state a zone line crosses or one whose towns keep a neighbour's time. */
-  assert.deepEqual(Object.keys(STATE_TIME_ZONES).sort(), [
-    "AR", "AS", "AZ", "CA", "CO", "CT", "DC", "DE", "GA", "GU", "HI", "IA", "IL", "LA", "MA", "MD", "ME", "MN", "MO", "MP", "MS", "MT",
-    "NC", "NH", "NJ", "NM", "NY", "OH", "OK", "PA", "PR", "RI", "SC", "UT", "VA", "VI", "VT", "WA", "WI", "WV", "WY",
-  ]);
-  assert.deepEqual([STATE_TIME_ZONES.AZ, STATE_TIME_ZONES.NH, STATE_TIME_ZONES.NJ, STATE_TIME_ZONES.NM, STATE_TIME_ZONES.OH], ["America/Phoenix", "America/New_York", "America/New_York", "America/Denver", "America/New_York"]);
-  for (const split of ["AK", "AL", "FL", "ID", "IN", "KS", "KY", "MI", "ND", "NE", "NV", "OR", "SD", "TN", "TX"]) assert.equal(STATE_TIME_ZONES[split], undefined, `${split} is never guessed`);
+  assert.equal(new Set([...COUNTY_TIME_ZONES.values()].map(row => row.stateCode)).size, 56);
+  assert.deepEqual([governmentTimeZone("AZ", "04019"), governmentTimeZone("NH"), governmentTimeZone("NJ"), governmentTimeZone("NM"), governmentTimeZone("OH")], ["America/Phoenix", "America/New_York", "America/New_York", "America/Denver", "America/New_York"]);
+  for (const split of ["AK", "AL", "AZ", "FL", "ID", "IN", "KS", "KY", "MI", "ND", "NE", "NV", "OR", "SD", "TN", "TX"]) assert.equal(governmentTimeZone(split), null, `${split} needs its county, never a statewide guess`);
   /* A government's own events page in a one-zone state is confirmed by the free walk. */
   const ohio = verifyEndpointBody(
     { vendor: "official-page-events", url: "https://www.sfps.info/page/board-of-education-2" },

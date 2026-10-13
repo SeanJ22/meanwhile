@@ -10,11 +10,13 @@ import {
   COULD_GOVERN_TEXT,
 } from "../lib/ballot/could-govern.ts";
 import { needsPill, zipCertainty } from "../lib/geo/zip-certainty.ts";
-import { divisionIdsForZipArea } from "../lib/ballot/zip-divisions.ts";
+import { POINT_GEOMETRY_PLANS, divisionIdsForZipArea } from "../lib/ballot/zip-divisions.ts";
 import { buildCensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
 import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { codeOf } from "./read-code.ts";
+import { contestsForDivisions } from "../lib/sources/ballot-nj-morris/index.ts";
+import { azBallot, electionSelection } from "./helpers/ballot-district-fixtures.ts";
 
 /**
  * A ZIP cannot answer "who governs you"; a street address can. Certainty is measured rather than hand-listed, the
@@ -331,18 +333,26 @@ test("3.1: the class sweep — both zip-resolving surfaces widen to the AREA", (
   }
 });
 
-test("3.1: qualified area plans replace stale point districts and preserve independent local facts", async () => {
-  const local = "ocd-division/country:us/state:az/place:sierra_vista";
+test("3.1: the held election plans widen 85641 to both legislative districts and preserve independent local facts", async () => {
+  const local = "ocd-division/country:us/state:az/place:vail";
   const stale = "ocd-division/country:us/state:az/cd:7";
   const point = [local, stale, "ocd-division/country:us/state:az"];
-  const serving = await withDistricts(() => divisionIdsForZipArea("85635", point, current));
+  const serving = await withDistricts(() => divisionIdsForZipArea("85641", point, current, POINT_GEOMETRY_PLANS));
   assert.ok(serving.includes(local));
   assert.ok(serving.includes("ocd-division/country:us/state:az/cd:6"));
   assert.ok(!serving.includes(stale), "the previous point assignment does not survive a qualified replacement");
-  const election = await withDistricts(() => divisionIdsForZipArea("85635", point,
-    { purpose: "election", asOf: "2026-10-09", electionDate: "2026-11-03" }));
+  const election = await withDistricts(() => divisionIdsForZipArea("85641", point, electionSelection, POINT_GEOMETRY_PLANS));
   assert.ok(election.includes(local));
-  assert.ok(!election.some(id => /\/(?:cd|sldu|sldl):/.test(id)), "a missing election plan cannot borrow a serving district");
+  const districtContests = contestsForDivisions(azBallot, election).contests.filter(contest => /\/(?:cd|sldu|sldl):/.test(contest.ocdId));
+  assert.deepEqual(districtContests.map(contest => contest.id.split(":").at(-1)).sort(), ["state-house-17", "state-house-19", "state-senate-17", "state-senate-19", "us-house-6"]);
+  const certainty = await withDistricts(() => zipCertainty("85641", electionSelection));
+  assert.ok(certainty);
+  assert.equal(certainty.certaintyOf("ocd-division/country:us/state:az/cd:6"), "CERTAIN");
+  for (const family of ["sldu", "sldl"]) for (const district of [17, 19]) {
+    const id = `ocd-division/country:us/state:az/${family}:${district}`;
+    assert.equal(certainty.certaintyOf(id), "AMBIGUOUS", `${id} covers part of the ZIP`);
+    assert.ok(needsPill(certainty.certaintyOf(id)));
+  }
 });
 
 test("3.1: a body arriving only through the widening must be GOVERNING", () => {

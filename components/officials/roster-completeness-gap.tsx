@@ -1,12 +1,17 @@
 import type { RosterReaderGap } from "@/lib/registry/body-rosters";
+import type { CardGap } from "@/lib/design/card-gaps";
+import { CardGapsContribution } from "@/components/ui/card-gap-context";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 
-/** A partial verified roster remains useful; the unresolved identity stays explicit. */
+export function rosterCardGaps(gaps: readonly RosterReaderGap[]): CardGap[] {
+  return gaps.map(gap => ({ id: `roster:${gap.bodyId}`, label: "member names", count: gap.unresolvedSlots,
+    unit: "seat", subject: { type: "BODY", id: gap.bodyId } }));
+}
+
+/** Partial rosters keep their members; missing identities join the card's single gap line. */
 export function RosterCompletenessGaps({ gaps }: { gaps: readonly RosterReaderGap[] }) {
-  return <>{gaps.map(gap => <div key={gap.bodyId} data-roster-completeness-gap={gap.bodyId}
-    data-verified-members={gap.verifiedMembers} data-expected-members={gap.expectedMembers}
-    className="my-2 space-y-1 t-detail leading-relaxed text-muted">
-    <p>{gap.statement}</p>
-    <CardSourcesContribution id={`roster-gap:${gap.bodyId}`} sources={[{ what: "Roster member identities", provenance: { sourceUrl: gap.sourceUrl, sourceOrg: gap.sourceOrg, collectedAt: gap.readAt, verifiedAt: null } }]} />
-  </div>)}</>;
+  return <>
+    <CardGapsContribution id="roster-completeness" gaps={rosterCardGaps(gaps)} />
+    <CardSourcesContribution id="roster-completeness" sources={gaps.map(gap => ({ what: "Roster member identities", provenance: { sourceUrl: gap.sourceUrl, sourceOrg: gap.sourceOrg, collectedAt: gap.readAt, verifiedAt: null } }))} />
+  </>;
 }

@@ -1,3 +1,4 @@
+import { planRepairToolDescription } from "../workers/plan-repair-grammar.ts";
 /**
  * The Scout: the model lane's `DeclaredExecutor`, a bounded model worker that acts only through research tools.
  * Every tool vaults before it returns a sanitized representation; robots.txt is recorded, never a refusal; an
@@ -9,7 +10,7 @@
  */
 
 import type { AttemptCost } from "../attempt.ts";
-import { defaultPlaybookText, rolePlaybook, workerSystemPrompt, type WorkerPlaybook } from "../playbooks.ts";
+import { workerSystemPrompt, type WorkerPlaybook } from "../playbooks.ts";
 import { sanitizedErrorDiagnostic } from "../../ops/error-diagnostic.ts";
 import { WORK_QUESTIONS, WORK_QUESTION_WORDS, type WorkQuestion } from "../work-question.ts";
 import type { CostModelShare } from "../cost.ts";
@@ -55,7 +56,6 @@ import {
   type ScoutToolkit,
 } from "./scout-contract.ts";
 import {
-  MIN_DISTINCT_RUNGS,
   REWALK_REFUSAL_DAYS,
   SCOUT_OUTCOMES,
   SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION,
@@ -270,7 +270,7 @@ const FINISH_SPEC: ScoutToolSpec = {
     "`permission` verdict on the cited artifact's envelope, and recordClass from the obligation; the machine derives the values from the " +
     "vault record and refuses a finish whose claims disagree with it. permission is the robots.txt verdict as a RECORD: a DISALLOWED or " +
     "CANNOT_TELL verdict never disqualifies a public route (an owner decision). " +
-    `Outcomes: ${SCOUT_OUTCOMES.join(", ")}.`,
+    `Outcomes: ${SCOUT_OUTCOMES.join(", ")}. ` + planRepairToolDescription(),
   input_schema: {
     type: "object",
     properties: {
@@ -350,8 +350,8 @@ const FINISH_SPEC: ScoutToolSpec = {
 
 
 /** The system prompt: stable across Attempts so the prompt cache applies; nothing per-obligation is here. */
-export function scoutSystemPrompt(bound: ScoutBound, minRungs: number, playbook?: string, role: "SCOUT" | "DETECTIVE" = "SCOUT"): string {
-  return workerSystemPrompt(role, playbook ?? defaultPlaybookText(role)).replaceAll("{{minimum_rungs}}", String(minRungs));
+export function scoutSystemPrompt(_bound: ScoutBound, _minRungs: number, playbook?: string, role: "SCOUT" | "DETECTIVE" = "SCOUT"): string {
+  return workerSystemPrompt(role, playbook ?? "");
 }
 
 /** How the brief labels one prior rung. A robots-only refusal is named as walkable, never as failed. */
@@ -372,7 +372,7 @@ function priorRungLabel(kind: PriorFailureClass): string {
 export function scoutBrief(
   row: ScheduledObligation,
   route: RouteDescriptor | null,
-  providerId: string | null,
+  _providerId: string | null,
   reason: string,
   inherited: InheritedEvidence,
   ownerQuestions: readonly WorkQuestion[] = (row.obligation.assignments ?? []).flatMap(a => a.questions ?? []),
@@ -398,32 +398,18 @@ export function scoutBrief(
     );
   }
   lines.push(
-    "THE OBLIGATION",
-    `obligation id: ${o.id}`,
-    `subject: ${o.subjectId}`,
-    `record class: ${o.recordClass}`,
-    `provider: ${providerId ?? "(unknown)"}`,
-    `route id: ${o.routeId ?? "(none)"}`,
-    `route label: ${route?.label ?? "(no descriptor)"}`,
-    `why a Scout: ${reason}`,
-    route ? `provider's reason for the class: ${route.executorReason}` : "",
-    route?.open.kind === "NOT_MACHINE_EXECUTABLE"
-      ? `target: ${route.open.target}\nwhat stands in the way: ${route.open.reason}`
-      : route
-        ? `declared opening: ${route.open.kind} ${"url" in route.open ? route.open.url : ""}`
-        : "",
-    route?.awaitingAdapter ? `next move recorded by the provider: ${route.awaitingAdapter}` : "",
-    route ? `citation: ${route.citation}` : "",
-    ...WORK_QUESTIONS.filter(q => ownerQuestions.includes(q)).map(q => `OWNER'S QUESTION ${q}: ${WORK_QUESTION_WORDS[q]}`),
-    ...(ownerQuestions.length ? ["Investigate these owner questions for this subject and record class. Compare current source evidence with inherited holdings, preserve independently verified fields, and name unresolved differences. READER_CAN_SEE requires a real reader link and public readback; a captured source or proposed route alone does not prove delivery. Questions never authorize changing identity, skipping validation, or claiming a missing record was not published."] : []),
-    "",
-    "INHERITED PROJECT CONTEXT (sanitized; artifact ids here may be cited as inherited evidence)",
-    inherited.summary.trim() === "" ? "(none recorded)" : inherited.summary,
-    inherited.artifactIds.length > 0 ? `inherited artifact ids: ${inherited.artifactIds.join(", ")}` : "",
-    "",
-    prior.length > 0
-      ? "Continue the ladder from the next rungs above. Finish with the typed result."
-      : "Begin at the primary authority's host (the tools read and record its robots.txt automatically), then walk the ladder. Finish with the typed result.",
+    `Place: ${inherited.placeName ?? o.subjectId}`,
+    "What residents are still missing:",
+    ...(inherited.blanks?.length ? inherited.blanks.map(blank => `- ${blank}`) : [reason]),
+    ...(inherited.officialWebsite ? [`Official website: ${inherited.officialWebsite}`] : route && "url" in route.open ? [`Website: ${route.open.url}`] : ["Official website: not recorded yet."]),
+    ...(ownerQuestions.length ? ["Questions to investigate:", ...WORK_QUESTIONS.filter(q => ownerQuestions.includes(q)).map(q => `- ${WORK_QUESTION_WORDS[q]}`)] : []),
+    "Saved pages (use these ids with read_held):",
+    ...(inherited.savedPages ?? []).map(page => `- ${page.id}: ${page.url}`),
+    ...inherited.artifactIds.filter(id => !inherited.savedPages?.some(page => page.id === id)).map(id => `- ${id}`),
+    "What worked for similar places in this state:",
+    ...(inherited.similarPlaces?.length ? inherited.similarPlaces.map(line => `- ${line}`) : ["No successful method has been recorded yet."]),
+    "Saved work and remaining leads:", inherited.summary,
+    prior.length > 0 ? "Continue from the useful leads above and finish with the evidence-supported result." : "Read the saved pages and official website, then pursue the remaining blanks. Finish with the evidence-supported result.",
   );
   return lines.filter((l) => l !== "").join("\n");
 }
@@ -914,7 +900,7 @@ function mergedCacheDefects(readings: readonly CacheDefectReading[]): { readonly
 
 export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
   const bound = deps.bound ?? RESEARCH_BOUNDS.perDispatch;
-  const minRungs = deps.minRungs ?? MIN_DISTINCT_RUNGS;
+  const minRungs = deps.minRungs ?? 0;
   const clock = deps.now ?? (() => new Date().toISOString());
   /* The routing decides the start class, model and effort; an injected model overrides the id only. */
   const defaultBase = scoutLoopBase(deps.model);
@@ -977,8 +963,10 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
 
       /* The static prefix, from the one builder the pre-warm also calls. */
       const role = deps.role ?? "SCOUT";
-      const playbook = deps.playbookFor ? await deps.playbookFor(role) : rolePlaybook(ctx.inherited.manualEntries ?? [], role);
+      if (!deps.playbookFor) throw new Error("Worker instructions could not be read. Restore them in Admin Settings.");
+      const playbook = await deps.playbookFor(role);
       const prefix = scoutStaticPrefix({ toolkitSpecs: toolkit.specs, bound, minRungs, role, playbook: playbook.text });
+      console.info(`${role} instructions ${playbook.version}; attempt ${attemptId}; exact system prompt in scout_results.instructions.systemPrompt`);
       const rungs: ScoutRung[] = [];
       const artifacts: WorkArtifact[] = [];
       const knowledgeReads: NonNullable<ScoutResult["knowledgeReads"]>[number][] = [];
@@ -1650,6 +1638,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
               zeroReadTurns: defectReading.zeroReadTurns,
             };
       const result: ScoutResult = {
+        instructions: { role, version: playbook.version, entryIds: playbook.entryIds, systemPrompt: prefix.system[0].text },
         formatVersion: 1,
         attemptId,
         obligationId: row.obligation.id,

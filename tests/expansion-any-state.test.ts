@@ -376,7 +376,7 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
 
   /* 3. The next cycle's providers keep the created work: the same accessor reads Ohio's registration. */
   const ids = new Set(created.map((o) => o.id));
-  const pass = buildRegistry([meetingsDiscoveryProvider({ materialized: () => ({ ids }) }), localJurisdictionsProvider({
+  const pass = buildRegistry([meetingsDiscoveryProvider({ registered: () => ({ registries: new Map(), refused: new Map() }), materialized: () => ({ ids }) }), localJurisdictionsProvider({
     trackedStates: { read: () => ({ states: [], source: "fixture: no standing state work" }) }, materialized: () => ({ ids }),
   })], { root: ROOT, nowIso: T_NEXT });
   assert.deepEqual(pass.byProvider.map((p) => p.readFailure), [null, null]);
@@ -569,7 +569,7 @@ test("A SEND FOR A PUERTO RICO MUNICIPIO creates its discovery needs from regist
   const walks = await readFreeDiscoveryWalks(repos, [{ jurisdictionId: adjuntas.need.jurisdictionId, walkable: false }]);
   assert.equal(walks.latestFor(adjuntas.need.jurisdictionId), "NO_SITE_TO_WALK");
   assert.equal(paidDiscoveryHold(`${MEETINGS_DISCOVERY_NAMESPACE}pr:county:adjuntas-municipio#find-own-site`, walks), null, "finding the site is the paid lane's, inside the owner's budgets");
-  const route = buildRegistry([meetingsDiscoveryProvider({ materialized: () => ({ ids: new Set(created.map((o) => o.id)) }) })], { root: ROOT, nowIso: T_NEXT })
+  const route = buildRegistry([meetingsDiscoveryProvider({ registered: () => ({ registries: new Map(), refused: new Map() }), materialized: () => ({ ids: new Set(created.map((o) => o.id)) }) })], { root: ROOT, nowIso: T_NEXT })
     .routeFor(`${MEETINGS_DISCOVERY_NAMESPACE}pr:county:adjuntas-municipio#find-own-site`);
   assert.match(route?.citation ?? "", /PR's registration names this government \(promoted version .+\), and the Census records no web address for it, so none is invented/);
   clearRegistrationJurisdictionRegistries();

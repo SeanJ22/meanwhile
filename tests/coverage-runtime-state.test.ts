@@ -5,7 +5,6 @@ import type { CivicDataReadMetadata, CivicDataReadResult } from "../lib/civic-da
 import type { OfficialStateLegislatorReadModel } from "../lib/civic-data/candidate-builders.ts";
 import type { OfficeholderIndex } from "../lib/officials/lookup.ts";
 import {
-  stateLegislatorCoverageGapText,
   summarizeCoverage,
 } from "../lib/registry/coverage.ts";
 import {
@@ -208,8 +207,6 @@ test("coverage preserves NOT_RECORDED and STORE_UNREACHABLE as independent exact
       { scope: "US-NJ", kind: "STORE_UNREACHABLE" },
     ],
   );
-  assert.match(stateLegislatorCoverageGapText(summary.stateLegislatorAuthorities[0]!)!, /store answered.*no promoted roster/i);
-  assert.match(stateLegislatorCoverageGapText(summary.stateLegislatorAuthorities[1]!)!, /couldn't verify.*names may be missing/i);
 });
 
 test("a healthy exact-scope roster still populates its seat and has no gap notice", async () => {
@@ -233,5 +230,4 @@ test("a healthy exact-scope roster still populates its seat and has no gap notic
   assert.equal(existing.size, 0, "settlement must not mutate the independently loaded base roster");
   assert.equal(summary.stateLegislatorAuthorities[0]?.kind, "PROMOTED");
   assert.equal(summary.seats[0]?.representatives[0]?.id, "az-legislature:person-1");
-  assert.equal(stateLegislatorCoverageGapText(summary.stateLegislatorAuthorities[0]!), null);
 });

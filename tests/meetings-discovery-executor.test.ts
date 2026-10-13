@@ -217,7 +217,7 @@ test("ROBOTS REDIRECTS: robots.txt is followed through its redirects (RFC 9309),
   assert.equal(refused.outcome, "COULD_NOT_READ");
 });
 
-test("REDIRECT: each hop reads and records its host's robots.txt first; a hop onto a disallowing host is followed, and a hop onto a recorded wall is not", async () => {
+test("REDIRECT: each hop records robots.txt and stops when the destination refuses the identified client", async () => {
   const { open, seen } = fakeOpen({
     "https://oldtown.gov/robots.txt": ALLOW,
     "https://oldtown.gov/": { status: 301, location: "https://portal.vendor-cms.com/oldtown/" },
@@ -234,10 +234,12 @@ test("REDIRECT: each hop reads and records its host's robots.txt first; a hop on
     "https://newtown.gov/robots.txt": ALLOW,
     "https://newtown.gov/": { status: 302, location: "https://go.boarddocs.com/az/newtown/Board.nsf/Public" },
     "https://www.newtown.gov/robots.txt": ALLOW,
+    "https://go.boarddocs.com/robots.txt": DENY,
+    "https://go.boarddocs.com/az/newtown/Board.nsf/Public": { status: 403, body: "refused" },
   });
   const blocked = await walkMeetingsDiscoveryNeed(need("az:town:newtown", "newtown.gov"), runtime(walled.open));
-  assert.equal(walled.seen.some((u) => u.includes("boarddocs.com")), false, "a recorded wall is never asked anything, not even through a redirect");
-  assert.equal(blocked.steps.find((s) => s.url.includes("boarddocs.com"))?.permission, "RECORDED_WALL");
+  assert.ok(walled.seen.includes("https://go.boarddocs.com/robots.txt"));
+  assert.equal(blocked.steps.find((s) => s.url.endsWith("/Board.nsf/Public"))?.status, 403);
 });
 
 test("A CHALLENGE AT 200 IS A WALL: the walk records the access control on the step, vaults the page as its evidence, never reads it as the homepage, and teaches a dead door", async () => {
@@ -282,12 +284,12 @@ test("A TOKEN REDIRECT AT 200 IS A WALL: Sierra Vista Unified's homepage (2026-0
   assert.match(doors[0].summary, /a bot challenge/);
 });
 
-test("WALL: a recorded wall is never requested, not even its robots.txt", async () => {
-  assert.ok(RECORDED_WALLS.some((w) => w.host === "go.boarddocs.com"));
-  const { open, seen } = fakeOpen({ "https://boarddocs.com/robots.txt": DENY });
+test("BoardDocs is checked as a public source; a refusal is recorded without closing every tenant forever", async () => {
+  assert.ok(!RECORDED_WALLS.some((w) => w.host === "go.boarddocs.com"));
+  const { open, seen } = fakeOpen({ "https://go.boarddocs.com/robots.txt": DENY, "https://go.boarddocs.com/": { status: 403, body: "refused" } });
   const attempt = await walkMeetingsDiscoveryNeed(need("az:district:walled", "go.boarddocs.com"), runtime(open));
-  assert.equal(seen.some((u) => u.startsWith("https://go.boarddocs.com/")), false);
-  assert.equal(attempt.steps.find((s) => s.url === "https://go.boarddocs.com/")?.permission, "RECORDED_WALL");
+  assert.ok(seen.includes("https://go.boarddocs.com/robots.txt"));
+  assert.equal(attempt.steps.find((s) => s.url === "https://go.boarddocs.com/")?.status, 403);
 });
 
 test("NOT A ROUTE: a linked feed that answers an HTML shell is a lead, never a find; an unreachable site is COULD_NOT_READ", async () => {
@@ -436,6 +438,30 @@ test("ROTATION: every need comes round in turn from the cycle's hour, with no st
   assert.deepEqual(rotationWindow([], 7, 3), []);
 });
 
+test("standing census reaches unread governments before repeating unchanged hinted sites", async () => {
+  for (const [label, repos] of await eachStore("wtp-census-unread-")) {
+    const old = need("az:town:already-read", "old.gov");
+    const hints: JurisdictionRouteHints[] = [{ jurisdictionId: old.jurisdictionId, officialSite: null, routes: [] }];
+    const previous = await walkMeetingsDiscoveryNeed(old, runtime(fakeOpen({}).open, { routeHints: hints }));
+    await repos.discoveryAttempts.append(old.jurisdictionId, previous.attemptId, previous, previous.finishedAt);
+    const untouched = need("az:town:unread", "new.gov");
+    const historyReads: string[] = [];
+    const readHistory = repos.discoveryAttempts.read.bind(repos.discoveryAttempts);
+    repos.discoveryAttempts.read = async id => { historyReads.push(id); return readHistory(id); };
+    const projectedReads: unknown[] = [];
+    const readLatest = repos.discoveryAttempts.readLatest.bind(repos.discoveryAttempts);
+    repos.discoveryAttempts.readLatest = async (ids, projection) => { projectedReads.push(projection); return readLatest(ids, projection); };
+    const pass = await runMeetingsDiscovery(repos, {
+      needs: [old, untouched], cycleIndex: 0, maxWalks: 1,
+      runtime: runtime(fakeOpen({}).open, { routeHints: hints, now: () => "2026-09-25T01:00:00.000Z" }),
+    });
+    assert.deepEqual(pass.walked.map(attempt => attempt.jurisdictionId), [untouched.jurisdictionId], `${label}: a recurring due hint cannot use the new government's place in the pass`);
+    assert.deepEqual(historyReads, [untouched.jurisdictionId]);
+    assert.deepEqual(projectedReads, [{ finishedAt: true, routeHints: ["fingerprint"] }], `${label}: only small scheduling fields are held for this state's needs`);
+    assert.deepEqual(pass.deferred, [old.jurisdictionId]);
+  }
+});
+
 test("PASS: every walk is appended under its jurisdiction; a need not yet due is passed over; a spent budget defers the rest untouched", async () => {
   for (const [label, repos] of await eachStore("wtp-discovery-")) {
     const { open, seen } = fakeOpen({
@@ -470,13 +496,14 @@ test("PASS: every walk is appended under its jurisdiction; a need not yet due is
     assert.deepEqual(await repos.discoveryAttempts.readRecent("az:d:no-site", 5), [], `${label}: a need with no site is not walked`);
 
     const manual = (await repos.fieldManual.list()).map((row) => row.value);
-    assert.deepEqual(manual.map((e) => [e.kind, e.outcome]).sort(), [["DEAD_DOOR", "BLOCKED"], ["MEETINGS_ROUTE", "YIELDED"]], `${label}: a route and a dead door are learned`);
-    assert.equal(pass.fieldManual.written, 2);
+    assert.deepEqual(manual.map((e) => [e.kind, e.outcome]).sort(), [["DEAD_DOOR", "BLOCKED"], ["MEETINGS_ROUTE", "YIELDED"], ["PLATFORM_CENSUS", "ZERO"]], `${label}: a route, a dead door and a homepage census are learned`);
+    assert.equal(pass.fieldManual.written, 3);
 
-    let asked = 0;
+    let spent = false;
     const deferred = await runMeetingsDiscovery(repos, {
       needs: [need("az:e:one", "one.gov"), need("az:f:two", "two.gov")],
-      runtime: runtime(fakeOpen({}).open, { budget: { spent: () => asked++ >= 1 } }),
+      runtime: runtime(fakeOpen({}).open, { budget: { spent: () => spent } }),
+      onWalk: () => { spent = true; },
       cycleIndex: 0,
       maxWalks: 5,
     });
@@ -678,7 +705,7 @@ test("HINTED ROUTES GO FIRST, ROBOTS-FIRST: a route a check covers is confirmed 
 
   assert.deepEqual(
     discoveryFieldManualEntries(attempt).map((e) => [e.kind, e.outcome, e.platforms.join(",")]),
-    [["MEETINGS_ROUTE", "YIELDED", "ical"], ["MEETINGS_ROUTE", "YIELDED", "ical"], ["MEETINGS_LEAD", "REFERENCE", "wordpress"], ["MEETINGS_LEAD", "REFERENCE", "pdf"], ["MEETINGS_LEAD", "REFERENCE", "youtube"]],
+    [["PLATFORM_CENSUS", "ZERO", ""], ["MEETINGS_ROUTE", "YIELDED", "ical"], ["MEETINGS_ROUTE", "YIELDED", "ical"], ["MEETINGS_LEAD", "REFERENCE", "wordpress"], ["MEETINGS_LEAD", "REFERENCE", "pdf"], ["MEETINGS_LEAD", "REFERENCE", "youtube"]],
     "what the hints yielded is written the way every walk's results are, so later walks inherit it",
   );
 });
@@ -795,7 +822,7 @@ test("A WALK THAT FAILS ON OUR SIDE IS NAMED, AND THE PASS GOES ON: the other wa
     assert.deepEqual(pass.walked.map((a) => [a.jurisdictionId, a.outcome]), [["az:b:found", "FOUND"]], `${label}: the pass went on`);
     assert.deepEqual(pass.walkFailures, [{ jurisdictionId: "az:a:broken", why: "the transport adapter threw: not a site failure" }], label);
     assert.deepEqual(await repos.discoveryAttempts.readRecent("az:a:broken", 5), [], `${label}: nothing is recorded as a reading, so the need stays due`);
-    assert.equal(pass.fieldManual.written, 1, `${label}: the other walk's route reached the field manual`);
+    assert.equal(pass.fieldManual.written, 2, `${label}: the other walk's route and homepage census reached the field manual`);
   }
   assert.match(readFileSync("scripts/freshness-shadow.mts", "utf8"), /walkFailures: meetingsDiscovery\?\.walkFailures \?\? \[\],/, "the cycle record names them");
 });
@@ -869,11 +896,69 @@ test("A FIND RECORDED WITHOUT PROVENANCE IS WALKED AGAIN, so no route waits out 
     assert.deepEqual(again.notDue, ["az:a:found"], `${label}: once it carries provenance it waits for its recheck`);
     const latest = pass.walked[0];
     await repos.discoveryAttempts.append(latest.jurisdictionId, `${latest.attemptId}-legacy`,
-      { ...latest, recheckAfter: "2026-12-24T01:00:00.000Z" }, latest.finishedAt);
+      { ...latest, platformCensus: undefined, recheckAfter: "2026-12-24T01:00:00.000Z" }, latest.finishedAt);
     const next = await runMeetingsDiscovery(repos, { needs: [need("az:a:found", "found.gov")],
       runtime: runtime(open, { now: () => "2026-09-24T14:00:00.000Z" }), cycleIndex: 0, maxWalks: 1 });
     assert.deepEqual(next.walked.map(attempt => attempt.jurisdictionId), [latest.jurisdictionId],
       `${label}: an old ninety-day hold cannot hide new calendars beyond the twice-daily cadence`);
+  }
+});
+
+test("confirmed platform homepages follow the slow census clock while unresolved discovery remains twice daily", async () => {
+  for (const [label, repos] of await eachStore("wtp-census-clock-")) {
+    const site = need("az:town:monthly", "monthly.gov");
+    const { open } = fakeOpen({
+      "https://monthly.gov/robots.txt": ALLOW,
+      "https://monthly.gov/": { status: 200, body: `<a href="/meetings.ics">Meetings</a>` },
+      "https://monthly.gov/meetings.ics": { status: 200, body: ICS },
+    });
+    const first = await runMeetingsDiscovery(repos, { needs: [site], runtime: runtime(open), cycleIndex: 0, maxWalks: 1 });
+    const census = first.walked[0].platformCensus;
+    assert.ok(census, `${label}: a confirmed homepage carries its census date`);
+    const unchanged = fakeOpen({});
+    const nextDay = await runMeetingsDiscovery(repos, { needs: [site], cycleIndex: 0, maxWalks: 1,
+      runtime: runtime(unchanged.open, { now: () => new Date(Date.parse(NOW) + 86_400_000).toISOString() }) });
+    assert.deepEqual(nextDay.notDue, [site.jurisdictionId], `${label}: a confirmed route does not consume daily homepage traffic`);
+    assert.deepEqual(unchanged.seen, []);
+    const due = await runMeetingsDiscovery(repos, { needs: [site], cycleIndex: 0, maxWalks: 1,
+      runtime: runtime(open, { now: () => census.recheckAfter }) });
+    assert.equal(due.walked.length, 1, `${label}: the controlled clock reaches the next census reading`);
+  }
+});
+
+test("a confirmed partial walk retains discovery work for routes beyond a small publisher's request limit", async () => {
+  for (const [label, repos] of await eachStore("wtp-partial-census-")) {
+    const site = need("az:town:partial", "partial.gov");
+    const reply: Record<string, Reply> = { "https://partial.gov/robots.txt": ALLOW,
+      "https://partial.gov/": { status: 200, body: Array.from({ length: 12 }, (_, index) => `<a href="/meetings-${index}.ics">Meetings ${index}</a>`).join("") } };
+    for (let index = 0; index < 12; index++) reply[`https://partial.gov/meetings-${index}.ics`] = { status: 200, body: ICS };
+    const { open } = fakeOpen(reply);
+    const options = { websiteSize: () => ({ kind: "local-government" as const, population: 9999 }) };
+    const first = await runMeetingsDiscovery(repos, { needs: [site], runtime: runtime(open, options), cycleIndex: 0, maxWalks: 1 });
+    assert.equal(first.walked[0].outcome, "FOUND");
+    assert.ok(first.walked[0].steps.some(step => step.status === null && /website reached/.test(step.note)));
+    const next = await runMeetingsDiscovery(repos, { needs: [site], cycleIndex: 0, maxWalks: 1,
+      runtime: runtime(open, { ...options, now: () => new Date(Date.parse(NOW) + 13 * 3_600_000).toISOString() }) });
+    assert.equal(next.walked.length, 1, `${label}: unfinished routes do not wait for the monthly census clock`);
+  }
+});
+
+test("newly promoted registration brings a Census lead forward before its monthly clock", async () => {
+  for (const [label, repos] of await eachStore("wtp-census-registration-")) {
+    const site = need("al:town:registered", "registered.gov");
+    const { open } = fakeOpen({
+      "https://registered.gov/robots.txt": ALLOW,
+      "https://registered.gov/": { status: 200, body: `<a href="/meetings.ics">Meetings</a>` },
+      "https://registered.gov/meetings.ics": { status: 200, body: ICS },
+    });
+    await runMeetingsDiscovery(repos, { needs: [site], runtime: runtime(open), cycleIndex: 0, maxWalks: 1 });
+    const registered = { ...site, addressSource: { source: "REGISTRATION" as const, versionId: "new-registration" } };
+    const at = new Date(Date.parse(NOW) + 3_600_000).toISOString();
+    const ready = await runMeetingsDiscovery(repos, { needs: [registered], runtime: runtime(open, { now: () => at }), cycleIndex: 0, maxWalks: 1 });
+    assert.equal(ready.walked.length, 1, `${label}: a newly registered source is immediately walkable for attestation`);
+    assert.equal(ready.walked[0].site?.address?.versionId, "new-registration");
+    const again = await runMeetingsDiscovery(repos, { needs: [registered], runtime: runtime(open, { now: () => at }), cycleIndex: 0, maxWalks: 1 });
+    assert.deepEqual(again.notDue, [site.jurisdictionId], `${label}: unchanged registration keeps the monthly clock`);
   }
 });
 

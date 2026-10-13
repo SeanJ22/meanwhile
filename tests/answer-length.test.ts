@@ -1,3 +1,4 @@
+import { fixturePlaybooks } from "./helpers/playbooks.ts";
 /**
  * The answer length contract. A prose cap applied without a contract would truncate sourced content,
  * so these assertions are as much about what the contract must not do (cut a sentence, drop a
@@ -95,8 +96,8 @@ test("ASK-19: the PROMPT states the same numbers the validator enforces", () => 
   const rule = lengthRuleForPrompt();
   assert.match(rule, new RegExp(String(ANSWER_LENGTH_CONTRACT.maxSentences)));
   assert.match(rule, new RegExp(String(ANSWER_LENGTH_CONTRACT.maxCharacters)));
-  const prompt = readFileSync("lib/ask/synthesize.ts", "utf8");
-  assert.match(prompt, /lengthRuleForPrompt\(\)/, "the prompt reads the contract");
+  const prompt = (fixturePlaybooks(["ASK_WRITER"])[0].payload as {text:string}).text;
+  assert.ok(prompt.includes(rule), "the seeded instructions state the code-enforced length contract");
   assert.ok(
     !/Two to five sentences unless the records genuinely need more/.test(prompt),
     "the escape hatch is gone — an instruction the model can always satisfy is not a rule",

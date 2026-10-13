@@ -128,7 +128,7 @@ test("an official school's linked Diligent portal becomes a reviewed, body-filte
     [portal]: { status: 200, body: portalHtml },
     [route]: { status: 200, body: JSON.stringify(rows), contentType: "application/json" },
   }, { jurisdictionId, stateCode: "AZ", name: "Fixture Accommodation Schools" });
-  const result = review(recorded.attempt, recorded.bodies, { registered: { bodyId: `${ocdId}#board`, ocdId, publishingOrg: "Fixture Accommodation Schools", input: { ...REGISTRATION, scope: "US-AZ:registration:v1" } } });
+  const result = review(recorded.attempt, recorded.bodies, { registered: { bodyId: `${ocdId}#board`, ocdId, publishingOrg: "Fixture Accommodation Schools", countyFips: "04013", input: { ...REGISTRATION, scope: "US-AZ:registration:v1" } } });
   const accepted = result.accepted.find(a => a.row.bodyId === `${ocdId}#board`);
   assert.ok(accepted, JSON.stringify(result.held));
   assert.equal(accepted.row.kind, "DILIGENT");
@@ -237,7 +237,7 @@ test("HELD: bytes not vaulted, a government registration does not pair, a hand-w
   assert.ok(wired.held.some((h) => h.reason === "ALREADY_WIRED" && h.bodyName === "City Council"));
   assert.deepEqual(wired.accepted.map((a) => a.row.bodyName), ["Fair Housing Commission", "Housing Commission", "Tourism Commission", "Youth City Council"]);
 
-  const unsupported = { ...attempt, found: [{ ...attempt.found[0]!, vendor: "boardbook", url: "https://meetings.boardbook.org/Public/Organization/100" }] };
+  const unsupported = { ...attempt, found: [{ ...attempt.found[0]!, vendor: "onbase", url: "https://fixture.hylandcloud.com/100" }] };
   assert.deepEqual(reasons(review(unsupported, bodies)), ["KIND_NOT_REVIEWABLE:-"]);
 });
 

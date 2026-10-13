@@ -13,7 +13,7 @@ import type { SourceSnapshot, StatementCorpus } from "../lib/corpus/types.ts";
 
 /**
  * The three answers are three different facts: without them an empty match reads as "this person has no position
- * on X", a false claim about a named person. The surface must not render any two of them the same way.
+ * on X", a false claim about a named person. Missing passages contribute to the card gap.
  */
 
 const ROOT = join(import.meta.dirname, "..");
@@ -175,29 +175,16 @@ test("D35: the three answers are distinguishable in data, and none of them says 
   assert.equal(kinds.size, 3, "two of the three answers collapsed into one");
 });
 
-test("D35: the surface renders three different sentences, in the gap's own register", () => {
+test("D35: missing passages contribute to the card gap without asserting a finding", () => {
   const surface = readFileSync(
     join(ROOT, "components", "officials", "positions-section.tsx"),
     "utf8",
   );
-
-  // Each answer marks itself in the DOM, so a walk can tell which one it got.
-  for (const kind of [
-    "MATCHED",
-    "SEARCHED_NOTHING_MATCHED",
-    "NOT_YET_COLLECTED",
-  ]) {
-    assert.ok(
-      surface.includes(`data-positions-answer${kind === "MATCHED" ? '="MATCHED"' : `": "${kind}"`}`),
-      `the surface does not mark the ${kind} answer`,
-    );
-  }
-
-  // Internal search states without a full equal-effort sweep keep WorkingOnIt rather than a finding.
-  assert.match(surface, /answer.kind === "SEARCHED_NOTHING_MATCHED" && <WorkingOnIt/);
-  assert.match(surface, /answer.kind === "NOT_YET_COLLECTED" && <WorkingOnIt/);
-  assert.match(surface, /failed && <WorkingOnIt/);
-  assert.doesNotMatch(surface, /none of\s+them mentions|has no\s+position on it/);
+  assert.match(surface, /data-positions-answer="MATCHED"/);
+  assert.match(surface, /answer.kind === "SEARCHED_NOTHING_MATCHED" && <CardGapContribution/);
+  assert.match(surface, /answer.kind === "NOT_YET_COLLECTED" && <CardGapContribution/);
+  assert.match(surface, /failed && <CardGapContribution/);
+  assert.doesNotMatch(surface, /WorkingOnIt|none of\s+them mentions|has no\s+position on it/);
 
   // Only MATCHED renders the quote block.
   const matchedBlock = surface.slice(

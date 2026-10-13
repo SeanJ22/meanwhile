@@ -1,3 +1,4 @@
+import { fixtureRolePlaybook } from "./helpers/playbooks.ts";
 /**
  * On Claude Opus 5.5 a thinking block is bound to the model that produced it
  * and to the conversation before it; replaying a block after an edit of the
@@ -152,7 +153,7 @@ async function runScout(transport: ModelTransport, bound: Partial<ScoutBound> = 
   const results: ScoutResult[] = [];
   const b: ScoutBound = { ...RESEARCH_BOUNDS.perDispatch, ...bound };
   const toolkit = bigPageToolkit();
-  const exec = scoutExecutor({
+  const exec = scoutExecutor({ playbookFor: fixtureRolePlaybook,
     model: SONNET, // This suite specifically verifies Sonnet → Opus preserved thinking.
     transport,
     bound: b,

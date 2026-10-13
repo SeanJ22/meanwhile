@@ -1,27 +1,51 @@
 import { zipDivisionEntry } from "../geo/zip-division-index.ts";
-import type { GeographySelection } from "../census-geography/selection.ts";
+import { districtFamilyKey } from "../census-geography/division-id.ts";
+import { currentRepresentationSelection, selectGeographyVersion, type GeographySelection } from "../census-geography/selection.ts";
+import type { GeographyType } from "../census-geography/contract.ts";
+import type { BallotSet } from "./types.ts";
 
-/**
- * Every division whose territory reaches inside this zip, unioned with the
- * divisions containing the zip's centroid.
- *
- * @param zip Five digits. Anything else returns `pointDivisionIds` unchanged.
- * @param pointDivisionIds What the centroid resolved to. Always included.
- */
+/** Plans used to build the held point geometry and sampled ZIP index. */
+export const POINT_GEOMETRY_PLANS = { cd: "cd:119", sldu: "sldu:2024", sldl: "sldl:2024" } as const;
+type DistrictFamily = keyof typeof POINT_GEOMETRY_PLANS;
+type PointPlans = Partial<Readonly<Record<DistrictFamily, string>>>;
+const TYPES: Record<DistrictFamily, GeographyType> = { cd: "congressional_district", sldu: "state_leg_upper", sldl: "state_leg_lower" };
+const OFFICES: Record<DistrictFamily, string> = { cd: "U.S. House", sldu: "State Senate", sldl: "State House" };
+
+/** Every qualified district touching the ZIP, plus point and sampled local
+ * divisions. A point district needs its own applicable plan when no ZIP rows
+ * qualified that state's family. */
 export async function divisionIdsForZipArea(
   zip: string | null,
   pointDivisionIds: readonly string[],
-  selection?: GeographySelection,
+  selection: GeographySelection = currentRepresentationSelection(),
+  pointPlans?: PointPlans,
 ): Promise<string[]> {
-  const out = new Set(pointDivisionIds);
-  if (!zip || !/^\d{5}$/.test(zip)) return [...out];
-  const entry = await zipDivisionEntry(zip, selection);
-  // A qualified area family supersedes stale centroid assignments for that
-  // family. The centroid remains orientation data for unrelated local layers.
-  for (const family of ["cd", "sldu", "sldl"]) {
-    const pattern = new RegExp(`/${family}:[^/]+$`);
-    for (const id of out) if (pattern.test(id)) out.delete(id);
+  const entry = zip && /^\d{5}$/.test(zip) ? await zipDivisionEntry(zip, selection) : null;
+  const areaIds = new Set(entry?.ids ?? []);
+  const qualified = new Set(entry?.qualifiedDistricts ?? []);
+  const out = new Set([...pointDivisionIds, ...areaIds]);
+  for (const id of out) {
+    const key = districtFamilyKey(id);
+    if (!key) continue;
+    if (qualified.has(key)) {
+      if (!areaIds.has(id)) out.delete(id);
+      continue;
+    }
+    const [state, family] = key.split("/") as [string, DistrictFamily];
+    const plan = pointPlans?.[family];
+    if (!plan || !selectGeographyVersion([{ key: plan, type: TYPES[family] }], TYPES[family], selection, state)) out.delete(id);
   }
-  for (const id of entry?.ids ?? []) out.add(id);
   return [...out];
+}
+
+/** Each missing state/family leaves its independently established contests
+ * readable and gets its own office-specific district note. */
+export function unestablishedDistrictOffices(set: Pick<BallotSet, "contests">, electionIds: readonly string[]): string[] {
+  const established = new Set(electionIds.map(districtFamilyKey).filter(key => key !== null));
+  const offices = new Set<string>();
+  for (const contest of set.contests) {
+    const key = districtFamilyKey(contest.ocdId);
+    if (key && !established.has(key)) offices.add(OFFICES[key.split("/")[1] as DistrictFamily]);
+  }
+  return [...offices];
 }

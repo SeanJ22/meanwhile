@@ -12,12 +12,13 @@ import {
   unplacedVenueGap,
 } from "../../meetings/venue-cache.ts";
 import { toZonedIso } from "../../time/zoned.ts";
-import { politeGetText } from "../http.ts";
+import { decodeEntities, politeGetText } from "../http.ts";
 import type {
   Meeting,
   MeetingQuery,
   MeetingStatus,
   NormalizeDropCounts,
+  PartialScopeFailure,
   ReportingMeetingSource,
 } from "../types.ts";
 import {
@@ -40,6 +41,7 @@ export interface CivicPlusRaw {
   ical: string;
   /** The AgendaCenter page's HTML, when the row wires one. */
   agendaCenter?: string;
+  partialScopes?: PartialScopeFailure[];
   collectedAt: string;
 }
 
@@ -49,6 +51,30 @@ export interface ArchivedSitting {
   date: string;
   /** Site-relative hrefs, agenda first where both exist. */
   agendaHref: string | null;
+  title?: string;
+}
+
+/** CivicEngage renders both flat `listing` categories and grouped `category` panels. */
+function categoryBlocks(html: string): { id: string; name: string; html: string }[] {
+  const blocks: { id: string; name: string; html: string }[] = [];
+  for (const match of html.matchAll(/<div\b[^>]*\bid\s*=\s*["']cat(\d+)["'][^>]*>/gi)) {
+    const start = match.index! + match[0].length;
+    let depth = 1;
+    let end = html.length;
+    for (const tag of html.slice(start).matchAll(/<\/?div\b[^>]*>/gi)) {
+      depth += /^<\//.test(tag[0]) ? -1 : 1;
+      if (depth === 0) { end = start + tag.index!; break; }
+    }
+    const block = html.slice(start, end);
+    const heading = /<h[23]\b[^>]*>([\s\S]*?)<\/h[23]>/i.exec(block)?.[1] ?? "";
+    const name = decodeEntities(heading.replace(/<[^>]+>/g, " ")).replace(/\s+/g, " ").trim();
+    blocks.push({ id: match[1], name, html: block });
+  }
+  return blocks;
+}
+
+export function parseAgendaCenterCategories(html: string): { id: string; name: string }[] {
+  return categoryBlocks(html).map(({ id, name }) => ({ id, name }));
 }
 
 /**
@@ -61,18 +87,18 @@ export function parseAgendaCenter(
   html: string,
   categoryId: string,
 ): ArchivedSitting[] {
-  const block = new RegExp(
-    `<div class="listing[^"]*" id="cat${categoryId}">([\\s\\S]*?)(?=<div class="listing|<\\/main|<footer)`,
-  ).exec(html);
+  const block = categoryBlocks(html).find((category) => category.id === categoryId);
   if (!block) return [];
 
   const byDate = new Map<string, { agenda?: string; other?: string }>();
-  for (const m of block[1].matchAll(
-    /\/AgendaCenter\/ViewFile\/(Agenda|Minutes)\/_?(\d{2})(\d{2})(\d{4})-(\d+)/g,
+  for (const m of block.html.matchAll(
+    /\/AgendaCenter\/ViewFile\/(Agenda|Minutes)\/_?(\d{2})(\d{2})(\d{4})-(\d+)(?:\?[^"'<>\s]*)?/gi,
   )) {
     const date = `${m[4]}-${m[2]}-${m[3]}`;
+    const stamp = Date.parse(`${date}T00:00:00Z`);
+    if (!Number.isFinite(stamp) || new Date(stamp).toISOString().slice(0, 10) !== date) continue;
     const entry = byDate.get(date) ?? {};
-    if (m[1] === "Agenda") entry.agenda = m[0];
+    if (m[1].toLowerCase() === "agenda" && !entry.agenda) entry.agenda = decodeEntities(m[0]);
     else entry.other = m[0];
     byDate.set(date, entry);
   }
@@ -180,7 +206,7 @@ export function makeCivicPlusSource(
   const normalizeWithDrops = (
     raw: CivicPlusRaw[],
     now: Date = new Date(),
-  ): Accounted<{ meetings: Meeting[]; drops: NormalizeDropCounts }> => {
+  ): Accounted<{ meetings: Meeting[]; drops: NormalizeDropCounts; partialScopes?: PartialScopeFailure[] }> => {
     const meetings: Meeting[] = [];
     const drops: NormalizeDropCounts = {
       placeless: 0,
@@ -361,7 +387,7 @@ export function makeCivicPlusSource(
     return accountedNormalize(
       SOURCE_NAME,
       raw,
-      { meetings, drops },
+      { meetings, drops, ...(raw.some(row => row.partialScopes?.length) ? { partialScopes: raw.flatMap(row => row.partialScopes ?? []) } : {}) },
       { logicalInput: considered, duplicates, countedButProduced: keptButPlaceless },
     );
   };
@@ -378,25 +404,46 @@ export function makeCivicPlusSource(
       const collected: CivicPlusRaw[] = [];
       // Serialized across bodies, same as every adapter here.
       for (const wiring of wiringRows) {
-        const { text } = await politeGetText(wiring.config.icalUrl, {
-          fetchImpl,
-          accept: "text/calendar",
-          signal: query?.signal,
-        });
+        // An AgendaCenter is a complete publication route on its own. A site's
+        // separate calendar module is optional and must never be guessed.
+        if (!wiring.config.icalUrl && !wiring.config.agendaCenterUrl) {
+          throw new Error(`CIVICPLUS_SOURCE_WIRING_INVALID:${wiring.bodyId}: no published calendar or AgendaCenter URL`);
+        }
+        const partialScopes: PartialScopeFailure[] = [];
+        let failure: unknown;
+        let text = "";
+        if (wiring.config.icalUrl) {
+          try {
+            text = (await politeGetText(wiring.config.icalUrl, {
+              fetchImpl, accept: "text/calendar", signal: query?.signal,
+              expect: { label: "iCalendar feed", marker: "BEGIN:VCALENDAR" },
+            })).text;
+          } catch (error) {
+            query?.signal?.throwIfAborted();
+            failure = error;
+            partialScopes.push({ scope: "UPCOMING", ocdIds: [wiring.ocdId], cause: String(error) });
+          }
+        }
         // M59: one extra GET, only where a row wires an archive.
         let agendaCenter: string | undefined;
         if (wiring.config.agendaCenterUrl) {
-          const archive = await politeGetText(wiring.config.agendaCenterUrl, {
-            fetchImpl,
-            accept: "text/html",
-            signal: query?.signal,
-          });
-          agendaCenter = archive.text;
+          try {
+            const archive = await politeGetText(wiring.config.agendaCenterUrl, {
+              fetchImpl, accept: "text/html", signal: query?.signal,
+            });
+            agendaCenter = archive.text;
+          } catch (error) {
+            query?.signal?.throwIfAborted();
+            failure = error;
+            partialScopes.push({ scope: "ARCHIVE", ocdIds: [wiring.ocdId], cause: String(error) });
+          }
         }
+        if (!text && !agendaCenter && failure) throw failure;
         collected.push({
           wiring,
           ical: text,
           agendaCenter,
+          ...(partialScopes.length ? { partialScopes } : {}),
           collectedAt: new Date().toISOString(),
         });
       }

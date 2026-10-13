@@ -17,9 +17,7 @@ import { DEFAULT_SOURCE_POLICY } from "../lib/control-plane/promotion/source-kin
 import { filedOrganizations, stateSmallDonorSentence } from "../lib/funding/state-money-funding.ts";
 import { campaignMoneyEvidenceFor } from "../lib/ask/campaign-money.ts";
 import { composeMoneyAnswer } from "../lib/ask/money-answer.ts";
-import { createElement } from "react";
-import { renderToStaticMarkup } from "react-dom/server";
-import { StateMoneySection } from "../components/funding/state-money-section.tsx";
+import { renderCardWithSources } from "./helpers/render-card.ts";
 import { zip as createZip } from "../scripts/xlsx.mjs";
 
 const now = "2026-10-05T18:00:00Z", division = "ocd-division/country:us/state:oh/place:alder", target = "ballot-candidacy:avery";
@@ -217,7 +215,7 @@ test("filed organizations and aggregate private giving reach cards and Ask, with
   assert.match(stateSmallDonorSentence(record.funding)!, /25%/);
   assert.equal(stateSmallDonorSentence({ ...record.funding!, scope: "REPORT_PERIOD" }), null);
   assert.doesNotMatch(JSON.stringify(read.value), /Private Donor|Private Lane|Private Road|Unclassified Person/);
-  const html = renderToStaticMarkup(createElement(StateMoneySection, { records: [record] }));
+  const html = await renderCardWithSources({ modulePath: "./components/funding/state-money-section.tsx", exportName: "StateMoneySection", props: { records: [record] }, sourceUrls: [url] });
   assert.match(html, /Neighbors PAC/);
   assert.match(html, /Individual giving/);
   assert.match(html, /<span class="card-section-title">Sources<\/span>/);

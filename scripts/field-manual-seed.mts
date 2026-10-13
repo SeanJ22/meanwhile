@@ -22,7 +22,6 @@ import {
   type FieldManualOutcome,
   type FieldManualRole,
 } from "../lib/control-plane/field-manual.ts";
-import { defaultPlaybookEntries } from "../lib/control-plane/playbooks.ts";
 import { platformFingerprintEntries } from "../lib/control-plane/platform-fingerprints.ts";
 import { COVERAGE_AUDITS } from "../lib/registry/coverage-audit.ts";
 import { LEGISTAR_CLIENTS } from "../lib/sources/legistar/client-registry.ts";
@@ -149,8 +148,6 @@ async function fromMethodCandidates(repos: ControlPlaneRepositories): Promise<Fi
 /** Index the big Markdown method-of-record docs as pointers — full text stays in git, never lost. */
 function fromDocs(): FieldManualEntry[] {
   const docs: { path: string; kind: string; role: FieldManualRole; states: string[]; title: string }[] = [
-    { path: "docs/zip-playbook.md", kind: "PLAYBOOK", role: "SHARED", states: [], title: "The ZIP discovery playbook (lettered A–M ladder, dated rungs and dead doors, definition-of-done)" },
-    { path: "docs/source-ladder.md", kind: "PLAYBOOK", role: "SHARED", states: [], title: "The source ladder — per-body evidence: every rung walked, every wall that fell" },
     { path: "docs/sources.md", kind: "SOURCE_REGISTER", role: "SHARED", states: [], title: "The global source & credential register (wired/auth/licence)" },
   ];
   const entries: FieldManualEntry[] = [];
@@ -291,7 +288,6 @@ async function main(): Promise<void> {
     ...fromCoverageAudits(),
     ...(target === "control-plane" ? await fromMethodCandidates(repos) : []),
     ...fromDocs(),
-    ...defaultPlaybookEntries(["SCOUT", "DETECTIVE", "PARSER", "AUDITOR", "ENGINEER", "VALIDATOR"]),
     ...fromTenantRegistries(),
     ...fromTiers(),
   ];

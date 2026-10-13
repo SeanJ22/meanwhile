@@ -4,7 +4,7 @@ import type { SeatHolder } from "@/lib/officials/lookup";
 import type { Bill } from "@/lib/sources/legiscan/bills";
 import { LEGISCAN_ATTRIBUTION } from "@/lib/sources/legiscan/types";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
-import { WorkingOnIt } from "@/components/demand/working-on-it";
+import { CardGapContribution } from "@/components/ui/card-gap-context";
 
 export function LegislatorBills({holder}:{holder:SeatHolder}) {
   const [read,setRead]=useState<{bills:Bill[];complete:boolean;checkedAt:string|null}|null>(null),[showAll,setShowAll]=useState(false);
@@ -20,9 +20,12 @@ export function LegislatorBills({holder}:{holder:SeatHolder}) {
   },[holder.id,state,legislative]);
   if(!state||!legislative) return null;
   const bills=read?.bills.slice(0,showAll?undefined:20)??[];
+  // A missing field never shows a placeholder: it joins the card's counted gap line once the read has answered.
+  if(!read) return null;
+  if(!read.bills.length) return <CardGapContribution id={`bills:${holder.id}`} label="sponsored bills"/>;
   return <section className="mt-4" data-legislator-bills>
     <h3 className="t-eyebrow text-muted">Sponsored bills</h3>
-    {!read||!read.bills.length?<WorkingOnIt/>:<>
+    <>
       <ul className="mt-2 space-y-3">{bills.map(bill=><li key={bill.id} data-bill-id={bill.id} className="t-detail">
         <a href={bill.sourceUrl} target="_blank" rel="noreferrer noopener" className="text-link">{bill.number} · {bill.title}</a>
         <p>{bill.statusLabel}{bill.statusDate?` · ${bill.statusDate}`:""} · {bill.sessionName}</p>
@@ -31,7 +34,7 @@ export function LegislatorBills({holder}:{holder:SeatHolder}) {
       </li>)}</ul>
       <p className="t-caption text-muted">Showing {bills.length} of {read.bills.length} sponsored bills.</p>
       {read.bills.length>20&&<button type="button" className="t-detail text-link" onClick={()=>setShowAll(value=>!value)}>{showAll?"Show recent bills":"Show all bills"}</button>}
-      {!read.complete&&<WorkingOnIt/>}
+      {!read.complete&&<CardGapContribution id={`bills-incomplete:${holder.id}`} label="the rest of the sponsored bills"/>}
       <CardSourcesContribution id={`bills:${holder.id}`} sources={[
         {what:`Bill data licence: ${LEGISCAN_ATTRIBUTION.licence}`,provenance:{sourceUrl:LEGISCAN_ATTRIBUTION.licenceUrl,sourceOrg:"LegiScan",collectedAt:read.checkedAt??"",verifiedAt:null}},
         ...bills.flatMap(bill=>[
@@ -39,6 +42,6 @@ export function LegislatorBills({holder}:{holder:SeatHolder}) {
           ...bill.texts.map(row=>({what:`${bill.number}: ${row.type}; published ${row.date??bill.facts.title.publishedAt}`,provenance:{...bill.facts[`text:${row.id}`],sourceUrl:row.governmentUrl??row.url,sourceOrg:row.governmentSourceOfficial?`${bill.state} Legislature`:"LegiScan",kind:row.governmentSourceOfficial?"OFFICIAL" as const:"REFERENCE" as const}})),
         ]),
       ]}/>
-    </>}
+    </>
   </section>;
 }

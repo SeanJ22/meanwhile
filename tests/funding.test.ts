@@ -1105,7 +1105,7 @@ test("D06: nothing is sorted into an industry, and the org split is dollars not 
   assert.match(sentences, /\$2,000 came from individual people/);
 });
 
-test("D06: an unknown state is a named gap, never a zero that reads as 'none from home'", async () => {
+test("D06: an unknown state has no geography sentence or invented zero", async () => {
   const { concentrationOf, concentrationSentences } = await import(
     "../lib/funding/concentration.ts"
   );
@@ -1113,7 +1113,7 @@ test("D06: an unknown state is a named gap, never a zero that reads as 'none fro
   assert.ok(concentration);
   assert.equal(concentration.hasGeography, false);
   const sentences = concentrationSentences(concentration, null).join(" ");
-  assert.match(sentences, /We're working on getting this info/);
+  assert.doesNotMatch(sentences, /working on getting|Filed from inside|Filed from outside/);
   assert.doesNotMatch(sentences, /\b0% of/);
 });
 

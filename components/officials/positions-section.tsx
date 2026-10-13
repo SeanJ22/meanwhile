@@ -1,6 +1,6 @@
 "use client";
 
-import { WorkingOnIt } from "@/components/demand/working-on-it";
+import { CardGapContribution } from "@/components/ui/card-gap-context";
 import { useEffect, useId, useRef, useState } from "react";
 
 import { CardSection } from "@/components/officials/card-section";
@@ -14,8 +14,8 @@ import type { StoredTopicAnswer } from "@/lib/corpus/topic-answers";
 /**
  * Three answers kept visually distinct: MATCHED (quoted passages with page and
  * read date), SEARCHED_NOTHING_MATCHED (our search and its denominator, never
- * "no position"), and NOT_YET_COLLECTED (a sentence about our collection, with
- * their own page). The search covers this person's corpus only.
+ * "no position"), and NOT_YET_COLLECTED (contributes to the card gap).
+ * The search covers this person's corpus only.
  */
 export function PositionsSection({
   subjectId,
@@ -137,7 +137,7 @@ export function PositionsSection({
                 <AskAnswerRecords records={stored.records} initiallyOpen={!stored.prose} />
               </>
             ) : (
-              <WorkingOnIt subject={{ type: "CANDIDATE", id: subjectId }} attrs={{ "data-positions-answer": "STORED_NO_PASSAGE" }} />
+              <CardGapContribution id={`positions:${subjectId}:${topic}`} label={topic ? `published statements about ${topic}` : "published statements"} subject={{ type: "CANDIDATE", id: subjectId }} />
             )}
           </div>
         )}
@@ -148,11 +148,11 @@ export function PositionsSection({
           </p>
         )}
 
-        {failed && <WorkingOnIt className="mt-2.5" subject={{ type: "CANDIDATE", id: subjectId }} attrs={{ "data-positions-answer": "FAILED" }} />}
+        {failed && <CardGapContribution id={`positions:${subjectId}:${topic}`} label={topic ? `published statements about ${topic}` : "published statements"} subject={{ type: "CANDIDATE", id: subjectId }} />}
 
         {answer && !asking && (
           <div className="mt-2.5">
-            {answer.holdingStatus === "PARTIAL" && <WorkingOnIt className="mb-2" subject={{ type: "CANDIDATE", id: subjectId }} attrs={{ "data-positions-holding-status": "PARTIAL" }} />}
+            {answer.holdingStatus === "PARTIAL" && <CardGapContribution id={`positions:${subjectId}:${topic}`} label={topic ? `published statements about ${topic}` : "published statements"} subject={{ type: "CANDIDATE", id: subjectId }} />}
 
             {answer.kind === "MATCHED" && (
               <div data-positions-answer="MATCHED">
@@ -179,8 +179,8 @@ export function PositionsSection({
               </div>
             )}
 
-            {answer.kind === "SEARCHED_NOTHING_MATCHED" && <WorkingOnIt subject={{ type: "CANDIDATE", id: subjectId }} attrs={{ "data-positions-answer": "SEARCHED_NOTHING_MATCHED" }} />}
-            {answer.kind === "NOT_YET_COLLECTED" && <WorkingOnIt subject={{ type: "CANDIDATE", id: subjectId }} attrs={{ "data-positions-answer": "NOT_YET_COLLECTED" }} />}
+            {answer.kind === "SEARCHED_NOTHING_MATCHED" && <CardGapContribution id={`positions:${subjectId}:${topic}`} label={topic ? `published statements about ${topic}` : "published statements"} subject={{ type: "CANDIDATE", id: subjectId }} />}
+            {answer.kind === "NOT_YET_COLLECTED" && <CardGapContribution id={`positions:${subjectId}:${topic}`} label={topic ? `published statements about ${topic}` : "published statements"} subject={{ type: "CANDIDATE", id: subjectId }} />}
           </div>
         )}
       </div>

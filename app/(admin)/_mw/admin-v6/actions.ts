@@ -860,12 +860,14 @@ const defs: ActionDef[] = [
           ["What changes", "The new value is saved with when it changed and the value before"],
           ["Undo", "From Settings"],
         ],
-        ...(control === "boolean"
+        ...(control === "choice"
+          ? { options: (JSON.parse(ctx.payload?.choices ?? "[]") as {value:string;label:string}[]).map(choice => ({ id: choice.value, label: choice.label, note: "" })) }
+          : control === "boolean"
           ? { options: [{ id: "on", label: "On", note: "" }, { id: "off", label: "Off", note: "" }] }
           : { amount: { label: control === "number" ? "New value" : control === "json" ? "New value (as data)" : "New wording", initial: ctx.payload?.current ?? "", text: control !== "number" } }),
         note: true,
         invalid: ({ amount, option }) => settingValueFromInput(control, amount, option) === undefined
-          ? control === "number" ? "Enter a number." : control === "json" ? "Enter valid data." : control === "boolean" ? null : "Enter the new wording." : null,
+          ? control === "choice" ? "Choose a value." : control === "number" ? "Enter a number." : control === "json" ? "Enter valid data." : control === "boolean" ? null : "Enter the new wording." : null,
       };
     },
     gateway: { type: "config.setSetting" },
@@ -1007,6 +1009,7 @@ export function gatewayActionKind(type: string, evidence: { subject?: string; sa
  */
 export function settingValueFromInput(control: string, amount: string, option: string | null): unknown {
   const typed = amount.trim();
+  if (control === "choice") return option ?? undefined;
   if (control === "boolean") return option === "on" ? true : option === "off" ? false : undefined;
   if (control === "number") { const n = Number(typed); return typed !== "" && Number.isFinite(n) ? n : undefined; }
   if (control === "json") { try { return JSON.parse(typed) as unknown; } catch { return undefined; } }

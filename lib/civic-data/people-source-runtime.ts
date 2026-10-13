@@ -11,6 +11,7 @@ import type { RoutineDataStore } from "./store.ts";
 import type { StatePeopleAcquisition } from "./state-people-publication.ts";
 import { statePeopleDivisions } from "../sources/plural/acquisition.ts";
 import type { RegistryDivisionLite } from "../sources/plural/index.ts";
+import type { Slice } from "../control-plane/admin-view/promoted-slices.ts";
 
 export interface PeopleSourceAcquired {
   readonly state: string;
@@ -47,7 +48,7 @@ export function parsePeopleSourceArguments(args: readonly string[]): { state: st
 export interface PeopleSourceRuntimeDependencies {
   readonly now?: () => string;
   readonly readHeld?: (state: string, store: RoutineDataStore, now: string) => Promise<OfficeholderSet | undefined>;
-  readonly readDivisions?: (state: string, asOf: string) => Promise<readonly RegistryDivisionLite[]>;
+  readonly readDivisions?: (state: string, asOf: string) => Promise<readonly RegistryDivisionLite[] | Slice<RegistryDivisionLite[]>>;
   readonly acquire?: (input: {
     readonly state: string; readonly sourceId: StandingPeopleSourceId; readonly asOf: string;
     readonly signal: AbortSignal; readonly roster?: OfficeholderSet;
@@ -89,10 +90,19 @@ export async function runPeopleSourceRefresh(input: {
   try {
     // State readers never request another state's source partitions.
     const asOf = now().slice(0,10);
+    // The held boundary read answers HELD, UNREAD or NOT_PUBLISHED; only HELD supplies divisions, and the others stay standing work.
+    const divisionsFrom = (read: readonly RegistryDivisionLite[] | Slice<RegistryDivisionLite[]>): readonly RegistryDivisionLite[] => {
+      if (Array.isArray(read)) return read;
+      const slice = read as Slice<RegistryDivisionLite[]>;
+      if (slice.kind === "HELD") return slice.value;
+      geographyGaps.push({sourceUrl:"https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html",
+        detail:`CENSUS_GEOGRAPHY_${slice.kind}:${input.state.toUpperCase()}: ${slice.kind === "UNREAD" ? slice.detail : "The Census district file has not been published to the reader store."} Verified people publish; their division matching remains standing work.`});
+      return [];
+    };
     const [roster,divisions] = await Promise.all([
       (dependencies.readHeld ?? readHeld)(input.state, input.store, now()),
       ["legiscan-api","official-state-people","wikidata-people"].includes(input.sourceId)
-        ? (dependencies.readDivisions ?? statePeopleDivisions)(input.state,asOf).catch(()=>{
+        ? (dependencies.readDivisions ?? statePeopleDivisions)(input.state,asOf).then(divisionsFrom).catch(()=>{
           geographyGaps.push({sourceUrl:"https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html",
             detail:`STATE_PEOPLE_DIVISIONS_UNAVAILABLE:${input.state}:Held legislative boundaries could not be read. Verified people publish; their division matching remains standing work.`});
           return [];

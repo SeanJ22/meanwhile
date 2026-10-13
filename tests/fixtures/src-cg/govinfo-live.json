@@ -1,0 +1,17 @@
+{
+  "count": 500,
+  "message": null,
+  "nextPage": "https://api.govinfo.gov/collections/BILLS/2026-10-01T00:00:00Z?offsetMark=AoJwsq%2BTkqEDMkJJTExTLTExOWhyMTAzNzFyaA%3D%3D&pageSize=1",
+  "previousPage": null,
+  "packages": [
+    {
+      "congress": "119",
+      "dateIssued": "2026-10-09",
+      "docClass": "hr",
+      "lastModified": "2026-10-10T05:33:40Z",
+      "packageId": "BILLS-119hr10371rh",
+      "packageLink": "https://api.govinfo.gov/packages/BILLS-119hr10371rh/summary",
+      "title": "Ensuring SBA Implementation of GAO Recommendations Act of 2026"
+    }
+  ]
+}

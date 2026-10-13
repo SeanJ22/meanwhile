@@ -3,7 +3,7 @@ import { SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION } from "../lib/control-plane/sched
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { plainAdapterFor, workAdapterQueue } from '../lib/control-plane/workers/engineering-adapter.ts';
-import {createMemoryRepositories} from '../lib/control-plane/repository/memory.ts';
+import {createMemoryRepositories} from './helpers/playbooks.ts';
 import {MODELS} from '../lib/models.ts';
 import {SendBudgetRefusal} from '../lib/control-plane/expansion/spend-holds.ts';
 import {solvedScoutResult,readSubjectScoutHistory,wakeInstalledAdapterDebts,adapterWaitReasonFromKnowledge} from '../lib/control-plane/workers/detective.ts';

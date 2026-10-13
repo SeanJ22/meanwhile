@@ -290,6 +290,9 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "meeting-source-wiring",
     "candidate-campaign-sites-derived",
     ...PEOPLE_SOURCE_CONTRACTS.map(contract => contract.id),
+    "socrata-discovery",
+    "epa-echo",
+    "congress-api", "govinfo", "regulations-gov", "federal-register", "senate-lda",
   ]);
   assert.deepEqual(nonMeetingTasks.map((task) => task.id), ROUTINE_SOURCE_CONTRACTS.map((contract) => contract.id));
   assert.deepEqual(
@@ -1322,13 +1325,13 @@ test("the pilot awaits independently bounded routine and intake children without
   assert.match(pilot, /await standingRuntimeScheduler\.waitForIdle\(\)/);
 });
 
-test("an operational-reference-only contract fabricates no Reader delivery result", async () => {
+test("the CISA government-domain contract has a Reader projection even before its first promotion", async () => {
   const dotgov = ROUTINE_SOURCE_CONTRACTS.find((contract) => contract.id === "dotgov");
   assert.ok(dotgov);
-  assert.equal(dotgov.readerProjection, null);
+  assert.equal(dotgov.readerProjection?.id, "government-domains");
   assert.deepEqual(
     await repairRoutineReaderProjectionReadback(new MemoryRoutineDataStore(), dotgov, T0),
-    { kind: "NOT_APPLICABLE", receipt: null },
+    { kind: "NO_PROMOTION", receipt: null },
   );
 });
 
@@ -1519,7 +1522,7 @@ test("same-cycle isolation requires exact task/candidate receipts, never aggrega
         taskId: "dotgov",
         sourceId: "CISA .gov registry",
         recordClass: "DOTGOV_REFERENCE",
-        scope: "US:current-full:election-domains",
+        scope: "US:current-full:domains",
         classification: "VERIFIED_SOURCE_FAILURE",
         receipt: failedReceipt,
       },
@@ -1992,10 +1995,12 @@ test("the supervisor proves the registry once for two or more meeting children a
   const admitted = source.indexOf("attempted = pendingRuns.length;");
   const proof = source.indexOf("await readRegistryRuntimeProjection({ store })");
   const attest = source.indexOf("attestPromotedVersion(\"REGISTRY_RUNTIME_BINDING\", REGISTRY_RUNTIME_SCOPE, store)");
-  const launch = source.indexOf("const sourcePass = runBoundedChildPass(");
+  const launch = source.indexOf("const sourcePass = runMeetingDiscoveryChain(");
   assert.ok(admitted > 0 && admitted < proof && proof < attest && attest < launch, "proved after admission, before any child starts");
   assert.match(source, /if \(meetingPartitionRuns >= 2\) \{/);
+  assert.match(source, /const sourcePass = runMeetingDiscoveryChain\(pendingRuns, runs => runBoundedChildPass\(\s*runs\.map\(sourceChildCommand\),/, "every ordered discovery subpass builds children through the attestation-aware command factory");
   assert.match(source, /\.\.\.\(pending\.kind === "MEETING_PARTITION" \? meetingChildAttestations : \{\}\)/);
+  assert.match(source, /onSettled: async \(run, index\) => settlePendingRun\(runs\[index\]!/, "settlement must match the command's subpass rather than the complete pending list");
   assert.match(source, /catch \(error\) \{\s*console\.log\(`RCD_PASS registry not attested; each meeting child proves it/);
 });
 

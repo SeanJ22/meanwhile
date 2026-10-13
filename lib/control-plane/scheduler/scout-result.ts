@@ -263,6 +263,7 @@ export interface ScoutEscalationRefused {
 
 /** The typed result, as persisted. */
 export interface ScoutResult {
+  readonly instructions?: { readonly role: "SCOUT" | "DETECTIVE"; readonly version: string; readonly entryIds: readonly string[]; readonly systemPrompt: string };
   /** Rejected source observations, retained as dead ends rather than discoveries. */
   readonly sourceDeadEnds?: readonly ScoutSourceDeadEnd[];
   /** The failure responder shares the research format and tools; legacy rows are Scouts. */
@@ -564,7 +565,6 @@ export function validateScoutFinishWithCandidates(input: Parameters<typeof valid
   const stale = new Map((input.machine?.factEvidence && input.machine.freshness
     ? scoutSourceDeadEnds(input.machine.factEvidence, input.machine.freshness.now, input.machine.freshness.cadenceHours)
     : []).map(source => [source.artifactId, source]));
-  const min = input.minRungs ?? MIN_DISTINCT_RUNGS;
   const f = input.finish;
 
   if (input.toolCalls === 0) {
@@ -721,15 +721,6 @@ export function validateScoutFinishWithCandidates(input: Parameters<typeof valid
   }
 
   if (LADDER_OWED_OUTCOMES.includes(outcome)) {
-    const distinct = distinctEvidenceRungs(input.rungs);
-    if (input.stoppedBy === "MODEL" && distinct < min) {
-      issues.push({
-        code: "SCOUT_EARLY_ABSENCE",
-        detail:
-          `${outcome} after ${distinct} distinct evidence-backed rung(s); the declared minimum is ` +
-          `${min}. Absence is argued, never asserted — walk the ladder or state what remains.`,
-      });
-    }
     if (input.stoppedBy === "BOUND" && (f.nextRungs ?? []).length === 0) {
       issues.push({
         code: "SCOUT_BOUND_WITHOUT_NEXT_RUNGS",

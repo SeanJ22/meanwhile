@@ -92,6 +92,11 @@ export interface PriorRung {
 export interface InheritedEvidence {
   /** Artifact ids the model may cite as inherited evidence. */
   readonly artifactIds: readonly string[];
+  readonly placeName?: string;
+  readonly blanks?: readonly string[];
+  readonly officialWebsite?: string;
+  readonly savedPages?: readonly { readonly id: string; readonly url: string }[];
+  readonly similarPlaces?: readonly string[];
   /** Prior route outcomes, prior Scout results, known routes for the hosts — as text. */
   readonly summary: string;
   /** Machine provenance for the inherited ids, where the control plane holds it. */

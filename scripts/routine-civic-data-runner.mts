@@ -1,4 +1,5 @@
 import { boxIndexEnabled } from "../lib/control-plane/box.ts";
+import { readMeetingDiscoveryInputs, meetingDiscoveryInputsDue, runMeetingDiscoveryChain, type MeetingDiscoveryInputs } from "../lib/civic-data/meeting-discovery-due.ts";
 import { buildBoxFindings } from "../lib/control-plane/workers/scout-extraction.ts";
 import { workerPublicationContext } from "../lib/civic-data/worker-publication-context.ts";
 /**
@@ -751,6 +752,18 @@ if (!FORCE && controlPlaneUrlFromEnv() !== null) {
   }
 }
 const honouredDueRequests = new Map<string, RoutineDueRequest>();
+let meetingDiscoveryInputs: MeetingDiscoveryInputs | null = null;
+if (!FORCE && selectedTasks.some(task => task.id === "meeting-body-crosswalk-derived" || task.id === "meeting-source-wiring")) {
+  try {
+    const connection = controlPlaneUrlFromEnv();
+    if (connection) {
+      const sql = neon(connection);
+      meetingDiscoveryInputs = await readMeetingDiscoveryInputs((statement, params) => sql.query(statement, params));
+    }
+  } catch (error) {
+    console.error(`RCD_INPUT_CHANGED meetings: ${safeFailure(sanitizedErrorDiagnostic(error))}; normal cadence retained`);
+  }
+}
 // Newly verified findings need not wait for the hourly fallback clock. This
 // read changes no data; admission uses the same frontier and publication child.
 let campaignPublicationInputs: CampaignPublicationInputs | null = null;
@@ -815,13 +828,14 @@ for (const read of clockReads) {
   const observedEveryMs = observedChange === undefined ? undefined : observedChange * 60_000;
   const dueRequest = FORCE ? null : routineDueRequestFor(task, durableClock, admissionNowMs, dueRequests);
   const publicationDue = campaignPublicationInputsDue(task.id, campaignPublicationInputs);
+  const discoveryDue = meetingDiscoveryInputsDue(task.id, durableClock, meetingDiscoveryInputs, admissionNowMs);
   if (task.ownerInvocation) {
     const due = routineTaskDue(task, durableClock, admissionNowMs);
     const succeeded = Date.parse(durableClock?.lastSucceededObservedAt ?? durableClock?.lastSucceededAt ?? "");
     const reused = !task.ownerInvocation.publicationPending && Number.isFinite(succeeded) && succeeded >= Date.parse(task.ownerInvocation.requestedAt) && succeeded <= admissionNowMs;
     publicationInputLines.push(`Send ${task.ownerInvocation.instructions.join(", ")}: shared ${task.id} ${due ? "refresh offered to the normal source frontier" : reused ? "verified shared result reused" : "failed attempt held under retry backoff"}; canonical scope ${task.scope}.`);
   }
-  if (!FORCE && !routineTaskDue(task, durableClock, admissionNowMs, sittingHot, observedEveryMs) && dueRequest === null && !publicationDue) {
+  if (!FORCE && !routineTaskDue(task, durableClock, admissionNowMs, sittingHot, observedEveryMs) && dueRequest === null && !publicationDue && !discoveryDue) {
     console.log(`RCD_SKIP ${task.id}: cadence not due${
       sittingSignals.has(task.id) ? ` (sitting window ${sittingHot === false ? "base" : sittingHot ? "hot" : "unknown, read as hot"})` : ""
     }`);
@@ -951,8 +965,8 @@ function recordSourceSettlementFailures(runs: readonly BoundedChildResult[]): vo
 step = "running the source pass";
 for (const { id } of pendingRuns) unsettledSourceRuns.add(id);
 // Awaited below, with the catch-up reads that run beside it.
-const sourcePass = runBoundedChildPass(
-  pendingRuns.map(sourceChildCommand),
+const sourcePass = runMeetingDiscoveryChain(pendingRuns, runs => runBoundedChildPass(
+  runs.map(sourceChildCommand),
   {
     cwd: ROOT,
     env: process.env,
@@ -963,14 +977,14 @@ const sourcePass = runBoundedChildPass(
     sameDomainGapMs: ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
     onStarting: async (command, index) => {
       await acquireChildMemory(command);
-      await recordHuntSourceProgress(pendingRuns[index]!.task, "COLLECTING_AND_VERIFYING", "The source command has a worker slot. Collecting current source records and running the existing identity, content, freshness and reader checks. No model call is used.");
+      await recordHuntSourceProgress(runs[index]!.task, "COLLECTING_AND_VERIFYING", "The source command has a worker slot. Collecting current source records and running the existing identity, content, freshness and reader checks. No model call is used.");
     },
-    onSettled: async (run, index) => settlePendingRun(pendingRuns[index]!, run),
+    onSettled: async (run, index) => settlePendingRun(runs[index]!, run),
     // Classification consumes the exact receipt before this worker advances.
     // Retaining only the small result summary bounds memory across the full portfolio.
     discardOutputAfterSettlement: true,
   },
-);
+));
 
 async function settlePendingRun(pending: PendingRun, run: BoundedChildResult): Promise<void> {
   try { await settlePendingRunResult(pending, run); }

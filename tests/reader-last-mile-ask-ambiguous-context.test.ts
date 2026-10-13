@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import test from "./helpers/playbooks.ts";
 import { resolveInterpretation } from "../lib/ask/resolve.ts";
 import { unavailableInterpretation } from "../lib/ask/intent.ts";
 import { readerPersonKeys } from "../lib/identity/reader-person.ts";

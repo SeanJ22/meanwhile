@@ -6,7 +6,7 @@
  * call loads nothing and answers at once.
  */
 import { numericInRange, refuse, rejectUnknown } from "@/lib/api/params";
-import { divisionIdsForZipArea } from "@/lib/ballot/zip-divisions";
+import { divisionIdsForZipArea, POINT_GEOMETRY_PLANS } from "@/lib/ballot/zip-divisions";
 import { settleAzBallotRead, settleCandidateCorpusRead, settleCandidateProfilesRead } from "@/lib/civic-data/manual-read-models";
 import { settleAzPimaFinanceRead } from "@/lib/control-plane/campaign-finance/held-records";
 import { settleOfficeholderStatementsRead } from "@/lib/corpus/data-plane";
@@ -121,7 +121,7 @@ async function primeReaderPlaces(manifest: ReaderManifest): Promise<{ places: nu
       const place = await statePlace(state);
       if (!place) return;
       const own = place.own;
-      const widened = await divisionsByOcdIds(await divisionIdsForZipArea(place.zip, own.map((d) => d.ocdId)));
+      const widened = await divisionsByOcdIds(await divisionIdsForZipArea(place.zip, own.map((d) => d.ocdId), undefined, POINT_GEOMETRY_PLANS));
       await coverageAt(place.lat, place.lng, 0, widened.length >= own.length ? widened : own);
       await zipCertainty(place.zip);
       counts.places += 1;

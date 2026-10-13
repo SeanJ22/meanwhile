@@ -57,6 +57,7 @@ export interface ScopeSlice {
   readonly version: string;
   readonly plan: string;
   readonly applicability?: readonly import("../../census-geography/selection.ts").GeographyApplicability[];
+  readonly states?: readonly string[];
   readonly retrievalComplete?: boolean;
   readonly sourceUrls?: readonly string[];
   readonly observedAt?: string;
@@ -113,9 +114,10 @@ export function geographyOfRows(rows: readonly Row[], withOverlaps: boolean): Ge
   for (const row of rows) {
     if (row.row_kind === "scope") {
       const version = text(row.version);
-      const meta = row.version_meta as { applicability?: ScopeSlice["applicability"]; retrievalComplete?: boolean; provenance?: { sourceUrls?: readonly string[]; computedAt?: string } } | undefined;
+      const meta = row.version_meta as { applicability?: ScopeSlice["applicability"]; states?: readonly string[]; retrievalComplete?: boolean; provenance?: { sourceUrls?: readonly string[]; computedAt?: string } } | undefined;
       if (isGeographyType(row.type) && version !== null) scopes.push({ type: row.type, version, plan: text(row.plan) ?? "",
         ...(Array.isArray(meta?.applicability) ? { applicability: meta.applicability } : {}),
+        ...(Array.isArray(meta?.states) ? { states: meta.states } : {}),
         ...(typeof meta?.retrievalComplete === "boolean" ? { retrievalComplete: meta.retrievalComplete } : {}),
         ...(meta?.provenance ? { sourceUrls: meta.provenance.sourceUrls, observedAt: meta.provenance.computedAt } : {}) });
     } else {

@@ -201,7 +201,7 @@ function registryPass(materialized: MaterializedReading, tracked = trackedStates
   return buildRegistry(
     [
       localJurisdictionsProvider({ trackedStates: tracked, materialized: () => materialized, meetingPartitions: UNREAD_MEETING_PARTITIONS }),
-      meetingsDiscoveryProvider({ materialized: () => materialized }),
+      meetingsDiscoveryProvider({ registered: () => ({ registries: new Map(), refused: new Map() }), materialized: () => materialized }),
     ],
     { root: ROOT, nowIso: T0 },
   );
@@ -695,12 +695,12 @@ test("a meetings route with a known address is carried by what the partition wir
   assert.equal(jurisdictionRequirements(REGISTRIES.az, REGISTRIES.az.jurisdictions.find((x) => x.id === "az:city:city-of-tucson")!).some((r) => r.source.recordClass === "MEETINGS"), false, "a DISCOVERY_OWED meetings source is discovery, not a route here");
 });
 
-test("the meetings-discovery provider emits exactly the materialized needs, in the registry derivation's shape", () => {
-  const empty = meetingsDiscoveryProvider().enumerate({ root: ROOT, nowIso: T0 });
+test("explicit paid meetings discovery keeps the materialized needs in the registry derivation's shape", () => {
+  const empty = meetingsDiscoveryProvider({ registered: () => ({ registries: new Map(), refused: new Map() }) }).enumerate({ root: ROOT, nowIso: T0 });
   assert.equal(empty.obligations.length, 0);
-  assert.match(empty.emptyReason ?? "", /mission map/);
+  assert.match(empty.emptyReason ?? "", /no registered government website/);
 
-  const unreadable = meetingsDiscoveryProvider({ materialized: () => ({ unreadable: "store down" }) }).enumerate({ root: ROOT, nowIso: T0 });
+  const unreadable = meetingsDiscoveryProvider({ registered: () => ({ registries: new Map(), refused: new Map() }), materialized: () => ({ unreadable: "store down" }) }).enumerate({ root: ROOT, nowIso: T0 });
   assert.match(unreadable.readFailure ?? "", /could not be read \(store down\)/);
 
   const needs = meetingsDiscoveryNeeds([REGISTRIES.az]);
@@ -708,7 +708,7 @@ test("the meetings-discovery provider emits exactly the materialized needs, in t
   const noSite = needs.find((n) => n.basis === "NO_MEETINGS_SOURCE_RECORDED")!;
   const ids = [meetingsDiscoveryObligationId(own), meetingsDiscoveryObligationId(noSite)];
   const wrongBasis = `${MEETINGS_DISCOVERY_NAMESPACE}${own.jurisdictionId}#find-own-site`;
-  const pass = buildRegistry([meetingsDiscoveryProvider({ materialized: () => ({ ids: new Set([...ids, wrongBasis, "freshness:jurisdiction:x#y"]) }) })], { root: ROOT, nowIso: T0 });
+  const pass = buildRegistry([meetingsDiscoveryProvider({ registered: () => ({ registries: new Map(), refused: new Map() }), materialized: () => ({ ids: new Set([...ids, wrongBasis, "freshness:jurisdiction:x#y"]) }) })], { root: ROOT, nowIso: T0 });
   assert.deepEqual(pass.units.map((u) => u.obligation.id).sort(), [...ids].sort(), "a need whose basis moved, and another provider's id, are not emitted");
   for (const u of pass.units) {
     assert.equal(u.obligation.recordClass, "meetings-discovery");

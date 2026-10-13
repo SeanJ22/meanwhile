@@ -1,4 +1,5 @@
-import { isJurisdictionSegment } from "../ocd/fips.ts";
+import { stateOcdIdFrom } from "../ocd/state-division.ts";
+export { stateOcdIdFrom } from "../ocd/state-division.ts";
 import type { Provenance } from "../sources/types.ts";
 
 import { campaignSiteFor } from "./campaign-sites.ts";
@@ -145,12 +146,6 @@ export function indexByDivision(
   }
 
   return index;
-}
-
-/** The state division identifier implied by any division identifier, as its OCD prefix. */
-export function stateOcdIdFrom(ocdId: string): string | null {
-  const match = /^(ocd-division\/country:us\/(state|district|territory):([a-z]{2}))(\/|$)/.exec(ocdId);
-  return match && isJurisdictionSegment(match[2], match[3]) ? match[1] : null;
 }
 
 /** Everyone holding a seat for this division. Empty is a real answer. */

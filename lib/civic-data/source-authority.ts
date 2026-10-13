@@ -1,5 +1,6 @@
 import { PLURAL_STATES, PLURAL_PARSER_VERSION } from "../sources/plural/targets.ts";
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
+import { FEDERAL_SOURCE_AUTHORITIES } from "../sources/congress/authority.ts";
 import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ROUTE_PREFIX, REGISTRATION_TARGETS } from "../registration/publication.ts";
 import { extractedMemberUrl } from "./manual-source-urls.ts";
 import {
@@ -61,12 +62,31 @@ function peopleSourceAuthority(input: {
   };
 }
 
+/** Congress.gov and GovInfo serve two jobs: their people directories and their federal civic records. One authority covers both. */
+const PEOPLE_FEDERAL_AUTHORITIES = {
+  "congress-api": peopleSourceAuthority({ id: "congress-api", publisher: "Congress.gov member API", official: true, federal: true, routePrefixes: ["https://api.congress.gov/v3/", "https://www.congress.gov/"] }),
+  govinfo: peopleSourceAuthority({ id: "govinfo", publisher: "U.S. Government Publishing Office Congressional Directory", official: true, federal: true, routePrefixes: ["https://api.govinfo.gov/", "https://www.govinfo.gov/", "https://govinfo.gov/"] }),
+};
+
+function sharedAuthority(people: SourceAuthorityContract, federal: SourceAuthorityContract): SourceAuthorityContract {
+  const union = <T,>(a: readonly T[], b: readonly T[]): T[] => [...new Set([...a, ...b])];
+  return {
+    ...federal,
+    publisher: `${federal.publisher}; ${people.publisher}`,
+    routePrefixes: union(federal.routePrefixes, people.routePrefixes),
+    jurisdictions: union(federal.jurisdictions, people.jurisdictions),
+    recordClasses: union(federal.recordClasses, people.recordClasses),
+    competentFacts: union(federal.competentFacts, people.competentFacts),
+    expectedIdentifierKeys: union(federal.expectedIdentifierKeys, people.expectedIdentifierKeys),
+    expectedTemporalFields: union(federal.expectedTemporalFields, people.expectedTemporalFields),
+    horizonSemantics: `${federal.horizonSemantics} ${people.horizonSemantics}`,
+  };
+}
+
 export const SOURCE_AUTHORITIES = {
   "legiscan-api": peopleSourceAuthority({ id: "legiscan-api", publisher: "LegiScan current-session people API", official: false, routePrefixes: ["https://api.legiscan.com/", "https://legiscan.com/"] }),
   "official-state-people": peopleSourceAuthority({ id: "official-state-people", publisher: "Each state legislature's captured official roster and member pages", official: true, routePrefixes: ["https://"] }),
   "statewide-executive-sources": peopleSourceAuthority({ id: "statewide-executive-sources", publisher: "Each officer's captured official state page; national executive associations and Wikidata supply attributed leads", official: true, routePrefixes: ["https://"] }),
-  "congress-api": peopleSourceAuthority({ id: "congress-api", publisher: "Congress.gov member API", official: true, federal: true, routePrefixes: ["https://api.congress.gov/v3/", "https://www.congress.gov/"] }),
-  govinfo: peopleSourceAuthority({ id: "govinfo", publisher: "U.S. Government Publishing Office Congressional Directory", official: true, federal: true, routePrefixes: ["https://api.govinfo.gov/", "https://www.govinfo.gov/", "https://govinfo.gov/"] }),
   "wikidata-people": peopleSourceAuthority({ id: "wikidata-people", publisher: "Wikidata; image licenses attributed to Wikimedia Commons", official: false, routePrefixes: ["https://query.wikidata.org/", "https://www.wikidata.org/", "https://www.wikimedia.org/", "https://commons.wikimedia.org/"] }),
   "people-portraits": {
     id: "people-portraits", publisher: "Each person's own official page, verified against saved portrait evidence",
@@ -79,6 +99,29 @@ export const SOURCE_AUTHORITIES = {
     absencePolicy: { kind: "NEVER_FROM_ZERO" }, routineAutoPromotion: true,
     derivedPromotion: { inputKinds: ["PROMOTED_VERSION", "VAULTED_EVIDENCE"], authorization: "SL-03: Sean's October 12, 2026 instruction for standing own-page portrait verification" },
   },
+  "socrata-discovery": {
+    id: "socrata-discovery", publisher: "Government publishers through the Socrata Discovery API", trust: "T1_AUTHORITATIVE_STRUCTURED",
+    sourceClass: "MULTI_PUBLISHER_PRIMARY", routePrefixes: ["https://api.us.socrata.com/api/catalog/v1"],
+    jurisdictions: ["US", ...REGISTRATION_TARGETS.map(t=>t.jurisdiction)], recordClasses: ["CURATED_READER_RECORD"],
+    competentFacts: ["Native dataset identity", "publisher title, description, columns and publication/update dates", "explicit publisher jurisdiction identifiers"],
+    expectedIdentifierKeys: ["record_id", "socrata_id"], expectedTemporalFields: ["source_through"],
+    horizonSemantics: "Paged national catalog; each exact domain and resource is retained even when its jurisdiction does not join. A catalog listing proves dataset metadata; dataset contents remain acquisition leads.",
+    parserVersion: "src-so/1", freshnessExpectation: "Daily discovery; source publication dates and advertised dataset update frequencies remain attributed.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" }, routineAutoPromotion: true,
+  },
+  "epa-echo": {
+    id: "epa-echo", publisher: "U.S. Environmental Protection Agency", trust: "T1_AUTHORITATIVE_STRUCTURED", sourceClass: "FEDERAL_AGENCY",
+    routePrefixes: ["https://echo.epa.gov/files/echodownloads/", "https://echodata.epa.gov/echo/"],
+    jurisdictions: ["US", ...REGISTRATION_TARGETS.map(t=>t.jurisdiction)], recordClasses: ["CURATED_READER_RECORD"],
+    competentFacts: ["FRS facility identity", "ZIP and Census FIPS", "reported inspections, dates, compliance and violation histories"],
+    expectedIdentifierKeys: ["record_id", "registry_id"], expectedTemporalFields: ["source_through"],
+    horizonSemantics: "Complete weekly national exporter, including facilities beyond the search API's queryset limit. Each native facility is retained in its ZIP; missing ZIPs and unresolved government joins remain held and counted.",
+    parserVersion: "src-so/1", freshnessExpectation: "Weekly EPA publication; HTTP Last-Modified dates the source release.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" }, routineAutoPromotion: true,
+  },
+  ...FEDERAL_SOURCE_AUTHORITIES,
+  "congress-api": sharedAuthority(PEOPLE_FEDERAL_AUTHORITIES["congress-api"], FEDERAL_SOURCE_AUTHORITIES["congress-api"]),
+  govinfo: sharedAuthority(PEOPLE_FEDERAL_AUTHORITIES.govinfo, FEDERAL_SOURCE_AUTHORITIES.govinfo),
   "official-ballot-authorities": {
     id: "official-ballot-authorities",
     publisher: "Exact official election authorities in the saved-source receipt",
@@ -148,7 +191,7 @@ export const SOURCE_AUTHORITIES = {
     trust: "T3_ATTRIBUTED_PRIMARY",
     sourceClass: "MULTI_PUBLISHER_PRIMARY",
     routePrefixes: [],
-    jurisdictions: ["US", "US-AZ", "US-NH", "US-NJ"],
+    jurisdictions: ["US", ...REGISTRATION_TARGETS.map((target) => target.jurisdiction)],
     recordClasses: ["REGISTRY_RUNTIME_BINDING"],
     competentFacts: ["body-to-division binding", "current body name and contact", "body roster membership and contact", "statewide officeholder and contact", "exact roster identity disposition", "officeholder-to-candidacy binding", "runtime body provenance", "licensed officeholder portrait binding"],
     expectedIdentifierKeys: ["body_id", "division_ocd_id", "officeholder_id", "candidacy_id"],
@@ -248,14 +291,14 @@ export const SOURCE_AUTHORITIES = {
     publisher: "Federal Election Commission",
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "FEDERAL_AGENCY",
-    routePrefixes: ["https://api.open.fec.gov/v1/"],
+    routePrefixes: ["https://api.open.fec.gov/v1/", "https://www.fec.gov/files/bulk-downloads/"],
     jurisdictions: ["US"],
     recordClasses: ["FEC_FUNDING"],
     competentFacts: ["candidate registration", "committee registration", "filed totals", "filed receipts", "report coverage period"],
     expectedIdentifierKeys: ["candidate_id", "committee_id"],
     expectedTemporalFields: ["cycle", "coverage_end_date", "two_year_transaction_period"],
     horizonSemantics: "Each API query has its own filters and pagination. A candidate total or filed receipt is authoritative; the union of returned pages is complete only when pagination metadata proves the bounded query ended.",
-    parserVersion: "fec-funding/3",
+    parserVersion: "fec-funding/4",
     freshnessExpectation: "Weekly; FEC processing itself may lag filings by days.",
     absencePolicy: { kind: "BOUNDED_QUERY_OR_EXPLICIT_STATEMENT", requiredKeys: ["office", "state", "district", "cycle", "pagination"] },
     routineAutoPromotion: true,
@@ -384,7 +427,7 @@ export const SOURCE_AUTHORITIES = {
     publisher: "U.S. Census Bureau",
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "FEDERAL_AGENCY",
-    routePrefixes: [REGISTRATION_SOURCE_ROUTE_PREFIX, "https://nces.ed.gov/ccd/"],
+    routePrefixes: [REGISTRATION_SOURCE_ROUTE_PREFIX, "https://nces.ed.gov/ccd/", "https://ies.ed.gov/sites/default/files/"],
     jurisdictions: REGISTRATION_TARGETS.map((t) => t.jurisdiction),
     recordClasses: ["REGISTRATION"],
     competentFacts: [
@@ -412,7 +455,7 @@ export const SOURCE_AUTHORITIES = {
       "https://www2.census.gov/programs-surveys/gus/",
       "https://apps.azsos.gov/cfs/",
     ],
-    jurisdictions: ["US-AZ", "US-NH", "US-NJ"],
+    jurisdictions: REGISTRATION_TARGETS.map((target) => target.jurisdiction),
     recordClasses: ["OPERATIONAL_REFERENCE"],
     competentFacts: [
       "named covered-state government from the adopted Census source vintage",
@@ -486,7 +529,7 @@ export const SOURCE_AUTHORITIES = {
       "https://winslowaz.suiteonemedia.com/robots.txt",
       "https://winslowaz.suiteonemedia.com/?embed=1",
     ],
-    jurisdictions: ["US-AZ", "US-NH", "US-NJ", "SUPPORTED-BODY-WITHOUT-CENSUS-DIVISION"],
+    jurisdictions: [...REGISTRATION_TARGETS.map((target) => target.jurisdiction), "SUPPORTED-BODY-WITHOUT-CENSUS-DIVISION"],
     recordClasses: ["MEETING"],
     competentFacts: ["meeting time", "meeting status", "public body", "location", "agenda link", "agenda document"],
     expectedIdentifierKeys: ["meeting_id", "body_id", "source_route"],
@@ -595,7 +638,7 @@ export const SOURCE_AUTHORITIES = {
     trust: "T3_ATTRIBUTED_PRIMARY",
     sourceClass: "MULTI_PUBLISHER_PRIMARY",
     routePrefixes: [],
-    jurisdictions: ["US", "US-AZ", "US-NH", "US-NJ"],
+    jurisdictions: ["US", ...REGISTRATION_TARGETS.map((target) => target.jurisdiction)],
     recordClasses: ["CURATED_READER_RECORD"],
     competentFacts: [
       "a 2026 candidate's campaign site, read robots-first by our own deterministic Attempt and verified to name the candidate, the office or district and the 2026 election, on vaulted bytes",
@@ -646,7 +689,7 @@ export const SOURCE_AUTHORITIES = {
     expectedIdentifierKeys: ["domain", "source_sha"],
     expectedTemporalFields: ["source_commit", "source_through"],
     horizonSemantics: "The SHA-pinned current-full.csv is a complete domain registry for that source revision but never a government/body denominator.",
-    parserVersion: "cisa-dotgov/2",
+    parserVersion: "cisa-dotgov/3",
     freshnessExpectation: "Monthly check for a newer CISA source revision.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
@@ -693,7 +736,7 @@ export const SOURCE_AUTHORITIES = {
     trust: "T3_ATTRIBUTED_PRIMARY",
     sourceClass: "MULTI_PUBLISHER_PRIMARY",
     routePrefixes: [],
-    jurisdictions: ["US-AZ", "US-NH", "US-NJ"],
+    jurisdictions: REGISTRATION_TARGETS.map((target) => target.jurisdiction),
     recordClasses: ["CANDIDATE_PROFILE", "CANDIDATE_PUBLICATION"],
     competentFacts: ["candidate-published biography", "candidate-controlled link", "filed contact", "candidate-authored publication", "official officeholder page"],
     expectedIdentifierKeys: ["candidate_key", "document_id"],

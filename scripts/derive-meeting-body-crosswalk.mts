@@ -46,6 +46,7 @@ import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
 import { AUTO_CROSSWALK_VENDORS, autoCrosswalkReviewerId, reviewDiscoveryWalk, type HeldBytes, type RegisteredGovernment } from "../lib/control-plane/discovery/auto-crosswalk.ts";
 import { CURRENT_CALENDAR_READS_SQL } from "../lib/control-plane/discovery/derived-wiring.ts";
+import { readCensusGovernmentFacts } from "../lib/registration/jurisdictions.ts";
 import { reviewedBodyForGovernment } from "../lib/control-plane/discovery/reviewed-body.ts";
 import { readHeldBytes, type HeldVaultArtifact } from "../lib/control-plane/evidence/read-only-vault.ts";
 import { heldArtifactCaptures } from "../lib/civic-data/held-artifact-captures.ts";
@@ -138,10 +139,13 @@ async function main(): Promise<void> {
         continue;
       }
       const labels = new Map(read.value.divisions.map((d) => [d.ocdId, d.label] as const));
+      const census = readCensusGovernmentFacts(process.cwd(), [state]);
+      const countyByPid = new Map((read.value.governments ?? []).map(government => [government.nativeIds.census_pid6, government.countyFips]));
       const bodies = new Map<string, RegisteredGovernment>();
       for (const body of read.value.bodies) {
         if (body.jurisdictionId === null || bodies.has(body.jurisdictionId)) continue;
-        bodies.set(body.jurisdictionId, { bodyId: body.id, ocdId: body.ocdId, publishingOrg: labels.get(body.ocdId) ?? body.jurisdictionId, input });
+        bodies.set(body.jurisdictionId, { bodyId: body.id, ocdId: body.ocdId, publishingOrg: labels.get(body.ocdId) ?? body.jurisdictionId,
+          countyFips: body.censusId ? countyByPid.get(body.censusId) ?? census.byPid.get(body.censusId)?.countyFips ?? null : null, input });
       }
       registrations.set(state, { input, bodies, reference });
     } catch (error) {

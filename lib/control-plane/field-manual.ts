@@ -34,6 +34,11 @@ export const FIELD_MANUAL_ROLES = [
   "VALIDATOR",
   "AUDITOR",
   "ENGINEER",
+  "MEASURE_WRITER",
+  "MEASURE_CHECKER",
+  "ASK_READER",
+  "ASK_WRITER",
+  "ASK_FALLBACK",
   "SHARED",
 ] as const;
 export type FieldManualRole = (typeof FIELD_MANUAL_ROLES)[number];
@@ -121,7 +126,7 @@ function lower(values: readonly string[]): string[] {
 export const JOB_COST_KIND = "JOB_COST";
 
 /** Kinds that hold bookkeeping rather than lessons; no worker is shown them. */
-export const BOOKKEEPING_KINDS: ReadonlySet<string> = new Set([JOB_COST_KIND, "WRITE_HEALTH", "COPY_REPORT"]);
+export const BOOKKEEPING_KINDS: ReadonlySet<string> = new Set([JOB_COST_KIND, "WRITE_HEALTH", "COPY_REPORT", "PLAYBOOK_RETIREMENT"]);
 
 /** Reusable ways in: a method from one place is offered wherever it could apply, ranked by where it has worked. */
 export const TRANSFERABLE_METHOD_KINDS: ReadonlySet<string> = new Set(["METHOD", "ROUTE", "MANIFEST_BRANCH"]);

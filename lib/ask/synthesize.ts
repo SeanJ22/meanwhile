@@ -1,8 +1,8 @@
-import { lengthRuleForPrompt } from "./length-contract.ts";
+import { askPlaybook, askSettings } from "./runtime-settings.ts";
 import { writerSelection } from "./writer-selection.ts";
 import { stanceAnswerability } from "./stance-answerability.ts";
 import { gapWords, packHasEvidence, type EvidencePack } from "./evidence.ts";
-import { askModelTakesEffort, resolveAskEffort, resolveAskFastWriter, resolveAskModel, type AskEffort, type AskModelEnv } from "./model.ts";
+import { askModelTakesEffort, resolveAskEffort, resolveAskFastWriter, resolveAskModel, type AskEffort, type AskModelSettings } from "./model.ts";
 import { modelRequestFields, servedModelOf } from "../models.ts";
 import type { ValidationVerdict } from "./validate.ts";
 import {
@@ -64,44 +64,8 @@ export function synthesisSchema(): Record<string, unknown> {
   };
 }
 
-export function synthesisPrompt(pack: EvidencePack): string {
-  const agenda = pack.subject?.kind === "BODY" && pack.intent === "UPCOMING_AGENDA";
-  return [
-    "You are answering one resident's question about their government, using ONLY the records supplied below.",
-    "",
-    "Rules, all of them absolute:",
-    "- Use only the supplied records. You have no other source. If something is not in the records, you do not know it.",
-    "- Never state a fact about a government that the records do not contain. Do not fill a gap with what is likely, typical, or what you may remember.",
-    "- The named gaps are part of the evidence. Say them plainly when they matter to the answer.",
-    ...(writerSelection(pack).note
-      ? ["- You were given a selection of the vote records; writerSelection says how many exist. Never say or imply that the others were not published, not recorded or not available."] : []),
-    ...(pack.records.some(record => record.meetingListingIdentity?.uniqueMeetingCount === null)
-      ? ["- Calendar listings with uniqueMeetingCount:null have an unresolved distinct-meeting count. State their source-listing count and the identity gap; never call that number a count of meetings or merge their agendas, minutes or votes."] : []),
-    "- A gap marked OURS is about us — say we have not recorded it. A gap marked THEIRS is about the government — say what they have not published. Never swap these.",
-    ...(pack.records.some(record => record.kind === "FINANCE_SUMMARY" || record.kind === "FINANCE_TRANSACTION" || record.kind === "FINANCE_COMMITTEE")
-      ? [
-        "- CAMPAIGN MONEY: state each figure exactly as its record states it, and whose committee reported it. A total is not a list of donors: when no record names who gave, say the records we hold give totals and do not name donors. That is what WE hold; never say the state, the county or the committee withholds donors or did not file.",
-        "- When the question names more than one person, give each person's figures from that person's own records. Never say we hold no money records for a person whose records are in the list; if one person has none, say so for that person alone.",
-      ] : []),
-    "- Never tell the reader how to vote, never rank or score candidates, and never say who to support.",
-    "- Never state a candidate's or official's position, stance or vote unless a supplied record states it.",
-    "- SOURCE_PASSAGE is a matched quotation from a linked page. It does not establish who spoke or adopted the words. Attribute it to the page, never to the person.",
-    "- Do not announce your own failure or apologise. State what is known, name what is missing, stop.",
-    "- Plain language a twelve-year-old would understand. No identifiers, no codes, no internal state names.",
-    agenda
-      ? "- LEAD WITH THE HELD AGENDA: answer what is on this body's selected meeting agenda using its held agenda item titles and documents. Keep each item attached to its own meeting. A publication index is not a meeting agenda. If no agenda is held, lead with the named holding gap; never infer an empty docket or publisher absence. A sourced body-purpose explanation may be brief fallback context only when no agenda is held."
-      : "- LEAD WITH THE PLAIN DEFINITION: begin with one or two short sentences saying, in the simplest words, what the thing the reader asked about actually MEANS. Say what it is before you say anything else about it.",
-    agenda
-      ? "- After the agenda information, add only supporting facts that answer the agenda question. Do not replace held agenda information with generic civics education."
-      : "- After the definition, add only the most important supporting facts, in DESCENDING order of relevance — most important first, and stop when the important part is said. Do not list everything in the records.",
-    "- Everything you write is about the ONE thing the reader asked about. Nothing about any other race, office, measure or person on the ballot belongs in the answer, even if a record mentions it.",
-    agenda
-      ? "- Preserve the source's meeting date and the named scope of every holding gap. Never describe missing extraction as nothing on the agenda."
-      : "- Any procedural caveat — wording not final, an analysis still pending, where a title came from — comes AFTER the definition, briefly, once, and only when a record states it. It is never the lead.",
-    lengthRuleForPrompt(),
-    "",
-    "Also report citedSources: the n, from the sources list, of every source whose records you actually relied on. Do not invent one.",
-  ].join("\n");
+export function synthesisPrompt(_pack: EvidencePack): string {
+  return askPlaybook("ASK_WRITER");
 }
 
 export function synthesisSources(pack: Pick<EvidencePack, "records">): { n: number; url: string }[] {
@@ -234,11 +198,11 @@ export interface SynthesisRung {
 
 export const ASK_FAST_WRITER_TIMEOUT_MS = 6_000;
 
-export function frontierRung(env: AskModelEnv = process.env): SynthesisRung {
+export function frontierRung(env: AskModelSettings = askSettings()): SynthesisRung {
   return { model: resolveAskModel(env), effort: resolveAskEffort(env), role: "FRONTIER", timeoutMs: ASK_SYNTHESIS_TIMEOUT_MS };
 }
 
-export function synthesisLadder(env: AskModelEnv = process.env): SynthesisRung[] {
+export function synthesisLadder(env: AskModelSettings = askSettings()): SynthesisRung[] {
   const frontier = frontierRung(env);
   const fast = resolveAskFastWriter(env);
   if (!fast || fast === frontier.model) return [frontier];

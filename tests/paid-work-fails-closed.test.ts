@@ -121,23 +121,33 @@ function checkCycleFailsClosed(src: string): void {
     "the auditor is not given the ceiling in force");
 }
 
-/** Free work runs exactly as before: nothing paid, and nothing unreadable, gates it. */
-function checkFreeWorkUntouched(src: string): void {
+/** Free work obeys the runner pause and remains independent of paid controls and explicit dispatches. */
+function checkFreeStandingWork(src: string): void {
   assert.match(
     src,
     /\nif \(!dry && !canary && !intents\.runnerPause\.paused\) \{\s*try \{\s*const retained = await retainRecentRoutineMeetingEvidence\(/,
     "routine meeting intake is gated differently",
   );
-  const walk = src.slice(src.indexOf('let meetingsDiscoveryState = "not run: the meetings discovery pass has not started";'), src.indexOf("meetingsDiscovery = await runMeetingsDiscovery(repos, {"));
-  assert.ok(walk.length > 0, "the discovery walk anchors moved");
+  const start = src.indexOf("const runMeetingsDiscoveryPass = async (");
+  const end = src.indexOf("\n};", start);
+  assert.ok(start > 0 && end > start, "the discovery pass could not be located");
+  const walk = src.slice(start, end);
   assert.match(
     walk,
-    /if \(!MEETINGS_DISCOVERY_ENABLED\) \{[\s\S]*?\} else if \(dry \|\| canary\) \{[\s\S]*?\} else if \(discoveryToWalk\.length === 0\) \{[\s\S]*?\} else \{/,
-    "the free discovery walk is gated differently",
+    /if \(!MEETINGS_DISCOVERY_ENABLED\) \{[\s\S]*?\} else if \(dry \|\| canary\) \{[\s\S]*?\} else if \(intents\.runnerPause\.paused\) \{[\s\S]*?\} else \{/,
+    "free discovery must obey its kill switch, diagnostic modes and the explicit runner pause",
   );
+  assert.doesNotMatch(walk, /else if \(discoveryToWalk\.length === 0\)/, "an empty Send list must not stop standing discovery");
   for (const paidFact of ["modelLaneEnabled", "laneClosure", "laneDisabledReason", "unreadableControls", "configHold", "intentLogUnreadable", "ownerIntentsUnreadableByRunner"]) {
     assert.ok(!walk.includes(paidFact), `the free discovery walk now depends on ${paidFact}`);
   }
+  assert.match(walk, /const freeRuntime: DiscoveryRuntime = \{ \.\.\.discoveryRuntime, search: undefined, searchScopeFor: undefined, recordCost: undefined \}/, "standing work must remove every paid search seam");
+  assert.match(walk, /REGISTRATION_TARGETS\.map\(target => target\.state\.toLowerCase\(\)\), "us"/, "standing discovery must cover the registered national state set and unscoped domains");
+  assert.match(walk, /loadRegistrationJurisdictions\(\{ root: ROOT, states: \[state\],/, "each discovery job must load one state's registration");
+  assert.match(walk, /const runtime = \{ \.\.\.freeRuntime, recipes: knownRecipes\(manual\.store\.entries\) \}/, "the state job must use the free runtime");
+  assert.match(walk, /refreshDotgovCensusLeads\(repos, runtime, state\)/, "CISA and tenant leads must use the free state job");
+  assert.match(walk, /readPlatformCensusNeeds\(state, registry,/, "registered government websites must feed standing discovery");
+  assert.match(walk, /await runNeeds\(discoveryToWalk, runtime\)/, "the standing state list must reach the free executor");
   assert.match(src, /const MEETINGS_DISCOVERY_ENABLED = process\.env\.WTP_MEETINGS_DISCOVERY !== "off";/);
   assert.match(src, /const dispatchWorkWrites = !dry && !canary && ONLY === null && IDS === null && !intents\.runnerPause\.paused;/);
   assert.match(src, /const dispatchScopes = expansionPlan\?\.scopes \?\? \[\];/);
@@ -152,8 +162,8 @@ test("freshness-shadow.mts closes every paid path on an unreadable or ignored co
   checkCycleFailsClosed(source("scripts/freshness-shadow.mts"));
 });
 
-test("PRODUCTION TODAY: routine intake, the free discovery walk and dispatch-work writes are gated exactly as before", () => {
-  checkFreeWorkUntouched(source("scripts/freshness-shadow.mts"));
+test("PRODUCTION TODAY: routine intake and standing discovery run while paid controls are held, and obey the explicit runner pause", () => {
+  checkFreeStandingWork(source("scripts/freshness-shadow.mts"));
 });
 
 test("POSITIVE CONTROL: a cycle that drops any fail-closed wire, or gates free work on paid facts, fails its checker", () => {
@@ -174,10 +184,19 @@ test("POSITIVE CONTROL: a cycle that drops any fail-closed wire, or gates free w
   }
   const intakeOnLane = src.replace("if (!dry && !canary && !intents.runnerPause.paused) {\n  try {\n    const retained", "if (!dry && !canary && !intents.runnerPause.paused && modelLaneEnabled) {\n  try {\n    const retained");
   assert.notEqual(intakeOnLane, src);
-  assert.ok(fails(() => checkFreeWorkUntouched(intakeOnLane)), "routine intake gated on the paid lane passed");
-  const walkOnUnreadable = src.replace("} else if (discoveryToWalk.length === 0) {", "} else if (unreadableControls.length > 0 || discoveryToWalk.length === 0) {");
+  assert.ok(fails(() => checkFreeStandingWork(intakeOnLane)), "routine intake gated on the paid lane passed");
+  const walkOnUnreadable = src.replace("} else if (intents.runnerPause.paused) {", "} else if (unreadableControls.length > 0 || intents.runnerPause.paused) {");
   assert.notEqual(walkOnUnreadable, src);
-  assert.ok(fails(() => checkFreeWorkUntouched(walkOnUnreadable)), "a free walk stopped by an unreadable control passed");
+  assert.ok(fails(() => checkFreeStandingWork(walkOnUnreadable)), "a free walk stopped by an unreadable control passed");
+  for (const [from, to, what] of [
+    ["search: undefined, searchScopeFor: undefined, recordCost: undefined", "search: discoverySearch ?? undefined, searchScopeFor: undefined, recordCost: undefined", "paid search reattached to standing work"],
+    ["const states = ONLY !== null || IDS !== null ? []", "const states = !modelLaneEnabled || ONLY !== null || IDS !== null ? []", "standing states gated on the paid lane"],
+    ["} else if (intents.runnerPause.paused) {", "} else if (discoveryToWalk.length === 0) { return; } else if (intents.runnerPause.paused) {", "standing work stopped by an empty Send list"],
+  ]) {
+    const mutated = src.replace(from, to);
+    assert.notEqual(mutated, src, `the mutation for "${what}" did not apply`);
+    assert.ok(fails(() => checkFreeStandingWork(mutated)), `${what} passed`);
+  }
 });
 
 /* ------------------------------------------------ pilot-runner.mts, as text */

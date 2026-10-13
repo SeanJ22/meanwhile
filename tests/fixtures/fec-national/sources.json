@@ -1,0 +1,20 @@
+{
+  "capturedAt": "2026-10-12",
+  "sources": [
+    {
+      "file": "cn26.zip",
+      "sourceUrl": "https://www.fec.gov/files/bulk-downloads/2026/cn26.zip",
+      "sha256": "39cdcc9ef75ac2fdc8aa91072b551f273fd11adf39eefb12fd517ee50bd2fd23"
+    },
+    {
+      "file": "weball26.zip",
+      "sourceUrl": "https://www.fec.gov/files/bulk-downloads/2026/weball26.zip",
+      "sha256": "9fa81e0079874ffce44bf45f5ccb06f33aafbb1303b4a9b77b7a58347f83af52"
+    },
+    {
+      "file": "totals.json",
+      "sourceUrl": "https://api.open.fec.gov/v1/candidates/totals/?election_year=2026&cycle=2026&election_full=false&per_page=100&page=1",
+      "sha256": "3197cdab0d9d90d203df9268c03c3f18eb2b462a13db0503ec16fe17245c9489"
+    }
+  ]
+}

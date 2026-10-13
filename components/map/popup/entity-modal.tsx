@@ -4,18 +4,18 @@ import { CardSubjectContext } from "@/components/ui/card-subject-context";
 import { CheckedLink } from "@/components/ui/checked-link";
 import { CardSourceContext, useCardSourceRegistry } from "@/components/ui/card-source-context";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
-import { WorkingOnIt } from "@/components/demand/working-on-it";
+import { CardGapContext, CardGapContribution, useCardGapRegistry } from "@/components/ui/card-gap-context";
+import { CardFooter } from "@/components/ui/card-footer";
 import { blurbForTitle } from "@/lib/officials/office-blurbs";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import { X } from "lucide-react";
 import { PlacePublicRecords } from "../public-records";
 import { MeetingCard } from "@/components/ui/meeting-card";
-import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 import { useCardVisibility } from "@/hooks/use-card-visibility";
 
 import { formatMeetingDate, formatMeetingTime } from "@/lib/map/format";
-import { sourceCreditFor } from "@/lib/meetings/list-attribution";
 import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
 import { useMeetingListingIdentity } from "@/lib/state/data";
 import { MeetingListingNotice } from "../meeting-listing-notice";
@@ -24,8 +24,7 @@ import {
   hasConcluded,
   orderByUpcomingFirst,
 } from "@/lib/meetings/ordering";
-import { NO_BODY_BLURB_LINE } from "@/lib/officials/body-description";
-import { TOP_OFFICES_GAP, runsSomething, topOfficesFor,
+import { runsSomething, topOfficesFor,
   rosterInReadingOrder,
 } from "@/lib/officials/top-offices";
 import { displayPersonName } from "@/lib/officials/person-name";
@@ -34,7 +33,6 @@ import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyColorVar } from "@/lib/officials/party-color";
 import { readerPartyLabel } from "@/lib/text/reader-names";
 import {
-  sourceCountLabel,
   type CardSource,
   meetingCardSources,
 } from "@/lib/officials/card-sources";
@@ -44,10 +42,8 @@ import {
   CardSection,
   CardSectionGroup,
 } from "@/components/officials/card-section";
-import { CardSourcesList } from "@/components/officials/card-sources-list";
 import { IdentityPortrait } from "@/components/officials/person-identity";
 import { SpeakYourMind } from "@/components/speak/speak-your-mind";
-import { DemandPill } from "@/components/demand/demand-pill";
 import { RosterCompletenessGaps } from "@/components/officials/roster-completeness-gap";
 import type { RosterReaderGap } from "@/lib/registry/body-rosters";
 
@@ -74,9 +70,7 @@ export type ModalTab =
 
 
 /**
- * One collapsible section of a body's battlecard. With `content` null the
- * section still renders, collapsed, with its absence line, so every body card
- * has the same set of sections.
+ * One held section of a body's card. Missing sections contribute to its footer.
  */
 export interface BodyCardSection {
   id: string;
@@ -84,8 +78,6 @@ export interface BodyCardSection {
   /** Beside the title — a count, a date range. Never a judgement. */
   meta?: string;
   content: ReactNode | null;
-  /** Renders inside when `content` is null. Describes us, never the body. */
-  absence: string;
 }
 
 /** One sourced description with its citation underneath. */
@@ -246,12 +238,7 @@ function PlaceSections({
     <div className="account-modal-body">
       <PopupRow label="Type">{card.typeLabel}</PopupRow>
       <PopupRow label="Tier">
-        {card.tierLabel ?? (
-          // The named gap, never the tier the header painted.
-          <span className="text-muted">
-            We don&apos;t recognise this division type yet
-          </span>
-        )}
+{card.tierLabel}
       </PopupRow>
 
       <PopupSectionLabel>
@@ -262,7 +249,7 @@ function PlaceSections({
       </PopupSectionLabel>
 
       {card.bodies.length === 0 ? (
-        <WorkingOnIt />
+        <CardGapContribution id={`place:${subject.subjectId}:bodies`} label="who governs here" />
       ) : (
         <ul className="mt-1.5 flex flex-col gap-1">
           {card.bodies.map((body) => (
@@ -338,7 +325,6 @@ function BodySections({
             )}
           </>
         ) : null,
-      absence: NO_BODY_BLURB_LINE,
     },
     {
       id: "representation",
@@ -371,23 +357,18 @@ function BodySections({
                     onOpenHolder={onOpenHolder}
                   />
                 ) : (
-                  <Empty>
-                    We haven&rsquo;t sourced who the superintendent is. They are
-                    hired by this board, not elected.
-                  </Empty>
+                  <CardGapContribution id={`body:${subject.subjectId}:superintendent`} label="the superintendent" />
                 )}
               </div>
             )}
           </>
         ) : null,
-      absence: subject.representationNote,
     },
     {
       id: "meetings",
       title: listingCount.heading,
       meta: meetings.length > 0 ? `${upcoming} upcoming${listingCount.unresolved ? " listings" : ""}` : undefined,
       content: meetings.length > 0 ? <Meetings meetings={meetings} /> : null,
-      absence: "",
     },
     {
       id: "contact",
@@ -413,7 +394,6 @@ function BodySections({
             ))}
           </>
         ) : null,
-      absence: "",
     },
     {
       id: "jurisdiction",
@@ -428,15 +408,6 @@ function BodySections({
             ))}
           </>
         ) : null,
-      absence: "",
-    },
-    {
-      id: "sources",
-      title: "Sources",
-      meta: sourceCountLabel(subject.sources) ?? undefined,
-      content:
-        subject.sources.length > 0 ? <Sources sources={subject.sources} /> : null,
-      absence: "",
     },
   ];
 
@@ -451,14 +422,10 @@ function BodySections({
 
       {/* One group, one open pill. */}
       <CardSectionGroup>
-        {sections.map((section) => (
-          <Fragment key={section.id}>
-            {section.id === "sources" && <PublicRecordSection subject={subject} />}
-            <CardSection title={section.title} meta={section.meta} keepMounted={section.id === "sources"}>
-              <div data-card-sources={section.id === "sources" ? "" : undefined}>{section.content ?? <WorkingOnIt subject={subject.subjectKind === "BODY" ? { type: "BODY", id: subject.subjectId } : null} />}</div>
-            </CardSection>
-          </Fragment>
-        ))}
+        {sections.map((section) => section.content ? (
+          <CardSection key={section.id} title={section.title} meta={section.meta}>{section.content}</CardSection>
+        ) : <CardGapContribution key={section.id} id={`body:${subject.subjectId}:${section.id}`} label={section.title.toLowerCase()} />)}
+        <PublicRecordSection subject={subject} />
       </CardSectionGroup>
     </div>
   );
@@ -479,8 +446,8 @@ export function EntityModal({
   useCardVisibility(cardRef, `${subject.subjectKind}:${subject.subjectId}`, subject.subjectKind);
   const tab = initialTab;
   const listingCount = readerMeetingCount(subject.meetings, useMeetingListingIdentity());
-  const { register, sources: allSources } = useCardSourceRegistry(subject.sources, `${subject.subjectKind}:${subject.subjectId}`);
-  const sourceCount = sourceCountLabel(allSources);
+  const { register, sources: allSources, insideCard } = useCardSourceRegistry(subject.sources, `${subject.subjectKind}:${subject.subjectId}`);
+  const { register: registerGaps, gaps: allGaps } = useCardGapRegistry([], `${subject.subjectKind}:${subject.subjectId}`);
 
   useEffect(() => {
     if (embedded) return;
@@ -595,7 +562,7 @@ export function EntityModal({
   </div>;
 
   return (
-    <CardSubjectContext.Provider value={subject.subjectKind === "BODY" ? { type: "BODY", id: subject.subjectId } : null}><CardSourceContext.Provider value={register}><div
+    <CardSubjectContext.Provider value={subject.subjectKind === "BODY" ? { type: "BODY", id: subject.subjectId } : null}><CardSourceContext.Provider value={register}><CardGapContext.Provider value={registerGaps}><div
       ref={cardRef}
       className={embedded ? "account-modal-overlay mw-embedded" : "account-modal-overlay"}
       role={embedded ? undefined : "dialog"}
@@ -679,7 +646,6 @@ export function EntityModal({
             )}
             {subject.subjectKind !== "MEETING" && <CardSection title={listingCount.heading}><Meetings meetings={subject.meetings} /></CardSection>}
             <PublicRecordSection subject={subject} />
-            <CardSection title="Sources" meta={sourceCount}><Sources sources={allSources} /></CardSection>
           </CardSectionGroup>
         </div>
         )}
@@ -694,24 +660,16 @@ export function EntityModal({
               subjectId={subject.subjectId}
               subject={subject.title}
             />
-            {/* Body cards only; the same component the candidate card uses. */}
-            {subject.subjectKind === "BODY" && (
-              <DemandPill
-                subjectType="BODY"
-                subjectId={subject.subjectId}
-                className="mt-3"
-              />
-            )}
           </div>
         )}
+        {!insideCard && <CardFooter gaps={allGaps} sources={allSources} />}
       </div>
-    </div></CardSourceContext.Provider></CardSubjectContext.Provider>
+    </div></CardGapContext.Provider></CardSourceContext.Provider></CardSubjectContext.Provider>
   );
 }
 
 export function Representation({
   holders,
-  note,
   gaps = [],
   onOpenHolder,
   /** Lead with the top offices. False only where the list already is the top office. */
@@ -723,7 +681,7 @@ export function Representation({
   onOpenHolder?: (holder: SeatHolder) => void;
   showTopOffices?: boolean;
 }) {
-  if (holders.length === 0) return <><RosterCompletenessGaps gaps={gaps} /><Empty>{note}</Empty></>;
+  if (holders.length === 0) return <><RosterCompletenessGaps gaps={gaps} /><CardGapContribution id="representation" label="who sits on it" /></>;
 
   // The appointed executive leads the list.
   const ordered = rosterInReadingOrder(holders);
@@ -762,9 +720,7 @@ export function Representation({
         </div>
       )}
       {showTopOffices && topOffices.length === 0 && (
-        <p className="mb-2.5 border-b border-[var(--panel-border)] pb-2.5 t-caption leading-relaxed text-muted">
-          {TOP_OFFICES_GAP}
-        </p>
+        <CardGapContribution id="top-offices" label="who runs it" />
       )}
       {ordered.map((holder) => (
         <div key={holder.id} data-roster-holder={holder.id} className="account-modal-person flex items-start gap-3">
@@ -818,19 +774,10 @@ export function Meetings({ meetings }: { meetings: Meeting[] }) {
   const [now] = useState(() => Date.now());
 
   if (meetings.length === 0) {
-    return (
-      <Empty>
-        No meetings on file for this division. That is our coverage, not a
-        statement that nothing is scheduled.
-      </Empty>
-    );
+    return <CardGapContribution id="meetings" label="meetings" />;
   }
 
   const groups = groupMeetingsForReading(meetings, now);
-  // One credit line at the foot, no inline markers.
-  const credit = sourceCreditFor(
-    groups.flatMap((group) => group.meetings),
-  );
 
   return (
     <>
@@ -880,24 +827,10 @@ export function Meetings({ meetings }: { meetings: Meeting[] }) {
 
       {/* One credit line at the foot of the tab. */}
       <MeetingSourceCredit
-        credit={credit}
         sources={meetings.flatMap(meeting => meetingCardSources(meeting, []))}
-        className="mt-3 border-t border-[var(--panel-border)] pt-2.5"
       />
     </>
   );
-}
-
-/** Every record behind everything on screen. A null `sourceUrl` renders as such. */
-function Sources({ sources }: { sources: CardSource[] }) {
-  if (sources.length === 0) {
-    return <WorkingOnIt />;
-  }
-  return <CardSourcesList sources={sources} />;
-}
-
-function Empty(_props: { children: ReactNode }) {
-  return <WorkingOnIt className="px-1 py-3" />;
 }
 
 export { PopupSectionLabel };

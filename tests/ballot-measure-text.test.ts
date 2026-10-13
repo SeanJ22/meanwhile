@@ -2,6 +2,11 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import * as React from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import ts from "typescript";
+import { CardGapContribution } from "../components/ui/card-gap-context.tsx";
+import { cardGapLine } from "../lib/design/card-gaps.ts";
 
 import type { BallotSet } from "@/lib/ballot/types";
 
@@ -79,25 +84,34 @@ test("BAL-30: the ballot page renders the question and the statement it holds", 
   );
 });
 
-test("BAL-30: a null statement renders as a NAMED gap, never as the rich branch", () => {
-  const src = code(PAGE);
-
-  const present = src.indexOf('data-measure-statement="PRESENT"');
-  const gap = src.indexOf('"data-measure-statement": "GAP_OURS"');
-  assert.ok(present > 0, "the statement-present branch is marked");
-  assert.ok(gap > present, "the gap branch is marked, and it is a DIFFERENT branch");
-
-  /*
-   * The gap says whose it is. "We have not recorded" is a fact about us;
-   * anything reading as "the authority published nothing" would be a claim
-   * about a school district made out of a document we did not open.
-   */
-  assert.match(src, /<WorkingOnIt[^\n]+"data-measure-statement": "GAP_OURS"/,
-    "FE-30: the missing statement uses the shared Reader hunt state");
-  assert.ok(
-    !/nothing was published|the district published no/i.test(src),
-    "a gap of ours may never render as a claim about the authority",
-  );
+test("BAL-30: a null statement contributes one named card gap and renders no empty row", () => {
+  const source = ts.createSourceFile("ballot.tsx", PAGE, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  let statement: ts.ConditionalExpression | undefined;
+  const visit = (node: ts.Node) => {
+    if (ts.isConditionalExpression(node) && node.condition.getText(source) === "measure.officialStatement") statement = node;
+    ts.forEachChild(node, visit);
+  };
+  visit(source);
+  assert.ok(statement, "exercise the production held/missing statement branch");
+  const executable = ts.transpileModule(`return (${statement.getText(source)});`, {
+    compilerOptions: { jsx: ts.JsxEmit.React, target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None },
+  }).outputText;
+  const render = new Function("React", "CardGapContribution", "measure", "contest", executable).bind(null, React, CardGapContribution);
+  for (const id of ["ballot-az-pima:prop-428", "ballot-az-pima:prop-429"]) {
+    const measure = measureOf(id)!;
+    const gap = render(measure, { id });
+    assert.equal(gap.type, CardGapContribution);
+    assert.equal(gap.props.id, `measure-statement:${id}`);
+    assert.equal(gap.props.label, "the official statement");
+    assert.equal(gap.props.kind ?? "not-held", "not-held", "an unread statement does not claim the authority published nothing");
+    assert.equal(renderToStaticMarkup(gap), "", "the missing field itself has no visible row");
+    assert.equal(cardGapLine([gap.props]), "Still gathering: the official statement.");
+  }
+  const held = measureOf("ballot-az-pima:prop-425")!;
+  const heldMarkup = renderToStaticMarkup(render(held, { id: held.contestId }));
+  assert.match(heldMarkup, /data-measure-statement="PRESENT"/);
+  assert.ok(heldMarkup.includes(held.officialStatement!.slice(0, 60)), "held official wording reaches the visible branch");
+  assert.doesNotMatch(heldMarkup, /Still gathering|working on getting this info/);
 });
 
 test("BAL-30: a school-district override no longer files under 'Statewide measures'", () => {

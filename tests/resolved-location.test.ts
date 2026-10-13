@@ -483,7 +483,7 @@ test("WIRING: the browse surfaces name THEIR question, and it is a different one
   assert.match(popup, /browsingSubject\(home, ocdId\)/, "the popup constructs BROWSING");
 
   const modal = codeOf("components", "map", "popup", "entity-modal.tsx");
-  assert.match(modal, /<BrowsingSubjectLine/, "the large card carries it too");
+  assert.match(modal, /<BrowsingSubjectLine/, "the card renders its browsing subject");
 
   // ONE implementation, shared. Two copies of "which question is this" is how
   // two surfaces come to answer it differently.

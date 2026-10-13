@@ -1,6 +1,5 @@
 "use client";
 
-import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { useMemo } from "react";
 
 import { formatMiles } from "@/lib/map/format";
@@ -149,12 +148,9 @@ function Card({
   loading?: boolean;
   onOpen?: () => void;
 }) {
-  /*
-   * A number we do not hold is never a dash: an ellipsis while loading, then
-   * the working-on-it line. `derive.ts` keeps "—" as its internal sentinel.
-   */
+  // `derive.ts` keeps "—" as its internal sentinel; only held counts render.
   const missing = value === "—";
-  const note = missing && !loading ? <WorkingOnIt inline /> : sub;
+  const note = sub;
   return (
     <button
       type="button"
@@ -167,7 +163,7 @@ function Card({
       onClick={onOpen}
       aria-label={`Open the ${label.toLowerCase()} list`}
     >
-      <div className="num">{missing ? "…" : value}</div>
+      {(!missing || loading) && <div className="num">{loading && missing ? "…" : value}</div>}
       <div className="label">{label}</div>
       {note && (
         <div className="label" style={{ color: "var(--text-muted)" }}>

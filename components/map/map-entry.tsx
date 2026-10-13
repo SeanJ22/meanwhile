@@ -1,6 +1,5 @@
 "use client";
 
-import { WorkingOnIt } from "@/components/demand/working-on-it";
 
 import { OfficeCard } from "./popup/office-card";
 import { useOfficePins } from "@/hooks/use-office-pins";
@@ -53,6 +52,7 @@ import type { MeetingSearchResult } from "@/lib/meetings/query";
 import type { SnapshotStatus } from "@/lib/meetings/freshness";
 import { logEvent } from "@/lib/log/client";
 import { groupByVenue, placelessSittingsOfVenueBodies, type Venue } from "@/lib/meetings/venues";
+import { meetingCardGaps } from "@/lib/meetings/card-gaps";
 import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
 import { lastReadByDivision, snapshotInView } from "@/lib/meetings/freshness";
 import type { MeetingListingIdentityReadback } from "@/lib/meetings/listing-identity";
@@ -62,6 +62,7 @@ import type { SeatHolder } from "@/lib/officials/lookup";
 import {
   districtCardSources,
   meetingCardSources,
+  personCardSources,
 } from "@/lib/officials/card-sources";
 import type { CoveredBody } from "@/lib/registry/coverage";
 import { bodyClassLong } from "@/lib/registry/body-class-labels";
@@ -1117,7 +1118,7 @@ function MapEntryInner() {
         ? `venue:${cardView.venue.key}`
         : cardView.kind === "door"
           ? `door:${cardView.door}`
-          : cardView.kind
+          : `${cardView.kind}`
     : null;
   const cardLabel = cardView ? cardViewLabel(cardView) : "";
 
@@ -1860,6 +1861,14 @@ function MapEntryInner() {
         {cardView && !parked && (
           <ReaderCard
             viewKey={cardKey ?? "card"}
+            sources={cardView.kind === "venue"
+              ? [...cardView.venue.meetings, ...selectedVenuePlaceless].flatMap(meeting => meetingCardSources(meeting, []))
+              : cardView.kind === "large" && cardView.surface.kind === "entity" ? cardView.surface.subject.sources
+                : cardView.kind === "large" && cardView.surface.kind === "official" ? personCardSources(cardView.surface.holder) : []}
+            gaps={cardView.kind === "venue" ? [...cardView.venue.meetings, ...selectedVenuePlaceless].flatMap(meetingCardGaps)
+              : cardView.kind === "large" && cardView.surface.kind === "entity" ? cardView.surface.subject.meetings.flatMap(meetingCardGaps) : []}
+            subject={cardView.kind === "large" && cardView.surface.kind === "official" ? { type: "CANDIDATE", id: cardView.surface.holder.id }
+              : cardView.kind === "large" && cardView.surface.kind === "entity" && cardView.surface.subject.subjectKind === "BODY" ? { type: "BODY", id: cardView.surface.subject.subjectId } : undefined}
             kicker={cardKicker}
             kickerTone={cardTone}
             zip={clusterZip}
@@ -2013,12 +2022,12 @@ function meetingSubject(
         : {
             // The online sentence only where the body published online access.
             label: "Where",
-            value: isPlaceUnrecorded(meeting) ? <WorkingOnIt inline subject={body ? { type: "BODY", id: body.bodyId } : null} /> : placelessWhereLine(meeting),
+            value: isPlaceUnrecorded(meeting) ? null : placelessWhereLine(meeting),
           },
       ...(() => {
         const access = onlineAccessFor(meeting);
-        return access
-          ? [{ label: "How to join", value: access.joinUrl ? <a href={access.joinUrl} target="_blank" rel="noreferrer">Join online</a> : <WorkingOnIt inline subject={body ? { type: "BODY", id: body.bodyId } : null} /> }]
+        return access?.joinUrl
+          ? [{ label: "How to join", value: <a href={access.joinUrl} target="_blank" rel="noreferrer">Join online</a> }]
           : [];
       })(),
       { label: "Status", value: STATUS_LABEL[meeting.status] },

@@ -82,7 +82,10 @@ test("BAL-43: offices read top to bottom; both candidate paths share the desktop
     "only desktop uses two candidate columns");
   assert.doesNotMatch(CSS, /\.ballot-office-list \{[^}]*[;{]\s*columns:/,
     "offices cannot flow into a second column");
-  assert.match(src, /data-office-tier-start=/);
+  assert.match(src, /attrs=\{\{[\s\S]*?"data-office-tier-start": "true"/,
+    "the shared card receives the tier-divider attribute");
+  assert.match(src, /contestIndex > 0 && tierForOffice\(contest\.title, contest\.ocdId\) !== tierForOffice\(candidacyContests\[contestIndex - 1\]/,
+    "only a transition between adjacent office tiers starts a divider");
   assert.match(CSS, /\.ballot-office-card\[data-office-tier-start="true"\] \{[^}]*border-top-width:\s*3px/,
     "tier transitions have a clear divider without reordering offices");
 });

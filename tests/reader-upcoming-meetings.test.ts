@@ -100,7 +100,7 @@ test("the district card's door opens exactly the rows its count counted, never a
   assert.doesNotMatch(entry, /type: "scope\/body"/, "map-entry dispatches a Body scope");
 });
 
-test("every reader surface that lists meetings renders the upcoming sittings, with honest gaps and matching counts", () => {
+test("every reader surface renders the upcoming sittings with held fields and matching counts", () => {
   const script = `
     import { createElement as h, Fragment } from 'react';
     import { renderToStaticMarkup } from 'react-dom/server';
@@ -207,9 +207,10 @@ test("every reader surface that lists meetings renders the upcoming sittings, wi
     const row = text(rowMarkup(html("duffy"), id));
     // The body's own published words, per row ("Via Zoom Webinar", "Via Zoom").
     const label = byId.get(id)?.online?.label;
-    check(/data-working-on-it=/.test(row), `Duffy panel: ${id} does not name its agenda gap`);
-    check(/data-status="online"/.test(rowMarkup(html("duffy"), id)), `Duffy panel: ${id} carries no online mark`);
-    check(Boolean(label) && row.includes(label!) && /data-working-on-it=/.test(row), `Duffy panel: ${id} does not quote "${label}" or say whose gap the join link is`);
+    check(!/data-working-on-it=|working on getting this info|Want us/.test(row), `Duffy panel: ${id} renders a missing-field placeholder`);
+    check(/data-meeting-where="online"/.test(rowMarkup(html("duffy"), id)), `Duffy panel: ${id} carries no online label`);
+    check(Boolean(label) && row.includes(`Online · ${label}`), `Duffy panel: ${id} does not quote "${label}"`);
+    check(/>Meeting page<\//.test(row), `Duffy panel: ${id} omits its held meeting page`);
   }
   check(/Read the agenda/.test(duffy), "Duffy panel: no agenda link renders at all");
 
@@ -223,13 +224,12 @@ test("every reader surface that lists meetings renders the upcoming sittings, wi
   // ── The Bodies door: the next sitting is the first upcoming one. ──
   check(/Next meeting[\s\S]*Mon, September 28th, 2026/.test(text(html("bodies"))), "Bodies door: Tucson Unified's next meeting is not Sep 28");
 
-  // ── The missing-location path: listed, never "online", gap named. ──
+  // ── The missing-location path: listed, with its absent place omitted. ──
   const unrecordedRow = rowMarkup(html("unrecordedList"), UNRECORDED);
   check(unrecordedRow.length > 0, "no-place sitting: dropped from the meeting list");
-  check(!/data-status="online"/.test(unrecordedRow), "no-place sitting: marked online in the meeting list");
-  check(/data-meeting-where="unrecorded"/.test(unrecordedRow), "no-place sitting: the list row names no gap");
+  check(!/data-meeting-where/.test(unrecordedRow), "no-place sitting: the list row renders an absent place");
   check(rowIds(html("unrecordedDuffy")).includes(UNRECORDED), "no-place sitting: dropped from the body's pin panel");
-  check(/data-meeting-where="unrecorded"/.test(rowMarkup(html("unrecordedDuffy"), UNRECORDED)), "no-place sitting: the pin panel names no gap");
+  check(!/data-meeting-where/.test(rowMarkup(html("unrecordedDuffy"), UNRECORDED)), "no-place sitting: the pin panel renders an absent place");
   check(r.unrecordedPinned === false, "no-place sitting: given a pin");
 
   assert.deepEqual(fails, [], `\n  ${fails.join("\n  ")}`);

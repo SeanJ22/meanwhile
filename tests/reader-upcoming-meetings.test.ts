@@ -102,7 +102,7 @@ test("the district card's door opens exactly the rows its count counted, never a
 
 test("every reader surface renders the upcoming sittings with held fields and matching counts", () => {
   const script = `
-    import { createElement as h } from 'react';
+    import { createElement as h, Fragment } from 'react';
     import { renderToStaticMarkup } from 'react-dom/server';
     import { readFileSync } from 'node:fs';
     import { DataProvider } from './lib/state/data.tsx';
@@ -111,6 +111,8 @@ test("every reader surface renders the upcoming sittings with held fields and ma
     import { applyFilters } from './lib/state/derive.ts';
     import { ListOverlay } from './components/map/list-overlay.tsx';
     import { MeetingPanel } from './components/map/meeting-panel.tsx';
+    import { EntityModal, Meetings } from './components/map/popup/entity-modal.tsx';
+    import { districtSubject } from './components/map/district-subject.tsx';
     import { DoorOverlay } from './components/map/door-overlay.tsx';
     import * as venuesModule from './lib/meetings/venues.ts';
     import { installRegistryAuthority } from './tests/helpers/promoted-fixtures.ts';
@@ -147,6 +149,11 @@ test("every reader surface renders the upcoming sittings with held fields and ma
       out.duffy = duffy ? render(data, {}, h(MeetingPanel, { venue: duffy, placeless: placelessFor(duffy, meetings), onClose: () => {}, onOpenMeeting: () => {} })) : '';
       const pcc = venues.find((v) => v.meetings.some((m) => m.id.startsWith('diligent:pcc:')));
       out.pcc = pcc ? render(data, {}, h(MeetingPanel, { venue: pcc, placeless: placelessFor(pcc, meetings), onClose: () => {}, onOpenMeeting: () => {} })) : '';
+      const district = districtSubject({ type: 'school-unified', tier: 'local', typeLabel: 'School (unified)', ocdId: ${JSON.stringify(TUSD)}, label: 'Tucson Unified District', state: 'AZ' }, meetings);
+      // Static rendering cannot open a disclosure. Render the actual card's meeting pane alongside its heading.
+      out.district = render(data, {}, h(Fragment, null, h(EntityModal, {
+        embedded: true, subject: district, onClose: () => {},
+      }), h(Meetings, { meetings: district.meetings })));
       out.bodies = render(data, {}, h(DoorOverlay, { door: 'bodies', coverage: fixture.coverage, meetings, drawnDistricts: [], districtOverlayOn: false, atAddress: false,
         onShowDistricts: () => {}, onOpenOfficial: () => {}, onOpenMeeting: () => {}, onOpenBody: () => {}, onClose: () => {} }));
     }
@@ -210,6 +217,9 @@ test("every reader surface renders the upcoming sittings with held fields and ma
   // ── A division-less body's pin. ──
   const pccIds = rowIds(html("pcc"));
   for (const id of PCC_PLACELESS_UPCOMING) check(pccIds.includes(id), `PCC panel: ${id} is not rendered`);
+
+  // The actual district card lists the upcoming sittings behind its meeting section.
+  for (const id of UPCOMING) check(rowIds(html("district")).includes(id), `district card: ${id} is missing from its meetings`);
 
   // ── The Bodies door: the next sitting is the first upcoming one. ──
   check(/Next meeting[\s\S]*Mon, September 28th, 2026/.test(text(html("bodies"))), "Bodies door: Tucson Unified's next meeting is not Sep 28");

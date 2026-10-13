@@ -70,6 +70,10 @@ const LITERAL_ALLOWED = new Map<string, string>([
   ],
   ["tests/origins.test.ts", "this file asserts the host's value"],
   [
+    "tests/fixtures/ui-01-tusd-reader-promotion.json",
+    "recordedFrom retains the actual source URL of the captured production response, never a runtime call site",
+  ],
+  [
     "lib/control-plane/admin-google.ts",
     // An enrolled identity is an email address, not an origin, so it is not derived from PUBLIC_SITE_ORIGIN.
     "the enrolled owner address — an identity, never a call site",

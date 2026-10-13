@@ -87,10 +87,10 @@ test("SWEEP-01: no reader surface asserts a publication state of its own", () =>
   );
 });
 
-test("SWEEP-01: both agenda surfaces go through the ONE decider", () => {
-  // Both components route a null agenda link through the one decider.
+test("SWEEP-01: agenda gap contributions share the publication decider", () => {
+  // Rows collect at the card foot; both gap producers preserve the same evidence rule.
   for (const rel of [
-    "components/ui/meeting-row.tsx",
+    "lib/meetings/card-gaps.ts",
     "components/map/popup/agenda-section.tsx",
   ]) {
     const source = readFileSync(join(ROOT, rel), "utf8");

@@ -66,7 +66,7 @@ async function cycleWorld(repos: ControlPlaneRepositories, now: string): Promise
   const registry = buildRegistry(
     [
       localJurisdictionsProvider({ trackedStates: trackedStatesFromOperationalReference(), materialized: () => materialized, meetingPartitions: UNREAD_MEETING_PARTITIONS }),
-      meetingsDiscoveryProvider({ materialized: () => materialized }),
+      meetingsDiscoveryProvider({ registered: () => ({ registries: new Map(), refused: new Map() }), materialized: () => materialized }),
     ],
     { root: ROOT, nowIso: now },
   );

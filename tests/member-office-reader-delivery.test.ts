@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createElement } from "react";
+import { readFileSync } from "node:fs";
+import { parse } from "yaml";
 import { renderToStaticMarkup } from "react-dom/server";
 import { GET } from "../app/api/directory/route.ts";
 import { DirectoryRecordsContent } from "../components/officials/member-directory.tsx";
@@ -59,4 +61,21 @@ test("the shared directory fetch carries and caches the native person's state sc
     assert.equal(one,same);assert.notEqual(one,other);await Promise.all([one,other]);
     assert.equal(urls.length,2);assert.ok(urls[0].endsWith("&state=OH"));assert.ok(urls[1].endsWith("&state=NC"));
   } finally {globalThis.fetch=original;}
+});
+
+
+test("the committed congress-legislators sample shows held office fields with no missing-field rows", () => {
+  const fixture = JSON.parse(readFileSync(new URL("./fixtures/ui-01-congress-legislators-hinson.json", import.meta.url), "utf8"));
+  const normalized = normalizeCongressDirectory(Object.fromEntries(Object.entries(fixture.yaml as Record<string, string>).map(([key, value]) => [key, parse(value)])), fixture.revision, fixture.retrievedAt);
+  const held = normalized.directory.byMember.H001091;
+  assert.equal(held.districtOffices.length, 3);
+  const markup = renderToStaticMarkup(createElement(DirectoryRecordsContent, { holderId: "congress:H001091", state: "IA", only: "offices", directory: { districtOffices: held.districtOffices, committees: [] }, failed: false }));
+  assert.equal((markup.match(/data-directory-office=/g) ?? []).length, 3);
+  for (const office of held.districtOffices) {
+    assert.ok(markup.includes(office.city!));
+    assert.ok(markup.includes(`tel:${office.phone!.replace(/[^\d+]/g, "")}`));
+  }
+  assert.doesNotMatch(markup, /working on getting|Want us|no published page|<summary[^>]*>Sources/);
+  const missing = renderToStaticMarkup(createElement(DirectoryRecordsContent, { holderId: "congress:H001091", state: "IA", only: "offices", directory: { districtOffices: [], committees: [] }, failed: false }));
+  assert.equal(missing, "", "the empty directory contributes to the card gap without rendering field rows");
 });

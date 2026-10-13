@@ -1,6 +1,9 @@
+import { withPublishedAskSettings, askPlaybookVersion } from "@/lib/ask/runtime-settings.ts";
 import { governmentFinanceEvidence, governmentFinanceQuestion, composeGovernmentFinanceAnswer } from "@/lib/ask/government-finance";
-import { governmentListingEntity, governmentListingEvidence, readerGovernmentListings } from "@/lib/ask/government-listings";
+import { openDataQuestion, openDataEvidenceFor } from "@/lib/ask/open-data";
+import { governmentListingEntity, governmentListingEvidenceRecords, readerGovernmentListings } from "@/lib/ask/government-listings";
 import { prlStatementEvidence, readPrlForSubject } from "@/lib/sources/prl/person";
+import { federalAskEvidence } from "@/lib/sources/congress/reader";
 import { type MeetingsSnapshot } from "@/lib/meetings/snapshot";
 import { ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
 import { enterReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "@/lib/registry/runtime-edge";
@@ -46,6 +49,7 @@ import { stanceAnswerability } from "@/lib/ask/stance-answerability";
 import { fetchThroughKey, composeFinanceDetail } from "@/lib/ask/fetch-through-key";
 import { campaignMoneyEvidenceFor } from "@/lib/ask/campaign-money";
 import { candidateProfileEvidenceFor } from "@/lib/ask/candidate-profile";
+import { fecRaceMoneyQuestion, fecRaceMoneyAnswer, requestedFecSubjects } from "@/lib/ask/fec-national";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyConflictCardForFiling, reconciledCandidacyIdForCard, type PartyConflictFiling } from "@/lib/identity/az-2026";
 import { meetingOutcomeEvidenceFor, outcomeSittingsOnDate, meetingRecordQuestionClass, type HeldMeetingAction } from "@/lib/ask/meeting-outcomes";
@@ -195,7 +199,6 @@ import { statesOf, voteEvidenceForIncludingHistory, voteEvidenceReadsStateRollCa
 export const runtime = "nodejs";
 
 /** Logs the resolved model and effort once at startup, so an override is visible in the deployment log. Configuration only, never request content. */
-console.log(askModelStartupLine());
 
 const MAX_BODY_BYTES = 16384;
 const MAX_QUESTION_CHARS = 400;
@@ -390,6 +393,13 @@ function personEntities(seats: readonly SeatHolder[]): BindableEntity[] {
 }
 
 export async function POST(request: Request) {
+  return withPublishedAskSettings(() => {
+    console.log(askModelStartupLine());
+    return answerWithSettings(request);
+  });
+}
+
+async function answerWithSettings(request: Request) {
   const started = Date.now();
   const trace: AskTrace = emptyTrace();
 
@@ -530,6 +540,33 @@ export async function POST(request: Request) {
         : leanAsk ? READER_MAP_AUTHORITY_FAMILIES
         : deferUnrelatedEvidence ? AUTHORITY_FAMILIES.filter(family => !unrelatedFamilies.has(family)) : AUTHORITY_FAMILIES).catch(() => null))();
     if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
+  }
+  if (fecRaceMoneyQuestion(question)) {
+    await timed("funding", settleFundingRead)().catch(() => undefined);
+    let direct: ReturnType<typeof fecRaceMoneyAnswer> = null;
+    try { direct = fecRaceMoneyAnswer(question, typeof body.today === "string" ? body.today : new Date().toISOString().slice(0, 10)); } catch { /* The regular answer path records a failed holding. */ }
+    if (direct) {
+      const verdict = validateAnswer(direct.answer, direct.citedUrls, direct.pack);
+      if (verdict.kind === "PASSED") {
+        const interpretation = { ...unavailableInterpretation(), intent: direct.pack.intent, temporal: direct.pack.temporal };
+        trace.interpretation = { ran: false, why: "fec-registration-money", intent: direct.pack.intent, temporal: direct.pack.temporal, fellBackToDeterministic: true };
+        trace.resolution = { state: "NONE", basis: "FEC_REGISTRATION_SCOPE" };
+        trace.retrieval = { selection: "FEC_REGISTRATION_SCOPE", recordCount: direct.pack.records.length,
+          sourceCount: direct.citedUrls.length, gapCount: direct.pack.gaps.length, denominators: direct.pack.denominators };
+        trace.composition = { kind: "MONEY", shape: "FEC_MOST_RAISED", basis: "FEC_FILED_TOTALS", composed: true, passed: true };
+        trace.validation = { ran: true, passed: true, checked: verdict.checked };
+        trace.synthesis = { ran: false, why: "composed-from-fec-records" };
+        trace.sourcesLoaded = "ESSENTIAL"; trace.preloads = preloadMs; trace.answerMode = "STRUCTURED_GROUNDED"; trace.totalMs = Date.now() - started;
+        await captureDelivered({ request, question, interpretation, resolutionState: "NONE", mode: "STRUCTURED_GROUNDED",
+          subjectIds: [...new Set(direct.pack.records.flatMap(row => row.subjectId ? [row.subjectId] : []))], answer: direct.answer,
+          answerModel: null, validationPassed: true, records: direct.pack.records, gaps: direct.pack.gaps,
+          surface: body.surface === "MAP" || body.surface === "BALLOT" ? body.surface : "UNKNOWN",
+          approximateLocation: typeof body.approximateLocation === "string" ? body.approximateLocation : null,
+          ocdIds, residency: stampResidency(readLocationOrigin(body.locationOrigin)),
+          continuityKey: typeof body.continuityKey === "string" ? body.continuityKey : "" });
+        return Response.json(askAnswer({ mode: "STRUCTURED_GROUNDED", pack: direct.pack, answer: direct.answer, contacts: [], trace }));
+      }
+    }
   }
   // Confirm the hint from the published ballot before leaving any source
   // unread. Legacy authorities and unmatched titles continue through the full path.
@@ -763,6 +800,13 @@ export async function POST(request: Request) {
     ballotOfficialIds.set(candidate.id, officialIds);
     for (const officialId of officialIds) officialToBallot.set(officialId, candidate.id);
   }
+  let fecSubjects: ReturnType<typeof requestedFecSubjects> = [];
+  if (!deterministicTopicRoute && !areaTopicRoute && !namedBodyTopicRoute && !leanAsk) {
+    try { fecSubjects = requestedFecSubjects(question, preferredOfficialIds).map(row => {
+      const id = officialToBallot.get(row.entity.id) ?? officialAliases.get(row.entity.id) ?? row.entity.id;
+      return { entity: { ...row.entity, id }, record: { ...row.record, subjectId: id } };
+    }); } catch { /* The funding source read already records its failure. */ }
+  }
   /* A candidate held as a certified card and as a filing with a different party binds to the card; the answer carries both records and both parties, never one merged. */
   const partyConflictFilings = new Map<string, PartyConflictFiling>();
   /* A surface that focuses the filing record itself means that record: it keeps its own id. */
@@ -770,6 +814,7 @@ export async function POST(request: Request) {
   const inventory = [
     ...bodies,
     ...heldFilings.map(row => row.entity),
+    ...fecSubjects.map(row => row.entity),
     ...people.map((person) => ({ ...person, id: officialToBallot.get(person.id) ?? officialAliases.get(person.id) ?? person.id })),
     ...ballotInventory.entities.map((entity) => {
       const pair = entity.id.startsWith("ballot-az-") && !surfaceIds.has(entity.id) ? partyConflictCardForFiling(entity.id) : null;
@@ -827,6 +872,7 @@ export async function POST(request: Request) {
   /* The writing ladder: the fast writer first for every question; the frontier only when its answer fails a check. */
   const ladder = synthesisLadder();
   const ladderKey = ladderIdentity(ladder);
+  const writerCacheModel = `${ladderKey.model}:${askPlaybookVersion("ASK_WRITER")}`;
   const callerKey = askCallerKey(process.env, markerFromRequest(request).runClass);
   const lapAt = (name: string, at: number) => { stageMs[name] = at - stageMark; stageMark = at; };
   type PackPath = Extract<Awaited<ReturnType<typeof answerPath>>, { kind: "PACK" }>;
@@ -837,7 +883,7 @@ export async function POST(request: Request) {
     intent: path.pack.intent,
     temporal: path.pack.temporal,
     selection: path.selection,
-    writerInput: synthesisCacheKey({ ...path.pack, intent: "UNKNOWN" }, ladderKey.model, ladderKey.effort),
+    writerInput: synthesisCacheKey({ ...path.pack, intent: "UNKNOWN" }, writerCacheModel, ladderKey.effort),
   });
   /* Start the answer from the code's own reading while the model reads (`lib/ask/speculative-reading.ts`); the model's reading still decides. `WTP_ASK_SPECULATION=off` turns it off. */
   const speculationEnabled = Boolean(process.env.ANTHROPIC_API_KEY) && process.env.WTP_ASK_SPECULATION !== "off";
@@ -851,7 +897,7 @@ export async function POST(request: Request) {
         path.pack.subject?.kind === "MEASURE" && requestedMeasureVotes(question).length > 0 ||
         stanceAnswerability(path.pack) === "UNVERIFIED_PERSONAL_STANCE") return { started: false, why: "code-reading-needs-no-writer", ...guess };
       const outcome = readingOutcome(path);
-      const cached = synthesisCache.get(synthesisCacheKey(path.pack, ladderKey.model, ladderKey.effort));
+      const cached = synthesisCache.get(synthesisCacheKey(path.pack, writerCacheModel, ladderKey.effort));
       const controller = new AbortController();
       let settled = Boolean(cached);
       const writing = cached ? Promise.resolve(cached) : synthesizeWithLadder(path.pack, {
@@ -913,7 +959,7 @@ export async function POST(request: Request) {
       trace.sourcesLoaded = "ALL";
     }
   }
-  const interpretationKey = modelFreeTopicRoute || lexical ? null : interpretationCacheKey(question, interpretContext, resolveAskRoleModel("READER"));
+  const interpretationKey = modelFreeTopicRoute || lexical ? null : interpretationCacheKey(question, interpretContext, `${resolveAskRoleModel("READER")}:${askPlaybookVersion("ASK_READER")}`);
   const cachedInterpretation = interpretationKey ? interpretationCache.get(interpretationKey) : null;
   // The model's reading is requested first; the code's reading runs while it is in flight.
   const modelReading = modelFreeTopicRoute || lexical || cachedInterpretation ? null : interpretQuestion(question, interpretContext, { allowCall });
@@ -1178,11 +1224,18 @@ export async function POST(request: Request) {
     const moneyOnly = subject?.kind === "PERSON" && asksOnlyMoney(question, "PERSON");
     const heldFiling = subject ? heldFilings.find(row => row.entity.id === subject.id) : null;
     if (heldFiling) records.push(heldFiling.record);
+    if (subject) records.push(...fecSubjects.filter(row => row.entity.id === subject.id).map(row => row.record));
     /** The sittings this request resolved, for the structured half of the payload. */
     const resolvedSittings: AskSitting[] = [];
     /** A topic question's dated timeline for the bound body, when one was built. */
     let topicTimeline: ReturnType<typeof buildTopicTimeline> | null = null;
     const gaps: EvidenceGap[] = [...holdingLoadGaps];
+    if(openDataQuestion(question)) {
+      const divisionIds=subject?.kind==="BODY" ? [bound?.ocdId ?? subject.id.split("#")[0]].filter(id=>id?.startsWith("ocd-division/")) as string[] : ocdIds;
+      const data=await openDataEvidenceFor({divisionIds,zip:ballotZip,bodyId:subject?.kind==="BODY"?subject.id:null},subject?.id).catch(()=>({records:[],unavailable:["open-data"],notHeld:[]}));
+      records.push(...data.records);
+      if(data.unavailable.length || data.notHeld.length)gaps.push({whose:"OURS",statement:"We're working on getting this info from all open-data and environmental sources for this place."});
+    }
     /* The gaps attached to the chosen sitting(s), by why they were attached, for
        an answer composed from the sitting (`lib/ask/sitting-answer.ts`). Each is
        also in `gaps`; this only remembers which ones are about the sitting. */
@@ -1332,7 +1385,7 @@ export async function POST(request: Request) {
     } else if (subject?.kind === "BODY") {
       const listing = governmentListings.records.find(row => row.id === subject.id);
       if (listing) {
-        records.push(governmentListingEvidence(listing));
+        records.push(...governmentListingEvidenceRecords(listing));
         denominators.governmentInventoryRecords = 1;
       }
       const identity = canonicalBodyIdentity(subject.id);
@@ -1661,6 +1714,11 @@ export async function POST(request: Request) {
     }
 
     /* A comparison retrieves both people's money: the one other held person the question names (exact id, never a context default) is stamped as theirs. */
+    const federalMember = subject?.kind === "PERSON" ? [...canonicalSubjectKeys].find(id => /^congress:[A-Z]\d{6}$/.test(id)) ?? subject.id : null;
+    const federal = await federalAskEvidence(federalMember, question);
+    records.push(...federal.records.map(record => subject?.kind === "PERSON" ? { ...record, subjectId: subject.id } : record));
+    gaps.push(...federal.gaps);
+    Object.assign(denominators, federal.denominators);
     const comparedIds = new Set<string>();
     if (subject?.kind === "PERSON" && financeAsked) {
       const other = otherNamedPerson(question, inventory, subject.id);
@@ -2149,7 +2207,7 @@ export async function POST(request: Request) {
   lapAt("resolutionAndRetrieval", path.retrievedAt);
   const { pack, packRecords, packGaps, subject, composed, topicTimeline, areaTimelines, shownContacts, resolvedSittings, agendaQuestion, capture, composedWhy } = path;
   /* The fast writer answers first; the frontier model writes only when that answer fails the same validator (`synthesizeWithLadder`). */
-  const synthesisKey = composed ? null : synthesisCacheKey(pack, ladderKey.model, ladderKey.effort);
+  const synthesisKey = composed ? null : synthesisCacheKey(pack, writerCacheModel, ladderKey.effort);
   const missingMeasureMeaning = subject?.kind === "MEASURE" && requestedMeasureVotes(question).length > 0 &&
     !composeMeasureMeaningAnswer({ subject, question, records: packRecords });
   const cachedSynthesis = !missingMeasureMeaning && synthesisKey && stanceAnswerability(pack) !== "UNVERIFIED_PERSONAL_STANCE"

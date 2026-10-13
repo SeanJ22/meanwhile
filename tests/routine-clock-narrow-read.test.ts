@@ -82,7 +82,7 @@ function candidate(id: string, overrides: Partial<RoutineCandidate> = {}): Routi
     },
     normalization: {
       succeeded: true,
-      parserVersion: "fec-funding/3",
+      parserVersion: "fec-funding/4",
       schemaVersion: "2",
       normalizedHash: normalizedHash(readModel),
       normalizedPayloadHash: normalizedHash(normalizedPayload),
@@ -191,7 +191,7 @@ test("the clock view names exactly the fields the clock proves; widening it is a
   const view = routineClockCandidateView(candidate("view-shape"));
   assert.deepEqual(Object.keys(view).sort(), ["id", "normalization", "recordClass", "retrieval", "scope", "sourceId"]);
   assert.deepEqual(view.retrieval, { retrievedAt: "2026-09-08T12:00:00.000Z" });
-  assert.deepEqual(view.normalization, { parserVersion: "fec-funding/3" });
+  assert.deepEqual(view.normalization, { parserVersion: "fec-funding/4" });
   assert.doesNotMatch(JSON.stringify(view), /view-shape-\d/, "no dataset row survives the view");
 });
 
@@ -563,9 +563,9 @@ test("a real 304 advances the source clock while held replay preserves both chec
   assert.equal(checked.lastSucceededAt, value.retrieval.retrievedAt);
   assert.equal(checked.lastSucceededObservedAt, checkedAt);
   assert.equal(checked.lastAttemptedAt, checkedAt);
-  const upgradedParser = await store.clock(value.sourceId, value.recordClass, value.scope, "fec-funding/4");
+  const upgradedParser = await store.clock(value.sourceId, value.recordClass, value.scope, "fec-funding/5");
   assert.equal(upgradedParser.lastAttemptedAt, undefined, "an older parser's confirmation cannot postpone the upgraded parser's first attempt");
-  assert.equal(upgradedParser.lastSucceededParserVersion, "fec-funding/3");
+  assert.equal(upgradedParser.lastSucceededParserVersion, "fec-funding/4");
   assert.equal(upgradedParser.lastSucceededObservedAt, checkedAt, "the real source check remains true for the prior GOOD");
   assert.equal((await store.confirmUnchanged(input, "2026-09-09T18:00:00.000Z")).kind, "CONFIRMED");
   assert.deepEqual(await store.clock(value.sourceId, value.recordClass, value.scope), checked);

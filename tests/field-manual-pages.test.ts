@@ -14,7 +14,7 @@ import test from "node:test";
 
 import { copyFieldManualDocument, copiedReach, type SingleDocumentManual } from "../lib/control-plane/field-manual-copy.ts";
 import { fieldManualLine, readFieldManual, type FieldManualEntry, type FieldManualRead } from "../lib/control-plane/field-manual.ts";
-import { readRolePlaybook, rolePlaybook } from "../lib/control-plane/playbooks.ts";
+import { readRolePlaybook } from "../lib/control-plane/playbooks.ts";
 import { readValidatorManual } from "../lib/control-plane/promotion/validator-manual.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import type { Persisted } from "../lib/control-plane/repository/types.ts";
@@ -22,7 +22,7 @@ import { fieldManualBriefLines, scoutFieldManualCatalog, scoutFieldManualProject
 import { engineerJob } from "../lib/control-plane/workers/engineering-adapter.ts";
 import { routeParse } from "../lib/control-plane/workers/model-parser.ts";
 import { acquirerQuery } from "../lib/control-plane/workers/research-runtime.ts";
-import { TRANSLATION_PLAYBOOK_QUERY, translationPlaybook } from "../lib/translate/worker.ts";
+import { translationPlaybook } from "../lib/translate/worker.ts";
 
 const dir = new URL("./fixtures/field-manual-pages/", import.meta.url);
 const document = JSON.parse(readFileSync(new URL("manual.json", dir), "utf8")) as { entries: FieldManualEntry[] };
@@ -70,20 +70,19 @@ async function renderAfter(repos: ReturnType<typeof createMemoryRepositories>) {
     const opts = { subjectId: job.ocdId, obligationId: job.workItemId, recordClass: job.recordClass, limit: 30 };
     const scout = await readFieldManual(repos, scoutFieldManualQuery(opts));
     const lines = fieldManualBriefLines(scoutFieldManualProjection(scout, opts));
-    const catalog = scoutFieldManualCatalog(scout, opts);
-    put("SCOUT", job.key, { prompt: rolePlaybook(catalog, "SCOUT").text, manual: lines }, scout);
-    put("DETECTIVE", job.key, { prompt: rolePlaybook(catalog, "DETECTIVE").text, manual: lines }, scout);
+    put("SCOUT", job.key, { prompt: (await readRolePlaybook(repos, "SCOUT")).text, manual: lines }, scout);
+    put("DETECTIVE", job.key, { prompt: (await readRolePlaybook(repos, "DETECTIVE")).text, manual: lines }, scout);
     const parser = await readFieldManual(repos, { role: "PARSER", state: job.state, recordClass: job.recordClass });
     const route = routeParse(parser.store, { recordClass: job.recordClass, host: job.host });
-    put("PARSER", job.key, { prompt: rolePlaybook(parser.store.entries, "PARSER").text, manual: [route.reason, `fields: ${route.knownFieldNames.join(",")}`] }, parser);
+    put("PARSER", job.key, { prompt: (await readRolePlaybook(repos, "PARSER")).text, manual: [route.reason, `fields: ${route.knownFieldNames.join(",")}`] }, parser);
     const acquirer = await readFieldManual(repos, acquirerQuery(job.ocdId, job.recordClass));
     put("ACQUIRER", job.key, { prompt: "", manual: [...acquirer.projection.lines] }, acquirer);
-    const translator = await readFieldManual(repos, TRANSLATION_PLAYBOOK_QUERY);
-    put("TRANSLATOR", job.key, { prompt: translationPlaybook(translator.store.entries).text, manual: [] }, translator);
+    const translator = await readFieldManual(repos, { kinds:["PLAYBOOK"], everywhere:true });
+    put("TRANSLATOR", job.key, { prompt: translationPlaybook(translator.store.entries).writerText, manual: [] }, translator);
   }
   const validator = await readValidatorManual(repos);
-  put("VALIDATOR", "pass", { prompt: validator.playbook, manual: [...validator.officialLinks].map(([host, ids]) => `${host}: ${ids.join(",")}`).sort() },
-    await readFieldManual(repos, { role: "VALIDATOR", kinds: ["OFFICIAL_LINK", "PLAYBOOK"], everywhere: true }));
+  put("VALIDATOR", "pass", { prompt: "", manual: [...validator.officialLinks].map(([host, ids]) => `${host}: ${ids.join(",")}`).sort() },
+    await readFieldManual(repos, { role: "VALIDATOR", kinds: ["OFFICIAL_LINK"], everywhere: true }));
   put("AUDITOR", "audit", { prompt: (await readRolePlaybook(repos, "AUDITOR")).text, manual: [] },
     await readFieldManual(repos, { role: "AUDITOR", kinds: ["PLAYBOOK"], everywhere: true }));
   const engineer = await readFieldManual(repos, engineerJob({ subjectId: `${jobs[0]!.ocdId}#governing`, recordClass: "meetings" }, "legistar"));
@@ -105,6 +104,7 @@ const INTENDED = {
   THIS_PLACE: "this place's own lessons rank first",
   ITS_STATE: "its state's lessons rank next, ahead of other places' doors",
   NATIONAL: "what applies everywhere (and platform lessons when the job's platform is unknown) ranks after its state",
+  ROLE_INSTRUCTIONS: "canonical role rows are read directly, outside the place-filtered manual list",
   COUNTS: "the header counts the rows the job read, not the whole manual",
 } as const;
 
@@ -113,6 +113,7 @@ const strip = (line: string) => line.replace(/^\s+• /, "").replace(/ \[(works 
 function classify(line: string, side: "removed" | "added", entries: readonly FieldManualEntry[], read: FieldManualRead,
   job: { state: string; recordClass: string; platform?: string } | null, otherSide: readonly string[]): keyof typeof INTENDED | null {
   const body = strip(line);
+  if (body.includes("/PLAYBOOK ")) return "ROLE_INSTRUCTIONS";
   const entry = entries.find((e) => body.startsWith(fieldManualLine(e).replace(/ seen \d{4}-\d{2}-\d{2}$/, "")));
   if (!entry) return null;
   if (otherSide.some((other) => strip(other) === body)) return "HERE_NOTE";

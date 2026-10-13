@@ -140,6 +140,36 @@ test("native role dates select the current legislative membership without mayor 
     ["az|lower|3", "ocd-division/country:us/state:az/sldl:3"]]), at, "US-AZ");
   assert.equal(multiple.officeholders.length, 1); assert.equal(multiple.divisions.length, 2, "each current native membership keeps its exact division");
 });
+test("unread and unpublished Census slices publish a named gap alongside the sourced roster", async () => {
+  const archive = zip([{ name: `people-${sha}/data/az/legislature/One.yml`, data: Buffer.from(yaml("one", "Member One")) }], "2026-10-01");
+  for (const [kind, geographyQuery] of [["UNREAD", null], ["NOT_PUBLISHED", async () => [[], []]]] as const) {
+    const { locks } = createMemoryRepositories();
+    const result = await acquireStatePeople({ state: "az", store: new MemoryEvidenceStore(), locks, now: () => at,
+      signal: AbortSignal.timeout(10_000), geographyQuery,
+      fetchImpl: (async url => String(url) === PLURAL_REVISION_URL ? Response.json([{ sha }]) : new Response(archive)) as typeof fetch });
+    assert.equal(result.roster.officeholders.length, 1);
+    assert.ok(result.gaps.some(gap => gap.detail.startsWith(`CENSUS_GEOGRAPHY_${kind}:AZ:`)));
+    const publication = await publishStatePeople({ store: new MemoryRoutineDataStore(), ...result, now: at });
+    assert.ok(publication.outcome.promoted, JSON.stringify(publication.outcome.candidate.receipt));
+    assert.ok(publication.candidate.excludedFacts?.some(gap => gap.code === `CENSUS_GEOGRAPHY_${kind}`));
+  }
+});
+test("Open States offices publish outside the official pilot rosters with their source attribution", async () => {
+  const archive = zip([{ name: `people-${sha}/data/ca/legislature/One.yml`, data: Buffer.from(yaml("one", "Member One")) }], "2026-10-01");
+  const { locks } = createMemoryRepositories();
+  const acquired = await acquireStatePeople({ state: "ca", store: new MemoryEvidenceStore(), locks, now: () => at,
+    signal: AbortSignal.timeout(10_000), divisions: [],
+    fetchImpl: (async url => String(url) === PLURAL_REVISION_URL ? Response.json([{ sha }]) : new Response(archive)) as typeof fetch });
+  const store = new MemoryRoutineDataStore();
+  assert.ok((await publishStatePeople({ store, ...acquired, now: at })).outcome.promoted);
+  const publication = await publishMemberOffices({ store, now: at, jurisdictions: ["US-CA"] });
+  assert.ok(publication.outcome?.promoted, JSON.stringify(publication));
+  assert.equal(publication.records, 2);
+  await refreshMemberOfficesFromPromoted({ store, now: at, bypassCache: true });
+  const offices = currentMemberOffices("plural:ca:one");
+  assert.deepEqual(offices.map(row => row.office.phone), ["555-1000", "555-2000"]);
+  assert.ok(offices.every(row => row.official === false && row.sourceOrg === "Open States (Plural, CC-0)"));
+});
 test("one malformed native record leaves verified people publishable without claiming a complete replacement", async () => {
   const archive = zip([
     { name: `people-${sha}/data/az/legislature/One.yml`, data: Buffer.from(yaml("one", "Member One")) },
@@ -228,7 +258,8 @@ test("an explicitly ended final office retires during a partial refresh while ma
         : municipal("wrong-jurisdiction","phoenix"))},
     ],"2026-10-01");
     const {locks}=createMemoryRepositories();
-    return acquireStatePeople({state:"az",store:new MemoryEvidenceStore(),locks,now:()=>at,signal:AbortSignal.timeout(10_000),divisions:[],
+    return acquireStatePeople({state:"az",store:new MemoryEvidenceStore(),locks,now:()=>at,signal:AbortSignal.timeout(10_000),
+      divisions:stage ? [{ocdId:"ocd-division/country:us/state:az/sldu:7",label:"AZ State Senate District 7 (2024 plan)",divisionType:"sldu"}] : [],
       fetchImpl:(async url=>String(url)===PLURAL_REVISION_URL ? new Response(JSON.stringify([{sha:release}])) : new Response(archive)) as typeof fetch});
   };
   const canonical=new MemoryRoutineDataStore(),initial=await acquire(0);
@@ -258,6 +289,8 @@ test("an explicitly ended final office retires during a partial refresh while ma
   assert.equal(divisions.get("ocd-division/country:us/state:az/place:tempe")?.[0].personId,"plural:malformed");
   assert.equal(divisions.get("ocd-division/country:us/state:az/place:phoenix")?.[0].personId,"plural:wrong-jurisdiction");
   assert.ok(read.value.roster.officeholders.some(row=>row.personId === "plural:one"));
+  assert.ok(!read.value.roster.unmatched.some(row=>row.officeholderId === "plural:az:one"),
+    "a partial refresh removes the carried no-division gap for a person now linked to Census");
   const history=read.value.roster.endedMemberships?.find(row=>row.id === endedId);
   assert.equal(history?.current,false); assert.equal(history?.termEnd,"2026-09-01");
   assert.match(history?.sourceUrl ?? "",/\/municipalities\/Ended\.yml$/);

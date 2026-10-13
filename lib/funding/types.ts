@@ -91,6 +91,8 @@ export interface CommitteeTotals {
    */
   smallDonorShare: number | null;
   coverageEndDate: string | null;
+  smallDonorCoverageEndDate?: string | null;
+  smallDonorCollectedAt?: string;
 }
 
 export interface FundingCandidate {
@@ -100,6 +102,7 @@ export interface FundingCandidate {
   state: string;
   office: "H" | "S";
   district: string | null;
+  registration?: { electionYear: number; label: string; collectedAt: string };
   /** Every app-side id this record answers for — roster officeholder ids
    *  (`congress:B001288`), ballot candidacy ids, and lineup nominee keys. */
   targetKeys: string[];
@@ -147,4 +150,5 @@ export interface FundingSnapshot {
   secondHop?: SecondHopCommittee[];
   /** Attempt order for the standing collector; never replaces a source observation date. */
   refreshAttempts?: Record<string, string>;
+  coverage?: { discoveryRoute: "api" | "bulk"; countsByState: Record<string, number> };
 }

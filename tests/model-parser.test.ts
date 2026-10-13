@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import { contentHash } from "../lib/control-plane/ids.ts";
 import { readFieldManual, writeFieldManual, type FieldManualStore } from "../lib/control-plane/field-manual.ts";
-import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { createMemoryRepositories } from "./helpers/playbooks.ts";
 import type { ModelRequest, ModelResponse, ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { MODEL_FOR_CLASS } from "../lib/control-plane/scheduler/model-routing.ts";
 import { documentWindows, modelParseReasoner, ModelParseFailure, parseLearningEntries, routeParse } from "../lib/control-plane/workers/model-parser.ts";

@@ -289,16 +289,15 @@ export async function launchGuarded(options: GuardedOptions): Promise<GuardedBro
 }
 
 /**
- * Seeds the ZIP before the first paint. `?zip=` does not seed the app; the zip
- * lives in `sessionStorage` under `wtp.approximate_location`, in the shape
- * `use-stored-zip` writes. The tutorial flag is seeded too, so captures are not
+ * Seeds the ZIP before the first paint. The zip lives in `localStorage` under
+ * `wtp.approximate_location`, in the shape `use-stored-zip` writes. The tutorial flag is seeded too, so captures are not
  * photographs of the welcome overlay or the first-run tour.
  */
 export async function seedZip(page: Page, zip: string): Promise<void> {
   await page.addInitScript(
     ({ zip: z }: { zip: string }) => {
       try {
-        sessionStorage.setItem(
+        localStorage.setItem(
           "wtp.approximate_location",
           JSON.stringify({ zip: z, savedAt: new Date().toISOString() }),
         );

@@ -35,6 +35,8 @@ export interface AddressPromptProps {
   trigger?: string;
   /** Render expanded from the start — the who-governs pill opens straight in. */
   startOpen?: boolean;
+  /** Entry from a mail-only or unplaced ZIP accepts the reader's own city/state. */
+  postalEntry?: boolean;
   /** Class on the open form's wrapper. Never applied to the collapsed trigger. */
   className?: string;
   /** Class on the collapsed trigger's wrapper. */
@@ -51,6 +53,7 @@ export function AddressPrompt({
   onSwitchZip,
   trigger = "Add your address",
   startOpen = false,
+  postalEntry = false,
   className,
   triggerClassName,
 }: AddressPromptProps) {
@@ -98,6 +101,7 @@ export function AddressPrompt({
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           zip,
+          ...(postalEntry ? { postalEntry: true } : {}),
           street: street.trim(),
           ...(withNumber ? { houseNumber: withNumber } : {}),
         }),
@@ -314,14 +318,14 @@ export function AddressPrompt({
   /* ------------------------------------------------- the street ask --- */
   return (
     <div className={`address-prompt ${className ?? ""}`}>
-      <p className="address-prompt-ask">What street do you live on?</p>
+      <p className="address-prompt-ask">{postalEntry ? "Your street, city and state" : "What street do you live on?"}</p>
       <div className="address-prompt-fields">
         <input
           ref={streetRef}
           type="text"
           value={street}
-          placeholder="Street"
-          aria-label="Street"
+          placeholder={postalEntry ? "Street, city, state" : "Street"}
+          aria-label={postalEntry ? "Street address" : "Street"}
           onChange={(e) => {
             setStreet(e.target.value);
             setError(null);

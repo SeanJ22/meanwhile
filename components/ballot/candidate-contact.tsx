@@ -3,7 +3,7 @@ import { CheckedLink } from "@/components/ui/checked-link";
 import type { CandidateCardData } from "@/lib/ballot/candidate-cards";
 import type { CandidateLinks } from "@/lib/ballot/candidate-sites";
 import type { CandidateContact as FilingContact } from "@/lib/ballot/candidate-contacts";
-import { CardSourcesList } from "@/components/officials/card-sources-list";
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import { candidateOwnKind } from "@/lib/officials/verification";
 
 /**
@@ -28,11 +28,11 @@ export function CandidateContact({
   const campaign = links?.campaign ?? null;
   const email = card?.email !== filing?.email ? card?.email ?? null : null;
 
-  if (!campaign && !email && !filing) return null;
+  if (!campaign && !email && !filing?.email) return null;
 
   return (
     <div data-candidate-contact className="contact-pill-row">
-      {filing && (
+      {filing?.email && (
         <div data-filed-contact={filing.candidacyId} className="space-y-1 t-detail">
           {filing.email && <p><CheckedLink href={`mailto:${filing.email}`} className="contact-pill">{filing.email}</CheckedLink></p>}
         </div>
@@ -70,5 +70,5 @@ export function CandidateContactSources({ links, filing }: { links: CandidateLin
     ...(links?.campaign ? [{ what: "Campaign contacts and website", provenance: { kind: candidateOwnKind(links.campaign.url), sourceOrg: links.campaign.label ?? "Campaign", sourceUrl: links.campaign.url, collectedAt: links.campaign.attemptedAt, verifiedAt: links.campaign.attemptedAt } }] : []),
     ...(filing ? [{ what: "Published filing contact", provenance: { sourceOrg: filing.sourceOrg, sourceUrl: filing.sourceUrl, collectedAt: filing.collectedAt, verifiedAt: null } }] : []),
   ];
-  return sources.length ? <CardSourcesList sources={sources} /> : null;
+  return sources.length ? <CardSourcesContribution id={`candidate-contact:${filing?.candidacyId ?? links?.campaign?.url}`} sources={sources} /> : null;
 }

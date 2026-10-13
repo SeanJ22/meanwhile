@@ -4,7 +4,7 @@ import { createServer } from "node:http";
 import { build } from "esbuild";
 import { launchGuarded } from "../scripts/browser.mts";
 
-test("actual map and ballot vote components expose a planted held tail beyond twenty", async () => {
+test("vote cards show the held tail and omit empty views while retaining independent history", async () => {
   // Synthetic records stay in this local fixture server. The component,
   // fetch, React state, disclosure, and expansion gestures are production code.
   const member = "congress:Z999998";
@@ -25,6 +25,8 @@ test("actual map and ballot vote components expose a planted held tail beyond tw
         createRoot(document.getElementById("root")).render(<>
           <div id="map"><Card title="Map official" sources={[]}><RecentVotes holder={holder} reactionContext={null} columns /></Card></div>
           <div id="ballot"><Card title="Ballot official" sources={[]}><CardSection title="Voting record"><RecentVotes holder={holder} reactionContext={null} contentOnly /></CardSection></Card></div>
+          {[['failed','congress:Z999997'],['empty','congress:Z999996'],['history','congress:Z999995']].map(([scenario,id]) =>
+            <div id={scenario} key={scenario}><Card title={scenario} sources={[]}><RecentVotes holder={{...holder,id}} reactionContext={null} columns /></Card></div>)}
         </>);`,
       resolveDir: process.cwd(), sourcefile: "reader-vote-expansion-fixture.tsx", loader: "tsx",
     },
@@ -32,17 +34,22 @@ test("actual map and ballot vote components expose a planted held tail beyond tw
     platform: "browser", format: "iife", jsx: "automatic",
     define: { "process.env.NODE_ENV": '"production"' }, logLevel: "silent",
   });
-  // esbuild needs an output name to assemble CSS Modules. Serve that actual
-  // stylesheet beside the fixture JS; no product component or CSS is stubbed.
+  // Serve any CSS imported by the component graph beside the real fixture JS.
   const javascript = output.outputFiles.find(file => file.path.endsWith(".js"))?.text;
-  const stylesheet = output.outputFiles.find(file => file.path.endsWith(".css"))?.text;
-  assert.ok(javascript && stylesheet, "the real component bundle must include its JS and CSS Modules");
+  const stylesheet = output.outputFiles.find(file => file.path.endsWith(".css"))?.text ?? "";
+  assert.ok(javascript, "the real component bundle must include its JavaScript");
   const server = createServer((request, response) => {
     if (request.url?.startsWith("/api/votes?")) {
-      const history = new URL(request.url, "http://fixture.test").searchParams.get("history") === "1";
+      const params = new URL(request.url, "http://fixture.test").searchParams;
+      const history = params.get("history") === "1";
+      const requestedMember = params.get("member");
+      if (requestedMember === "congress:Z999997") {
+        response.writeHead(503).end();
+        return;
+      }
       response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify(history
-        ? { historicalVotes: [], historyStatus: "COMPLETE", nextHistoricalVersionId: null, currentVersionId: "fixture:current" }
-        : { member, votes, chamber: "house", keyVotes: [] }));
+        ? { historicalVotes: requestedMember === "congress:Z999995" ? [votes[20]] : [], historyStatus: "COMPLETE", nextHistoricalVersionId: null, currentVersionId: "fixture:current" }
+        : { member: requestedMember, votes: requestedMember === member ? votes : [], chamber: "house", keyVotes: [] }));
     } else if (request.url === "/fixture.js") {
       response.writeHead(200, { "content-type": "application/javascript" }).end(javascript);
     } else if (request.url === "/fixture.css") {
@@ -89,6 +96,18 @@ test("actual map and ballot vote components expose a planted held tail beyond tw
       await surface.getByRole("button", { name: "Show latest 20", exact: true }).click();
       assert.equal(await surface.locator("[data-recent-vote-id]").count(), 20);
     }
+    for (const scenario of ["failed", "empty"]) {
+      const surface = page.locator(`#${scenario}`);
+      await surface.locator("[data-card-gap]").waitFor({ state: "visible" });
+      assert.match(await surface.locator("[data-card-gap]").innerText(), /voting record/);
+      assert.equal(await surface.locator(".vote-view-switch").count(), 0, `${scenario} has no empty view selector`);
+      assert.equal(await surface.getByRole("button", { name: "Voting Record", exact: true }).count(), 0);
+    }
+    const historyOnly = page.locator("#history");
+    await historyOnly.getByRole("button", { name: "Voting Record", exact: true }).click();
+    await historyOnly.locator('[data-recent-vote-id="planted:roll-call:21"]').waitFor({ state: "visible" });
+    assert.equal(await historyOnly.getByRole("button", { name: /^Recent/ }).count(), 0, "an empty recent list cannot hide held earlier records behind a tab");
+    assert.equal(await historyOnly.getByRole("button", { name: /^Earlier records/ }).getAttribute("aria-pressed"), "true");
     await context.close();
   } finally {
     await browser?.close();

@@ -1,3 +1,5 @@
+import "../../ask/model.ts";
+import { playbookUpdateAction } from "./playbook-action.ts";
 import { appendDecisionIntent, RUNNER_ID, SNAPSHOT_ID } from "../admin-data.ts";
 import { fixConsequence, fixSubjectId, parseFixField, WHERE_SEPARATOR } from "../fix-queue.ts";
 import { addFixItem, completeFixItem, fixItems, fixDispatchNote, recordFixDispatch } from "../fix-list.ts";
@@ -197,6 +199,7 @@ const READBACK_SUBJECTS: Readonly<Record<string, { readonly name: string; readon
 };
 
 const REGISTRY: readonly RegisteredAction[] = [
+  playbookUpdateAction,
   {
     definition: {
       type: "config.setSetting", label: "Change a setting",
@@ -237,10 +240,10 @@ const REGISTRY: readonly RegisteredAction[] = [
       if (definition.readerFacing) {
         try { published = await publishReaderSettings(next, revision); } catch { published = false; }
       }
-      const words = settingValueWords(input.value as SettingValue, definition.unit);
+      const words = settingValueWords(input.value as SettingValue, definition.unit, definition.choices);
       const beforeValue = (next.settingHistory ?? []).find((h) => h.id === context.receiptId)?.before;
       return { ok: true, outcome: published ? "DONE" : "QUEUED", subject: key,
-        ...(beforeValue !== undefined ? { change: { before: settingValueWords(beforeValue as SettingValue, definition.unit), after: words } } : {}),
+        ...(beforeValue !== undefined ? { change: { before: settingValueWords(beforeValue as SettingValue, definition.unit, definition.choices), after: words } } : {}),
         says: published ? `${definition.label} is now ${words}.` : `${definition.label} is saved as ${words}; readers get it on the next publish.`,
         readBackAt: "/admin?view=settings", undo: null };
     },

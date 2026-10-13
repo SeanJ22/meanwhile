@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import test from "./helpers/playbooks.ts";
 import { installFederalVotes, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
 await installRegistryAuthority();
@@ -99,7 +99,6 @@ const PASSING = { answer: "The board's contacts are in the records below.", cite
 
 process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
 process.env.ANTHROPIC_API_KEY = "test-stub-not-a-real-key";
-delete process.env.WTP_ASK_FAST_MODEL;
 delete process.env.WTP_ASK_SPECULATION;
 globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
   const url = input instanceof Request ? input.url : String(input);

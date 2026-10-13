@@ -42,17 +42,17 @@ commercial ZIP database is ever used as an input.
 | place | place:2020 | `…/rel2020/zcta520/tab20_zcta520_place20_natl.txt` | 2021-12-09 |
 | county_subdivision | cousub:2020 | `…/rel2020/zcta520/tab20_zcta520_cousub20_natl.txt` | 2021-12-09 |
 
-The acquirer records URL, byte size, SHA-256, and Last-Modified for every file
-it actually reads (`provenance.sourceChecksums`, index-aligned with
-`sourceFiles`). Reruns are idempotent: identical source bytes yield an identical
-dataset, and a failed/partial fetch never replaces a good build.
+The acquirer records each exact file URL, byte size, ETag, Last-Modified, and
+SHA-256 (`provenance.sourceValidators` and `sourceChecksums`, index-aligned with
+`sourceFiles`). The shared source-release evidence vault keeps immutable source
+bytes and validates a changed document before updating its release index. An
+unchanged file reuses its held overlaps after a fresh HEAD/ETag check; a failed
+or partial fetch leaves the last promoted dataset serving.
 
 **Reachability:** the standing runner runs on the production-runtime checkout
 (Sean's machine), which reaches `www2.census.gov` directly, so the routine
-refresh fetches the source live on the runner — the dataset it builds in memory
-is the promotion payload; there is no object-storage staging step. (An earlier
-note that www2 was proxy-blocked applied to the hosted-CI environment, not the
-runner.)
+refresh checks Census on the runner. The dataset it assembles in memory is the
+promotion payload; the existing evidence vault retains source files for replay.
 
 ## Method and shares
 
@@ -141,25 +141,54 @@ LA, TX, FL, CA, MO, OH, AL, NC** (10–65% of each state's ZCTAs move district).
 other 40 states + PR are unchanged (2026 = 119th). Single-district states are
 at-large and cannot redraw; small diffs there are encoding artifacts, not redraws.
 
-**Cost, cadence, and status.** The grf block files are large (~55 MB/state, ~2.9 GB
-nationally) versus ~6 MB for a tab20 CD file, while the 2026 map is stable until the
-election. So `cd120` is **opt-in** (built via `--only=…,cd120`; not in
-DEFAULT_SCOPES) and is intended to refresh at a **lower cadence** than the monthly
-tab20 refresh — the owner picks the cadence (recommendation: quarterly/on-demand).
-`acquireDataset({ only: ["cd120"], states })` state-filters the download.
+**Routine current district maps.** District maps are always kept as current as
+Census publishes them. `cd120`, `sldu2026`, and `sldl2026` are in `DEFAULT_SCOPES`
+and run in the standing Census refresh. `acquireGrfScopes` reads each state block
+file once and extracts all three district columns in that pass. A first national
+pass reads about 2.9 GB; subsequent refreshes check the exact source files with
+HEAD/ETag and reuse unchanged held rows. Changed files alone are downloaded and
+parsed. `acquireDataset({ only: ["cd120", "sldu2026", "sldl2026"], states })`
+can restrict acquisition to requested states. The routine script passes the last
+promoted dataset for reuse and retains earlier plans for their applicable dates.
+
+Every routine refresh checks Census GRF release listings, TIGER release/CD/SLDU/SLDL
+listings, and the exact `rel2020/cd-sld` relationship listing. New GRF directories
+and newly published tab20 district files are acquired without a registry or code
+change. Each state’s GRFN `CDSESSN` and `LSY` establish its actual Congress and
+legislative plan; the release directory year does not substitute for them.
+A district plan published first as a TIGER shapefile is acquired by the same
+routine refresh. The DBF's `CD<n>FP` column establishes the Congress and its
+`LSY` establishes the legislative plan year. The acquirer intersects that
+state's district polygons with the full-resolution 2020 ZCTA polygons from
+`TIGER2020/ZCTA520/tl_2020_us_zcta520.zip`. Positive surface-area intersections
+establish membership, including tiny slivers; line or point contact alone does
+not. Exact containment establishes whole coverage. These geometry overlaps
+carry `fractionBasis: "unknown"` and null shares because polygon surface area
+does not provide Census's tabulated land weights.
+
+The national ZCTA ZIP streams to a temporary file and immutable 4 MiB chunks
+in the existing evidence vault. Each state's geometry read returns only the
+ZCTAs in its held county relationships, and decodes one polygon record at a
+time. District files also use the shared source cache; ZIP CRC, SHP/DBF pairing,
+and geographic NAD83 coordinates are checked before admission. A failed update
+preserves both the last good source archive and published geography. Fresh
+HEAD/ETag checks reuse unchanged parsed overlaps without restoring or decoding
+their large archives. A new plan's metadata names the states whose complete
+files are held, so that plan does not cut off another state's current map.
 
 **State Senate / State House 2026 version clarity (determined from Census data).**
 The grf/2026 `SLDUST`/`SLDLST` (grfn `LSY=2026`) are the current legislative
 districts. Comparing each ZCTA's dominant district between grf‑2026 and the tab20
-2024 plan nationally (2.90 GB): **state-leg maps are stable 2024→2026 except
-Michigan's State Senate (7.4% of ZCTAs moved — a real 2026 redraw) and, borderline,
-South Dakota (~5–7%, both chambers).** ("Nebraska State House 100%" is an
-artifact — Nebraska's legislature is unicameral, so it has no SLDL.) So the shipped
-`sldu:2024`/`sldl:2024` accurately cover the 2026 election for 48+ states; Michigan's
-Senate is the one clear place they differ. `grf.ts`'s `GrfTarget` is generic, so
-`sldu:2026`/`sldl:2026` build from the SAME grf pass as cd:120 (one ~2.9 GB
-download yields all three) — recommended to bundle into the upcoming-election build
-when the owner activates it, for full 2026 correctness including Michigan's Senate.
+2024 plan nationally (2.90 GB): the 2026 upper-chamber exceptions are **Alabama,
+Michigan, and South Dakota**; the lower-chamber exception is **South Dakota**.
+The official source is the [Census GRF 2026 block and names publication](https://www2.census.gov/geo/docs/maps-data/data/grf/2026/),
+compared with the [2024 tab20 legislative relationships](https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/).
+Michigan’s Senate moves 7.4% of ZCTAs; South Dakota moves about 5–7% in both
+chambers. Nebraska has one legislative chamber and no State House; its unassigned
+lower-chamber codes are excluded. The unchanged states’ 2024 plans continue to
+answer election and representation requests until a held successor starts.
+`sldu:2026` and `sldl:2026` are acquired together with `cd:120` in the routine pass,
+including Alabama and Michigan’s Senate maps.
 
 ## Verification
 
@@ -167,6 +196,15 @@ when the owner activates it, for full 2026 correctness including Michigan's Sena
 remainder, split relationships, loud failure on a changed header) and the read
 model against the committed AZ fixture (`lib/census-geography/bootstrap-az.json`,
 all five primary groupings for Arizona).
+
+BD-02's offline checks use the committed Census-shaped binary ZIP samples in
+`tests/fixtures/census-tiger`. They test routine discovery and all three
+TIGER-only successor families through routine publication and the served lookup,
+state coverage, unchanged-source reuse,
+malformed-update preservation, holes, tiny splits, named district identity, and
+bounded streaming of an archive larger than 256 MiB. The samples have artificial
+coordinates and are parser evidence; production downloads run on the installed
+runner after River releases the code.
 
 **AZ-06 (toss-up):** the Census tab20 CD119 build returns **79 ZCTAs** (43
 whole, 36 partial). `zccd.csv` lists **87**. The 8-ZCTA difference is fully
@@ -221,16 +259,13 @@ serves real Arizona data before production promotion.
 
 ## Build, publish, refresh
 
-Acquire + build the national dataset (runs locally or on the runner, reaches
-www2):
-
-```bash
-pnpm exec tsx scripts/census-geo-build.mts --out=<off-repo>/census-geo-dataset.json
-```
-
-With no `--only`, this builds the five primary groupings (DEFAULT_SCOPES).
-`--states=<fips,…>` restricts to a priority batch; the committed AZ fixture was
-built with `--states=04`.
+The installed production runner invokes the registered
+`scripts/census-geography-refresh.mts` adapter. It reads the last promoted dataset,
+checks release listings and source validators, acquires changed source files,
+and assembles the national publication. `DEFAULT_SCOPES` includes all five primary
+groupings and the three 2026 district plans. The adapter uses the existing
+control-plane connection and evidence vault; a test or custom caller supplies
+`AcquireOptions.cache` with its evidence store and release locks.
 
 **Publication is ROUTINE and automatic** (owner directive: official Census/OMB
 geography passing the checks auto-publishes; no per-import manual approval). The
@@ -240,7 +275,7 @@ is an official `.gov` source that auto-qualifies (`routineAutoPromotion: true`)
 under the shared `isOfficialSource` rule in
 `lib/civic-data/source-authority.ts` — not a Census-specific exception. The
 standing runner executes `scripts/census-geography-refresh.mts` on its cadence:
-`acquireDataset()` → `censusGeographyCandidate` → the 8 civic-data validation
+`acquireDataset({ previousDataset, discoverPlans: true })` → `censusGeographyCandidate` → the 8 civic-data validation
 checks → atomic promotion of the production version pointer (RULING 283/289).
 
 Promotion runs **only from the installed, certified runtime whose HEAD equals

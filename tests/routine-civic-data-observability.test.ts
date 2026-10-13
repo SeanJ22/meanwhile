@@ -1179,8 +1179,12 @@ test("PDC-13: receipt-held records retain their exact key and record payload", (
 });
 
 test("PDC-13: a contract without a Reader projection is never labeled Reader-visible", () => {
-  const contract = ROUTINE_SOURCE_CONTRACTS.find((item) => item.id === "dotgov")!;
-  const row = candidateRow(contract, { id: "dotgov-v1", at: "2026-09-08T01:00:00.000Z" });
+  const contract: RoutineSourceContract = {
+    ...ROUTINE_SOURCE_CONTRACTS.find((item) => item.id === "dotgov")!,
+    id: "operational-reference-without-reader",
+    readerProjection: null,
+  };
+  const row = candidateRow(contract, { id: "operational-reference-v1", at: "2026-09-08T01:00:00.000Z" });
   const view = projectRoutineDataObservability(
     { candidates: [row], events: sourceHistory(row), promotions: [promotion(contract, row)] },
     NOW,
@@ -1188,6 +1192,24 @@ test("PDC-13: a contract without a Reader projection is never labeled Reader-vis
   );
   assert.equal(view.contracts[0].canonicalPromotion.kind, "MEASURED");
   assert.equal(view.contracts[0].readerVisible.kind, "NOT_APPLICABLE");
+});
+
+test("NL-01: CISA government domains become Reader-visible only after typed Reader readback", () => {
+  const contract = ROUTINE_SOURCE_CONTRACTS.find((item) => item.id === "dotgov")!;
+  assert.equal(contract.readerProjection?.id, "government-domains");
+  const row = candidateRow(contract, { id: "dotgov-reader-v1", at: "2026-09-08T01:00:00.000Z" });
+  const withoutReadback = projectRoutineDataObservability(
+    { candidates: [row], events: sourceHistory(row), promotions: [promotion(contract, row)] },
+    NOW, [contract], READER_BUILD,
+  ).contracts[0];
+  assert.equal(withoutReadback.canonicalPromotion.kind, "MEASURED");
+  assert.equal(withoutReadback.readerVisible.kind, "NOT_RECORDED");
+  const withReadback = projectRoutineDataObservability(
+    { candidates: [row], events: [...sourceHistory(row), readerEvent(contract, row)], promotions: [promotion(contract, row)] },
+    NOW, [contract], READER_BUILD,
+  ).contracts[0];
+  assert.equal(withReadback.readerVisible.kind, "MEASURED");
+  assert.equal(withReadback.cadence.operationalState, "HEALTHY");
 });
 
 test("PDC-13: a broken pointer proof makes canonical and Reader visibility UNKNOWN", () => {
@@ -1870,7 +1892,7 @@ test("a confirmed re-check keeps Admin current: the newest confirmation is the l
     sourceId: contract.sourceId,
     recordClass: contract.recordClass,
     scope: contract.scope,
-    parserVersion: "fec-funding/3",
+    parserVersion: "fec-funding/4",
     pointerVersionId: row.id,
     readModelHash: (row.candidate as { normalization: { normalizedHash: string } }).normalization.normalizedHash,
     basis: "READ_MODEL_RECOMPUTED",

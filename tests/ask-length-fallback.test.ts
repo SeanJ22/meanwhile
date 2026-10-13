@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import test from "./helpers/playbooks.ts";
 import { installFederalVotes, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
 await installRegistryAuthority();

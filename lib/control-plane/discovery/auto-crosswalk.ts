@@ -528,10 +528,10 @@ function selectFor(kind: CrosswalkKind, proposal: Proposal, events: readonly Cal
       return { filter: kind === "IQM2" ? { boardMatch: labels[0]! } : { bodyMatch: labels[0]!, portalBase: `https://${new URL(route).hostname.replace(/\.api\.civicclerk\.com$/, ".portal.civicclerk.com")}` }, selected };
     }
     const ids = [...new Set(selected.map(event => event.scopeId).filter((id): id is string => typeof id === "string"))];
-    if (ids.length !== 1 || events.some(event => event.scopeId === ids[0] && !selected.includes(event))) {
+    if (ids.length === 0 || (kind !== "CIVICPLUS" && ids.length !== 1) || events.some(event => ids.includes(event.scopeId ?? "") && !selected.includes(event))) {
       return { held: "AMBIGUOUS_TITLE", detail: `${kind} has no unique category or committee for this body` };
     }
-    return { filter: kind === "CIVICPLUS" ? { agendaCenterCategoryId: ids[0]! } : { committeeId: ids[0]! }, selected };
+    return { filter: kind === "CIVICPLUS" ? { agendaCenterCategoryId: ids.sort((a, b) => Number(a) - Number(b)).join(",") } : { committeeId: ids[0]! }, selected };
   }
   if (kind === "LEGISTAR") {
     const selected = events.filter(e => proposal.spellings.some(s => wordAt(e.title, s) >= 0));
@@ -784,8 +784,8 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       events = parseCalendarRows(calendar.text).filter(row => row.board && row.when).map(row => ({ title: flat(row.board), context: "", categories: [flat(row.board)],
         identity: `${row.detailId}|${row.when}`, tzid: stateZone, utc: false, floating: true, url: `${new URL(route).origin}/Citizens/Detail_Meeting.aspx?ID=${row.detailId}` }));
     } else if (kind === "CIVICPLUS") {
-      events = parseAgendaCenterCategories(calendar.text).flatMap(category => parseAgendaCenter(calendar.text, category.id).map(row => ({ title: flat(category.name), context: "", categories: [flat(category.name)],
-        scopeId: category.id, identity: `${category.id}|${row.date}`, tzid: stateZone, utc: false, floating: false, url: row.agendaHref ? new URL(row.agendaHref, route).toString() : route })));
+      events = parseAgendaCenterCategories(calendar.text).flatMap(category => parseAgendaCenter(calendar.text, category.id).map(row => ({ title: flat(category.name), context: flat(row.title), categories: [flat(category.name)],
+        scopeId: category.id, identity: `${category.id}|${row.id}|${row.date}`, tzid: stateZone, utc: false, floating: row.hour !== null, url: row.agendaHref ? new URL(row.agendaHref, route).toString() : route })));
     } else if (kind === "BOARDDOCS") {
       const committeeId = new URL(route).searchParams.get("current_committee_id");
       const via = find.via?.artifactId ? input.held(find.via.artifactId) : null;

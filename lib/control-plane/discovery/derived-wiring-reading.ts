@@ -119,7 +119,7 @@ async function readOne(reading: HeldCalendarReading, now: string, adapterDigest:
       // here would ask for additional URLs whose bytes were never vaulted.
       const collectedAt = reading.evidence.retrievedAt;
       if (row.kind === "CIVICPLUS") {
-        meetings = makeCivicPlusSource([wiring]).normalizeWithDrops([{ wiring, ical: "", agendaCenter: text, collectedAt }], new Date(now)).meetings;
+        meetings = makeCivicPlusSource([wiring]).normalizeWithDrops([{ wiring, ical: "", agendaPages: [{ url: wiring.config.agendaCenterUrl, text, collectedAt }], collectedAt }], new Date(now)).meetings;
       } else if (row.kind === "CIVICCLERK") {
         const events = JSON.parse(text)?.value;
         if (!Array.isArray(events)) return { changed: "The CivicClerk route no longer returns a list of events" };

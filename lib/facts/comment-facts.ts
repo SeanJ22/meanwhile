@@ -30,14 +30,14 @@ export async function publishCommentFacts(db: FactDb & { readonly query: Query }
   const out: PublishOutcome[] = [];
   const claim = (field: string, value: unknown, valueText: string, quote: string) =>
     publishClaim(db, { entity, field, fieldKind: "comment_rule", provenance, value, valueText, quote, copy, producedBy: input.producedBy, costUsd: 0 }, clocks, now);
-  const quoteOf = (field: string, value: string) => input.reading.fieldSources?.[field]?.quote ?? value;
+  const quoteOf = (field: string) => text(input.reading.fieldSources?.[field]?.quote);
   for (const [from, field] of FIELDS) {
     const value = text(input.reading.fields[from]);
-    if (value) out.push(await claim(field, value, quoteOf(from, value), quoteOf(from, value)));
+    if (value) out.push(await claim(field, value, value, quoteOf(from) ?? value));
   }
   const period = text(input.reading.fields.commentPeriod);
-  const support = input.reading.fieldSources?.commentPeriod?.quote ??
-    FIELDS.map(([from]) => text(input.reading.fields[from])).find((value): value is string => value !== null);
+  // Whether a body takes comment is read from the page's own words about how, so that passage is both value text and quote.
+  const support = quoteOf("commentPeriod") ?? FIELDS.map(([from]) => quoteOf(from) ?? text(input.reading.fields[from])).find((quote): quote is string => quote !== null);
   if ((period === "YES" || period === "NO") && support) out.push(await claim(PERIOD, period, support, support));
   return out;
 }

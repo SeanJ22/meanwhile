@@ -14,7 +14,7 @@ import type { AutonomousWorkPlan } from "../control-plane/workers/autonomous-pla
 import type { ArtifactRecord } from "../control-plane/repository/types.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import { ensureEntity, learnOfficialHost } from "../facts/entities.ts";
-import type { Clocks, FactDb, Query } from "../facts/publish.ts";
+import type { Clocks, FactDb, PublishOutcome, Query } from "../facts/publish.ts";
 import { publishBodyFacts } from "../facts/roster-facts.ts";
 import { createHash } from "node:crypto";
 import { subBodyId } from "./meeting-body-crosswalk.ts";
@@ -48,10 +48,10 @@ const words = (value: unknown) => typeof value === "string" ? value.toLowerCase(
 interface BodyOfficeContact { readonly bodyId: string; readonly capture: WorkerPublicationCapture; readonly address: string | null; readonly phone: string | null }
 
 /** A directory body's office address and phone, each a fact on the body checked against the page that listed it. */
-export async function publishBodyOffice(facts: FactDb & { readonly query: Query }, body: Body, contact: BodyOfficeContact, producedBy: string, clocks: Clocks, now: Date): Promise<void> {
+export async function publishBodyOffice(facts: FactDb & { readonly query: Query }, body: Body, contact: BodyOfficeContact, producedBy: string, clocks: Clocks, now: Date): Promise<readonly PublishOutcome[]> {
   await ensureEntity(facts.query, { id: body.id, kind: "body", name: body.name ?? body.id, state: /\/state:([a-z]{2})/.exec(body.id)?.[1]?.toUpperCase() ?? null, parentId: body.ocdId });
   await learnOfficialHost(facts.query, body.id, contact.capture.evidence.canonicalUrl);
-  await publishBodyFacts(facts, { bodyId: body.id, capture: contact.capture, producedBy, facts: [["office_address", contact.address], ["office_phone", contact.phone]]
+  return publishBodyFacts(facts, { bodyId: body.id, capture: contact.capture, producedBy, facts: [["office_address", contact.address], ["office_phone", contact.phone]]
     .flatMap(([field, value]) => value ? [{ field: field as "office_address" | "office_phone", value, quote: value }] : []) }, clocks, now);
 }
 

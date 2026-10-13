@@ -149,15 +149,21 @@ export async function importCartonOffices(input: {
     const read = await receiptCapture({ url, repos: input.repos, vault: input.vault, fetch: input.fetch, now: input.now });
     if ("error" in read) {
       report.unreadable.push({ url, reason: read.error });
+      await ensureEntity(input.facts.query, { id: body.id, kind: "body", name: body.name ?? body.id, state: /\/state:([a-z]{2})/.exec(body.id)?.[1]?.toUpperCase() ?? null, parentId: body.ocdId });
+      for (const field of [body.officeAddress ? "office_address" : null, body.officePhone ? "office_phone" : null].filter((f): f is string => f !== null)) {
+        await openBlank(input.facts.query, { entityId: body.id, field, stage: "ACQUIRE", reason: "SOURCE_BLOCKED", detail: `${url}: ${read.error}`,
+          retryMinutes: input.clocks.retryMinutes("contact") });
+        report.blanks++;
+      }
       continue;
     }
-    await publishBodyOffice(input.facts, body, { bodyId: body.id, capture: read.capture, address: body.officeAddress ?? null, phone: body.officePhone ?? null },
+    const outcomes = await publishBodyOffice(input.facts, body, { bodyId: body.id, capture: read.capture, address: body.officeAddress ?? null, phone: body.officePhone ?? null },
       `carton:${input.versionId}`, input.clocks, new Date(input.now));
+    report.live += outcomes.filter(row => "decision" in row && row.decision === "PUBLISH").length;
+    report.confirmed += outcomes.filter(row => "decision" in row && row.decision === "CONFIRM").length;
+    report.blanks += outcomes.filter(row => "blank" in row).length;
     report.rosters++;
   }
-  const tally = await input.facts.query(`SELECT count(*) FILTER (WHERE status = 'live')::int AS live FROM fact WHERE produced_by = $1 AND field LIKE 'office_%'`, [`carton:${input.versionId}`]);
-  report.live = Number(tally[0]?.live ?? 0);
-  report.blanks = Number((await input.facts.query(`SELECT count(*)::int AS n FROM blank WHERE field LIKE 'office_%'`))[0]?.n ?? 0);
   await input.facts.query(`INSERT INTO fact_store_load (source, sha256) VALUES ($1, $2)
     ON CONFLICT (source) DO UPDATE SET sha256 = EXCLUDED.sha256, loaded_at = now()`, [CARTON_OFFICES, createHash("sha256").update(input.versionId).digest("hex")]);
   return report;

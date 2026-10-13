@@ -36,7 +36,7 @@ function owedPublications(items: readonly WorkerPublicationItem[], results: read
   return items.flatMap(item => {
     const plan = item.autonomousPlan;
     const target = plan?.publication?.contractId;
-    if (!plan || !target || (target !== "registry-runtime-bindings" && !isWorkerReaderContract(target))) return [];
+    if (!plan || !target || (target !== "registry-runtime-bindings" && target !== COMMENT_RULE_PUBLICATION && !isWorkerReaderContract(target))) return [];
     const outcome = item.publicationOutcome;
     const ownResults = byItem.get(item.id) ?? [];
     const parser = latestParserResult(ownResults, item.id);

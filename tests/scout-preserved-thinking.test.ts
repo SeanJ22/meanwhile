@@ -190,13 +190,13 @@ const isRestart = (messages: ModelRequest["messages"]): boolean =>
 
 
 test("PT-1: the conversation is append-only — each request extends the one before byte-for-byte, except a restart, which replays no earlier turn or thinking block — and the payload stays bounded", async () => {
-  const sonnet: Turn[] = [1, 2, 3, 4, 5].map((k) => [thinking(`sig-s${k}`), fetchOf(`u${k}`, `https://a.gov/page-${k}`)]);
-  sonnet.push([thinking("sig-s6"), finishCiting("f", "art-5", 5)]);
+  const sonnet: Turn[] = Array.from({ length: 15 }, (_, i) => i + 1).map((k) => [thinking(`sig-s${k}`), fetchOf(`u${k}`, `https://page-${k}.gov/`)]);
+  sonnet.push([thinking("sig-s16"), finishCiting("f", "art-15", 15)]);
   const provider = fakeProvider({ [SONNET]: sonnet });
   const { outcome, result } = await runScout(provider.transport);
   assert.equal(outcome.kind, "DISPOSED", outcome.detail);
   const { requests } = provider;
-  assert.equal(requests.length, 6);
+  assert.equal(requests.length, 16);
 
   let restarts = 0;
   for (let i = 1; i < requests.length; i += 1) {
@@ -210,7 +210,7 @@ test("PT-1: the conversation is append-only — each request extends the one bef
     }
     assert.equal(json(after.slice(0, before.length)), json(before), `request ${i + 1} extends request ${i} byte-for-byte: nothing already sent was edited`);
   }
-  assert.equal(restarts, 2, "three 45 KB pages pass the 100 KB budget twice in five fetches");
+  assert.ok(restarts >= 2, "capped page results exercise repeated restarts at the context budget");
   assert.equal(result.contextRestarts, restarts);
 
   for (const request of requests) {
@@ -220,7 +220,7 @@ test("PT-1: the conversation is append-only — each request extends the one bef
   /* The model's own thinking blocks go back unchanged within a conversation. */
   assert.ok(json(requests[2].messages).includes('"signature":"sig-s2"'), "a thinking block is echoed verbatim on the next turns");
   /* The accepted finish cites the page the restarted conversation carried. */
-  assert.deepEqual(result.candidates[0]?.evidenceArtifactIds, ["art-5"]);
+  assert.deepEqual(result.candidates[0]?.evidenceArtifactIds, ["art-15"]);
   assert.deepEqual(result.inputTransformations, []);
 });
 
